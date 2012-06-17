@@ -7,10 +7,10 @@
 
     <ImageView
         android:id="@+id/ivType"
-        android:layout_width="32dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_marginRight="10dip"
+        android:gravity="center"
         android:src="@drawable/ic_launcher" />
 
     <TextView
