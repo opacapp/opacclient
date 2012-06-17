@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="de.geeksfactory.opacclient"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk android:minSdkVersion="10" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:theme="@style/LightThemeSelector"
+        android:label="@string/app_name" android:name=".OpacClient">
+        <activity
+            android:name=".SearchActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        	<uses-library android:name="org.jsoup.Jsoup" />
+        </activity>
+        <activity
+            android:name=".SearchResultsActivity"
+            android:label="@string/search_results"
+            android:configChanges="keyboardHidden|orientation" >
+       	</activity>
+       	<activity android:name=".MainPreferenceActivity"
+            android:label="@string/prefs">
+       	</activity>
+       	<activity android:name=".SearchResultDetailsActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/details">
+       	</activity>
+       	<activity android:name=".AccountActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/account">
+       	</activity>
+       	<activity android:name=".WelcomeActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/app_name">
+       	</activity>
+       	<activity android:name=".AboutActivity"
+            android:label="@string/about">
+       	</activity>
+       	<activity android:name=".ErrorActivity"
+            android:label="@string/app_name">
+       	</activity>
+    </application>
+
+</manifest>

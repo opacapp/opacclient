@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/web_opac" >
+        <EditTextPreference
+            android:defaultValue="@string/opac_mannheim"
+            android:key="opac_url"
+            android:summary="@string/opac_url_example"
+            android:title="@string/opac_url" />
+        <EditTextPreference
+            android:key="opac_usernr"
+            android:numeric="integer"
+            android:title="@string/opac_usernr" />
+        <EditTextPreference
+            android:key="opac_password"
+            android:password="true"
+            android:summary="@string/opac_password_hint"
+            android:title="@string/opac_password" />
+    </PreferenceCategory>
+    <!-- <PreferenceCategory android:title="@string/notifications" >
+        <CheckBoxPreference
+            android:key="notification_service"
+            android:title="@string/notification_service" />
+
+        <ListPreference
+            android:dependency="notification_service"
+            android:entries="@array/intervals"
+            android:entryValues="@array/intervals_n"
+            android:key="notification_interval"
+            android:title="@string/notification_interval" />
+
+        <RingtonePreference
+            android:dependency="notification_service"
+            android:key="notification_tone"
+            android:title="@string/notification_sound" />
+    </PreferenceCategory>-->
+
+</PreferenceScreen>

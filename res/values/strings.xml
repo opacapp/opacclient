@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World!</string>
+    <string name="app_name">OpacClient</string>
+    <string name="web_opac">Web-Opac</string>
+    <string name="opac_url">Web-OPAC-Adresse</string>
+    <string name="opac_url_example">z.B. http://katalog.mannheim.de/wopac</string>
+    <string name="opac_usernr">Ausweisnummer</string>
+    <string name="opac_password">Passwort</string>
+    <string name="opac_password_hint">Unbekannt? Vielleicht dein Geburtsdatum (TT.MM.JJJJ)</string>
+    <string name="opac_mannheim">http://katalog.mannheim.de/wopac</string>
+    <string name="search">Katalogsuche</string>
+    <string name="titel">Titel (Stichwort)</string>
+    <string name="verfasser">Verfasser</string>
+    <string name="verlag">Verlag</string>
+    <string name="zweigstelle">Zweigstelle</string>
+    <string name="interessenkreis">Interessenkreis</string>
+    <string name="ISBN">ISBN</string>
+    <string name="jahr">Jahr</string>
+    <string name="mediengruppe">Mediengruppe</string>
+    <string name="schlag">Schlagwörter</string>
+    <string name="systematik">Systematik</string>
+    <string name="go_search">Suche starten!</string>
+    <string name="jahr_von">von</string>
+    <string name="jahr_bis">bis</string>
+    <string name="loading">Lade…</string>
+    <string name="loading_results">Lade Ergebnisse</string>
+    <string name="loading_details">Lade Details</string>
+    <string name="search_results">Suchergebnisse</string>
+    <string name="prefs">Einstellungen</string>
+    <string name="account">Konto</string>
+    <string name="about">Über</string>
+    <string name="details">Details</string>
+    <string name="copies">Exemplare</string>
+    <string name="order">Sortierung</string>
+    <string name="ret">Rückgabe</string>
+    <string name="res">Vorbestellt</string>
+    <string name="reserve">Vorbestellen</string>
+    <string name="res_zst">Zweigstelle auswählen</string>
+    <string name="doing_res">Führe Vorbestellung durch…</string>
+    <string name="status_nouser">Du hast in den Einstellungen keinen Ausweis hinterlegt.</string>
+    <string name="dismiss">Schließen</string>
+    <string name="loading_account">Lade Account</string>
+    <string name="entl">Entliehen</string>
+    <string name="extendall">Alle verlängern</string>
+    <string name="reservations">Vorbestellungen</string>
+    <string name="doing_cancel">Lösche Vorbestellung</string>
+    <string name="opac_error">Der Web-Opac meldet:</string>
+    <string name="io_error">Fehler bei der Kommunikation mit dem Web-Opac. Entweder dein Internet funktioniert nicht, oder es gibt ein Problem mit dem Opac oder der App. Tut uns leid.</string>
+    <string name="welcome">Herzlich Willkommen</string>
+    <string name="welcome_select">zum Web-Opac-Client für Android. Bitte wähle aus, mit welcher Bibliothek du dich verbinden willst. Ist deine nicht in der Liste, kannst du irgendeine auswählen und in den Einstellungen die Opac-Adresse anpassen.</string>
+    <string name="welcome_account">Um Vorbestellen oder dein Konto einsehen zu können, musst du in den Einstellungen deine Ausweisnummer und dein Passwort hinterlegen!</string>
+    <string-array name="orders">
+    	<item>Standard</item>
+    	<item>Erscheinungsjahr</item>
+    	<item>Mediengruppe</item>
+    </string-array>
+    <string name="error_occured">Ein Fehler ist aufgetreten!</string>
+    <string name="restart">Anwendung neustarten</string>
+    <string name="report">Bericht senden</string>
+    <string name="report_sending">Sende Bericht…</string>
+    <string name="report_sent">Bericht gesendet. Vielen Dank!</string>
+    <string name="no_connection">Ohne Verbindung zum Internet ist das hier alles sinnlos. (Oder du hast eine falsche Web-Opac-Adresse konfiguriert.)</string>
+    <string name="ioerror">Die Kommunikation mit dem Web-Opac ist fehlgeschlagen oder etwas anderes ist schiefgelaufen. Wenn du einen Bericht absendest (völlig anonym!), kümmeren wir uns darum.</string>
+    <string name="notifications">Benachrichtigungen</string>
+    <string name="notification_service">Benachrichtigungs-Service</string>
+    <string name="notification_interval">Überprüfungs-Intervall</string>
+    <string-array name="intervals">
+    	<item>Täglich</item>
+    	<item>Alle 3 Tage</item>
+    	<item>Wöchentlich</item>
+    </string-array>
+    <string-array name="intervals_n">
+    	<item>86400</item>
+    	<item>367200</item>
+    	<item>856800</item>
+    </string-array>
+    	<string name="notification_sound">Ton abspielen</string>
+</resources>

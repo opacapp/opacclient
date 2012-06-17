@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="5dp" 
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvTitel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/titel" />
+
+            <EditText
+                android:id="@+id/etTitel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="text"
+                android:singleLine="true" />
+
+            <TextView
+                android:id="@+id/tvVerfasser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/verfasser" />
+
+            <EditText
+                android:id="@+id/etVerfasser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="text" />
+
+            <TextView
+                android:id="@+id/tvSchlag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/schlag" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <EditText
+                    android:id="@+id/etSchlagA"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="text" />
+
+                <EditText
+                    android:id="@+id/etSchlagB"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="text" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvISBN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ISBN" />
+
+            <EditText
+                android:id="@+id/etISBN"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number" />
+
+            <TextView
+                android:id="@+id/tvJahr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/jahr" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <EditText
+                    android:id="@+id/etJahrVon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="@string/jahr_von"
+                    android:inputType="number" />
+
+                <EditText
+                    android:id="@+id/etJahrBis"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="number"
+                    android:hint="@string/jahr_bis" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvZweigstelle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/zweigstelle" />
+
+            <Spinner
+                android:id="@+id/cbZweigstelle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tvMediengruppe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mediengruppe" />
+
+            <Spinner
+                android:id="@+id/cbMediengruppe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tvVerlag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/verlag" />
+
+            <EditText
+                android:id="@+id/etVerlag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="text" />
+
+            <TextView
+                android:id="@+id/tvSystematik"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/systematik" />
+
+            <EditText
+                android:id="@+id/etSystematik"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="text" />
+
+            <TextView
+                android:id="@+id/tvInteressenkreis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/interessenkreis" />
+
+            <EditText
+                android:id="@+id/etInteressenkreis"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="text" />
+
+            <TextView
+                android:id="@+id/tvOrder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/order" />
+
+            <Spinner
+                android:id="@+id/cbOrder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/orders" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btStartsearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.05"
+        android:background="@drawable/go_button"
+        android:text="@string/go_search" />
+
+</LinearLayout>
