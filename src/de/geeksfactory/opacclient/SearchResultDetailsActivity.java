@@ -106,9 +106,12 @@ public class SearchResultDetailsActivity extends OpacActivity {
             try {
     			DetailledItem res = app.ohc.getResult(nr);
 				URL newurl;
-				newurl = new URL(res.getCover());
-        		Bitmap mIcon_val = BitmapFactory.decodeStream(newurl.openConnection().getInputStream()); 
-        		res.setCoverBitmap(mIcon_val);
+				try {
+					newurl = new URL(res.getCover());
+	        		Bitmap mIcon_val = BitmapFactory.decodeStream(newurl.openConnection().getInputStream()); 
+	        		res.setCoverBitmap(mIcon_val);
+				} catch (Exception e) {
+	    		}
     			return res;
     		} catch (Exception e) {
     			publishProgress(e, "ioerror");
@@ -119,8 +122,12 @@ public class SearchResultDetailsActivity extends OpacActivity {
     	
         protected void onPostExecute(DetailledItem result) {
         	item = result;
-        	Log.i("result", item.toString());
         	
+        	try {
+        		Log.i("result", item.toString());
+        	}catch(Exception e){
+        		app.web_error(e, "ioerror");
+        	}
         	ImageView iv = (ImageView) findViewById(R.id.ivCover);
         	
         	if(item.getCoverBitmap() != null){
