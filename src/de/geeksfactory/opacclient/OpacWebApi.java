@@ -101,9 +101,16 @@ public class OpacWebApi {
 		initialised = true;
 		HttpGet httpget = new HttpGet(opac_url+"/woload.asp?lkz=1&nextpage=");
 		HttpResponse response = ahc.execute(httpget);
+		response.getEntity().consumeContent();
+
+		HttpPost httppost = new HttpPost(opac_url+"/index.asp");
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+		nameValuePairs.add(new BasicNameValuePair("link_profis.x", "0"));
+        nameValuePairs.add(new BasicNameValuePair("link_profis.y", "1"));
+        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+		response = ahc.execute(httppost);
 		String html = convertStreamToString(response.getEntity().getContent());
 		extract_information(html);
-		response.getEntity().consumeContent();
 	}
 	
 	public List<SearchResult> search (

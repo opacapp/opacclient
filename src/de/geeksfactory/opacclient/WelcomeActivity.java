@@ -1,5 +1,11 @@
 package de.geeksfactory.opacclient;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.json.JSONException;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,28 +19,44 @@ import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class WelcomeActivity extends OpacActivity {
-	ProgressDialog dialog;
+	protected ProgressDialog dialog;
+	protected String[] bibnamesA;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome);
-        
+
         ListView lv = (ListView) findViewById(R.id.lvBibs);
-        lv.setAdapter(new ArrayAdapter<String>(this,
-        		android.R.layout.simple_list_item_1, OpacClient.BIBNAMES));
+    	try {
+	        List<String> bibnames = new ArrayList<String>();
+	        for(int i = 0; i < app.bibs.names().length(); i++){
+				bibnames.add(app.bibs.names().getString(i));
+	        }
+	        bibnamesA = new String[bibnames.size()];
+	        bibnames.toArray(bibnamesA);
+	        Arrays.sort(bibnamesA);
+	        lv.setAdapter(new ArrayAdapter<String>(this,
+	        		android.R.layout.simple_list_item_1, bibnamesA));
+		} catch (JSONException e) {
+			app.web_error(e, "jsonerror");
+		}
         lv.setTextFilterEnabled(true);
         
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 		        int position, long id) {
+
+		        try {
+			        app.ohc.opac_url = app.bibs.getString(bibnamesA[position]);
+				} catch (JSONException e) {
+					app.web_error(e, "jsonerror");
+				}
 		  	  	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(WelcomeActivity.this);
 		  	  	Editor e = sp.edit();
 		  	  	e.remove("opac_mg");
 		  	  	e.remove("opac_zst");
-		        e.putString("opac_url", OpacClient.BIBURLS[position]);
+				e.putString("opac_url", app.ohc.opac_url);
 		        e.commit();
-		        
-		        app.ohc.opac_url = OpacClient.BIBURLS[position];
 		        
 				dialog = ProgressDialog.show(WelcomeActivity.this, "", 
 						getString(R.string.loading), true);
