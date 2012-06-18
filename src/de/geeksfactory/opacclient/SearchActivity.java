@@ -2,17 +2,35 @@ package de.geeksfactory.opacclient;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Camera;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 
 public class SearchActivity extends OpacActivity {
-	
+
+    
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent idata) {
+    	super.onActivityResult(requestCode, resultCode, idata);
+    	
+    	// Barcode
+    	IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, idata);
+    	if (resultCode != RESULT_CANCELED && scanResult != null) {
+    		Log.i("scanned", scanResult.getContents());
+    		if(scanResult.getContents() == null) return;
+    		if(scanResult.getContents().length() < 3) return;
+    		((EditText)SearchActivity.this.findViewById(R.id.etISBN)).setText(scanResult.getContents());
+    	}
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +65,14 @@ public class SearchActivity extends OpacActivity {
         mg_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         cbMg.setAdapter(mg_adapter);
         
+        ImageView ivBarcode = (ImageView) findViewById(R.id.ivBarcode);
+        ivBarcode.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				IntentIntegrator integrator = new IntentIntegrator(SearchActivity.this);
+				integrator.initiateScan();				
+			}
+        });
         // Go
         
         Button btGo = (Button) findViewById(R.id.btStartsearch);

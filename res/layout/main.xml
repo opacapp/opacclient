@@ -77,12 +77,25 @@
                 android:layout_height="wrap_content"
                 android:text="@string/ISBN" />
 
-            <EditText
-                android:id="@+id/etISBN"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number" />
+                android:layout_height="wrap_content" >
+
+                <EditText
+                    android:id="@+id/etISBN"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="number" />
+
+                <ImageView
+                    android:id="@+id/ivBarcode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_barcode" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tvJahr"
