@@ -7,7 +7,8 @@ import android.preference.PreferenceActivity;
 
 
 public class MainPreferenceActivity extends PreferenceActivity {
-    public void onCreate(Bundle savedInstanceState) {
+    @SuppressWarnings("deprecation")
+	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     	addPreferencesFromResource(R.xml.settings);
     	

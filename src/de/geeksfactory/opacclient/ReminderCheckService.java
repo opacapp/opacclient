@@ -16,7 +16,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 public class ReminderCheckService extends Service {
 
@@ -91,7 +90,7 @@ public class ReminderCheckService extends Service {
 		    
 		    long when = System.currentTimeMillis();
 
-		    Notification notification = new Notification(icon, getString(R.string.notif_ticker, abs), when);
+			Notification notification = new Notification(icon, getString(R.string.notif_ticker, abs), when);
 		    
 		    Context context = getApplicationContext();
 		    CharSequence contentTitle = getString(R.string.notif_title);
