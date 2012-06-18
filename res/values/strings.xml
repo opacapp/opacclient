@@ -13,8 +13,10 @@
     <string name="opac_password_hint">Unbekannt? Vielleicht dein Geburtsdatum (TT.MM.JJJJ)</string>
     <string name="opac_mannheim">http://katalog.mannheim.de/wopac</string>
     <string name="search">Katalogsuche</string>
-    <string name="titel">Titel (Stichwort)</string>
+    <string name="titel">Titel</string>
+    <string name="titel_hint">Stichwort</string>
     <string name="verfasser">Verfasser</string>
+    <string name="verfasser_hint">Nachname, Vorname</string>
     <string name="verlag">Verlag</string>
     <string name="zweigstelle">Zweigstelle</string>
     <string name="interessenkreis">Interessenkreis</string>
