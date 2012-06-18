@@ -91,32 +91,4 @@ public abstract class OpacActivity extends Activity {
     	AlertDialog alert = builder.create();
     	alert.show();
 	}
-	
-	protected void dialog_fatal_error(int id) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    	builder.setMessage(id)
-    	       .setCancelable(false)
-    	       .setNegativeButton(R.string.dismiss, new DialogInterface.OnClickListener() {
-    	           public void onClick(DialogInterface dialog, int id) {
-    	                dialog.cancel();
-    	                finish();
-    	           }
-    	       });
-    	AlertDialog alert = builder.create();
-    	alert.show();
-	}
-	
-	protected void dialog_fatal_error(String s) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    	builder.setMessage(s)
-    	       .setCancelable(false)
-    	       .setNegativeButton(R.string.dismiss, new DialogInterface.OnClickListener() {
-    	           public void onClick(DialogInterface dialog, int id) {
-    	                dialog.cancel();
-    	                finish();
-    	           }
-    	       });
-    	AlertDialog alert = builder.create();
-    	alert.show();
-	}
 }
