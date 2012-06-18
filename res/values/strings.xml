@@ -6,7 +6,9 @@
     <string name="web_opac">Web-Opac</string>
     <string name="opac_url">Web-OPAC-Adresse</string>
     <string name="opac_url_example">z.B. http://katalog.mannheim.de/wopac</string>
+    <string name="opac_url_desc">Die Adresse des BOND Web-Opac 2.6/2.7 ohne ein eventuelles Endstück wie "/index.asp…", z.B. http://katalog.mannheim.de/wopac</string>
     <string name="opac_usernr">Ausweisnummer</string>
+    <string name="opac_usernr_desc">Gib eine Ausweisnummer an, um auf dein Konto zugreifen zu können</string>
     <string name="opac_password">Passwort</string>
     <string name="opac_password_hint">Unbekannt? Vielleicht dein Geburtsdatum (TT.MM.JJJJ)</string>
     <string name="opac_mannheim">http://katalog.mannheim.de/wopac</string>
@@ -49,6 +51,7 @@
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
     <string name="doing_cancel">Lösche Vorbestellung</string>
+    <string name="doing_prolong">Verlängere</string>
     <string name="opac_error">Der Web-Opac meldet:</string>
     <string name="io_error">Fehler bei der Kommunikation mit dem Web-Opac. Entweder dein Internet funktioniert nicht, oder es gibt ein Problem mit dem Opac oder der App. Tut uns leid.</string>
     <string name="welcome">Herzlich Willkommen</string>
@@ -67,16 +70,23 @@
     <string name="no_connection">Ohne Verbindung zum Internet ist das hier alles sinnlos. (Oder du hast eine falsche Web-Opac-Adresse konfiguriert.)</string>
     <string name="ioerror">Die Kommunikation mit dem Web-Opac ist fehlgeschlagen oder etwas anderes ist schiefgelaufen. Wenn du einen Bericht absendest (völlig anonym!), kümmeren wir uns darum.</string>
     <string name="notifications">Benachrichtigungen</string>
-    <string name="notification_service">Benachrichtigungs-Service</string>
-    <string name="notification_interval">Überprüfungs-Intervall</string>
-    <string-array name="intervals">
-    	<item>Täglich</item>
-    	<item>Alle 3 Tage</item>
-    	<item>Wöchentlich</item>
+    <string name="notification_service">Ablaufende Medien</string>
+    <string name="notification_service_desc">Benachrichtige, wenn ein Medium abgegeben werden muss</string>
+    <string name="notification_sound">Benachrichtigungs-Ton</string>
+    <string-array name="warning">
+    	<item>Am selben Tag</item>
+    	<item>3 Tage vorher</item>
+    	<item>1 Woche vorher</item>
     </string-array>
-    <string-array name="intervals_n">
-    	<item>86400</item>
-    	<item>367200</item>
-    	<item>856800</item>
+    <string-array name="warning_n">
+    	<item>86400000</item>
+    	<item>259200000</item>
+    	<item>604800000</item>
     </string-array>
+    <string name="notification_warning">Warnzeitraum</string>
+    <string name="notification_warning_desc">Wie lange vorher soll benachrichtigt werden?</string>
+    <string name="notif_ticker">%s Bücher müssen abgegeben oder verlängert werden!</string>
+    <string name="notif_title">Bücher laufen ab</string>
+    <string name="welcome_assistant">Willkommens-Assistent</string>
+    <string name="welcome_assistant_desc">Hilft dabei, eine OPAC-Adresse einer der App bekannten Bibliothek zu konfigurieren</string>
 </resources>

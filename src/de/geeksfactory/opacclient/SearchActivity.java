@@ -22,11 +22,11 @@ public class SearchActivity extends OpacActivity {
   	  	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         
   	  	if(sp.getString("opac_url", "").equals("")){
-            Intent intent = new Intent(SearchActivity.this, WelcomeActivity.class);
+            Intent intent = new Intent(this, WelcomeActivity.class);
             startActivity(intent);
             return;
   	  	}
-  	  	
+        
   	  	// Fill combo boxes
   	  	
         Spinner cbZst = (Spinner) findViewById(R.id.cbZweigstelle);
