@@ -18,7 +18,7 @@
 
             <TextView
                 android:id="@+id/tvTitel"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/titel" />
 
@@ -27,6 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:hint="@string/titel_hint"
                 android:inputType="text"
                 android:singleLine="true" />
 
@@ -41,7 +42,34 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:hint="@string/verfasser_hint"
                 android:inputType="text" />
+
+            <TextView
+                android:id="@+id/tvISBN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ISBN" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <EditText
+                    android:id="@+id/etISBN"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="number" />
+
+                <ImageView
+                    android:id="@+id/ivBarcode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_barcode" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tvSchlag"
@@ -68,32 +96,6 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:inputType="text" />
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/tvISBN"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/ISBN" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-                <EditText
-                    android:id="@+id/etISBN"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="number" />
-
-                <ImageView
-                    android:id="@+id/ivBarcode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/ic_barcode" />
 
             </LinearLayout>
 
