@@ -2,6 +2,7 @@ package de.geeksfactory.opacclient;
 
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -50,12 +51,31 @@ public class AccountActivity extends OpacActivity {
     	}
     }
     
-	protected void cancel(String a){
-		dialog = ProgressDialog.show(this, "", 
-				getString(R.string.doing_cancel), true);
-		dialog.show();
-        
-		new CancelTask().execute(app, a);
+	protected void cancel(final String a){
+
+    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    	builder.setMessage(R.string.cancel_confirm)
+    	       .setCancelable(true)
+    	       .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+    	           public void onClick(DialogInterface d, int id) {
+    	                d.cancel();
+    	           }
+    	       })
+		       .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface d, int id) {
+		                d.dismiss();
+		        		dialog = ProgressDialog.show(AccountActivity.this, "", 
+		        				getString(R.string.doing_cancel), true);
+		        		dialog.show();
+		        		new CancelTask().execute(app, a);
+		           }
+		       }).setOnCancelListener(new DialogInterface.OnCancelListener(){
+					public void onCancel(DialogInterface d) {
+    	                if(d != null) d.cancel();
+					}
+		       });
+    	AlertDialog alert = builder.create();
+    	alert.show();
 	}
 	
 	public void cancel_done(int result){
