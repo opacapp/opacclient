@@ -33,6 +33,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 	
 	public static int STATUS_SUCCESS = 0;
 	public static int STATUS_NOUSER = 1;
+	public static int STATUS_WRONGCREDENTIALS = 2;
 	
 	protected String[] items;
 	
@@ -144,15 +145,24 @@ public class SearchResultDetailsActivity extends OpacActivity {
         	
         	for(int i = 0; i < result.getDetails().size(); i++){
                 TableRow row = new TableRow(SearchResultDetailsActivity.this);
-
-                TextView t1 = new TextView(SearchResultDetailsActivity.this);
-                t1.setText(Html.fromHtml(result.getDetails().get(i)[0]));
-                t1.setPadding(0, 0, 10, 0);
-                row.addView(t1); 
                 
-                TextView t2 = new TextView(SearchResultDetailsActivity.this);
-                t2.setText(Html.fromHtml(result.getDetails().get(i)[1]));
-                row.addView(t2); 
+                if(result.getDetails().get(i)[0].equals("Annotation/ Beschreibung:")){
+	                TextView t2 = new TextView(SearchResultDetailsActivity.this);
+	                t2.setText(Html.fromHtml("<i>"+result.getDetails().get(i)[1]+"</i>"));
+	                TableRow.LayoutParams params = new TableRow.LayoutParams();
+	                params.span = 2;
+	                t2.setPadding(20, 0, 0, 0);
+	                row.addView(t2, params); 
+                }else{
+	                TextView t1 = new TextView(SearchResultDetailsActivity.this);
+	                t1.setText(Html.fromHtml(result.getDetails().get(i)[0]));
+	                t1.setPadding(0, 0, 10, 0);
+	                row.addView(t1); 
+	                
+	                TextView t2 = new TextView(SearchResultDetailsActivity.this);
+	                t2.setText(Html.fromHtml(result.getDetails().get(i)[1].replace("\n", "<br />")));
+	                row.addView(t2); 
+                }
                 td.addView(row,new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         	}
         	
@@ -202,7 +212,9 @@ public class SearchResultDetailsActivity extends OpacActivity {
                 	if(sp.getString("opac_usernr", "").equals("") || sp.getString("opac_password", "").equals("")){
                 		return STATUS_NOUSER;
                 	}else{
-    					app.ohc.reservation(zst, sp.getString("opac_usernr", ""), sp.getString("opac_password", ""));
+    					Boolean res = app.ohc.reservation(zst, sp.getString("opac_usernr", ""), sp.getString("opac_password", ""));
+    					if(res == null)
+    						return STATUS_WRONGCREDENTIALS;
                 	}
 				} catch (Exception e) {
 	    			publishProgress(e, "ioerror");
@@ -211,6 +223,11 @@ public class SearchResultDetailsActivity extends OpacActivity {
         	}
         	
             protected void onPostExecute(Integer result) {
+        		if(result == STATUS_WRONGCREDENTIALS){
+        			dialog.dismiss();
+        			dialog_wrong_credentials(app.ohc.getLast_error(), false);
+        			return;
+        		}
             	reservation_done(result);
             }
     }

@@ -227,14 +227,21 @@ public class OpacWebApi {
 	        nameValuePairs.add(new BasicNameValuePair("type", "VT2"));
 	        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 	        response = ahc.execute(httppost);
+
+			String html = convertStreamToString(response.getEntity().getContent());
+			Document doc = Jsoup.parse(html);
+	    	response.getEntity().consumeContent();
+			
+	        if(doc.getElementsByClass("kontomeldung").size() == 1){
+				last_error = doc.getElementsByClass("kontomeldung").get(0).text();
+				return null;
+	        }
 	    }else if(response.getStatusLine().getStatusCode() == 302){
 			response.getEntity().consumeContent();
 	    	// Bereits eingeloggt
 			httpget = new HttpGet(opac_url+"/index.asp?target=zwstausw");
 		    response = ahc.execute(httpget);
 	    }
-	    
-	    response.getEntity().consumeContent();
 
 	    httppost = new HttpPost(opac_url+"/index.asp"); 
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);

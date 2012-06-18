@@ -45,6 +45,9 @@
     <string name="entl">Entliehen</string>
     <string name="extendall">Alle verlängern</string>
     <string name="reservations">Vorbestellungen</string>
+    <string name="cancel_confirm">Vorbestellung wirklich entfernen?</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
     <string name="doing_cancel">Lösche Vorbestellung</string>
     <string name="opac_error">Der Web-Opac meldet:</string>
     <string name="io_error">Fehler bei der Kommunikation mit dem Web-Opac. Entweder dein Internet funktioniert nicht, oder es gibt ein Problem mit dem Opac oder der App. Tut uns leid.</string>
@@ -76,5 +79,4 @@
     	<item>367200</item>
     	<item>856800</item>
     </string-array>
-    	<string name="notification_sound">Ton abspielen</string>
 </resources>
