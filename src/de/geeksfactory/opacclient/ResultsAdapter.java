@@ -3,7 +3,6 @@ package de.geeksfactory.opacclient;
 import java.util.List;
 
 import android.content.Context;
-import android.content.res.Resources.NotFoundException;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
