@@ -47,7 +47,8 @@ public class OpacClient extends Application {
 		"http://www.hait.tu-dresden.de/webopac"					// 16
 		};
 	
-	
+	public static int NOTIF_ID = 1;
+	public static int BROADCAST_REMINDER = 2;
 	
 	@Override
 	public void onCreate() {

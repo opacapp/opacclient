@@ -5,14 +5,17 @@ import java.util.List;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnCancelListener;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableLayout.LayoutParams;
 import android.widget.TableRow;
@@ -24,6 +27,7 @@ public class AccountActivity extends OpacActivity {
 	
 	public static int STATUS_SUCCESS = 0;
 	public static int STATUS_NOUSER = 1;
+	public static int STATUS_FAILED = 2;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,7 @@ public class AccountActivity extends OpacActivity {
     public void onResume() {
     	super.onResume();
         setContentView(R.layout.account);
+        
         
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(app);
     	if(sp.getString("opac_usernr", "").equals("") || sp.getString("opac_password", "").equals("")){
@@ -89,6 +94,36 @@ public class AccountActivity extends OpacActivity {
 	        new LoadTask().execute(app, getIntent().getIntExtra("item", 0));
 		}
 	}
+    
+	protected void prolong(final String a){
+		dialog = ProgressDialog.show(AccountActivity.this, "", 
+				getString(R.string.doing_prolong), true);
+		dialog.show();
+		new ProlongTask().execute(app, a);
+	}
+	
+	public void prolong_done(int result){
+		dialog.dismiss();
+		
+		if(result == STATUS_SUCCESS){
+			dialog = ProgressDialog.show(this, "", 
+				getString(R.string.loading_account), true);
+			dialog.show();
+			
+	        new LoadTask().execute(app, getIntent().getIntExtra("item", 0));
+		}else if(result == STATUS_FAILED){
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	    	builder.setMessage("Der Web-Opac meldet: "+app.ohc.getLast_error())
+	    	       .setCancelable(false)
+	    	       .setNegativeButton(R.string.dismiss, new DialogInterface.OnClickListener() {
+	    	           public void onClick(DialogInterface dialog, int id) {
+	    	                dialog.cancel();
+	    	           }
+	    	       });
+	    	AlertDialog alert = builder.create();
+	    	alert.show();
+		}
+	}
 	
     public class LoadTask extends OpacTask<List<List<String[]>>> {
 
@@ -132,6 +167,21 @@ public class AccountActivity extends OpacActivity {
             TextView t2 = new TextView(AccountActivity.this);
             t2.setText(Html.fromHtml(result.get(0).get(i)[3]+" ("+result.get(0).get(i)[4]+")<br />"+result.get(0).get(i)[6]));
             row.addView(t2); 
+            
+	    	if(result.get(0).get(i)[7] != null){
+	            final int j = i;
+	            ImageView b1 = new ImageView(AccountActivity.this);
+	            b1.setImageResource(android.R.drawable.ic_input_add);
+	            
+	            b1.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View arg0) {
+						AccountActivity.this.prolong(result.get(0).get(j)[7]);
+					}
+	            });
+	            row.addView(b1);
+	    	}
+	    	
             td.addView(row,new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
     	}
         
@@ -151,8 +201,9 @@ public class AccountActivity extends OpacActivity {
             
 	    	if(result.get(1).get(i)[4] != null){
 	            final int j = i;
-	            Button b1 = new Button(AccountActivity.this);
-	            b1.setText("X");
+	            ImageView b1 = new ImageView(AccountActivity.this);
+	            b1.setImageResource(android.R.drawable.ic_delete);
+	            
 	            b1.setOnClickListener(new OnClickListener(){
 					@Override
 					public void onClick(View arg0) {
@@ -184,6 +235,30 @@ public class AccountActivity extends OpacActivity {
     	
         protected void onPostExecute(Integer result) {
         	cancel_done(result);
+        }
+	}
+    
+	public class ProlongTask extends OpacTask<Integer> {
+		
+    	@Override
+    	protected Integer doInBackground(Object... arg0) {
+            app = (OpacClient) arg0[0];
+            String a = (String) arg0[1];
+            try {
+				boolean res = app.ohc.prolong(a);
+				if(res){
+		    		return STATUS_SUCCESS;
+				}else{
+					return STATUS_FAILED;
+				}
+			} catch (Exception e) {
+    			publishProgress(e, "ioerror");
+			}
+    		return STATUS_SUCCESS;
+    	}
+    	
+        protected void onPostExecute(Integer result) {
+        	prolong_done(result);
         }
 	}
 }

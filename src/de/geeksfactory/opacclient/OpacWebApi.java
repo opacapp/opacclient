@@ -263,6 +263,28 @@ public class OpacWebApi {
 
 		return true;
 	}
+	public boolean prolong (String a) throws IOException  {	
+		if(!initialised) init();	
+		HttpGet httpget = new HttpGet(opac_url+"/"+a);
+        HttpResponse response = ahc.execute(httpget);
+		String html = convertStreamToString(response.getEntity().getContent());
+		Document doc = Jsoup.parse(html);
+    	response.getEntity().consumeContent();
+		
+        if(doc.getElementsByClass("kontomeldung").size() == 1){
+			last_error = doc.getElementsByClass("kontomeldung").get(0).text();
+			return false;
+        }
+        /*
+	    HttpPost httppost = new HttpPost(opac_url+"/index.asp"); 
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+        nameValuePairs.add(new BasicNameValuePair("target", "delvorbest"));
+        nameValuePairs.add(new BasicNameValuePair("vorbdelbest", "Bestätigung"));
+        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+        response = ahc.execute(httppost);
+		response.getEntity().consumeContent();*/
+		return true;
+	}
 	public boolean cancel (String a) throws IOException  {	
 		if(!initialised) init();	
 		HttpGet httpget = new HttpGet(opac_url+"/"+a);
@@ -325,7 +347,7 @@ public class OpacWebApi {
 		for(int i = 0; i < exemplartrs.size(); i++){
 			Element tr = exemplartrs.get(i);
 			String[] e = { tr.child(0).text(), tr.child(1).text(), tr.child(2).text(), 
-					tr.child(3).text(), tr.child(4).text(), tr.child(5).text(), tr.child(6).text(), tr.child(7).html() };
+					tr.child(3).text(), tr.child(4).text(), tr.child(5).text(), tr.child(6).text(), tr.child(7).child(0).attr("href") };
 			medien.add(e);
 		}
 		
