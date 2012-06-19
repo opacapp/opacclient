@@ -37,12 +37,17 @@ public class SearchActivity extends OpacActivity {
         
   	  	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         
-  	  	if(sp.getString("opac_url", "").equals("")){
+  	  	if(sp.getString("opac_url", "").equals("") || sp.getString("opac_bib", "").equals("")){
             Intent intent = new Intent(this, WelcomeActivity.class);
             startActivity(intent);
             return;
   	  	}
         
+  	  	if(!((OpacClient) getApplication()).isOnline()){
+  	  		app.web_error(null, "offline");
+  	  		return;
+  	  	}
+  	  	
   	  	// Fill combo boxes
   	  	
         Spinner cbZst = (Spinner) findViewById(R.id.cbZweigstelle);

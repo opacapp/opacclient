@@ -16,6 +16,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -34,6 +35,7 @@ public class OpacWebApi {
 	public String results;
 	private boolean initialised = false;
 	private String last_error;
+	public OpacClient app;
 	
 	public String getResults() {
 		return results;
@@ -90,11 +92,12 @@ public class OpacWebApi {
 		spe.commit();
 	}
 	
-	public OpacWebApi(String opac_url, Context context){
+	public OpacWebApi(String opac_url, Context context, OpacClient app){
 		//ahc = AndroidHttpClient.newInstance("WebOpac Client / Android");
 		ahc = new DefaultHttpClient();
 		this.opac_url = opac_url;
 		this.context = context;
+		this.app = app;
 	}
 		
 	public void init() throws ClientProtocolException, IOException {
@@ -168,7 +171,8 @@ public class OpacWebApi {
 		for(int i = 0; i < table.size(); i++){
 			Element tr = table.get(i);
 			SearchResult sr = new SearchResult();
-			sr.setType(tr.select("td a img").get(0).attr("src").replace("/read/PICS/", "type_").replace(".jpg", ".png").replace(".gif", ".png").toLowerCase());
+			String[] fparts = tr.select("td a img").get(0).attr("src").split("/");
+			sr.setType("type_"+fparts[fparts.length-1].replace(".jpg", ".png").replace(".gif", ".png").toLowerCase());
 			sr.setInnerhtml(tr.child(1).child(0).html());
 			sr.setNr(i);
 			results.add(sr);
@@ -202,13 +206,25 @@ public class OpacWebApi {
 				result.addDetail(detail);
 			}
 		}
-		
-		Elements exemplartrs = doc.select(".exemplartab .tabExemplar, .exemplartab .tabExemplar_");
-		for(int i = 0; i < exemplartrs.size(); i++){
-			Element tr = exemplartrs.get(i);
-			String[] e = { tr.child(0).text(), tr.child(1).text(), tr.child(2).text(), 
-					tr.child(3).text(), tr.child(4).text(), tr.child(5).text(), tr.child(6).text() };
-			result.addCopy(e);
+		try {
+			JSONArray copymap = app.get_bib().getJSONArray(0);
+			Elements exemplartrs = doc.select(".exemplartab .tabExemplar, .exemplartab .tabExemplar_");
+			for(int i = 0; i < exemplartrs.size(); i++){
+				Element tr = exemplartrs.get(i);
+				
+				String[] e = new String[7];
+				
+				for(int j = 0; j < 7; j++){
+					if(copymap.getInt(j+1) > -1){
+						e[j] = tr.child(copymap.getInt(j+1)).text();
+					}else{
+						e[j] = "?";
+					}
+				}
+				result.addCopy(e);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
 		}
 		
 		if(doc.select(".detail_vorbest a").size() == 1){

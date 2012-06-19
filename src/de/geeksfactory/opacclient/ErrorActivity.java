@@ -51,13 +51,17 @@ public class ErrorActivity extends Activity {
         
         TextView tvDetails = (TextView) findViewById(R.id.tvErrorDetails);
         Exception e = (Exception) getIntent().getExtras().get("e");
-        st = Log.getStackTraceString(e);
-        tvDetails.setText(st);
+        if(e != null){
+        	st = Log.getStackTraceString(e);
+            tvDetails.setText(st);
+        }else{
+        	st = "";
+        }
 
         Button btSend = (Button) findViewById(R.id.btSend);
         
         TextView tvMsg = (TextView) findViewById(R.id.tvError);
-        if(st.startsWith("java.net.UnknownHostException")){
+        if(st.startsWith("java.net.UnknownHostException") || getIntent().getExtras().getString("t").equals("offline")){
         	tvMsg.setText(R.string.no_connection);
         }else{
         	tvMsg.setText(R.string.ioerror);

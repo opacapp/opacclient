@@ -11,7 +11,7 @@ public class MainPreferenceActivity extends PreferenceActivity {
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     	addPreferencesFromResource(R.xml.settings);
-    	
+
     	Preference assistant = (Preference) findPreference("welcome_assistant");
     	assistant.setOnPreferenceClickListener(new OnPreferenceClickListener(){
 			@Override

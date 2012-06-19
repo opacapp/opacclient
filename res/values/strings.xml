@@ -2,10 +2,11 @@
 <resources>
 
     <string name="hello">Hello World!</string>
-    <string name="app_name">OpacClient</string>
+    <string name="app_name">Web Opac</string>
+    <string name="launcher_name">Stadtbibliothek</string>
     <string name="web_opac">Web-Opac</string>
     <string name="opac_url">Web-OPAC-Adresse</string>
-    <string name="opac_url_example">z.B. http://katalog.mannheim.de/wopac</string>
+    <string name="opac_url_example">Nur für erfahrenere Benutzer empfohlen</string>
     <string name="opac_url_desc">Die Adresse des BOND Web-Opac 2.6/2.7 ohne ein eventuelles Endstück wie "/index.asp…", z.B. http://katalog.mannheim.de/wopac</string>
     <string name="opac_usernr">Ausweisnummer</string>
     <string name="opac_usernr_desc">Gib eine Ausweisnummer an, um auf dein Konto zugreifen zu können</string>
@@ -89,6 +90,6 @@
     <string name="notification_warning_desc">Wie lange vorher soll benachrichtigt werden?</string>
     <string name="notif_ticker">%s Bücher müssen abgegeben oder verlängert werden!</string>
     <string name="notif_title">Bücher laufen ab</string>
-    <string name="welcome_assistant">Willkommens-Assistent</string>
+    <string name="welcome_assistant">Bibliotheks-Auswahl</string>
     <string name="welcome_assistant_desc">Hilft dabei, eine OPAC-Adresse einer der App bekannten Bibliothek zu konfigurieren</string>
 </resources>

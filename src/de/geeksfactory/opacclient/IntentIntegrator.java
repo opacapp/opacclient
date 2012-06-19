@@ -101,8 +101,8 @@ public class IntentIntegrator {
   public static final String DEFAULT_TITLE = "Barcode Scanner installieren?";
   public static final String DEFAULT_MESSAGE =
       "Diese Funktion erfordert einen Barcode-Scanner. Soll er installiert werden?";
-  public static final String DEFAULT_YES = "Yes";
-  public static final String DEFAULT_NO = "No";
+  public static final String DEFAULT_YES = "Ja";
+  public static final String DEFAULT_NO = "Nein";
 
   private static final String BS_PACKAGE = "com.google.zxing.client.android";
 

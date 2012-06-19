@@ -47,7 +47,7 @@ public class WelcomeActivity extends OpacActivity {
 		        int position, long id) {
 
 		        try {
-			        app.ohc.opac_url = app.bibs.getString(bibnamesA[position]);
+			        app.ohc.opac_url = app.bibs.getJSONArray(bibnamesA[position]).getString(0);
 				} catch (JSONException e) {
 					app.web_error(e, "jsonerror");
 				}
@@ -56,6 +56,7 @@ public class WelcomeActivity extends OpacActivity {
 		  	  	e.remove("opac_mg");
 		  	  	e.remove("opac_zst");
 				e.putString("opac_url", app.ohc.opac_url);
+				e.putString("opac_bib", bibnamesA[position]);
 		        e.commit();
 		        
 				dialog = ProgressDialog.show(WelcomeActivity.this, "", 

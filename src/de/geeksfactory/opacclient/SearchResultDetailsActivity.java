@@ -172,16 +172,25 @@ public class SearchResultDetailsActivity extends OpacActivity {
                 TableRow row = new TableRow(SearchResultDetailsActivity.this);
 
                 TextView t1 = new TextView(SearchResultDetailsActivity.this);
-                t1.setText(Html.fromHtml(result.getCopies().get(i)[0]+"<br />"+result.getCopies().get(i)[1]));
+                String t1t = "";
+                if(!result.getCopies().get(i)[0].equals("?")){
+                	t1t = t1t + result.getCopies().get(i)[0]+"<br />";
+                }
+                if(!result.getCopies().get(i)[0].equals("?")){
+                	t1t = t1t + result.getCopies().get(i)[1];
+                }
+                t1.setText(Html.fromHtml(t1t));
                 row.addView(t1); 
                 
                 TextView t2 = new TextView(SearchResultDetailsActivity.this);
                 String status = result.getCopies().get(i)[4]+"<br />";
-                if(!result.getCopies().get(i)[5].equals("")){
+                if(!result.getCopies().get(i)[5].equals("") && !result.getCopies().get(i)[5].equals("?")){
                 	status = status + getString(R.string.ret) + ": "+result.getCopies().get(i)[5]+"<br />";
                 }
                 t2.setPadding(10, 0, 0, 0);
-            	status = status + getString(R.string.res) + ": "+result.getCopies().get(i)[6];
+                if(!result.getCopies().get(i)[6].equals("") && !result.getCopies().get(i)[6].equals("?")){
+                	status = status + getString(R.string.res) + ": "+result.getCopies().get(i)[6];
+                }
                 t2.setText(Html.fromHtml(status));
                 row.addView(t2); 
                 

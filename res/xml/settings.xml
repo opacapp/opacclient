@@ -2,11 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <PreferenceCategory android:title="@string/web_opac" >
-        <EditTextPreference
-            android:defaultValue="@string/opac_mannheim"
-            android:key="opac_url"
-            android:summary="@string/opac_url_example"
-            android:title="@string/opac_url" android:dialogMessage="@string/opac_url_desc"/>
+        <Preference android:key="welcome_assistant" android:title="@string/welcome_assistant" android:summary="@string/welcome_assistant_desc" />
         <EditTextPreference
             android:key="opac_usernr"
             android:numeric="integer"
@@ -15,7 +11,7 @@
             android:key="opac_password"
             android:password="true"
             android:summary="@string/opac_password_hint"
-            android:title="@string/opac_password" android:dependency="opac_usernr"/><Preference android:key="welcome_assistant" android:title="@string/welcome_assistant" android:summary="@string/welcome_assistant_desc"/>
+            android:title="@string/opac_password" android:dependency="opac_usernr"/>
         
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/notifications" >

@@ -27,7 +27,16 @@ public class ReminderCheckService extends Service {
   			return START_STICKY;
   	  	}
         
-		new CheckTask().execute();
+  	  	if(((OpacClient) getApplication()).isOnline()){
+  			new CheckTask().execute();
+  	  	}else{
+			Intent i = new Intent(ReminderCheckService.this, ReminderAlarmReceiver.class);
+			PendingIntent sender = PendingIntent.getBroadcast(ReminderCheckService.this, OpacClient.BROADCAST_REMINDER, i, PendingIntent.FLAG_UPDATE_CURRENT);
+	        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+	        am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+(1000*3600*1), sender);
+	        stopSelf();
+  	  	}
+  	  	
 		return START_STICKY;
 	}
 
@@ -41,7 +50,7 @@ public class ReminderCheckService extends Service {
 		@Override
 		protected Integer[] doInBackground(Object... params) {
 	  	  	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ReminderCheckService.this);
-			OpacWebApi ohc = new OpacWebApi(sp.getString("opac_url", getResources().getString(R.string.opac_mannheim)), ReminderCheckService.this);
+			OpacWebApi ohc = new OpacWebApi(sp.getString("opac_url", getResources().getString(R.string.opac_mannheim)), ReminderCheckService.this, (OpacClient) getApplication());
 			SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 			long now = new Date().getTime();
 			long warning = Long.decode(sp.getString("notification_warning", "367200000"));

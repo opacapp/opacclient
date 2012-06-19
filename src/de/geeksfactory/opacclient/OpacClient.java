@@ -4,12 +4,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 
 public class OpacClient extends Application {
@@ -20,11 +24,24 @@ public class OpacClient extends Application {
 	public static int NOTIF_ID = 1;
 	public static int BROADCAST_REMINDER = 2;
 	
-	@Override
-	public void onCreate() {
-		super.onCreate();
+	public boolean isOnline() {
+	    ConnectivityManager connMgr = (ConnectivityManager) 
+	            getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+	    return (networkInfo != null && networkInfo.isConnected());
+	}  
+	
+	protected JSONArray get_bib(){
   	  	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-		
+		try {
+			return bibs.getJSONArray(sp.getString("opac_bib", "Mannheim"));
+		} catch (JSONException e) {
+			web_error(e, "jsonerror");
+			return null;
+		}
+	}
+	
+	protected void load_bibs(){
 		try {
 			StringBuilder builder = new StringBuilder();
 			InputStream fis = getAssets().open("bibs.json");
@@ -44,8 +61,16 @@ public class OpacClient extends Application {
 		} catch (JSONException e) {
 			web_error(e, "jsonerror");
 		}
+	}
+	
+	@Override
+	public void onCreate() {
+		super.onCreate();
+  	  	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		load_bibs();
   	  	
-		ohc = new OpacWebApi(sp.getString("opac_url", getResources().getString(R.string.opac_mannheim)), this);
+		ohc = new OpacWebApi(sp.getString("opac_url", getResources().getString(R.string.opac_mannheim)), this, this);
 	}
 	
 	public void web_error(Exception e){
