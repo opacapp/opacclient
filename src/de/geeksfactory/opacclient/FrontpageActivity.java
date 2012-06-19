@@ -1,0 +1,63 @@
+package de.geeksfactory.opacclient;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+public class FrontpageActivity extends OpacActivity {
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+        setContentView(R.layout.frontpage);
+  	  	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        
+  	  	if(sp.getString("opac_url", "").equals("") || sp.getString("opac_bib", "").equals("")){
+            Intent intent = new Intent(this, WelcomeActivity.class);
+            startActivity(intent);
+            return;
+  	  	}
+        
+  	  	if(!((OpacClient) getApplication()).isOnline()){
+  	  		app.web_error(null, "offline");
+  	  		return;
+  	  	}
+  	  	
+  	  	TextView tvBn = (TextView) findViewById(R.id.tvBibname);
+  	  	tvBn.setText(sp.getString("opac_bib", "Mannheim"));
+
+  	  	ImageView ivSearch = (ImageView) findViewById(R.id.ivGoSearch);
+  	  	ImageView ivScan = (ImageView) findViewById(R.id.ivGoScan);
+  	  	ImageView ivAccount = (ImageView) findViewById(R.id.ivGoAccount);
+
+  	  	ivSearch.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+	            Intent intent = new Intent(FrontpageActivity.this, SearchActivity.class);
+	            startActivity(intent);
+			}
+        });
+  	  	ivAccount.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+	            Intent intent = new Intent(FrontpageActivity.this, AccountActivity.class);
+	            startActivity(intent);
+			}
+        });
+  	  	ivScan.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+	            Intent intent = new Intent(FrontpageActivity.this, SearchActivity.class);
+	            intent.putExtra("barcode", true);
+	            startActivity(intent);
+			}
+        });
+	}
+
+}

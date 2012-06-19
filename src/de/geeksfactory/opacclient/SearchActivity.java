@@ -33,19 +33,11 @@ public class SearchActivity extends OpacActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        setTitle(R.string.search);
-        
   	  	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        
-  	  	if(sp.getString("opac_url", "").equals("") || sp.getString("opac_bib", "").equals("")){
-            Intent intent = new Intent(this, WelcomeActivity.class);
-            startActivity(intent);
-            return;
-  	  	}
-        
-  	  	if(!((OpacClient) getApplication()).isOnline()){
-  	  		app.web_error(null, "offline");
-  	  		return;
+  	  	
+  	  	if(getIntent().getBooleanExtra("barcode", false)){
+			IntentIntegrator integrator = new IntentIntegrator(SearchActivity.this);
+			integrator.initiateScan();
   	  	}
   	  	
   	  	// Fill combo boxes

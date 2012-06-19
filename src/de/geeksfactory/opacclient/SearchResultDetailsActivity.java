@@ -176,7 +176,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
                 if(!result.getCopies().get(i)[0].equals("?")){
                 	t1t = t1t + result.getCopies().get(i)[0]+"<br />";
                 }
-                if(!result.getCopies().get(i)[0].equals("?")){
+                if(!result.getCopies().get(i)[1].equals("?")){
                 	t1t = t1t + result.getCopies().get(i)[1];
                 }
                 t1.setText(Html.fromHtml(t1t));
@@ -213,31 +213,41 @@ public class SearchResultDetailsActivity extends OpacActivity {
         }
     }
 	public class ResTask extends OpacTask<Integer> {			
-        	protected Integer doInBackground(Object... arg0) {
-                app = (OpacClient) arg0[0];
-                String zst = (String) arg0[1];
-                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(app);
-                try {
-                	if(sp.getString("opac_usernr", "").equals("") || sp.getString("opac_password", "").equals("")){
-                		return STATUS_NOUSER;
-                	}else{
-    					Boolean res = app.ohc.reservation(zst, sp.getString("opac_usernr", ""), sp.getString("opac_password", ""));
-    					if(res == null)
-    						return STATUS_WRONGCREDENTIALS;
-                	}
-				} catch (Exception e) {
-	    			publishProgress(e, "ioerror");
-				}
-        		return STATUS_SUCCESS;
-        	}
-        	
-            protected void onPostExecute(Integer result) {
-        		if(result == STATUS_WRONGCREDENTIALS){
-        			dialog.dismiss();
-        			dialog_wrong_credentials(app.ohc.getLast_error(), false);
-        			return;
-        		}
-            	reservation_done(result);
-            }
+    	protected Integer doInBackground(Object... arg0) {
+            app = (OpacClient) arg0[0];
+            String zst = (String) arg0[1];
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(app);
+            try {
+            	if(sp.getString("opac_usernr", "").equals("") || sp.getString("opac_password", "").equals("")){
+            		return STATUS_NOUSER;
+            	}else{
+					Boolean res = app.ohc.reservation(zst, sp.getString("opac_usernr", ""), sp.getString("opac_password", ""));
+					if(res == null)
+						return STATUS_WRONGCREDENTIALS;
+            	}
+			} catch (Exception e) {
+    			publishProgress(e, "ioerror");
+			}
+    		return STATUS_SUCCESS;
+    	}
+    	
+        protected void onPostExecute(Integer result) {
+    		if(result == STATUS_WRONGCREDENTIALS){
+    			dialog.dismiss();
+    			dialog_wrong_credentials(app.ohc.getLast_error(), false);
+    			return;
+    		}
+        	reservation_done(result);
+        }
     }
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if(dialog != null){
+			if(dialog.isShowing()){
+				dialog.cancel();
+			}
+		}
+	}
 }

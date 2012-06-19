@@ -50,13 +50,8 @@ public class ErrorActivity extends Activity {
         });
         
         TextView tvDetails = (TextView) findViewById(R.id.tvErrorDetails);
-        Exception e = (Exception) getIntent().getExtras().get("e");
-        if(e != null){
-        	st = Log.getStackTraceString(e);
-            tvDetails.setText(st);
-        }else{
-        	st = "";
-        }
+        st = getIntent().getExtras().getString("e");
+        tvDetails.setText(st);
 
         Button btSend = (Button) findViewById(R.id.btSend);
         

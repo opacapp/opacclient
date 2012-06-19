@@ -2,4 +2,7 @@
 <resources>
     <style name="LightThemeSelector" parent="android:Theme.Holo.Light">
     </style>
+    <style name="LightThemeSelector.NoTitleBar" parent="android:Theme.Holo.Light">
+        <item name="android:windowActionBar">false</item>
+    </style>
 </resources>

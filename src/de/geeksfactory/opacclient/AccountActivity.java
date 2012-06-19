@@ -258,4 +258,14 @@ public class AccountActivity extends OpacActivity {
         	prolong_done(result);
         }
 	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if(dialog != null){
+			if(dialog.isShowing()){
+				dialog.cancel();
+			}
+		}
+	}
 }

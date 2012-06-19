@@ -172,4 +172,14 @@ public class SearchResultsActivity extends OpacActivity {
 
         }
     }
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if(dialog != null){
+			if(dialog.isShowing()){
+				dialog.cancel();
+			}
+		}
+	}
 }

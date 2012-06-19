@@ -15,6 +15,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class OpacClient extends Application {
 
@@ -80,7 +81,7 @@ public class OpacClient extends Application {
 	public void web_error(Exception e, String t){
         Intent intent = new Intent(this, ErrorActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("e", e);
+        intent.putExtra("e", Log.getStackTraceString(e));
         intent.putExtra("t", t);
         startActivity(intent);
 	}

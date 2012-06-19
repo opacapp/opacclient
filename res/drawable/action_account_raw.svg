@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="69.306145"
+   height="69.028107"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   inkscape:export-filename="/daten/proj/opacclient/res/drawable/action_account.png"
+   inkscape:export-xdpi="664.94653"
+   inkscape:export-ydpi="664.94653"
+   sodipodi:docname="action_account_raw.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="11.2"
+     inkscape:cx="11.617329"
+     inkscape:cy="35.559094"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     width="372.05px"
+     fit-margin-top="10"
+     fit-margin-left="10"
+     fit-margin-right="10"
+     fit-margin-bottom="10"
+     inkscape:window-width="1916"
+     inkscape:window-height="1041"
+     inkscape:window-x="1680"
+     inkscape:window-y="18"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-502.44299,-643.95062)">
+    <path
+       style="fill:#ffffff;stroke:#ffffff;stroke-width:1.03341543999999996px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 527.67864,675.95114 c 4.52173,0 5.70573,9.82667 9.41147,9.82667 3.23073,0 4.88299,-9.59599 10.14961,-9.59599 3.93474,0 10.3024,6.62065 10.74936,16.9314 0.0987,2.27698 -1.01495,8.58104 -9.82667,9.04238 -2.76582,0.14481 -21.08927,0.10863 -23.85159,-0.0923 -2.53741,-0.18453 -8.25809,-2.16833 -8.35037,-9.36532 -0.0714,-5.56657 4.93458,-16.60046 11.71819,-16.74687 z"
+       id="path4706"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cssssssc"
+       inkscape:export-filename="/daten/proj/opacclient/res/drawable/path4708.png"
+       inkscape:export-xdpi="664"
+       inkscape:export-ydpi="664" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:2.67799997000000012;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="path4708"
+       sodipodi:cx="33.90625"
+       sodipodi:cy="20.858463"
+       sodipodi:rx="8.1473217"
+       sodipodi:ry="6.875"
+       d="m 42.053572,20.858463 a 8.1473217,6.875 0 1 1 -16.294644,0 8.1473217,6.875 0 1 1 16.294644,0 z"
+       transform="matrix(1.0172721,0,0,1.1727913,502.52903,638.1201)"
+       inkscape:export-xdpi="664"
+       inkscape:export-ydpi="664" />
+  </g>
+</svg>

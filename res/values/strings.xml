@@ -92,4 +92,5 @@
     <string name="notif_title">Bücher laufen ab</string>
     <string name="welcome_assistant">Bibliotheks-Auswahl</string>
     <string name="welcome_assistant_desc">Hilft dabei, eine OPAC-Adresse einer der App bekannten Bibliothek zu konfigurieren</string>
+    <string name="headline">Web Opac</string>
 </resources>

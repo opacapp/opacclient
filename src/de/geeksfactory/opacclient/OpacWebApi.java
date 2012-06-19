@@ -207,7 +207,7 @@ public class OpacWebApi {
 			}
 		}
 		try {
-			JSONArray copymap = app.get_bib().getJSONArray(0);
+			JSONArray copymap = app.get_bib().getJSONArray(1);
 			Elements exemplartrs = doc.select(".exemplartab .tabExemplar, .exemplartab .tabExemplar_");
 			for(int i = 0; i < exemplartrs.size(); i++){
 				Element tr = exemplartrs.get(i);
@@ -215,8 +215,8 @@ public class OpacWebApi {
 				String[] e = new String[7];
 				
 				for(int j = 0; j < 7; j++){
-					if(copymap.getInt(j+1) > -1){
-						e[j] = tr.child(copymap.getInt(j+1)).text();
+					if(copymap.getInt(j) > -1){
+						e[j] = tr.child(copymap.getInt(j)).text();
 					}else{
 						e[j] = "?";
 					}
