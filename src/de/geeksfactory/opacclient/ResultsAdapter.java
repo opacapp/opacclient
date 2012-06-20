@@ -1,5 +1,6 @@
 package de.geeksfactory.opacclient;
 
+import java.util.HashMap;
 import java.util.List;
 
 import android.content.Context;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 public class ResultsAdapter extends ArrayAdapter<SearchResult> {
 	private List<SearchResult> objects;
+	public HashMap<String,Integer> typemap = new HashMap<String,Integer> ();
 
 	@Override
 	public View getView(int position, View contentView, ViewGroup viewGroup) {
@@ -38,50 +40,10 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
 		tv.setText(Html.fromHtml(item.getInnerhtml()));
 		
 		ImageView iv = (ImageView) view.findViewById(R.id.ivType);
-		if(item.getType().equals("type_mbuchs.png")){
-			iv.setImageResource(R.drawable.type_mbuchs);
-			iv.setVisibility(View.VISIBLE);
-		}else if(item.getType().equals("type_cdkl.png")){
-			iv.setImageResource(R.drawable.type_cdkl);
-			iv.setVisibility(View.VISIBLE);
-		}else if(item.getType().equals("type_cdromkl.png") || item.getType().equals("type_mcdroms.png")){
-			iv.setImageResource(R.drawable.type_cdromkl);
-			iv.setVisibility(View.VISIBLE);
-		}else if(item.getType().equals("type_ekl.png") || item.getType().equals("type_emedium.png") || item.getType().equals("type_monleihe.png")){
-			iv.setImageResource(R.drawable.type_ekl);
-			iv.setVisibility(View.VISIBLE);
-		}else if(item.getType().equals("type_mbmonos.png")){
-			iv.setImageResource(R.drawable.type_mbmonos);
-			iv.setVisibility(View.VISIBLE);
-		}else if(item.getType().equals("type_mbuechers.png")){
-			iv.setImageResource(R.drawable.type_mbuechers);
-			iv.setVisibility(View.VISIBLE);
-		}else if(item.getType().equals("type_mdvds.png") || item.getType().equals("type_mdvd.png")){
-			iv.setImageResource(R.drawable.type_mdvds);
-			iv.setVisibility(View.VISIBLE);
-		}else if(item.getType().equals("type_mfilms.png") || item.getType().equals("type_mvideos.png")){
-			iv.setImageResource(R.drawable.type_mfilms);
-			iv.setVisibility(View.VISIBLE);
-		}else if(item.getType().equals("type_mhoerbuchs.png")){
-			iv.setImageResource(R.drawable.type_mhoerbuchs);
-			iv.setVisibility(View.VISIBLE);
-		}else if(item.getType().equals("type_mmusikcds.png") || item.getType().equals("type_mcdns.png")){
-			iv.setImageResource(R.drawable.type_mmusikcds);
-			iv.setVisibility(View.VISIBLE);
-		}else if(item.getType().equals("type_mnoten1s.png")){
-			iv.setImageResource(R.drawable.type_mnoten1s);
-			iv.setVisibility(View.VISIBLE);
-		}else if(item.getType().equals("type_munselbs.png")){
-			iv.setImageResource(R.drawable.type_munselbs);
-			iv.setVisibility(View.VISIBLE);
-		}else if(item.getType().equals("type_mztgs.png") || item.getType().equals("type_zeitung.png")){
-			iv.setImageResource(R.drawable.type_mztgs);
-			iv.setVisibility(View.VISIBLE);
-		}else if(item.getType().equals("type_spielekl.png") || item.getType().equals("type_mspiels.png")){
-			iv.setImageResource(R.drawable.type_spielekl);
-			iv.setVisibility(View.VISIBLE);
-		}else if(item.getType().equals("type_tafelkl.png")){
-			iv.setImageResource(R.drawable.type_tafelkl);
+		
+		
+		if(typemap.containsKey(item.getType())){
+			iv.setImageResource(typemap.get(item.getType()));
 			iv.setVisibility(View.VISIBLE);
 		}else{
 			iv.setVisibility(View.INVISIBLE);
@@ -94,5 +56,29 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
 			List<SearchResult> objects) {
 		super(context, R.layout.searchresult_listitem, objects);
 		this.objects = objects;
+		
+		typemap.put("type_mbuchs.png", R.drawable.type_mbuchs);
+		typemap.put("type_cdkl.png", R.drawable.type_cdkl);
+		typemap.put("type_cdromkl.png", R.drawable.type_cdromkl);
+		typemap.put("type_mcdroms.png", R.drawable.type_cdromkl);
+		typemap.put("type_ekl.png", R.drawable.type_ekl);
+		typemap.put("type_emedium.png", R.drawable.type_ekl);
+		typemap.put("type_monleihe.png", R.drawable.type_ekl);
+		typemap.put("type_mbmonos.png", R.drawable.type_mbmonos);
+		typemap.put("type_mbuechers.png", R.drawable.type_mbuechers);
+		typemap.put("type_mdvds.png", R.drawable.type_mdvds);
+		typemap.put("type_mdvd.png", R.drawable.type_mdvds);
+		typemap.put("type_mfilms.png", R.drawable.type_mfilms);
+		typemap.put("type_mvideos.png", R.drawable.type_mfilms);
+		typemap.put("type_mhoerbuchs.png", R.drawable.type_mhoerbuchs);
+		typemap.put("type_mmusikcds.png", R.drawable.type_mmusikcds);
+		typemap.put("type_mcdns.png", R.drawable.type_mmusikcds);
+		typemap.put("type_mnoten1s.png", R.drawable.type_mnoten1s);
+		typemap.put("type_munselbs.png", R.drawable.type_munselbs);
+		typemap.put("type_mztgs.png", R.drawable.type_mztgs);
+		typemap.put("type_zeitung.png", R.drawable.type_mztgs);
+		typemap.put("type_spielekl.png", R.drawable.type_spielekl);
+		typemap.put("type_mspiels.png", R.drawable.type_spielekl);
+		typemap.put("type_tafelkl.png", R.drawable.type_tafelkl);
 	}
 }
