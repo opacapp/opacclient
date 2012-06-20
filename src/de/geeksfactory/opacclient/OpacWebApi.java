@@ -18,6 +18,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Comment;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -174,7 +175,14 @@ public class OpacWebApi {
 			SearchResult sr = new SearchResult();
 			String[] fparts = tr.select("td a img").get(0).attr("src").split("/");
 			sr.setType("type_"+fparts[fparts.length-1].replace(".jpg", ".png").replace(".gif", ".png").toLowerCase());
-			Log.i("n", tr.child(1).childNode(0).nodeName());
+			try	{
+				Comment c = (Comment) tr.child(1).childNode(0);
+				String comment = c.getData().trim();
+				String id = comment.split(": ")[1];
+				sr.setId(id);
+			}catch(Exception e){
+				
+			}
 			sr.setInnerhtml(tr.child(1).child(0).html());
 			sr.setNr(i);
 			results.add(sr);
@@ -183,8 +191,9 @@ public class OpacWebApi {
 		return results;
 	}
 	
-	public DetailledItem getSubResult (String a) throws IOException {		
-		HttpGet httpget = new HttpGet(opac_url+"/"+a);
+	public DetailledItem getResultById (String a) throws IOException {	
+		if(!initialised) init();	
+		HttpGet httpget = new HttpGet(opac_url+"/index.asp?MedienNr="+a);
 	    
 	    HttpResponse response = ahc.execute(httpget);
 	
@@ -251,7 +260,7 @@ public class OpacWebApi {
 				Element tr = bandtrs.get(i);
 
 				String[] e = new String[2];
-				e[0] = tr.attr("href");
+				e[0] = tr.attr("href").split("=")[1];
 				e[1] = tr.text();
 				result.addBand(e);
 			}

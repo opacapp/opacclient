@@ -22,6 +22,9 @@ public class SearchResultsActivity extends OpacActivity {
 	protected List<SearchResult> items;
 	private int page = 1;
 	
+	private SearchStartTask st;
+	private SearchPageTask sst;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,11 +45,13 @@ public class SearchResultsActivity extends OpacActivity {
 		        int position, long id) {
 		        Intent intent = new Intent(SearchResultsActivity.this, SearchResultDetailsActivity.class);
 		        intent.putExtra("item", (int) items.get(position).getNr());
+		        intent.putExtra("item_id", items.get(position).getId());
 		        startActivity(intent);
 		    }
 		});
 		
-        new SearchStartTask().execute(app, 
+        st = new SearchStartTask();
+        st.execute(app, 
         			getIntent().getStringExtra("titel"),
         			getIntent().getStringExtra("verfasser"),
         			getIntent().getStringExtra("schlag_a"),
@@ -78,7 +83,8 @@ public class SearchResultsActivity extends OpacActivity {
 				});
 				dialog.show();
 				page--;
-		        new SearchPageTask().execute(app, page);
+		        sst = new SearchPageTask();
+		        sst.execute(app, page);
 		        if(page == 1){
 		        	btPrev.setVisibility(View.INVISIBLE);
 		        }
@@ -98,7 +104,8 @@ public class SearchResultsActivity extends OpacActivity {
 				});
 				dialog.show();
 				page++;
-		        new SearchPageTask().execute(app, page);
+		        sst = new SearchPageTask();
+		        sst.execute(app, page);
 		        if(page > 1){
 		        	btPrev.setVisibility(View.VISIBLE);
 		        }
@@ -142,7 +149,6 @@ public class SearchResultsActivity extends OpacActivity {
     		ListView lv = (ListView) findViewById(R.id.lvResults);
     		lv.setAdapter(new ResultsAdapter(SearchResultsActivity.this, (result)));
     		lv.setTextFilterEnabled(true);
-
         }
     }
     public class SearchPageTask extends OpacTask<List<SearchResult>> {
@@ -181,6 +187,21 @@ public class SearchResultsActivity extends OpacActivity {
 			if(dialog.isShowing()){
 				dialog.cancel();
 			}
+		}
+
+		try {
+			if(st != null){
+				if(!st.isCancelled()){
+					st.cancel(true);
+				}
+			}
+			if(sst != null){
+				if(!sst.isCancelled()){
+					sst.cancel(true);
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 	

@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -35,6 +38,7 @@ public class FrontpageActivity extends OpacActivity {
   	  	ImageView ivSearch = (ImageView) findViewById(R.id.ivGoSearch);
   	  	ImageView ivScan = (ImageView) findViewById(R.id.ivGoScan);
   	  	ImageView ivAccount = (ImageView) findViewById(R.id.ivGoAccount);
+  	  	ImageView ivStarred = (ImageView) findViewById(R.id.ivGoStarred);
 
   	  	ivSearch.setOnClickListener(new OnClickListener(){
 			@Override
@@ -58,6 +62,38 @@ public class FrontpageActivity extends OpacActivity {
 	            startActivity(intent);
 			}
         });
+  	  	ivStarred.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+	            Intent intent = new Intent(FrontpageActivity.this, StarredActivity.class);
+	            startActivity(intent);
+			}
+        });
+	}
+    
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.frontpage_menu, menu);
+	    return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+		Intent intent;
+	    switch (item.getItemId()) {
+	        case R.id.menu_prefs:
+	            intent = new Intent(FrontpageActivity.this, MainPreferenceActivity.class);
+	            startActivity(intent);
+	            return true;
+	        case R.id.menu_about:
+	            intent = new Intent(FrontpageActivity.this, AboutActivity.class);
+	            startActivity(intent);
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
 	}
 
 }

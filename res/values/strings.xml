@@ -30,8 +30,8 @@
     <string name="jahr_von">von</string>
     <string name="jahr_bis">bis</string>
     <string name="loading">Lade…</string>
-    <string name="loading_results">Lade Ergebnisse</string>
-    <string name="loading_details">Lade Details</string>
+    <string name="loading_results">Lade Ergebnisse…</string>
+    <string name="loading_details">Lade Details…</string>
     <string name="search_results">Suchergebnisse</string>
     <string name="prefs">Einstellungen</string>
     <string name="account">Konto</string>
@@ -44,21 +44,21 @@
     <string name="reserve">Vorbestellen</string>
     <string name="res_zst">Zweigstelle auswählen</string>
     <string name="doing_res">Führe Vorbestellung durch…</string>
-    <string name="status_nouser">Du hast in den Einstellungen keinen Ausweis hinterlegt.</string>
+    <string name="status_nouser">Du hast in den Einstellungen keine Ausweisdaten hinterlegt.</string>
     <string name="dismiss">Schließen</string>
-    <string name="loading_account">Lade Account</string>
+    <string name="loading_account">Lade Konto</string>
     <string name="entl">Entliehen</string>
     <string name="extendall">Alle verlängern</string>
     <string name="reservations">Vorbestellungen</string>
     <string name="cancel_confirm">Vorbestellung wirklich entfernen?</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
-    <string name="doing_cancel">Lösche Vorbestellung</string>
-    <string name="doing_prolong">Verlängere</string>
+    <string name="doing_cancel">Lösche Vorbestellung…</string>
+    <string name="doing_prolong">Verlängere…</string>
     <string name="opac_error">Der Web-Opac meldet:</string>
     <string name="io_error">Fehler bei der Kommunikation mit dem Web-Opac. Entweder dein Internet funktioniert nicht, oder es gibt ein Problem mit dem Opac oder der App. Tut uns leid.</string>
     <string name="welcome">Herzlich Willkommen</string>
-    <string name="welcome_select">zum Web-Opac-Client für Android. Bitte wähle aus, mit welcher Bibliothek du dich verbinden willst. Ist deine nicht in der Liste, kannst du irgendeine auswählen und in den Einstellungen die Opac-Adresse anpassen.</string>
+    <string name="welcome_select">zum Web-Opac-Client für Android. Bitte wähle aus, mit welcher Bibliothek du dich verbinden willst.</string>
     <string name="welcome_account">Um Vorbestellen oder dein Konto einsehen zu können, musst du in den Einstellungen deine Ausweisnummer und dein Passwort hinterlegen!</string>
     <string-array name="orders">
     	<item>Standard</item>
@@ -94,4 +94,8 @@
     <string name="welcome_assistant_desc">Hilft dabei, eine OPAC-Adresse einer der App bekannten Bibliothek zu konfigurieren</string>
     <string name="headline">Web Opac</string>
     <string name="baende">Bände</string>
+    <string name="star">Merken</string>
+    <string name="starred">Das Medium ist jetzt auf der Merkliste</string>
+    <string name="starred_list">Merkliste</string>
+    <string name="starred_welcome">Dies ist deine Merkliste. Du kannst in der Detailansicht von jedem Medium die Menütaste drücken und „Merken“ auswählen, dann erscheint das Medium hier auf der Liste.</string>
 </resources>

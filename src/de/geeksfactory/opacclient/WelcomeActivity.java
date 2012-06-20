@@ -25,7 +25,8 @@ public class WelcomeActivity extends OpacActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome);
-
+        
+  	  	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(WelcomeActivity.this);
         ListView lv = (ListView) findViewById(R.id.lvBibs);
     	try {
 	        List<String> bibnames = new ArrayList<String>();
@@ -40,7 +41,6 @@ public class WelcomeActivity extends OpacActivity {
 		} catch (JSONException e) {
 			app.web_error(e, "jsonerror");
 		}
-        lv.setTextFilterEnabled(true);
         
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,

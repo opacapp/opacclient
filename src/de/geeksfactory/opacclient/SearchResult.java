@@ -3,6 +3,7 @@ package de.geeksfactory.opacclient;
 public class SearchResult {
 	private String type;
 	private int nr;
+	private String id;
 	private String innerhtml;
 	
 	public SearchResult(String type, int nr, String innerhtml) {
@@ -19,6 +20,14 @@ public class SearchResult {
 		this.innerhtml = "";
 	}
 	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
 	public String getType() {
 		return type;
 	}
@@ -40,7 +49,7 @@ public class SearchResult {
 
 	@Override
 	public String toString() {
-		return "SearchResult [type=" + type + ", nr=" + nr + ", innerhtml="
+		return "SearchResult [id= " + id + ", type=" + type + ", nr=" + nr + ", innerhtml="
 				+ innerhtml + "]";
 	}
 	

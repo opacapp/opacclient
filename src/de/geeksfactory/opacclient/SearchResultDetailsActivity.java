@@ -17,11 +17,15 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TableLayout;
+import android.widget.Toast;
 import android.widget.TableLayout.LayoutParams;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -30,12 +34,17 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
 	protected ProgressDialog dialog;
 	protected DetailledItem item;
+	protected String id;
+	protected String title;
 	
 	public static int STATUS_SUCCESS = 0;
 	public static int STATUS_NOUSER = 1;
 	public static int STATUS_WRONGCREDENTIALS = 2;
 	
 	protected String[] items;
+	protected FetchTask ft;
+	protected FetchSubTask fst;
+	protected ResTask rt;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,10 +59,19 @@ public class SearchResultDetailsActivity extends OpacActivity {
 					}
 		});
 		dialog.show();
+		
+		if(getIntent().getStringExtra("item_id") != null){
+	        id = getIntent().getStringExtra("item_id");
+		}else{
+			finish();
+		}
+		
 		if(getIntent().getIntExtra("item", -1) != -1){
-	        new FetchTask().execute(app, getIntent().getIntExtra("item", 0));
-		}else if(getIntent().getStringExtra("subitem") != null){
-	        new FetchSubTask().execute(app, getIntent().getStringExtra("subitem"));
+	        ft = new FetchTask();
+	        ft.execute(app, getIntent().getIntExtra("item", 0));
+		}else if(getIntent().getStringExtra("item_id") != null){
+	        fst = new FetchSubTask();
+	        fst.execute(app, getIntent().getStringExtra("item_id"));
 		}
     }
 	
@@ -74,7 +92,8 @@ public class SearchResultDetailsActivity extends OpacActivity {
 						getString(R.string.doing_res), true);
 				dialog.show();
 		        
-				new ResTask().execute(app, items[item].split(":",2)[0]);
+				rt = new ResTask();
+				rt.execute(app, items[item].split(":",2)[0]);
 		    }
 		});
 		AlertDialog alert = builder.create();
@@ -143,6 +162,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
         	
         	TextView tvTitel = (TextView) findViewById(R.id.tvTitle);
         	tvTitel.setText(item.getTitle());
+        	title = item.getTitle();
             
         	TableLayout td = (TableLayout) findViewById(R.id.tlDetails);
         	
@@ -187,7 +207,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 						@Override
 						public void onClick(View arg0) {
 					        Intent intent = new Intent(SearchResultDetailsActivity.this, SearchResultDetailsActivity.class);
-					        intent.putExtra("subitem", a);
+					        intent.putExtra("item_id", a);
 					        startActivity(intent);
 						}
 	                });
@@ -251,7 +271,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
             String a = (String) arg0[1];
             
             try {
-    			DetailledItem res = app.ohc.getSubResult(a);
+    			DetailledItem res = app.ohc.getResultById(a);
 				URL newurl;
 				try {
 					newurl = new URL(res.getCover());
@@ -305,6 +325,25 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				dialog.cancel();
 			}
 		}
+		try {
+			if(ft != null){
+				if(!ft.isCancelled()){
+					ft.cancel(true);
+				}
+			}
+			if(fst != null){
+				if(!fst.isCancelled()){
+					fst.cancel(true);
+				}
+			}
+			if(rt != null){
+				if(!rt.isCancelled()){
+					rt.cancel(true);
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	
     @Override
@@ -313,4 +352,43 @@ public class SearchResultDetailsActivity extends OpacActivity {
 	    unbindDrawables(findViewById(R.id.rootView));
 	    System.gc();
     }
+    
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.detailspage_menu, menu);
+	    return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+		Intent intent;
+	    switch (item.getItemId()) {
+	        case R.id.menu_prefs:
+	            intent = new Intent(SearchResultDetailsActivity.this, MainPreferenceActivity.class);
+	            startActivity(intent);
+	            return true;
+	        case R.id.menu_account:
+	            intent = new Intent(SearchResultDetailsActivity.this, AccountActivity.class);
+	            startActivity(intent);
+	            return true;
+	        case R.id.menu_about:
+	            intent = new Intent(SearchResultDetailsActivity.this, AboutActivity.class);
+	            startActivity(intent);
+	            return true;
+	        case R.id.menu_star:
+	      	  	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(SearchResultDetailsActivity.this);
+	      	  	String bib = sp.getString("opac_bib", "");
+	            StarDataSource star = new StarDataSource(this);
+	            star.open();
+	            star.star(id, title, bib);
+	            star.close();
+	            Toast toast = Toast.makeText(this, getString(R.string.starred), Toast.LENGTH_SHORT);
+	            toast.show();
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
 }

@@ -56,7 +56,9 @@
                     android:id="@+id/ivGoSearch"
                     android:layout_width="130dp"
                     android:layout_height="wrap_content"
+                    android:focusable="true"
                     android:src="@drawable/action_search" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -69,6 +71,7 @@
                 <ImageView
                     android:id="@+id/ivGoScan"
                     android:layout_width="100dp"
+                    android:focusable="true"
                     android:layout_height="wrap_content"
                     android:src="@drawable/action_scan" />
             </LinearLayout>
@@ -85,15 +88,30 @@
                 android:id="@+id/ll3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_span="2"
                 android:orientation="vertical" >
 
                 <ImageView
                     android:id="@+id/ivGoAccount"
+                    android:focusable="true"
                     android:layout_width="130dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:src="@drawable/action_account" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <ImageView
+                    android:id="@+id/ivGoStarred"
+                    android:layout_width="130dp"
+                    android:focusable="true"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/action_fav" />
             </LinearLayout>
         </TableRow>
     </TableLayout>

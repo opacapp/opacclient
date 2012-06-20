@@ -52,6 +52,9 @@
        	<activity android:name=".ErrorActivity"
             android:label="@string/app_name" android:excludeFromRecents="true" android:noHistory="true">
        	</activity>
+       	<activity android:name=".StarredActivity"
+            android:label="@string/starred_list">
+       	</activity>
        	<service android:name=".ReminderCheckService"></service>
        	<receiver android:name=".ReminderBootBroadcastReceiver">  
 		    <intent-filter>  

@@ -26,6 +26,10 @@ public class AccountActivity extends OpacActivity {
 	public static int STATUS_NOUSER = 1;
 	public static int STATUS_FAILED = 2;
 	
+	protected LoadTask lt;
+	protected CancelTask ct;
+	protected ProlongTask pt;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +53,8 @@ public class AccountActivity extends OpacActivity {
 			});
 			dialog.show();
 			
-	        new LoadTask().execute(app, getIntent().getIntExtra("item", 0));
+	        lt = new LoadTask();
+	        lt.execute(app, getIntent().getIntExtra("item", 0));
     	}
     }
     
@@ -69,7 +74,8 @@ public class AccountActivity extends OpacActivity {
 		        		dialog = ProgressDialog.show(AccountActivity.this, "", 
 		        				getString(R.string.doing_cancel), true);
 		        		dialog.show();
-		        		new CancelTask().execute(app, a);
+		        		ct = new CancelTask();
+		        		ct.execute(app, a);
 		           }
 		       }).setOnCancelListener(new DialogInterface.OnCancelListener(){
 					public void onCancel(DialogInterface d) {
@@ -96,7 +102,8 @@ public class AccountActivity extends OpacActivity {
 		dialog = ProgressDialog.show(AccountActivity.this, "", 
 				getString(R.string.doing_prolong), true);
 		dialog.show();
-		new ProlongTask().execute(app, a);
+		pt = new ProlongTask();
+		pt.execute(app, a);
 	}
 	
 	public void prolong_done(int result){
@@ -107,7 +114,8 @@ public class AccountActivity extends OpacActivity {
 				getString(R.string.loading_account), true);
 			dialog.show();
 			
-	        new LoadTask().execute(app, getIntent().getIntExtra("item", 0));
+	        lt = new LoadTask();
+	        lt.execute(app, getIntent().getIntExtra("item", 0));
 		}else if(result == STATUS_FAILED){
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 	    	builder.setMessage("Der Web-Opac meldet: "+app.ohc.getLast_error())
@@ -266,6 +274,26 @@ public class AccountActivity extends OpacActivity {
 			if(dialog.isShowing()){
 				dialog.cancel();
 			}
+		}
+
+		try {
+			if(lt != null){
+				if(!lt.isCancelled()){
+					lt.cancel(true);
+				}
+			}
+			if(ct != null){
+				if(!ct.isCancelled()){
+					ct.cancel(true);
+				}
+			}
+			if(pt != null){
+				if(!pt.isCancelled()){
+					pt.cancel(true);
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 }
