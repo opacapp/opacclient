@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 
 public class SearchResultsActivity extends OpacActivity {
 	
@@ -182,4 +183,11 @@ public class SearchResultsActivity extends OpacActivity {
 			}
 		}
 	}
+	
+    @Override
+    public void onDestroy() {
+	    super.onDestroy();
+	    unbindDrawables(findViewById(R.id.rootView));
+	    System.gc();
+    }
 }
