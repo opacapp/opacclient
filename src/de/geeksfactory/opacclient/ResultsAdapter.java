@@ -98,5 +98,15 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
 		typemap.put("type_cd_rom_32_32.png", R.drawable.type_cdromkl);
 		typemap.put("type_video_32_32.png", R.drawable.type_mfilms);
 		typemap.put("type_noten_32_32.png", R.drawable.type_mnoten1s);
+		// Magdeburg
+		typemap.put("type_cd.png", R.drawable.type_cdkl);
+		typemap.put("type_cdh.png", R.drawable.type_mhoerbuchs);
+		typemap.put("type_cdhk.png", R.drawable.type_mhoerbuchs);
+		typemap.put("type_dm.png", R.drawable.type_mnoten1s);
+		typemap.put("type_b.png", R.drawable.type_mbuchs);
+		typemap.put("type_bk.png", R.drawable.type_mbuchs);
+		typemap.put("type_dvd.png", R.drawable.type_mdvds);
+		typemap.put("type_dvdk.png", R.drawable.type_mdvds);
+		typemap.put("type_rom.png", R.drawable.type_cdromkl);
 	}
 }

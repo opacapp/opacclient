@@ -19,20 +19,20 @@ import android.util.Log;
 
 public class OpacClient extends Application {
 
-	protected OpacWebApi ohc;
+	public OpacWebApi ohc;
 	public JSONObject bibs;
 	
 	public static int NOTIF_ID = 1;
 	public static int BROADCAST_REMINDER = 2;
 	
-	public boolean isOnline() {
+	protected boolean isOnline() {
 	    ConnectivityManager connMgr = (ConnectivityManager) 
 	            getSystemService(Context.CONNECTIVITY_SERVICE);
 	    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 	    return (networkInfo != null && networkInfo.isConnected());
 	}  
 	
-	protected JSONArray get_bib(){
+	public JSONArray get_bib(){
   	  	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 		try {
 			return bibs.getJSONArray(sp.getString("opac_bib", "Mannheim"));
@@ -71,7 +71,7 @@ public class OpacClient extends Application {
 		
 		load_bibs();
   	  	
-		ohc = new OpacWebApi(sp.getString("opac_url", getResources().getString(R.string.opac_mannheim)), this, this);
+		ohc = new OpacWebApi(sp.getString("opac_url", getResources().getString(R.string.opac_mannheim)), this, this.get_bib());
 	}
 	
 	public void web_error(Exception e){

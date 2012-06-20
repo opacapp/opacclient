@@ -37,7 +37,7 @@ public class OpacWebApi {
 	public String results;
 	private boolean initialised = false;
 	private String last_error;
-	public OpacClient app;
+	public JSONArray bib;
 	
 	public String getResults() {
 		return results;
@@ -74,9 +74,9 @@ public class OpacWebApi {
 	public void extract_information(String html){
 		// Zweigstellen und Mediengruppen auslesen
 		Document doc = Jsoup.parse(html);
-		
+		Editor spe = null;
   	  	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-		Editor spe = sp.edit();
+		spe = sp.edit();
 		Elements zst_opts = doc.select("#zst option");
 		StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < zst_opts.size(); i++){
@@ -94,12 +94,12 @@ public class OpacWebApi {
 		spe.commit();
 	}
 	
-	public OpacWebApi(String opac_url, Context context, OpacClient app){
+	public OpacWebApi(String opac_url, Context context, JSONArray bib){
 		//ahc = AndroidHttpClient.newInstance("WebOpac Client / Android");
 		ahc = new DefaultHttpClient();
 		this.opac_url = opac_url;
 		this.context = context;
-		this.app = app;
+		this.bib = bib;
 	}
 		
 	public void init() throws ClientProtocolException, IOException {
@@ -234,7 +234,7 @@ public class OpacWebApi {
 			}
 		}
 		try {
-			JSONArray copymap = app.get_bib().getJSONArray(1);
+			JSONArray copymap = bib.getJSONArray(1);
 			Elements exemplartrs = doc.select(".exemplartab .tabExemplar, .exemplartab .tabExemplar_");
 			for(int i = 0; i < exemplartrs.size(); i++){
 				Element tr = exemplartrs.get(i);

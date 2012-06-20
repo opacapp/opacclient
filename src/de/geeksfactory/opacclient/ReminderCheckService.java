@@ -50,7 +50,7 @@ public class ReminderCheckService extends Service {
 		@Override
 		protected Integer[] doInBackground(Object... params) {
 	  	  	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ReminderCheckService.this);
-			OpacWebApi ohc = new OpacWebApi(sp.getString("opac_url", getResources().getString(R.string.opac_mannheim)), ReminderCheckService.this, (OpacClient) getApplication());
+			OpacWebApi ohc = new OpacWebApi(sp.getString("opac_url", getResources().getString(R.string.opac_mannheim)), ReminderCheckService.this, ((OpacClient) getApplication()).get_bib());
 			SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 			long now = new Date().getTime();
 			long warning = Long.decode(sp.getString("notification_warning", "367200000"));
