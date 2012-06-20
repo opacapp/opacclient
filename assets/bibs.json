@@ -32,10 +32,10 @@
 		"Pinneberg":["http://89.246.245.100/webopac", [4, -1, -1, 1, 2, 3, -1]],
 		"Kronberg":["http://webopac.kronberg.de", [0, 4, -1, 2, 3, 5, -1]],
 		"Hann. Münden":["http://www.buecherei.hann.muenden.de", [0, -1, -1, 1, 2, 3, -1]],
-		"Wolfsburg":["http://webopac.stadt.wolfsburg.de/webopac", [0, 4, -1, 1, 3, 5, -1]]
+		"Wolfsburg":["http://webopac.stadt.wolfsburg.de/webopac", [0, 4, -1, 1, 3, 5, -1]],
+		"Wien":["http://katalog.buechereien.wien.at", [-1, 0, -1, 1, 3, 4, 5]],
+		"Hof":["http://opac.stadt-hof.org", [-1, 3, -1, 0, 2, 4, -1]]
 	},
 	"weak": {	
-		"Wien":["http://katalog.buechereien.wien.at", [0, 1, 2, 3, 4, 5, 6]],
-		"Hof":["http://opac.stadt-hof.org", [-1, 3, -1, 0, 2, 4, -1]]
 	}
 }

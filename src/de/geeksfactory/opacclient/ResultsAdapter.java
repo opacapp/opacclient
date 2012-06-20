@@ -80,5 +80,23 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
 		typemap.put("type_spielekl.png", R.drawable.type_spielekl);
 		typemap.put("type_mspiels.png", R.drawable.type_spielekl);
 		typemap.put("type_tafelkl.png", R.drawable.type_tafelkl);
+		typemap.put("type_spiel_konsol.png", R.drawable.type_konsol);
+		typemap.put("type_wii.png", R.drawable.type_konsol);
+		// Hof
+		typemap.put("type_buch_rot.png", R.drawable.type_mbuchs);
+		typemap.put("type_buch_gelb.png", R.drawable.type_mbuchs);
+		typemap.put("type_buch_blau.png", R.drawable.type_mbuchs);
+		// Wien
+		typemap.put("type_buch_32_32.png", R.drawable.type_mbuchs);
+		typemap.put("type_zeitschrift_32_32.png", R.drawable.type_mztgs);
+		typemap.put("type_cd_32_32.png", R.drawable.type_cdkl);
+		typemap.put("type_dvd_32_32.png", R.drawable.type_mdvds);
+		typemap.put("type_sony_playstation_32_32.png", R.drawable.type_konsol);
+		typemap.put("type_microsoft_xbox_32_32.png", R.drawable.type_konsol);
+		typemap.put("type_nintendo_wii_32_32.png", R.drawable.type_konsol);
+		typemap.put("type_nintendo_ds_32_32.png", R.drawable.type_konsol);
+		typemap.put("type_cd_rom_32_32.png", R.drawable.type_cdromkl);
+		typemap.put("type_video_32_32.png", R.drawable.type_mfilms);
+		typemap.put("type_noten_32_32.png", R.drawable.type_mnoten1s);
 	}
 }
