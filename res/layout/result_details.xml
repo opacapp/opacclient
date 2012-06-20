@@ -34,6 +34,7 @@
                 	android:gravity="center"
         			android:background="@drawable/go_button"
                     android:visibility="gone"
+                    android:textColor="#ffffff"
                     android:text="@string/reserve" />
 
             </LinearLayout>
