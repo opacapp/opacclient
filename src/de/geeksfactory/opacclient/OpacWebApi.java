@@ -26,6 +26,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class OpacWebApi {
 	
@@ -79,14 +80,14 @@ public class OpacWebApi {
 		StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < zst_opts.size(); i++){
 			Element opt = zst_opts.get(i);
-			sb.append(opt.val()+": "+(opt.text().trim())+",");
+			sb.append(opt.val()+": "+(opt.text().trim())+"~");
 		}
 		spe.putString("opac_zst", sb.toString());
 		Elements mg_opts = doc.select("#medigrp option");
 		sb = new StringBuilder();
 		for(int i = 0; i < mg_opts.size(); i++){
 			Element opt = mg_opts.get(i);
-			sb.append(opt.val()+": "+(opt.text().trim())+",");
+			sb.append(opt.val()+": "+(opt.text().trim())+"~");
 		}
 		spe.putString("opac_mg", sb.toString());
 		spe.commit();
@@ -173,12 +174,24 @@ public class OpacWebApi {
 			SearchResult sr = new SearchResult();
 			String[] fparts = tr.select("td a img").get(0).attr("src").split("/");
 			sr.setType("type_"+fparts[fparts.length-1].replace(".jpg", ".png").replace(".gif", ".png").toLowerCase());
+			Log.i("n", tr.child(1).childNode(0).nodeName());
 			sr.setInnerhtml(tr.child(1).child(0).html());
 			sr.setNr(i);
 			results.add(sr);
 		}
 		this.results = doc.select(".result_gefunden").text();
 		return results;
+	}
+	
+	public DetailledItem getSubResult (String a) throws IOException {		
+		HttpGet httpget = new HttpGet(opac_url+"/"+a);
+	    
+	    HttpResponse response = ahc.execute(httpget);
+	
+		String html = convertStreamToString(response.getEntity().getContent());
+		response.getEntity().consumeContent();
+		
+		return parse_result(html);
 	}
 	
 	public DetailledItem getResult (int nr) throws IOException {		
@@ -188,6 +201,11 @@ public class OpacWebApi {
 	
 		String html = convertStreamToString(response.getEntity().getContent());
 		response.getEntity().consumeContent();
+		
+		return parse_result(html);
+	}
+	
+	private DetailledItem parse_result(String html){
 		Document doc = Jsoup.parse(html);
 		
 		DetailledItem result = new DetailledItem();
@@ -227,12 +245,26 @@ public class OpacWebApi {
 			e.printStackTrace();
 		}
 		
+		try {
+			Elements bandtrs = doc.select("table .tabBand a");
+			for(int i = 0; i < bandtrs.size(); i++){
+				Element tr = bandtrs.get(i);
+
+				String[] e = new String[2];
+				e[0] = tr.attr("href");
+				e[1] = tr.text();
+				result.addBand(e);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
 		if(doc.select(".detail_vorbest a").size() == 1){
 			result.setReservable(true);
 		}
-		
 		return result;
 	}
+	
 	public Boolean reservation (String zst, String ausw, String pwd) throws IOException  {		
 		HttpGet httpget = new HttpGet(opac_url+"/index.asp?target=vorbesttrans");
 	    HttpResponse response = ahc.execute(httpget);

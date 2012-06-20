@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/scrollView1"
+    android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -54,7 +54,7 @@
             </TableLayout>
 
             <TextView
-                android:id="@+id/textView1"
+                android:id="@+id/tvCopies"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/copies"
@@ -63,7 +63,11 @@
             <TableLayout
                 android:id="@+id/tlExemplare"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+   				android:shrinkColumns="0"
+                android:stretchColumns="0">
+
             </TableLayout>
+
         </LinearLayout>
     </ScrollView>

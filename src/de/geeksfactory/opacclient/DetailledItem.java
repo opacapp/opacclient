@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 public class DetailledItem {
 	private List<String[]> details = new ArrayList<String[]>();
 	private List<String[]> copies = new ArrayList<String[]>();
+	private List<String[]> baende = new ArrayList<String[]>();
 	private String cover;
 	private String title;
 	private Bitmap coverBitmap;
@@ -52,7 +53,11 @@ public class DetailledItem {
 
 	public List<String[]> getCopies() {
 		return copies;
-}
+	}
+
+	public List<String[]> getBaende() {
+		return baende;
+	}
 	
 	public void addDetail(String[] e) {
 		details.add(e);
@@ -60,6 +65,10 @@ public class DetailledItem {
 
 	public void addCopy(String[] e) {
 		copies.add(e);
+	}
+
+	public void addBand(String[] e) {
+		baende.add(e);
 	}
 
 	public boolean isReservable() {

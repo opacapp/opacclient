@@ -93,4 +93,5 @@
     <string name="welcome_assistant">Bibliotheks-Auswahl</string>
     <string name="welcome_assistant_desc">Hilft dabei, eine OPAC-Adresse einer der App bekannten Bibliothek zu konfigurieren</string>
     <string name="headline">Web Opac</string>
+    <string name="baende">Bände</string>
 </resources>

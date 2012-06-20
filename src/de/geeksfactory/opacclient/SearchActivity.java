@@ -43,7 +43,7 @@ public class SearchActivity extends OpacActivity {
   	  	// Fill combo boxes
   	  	
         Spinner cbZst = (Spinner) findViewById(R.id.cbZweigstelle);
-        String[] zst = sp.getString("opac_zst", ":Alle").split(",");
+        String[] zst = sp.getString("opac_zst", ":Alle").split("~");
         if(zst[0].startsWith(": ")){
         	zst[0] = zst[0].substring(2);
         }
@@ -52,7 +52,7 @@ public class SearchActivity extends OpacActivity {
         cbZst.setAdapter(zst_adapter);
         
         Spinner cbMg = (Spinner) findViewById(R.id.cbMediengruppe);
-        String[] mg = sp.getString("opac_mg", ":Alle").split(",");
+        String[] mg = sp.getString("opac_mg", ":Alle").split("~");
         if(mg[0].startsWith(": ")){
         	mg[0] = mg[0].substring(2);
         }

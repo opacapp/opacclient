@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 public abstract class OpacActivity extends Activity {
 	protected OpacClient app;
@@ -91,4 +94,18 @@ public abstract class OpacActivity extends Activity {
     	AlertDialog alert = builder.create();
     	alert.show();
 	}
+
+    protected void unbindDrawables(View view) {
+        if (view.getBackground() != null) {
+        view.getBackground().setCallback(null);
+        }
+        if (view instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+            	unbindDrawables(((ViewGroup) view).getChildAt(i));
+            }
+            if(!(view instanceof AdapterView)){
+            	((ViewGroup) view).removeAllViews();
+            }
+        }
+    }
 }

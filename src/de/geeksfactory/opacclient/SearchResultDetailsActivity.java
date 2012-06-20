@@ -50,13 +50,16 @@ public class SearchResultDetailsActivity extends OpacActivity {
 					}
 		});
 		dialog.show();
-		
-        new FetchTask().execute(app, getIntent().getIntExtra("item", 0));
+		if(getIntent().getIntExtra("item", -1) != -1){
+	        new FetchTask().execute(app, getIntent().getIntExtra("item", 0));
+		}else if(getIntent().getStringExtra("subitem") != null){
+	        new FetchSubTask().execute(app, getIntent().getStringExtra("subitem"));
+		}
     }
 	
 	protected void reservation(){
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-		items = sp.getString("opac_zst", "00:").split(",");
+		items = sp.getString("opac_zst", "00:").split("~");
 		if(items[0].startsWith(":")){
 	        List<String> tmp = new ArrayList<String>(Arrays.asList(items));
 	        tmp.remove(0);
@@ -166,35 +169,63 @@ public class SearchResultDetailsActivity extends OpacActivity {
                 td.addView(row,new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         	}
         	
-        	TableLayout tc = (TableLayout) findViewById(R.id.tlExemplare);
-        	
-        	for(int i = 0; i < result.getCopies().size(); i++){
-                TableRow row = new TableRow(SearchResultDetailsActivity.this);
-
-                TextView t1 = new TextView(SearchResultDetailsActivity.this);
-                String t1t = "";
-                if(!result.getCopies().get(i)[0].equals("?")){
-                	t1t = t1t + result.getCopies().get(i)[0]+"<br />";
-                }
-                if(!result.getCopies().get(i)[1].equals("?")){
-                	t1t = t1t + result.getCopies().get(i)[1];
-                }
-                t1.setText(Html.fromHtml(t1t));
-                row.addView(t1); 
-                
-                TextView t2 = new TextView(SearchResultDetailsActivity.this);
-                String status = result.getCopies().get(i)[4]+"<br />";
-                if(!result.getCopies().get(i)[5].equals("") && !result.getCopies().get(i)[5].equals("?")){
-                	status = status + getString(R.string.ret) + ": "+result.getCopies().get(i)[5]+"<br />";
-                }
-                t2.setPadding(10, 0, 0, 0);
-                if(!result.getCopies().get(i)[6].equals("") && !result.getCopies().get(i)[6].equals("?")){
-                	status = status + getString(R.string.res) + ": "+result.getCopies().get(i)[6];
-                }
-                t2.setText(Html.fromHtml(status));
-                row.addView(t2); 
-                
-                tc.addView(row,new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+        	if(result.getBaende().size() > 0){
+        		TextView tvC = (TextView) findViewById(R.id.tvCopies);
+        		tvC.setText(R.string.baende);
+	        	TableLayout tc = (TableLayout) findViewById(R.id.tlExemplare);
+	        	
+	        	for(int i = 0; i < result.getBaende().size(); i++){
+	                TableRow row = new TableRow(SearchResultDetailsActivity.this);
+	
+	                TextView t1 = new TextView(SearchResultDetailsActivity.this);
+	                t1.setText(Html.fromHtml(result.getBaende().get(i)[1]));
+	                row.addView(t1); 
+	                final String a = result.getBaende().get(i)[0];
+	                
+	                Button b2 = new Button(SearchResultDetailsActivity.this);
+	                b2.setOnClickListener(new OnClickListener(){
+						@Override
+						public void onClick(View arg0) {
+					        Intent intent = new Intent(SearchResultDetailsActivity.this, SearchResultDetailsActivity.class);
+					        intent.putExtra("subitem", a);
+					        startActivity(intent);
+						}
+	                });
+	                b2.setText(R.string.details);
+	                row.addView(b2); 
+	                tc.addView(row,new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+	        	}
+        	}else{
+	        	TableLayout tc = (TableLayout) findViewById(R.id.tlExemplare);
+	        	
+	        	for(int i = 0; i < result.getCopies().size(); i++){
+	                TableRow row = new TableRow(SearchResultDetailsActivity.this);
+	
+	                TextView t1 = new TextView(SearchResultDetailsActivity.this);
+	                String t1t = "";
+	                if(!result.getCopies().get(i)[0].equals("?")){
+	                	t1t = t1t + result.getCopies().get(i)[0]+"<br />";
+	                }
+	                if(!result.getCopies().get(i)[1].equals("?")){
+	                	t1t = t1t + result.getCopies().get(i)[1];
+	                }
+	                t1.setText(Html.fromHtml(t1t));
+	                row.addView(t1); 
+	                
+	                TextView t2 = new TextView(SearchResultDetailsActivity.this);
+	                String status = result.getCopies().get(i)[4]+"<br />";
+	                if(!result.getCopies().get(i)[5].equals("") && !result.getCopies().get(i)[5].equals("?")){
+	                	status = status + getString(R.string.ret) + ": "+result.getCopies().get(i)[5]+"<br />";
+	                }
+	                t2.setPadding(10, 0, 0, 0);
+	                if(!result.getCopies().get(i)[6].equals("") && !result.getCopies().get(i)[6].equals("?")){
+	                	status = status + getString(R.string.res) + ": "+result.getCopies().get(i)[6];
+	                }
+	                t2.setText(Html.fromHtml(status));
+	                row.addView(t2); 
+	                
+	                tc.addView(row,new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+	        	}
         	}
         	
         	if(item.isReservable()){
@@ -212,6 +243,31 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
         }
     }
+	
+    public class FetchSubTask extends FetchTask {
+    	@Override
+    	protected DetailledItem doInBackground(Object... arg0) {
+            app = (OpacClient) arg0[0];
+            String a = (String) arg0[1];
+            
+            try {
+    			DetailledItem res = app.ohc.getSubResult(a);
+				URL newurl;
+				try {
+					newurl = new URL(res.getCover());
+	        		Bitmap mIcon_val = BitmapFactory.decodeStream(newurl.openConnection().getInputStream()); 
+	        		res.setCoverBitmap(mIcon_val);
+				} catch (Exception e) {
+	    		}
+    			return res;
+    		} catch (Exception e) {
+    			publishProgress(e, "ioerror");
+    		}
+            
+    		return null;
+    	}
+    }
+    
 	public class ResTask extends OpacTask<Integer> {			
     	protected Integer doInBackground(Object... arg0) {
             app = (OpacClient) arg0[0];
@@ -250,4 +306,11 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			}
 		}
 	}
+	
+    @Override
+    public void onDestroy() {
+	    super.onDestroy();
+	    unbindDrawables(findViewById(R.id.rootView));
+	    System.gc();
+    }
 }
