@@ -327,6 +327,7 @@ public class OpacWebApi {
 
 		return true;
 	}
+	
 	public boolean prolong (String a) throws IOException  {	
 		if(!initialised) init();	
 		HttpGet httpget = new HttpGet(opac_url+"/"+a);
@@ -339,16 +340,26 @@ public class OpacWebApi {
 			last_error = doc.getElementsByClass("kontomeldung").get(0).text();
 			return false;
         }
-        /*
-	    HttpPost httppost = new HttpPost(opac_url+"/index.asp"); 
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-        nameValuePairs.add(new BasicNameValuePair("target", "delvorbest"));
-        nameValuePairs.add(new BasicNameValuePair("vorbdelbest", "Bestätigung"));
-        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-        response = ahc.execute(httppost);
-		response.getEntity().consumeContent();*/
-		return true;
+        if(doc.select("#verlaengern").size() == 1){
+
+    	    HttpPost httppost = new HttpPost(opac_url+"/index.asp"); 
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+            nameValuePairs.add(new BasicNameValuePair("target", "make_vl"));
+            nameValuePairs.add(new BasicNameValuePair("verlaengern", "Bestätigung"));
+            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            response = ahc.execute(httppost);
+    		response.getEntity().consumeContent();
+
+            if(doc.getElementsByClass("kontomeldung").size() == 1){
+    			last_error = doc.getElementsByClass("kontomeldung").get(0).text();
+            }
+        	
+			return true;
+        }
+        last_error = "??";
+		return false;
 	}
+	
 	public boolean cancel (String a) throws IOException  {	
 		if(!initialised) init();	
 		HttpGet httpget = new HttpGet(opac_url+"/"+a);
