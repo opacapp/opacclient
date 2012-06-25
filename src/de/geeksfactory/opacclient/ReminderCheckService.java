@@ -16,11 +16,14 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class ReminderCheckService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startid) {
+		Log.i("service", "start");
+		
   	  	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ReminderCheckService.this);
   	  	if(sp.getBoolean("notification_service", false) == false || sp.getString("opac_password", "").equals("")){
   	  		stopSelf();
@@ -45,17 +48,17 @@ public class ReminderCheckService extends Service {
 		return null;
 	}
 	
-	public class CheckTask extends AsyncTask<Object, Object, Integer[]> {
+	public class CheckTask extends AsyncTask<Object, Object, Long[]> {
 
 		@Override
-		protected Integer[] doInBackground(Object... params) {
+		protected Long[] doInBackground(Object... params) {
 	  	  	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ReminderCheckService.this);
 			OpacWebApi ohc = new OpacWebApi(sp.getString("opac_url", getResources().getString(R.string.opac_mannheim)), ReminderCheckService.this, ((OpacClient) getApplication()).get_bib());
 			SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 			long now = new Date().getTime();
 			long warning = Long.decode(sp.getString("notification_warning", "367200000"));
-			int E = 0;
-			int abs = 0;
+			long E = 0;
+			long abs = 0;
 			long last = sp.getLong("notification_last", 0);
 			try {
         		List<List<String[]>> res = ohc.account(sp.getString("opac_usernr", ""), sp.getString("opac_password", ""));
@@ -72,15 +75,13 @@ public class ReminderCheckService extends Service {
 							if(expiring.getTime() > last){
 								last = expiring.getTime();
 							}
+							Log.i("book", (expiring.getTime()-now)+" "+warning);
 						}catch(Exception e){
 			            	e.printStackTrace();
 						}
 					}
         		}
-        		SharedPreferences.Editor spe = sp.edit();
-        		spe.putLong("notification_last", last);
-        		spe.commit();
-        		Integer[] r = {E, abs};
+        		Long[] r = {E, abs, last};
         		return r;
             }catch(Exception e){
             	e.printStackTrace();
@@ -88,11 +89,12 @@ public class ReminderCheckService extends Service {
 			return null;
 		}
 		
-		protected void onPostExecute(Integer[] result) {
-			int E = result[0];
-			int abs = result[1];
+		protected void onPostExecute(Long[] result) {
+			long E = result[0];
+			long abs = result[1];
+			long last = result[2];
 			if(E == 0) return;
-
+			
 	  	  	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ReminderCheckService.this);
 		    NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		    int icon = android.R.drawable.stat_notify_error;
@@ -105,13 +107,13 @@ public class ReminderCheckService extends Service {
 		    CharSequence contentTitle = getString(R.string.notif_title);
 		    CharSequence contentText = getString(R.string.notif_ticker, abs);
 		    Intent notificationIntent = new Intent(ReminderCheckService.this, AccountActivity.class);
+		    notificationIntent.putExtra("notif_last", last);
 		    PendingIntent contentIntent = PendingIntent.getActivity(ReminderCheckService.this, 0, notificationIntent, 0);
 
 		    if(!sp.getString("notification_sound", "").equals("")){
 		    	notification.sound = Uri.parse(sp.getString("notification_sound", ""));
 		    }
-		    notification.flags |= Notification.FLAG_AUTO_CANCEL;
-		    notification.number = E;
+		    notification.number = (int) E;
 		    
 		    notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
 

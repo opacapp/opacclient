@@ -20,7 +20,7 @@ public class FrontpageActivity extends OpacActivity {
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.frontpage);
   	  	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        
+		
   	  	if(sp.getString("opac_url", "").equals("") || sp.getString("opac_bib", "").equals("")){
             Intent intent = new Intent(this, WelcomeActivity.class);
             startActivity(intent);

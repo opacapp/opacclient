@@ -3,7 +3,9 @@ package de.geeksfactory.opacclient;
 import java.util.List;
 
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnCancelListener;
@@ -33,13 +35,24 @@ public class AccountActivity extends OpacActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(app);
+        
+        if(getIntent().getExtras() != null){
+        	if(getIntent().getExtras().getLong("notif_last") > 0){
+	    		SharedPreferences.Editor spe = sp.edit();
+	    		spe.putLong("notification_last", getIntent().getExtras().getLong("notif_last"));
+	    		spe.commit();
+	    	    NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+	    	    nMgr.cancel(OpacClient.NOTIF_ID);
+        	}
+        };
     }
     @Override
     public void onResume() {
     	super.onResume();
         setContentView(R.layout.account);
-        
-        
+
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(app);
     	if(sp.getString("opac_usernr", "").equals("") || sp.getString("opac_password", "").equals("")){
     		dialog_no_user(true);

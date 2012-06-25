@@ -55,6 +55,10 @@ public class WelcomeActivity extends OpacActivity {
 		  	  	Editor e = sp.edit();
 		  	  	e.remove("opac_mg");
 		  	  	e.remove("opac_zst");
+		  	  	e.remove("notification_last");
+		  	  	e.putBoolean("notification_service", false);
+		  	  	e.remove("opac_usernr");
+		  	  	e.remove("opac_password");
 				e.putString("opac_url", app.ohc.opac_url);
 				e.putString("opac_bib", bibnamesA[position]);
 		        e.commit();
