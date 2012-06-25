@@ -56,6 +56,7 @@
                     android:id="@+id/ivGoSearch"
                     android:layout_width="130dp"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/frontpage_focused"
                     android:focusable="true"
                     android:src="@drawable/action_search" />
 
@@ -70,8 +71,11 @@
 
                 <ImageView
                     android:id="@+id/ivGoScan"
-                    android:layout_width="100dp"
+                    android:layout_width="130dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
                     android:focusable="true"
+                    android:background="@drawable/frontpage_focused"
                     android:layout_height="wrap_content"
                     android:src="@drawable/action_scan" />
             </LinearLayout>
@@ -95,6 +99,7 @@
                     android:focusable="true"
                     android:layout_width="130dp"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/frontpage_focused"
                     android:layout_gravity="center"
                     android:src="@drawable/action_account" />
             </LinearLayout>
@@ -110,6 +115,7 @@
                     android:layout_width="130dp"
                     android:focusable="true"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/frontpage_focused"
                     android:layout_gravity="center"
                     android:src="@drawable/action_fav" />
             </LinearLayout>
