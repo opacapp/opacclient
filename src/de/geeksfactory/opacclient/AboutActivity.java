@@ -1,5 +1,10 @@
 package de.geeksfactory.opacclient;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import android.app.Activity;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
@@ -15,21 +20,29 @@ public class AboutActivity extends Activity {
         setContentView(R.layout.about);
         
         TextView tvAbout = (TextView) findViewById(R.id.tvAbout);
+        TextView tvVersion = (TextView) findViewById(R.id.tvVersion);
+        String abouttext = "";
         
         try {
-			tvAbout.setText(Html.fromHtml("OpacClient für Android "+(getPackageManager().getPackageInfo(getPackageName(), 0).versionName)+
-					"<br /><br />Eine App von <b>Raphael Michel</b><br /><br />" +
-					"<a href='http://www.raphaelmichel.de'>www.raphaelmichel.de</a><br />"+
-					"<a href='mailto:raphael@geeksfactory.de'>raphael@geeksfactory.de</a><br /><br />" +
-					"Veröffentlicht von der geek's factory<br />" +
-					"<a href='http://www.geeksfactory.de'>www.geeksfactory.de</a><br /><br />"+
-					"Diese App ist freie Software, den Source Code gibt es hier:<br />"+
-					"<a href='https://github.com/raphaelm/opacclient'>github.com/raphaelm/opacclient</a><br /><br />"+
-					"Die Icons stammen aus dem Human O2 Set von Oliver Scholtz<br /><br />"+
-					"Gedacht zur Bedienung von BOND Web-Opacs V2.6<br /><br />"+
-					"Danke an Céline A.<br />"+
-					"Die App verwendet <a href='http://jsoup.org'>jsoup</a> und mag es.<br />"
-					));
+			StringBuilder builder = new StringBuilder();
+			InputStream fis;
+			try {
+				fis = getAssets().open("about.html");
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(fis, "utf-8"));
+				String line;
+				while ((line = reader.readLine()) != null) {
+					builder.append(line);
+				}
+
+	        	abouttext = builder.toString();
+	    		fis.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+        	
+			tvVersion.setText(Html.fromHtml("OpacClient für Android "+(getPackageManager().getPackageInfo(getPackageName(), 0).versionName)));
+			tvAbout.setText(Html.fromHtml(abouttext));
 			tvAbout.setMovementMethod(LinkMovementMethod.getInstance());
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();

@@ -13,6 +13,13 @@
         android:layout_marginBottom="15dip"
         android:src="@drawable/ic_launcher_big" />
 
+    <TextView
+        android:id="@+id/tvVersion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dip"
+        android:text="TextView" />
+
     <ScrollView
         android:id="@+id/svAbout"
         android:layout_width="match_parent"
