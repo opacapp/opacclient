@@ -36,7 +36,8 @@
             android:id="@+id/btExtendall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/extendall" />
+            android:text="@string/extendall"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/textView2"
