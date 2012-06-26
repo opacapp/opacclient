@@ -19,9 +19,11 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -58,6 +60,8 @@ public class ErrorActivity extends Activity {
         TextView tvMsg = (TextView) findViewById(R.id.tvError);
         if(st.startsWith("java.net.UnknownHostException") || getIntent().getExtras().getString("t").equals("offline")){
         	tvMsg.setText(R.string.no_connection);
+        }else if(st.startsWith("org.apache.http.NoHttpResponseException")){
+            tvMsg.setText(R.string.no_response);
         }else{
         	tvMsg.setText(R.string.ioerror);
         	btSend.setVisibility(View.VISIBLE);
@@ -95,9 +99,11 @@ public class ErrorActivity extends Activity {
 	        } catch (Exception e) {
 	        	
 	        }
+	  	  	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ErrorActivity.this);
 	        nameValuePairs.add(new BasicNameValuePair("android", android.os.Build.VERSION.RELEASE));
 	        nameValuePairs.add(new BasicNameValuePair("sdk", ""+android.os.Build.VERSION.SDK_INT));
 	        nameValuePairs.add(new BasicNameValuePair("device", android.os.Build.MANUFACTURER+" "+android.os.Build.MODEL));
+	        nameValuePairs.add(new BasicNameValuePair("bib", sp.getString("opac_bib", "Unknown")));
 
 	        try {
 				httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
