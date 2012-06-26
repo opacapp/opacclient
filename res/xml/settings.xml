@@ -2,29 +2,43 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <PreferenceCategory android:title="@string/web_opac" >
-        <Preference android:key="welcome_assistant" android:title="@string/welcome_assistant" android:summary="@string/welcome_assistant_desc" />
+        <Preference
+            android:key="welcome_assistant"
+            android:summary="@string/welcome_assistant_desc"
+            android:title="@string/welcome_assistant" />
+
         <EditTextPreference
             android:key="opac_usernr"
             android:numeric="integer"
-            android:title="@string/opac_usernr" android:summary="@string/opac_usernr_desc"/>
+            android:summary="@string/opac_usernr_desc"
+            android:title="@string/opac_usernr" />
         <EditTextPreference
+            android:dependency="opac_usernr"
             android:key="opac_password"
             android:password="true"
             android:summary="@string/opac_password_hint"
-            android:title="@string/opac_password" android:dependency="opac_usernr"/>
-        
+            android:title="@string/opac_password" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/notifications" >
         <CheckBoxPreference
+            android:dependency="opac_usernr"
             android:key="notification_service"
-            android:title="@string/notification_service" android:dependency="opac_usernr" android:summary="@string/notification_service_desc"/>
+            android:summary="@string/notification_service_desc"
+            android:title="@string/notification_service" />
 
-        <ListPreference android:dependency="notification_service" android:entries="@array/warning" android:entryValues="@array/warning_n" android:key="notification_warning" android:title="@string/notification_warning" android:defaultValue="259200000" android:summary="@string/notification_warning_desc"/><RingtonePreference
+        <ListPreference
+            android:defaultValue="259200000"
+            android:dependency="notification_service"
+            android:entries="@array/warning"
+            android:entryValues="@array/warning_n"
+            android:key="notification_warning"
+            android:summary="@string/notification_warning_desc"
+            android:title="@string/notification_warning" />
+
+        <RingtonePreference
             android:dependency="notification_service"
             android:key="notification_sound"
-            android:title="@string/notification_sound" />
-
-        
+            android:title="@string/notification_sound" android:ringtoneType="notification"/>
     </PreferenceCategory>
 
 </PreferenceScreen>
