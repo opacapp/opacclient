@@ -60,13 +60,17 @@ public class ErrorActivity extends Activity {
         TextView tvMsg = (TextView) findViewById(R.id.tvError);
         if(st.startsWith("java.net.UnknownHostException") || getIntent().getExtras().getString("t").equals("offline")){
         	tvMsg.setText(R.string.no_connection);
+            tvDetails.setVisibility(View.GONE);
         }else if(st.startsWith("org.apache.http.NoHttpResponseException")){
             tvMsg.setText(R.string.no_response);
+            tvDetails.setVisibility(View.GONE);
         }else if(st.startsWith("de.geeksfactory.opacclient.NotReachableException")){
             tvMsg.setText(R.string.not_reachable);
+            tvDetails.setVisibility(View.GONE);
         }else{
         	tvMsg.setText(R.string.ioerror);
         	btSend.setVisibility(View.VISIBLE);
+            tvDetails.setVisibility(View.VISIBLE);
         }
         btSend.setOnClickListener(new OnClickListener(){
 			@Override
