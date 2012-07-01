@@ -80,9 +80,9 @@ public class ReminderCheckService extends Service {
 			            	e.printStackTrace();
 						}
 					}
+	        		Long[] r = {E, abs, last};
+	        		return r;
         		}
-        		Long[] r = {E, abs, last};
-        		return r;
             }catch(Exception e){
             	e.printStackTrace();
             }
@@ -90,6 +90,16 @@ public class ReminderCheckService extends Service {
 		}
 		
 		protected void onPostExecute(Long[] result) {
+			Intent i = new Intent(ReminderCheckService.this, ReminderAlarmReceiver.class);
+			PendingIntent sender = PendingIntent.getBroadcast(ReminderCheckService.this, OpacClient.BROADCAST_REMINDER, i, PendingIntent.FLAG_UPDATE_CURRENT);
+	        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+	        
+			if(result == null){
+				// Try again in one hour
+		        am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+(1000*3600), sender);
+		        return;
+			}
+			
 			long E = result[0];
 			long abs = result[1];
 			long last = result[2];
@@ -118,11 +128,7 @@ public class ReminderCheckService extends Service {
 		    notification.setLatestEventInfo(context, contentTitle, contentText, contentIntent);
 
 		    mNotificationManager.notify(OpacClient.NOTIF_ID, notification);
-	  	  	
-			Intent i = new Intent(ReminderCheckService.this, ReminderAlarmReceiver.class);
-			PendingIntent sender = PendingIntent.getBroadcast(ReminderCheckService.this, OpacClient.BROADCAST_REMINDER, i, PendingIntent.FLAG_UPDATE_CURRENT);
-	 
-	        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		    
 	        am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+(1000*3600*5), sender);
 	        
 		    stopSelf();
