@@ -103,10 +103,15 @@ public class OpacWebApi {
 		this.bib = bib;
 	}
 		
-	public void init() throws ClientProtocolException, IOException {
+	public void init() throws ClientProtocolException, IOException, NotReachableException {
 		initialised = true;
 		HttpGet httpget = new HttpGet(opac_url+"/woload.asp?lkz=1&nextpage=");
 		HttpResponse response = ahc.execute(httpget);
+        
+        if(response.getStatusLine().getStatusCode() == 500){
+			throw new NotReachableException();
+	    }
+        
 		response.getEntity().consumeContent();
 
 		HttpPost httppost = new HttpPost(opac_url+"/index.asp");
@@ -124,7 +129,7 @@ public class OpacWebApi {
 			String schlag_a, String schlag_b, String zweigstelle, 
 			String mediengruppe, String isbn, String jahr_von, String jahr_bis,
 			String notation, String interessenkreis, String verlag, String order
-		) throws IOException{
+		) throws IOException, NotReachableException{
 		if(!initialised) init();
 		
 	    HttpPost httppost = new HttpPost(opac_url+"/index.asp"); 
@@ -150,13 +155,17 @@ public class OpacWebApi {
         
         httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
         HttpResponse response = ahc.execute(httppost);
+        
+        if(response.getStatusLine().getStatusCode() == 500){
+			throw new NotReachableException();
+	    }
 
 		String html = convertStreamToString(response.getEntity().getContent());
 		response.getEntity().consumeContent();
 		return parse_search(html);
 	}
 	
-	public List<SearchResult> search_page (int page) throws IOException {
+	public List<SearchResult> search_page (int page) throws IOException, NotReachableException {
 		if(!initialised) init();
 		
 	    HttpGet httpget = new HttpGet(opac_url+"/index.asp?scrollAction="+page); 
@@ -192,7 +201,7 @@ public class OpacWebApi {
 		return results;
 	}
 	
-	public DetailledItem getResultById (String a) throws IOException {	
+	public DetailledItem getResultById (String a) throws IOException, NotReachableException {	
 		if(!initialised) init();	
 		HttpGet httpget = new HttpGet(opac_url+"/index.asp?MedienNr="+a);
 	    
@@ -329,7 +338,7 @@ public class OpacWebApi {
 		return true;
 	}
 	
-	public boolean prolong (String a) throws IOException  {	
+	public boolean prolong (String a) throws IOException, NotReachableException  {	
 		if(!initialised) init();	
 		HttpGet httpget = new HttpGet(opac_url+"/"+a);
         HttpResponse response = ahc.execute(httpget);
@@ -361,7 +370,7 @@ public class OpacWebApi {
 		return false;
 	}
 	
-	public boolean cancel (String a) throws IOException  {	
+	public boolean cancel (String a) throws IOException, NotReachableException  {	
 		if(!initialised) init();	
 		HttpGet httpget = new HttpGet(opac_url+"/"+a);
         HttpResponse response = ahc.execute(httpget);
@@ -376,7 +385,7 @@ public class OpacWebApi {
 		response.getEntity().consumeContent();
 		return true;
 	}
-	public List<List<String[]>> account (String ausw, String pwd) throws IOException  {
+	public List<List<String[]>> account (String ausw, String pwd) throws IOException, NotReachableException  {
 		if(!initialised) init();		
 		HttpGet httpget;
 		
@@ -387,7 +396,8 @@ public class OpacWebApi {
         nameValuePairs.add(new BasicNameValuePair("link_konto.y", "0"));
         httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
         HttpResponse response = ahc.execute(httppost);
-	    
+
+    	Log.i("response", ""+response.getStatusLine().getStatusCode());
 	    if(response.getStatusLine().getStatusCode() == 200){
 	    	// Login vonnöten
 	    	response.getEntity().consumeContent();
@@ -403,10 +413,10 @@ public class OpacWebApi {
 	    }else if(response.getStatusLine().getStatusCode() == 302){
 	    	// Bereits eingeloggt
 	    	response.getEntity().consumeContent();
-			httpget = new HttpGet(opac_url+"/index.asp?target=konto");
+			httpget = new HttpGet(opac_url+"/inderesponse.getStatusLine().getStatusCode()x.asp?target=konto");
 		    response = ahc.execute(httpget);
-	    }else{
-			response.getEntity().consumeContent();
+	    }else if(response.getStatusLine().getStatusCode() == 500){
+			throw new NotReachableException();
 	    }
 
 		String html = convertStreamToString(response.getEntity().getContent());

@@ -62,6 +62,8 @@ public class ErrorActivity extends Activity {
         	tvMsg.setText(R.string.no_connection);
         }else if(st.startsWith("org.apache.http.NoHttpResponseException")){
             tvMsg.setText(R.string.no_response);
+        }else if(st.startsWith("de.geeksfactory.opacclient.NotReachableException")){
+            tvMsg.setText(R.string.not_reachable);
         }else{
         	tvMsg.setText(R.string.ioerror);
         	btSend.setVisibility(View.VISIBLE);
