@@ -1,68 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.geeksfactory.opacclient"
-    android:versionCode="6"
-    android:versionName="1.1.3" >
+    android:versionCode="7"
+    android:versionName="1.1.4" >
 
     <uses-sdk android:minSdkVersion="10" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <application
+        android:name=".OpacClient"
         android:icon="@drawable/ic_launcher"
-        android:theme="@style/LightThemeSelector"
-        android:label="@string/app_name" android:name=".OpacClient">
+        android:label="@string/app_name"
+        android:theme="@style/LightThemeSelector" >
         <activity
             android:name=".FrontpageActivity"
-        	android:theme="@style/LightThemeSelector.NoTitleBar"
-            android:label="@string/launcher_name">
+            android:label="@string/launcher_name"
+            android:theme="@style/LightThemeSelector.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="de.geeksfactory.opacclient"
+                    android:scheme="opac" />
             </intent-filter>
         </activity>
         <activity
             android:name=".SearchActivity"
-            android:label="@string/search">
+            android:label="@string/search" >
         </activity>
         <activity
             android:name=".SearchResultsActivity"
-            android:label="@string/search_results"
-            android:configChanges="keyboardHidden|orientation">
-       	</activity>
-       	<activity android:name=".MainPreferenceActivity"
-            android:label="@string/prefs">
-       	</activity>
-       	<activity android:name=".SearchResultDetailsActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/details">
-       	</activity>
-       	<activity android:name=".AccountActivity"
+            android:label="@string/search_results" >
+        </activity>
+        <activity
+            android:name=".MainPreferenceActivity"
+            android:label="@string/prefs" >
+        </activity>
+        <activity
+            android:name=".SearchResultDetailsActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/account">
-       	</activity>
-       	<activity android:name=".WelcomeActivity"
+            android:label="@string/details" >
+        </activity>
+        <activity
+            android:name=".AccountActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name">
-       	</activity>
-       	<activity android:name=".AboutActivity"
-            android:label="@string/about">
-       	</activity>
-       	<activity android:name=".ErrorActivity"
-            android:label="@string/app_name" android:excludeFromRecents="true" android:noHistory="true">
-       	</activity>
-       	<activity android:name=".StarredActivity"
-            android:label="@string/starred_list">
-       	</activity>
-       	<service android:name=".ReminderCheckService"></service>
-       	<receiver android:name=".ReminderBootBroadcastReceiver">  
-		    <intent-filter>  
-		        <action android:name="android.intent.action.BOOT_COMPLETED" />  
-		    </intent-filter>  
-		</receiver>
-       	<receiver android:name=".ReminderAlarmReceiver">  
-		</receiver>
+            android:label="@string/account" >
+        </activity>
+        <activity
+            android:name=".WelcomeActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".AboutActivity"
+            android:label="@string/about" >
+        </activity>
+        <activity
+            android:name=".ErrorActivity"
+            android:excludeFromRecents="true"
+            android:label="@string/app_name"
+            android:noHistory="true" >
+        </activity>
+        <activity
+            android:name=".StarredActivity"
+            android:label="@string/starred_list" >
+        </activity>
+
+        <service android:name=".ReminderCheckService" >
+        </service>
+
+        <receiver android:name=".ReminderBootBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".ReminderAlarmReceiver" >
+        </receiver>
     </application>
 
 </manifest>

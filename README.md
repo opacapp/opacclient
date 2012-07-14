@@ -36,3 +36,22 @@ Autor
 Raphael Michel
 http://www.raphaelmichel.de
 raphael@geeksfactory.de
+
+Technisches
+===========
+
+Intents
+-------
+android.intent.action.VIEW, opac://de.geeksfactory.opacclient?…
+
+Parameters:
+* id (Mediennr.)
+oder
+* titel
+* verfasser
+* schlag_a
+* schlag_b
+* isbn
+* jahr_von
+* jahr_bis
+* verlag
