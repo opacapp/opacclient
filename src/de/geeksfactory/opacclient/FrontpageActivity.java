@@ -26,6 +26,7 @@ public class FrontpageActivity extends OpacActivity {
 	        Intent intent = new Intent(FrontpageActivity.this, SearchResultDetailsActivity.class);
 	        intent.putExtra("item_id", medianr);
 	        startActivity(intent);
+	    	finish();
 	        return;
 		}
 		
@@ -47,6 +48,7 @@ public class FrontpageActivity extends OpacActivity {
 		myIntent.putExtra("jahr_bis", (jahr_bis != null ? jahr_bis : ""));
 		myIntent.putExtra("verlag", (verlag != null ? verlag : ""));
     	startActivity(myIntent);
+    	finish();
 	}
 	
 	@Override
@@ -67,9 +69,11 @@ public class FrontpageActivity extends OpacActivity {
   	  	}
         setContentView(R.layout.frontpage);
         
-        if(getIntent().getAction().equals("android.intent.action.VIEW")){        	
-        	urlintent();
-        	return;
+        if(getIntent().getAction() != null){
+        	if(getIntent().getAction().equals("android.intent.action.VIEW")){
+	        	urlintent();
+	        	return;
+        	}
         }
   	  	
   	  	TextView tvBn = (TextView) findViewById(R.id.tvBibname);
