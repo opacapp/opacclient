@@ -38,7 +38,8 @@
         <RingtonePreference
             android:dependency="notification_service"
             android:key="notification_sound"
-            android:title="@string/notification_sound" android:ringtoneType="notification"/>
+            android:ringtoneType="notification"
+            android:title="@string/notification_sound" />
     </PreferenceCategory>
 
 </PreferenceScreen>

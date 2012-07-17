@@ -14,50 +14,52 @@ import android.widget.AdapterView.OnItemClickListener;
 public class StarredActivity extends OpacActivity {
 
 	List<Starred> items;
-	
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
-        setContentView(R.layout.starred);
 
-  	  	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(StarredActivity.this);
-  	  	String bib = sp.getString("opac_bib", "");
-  	  	
-        StarDataSource data = new StarDataSource(this);
-        data.open();
-        items = data.getAllItems(bib);
-        data.close();
+		setContentView(R.layout.starred);
+
+		SharedPreferences sp = PreferenceManager
+				.getDefaultSharedPreferences(StarredActivity.this);
+		String bib = sp.getString("opac_bib", "");
+
+		StarDataSource data = new StarDataSource(this);
+		data.open();
+		items = data.getAllItems(bib);
+		data.close();
 
 		ListView lv = (ListView) findViewById(R.id.lvStarred);
-		
-        if(items.size() == 0){
-            setContentView(R.layout.starred_empty);
-        }else{
-    		lv.setOnItemClickListener(new OnItemClickListener() {
-    			public void onItemClick(AdapterView<?> parent, View view,
-    		        int position, long id) {
-    		        Intent intent = new Intent(StarredActivity.this, SearchResultDetailsActivity.class);
-    		        intent.putExtra("item_id", items.get(position).getMNr());
-    		        startActivity(intent);
-    		    }
-    		});
-    		lv.setClickable(true);
-    		lv.setAdapter(new StarredAdapter(StarredActivity.this, (items)));
-    		lv.setTextFilterEnabled(true);
-        }
+
+		if (items.size() == 0) {
+			setContentView(R.layout.starred_empty);
+		} else {
+			lv.setOnItemClickListener(new OnItemClickListener() {
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					Intent intent = new Intent(StarredActivity.this,
+							SearchResultDetailsActivity.class);
+					intent.putExtra("item_id", items.get(position).getMNr());
+					startActivity(intent);
+				}
+			});
+			lv.setClickable(true);
+			lv.setAdapter(new StarredAdapter(StarredActivity.this, (items)));
+			lv.setTextFilterEnabled(true);
+		}
 	}
-	
-	public void remove(Starred item){
+
+	public void remove(Starred item) {
 		items.remove(item);
-  	  	
-        StarDataSource data = new StarDataSource(this);
-        data.open();
-        data.remove(item);
-        data.close();
+
+		StarDataSource data = new StarDataSource(this);
+		data.open();
+		data.remove(item);
+		data.close();
 	}
 }

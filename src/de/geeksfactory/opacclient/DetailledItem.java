@@ -13,7 +13,7 @@ public class DetailledItem {
 	private String title;
 	private Bitmap coverBitmap;
 	private boolean reservable;
-	
+
 	public String getTitle() {
 		return title;
 	}
@@ -21,7 +21,7 @@ public class DetailledItem {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	
+
 	public Bitmap getCoverBitmap() {
 		return coverBitmap;
 	}
@@ -33,10 +33,11 @@ public class DetailledItem {
 	public DetailledItem() {
 		super();
 	}
-	
+
 	public String getCover() {
 		return cover;
 	}
+
 	public void setCover(String cover) {
 		this.cover = cover;
 	}
@@ -44,7 +45,8 @@ public class DetailledItem {
 	@Override
 	public String toString() {
 		return "DetailledItem [details=" + details + ", copies=" + copies
-				+ ", cover=" + cover + ", title = " + title + ", reservable = " + reservable + "]";
+				+ ", cover=" + cover + ", title = " + title + ", reservable = "
+				+ reservable + "]";
 	}
 
 	public List<String[]> getDetails() {
@@ -58,7 +60,7 @@ public class DetailledItem {
 	public List<String[]> getBaende() {
 		return baende;
 	}
-	
+
 	public void addDetail(String[] e) {
 		details.add(e);
 	}

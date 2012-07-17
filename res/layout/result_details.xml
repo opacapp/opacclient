@@ -4,70 +4,68 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="5dp">
+    android:padding="5dp" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:id="@+id/topbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" >
 
-            <LinearLayout
-                android:id="@+id/topbar"
+            <ImageView
+                android:id="@+id/ivCover"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center" >
+                android:layout_gravity="center"
+                android:contentDescription="Cover"
+                android:gravity="center"
+                android:visibility="gone" />
 
-                <ImageView
-                    android:id="@+id/ivCover"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                	android:layout_gravity="center"
-                	android:gravity="center"
-                	android:contentDescription="Cover"
-                    android:visibility="gone" />
-
-                <Button
-                    android:id="@+id/btReserve"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                	android:layout_gravity="center"
-                	android:gravity="center"
-        			android:background="@drawable/go_button"
-                    android:visibility="gone"
-                    android:textColor="#ffffff"
-                    android:text="@string/reserve" />
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/btReserve"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
-            <TableLayout
-                android:id="@+id/tlDetails"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-   				android:shrinkColumns="1"
-                android:stretchColumns="1">
-            </TableLayout>
-
-            <TextView
-                android:id="@+id/tvCopies"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/copies"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <TableLayout
-                android:id="@+id/tlExemplare"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-   				android:shrinkColumns="0"
-                android:stretchColumns="0">
-
-            </TableLayout>
-
+                android:layout_gravity="center"
+                android:background="@drawable/go_button"
+                android:gravity="center"
+                android:text="@string/reserve"
+                android:textColor="#ffffff"
+                android:visibility="gone" />
         </LinearLayout>
-    </ScrollView>
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TableLayout
+            android:id="@+id/tlDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:shrinkColumns="1"
+            android:stretchColumns="1" >
+        </TableLayout>
+
+        <TextView
+            android:id="@+id/tvCopies"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/copies"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TableLayout
+            android:id="@+id/tlExemplare"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:shrinkColumns="0"
+            android:stretchColumns="0" >
+        </TableLayout>
+    </LinearLayout>
+
+</ScrollView>

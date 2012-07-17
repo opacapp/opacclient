@@ -1,4 +1,5 @@
 package de.geeksfactory.opacclient;
+
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 
 import android.content.Intent;
@@ -7,21 +8,21 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 
-
 public class MainPreferenceActivity extends SherlockPreferenceActivity {
-    @SuppressWarnings("deprecation")
+	@SuppressWarnings("deprecation")
 	public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    	addPreferencesFromResource(R.xml.settings);
+		super.onCreate(savedInstanceState);
+		addPreferencesFromResource(R.xml.settings);
 
-    	Preference assistant = (Preference) findPreference("welcome_assistant");
-    	assistant.setOnPreferenceClickListener(new OnPreferenceClickListener(){
+		Preference assistant = (Preference) findPreference("welcome_assistant");
+		assistant.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference arg0) {
-	            Intent intent = new Intent(MainPreferenceActivity.this, WelcomeActivity.class);
-	            startActivity(intent);
+				Intent intent = new Intent(MainPreferenceActivity.this,
+						WelcomeActivity.class);
+				startActivity(intent);
 				return false;
 			}
-    	});
-    }
+		});
+	}
 }

@@ -1,4 +1,5 @@
 package de.geeksfactory.opacclient;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,19 +22,19 @@ public class OpacClient extends Application {
 
 	public OpacWebApi ohc;
 	public JSONObject bibs;
-	
+
 	public static int NOTIF_ID = 1;
 	public static int BROADCAST_REMINDER = 2;
-	
+
 	protected boolean isOnline() {
-	    ConnectivityManager connMgr = (ConnectivityManager) 
-	            getSystemService(Context.CONNECTIVITY_SERVICE);
-	    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-	    return (networkInfo != null && networkInfo.isConnected());
-	}  
-	
-	public JSONArray get_bib(){
-  	  	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+		return (networkInfo != null && networkInfo.isConnected());
+	}
+
+	public JSONArray get_bib() {
+		SharedPreferences sp = PreferenceManager
+				.getDefaultSharedPreferences(this);
 		try {
 			return bibs.getJSONArray(sp.getString("opac_bib", "Mannheim"));
 		} catch (JSONException e) {
@@ -41,49 +42,52 @@ public class OpacClient extends Application {
 			return null;
 		}
 	}
-	
-	protected void load_bibs(){
+
+	protected void load_bibs() {
 		try {
 			StringBuilder builder = new StringBuilder();
 			InputStream fis = getAssets().open("bibs.json");
-			
-			BufferedReader reader = new BufferedReader(
-					new InputStreamReader(fis, "utf-8"));
+
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					fis, "utf-8"));
 			String line;
 			while ((line = reader.readLine()) != null) {
 				builder.append(line);
 			}
-			
-    		fis.close();
-        	String json = builder.toString();
-        	bibs = new JSONObject(json).getJSONObject("bibs");
+
+			fis.close();
+			String json = builder.toString();
+			bibs = new JSONObject(json).getJSONObject("bibs");
 		} catch (IOException e) {
 			web_error(e, "ioerror");
 		} catch (JSONException e) {
 			web_error(e, "jsonerror");
 		}
 	}
-	
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
-  	  	SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-		
+		SharedPreferences sp = PreferenceManager
+				.getDefaultSharedPreferences(this);
+
 		load_bibs();
-  	  	
-		ohc = new OpacWebApi(sp.getString("opac_url", getResources().getString(R.string.opac_mannheim)), this, this.get_bib());
+
+		ohc = new OpacWebApi(sp.getString("opac_url",
+				getResources().getString(R.string.opac_mannheim)), this,
+				this.get_bib());
 	}
-	
-	public void web_error(Exception e){
+
+	public void web_error(Exception e) {
 		web_error(e, ohc.getLast_error());
 	}
 
-	public void web_error(Exception e, String t){
-        Intent intent = new Intent(this, ErrorActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("e", Log.getStackTraceString(e));
-        intent.putExtra("t", t);
-        startActivity(intent);
+	public void web_error(Exception e, String t) {
+		Intent intent = new Intent(this, ErrorActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.putExtra("e", Log.getStackTraceString(e));
+		intent.putExtra("t", t);
+		startActivity(intent);
 	}
 
 }

@@ -16,7 +16,7 @@ public class FrontpageActivity extends OpacActivity {
 
 	public void urlintent() {
 		Uri d = getIntent().getData();
-		
+
 		if (d.getHost().equals("de.geeksfactory.opacclient")) {
 			String medianr = d.getQueryParameter("id");
 
@@ -60,7 +60,10 @@ public class FrontpageActivity extends OpacActivity {
 				bib = d.getQueryParameter("bib");
 			}
 			if (!sp.getString("opac_bib", "").equals(bib)) {
-				Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.raphaelmichel.de/opacclient/bibproxy.php/web?"+d.getQuery()));
+				Intent i = new Intent(
+						Intent.ACTION_VIEW,
+						Uri.parse("http://www.raphaelmichel.de/opacclient/bibproxy.php/web?"
+								+ d.getQuery()));
 				startActivity(i);
 				return;
 			}

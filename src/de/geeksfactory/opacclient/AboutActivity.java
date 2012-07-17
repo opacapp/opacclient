@@ -18,16 +18,16 @@ import android.widget.TextView;
 
 public class AboutActivity extends OpacActivity {
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.about);
-		
-        TextView tvAbout = (TextView) findViewById(R.id.tvAbout);
-        TextView tvVersion = (TextView) findViewById(R.id.tvVersion);
-        String abouttext = "";
-        
-        try {
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.about);
+
+		TextView tvAbout = (TextView) findViewById(R.id.tvAbout);
+		TextView tvVersion = (TextView) findViewById(R.id.tvVersion);
+		String abouttext = "";
+
+		try {
 			StringBuilder builder = new StringBuilder();
 			InputStream fis;
 			try {
@@ -39,17 +39,20 @@ public class AboutActivity extends OpacActivity {
 					builder.append(line);
 				}
 
-	        	abouttext = builder.toString();
-	    		fis.close();
+				abouttext = builder.toString();
+				fis.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-        	
-			tvVersion.setText(Html.fromHtml("OpacClient für Android "+(getPackageManager().getPackageInfo(getPackageName(), 0).versionName)));
+
+			tvVersion.setText(Html
+					.fromHtml("OpacClient für Android "
+							+ (getPackageManager().getPackageInfo(
+									getPackageName(), 0).versionName)));
 			tvAbout.setText(Html.fromHtml(abouttext));
 			tvAbout.setMovementMethod(LinkMovementMethod.getInstance());
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
 		}
-    }
+	}
 }

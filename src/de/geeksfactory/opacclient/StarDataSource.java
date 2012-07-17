@@ -26,7 +26,7 @@ public class StarDataSource {
 	public void close() {
 		dbHelper.close();
 	}
-	
+
 	public void star(String nr, String title, String bib) {
 		ContentValues values = new ContentValues();
 		values.put("medianr", nr);
@@ -34,11 +34,12 @@ public class StarDataSource {
 		values.put("bib", bib);
 		database.insert("starred", null, values);
 	}
+
 	public List<Starred> getAllItems(String bib) {
 		List<Starred> items = new ArrayList<Starred>();
 		String[] selA = { bib };
-		Cursor cursor = database.query("starred",
-				allColumns, "bib = ?", selA, null, null, null);
+		Cursor cursor = database.query("starred", allColumns, "bib = ?", selA,
+				null, null, null);
 
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
@@ -50,7 +51,7 @@ public class StarDataSource {
 		cursor.close();
 		return items;
 	}
-	
+
 	private Starred cursorToItem(Cursor cursor) {
 		Starred item = new Starred();
 		item.setId(cursor.getInt(0));
@@ -60,10 +61,8 @@ public class StarDataSource {
 	}
 
 	public void remove(Starred item) {
-		String[] selA = { ""+item.getId() };
+		String[] selA = { "" + item.getId() };
 		database.delete("starred", "id=?", selA);
 	}
-
-
 
 }

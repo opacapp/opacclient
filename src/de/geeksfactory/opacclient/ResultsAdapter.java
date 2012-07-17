@@ -14,49 +14,51 @@ import android.widget.TextView;
 
 public class ResultsAdapter extends ArrayAdapter<SearchResult> {
 	private List<SearchResult> objects;
-	public HashMap<String,Integer> typemap = new HashMap<String,Integer> ();
+	public HashMap<String, Integer> typemap = new HashMap<String, Integer>();
 
 	@Override
 	public View getView(int position, View contentView, ViewGroup viewGroup) {
 		View view = null;
-		
+
 		// position always 0-7
-		if(objects.get(position) == null){
-			LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		    view = layoutInflater.inflate(R.layout.searchresult_listitem, viewGroup, false);
-		    return view;
+		if (objects.get(position) == null) {
+			LayoutInflater layoutInflater = (LayoutInflater) getContext()
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			view = layoutInflater.inflate(R.layout.searchresult_listitem,
+					viewGroup, false);
+			return view;
 		}
-		
+
 		SearchResult item = objects.get(position);
-		
+
 		if (contentView == null) {
-			LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		    view = layoutInflater.inflate(R.layout.searchresult_listitem, viewGroup, false);
-		}else{
+			LayoutInflater layoutInflater = (LayoutInflater) getContext()
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			view = layoutInflater.inflate(R.layout.searchresult_listitem,
+					viewGroup, false);
+		} else {
 			view = contentView;
 		}
-		
+
 		TextView tv = (TextView) view.findViewById(R.id.tvResult);
 		tv.setText(Html.fromHtml(item.getInnerhtml()));
-		
+
 		ImageView iv = (ImageView) view.findViewById(R.id.ivType);
-		
-		
-		if(typemap.containsKey(item.getType())){
+
+		if (typemap.containsKey(item.getType())) {
 			iv.setImageResource(typemap.get(item.getType()));
 			iv.setVisibility(View.VISIBLE);
-		}else{
+		} else {
 			iv.setVisibility(View.INVISIBLE);
 		}
-			
+
 		return view;
 	}
 
-	public ResultsAdapter(Context context,
-			List<SearchResult> objects) {
+	public ResultsAdapter(Context context, List<SearchResult> objects) {
 		super(context, R.layout.searchresult_listitem, objects);
 		this.objects = objects;
-		
+
 		typemap.put("type_mbuchs.png", R.drawable.type_mbuchs);
 		typemap.put("type_cdkl.png", R.drawable.type_cdkl);
 		typemap.put("type_cdromkl.png", R.drawable.type_cdromkl);

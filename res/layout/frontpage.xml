@@ -59,7 +59,6 @@
                     android:background="@drawable/frontpage_focused"
                     android:focusable="true"
                     android:src="@drawable/action_search" />
-
             </LinearLayout>
 
             <LinearLayout
@@ -72,11 +71,11 @@
                 <ImageView
                     android:id="@+id/ivGoScan"
                     android:layout_width="130dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/frontpage_focused"
+                    android:focusable="true"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
-                    android:focusable="true"
-                    android:background="@drawable/frontpage_focused"
-                    android:layout_height="wrap_content"
                     android:src="@drawable/action_scan" />
             </LinearLayout>
         </TableRow>
@@ -96,11 +95,11 @@
 
                 <ImageView
                     android:id="@+id/ivGoAccount"
-                    android:focusable="true"
                     android:layout_width="130dp"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/frontpage_focused"
                     android:layout_gravity="center"
+                    android:background="@drawable/frontpage_focused"
+                    android:focusable="true"
                     android:src="@drawable/action_account" />
             </LinearLayout>
 
@@ -113,10 +112,10 @@
                 <ImageView
                     android:id="@+id/ivGoStarred"
                     android:layout_width="130dp"
-                    android:focusable="true"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/frontpage_focused"
                     android:layout_gravity="center"
+                    android:background="@drawable/frontpage_focused"
+                    android:focusable="true"
                     android:src="@drawable/action_fav" />
             </LinearLayout>
         </TableRow>
