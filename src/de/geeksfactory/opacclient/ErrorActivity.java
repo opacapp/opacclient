@@ -12,6 +12,9 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+
+import com.actionbarsherlock.app.SherlockActivity;
+
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -31,7 +34,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ErrorActivity extends Activity {
+public class ErrorActivity extends SherlockActivity {
 	String st = "";
 	ProgressDialog dialog;
 	

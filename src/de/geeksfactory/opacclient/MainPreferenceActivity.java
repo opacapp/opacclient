@@ -1,4 +1,6 @@
 package de.geeksfactory.opacclient;
+import com.actionbarsherlock.app.SherlockPreferenceActivity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -6,7 +8,7 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 
 
-public class MainPreferenceActivity extends PreferenceActivity {
+public class MainPreferenceActivity extends SherlockPreferenceActivity {
     @SuppressWarnings("deprecation")
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

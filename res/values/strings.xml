@@ -60,11 +60,13 @@
     <string name="welcome">Herzlich Willkommen</string>
     <string name="welcome_select">zum Web-Opac-Client für Android. Bitte wähle aus, mit welcher Bibliothek du dich verbinden willst.</string>
     <string name="welcome_account">Um Vorbestellen oder dein Konto einsehen zu können, musst du in den Einstellungen deine Ausweisnummer und dein Passwort hinterlegen!</string>
+
     <string-array name="orders">
-    	<item>Standard</item>
-    	<item>Erscheinungsjahr</item>
-    	<item>Mediengruppe</item>
+        <item>Standard</item>
+        <item>Erscheinungsjahr</item>
+        <item>Mediengruppe</item>
     </string-array>
+
     <string name="error_occured">Ein Fehler ist aufgetreten!</string>
     <string name="restart">Anwendung neustarten</string>
     <string name="report">Bericht senden</string>
@@ -72,22 +74,24 @@
     <string name="report_sent">Bericht gesendet. Vielen Dank!</string>
     <string name="no_response">Die Bücherei konnte nicht erreicht werden. Entweder mit deinem Internet stimmt etwas nicht, oder bei der Bücherei ist was kaputt.</string>
     <string name="no_connection">Ohne Verbindung zum Internet ist das hier alles sinnlos. (Oder du hast eine falsche Web-Opac-Adresse konfiguriert.)</string>
-   	<string name="not_reachable">Der Server der Bücherei meldet einen Fehler. Da sind wir leider machtlos.</string>
+    <string name="not_reachable">Der Server der Bücherei meldet einen Fehler. Da sind wir leider machtlos.</string>
     <string name="ioerror">Die Kommunikation mit dem Web-Opac ist fehlgeschlagen oder etwas anderes ist schiefgelaufen. Wenn du einen Bericht absendest (völlig anonym!), kümmeren wir uns darum.</string>
     <string name="notifications">Benachrichtigungen</string>
     <string name="notification_service">Ablaufende Medien</string>
     <string name="notification_service_desc">Benachrichtige, wenn ein Medium abgegeben werden muss</string>
     <string name="notification_sound">Benachrichtigungs-Ton</string>
+
     <string-array name="warning">
-    	<item>Am selben Tag</item>
-    	<item>3 Tage vorher</item>
-    	<item>1 Woche vorher</item>
+        <item>Am selben Tag</item>
+        <item>3 Tage vorher</item>
+        <item>1 Woche vorher</item>
     </string-array>
     <string-array name="warning_n">
-    	<item>86400000</item>
-    	<item>259200000</item>
-    	<item>604800000</item>
+        <item>86400000</item>
+        <item>259200000</item>
+        <item>604800000</item>
     </string-array>
+
     <string name="notification_warning">Warnzeitraum</string>
     <string name="notification_warning_desc">Wie lange vorher soll benachrichtigt werden?</string>
     <string name="notif_ticker">%s Bücher müssen abgegeben oder verlängert werden!</string>
@@ -100,4 +104,6 @@
     <string name="starred">Das Medium ist jetzt auf der Merkliste</string>
     <string name="starred_list">Merkliste</string>
     <string name="starred_welcome">Dies ist deine Merkliste. Du kannst in der Detailansicht von jedem Medium die Menütaste drücken und „Merken“ auswählen, dann erscheint das Medium hier auf der Liste.</string>
+    <string name="share">Teilen</string>
+
 </resources>

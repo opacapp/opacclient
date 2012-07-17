@@ -1,54 +1,55 @@
 package de.geeksfactory.opacclient;
 
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
-public abstract class OpacActivity extends Activity {
+public abstract class OpacActivity extends SherlockActivity {
 	protected OpacClient app;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+		this.getSupportActionBar().setHomeButtonEnabled(true);
         app = (OpacClient) getApplication();
     }
     
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.main_menu, menu);
-	    return true;
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-	    // Handle item selection
-		Intent intent;
-	    switch (item.getItemId()) {
-	        case R.id.menu_prefs:
-	            intent = new Intent(OpacActivity.this, MainPreferenceActivity.class);
-	            startActivity(intent);
-	            return true;
-	        case R.id.menu_account:
-	            intent = new Intent(OpacActivity.this, AccountActivity.class);
-	            startActivity(intent);
-	            return true;
-	        case R.id.menu_about:
-	            intent = new Intent(OpacActivity.this, AboutActivity.class);
-	            startActivity(intent);
-	            return true;
-	        default:
-	            return super.onOptionsItemSelected(item);
-	    }
+		menu.add(getString(R.string.prefs))
+				.setIcon(R.drawable.ic_menu_preferences)
+				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+					@Override
+					public boolean onMenuItemClick(MenuItem item) {
+						Intent intent = new Intent(OpacActivity.this,
+								MainPreferenceActivity.class);
+						startActivity(intent);
+						return true;
+					}
+				}).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+		
+		menu.add(getString(R.string.about))
+				.setIcon(R.drawable.ic_menu_info_details)
+				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+					@Override
+					public boolean onMenuItemClick(MenuItem item) {
+						Intent intent = new Intent(OpacActivity.this,
+								AboutActivity.class);
+						startActivity(intent);
+						return true;
+					}
+				}).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+		return true;
 	}
 	
 	protected void dialog_no_user(){
@@ -108,4 +109,18 @@ public abstract class OpacActivity extends Activity {
             }
         }
     }
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			// app icon in action bar clicked; go home
+			Intent intent = new Intent(this, FrontpageActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
 }

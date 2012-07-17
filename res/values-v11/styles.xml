@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="LightThemeSelector" parent="android:Theme.Holo.Light">
-    </style>
-    <style name="LightThemeSelector.NoTitleBar" parent="android:Theme.Holo.Light.NoActionBar">
-        <item name="android:windowActionBar">false</item>
-    </style>
-</resources>

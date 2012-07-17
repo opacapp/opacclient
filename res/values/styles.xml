@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="LightThemeSelector" parent="android:Theme.Light">
-    </style>
-    <style name="LightThemeSelector.NoTitleBar" parent="android:Theme.Light.NoTitleBar">
-    </style>
-</resources>
