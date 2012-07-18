@@ -8,7 +8,7 @@ $baseurl = $bibs->bibs->{$_GET['bib']}[0];
 <html>
 
 <head>
-	<title>Einen Moment…</title>
+	<title><?php echo htmlspecialchars($_GET['title']); ?> – Stadtbibliothek <?php echo htmlspecialchars($_GET['bib']); ?> – Einen Moment…</title>
 	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
 	<script type="text/javascript">
 		var img = new Image();
@@ -26,6 +26,7 @@ $baseurl = $bibs->bibs->{$_GET['bib']}[0];
 <body>
 	<h1>Einen Moment bitte…</h1>
 	<h2>Sie werden in wenigen Sekunden zur Stadtbibliothek <?php echo htmlspecialchars($_GET['bib']); ?> weitergeleitet…</h2>
+	<h3>„<?php echo htmlspecialchars($_GET['title']); ?>“</h3>
 	<p>Dieser Zwischenschritt ist leider aus technischen Gründen notwendig. Wir finden das auch doof.</p>
 	<!--
 	<p>Wenn die Weiterleitung nach fünf Sekunden nicht erfolgt, klicken Sie bitte folgenden Link:</p>
