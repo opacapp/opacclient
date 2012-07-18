@@ -52,6 +52,30 @@ public class StarDataSource {
 		return items;
 	}
 
+	public Starred getItem(String bib, String id) {
+		String[] selA = { bib, id };
+		Cursor cursor = database.query("starred", allColumns, "bib = ? AND medianr = ?", selA,
+				null, null, null);
+		Starred item = null;
+		
+		cursor.moveToFirst();
+		if (!cursor.isAfterLast()) {
+			item = cursorToItem(cursor);
+			cursor.moveToNext();
+		}
+		// Make sure to close the cursor
+		cursor.close();
+		return item;
+	}
+
+	public boolean isStarred(String bib, String id) {
+		List<Starred> items = new ArrayList<Starred>();
+		String[] selA = { bib, id };
+		Cursor cursor = database.query("starred", allColumns, "bib = ? AND medianr = ?", selA,
+				null, null, null);
+		return (cursor.getCount() > 0);
+	}
+
 	private Starred cursorToItem(Cursor cursor) {
 		Starred item = new Starred();
 		item.setId(cursor.getInt(0));

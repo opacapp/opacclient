@@ -405,37 +405,55 @@ public class SearchResultDetailsActivity extends OpacActivity {
 						SharedPreferences sp = PreferenceManager
 								.getDefaultSharedPreferences(SearchResultDetailsActivity.this);
 						String bib = sp.getString("opac_bib", "");
+						String t = title;
 						try {
 							bib = java.net.URLEncoder.encode(bib, "UTF-8");
+							t = java.net.URLEncoder.encode(t, "UTF-8");
 						} catch (UnsupportedEncodingException e) {
 						}
 
 						intent.putExtra(Intent.EXTRA_TEXT,
 								"http://www.raphaelmichel.de/opacclient/bibproxy.php/go?bib="
-										+ bib + "&id=" + id);
+										+ bib + "&id=" + id + "&title=" + t);
 						startActivity(Intent.createChooser(intent,
 								getResources().getString(R.string.share)));
 						return true;
 					}
 				}).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-		menu.add(getString(R.string.star)).setIcon(R.drawable.ic_ab_star)
+		SharedPreferences sp = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		final String bib = sp.getString("opac_bib", "");
+
+		int starIcon = R.drawable.ic_ab_star_0;
+		StarDataSource data = new StarDataSource(this);
+		data.open();
+		if (data.isStarred(bib, id)) {
+			starIcon = R.drawable.ic_ab_star_1;
+		}
+		data.close();
+
+		menu.add(getString(R.string.star)).setIcon(starIcon)
 				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 					@Override
 					public boolean onMenuItemClick(MenuItem item) {
-						SharedPreferences sp = PreferenceManager
-								.getDefaultSharedPreferences(SearchResultDetailsActivity.this);
-						String bib = sp.getString("opac_bib", "");
 						StarDataSource star = new StarDataSource(
 								SearchResultDetailsActivity.this);
 						star.open();
-						star.star(id, title, bib);
+						if (star.isStarred(bib, id)) {
+							star.remove(star.getItem(bib, id));
+							item.setIcon(R.drawable.ic_ab_star_0);
+						} else {
+							star.star(id, title, bib);
+							Toast toast = Toast.makeText(
+									SearchResultDetailsActivity.this,
+									getString(R.string.starred),
+									Toast.LENGTH_SHORT);
+							toast.show();
+							item.setIcon(R.drawable.ic_ab_star_1);
+						}
 						star.close();
-						Toast toast = Toast
-								.makeText(SearchResultDetailsActivity.this,
-										getString(R.string.starred),
-										Toast.LENGTH_SHORT);
-						toast.show();
+
 						return true;
 					}
 				}).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
