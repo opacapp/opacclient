@@ -48,12 +48,6 @@ public class WelcomeActivity extends OpacActivity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 
-				try {
-					app.ohc.opac_url = app.bibs.getJSONArray(
-							bibnamesA[position]).getString(0);
-				} catch (JSONException e) {
-					app.web_error(e, "jsonerror");
-				}
 				SharedPreferences sp = PreferenceManager
 						.getDefaultSharedPreferences(WelcomeActivity.this);
 				Editor e = sp.edit();
@@ -66,6 +60,18 @@ public class WelcomeActivity extends OpacActivity {
 				e.putString("opac_url", app.ohc.opac_url);
 				e.putString("opac_bib", bibnamesA[position]);
 				e.commit();
+
+				try {
+					app.ohc.opac_url = app.bibs.getJSONArray(
+							bibnamesA[position]).getString(0);
+
+					app.ohc = new OpacWebApi(app.bibs.getJSONArray(
+							bibnamesA[position]).getString(0), app, app
+							.get_bib());
+
+				} catch (JSONException er) {
+					app.web_error(er, "jsonerror");
+				}
 
 				dialog = ProgressDialog.show(WelcomeActivity.this, "",
 						getString(R.string.loading), true);

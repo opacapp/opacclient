@@ -36,6 +36,7 @@ public class OpacClient extends Application {
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		try {
+			Log.i("get_bib", sp.getString("opac_bib", "Mannheim"));
 			return bibs.getJSONArray(sp.getString("opac_bib", "Mannheim"));
 		} catch (JSONException e) {
 			web_error(e, "jsonerror");

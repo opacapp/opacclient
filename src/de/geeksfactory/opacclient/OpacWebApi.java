@@ -257,6 +257,7 @@ public class OpacWebApi {
 		}
 		try {
 			JSONArray copymap = bib.getJSONArray(1);
+			Log.i("copymap", copymap.toString());
 			Elements exemplartrs = doc
 					.select(".exemplartab .tabExemplar, .exemplartab .tabExemplar_");
 			for (int i = 0; i < exemplartrs.size(); i++) {
@@ -322,7 +323,7 @@ public class OpacWebApi {
 			Document doc = Jsoup.parse(html);
 			response.getEntity().consumeContent();
 
-			if (doc.getElementsByClass("kontomeldung").size() == 1) {
+			if (doc.getElementsByClass("kontomeldung").size() == 1 && doc.select("select[name=zstauswahl]").size() == 0) {
 				last_error = doc.getElementsByClass("kontomeldung").get(0)
 						.text();
 				return null;
@@ -441,7 +442,7 @@ public class OpacWebApi {
 			response.getEntity().consumeContent();
 			httpget = new HttpGet(
 					opac_url
-							+ "/inderesponse.getStatusLine().getStatusCode()x.asp?target=konto");
+							+ "/index.asp?target=konto");
 			response = ahc.execute(httpget);
 		} else if (response.getStatusLine().getStatusCode() == 500) {
 			throw new NotReachableException();
