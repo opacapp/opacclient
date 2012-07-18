@@ -44,7 +44,7 @@ Intents
 -------
 android.intent.action.VIEW, opac://de.geeksfactory.opacclient?…
 
-Parameters:
+Parameter:
 * id (Mediennr.)
 oder
 * titel
@@ -55,3 +55,13 @@ oder
 * jahr_von
 * jahr_bis
 * verlag
+
+Kompatibilität
+---------------
+Aufbau der Einträge  in assets/bibs.json -> bibs
+
+    "Ort":["Basis-URL", [Exemplartabellen-Zuordnung]],
+
+Exemplartabellen-Zuordnung
+
+    Barcode, Zweigstelle, Abteilung, Standort, Status, Rückgabe, Vorbestellt
