@@ -14,7 +14,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 
 public class SearchResultsActivity extends OpacActivity {
 

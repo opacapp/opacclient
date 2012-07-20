@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.PreferenceActivity;
 
 public class MainPreferenceActivity extends SherlockPreferenceActivity {
 	@SuppressWarnings("deprecation")
