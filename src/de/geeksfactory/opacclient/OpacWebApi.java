@@ -10,7 +10,6 @@ import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -18,6 +17,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Comment;
 import org.jsoup.nodes.Document;
@@ -323,7 +323,8 @@ public class OpacWebApi {
 			Document doc = Jsoup.parse(html);
 			response.getEntity().consumeContent();
 
-			if (doc.getElementsByClass("kontomeldung").size() == 1 && doc.select("select[name=zstauswahl]").size() == 0) {
+			if (doc.getElementsByClass("kontomeldung").size() == 1
+					&& doc.select("select[name=zstauswahl]").size() == 0) {
 				last_error = doc.getElementsByClass("kontomeldung").get(0)
 						.text();
 				return null;
@@ -411,7 +412,7 @@ public class OpacWebApi {
 	}
 
 	public List<List<String[]>> account(String ausw, String pwd)
-			throws IOException, NotReachableException {
+			throws IOException, NotReachableException, JSONException, AccountUnsupportedException {
 		if (!initialised)
 			init();
 		HttpGet httpget;
@@ -440,9 +441,7 @@ public class OpacWebApi {
 		} else if (response.getStatusLine().getStatusCode() == 302) {
 			// Bereits eingeloggt
 			response.getEntity().consumeContent();
-			httpget = new HttpGet(
-					opac_url
-							+ "/index.asp?target=konto");
+			httpget = new HttpGet(opac_url + "/index.asp?target=konto");
 			response = ahc.execute(httpget);
 		} else if (response.getStatusLine().getStatusCode() == 500) {
 			throw new NotReachableException();
@@ -456,30 +455,69 @@ public class OpacWebApi {
 			last_error = doc.getElementsByClass("kontomeldung").get(0).text();
 			return null;
 		}
+		JSONArray copymap = null;
+		
+		try {
+			copymap = bib.getJSONArray(2);
+		}catch(JSONException e){
+			throw new AccountUnsupportedException(html);
+		}
 
 		List<String[]> medien = new ArrayList<String[]>();
 		Elements exemplartrs = doc.select(".kontozeile_center table").get(0)
 				.select("tr.tabKonto");
 		for (int i = 0; i < exemplartrs.size(); i++) {
 			Element tr = exemplartrs.get(i);
-			String[] e = { tr.child(0).text(), tr.child(1).text(),
-					tr.child(2).text(), tr.child(3).text(), tr.child(4).text(),
-					tr.child(5).text(), tr.child(6).text(),
-					tr.child(7).child(0).attr("href") };
+			String[] e = new String[8];
+
+			for (int j = 0; j < 8; j++) {
+				if (copymap.getInt(j) > -1) {
+					if (j == 7) {
+						if (tr.child(copymap.getInt(j)).children().size() > 0) {
+							e[j] = tr.child(copymap.getInt(j)).child(0)
+									.attr("href");
+						} else {
+							e[j] = null;
+						}
+					} else {
+						e[j] = tr.child(copymap.getInt(j)).text();
+					}
+				} else {
+					e[j] = "?";
+				}
+			}
 			medien.add(e);
 		}
 
+		try {
+			copymap = bib.getJSONArray(2);
+		}catch(JSONException e){
+			throw new AccountUnsupportedException(html);
+		}
 		List<String[]> reservations = new ArrayList<String[]>();
 		exemplartrs = doc.select(".kontozeile_center table").get(1)
 				.select("tr.tabKonto");
 		for (int i = 0; i < exemplartrs.size(); i++) {
 			Element tr = exemplartrs.get(i);
-			String l = null;
-			if (tr.child(5).children().size() != 0) {
-				l = tr.child(5).child(0).attr("href");
+			String[] e = new String[5];
+
+			for (int j = 0; j < 5; j++) {
+				if (copymap.getInt(j) > -1) {
+					if (j == 4) {
+						if (tr.child(copymap.getInt(j)).children().size() > 0) {
+							e[j] = tr.child(copymap.getInt(j)).child(0)
+									.attr("href");
+						} else {
+							e[j] = null;
+						}
+					} else {
+						e[j] = tr.child(copymap.getInt(j)).text();
+					}
+				} else {
+					e[j] = "?";
+				}
 			}
-			String[] e = { tr.child(0).text(), tr.child(1).text(),
-					tr.child(2).text(), tr.child(3).text(), l };
+
 			reservations.add(e);
 		}
 

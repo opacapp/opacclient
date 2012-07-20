@@ -15,7 +15,6 @@ import org.apache.http.message.BasicNameValuePair;
 
 import com.actionbarsherlock.app.SherlockActivity;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -35,8 +34,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ErrorActivity extends SherlockActivity {
-	String st = "";
-	ProgressDialog dialog;
+	private String st = "";
+	private ProgressDialog dialog;
+	private Exception ex;
+	private boolean sendHtml = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,8 @@ public class ErrorActivity extends SherlockActivity {
 
 		Button btSend = (Button) findViewById(R.id.btSend);
 
+		ex = ((OpacClient) getApplication()).last_exception;
+
 		TextView tvMsg = (TextView) findViewById(R.id.tvError);
 		if (st.startsWith("java.net.UnknownHostException")
 				|| getIntent().getExtras().getString("t").equals("offline")) {
@@ -74,11 +77,18 @@ public class ErrorActivity extends SherlockActivity {
 				.startsWith("de.geeksfactory.opacclient.NotReachableException")) {
 			tvMsg.setText(R.string.not_reachable);
 			tvDetails.setVisibility(View.GONE);
+		} else if (st
+				.startsWith("de.geeksfactory.opacclient.AccountUnsupportedException")) {
+			tvMsg.setText(R.string.account_unsupported);
+			tvDetails.setVisibility(View.GONE);
+			btSend.setVisibility(View.VISIBLE);
+			sendHtml = true;
 		} else {
 			tvMsg.setText(R.string.ioerror);
 			btSend.setVisibility(View.VISIBLE);
 			tvDetails.setVisibility(View.VISIBLE);
 		}
+
 		btSend.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -129,6 +139,16 @@ public class ErrorActivity extends SherlockActivity {
 			nameValuePairs.add(new BasicNameValuePair("bib", sp.getString(
 					"opac_bib", "Unknown")));
 
+			if (sendHtml) {
+				try {
+					nameValuePairs.add(new BasicNameValuePair("html",
+							((AccountUnsupportedException) ex).getHtml()));
+				} catch (Exception e) {
+					nameValuePairs.add(new BasicNameValuePair("html", Log
+							.getStackTraceString(e)));
+				}
+			}
+
 			try {
 				httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 			} catch (UnsupportedEncodingException e) {
@@ -153,6 +173,7 @@ public class ErrorActivity extends SherlockActivity {
 			Toast toast = Toast.makeText(ErrorActivity.this,
 					getString(R.string.report_sent), Toast.LENGTH_SHORT);
 			toast.show();
+
 		}
 	}
 }

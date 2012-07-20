@@ -22,6 +22,7 @@ public class OpacClient extends Application {
 
 	public OpacWebApi ohc;
 	public JSONObject bibs;
+	public Exception last_exception;
 
 	public static int NOTIF_ID = 1;
 	public static int BROADCAST_REMINDER = 2;
@@ -74,9 +75,12 @@ public class OpacClient extends Application {
 
 		load_bibs();
 
-		ohc = new OpacWebApi(sp.getString("opac_url",
-				getResources().getString(R.string.opac_mannheim)), this,
-				this.get_bib());
+		try {
+			ohc = new OpacWebApi(bibs.getJSONArray(sp.getString("opac_bib", "Mannheim")).getString(0), this,
+					this.get_bib());
+		} catch (JSONException e) {
+			web_error(e, "jsonerror");
+		}
 	}
 
 	public void web_error(Exception e) {
@@ -88,6 +92,7 @@ public class OpacClient extends Application {
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		intent.putExtra("e", Log.getStackTraceString(e));
 		intent.putExtra("t", t);
+		last_exception = e;
 		startActivity(intent);
 	}
 

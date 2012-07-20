@@ -47,7 +47,15 @@ public class WelcomeActivity extends OpacActivity {
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-
+				
+				String newurl = "";
+				try {
+					newurl = app.bibs.getJSONArray(
+							bibnamesA[position]).getString(0);
+				} catch (JSONException er) {
+					app.web_error(er, "jsonerror");
+				}
+				
 				SharedPreferences sp = PreferenceManager
 						.getDefaultSharedPreferences(WelcomeActivity.this);
 				Editor e = sp.edit();
@@ -57,13 +65,12 @@ public class WelcomeActivity extends OpacActivity {
 				e.putBoolean("notification_service", false);
 				e.remove("opac_usernr");
 				e.remove("opac_password");
-				e.putString("opac_url", app.ohc.opac_url);
+				e.putString("opac_url", newurl);
 				e.putString("opac_bib", bibnamesA[position]);
 				e.commit();
 
 				try {
-					app.ohc.opac_url = app.bibs.getJSONArray(
-							bibnamesA[position]).getString(0);
+					app.ohc.opac_url = newurl;
 
 					app.ohc = new OpacWebApi(app.bibs.getJSONArray(
 							bibnamesA[position]).getString(0), app, app

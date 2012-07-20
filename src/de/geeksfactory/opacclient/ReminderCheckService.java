@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.json.JSONException;
+
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -60,10 +62,15 @@ public class ReminderCheckService extends Service {
 		protected Long[] doInBackground(Object... params) {
 			SharedPreferences sp = PreferenceManager
 					.getDefaultSharedPreferences(ReminderCheckService.this);
-			OpacWebApi ohc = new OpacWebApi(sp.getString("opac_url",
-					getResources().getString(R.string.opac_mannheim)),
-					ReminderCheckService.this,
-					((OpacClient) getApplication()).get_bib());
+
+			OpacWebApi ohc = null;
+			try {
+				ohc = new OpacWebApi(((OpacClient) getApplication()).get_bib()
+						.getString(0), ReminderCheckService.this,
+						((OpacClient) getApplication()).get_bib());
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 			SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 			long now = new Date().getTime();
 			long warning = Long.decode(sp.getString("notification_warning",
