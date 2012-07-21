@@ -1,4 +1,5 @@
 {
+
 	"bibs": {
 		"Mannheim":["http://katalog.mannheim.de/wopac", [0, 1, 2, 3, 4, 5, 6], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 5]],
 		"Heidelberg":["http://ww3.heidelberg.de/wwwopac", [5, 0, 2, 1, 4, 5, -1], null, null],
@@ -19,7 +20,7 @@
 		"Dachau":["http://opac.dachau.de/webopac", [0, 4, -1, 2, 3, 5, -1], null, null],
 		"Sigmaringen":["http://www.bib.sigmaringen.de", [0, -1, -1, 1, 2, 3, -1], null, null],
 		"Aarau":["http://opac.aarau.ch", [-1, 0, 1, -1, 3, 4, -1], null, null],
-		"Hamm":["http://opac.hamm.de/opac30", [-1, 0, -1, 3, 1, 2, 6], null, null],
+		"Hamm":["http://opac.hamm.de/opac30", [-1, 0, -1, 3, 1, 2, 6], [-1, 0, 1, 2, -1, -1, 3, 4], [0, 1, -1, 2, 3]],
 		"Langenfeld":["http://www1.langenfeld.de/webopac", [5, -1, -1, 1, 0, 3, -1], null, null],
 		"Bergheim":["http://buecherei.bergheim.de/webopac", [-1, 0, -1, 3, 1, 2, 5], null, null],
 		"Göttingen":["http://opac.stadtbibliothek.goettingen.de/wopac", [-1, 0, -1, 1, 2, 3, 4], null, null],
