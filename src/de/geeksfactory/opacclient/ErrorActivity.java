@@ -70,6 +70,9 @@ public class ErrorActivity extends SherlockActivity {
 				|| getIntent().getExtras().getString("t").equals("offline")) {
 			tvMsg.setText(R.string.no_connection);
 			tvDetails.setVisibility(View.GONE);
+		} else if (st.startsWith("java.io.IOException: Request aborted")) {
+			tvMsg.setText(R.string.no_connection);
+			tvDetails.setVisibility(View.GONE);
 		} else if (st.startsWith("org.apache.http.NoHttpResponseException")) {
 			tvMsg.setText(R.string.no_response);
 			tvDetails.setVisibility(View.GONE);
