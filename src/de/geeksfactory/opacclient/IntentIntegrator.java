@@ -137,7 +137,8 @@ public class IntentIntegrator {
 
 	public static final String DEFAULT_TITLE = "Barcode Scanner installieren?";
 	public static final String DEFAULT_MESSAGE = "Diese Funktion erfordert einen Barcode-Scanner. Soll er installiert werden?";
-	public static final String DEFAULT_YES = "Ja";
+	public static final String DEFAULT_YES = "Google Play";
+	public static final String DEFAULT_AMAZON = "Amazon";
 	public static final String DEFAULT_NO = "Nein";
 
 	private static final String BS_PACKAGE = "com.google.zxing.client.android";
@@ -169,6 +170,7 @@ public class IntentIntegrator {
 	private String message;
 	private String buttonYes;
 	private String buttonNo;
+	private String buttonAmazon;
 	private Collection<String> targetApplications;
 
 	public IntentIntegrator(Activity activity) {
@@ -177,6 +179,7 @@ public class IntentIntegrator {
 		message = DEFAULT_MESSAGE;
 		buttonYes = DEFAULT_YES;
 		buttonNo = DEFAULT_NO;
+		buttonAmazon = DEFAULT_AMAZON;
 		targetApplications = TARGET_ALL_KNOWN;
 	}
 
@@ -329,6 +332,22 @@ public class IntentIntegrator {
 							// Hmm, market is not installed
 							Log.w(TAG,
 									"Android Market is not installed; cannot install Barcode Scanner");
+						}
+					}
+				});
+		downloadDialog.setNeutralButton(buttonAmazon,
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialogInterface, int i) {
+						Uri uri = Uri
+								.parse("http://www.amazon.com/gp/mas/dl/android?p=" + BS_PACKAGE);
+						Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+						try {
+							activity.startActivity(intent);
+						} catch (ActivityNotFoundException anfe) {
+							// Hmm, market is not installed
+							Log.w(TAG,
+									"Amazon Market is not installed; cannot install Barcode Scanner");
 						}
 					}
 				});
