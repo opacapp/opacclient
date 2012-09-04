@@ -22,7 +22,7 @@
 		"Aarau": ["http://opac.aarau.ch", [-1, 0, 1, -1, 3, 4, -1], null, null],
 		"Hamm": ["http://opac.hamm.de/opac30", [-1, 0, -1, 3, 1, 2, 6], [-1, 0, 1, 2, -1, -1, 3, 4], [0, 1, -1, 2, 3]],
 		"Langenfeld": ["http://www1.langenfeld.de/webopac", [5, -1, -1, 1, 0, 3, -1], null, null],
-		"Bergheim": ["http://buecherei.bergheim.de/webopac", [-1, 0, -1, 3, 1, 2, 5], null, null],
+		"Bergheim": ["http://buecherei.bergheim.de/webopac", [-1, 0, -1, 3, 1, 2, 5], [-1, 0, 1, 2, -1, -1, -1, 3], [0, 1, -1, -1, 2]],
 		"Göttingen": ["http://opac.stadtbibliothek.goettingen.de/wopac", [-1, 0, -1, 1, 2, 3, 4], [0, 3, 4, 6, 5, 1, 1, 7], [2, 3, 4, 0, 3]],
 		"Leutenbach": ["http://opac.leutenbach.de", [-1, 0, -1, 1, 3, 4, -1], null, null],
 		"Schwabach": ["https://service-on.schwabach.de/wwwopac", [0, 4, -1, 2, 3, 3, -1], null, null],
