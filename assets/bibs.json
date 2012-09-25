@@ -3,7 +3,7 @@
 	"bibs": {
 		"Mannheim": ["http://katalog.mannheim.de/wopac", [0, 1, 2, 3, 4, 5, 6], [0, 1, 2, 3, 4, 5, 6, 7], [0, 1, 2, 3, 5]],
 		"Heidelberg": ["http://ww3.heidelberg.de/wwwopac", [5, 0, 2, 1, 4, 5, -1], [3, -1, 1, 2, -1, 4, 4, 5], [-1, 0, 2, 1, 3]],
-		"Frankfurt": ["http://www.stadtbuecherei-frankfurt.de/opac", [-1, 0, -1, 1, 3, 4, -1], null, null],
+		"Frankfurt": ["http://www.stadtbuecherei-frankfurt.de/opac", [-1, 0, -1, 1, 3, 4, -1], [-1, 0, 1, 2, -1, 3, 3, 4], [0, 1, -1 , 2, 3]],
 		"Tübingen": ["http://wwwopac.rz-as.de/tuebingen", [6, 0, 3, 1, 4, 5, -1], [-1, 0, 1, 3, -1, 2, 2, 4], [0, 1, -1, 2, 3]],
 		"Trier (Palais Walderdorff)": ["https://opac.trier.de/webopac", [-1, -1, -1, 3, 0, 4, -1], [-1, 0, 1, 2, -1, 3, 3, 4], [0, 1, 2, 3, 4]],
 		"Ludwigshafen (Rhein)": ["http://bibliothek-katalog.ludwigshafen.de/webopac", [5, 0, -1, 1, 3, 4, 7], null, null],
@@ -11,7 +11,7 @@
 		"Pforzheim": ["https://opac1.stadt-pforzheim.de", [-1, 0, 1, 2, 3, 4, -1], [-1, 0, 1, 2, -1, 3, 3, 4], [0, 1, 2, 3, 4]],
 		"Ulm": ["http://www2opac.stadtbibliothek.ulm.de/wwwopac", [-1, 0, 1, 2, 4, 5, -1], [4, 2, 3, 5, -1, 0, 0, 6], [2, 3, 4, 0, 5]],
 		"Leverkusen": ["http://www.bibliothek.leverkusen.de/wwwopac", [-1, 0, -1, -1, 3, 4, 5], null, null],
-		"Speyer": ["http://buecherei.speyer.de", [0, 4, -1, 2, 3, 5, -1], null, null],
+		"Speyer": ["http://buecherei.speyer.de", [0, 4, -1, 2, 3, 5, -1], [-1, 0, 1, 2, -1, -1, -1, 3], [0, 1, 2, -1, 3]],
 		"Bad Homburg": ["http://wwwopac.bad-homburg.de/webopac", [-1, 0, -1, 2, 5, 4, 6], [-1, 0, 1, 2, -1, -1, -1, 4], [0, 1, 2, -1, 4]],
 		"Steinfurt": ["http://topac30.citeq.de/opac80", [0, 3, -1, 2, 4, 5, 6], [-1, 0, 1, 2, -1, -1, -1, 3], [0, 1, 2, -1, 3]],
 		"Bamberg": ["http://opac.stadtbuecherei-bamberg.de", [-1, 0, -1, 1, 3, 4, -1], [-1, 0, 1, 2, -1, 3, 3, 4], [0, 1, 2, 3, 4]],
