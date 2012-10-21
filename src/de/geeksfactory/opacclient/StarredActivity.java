@@ -2,10 +2,13 @@ package de.geeksfactory.opacclient;
 
 import java.util.List;
 
+import com.actionbarsherlock.view.MenuItem;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NavUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -52,6 +55,17 @@ public class StarredActivity extends OpacActivity {
 			lv.setAdapter(new StarredAdapter(StarredActivity.this, (items)));
 			lv.setTextFilterEnabled(true);
 		}
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			NavUtils.navigateUpFromSameTask(this);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	public void remove(Starred item) {

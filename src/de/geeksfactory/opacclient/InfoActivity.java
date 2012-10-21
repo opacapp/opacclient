@@ -2,7 +2,10 @@ package de.geeksfactory.opacclient;
 
 import org.json.JSONException;
 
+import com.actionbarsherlock.view.MenuItem;
+
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.TextView;
@@ -33,5 +36,17 @@ public class InfoActivity extends OpacActivity {
 			tvErr.setVisibility(View.VISIBLE);
 			tvErr.setText(R.string.info_error);
 		}
+		
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			NavUtils.navigateUpFromSameTask(this);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 }

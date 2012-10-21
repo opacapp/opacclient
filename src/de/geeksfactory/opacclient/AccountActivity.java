@@ -2,6 +2,8 @@ package de.geeksfactory.opacclient;
 
 import java.util.List;
 
+import com.actionbarsherlock.view.MenuItem;
+
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
@@ -11,6 +13,7 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NavUtils;
 import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -49,7 +52,18 @@ public class AccountActivity extends OpacActivity {
 				nMgr.cancel(OpacClient.NOTIF_ID);
 			}
 		}
-		;
+
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			NavUtils.navigateUpFromSameTask(this);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override

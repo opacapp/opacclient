@@ -1,9 +1,13 @@
 package de.geeksfactory.opacclient;
 
+import com.WazaBe.HoloEverywhere.widget.Spinner;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,7 +15,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 
 public class SearchActivity extends OpacActivity {
 
@@ -54,9 +57,9 @@ public class SearchActivity extends OpacActivity {
 			zst[0] = zst[0].substring(2);
 		}
 		ArrayAdapter<String> zst_adapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_spinner_item, zst);
+				R.layout.simple_spinner_item, zst);
 		zst_adapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
 		cbZst.setAdapter(zst_adapter);
 
 		Spinner cbMg = (Spinner) findViewById(R.id.cbMediengruppe);
@@ -65,10 +68,18 @@ public class SearchActivity extends OpacActivity {
 			mg[0] = mg[0].substring(2);
 		}
 		ArrayAdapter<String> mg_adapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_spinner_item, mg);
+				R.layout.simple_spinner_item, mg);
 		mg_adapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
 		cbMg.setAdapter(mg_adapter);
+
+		ArrayAdapter<CharSequence> order_adapter = ArrayAdapter
+				.createFromResource(this, R.array.orders,
+						R.layout.simple_spinner_item);
+		order_adapter
+				.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
+		((Spinner) SearchActivity.this.findViewById(R.id.cbOrder))
+				.setAdapter(order_adapter);
 
 		ImageView ivBarcode = (ImageView) findViewById(R.id.ivBarcode);
 		ivBarcode.setOnClickListener(new OnClickListener() {
@@ -136,13 +147,24 @@ public class SearchActivity extends OpacActivity {
 				myIntent.putExtra(
 						"order",
 						(((Integer) ((Spinner) SearchActivity.this
-								.findViewById(R.id.cbZweigstelle))
+								.findViewById(R.id.cbOrder))
 								.getSelectedItemPosition()) + 1)
 								+ "");
 				startActivity(myIntent);
 			}
 		});
 
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			NavUtils.navigateUpFromSameTask(this);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 }

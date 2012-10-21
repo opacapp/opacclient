@@ -4,7 +4,9 @@
     android:versionCode="24"
     android:versionName="1.3.1" >
 
-    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="16" />
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="16" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -63,6 +65,9 @@
         <activity
             android:name=".MainPreferenceActivity"
             android:label="@string/prefs" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.geeksfactory.opacclient.FrontpageActivity" />
         </activity>
         <activity
             android:name=".SearchResultDetailsActivity"
@@ -88,6 +93,9 @@
         <activity
             android:name=".AboutActivity"
             android:label="@string/about" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.geeksfactory.opacclient.FrontpageActivity" />
         </activity>
         <activity
             android:name=".ErrorActivity"
@@ -98,10 +106,16 @@
         <activity
             android:name=".StarredActivity"
             android:label="@string/starred_list" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.geeksfactory.opacclient.FrontpageActivity" />
         </activity>
         <activity
             android:name=".InfoActivity"
             android:label="@string/info" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.geeksfactory.opacclient.FrontpageActivity" />
         </activity>
 
         <service android:name=".ReminderCheckService" >
