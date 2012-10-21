@@ -1,11 +1,9 @@
-package de.geeksfactory.opacclient;
+package de.geeksfactory.opacclient.frontend;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
-import com.actionbarsherlock.view.MenuItem;
 
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
@@ -13,6 +11,10 @@ import android.support.v4.app.NavUtils;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
+
+import com.actionbarsherlock.view.MenuItem;
+
+import de.geeksfactory.opacclient.R;
 
 public class AboutActivity extends OpacActivity {
 

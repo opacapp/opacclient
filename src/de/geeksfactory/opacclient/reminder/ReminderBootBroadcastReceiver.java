@@ -1,5 +1,6 @@
-package de.geeksfactory.opacclient;
+package de.geeksfactory.opacclient.reminder;
 
+import de.geeksfactory.opacclient.OpacClient;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;

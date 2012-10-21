@@ -24,6 +24,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.storage.SearchResult;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;

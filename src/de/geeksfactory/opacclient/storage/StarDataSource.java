@@ -1,7 +1,9 @@
-package de.geeksfactory.opacclient;
+package de.geeksfactory.opacclient.storage;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.geeksfactory.opacclient.objects.Starred;
 
 import android.content.ContentValues;
 import android.content.Context;

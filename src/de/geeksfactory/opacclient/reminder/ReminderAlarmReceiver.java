@@ -1,4 +1,4 @@
-package de.geeksfactory.opacclient;
+package de.geeksfactory.opacclient.reminder;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

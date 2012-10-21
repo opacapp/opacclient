@@ -1,4 +1,4 @@
-package de.geeksfactory.opacclient;
+package de.geeksfactory.opacclient.storage;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

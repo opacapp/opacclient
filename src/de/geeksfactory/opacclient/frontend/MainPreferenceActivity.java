@@ -1,4 +1,4 @@
-package de.geeksfactory.opacclient;
+package de.geeksfactory.opacclient.frontend;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,8 @@ import android.support.v4.app.NavUtils;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
+
+import de.geeksfactory.opacclient.R;
 
 public class MainPreferenceActivity extends SherlockPreferenceActivity {
 	@SuppressWarnings("deprecation")

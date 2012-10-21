@@ -1,4 +1,4 @@
-package de.geeksfactory.opacclient;
+package de.geeksfactory.opacclient.frontend;
 
 import java.util.List;
 
@@ -11,6 +11,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.R.id;
+import de.geeksfactory.opacclient.R.layout;
+import de.geeksfactory.opacclient.objects.Starred;
 
 public class StarredAdapter extends ArrayAdapter<Starred> {
 	private List<Starred> objects;

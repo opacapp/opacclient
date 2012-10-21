@@ -1,7 +1,13 @@
-package de.geeksfactory.opacclient;
+package de.geeksfactory.opacclient.frontend;
 
 import java.util.HashMap;
 import java.util.List;
+
+import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.R.drawable;
+import de.geeksfactory.opacclient.R.id;
+import de.geeksfactory.opacclient.R.layout;
+import de.geeksfactory.opacclient.storage.SearchResult;
 
 import android.content.Context;
 import android.text.Html;

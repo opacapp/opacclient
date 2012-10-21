@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.geeksfactory.opacclient;
+package de.geeksfactory.opacclient.zxing;
 
 /**
  * <p>

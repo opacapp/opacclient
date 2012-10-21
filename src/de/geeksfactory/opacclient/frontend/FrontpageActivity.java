@@ -1,4 +1,4 @@
-package de.geeksfactory.opacclient;
+package de.geeksfactory.opacclient.frontend;
 
 import java.io.UnsupportedEncodingException;
 
@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+import de.geeksfactory.opacclient.OpacClient;
+import de.geeksfactory.opacclient.R;
 
 public class FrontpageActivity extends OpacActivity {
 

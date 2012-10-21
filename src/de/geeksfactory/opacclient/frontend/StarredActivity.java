@@ -1,8 +1,6 @@
-package de.geeksfactory.opacclient;
+package de.geeksfactory.opacclient.frontend;
 
 import java.util.List;
-
-import com.actionbarsherlock.view.MenuItem;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +11,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+
+import com.actionbarsherlock.view.MenuItem;
+
+import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.objects.Starred;
+import de.geeksfactory.opacclient.storage.StarDataSource;
 
 public class StarredActivity extends OpacActivity {
 

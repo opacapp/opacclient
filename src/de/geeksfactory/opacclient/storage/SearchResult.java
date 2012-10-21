@@ -1,4 +1,4 @@
-package de.geeksfactory.opacclient;
+package de.geeksfactory.opacclient.storage;
 
 public class SearchResult {
 	private String type;

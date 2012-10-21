@@ -1,4 +1,4 @@
-package de.geeksfactory.opacclient;
+package de.geeksfactory.opacclient.frontend;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,6 +17,10 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import de.geeksfactory.opacclient.OpacClient;
+import de.geeksfactory.opacclient.OpacTask;
+import de.geeksfactory.opacclient.OpacWebApi;
+import de.geeksfactory.opacclient.R;
 
 public class WelcomeActivity extends OpacActivity {
 	protected ProgressDialog dialog;

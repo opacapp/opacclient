@@ -1,4 +1,4 @@
-package de.geeksfactory.opacclient;
+package de.geeksfactory.opacclient.reminder;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,6 +19,11 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import de.geeksfactory.opacclient.OpacClient;
+import de.geeksfactory.opacclient.OpacWebApi;
+import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.R.string;
+import de.geeksfactory.opacclient.frontend.AccountActivity;
 
 public class ReminderCheckService extends Service {
 

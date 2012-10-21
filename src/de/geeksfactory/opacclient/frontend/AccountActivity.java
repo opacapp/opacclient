@@ -1,8 +1,6 @@
-package de.geeksfactory.opacclient;
+package de.geeksfactory.opacclient.frontend;
 
 import java.util.List;
-
-import com.actionbarsherlock.view.MenuItem;
 
 import android.app.AlertDialog;
 import android.app.NotificationManager;
@@ -22,6 +20,12 @@ import android.widget.TableLayout;
 import android.widget.TableLayout.LayoutParams;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import com.actionbarsherlock.view.MenuItem;
+
+import de.geeksfactory.opacclient.OpacClient;
+import de.geeksfactory.opacclient.OpacTask;
+import de.geeksfactory.opacclient.R;
 
 public class AccountActivity extends OpacActivity {
 

@@ -17,6 +17,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import de.geeksfactory.opacclient.frontend.ErrorActivity;
 
 public class OpacClient extends Application {
 
@@ -27,7 +28,7 @@ public class OpacClient extends Application {
 	public static int NOTIF_ID = 1;
 	public static int BROADCAST_REMINDER = 2;
 
-	protected boolean isOnline() {
+	public boolean isOnline() {
 		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 		return (networkInfo != null && networkInfo.isConnected());

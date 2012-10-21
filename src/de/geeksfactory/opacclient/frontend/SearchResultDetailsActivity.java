@@ -1,4 +1,4 @@
-package de.geeksfactory.opacclient;
+package de.geeksfactory.opacclient.frontend;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
@@ -31,6 +31,12 @@ import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
+
+import de.geeksfactory.opacclient.OpacClient;
+import de.geeksfactory.opacclient.OpacTask;
+import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.storage.StarDataSource;
 
 public class SearchResultDetailsActivity extends OpacActivity {
 

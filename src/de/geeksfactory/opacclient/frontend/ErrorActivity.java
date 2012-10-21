@@ -1,4 +1,4 @@
-package de.geeksfactory.opacclient;
+package de.geeksfactory.opacclient.frontend;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -32,6 +32,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
+
+import de.geeksfactory.opacclient.AccountUnsupportedException;
+import de.geeksfactory.opacclient.OpacClient;
+import de.geeksfactory.opacclient.R;
 
 public class ErrorActivity extends SherlockActivity {
 	private String st = "";

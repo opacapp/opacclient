@@ -1,4 +1,4 @@
-package de.geeksfactory.opacclient;
+package de.geeksfactory.opacclient.frontend;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -12,6 +12,9 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
+
+import de.geeksfactory.opacclient.OpacClient;
+import de.geeksfactory.opacclient.R;
 
 public abstract class OpacActivity extends SherlockActivity {
 	protected OpacClient app;

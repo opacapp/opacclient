@@ -1,4 +1,4 @@
-package de.geeksfactory.opacclient;
+package de.geeksfactory.opacclient.objects;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,4 @@
-package de.geeksfactory.opacclient;
-
-import com.WazaBe.HoloEverywhere.widget.Spinner;
-import com.actionbarsherlock.view.MenuItem;
+package de.geeksfactory.opacclient.frontend;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,6 +12,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+
+import com.WazaBe.HoloEverywhere.widget.Spinner;
+import com.actionbarsherlock.view.MenuItem;
+
+import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.zxing.IntentIntegrator;
+import de.geeksfactory.opacclient.zxing.IntentResult;
 
 public class SearchActivity extends OpacActivity {
 

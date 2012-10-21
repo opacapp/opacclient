@@ -1,4 +1,4 @@
-package de.geeksfactory.opacclient;
+package de.geeksfactory.opacclient.frontend;
 
 import java.util.List;
 
@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -17,6 +16,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.view.MenuItem;
+
+import de.geeksfactory.opacclient.OpacClient;
+import de.geeksfactory.opacclient.OpacTask;
+import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.storage.SearchResult;
 
 public class SearchResultsActivity extends OpacActivity {
 
