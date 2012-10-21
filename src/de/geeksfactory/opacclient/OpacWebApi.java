@@ -490,7 +490,7 @@ public class OpacWebApi {
 		}
 
 		try {
-			copymap = bib.getJSONArray(2);
+			copymap = bib.getJSONArray(3);
 		}catch(JSONException e){
 			throw new AccountUnsupportedException(html);
 		}
