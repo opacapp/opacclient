@@ -1,0 +1,3 @@
+[submodule "3dparty/HoloEverywhere"]
+	path = 3dparty/HoloEverywhere
+	url = https://github.com/raphaelm/HoloEverywhere.git
