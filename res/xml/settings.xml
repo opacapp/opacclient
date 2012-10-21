@@ -9,7 +9,6 @@
 
         <EditTextPreference
             android:key="opac_usernr"
-            android:numeric="integer"
             android:summary="@string/opac_usernr_desc"
             android:title="@string/opac_usernr" />
         <EditTextPreference
