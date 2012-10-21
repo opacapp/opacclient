@@ -38,7 +38,7 @@
 		"Hof": ["http://opac.stadt-hof.org", [-1, 3, -1, 0, 2, 4, -1], [-1, 0, 1, 2, -1, -1, -1, 3], [0, 1, 2, -1, 3]],
 		"Münster": ["http://www2.stadt-muenster.de/opac10", [-1, 0, -1, 4, 1, 2, 6], null, null],
 		"Wiesbaden": ["https://bond.wiesbaden.de/webopac", [-1, 0, 4, 3, 1, 2, 5], [4, 0, 1, 2, 3, 5, 5, 7], [0, 1, 5, 2, 6]],
-		"Bielefeld": ["https://www1.stadtbibliothek-bielefeld.de/webopac", [-1, 0, -1, 2, 3, 4, -1], null, null],
+		"Bielefeld": ["https://www1.stadtbibliothek-bielefeld.de/webopac", [-1, 0, -1, 2, 3, 4, -1], [-1, 0, 1, 2, 4, 3, 3, 5], [0, 1, 2, 3, 4]],
 		"Rostock": ["http://195.37.188.172/webopac", [4, 0, -1, -1, 1, 3, -1], [4, 0, 1, 3, -1, 2, 2, 5], [0, 1, 3, 2, 4]],
 		"Magdeburg": ["http://auskunft.stadtbibliothek.magdeburg.de/webopac", [-1, 0, -1, 2, 4, 5, -1], null, null],
 		"Crailsheim": ["http://www.bibliotheken.bw-online.de/wwwopac-crailsheim", [-1, -1, -1, 1, 2, 3, -1], null, null],
@@ -54,7 +54,7 @@
 		"Bad Friedrichshall": ["http://www.bibliotheken.bw-online.de/wwwopac-friedrichshall", [-1, 3, -1, 0, 1, 2, -1], null, null],
 		"Wiesloch": ["http://www.bibliotheken.bw-online.de/wwwopac-wiesloch", [-1, -1, -1, 0, 1, 2, -1], null, null],
 		"Leimen": ["http://www.bibliotheken.bw-online.de/wwwopac-leimen", [-1, -1, -1, 0, 3, 4, -1], null, null],
-		"Schwäbisch Hall": ["http://www.bibliotheken.bw-online.de/wwwopac-sha", [-1, 0, -1, 1, 2, 3, -1], null, null],
+		"Schwäbisch Hall": ["http://www.bibliotheken.bw-online.de/wwwopac-sha", [-1, 0, -1, 1, 2, 3, -1], [-1, 0, 1, 2, -1, -1, -1, 3], [0, 1, 2, -1, 3]],
 		"Weinheim": ["http://www.bibliotheken.bw-online.de/wwwopac-weinheim", [-1, -1, -1, 1, 2, 3, 4], [-1, 0, 1, 2, -1, -1, -1, 3], [0, 1, 2, -1, 3]],
 		"Gaildorf": ["http://www.bibliotheken.bw-online.de/wwwopac-gaildorf", [-1, -1, -1, 1, 3, 4, -1], null, null]
 	},
