@@ -43,7 +43,7 @@ public class SearchActivity extends OpacActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+		setContentView(R.layout.search_activity);
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(this);
 

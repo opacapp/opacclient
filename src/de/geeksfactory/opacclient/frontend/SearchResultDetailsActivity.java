@@ -57,7 +57,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.result_details);
+		setContentView(R.layout.result_details_activity);
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

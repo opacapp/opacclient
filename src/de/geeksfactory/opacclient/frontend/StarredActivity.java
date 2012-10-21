@@ -30,7 +30,7 @@ public class StarredActivity extends OpacActivity {
 	protected void onResume() {
 		super.onResume();
 
-		setContentView(R.layout.starred);
+		setContentView(R.layout.starred_activity);
 
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(StarredActivity.this);

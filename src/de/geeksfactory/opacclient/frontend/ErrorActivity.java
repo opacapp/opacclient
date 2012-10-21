@@ -46,7 +46,7 @@ public class ErrorActivity extends SherlockActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.error);
+		setContentView(R.layout.error_activity);
 		Button btRestart = (Button) findViewById(R.id.btRestart);
 		btRestart.setOnClickListener(new OnClickListener() {
 			@Override

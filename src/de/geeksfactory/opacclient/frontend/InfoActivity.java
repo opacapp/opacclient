@@ -19,7 +19,7 @@ public class InfoActivity extends OpacActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.info);
+		setContentView(R.layout.info_activity);
 		wvInfo = (WebView) findViewById(R.id.wvInfo);
 		TextView tvErr = (TextView) findViewById(R.id.tvErr);
 		wvInfo.loadData(getString(R.string.loading), "text/html", null);

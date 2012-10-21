@@ -21,7 +21,7 @@ public class AboutActivity extends OpacActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.about);
+		setContentView(R.layout.about_activity);
 
 		TextView tvAbout = (TextView) findViewById(R.id.tvAbout);
 		TextView tvVersion = (TextView) findViewById(R.id.tvVersion);

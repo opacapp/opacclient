@@ -97,7 +97,7 @@ public class FrontpageActivity extends OpacActivity {
 			app.web_error(null, "offline");
 			return;
 		}
-		setContentView(R.layout.frontpage);
+		setContentView(R.layout.frontpage_activity);
 
 		TextView tvBn = (TextView) findViewById(R.id.tvBibname);
 		tvBn.setText(sp.getString("opac_bib", "Mannheim"));

@@ -29,7 +29,7 @@ public class WelcomeActivity extends OpacActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.welcome);
+		setContentView(R.layout.welcome_activity);
 
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(WelcomeActivity.this);

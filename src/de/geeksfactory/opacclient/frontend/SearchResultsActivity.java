@@ -34,7 +34,7 @@ public class SearchResultsActivity extends OpacActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.search_results);
+		setContentView(R.layout.search_results_activity);
 
 		dialog = ProgressDialog.show(this, "",
 				getString(R.string.loading_results), true, true,

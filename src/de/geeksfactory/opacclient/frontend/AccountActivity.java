@@ -73,7 +73,7 @@ public class AccountActivity extends OpacActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		setContentView(R.layout.account);
+		setContentView(R.layout.account_activity);
 
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(app);
