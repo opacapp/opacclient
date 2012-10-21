@@ -3,13 +3,12 @@ package de.geeksfactory.opacclient.storage;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.geeksfactory.opacclient.objects.Starred;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import de.geeksfactory.opacclient.objects.Starred;
 
 public class StarDataSource {
 	// Database fields

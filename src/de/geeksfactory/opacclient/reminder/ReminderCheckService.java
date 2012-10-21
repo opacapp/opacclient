@@ -22,7 +22,6 @@ import android.util.Log;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacWebApi;
 import de.geeksfactory.opacclient.R;
-import de.geeksfactory.opacclient.R.string;
 import de.geeksfactory.opacclient.frontend.AccountActivity;
 
 public class ReminderCheckService extends Service {
