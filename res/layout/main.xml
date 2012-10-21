@@ -132,7 +132,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/zweigstelle" />
 
-            <Spinner
+            <com.WazaBe.HoloEverywhere.widget.Spinner
                 android:id="@+id/cbZweigstelle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -143,7 +143,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/mediengruppe" />
 
-            <Spinner
+            <com.WazaBe.HoloEverywhere.widget.Spinner
                 android:id="@+id/cbMediengruppe"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -193,7 +193,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/order" />
 
-            <Spinner
+            <com.WazaBe.HoloEverywhere.widget.Spinner
                 android:id="@+id/cbOrder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
