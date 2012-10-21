@@ -48,11 +48,17 @@
         <activity
             android:name=".SearchActivity"
             android:label="@string/search" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.geeksfactory.opacclient.FrontpageActivity" />
         </activity>
         <activity
             android:name=".SearchResultsActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/search_results" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.geeksfactory.opacclient.SearcgActivity" />
         </activity>
         <activity
             android:name=".MainPreferenceActivity"
@@ -62,11 +68,17 @@
             android:name=".SearchResultDetailsActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/details" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.geeksfactory.opacclient.SearchResultsActivity" />
         </activity>
         <activity
             android:name=".AccountActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/account" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.geeksfactory.opacclient.FrontpageActivity" />
         </activity>
         <activity
             android:name=".WelcomeActivity"
