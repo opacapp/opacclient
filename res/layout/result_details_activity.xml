@@ -34,9 +34,23 @@
                 android:background="@drawable/go_button"
                 android:gravity="center"
                 android:text="@string/reserve"
-                android:textColor="#ffffff"
+                android:textColor="@color/go_button_text"
                 android:visibility="gone" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvDetails"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="8dp"
+            android:drawableBottom="@drawable/section_header"
+            android:drawablePadding="4dp"
+            android:paddingLeft="4dp"
+            android:text="@string/details_head"
+            android:textAllCaps="true"
+            android:textColor="@color/emphasis"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/tvTitle"
@@ -54,10 +68,17 @@
 
         <TextView
             android:id="@+id/tvCopies"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/copies"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="8dp"
+            android:drawableBottom="@drawable/section_header"
+            android:drawablePadding="4dp"
+            android:paddingLeft="4dp"
+            android:text="@string/copies_head"
+            android:textAllCaps="true"
+            android:textColor="@color/emphasis"
+            android:textSize="14sp" />
 
         <TableLayout
             android:id="@+id/tlExemplare"

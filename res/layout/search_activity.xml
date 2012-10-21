@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/de.geeksfactory.opacclient"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:padding="5dp" xmlns:app="http://schemas.android.com/apk/res/de.geeksfactory.opacclient">
+    android:padding="5dp" >
 
     <ScrollView
         android:id="@+id/scrollView1"
@@ -208,6 +209,6 @@
         android:layout_weight="0.05"
         android:background="@drawable/go_button"
         android:text="@string/go_search"
-        android:textColor="#ffffff" />
+        android:textColor="@color/go_button_text" />
 
 </LinearLayout>

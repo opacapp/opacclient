@@ -38,6 +38,8 @@
     <string name="about">Über</string>
     <string name="details">Details</string>
     <string name="copies">Exemplare</string>
+    <string name="details_head">DETAILS</string>
+    <string name="copies_head">EXEMPLARE</string>
     <string name="order">Sortierung</string>
     <string name="ret">Rückgabe</string>
     <string name="res">Vorbestellt</string>
@@ -48,8 +50,10 @@
     <string name="dismiss">Schließen</string>
     <string name="loading_account">Lade Konto</string>
     <string name="entl">Entliehen</string>
-    <string name="extendall">Alle verlängern</string>
     <string name="reservations">Vorbestellungen</string>
+    <string name="entl_head">ENTLIEHEN</string>
+    <string name="reservations_head">VORBESTELLUNGEN</string>
+    <string name="extendall">Alle verlängern</string>
     <string name="cancel_confirm">Vorbestellung wirklich entfernen?</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>

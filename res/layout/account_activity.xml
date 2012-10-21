@@ -12,11 +12,18 @@
         android:padding="5dp" >
 
         <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
+            android:id="@+id/tvEntlHeader"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/entl"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="8dp"
+            android:drawableBottom="@drawable/section_header"
+            android:drawablePadding="4dp"
+            android:paddingLeft="4dp"
+            android:text="@string/entl_head"
+            android:textAllCaps="true"
+            android:textColor="@color/emphasis"
+            android:textSize="14sp" />
 
         <TableLayout
             android:id="@+id/tlMedien"
@@ -40,11 +47,18 @@
             android:visibility="gone" />
 
         <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
+            android:id="@+id/tvResHeader"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/reservations"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="8dp"
+            android:drawableBottom="@drawable/section_header"
+            android:drawablePadding="4dp"
+            android:paddingLeft="4dp"
+            android:text="@string/reservations_head"
+            android:textAllCaps="true"
+            android:textColor="@color/emphasis"
+            android:textSize="14sp" />
 
         <TableLayout
             android:id="@+id/tlReservations"
