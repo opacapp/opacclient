@@ -106,4 +106,8 @@
     <string name="starred_welcome">Dies ist deine Merkliste. Du kannst in der Detailansicht von jedem Medium die Menütaste drücken und „Merken“ auswählen, dann erscheint das Medium hier auf der Liste.</string>
     <string name="share">Teilen</string>
 	<string name="account_unsupported">Diese Funktion wird in deiner Stadt noch nicht unterstützt! Wir würden das auch gern ändern, aber dazu brauchen wir deine Hilfe: Wenn du auf „Bericht senden“ klickst, können wir versuchen, das im nächsten Update zu ändern. Wir kennen dann eventuell deine Ausweisnummer und was du für Bücher ausgeliehen hast (nicht dein Passwort, nicht deinen Namen und auch sonst nichts zu deiner Person!) aber wir gehen mit den Daten verantwortungsbewusst um und löschen sie, sobald wir sie ausgewertet haben.</string>
+
+    <string name="info">Infos</string>
+    <string name="info_error">Die Infos der Bücherei konnten nicht abgerufen werden.</string>
+    <string name="info_unsupported">Deine Bücherei stellt keine zusätzlichen Informationen bereit, die wir dir anzeigen könnten.</string>
 </resources>

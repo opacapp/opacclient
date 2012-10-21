@@ -7,6 +7,11 @@ e = False
 
 remove_these = ' .()-/'
 for k,v in bibs.items():
+	if len(v) != 5:
+		print "Error at", k, ":", v
+		print "\tHas to be 5 elements long"
+		print ""
+		e = True
 	if not v[0].startswith("http"):
 		print "Error at", k, ":", v
 		print "\tIndex 0 has to be an URL"
@@ -27,6 +32,12 @@ for k,v in bibs.items():
 		if len(v[3]) != 5:
 			print "Error at", k, ":", v
 			print "\tIndex 3 has be an array with a length of 5"
+			print ""
+			e = True
+	if v[4] is not None:
+		if not v[4].startswith("/"):
+			print "Error at", k, ":", v
+			print "\tIndex 4 has to start with /"
 			print ""
 			e = True
 
