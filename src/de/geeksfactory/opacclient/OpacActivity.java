@@ -1,7 +1,5 @@
 package de.geeksfactory.opacclient;
 
-import org.json.JSONException;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -40,18 +38,22 @@ public abstract class OpacActivity extends SherlockActivity {
 				}).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
 		try {
-			if(app.ohc.bib.getString(4) != null && !app.ohc.bib.getString(4).equals("null")){
+			if (app.ohc.bib.getString(4) != null
+					&& !app.ohc.bib.getString(4).equals("null")) {
 				menu.add(getString(R.string.info))
 						.setIcon(R.drawable.ic_menu_info_details)
-						.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-							@Override
-							public boolean onMenuItemClick(MenuItem item) {
-								Intent intent = new Intent(OpacActivity.this,
-										InfoActivity.class);
-								startActivity(intent);
-								return true;
-							}
-						}).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+						.setOnMenuItemClickListener(
+								new OnMenuItemClickListener() {
+									@Override
+									public boolean onMenuItemClick(MenuItem item) {
+										Intent intent = new Intent(
+												OpacActivity.this,
+												InfoActivity.class);
+										startActivity(intent);
+										return true;
+									}
+								})
+						.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

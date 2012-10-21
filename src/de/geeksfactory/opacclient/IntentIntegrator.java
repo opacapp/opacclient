@@ -340,7 +340,8 @@ public class IntentIntegrator {
 					@Override
 					public void onClick(DialogInterface dialogInterface, int i) {
 						Uri uri = Uri
-								.parse("http://www.amazon.com/gp/mas/dl/android?p=" + BS_PACKAGE);
+								.parse("http://www.amazon.com/gp/mas/dl/android?p="
+										+ BS_PACKAGE);
 						Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 						try {
 							activity.startActivity(intent);

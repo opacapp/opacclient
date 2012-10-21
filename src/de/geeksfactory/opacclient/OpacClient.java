@@ -76,7 +76,8 @@ public class OpacClient extends Application {
 		load_bibs();
 
 		try {
-			ohc = new OpacWebApi(bibs.getJSONArray(sp.getString("opac_bib", "Mannheim")).getString(0), this,
+			ohc = new OpacWebApi(bibs.getJSONArray(
+					sp.getString("opac_bib", "Mannheim")).getString(0), this,
 					this.get_bib());
 		} catch (JSONException e) {
 			web_error(e, "jsonerror");

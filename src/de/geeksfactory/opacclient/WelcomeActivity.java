@@ -47,15 +47,15 @@ public class WelcomeActivity extends OpacActivity {
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				
+
 				String newurl = "";
 				try {
-					newurl = app.bibs.getJSONArray(
-							bibnamesA[position]).getString(0);
+					newurl = app.bibs.getJSONArray(bibnamesA[position])
+							.getString(0);
 				} catch (JSONException er) {
 					app.web_error(er, "jsonerror");
 				}
-				
+
 				SharedPreferences sp = PreferenceManager
 						.getDefaultSharedPreferences(WelcomeActivity.this);
 				Editor e = sp.edit();

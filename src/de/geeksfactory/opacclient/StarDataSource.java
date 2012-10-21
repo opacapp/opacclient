@@ -54,10 +54,10 @@ public class StarDataSource {
 
 	public Starred getItem(String bib, String id) {
 		String[] selA = { bib, id };
-		Cursor cursor = database.query("starred", allColumns, "bib = ? AND medianr = ?", selA,
-				null, null, null);
+		Cursor cursor = database.query("starred", allColumns,
+				"bib = ? AND medianr = ?", selA, null, null, null);
 		Starred item = null;
-		
+
 		cursor.moveToFirst();
 		if (!cursor.isAfterLast()) {
 			item = cursorToItem(cursor);
@@ -71,8 +71,8 @@ public class StarDataSource {
 	public boolean isStarred(String bib, String id) {
 		List<Starred> items = new ArrayList<Starred>();
 		String[] selA = { bib, id };
-		Cursor cursor = database.query("starred", allColumns, "bib = ? AND medianr = ?", selA,
-				null, null, null);
+		Cursor cursor = database.query("starred", allColumns,
+				"bib = ? AND medianr = ?", selA, null, null, null);
 		return (cursor.getCount() > 0);
 	}
 

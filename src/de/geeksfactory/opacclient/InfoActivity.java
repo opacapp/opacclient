@@ -19,7 +19,8 @@ public class InfoActivity extends OpacActivity {
 		TextView tvErr = (TextView) findViewById(R.id.tvErr);
 		wvInfo.loadData(getString(R.string.loading), "text/html", null);
 		try {
-			if (app.ohc.bib.getString(4) == null || app.ohc.bib.getString(4).equals("null")) {
+			if (app.ohc.bib.getString(4) == null
+					|| app.ohc.bib.getString(4).equals("null")) {
 				wvInfo.setVisibility(View.GONE);
 				tvErr.setVisibility(View.VISIBLE);
 				tvErr.setText(R.string.info_unsupported);

@@ -412,7 +412,8 @@ public class OpacWebApi {
 	}
 
 	public List<List<String[]>> account(String ausw, String pwd)
-			throws IOException, NotReachableException, JSONException, AccountUnsupportedException {
+			throws IOException, NotReachableException, JSONException,
+			AccountUnsupportedException {
 		if (!initialised)
 			init();
 		HttpGet httpget;
@@ -456,10 +457,10 @@ public class OpacWebApi {
 			return null;
 		}
 		JSONArray copymap = null;
-		
+
 		try {
 			copymap = bib.getJSONArray(2);
-		}catch(JSONException e){
+		} catch (JSONException e) {
 			throw new AccountUnsupportedException(html);
 		}
 
@@ -491,7 +492,7 @@ public class OpacWebApi {
 
 		try {
 			copymap = bib.getJSONArray(3);
-		}catch(JSONException e){
+		} catch (JSONException e) {
 			throw new AccountUnsupportedException(html);
 		}
 		List<String[]> reservations = new ArrayList<String[]>();
@@ -502,16 +503,16 @@ public class OpacWebApi {
 			String[] e = new String[5];
 
 			for (int j = 0; j < 5; j++) {
-				if (copymap.getInt(j) > -1) {
+				int k = copymap.getInt(j);
+				if (k > -1) {
 					if (j == 4) {
-						if (tr.child(copymap.getInt(j)).children().size() > 0) {
-							e[j] = tr.child(copymap.getInt(j)).child(0)
-									.attr("href");
+						if (tr.child(k).children().size() > 0) {
+							e[j] = tr.child(k).child(0).attr("href");
 						} else {
 							e[j] = null;
 						}
 					} else {
-						e[j] = tr.child(copymap.getInt(j)).text();
+						e[j] = tr.child(k).text();
 					}
 				} else {
 					e[j] = "?";
