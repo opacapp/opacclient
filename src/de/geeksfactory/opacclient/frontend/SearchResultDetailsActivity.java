@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 
@@ -58,7 +59,8 @@ public class SearchResultDetailsActivity extends OpacActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.loading);
-		((TextView) findViewById(R.id.tvLoading)).setText(R.string.loading_details);
+		((TextView) findViewById(R.id.tvLoading))
+				.setText(R.string.loading_details);
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -153,7 +155,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
 		protected void onPostExecute(DetailledItem result) {
 			item = result;
-			
+
 			setContentView(R.layout.result_details_activity);
 
 			try {
@@ -384,87 +386,77 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
-		menu.add(getString(R.string.share)).setIcon(R.drawable.ic_ab_share)
-				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-					@Override
-					public boolean onMenuItemClick(MenuItem item) {
-						Intent intent = new Intent(
-								android.content.Intent.ACTION_SEND);
-						intent.setType("text/plain");
-						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-
-						// Add data to the intent, the receiving app will decide
-						// what to do
-						// with it.
-						intent.putExtra(Intent.EXTRA_SUBJECT, title);
-
-						SharedPreferences sp = PreferenceManager
-								.getDefaultSharedPreferences(SearchResultDetailsActivity.this);
-						String bib = sp.getString("opac_bib", "");
-						String t = title;
-						try {
-							bib = java.net.URLEncoder.encode(bib, "UTF-8");
-							t = java.net.URLEncoder.encode(t, "UTF-8");
-						} catch (UnsupportedEncodingException e) {
-						}
-
-						intent.putExtra(Intent.EXTRA_TEXT,
-								"http://www.raphaelmichel.de/opacclient/bibproxy.php/go?bib="
-										+ bib + "&id=" + id + "&title=" + t);
-						startActivity(Intent.createChooser(intent,
-								getResources().getString(R.string.share)));
-						return true;
-					}
-				}).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		MenuInflater mi = new MenuInflater(this);
+		mi.inflate(R.menu.search_result_details_activity, menu);
 
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(this);
-		final String bib = sp.getString("opac_bib", "");
+		String bib = sp.getString("opac_bib", "");
 
-		int starIcon = R.drawable.ic_ab_star_0;
 		StarDataSource data = new StarDataSource(this);
 		data.open();
 		if (data.isStarred(bib, id)) {
-			starIcon = R.drawable.ic_ab_star_1;
+			menu.findItem(R.id.action_star).setIcon(R.drawable.ic_ab_star_1);
 		}
 		data.close();
 
-		menu.add(getString(R.string.star)).setIcon(starIcon)
-				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-					@Override
-					public boolean onMenuItemClick(MenuItem item) {
-						StarDataSource star = new StarDataSource(
-								SearchResultDetailsActivity.this);
-						star.open();
-						if (star.isStarred(bib, id)) {
-							star.remove(star.getItem(bib, id));
-							item.setIcon(R.drawable.ic_ab_star_0);
-						} else {
-							star.star(id, title, bib);
-							Toast toast = Toast.makeText(
-									SearchResultDetailsActivity.this,
-									getString(R.string.starred),
-									Toast.LENGTH_SHORT);
-							toast.show();
-							item.setIcon(R.drawable.ic_ab_star_1);
-						}
-						star.close();
-
-						return true;
-					}
-				}).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-		super.onCreateOptionsMenu(menu);
-		return true;
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		SharedPreferences sp = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		String bib = sp.getString("opac_bib", "");
+		
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
 			return true;
+
+		case R.id.action_share:
+			Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+			intent.setType("text/plain");
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+
+			// Add data to the intent, the receiving app will decide
+			// what to do with it.
+			intent.putExtra(Intent.EXTRA_SUBJECT, title);
+
+			String t = title;
+			try {
+				bib = java.net.URLEncoder.encode(bib, "UTF-8");
+				t = java.net.URLEncoder.encode(t, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+			}
+
+			intent.putExtra(Intent.EXTRA_TEXT,
+					"http://www.raphaelmichel.de/opacclient/bibproxy.php/go?bib="
+							+ bib + "&id=" + id + "&title=" + t);
+			startActivity(Intent.createChooser(intent, getResources()
+					.getString(R.string.share)));
+			return true;
+			
+		case R.id.action_star:
+			StarDataSource star = new StarDataSource(
+					SearchResultDetailsActivity.this);
+			star.open();
+			
+			if (star.isStarred(bib, id)) {
+				star.remove(star.getItem(bib, id));
+				item.setIcon(R.drawable.ic_ab_star_0);
+			} else {
+				star.star(id, title, bib);
+				Toast toast = Toast.makeText(
+						SearchResultDetailsActivity.this,
+						getString(R.string.starred),
+						Toast.LENGTH_SHORT);
+				toast.show();
+				item.setIcon(R.drawable.ic_ab_star_1);
+			}
+			star.close();
+			return true;
+
 		default:
 			return super.onOptionsItemSelected(item);
 		}

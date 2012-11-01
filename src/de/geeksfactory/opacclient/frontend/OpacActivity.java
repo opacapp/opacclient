@@ -10,8 +10,8 @@ import android.widget.AdapterView;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
@@ -28,52 +28,17 @@ public abstract class OpacActivity extends SherlockActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(getString(R.string.prefs))
-				.setIcon(R.drawable.ic_menu_preferences)
-				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-					@Override
-					public boolean onMenuItemClick(MenuItem item) {
-						Intent intent = new Intent(OpacActivity.this,
-								MainPreferenceActivity.class);
-						startActivity(intent);
-						return true;
-					}
-				}).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-
+		MenuInflater mi = new MenuInflater(this);
+		mi.inflate(R.menu.activity_opac, menu);
 		try {
-			if (app.ohc.bib.getString(4) != null
-					&& !app.ohc.bib.getString(4).equals("null")) {
-				menu.add(getString(R.string.info))
-						.setIcon(R.drawable.ic_menu_info_details)
-						.setOnMenuItemClickListener(
-								new OnMenuItemClickListener() {
-									@Override
-									public boolean onMenuItemClick(MenuItem item) {
-										Intent intent = new Intent(
-												OpacActivity.this,
-												InfoActivity.class);
-										startActivity(intent);
-										return true;
-									}
-								})
-						.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+			if (app.ohc.bib.getString(4) == null
+					|| app.ohc.bib.getString(4).equals("null")) {
+				menu.removeItem(R.id.menu_info);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			menu.removeItem(R.id.menu_info);
 		}
-
-		menu.add(getString(R.string.about))
-				.setIcon(R.drawable.ic_menu_info_details)
-				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-					@Override
-					public boolean onMenuItemClick(MenuItem item) {
-						Intent intent = new Intent(OpacActivity.this,
-								AboutActivity.class);
-						startActivity(intent);
-						return true;
-					}
-				}).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-		return true;
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	protected void dialog_no_user() {
@@ -150,6 +115,19 @@ public abstract class OpacActivity extends SherlockActivity {
 			Intent intent = new Intent(this, FrontpageActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
+			return true;
+		case R.id.menu_about:
+			Intent iAbout = new Intent(OpacActivity.this, AboutActivity.class);
+			startActivity(iAbout);
+			return true;
+		case R.id.menu_info:
+			Intent iInfo = new Intent(OpacActivity.this, InfoActivity.class);
+			startActivity(iInfo);
+			return true;
+		case R.id.menu_prefs:
+			Intent iPrefs = new Intent(OpacActivity.this,
+					MainPreferenceActivity.class);
+			startActivity(iPrefs);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
