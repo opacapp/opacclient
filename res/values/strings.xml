@@ -53,6 +53,8 @@
     <string name="reservations">Vorbestellungen</string>
     <string name="entl_head">ENTLIEHEN</string>
     <string name="reservations_head">VORBESTELLUNGEN</string>
+    <string name="entl_none">Keine Medien entliehen</string>
+    <string name="reservations_none">Keine Medien vorbestellt</string>
     <string name="extendall">Alle verlängern</string>
     <string name="cancel_confirm">Vorbestellung wirklich entfernen?</string>
     <string name="yes">Ja</string>

@@ -201,17 +201,25 @@ public class AccountActivity extends OpacActivity {
 
 		TableLayout td = (TableLayout) findViewById(R.id.tlMedien);
 		td.removeAllViews();
+		if(result.get(0).size() == 0){
+			TableRow row = new TableRow(this);
+			TextView t1 = new TextView(this);
+			t1.setText(R.string.entl_none);
+			row.addView(t1);
+			td.addView(row, new TableLayout.LayoutParams(
+					LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		}
 		for (int i = 0; i < result.get(0).size(); i++) {
-			TableRow row = new TableRow(AccountActivity.this);
+			TableRow row = new TableRow(this);
 
-			TextView t1 = new TextView(AccountActivity.this);
+			TextView t1 = new TextView(this);
 			t1.setText(Html.fromHtml(result.get(0).get(i)[0] + "<br />"
 					+ result.get(0).get(i)[1] + "<br />"
 					+ result.get(0).get(i)[2]));
 			t1.setPadding(0, 0, 10, 10);
 			row.addView(t1);
 
-			TextView t2 = new TextView(AccountActivity.this);
+			TextView t2 = new TextView(this);
 			t2.setText(Html.fromHtml(result.get(0).get(i)[3] + " ("
 					+ result.get(0).get(i)[4] + ")<br />"
 					+ result.get(0).get(i)[6]));
@@ -219,7 +227,7 @@ public class AccountActivity extends OpacActivity {
 
 			if (result.get(0).get(i)[7] != null) {
 				final int j = i;
-				ImageView b1 = new ImageView(AccountActivity.this);
+				ImageView b1 = new ImageView(this);
 				b1.setImageResource(android.R.drawable.ic_input_add);
 
 				b1.setOnClickListener(new OnClickListener() {
@@ -237,29 +245,37 @@ public class AccountActivity extends OpacActivity {
 
 		TableLayout tr = (TableLayout) findViewById(R.id.tlReservations);
 		tr.removeAllViews();
+		if(result.get(1).size() == 0){
+			TableRow row = new TableRow(this);
+			TextView t1 = new TextView(this);
+			t1.setText(R.string.reservations_none);
+			row.addView(t1);
+			tr.addView(row, new TableLayout.LayoutParams(
+					LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		}
 		for (int i = 0; i < result.get(1).size(); i++) {
-			TableRow row = new TableRow(AccountActivity.this);
+			TableRow row = new TableRow(this);
 
-			TextView t1 = new TextView(AccountActivity.this);
+			TextView t1 = new TextView(this);
 			t1.setText(Html.fromHtml(result.get(1).get(i)[0] + "<br />"
 					+ result.get(1).get(i)[1]));
 			t1.setPadding(0, 0, 10, 10);
 			row.addView(t1);
 
-			TextView t2 = new TextView(AccountActivity.this);
+			TextView t2 = new TextView(this);
 			t2.setText(Html.fromHtml(result.get(1).get(i)[2] + "<br />"
 					+ result.get(1).get(i)[3]));
 			row.addView(t2);
 
 			if (result.get(1).get(i)[4] != null) {
 				final int j = i;
-				ImageView b1 = new ImageView(AccountActivity.this);
+				ImageView b1 = new ImageView(this);
 				b1.setImageResource(android.R.drawable.ic_delete);
 
 				b1.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View arg0) {
-						AccountActivity.this.cancel(result.get(1).get(j)[4]);
+						cancel(result.get(1).get(j)[4]);
 					}
 				});
 				row.addView(b1);
