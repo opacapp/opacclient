@@ -74,7 +74,9 @@ public class StarDataSource {
 		String[] selA = { bib, id };
 		Cursor cursor = database.query("starred", allColumns,
 				"bib = ? AND medianr = ?", selA, null, null, null);
-		return (cursor.getCount() > 0);
+		int c = cursor.getCount();
+		cursor.close();
+		return (c > 0);
 	}
 
 	private Starred cursorToItem(Cursor cursor) {
