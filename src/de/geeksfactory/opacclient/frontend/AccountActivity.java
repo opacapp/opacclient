@@ -7,7 +7,6 @@ import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -73,7 +72,8 @@ public class AccountActivity extends OpacActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		setContentView(R.layout.account_activity);
+		setContentView(R.layout.loading);
+		((TextView) findViewById(R.id.tvLoading)).setText(R.string.loading_account);
 
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(app);
@@ -81,16 +81,6 @@ public class AccountActivity extends OpacActivity {
 				|| sp.getString("opac_password", "").equals("")) {
 			dialog_no_user(true);
 		} else {
-			dialog = ProgressDialog.show(AccountActivity.this, "",
-					getString(R.string.loading_account), true, true,
-					new OnCancelListener() {
-						@Override
-						public void onCancel(DialogInterface arg0) {
-							finish();
-						}
-					});
-			dialog.show();
-
 			lt = new LoadTask();
 			lt.execute(app, getIntent().getIntExtra("item", 0));
 		}
@@ -203,10 +193,11 @@ public class AccountActivity extends OpacActivity {
 
 	public void loaded(final List<List<String[]>> result) {
 		if (result == null) {
-			dialog.dismiss();
 			dialog_wrong_credentials(app.ohc.getLast_error(), true);
 			return;
 		}
+
+		setContentView(R.layout.account_activity);
 
 		TableLayout td = (TableLayout) findViewById(R.id.tlMedien);
 		td.removeAllViews();
@@ -277,8 +268,6 @@ public class AccountActivity extends OpacActivity {
 			tr.addView(row, new TableLayout.LayoutParams(
 					LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		}
-
-		dialog.dismiss();
 	}
 
 	public class CancelTask extends OpacTask<Integer> {

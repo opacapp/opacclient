@@ -48,7 +48,7 @@
     <string name="doing_res">Führe Vorbestellung durch…</string>
     <string name="status_nouser">Du hast in den Einstellungen keine Ausweisdaten hinterlegt.</string>
     <string name="dismiss">Schließen</string>
-    <string name="loading_account">Lade Konto</string>
+    <string name="loading_account">Lade Konto…</string>
     <string name="entl">Entliehen</string>
     <string name="reservations">Vorbestellungen</string>
     <string name="entl_head">ENTLIEHEN</string>

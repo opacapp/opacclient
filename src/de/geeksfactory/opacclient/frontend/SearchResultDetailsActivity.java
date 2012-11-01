@@ -57,19 +57,10 @@ public class SearchResultDetailsActivity extends OpacActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.result_details_activity);
+		setContentView(R.layout.loading);
+		((TextView) findViewById(R.id.tvLoading)).setText(R.string.loading_details);
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-		dialog = ProgressDialog.show(this, "",
-				getString(R.string.loading_details), true, true,
-				new OnCancelListener() {
-					@Override
-					public void onCancel(DialogInterface arg0) {
-						finish();
-					}
-				});
-		dialog.show();
 
 		if (getIntent().getStringExtra("item_id") != null) {
 			id = getIntent().getStringExtra("item_id");
@@ -139,7 +130,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
 		@Override
 		protected DetailledItem doInBackground(Object... arg0) {
-			app = (OpacClient) arg0[0];
+			super.doInBackground(arg0);
 			Integer nr = (Integer) arg0[1];
 
 			try {
@@ -162,6 +153,8 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
 		protected void onPostExecute(DetailledItem result) {
 			item = result;
+			
+			setContentView(R.layout.result_details_activity);
 
 			try {
 				Log.i("result", item.toString());
@@ -291,8 +284,6 @@ public class SearchResultDetailsActivity extends OpacActivity {
 					}
 				});
 			}
-
-			dialog.dismiss();
 
 		}
 	}

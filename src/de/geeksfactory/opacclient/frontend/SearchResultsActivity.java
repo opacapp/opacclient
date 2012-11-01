@@ -34,29 +34,9 @@ public class SearchResultsActivity extends OpacActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.search_results_activity);
-
-		dialog = ProgressDialog.show(this, "",
-				getString(R.string.loading_results), true, true,
-				new OnCancelListener() {
-					@Override
-					public void onCancel(DialogInterface arg0) {
-						finish();
-					}
-				});
-		dialog.show();
-
-		ListView lv = (ListView) findViewById(R.id.lvResults);
-		lv.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				Intent intent = new Intent(SearchResultsActivity.this,
-						SearchResultDetailsActivity.class);
-				intent.putExtra("item", (int) items.get(position).getNr());
-				intent.putExtra("item_id", items.get(position).getId());
-				startActivity(intent);
-			}
-		});
+		setContentView(R.layout.loading);
+		((TextView) findViewById(R.id.tvLoading))
+				.setText(R.string.loading_results);
 
 		st = new SearchStartTask();
 		st.execute(app, getIntent().getStringExtra("titel"), getIntent()
@@ -72,53 +52,6 @@ public class SearchResultsActivity extends OpacActivity {
 						.getStringExtra("ikr"),
 				getIntent().getStringExtra("verlag"), getIntent()
 						.getStringExtra("order"));
-
-		final ImageView btPrev = (ImageView) findViewById(R.id.btPrev);
-		if (page == 1) {
-			btPrev.setVisibility(View.INVISIBLE);
-		}
-		btPrev.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				dialog = ProgressDialog.show(SearchResultsActivity.this, "",
-						getString(R.string.loading_results), true, true,
-						new OnCancelListener() {
-							@Override
-							public void onCancel(DialogInterface arg0) {
-								finish();
-							}
-						});
-				dialog.show();
-				page--;
-				sst = new SearchPageTask();
-				sst.execute(app, page);
-				if (page == 1) {
-					btPrev.setVisibility(View.INVISIBLE);
-				}
-			}
-		});
-
-		final ImageView btNext = (ImageView) findViewById(R.id.btNext);
-		btNext.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				dialog = ProgressDialog.show(SearchResultsActivity.this, "",
-						getString(R.string.loading_results), true, true,
-						new OnCancelListener() {
-							@Override
-							public void onCancel(DialogInterface arg0) {
-								finish();
-							}
-						});
-				dialog.show();
-				page++;
-				sst = new SearchPageTask();
-				sst.execute(app, page);
-				if (page > 1) {
-					btPrev.setVisibility(View.VISIBLE);
-				}
-			}
-		});
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
@@ -163,16 +96,65 @@ public class SearchResultsActivity extends OpacActivity {
 
 		protected void onPostExecute(List<SearchResult> result) {
 			items = result;
-
-			dialog.dismiss();
-			TextView rn = (TextView) findViewById(R.id.tvResultNum);
-			rn.setText(app.ohc.getResults());
-
-			ListView lv = (ListView) findViewById(R.id.lvResults);
-			lv.setAdapter(new ResultsAdapter(SearchResultsActivity.this,
-					(result)));
-			lv.setTextFilterEnabled(true);
+			loaded();
 		}
+	}
+
+	private void loaded() {
+		setContentView(R.layout.search_results_activity);
+
+		ListView lv = (ListView) findViewById(R.id.lvResults);
+		lv.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Intent intent = new Intent(SearchResultsActivity.this,
+						SearchResultDetailsActivity.class);
+				intent.putExtra("item", (int) items.get(position).getNr());
+				intent.putExtra("item_id", items.get(position).getId());
+				startActivity(intent);
+			}
+		});
+
+		final ImageView btPrev = (ImageView) findViewById(R.id.btPrev);
+		if (page == 1) {
+			btPrev.setVisibility(View.INVISIBLE);
+		}
+		btPrev.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				setContentView(R.layout.loading);
+				((TextView) findViewById(R.id.tvLoading))
+						.setText(R.string.loading_results);
+				page--;
+				sst = new SearchPageTask();
+				sst.execute(app, page);
+				if (page == 1) {
+					btPrev.setVisibility(View.INVISIBLE);
+				}
+			}
+		});
+
+		final ImageView btNext = (ImageView) findViewById(R.id.btNext);
+		btNext.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				setContentView(R.layout.loading);
+				((TextView) findViewById(R.id.tvLoading))
+						.setText(R.string.loading_results);
+				page++;
+				sst = new SearchPageTask();
+				sst.execute(app, page);
+				if (page > 1) {
+					btPrev.setVisibility(View.VISIBLE);
+				}
+			}
+		});
+
+		TextView rn = (TextView) findViewById(R.id.tvResultNum);
+		rn.setText(app.ohc.getResults());
+
+		lv.setAdapter(new ResultsAdapter(this, (items)));
+		lv.setTextFilterEnabled(true);
 	}
 
 	public class SearchPageTask extends OpacTask<List<SearchResult>> {
@@ -193,16 +175,7 @@ public class SearchResultsActivity extends OpacActivity {
 
 		protected void onPostExecute(List<SearchResult> result) {
 			items = result;
-
-			dialog.dismiss();
-			TextView rn = (TextView) findViewById(R.id.tvResultNum);
-			rn.setText(app.ohc.getResults());
-
-			ListView lv = (ListView) findViewById(R.id.lvResults);
-			lv.setAdapter(new ResultsAdapter(SearchResultsActivity.this,
-					(result)));
-			lv.setTextFilterEnabled(true);
-
+			loaded();
 		}
 	}
 
