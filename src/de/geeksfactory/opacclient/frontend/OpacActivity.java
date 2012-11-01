@@ -94,6 +94,7 @@ public abstract class OpacActivity extends SherlockActivity {
 	}
 
 	protected void unbindDrawables(View view) {
+		if(view == null) return;
 		if (view.getBackground() != null) {
 			view.getBackground().setCallback(null);
 		}
