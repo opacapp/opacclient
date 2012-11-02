@@ -68,7 +68,7 @@ public class SearchResultsActivity extends OpacActivity {
 	public class SearchStartTask extends OpacTask<List<SearchResult>> {
 		@Override
 		protected List<SearchResult> doInBackground(Object... arg0) {
-			app = (OpacClient) arg0[0];
+			super.doInBackground(arg0);
 			String stichwort = (String) arg0[1];
 			String verfasser = (String) arg0[2];
 			String schlag_a = (String) arg0[3];
@@ -161,7 +161,7 @@ public class SearchResultsActivity extends OpacActivity {
 
 		@Override
 		protected List<SearchResult> doInBackground(Object... arg0) {
-			app = (OpacClient) arg0[0];
+			super.doInBackground(arg0);
 			Integer page = (Integer) arg0[1];
 
 			try {

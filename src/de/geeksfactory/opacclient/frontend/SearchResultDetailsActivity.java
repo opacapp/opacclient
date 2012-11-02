@@ -293,7 +293,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 	public class FetchSubTask extends FetchTask {
 		@Override
 		protected DetailledItem doInBackground(Object... arg0) {
-			app = (OpacClient) arg0[0];
+			this.a = (OpacClient) arg0[0];
 			String a = (String) arg0[1];
 
 			try {
@@ -317,6 +317,8 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
 	public class ResTask extends OpacTask<Integer> {
 		protected Integer doInBackground(Object... arg0) {
+			super.doInBackground(arg0);
+			
 			app = (OpacClient) arg0[0];
 			String zst = (String) arg0[1];
 			SharedPreferences sp = PreferenceManager

@@ -170,10 +170,10 @@ public class AccountActivity extends OpacActivity {
 
 		@Override
 		protected List<List<String[]>> doInBackground(Object... arg0) {
-			app = (OpacClient) arg0[0];
+			super.doInBackground(arg0);
 
 			SharedPreferences sp = PreferenceManager
-					.getDefaultSharedPreferences(app);
+					.getDefaultSharedPreferences(AccountActivity.this.app);
 			try {
 				List<List<String[]>> res = app.ohc.account(
 						sp.getString("opac_usernr", ""),
@@ -290,7 +290,7 @@ public class AccountActivity extends OpacActivity {
 
 		@Override
 		protected Integer doInBackground(Object... arg0) {
-			app = (OpacClient) arg0[0];
+			super.doInBackground(arg0);
 			String a = (String) arg0[1];
 			try {
 				app.ohc.cancel(a);
@@ -309,7 +309,7 @@ public class AccountActivity extends OpacActivity {
 
 		@Override
 		protected Integer doInBackground(Object... arg0) {
-			app = (OpacClient) arg0[0];
+			super.doInBackground(arg0);
 			String a = (String) arg0[1];
 			try {
 				boolean res = app.ohc.prolong(a);

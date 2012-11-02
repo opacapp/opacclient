@@ -96,7 +96,7 @@ public class WelcomeActivity extends OpacActivity {
 	public class InitTask extends OpacTask<Integer> {
 		@Override
 		protected Integer doInBackground(Object... arg0) {
-			app = (OpacClient) arg0[0];
+			super.doInBackground(arg0);
 			try {
 				app.ohc.init();
 			} catch (Exception e) {
