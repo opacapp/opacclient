@@ -106,8 +106,6 @@ public class SearchResultDetailsActivity extends OpacActivity {
 	}
 
 	public void reservation_done(int result) {
-		dialog.dismiss();
-
 		if (result == STATUS_NOUSER) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage(R.string.status_nouser)
@@ -129,6 +127,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 	}
 
 	public class FetchTask extends OpacTask<DetailledItem> {
+		protected boolean success = true;
 
 		@Override
 		protected DetailledItem doInBackground(Object... arg0) {
@@ -145,15 +144,33 @@ public class SearchResultDetailsActivity extends OpacActivity {
 					res.setCoverBitmap(mIcon_val);
 				} catch (Exception e) {
 				}
+				success = true;
 				return res;
+			} catch (java.net.UnknownHostException e) {
+				publishProgress(e, "ioerror");
+			} catch (java.io.IOException e) {
+				success = false;
+			} catch (java.lang.IllegalStateException e) {
+				success = false;
 			} catch (Exception e) {
 				publishProgress(e, "ioerror");
 			}
-
 			return null;
 		}
 
 		protected void onPostExecute(DetailledItem result) {
+			if (!success) {
+				setContentView(R.layout.connectivity_error);
+				((Button) findViewById(R.id.btRetry))
+						.setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								onCreate(null);
+							}
+						});
+				return;
+			}
+
 			item = result;
 
 			setContentView(R.layout.result_details_activity);
@@ -306,7 +323,14 @@ public class SearchResultDetailsActivity extends OpacActivity {
 					res.setCoverBitmap(mIcon_val);
 				} catch (Exception e) {
 				}
+				success = true;
 				return res;
+			} catch (java.net.UnknownHostException e) {
+				publishProgress(e, "ioerror");
+			} catch (java.io.IOException e) {
+				success = false;
+			} catch (java.lang.IllegalStateException e) {
+				success = false;
 			} catch (Exception e) {
 				publishProgress(e, "ioerror");
 			}
@@ -316,9 +340,11 @@ public class SearchResultDetailsActivity extends OpacActivity {
 	}
 
 	public class ResTask extends OpacTask<Integer> {
+		private boolean success;
+		
 		protected Integer doInBackground(Object... arg0) {
 			super.doInBackground(arg0);
-			
+
 			app = (OpacClient) arg0[0];
 			String zst = (String) arg0[1];
 			SharedPreferences sp = PreferenceManager
@@ -326,14 +352,22 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			try {
 				if (sp.getString("opac_usernr", "").equals("")
 						|| sp.getString("opac_password", "").equals("")) {
+					success = true;
 					return STATUS_NOUSER;
 				} else {
 					Boolean res = app.ohc.reservation(zst,
 							sp.getString("opac_usernr", ""),
 							sp.getString("opac_password", ""));
+					success = true;
 					if (res == null)
 						return STATUS_WRONGCREDENTIALS;
 				}
+			} catch (java.net.UnknownHostException e) {
+				publishProgress(e, "ioerror");
+			} catch (java.io.IOException e) {
+				success = false;
+			} catch (java.lang.IllegalStateException e) {
+				success = false;
 			} catch (Exception e) {
 				publishProgress(e, "ioerror");
 			}
@@ -341,8 +375,26 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		}
 
 		protected void onPostExecute(Integer result) {
+			dialog.dismiss();
+			
+			if (!success) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						SearchResultDetailsActivity.this);
+				builder.setMessage(R.string.connection_error)
+						.setCancelable(true)
+						.setNegativeButton(R.string.dismiss,
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int id) {
+										dialog.cancel();
+									}
+								});
+				AlertDialog alert = builder.create();
+				alert.show();
+				return;
+			}
+			
 			if (result == STATUS_WRONGCREDENTIALS) {
-				dialog.dismiss();
 				dialog_wrong_credentials(app.ohc.getLast_error(), false);
 				return;
 			}
@@ -410,7 +462,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		String bib = sp.getString("opac_bib", "");
-		
+
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
@@ -438,21 +490,19 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			startActivity(Intent.createChooser(intent, getResources()
 					.getString(R.string.share)));
 			return true;
-			
+
 		case R.id.action_star:
 			StarDataSource star = new StarDataSource(
 					SearchResultDetailsActivity.this);
 			star.open();
-			
+
 			if (star.isStarred(bib, id)) {
 				star.remove(star.getItem(bib, id));
 				item.setIcon(R.drawable.ic_ab_star_0);
 			} else {
 				star.star(id, title, bib);
-				Toast toast = Toast.makeText(
-						SearchResultDetailsActivity.this,
-						getString(R.string.starred),
-						Toast.LENGTH_SHORT);
+				Toast toast = Toast.makeText(SearchResultDetailsActivity.this,
+						getString(R.string.starred), Toast.LENGTH_SHORT);
 				toast.show();
 				item.setIcon(R.drawable.ic_ab_star_1);
 			}

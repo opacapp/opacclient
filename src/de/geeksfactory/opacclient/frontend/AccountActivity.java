@@ -14,6 +14,7 @@ import android.support.v4.app.NavUtils;
 import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableLayout.LayoutParams;
@@ -73,7 +74,8 @@ public class AccountActivity extends OpacActivity {
 	public void onResume() {
 		super.onResume();
 		setContentView(R.layout.loading);
-		((TextView) findViewById(R.id.tvLoading)).setText(R.string.loading_account);
+		((TextView) findViewById(R.id.tvLoading))
+				.setText(R.string.loading_account);
 
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(app);
@@ -120,14 +122,8 @@ public class AccountActivity extends OpacActivity {
 	}
 
 	public void cancel_done(int result) {
-		dialog.dismiss();
-
 		if (result == STATUS_SUCCESS) {
-			dialog = ProgressDialog.show(this, "",
-					getString(R.string.loading_account), true);
-			dialog.show();
-
-			new LoadTask().execute(app, getIntent().getIntExtra("item", 0));
+			onResume();
 		}
 	}
 
@@ -140,15 +136,8 @@ public class AccountActivity extends OpacActivity {
 	}
 
 	public void prolong_done(int result) {
-		dialog.dismiss();
-
 		if (result == STATUS_SUCCESS) {
-			dialog = ProgressDialog.show(this, "",
-					getString(R.string.loading_account), true);
-			dialog.show();
-
-			lt = new LoadTask();
-			lt.execute(app, getIntent().getIntExtra("item", 0));
+			onResume();
 		} else if (result == STATUS_FAILED) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage(
@@ -168,6 +157,8 @@ public class AccountActivity extends OpacActivity {
 
 	public class LoadTask extends OpacTask<List<List<String[]>>> {
 
+		private boolean success = true;
+
 		@Override
 		protected List<List<String[]>> doInBackground(Object... arg0) {
 			super.doInBackground(arg0);
@@ -178,16 +169,35 @@ public class AccountActivity extends OpacActivity {
 				List<List<String[]>> res = app.ohc.account(
 						sp.getString("opac_usernr", ""),
 						sp.getString("opac_password", ""));
+				success = true;
 				return res;
+			} catch (java.net.UnknownHostException e) {
+				publishProgress(e, "ioerror");
+			} catch (java.io.IOException e) {
+				success = false;
+			} catch (de.geeksfactory.opacclient.NotReachableException e) {
+				success = false;
+			} catch (java.lang.IllegalStateException e) {
+				success = false;
 			} catch (Exception e) {
 				publishProgress(e, "ioerror");
 			}
-
 			return null;
 		}
 
 		protected void onPostExecute(List<List<String[]>> result) {
-			loaded(result);
+			if (success) {
+				loaded(result);
+			} else {
+				setContentView(R.layout.connectivity_error);
+				((Button) findViewById(R.id.btRetry))
+						.setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								onResume();
+							}
+						});
+			}
 		}
 	}
 
@@ -201,7 +211,7 @@ public class AccountActivity extends OpacActivity {
 
 		TableLayout td = (TableLayout) findViewById(R.id.tlMedien);
 		td.removeAllViews();
-		if(result.get(0).size() == 0){
+		if (result.get(0).size() == 0) {
 			TableRow row = new TableRow(this);
 			TextView t1 = new TextView(this);
 			t1.setText(R.string.entl_none);
@@ -245,7 +255,7 @@ public class AccountActivity extends OpacActivity {
 
 		TableLayout tr = (TableLayout) findViewById(R.id.tlReservations);
 		tr.removeAllViews();
-		if(result.get(1).size() == 0){
+		if (result.get(1).size() == 0) {
 			TableRow row = new TableRow(this);
 			TextView t1 = new TextView(this);
 			t1.setText(R.string.reservations_none);
@@ -287,6 +297,7 @@ public class AccountActivity extends OpacActivity {
 	}
 
 	public class CancelTask extends OpacTask<Integer> {
+		private boolean success = true;
 
 		@Override
 		protected Integer doInBackground(Object... arg0) {
@@ -294,6 +305,15 @@ public class AccountActivity extends OpacActivity {
 			String a = (String) arg0[1];
 			try {
 				app.ohc.cancel(a);
+				success = true;
+			} catch (java.net.UnknownHostException e) {
+				publishProgress(e, "ioerror");
+			} catch (java.io.IOException e) {
+				success = false;
+			} catch (de.geeksfactory.opacclient.NotReachableException e) {
+				success = false;
+			} catch (java.lang.IllegalStateException e) {
+				success = false;
 			} catch (Exception e) {
 				publishProgress(e, "ioerror");
 			}
@@ -301,11 +321,30 @@ public class AccountActivity extends OpacActivity {
 		}
 
 		protected void onPostExecute(Integer result) {
-			cancel_done(result);
+			dialog.dismiss();
+
+			if (success) {
+				cancel_done(result);
+			} else {
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						AccountActivity.this);
+				builder.setMessage(R.string.connection_error)
+						.setCancelable(true)
+						.setNegativeButton(R.string.dismiss,
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int id) {
+										dialog.cancel();
+									}
+								});
+				AlertDialog alert = builder.create();
+				alert.show();
+			}
 		}
 	}
 
 	public class ProlongTask extends OpacTask<Integer> {
+		private boolean success = true;
 
 		@Override
 		protected Integer doInBackground(Object... arg0) {
@@ -313,11 +352,20 @@ public class AccountActivity extends OpacActivity {
 			String a = (String) arg0[1];
 			try {
 				boolean res = app.ohc.prolong(a);
+				success = true;
 				if (res) {
 					return STATUS_SUCCESS;
 				} else {
 					return STATUS_FAILED;
 				}
+			} catch (java.net.UnknownHostException e) {
+				publishProgress(e, "ioerror");
+			} catch (java.io.IOException e) {
+				success = false;
+			} catch (de.geeksfactory.opacclient.NotReachableException e) {
+				success = false;
+			} catch (java.lang.IllegalStateException e) {
+				success = false;
 			} catch (Exception e) {
 				publishProgress(e, "ioerror");
 			}
@@ -325,7 +373,25 @@ public class AccountActivity extends OpacActivity {
 		}
 
 		protected void onPostExecute(Integer result) {
-			prolong_done(result);
+			dialog.dismiss();
+
+			if (success) {
+				prolong_done(result);
+			} else {
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						AccountActivity.this);
+				builder.setMessage(R.string.connection_error)
+						.setCancelable(true)
+						.setNegativeButton(R.string.dismiss,
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int id) {
+										dialog.cancel();
+									}
+								});
+				AlertDialog alert = builder.create();
+				alert.show();
+			}
 		}
 	}
 

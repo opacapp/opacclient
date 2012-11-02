@@ -93,10 +93,6 @@ public class FrontpageActivity extends OpacActivity {
 			return;
 		}
 
-		if (!((OpacClient) getApplication()).isOnline()) {
-			app.web_error(null, "offline");
-			return;
-		}
 		setContentView(R.layout.frontpage_activity);
 
 		TextView tvBn = (TextView) findViewById(R.id.tvBibname);

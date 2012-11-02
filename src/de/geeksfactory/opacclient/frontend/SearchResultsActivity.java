@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -66,6 +67,8 @@ public class SearchResultsActivity extends OpacActivity {
 	}
 
 	public class SearchStartTask extends OpacTask<List<SearchResult>> {
+		private boolean success;
+
 		@Override
 		protected List<SearchResult> doInBackground(Object... arg0) {
 			super.doInBackground(arg0);
@@ -84,9 +87,20 @@ public class SearchResultsActivity extends OpacActivity {
 			String order = (String) arg0[13];
 
 			try {
-				return app.ohc.search(stichwort, verfasser, schlag_a, schlag_b,
-						zweigstelle, mediengruppe, isbn, jahr_von, jahr_bis,
-						notation, interessenkreis, verlag, order);
+				List<SearchResult> res = app.ohc.search(stichwort, verfasser,
+						schlag_a, schlag_b, zweigstelle, mediengruppe, isbn,
+						jahr_von, jahr_bis, notation, interessenkreis, verlag,
+						order);
+				success = true;
+				return res;
+			} catch (java.net.UnknownHostException e) {
+				publishProgress(e, "ioerror");
+			} catch (java.io.IOException e) {
+				success = false;
+			} catch (de.geeksfactory.opacclient.NotReachableException e) {
+				success = false;
+			} catch (java.lang.IllegalStateException e) {
+				success = false;
 			} catch (Exception e) {
 				publishProgress(e, "ioerror");
 			}
@@ -95,8 +109,19 @@ public class SearchResultsActivity extends OpacActivity {
 		}
 
 		protected void onPostExecute(List<SearchResult> result) {
-			items = result;
-			loaded();
+			if (success) {
+				items = result;
+				loaded();
+			} else {
+				setContentView(R.layout.connectivity_error);
+				((Button) findViewById(R.id.btRetry))
+						.setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								onCreate(null);
+							}
+						});
+			}
 		}
 	}
 
@@ -158,6 +183,7 @@ public class SearchResultsActivity extends OpacActivity {
 	}
 
 	public class SearchPageTask extends OpacTask<List<SearchResult>> {
+		private boolean success;
 
 		@Override
 		protected List<SearchResult> doInBackground(Object... arg0) {
@@ -165,17 +191,37 @@ public class SearchResultsActivity extends OpacActivity {
 			Integer page = (Integer) arg0[1];
 
 			try {
-				return app.ohc.search_page(page);
+				List<SearchResult> res = app.ohc.search_page(page);
+				success = true;
+				return res;
+			} catch (java.net.UnknownHostException e) {
+				publishProgress(e, "ioerror");
+			} catch (java.io.IOException e) {
+				success = false;
+			} catch (de.geeksfactory.opacclient.NotReachableException e) {
+				success = false;
+			} catch (java.lang.IllegalStateException e) {
+				success = false;
 			} catch (Exception e) {
 				publishProgress(e, "ioerror");
 			}
-
 			return null;
 		}
 
 		protected void onPostExecute(List<SearchResult> result) {
-			items = result;
-			loaded();
+			if (success) {
+				items = result;
+				loaded();
+			} else {
+				setContentView(R.layout.connectivity_error);
+				((Button) findViewById(R.id.btRetry))
+						.setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								onCreate(null);
+							}
+						});
+			}
 		}
 	}
 

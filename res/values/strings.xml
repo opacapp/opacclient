@@ -116,4 +116,7 @@
     <string name="info">Infos</string>
     <string name="info_error">Die Infos der Bücherei konnten nicht abgerufen werden.</string>
     <string name="info_unsupported">Deine Bücherei stellt keine zusätzlichen Informationen bereit, die wir dir anzeigen könnten.</string>
+    <string name="connection_error">Verbindungsfehler</string>
+    <string name="connection_error_detail">Der Aufbau einer Verbindung zum Bibliotheksserver oder das Auswerten der Antwort ist fehlgeschlagen.</string>
+    <string name="retry">Erneut versuchen</string>
 </resources>
