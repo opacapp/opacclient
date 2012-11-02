@@ -43,7 +43,10 @@ public class StarredAdapter extends ArrayAdapter<Starred> {
 		}
 
 		TextView tv = (TextView) view.findViewById(R.id.tvTitle);
-		tv.setText(Html.fromHtml(item.getTitle()));
+		if(item.getTitle() != null)
+			tv.setText(Html.fromHtml(item.getTitle()));
+		else
+			tv.setText("");
 
 		ImageView iv = (ImageView) view.findViewById(R.id.ivDelete);
 		iv.setFocusableInTouchMode(false);
