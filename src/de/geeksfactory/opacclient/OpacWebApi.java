@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -107,7 +108,7 @@ public class OpacWebApi {
 	}
 
 	public void init() throws ClientProtocolException, IOException,
-			NotReachableException {
+			NotReachableException, SocketException {
 		initialised = true;
 		HttpGet httpget = new HttpGet(opac_url + "/woload.asp?lkz=1&nextpage=");
 		HttpResponse response = ahc.execute(httpget);
@@ -415,7 +416,7 @@ public class OpacWebApi {
 
 	public List<List<String[]>> account(String ausw, String pwd)
 			throws IOException, NotReachableException, JSONException,
-			AccountUnsupportedException {
+			AccountUnsupportedException, SocketException {
 		if (!initialised)
 			init();
 		HttpGet httpget;
