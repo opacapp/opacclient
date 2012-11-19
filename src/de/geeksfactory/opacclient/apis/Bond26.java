@@ -1,4 +1,4 @@
-package de.geeksfactory.opacclient;
+package de.geeksfactory.opacclient.apis;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,11 +30,19 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import de.geeksfactory.opacclient.AccountUnsupportedException;
+import de.geeksfactory.opacclient.NotReachableException;
+import de.geeksfactory.opacclient.OpacApi;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.storage.SearchResult;
 
-public class OpacWebApi {
+public class Bond26 implements OpacApi {
 
+	/*
+	 * OpacApi für OCLC WebOpacs V2.6
+	 * Meist kompatibel zu V2.7
+	 */
+	
 	private DefaultHttpClient ahc;
 	public String opac_url = "";
 	private Context context;
@@ -99,16 +107,16 @@ public class OpacWebApi {
 		spe.commit();
 	}
 
-	public OpacWebApi(String opac_url, Context context, JSONArray bib) {
-		// ahc = AndroidHttpClient.newInstance("WebOpac Client / Android");
+	public void init() throws ClientProtocolException, SocketException, IOException, NotReachableException {
+		init(opac_url, context, bib);
+	}
+
+	public void init(String opac_url, Context context, JSONArray bib) throws ClientProtocolException, IOException,
+			NotReachableException, SocketException {
 		ahc = new DefaultHttpClient();
 		this.opac_url = opac_url;
 		this.context = context;
 		this.bib = bib;
-	}
-
-	public void init() throws ClientProtocolException, IOException,
-			NotReachableException, SocketException {
 		initialised = true;
 		HttpGet httpget = new HttpGet(opac_url + "/woload.asp?lkz=1&nextpage=");
 		HttpResponse response = ahc.execute(httpget);
@@ -301,7 +309,7 @@ public class OpacWebApi {
 		return result;
 	}
 
-	public Boolean reservation(String zst, String ausw, String pwd)
+	public boolean reservation(String zst, String ausw, String pwd)
 			throws IOException {
 		HttpGet httpget = new HttpGet(opac_url
 				+ "/index.asp?target=vorbesttrans");
@@ -330,7 +338,7 @@ public class OpacWebApi {
 					&& doc.select("select[name=zstauswahl]").size() == 0) {
 				last_error = doc.getElementsByClass("kontomeldung").get(0)
 						.text();
-				return null;
+				return false;
 			}
 		} else if (response.getStatusLine().getStatusCode() == 302) {
 			response.getEntity().consumeContent();

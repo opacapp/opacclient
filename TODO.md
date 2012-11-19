@@ -7,6 +7,7 @@ ROADMAP VERSION 2
 * Migration von alter Version!!!
 * Tablet?
 * BibProxy bedenken
+* Kein Crash bei nicht unterstützem Account
 
 Zu integrierende Bibliothekssysteme
 -----------------------------------

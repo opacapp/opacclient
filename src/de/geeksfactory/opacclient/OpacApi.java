@@ -1,9 +1,14 @@
 package de.geeksfactory.opacclient;
 
+import java.io.IOException;
+import java.net.SocketException;
 import java.util.List;
 
+import org.apache.http.client.ClientProtocolException;
 import org.json.JSONArray;
+import org.json.JSONException;
 
+import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.storage.SearchResult;
 
 import android.content.Context;
@@ -18,25 +23,32 @@ public interface OpacApi {
 
 	String getResults();
 
-	void init(String opac_url, Context context, JSONArray bib);
+	void init(String opac_url, Context context, JSONArray bib)
+			throws ClientProtocolException, IOException, NotReachableException,
+			SocketException;
 
 	List<SearchResult> search(String stichwort, String verfasser,
 			String schlag_a, String schlag_b, String zweigstelle,
 			String mediengruppe, String isbn, String jahr_von, String jahr_bis,
-			String notation, String interessenkreis, String verlag, String order);
+			String notation, String interessenkreis, String verlag, String order)
+			throws IOException, NotReachableException;
 
-	List<SearchResult> search_page(int page);
+	List<SearchResult> search_page(int page) throws IOException,
+			NotReachableException;
 
-	SearchResult getResultById(String id);
+	DetailledItem getResultById(String id) throws IOException,
+			NotReachableException;
 
-	SearchResult getResult(int position);
+	DetailledItem getResult(int position) throws IOException;
 
-	boolean reservation(String zst, String ausw, String pwd);
+	boolean reservation(String zst, String ausw, String pwd) throws IOException;
 
-	boolean prolong(String a);
+	boolean prolong(String a) throws IOException, NotReachableException;
 
-	boolean cancel(String a);
+	boolean cancel(String a) throws IOException, NotReachableException;
 
-	List<List<String[]>> account(String ausw, String pwd);
+	List<List<String[]>> account(String ausw, String pwd) throws IOException,
+			NotReachableException, JSONException, AccountUnsupportedException,
+			SocketException;
 
 }
