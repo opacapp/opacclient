@@ -86,8 +86,7 @@ public class FrontpageActivity extends OpacActivity {
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(this);
 
-		if (sp.getString("opac_url", "").equals("")
-				|| sp.getString("opac_bib", "").equals("")) {
+		if (app.getLibrary() == null) {
 			Intent intent = new Intent(this, WelcomeActivity.class);
 			startActivity(intent);
 			return;

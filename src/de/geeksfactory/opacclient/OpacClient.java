@@ -4,8 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,16 +14,17 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import de.geeksfactory.opacclient.frontend.ErrorActivity;
+import de.geeksfactory.opacclient.objects.Library;
 
 public class OpacClient extends Application {
 
 	public OpacWebApi ohc;
-	public JSONObject bibs;
 	public Exception last_exception;
 
 	public static int NOTIF_ID = 1;
@@ -34,38 +36,40 @@ public class OpacClient extends Application {
 		return (networkInfo != null && networkInfo.isConnected());
 	}
 
-	public JSONArray get_bib() {
-		SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		try {
-			Log.i("get_bib", sp.getString("opac_bib", "Mannheim"));
-			return bibs.getJSONArray(sp.getString("opac_bib", "Mannheim"));
-		} catch (JSONException e) {
-			web_error(e, "jsonerror");
-			return null;
-		}
+	public Library getLibrary() {
+		return null;
 	}
 
-	protected void load_bibs() {
-		try {
-			StringBuilder builder = new StringBuilder();
-			InputStream fis = getAssets().open("bibs.json");
+	public static final String ASSETS_BIBSDIR = "bibs";
 
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					fis, "utf-8"));
-			String line;
+	public List<Library> getLibraries() throws IOException, JSONException {
+		AssetManager assets = getAssets();
+		String[] files = assets.list(ASSETS_BIBSDIR);
+		int num = files.length;
+
+		List<Library> libs = new ArrayList<Library>();
+
+		StringBuilder builder = null;
+		BufferedReader reader = null;
+		InputStream fis = null;
+		String line = null;
+		String json = null;
+
+		for (int i = 0; i < num; i++) {
+			builder = new StringBuilder();
+			fis = assets.open(ASSETS_BIBSDIR + "/" + files[i]);
+
+			reader = new BufferedReader(new InputStreamReader(fis, "utf-8"));
 			while ((line = reader.readLine()) != null) {
 				builder.append(line);
 			}
 
 			fis.close();
-			String json = builder.toString();
-			bibs = new JSONObject(json).getJSONObject("bibs");
-		} catch (IOException e) {
-			web_error(e, "ioerror");
-		} catch (JSONException e) {
-			web_error(e, "jsonerror");
+			json = builder.toString();
+			libs.add(Library.fromJSON(files[i], new JSONObject(json)));
 		}
+
+		return libs;
 	}
 
 	@Override
@@ -73,16 +77,6 @@ public class OpacClient extends Application {
 		super.onCreate();
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(this);
-
-		load_bibs();
-
-		try {
-			ohc = new OpacWebApi(bibs.getJSONArray(
-					sp.getString("opac_bib", "Mannheim")).getString(0), this,
-					this.get_bib());
-		} catch (JSONException e) {
-			web_error(e, "jsonerror");
-		}
 	}
 
 	public void web_error(Exception e) {

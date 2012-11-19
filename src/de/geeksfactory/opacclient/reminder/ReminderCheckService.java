@@ -64,53 +64,55 @@ public class ReminderCheckService extends Service {
 
 		@Override
 		protected Long[] doInBackground(Object... params) {
-			SharedPreferences sp = PreferenceManager
-					.getDefaultSharedPreferences(ReminderCheckService.this);
-
-			OpacWebApi ohc = null;
-			try {
-				ohc = new OpacWebApi(((OpacClient) getApplication()).get_bib()
-						.getString(0), ReminderCheckService.this,
-						((OpacClient) getApplication()).get_bib());
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-			long now = new Date().getTime();
-			long warning = Long.decode(sp.getString("notification_warning",
-					"367200000"));
-			long E = 0;
-			long abs = 0;
-			long last = sp.getLong("notification_last", 0);
-			try {
-				List<List<String[]>> res = ohc.account(
-						sp.getString("opac_usernr", ""),
-						sp.getString("opac_password", ""));
-				if (res != null) {
-					for (int i = 0; i < res.get(0).size(); i++) {
-						try {
-							Date expiring = sdf.parse(res.get(0).get(i)[3]);
-							if ((expiring.getTime() - now) < warning) {
-								abs++;
-								if (expiring.getTime() >= last) {
-									E++;
-								}
-							}
-							if (expiring.getTime() > last) {
-								last = expiring.getTime();
-							}
-							Log.i("book", (expiring.getTime() - now) + " "
-									+ warning);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-					Long[] r = { E, abs, last };
-					return r;
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			// TODO: WIEDER EINBAUEN!
+			// SharedPreferences sp = PreferenceManager
+			// .getDefaultSharedPreferences(ReminderCheckService.this);
+			//
+			// OpacWebApi ohc = null;
+			// try {
+			// ohc = new OpacWebApi(((OpacClient)
+			// getApplication()).getLibrary().getData()
+			// .getString("baseurl"), ReminderCheckService.this,
+			// ((OpacClient) getApplication()).getLibrary());
+			// } catch (JSONException e) {
+			// e.printStackTrace();
+			// }
+			// SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+			// long now = new Date().getTime();
+			// long warning = Long.decode(sp.getString("notification_warning",
+			// "367200000"));
+			// long E = 0;
+			// long abs = 0;
+			// long last = sp.getLong("notification_last", 0);
+			// try {
+			// List<List<String[]>> res = ohc.account(
+			// sp.getString("opac_usernr", ""),
+			// sp.getString("opac_password", ""));
+			// if (res != null) {
+			// for (int i = 0; i < res.get(0).size(); i++) {
+			// try {
+			// Date expiring = sdf.parse(res.get(0).get(i)[3]);
+			// if ((expiring.getTime() - now) < warning) {
+			// abs++;
+			// if (expiring.getTime() >= last) {
+			// E++;
+			// }
+			// }
+			// if (expiring.getTime() > last) {
+			// last = expiring.getTime();
+			// }
+			// Log.i("book", (expiring.getTime() - now) + " "
+			// + warning);
+			// } catch (Exception e) {
+			// e.printStackTrace();
+			// }
+			// }
+			// Long[] r = { E, abs, last };
+			// return r;
+			// }
+			// } catch (Exception e) {
+			// e.printStackTrace();
+			// }
 			return null;
 		}
 

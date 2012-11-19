@@ -15,6 +15,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.objects.Library;
 
 public abstract class OpacActivity extends SherlockActivity {
 	protected OpacClient app;
