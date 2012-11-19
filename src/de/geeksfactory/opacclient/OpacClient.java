@@ -4,9 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,15 +23,22 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import de.geeksfactory.opacclient.apis.Bond26;
 import de.geeksfactory.opacclient.frontend.ErrorActivity;
+import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.storage.AccountDataSource;
 
 public class OpacClient extends Application {
 
-	public Bond26 ohc;
 	public Exception last_exception;
 
 	public static int NOTIF_ID = 1;
 	public static int BROADCAST_REMINDER = 2;
+	public static final String PREF_SELECTED_ACCOUNT = "selectedAccount";
+
+	private SharedPreferences sp;
+
+	private Account account;
+	private OpacApi api;
 
 	public boolean isOnline() {
 		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -37,7 +46,82 @@ public class OpacClient extends Application {
 		return (networkInfo != null && networkInfo.isConnected());
 	}
 
+	private OpacApi initApi(Library lib) throws ClientProtocolException,
+			SocketException, IOException, NotReachableException {
+		OpacApi api = null;
+		if (lib.getApi().equals("bond26"))
+			api = new Bond26();
+		else
+			return null;
+
+		api.init(this, lib.getData());
+		return api;
+	}
+
+	public OpacApi getApi() {
+		if (account != null && api != null) {
+			if (sp.getLong(PREF_SELECTED_ACCOUNT, 0) == account.getId()) {
+				return api;
+			}
+		}
+		try {
+			api = initApi(getLibrary());
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotReachableException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return api;
+	}
+
+	public Account getAccount() {
+		if (account != null) {
+			if (sp.getLong(PREF_SELECTED_ACCOUNT, 0) == account.getId()) {
+				return account;
+			}
+		}
+		AccountDataSource data = new AccountDataSource(this);
+		data.open();
+		Account acc = data.getAccount(sp.getLong(PREF_SELECTED_ACCOUNT, 0));
+		data.close();
+		return acc;
+	}
+
+	public Library getLibrary(String ident) throws IOException, JSONException {
+		String line;
+
+		StringBuilder builder = new StringBuilder();
+		InputStream fis = getAssets().open(ASSETS_BIBSDIR + "/" + ident);
+
+		BufferedReader reader = new BufferedReader(new InputStreamReader(fis,
+				"utf-8"));
+		while ((line = reader.readLine()) != null) {
+			builder.append(line);
+		}
+
+		fis.close();
+		String json = builder.toString();
+		return Library.fromJSON(ident, new JSONObject(json));
+	}
+
 	public Library getLibrary() {
+		try {
+			return getLibrary(getAccount().getBib());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
 
@@ -76,12 +160,11 @@ public class OpacClient extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(this);
+		sp = PreferenceManager.getDefaultSharedPreferences(this);
 	}
 
 	public void web_error(Exception e) {
-		web_error(e, ohc.getLast_error());
+		web_error(e, getApi().getLast_error());
 	}
 
 	public void web_error(Exception e, String t) {

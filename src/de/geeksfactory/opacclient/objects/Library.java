@@ -8,12 +8,14 @@ public class Library {
 	private String city;
 	private String title;
 	private String support;
+	private String api;
 	private JSONObject data;
 
 	public static Library fromJSON(String ident, JSONObject input)
 			throws JSONException {
 		Library lib = new Library();
 		lib.setIdent(ident);
+		lib.setApi(input.getString("api"));
 		lib.setCity(input.getString("city"));
 		lib.setTitle(input.getString("title"));
 		lib.setSupport(input.getString("support"));
@@ -53,6 +55,14 @@ public class Library {
 
 	public void setSupport(String support) {
 		this.support = support;
+	}
+
+	public String getApi() {
+		return api;
+	}
+
+	public void setApi(String api) {
+		this.api = api;
 	}
 
 	public JSONObject getData() {

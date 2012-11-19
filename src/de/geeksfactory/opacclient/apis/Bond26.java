@@ -19,6 +19,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Comment;
 import org.jsoup.nodes.Document;
@@ -49,7 +50,7 @@ public class Bond26 implements OpacApi {
 	public String results;
 	private boolean initialised = false;
 	private String last_error;
-	public JSONArray bib;
+	public JSONObject data;
 
 	public String getResults() {
 		return results;
@@ -108,15 +109,15 @@ public class Bond26 implements OpacApi {
 	}
 
 	public void init() throws ClientProtocolException, SocketException, IOException, NotReachableException {
-		init(opac_url, context, bib);
+		init(context, bib);
 	}
 
-	public void init(String opac_url, Context context, JSONArray bib) throws ClientProtocolException, IOException,
+	public void init(Context context, JSONObject data) throws ClientProtocolException, IOException,
 			NotReachableException, SocketException {
 		ahc = new DefaultHttpClient();
-		this.opac_url = opac_url;
 		this.context = context;
-		this.bib = bib;
+		this.data = data;
+		this.opac_url = data.getString("baseurl");
 		initialised = true;
 		HttpGet httpget = new HttpGet(opac_url + "/woload.asp?lkz=1&nextpage=");
 		HttpResponse response = ahc.execute(httpget);

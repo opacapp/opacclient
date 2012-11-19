@@ -5,13 +5,12 @@ import java.net.SocketException;
 import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
-import org.json.JSONArray;
 import org.json.JSONException;
-
-import de.geeksfactory.opacclient.objects.DetailledItem;
-import de.geeksfactory.opacclient.objects.SearchResult;
+import org.json.JSONObject;
 
 import android.content.Context;
+import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.SearchResult;
 
 public interface OpacApi {
 	String[] SEARCH_FIELDS = new String[] { "stichwort", "verfasser",
@@ -23,9 +22,8 @@ public interface OpacApi {
 
 	String getResults();
 
-	void init(String opac_url, Context context, JSONArray bib)
-			throws ClientProtocolException, IOException, NotReachableException,
-			SocketException;
+	void init(Context context, JSONObject data) throws ClientProtocolException,
+			IOException, NotReachableException, SocketException;
 
 	List<SearchResult> search(String stichwort, String verfasser,
 			String schlag_a, String schlag_b, String zweigstelle,
