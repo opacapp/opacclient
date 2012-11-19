@@ -12,7 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import de.geeksfactory.opacclient.R;
-import de.geeksfactory.opacclient.storage.SearchResult;
+import de.geeksfactory.opacclient.objects.SearchResult;
 
 public class ResultsAdapter extends ArrayAdapter<SearchResult> {
 	private List<SearchResult> objects;

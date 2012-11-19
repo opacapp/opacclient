@@ -21,7 +21,7 @@ import com.actionbarsherlock.view.MenuItem;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
-import de.geeksfactory.opacclient.storage.SearchResult;
+import de.geeksfactory.opacclient.objects.SearchResult;
 
 public class SearchResultsActivity extends OpacActivity {
 
