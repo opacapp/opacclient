@@ -1,0 +1,21 @@
+{
+ "api": "bond26", 
+ "city": "Magdeburg", 
+ "data": {
+  "accounttable": null, 
+  "baseurl": "http://auskunft.stadtbibliothek.magdeburg.de/webopac", 
+  "copiestable": [
+   -1, 
+   0, 
+   -1, 
+   2, 
+   4, 
+   5, 
+   -1
+  ], 
+  "information": null, 
+  "reservationtable": null
+ }, 
+ "support": "Katalogsuche", 
+ "title": null
+}

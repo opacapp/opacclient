@@ -1,0 +1,21 @@
+{
+ "api": "bond26", 
+ "city": "Schwabach", 
+ "data": {
+  "accounttable": null, 
+  "baseurl": "https://service-on.schwabach.de/wwwopac", 
+  "copiestable": [
+   0, 
+   4, 
+   -1, 
+   2, 
+   3, 
+   3, 
+   -1
+  ], 
+  "information": null, 
+  "reservationtable": null
+ }, 
+ "support": "Katalogsuche", 
+ "title": null
+}

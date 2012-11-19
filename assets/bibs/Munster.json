@@ -1,0 +1,21 @@
+{
+ "api": "bond26", 
+ "city": "M\u00fcnster", 
+ "data": {
+  "accounttable": null, 
+  "baseurl": "http://www2.stadt-muenster.de/opac10", 
+  "copiestable": [
+   -1, 
+   0, 
+   -1, 
+   4, 
+   1, 
+   2, 
+   6
+  ], 
+  "information": "/../read/info.html", 
+  "reservationtable": null
+ }, 
+ "support": "Katalogsuche", 
+ "title": null
+}

@@ -1,0 +1,36 @@
+{
+ "api": "bond26", 
+ "city": "Heilbronn", 
+ "data": {
+  "accounttable": [
+   6, 
+   0, 
+   1, 
+   2, 
+   3, 
+   5, 
+   5, 
+   7
+  ], 
+  "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-heilbronn", 
+  "copiestable": [
+   3, 
+   0, 
+   -1, 
+   1, 
+   4, 
+   5, 
+   -1
+  ], 
+  "information": null, 
+  "reservationtable": [
+   0, 
+   1, 
+   3, 
+   4, 
+   5
+  ]
+ }, 
+ "support": "Katalogsuche und Konto", 
+ "title": null
+}

@@ -1,0 +1,21 @@
+{
+ "api": "bond26", 
+ "city": "Brackenheim", 
+ "data": {
+  "accounttable": null, 
+  "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-brackenheim", 
+  "copiestable": [
+   -1, 
+   -1, 
+   -1, 
+   1, 
+   3, 
+   4, 
+   -1
+  ], 
+  "information": null, 
+  "reservationtable": null
+ }, 
+ "support": "Katalogsuche", 
+ "title": null
+}

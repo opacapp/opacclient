@@ -1,0 +1,36 @@
+{
+ "api": "bond26", 
+ "city": "Speyer", 
+ "data": {
+  "accounttable": [
+   -1, 
+   0, 
+   1, 
+   2, 
+   -1, 
+   -1, 
+   -1, 
+   3
+  ], 
+  "baseurl": "http://buecherei.speyer.de", 
+  "copiestable": [
+   0, 
+   4, 
+   -1, 
+   2, 
+   3, 
+   5, 
+   -1
+  ], 
+  "information": null, 
+  "reservationtable": [
+   0, 
+   1, 
+   2, 
+   -1, 
+   3
+  ]
+ }, 
+ "support": "Katalogsuche und Konto", 
+ "title": null
+}

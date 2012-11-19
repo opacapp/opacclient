@@ -1,0 +1,21 @@
+{
+ "api": "bond26", 
+ "city": "Pinneberg", 
+ "data": {
+  "accounttable": null, 
+  "baseurl": "http://89.246.245.100/webopac", 
+  "copiestable": [
+   4, 
+   -1, 
+   -1, 
+   1, 
+   2, 
+   3, 
+   -1
+  ], 
+  "information": null, 
+  "reservationtable": null
+ }, 
+ "support": "Katalogsuche", 
+ "title": null
+}

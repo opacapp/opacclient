@@ -1,0 +1,21 @@
+{
+ "api": "bond26", 
+ "city": "Gundelsheim", 
+ "data": {
+  "accounttable": null, 
+  "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-gundelsheim", 
+  "copiestable": [
+   -1, 
+   -1, 
+   -1, 
+   0, 
+   2, 
+   3, 
+   -1
+  ], 
+  "information": null, 
+  "reservationtable": null
+ }, 
+ "support": "Katalogsuche", 
+ "title": null
+}

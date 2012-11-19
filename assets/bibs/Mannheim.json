@@ -1,0 +1,36 @@
+{
+ "api": "bond26", 
+ "city": "Mannheim", 
+ "data": {
+  "accounttable": [
+   0, 
+   1, 
+   2, 
+   3, 
+   4, 
+   5, 
+   6, 
+   7
+  ], 
+  "baseurl": "http://katalog.mannheim.de/wopac", 
+  "copiestable": [
+   0, 
+   1, 
+   2, 
+   3, 
+   4, 
+   5, 
+   6
+  ], 
+  "information": "/../read/info.html", 
+  "reservationtable": [
+   0, 
+   1, 
+   2, 
+   3, 
+   5
+  ]
+ }, 
+ "support": "Volle Unterstützung", 
+ "title": null
+}

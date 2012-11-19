@@ -1,0 +1,36 @@
+{
+ "api": "bond26", 
+ "city": "Ketsch", 
+ "data": {
+  "accounttable": [
+   -1, 
+   0, 
+   1, 
+   2, 
+   -1, 
+   -1, 
+   -1, 
+   3
+  ], 
+  "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-ketsch", 
+  "copiestable": [
+   -1, 
+   -1, 
+   -1, 
+   0, 
+   1, 
+   2, 
+   -1
+  ], 
+  "information": null, 
+  "reservationtable": [
+   0, 
+   1, 
+   2, 
+   -1, 
+   3
+  ]
+ }, 
+ "support": "Katalogsuche und Konto", 
+ "title": null
+}

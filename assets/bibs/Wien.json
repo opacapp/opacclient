@@ -1,0 +1,21 @@
+{
+ "api": "bond26", 
+ "city": "Wien", 
+ "data": {
+  "accounttable": null, 
+  "baseurl": "http://katalog.buechereien.wien.at", 
+  "copiestable": [
+   -1, 
+   0, 
+   -1, 
+   1, 
+   3, 
+   4, 
+   5
+  ], 
+  "information": null, 
+  "reservationtable": null
+ }, 
+ "support": "Katalogsuche", 
+ "title": null
+}
