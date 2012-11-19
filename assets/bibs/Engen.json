@@ -1,0 +1,21 @@
+{
+ "api": "bond26", 
+ "city": "Engen", 
+ "data": {
+  "accounttable": null, 
+  "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-engen", 
+  "copiestable": [
+   -1, 
+   0, 
+   -1, 
+   1, 
+   3, 
+   4, 
+   -1
+  ], 
+  "information": null, 
+  "reservationtable": null
+ }, 
+ "support": "Katalogsuche", 
+ "title": null
+}

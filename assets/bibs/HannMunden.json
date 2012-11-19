@@ -1,0 +1,21 @@
+{
+ "api": "bond26", 
+ "city": "Hann. M\u00fcnden", 
+ "data": {
+  "accounttable": null, 
+  "baseurl": "http://www.buecherei.hann.muenden.de", 
+  "copiestable": [
+   0, 
+   -1, 
+   -1, 
+   1, 
+   2, 
+   3, 
+   -1
+  ], 
+  "information": "/read/info.html", 
+  "reservationtable": null
+ }, 
+ "support": "Katalogsuche", 
+ "title": null
+}

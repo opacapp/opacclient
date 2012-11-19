@@ -1,0 +1,36 @@
+{
+ "api": "bond26", 
+ "city": "Trier (Palais Walderdorff)", 
+ "data": {
+  "accounttable": [
+   -1, 
+   0, 
+   1, 
+   2, 
+   -1, 
+   3, 
+   3, 
+   4
+  ], 
+  "baseurl": "https://opac.trier.de/webopac", 
+  "copiestable": [
+   -1, 
+   -1, 
+   -1, 
+   3, 
+   0, 
+   4, 
+   -1
+  ], 
+  "information": null, 
+  "reservationtable": [
+   0, 
+   1, 
+   2, 
+   3, 
+   4
+  ]
+ }, 
+ "support": "Katalogsuche und Konto", 
+ "title": "Palais Walderdorff"
+}

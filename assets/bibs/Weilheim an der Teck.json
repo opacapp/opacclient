@@ -1,0 +1,21 @@
+{
+ "api": "bond26", 
+ "city": "Weilheim an der Teck", 
+ "data": {
+  "accounttable": null, 
+  "baseurl": "http://217.7.135.254/webopac", 
+  "copiestable": [
+   0, 
+   4, 
+   -1, 
+   2, 
+   3, 
+   5, 
+   -1
+  ], 
+  "information": null, 
+  "reservationtable": null
+ }, 
+ "support": "Katalogsuche", 
+ "title": null
+}

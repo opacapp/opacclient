@@ -1,0 +1,21 @@
+{
+ "api": "bond26", 
+ "city": "Wolfsburg", 
+ "data": {
+  "accounttable": null, 
+  "baseurl": "http://webopac.stadt.wolfsburg.de/webopac", 
+  "copiestable": [
+   0, 
+   4, 
+   -1, 
+   1, 
+   3, 
+   5, 
+   -1
+  ], 
+  "information": null, 
+  "reservationtable": null
+ }, 
+ "support": "Katalogsuche", 
+ "title": null
+}

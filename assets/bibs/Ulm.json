@@ -1,0 +1,36 @@
+{
+ "api": "bond26", 
+ "city": "Ulm", 
+ "data": {
+  "accounttable": [
+   4, 
+   2, 
+   3, 
+   5, 
+   -1, 
+   0, 
+   0, 
+   6
+  ], 
+  "baseurl": "http://www2opac.stadtbibliothek.ulm.de/wwwopac", 
+  "copiestable": [
+   -1, 
+   0, 
+   1, 
+   2, 
+   4, 
+   5, 
+   -1
+  ], 
+  "information": null, 
+  "reservationtable": [
+   2, 
+   3, 
+   4, 
+   0, 
+   5
+  ]
+ }, 
+ "support": "Katalogsuche und Konto", 
+ "title": null
+}

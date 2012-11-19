@@ -4,7 +4,7 @@ ROADMAP VERSION 2
 * Multiple Accounts
 * Multiple Bibliotheks-APIs
 * Overflow-Menü der Startseite eleganter bei >ICS unterbringen
-
+* Migration von alter Version!!!
 
 Zu integrierende Bibliothekssysteme
 -----------------------------------
