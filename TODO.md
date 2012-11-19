@@ -2,12 +2,21 @@ ROADMAP VERSION 2
 =================
 
 * Multiple Accounts
+  * List
+  * Delete
+  * Add
+  * Settings
+  * Switch
+  * Switch beim vorbestellen
+  * Migration von alter Version!!!
 * Multiple Bibliotheks-APIs
+  * Kein Crash bei nicht unterstützem Account
+  * Suchmaske basierend auf API
+  * BibProxy und Intents bedenken
+* Erinnerungen anpassen
 * Overflow-Menü der Startseite eleganter bei >ICS unterbringen
-* Migration von alter Version!!!
-* Tablet?
-* BibProxy bedenken
-* Kein Crash bei nicht unterstützem Account
+* Tablet-Optimierung?
+* Error Handling komplett überarbeiten
 
 Zu integrierende Bibliothekssysteme
 -----------------------------------
@@ -20,4 +29,4 @@ Zu integrierende Bibliothekssysteme
 * Bond 2.4: Stuttgart http://141.31.128.163/wwwopac/index.asp
 * Dortmund: http://katalog.dortmund.de:8080/
 * BiblioMondo: Hannover https://bibliothek.hannover-stadt.de/
-
+* WinBIAP: Kassel https://bibliothek.stadt-kassel.de/index.aspx
