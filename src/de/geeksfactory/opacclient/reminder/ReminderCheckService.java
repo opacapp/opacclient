@@ -20,8 +20,8 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import de.geeksfactory.opacclient.OpacClient;
-import de.geeksfactory.opacclient.OpacWebApi;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.apis.Bond26;
 import de.geeksfactory.opacclient.frontend.AccountActivity;
 
 public class ReminderCheckService extends Service {

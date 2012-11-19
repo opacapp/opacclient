@@ -19,12 +19,13 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import de.geeksfactory.opacclient.apis.Bond26;
 import de.geeksfactory.opacclient.frontend.ErrorActivity;
 import de.geeksfactory.opacclient.objects.Library;
 
 public class OpacClient extends Application {
 
-	public OpacWebApi ohc;
+	public Bond26 ohc;
 	public Exception last_exception;
 
 	public static int NOTIF_ID = 1;
