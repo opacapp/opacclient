@@ -65,7 +65,7 @@
     <string name="io_error">Fehler bei der Kommunikation mit dem Web-Opac. Entweder dein Internet funktioniert nicht, oder es gibt ein Problem mit dem Opac oder der App. Tut uns leid.</string>
     <string name="welcome">Herzlich Willkommen</string>
     <string name="welcome_select">zum Web-Opac-Client für Android. Bitte wähle aus, mit welcher Bibliothek du dich verbinden willst.</string>
-    <string name="welcome_account">Um Vorbestellen oder dein Konto einsehen zu können, musst du in den Einstellungen deine Ausweisnummer und dein Passwort hinterlegen!</string>
+    <string name="welcome_account">Um Vorbestellen oder dein Konto einsehen zu können, musst du in den Einstellungen diesem anonymen Konto noch deine Ausweisnummer und dein Passwort hinzufügen!</string>
 
     <string-array name="orders">
         <item>Standard</item>

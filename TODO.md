@@ -5,6 +5,8 @@ ROADMAP VERSION 2
 * Multiple Bibliotheks-APIs
 * Overflow-Menü der Startseite eleganter bei >ICS unterbringen
 * Migration von alter Version!!!
+* Tablet?
+* BibProxy bedenken
 
 Zu integrierende Bibliothekssysteme
 -----------------------------------
