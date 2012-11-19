@@ -9,7 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import de.geeksfactory.opacclient.objects.DetailledItem;
-import de.geeksfactory.opacclient.storage.SearchResult;
+import de.geeksfactory.opacclient.objects.SearchResult;
 
 import android.content.Context;
 

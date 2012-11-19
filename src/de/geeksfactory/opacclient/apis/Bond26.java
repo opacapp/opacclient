@@ -34,7 +34,7 @@ import de.geeksfactory.opacclient.AccountUnsupportedException;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacApi;
 import de.geeksfactory.opacclient.objects.DetailledItem;
-import de.geeksfactory.opacclient.storage.SearchResult;
+import de.geeksfactory.opacclient.objects.SearchResult;
 
 public class Bond26 implements OpacApi {
 
