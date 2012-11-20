@@ -6,11 +6,14 @@ import java.util.List;
 import org.json.JSONException;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -41,10 +44,21 @@ public class AccountListActivity extends SherlockActivity {
 		ListView lvAccounts = (ListView) findViewById(R.id.lvAccounts);
 		AccountDataSource data = new AccountDataSource(this);
 		data.open();
-		List<Account> accounts = data.getAllAccounts();
+		accounts = data.getAllAccounts();
 		data.close();
 		AccountListAdapter adapter = new AccountListAdapter(this, accounts);
 		lvAccounts.setAdapter(adapter);
+
+		lvAccounts.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Intent i = new Intent(AccountListActivity.this, AccountEditActivity.class);
+				i.putExtra("id", accounts.get(position).getId());
+				startActivity(i);
+			}
+		});
 	}
 
 	public class AccountListAdapter extends ArrayAdapter<Account> {
