@@ -127,6 +127,14 @@
         </receiver>
         <receiver android:name=".reminder.ReminderAlarmReceiver" >
         </receiver>
+
+        <activity
+            android:name=".frontend.AccountListActivity"
+            android:label="@string/title_activity_account_list" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.geeksfactory.opacclient.frontend.MainPreferenceActivity" />
+        </activity>
     </application>
 
 </manifest>
