@@ -143,8 +143,8 @@ public class ErrorActivity extends SherlockActivity {
 			nameValuePairs.add(new BasicNameValuePair("device",
 					android.os.Build.MANUFACTURER + " "
 							+ android.os.Build.MODEL));
-			nameValuePairs.add(new BasicNameValuePair("bib", sp.getString(
-					"opac_bib", "Unknown")));
+			nameValuePairs.add(new BasicNameValuePair("bib",
+					((OpacClient) getApplication()).getLibrary().getIdent()));
 
 			if (sendHtml) {
 				try {

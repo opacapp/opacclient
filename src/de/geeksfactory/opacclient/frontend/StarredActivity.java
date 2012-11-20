@@ -32,9 +32,7 @@ public class StarredActivity extends OpacActivity {
 
 		setContentView(R.layout.starred_activity);
 
-		SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(StarredActivity.this);
-		String bib = sp.getString("opac_bib", "");
+		String bib = app.getLibrary().getIdent();
 
 		StarDataSource data = new StarDataSource(this);
 		data.open();
