@@ -3,8 +3,6 @@ package de.geeksfactory.opacclient.frontend;
 import java.util.List;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -18,7 +16,6 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.MenuItem;
 
-import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.SearchResult;

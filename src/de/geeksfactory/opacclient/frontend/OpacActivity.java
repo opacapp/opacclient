@@ -15,7 +15,6 @@ import com.actionbarsherlock.view.MenuItem;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
-import de.geeksfactory.opacclient.objects.Library;
 
 public abstract class OpacActivity extends SherlockActivity {
 	protected OpacClient app;
@@ -33,7 +32,8 @@ public abstract class OpacActivity extends SherlockActivity {
 		mi.inflate(R.menu.activity_opac, menu);
 		try {
 			if (app.getLibrary().getData().getString("information") == null
-					||app.getLibrary().getData().getString("information").equals("null")) {
+					|| app.getLibrary().getData().getString("information")
+							.equals("null")) {
 				menu.removeItem(R.id.menu_info);
 			}
 		} catch (Exception e) {
@@ -95,7 +95,8 @@ public abstract class OpacActivity extends SherlockActivity {
 	}
 
 	protected void unbindDrawables(View view) {
-		if(view == null) return;
+		if (view == null)
+			return;
 		if (view.getBackground() != null) {
 			view.getBackground().setCallback(null);
 		}

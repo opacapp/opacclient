@@ -20,8 +20,10 @@ public class Library {
 		lib.setTitle(input.getString("title"));
 		lib.setSupport(input.getString("support"));
 		lib.setData(input.getJSONObject("data"));
-		if(lib.getTitle().equals("")) lib.setTitle(null);
-		if(lib.getSupport().equals("")) lib.setSupport(null);
+		if (lib.getTitle().equals(""))
+			lib.setTitle(null);
+		if (lib.getSupport().equals(""))
+			lib.setSupport(null);
 		return lib;
 	}
 

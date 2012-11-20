@@ -9,7 +9,6 @@ import java.util.List;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -31,7 +30,6 @@ import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
@@ -341,7 +339,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
 	public class ResTask extends OpacTask<Integer> {
 		private boolean success;
-		
+
 		protected Integer doInBackground(Object... arg0) {
 			super.doInBackground(arg0);
 
@@ -376,7 +374,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
 		protected void onPostExecute(Integer result) {
 			dialog.dismiss();
-			
+
 			if (!success) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						SearchResultDetailsActivity.this);
@@ -393,7 +391,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				alert.show();
 				return;
 			}
-			
+
 			if (result == STATUS_WRONGCREDENTIALS) {
 				dialog_wrong_credentials(app.getApi().getLast_error(), false);
 				return;
