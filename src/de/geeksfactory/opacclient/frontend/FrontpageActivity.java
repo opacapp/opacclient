@@ -82,8 +82,6 @@ public class FrontpageActivity extends OpacActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.getSupportActionBar().hide();
-		SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(this);
 
 		if (app.getLibrary() == null) {
 			Intent intent = new Intent(this, WelcomeActivity.class);
@@ -94,7 +92,11 @@ public class FrontpageActivity extends OpacActivity {
 		setContentView(R.layout.frontpage_activity);
 
 		TextView tvBn = (TextView) findViewById(R.id.tvBibname);
-		tvBn.setText(sp.getString("opac_bib", "Mannheim"));
+		if (app.getLibrary().getTitle() != null && !app.getLibrary().getTitle().equals("null"))
+			tvBn.setText(app.getLibrary().getCity() + "\n"
+					+ app.getLibrary().getTitle());
+		else
+			tvBn.setText(app.getLibrary().getCity());
 
 		ImageView ivSearch = (ImageView) findViewById(R.id.ivGoSearch);
 		ImageView ivScan = (ImageView) findViewById(R.id.ivGoScan);
