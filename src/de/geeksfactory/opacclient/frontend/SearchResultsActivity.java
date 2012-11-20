@@ -87,10 +87,10 @@ public class SearchResultsActivity extends OpacActivity {
 			String order = (String) arg0[13];
 
 			try {
-				List<SearchResult> res = app.ohc.search(stichwort, verfasser,
-						schlag_a, schlag_b, zweigstelle, mediengruppe, isbn,
-						jahr_von, jahr_bis, notation, interessenkreis, verlag,
-						order);
+				List<SearchResult> res = app.getApi().search(stichwort,
+						verfasser, schlag_a, schlag_b, zweigstelle,
+						mediengruppe, isbn, jahr_von, jahr_bis, notation,
+						interessenkreis, verlag, order);
 				success = true;
 				return res;
 			} catch (java.net.UnknownHostException e) {
@@ -176,7 +176,7 @@ public class SearchResultsActivity extends OpacActivity {
 		});
 
 		TextView rn = (TextView) findViewById(R.id.tvResultNum);
-		rn.setText(app.ohc.getResults());
+		rn.setText(app.getApi().getResults());
 
 		lv.setAdapter(new ResultsAdapter(this, (items)));
 		lv.setTextFilterEnabled(true);
@@ -191,7 +191,7 @@ public class SearchResultsActivity extends OpacActivity {
 			Integer page = (Integer) arg0[1];
 
 			try {
-				List<SearchResult> res = app.ohc.search_page(page);
+				List<SearchResult> res = app.getApi().searchGetPage(page);
 				success = true;
 				return res;
 			} catch (java.net.UnknownHostException e) {

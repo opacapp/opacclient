@@ -22,8 +22,10 @@ public interface OpacApi {
 
 	String getResults();
 
-	void init(Context context, JSONObject data) throws ClientProtocolException,
-			IOException, NotReachableException, SocketException;
+	void start() throws ClientProtocolException, IOException,
+			NotReachableException, SocketException;
+
+	void init(Context context, JSONObject data);
 
 	List<SearchResult> search(String stichwort, String verfasser,
 			String schlag_a, String schlag_b, String zweigstelle,
@@ -31,7 +33,7 @@ public interface OpacApi {
 			String notation, String interessenkreis, String verlag, String order)
 			throws IOException, NotReachableException;
 
-	List<SearchResult> search_page(int page) throws IOException,
+	List<SearchResult> searchGetPage(int page) throws IOException,
 			NotReachableException;
 
 	DetailledItem getResultById(String id) throws IOException,

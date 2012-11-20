@@ -32,8 +32,8 @@ public abstract class OpacActivity extends SherlockActivity {
 		MenuInflater mi = new MenuInflater(this);
 		mi.inflate(R.menu.activity_opac, menu);
 		try {
-			if (app.ohc.bib.getString(4) == null
-					|| app.ohc.bib.getString(4).equals("null")) {
+			if (app.getLibrary().getData().getString("information") == null
+					||app.getLibrary().getData().getString("information").equals("null")) {
 				menu.removeItem(R.id.menu_info);
 			}
 		} catch (Exception e) {

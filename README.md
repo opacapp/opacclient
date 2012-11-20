@@ -55,21 +55,3 @@ oder
 * jahr_von
 * jahr_bis
 * verlag
-
-Kompatibilität
----------------
-Aufbau der Einträge  in assets/bibs.json -> bibs
-
-    "Ort":["Basis-URL", [Tabelle Exemplare], [Tabelle Entliehen], [Tabelle Vorbestellt]],
-
-Tabelle Exemplare
-
-    Barcode, Zweigstelle, Abteilung, Standort, Status, Rückgabe, Vorbestellt
-
-Tabelle Entliehen
-
-    Barcode, Verfasser, Titel, Frist, Ausleihstatus, Zweigstelle, Ausleihstelle, Verl.-Link
-
-Tabelle Vorbestellt
-
-    Verfasser, Titel, Bereit, Zweigstelle, Abbr.-Link
