@@ -100,7 +100,7 @@ public class OpacClient extends Application {
 		String line;
 
 		StringBuilder builder = new StringBuilder();
-		InputStream fis = getAssets().open(ASSETS_BIBSDIR + "/" + ident);
+		InputStream fis = getAssets().open(ASSETS_BIBSDIR + "/" + ident + ".json");
 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(fis,
 				"utf-8"));
@@ -159,7 +159,7 @@ public class OpacClient extends Application {
 
 			fis.close();
 			json = builder.toString();
-			libs.add(Library.fromJSON(files[i], new JSONObject(json)));
+			libs.add(Library.fromJSON(files[i].replace(".json", ""), new JSONObject(json)));
 		}
 
 		return libs;
