@@ -13,6 +13,8 @@ ROADMAP VERSION 2
   * Kein Crash bei nicht unterstützem Account
   * Suchmaske basierend auf API
   * BibProxy und Intents bedenken
+  * Zweigstellenliste
+  * Mediengruppenliste
 * Erinnerungen anpassen
 * Overflow-Menü der Startseite eleganter bei >ICS unterbringen
 * Tablet-Optimierung?

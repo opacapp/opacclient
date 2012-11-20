@@ -40,10 +40,9 @@ import de.geeksfactory.opacclient.objects.SearchResult;
 public class Bond26 implements OpacApi {
 
 	/*
-	 * OpacApi für OCLC WebOpacs V2.6
-	 * Meist kompatibel zu V2.7
+	 * OpacApi für OCLC WebOpacs V2.6 Meist kompatibel zu V2.7
 	 */
-	
+
 	private DefaultHttpClient ahc;
 	public String opac_url = "";
 	private Context context;
@@ -52,10 +51,12 @@ public class Bond26 implements OpacApi {
 	private String last_error;
 	public JSONObject data;
 
+	@Override
 	public String getResults() {
 		return results;
 	}
 
+	@Override
 	public String getLast_error() {
 		return last_error;
 	}
@@ -108,16 +109,9 @@ public class Bond26 implements OpacApi {
 		spe.commit();
 	}
 
-	public void init() throws ClientProtocolException, SocketException, IOException, NotReachableException {
-		init(context, bib);
-	}
-
-	public void init(Context context, JSONObject data) throws ClientProtocolException, IOException,
-			NotReachableException, SocketException {
-		ahc = new DefaultHttpClient();
-		this.context = context;
-		this.data = data;
-		this.opac_url = data.getString("baseurl");
+	@Override
+	public void start() throws ClientProtocolException, SocketException,
+			IOException, NotReachableException {
 		initialised = true;
 		HttpGet httpget = new HttpGet(opac_url + "/woload.asp?lkz=1&nextpage=");
 		HttpResponse response = ahc.execute(httpget);
@@ -138,13 +132,27 @@ public class Bond26 implements OpacApi {
 		extract_information(html);
 	}
 
+	@Override
+	public void init(Context context, JSONObject data) {
+		ahc = new DefaultHttpClient();
+		this.context = context;
+		this.data = data;
+		try {
+			this.opac_url = data.getString("baseurl");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
 	public List<SearchResult> search(String stichwort, String verfasser,
 			String schlag_a, String schlag_b, String zweigstelle,
 			String mediengruppe, String isbn, String jahr_von, String jahr_bis,
 			String notation, String interessenkreis, String verlag, String order)
 			throws IOException, NotReachableException {
 		if (!initialised)
-			init();
+			start();
 
 		HttpPost httppost = new HttpPost(opac_url + "/index.asp");
 
@@ -179,10 +187,11 @@ public class Bond26 implements OpacApi {
 		return parse_search(html);
 	}
 
-	public List<SearchResult> search_page(int page) throws IOException,
+	@Override
+	public List<SearchResult> searchGetPage(int page) throws IOException,
 			NotReachableException {
 		if (!initialised)
-			init();
+			start();
 
 		HttpGet httpget = new HttpGet(opac_url + "/index.asp?scrollAction="
 				+ page);
@@ -222,10 +231,11 @@ public class Bond26 implements OpacApi {
 		return results;
 	}
 
+	@Override
 	public DetailledItem getResultById(String a) throws IOException,
 			NotReachableException {
 		if (!initialised)
-			init();
+			start();
 		HttpGet httpget = new HttpGet(opac_url + "/index.asp?MedienNr=" + a);
 
 		HttpResponse response = ahc.execute(httpget);
@@ -236,6 +246,7 @@ public class Bond26 implements OpacApi {
 		return parse_result(html);
 	}
 
+	@Override
 	public DetailledItem getResult(int nr) throws IOException {
 		HttpGet httpget = new HttpGet(opac_url + "/index.asp?detmediennr=" + nr);
 
@@ -268,8 +279,7 @@ public class Bond26 implements OpacApi {
 			}
 		}
 		try {
-			JSONArray copymap = bib.getJSONArray(1);
-			Log.i("copymap", copymap.toString());
+			JSONArray copymap = data.getJSONArray("copiestable");
 			Elements exemplartrs = doc
 					.select(".exemplartab .tabExemplar, .exemplartab .tabExemplar_");
 			for (int i = 0; i < exemplartrs.size(); i++) {
@@ -310,6 +320,7 @@ public class Bond26 implements OpacApi {
 		return result;
 	}
 
+	@Override
 	public boolean reservation(String zst, String ausw, String pwd)
 			throws IOException {
 		HttpGet httpget = new HttpGet(opac_url
@@ -370,9 +381,10 @@ public class Bond26 implements OpacApi {
 		return true;
 	}
 
+	@Override
 	public boolean prolong(String a) throws IOException, NotReachableException {
 		if (!initialised)
-			init();
+			start();
 		HttpGet httpget = new HttpGet(opac_url + "/" + a);
 		HttpResponse response = ahc.execute(httpget);
 		String html = convertStreamToString(response.getEntity().getContent());
@@ -405,9 +417,10 @@ public class Bond26 implements OpacApi {
 		return false;
 	}
 
+	@Override
 	public boolean cancel(String a) throws IOException, NotReachableException {
 		if (!initialised)
-			init();
+			start();
 		HttpGet httpget = new HttpGet(opac_url + "/" + a);
 		HttpResponse response = ahc.execute(httpget);
 		response.getEntity().consumeContent();
@@ -423,11 +436,12 @@ public class Bond26 implements OpacApi {
 		return true;
 	}
 
+	@Override
 	public List<List<String[]>> account(String ausw, String pwd)
 			throws IOException, NotReachableException, JSONException,
 			AccountUnsupportedException, SocketException {
 		if (!initialised)
-			init();
+			start();
 		HttpGet httpget;
 
 		// Login vonnöten
@@ -471,7 +485,7 @@ public class Bond26 implements OpacApi {
 		JSONArray copymap = null;
 
 		try {
-			copymap = bib.getJSONArray(2);
+			copymap = data.getJSONArray("accounttable");
 		} catch (JSONException e) {
 			throw new AccountUnsupportedException(html);
 		}
@@ -503,7 +517,7 @@ public class Bond26 implements OpacApi {
 		}
 
 		try {
-			copymap = bib.getJSONArray(3);
+			copymap = data.getJSONArray("reservationtable");
 		} catch (JSONException e) {
 			throw new AccountUnsupportedException(html);
 		}

@@ -51,7 +51,7 @@ public class WelcomeActivity extends OpacActivity {
 		protected Integer doInBackground(Object... arg0) {
 			super.doInBackground(arg0);
 			try {
-				app.ohc.init();
+				app.getApi().start();
 			} catch (Exception e) {
 				publishProgress(e, "ioerror");
 			}

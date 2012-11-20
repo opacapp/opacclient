@@ -24,13 +24,13 @@ public class InfoActivity extends OpacActivity {
 		TextView tvErr = (TextView) findViewById(R.id.tvErr);
 		wvInfo.loadData(getString(R.string.loading), "text/html", null);
 		try {
-			if (app.ohc.bib.getString(4) == null
-					|| app.ohc.bib.getString(4).equals("null")) {
+			if (app.getLibrary().getData().getString("information") == null
+					|| app.getLibrary().getData().getString("information").equals("null")) {
 				wvInfo.setVisibility(View.GONE);
 				tvErr.setVisibility(View.VISIBLE);
 				tvErr.setText(R.string.info_unsupported);
 			} else {
-				wvInfo.loadUrl(app.ohc.opac_url + app.ohc.bib.getString(4));
+				wvInfo.loadUrl(app.getLibrary().getData().getString("baseurl") + app.getLibrary().getData().getString("information"));
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

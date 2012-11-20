@@ -39,6 +39,7 @@ public class OpacClient extends Application {
 
 	private Account account;
 	private OpacApi api;
+	private Library library;
 
 	public boolean isOnline() {
 		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -113,8 +114,13 @@ public class OpacClient extends Application {
 	}
 
 	public Library getLibrary() {
+		if (account != null && library != null) {
+			if (sp.getLong(PREF_SELECTED_ACCOUNT, 0) == account.getId()) {
+				return library;
+			}
+		}
 		try {
-			return getLibrary(getAccount().getBib());
+			library = getLibrary(getAccount().getBib());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -122,7 +128,7 @@ public class OpacClient extends Application {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
+		return library;
 	}
 
 	public static final String ASSETS_BIBSDIR = "bibs";

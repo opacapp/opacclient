@@ -135,7 +135,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			Integer nr = (Integer) arg0[1];
 
 			try {
-				DetailledItem res = app.ohc.getResult(nr);
+				DetailledItem res = app.getApi().getResult(nr);
 				URL newurl;
 				try {
 					newurl = new URL(res.getCover());
@@ -314,7 +314,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			String a = (String) arg0[1];
 
 			try {
-				DetailledItem res = app.ohc.getResultById(a);
+				DetailledItem res = app.getApi().getResultById(a);
 				URL newurl;
 				try {
 					newurl = new URL(res.getCover());
@@ -355,7 +355,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 					success = true;
 					return STATUS_NOUSER;
 				} else {
-					Boolean res = app.ohc.reservation(zst,
+					Boolean res = app.getApi().reservation(zst,
 							sp.getString("opac_usernr", ""),
 							sp.getString("opac_password", ""));
 					success = true;
@@ -395,7 +395,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			}
 			
 			if (result == STATUS_WRONGCREDENTIALS) {
-				dialog_wrong_credentials(app.ohc.getLast_error(), false);
+				dialog_wrong_credentials(app.getApi().getLast_error(), false);
 				return;
 			}
 			reservation_done(result);

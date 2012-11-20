@@ -141,7 +141,7 @@ public class AccountActivity extends OpacActivity {
 		} else if (result == STATUS_FAILED) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage(
-					"Der Web-Opac meldet: " + app.ohc.getLast_error())
+					"Der Web-Opac meldet: " + app.getApi().getLast_error())
 					.setCancelable(false)
 					.setNegativeButton(R.string.dismiss,
 							new DialogInterface.OnClickListener() {
@@ -166,7 +166,7 @@ public class AccountActivity extends OpacActivity {
 			SharedPreferences sp = PreferenceManager
 					.getDefaultSharedPreferences(AccountActivity.this.app);
 			try {
-				List<List<String[]>> res = app.ohc.account(
+				List<List<String[]>> res = app.getApi().account(
 						sp.getString("opac_usernr", ""),
 						sp.getString("opac_password", ""));
 				success = true;
@@ -203,7 +203,7 @@ public class AccountActivity extends OpacActivity {
 
 	public void loaded(final List<List<String[]>> result) {
 		if (result == null) {
-			dialog_wrong_credentials(app.ohc.getLast_error(), true);
+			dialog_wrong_credentials(app.getApi().getLast_error(), true);
 			return;
 		}
 
@@ -304,7 +304,7 @@ public class AccountActivity extends OpacActivity {
 			super.doInBackground(arg0);
 			String a = (String) arg0[1];
 			try {
-				app.ohc.cancel(a);
+				app.getApi().cancel(a);
 				success = true;
 			} catch (java.net.UnknownHostException e) {
 				publishProgress(e, "ioerror");
@@ -351,7 +351,7 @@ public class AccountActivity extends OpacActivity {
 			super.doInBackground(arg0);
 			String a = (String) arg0[1];
 			try {
-				boolean res = app.ohc.prolong(a);
+				boolean res = app.getApi().prolong(a);
 				success = true;
 				if (res) {
 					return STATUS_SUCCESS;
