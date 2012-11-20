@@ -29,23 +29,23 @@ public class AccountDataSource {
 		dbHelper.close();
 	}
 
-	public void addAccount(Account acc) {
+	public long addAccount(Account acc) {
 		ContentValues values = new ContentValues();
 		values.put("bib", acc.getBib());
 		values.put("label", acc.getLabel());
 		values.put("name", acc.getName());
 		values.put("password", acc.getPassword());
-		database.insert("accounts", null, values);
+		return database.insert("accounts", null, values);
 	}
 
-	public void addAccount(String bib, String label, String name,
+	public long addAccount(String bib, String label, String name,
 			String password) {
 		ContentValues values = new ContentValues();
 		values.put("bib", bib);
 		values.put("label", label);
 		values.put("name", name);
 		values.put("password", password);
-		database.insert("accounts", null, values);
+		return database.insert("accounts", null, values);
 	}
 
 	public List<Account> getAllAccounts() {
