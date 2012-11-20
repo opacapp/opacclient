@@ -120,4 +120,5 @@
     <string name="connection_error_detail">Der Aufbau einer Verbindung zum Bibliotheksserver oder das Auswerten der Antwort ist fehlgeschlagen.</string>
     <string name="retry">Erneut versuchen</string>
     <string name="default_account_name">Anonymes Konto</string>
+    <string name="connecting_initially">Baue erstmalige Verbindung mit Bibliotheksserver auf...</string>
 </resources>
