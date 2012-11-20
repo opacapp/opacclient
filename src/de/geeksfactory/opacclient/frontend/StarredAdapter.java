@@ -43,7 +43,7 @@ public class StarredAdapter extends ArrayAdapter<Starred> {
 		}
 
 		TextView tv = (TextView) view.findViewById(R.id.tvTitle);
-		if(item.getTitle() != null)
+		if (item.getTitle() != null)
 			tv.setText(Html.fromHtml(item.getTitle()));
 		else
 			tv.setText("");

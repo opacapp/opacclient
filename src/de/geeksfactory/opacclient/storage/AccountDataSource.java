@@ -29,7 +29,8 @@ public class AccountDataSource {
 		dbHelper.close();
 	}
 
-	public void addAccount(String bib, String label, String name, String password) {
+	public void addAccount(String bib, String label, String name,
+			String password) {
 		ContentValues values = new ContentValues();
 		values.put("bib", bib);
 		values.put("label", label);
@@ -40,8 +41,8 @@ public class AccountDataSource {
 
 	public List<Account> getAllAccounts() {
 		List<Account> accs = new ArrayList<Account>();
-		Cursor cursor = database.query("starred", allColumns, null, null,
-				null, null, null);
+		Cursor cursor = database.query("starred", allColumns, null, null, null,
+				null, null);
 
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
@@ -55,9 +56,9 @@ public class AccountDataSource {
 	}
 
 	public Account getAccount(long id) {
-		String[] selA = { ""+id };
-		Cursor cursor = database.query("starred", allColumns,
-				"id = ?", selA, null, null, null);
+		String[] selA = { "" + id };
+		Cursor cursor = database.query("starred", allColumns, "id = ?", selA,
+				null, null, null);
 		Account acc = null;
 
 		cursor.moveToFirst();

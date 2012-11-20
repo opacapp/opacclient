@@ -25,12 +25,14 @@ public class InfoActivity extends OpacActivity {
 		wvInfo.loadData(getString(R.string.loading), "text/html", null);
 		try {
 			if (app.getLibrary().getData().getString("information") == null
-					|| app.getLibrary().getData().getString("information").equals("null")) {
+					|| app.getLibrary().getData().getString("information")
+							.equals("null")) {
 				wvInfo.setVisibility(View.GONE);
 				tvErr.setVisibility(View.VISIBLE);
 				tvErr.setText(R.string.info_unsupported);
 			} else {
-				wvInfo.loadUrl(app.getLibrary().getData().getString("baseurl") + app.getLibrary().getData().getString("information"));
+				wvInfo.loadUrl(app.getLibrary().getData().getString("baseurl")
+						+ app.getLibrary().getData().getString("information"));
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -38,7 +40,7 @@ public class InfoActivity extends OpacActivity {
 			tvErr.setVisibility(View.VISIBLE);
 			tvErr.setText(R.string.info_error);
 		}
-		
+
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 

@@ -14,7 +14,8 @@ public class AccountDatabase extends SQLiteOpenHelper {
 	private static final String DATABASE_CREATE = "create table "
 			+ "accounts ( id integer primary key autoincrement," + " bib text,"
 			+ " label text," + " name text," + " password text" + ");";
-	public static final String[] COLUMNS = { "id", "bib", "label", "name", "password" };
+	public static final String[] COLUMNS = { "id", "bib", "label", "name",
+			"password" };
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {

@@ -13,7 +13,7 @@ public abstract class OpacTask<Result> extends
 
 	protected void onProgressUpdate(Object... arg0) {
 		if (((String) arg0[1]).equals("ioerror")) {
-			if(a != null)
+			if (a != null)
 				a.web_error((Exception) arg0[0], "ioerror");
 		}
 	}
