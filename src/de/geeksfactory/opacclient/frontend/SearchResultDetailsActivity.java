@@ -457,10 +457,8 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		String bib = sp.getString("opac_bib", "");
 
+		String bib = "";
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
@@ -477,7 +475,8 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
 			String t = title;
 			try {
-				bib = java.net.URLEncoder.encode(bib, "UTF-8");
+				bib = java.net.URLEncoder.encode(app.getLibrary().getIdent(),
+						"UTF-8");
 				t = java.net.URLEncoder.encode(t, "UTF-8");
 			} catch (UnsupportedEncodingException e) {
 			}

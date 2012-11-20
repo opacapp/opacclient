@@ -51,8 +51,6 @@ public class FrontpageActivity extends OpacActivity {
 			startActivity(myIntent);
 			finish();
 		} else if (d.getHost().equals("www.raphaelmichel.de")) {
-			SharedPreferences sp = PreferenceManager
-					.getDefaultSharedPreferences(this);
 			String bib;
 			try {
 				bib = java.net.URLDecoder.decode(d.getQueryParameter("bib"),
@@ -60,7 +58,7 @@ public class FrontpageActivity extends OpacActivity {
 			} catch (UnsupportedEncodingException e) {
 				bib = d.getQueryParameter("bib");
 			}
-			if (!sp.getString("opac_bib", "").equals(bib)) {
+			if (!app.getLibrary().getIdent().equals(bib)) {
 				Intent i = new Intent(
 						Intent.ACTION_VIEW,
 						Uri.parse("http://www.raphaelmichel.de/opacclient/bibproxy.php/web?"
