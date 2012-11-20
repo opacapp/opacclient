@@ -135,6 +135,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.geeksfactory.opacclient.frontend.MainPreferenceActivity" />
         </activity>
+        <activity
+            android:name=".frontend.AccountEditActivity"
+            android:label="@string/title_activity_account_edit" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.geeksfactory.opacclient.frontend.AccountListActivity" />
+        </activity>
     </application>
 
 </manifest>
