@@ -29,6 +29,15 @@ public class AccountDataSource {
 		dbHelper.close();
 	}
 
+	public void addAccount(Account acc) {
+		ContentValues values = new ContentValues();
+		values.put("bib", acc.getBib());
+		values.put("label", acc.getLabel());
+		values.put("name", acc.getName());
+		values.put("password", acc.getPassword());
+		database.insert("accounts", null, values);
+	}
+
 	public void addAccount(String bib, String label, String name,
 			String password) {
 		ContentValues values = new ContentValues();
@@ -41,7 +50,7 @@ public class AccountDataSource {
 
 	public List<Account> getAllAccounts() {
 		List<Account> accs = new ArrayList<Account>();
-		Cursor cursor = database.query("starred", allColumns, null, null, null,
+		Cursor cursor = database.query("accounts", allColumns, null, null, null,
 				null, null);
 
 		cursor.moveToFirst();
@@ -57,7 +66,7 @@ public class AccountDataSource {
 
 	public Account getAccount(long id) {
 		String[] selA = { "" + id };
-		Cursor cursor = database.query("starred", allColumns, "id = ?", selA,
+		Cursor cursor = database.query("accounts", allColumns, "id = ?", selA,
 				null, null, null);
 		Account acc = null;
 
@@ -83,7 +92,7 @@ public class AccountDataSource {
 
 	public void remove(Starred item) {
 		String[] selA = { "" + item.getId() };
-		database.delete("starred", "id=?", selA);
+		database.delete("accounts", "id=?", selA);
 	}
 
 }
