@@ -56,7 +56,7 @@ public class WelcomeActivity extends OpacActivity {
 				sp.edit().putLong(OpacClient.PREF_SELECTED_ACCOUNT, insertedid).commit();
 
 				dialog = ProgressDialog.show(WelcomeActivity.this, "",
-						getString(R.string.loading), true);
+						getString(R.string.connecting_initially), true);
 				dialog.show();
 
 				new InitTask().execute(app);
