@@ -14,9 +14,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.storage.AccountDataSource;
 
 public class WelcomeActivity extends OpacActivity {
 	protected ProgressDialog dialog;
@@ -27,7 +30,7 @@ public class WelcomeActivity extends OpacActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.welcome_activity);
 
-		SharedPreferences sp = PreferenceManager
+		final SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(WelcomeActivity.this);
 		ListView lv = (ListView) findViewById(R.id.lvBibs);
 		try {
@@ -42,6 +45,21 @@ public class WelcomeActivity extends OpacActivity {
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
+				AccountDataSource data = new AccountDataSource(WelcomeActivity.this);
+				data.open();
+				Account acc = new Account();
+				acc.setBib(libraries.get(position).getIdent());
+				acc.setLabel(getString(R.string.default_account_name));
+				long insertedid = data.addAccount(acc);
+				data.close();
+				
+				sp.edit().putLong(OpacClient.PREF_SELECTED_ACCOUNT, insertedid).commit();
+
+				dialog = ProgressDialog.show(WelcomeActivity.this, "",
+						getString(R.string.loading), true);
+				dialog.show();
+
+				new InitTask().execute(app);
 			}
 		});
 	}

@@ -119,4 +119,5 @@
     <string name="connection_error">Verbindungsfehler</string>
     <string name="connection_error_detail">Der Aufbau einer Verbindung zum Bibliotheksserver oder das Auswerten der Antwort ist fehlgeschlagen.</string>
     <string name="retry">Erneut versuchen</string>
+    <string name="default_account_name">Anonymes Konto</string>
 </resources>

@@ -114,6 +114,8 @@ public class OpacClient extends Application {
 	}
 
 	public Library getLibrary() {
+		if(getAccount() == null)
+			return null;
 		if (account != null && library != null) {
 			if (sp.getLong(PREF_SELECTED_ACCOUNT, 0) == account.getId()) {
 				return library;
