@@ -16,6 +16,8 @@ ROADMAP VERSION 2
   * Zweigstellenliste
   * Mediengruppenliste
 * Erinnerungen anpassen
+* Redesign Account-Seite
+  * Farbkodierung abgabetermin
 * Overflow-Menü der Startseite eleganter bei >ICS unterbringen
 * Tablet-Optimierung?
 * Error Handling komplett überarbeiten
