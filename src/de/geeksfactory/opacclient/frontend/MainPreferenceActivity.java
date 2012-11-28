@@ -20,12 +20,12 @@ public class MainPreferenceActivity extends SherlockPreferenceActivity {
 
 		addPreferencesFromResource(R.xml.settings);
 
-		Preference assistant = (Preference) findPreference("welcome_assistant");
+		Preference assistant = (Preference) findPreference("accounts");
 		assistant.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference arg0) {
 				Intent intent = new Intent(MainPreferenceActivity.this,
-						WelcomeActivity.class);
+						AccountListActivity.class);
 				startActivity(intent);
 				return false;
 			}
