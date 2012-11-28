@@ -111,8 +111,7 @@
     <string name="starred_list">Merkliste</string>
     <string name="starred_welcome">Dies ist deine Merkliste. Du kannst in der Detailansicht von jedem Medium die Menütaste drücken und „Merken“ auswählen, dann erscheint das Medium hier auf der Liste.</string>
     <string name="share">Teilen</string>
-	<string name="account_unsupported">Diese Funktion wird in deiner Stadt noch nicht unterstützt! Wir würden das auch gern ändern, aber dazu brauchen wir deine Hilfe: Wenn du auf „Bericht senden“ klickst, können wir versuchen, das im nächsten Update zu ändern. Wir kennen dann eventuell deine Ausweisnummer und was du für Bücher ausgeliehen hast (nicht dein Passwort, nicht deinen Namen und auch sonst nichts zu deiner Person!) aber wir gehen mit den Daten verantwortungsbewusst um und löschen sie, sobald wir sie ausgewertet haben.</string>
-
+    <string name="account_unsupported">Diese Funktion wird in deiner Stadt noch nicht unterstützt! Wir würden das auch gern ändern, aber dazu brauchen wir deine Hilfe: Wenn du auf „Bericht senden“ klickst, können wir versuchen, das im nächsten Update zu ändern. Wir kennen dann eventuell deine Ausweisnummer und was du für Bücher ausgeliehen hast (nicht dein Passwort, nicht deinen Namen und auch sonst nichts zu deiner Person!) aber wir gehen mit den Daten verantwortungsbewusst um und löschen sie, sobald wir sie ausgewertet haben.</string>
     <string name="info">Infos</string>
     <string name="info_error">Die Infos der Bücherei konnten nicht abgerufen werden.</string>
     <string name="info_unsupported">Deine Bücherei stellt keine zusätzlichen Informationen bereit, die wir dir anzeigen könnten.</string>
@@ -121,4 +120,14 @@
     <string name="retry">Erneut versuchen</string>
     <string name="default_account_name">Anonymes Konto</string>
     <string name="connecting_initially">Baue erstmalige Verbindung mit Bibliotheksserver auf...</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_account_list">Konten</string>
+    <string name="account_add">Konto hinzufügen</string>
+    <string name="accounts">Konten</string>
+	<string name="accounts_desc">Genutzte Bibliotheken und Mitgliedsnummern verwalten</string>
+	<string name="account_label">Bezeichnung</string>
+	<string name="account_nr">Mitgliedsnummer/-name (optional)</string>
+	<string name="account_password">Passwort (optional)</string>
+	<string name="title_activity_account_edit">Konto bearbeiten</string>
 </resources>

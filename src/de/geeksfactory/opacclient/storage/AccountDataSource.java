@@ -38,6 +38,16 @@ public class AccountDataSource {
 		return database.insert("accounts", null, values);
 	}
 
+	public void update(Account acc) {
+		ContentValues values = new ContentValues();
+		values.put("bib", acc.getBib());
+		values.put("label", acc.getLabel());
+		values.put("name", acc.getName());
+		values.put("password", acc.getPassword());
+		database.update("accounts", values, "id = ?",
+				new String[] { acc.getId() + "" });
+	}
+
 	public long addAccount(String bib, String label, String name,
 			String password) {
 		ContentValues values = new ContentValues();
@@ -50,8 +60,8 @@ public class AccountDataSource {
 
 	public List<Account> getAllAccounts() {
 		List<Account> accs = new ArrayList<Account>();
-		Cursor cursor = database.query("accounts", allColumns, null, null, null,
-				null, null);
+		Cursor cursor = database.query("accounts", allColumns, null, null,
+				null, null, null);
 
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {

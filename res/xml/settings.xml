@@ -3,24 +3,12 @@
 
     <PreferenceCategory android:title="@string/web_opac" >
         <Preference
-            android:key="welcome_assistant"
-            android:summary="@string/welcome_assistant_desc"
-            android:title="@string/welcome_assistant" />
-
-        <EditTextPreference
-            android:key="opac_usernr"
-            android:summary="@string/opac_usernr_desc"
-            android:title="@string/opac_usernr" />
-        <EditTextPreference
-            android:dependency="opac_usernr"
-            android:key="opac_password"
-            android:password="true"
-            android:summary="@string/opac_password_hint"
-            android:title="@string/opac_password" />
+            android:key="accounts"
+            android:summary="@string/accounts_desc"
+            android:title="@string/accounts" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/notifications" >
         <CheckBoxPreference
-            android:dependency="opac_usernr"
             android:key="notification_service"
             android:summary="@string/notification_service_desc"
             android:title="@string/notification_service" />
