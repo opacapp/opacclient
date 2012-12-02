@@ -133,5 +133,6 @@
 	<string name="account_label">Bezeichnung</string>
 	<string name="account_nr">Mitgliedsnummer/-name (optional)</string>
 	<string name="account_password">Passwort (optional)</string>
+	<string name="account_city">Bibliothek</string>
 	<string name="title_activity_account_edit">Konto bearbeiten</string>
 </resources>
