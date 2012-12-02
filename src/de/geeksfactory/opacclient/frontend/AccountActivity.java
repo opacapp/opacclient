@@ -121,6 +121,14 @@ public class AccountActivity extends OpacActivity {
 					public void onClick(DialogInterface dialog, int id) {
 						dialog.cancel();
 					}
+				}).setNeutralButton(R.string.accounts_edit,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.dismiss();
+						Intent intent = new Intent(AccountActivity.this,
+								AccountListActivity.class);
+						startActivity(intent);
+					}
 				});
 		adialog = builder.create();
 		adialog.show();
@@ -222,9 +230,7 @@ public class AccountActivity extends OpacActivity {
 			SharedPreferences sp = PreferenceManager
 					.getDefaultSharedPreferences(AccountActivity.this.app);
 			try {
-				List<List<String[]>> res = app.getApi().account(
-						sp.getString("opac_usernr", ""),
-						sp.getString("opac_password", ""));
+				List<List<String[]>> res = app.getApi().account(((OpacClient)getApplication()).getAccount());
 				success = true;
 				return res;
 			} catch (java.net.UnknownHostException e) {
