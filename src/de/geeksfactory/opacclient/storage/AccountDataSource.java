@@ -73,6 +73,23 @@ public class AccountDataSource {
 		return accs;
 	}
 
+	public List<Account> getAllAccounts(String bib) {
+		List<Account> accs = new ArrayList<Account>();
+		String[] selA = { bib };
+		Cursor cursor = database.query("accounts", allColumns, "bib = ?", selA,
+				null, null, null);
+
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			Account acc = cursorToAccount(cursor);
+			accs.add(acc);
+			cursor.moveToNext();
+		}
+		// Make sure to close the cursor
+		cursor.close();
+		return accs;
+	}
+
 	public Account getAccount(long id) {
 		String[] selA = { "" + id };
 		Cursor cursor = database.query("accounts", allColumns, "id = ?", selA,
