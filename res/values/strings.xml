@@ -136,4 +136,5 @@
 	<string name="account_password">Passwort (optional)</string>
 	<string name="account_city">Bibliothek</string>
 	<string name="title_activity_account_edit">Konto bearbeiten</string>
+	<string name="account_select">Konto auswählen</string>
 </resources>
