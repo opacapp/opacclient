@@ -12,6 +12,32 @@
         android:padding="5dp" >
 
         <TextView
+            android:id="@+id/tvAccHeader"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="8dp"
+            android:drawableBottom="@drawable/section_header"
+            android:drawablePadding="4dp"
+            android:paddingLeft="4dp"
+            android:text="@string/account"
+            android:textAllCaps="true"
+            android:textColor="@color/emphasis"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tvAccUser"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/tvAccCity"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
             android:id="@+id/tvEntlHeader"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

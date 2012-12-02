@@ -58,27 +58,18 @@ public abstract class OpacActivity extends SherlockActivity {
 	}
 
 	protected void dialog_no_user(final boolean finish) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(R.string.status_nouser)
-				.setCancelable(false)
-				.setNegativeButton(R.string.dismiss,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
-								if (finish)
-									finish();
-							}
-						})
-				.setPositiveButton(R.string.prefs,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								Intent intent = new Intent(OpacActivity.this,
-										MainPreferenceActivity.class);
-								startActivity(intent);
-							}
-						});
-		AlertDialog alert = builder.create();
-		alert.show();
+		setContentView(R.layout.answer_error);
+		((Button) findViewById(R.id.btPrefs))
+				.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(OpacActivity.this,
+								AccountListActivity.class);
+						startActivity(intent);
+					}
+				});
+		((TextView) findViewById(R.id.tvErrHead)).setText("");
+		((TextView) findViewById(R.id.tvErrBody)).setText(R.string.status_nouser);
 	}
 
 	protected void dialog_wrong_credentials(String s, final boolean finish) {

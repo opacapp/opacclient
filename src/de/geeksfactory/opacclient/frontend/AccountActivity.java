@@ -1,7 +1,11 @@
 package de.geeksfactory.opacclient.frontend;
 
+import java.io.IOException;
 import java.util.List;
 
+import org.json.JSONException;
+
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -27,6 +31,8 @@ import com.actionbarsherlock.view.MenuItem;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.objects.Account;
+import de.geeksfactory.opacclient.objects.Library;
 
 public class AccountActivity extends OpacActivity {
 
@@ -36,9 +42,11 @@ public class AccountActivity extends OpacActivity {
 	public static int STATUS_NOUSER = 1;
 	public static int STATUS_FAILED = 2;
 
-	protected LoadTask lt;
-	protected CancelTask ct;
-	protected ProlongTask pt;
+	private LoadTask lt;
+	private CancelTask ct;
+	private ProlongTask pt;
+
+	private Account account;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -87,10 +95,13 @@ public class AccountActivity extends OpacActivity {
 		((TextView) findViewById(R.id.tvLoading))
 				.setText(R.string.loading_account);
 
+		account = ((OpacClient) getApplication()).getAccount();
+
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(app);
-		if (sp.getString("opac_usernr", "").equals("")
-				|| sp.getString("opac_password", "").equals("")) {
+		if (account.getPassword() == null
+				|| account.getPassword().equals("null")
+				|| account.getPassword().equals("")) {
 			dialog_no_user(true);
 		} else {
 			lt = new LoadTask();
@@ -217,6 +228,26 @@ public class AccountActivity extends OpacActivity {
 		}
 
 		setContentView(R.layout.account_activity);
+
+		((TextView) findViewById(R.id.tvAccHeader)).setText(getString(
+				R.string.account_header, account.getLabel()));
+		((TextView) findViewById(R.id.tvAccUser)).setText(account.getName());
+		TextView tvAccCity = (TextView) findViewById(R.id.tvAccCity);
+		Library lib;
+		try {
+			lib = ((OpacClient) getApplication()).getLibrary(account.getBib());
+			if (lib.getTitle() != null && !lib.getTitle().equals("null")) {
+				tvAccCity.setText(lib.getCity() + "\n" + lib.getTitle());
+			} else {
+				tvAccCity.setText(lib.getCity());
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		TableLayout td = (TableLayout) findViewById(R.id.tlMedien);
 		td.removeAllViews();
