@@ -120,8 +120,8 @@ public abstract class OpacActivity extends SherlockActivity {
 				adialog.dismiss();
 			}
 		});
-
-		builder.setView(view)
+		builder.setTitle(R.string.account_select)
+				.setView(view)
 				.setNegativeButton(R.string.cancel,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
