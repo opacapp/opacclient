@@ -2,22 +2,22 @@ ROADMAP VERSION 2
 =================
 
 * Multiple Accounts
-  * Settings
-  * Switch
   * Switch beim vorbestellen
   * Migration von alter Version!!!
+  * Verlängern und Abbestellen prüfen!
+  * Erinnerungen anpassen
 * Multiple Bibliotheks-APIs
   * Kein Crash bei nicht unterstützem Account
   * Suchmaske basierend auf API
   * BibProxy und Intents bedenken
   * Zweigstellenliste
   * Mediengruppenliste
-* Erinnerungen anpassen
 * Redesign Account-Seite
   * Farbkodierung abgabetermin
 * Overflow-Menü der Startseite eleganter bei >ICS unterbringen
 * Tablet-Optimierung?
 * Error Handling komplett überarbeiten
+* Search Screen : restoreInstanceState
 
 Zu integrierende Bibliothekssysteme
 -----------------------------------
