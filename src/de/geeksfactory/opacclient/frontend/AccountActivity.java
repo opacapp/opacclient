@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.json.JSONException;
 
-import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -97,8 +96,6 @@ public class AccountActivity extends OpacActivity {
 
 		account = ((OpacClient) getApplication()).getAccount();
 
-		SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(app);
 		if (account.getPassword() == null
 				|| account.getPassword().equals("null")
 				|| account.getPassword().equals("")) {
@@ -183,9 +180,6 @@ public class AccountActivity extends OpacActivity {
 		@Override
 		protected List<List<String[]>> doInBackground(Object... arg0) {
 			super.doInBackground(arg0);
-
-			SharedPreferences sp = PreferenceManager
-					.getDefaultSharedPreferences(AccountActivity.this.app);
 			try {
 				List<List<String[]>> res = app.getApi().account(
 						((OpacClient) getApplication()).getAccount());

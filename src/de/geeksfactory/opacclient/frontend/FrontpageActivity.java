@@ -75,6 +75,17 @@ public class FrontpageActivity extends OpacActivity {
 	}
 
 	@Override
+	protected void onResume() {
+		TextView tvBn = (TextView) findViewById(R.id.tvBibname);
+		if (app.getLibrary().getTitle() != null && !app.getLibrary().getTitle().equals("null"))
+			tvBn.setText(app.getLibrary().getCity() + "\n"
+					+ app.getLibrary().getTitle());
+		else
+			tvBn.setText(app.getLibrary().getCity());
+		super.onResume();
+	}
+
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.getSupportActionBar().hide();

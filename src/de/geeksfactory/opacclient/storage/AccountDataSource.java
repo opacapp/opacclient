@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import de.geeksfactory.opacclient.objects.Account;
-import de.geeksfactory.opacclient.objects.Starred;
 
 public class AccountDataSource {
 	// Database fields
