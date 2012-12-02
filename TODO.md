@@ -14,7 +14,6 @@ ROADMAP VERSION 2
   * Mediengruppenliste
 * Redesign Account-Seite
   * Farbkodierung abgabetermin
-* Overflow-Menü der Startseite eleganter bei >ICS unterbringen
 * Tablet-Optimierung?
 * Error Handling komplett überarbeiten
 * Search Screen : restoreInstanceState
