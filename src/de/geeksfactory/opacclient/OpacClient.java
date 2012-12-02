@@ -96,11 +96,16 @@ public class OpacClient extends Application {
 		return acc;
 	}
 
+	public void setAccount(long id) {
+		sp.edit().putLong(OpacClient.PREF_SELECTED_ACCOUNT, id).commit();
+	}
+
 	public Library getLibrary(String ident) throws IOException, JSONException {
 		String line;
 
 		StringBuilder builder = new StringBuilder();
-		InputStream fis = getAssets().open(ASSETS_BIBSDIR + "/" + ident + ".json");
+		InputStream fis = getAssets().open(
+				ASSETS_BIBSDIR + "/" + ident + ".json");
 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(fis,
 				"utf-8"));
@@ -114,7 +119,7 @@ public class OpacClient extends Application {
 	}
 
 	public Library getLibrary() {
-		if(getAccount() == null)
+		if (getAccount() == null)
 			return null;
 		if (account != null && library != null) {
 			if (sp.getLong(PREF_SELECTED_ACCOUNT, 0) == account.getId()) {
@@ -159,7 +164,8 @@ public class OpacClient extends Application {
 
 			fis.close();
 			json = builder.toString();
-			libs.add(Library.fromJSON(files[i].replace(".json", ""), new JSONObject(json)));
+			libs.add(Library.fromJSON(files[i].replace(".json", ""),
+					new JSONObject(json)));
 		}
 
 		return libs;
