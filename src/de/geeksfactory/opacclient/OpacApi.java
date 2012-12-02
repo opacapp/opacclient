@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.SearchResult;
 
@@ -47,7 +48,7 @@ public interface OpacApi {
 
 	boolean cancel(String a) throws IOException, NotReachableException;
 
-	List<List<String[]>> account(String ausw, String pwd) throws IOException,
+	List<List<String[]>> account(Account acc) throws IOException,
 			NotReachableException, JSONException, AccountUnsupportedException,
 			SocketException;
 

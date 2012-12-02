@@ -34,6 +34,7 @@ import android.util.Log;
 import de.geeksfactory.opacclient.AccountUnsupportedException;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacApi;
+import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.SearchResult;
 
@@ -437,13 +438,16 @@ public class Bond26 implements OpacApi {
 	}
 
 	@Override
-	public List<List<String[]>> account(String ausw, String pwd)
+	public List<List<String[]>> account(Account acc)
 			throws IOException, NotReachableException, JSONException,
 			AccountUnsupportedException, SocketException {
 		if (!initialised)
 			start();
 		HttpGet httpget;
 
+		if(acc.getName() == null || acc.getName().equals("null"))
+			return null;
+		
 		// Login vonnöten
 		HttpPost httppost = new HttpPost(opac_url + "/index.asp");
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
@@ -458,8 +462,8 @@ public class Bond26 implements OpacApi {
 			response.getEntity().consumeContent();
 			httppost = new HttpPost(opac_url + "/index.asp");
 			nameValuePairs = new ArrayList<NameValuePair>(2);
-			nameValuePairs.add(new BasicNameValuePair("AUSWEIS", ausw));
-			nameValuePairs.add(new BasicNameValuePair("PWD", pwd));
+			nameValuePairs.add(new BasicNameValuePair("AUSWEIS", acc.getName()));
+			nameValuePairs.add(new BasicNameValuePair("PWD", acc.getPassword()));
 			nameValuePairs.add(new BasicNameValuePair("B1", "weiter"));
 			nameValuePairs.add(new BasicNameValuePair("target", "konto"));
 			nameValuePairs.add(new BasicNameValuePair("type", "K"));
