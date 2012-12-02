@@ -76,6 +76,9 @@ public class FrontpageActivity extends OpacActivity {
 
 	@Override
 	protected void onResume() {
+		if (app.getLibrary() == null) {
+			return;
+		}
 		TextView tvBn = (TextView) findViewById(R.id.tvBibname);
 		if (app.getLibrary().getTitle() != null && !app.getLibrary().getTitle().equals("null"))
 			tvBn.setText(app.getLibrary().getCity() + "\n"
