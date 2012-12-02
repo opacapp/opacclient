@@ -1,15 +1,20 @@
 package de.geeksfactory.opacclient.frontend;
 
+import java.util.List;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
@@ -18,9 +23,12 @@ import com.actionbarsherlock.view.MenuItem;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.objects.Account;
+import de.geeksfactory.opacclient.storage.AccountDataSource;
 
 public abstract class OpacActivity extends SherlockActivity {
 	protected OpacClient app;
+	protected AlertDialog adialog;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -85,6 +93,52 @@ public abstract class OpacActivity extends SherlockActivity {
 					}
 				});
 		((TextView) findViewById(R.id.tvErrBody)).setText(s);
+	}
+
+	public void selectaccount() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		// Get the layout inflater
+		LayoutInflater inflater = getLayoutInflater();
+
+		View view = inflater.inflate(R.layout.account_add_liblist_dialog, null);
+
+		ListView lv = (ListView) view.findViewById(R.id.lvBibs);
+		AccountDataSource data = new AccountDataSource(this);
+		data.open();
+		final List<Account> accounts = data.getAllAccounts();
+		data.close();
+		AccountListAdapter adapter = new AccountListAdapter(this, accounts);
+		lv.setAdapter(adapter);
+		lv.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+
+				((OpacClient) getApplication()).setAccount(accounts.get(
+						position).getId());
+				onResume();
+				adialog.dismiss();
+			}
+		});
+
+		builder.setView(view)
+				.setNegativeButton(R.string.cancel,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								adialog.cancel();
+							}
+						})
+				.setNeutralButton(R.string.accounts_edit,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.dismiss();
+								Intent intent = new Intent(OpacActivity.this,
+										AccountListActivity.class);
+								startActivity(intent);
+							}
+						});
+		adialog = builder.create();
+		adialog.show();
 	}
 
 	protected void unbindDrawables(View view) {
