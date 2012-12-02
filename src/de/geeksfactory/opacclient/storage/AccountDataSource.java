@@ -100,8 +100,8 @@ public class AccountDataSource {
 		return acc;
 	}
 
-	public void remove(Starred item) {
-		String[] selA = { "" + item.getId() };
+	public void remove(Account acc) {
+		String[] selA = { "" + acc.getId() };
 		database.delete("accounts", "id=?", selA);
 	}
 

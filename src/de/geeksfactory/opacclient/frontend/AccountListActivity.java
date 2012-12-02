@@ -5,19 +5,19 @@ import java.util.List;
 
 import org.json.JSONException;
 
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
+import com.WazaBe.HoloEverywhere.app.AlertDialog;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 
@@ -29,13 +29,70 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 
 public class AccountListActivity extends SherlockActivity {
 
-	List<Account> accounts;
+	private List<Account> accounts;
+	private List<Library> libraries;
+	private AlertDialog dialog;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_account_list);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+		Button btAdd = (Button) findViewById(R.id.btAdd);
+		btAdd.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						AccountListActivity.this);
+				// Get the layout inflater
+				LayoutInflater inflater = getLayoutInflater();
+
+				View view = inflater.inflate(
+						R.layout.account_add_liblist_dialog, null);
+
+				ListView lv = (ListView) view.findViewById(R.id.lvBibs);
+				try {
+					libraries = ((OpacClient) getApplication()).getLibraries();
+					lv.setAdapter(new LibraryListAdapter(
+							AccountListActivity.this, libraries));
+				} catch (JSONException e) {
+					((OpacClient) getApplication()).web_error(e, "jsonerror");
+				} catch (IOException e) {
+					((OpacClient) getApplication()).web_error(e, "jsonerror");
+				}
+				lv.setOnItemClickListener(new OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view,
+							int position, long id) {
+						AccountDataSource data = new AccountDataSource(
+								AccountListActivity.this);
+						data.open();
+						Account acc = new Account();
+						acc.setBib(libraries.get(position).getIdent());
+						acc.setLabel(getString(R.string.default_account_name));
+						long insertedid = data.addAccount(acc);
+						data.close();
+						dialog.dismiss();
+
+						Intent i = new Intent(AccountListActivity.this,
+								AccountEditActivity.class);
+						i.putExtra("id", insertedid);
+						startActivity(i);
+					}
+				});
+
+				builder.setView(view).setNegativeButton(R.string.cancel,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						});
+				dialog = builder.create();
+				dialog.show();
+			}
+		});
 	}
 
 	@Override
@@ -54,67 +111,12 @@ public class AccountListActivity extends SherlockActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				Intent i = new Intent(AccountListActivity.this, AccountEditActivity.class);
+				Intent i = new Intent(AccountListActivity.this,
+						AccountEditActivity.class);
 				i.putExtra("id", accounts.get(position).getId());
 				startActivity(i);
 			}
 		});
-	}
-
-	public class AccountListAdapter extends ArrayAdapter<Account> {
-		private List<Account> objects;
-
-		@Override
-		public View getView(int position, View contentView, ViewGroup viewGroup) {
-			View view = null;
-
-			// position always 0-7
-			if (objects.get(position) == null) {
-				LayoutInflater layoutInflater = (LayoutInflater) getContext()
-						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				view = layoutInflater.inflate(R.layout.account_listitem,
-						viewGroup, false);
-				return view;
-			}
-
-			Account item = objects.get(position);
-
-			if (contentView == null) {
-				LayoutInflater layoutInflater = (LayoutInflater) getContext()
-						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				view = layoutInflater.inflate(R.layout.account_listitem,
-						viewGroup, false);
-			} else {
-				view = contentView;
-			}
-
-			Library lib;
-			try {
-				lib = ((OpacClient) getApplication()).getLibrary(item.getBib());
-				TextView tvCity = (TextView) view.findViewById(R.id.tvCity);
-				if (lib.getTitle() != null && !lib.getTitle().equals("null")) {
-					tvCity.setText(lib.getCity() + "\n" + lib.getTitle());
-				} else {
-					tvCity.setText(lib.getCity());
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			TextView tvName = (TextView) view.findViewById(R.id.tvName);
-			if (item.getName() != null)
-				tvName.setText(item.getName());
-			TextView tvLabel = (TextView) view.findViewById(R.id.tvLabel);
-			if (item.getLabel() != null)
-				tvLabel.setText(item.getLabel());
-			return view;
-		}
-
-		public AccountListAdapter(Context context, List<Account> objects) {
-			super(context, R.layout.account_listitem, objects);
-			this.objects = objects;
-		}
 	}
 
 	@Override

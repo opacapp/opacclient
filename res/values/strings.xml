@@ -59,6 +59,10 @@
     <string name="cancel_confirm">Vorbestellung wirklich entfernen?</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="cont">Weiter</string>
+    <string name="delete">Löschen</string>
+    <string name="accept">OK</string>
     <string name="doing_cancel">Lösche Vorbestellung…</string>
     <string name="doing_prolong">Verlängere…</string>
     <string name="opac_error">Der Web-Opac meldet:</string>
