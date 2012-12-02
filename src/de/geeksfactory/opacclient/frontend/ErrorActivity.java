@@ -20,10 +20,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -134,8 +132,7 @@ public class ErrorActivity extends SherlockActivity {
 			} catch (Exception e) {
 
 			}
-			SharedPreferences sp = PreferenceManager
-					.getDefaultSharedPreferences(ErrorActivity.this);
+
 			nameValuePairs.add(new BasicNameValuePair("android",
 					android.os.Build.VERSION.RELEASE));
 			nameValuePairs.add(new BasicNameValuePair("sdk", ""

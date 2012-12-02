@@ -3,10 +3,8 @@ package de.geeksfactory.opacclient.frontend;
 import java.io.UnsupportedEncodingException;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
