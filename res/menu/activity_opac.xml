@@ -3,21 +3,21 @@
 
     <item
         android:id="@+id/menu_prefs"
-        android:icon="@drawable/ic_menu_preferences"
+        android:icon="@drawable/ic_menu_settings"
         android:showAsAction="never"
         android:title="@string/prefs">
     </item>
 
     <item
         android:id="@+id/menu_info"
-        android:icon="@drawable/ic_menu_info_details"
+        android:icon="@drawable/ic_menu_info"
         android:showAsAction="never"
         android:title="@string/info">
     </item>
 
     <item
         android:id="@+id/menu_about"
-        android:icon="@drawable/ic_menu_info_details"
+        android:icon="@drawable/ic_menu_about"
         android:showAsAction="never"
         android:title="@string/about">
     </item>

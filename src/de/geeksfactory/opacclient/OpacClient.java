@@ -100,6 +100,7 @@ public class OpacClient extends Application {
 		sp.edit().putLong(OpacClient.PREF_SELECTED_ACCOUNT, id).commit();
 		account = null;
 		api = null;
+		library = null;
 	}
 
 	public Library getLibrary(String ident) throws IOException, JSONException {

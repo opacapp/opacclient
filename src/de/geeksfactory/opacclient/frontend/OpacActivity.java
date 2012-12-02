@@ -69,7 +69,8 @@ public abstract class OpacActivity extends SherlockActivity {
 					}
 				});
 		((TextView) findViewById(R.id.tvErrHead)).setText("");
-		((TextView) findViewById(R.id.tvErrBody)).setText(R.string.status_nouser);
+		((TextView) findViewById(R.id.tvErrBody))
+				.setText(R.string.status_nouser);
 	}
 
 	protected void dialog_wrong_credentials(String s, final boolean finish) {
@@ -86,7 +87,15 @@ public abstract class OpacActivity extends SherlockActivity {
 		((TextView) findViewById(R.id.tvErrBody)).setText(s);
 	}
 
+	public interface AccountSelectedListener {
+		void accountSelected(Account account);
+	}
+
 	public void selectaccount() {
+		selectaccount(null);
+	}
+
+	public void selectaccount(final AccountSelectedListener listener) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		// Get the layout inflater
 		LayoutInflater inflater = getLayoutInflater();
@@ -105,10 +114,15 @@ public abstract class OpacActivity extends SherlockActivity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 
-				((OpacClient) getApplication()).setAccount(accounts.get(
-						position).getId());
-				onResume();
+				app.setAccount(accounts.get(position).getId());
+
 				adialog.dismiss();
+
+				onResume();
+
+				if (listener != null) {
+					listener.accountSelected(accounts.get(position));
+				}
 			}
 		});
 		builder.setTitle(R.string.account_select)
