@@ -9,12 +9,14 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
@@ -136,8 +138,16 @@ public class Bond26 implements OpacApi {
 	@Override
 	public void init(Context context, JSONObject data) {
 		ahc = new DefaultHttpClient();
+
 		this.context = context;
 		this.data = data;
+
+		SharedPreferences sp = PreferenceManager
+				.getDefaultSharedPreferences(context);
+		if (sp.getBoolean("debug_proxy", false))
+			ahc.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,
+					new HttpHost("192.168.0.173", 8000)); // TODO: DEBUG ONLY
+
 		try {
 			this.opac_url = data.getString("baseurl");
 		} catch (JSONException e) {
@@ -438,16 +448,16 @@ public class Bond26 implements OpacApi {
 	}
 
 	@Override
-	public List<List<String[]>> account(Account acc)
-			throws IOException, NotReachableException, JSONException,
-			AccountUnsupportedException, SocketException {
+	public List<List<String[]>> account(Account acc) throws IOException,
+			NotReachableException, JSONException, AccountUnsupportedException,
+			SocketException {
 		if (!initialised)
 			start();
 		HttpGet httpget;
 
-		if(acc.getName() == null || acc.getName().equals("null"))
+		if (acc.getName() == null || acc.getName().equals("null"))
 			return null;
-		
+
 		// Login vonnöten
 		HttpPost httppost = new HttpPost(opac_url + "/index.asp");
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
@@ -462,8 +472,10 @@ public class Bond26 implements OpacApi {
 			response.getEntity().consumeContent();
 			httppost = new HttpPost(opac_url + "/index.asp");
 			nameValuePairs = new ArrayList<NameValuePair>(2);
-			nameValuePairs.add(new BasicNameValuePair("AUSWEIS", acc.getName()));
-			nameValuePairs.add(new BasicNameValuePair("PWD", acc.getPassword()));
+			nameValuePairs
+					.add(new BasicNameValuePair("AUSWEIS", acc.getName()));
+			nameValuePairs
+					.add(new BasicNameValuePair("PWD", acc.getPassword()));
 			nameValuePairs.add(new BasicNameValuePair("B1", "weiter"));
 			nameValuePairs.add(new BasicNameValuePair("target", "konto"));
 			nameValuePairs.add(new BasicNameValuePair("type", "K"));

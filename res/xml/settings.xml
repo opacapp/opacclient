@@ -29,4 +29,9 @@
             android:title="@string/notification_sound" />
     </PreferenceCategory>
 
+    <CheckBoxPreference
+        android:key="debug_proxy"
+        android:summary="Nicht benutzen, außer du weißt, was du tust."
+        android:title="Debug-Modus (Proxy)" />
+
 </PreferenceScreen>
