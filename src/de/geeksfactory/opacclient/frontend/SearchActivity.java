@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.WazaBe.HoloEverywhere.widget.Spinner;
+import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 import de.geeksfactory.opacclient.R;
@@ -161,11 +162,21 @@ public class SearchActivity extends OpacActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getSupportMenuInflater().inflate(R.menu.activity_search, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			NavUtils.navigateUpFromSameTask(this);
+			return true;
+		case R.id.action_accounts:
+			selectaccount();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
