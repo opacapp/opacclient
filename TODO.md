@@ -2,9 +2,6 @@ ROADMAP VERSION 2
 =================
 
 * Multiple Accounts
-  * List
-  * Delete
-  * Add
   * Settings
   * Switch
   * Switch beim vorbestellen
