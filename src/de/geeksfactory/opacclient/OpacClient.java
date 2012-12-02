@@ -49,7 +49,7 @@ public class OpacClient extends Application {
 
 	private OpacApi initApi(Library lib) throws ClientProtocolException,
 			SocketException, IOException, NotReachableException {
-		OpacApi api = null;
+		api = null;
 		if (lib.getApi().equals("bond26"))
 			api = new Bond26();
 		else
@@ -91,13 +91,15 @@ public class OpacClient extends Application {
 		}
 		AccountDataSource data = new AccountDataSource(this);
 		data.open();
-		Account acc = data.getAccount(sp.getLong(PREF_SELECTED_ACCOUNT, 0));
+		account = data.getAccount(sp.getLong(PREF_SELECTED_ACCOUNT, 0));
 		data.close();
-		return acc;
+		return account;
 	}
 
 	public void setAccount(long id) {
 		sp.edit().putLong(OpacClient.PREF_SELECTED_ACCOUNT, id).commit();
+		account = null;
+		api = null;
 	}
 
 	public Library getLibrary(String ident) throws IOException, JSONException {
