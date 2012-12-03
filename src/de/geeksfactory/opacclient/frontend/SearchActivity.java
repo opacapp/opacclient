@@ -1,31 +1,41 @@
 package de.geeksfactory.opacclient.frontend;
 
 import java.util.Arrays;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.WazaBe.HoloEverywhere.widget.Spinner;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.storage.MetaDataSource;
 import de.geeksfactory.opacclient.zxing.IntentIntegrator;
 import de.geeksfactory.opacclient.zxing.IntentResult;
 
 public class SearchActivity extends OpacActivity {
+
+	private List<ContentValues> cbMg_data;
+	private List<ContentValues> cbZst_data;
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent idata) {
@@ -135,6 +145,76 @@ public class SearchActivity extends OpacActivity {
 		}
 	}
 
+	public class MetaAdapter extends ArrayAdapter<ContentValues> {
+
+		private List<ContentValues> objects;
+
+		@Override
+		public View getDropDownView(int position, View contentView,
+				ViewGroup viewGroup) {
+			View view = null;
+
+			if (objects.get(position) == null) {
+				LayoutInflater layoutInflater = (LayoutInflater) getContext()
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				view = layoutInflater
+						.inflate(R.layout.simple_spinner_dropdown_item,
+								viewGroup, false);
+				return view;
+			}
+
+			ContentValues item = objects.get(position);
+
+			if (contentView == null) {
+				LayoutInflater layoutInflater = (LayoutInflater) getContext()
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				view = layoutInflater
+						.inflate(R.layout.simple_spinner_dropdown_item,
+								viewGroup, false);
+			} else {
+				view = contentView;
+			}
+
+			TextView tvText = (TextView) view.findViewById(android.R.id.text1);
+			tvText.setText(item.getAsString("value"));
+			return view;
+		}
+
+		@Override
+		public View getView(int position, View contentView, ViewGroup viewGroup) {
+			View view = null;
+
+			if (objects.get(position) == null) {
+				LayoutInflater layoutInflater = (LayoutInflater) getContext()
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				view = layoutInflater.inflate(R.layout.simple_spinner_item,
+						viewGroup, false);
+				return view;
+			}
+
+			ContentValues item = objects.get(position);
+
+			if (contentView == null) {
+				LayoutInflater layoutInflater = (LayoutInflater) getContext()
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				view = layoutInflater.inflate(R.layout.simple_spinner_item,
+						viewGroup, false);
+			} else {
+				view = contentView;
+			}
+
+			TextView tvText = (TextView) view.findViewById(android.R.id.text1);
+			tvText.setText(item.getAsString("value"));
+			return view;
+		}
+
+		public MetaAdapter(Context context, List<ContentValues> objects) {
+			super(context, R.layout.simple_spinner_item, objects);
+			this.objects = objects;
+		}
+
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -151,26 +231,24 @@ public class SearchActivity extends OpacActivity {
 		// Fill combo boxes
 
 		Spinner cbZst = (Spinner) findViewById(R.id.cbZweigstelle);
-		String[] zst = sp.getString("opac_zst", ":Alle").split("~");
-		if (zst[0].startsWith(": ")) {
-			zst[0] = zst[0].substring(2);
-		}
-		ArrayAdapter<String> zst_adapter = new ArrayAdapter<String>(this,
-				R.layout.simple_spinner_item, zst);
-		zst_adapter
-				.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
-		cbZst.setAdapter(zst_adapter);
+
+		MetaDataSource data = new MetaDataSource(this);
+		data.open();
+
+		ContentValues all = new ContentValues();
+		all.put("key", "");
+		all.put("value", getString(R.string.all));
+		
+		cbZst_data = data.getMeta(app.getLibrary().getIdent(), "zst");
+		cbZst_data.add(0, all);
+		cbZst.setAdapter(new MetaAdapter(this, cbZst_data));
 
 		Spinner cbMg = (Spinner) findViewById(R.id.cbMediengruppe);
-		String[] mg = sp.getString("opac_mg", ":Alle").split("~");
-		if (mg[0].startsWith(": ")) {
-			mg[0] = mg[0].substring(2);
-		}
-		ArrayAdapter<String> mg_adapter = new ArrayAdapter<String>(this,
-				R.layout.simple_spinner_item, mg);
-		mg_adapter
-				.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
-		cbMg.setAdapter(mg_adapter);
+		cbMg_data = data.getMeta(app.getLibrary().getIdent(), "mg");
+		cbMg_data.add(0, all);
+		cbMg.setAdapter(new MetaAdapter(this, cbMg_data));
+
+		data.close();
 
 		ArrayAdapter<CharSequence> order_adapter = ArrayAdapter
 				.createFromResource(this, R.array.orders,
@@ -189,26 +267,28 @@ public class SearchActivity extends OpacActivity {
 				integrator.initiateScan();
 			}
 		});
+
 		// Go
 
 		Button btGo = (Button) findViewById(R.id.btStartsearch);
 		btGo.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				String zst = ((String) ((Spinner) SearchActivity.this
-						.findViewById(R.id.cbZweigstelle)).getSelectedItem());
-				if (zst.contains(":")) {
-					zst = zst.split(":", 2)[0];
-				} else {
-					zst = "";
-				}
-				String mg = ((String) ((Spinner) SearchActivity.this
-						.findViewById(R.id.cbMediengruppe)).getSelectedItem());
-				if (mg.contains(":")) {
-					mg = mg.split(":", 2)[0];
-				} else {
-					mg = "";
-				}
+				String zst = "";
+				String mg = "";
+				if (cbZst_data.size() > 0)
+					zst = cbZst_data.get(
+							((Spinner) SearchActivity.this
+									.findViewById(R.id.cbZweigstelle))
+									.getSelectedItemPosition()).getAsString(
+							"key");
+				if (cbMg_data.size() > 0)
+					mg = cbMg_data.get(
+							((Spinner) SearchActivity.this
+									.findViewById(R.id.cbMediengruppe))
+									.getSelectedItemPosition()).getAsString(
+							"key");
+
 				Intent myIntent = new Intent(SearchActivity.this,
 						SearchResultsActivity.class);
 				Bundle query = new Bundle();

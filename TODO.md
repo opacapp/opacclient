@@ -9,8 +9,6 @@ ROADMAP VERSION 2
 * Multiple Bibliotheks-APIs
   * Kein Crash bei nicht unterstützem Account
   * BibProxy und Intents bedenken
-  * Zweigstellenliste
-  * Mediengruppenliste
   * AccountActivity generischer
 * Redesign Account-Seite?
   * Farbkodierung abgabetermin

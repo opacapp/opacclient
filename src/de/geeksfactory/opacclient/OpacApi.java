@@ -34,7 +34,7 @@ public interface OpacApi {
 	public void start() throws ClientProtocolException, IOException,
 			NotReachableException, SocketException;
 
-	public void init(Context context, JSONObject data);
+	public void init(Context context, Library lib);
 
 	public List<SearchResult> search(Bundle query) throws IOException,
 			NotReachableException;
@@ -47,7 +47,7 @@ public interface OpacApi {
 
 	public DetailledItem getResult(int position) throws IOException;
 
-	public boolean reservation(String zst, String ausw, String pwd)
+	public boolean reservation(String zst, Account acc)
 			throws IOException;
 
 	public boolean prolong(String a) throws IOException, NotReachableException;

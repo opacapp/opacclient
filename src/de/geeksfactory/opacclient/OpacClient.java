@@ -55,7 +55,7 @@ public class OpacClient extends Application {
 		else
 			return null;
 
-		api.init(this, lib.getData());
+		api.init(this, lib);
 		return api;
 	}
 
@@ -104,9 +104,7 @@ public class OpacClient extends Application {
 
 	public void setAccount(long id) {
 		sp.edit().putLong(OpacClient.PREF_SELECTED_ACCOUNT, id).commit();
-		account = null;
-		api = null;
-		library = null;
+		resetCache();
 	}
 
 	public Library getLibrary(String ident) throws IOException, JSONException {
