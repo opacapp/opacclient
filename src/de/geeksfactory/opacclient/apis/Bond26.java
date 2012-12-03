@@ -31,6 +31,7 @@ import org.jsoup.select.Elements;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import de.geeksfactory.opacclient.AccountUnsupportedException;
@@ -163,12 +164,17 @@ public class Bond26 implements OpacApi {
 		}
 	}
 
+	public static String getStringFromBundle(Bundle bundle, String key) {
+		// Workaround for Bundle.getString(key, default) being available not before API 12
+		String res = bundle.getString(key);
+		if (res == null)
+			res = "";
+		return res;
+	}
+
 	@Override
-	public List<SearchResult> search(String stichwort, String verfasser,
-			String schlag_a, String schlag_b, String zweigstelle,
-			String mediengruppe, String isbn, String jahr_von, String jahr_bis,
-			String notation, String interessenkreis, String verlag, String order)
-			throws IOException, NotReachableException {
+	public List<SearchResult> search(Bundle query) throws IOException,
+			NotReachableException {
 		if (!initialised)
 			start();
 
@@ -176,19 +182,32 @@ public class Bond26 implements OpacApi {
 
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 		nameValuePairs.add(new BasicNameValuePair("stichtit", "stich"));
-		nameValuePairs.add(new BasicNameValuePair("stichwort", stichwort));
-		nameValuePairs.add(new BasicNameValuePair("verfasser", verfasser));
-		nameValuePairs.add(new BasicNameValuePair("schlag_a", schlag_a));
-		nameValuePairs.add(new BasicNameValuePair("schlag_b", schlag_b));
-		nameValuePairs.add(new BasicNameValuePair("zst", zweigstelle));
-		nameValuePairs.add(new BasicNameValuePair("medigrp", mediengruppe));
-		nameValuePairs.add(new BasicNameValuePair("isbn", isbn));
-		nameValuePairs.add(new BasicNameValuePair("jahr_von", jahr_von));
-		nameValuePairs.add(new BasicNameValuePair("jahr_bis", jahr_bis));
-		nameValuePairs.add(new BasicNameValuePair("notation", notation));
-		nameValuePairs.add(new BasicNameValuePair("ikr", interessenkreis));
-		nameValuePairs.add(new BasicNameValuePair("verl", verlag));
-		nameValuePairs.add(new BasicNameValuePair("orderselect", order));
+		nameValuePairs.add(new BasicNameValuePair("stichwort",
+				getStringFromBundle(query, "title")));
+		nameValuePairs.add(new BasicNameValuePair("verfasser",
+				getStringFromBundle(query, "verfasser")));
+		nameValuePairs.add(new BasicNameValuePair("schlag_a",
+				getStringFromBundle(query, "schlag_a")));
+		nameValuePairs.add(new BasicNameValuePair("schlag_b",
+				getStringFromBundle(query, "schlag_b")));
+		nameValuePairs.add(new BasicNameValuePair("zst", getStringFromBundle(
+				query, "zst")));
+		nameValuePairs.add(new BasicNameValuePair("medigrp",
+				getStringFromBundle(query, "mediengruppe")));
+		nameValuePairs.add(new BasicNameValuePair("isbn", getStringFromBundle(
+				query, "isbn")));
+		nameValuePairs.add(new BasicNameValuePair("jahr_von",
+				getStringFromBundle(query, "jahr_von")));
+		nameValuePairs.add(new BasicNameValuePair("jahr_bis",
+				getStringFromBundle(query, "jahr_bis")));
+		nameValuePairs.add(new BasicNameValuePair("notation",
+				getStringFromBundle(query, "notation")));
+		nameValuePairs.add(new BasicNameValuePair("ikr", getStringFromBundle(
+				query, "interessenkreis")));
+		nameValuePairs.add(new BasicNameValuePair("verl", getStringFromBundle(
+				query, "verlag")));
+		nameValuePairs.add(new BasicNameValuePair("orderselect",
+				getStringFromBundle(query, "order")));
 		nameValuePairs.add(new BasicNameValuePair("suche_starten.x", "1"));
 		nameValuePairs.add(new BasicNameValuePair("suche_starten.y", "1"));
 		nameValuePairs.add(new BasicNameValuePair("QL_Nr", ""));

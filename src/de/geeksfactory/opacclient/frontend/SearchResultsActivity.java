@@ -37,19 +37,7 @@ public class SearchResultsActivity extends OpacActivity {
 				.setText(R.string.loading_results);
 
 		st = new SearchStartTask();
-		st.execute(app, getIntent().getStringExtra("titel"), getIntent()
-				.getStringExtra("verfasser"),
-				getIntent().getStringExtra("schlag_a"), getIntent()
-						.getStringExtra("schlag_b"), getIntent()
-						.getStringExtra("zst"), getIntent()
-						.getStringExtra("mg"),
-				getIntent().getStringExtra("isbn"),
-				getIntent().getStringExtra("jahr_von"), getIntent()
-						.getStringExtra("jahr_bis"), getIntent()
-						.getStringExtra("systematik"), getIntent()
-						.getStringExtra("ikr"),
-				getIntent().getStringExtra("verlag"), getIntent()
-						.getStringExtra("order"));
+		st.execute(app, getIntent().getBundleExtra("query"));
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
@@ -69,25 +57,10 @@ public class SearchResultsActivity extends OpacActivity {
 		@Override
 		protected List<SearchResult> doInBackground(Object... arg0) {
 			super.doInBackground(arg0);
-			String stichwort = (String) arg0[1];
-			String verfasser = (String) arg0[2];
-			String schlag_a = (String) arg0[3];
-			String schlag_b = (String) arg0[4];
-			String zweigstelle = (String) arg0[5];
-			String mediengruppe = (String) arg0[6];
-			String isbn = (String) arg0[7];
-			String jahr_von = (String) arg0[8];
-			String jahr_bis = (String) arg0[9];
-			String notation = (String) arg0[10];
-			String interessenkreis = (String) arg0[11];
-			String verlag = (String) arg0[12];
-			String order = (String) arg0[13];
+			Bundle query = (Bundle) arg0[1];
 
 			try {
-				List<SearchResult> res = app.getApi().search(stichwort,
-						verfasser, schlag_a, schlag_b, zweigstelle,
-						mediengruppe, isbn, jahr_von, jahr_bis, notation,
-						interessenkreis, verlag, order);
+				List<SearchResult> res = app.getApi().search(query);
 				success = true;
 				return res;
 			} catch (java.net.UnknownHostException e) {

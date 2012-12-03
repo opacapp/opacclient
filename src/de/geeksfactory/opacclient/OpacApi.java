@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.os.Bundle;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.SearchResult;
@@ -26,10 +27,7 @@ public interface OpacApi {
 
 	public void init(Context context, JSONObject data);
 
-	public List<SearchResult> search(String stichwort, String verfasser,
-			String schlag_a, String schlag_b, String zweigstelle,
-			String mediengruppe, String isbn, String jahr_von, String jahr_bis,
-			String notation, String interessenkreis, String verlag, String order)
+	public List<SearchResult> search(Bundle query)
 			throws IOException, NotReachableException;
 
 	public List<SearchResult> searchGetPage(int page) throws IOException,
