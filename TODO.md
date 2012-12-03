@@ -8,15 +8,14 @@ ROADMAP VERSION 2
   * Erinnerungen anpassen
 * Multiple Bibliotheks-APIs
   * Kein Crash bei nicht unterstützem Account
-  * Suchmaske basierend auf API
   * BibProxy und Intents bedenken
   * Zweigstellenliste
   * Mediengruppenliste
-* Redesign Account-Seite
+  * Account-Unterstützung, AccountActivity generischer
+* Redesign Account-Seite?
   * Farbkodierung abgabetermin
 * Tablet-Optimierung?
 * Error Handling komplett überarbeiten
-* Search Screen : restoreInstanceState
 
 Zu integrierende Bibliothekssysteme
 -----------------------------------
