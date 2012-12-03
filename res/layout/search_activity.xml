@@ -14,7 +14,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical" 
+            android:id="@+id/llForm">
 
             <TextView
                 android:id="@+id/tvTitel"
@@ -52,6 +53,7 @@
                 android:text="@string/ISBN" />
 
             <LinearLayout
+                android:id="@+id/llISBN"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
@@ -77,6 +79,7 @@
                 android:text="@string/schlag" />
 
             <LinearLayout
+                android:id="@+id/llSchlag"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
@@ -104,6 +107,7 @@
                 android:text="@string/jahr" />
 
             <LinearLayout
+                android:id="@+id/llJahr"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 

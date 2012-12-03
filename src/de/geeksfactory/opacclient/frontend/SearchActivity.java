@@ -1,5 +1,9 @@
 package de.geeksfactory.opacclient.frontend;
 
+import java.util.Arrays;
+import java.util.Set;
+import java.util.HashSet;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -38,6 +42,95 @@ public class SearchActivity extends OpacActivity {
 				return;
 			((EditText) SearchActivity.this.findViewById(R.id.etISBN))
 					.setText(scanResult.getContents());
+		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Set<String> fields = new HashSet<String>(Arrays.asList(app.getApi().getSearchFields()));
+
+		if(fields.contains("stichwort")){
+			findViewById(R.id.etTitel).setVisibility(View.VISIBLE);
+			findViewById(R.id.tvTitel).setVisibility(View.VISIBLE);
+		}else{
+			findViewById(R.id.etTitel).setVisibility(View.GONE);
+			findViewById(R.id.tvTitel).setVisibility(View.GONE);
+		}
+		if(fields.contains("verfasser")){
+			findViewById(R.id.etVerfasser).setVisibility(View.VISIBLE);
+			findViewById(R.id.tvVerfasser).setVisibility(View.VISIBLE);
+		}else{
+			findViewById(R.id.etVerfasser).setVisibility(View.GONE);
+			findViewById(R.id.tvVerfasser).setVisibility(View.GONE);
+		}
+		if(fields.contains("schlag_a")){
+			findViewById(R.id.llSchlag).setVisibility(View.VISIBLE);
+			findViewById(R.id.tvSchlag).setVisibility(View.VISIBLE);
+		}else{
+			findViewById(R.id.llSchlag).setVisibility(View.GONE);
+			findViewById(R.id.tvSchlag).setVisibility(View.GONE);
+		}
+		if(fields.contains("schlag_b")){
+			findViewById(R.id.etSchlagB).setVisibility(View.VISIBLE);
+		}else{
+			findViewById(R.id.etSchlagB).setVisibility(View.GONE);
+		}		
+		if(fields.contains("zweigstelle")){
+			findViewById(R.id.cbZweigstelle).setVisibility(View.VISIBLE);
+			findViewById(R.id.tvZweigstelle).setVisibility(View.VISIBLE);
+		}else{
+			findViewById(R.id.cbZweigstelle).setVisibility(View.GONE);
+			findViewById(R.id.tvZweigstelle).setVisibility(View.GONE);
+		}
+		if(fields.contains("mediengruppe")){
+			findViewById(R.id.cbMediengruppe).setVisibility(View.VISIBLE);
+			findViewById(R.id.tvMediengruppe).setVisibility(View.VISIBLE);
+		}else{
+			findViewById(R.id.cbMediengruppe).setVisibility(View.GONE);
+			findViewById(R.id.tvMediengruppe).setVisibility(View.GONE);
+		}
+		if(fields.contains("isbn")){
+			findViewById(R.id.llISBN).setVisibility(View.VISIBLE);
+			findViewById(R.id.tvISBN).setVisibility(View.VISIBLE);
+		}else{
+			findViewById(R.id.llISBN).setVisibility(View.GONE);
+			findViewById(R.id.tvISBN).setVisibility(View.GONE);
+		}
+		if(fields.contains("jahr_von") && fields.contains("jahr_bis")){
+			findViewById(R.id.llJahr).setVisibility(View.VISIBLE);
+			findViewById(R.id.tvJahr).setVisibility(View.VISIBLE);
+		}else{
+			findViewById(R.id.llJahr).setVisibility(View.GONE);
+			findViewById(R.id.tvJahr).setVisibility(View.GONE);
+		}
+		if(fields.contains("notation")){
+			findViewById(R.id.etSystematik).setVisibility(View.VISIBLE);
+			findViewById(R.id.tvSystematik).setVisibility(View.VISIBLE);
+		}else{
+			findViewById(R.id.etSystematik).setVisibility(View.GONE);
+			findViewById(R.id.tvSystematik).setVisibility(View.GONE);
+		}
+		if(fields.contains("interessenkreis")){
+			findViewById(R.id.etInteressenkreis).setVisibility(View.VISIBLE);
+			findViewById(R.id.tvInteressenkreis).setVisibility(View.VISIBLE);
+		}else{
+			findViewById(R.id.etInteressenkreis).setVisibility(View.GONE);
+			findViewById(R.id.tvInteressenkreis).setVisibility(View.GONE);
+		}
+		if(fields.contains("verlag")){
+			findViewById(R.id.etVerlag).setVisibility(View.VISIBLE);
+			findViewById(R.id.tvVerlag).setVisibility(View.VISIBLE);
+		}else{
+			findViewById(R.id.etVerlag).setVisibility(View.GONE);
+			findViewById(R.id.tvVerlag).setVisibility(View.GONE);
+		}
+		if(fields.contains("order")){
+			findViewById(R.id.cbOrder).setVisibility(View.VISIBLE);
+			findViewById(R.id.tvOrder).setVisibility(View.VISIBLE);
+		}else{
+			findViewById(R.id.cbOrder).setVisibility(View.GONE);
+			findViewById(R.id.tvOrder).setVisibility(View.GONE);
 		}
 	}
 
@@ -161,7 +254,6 @@ public class SearchActivity extends OpacActivity {
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
-
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

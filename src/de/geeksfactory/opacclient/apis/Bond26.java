@@ -60,6 +60,13 @@ public class Bond26 implements OpacApi {
 	}
 
 	@Override
+	public String[] getSearchFields() {
+		return new String[] { "titel", "verfasser", "schlag_a", "schlag_b",
+				"zweigstelle", "mediengruppe", "isbn", "jahr_von", "jahr_bis",
+				"notation", "interessenkreis", "verlag", "order" };
+	}
+
+	@Override
 	public String getLast_error() {
 		return last_error;
 	}
