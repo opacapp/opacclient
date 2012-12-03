@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -95,9 +96,7 @@ public class AccountListActivity extends SherlockActivity {
 		});
 	}
 
-	@Override
-	public void onResume() {
-		super.onResume();
+	private void refreshLv() {
 		ListView lvAccounts = (ListView) findViewById(R.id.lvAccounts);
 		AccountDataSource data = new AccountDataSource(this);
 		data.open();
@@ -105,6 +104,13 @@ public class AccountListActivity extends SherlockActivity {
 		data.close();
 		AccountListAdapter adapter = new AccountListAdapter(this, accounts);
 		lvAccounts.setAdapter(adapter);
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		ListView lvAccounts = (ListView) findViewById(R.id.lvAccounts);
+		refreshLv();
 
 		lvAccounts.setOnItemClickListener(new OnItemClickListener() {
 
@@ -116,6 +122,18 @@ public class AccountListActivity extends SherlockActivity {
 				i.putExtra("id", accounts.get(position).getId());
 				startActivity(i);
 			}
+		});
+		lvAccounts.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				((OpacClient) getApplication()).setAccount(accounts.get(
+						position).getId());
+				refreshLv();
+				return true;
+			}
+
 		});
 	}
 
