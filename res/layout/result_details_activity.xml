@@ -33,6 +33,7 @@
                 android:layout_gravity="center"
                 android:background="@drawable/go_button"
                 android:gravity="center"
+                android:layout_marginLeft="16dp"
                 android:text="@string/reserve"
                 android:textColor="@color/go_button_text"
                 android:visibility="gone" />
