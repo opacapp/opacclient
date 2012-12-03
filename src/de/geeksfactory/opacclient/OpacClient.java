@@ -59,6 +59,12 @@ public class OpacClient extends Application {
 		return api;
 	}
 
+	public void resetCache() {
+		account = null;
+		api = null;
+		library = null;
+	}
+
 	public OpacApi getApi() {
 		if (account != null && api != null) {
 			if (sp.getLong(PREF_SELECTED_ACCOUNT, 0) == account.getId()) {

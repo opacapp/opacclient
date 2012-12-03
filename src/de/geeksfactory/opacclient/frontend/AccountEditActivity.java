@@ -45,7 +45,7 @@ public class AccountEditActivity extends SherlockActivity {
 		etLabel.setText(account.getLabel());
 		etName.setText(account.getName());
 		etPassword.setText(account.getPassword());
-		
+
 		try {
 			lib = ((OpacClient) getApplication()).getLibrary(account.getBib());
 			TextView tvCity = (TextView) findViewById(R.id.tvCity);
@@ -71,6 +71,10 @@ public class AccountEditActivity extends SherlockActivity {
 		data.open();
 		data.update(account);
 		data.close();
+		if (((OpacClient) getApplication()).getAccount().getId() == account
+				.getId()) {
+			((OpacClient) getApplication()).resetCache();
+		}
 	}
 
 	private void delete() {
