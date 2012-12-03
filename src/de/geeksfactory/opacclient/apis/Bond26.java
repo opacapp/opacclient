@@ -183,7 +183,7 @@ public class Bond26 implements OpacApi {
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 		nameValuePairs.add(new BasicNameValuePair("stichtit", "stich"));
 		nameValuePairs.add(new BasicNameValuePair("stichwort",
-				getStringFromBundle(query, "title")));
+				getStringFromBundle(query, "titel")));
 		nameValuePairs.add(new BasicNameValuePair("verfasser",
 				getStringFromBundle(query, "verfasser")));
 		nameValuePairs.add(new BasicNameValuePair("schlag_a",

@@ -51,7 +51,7 @@ public class SearchActivity extends OpacActivity {
 		Set<String> fields = new HashSet<String>(Arrays.asList(app.getApi()
 				.getSearchFields()));
 
-		if (fields.contains("stichwort")) {
+		if (fields.contains("titel")) {
 			findViewById(R.id.etTitel).setVisibility(View.VISIBLE);
 			findViewById(R.id.tvTitel).setVisibility(View.VISIBLE);
 		} else {
