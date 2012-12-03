@@ -191,7 +191,7 @@ public class Bond26 implements OpacApi {
 		nameValuePairs.add(new BasicNameValuePair("schlag_b",
 				getStringFromBundle(query, "schlag_b")));
 		nameValuePairs.add(new BasicNameValuePair("zst", getStringFromBundle(
-				query, "zst")));
+				query, "zweigstelle")));
 		nameValuePairs.add(new BasicNameValuePair("medigrp",
 				getStringFromBundle(query, "mediengruppe")));
 		nameValuePairs.add(new BasicNameValuePair("isbn", getStringFromBundle(
