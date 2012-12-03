@@ -39,6 +39,7 @@ import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacApi;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchResult;
 
 public class Bond26 implements OpacApi {
@@ -165,7 +166,8 @@ public class Bond26 implements OpacApi {
 	}
 
 	public static String getStringFromBundle(Bundle bundle, String key) {
-		// Workaround for Bundle.getString(key, default) being available not before API 12
+		// Workaround for Bundle.getString(key, default) being available not
+		// before API 12
 		String res = bundle.getString(key);
 		if (res == null)
 			res = "";
@@ -595,5 +597,63 @@ public class Bond26 implements OpacApi {
 		res.add(reservations);
 
 		return res;
+	}
+
+	@Override
+	public boolean isAccountSupported(Library library) {
+		return !library.getData().isNull("accounttable");
+	}
+
+	@Override
+	public boolean isAccountExtendable() {
+		return true;
+	}
+
+	@Override
+	public String getAccountExtendableInfo(Account acc)
+			throws ClientProtocolException, SocketException, IOException,
+			NotReachableException {
+		if (!initialised)
+			start();
+		HttpGet httpget;
+
+		if (acc.getName() == null || acc.getName().equals("null"))
+			return null;
+
+		// Login vonnöten
+		HttpPost httppost = new HttpPost(opac_url + "/index.asp");
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+		nameValuePairs.add(new BasicNameValuePair("link_konto.x", "0"));
+		nameValuePairs.add(new BasicNameValuePair("link_konto.y", "0"));
+		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+		HttpResponse response = ahc.execute(httppost);
+
+		Log.i("response", "" + response.getStatusLine().getStatusCode());
+		if (response.getStatusLine().getStatusCode() == 200) {
+			// Login vonnöten
+			response.getEntity().consumeContent();
+			httppost = new HttpPost(opac_url + "/index.asp");
+			nameValuePairs = new ArrayList<NameValuePair>(2);
+			nameValuePairs
+					.add(new BasicNameValuePair("AUSWEIS", acc.getName()));
+			nameValuePairs
+					.add(new BasicNameValuePair("PWD", acc.getPassword()));
+			nameValuePairs.add(new BasicNameValuePair("B1", "weiter"));
+			nameValuePairs.add(new BasicNameValuePair("target", "konto"));
+			nameValuePairs.add(new BasicNameValuePair("type", "K"));
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			response = ahc.execute(httppost);
+		} else if (response.getStatusLine().getStatusCode() == 302) {
+			// Bereits eingeloggt
+			response.getEntity().consumeContent();
+			httpget = new HttpGet(opac_url + "/index.asp?target=konto");
+			response = ahc.execute(httpget);
+		} else if (response.getStatusLine().getStatusCode() == 500) {
+			throw new NotReachableException();
+		}
+
+		String html = convertStreamToString(response.getEntity().getContent());
+		return html;
+
 	}
 }
