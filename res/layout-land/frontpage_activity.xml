@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_red"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tvHeadline"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/headline"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ffffff"
+            android:textSize="50sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvBibname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Small Text"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#ffffff" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll1"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/ivGoSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/frontpage_focused"
+            android:focusable="true"
+            android:src="@drawable/action_search" />
+
+        <ImageView
+            android:id="@+id/ivGoScan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/frontpage_focused"
+            android:focusable="true"
+            android:src="@drawable/action_scan" />
+
+        <ImageView
+            android:id="@+id/ivGoAccount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/frontpage_focused"
+            android:focusable="true"
+            android:src="@drawable/action_account" />
+
+        <ImageView
+            android:id="@+id/ivGoStarred"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/frontpage_focused"
+            android:focusable="true"
+            android:src="@drawable/action_fav" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp" >
+
+        <ImageView
+            android:id="@+id/ivMAcc"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@drawable/frontpage_menu_focused"
+            android:focusable="true"
+            android:padding="8dp"
+            android:src="@drawable/ic_menu_accounts" />
+
+        <ImageView
+            android:id="@+id/ivMPrefs"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@drawable/frontpage_menu_focused"
+            android:focusable="true"
+            android:padding="8dp"
+            android:src="@drawable/ic_menu_settings" />
+
+        <ImageView
+            android:id="@+id/ivMInfo"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@drawable/frontpage_menu_focused"
+            android:focusable="true"
+            android:padding="8dp"
+            android:src="@drawable/ic_menu_info" />
+
+        <ImageView
+            android:id="@+id/ivMAbout"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@drawable/frontpage_menu_focused"
+            android:focusable="true"
+            android:padding="8dp"
+            android:src="@drawable/ic_menu_about" />
+    </LinearLayout>
+
+</LinearLayout>
