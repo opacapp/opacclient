@@ -11,7 +11,7 @@ ROADMAP VERSION 2
   * BibProxy und Intents bedenken
   * Zweigstellenliste
   * Mediengruppenliste
-  * Account-Unterstützung, AccountActivity generischer
+  * AccountActivity generischer
 * Redesign Account-Seite?
   * Farbkodierung abgabetermin
 * Tablet-Optimierung?

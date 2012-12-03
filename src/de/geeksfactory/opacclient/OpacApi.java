@@ -12,6 +12,7 @@ import android.content.Context;
 import android.os.Bundle;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchResult;
 
 public interface OpacApi {
@@ -22,13 +23,21 @@ public interface OpacApi {
 
 	public String getResults();
 
+	public boolean isAccountSupported(Library library);
+
+	public boolean isAccountExtendable();
+
+	public String getAccountExtendableInfo(Account acc)
+			throws ClientProtocolException, SocketException, IOException,
+			NotReachableException;
+
 	public void start() throws ClientProtocolException, IOException,
 			NotReachableException, SocketException;
 
 	public void init(Context context, JSONObject data);
 
-	public List<SearchResult> search(Bundle query)
-			throws IOException, NotReachableException;
+	public List<SearchResult> search(Bundle query) throws IOException,
+			NotReachableException;
 
 	public List<SearchResult> searchGetPage(int page) throws IOException,
 			NotReachableException;
