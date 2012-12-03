@@ -14,6 +14,7 @@ ROADMAP VERSION 2
   * Farbkodierung abgabetermin
 * Tablet-Optimierung?
 * Error Handling komplett überarbeiten
+* Verhalten wenn Dialog gecancelt wird
 
 Zu integrierende Bibliothekssysteme
 -----------------------------------

@@ -1,13 +1,12 @@
 package de.geeksfactory.opacclient.frontend;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,24 +16,33 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableLayout.LayoutParams;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.WazaBe.HoloEverywhere.app.AlertDialog;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
+import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.storage.MetaDataSource;
 import de.geeksfactory.opacclient.storage.StarDataSource;
 
 public class SearchResultDetailsActivity extends OpacActivity {
@@ -77,52 +85,159 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		}
 	}
 
-	protected void reservation() {
-		// TODO: Prüfe, ob Account vorhanden (oder mehrere, dann frage nach)
-		SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		items = sp.getString("opac_zst", "00:").split("~");
-		if (items[0].startsWith(":")) {
-			List<String> tmp = new ArrayList<String>(Arrays.asList(items));
-			tmp.remove(0);
-			String[] tmp2 = new String[tmp.size()];
-			items = tmp.toArray(tmp2);
-		}
+	protected void dialog_no_user() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(getString(R.string.res_zst));
-		builder.setItems(items, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface d, int item) {
+		builder.setMessage(R.string.status_nouser)
+				.setCancelable(false)
+				.setNegativeButton(R.string.dismiss,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						})
+				.setPositiveButton(R.string.accounts_edit,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								Intent intent = new Intent(
+										SearchResultDetailsActivity.this,
+										AccountListActivity.class);
+								startActivity(intent);
+							}
+						});
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
+	protected void reservation() {
+		AccountDataSource data = new AccountDataSource(this);
+		data.open();
+		final List<Account> accounts = data.getAllAccounts(app.getLibrary()
+				.getIdent());
+		data.close();
+		if (accounts.size() == 0) {
+			dialog_no_user();
+			return;
+		} else if (accounts.size() > 1) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			// Get the layout inflater
+			LayoutInflater inflater = getLayoutInflater();
+
+			View view = inflater.inflate(R.layout.account_add_liblist_dialog,
+					null);
+
+			ListView lv = (ListView) view.findViewById(R.id.lvBibs);
+			AccountListAdapter adapter = new AccountListAdapter(this, accounts);
+			lv.setAdapter(adapter);
+			lv.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					if (accounts.get(position).getId() != app.getAccount()
+							.getId()) {
+						app.setAccount(accounts.get(position).getId());
+
+						new RestoreSessionTask().execute();
+					}
+					adialog.dismiss();
+					reservation_zst();
+				}
+			});
+			builder.setTitle(R.string.account_select)
+					.setView(view)
+					.setNegativeButton(R.string.cancel,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									adialog.cancel();
+								}
+							})
+					.setNeutralButton(R.string.accounts_edit,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									dialog.dismiss();
+									Intent intent = new Intent(
+											SearchResultDetailsActivity.this,
+											AccountListActivity.class);
+									startActivity(intent);
+								}
+							});
+			adialog = builder.create();
+			adialog.show();
+		} else {
+			reservation_zst();
+		}
+	}
+
+	public void reservation_zst() {
+		MetaDataSource data = new MetaDataSource(this);
+		data.open();
+		final List<ContentValues> zst = data.getMeta(app.getLibrary()
+				.getIdent(), "zst");
+		data.close();
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		// Get the layout inflater
+		LayoutInflater inflater = getLayoutInflater();
+
+		View view = inflater.inflate(R.layout.account_add_liblist_dialog, null);
+
+		ListView lv = (ListView) view.findViewById(R.id.lvBibs);
+
+		lv.setAdapter(new OpacActivity.MetaAdapter(this, zst,
+				R.layout.zst_listitem));
+		lv.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				adialog.dismiss();
+
 				dialog = ProgressDialog.show(SearchResultDetailsActivity.this,
 						"", getString(R.string.doing_res), true);
 				dialog.show();
 
 				rt = new ResTask();
-				rt.execute(app, items[item].split(":", 2)[0]);
+				rt.execute(app, zst.get(position).getAsString("key"));
 			}
 		});
-		AlertDialog alert = builder.create();
-		alert.show();
+		builder.setTitle(getString(R.string.res_zst))
+				.setView(view)
+				.setNegativeButton(R.string.cancel,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								adialog.cancel();
+							}
+						});
+		adialog = builder.create();
+		adialog.show();
 	}
 
 	public void reservation_done(int result) {
-		if (result == STATUS_NOUSER) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage(R.string.status_nouser)
-					.setCancelable(true)
-					.setNegativeButton(R.string.dismiss,
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int id) {
-									dialog.cancel();
-								}
-							});
-			AlertDialog alert = builder.create();
-			alert.show();
-		} else if (result == STATUS_SUCCESS) {
+		if (result == STATUS_SUCCESS) {
 			Intent intent = new Intent(SearchResultDetailsActivity.this,
 					AccountActivity.class);
 			startActivity(intent);
 		}
+	}
+
+	public class RestoreSessionTask extends OpacTask<Integer> {
+		@Override
+		protected Integer doInBackground(Object... arg0) {
+			try {
+				app.getApi().getResultById(SearchResultDetailsActivity.this.id);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NotReachableException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return 0;
+		}
+
+		protected void onPostExecute(Integer result) {
+		}
+
 	}
 
 	public class FetchTask extends OpacTask<DetailledItem> {
@@ -306,6 +421,31 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		}
 	}
 
+	protected void dialog_wrong_credentials(String s, final boolean finish) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(getString(R.string.opac_error) + " " + s)
+				.setCancelable(false)
+				.setNegativeButton(R.string.dismiss,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+								if (finish)
+									finish();
+							}
+						})
+				.setPositiveButton(R.string.prefs,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								Intent intent = new Intent(
+										SearchResultDetailsActivity.this,
+										MainPreferenceActivity.class);
+								startActivity(intent);
+							}
+						});
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
 	public class FetchSubTask extends FetchTask {
 		@Override
 		protected DetailledItem doInBackground(Object... arg0) {
@@ -351,7 +491,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			try {
 				Boolean res = app.getApi().reservation(zst, app.getAccount());
 				success = true;
-				if (res == null)
+				if (!res)
 					return STATUS_WRONGCREDENTIALS;
 			} catch (java.net.UnknownHostException e) {
 				publishProgress(e, "ioerror");
@@ -368,6 +508,11 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		protected void onPostExecute(Integer result) {
 			dialog.dismiss();
 
+			if (result == STATUS_WRONGCREDENTIALS) {
+				dialog_wrong_credentials(app.getApi().getLast_error(), false);
+				return;
+			}
+
 			if (!success) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						SearchResultDetailsActivity.this);
@@ -383,13 +528,9 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				AlertDialog alert = builder.create();
 				alert.show();
 				return;
+			} else {
+				reservation_done(result);
 			}
-
-			if (result == STATUS_WRONGCREDENTIALS) {
-				dialog_wrong_credentials(app.getApi().getLast_error(), false);
-				return;
-			}
-			reservation_done(result);
 		}
 	}
 

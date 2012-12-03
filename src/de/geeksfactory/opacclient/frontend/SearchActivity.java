@@ -145,76 +145,6 @@ public class SearchActivity extends OpacActivity {
 		}
 	}
 
-	public class MetaAdapter extends ArrayAdapter<ContentValues> {
-
-		private List<ContentValues> objects;
-
-		@Override
-		public View getDropDownView(int position, View contentView,
-				ViewGroup viewGroup) {
-			View view = null;
-
-			if (objects.get(position) == null) {
-				LayoutInflater layoutInflater = (LayoutInflater) getContext()
-						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				view = layoutInflater
-						.inflate(R.layout.simple_spinner_dropdown_item,
-								viewGroup, false);
-				return view;
-			}
-
-			ContentValues item = objects.get(position);
-
-			if (contentView == null) {
-				LayoutInflater layoutInflater = (LayoutInflater) getContext()
-						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				view = layoutInflater
-						.inflate(R.layout.simple_spinner_dropdown_item,
-								viewGroup, false);
-			} else {
-				view = contentView;
-			}
-
-			TextView tvText = (TextView) view.findViewById(android.R.id.text1);
-			tvText.setText(item.getAsString("value"));
-			return view;
-		}
-
-		@Override
-		public View getView(int position, View contentView, ViewGroup viewGroup) {
-			View view = null;
-
-			if (objects.get(position) == null) {
-				LayoutInflater layoutInflater = (LayoutInflater) getContext()
-						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				view = layoutInflater.inflate(R.layout.simple_spinner_item,
-						viewGroup, false);
-				return view;
-			}
-
-			ContentValues item = objects.get(position);
-
-			if (contentView == null) {
-				LayoutInflater layoutInflater = (LayoutInflater) getContext()
-						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				view = layoutInflater.inflate(R.layout.simple_spinner_item,
-						viewGroup, false);
-			} else {
-				view = contentView;
-			}
-
-			TextView tvText = (TextView) view.findViewById(android.R.id.text1);
-			tvText.setText(item.getAsString("value"));
-			return view;
-		}
-
-		public MetaAdapter(Context context, List<ContentValues> objects) {
-			super(context, R.layout.simple_spinner_item, objects);
-			this.objects = objects;
-		}
-
-	}
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -241,12 +171,12 @@ public class SearchActivity extends OpacActivity {
 		
 		cbZst_data = data.getMeta(app.getLibrary().getIdent(), "zst");
 		cbZst_data.add(0, all);
-		cbZst.setAdapter(new MetaAdapter(this, cbZst_data));
+		cbZst.setAdapter(new MetaAdapter(this, cbZst_data, R.layout.simple_spinner_item));
 
 		Spinner cbMg = (Spinner) findViewById(R.id.cbMediengruppe);
 		cbMg_data = data.getMeta(app.getLibrary().getIdent(), "mg");
 		cbMg_data.add(0, all);
-		cbMg.setAdapter(new MetaAdapter(this, cbMg_data));
+		cbMg.setAdapter(new MetaAdapter(this, cbMg_data, R.layout.simple_spinner_item));
 
 		data.close();
 
