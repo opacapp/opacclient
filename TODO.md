@@ -2,9 +2,7 @@ ROADMAP VERSION 2
 =================
 
 * Multiple Accounts
-  * Switch beim vorbestellen
   * Migration von alter Version!!!
-  * Verlängern und Abbestellen prüfen!
   * Erinnerungen anpassen
 * Multiple Bibliotheks-APIs
   * Kein Crash bei nicht unterstützem Account
@@ -15,6 +13,7 @@ ROADMAP VERSION 2
 * Tablet-Optimierung?
 * Error Handling komplett überarbeiten
 * Verhalten wenn Dialog gecancelt wird
+* Verhalten wenn selektierter Account gelöscht wird
 
 Zu integrierende Bibliothekssysteme
 -----------------------------------
