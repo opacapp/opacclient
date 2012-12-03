@@ -78,6 +78,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 	}
 
 	protected void reservation() {
+		// TODO: Prüfe, ob Account vorhanden (oder mehrere, dann frage nach)
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		items = sp.getString("opac_zst", "00:").split("~");
@@ -348,18 +349,10 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			SharedPreferences sp = PreferenceManager
 					.getDefaultSharedPreferences(app);
 			try {
-				if (sp.getString("opac_usernr", "").equals("")
-						|| sp.getString("opac_password", "").equals("")) {
-					success = true;
-					return STATUS_NOUSER;
-				} else {
-					Boolean res = app.getApi().reservation(zst,
-							sp.getString("opac_usernr", ""),
-							sp.getString("opac_password", ""));
-					success = true;
-					if (res == null)
-						return STATUS_WRONGCREDENTIALS;
-				}
+				Boolean res = app.getApi().reservation(zst, app.getAccount());
+				success = true;
+				if (res == null)
+					return STATUS_WRONGCREDENTIALS;
 			} catch (java.net.UnknownHostException e) {
 				publishProgress(e, "ioerror");
 			} catch (java.io.IOException e) {

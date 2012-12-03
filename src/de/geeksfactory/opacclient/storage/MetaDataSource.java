@@ -77,4 +77,8 @@ public class MetaDataSource {
 		database.delete("meta", "bib=?", selA);
 	}
 
+	public void clearMeta() {
+		database.delete("meta", null, null);
+	}
+
 }

@@ -30,7 +30,6 @@ import org.jsoup.select.Elements;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -41,6 +40,7 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchResult;
+import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 public class Bond26 implements OpacApi {
 
@@ -48,13 +48,14 @@ public class Bond26 implements OpacApi {
 	 * OpacApi für OCLC WebOpacs V2.6 Meist kompatibel zu V2.7
 	 */
 
+	private String opac_url = "";
+	private String results;
+	private JSONObject data;
 	private DefaultHttpClient ahc;
-	public String opac_url = "";
 	private Context context;
-	public String results;
 	private boolean initialised = false;
 	private String last_error;
-	public JSONObject data;
+	private Library library;
 
 	@Override
 	public String getResults() {
@@ -97,28 +98,28 @@ public class Bond26 implements OpacApi {
 		return sb.toString();
 	}
 
-	public void extract_information(String html) {
+	public void extract_meta(String html) {
 		// Zweigstellen und Mediengruppen auslesen
 		Document doc = Jsoup.parse(html);
-		Editor spe = null;
-		SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(context);
-		spe = sp.edit();
+
 		Elements zst_opts = doc.select("#zst option");
-		StringBuilder sb = new StringBuilder();
+		MetaDataSource data = new MetaDataSource(context);
+		data.open();
+		data.clearMeta(library.getIdent());
 		for (int i = 0; i < zst_opts.size(); i++) {
 			Element opt = zst_opts.get(i);
-			sb.append(opt.val() + ": " + (opt.text().trim()) + "~");
+			if (!opt.val().equals(""))
+				data.addMeta("zst", library.getIdent(), opt.val(), opt.text());
 		}
-		spe.putString("opac_zst", sb.toString());
+
 		Elements mg_opts = doc.select("#medigrp option");
-		sb = new StringBuilder();
 		for (int i = 0; i < mg_opts.size(); i++) {
 			Element opt = mg_opts.get(i);
-			sb.append(opt.val() + ": " + (opt.text().trim()) + "~");
+			if (!opt.val().equals(""))
+				data.addMeta("mg", library.getIdent(), opt.val(), opt.text());
 		}
-		spe.putString("opac_mg", sb.toString());
-		spe.commit();
+
+		data.close();
 	}
 
 	@Override
@@ -134,22 +135,31 @@ public class Bond26 implements OpacApi {
 
 		response.getEntity().consumeContent();
 
-		HttpPost httppost = new HttpPost(opac_url + "/index.asp");
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-		nameValuePairs.add(new BasicNameValuePair("link_profis.x", "0"));
-		nameValuePairs.add(new BasicNameValuePair("link_profis.y", "1"));
-		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-		response = ahc.execute(httppost);
-		String html = convertStreamToString(response.getEntity().getContent());
-		extract_information(html);
+		MetaDataSource data = new MetaDataSource(context);
+		data.open();
+		if (!data.hasMeta(library.getIdent())) {
+			HttpPost httppost = new HttpPost(opac_url + "/index.asp");
+			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+			nameValuePairs.add(new BasicNameValuePair("link_profis.x", "0"));
+			nameValuePairs.add(new BasicNameValuePair("link_profis.y", "1"));
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			response = ahc.execute(httppost);
+			String html = convertStreamToString(response.getEntity()
+					.getContent());
+			data.close();
+			extract_meta(html);
+		} else {
+			data.close();
+		}
 	}
 
 	@Override
-	public void init(Context context, JSONObject data) {
+	public void init(Context context, Library lib) {
 		ahc = new DefaultHttpClient();
 
 		this.context = context;
-		this.data = data;
+		this.library = lib;
+		this.data = lib.getData();
 
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(context);
@@ -360,8 +370,7 @@ public class Bond26 implements OpacApi {
 	}
 
 	@Override
-	public boolean reservation(String zst, String ausw, String pwd)
-			throws IOException {
+	public boolean reservation(String zst, Account acc) throws IOException {
 		HttpGet httpget = new HttpGet(opac_url
 				+ "/index.asp?target=vorbesttrans");
 		HttpResponse response = ahc.execute(httpget);
@@ -372,8 +381,10 @@ public class Bond26 implements OpacApi {
 			// Login vonnöten
 			httppost = new HttpPost(opac_url + "/index.asp");
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			nameValuePairs.add(new BasicNameValuePair("AUSWEIS", ausw));
-			nameValuePairs.add(new BasicNameValuePair("PWD", pwd));
+			nameValuePairs
+					.add(new BasicNameValuePair("AUSWEIS", acc.getName()));
+			nameValuePairs
+					.add(new BasicNameValuePair("PWD", acc.getPassword()));
 			nameValuePairs.add(new BasicNameValuePair("B1", "weiter"));
 			nameValuePairs.add(new BasicNameValuePair("target", "zwstausw"));
 			nameValuePairs.add(new BasicNameValuePair("type", "VT2"));
