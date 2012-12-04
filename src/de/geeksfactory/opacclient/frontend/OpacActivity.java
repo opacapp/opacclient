@@ -9,14 +9,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.WazaBe.HoloEverywhere.app.AlertDialog;
 import com.actionbarsherlock.app.SherlockActivity;
@@ -141,8 +141,7 @@ public abstract class OpacActivity extends SherlockActivity {
 			if (objects.get(position) == null) {
 				LayoutInflater layoutInflater = (LayoutInflater) getContext()
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				view = layoutInflater.inflate(spinneritem,
-						viewGroup, false);
+				view = layoutInflater.inflate(spinneritem, viewGroup, false);
 				return view;
 			}
 
@@ -151,8 +150,7 @@ public abstract class OpacActivity extends SherlockActivity {
 			if (contentView == null) {
 				LayoutInflater layoutInflater = (LayoutInflater) getContext()
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				view = layoutInflater.inflate(spinneritem,
-						viewGroup, false);
+				view = layoutInflater.inflate(spinneritem, viewGroup, false);
 			} else {
 				view = contentView;
 			}
@@ -162,7 +160,8 @@ public abstract class OpacActivity extends SherlockActivity {
 			return view;
 		}
 
-		public MetaAdapter(Context context, List<ContentValues> objects, int spinneritem) {
+		public MetaAdapter(Context context, List<ContentValues> objects,
+				int spinneritem) {
 			super(context, R.layout.simple_spinner_item, objects);
 			this.objects = objects;
 			this.spinneritem = spinneritem;

@@ -4,8 +4,6 @@ import java.io.UnsupportedEncodingException;
 
 import org.json.JSONException;
 
-import com.actionbarsherlock.view.Menu;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +11,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.actionbarsherlock.view.Menu;
+
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.Account;
 
@@ -106,10 +107,8 @@ public class FrontpageActivity extends OpacActivity {
 			tvBn.setText(app.getLibrary().getCity());
 
 		try {
-			if (app.getLibrary().getData()
-					.getString("information") != null) {
-				if (!app.getLibrary().getData()
-						.getString("information")
+			if (app.getLibrary().getData().getString("information") != null) {
+				if (!app.getLibrary().getData().getString("information")
 						.equals("null")) {
 					((ImageView) findViewById(R.id.ivMInfo))
 							.setVisibility(View.VISIBLE);

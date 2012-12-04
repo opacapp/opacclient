@@ -24,9 +24,9 @@ public class MetaDatabase extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.w(MetaDatabase.class.getName(),
-				"Upgrading database from version " + oldVersion + " to "
-						+ newVersion + ", which will destroy all old data");
+		Log.w(MetaDatabase.class.getName(), "Upgrading database from version "
+				+ oldVersion + " to " + newVersion
+				+ ", which will destroy all old data");
 		db.execSQL("DROP TABLE IF EXISTS meta");
 		onCreate(db);
 

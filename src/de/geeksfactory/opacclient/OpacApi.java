@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -48,8 +47,7 @@ public interface OpacApi {
 
 	public DetailledItem getResult(int position) throws IOException;
 
-	public boolean reservation(String zst, Account acc)
-			throws IOException;
+	public boolean reservation(String zst, Account acc) throws IOException;
 
 	public boolean prolong(String a) throws IOException, NotReachableException;
 
