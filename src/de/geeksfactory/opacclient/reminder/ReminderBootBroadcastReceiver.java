@@ -14,11 +14,7 @@ public class ReminderBootBroadcastReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(context);
-		if (sp.getBoolean("notification_service", false) == false
-				|| sp.getString("opac_password", "").equals("")) {
-			return;
-		}
-
+		
 		Intent i = new Intent(context, ReminderAlarmReceiver.class);
 		PendingIntent sender = PendingIntent.getBroadcast(context,
 				OpacClient.BROADCAST_REMINDER, i,

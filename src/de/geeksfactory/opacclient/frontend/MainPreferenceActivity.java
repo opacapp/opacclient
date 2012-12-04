@@ -10,6 +10,7 @@ import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
 
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.reminder.ReminderCheckService;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 public class MainPreferenceActivity extends SherlockPreferenceActivity {
@@ -41,6 +42,8 @@ public class MainPreferenceActivity extends SherlockPreferenceActivity {
 				data.open();
 				data.clearMeta();
 				data.close();
+				Intent i = new Intent(MainPreferenceActivity.this, ReminderCheckService.class);
+				startService(i);
 				return false;
 			}
 		});

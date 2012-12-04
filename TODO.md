@@ -3,10 +3,11 @@ ROADMAP VERSION 2
 
 * Multiple Accounts
   * Migration von alter Version!!!
-  * Erinnerungen wieder einbauen
 * Multiple Bibliotheks-APIs
   * BibProxy und Intents bedenken
 * Account-Seite: Farbkodierung Abgabetermin?
+    -> Bei Notification klarmachen, um welchen Account es geht. 
+    -> Accounts farbmarkieren?
 * Tablet-Optimierung?
 * Verhalten wenn ProgressDialog gecancelt wird
 * Verhalten wenn selektierter Account gelöscht wird

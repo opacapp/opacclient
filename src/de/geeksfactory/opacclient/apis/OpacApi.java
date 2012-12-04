@@ -2,6 +2,7 @@ package de.geeksfactory.opacclient.apis;
 
 import java.io.IOException;
 import java.net.SocketException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
@@ -28,6 +29,8 @@ public interface OpacApi {
 	public boolean isAccountSupported(Library library);
 
 	public boolean isAccountExtendable();
+	
+	public SimpleDateFormat getDateFormat();
 
 	public String getAccountExtendableInfo(Account acc)
 			throws ClientProtocolException, SocketException, IOException,

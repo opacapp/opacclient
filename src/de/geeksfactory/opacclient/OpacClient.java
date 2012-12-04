@@ -48,6 +48,18 @@ public class OpacClient extends Application {
 		return (networkInfo != null && networkInfo.isConnected());
 	}
 
+	public OpacApi getIndependentApi(Library lib) throws ClientProtocolException,
+			SocketException, IOException, NotReachableException {
+		OpacApi a;
+		if (lib.getApi().equals("bond26"))
+			a = new Bond26();
+		else
+			return null;
+
+		a.init(this, lib);
+		return a;
+	}
+
 	private OpacApi initApi(Library lib) throws ClientProtocolException,
 			SocketException, IOException, NotReachableException {
 		api = null;
