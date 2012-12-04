@@ -51,19 +51,12 @@
             android:textColor="@color/emphasis"
             android:textSize="14sp" />
 
-        <TableLayout
-            android:id="@+id/tlMedien"
+        <LinearLayout
+            android:id="@+id/llLent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:shrinkColumns="0,1"
-            android:stretchColumns="0,1" >
-
-            <TableRow
-                android:id="@+id/tableRow2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-            </TableRow>
-        </TableLayout>
+            android:orientation="vertical" >
+        </LinearLayout>
 
         <Button
             android:id="@+id/btExtendall"
@@ -86,13 +79,12 @@
             android:textColor="@color/emphasis"
             android:textSize="14sp" />
 
-        <TableLayout
-            android:id="@+id/tlReservations"
+        <LinearLayout
+            android:id="@+id/llReservations"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:shrinkColumns="*"
-            android:stretchColumns="*" >
-        </TableLayout>
+            android:orientation="vertical" >
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>
