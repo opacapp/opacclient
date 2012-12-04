@@ -1,4 +1,4 @@
-package de.geeksfactory.opacclient;
+package de.geeksfactory.opacclient.apis;
 
 import java.io.IOException;
 import java.net.SocketException;
@@ -9,6 +9,8 @@ import org.json.JSONException;
 
 import android.content.Context;
 import android.os.Bundle;
+import de.geeksfactory.opacclient.AccountUnsupportedException;
+import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.DetailledItem;

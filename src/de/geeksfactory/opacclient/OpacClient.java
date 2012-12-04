@@ -22,6 +22,7 @@ import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import de.geeksfactory.opacclient.apis.Bond26;
+import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.frontend.ErrorActivity;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;

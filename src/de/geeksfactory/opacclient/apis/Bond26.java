@@ -36,7 +36,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import de.geeksfactory.opacclient.AccountUnsupportedException;
 import de.geeksfactory.opacclient.NotReachableException;
-import de.geeksfactory.opacclient.OpacApi;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
