@@ -50,8 +50,7 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
 			view.findViewById(R.id.llItem).setBackgroundColor(
 					context.getResources().getColor(R.color.active_account));
 		} else {
-			view.findViewById(R.id.llItem).setBackgroundResource(
-					R.drawable.list_selector_holo_light);
+			view.findViewById(R.id.llItem).setBackgroundDrawable(null);
 		}
 
 		Library lib;
