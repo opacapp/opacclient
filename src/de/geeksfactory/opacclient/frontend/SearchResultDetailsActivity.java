@@ -591,7 +591,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
-		String bib = "";
+		String bib = app.getLibrary().getIdent();
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
