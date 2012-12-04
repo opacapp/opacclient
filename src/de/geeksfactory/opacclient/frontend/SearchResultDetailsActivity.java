@@ -271,7 +271,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		}
 
 		protected void onPostExecute(DetailledItem result) {
-			if (!success) {
+			if (!success || result == null) {
 				setContentView(R.layout.connectivity_error);
 				((Button) findViewById(R.id.btRetry))
 						.setOnClickListener(new OnClickListener() {
@@ -318,37 +318,29 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
 			LinearLayout llCopies = (LinearLayout) findViewById(R.id.llCopies);
 			if (result.getBaende().size() > 0) {
-				// TextView tvC = (TextView) findViewById(R.id.tvCopies);
-				// tvC.setText(R.string.baende);
-				// TableLayout tc = (TableLayout)
-				// findViewById(R.id.tlExemplare);
-				//
-				// for (int i = 0; i < result.getBaende().size(); i++) {
-				// TableRow row = new TableRow(
-				// SearchResultDetailsActivity.this);
-				//
-				// TextView t1 = new TextView(SearchResultDetailsActivity.this);
-				// t1.setText(Html.fromHtml(result.getBaende().get(i)[1]));
-				// row.addView(t1);
-				// final String a = result.getBaende().get(i)[0];
-				//
-				// Button b2 = new Button(SearchResultDetailsActivity.this);
-				// b2.setOnClickListener(new OnClickListener() {
-				// @Override
-				// public void onClick(View arg0) {
-				// Intent intent = new Intent(
-				// SearchResultDetailsActivity.this,
-				// SearchResultDetailsActivity.class);
-				// intent.putExtra("item_id", a);
-				// startActivity(intent);
-				// }
-				// });
-				// b2.setText(R.string.details);
-				// row.addView(b2);
-				// tc.addView(row, new TableLayout.LayoutParams(
-				// LayoutParams.WRAP_CONTENT,
-				// LayoutParams.WRAP_CONTENT));
-				// }
+				TextView tvC = (TextView) findViewById(R.id.tvCopies);
+				tvC.setText(R.string.baende);
+
+				for (final ContentValues band : result.getBaende()) {
+					View v = getLayoutInflater().inflate(
+							R.layout.band_listitem, null);
+					((TextView) v.findViewById(R.id.tvTitel)).setText(band
+							.getAsString("titel"));
+
+					v.findViewById(R.id.llItem).setOnClickListener(
+							new OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									Intent intent = new Intent(
+											SearchResultDetailsActivity.this,
+											SearchResultDetailsActivity.class);
+									intent.putExtra("item_id",
+											band.getAsString("id"));
+									startActivity(intent);
+								}
+							});
+					llCopies.addView(v);
+				}
 			} else {
 				for (ContentValues copy : result.getCopies()) {
 					View v = getLayoutInflater().inflate(
