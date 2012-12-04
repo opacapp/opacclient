@@ -16,7 +16,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 
 import android.app.NotificationManager;
-import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -36,6 +35,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.WazaBe.HoloEverywhere.app.AlertDialog;
+import com.WazaBe.HoloEverywhere.app.ProgressDialog;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
