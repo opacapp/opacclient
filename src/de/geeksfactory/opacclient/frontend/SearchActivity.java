@@ -6,22 +6,18 @@ import java.util.List;
 import java.util.Set;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.WazaBe.HoloEverywhere.widget.Spinner;
 import com.actionbarsherlock.view.Menu;
@@ -168,15 +164,17 @@ public class SearchActivity extends OpacActivity {
 		ContentValues all = new ContentValues();
 		all.put("key", "");
 		all.put("value", getString(R.string.all));
-		
+
 		cbZst_data = data.getMeta(app.getLibrary().getIdent(), "zst");
 		cbZst_data.add(0, all);
-		cbZst.setAdapter(new MetaAdapter(this, cbZst_data, R.layout.simple_spinner_item));
+		cbZst.setAdapter(new MetaAdapter(this, cbZst_data,
+				R.layout.simple_spinner_item));
 
 		Spinner cbMg = (Spinner) findViewById(R.id.cbMediengruppe);
 		cbMg_data = data.getMeta(app.getLibrary().getIdent(), "mg");
 		cbMg_data.add(0, all);
-		cbMg.setAdapter(new MetaAdapter(this, cbMg_data, R.layout.simple_spinner_item));
+		cbMg.setAdapter(new MetaAdapter(this, cbMg_data,
+				R.layout.simple_spinner_item));
 
 		data.close();
 

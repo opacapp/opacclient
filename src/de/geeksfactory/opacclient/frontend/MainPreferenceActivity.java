@@ -31,12 +31,13 @@ public class MainPreferenceActivity extends SherlockPreferenceActivity {
 				return false;
 			}
 		});
-		
+
 		Preference meta = (Preference) findPreference("meta_clear");
 		meta.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference arg0) {
-				MetaDataSource data = new MetaDataSource(MainPreferenceActivity.this);
+				MetaDataSource data = new MetaDataSource(
+						MainPreferenceActivity.this);
 				data.open();
 				data.clearMeta();
 				data.close();
