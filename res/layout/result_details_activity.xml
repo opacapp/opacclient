@@ -85,6 +85,7 @@
             android:id="@+id/llCopies"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:divider="@drawable/list_divider_holo_light"
             android:orientation="vertical" >
         </LinearLayout>
     </LinearLayout>
