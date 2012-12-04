@@ -14,7 +14,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,10 +22,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TableLayout;
-import android.widget.TableLayout.LayoutParams;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +37,7 @@ import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.Account;
+import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
@@ -307,103 +305,104 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			tvTitel.setText(item.getTitle());
 			title = item.getTitle();
 
-			TableLayout td = (TableLayout) findViewById(R.id.tlDetails);
-
-			for (int i = 0; i < result.getDetails().size(); i++) {
-				TableRow row = new TableRow(SearchResultDetailsActivity.this);
-
-				if (result.getDetails().get(i)[0]
-						.equals("Annotation/ Beschreibung:")) {
-					TextView t2 = new TextView(SearchResultDetailsActivity.this);
-					t2.setText(Html.fromHtml("<i>"
-							+ result.getDetails().get(i)[1] + "</i>"));
-					TableRow.LayoutParams params = new TableRow.LayoutParams();
-					params.span = 2;
-					t2.setPadding(20, 0, 0, 0);
-					row.addView(t2, params);
-				} else {
-					TextView t1 = new TextView(SearchResultDetailsActivity.this);
-					t1.setText(Html.fromHtml(result.getDetails().get(i)[0]));
-					t1.setPadding(0, 0, 10, 0);
-					row.addView(t1);
-
-					TextView t2 = new TextView(SearchResultDetailsActivity.this);
-					t2.setText(Html.fromHtml(result.getDetails().get(i)[1]
-							.replace("\n", "<br />")));
-					row.addView(t2);
-				}
-				td.addView(row, new TableLayout.LayoutParams(
-						LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			LinearLayout llDetails = (LinearLayout) findViewById(R.id.llDetails);
+			for (Detail detail : result.getDetails()) {
+				View v = getLayoutInflater().inflate(R.layout.detail_listitem,
+						null);
+				((TextView) v.findViewById(R.id.tvDesc)).setText(detail
+						.getDesc());
+				((TextView) v.findViewById(R.id.tvContent)).setText(detail
+						.getContent());
+				llDetails.addView(v);
 			}
 
+			LinearLayout llCopies = (LinearLayout) findViewById(R.id.llCopies);
 			if (result.getBaende().size() > 0) {
-				TextView tvC = (TextView) findViewById(R.id.tvCopies);
-				tvC.setText(R.string.baende);
-				TableLayout tc = (TableLayout) findViewById(R.id.tlExemplare);
-
-				for (int i = 0; i < result.getBaende().size(); i++) {
-					TableRow row = new TableRow(
-							SearchResultDetailsActivity.this);
-
-					TextView t1 = new TextView(SearchResultDetailsActivity.this);
-					t1.setText(Html.fromHtml(result.getBaende().get(i)[1]));
-					row.addView(t1);
-					final String a = result.getBaende().get(i)[0];
-
-					Button b2 = new Button(SearchResultDetailsActivity.this);
-					b2.setOnClickListener(new OnClickListener() {
-						@Override
-						public void onClick(View arg0) {
-							Intent intent = new Intent(
-									SearchResultDetailsActivity.this,
-									SearchResultDetailsActivity.class);
-							intent.putExtra("item_id", a);
-							startActivity(intent);
-						}
-					});
-					b2.setText(R.string.details);
-					row.addView(b2);
-					tc.addView(row, new TableLayout.LayoutParams(
-							LayoutParams.WRAP_CONTENT,
-							LayoutParams.WRAP_CONTENT));
-				}
+				// TextView tvC = (TextView) findViewById(R.id.tvCopies);
+				// tvC.setText(R.string.baende);
+				// TableLayout tc = (TableLayout)
+				// findViewById(R.id.tlExemplare);
+				//
+				// for (int i = 0; i < result.getBaende().size(); i++) {
+				// TableRow row = new TableRow(
+				// SearchResultDetailsActivity.this);
+				//
+				// TextView t1 = new TextView(SearchResultDetailsActivity.this);
+				// t1.setText(Html.fromHtml(result.getBaende().get(i)[1]));
+				// row.addView(t1);
+				// final String a = result.getBaende().get(i)[0];
+				//
+				// Button b2 = new Button(SearchResultDetailsActivity.this);
+				// b2.setOnClickListener(new OnClickListener() {
+				// @Override
+				// public void onClick(View arg0) {
+				// Intent intent = new Intent(
+				// SearchResultDetailsActivity.this,
+				// SearchResultDetailsActivity.class);
+				// intent.putExtra("item_id", a);
+				// startActivity(intent);
+				// }
+				// });
+				// b2.setText(R.string.details);
+				// row.addView(b2);
+				// tc.addView(row, new TableLayout.LayoutParams(
+				// LayoutParams.WRAP_CONTENT,
+				// LayoutParams.WRAP_CONTENT));
+				// }
 			} else {
-				TableLayout tc = (TableLayout) findViewById(R.id.tlExemplare);
+				for (ContentValues copy : result.getCopies()) {
+					View v = getLayoutInflater().inflate(
+							R.layout.copy_listitem, null);
 
-				for (int i = 0; i < result.getCopies().size(); i++) {
-					TableRow row = new TableRow(
-							SearchResultDetailsActivity.this);
+					if (copy.containsKey("barcode")) {
+						((TextView) v.findViewById(R.id.tvBarcode))
+								.setText(copy.getAsString("barcode"));
+						((TextView) v.findViewById(R.id.tvBarcode))
+								.setVisibility(View.VISIBLE);
+					} else {
+						((TextView) v.findViewById(R.id.tvBarcode))
+								.setVisibility(View.GONE);
+					}
+					if (copy.containsKey("zst")) {
+						((TextView) v.findViewById(R.id.tvZst)).setText(copy
+								.getAsString("zst"));
+						((TextView) v.findViewById(R.id.tvZst))
+								.setVisibility(View.VISIBLE);
+					} else {
+						((TextView) v.findViewById(R.id.tvZst))
+								.setVisibility(View.GONE);
+					}
+					if (copy.containsKey("status")) {
+						((TextView) v.findViewById(R.id.tvStatus)).setText(copy
+								.getAsString("status"));
+						((TextView) v.findViewById(R.id.tvStatus))
+								.setVisibility(View.VISIBLE);
+					} else {
+						((TextView) v.findViewById(R.id.tvStatus))
+								.setVisibility(View.GONE);
+					}
+					if (copy.containsKey("vorbestellt")) {
+						((TextView) v.findViewById(R.id.tvVorbestellt))
+								.setText(getString(R.string.res) + ": "
+										+ copy.getAsString("vorbestellt"));
+						((TextView) v.findViewById(R.id.tvVorbestellt))
+								.setVisibility(View.VISIBLE);
+					} else {
+						((TextView) v.findViewById(R.id.tvVorbestellt))
+								.setVisibility(View.GONE);
+					}
+					if (copy.containsKey("rueckgabe")) {
+						((TextView) v.findViewById(R.id.tvRueckgabe))
+								.setText(getString(R.string.ret) + ": "
+										+ copy.getAsString("rueckgabe"));
+						((TextView) v.findViewById(R.id.tvRueckgabe))
+								.setVisibility(View.VISIBLE);
+					} else {
+						((TextView) v.findViewById(R.id.tvRueckgabe))
+								.setVisibility(View.GONE);
+					}
 
-					TextView t1 = new TextView(SearchResultDetailsActivity.this);
-					String t1t = "";
-					if (!result.getCopies().get(i)[0].equals("?")) {
-						t1t = t1t + result.getCopies().get(i)[0] + "<br />";
-					}
-					if (!result.getCopies().get(i)[1].equals("?")) {
-						t1t = t1t + result.getCopies().get(i)[1];
-					}
-					t1.setText(Html.fromHtml(t1t));
-					row.addView(t1);
-
-					TextView t2 = new TextView(SearchResultDetailsActivity.this);
-					String status = result.getCopies().get(i)[4] + "<br />";
-					if (!result.getCopies().get(i)[5].equals("")
-							&& !result.getCopies().get(i)[5].equals("?")) {
-						status = status + getString(R.string.ret) + ": "
-								+ result.getCopies().get(i)[5] + "<br />";
-					}
-					t2.setPadding(10, 0, 0, 0);
-					if (!result.getCopies().get(i)[6].equals("")
-							&& !result.getCopies().get(i)[6].equals("?")) {
-						status = status + getString(R.string.res) + ": "
-								+ result.getCopies().get(i)[6];
-					}
-					t2.setText(Html.fromHtml(status));
-					row.addView(t2);
-
-					tc.addView(row, new TableLayout.LayoutParams(
-							LayoutParams.WRAP_CONTENT,
-							LayoutParams.WRAP_CONTENT));
+					llCopies.addView(v);
 				}
 			}
 
