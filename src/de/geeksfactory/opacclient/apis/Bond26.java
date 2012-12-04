@@ -28,6 +28,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -37,6 +38,7 @@ import de.geeksfactory.opacclient.AccountUnsupportedException;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacApi;
 import de.geeksfactory.opacclient.objects.Account;
+import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchResult;
@@ -487,7 +489,7 @@ public class Bond26 implements OpacApi {
 	}
 
 	@Override
-	public List<List<String[]>> account(Account acc) throws IOException,
+	public AccountData account(Account acc) throws IOException,
 			NotReachableException, JSONException, AccountUnsupportedException,
 			SocketException {
 		if (!initialised)
@@ -545,27 +547,29 @@ public class Bond26 implements OpacApi {
 			throw new AccountUnsupportedException(html);
 		}
 
-		List<String[]> medien = new ArrayList<String[]>();
+		String[] copymap_keys = new String[] { "barcode", "verfasser", "titel",
+				"frist", "status", "zst", "ast", "link" };
+		int copymap_num = copymap_keys.length;
+		List<ContentValues> medien = new ArrayList<ContentValues>();
+
 		Elements exemplartrs = doc.select(".kontozeile_center table").get(0)
 				.select("tr.tabKonto");
+
 		for (int i = 0; i < exemplartrs.size(); i++) {
 			Element tr = exemplartrs.get(i);
-			String[] e = new String[8];
+			ContentValues e = new ContentValues();
 
-			for (int j = 0; j < 8; j++) {
+			for (int j = 0; j < copymap_num; j++) {
 				if (copymap.getInt(j) > -1) {
-					if (j == 7) {
+					if (copymap_keys[j].equals("link")) {
 						if (tr.child(copymap.getInt(j)).children().size() > 0) {
-							e[j] = tr.child(copymap.getInt(j)).child(0)
-									.attr("href");
-						} else {
-							e[j] = null;
+							e.put(copymap_keys[j], tr.child(copymap.getInt(j))
+									.child(0).attr("href"));
 						}
 					} else {
-						e[j] = tr.child(copymap.getInt(j)).text();
+						e.put(copymap_keys[j], tr.child(copymap.getInt(j))
+								.text());
 					}
-				} else {
-					e[j] = "?";
 				}
 			}
 			medien.add(e);
@@ -576,37 +580,37 @@ public class Bond26 implements OpacApi {
 		} catch (JSONException e) {
 			throw new AccountUnsupportedException(html);
 		}
-		List<String[]> reservations = new ArrayList<String[]>();
+		copymap_keys = new String[] { "verfasser", "titel", "bereit", "zst",
+				"cancel" };
+		copymap_num = copymap_keys.length;
+
+		List<ContentValues> reservations = new ArrayList<ContentValues>();
 		exemplartrs = doc.select(".kontozeile_center table").get(1)
 				.select("tr.tabKonto");
 		for (int i = 0; i < exemplartrs.size(); i++) {
 			Element tr = exemplartrs.get(i);
-			String[] e = new String[5];
+			ContentValues e = new ContentValues();
 
-			for (int j = 0; j < 5; j++) {
-				int k = copymap.getInt(j);
-				if (k > -1) {
-					if (j == 4) {
-						if (tr.child(k).children().size() > 0) {
-							e[j] = tr.child(k).child(0).attr("href");
-						} else {
-							e[j] = null;
+			for (int j = 0; j < copymap_num; j++) {
+				if (copymap.getInt(j) > -1) {
+					if (copymap_keys[j].equals("cancel")) {
+						if (tr.child(copymap.getInt(j)).children().size() > 0) {
+							e.put(copymap_keys[j], tr.child(copymap.getInt(j))
+									.child(0).attr("href"));
 						}
 					} else {
-						e[j] = tr.child(k).text();
+						e.put(copymap_keys[j], tr.child(copymap.getInt(j))
+								.text());
 					}
-				} else {
-					e[j] = "?";
 				}
 			}
 
 			reservations.add(e);
 		}
 
-		List<List<String[]>> res = new ArrayList<List<String[]>>();
-		res.add(medien);
-		res.add(reservations);
-
+		AccountData res = new AccountData();
+		res.setLent(medien);
+		res.setReservations(reservations);
 		return res;
 	}
 

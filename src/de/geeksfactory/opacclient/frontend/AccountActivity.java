@@ -17,38 +17,34 @@ import org.json.JSONException;
 
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
-import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TableLayout;
-import android.widget.Toast;
-import android.widget.TableLayout.LayoutParams;
-import android.widget.TableRow;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.WazaBe.HoloEverywhere.app.AlertDialog;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-import de.geeksfactory.opacclient.AccountUnsupportedException;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
-import de.geeksfactory.opacclient.frontend.ErrorActivity.SendTask;
 import de.geeksfactory.opacclient.objects.Account;
+import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Library;
 
 public class AccountActivity extends OpacActivity {
@@ -156,6 +152,7 @@ public class AccountActivity extends OpacActivity {
 			dialog_no_user(true);
 
 		} else if (!app.getApi().isAccountSupported(app.getLibrary())) {
+
 			// We need help
 			setContentView(R.layout.unsupported_error);
 
@@ -327,15 +324,15 @@ public class AccountActivity extends OpacActivity {
 		}
 	}
 
-	public class LoadTask extends OpacTask<List<List<String[]>>> {
+	public class LoadTask extends OpacTask<AccountData> {
 
 		private boolean success = true;
 
 		@Override
-		protected List<List<String[]>> doInBackground(Object... arg0) {
+		protected AccountData doInBackground(Object... arg0) {
 			super.doInBackground(arg0);
 			try {
-				List<List<String[]>> res = app.getApi().account(
+				AccountData res = app.getApi().account(
 						((OpacClient) getApplication()).getAccount());
 				success = true;
 				return res;
@@ -353,7 +350,7 @@ public class AccountActivity extends OpacActivity {
 			return null;
 		}
 
-		protected void onPostExecute(List<List<String[]>> result) {
+		protected void onPostExecute(AccountData result) {
 			if (success) {
 				loaded(result);
 			} else {
@@ -369,7 +366,7 @@ public class AccountActivity extends OpacActivity {
 		}
 	}
 
-	public void loaded(final List<List<String[]>> result) {
+	public void loaded(final AccountData result) {
 		if (result == null) {
 			dialog_wrong_credentials(app.getApi().getLast_error(), true);
 			return;
@@ -397,90 +394,134 @@ public class AccountActivity extends OpacActivity {
 			e.printStackTrace();
 		}
 
-		TableLayout td = (TableLayout) findViewById(R.id.tlMedien);
-		td.removeAllViews();
-		if (result.get(0).size() == 0) {
-			TableRow row = new TableRow(this);
+		LinearLayout llLent = (LinearLayout) findViewById(R.id.llLent);
+
+		if (result.getLent().size() == 0) {
 			TextView t1 = new TextView(this);
 			t1.setText(R.string.entl_none);
-			row.addView(t1);
-			td.addView(row, new TableLayout.LayoutParams(
-					LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-		}
-		for (int i = 0; i < result.get(0).size(); i++) {
-			TableRow row = new TableRow(this);
+			llLent.addView(t1);
+		} else {
+			for (final ContentValues item : result.getLent()) {
+				View v = getLayoutInflater().inflate(R.layout.lent_listitem,
+						null);
+				((TextView) v.findViewById(R.id.tvTitel)).setText(item
+						.getAsString("titel"));
+				((TextView) v.findViewById(R.id.tvVerfasser)).setText(item
+						.getAsString("verfasser"));
 
-			TextView t1 = new TextView(this);
-			t1.setText(Html.fromHtml(result.get(0).get(i)[0] + "<br />"
-					+ result.get(0).get(i)[1] + "<br />"
-					+ result.get(0).get(i)[2]));
-			t1.setPadding(0, 0, 10, 10);
-			row.addView(t1);
+				if (item.containsKey("barcode")) {
+					((TextView) v.findViewById(R.id.tvBarcode)).setText(item
+							.getAsString("barcode"));
+					((TextView) v.findViewById(R.id.tvBarcode))
+							.setVisibility(View.VISIBLE);
+				} else {
+					((TextView) v.findViewById(R.id.tvBarcode))
+							.setVisibility(View.GONE);
+				}
 
-			TextView t2 = new TextView(this);
-			t2.setText(Html.fromHtml(result.get(0).get(i)[3] + " ("
-					+ result.get(0).get(i)[4] + ")<br />"
-					+ result.get(0).get(i)[6]));
-			row.addView(t2);
+				((TextView) v.findViewById(R.id.tvStatus))
+						.setVisibility(View.VISIBLE);
+				if (item.containsKey("status") && item.containsKey("frist")) {
+					((TextView) v.findViewById(R.id.tvStatus)).setText(item
+							.getAsString("frist")
+							+ " ("
+							+ item.getAsString("status") + ")");
+				} else if (item.containsKey("status")) {
+					((TextView) v.findViewById(R.id.tvStatus)).setText(item
+							.getAsString("status"));
+				} else if (item.containsKey("frist")) {
+					((TextView) v.findViewById(R.id.tvStatus)).setText(item
+							.getAsString("frist"));
+				} else {
+					((TextView) v.findViewById(R.id.tvStatus))
+							.setVisibility(View.GONE);
+				}
 
-			if (result.get(0).get(i)[7] != null) {
-				final int j = i;
-				ImageView b1 = new ImageView(this);
-				b1.setImageResource(android.R.drawable.ic_input_add);
+				if (item.containsKey("ast")) {
+					((TextView) v.findViewById(R.id.tvZst)).setText(item
+							.getAsString("ast"));
+					((TextView) v.findViewById(R.id.tvZst))
+							.setVisibility(View.VISIBLE);
+				} else if (item.containsKey("zst")) {
+					((TextView) v.findViewById(R.id.tvZst)).setText(item
+							.getAsString("zst"));
+					((TextView) v.findViewById(R.id.tvZst))
+							.setVisibility(View.VISIBLE);
+				} else {
+					((TextView) v.findViewById(R.id.tvZst))
+							.setVisibility(View.GONE);
+				}
 
-				b1.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View arg0) {
-						AccountActivity.this.prolong(result.get(0).get(j)[7]);
-					}
-				});
-				row.addView(b1);
+				if (item.containsKey("link")) {
+					((ImageView) v.findViewById(R.id.ivProlong))
+							.setOnClickListener(new OnClickListener() {
+								@Override
+								public void onClick(View arg0) {
+									prolong(item.getAsString("link"));
+								}
+							});
+					((ImageView) v.findViewById(R.id.ivProlong))
+							.setVisibility(View.VISIBLE);
+				} else {
+					((ImageView) v.findViewById(R.id.ivProlong))
+							.setVisibility(View.GONE);
+				}
+
+				llLent.addView(v);
 			}
-
-			td.addView(row, new TableLayout.LayoutParams(
-					LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		}
 
-		TableLayout tr = (TableLayout) findViewById(R.id.tlReservations);
-		tr.removeAllViews();
-		if (result.get(1).size() == 0) {
-			TableRow row = new TableRow(this);
+		LinearLayout llRes = (LinearLayout) findViewById(R.id.llReservations);
+
+		if (result.getReservations().size() == 0) {
 			TextView t1 = new TextView(this);
 			t1.setText(R.string.reservations_none);
-			row.addView(t1);
-			tr.addView(row, new TableLayout.LayoutParams(
-					LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-		}
-		for (int i = 0; i < result.get(1).size(); i++) {
-			TableRow row = new TableRow(this);
+			llRes.addView(t1);
+		} else {
+			for (final ContentValues item : result.getReservations()) {
+				View v = getLayoutInflater().inflate(R.layout.reservation_listitem,
+						null);
+				((TextView) v.findViewById(R.id.tvTitel)).setText(item
+						.getAsString("titel"));
+				((TextView) v.findViewById(R.id.tvVerfasser)).setText(item
+						.getAsString("verfasser"));
 
-			TextView t1 = new TextView(this);
-			t1.setText(Html.fromHtml(result.get(1).get(i)[0] + "<br />"
-					+ result.get(1).get(i)[1]));
-			t1.setPadding(0, 0, 10, 10);
-			row.addView(t1);
+				if (item.containsKey("bereit")) {
+					((TextView) v.findViewById(R.id.tvStatus)).setText(item
+							.getAsString("bereit"));
+					((TextView) v.findViewById(R.id.tvStatus))
+							.setVisibility(View.VISIBLE);
+				} else {
+					((TextView) v.findViewById(R.id.tvStatus))
+							.setVisibility(View.GONE);
+				}
 
-			TextView t2 = new TextView(this);
-			t2.setText(Html.fromHtml(result.get(1).get(i)[2] + "<br />"
-					+ result.get(1).get(i)[3]));
-			row.addView(t2);
+				if (item.containsKey("zst")) {
+					((TextView) v.findViewById(R.id.tvZst)).setText(item
+							.getAsString("zst"));
+					((TextView) v.findViewById(R.id.tvZst))
+							.setVisibility(View.VISIBLE);
+				} else {
+					((TextView) v.findViewById(R.id.tvZst))
+							.setVisibility(View.GONE);
+				}
 
-			if (result.get(1).get(i)[4] != null) {
-				final int j = i;
-				ImageView b1 = new ImageView(this);
-				b1.setImageResource(android.R.drawable.ic_delete);
-
-				b1.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View arg0) {
-						cancel(result.get(1).get(j)[4]);
-					}
-				});
-				row.addView(b1);
+				if (item.containsKey("cancel")) {
+					((ImageView) v.findViewById(R.id.ivCancel))
+							.setOnClickListener(new OnClickListener() {
+								@Override
+								public void onClick(View arg0) {
+									cancel(item.getAsString("cancel"));
+								}
+							});
+					((ImageView) v.findViewById(R.id.ivCancel))
+							.setVisibility(View.VISIBLE);
+				} else {
+					((ImageView) v.findViewById(R.id.ivCancel))
+							.setVisibility(View.GONE);
+				}
+				llRes.addView(v);
 			}
-
-			tr.addView(row, new TableLayout.LayoutParams(
-					LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		}
 	}
 
