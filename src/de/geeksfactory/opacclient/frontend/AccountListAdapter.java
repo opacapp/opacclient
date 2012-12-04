@@ -29,8 +29,8 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
 		if (objects.get(position) == null) {
 			LayoutInflater layoutInflater = (LayoutInflater) getContext()
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			view = layoutInflater.inflate(R.layout.account_listitem,
-					viewGroup, false);
+			view = layoutInflater.inflate(R.layout.account_listitem, viewGroup,
+					false);
 			return view;
 		}
 
@@ -39,21 +39,25 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
 		if (contentView == null) {
 			LayoutInflater layoutInflater = (LayoutInflater) getContext()
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			view = layoutInflater.inflate(R.layout.account_listitem,
-					viewGroup, false);
+			view = layoutInflater.inflate(R.layout.account_listitem, viewGroup,
+					false);
 		} else {
 			view = contentView;
 		}
 
-		if(((OpacClient) ((Activity) context).getApplication()).getAccount().getId() == item.getId()){
-			view.findViewById(R.id.llItem).setBackgroundColor(context.getResources().getColor(R.color.active_account));
-		}else{
-			view.findViewById(R.id.llItem).setBackgroundColor(context.getResources().getColor(R.color.inactive_account));
+		if (((OpacClient) ((Activity) context).getApplication()).getAccount()
+				.getId() == item.getId()) {
+			view.findViewById(R.id.llItem).setBackgroundColor(
+					context.getResources().getColor(R.color.active_account));
+		} else {
+			view.findViewById(R.id.llItem).setBackgroundResource(
+					R.drawable.list_selector_holo_light);
 		}
-		
+
 		Library lib;
 		try {
-			lib = ((OpacClient) ((Activity) context).getApplication()).getLibrary(item.getBib());
+			lib = ((OpacClient) ((Activity) context).getApplication())
+					.getLibrary(item.getBib());
 			TextView tvCity = (TextView) view.findViewById(R.id.tvCity);
 			if (lib.getTitle() != null && !lib.getTitle().equals("null")) {
 				tvCity.setText(lib.getCity() + "\n" + lib.getTitle());
