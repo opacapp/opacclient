@@ -15,7 +15,6 @@ import org.apache.http.message.BasicNameValuePair;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -29,6 +28,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.WazaBe.HoloEverywhere.app.ProgressDialog;
 import com.actionbarsherlock.app.SherlockActivity;
 
 import de.geeksfactory.opacclient.AccountUnsupportedException;

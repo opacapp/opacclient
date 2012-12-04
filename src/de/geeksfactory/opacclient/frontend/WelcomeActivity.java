@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.json.JSONException;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,6 +13,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+
+import com.WazaBe.HoloEverywhere.app.ProgressDialog;
+
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
@@ -45,15 +47,17 @@ public class WelcomeActivity extends OpacActivity {
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				AccountDataSource data = new AccountDataSource(WelcomeActivity.this);
+				AccountDataSource data = new AccountDataSource(
+						WelcomeActivity.this);
 				data.open();
 				Account acc = new Account();
 				acc.setBib(libraries.get(position).getIdent());
 				acc.setLabel(getString(R.string.default_account_name));
 				long insertedid = data.addAccount(acc);
 				data.close();
-				
-				sp.edit().putLong(OpacClient.PREF_SELECTED_ACCOUNT, insertedid).commit();
+
+				sp.edit().putLong(OpacClient.PREF_SELECTED_ACCOUNT, insertedid)
+						.commit();
 
 				dialog = ProgressDialog.show(WelcomeActivity.this, "",
 						getString(R.string.connecting_initially), true);
