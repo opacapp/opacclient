@@ -382,7 +382,18 @@ public class AccountActivity extends OpacActivity {
 
 	public void loaded(final AccountData result) {
 		if (result == null) {
-			dialog_wrong_credentials(app.getApi().getLast_error(), true);
+			if (app.getApi().getLast_error() == null
+					|| app.getApi().getLast_error().equals("")) {
+				setContentView(R.layout.connectivity_error);
+				((Button) findViewById(R.id.btRetry))
+						.setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								onResume();
+							}
+						});
+			} else
+				dialog_wrong_credentials(app.getApi().getLast_error(), true);
 			return;
 		}
 
