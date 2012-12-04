@@ -3,16 +3,12 @@ ROADMAP VERSION 2
 
 * Multiple Accounts
   * Migration von alter Version!!!
-  * Erinnerungen anpassen
+  * Erinnerungen wieder einbauen
 * Multiple Bibliotheks-APIs
-  * Kein Crash bei nicht unterstützem Account
   * BibProxy und Intents bedenken
-  * AccountActivity generischer
-* Redesign Account-Seite?
-  * Farbkodierung abgabetermin
+* Account-Seite: Farbkodierung Abgabetermin?
 * Tablet-Optimierung?
-* Error Handling komplett überarbeiten
-* Verhalten wenn Dialog gecancelt wird
+* Verhalten wenn ProgressDialog gecancelt wird
 * Verhalten wenn selektierter Account gelöscht wird
 
 Zu integrierende Bibliothekssysteme
