@@ -39,6 +39,7 @@ import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacApi;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchResult;
@@ -325,10 +326,15 @@ public class Bond26 implements OpacApi {
 		for (int i = 0; i < detailtrs.size(); i++) {
 			Element tr = detailtrs.get(i);
 			if (tr.child(0).hasClass("detail_feld")) {
-				String[] detail = { tr.child(0).text(), tr.child(1).text() };
-				result.addDetail(detail);
+				result.addDetail(new Detail(tr.child(0).text(), tr.child(1)
+						.text()));
 			}
 		}
+
+		String[] copy_keys = new String[] { "barcode", "zst", "abt", "ort",
+				"status", "rueckgabe", "vorbestellt" };
+		int copy_keynum = copy_keys.length;
+
 		try {
 			JSONArray copymap = data.getJSONArray("copiestable");
 			Elements exemplartrs = doc
@@ -336,13 +342,11 @@ public class Bond26 implements OpacApi {
 			for (int i = 0; i < exemplartrs.size(); i++) {
 				Element tr = exemplartrs.get(i);
 
-				String[] e = new String[7];
+				ContentValues e = new ContentValues();
 
-				for (int j = 0; j < 7; j++) {
+				for (int j = 0; j < copy_keynum; j++) {
 					if (copymap.getInt(j) > -1) {
-						e[j] = tr.child(copymap.getInt(j)).text();
-					} else {
-						e[j] = "?";
+						e.put(copy_keys[j], tr.child(copymap.getInt(j)).text());
 					}
 				}
 				result.addCopy(e);
@@ -356,9 +360,9 @@ public class Bond26 implements OpacApi {
 			for (int i = 0; i < bandtrs.size(); i++) {
 				Element tr = bandtrs.get(i);
 
-				String[] e = new String[2];
-				e[0] = tr.attr("href").split("=")[1];
-				e[1] = tr.text();
+				ContentValues e = new ContentValues();
+				e.put("id", tr.attr("href").split("=")[1]);
+				e.put("titel", tr.text());
 				result.addBand(e);
 			}
 		} catch (Exception e) {

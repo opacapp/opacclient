@@ -11,6 +11,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
         <LinearLayout
             android:id="@+id/topbar"
             android:layout_width="wrap_content"
@@ -31,9 +37,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginLeft="16dp"
                 android:background="@drawable/go_button"
                 android:gravity="center"
-                android:layout_marginLeft="16dp"
                 android:text="@string/reserve"
                 android:textColor="@color/go_button_text"
                 android:visibility="gone" />
@@ -53,19 +59,12 @@
             android:textColor="@color/emphasis"
             android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/tvTitle"
+        <LinearLayout
+            android:id="@+id/llDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <TableLayout
-            android:id="@+id/tlDetails"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:shrinkColumns="1"
-            android:stretchColumns="1" >
-        </TableLayout>
+            android:orientation="vertical" >
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tvCopies"
@@ -81,13 +80,12 @@
             android:textColor="@color/emphasis"
             android:textSize="14sp" />
 
-        <TableLayout
-            android:id="@+id/tlExemplare"
+        <LinearLayout
+            android:id="@+id/llCopies"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:shrinkColumns="0"
-            android:stretchColumns="0" >
-        </TableLayout>
+            android:orientation="vertical" >
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>
