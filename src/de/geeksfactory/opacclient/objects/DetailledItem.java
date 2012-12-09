@@ -3,12 +3,13 @@ package de.geeksfactory.opacclient.objects;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.ContentValues;
 import android.graphics.Bitmap;
 
 public class DetailledItem {
-	private List<String[]> details = new ArrayList<String[]>();
-	private List<String[]> copies = new ArrayList<String[]>();
-	private List<String[]> baende = new ArrayList<String[]>();
+	private List<Detail> details = new ArrayList<Detail>();
+	private List<ContentValues> copies = new ArrayList<ContentValues>();
+	private List<ContentValues> baende = new ArrayList<ContentValues>();
 	private String cover;
 	private String title;
 	private Bitmap coverBitmap;
@@ -49,27 +50,27 @@ public class DetailledItem {
 				+ reservable + "]";
 	}
 
-	public List<String[]> getDetails() {
+	public List<Detail> getDetails() {
 		return details;
 	}
 
-	public List<String[]> getCopies() {
+	public List<ContentValues> getCopies() {
 		return copies;
 	}
 
-	public List<String[]> getBaende() {
+	public List<ContentValues> getBaende() {
 		return baende;
 	}
 
-	public void addDetail(String[] e) {
-		details.add(e);
+	public void addDetail(Detail d) {
+		details.add(d);
 	}
 
-	public void addCopy(String[] e) {
+	public void addCopy(ContentValues e) {
 		copies.add(e);
 	}
 
-	public void addBand(String[] e) {
+	public void addBand(ContentValues e) {
 		baende.add(e);
 	}
 

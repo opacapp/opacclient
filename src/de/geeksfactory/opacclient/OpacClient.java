@@ -22,6 +22,7 @@ import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import de.geeksfactory.opacclient.apis.Bond26;
+import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.frontend.ErrorActivity;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
@@ -47,16 +48,34 @@ public class OpacClient extends Application {
 		return (networkInfo != null && networkInfo.isConnected());
 	}
 
+	public OpacApi getIndependentApi(Library lib) throws ClientProtocolException,
+			SocketException, IOException, NotReachableException {
+		OpacApi a;
+		if (lib.getApi().equals("bond26"))
+			a = new Bond26();
+		else
+			return null;
+
+		a.init(this, lib);
+		return a;
+	}
+
 	private OpacApi initApi(Library lib) throws ClientProtocolException,
 			SocketException, IOException, NotReachableException {
-		OpacApi api = null;
+		api = null;
 		if (lib.getApi().equals("bond26"))
 			api = new Bond26();
 		else
 			return null;
 
-		api.init(this, lib.getData());
+		api.init(this, lib);
 		return api;
+	}
+
+	public void resetCache() {
+		account = null;
+		api = null;
+		library = null;
 	}
 
 	public OpacApi getApi() {
@@ -91,16 +110,22 @@ public class OpacClient extends Application {
 		}
 		AccountDataSource data = new AccountDataSource(this);
 		data.open();
-		Account acc = data.getAccount(sp.getLong(PREF_SELECTED_ACCOUNT, 0));
+		account = data.getAccount(sp.getLong(PREF_SELECTED_ACCOUNT, 0));
 		data.close();
-		return acc;
+		return account;
+	}
+
+	public void setAccount(long id) {
+		sp.edit().putLong(OpacClient.PREF_SELECTED_ACCOUNT, id).commit();
+		resetCache();
 	}
 
 	public Library getLibrary(String ident) throws IOException, JSONException {
 		String line;
 
 		StringBuilder builder = new StringBuilder();
-		InputStream fis = getAssets().open(ASSETS_BIBSDIR + "/" + ident + ".json");
+		InputStream fis = getAssets().open(
+				ASSETS_BIBSDIR + "/" + ident + ".json");
 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(fis,
 				"utf-8"));
@@ -114,7 +139,7 @@ public class OpacClient extends Application {
 	}
 
 	public Library getLibrary() {
-		if(getAccount() == null)
+		if (getAccount() == null)
 			return null;
 		if (account != null && library != null) {
 			if (sp.getLong(PREF_SELECTED_ACCOUNT, 0) == account.getId()) {
@@ -159,7 +184,8 @@ public class OpacClient extends Application {
 
 			fis.close();
 			json = builder.toString();
-			libs.add(Library.fromJSON(files[i].replace(".json", ""), new JSONObject(json)));
+			libs.add(Library.fromJSON(files[i].replace(".json", ""),
+					new JSONObject(json)));
 		}
 
 		return libs;

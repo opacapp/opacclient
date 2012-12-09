@@ -1,13 +1,24 @@
 package de.geeksfactory.opacclient.frontend;
 
-import android.app.AlertDialog;
+import java.util.List;
+
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
 
+import com.WazaBe.HoloEverywhere.app.AlertDialog;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -15,9 +26,12 @@ import com.actionbarsherlock.view.MenuItem;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.objects.Account;
+import de.geeksfactory.opacclient.storage.AccountDataSource;
 
 public abstract class OpacActivity extends SherlockActivity {
 	protected OpacClient app;
+	protected AlertDialog adialog;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -47,51 +61,163 @@ public abstract class OpacActivity extends SherlockActivity {
 	}
 
 	protected void dialog_no_user(final boolean finish) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(R.string.status_nouser)
-				.setCancelable(false)
-				.setNegativeButton(R.string.dismiss,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
-								if (finish)
-									finish();
-							}
-						})
-				.setPositiveButton(R.string.prefs,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								Intent intent = new Intent(OpacActivity.this,
-										MainPreferenceActivity.class);
-								startActivity(intent);
-							}
-						});
-		AlertDialog alert = builder.create();
-		alert.show();
+		setContentView(R.layout.answer_error);
+		((Button) findViewById(R.id.btPrefs))
+				.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(OpacActivity.this,
+								AccountListActivity.class);
+						startActivity(intent);
+					}
+				});
+		((TextView) findViewById(R.id.tvErrHead)).setText("");
+		((TextView) findViewById(R.id.tvErrBody))
+				.setText(R.string.status_nouser);
 	}
 
 	protected void dialog_wrong_credentials(String s, final boolean finish) {
+		setContentView(R.layout.answer_error);
+		((Button) findViewById(R.id.btPrefs))
+				.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(OpacActivity.this,
+								AccountListActivity.class);
+						startActivity(intent);
+					}
+				});
+		((TextView) findViewById(R.id.tvErrBody)).setText(s);
+	}
+
+	public interface AccountSelectedListener {
+		void accountSelected(Account account);
+	}
+
+	public void selectaccount() {
+		selectaccount(null);
+	}
+
+	public class MetaAdapter extends ArrayAdapter<ContentValues> {
+
+		private List<ContentValues> objects;
+		private int spinneritem;
+
+		@Override
+		public View getDropDownView(int position, View contentView,
+				ViewGroup viewGroup) {
+			View view = null;
+
+			if (objects.get(position) == null) {
+				LayoutInflater layoutInflater = (LayoutInflater) getContext()
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				view = layoutInflater
+						.inflate(R.layout.simple_spinner_dropdown_item,
+								viewGroup, false);
+				return view;
+			}
+
+			ContentValues item = objects.get(position);
+
+			if (contentView == null) {
+				LayoutInflater layoutInflater = (LayoutInflater) getContext()
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				view = layoutInflater
+						.inflate(R.layout.simple_spinner_dropdown_item,
+								viewGroup, false);
+			} else {
+				view = contentView;
+			}
+
+			TextView tvText = (TextView) view.findViewById(android.R.id.text1);
+			tvText.setText(item.getAsString("value"));
+			return view;
+		}
+
+		@Override
+		public View getView(int position, View contentView, ViewGroup viewGroup) {
+			View view = null;
+
+			if (objects.get(position) == null) {
+				LayoutInflater layoutInflater = (LayoutInflater) getContext()
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				view = layoutInflater.inflate(spinneritem, viewGroup, false);
+				return view;
+			}
+
+			ContentValues item = objects.get(position);
+
+			if (contentView == null) {
+				LayoutInflater layoutInflater = (LayoutInflater) getContext()
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				view = layoutInflater.inflate(spinneritem, viewGroup, false);
+			} else {
+				view = contentView;
+			}
+
+			TextView tvText = (TextView) view.findViewById(android.R.id.text1);
+			tvText.setText(item.getAsString("value"));
+			return view;
+		}
+
+		public MetaAdapter(Context context, List<ContentValues> objects,
+				int spinneritem) {
+			super(context, R.layout.simple_spinner_item, objects);
+			this.objects = objects;
+			this.spinneritem = spinneritem;
+		}
+
+	}
+
+	public void selectaccount(final AccountSelectedListener listener) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(getString(R.string.opac_error) + " " + s)
-				.setCancelable(false)
-				.setNegativeButton(R.string.dismiss,
+		// Get the layout inflater
+		LayoutInflater inflater = getLayoutInflater();
+
+		View view = inflater.inflate(R.layout.account_add_liblist_dialog, null);
+
+		ListView lv = (ListView) view.findViewById(R.id.lvBibs);
+		AccountDataSource data = new AccountDataSource(this);
+		data.open();
+		final List<Account> accounts = data.getAllAccounts();
+		data.close();
+		AccountListAdapter adapter = new AccountListAdapter(this, accounts);
+		lv.setAdapter(adapter);
+		lv.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+
+				app.setAccount(accounts.get(position).getId());
+
+				adialog.dismiss();
+
+				onResume();
+
+				if (listener != null) {
+					listener.accountSelected(accounts.get(position));
+				}
+			}
+		});
+		builder.setTitle(R.string.account_select)
+				.setView(view)
+				.setNegativeButton(R.string.cancel,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
-								if (finish)
-									finish();
+								adialog.cancel();
 							}
 						})
-				.setPositiveButton(R.string.prefs,
+				.setNeutralButton(R.string.accounts_edit,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
+								dialog.dismiss();
 								Intent intent = new Intent(OpacActivity.this,
-										MainPreferenceActivity.class);
+										AccountListActivity.class);
 								startActivity(intent);
 							}
 						});
-		AlertDialog alert = builder.create();
-		alert.show();
+		adialog = builder.create();
+		adialog.show();
 	}
 
 	protected void unbindDrawables(View view) {

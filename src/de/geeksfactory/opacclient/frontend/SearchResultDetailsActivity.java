@@ -1,13 +1,11 @@
 package de.geeksfactory.opacclient.frontend;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,26 +13,34 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.text.Html;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TableLayout;
-import android.widget.TableLayout.LayoutParams;
-import android.widget.TableRow;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.WazaBe.HoloEverywhere.app.AlertDialog;
+import com.WazaBe.HoloEverywhere.app.ProgressDialog;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
+import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.objects.Account;
+import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.storage.MetaDataSource;
 import de.geeksfactory.opacclient.storage.StarDataSource;
 
 public class SearchResultDetailsActivity extends OpacActivity {
@@ -77,51 +83,159 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		}
 	}
 
-	protected void reservation() {
-		SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		items = sp.getString("opac_zst", "00:").split("~");
-		if (items[0].startsWith(":")) {
-			List<String> tmp = new ArrayList<String>(Arrays.asList(items));
-			tmp.remove(0);
-			String[] tmp2 = new String[tmp.size()];
-			items = tmp.toArray(tmp2);
-		}
+	protected void dialog_no_user() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(getString(R.string.res_zst));
-		builder.setItems(items, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface d, int item) {
+		builder.setMessage(R.string.status_nouser)
+				.setCancelable(false)
+				.setNegativeButton(R.string.dismiss,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						})
+				.setPositiveButton(R.string.accounts_edit,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								Intent intent = new Intent(
+										SearchResultDetailsActivity.this,
+										AccountListActivity.class);
+								startActivity(intent);
+							}
+						});
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
+	protected void reservation() {
+		AccountDataSource data = new AccountDataSource(this);
+		data.open();
+		final List<Account> accounts = data.getAllAccounts(app.getLibrary()
+				.getIdent());
+		data.close();
+		if (accounts.size() == 0) {
+			dialog_no_user();
+			return;
+		} else if (accounts.size() > 1) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			// Get the layout inflater
+			LayoutInflater inflater = getLayoutInflater();
+
+			View view = inflater.inflate(R.layout.account_add_liblist_dialog,
+					null);
+
+			ListView lv = (ListView) view.findViewById(R.id.lvBibs);
+			AccountListAdapter adapter = new AccountListAdapter(this, accounts);
+			lv.setAdapter(adapter);
+			lv.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					if (accounts.get(position).getId() != app.getAccount()
+							.getId()) {
+						app.setAccount(accounts.get(position).getId());
+
+						new RestoreSessionTask().execute();
+					}
+					adialog.dismiss();
+					reservation_zst();
+				}
+			});
+			builder.setTitle(R.string.account_select)
+					.setView(view)
+					.setNegativeButton(R.string.cancel,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									adialog.cancel();
+								}
+							})
+					.setNeutralButton(R.string.accounts_edit,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									dialog.dismiss();
+									Intent intent = new Intent(
+											SearchResultDetailsActivity.this,
+											AccountListActivity.class);
+									startActivity(intent);
+								}
+							});
+			adialog = builder.create();
+			adialog.show();
+		} else {
+			reservation_zst();
+		}
+	}
+
+	public void reservation_zst() {
+		MetaDataSource data = new MetaDataSource(this);
+		data.open();
+		final List<ContentValues> zst = data.getMeta(app.getLibrary()
+				.getIdent(), "zst");
+		data.close();
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		// Get the layout inflater
+		LayoutInflater inflater = getLayoutInflater();
+
+		View view = inflater.inflate(R.layout.account_add_liblist_dialog, null);
+
+		ListView lv = (ListView) view.findViewById(R.id.lvBibs);
+
+		lv.setAdapter(new OpacActivity.MetaAdapter(this, zst,
+				R.layout.zst_listitem));
+		lv.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				adialog.dismiss();
+
 				dialog = ProgressDialog.show(SearchResultDetailsActivity.this,
 						"", getString(R.string.doing_res), true);
 				dialog.show();
 
 				rt = new ResTask();
-				rt.execute(app, items[item].split(":", 2)[0]);
+				rt.execute(app, zst.get(position).getAsString("key"));
 			}
 		});
-		AlertDialog alert = builder.create();
-		alert.show();
+		builder.setTitle(getString(R.string.res_zst))
+				.setView(view)
+				.setNegativeButton(R.string.cancel,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								adialog.cancel();
+							}
+						});
+		adialog = builder.create();
+		adialog.show();
 	}
 
 	public void reservation_done(int result) {
-		if (result == STATUS_NOUSER) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage(R.string.status_nouser)
-					.setCancelable(true)
-					.setNegativeButton(R.string.dismiss,
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int id) {
-									dialog.cancel();
-								}
-							});
-			AlertDialog alert = builder.create();
-			alert.show();
-		} else if (result == STATUS_SUCCESS) {
+		if (result == STATUS_SUCCESS) {
 			Intent intent = new Intent(SearchResultDetailsActivity.this,
 					AccountActivity.class);
 			startActivity(intent);
 		}
+	}
+
+	public class RestoreSessionTask extends OpacTask<Integer> {
+		@Override
+		protected Integer doInBackground(Object... arg0) {
+			try {
+				app.getApi().getResultById(SearchResultDetailsActivity.this.id);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NotReachableException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return 0;
+		}
+
+		protected void onPostExecute(Integer result) {
+		}
+
 	}
 
 	public class FetchTask extends OpacTask<DetailledItem> {
@@ -157,7 +271,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		}
 
 		protected void onPostExecute(DetailledItem result) {
-			if (!success) {
+			if (!success || result == null) {
 				setContentView(R.layout.connectivity_error);
 				((Button) findViewById(R.id.btRetry))
 						.setOnClickListener(new OnClickListener() {
@@ -191,103 +305,96 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			tvTitel.setText(item.getTitle());
 			title = item.getTitle();
 
-			TableLayout td = (TableLayout) findViewById(R.id.tlDetails);
-
-			for (int i = 0; i < result.getDetails().size(); i++) {
-				TableRow row = new TableRow(SearchResultDetailsActivity.this);
-
-				if (result.getDetails().get(i)[0]
-						.equals("Annotation/ Beschreibung:")) {
-					TextView t2 = new TextView(SearchResultDetailsActivity.this);
-					t2.setText(Html.fromHtml("<i>"
-							+ result.getDetails().get(i)[1] + "</i>"));
-					TableRow.LayoutParams params = new TableRow.LayoutParams();
-					params.span = 2;
-					t2.setPadding(20, 0, 0, 0);
-					row.addView(t2, params);
-				} else {
-					TextView t1 = new TextView(SearchResultDetailsActivity.this);
-					t1.setText(Html.fromHtml(result.getDetails().get(i)[0]));
-					t1.setPadding(0, 0, 10, 0);
-					row.addView(t1);
-
-					TextView t2 = new TextView(SearchResultDetailsActivity.this);
-					t2.setText(Html.fromHtml(result.getDetails().get(i)[1]
-							.replace("\n", "<br />")));
-					row.addView(t2);
-				}
-				td.addView(row, new TableLayout.LayoutParams(
-						LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			LinearLayout llDetails = (LinearLayout) findViewById(R.id.llDetails);
+			for (Detail detail : result.getDetails()) {
+				View v = getLayoutInflater().inflate(R.layout.detail_listitem,
+						null);
+				((TextView) v.findViewById(R.id.tvDesc)).setText(detail
+						.getDesc());
+				((TextView) v.findViewById(R.id.tvContent)).setText(detail
+						.getContent());
+				llDetails.addView(v);
 			}
 
+			LinearLayout llCopies = (LinearLayout) findViewById(R.id.llCopies);
 			if (result.getBaende().size() > 0) {
 				TextView tvC = (TextView) findViewById(R.id.tvCopies);
 				tvC.setText(R.string.baende);
-				TableLayout tc = (TableLayout) findViewById(R.id.tlExemplare);
 
-				for (int i = 0; i < result.getBaende().size(); i++) {
-					TableRow row = new TableRow(
-							SearchResultDetailsActivity.this);
+				for (final ContentValues band : result.getBaende()) {
+					View v = getLayoutInflater().inflate(
+							R.layout.band_listitem, null);
+					((TextView) v.findViewById(R.id.tvTitel)).setText(band
+							.getAsString("titel"));
 
-					TextView t1 = new TextView(SearchResultDetailsActivity.this);
-					t1.setText(Html.fromHtml(result.getBaende().get(i)[1]));
-					row.addView(t1);
-					final String a = result.getBaende().get(i)[0];
-
-					Button b2 = new Button(SearchResultDetailsActivity.this);
-					b2.setOnClickListener(new OnClickListener() {
-						@Override
-						public void onClick(View arg0) {
-							Intent intent = new Intent(
-									SearchResultDetailsActivity.this,
-									SearchResultDetailsActivity.class);
-							intent.putExtra("item_id", a);
-							startActivity(intent);
-						}
-					});
-					b2.setText(R.string.details);
-					row.addView(b2);
-					tc.addView(row, new TableLayout.LayoutParams(
-							LayoutParams.WRAP_CONTENT,
-							LayoutParams.WRAP_CONTENT));
+					v.findViewById(R.id.llItem).setOnClickListener(
+							new OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									Intent intent = new Intent(
+											SearchResultDetailsActivity.this,
+											SearchResultDetailsActivity.class);
+									intent.putExtra("item_id",
+											band.getAsString("id"));
+									startActivity(intent);
+								}
+							});
+					llCopies.addView(v);
 				}
 			} else {
-				TableLayout tc = (TableLayout) findViewById(R.id.tlExemplare);
+				for (ContentValues copy : result.getCopies()) {
+					View v = getLayoutInflater().inflate(
+							R.layout.copy_listitem, null);
 
-				for (int i = 0; i < result.getCopies().size(); i++) {
-					TableRow row = new TableRow(
-							SearchResultDetailsActivity.this);
+					if (copy.containsKey("barcode")) {
+						((TextView) v.findViewById(R.id.tvBarcode))
+								.setText(copy.getAsString("barcode"));
+						((TextView) v.findViewById(R.id.tvBarcode))
+								.setVisibility(View.VISIBLE);
+					} else {
+						((TextView) v.findViewById(R.id.tvBarcode))
+								.setVisibility(View.GONE);
+					}
+					if (copy.containsKey("zst")) {
+						((TextView) v.findViewById(R.id.tvZst)).setText(copy
+								.getAsString("zst"));
+						((TextView) v.findViewById(R.id.tvZst))
+								.setVisibility(View.VISIBLE);
+					} else {
+						((TextView) v.findViewById(R.id.tvZst))
+								.setVisibility(View.GONE);
+					}
+					if (copy.containsKey("status")) {
+						((TextView) v.findViewById(R.id.tvStatus)).setText(copy
+								.getAsString("status"));
+						((TextView) v.findViewById(R.id.tvStatus))
+								.setVisibility(View.VISIBLE);
+					} else {
+						((TextView) v.findViewById(R.id.tvStatus))
+								.setVisibility(View.GONE);
+					}
+					if (copy.containsKey("vorbestellt")) {
+						((TextView) v.findViewById(R.id.tvVorbestellt))
+								.setText(getString(R.string.res) + ": "
+										+ copy.getAsString("vorbestellt"));
+						((TextView) v.findViewById(R.id.tvVorbestellt))
+								.setVisibility(View.VISIBLE);
+					} else {
+						((TextView) v.findViewById(R.id.tvVorbestellt))
+								.setVisibility(View.GONE);
+					}
+					if (copy.containsKey("rueckgabe")) {
+						((TextView) v.findViewById(R.id.tvRueckgabe))
+								.setText(getString(R.string.ret) + ": "
+										+ copy.getAsString("rueckgabe"));
+						((TextView) v.findViewById(R.id.tvRueckgabe))
+								.setVisibility(View.VISIBLE);
+					} else {
+						((TextView) v.findViewById(R.id.tvRueckgabe))
+								.setVisibility(View.GONE);
+					}
 
-					TextView t1 = new TextView(SearchResultDetailsActivity.this);
-					String t1t = "";
-					if (!result.getCopies().get(i)[0].equals("?")) {
-						t1t = t1t + result.getCopies().get(i)[0] + "<br />";
-					}
-					if (!result.getCopies().get(i)[1].equals("?")) {
-						t1t = t1t + result.getCopies().get(i)[1];
-					}
-					t1.setText(Html.fromHtml(t1t));
-					row.addView(t1);
-
-					TextView t2 = new TextView(SearchResultDetailsActivity.this);
-					String status = result.getCopies().get(i)[4] + "<br />";
-					if (!result.getCopies().get(i)[5].equals("")
-							&& !result.getCopies().get(i)[5].equals("?")) {
-						status = status + getString(R.string.ret) + ": "
-								+ result.getCopies().get(i)[5] + "<br />";
-					}
-					t2.setPadding(10, 0, 0, 0);
-					if (!result.getCopies().get(i)[6].equals("")
-							&& !result.getCopies().get(i)[6].equals("?")) {
-						status = status + getString(R.string.res) + ": "
-								+ result.getCopies().get(i)[6];
-					}
-					t2.setText(Html.fromHtml(status));
-					row.addView(t2);
-
-					tc.addView(row, new TableLayout.LayoutParams(
-							LayoutParams.WRAP_CONTENT,
-							LayoutParams.WRAP_CONTENT));
+					llCopies.addView(v);
 				}
 			}
 
@@ -303,6 +410,31 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			}
 
 		}
+	}
+
+	protected void dialog_wrong_credentials(String s, final boolean finish) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(getString(R.string.opac_error) + " " + s)
+				.setCancelable(false)
+				.setNegativeButton(R.string.dismiss,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+								if (finish)
+									finish();
+							}
+						})
+				.setPositiveButton(R.string.prefs,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								Intent intent = new Intent(
+										SearchResultDetailsActivity.this,
+										MainPreferenceActivity.class);
+								startActivity(intent);
+							}
+						});
+		AlertDialog alert = builder.create();
+		alert.show();
 	}
 
 	public class FetchSubTask extends FetchTask {
@@ -348,18 +480,10 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			SharedPreferences sp = PreferenceManager
 					.getDefaultSharedPreferences(app);
 			try {
-				if (sp.getString("opac_usernr", "").equals("")
-						|| sp.getString("opac_password", "").equals("")) {
-					success = true;
-					return STATUS_NOUSER;
-				} else {
-					Boolean res = app.getApi().reservation(zst,
-							sp.getString("opac_usernr", ""),
-							sp.getString("opac_password", ""));
-					success = true;
-					if (res == null)
-						return STATUS_WRONGCREDENTIALS;
-				}
+				Boolean res = app.getApi().reservation(zst, app.getAccount());
+				success = true;
+				if (!res)
+					return STATUS_WRONGCREDENTIALS;
 			} catch (java.net.UnknownHostException e) {
 				publishProgress(e, "ioerror");
 			} catch (java.io.IOException e) {
@@ -374,6 +498,11 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
 		protected void onPostExecute(Integer result) {
 			dialog.dismiss();
+
+			if (result == STATUS_WRONGCREDENTIALS) {
+				dialog_wrong_credentials(app.getApi().getLast_error(), false);
+				return;
+			}
 
 			if (!success) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -390,13 +519,9 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				AlertDialog alert = builder.create();
 				alert.show();
 				return;
+			} else {
+				reservation_done(result);
 			}
-
-			if (result == STATUS_WRONGCREDENTIALS) {
-				dialog_wrong_credentials(app.getApi().getLast_error(), false);
-				return;
-			}
-			reservation_done(result);
 		}
 	}
 
@@ -458,7 +583,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
-		String bib = "";
+		String bib = app.getLibrary().getIdent();
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();

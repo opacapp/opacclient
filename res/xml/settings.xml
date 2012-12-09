@@ -29,4 +29,14 @@
             android:title="@string/notification_sound" />
     </PreferenceCategory>
 
+    <CheckBoxPreference
+        android:key="debug_proxy"
+        android:summary="Nicht benutzen, außer du weißt, was du tust."
+        android:title="Debug-Modus (Proxy)" />
+
+    <Preference
+        android:key="meta_clear"
+        android:summary="Löscht die zwischengespeicherte Liste der Zweigstellen und Mediengruppen"
+        android:title="Cache leeren" />
+
 </PreferenceScreen>

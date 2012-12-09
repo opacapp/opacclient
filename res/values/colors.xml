@@ -3,4 +3,7 @@
     <color name="main_red">#b90000</color>
     <color name="emphasis">#31b6e7</color>
     <color name="go_button_text">#FFFFFF</color>
+    <color name="active_account">#99CC00</color>
+    <color name="inactive_account">#F7F7F7</color>
+    <color name="detail_desc">#7E7E7E</color>
 </resources>

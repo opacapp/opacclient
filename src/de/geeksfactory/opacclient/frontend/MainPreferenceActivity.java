@@ -10,6 +10,8 @@ import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
 
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.reminder.ReminderCheckService;
+import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 public class MainPreferenceActivity extends SherlockPreferenceActivity {
 	@SuppressWarnings("deprecation")
@@ -27,6 +29,21 @@ public class MainPreferenceActivity extends SherlockPreferenceActivity {
 				Intent intent = new Intent(MainPreferenceActivity.this,
 						AccountListActivity.class);
 				startActivity(intent);
+				return false;
+			}
+		});
+
+		Preference meta = (Preference) findPreference("meta_clear");
+		meta.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference arg0) {
+				MetaDataSource data = new MetaDataSource(
+						MainPreferenceActivity.this);
+				data.open();
+				data.clearMeta();
+				data.close();
+				Intent i = new Intent(MainPreferenceActivity.this, ReminderCheckService.class);
+				startService(i);
 				return false;
 			}
 		});
