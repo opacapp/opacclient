@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import de.geeksfactory.opacclient.objects.Account;
-import de.geeksfactory.opacclient.objects.Starred;
 
 public class AccountDataSource {
 	// Database fields
@@ -74,6 +73,41 @@ public class AccountDataSource {
 		return accs;
 	}
 
+	public List<Account> getAllAccounts(String bib) {
+		List<Account> accs = new ArrayList<Account>();
+		String[] selA = { bib };
+		Cursor cursor = database.query("accounts", allColumns, "bib = ?", selA,
+				null, null, null);
+
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			Account acc = cursorToAccount(cursor);
+			accs.add(acc);
+			cursor.moveToNext();
+		}
+		// Make sure to close the cursor
+		cursor.close();
+		return accs;
+	}
+
+	public List<Account> getAccountsWithPassword() {
+		List<Account> accs = new ArrayList<Account>();
+
+		Cursor cursor = database.query("accounts", allColumns,
+				"name is not null AND name != '' AND password is not null",
+				null, null, null, null);
+
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			Account acc = cursorToAccount(cursor);
+			accs.add(acc);
+			cursor.moveToNext();
+		}
+		// Make sure to close the cursor
+		cursor.close();
+		return accs;
+	}
+
 	public Account getAccount(long id) {
 		String[] selA = { "" + id };
 		Cursor cursor = database.query("accounts", allColumns, "id = ?", selA,
@@ -100,8 +134,8 @@ public class AccountDataSource {
 		return acc;
 	}
 
-	public void remove(Starred item) {
-		String[] selA = { "" + item.getId() };
+	public void remove(Account acc) {
+		String[] selA = { "" + acc.getId() };
 		database.delete("accounts", "id=?", selA);
 	}
 

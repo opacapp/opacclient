@@ -3,9 +3,7 @@ package de.geeksfactory.opacclient.frontend;
 import java.util.List;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.view.View;
 import android.widget.AdapterView;

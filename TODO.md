@@ -2,23 +2,15 @@ ROADMAP VERSION 2
 =================
 
 * Multiple Accounts
-  * List
-  * Delete
-  * Add
-  * Settings
-  * Switch
-  * Switch beim vorbestellen
   * Migration von alter Version!!!
 * Multiple Bibliotheks-APIs
-  * Kein Crash bei nicht unterstützem Account
-  * Suchmaske basierend auf API
   * BibProxy und Intents bedenken
-  * Zweigstellenliste
-  * Mediengruppenliste
-* Erinnerungen anpassen
-* Overflow-Menü der Startseite eleganter bei >ICS unterbringen
+* Account-Seite: Farbkodierung Abgabetermin?
+    -> Bei Notification klarmachen, um welchen Account es geht. 
+    -> Accounts farbmarkieren?
 * Tablet-Optimierung?
-* Error Handling komplett überarbeiten
+* Verhalten wenn ProgressDialog gecancelt wird
+* Verhalten wenn selektierter Account gelöscht wird
 
 Zu integrierende Bibliothekssysteme
 -----------------------------------
