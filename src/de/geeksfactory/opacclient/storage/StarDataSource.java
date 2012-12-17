@@ -70,6 +70,8 @@ public class StarDataSource {
 	}
 
 	public boolean isStarred(String bib, String id) {
+		if (id == null)
+			return false;
 		String[] selA = { bib, id };
 		Cursor cursor = database.query("starred", allColumns,
 				"bib = ? AND medianr = ?", selA, null, null, null);
