@@ -17,6 +17,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -60,6 +61,8 @@ public class OCLC2011 implements OpacApi {
 	private String last_error;
 	private Library library;
 
+	private String CSId;
+
 	@Override
 	public String getResults() {
 		return results;
@@ -68,8 +71,8 @@ public class OCLC2011 implements OpacApi {
 	@Override
 	public String[] getSearchFields() {
 		return new String[] { "titel", "verfasser", "schlag_a", "schlag_b",
-				"zweigstelle", "isbn", "jahr", "notation",
-				"interessenkreis", "verlag" };
+				"zweigstelle", "isbn", "jahr", "notation", "interessenkreis",
+				"verlag" };
 	}
 
 	@Override
@@ -101,10 +104,8 @@ public class OCLC2011 implements OpacApi {
 		return sb.toString();
 	}
 
-	public void extract_meta(String html) {
-		// Zweigstellen und Mediengruppen auslesen
-		Document doc = Jsoup.parse(html);
-
+	public void extract_meta(Document doc) {
+		// Zweigstellen auslesen
 		Elements zst_opts = doc.select("#selectedSearchBranchlib option");
 		MetaDataSource data = new MetaDataSource(context);
 		data.open();
@@ -121,7 +122,6 @@ public class OCLC2011 implements OpacApi {
 	@Override
 	public void start() throws ClientProtocolException, SocketException,
 			IOException, NotReachableException {
-		initialised = true;
 		HttpGet httpget = new HttpGet(opac_url + "/start.do");
 		HttpResponse response = ahc.execute(httpget);
 
@@ -129,15 +129,18 @@ public class OCLC2011 implements OpacApi {
 			throw new NotReachableException();
 		}
 
+		initialised = true;
+
+		String html = convertStreamToString(response.getEntity().getContent());
+		Document doc = Jsoup.parse(html);
+		CSId = doc.select("input[name=CSId]").val();
+
 		MetaDataSource data = new MetaDataSource(context);
 		data.open();
 		if (!data.hasMeta(library.getIdent())) {
-			String html = convertStreamToString(response.getEntity()
-					.getContent());
 			data.close();
-			extract_meta(html);
+			extract_meta(doc);
 		} else {
-			response.getEntity().consumeContent();
 			data.close();
 		}
 	}
@@ -173,48 +176,58 @@ public class OCLC2011 implements OpacApi {
 		return res;
 	}
 
+	private int addParameters(Bundle query, String key, String searchkey,
+			List<NameValuePair> params, int index) {
+		if (!query.containsKey(key) || query.getString(key).equals(""))
+			return index;
+
+		if (index != 0)
+			params.add(new BasicNameValuePair("combinationOperator[" + index
+					+ "]", "AND"));
+		params.add(new BasicNameValuePair("searchCategories[" + index + "]",
+				searchkey));
+		params.add(new BasicNameValuePair("searchString[" + index + "]", query.getString(key)));
+		return index + 1;
+
+	}
+
 	@Override
 	public List<SearchResult> search(Bundle query) throws IOException,
 			NotReachableException {
 		if (!initialised)
 			start();
 
-		HttpPost httppost = new HttpPost(opac_url + "/index.asp");
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("methodToCall", "submit"));
+		params.add(new BasicNameValuePair("methodToCallParameter",
+				"submitSearch"));
+		params.add(new BasicNameValuePair("callingPage", "searchParameters"));
+		params.add(new BasicNameValuePair("submitSearch", "Suchen"));
+		params.add(new BasicNameValuePair("CSId", CSId));
 
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-		nameValuePairs.add(new BasicNameValuePair("stichtit", "stich"));
-		nameValuePairs.add(new BasicNameValuePair("stichwort",
-				getStringFromBundle(query, "titel")));
-		nameValuePairs.add(new BasicNameValuePair("verfasser",
-				getStringFromBundle(query, "verfasser")));
-		nameValuePairs.add(new BasicNameValuePair("schlag_a",
-				getStringFromBundle(query, "schlag_a")));
-		nameValuePairs.add(new BasicNameValuePair("schlag_b",
-				getStringFromBundle(query, "schlag_b")));
-		nameValuePairs.add(new BasicNameValuePair("zst", getStringFromBundle(
-				query, "zweigstelle")));
-		nameValuePairs.add(new BasicNameValuePair("medigrp",
-				getStringFromBundle(query, "mediengruppe")));
-		nameValuePairs.add(new BasicNameValuePair("isbn", getStringFromBundle(
-				query, "isbn")));
-		nameValuePairs.add(new BasicNameValuePair("jahr_von",
-				getStringFromBundle(query, "jahr_von")));
-		nameValuePairs.add(new BasicNameValuePair("jahr_bis",
-				getStringFromBundle(query, "jahr_bis")));
-		nameValuePairs.add(new BasicNameValuePair("notation",
-				getStringFromBundle(query, "notation")));
-		nameValuePairs.add(new BasicNameValuePair("ikr", getStringFromBundle(
-				query, "interessenkreis")));
-		nameValuePairs.add(new BasicNameValuePair("verl", getStringFromBundle(
-				query, "verlag")));
-		nameValuePairs.add(new BasicNameValuePair("orderselect",
-				getStringFromBundle(query, "order")));
-		nameValuePairs.add(new BasicNameValuePair("suche_starten.x", "1"));
-		nameValuePairs.add(new BasicNameValuePair("suche_starten.y", "1"));
-		nameValuePairs.add(new BasicNameValuePair("QL_Nr", ""));
+		int index = 0;
 
-		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-		HttpResponse response = ahc.execute(httppost);
+		index = addParameters(query, "titel", "331", params, index);
+		index = addParameters(query, "verfasser", "100", params, index);
+		index = addParameters(query, "isbn", "540", params, index);
+		index = addParameters(query, "schlag_a", "902", params, index);
+		index = addParameters(query, "schlag_b", "710", params, index);
+		index = addParameters(query, "jahr", "425", params, index);
+		index = addParameters(query, "verlag", "412", params, index);
+		index = addParameters(query, "systematik", "700", params, index);
+		index = addParameters(query, "interessenkreis", "1001", params, index);
+		
+		if(index > 4){
+			last_error = "Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.";
+			return null;
+		}
+
+		params.add(new BasicNameValuePair("selectedSearchBranchlib", query.getString("zweigstelle")));
+		
+		HttpGet httpget = new HttpGet(opac_url + "/search.do?"
+				+ URLEncodedUtils.format(params, "UTF-8"));
+
+		HttpResponse response = ahc.execute(httpget);
 
 		if (response.getStatusLine().getStatusCode() == 500) {
 			throw new NotReachableException();
@@ -360,7 +373,7 @@ public class OCLC2011 implements OpacApi {
 		}
 		return result;
 	}
-	
+
 	// No account support for now.
 
 	@Override

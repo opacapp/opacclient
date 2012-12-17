@@ -11,6 +11,7 @@ ROADMAP VERSION 2
 * Tablet-Optimierung?
 * Verhalten wenn ProgressDialog gecancelt wird
 * Verhalten wenn selektierter Account gelöscht wird
+* HTTPS wo möglich
 
 Zu integrierende Bibliothekssysteme
 -----------------------------------
@@ -24,3 +25,7 @@ Zu integrierende Bibliothekssysteme
 * Dortmund: http://katalog.dortmund.de:8080/
 * BiblioMondo: Hannover https://bibliothek.hannover-stadt.de/
 * WinBIAP: Kassel https://bibliothek.stadt-kassel.de/index.aspx
+
+Später
+------
+* Merkliste kategorisieren?
