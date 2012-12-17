@@ -30,7 +30,11 @@
                 android:ems="10"
                 android:hint="@string/titel_hint"
                 android:inputType="text"
-                android:singleLine="true" />
+                android:singleLine="true" >
+
+                <requestFocus />
+
+            </EditText>
 
             <TextView
                 android:id="@+id/tvVerfasser"
