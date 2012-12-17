@@ -68,7 +68,7 @@ public class OCLC2011 implements OpacApi {
 	@Override
 	public String[] getSearchFields() {
 		return new String[] { "titel", "verfasser", "schlag_a", "schlag_b",
-				"zweigstelle", "isbn", "jahr_von", "jahr_bis", "notation",
+				"zweigstelle", "isbn", "jahr", "notation",
 				"interessenkreis", "verlag" };
 	}
 
