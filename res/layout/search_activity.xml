@@ -12,10 +12,10 @@
         android:layout_weight="1" >
 
         <LinearLayout
+            android:id="@+id/llForm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" 
-            android:id="@+id/llForm">
+            android:orientation="vertical" >
 
             <TextView
                 android:id="@+id/tvTitel"
@@ -102,9 +102,15 @@
 
             <TextView
                 android:id="@+id/tvJahr"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/jahr" />
+
+            <EditText
+                android:id="@+id/etJahr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
 
             <LinearLayout
                 android:id="@+id/llJahr"
@@ -209,8 +215,8 @@
         android:id="@+id/btStartsearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.05"
         android:layout_marginTop="8dp"
+        android:layout_weight="0.05"
         android:background="@drawable/go_button"
         android:text="@string/go_search"
         android:textColor="@color/go_button_text" />

@@ -107,9 +107,15 @@ public class SearchActivity extends OpacActivity {
 		if (fields.contains("jahr_von") && fields.contains("jahr_bis")) {
 			findViewById(R.id.llJahr).setVisibility(View.VISIBLE);
 			findViewById(R.id.tvJahr).setVisibility(View.VISIBLE);
+			findViewById(R.id.etJahr).setVisibility(View.GONE);
+		} else if (fields.contains("jahr")) {
+			findViewById(R.id.llJahr).setVisibility(View.GONE);
+			findViewById(R.id.etJahr).setVisibility(View.VISIBLE);
+			findViewById(R.id.tvJahr).setVisibility(View.VISIBLE);
 		} else {
 			findViewById(R.id.llJahr).setVisibility(View.GONE);
 			findViewById(R.id.tvJahr).setVisibility(View.GONE);
+			findViewById(R.id.etJahr).setVisibility(View.GONE);
 		}
 		if (fields.contains("notation")) {
 			findViewById(R.id.etSystematik).setVisibility(View.VISIBLE);
@@ -236,6 +242,9 @@ public class SearchActivity extends OpacActivity {
 				query.putString("mediengruppe", mg);
 				query.putString("isbn", ((EditText) SearchActivity.this
 						.findViewById(R.id.etISBN)).getEditableText()
+						.toString());
+				query.putString("jahr", ((EditText) SearchActivity.this
+						.findViewById(R.id.etJahr)).getEditableText()
 						.toString());
 				query.putString("jahr_von", ((EditText) SearchActivity.this
 						.findViewById(R.id.etJahrVon)).getEditableText()
