@@ -68,18 +68,14 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		if (getIntent().getStringExtra("item_id") != null) {
-			id = getIntent().getStringExtra("item_id");
-		} else {
-			id = null;
-		}
+		id = getIntent().getStringExtra("item_id");
 
 		if (getIntent().getIntExtra("item", -1) != -1) {
 			ft = new FetchTask();
 			ft.execute(app, getIntent().getIntExtra("item", 0));
-		} else if (getIntent().getStringExtra("item_id") != null) {
+		} else {
 			fst = new FetchSubTask();
-			fst.execute(app, getIntent().getStringExtra("item_id"));
+			fst.execute(app, id);
 		}
 	}
 
