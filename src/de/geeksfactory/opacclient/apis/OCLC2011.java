@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,7 @@ import org.jsoup.select.Elements;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -51,13 +54,8 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
 public class OCLC2011 implements OpacApi {
 
 	/*
-	 * OpacApi für WebOpacs "Copyright 2011 OCLC" z.B. Bremen
-	 * TODO
-	 *    - Details
-	 *    - Exemplare
-	 *    - Bände
-	 *    - Vorbestellen
-	 *    - Account
+	 * OpacApi für WebOpacs "Copyright 2011 OCLC" z.B. Bremen TODO - Details -
+	 * Exemplare - Bände - Vorbestellen - Account
 	 */
 
 	private String opac_url = "";
@@ -70,6 +68,7 @@ public class OCLC2011 implements OpacApi {
 	private Library library;
 
 	private String CSId;
+	private String identifier;
 
 	@Override
 	public String getResults() {
@@ -254,8 +253,9 @@ public class OCLC2011 implements OpacApi {
 		if (!initialised)
 			start();
 
-		HttpGet httpget = new HttpGet(opac_url + "/index.asp?scrollAction="
-				+ page);
+		HttpGet httpget = new HttpGet(opac_url
+				+ "/hitList.do?methodToCall=pos&identifier=" + identifier
+				+ "&curPos=" + (((page - 1) * 10) + 1));
 		HttpResponse response = ahc.execute(httpget);
 
 		String html = convertStreamToString(response.getEntity().getContent());
@@ -302,6 +302,22 @@ public class OCLC2011 implements OpacApi {
 			results.add(sr);
 		}
 		this.results = doc.select("#hitlist .box-header h2").text();
+
+		try {
+			List<NameValuePair> anyurl = URLEncodedUtils.parse(new URI(doc
+					.select("#hitlist .box-right a").first().attr("href")),
+					"UTF-8");
+			for (NameValuePair nv : anyurl) {
+				if (nv.getName().equals("identifier")) {
+					identifier = nv.getValue();
+					break;
+				}
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		return results;
 	}
 
