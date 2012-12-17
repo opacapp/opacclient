@@ -260,16 +260,9 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				}
 				success = true;
 				return res;
-			} catch (java.net.UnknownHostException e) {
-				publishProgress(e, "ioerror");
-			} catch (java.io.IOException e) {
-				success = false;
-				e.printStackTrace();
-			} catch (java.lang.IllegalStateException e) {
-				success = false;
-				e.printStackTrace();
 			} catch (Exception e) {
-				publishProgress(e, "ioerror");
+				e.printStackTrace();
+				success = false;
 			}
 			return null;
 		}
