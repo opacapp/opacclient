@@ -71,7 +71,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		if (getIntent().getStringExtra("item_id") != null) {
 			id = getIntent().getStringExtra("item_id");
 		} else {
-			finish();
+			id = null;
 		}
 
 		if (getIntent().getIntExtra("item", -1) != -1) {
@@ -249,12 +249,14 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			try {
 				DetailledItem res = app.getApi().getResult(nr);
 				URL newurl;
-				try {
-					newurl = new URL(res.getCover());
-					Bitmap mIcon_val = BitmapFactory.decodeStream(newurl
-							.openConnection().getInputStream());
-					res.setCoverBitmap(mIcon_val);
-				} catch (Exception e) {
+				if (res.getCover() != null) {
+					try {
+						newurl = new URL(res.getCover());
+						Bitmap mIcon_val = BitmapFactory.decodeStream(newurl
+								.openConnection().getInputStream());
+						res.setCoverBitmap(mIcon_val);
+					} catch (Exception e) {
+					}
 				}
 				success = true;
 				return res;
@@ -262,8 +264,10 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				publishProgress(e, "ioerror");
 			} catch (java.io.IOException e) {
 				success = false;
+				e.printStackTrace();
 			} catch (java.lang.IllegalStateException e) {
 				success = false;
+				e.printStackTrace();
 			} catch (Exception e) {
 				publishProgress(e, "ioerror");
 			}
@@ -286,6 +290,9 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			item = result;
 
 			setContentView(R.layout.result_details_activity);
+
+			if (id == null)
+				id = item.getId();
 
 			try {
 				Log.i("result", item.toString());

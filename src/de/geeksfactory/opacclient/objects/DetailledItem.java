@@ -14,6 +14,15 @@ public class DetailledItem {
 	private String title;
 	private Bitmap coverBitmap;
 	private boolean reservable;
+	private String id;
+	
+	public String getId() {
+		return id;
+	}
+	
+	public void setId(String id){
+		this.id = id;
+	}
 
 	public String getTitle() {
 		return title;

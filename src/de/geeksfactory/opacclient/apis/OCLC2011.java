@@ -55,7 +55,7 @@ public class OCLC2011 implements OpacApi {
 
 	/*
 	 * OpacApi für WebOpacs "Copyright 2011 OCLC" z.B. Bremen TODO - Details -
-	 * Exemplare - Bände - Vorbestellen - Account
+	 * Exemplare - Bände - Vorbestellen - Account - ID für Merkliste
 	 */
 
 	private String opac_url = "";
@@ -202,8 +202,7 @@ public class OCLC2011 implements OpacApi {
 	@Override
 	public List<SearchResult> search(Bundle query) throws IOException,
 			NotReachableException {
-		if (!initialised)
-			start();
+		start();
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("methodToCall", "submit"));
@@ -249,7 +248,7 @@ public class OCLC2011 implements OpacApi {
 
 	@Override
 	public List<SearchResult> searchGetPage(int page) throws IOException,
-			NotReachableException { // TODO
+			NotReachableException {
 		if (!initialised)
 			start();
 
@@ -299,6 +298,7 @@ public class OCLC2011 implements OpacApi {
 				desc = desc.substring(0, desc.length() - 6);
 			sr.setInnerhtml(desc);
 			sr.setNr(i);
+			sr.setId(null);
 			results.add(sr);
 		}
 		this.results = doc.select("#hitlist .box-header h2").text();
@@ -333,83 +333,53 @@ public class OCLC2011 implements OpacApi {
 		String html = convertStreamToString(response.getEntity().getContent());
 		response.getEntity().consumeContent();
 
-		return parse_result(html);
+		return parse_result(html, html);
 	}
 
 	@Override
 	public DetailledItem getResult(int nr) throws IOException {
-		HttpGet httpget = new HttpGet(opac_url + "/index.asp?detmediennr=" + nr);
+		HttpGet httpget = new HttpGet(opac_url
+				+ "/singleHit.do?methodToCall=showHit&curPos=" + nr
+				+ "&identifier=" + identifier);
 
 		HttpResponse response = ahc.execute(httpget);
 
 		String html = convertStreamToString(response.getEntity().getContent());
 		response.getEntity().consumeContent();
 
-		return parse_result(html);
+		httpget = new HttpGet(opac_url
+				+ "/singleHit.do?methodToCall=activateTab&tab=showTitleActive");
+
+		response = ahc.execute(httpget);
+
+		String html2 = convertStreamToString(response.getEntity().getContent());
+		response.getEntity().consumeContent();
+
+		return parse_result(html, html2);
 	}
 
-	private DetailledItem parse_result(String html) {
+	private DetailledItem parse_result(String html, String html2) {
 		Document doc = Jsoup.parse(html);
+		Document doc2 = Jsoup.parse(html2);
 
 		DetailledItem result = new DetailledItem();
 
-		if (doc.select(".detail_cover a img").size() == 1) {
-			result.setCover(doc.select(".detail_cover a img").get(0)
-					.attr("src"));
-		}
+		result.setTitle(doc.select(".data td strong:first").text());
 
-		result.setTitle(doc.select(".detail_titel").text());
-
-		Elements detailtrs = doc.select(".detailzeile table tr");
-		for (int i = 0; i < detailtrs.size(); i++) {
-			Element tr = detailtrs.get(i);
-			if (tr.child(0).hasClass("detail_feld")) {
-				result.addDetail(new Detail(tr.child(0).text(), tr.child(1)
-						.text()));
-			}
-		}
-
-		String[] copy_keys = new String[] { "barcode", "zst", "abt", "ort",
-				"status", "rueckgabe", "vorbestellt" };
-		int copy_keynum = copy_keys.length;
-
-		try {
-			JSONArray copymap = data.getJSONArray("copiestable");
-			Elements exemplartrs = doc
-					.select(".exemplartab .tabExemplar, .exemplartab .tabExemplar_");
-			for (int i = 0; i < exemplartrs.size(); i++) {
-				Element tr = exemplartrs.get(i);
-
-				ContentValues e = new ContentValues();
-
-				for (int j = 0; j < copy_keynum; j++) {
-					if (copymap.getInt(j) > -1) {
-						e.put(copy_keys[j], tr.child(copymap.getInt(j)).text());
-					}
+		String title = "";
+		Element detailtrs = doc2.select(".tab-content .data td").first();
+		for (Node node : detailtrs.childNodes()) {
+			if (node instanceof Element) {
+				if (((Element) node).tag().getName().equals("strong")) {
+					title = ((Element) node).text().trim();
 				}
-				result.addCopy(e);
+			} else if (node instanceof TextNode && !title.equals("")) {
+				result.addDetail(new Detail(title, ((TextNode) node).text()
+						.trim()));
+				title = "";
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-
-		try {
-			Elements bandtrs = doc.select("table .tabBand a");
-			for (int i = 0; i < bandtrs.size(); i++) {
-				Element tr = bandtrs.get(i);
-
-				ContentValues e = new ContentValues();
-				e.put("id", tr.attr("href").split("=")[1]);
-				e.put("titel", tr.text());
-				result.addBand(e);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		if (doc.select(".detail_vorbest a").size() == 1) {
-			result.setReservable(true);
-		}
+		result.setReservable(false);
 		return result;
 	}
 
