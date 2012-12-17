@@ -381,6 +381,20 @@ public class OCLC2011 implements OpacApi {
 				title = "";
 			}
 		}
+		
+
+		Elements exemplartrs = doc
+				.select("#tab-content .data tr:not(#bg2)");
+		for (int i = 0; i < exemplartrs.size(); i++) {
+			Element tr = exemplartrs.get(i);
+
+			ContentValues e = new ContentValues();
+			e.put("barcode", tr.child(1).text().trim());
+			e.put("zst", tr.child(3).text().trim());
+			e.put("status", tr.child(4).text().trim());
+			result.addCopy(e);
+		}
+		
 		result.setReservable(false);
 		return result;
 	}
