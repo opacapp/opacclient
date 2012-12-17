@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,18 +15,14 @@ import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Comment;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
@@ -37,7 +32,6 @@ import org.jsoup.select.Elements;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -55,7 +49,8 @@ public class OCLC2011 implements OpacApi {
 
 	/*
 	 * OpacApi für WebOpacs "Copyright 2011 OCLC" z.B. Bremen TODO - Details -
-	 * Exemplare - Bände - Vorbestellen - Account - ID für Merkliste
+	 * Bände - Vorbestellen - Account - ID für Merkliste - Redirect zu
+	 * Detailsbei nur einem Ergebnis
 	 */
 
 	private String opac_url = "";
@@ -69,6 +64,7 @@ public class OCLC2011 implements OpacApi {
 
 	private String CSId;
 	private String identifier;
+	private String reusehtml;
 
 	@Override
 	public String getResults() {
@@ -264,6 +260,13 @@ public class OCLC2011 implements OpacApi {
 
 	private List<SearchResult> parse_search(String html) {
 		Document doc = Jsoup.parse(html);
+		this.results = doc.select(".box-header h2").first().text();
+		Log.i("results", results);
+		if (results.contains("(1/1)")) {
+			reusehtml = html;
+			return new ArrayList<SearchResult>();
+		}
+
 		Elements table = doc.select("table.data tbody tr");
 		List<SearchResult> results = new ArrayList<SearchResult>();
 		for (int i = 0; i < table.size(); i++) {
@@ -301,7 +304,6 @@ public class OCLC2011 implements OpacApi {
 			sr.setId(null);
 			results.add(sr);
 		}
-		this.results = doc.select("#hitlist .box-header h2").text();
 
 		try {
 			List<NameValuePair> anyurl = URLEncodedUtils.parse(new URI(doc
@@ -324,8 +326,12 @@ public class OCLC2011 implements OpacApi {
 	@Override
 	public DetailledItem getResultById(String a) throws IOException,
 			NotReachableException {
-		if (!initialised)
-			start();
+		start();
+
+		if (a == null && reusehtml != null) {
+			return parse_result(reusehtml);
+		}
+
 		HttpGet httpget = new HttpGet(opac_url + "/index.asp?MedienNr=" + a);
 
 		HttpResponse response = ahc.execute(httpget);
@@ -333,36 +339,41 @@ public class OCLC2011 implements OpacApi {
 		String html = convertStreamToString(response.getEntity().getContent());
 		response.getEntity().consumeContent();
 
-		return parse_result(html, html);
+		return parse_result(html);
 	}
 
 	@Override
 	public DetailledItem getResult(int nr) throws IOException {
-		HttpGet httpget = new HttpGet(opac_url
-				+ "/singleHit.do?methodToCall=showHit&curPos=" + nr
-				+ "&identifier=" + identifier);
+		HttpGet httpget = new HttpGet(
+				opac_url
+						+ "/singleHit.do?tab=showExemplarActive&methodToCall=showHit&curPos="
+						+ (nr + 1) + "&identifier=" + identifier);
 
 		HttpResponse response = ahc.execute(httpget);
 
 		String html = convertStreamToString(response.getEntity().getContent());
 		response.getEntity().consumeContent();
 
-		httpget = new HttpGet(opac_url
+		return parse_result(html);
+	}
+
+	private DetailledItem parse_result(String html) throws IOException {
+		Document doc = Jsoup.parse(html);
+
+		HttpGet httpget = new HttpGet(opac_url
 				+ "/singleHit.do?methodToCall=activateTab&tab=showTitleActive");
 
-		response = ahc.execute(httpget);
-
+		HttpResponse response = ahc.execute(httpget);
 		String html2 = convertStreamToString(response.getEntity().getContent());
 		response.getEntity().consumeContent();
 
-		return parse_result(html, html2);
-	}
-
-	private DetailledItem parse_result(String html, String html2) {
-		Document doc = Jsoup.parse(html);
 		Document doc2 = Jsoup.parse(html2);
 
 		DetailledItem result = new DetailledItem();
+
+		if (doc.select(".data td img").size() == 1) {
+			result.setCover(doc.select(".data td img").first().attr("abs:src"));
+		}
 
 		result.setTitle(doc.select(".data td strong").first().text());
 
@@ -374,17 +385,14 @@ public class OCLC2011 implements OpacApi {
 					title = ((Element) node).text().trim();
 				}
 			} else if (node instanceof TextNode && !title.equals("")) {
-				String text = ((TextNode) node).text()
-						.trim();
-				if(!text.equals(""))
+				String text = ((TextNode) node).text().trim();
+				if (!text.equals(""))
 					result.addDetail(new Detail(title, text));
 				title = "";
 			}
 		}
-		
 
-		Elements exemplartrs = doc
-				.select("#tab-content .data tr:not(#bg2)");
+		Elements exemplartrs = doc.select("#tab-content .data tr:not(#bg2)");
 		for (int i = 0; i < exemplartrs.size(); i++) {
 			Element tr = exemplartrs.get(i);
 
@@ -394,7 +402,7 @@ public class OCLC2011 implements OpacApi {
 			e.put("status", tr.child(4).text().trim());
 			result.addCopy(e);
 		}
-		
+
 		result.setReservable(false);
 		return result;
 	}

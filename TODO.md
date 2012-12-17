@@ -12,6 +12,7 @@ ROADMAP VERSION 2
 * Verhalten wenn ProgressDialog gecancelt wird
 * Verhalten wenn selektierter Account gelöscht wird
 * HTTPS wo möglich
+* RestoreInstance Dinge
 
 Zu integrierende Bibliothekssysteme
 -----------------------------------

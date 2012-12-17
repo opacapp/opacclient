@@ -64,16 +64,9 @@ public class SearchResultsActivity extends OpacActivity {
 				List<SearchResult> res = app.getApi().search(query);
 				success = true;
 				return res;
-			} catch (java.net.UnknownHostException e) {
-				publishProgress(e, "ioerror");
-			} catch (java.io.IOException e) {
-				success = false;
-			} catch (de.geeksfactory.opacclient.NotReachableException e) {
-				success = false;
-			} catch (java.lang.IllegalStateException e) {
-				success = false;
 			} catch (Exception e) {
-				publishProgress(e, "ioerror");
+				e.printStackTrace();
+				success = false;
 			}
 
 			return null;
@@ -159,6 +152,13 @@ public class SearchResultsActivity extends OpacActivity {
 				}
 			}
 		});
+
+		if (items.size() == 0) {
+			Intent intent = new Intent(SearchResultsActivity.this,
+					SearchResultDetailsActivity.class);
+			startActivity(intent);
+			finish();
+		}
 
 		TextView rn = (TextView) findViewById(R.id.tvResultNum);
 		rn.setText(app.getApi().getResults());
