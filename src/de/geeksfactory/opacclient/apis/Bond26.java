@@ -264,9 +264,8 @@ public class Bond26 implements OpacApi {
 			SearchResult sr = new SearchResult();
 			String[] fparts = tr.select("td a img").get(0).attr("src")
 					.split("/");
-			sr.setType("type_"
-					+ fparts[fparts.length - 1].replace(".jpg", ".png")
-							.replace(".gif", ".png").toLowerCase());
+			sr.setType(fparts[fparts.length - 1].replace(".jpg", ".png")
+					.replace(".gif", ".png").toLowerCase());
 			try {
 				Comment c = (Comment) tr.child(1).childNode(0);
 				String comment = c.getData().trim();

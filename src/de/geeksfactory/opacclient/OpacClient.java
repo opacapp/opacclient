@@ -22,6 +22,7 @@ import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import de.geeksfactory.opacclient.apis.Bond26;
+import de.geeksfactory.opacclient.apis.OCLC2011;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.frontend.ErrorActivity;
 import de.geeksfactory.opacclient.objects.Account;
@@ -48,11 +49,14 @@ public class OpacClient extends Application {
 		return (networkInfo != null && networkInfo.isConnected());
 	}
 
-	public OpacApi getIndependentApi(Library lib) throws ClientProtocolException,
-			SocketException, IOException, NotReachableException {
+	public OpacApi getIndependentApi(Library lib)
+			throws ClientProtocolException, SocketException, IOException,
+			NotReachableException {
 		OpacApi a;
 		if (lib.getApi().equals("bond26"))
 			a = new Bond26();
+		else if (lib.getApi().equals("oclc2011"))
+			a = new OCLC2011();
 		else
 			return null;
 
@@ -65,6 +69,8 @@ public class OpacClient extends Application {
 		api = null;
 		if (lib.getApi().equals("bond26"))
 			api = new Bond26();
+		else if (lib.getApi().equals("oclc2011"))
+			api = new OCLC2011();
 		else
 			return null;
 
