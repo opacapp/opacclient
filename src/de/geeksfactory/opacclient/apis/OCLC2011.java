@@ -52,6 +52,12 @@ public class OCLC2011 implements OpacApi {
 
 	/*
 	 * OpacApi für WebOpacs "Copyright 2011 OCLC" z.B. Bremen
+	 * TODO
+	 *    - Details
+	 *    - Exemplare
+	 *    - Bände
+	 *    - Vorbestellen
+	 *    - Account
 	 */
 
 	private String opac_url = "";
@@ -266,9 +272,8 @@ public class OCLC2011 implements OpacApi {
 			SearchResult sr = new SearchResult();
 			String[] fparts = tr.select("td a img").get(0).attr("src")
 					.split("/");
-			sr.setType("type_"
-					+ fparts[fparts.length - 1].replace(".jpg", ".png")
-							.replace(".gif", ".png").toLowerCase());
+			sr.setType(fparts[fparts.length - 1].replace(".jpg", ".png")
+					.replace(".gif", ".png").toLowerCase());
 
 			String desc = "";
 			List<Node> children = tr.child(2).childNodes();
