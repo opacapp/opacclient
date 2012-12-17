@@ -364,18 +364,20 @@ public class OCLC2011 implements OpacApi {
 
 		DetailledItem result = new DetailledItem();
 
-		result.setTitle(doc.select(".data td strong:first").text());
+		result.setTitle(doc.select(".data td strong").first().text());
 
 		String title = "";
-		Element detailtrs = doc2.select(".tab-content .data td").first();
+		Element detailtrs = doc2.select("#tab-content .data td").first();
 		for (Node node : detailtrs.childNodes()) {
 			if (node instanceof Element) {
 				if (((Element) node).tag().getName().equals("strong")) {
 					title = ((Element) node).text().trim();
 				}
 			} else if (node instanceof TextNode && !title.equals("")) {
-				result.addDetail(new Detail(title, ((TextNode) node).text()
-						.trim()));
+				String text = ((TextNode) node).text()
+						.trim();
+				if(!text.equals(""))
+					result.addDetail(new Detail(title, text));
 				title = "";
 			}
 		}
