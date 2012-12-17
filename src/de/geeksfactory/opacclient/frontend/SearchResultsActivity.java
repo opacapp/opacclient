@@ -80,8 +80,21 @@ public class SearchResultsActivity extends OpacActivity {
 
 		protected void onPostExecute(List<SearchResult> result) {
 			if (success) {
-				items = result;
-				loaded();
+				if (result == null) {
+					setContentView(R.layout.connectivity_error);
+					((TextView) findViewById(R.id.tvErrBody)).setText(app
+							.getApi().getLast_error());
+					((Button) findViewById(R.id.btRetry))
+							.setOnClickListener(new OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									onCreate(null);
+								}
+							});
+				} else {
+					items = result;
+					loaded();
+				}
 			} else {
 				setContentView(R.layout.connectivity_error);
 				((Button) findViewById(R.id.btRetry))
