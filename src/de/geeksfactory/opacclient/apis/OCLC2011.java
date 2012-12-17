@@ -28,6 +28,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Comment;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 import android.content.ContentValues;
@@ -186,7 +188,8 @@ public class OCLC2011 implements OpacApi {
 					+ "]", "AND"));
 		params.add(new BasicNameValuePair("searchCategories[" + index + "]",
 				searchkey));
-		params.add(new BasicNameValuePair("searchString[" + index + "]", query.getString(key)));
+		params.add(new BasicNameValuePair("searchString[" + index + "]", query
+				.getString(key)));
 		return index + 1;
 
 	}
@@ -216,14 +219,15 @@ public class OCLC2011 implements OpacApi {
 		index = addParameters(query, "verlag", "412", params, index);
 		index = addParameters(query, "systematik", "700", params, index);
 		index = addParameters(query, "interessenkreis", "1001", params, index);
-		
-		if(index > 4){
+
+		if (index > 4) {
 			last_error = "Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.";
 			return null;
 		}
 
-		params.add(new BasicNameValuePair("selectedSearchBranchlib", query.getString("zweigstelle")));
-		
+		params.add(new BasicNameValuePair("selectedSearchBranchlib", query
+				.getString("zweigstelle")));
+
 		HttpGet httpget = new HttpGet(opac_url + "/search.do?"
 				+ URLEncodedUtils.format(params, "UTF-8"));
 
@@ -240,7 +244,7 @@ public class OCLC2011 implements OpacApi {
 
 	@Override
 	public List<SearchResult> searchGetPage(int page) throws IOException,
-			NotReachableException {
+			NotReachableException { // TODO
 		if (!initialised)
 			start();
 
@@ -255,8 +259,7 @@ public class OCLC2011 implements OpacApi {
 
 	private List<SearchResult> parse_search(String html) {
 		Document doc = Jsoup.parse(html);
-		Elements table = doc
-				.select(".resulttab tr.result_trefferX, .resulttab tr.result_treffer");
+		Elements table = doc.select("table.data tbody tr");
 		List<SearchResult> results = new ArrayList<SearchResult>();
 		for (int i = 0; i < table.size(); i++) {
 			Element tr = table.get(i);
@@ -266,19 +269,34 @@ public class OCLC2011 implements OpacApi {
 			sr.setType("type_"
 					+ fparts[fparts.length - 1].replace(".jpg", ".png")
 							.replace(".gif", ".png").toLowerCase());
-			try {
-				Comment c = (Comment) tr.child(1).childNode(0);
-				String comment = c.getData().trim();
-				String id = comment.split(": ")[1];
-				sr.setId(id);
-			} catch (Exception e) {
 
+			String desc = "";
+			List<Node> children = tr.child(2).childNodes();
+			int childrennum = children.size();
+			boolean haslink = false;
+
+			for (int ch = 0; ch < childrennum; ch++) {
+				Node node = children.get(ch);
+				if (node instanceof TextNode) {
+					String text = ((TextNode) node).text().trim();
+					if (!text.equals(""))
+						desc += text + "<br />";
+				} else if (node instanceof Element) {
+					if (((Element) node).tag().getName().equals("a")) {
+						if (node.hasAttr("href") && !haslink) {
+							haslink = true;
+							desc += ((Element) node).text() + "<br />";
+						}
+					}
+				}
 			}
-			sr.setInnerhtml(tr.child(1).child(0).html());
+			if (desc.endsWith("<br />"))
+				desc = desc.substring(0, desc.length() - 6);
+			sr.setInnerhtml(desc);
 			sr.setNr(i);
 			results.add(sr);
 		}
-		this.results = doc.select(".result_gefunden").text();
+		this.results = doc.select("#hitlist .box-header h2").text();
 		return results;
 	}
 
