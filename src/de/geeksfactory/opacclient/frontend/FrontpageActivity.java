@@ -1,23 +1,34 @@
 package de.geeksfactory.opacclient.frontend;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import org.json.JSONException;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.WazaBe.HoloEverywhere.app.ProgressDialog;
 import com.actionbarsherlock.view.Menu;
 
+import de.geeksfactory.opacclient.OpacClient;
+import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.frontend.WelcomeActivity.InitTask;
 import de.geeksfactory.opacclient.objects.Account;
+import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.storage.AccountDataSource;
 
 public class FrontpageActivity extends OpacActivity {
+	protected ProgressDialog dialog;
 
 	public void urlintent() {
 		Uri d = getIntent().getData();
@@ -91,6 +102,56 @@ public class FrontpageActivity extends OpacActivity {
 		this.getSupportActionBar().hide();
 
 		if (app.getLibrary() == null) {
+			// Migrate
+			SharedPreferences sp = PreferenceManager
+					.getDefaultSharedPreferences(this);
+			if (!sp.getString("opac_bib", "").equals("")) {
+				Library lib = null;
+				try {
+					lib = app.getLibrary(sp.getString("opac_bib", ""));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				if (lib != null) {
+					AccountDataSource data = new AccountDataSource(this);
+					data.open();
+					Account acc = new Account();
+					acc.setBib(lib.getIdent());
+					acc.setLabel(getString(R.string.default_account_name));
+					if (!sp.getString("opac_usernr", "").equals("")) {
+						acc.setName(sp.getString("opac_usernr", ""));
+						acc.setPassword(sp.getString("opac_password", ""));
+					}
+					long insertedid = data.addAccount(acc);
+					data.close();
+
+					sp.edit()
+							.putLong(OpacClient.PREF_SELECTED_ACCOUNT,
+									insertedid).commit();
+
+					dialog = ProgressDialog.show(this, "",
+							getString(R.string.connecting_initially), true);
+					dialog.show();
+
+					new InitTask().execute(app);
+
+					Toast.makeText(
+							this,
+							"Neue Version! Alte Accountdaten wurden wiederhergestellt.",
+							Toast.LENGTH_LONG);
+
+					return;
+
+				} else {
+					Toast.makeText(
+							this,
+							"Neue Version! Wiederherstellung alter Zugangsdaten ist fehlgeschlagen.",
+							Toast.LENGTH_LONG);
+				}
+			}
+
+			// Create new
 			Intent intent = new Intent(this, WelcomeActivity.class);
 			startActivity(intent);
 			return;
@@ -234,6 +295,26 @@ public class FrontpageActivity extends OpacActivity {
 				urlintent();
 				return;
 			}
+		}
+	}
+
+	public class InitTask extends OpacTask<Integer> {
+		@Override
+		protected Integer doInBackground(Object... arg0) {
+			super.doInBackground(arg0);
+			try {
+				app.getApi().start();
+			} catch (Exception e) {
+				publishProgress(e, "ioerror");
+			}
+			return 0;
+		}
+
+		protected void onPostExecute(Integer result) {
+			dialog.dismiss();
+			Intent intent = new Intent(FrontpageActivity.this,
+					FrontpageActivity.class);
+			startActivity(intent);
 		}
 	}
 
