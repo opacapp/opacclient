@@ -1,8 +1,6 @@
 ROADMAP VERSION 2
 =================
 
-* Multiple Accounts
-  * Migration von alter Version!!!
 * Multiple Bibliotheks-APIs
   * BibProxy und Intents bedenken
 * Account-Seite: Farbkodierung Abgabetermin?
