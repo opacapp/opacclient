@@ -3,14 +3,11 @@
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <title>Web Opac by raphaelm</title>
+    <title>Web Opac Client – Stadtbibliotheken auf Android</title>
   </head>
 
   <body>
@@ -18,54 +15,210 @@
       <div class="inner">
 
         <header>
-          <h1>Web Opac</h1>
-          <h2>Stadtbibliotheken zugänglich für Android</h2>
+			<div>
+			  <h1>Web Opac Client</h1>
+			  <h2>Stadtbibliotheken zugänglich für Android</h2>
+			</div>
         </header>
 
-        <section id="downloads" class="clearfix">
-          <a href="https://github.com/raphaelm/opacclient/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/raphaelm/opacclient/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/raphaelm/opacclient" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        <section class="downloads">
+			<div class="inner">
+				<img alt="Android-App auf Google Play" src="images/qrcode.png" class="float" />
+				<div class="float">
+					<a href="http://www.amazon.com/dp/B00946RJQO/" target="_blank"><img alt="Android-App auf Amazon" src="images/amazon.png"/></a><br />
+					<a href="https://play.google.com/store/apps/details?id=de.geeksfactory.opacclient" target="_blank"><img alt="Android-App auf Google Play" src="http://developer.android.com/images/brand/en_app_rgb_wo_60.png" /></a>
+				</div>
+				<p>Diese kostenlose Android-App ermöglicht den bequemen Zugang von unterwegs auf die Kataloge und Mitgliedskonten von zahllosen öffentlichen Bibliotheken im deutschsprachigen Raum.</p>
+				<iframe src="http://www.facebook.com/plugins/like.php?href=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails?id=de.geeksfactory.opacclient&amp;send=false&amp;layout=button_count&amp;width=110&amp;show_faces=true&amp;action=like&amp;colorscheme=light&amp;font&amp;height=21&amp;appId=353308798071141" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:110px; height:21px;" allowTransparency="true"></iframe> <div class="g-plusone" data-size="medium" data-href="https://play.google.com/store/apps/details?id=de.geeksfactory.opacclient"></div> <a href="https://twitter.com/share" class="twitter-share-button" data-url="https://play.google.com/store/apps/details?id=de.geeksfactory.opacclient" data-via="_rami_" data-lang="de" data-hashtags="android">Twittern</a> <iframe src="http://ghbtns.com/github-btn.html?user=raphaelm&repo=opacclient&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
+				<div class="clear"></div>
+			</div>
         </section>
 
-        <hr>
+        <section class="content">
+			<img src="images/screenshot.png" id="screenshot" alt="Screenshot" />
+			<h3>Funktionen</h3>
+			<ul>
+				<li>Suche im Katalog der Stadtbücherei</li>
+				<li>Merkliste für Bücher</li>
+				<li>Suche im Katalog nach ISBN mit Barcode-Scanner</li>
+			</ul>
+			Sowie in einigen Städten:
+			<ul>
+				<li>Anzeige der ausgeliehenen Medien <span>(mehrere Accounts möglich)</span></li>
+				<li>Verlängerung von ausgeliehenen Büchern und Abbrechen von Vorbestellungen</li>
+				<li>Vorbestellen von Büchern</li>
+				<li>Benachrichtigung bei Büchern, die abgegeben werden müssen</li>
+				<li>Anzeige von Informationen der Bibliothek <span>(z.B. Öffnungszeiten)</span></li>
+			</ul>
+			<p>In der Tabelle unten ist aufgelistet, welche Stadt wie weit unterstützt wird. Ihre Stadtbücherei wird nicht unterstützt? Wenn es eine große Stadt ist (über 100.000 Einwohner), haben wir es wahrscheinlich schon geprüft und es geht aktuell nicht (das bauen wir aber eines Tages nach!). Wenn es eine kleinere ist, schreiben Sie mir bitte an <a href="mailto:raphael+opac@geeksfactory.de">raphael+opac@geeksfactory.de</a> und ich schaue, was wir tun können.</p>
+			
+			<div class="clear"></div>
+        </section>
 
-        <section id="main_content">
-          <h3>Welcome to GitHub Pages.</h3>
+        <section class="content">
+			<h3>Kompatibilität</h3>
+			<table id="comp">
+				<thead>
+					<tr>
+						<th style="">Stadt</th>
+						<th style="width: 150px">Katalogsuche</th>
+						<th style="width: 150px">Kontofunktionen</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Bielefeld</td>
+						<td>ja</td>		<td>ja</td>
+					</tr>
+					<tr>
+						<td>Bonn</td>
+						<td>bald (2.0)</td>		<td><a href="#helfen" class="no">helfen</a></td>
+					</tr>
+					<tr>
+						<td>Bremen</td>
+						<td>bald (2.0)</td>		<td><a href="#helfen" class="no">helfen</a></td>
+					</tr>
+					<tr>
+						<td>Dresden</td>
+						<td>bald (2.0)</td>		<td><a href="#helfen" class="no">helfen</a></td>
+					</tr>
+					<tr>
+						<td>Frankfurt</td>
+						<td>ja</td>		<td>ja</td>
+					</tr>
+					<tr>
+						<td>Hamburg</td>
+						<td>bald (2.0)</td>		<td><a href="#helfen" class="no">helfen</a></td>
+					</tr>
+					<tr>
+						<td>Hannover</td>
+						<td>bald (2.0)</td>		<td><a href="#helfen" class="no">helfen</a></td>
+					</tr>
+					<tr>
+						<td>Heidelberg</td>
+						<td>ja</td>		<td>ja</td>
+					</tr>
+					<tr>
+						<td>Köln</td>
+						<td>bald (2.0)</td>		<td><a href="#helfen" class="no">helfen</a></td>
+					</tr>
+					<tr>
+						<td>Leipzig</td>
+						<td>bald (2.0)</td>		<td><a href="#helfen" class="no">helfen</a></td>
+					</tr>
+					<tr>
+						<td>Mannheim</td>
+						<td>ja</td>		<td>ja</td>
+					</tr>
+					<tr>
+						<td>Münster</td>
+						<td>ja</td>		<td>ja</td>
+					</tr>
+					<tr>
+						<td>Wien</td>
+						<td>ja</td>		<td><a href="#helfen" class="no">helfen</a></td>
+					</tr>
+					<tr>
+						<td>Wiesbaden</td>
+						<td>ja</td>		<td>ja</td>
+					</tr>
+					<tr class="trenner">
+						<td>Wuppertal</td>
+						<td>bald (2.0)</td>		<td><a href="#helfen" class="no">helfen</a></td>
+					</tr>
+					<tr> <td>Aarau</td>		<td>ja</td>		<td><a href="#helfen" class="no">helfen</a></td> </tr>
+					<tr> <td>Bad Friedrichshall</td>		<td>ja</td>		<td><a href="#helfen" class="no">helfen</a></td> </tr>
+					<tr> <td>Bad Homburg</td>		<td>ja</td>		<td>ja</td> </tr>
+					<tr> <td>Bamberg</td>		<td>ja</td>		<td>ja</td> </tr>
+					<tr> <td>Bergheim</td>		<td>ja</td>		<td>ja</td> </tr>
+					<tr> <td>Brackenheim</td>		<td>ja</td>		<td><a href="#helfen" class="no">helfen</a></td> </tr>
+					<tr> <td>Boxberg</td>		<td>ja</td>		<td><a href="#helfen" class="no">helfen</a></td> </tr>
+					<tr> <td>Crailsheim</td>		<td>ja</td>		<td><a href="#helfen" class="no">helfen</a></td> </tr>
+					<tr> <td>Dachau</td>		<td>ja</td>		<td>ja</td> </tr>
+					<tr> <td>Engen</td>		<td>ja</td>		<td><a href="#helfen" class="no">helfen</a></td> </tr>
+					<tr> <td>Eppingen</td>		<td>ja</td>		<td><a href="#helfen" class="no">helfen</a></td> </tr>
+					<tr> <td>Gaildorf</td>		<td>ja</td>		<td><a href="#helfen" class="no">helfen</a></td> </tr>
+					<tr> <td>Göttingen</td>		<td>ja</td>		<td>ja</td> </tr>
+					<tr> <td>Gundelfingen</td>		<td>ja</td>		<td><a href="#helfen" class="no">helfen</a></td> </tr>
+					<tr> <td>Gundelsheim</td>		<td>ja</td>		<td><a href="#helfen" class="no">helfen</a></td> </tr>
+					<tr> <td>Hamm</td>		<td>ja</td>		<td>ja</td> </tr>
+					<tr> <td>Hann. Münden</td>		<td>ja</td>		<td><a href="#helfen" class="no">helfen</a></td> </tr>
+					<tr> <td>Haslach</td>		<td>ja</td>		<td><a href="#helfen" class="no">helfen</a></td> </tr>
+					<tr> <td>Heilbronn</td>		<td>ja</td>		<td>ja</td> </tr>
+					<tr> <td>Hof</td>		<td>ja</td>		<td>ja</td> </tr>
+					<tr> <td>Iserlohn</td>		<td>ja</td>		<td>ja</td> </tr>
+					<tr> <td>Ketsch</td>		<td>ja</td>		<td>ja</td> </tr>
+					<tr> <td>Kronberg</td>		<td>ja</td>		<td><a href="#helfen" class="no">helfen</a></td> </tr>
+					<tr> <td>Langenfeld</td>		<td>ja</td>		<td><a href="#helfen" class="no">helfen</a></td> </tr>
+					<tr> <td>Leimen</td>		<td>ja</td>		<td><a href="#helfen" class="no">helfen</a></td> </tr>
+					<tr> <td>Leutenbach</td>		<td>ja</td>		<td><a href="#helfen" class="no">helfen</a></td> </tr>
+					<tr> <td>Leverkusen</td>		<td>ja</td>		<td><a href="#helfen" class="no">helfen</a></td> </tr>
+					<tr> <td>Ludwigshafen (Rhein)</td>		<td>ja</td>		<td><a href="#helfen" class="no">helfen</a></td> </tr>
+					<tr> <td>Magdeburg</td>		<td>ja</td>		<td><a href="#helfen" class="no">helfen</a></td> </tr>
+					<tr> <td>Neu-Ulm</td>		<td>ja</td>		<td>ja</td> </tr>
+					<tr> <td>Pforzheim</td>		<td>ja</td>		<td>ja</td> </tr>
+					<tr> <td>Pinneberg</td>		<td>ja</td>		<td><a href="#helfen" class="no">helfen</a></td> </tr>
+					<tr> <td>Radolfzell</td>		<td>ja</td>		<td><a href="#helfen" class="no">helfen</a></td> </tr>
+					<tr> <td>Rheine</td>		<td>ja</td>		<td>ja</td> </tr>
+					<tr> <td>Rostock</td>		<td>ja</td>		<td>ja</td> </tr>
+					<tr> <td>Schwabach</td>		<td>ja</td>		<td><a href="#helfen" class="no">helfen</a></td> </tr>
+					<tr> <td>Schwäbisch Hall</td>		<td>ja</td>		<td>ja</td> </tr>
+					<tr> <td>Sigmaringen</td>		<td>ja</td>		<td><a href="#helfen" class="no">helfen</a></td> </tr>
+					<tr> <td>Speyer</td>		<td>ja</td>		<td>ja</td> </tr>
+					<tr> <td>Steinfurt</td>		<td>ja</td>		<td>ja</td> </tr>
+					<tr> <td>Stuhr</td>		<td>ja</td>		<td><a href="#helfen" class="no">helfen</a></td> </tr>
+					<tr> <td>Trier <span>(Palais Walderdorff)</span></td>		<td>ja</td>		<td>ja</td> </tr>
+					<tr> <td>Tübingen</td>		<td>ja</td>		<td>ja</td> </tr>
+					<tr> <td>Ulm</td>		<td>ja</td>		<td>ja</td> </tr>
+					<tr> <td>Veitshöchheim</td>		<td>ja</td>		<td>ja</td> </tr>
+					<tr> <td>Weilheim an der Teck</td>		<td>ja</td>		<td><a href="#helfen" class="no">helfen</a></td> </tr>
+					<tr> <td>Weinheim</td>		<td>ja</td>		<td>ja</td> </tr>
+					<tr> <td>Wiesloch</td>		<td>ja</td>		<td><a href="#helfen" class="no">helfen</a></td> </tr>
+					<tr class="trenner"> <td>Wolfsburg</td>		<td>ja</td>		<td><a href="#helfen" class="no">helfen</a></td> </tr>
+				</tbody>
+			</table>
+        </section>
+        <section class="content" id="helfen">
+			<h3>Helfen</h3>
+			<p>
+				Ich kann die Account-Funktionen theoretisch nur in Städten einbauen, in denen ich über einen Mitgliedsausweis verfüge. Da das nur in einer Stadt der Fall ist, brauche ich für die anderen Städte die Hilfe der dortigen Leser.
+			</p>
+			<p>
+				In den meisten Städten reicht es, wenn Sie die App installieren, Ihre Ausweisdaten ganz normal eingeben und dann die Account-Ansicht besuchen. Sie werden dann gebeten einen Bericht einzuschicken und mit diesem Bericht kann ich dann in der nächsten Version die Account-Funktionen für diese Stadt nachbauen. In dem Bericht kann ich Ihre Ausweisnummer und Ihre ausgeliehenen Medien, nicht aber Ihr Kennwort oder Ihren Namen sehen. Ich vernichte die Daten sofort nach Auswertung.
+			</p>
+			<p>
+				In Städten, deren System für mich noch gänzlich „unerforscht“ ist, ist diese Art der Hilfe leider nicht möglich. Wenn Sie die volle Unterstützung für diese Städte sehen möchten, kontaktieren Sie mich bitte per E-Mail unter <a href="mailto:raphael+opac@geeksfactory.de">raphael+opac@geeksfactory.de</a>.
+			</p>
+		</section>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
-
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
-
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
-
-<h3>Designer Templates</h3>
-
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
-
-<h3>Rather Drive Stick?</h3>
-
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
-
-<h3>Authors and Contributors</h3>
-
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-<h3>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+        <section class="downloads">
+			<div class="inner">
+				<div class="float">
+					<a href="http://www.amazon.com/dp/B00946RJQO/" target="_blank"><img alt="Android-App auf Amazon" src="images/amazon.png"/></a>
+					<a href="https://play.google.com/store/apps/details?id=de.geeksfactory.opacclient" target="_blank"><img alt="Android-App auf Google Play" src="http://developer.android.com/images/brand/en_app_rgb_wo_60.png" /></a>
+				</div>
+				<div class="clear"></div>
+			</div>
         </section>
 
         <footer>
-          Web Opac is maintained by <a href="https://github.com/raphaelm">raphaelm</a><br>
-          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.
+		  <div>
+          „Web Opac Client für Android“ ist ein nicht-kommerzielles Projekt unter Leitung von <a href="http://www.raphaelmichel.de">Raphael Michel</a><br />
+          Die Software ist freie Software und steht unter der MIT-Lizenz<br />
+          Sie steht in keiner Geschäftsbeziehung zu einer Bibliothek oder einem Bibliothekssoftwarehersteller und existiert aus reiner Menschen- und Bücherliebe.<br />
+          Raphael Michel · Ziethenstraße 68 · 68259 Mannheim · <a href="mailto:raphael+opac@geeksfactory.de">raphael+opac@geeksfactory.de</a>
+          </div>
         </footer>
 
         
       </div>
     </div>
+    <a href="https://github.com/raphaelm/opacclient"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub"></a>
+	
+	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>		
+	<script type="text/javascript" src="https://apis.google.com/js/plusone.js">
+	  {lang: 'de', parsetags: 'explicit'}
+	</script>
+	<script type="text/javascript">gapi.plusone.go();</script>
   </body>
 </html>
