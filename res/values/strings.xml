@@ -110,6 +110,7 @@
     <string name="welcome_assistant_desc">Hilft dabei, eine OPAC-Adresse einer der App bekannten Bibliothek zu konfigurieren</string>
     <string name="headline">Web Opac</string>
     <string name="baende">BÄNDE</string>
+    <string name="baende_volumesearch">Einzelbände zeigen</string>
     <string name="star">Merken</string>
     <string name="starred">Das Medium ist jetzt auf der Merkliste</string>
     <string name="starred_list">Merkliste</string>

@@ -313,7 +313,24 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			}
 
 			LinearLayout llCopies = (LinearLayout) findViewById(R.id.llCopies);
-			if (result.getBaende().size() > 0) {
+			if (result.getVolumesearch() != null) {
+				TextView tvC = (TextView) findViewById(R.id.tvCopies);
+				tvC.setText(R.string.baende);
+				Button btnVolume = new Button(SearchResultDetailsActivity.this);
+				btnVolume.setText(R.string.baende_volumesearch);
+				btnVolume.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent myIntent = new Intent(
+								SearchResultDetailsActivity.this,
+								SearchResultsActivity.class);
+						myIntent.putExtra("query", item.getVolumesearch());
+						startActivity(myIntent);
+					}
+				});
+				llCopies.addView(btnVolume);
+
+			} else if (result.getBaende().size() > 0) {
 				TextView tvC = (TextView) findViewById(R.id.tvCopies);
 				tvC.setText(R.string.baende);
 

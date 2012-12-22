@@ -75,6 +75,15 @@ public class SearchResultsActivity extends OpacActivity {
 		protected void onPostExecute(List<SearchResult> result) {
 			if (success) {
 				if (result == null) {
+
+					if (app.getApi().getLast_error().equals("is_a_redirect")) {
+						Intent intent = new Intent(SearchResultsActivity.this,
+								SearchResultDetailsActivity.class);
+						startActivity(intent);
+						finish();
+						return;
+					}
+
 					setContentView(R.layout.connectivity_error);
 					((TextView) findViewById(R.id.tvErrBody)).setText(app
 							.getApi().getLast_error());
@@ -152,13 +161,6 @@ public class SearchResultsActivity extends OpacActivity {
 				}
 			}
 		});
-
-		if (items.size() == 0) {
-			Intent intent = new Intent(SearchResultsActivity.this,
-					SearchResultDetailsActivity.class);
-			startActivity(intent);
-			finish();
-		}
 
 		TextView rn = (TextView) findViewById(R.id.tvResultNum);
 		rn.setText(app.getApi().getResults());
