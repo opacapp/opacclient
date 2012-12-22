@@ -49,8 +49,7 @@ public class OCLC2011 implements OpacApi {
 
 	/*
 	 * OpacApi für WebOpacs "Copyright 2011 OCLC" z.B. Bremen TODO -
-	 * Vorbestellen - Account - ID für Merkliste - Redirect zu Detailsbei nur
-	 * einem Ergebnis
+	 * Vorbestellen - Account - ID für Merkliste
 	 */
 
 	private String opac_url = "";
@@ -339,11 +338,12 @@ public class OCLC2011 implements OpacApi {
 	@Override
 	public DetailledItem getResultById(String a) throws IOException,
 			NotReachableException {
-		start();
 
 		if (a == null && reusehtml != null) {
 			return parse_result(reusehtml);
 		}
+
+		start();
 
 		HttpGet httpget = new HttpGet(opac_url + "/index.asp?MedienNr=" + a);
 
