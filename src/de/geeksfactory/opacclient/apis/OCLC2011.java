@@ -48,7 +48,7 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
 public class OCLC2011 implements OpacApi {
 
 	/*
-	 * OpacApi für WebOpacs "Copyright 2011 OCLC" z.B. Bremen TODO - Bände -
+	 * OpacApi für WebOpacs "Copyright 2011 OCLC" z.B. Bremen TODO -
 	 * Vorbestellen - Account - ID für Merkliste - Redirect zu Detailsbei nur
 	 * einem Ergebnis
 	 */
@@ -198,35 +198,45 @@ public class OCLC2011 implements OpacApi {
 	@Override
 	public List<SearchResult> search(Bundle query) throws IOException,
 			NotReachableException {
-		start();
-
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		params.add(new BasicNameValuePair("methodToCall", "submit"));
-		params.add(new BasicNameValuePair("methodToCallParameter",
-				"submitSearch"));
-		params.add(new BasicNameValuePair("callingPage", "searchParameters"));
-		params.add(new BasicNameValuePair("submitSearch", "Suchen"));
-		params.add(new BasicNameValuePair("CSId", CSId));
 
-		int index = 0;
+		if (query.containsKey("volume")) {
+			params.add(new BasicNameValuePair("methodToCall", "volumeSearch"));
+			params.add(new BasicNameValuePair("dbIdentifier", query
+					.getString("dbIdentifier")));
+			params.add(new BasicNameValuePair("catKey", query
+					.getString("catKey")));
+			params.add(new BasicNameValuePair("periodical", "N"));
+		} else {
+			int index = 0;
+			start();
 
-		index = addParameters(query, "titel", "331", params, index);
-		index = addParameters(query, "verfasser", "100", params, index);
-		index = addParameters(query, "isbn", "540", params, index);
-		index = addParameters(query, "schlag_a", "902", params, index);
-		index = addParameters(query, "schlag_b", "710", params, index);
-		index = addParameters(query, "jahr", "425", params, index);
-		index = addParameters(query, "verlag", "412", params, index);
-		index = addParameters(query, "systematik", "700", params, index);
-		index = addParameters(query, "interessenkreis", "1001", params, index);
+			params.add(new BasicNameValuePair("CSId", CSId));
+			params.add(new BasicNameValuePair("methodToCall", "submit"));
+			params.add(new BasicNameValuePair("methodToCallParameter",
+					"submitSearch"));
+			params.add(new BasicNameValuePair("callingPage", "searchParameters"));
+			params.add(new BasicNameValuePair("submitSearch", "Suchen"));
 
-		if (index > 4) {
-			last_error = "Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.";
-			return null;
+			index = addParameters(query, "titel", "331", params, index);
+			index = addParameters(query, "verfasser", "100", params, index);
+			index = addParameters(query, "isbn", "540", params, index);
+			index = addParameters(query, "schlag_a", "902", params, index);
+			index = addParameters(query, "schlag_b", "710", params, index);
+			index = addParameters(query, "jahr", "425", params, index);
+			index = addParameters(query, "verlag", "412", params, index);
+			index = addParameters(query, "systematik", "700", params, index);
+			index = addParameters(query, "interessenkreis", "1001", params,
+					index);
+
+			if (index > 4) {
+				last_error = "Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.";
+				return null;
+			}
+
+			params.add(new BasicNameValuePair("selectedSearchBranchlib", query
+					.getString("zweigstelle")));
 		}
-
-		params.add(new BasicNameValuePair("selectedSearchBranchlib", query
-				.getString("zweigstelle")));
 
 		HttpGet httpget = new HttpGet(opac_url + "/search.do?"
 				+ URLEncodedUtils.format(params, "UTF-8"));
@@ -264,7 +274,8 @@ public class OCLC2011 implements OpacApi {
 		Log.i("results", results);
 		if (results.contains("(1/1)")) {
 			reusehtml = html;
-			return new ArrayList<SearchResult>();
+			last_error = "is_a_redirect";
+			return null;
 		}
 
 		Elements table = doc.select("table.data tbody tr");
@@ -406,6 +417,34 @@ public class OCLC2011 implements OpacApi {
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
+		}
+
+		try {
+			Element isvolume = null;
+			Bundle volume = new Bundle();
+			Elements links = doc.select(".data td a");
+			int elcount = links.size();
+			for (int eli = 0; eli < elcount; eli++) {
+				List<NameValuePair> anyurl = URLEncodedUtils.parse(new URI(
+						links.get(eli).attr("href")), "UTF-8");
+				for (NameValuePair nv : anyurl) {
+					if (nv.getName().equals("methodToCall")
+							&& nv.getValue().equals("volumeSearch")) {
+						isvolume = links.get(eli);
+					} else if (nv.getName().equals("catKey")) {
+						volume.putString("catKey", nv.getValue());
+					} else if (nv.getName().equals("dbIdentifier")) {
+						volume.putString("dbIdentifier", nv.getValue());
+					}
+				}
+				if (isvolume != null) {
+					volume.putBoolean("volume", true);
+					result.setVolumesearch(volume);
+					break;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		result.setReservable(false);

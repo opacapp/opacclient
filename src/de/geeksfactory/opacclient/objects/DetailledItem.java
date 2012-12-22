@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.ContentValues;
 import android.graphics.Bitmap;
+import android.os.Bundle;
 
 public class DetailledItem {
 	private List<Detail> details = new ArrayList<Detail>();
@@ -15,6 +16,7 @@ public class DetailledItem {
 	private Bitmap coverBitmap;
 	private boolean reservable;
 	private String id;
+	private Bundle volumesearch;
 	
 	public String getId() {
 		return id;
@@ -81,6 +83,14 @@ public class DetailledItem {
 
 	public void addBand(ContentValues e) {
 		baende.add(e);
+	}
+
+	public Bundle getVolumesearch() {
+		return volumesearch;
+	}
+
+	public void setVolumesearch(Bundle volumesearch) {
+		this.volumesearch = volumesearch;
 	}
 
 	public boolean isReservable() {
