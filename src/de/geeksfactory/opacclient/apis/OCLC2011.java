@@ -48,9 +48,9 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
 public class OCLC2011 implements OpacApi {
 
 	/*
-	 * OpacApi für WebOpacs "Copyright 2011 OCLC" z.B. Bremen TODO - Details -
-	 * Bände - Vorbestellen - Account - ID für Merkliste - Redirect zu
-	 * Detailsbei nur einem Ergebnis
+	 * OpacApi für WebOpacs "Copyright 2011 OCLC" z.B. Bremen TODO - Bände -
+	 * Vorbestellen - Account - ID für Merkliste - Redirect zu Detailsbei nur
+	 * einem Ergebnis
 	 */
 
 	private String opac_url = "";
@@ -268,6 +268,7 @@ public class OCLC2011 implements OpacApi {
 		}
 
 		Elements table = doc.select("table.data tbody tr");
+		identifier = null;
 		List<SearchResult> results = new ArrayList<SearchResult>();
 		for (int i = 0; i < table.size(); i++) {
 			Element tr = table.get(i);
@@ -293,6 +294,22 @@ public class OCLC2011 implements OpacApi {
 						if (node.hasAttr("href") && !haslink) {
 							haslink = true;
 							desc += ((Element) node).text() + "<br />";
+
+							try {
+								List<NameValuePair> anyurl = URLEncodedUtils
+										.parse(new URI(((Element) node)
+												.attr("href")), "UTF-8");
+								for (NameValuePair nv : anyurl) {
+									if (nv.getName().equals("identifier")) {
+										identifier = nv.getValue();
+										break;
+									}
+								}
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+
 						}
 					}
 				}
@@ -303,21 +320,6 @@ public class OCLC2011 implements OpacApi {
 			sr.setNr(i);
 			sr.setId(null);
 			results.add(sr);
-		}
-
-		try {
-			List<NameValuePair> anyurl = URLEncodedUtils.parse(new URI(doc
-					.select("#hitlist .box-right a").first().attr("href")),
-					"UTF-8");
-			for (NameValuePair nv : anyurl) {
-				if (nv.getName().equals("identifier")) {
-					identifier = nv.getValue();
-					break;
-				}
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 
 		return results;
@@ -395,12 +397,15 @@ public class OCLC2011 implements OpacApi {
 		Elements exemplartrs = doc.select("#tab-content .data tr:not(#bg2)");
 		for (int i = 0; i < exemplartrs.size(); i++) {
 			Element tr = exemplartrs.get(i);
-
-			ContentValues e = new ContentValues();
-			e.put("barcode", tr.child(1).text().trim());
-			e.put("zst", tr.child(3).text().trim());
-			e.put("status", tr.child(4).text().trim());
-			result.addCopy(e);
+			try {
+				ContentValues e = new ContentValues();
+				e.put("barcode", tr.child(1).text().trim());
+				e.put("zst", tr.child(3).text().trim());
+				e.put("status", tr.child(4).text().trim());
+				result.addCopy(e);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 		}
 
 		result.setReservable(false);
