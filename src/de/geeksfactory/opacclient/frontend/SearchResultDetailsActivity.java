@@ -631,15 +631,26 @@ public class SearchResultDetailsActivity extends OpacActivity {
 					SearchResultDetailsActivity.this);
 			star.open();
 
-			if (star.isStarred(bib, id)) {
-				star.remove(star.getItem(bib, id));
-				item.setIcon(R.drawable.ic_ab_star_0);
-			} else {
-				star.star(id, title, bib);
+			if (this.item == null) {
 				Toast toast = Toast.makeText(SearchResultDetailsActivity.this,
-						getString(R.string.starred), Toast.LENGTH_SHORT);
+						getString(R.string.star_wait), Toast.LENGTH_SHORT);
 				toast.show();
-				item.setIcon(R.drawable.ic_ab_star_1);
+			} else if (id == null) {
+				Toast toast = Toast.makeText(SearchResultDetailsActivity.this,
+						getString(R.string.star_noid), Toast.LENGTH_SHORT);
+				toast.show();
+			} else {
+				if (star.isStarred(bib, id)) {
+					star.remove(star.getItem(bib, id));
+					item.setIcon(R.drawable.ic_ab_star_0);
+				} else {
+					star.star(id, title, bib);
+					Toast toast = Toast.makeText(
+							SearchResultDetailsActivity.this,
+							getString(R.string.starred), Toast.LENGTH_SHORT);
+					toast.show();
+					item.setIcon(R.drawable.ic_ab_star_1);
+				}
 			}
 			star.close();
 			return true;

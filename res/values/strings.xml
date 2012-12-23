@@ -113,6 +113,8 @@
     <string name="baende_volumesearch">Einzelbände zeigen</string>
     <string name="star">Merken</string>
     <string name="starred">Das Medium ist jetzt auf der Merkliste</string>
+    <string name="star_noid">Funktion leider hier nicht verfügbar.</string>
+    <string name="star_wait">Bitte warten, bis die Details geladen wurden!</string>
     <string name="starred_list">Merkliste</string>
     <string name="starred_welcome">Dies ist deine Merkliste. Du kannst in der Detailansicht von jedem Medium die Menütaste drücken und „Merken“ auswählen, dann erscheint das Medium hier auf der Liste.</string>
     <string name="share">Teilen</string>
