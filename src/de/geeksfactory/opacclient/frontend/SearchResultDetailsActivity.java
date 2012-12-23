@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -263,6 +264,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			return null;
 		}
 
+		@SuppressLint("NewApi")
 		protected void onPostExecute(DetailledItem result) {
 			if (!success || result == null) {
 				setContentView(R.layout.connectivity_error);
@@ -280,9 +282,11 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
 			setContentView(R.layout.result_details_activity);
 
-			if (id == null)
+			if (id == null) {
 				id = item.getId();
-
+				invalidateOptionsMenu();
+			}
+			
 			try {
 				Log.i("result", item.toString());
 			} catch (Exception e) {
@@ -579,10 +583,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		MenuInflater mi = new MenuInflater(this);
 		mi.inflate(R.menu.search_result_details_activity, menu);
 
-		SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		String bib = sp.getString("opac_bib", "");
-
+		String bib = app.getLibrary().getIdent();
 		StarDataSource data = new StarDataSource(this);
 		data.open();
 		if (data.isStarred(bib, id)) {
