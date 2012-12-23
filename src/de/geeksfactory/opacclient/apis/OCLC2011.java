@@ -49,9 +49,13 @@ public class OCLC2011 implements OpacApi {
 
 	/*
 	 * OpacApi für WebOpacs "Copyright 2011 OCLC" z.B. Bremen TODO -
-	 * Vorbestellen - Account - ID für Merkliste
+	 * Vorbestellen - Account
 	 */
 
+	/*
+	 * setzt aktuell voraus, dass die Bibliothek die Bibtip Extension benutzt!
+	 * Wir wissen nicht, wie wir anderweitig an die IDs der Medien kommen.
+	 */
 	private String opac_url = "";
 	private String results;
 	private JSONObject data;
@@ -345,7 +349,9 @@ public class OCLC2011 implements OpacApi {
 
 		start();
 
-		HttpGet httpget = new HttpGet(opac_url + "/index.asp?MedienNr=" + a);
+		HttpGet httpget = new HttpGet(opac_url
+				+ "/search.do?methodToCall=quickSearch&Kateg=0&Content=" + a
+				+ "&fbt=" + a);
 
 		HttpResponse response = ahc.execute(httpget);
 
@@ -383,6 +389,12 @@ public class OCLC2011 implements OpacApi {
 		Document doc2 = Jsoup.parse(html2);
 
 		DetailledItem result = new DetailledItem();
+
+		try {
+			result.setId(doc.select("#bibtip_id").text().trim());
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 
 		if (doc.select(".data td img").size() == 1) {
 			result.setCover(doc.select(".data td img").first().attr("abs:src"));
