@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.geeksfactory.opacclient"
     android:versionCode="27"
-    android:versionName="2.0.0-alpha1" >
+    android:versionName="2.0.0-alpha3" >
 
     <uses-sdk
         android:minSdkVersion="8"
