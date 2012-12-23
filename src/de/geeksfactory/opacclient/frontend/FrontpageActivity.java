@@ -1,6 +1,5 @@
 package de.geeksfactory.opacclient.frontend;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import org.json.JSONException;
@@ -22,7 +21,6 @@ import com.actionbarsherlock.view.Menu;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
-import de.geeksfactory.opacclient.frontend.WelcomeActivity.InitTask;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
@@ -271,40 +269,39 @@ public class FrontpageActivity extends OpacActivity {
 			}
 		}
 	}
-	
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 
-		TextView tvBn = (TextView) findViewById(R.id.tvBibname);
-		if (app.getLibrary().getTitle() != null
-				&& !app.getLibrary().getTitle().equals("null"))
-			tvBn.setText(app.getLibrary().getCity() + "\n"
-					+ app.getLibrary().getTitle());
-		else
-			tvBn.setText(app.getLibrary().getCity());
+		if (app.getLibrary() != null) {
+			TextView tvBn = (TextView) findViewById(R.id.tvBibname);
+			if (app.getLibrary().getTitle() != null
+					&& !app.getLibrary().getTitle().equals("null"))
+				tvBn.setText(app.getLibrary().getCity() + "\n"
+						+ app.getLibrary().getTitle());
+			else
+				tvBn.setText(app.getLibrary().getCity());
 
-		try {
-			if (app.getLibrary().getData().getString("information") != null) {
-				if (!app.getLibrary().getData().getString("information")
-						.equals("null")) {
-					((ImageView) findViewById(R.id.ivMInfo))
-							.setVisibility(View.VISIBLE);
+			try {
+				if (app.getLibrary().getData().getString("information") != null) {
+					if (!app.getLibrary().getData().getString("information")
+							.equals("null")) {
+						((ImageView) findViewById(R.id.ivMInfo))
+								.setVisibility(View.VISIBLE);
+					} else {
+						((ImageView) findViewById(R.id.ivMInfo))
+								.setVisibility(View.GONE);
+					}
 				} else {
 					((ImageView) findViewById(R.id.ivMInfo))
 							.setVisibility(View.GONE);
 				}
-			} else {
-				((ImageView) findViewById(R.id.ivMInfo))
-						.setVisibility(View.GONE);
+			} catch (JSONException e) {
+				e.printStackTrace();
 			}
-		} catch (JSONException e) {
-			e.printStackTrace();
 		}
 	}
-
-
 
 	public class InitTask extends OpacTask<Integer> {
 		@Override
