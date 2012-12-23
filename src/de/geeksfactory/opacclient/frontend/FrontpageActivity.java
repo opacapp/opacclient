@@ -159,32 +159,6 @@ public class FrontpageActivity extends OpacActivity {
 
 		setContentView(R.layout.frontpage_activity);
 
-		TextView tvBn = (TextView) findViewById(R.id.tvBibname);
-		if (app.getLibrary().getTitle() != null
-				&& !app.getLibrary().getTitle().equals("null"))
-			tvBn.setText(app.getLibrary().getCity() + "\n"
-					+ app.getLibrary().getTitle());
-		else
-			tvBn.setText(app.getLibrary().getCity());
-
-		try {
-			if (app.getLibrary().getData().getString("information") != null) {
-				if (!app.getLibrary().getData().getString("information")
-						.equals("null")) {
-					((ImageView) findViewById(R.id.ivMInfo))
-							.setVisibility(View.VISIBLE);
-				} else {
-					((ImageView) findViewById(R.id.ivMInfo))
-							.setVisibility(View.GONE);
-				}
-			} else {
-				((ImageView) findViewById(R.id.ivMInfo))
-						.setVisibility(View.GONE);
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-
 		ImageView ivSearch = (ImageView) findViewById(R.id.ivGoSearch);
 		ImageView ivScan = (ImageView) findViewById(R.id.ivGoScan);
 		ImageView ivAccount = (ImageView) findViewById(R.id.ivGoAccount);
@@ -297,6 +271,40 @@ public class FrontpageActivity extends OpacActivity {
 			}
 		}
 	}
+	
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		TextView tvBn = (TextView) findViewById(R.id.tvBibname);
+		if (app.getLibrary().getTitle() != null
+				&& !app.getLibrary().getTitle().equals("null"))
+			tvBn.setText(app.getLibrary().getCity() + "\n"
+					+ app.getLibrary().getTitle());
+		else
+			tvBn.setText(app.getLibrary().getCity());
+
+		try {
+			if (app.getLibrary().getData().getString("information") != null) {
+				if (!app.getLibrary().getData().getString("information")
+						.equals("null")) {
+					((ImageView) findViewById(R.id.ivMInfo))
+							.setVisibility(View.VISIBLE);
+				} else {
+					((ImageView) findViewById(R.id.ivMInfo))
+							.setVisibility(View.GONE);
+				}
+			} else {
+				((ImageView) findViewById(R.id.ivMInfo))
+						.setVisibility(View.GONE);
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+
 
 	public class InitTask extends OpacTask<Integer> {
 		@Override
