@@ -181,16 +181,10 @@ public class SearchResultsActivity extends OpacActivity {
 				List<SearchResult> res = app.getApi().searchGetPage(page);
 				success = true;
 				return res;
-			} catch (java.net.UnknownHostException e) {
-				publishProgress(e, "ioerror");
-			} catch (java.io.IOException e) {
-				success = false;
-			} catch (de.geeksfactory.opacclient.NotReachableException e) {
-				success = false;
-			} catch (java.lang.IllegalStateException e) {
-				success = false;
 			} catch (Exception e) {
 				publishProgress(e, "ioerror");
+				e.printStackTrace();
+				success = false;
 			}
 			return null;
 		}
