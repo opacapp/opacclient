@@ -1,0 +1,10 @@
+{
+ "api": "zones22", 
+ "city": "Hamburg", 
+ "data": {
+  "baseurl": "https://www.buecherhallen.de/alswww2.dll/",
+  "information": null
+ }, 
+ "support": "Katalogsuche", 
+ "title": null
+}

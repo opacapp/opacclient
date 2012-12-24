@@ -24,6 +24,7 @@ import android.util.Log;
 import de.geeksfactory.opacclient.apis.Bond26;
 import de.geeksfactory.opacclient.apis.OCLC2011;
 import de.geeksfactory.opacclient.apis.OpacApi;
+import de.geeksfactory.opacclient.apis.Zones22;
 import de.geeksfactory.opacclient.frontend.ErrorActivity;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
@@ -57,6 +58,8 @@ public class OpacClient extends Application {
 			a = new Bond26();
 		else if (lib.getApi().equals("oclc2011"))
 			a = new OCLC2011();
+		else if (lib.getApi().equals("zones22"))
+			a = new Zones22();
 		else
 			return null;
 
@@ -71,6 +74,8 @@ public class OpacClient extends Application {
 			api = new Bond26();
 		else if (lib.getApi().equals("oclc2011"))
 			api = new OCLC2011();
+		else if (lib.getApi().equals("zones22"))
+			api = new Zones22();
 		else
 			return null;
 
