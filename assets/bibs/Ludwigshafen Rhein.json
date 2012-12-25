@@ -2,7 +2,7 @@
  "api": "bond26", 
  "city": "Ludwigshafen (Rhein)", 
  "data": {
-  "accounttable": null, 
+  "accounttable": [5, 0, 1, -1, 2, 3, 3, 6], 
   "baseurl": "http://bibliothek-katalog.ludwigshafen.de/webopac", 
   "copiestable": [
    5, 
@@ -14,7 +14,7 @@
    7
   ], 
   "information": null, 
-  "reservationtable": null
+  "reservationtable": [0, 1, -1, 2, 4]
  }, 
  "support": "Katalogsuche", 
  "title": null
