@@ -22,24 +22,15 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
-import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TableLayout;
-import android.widget.Toast;
-import android.widget.TableLayout.LayoutParams;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,12 +39,10 @@ import com.WazaBe.HoloEverywhere.app.ProgressDialog;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-import de.geeksfactory.opacclient.AccountUnsupportedException;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
-import de.geeksfactory.opacclient.frontend.ErrorActivity.SendTask;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Library;
@@ -163,10 +152,7 @@ public class AccountActivity extends OpacActivity {
 			dialog_no_user(true);
 
 		} else if (!app.getApi().isAccountSupported(app.getLibrary())) {
-<<<<<<< HEAD
 
-=======
->>>>>>> 5990d4a8b45244d943a0e0ef3b93e99d99c108d8
 			// We need help
 			setContentView(R.layout.unsupported_error);
 
@@ -504,8 +490,9 @@ public class AccountActivity extends OpacActivity {
 			llRes.addView(t1);
 		} else {
 			for (final ContentValues item : result.getReservations()) {
-				View v = getLayoutInflater().inflate(R.layout.reservation_listitem,
-						null);
+				View v = getLayoutInflater().inflate(
+						R.layout.reservation_listitem, null);
+
 				((TextView) v.findViewById(R.id.tvTitel)).setText(item
 						.getAsString("titel"));
 				((TextView) v.findViewById(R.id.tvVerfasser)).setText(item
