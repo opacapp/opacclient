@@ -1,30 +1,5 @@
 ROADMAP VERSION 2
 =================
+Verschoben nach:
 
-* Multiple Bibliotheks-APIs
-  * BibProxy und Intents bedenken
-* Account-Seite: Farbkodierung Abgabetermin?
-    -> Bei Notification klarmachen, um welchen Account es geht. 
-    -> Accounts farbmarkieren?
-* Tablet-Optimierung?
-* Verhalten wenn ProgressDialog gecancelt wird
-* Verhalten wenn selektierter Account gelöscht wird
-* HTTPS wo möglich
-* RestoreInstance Dinge
-
-Zu integrierende Bibliothekssysteme
------------------------------------
-* BiBer: Essen http://katalog.stadtbibliothek-essen.de/opac/de/qsim_frm.html.S Duisburg Karlsruhe?
-* OCLC 2011: Bremen http://opac.stadtbibliothek-bremen.de/webOPACClient/start.do Leipzig Dresden RUB Wuppertal Bonn
-* ZONES v1.8.1: Köln https://katalog.stbib-koeln.de/
-* ZONES v2.2.44: Hamburg https://www.buecherhallen.de/Zones2/
-* Düsseldorf: http://www.digibib.net/template/search?SID=DEIMOS:4852591&LOCATION=362
-* aStec: München https://ssl.muenchen.de/aDISWeb/
-* Bond 2.4: Stuttgart http://141.31.128.163/wwwopac/index.asp
-* Dortmund: http://katalog.dortmund.de:8080/
-* BiblioMondo: Hannover https://bibliothek.hannover-stadt.de/
-* WinBIAP: Kassel https://bibliothek.stadt-kassel.de/index.aspx
-
-Später
-------
-* Merkliste kategorisieren?
+https://docs.google.com/document/pub?id=15orn5je0H95puW2Noakw0IiMlp9GHZLb7gccAJhJgss1
