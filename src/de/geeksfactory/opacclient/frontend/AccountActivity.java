@@ -152,6 +152,7 @@ public class AccountActivity extends OpacActivity {
 			dialog_no_user(true);
 
 		} else if (!app.getApi().isAccountSupported(app.getLibrary())) {
+
 			// We need help
 			setContentView(R.layout.unsupported_error);
 
@@ -491,6 +492,7 @@ public class AccountActivity extends OpacActivity {
 			for (final ContentValues item : result.getReservations()) {
 				View v = getLayoutInflater().inflate(
 						R.layout.reservation_listitem, null);
+
 				((TextView) v.findViewById(R.id.tvTitel)).setText(item
 						.getAsString("titel"));
 				((TextView) v.findViewById(R.id.tvVerfasser)).setText(item
