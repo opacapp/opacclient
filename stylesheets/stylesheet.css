@@ -113,7 +113,9 @@ body {
 	background: white;
 	margin: 0;
 }
-
+a {
+	color: #009;
+}
 #container {
 	width: 100%;
 }
@@ -226,4 +228,9 @@ table#comp tr td a.no {
 }
 footer a {
 	color: white;
+}
+p.info {
+	background: #ff6;
+	padding: 20px;
+	margin: 10px 0;
 }
