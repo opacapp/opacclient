@@ -282,11 +282,6 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
 			setContentView(R.layout.result_details_activity);
 
-			if (id == null) {
-				id = item.getId();
-				invalidateOptionsMenu();
-			}
-			
 			try {
 				Log.i("result", item.toString());
 			} catch (Exception e) {
@@ -413,6 +408,11 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
 					llCopies.addView(v);
 				}
+			}
+
+			if (id == null) {
+				id = item.getId();
+				invalidateOptionsMenu();
 			}
 
 			if (item.isReservable()) {
@@ -586,8 +586,18 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		String bib = app.getLibrary().getIdent();
 		StarDataSource data = new StarDataSource(this);
 		data.open();
-		if (data.isStarred(bib, id)) {
-			menu.findItem(R.id.action_star).setIcon(R.drawable.ic_ab_star_1);
+		if (item != null) {
+			if (id == null || id.equals("")) {
+				if (data.isStarredTitle(bib, title)) {
+					menu.findItem(R.id.action_star).setIcon(
+							R.drawable.ic_ab_star_1);
+				}
+			} else {
+				if (data.isStarred(bib, id)) {
+					menu.findItem(R.id.action_star).setIcon(
+							R.drawable.ic_ab_star_1);
+				}
+			}
 		}
 		data.close();
 
@@ -636,10 +646,18 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				Toast toast = Toast.makeText(SearchResultDetailsActivity.this,
 						getString(R.string.star_wait), Toast.LENGTH_SHORT);
 				toast.show();
-			} else if (id == null) {
-				Toast toast = Toast.makeText(SearchResultDetailsActivity.this,
-						getString(R.string.star_noid), Toast.LENGTH_SHORT);
-				toast.show();
+			} else if (id == null || id.equals("")) {
+				if (star.isStarredTitle(bib, title)) {
+					star.remove(star.getItemTitle(bib, title));
+					item.setIcon(R.drawable.ic_ab_star_0);
+				} else {
+					star.star(null, title, bib);
+					Toast toast = Toast.makeText(
+							SearchResultDetailsActivity.this,
+							getString(R.string.starred), Toast.LENGTH_SHORT);
+					toast.show();
+					item.setIcon(R.drawable.ic_ab_star_1);
+				}
 			} else {
 				if (star.isStarred(bib, id)) {
 					star.remove(star.getItem(bib, id));

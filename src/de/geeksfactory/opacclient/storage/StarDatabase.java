@@ -8,13 +8,12 @@ import android.util.Log;
 public class StarDatabase extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "starred.db";
-	private static final int DATABASE_VERSION = 3; // REPLACE ONUPGRADE IF YOU
+	private static final int DATABASE_VERSION = 5; // REPLACE ONUPGRADE IF YOU
 													// CHANGE THIS
 
 	private static final String DATABASE_CREATE = "create table "
 			+ "starred ( id integer primary key autoincrement,"
-			+ " medianr text unique on conflict replace," + " bib text,"
-			+ " title text" + ");";
+			+ " medianr text," + " bib text," + " title text" + ");";
 	public static final String[] COLUMNS = { "id", "medianr", "bib", "title" };
 
 	@Override
@@ -27,8 +26,13 @@ public class StarDatabase extends SQLiteOpenHelper {
 		Log.w(StarDatabase.class.getName(), "Upgrading database from version "
 				+ oldVersion + " to " + newVersion
 				+ ", which will destroy all old data");
-		db.execSQL("DROP TABLE IF EXISTS starred");
+
+		db.execSQL("create table temp ( id integer primary key autoincrement, medianr text, bib text, title text );");
+		db.execSQL("insert into temp select * from starred;");
+		db.execSQL("drop table starred;");
 		onCreate(db);
+		db.execSQL("insert into starred select * from temp;");
+		db.execSQL("drop table temp;");
 
 	}
 

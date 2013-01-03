@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import com.WazaBe.HoloEverywhere.widget.Spinner;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
@@ -46,10 +48,22 @@ public class StarredActivity extends OpacActivity {
 			lv.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
-					Intent intent = new Intent(StarredActivity.this,
-							SearchResultDetailsActivity.class);
-					intent.putExtra("item_id", items.get(position).getMNr());
-					startActivity(intent);
+					if (items.get(position).getMNr() == null
+							|| items.get(position).getMNr().equals("null")
+							|| items.get(position).getMNr().equals("")) {
+
+						Intent myIntent = new Intent(StarredActivity.this,
+								SearchResultsActivity.class);
+						Bundle query = new Bundle();
+						query.putString("titel", items.get(position).getTitle());
+						myIntent.putExtra("query", query);
+						startActivity(myIntent);
+					} else {
+						Intent intent = new Intent(StarredActivity.this,
+								SearchResultDetailsActivity.class);
+						intent.putExtra("item_id", items.get(position).getMNr());
+						startActivity(intent);
+					}
 				}
 			});
 			lv.setClickable(true);
