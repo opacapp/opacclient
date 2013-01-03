@@ -1,0 +1,10 @@
+{
+ "api": "oclc2011", 
+ "city": "Dresden",
+ "data": {
+  "baseurl": "http://217.5.176.101/webOPACClient", 
+  "information": null
+ }, 
+ "support": "Katalogsuche", 
+ "title": null
+}

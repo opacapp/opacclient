@@ -1,0 +1,10 @@
+{
+ "api": "oclc2011", 
+ "city": "Wuppertal", 
+ "data": {
+  "baseurl": "http://webopac.wuppertal.de/webOPACClient.sisis", 
+  "information": null
+ }, 
+ "support": "Katalogsuche", 
+ "title": null
+}

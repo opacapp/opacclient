@@ -1,0 +1,10 @@
+{
+ "api": "oclc2011", 
+ "city": "Bonn", 
+ "data": {
+  "baseurl": "https://www.lib.bonn.de/webOPACClient", 
+  "information": null
+ }, 
+ "support": "Katalogsuche", 
+ "title": null
+}
