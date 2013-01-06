@@ -63,23 +63,16 @@ public class FrontpageActivity extends OpacActivity {
 			myIntent.putExtra("verlag", (verlag != null ? verlag : ""));
 			startActivity(myIntent);
 			finish();
-		} else if (d.getHost().equals("www.raphaelmichel.de")) {
-			String bib;
-			try {
-				bib = java.net.URLDecoder.decode(d.getQueryParameter("bib"),
-						"UTF-8");
-			} catch (UnsupportedEncodingException e) {
-				bib = d.getQueryParameter("bib");
-			}
+		} else if (d.getHost().equals("opacapp.de")) {
+			String[] split = d.getPath().split(":");
+			String bib = split[1];
 			if (!app.getLibrary().getIdent().equals(bib)) {
-				Intent i = new Intent(
-						Intent.ACTION_VIEW,
-						Uri.parse("http://www.raphaelmichel.de/opacclient/bibproxy.php/web?"
-								+ d.getQuery()));
+				Intent i = new Intent(Intent.ACTION_VIEW,
+						Uri.parse("http://opacapp.de/web" + d.getPath()));
 				startActivity(i);
 				return;
 			}
-			String medianr = d.getQueryParameter("id");
+			String medianr = split[2];
 			Intent intent = new Intent(FrontpageActivity.this,
 					SearchResultDetailsActivity.class);
 			intent.putExtra("item_id", medianr);

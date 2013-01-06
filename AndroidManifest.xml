@@ -42,8 +42,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="www.raphaelmichel.de"
-                    android:pathPrefix="/opacclient/bibproxy.php/go"
+                    android:host="opacapp.de"
+                    android:pathPrefix="/:"
                     android:scheme="http" />
             </intent-filter>
         </activity>

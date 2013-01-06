@@ -635,9 +635,8 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				} catch (UnsupportedEncodingException e) {
 				}
 
-				intent.putExtra(Intent.EXTRA_TEXT,
-						"http://www.raphaelmichel.de/opacclient/bibproxy.php/go?bib="
-								+ bib + "&id=" + id + "&title=" + t);
+				intent.putExtra(Intent.EXTRA_TEXT, "http://opacapp.de/:" + bib
+						+ ":" + id + ":" + t);
 				startActivity(Intent.createChooser(intent, getResources()
 						.getString(R.string.share)));
 			}
