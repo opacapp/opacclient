@@ -118,6 +118,7 @@
     <string name="starred_list">Merkliste</string>
     <string name="starred_welcome">Dies ist deine Merkliste. Du kannst in der Detailansicht von jedem Medium die Menütaste drücken und „Merken“ auswählen, dann erscheint das Medium hier auf der Liste.</string>
     <string name="share">Teilen</string>
+    <string name="share_wait">Bitte warten, bis die Details geladen wurden!</string>
     <string name="unsupported">Funktion nicht unterstützt</string>
     <string name="account_unsupported_api">Diese Funktion wird in deiner Stadt noch nicht unterstützt! Wir würden das gerne ändern, brauchen dazu aber Hilfe von Lesern dieser Bibliothek. Wenn du motiviert bist, uns zu helfen, melde dich doch unter raphael@geeksfactory.de</string> 
     <string name="account_unsupported">Diese Funktion wird in deiner Stadt noch nicht unterstützt! Wir würden das auch gern ändern, aber dazu brauchen wir deine Hilfe: Wenn du auf „Bericht senden“ klickst, können wir versuchen, das im nächsten Update zu ändern. Wir kennen dann eventuell deine Ausweisnummer und was du für Bücher ausgeliehen hast (nicht dein Passwort, nicht deinen Namen und auch sonst nichts zu deiner Person!) aber wir gehen mit den Daten verantwortungsbewusst um und löschen sie, sobald wir sie ausgewertet haben.</string>

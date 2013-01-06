@@ -614,27 +614,33 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			return true;
 
 		case R.id.action_share:
-			Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-			intent.setType("text/plain");
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+			if (this.item == null) {
+				Toast toast = Toast.makeText(SearchResultDetailsActivity.this,
+						getString(R.string.share_wait), Toast.LENGTH_SHORT);
+				toast.show();
+			} else {
+				Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+				intent.setType("text/plain");
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 
-			// Add data to the intent, the receiving app will decide
-			// what to do with it.
-			intent.putExtra(Intent.EXTRA_SUBJECT, title);
+				// Add data to the intent, the receiving app will decide
+				// what to do with it.
+				intent.putExtra(Intent.EXTRA_SUBJECT, title);
 
-			String t = title;
-			try {
-				bib = java.net.URLEncoder.encode(app.getLibrary().getIdent(),
-						"UTF-8");
-				t = java.net.URLEncoder.encode(t, "UTF-8");
-			} catch (UnsupportedEncodingException e) {
+				String t = title;
+				try {
+					bib = java.net.URLEncoder.encode(app.getLibrary()
+							.getIdent(), "UTF-8");
+					t = java.net.URLEncoder.encode(t, "UTF-8");
+				} catch (UnsupportedEncodingException e) {
+				}
+
+				intent.putExtra(Intent.EXTRA_TEXT,
+						"http://www.raphaelmichel.de/opacclient/bibproxy.php/go?bib="
+								+ bib + "&id=" + id + "&title=" + t);
+				startActivity(Intent.createChooser(intent, getResources()
+						.getString(R.string.share)));
 			}
-
-			intent.putExtra(Intent.EXTRA_TEXT,
-					"http://www.raphaelmichel.de/opacclient/bibproxy.php/go?bib="
-							+ bib + "&id=" + id + "&title=" + t);
-			startActivity(Intent.createChooser(intent, getResources()
-					.getString(R.string.share)));
 			return true;
 
 		case R.id.action_star:
