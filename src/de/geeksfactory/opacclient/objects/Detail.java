@@ -25,4 +25,9 @@ public class Detail {
 	public void setContent(String content) {
 		this.content = content;
 	}
+
+	@Override
+	public String toString() {
+		return "Detail [desc=" + desc + ", content=" + content + "]";
+	}
 }
