@@ -250,6 +250,7 @@ public class Zones22 implements OpacApi {
 
 		Elements table = doc.select("#BrowseList > tbody > tr");
 		List<SearchResult> results = new ArrayList<SearchResult>();
+		Log.i("zones22", "table.size() = "+table.size());
 		for (int i = 0; i < table.size(); i++) {
 			Element tr = table.get(i);
 			SearchResult sr = new SearchResult();
@@ -258,12 +259,13 @@ public class Zones22 implements OpacApi {
 					.replace("\n", " ").trim());
 
 			String desc = "";
-			Elements children = tr.select(".SummaryDataCell tr");
+			Elements children = tr.select(".SummaryDataCell tr, .SummaryDataCellStripe tr");
 			int childrennum = children.size();
 			boolean haslink = false;
 
 			for (int ch = 0; ch < childrennum; ch++) {
 				Element node = children.get(ch);
+				Log.i("zones22", "node.outerHtml() = "+node.outerHtml());
 				if (node.select(".SummaryFieldLegend").text().equals("Titel")) {
 					desc += "<b>"
 							+ node.select(".SummaryFieldData").text().trim()

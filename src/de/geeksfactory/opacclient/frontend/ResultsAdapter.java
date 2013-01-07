@@ -135,7 +135,12 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
 		typemap.put("21.png", R.drawable.type_mnoten1s);
 		// Hamburg
 		typemap.put("Buch", R.drawable.type_mbuchs);
+		typemap.put("Buch Erwachsene", R.drawable.type_mbuchs);
 		typemap.put("Buch Kinder/Jugendliche", R.drawable.type_mbuchs);
 		typemap.put("DVD", R.drawable.type_mdvds);
+		typemap.put("Konsolenspiele", R.drawable.type_konsol);
+		typemap.put("Blu-ray Disc", R.drawable.type_mfilms);
+		typemap.put("Compact Disc", R.drawable.type_cdkl);
+		typemap.put("CD-ROM", R.drawable.type_cdromkl);
 	}
 }
