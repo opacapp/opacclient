@@ -69,7 +69,9 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		id = getIntent().getStringExtra("item_id");
+		if (getIntent().hasExtra("item_id")
+				&& !getIntent().getStringExtra("item_id").equals(""))
+			id = getIntent().getStringExtra("item_id");
 
 		if (getIntent().getIntExtra("item", -1) != -1) {
 			ft = new FetchTask();
@@ -410,7 +412,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				}
 			}
 
-			if (id == null) {
+			if (id == null || id.equals("")) {
 				id = item.getId();
 				invalidateOptionsMenu();
 			}
@@ -583,20 +585,20 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		MenuInflater mi = new MenuInflater(this);
 		mi.inflate(R.menu.search_result_details_activity, menu);
 
+		Log.i("menu", "item " + item + " id " + id);
+
 		String bib = app.getLibrary().getIdent();
 		StarDataSource data = new StarDataSource(this);
 		data.open();
-		if (item != null) {
-			if (id == null || id.equals("")) {
-				if (data.isStarredTitle(bib, title)) {
-					menu.findItem(R.id.action_star).setIcon(
-							R.drawable.ic_ab_star_1);
-				}
-			} else {
-				if (data.isStarred(bib, id)) {
-					menu.findItem(R.id.action_star).setIcon(
-							R.drawable.ic_ab_star_1);
-				}
+		if ((id == null || id.equals("")) && item != null) {
+			if (data.isStarredTitle(bib, title)) {
+				menu.findItem(R.id.action_star)
+						.setIcon(R.drawable.ic_ab_star_1);
+			}
+		} else {
+			if (data.isStarred(bib, id)) {
+				menu.findItem(R.id.action_star)
+						.setIcon(R.drawable.ic_ab_star_1);
 			}
 		}
 		data.close();
