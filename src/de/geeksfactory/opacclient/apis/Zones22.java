@@ -48,9 +48,9 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
 public class Zones22 implements OpacApi {
 
 	/*
-	 * OpacApi für WebOpacs "Zones.2.2.45.04" z.B. Hamburg - TODO: Suche - Suche
-	 * mit Medientypen - Suche blättern - Details - Details by id - Merkliste -
-	 * Account - Vorbestellen - Zweigstellen
+	 * OpacApi für WebOpacs "Zones.2.2.45.04" z.B. Hamburg - TODO: Suche mit
+	 * Medientypen - Details - Details by id - Merkliste - Account -
+	 * Vorbestellen - Zweigstellen
 	 */
 
 	private String opac_url = "";
@@ -61,6 +61,8 @@ public class Zones22 implements OpacApi {
 	private boolean initialised = false;
 	private String last_error;
 	private Library library;
+	private int page;
+	private String searchobj;
 
 	@Override
 	public String getResults() {
@@ -136,6 +138,8 @@ public class Zones22 implements OpacApi {
 		String html = convertStreamToString(response.getEntity().getContent());
 		Document doc = Jsoup.parse(html);
 
+		searchobj = doc.select("#ExpertSearch").attr("action");
+
 		MetaDataSource data = new MetaDataSource(context);
 		data.open();
 		if (!data.hasMeta(library.getIdent())) {
@@ -196,8 +200,7 @@ public class Zones22 implements OpacApi {
 	@Override
 	public List<SearchResult> search(Bundle query) throws IOException,
 			NotReachableException {
-		if (!initialised)
-			start();
+		start();
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
@@ -224,7 +227,7 @@ public class Zones22 implements OpacApi {
 			return null;
 		}
 
-		HttpGet httpget = new HttpGet(opac_url + "/?"
+		HttpGet httpget = new HttpGet(opac_url + "/" + searchobj + "?"
 				+ URLEncodedUtils.format(params, "UTF-8"));
 
 		HttpResponse response = ahc.execute(httpget);
@@ -235,22 +238,54 @@ public class Zones22 implements OpacApi {
 
 		String html = convertStreamToString(response.getEntity().getContent());
 		response.getEntity().consumeContent();
+
+		page = 1;
+
 		return parse_search(html);
 	}
 
 	@Override
 	public List<SearchResult> searchGetPage(int page) throws IOException,
 			NotReachableException {
-		return null;
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+		params.add(new BasicNameValuePair("Style", "Portal3"));
+		params.add(new BasicNameValuePair("SubStyle", ""));
+		params.add(new BasicNameValuePair("Lang", "GER"));
+		params.add(new BasicNameValuePair("ResponseEncoding", "utf-8"));
+		if (page > this.page) {
+			params.add(new BasicNameValuePair("Method", "PageDown"));
+		} else {
+			params.add(new BasicNameValuePair("Method", "PageUp"));
+		}
+		params.add(new BasicNameValuePair("PageSize", "10"));
+
+		HttpGet httpget = new HttpGet(opac_url + "/" + searchobj + "?"
+				+ URLEncodedUtils.format(params, "UTF-8"));
+
+		HttpResponse response = ahc.execute(httpget);
+
+		if (response.getStatusLine().getStatusCode() == 500) {
+			throw new NotReachableException();
+		}
+
+		String html = convertStreamToString(response.getEntity().getContent());
+		response.getEntity().consumeContent();
+
+		this.page = page;
+
+		return parse_search(html);
 	}
 
 	private List<SearchResult> parse_search(String html) {
 		Document doc = Jsoup.parse(html);
 		this.results = doc.select(".searchHits").first().text().trim();
 
+		searchobj = doc.select(".pageNavLink").first().attr("href")
+				.split("\\?")[0];
+
 		Elements table = doc.select("#BrowseList > tbody > tr");
 		List<SearchResult> results = new ArrayList<SearchResult>();
-		Log.i("zones22", "table.size() = "+table.size());
 		for (int i = 0; i < table.size(); i++) {
 			Element tr = table.get(i);
 			SearchResult sr = new SearchResult();
@@ -259,13 +294,13 @@ public class Zones22 implements OpacApi {
 					.replace("\n", " ").trim());
 
 			String desc = "";
-			Elements children = tr.select(".SummaryDataCell tr, .SummaryDataCellStripe tr");
+			Elements children = tr
+					.select(".SummaryDataCell tr, .SummaryDataCellStripe tr");
 			int childrennum = children.size();
 			boolean haslink = false;
 
 			for (int ch = 0; ch < childrennum; ch++) {
 				Element node = children.get(ch);
-				Log.i("zones22", "node.outerHtml() = "+node.outerHtml());
 				if (node.select(".SummaryFieldLegend").text().equals("Titel")) {
 					desc += "<b>"
 							+ node.select(".SummaryFieldData").text().trim()
