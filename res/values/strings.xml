@@ -116,7 +116,7 @@
     <string name="star_noid">Funktion leider hier nicht verfügbar.</string>
     <string name="star_wait">Bitte warten, bis die Details geladen wurden!</string>
     <string name="starred_list">Merkliste</string>
-    <string name="starred_welcome">Dies ist deine Merkliste. Du kannst in der Detailansicht von jedem Medium die Menütaste drücken und „Merken“ auswählen, dann erscheint das Medium hier auf der Liste.</string>
+    <string name="starred_welcome">Dies ist deine Merkliste. Du kannst in der Detailansicht von jedem Medium den Stern für „Merken“ auswählen, dann erscheint das Medium hier auf der Liste. Achtung: Die Liste wird für jede Bibliothek, die du benutzt, seperat geführt.</string>
     <string name="share">Teilen</string>
     <string name="share_wait">Bitte warten, bis die Details geladen wurden!</string>
     <string name="unsupported">Funktion nicht unterstützt</string>
