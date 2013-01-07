@@ -1,0 +1,10 @@
+{
+ "api": "oclc2011", 
+ "city": "Berlin", 
+ "data": {
+  "baseurl": "https://sisis.rz.htw-berlin.de/InfoGuideClient", 
+  "information": null
+ }, 
+ "support": "Katalogsuche", 
+ "title": "Unibibliothek HTW"
+}
