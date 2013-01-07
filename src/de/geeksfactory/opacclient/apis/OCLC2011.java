@@ -413,6 +413,9 @@ public class OCLC2011 implements OpacApi {
 				String text = ((TextNode) node).text().trim();
 				if (!text.equals(""))
 					result.addDetail(new Detail(title, text));
+				if (title.equals("Titel:")) {
+					result.setTitle(text);
+				}
 				title = "";
 			}
 		}
