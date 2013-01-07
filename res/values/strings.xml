@@ -120,14 +120,16 @@
     <string name="share">Teilen</string>
     <string name="share_wait">Bitte warten, bis die Details geladen wurden!</string>
     <string name="unsupported">Funktion nicht unterstützt</string>
-    <string name="account_unsupported_api">Diese Funktion wird in deiner Stadt noch nicht unterstützt! Wir würden das gerne ändern, brauchen dazu aber Hilfe von Lesern dieser Bibliothek. Wenn du motiviert bist, uns zu helfen, melde dich doch unter raphael@geeksfactory.de</string> 
+    <string name="account_unsupported_api">Diese Funktion wird in deiner Stadt noch nicht unterstützt! Wir würden das gerne ändern, brauchen dazu aber Hilfe von Lesern dieser Bibliothek. Wenn du motiviert bist, uns zu helfen, melde dich doch unter raphael@geeksfactory.de</string>
     <string name="account_unsupported">Diese Funktion wird in deiner Stadt noch nicht unterstützt! Wir würden das auch gern ändern, aber dazu brauchen wir deine Hilfe: Wenn du auf „Bericht senden“ klickst, können wir versuchen, das im nächsten Update zu ändern. Wir kennen dann eventuell deine Ausweisnummer und was du für Bücher ausgeliehen hast (nicht dein Passwort, nicht deinen Namen und auch sonst nichts zu deiner Person!) aber wir gehen mit den Daten verantwortungsbewusst um und löschen sie, sobald wir sie ausgewertet haben.</string>
     <string name="info">Infos</string>
     <string name="write_mail">E-Mail schreiben</string>
     <string name="info_error">Die Infos der Bücherei konnten nicht abgerufen werden.</string>
     <string name="info_unsupported">Deine Bücherei stellt keine zusätzlichen Informationen bereit, die wir dir anzeigen könnten.</string>
     <string name="connection_error">Verbindungsfehler</string>
-    <string name="connection_error_detail">Der Aufbau einer Verbindung zum Bibliotheksserver oder das Auswerten der Antwort ist fehlgeschlagen.</string>
+    <string name="connection_error_detail">Der Aufbau einer Verbindung zum Bibliotheksserver oder das Auswerten der Antwort ist fehlgeschlagen.
+        
+        Das kann heißen, dass die Internetverbindung gerade nicht tut, dass die Bibliothek gerade nicht erreichbar ist oder einfach, dass sie etwas gesendet hat, womit diese App nicht klarkommt, z.B. eine seltene Fehlermeldung-</string>
     <string name="retry">Erneut versuchen</string>
     <string name="default_account_name">Anonymes Konto</string>
     <string name="connecting_initially">Baue erstmalige Verbindung mit Bibliotheksserver auf…</string>
@@ -138,12 +140,13 @@
     <string name="accounts">Konten</string>
     <string name="account_header">KONTO: %s</string>
     <string name="accounts_edit">Konten bearbeiten</string>
-	<string name="accounts_desc">Genutzte Bibliotheken und Mitgliedsnummern verwalten</string>
-	<string name="account_label">Bezeichnung</string>
-	<string name="account_nr">Mitgliedsnummer/-name (optional)</string>
-	<string name="account_password">Passwort (optional)</string>
-	<string name="account_city">Bibliothek</string>
-	<string name="title_activity_account_edit">Konto bearbeiten</string>
-	<string name="account_select">Konto auswählen</string>
+    <string name="accounts_desc">Genutzte Bibliotheken und Mitgliedsnummern verwalten</string>
+    <string name="account_label">Bezeichnung</string>
+    <string name="account_nr">Mitgliedsnummer/-name (optional)</string>
+    <string name="account_password">Passwort (optional)</string>
+    <string name="account_city">Bibliothek</string>
+    <string name="title_activity_account_edit">Konto bearbeiten</string>
+    <string name="account_select">Konto auswählen</string>
     <string name="all">Alle</string>
+
 </resources>
