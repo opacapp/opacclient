@@ -25,7 +25,7 @@ public class SearchResultsActivity extends OpacActivity {
 
 	protected ProgressDialog dialog;
 	protected List<SearchResult> items;
-	private int page = 1;
+	private int page;
 
 	private SearchStartTask st;
 	private SearchPageTask sst;
@@ -37,6 +37,8 @@ public class SearchResultsActivity extends OpacActivity {
 		((TextView) findViewById(R.id.tvLoading))
 				.setText(R.string.loading_results);
 
+		page = 1;
+		
 		st = new SearchStartTask();
 		st.execute(app, getIntent().getBundleExtra("query"));
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
