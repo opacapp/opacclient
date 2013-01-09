@@ -38,7 +38,7 @@
         android:layout_height="fill_parent"
         android:layout_weight="1"
         android:padding="5dp"
-        android:stretchColumns="*">
+        android:stretchColumns="*" >
 
         <TableRow
             android:id="@+id/tableRow1"
@@ -157,16 +157,6 @@
             android:focusable="true"
             android:padding="8dp"
             android:src="@drawable/ic_menu_info" />
-
-        <ImageView
-            android:id="@+id/ivMAbout"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:background="@drawable/frontpage_menu_focused"
-            android:focusable="true"
-            android:padding="8dp"
-            android:src="@drawable/ic_menu_about" />
     </LinearLayout>
 
 </LinearLayout>

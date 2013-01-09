@@ -15,11 +15,4 @@
         android:title="@string/info">
     </item>
 
-    <item
-        android:id="@+id/menu_about"
-        android:icon="@drawable/ic_menu_about"
-        android:showAsAction="never"
-        android:title="@string/about">
-    </item>
-
 </menu>

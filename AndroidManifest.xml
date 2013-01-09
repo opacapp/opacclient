@@ -95,7 +95,14 @@
             android:label="@string/about" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.geeksfactory.opacclient.frontend.FrontpageActivity" />
+                android:value="de.geeksfactory.opacclient.frontend.MainPreferenceActivity" />
+        </activity>
+        <activity
+            android:name=".frontend.ChangelogActivity"
+            android:label="@string/changelog" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.geeksfactory.opacclient.frontend.MainPreferenceActivity" />
         </activity>
         <activity
             android:name=".frontend.ErrorActivity"

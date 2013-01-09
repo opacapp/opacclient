@@ -28,15 +28,27 @@
             android:ringtoneType="notification"
             android:title="@string/notification_sound" />
     </PreferenceCategory>
+    
+    <PreferenceCategory android:title="@string/information" >
+        <Preference
+            android:key="about"
+            android:summary="@string/about_summary"
+            android:title="@string/about" />
+        <Preference
+            android:key="changelog"
+            android:title="@string/changelog" />
+    </PreferenceCategory>
+    
+    <PreferenceCategory android:title="@string/developer_settings" >
+        <CheckBoxPreference
+            android:key="debug_proxy"
+            android:summary="Nicht benutzen, außer du weißt, was du tust."
+            android:title="Debug-Modus (Proxy)" />
 
-    <CheckBoxPreference
-        android:key="debug_proxy"
-        android:summary="Nicht benutzen, außer du weißt, was du tust."
-        android:title="Debug-Modus (Proxy)" />
-
-    <Preference
-        android:key="meta_clear"
-        android:summary="Löscht die zwischengespeicherte Liste der Zweigstellen und Mediengruppen"
-        android:title="Cache leeren" />
+        <Preference
+            android:key="meta_clear"
+            android:summary="Löscht die zwischengespeicherte Liste der Zweigstellen und Mediengruppen"
+            android:title="Cache leeren" />
+    </PreferenceCategory>
 
 </PreferenceScreen>

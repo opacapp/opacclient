@@ -36,6 +36,12 @@
     <string name="prefs">Einstellungen</string>
     <string name="account">Konto</string>
     <string name="about">Über</string>
+    <string name="about_summary">Über diese App</string>
+    <string name="information">Informationen</string>
+    <string name="changelog">Änderungsverlauf</string>
+    <string name="close">Schließen</string>
+    <string name="osl">Open Source Lizenzen</string>
+    <string name="developer_settings">Entwickler-Einstellungen</string>
     <string name="details">Details</string>
     <string name="copies">Exemplare</string>
     <string name="details_head">DETAILS</string>

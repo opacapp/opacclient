@@ -246,14 +246,6 @@ public class FrontpageActivity extends OpacActivity {
 				startActivity(intent);
 			}
 		});
-		ivMAbout.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				Intent intent = new Intent(FrontpageActivity.this,
-						AboutActivity.class);
-				startActivity(intent);
-			}
-		});
 
 		if (getIntent().getAction() != null) {
 			if (getIntent().getAction().equals("android.intent.action.VIEW")) {

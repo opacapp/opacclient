@@ -245,10 +245,6 @@ public abstract class OpacActivity extends SherlockActivity {
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			return true;
-		case R.id.menu_about:
-			Intent iAbout = new Intent(OpacActivity.this, AboutActivity.class);
-			startActivity(iAbout);
-			return true;
 		case R.id.menu_info:
 			Intent iInfo = new Intent(OpacActivity.this, InfoActivity.class);
 			startActivity(iInfo);
