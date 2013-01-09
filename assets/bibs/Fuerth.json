@@ -1,0 +1,10 @@
+{
+ "api": "oclc2011", 
+ "city": "Fürth",
+ "data": {
+  "baseurl": "https://serviceweb.fuerth.de/webOPAC", 
+  "information": null
+ }, 
+ "support": "Katalogsuche", 
+ "title": null
+}
