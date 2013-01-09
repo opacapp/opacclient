@@ -32,6 +32,7 @@ import org.jsoup.select.Elements;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -279,6 +280,8 @@ public class Zones22 implements OpacApi {
 
 	private List<SearchResult> parse_search(String html) {
 		Document doc = Jsoup.parse(html);
+		doc.setBaseUri(opac_url + "/APS_PRESENT_BIB");
+
 		this.results = doc.select(".searchHits").first().text().trim();
 
 		searchobj = doc.select(".pageNavLink").first().attr("href")
@@ -313,12 +316,19 @@ public class Zones22 implements OpacApi {
 					desc += node.select(".SummaryFieldData").text().trim()
 							+ "<br />";
 				}
+
+				if (node.select(".SummaryFieldData a.SummaryFieldLink").size() > 0
+						&& haslink == false) {
+					sr.setId(Uri.parse(
+							node.select(".SummaryFieldData a.SummaryFieldLink")
+									.attr("abs:href")).getQueryParameter("no"));
+					haslink = true;
+				}
 			}
 			if (desc.endsWith("<br />"))
 				desc = desc.substring(0, desc.length() - 6);
 			sr.setInnerhtml(desc);
 			sr.setNr(i);
-			sr.setId(null);
 
 			results.add(sr);
 		}
@@ -327,11 +337,30 @@ public class Zones22 implements OpacApi {
 	}
 
 	@Override
-	public DetailledItem getResultById(String a) throws IOException,
+	public DetailledItem getResultById(String id) throws IOException,
 			NotReachableException {
-		// https://www.buecherhallen.de/alswww2.dll/APS_PRESENT_BIB?Style=Portal3&Lang=GER&ResponseEncoding=utf-8&no=T014982642&QueryObject=Obj_375131356306224
-		// What is no=?
-		return null;
+
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+		params.add(new BasicNameValuePair("Style", "Portal3"));
+		params.add(new BasicNameValuePair("SubStyle", ""));
+		params.add(new BasicNameValuePair("Lang", "GER"));
+		params.add(new BasicNameValuePair("ResponseEncoding", "utf-8"));
+		params.add(new BasicNameValuePair("no", id));
+
+		HttpGet httpget = new HttpGet(opac_url + "/APS_PRESENT_BIB?"
+				+ URLEncodedUtils.format(params, "UTF-8"));
+
+		HttpResponse response = ahc.execute(httpget);
+
+		if (response.getStatusLine().getStatusCode() == 500) {
+			throw new NotReachableException();
+		}
+
+		String html = convertStreamToString(response.getEntity().getContent());
+		response.getEntity().consumeContent();
+
+		return parse_result(id, html);
 	}
 
 	@Override
@@ -339,8 +368,31 @@ public class Zones22 implements OpacApi {
 		return null;
 	}
 
-	private DetailledItem parse_result(String html) throws IOException {
-		return null;
+	private DetailledItem parse_result(String id, String html)
+			throws IOException {
+		Document doc = Jsoup.parse(html);
+
+		DetailledItem result = new DetailledItem();
+		boolean title_is_set = false;
+
+		result.setId(id);
+
+		Elements detailtrs1 = doc
+				.select(".DetailDataCell table table:not(.inRecordHeader) tr");
+		for (int i = 0; i < detailtrs1.size(); i++) {
+			Element tr = detailtrs1.get(i);
+			int s = tr.children().size();
+			if (tr.child(0).text().trim().equals("Titel") && !title_is_set) {
+				result.setTitle(tr.child(s - 1).text().trim());
+				title_is_set = true;
+			} else if (s > 1) {
+				Log.i("tr", tr.outerHtml());
+				result.addDetail(new Detail(tr.child(0).text().trim(), tr
+						.child(s - 1).text().trim()));
+			}
+		}
+
+		return result;
 	}
 
 	// No account support for now.
