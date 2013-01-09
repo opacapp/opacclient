@@ -305,6 +305,7 @@ public class Zones22 implements OpacApi {
 					desc += "<b>"
 							+ node.select(".SummaryFieldData").text().trim()
 							+ "</b><br />";
+
 				} else if (node.select(".SummaryFieldLegend").text()
 						.equals("Verfasser")
 						|| node.select(".SummaryFieldLegend").text()

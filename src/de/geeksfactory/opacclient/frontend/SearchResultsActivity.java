@@ -123,6 +123,7 @@ public class SearchResultsActivity extends OpacActivity {
 				Intent intent = new Intent(SearchResultsActivity.this,
 						SearchResultDetailsActivity.class);
 				intent.putExtra("item", (int) items.get(position).getNr());
+				
 				if (items.get(position).getId() != null)
 					intent.putExtra("item_id", items.get(position).getId());
 				startActivity(intent);

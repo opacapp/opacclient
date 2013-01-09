@@ -407,7 +407,6 @@ public class OCLC2011 implements OpacApi {
 		String title = "";
 		String text = "";
 		Element detailtrs = doc2.select("#tab-content .data td").first();
-		Log.i("node", detailtrs.outerHtml());
 		for (Node node : detailtrs.childNodes()) {
 			if (node instanceof Element) {
 				if (((Element) node).tag().getName().equals("strong")) {
@@ -417,11 +416,9 @@ public class OCLC2011 implements OpacApi {
 							result.setTitle(text);
 						}
 						text = "";
-						Log.i("node", "text: "+text);
 					}
 
 					title = ((Element) node).text().trim();
-					Log.i("node", "title: "+title);
 				} else {
 					text = text + ((Element) node).text();
 				}

@@ -255,6 +255,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 								.openConnection().getInputStream());
 						res.setCoverBitmap(mIcon_val);
 					} catch (Exception e) {
+						e.printStackTrace();
 					}
 				}
 				success = true;
@@ -471,6 +472,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 							.openConnection().getInputStream());
 					res.setCoverBitmap(mIcon_val);
 				} catch (Exception e) {
+					e.printStackTrace();
 				}
 				success = true;
 				return res;
@@ -478,8 +480,10 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				publishProgress(e, "ioerror");
 			} catch (java.io.IOException e) {
 				success = false;
+				e.printStackTrace();
 			} catch (java.lang.IllegalStateException e) {
 				success = false;
+				e.printStackTrace();
 			} catch (Exception e) {
 				publishProgress(e, "ioerror");
 			}
@@ -507,8 +511,10 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				publishProgress(e, "ioerror");
 			} catch (java.io.IOException e) {
 				success = false;
+				e.printStackTrace();
 			} catch (java.lang.IllegalStateException e) {
 				success = false;
+				e.printStackTrace();
 			} catch (Exception e) {
 				publishProgress(e, "ioerror");
 			}
@@ -584,8 +590,6 @@ public class SearchResultDetailsActivity extends OpacActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater mi = new MenuInflater(this);
 		mi.inflate(R.menu.search_result_details_activity, menu);
-
-		Log.i("menu", "item " + item + " id " + id);
 
 		String bib = app.getLibrary().getIdent();
 		StarDataSource data = new StarDataSource(this);
