@@ -1,0 +1,10 @@
+{
+ "api": "oclc2011", 
+ "city": "Würzburg", 
+ "data": {
+  "baseurl": "http://katalog.bibliothek.uni-wuerzburg.de/InfoGuideClient.ubwsis", 
+  "information": null
+ }, 
+ "support": "Katalogsuche", 
+ "title": "Unibibliothek"
+}
