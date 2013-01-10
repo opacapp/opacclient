@@ -24,7 +24,6 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import de.geeksfactory.opacclient.AccountUnsupportedException;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
@@ -80,9 +79,9 @@ public class ReminderCheckService extends Service {
 
 			long now = new Date().getTime();
 			long last = sp.getLong("notification_last", 0);
-//			long warning = Long.decode(sp.getString("notification_warning",
-//					"367200000"));
-			long warning = 1000*3600*24*90;
+			// long warning = Long.decode(sp.getString("notification_warning",
+			// "367200000"));
+			long warning = 1000 * 3600 * 24 * 90;
 			long expired_new = 0;
 			long expired_total = 0;
 			long first = 0;

@@ -64,7 +64,8 @@ public class MainPreferenceActivity extends SherlockPreferenceActivity {
 				data.open();
 				data.clearMeta();
 				data.close();
-				Intent i = new Intent(MainPreferenceActivity.this, ReminderCheckService.class);
+				Intent i = new Intent(MainPreferenceActivity.this,
+						ReminderCheckService.class);
 				startService(i);
 				return false;
 			}

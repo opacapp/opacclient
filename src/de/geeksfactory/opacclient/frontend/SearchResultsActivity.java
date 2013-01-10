@@ -4,7 +4,6 @@ import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -38,7 +37,7 @@ public class SearchResultsActivity extends OpacActivity {
 				.setText(R.string.loading_results);
 
 		page = 1;
-		
+
 		st = new SearchStartTask();
 		st.execute(app, getIntent().getBundleExtra("query"));
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -123,7 +122,7 @@ public class SearchResultsActivity extends OpacActivity {
 				Intent intent = new Intent(SearchResultsActivity.this,
 						SearchResultDetailsActivity.class);
 				intent.putExtra("item", (int) items.get(position).getNr());
-				
+
 				if (items.get(position).getId() != null)
 					intent.putExtra("item_id", items.get(position).getId());
 				startActivity(intent);

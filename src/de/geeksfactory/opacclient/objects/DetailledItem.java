@@ -17,12 +17,12 @@ public class DetailledItem {
 	private boolean reservable;
 	private String id;
 	private Bundle volumesearch;
-	
+
 	public String getId() {
 		return id;
 	}
-	
-	public void setId(String id){
+
+	public void setId(String id) {
 		this.id = id;
 	}
 

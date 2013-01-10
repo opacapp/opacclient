@@ -68,7 +68,7 @@ public class StarDataSource {
 		cursor.close();
 		return item;
 	}
-	
+
 	public Starred getItem(String bib, String id) {
 		String[] selA = { bib, id };
 		Cursor cursor = database.query("starred", allColumns,

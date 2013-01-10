@@ -51,7 +51,8 @@ public class ErrorActivity extends SherlockActivity {
 			public void onClick(View v) {
 				PendingIntent RESTART_INTENT = PendingIntent.getActivity(
 						getBaseContext(), 0, new Intent(ErrorActivity.this,
-								FrontpageActivity.class), getIntent().getFlags());
+								FrontpageActivity.class), getIntent()
+								.getFlags());
 				AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 				mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 1000,
 						RESTART_INTENT);

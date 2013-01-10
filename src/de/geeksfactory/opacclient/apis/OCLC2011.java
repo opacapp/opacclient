@@ -48,8 +48,9 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
 public class OCLC2011 implements OpacApi {
 
 	/*
-	 * OpacApi für WebOpacs "Copyright 2011 OCLC" z.B. Bremen TODO -
-	 * Vorbestellen - Account - Zweigstellenkrams
+	 * OpacApi für WebOpacs "Copyright 2011 OCLC" (echter Name der Software
+	 * scheint SISIS zu sein) z.B. Bremen TODO - Vorbestellen - Account -
+	 * Zweigstellenkrams
 	 */
 
 	/*
@@ -422,9 +423,9 @@ public class OCLC2011 implements OpacApi {
 				} else {
 					text = text + ((Element) node).text();
 				}
-			} else if(node instanceof Element) {
+			} else if (node instanceof Element) {
 				text = text + ((Element) node).text();
-			} else if(node instanceof TextNode) {
+			} else if (node instanceof TextNode) {
 				text = text + ((TextNode) node).text();
 			}
 		}

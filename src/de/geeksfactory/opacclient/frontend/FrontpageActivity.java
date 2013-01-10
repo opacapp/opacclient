@@ -1,7 +1,5 @@
 package de.geeksfactory.opacclient.frontend;
 
-import java.io.UnsupportedEncodingException;
-
 import org.json.JSONException;
 
 import android.content.Intent;

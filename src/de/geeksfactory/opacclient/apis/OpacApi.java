@@ -29,7 +29,7 @@ public interface OpacApi {
 	public boolean isAccountSupported(Library library);
 
 	public boolean isAccountExtendable();
-	
+
 	public SimpleDateFormat getDateFormat();
 
 	public String getAccountExtendableInfo(Account acc)
