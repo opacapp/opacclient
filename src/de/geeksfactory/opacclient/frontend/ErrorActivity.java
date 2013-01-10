@@ -28,7 +28,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.WazaBe.HoloEverywhere.app.ProgressDialog;
+import org.holoeverywhere.app.ProgressDialog;
 import com.actionbarsherlock.app.SherlockActivity;
 
 import de.geeksfactory.opacclient.AccountUnsupportedException;

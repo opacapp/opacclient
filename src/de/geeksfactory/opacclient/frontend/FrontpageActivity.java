@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.WazaBe.HoloEverywhere.app.ProgressDialog;
+import org.holoeverywhere.app.ProgressDialog;
 import com.actionbarsherlock.view.Menu;
 
 import de.geeksfactory.opacclient.OpacClient;
