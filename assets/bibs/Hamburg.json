@@ -3,7 +3,7 @@
  "city": "Hamburg", 
  "data": {
   "baseurl": "https://www.buecherhallen.de/alswww2.dll/",
-  "information": null
+  "information": "http://www.buecherhallen.de/ca/d/r/"
  }, 
  "support": "Katalogsuche", 
  "title": null

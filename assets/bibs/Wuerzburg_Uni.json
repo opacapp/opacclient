@@ -3,7 +3,7 @@
  "city": "Würzburg", 
  "data": {
   "baseurl": "http://katalog.bibliothek.uni-wuerzburg.de/InfoGuideClient.ubwsis", 
-  "information": null
+  "information": "http://www.bibliothek.uni-wuerzburg.de/ub_infos/oeffnungszeiten/"
  }, 
  "support": "Katalogsuche", 
  "title": "Unibibliothek"

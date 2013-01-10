@@ -3,7 +3,7 @@
  "city": "Wuppertal", 
  "data": {
   "baseurl": "http://webopac.wuppertal.de/webOPACClient.sisis", 
-  "information": null
+  "information": "http://www.wuppertal.de/kultur-bildung/stadtbibliothek/index.php"
  }, 
  "support": "Katalogsuche", 
  "title": null

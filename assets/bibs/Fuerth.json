@@ -3,7 +3,7 @@
  "city": "Fürth",
  "data": {
   "baseurl": "https://serviceweb.fuerth.de/webOPAC", 
-  "information": null
+  "information": "http://fuerth.de/Home/Leben-in-Fuerth/schulen-bildung/volksbuecherei.aspx#ctl00_ctl16_cdvBigView_ctl00"
  }, 
  "support": "Katalogsuche", 
  "title": null

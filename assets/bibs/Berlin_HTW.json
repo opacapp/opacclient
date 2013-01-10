@@ -3,7 +3,7 @@
  "city": "Berlin", 
  "data": {
   "baseurl": "https://sisis.rz.htw-berlin.de/InfoGuideClient", 
-  "information": null
+  "information": "http://bibliothek.htw-berlin.de/oeffnungszeiten/"
  }, 
  "support": "Katalogsuche", 
  "title": "Unibibliothek HTW"

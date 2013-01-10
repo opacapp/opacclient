@@ -3,7 +3,7 @@
  "city": "Leipzig", 
  "data": {
   "baseurl": "https://webopac.stadtbibliothek-leipzig.de/webOPACClient", 
-  "information": null
+  "information": "http://www.leipzig.de/stadtbib/"
  }, 
  "support": "Katalogsuche", 
  "title": null

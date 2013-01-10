@@ -3,7 +3,7 @@
  "city": "Bochum", 
  "data": {
   "baseurl": "http://opac.ub.rub.de:8080/webOPACClient", 
-  "information": null
+  "information": "http://www.ub.rub.de/informationen/oeffnungszeiten.html"
  }, 
  "support": "Katalogsuche", 
  "title": "Unibibliothek RUB"

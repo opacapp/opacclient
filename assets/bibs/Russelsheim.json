@@ -3,7 +3,7 @@
  "city": "Rüsselsheim", 
  "data": {
   "baseurl": "http://stadtbuecherei.ruesselsheim.de/webOPACClient", 
-  "information": null
+  "information": "http://www.stadt-ruesselsheim.de/Stadtbuecherei.html"
  }, 
  "support": "Katalogsuche", 
  "title": null

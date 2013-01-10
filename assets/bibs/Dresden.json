@@ -3,7 +3,7 @@
  "city": "Dresden",
  "data": {
   "baseurl": "http://217.5.176.101/webOPACClient", 
-  "information": null
+  "information": "http://www.bibo-dresden.de/4/index_4.html"
  }, 
  "support": "Katalogsuche", 
  "title": null
