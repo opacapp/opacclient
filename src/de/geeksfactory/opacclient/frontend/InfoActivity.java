@@ -24,15 +24,17 @@ public class InfoActivity extends OpacActivity {
 		TextView tvErr = (TextView) findViewById(R.id.tvErr);
 		wvInfo.loadData(getString(R.string.loading), "text/html", null);
 		try {
-			if (app.getLibrary().getData().getString("information") == null
-					|| app.getLibrary().getData().getString("information")
-							.equals("null")) {
+			String infoUrl = app.getLibrary().getData()
+					.getString("information");
+			if (infoUrl == null || infoUrl.equals("null")) {
 				wvInfo.setVisibility(View.GONE);
 				tvErr.setVisibility(View.VISIBLE);
 				tvErr.setText(R.string.info_unsupported);
+			} else if (infoUrl.startsWith("http")) {
+				wvInfo.loadUrl(infoUrl);
 			} else {
 				wvInfo.loadUrl(app.getLibrary().getData().getString("baseurl")
-						+ app.getLibrary().getData().getString("information"));
+						+ infoUrl);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
