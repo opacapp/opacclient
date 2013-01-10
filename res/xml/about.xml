@@ -18,8 +18,8 @@
     <PreferenceCategory android:title="Feedback" >
         <Preference
             android:key="feedback"
-            android:summary="Feedback"
-            android:title="raphael+opac@geeksfactory.de" />
+            android:summary="raphael+opac@geeksfactory.de"
+            android:title="Feedback" />
         <Preference
             android:key="rate_play"
             android:summary="Google Play"
