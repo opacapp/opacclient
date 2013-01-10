@@ -158,7 +158,6 @@ public class FrontpageActivity extends OpacActivity {
 		ImageView ivMAccs = (ImageView) findViewById(R.id.ivMAcc);
 		ImageView ivMPrefs = (ImageView) findViewById(R.id.ivMPrefs);
 		ImageView ivMInfo = (ImageView) findViewById(R.id.ivMInfo);
-		ImageView ivMAbout = (ImageView) findViewById(R.id.ivMAbout);
 
 		ivSearch.setOnClickListener(new OnClickListener() {
 			@Override
