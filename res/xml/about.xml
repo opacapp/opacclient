@@ -36,8 +36,7 @@
             android:title="Source Code" />
         <Preference
             android:key="thanks"
-            android:summary="Céline A."
-            android:title="Danke an" />
+            android:title="@string/thanks" />
         <Preference
             android:key="osl"
             android:title="@string/osl" />
