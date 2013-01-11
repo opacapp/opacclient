@@ -1,0 +1,10 @@
+{
+ "api": "oclc2011", 
+ "city": "Trier", 
+ "data": {
+  "baseurl": "http://bibserv.fh-trier.de:8080/webOPACClient", 
+  "information": "http://www.hochschule-trier.de/index.php?id=1020"
+ }, 
+ "support": "Katalogsuche", 
+ "title": "Fachhochschule"
+}
