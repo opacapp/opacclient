@@ -107,6 +107,9 @@ public class AccountEditActivity extends SherlockActivity {
 			finish();
 			return true;
 		case R.id.action_cancel:
+			if (getIntent().hasExtra("adding")
+					&& getIntent().getBooleanExtra("adding", false))
+				delete();
 			finish();
 			return true;
 		case R.id.action_delete:

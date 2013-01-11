@@ -79,6 +79,7 @@ public class AccountListActivity extends SherlockActivity {
 						Intent i = new Intent(AccountListActivity.this,
 								AccountEditActivity.class);
 						i.putExtra("id", insertedid);
+						i.putExtra("adding", true);
 						startActivity(i);
 					}
 				});
