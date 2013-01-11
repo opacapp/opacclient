@@ -290,10 +290,12 @@ public class OCLC2011 implements OpacApi {
 		for (int i = 0; i < table.size(); i++) {
 			Element tr = table.get(i);
 			SearchResult sr = new SearchResult();
-			String[] fparts = tr.select("td a img").get(0).attr("src")
-					.split("/");
-			sr.setType(fparts[fparts.length - 1].replace(".jpg", ".png")
-					.replace(".gif", ".png").toLowerCase());
+			if (tr.select("td a img").size() > 0) {
+				String[] fparts = tr.select("td a img").get(0).attr("src")
+						.split("/");
+				sr.setType(fparts[fparts.length - 1].replace(".jpg", ".png")
+						.replace(".gif", ".png").toLowerCase());
+			}
 
 			String desc = "";
 			List<Node> children = tr.child(2).childNodes();
