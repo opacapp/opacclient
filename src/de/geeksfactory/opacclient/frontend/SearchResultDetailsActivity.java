@@ -78,6 +78,8 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			ft = new FetchTask();
 			ft.execute(app, getIntent().getIntExtra("item", 0));
 		} else {
+			fst = new FetchSubTask();
+			fst.execute(app, id);
 		}
 	}
 
