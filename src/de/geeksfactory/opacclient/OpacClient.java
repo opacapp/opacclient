@@ -50,36 +50,25 @@ public class OpacClient extends Application {
 		return (networkInfo != null && networkInfo.isConnected());
 	}
 
-	public OpacApi getIndependentApi(Library lib)
-			throws ClientProtocolException, SocketException, IOException,
-			NotReachableException {
-		OpacApi a;
+	public OpacApi getNewApi(Library lib) throws ClientProtocolException,
+			SocketException, IOException, NotReachableException {
+		OpacApi newApiInstance = null;
 		if (lib.getApi().equals("bond26"))
-			a = new Bond26();
+			newApiInstance = new Bond26();
 		else if (lib.getApi().equals("oclc2011"))
-			a = new OCLC2011();
+			newApiInstance = new OCLC2011();
 		else if (lib.getApi().equals("zones22"))
-			a = new Zones22();
+			newApiInstance = new Zones22();
 		else
 			return null;
 
-		a.init(this, lib);
-		return a;
+		newApiInstance.init(this, lib);
+		return newApiInstance;
 	}
 
 	private OpacApi initApi(Library lib) throws ClientProtocolException,
 			SocketException, IOException, NotReachableException {
-		api = null;
-		if (lib.getApi().equals("bond26"))
-			api = new Bond26();
-		else if (lib.getApi().equals("oclc2011"))
-			api = new OCLC2011();
-		else if (lib.getApi().equals("zones22"))
-			api = new Zones22();
-		else
-			return null;
-
-		api.init(this, lib);
+		api = getNewApi(lib);
 		return api;
 	}
 

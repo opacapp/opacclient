@@ -89,8 +89,8 @@ public class ReminderCheckService extends Service {
 			OpacClient app = (OpacClient) getApplication();
 			for (Account account : accounts) {
 				try {
-					OpacApi api = app.getIndependentApi(app.getLibrary(account
-							.getBib()));
+					OpacApi api = app
+							.getNewApi(app.getLibrary(account.getBib()));
 					SimpleDateFormat sdf = api.getDateFormat();
 					AccountData res = api.account(account);
 
