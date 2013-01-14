@@ -49,8 +49,7 @@ public class OCLC2011 implements OpacApi {
 
 	/*
 	 * OpacApi für WebOpacs "Copyright 2011 OCLC" (echter Name der Software
-	 * scheint SISIS zu sein) z.B. Bremen TODO - Vorbestellen - Account -
-	 * Zweigstellenkrams
+	 * scheint SISIS zu sein) z.B. Bremen TODO - Vorbestellen - Account
 	 */
 
 	/*
@@ -119,6 +118,7 @@ public class OCLC2011 implements OpacApi {
 		data.clearMeta(library.getIdent());
 		for (int i = 0; i < zst_opts.size(); i++) {
 			Element opt = zst_opts.get(i);
+			Log.i("node", opt.outerHtml());
 			if (!opt.val().equals(""))
 				data.addMeta("zst", library.getIdent(), opt.val(), opt.text());
 		}
