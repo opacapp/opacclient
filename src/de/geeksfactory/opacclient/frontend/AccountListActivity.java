@@ -3,6 +3,7 @@ package de.geeksfactory.opacclient.frontend;
 import java.io.IOException;
 import java.util.List;
 
+import org.holoeverywhere.app.AlertDialog;
 import org.json.JSONException;
 
 import android.content.DialogInterface;
@@ -17,7 +18,6 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 
-import org.holoeverywhere.app.AlertDialog;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 

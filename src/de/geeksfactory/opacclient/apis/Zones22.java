@@ -34,7 +34,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import de.geeksfactory.opacclient.AccountUnsupportedException;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
@@ -231,10 +230,6 @@ public class Zones22 implements OpacApi {
 			last_error = "Die Suchanfrage war leer.";
 			return null;
 		}
-
-		Log.i("url",
-				opac_url + "/" + searchobj + "?"
-						+ URLEncodedUtils.format(params, "UTF-8"));
 
 		HttpGet httpget = new HttpGet(opac_url + "/" + searchobj + "?"
 				+ URLEncodedUtils.format(params, "UTF-8"));

@@ -12,6 +12,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.holoeverywhere.app.ProgressDialog;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -28,7 +29,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.holoeverywhere.app.ProgressDialog;
 import com.actionbarsherlock.app.SherlockActivity;
 
 import de.geeksfactory.opacclient.AccountUnsupportedException;

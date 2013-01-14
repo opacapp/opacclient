@@ -2,6 +2,8 @@ package de.geeksfactory.opacclient.frontend;
 
 import java.util.List;
 
+import org.holoeverywhere.app.ProgressDialog;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -13,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.holoeverywhere.app.ProgressDialog;
 import com.actionbarsherlock.view.MenuItem;
 
 import de.geeksfactory.opacclient.OpacTask;

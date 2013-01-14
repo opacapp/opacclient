@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.holoeverywhere.app.Dialog;
+
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -20,7 +22,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.holoeverywhere.app.Dialog;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
 

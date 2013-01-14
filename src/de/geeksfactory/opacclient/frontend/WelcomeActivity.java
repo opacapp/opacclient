@@ -3,6 +3,7 @@ package de.geeksfactory.opacclient.frontend;
 import java.io.IOException;
 import java.util.List;
 
+import org.holoeverywhere.app.ProgressDialog;
 import org.json.JSONException;
 
 import android.content.Intent;
@@ -13,9 +14,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-
-import org.holoeverywhere.app.ProgressDialog;
-
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
