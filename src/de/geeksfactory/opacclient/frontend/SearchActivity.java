@@ -145,22 +145,6 @@ public class SearchActivity extends OpacActivity {
 			findViewById(R.id.cbOrder).setVisibility(View.GONE);
 			findViewById(R.id.tvOrder).setVisibility(View.GONE);
 		}
-	}
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.search_activity);
-		SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(this);
-
-		if (getIntent().getBooleanExtra("barcode", false)) {
-			IntentIntegrator integrator = new IntentIntegrator(
-					SearchActivity.this);
-			integrator.initiateScan();
-		}
-
-		// Fill combo boxes
 
 		Spinner cbZst = (Spinner) findViewById(R.id.cbZweigstelle);
 
@@ -183,6 +167,22 @@ public class SearchActivity extends OpacActivity {
 				R.layout.simple_spinner_item));
 
 		data.close();
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.search_activity);
+		SharedPreferences sp = PreferenceManager
+				.getDefaultSharedPreferences(this);
+
+		if (getIntent().getBooleanExtra("barcode", false)) {
+			IntentIntegrator integrator = new IntentIntegrator(
+					SearchActivity.this);
+			integrator.initiateScan();
+		}
+
+		// Fill combo boxes
 
 		ArrayAdapter<CharSequence> order_adapter = ArrayAdapter
 				.createFromResource(this, R.array.orders,
