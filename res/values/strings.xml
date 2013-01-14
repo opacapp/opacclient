@@ -89,6 +89,7 @@
     <string name="report">Bericht senden</string>
     <string name="report_sending">Sende Bericht…</string>
     <string name="report_sent">Bericht gesendet. Vielen Dank!</string>
+    <string name="report_error">Bericht konnte nicht gesendet werden!</string>
     <string name="no_response">Die Bücherei konnte nicht erreicht werden. Entweder mit deinem Internet stimmt etwas nicht, oder bei der Bücherei ist was kaputt.</string>
     <string name="no_connection">Ohne Verbindung zum Internet ist das hier alles sinnlos. (Oder du hast eine falsche Web-Opac-Adresse konfiguriert.)</string>
     <string name="not_reachable">Der Server der Bücherei meldet einen Fehler. Da sind wir leider machtlos.</string>

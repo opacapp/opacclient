@@ -6,11 +6,13 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
@@ -237,7 +239,7 @@ public class AccountActivity extends OpacActivity {
 		protected Integer doInBackground(Object... arg0) {
 			DefaultHttpClient dc = new DefaultHttpClient();
 			HttpPost httppost = new HttpPost(
-					"http://www.raphaelmichel.de/opacclient/crashreport.php");
+					"http://opacapp.de/crashreport.php");
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("traceback", ""));
 			try {
@@ -246,7 +248,7 @@ public class AccountActivity extends OpacActivity {
 								getPackageManager().getPackageInfo(
 										getPackageName(), 0).versionName));
 			} catch (Exception e) {
-
+				e.printStackTrace();
 			}
 
 			nameValuePairs.add(new BasicNameValuePair("android",
@@ -262,18 +264,9 @@ public class AccountActivity extends OpacActivity {
 			try {
 				nameValuePairs.add(new BasicNameValuePair("html", app.getApi()
 						.getAccountExtendableInfo(app.getAccount())));
-			} catch (ClientProtocolException e1) {
+			} catch (Exception e1) {
 				e1.printStackTrace();
-				return 0;
-			} catch (SocketException e1) {
-				e1.printStackTrace();
-				return 0;
-			} catch (IOException e1) {
-				e1.printStackTrace();
-				return 0;
-			} catch (NotReachableException e1) {
-				e1.printStackTrace();
-				return 0;
+				return 1;
 			}
 
 			try {
@@ -285,10 +278,9 @@ public class AccountActivity extends OpacActivity {
 			try {
 				response = dc.execute(httppost);
 				response.getEntity().consumeContent();
-			} catch (ClientProtocolException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+				return 1;
 			}
 			return 0;
 		}
@@ -297,9 +289,15 @@ public class AccountActivity extends OpacActivity {
 			dialog.dismiss();
 			Button btSend = (Button) findViewById(R.id.btSend);
 			btSend.setEnabled(false);
-			Toast toast = Toast.makeText(AccountActivity.this,
-					getString(R.string.report_sent), Toast.LENGTH_SHORT);
-			toast.show();
+			if (result == 0) {
+				Toast toast = Toast.makeText(AccountActivity.this,
+						getString(R.string.report_sent), Toast.LENGTH_SHORT);
+				toast.show();
+			} else {
+				Toast toast = Toast.makeText(AccountActivity.this,
+						getString(R.string.report_error), Toast.LENGTH_SHORT);
+				toast.show();
+			}
 
 		}
 	}
