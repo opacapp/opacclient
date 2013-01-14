@@ -111,10 +111,8 @@ public class Zones22 implements OpacApi {
 		data.clearMeta(library.getIdent());
 		for (int i = 0; i < zst_opts.size(); i++) {
 			Element opt = zst_opts.get(i);
-			if (!opt.val().equals(""))
-				data.addMeta("zst", library.getIdent(), opt.attr("for")
-						.substring(opt.attr("for").indexOf(".", 8)).trim(), opt
-						.text().trim());
+			data.addMeta("zst", library.getIdent(), opt.attr("for"), opt.text()
+					.trim());
 		}
 
 		data.close();
@@ -221,10 +219,22 @@ public class Zones22 implements OpacApi {
 		index = addParameters(query, "schlag_a", "su=", params, index);
 		index = addParameters(query, "jahr", "dp=", params, index);
 
+		if (query.containsKey("zweigstelle")
+				&& !query.getString("zweigstelle").equals(""))
+			params.add(new BasicNameValuePair("q.limits.limit", query
+					.getString("zweigstelle")));
+
 		if (index > 3) {
 			last_error = "Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.";
 			return null;
+		} else if (index == 1) {
+			last_error = "Die Suchanfrage war leer.";
+			return null;
 		}
+
+		Log.i("url",
+				opac_url + "/" + searchobj + "?"
+						+ URLEncodedUtils.format(params, "UTF-8"));
 
 		HttpGet httpget = new HttpGet(opac_url + "/" + searchobj + "?"
 				+ URLEncodedUtils.format(params, "UTF-8"));
@@ -280,7 +290,7 @@ public class Zones22 implements OpacApi {
 		Document doc = Jsoup.parse(html);
 		doc.setBaseUri(opac_url + "/APS_PRESENT_BIB");
 
-		this.results = doc.select(".searchHits").first().text().trim();
+		results = doc.select(".searchHits").first().text().trim();
 
 		searchobj = doc.select(".pageNavLink").first().attr("href")
 				.split("\\?")[0];
@@ -421,7 +431,6 @@ public class Zones22 implements OpacApi {
 						}
 						j++;
 					} else if (node instanceof TextNode) {
-						Log.i("node", j + ": " + ((TextNode) node).text());
 						if (j == 0)
 							copy.put("abt", ((TextNode) node).text());
 						if (j == 2)
