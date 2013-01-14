@@ -24,6 +24,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 import de.geeksfactory.opacclient.zxing.IntentIntegrator;
 import de.geeksfactory.opacclient.zxing.IntentResult;
@@ -145,7 +146,9 @@ public class SearchActivity extends OpacActivity {
 			findViewById(R.id.cbOrder).setVisibility(View.GONE);
 			findViewById(R.id.tvOrder).setVisibility(View.GONE);
 		}
+	}
 
+	private void fillComboBoxes() {
 		Spinner cbZst = (Spinner) findViewById(R.id.cbZweigstelle);
 
 		MetaDataSource data = new MetaDataSource(this);
@@ -183,6 +186,7 @@ public class SearchActivity extends OpacActivity {
 		}
 
 		// Fill combo boxes
+		fillComboBoxes();
 
 		ArrayAdapter<CharSequence> order_adapter = ArrayAdapter
 				.createFromResource(this, R.array.orders,
@@ -289,7 +293,13 @@ public class SearchActivity extends OpacActivity {
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
 		case R.id.action_accounts:
-			selectaccount();
+			selectaccount(new AccountSelectedListener() {
+
+				@Override
+				public void accountSelected(Account account) {
+					fillComboBoxes();
+				}
+			});
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
