@@ -363,13 +363,13 @@ public class SearchResultDetailsActivity extends OpacActivity {
 							R.layout.copy_listitem, null);
 
 					if (copy.containsKey("ort")) {
-						((TextView) v.findViewById(R.id.tvLocation)).setText(copy
-								.getAsString("ort"));
+						((TextView) v.findViewById(R.id.tvLocation))
+								.setText(copy.getAsString("ort"));
 						((TextView) v.findViewById(R.id.tvLocation))
 								.setVisibility(View.VISIBLE);
 					} else if (copy.containsKey("barcode")) {
-						((TextView) v.findViewById(R.id.tvLocation)).setText(copy
-								.getAsString("barcode"));
+						((TextView) v.findViewById(R.id.tvLocation))
+								.setText(copy.getAsString("barcode"));
 						((TextView) v.findViewById(R.id.tvLocation))
 								.setVisibility(View.VISIBLE);
 					} else {
