@@ -12,7 +12,7 @@
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/tvBarcode"
+            android:id="@+id/tvLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"

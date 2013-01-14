@@ -362,13 +362,18 @@ public class SearchResultDetailsActivity extends OpacActivity {
 					View v = getLayoutInflater().inflate(
 							R.layout.copy_listitem, null);
 
-					if (copy.containsKey("barcode")) {
-						((TextView) v.findViewById(R.id.tvBarcode))
-								.setText(copy.getAsString("barcode"));
-						((TextView) v.findViewById(R.id.tvBarcode))
+					if (copy.containsKey("ort")) {
+						((TextView) v.findViewById(R.id.tvLocation)).setText(copy
+								.getAsString("ort"));
+						((TextView) v.findViewById(R.id.tvLocation))
+								.setVisibility(View.VISIBLE);
+					} else if (copy.containsKey("barcode")) {
+						((TextView) v.findViewById(R.id.tvLocation)).setText(copy
+								.getAsString("barcode"));
+						((TextView) v.findViewById(R.id.tvLocation))
 								.setVisibility(View.VISIBLE);
 					} else {
-						((TextView) v.findViewById(R.id.tvBarcode))
+						((TextView) v.findViewById(R.id.tvLocation))
 								.setVisibility(View.GONE);
 					}
 					if (copy.containsKey("zst")) {
