@@ -24,8 +24,11 @@ import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -46,7 +49,7 @@ public class Zones22 implements OpacApi {
 
 	/*
 	 * OpacApi für WebOpacs "Zones.2.2.45.04" z.B. Hamburg - TODO: Suche mit
-	 * Medientypen - Details - Account - Vorbestellen - Zweigstellen
+	 * Medientypen - Account - Vorbestellen - Zweigstellen
 	 */
 
 	private String opac_url = "";
@@ -381,9 +384,60 @@ public class Zones22 implements OpacApi {
 				result.setTitle(tr.child(s - 1).text().trim());
 				title_is_set = true;
 			} else if (s > 1) {
-				Log.i("tr", tr.outerHtml());
 				result.addDetail(new Detail(tr.child(0).text().trim(), tr
 						.child(s - 1).text().trim()));
+			}
+		}
+
+		Elements copydivs = doc.select(".DetailDataCell div[id^=stock_]");
+		String pop = "";
+		for (int i = 0; i < copydivs.size(); i++) {
+			Element div = copydivs.get(i);
+
+			if (div.attr("id").startsWith("stock_head")) {
+				pop = div.text().trim();
+				continue;
+			}
+
+			ContentValues copy = new ContentValues();
+
+			// This is getting very ugly - check if it is valid for libraries
+			// which are not
+			// Hamburg.
+			int j = 0;
+			for (Node node : div.childNodes()) {
+				try {
+					if (node instanceof Element) {
+						if (((Element) node).tag().getName().equals("br")) {
+							copy.put("zst", pop);
+							result.addCopy(copy);
+							j = -1;
+						} else if (((Element) node).tag().getName().equals("b")
+								&& j == 1) {
+							copy.put("ort", ((Element) node).text());
+						} else if (((Element) node).tag().getName().equals("b")
+								&& j > 1) {
+							copy.put("status", ((Element) node).text());
+						}
+						j++;
+					} else if (node instanceof TextNode) {
+						Log.i("node", j + ": " + ((TextNode) node).text());
+						if (j == 0)
+							copy.put("abt", ((TextNode) node).text());
+						if (j == 2)
+							copy.put("barcode",
+									((TextNode) node).getWholeText().trim()
+											.split("\n")[0].trim());
+						if (j == 6) {
+							String text = ((TextNode) node).text().trim();
+							copy.put("rueckgabe",
+									text.substring(text.length() - 10));
+						}
+						j++;
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 
