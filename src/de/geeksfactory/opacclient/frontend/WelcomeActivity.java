@@ -25,12 +25,14 @@ import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 
 public class WelcomeActivity extends SherlockActivity {
+	protected OpacClient app;
 	protected ProgressDialog dialog;
 	private List<Library> libraries;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		app = (OpacClient) getApplication();
 		setContentView(R.layout.welcome_activity);
 
 		final SharedPreferences sp = PreferenceManager
