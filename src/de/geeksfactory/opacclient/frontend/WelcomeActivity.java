@@ -14,6 +14,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+
+import com.actionbarsherlock.app.SherlockActivity;
+
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
@@ -21,7 +24,7 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 
-public class WelcomeActivity extends OpacActivity {
+public class WelcomeActivity extends SherlockActivity {
 	protected ProgressDialog dialog;
 	private List<Library> libraries;
 
