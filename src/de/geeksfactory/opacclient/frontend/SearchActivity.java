@@ -409,8 +409,6 @@ public class SearchActivity extends OpacActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			return true;
 		case R.id.action_accounts:
 			selectaccount(new AccountSelectedListener() {
 

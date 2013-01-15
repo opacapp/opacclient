@@ -20,17 +20,18 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.slidingmenu.lib.SlidingMenu;
+import com.slidingmenu.lib.app.SlidingActivity;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 
-public abstract class OpacActivity extends SherlockActivity {
+public abstract class OpacActivity extends SlidingActivity {
 	protected OpacClient app;
 	protected AlertDialog adialog;
 
@@ -39,6 +40,15 @@ public abstract class OpacActivity extends SherlockActivity {
 		super.onCreate(savedInstanceState);
 		this.getSupportActionBar().setHomeButtonEnabled(true);
 		app = (OpacClient) getApplication();
+
+		SlidingMenu sm = getSlidingMenu();
+		setBehindContentView(R.layout.sliding_navigation);
+		sm.setShadowWidthRes(R.dimen.shadow_width);
+		sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+		sm.setFadeDegree(0.35f);
+		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		
 	}
 
 	@Override
