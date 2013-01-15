@@ -2,7 +2,7 @@
  "api": "bond26", 
  "city": "Kronberg", 
  "data": {
-  "accounttable": null, 
+  "accounttable": [-1, 0, 1, 2, -1, -1, -1, 3], 
   "baseurl": "http://webopac.kronberg.de", 
   "copiestable": [
    0, 
@@ -14,7 +14,7 @@
    -1
   ], 
   "information": "http://stadtbuecherei.kronberg.de/sv_kronberg_stadtbuecherei/Home/",
-  "reservationtable": null
+  "reservationtable": [0, 1, 2, -1, 3]
  }, 
  "support": "Katalogsuche", 
  "title": null

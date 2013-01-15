@@ -2,7 +2,7 @@
  "api": "bond26", 
  "city": "Leverkusen", 
  "data": {
-  "accounttable": null, 
+  "accounttable": [-1, 1, 2, 3, 4, 0, -1, 5], 
   "baseurl": "http://www.bibliothek.leverkusen.de/wwwopac", 
   "copiestable": [
    -1, 
@@ -14,7 +14,7 @@
    5
   ], 
   "information": "http://www.bibliothek.leverkusen.de/read_blue/info.html",
-  "reservationtable": null
+  "reservationtable": [1, 2, -1, 0, 3]
  }, 
  "support": "Katalogsuche", 
  "title": null

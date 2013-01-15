@@ -2,7 +2,7 @@
  "api": "bond26", 
  "city": "Wien", 
  "data": {
-  "accounttable": null, 
+  "accounttable": [-1, 0, 1, 2, -1, 3, 3, 4],
   "baseurl": "http://katalog.buechereien.wien.at", 
   "copiestable": [
    -1, 
@@ -14,7 +14,7 @@
    5
   ], 
   "information": "http://buechereien.wien.at/de/standorteoeffnungszeiten",
-  "reservationtable": null
+  "reservationtable": [0, 1, -1, 2, 3]
  }, 
  "support": "Katalogsuche", 
  "title": null
