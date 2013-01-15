@@ -242,7 +242,7 @@ public abstract class OpacActivity extends SherlockActivity {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			// app icon in action bar clicked; go home
-			Intent intent = new Intent(this, FrontpageActivity.class);
+			Intent intent = new Intent(this, SearchActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			return true;

@@ -18,8 +18,9 @@
         android:label="@string/app_name"
         android:theme="@style/Holo.Theme.Light" >
         <activity
-            android:name=".frontend.FrontpageActivity"
+            android:name=".frontend.SearchActivity"
             android:label="@string/launcher_name" >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -48,13 +49,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".frontend.SearchActivity"
-            android:label="@string/search" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.geeksfactory.opacclient.frontend.FrontpageActivity" />
-        </activity>
-        <activity
             android:name=".frontend.SearchResultsActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/search_results" >
@@ -65,9 +59,6 @@
         <activity
             android:name=".frontend.MainPreferenceActivity"
             android:label="@string/prefs" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.geeksfactory.opacclient.frontend.FrontpageActivity" />
         </activity>
         <activity
             android:name=".frontend.SearchResultDetailsActivity"
@@ -81,9 +72,6 @@
             android:name=".frontend.AccountActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/account" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.geeksfactory.opacclient.frontend.FrontpageActivity" />
         </activity>
         <activity
             android:name=".frontend.WelcomeActivity"
@@ -112,16 +100,10 @@
         <activity
             android:name=".frontend.StarredActivity"
             android:label="@string/starred_list" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.geeksfactory.opacclient.frontend.FrontpageActivity" />
         </activity>
         <activity
             android:name=".frontend.InfoActivity"
             android:label="@string/info" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.geeksfactory.opacclient.frontend.FrontpageActivity" />
         </activity>
         <activity
             android:name=".frontend.AccountListActivity"

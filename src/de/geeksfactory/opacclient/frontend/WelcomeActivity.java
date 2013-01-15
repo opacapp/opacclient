@@ -81,7 +81,7 @@ public class WelcomeActivity extends OpacActivity {
 		protected void onPostExecute(Integer result) {
 			dialog.dismiss();
 			Intent intent = new Intent(WelcomeActivity.this,
-					FrontpageActivity.class);
+					SearchActivity.class);
 			startActivity(intent);
 		}
 	}

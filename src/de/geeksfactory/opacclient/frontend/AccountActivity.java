@@ -89,7 +89,6 @@ public class AccountActivity extends OpacActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			NavUtils.navigateUpFromSameTask(this);
 			return true;
 		case R.id.action_accounts:
 			selectaccount();

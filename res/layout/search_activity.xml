@@ -33,7 +33,6 @@
                 android:singleLine="true" >
 
                 <requestFocus />
-
             </EditText>
 
             <TextView
