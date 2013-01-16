@@ -17,5 +17,5 @@
 -->
 
 <resources>
-    <color name="pressed_opac">#CCcc0000</color>
+    <color name="pressed_opac">#CCff4444</color>
 </resources>
