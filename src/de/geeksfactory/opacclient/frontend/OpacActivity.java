@@ -251,10 +251,7 @@ public abstract class OpacActivity extends SlidingActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			// app icon in action bar clicked; go home
-			Intent intent = new Intent(this, SearchActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
+			toggle();
 			return true;
 		case R.id.menu_info:
 			Intent iInfo = new Intent(OpacActivity.this, InfoActivity.class);
