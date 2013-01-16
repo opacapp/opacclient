@@ -170,6 +170,55 @@ public class AboutActivity extends SherlockPreferenceActivity {
 						return false;
 					}
 				});
+
+		findPreference("privacy").setOnPreferenceClickListener(
+				new OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference preference) {
+
+						final Dialog dialog = new Dialog(AboutActivity.this);
+						dialog.setContentView(R.layout.osl_dialog);
+						dialog.setTitle(R.string.privacy);
+						TextView textview1 = (TextView) dialog
+								.findViewById(R.id.textView1);
+
+						String text = "";
+
+						StringBuilder builder = new StringBuilder();
+						InputStream fis;
+						try {
+							fis = getAssets().open("privacy.html");
+							BufferedReader reader = new BufferedReader(
+									new InputStreamReader(fis, "utf-8"));
+							String line;
+							while ((line = reader.readLine()) != null) {
+								builder.append(line);
+							}
+
+							text = builder.toString();
+							fis.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+
+						textview1.setText(Html.fromHtml(text));
+
+						Button dialogButton = (Button) dialog
+								.findViewById(R.id.button1);
+						// if button is clicked, close the custom dialog
+						dialogButton.setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								dialog.dismiss();
+							}
+						});
+
+						dialog.show();
+
+						return false;
+					}
+				});
+		
 		findPreference("thanks").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
 					@Override

@@ -31,6 +31,9 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="Sonstiges" >
         <Preference
+            android:key="privacy"
+            android:title="@string/privacy" />
+        <Preference
             android:key="source"
             android:summary="github.com/raphaelm/opacclient"
             android:title="Source Code" />
