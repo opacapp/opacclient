@@ -406,6 +406,10 @@ public class Bond26 implements OpacApi {
 				last_error = doc.getElementsByClass("kontomeldung").get(0)
 						.text();
 				return false;
+			} else if (doc.select(
+					"select[name=zstauswahl] option[value=" + zst + "]").size() == 0) {
+				last_error = "In diese Zweigstelle kann nicht vorbestellt werden.";
+				return false;
 			}
 		} else if (response.getStatusLine().getStatusCode() == 302) {
 			response.getEntity().consumeContent();
