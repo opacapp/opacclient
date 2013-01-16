@@ -7,5 +7,11 @@
         android:showAsAction="always"
         android:title="@string/accounts">
     </item>
+    
+    <item
+        android:id="@+id/action_search_go"
+        android:showAsAction="always|withText"
+        android:title="@string/go_search">
+    </item>
 
 </menu>

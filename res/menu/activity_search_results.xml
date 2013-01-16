@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_prev"
+        android:icon="@drawable/nav_prev"
+        android:showAsAction="always">
+    </item>
+    <item
+        android:id="@+id/action_next"
+        android:icon="@drawable/nav_next"
+        android:showAsAction="always">
+    </item>
+
+</menu>

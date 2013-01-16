@@ -19,8 +19,8 @@
         android:theme="@style/Theme.opac" >
         <activity
             android:name=".frontend.SearchActivity"
-            android:label="@string/launcher_name" >
-
+            android:label="@string/launcher_name"
+            android:uiOptions="splitActionBarWhenNarrow" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -51,7 +51,8 @@
         <activity
             android:name=".frontend.SearchResultsActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/search_results" >
+            android:label="@string/search_results"
+            android:uiOptions="splitActionBarWhenNarrow" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.geeksfactory.opacclient.frontend.SearchActivity" />

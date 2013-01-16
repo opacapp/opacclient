@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.holoeverywhere.app.ProgressDialog;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -15,11 +16,14 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.SearchResult;
+import de.geeksfactory.opacclient.storage.StarDataSource;
 
 public class SearchResultsActivity extends OpacActivity {
 
@@ -44,14 +48,48 @@ public class SearchResultsActivity extends OpacActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
+	@SuppressLint("NewApi")
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case R.id.action_prev:
+			setContentView(R.layout.loading);
+			((TextView) findViewById(R.id.tvLoading))
+					.setText(R.string.loading_results);
+			page--;
+			sst = new SearchPageTask();
+			sst.execute(app, page);
+			invalidateOptionsMenu();
+			return true;
+		case R.id.action_next:
+			setContentView(R.layout.loading);
+			((TextView) findViewById(R.id.tvLoading))
+					.setText(R.string.loading_results);
+			page++;
+			sst = new SearchPageTask();
+			sst.execute(app, page);
+			invalidateOptionsMenu();
+			return true;
 		case android.R.id.home:
 			finish();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater mi = new MenuInflater(this);
+		mi.inflate(R.menu.activity_search_results, menu);
+
+		if (page == 1) {
+			menu.findItem(R.id.action_prev).setVisible(false);
+		} else {
+
+			menu.findItem(R.id.action_prev).setVisible(true);
+		}
+
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	public class SearchStartTask extends OpacTask<List<SearchResult>> {
@@ -127,41 +165,6 @@ public class SearchResultsActivity extends OpacActivity {
 				if (items.get(position).getId() != null)
 					intent.putExtra("item_id", items.get(position).getId());
 				startActivity(intent);
-			}
-		});
-
-		final ImageView btPrev = (ImageView) findViewById(R.id.btPrev);
-		if (page == 1) {
-			btPrev.setVisibility(View.INVISIBLE);
-		}
-		btPrev.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				setContentView(R.layout.loading);
-				((TextView) findViewById(R.id.tvLoading))
-						.setText(R.string.loading_results);
-				page--;
-				sst = new SearchPageTask();
-				sst.execute(app, page);
-				if (page == 1) {
-					btPrev.setVisibility(View.INVISIBLE);
-				}
-			}
-		});
-
-		final ImageView btNext = (ImageView) findViewById(R.id.btNext);
-		btNext.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				setContentView(R.layout.loading);
-				((TextView) findViewById(R.id.tvLoading))
-						.setText(R.string.loading_results);
-				page++;
-				sst = new SearchPageTask();
-				sst.execute(app, page);
-				if (page > 1) {
-					btPrev.setVisibility(View.VISIBLE);
-				}
 			}
 		});
 

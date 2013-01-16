@@ -326,78 +326,72 @@ public class SearchActivity extends OpacActivity {
 			}
 		});
 
-		// Go
-
-		Button btGo = (Button) findViewById(R.id.btStartsearch);
-		btGo.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				String zst = "";
-				String mg = "";
-				if (cbZst_data.size() > 0)
-					zst = cbZst_data.get(
-							((Spinner) SearchActivity.this
-									.findViewById(R.id.cbZweigstelle))
-									.getSelectedItemPosition()).getAsString(
-							"key");
-				if (cbMg_data.size() > 0)
-					mg = cbMg_data.get(
-							((Spinner) SearchActivity.this
-									.findViewById(R.id.cbMediengruppe))
-									.getSelectedItemPosition()).getAsString(
-							"key");
-
-				Intent myIntent = new Intent(SearchActivity.this,
-						SearchResultsActivity.class);
-				Bundle query = new Bundle();
-				query.putString("titel", ((EditText) SearchActivity.this
-						.findViewById(R.id.etTitel)).getEditableText()
-						.toString());
-				query.putString("verfasser", ((EditText) SearchActivity.this
-						.findViewById(R.id.etVerfasser)).getEditableText()
-						.toString());
-				query.putString("schlag_a", ((EditText) SearchActivity.this
-						.findViewById(R.id.etSchlagA)).getEditableText()
-						.toString());
-				query.putString("schlag_b", ((EditText) SearchActivity.this
-						.findViewById(R.id.etSchlagB)).getEditableText()
-						.toString());
-				query.putString("zweigstelle", zst);
-				query.putString("mediengruppe", mg);
-				query.putString("isbn", ((EditText) SearchActivity.this
-						.findViewById(R.id.etISBN)).getEditableText()
-						.toString());
-				query.putString("jahr", ((EditText) SearchActivity.this
-						.findViewById(R.id.etJahr)).getEditableText()
-						.toString());
-				query.putString("jahr_von", ((EditText) SearchActivity.this
-						.findViewById(R.id.etJahrVon)).getEditableText()
-						.toString());
-				query.putString("jahr_bis", ((EditText) SearchActivity.this
-						.findViewById(R.id.etJahrBis)).getEditableText()
-						.toString());
-				query.putString("systematik", ((EditText) SearchActivity.this
-						.findViewById(R.id.etSystematik)).getEditableText()
-						.toString());
-				query.putString("interessenkreis",
-						((EditText) SearchActivity.this
-								.findViewById(R.id.etInteressenkreis))
-								.getEditableText().toString());
-				query.putString("verlag", ((EditText) SearchActivity.this
-						.findViewById(R.id.etVerlag)).getEditableText()
-						.toString());
-				query.putString(
-						"order",
-						(((Integer) ((Spinner) SearchActivity.this
-								.findViewById(R.id.cbOrder))
-								.getSelectedItemPosition()) + 1)
-								+ "");
-				myIntent.putExtra("query", query);
-				startActivity(myIntent);
-			}
-		});
-
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+	}
+	
+	public void go(){
+		String zst = "";
+		String mg = "";
+		if (cbZst_data.size() > 0)
+			zst = cbZst_data.get(
+					((Spinner) SearchActivity.this
+							.findViewById(R.id.cbZweigstelle))
+							.getSelectedItemPosition()).getAsString(
+					"key");
+		if (cbMg_data.size() > 0)
+			mg = cbMg_data.get(
+					((Spinner) SearchActivity.this
+							.findViewById(R.id.cbMediengruppe))
+							.getSelectedItemPosition()).getAsString(
+					"key");
+
+		Intent myIntent = new Intent(SearchActivity.this,
+				SearchResultsActivity.class);
+		Bundle query = new Bundle();
+		query.putString("titel", ((EditText) SearchActivity.this
+				.findViewById(R.id.etTitel)).getEditableText()
+				.toString());
+		query.putString("verfasser", ((EditText) SearchActivity.this
+				.findViewById(R.id.etVerfasser)).getEditableText()
+				.toString());
+		query.putString("schlag_a", ((EditText) SearchActivity.this
+				.findViewById(R.id.etSchlagA)).getEditableText()
+				.toString());
+		query.putString("schlag_b", ((EditText) SearchActivity.this
+				.findViewById(R.id.etSchlagB)).getEditableText()
+				.toString());
+		query.putString("zweigstelle", zst);
+		query.putString("mediengruppe", mg);
+		query.putString("isbn", ((EditText) SearchActivity.this
+				.findViewById(R.id.etISBN)).getEditableText()
+				.toString());
+		query.putString("jahr", ((EditText) SearchActivity.this
+				.findViewById(R.id.etJahr)).getEditableText()
+				.toString());
+		query.putString("jahr_von", ((EditText) SearchActivity.this
+				.findViewById(R.id.etJahrVon)).getEditableText()
+				.toString());
+		query.putString("jahr_bis", ((EditText) SearchActivity.this
+				.findViewById(R.id.etJahrBis)).getEditableText()
+				.toString());
+		query.putString("systematik", ((EditText) SearchActivity.this
+				.findViewById(R.id.etSystematik)).getEditableText()
+				.toString());
+		query.putString("interessenkreis",
+				((EditText) SearchActivity.this
+						.findViewById(R.id.etInteressenkreis))
+						.getEditableText().toString());
+		query.putString("verlag", ((EditText) SearchActivity.this
+				.findViewById(R.id.etVerlag)).getEditableText()
+				.toString());
+		query.putString(
+				"order",
+				(((Integer) ((Spinner) SearchActivity.this
+						.findViewById(R.id.cbOrder))
+						.getSelectedItemPosition()) + 1)
+						+ "");
+		myIntent.putExtra("query", query);
+		startActivity(myIntent);
 	}
 
 	@Override
@@ -409,6 +403,9 @@ public class SearchActivity extends OpacActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case R.id.action_search_go:
+			go();
+			return true;
 		case R.id.action_accounts:
 			selectaccount(new AccountSelectedListener() {
 
