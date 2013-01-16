@@ -604,12 +604,12 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		if ((id == null || id.equals("")) && item != null) {
 			if (data.isStarredTitle(bib, title)) {
 				menu.findItem(R.id.action_star)
-						.setIcon(R.drawable.ic_ab_star_1);
+						.setIcon(R.drawable.ic_action_star_1);
 			}
 		} else {
 			if (data.isStarred(bib, id)) {
 				menu.findItem(R.id.action_star)
-						.setIcon(R.drawable.ic_ab_star_1);
+						.setIcon(R.drawable.ic_action_star_1);
 			}
 		}
 		data.close();
@@ -667,26 +667,26 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			} else if (id == null || id.equals("")) {
 				if (star.isStarredTitle(bib, title)) {
 					star.remove(star.getItemTitle(bib, title));
-					item.setIcon(R.drawable.ic_ab_star_0);
+					item.setIcon(R.drawable.ic_action_star_0);
 				} else {
 					star.star(null, title, bib);
 					Toast toast = Toast.makeText(
 							SearchResultDetailsActivity.this,
 							getString(R.string.starred), Toast.LENGTH_SHORT);
 					toast.show();
-					item.setIcon(R.drawable.ic_ab_star_1);
+					item.setIcon(R.drawable.ic_action_star_1);
 				}
 			} else {
 				if (star.isStarred(bib, id)) {
 					star.remove(star.getItem(bib, id));
-					item.setIcon(R.drawable.ic_ab_star_0);
+					item.setIcon(R.drawable.ic_action_star_0);
 				} else {
 					star.star(id, title, bib);
 					Toast toast = Toast.makeText(
 							SearchResultDetailsActivity.this,
 							getString(R.string.starred), Toast.LENGTH_SHORT);
 					toast.show();
-					item.setIcon(R.drawable.ic_ab_star_1);
+					item.setIcon(R.drawable.ic_action_star_1);
 				}
 			}
 			star.close();

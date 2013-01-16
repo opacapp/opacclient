@@ -3,14 +3,14 @@
 
     <item
         android:id="@+id/menu_prefs"
-        android:icon="@drawable/ic_menu_settings"
+        android:icon="@drawable/ic_action_settings"
         android:showAsAction="never"
         android:title="@string/prefs">
     </item>
 
     <item
         android:id="@+id/menu_info"
-        android:icon="@drawable/ic_menu_info"
+        android:icon="@drawable/ic_action_info"
         android:showAsAction="never"
         android:title="@string/info">
     </item>
