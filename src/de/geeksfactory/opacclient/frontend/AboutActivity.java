@@ -27,7 +27,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 import de.geeksfactory.opacclient.R;
 
-public class AboutActivity extends SherlockPreferenceActivity {
+public class AboutActivity extends OpacPreferenceActivity {
 
 	@Override
 	@SuppressWarnings("deprecation")

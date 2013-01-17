@@ -13,7 +13,7 @@ import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.reminder.ReminderCheckService;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
-public class MainPreferenceActivity extends SherlockPreferenceActivity {
+public class MainPreferenceActivity extends OpacPreferenceActivity {
 	@SuppressWarnings("deprecation")
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
