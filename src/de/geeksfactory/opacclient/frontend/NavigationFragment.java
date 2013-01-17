@@ -140,6 +140,8 @@ public class NavigationFragment extends Fragment {
 					((TextView) v.findViewById(R.id.tvLabel)).setTypeface(null,
 							Typeface.BOLD);
 					v.findViewById(R.id.llAccount).setClickable(false);
+					v.findViewById(R.id.llAccount).setBackgroundResource(R.drawable.nav_active);
+					v.findViewById(R.id.viewRedbar).setBackgroundColor(getResources().getColor(R.color.nav_highlighted_border));
 				}
 
 				Library library;
