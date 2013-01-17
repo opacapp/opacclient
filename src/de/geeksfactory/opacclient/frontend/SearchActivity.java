@@ -334,6 +334,13 @@ public class SearchActivity extends OpacActivity {
 		});
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+		if (getIntent().getAction() != null) {
+			if (getIntent().getAction().equals("android.intent.action.VIEW")) {
+				urlintent();
+				return;
+			}
+		}
 	}
 
 	public void go() {
