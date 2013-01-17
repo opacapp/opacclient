@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,16 +26,17 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.slidingmenu.lib.SlidingMenu;
-import com.slidingmenu.lib.app.SlidingActivity;
+import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 
-public abstract class OpacActivity extends SlidingActivity {
+public abstract class OpacActivity extends SlidingFragmentActivity {
 	protected OpacClient app;
 	protected AlertDialog adialog;
+	protected Fragment mFrag;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -41,14 +44,21 @@ public abstract class OpacActivity extends SlidingActivity {
 		this.getSupportActionBar().setHomeButtonEnabled(true);
 		app = (OpacClient) getApplication();
 
+		// Sliding Menu
+		setBehindContentView(R.layout.menu_frame);
+		FragmentTransaction t = this.getSupportFragmentManager()
+				.beginTransaction();
+		mFrag = new NavigationFragment();
+		t.replace(R.id.menu_frame, mFrag);
+		t.commit();
+
 		SlidingMenu sm = getSlidingMenu();
-		setBehindContentView(R.layout.sliding_navigation);
 		sm.setShadowWidthRes(R.dimen.shadow_width);
 		sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
 		sm.setFadeDegree(0.35f);
 		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		
+
 	}
 
 	@Override
