@@ -416,9 +416,9 @@ public class OCLC2011 implements OpacApi {
 			if (node instanceof Element) {
 				if (((Element) node).tag().getName().equals("strong")) {
 					if (!text.equals("") && !title.equals("")) {
-						result.addDetail(new Detail(title, text));
+						result.addDetail(new Detail(title.trim(), text.trim()));
 						if (title.equals("Titel:")) {
-							result.setTitle(text);
+							result.setTitle(text.trim());
 						}
 						text = "";
 					}
@@ -434,9 +434,9 @@ public class OCLC2011 implements OpacApi {
 			}
 		}
 		if (!text.equals("") && !title.equals("")) {
-			result.addDetail(new Detail(title, text));
+			result.addDetail(new Detail(title.trim(), text.trim()));
 			if (title.equals("Titel:")) {
-				result.setTitle(text);
+				result.setTitle(text.trim());
 			}
 		}
 
