@@ -32,18 +32,6 @@
                 android:contentDescription="Cover"
                 android:gravity="center"
                 android:visibility="gone" />
-
-            <Button
-                android:id="@+id/btReserve"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="16dp"
-                android:background="@drawable/go_button"
-                android:gravity="center"
-                android:text="@string/reserve"
-                android:textColor="@color/go_button_text"
-                android:visibility="gone" />
         </LinearLayout>
 
         <TextView

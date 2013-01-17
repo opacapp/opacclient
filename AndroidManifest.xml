@@ -64,7 +64,8 @@
         <activity
             android:name=".frontend.SearchResultDetailsActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/details" >
+            android:label="@string/details"
+            android:uiOptions="splitActionBarWhenNarrow" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.geeksfactory.opacclient.frontend.SearchResultsActivity" />

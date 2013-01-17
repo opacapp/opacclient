@@ -13,5 +13,10 @@
         android:showAsAction="ifRoom"
         android:title="@string/star">
     </item>
+    <item
+        android:id="@+id/action_reservation"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/reserve">
+    </item>
 
 </menu>

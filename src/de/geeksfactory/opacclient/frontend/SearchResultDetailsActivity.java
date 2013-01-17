@@ -422,20 +422,9 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
 			if (id == null || id.equals("")) {
 				id = item.getId();
-				invalidateOptionsMenu();
 			}
 
-			if (item.isReservable()) {
-				Button btres = (Button) findViewById(R.id.btReserve);
-				btres.setVisibility(View.VISIBLE);
-				btres.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View arg0) {
-						reservation();
-					}
-				});
-			}
-
+			invalidateOptionsMenu();
 		}
 	}
 
@@ -598,18 +587,28 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		MenuInflater mi = new MenuInflater(this);
 		mi.inflate(R.menu.search_result_details_activity, menu);
 
+		if (item != null) {
+			if (item.isReservable()) {
+				menu.findItem(R.id.action_reservation).setVisible(true);
+			} else {
+				menu.findItem(R.id.action_reservation).setVisible(false);
+			}
+		} else {
+			menu.findItem(R.id.action_reservation).setVisible(false);
+		}
+
 		String bib = app.getLibrary().getIdent();
 		StarDataSource data = new StarDataSource(this);
 		data.open();
 		if ((id == null || id.equals("")) && item != null) {
 			if (data.isStarredTitle(bib, title)) {
-				menu.findItem(R.id.action_star)
-						.setIcon(R.drawable.ic_action_star_1);
+				menu.findItem(R.id.action_star).setIcon(
+						R.drawable.ic_action_star_1);
 			}
 		} else {
 			if (data.isStarred(bib, id)) {
-				menu.findItem(R.id.action_star)
-						.setIcon(R.drawable.ic_action_star_1);
+				menu.findItem(R.id.action_star).setIcon(
+						R.drawable.ic_action_star_1);
 			}
 		}
 		data.close();
@@ -622,6 +621,10 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
 		String bib = app.getLibrary().getIdent();
 		switch (item.getItemId()) {
+		case R.id.action_reservation:
+			reservation();
+			return true;
+
 		case android.R.id.home:
 			finish();
 			return true;
