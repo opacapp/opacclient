@@ -465,7 +465,7 @@ public class AccountActivity extends OpacActivity {
 							.setVisibility(View.VISIBLE);
 				} else {
 					((ImageView) v.findViewById(R.id.ivProlong))
-							.setVisibility(View.GONE);
+							.setVisibility(View.INVISIBLE);
 				}
 
 				llLent.addView(v);
@@ -520,7 +520,7 @@ public class AccountActivity extends OpacActivity {
 							.setVisibility(View.VISIBLE);
 				} else {
 					((ImageView) v.findViewById(R.id.ivCancel))
-							.setVisibility(View.GONE);
+							.setVisibility(View.INVISIBLE);
 				}
 				llRes.addView(v);
 			}
