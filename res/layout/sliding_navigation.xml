@@ -10,11 +10,17 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
+        <TextView
+            android:id="@+id/tvLibrary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textColor="@color/nav_headline" />
+
         <org.holoeverywhere.widget.TextView
             android:id="@+id/tvHlLibrary"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:drawableBottom="@drawable/navigation_header"
             android:drawablePadding="4dp"
             android:paddingLeft="8dp"
@@ -94,6 +100,115 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:text="@string/nav_starred"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/nav_fg" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llNavInfo"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/nav_item"
+            android:clickable="true"
+            android:gravity="center|left"
+            android:padding="4dp" >
+
+            <ImageView
+                android:id="@+id/ivNavInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_info" />
+
+            <TextView
+                android:id="@+id/tvNavInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:text="@string/nav_info"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/nav_fg" />
+        </LinearLayout>
+
+        <org.holoeverywhere.widget.TextView
+            android:id="@+id/tvHlAccountlist"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:drawableBottom="@drawable/navigation_header"
+            android:drawablePadding="4dp"
+            android:paddingLeft="8dp"
+            android:text="@string/nav_hl_ccountlist"
+            android:textAllCaps="true"
+            android:textColor="@color/nav_headline"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:id="@+id/llAccountlist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+        </LinearLayout>
+
+        <org.holoeverywhere.widget.TextView
+            android:id="@+id/tvHlSettings"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:drawableBottom="@drawable/navigation_header"
+            android:drawablePadding="4dp"
+            android:paddingLeft="8dp"
+            android:text="@string/nav_hl_other"
+            android:textAllCaps="true"
+            android:textColor="@color/nav_headline"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:id="@+id/llNavSettings"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/nav_item"
+            android:clickable="true"
+            android:gravity="center|left"
+            android:padding="4dp" >
+
+            <ImageView
+                android:id="@+id/ivNavSettings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_settings" />
+
+            <TextView
+                android:id="@+id/tvNavSettings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:text="@string/nav_settings"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/nav_fg" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llNavAbout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/nav_item"
+            android:clickable="true"
+            android:gravity="center|left"
+            android:padding="4dp" >
+
+            <ImageView
+                android:id="@+id/ivNavAbout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_help" />
+
+            <TextView
+                android:id="@+id/tvNavAbout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:text="@string/nav_about"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/nav_fg" />
         </LinearLayout>

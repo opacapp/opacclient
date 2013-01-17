@@ -159,5 +159,9 @@
     <string name="nav_search">Katalogsuche</string>
     <string name="nav_account">Konto</string>
     <string name="nav_starred">Merkliste</string>
-
+    <string name="nav_info">Informationen</string>
+    <string name="nav_hl_other">Sonstiges</string>
+    <string name="nav_settings">Einstellungen</string>
+    <string name="nav_about">Über die App</string>
+    <string name="nav_hl_ccountlist">Kontoauswahl</string>
 </resources>

@@ -11,5 +11,6 @@
     <color name="nav_fg">#F3F3F3</color>
     <color name="nav_headline">#9F9F9F</color>
     <color name="nav_active">#CCff4444</color>
+    <color name="nav_highlight">#CCff44</color>
 
 </resources>
