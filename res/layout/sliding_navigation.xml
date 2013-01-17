@@ -13,14 +13,17 @@
         <TextView
             android:id="@+id/tvLibrary"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/nav_head_bg"
+            android:gravity="center_vertical"
             android:padding="8dp"
-            android:textColor="@color/nav_headline" />
+            android:textColor="@color/nav_head_fg" />
 
         <org.holoeverywhere.widget.TextView
             android:id="@+id/tvHlLibrary"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:drawableBottom="@drawable/navigation_header"
             android:drawablePadding="4dp"
             android:paddingLeft="8dp"
