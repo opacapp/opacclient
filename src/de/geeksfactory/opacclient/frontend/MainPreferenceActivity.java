@@ -33,28 +33,6 @@ public class MainPreferenceActivity extends SherlockPreferenceActivity {
 			}
 		});
 
-		Preference about = (Preference) findPreference("about");
-		about.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference arg0) {
-				Intent intent = new Intent(MainPreferenceActivity.this,
-						AboutActivity.class);
-				startActivity(intent);
-				return false;
-			}
-		});
-
-		Preference changelog = (Preference) findPreference("changelog");
-		changelog.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference arg0) {
-				Intent intent = new Intent(MainPreferenceActivity.this,
-						ChangelogActivity.class);
-				startActivity(intent);
-				return false;
-			}
-		});
-
 		Preference meta = (Preference) findPreference("meta_clear");
 		meta.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override

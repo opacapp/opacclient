@@ -44,19 +44,19 @@ public abstract class OpacActivity extends SlidingFragmentActivity {
 		this.getSupportActionBar().setHomeButtonEnabled(true);
 		app = (OpacClient) getApplication();
 
-		// Sliding Menu
+		setContentView(R.layout.empty_workaround);
 		setBehindContentView(R.layout.menu_frame);
 		FragmentTransaction t = this.getSupportFragmentManager()
 				.beginTransaction();
 		mFrag = new NavigationFragment();
 		t.replace(R.id.menu_frame, mFrag);
 		t.commit();
-
+		// Sliding Menu
 		SlidingMenu sm = getSlidingMenu();
 		sm.setShadowWidthRes(R.dimen.shadow_width);
 		sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
 		sm.setFadeDegree(0.35f);
-		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 	}

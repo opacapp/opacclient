@@ -7,6 +7,9 @@
             android:summary="@string/about_summary"
             android:title="Version" />
         <Preference
+            android:key="changelog"
+            android:title="@string/changelog" />
+        <Preference
             android:key="website"
             android:summary="www.opacapp.de"
             android:title="Website" />

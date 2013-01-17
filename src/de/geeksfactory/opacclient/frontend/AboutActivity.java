@@ -218,7 +218,7 @@ public class AboutActivity extends SherlockPreferenceActivity {
 						return false;
 					}
 				});
-		
+
 		findPreference("thanks").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {
 					@Override
@@ -263,6 +263,17 @@ public class AboutActivity extends SherlockPreferenceActivity {
 
 						dialog.show();
 
+						return false;
+					}
+				});
+
+		findPreference("changelog").setOnPreferenceClickListener(
+				new OnPreferenceClickListener() {
+					@Override
+					public boolean onPreferenceClick(Preference arg0) {
+						Intent intent = new Intent(AboutActivity.this,
+								ChangelogActivity.class);
+						startActivity(intent);
 						return false;
 					}
 				});
