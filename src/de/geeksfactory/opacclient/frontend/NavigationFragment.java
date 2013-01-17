@@ -177,6 +177,12 @@ public class NavigationFragment extends Fragment {
 		aData.close();
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		reload();
+	}
+
 	public void selectaccount(long id) {
 		((OpacClient) getActivity().getApplication()).setAccount(id);
 		if (getActivity() instanceof OpacActivity) {
