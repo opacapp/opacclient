@@ -21,11 +21,11 @@ Not all of the features are availably for every library.
 License
 -------
 This code is released under the terms of the MIT License[1]. It contains or uses several other project:
-* jsoup, MIT License[2]
-* ActionBarSherlock, Apache License 2.0[3]
+* jsoup, MIT License[1]
+* ActionBarSherlock, Apache License 2.0[2]
 * HoloEverywhere, MIT License [1]
 * SlidingMenu, Apache License 2.0[1]
-* ZXing IntentIntegrator, Apache License 2.0[3]
+* ZXing IntentIntegrator, Apache License 2.0[2]
 
 [1] http://de.wikipedia.org/wiki/MIT-Lizenz
 [2] http://www.apache.org/licenses/LICENSE-2.0.html 
