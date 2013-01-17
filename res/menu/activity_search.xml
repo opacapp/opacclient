@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
-    <item
-        android:id="@+id/action_accounts"
-        android:icon="@drawable/ic_action_accounts"
-        android:showAsAction="always"
-        android:title="@string/accounts">
-    </item>
     
     <item
         android:id="@+id/action_search_go"

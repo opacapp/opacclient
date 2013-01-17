@@ -88,9 +88,6 @@ public class AccountActivity extends OpacActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.action_accounts:
-			selectaccount();
-			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}

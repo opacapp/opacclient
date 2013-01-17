@@ -65,15 +65,6 @@ public abstract class OpacActivity extends SlidingFragmentActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater mi = new MenuInflater(this);
 		mi.inflate(R.menu.activity_opac, menu);
-		try {
-			if (app.getLibrary().getData().getString("information") == null
-					|| app.getLibrary().getData().getString("information")
-							.equals("null")) {
-				menu.removeItem(R.id.menu_info);
-			}
-		} catch (Exception e) {
-			menu.removeItem(R.id.menu_info);
-		}
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -262,15 +253,6 @@ public abstract class OpacActivity extends SlidingFragmentActivity {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			toggle();
-			return true;
-		case R.id.menu_info:
-			Intent iInfo = new Intent(OpacActivity.this, InfoActivity.class);
-			startActivity(iInfo);
-			return true;
-		case R.id.menu_prefs:
-			Intent iPrefs = new Intent(OpacActivity.this,
-					MainPreferenceActivity.class);
-			startActivity(iPrefs);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

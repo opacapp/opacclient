@@ -406,15 +406,6 @@ public class SearchActivity extends OpacActivity {
 		case R.id.action_search_go:
 			go();
 			return true;
-		case R.id.action_accounts:
-			selectaccount(new AccountSelectedListener() {
-
-				@Override
-				public void accountSelected(Account account) {
-					fillComboBoxes();
-				}
-			});
-			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}

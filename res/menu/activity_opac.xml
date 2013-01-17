@@ -1,18 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item
-        android:id="@+id/menu_prefs"
-        android:icon="@drawable/ic_action_settings"
-        android:showAsAction="never"
-        android:title="@string/prefs">
-    </item>
-
-    <item
-        android:id="@+id/menu_info"
-        android:icon="@drawable/ic_action_info"
-        android:showAsAction="never"
-        android:title="@string/info">
-    </item>
-
 </menu>
