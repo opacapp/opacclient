@@ -69,6 +69,8 @@ public class OCLC2011 implements OpacApi {
 	private String identifier;
 	private String reusehtml;
 
+	private int resultcount = 10;
+
 	@Override
 	public String getResults() {
 		return results;
@@ -266,7 +268,7 @@ public class OCLC2011 implements OpacApi {
 
 		HttpGet httpget = new HttpGet(opac_url
 				+ "/hitList.do?methodToCall=pos&identifier=" + identifier
-				+ "&curPos=" + (((page - 1) * 10) + 1));
+				+ "&curPos=" + (((page - 1) * resultcount) + 1));
 		HttpResponse response = ahc.execute(httpget);
 
 		String html = convertStreamToString(response.getEntity().getContent());
@@ -340,7 +342,7 @@ public class OCLC2011 implements OpacApi {
 			sr.setId(null);
 			results.add(sr);
 		}
-
+		resultcount = results.size();
 		return results;
 	}
 
