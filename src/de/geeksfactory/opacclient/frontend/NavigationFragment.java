@@ -5,16 +5,8 @@ import java.util.List;
 
 import org.json.JSONException;
 
-import com.actionbarsherlock.ActionBarSherlock.Implementation;
-import com.slidingmenu.lib.app.SlidingFragmentActivity;
-
-import de.geeksfactory.opacclient.OpacClient;
-import de.geeksfactory.opacclient.R;
-import de.geeksfactory.opacclient.objects.Account;
-import de.geeksfactory.opacclient.objects.Library;
-import de.geeksfactory.opacclient.storage.AccountDataSource;
-import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -23,6 +15,11 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import de.geeksfactory.opacclient.OpacClient;
+import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.objects.Account;
+import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.storage.AccountDataSource;
 
 public class NavigationFragment extends Fragment {
 
@@ -132,36 +129,48 @@ public class NavigationFragment extends Fragment {
 		AccountDataSource aData = new AccountDataSource(getActivity());
 		aData.open();
 		List<Account> accounts = aData.getAllAccounts();
-		for (final Account account : accounts) {
-			View v = getActivity().getLayoutInflater().inflate(
-					R.layout.account_listitem_nav, null);
-			((TextView) v.findViewById(R.id.tvLabel)).setText(account
-					.getLabel());
-			Library library;
-			try {
-				library = ((OpacClient) getActivity().getApplication())
-						.getLibrary(account.getBib());
-				TextView tvCity = (TextView) v.findViewById(R.id.tvCity);
-				if (library.getTitle() != null
-						&& !library.getTitle().equals("null")) {
-					tvCity.setText(library.getCity() + " · "
-							+ library.getTitle());
-				} else {
-					tvCity.setText(library.getCity());
+		if (accounts.size() > 1) {
+			for (final Account account : accounts) {
+				View v = getActivity().getLayoutInflater().inflate(
+						R.layout.account_listitem_nav, null);
+				((TextView) v.findViewById(R.id.tvLabel)).setText(account
+						.getLabel());
+				if (account.getId() == ((OpacClient) getActivity()
+						.getApplication()).getAccount().getId()) {
+					((TextView) v.findViewById(R.id.tvLabel)).setTypeface(null,
+							Typeface.BOLD);
+					v.findViewById(R.id.llAccount).setClickable(false);
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (JSONException e) {
-				e.printStackTrace();
+
+				Library library;
+				try {
+					library = ((OpacClient) getActivity().getApplication())
+							.getLibrary(account.getBib());
+					TextView tvCity = (TextView) v.findViewById(R.id.tvCity);
+					if (library.getTitle() != null
+							&& !library.getTitle().equals("null")) {
+						tvCity.setText(library.getCity() + " · "
+								+ library.getTitle());
+					} else {
+						tvCity.setText(library.getCity());
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				v.findViewById(R.id.llAccount).setOnClickListener(
+						new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								selectaccount(account.getId());
+							}
+						});
+				llAccountlist.addView(v);
 			}
-			v.findViewById(R.id.llAccount).setOnClickListener(
-					new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							selectaccount(account.getId());
-						}
-					});
-			llAccountlist.addView(v);
+			getView().findViewById(R.id.tvHlAccountlist).setVisibility(View.VISIBLE);
+		}else{
+			getView().findViewById(R.id.tvHlAccountlist).setVisibility(View.GONE);
 		}
 		aData.close();
 	}
