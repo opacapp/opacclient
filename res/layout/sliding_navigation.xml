@@ -45,6 +45,7 @@
                 android:id="@+id/ivNavSearch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
                 android:src="@drawable/ic_action_search" />
 
             <TextView
@@ -70,6 +71,7 @@
                 android:id="@+id/ivNavAccount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
                 android:src="@drawable/ic_action_account" />
 
             <TextView
@@ -95,6 +97,7 @@
                 android:id="@+id/ivNavStarred"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
                 android:src="@drawable/ic_action_star_1" />
 
             <TextView
@@ -120,6 +123,7 @@
                 android:id="@+id/ivNavInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
                 android:src="@drawable/ic_action_info" />
 
             <TextView
@@ -179,6 +183,7 @@
                 android:id="@+id/ivNavSettings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
                 android:src="@drawable/ic_action_settings" />
 
             <TextView
@@ -204,6 +209,7 @@
                 android:id="@+id/ivNavAbout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
                 android:src="@drawable/ic_action_help" />
 
             <TextView

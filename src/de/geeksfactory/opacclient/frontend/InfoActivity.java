@@ -9,6 +9,7 @@ import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.view.MenuItem;
+import com.slidingmenu.lib.SlidingMenu;
 
 import de.geeksfactory.opacclient.R;
 
@@ -44,6 +45,9 @@ public class InfoActivity extends OpacActivity {
 		}
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		SlidingMenu sm = getSlidingMenu();
+		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
 	}
 
 	@Override
