@@ -155,5 +155,9 @@
     <string name="account_select">Konto auswählen</string>
     <string name="all">Alle</string>
     <string name="privacy">Datenschutzbestimmungen</string>
+    <string name="nav_hl_library">Bibliothek</string>
+    <string name="nav_search">Katalogsuche</string>
+    <string name="nav_account">Konto</string>
+    <string name="nav_starred">Merkliste</string>
 
 </resources>
