@@ -93,6 +93,12 @@ public class AccountActivity extends OpacActivity {
 	}
 
 	@Override
+	public void accountSelected() {
+		onResume();
+		super.accountSelected();
+	}
+
+	@Override
 	public void onResume() {
 		super.onResume();
 		setContentView(R.layout.loading);

@@ -36,7 +36,7 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 public abstract class OpacActivity extends SlidingFragmentActivity {
 	protected OpacClient app;
 	protected AlertDialog adialog;
-	protected Fragment mFrag;
+	protected NavigationFragment mFrag;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -178,6 +178,10 @@ public abstract class OpacActivity extends SlidingFragmentActivity {
 			this.objects = objects;
 			this.spinneritem = spinneritem;
 		}
+
+	}
+
+	public void accountSelected() {
 
 	}
 

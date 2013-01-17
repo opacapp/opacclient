@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llItem"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="8dp"
-    android:id="@+id/llItem"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:padding="8dp" >
 
     <TextView
         android:id="@+id/tvLabel"

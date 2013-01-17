@@ -47,6 +47,12 @@ public class InfoActivity extends OpacActivity {
 	}
 
 	@Override
+	public void accountSelected() {
+		onCreate(null);
+		super.accountSelected();
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		}

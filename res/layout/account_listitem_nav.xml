@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llAccount"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/nav_item"
@@ -15,10 +16,10 @@
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/tvAccount"
+            android:id="@+id/tvLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Medium Text"
+            android:ellipsize="end"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/nav_fg" />
 
@@ -26,7 +27,6 @@
             android:id="@+id/tvCity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView"
             android:textColor="@color/nav_fg" />
     </LinearLayout>
 
@@ -36,7 +36,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:text="3"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/nav_highlight" />
 

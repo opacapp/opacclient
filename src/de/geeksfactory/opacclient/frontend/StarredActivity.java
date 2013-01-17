@@ -84,6 +84,12 @@ public class StarredActivity extends OpacActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	@Override
+	public void accountSelected() {
+		onResume();
+		super.accountSelected();
+	}
+
 	public void remove(Starred item) {
 		items.remove(item);
 
