@@ -26,6 +26,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
+import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -408,37 +409,36 @@ public class AccountActivity extends OpacActivity {
 			for (final ContentValues item : result.getLent()) {
 				View v = getLayoutInflater().inflate(R.layout.lent_listitem,
 						null);
-				((TextView) v.findViewById(R.id.tvTitel)).setText(item
-						.getAsString("titel"));
-				((TextView) v.findViewById(R.id.tvVerfasser)).setText(item
-						.getAsString("verfasser"));
+				((TextView) v.findViewById(R.id.tvTitel)).setText(Html
+						.fromHtml(item.getAsString("titel")));
+				((TextView) v.findViewById(R.id.tvVerfasser)).setText(Html
+						.fromHtml(item.getAsString("verfasser")));
 
 				((TextView) v.findViewById(R.id.tvStatus))
 						.setVisibility(View.VISIBLE);
 				if (item.containsKey("status") && item.containsKey("frist")) {
-					((TextView) v.findViewById(R.id.tvStatus)).setText(item
-							.getAsString("frist")
-							+ " ("
-							+ item.getAsString("status") + ")");
+					((TextView) v.findViewById(R.id.tvStatus)).setText(Html
+							.fromHtml(item.getAsString("frist") + " ("
+									+ item.getAsString("status") + ")"));
 				} else if (item.containsKey("status")) {
-					((TextView) v.findViewById(R.id.tvStatus)).setText(item
-							.getAsString("status"));
+					((TextView) v.findViewById(R.id.tvStatus)).setText(Html
+							.fromHtml(item.getAsString("status")));
 				} else if (item.containsKey("frist")) {
-					((TextView) v.findViewById(R.id.tvStatus)).setText(item
-							.getAsString("frist"));
+					((TextView) v.findViewById(R.id.tvStatus)).setText(Html
+							.fromHtml(item.getAsString("frist")));
 				} else {
 					((TextView) v.findViewById(R.id.tvStatus))
 							.setVisibility(View.GONE);
 				}
 
 				if (item.containsKey("ast")) {
-					((TextView) v.findViewById(R.id.tvZst)).setText(item
-							.getAsString("ast"));
+					((TextView) v.findViewById(R.id.tvZst)).setText(Html
+							.fromHtml(item.getAsString("ast")));
 					((TextView) v.findViewById(R.id.tvZst))
 							.setVisibility(View.VISIBLE);
 				} else if (item.containsKey("zst")) {
-					((TextView) v.findViewById(R.id.tvZst)).setText(item
-							.getAsString("zst"));
+					((TextView) v.findViewById(R.id.tvZst)).setText(Html
+							.fromHtml(item.getAsString("zst")));
 					((TextView) v.findViewById(R.id.tvZst))
 							.setVisibility(View.VISIBLE);
 				} else {
@@ -476,14 +476,14 @@ public class AccountActivity extends OpacActivity {
 				View v = getLayoutInflater().inflate(
 						R.layout.reservation_listitem, null);
 
-				((TextView) v.findViewById(R.id.tvTitel)).setText(item
-						.getAsString("titel"));
+				((TextView) v.findViewById(R.id.tvTitel)).setText(Html
+						.fromHtml(item.getAsString("titel")));
 				((TextView) v.findViewById(R.id.tvVerfasser)).setText(item
 						.getAsString("verfasser"));
 
 				if (item.containsKey("bereit")) {
-					((TextView) v.findViewById(R.id.tvStatus)).setText(item
-							.getAsString("bereit"));
+					((TextView) v.findViewById(R.id.tvStatus)).setText(Html
+							.fromHtml(item.getAsString("bereit")));
 					((TextView) v.findViewById(R.id.tvStatus))
 							.setVisibility(View.VISIBLE);
 				} else {
@@ -492,8 +492,8 @@ public class AccountActivity extends OpacActivity {
 				}
 
 				if (item.containsKey("zst")) {
-					((TextView) v.findViewById(R.id.tvZst)).setText(item
-							.getAsString("zst"));
+					((TextView) v.findViewById(R.id.tvZst)).setText(Html
+							.fromHtml(item.getAsString("zst")));
 					((TextView) v.findViewById(R.id.tvZst))
 							.setVisibility(View.VISIBLE);
 				} else {
