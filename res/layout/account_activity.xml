@@ -5,85 +5,94 @@
     android:layout_height="wrap_content" >
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="5dp" >
-
-        <TextView
-            android:id="@+id/tvAccHeader"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="8dp"
-            android:drawableBottom="@drawable/section_header"
-            android:drawablePadding="4dp"
-            android:paddingLeft="4dp"
-            android:text="@string/account"
-            android:textAllCaps="true"
-            android:textColor="@color/emphasis"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/tvAccUser"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp" />
-
-        <TextView
-            android:id="@+id/tvAccCity"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp" />
-
-        <TextView
-            android:id="@+id/tvEntlHeader"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="8dp"
-            android:drawableBottom="@drawable/section_header"
-            android:drawablePadding="4dp"
-            android:paddingLeft="4dp"
-            android:text="@string/entl_head"
-            android:textAllCaps="true"
-            android:textColor="@color/emphasis"
-            android:textSize="14sp" />
+        android:orientation="vertical" >
 
         <LinearLayout
-            android:id="@+id/llLent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:background="@color/account_head_bg"
+            android:orientation="vertical"
+            android:padding="8dp" >
+
+            <TextView
+                android:id="@+id/tvAccLabel"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/account_head_fg" />
+
+            <TextView
+                android:id="@+id/tvAccCity"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:textColor="@color/account_head_fg" />
+
+            <TextView
+                android:id="@+id/tvAccUser"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:textColor="@color/account_head_fg" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btExtendall"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/extendall"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/tvResHeader"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="8dp"
-            android:drawableBottom="@drawable/section_header"
-            android:drawablePadding="4dp"
-            android:paddingLeft="4dp"
-            android:text="@string/reservations_head"
-            android:textAllCaps="true"
-            android:textColor="@color/emphasis"
-            android:textSize="14sp" />
-
         <LinearLayout
-            android:id="@+id/llReservations"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:padding="5dp" >
+
+            <TextView
+                android:id="@+id/tvEntlHeader"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="8dp"
+                android:drawableBottom="@drawable/section_header"
+                android:drawablePadding="4dp"
+                android:paddingLeft="4dp"
+                android:text="@string/entl_head"
+                android:textAllCaps="true"
+                android:textColor="@color/emphasis"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:id="@+id/llLent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btExtendall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/extendall"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tvResHeader"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="8dp"
+                android:drawableBottom="@drawable/section_header"
+                android:drawablePadding="4dp"
+                android:paddingLeft="4dp"
+                android:text="@string/reservations_head"
+                android:textAllCaps="true"
+                android:textColor="@color/emphasis"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:id="@+id/llReservations"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

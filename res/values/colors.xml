@@ -16,6 +16,7 @@
     <color name="nav_head_fg">#ffffff</color>
     <color name="nav_highlighted_bg">#505050</color>
     <color name="nav_highlighted_border">#CCff4444</color>
-    
+    <color name="account_head_bg">#505050</color>
+    <color name="account_head_fg">#F3F3F3</color>
 
 </resources>

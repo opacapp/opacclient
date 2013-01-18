@@ -379,8 +379,7 @@ public class AccountActivity extends OpacActivity {
 
 		setContentView(R.layout.account_activity);
 
-		((TextView) findViewById(R.id.tvAccHeader)).setText(getString(
-				R.string.account_header, account.getLabel()));
+		((TextView) findViewById(R.id.tvAccLabel)).setText(account.getLabel());
 		((TextView) findViewById(R.id.tvAccUser)).setText(account.getName());
 		TextView tvAccCity = (TextView) findViewById(R.id.tvAccCity);
 		Library lib;
