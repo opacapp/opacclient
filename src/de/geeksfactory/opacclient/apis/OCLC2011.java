@@ -532,9 +532,14 @@ public class OCLC2011 implements OpacApi {
 			return null;
 		}
 
-		System.out.println(html);
+		HttpGet httpget = new HttpGet(opac_url
+				+ "/userAccount.do?methodToCall=show&type=1");
+		HttpResponse response2 = ahc.execute(httpget);
 
-		Elements copytrs = doc.select(".data tr");
+		String html2 = convertStreamToString(response2.getEntity().getContent());
+		Document doc2 = Jsoup.parse(html2);
+
+		Elements copytrs = doc2.select(".data tr");
 
 		List<ContentValues> medien = new ArrayList<ContentValues>();
 
@@ -544,8 +549,13 @@ public class OCLC2011 implements OpacApi {
 
 			e.put("titel", tr.child(1).select("strong").text().trim());
 			try {
-				e.put("frist", tr.child(2).html().split("<br>")[0].trim());
-				e.put("zst", tr.child(2).html().split("<br>")[1].trim());
+				e.put("verfasser", tr.child(1).html().split("<br />")[1].trim());
+
+				String frist = tr.child(2).html().split("<br />")[0].trim();
+				if (frist.contains("-"))
+					frist = frist.split("-")[1].trim();
+				e.put("frist", frist);
+				e.put("zst", tr.child(2).html().split("<br />")[1].trim());
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
