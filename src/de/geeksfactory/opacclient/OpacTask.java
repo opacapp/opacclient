@@ -7,6 +7,7 @@ public abstract class OpacTask<Result> extends
 	protected OpacClient a;
 
 	protected Result doInBackground(Object... arg0) {
+		@SuppressWarnings("unused")
 		OpacClient a = (OpacClient) arg0[0];
 		return null;
 	}

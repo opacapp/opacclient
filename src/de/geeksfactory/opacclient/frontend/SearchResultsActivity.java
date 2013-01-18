@@ -12,7 +12,6 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -23,7 +22,6 @@ import com.actionbarsherlock.view.MenuItem;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.SearchResult;
-import de.geeksfactory.opacclient.storage.StarDataSource;
 
 public class SearchResultsActivity extends OpacActivity {
 

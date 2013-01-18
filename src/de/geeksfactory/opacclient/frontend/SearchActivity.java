@@ -14,12 +14,10 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -30,7 +28,6 @@ import com.actionbarsherlock.view.MenuItem;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
-import de.geeksfactory.opacclient.frontend.WelcomeActivity.InitTask;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
@@ -288,7 +285,7 @@ public class SearchActivity extends OpacActivity {
 					Toast.makeText(
 							this,
 							"Neue Version! Alte Accountdaten wurden wiederhergestellt.",
-							Toast.LENGTH_LONG);
+							Toast.LENGTH_LONG).show();
 
 					return;
 
@@ -296,7 +293,7 @@ public class SearchActivity extends OpacActivity {
 					Toast.makeText(
 							this,
 							"Neue Version! Wiederherstellung alter Zugangsdaten ist fehlgeschlagen.",
-							Toast.LENGTH_LONG);
+							Toast.LENGTH_LONG).show();
 				}
 			}
 

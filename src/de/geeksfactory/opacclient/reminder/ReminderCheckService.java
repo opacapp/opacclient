@@ -164,7 +164,6 @@ public class ReminderCheckService extends Service {
 			SharedPreferences sp = PreferenceManager
 					.getDefaultSharedPreferences(ReminderCheckService.this);
 			NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-			int icon = android.R.drawable.stat_notify_error;
 
 			NotificationCompat.Builder nb = new NotificationCompat.Builder(
 					ReminderCheckService.this);

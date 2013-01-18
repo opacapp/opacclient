@@ -12,11 +12,9 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -496,8 +494,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
 			app = (OpacClient) arg0[0];
 			String zst = (String) arg0[1];
-			SharedPreferences sp = PreferenceManager
-					.getDefaultSharedPreferences(app);
+
 			try {
 				Boolean res = app.getApi().reservation(zst, app.getAccount());
 				success = true;

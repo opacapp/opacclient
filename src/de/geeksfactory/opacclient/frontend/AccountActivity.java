@@ -25,7 +25,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NavUtils;
 import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;

@@ -3,7 +3,6 @@ package de.geeksfactory.opacclient.frontend;
 import org.json.JSONException;
 
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.TextView;
