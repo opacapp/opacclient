@@ -25,8 +25,8 @@ public class StarredActivity extends OpacActivity {
 	}
 
 	@Override
-	protected void onResume() {
-		super.onResume();
+	protected void onStart() {
+		super.onStart();
 
 		setContentView(R.layout.starred_activity);
 
@@ -85,7 +85,7 @@ public class StarredActivity extends OpacActivity {
 
 	@Override
 	public void accountSelected() {
-		onResume();
+		onStart();
 		super.accountSelected();
 	}
 

@@ -211,8 +211,8 @@ public class SearchResultsActivity extends OpacActivity {
 	}
 
 	@Override
-	protected void onPause() {
-		super.onPause();
+	protected void onStop() {
+		super.onStop();
 		if (dialog != null) {
 			if (dialog.isShowing()) {
 				dialog.cancel();

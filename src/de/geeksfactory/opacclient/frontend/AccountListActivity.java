@@ -107,8 +107,8 @@ public class AccountListActivity extends SherlockActivity {
 	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
+	public void onStart() {
+		super.onStart();
 		ListView lvAccounts = (ListView) findViewById(R.id.lvAccounts);
 		refreshLv();
 

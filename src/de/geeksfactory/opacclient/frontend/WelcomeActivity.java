@@ -92,8 +92,8 @@ public class WelcomeActivity extends SherlockActivity {
 	}
 
 	@Override
-	protected void onPause() {
-		super.onPause();
+	protected void onStop() {
+		super.onStop();
 		if (dialog != null) {
 			if (dialog.isShowing()) {
 				dialog.cancel();

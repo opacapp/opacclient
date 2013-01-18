@@ -94,13 +94,13 @@ public class AccountActivity extends OpacActivity {
 
 	@Override
 	public void accountSelected() {
-		onResume();
+		onStart();
 		super.accountSelected();
 	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
+	public void onStart() {
+		super.onStart();
 		setContentView(R.layout.loading);
 		((TextView) findViewById(R.id.tvLoading))
 				.setText(R.string.loading_account);
@@ -216,7 +216,7 @@ public class AccountActivity extends OpacActivity {
 
 	public void cancel_done(int result) {
 		if (result == STATUS_SUCCESS) {
-			onResume();
+			onStart();
 		}
 	}
 
@@ -299,7 +299,7 @@ public class AccountActivity extends OpacActivity {
 
 	public void prolong_done(int result) {
 		if (result == STATUS_SUCCESS) {
-			onResume();
+			onStart();
 		} else if (result == STATUS_FAILED) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage(
@@ -352,7 +352,7 @@ public class AccountActivity extends OpacActivity {
 						.setOnClickListener(new OnClickListener() {
 							@Override
 							public void onClick(View v) {
-								onResume();
+								onStart();
 							}
 						});
 			}
@@ -368,7 +368,7 @@ public class AccountActivity extends OpacActivity {
 						.setOnClickListener(new OnClickListener() {
 							@Override
 							public void onClick(View v) {
-								onResume();
+								onStart();
 							}
 						});
 			} else
@@ -618,8 +618,8 @@ public class AccountActivity extends OpacActivity {
 	}
 
 	@Override
-	protected void onPause() {
-		super.onPause();
+	protected void onStop() {
+		super.onStop();
 		if (dialog != null) {
 			if (dialog.isShowing()) {
 				dialog.cancel();

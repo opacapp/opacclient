@@ -115,8 +115,8 @@ public class SearchActivity extends OpacActivity {
 	}
 
 	@Override
-	protected void onResume() {
-		super.onResume();
+	protected void onStart() {
+		super.onStart();
 		Set<String> fields = new HashSet<String>(Arrays.asList(app.getApi()
 				.getSearchFields()));
 
@@ -212,7 +212,7 @@ public class SearchActivity extends OpacActivity {
 
 	@Override
 	public void accountSelected() {
-		onResume();
+		onStart();
 		fillComboBoxes();
 		super.accountSelected();
 	}
@@ -421,7 +421,7 @@ public class SearchActivity extends OpacActivity {
 
 		protected void onPostExecute(Integer result) {
 			dialog.dismiss();
-			onResume();
+			onStart();
 		}
 	}
 
