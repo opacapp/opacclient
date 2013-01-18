@@ -123,11 +123,7 @@ public abstract class OpacActivity extends SlidingFragmentActivity {
 	public interface AccountSelectedListener {
 		void accountSelected(Account account);
 	}
-
-	public void selectaccount() {
-		selectaccount(null);
-	}
-
+	
 	public class MetaAdapter extends ArrayAdapter<ContentValues> {
 
 		private List<ContentValues> objects;
@@ -203,7 +199,7 @@ public abstract class OpacActivity extends SlidingFragmentActivity {
 
 	}
 
-	public void selectaccount(final AccountSelectedListener listener) {
+	public void selectaccount() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		// Get the layout inflater
 		LayoutInflater inflater = getLayoutInflater();
@@ -226,11 +222,7 @@ public abstract class OpacActivity extends SlidingFragmentActivity {
 
 				adialog.dismiss();
 
-				onResume();
-
-				if (listener != null) {
-					listener.accountSelected(accounts.get(position));
-				}
+				accountSelected();
 			}
 		});
 		builder.setTitle(R.string.account_select)
