@@ -74,6 +74,12 @@ public abstract class OpacActivity extends SlidingFragmentActivity {
 	}
 
 	@Override
+	protected void onStop() {
+		super.onStop();
+		showContent();
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater mi = new MenuInflater(this);
 		mi.inflate(R.menu.activity_opac, menu);
