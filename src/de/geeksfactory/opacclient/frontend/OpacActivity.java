@@ -63,9 +63,11 @@ public abstract class OpacActivity extends SlidingFragmentActivity {
 		sm.setOnOpenListener(new OnOpenListener() {
 			@Override
 			public void onOpen() {
-				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-				imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
-						0);
+				if (getCurrentFocus() != null) {
+					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(getCurrentFocus()
+							.getWindowToken(), 0);
+				}
 			}
 		});
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
