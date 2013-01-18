@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -140,8 +141,11 @@ public class NavigationFragment extends Fragment {
 					((TextView) v.findViewById(R.id.tvLabel)).setTypeface(null,
 							Typeface.BOLD);
 					v.findViewById(R.id.llAccount).setClickable(false);
-					v.findViewById(R.id.llAccount).setBackgroundResource(R.drawable.nav_active);
-					v.findViewById(R.id.viewRedbar).setBackgroundColor(getResources().getColor(R.color.nav_highlighted_border));
+					v.findViewById(R.id.llAccount).setBackgroundResource(
+							R.drawable.nav_active);
+					v.findViewById(R.id.viewRedbar).setBackgroundColor(
+							getResources().getColor(
+									R.color.nav_highlighted_border));
 				}
 
 				Library library;
@@ -168,11 +172,24 @@ public class NavigationFragment extends Fragment {
 								selectaccount(account.getId());
 							}
 						});
+				v.findViewById(R.id.llAccount).setOnLongClickListener(
+						new OnLongClickListener() {
+							@Override
+							public boolean onLongClick(View v) {
+								Intent i = new Intent(getActivity(),
+										AccountEditActivity.class);
+								i.putExtra("id", account.getId());
+								startActivity(i);
+								return true;
+							}
+						});
 				llAccountlist.addView(v);
 			}
-			getView().findViewById(R.id.tvHlAccountlist).setVisibility(View.VISIBLE);
-		}else{
-			getView().findViewById(R.id.tvHlAccountlist).setVisibility(View.GONE);
+			getView().findViewById(R.id.tvHlAccountlist).setVisibility(
+					View.VISIBLE);
+		} else {
+			getView().findViewById(R.id.tvHlAccountlist).setVisibility(
+					View.GONE);
 		}
 		aData.close();
 	}
