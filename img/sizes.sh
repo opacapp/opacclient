@@ -15,9 +15,3 @@ for f in navigate*.png; do
 	convert $f -thumbnail x30 ../res/drawable-ldpi/$f;
 done;
 
-for f in action*.png; do
-	convert $f -thumbnail 260x ../res/drawable-xhdpi/$f;
-	convert $f -thumbnail 195x ../res/drawable-hdpi/$f;
-	convert $f -thumbnail 130x ../res/drawable-mdpi/$f;
-	convert $f -thumbnail 98x ../res/drawable-ldpi/$f;
-done;
