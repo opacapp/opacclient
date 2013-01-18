@@ -15,7 +15,9 @@ import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -507,12 +509,59 @@ public class OCLC2011 implements OpacApi {
 	public AccountData account(Account acc) throws IOException,
 			NotReachableException, JSONException, AccountUnsupportedException,
 			SocketException {
-		return null;
+		start(); // TODO: Is this necessary?
+
+		HttpPost httppost = new HttpPost(opac_url + "/login.do");
+
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+		nameValuePairs.add(new BasicNameValuePair("username", acc.getName()));
+		nameValuePairs
+				.add(new BasicNameValuePair("password", acc.getPassword()));
+		nameValuePairs.add(new BasicNameValuePair("CSId", CSId));
+		nameValuePairs.add(new BasicNameValuePair("methodToCall", "submit"));
+		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+		HttpResponse response = ahc.execute(httppost);
+
+		String html = convertStreamToString(response.getEntity().getContent());
+		Document doc = Jsoup.parse(html);
+		response.getEntity().consumeContent();
+
+		if (doc.getElementsByClass("error").size() > 0) {
+			last_error = doc.getElementsByClass("error").get(0).text();
+			return null;
+		}
+
+		System.out.println(html);
+
+		Elements copytrs = doc.select(".data tr");
+
+		List<ContentValues> medien = new ArrayList<ContentValues>();
+
+		for (int i = 1; i < copytrs.size(); i++) {
+			Element tr = copytrs.get(i);
+			ContentValues e = new ContentValues();
+
+			e.put("titel", tr.child(1).select("strong").text().trim());
+			try {
+				e.put("frist", tr.child(2).html().split("<br>")[0].trim());
+				e.put("zst", tr.child(2).html().split("<br>")[1].trim());
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
+			medien.add(e);
+		}
+
+		AccountData res = new AccountData();
+		res.setLent(medien);
+		res.setReservations(new ArrayList<ContentValues>());
+		return res;
 	}
 
 	@Override
 	public boolean isAccountSupported(Library library) {
-		return false;
+		return true;
 	}
 
 	@Override
