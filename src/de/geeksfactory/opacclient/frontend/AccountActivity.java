@@ -413,16 +413,6 @@ public class AccountActivity extends OpacActivity {
 				((TextView) v.findViewById(R.id.tvVerfasser)).setText(item
 						.getAsString("verfasser"));
 
-				if (item.containsKey("barcode")) {
-					((TextView) v.findViewById(R.id.tvBarcode)).setText(item
-							.getAsString("barcode"));
-					((TextView) v.findViewById(R.id.tvBarcode))
-							.setVisibility(View.VISIBLE);
-				} else {
-					((TextView) v.findViewById(R.id.tvBarcode))
-							.setVisibility(View.GONE);
-				}
-
 				((TextView) v.findViewById(R.id.tvStatus))
 						.setVisibility(View.VISIBLE);
 				if (item.containsKey("status") && item.containsKey("frist")) {
