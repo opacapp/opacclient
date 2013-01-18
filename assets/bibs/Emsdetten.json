@@ -1,0 +1,13 @@
+{
+ "api": "bond26", 
+ "city": "Emsdetten", 
+ "data": {
+  'copiestable': [0, 4, 2, 1, 3, 5, -1], 
+  'reservationtable': [0, 1, 2, -1, 3], 
+  'accounttable': [-1, 0, 1, 2, -1, -1, -1, 3],
+  "baseurl": "http://91.190.226.2/webopac", 
+  "information": "http://www.emsdetten.de/bildung-betreuung-soziales/bildung/stadtbibliothek.html#container"
+ }, 
+ "support": "Katalogsuche und Konto", 
+ "title": null
+}
