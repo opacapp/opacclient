@@ -34,11 +34,13 @@ import org.jsoup.select.Elements;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import de.geeksfactory.opacclient.AccountUnsupportedException;
 import de.geeksfactory.opacclient.NotReachableException;
+import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -70,7 +72,7 @@ public class OCLC2011 implements OpacApi {
 	private String CSId;
 	private String identifier;
 	private String reusehtml;
-
+	private String last_id;
 	private int resultcount = 10;
 
 	@Override
@@ -405,6 +407,26 @@ public class OCLC2011 implements OpacApi {
 			ex.printStackTrace();
 		}
 
+		if (result.getId() == null) {
+			HttpGet httpget3 = new HttpGet(
+					opac_url
+							+ "/singleHit.do?methodToCall=activateTab&tab=showAvailibilityActive");
+
+			HttpResponse response3 = ahc.execute(httpget3);
+			String html3 = convertStreamToString(response3.getEntity()
+					.getContent());
+			response3.getEntity().consumeContent();
+
+			Document doc3 = Jsoup.parse(html3);
+			for (Element link : doc3.select("a")) {
+				String key = Uri.parse(link.attr("abs:href"))
+						.getQueryParameter("katkey");
+				if (key != null) {
+					result.setId(key);
+				}
+			}
+		}
+
 		if (doc.select(".data td img").size() == 1) {
 			result.setCover(doc.select(".data td img").first().attr("abs:src"));
 		}
@@ -491,8 +513,10 @@ public class OCLC2011 implements OpacApi {
 	// No account support for now.
 
 	@Override
-	public boolean reservation(String zst, Account acc) throws IOException {
-		return false;
+	public ReservationResult reservation(String zst, Account acc)
+			throws IOException {
+
+		return ReservationResult.ERROR;
 	}
 
 	@Override
@@ -505,12 +529,7 @@ public class OCLC2011 implements OpacApi {
 		return false;
 	}
 
-	@Override
-	public AccountData account(Account acc) throws IOException,
-			NotReachableException, JSONException, AccountUnsupportedException,
-			SocketException {
-		start(); // TODO: Is this necessary?
-
+	private boolean login(Account acc) {
 		HttpPost httppost = new HttpPost(opac_url + "/login.do");
 
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
@@ -519,18 +538,44 @@ public class OCLC2011 implements OpacApi {
 				.add(new BasicNameValuePair("password", acc.getPassword()));
 		nameValuePairs.add(new BasicNameValuePair("CSId", CSId));
 		nameValuePairs.add(new BasicNameValuePair("methodToCall", "submit"));
-		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+		try {
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return false;
+		}
 
-		HttpResponse response = ahc.execute(httppost);
+		HttpResponse response;
+		String html;
+		try {
+			response = ahc.execute(httppost);
+			html = convertStreamToString(response.getEntity().getContent());
+			response.getEntity().consumeContent();
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
 
-		String html = convertStreamToString(response.getEntity().getContent());
 		Document doc = Jsoup.parse(html);
-		response.getEntity().consumeContent();
 
 		if (doc.getElementsByClass("error").size() > 0) {
 			last_error = doc.getElementsByClass("error").get(0).text();
-			return null;
+			return false;
 		}
+		return true;
+	}
+
+	@Override
+	public AccountData account(Account acc) throws IOException,
+			NotReachableException, JSONException, AccountUnsupportedException,
+			SocketException {
+		start(); // TODO: Is this necessary?
+
+		if (!login(acc))
+			return null;
 
 		HttpGet httpget = new HttpGet(opac_url
 				+ "/userAccount.do?methodToCall=show&type=1");
