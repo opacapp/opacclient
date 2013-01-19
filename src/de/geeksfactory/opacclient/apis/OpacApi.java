@@ -20,6 +20,10 @@ import de.geeksfactory.opacclient.objects.SearchResult;
 
 public interface OpacApi {
 
+	public enum ReservationResult {
+		OK, ERROR, SELECTBRANCH
+	}
+
 	public String[] getSearchFields();
 
 	public String getLast_error();
@@ -52,7 +56,8 @@ public interface OpacApi {
 
 	public DetailledItem getResult(int position) throws IOException;
 
-	public boolean reservation(String zst, Account acc) throws IOException;
+	public ReservationResult reservation(String zst, Account acc)
+			throws IOException;
 
 	public boolean prolong(String a) throws IOException, NotReachableException;
 

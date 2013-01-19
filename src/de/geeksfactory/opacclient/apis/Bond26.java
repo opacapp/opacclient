@@ -375,7 +375,7 @@ public class Bond26 implements OpacApi {
 	}
 
 	@Override
-	public boolean reservation(String zst, Account acc) throws IOException {
+	public ReservationResult reservation(String zst, Account acc) throws IOException {
 		HttpGet httpget = new HttpGet(opac_url
 				+ "/index.asp?target=vorbesttrans");
 		HttpResponse response = ahc.execute(httpget);
@@ -405,11 +405,11 @@ public class Bond26 implements OpacApi {
 					&& doc.select("select[name=zstauswahl]").size() == 0) {
 				last_error = doc.getElementsByClass("kontomeldung").get(0)
 						.text();
-				return false;
+				return ReservationResult.ERROR;
 			} else if (doc.select(
 					"select[name=zstauswahl] option[value=" + zst + "]").size() == 0) {
 				last_error = "In diese Zweigstelle kann nicht vorbestellt werden.";
-				return false;
+				return ReservationResult.ERROR;
 			}
 		} else if (response.getStatusLine().getStatusCode() == 302) {
 			response.getEntity().consumeContent();
@@ -437,7 +437,7 @@ public class Bond26 implements OpacApi {
 		response = ahc.execute(httppost);
 		response.getEntity().consumeContent();
 
-		return true;
+		return ReservationResult.OK;
 	}
 
 	@Override

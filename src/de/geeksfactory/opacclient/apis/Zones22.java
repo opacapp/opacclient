@@ -36,6 +36,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import de.geeksfactory.opacclient.AccountUnsupportedException;
 import de.geeksfactory.opacclient.NotReachableException;
+import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -451,8 +452,8 @@ public class Zones22 implements OpacApi {
 	// No account support for now.
 
 	@Override
-	public boolean reservation(String zst, Account acc) throws IOException {
-		return false;
+	public ReservationResult reservation(String zst, Account acc) throws IOException {
+		return ReservationResult.ERROR;
 	}
 
 	@Override
