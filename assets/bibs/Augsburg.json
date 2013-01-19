@@ -1,0 +1,10 @@
+{
+ "api": "oclc2011", 
+ "city": "Augsburg", 
+ "data": {
+  "baseurl": "https://stadtbuecherei1.augsburg.de/webOPACClient.stasis", 
+  "information": "http://www.stadtbuecherei.augsburg.de/index.php?id=sb_standorte" 
+ }, 
+ "support": "Katalogsuche", 
+ "title": null
+}
