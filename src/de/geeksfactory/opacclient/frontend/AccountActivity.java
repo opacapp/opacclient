@@ -333,8 +333,6 @@ public class AccountActivity extends OpacActivity {
 				publishProgress(e, "ioerror");
 			} catch (java.io.IOException e) {
 				success = false;
-			} catch (de.geeksfactory.opacclient.NotReachableException e) {
-				success = false;
 			} catch (java.lang.IllegalStateException e) {
 				success = false;
 			} catch (Exception e) {
@@ -532,8 +530,6 @@ public class AccountActivity extends OpacActivity {
 				publishProgress(e, "ioerror");
 			} catch (java.io.IOException e) {
 				success = false;
-			} catch (de.geeksfactory.opacclient.NotReachableException e) {
-				success = false;
 			} catch (java.lang.IllegalStateException e) {
 				success = false;
 			} catch (Exception e) {
@@ -583,8 +579,6 @@ public class AccountActivity extends OpacActivity {
 			} catch (java.net.UnknownHostException e) {
 				publishProgress(e, "ioerror");
 			} catch (java.io.IOException e) {
-				success = false;
-			} catch (de.geeksfactory.opacclient.NotReachableException e) {
 				success = false;
 			} catch (java.lang.IllegalStateException e) {
 				success = false;

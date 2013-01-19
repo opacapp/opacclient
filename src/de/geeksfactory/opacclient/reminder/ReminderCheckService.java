@@ -122,9 +122,6 @@ public class ReminderCheckService extends Service {
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} catch (NotReachableException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

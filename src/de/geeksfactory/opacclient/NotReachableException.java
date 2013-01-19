@@ -1,5 +1,7 @@
 package de.geeksfactory.opacclient;
 
-public class NotReachableException extends Exception {
+import java.io.IOException;
+
+public class NotReachableException extends IOException {
 
 }

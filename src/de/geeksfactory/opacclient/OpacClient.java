@@ -95,9 +95,6 @@ public class OpacClient extends Application {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (NotReachableException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		return api;
 	}
