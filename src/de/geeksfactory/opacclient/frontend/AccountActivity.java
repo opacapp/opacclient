@@ -381,7 +381,7 @@ public class AccountActivity extends OpacActivity {
 		TextView tvAccCity = (TextView) findViewById(R.id.tvAccCity);
 		Library lib;
 		try {
-			lib = ((OpacClient) getApplication()).getLibrary(account.getBib());
+			lib = ((OpacClient) getApplication()).getLibrary(account.getLibrary());
 			if (lib.getTitle() != null && !lib.getTitle().equals("null")) {
 				tvAccCity.setText(lib.getCity() + " · " + lib.getTitle());
 			} else {

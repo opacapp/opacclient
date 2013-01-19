@@ -54,7 +54,7 @@ public class WelcomeActivity extends SherlockActivity {
 						WelcomeActivity.this);
 				data.open();
 				Account acc = new Account();
-				acc.setBib(libraries.get(position).getIdent());
+				acc.setLibrary(libraries.get(position).getIdent());
 				acc.setLabel(getString(R.string.default_account_name));
 				long insertedid = data.addAccount(acc);
 				data.close();

@@ -56,7 +56,7 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
 		Library lib;
 		try {
 			lib = ((OpacClient) ((Activity) context).getApplication())
-					.getLibrary(item.getBib());
+					.getLibrary(item.getLibrary());
 			TextView tvCity = (TextView) view.findViewById(R.id.tvCity);
 			if (lib.getTitle() != null && !lib.getTitle().equals("null")) {
 				tvCity.setText(lib.getCity() + "\n" + lib.getTitle());

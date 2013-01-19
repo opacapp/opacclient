@@ -30,7 +30,7 @@ public class AccountDataSource {
 
 	public long addAccount(Account acc) {
 		ContentValues values = new ContentValues();
-		values.put("bib", acc.getBib());
+		values.put("bib", acc.getLibrary());
 		values.put("label", acc.getLabel());
 		values.put("name", acc.getName());
 		values.put("password", acc.getPassword());
@@ -39,7 +39,7 @@ public class AccountDataSource {
 
 	public void update(Account acc) {
 		ContentValues values = new ContentValues();
-		values.put("bib", acc.getBib());
+		values.put("bib", acc.getLibrary());
 		values.put("label", acc.getLabel());
 		values.put("name", acc.getName());
 		values.put("password", acc.getPassword());
@@ -127,7 +127,7 @@ public class AccountDataSource {
 	private Account cursorToAccount(Cursor cursor) {
 		Account acc = new Account();
 		acc.setId(cursor.getLong(0));
-		acc.setBib(cursor.getString(1));
+		acc.setLibrary(cursor.getString(1));
 		acc.setLabel(cursor.getString(2));
 		acc.setName(cursor.getString(3));
 		acc.setPassword(cursor.getString(4));

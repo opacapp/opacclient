@@ -151,7 +151,7 @@ public class NavigationFragment extends Fragment {
 				Library library;
 				try {
 					library = ((OpacClient) getActivity().getApplication())
-							.getLibrary(account.getBib());
+							.getLibrary(account.getLibrary());
 					TextView tvCity = (TextView) v.findViewById(R.id.tvCity);
 					if (library.getTitle() != null
 							&& !library.getTitle().equals("null")) {

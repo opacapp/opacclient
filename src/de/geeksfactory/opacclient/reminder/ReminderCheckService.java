@@ -90,7 +90,7 @@ public class ReminderCheckService extends Service {
 			for (Account account : accounts) {
 				try {
 					OpacApi api = app
-							.getNewApi(app.getLibrary(account.getBib()));
+							.getNewApi(app.getLibrary(account.getLibrary()));
 					SimpleDateFormat sdf = api.getDateFormat();
 					AccountData res = api.account(account);
 

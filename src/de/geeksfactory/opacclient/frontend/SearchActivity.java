@@ -263,7 +263,7 @@ public class SearchActivity extends OpacActivity {
 					AccountDataSource data = new AccountDataSource(this);
 					data.open();
 					Account acc = new Account();
-					acc.setBib(lib.getIdent());
+					acc.setLibrary(lib.getIdent());
 					acc.setLabel(getString(R.string.default_account_name));
 					if (!sp.getString("opac_usernr", "").equals("")) {
 						acc.setName(sp.getString("opac_usernr", ""));
