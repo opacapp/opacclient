@@ -1,84 +1,94 @@
 package de.geeksfactory.opacclient.storage;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
 import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
 
-public class MetaDataSource {
-	// Database fields
-	private SQLiteDatabase database;
-	private MetaDatabase dbHelper;
-	private String[] allColumns = MetaDatabase.COLUMNS;
+/**
+ * Data source for library meta data (like e.g. the list of branches) stored in
+ * a key-value format
+ * 
+ * @author Raphael Michel
+ * @since 2.0.0
+ */
+public interface MetaDataSource {
 
-	public MetaDataSource(Context context) {
-		dbHelper = new MetaDatabase(context);
-	}
+	public static String META_TYPE_BRANCH = "zst";
+	public static String META_TYPE_CATEGORY = "mg";
 
-	public void open() throws SQLException {
-		database = dbHelper.getWritableDatabase();
-	}
+	/**
+	 * Open up the connection to the data source. Needs to be called before any
+	 * read or write operation.
+	 * 
+	 * @throws SQLException
+	 *             on failure
+	 */
+	public void open() throws SQLException;
 
-	public void close() {
-		dbHelper.close();
-	}
+	/**
+	 * Close the connection to the data source. Implementations might require
+	 * that each connection is closed before another is opened.
+	 */
+	public void close();
 
-	public long addMeta(String type, String bib, String key, String value) {
-		ContentValues values = new ContentValues();
-		values.put("type", type);
-		values.put("bib", bib);
-		values.put("key", key);
-		values.put("value", value);
-		return database.insert("meta", null, values);
-	}
+	/**
+	 * Add an entry to the database.
+	 * 
+	 * @param type
+	 *            The type of information. Can be one of the
+	 *            <code>META_TYPE_</code> constants but also a string specific
+	 *            to your OpacApi implementation.
+	 * @param library
+	 *            The library identification string this entry should be
+	 *            associated with, see
+	 *            {@link de.geeksfactory.opacclient.objects.Library#getIdent()}
+	 * @param key
+	 *            The key the information is stored with, for example the ID of
+	 *            a branch.
+	 * @param value
+	 *            The value to be stored, for example the name of a branch
+	 * @return
+	 */
+	public long addMeta(String type, String library, String key, String value);
 
-	public List<ContentValues> getMeta(String bib, String type) {
-		List<ContentValues> meta = new ArrayList<ContentValues>();
-		String[] selA = { bib, type };
-		Cursor cursor = database.query("meta", allColumns,
-				"bib = ? AND type = ?", selA, null, null, null);
+	/**
+	 * Get all datasets of a specific type associated with a specific library.
+	 * 
+	 * @param library
+	 *            The library identification, see
+	 *            {@link de.geeksfactory.opacclient.objects.Library#getIdent()}
+	 * @param type
+	 *            The type of information which should be fetched. Can be one of
+	 *            the <code>META_TYPE_</code> constants but also a string
+	 *            specific to your OpacApi implementation.
+	 * @return A list of datasets, stored in <code>ContentValues</code> objects.
+	 */
+	public List<ContentValues> getMeta(String library, String type);
 
-		cursor.moveToFirst();
-		while (!cursor.isAfterLast()) {
-			ContentValues m = cursorToMeta(cursor);
-			meta.add(m);
-			cursor.moveToNext();
-		}
-		// Make sure to close the cursor
-		cursor.close();
-		return meta;
-	}
+	/**
+	 * Checks whether there is meta data present for a specific library.
+	 * 
+	 * @param library
+	 *            The library identification, see
+	 *            {@link de.geeksfactory.opacclient.objects.Library#getIdent()}
+	 * @return <code>true</code> if datasets for this library exist,
+	 *         <code>false</code> otherwise
+	 */
+	public boolean hasMeta(String library);
 
-	public boolean hasMeta(String bib) {
-		String[] selA = { bib };
-		Cursor cursor = database.query("meta", allColumns, "bib = ?", selA,
-				null, null, null);
-		int num = cursor.getCount();
-		cursor.close();
-		return num > 0;
-	}
+	/**
+	 * Clear all meta data for a specific library.
+	 * 
+	 * @param library
+	 *            The library identification, see
+	 *            {@link de.geeksfactory.opacclient.objects.Library#getIdent()}
+	 */
+	public void clearMeta(String library);
 
-	private ContentValues cursorToMeta(Cursor cursor) {
-		ContentValues meta = new ContentValues();
-		meta.put("id", cursor.getLong(0));
-		meta.put("type", cursor.getString(1));
-		meta.put("bib", cursor.getString(2));
-		meta.put("key", cursor.getString(3));
-		meta.put("value", cursor.getString(4));
-		return meta;
-	}
-
-	public void clearMeta(String bib) {
-		String[] selA = { bib };
-		database.delete("meta", "bib=?", selA);
-	}
-
-	public void clearMeta() {
-		database.delete("meta", null, null);
-	}
+	/**
+	 * Clear all meta data for all libraries. Be careful!
+	 */
+	public void clearMeta();
 
 }

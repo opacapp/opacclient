@@ -32,7 +32,6 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
@@ -42,6 +41,7 @@ import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
+import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 import de.geeksfactory.opacclient.storage.StarDataSource;
 
 public class SearchResultDetailsActivity extends OpacActivity {
@@ -168,10 +168,10 @@ public class SearchResultDetailsActivity extends OpacActivity {
 	}
 
 	public void reservation_zst() {
-		MetaDataSource data = new MetaDataSource(this);
+		MetaDataSource data = new SQLMetaDataSource(this);
 		data.open();
 		final List<ContentValues> zst = data.getMeta(app.getLibrary()
-				.getIdent(), "zst");
+				.getIdent(), MetaDataSource.META_TYPE_BRANCH);
 		data.close();
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -347,7 +347,8 @@ public class SearchResultDetailsActivity extends OpacActivity {
 									Intent intent = new Intent(
 											SearchResultDetailsActivity.this,
 											SearchResultDetailsActivity.class);
-									intent.putExtra("item_id",
+									intent.putExtra(
+											"item_id",
 											band.getAsString(DetailledItem.KEY_CHILD_ID));
 									startActivity(intent);
 								}

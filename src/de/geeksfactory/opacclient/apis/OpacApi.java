@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.json.JSONException;
 
-import android.content.Context;
 import android.os.Bundle;
 import de.geeksfactory.opacclient.AccountUnsupportedException;
 import de.geeksfactory.opacclient.NotReachableException;
@@ -15,6 +14,7 @@ import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchResult;
+import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
  * Generic interface for accessing online library catalogues.
@@ -135,15 +135,15 @@ public interface OpacApi {
 	/**
 	 * Is called whenever a new API object is created. The difference to start
 	 * is that you can rely on it but must not use blocking network functions in
-	 * it. I use it to initialize my DefaultHTTPClient and to store the context
+	 * it. I use it to initialize my DefaultHTTPClient and to store the metadata
 	 * and library objects.
 	 * 
-	 * @param context
-	 *            A valid context inside the application
+	 * @param metadata
+	 *            A MetaDataSource to store metadata in
 	 * @param library
 	 *            The library the Api is initialized for
 	 */
-	public void init(Context context, Library library);
+	public void init(MetaDataSource metadata, Library library);
 
 	/**
 	 * Performs a catalogue search. The given <code>Bundle</code> contains the

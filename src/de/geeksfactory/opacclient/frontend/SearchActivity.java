@@ -33,6 +33,7 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
+import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 import de.geeksfactory.opacclient.zxing.IntentIntegrator;
 import de.geeksfactory.opacclient.zxing.IntentResult;
 
@@ -225,20 +226,22 @@ public class SearchActivity extends OpacActivity {
 	private void fillComboBoxes() {
 		Spinner cbZst = (Spinner) findViewById(R.id.cbZweigstelle);
 
-		MetaDataSource data = new MetaDataSource(this);
+		MetaDataSource data = new SQLMetaDataSource(this);
 		data.open();
 
 		ContentValues all = new ContentValues();
 		all.put("key", "");
 		all.put("value", getString(R.string.all));
 
-		cbZst_data = data.getMeta(app.getLibrary().getIdent(), "zst");
+		cbZst_data = data.getMeta(app.getLibrary().getIdent(),
+				MetaDataSource.META_TYPE_BRANCH);
 		cbZst_data.add(0, all);
 		cbZst.setAdapter(new MetaAdapter(this, cbZst_data,
 				R.layout.simple_spinner_item));
 
 		Spinner cbMg = (Spinner) findViewById(R.id.cbMediengruppe);
-		cbMg_data = data.getMeta(app.getLibrary().getIdent(), "mg");
+		cbMg_data = data.getMeta(app.getLibrary().getIdent(),
+				MetaDataSource.META_TYPE_CATEGORY);
 		cbMg_data.add(0, all);
 		cbMg.setAdapter(new MetaAdapter(this, cbMg_data,
 				R.layout.simple_spinner_item));

@@ -10,14 +10,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
@@ -30,11 +28,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import android.content.ContentValues;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.util.Log;
 import de.geeksfactory.opacclient.AccountUnsupportedException;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
@@ -55,7 +49,7 @@ public class Bond26 implements OpacApi {
 	private String results;
 	private JSONObject data;
 	private DefaultHttpClient ahc;
-	private Context context;
+	private MetaDataSource metadata;
 	private boolean initialised = false;
 	private String last_error;
 	private Library library;
@@ -109,23 +103,24 @@ public class Bond26 implements OpacApi {
 		Document doc = Jsoup.parse(html);
 
 		Elements zst_opts = doc.select("#zst option");
-		MetaDataSource data = new MetaDataSource(context);
-		data.open();
-		data.clearMeta(library.getIdent());
+		metadata.open();
+		metadata.clearMeta(library.getIdent());
 		for (int i = 0; i < zst_opts.size(); i++) {
 			Element opt = zst_opts.get(i);
 			if (!opt.val().equals(""))
-				data.addMeta("zst", library.getIdent(), opt.val(), opt.text());
+				metadata.addMeta(MetaDataSource.META_TYPE_BRANCH, library.getIdent(), opt.val(),
+						opt.text());
 		}
 
 		Elements mg_opts = doc.select("#medigrp option");
 		for (int i = 0; i < mg_opts.size(); i++) {
 			Element opt = mg_opts.get(i);
 			if (!opt.val().equals(""))
-				data.addMeta("mg", library.getIdent(), opt.val(), opt.text());
+				metadata.addMeta(MetaDataSource.META_TYPE_CATEGORY, library.getIdent(), opt.val(),
+						opt.text());
 		}
 
-		data.close();
+		metadata.close();
 	}
 
 	@Override
@@ -141,9 +136,8 @@ public class Bond26 implements OpacApi {
 
 		response.getEntity().consumeContent();
 
-		MetaDataSource data = new MetaDataSource(context);
-		data.open();
-		if (!data.hasMeta(library.getIdent())) {
+		metadata.open();
+		if (!metadata.hasMeta(library.getIdent())) {
 			HttpPost httppost = new HttpPost(opac_url + "/index.asp");
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("link_profis.x", "0"));
@@ -152,26 +146,20 @@ public class Bond26 implements OpacApi {
 			response = ahc.execute(httppost);
 			String html = convertStreamToString(response.getEntity()
 					.getContent());
-			data.close();
+			metadata.close();
 			extract_meta(html);
 		} else {
-			data.close();
+			metadata.close();
 		}
 	}
 
 	@Override
-	public void init(Context context, Library lib) {
+	public void init(MetaDataSource metadata, Library lib) {
 		ahc = new DefaultHttpClient();
 
-		this.context = context;
+		this.metadata = metadata;
 		this.library = lib;
 		this.data = lib.getData();
-
-		SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(context);
-		if (sp.getBoolean("debug_proxy", false))
-			ahc.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,
-					new HttpHost("192.168.0.173", 8000)); // TODO: DEBUG ONLY
 
 		try {
 			this.opac_url = data.getString("baseurl");
@@ -522,7 +510,6 @@ public class Bond26 implements OpacApi {
 		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 		HttpResponse response = ahc.execute(httppost);
 
-		Log.i("response", "" + response.getStatusLine().getStatusCode());
 		if (response.getStatusLine().getStatusCode() == 200) {
 			// Login vonnöten
 			response.getEntity().consumeContent();
@@ -664,7 +651,6 @@ public class Bond26 implements OpacApi {
 		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 		HttpResponse response = ahc.execute(httppost);
 
-		Log.i("response", "" + response.getStatusLine().getStatusCode());
 		if (response.getStatusLine().getStatusCode() == 200) {
 			// Login vonnöten
 			response.getEntity().consumeContent();

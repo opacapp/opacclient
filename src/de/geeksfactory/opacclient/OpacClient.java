@@ -8,6 +8,8 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.acra.ACRA;
+import org.acra.annotation.ReportsCrashes;
 import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,10 +23,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
-
-import org.acra.*;
-import org.acra.annotation.*;
-
 import de.geeksfactory.opacclient.apis.Bond26;
 import de.geeksfactory.opacclient.apis.OCLC2011;
 import de.geeksfactory.opacclient.apis.OpacApi;
@@ -33,9 +31,9 @@ import de.geeksfactory.opacclient.frontend.ErrorActivity;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 
-@ReportsCrashes(formKey = "",
-                mailTo = "raphael+opac@geeksfactory.de")
+@ReportsCrashes(formKey = "", mailTo = "raphael+opac@geeksfactory.de")
 public class OpacClient extends Application {
 
 	public Exception last_exception;
@@ -68,7 +66,7 @@ public class OpacClient extends Application {
 		else
 			return null;
 
-		newApiInstance.init(this, lib);
+		newApiInstance.init(new SQLMetaDataSource(this), lib);
 		return newApiInstance;
 	}
 
@@ -197,7 +195,7 @@ public class OpacClient extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-        ACRA.init(this);
+		ACRA.init(this);
 		sp = PreferenceManager.getDefaultSharedPreferences(this);
 	}
 

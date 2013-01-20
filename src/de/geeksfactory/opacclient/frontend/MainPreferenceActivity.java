@@ -10,6 +10,7 @@ import com.actionbarsherlock.view.MenuItem;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.reminder.ReminderCheckService;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
+import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 
 public class MainPreferenceActivity extends OpacPreferenceActivity {
 	@SuppressWarnings("deprecation")
@@ -35,7 +36,7 @@ public class MainPreferenceActivity extends OpacPreferenceActivity {
 		meta.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference arg0) {
-				MetaDataSource data = new MetaDataSource(
+				MetaDataSource data = new SQLMetaDataSource(
 						MainPreferenceActivity.this);
 				data.open();
 				data.clearMeta();
