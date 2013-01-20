@@ -117,6 +117,10 @@ public class SearchActivity extends OpacActivity {
 	@Override
 	protected void onStart() {
 		super.onStart();
+
+        if(app.getLibrary() == null)
+            return;
+
 		Set<String> fields = new HashSet<String>(Arrays.asList(app.getApi()
 				.getSearchFields()));
 
