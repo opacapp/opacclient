@@ -28,6 +28,7 @@ import com.actionbarsherlock.view.MenuItem;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
@@ -118,8 +119,8 @@ public class SearchActivity extends OpacActivity {
 	protected void onStart() {
 		super.onStart();
 
-        if(app.getLibrary() == null)
-            return;
+		if (app.getLibrary() == null)
+			return;
 
 		Set<String> fields = new HashSet<String>(Arrays.asList(app.getApi()
 				.getSearchFields()));
@@ -361,31 +362,43 @@ public class SearchActivity extends OpacActivity {
 		Intent myIntent = new Intent(SearchActivity.this,
 				SearchResultsActivity.class);
 		Bundle query = new Bundle();
-		query.putString("titel", ((EditText) SearchActivity.this
-				.findViewById(R.id.etTitel)).getEditableText().toString());
-		query.putString("verfasser", ((EditText) SearchActivity.this
-				.findViewById(R.id.etVerfasser)).getEditableText().toString());
-		query.putString("schlag_a", ((EditText) SearchActivity.this
-				.findViewById(R.id.etSchlagA)).getEditableText().toString());
-		query.putString("schlag_b", ((EditText) SearchActivity.this
-				.findViewById(R.id.etSchlagB)).getEditableText().toString());
-		query.putString("zweigstelle", zst);
-		query.putString("mediengruppe", mg);
-		query.putString("isbn", ((EditText) SearchActivity.this
-				.findViewById(R.id.etISBN)).getEditableText().toString());
-		query.putString("jahr", ((EditText) SearchActivity.this
-				.findViewById(R.id.etJahr)).getEditableText().toString());
-		query.putString("jahr_von", ((EditText) SearchActivity.this
-				.findViewById(R.id.etJahrVon)).getEditableText().toString());
-		query.putString("jahr_bis", ((EditText) SearchActivity.this
-				.findViewById(R.id.etJahrBis)).getEditableText().toString());
-		query.putString("systematik", ((EditText) SearchActivity.this
-				.findViewById(R.id.etSystematik)).getEditableText().toString());
-		query.putString("interessenkreis", ((EditText) SearchActivity.this
-				.findViewById(R.id.etInteressenkreis)).getEditableText()
-				.toString());
-		query.putString("verlag", ((EditText) SearchActivity.this
-				.findViewById(R.id.etVerlag)).getEditableText().toString());
+		query.putString(OpacApi.KEY_SEARCH_QUERY_TITLE,
+				((EditText) SearchActivity.this.findViewById(R.id.etTitel))
+						.getEditableText().toString());
+		query.putString(OpacApi.KEY_SEARCH_QUERY_AUTHOR,
+				((EditText) SearchActivity.this.findViewById(R.id.etVerfasser))
+						.getEditableText().toString());
+		query.putString(OpacApi.KEY_SEARCH_QUERY_KEYWORDA,
+				((EditText) SearchActivity.this.findViewById(R.id.etSchlagA))
+						.getEditableText().toString());
+		query.putString(OpacApi.KEY_SEARCH_QUERY_KEYWORDB,
+				((EditText) SearchActivity.this.findViewById(R.id.etSchlagB))
+						.getEditableText().toString());
+		query.putString(OpacApi.KEY_SEARCH_QUERY_BRANCH, zst);
+		query.putString(OpacApi.KEY_SEARCH_QUERY_CATEGORY, mg);
+		query.putString(OpacApi.KEY_SEARCH_QUERY_ISBN,
+				((EditText) SearchActivity.this.findViewById(R.id.etISBN))
+						.getEditableText().toString());
+		query.putString(OpacApi.KEY_SEARCH_QUERY_YEAR,
+				((EditText) SearchActivity.this.findViewById(R.id.etJahr))
+						.getEditableText().toString());
+		query.putString(OpacApi.KEY_SEARCH_QUERY_YEAR_RANGE_START,
+				((EditText) SearchActivity.this.findViewById(R.id.etJahrVon))
+						.getEditableText().toString());
+		query.putString(OpacApi.KEY_SEARCH_QUERY_YEAR_RANGE_END,
+				((EditText) SearchActivity.this.findViewById(R.id.etJahrBis))
+						.getEditableText().toString());
+		query.putString(
+				OpacApi.KEY_SEARCH_QUERY_SYSTEM,
+				((EditText) SearchActivity.this.findViewById(R.id.etSystematik))
+						.getEditableText().toString());
+		query.putString(OpacApi.KEY_SEARCH_QUERY_AUDIENCE,
+				((EditText) SearchActivity.this
+						.findViewById(R.id.etInteressenkreis))
+						.getEditableText().toString());
+		query.putString(OpacApi.KEY_SEARCH_QUERY_AUDIENCE,
+				((EditText) SearchActivity.this.findViewById(R.id.etVerlag))
+						.getEditableText().toString());
 		query.putString(
 				"order",
 				(((Integer) ((Spinner) SearchActivity.this

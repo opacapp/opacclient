@@ -82,9 +82,11 @@ public class OCLC2011 implements OpacApi {
 
 	@Override
 	public String[] getSearchFields() {
-		return new String[] { "titel", "verfasser", "schlag_a", "schlag_b",
-				"zweigstelle", "isbn", "jahr", "notation", "interessenkreis",
-				"verlag" };
+		return new String[] { KEY_SEARCH_QUERY_TITLE, KEY_SEARCH_QUERY_AUTHOR,
+				KEY_SEARCH_QUERY_KEYWORDA, KEY_SEARCH_QUERY_KEYWORDB,
+				KEY_SEARCH_QUERY_BRANCH, KEY_SEARCH_QUERY_ISBN,
+				KEY_SEARCH_QUERY_YEAR, KEY_SEARCH_QUERY_SYSTEM,
+				KEY_SEARCH_QUERY_AUDIENCE, KEY_SEARCH_QUERY_PUBLISHER };
 	}
 
 	@Override
@@ -230,16 +232,24 @@ public class OCLC2011 implements OpacApi {
 			params.add(new BasicNameValuePair("callingPage", "searchParameters"));
 			params.add(new BasicNameValuePair("submitSearch", "Suchen"));
 
-			index = addParameters(query, "titel", "331", params, index);
-			index = addParameters(query, "verfasser", "100", params, index);
-			index = addParameters(query, "isbn", "540", params, index);
-			index = addParameters(query, "schlag_a", "902", params, index);
-			index = addParameters(query, "schlag_b", "710", params, index);
-			index = addParameters(query, "jahr", "425", params, index);
-			index = addParameters(query, "verlag", "412", params, index);
-			index = addParameters(query, "systematik", "700", params, index);
-			index = addParameters(query, "interessenkreis", "1001", params,
+			index = addParameters(query, KEY_SEARCH_QUERY_TITLE, "331", params,
 					index);
+			index = addParameters(query, KEY_SEARCH_QUERY_AUTHOR, "100",
+					params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_ISBN, "540", params,
+					index);
+			index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDA, "902",
+					params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDB, "710",
+					params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_YEAR, "425", params,
+					index);
+			index = addParameters(query, KEY_SEARCH_QUERY_PUBLISHER, "412",
+					params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_SYSTEM, "700",
+					params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_AUDIENCE, "1001",
+					params, index);
 
 			if (index > 4) {
 				last_error = "Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.";
@@ -469,9 +479,9 @@ public class OCLC2011 implements OpacApi {
 			Element tr = exemplartrs.get(i);
 			try {
 				ContentValues e = new ContentValues();
-				e.put("barcode", tr.child(1).text().trim());
-				e.put("zst", tr.child(3).text().trim());
-				e.put("status", tr.child(4).text().trim());
+				e.put(DetailledItem.KEY_COPY_BARCODE, tr.child(1).text().trim());
+				e.put(DetailledItem.KEY_COPY_BRANCH, tr.child(3).text().trim());
+				e.put(DetailledItem.KEY_COPY_STATUS, tr.child(4).text().trim());
 				result.addCopy(e);
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -592,15 +602,18 @@ public class OCLC2011 implements OpacApi {
 			Element tr = copytrs.get(i);
 			ContentValues e = new ContentValues();
 
-			e.put("titel", tr.child(1).select("strong").text().trim());
+			e.put(AccountData.KEY_LENT_TITLE, tr.child(1).select("strong")
+					.text().trim());
 			try {
-				e.put("verfasser", tr.child(1).html().split("<br />")[1].trim());
+				e.put(AccountData.KEY_LENT_AUTHOR,
+						tr.child(1).html().split("<br />")[1].trim());
 
 				String frist = tr.child(2).html().split("<br />")[0].trim();
 				if (frist.contains("-"))
 					frist = frist.split("-")[1].trim();
-				e.put("frist", frist);
-				e.put("zst", tr.child(2).html().split("<br />")[1].trim());
+				e.put(AccountData.KEY_LENT_DEADLINE, frist);
+				e.put(AccountData.KEY_LENT_BRANCH,
+						tr.child(2).html().split("<br />")[1].trim());
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}

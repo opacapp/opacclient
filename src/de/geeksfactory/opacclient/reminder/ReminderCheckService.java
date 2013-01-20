@@ -89,15 +89,16 @@ public class ReminderCheckService extends Service {
 			OpacClient app = (OpacClient) getApplication();
 			for (Account account : accounts) {
 				try {
-					OpacApi api = app
-							.getNewApi(app.getLibrary(account.getLibrary()));
+					OpacApi api = app.getNewApi(app.getLibrary(account
+							.getLibrary()));
 					SimpleDateFormat sdf = api.getDateFormat();
 					AccountData res = api.account(account);
 
 					for (ContentValues item : res.getLent()) {
-						if (item.containsKey("frist")) {
+						if (item.containsKey(AccountData.KEY_LENT_DEADLINE)) {
 							Date expiring = sdf
-									.parse(item.getAsString("frist"));
+									.parse(item
+											.getAsString(AccountData.KEY_LENT_DEADLINE));
 							if ((expiring.getTime() - now) < warning) {
 								expired_total++;
 								if (expiring.getTime() >= last) {

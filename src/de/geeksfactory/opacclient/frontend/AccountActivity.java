@@ -381,7 +381,8 @@ public class AccountActivity extends OpacActivity {
 		TextView tvAccCity = (TextView) findViewById(R.id.tvAccCity);
 		Library lib;
 		try {
-			lib = ((OpacClient) getApplication()).getLibrary(account.getLibrary());
+			lib = ((OpacClient) getApplication()).getLibrary(account
+					.getLibrary());
 			if (lib.getTitle() != null && !lib.getTitle().equals("null")) {
 				tvAccCity.setText(lib.getCity() + " · " + lib.getTitle());
 			} else {
@@ -405,36 +406,46 @@ public class AccountActivity extends OpacActivity {
 			for (final ContentValues item : result.getLent()) {
 				View v = getLayoutInflater().inflate(R.layout.lent_listitem,
 						null);
-				((TextView) v.findViewById(R.id.tvTitel)).setText(Html
-						.fromHtml(item.getAsString("titel")));
-				((TextView) v.findViewById(R.id.tvVerfasser)).setText(Html
-						.fromHtml(item.getAsString("verfasser")));
+				((TextView) v.findViewById(R.id.tvTitel))
+						.setText(Html.fromHtml(item
+								.getAsString(AccountData.KEY_LENT_TITLE)));
+				((TextView) v.findViewById(R.id.tvVerfasser))
+						.setText(Html.fromHtml(item
+								.getAsString(AccountData.KEY_LENT_AUTHOR)));
 
 				((TextView) v.findViewById(R.id.tvStatus))
 						.setVisibility(View.VISIBLE);
-				if (item.containsKey("status") && item.containsKey("frist")) {
+				if (item.containsKey(AccountData.KEY_LENT_STATUS)
+						&& item.containsKey(AccountData.KEY_LENT_DEADLINE)) {
+					((TextView) v.findViewById(R.id.tvStatus))
+							.setText(Html.fromHtml(item
+									.getAsString(AccountData.KEY_LENT_DEADLINE)
+									+ " ("
+									+ item.getAsString(AccountData.KEY_LENT_STATUS)
+									+ ")"));
+				} else if (item.containsKey(AccountData.KEY_LENT_STATUS)) {
 					((TextView) v.findViewById(R.id.tvStatus)).setText(Html
-							.fromHtml(item.getAsString("frist") + " ("
-									+ item.getAsString("status") + ")"));
-				} else if (item.containsKey("status")) {
-					((TextView) v.findViewById(R.id.tvStatus)).setText(Html
-							.fromHtml(item.getAsString("status")));
-				} else if (item.containsKey("frist")) {
-					((TextView) v.findViewById(R.id.tvStatus)).setText(Html
-							.fromHtml(item.getAsString("frist")));
+							.fromHtml(item
+									.getAsString(AccountData.KEY_LENT_STATUS)));
+				} else if (item.containsKey(AccountData.KEY_LENT_DEADLINE)) {
+					((TextView) v.findViewById(R.id.tvStatus))
+							.setText(Html.fromHtml(item
+									.getAsString(AccountData.KEY_LENT_DEADLINE)));
 				} else {
 					((TextView) v.findViewById(R.id.tvStatus))
 							.setVisibility(View.GONE);
 				}
 
-				if (item.containsKey("ast")) {
-					((TextView) v.findViewById(R.id.tvZst)).setText(Html
-							.fromHtml(item.getAsString("ast")));
+				if (item.containsKey(AccountData.KEY_LENT_LENDING_BRANCH)) {
+					((TextView) v.findViewById(R.id.tvZst))
+							.setText(Html.fromHtml(item
+									.getAsString(AccountData.KEY_LENT_LENDING_BRANCH)));
 					((TextView) v.findViewById(R.id.tvZst))
 							.setVisibility(View.VISIBLE);
-				} else if (item.containsKey("zst")) {
+				} else if (item.containsKey(AccountData.KEY_LENT_BRANCH)) {
 					((TextView) v.findViewById(R.id.tvZst)).setText(Html
-							.fromHtml(item.getAsString("zst")));
+							.fromHtml(item
+									.getAsString(AccountData.KEY_LENT_BRANCH)));
 					((TextView) v.findViewById(R.id.tvZst))
 							.setVisibility(View.VISIBLE);
 				} else {
@@ -442,12 +453,13 @@ public class AccountActivity extends OpacActivity {
 							.setVisibility(View.GONE);
 				}
 
-				if (item.containsKey("link")) {
+				if (item.containsKey(AccountData.KEY_LENT_LINK)) {
 					((ImageView) v.findViewById(R.id.ivProlong))
 							.setOnClickListener(new OnClickListener() {
 								@Override
 								public void onClick(View arg0) {
-									prolong(item.getAsString("link"));
+									prolong(item
+											.getAsString(AccountData.KEY_LENT_LINK));
 								}
 							});
 					((ImageView) v.findViewById(R.id.ivProlong))
@@ -472,14 +484,16 @@ public class AccountActivity extends OpacActivity {
 				View v = getLayoutInflater().inflate(
 						R.layout.reservation_listitem, null);
 
-				((TextView) v.findViewById(R.id.tvTitel)).setText(Html
-						.fromHtml(item.getAsString("titel")));
+				((TextView) v.findViewById(R.id.tvTitel))
+						.setText(Html.fromHtml(item
+								.getAsString(AccountData.KEY_RESERVATION_TITLE)));
 				((TextView) v.findViewById(R.id.tvVerfasser)).setText(item
-						.getAsString("verfasser"));
+						.getAsString(AccountData.KEY_RESERVATION_AUTHOR));
 
-				if (item.containsKey("bereit")) {
-					((TextView) v.findViewById(R.id.tvStatus)).setText(Html
-							.fromHtml(item.getAsString("bereit")));
+				if (item.containsKey(AccountData.KEY_RESERVATION_READY)) {
+					((TextView) v.findViewById(R.id.tvStatus))
+							.setText(Html.fromHtml(item
+									.getAsString(AccountData.KEY_RESERVATION_READY)));
 					((TextView) v.findViewById(R.id.tvStatus))
 							.setVisibility(View.VISIBLE);
 				} else {
@@ -487,9 +501,10 @@ public class AccountActivity extends OpacActivity {
 							.setVisibility(View.GONE);
 				}
 
-				if (item.containsKey("zst")) {
-					((TextView) v.findViewById(R.id.tvZst)).setText(Html
-							.fromHtml(item.getAsString("zst")));
+				if (item.containsKey(AccountData.KEY_RESERVATION_BRANCH)) {
+					((TextView) v.findViewById(R.id.tvZst))
+							.setText(Html.fromHtml(item
+									.getAsString(AccountData.KEY_RESERVATION_BRANCH)));
 					((TextView) v.findViewById(R.id.tvZst))
 							.setVisibility(View.VISIBLE);
 				} else {
@@ -497,12 +512,13 @@ public class AccountActivity extends OpacActivity {
 							.setVisibility(View.GONE);
 				}
 
-				if (item.containsKey("cancel")) {
+				if (item.containsKey(AccountData.KEY_RESERVATION_CANCEL)) {
 					((ImageView) v.findViewById(R.id.ivCancel))
 							.setOnClickListener(new OnClickListener() {
 								@Override
 								public void onClick(View arg0) {
-									cancel(item.getAsString("cancel"));
+									cancel(item
+											.getAsString(AccountData.KEY_RESERVATION_CANCEL));
 								}
 							});
 					((ImageView) v.findViewById(R.id.ivCancel))

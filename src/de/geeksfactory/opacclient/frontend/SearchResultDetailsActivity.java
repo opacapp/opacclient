@@ -338,7 +338,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 					View v = getLayoutInflater().inflate(
 							R.layout.band_listitem, null);
 					((TextView) v.findViewById(R.id.tvTitel)).setText(band
-							.getAsString("titel"));
+							.getAsString(DetailledItem.KEY_CHILD_TITLE));
 
 					v.findViewById(R.id.llItem).setOnClickListener(
 							new OnClickListener() {
@@ -348,7 +348,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 											SearchResultDetailsActivity.this,
 											SearchResultDetailsActivity.class);
 									intent.putExtra("item_id",
-											band.getAsString("id"));
+											band.getAsString(DetailledItem.KEY_CHILD_ID));
 									startActivity(intent);
 								}
 							});
@@ -359,42 +359,45 @@ public class SearchResultDetailsActivity extends OpacActivity {
 					View v = getLayoutInflater().inflate(
 							R.layout.copy_listitem, null);
 
-					if (copy.containsKey("ort")) {
+					if (copy.containsKey(DetailledItem.KEY_COPY_LOCATION)) {
 						((TextView) v.findViewById(R.id.tvLocation))
-								.setText(copy.getAsString("ort"));
+								.setText(copy
+										.getAsString(DetailledItem.KEY_COPY_LOCATION));
 						((TextView) v.findViewById(R.id.tvLocation))
 								.setVisibility(View.VISIBLE);
-					} else if (copy.containsKey("barcode")) {
+					} else if (copy.containsKey(DetailledItem.KEY_COPY_BARCODE)) {
 						((TextView) v.findViewById(R.id.tvLocation))
-								.setText(copy.getAsString("barcode"));
+								.setText(copy
+										.getAsString(DetailledItem.KEY_COPY_BARCODE));
 						((TextView) v.findViewById(R.id.tvLocation))
 								.setVisibility(View.VISIBLE);
 					} else {
 						((TextView) v.findViewById(R.id.tvLocation))
 								.setVisibility(View.GONE);
 					}
-					if (copy.containsKey("zst")) {
+					if (copy.containsKey(DetailledItem.KEY_COPY_BRANCH)) {
 						((TextView) v.findViewById(R.id.tvZst)).setText(copy
-								.getAsString("zst"));
+								.getAsString(DetailledItem.KEY_COPY_BRANCH));
 						((TextView) v.findViewById(R.id.tvZst))
 								.setVisibility(View.VISIBLE);
 					} else {
 						((TextView) v.findViewById(R.id.tvZst))
 								.setVisibility(View.GONE);
 					}
-					if (copy.containsKey("status")) {
+					if (copy.containsKey(DetailledItem.KEY_COPY_STATUS)) {
 						((TextView) v.findViewById(R.id.tvStatus)).setText(copy
-								.getAsString("status"));
+								.getAsString(DetailledItem.KEY_COPY_STATUS));
 						((TextView) v.findViewById(R.id.tvStatus))
 								.setVisibility(View.VISIBLE);
 					} else {
 						((TextView) v.findViewById(R.id.tvStatus))
 								.setVisibility(View.GONE);
 					}
-					if (copy.containsKey("vorbestellt")) {
+					if (copy.containsKey(DetailledItem.KEY_COPY_RESERVATIONS)) {
 						((TextView) v.findViewById(R.id.tvVorbestellt))
-								.setText(getString(R.string.res) + ": "
-										+ copy.getAsString("vorbestellt"));
+								.setText(getString(R.string.res)
+										+ ": "
+										+ copy.getAsString(DetailledItem.KEY_COPY_RESERVATIONS));
 						((TextView) v.findViewById(R.id.tvVorbestellt))
 								.setVisibility(View.VISIBLE);
 					} else {
@@ -403,8 +406,9 @@ public class SearchResultDetailsActivity extends OpacActivity {
 					}
 					if (copy.containsKey("rueckgabe")) {
 						((TextView) v.findViewById(R.id.tvRueckgabe))
-								.setText(getString(R.string.ret) + ": "
-										+ copy.getAsString("rueckgabe"));
+								.setText(getString(R.string.ret)
+										+ ": "
+										+ copy.getAsString(DetailledItem.KEY_COPY_RETURN));
 						((TextView) v.findViewById(R.id.tvRueckgabe))
 								.setVisibility(View.VISIBLE);
 					} else {

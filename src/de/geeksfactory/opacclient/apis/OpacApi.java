@@ -1,11 +1,9 @@
 package de.geeksfactory.opacclient.apis;
 
 import java.io.IOException;
-import java.net.SocketException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 
 import android.content.Context;
@@ -24,6 +22,97 @@ import de.geeksfactory.opacclient.objects.SearchResult;
  * @author Raphael Michel
  */
 public interface OpacApi {
+
+	/**
+	 * Bundle key for {@link #search(Bundle)}:
+	 * 
+	 * Keywords to search in item's title
+	 */
+	public static String KEY_SEARCH_QUERY_TITLE = "titel";
+
+	/**
+	 * Bundle key for {@link #search(Bundle)}:
+	 * 
+	 * Author
+	 */
+	public static String KEY_SEARCH_QUERY_AUTHOR = "verfasser";
+
+	/**
+	 * Bundle key for {@link #search(Bundle)}:
+	 * 
+	 * Keyword A
+	 */
+	public static String KEY_SEARCH_QUERY_KEYWORDA = "schlag_a";
+
+	/**
+	 * Bundle key for {@link #search(Bundle)}:
+	 * 
+	 * Keyword B
+	 */
+	public static String KEY_SEARCH_QUERY_KEYWORDB = "schlag_b";
+
+	/**
+	 * Bundle key for {@link #search(Bundle)}:
+	 * 
+	 * Library branch
+	 */
+	public static String KEY_SEARCH_QUERY_BRANCH = "zweigstelle";
+
+	/**
+	 * Bundle key for {@link #search(Bundle)}:
+	 * 
+	 * ISBN
+	 */
+	public static String KEY_SEARCH_QUERY_ISBN = "isbn";
+
+	/**
+	 * Bundle key for {@link #search(Bundle)}:
+	 * 
+	 * Year of publication
+	 */
+	public static String KEY_SEARCH_QUERY_YEAR = "jahr";
+
+	/**
+	 * Bundle key for {@link #search(Bundle)}:
+	 * 
+	 * Year range start
+	 */
+	public static String KEY_SEARCH_QUERY_YEAR_RANGE_START = "jahr_von";
+
+	/**
+	 * Bundle key for {@link #search(Bundle)}:
+	 * 
+	 * Year range end
+	 */
+	public static String KEY_SEARCH_QUERY_YEAR_RANGE_END = "jahr_bis";
+
+	/**
+	 * Bundle key for {@link #search(Bundle)}:
+	 * 
+	 * Year range end
+	 */
+	public static String KEY_SEARCH_QUERY_SYSTEM = "systematik";
+
+	/**
+	 * Bundle key for {@link #search(Bundle)}:
+	 * 
+	 * Systematic identification
+	 */
+	public static String KEY_SEARCH_QUERY_AUDIENCE = "interessenkreis";
+
+	/**
+	 * Bundle key for {@link #search(Bundle)}:
+	 * 
+	 * Item's publisher
+	 */
+	public static String KEY_SEARCH_QUERY_PUBLISHER = "verlag";
+
+	/**
+	 * Bundle key for {@link #search(Bundle)}:
+	 * 
+	 * Item's category
+	 */
+	public static String KEY_SEARCH_QUERY_CATEGORY = "mediengruppe";
 
 	/**
 	 * Is called on application startup and you are free to call it in <our
@@ -61,24 +150,8 @@ public interface OpacApi {
 	 * search criteria. See documentation on <code>SearchResult</code> for
 	 * details.
 	 * 
-	 * The <code>Bundle</code> can contain:
-	 * <ul>
-	 * <li>"titel" – Title</li>
-	 * <li>"verfasser" – Author</li>
-	 * <li>"schlag_a" – Keyword A</li>
-	 * <li>"schlag_b" – Keyword B</li>
-	 * <li>"zweigstelle" – Branch</li>
-	 * <li>"isbn" – ISBN</li>
-	 * <li>"jahr" – Year</li>
-	 * <li>"jahr_von" – Year (from)</li>
-	 * <li>"jahr_bis" – Year (until)</li>
-	 * <li>"systematik" – Systematical identification</li>
-	 * <li>"interessenkreis" – Audience</li>
-	 * <li>"verlag" – Publisher</li>
-	 * </ul>
-	 * 
-	 * Sorry for the German keys, this will get fixed someday (old will continue
-	 * to work or I'll port every code all by myself ;-))
+	 * The <code>Bundle</code> can contain any of the <code>KEY_SEARCH_*</code>
+	 * constants as keys.
 	 * 
 	 * This function is always called from a background thread, you can use
 	 * blocking network operations in it. See documentation on DetailledItem for
@@ -168,11 +241,11 @@ public interface OpacApi {
 		/**
 		 * Everything went well
 		 */
-		OK, 
+		OK,
 		/**
 		 * An error occured
 		 */
-		ERROR, 
+		ERROR,
 		/**
 		 * (Reserved, currently not in use.)
 		 */

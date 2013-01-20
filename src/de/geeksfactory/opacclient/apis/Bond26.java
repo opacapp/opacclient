@@ -67,9 +67,12 @@ public class Bond26 implements OpacApi {
 
 	@Override
 	public String[] getSearchFields() {
-		return new String[] { "titel", "verfasser", "schlag_a", "schlag_b",
-				"zweigstelle", "mediengruppe", "isbn", "jahr_von", "jahr_bis",
-				"notation", "interessenkreis", "verlag", "order" };
+		return new String[] { KEY_SEARCH_QUERY_TITLE, KEY_SEARCH_QUERY_AUTHOR,
+				KEY_SEARCH_QUERY_KEYWORDA, KEY_SEARCH_QUERY_KEYWORDB,
+				KEY_SEARCH_QUERY_BRANCH, KEY_SEARCH_QUERY_CATEGORY,
+				KEY_SEARCH_QUERY_ISBN, KEY_SEARCH_QUERY_YEAR_RANGE_START,
+				KEY_SEARCH_QUERY_YEAR_RANGE_END, KEY_SEARCH_QUERY_SYSTEM,
+				KEY_SEARCH_QUERY_AUDIENCE, KEY_SEARCH_QUERY_PUBLISHER, "order" };
 	}
 
 	@Override
@@ -198,29 +201,29 @@ public class Bond26 implements OpacApi {
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 		nameValuePairs.add(new BasicNameValuePair("stichtit", "stich"));
 		nameValuePairs.add(new BasicNameValuePair("stichwort",
-				getStringFromBundle(query, "titel")));
+				getStringFromBundle(query, KEY_SEARCH_QUERY_TITLE)));
 		nameValuePairs.add(new BasicNameValuePair("verfasser",
-				getStringFromBundle(query, "verfasser")));
+				getStringFromBundle(query, KEY_SEARCH_QUERY_AUTHOR)));
 		nameValuePairs.add(new BasicNameValuePair("schlag_a",
-				getStringFromBundle(query, "schlag_a")));
+				getStringFromBundle(query, KEY_SEARCH_QUERY_KEYWORDA)));
 		nameValuePairs.add(new BasicNameValuePair("schlag_b",
-				getStringFromBundle(query, "schlag_b")));
+				getStringFromBundle(query, KEY_SEARCH_QUERY_KEYWORDB)));
 		nameValuePairs.add(new BasicNameValuePair("zst", getStringFromBundle(
-				query, "zweigstelle")));
+				query, KEY_SEARCH_QUERY_BRANCH)));
 		nameValuePairs.add(new BasicNameValuePair("medigrp",
-				getStringFromBundle(query, "mediengruppe")));
+				getStringFromBundle(query, KEY_SEARCH_QUERY_CATEGORY)));
 		nameValuePairs.add(new BasicNameValuePair("isbn", getStringFromBundle(
-				query, "isbn")));
+				query, KEY_SEARCH_QUERY_ISBN)));
 		nameValuePairs.add(new BasicNameValuePair("jahr_von",
-				getStringFromBundle(query, "jahr_von")));
+				getStringFromBundle(query, KEY_SEARCH_QUERY_YEAR_RANGE_START)));
 		nameValuePairs.add(new BasicNameValuePair("jahr_bis",
-				getStringFromBundle(query, "jahr_bis")));
+				getStringFromBundle(query, KEY_SEARCH_QUERY_YEAR_RANGE_END)));
 		nameValuePairs.add(new BasicNameValuePair("notation",
-				getStringFromBundle(query, "notation")));
+				getStringFromBundle(query, KEY_SEARCH_QUERY_SYSTEM)));
 		nameValuePairs.add(new BasicNameValuePair("ikr", getStringFromBundle(
-				query, "interessenkreis")));
+				query, KEY_SEARCH_QUERY_AUDIENCE)));
 		nameValuePairs.add(new BasicNameValuePair("verl", getStringFromBundle(
-				query, "verlag")));
+				query, KEY_SEARCH_QUERY_PUBLISHER)));
 		nameValuePairs.add(new BasicNameValuePair("orderselect",
 				getStringFromBundle(query, "order")));
 		nameValuePairs.add(new BasicNameValuePair("suche_starten.x", "1"));
@@ -330,8 +333,12 @@ public class Bond26 implements OpacApi {
 			}
 		}
 
-		String[] copy_keys = new String[] { "barcode", "zst", "abt", "ort",
-				"status", "rueckgabe", "vorbestellt" };
+		String[] copy_keys = new String[] { DetailledItem.KEY_COPY_BARCODE,
+				DetailledItem.KEY_COPY_BRANCH,
+				DetailledItem.KEY_COPY_DEPARTMENT,
+				DetailledItem.KEY_COPY_LOCATION, DetailledItem.KEY_COPY_STATUS,
+				DetailledItem.KEY_COPY_RETURN,
+				DetailledItem.KEY_COPY_RESERVATIONS };
 		int copy_keynum = copy_keys.length;
 
 		try {
@@ -360,8 +367,8 @@ public class Bond26 implements OpacApi {
 				Element tr = bandtrs.get(i);
 
 				ContentValues e = new ContentValues();
-				e.put("id", tr.attr("href").split("=")[1]);
-				e.put("titel", tr.text());
+				e.put(DetailledItem.KEY_CHILD_ID, tr.attr("href").split("=")[1]);
+				e.put(DetailledItem.KEY_CHILD_TITLE, tr.text());
 				result.addBand(e);
 			}
 		} catch (Exception e) {
@@ -375,7 +382,8 @@ public class Bond26 implements OpacApi {
 	}
 
 	@Override
-	public ReservationResult reservation(String zst, Account acc) throws IOException {
+	public ReservationResult reservation(String zst, Account acc)
+			throws IOException {
 		HttpGet httpget = new HttpGet(opac_url
 				+ "/index.asp?target=vorbesttrans");
 		HttpResponse response = ahc.execute(httpget);
@@ -554,8 +562,11 @@ public class Bond26 implements OpacApi {
 			throw new AccountUnsupportedException(html);
 		}
 
-		String[] copymap_keys = new String[] { "barcode", "verfasser", "titel",
-				"frist", "status", "zst", "ast", "link" };
+		String[] copymap_keys = new String[] { AccountData.KEY_LENT_BARCODE,
+				AccountData.KEY_LENT_AUTHOR, AccountData.KEY_LENT_TITLE,
+				AccountData.KEY_LENT_DEADLINE, AccountData.KEY_LENT_STATUS,
+				AccountData.KEY_LENT_BRANCH,
+				AccountData.KEY_LENT_LENDING_BRANCH, AccountData.KEY_LENT_LINK };
 		int copymap_num = copymap_keys.length;
 		List<ContentValues> medien = new ArrayList<ContentValues>();
 
@@ -587,8 +598,11 @@ public class Bond26 implements OpacApi {
 		} catch (JSONException e) {
 			throw new AccountUnsupportedException(html);
 		}
-		copymap_keys = new String[] { "verfasser", "titel", "bereit", "zst",
-				"cancel" };
+		copymap_keys = new String[] { AccountData.KEY_RESERVATION_AUTHOR,
+				AccountData.KEY_RESERVATION_TITLE,
+				AccountData.KEY_RESERVATION_READY,
+				AccountData.KEY_RESERVATION_BRANCH,
+				AccountData.KEY_RESERVATION_CANCEL };
 		copymap_num = copymap_keys.length;
 
 		List<ContentValues> reservations = new ArrayList<ContentValues>();

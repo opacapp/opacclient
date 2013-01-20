@@ -26,6 +26,69 @@ public class DetailledItem {
 	private Bundle volumesearch;
 
 	/**
+	 * ContentValues key for {@link #addCopy(ContentValues)}:
+	 * 
+	 * this copy's barcode
+	 */
+	public static String KEY_COPY_BARCODE = "barcode";
+
+	/**
+	 * ContentValues key for {@link #addCopy(ContentValues)}:
+	 * 
+	 * Location
+	 */
+	public static String KEY_COPY_LOCATION = "ort";
+
+	/**
+	 * ContentValues key for {@link #addCopy(ContentValues)}:
+	 * 
+	 * Department
+	 */
+	public static String KEY_COPY_DEPARTMENT = "abt";
+
+	/**
+	 * ContentValues key for {@link #addCopy(ContentValues)}:
+	 * 
+	 * Branch
+	 */
+	public static String KEY_COPY_BRANCH = "zst";
+
+	/**
+	 * ContentValues key for {@link #addCopy(ContentValues)}:
+	 * 
+	 * Current status
+	 */
+	public static String KEY_COPY_STATUS = "status";
+
+	/**
+	 * ContentValues key for {@link #addCopy(ContentValues)}:
+	 * 
+	 * Date of return
+	 */
+	public static String KEY_COPY_RETURN = "rueckgabe";
+
+	/**
+	 * ContentValues key for {@link #addCopy(ContentValues)}:
+	 * 
+	 * number of reservations pending
+	 */
+	public static String KEY_COPY_RESERVATIONS = "vorbestellt";
+
+	/**
+	 * ContentValues key for {@link #addBand(ContentValues)}:
+	 * 
+	 * child item's ID
+	 */
+	public static String KEY_CHILD_ID = "id";
+
+	/**
+	 * ContentValues key for {@link #addBand(ContentValues)}:
+	 * 
+	 * child item's title
+	 */
+	public static String KEY_CHILD_TITLE = "titel";
+
+	/**
 	 * Get unique media identifier
 	 * 
 	 * @return media ID
@@ -133,18 +196,11 @@ public class DetailledItem {
 	}
 
 	/**
-	 * Add a copy. <code>copy</code> may contain:
-	 * <ul>
-	 * <li>"barcode" – copy's barcode</li>
-	 * <li>"zst" – branch</li>
-	 * <li>"ort" – location</li>
-	 * <li>"abt" – department</li>
-	 * <li>"status" – current status</li>
-	 * <li>"rueckgabe" – date of return</li>
-	 * <li>"vorbestellt" – number of reservations pending</li>
-	 * </ul>
+	 * Add a copy. <code>copy</code> may contain any of the
+	 * <code>KEY_COPY_*</code> constants as keys.
 	 * 
-	 * @return List of Details
+	 * @param copy
+	 *            An object representing a copy
 	 * @see Detail
 	 */
 	public void addCopy(ContentValues copy) {
@@ -152,11 +208,8 @@ public class DetailledItem {
 	}
 
 	/**
-	 * Add a child item. <code>child</code> must contain:
-	 * <ul>
-	 * <li>"id" – {@link #getId()}-like identifier of child item</li>
-	 * <li>"titel" – the title
-	 * </ul>
+	 * Add a child item. <code>child</code> must contain all of the
+	 * <code>KEY_CHILD_*</code> constants as keys.
 	 * 
 	 * @see Detail
 	 */

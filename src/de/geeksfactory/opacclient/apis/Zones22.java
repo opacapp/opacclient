@@ -70,8 +70,9 @@ public class Zones22 implements OpacApi {
 
 	@Override
 	public String[] getSearchFields() {
-		return new String[] { "titel", "verfasser", "schlag_a", "zweigstelle",
-				"isbn", "jahr" };
+		return new String[] { KEY_SEARCH_QUERY_TITLE, KEY_SEARCH_QUERY_AUTHOR,
+				KEY_SEARCH_QUERY_KEYWORDA, KEY_SEARCH_QUERY_BRANCH,
+				KEY_SEARCH_QUERY_ISBN, KEY_SEARCH_QUERY_YEAR };
 	}
 
 	@Override
@@ -213,16 +214,21 @@ public class Zones22 implements OpacApi {
 
 		int index = 1;
 
-		index = addParameters(query, "titel", "ti=", params, index);
-		index = addParameters(query, "verfasser", "au=", params, index);
-		index = addParameters(query, "isbn", "sb=", params, index);
-		index = addParameters(query, "schlag_a", "su=", params, index);
-		index = addParameters(query, "jahr", "dp=", params, index);
+		index = addParameters(query, KEY_SEARCH_QUERY_TITLE, "ti=", params,
+				index);
+		index = addParameters(query, KEY_SEARCH_QUERY_AUTHOR, "au=", params,
+				index);
+		index = addParameters(query, KEY_SEARCH_QUERY_ISBN, "sb=", params,
+				index);
+		index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDA, "su=", params,
+				index);
+		index = addParameters(query, KEY_SEARCH_QUERY_YEAR, "dp=", params,
+				index);
 
-		if (query.containsKey("zweigstelle")
-				&& !query.getString("zweigstelle").equals(""))
+		if (query.containsKey(KEY_SEARCH_QUERY_BRANCH)
+				&& !query.getString(KEY_SEARCH_QUERY_BRANCH).equals(""))
 			params.add(new BasicNameValuePair("q.limits.limit", query
-					.getString("zweigstelle")));
+					.getString(KEY_SEARCH_QUERY_BRANCH)));
 
 		if (index > 3) {
 			last_error = "Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.";
@@ -415,27 +421,30 @@ public class Zones22 implements OpacApi {
 				try {
 					if (node instanceof Element) {
 						if (((Element) node).tag().getName().equals("br")) {
-							copy.put("zst", pop);
+							copy.put(DetailledItem.KEY_COPY_BRANCH, pop);
 							result.addCopy(copy);
 							j = -1;
 						} else if (((Element) node).tag().getName().equals("b")
 								&& j == 1) {
-							copy.put("ort", ((Element) node).text());
+							copy.put(DetailledItem.KEY_COPY_LOCATION,
+									((Element) node).text());
 						} else if (((Element) node).tag().getName().equals("b")
 								&& j > 1) {
-							copy.put("status", ((Element) node).text());
+							copy.put(DetailledItem.KEY_COPY_STATUS,
+									((Element) node).text());
 						}
 						j++;
 					} else if (node instanceof TextNode) {
 						if (j == 0)
-							copy.put("abt", ((TextNode) node).text());
+							copy.put(DetailledItem.KEY_COPY_DEPARTMENT,
+									((TextNode) node).text());
 						if (j == 2)
-							copy.put("barcode",
+							copy.put(DetailledItem.KEY_COPY_BARCODE,
 									((TextNode) node).getWholeText().trim()
 											.split("\n")[0].trim());
 						if (j == 6) {
 							String text = ((TextNode) node).text().trim();
-							copy.put("rueckgabe",
+							copy.put(DetailledItem.KEY_COPY_RETURN,
 									text.substring(text.length() - 10));
 						}
 						j++;
@@ -452,7 +461,8 @@ public class Zones22 implements OpacApi {
 	// No account support for now.
 
 	@Override
-	public ReservationResult reservation(String zst, Account acc) throws IOException {
+	public ReservationResult reservation(String zst, Account acc)
+			throws IOException {
 		return ReservationResult.ERROR;
 	}
 
