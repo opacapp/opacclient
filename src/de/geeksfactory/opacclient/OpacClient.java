@@ -144,7 +144,7 @@ public class OpacClient extends Application {
 			}
 		}
 		try {
-			library = getLibrary(getAccount().getBib());
+			library = getLibrary(getAccount().getLibrary());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
