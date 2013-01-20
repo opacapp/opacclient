@@ -21,6 +21,10 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
+import org.acra.*;
+import org.acra.annotation.*;
+
 import de.geeksfactory.opacclient.apis.Bond26;
 import de.geeksfactory.opacclient.apis.OCLC2011;
 import de.geeksfactory.opacclient.apis.OpacApi;
@@ -30,6 +34,8 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 
+@ReportsCrashes(formKey = "",
+                mailTo = "raphael+opac@geeksfactory.de")
 public class OpacClient extends Application {
 
 	public Exception last_exception;
@@ -194,6 +200,7 @@ public class OpacClient extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+        ACRA.init(this);
 		sp = PreferenceManager.getDefaultSharedPreferences(this);
 	}
 
