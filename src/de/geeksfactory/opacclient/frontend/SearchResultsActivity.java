@@ -38,12 +38,20 @@ public class SearchResultsActivity extends OpacActivity {
 		setContentView(R.layout.loading);
 		((TextView) findViewById(R.id.tvLoading))
 				.setText(R.string.loading_results);
-
-		page = 1;
-
-		st = new SearchStartTask();
-		st.execute(app, getIntent().getBundleExtra("query"));
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		page = 1;
+		performsearch();
+	}
+
+	public void performsearch() {
+		setContentView(R.layout.loading);
+		if(page == 1) {
+			st = new SearchStartTask();
+			st.execute(app, getIntent().getBundleExtra("query"));
+		} else {
+			sst = new SearchPageTask();
+			sst.execute(app, page);
+		}
 	}
 
 	@SuppressLint("NewApi")
@@ -142,7 +150,7 @@ public class SearchResultsActivity extends OpacActivity {
 						.setOnClickListener(new OnClickListener() {
 							@Override
 							public void onClick(View v) {
-								onCreate(null);
+								performsearch();
 							}
 						});
 			}
@@ -203,7 +211,7 @@ public class SearchResultsActivity extends OpacActivity {
 						.setOnClickListener(new OnClickListener() {
 							@Override
 							public void onClick(View v) {
-								onCreate(null);
+								performsearch();
 							}
 						});
 			}
