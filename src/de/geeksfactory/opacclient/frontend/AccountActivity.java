@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.acra.ACRA;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -330,13 +331,12 @@ public class AccountActivity extends OpacActivity {
 				success = true;
 				return res;
 			} catch (java.net.UnknownHostException e) {
-				publishProgress(e, "ioerror");
-			} catch (java.io.IOException e) {
 				success = false;
-			} catch (java.lang.IllegalStateException e) {
+			} catch (java.net.SocketException e) {
 				success = false;
 			} catch (Exception e) {
-				publishProgress(e, "ioerror");
+				ACRA.getErrorReporter().handleException(e);
+				success = false;
 			}
 			return null;
 		}
@@ -543,13 +543,12 @@ public class AccountActivity extends OpacActivity {
 				app.getApi().cancel(a);
 				success = true;
 			} catch (java.net.UnknownHostException e) {
-				publishProgress(e, "ioerror");
-			} catch (java.io.IOException e) {
 				success = false;
-			} catch (java.lang.IllegalStateException e) {
+			} catch (java.net.SocketException e) {
 				success = false;
 			} catch (Exception e) {
-				publishProgress(e, "ioerror");
+				ACRA.getErrorReporter().handleException(e);
+				success = false;
 			}
 			return STATUS_SUCCESS;
 		}
@@ -593,13 +592,12 @@ public class AccountActivity extends OpacActivity {
 					return STATUS_FAILED;
 				}
 			} catch (java.net.UnknownHostException e) {
-				publishProgress(e, "ioerror");
-			} catch (java.io.IOException e) {
 				success = false;
-			} catch (java.lang.IllegalStateException e) {
+			} catch (java.net.SocketException e) {
 				success = false;
 			} catch (Exception e) {
-				publishProgress(e, "ioerror");
+				ACRA.getErrorReporter().handleException(e);
+				success = false;
 			}
 			return STATUS_SUCCESS;
 		}

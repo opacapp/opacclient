@@ -2,6 +2,7 @@ package de.geeksfactory.opacclient.frontend;
 
 import java.util.List;
 
+import org.acra.ACRA;
 import org.holoeverywhere.app.ProgressDialog;
 
 import android.annotation.SuppressLint;
@@ -45,7 +46,7 @@ public class SearchResultsActivity extends OpacActivity {
 
 	public void performsearch() {
 		setContentView(R.layout.loading);
-		if(page == 1) {
+		if (page == 1) {
 			st = new SearchStartTask();
 			st.execute(app, getIntent().getBundleExtra("query"));
 		} else {
@@ -110,8 +111,14 @@ public class SearchResultsActivity extends OpacActivity {
 				List<SearchResult> res = app.getApi().search(query);
 				success = true;
 				return res;
-			} catch (Exception e) {
+			} catch (java.net.UnknownHostException e) {
+				success = false;
 				e.printStackTrace();
+			} catch (java.net.SocketException e) {
+				success = false;
+				e.printStackTrace();
+			} catch (Exception e) {
+				ACRA.getErrorReporter().handleException(e);
 				success = false;
 			}
 
@@ -193,10 +200,14 @@ public class SearchResultsActivity extends OpacActivity {
 				List<SearchResult> res = app.getApi().searchGetPage(page);
 				success = true;
 				return res;
-			} catch (Exception e) {
-				publishProgress(e, "ioerror");
+			} catch (java.net.UnknownHostException e) {
+				success = false;
 				e.printStackTrace();
-				
+			} catch (java.net.SocketException e) {
+				success = false;
+				e.printStackTrace();
+			} catch (Exception e) {
+				ACRA.getErrorReporter().handleException(e);
 				success = false;
 			}
 			return null;

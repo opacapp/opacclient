@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.List;
 
+import org.acra.ACRA;
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.ProgressDialog;
 
@@ -222,10 +223,14 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		@Override
 		protected Integer doInBackground(Object... arg0) {
 			try {
-				app.getApi().getResultById(SearchResultDetailsActivity.this.id);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				if (id != null)
+					app.getApi().getResultById(id);
+			} catch (java.net.SocketException e) {
 				e.printStackTrace();
+			} catch (java.net.UnknownHostException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				ACRA.getErrorReporter().handleException(e);
 			}
 			return 0;
 		}
@@ -258,8 +263,14 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				}
 				success = true;
 				return res;
-			} catch (Exception e) {
+			} catch (java.net.UnknownHostException e) {
+				success = false;
 				e.printStackTrace();
+			} catch (java.net.SocketException e) {
+				success = false;
+				e.printStackTrace();
+			} catch (Exception e) {
+				ACRA.getErrorReporter().handleException(e);
 				success = false;
 			}
 			return null;
@@ -286,7 +297,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			try {
 				Log.i("result", item.toString());
 			} catch (Exception e) {
-				app.web_error(e, "ioerror");
+				ACRA.getErrorReporter().handleException(e);
 			}
 			ImageView iv = (ImageView) findViewById(R.id.ivCover);
 
@@ -506,14 +517,12 @@ public class SearchResultDetailsActivity extends OpacActivity {
 					return STATUS_WRONGCREDENTIALS;
 			} catch (java.net.UnknownHostException e) {
 				publishProgress(e, "ioerror");
-			} catch (java.io.IOException e) {
-				success = false;
-				e.printStackTrace();
-			} catch (java.lang.IllegalStateException e) {
+			} catch (java.net.SocketException e) {
 				success = false;
 				e.printStackTrace();
 			} catch (Exception e) {
-				publishProgress(e, "ioerror");
+				ACRA.getErrorReporter().handleException(e);
+				success = false;
 			}
 			return STATUS_SUCCESS;
 		}

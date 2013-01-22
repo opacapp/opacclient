@@ -167,6 +167,6 @@
     <string name="pagination_next">Nächste Seite</string>
     <string name="pagination_prev">Vorige Seite</string>
     <string name="crash_toast_text">Informationen für einen Fehlerbericht werden gesammelt</string>
-    <string name="crash_dialog_text">OpacApp ist gecrasht – das tut uns leid und wir wollen das beheben. Bitte schicken Sie uns den Fehlerbericht per E-Mail ein!</string>
+    <string name="crash_dialog_text">Es ist ein Fehler aufgetreten! Bitte schicken Sie uns den Fehlerbericht per E-Mail ein, dann können wir ihn beheben.</string>
 
 </resources>

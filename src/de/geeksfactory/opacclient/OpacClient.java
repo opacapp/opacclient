@@ -16,18 +16,15 @@ import org.json.JSONObject;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import de.geeksfactory.opacclient.apis.Bond26;
 import de.geeksfactory.opacclient.apis.OCLC2011;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.Zones22;
-import de.geeksfactory.opacclient.frontend.ErrorActivity;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
@@ -205,19 +202,6 @@ public class OpacClient extends Application {
 			ACRA.getErrorReporter().putCustomData("library",
 					getLibrary().getIdent());
 		}
-	}
-
-	public void web_error(Exception e) {
-		web_error(e, getApi().getLast_error());
-	}
-
-	public void web_error(Exception e, String t) {
-		Intent intent = new Intent(this, ErrorActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		intent.putExtra("e", Log.getStackTraceString(e));
-		intent.putExtra("t", t);
-		last_exception = e;
-		startActivity(intent);
 	}
 
 }

@@ -11,11 +11,4 @@ public abstract class OpacTask<Result> extends
 		OpacClient a = (OpacClient) arg0[0];
 		return null;
 	}
-
-	protected void onProgressUpdate(Object... arg0) {
-		if (((String) arg0[1]).equals("ioerror")) {
-			if (a != null)
-				a.web_error((Exception) arg0[0], "ioerror");
-		}
-	}
 }

@@ -3,6 +3,7 @@ package de.geeksfactory.opacclient.frontend;
 import java.io.IOException;
 import java.util.List;
 
+import org.acra.ACRA;
 import org.holoeverywhere.app.AlertDialog;
 import org.json.JSONException;
 
@@ -55,13 +56,13 @@ public class AccountListActivity extends SherlockActivity {
 				ListView lv = (ListView) view.findViewById(R.id.lvBibs);
 				try {
 					libraries = ((OpacClient) getApplication()).getLibraries();
-					lv.setAdapter(new LibraryListAdapter(
-							AccountListActivity.this, libraries));
-				} catch (JSONException e) {
-					((OpacClient) getApplication()).web_error(e, "jsonerror");
 				} catch (IOException e) {
-					((OpacClient) getApplication()).web_error(e, "jsonerror");
+					ACRA.getErrorReporter().handleException(e);
+				} catch (JSONException e) {
+					ACRA.getErrorReporter().handleException(e);
 				}
+				lv.setAdapter(new LibraryListAdapter(AccountListActivity.this,
+						libraries));
 				lv.setOnItemClickListener(new OnItemClickListener() {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view,

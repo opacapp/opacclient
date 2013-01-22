@@ -95,11 +95,6 @@
                 android:value="de.geeksfactory.opacclient.frontend.MainPreferenceActivity" />
         </activity>
         <activity
-            android:name=".frontend.ErrorActivity"
-            android:excludeFromRecents="true"
-            android:label="@string/app_name"
-            android:noHistory="true" />
-        <activity
             android:name=".frontend.StarredActivity"
             android:label="@string/starred_list" >
         </activity>

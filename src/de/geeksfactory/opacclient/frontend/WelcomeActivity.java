@@ -3,6 +3,7 @@ package de.geeksfactory.opacclient.frontend;
 import java.io.IOException;
 import java.util.List;
 
+import org.acra.ACRA;
 import org.holoeverywhere.app.ProgressDialog;
 import org.json.JSONException;
 
@@ -42,9 +43,9 @@ public class WelcomeActivity extends SherlockActivity {
 			libraries = app.getLibraries();
 			lv.setAdapter(new LibraryListAdapter(this, libraries));
 		} catch (JSONException e) {
-			app.web_error(e, "jsonerror");
+			ACRA.getErrorReporter().handleException(e);
 		} catch (IOException e) {
-			app.web_error(e, "jsonerror");
+			ACRA.getErrorReporter().handleException(e);
 		}
 
 		lv.setOnItemClickListener(new OnItemClickListener() {
@@ -77,8 +78,12 @@ public class WelcomeActivity extends SherlockActivity {
 			super.doInBackground(arg0);
 			try {
 				app.getApi().start();
+			} catch (java.net.UnknownHostException e) {
+				e.printStackTrace();
+			} catch (java.net.SocketException e) {
+				e.printStackTrace();
 			} catch (Exception e) {
-				publishProgress(e, "ioerror");
+				ACRA.getErrorReporter().handleException(e);
 			}
 			return 0;
 		}

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.acra.ACRA;
 import org.holoeverywhere.app.ProgressDialog;
 import org.holoeverywhere.widget.Spinner;
 
@@ -433,8 +434,12 @@ public class SearchActivity extends OpacActivity {
 			super.doInBackground(arg0);
 			try {
 				app.getApi().start();
+			} catch (java.net.UnknownHostException e) {
+				e.printStackTrace();
+			} catch (java.net.SocketException e) {
+				e.printStackTrace();
 			} catch (Exception e) {
-				publishProgress(e, "ioerror");
+				ACRA.getErrorReporter().handleException(e);
 			}
 			return 0;
 		}
