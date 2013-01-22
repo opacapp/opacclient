@@ -134,7 +134,7 @@
     <string name="write_mail">E-Mail schreiben</string>
     <string name="info_error">Die Infos der Bücherei konnten nicht abgerufen werden.</string>
     <string name="info_unsupported">Deine Bücherei stellt keine zusätzlichen Informationen bereit, die wir dir anzeigen könnten.</string>
-    <string name="connection_error">Verbindungsfehler</string>
+    <string name="connection_error">Fehler</string>
     <string name="connection_error_detail">Der Aufbau einer Verbindung zum Bibliotheksserver oder das Auswerten der Antwort ist fehlgeschlagen. Das kann heißen, dass die Internetverbindung gerade nicht tut, dass die Bibliothek gerade nicht erreichbar ist oder einfach, dass sie etwas gesendet hat, womit diese App nicht klarkommt, z.B. eine seltene Fehlermeldung.</string>
     <string name="retry">Erneut versuchen</string>
     <string name="default_account_name">Unbenanntes Konto</string>

@@ -219,7 +219,7 @@ public class Zones22 implements OpacApi {
 			last_error = "Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.";
 			return null;
 		} else if (index == 1) {
-			last_error = "Die Suchanfrage war leer.";
+			last_error = "Es wurden keine Suchkriterien eingegeben.";
 			return null;
 		}
 

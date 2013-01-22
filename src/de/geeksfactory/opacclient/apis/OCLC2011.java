@@ -239,6 +239,10 @@ public class OCLC2011 implements OpacApi {
 				last_error = "Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.";
 				return null;
 			}
+			if (index == 0) {
+				last_error = "Es wurden keine Suchkriterien eingegeben.";
+				return null;
+			}
 
 			params.add(new BasicNameValuePair("selectedSearchBranchlib", query
 					.getString("zweigstelle")));
@@ -276,6 +280,12 @@ public class OCLC2011 implements OpacApi {
 
 	private List<SearchResult> parse_search(String html) {
 		Document doc = Jsoup.parse(html);
+
+		if (doc.select(".error").size() > 0) {
+			last_error = doc.select(".error").text().trim();
+			return null;
+		}
+
 		this.results = doc.select(".box-header h2").first().text();
 		if (results.contains("(1/1)")) {
 			reusehtml = html;
