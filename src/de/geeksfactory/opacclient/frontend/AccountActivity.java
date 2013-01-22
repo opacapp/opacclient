@@ -37,6 +37,7 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
@@ -60,12 +61,13 @@ public class AccountActivity extends OpacActivity {
 
 	private Account account;
 
-	private MenuItem miRefresh;
+	private boolean refreshing = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
-
+		setSupportProgressBarIndeterminateVisibility(false);
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(app);
 
@@ -86,7 +88,13 @@ public class AccountActivity extends OpacActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.activity_account, menu);
-		miRefresh = menu.findItem(R.id.action_refresh);
+		if (refreshing) {
+			menu.findItem(R.id.action_refresh).setVisible(false);
+			setSupportProgressBarIndeterminateVisibility(true);
+		} else {
+			menu.findItem(R.id.action_refresh).setActionView(null);
+			setSupportProgressBarIndeterminateVisibility(false);
+		}
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -189,7 +197,8 @@ public class AccountActivity extends OpacActivity {
 	}
 
 	public void refresh() {
-		miRefresh.setActionView(R.layout.actionbar_indeterminate_progress);
+		refreshing = true;
+		invalidateOptionsMenu();
 		lt = new LoadTask();
 		lt.execute(app, getIntent().getIntExtra("item", 0));
 	}
@@ -370,7 +379,8 @@ public class AccountActivity extends OpacActivity {
 	}
 
 	public void loaded(final AccountData result) {
-		miRefresh.setActionView(null);
+		refreshing = false;
+		invalidateOptionsMenu();
 
 		if (result == null) {
 			if (app.getApi().getLast_error() == null

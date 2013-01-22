@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 import com.slidingmenu.lib.SlidingMenu;
 import com.slidingmenu.lib.SlidingMenu.OnOpenListener;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
@@ -43,6 +44,7 @@ public abstract class OpacActivity extends SlidingFragmentActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.getSupportActionBar().setHomeButtonEnabled(true);
+
 		app = (OpacClient) getApplication();
 
 		setContentView(R.layout.empty_workaround);
