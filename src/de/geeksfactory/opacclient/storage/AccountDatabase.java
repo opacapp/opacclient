@@ -13,11 +13,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class AccountDatabase extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "accounts.db";
-	private static final int DATABASE_VERSION = 2; // REPLACE ONUPGRADE IF YOU
+	private static final int DATABASE_VERSION = 3; // REPLACE ONUPGRADE IF YOU
 													// CHANGE THIS
 
 	public static final String[] COLUMNS = { "id", "bib", "label", "name",
-			"password" };
+			"password", "cached" };
 
 	public static final Map<String, String> COLUMNS_LENT;
 	public static final Map<String, String> COLUMNS_RESERVATIONS;
@@ -42,7 +42,8 @@ public class AccountDatabase extends SQLiteOpenHelper {
 		bMap.put(AccountData.KEY_RESERVATION_TITLE, "title");
 		COLUMNS_RESERVATIONS = Collections.unmodifiableMap(bMap);
 	}
-	
+
+	public static final String TABLENAME_ACCOUNTS = "accounts";
 	public static final String TABLENAME_LENT = "accountdata_lent";
 	public static final String TABLENAME_RESERVATION = "accountdata_reservations";
 
@@ -51,15 +52,15 @@ public class AccountDatabase extends SQLiteOpenHelper {
 		db.execSQL("create table "
 				+ "accounts ( id integer primary key autoincrement,"
 				+ " bib text," + " label text," + " name text,"
-				+ " password text" + ");");
+				+ " password text," + " cached integer" + ");");
 		db.execSQL("create table " + "accountdata_lent ( account integer, "
-				+ "fetchtime integer," + "title text," + "barcode text,"
-				+ "author text," + "deadline text," + "status text,"
-				+ "branch text," + "lending_branch text," + "link text" + ");");
+				+ "title text," + "barcode text," + "author text,"
+				+ "deadline text," + "status text," + "branch text,"
+				+ "lending_branch text," + "link text" + ");");
 		db.execSQL("create table "
 				+ "accountdata_reservations ( account integer, "
-				+ "fetchtime integer," + "title text," + "author text,"
-				+ "ready text," + "branch text," + "cancel text" + ");");
+				+ "title text," + "author text," + "ready text,"
+				+ "branch text," + "cancel text" + ");");
 	}
 
 	@Override
@@ -69,14 +70,17 @@ public class AccountDatabase extends SQLiteOpenHelper {
 		if (oldVersion < 2 && newVersion == 2) {
 			// App version 2.0.0-alpha to 2.0.0, adding tables for account data
 			db.execSQL("create table " + "accountdata_lent ( account integer, "
-					+ "fetchtime integer," + "title text," + "barcode text,"
-					+ "author text," + "deadline text," + "status text,"
-					+ "branch text," + "lending_branch text," + "link text"
-					+ ");");
+					+ "title text," + "barcode text," + "author text,"
+					+ "deadline text," + "status text," + "branch text,"
+					+ "lending_branch text," + "link text" + ");");
 			db.execSQL("create table "
 					+ "accountdata_reservations ( account integer, "
-					+ "fetchtime integer," + "title text," + "author text,"
-					+ "ready text," + "branch text," + "cancel text" + ");");
+					+ "title text," + "author text," + "ready text,"
+					+ "branch text," + "cancel text" + ");");
+		}
+		if (oldVersion < 3 && newVersion == 3) {
+			// App version 2.0.0-alpha to 2.0.0, adding tables for account data
+			db.execSQL("alter table accounts add column cached integer");
 		}
 
 	}

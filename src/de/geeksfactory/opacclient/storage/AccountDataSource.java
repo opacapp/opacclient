@@ -137,6 +137,7 @@ public class AccountDataSource {
 		acc.setLabel(cursor.getString(2));
 		acc.setName(cursor.getString(3));
 		acc.setPassword(cursor.getString(4));
+		acc.setCached(cursor.getLong(5));
 		return acc;
 	}
 
@@ -191,8 +192,28 @@ public class AccountDataSource {
 		return adata;
 	}
 
+	public void invalidateCachedAccountData(Account account) {
+		database.delete(AccountDatabase.TABLENAME_LENT, "account = ?",
+				new String[] { "" + account.getId() });
+		database.delete(AccountDatabase.TABLENAME_RESERVATION, "account = ?",
+				new String[] { "" + account.getId() });
+		ContentValues update = new ContentValues();
+		update.put("cached", 0);
+		database.update(AccountDatabase.TABLENAME_ACCOUNTS, update,
+				"account = ?", new String[] { "" + account.getId() });
+	}
+
+	public long getCachedAccountDataTime(Account account) {
+		return getAccount(account.getId()).getCached();
+	}
+
 	public void storeCachedAccountData(Account account, AccountData adata) {
 		long time = System.currentTimeMillis();
+		ContentValues update = new ContentValues();
+		update.put("cached", time);
+		database.update(AccountDatabase.TABLENAME_ACCOUNTS, update,
+				"account = ?", new String[] { "" + account.getId() });
+
 		database.delete(AccountDatabase.TABLENAME_LENT, "account = ?",
 				new String[] { "" + account.getId() });
 		for (ContentValues entry : adata.getLent()) {
@@ -202,7 +223,6 @@ public class AccountDataSource {
 						AccountDatabase.COLUMNS_LENT.get(inner.getKey()),
 						(String) inner.getValue());
 			}
-			insertmapping.put("fetchtime", time);
 			insertmapping.put("account", account.getId());
 			database.insert(AccountDatabase.TABLENAME_LENT, null, insertmapping);
 		}
@@ -215,7 +235,6 @@ public class AccountDataSource {
 				insertmapping.put(AccountDatabase.COLUMNS_RESERVATIONS
 						.get(inner.getKey()), (String) inner.getValue());
 			}
-			insertmapping.put("fetchtime", time);
 			insertmapping.put("account", account.getId());
 			database.insert(AccountDatabase.TABLENAME_RESERVATION, null,
 					insertmapping);

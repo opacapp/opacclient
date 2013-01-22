@@ -18,49 +18,49 @@ public class AccountData {
 	 * 
 	 * Item's title
 	 */
-	public static String KEY_LENT_TITLE = "titel";
+	public static final String KEY_LENT_TITLE = "titel";
 
 	/**
 	 * ContentValues key for {@link #setLent(List)}:
 	 * 
 	 * Item's title
 	 */
-	public static String KEY_LENT_BARCODE = "barcode";
+	public static final String KEY_LENT_BARCODE = "barcode";
 
 	/**
 	 * ContentValues key for {@link #setLent(List)}:
 	 * 
 	 * Item's title
 	 */
-	public static String KEY_LENT_AUTHOR = "verfasser";
+	public static final String KEY_LENT_AUTHOR = "verfasser";
 
 	/**
 	 * ContentValues key for {@link #setLent(List)}:
 	 * 
 	 * Return date
 	 */
-	public static String KEY_LENT_DEADLINE = "frist";
+	public static final String KEY_LENT_DEADLINE = "frist";
 
 	/**
 	 * ContentValues key for {@link #setLent(List)}:
 	 * 
 	 * Status
 	 */
-	public static String KEY_LENT_STATUS = "status";
+	public static final String KEY_LENT_STATUS = "status";
 
 	/**
 	 * ContentValues key for {@link #setLent(List)}:
 	 * 
 	 * Branch the item belongs to
 	 */
-	public static String KEY_LENT_BRANCH = "zst";
+	public static final String KEY_LENT_BRANCH = "zst";
 
 	/**
 	 * ContentValues key for {@link #setLent(List)}:
 	 * 
 	 * Branch were the item was lent
 	 */
-	public static String KEY_LENT_LENDING_BRANCH = "ast";
+	public static final String KEY_LENT_LENDING_BRANCH = "ast";
 
 	/**
 	 * ContentValues key for {@link #setLent(List)}:
@@ -68,14 +68,14 @@ public class AccountData {
 	 * Identifier (see
 	 * {@link de.geeksfactory.opacclient.apis.OpacApi#prolong(String)}
 	 */
-	public static String KEY_LENT_LINK = "link";
+	public static final String KEY_LENT_LINK = "link";
 
 	/**
 	 * ContentValues key for {@link #setReservations(List)}:
 	 * 
 	 * Item's title
 	 */
-	public static String KEY_RESERVATION_TITLE = "titel";
+	public static final String KEY_RESERVATION_TITLE = "titel";
 
 	/**
 	 * ContentValues key for {@link #setReservations(List)}:
@@ -83,21 +83,21 @@ public class AccountData {
 	 * 
 	 * Item's author
 	 */
-	public static String KEY_RESERVATION_AUTHOR = "verfasser";
+	public static final String KEY_RESERVATION_AUTHOR = "verfasser";
 
 	/**
 	 * ContentValues key for {@link #setReservations(List)}:
 	 * 
 	 * Expected date
 	 */
-	public static String KEY_RESERVATION_READY = "bereit";
+	public static final String KEY_RESERVATION_READY = "bereit";
 
 	/**
 	 * ContentValues key for {@link #setReservations(List)}:
 	 * 
 	 * branch
 	 */
-	public static String KEY_RESERVATION_BRANCH = "zst";
+	public static final String KEY_RESERVATION_BRANCH = "zst";
 
 	/**
 	 * ContentValues key for {@link #setReservations(List)}:
@@ -105,7 +105,7 @@ public class AccountData {
 	 * Identifier (see
 	 * {@link de.geeksfactory.opacclient.apis.OpacApi#cancel(String)}
 	 */
-	public static String KEY_RESERVATION_CANCEL = "cancel";
+	public static final String KEY_RESERVATION_CANCEL = "cancel";
 
 	/**
 	 * Get lent items

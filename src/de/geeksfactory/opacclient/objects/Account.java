@@ -11,6 +11,7 @@ public class Account {
 	private String label;
 	private String name;
 	private String password;
+	private long cached;
 
 	/**
 	 * Get ID this account is stored with in <code>AccountDataStore</code>
@@ -105,5 +106,24 @@ public class Account {
 	 */
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	/**
+	 * Set date of last caching
+	 * 
+	 * @return Password
+	 */
+	public long getCached() {
+		return cached;
+	}
+
+	/**
+	 * Get date of last caching
+	 * 
+	 * @param password
+	 *            Password
+	 */
+	public void setCached(long cached) {
+		this.cached = cached;
 	}
 }

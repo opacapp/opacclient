@@ -51,9 +51,11 @@ public class AccountActivity extends OpacActivity {
 
 	protected ProgressDialog dialog;
 
-	public static int STATUS_SUCCESS = 0;
-	public static int STATUS_NOUSER = 1;
-	public static int STATUS_FAILED = 2;
+	public static final int STATUS_SUCCESS = 0;
+	public static final int STATUS_NOUSER = 1;
+	public static final int STATUS_FAILED = 2;
+
+	public static final long MAX_CACHE_AGE = (1000 * 3600 * 2);
 
 	private LoadTask lt;
 	private CancelTask ct;
@@ -193,6 +195,14 @@ public class AccountActivity extends OpacActivity {
 			// Supported
 			// TODO: display cached data
 			// refresh();
+
+			AccountDataSource adatasource = new AccountDataSource(this);
+			adatasource.open();
+			long lastrefresh = adatasource.getCachedAccountDataTime(account);
+			if (lastrefresh > 0) {
+				displaydata(adatasource.getCachedAccountData(account));
+			}
+			adatasource.close();
 		}
 	}
 
@@ -403,6 +413,10 @@ public class AccountActivity extends OpacActivity {
 		adatasource.storeCachedAccountData(account, result);
 		adatasource.close();
 
+		displaydata(result);
+	}
+
+	public void displaydata(AccountData result) {
 		setContentView(R.layout.account_activity);
 
 		((TextView) findViewById(R.id.tvAccLabel)).setText(account.getLabel());

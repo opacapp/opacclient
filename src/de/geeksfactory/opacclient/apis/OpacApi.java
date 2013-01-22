@@ -27,91 +27,91 @@ public interface OpacApi {
 	 * 
 	 * Keywords to search in item's title
 	 */
-	public static String KEY_SEARCH_QUERY_TITLE = "titel";
+	public static final String KEY_SEARCH_QUERY_TITLE = "titel";
 
 	/**
 	 * Bundle key for {@link #search(Bundle)}:
 	 * 
 	 * Author
 	 */
-	public static String KEY_SEARCH_QUERY_AUTHOR = "verfasser";
+	public static final String KEY_SEARCH_QUERY_AUTHOR = "verfasser";
 
 	/**
 	 * Bundle key for {@link #search(Bundle)}:
 	 * 
 	 * Keyword A
 	 */
-	public static String KEY_SEARCH_QUERY_KEYWORDA = "schlag_a";
+	public static final String KEY_SEARCH_QUERY_KEYWORDA = "schlag_a";
 
 	/**
 	 * Bundle key for {@link #search(Bundle)}:
 	 * 
 	 * Keyword B
 	 */
-	public static String KEY_SEARCH_QUERY_KEYWORDB = "schlag_b";
+	public static final String KEY_SEARCH_QUERY_KEYWORDB = "schlag_b";
 
 	/**
 	 * Bundle key for {@link #search(Bundle)}:
 	 * 
 	 * Library branch
 	 */
-	public static String KEY_SEARCH_QUERY_BRANCH = "zweigstelle";
+	public static final String KEY_SEARCH_QUERY_BRANCH = "zweigstelle";
 
 	/**
 	 * Bundle key for {@link #search(Bundle)}:
 	 * 
 	 * ISBN
 	 */
-	public static String KEY_SEARCH_QUERY_ISBN = "isbn";
+	public static final String KEY_SEARCH_QUERY_ISBN = "isbn";
 
 	/**
 	 * Bundle key for {@link #search(Bundle)}:
 	 * 
 	 * Year of publication
 	 */
-	public static String KEY_SEARCH_QUERY_YEAR = "jahr";
+	public static final String KEY_SEARCH_QUERY_YEAR = "jahr";
 
 	/**
 	 * Bundle key for {@link #search(Bundle)}:
 	 * 
 	 * Year range start
 	 */
-	public static String KEY_SEARCH_QUERY_YEAR_RANGE_START = "jahr_von";
+	public static final String KEY_SEARCH_QUERY_YEAR_RANGE_START = "jahr_von";
 
 	/**
 	 * Bundle key for {@link #search(Bundle)}:
 	 * 
 	 * Year range end
 	 */
-	public static String KEY_SEARCH_QUERY_YEAR_RANGE_END = "jahr_bis";
+	public static final String KEY_SEARCH_QUERY_YEAR_RANGE_END = "jahr_bis";
 
 	/**
 	 * Bundle key for {@link #search(Bundle)}:
 	 * 
 	 * Year range end
 	 */
-	public static String KEY_SEARCH_QUERY_SYSTEM = "systematik";
+	public static final String KEY_SEARCH_QUERY_SYSTEM = "systematik";
 
 	/**
 	 * Bundle key for {@link #search(Bundle)}:
 	 * 
 	 * Systematic identification
 	 */
-	public static String KEY_SEARCH_QUERY_AUDIENCE = "interessenkreis";
+	public static final String KEY_SEARCH_QUERY_AUDIENCE = "interessenkreis";
 
 	/**
 	 * Bundle key for {@link #search(Bundle)}:
 	 * 
 	 * Item's publisher
 	 */
-	public static String KEY_SEARCH_QUERY_PUBLISHER = "verlag";
+	public static final String KEY_SEARCH_QUERY_PUBLISHER = "verlag";
 
 	/**
 	 * Bundle key for {@link #search(Bundle)}:
 	 * 
 	 * Item's category
 	 */
-	public static String KEY_SEARCH_QUERY_CATEGORY = "mediengruppe";
+	public static final String KEY_SEARCH_QUERY_CATEGORY = "mediengruppe";
 
 	/**
 	 * Is called on application startup and you are free to call it in <our
