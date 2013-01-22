@@ -137,7 +137,7 @@ public class SearchResultsActivity extends OpacActivity {
 							.setOnClickListener(new OnClickListener() {
 								@Override
 								public void onClick(View v) {
-									onCreate(null);
+									performsearch();
 								}
 							});
 				} else {
@@ -196,6 +196,7 @@ public class SearchResultsActivity extends OpacActivity {
 			} catch (Exception e) {
 				publishProgress(e, "ioerror");
 				e.printStackTrace();
+				
 				success = false;
 			}
 			return null;
