@@ -561,25 +561,10 @@ public class OCLC2011 implements OpacApi {
 		return true;
 	}
 
-	@Override
-	public AccountData account(Account acc) throws IOException,
-			NotReachableException, JSONException, AccountUnsupportedException,
-			SocketException {
-		start(); // TODO: Is this necessary?
-
-		if (!login(acc))
-			return null;
-
-		HttpGet httpget = new HttpGet(opac_url
-				+ "/userAccount.do?methodToCall=show&type=1");
-		HttpResponse response2 = ahc.execute(httpget);
-
-		String html2 = convertStreamToString(response2.getEntity().getContent());
-		Document doc2 = Jsoup.parse(html2);
-
-		Elements copytrs = doc2.select(".data tr");
-
-		List<ContentValues> medien = new ArrayList<ContentValues>();
+	private void parse_medialist(List<ContentValues> medien, String html)
+			throws ClientProtocolException, IOException {
+		Document doc = Jsoup.parse(html);
+		Elements copytrs = doc.select(".data tr");
 
 		for (int i = 1; i < copytrs.size(); i++) {
 			Element tr = copytrs.get(i);
@@ -603,6 +588,39 @@ public class OCLC2011 implements OpacApi {
 
 			medien.add(e);
 		}
+
+		for (Element link : doc.select(".box-right a")) {
+			if (link.text().contains("»")) {
+				HttpGet httpget = new HttpGet(link.attr("abs:href"));
+				HttpResponse response2 = ahc.execute(httpget);
+
+				String html2 = convertStreamToString(response2.getEntity()
+						.getContent());
+
+				parse_medialist(medien, html2);
+				break;
+			}
+		}
+
+	}
+
+	@Override
+	public AccountData account(Account acc) throws IOException,
+			NotReachableException, JSONException, SocketException {
+		start(); // TODO: Is this necessary?
+
+		if (!login(acc))
+			return null;
+
+		HttpGet httpget = new HttpGet(opac_url
+				+ "/userAccount.do?methodToCall=show&type=1");
+		HttpResponse response2 = ahc.execute(httpget);
+
+		String html2 = convertStreamToString(response2.getEntity().getContent());
+
+		List<ContentValues> medien = new ArrayList<ContentValues>();
+
+		parse_medialist(medien, html2);
 
 		AccountData res = new AccountData();
 		res.setLent(medien);
