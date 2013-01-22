@@ -280,8 +280,10 @@ public class Zones22 implements OpacApi {
 
 		results = doc.select(".searchHits").first().text().trim();
 
-		searchobj = doc.select(".pageNavLink").first().attr("href")
-				.split("\\?")[0];
+		if (doc.select(".pageNavLink").size() > 0) {
+			searchobj = doc.select(".pageNavLink").first().attr("href")
+					.split("\\?")[0];
+		}
 
 		Elements table = doc.select("#BrowseList > tbody > tr");
 		List<SearchResult> results = new ArrayList<SearchResult>();
