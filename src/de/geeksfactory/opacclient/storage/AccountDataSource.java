@@ -169,8 +169,9 @@ public class AccountDataSource {
 
 		List<ContentValues> res = new ArrayList<ContentValues>();
 		cursor = database.query(AccountDatabase.TABLENAME_RESERVATION,
-				(String[]) AccountDatabase.COLUMNS_RESERVATIONS.values().toArray(),
-				"account = ?", selectionArgs, null, null, null);
+				(String[]) AccountDatabase.COLUMNS_RESERVATIONS.values()
+						.toArray(), "account = ?", selectionArgs, null, null,
+				null);
 		cursor.moveToFirst();
 
 		if (!cursor.isAfterLast()) {
@@ -187,5 +188,30 @@ public class AccountDataSource {
 		adata.setReservations(res);
 
 		return adata;
+	}
+
+	public void storeCachedAccountData(Account account, AccountData adata) {
+		database.delete(AccountDatabase.TABLENAME_LENT, "account = ?",
+				new String[] { "" + account.getId() });
+		for (ContentValues entry : adata.getLent()) {
+			ContentValues insertmapping = new ContentValues();
+			for (Entry<String, Object> inner : entry.valueSet()) {
+				insertmapping.put(
+						AccountDatabase.COLUMNS_LENT.get(inner.getKey()),
+						(String) inner.getValue());
+			}
+			database.insert(AccountDatabase.TABLENAME_LENT, null, insertmapping);
+		}
+		database.delete(AccountDatabase.TABLENAME_RESERVATION, "account = ?",
+				new String[] { "" + account.getId() });
+		for (ContentValues entry : adata.getReservations()) {
+			ContentValues insertmapping = new ContentValues();
+			for (Entry<String, Object> inner : entry.valueSet()) {
+				insertmapping.put(AccountDatabase.COLUMNS_RESERVATIONS
+						.get(inner.getKey()), (String) inner.getValue());
+			}
+			database.insert(AccountDatabase.TABLENAME_RESERVATION, null,
+					insertmapping);
+		}
 	}
 }
