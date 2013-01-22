@@ -123,7 +123,7 @@ public abstract class OpacActivity extends SlidingFragmentActivity {
 	public interface AccountSelectedListener {
 		void accountSelected(Account account);
 	}
-	
+
 	public class MetaAdapter extends ArrayAdapter<ContentValues> {
 
 		private List<ContentValues> objects;

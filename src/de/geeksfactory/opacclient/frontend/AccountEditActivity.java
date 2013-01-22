@@ -48,7 +48,8 @@ public class AccountEditActivity extends SherlockActivity {
 		etPassword.setText(account.getPassword());
 
 		try {
-			lib = ((OpacClient) getApplication()).getLibrary(account.getLibrary());
+			lib = ((OpacClient) getApplication()).getLibrary(account
+					.getLibrary());
 			TextView tvCity = (TextView) findViewById(R.id.tvCity);
 			if (lib.getTitle() != null && !lib.getTitle().equals("null")) {
 				tvCity.setText(lib.getCity() + "\n" + lib.getTitle());
