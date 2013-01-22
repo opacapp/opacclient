@@ -69,7 +69,6 @@ public class ReminderCheckService extends Service {
 					ReminderCheckService.this);
 			data.open();
 			List<Account> accounts = data.getAccountsWithPassword();
-			data.close();
 			if (accounts.size() == 0)
 				return null;
 
@@ -92,6 +91,8 @@ public class ReminderCheckService extends Service {
 							.getLibrary()));
 					SimpleDateFormat sdf = api.getDateFormat();
 					AccountData res = api.account(account);
+
+					data.storeCachedAccountData(account, res);
 
 					for (ContentValues item : res.getLent()) {
 						if (item.containsKey(AccountData.KEY_LENT_DEADLINE)) {
@@ -127,6 +128,7 @@ public class ReminderCheckService extends Service {
 					e.printStackTrace();
 				}
 			}
+			data.close();
 			return new Long[] { expired_new, expired_total, last, first };
 		}
 
