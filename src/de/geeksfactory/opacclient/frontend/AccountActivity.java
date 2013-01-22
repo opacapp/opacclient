@@ -389,11 +389,10 @@ public class AccountActivity extends OpacActivity {
 				tvAccCity.setText(lib.getCity());
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			ACRA.getErrorReporter().handleException(e);
 			e.printStackTrace();
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ACRA.getErrorReporter().handleException(e);
 		}
 
 		LinearLayout llLent = (LinearLayout) findViewById(R.id.llLent);

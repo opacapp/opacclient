@@ -88,13 +88,10 @@ public class OpacClient extends Application {
 		try {
 			api = initApi(getLibrary());
 		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SocketException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return api;
@@ -151,11 +148,9 @@ public class OpacClient extends Application {
 		try {
 			library = getLibrary(getAccount().getLibrary());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ACRA.getErrorReporter().handleException(e);
 		}
 		return library;
 	}

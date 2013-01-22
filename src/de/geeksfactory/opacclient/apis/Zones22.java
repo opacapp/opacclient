@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.acra.ACRA;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -150,8 +151,7 @@ public class Zones22 implements OpacApi {
 		try {
 			this.opac_url = data.getString("baseurl");
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ACRA.getErrorReporter().handleException(e);
 		}
 	}
 
@@ -277,11 +277,11 @@ public class Zones22 implements OpacApi {
 		Document doc = Jsoup.parse(html);
 		doc.setBaseUri(opac_url + "/APS_PRESENT_BIB");
 
-		if(doc.select("#ErrorAdviceRow").size() > 0){
+		if (doc.select("#ErrorAdviceRow").size() > 0) {
 			last_error = doc.select("#ErrorAdviceRow").text().trim();
 			return null;
 		}
-		
+
 		results = doc.select(".searchHits").first().text().trim();
 
 		if (doc.select(".pageNavLink").size() > 0) {

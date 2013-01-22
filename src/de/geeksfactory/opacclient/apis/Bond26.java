@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.acra.ACRA;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -163,8 +164,7 @@ public class Bond26 implements OpacApi {
 		try {
 			this.opac_url = data.getString("baseurl");
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ACRA.getErrorReporter().handleException(e);
 		}
 	}
 

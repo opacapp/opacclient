@@ -2,6 +2,7 @@ package de.geeksfactory.opacclient.frontend;
 
 import java.io.IOException;
 
+import org.acra.ACRA;
 import org.json.JSONException;
 
 import android.os.Bundle;
@@ -55,10 +56,9 @@ public class AccountEditActivity extends SherlockActivity {
 				tvCity.setText(lib.getCity());
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
+			ACRA.getErrorReporter().handleException(e);
 			e.printStackTrace();
 		}
 	}

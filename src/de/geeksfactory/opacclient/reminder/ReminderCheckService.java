@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.acra.ACRA;
 import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 
@@ -114,19 +115,16 @@ public class ReminderCheckService extends Service {
 					}
 
 				} catch (ClientProtocolException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (SocketException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
+					ACRA.getErrorReporter().handleException(e);
 					e.printStackTrace();
 				} catch (ParseException e) {
-					// TODO Auto-generated catch block
+					ACRA.getErrorReporter().handleException(e);
 					e.printStackTrace();
 				}
 			}
