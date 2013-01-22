@@ -4,11 +4,13 @@
     <item
         android:id="@+id/action_prev"
         android:icon="@drawable/nav_prev"
+        android:title="@string/pagination_prev"
         android:showAsAction="always">
     </item>
     <item
         android:id="@+id/action_next"
         android:icon="@drawable/nav_next"
+        android:title="@string/pagination_next"
         android:showAsAction="always">
     </item>
 

@@ -164,4 +164,6 @@
     <string name="nav_settings">Einstellungen</string>
     <string name="nav_about">Über die App</string>
     <string name="nav_hl_ccountlist">Kontoauswahl</string>
+    <string name="pagination_next">Nächste Seite</string>
+    <string name="pagination_prev">Vorige Seite</string>
 </resources>
