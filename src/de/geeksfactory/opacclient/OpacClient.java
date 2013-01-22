@@ -33,7 +33,7 @@ import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 
-@ReportsCrashes(formKey = "", mailTo = "raphael+opac@geeksfactory.de")
+@ReportsCrashes(formKey = "", mailTo = "raphael+opac@geeksfactory.de", mode = org.acra.ReportingInteractionMode.DIALOG, resToastText = R.string.crash_toast_text, resDialogText = R.string.crash_dialog_text)
 public class OpacClient extends Application {
 
 	public Exception last_exception;
@@ -119,6 +119,10 @@ public class OpacClient extends Application {
 	public void setAccount(long id) {
 		sp.edit().putLong(OpacClient.PREF_SELECTED_ACCOUNT, id).commit();
 		resetCache();
+		if (getLibrary() != null) {
+			ACRA.getErrorReporter().putCustomData("library",
+					getLibrary().getIdent());
+		}
 	}
 
 	public Library getLibrary(String ident) throws IOException, JSONException {
@@ -197,6 +201,10 @@ public class OpacClient extends Application {
 		super.onCreate();
 		ACRA.init(this);
 		sp = PreferenceManager.getDefaultSharedPreferences(this);
+		if (getLibrary() != null) {
+			ACRA.getErrorReporter().putCustomData("library",
+					getLibrary().getIdent());
+		}
 	}
 
 	public void web_error(Exception e) {
