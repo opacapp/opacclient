@@ -278,6 +278,11 @@ public class Zones22 implements OpacApi {
 		Document doc = Jsoup.parse(html);
 		doc.setBaseUri(opac_url + "/APS_PRESENT_BIB");
 
+		if(doc.select("#ErrorAdviceRow").size() > 0){
+			last_error = doc.select("#ErrorAdviceRow").text().trim();
+			return null;
+		}
+		
 		results = doc.select(".searchHits").first().text().trim();
 
 		if (doc.select(".pageNavLink").size() > 0) {
