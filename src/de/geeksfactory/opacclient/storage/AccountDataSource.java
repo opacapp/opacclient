@@ -1,7 +1,11 @@
 package de.geeksfactory.opacclient.storage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,6 +13,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import de.geeksfactory.opacclient.objects.Account;
+import de.geeksfactory.opacclient.objects.AccountData;
 
 public class AccountDataSource {
 	// Database fields
@@ -139,4 +144,48 @@ public class AccountDataSource {
 		database.delete("accounts", "id=?", selA);
 	}
 
+	public AccountData getCachedAccountData(Account account) {
+		AccountData adata = new AccountData();
+
+		List<ContentValues> lent = new ArrayList<ContentValues>();
+		String[] selectionArgs = { "" + account.getId() };
+		Cursor cursor = database.query(AccountDatabase.TABLENAME_LENT,
+				(String[]) AccountDatabase.COLUMNS_LENT.values().toArray(),
+				"account = ?", selectionArgs, null, null, null);
+		cursor.moveToFirst();
+
+		if (!cursor.isAfterLast()) {
+			ContentValues entry = new ContentValues();
+			for (Object o : AccountDatabase.COLUMNS_LENT.entrySet()) {
+				Map.Entry<String, String> field = (Map.Entry<String, String>) o;
+				entry.put(field.getKey(), cursor.getString(cursor
+						.getColumnIndex(field.getValue())));
+			}
+			lent.add(entry);
+			cursor.moveToNext();
+		}
+		cursor.close();
+		adata.setLent(lent);
+
+		List<ContentValues> res = new ArrayList<ContentValues>();
+		cursor = database.query(AccountDatabase.TABLENAME_RESERVATION,
+				(String[]) AccountDatabase.COLUMNS_RESERVATIONS.values().toArray(),
+				"account = ?", selectionArgs, null, null, null);
+		cursor.moveToFirst();
+
+		if (!cursor.isAfterLast()) {
+			ContentValues entry = new ContentValues();
+			for (Object o : AccountDatabase.COLUMNS_RESERVATIONS.entrySet()) {
+				Map.Entry<String, String> field = (Map.Entry<String, String>) o;
+				entry.put(field.getKey(), cursor.getString(cursor
+						.getColumnIndex(field.getValue())));
+			}
+			res.add(entry);
+			cursor.moveToNext();
+		}
+		cursor.close();
+		adata.setReservations(res);
+
+		return adata;
+	}
 }
