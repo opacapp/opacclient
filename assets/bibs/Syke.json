@@ -1,0 +1,13 @@
+{
+ "api": "bond26", 
+ "city": "Syke", 
+ "data": {
+  'copiestable': [0, 5, 2, 1, 3, 4, -1], 
+  'reservationtable': [0, 1, 2, -1, 3], 
+  'accounttable': [-1, 0, 1, 2, -1, -1, -1, 3],
+  "baseurl": "http://www.stadt-syke.de/webopac", 
+  "information": "http://www.syke.de/internet/page.php?naviID=6000146&site=6000041&brotID=6000146&typ=2&rubrik=6000008"
+ }, 
+ "support": "Katalogsuche und Konto", 
+ "title": null
+}
