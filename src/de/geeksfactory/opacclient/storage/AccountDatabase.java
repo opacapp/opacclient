@@ -40,7 +40,7 @@ public class AccountDatabase extends SQLiteOpenHelper {
 		bMap.put(AccountData.KEY_RESERVATION_CANCEL, "cancel");
 		bMap.put(AccountData.KEY_RESERVATION_READY, "ready");
 		bMap.put(AccountData.KEY_RESERVATION_TITLE, "title");
-		COLUMNS_RESERVATIONS = Collections.unmodifiableMap(aMap);
+		COLUMNS_RESERVATIONS = Collections.unmodifiableMap(bMap);
 	}
 	
 	public static final String TABLENAME_LENT = "accountdata_lent";
@@ -55,11 +55,11 @@ public class AccountDatabase extends SQLiteOpenHelper {
 		db.execSQL("create table " + "accountdata_lent ( account integer, "
 				+ "fetchtime integer," + "title text," + "barcode text,"
 				+ "author text," + "deadline text," + "status text,"
-				+ "branch text," + "lending_branch text," + "link text," + ");");
+				+ "branch text," + "lending_branch text," + "link text" + ");");
 		db.execSQL("create table "
 				+ "accountdata_reservations ( account integer, "
 				+ "fetchtime integer," + "title text," + "author text,"
-				+ "ready text," + "branch text," + "cancel text," + ");");
+				+ "ready text," + "branch text," + "cancel text" + ");");
 	}
 
 	@Override
@@ -71,12 +71,12 @@ public class AccountDatabase extends SQLiteOpenHelper {
 			db.execSQL("create table " + "accountdata_lent ( account integer, "
 					+ "fetchtime integer," + "title text," + "barcode text,"
 					+ "author text," + "deadline text," + "status text,"
-					+ "branch text," + "lending_branch text," + "link text,"
+					+ "branch text," + "lending_branch text," + "link text"
 					+ ");");
 			db.execSQL("create table "
 					+ "accountdata_reservations ( account integer, "
 					+ "fetchtime integer," + "title text," + "author text,"
-					+ "ready text," + "branch text," + "cancel text," + ");");
+					+ "ready text," + "branch text," + "cancel text" + ");");
 		}
 
 	}

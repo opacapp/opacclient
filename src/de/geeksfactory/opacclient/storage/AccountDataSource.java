@@ -12,6 +12,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 
@@ -191,6 +192,7 @@ public class AccountDataSource {
 	}
 
 	public void storeCachedAccountData(Account account, AccountData adata) {
+		long time = System.currentTimeMillis();
 		database.delete(AccountDatabase.TABLENAME_LENT, "account = ?",
 				new String[] { "" + account.getId() });
 		for (ContentValues entry : adata.getLent()) {
@@ -200,8 +202,11 @@ public class AccountDataSource {
 						AccountDatabase.COLUMNS_LENT.get(inner.getKey()),
 						(String) inner.getValue());
 			}
+			insertmapping.put("fetchtime", time);
+			insertmapping.put("account", account.getId());
 			database.insert(AccountDatabase.TABLENAME_LENT, null, insertmapping);
 		}
+
 		database.delete(AccountDatabase.TABLENAME_RESERVATION, "account = ?",
 				new String[] { "" + account.getId() });
 		for (ContentValues entry : adata.getReservations()) {
@@ -210,6 +215,8 @@ public class AccountDataSource {
 				insertmapping.put(AccountDatabase.COLUMNS_RESERVATIONS
 						.get(inner.getKey()), (String) inner.getValue());
 			}
+			insertmapping.put("fetchtime", time);
+			insertmapping.put("account", account.getId());
 			database.insert(AccountDatabase.TABLENAME_RESERVATION, null,
 					insertmapping);
 		}

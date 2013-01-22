@@ -44,6 +44,7 @@ import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.storage.AccountDataSource;
 
 public class AccountActivity extends OpacActivity {
 
@@ -160,7 +161,6 @@ public class AccountActivity extends OpacActivity {
 					.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-
 							dialog = ProgressDialog.show(AccountActivity.this,
 									"", getString(R.string.report_sending),
 									true, true, new OnCancelListener() {
@@ -373,6 +373,11 @@ public class AccountActivity extends OpacActivity {
 				dialog_wrong_credentials(app.getApi().getLast_error(), true);
 			return;
 		}
+
+		AccountDataSource adatasource = new AccountDataSource(this);
+		adatasource.open();
+		adatasource.storeCachedAccountData(account, result);
+		adatasource.close();
 
 		setContentView(R.layout.account_activity);
 
