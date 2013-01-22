@@ -60,6 +60,8 @@ public class AccountActivity extends OpacActivity {
 
 	private Account account;
 
+	private MenuItem miRefresh;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -84,12 +86,16 @@ public class AccountActivity extends OpacActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.activity_account, menu);
+		miRefresh = menu.findItem(R.id.action_refresh);
 		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case R.id.action_refresh:
+			refresh();
+			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -177,9 +183,15 @@ public class AccountActivity extends OpacActivity {
 
 		} else {
 			// Supported
-			lt = new LoadTask();
-			lt.execute(app, getIntent().getIntExtra("item", 0));
+			// TODO: display cached data
+			// refresh();
 		}
+	}
+
+	public void refresh() {
+		miRefresh.setActionView(R.layout.actionbar_indeterminate_progress);
+		lt = new LoadTask();
+		lt.execute(app, getIntent().getIntExtra("item", 0));
 	}
 
 	protected void cancel(final String a) {
@@ -358,6 +370,8 @@ public class AccountActivity extends OpacActivity {
 	}
 
 	public void loaded(final AccountData result) {
+		miRefresh.setActionView(null);
+
 		if (result == null) {
 			if (app.getApi().getLast_error() == null
 					|| app.getApi().getLast_error().equals("")) {

@@ -168,5 +168,6 @@
     <string name="pagination_prev">Vorige Seite</string>
     <string name="crash_toast_text">Ein Fehler ist aufgetreten. Bitte warten Sie einen Augenblick.</string>
     <string name="crash_dialog_text">In der Opac App ist ein Fehler aufgetreten! Bitte schicken Sie uns den Fehlerbericht per E-Mail ein, dann können wir ihn beheben.</string>
+    <string name="refresh">Aktualisieren</string>
 
 </resources>
