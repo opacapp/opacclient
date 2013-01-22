@@ -1,7 +1,7 @@
 package de.geeksfactory.opacclient;
 
-import java.io.IOException;
+import java.net.SocketException;
 
-public class NotReachableException extends IOException {
+public class NotReachableException extends SocketException {
 
 }

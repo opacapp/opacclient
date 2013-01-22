@@ -7,7 +7,6 @@ import java.util.List;
 import org.json.JSONException;
 
 import android.os.Bundle;
-import de.geeksfactory.opacclient.AccountUnsupportedException;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -299,7 +298,7 @@ public interface OpacApi {
 	 * @see de.geeksfactory.opacclient.objects.AccountData
 	 */
 	public AccountData account(Account account) throws IOException,
-			JSONException, AccountUnsupportedException;
+			JSONException;
 
 	/**
 	 * Returns an array of search criterias which are supported by this OPAC and

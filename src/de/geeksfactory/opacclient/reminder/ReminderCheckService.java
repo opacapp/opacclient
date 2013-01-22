@@ -24,7 +24,6 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import de.geeksfactory.opacclient.AccountUnsupportedException;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
@@ -124,9 +123,6 @@ public class ReminderCheckService extends Service {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (AccountUnsupportedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (ParseException e) {

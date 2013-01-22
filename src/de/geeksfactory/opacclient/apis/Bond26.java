@@ -29,7 +29,6 @@ import org.jsoup.select.Elements;
 
 import android.content.ContentValues;
 import android.os.Bundle;
-import de.geeksfactory.opacclient.AccountUnsupportedException;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -108,16 +107,16 @@ public class Bond26 implements OpacApi {
 		for (int i = 0; i < zst_opts.size(); i++) {
 			Element opt = zst_opts.get(i);
 			if (!opt.val().equals(""))
-				metadata.addMeta(MetaDataSource.META_TYPE_BRANCH, library.getIdent(), opt.val(),
-						opt.text());
+				metadata.addMeta(MetaDataSource.META_TYPE_BRANCH,
+						library.getIdent(), opt.val(), opt.text());
 		}
 
 		Elements mg_opts = doc.select("#medigrp option");
 		for (int i = 0; i < mg_opts.size(); i++) {
 			Element opt = mg_opts.get(i);
 			if (!opt.val().equals(""))
-				metadata.addMeta(MetaDataSource.META_TYPE_CATEGORY, library.getIdent(), opt.val(),
-						opt.text());
+				metadata.addMeta(MetaDataSource.META_TYPE_CATEGORY,
+						library.getIdent(), opt.val(), opt.text());
 		}
 
 		metadata.close();
@@ -493,8 +492,7 @@ public class Bond26 implements OpacApi {
 
 	@Override
 	public AccountData account(Account acc) throws IOException,
-			NotReachableException, JSONException, AccountUnsupportedException,
-			SocketException {
+			NotReachableException, JSONException, SocketException {
 		if (!initialised)
 			start();
 		HttpGet httpget;
@@ -543,11 +541,7 @@ public class Bond26 implements OpacApi {
 		}
 		JSONArray copymap = null;
 
-		try {
-			copymap = data.getJSONArray("accounttable");
-		} catch (JSONException e) {
-			throw new AccountUnsupportedException(html);
-		}
+		copymap = data.getJSONArray("accounttable");
 
 		String[] copymap_keys = new String[] { AccountData.KEY_LENT_BARCODE,
 				AccountData.KEY_LENT_AUTHOR, AccountData.KEY_LENT_TITLE,
@@ -580,11 +574,7 @@ public class Bond26 implements OpacApi {
 			medien.add(e);
 		}
 
-		try {
-			copymap = data.getJSONArray("reservationtable");
-		} catch (JSONException e) {
-			throw new AccountUnsupportedException(html);
-		}
+		copymap = data.getJSONArray("reservationtable");
 		copymap_keys = new String[] { AccountData.KEY_RESERVATION_AUTHOR,
 				AccountData.KEY_RESERVATION_TITLE,
 				AccountData.KEY_RESERVATION_READY,

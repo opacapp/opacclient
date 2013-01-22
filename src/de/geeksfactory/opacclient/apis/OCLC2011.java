@@ -32,7 +32,6 @@ import org.jsoup.select.Elements;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
-import de.geeksfactory.opacclient.AccountUnsupportedException;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
