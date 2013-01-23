@@ -93,6 +93,16 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvAge"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center|top"
+                android:textColor="@color/account_age"
+                android:textStyle="italic" />
+
         </LinearLayout>
     </LinearLayout>
 

@@ -169,5 +169,20 @@
     <string name="crash_toast_text">Ein Fehler ist aufgetreten. Bitte warten Sie einen Augenblick.</string>
     <string name="crash_dialog_text">In der Opac App ist ein Fehler aufgetreten! Bitte schicken Sie uns den Fehlerbericht per E-Mail ein, dann können wir ihn beheben.</string>
     <string name="refresh">Aktualisieren</string>
+    <string name="account_no_concurrent">Bitte warten, bis die Ansicht aktualisiert wurde.</string>
+
+    <plurals name="account_age_minutes">
+        <item quantity="zero">Die angezeigten Daten sind aktuell.</item>
+        <item quantity="one">Die angezeigten Daten sind eine Minute alt.</item>
+        <item quantity="other">Die angezeigten Daten sind %d Minuten alt.</item>
+    </plurals>
+    <plurals name="account_age_hours">
+        <item quantity="one">Die angezeigten Daten sind eine Stunde alt.</item>
+        <item quantity="other">Die angezeigten Daten sind %d Stunden alt.</item>
+    </plurals>
+    <plurals name="account_age_days">
+        <item quantity="one">Die angezeigten Daten sind einen Tag alt.</item>
+        <item quantity="other">Die angezeigten Daten sind %d Tage alt.</item>
+    </plurals>
 
 </resources>

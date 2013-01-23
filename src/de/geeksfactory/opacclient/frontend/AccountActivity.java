@@ -26,6 +26,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.view.View;
@@ -65,6 +66,7 @@ public class AccountActivity extends OpacActivity {
 	private Account account;
 
 	private boolean refreshing = false;
+	private long refreshtime;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -85,6 +87,16 @@ public class AccountActivity extends OpacActivity {
 		}
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+		final Handler handler = new Handler();
+		// schedule alarm here and post runnable as soon as scheduled
+		handler.post(new Runnable() {
+			@Override
+			public void run() {
+				refreshage();
+				handler.postDelayed(this, 60000);
+			}
+		});
 	}
 
 	@Override
@@ -207,10 +219,10 @@ public class AccountActivity extends OpacActivity {
 
 			AccountDataSource adatasource = new AccountDataSource(this);
 			adatasource.open();
-			long lastrefresh = adatasource.getCachedAccountDataTime(account);
-			if (lastrefresh > 0) {
+			refreshtime = adatasource.getCachedAccountDataTime(account);
+			if (refreshtime > 0) {
 				displaydata(adatasource.getCachedAccountData(account));
-				if (System.currentTimeMillis() - lastrefresh > MAX_CACHE_AGE) {
+				if (System.currentTimeMillis() - refreshtime > MAX_CACHE_AGE) {
 					refresh();
 				}
 			} else {
@@ -228,7 +240,11 @@ public class AccountActivity extends OpacActivity {
 	}
 
 	protected void cancel(final String a) {
-
+		if (refreshing) {
+			Toast.makeText(this, R.string.account_no_concurrent,
+					Toast.LENGTH_LONG).show();
+			return;
+		}
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage(R.string.cancel_confirm)
 				.setCancelable(true)
@@ -267,6 +283,11 @@ public class AccountActivity extends OpacActivity {
 	}
 
 	protected void prolong(final String a) {
+		if (refreshing) {
+			Toast.makeText(this, R.string.account_no_concurrent,
+					Toast.LENGTH_LONG).show();
+			return;
+		}
 		dialog = ProgressDialog.show(AccountActivity.this, "",
 				getString(R.string.doing_prolong), true);
 		dialog.show();
@@ -435,6 +456,8 @@ public class AccountActivity extends OpacActivity {
 		adatasource.storeCachedAccountData(account, result);
 		adatasource.close();
 
+		refreshtime = System.currentTimeMillis();
+
 		displaydata(result);
 	}
 
@@ -593,6 +616,31 @@ public class AccountActivity extends OpacActivity {
 				}
 				llRes.addView(v);
 			}
+		}
+		refreshage();
+	}
+
+	public void refreshage() {
+		if (findViewById(R.id.tvAge) == null)
+			return;
+
+		long age = System.currentTimeMillis() - refreshtime;
+		if (age < (3600 * 1000)) {
+			((TextView) findViewById(R.id.tvAge)).setText(getResources()
+					.getQuantityString(R.plurals.account_age_minutes,
+							(int) (age / (60 * 1000)),
+							(int) (age / (60 * 1000))));
+		} else if (age < 24 * 3600 * 1000) {
+			((TextView) findViewById(R.id.tvAge)).setText(getResources()
+					.getQuantityString(R.plurals.account_age_hours,
+							(int) (age / (3600 * 1000)),
+							(int) (age / (3600 * 1000))));
+
+		} else {
+			((TextView) findViewById(R.id.tvAge)).setText(getResources()
+					.getQuantityString(R.plurals.account_age_days,
+							(int) (age / (24 * 3600 * 1000)),
+							(int) (age / (24 * 3600 * 1000))));
 		}
 	}
 
