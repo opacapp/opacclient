@@ -262,11 +262,7 @@ public class AccountActivity extends OpacActivity {
 
 	public void cancel_done(int result) {
 		if (result == STATUS_SUCCESS) {
-			AccountDataSource adatasource = new AccountDataSource(this);
-			adatasource.open();
-			adatasource.invalidateCachedAccountData(account);
-			adatasource.close();
-			onStart();
+			invalidateData();
 		}
 	}
 
@@ -347,13 +343,17 @@ public class AccountActivity extends OpacActivity {
 		}
 	}
 
+	public void invalidateData() {
+		AccountDataSource adatasource = new AccountDataSource(this);
+		adatasource.open();
+		adatasource.invalidateCachedAccountData(account);
+		adatasource.close();
+		onStart();
+	}
+
 	public void prolong_done(int result) {
 		if (result == STATUS_SUCCESS) {
-			AccountDataSource adatasource = new AccountDataSource(this);
-			adatasource.open();
-			adatasource.invalidateCachedAccountData(account);
-			adatasource.close();
-			onStart();
+			invalidateData();
 		} else if (result == STATUS_FAILED) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage(
@@ -619,7 +619,7 @@ public class AccountActivity extends OpacActivity {
 
 		protected void onPostExecute(Integer result) {
 			dialog.dismiss();
-			
+
 			if (success) {
 				cancel_done(result);
 			} else {
