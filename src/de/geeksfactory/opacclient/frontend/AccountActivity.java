@@ -204,14 +204,17 @@ public class AccountActivity extends OpacActivity {
 
 		} else {
 			// Supported
-			// TODO: display cached data
-			// refresh();
 
 			AccountDataSource adatasource = new AccountDataSource(this);
 			adatasource.open();
 			long lastrefresh = adatasource.getCachedAccountDataTime(account);
 			if (lastrefresh > 0) {
 				displaydata(adatasource.getCachedAccountData(account));
+				if (System.currentTimeMillis() - lastrefresh > MAX_CACHE_AGE) {
+					refresh();
+				}
+			} else {
+				refresh();
 			}
 			adatasource.close();
 		}
@@ -259,6 +262,10 @@ public class AccountActivity extends OpacActivity {
 
 	public void cancel_done(int result) {
 		if (result == STATUS_SUCCESS) {
+			AccountDataSource adatasource = new AccountDataSource(this);
+			adatasource.open();
+			adatasource.invalidateCachedAccountData(account);
+			adatasource.close();
 			onStart();
 		}
 	}
@@ -342,6 +349,10 @@ public class AccountActivity extends OpacActivity {
 
 	public void prolong_done(int result) {
 		if (result == STATUS_SUCCESS) {
+			AccountDataSource adatasource = new AccountDataSource(this);
+			adatasource.open();
+			adatasource.invalidateCachedAccountData(account);
+			adatasource.close();
 			onStart();
 		} else if (result == STATUS_FAILED) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
