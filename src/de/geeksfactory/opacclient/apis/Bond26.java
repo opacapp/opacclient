@@ -55,6 +55,10 @@ public class Bond26 implements OpacApi {
 	private boolean initialised = false;
 	private String last_error;
 	private Library library;
+	private long logged_in;
+	private Account logged_in_as;
+
+	private final long SESSION_LIFETIME = 1000 * 60 * 3;
 
 	@Override
 	public String getResults() {
@@ -438,9 +442,26 @@ public class Bond26 implements OpacApi {
 	}
 
 	@Override
-	public boolean prolong(String a) throws IOException, NotReachableException {
+	public boolean prolong(Account account, String a) throws IOException,
+			NotReachableException {
 		if (!initialised)
 			start();
+		if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
+				|| logged_in_as == null) {
+			try {
+				account(account);
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return false;
+			}
+		} else if (logged_in_as.getId() != account.getId()) {
+			try {
+				account(account);
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
 		HttpGet httpget = new HttpGet(opac_url + "/" + a);
 		HttpResponse response = ahc.execute(httpget);
 		String html = convertStreamToString(response.getEntity().getContent());
@@ -452,7 +473,6 @@ public class Bond26 implements OpacApi {
 			return false;
 		}
 		if (doc.select("#verlaengern").size() == 1) {
-
 			HttpPost httppost = new HttpPost(opac_url + "/index.asp");
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("target", "make_vl"));
@@ -474,9 +494,26 @@ public class Bond26 implements OpacApi {
 	}
 
 	@Override
-	public boolean cancel(String a) throws IOException, NotReachableException {
+	public boolean cancel(Account account, String a) throws IOException,
+			NotReachableException {
 		if (!initialised)
 			start();
+		if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
+				|| logged_in_as == null) {
+			try {
+				account(account);
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return false;
+			}
+		} else if (logged_in_as.getId() != account.getId()) {
+			try {
+				account(account);
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
 		HttpGet httpget = new HttpGet(opac_url + "/" + a);
 		HttpResponse response = ahc.execute(httpget);
 		response.getEntity().consumeContent();
@@ -541,6 +578,10 @@ public class Bond26 implements OpacApi {
 			last_error = doc.getElementsByClass("kontomeldung").get(0).text();
 			return null;
 		}
+
+		logged_in = System.currentTimeMillis();
+		logged_in_as = acc;
+
 		JSONArray copymap = null;
 
 		copymap = data.getJSONArray("accounttable");

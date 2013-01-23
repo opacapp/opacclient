@@ -265,7 +265,7 @@ public interface OpacApi {
 	 *         more information.
 	 * @see de.geeksfactory.opacclient.objects.AccountData
 	 */
-	public boolean prolong(String media) throws IOException;
+	public boolean prolong(Account account, String media) throws IOException;
 
 	/**
 	 * Cancel a media reservation/order identified by the given String (see
@@ -281,7 +281,7 @@ public interface OpacApi {
 	 *         more information.
 	 * @see de.geeksfactory.opacclient.objects.AccountData
 	 */
-	public boolean cancel(String media) throws IOException;
+	public boolean cancel(Account account, String media) throws IOException;
 
 	/**
 	 * Load account view (borrowed and reserved items, see

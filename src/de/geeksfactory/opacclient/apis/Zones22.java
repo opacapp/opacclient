@@ -461,12 +461,14 @@ public class Zones22 implements OpacApi {
 	}
 
 	@Override
-	public boolean prolong(String a) throws IOException, NotReachableException {
+	public boolean prolong(Account account, String a) throws IOException,
+			NotReachableException {
 		return false;
 	}
 
 	@Override
-	public boolean cancel(String a) throws IOException, NotReachableException {
+	public boolean cancel(Account account, String a) throws IOException,
+			NotReachableException {
 		return false;
 	}
 

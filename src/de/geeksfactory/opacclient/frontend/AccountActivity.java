@@ -593,7 +593,7 @@ public class AccountActivity extends OpacActivity {
 			super.doInBackground(arg0);
 			String a = (String) arg0[1];
 			try {
-				app.getApi().cancel(a);
+				app.getApi().cancel(account, a);
 				success = true;
 			} catch (java.net.UnknownHostException e) {
 				success = false;
@@ -608,7 +608,7 @@ public class AccountActivity extends OpacActivity {
 
 		protected void onPostExecute(Integer result) {
 			dialog.dismiss();
-
+			
 			if (success) {
 				cancel_done(result);
 			} else {
@@ -637,7 +637,7 @@ public class AccountActivity extends OpacActivity {
 			super.doInBackground(arg0);
 			String a = (String) arg0[1];
 			try {
-				boolean res = app.getApi().prolong(a);
+				boolean res = app.getApi().prolong(account, a);
 				success = true;
 				if (res) {
 					return STATUS_SUCCESS;
