@@ -21,6 +21,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.HttpProtocolParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -167,6 +168,7 @@ public class OCLC2011 implements OpacApi {
 	@Override
 	public void init(MetaDataSource metadata, Library lib) {
 		ahc = new DefaultHttpClient();
+		HttpProtocolParams.setUserAgent(ahc.getParams(), "OpacApp.de");
 
 		this.metadata = metadata;
 		this.library = lib;

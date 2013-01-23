@@ -19,6 +19,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.HttpProtocolParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -162,6 +163,7 @@ public class Bond26 implements OpacApi {
 	@Override
 	public void init(MetaDataSource metadata, Library lib) {
 		ahc = new DefaultHttpClient();
+		HttpProtocolParams.setUserAgent(ahc.getParams(), "OpacApp.de");
 
 		this.metadata = metadata;
 		this.library = lib;
