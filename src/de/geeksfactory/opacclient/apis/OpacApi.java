@@ -364,11 +364,4 @@ public interface OpacApi {
 	public String getAccountExtendableInfo(Account account) throws IOException,
 			NotReachableException;
 
-	/**
-	 * Returns the date format the OPAC uses for return dates.
-	 * 
-	 * @return Date format
-	 */
-	public SimpleDateFormat getDateFormat();
-
 }

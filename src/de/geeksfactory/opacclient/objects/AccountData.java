@@ -44,6 +44,13 @@ public class AccountData {
 	/**
 	 * ContentValues key for {@link #setLent(List)}:
 	 * 
+	 * Return date (as a timestamp in milliseconds)
+	 */
+	public static final String KEY_LENT_DEADLINE_TIMESTAMP = "deadline_ts";
+
+	/**
+	 * ContentValues key for {@link #setLent(List)}:
+	 * 
 	 * Status
 	 */
 	public static final String KEY_LENT_STATUS = "status";

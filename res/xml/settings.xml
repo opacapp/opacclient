@@ -28,7 +28,6 @@
             android:ringtoneType="notification"
             android:title="@string/notification_sound" />
     </PreferenceCategory>
-    
     <PreferenceCategory android:title="@string/developer_settings" >
         <CheckBoxPreference
             android:key="debug_proxy"

@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -599,6 +600,8 @@ public class Bond26 implements OpacApi {
 		Elements exemplartrs = doc.select(".kontozeile_center table").get(0)
 				.select("tr.tabKonto");
 
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+
 		for (int i = 0; i < exemplartrs.size(); i++) {
 			Element tr = exemplartrs.get(i);
 			ContentValues e = new ContentValues();
@@ -614,6 +617,16 @@ public class Bond26 implements OpacApi {
 						e.put(copymap_keys[j], tr.child(copymap.getInt(j))
 								.text());
 					}
+				}
+			}
+			if (e.containsKey(AccountData.KEY_LENT_DEADLINE)) {
+				try {
+					e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
+							sdf.parse(
+									e.getAsString(AccountData.KEY_LENT_DEADLINE))
+									.getTime());
+				} catch (ParseException e1) {
+					e1.printStackTrace();
 				}
 			}
 			medien.add(e);
@@ -712,10 +725,5 @@ public class Bond26 implements OpacApi {
 		String html = convertStreamToString(response.getEntity().getContent());
 		return html;
 
-	}
-
-	@Override
-	public SimpleDateFormat getDateFormat() {
-		return new SimpleDateFormat("dd.MM.yyyy");
 	}
 }

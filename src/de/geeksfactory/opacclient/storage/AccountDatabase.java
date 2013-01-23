@@ -13,7 +13,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class AccountDatabase extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "accounts.db";
-	private static final int DATABASE_VERSION = 3; // REPLACE ONUPGRADE IF YOU
+	private static final int DATABASE_VERSION = 4; // REPLACE ONUPGRADE IF YOU
 													// CHANGE THIS
 
 	public static final String[] COLUMNS = { "id", "bib", "label", "name",
@@ -28,6 +28,7 @@ public class AccountDatabase extends SQLiteOpenHelper {
 		aMap.put(AccountData.KEY_LENT_BARCODE, "barcode");
 		aMap.put(AccountData.KEY_LENT_BRANCH, "branch");
 		aMap.put(AccountData.KEY_LENT_DEADLINE, "deadline");
+		aMap.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, "deadline_ts");
 		aMap.put(AccountData.KEY_LENT_LENDING_BRANCH, "lending_branch");
 		aMap.put(AccountData.KEY_LENT_LINK, "link");
 		aMap.put(AccountData.KEY_LENT_STATUS, "status");
@@ -55,8 +56,8 @@ public class AccountDatabase extends SQLiteOpenHelper {
 				+ " password text," + " cached integer" + ");");
 		db.execSQL("create table " + "accountdata_lent ( account integer, "
 				+ "title text," + "barcode text," + "author text,"
-				+ "deadline text," + "status text," + "branch text,"
-				+ "lending_branch text," + "link text" + ");");
+				+ "deadline text," + "deadline_ts integer," + "status text,"
+				+ "branch text," + "lending_branch text," + "link text" + ");");
 		db.execSQL("create table "
 				+ "accountdata_reservations ( account integer, "
 				+ "title text," + "author text," + "ready text,"
@@ -67,20 +68,27 @@ public class AccountDatabase extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// Provide something here if you change the database version
 
-		if (oldVersion < 2 && newVersion == 2) {
+		if (oldVersion < 2) {
 			// App version 2.0.0-alpha to 2.0.0, adding tables for account data
 			db.execSQL("create table " + "accountdata_lent ( account integer, "
 					+ "title text," + "barcode text," + "author text,"
-					+ "deadline text," + "status text," + "branch text,"
-					+ "lending_branch text," + "link text" + ");");
+					+ "deadline text," + "deadline_ts integer,"
+					+ "status text," + "branch text," + "lending_branch text,"
+					+ "link text" + ");");
 			db.execSQL("create table "
 					+ "accountdata_reservations ( account integer, "
 					+ "title text," + "author text," + "ready text,"
 					+ "branch text," + "cancel text" + ");");
 		}
-		if (oldVersion < 3 && newVersion == 3) {
-			// App version 2.0.0-alpha to 2.0.0, adding tables for account data
+		if (oldVersion < 3) {
+			// App version 2.0.0-alpha3 to 2.0.0-alpha4, adding tables for
+			// account data
 			db.execSQL("alter table accounts add column cached integer");
+		}
+		if (oldVersion == 3) {
+			// App version 2.0.0-alpha4 to 2.0.0-alpha5, adding tables for
+			// account data
+			db.execSQL("alter table accountdata_lent add column deadline_ts integer");
 		}
 
 	}

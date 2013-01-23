@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
 import java.net.URI;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -536,12 +537,14 @@ public class OCLC2011 implements OpacApi {
 	}
 
 	@Override
-	public boolean prolong(Account account, String a) throws IOException, NotReachableException {
+	public boolean prolong(Account account, String a) throws IOException,
+			NotReachableException {
 		return false;
 	}
 
 	@Override
-	public boolean cancel(Account account, String a) throws IOException, NotReachableException {
+	public boolean cancel(Account account, String a) throws IOException,
+			NotReachableException {
 		return false;
 	}
 
@@ -589,6 +592,8 @@ public class OCLC2011 implements OpacApi {
 		Document doc = Jsoup.parse(html);
 		Elements copytrs = doc.select(".data tr");
 
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+
 		for (int i = 1; i < copytrs.size(); i++) {
 			Element tr = copytrs.get(i);
 			ContentValues e = new ContentValues();
@@ -605,6 +610,17 @@ public class OCLC2011 implements OpacApi {
 				e.put(AccountData.KEY_LENT_DEADLINE, frist);
 				e.put(AccountData.KEY_LENT_BRANCH,
 						tr.child(2).html().split("<br />")[1].trim());
+
+				if (!frist.equals("")) {
+					try {
+						e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
+								sdf.parse(
+										e.getAsString(AccountData.KEY_LENT_DEADLINE))
+										.getTime());
+					} catch (ParseException e1) {
+						e1.printStackTrace();
+					}
+				}
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -666,10 +682,5 @@ public class OCLC2011 implements OpacApi {
 			throws ClientProtocolException, SocketException, IOException,
 			NotReachableException {
 		return null;
-	}
-
-	@Override
-	public SimpleDateFormat getDateFormat() {
-		return new SimpleDateFormat("dd.MM.yyyy");
 	}
 }

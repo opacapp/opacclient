@@ -228,9 +228,15 @@ public class AccountDataSource {
 		for (ContentValues entry : adata.getLent()) {
 			ContentValues insertmapping = new ContentValues();
 			for (Entry<String, Object> inner : entry.valueSet()) {
-				insertmapping.put(
-						AccountDatabase.COLUMNS_LENT.get(inner.getKey()),
-						(String) inner.getValue());
+
+				if (inner.getValue() instanceof Long)
+					insertmapping.put(
+							AccountDatabase.COLUMNS_LENT.get(inner.getKey()),
+							(Long) inner.getValue());
+				else
+					insertmapping.put(
+							AccountDatabase.COLUMNS_LENT.get(inner.getKey()),
+							(String) inner.getValue());
 			}
 			insertmapping.put("account", account.getId());
 			database.insert(AccountDatabase.TABLENAME_LENT, null, insertmapping);

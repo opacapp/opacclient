@@ -496,9 +496,4 @@ public class Zones22 implements OpacApi {
 			NotReachableException {
 		return null;
 	}
-
-	@Override
-	public SimpleDateFormat getDateFormat() {
-		return new SimpleDateFormat("dd.MM.yyyy");
-	}
 }

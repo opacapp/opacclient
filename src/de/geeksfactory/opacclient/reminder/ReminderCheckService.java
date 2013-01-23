@@ -89,27 +89,25 @@ public class ReminderCheckService extends Service {
 				try {
 					OpacApi api = app.getNewApi(app.getLibrary(account
 							.getLibrary()));
-					SimpleDateFormat sdf = api.getDateFormat();
 					AccountData res = api.account(account);
 
 					data.storeCachedAccountData(account, res);
 
 					for (ContentValues item : res.getLent()) {
-						if (item.containsKey(AccountData.KEY_LENT_DEADLINE)) {
-							Date expiring = sdf
-									.parse(item
-											.getAsString(AccountData.KEY_LENT_DEADLINE));
-							if ((expiring.getTime() - now) < warning) {
+						if (item.containsKey(AccountData.KEY_LENT_DEADLINE_TIMESTAMP)) {
+							long expiring = item
+									.getAsLong(AccountData.KEY_LENT_DEADLINE_TIMESTAMP);
+							if ((expiring - now) < warning) {
 								expired_total++;
-								if (expiring.getTime() >= last) {
+								if (expiring >= last) {
 									expired_new++;
 								}
 							}
-							if (expiring.getTime() > last) {
-								last = expiring.getTime();
+							if (expiring > last) {
+								last = expiring;
 							}
-							if (expiring.getTime() < first || first == 0) {
-								first = expiring.getTime();
+							if (expiring < first || first == 0) {
+								first = expiring;
 							}
 						}
 					}
@@ -121,9 +119,6 @@ public class ReminderCheckService extends Service {
 				} catch (IOException e) {
 					e.printStackTrace();
 				} catch (JSONException e) {
-					ACRA.getErrorReporter().handleException(e);
-					e.printStackTrace();
-				} catch (ParseException e) {
 					ACRA.getErrorReporter().handleException(e);
 					e.printStackTrace();
 				}
