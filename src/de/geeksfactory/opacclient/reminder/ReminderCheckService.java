@@ -77,11 +77,12 @@ public class ReminderCheckService extends Service {
 
 			long now = new Date().getTime();
 			long last = sp.getLong("notification_last", 0);
-			// long warning = Long.decode(sp.getString("notification_warning",
-			// "367200000"));
-			long warning = 1000 * 3600 * 24 * 90;
+			long warning = Long.decode(sp.getString("notification_warning",
+					"367200000"));
+			// long warning = 1000 * 3600 * 24 * 90;
 			long expired_new = 0;
 			long expired_total = 0;
+			long affected_accounts = 0;
 			long first = 0;
 
 			OpacClient app = (OpacClient) getApplication();
@@ -93,6 +94,8 @@ public class ReminderCheckService extends Service {
 
 					data.storeCachedAccountData(account, res);
 
+					int this_account = 0;
+
 					for (ContentValues item : res.getLent()) {
 						if (item.containsKey(AccountData.KEY_LENT_DEADLINE_TIMESTAMP)) {
 							long expiring = item
@@ -102,6 +105,7 @@ public class ReminderCheckService extends Service {
 								if (expiring >= last) {
 									expired_new++;
 								}
+								this_account++;
 							}
 							if (expiring > last) {
 								last = expiring;
@@ -111,6 +115,9 @@ public class ReminderCheckService extends Service {
 							}
 						}
 					}
+
+					if (this_account > 0)
+						affected_accounts++;
 
 				} catch (ClientProtocolException e) {
 					e.printStackTrace();
@@ -124,7 +131,8 @@ public class ReminderCheckService extends Service {
 				}
 			}
 			data.close();
-			return new Long[] { expired_new, expired_total, last, first };
+			return new Long[] { expired_new, expired_total, last, first,
+					affected_accounts };
 		}
 
 		protected void onPostExecute(Long[] result) {
@@ -146,6 +154,7 @@ public class ReminderCheckService extends Service {
 			long expired_total = result[1];
 			long last = result[2];
 			long first = result[3];
+			long affected_accounts = result[4];
 			if (expired_new == 0)
 				return;
 
@@ -172,6 +181,11 @@ public class ReminderCheckService extends Service {
 			Intent notificationIntent = new Intent(ReminderCheckService.this,
 					AccountActivity.class);
 			notificationIntent.putExtra("notif_last", last);
+			if (affected_accounts > 1) {
+				// If there are notifications for more than one account, account
+				// menu should be opened
+				notificationIntent.putExtra("showmenu", true);
+			}
 			PendingIntent contentIntent = PendingIntent.getActivity(
 					ReminderCheckService.this, 0, notificationIntent, 0);
 			nb.setContentIntent(contentIntent);

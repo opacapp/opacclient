@@ -84,6 +84,9 @@ public class AccountActivity extends OpacActivity {
 				NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 				nMgr.cancel(OpacClient.NOTIF_ID);
 			}
+			if (getIntent().getExtras().getBoolean("showmenu", false)) {
+				getSlidingMenu().showMenu(false);
+			}
 		}
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
