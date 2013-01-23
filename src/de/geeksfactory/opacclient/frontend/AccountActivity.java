@@ -24,6 +24,7 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
@@ -69,7 +70,6 @@ public class AccountActivity extends OpacActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
-		setSupportProgressBarIndeterminateVisibility(false);
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(app);
 
@@ -91,11 +91,21 @@ public class AccountActivity extends OpacActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.activity_account, menu);
 		if (refreshing) {
-			menu.findItem(R.id.action_refresh).setVisible(false);
-			setSupportProgressBarIndeterminateVisibility(true);
+			// We want it to look as good as possible everywhere
+			if (Build.VERSION.SDK_INT >= 14) {
+				menu.findItem(R.id.action_refresh).setActionView(
+						R.layout.loading_indicator);
+			} else {
+				menu.findItem(R.id.action_refresh).setVisible(false);
+				setSupportProgressBarIndeterminateVisibility(true);
+			}
 		} else {
-			menu.findItem(R.id.action_refresh).setActionView(null);
-			setSupportProgressBarIndeterminateVisibility(false);
+			if (Build.VERSION.SDK_INT >= 14) {
+				menu.findItem(R.id.action_refresh).setActionView(null);
+			} else {
+				menu.findItem(R.id.action_refresh).setActionView(null);
+				setSupportProgressBarIndeterminateVisibility(false);
+			}
 		}
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -119,6 +129,7 @@ public class AccountActivity extends OpacActivity {
 	@Override
 	public void onStart() {
 		super.onStart();
+		setSupportProgressBarIndeterminateVisibility(false);
 		setContentView(R.layout.loading);
 		((TextView) findViewById(R.id.tvLoading))
 				.setText(R.string.loading_account);
