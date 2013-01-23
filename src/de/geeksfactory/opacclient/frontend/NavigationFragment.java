@@ -6,8 +6,10 @@ import java.util.List;
 import org.json.JSONException;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +22,7 @@ import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.reminder.ReminderCheckService;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 
 public class NavigationFragment extends Fragment {
@@ -98,8 +101,14 @@ public class NavigationFragment extends Fragment {
 	}
 
 	public void reload() {
+		SharedPreferences sp = PreferenceManager
+				.getDefaultSharedPreferences(getActivity());
+		long tolerance = Long.decode(sp.getString("notification_warning",
+				"367200000"));
+
 		Library lib = ((OpacClient) getActivity().getApplication())
 				.getLibrary();
+
 		if (lib != null) {
 			TextView tvBn = (TextView) getView().findViewById(R.id.tvLibrary);
 			if (lib.getTitle() != null && !lib.getTitle().equals("null"))
@@ -164,6 +173,14 @@ public class NavigationFragment extends Fragment {
 					e.printStackTrace();
 				} catch (JSONException e) {
 					e.printStackTrace();
+				}
+				TextView tvNotifications = (TextView) v
+						.findViewById(R.id.tvNotifications);
+				int expiring = aData.getExpiring(account, tolerance);
+				if (expiring > 0) {
+					tvNotifications.setText("" + expiring);
+				} else {
+					tvNotifications.setText("");
 				}
 				v.findViewById(R.id.llAccount).setOnClickListener(
 						new OnClickListener() {

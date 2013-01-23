@@ -451,6 +451,9 @@ public class AccountActivity extends OpacActivity {
 			return;
 		}
 
+		if (mFrag != null)
+			mFrag.reload();
+
 		AccountDataSource adatasource = new AccountDataSource(this);
 		adatasource.open();
 		adatasource.storeCachedAccountData(account, result);

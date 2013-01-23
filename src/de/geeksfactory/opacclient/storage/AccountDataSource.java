@@ -146,6 +146,18 @@ public class AccountDataSource {
 		database.delete("accounts", "id=?", selA);
 	}
 
+	public int getExpiring(Account account, long tolerance) {
+		String[] selA = { "" + account.getId() };
+		Cursor cursor = database.query(AccountDatabase.TABLENAME_LENT,
+				new String[] { "COUNT(*)" }, "account = ? AND deadline_ts - "
+						+ System.currentTimeMillis() + " <= "+tolerance, selA, null,
+				null, null);
+		cursor.moveToFirst();
+		int result = cursor.getInt(0);
+		cursor.close();
+		return result;
+	}
+
 	public AccountData getCachedAccountData(Account account) {
 		AccountData adata = new AccountData();
 
@@ -232,7 +244,7 @@ public class AccountDataSource {
 				if (inner.getValue() instanceof Long)
 					insertmapping.put(
 							AccountDatabase.COLUMNS_LENT.get(inner.getKey()),
-							(Long) inner.getValue());
+							((Long) inner.getValue()).toString());
 				else
 					insertmapping.put(
 							AccountDatabase.COLUMNS_LENT.get(inner.getKey()),

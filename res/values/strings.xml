@@ -103,13 +103,11 @@
         <item>Am selben Tag</item>
         <item>3 Tage vorher</item>
         <item>1 Woche vorher</item>
-        <item>3 Wochen vorher</item>
     </string-array>
     <string-array name="warning_n">
         <item>86400000</item>
         <item>259200000</item>
         <item>604800000</item>
-        <item>1814400000</item>
     </string-array>
 
     <string name="notification_warning">Warnzeitraum</string>
