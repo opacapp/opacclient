@@ -2,7 +2,7 @@
  "api": "oclc2011", 
  "city": "Bremen", 
  "data": {
-  "baseurl": "http://opac.stadtbibliothek-bremen.de/webOPACClient", 
+  "baseurl": "https://opac.stadtbibliothek-bremen.de/webOPACClient", 
   "information": "http://www.stadtbibliothek-bremen.de/Bibliotheken.html"
  }, 
  "support": "Katalogsuche", 
