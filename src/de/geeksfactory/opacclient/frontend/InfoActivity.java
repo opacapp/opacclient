@@ -1,9 +1,11 @@
 package de.geeksfactory.opacclient.frontend;
 
+import org.holoeverywhere.widget.ProgressBar;
 import org.json.JSONException;
 
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.TextView;
 
@@ -52,6 +54,21 @@ public class InfoActivity extends OpacActivity {
 
 		SlidingMenu sm = getSlidingMenu();
 		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+
+		wvInfo = (WebView) findViewById(R.id.wvInfo);
+		wvInfo.getSettings().setSupportZoom(true);
+		wvInfo.setWebChromeClient(new WebChromeClient() {
+			public void onProgressChanged(WebView view, int progress) {
+				ProgressBar Pbar = (ProgressBar) findViewById(R.id.pbWebProgress);
+				if (progress < 100 && Pbar.getVisibility() == ProgressBar.GONE) {
+					Pbar.setVisibility(ProgressBar.VISIBLE);
+				}
+				Pbar.setProgress(progress);
+				if (progress == 100) {
+					Pbar.setVisibility(ProgressBar.GONE);
+				}
+			}
+		});
 	}
 
 	@Override
