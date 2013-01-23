@@ -111,17 +111,18 @@ public class Account {
 	/**
 	 * Set date of last caching
 	 * 
-	 * @return Password
+	 * @return Timestamp in milliseconds
 	 */
 	public long getCached() {
 		return cached;
 	}
 
 	/**
-	 * Get date of last caching
+	 * Set date of last caching
 	 * 
-	 * @param password
-	 *            Password
+	 * @param cached
+	 *            Timestamp in milliseconds (use
+	 *            <code>System.currentTimeMillis</code>)
 	 */
 	public void setCached(long cached) {
 		this.cached = cached;

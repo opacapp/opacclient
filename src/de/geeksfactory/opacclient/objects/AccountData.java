@@ -66,7 +66,7 @@ public class AccountData {
 	 * ContentValues key for {@link #setLent(List)}:
 	 * 
 	 * Identifier (see
-	 * {@link de.geeksfactory.opacclient.apis.OpacApi#prolong(String)}
+	 * {@link de.geeksfactory.opacclient.apis.OpacApi#prolong(Account, String)}
 	 */
 	public static final String KEY_LENT_LINK = "link";
 
@@ -103,7 +103,7 @@ public class AccountData {
 	 * ContentValues key for {@link #setReservations(List)}:
 	 * 
 	 * Identifier (see
-	 * {@link de.geeksfactory.opacclient.apis.OpacApi#cancel(String)}
+	 * {@link de.geeksfactory.opacclient.apis.OpacApi#cancel(Account, String)}
 	 */
 	public static final String KEY_RESERVATION_CANCEL = "cancel";
 

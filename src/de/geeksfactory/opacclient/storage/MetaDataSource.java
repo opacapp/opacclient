@@ -48,7 +48,7 @@ public interface MetaDataSource {
 	 *            a branch.
 	 * @param value
 	 *            The value to be stored, for example the name of a branch
-	 * @return
+	 * @return dataset ID
 	 */
 	public long addMeta(String type, String library, String key, String value);
 
