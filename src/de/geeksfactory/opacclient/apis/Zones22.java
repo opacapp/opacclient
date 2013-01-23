@@ -39,12 +39,14 @@ import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
+/**
+ * API für Web-Opacs von Zones mit dem Hinweis "Zones.2.2.45.04" im Footer.
+ * Einziger bekannter Einsatzort ist Hamburg.
+ * 
+ * TODO: Suche nach Medientypen, alles mit Konten + Vorbestellen
+ * 
+ */
 public class Zones22 implements OpacApi {
-
-	/*
-	 * OpacApi für WebOpacs "Zones.2.2.45.04" z.B. Hamburg - TODO: Suche mit
-	 * Medientypen - Account - Vorbestellen - Zweigstellen
-	 */
 
 	private String opac_url = "";
 	private String results;

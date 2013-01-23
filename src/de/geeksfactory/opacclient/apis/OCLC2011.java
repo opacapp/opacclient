@@ -42,6 +42,17 @@ import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
+/**
+ * Api für Web-Opacs zu SunRise von OCLC. Online nur zu erkennen an
+ * "Copyright 2009/2011 OCLC"
+ * 
+ * TODO: Vorbestellen - Ansicht der Vorbestellungen - Verlängern
+ * 
+ * Einschränkungen: Die Merkliste wird nur in solchen Bibliotheken gut
+ * unterstützt, die die Erweiterung Bibtip einsetzen. In anderen kann nur der
+ * Titel in der Merkliste gespeichert werden.
+ * 
+ */
 public class OCLC2011 implements OpacApi {
 
 	/*

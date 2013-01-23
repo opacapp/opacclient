@@ -39,11 +39,13 @@ import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
+/**
+ * Api für Web-Opacs zu BIBLIOTHECA, ursprünglich von BOND, jetzt von OCLC.
+ * Funktioniert von 2.6-2.8 recht gut.
+ * 
+ * TODO: Suchtipps
+ */
 public class Bond26 implements OpacApi {
-
-	/*
-	 * OpacApi für OCLC WebOpacs V2.6 Meist kompatibel zu V2.7
-	 */
 
 	private String opac_url = "";
 	private String results;
