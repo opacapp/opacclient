@@ -152,16 +152,20 @@ public class AccountDataSource {
 		List<ContentValues> lent = new ArrayList<ContentValues>();
 		String[] selectionArgs = { "" + account.getId() };
 		Cursor cursor = database.query(AccountDatabase.TABLENAME_LENT,
-				(String[]) AccountDatabase.COLUMNS_LENT.values().toArray(),
+				AccountDatabase.COLUMNS_LENT.values().toArray(new String[] {}),
 				"account = ?", selectionArgs, null, null, null);
 		cursor.moveToFirst();
-
-		if (!cursor.isAfterLast()) {
+		while (!cursor.isAfterLast()) {
 			ContentValues entry = new ContentValues();
 			for (Object o : AccountDatabase.COLUMNS_LENT.entrySet()) {
 				Map.Entry<String, String> field = (Map.Entry<String, String>) o;
-				entry.put(field.getKey(), cursor.getString(cursor
-						.getColumnIndex(field.getValue())));
+				String value = cursor.getString(cursor.getColumnIndex(field
+						.getValue()));
+				if (value != null) {
+					if (!value.equals("")) {
+						entry.put(field.getKey(), value);
+					}
+				}
 			}
 			lent.add(entry);
 			cursor.moveToNext();
@@ -172,16 +176,21 @@ public class AccountDataSource {
 		List<ContentValues> res = new ArrayList<ContentValues>();
 		cursor = database.query(AccountDatabase.TABLENAME_RESERVATION,
 				(String[]) AccountDatabase.COLUMNS_RESERVATIONS.values()
-						.toArray(), "account = ?", selectionArgs, null, null,
-				null);
+						.toArray(new String[] {}), "account = ?",
+				selectionArgs, null, null, null);
 		cursor.moveToFirst();
 
-		if (!cursor.isAfterLast()) {
+		while (!cursor.isAfterLast()) {
 			ContentValues entry = new ContentValues();
 			for (Object o : AccountDatabase.COLUMNS_RESERVATIONS.entrySet()) {
 				Map.Entry<String, String> field = (Map.Entry<String, String>) o;
-				entry.put(field.getKey(), cursor.getString(cursor
-						.getColumnIndex(field.getValue())));
+				String value = cursor.getString(cursor.getColumnIndex(field
+						.getValue()));
+				if (value != null) {
+					if (!value.equals("")) {
+						entry.put(field.getKey(), value);
+					}
+				}
 			}
 			res.add(entry);
 			cursor.moveToNext();
@@ -199,8 +208,8 @@ public class AccountDataSource {
 				new String[] { "" + account.getId() });
 		ContentValues update = new ContentValues();
 		update.put("cached", 0);
-		database.update(AccountDatabase.TABLENAME_ACCOUNTS, update,
-				"account = ?", new String[] { "" + account.getId() });
+		database.update(AccountDatabase.TABLENAME_ACCOUNTS, update, "id = ?",
+				new String[] { "" + account.getId() });
 	}
 
 	public long getCachedAccountDataTime(Account account) {
@@ -211,8 +220,8 @@ public class AccountDataSource {
 		long time = System.currentTimeMillis();
 		ContentValues update = new ContentValues();
 		update.put("cached", time);
-		database.update(AccountDatabase.TABLENAME_ACCOUNTS, update,
-				"account = ?", new String[] { "" + account.getId() });
+		database.update(AccountDatabase.TABLENAME_ACCOUNTS, update, "id = ?",
+				new String[] { "" + account.getId() });
 
 		database.delete(AccountDatabase.TABLENAME_LENT, "account = ?",
 				new String[] { "" + account.getId() });
