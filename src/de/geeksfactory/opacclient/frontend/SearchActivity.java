@@ -83,11 +83,20 @@ public class SearchActivity extends OpacActivity {
 		} else if (d.getHost().equals("opacapp.de")) {
 			String[] split = d.getPath().split(":");
 			String bib = split[1];
+
 			if (!app.getLibrary().getIdent().equals(bib)) {
-				Intent i = new Intent(Intent.ACTION_VIEW,
-						Uri.parse("http://opacapp.de/web" + d.getPath()));
-				startActivity(i);
-				return;
+				AccountDataSource adata = new AccountDataSource(this);
+				adata.open();
+				List<Account> accounts = adata.getAllAccounts(bib);
+				adata.close();
+				if (accounts.size() > 0) {
+					app.setAccount(accounts.get(0).getId());
+				} else {
+					Intent i = new Intent(Intent.ACTION_VIEW,
+							Uri.parse("http://opacapp.de/web" + d.getPath()));
+					startActivity(i);
+					return;
+				}
 			}
 			String medianr = split[2];
 			Intent intent = new Intent(SearchActivity.this,
