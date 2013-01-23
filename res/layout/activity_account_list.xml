@@ -12,11 +12,4 @@
         android:layout_weight="1" >
     </ListView>
 
-    <Button
-        android:id="@+id/btAdd"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:text="@string/account_add" />
-
 </LinearLayout>
