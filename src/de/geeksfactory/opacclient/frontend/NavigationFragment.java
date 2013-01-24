@@ -22,7 +22,6 @@ import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
-import de.geeksfactory.opacclient.reminder.ReminderCheckService;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 
 public class NavigationFragment extends Fragment {

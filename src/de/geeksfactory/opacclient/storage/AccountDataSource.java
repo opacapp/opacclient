@@ -1,18 +1,15 @@
 package de.geeksfactory.opacclient.storage;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 
@@ -150,8 +147,8 @@ public class AccountDataSource {
 		String[] selA = { "" + account.getId() };
 		Cursor cursor = database.query(AccountDatabase.TABLENAME_LENT,
 				new String[] { "COUNT(*)" }, "account = ? AND deadline_ts - "
-						+ System.currentTimeMillis() + " <= "+tolerance, selA, null,
-				null, null);
+						+ System.currentTimeMillis() + " <= " + tolerance,
+				selA, null, null, null);
 		cursor.moveToFirst();
 		int result = cursor.getInt(0);
 		cursor.close();

@@ -2,8 +2,6 @@ package de.geeksfactory.opacclient.reminder;
 
 import java.io.IOException;
 import java.net.SocketException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 

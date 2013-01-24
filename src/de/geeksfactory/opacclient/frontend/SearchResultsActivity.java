@@ -3,7 +3,6 @@ package de.geeksfactory.opacclient.frontend;
 import java.util.List;
 
 import org.acra.ACRA;
-import org.holoeverywhere.app.ProgressDialog;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -26,7 +25,6 @@ import de.geeksfactory.opacclient.objects.SearchResult;
 
 public class SearchResultsActivity extends OpacActivity {
 
-	protected ProgressDialog dialog;
 	protected List<SearchResult> items;
 	private int page;
 
@@ -233,11 +231,6 @@ public class SearchResultsActivity extends OpacActivity {
 	@Override
 	protected void onStop() {
 		super.onStop();
-		if (dialog != null) {
-			if (dialog.isShowing()) {
-				dialog.cancel();
-			}
-		}
 
 		try {
 			if (st != null) {

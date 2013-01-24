@@ -4,11 +4,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.geeksfactory.opacclient.objects.AccountData;
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import de.geeksfactory.opacclient.objects.AccountData;
 
 public class AccountDatabase extends SQLiteOpenHelper {
 
