@@ -453,6 +453,7 @@ public class SearchActivity extends OpacActivity {
 			return 0;
 		}
 
+		@Override
 		protected void onPostExecute(Integer result) {
 			dialog.dismiss();
 			onStart();

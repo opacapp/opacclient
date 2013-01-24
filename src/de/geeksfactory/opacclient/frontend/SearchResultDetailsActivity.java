@@ -83,18 +83,21 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		}
 	}
 
+	@Override
 	protected void dialog_no_user() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage(R.string.status_nouser)
 				.setCancelable(false)
 				.setNegativeButton(R.string.dismiss,
 						new DialogInterface.OnClickListener() {
+							@Override
 							public void onClick(DialogInterface dialog, int id) {
 								dialog.cancel();
 							}
 						})
 				.setPositiveButton(R.string.accounts_edit,
 						new DialogInterface.OnClickListener() {
+							@Override
 							public void onClick(DialogInterface dialog, int id) {
 								Intent intent = new Intent(
 										SearchResultDetailsActivity.this,
@@ -144,6 +147,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 					.setView(view)
 					.setNegativeButton(R.string.cancel,
 							new DialogInterface.OnClickListener() {
+								@Override
 								public void onClick(DialogInterface dialog,
 										int id) {
 									adialog.cancel();
@@ -151,6 +155,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 							})
 					.setNeutralButton(R.string.accounts_edit,
 							new DialogInterface.OnClickListener() {
+								@Override
 								public void onClick(DialogInterface dialog,
 										int id) {
 									dialog.dismiss();
@@ -202,6 +207,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				.setView(view)
 				.setNegativeButton(R.string.cancel,
 						new DialogInterface.OnClickListener() {
+							@Override
 							public void onClick(DialogInterface dialog, int id) {
 								adialog.cancel();
 							}
@@ -234,6 +240,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			return 0;
 		}
 
+		@Override
 		protected void onPostExecute(Integer result) {
 		}
 
@@ -275,6 +282,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			return null;
 		}
 
+		@Override
 		@SuppressLint("NewApi")
 		protected void onPostExecute(DetailledItem result) {
 			if (!success || result == null) {
@@ -439,12 +447,14 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		}
 	}
 
+	@Override
 	protected void dialog_wrong_credentials(String s, final boolean finish) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage(getString(R.string.opac_error) + " " + s)
 				.setCancelable(false)
 				.setNegativeButton(R.string.dismiss,
 						new DialogInterface.OnClickListener() {
+							@Override
 							public void onClick(DialogInterface dialog, int id) {
 								dialog.cancel();
 								if (finish)
@@ -453,6 +463,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 						})
 				.setPositiveButton(R.string.prefs,
 						new DialogInterface.OnClickListener() {
+							@Override
 							public void onClick(DialogInterface dialog, int id) {
 								Intent intent = new Intent(
 										SearchResultDetailsActivity.this,
@@ -502,6 +513,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 	public class ResTask extends OpacTask<Integer> {
 		private boolean success;
 
+		@Override
 		protected Integer doInBackground(Object... arg0) {
 			super.doInBackground(arg0);
 
@@ -526,6 +538,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			return STATUS_SUCCESS;
 		}
 
+		@Override
 		protected void onPostExecute(Integer result) {
 			dialog.dismiss();
 
@@ -541,6 +554,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 						.setCancelable(true)
 						.setNegativeButton(R.string.dismiss,
 								new DialogInterface.OnClickListener() {
+									@Override
 									public void onClick(DialogInterface dialog,
 											int id) {
 										dialog.cancel();

@@ -19,14 +19,17 @@ public class SQLMetaDataSource implements MetaDataSource {
 		dbHelper = new MetaDatabase(context);
 	}
 
+	@Override
 	public void open() throws SQLException {
 		database = dbHelper.getWritableDatabase();
 	}
 
+	@Override
 	public void close() {
 		dbHelper.close();
 	}
 
+	@Override
 	public long addMeta(String type, String bib, String key, String value) {
 		ContentValues values = new ContentValues();
 		values.put("type", type);
@@ -36,6 +39,7 @@ public class SQLMetaDataSource implements MetaDataSource {
 		return database.insert("meta", null, values);
 	}
 
+	@Override
 	public List<ContentValues> getMeta(String bib, String type) {
 		List<ContentValues> meta = new ArrayList<ContentValues>();
 		String[] selA = { bib, type };
@@ -53,6 +57,7 @@ public class SQLMetaDataSource implements MetaDataSource {
 		return meta;
 	}
 
+	@Override
 	public boolean hasMeta(String bib) {
 		String[] selA = { bib };
 		Cursor cursor = database.query("meta", allColumns, "bib = ?", selA,
@@ -72,11 +77,13 @@ public class SQLMetaDataSource implements MetaDataSource {
 		return meta;
 	}
 
+	@Override
 	public void clearMeta(String bib) {
 		String[] selA = { bib };
 		database.delete("meta", "bib=?", selA);
 	}
 
+	@Override
 	public void clearMeta() {
 		database.delete("meta", null, null);
 	}

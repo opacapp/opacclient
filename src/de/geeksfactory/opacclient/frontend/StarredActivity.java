@@ -20,6 +20,7 @@ public class StarredActivity extends OpacActivity {
 
 	List<Starred> items;
 
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	}
@@ -43,6 +44,7 @@ public class StarredActivity extends OpacActivity {
 			setContentView(R.layout.starred_empty);
 		} else {
 			lv.setOnItemClickListener(new OnItemClickListener() {
+				@Override
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
 					if (items.get(position).getMNr() == null

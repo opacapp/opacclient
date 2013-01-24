@@ -253,12 +253,14 @@ public class AccountActivity extends OpacActivity {
 				.setCancelable(true)
 				.setNegativeButton(R.string.no,
 						new DialogInterface.OnClickListener() {
+							@Override
 							public void onClick(DialogInterface d, int id) {
 								d.cancel();
 							}
 						})
 				.setPositiveButton(R.string.yes,
 						new DialogInterface.OnClickListener() {
+							@Override
 							public void onClick(DialogInterface d, int id) {
 								d.dismiss();
 								dialog = ProgressDialog.show(
@@ -270,6 +272,7 @@ public class AccountActivity extends OpacActivity {
 							}
 						})
 				.setOnCancelListener(new DialogInterface.OnCancelListener() {
+					@Override
 					public void onCancel(DialogInterface d) {
 						if (d != null)
 							d.cancel();
@@ -350,6 +353,7 @@ public class AccountActivity extends OpacActivity {
 			return 0;
 		}
 
+		@Override
 		protected void onPostExecute(Integer result) {
 			dialog.dismiss();
 			Button btSend = (Button) findViewById(R.id.btSend);
@@ -385,6 +389,7 @@ public class AccountActivity extends OpacActivity {
 					.setCancelable(false)
 					.setNegativeButton(R.string.dismiss,
 							new DialogInterface.OnClickListener() {
+								@Override
 								public void onClick(DialogInterface dialog,
 										int id) {
 									dialog.cancel();
@@ -418,6 +423,7 @@ public class AccountActivity extends OpacActivity {
 			return null;
 		}
 
+		@Override
 		protected void onPostExecute(AccountData result) {
 			if (success) {
 				loaded(result);
@@ -671,6 +677,7 @@ public class AccountActivity extends OpacActivity {
 			return STATUS_SUCCESS;
 		}
 
+		@Override
 		protected void onPostExecute(Integer result) {
 			dialog.dismiss();
 
@@ -683,6 +690,7 @@ public class AccountActivity extends OpacActivity {
 						.setCancelable(true)
 						.setNegativeButton(R.string.dismiss,
 								new DialogInterface.OnClickListener() {
+									@Override
 									public void onClick(DialogInterface dialog,
 											int id) {
 										dialog.cancel();
@@ -720,6 +728,7 @@ public class AccountActivity extends OpacActivity {
 			return STATUS_SUCCESS;
 		}
 
+		@Override
 		protected void onPostExecute(Integer result) {
 			dialog.dismiss();
 
@@ -732,6 +741,7 @@ public class AccountActivity extends OpacActivity {
 						.setCancelable(true)
 						.setNegativeButton(R.string.dismiss,
 								new DialogInterface.OnClickListener() {
+									@Override
 									public void onClick(DialogInterface dialog,
 											int id) {
 										dialog.cancel();

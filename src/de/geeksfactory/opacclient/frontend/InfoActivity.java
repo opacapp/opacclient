@@ -58,14 +58,15 @@ public class InfoActivity extends OpacActivity {
 		wvInfo = (WebView) findViewById(R.id.wvInfo);
 		wvInfo.getSettings().setSupportZoom(true);
 		wvInfo.setWebChromeClient(new WebChromeClient() {
+			@Override
 			public void onProgressChanged(WebView view, int progress) {
 				ProgressBar Pbar = (ProgressBar) findViewById(R.id.pbWebProgress);
-				if (progress < 100 && Pbar.getVisibility() == ProgressBar.GONE) {
-					Pbar.setVisibility(ProgressBar.VISIBLE);
+				if (progress < 100 && Pbar.getVisibility() == View.GONE) {
+					Pbar.setVisibility(View.VISIBLE);
 				}
 				Pbar.setProgress(progress);
 				if (progress == 100) {
-					Pbar.setVisibility(ProgressBar.GONE);
+					Pbar.setVisibility(View.GONE);
 				}
 			}
 		});

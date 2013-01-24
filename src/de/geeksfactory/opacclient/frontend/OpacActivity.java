@@ -230,12 +230,14 @@ public abstract class OpacActivity extends SlidingFragmentActivity {
 				.setView(view)
 				.setNegativeButton(R.string.cancel,
 						new DialogInterface.OnClickListener() {
+							@Override
 							public void onClick(DialogInterface dialog, int id) {
 								adialog.cancel();
 							}
 						})
 				.setNeutralButton(R.string.accounts_edit,
 						new DialogInterface.OnClickListener() {
+							@Override
 							public void onClick(DialogInterface dialog, int id) {
 								dialog.dismiss();
 								Intent intent = new Intent(OpacActivity.this,

@@ -13,6 +13,7 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
 import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 
 public class MainPreferenceActivity extends OpacPreferenceActivity {
+	@Override
 	@SuppressWarnings("deprecation")
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -21,7 +22,7 @@ public class MainPreferenceActivity extends OpacPreferenceActivity {
 
 		addPreferencesFromResource(R.xml.settings);
 
-		Preference assistant = (Preference) findPreference("accounts");
+		Preference assistant = findPreference("accounts");
 		assistant.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference arg0) {
@@ -32,7 +33,7 @@ public class MainPreferenceActivity extends OpacPreferenceActivity {
 			}
 		});
 
-		Preference meta = (Preference) findPreference("meta_clear");
+		Preference meta = findPreference("meta_clear");
 		meta.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference arg0) {

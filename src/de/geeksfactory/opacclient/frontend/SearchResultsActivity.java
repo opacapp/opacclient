@@ -123,6 +123,7 @@ public class SearchResultsActivity extends OpacActivity {
 			return null;
 		}
 
+		@Override
 		protected void onPostExecute(List<SearchResult> result) {
 			if (success) {
 				if (result == null) {
@@ -167,6 +168,7 @@ public class SearchResultsActivity extends OpacActivity {
 
 		ListView lv = (ListView) findViewById(R.id.lvResults);
 		lv.setOnItemClickListener(new OnItemClickListener() {
+			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				Intent intent = new Intent(SearchResultsActivity.this,
@@ -211,6 +213,7 @@ public class SearchResultsActivity extends OpacActivity {
 			return null;
 		}
 
+		@Override
 		protected void onPostExecute(List<SearchResult> result) {
 			if (success) {
 				items = result;

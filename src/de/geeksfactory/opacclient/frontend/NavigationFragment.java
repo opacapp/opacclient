@@ -26,6 +26,7 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 
 public class NavigationFragment extends Fragment {
 
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.sliding_navigation, null);
@@ -93,6 +94,7 @@ public class NavigationFragment extends Fragment {
 		return v;
 	}
 
+	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 

@@ -6,6 +6,7 @@ public abstract class OpacTask<Result> extends
 		AsyncTask<Object, Object, Result> {
 	protected OpacClient a;
 
+	@Override
 	protected Result doInBackground(Object... arg0) {
 		@SuppressWarnings("unused")
 		OpacClient a = (OpacClient) arg0[0];

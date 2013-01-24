@@ -49,6 +49,7 @@ public class WelcomeActivity extends SherlockActivity {
 		}
 
 		lv.setOnItemClickListener(new OnItemClickListener() {
+			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				AccountDataSource data = new AccountDataSource(
@@ -88,6 +89,7 @@ public class WelcomeActivity extends SherlockActivity {
 			return 0;
 		}
 
+		@Override
 		protected void onPostExecute(Integer result) {
 			dialog.dismiss();
 			Intent intent = new Intent(WelcomeActivity.this,

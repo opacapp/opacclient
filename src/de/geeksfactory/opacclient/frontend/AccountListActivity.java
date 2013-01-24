@@ -83,6 +83,7 @@ public class AccountListActivity extends SherlockActivity {
 
 		builder.setView(view).setNegativeButton(R.string.cancel,
 				new DialogInterface.OnClickListener() {
+					@Override
 					public void onClick(DialogInterface dialog, int id) {
 						dialog.cancel();
 					}

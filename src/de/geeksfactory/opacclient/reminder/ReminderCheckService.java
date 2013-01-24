@@ -133,6 +133,7 @@ public class ReminderCheckService extends Service {
 					affected_accounts };
 		}
 
+		@Override
 		protected void onPostExecute(Long[] result) {
 			Intent i = new Intent(ReminderCheckService.this,
 					ReminderAlarmReceiver.class);
