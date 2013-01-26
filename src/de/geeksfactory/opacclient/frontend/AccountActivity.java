@@ -144,7 +144,8 @@ public class AccountActivity extends OpacActivity {
 	@Override
 	public void onStart() {
 		super.onStart();
-		setSupportProgressBarIndeterminateVisibility(false);
+		refreshing = false;
+		invalidateOptionsMenu();
 		setContentView(R.layout.loading);
 		((TextView) findViewById(R.id.tvLoading))
 				.setText(R.string.loading_account);
@@ -444,10 +445,11 @@ public class AccountActivity extends OpacActivity {
 	}
 
 	public void loaded(final AccountData result) {
-		refreshing = false;
-		invalidateOptionsMenu();
 
 		if (result == null) {
+			refreshing = false;
+			invalidateOptionsMenu();
+
 			if (app.getApi().getLast_error() == null
 					|| app.getApi().getLast_error().equals("")) {
 				setContentView(R.layout.connectivity_error);
@@ -468,12 +470,21 @@ public class AccountActivity extends OpacActivity {
 
 		AccountDataSource adatasource = new AccountDataSource(this);
 		adatasource.open();
-		adatasource.storeCachedAccountData(account, result);
+		adatasource.storeCachedAccountData(
+				adatasource.getAccount(result.getAccount()), result);
 		adatasource.close();
 
-		refreshtime = System.currentTimeMillis();
+		if (result.getAccount() == account.getId()) {
+			// The account this data is for is still visible
 
-		displaydata(result);
+			refreshing = false;
+			invalidateOptionsMenu();
+
+			refreshtime = System.currentTimeMillis();
+
+			displaydata(result);
+		}
+
 	}
 
 	public void displaydata(AccountData result) {
