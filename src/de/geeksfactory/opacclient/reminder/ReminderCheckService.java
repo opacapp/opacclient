@@ -29,6 +29,7 @@ import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.frontend.AccountActivity;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 
 public class ReminderCheckService extends Service {
@@ -86,8 +87,12 @@ public class ReminderCheckService extends Service {
 			OpacClient app = (OpacClient) getApplication();
 			for (Account account : accounts) {
 				try {
-					OpacApi api = app.getNewApi(app.getLibrary(account
-							.getLibrary()));
+					Library library = app.getLibrary(account.getLibrary());
+					OpacApi api = app.getNewApi(library);
+
+					if (!api.isAccountSupported(library))
+						continue;
+
 					AccountData res = api.account(account);
 
 					data.storeCachedAccountData(account, res);
