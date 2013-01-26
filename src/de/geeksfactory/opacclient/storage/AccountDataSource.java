@@ -156,7 +156,7 @@ public class AccountDataSource {
 	}
 
 	public AccountData getCachedAccountData(Account account) {
-		AccountData adata = new AccountData();
+		AccountData adata = new AccountData(account.getId());
 
 		List<ContentValues> lent = new ArrayList<ContentValues>();
 		String[] selectionArgs = { "" + account.getId() };

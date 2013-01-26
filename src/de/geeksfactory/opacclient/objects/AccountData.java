@@ -12,6 +12,7 @@ import android.content.ContentValues;
 public class AccountData {
 	private List<ContentValues> lent;
 	private List<ContentValues> reservations;
+	private long account;
 
 	/**
 	 * ContentValues key for {@link #setLent(List)}:
@@ -165,4 +166,38 @@ public class AccountData {
 	public void setReservations(List<ContentValues> reservations) {
 		this.reservations = reservations;
 	}
+
+	/**
+	 * Get account ID associated with this dataset.
+	 * 
+	 * @return An ID
+	 * @since 2.0.0
+	 */
+	public long getAccount() {
+		return account;
+	}
+
+	/**
+	 * Set account ID associated with this dataset.
+	 * 
+	 * @param account
+	 *            An ID
+	 * @since 2.0.0
+	 */
+	public void setAccount(long account) {
+		this.account = account;
+	}
+
+	/**
+	 * Create a new AccountData object
+	 * 
+	 * @param account
+	 *            Account ID associated with this dataset.
+	 * @since 2.0.0
+	 */
+	public AccountData(long account) {
+		super();
+		this.account = account;
+	}
+
 }

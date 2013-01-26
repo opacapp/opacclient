@@ -661,7 +661,7 @@ public class OCLC2011 implements OpacApi {
 
 		parse_medialist(medien, html2);
 
-		AccountData res = new AccountData();
+		AccountData res = new AccountData(acc.getId());
 		res.setLent(medien);
 		res.setReservations(new ArrayList<ContentValues>());
 		return res;

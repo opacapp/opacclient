@@ -664,7 +664,7 @@ public class Bond26 implements OpacApi {
 			reservations.add(e);
 		}
 
-		AccountData res = new AccountData();
+		AccountData res = new AccountData(acc.getId());
 		res.setLent(medien);
 		res.setReservations(reservations);
 		return res;
