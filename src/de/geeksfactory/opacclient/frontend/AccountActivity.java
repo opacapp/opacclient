@@ -428,6 +428,9 @@ public class AccountActivity extends OpacActivity {
 			if (success) {
 				loaded(result);
 			} else {
+				refreshing = false;
+				invalidateOptionsMenu();
+
 				setContentView(R.layout.connectivity_error);
 				((Button) findViewById(R.id.btRetry))
 						.setOnClickListener(new OnClickListener() {
