@@ -17,7 +17,8 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="" />
+            android:text=""
+            android:textIsSelectable="true" />
 
         <TextView
             android:id="@+id/tvStatus"
@@ -25,7 +26,8 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="" />
+            android:text=""
+            android:textIsSelectable="true" />
     </LinearLayout>
 
     <LinearLayout
@@ -40,7 +42,8 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="" />
+            android:text=""
+            android:textIsSelectable="true" />
 
         <TextView
             android:id="@+id/tvZst"
@@ -48,7 +51,8 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="" />
+            android:text=""
+            android:textIsSelectable="true" />
     </LinearLayout>
 
     <ImageView
