@@ -8,10 +8,17 @@ package de.geeksfactory.opacclient.objects;
 public class Account {
 	private long id;
 	private String library;
+
 	private String label;
 	private String name;
 	private String password;
 	private long cached;
+
+	@Override
+	public String toString() {
+		return "Account [id=" + id + ", library=" + library + ", label="
+				+ label + ", name=" + name + ", cached=" + cached + "]";
+	}
 
 	/**
 	 * Get ID this account is stored with in <code>AccountDataStore</code>
