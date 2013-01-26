@@ -386,7 +386,7 @@ public class AccountActivity extends OpacActivity {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage(
 					"Der Web-Opac meldet: " + app.getApi().getLast_error())
-					.setCancelable(false)
+					.setCancelable(true)
 					.setNegativeButton(R.string.dismiss,
 							new DialogInterface.OnClickListener() {
 								@Override
