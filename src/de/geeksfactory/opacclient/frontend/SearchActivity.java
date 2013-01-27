@@ -1,8 +1,10 @@
 package de.geeksfactory.opacclient.frontend;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.acra.ACRA;
@@ -271,9 +273,22 @@ public class SearchActivity extends OpacActivity {
 		if (app.getLibrary() == null) {
 			// Migrate
 			if (!sp.getString("opac_bib", "").equals("")) {
+				Map<String, String> renamed_libs = new HashMap<String, String>();
+				renamed_libs.put("Trier (Palais Walderdorff)", "Trier");
+				renamed_libs.put("Ludwigshafen (Rhein)", "Ludwigshafen Rhein");
+				renamed_libs.put("Neu-Ulm", "NeuUlm");
+				renamed_libs.put("Hann. Münden", "HannMünden");
+				renamed_libs.put("Münster", "Munster");
+				renamed_libs.put("Tübingen", "Tubingen");
+				renamed_libs.put("Göttingen", "Gottingen");
+				renamed_libs.put("Schwäbisch Hall", "Schwabisch Hall");
 				Library lib = null;
 				try {
-					lib = app.getLibrary(sp.getString("opac_bib", ""));
+					if (renamed_libs.containsKey(sp.getString("opac_bib", "")))
+						lib = app.getLibrary(renamed_libs.get(sp.getString(
+								"opac_bib", "")));
+					else
+						lib = app.getLibrary(sp.getString("opac_bib", ""));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
