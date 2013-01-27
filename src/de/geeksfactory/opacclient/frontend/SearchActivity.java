@@ -1,5 +1,7 @@
 package de.geeksfactory.opacclient.frontend;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -85,7 +87,12 @@ public class SearchActivity extends OpacActivity {
 			finish();
 		} else if (d.getHost().equals("opacapp.de")) {
 			String[] split = d.getPath().split(":");
-			String bib = split[1];
+			String bib;
+			try {
+				bib = URLDecoder.decode(split[1], "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				bib = URLDecoder.decode(split[1]);
+			}
 
 			if (!app.getLibrary().getIdent().equals(bib)) {
 				AccountDataSource adata = new AccountDataSource(this);
