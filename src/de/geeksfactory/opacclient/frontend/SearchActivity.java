@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
@@ -356,6 +357,25 @@ public class SearchActivity extends OpacActivity {
 				return;
 			}
 		}
+
+		if (!sp.getBoolean("version2.0.0-introduced", false)) {
+			final Handler handler = new Handler();
+			// Just show the menu to explain that is there if people start
+			// version 2 for the first time.
+			// We need a handler because if we just put this in onCreate nothing
+			// happens. I don't have any idea, why.
+			handler.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					SharedPreferences sp = PreferenceManager
+							.getDefaultSharedPreferences(SearchActivity.this);
+					getSlidingMenu().showMenu(true);
+					sp.edit().putBoolean("version2.0.0-introduced", true)
+							.commit();
+				}
+			}, 500);
+		}
+
 	}
 
 	public void go() {
