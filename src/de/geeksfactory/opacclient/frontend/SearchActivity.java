@@ -109,10 +109,25 @@ public class SearchActivity extends OpacActivity {
 				}
 			}
 			String medianr = split[2];
-			Intent intent = new Intent(SearchActivity.this,
-					SearchResultDetailsActivity.class);
-			intent.putExtra("item_id", medianr);
-			startActivity(intent);
+			if (medianr.length() > 1) {
+				Intent intent = new Intent(SearchActivity.this,
+						SearchResultDetailsActivity.class);
+				intent.putExtra("item_id", medianr);
+				startActivity(intent);
+			} else {
+				String title;
+				try {
+					title = URLDecoder.decode(split[3], "UTF-8");
+				} catch (UnsupportedEncodingException e) {
+					title = URLDecoder.decode(split[3]);
+				}
+				Bundle query = new Bundle();
+				query.putString(OpacApi.KEY_SEARCH_QUERY_TITLE, title);
+				Intent intent = new Intent(SearchActivity.this,
+						SearchResultsActivity.class);
+				intent.putExtra("query", query);
+				startActivity(intent);
+			}
 			finish();
 			return;
 		}
