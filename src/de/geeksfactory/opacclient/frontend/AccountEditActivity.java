@@ -1,10 +1,12 @@
 package de.geeksfactory.opacclient.frontend;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.acra.ACRA;
 import org.json.JSONException;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.widget.EditText;
@@ -82,6 +84,19 @@ public class AccountEditActivity extends SherlockActivity {
 		AccountDataSource data = new AccountDataSource(this);
 		data.open();
 		data.remove(account);
+
+		// Check whether he deleted account was selected
+		if (((OpacClient) getApplication()).getAccount().getId() == account
+				.getId()) {
+			List<Account> available_accounts = data.getAllAccounts();
+			if (available_accounts.size() == 0) {
+				Intent intent = new Intent(this, WelcomeActivity.class);
+				startActivity(intent);
+			} else {
+				((OpacClient) getApplication()).setAccount(available_accounts
+						.get(0).getId());
+			}
+		}
 		data.close();
 	}
 
