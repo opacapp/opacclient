@@ -48,8 +48,6 @@ public class SearchActivity extends OpacActivity {
 	private List<ContentValues> cbMg_data;
 	private List<ContentValues> cbZst_data;
 
-	private ProgressDialog dialog;
-
 	public void urlintent() {
 		Uri d = getIntent().getData();
 
@@ -331,11 +329,6 @@ public class SearchActivity extends OpacActivity {
 					sp.edit()
 							.putLong(OpacClient.PREF_SELECTED_ACCOUNT,
 									insertedid).commit();
-
-					dialog = ProgressDialog.show(this, "",
-							getString(R.string.connecting_initially), true);
-					dialog.show();
-
 					new InitTask().execute(app);
 
 					Toast.makeText(
@@ -512,7 +505,6 @@ public class SearchActivity extends OpacActivity {
 
 		@Override
 		protected void onPostExecute(Integer result) {
-			dialog.dismiss();
 			onStart();
 		}
 	}
