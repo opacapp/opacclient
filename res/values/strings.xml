@@ -5,14 +5,10 @@
     <string name="app_name">Web Opac</string>
     <string name="launcher_name">Stadtbibliothek</string>
     <string name="web_opac">Web-Opac</string>
-    <string name="opac_url">Web-OPAC-Adresse</string>
-    <string name="opac_url_example">Nur für erfahrenere Benutzer empfohlen</string>
-    <string name="opac_url_desc">Die Adresse des BOND Web-Opac 2.6/2.7 ohne ein eventuelles Endstück wie "/index.asp…", z.B. http://katalog.mannheim.de/wopac</string>
     <string name="opac_usernr">Ausweisnummer</string>
     <string name="opac_usernr_desc">Gib eine Ausweisnummer an, um auf dein Konto zugreifen zu können</string>
     <string name="opac_password">Passwort</string>
     <string name="opac_password_hint">Unbekannt? Vielleicht dein Geburtsdatum (TT.MM.JJJJ)</string>
-    <string name="opac_mannheim">http://katalog.mannheim.de/wopac</string>
     <string name="search">Katalogsuche</string>
     <string name="titel">Titel</string>
     <string name="titel_hint">Stichwort</string>
@@ -53,7 +49,7 @@
     <string name="reserve">Vorbestellen</string>
     <string name="res_zst">Zweigstelle auswählen</string>
     <string name="doing_res">Führe Vorbestellung durch…</string>
-    <string name="status_nouser">Du hast in den Einstellungen keine Ausweisdaten hinterlegt. Wähle rechts oben ein anderes Konto oder bearbeite deine Konten:</string>
+    <string name="status_nouser">In den Einstellungen sind zu diesem Konto keine Ausweisdaten hinterlegt.</string>
     <string name="dismiss">Schließen</string>
     <string name="loading_account">Lade Konto…</string>
     <string name="entl">Entliehen</string>
@@ -70,10 +66,9 @@
     <string name="cont">Weiter</string>
     <string name="delete">Löschen</string>
     <string name="accept">OK</string>
-    <string name="doing_cancel">Lösche Vorbestellung…</string>
-    <string name="doing_prolong">Verlängere…</string>
-    <string name="opac_error">Der Web-Opac meldet:</string>
-    <string name="io_error">Fehler bei der Kommunikation mit dem Web-Opac. Entweder dein Internet funktioniert nicht, oder es gibt ein Problem mit dem Opac oder der App. Tut uns leid.</string>
+    <string name="doing_cancel">Vorbestellung wird gelöscht…</string>
+    <string name="doing_prolong">Verlängerung wird durchgeführt…</string>
+    <string name="opac_error">Meldung vom Web-Opac:</string>
     <string name="welcome">Herzlich Willkommen</string>
     <string name="welcome_select">zum Web-Opac-Client für Android. Bitte wähle aus, mit welcher Bibliothek du dich verbinden willst.</string>
     <string name="welcome_account">Um Vorbestellen oder dein Konto einsehen zu können, musst du in den Einstellungen diesem anonymen Konto noch deine Ausweisnummer und dein Passwort hinzufügen!</string>
@@ -84,19 +79,14 @@
         <item>Mediengruppe</item>
     </string-array>
 
-    <string name="error_occured">Ein Fehler ist aufgetreten!</string>
     <string name="restart">Anwendung neustarten</string>
     <string name="report">Bericht senden</string>
     <string name="report_sending">Sende Bericht…</string>
     <string name="report_sent">Bericht gesendet. Vielen Dank!</string>
-    <string name="report_error">Bericht konnte nicht gesendet werden!</string>
-    <string name="no_response">Die Bücherei konnte nicht erreicht werden. Entweder mit deinem Internet stimmt etwas nicht, oder bei der Bücherei ist was kaputt.</string>
-    <string name="no_connection">Ohne Verbindung zum Internet ist das hier alles sinnlos. (Oder du hast eine falsche Web-Opac-Adresse konfiguriert.)</string>
-    <string name="not_reachable">Der Server der Bücherei meldet einen Fehler. Da sind wir leider machtlos.</string>
-    <string name="ioerror">Die Kommunikation mit dem Web-Opac ist fehlgeschlagen oder etwas anderes ist schiefgelaufen. Wenn du einen Bericht absendest (völlig anonym!), kümmeren wir uns darum. Prüfe auch, ob es Updates für die App im Play Store gibt!!</string>
+    <string name="report_error">Bericht konnte nicht gesendet werden.</string>
     <string name="notifications">Benachrichtigungen</string>
     <string name="notification_service">Ablaufende Medien</string>
-    <string name="notification_service_desc">Benachrichtige, wenn ein Medium abgegeben werden muss</string>
+    <string name="notification_service_desc">Benachrichtigung, wenn ein Medium abgegeben werden muss</string>
     <string name="notification_sound">Benachrichtigungs-Ton</string>
 
     <string-array name="warning">
@@ -115,27 +105,26 @@
     <string name="notif_ticker">%s Bücher müssen abgegeben oder verlängert werden!</string>
     <string name="notif_title">Bücher laufen ab</string>
     <string name="welcome_assistant">Bibliotheks-Auswahl</string>
-    <string name="welcome_assistant_desc">Hilft dabei, eine OPAC-Adresse einer der App bekannten Bibliothek zu konfigurieren</string>
     <string name="headline">Web Opac</string>
     <string name="baende">BÄNDE</string>
     <string name="baende_volumesearch">Einzelbände zeigen</string>
     <string name="star">Merken</string>
-    <string name="starred">Das Medium ist jetzt auf der Merkliste</string>
-    <string name="star_noid">Funktion leider hier nicht verfügbar.</string>
+    <string name="starred">Das Medium ist jetzt auf deiner Merkliste</string>
+    <string name="star_noid">Funktion leider in dieser Bibliothek nicht verfügbar</string>
     <string name="star_wait">Bitte warten, bis die Details geladen wurden!</string>
     <string name="starred_list">Merkliste</string>
-    <string name="starred_welcome">Dies ist deine Merkliste. Du kannst in der Detailansicht von jedem Medium den Stern für „Merken“ auswählen, dann erscheint das Medium hier auf der Liste. Achtung: Die Liste wird für jede Bibliothek, die du benutzt, seperat geführt.</string>
+    <string name="starred_welcome">Dies ist deine Merkliste. Du kannst in der Detailansicht von jedem Medium den Stern für „Merken“ auswählen, dann erscheint das Medium hier auf der Liste. Die Liste wird für jede Bibliothek, die du benutzt, seperat geführt.</string>
     <string name="share">Teilen</string>
-    <string name="share_wait">Bitte warten, bis die Details geladen wurden!</string>
+    <string name="share_wait">Bitte warten, bis die Details geladen wurden</string>
     <string name="unsupported">Funktion nicht unterstützt</string>
-    <string name="account_unsupported_api">Diese Funktion wird in deiner Stadt noch nicht unterstützt! Wir würden das gerne ändern, brauchen dazu aber Hilfe von Lesern dieser Bibliothek. Wenn du motiviert bist, uns zu helfen, melde dich doch unter raphael@geeksfactory.de</string>
-    <string name="account_unsupported">Diese Funktion wird in deiner Stadt noch nicht unterstützt! Wir würden das auch gern ändern, aber dazu brauchen wir deine Hilfe: Wenn du auf „Bericht senden“ klickst, können wir versuchen, das im nächsten Update zu ändern. Wir kennen dann eventuell deine Ausweisnummer und was du für Bücher ausgeliehen hast (nicht dein Passwort, nicht deinen Namen und auch sonst nichts zu deiner Person!) aber wir gehen mit den Daten verantwortungsbewusst um und löschen sie, sobald wir sie ausgewertet haben.</string>
+    <string name="account_unsupported_api">Diese Funktion wird in deiner Bibliothek noch nicht unterstützt. Um das zu ändern brauchen wir Hilfe von Lesern dieser Bibliothek. Wenn du helfen möchtest, melde dich unter raphael@geeksfactory.de</string>
+    <string name="account_unsupported">Diese Funktion wird in deiner Bibliothek noch nicht unterstützt. Um das zu ändern brauchen wir Hilfe von Lesern dieser Bibliothek: Wenn du auf „Bericht senden“ klickst, können wir versuchen, das im nächsten Update zu ändern. Wir kennen dann eventuell deine Ausweisnummer und was du für Bücher ausgeliehen hast (nicht dein Passwort, nicht deinen Namen und auch sonst nichts zu deiner Person!) aber wir gehen mit den Daten verantwortungsbewusst um und löschen sie, sobald wir sie ausgewertet haben.</string>
     <string name="info">Infos</string>
     <string name="write_mail">E-Mail schreiben</string>
-    <string name="info_error">Die Infos der Bücherei konnten nicht abgerufen werden.</string>
+    <string name="info_error">Die zusätzlichen Informationen der Bibliothek konnten nicht abgerufen werden.</string>
     <string name="info_unsupported">Deine Bücherei stellt keine zusätzlichen Informationen bereit, die wir dir anzeigen könnten.</string>
     <string name="connection_error">Fehler</string>
-    <string name="connection_error_detail">Der Aufbau einer Verbindung zum Bibliotheksserver oder das Auswerten der Antwort ist fehlgeschlagen. Das kann heißen, dass die Internetverbindung gerade nicht tut, dass die Bibliothek gerade nicht erreichbar ist oder einfach, dass sie etwas gesendet hat, womit diese App nicht klarkommt, z.B. eine seltene Fehlermeldung.</string>
+    <string name="connection_error_detail">Der Aufbau einer Verbindung zum Bibliotheksserver ist fehlgeschlagen. Prüfe, ob eine Verbindung zum Internet verfügbar ist. Möglicherweise hat auch der Bibliotheksserver ein Problem oder die App konnte seine Antwort nicht auswerten.</string>
     <string name="retry">Erneut versuchen</string>
     <string name="default_account_name">Unbenanntes Konto</string>
     <string name="connecting_initially">Baue erstmalige Verbindung mit Bibliotheksserver auf…</string>
@@ -148,7 +137,7 @@
     <string name="accounts_edit">Konten bearbeiten</string>
     <string name="accounts_desc">Genutzte Bibliotheken und Mitgliedsnummern verwalten</string>
     <string name="account_label">Bezeichnung</string>
-    <string name="account_nr">Mitgliedsnummer/-name (optional)</string>
+    <string name="account_nr">Ausweisnummer/-name (optional)</string>
     <string name="account_password">Passwort (optional)</string>
     <string name="account_city">Bibliothek</string>
     <string name="title_activity_account_edit">Konto bearbeiten</string>
