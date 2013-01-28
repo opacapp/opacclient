@@ -242,7 +242,8 @@ public class AccountActivity extends OpacActivity {
 	}
 
 	protected void cancel(final String a) {
-		if (refreshing) {
+		long age = System.currentTimeMillis() - refreshtime;
+		if (refreshing || age > MAX_CACHE_AGE) {
 			Toast.makeText(this, R.string.account_no_concurrent,
 					Toast.LENGTH_LONG).show();
 			return;
@@ -288,7 +289,8 @@ public class AccountActivity extends OpacActivity {
 	}
 
 	protected void prolong(final String a) {
-		if (refreshing) {
+		long age = System.currentTimeMillis() - refreshtime;
+		if (refreshing || age > MAX_CACHE_AGE) {
 			Toast.makeText(this, R.string.account_no_concurrent,
 					Toast.LENGTH_LONG).show();
 			return;
