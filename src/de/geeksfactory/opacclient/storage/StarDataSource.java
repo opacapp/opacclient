@@ -2,6 +2,8 @@ package de.geeksfactory.opacclient.storage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -118,6 +120,15 @@ public class StarDataSource {
 	public void remove(Starred item) {
 		String[] selA = { "" + item.getId() };
 		database.delete("starred", "id=?", selA);
+	}
+
+	public void renameLibraries(Map<String, String> map) {
+		for (Entry<String, String> entry : map.entrySet()) {
+			ContentValues cv = new ContentValues();
+			cv.put("bib", entry.getValue());
+			database.update("starred", cv, "bib = ?",
+					new String[] { entry.getKey() });
+		}
 	}
 
 }

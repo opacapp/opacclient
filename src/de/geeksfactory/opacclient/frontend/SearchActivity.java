@@ -40,6 +40,7 @@ import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
+import de.geeksfactory.opacclient.storage.StarDataSource;
 import de.geeksfactory.opacclient.zxing.IntentIntegrator;
 import de.geeksfactory.opacclient.zxing.IntentResult;
 
@@ -302,6 +303,12 @@ public class SearchActivity extends OpacActivity {
 				renamed_libs.put("Tübingen", "Tubingen");
 				renamed_libs.put("Göttingen", "Gottingen");
 				renamed_libs.put("Schwäbisch Hall", "Schwabisch Hall");
+
+				StarDataSource stardata = new StarDataSource(this);
+				stardata.open();
+				stardata.renameLibraries(renamed_libs);
+				stardata.close();
+
 				Library lib = null;
 				try {
 					if (renamed_libs.containsKey(sp.getString("opac_bib", "")))
