@@ -47,10 +47,10 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
 
 		if (((OpacClient) ((Activity) context).getApplication()).getAccount()
 				.getId() == item.getId()) {
-			view.findViewById(R.id.llItem).setBackgroundColor(
+			view.findViewById(R.id.rlItem).setBackgroundColor(
 					context.getResources().getColor(R.color.active_account));
 		} else {
-			view.findViewById(R.id.llItem).setBackgroundDrawable(null);
+			view.findViewById(R.id.rlItem).setBackgroundDrawable(null);
 		}
 
 		Library lib;

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="4dp" >
+    android:padding="4dp"
+    android:paddingTop="0dp" >
 
     <TextView
         android:id="@+id/tvDesc"
@@ -11,7 +12,6 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:singleLine="true"
-        android:text=""
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/detail_desc" />
 
@@ -19,8 +19,8 @@
         android:id="@+id/tvContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
+        android:layout_below="@id/tvDesc"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textIsSelectable="true" />
 
-</LinearLayout>
+</RelativeLayout>

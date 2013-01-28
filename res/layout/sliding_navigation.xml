@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/nav_bg" >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
@@ -23,6 +23,7 @@
             android:id="@+id/tvHlLibrary"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/tvLibrary"
             android:layout_marginTop="8dp"
             android:drawableBottom="@drawable/navigation_header"
             android:drawablePadding="4dp"
@@ -38,6 +39,7 @@
             android:layout_height="48dp"
             android:background="@drawable/nav_item"
             android:clickable="true"
+            android:layout_below="@id/tvHlLibrary"
             android:gravity="center|left"
             android:padding="4dp" >
 
@@ -62,6 +64,7 @@
             android:id="@+id/llNavAccount"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:layout_below="@id/llNavSearch"
             android:background="@drawable/nav_item"
             android:clickable="true"
             android:gravity="center|left"
@@ -88,6 +91,7 @@
             android:id="@+id/llNavStarred"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:layout_below="@id/llNavAccount"
             android:background="@drawable/nav_item"
             android:clickable="true"
             android:gravity="center|left"
@@ -114,6 +118,7 @@
             android:id="@+id/llNavInfo"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:layout_below="@id/llNavStarred"
             android:background="@drawable/nav_item"
             android:clickable="true"
             android:gravity="center|left"
@@ -140,6 +145,7 @@
             android:id="@+id/tvHlAccountlist"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/llNavInfo"
             android:layout_marginTop="8dp"
             android:drawableBottom="@drawable/navigation_header"
             android:drawablePadding="4dp"
@@ -153,15 +159,16 @@
             android:id="@+id/llAccountlist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/tvHlAccountlist"
             android:orientation="vertical" >
         </LinearLayout>
 
         <org.holoeverywhere.widget.TextView
             android:id="@+id/tvHlSettings"
             android:layout_width="fill_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/llAccountlist"
             android:layout_marginTop="8dp"
-            android:layout_weight="1"
             android:drawableBottom="@drawable/navigation_header"
             android:drawablePadding="4dp"
             android:paddingLeft="16dp"
@@ -174,6 +181,7 @@
             android:id="@+id/llNavSettings"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:layout_below="@id/tvHlSettings"
             android:background="@drawable/nav_item"
             android:clickable="true"
             android:gravity="center|left"
@@ -200,6 +208,7 @@
             android:id="@+id/llNavAbout"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:layout_below="@id/llNavSettings"
             android:background="@drawable/nav_item"
             android:clickable="true"
             android:gravity="center|left"
@@ -221,6 +230,6 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/nav_fg" />
         </LinearLayout>
-    </LinearLayout>
+    </RelativeLayout>
 
 </ScrollView>

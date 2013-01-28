@@ -4,14 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/rlAccHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentTop="true"
             android:background="@color/account_head_bg"
             android:orientation="vertical"
             android:padding="8dp" >
@@ -20,6 +23,8 @@
                 android:id="@+id/tvAccLabel"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
                 android:ellipsize="end"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/account_head_fg" />
@@ -28,6 +33,8 @@
                 android:id="@+id/tvAccCity"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="false"
+                android:layout_below="@id/tvAccLabel"
                 android:layout_marginBottom="4dp"
                 android:textColor="@color/account_head_fg" />
 
@@ -35,15 +42,19 @@
                 android:id="@+id/tvAccUser"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/tvAccCity"
                 android:layout_marginBottom="4dp"
                 android:textColor="@color/account_head_fg"
                 android:textIsSelectable="true" />
-        </LinearLayout>
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/tvError"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/rlAccHeader"
             android:background="@color/error_bg"
             android:gravity="center"
             android:padding="5dp"
@@ -51,9 +62,10 @@
             android:textStyle="bold"
             android:visibility="gone" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/tvError"
             android:orientation="vertical"
             android:padding="5dp" >
 
@@ -75,13 +87,16 @@
                 android:id="@+id/llLent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/tvEntlHeader"
                 android:orientation="vertical" >
+
             </LinearLayout>
 
             <Button
                 android:id="@+id/btExtendall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/llLent"
                 android:text="@string/extendall"
                 android:visibility="gone" />
 
@@ -89,6 +104,7 @@
                 android:id="@+id/tvResHeader"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/btExtendall"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="8dp"
                 android:drawableBottom="@drawable/section_header"
@@ -103,18 +119,22 @@
                 android:id="@+id/llReservations"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/tvResHeader"
                 android:orientation="vertical" >
+
             </LinearLayout>
 
             <TextView
                 android:id="@+id/tvAge"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/llReservations"
                 android:layout_marginTop="4dp"
                 android:gravity="center|top"
                 android:textColor="@color/account_age"
                 android:textStyle="italic" />
-        </LinearLayout>
-    </LinearLayout>
+
+        </RelativeLayout>
+    </RelativeLayout>
 
 </ScrollView>
