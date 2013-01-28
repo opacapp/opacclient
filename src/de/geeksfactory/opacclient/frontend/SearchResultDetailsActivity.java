@@ -64,8 +64,6 @@ public class SearchResultDetailsActivity extends OpacActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.loading);
-		((TextView) findViewById(R.id.tvLoading))
-				.setText(R.string.loading_details);
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

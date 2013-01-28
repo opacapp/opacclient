@@ -35,8 +35,6 @@ public class SearchResultsActivity extends OpacActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.loading);
-		((TextView) findViewById(R.id.tvLoading))
-				.setText(R.string.loading_results);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		page = 1;
 		performsearch();
@@ -59,8 +57,6 @@ public class SearchResultsActivity extends OpacActivity {
 		switch (item.getItemId()) {
 		case R.id.action_prev:
 			setContentView(R.layout.loading);
-			((TextView) findViewById(R.id.tvLoading))
-					.setText(R.string.loading_results);
 			page--;
 			sst = new SearchPageTask();
 			sst.execute(app, page);
@@ -68,8 +64,6 @@ public class SearchResultsActivity extends OpacActivity {
 			return true;
 		case R.id.action_next:
 			setContentView(R.layout.loading);
-			((TextView) findViewById(R.id.tvLoading))
-					.setText(R.string.loading_results);
 			page++;
 			sst = new SearchPageTask();
 			sst.execute(app, page);

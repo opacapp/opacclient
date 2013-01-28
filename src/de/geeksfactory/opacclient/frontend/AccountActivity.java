@@ -147,8 +147,6 @@ public class AccountActivity extends OpacActivity {
 		refreshing = false;
 		invalidateOptionsMenu();
 		setContentView(R.layout.loading);
-		((TextView) findViewById(R.id.tvLoading))
-				.setText(R.string.loading_account);
 
 		account = app.getAccount();
 

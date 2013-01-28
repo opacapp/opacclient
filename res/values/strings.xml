@@ -25,9 +25,6 @@
     <string name="go_search">Suche starten</string>
     <string name="jahr_von">von</string>
     <string name="jahr_bis">bis</string>
-    <string name="loading">Lade…</string>
-    <string name="loading_results">Lade Ergebnisse…</string>
-    <string name="loading_details">Lade Details…</string>
     <string name="search_results">Suchergebnisse</string>
     <string name="prefs">Einstellungen</string>
     <string name="account">Konto</string>
