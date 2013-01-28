@@ -292,8 +292,8 @@ public class SearchActivity extends OpacActivity {
 				.getDefaultSharedPreferences(this);
 
 		if (app.getLibrary() == null) {
-			// Migrate
 			if (!sp.getString("opac_bib", "").equals("")) {
+				// Migrate
 				Map<String, String> renamed_libs = new HashMap<String, String>();
 				renamed_libs.put("Trier (Palais Walderdorff)", "Trier");
 				renamed_libs.put("Ludwigshafen (Rhein)", "Ludwigshafen Rhein");
@@ -332,10 +332,7 @@ public class SearchActivity extends OpacActivity {
 					}
 					long insertedid = data.addAccount(acc);
 					data.close();
-
-					sp.edit()
-							.putLong(OpacClient.PREF_SELECTED_ACCOUNT,
-									insertedid).commit();
+					app.setAccount(insertedid);
 					new InitTask().execute(app);
 
 					Toast.makeText(
@@ -343,38 +340,36 @@ public class SearchActivity extends OpacActivity {
 							"Neue Version! Alte Accountdaten wurden wiederhergestellt.",
 							Toast.LENGTH_LONG).show();
 
-					return;
-
 				} else {
 					Toast.makeText(
 							this,
 							"Neue Version! Wiederherstellung alter Zugangsdaten ist fehlgeschlagen.",
 							Toast.LENGTH_LONG).show();
 				}
+			} else {
+				// Create new
+				Intent intent = new Intent(this, WelcomeActivity.class);
+				startActivity(intent);
+				return;
 			}
-
-			// Create new
-			Intent intent = new Intent(this, WelcomeActivity.class);
-			startActivity(intent);
-			return;
 		}
 
 		if (getIntent().getBooleanExtra("barcode", false)) {
 			IntentIntegrator integrator = new IntentIntegrator(
 					SearchActivity.this);
 			integrator.initiateScan();
+		} else {
+			// Fill combo boxes
+			fillComboBoxes();
+
+			ArrayAdapter<CharSequence> order_adapter = ArrayAdapter
+					.createFromResource(this, R.array.orders,
+							R.layout.simple_spinner_item);
+			order_adapter
+					.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
+			((Spinner) SearchActivity.this.findViewById(R.id.cbOrder))
+					.setAdapter(order_adapter);
 		}
-
-		// Fill combo boxes
-		fillComboBoxes();
-
-		ArrayAdapter<CharSequence> order_adapter = ArrayAdapter
-				.createFromResource(this, R.array.orders,
-						R.layout.simple_spinner_item);
-		order_adapter
-				.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
-		((Spinner) SearchActivity.this.findViewById(R.id.cbOrder))
-				.setAdapter(order_adapter);
 
 		ImageView ivBarcode = (ImageView) findViewById(R.id.ivBarcode);
 		ivBarcode.setOnClickListener(new OnClickListener() {
@@ -412,7 +407,6 @@ public class SearchActivity extends OpacActivity {
 				}
 			}, 500);
 		}
-
 	}
 
 	public void go() {
