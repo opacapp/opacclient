@@ -226,6 +226,9 @@ public class AccountDataSource {
 	}
 
 	public void storeCachedAccountData(Account account, AccountData adata) {
+		if (adata == null)
+			return;
+
 		long time = System.currentTimeMillis();
 		ContentValues update = new ContentValues();
 		update.put("cached", time);

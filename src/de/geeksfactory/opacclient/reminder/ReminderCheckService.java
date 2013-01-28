@@ -95,6 +95,9 @@ public class ReminderCheckService extends Service {
 
 					AccountData res = api.account(account);
 
+					if (res == null)
+						continue;
+
 					data.storeCachedAccountData(account, res);
 
 					int this_account = 0;
