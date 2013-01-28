@@ -40,6 +40,17 @@
                 android:textIsSelectable="true" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/tvError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/error_bg"
+            android:gravity="center"
+            android:padding="5dp"
+            android:textColor="@color/error_fg"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

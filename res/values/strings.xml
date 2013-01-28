@@ -156,6 +156,7 @@
     <string name="crash_dialog_text">In der Opac App ist ein Fehler aufgetreten! Bitte schicken Sie uns den Fehlerbericht per E-Mail ein, dann können wir ihn beheben.</string>
     <string name="refresh">Aktualisieren</string>
     <string name="account_no_concurrent">Bitte warten, bis die Ansicht aktualisiert wurde.</string>
+    <string name="error_connection">Verbindungsfehler</string>
 
     <plurals name="account_age_minutes">
         <item quantity="zero">Die angezeigten Daten sind aktuell.</item>

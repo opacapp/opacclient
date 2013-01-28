@@ -432,15 +432,25 @@ public class AccountActivity extends OpacActivity {
 				refreshing = false;
 				invalidateOptionsMenu();
 
-				setContentView(R.layout.connectivity_error);
-				((Button) findViewById(R.id.btRetry))
-						.setOnClickListener(new OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								onStart();
-							}
-						});
+				show_connectivity_error();
 			}
+		}
+	}
+
+	public void show_connectivity_error() {
+		View tvError = findViewById(R.id.tvError);
+		if (tvError != null) {
+			tvError.setVisibility(View.VISIBLE);
+			((TextView) tvError).setText(R.string.error_connection);
+		} else {
+			setContentView(R.layout.connectivity_error);
+			((Button) findViewById(R.id.btRetry))
+					.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							onStart();
+						}
+					});
 		}
 	}
 
@@ -452,14 +462,7 @@ public class AccountActivity extends OpacActivity {
 
 			if (app.getApi().getLast_error() == null
 					|| app.getApi().getLast_error().equals("")) {
-				setContentView(R.layout.connectivity_error);
-				((Button) findViewById(R.id.btRetry))
-						.setOnClickListener(new OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								onStart();
-							}
-						});
+				show_connectivity_error();
 			} else
 				dialog_wrong_credentials(app.getApi().getLast_error(), true);
 			return;
