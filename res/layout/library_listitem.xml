@@ -9,19 +9,17 @@
         android:id="@+id/tvCity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Stadt" />
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Title" />
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/tvSupport"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Support"
         android:textStyle="italic" />
 
 </LinearLayout>

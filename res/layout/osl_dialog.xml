@@ -9,15 +9,14 @@
     <ScrollView
         android:id="@+id/ScrollView1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="fill_parent"
         android:layout_weight="1"
         android:padding="5dp" >
 
         <TextView
             android:id="@+id/textView1"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="TextView" />
+            android:layout_height="wrap_content" />
     </ScrollView>
 
     <Button
