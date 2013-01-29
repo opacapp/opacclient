@@ -142,7 +142,18 @@ public class OCLC2011 implements OpacApi {
 	@Override
 	public void start() throws ClientProtocolException, SocketException,
 			IOException, NotReachableException {
-		HttpGet httpget = new HttpGet(opac_url + "/start.do");
+
+		// Some libraries require start parameters for start.do, like Login=foo
+		String startparams = "";
+		if (data.has("startparams")) {
+			try {
+				startparams = "?" + data.getString("startparams");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+
+		HttpGet httpget = new HttpGet(opac_url + "/start.do" + startparams);
 		HttpResponse response = ahc.execute(httpget);
 
 		if (response.getStatusLine().getStatusCode() == 500) {
