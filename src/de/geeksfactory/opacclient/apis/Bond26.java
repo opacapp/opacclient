@@ -33,6 +33,7 @@ import org.jsoup.select.Elements;
 import android.content.ContentValues;
 import android.os.Bundle;
 import de.geeksfactory.opacclient.NotReachableException;
+import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult.Status;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -373,75 +374,118 @@ public class Bond26 implements OpacApi {
 
 		if (doc.select(".detail_vorbest a").size() == 1) {
 			result.setReservable(true);
+			result.setReservation_info(doc.select(".detail_vorbest a").attr(
+					"href"));
 		}
 		return result;
 	}
 
 	@Override
-	public ReservationResult reservation(String zst, Account acc)
-			throws IOException {
-		HttpGet httpget = new HttpGet(opac_url
-				+ "/index.asp?target=vorbesttrans");
-		HttpResponse response = ahc.execute(httpget);
-		HttpPost httppost;
+	public ReservationResult reservation(String reservation_info, Account acc,
+			int useraction, String selection) throws IOException {
+		final String branch_inputfield = "zstauswahl";
 
-		if (response.getStatusLine().getStatusCode() == 200) {
-			response.getEntity().consumeContent();
-			// Login vonnöten
+		HttpPost httppost;
+		HttpGet httpget;
+		HttpResponse response;
+		Document doc = null;
+
+		if (useraction == ReservationResult.ACTION_CONFIRMATION) {
 			httppost = new HttpPost(opac_url + "/index.asp");
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs
-					.add(new BasicNameValuePair("AUSWEIS", acc.getName()));
-			nameValuePairs
-					.add(new BasicNameValuePair("PWD", acc.getPassword()));
-			nameValuePairs.add(new BasicNameValuePair("B1", "weiter"));
-			nameValuePairs.add(new BasicNameValuePair("target", "zwstausw"));
-			nameValuePairs.add(new BasicNameValuePair("type", "VT2"));
+					.add(new BasicNameValuePair("button1", "Bestaetigung"));
+			nameValuePairs.add(new BasicNameValuePair("target", "makevorbest"));
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			response = ahc.execute(httppost);
+			return new ReservationResult(Status.OK);
+		} else if (selection == null || useraction == 0) {
+			httpget = new HttpGet(opac_url + "/" + reservation_info);
+
+			response = ahc.execute(httpget);
+			String html = convertStreamToString(response.getEntity()
+					.getContent());
+			response.getEntity().consumeContent();
+			doc = Jsoup.parse(html);
+
+			if (doc.select("input[name=AUSWEIS]").size() > 0) {
+				// Login vonnöten
+				httppost = new HttpPost(opac_url + "/index.asp");
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
+						2);
+				nameValuePairs.add(new BasicNameValuePair("AUSWEIS", acc
+						.getName()));
+				nameValuePairs.add(new BasicNameValuePair("PWD", acc
+						.getPassword()));
+				nameValuePairs.add(new BasicNameValuePair("B1", "weiter"));
+				nameValuePairs.add(new BasicNameValuePair("target", doc.select(
+						"input[name=target]").val()));
+				nameValuePairs.add(new BasicNameValuePair("type", "VT2"));
+				httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+				response = ahc.execute(httppost);
+
+				html = convertStreamToString(response.getEntity().getContent());
+				doc = Jsoup.parse(html);
+			}
+
+			if (doc.select("select[name=" + branch_inputfield + "]").size() > 0) {
+				ContentValues branches = new ContentValues();
+				for (Element option : doc
+						.select("select[name=" + branch_inputfield + "]")
+						.first().children()) {
+					String value = option.text().trim();
+					String key;
+					if (option.hasAttr("value")) {
+						key = option.attr("value");
+					} else {
+						key = value;
+					}
+					branches.put(key, value);
+				}
+				ReservationResult result = new ReservationResult(
+						Status.SELECTION_NEEDED);
+				result.setActionIdentifier(ReservationResult.ACTION_BRANCH);
+				result.setSelection(branches);
+				return result;
+			}
+		} else if (useraction == ReservationResult.ACTION_BRANCH) {
+			httppost = new HttpPost(opac_url + "/index.asp");
+			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+			nameValuePairs.add(new BasicNameValuePair("zstauswahl", selection));
+			nameValuePairs.add(new BasicNameValuePair("button2", "weiter"));
+			nameValuePairs.add(new BasicNameValuePair("target",
+					"vorbesttranskonto"));
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 			response = ahc.execute(httppost);
 
 			String html = convertStreamToString(response.getEntity()
 					.getContent());
-			Document doc = Jsoup.parse(html);
-			response.getEntity().consumeContent();
-
-			if (doc.getElementsByClass("kontomeldung").size() == 1
-					&& doc.select("select[name=zstauswahl]").size() == 0) {
-				last_error = doc.getElementsByClass("kontomeldung").get(0)
-						.text();
-				return ReservationResult.ERROR;
-			} else if (doc.select(
-					"select[name=zstauswahl] option[value=" + zst + "]").size() == 0) {
-				last_error = "In diese Zweigstelle kann nicht vorbestellt werden.";
-				return ReservationResult.ERROR;
-			}
-		} else if (response.getStatusLine().getStatusCode() == 302) {
-			response.getEntity().consumeContent();
-			// Bereits eingeloggt
-			httpget = new HttpGet(opac_url + "/index.asp?target=zwstausw");
-			response = ahc.execute(httpget);
+			doc = Jsoup.parse(html);
 		}
 
-		httppost = new HttpPost(opac_url + "/index.asp");
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-		nameValuePairs
-				.add(new BasicNameValuePair("target", "vorbesttranskonto"));
-		nameValuePairs.add(new BasicNameValuePair("zstauswahl", zst));
-		nameValuePairs.add(new BasicNameValuePair("button2", "Bestätigung"));
-		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-		response = ahc.execute(httppost);
+		if (doc == null)
+			return new ReservationResult(Status.ERROR);
 
-		response.getEntity().consumeContent();
+		if (doc.select("input[name=target]").size() > 0) {
+			if (doc.select("input[name=target]").attr("value")
+					.equals("makevorbest")) {
+				List<String[]> details = new ArrayList<String[]>();
+				for (Element row : doc.select(".kontozeile_center table tr")) {
+					if (row.select(".konto_feld").size() == 1
+							&& row.select(".konto_feldinhalt").size() == 1) {
+						details.add(new String[] {
+								row.select(".konto_feld").text().trim(),
+								row.select(".konto_feldinhalt").text().trim() });
+					}
+				}
+				ReservationResult result = new ReservationResult(
+						Status.CONFIRMATION_NEEDED);
+				result.setDetails(details);
+				return result;
+			}
+		}
 
-		httppost = new HttpPost(opac_url + "/index.asp");
-		nameValuePairs = new ArrayList<NameValuePair>(2);
-		nameValuePairs.add(new BasicNameValuePair("target", "makevorbest"));
-		nameValuePairs.add(new BasicNameValuePair("button1", "Bestätigung"));
-		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-		response = ahc.execute(httppost);
-		response.getEntity().consumeContent();
-
-		return ReservationResult.OK;
+		return new ReservationResult(Status.ERROR);
 	}
 
 	@Override

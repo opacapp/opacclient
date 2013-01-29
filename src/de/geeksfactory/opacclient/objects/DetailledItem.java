@@ -3,6 +3,8 @@ package de.geeksfactory.opacclient.objects;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.geeksfactory.opacclient.apis.OpacApi;
+
 import android.content.ContentValues;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ public class DetailledItem {
 	private String title;
 	private Bitmap coverBitmap;
 	private boolean reservable;
+	private String reservation_info;
 	private String id;
 	private Bundle volumesearch;
 
@@ -254,4 +257,28 @@ public class DetailledItem {
 	public void setReservable(boolean reservable) {
 		this.reservable = reservable;
 	}
+
+	/**
+	 * Get extra information stored to be returned to your
+	 * {@link de.geeksfactory.opacclient.apis.OpacApi#reservation(String, Account, int, String)}
+	 * implementation.
+	 * 
+	 * @return Some custom information.
+	 */
+	public String getReservation_info() {
+		return reservation_info;
+	}
+
+	/**
+	 * Set extra information stored to be returned to your
+	 * {@link de.geeksfactory.opacclient.apis.OpacApi#reservation(String, Account, int, String)}
+	 * implementation.
+	 * 
+	 * @param reservation_info
+	 *            Some custom information.
+	 */
+	public void setReservation_info(String reservation_info) {
+		this.reservation_info = reservation_info;
+	}
+
 }

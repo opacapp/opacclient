@@ -36,6 +36,7 @@ import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
 import de.geeksfactory.opacclient.NotReachableException;
+import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -544,10 +545,10 @@ public class OCLC2011 implements OpacApi {
 	// No account support for now.
 
 	@Override
-	public ReservationResult reservation(String zst, Account acc)
+	public ReservationResult reservation(String reservation_info, Account acc,
+			int useraction, String selection)
 			throws IOException {
-
-		return ReservationResult.ERROR;
+		return new ReservationResult(ReservationResult.Status.UNSUPPORTED);
 	}
 
 	@Override

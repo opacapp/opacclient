@@ -3,8 +3,10 @@ package de.geeksfactory.opacclient.apis;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 
+import android.content.ContentValues;
 import android.os.Bundle;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
@@ -214,40 +216,181 @@ public interface OpacApi {
 
 	/**
 	 * Perform a reservation on the item last fetched with
-	 * <code>getResultById</code> or <code>@getResult</code> for Account
-	 * <code>acc</code> and the branch <code>zst</code> (if applicable)
-	 * 
-	 * WARNING: This API is about to change. If you are serious using it for an
-	 * implementation, please contact me!
+	 * <code>getResultById</code> or <code>getResult</code> for Account
+	 * <code>acc</code>. (if applicable)
 	 * 
 	 * This function is always called from a background thread, you can use
 	 * blocking network operations in it.
 	 * 
+	 * @param reservation_info
+	 *            Data your <code>getDetail</code> implementation returned as
+	 *            reservation_info for this item.
 	 * @param account
 	 *            Account to be used
-	 * @param branch
-	 *            Branch identifier
-	 * @return ReservationResult.OK on success, ReservationResult.ERROR on error
+	 * @param useraction
+	 *            Identifier for the selection made by the user in
+	 *            <code>selection</code>, if a selection was made (see
+	 *            {@link ReservationResult#getActionIdentifier()}) or 0, if
+	 *            no selection was required. If your last method call returned
+	 *            <code>CONFIRMATION_NEEDED</code>, this is set to
+	 *            <code>ACTION_CONFIRMATION</code> if the user positively
+	 *            confirmed the action.
+	 * @param selection
+	 *            When the method is called for the first time or if
+	 *            useraction is <code>ACTION_CONFIRMATION</code>, this
+	 *            parameter is null. If you return <code>SELECTION</code> in
+	 *            your {@link ReservationResult#getStatus()}, this method
+	 *            will be called again with the user's selection present in
+	 *            selection.
+	 * @return A <code>ReservationResult</code> object which has to have the
+	 *         status set.
 	 */
-	public ReservationResult reservation(String branch, Account account)
+	public ReservationResult reservation(String reservation_info,
+			Account account, int useraction, String selection)
 			throws IOException;
 
 	/**
-	 * The result of a {@link OpacApi#reservation(String, Account)} call
+	 * The result of a {@link OpacApi#reservation(String, Account, int, String)} call
 	 */
-	public enum ReservationResult {
+	public class ReservationResult {
+		public enum Status {
+			/**
+			 * Everything went well
+			 */
+			OK,
+			/**
+			 * This is not supported in this API implementation
+			 */
+			UNSUPPORTED,
+			/**
+			 * An error occured
+			 */
+			ERROR,
+			/**
+			 * The user has to make a selection
+			 */
+			SELECTION_NEEDED,
+			/**
+			 * The user has to confirm the reservation
+			 */
+			CONFIRMATION_NEEDED
+		};
+
+		private Status status;
+		private ContentValues selection;
+		private List<String[]> details;
+		private int actionidentifier;
+
 		/**
-		 * Everything went well
+		 * Action type identifier for library branch selection
 		 */
-		OK,
+		public static final int ACTION_BRANCH = 1;
+
 		/**
-		 * An error occured
+		 * Action type identifier for process confirmation
 		 */
-		ERROR,
+		public static final int ACTION_CONFIRMATION = 2;
+
 		/**
-		 * (Reserved, currently not in use.)
+		 * Action number to use for custom selection type identifiers.
 		 */
-		SELECTBRANCH
+		public static final int ACTION_USER = 100;
+
+		/**
+		 * Create a new ReservationResult object holding the return status of
+		 * the reservation() operation.
+		 * 
+		 * @param status
+		 *            The return status
+		 * @see #getStatus()
+		 */
+		public ReservationResult(Status status) {
+			this.status = status;
+		}
+
+		/**
+		 * Get the return status of the reservation() operation. Can be
+		 * <code>OK</code> if the operation was successful, <code>ERROR</code>
+		 * if the operation failed, <code>SELECTION_NEEDED</code> if the user
+		 * should select one of the options presented in {@link #getSelection()}
+		 * or <code>CONFIRMATION_NEEDED</code> if the user should confirm the
+		 * details returned by <code>getDetails</code>. .
+		 */
+		public Status getStatus() {
+			return status;
+		}
+
+		/**
+		 * Identifier for the type of user selection if {@link #getStatus()} is
+		 * <code>SELECTION_NEEDED</code>.
+		 * 
+		 * @return One of the <code>ACTION_</code> constants or a
+		 *         number above <code>ACTION_USER</code>.
+		 */
+		public int getActionIdentifier() {
+			return actionidentifier;
+		}
+
+		/**
+		 * Set identifier for the type of user selection if {@link #getStatus()}
+		 * is <code>SELECTION_NEEDED</code>.
+		 * 
+		 * @param actionidentifier
+		 *            One of the <code>ACTION_</code> constants or a
+		 *            number above <code>ACTION_USER</code>.
+		 */
+		public void setActionIdentifier(int actionidentifier) {
+			this.actionidentifier = actionidentifier;
+		}
+
+		/**
+		 * Get values the user should select one of if {@link #getStatus()} is
+		 * <code>SELECTION_NEEDED</code>.
+		 * 
+		 * @return ContentValue tuples with key to give back and value to show
+		 *         to the users.
+		 */
+		public ContentValues getSelection() {
+			return selection;
+		}
+
+		/**
+		 * Set values the user should select one of if
+		 * {@link #getStatus()} is set to <code>SELECTION_NEEDED</code>.
+		 * 
+		 * @param selection
+		 *            Store with key-value-tuples where the key is what is to be
+		 *            returned back to reservation() and the value is what is to
+		 *            be displayed to the user.
+		 */
+		public void setSelection(ContentValues selection) {
+			this.selection = selection;
+		}
+
+		/**
+		 * Set details the user should confirm if {@link #getStatus()} is
+		 * <code>CONFIRMATION_NEEDED</code>.
+		 * 
+		 * @return ContentValue tuples with key to give back and value to show
+		 *         to the users.
+		 */
+		public List<String[]> getDetails() {
+			return details;
+		}
+
+		/**
+		 * Set values the user should select one of if
+		 * {@link #getStatus()} is set to <code>CONFIRMATION_NEEDED</code>
+		 * .
+		 * 
+		 * @param details
+		 *            List containing reservation details. A detail is stored as
+		 *            an array of two strings, the detail's description (e.g.
+		 *            "Fee") and the detail itself (e.g. "2 EUR")
+		 */
+		public void setDetails(List<String[]> details) {
+			this.details = details;
+		}
 	}
 
 	/**

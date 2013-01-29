@@ -52,7 +52,7 @@ public class WelcomeActivity extends SherlockActivity {
 		// Get the layout inflater
 		LayoutInflater inflater = getLayoutInflater();
 
-		View view = inflater.inflate(R.layout.account_add_liblist_dialog, null);
+		View view = inflater.inflate(R.layout.simple_list_dialog, null);
 
 		ListView lv = (ListView) view.findViewById(R.id.lvBibs);
 		try {

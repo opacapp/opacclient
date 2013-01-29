@@ -456,9 +456,9 @@ public class Zones22 implements OpacApi {
 	// No account support for now.
 
 	@Override
-	public ReservationResult reservation(String zst, Account acc)
-			throws IOException {
-		return ReservationResult.ERROR;
+	public ReservationResult reservation(String reservation_info, Account acc,
+			int useraction, String selection) throws IOException {
+		return new ReservationResult(ReservationResult.Status.UNSUPPORTED);
 	}
 
 	@Override

@@ -267,4 +267,24 @@ public class AccountDataSource {
 					insertmapping);
 		}
 	}
+
+	public List<Account> getAccountsWithPassword(String ident) {
+		List<Account> accs = new ArrayList<Account>();
+
+		Cursor cursor = database
+				.query("accounts",
+						allColumns,
+						"name is not null AND name != '' AND password is not null AND bib = ?",
+						new String[] { ident }, null, null, null);
+
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			Account acc = cursorToAccount(cursor);
+			accs.add(acc);
+			cursor.moveToNext();
+		}
+		// Make sure to close the cursor
+		cursor.close();
+		return accs;
+	}
 }

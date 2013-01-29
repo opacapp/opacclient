@@ -158,6 +158,8 @@
     <string name="refresh">Aktualisieren</string>
     <string name="account_no_concurrent">Bitte warten, bis die Ansicht aktualisiert wurde.</string>
     <string name="error_connection">Verbindungsfehler</string>
+    <string name="confirm_title">Bestätigen</string>
+    <string name="confirm">Bestätigen</string>
 
     <plurals name="account_age_minutes">
         <item quantity="zero">Die angezeigten Daten sind aktuell.</item>

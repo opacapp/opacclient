@@ -3,6 +3,7 @@ package de.geeksfactory.opacclient.frontend;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.acra.ACRA;
 import org.holoeverywhere.app.AlertDialog;
@@ -10,22 +11,29 @@ import org.holoeverywhere.app.ProgressDialog;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.TextUtils.TruncateAt;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,13 +44,11 @@ import com.actionbarsherlock.view.MenuItem;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
-import de.geeksfactory.opacclient.apis.OpacApi;
+import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
-import de.geeksfactory.opacclient.storage.MetaDataSource;
-import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 import de.geeksfactory.opacclient.storage.StarDataSource;
 
 public class SearchResultDetailsActivity extends OpacActivity {
@@ -51,10 +57,6 @@ public class SearchResultDetailsActivity extends OpacActivity {
 	protected DetailledItem item;
 	protected String id;
 	protected String title;
-
-	public static int STATUS_SUCCESS = 0;
-	public static int STATUS_NOUSER = 1;
-	public static int STATUS_WRONGCREDENTIALS = 2;
 
 	protected String[] items;
 	protected FetchTask ft;
@@ -108,11 +110,11 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		alert.show();
 	}
 
-	protected void reservation() {
+	protected void reservationStart() {
 		AccountDataSource data = new AccountDataSource(this);
 		data.open();
-		final List<Account> accounts = data.getAllAccounts(app.getLibrary()
-				.getIdent());
+		final List<Account> accounts = data.getAccountsWithPassword(app
+				.getLibrary().getIdent());
 		data.close();
 		if (accounts.size() == 0) {
 			dialog_no_user();
@@ -122,8 +124,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			// Get the layout inflater
 			LayoutInflater inflater = getLayoutInflater();
 
-			View view = inflater.inflate(R.layout.account_add_liblist_dialog,
-					null);
+			View view = inflater.inflate(R.layout.simple_list_dialog, null);
 
 			ListView lv = (ListView) view.findViewById(R.id.lvBibs);
 			AccountListAdapter adapter = new AccountListAdapter(this, accounts);
@@ -135,11 +136,11 @@ public class SearchResultDetailsActivity extends OpacActivity {
 					if (accounts.get(position).getId() != app.getAccount()
 							.getId()) {
 						app.setAccount(accounts.get(position).getId());
-
 						new RestoreSessionTask().execute();
+					} else {
+						reservationDo();
 					}
 					adialog.dismiss();
-					reservation_zst();
 				}
 			});
 			builder.setTitle(R.string.account_select)
@@ -157,7 +158,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 								@Override
 								public void onClick(DialogInterface dialog,
 										int id) {
-									dialog.dismiss();
+									adialog.dismiss();
 									Intent intent = new Intent(
 											SearchResultDetailsActivity.this,
 											AccountListActivity.class);
@@ -167,43 +168,162 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			adialog = builder.create();
 			adialog.show();
 		} else {
-			reservation_zst();
+			reservationDo();
 		}
 	}
 
-	public void reservation_zst() {
-		MetaDataSource data = new SQLMetaDataSource(this);
-		data.open();
-		final List<ContentValues> zst = data.getMeta(app.getLibrary()
-				.getIdent(), MetaDataSource.META_TYPE_BRANCH);
-		data.close();
+	public void reservationDo() {
+		reservationDo(0, null);
+	}
 
+	public void reservationDo(int useraction, String selection) {
+		dialog = ProgressDialog.show(SearchResultDetailsActivity.this, "",
+				getString(R.string.doing_res), true);
+		dialog.show();
+
+		rt = new ResTask();
+		rt.execute(app, item.getReservation_info(), useraction, selection);
+	}
+
+	public void reservationResult(ReservationResult result) {
+		AccountDataSource adata = new AccountDataSource(this);
+		adata.open();
+		adata.invalidateCachedAccountData(app.getAccount());
+		adata.close();
+		switch (result.getStatus()) {
+		case CONFIRMATION_NEEDED:
+			reservationConfirmation(result);
+			break;
+		case SELECTION_NEEDED:
+			reservationSelection(result);
+			break;
+		case ERROR:
+			dialog_wrong_credentials(app.getApi().getLast_error(), false);
+			break;
+		case OK:
+			Intent intent = new Intent(SearchResultDetailsActivity.this,
+					AccountActivity.class);
+			startActivity(intent);
+			break;
+		case UNSUPPORTED:
+			// TODO: Show dialog
+			break;
+		default:
+			break;
+		}
+	}
+
+	public class SelectionAdapter extends ArrayAdapter<Object> {
+
+		private Object[] objects;
+
+		@Override
+		public View getView(int position, View contentView, ViewGroup viewGroup) {
+			View view = null;
+
+			if (objects[position] == null) {
+				LayoutInflater layoutInflater = (LayoutInflater) getContext()
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				view = layoutInflater.inflate(R.layout.zst_listitem, viewGroup,
+						false);
+				return view;
+			}
+
+			String item = ((Entry<String, Object>) objects[position])
+					.getValue().toString();
+
+			if (contentView == null) {
+				LayoutInflater layoutInflater = (LayoutInflater) getContext()
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				view = layoutInflater.inflate(R.layout.zst_listitem, viewGroup,
+						false);
+			} else {
+				view = contentView;
+			}
+
+			TextView tvText = (TextView) view.findViewById(android.R.id.text1);
+			tvText.setText(item);
+			return view;
+		}
+
+		public SelectionAdapter(Context context, Object[] objects) {
+			super(context, R.layout.simple_spinner_item, objects);
+			this.objects = objects;
+		}
+
+	}
+
+	public void reservationSelection(final ReservationResult result) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		// Get the layout inflater
+
 		LayoutInflater inflater = getLayoutInflater();
 
-		View view = inflater.inflate(R.layout.account_add_liblist_dialog, null);
+		View view = inflater.inflate(R.layout.simple_list_dialog, null);
 
 		ListView lv = (ListView) view.findViewById(R.id.lvBibs);
+		final Object[] possibilities = result.getSelection().valueSet()
+				.toArray();
 
-		lv.setAdapter(new OpacActivity.MetaAdapter(this, zst,
-				R.layout.zst_listitem));
+		lv.setAdapter(new SelectionAdapter(this, possibilities));
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				adialog.dismiss();
 
-				dialog = ProgressDialog.show(SearchResultDetailsActivity.this,
-						"", getString(R.string.doing_res), true);
-				dialog.show();
-
-				rt = new ResTask();
-				rt.execute(app, zst.get(position).getAsString("key"));
+				reservationDo(result.getActionIdentifier(),
+						((Entry<String, Object>) possibilities[position])
+								.getKey());
 			}
 		});
-		builder.setTitle(getString(R.string.res_zst))
+		switch (result.getActionIdentifier()) {
+		case ReservationResult.ACTION_BRANCH:
+			builder.setTitle(R.string.zweigstelle);
+		}
+		builder.setView(view).setNegativeButton(R.string.cancel,
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int id) {
+						adialog.cancel();
+					}
+				});
+		adialog = builder.create();
+		adialog.show();
+	}
+
+	public void reservationConfirmation(final ReservationResult result) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+		LayoutInflater inflater = getLayoutInflater();
+
+		View view = inflater.inflate(R.layout.reservation_details_dialog, null);
+
+		TableLayout table = (TableLayout) view.findViewById(R.id.tlDetails);
+
+		for (String[] detail : result.getDetails()) {
+			TableRow tr = new TableRow(this);
+			TextView tv1 = new TextView(this);
+			tv1.setText(detail[0]);
+			tv1.setTypeface(null, Typeface.BOLD);
+			TextView tv2 = new TextView(this);
+			tv2.setText(detail[1]);
+			tv2.setEllipsize(TruncateAt.END);
+			tr.addView(tv1);
+			tr.addView(tv2);
+			table.addView(tr);
+		}
+
+		builder.setTitle(R.string.confirm_title)
 				.setView(view)
+				.setPositiveButton(R.string.confirm,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								reservationDo(
+										ReservationResult.ACTION_CONFIRMATION,
+										"confirmed");
+							}
+						})
 				.setNegativeButton(R.string.cancel,
 						new DialogInterface.OnClickListener() {
 							@Override
@@ -215,20 +335,16 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		adialog.show();
 	}
 
-	public void reservation_done(int result) {
-		if (result == STATUS_SUCCESS) {
-			Intent intent = new Intent(SearchResultDetailsActivity.this,
-					AccountActivity.class);
-			startActivity(intent);
-		}
-	}
-
 	public class RestoreSessionTask extends OpacTask<Integer> {
 		@Override
 		protected Integer doInBackground(Object... arg0) {
 			try {
-				if (id != null)
+				if (id != null) {
 					app.getApi().getResultById(id);
+					return 0;
+				} else
+					ACRA.getErrorReporter().handleException(
+							new Throwable("No ID supplied"));
 			} catch (java.net.SocketException e) {
 				e.printStackTrace();
 			} catch (java.net.UnknownHostException e) {
@@ -236,11 +352,12 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			} catch (Exception e) {
 				ACRA.getErrorReporter().handleException(e);
 			}
-			return 0;
+			return 1;
 		}
 
 		@Override
 		protected void onPostExecute(Integer result) {
+			reservationDo();
 		}
 
 	}
@@ -326,7 +443,8 @@ public class SearchResultDetailsActivity extends OpacActivity {
 						.getDesc());
 				((TextView) v.findViewById(R.id.tvContent)).setText(detail
 						.getContent());
-				Linkify.addLinks((TextView) v.findViewById(R.id.tvContent), Linkify.WEB_URLS);
+				Linkify.addLinks((TextView) v.findViewById(R.id.tvContent),
+						Linkify.WEB_URLS);
 				llDetails.addView(v);
 			}
 
@@ -510,22 +628,24 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		}
 	}
 
-	public class ResTask extends OpacTask<Integer> {
+	public class ResTask extends OpacTask<ReservationResult> {
 		private boolean success;
 
 		@Override
-		protected Integer doInBackground(Object... arg0) {
+		protected ReservationResult doInBackground(Object... arg0) {
 			super.doInBackground(arg0);
 
 			app = (OpacClient) arg0[0];
-			String zst = (String) arg0[1];
+			String reservation_info = (String) arg0[1];
+			int useraction = (Integer) arg0[2];
+			String selection = (String) arg0[3];
 
 			try {
-				OpacApi.ReservationResult res = app.getApi().reservation(zst,
-						app.getAccount());
+				ReservationResult res = app.getApi().reservation(
+						reservation_info, app.getAccount(), useraction,
+						selection);
 				success = true;
-				if (res == OpacApi.ReservationResult.ERROR)
-					return STATUS_WRONGCREDENTIALS;
+				return res;
 			} catch (java.net.UnknownHostException e) {
 				publishProgress(e, "ioerror");
 			} catch (java.net.SocketException e) {
@@ -535,19 +655,14 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				ACRA.getErrorReporter().handleException(e);
 				success = false;
 			}
-			return STATUS_SUCCESS;
+			return null;
 		}
 
 		@Override
-		protected void onPostExecute(Integer result) {
+		protected void onPostExecute(ReservationResult res) {
 			dialog.dismiss();
 
-			if (result == STATUS_WRONGCREDENTIALS) {
-				dialog_wrong_credentials(app.getApi().getLast_error(), false);
-				return;
-			}
-
-			if (!success) {
+			if (!success || res == null) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						SearchResultDetailsActivity.this);
 				builder.setMessage(R.string.connection_error)
@@ -563,9 +678,9 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				AlertDialog alert = builder.create();
 				alert.show();
 				return;
-			} else {
-				reservation_done(result);
 			}
+
+			reservationResult(res);
 		}
 	}
 
@@ -645,7 +760,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		String bib = app.getLibrary().getIdent();
 		switch (item.getItemId()) {
 		case R.id.action_reservation:
-			reservation();
+			reservationStart();
 			return true;
 
 		case android.R.id.home:
