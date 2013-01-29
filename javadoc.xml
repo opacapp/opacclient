@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="javadoc">
     <target name="javadoc">
-        <javadoc access="public" additionalparam="-linkoffline http://d.android.com/reference file:/opt/android-sdk-linux_x86/docs/reference" author="true" classpath="3dparty/SlidingMenu/library/libs/android-support-v4.jar:3dparty/SlidingMenu/library/bin/slidingmenu_opacclient.jar:libs/jsoup-1.6.3.jar:libs/acra-4.4.0.jar:3dparty/HoloEverywhere/library/bin/holoeverywhere_opacclient.jar:3dparty/HoloEverywhere/contrib/ActionBarSherlock/library/bin/abs_opacclient.jar:/opt/android-sdk-linux_x86/platforms/android-17/android.jar" destdir="doc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="de.geeksfactory.opacclient.objects" source="1.6" sourcefiles="src/de/geeksfactory/opacclient/apis/OpacApi.java,src/de/geeksfactory/opacclient/storage/MetaDataSource.java" sourcepath="gen:src" splitindex="true" use="true" version="true">
+        <javadoc 
+				access="public" 
+				additionalparam="-linkoffline http://d.android.com/reference file:/opt/android-sdk-linux_x86/docs/reference" 
+				author="true" 
+				classpath="3dparty/SlidingMenu/library/libs/android-support-v4.jar:3dparty/SlidingMenu/library/bin/slidingmenu_opacclient.jar:libs/jsoup-1.6.3.jar:libs/acra-4.4.0.jar:3dparty/HoloEverywhere/library/bin/holoeverywhere_opacclient.jar:3dparty/HoloEverywhere/contrib/ActionBarSherlock/library/bin/abs_opacclient.jar:/opt/android-sdk-linux_x86/platforms/android-17/android.jar" 
+				destdir="doc"
+				nodeprecated="false" nodeprecatedlist="false" 
+				noindex="false" nonavbar="false" notree="false" 
+				packagenames="de.geeksfactory.opacclient.objects" 
+				source="1.6"
+				sourcefiles="src/de/geeksfactory/opacclient/apis/OpacApi.java,src/de/geeksfactory/opacclient/storage/MetaDataSource.java" 
+				sourcepath="gen:src" splitindex="true" 
+				use="true" version="true"
+				header="OpacClient public API v2.0.0-dev"
+				windowtitle="OpacClient API">
             <link href="http://developer.android.com/reference/"/>
 			<doctitle>OpacClient public API</doctitle>
         </javadoc>
