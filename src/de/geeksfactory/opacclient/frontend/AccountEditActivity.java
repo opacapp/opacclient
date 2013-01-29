@@ -119,8 +119,15 @@ public class AccountEditActivity extends SherlockActivity {
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
 		case R.id.action_accept:
-			save();
-			finish();
+			if (getIntent().hasExtra("welcome")
+					&& getIntent().getBooleanExtra("welcome", false)) {
+				save();
+				Intent i = new Intent(this, SearchActivity.class);
+				startActivity(i);
+			} else {
+				save();
+				finish();
+			}
 			return true;
 		case R.id.action_cancel:
 			if (getIntent().hasExtra("adding")

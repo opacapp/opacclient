@@ -52,7 +52,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tvDetails"
             android:orientation="vertical" >
-
         </LinearLayout>
 
         <TextView
@@ -77,7 +76,6 @@
             android:layout_below="@id/tvCopies"
             android:divider="@drawable/list_divider_holo_light"
             android:orientation="vertical" >
-
         </LinearLayout>
     </RelativeLayout>
 

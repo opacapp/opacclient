@@ -67,8 +67,9 @@
     <string name="doing_prolong">Verlängerung wird durchgeführt…</string>
     <string name="opac_error">Meldung vom Web-Opac:</string>
     <string name="welcome">Herzlich Willkommen</string>
-    <string name="welcome_select">zum Web-Opac-Client für Android. Bitte wähle aus, mit welcher Bibliothek du dich verbinden willst.</string>
-    <string name="welcome_account">Um Vorbestellen oder dein Konto einsehen zu können, musst du in den Einstellungen diesem anonymen Konto noch deine Ausweisnummer und dein Passwort hinzufügen!</string>
+    <string name="welcome_select">Zuerst muss ein Bibliothekskonto eingerichtet werden.</string>
+    <string name="welcome_account">Dieses Konto kann anonym sein (nur Suche), oder Ausweisnummer und Passwort enthalten (auch Kontofunktionen). Es können später in den Einstellungen weitere Konten angelegt werden.</string>
+    <string name="select_library">Bibliothek auswählen</string>
 
     <string-array name="orders">
         <item>Standard</item>

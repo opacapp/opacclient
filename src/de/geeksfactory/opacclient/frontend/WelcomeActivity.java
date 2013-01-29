@@ -4,16 +4,18 @@ import java.io.IOException;
 import java.util.List;
 
 import org.acra.ACRA;
-import org.holoeverywhere.app.ProgressDialog;
+import org.holoeverywhere.app.AlertDialog;
 import org.json.JSONException;
 
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockActivity;
@@ -27,27 +29,40 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 
 public class WelcomeActivity extends SherlockActivity {
 	protected OpacClient app;
-	protected ProgressDialog dialog;
+	protected AlertDialog dialog;
 	private List<Library> libraries;
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		app = (OpacClient) getApplication();
 		setContentView(R.layout.welcome_activity);
 
-		final SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(WelcomeActivity.this);
-		ListView lv = (ListView) findViewById(R.id.lvBibs);
+		Button btAddAccount = (Button) findViewById(R.id.btAddAccount);
+		btAddAccount.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				add();
+			}
+		});
+	}
+
+	public void add() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		// Get the layout inflater
+		LayoutInflater inflater = getLayoutInflater();
+
+		View view = inflater.inflate(R.layout.account_add_liblist_dialog, null);
+
+		ListView lv = (ListView) view.findViewById(R.id.lvBibs);
 		try {
-			libraries = app.getLibraries();
-			lv.setAdapter(new LibraryListAdapter(this, libraries));
-		} catch (JSONException e) {
-			ACRA.getErrorReporter().handleException(e);
+			libraries = ((OpacClient) getApplication()).getLibraries();
 		} catch (IOException e) {
 			ACRA.getErrorReporter().handleException(e);
+		} catch (JSONException e) {
+			ACRA.getErrorReporter().handleException(e);
 		}
-
+		lv.setAdapter(new LibraryListAdapter(this, libraries));
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
@@ -60,17 +75,28 @@ public class WelcomeActivity extends SherlockActivity {
 				acc.setLabel(getString(R.string.default_account_name));
 				long insertedid = data.addAccount(acc);
 				data.close();
+				dialog.dismiss();
 
-				sp.edit().putLong(OpacClient.PREF_SELECTED_ACCOUNT, insertedid)
-						.commit();
-
-				dialog = ProgressDialog.show(WelcomeActivity.this, "",
-						getString(R.string.connecting_initially), true);
-				dialog.show();
-
-				new InitTask().execute(app);
+				((OpacClient) getApplication()).setAccount(insertedid);
+				
+				Intent i = new Intent(WelcomeActivity.this,
+						AccountEditActivity.class);
+				i.putExtra("id", insertedid);
+				i.putExtra("adding", true);
+				i.putExtra("welcome", true);
+				startActivity(i);
 			}
 		});
+
+		builder.setView(view).setNegativeButton(R.string.cancel,
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+					}
+				});
+		dialog = builder.create();
+		dialog.show();
 	}
 
 	public class InitTask extends OpacTask<Integer> {
