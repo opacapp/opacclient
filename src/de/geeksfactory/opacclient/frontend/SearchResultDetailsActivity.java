@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -325,6 +326,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 						.getDesc());
 				((TextView) v.findViewById(R.id.tvContent)).setText(detail
 						.getContent());
+				Linkify.addLinks((TextView) v.findViewById(R.id.tvContent), Linkify.WEB_URLS);
 				llDetails.addView(v);
 			}
 
