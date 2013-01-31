@@ -309,6 +309,9 @@ public class OCLC2011 implements OpacApi {
 		if (doc.select(".error").size() > 0) {
 			last_error = doc.select(".error").text().trim();
 			return null;
+		} else if (doc.select(".nohits").size() > 0) {
+			last_error = doc.select(".nohits").text().trim();
+			return null;
 		}
 
 		this.results = doc.select(".box-header h2").first().text();
