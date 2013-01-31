@@ -522,12 +522,16 @@ public class AccountActivity extends OpacActivity {
 			for (final ContentValues item : result.getLent()) {
 				View v = getLayoutInflater().inflate(R.layout.lent_listitem,
 						null);
-				((TextView) v.findViewById(R.id.tvTitel))
-						.setText(Html.fromHtml(item
-								.getAsString(AccountData.KEY_LENT_TITLE)));
-				((TextView) v.findViewById(R.id.tvVerfasser))
-						.setText(Html.fromHtml(item
-								.getAsString(AccountData.KEY_LENT_AUTHOR)));
+				if (item.containsKey(AccountData.KEY_LENT_TITLE)) {
+					((TextView) v.findViewById(R.id.tvTitel)).setText(Html
+							.fromHtml(item
+									.getAsString(AccountData.KEY_LENT_TITLE)));
+				}
+				if (item.containsKey(AccountData.KEY_LENT_AUTHOR)) {
+					((TextView) v.findViewById(R.id.tvVerfasser)).setText(Html
+							.fromHtml(item
+									.getAsString(AccountData.KEY_LENT_AUTHOR)));
+				}
 
 				((TextView) v.findViewById(R.id.tvStatus))
 						.setVisibility(View.VISIBLE);
@@ -600,11 +604,15 @@ public class AccountActivity extends OpacActivity {
 				View v = getLayoutInflater().inflate(
 						R.layout.reservation_listitem, null);
 
-				((TextView) v.findViewById(R.id.tvTitel))
-						.setText(Html.fromHtml(item
-								.getAsString(AccountData.KEY_RESERVATION_TITLE)));
-				((TextView) v.findViewById(R.id.tvVerfasser)).setText(item
-						.getAsString(AccountData.KEY_RESERVATION_AUTHOR));
+				if (item.containsKey(AccountData.KEY_RESERVATION_TITLE)) {
+					((TextView) v.findViewById(R.id.tvTitel))
+							.setText(Html.fromHtml(item
+									.getAsString(AccountData.KEY_RESERVATION_TITLE)));
+				}
+				if (item.containsKey(AccountData.KEY_RESERVATION_AUTHOR)) {
+					((TextView) v.findViewById(R.id.tvVerfasser)).setText(item
+							.getAsString(AccountData.KEY_RESERVATION_AUTHOR));
+				}
 
 				if (item.containsKey(AccountData.KEY_RESERVATION_READY)) {
 					((TextView) v.findViewById(R.id.tvStatus))
