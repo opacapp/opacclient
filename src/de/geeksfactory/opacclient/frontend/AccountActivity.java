@@ -23,6 +23,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -103,6 +104,12 @@ public class AccountActivity extends OpacActivity {
 	}
 
 	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// see https://github.com/raphaelm/opacclient/issues/70
+		super.onConfigurationChanged(newConfig);
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.activity_account, menu);
 		if (refreshing) {
@@ -149,7 +156,6 @@ public class AccountActivity extends OpacActivity {
 		setContentView(R.layout.loading);
 
 		account = app.getAccount();
-
 		if (!app.getApi().isAccountSupported(app.getLibrary())
 				&& !app.getApi().isAccountExtendable()) {
 			// Not supported with this api at all
@@ -513,15 +519,17 @@ public class AccountActivity extends OpacActivity {
 		}
 
 		LinearLayout llLent = (LinearLayout) findViewById(R.id.llLent);
+		llLent.removeAllViews();
 
 		if (result.getLent().size() == 0) {
 			TextView t1 = new TextView(this);
 			t1.setText(R.string.entl_none);
 			llLent.addView(t1);
 		} else {
-			for (final ContentValues item : result.getLent()) {
+			for (ContentValues item : result.getLent()) {
 				View v = getLayoutInflater().inflate(R.layout.lent_listitem,
 						null);
+
 				if (item.containsKey(AccountData.KEY_LENT_TITLE)) {
 					((TextView) v.findViewById(R.id.tvTitel)).setText(Html
 							.fromHtml(item
@@ -574,12 +582,13 @@ public class AccountActivity extends OpacActivity {
 				}
 
 				if (item.containsKey(AccountData.KEY_LENT_LINK)) {
+					v.findViewById(R.id.ivProlong).setTag(
+							item.getAsString(AccountData.KEY_LENT_LINK));
 					((ImageView) v.findViewById(R.id.ivProlong))
 							.setOnClickListener(new OnClickListener() {
 								@Override
 								public void onClick(View arg0) {
-									prolong(item
-											.getAsString(AccountData.KEY_LENT_LINK));
+									prolong((String) arg0.getTag());
 								}
 							});
 					((ImageView) v.findViewById(R.id.ivProlong))
@@ -594,13 +603,14 @@ public class AccountActivity extends OpacActivity {
 		}
 
 		LinearLayout llRes = (LinearLayout) findViewById(R.id.llReservations);
+		llRes.removeAllViews();
 
 		if (result.getReservations().size() == 0) {
 			TextView t1 = new TextView(this);
 			t1.setText(R.string.reservations_none);
 			llRes.addView(t1);
 		} else {
-			for (final ContentValues item : result.getReservations()) {
+			for (ContentValues item : result.getReservations()) {
 				View v = getLayoutInflater().inflate(
 						R.layout.reservation_listitem, null);
 
@@ -637,12 +647,14 @@ public class AccountActivity extends OpacActivity {
 				}
 
 				if (item.containsKey(AccountData.KEY_RESERVATION_CANCEL)) {
+					v.findViewById(R.id.ivCancel)
+							.setTag(item
+									.getAsString(AccountData.KEY_RESERVATION_CANCEL));
 					((ImageView) v.findViewById(R.id.ivCancel))
 							.setOnClickListener(new OnClickListener() {
 								@Override
 								public void onClick(View arg0) {
-									cancel(item
-											.getAsString(AccountData.KEY_RESERVATION_CANCEL));
+									cancel((String) arg0.getTag());
 								}
 							});
 					((ImageView) v.findViewById(R.id.ivCancel))

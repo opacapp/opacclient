@@ -50,7 +50,7 @@
         </activity>
         <activity
             android:name=".frontend.SearchResultsActivity"
-            android:configChanges="keyboardHidden|orientation"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/search_results"
             android:uiOptions="splitActionBarWhenNarrow" >
             <meta-data
@@ -63,7 +63,7 @@
         </activity>
         <activity
             android:name=".frontend.SearchResultDetailsActivity"
-            android:configChanges="keyboardHidden|orientation"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/details"
             android:uiOptions="splitActionBarWhenNarrow" >
             <meta-data
@@ -72,12 +72,11 @@
         </activity>
         <activity
             android:name=".frontend.AccountActivity"
-            android:configChanges="keyboardHidden|orientation"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/account" >
         </activity>
         <activity
             android:name=".frontend.WelcomeActivity"
-            android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name" >
         </activity>
         <activity
@@ -100,7 +99,7 @@
         </activity>
         <activity
             android:name=".frontend.InfoActivity"
-            android:configChanges="orientation|keyboardHidden"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/info" >
         </activity>
         <activity
