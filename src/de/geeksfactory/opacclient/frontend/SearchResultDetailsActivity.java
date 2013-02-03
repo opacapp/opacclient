@@ -53,15 +53,21 @@ import de.geeksfactory.opacclient.storage.StarDataSource;
 
 public class SearchResultDetailsActivity extends OpacActivity {
 
-	protected ProgressDialog dialog;
-	protected DetailledItem item;
-	protected String id;
-	protected String title;
+	private ProgressDialog dialog;
+	private DetailledItem item;
+	private String id;
+	private String title;
 
-	protected String[] items;
-	protected FetchTask ft;
-	protected FetchSubTask fst;
-	protected ResTask rt;
+	private FetchTask ft;
+	private FetchSubTask fst;
+	private ResTask rt;
+	private boolean account_switched = false;
+
+	@Override
+	public void accountSelected() {
+		account_switched = true;
+		super.accountSelected();
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -134,7 +140,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
 					if (accounts.get(position).getId() != app.getAccount()
-							.getId()) {
+							.getId() || account_switched) {
 						app.setAccount(accounts.get(position).getId());
 						new RestoreSessionTask().execute();
 					} else {
