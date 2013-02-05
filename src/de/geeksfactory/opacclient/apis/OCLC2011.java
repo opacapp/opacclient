@@ -35,8 +35,10 @@ import org.jsoup.select.Elements;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
+import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult.Status;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -431,6 +433,17 @@ public class OCLC2011 implements OpacApi {
 
 		Document doc2 = Jsoup.parse(html2);
 
+		httpget = new HttpGet(
+				opac_url
+						+ "/singleHit.do?methodToCall=activateTab&tab=showAvailabilityActive");
+
+		response = ahc.execute(httpget);
+		String html3 = convertStreamToString(response.getEntity().getContent());
+		response.getEntity().consumeContent();
+
+		Document doc3 = Jsoup.parse(html3);
+		doc3.setBaseUri(opac_url);
+
 		DetailledItem result = new DetailledItem();
 
 		try {
@@ -438,25 +451,31 @@ public class OCLC2011 implements OpacApi {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-
-		if (result.getId() == null) {
-			HttpGet httpget3 = new HttpGet(
-					opac_url
-							+ "/singleHit.do?methodToCall=activateTab&tab=showAvailibilityActive");
-
-			HttpResponse response3 = ahc.execute(httpget3);
-			String html3 = convertStreamToString(response3.getEntity()
-					.getContent());
-			response3.getEntity().consumeContent();
-
-			Document doc3 = Jsoup.parse(html3);
-			for (Element link : doc3.select("a")) {
-				String key = Uri.parse(link.attr("abs:href"))
-						.getQueryParameter("katkey");
+		List<String> reservationlinks = new ArrayList<String>();
+		for (Element link : doc3.select("#tab-content a")) {
+			Uri href = Uri.parse(link.absUrl("href"));
+			if (result.getId() == null) {
+				// ID retrieval
+				String key = href.getQueryParameter("katkey");
 				if (key != null) {
 					result.setId(key);
 				}
 			}
+
+			// Vormerken
+			if (href.getQueryParameter("methodToCall") != null) {
+				if (href.getQueryParameter("methodToCall").equals(
+						"doVormerkung"))
+					reservationlinks.add(href.getQuery());
+			}
+		}
+		if (reservationlinks.size() == 1) {
+			result.setReservable(true);
+			result.setReservation_info(reservationlinks.get(0));
+		} else if (reservationlinks.size() == 0) {
+			result.setReservable(false);
+		} else {
+			// TODO: Multiple options - handle this case!
 		}
 
 		if (doc.select(".data td img").size() == 1) {
@@ -538,17 +557,93 @@ public class OCLC2011 implements OpacApi {
 			e.printStackTrace();
 		}
 
-		result.setReservable(false);
 		return result;
 	}
 
-	// No account support for now.
-
 	@Override
 	public ReservationResult reservation(String reservation_info, Account acc,
-			int useraction, String selection)
-			throws IOException {
-		return new ReservationResult(ReservationResult.Status.UNSUPPORTED);
+			int useraction, String selection) throws IOException {
+		final String branch_inputfield = "issuepoint";
+
+		HttpPost httppost;
+		HttpGet httpget;
+		HttpResponse response;
+		Document doc = null;
+
+		if (useraction == ReservationResult.ACTION_CONFIRMATION) {
+
+		} else if (selection == null || useraction == 0) {
+			httpget = new HttpGet(opac_url + "/availability.do?"
+					+ reservation_info);
+
+			response = ahc.execute(httpget);
+			String html = convertStreamToString(response.getEntity()
+					.getContent());
+			response.getEntity().consumeContent();
+			doc = Jsoup.parse(html);
+
+			if (doc.select("input[name=username]").size() > 0) {
+				// Login vonnöten
+				httppost = new HttpPost(opac_url + "/login.do");
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
+						2);
+				nameValuePairs.add(new BasicNameValuePair("username", acc
+						.getName()));
+				nameValuePairs.add(new BasicNameValuePair("password", acc
+						.getPassword()));
+				nameValuePairs.add(new BasicNameValuePair("methodToCall",
+						"submit"));
+				nameValuePairs.add(new BasicNameValuePair("CSId", CSId));
+				nameValuePairs.add(new BasicNameValuePair("login_action",
+						"Login"));
+				httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+				response = ahc.execute(httppost);
+
+				html = convertStreamToString(response.getEntity().getContent());
+				doc = Jsoup.parse(html);
+			}
+			if (doc.select("input[name=" + branch_inputfield + "]").size() > 0) {
+				ContentValues branches = new ContentValues();
+				for (Element option : doc
+						.select("input[name=" + branch_inputfield + "]")
+						.first().parent().parent().parent().select("td")) {
+					if (option.select("input").size() != 1)
+						continue;
+					String value = option.text().trim();
+					String key = option.select("input").val();
+					branches.put(key, value);
+				}
+				ReservationResult result = new ReservationResult(
+						Status.SELECTION_NEEDED);
+				result.setActionIdentifier(ReservationResult.ACTION_BRANCH);
+				result.setSelection(branches);
+				return result;
+			}
+		} else if (useraction == ReservationResult.ACTION_BRANCH) {
+			httppost = new HttpPost(opac_url + "/reservation.do");
+			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+			nameValuePairs.add(new BasicNameValuePair(branch_inputfield,
+					selection));
+			nameValuePairs.add(new BasicNameValuePair("methodToCall",
+					"reservation"));
+			nameValuePairs.add(new BasicNameValuePair("CSId", CSId));
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			response = ahc.execute(httppost);
+
+			String html = convertStreamToString(response.getEntity()
+					.getContent());
+			doc = Jsoup.parse(html);
+		}
+
+		if (doc == null)
+			return new ReservationResult(Status.ERROR);
+
+		if (doc.getElementsByClass("error").size() >= 1) {
+			last_error = doc.getElementsByClass("error").get(0).text();
+			return new ReservationResult(Status.ERROR);
+		}
+
+		return new ReservationResult(Status.OK);
 	}
 
 	@Override
@@ -606,6 +701,7 @@ public class OCLC2011 implements OpacApi {
 			throws ClientProtocolException, IOException {
 		Document doc = Jsoup.parse(html);
 		Elements copytrs = doc.select(".data tr");
+		doc.setBaseUri(opac_url);
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 
