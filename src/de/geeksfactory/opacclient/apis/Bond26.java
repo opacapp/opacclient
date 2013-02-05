@@ -427,7 +427,6 @@ public class Bond26 implements OpacApi {
 				html = convertStreamToString(response.getEntity().getContent());
 				doc = Jsoup.parse(html);
 			}
-
 			if (doc.select("select[name=" + branch_inputfield + "]").size() > 0) {
 				ContentValues branches = new ContentValues();
 				for (Element option : doc
@@ -483,6 +482,11 @@ public class Bond26 implements OpacApi {
 				result.setDetails(details);
 				return result;
 			}
+		}
+
+		if (doc.getElementsByClass("kontomeldung").size() == 1) {
+			last_error = doc.getElementsByClass("kontomeldung").get(0).text();
+			return new ReservationResult(Status.ERROR);
 		}
 
 		return new ReservationResult(Status.ERROR);

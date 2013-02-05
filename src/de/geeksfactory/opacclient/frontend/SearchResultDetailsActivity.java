@@ -142,6 +142,10 @@ public class SearchResultDetailsActivity extends OpacActivity {
 					if (accounts.get(position).getId() != app.getAccount()
 							.getId() || account_switched) {
 						app.setAccount(accounts.get(position).getId());
+						dialog = ProgressDialog.show(
+								SearchResultDetailsActivity.this, "",
+								getString(R.string.doing_res), true);
+						dialog.show();
 						new RestoreSessionTask().execute();
 					} else {
 						reservationDo();
@@ -183,9 +187,15 @@ public class SearchResultDetailsActivity extends OpacActivity {
 	}
 
 	public void reservationDo(int useraction, String selection) {
-		dialog = ProgressDialog.show(SearchResultDetailsActivity.this, "",
-				getString(R.string.doing_res), true);
-		dialog.show();
+		if (dialog == null) {
+			dialog = ProgressDialog.show(SearchResultDetailsActivity.this, "",
+					getString(R.string.doing_res), true);
+			dialog.show();
+		} else if (!dialog.isShowing()) {
+			dialog = ProgressDialog.show(SearchResultDetailsActivity.this, "",
+					getString(R.string.doing_res), true);
+			dialog.show();
+		}
 
 		rt = new ResTask();
 		rt.execute(app, item.getReservation_info(), useraction, selection);
