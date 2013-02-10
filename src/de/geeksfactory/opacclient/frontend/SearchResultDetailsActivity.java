@@ -18,6 +18,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.TextUtils.TruncateAt;
 import android.text.util.Linkify;
 import android.util.Log;
@@ -319,11 +320,13 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		for (String[] detail : result.getDetails()) {
 			TableRow tr = new TableRow(this);
 			TextView tv1 = new TextView(this);
-			tv1.setText(detail[0]);
+			tv1.setText(Html.fromHtml(detail[0]));
 			tv1.setTypeface(null, Typeface.BOLD);
+			tv1.setPadding(0, 0, 8, 0);
 			TextView tv2 = new TextView(this);
-			tv2.setText(detail[1]);
+			tv2.setText(Html.fromHtml(detail[1]));
 			tv2.setEllipsize(TruncateAt.END);
+			tv2.setSingleLine(false);
 			tr.addView(tv1);
 			tr.addView(tv2);
 			table.addView(tr);

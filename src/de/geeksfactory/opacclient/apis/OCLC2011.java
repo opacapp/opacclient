@@ -465,7 +465,9 @@ public class OCLC2011 implements OpacApi {
 			// Vormerken
 			if (href.getQueryParameter("methodToCall") != null) {
 				if (href.getQueryParameter("methodToCall").equals(
-						"doVormerkung"))
+						"doVormerkung")
+						|| href.getQueryParameter("methodToCall").equals(
+								"doBestellung"))
 					reservationlinks.add(href.getQuery());
 			}
 		}
@@ -570,8 +572,22 @@ public class OCLC2011 implements OpacApi {
 		HttpResponse response;
 		Document doc = null;
 
-		if (useraction == ReservationResult.ACTION_CONFIRMATION) {
+		String action = "reservation";
+		if (reservation_info.contains("doBestellung")) {
+			action = "order";
+		}
 
+		if (useraction == ReservationResult.ACTION_CONFIRMATION) {
+			httppost = new HttpPost(opac_url + "/" + action + ".do");
+			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+			nameValuePairs.add(new BasicNameValuePair("methodToCall", action));
+			nameValuePairs.add(new BasicNameValuePair("CSId", CSId));
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			response = ahc.execute(httppost);
+
+			String html = convertStreamToString(response.getEntity()
+					.getContent());
+			doc = Jsoup.parse(html);
 		} else if (selection == null || useraction == 0) {
 			httpget = new HttpGet(opac_url + "/availability.do?"
 					+ reservation_info);
@@ -620,12 +636,11 @@ public class OCLC2011 implements OpacApi {
 				return result;
 			}
 		} else if (useraction == ReservationResult.ACTION_BRANCH) {
-			httppost = new HttpPost(opac_url + "/reservation.do");
+			httppost = new HttpPost(opac_url + "/" + action + ".do");
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair(branch_inputfield,
 					selection));
-			nameValuePairs.add(new BasicNameValuePair("methodToCall",
-					"reservation"));
+			nameValuePairs.add(new BasicNameValuePair("methodToCall", action));
 			nameValuePairs.add(new BasicNameValuePair("CSId", CSId));
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 			response = ahc.execute(httppost);
@@ -641,6 +656,26 @@ public class OCLC2011 implements OpacApi {
 		if (doc.getElementsByClass("error").size() >= 1) {
 			last_error = doc.getElementsByClass("error").get(0).text();
 			return new ReservationResult(Status.ERROR);
+		}
+
+		if (doc.select("#CirculationForm .textrot").size() > 0) {
+			List<String[]> details = new ArrayList<String[]>();
+			for (String row : doc.select("#CirculationForm p").first().html()
+					.split("<br />")) {
+				Document frag = Jsoup.parseBodyFragment(row);
+				if (frag.text().contains(":")) {
+					String[] split = frag.text().split(":");
+					if (split.length >= 2)
+						details.add(new String[] { split[0].trim() + ":",
+								split[1].trim() });
+				} else {
+					details.add(new String[] { "", frag.text().trim() });
+				}
+			}
+			ReservationResult result = new ReservationResult(
+					Status.CONFIRMATION_NEEDED);
+			result.setDetails(details);
+			return result;
 		}
 
 		return new ReservationResult(Status.OK);
@@ -716,7 +751,7 @@ public class OCLC2011 implements OpacApi {
 			Element tr = copytrs.get(i);
 			ContentValues e = new ContentValues();
 
-			if(tr.text().contains("keine Daten")){
+			if (tr.text().contains("keine Daten")) {
 				return;
 			}
 
@@ -765,8 +800,8 @@ public class OCLC2011 implements OpacApi {
 
 	}
 
-	private void parse_reslist(List<ContentValues> reservations, String html)
-			throws ClientProtocolException, IOException {
+	private void parse_reslist(List<ContentValues> reservations, String html,
+			int page) throws ClientProtocolException, IOException {
 		Document doc = Jsoup.parse(html);
 		Elements copytrs = doc.select(".data tr");
 		doc.setBaseUri(opac_url);
@@ -778,10 +813,10 @@ public class OCLC2011 implements OpacApi {
 			Element tr = copytrs.get(i);
 			ContentValues e = new ContentValues();
 
-			if(tr.text().contains("keine Daten")){
+			if (tr.text().contains("keine Daten")) {
 				return;
 			}
-				
+
 			e.put(AccountData.KEY_RESERVATION_TITLE,
 					tr.child(1).select("strong").text().trim());
 			try {
@@ -791,7 +826,10 @@ public class OCLC2011 implements OpacApi {
 				e.put(AccountData.KEY_RESERVATION_BRANCH, tr.child(2).html()
 						.split("<br />")[2].trim());
 
-				if (tr.select("a").size() == 1)
+				if (tr.select("a").size() == 1 && page == 0)
+					// TODO: The URL is based on the position and might create
+					// problems if there are
+					// multiple pages… We don't know that!
 					e.put(AccountData.KEY_RESERVATION_CANCEL,
 							Uri.parse(tr.select("a").attr("abs:href"))
 									.getQuery());
@@ -811,7 +849,7 @@ public class OCLC2011 implements OpacApi {
 				String html2 = convertStreamToString(response2.getEntity()
 						.getContent());
 
-				parse_reslist(reservations, html2);
+				parse_reslist(reservations, html2, page + 1);
 				break;
 			}
 		}
@@ -840,14 +878,14 @@ public class OCLC2011 implements OpacApi {
 		response2 = ahc.execute(httpget);
 		html2 = convertStreamToString(response2.getEntity().getContent());
 		List<ContentValues> reserved = new ArrayList<ContentValues>();
-		parse_reslist(reserved, html2);
+		parse_reslist(reserved, html2, 0);
 
 		// Vorgemerkte Medien
 		httpget = new HttpGet(opac_url
 				+ "/userAccount.do?methodToCall=showAccount&typ=7");
 		response2 = ahc.execute(httpget);
 		html2 = convertStreamToString(response2.getEntity().getContent());
-		parse_reslist(reserved, html2);
+		parse_reslist(reserved, html2, 0);
 
 		AccountData res = new AccountData(acc.getId());
 		res.setLent(medien);
