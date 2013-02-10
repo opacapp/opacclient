@@ -655,7 +655,11 @@ public class OCLC2011 implements OpacApi {
 	@Override
 	public boolean cancel(Account account, String a) throws IOException,
 			NotReachableException {
-		return false;
+		HttpGet httpget = new HttpGet(opac_url + "/userAccount.do?" + a);
+		HttpResponse response2 = ahc.execute(httpget);
+
+		String html2 = convertStreamToString(response2.getEntity().getContent());
+		return true;
 	}
 
 	private boolean login(Account acc) {
@@ -705,9 +709,16 @@ public class OCLC2011 implements OpacApi {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 
-		for (int i = 1; i < copytrs.size(); i++) {
+		int trs = copytrs.size();
+		if (trs == 1)
+			return;
+		for (int i = 1; i < trs; i++) {
 			Element tr = copytrs.get(i);
 			ContentValues e = new ContentValues();
+
+			if(tr.text().contains("keine Daten")){
+				return;
+			}
 
 			e.put(AccountData.KEY_LENT_TITLE, tr.child(1).select("strong")
 					.text().trim());
@@ -754,6 +765,59 @@ public class OCLC2011 implements OpacApi {
 
 	}
 
+	private void parse_reslist(List<ContentValues> reservations, String html)
+			throws ClientProtocolException, IOException {
+		Document doc = Jsoup.parse(html);
+		Elements copytrs = doc.select(".data tr");
+		doc.setBaseUri(opac_url);
+
+		int trs = copytrs.size();
+		if (trs == 1)
+			return;
+		for (int i = 1; i < trs; i++) {
+			Element tr = copytrs.get(i);
+			ContentValues e = new ContentValues();
+
+			if(tr.text().contains("keine Daten")){
+				return;
+			}
+				
+			e.put(AccountData.KEY_RESERVATION_TITLE,
+					tr.child(1).select("strong").text().trim());
+			try {
+				e.put(AccountData.KEY_RESERVATION_AUTHOR, tr.child(1).html()
+						.split("<br />")[1].trim());
+
+				e.put(AccountData.KEY_RESERVATION_BRANCH, tr.child(2).html()
+						.split("<br />")[2].trim());
+
+				if (tr.select("a").size() == 1)
+					e.put(AccountData.KEY_RESERVATION_CANCEL,
+							Uri.parse(tr.select("a").attr("abs:href"))
+									.getQuery());
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
+			reservations.add(e);
+		}
+
+		for (Element link : doc.select(".box-right a")) {
+			if (link.text().contains("»")) {
+				HttpGet httpget = new HttpGet(link.attr("abs:href"));
+				HttpResponse response2 = ahc.execute(httpget);
+
+				String html2 = convertStreamToString(response2.getEntity()
+						.getContent());
+
+				parse_reslist(reservations, html2);
+				break;
+			}
+		}
+
+	}
+
 	@Override
 	public AccountData account(Account acc) throws IOException,
 			NotReachableException, JSONException, SocketException {
@@ -762,19 +826,32 @@ public class OCLC2011 implements OpacApi {
 		if (!login(acc))
 			return null;
 
+		// Geliehene Medien
 		HttpGet httpget = new HttpGet(opac_url
-				+ "/userAccount.do?methodToCall=show&type=1");
+				+ "/userAccount.do?methodToCall=showAccount&typ=1");
 		HttpResponse response2 = ahc.execute(httpget);
-
 		String html2 = convertStreamToString(response2.getEntity().getContent());
-
 		List<ContentValues> medien = new ArrayList<ContentValues>();
-
 		parse_medialist(medien, html2);
+
+		// Bestellte Medien
+		httpget = new HttpGet(opac_url
+				+ "/userAccount.do?methodToCall=showAccount&typ=6");
+		response2 = ahc.execute(httpget);
+		html2 = convertStreamToString(response2.getEntity().getContent());
+		List<ContentValues> reserved = new ArrayList<ContentValues>();
+		parse_reslist(reserved, html2);
+
+		// Vorgemerkte Medien
+		httpget = new HttpGet(opac_url
+				+ "/userAccount.do?methodToCall=showAccount&typ=7");
+		response2 = ahc.execute(httpget);
+		html2 = convertStreamToString(response2.getEntity().getContent());
+		parse_reslist(reserved, html2);
 
 		AccountData res = new AccountData(acc.getId());
 		res.setLent(medien);
-		res.setReservations(new ArrayList<ContentValues>());
+		res.setReservations(reserved);
 		return res;
 	}
 
