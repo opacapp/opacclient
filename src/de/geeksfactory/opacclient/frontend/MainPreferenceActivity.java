@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceManager;
 
 import com.actionbarsherlock.view.MenuItem;
 
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.reminder.ReminderCheckService;
+import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 
@@ -42,6 +44,15 @@ public class MainPreferenceActivity extends OpacPreferenceActivity {
 				data.open();
 				data.clearMeta();
 				data.close();
+				AccountDataSource adata = new AccountDataSource(
+						MainPreferenceActivity.this);
+				adata.open();
+				adata.invalidateCachedData();
+				adata.close();
+				PreferenceManager
+						.getDefaultSharedPreferences(
+								MainPreferenceActivity.this).edit()
+						.putLong("notification_last", 0).commit();
 				Intent i = new Intent(MainPreferenceActivity.this,
 						ReminderCheckService.class);
 				startService(i);

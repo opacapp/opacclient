@@ -36,7 +36,7 @@
 
         <Preference
             android:key="meta_clear"
-            android:summary="Löscht die zwischengespeicherte Liste der Zweigstellen und Mediengruppen"
+            android:summary="Löscht alle auf dem Handy zwischengespeicherten Daten außer Passwörtern"
             android:title="Cache leeren" />
     </PreferenceCategory>
 

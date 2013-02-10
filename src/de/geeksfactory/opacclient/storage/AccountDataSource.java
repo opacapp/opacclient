@@ -210,6 +210,14 @@ public class AccountDataSource {
 		return adata;
 	}
 
+	public void invalidateCachedData() {
+		database.delete(AccountDatabase.TABLENAME_LENT, null, null);
+		database.delete(AccountDatabase.TABLENAME_RESERVATION, null, null);
+		ContentValues update = new ContentValues();
+		update.put("cached", 0);
+		database.update(AccountDatabase.TABLENAME_ACCOUNTS, update, null, null);
+	}
+
 	public void invalidateCachedAccountData(Account account) {
 		database.delete(AccountDatabase.TABLENAME_LENT, "account = ?",
 				new String[] { "" + account.getId() });
