@@ -23,6 +23,7 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
@@ -76,6 +77,7 @@ public class ReminderCheckService extends Service {
 
 			long now = new Date().getTime();
 			long last = sp.getLong("notification_last", 0);
+			long new_last = last;
 			long warning = Long.decode(sp.getString("notification_warning",
 					"367200000"));
 			// long warning = 1000 * 3600 * 24 * 90;
@@ -83,6 +85,7 @@ public class ReminderCheckService extends Service {
 			long expired_total = 0;
 			long affected_accounts = 0;
 			long first = 0;
+			long first_affected_account = 0;
 
 			OpacClient app = (OpacClient) getApplication();
 			for (Account account : accounts) {
@@ -113,8 +116,8 @@ public class ReminderCheckService extends Service {
 								}
 								this_account++;
 							}
-							if (expiring > last) {
-								last = expiring;
+							if (expiring > new_last) {
+								new_last = expiring;
 							}
 							if (expiring < first || first == 0) {
 								first = expiring;
@@ -122,8 +125,11 @@ public class ReminderCheckService extends Service {
 						}
 					}
 
-					if (this_account > 0)
+					if (this_account > 0) {
 						affected_accounts++;
+						if (first_affected_account == 0)
+							first_affected_account = account.getId();
+					}
 
 				} catch (ClientProtocolException e) {
 					e.printStackTrace();
@@ -137,8 +143,8 @@ public class ReminderCheckService extends Service {
 				}
 			}
 			data.close();
-			return new Long[] { expired_new, expired_total, last, first,
-					affected_accounts };
+			return new Long[] { expired_new, expired_total, new_last, first,
+					affected_accounts, first_affected_account };
 		}
 
 		@Override
@@ -162,11 +168,14 @@ public class ReminderCheckService extends Service {
 			long last = result[2];
 			long first = result[3];
 			long affected_accounts = result[4];
+			long first_affected_account = result[5];
+
 			if (expired_new == 0)
 				return;
 
 			SharedPreferences sp = PreferenceManager
 					.getDefaultSharedPreferences(ReminderCheckService.this);
+
 			NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
 			NotificationCompat.Builder nb = new NotificationCompat.Builder(
@@ -193,6 +202,7 @@ public class ReminderCheckService extends Service {
 				// menu should be opened
 				notificationIntent.putExtra("showmenu", true);
 			}
+			notificationIntent.putExtra("account", first_affected_account);
 			PendingIntent contentIntent = PendingIntent.getActivity(
 					ReminderCheckService.this, 0, notificationIntent, 0);
 			nb.setContentIntent(contentIntent);

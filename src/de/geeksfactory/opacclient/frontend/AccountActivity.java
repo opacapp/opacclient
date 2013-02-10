@@ -82,6 +82,11 @@ public class AccountActivity extends OpacActivity {
 				spe.putLong("notification_last", getIntent().getExtras()
 						.getLong("notif_last"));
 				spe.commit();
+				if (getIntent().getExtras().getLong("account") != app
+						.getAccount().getId()) {
+					app.setAccount(getIntent().getExtras().getLong("account"));
+					accountSelected();
+				}
 				NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 				nMgr.cancel(OpacClient.NOTIF_ID);
 			}
