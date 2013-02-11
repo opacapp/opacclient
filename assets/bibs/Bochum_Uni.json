@@ -5,6 +5,6 @@
   "baseurl": "http://opac.ub.rub.de:8080/webOPACClient", 
   "information": "http://www.ub.rub.de/informationen/oeffnungszeiten.html"
  }, 
- "support": "Katalogsuche", 
+ "support": "Katalogsuche und Konto (experimentell)", 
  "title": "Unibibliothek RUB"
 }

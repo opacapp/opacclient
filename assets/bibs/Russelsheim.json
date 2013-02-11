@@ -5,6 +5,6 @@
   "baseurl": "http://stadtbuecherei.ruesselsheim.de/webOPACClient", 
   "information": "http://www.stadt-ruesselsheim.de/Stadtbuecherei.html"
  }, 
- "support": "Katalogsuche", 
+ "support": "Katalogsuche und Konto (experimentell)", 
  "title": null
 }

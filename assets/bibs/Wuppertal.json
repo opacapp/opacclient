@@ -5,6 +5,6 @@
   "baseurl": "http://webopac.wuppertal.de/webOPACClient.sisis", 
   "information": "http://www.wuppertal.de/kultur-bildung/stadtbibliothek/index.php"
  }, 
- "support": "Katalogsuche", 
+ "support": "Katalogsuche und Konto (experimentell)", 
  "title": null
 }

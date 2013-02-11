@@ -5,6 +5,6 @@
   "baseurl": "https://opac.haw-aw.de/InfoGuideClient.fawsis", 
   "information": "http://www.haw-aw.de/einrichtungen/bibliothek/oeffnungszeiten/" 
  }, 
- "support": "Katalogsuche", 
+ "support": "Katalogsuche und Konto (experimentell)", 
  "title": "Hochschule"
 }

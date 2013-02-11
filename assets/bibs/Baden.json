@@ -5,6 +5,6 @@
   "baseurl": "http://62.2.168.69/webOPACClient.baden", 
   "information": "http://www.baden.ch/xml_1/internet/de/application/d1/d59/f60.cfm#content" 
  }, 
- "support": "Katalogsuche", 
+ "support": "Katalogsuche und Konto (experimentell)", 
  "title": null
 }
