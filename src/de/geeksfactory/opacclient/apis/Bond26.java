@@ -679,6 +679,9 @@ public class Bond26 implements OpacApi {
 			}
 			medien.add(e);
 		}
+		assert (doc.select(".kontozeile_center table").get(0).select("tr")
+				.size() > 0);
+		assert (exemplartrs.size() == medien.size());
 
 		copymap = data.getJSONArray("reservationtable");
 		copymap_keys = new String[] { AccountData.KEY_RESERVATION_AUTHOR,
@@ -711,6 +714,9 @@ public class Bond26 implements OpacApi {
 
 			reservations.add(e);
 		}
+		assert (doc.select(".kontozeile_center table").get(1).select("tr")
+				.size() > 0);
+		assert (exemplartrs.size() == reservations.size());
 
 		AccountData res = new AccountData(acc.getId());
 		res.setLent(medien);

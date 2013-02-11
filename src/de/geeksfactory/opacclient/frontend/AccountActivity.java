@@ -68,7 +68,8 @@ public class AccountActivity extends OpacActivity {
 
 	private boolean refreshing = false;
 	private long refreshtime;
-
+	private boolean fromcache;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -234,7 +235,7 @@ public class AccountActivity extends OpacActivity {
 			adatasource.open();
 			refreshtime = adatasource.getCachedAccountDataTime(account);
 			if (refreshtime > 0) {
-				displaydata(adatasource.getCachedAccountData(account));
+				displaydata(adatasource.getCachedAccountData(account), true);
 				if (System.currentTimeMillis() - refreshtime > MAX_CACHE_AGE) {
 					refresh();
 				}
@@ -254,9 +255,12 @@ public class AccountActivity extends OpacActivity {
 
 	protected void cancel(final String a) {
 		long age = System.currentTimeMillis() - refreshtime;
-		if (refreshing || age > MAX_CACHE_AGE) {
+		if (refreshing || fromcache) {
 			Toast.makeText(this, R.string.account_no_concurrent,
 					Toast.LENGTH_LONG).show();
+			if(!refreshing){
+				refresh();
+			}
 			return;
 		}
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -304,6 +308,9 @@ public class AccountActivity extends OpacActivity {
 		if (refreshing || age > MAX_CACHE_AGE) {
 			Toast.makeText(this, R.string.account_no_concurrent,
 					Toast.LENGTH_LONG).show();
+			if(!refreshing){
+				refresh();
+			}
 			return;
 		}
 		dialog = ProgressDialog.show(AccountActivity.this, "",
@@ -496,14 +503,16 @@ public class AccountActivity extends OpacActivity {
 
 			refreshtime = System.currentTimeMillis();
 
-			displaydata(result);
+			displaydata(result, false);
 		}
 
 	}
 
-	public void displaydata(AccountData result) {
+	public void displaydata(AccountData result, boolean fromcache) {
 		setContentView(R.layout.account_activity);
-
+		
+		this.fromcache = fromcache;
+		
 		((TextView) findViewById(R.id.tvAccLabel)).setText(account.getLabel());
 		((TextView) findViewById(R.id.tvAccUser)).setText(account.getName());
 		TextView tvAccCity = (TextView) findViewById(R.id.tvAccCity);
@@ -625,8 +634,8 @@ public class AccountActivity extends OpacActivity {
 									.getAsString(AccountData.KEY_RESERVATION_TITLE)));
 				}
 				if (item.containsKey(AccountData.KEY_RESERVATION_AUTHOR)) {
-					((TextView) v.findViewById(R.id.tvVerfasser)).setText(item
-							.getAsString(AccountData.KEY_RESERVATION_AUTHOR));
+					((TextView) v.findViewById(R.id.tvVerfasser)).setText(Html.fromHtml(item
+							.getAsString(AccountData.KEY_RESERVATION_AUTHOR)));
 				}
 
 				if (item.containsKey(AccountData.KEY_RESERVATION_READY)) {

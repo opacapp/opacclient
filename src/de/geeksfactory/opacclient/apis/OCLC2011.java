@@ -84,6 +84,10 @@ public class OCLC2011 implements OpacApi {
 	private String last_id;
 	private int resultcount = 10;
 
+	private long logged_in;
+	private Account logged_in_as;
+	private final long SESSION_LIFETIME = 1000 * 60 * 3;
+
 	@Override
 	public String getResults() {
 		return results;
@@ -576,6 +580,8 @@ public class OCLC2011 implements OpacApi {
 		if (reservation_info.contains("doBestellung")) {
 			action = "order";
 		}
+		Log.i("res", "info = " + reservation_info + " action = " + useraction
+				+ " selection = " + selection);
 
 		if (useraction == ReservationResult.ACTION_CONFIRMATION) {
 			httppost = new HttpPost(opac_url + "/" + action + ".do");
@@ -617,6 +623,11 @@ public class OCLC2011 implements OpacApi {
 
 				html = convertStreamToString(response.getEntity().getContent());
 				doc = Jsoup.parse(html);
+
+				if (doc.getElementsByClass("error").size() == 0) {
+					logged_in = System.currentTimeMillis();
+					logged_in_as = acc;
+				}
 			}
 			if (doc.select("input[name=" + branch_inputfield + "]").size() > 0) {
 				ContentValues branches = new ContentValues();
@@ -658,7 +669,7 @@ public class OCLC2011 implements OpacApi {
 			return new ReservationResult(Status.ERROR);
 		}
 
-		if (doc.select("#CirculationForm .textrot").size() > 0) {
+		if (doc.select("#CirculationForm p").size() > 0) {
 			List<String[]> details = new ArrayList<String[]>();
 			for (String row : doc.select("#CirculationForm p").first().html()
 					.split("<br />")) {
@@ -684,16 +695,70 @@ public class OCLC2011 implements OpacApi {
 	@Override
 	public boolean prolong(Account account, String a) throws IOException,
 			NotReachableException {
-		return false;
+		if (!initialised)
+			start();
+		if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
+				|| logged_in_as == null) {
+			try {
+				account(account);
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return false;
+			}
+		} else if (logged_in_as.getId() != account.getId()) {
+			try {
+				account(account);
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+		
+		Log.i("prolong", a);
+		
+		// We have to call the page we originally found the link on first...
+		HttpGet httpget = new HttpGet(a.split("\\$")[0]);
+		HttpResponse response = ahc.execute(httpget);
+		response.getEntity().consumeContent();
+		
+		httpget = new HttpGet(opac_url + "/userAccount.do?" + a.split("\\$")[1]);
+		response = ahc.execute(httpget);
+		String html = convertStreamToString(response.getEntity().getContent());
+		response.getEntity().consumeContent();
+		Log.i("html", html);
+		return true;
 	}
 
 	@Override
 	public boolean cancel(Account account, String a) throws IOException,
 			NotReachableException {
-		HttpGet httpget = new HttpGet(opac_url + "/userAccount.do?" + a);
-		HttpResponse response2 = ahc.execute(httpget);
+		if (!initialised)
+			start();
+		if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
+				|| logged_in_as == null) {
+			try {
+				account(account);
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return false;
+			}
+		} else if (logged_in_as.getId() != account.getId()) {
+			try {
+				account(account);
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
 
-		String html2 = convertStreamToString(response2.getEntity().getContent());
+		// We have to call the page we originally found the link on first...
+		HttpGet httpget = new HttpGet(a.split("\\$")[0]);
+		HttpResponse response = ahc.execute(httpget);
+		response.getEntity().consumeContent();
+		
+		httpget = new HttpGet(opac_url + "/userAccount.do?" + a.split("\\$")[1]);
+		response = ahc.execute(httpget);
+		response.getEntity().consumeContent();
 		return true;
 	}
 
@@ -733,11 +798,15 @@ public class OCLC2011 implements OpacApi {
 			last_error = doc.getElementsByClass("error").get(0).text();
 			return false;
 		}
+
+		logged_in = System.currentTimeMillis();
+		logged_in_as = acc;
+
 		return true;
 	}
 
-	private void parse_medialist(List<ContentValues> medien, String html)
-			throws ClientProtocolException, IOException {
+	private void parse_medialist(String url, List<ContentValues> medien,
+			String html, int page) throws ClientProtocolException, IOException {
 		Document doc = Jsoup.parse(html);
 		Elements copytrs = doc.select(".data tr");
 		doc.setBaseUri(opac_url);
@@ -747,6 +816,7 @@ public class OCLC2011 implements OpacApi {
 		int trs = copytrs.size();
 		if (trs == 1)
 			return;
+		assert (trs > 0);
 		for (int i = 1; i < trs; i++) {
 			Element tr = copytrs.get(i);
 			ContentValues e = new ContentValues();
@@ -778,6 +848,19 @@ public class OCLC2011 implements OpacApi {
 						e1.printStackTrace();
 					}
 				}
+
+				if (tr.select("a").size() > 0) {
+					for (Element link : tr.select("a")) {
+						Uri uri = Uri.parse(link.attr("abs:href"));
+						if (uri.getQueryParameter("methodToCall").equals(
+								"renewalPossible")) {
+							e.put(AccountData.KEY_LENT_LINK,
+									url + "$" + uri.getQuery());
+							break;
+						}
+					}
+				}
+
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -793,15 +876,15 @@ public class OCLC2011 implements OpacApi {
 				String html2 = convertStreamToString(response2.getEntity()
 						.getContent());
 
-				parse_medialist(medien, html2);
+				parse_medialist(link.attr("abs:href"), medien, html2, page + 1);
 				break;
 			}
 		}
 
 	}
 
-	private void parse_reslist(List<ContentValues> reservations, String html,
-			int page) throws ClientProtocolException, IOException {
+	private void parse_reslist(String url, List<ContentValues> reservations,
+			String html, int page) throws ClientProtocolException, IOException {
 		Document doc = Jsoup.parse(html);
 		Elements copytrs = doc.select(".data tr");
 		doc.setBaseUri(opac_url);
@@ -809,6 +892,7 @@ public class OCLC2011 implements OpacApi {
 		int trs = copytrs.size();
 		if (trs == 1)
 			return;
+		assert (trs > 0);
 		for (int i = 1; i < trs; i++) {
 			Element tr = copytrs.get(i);
 			ContentValues e = new ContentValues();
@@ -827,11 +911,9 @@ public class OCLC2011 implements OpacApi {
 						.split("<br />")[2].trim());
 
 				if (tr.select("a").size() == 1 && page == 0)
-					// TODO: The URL is based on the position and might create
-					// problems if there are
-					// multiple pages… We don't know that!
-					e.put(AccountData.KEY_RESERVATION_CANCEL,
-							Uri.parse(tr.select("a").attr("abs:href"))
+					e.put(AccountData.KEY_RESERVATION_CANCEL, url
+							+ "$"
+							+ Uri.parse(tr.select("a").attr("abs:href"))
 									.getQuery());
 
 			} catch (Exception ex) {
@@ -849,7 +931,8 @@ public class OCLC2011 implements OpacApi {
 				String html2 = convertStreamToString(response2.getEntity()
 						.getContent());
 
-				parse_reslist(reservations, html2, page + 1);
+				parse_reslist(link.attr("abs:href"), reservations, html2,
+						page + 1);
 				break;
 			}
 		}
@@ -870,7 +953,9 @@ public class OCLC2011 implements OpacApi {
 		HttpResponse response2 = ahc.execute(httpget);
 		String html2 = convertStreamToString(response2.getEntity().getContent());
 		List<ContentValues> medien = new ArrayList<ContentValues>();
-		parse_medialist(medien, html2);
+		parse_medialist(opac_url
+				+ "/userAccount.do?methodToCall=showAccount&typ=1", medien,
+				html2, 0);
 
 		// Bestellte Medien
 		httpget = new HttpGet(opac_url
@@ -878,14 +963,18 @@ public class OCLC2011 implements OpacApi {
 		response2 = ahc.execute(httpget);
 		html2 = convertStreamToString(response2.getEntity().getContent());
 		List<ContentValues> reserved = new ArrayList<ContentValues>();
-		parse_reslist(reserved, html2, 0);
+		parse_reslist(opac_url
+				+ "/userAccount.do?methodToCall=showAccount&typ=6", reserved,
+				html2, 0);
 
 		// Vorgemerkte Medien
 		httpget = new HttpGet(opac_url
 				+ "/userAccount.do?methodToCall=showAccount&typ=7");
 		response2 = ahc.execute(httpget);
 		html2 = convertStreamToString(response2.getEntity().getContent());
-		parse_reslist(reserved, html2, 0);
+		parse_reslist(opac_url
+				+ "/userAccount.do?methodToCall=showAccount&typ=6", reserved,
+				html2, 0);
 
 		AccountData res = new AccountData(acc.getId());
 		res.setLent(medien);
