@@ -1,0 +1,11 @@
+{
+ "api": "bond26", 
+ "city": "Troisdorf", 
+ "data": {
+  "copiestable": [0, 4, 2, 1, 3, 5, -1], "reservationtable": [-1, 0, 1, -1, 2], "accounttable": [-1, -1, 0, 1, -1, -1, -1, 2],
+  "baseurl": "http://www3.troisdorf.de/wopac126", 
+  "information": "http://web.troisdorf.de/bibliothek/kontakt.asp?menue=1"
+ }, 
+ "support": "Katalogsuche und Konto", 
+ "title": null
+}
