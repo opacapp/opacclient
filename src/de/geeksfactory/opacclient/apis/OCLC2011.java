@@ -984,7 +984,7 @@ public class OCLC2011 implements OpacApi {
 		response2 = ahc.execute(httpget);
 		html2 = convertStreamToString(response2.getEntity().getContent());
 		parse_reslist(opac_url
-				+ "/userAccount.do?methodToCall=showAccount&typ=6", reserved,
+				+ "/userAccount.do?methodToCall=showAccount&typ=7", reserved,
 				html2, 0);
 
 		AccountData res = new AccountData(acc.getId());
