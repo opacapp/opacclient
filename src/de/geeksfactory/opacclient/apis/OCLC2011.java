@@ -695,6 +695,14 @@ public class OCLC2011 implements OpacApi {
 	@Override
 	public boolean prolong(Account account, String a) throws IOException,
 			NotReachableException {
+		// Internal convention: a is either a § followed by an error message or
+		// the URI of the page this item was found on and the query string the
+		// prolonging link links to, seperated by a $.
+		if (a.startsWith("§")) {
+			last_error = a.substring(1);
+			return false;
+		}
+
 		if (!initialised)
 			start();
 		if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
@@ -713,14 +721,14 @@ public class OCLC2011 implements OpacApi {
 				return false;
 			}
 		}
-		
+
 		Log.i("prolong", a);
-		
+
 		// We have to call the page we originally found the link on first...
 		HttpGet httpget = new HttpGet(a.split("\\$")[0]);
 		HttpResponse response = ahc.execute(httpget);
 		response.getEntity().consumeContent();
-		
+
 		httpget = new HttpGet(opac_url + "/userAccount.do?" + a.split("\\$")[1]);
 		response = ahc.execute(httpget);
 		String html = convertStreamToString(response.getEntity().getContent());
@@ -755,7 +763,7 @@ public class OCLC2011 implements OpacApi {
 		HttpGet httpget = new HttpGet(a.split("\\$")[0]);
 		HttpResponse response = ahc.execute(httpget);
 		response.getEntity().consumeContent();
-		
+
 		httpget = new HttpGet(opac_url + "/userAccount.do?" + a.split("\\$")[1]);
 		response = ahc.execute(httpget);
 		response.getEntity().consumeContent();
@@ -859,6 +867,9 @@ public class OCLC2011 implements OpacApi {
 							break;
 						}
 					}
+				} else if (tr.select(".textrot").size() == 1) {
+					e.put(AccountData.KEY_LENT_LINK, "§"
+							+ tr.select(".textrot").text());
 				}
 
 			} catch (Exception ex) {
