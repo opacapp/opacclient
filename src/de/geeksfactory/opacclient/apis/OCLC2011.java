@@ -878,6 +878,7 @@ public class OCLC2011 implements OpacApi {
 
 			medien.add(e);
 		}
+		assert(medien.size() == trs-1);
 
 		for (Element link : doc.select(".box-right a")) {
 			if (link.text().contains("»")) {
@@ -933,6 +934,7 @@ public class OCLC2011 implements OpacApi {
 
 			reservations.add(e);
 		}
+		assert(reservations.size() == trs-1);
 
 		for (Element link : doc.select(".box-right a")) {
 			if (link.text().contains("»")) {
