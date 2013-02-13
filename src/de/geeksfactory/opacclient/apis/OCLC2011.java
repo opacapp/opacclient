@@ -299,13 +299,9 @@ public class OCLC2011 implements OpacApi {
 		if (!initialised)
 			start();
 
-		HttpGet httpget = new HttpGet(opac_url
+		String html = httpGet(opac_url
 				+ "/hitList.do?methodToCall=pos&identifier=" + identifier
 				+ "&curPos=" + (((page - 1) * resultcount) + 1));
-		HttpResponse response = ahc.execute(httpget);
-
-		String html = convertStreamToString(response.getEntity().getContent());
-		response.getEntity().consumeContent();
 		return parse_search(html);
 	}
 
@@ -405,27 +401,17 @@ public class OCLC2011 implements OpacApi {
 			}
 		}
 
-		HttpGet httpget = new HttpGet(opac_url + "/start.do?" + startparams
+		String html = httpGet(opac_url + "/start.do?" + startparams
 				+ "searchType=1&Query=0%3D%22" + a + "%22");
-		HttpResponse response = ahc.execute(httpget);
-
-		String html = convertStreamToString(response.getEntity().getContent());
-		response.getEntity().consumeContent();
 
 		return parse_result(html);
 	}
 
 	@Override
 	public DetailledItem getResult(int nr) throws IOException {
-		HttpGet httpget = new HttpGet(
-				opac_url
-						+ "/singleHit.do?tab=showExemplarActive&methodToCall=showHit&curPos="
-						+ (nr + 1) + "&identifier=" + identifier);
-
-		HttpResponse response = ahc.execute(httpget);
-
-		String html = convertStreamToString(response.getEntity().getContent());
-		response.getEntity().consumeContent();
+		String html = httpGet(opac_url
+				+ "/singleHit.do?tab=showExemplarActive&methodToCall=showHit&curPos="
+				+ (nr + 1) + "&identifier=" + identifier);
 
 		return parse_result(html);
 	}
@@ -433,22 +419,13 @@ public class OCLC2011 implements OpacApi {
 	private DetailledItem parse_result(String html) throws IOException {
 		Document doc = Jsoup.parse(html);
 
-		HttpGet httpget = new HttpGet(opac_url
+		String html2 = httpGet(opac_url
 				+ "/singleHit.do?methodToCall=activateTab&tab=showTitleActive");
-
-		HttpResponse response = ahc.execute(httpget);
-		String html2 = convertStreamToString(response.getEntity().getContent());
-		response.getEntity().consumeContent();
 
 		Document doc2 = Jsoup.parse(html2);
 
-		httpget = new HttpGet(
-				opac_url
-						+ "/singleHit.do?methodToCall=activateTab&tab=showAvailabilityActive");
-
-		response = ahc.execute(httpget);
-		String html3 = convertStreamToString(response.getEntity().getContent());
-		response.getEntity().consumeContent();
+		String html3 = httpGet(opac_url
+				+ "/singleHit.do?methodToCall=activateTab&tab=showAvailabilityActive");
 
 		Document doc3 = Jsoup.parse(html3);
 		doc3.setBaseUri(opac_url);
@@ -589,7 +566,6 @@ public class OCLC2011 implements OpacApi {
 		final String branch_inputfield = "issuepoint";
 
 		HttpPost httppost;
-		HttpGet httpget;
 		HttpResponse response;
 		Document doc = null;
 
@@ -597,8 +573,6 @@ public class OCLC2011 implements OpacApi {
 		if (reservation_info.contains("doBestellung")) {
 			action = "order";
 		}
-		Log.i("res", "info = " + reservation_info + " action = " + useraction
-				+ " selection = " + selection);
 
 		if (useraction == ReservationResult.ACTION_CONFIRMATION) {
 			httppost = new HttpPost(opac_url + "/" + action + ".do");
@@ -612,13 +586,8 @@ public class OCLC2011 implements OpacApi {
 					.getContent());
 			doc = Jsoup.parse(html);
 		} else if (selection == null || useraction == 0) {
-			httpget = new HttpGet(opac_url + "/availability.do?"
+			String html = httpGet(opac_url + "/availability.do?"
 					+ reservation_info);
-
-			response = ahc.execute(httpget);
-			String html = convertStreamToString(response.getEntity()
-					.getContent());
-			response.getEntity().consumeContent();
 			doc = Jsoup.parse(html);
 
 			if (doc.select("input[name=username]").size() > 0) {
@@ -719,6 +688,9 @@ public class OCLC2011 implements OpacApi {
 			last_error = a.substring(1);
 			return false;
 		}
+		String[] parts = a.split("\\$");
+		String offset = parts[0];
+		String query = parts[1];
 
 		if (!initialised)
 			start();
@@ -739,18 +711,14 @@ public class OCLC2011 implements OpacApi {
 			}
 		}
 
-		Log.i("prolong", a);
-
 		// We have to call the page we originally found the link on first...
-		HttpGet httpget = new HttpGet(a.split("\\$")[0]);
-		HttpResponse response = ahc.execute(httpget);
-		response.getEntity().consumeContent();
+		httpGet(opac_url + "/userAccount.do?methodToCall=showAccount&typ=1");
+		if (offset != "1")
+			httpGet(opac_url
+					+ "/userAccount.do?methodToCall=pos&accountTyp=AUSLEIHEN&anzPos="
+					+ offset);
+		httpGet(opac_url + "/userAccount.do?" + query);
 
-		httpget = new HttpGet(opac_url + "/userAccount.do?" + a.split("\\$")[1]);
-		response = ahc.execute(httpget);
-		String html = convertStreamToString(response.getEntity().getContent());
-		response.getEntity().consumeContent();
-		Log.i("html", html);
 		return true;
 	}
 
@@ -759,6 +727,12 @@ public class OCLC2011 implements OpacApi {
 			NotReachableException {
 		if (!initialised)
 			start();
+
+		String[] parts = a.split("\\$");
+		String type = parts[0];
+		String offset = parts[1];
+		String query = parts[2];
+
 		if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
 				|| logged_in_as == null) {
 			try {
@@ -777,13 +751,12 @@ public class OCLC2011 implements OpacApi {
 		}
 
 		// We have to call the page we originally found the link on first...
-		HttpGet httpget = new HttpGet(a.split("\\$")[0]);
-		HttpResponse response = ahc.execute(httpget);
-		response.getEntity().consumeContent();
-
-		httpget = new HttpGet(opac_url + "/userAccount.do?" + a.split("\\$")[1]);
-		response = ahc.execute(httpget);
-		response.getEntity().consumeContent();
+		httpGet(opac_url + "/userAccount.do?methodToCall=showAccount&typ="
+				+ type);
+		if (offset != "1")
+			httpGet(opac_url + "/userAccount.do?methodToCall=pos&anzPos="
+					+ offset);
+		httpGet(opac_url + "/userAccount.do?" + query);
 		return true;
 	}
 
@@ -830,9 +803,8 @@ public class OCLC2011 implements OpacApi {
 		return true;
 	}
 
-	private void parse_medialist(String url, List<ContentValues> medien,
-			String html, int page) throws ClientProtocolException, IOException {
-		Document doc = Jsoup.parse(html);
+	private void parse_medialist(List<ContentValues> medien, Document doc,
+			int offset) throws ClientProtocolException, IOException {
 		Elements copytrs = doc.select(".data tr");
 		doc.setBaseUri(opac_url);
 
@@ -880,13 +852,13 @@ public class OCLC2011 implements OpacApi {
 						if (uri.getQueryParameter("methodToCall").equals(
 								"renewalPossible")) {
 							e.put(AccountData.KEY_LENT_LINK,
-									url + "$" + uri.getQuery());
+									offset + "$" + uri.getQuery());
 							break;
 						}
 					}
-				} else if (tr.select(".textrot").size() == 1) {
-					e.put(AccountData.KEY_LENT_LINK, "§"
-							+ tr.select(".textrot").text());
+				} else if (tr.select(".textrot, .textgruen").size() == 1) {
+					e.put(AccountData.KEY_LENT_LINK,
+							"§" + tr.select(".textrot, .textgruen").text());
 				}
 
 			} catch (Exception ex) {
@@ -897,24 +869,11 @@ public class OCLC2011 implements OpacApi {
 		}
 		assert (medien.size() == trs - 1);
 
-		for (Element link : doc.select(".box-right a")) {
-			if (link.text().contains("»")) {
-				HttpGet httpget = new HttpGet(link.attr("abs:href"));
-				HttpResponse response2 = ahc.execute(httpget);
-
-				String html2 = convertStreamToString(response2.getEntity()
-						.getContent());
-
-				parse_medialist(link.attr("abs:href"), medien, html2, page + 1);
-				break;
-			}
-		}
-
 	}
 
-	private void parse_reslist(String url, List<ContentValues> reservations,
-			String html, int page) throws ClientProtocolException, IOException {
-		Document doc = Jsoup.parse(html);
+	private void parse_reslist(String type, List<ContentValues> reservations,
+			Document doc, int offset) throws ClientProtocolException,
+			IOException {
 		Elements copytrs = doc.select(".data tr");
 		doc.setBaseUri(opac_url);
 
@@ -939,11 +898,14 @@ public class OCLC2011 implements OpacApi {
 				e.put(AccountData.KEY_RESERVATION_BRANCH, tr.child(2).html()
 						.split("<br />")[2].trim());
 
-				if (tr.select("a").size() == 1 && page == 0)
-					e.put(AccountData.KEY_RESERVATION_CANCEL, url
-							+ "$"
-							+ Uri.parse(tr.select("a").attr("abs:href"))
-									.getQuery());
+				if (tr.select("a").size() == 1)
+					e.put(AccountData.KEY_RESERVATION_CANCEL,
+							type
+									+ "$"
+									+ offset
+									+ "$"
+									+ Uri.parse(tr.select("a").attr("abs:href"))
+											.getQuery());
 
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -952,21 +914,16 @@ public class OCLC2011 implements OpacApi {
 			reservations.add(e);
 		}
 		assert (reservations.size() == trs - 1);
+	}
 
-		for (Element link : doc.select(".box-right a")) {
-			if (link.text().contains("»")) {
-				HttpGet httpget = new HttpGet(link.attr("abs:href"));
-				HttpResponse response2 = ahc.execute(httpget);
-
-				String html2 = convertStreamToString(response2.getEntity()
-						.getContent());
-
-				parse_reslist(link.attr("abs:href"), reservations, html2,
-						page + 1);
-				break;
-			}
-		}
-
+	private String httpGet(String url) throws ClientProtocolException,
+			IOException {
+		Log.i("oclc2011", url);
+		HttpGet httpget = new HttpGet(url);
+		HttpResponse response = ahc.execute(httpget);
+		String html = convertStreamToString(response.getEntity().getContent());
+		response.getEntity().consumeContent();
+		return html;
 	}
 
 	@Override
@@ -978,33 +935,57 @@ public class OCLC2011 implements OpacApi {
 			return null;
 
 		// Geliehene Medien
-		HttpGet httpget = new HttpGet(opac_url
+		String html = httpGet(opac_url
 				+ "/userAccount.do?methodToCall=showAccount&typ=1");
-		HttpResponse response2 = ahc.execute(httpget);
-		String html2 = convertStreamToString(response2.getEntity().getContent());
 		List<ContentValues> medien = new ArrayList<ContentValues>();
-		parse_medialist(opac_url
-				+ "/userAccount.do?methodToCall=showAccount&typ=1", medien,
-				html2, 0);
+		Document doc = Jsoup.parse(html);
+		int resultNum = Integer.parseInt(doc.select("#label1").text()
+				.replaceAll(".*\\(([0-9]+)\\).*", "$1"));
+		parse_medialist(medien, doc, 1);
+		for (Element link : doc.select(".box-right").first().select("a")) {
+			Uri uri = Uri.parse(link.attr("abs:href"));
+			if (uri.getQueryParameter("methodToCall").equals("pos")) {
+				html = httpGet(uri.toString());
+				parse_medialist(medien, Jsoup.parse(html),
+						Integer.parseInt(uri.getQueryParameter("anzPos")));
+			}
+		}
+		assert (resultNum == medien.size());
 
 		// Bestellte Medien
-		httpget = new HttpGet(opac_url
+		html = httpGet(opac_url
 				+ "/userAccount.do?methodToCall=showAccount&typ=6");
-		response2 = ahc.execute(httpget);
-		html2 = convertStreamToString(response2.getEntity().getContent());
 		List<ContentValues> reserved = new ArrayList<ContentValues>();
-		parse_reslist(opac_url
-				+ "/userAccount.do?methodToCall=showAccount&typ=6", reserved,
-				html2, 0);
+		doc = Jsoup.parse(html);
+		parse_reslist("6", reserved, doc, 1);
+		resultNum = Integer.parseInt(doc.select("#label6").text()
+				.replaceAll(".*\\(([0-9]+)\\).*", "$1"));
+		for (Element link : doc.select(".box-right").first().select("a")) {
+			Uri uri = Uri.parse(link.attr("abs:href"));
+			if (uri.getQueryParameter("methodToCall").equals("pos")) {
+				html = httpGet(uri.toString());
+				parse_reslist("6", medien, Jsoup.parse(html),
+						Integer.parseInt(uri.getQueryParameter("anzPos")));
+			}
+		}
 
 		// Vorgemerkte Medien
-		httpget = new HttpGet(opac_url
+		html = httpGet(opac_url
 				+ "/userAccount.do?methodToCall=showAccount&typ=7");
-		response2 = ahc.execute(httpget);
-		html2 = convertStreamToString(response2.getEntity().getContent());
-		parse_reslist(opac_url
-				+ "/userAccount.do?methodToCall=showAccount&typ=7", reserved,
-				html2, 0);
+		doc = Jsoup.parse(html);
+		parse_reslist("7", reserved, doc, 1);
+		resultNum += Integer.parseInt(doc.select("#label7").text()
+				.replaceAll(".*\\(([0-9]+)\\).*", "$1"));
+		for (Element link : doc.select(".box-right").first().select("a")) {
+			Uri uri = Uri.parse(link.attr("abs:href"));
+			if (uri.getQueryParameter("methodToCall").equals("pos")) {
+				html = httpGet(uri.toString());
+				parse_reslist("7", medien, Jsoup.parse(html),
+						Integer.parseInt(uri.getQueryParameter("anzPos")));
+			}
+		}
+
+		assert (resultNum == reserved.size());
 
 		AccountData res = new AccountData(acc.getId());
 		res.setLent(medien);
