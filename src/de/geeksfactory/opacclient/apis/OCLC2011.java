@@ -395,12 +395,18 @@ public class OCLC2011 implements OpacApi {
 			return parse_result(reusehtml);
 		}
 
-		start();
+		// Some libraries require start parameters for start.do, like Login=foo
+		String startparams = "";
+		if (data.has("startparams")) {
+			try {
+				startparams = data.getString("startparams") + "&";
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
 
-		HttpGet httpget = new HttpGet(opac_url
-				+ "/search.do?methodToCall=quickSearch&Kateg=0&Content=" + a
-				+ "&fbt=" + a);
-
+		HttpGet httpget = new HttpGet(opac_url + "/start.do?" + startparams
+				+ "searchType=1&Query=0%3D%22" + a + "%22");
 		HttpResponse response = ahc.execute(httpget);
 
 		String html = convertStreamToString(response.getEntity().getContent());
@@ -462,6 +468,7 @@ public class OCLC2011 implements OpacApi {
 				String key = href.getQueryParameter("katkey");
 				if (key != null) {
 					result.setId(key);
+					break;
 				}
 			}
 
@@ -517,6 +524,17 @@ public class OCLC2011 implements OpacApi {
 			result.addDetail(new Detail(title.trim(), text.trim()));
 			if (title.equals("Titel:")) {
 				result.setTitle(text.trim());
+			}
+		}
+		for (Element link : doc3.select("#tab-content a")) {
+			Uri href = Uri.parse(link.absUrl("href"));
+			if (result.getId() == null) {
+				// ID retrieval
+				String key = href.getQueryParameter("katkey");
+				if (key != null) {
+					result.setId(key);
+					break;
+				}
 			}
 		}
 
