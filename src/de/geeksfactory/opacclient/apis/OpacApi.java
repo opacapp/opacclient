@@ -230,18 +230,17 @@ public interface OpacApi {
 	 * @param useraction
 	 *            Identifier for the selection made by the user in
 	 *            <code>selection</code>, if a selection was made (see
-	 *            {@link ReservationResult#getActionIdentifier()}) or 0, if
-	 *            no selection was required. If your last method call returned
+	 *            {@link ReservationResult#getActionIdentifier()}) or 0, if no
+	 *            selection was required. If your last method call returned
 	 *            <code>CONFIRMATION_NEEDED</code>, this is set to
 	 *            <code>ACTION_CONFIRMATION</code> if the user positively
 	 *            confirmed the action.
 	 * @param selection
-	 *            When the method is called for the first time or if
-	 *            useraction is <code>ACTION_CONFIRMATION</code>, this
-	 *            parameter is null. If you return <code>SELECTION</code> in
-	 *            your {@link ReservationResult#getStatus()}, this method
-	 *            will be called again with the user's selection present in
-	 *            selection.
+	 *            When the method is called for the first time or if useraction
+	 *            is <code>ACTION_CONFIRMATION</code>, this parameter is null.
+	 *            If you return <code>SELECTION</code> in your
+	 *            {@link ReservationResult#getStatus()}, this method will be
+	 *            called again with the user's selection present in selection.
 	 * @return A <code>ReservationResult</code> object which has to have the
 	 *         status set.
 	 */
@@ -250,7 +249,8 @@ public interface OpacApi {
 			throws IOException;
 
 	/**
-	 * The result of a {@link OpacApi#reservation(String, Account, int, String)} call
+	 * The result of a {@link OpacApi#reservation(String, Account, int, String)}
+	 * call
 	 */
 	public class ReservationResult {
 		public enum Status {
@@ -324,8 +324,8 @@ public interface OpacApi {
 		 * Identifier for the type of user selection if {@link #getStatus()} is
 		 * <code>SELECTION_NEEDED</code>.
 		 * 
-		 * @return One of the <code>ACTION_</code> constants or a
-		 *         number above <code>ACTION_USER</code>.
+		 * @return One of the <code>ACTION_</code> constants or a number above
+		 *         <code>ACTION_USER</code>.
 		 */
 		public int getActionIdentifier() {
 			return actionidentifier;
@@ -336,8 +336,8 @@ public interface OpacApi {
 		 * is <code>SELECTION_NEEDED</code>.
 		 * 
 		 * @param actionidentifier
-		 *            One of the <code>ACTION_</code> constants or a
-		 *            number above <code>ACTION_USER</code>.
+		 *            One of the <code>ACTION_</code> constants or a number
+		 *            above <code>ACTION_USER</code>.
 		 */
 		public void setActionIdentifier(int actionidentifier) {
 			this.actionidentifier = actionidentifier;
@@ -355,8 +355,8 @@ public interface OpacApi {
 		}
 
 		/**
-		 * Set values the user should select one of if
-		 * {@link #getStatus()} is set to <code>SELECTION_NEEDED</code>.
+		 * Set values the user should select one of if {@link #getStatus()} is
+		 * set to <code>SELECTION_NEEDED</code>.
 		 * 
 		 * @param selection
 		 *            Store with key-value-tuples where the key is what is to be
@@ -379,9 +379,8 @@ public interface OpacApi {
 		}
 
 		/**
-		 * Set values the user should select one of if
-		 * {@link #getStatus()} is set to <code>CONFIRMATION_NEEDED</code>
-		 * .
+		 * Set values the user should select one of if {@link #getStatus()} is
+		 * set to <code>CONFIRMATION_NEEDED</code> .
 		 * 
 		 * @param details
 		 *            List containing reservation details. A detail is stored as
@@ -505,5 +504,22 @@ public interface OpacApi {
 	 */
 	public String getAccountExtendableInfo(Account account) throws IOException,
 			NotReachableException;
+
+	/**
+	 * Some library systems allow us to share search results. If your library
+	 * system allows this natively (to link directly on search results), you can
+	 * return the corresponding URL with this function. If you return null, the
+	 * app will use its default "Share proxy" on opacapp.de to create a session
+	 * before redirection to the results.
+	 * 
+	 * @param id
+	 *            Media id of the item to be shared
+	 * @param title
+	 *            Title of the item to be shared
+	 * @return An URL or <strong>null</strong>.
+	 * @see <a
+	 *      href="https://github.com/raphaelm/opacclient.web/blob/master/bibproxy.php">bibproxy.php</a>
+	 */
+	public String getShareUrl(String id, String title);
 
 }

@@ -495,4 +495,9 @@ public class Zones22 implements OpacApi {
 			NotReachableException {
 		return null;
 	}
+
+	@Override
+	public String getShareUrl(String id, String title) {
+		return null;
+	}
 }

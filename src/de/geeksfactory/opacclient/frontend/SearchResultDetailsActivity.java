@@ -808,8 +808,12 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				} catch (UnsupportedEncodingException e) {
 				}
 
-				intent.putExtra(Intent.EXTRA_TEXT, "http://opacapp.de/:" + bib
-						+ ":" + id + ":" + t);
+				String shareUrl = app.getApi().getShareUrl(id, title);
+				if (shareUrl != null)
+					intent.putExtra(Intent.EXTRA_TEXT, shareUrl);
+				else
+					intent.putExtra(Intent.EXTRA_TEXT, "http://opacapp.de/:"
+							+ bib + ":" + id + ":" + t);
 				startActivity(Intent.createChooser(intent, getResources()
 						.getString(R.string.share)));
 			}

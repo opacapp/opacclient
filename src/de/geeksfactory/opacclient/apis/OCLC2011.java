@@ -37,7 +37,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import de.geeksfactory.opacclient.NotReachableException;
-import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult.Status;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -62,7 +61,7 @@ public class OCLC2011 implements OpacApi {
 
 	/*
 	 * OpacApi für WebOpacs "Copyright 2011 OCLC" (echter Name der Software
-	 * scheint SISIS zu sein) z.B. Bremen TODO - Vorbestellen - Account
+	 * scheint SISIS SunRise zu sein) z.B. Bremen
 	 */
 
 	/*
@@ -878,7 +877,7 @@ public class OCLC2011 implements OpacApi {
 
 			medien.add(e);
 		}
-		assert(medien.size() == trs-1);
+		assert (medien.size() == trs - 1);
 
 		for (Element link : doc.select(".box-right a")) {
 			if (link.text().contains("»")) {
@@ -934,7 +933,7 @@ public class OCLC2011 implements OpacApi {
 
 			reservations.add(e);
 		}
-		assert(reservations.size() == trs-1);
+		assert (reservations.size() == trs - 1);
 
 		for (Element link : doc.select(".box-right a")) {
 			if (link.text().contains("»")) {
@@ -1010,5 +1009,24 @@ public class OCLC2011 implements OpacApi {
 			throws ClientProtocolException, SocketException, IOException,
 			NotReachableException {
 		return null;
+	}
+
+	@Override
+	public String getShareUrl(String id, String title) {
+		String startparams = "";
+		if (data.has("startparams")) {
+			try {
+				startparams = data.getString("startparams") + "&";
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+
+		if (id != null && id != "")
+			return opac_url + "/start.do?" + startparams
+					+ "searchType=1&Query=0%3D%22" + id + "%22";
+		else
+			return opac_url + "/start.do?" + startparams
+					+ "searchType=1&Query=-1%3D%22" + title + "%22";
 	}
 }
