@@ -153,8 +153,10 @@ public class DetailledItem {
 	@Override
 	public String toString() {
 		return "DetailledItem [details=" + details + ", copies=" + copies
-				+ ", cover=" + cover + ", title = " + title + ", reservable = "
-				+ reservable + "]";
+				+ ", baende=" + baende + ", cover=" + cover + ", title="
+				+ title + ", coverBitmap=" + coverBitmap + ", reservable="
+				+ reservable + ", reservation_info=" + reservation_info
+				+ ", id=" + id + ", volumesearch=" + volumesearch + "]";
 	}
 
 	/**
