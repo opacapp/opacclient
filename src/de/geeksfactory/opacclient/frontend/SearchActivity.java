@@ -160,58 +160,66 @@ public class SearchActivity extends OpacActivity {
 		Set<String> fields = new HashSet<String>(Arrays.asList(app.getApi()
 				.getSearchFields()));
 
-		if (fields.contains("titel")) {
+		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_FREE)) {
+			findViewById(R.id.tvSearchAdvHeader).setVisibility(View.VISIBLE);
+			findViewById(R.id.rlSimpleSearch).setVisibility(View.VISIBLE);
+		} else {
+			findViewById(R.id.tvSearchAdvHeader).setVisibility(View.GONE);
+			findViewById(R.id.rlSimpleSearch).setVisibility(View.GONE);
+		}
+		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_TITLE)) {
 			findViewById(R.id.etTitel).setVisibility(View.VISIBLE);
 			findViewById(R.id.tvTitel).setVisibility(View.VISIBLE);
 		} else {
 			findViewById(R.id.etTitel).setVisibility(View.GONE);
 			findViewById(R.id.tvTitel).setVisibility(View.GONE);
 		}
-		if (fields.contains("verfasser")) {
+		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_AUTHOR)) {
 			findViewById(R.id.etVerfasser).setVisibility(View.VISIBLE);
 			findViewById(R.id.tvVerfasser).setVisibility(View.VISIBLE);
 		} else {
 			findViewById(R.id.etVerfasser).setVisibility(View.GONE);
 			findViewById(R.id.tvVerfasser).setVisibility(View.GONE);
 		}
-		if (fields.contains("schlag_a")) {
+		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_KEYWORDA)) {
 			findViewById(R.id.llSchlag).setVisibility(View.VISIBLE);
 			findViewById(R.id.tvSchlag).setVisibility(View.VISIBLE);
 		} else {
 			findViewById(R.id.llSchlag).setVisibility(View.GONE);
 			findViewById(R.id.tvSchlag).setVisibility(View.GONE);
 		}
-		if (fields.contains("schlag_b")) {
+		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_KEYWORDB)) {
 			findViewById(R.id.etSchlagB).setVisibility(View.VISIBLE);
 		} else {
 			findViewById(R.id.etSchlagB).setVisibility(View.GONE);
 		}
-		if (fields.contains("zweigstelle")) {
-			findViewById(R.id.cbZweigstelle).setVisibility(View.VISIBLE);
+		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_BRANCH)) {
+			findViewById(R.id.cbBranch).setVisibility(View.VISIBLE);
 			findViewById(R.id.tvZweigstelle).setVisibility(View.VISIBLE);
 		} else {
-			findViewById(R.id.cbZweigstelle).setVisibility(View.GONE);
+			findViewById(R.id.cbBranch).setVisibility(View.GONE);
 			findViewById(R.id.tvZweigstelle).setVisibility(View.GONE);
 		}
-		if (fields.contains("mediengruppe")) {
+		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_CATEGORY)) {
 			findViewById(R.id.cbMediengruppe).setVisibility(View.VISIBLE);
 			findViewById(R.id.tvMediengruppe).setVisibility(View.VISIBLE);
 		} else {
 			findViewById(R.id.cbMediengruppe).setVisibility(View.GONE);
 			findViewById(R.id.tvMediengruppe).setVisibility(View.GONE);
 		}
-		if (fields.contains("isbn")) {
+		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_ISBN)) {
 			findViewById(R.id.llISBN).setVisibility(View.VISIBLE);
 			findViewById(R.id.tvISBN).setVisibility(View.VISIBLE);
 		} else {
 			findViewById(R.id.llISBN).setVisibility(View.GONE);
 			findViewById(R.id.tvISBN).setVisibility(View.GONE);
 		}
-		if (fields.contains("jahr_von") && fields.contains("jahr_bis")) {
+		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_YEAR_RANGE_START)
+				&& fields.contains(OpacApi.KEY_SEARCH_QUERY_YEAR_RANGE_END)) {
 			findViewById(R.id.llJahr).setVisibility(View.VISIBLE);
 			findViewById(R.id.tvJahr).setVisibility(View.VISIBLE);
 			findViewById(R.id.etJahr).setVisibility(View.GONE);
-		} else if (fields.contains("jahr")) {
+		} else if (fields.contains(OpacApi.KEY_SEARCH_QUERY_YEAR)) {
 			findViewById(R.id.llJahr).setVisibility(View.GONE);
 			findViewById(R.id.etJahr).setVisibility(View.VISIBLE);
 			findViewById(R.id.tvJahr).setVisibility(View.VISIBLE);
@@ -220,21 +228,21 @@ public class SearchActivity extends OpacActivity {
 			findViewById(R.id.tvJahr).setVisibility(View.GONE);
 			findViewById(R.id.etJahr).setVisibility(View.GONE);
 		}
-		if (fields.contains("notation")) {
+		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_SYSTEM)) {
 			findViewById(R.id.etSystematik).setVisibility(View.VISIBLE);
 			findViewById(R.id.tvSystematik).setVisibility(View.VISIBLE);
 		} else {
 			findViewById(R.id.etSystematik).setVisibility(View.GONE);
 			findViewById(R.id.tvSystematik).setVisibility(View.GONE);
 		}
-		if (fields.contains("interessenkreis")) {
+		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_AUDIENCE)) {
 			findViewById(R.id.etInteressenkreis).setVisibility(View.VISIBLE);
 			findViewById(R.id.tvInteressenkreis).setVisibility(View.VISIBLE);
 		} else {
 			findViewById(R.id.etInteressenkreis).setVisibility(View.GONE);
 			findViewById(R.id.tvInteressenkreis).setVisibility(View.GONE);
 		}
-		if (fields.contains("verlag")) {
+		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_PUBLISHER)) {
 			findViewById(R.id.etVerlag).setVisibility(View.VISIBLE);
 			findViewById(R.id.tvVerlag).setVisibility(View.VISIBLE);
 		} else {
@@ -258,7 +266,7 @@ public class SearchActivity extends OpacActivity {
 	}
 
 	private void fillComboBoxes() {
-		Spinner cbZst = (Spinner) findViewById(R.id.cbZweigstelle);
+		Spinner cbZst = (Spinner) findViewById(R.id.cbBranch);
 
 		MetaDataSource data = new SQLMetaDataSource(this);
 		data.open();
@@ -414,8 +422,7 @@ public class SearchActivity extends OpacActivity {
 		String mg = "";
 		if (cbZst_data.size() > 0)
 			zst = cbZst_data.get(
-					((Spinner) SearchActivity.this
-							.findViewById(R.id.cbZweigstelle))
+					((Spinner) SearchActivity.this.findViewById(R.id.cbBranch))
 							.getSelectedItemPosition()).getAsString("key");
 		if (cbMg_data.size() > 0)
 			mg = cbMg_data.get(
@@ -426,6 +433,10 @@ public class SearchActivity extends OpacActivity {
 		Intent myIntent = new Intent(SearchActivity.this,
 				SearchResultsActivity.class);
 		Bundle query = new Bundle();
+		query.putString(OpacApi.KEY_SEARCH_QUERY_FREE,
+				((EditText) SearchActivity.this
+						.findViewById(R.id.etSimpleSearch)).getEditableText()
+						.toString());
 		query.putString(OpacApi.KEY_SEARCH_QUERY_TITLE,
 				((EditText) SearchActivity.this.findViewById(R.id.etTitel))
 						.getEditableText().toString());

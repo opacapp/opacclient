@@ -3,7 +3,6 @@ package de.geeksfactory.opacclient.apis;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 
 import android.content.ContentValues;
@@ -22,6 +21,13 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  * @author Raphael Michel
  */
 public interface OpacApi {
+
+	/**
+	 * Bundle key for {@link #search(Bundle)}:
+	 * 
+	 * Keywords to do a free search
+	 */
+	public static final String KEY_SEARCH_QUERY_FREE = "free";
 
 	/**
 	 * Bundle key for {@link #search(Bundle)}:

@@ -94,11 +94,12 @@ public class OCLC2011 implements OpacApi {
 
 	@Override
 	public String[] getSearchFields() {
-		return new String[] { KEY_SEARCH_QUERY_TITLE, KEY_SEARCH_QUERY_AUTHOR,
-				KEY_SEARCH_QUERY_KEYWORDA, KEY_SEARCH_QUERY_KEYWORDB,
-				KEY_SEARCH_QUERY_BRANCH, KEY_SEARCH_QUERY_ISBN,
-				KEY_SEARCH_QUERY_YEAR, KEY_SEARCH_QUERY_SYSTEM,
-				KEY_SEARCH_QUERY_AUDIENCE, KEY_SEARCH_QUERY_PUBLISHER };
+		return new String[] { KEY_SEARCH_QUERY_FREE, KEY_SEARCH_QUERY_TITLE,
+				KEY_SEARCH_QUERY_AUTHOR, KEY_SEARCH_QUERY_KEYWORDA,
+				KEY_SEARCH_QUERY_KEYWORDB, KEY_SEARCH_QUERY_BRANCH,
+				KEY_SEARCH_QUERY_ISBN, KEY_SEARCH_QUERY_YEAR,
+				KEY_SEARCH_QUERY_SYSTEM, KEY_SEARCH_QUERY_AUDIENCE,
+				KEY_SEARCH_QUERY_PUBLISHER };
 	}
 
 	@Override
@@ -247,6 +248,8 @@ public class OCLC2011 implements OpacApi {
 			params.add(new BasicNameValuePair("callingPage", "searchParameters"));
 			params.add(new BasicNameValuePair("submitSearch", "Suchen"));
 
+			index = addParameters(query, KEY_SEARCH_QUERY_FREE, "-1", params,
+					index);
 			index = addParameters(query, KEY_SEARCH_QUERY_TITLE, "331", params,
 					index);
 			index = addParameters(query, KEY_SEARCH_QUERY_AUTHOR, "100",
@@ -266,12 +269,12 @@ public class OCLC2011 implements OpacApi {
 			index = addParameters(query, KEY_SEARCH_QUERY_AUDIENCE, "1001",
 					params, index);
 
-			if (index > 4) {
-				last_error = "Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.";
-				return null;
-			}
 			if (index == 0) {
 				last_error = "Es wurden keine Suchkriterien eingegeben.";
+				return null;
+			}
+			if (index > 4) {
+				last_error = "Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.";
 				return null;
 			}
 

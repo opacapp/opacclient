@@ -175,4 +175,7 @@
         <item quantity="other">Die angezeigten Daten sind %d Tage alt.</item>
     </plurals>
 
+    <string name="search_advanced">Erweiterte Suche</string>
+    <string name="search_free">Freie Suche</string>
+
 </resources>
