@@ -46,7 +46,7 @@ public class Library {
 
 	/**
 	 * Get the library's identifier (in OpacClient app this is the filename in
-	 * assets/bibs/)
+	 * assets/bibs/ without the .json extension)
 	 * 
 	 * @return unique library identifier
 	 */

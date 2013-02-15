@@ -23,110 +23,161 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
 public interface OpacApi {
 
 	/**
-	 * Bundle key for {@link #search(Bundle)}:
+	 * Keywords to do a free search. Some APIs do support this, some don't. If
+	 * supported, it must at least search in title and author field, but should
+	 * also search abstract and other things.
 	 * 
-	 * Keywords to do a free search
+	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_FREE = "free";
 
 	/**
-	 * Bundle key for {@link #search(Bundle)}:
+	 * Item title to search for. Doesn't have to be the full title, can also be
+	 * a substring to be searched.
 	 * 
-	 * Keywords to search in item's title
+	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_TITLE = "titel";
 
 	/**
-	 * Bundle key for {@link #search(Bundle)}:
+	 * Author name to search for.
 	 * 
-	 * Author
+	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_AUTHOR = "verfasser";
 
 	/**
-	 * Bundle key for {@link #search(Bundle)}:
+	 * "Keyword A". Most libraries require very special input in this field. May
+	 * be removed in future versions for a nicer user interface.
 	 * 
-	 * Keyword A
+	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * {@link #getSearchFields()}.
 	 */
+	@Deprecated
 	public static final String KEY_SEARCH_QUERY_KEYWORDA = "schlag_a";
 
 	/**
-	 * Bundle key for {@link #search(Bundle)}:
+	 * "Keyword B". Most libraries require very special input in this field. May
+	 * be removed in future versions for a nicer user interface. Can only be
+	 * set, if <code>KEY_SEARCH_QUERY_KEYWORDA</code> is set as well.
 	 * 
-	 * Keyword B
+	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * {@link #getSearchFields()}.
 	 */
+	@Deprecated
 	public static final String KEY_SEARCH_QUERY_KEYWORDB = "schlag_b";
 
 	/**
-	 * Bundle key for {@link #search(Bundle)}:
+	 * Library branch to search in. The user is able to select from multiple
+	 * options, generated from the MetaData you store in the MetaDataSource you
+	 * get in {@link #init(MetaDataSource, Library)}.
 	 * 
-	 * Library branch
+	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_BRANCH = "zweigstelle";
 
 	/**
-	 * Bundle key for {@link #search(Bundle)}:
+	 * "Home" library branch. Some library systems require this at search
+	 * request time to determine where book reservations should be placed. If in
+	 * doubt, don't use. Behaves similar to <code>KEY_SEARCH_QUERY_BRANCH</code>
+	 * .
 	 * 
-	 * ISBN
+	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * {@link #getSearchFields()}.
+	 */
+	public static final String KEY_SEARCH_QUERY_HOME_BRANCH = "homebranch";
+
+	/**
+	 * An ISBN / EAN code to search for. We cannot promise whether it comes with
+	 * spaces or hyphens in between but it most likely won't. If it makes a
+	 * difference to you, eliminate everythin except numbers and X. We also
+	 * cannot say whether a ISBN10 or a ISBN13 is supplied - if relevant, check
+	 * in your {@link #search(Bundle)} implementation.
+	 * 
+	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_ISBN = "isbn";
 
 	/**
-	 * Bundle key for {@link #search(Bundle)}:
+	 * Year of publication. Your API can either support this or both the
+	 * <code>KEY_SEARCH_QUERY_YEAR_RANGE_*</code> fields (or none of them).
 	 * 
-	 * Year of publication
+	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_YEAR = "jahr";
 
 	/**
-	 * Bundle key for {@link #search(Bundle)}:
+	 * End of range, if year of publication can be specified as a range. Can not
+	 * be combined with <code>KEY_SEARCH_QUERY_YEAR</code> but has to be
+	 * combined with <code>KEY_SEARCH_QUERY_YEAR_RANGE_END</code>.
 	 * 
-	 * Year range start
+	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_YEAR_RANGE_START = "jahr_von";
 
 	/**
-	 * Bundle key for {@link #search(Bundle)}:
+	 * Start of range, if year of publication can be specified as a range. Can
+	 * not be combined with <code>KEY_SEARCH_QUERY_YEAR</code> but has to be
+	 * combined with <code>KEY_SEARCH_QUERY_YEAR_RANGE_START</code>.
 	 * 
-	 * Year range end
+	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_YEAR_RANGE_END = "jahr_bis";
 
 	/**
-	 * Bundle key for {@link #search(Bundle)}:
+	 * Systematic identification, used in some libraries. Rarely in use. May be
+	 * removed in future versions for a nicer user interface.
 	 * 
-	 * Year range end
+	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * {@link #getSearchFields()}.
 	 */
+	@Deprecated
 	public static final String KEY_SEARCH_QUERY_SYSTEM = "systematik";
 
 	/**
-	 * Bundle key for {@link #search(Bundle)}:
+	 * Some libraries support a special "audience" field with specified values.
+	 * Rarely in use. May be removed in future versions for a nicer user
+	 * interface.
 	 * 
-	 * Systematic identification
+	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * {@link #getSearchFields()}.
 	 */
+	@Deprecated
 	public static final String KEY_SEARCH_QUERY_AUDIENCE = "interessenkreis";
 
 	/**
-	 * Bundle key for {@link #search(Bundle)}:
+	 * The "publisher" search field
 	 * 
-	 * Item's publisher
+	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_PUBLISHER = "verlag";
 
 	/**
-	 * Bundle key for {@link #search(Bundle)}:
+	 * Item category (like "book" or "CD"). The user is able to select from
+	 * multiple options, generated from the MetaData you store in the
+	 * MetaDataSource you get in {@link #init(MetaDataSource, Library)}.
 	 * 
-	 * Item's category
+	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_CATEGORY = "mediengruppe";
 
 	/**
-	 * Is called on application startup and you are free to call it in <our
+	 * May be called on application startup and you are free to call it in <our
 	 * {@link #search} implementation or similar positions. It is commonly used
-	 * to initialize a session. You must not rely on it being called and should
+	 * to initialize a session. You MUST NOT rely on it being called and should
 	 * check by yourself, whether it was already called (if your following calls
-	 * require it). I also populate MetaDataSource with branch information in
-	 * this method (documentation on this will follow).
+	 * require it to be called before). You SHOULD use this function to populate
+	 * the MetaDataSource e.g. with information on your library's branches.
 	 * 
 	 * This function is always called from a background thread, you can use
 	 * blocking network operations in it.

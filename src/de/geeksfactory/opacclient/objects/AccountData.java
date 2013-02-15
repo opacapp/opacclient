@@ -15,103 +15,109 @@ public class AccountData {
 	private long account;
 
 	/**
-	 * ContentValues key for {@link #setLent(List)}:
+	 * Title of a lent item.
 	 * 
-	 * Item's title
+	 * ContentValues key for {@link #setLent(List)}
 	 */
 	public static final String KEY_LENT_TITLE = "titel";
 
 	/**
-	 * ContentValues key for {@link #setLent(List)}:
+	 * Barcode/unique identifier of a lent item. Should be set.
 	 * 
-	 * Item's title
+	 * ContentValues key for {@link #setLent(List)}
 	 */
 	public static final String KEY_LENT_BARCODE = "barcode";
 
 	/**
-	 * ContentValues key for {@link #setLent(List)}:
+	 * Author of a lent item. Optional.
 	 * 
-	 * Item's title
+	 * ContentValues key for {@link #setLent(List)}
 	 */
 	public static final String KEY_LENT_AUTHOR = "verfasser";
 
 	/**
-	 * ContentValues key for {@link #setLent(List)}:
+	 * Return date for a lent item. Should be set.
 	 * 
-	 * Return date
+	 * ContentValues key for {@link #setLent(List)}
 	 */
 	public static final String KEY_LENT_DEADLINE = "frist";
 
 	/**
-	 * ContentValues key for {@link #setLent(List)}:
+	 * Return date for a lent item, converted to a unix timestamp in
+	 * milliseconds (comparable to <code>System.currentTimeMillis()</code>). Not
+	 * displayed, but REQUIRED for notifications!!
 	 * 
-	 * Return date (as a timestamp in milliseconds)
+	 * ContentValues key for {@link #setLent(List)}
 	 */
 	public static final String KEY_LENT_DEADLINE_TIMESTAMP = "deadline_ts";
 
 	/**
-	 * ContentValues key for {@link #setLent(List)}:
+	 * Status of a lent item. Some libraries use codes like "E" for
+	 * "first lending period", "1" for "lending period extended once", etc.
+	 * Optional.
 	 * 
-	 * Status
+	 * ContentValues key for {@link #setLent(List)}
 	 */
 	public static final String KEY_LENT_STATUS = "status";
 
 	/**
-	 * ContentValues key for {@link #setLent(List)}:
+	 * Library branch the item belongs to. Optional.
 	 * 
-	 * Branch the item belongs to
+	 * ContentValues key for {@link #setLent(List)}
 	 */
 	public static final String KEY_LENT_BRANCH = "zst";
 
 	/**
-	 * ContentValues key for {@link #setLent(List)}:
+	 * Library branch the item was lent from. Optional.
 	 * 
-	 * Branch were the item was lent
+	 * ContentValues key for {@link #setLent(List)}
 	 */
 	public static final String KEY_LENT_LENDING_BRANCH = "ast";
 
 	/**
-	 * ContentValues key for {@link #setLent(List)}:
-	 * 
-	 * Identifier (see
+	 * Internal identifier which will be supplied to your
 	 * {@link de.geeksfactory.opacclient.apis.OpacApi#prolong(Account, String)}
+	 * implementation for prolonging. Button for prolonging will only be
+	 * displayed if this is set.
+	 * 
+	 * ContentValues key for {@link #setLent(List)}
 	 */
 	public static final String KEY_LENT_LINK = "link";
 
 	/**
-	 * ContentValues key for {@link #setReservations(List)}:
+	 * Title of an ordered item. Should be set.
 	 * 
-	 * Item's title
+	 * ContentValues key for {@link #setReservations(List)}
 	 */
 	public static final String KEY_RESERVATION_TITLE = "titel";
 
 	/**
-	 * ContentValues key for {@link #setReservations(List)}:
-	 * 
-	 * 
-	 * Item's author
+	 * Author of an ordered item. Optional.
 	 */
 	public static final String KEY_RESERVATION_AUTHOR = "verfasser";
 
 	/**
-	 * ContentValues key for {@link #setReservations(List)}:
+	 * Expected date for an ordered item to arrive. Optional.
 	 * 
-	 * Expected date
+	 * ContentValues key for {@link #setReservations(List)}
 	 */
 	public static final String KEY_RESERVATION_READY = "bereit";
 
 	/**
-	 * ContentValues key for {@link #setReservations(List)}:
+	 * Library branch an item is ordered to. Optional, but should be set if your
+	 * library has multiple branches.
 	 * 
-	 * branch
+	 * ContentValues key for {@link #setReservations(List)}
 	 */
 	public static final String KEY_RESERVATION_BRANCH = "zst";
 
 	/**
-	 * ContentValues key for {@link #setReservations(List)}:
-	 * 
-	 * Identifier (see
+	 * Internal identifier which will be supplied to your
 	 * {@link de.geeksfactory.opacclient.apis.OpacApi#cancel(Account, String)}
+	 * implementation when the user wants to cancel the order. Cancel button
+	 * won't be displayed if this is not set.
+	 * 
+	 * ContentValues key for {@link #setReservations(List)}
 	 */
 	public static final String KEY_RESERVATION_CANCEL = "cancel";
 

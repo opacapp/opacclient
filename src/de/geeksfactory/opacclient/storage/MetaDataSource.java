@@ -14,7 +14,14 @@ import android.database.SQLException;
  */
 public interface MetaDataSource {
 
+	/**
+	 * Meta type: library branches
+	 */
 	public static String META_TYPE_BRANCH = "zst";
+	
+	/**
+	 * Meta type: categoroes, like "books" or "video games"
+	 */
 	public static String META_TYPE_CATEGORY = "mg";
 
 	/**

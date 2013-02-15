@@ -95,7 +95,7 @@ public class SearchResult {
 	}
 
 	/**
-	 * Get HTML describing the item to the user in a result list
+	 * Get HTML describing the item to the user in a result list.
 	 * 
 	 * @return position
 	 */
@@ -104,7 +104,8 @@ public class SearchResult {
 	}
 
 	/**
-	 * Set HTML describing the item to the user in a result list
+	 * Set HTML describing the item to the user in a result list. Only "simple"
+	 * HTML like <b>, <i>, etc. can be used.
 	 * 
 	 * @param innerhtml
 	 *            simple HTML code

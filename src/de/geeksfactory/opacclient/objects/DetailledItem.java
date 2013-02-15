@@ -27,65 +27,67 @@ public class DetailledItem {
 	private Bundle volumesearch;
 
 	/**
-	 * ContentValues key for {@link #addCopy(ContentValues)}:
+	 * The barcode of a copy. Optional.
 	 * 
-	 * this copy's barcode
+	 * ContentValues key for {@link #addCopy(ContentValues)}:
 	 */
 	public static final String KEY_COPY_BARCODE = "barcode";
 
 	/**
-	 * ContentValues key for {@link #addCopy(ContentValues)}:
+	 * The location (like "third floor") of a copy. Optional.
 	 * 
-	 * Location
+	 * ContentValues key for {@link #addCopy(ContentValues)}:
 	 */
 	public static final String KEY_COPY_LOCATION = "ort";
 
 	/**
-	 * ContentValues key for {@link #addCopy(ContentValues)}:
+	 * The department (like "music library") of a copy. Optional.
 	 * 
-	 * Department
+	 * ContentValues key for {@link #addCopy(ContentValues)}:
 	 */
 	public static final String KEY_COPY_DEPARTMENT = "abt";
 
 	/**
-	 * ContentValues key for {@link #addCopy(ContentValues)}:
+	 * The branch a copy is in. Should be set, if your library has more than one
+	 * branch.
 	 * 
-	 * Branch
+	 * ContentValues key for {@link #addCopy(ContentValues)}:
 	 */
 	public static final String KEY_COPY_BRANCH = "zst";
 
 	/**
-	 * ContentValues key for {@link #addCopy(ContentValues)}:
+	 * Current status of a copy ("lent", "free", ...). Should be set.
 	 * 
-	 * Current status
+	 * ContentValues key for {@link #addCopy(ContentValues)}:
 	 */
 	public static final String KEY_COPY_STATUS = "status";
 
 	/**
-	 * ContentValues key for {@link #addCopy(ContentValues)}:
+	 * Expected date of return if a copy is lent out. Optional.
 	 * 
-	 * Date of return
+	 * ContentValues key for {@link #addCopy(ContentValues)}:
 	 */
 	public static final String KEY_COPY_RETURN = "rueckgabe";
 
 	/**
-	 * ContentValues key for {@link #addCopy(ContentValues)}:
+	 * Number of pending reservations if a copy is currently lent out. Optional.
 	 * 
-	 * number of reservations pending
+	 * ContentValues key for {@link #addCopy(ContentValues)}:
 	 */
 	public static final String KEY_COPY_RESERVATIONS = "vorbestellt";
 
 	/**
-	 * ContentValues key for {@link #addBand(ContentValues)}:
+	 * Unique media identifier of a child item for
+	 * {@link OpacApi#getResultById(String)}. Required.
 	 * 
-	 * child item's ID
+	 * ContentValues key for {@link #addBand(ContentValues)}:
 	 */
 	public static final String KEY_CHILD_ID = "id";
 
 	/**
-	 * ContentValues key for {@link #addBand(ContentValues)}:
+	 * Title of a child item. Required.
 	 * 
-	 * child item's title
+	 * ContentValues key for {@link #addBand(ContentValues)}:
 	 */
 	public static final String KEY_CHILD_TITLE = "titel";
 
@@ -150,6 +152,10 @@ public class DetailledItem {
 		this.cover = cover;
 	}
 
+	/**
+	 * Returns all data stored in this object, serialized as a human-readable
+	 * string.
+	 */
 	@Override
 	public String toString() {
 		return "DetailledItem [details=" + details + ", copies=" + copies
@@ -212,7 +218,10 @@ public class DetailledItem {
 
 	/**
 	 * Add a child item. <code>child</code> must contain all of the
-	 * <code>KEY_CHILD_*</code> constants as keys.
+	 * <code>KEY_CHILD_*</code> constants as keys. This is to be used, if a
+	 * search result is not a real item but more like a "meta item" for a
+	 * collection, for example a "Harry Potter" item containing a collection of
+	 * all seven Harry Potter books as child items.
 	 * 
 	 * @see Detail
 	 */

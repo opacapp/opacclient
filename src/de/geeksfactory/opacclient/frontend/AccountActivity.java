@@ -69,7 +69,7 @@ public class AccountActivity extends OpacActivity {
 	private boolean refreshing = false;
 	private long refreshtime;
 	private boolean fromcache;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
