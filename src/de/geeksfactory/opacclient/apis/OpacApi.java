@@ -51,23 +51,21 @@ public interface OpacApi {
 
 	/**
 	 * "Keyword A". Most libraries require very special input in this field. May
-	 * be removed in future versions for a nicer user interface.
+	 * be only shown if "advanced fields" is set in user preferences.
 	 * 
 	 * Bundle key for {@link #search(Bundle)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
-	@Deprecated
 	public static final String KEY_SEARCH_QUERY_KEYWORDA = "schlag_a";
 
 	/**
 	 * "Keyword B". Most libraries require very special input in this field. May
-	 * be removed in future versions for a nicer user interface. Can only be
-	 * set, if <code>KEY_SEARCH_QUERY_KEYWORDA</code> is set as well.
+	 * be only shown if "advanced fields" is set in user preferences. Can only
+	 * be set, if <code>KEY_SEARCH_QUERY_KEYWORDA</code> is set as well.
 	 * 
 	 * Bundle key for {@link #search(Bundle)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
-	@Deprecated
 	public static final String KEY_SEARCH_QUERY_KEYWORDB = "schlag_b";
 
 	/**
@@ -134,23 +132,21 @@ public interface OpacApi {
 
 	/**
 	 * Systematic identification, used in some libraries. Rarely in use. May be
-	 * removed in future versions for a nicer user interface.
+	 * only shown if "advanced fields" is set in user preferences.
 	 * 
 	 * Bundle key for {@link #search(Bundle)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
-	@Deprecated
 	public static final String KEY_SEARCH_QUERY_SYSTEM = "systematik";
 
 	/**
 	 * Some libraries support a special "audience" field with specified values.
-	 * Rarely in use. May be removed in future versions for a nicer user
-	 * interface.
+	 * Rarely in use. May be only shown if "advanced fields" is set in user
+	 * preferences.
 	 * 
 	 * Bundle key for {@link #search(Bundle)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
-	@Deprecated
 	public static final String KEY_SEARCH_QUERY_AUDIENCE = "interessenkreis";
 
 	/**

@@ -177,5 +177,7 @@
 
     <string name="search_advanced">Erweiterte Suche</string>
     <string name="search_free">Freie Suche</string>
+    <string name="advanced">Erweiterter Modus</string>
+    <string name="advanced_desc">Zeigt weitere, selten benutzte Suchfelder.</string>
 
 </resources>

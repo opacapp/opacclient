@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.acra.ACRA;
-import org.holoeverywhere.app.ProgressDialog;
 import org.holoeverywhere.widget.Spinner;
 
 import android.content.ContentValues;
@@ -31,7 +30,6 @@ import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
@@ -48,6 +46,7 @@ public class SearchActivity extends OpacActivity {
 
 	private List<ContentValues> cbMg_data;
 	private List<ContentValues> cbZst_data;
+	private boolean advanced = false;
 
 	public void urlintent() {
 		Uri d = getIntent().getData();
@@ -157,6 +156,10 @@ public class SearchActivity extends OpacActivity {
 		if (app.getLibrary() == null)
 			return;
 
+		SharedPreferences sp = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		advanced = sp.getBoolean("advanced", false);
+
 		Set<String> fields = new HashSet<String>(Arrays.asList(app.getApi()
 				.getSearchFields()));
 
@@ -181,14 +184,14 @@ public class SearchActivity extends OpacActivity {
 			findViewById(R.id.etVerfasser).setVisibility(View.GONE);
 			findViewById(R.id.tvVerfasser).setVisibility(View.GONE);
 		}
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_KEYWORDA)) {
+		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_KEYWORDA) && advanced) {
 			findViewById(R.id.llSchlag).setVisibility(View.VISIBLE);
 			findViewById(R.id.tvSchlag).setVisibility(View.VISIBLE);
 		} else {
 			findViewById(R.id.llSchlag).setVisibility(View.GONE);
 			findViewById(R.id.tvSchlag).setVisibility(View.GONE);
 		}
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_KEYWORDB)) {
+		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_KEYWORDB) && advanced) {
 			findViewById(R.id.etSchlagB).setVisibility(View.VISIBLE);
 		} else {
 			findViewById(R.id.etSchlagB).setVisibility(View.GONE);
@@ -228,36 +231,36 @@ public class SearchActivity extends OpacActivity {
 			findViewById(R.id.tvJahr).setVisibility(View.GONE);
 			findViewById(R.id.etJahr).setVisibility(View.GONE);
 		}
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_SYSTEM)) {
+		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_SYSTEM) && advanced) {
 			findViewById(R.id.etSystematik).setVisibility(View.VISIBLE);
 			findViewById(R.id.tvSystematik).setVisibility(View.VISIBLE);
 		} else {
 			findViewById(R.id.etSystematik).setVisibility(View.GONE);
 			findViewById(R.id.tvSystematik).setVisibility(View.GONE);
 		}
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_AUDIENCE)) {
+		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_AUDIENCE) && advanced) {
 			findViewById(R.id.etInteressenkreis).setVisibility(View.VISIBLE);
 			findViewById(R.id.tvInteressenkreis).setVisibility(View.VISIBLE);
 		} else {
 			findViewById(R.id.etInteressenkreis).setVisibility(View.GONE);
 			findViewById(R.id.tvInteressenkreis).setVisibility(View.GONE);
 		}
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_PUBLISHER)) {
+		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_PUBLISHER) && advanced) {
 			findViewById(R.id.etVerlag).setVisibility(View.VISIBLE);
 			findViewById(R.id.tvVerlag).setVisibility(View.VISIBLE);
 		} else {
 			findViewById(R.id.etVerlag).setVisibility(View.GONE);
 			findViewById(R.id.tvVerlag).setVisibility(View.GONE);
 		}
-		if (fields.contains("order")) {
+		if (fields.contains("order") && advanced) {
 			findViewById(R.id.cbOrder).setVisibility(View.VISIBLE);
 			findViewById(R.id.tvOrder).setVisibility(View.VISIBLE);
 		} else {
 			findViewById(R.id.cbOrder).setVisibility(View.GONE);
 			findViewById(R.id.tvOrder).setVisibility(View.GONE);
 		}
-		
-		if(cbZst_data.size() == 1)
+
+		if (cbZst_data.size() == 1)
 			fillComboBoxes();
 	}
 
@@ -446,12 +449,6 @@ public class SearchActivity extends OpacActivity {
 		query.putString(OpacApi.KEY_SEARCH_QUERY_AUTHOR,
 				((EditText) SearchActivity.this.findViewById(R.id.etVerfasser))
 						.getEditableText().toString());
-		query.putString(OpacApi.KEY_SEARCH_QUERY_KEYWORDA,
-				((EditText) SearchActivity.this.findViewById(R.id.etSchlagA))
-						.getEditableText().toString());
-		query.putString(OpacApi.KEY_SEARCH_QUERY_KEYWORDB,
-				((EditText) SearchActivity.this.findViewById(R.id.etSchlagB))
-						.getEditableText().toString());
 		query.putString(OpacApi.KEY_SEARCH_QUERY_BRANCH, zst);
 		query.putString(OpacApi.KEY_SEARCH_QUERY_CATEGORY, mg);
 		query.putString(OpacApi.KEY_SEARCH_QUERY_ISBN,
@@ -466,22 +463,34 @@ public class SearchActivity extends OpacActivity {
 		query.putString(OpacApi.KEY_SEARCH_QUERY_YEAR_RANGE_END,
 				((EditText) SearchActivity.this.findViewById(R.id.etJahrBis))
 						.getEditableText().toString());
-		query.putString(
-				OpacApi.KEY_SEARCH_QUERY_SYSTEM,
-				((EditText) SearchActivity.this.findViewById(R.id.etSystematik))
-						.getEditableText().toString());
-		query.putString(OpacApi.KEY_SEARCH_QUERY_AUDIENCE,
-				((EditText) SearchActivity.this
-						.findViewById(R.id.etInteressenkreis))
-						.getEditableText().toString());
-		query.putString(OpacApi.KEY_SEARCH_QUERY_AUDIENCE,
-				((EditText) SearchActivity.this.findViewById(R.id.etVerlag))
-						.getEditableText().toString());
-		query.putString(
-				"order",
-				(((Integer) ((Spinner) SearchActivity.this
-						.findViewById(R.id.cbOrder)).getSelectedItemPosition()) + 1)
-						+ "");
+		if (advanced) {
+			query.putString(OpacApi.KEY_SEARCH_QUERY_KEYWORDA,
+					((EditText) SearchActivity.this
+							.findViewById(R.id.etSchlagA)).getEditableText()
+							.toString());
+			query.putString(OpacApi.KEY_SEARCH_QUERY_KEYWORDB,
+					((EditText) SearchActivity.this
+							.findViewById(R.id.etSchlagB)).getEditableText()
+							.toString());
+			query.putString(OpacApi.KEY_SEARCH_QUERY_SYSTEM,
+					((EditText) SearchActivity.this
+							.findViewById(R.id.etSystematik)).getEditableText()
+							.toString());
+			query.putString(OpacApi.KEY_SEARCH_QUERY_AUDIENCE,
+					((EditText) SearchActivity.this
+							.findViewById(R.id.etInteressenkreis))
+							.getEditableText().toString());
+			query.putString(
+					OpacApi.KEY_SEARCH_QUERY_PUBLISHER,
+					((EditText) SearchActivity.this.findViewById(R.id.etVerlag))
+							.getEditableText().toString());
+			query.putString(
+					"order",
+					(((Integer) ((Spinner) SearchActivity.this
+							.findViewById(R.id.cbOrder))
+							.getSelectedItemPosition()) + 1)
+							+ "");
+		}
 		myIntent.putExtra("query", query);
 		startActivity(myIntent);
 	}
