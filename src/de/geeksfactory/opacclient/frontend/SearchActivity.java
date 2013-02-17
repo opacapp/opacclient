@@ -31,10 +31,10 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 import de.geeksfactory.opacclient.OpacClient;
-import de.geeksfactory.opacclient.OpacClient.OnMetaDataLoaded;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
+import de.geeksfactory.opacclient.frontend.WelcomeActivity.InitTask;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
@@ -52,6 +52,8 @@ public class SearchActivity extends OpacActivity {
 	private List<ContentValues> cbZstHome_data;
 	private boolean advanced = false;
 	private Set<String> fields;
+	private LoadMetaDataTask lmdt;
+	public boolean metaDataLoading = false;
 
 	public void urlintent() {
 		Uri d = getIntent().getData();
@@ -160,6 +162,8 @@ public class SearchActivity extends OpacActivity {
 
 		if (app.getLibrary() == null)
 			return;
+
+		metaDataLoading = false;
 
 		advanced = sp.getBoolean("advanced", false);
 
@@ -305,7 +309,7 @@ public class SearchActivity extends OpacActivity {
 		String selection = sp.getString(OpacClient.PREF_HOME_BRANCH_PREFIX
 				+ app.getAccount().getId(), "");
 		int i = 0;
-		for (ContentValues row : cbZst_data) {
+		for (ContentValues row : cbZstHome_data) {
 			if (row.getAsString("key").equals(selection)) {
 				selected = i;
 			}
@@ -322,24 +326,13 @@ public class SearchActivity extends OpacActivity {
 		cbMg.setAdapter(new MetaAdapter(this, cbMg_data,
 				R.layout.simple_spinner_item));
 
-		if ((cbZst_data.size() == 1 && fields
+		if ((cbZst_data.size() == 1 || !fields
 				.contains(OpacApi.KEY_SEARCH_QUERY_BRANCH))
-				|| (cbMg_data.size() == 1 && fields
+				&& (cbMg_data.size() == 1 || !fields
 						.contains(OpacApi.KEY_SEARCH_QUERY_CATEGORY))
-				|| (cbZstHome_data.size() == 0 && fields
+				&& (cbZstHome_data.size() == 0 || !fields
 						.contains(OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH))) {
-			app.loadMetaData(app.getLibrary().getIdent(), true,
-					new OnMetaDataLoaded() {
-						@Override
-						public void onMetaDataLoaded(boolean success) {
-							loadingIndicators();
-							if (success)
-								fillComboBoxes();
-							else {
-								// TODO: error indicator
-							}
-						}
-					});
+			loadMetaData(app.getLibrary().getIdent(), true);
 			loadingIndicators();
 		}
 
@@ -347,7 +340,7 @@ public class SearchActivity extends OpacActivity {
 	}
 
 	private void loadingIndicators() {
-		int visibility = app.metaDataLoading ? View.VISIBLE : View.GONE;
+		int visibility = metaDataLoading ? View.VISIBLE : View.GONE;
 		findViewById(R.id.pbBranch).setVisibility(visibility);
 		findViewById(R.id.pbHomeBranch).setVisibility(visibility);
 		findViewById(R.id.pbMediengruppe).setVisibility(visibility);
@@ -402,7 +395,6 @@ public class SearchActivity extends OpacActivity {
 					long insertedid = data.addAccount(acc);
 					data.close();
 					app.setAccount(insertedid);
-					new InitTask().execute(app);
 
 					Toast.makeText(
 							this,
@@ -576,25 +568,61 @@ public class SearchActivity extends OpacActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	public class InitTask extends OpacTask<Integer> {
+	public void loadMetaData(String lib) {
+		loadMetaData(lib, false);
+	}
+
+	public void loadMetaData(String lib, boolean force) {
+		if (metaDataLoading)
+			return;
+		MetaDataSource data = new SQLMetaDataSource(this);
+		data.open();
+		boolean fetch = !data.hasMeta(lib);
+		data.close();
+		if (fetch || force) {
+			metaDataLoading = true;
+			lmdt = new LoadMetaDataTask();
+			lmdt.execute(getApplication(), lib);
+		}
+	}
+
+	public class LoadMetaDataTask extends OpacTask<Boolean> {
+		private boolean success = true;
+		private long account;
+
 		@Override
-		protected Integer doInBackground(Object... arg0) {
+		protected Boolean doInBackground(Object... arg0) {
 			super.doInBackground(arg0);
+
+			String lib = (String) arg0[1];
+			account = app.getAccount().getId();
+
 			try {
-				app.getApi().start();
+				if (lib.equals(app.getLibrary(lib).getIdent())) {
+					app.getNewApi(app.getLibrary(lib)).start();
+				} else {
+					app.getApi().start();
+				}
+				success = true;
 			} catch (java.net.UnknownHostException e) {
-				e.printStackTrace();
+				success = false;
 			} catch (java.net.SocketException e) {
-				e.printStackTrace();
+				success = false;
 			} catch (Exception e) {
 				ACRA.getErrorReporter().handleException(e);
+				success = false;
 			}
-			return 0;
+			return success;
 		}
 
 		@Override
-		protected void onPostExecute(Integer result) {
-			onStart();
+		protected void onPostExecute(Boolean result) {
+			if (account == app.getAccount().getId()) {
+				metaDataLoading = false;
+				loadingIndicators();
+				if (success)
+					fillComboBoxes();
+			}
 		}
 	}
 

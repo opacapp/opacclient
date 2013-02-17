@@ -122,8 +122,6 @@ public class AccountEditActivity extends SherlockActivity {
 			if (getIntent().hasExtra("welcome")
 					&& getIntent().getBooleanExtra("welcome", false)) {
 				save();
-				((OpacClient) getApplication()).loadMetaData(account
-						.getLibrary());
 				Intent i = new Intent(this, SearchActivity.class);
 				startActivity(i);
 			} else {

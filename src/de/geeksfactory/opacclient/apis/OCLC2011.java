@@ -144,8 +144,6 @@ public class OCLC2011 implements OpacApi {
 		}
 
 		zst_opts = doc.select("#selectedViewBranchlib option");
-		metadata.open();
-		metadata.clearMeta(library.getIdent());
 		for (int i = 0; i < zst_opts.size(); i++) {
 			Element opt = zst_opts.get(i);
 			if (!opt.val().equals(""))
@@ -934,7 +932,6 @@ public class OCLC2011 implements OpacApi {
 
 	private String httpGet(String url) throws ClientProtocolException,
 			IOException {
-		Log.i("oclc2011", url);
 		HttpGet httpget = new HttpGet(url);
 		HttpResponse response = ahc.execute(httpget);
 		String html = convertStreamToString(response.getEntity().getContent());
