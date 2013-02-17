@@ -258,7 +258,7 @@ public class AccountActivity extends OpacActivity {
 		if (refreshing || fromcache) {
 			Toast.makeText(this, R.string.account_no_concurrent,
 					Toast.LENGTH_LONG).show();
-			if(!refreshing){
+			if (!refreshing) {
 				refresh();
 			}
 			return;
@@ -308,7 +308,7 @@ public class AccountActivity extends OpacActivity {
 		if (refreshing || age > MAX_CACHE_AGE) {
 			Toast.makeText(this, R.string.account_no_concurrent,
 					Toast.LENGTH_LONG).show();
-			if(!refreshing){
+			if (!refreshing) {
 				refresh();
 			}
 			return;
@@ -510,9 +510,9 @@ public class AccountActivity extends OpacActivity {
 
 	public void displaydata(AccountData result, boolean fromcache) {
 		setContentView(R.layout.account_activity);
-		
+
 		this.fromcache = fromcache;
-		
+
 		((TextView) findViewById(R.id.tvAccLabel)).setText(account.getLabel());
 		((TextView) findViewById(R.id.tvAccUser)).setText(account.getName());
 		TextView tvAccCity = (TextView) findViewById(R.id.tvAccCity);
@@ -634,8 +634,9 @@ public class AccountActivity extends OpacActivity {
 									.getAsString(AccountData.KEY_RESERVATION_TITLE)));
 				}
 				if (item.containsKey(AccountData.KEY_RESERVATION_AUTHOR)) {
-					((TextView) v.findViewById(R.id.tvVerfasser)).setText(Html.fromHtml(item
-							.getAsString(AccountData.KEY_RESERVATION_AUTHOR)));
+					((TextView) v.findViewById(R.id.tvVerfasser))
+							.setText(Html.fromHtml(item
+									.getAsString(AccountData.KEY_RESERVATION_AUTHOR)));
 				}
 
 				if (item.containsKey(AccountData.KEY_RESERVATION_READY)) {

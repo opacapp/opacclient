@@ -28,6 +28,7 @@ import de.geeksfactory.opacclient.apis.Zones22;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.storage.MetaDataSource;
 import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 
 @ReportsCrashes(formKey = "", mailTo = "raphael+opac@geeksfactory.de", mode = org.acra.ReportingInteractionMode.DIALOG, resToastText = R.string.crash_toast_text, resDialogText = R.string.crash_dialog_text)
@@ -196,6 +197,48 @@ public class OpacClient extends Application {
 		if (getLibrary() != null) {
 			ACRA.getErrorReporter().putCustomData("library",
 					getLibrary().getIdent());
+		}
+	}
+
+	public void loadMetaData(String lib) {
+		MetaDataSource data = new SQLMetaDataSource(this);
+		data.open();
+		boolean fetch = !data.hasMeta(lib);
+		data.close();
+		if (fetch) {
+			new LoadMetaDataTask().execute(lib);
+		}
+	}
+
+	public class LoadMetaDataTask extends OpacTask<Boolean> {
+		private boolean success = true;
+
+		@Override
+		protected Boolean doInBackground(Object... arg0) {
+			super.doInBackground(arg0);
+
+			String lib = (String) arg0[0];
+
+			try {
+				if (lib.equals(library.getIdent())) {
+					getNewApi(getLibrary(lib)).start();
+				} else {
+					getApi().start();
+				}
+				success = true;
+			} catch (java.net.UnknownHostException e) {
+				success = false;
+			} catch (java.net.SocketException e) {
+				success = false;
+			} catch (Exception e) {
+				ACRA.getErrorReporter().handleException(e);
+				success = false;
+			}
+			return success;
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
 		}
 	}
 

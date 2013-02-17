@@ -256,6 +256,9 @@ public class SearchActivity extends OpacActivity {
 			findViewById(R.id.cbOrder).setVisibility(View.GONE);
 			findViewById(R.id.tvOrder).setVisibility(View.GONE);
 		}
+		
+		if(cbZst_data.size() == 1)
+			fillComboBoxes();
 	}
 
 	@Override
