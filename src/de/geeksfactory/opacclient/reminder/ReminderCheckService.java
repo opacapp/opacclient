@@ -23,7 +23,6 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
@@ -35,22 +34,34 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 
 public class ReminderCheckService extends Service {
 
+	boolean notification_on = false;
+
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startid) {
+		SharedPreferences sp = PreferenceManager
+				.getDefaultSharedPreferences(ReminderCheckService.this);
+		notification_on = sp.getBoolean("notification_service", false);
+		long waittime = (1000 * 3600 * 5);
 
 		if (((OpacClient) getApplication()).isOnline()) {
 			new CheckTask().execute();
 		} else {
-			Intent i = new Intent(ReminderCheckService.this,
-					ReminderAlarmReceiver.class);
-			PendingIntent sender = PendingIntent.getBroadcast(
-					ReminderCheckService.this, OpacClient.BROADCAST_REMINDER,
-					i, PendingIntent.FLAG_UPDATE_CURRENT);
-			AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-			am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
-					+ (1000 * 3600 * 1), sender);
+			waittime = (1000 * 3600 * 1);
 			stopSelf();
 		}
+
+		if (!notification_on) {
+			waittime = (1000 * 3600 * 12);
+		}
+
+		Intent i = new Intent(ReminderCheckService.this,
+				ReminderAlarmReceiver.class);
+		PendingIntent sender = PendingIntent.getBroadcast(
+				ReminderCheckService.this, OpacClient.BROADCAST_REMINDER, i,
+				PendingIntent.FLAG_UPDATE_CURRENT);
+		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + waittime,
+				sender);
 
 		return START_STICKY;
 	}
@@ -64,7 +75,6 @@ public class ReminderCheckService extends Service {
 
 		@Override
 		protected Long[] doInBackground(Object... params) {
-			// TODO: WIEDER EINBAUEN!
 			AccountDataSource data = new AccountDataSource(
 					ReminderCheckService.this);
 			data.open();
@@ -211,8 +221,6 @@ public class ReminderCheckService extends Service {
 			Notification notification = nb.build();
 			mNotificationManager.notify(OpacClient.NOTIF_ID, notification);
 
-			am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
-					+ (1000 * 3600 * 5), sender);
 			stopSelf();
 		}
 
