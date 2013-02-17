@@ -79,10 +79,10 @@ public interface OpacApi {
 	public static final String KEY_SEARCH_QUERY_BRANCH = "zweigstelle";
 
 	/**
-	 * "Home" library branch. Some library systems require this at search
-	 * request time to determine where book reservations should be placed. If in
-	 * doubt, don't use. Behaves similar to <code>KEY_SEARCH_QUERY_BRANCH</code>
-	 * .
+	 * "Home" library branch. Some library systems require this information at
+	 * search request time to determine where book reservations should be
+	 * placed. If in doubt, don't use. Behaves similar to
+	 * <code>KEY_SEARCH_QUERY_BRANCH</code> .
 	 * 
 	 * Bundle key for {@link #search(Bundle)} and possible value for
 	 * {@link #getSearchFields()}.

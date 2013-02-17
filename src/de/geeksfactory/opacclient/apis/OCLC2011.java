@@ -96,10 +96,10 @@ public class OCLC2011 implements OpacApi {
 	public String[] getSearchFields() {
 		return new String[] { KEY_SEARCH_QUERY_FREE, KEY_SEARCH_QUERY_TITLE,
 				KEY_SEARCH_QUERY_AUTHOR, KEY_SEARCH_QUERY_KEYWORDA,
-				KEY_SEARCH_QUERY_KEYWORDB, KEY_SEARCH_QUERY_BRANCH,
-				KEY_SEARCH_QUERY_ISBN, KEY_SEARCH_QUERY_YEAR,
-				KEY_SEARCH_QUERY_SYSTEM, KEY_SEARCH_QUERY_AUDIENCE,
-				KEY_SEARCH_QUERY_PUBLISHER };
+				KEY_SEARCH_QUERY_KEYWORDB, KEY_SEARCH_QUERY_HOME_BRANCH,
+				KEY_SEARCH_QUERY_BRANCH, KEY_SEARCH_QUERY_ISBN,
+				KEY_SEARCH_QUERY_YEAR, KEY_SEARCH_QUERY_SYSTEM,
+				KEY_SEARCH_QUERY_AUDIENCE, KEY_SEARCH_QUERY_PUBLISHER };
 	}
 
 	@Override
@@ -140,6 +140,16 @@ public class OCLC2011 implements OpacApi {
 			Element opt = zst_opts.get(i);
 			if (!opt.val().equals(""))
 				metadata.addMeta(MetaDataSource.META_TYPE_BRANCH,
+						library.getIdent(), opt.val(), opt.text());
+		}
+
+		zst_opts = doc.select("#selectedViewBranchlib option");
+		metadata.open();
+		metadata.clearMeta(library.getIdent());
+		for (int i = 0; i < zst_opts.size(); i++) {
+			Element opt = zst_opts.get(i);
+			if (!opt.val().equals(""))
+				metadata.addMeta(MetaDataSource.META_TYPE_HOME_BRANCH,
 						library.getIdent(), opt.val(), opt.text());
 		}
 
@@ -279,7 +289,10 @@ public class OCLC2011 implements OpacApi {
 			}
 
 			params.add(new BasicNameValuePair("selectedSearchBranchlib", query
-					.getString("zweigstelle")));
+					.getString(KEY_SEARCH_QUERY_BRANCH)));
+			if (!query.getString(KEY_SEARCH_QUERY_HOME_BRANCH).equals(""))
+				params.add(new BasicNameValuePair("selectedViewBranchlib",
+						query.getString(KEY_SEARCH_QUERY_HOME_BRANCH)));
 		}
 
 		HttpGet httpget = new HttpGet(opac_url + "/search.do?"

@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
+import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
@@ -44,8 +45,10 @@ import de.geeksfactory.opacclient.zxing.IntentResult;
 
 public class SearchActivity extends OpacActivity {
 
+	private SharedPreferences sp;
 	private List<ContentValues> cbMg_data;
 	private List<ContentValues> cbZst_data;
+	private List<ContentValues> cbZstHome_data;
 	private boolean advanced = false;
 
 	public void urlintent() {
@@ -156,8 +159,6 @@ public class SearchActivity extends OpacActivity {
 		if (app.getLibrary() == null)
 			return;
 
-		SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(this);
 		advanced = sp.getBoolean("advanced", false);
 
 		Set<String> fields = new HashSet<String>(Arrays.asList(app.getApi()
@@ -202,6 +203,13 @@ public class SearchActivity extends OpacActivity {
 		} else {
 			findViewById(R.id.cbBranch).setVisibility(View.GONE);
 			findViewById(R.id.tvZweigstelle).setVisibility(View.GONE);
+		}
+		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH)) {
+			findViewById(R.id.cbHomeBranch).setVisibility(View.VISIBLE);
+			findViewById(R.id.tvHomeBranch).setVisibility(View.VISIBLE);
+		} else {
+			findViewById(R.id.cbHomeBranch).setVisibility(View.GONE);
+			findViewById(R.id.tvHomeBranch).setVisibility(View.GONE);
 		}
 		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_CATEGORY)) {
 			findViewById(R.id.cbMediengruppe).setVisibility(View.VISIBLE);
@@ -273,6 +281,7 @@ public class SearchActivity extends OpacActivity {
 
 	private void fillComboBoxes() {
 		Spinner cbZst = (Spinner) findViewById(R.id.cbBranch);
+		Spinner cbZstHome = (Spinner) findViewById(R.id.cbHomeBranch);
 
 		MetaDataSource data = new SQLMetaDataSource(this);
 		data.open();
@@ -286,6 +295,22 @@ public class SearchActivity extends OpacActivity {
 		cbZst_data.add(0, all);
 		cbZst.setAdapter(new MetaAdapter(this, cbZst_data,
 				R.layout.simple_spinner_item));
+
+		cbZstHome_data = data.getMeta(app.getLibrary().getIdent(),
+				MetaDataSource.META_TYPE_HOME_BRANCH);
+		int selected = 0;
+		String selection = sp.getString(OpacClient.PREF_HOME_BRANCH_PREFIX
+				+ app.getAccount().getId(), "");
+		int i = 0;
+		for (ContentValues row : cbZst_data) {
+			if (row.getAsString("key").equals(selection)) {
+				selected = i;
+			}
+			i++;
+		}
+		cbZstHome.setAdapter(new MetaAdapter(this, cbZstHome_data,
+				R.layout.simple_spinner_item));
+		cbZstHome.setSelection(selected);
 
 		Spinner cbMg = (Spinner) findViewById(R.id.cbMediengruppe);
 		cbMg_data = data.getMeta(app.getLibrary().getIdent(),
@@ -302,8 +327,7 @@ public class SearchActivity extends OpacActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search_activity);
 		setTitle(R.string.search);
-		SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(this);
+		sp = PreferenceManager.getDefaultSharedPreferences(this);
 
 		if (app.getLibrary() == null) {
 			if (!sp.getString("opac_bib", "").equals("")) {
@@ -426,11 +450,23 @@ public class SearchActivity extends OpacActivity {
 	public void go() {
 		String zst = "";
 		String mg = "";
-		if (cbZst_data.size() > 0)
+		String zst_home = "";
+		if (cbZst_data.size() > 1)
 			zst = cbZst_data.get(
 					((Spinner) SearchActivity.this.findViewById(R.id.cbBranch))
 							.getSelectedItemPosition()).getAsString("key");
-		if (cbMg_data.size() > 0)
+		if (cbZstHome_data.size() > 0) {
+			zst_home = cbZstHome_data.get(
+					((Spinner) SearchActivity.this
+							.findViewById(R.id.cbHomeBranch))
+							.getSelectedItemPosition()).getAsString("key");
+			sp.edit()
+					.putString(
+							OpacClient.PREF_HOME_BRANCH_PREFIX
+									+ app.getAccount().getId(), zst_home)
+					.commit();
+		}
+		if (cbMg_data.size() > 1)
 			mg = cbMg_data.get(
 					((Spinner) SearchActivity.this
 							.findViewById(R.id.cbMediengruppe))
@@ -450,6 +486,7 @@ public class SearchActivity extends OpacActivity {
 				((EditText) SearchActivity.this.findViewById(R.id.etVerfasser))
 						.getEditableText().toString());
 		query.putString(OpacApi.KEY_SEARCH_QUERY_BRANCH, zst);
+		query.putString(OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH, zst_home);
 		query.putString(OpacApi.KEY_SEARCH_QUERY_CATEGORY, mg);
 		query.putString(OpacApi.KEY_SEARCH_QUERY_ISBN,
 				((EditText) SearchActivity.this.findViewById(R.id.etISBN))

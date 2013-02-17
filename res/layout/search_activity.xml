@@ -154,10 +154,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="4dp"
-                android:text="@string/zweigstelle" />
+                android:text="@string/zweigstelleSearch" />
 
             <org.holoeverywhere.widget.Spinner
                 android:id="@+id/cbBranch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tvHomeBranch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:text="@string/homebranch" />
+
+            <org.holoeverywhere.widget.Spinner
+                android:id="@+id/cbHomeBranch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

@@ -2,6 +2,8 @@ package de.geeksfactory.opacclient.storage;
 
 import java.util.List;
 
+import de.geeksfactory.opacclient.apis.OpacApi;
+
 import android.content.ContentValues;
 import android.database.SQLException;
 
@@ -18,7 +20,14 @@ public interface MetaDataSource {
 	 * Meta type: library branches
 	 */
 	public static String META_TYPE_BRANCH = "zst";
-	
+
+	/**
+	 * Meta type: library branches qualified to be used as a "home branch". You
+	 * normally do not need this.
+	 * @see OpacApi#KEY_SEARCH_QUERY_HOME_BRANCH
+	 */
+	public static String META_TYPE_HOME_BRANCH = "home_branch";
+
 	/**
 	 * Meta type: categoroes, like "books" or "video games"
 	 */

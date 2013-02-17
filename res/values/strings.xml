@@ -16,6 +16,7 @@
     <string name="verfasser_hint">Nachname, Vorname</string>
     <string name="verlag">Verlag</string>
     <string name="zweigstelle">Zweigstelle</string>
+    <string name="zweigstelleSearch">Medien in Zweigstelle</string>
     <string name="interessenkreis">Interessenkreis</string>
     <string name="ISBN">ISBN</string>
     <string name="jahr">Jahr</string>
@@ -179,5 +180,5 @@
     <string name="search_free">Freie Suche</string>
     <string name="advanced">Erweiterter Modus</string>
     <string name="advanced_desc">Zeigt weitere, selten benutzte Suchfelder.</string>
-
+	<string name="homebranch">Aktuelle Zweigstelle („eigene Zweigstelle“)</string>
 </resources>
