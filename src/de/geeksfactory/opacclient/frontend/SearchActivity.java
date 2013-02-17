@@ -31,6 +31,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 import de.geeksfactory.opacclient.OpacClient;
+import de.geeksfactory.opacclient.OpacClient.OnMetaDataLoaded;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
@@ -50,6 +51,7 @@ public class SearchActivity extends OpacActivity {
 	private List<ContentValues> cbZst_data;
 	private List<ContentValues> cbZstHome_data;
 	private boolean advanced = false;
+	private Set<String> fields;
 
 	public void urlintent() {
 		Uri d = getIntent().getData();
@@ -161,7 +163,7 @@ public class SearchActivity extends OpacActivity {
 
 		advanced = sp.getBoolean("advanced", false);
 
-		Set<String> fields = new HashSet<String>(Arrays.asList(app.getApi()
+		fields = new HashSet<String>(Arrays.asList(app.getApi()
 				.getSearchFields()));
 
 		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_FREE)) {
@@ -198,24 +200,24 @@ public class SearchActivity extends OpacActivity {
 			findViewById(R.id.etSchlagB).setVisibility(View.GONE);
 		}
 		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_BRANCH)) {
-			findViewById(R.id.cbBranch).setVisibility(View.VISIBLE);
+			findViewById(R.id.llBranch).setVisibility(View.VISIBLE);
 			findViewById(R.id.tvZweigstelle).setVisibility(View.VISIBLE);
 		} else {
-			findViewById(R.id.cbBranch).setVisibility(View.GONE);
+			findViewById(R.id.llBranch).setVisibility(View.GONE);
 			findViewById(R.id.tvZweigstelle).setVisibility(View.GONE);
 		}
 		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH)) {
-			findViewById(R.id.cbHomeBranch).setVisibility(View.VISIBLE);
+			findViewById(R.id.llHomeBranch).setVisibility(View.VISIBLE);
 			findViewById(R.id.tvHomeBranch).setVisibility(View.VISIBLE);
 		} else {
-			findViewById(R.id.cbHomeBranch).setVisibility(View.GONE);
+			findViewById(R.id.llHomeBranch).setVisibility(View.GONE);
 			findViewById(R.id.tvHomeBranch).setVisibility(View.GONE);
 		}
 		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_CATEGORY)) {
-			findViewById(R.id.cbMediengruppe).setVisibility(View.VISIBLE);
+			findViewById(R.id.llMediengruppe).setVisibility(View.VISIBLE);
 			findViewById(R.id.tvMediengruppe).setVisibility(View.VISIBLE);
 		} else {
-			findViewById(R.id.cbMediengruppe).setVisibility(View.GONE);
+			findViewById(R.id.llMediengruppe).setVisibility(View.GONE);
 			findViewById(R.id.tvMediengruppe).setVisibility(View.GONE);
 		}
 		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_ISBN)) {
@@ -268,8 +270,8 @@ public class SearchActivity extends OpacActivity {
 			findViewById(R.id.tvOrder).setVisibility(View.GONE);
 		}
 
-		if (cbZst_data.size() == 1)
-			fillComboBoxes();
+		fillComboBoxes();
+		loadingIndicators();
 	}
 
 	@Override
@@ -280,6 +282,7 @@ public class SearchActivity extends OpacActivity {
 	}
 
 	private void fillComboBoxes() {
+		// TODO: Preserve previously selected values
 		Spinner cbZst = (Spinner) findViewById(R.id.cbBranch);
 		Spinner cbZstHome = (Spinner) findViewById(R.id.cbHomeBranch);
 
@@ -319,7 +322,35 @@ public class SearchActivity extends OpacActivity {
 		cbMg.setAdapter(new MetaAdapter(this, cbMg_data,
 				R.layout.simple_spinner_item));
 
+		if ((cbZst_data.size() == 1 && fields
+				.contains(OpacApi.KEY_SEARCH_QUERY_BRANCH))
+				|| (cbMg_data.size() == 1 && fields
+						.contains(OpacApi.KEY_SEARCH_QUERY_CATEGORY))
+				|| (cbZstHome_data.size() == 0 && fields
+						.contains(OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH))) {
+			app.loadMetaData(app.getLibrary().getIdent(), true,
+					new OnMetaDataLoaded() {
+						@Override
+						public void onMetaDataLoaded(boolean success) {
+							loadingIndicators();
+							if (success)
+								fillComboBoxes();
+							else {
+								// TODO: error indicator
+							}
+						}
+					});
+			loadingIndicators();
+		}
+
 		data.close();
+	}
+
+	private void loadingIndicators() {
+		int visibility = app.metaDataLoading ? View.VISIBLE : View.GONE;
+		findViewById(R.id.pbBranch).setVisibility(visibility);
+		findViewById(R.id.pbHomeBranch).setVisibility(visibility);
+		findViewById(R.id.pbMediengruppe).setVisibility(visibility);
 	}
 
 	@Override
@@ -397,9 +428,6 @@ public class SearchActivity extends OpacActivity {
 					SearchActivity.this);
 			integrator.initiateScan();
 		} else {
-			// Fill combo boxes
-			fillComboBoxes();
-
 			ArrayAdapter<CharSequence> order_adapter = ArrayAdapter
 					.createFromResource(this, R.array.orders,
 							R.layout.simple_spinner_item);

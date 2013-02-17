@@ -46,6 +46,8 @@ public class OpacClient extends Application {
 	private Account account;
 	private OpacApi api;
 	private Library library;
+	private LoadMetaDataTask lmdt;
+	public boolean metaDataLoading = false;
 
 	public boolean isOnline() {
 		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -202,23 +204,37 @@ public class OpacClient extends Application {
 	}
 
 	public void loadMetaData(String lib) {
+		loadMetaData(lib, false, null);
+	}
+
+	public void loadMetaData(String lib, boolean force, OnMetaDataLoaded callback) {
+		if(metaDataLoading) return;
 		MetaDataSource data = new SQLMetaDataSource(this);
 		data.open();
 		boolean fetch = !data.hasMeta(lib);
 		data.close();
-		if (fetch) {
-			new LoadMetaDataTask().execute(lib);
+		if (fetch || force) {
+			metaDataLoading = true;
+			lmdt = new LoadMetaDataTask();
+			lmdt.execute(this, lib, callback);
 		}
+	}
+
+	public interface OnMetaDataLoaded {
+		public void onMetaDataLoaded(boolean success);
 	}
 
 	public class LoadMetaDataTask extends OpacTask<Boolean> {
 		private boolean success = true;
-
+		private OnMetaDataLoaded callback;
+		
 		@Override
 		protected Boolean doInBackground(Object... arg0) {
 			super.doInBackground(arg0);
 
-			String lib = (String) arg0[0];
+			String lib = (String) arg0[1];
+			callback = (OnMetaDataLoaded) arg0[2];
+			
 
 			try {
 				if (lib.equals(library.getIdent())) {
@@ -240,6 +256,8 @@ public class OpacClient extends Application {
 
 		@Override
 		protected void onPostExecute(Boolean result) {
+			metaDataLoading = false;
+			callback.onMetaDataLoaded(success);
 		}
 	}
 

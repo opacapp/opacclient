@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res/de.geeksfactory.opacclient">
 
     <RelativeLayout
         android:id="@+id/rlOuter"
@@ -156,10 +156,24 @@
                 android:paddingTop="4dp"
                 android:text="@string/zweigstelleSearch" />
 
-            <org.holoeverywhere.widget.Spinner
-                android:id="@+id/cbBranch"
+            <LinearLayout
+                android:id="@+id/llBranch"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <org.holoeverywhere.widget.Spinner
+                    android:id="@+id/cbBranch"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <ProgressBar
+                    android:id="@+id/pbBranch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tvHomeBranch"
@@ -168,10 +182,24 @@
                 android:paddingTop="4dp"
                 android:text="@string/homebranch" />
 
-            <org.holoeverywhere.widget.Spinner
-                android:id="@+id/cbHomeBranch"
+            <LinearLayout
+                android:id="@+id/llHomeBranch"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <org.holoeverywhere.widget.Spinner
+                    android:id="@+id/cbHomeBranch"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"  />
+
+                <ProgressBar
+                    android:id="@+id/pbHomeBranch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tvMediengruppe"
@@ -180,10 +208,24 @@
                 android:paddingTop="4dp"
                 android:text="@string/mediengruppe" />
 
-            <org.holoeverywhere.widget.Spinner
-                android:id="@+id/cbMediengruppe"
+            <LinearLayout
+                android:id="@+id/llMediengruppe"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <org.holoeverywhere.widget.Spinner
+                    android:id="@+id/cbMediengruppe"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"  />
+
+                <ProgressBar
+                    android:id="@+id/pbMediengruppe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tvVerlag"
@@ -268,7 +310,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:entries="@array/orders" />
-
         </LinearLayout>
     </RelativeLayout>
 
