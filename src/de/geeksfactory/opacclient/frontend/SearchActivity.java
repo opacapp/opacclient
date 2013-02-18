@@ -19,7 +19,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -34,15 +33,13 @@ import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
-import de.geeksfactory.opacclient.frontend.WelcomeActivity.InitTask;
+import de.geeksfactory.opacclient.barcode.BarcodeScanIntegrator;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 import de.geeksfactory.opacclient.storage.StarDataSource;
-import de.geeksfactory.opacclient.zxing.IntentIntegrator;
-import de.geeksfactory.opacclient.zxing.IntentResult;
 
 public class SearchActivity extends OpacActivity {
 
@@ -143,10 +140,9 @@ public class SearchActivity extends OpacActivity {
 		super.onActivityResult(requestCode, resultCode, idata);
 
 		// Barcode
-		IntentResult scanResult = IntentIntegrator.parseActivityResult(
-				requestCode, resultCode, idata);
+		BarcodeScanIntegrator.ScanResult scanResult = BarcodeScanIntegrator
+				.parseActivityResult(requestCode, resultCode, idata);
 		if (resultCode != RESULT_CANCELED && scanResult != null) {
-			Log.i("scanned", scanResult.getContents());
 			if (scanResult.getContents() == null)
 				return;
 			if (scanResult.getContents().length() < 3)
@@ -416,7 +412,7 @@ public class SearchActivity extends OpacActivity {
 		}
 
 		if (getIntent().getBooleanExtra("barcode", false)) {
-			IntentIntegrator integrator = new IntentIntegrator(
+			BarcodeScanIntegrator integrator = new BarcodeScanIntegrator(
 					SearchActivity.this);
 			integrator.initiateScan();
 		} else {
@@ -433,7 +429,7 @@ public class SearchActivity extends OpacActivity {
 		ivBarcode.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				IntentIntegrator integrator = new IntentIntegrator(
+				BarcodeScanIntegrator integrator = new BarcodeScanIntegrator(
 						SearchActivity.this);
 				integrator.initiateScan();
 			}
