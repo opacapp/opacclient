@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res/de.geeksfactory.opacclient">
+    android:orientation="vertical" >
 
     <RelativeLayout
         android:id="@+id/rlOuter"
@@ -168,7 +168,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
 
-                <ProgressBar
+                <org.holoeverywhere.widget.ProgressBar
                     android:id="@+id/pbBranch"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -192,9 +192,9 @@
                     android:id="@+id/cbHomeBranch"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"  />
+                    android:layout_weight="1" />
 
-                <ProgressBar
+                <org.holoeverywhere.widget.ProgressBar
                     android:id="@+id/pbHomeBranch"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -218,9 +218,9 @@
                     android:id="@+id/cbMediengruppe"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"  />
+                    android:layout_weight="1" />
 
-                <ProgressBar
+                <org.holoeverywhere.widget.ProgressBar
                     android:id="@+id/pbMediengruppe"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
