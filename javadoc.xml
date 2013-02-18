@@ -14,8 +14,8 @@
 				sourcefiles="src/de/geeksfactory/opacclient/apis/OpacApi.java,src/de/geeksfactory/opacclient/storage/MetaDataSource.java" 
 				sourcepath="gen:src" splitindex="true" 
 				use="true" version="true"
-				header="OpacClient public API v2.0.0-dev"
-				windowtitle="OpacClient API">
+				header="OpacClient public API"
+				windowtitle="OpacClient public API">
             <link href="http://developer.android.com/reference/"/>
 			<doctitle>OpacClient public API</doctitle>
         </javadoc>
