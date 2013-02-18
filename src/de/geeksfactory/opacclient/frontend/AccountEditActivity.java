@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.util.List;
 
 import org.acra.ACRA;
+import org.holoeverywhere.app.AlertDialog;
+import org.holoeverywhere.app.ProgressDialog;
 import org.json.JSONException;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -18,6 +21,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.frontend.AccountActivity.CancelTask;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
@@ -136,8 +140,34 @@ public class AccountEditActivity extends SherlockActivity {
 			finish();
 			return true;
 		case R.id.action_delete:
-			delete();
-			finish();
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage(R.string.account_delete_confirm)
+					.setCancelable(true)
+					.setNegativeButton(R.string.no,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface d, int id) {
+									d.cancel();
+								}
+							})
+					.setPositiveButton(R.string.delete,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface d, int id) {
+									d.dismiss();
+									delete();
+									finish();
+								}
+							})
+					.setOnCancelListener(new DialogInterface.OnCancelListener() {
+						@Override
+						public void onCancel(DialogInterface d) {
+							if (d != null)
+								d.cancel();
+						}
+					});
+			AlertDialog alert = builder.create();
+			alert.show();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
