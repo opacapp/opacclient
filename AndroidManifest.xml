@@ -91,7 +91,7 @@
             android:label="@string/changelog" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.geeksfactory.opacclient.frontend.MainPreferenceActivity" />
+                android:value="de.geeksfactory.opacclient.frontend.AboutActivity" />
         </activity>
         <activity
             android:name=".frontend.StarredActivity"
