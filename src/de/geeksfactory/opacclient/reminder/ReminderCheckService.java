@@ -18,7 +18,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -197,12 +196,7 @@ public class ReminderCheckService extends Service {
 			nb.setSmallIcon(R.drawable.ic_stat_notification);
 			nb.setWhen(first);
 			nb.setNumber((int) expired_new);
-
-			if (!sp.getString("notification_sound", "").equals("")) {
-				nb.setSound(Uri.parse(sp.getString("notification_sound", "")));
-			} else {
-				nb.setSound(null);
-			}
+			nb.setSound(null);
 
 			Intent notificationIntent = new Intent(ReminderCheckService.this,
 					AccountActivity.class);

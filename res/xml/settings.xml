@@ -27,12 +27,6 @@
             android:key="notification_warning"
             android:summary="@string/notification_warning_desc"
             android:title="@string/notification_warning" />
-
-        <RingtonePreference
-            android:dependency="notification_service"
-            android:key="notification_sound"
-            android:ringtoneType="notification"
-            android:title="@string/notification_sound" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/developer_settings" >
         <CheckBoxPreference
