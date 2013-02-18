@@ -498,6 +498,15 @@ public class Zones22 implements OpacApi {
 
 	@Override
 	public String getShareUrl(String id, String title) {
-		return null;
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+		params.add(new BasicNameValuePair("Style", "Portal3"));
+		params.add(new BasicNameValuePair("SubStyle", ""));
+		params.add(new BasicNameValuePair("Lang", "GER"));
+		params.add(new BasicNameValuePair("ResponseEncoding", "utf-8"));
+		params.add(new BasicNameValuePair("no", id));
+
+		return opac_url + "/APS_PRESENT_BIB?"
+				+ URLEncodedUtils.format(params, "UTF-8");
 	}
 }
