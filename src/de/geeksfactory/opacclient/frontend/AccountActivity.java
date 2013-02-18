@@ -92,7 +92,17 @@ public class AccountActivity extends OpacActivity {
 				nMgr.cancel(OpacClient.NOTIF_ID);
 			}
 			if (getIntent().getExtras().getBoolean("showmenu", false)) {
-				getSlidingMenu().showMenu(false);
+				final Handler handler = new Handler();
+				// Just show the menu to explain that is there if people start
+				// version 2 for the first time.
+				// We need a handler because if we just put this in onCreate
+				// nothing happens. I don't have any idea, why.
+				handler.postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						getSlidingMenu().showMenu(true);
+					}
+				}, 500);
 			}
 		}
 
