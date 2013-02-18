@@ -185,35 +185,40 @@ public class ReminderCheckService extends Service {
 			SharedPreferences sp = PreferenceManager
 					.getDefaultSharedPreferences(ReminderCheckService.this);
 
-			NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+			if (notification_on) {
+				NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-			NotificationCompat.Builder nb = new NotificationCompat.Builder(
-					ReminderCheckService.this);
-			nb.setContentInfo(getString(R.string.notif_ticker, expired_total));
-			nb.setContentTitle(getString(R.string.notif_title));
-			nb.setContentText(getString(R.string.notif_ticker, expired_total));
-			nb.setTicker(getString(R.string.notif_ticker, expired_total));
-			nb.setSmallIcon(R.drawable.ic_stat_notification);
-			nb.setWhen(first);
-			nb.setNumber((int) expired_new);
-			nb.setSound(null);
+				NotificationCompat.Builder nb = new NotificationCompat.Builder(
+						ReminderCheckService.this);
+				nb.setContentInfo(getString(R.string.notif_ticker,
+						expired_total));
+				nb.setContentTitle(getString(R.string.notif_title));
+				nb.setContentText(getString(R.string.notif_ticker,
+						expired_total));
+				nb.setTicker(getString(R.string.notif_ticker, expired_total));
+				nb.setSmallIcon(R.drawable.ic_stat_notification);
+				nb.setWhen(first);
+				nb.setNumber((int) expired_new);
+				nb.setSound(null);
 
-			Intent notificationIntent = new Intent(ReminderCheckService.this,
-					AccountActivity.class);
-			notificationIntent.putExtra("notif_last", last);
-			if (affected_accounts > 1) {
-				// If there are notifications for more than one account, account
-				// menu should be opened
-				notificationIntent.putExtra("showmenu", true);
+				Intent notificationIntent = new Intent(
+						ReminderCheckService.this, AccountActivity.class);
+				notificationIntent.putExtra("notif_last", last);
+				if (affected_accounts > 1) {
+					// If there are notifications for more than one account,
+					// account
+					// menu should be opened
+					notificationIntent.putExtra("showmenu", true);
+				}
+				notificationIntent.putExtra("account", first_affected_account);
+				PendingIntent contentIntent = PendingIntent.getActivity(
+						ReminderCheckService.this, 0, notificationIntent, 0);
+				nb.setContentIntent(contentIntent);
+				nb.setAutoCancel(true);
+
+				Notification notification = nb.build();
+				mNotificationManager.notify(OpacClient.NOTIF_ID, notification);
 			}
-			notificationIntent.putExtra("account", first_affected_account);
-			PendingIntent contentIntent = PendingIntent.getActivity(
-					ReminderCheckService.this, 0, notificationIntent, 0);
-			nb.setContentIntent(contentIntent);
-			nb.setAutoCancel(true);
-
-			Notification notification = nb.build();
-			mNotificationManager.notify(OpacClient.NOTIF_ID, notification);
 
 			stopSelf();
 		}
