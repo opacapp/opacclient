@@ -2,6 +2,8 @@ package de.geeksfactory.opacclient.storage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -53,6 +55,22 @@ public class StarDataSource {
 		return items;
 	}
 
+	public Starred getItemTitle(String bib, String title) {
+		String[] selA = { bib, title };
+		Cursor cursor = database.query("starred", allColumns,
+				"bib = ? AND title = ?", selA, null, null, null);
+		Starred item = null;
+
+		cursor.moveToFirst();
+		if (!cursor.isAfterLast()) {
+			item = cursorToItem(cursor);
+			cursor.moveToNext();
+		}
+		// Make sure to close the cursor
+		cursor.close();
+		return item;
+	}
+
 	public Starred getItem(String bib, String id) {
 		String[] selA = { bib, id };
 		Cursor cursor = database.query("starred", allColumns,
@@ -70,10 +88,22 @@ public class StarDataSource {
 	}
 
 	public boolean isStarred(String bib, String id) {
-		List<Starred> items = new ArrayList<Starred>();
+		if (id == null)
+			return false;
 		String[] selA = { bib, id };
 		Cursor cursor = database.query("starred", allColumns,
 				"bib = ? AND medianr = ?", selA, null, null, null);
+		int c = cursor.getCount();
+		cursor.close();
+		return (c > 0);
+	}
+
+	public boolean isStarredTitle(String bib, String title) {
+		if (title == null)
+			return false;
+		String[] selA = { bib, title };
+		Cursor cursor = database.query("starred", allColumns,
+				"bib = ? AND title = ?", selA, null, null, null);
 		int c = cursor.getCount();
 		cursor.close();
 		return (c > 0);
@@ -90,6 +120,15 @@ public class StarDataSource {
 	public void remove(Starred item) {
 		String[] selA = { "" + item.getId() };
 		database.delete("starred", "id=?", selA);
+	}
+
+	public void renameLibraries(Map<String, String> map) {
+		for (Entry<String, String> entry : map.entrySet()) {
+			ContentValues cv = new ContentValues();
+			cv.put("bib", entry.getValue());
+			database.update("starred", cv, "bib = ?",
+					new String[] { entry.getKey() });
+		}
 	}
 
 }

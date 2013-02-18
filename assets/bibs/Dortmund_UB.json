@@ -1,0 +1,10 @@
+{
+ "api": "oclc2011", 
+ "city": "Dortmund", 
+ "data": {
+  "baseurl": "https://www.ub.tu-dortmund.de/webOPACClient", 
+  "information": "http://www.ub.tu-dortmund.de/Ueberuns/Oeffnungszeiten.html" 
+ }, 
+ "support": "Katalogsuche und Konto (experimentell)", 
+ "title": "Unibibliothek TU"
+}

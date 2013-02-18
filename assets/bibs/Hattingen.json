@@ -1,0 +1,13 @@
+{
+ "api": "bond26", 
+ "city": "Hattingen", 
+ "data": {
+  "copiestable": [0, -1, 3, 2, 5, 6, -1], 
+  "reservationtable": [0, 1, 2, -1, 3], 
+  "accounttable": [-1, 0, 1, 2, -1, -1, -1, 3],
+  "baseurl": "http://webopac.hattingen.de/webopac", 
+  "information": "http://www.bibliothek.hattingen.de/oeffnungszeiten.php"
+ }, 
+ "support": "Katalogsuche und Konto", 
+ "title": null
+}

@@ -2,28 +2,38 @@ package de.geeksfactory.opacclient.frontend;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map.Entry;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
+import org.acra.ACRA;
+import org.holoeverywhere.app.AlertDialog;
+import org.holoeverywhere.app.ProgressDialog;
+
+import android.annotation.SuppressLint;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.Html;
+import android.text.TextUtils.TruncateAt;
+import android.text.util.Linkify;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TableLayout;
-import android.widget.TableLayout.LayoutParams;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,99 +41,344 @@ import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
+import de.geeksfactory.opacclient.objects.Account;
+import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.StarDataSource;
 
 public class SearchResultDetailsActivity extends OpacActivity {
 
-	protected ProgressDialog dialog;
-	protected DetailledItem item;
-	protected String id;
-	protected String title;
+	private ProgressDialog dialog;
+	private DetailledItem item;
+	private String id;
+	private String title;
 
-	public static int STATUS_SUCCESS = 0;
-	public static int STATUS_NOUSER = 1;
-	public static int STATUS_WRONGCREDENTIALS = 2;
+	private FetchTask ft;
+	private FetchSubTask fst;
+	private ResTask rt;
+	private boolean account_switched = false;
 
-	protected String[] items;
-	protected FetchTask ft;
-	protected FetchSubTask fst;
-	protected ResTask rt;
+	@Override
+	public void accountSelected() {
+		account_switched = true;
+		super.accountSelected();
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.loading);
-		((TextView) findViewById(R.id.tvLoading))
-				.setText(R.string.loading_details);
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		if (getIntent().getStringExtra("item_id") != null) {
+		if (getIntent().hasExtra("item_id")
+				&& !getIntent().getStringExtra("item_id").equals("")) {
 			id = getIntent().getStringExtra("item_id");
-		} else {
-			finish();
-		}
-
-		if (getIntent().getIntExtra("item", -1) != -1) {
+			fst = new FetchSubTask();
+			fst.execute(app, id);
+		} else if (getIntent().getIntExtra("item", -1) != -1) {
 			ft = new FetchTask();
 			ft.execute(app, getIntent().getIntExtra("item", 0));
-		} else if (getIntent().getStringExtra("item_id") != null) {
+		} else {
 			fst = new FetchSubTask();
-			fst.execute(app, getIntent().getStringExtra("item_id"));
+			fst.execute(app, id);
 		}
 	}
 
-	protected void reservation() {
-		SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		items = sp.getString("opac_zst", "00:").split("~");
-		if (items[0].startsWith(":")) {
-			List<String> tmp = new ArrayList<String>(Arrays.asList(items));
-			tmp.remove(0);
-			String[] tmp2 = new String[tmp.size()];
-			items = tmp.toArray(tmp2);
-		}
+	@Override
+	protected void dialog_no_user() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(getString(R.string.res_zst));
-		builder.setItems(items, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface d, int item) {
-				dialog = ProgressDialog.show(SearchResultDetailsActivity.this,
-						"", getString(R.string.doing_res), true);
-				dialog.show();
-
-				rt = new ResTask();
-				rt.execute(app, items[item].split(":", 2)[0]);
-			}
-		});
+		builder.setMessage(R.string.status_nouser)
+				.setCancelable(false)
+				.setNegativeButton(R.string.dismiss,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						})
+				.setPositiveButton(R.string.accounts_edit,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								Intent intent = new Intent(
+										SearchResultDetailsActivity.this,
+										AccountListActivity.class);
+								startActivity(intent);
+							}
+						});
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
 
-	public void reservation_done(int result) {
-		if (result == STATUS_NOUSER) {
+	protected void reservationStart() {
+		AccountDataSource data = new AccountDataSource(this);
+		data.open();
+		final List<Account> accounts = data.getAccountsWithPassword(app
+				.getLibrary().getIdent());
+		data.close();
+		if (accounts.size() == 0) {
+			dialog_no_user();
+			return;
+		} else if (accounts.size() > 1) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage(R.string.status_nouser)
-					.setCancelable(true)
-					.setNegativeButton(R.string.dismiss,
+			// Get the layout inflater
+			LayoutInflater inflater = getLayoutInflater();
+
+			View view = inflater.inflate(R.layout.simple_list_dialog, null);
+
+			ListView lv = (ListView) view.findViewById(R.id.lvBibs);
+			AccountListAdapter adapter = new AccountListAdapter(this, accounts);
+			lv.setAdapter(adapter);
+			lv.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					if (accounts.get(position).getId() != app.getAccount()
+							.getId() || account_switched) {
+						app.setAccount(accounts.get(position).getId());
+						dialog = ProgressDialog.show(
+								SearchResultDetailsActivity.this, "",
+								getString(R.string.doing_res), true);
+						dialog.show();
+						new RestoreSessionTask().execute();
+					} else {
+						reservationDo();
+					}
+					adialog.dismiss();
+				}
+			});
+			builder.setTitle(R.string.account_select)
+					.setView(view)
+					.setNegativeButton(R.string.cancel,
 							new DialogInterface.OnClickListener() {
+								@Override
 								public void onClick(DialogInterface dialog,
 										int id) {
-									dialog.cancel();
+									adialog.cancel();
+								}
+							})
+					.setNeutralButton(R.string.accounts_edit,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int id) {
+									adialog.dismiss();
+									Intent intent = new Intent(
+											SearchResultDetailsActivity.this,
+											AccountListActivity.class);
+									startActivity(intent);
 								}
 							});
-			AlertDialog alert = builder.create();
-			alert.show();
-		} else if (result == STATUS_SUCCESS) {
+			adialog = builder.create();
+			adialog.show();
+		} else {
+			reservationDo();
+		}
+	}
+
+	public void reservationDo() {
+		reservationDo(0, null);
+	}
+
+	public void reservationDo(int useraction, String selection) {
+		if (dialog == null) {
+			dialog = ProgressDialog.show(SearchResultDetailsActivity.this, "",
+					getString(R.string.doing_res), true);
+			dialog.show();
+		} else if (!dialog.isShowing()) {
+			dialog = ProgressDialog.show(SearchResultDetailsActivity.this, "",
+					getString(R.string.doing_res), true);
+			dialog.show();
+		}
+
+		rt = new ResTask();
+		rt.execute(app, item.getReservation_info(), useraction, selection);
+	}
+
+	public void reservationResult(ReservationResult result) {
+		AccountDataSource adata = new AccountDataSource(this);
+		adata.open();
+		adata.invalidateCachedAccountData(app.getAccount());
+		adata.close();
+		switch (result.getStatus()) {
+		case CONFIRMATION_NEEDED:
+			reservationConfirmation(result);
+			break;
+		case SELECTION_NEEDED:
+			reservationSelection(result);
+			break;
+		case ERROR:
+			dialog_wrong_credentials(app.getApi().getLast_error(), false);
+			break;
+		case OK:
 			Intent intent = new Intent(SearchResultDetailsActivity.this,
 					AccountActivity.class);
 			startActivity(intent);
+			break;
+		case UNSUPPORTED:
+			// TODO: Show dialog
+			break;
+		default:
+			break;
 		}
+	}
+
+	public class SelectionAdapter extends ArrayAdapter<Object> {
+
+		private Object[] objects;
+
+		@Override
+		public View getView(int position, View contentView, ViewGroup viewGroup) {
+			View view = null;
+
+			if (objects[position] == null) {
+				LayoutInflater layoutInflater = (LayoutInflater) getContext()
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				view = layoutInflater.inflate(R.layout.zst_listitem, viewGroup,
+						false);
+				return view;
+			}
+
+			String item = ((Entry<String, Object>) objects[position])
+					.getValue().toString();
+
+			if (contentView == null) {
+				LayoutInflater layoutInflater = (LayoutInflater) getContext()
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				view = layoutInflater.inflate(R.layout.zst_listitem, viewGroup,
+						false);
+			} else {
+				view = contentView;
+			}
+
+			TextView tvText = (TextView) view.findViewById(android.R.id.text1);
+			tvText.setText(item);
+			return view;
+		}
+
+		public SelectionAdapter(Context context, Object[] objects) {
+			super(context, R.layout.simple_spinner_item, objects);
+			this.objects = objects;
+		}
+
+	}
+
+	public void reservationSelection(final ReservationResult result) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+		LayoutInflater inflater = getLayoutInflater();
+
+		View view = inflater.inflate(R.layout.simple_list_dialog, null);
+
+		ListView lv = (ListView) view.findViewById(R.id.lvBibs);
+		final Object[] possibilities = result.getSelection().valueSet()
+				.toArray();
+
+		lv.setAdapter(new SelectionAdapter(this, possibilities));
+		lv.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				adialog.dismiss();
+
+				reservationDo(result.getActionIdentifier(),
+						((Entry<String, Object>) possibilities[position])
+								.getKey());
+			}
+		});
+		switch (result.getActionIdentifier()) {
+		case ReservationResult.ACTION_BRANCH:
+			builder.setTitle(R.string.zweigstelle);
+		}
+		builder.setView(view).setNegativeButton(R.string.cancel,
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int id) {
+						adialog.cancel();
+					}
+				});
+		adialog = builder.create();
+		adialog.show();
+	}
+
+	public void reservationConfirmation(final ReservationResult result) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+		LayoutInflater inflater = getLayoutInflater();
+
+		View view = inflater.inflate(R.layout.reservation_details_dialog, null);
+
+		TableLayout table = (TableLayout) view.findViewById(R.id.tlDetails);
+
+		for (String[] detail : result.getDetails()) {
+			TableRow tr = new TableRow(this);
+			TextView tv1 = new TextView(this);
+			tv1.setText(Html.fromHtml(detail[0]));
+			tv1.setTypeface(null, Typeface.BOLD);
+			tv1.setPadding(0, 0, 8, 0);
+			TextView tv2 = new TextView(this);
+			tv2.setText(Html.fromHtml(detail[1]));
+			tv2.setEllipsize(TruncateAt.END);
+			tv2.setSingleLine(false);
+			tr.addView(tv1);
+			tr.addView(tv2);
+			table.addView(tr);
+		}
+
+		builder.setTitle(R.string.confirm_title)
+				.setView(view)
+				.setPositiveButton(R.string.confirm,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								reservationDo(
+										ReservationResult.ACTION_CONFIRMATION,
+										"confirmed");
+							}
+						})
+				.setNegativeButton(R.string.cancel,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								adialog.cancel();
+							}
+						});
+		adialog = builder.create();
+		adialog.show();
+	}
+
+	public class RestoreSessionTask extends OpacTask<Integer> {
+		@Override
+		protected Integer doInBackground(Object... arg0) {
+			try {
+				if (id != null) {
+					app.getApi().getResultById(id);
+					return 0;
+				} else
+					ACRA.getErrorReporter().handleException(
+							new Throwable("No ID supplied"));
+			} catch (java.net.SocketException e) {
+				e.printStackTrace();
+			} catch (java.net.UnknownHostException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				ACRA.getErrorReporter().handleException(e);
+			}
+			return 1;
+		}
+
+		@Override
+		protected void onPostExecute(Integer result) {
+			reservationDo();
+		}
+
 	}
 
 	public class FetchTask extends OpacTask<DetailledItem> {
@@ -135,31 +390,37 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			Integer nr = (Integer) arg0[1];
 
 			try {
-				DetailledItem res = app.ohc.getResult(nr);
+				DetailledItem res = app.getApi().getResult(nr);
 				URL newurl;
-				try {
-					newurl = new URL(res.getCover());
-					Bitmap mIcon_val = BitmapFactory.decodeStream(newurl
-							.openConnection().getInputStream());
-					res.setCoverBitmap(mIcon_val);
-				} catch (Exception e) {
+				if (res.getCover() != null) {
+					try {
+						newurl = new URL(res.getCover());
+						Bitmap mIcon_val = BitmapFactory.decodeStream(newurl
+								.openConnection().getInputStream());
+						res.setCoverBitmap(mIcon_val);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 				success = true;
 				return res;
 			} catch (java.net.UnknownHostException e) {
-				publishProgress(e, "ioerror");
-			} catch (java.io.IOException e) {
 				success = false;
-			} catch (java.lang.IllegalStateException e) {
+				e.printStackTrace();
+			} catch (java.net.SocketException e) {
 				success = false;
+				e.printStackTrace();
 			} catch (Exception e) {
-				publishProgress(e, "ioerror");
+				ACRA.getErrorReporter().handleException(e);
+				success = false;
 			}
 			return null;
 		}
 
+		@Override
+		@SuppressLint("NewApi")
 		protected void onPostExecute(DetailledItem result) {
-			if (!success) {
+			if (!success || result == null) {
 				setContentView(R.layout.connectivity_error);
 				((Button) findViewById(R.id.btRetry))
 						.setOnClickListener(new OnClickListener() {
@@ -178,7 +439,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			try {
 				Log.i("result", item.toString());
 			} catch (Exception e) {
-				app.web_error(e, "ioerror");
+				ACRA.getErrorReporter().handleException(e);
 			}
 			ImageView iv = (ImageView) findViewById(R.id.ivCover);
 
@@ -193,118 +454,162 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			tvTitel.setText(item.getTitle());
 			title = item.getTitle();
 
-			TableLayout td = (TableLayout) findViewById(R.id.tlDetails);
-
-			for (int i = 0; i < result.getDetails().size(); i++) {
-				TableRow row = new TableRow(SearchResultDetailsActivity.this);
-
-				if (result.getDetails().get(i)[0]
-						.equals("Annotation/ Beschreibung:")) {
-					TextView t2 = new TextView(SearchResultDetailsActivity.this);
-					t2.setText(Html.fromHtml("<i>"
-							+ result.getDetails().get(i)[1] + "</i>"));
-					TableRow.LayoutParams params = new TableRow.LayoutParams();
-					params.span = 2;
-					t2.setPadding(20, 0, 0, 0);
-					row.addView(t2, params);
-				} else {
-					TextView t1 = new TextView(SearchResultDetailsActivity.this);
-					t1.setText(Html.fromHtml(result.getDetails().get(i)[0]));
-					t1.setPadding(0, 0, 10, 0);
-					row.addView(t1);
-
-					TextView t2 = new TextView(SearchResultDetailsActivity.this);
-					t2.setText(Html.fromHtml(result.getDetails().get(i)[1]
-							.replace("\n", "<br />")));
-					row.addView(t2);
-				}
-				td.addView(row, new TableLayout.LayoutParams(
-						LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+			LinearLayout llDetails = (LinearLayout) findViewById(R.id.llDetails);
+			for (Detail detail : result.getDetails()) {
+				View v = getLayoutInflater().inflate(R.layout.detail_listitem,
+						null);
+				((TextView) v.findViewById(R.id.tvDesc)).setText(detail
+						.getDesc());
+				((TextView) v.findViewById(R.id.tvContent)).setText(detail
+						.getContent());
+				Linkify.addLinks((TextView) v.findViewById(R.id.tvContent),
+						Linkify.WEB_URLS);
+				llDetails.addView(v);
 			}
 
-			if (result.getBaende().size() > 0) {
+			LinearLayout llCopies = (LinearLayout) findViewById(R.id.llCopies);
+			if (result.getVolumesearch() != null) {
 				TextView tvC = (TextView) findViewById(R.id.tvCopies);
 				tvC.setText(R.string.baende);
-				TableLayout tc = (TableLayout) findViewById(R.id.tlExemplare);
-
-				for (int i = 0; i < result.getBaende().size(); i++) {
-					TableRow row = new TableRow(
-							SearchResultDetailsActivity.this);
-
-					TextView t1 = new TextView(SearchResultDetailsActivity.this);
-					t1.setText(Html.fromHtml(result.getBaende().get(i)[1]));
-					row.addView(t1);
-					final String a = result.getBaende().get(i)[0];
-
-					Button b2 = new Button(SearchResultDetailsActivity.this);
-					b2.setOnClickListener(new OnClickListener() {
-						@Override
-						public void onClick(View arg0) {
-							Intent intent = new Intent(
-									SearchResultDetailsActivity.this,
-									SearchResultDetailsActivity.class);
-							intent.putExtra("item_id", a);
-							startActivity(intent);
-						}
-					});
-					b2.setText(R.string.details);
-					row.addView(b2);
-					tc.addView(row, new TableLayout.LayoutParams(
-							LayoutParams.WRAP_CONTENT,
-							LayoutParams.WRAP_CONTENT));
-				}
-			} else {
-				TableLayout tc = (TableLayout) findViewById(R.id.tlExemplare);
-
-				for (int i = 0; i < result.getCopies().size(); i++) {
-					TableRow row = new TableRow(
-							SearchResultDetailsActivity.this);
-
-					TextView t1 = new TextView(SearchResultDetailsActivity.this);
-					String t1t = "";
-					if (!result.getCopies().get(i)[0].equals("?")) {
-						t1t = t1t + result.getCopies().get(i)[0] + "<br />";
-					}
-					if (!result.getCopies().get(i)[1].equals("?")) {
-						t1t = t1t + result.getCopies().get(i)[1];
-					}
-					t1.setText(Html.fromHtml(t1t));
-					row.addView(t1);
-
-					TextView t2 = new TextView(SearchResultDetailsActivity.this);
-					String status = result.getCopies().get(i)[4] + "<br />";
-					if (!result.getCopies().get(i)[5].equals("")
-							&& !result.getCopies().get(i)[5].equals("?")) {
-						status = status + getString(R.string.ret) + ": "
-								+ result.getCopies().get(i)[5] + "<br />";
-					}
-					t2.setPadding(10, 0, 0, 0);
-					if (!result.getCopies().get(i)[6].equals("")
-							&& !result.getCopies().get(i)[6].equals("?")) {
-						status = status + getString(R.string.res) + ": "
-								+ result.getCopies().get(i)[6];
-					}
-					t2.setText(Html.fromHtml(status));
-					row.addView(t2);
-
-					tc.addView(row, new TableLayout.LayoutParams(
-							LayoutParams.WRAP_CONTENT,
-							LayoutParams.WRAP_CONTENT));
-				}
-			}
-
-			if (item.isReservable()) {
-				Button btres = (Button) findViewById(R.id.btReserve);
-				btres.setVisibility(View.VISIBLE);
-				btres.setOnClickListener(new OnClickListener() {
+				Button btnVolume = new Button(SearchResultDetailsActivity.this);
+				btnVolume.setText(R.string.baende_volumesearch);
+				btnVolume.setOnClickListener(new OnClickListener() {
 					@Override
-					public void onClick(View arg0) {
-						reservation();
+					public void onClick(View v) {
+						Intent myIntent = new Intent(
+								SearchResultDetailsActivity.this,
+								SearchResultsActivity.class);
+						myIntent.putExtra("query", item.getVolumesearch());
+						startActivity(myIntent);
 					}
 				});
+				llCopies.addView(btnVolume);
+
+			} else if (result.getBaende().size() > 0) {
+				TextView tvC = (TextView) findViewById(R.id.tvCopies);
+				tvC.setText(R.string.baende);
+
+				for (final ContentValues band : result.getBaende()) {
+					View v = getLayoutInflater().inflate(
+							R.layout.band_listitem, null);
+					((TextView) v.findViewById(R.id.tvTitel)).setText(band
+							.getAsString(DetailledItem.KEY_CHILD_TITLE));
+
+					v.findViewById(R.id.llItem).setOnClickListener(
+							new OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									Intent intent = new Intent(
+											SearchResultDetailsActivity.this,
+											SearchResultDetailsActivity.class);
+									intent.putExtra(
+											"item_id",
+											band.getAsString(DetailledItem.KEY_CHILD_ID));
+									startActivity(intent);
+								}
+							});
+					llCopies.addView(v);
+				}
+			} else {
+				for (ContentValues copy : result.getCopies()) {
+					View v = getLayoutInflater().inflate(
+							R.layout.copy_listitem, null);
+
+					if (copy.containsKey(DetailledItem.KEY_COPY_LOCATION)) {
+						((TextView) v.findViewById(R.id.tvLocation))
+								.setText(copy
+										.getAsString(DetailledItem.KEY_COPY_LOCATION));
+						((TextView) v.findViewById(R.id.tvLocation))
+								.setVisibility(View.VISIBLE);
+					} else if (copy.containsKey(DetailledItem.KEY_COPY_BARCODE)) {
+						((TextView) v.findViewById(R.id.tvLocation))
+								.setText(copy
+										.getAsString(DetailledItem.KEY_COPY_BARCODE));
+						((TextView) v.findViewById(R.id.tvLocation))
+								.setVisibility(View.VISIBLE);
+					} else {
+						((TextView) v.findViewById(R.id.tvLocation))
+								.setVisibility(View.GONE);
+					}
+					if (copy.containsKey(DetailledItem.KEY_COPY_BRANCH)) {
+						((TextView) v.findViewById(R.id.tvZst)).setText(copy
+								.getAsString(DetailledItem.KEY_COPY_BRANCH));
+						((TextView) v.findViewById(R.id.tvZst))
+								.setVisibility(View.VISIBLE);
+					} else {
+						((TextView) v.findViewById(R.id.tvZst))
+								.setVisibility(View.GONE);
+					}
+					if (copy.containsKey(DetailledItem.KEY_COPY_STATUS)) {
+						((TextView) v.findViewById(R.id.tvStatus)).setText(copy
+								.getAsString(DetailledItem.KEY_COPY_STATUS));
+						((TextView) v.findViewById(R.id.tvStatus))
+								.setVisibility(View.VISIBLE);
+					} else {
+						((TextView) v.findViewById(R.id.tvStatus))
+								.setVisibility(View.GONE);
+					}
+					if (copy.containsKey(DetailledItem.KEY_COPY_RESERVATIONS)) {
+						((TextView) v.findViewById(R.id.tvVorbestellt))
+								.setText(getString(R.string.res)
+										+ ": "
+										+ copy.getAsString(DetailledItem.KEY_COPY_RESERVATIONS));
+						((TextView) v.findViewById(R.id.tvVorbestellt))
+								.setVisibility(View.VISIBLE);
+					} else {
+						((TextView) v.findViewById(R.id.tvVorbestellt))
+								.setVisibility(View.GONE);
+					}
+					if (copy.containsKey("rueckgabe")) {
+						((TextView) v.findViewById(R.id.tvRueckgabe))
+								.setText(getString(R.string.ret)
+										+ ": "
+										+ copy.getAsString(DetailledItem.KEY_COPY_RETURN));
+						((TextView) v.findViewById(R.id.tvRueckgabe))
+								.setVisibility(View.VISIBLE);
+					} else {
+						((TextView) v.findViewById(R.id.tvRueckgabe))
+								.setVisibility(View.GONE);
+					}
+
+					llCopies.addView(v);
+				}
 			}
 
+			if (id == null || id.equals("")) {
+				id = item.getId();
+			}
+
+			invalidateOptionsMenu();
 		}
+	}
+
+	@Override
+	protected void dialog_wrong_credentials(String s, final boolean finish) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(getString(R.string.opac_error) + " " + s)
+				.setCancelable(false)
+				.setNegativeButton(R.string.dismiss,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+								if (finish)
+									finish();
+							}
+						})
+				.setPositiveButton(R.string.prefs,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								Intent intent = new Intent(
+										SearchResultDetailsActivity.this,
+										MainPreferenceActivity.class);
+								startActivity(intent);
+							}
+						});
+		AlertDialog alert = builder.create();
+		alert.show();
 	}
 
 	public class FetchSubTask extends FetchTask {
@@ -314,7 +619,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			String a = (String) arg0[1];
 
 			try {
-				DetailledItem res = app.ohc.getResultById(a);
+				DetailledItem res = app.getApi().getResultById(a);
 				URL newurl;
 				try {
 					newurl = new URL(res.getCover());
@@ -322,6 +627,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 							.openConnection().getInputStream());
 					res.setCoverBitmap(mIcon_val);
 				} catch (Exception e) {
+					e.printStackTrace();
 				}
 				success = true;
 				return res;
@@ -329,8 +635,10 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				publishProgress(e, "ioerror");
 			} catch (java.io.IOException e) {
 				success = false;
+				e.printStackTrace();
 			} catch (java.lang.IllegalStateException e) {
 				success = false;
+				e.printStackTrace();
 			} catch (Exception e) {
 				publishProgress(e, "ioerror");
 			}
@@ -339,51 +647,48 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		}
 	}
 
-	public class ResTask extends OpacTask<Integer> {
+	public class ResTask extends OpacTask<ReservationResult> {
 		private boolean success;
-		
-		protected Integer doInBackground(Object... arg0) {
+
+		@Override
+		protected ReservationResult doInBackground(Object... arg0) {
 			super.doInBackground(arg0);
 
 			app = (OpacClient) arg0[0];
-			String zst = (String) arg0[1];
-			SharedPreferences sp = PreferenceManager
-					.getDefaultSharedPreferences(app);
+			String reservation_info = (String) arg0[1];
+			int useraction = (Integer) arg0[2];
+			String selection = (String) arg0[3];
+
 			try {
-				if (sp.getString("opac_usernr", "").equals("")
-						|| sp.getString("opac_password", "").equals("")) {
-					success = true;
-					return STATUS_NOUSER;
-				} else {
-					Boolean res = app.ohc.reservation(zst,
-							sp.getString("opac_usernr", ""),
-							sp.getString("opac_password", ""));
-					success = true;
-					if (res == null)
-						return STATUS_WRONGCREDENTIALS;
-				}
+				ReservationResult res = app.getApi().reservation(
+						reservation_info, app.getAccount(), useraction,
+						selection);
+				success = true;
+				return res;
 			} catch (java.net.UnknownHostException e) {
 				publishProgress(e, "ioerror");
-			} catch (java.io.IOException e) {
+			} catch (java.net.SocketException e) {
 				success = false;
-			} catch (java.lang.IllegalStateException e) {
-				success = false;
+				e.printStackTrace();
 			} catch (Exception e) {
-				publishProgress(e, "ioerror");
+				ACRA.getErrorReporter().handleException(e);
+				success = false;
 			}
-			return STATUS_SUCCESS;
+			return null;
 		}
 
-		protected void onPostExecute(Integer result) {
+		@Override
+		protected void onPostExecute(ReservationResult res) {
 			dialog.dismiss();
-			
-			if (!success) {
+
+			if (!success || res == null) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						SearchResultDetailsActivity.this);
 				builder.setMessage(R.string.connection_error)
 						.setCancelable(true)
 						.setNegativeButton(R.string.dismiss,
 								new DialogInterface.OnClickListener() {
+									@Override
 									public void onClick(DialogInterface dialog,
 											int id) {
 										dialog.cancel();
@@ -393,18 +698,14 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				alert.show();
 				return;
 			}
-			
-			if (result == STATUS_WRONGCREDENTIALS) {
-				dialog_wrong_credentials(app.ohc.getLast_error(), false);
-				return;
-			}
-			reservation_done(result);
+
+			reservationResult(res);
 		}
 	}
 
 	@Override
-	protected void onPause() {
-		super.onPause();
+	protected void onStop() {
+		super.onStop();
 		if (dialog != null) {
 			if (dialog.isShowing()) {
 				dialog.cancel();
@@ -443,14 +744,29 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		MenuInflater mi = new MenuInflater(this);
 		mi.inflate(R.menu.search_result_details_activity, menu);
 
-		SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		String bib = sp.getString("opac_bib", "");
+		if (item != null) {
+			if (item.isReservable()) {
+				menu.findItem(R.id.action_reservation).setVisible(true);
+			} else {
+				menu.findItem(R.id.action_reservation).setVisible(false);
+			}
+		} else {
+			menu.findItem(R.id.action_reservation).setVisible(false);
+		}
 
+		String bib = app.getLibrary().getIdent();
 		StarDataSource data = new StarDataSource(this);
 		data.open();
-		if (data.isStarred(bib, id)) {
-			menu.findItem(R.id.action_star).setIcon(R.drawable.ic_ab_star_1);
+		if ((id == null || id.equals("")) && item != null) {
+			if (data.isStarredTitle(bib, title)) {
+				menu.findItem(R.id.action_star).setIcon(
+						R.drawable.ic_action_star_1);
+			}
+		} else {
+			if (data.isStarred(bib, id)) {
+				menu.findItem(R.id.action_star).setIcon(
+						R.drawable.ic_action_star_1);
+			}
 		}
 		data.close();
 
@@ -459,36 +775,48 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		String bib = sp.getString("opac_bib", "");
 
+		String bib = app.getLibrary().getIdent();
 		switch (item.getItemId()) {
+		case R.id.action_reservation:
+			reservationStart();
+			return true;
+
 		case android.R.id.home:
 			finish();
 			return true;
 
 		case R.id.action_share:
-			Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-			intent.setType("text/plain");
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+			if (this.item == null) {
+				Toast toast = Toast.makeText(SearchResultDetailsActivity.this,
+						getString(R.string.share_wait), Toast.LENGTH_SHORT);
+				toast.show();
+			} else {
+				Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+				intent.setType("text/plain");
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 
-			// Add data to the intent, the receiving app will decide
-			// what to do with it.
-			intent.putExtra(Intent.EXTRA_SUBJECT, title);
+				// Add data to the intent, the receiving app will decide
+				// what to do with it.
+				intent.putExtra(Intent.EXTRA_SUBJECT, title);
 
-			String t = title;
-			try {
-				bib = java.net.URLEncoder.encode(bib, "UTF-8");
-				t = java.net.URLEncoder.encode(t, "UTF-8");
-			} catch (UnsupportedEncodingException e) {
+				String t = title;
+				try {
+					bib = java.net.URLEncoder.encode(app.getLibrary()
+							.getIdent(), "UTF-8");
+					t = java.net.URLEncoder.encode(t, "UTF-8");
+				} catch (UnsupportedEncodingException e) {
+				}
+
+				String shareUrl = app.getApi().getShareUrl(id, title);
+				if (shareUrl != null)
+					intent.putExtra(Intent.EXTRA_TEXT, shareUrl);
+				else
+					intent.putExtra(Intent.EXTRA_TEXT, "http://opacapp.de/:"
+							+ bib + ":" + id + ":" + t);
+				startActivity(Intent.createChooser(intent, getResources()
+						.getString(R.string.share)));
 			}
-
-			intent.putExtra(Intent.EXTRA_TEXT,
-					"http://www.raphaelmichel.de/opacclient/bibproxy.php/go?bib="
-							+ bib + "&id=" + id + "&title=" + t);
-			startActivity(Intent.createChooser(intent, getResources()
-					.getString(R.string.share)));
 			return true;
 
 		case R.id.action_star:
@@ -496,15 +824,34 @@ public class SearchResultDetailsActivity extends OpacActivity {
 					SearchResultDetailsActivity.this);
 			star.open();
 
-			if (star.isStarred(bib, id)) {
-				star.remove(star.getItem(bib, id));
-				item.setIcon(R.drawable.ic_ab_star_0);
-			} else {
-				star.star(id, title, bib);
+			if (this.item == null) {
 				Toast toast = Toast.makeText(SearchResultDetailsActivity.this,
-						getString(R.string.starred), Toast.LENGTH_SHORT);
+						getString(R.string.star_wait), Toast.LENGTH_SHORT);
 				toast.show();
-				item.setIcon(R.drawable.ic_ab_star_1);
+			} else if (id == null || id.equals("")) {
+				if (star.isStarredTitle(bib, title)) {
+					star.remove(star.getItemTitle(bib, title));
+					item.setIcon(R.drawable.ic_action_star_0);
+				} else {
+					star.star(null, title, bib);
+					Toast toast = Toast.makeText(
+							SearchResultDetailsActivity.this,
+							getString(R.string.starred), Toast.LENGTH_SHORT);
+					toast.show();
+					item.setIcon(R.drawable.ic_action_star_1);
+				}
+			} else {
+				if (star.isStarred(bib, id)) {
+					star.remove(star.getItem(bib, id));
+					item.setIcon(R.drawable.ic_action_star_0);
+				} else {
+					star.star(id, title, bib);
+					Toast toast = Toast.makeText(
+							SearchResultDetailsActivity.this,
+							getString(R.string.starred), Toast.LENGTH_SHORT);
+					toast.show();
+					item.setIcon(R.drawable.ic_action_star_1);
+				}
 			}
 			star.close();
 			return true;

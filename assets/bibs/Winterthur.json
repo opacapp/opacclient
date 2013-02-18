@@ -1,0 +1,10 @@
+{
+ "api": "oclc2011", 
+ "city": "Winterthur", 
+ "data": {
+  "baseurl": "https://katalog.winterthur.ch/webOPACClient.sisis", 
+  "information": "http://bibliotheken.winterthur.ch/stadtbibliothek/oeffnungszeiten-kontakt/" 
+ }, 
+ "support": "Katalogsuche und Konto (experimentell)", 
+ "title": "Bibliotheksverbund"
+}

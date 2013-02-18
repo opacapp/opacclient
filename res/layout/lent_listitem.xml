@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="4dp" >
+
+    <View
+        android:id="@+id/strut"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/tvTitel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@id/strut"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textIsSelectable="true" />
+
+    <TextView
+        android:id="@+id/tvStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/tvTitel"
+        android:layout_toLeftOf="@id/strut"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textIsSelectable="true" />
+
+    <ImageView
+        android:id="@+id/ivProlong"
+        android:layout_width="48dp"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:padding="8dp"
+        android:src="@drawable/ic_prolong" />
+
+    <TextView
+        android:id="@+id/tvVerfasser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/ivProlong"
+        android:layout_toRightOf="@id/strut"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textIsSelectable="true" />
+
+    <TextView
+        android:id="@+id/tvZst"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvVerfasser"
+        android:layout_toLeftOf="@id/ivProlong"
+        android:layout_toRightOf="@id/strut"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textIsSelectable="true" />
+
+</RelativeLayout>

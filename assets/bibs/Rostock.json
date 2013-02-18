@@ -1,0 +1,36 @@
+{
+ "api": "bond26", 
+ "city": "Rostock", 
+ "data": {
+  "accounttable": [
+   4, 
+   0, 
+   1, 
+   3, 
+   -1, 
+   2, 
+   2, 
+   5
+  ], 
+  "baseurl": "http://195.37.188.172/webopac", 
+  "copiestable": [
+   4, 
+   0, 
+   -1, 
+   -1, 
+   1, 
+   3, 
+   -1
+  ], 
+  "information": null, 
+  "reservationtable": [
+   0, 
+   1, 
+   3, 
+   2, 
+   4
+  ]
+ }, 
+ "support": "Katalogsuche und Konto", 
+ "title": null
+}

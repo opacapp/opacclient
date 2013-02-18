@@ -1,0 +1,36 @@
+{
+ "api": "bond26", 
+ "city": "Schw\u00e4bisch Hall", 
+ "data": {
+  "accounttable": [
+   -1, 
+   0, 
+   1, 
+   2, 
+   -1, 
+   -1, 
+   -1, 
+   3
+  ], 
+  "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-sha", 
+  "copiestable": [
+   -1, 
+   0, 
+   -1, 
+   1, 
+   2, 
+   3, 
+   -1
+  ], 
+  "information": "http://www.schwaebischhall.de/bildungsstadt/stadtbibliothek.html",
+  "reservationtable": [
+   0, 
+   1, 
+   2, 
+   -1, 
+   3
+  ]
+ }, 
+ "support": "Katalogsuche und Konto", 
+ "title": null
+}

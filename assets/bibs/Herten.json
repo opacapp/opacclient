@@ -1,0 +1,13 @@
+{
+ "api": "bond26", 
+ "city": "Herten", 
+ "data": {
+  "accounttable": [2, 0, 1, 3, 4, -1, -1, 5], 
+  "baseurl": "http://85.119.208.92/wwwopac", 
+  "copiestable": [-1, -1, 1, 2, 3, 4, -1], 
+  "information": "/../read/info.html", 
+  "reservationtable": [0, 1, 2, -1, 3]
+ }, 
+ "support": "Katalogsuche und Konto", 
+ "title": null
+}

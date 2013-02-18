@@ -1,0 +1,36 @@
+{
+ "api": "bond26", 
+ "city": "Bad Homburg", 
+ "data": {
+  "accounttable": [
+   -1, 
+   0, 
+   1, 
+   2, 
+   -1, 
+   -1, 
+   -1, 
+   4
+  ], 
+  "baseurl": "http://wwwopac.bad-homburg.de/webopac", 
+  "copiestable": [
+   -1, 
+   0, 
+   -1, 
+   2, 
+   5, 
+   4, 
+   6
+  ], 
+  "information": "http://www.bad-homburg.de/sc/Kultur_Bildung/StadtBibliothek/Allgemeine_Informationen/7744790.asp", 
+  "reservationtable": [
+   0, 
+   1, 
+   2, 
+   -1, 
+   4
+  ]
+ }, 
+ "support": "Katalogsuche und Konto", 
+ "title": null
+}

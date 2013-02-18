@@ -2,9 +2,9 @@ package de.geeksfactory.opacclient.frontend;
 
 import java.util.List;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
+import org.acra.ACRA;
+
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,22 +12,21 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
-import de.geeksfactory.opacclient.storage.SearchResult;
+import de.geeksfactory.opacclient.objects.SearchResult;
 
 public class SearchResultsActivity extends OpacActivity {
 
-	protected ProgressDialog dialog;
 	protected List<SearchResult> items;
-	private int page = 1;
+	private int page;
 
 	private SearchStartTask st;
 	private SearchPageTask sst;
@@ -36,34 +35,60 @@ public class SearchResultsActivity extends OpacActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.loading);
-		((TextView) findViewById(R.id.tvLoading))
-				.setText(R.string.loading_results);
-
-		st = new SearchStartTask();
-		st.execute(app, getIntent().getStringExtra("titel"), getIntent()
-				.getStringExtra("verfasser"),
-				getIntent().getStringExtra("schlag_a"), getIntent()
-						.getStringExtra("schlag_b"), getIntent()
-						.getStringExtra("zst"), getIntent()
-						.getStringExtra("mg"),
-				getIntent().getStringExtra("isbn"),
-				getIntent().getStringExtra("jahr_von"), getIntent()
-						.getStringExtra("jahr_bis"), getIntent()
-						.getStringExtra("systematik"), getIntent()
-						.getStringExtra("ikr"),
-				getIntent().getStringExtra("verlag"), getIntent()
-						.getStringExtra("order"));
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		page = 1;
+		performsearch();
 	}
 
+	public void performsearch() {
+		setContentView(R.layout.loading);
+		if (page == 1) {
+			st = new SearchStartTask();
+			st.execute(app, getIntent().getBundleExtra("query"));
+		} else {
+			sst = new SearchPageTask();
+			sst.execute(app, page);
+		}
+	}
+
+	@SuppressLint("NewApi")
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case R.id.action_prev:
+			setContentView(R.layout.loading);
+			page--;
+			sst = new SearchPageTask();
+			sst.execute(app, page);
+			invalidateOptionsMenu();
+			return true;
+		case R.id.action_next:
+			setContentView(R.layout.loading);
+			page++;
+			sst = new SearchPageTask();
+			sst.execute(app, page);
+			invalidateOptionsMenu();
+			return true;
 		case android.R.id.home:
 			finish();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater mi = new MenuInflater(this);
+		mi.inflate(R.menu.activity_search_results, menu);
+
+		if (page == 1) {
+			menu.findItem(R.id.action_prev).setVisible(false);
+		} else {
+
+			menu.findItem(R.id.action_prev).setVisible(true);
+		}
+
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	public class SearchStartTask extends OpacTask<List<SearchResult>> {
@@ -72,53 +97,60 @@ public class SearchResultsActivity extends OpacActivity {
 		@Override
 		protected List<SearchResult> doInBackground(Object... arg0) {
 			super.doInBackground(arg0);
-			String stichwort = (String) arg0[1];
-			String verfasser = (String) arg0[2];
-			String schlag_a = (String) arg0[3];
-			String schlag_b = (String) arg0[4];
-			String zweigstelle = (String) arg0[5];
-			String mediengruppe = (String) arg0[6];
-			String isbn = (String) arg0[7];
-			String jahr_von = (String) arg0[8];
-			String jahr_bis = (String) arg0[9];
-			String notation = (String) arg0[10];
-			String interessenkreis = (String) arg0[11];
-			String verlag = (String) arg0[12];
-			String order = (String) arg0[13];
+			Bundle query = (Bundle) arg0[1];
 
 			try {
-				List<SearchResult> res = app.ohc.search(stichwort, verfasser,
-						schlag_a, schlag_b, zweigstelle, mediengruppe, isbn,
-						jahr_von, jahr_bis, notation, interessenkreis, verlag,
-						order);
+				List<SearchResult> res = app.getApi().search(query);
 				success = true;
 				return res;
 			} catch (java.net.UnknownHostException e) {
-				publishProgress(e, "ioerror");
-			} catch (java.io.IOException e) {
 				success = false;
-			} catch (de.geeksfactory.opacclient.NotReachableException e) {
+				e.printStackTrace();
+			} catch (java.net.SocketException e) {
 				success = false;
-			} catch (java.lang.IllegalStateException e) {
-				success = false;
+				e.printStackTrace();
 			} catch (Exception e) {
-				publishProgress(e, "ioerror");
+				ACRA.getErrorReporter().handleException(e);
+				success = false;
 			}
 
 			return null;
 		}
 
+		@Override
 		protected void onPostExecute(List<SearchResult> result) {
 			if (success) {
-				items = result;
-				loaded();
+				if (result == null) {
+
+					if (app.getApi().getLast_error().equals("is_a_redirect")) {
+						Intent intent = new Intent(SearchResultsActivity.this,
+								SearchResultDetailsActivity.class);
+						startActivity(intent);
+						finish();
+						return;
+					}
+
+					setContentView(R.layout.connectivity_error);
+					((TextView) findViewById(R.id.tvErrBody)).setText(app
+							.getApi().getLast_error());
+					((Button) findViewById(R.id.btRetry))
+							.setOnClickListener(new OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									performsearch();
+								}
+							});
+				} else {
+					items = result;
+					loaded();
+				}
 			} else {
 				setContentView(R.layout.connectivity_error);
 				((Button) findViewById(R.id.btRetry))
 						.setOnClickListener(new OnClickListener() {
 							@Override
 							public void onClick(View v) {
-								onCreate(null);
+								performsearch();
 							}
 						});
 			}
@@ -130,53 +162,21 @@ public class SearchResultsActivity extends OpacActivity {
 
 		ListView lv = (ListView) findViewById(R.id.lvResults);
 		lv.setOnItemClickListener(new OnItemClickListener() {
+			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				Intent intent = new Intent(SearchResultsActivity.this,
 						SearchResultDetailsActivity.class);
 				intent.putExtra("item", (int) items.get(position).getNr());
-				intent.putExtra("item_id", items.get(position).getId());
+
+				if (items.get(position).getId() != null)
+					intent.putExtra("item_id", items.get(position).getId());
 				startActivity(intent);
 			}
 		});
 
-		final ImageView btPrev = (ImageView) findViewById(R.id.btPrev);
-		if (page == 1) {
-			btPrev.setVisibility(View.INVISIBLE);
-		}
-		btPrev.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				setContentView(R.layout.loading);
-				((TextView) findViewById(R.id.tvLoading))
-						.setText(R.string.loading_results);
-				page--;
-				sst = new SearchPageTask();
-				sst.execute(app, page);
-				if (page == 1) {
-					btPrev.setVisibility(View.INVISIBLE);
-				}
-			}
-		});
-
-		final ImageView btNext = (ImageView) findViewById(R.id.btNext);
-		btNext.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				setContentView(R.layout.loading);
-				((TextView) findViewById(R.id.tvLoading))
-						.setText(R.string.loading_results);
-				page++;
-				sst = new SearchPageTask();
-				sst.execute(app, page);
-				if (page > 1) {
-					btPrev.setVisibility(View.VISIBLE);
-				}
-			}
-		});
-
 		TextView rn = (TextView) findViewById(R.id.tvResultNum);
-		rn.setText(app.ohc.getResults());
+		rn.setText(app.getApi().getResults());
 
 		lv.setAdapter(new ResultsAdapter(this, (items)));
 		lv.setTextFilterEnabled(true);
@@ -191,23 +191,23 @@ public class SearchResultsActivity extends OpacActivity {
 			Integer page = (Integer) arg0[1];
 
 			try {
-				List<SearchResult> res = app.ohc.search_page(page);
+				List<SearchResult> res = app.getApi().searchGetPage(page);
 				success = true;
 				return res;
 			} catch (java.net.UnknownHostException e) {
-				publishProgress(e, "ioerror");
-			} catch (java.io.IOException e) {
 				success = false;
-			} catch (de.geeksfactory.opacclient.NotReachableException e) {
+				e.printStackTrace();
+			} catch (java.net.SocketException e) {
 				success = false;
-			} catch (java.lang.IllegalStateException e) {
-				success = false;
+				e.printStackTrace();
 			} catch (Exception e) {
-				publishProgress(e, "ioerror");
+				ACRA.getErrorReporter().handleException(e);
+				success = false;
 			}
 			return null;
 		}
 
+		@Override
 		protected void onPostExecute(List<SearchResult> result) {
 			if (success) {
 				items = result;
@@ -218,7 +218,7 @@ public class SearchResultsActivity extends OpacActivity {
 						.setOnClickListener(new OnClickListener() {
 							@Override
 							public void onClick(View v) {
-								onCreate(null);
+								performsearch();
 							}
 						});
 			}
@@ -226,13 +226,8 @@ public class SearchResultsActivity extends OpacActivity {
 	}
 
 	@Override
-	protected void onPause() {
-		super.onPause();
-		if (dialog != null) {
-			if (dialog.isShowing()) {
-				dialog.cancel();
-			}
-		}
+	protected void onStop() {
+		super.onStop();
 
 		try {
 			if (st != null) {

@@ -1,0 +1,10 @@
+{
+ "api": "oclc2011", 
+ "city": "Leipzig", 
+ "data": {
+  "baseurl": "https://webopac.stadtbibliothek-leipzig.de/webOPACClient", 
+  "information": "http://www.leipzig.de/stadtbib/"
+ }, 
+ "support": "Katalogsuche und Konto (experimentell)", 
+ "title": null
+}

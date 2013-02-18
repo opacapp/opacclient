@@ -1,0 +1,21 @@
+{
+ "api": "bond26", 
+ "city": "Ludwigshafen (Rhein)", 
+ "data": {
+  "accounttable": [5, 0, 1, -1, 2, 3, 3, 6], 
+  "baseurl": "http://bibliothek-katalog.ludwigshafen.de/webopac", 
+  "copiestable": [
+   5, 
+   0, 
+   -1, 
+   1, 
+   3, 
+   4, 
+   7
+  ], 
+  "information": "http://www.ludwigshafen.de/lebenswert/stadtbibliothek/service/adressen-und-oeffnungszeiten/#mainContentOfPage", 
+  "reservationtable": [0, 1, -1, 2, 4]
+ }, 
+ "support": "Katalogsuche und Konto", 
+ "title": null
+}

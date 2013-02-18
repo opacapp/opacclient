@@ -1,43 +1,89 @@
 package de.geeksfactory.opacclient.frontend;
 
-import android.app.AlertDialog;
+import java.util.List;
+
+import org.holoeverywhere.app.AlertDialog;
+
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.slidingmenu.lib.SlidingMenu;
+import com.slidingmenu.lib.SlidingMenu.OnOpenListener;
+import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.objects.Account;
+import de.geeksfactory.opacclient.storage.AccountDataSource;
 
-public abstract class OpacActivity extends SherlockActivity {
+public abstract class OpacActivity extends SlidingFragmentActivity {
 	protected OpacClient app;
+	protected AlertDialog adialog;
+	protected NavigationFragment mFrag;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.getSupportActionBar().setHomeButtonEnabled(true);
+
 		app = (OpacClient) getApplication();
+
+		setContentView(R.layout.empty_workaround);
+		setBehindContentView(R.layout.menu_frame);
+		FragmentTransaction t = this.getSupportFragmentManager()
+				.beginTransaction();
+		mFrag = new NavigationFragment();
+		t.replace(R.id.menu_frame, mFrag);
+		t.commit();
+		// Sliding Menu
+		SlidingMenu sm = getSlidingMenu();
+		sm.setShadowWidthRes(R.dimen.shadow_width);
+		sm.setShadowDrawable(R.drawable.shadow);
+		sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+		sm.setFadeDegree(0.35f);
+		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+		sm.setOnOpenListener(new OnOpenListener() {
+			@Override
+			public void onOpen() {
+				if (getCurrentFocus() != null) {
+					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(getCurrentFocus()
+							.getWindowToken(), 0);
+				}
+			}
+		});
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		showContent();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater mi = new MenuInflater(this);
 		mi.inflate(R.menu.activity_opac, menu);
-		try {
-			if (app.ohc.bib.getString(4) == null
-					|| app.ohc.bib.getString(4).equals("null")) {
-				menu.removeItem(R.id.menu_info);
-			}
-		} catch (Exception e) {
-			menu.removeItem(R.id.menu_info);
-		}
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -46,55 +92,166 @@ public abstract class OpacActivity extends SherlockActivity {
 	}
 
 	protected void dialog_no_user(final boolean finish) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(R.string.status_nouser)
-				.setCancelable(false)
-				.setNegativeButton(R.string.dismiss,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
-								if (finish)
-									finish();
-							}
-						})
-				.setPositiveButton(R.string.prefs,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								Intent intent = new Intent(OpacActivity.this,
-										MainPreferenceActivity.class);
-								startActivity(intent);
-							}
-						});
-		AlertDialog alert = builder.create();
-		alert.show();
+		setContentView(R.layout.answer_error);
+		((Button) findViewById(R.id.btPrefs))
+				.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(OpacActivity.this,
+								AccountListActivity.class);
+						startActivity(intent);
+					}
+				});
+		((TextView) findViewById(R.id.tvErrHead)).setText("");
+		((TextView) findViewById(R.id.tvErrBody))
+				.setText(R.string.status_nouser);
 	}
 
 	protected void dialog_wrong_credentials(String s, final boolean finish) {
+		setContentView(R.layout.answer_error);
+		((Button) findViewById(R.id.btPrefs))
+				.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(OpacActivity.this,
+								AccountListActivity.class);
+						startActivity(intent);
+					}
+				});
+		((TextView) findViewById(R.id.tvErrBody)).setText(s);
+	}
+
+	public interface AccountSelectedListener {
+		void accountSelected(Account account);
+	}
+
+	public class MetaAdapter extends ArrayAdapter<ContentValues> {
+
+		private List<ContentValues> objects;
+		private int spinneritem;
+
+		@Override
+		public View getDropDownView(int position, View contentView,
+				ViewGroup viewGroup) {
+			View view = null;
+
+			if (objects.get(position) == null) {
+				LayoutInflater layoutInflater = (LayoutInflater) getContext()
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				view = layoutInflater
+						.inflate(R.layout.simple_spinner_dropdown_item,
+								viewGroup, false);
+				return view;
+			}
+
+			ContentValues item = objects.get(position);
+
+			if (contentView == null) {
+				LayoutInflater layoutInflater = (LayoutInflater) getContext()
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				view = layoutInflater
+						.inflate(R.layout.simple_spinner_dropdown_item,
+								viewGroup, false);
+			} else {
+				view = contentView;
+			}
+
+			TextView tvText = (TextView) view.findViewById(android.R.id.text1);
+			tvText.setText(item.getAsString("value"));
+			return view;
+		}
+
+		@Override
+		public View getView(int position, View contentView, ViewGroup viewGroup) {
+			View view = null;
+
+			if (objects.get(position) == null) {
+				LayoutInflater layoutInflater = (LayoutInflater) getContext()
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				view = layoutInflater.inflate(spinneritem, viewGroup, false);
+				return view;
+			}
+
+			ContentValues item = objects.get(position);
+
+			if (contentView == null) {
+				LayoutInflater layoutInflater = (LayoutInflater) getContext()
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				view = layoutInflater.inflate(spinneritem, viewGroup, false);
+			} else {
+				view = contentView;
+			}
+
+			TextView tvText = (TextView) view.findViewById(android.R.id.text1);
+			tvText.setText(item.getAsString("value"));
+			return view;
+		}
+
+		public MetaAdapter(Context context, List<ContentValues> objects,
+				int spinneritem) {
+			super(context, R.layout.simple_spinner_item, objects);
+			this.objects = objects;
+			this.spinneritem = spinneritem;
+		}
+
+	}
+
+	public void accountSelected() {
+
+	}
+
+	public void selectaccount() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(getString(R.string.opac_error) + " " + s)
-				.setCancelable(false)
-				.setNegativeButton(R.string.dismiss,
+		// Get the layout inflater
+		LayoutInflater inflater = getLayoutInflater();
+
+		View view = inflater.inflate(R.layout.simple_list_dialog, null);
+
+		ListView lv = (ListView) view.findViewById(R.id.lvBibs);
+		AccountDataSource data = new AccountDataSource(this);
+		data.open();
+		final List<Account> accounts = data.getAllAccounts();
+		data.close();
+		AccountListAdapter adapter = new AccountListAdapter(this, accounts);
+		lv.setAdapter(adapter);
+		lv.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+
+				app.setAccount(accounts.get(position).getId());
+
+				adialog.dismiss();
+
+				accountSelected();
+			}
+		});
+		builder.setTitle(R.string.account_select)
+				.setView(view)
+				.setNegativeButton(R.string.cancel,
 						new DialogInterface.OnClickListener() {
+							@Override
 							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
-								if (finish)
-									finish();
+								adialog.cancel();
 							}
 						})
-				.setPositiveButton(R.string.prefs,
+				.setNeutralButton(R.string.accounts_edit,
 						new DialogInterface.OnClickListener() {
+							@Override
 							public void onClick(DialogInterface dialog, int id) {
+								dialog.dismiss();
 								Intent intent = new Intent(OpacActivity.this,
-										MainPreferenceActivity.class);
+										AccountListActivity.class);
 								startActivity(intent);
 							}
 						});
-		AlertDialog alert = builder.create();
-		alert.show();
+		adialog = builder.create();
+		adialog.show();
 	}
 
 	protected void unbindDrawables(View view) {
-		if(view == null) return;
+		if (view == null)
+			return;
 		if (view.getBackground() != null) {
 			view.getBackground().setCallback(null);
 		}
@@ -112,23 +269,7 @@ public abstract class OpacActivity extends SherlockActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			// app icon in action bar clicked; go home
-			Intent intent = new Intent(this, FrontpageActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
-			return true;
-		case R.id.menu_about:
-			Intent iAbout = new Intent(OpacActivity.this, AboutActivity.class);
-			startActivity(iAbout);
-			return true;
-		case R.id.menu_info:
-			Intent iInfo = new Intent(OpacActivity.this, InfoActivity.class);
-			startActivity(iInfo);
-			return true;
-		case R.id.menu_prefs:
-			Intent iPrefs = new Intent(OpacActivity.this,
-					MainPreferenceActivity.class);
-			startActivity(iPrefs);
+			toggle();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

@@ -3,24 +3,18 @@
 
     <PreferenceCategory android:title="@string/web_opac" >
         <Preference
-            android:key="welcome_assistant"
-            android:summary="@string/welcome_assistant_desc"
-            android:title="@string/welcome_assistant" />
+            android:key="accounts"
+            android:summary="@string/accounts_desc"
+            android:title="@string/accounts" />
 
-        <EditTextPreference
-            android:key="opac_usernr"
-            android:summary="@string/opac_usernr_desc"
-            android:title="@string/opac_usernr" />
-        <EditTextPreference
-            android:dependency="opac_usernr"
-            android:key="opac_password"
-            android:password="true"
-            android:summary="@string/opac_password_hint"
-            android:title="@string/opac_password" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="advanced"
+            android:summary="@string/advanced_desc"
+            android:title="@string/advanced" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/notifications" >
         <CheckBoxPreference
-            android:dependency="opac_usernr"
             android:key="notification_service"
             android:summary="@string/notification_service_desc"
             android:title="@string/notification_service" />
@@ -33,12 +27,17 @@
             android:key="notification_warning"
             android:summary="@string/notification_warning_desc"
             android:title="@string/notification_warning" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/developer_settings" >
+        <CheckBoxPreference
+            android:key="debug_proxy"
+            android:summary="Nicht benutzen, außer du weißt, was du tust."
+            android:title="Debug-Modus (Proxy)" />
 
-        <RingtonePreference
-            android:dependency="notification_service"
-            android:key="notification_sound"
-            android:ringtoneType="notification"
-            android:title="@string/notification_sound" />
+        <Preference
+            android:key="meta_clear"
+            android:summary="Löscht alle auf dem Handy zwischengespeicherten Daten außer Passwörtern"
+            android:title="Cache leeren" />
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -1,0 +1,11 @@
+{
+ "api": "bond26", 
+ "city": "Bayreuth", 
+ "data": {
+  "copiestable": [-1, 6, 1, 3, 4, 5, -1], "reservationtable": [0, 1, -1, -1, 2], "accounttable": [-1, 0, 1, 2, -1, -1, -1, 3],
+  "baseurl": "http://online-dienste.bayreuth.de/wwwopac", 
+  "information": "http://bayreuth.de/rathaus_buerger_service/bildung_wissenschaft/stadtbibliothek_2388.html"
+ }, 
+ "support": "Katalogsuche und Konto", 
+ "title": null
+}

@@ -1,75 +1,37 @@
 opacclient
 ==========
-Android-Client für Web-OPACs von BOND
+Android client for public libraries. German only, but just for now.
 
-Unterstützt
------------
-Online-Bibliothekskataloge mit der Software BOND Web-Opac V2.6 bis 2.7.
-Getestet wird mit dem der [Stadtbibliothek Mannheim](http://katalog.mannheim.de/wopac/index.asp?DB=wopac)
-
-Unterstützung für weitere Stadtbibliotheken kann hinzugefügt werden, Dokumentation folgt.
+Supports
+--------
+Web catalogues of different vendors, see wiki for details.
 
 Features
 --------
-* Suche im Katalog
-* Vorbestellen von Büchern
-* Merkliste
-* Kontoansicht, Abbrechen von Vorbestellungen
-* Verlängerung von ausgeliehenen Büchern
-* Benachrichtigung bei Büchern, die abgegeben werden müssen
-* Suche nach ISBN mit Barcode-Scanner
+* Search the catalogue
+* Make reservations
+* Bookmarks
+* Account view
+* extending lending periods
+* Notification for return dates
+* Search by ISBN using barcodes
 
-Lizenz
-------
-Der Code der App selbst steht unter der MIT-Lizenz[1]. Dieses Projekt enthält aber noch weitere Dateien, die unter anderen Lizenzen stehen und diesen entsprechend weitergegeben werden müssen.
-* jsoup[2], ebenfalls MIT-Lizenz
-* Icons aus dem Human O2 Iconset[3], GNU GPL-Lizenz
-* ZXing IntentIntegrator, Apache License 2.0[4]
+Not all of the features are availably for every library.
+
+License
+-------
+This code is released under the terms of the MIT License[1]. It contains or uses several other project:
+* jsoup, MIT License[1]
+* ActionBarSherlock, Apache License 2.0[2]
+* HoloEverywhere, MIT License [1]
+* SlidingMenu, Apache License 2.0[1]
+* ZXing IntentIntegrator, Apache License 2.0[2]
 
 [1] http://de.wikipedia.org/wiki/MIT-Lizenz
-[2] http://jsoup.org/
-[3] http://schollidesign.deviantart.com/art/Human-O2-Iconset-105344123
-[4] http://www.apache.org/licenses/LICENSE-2.0.html 
+[2] http://www.apache.org/licenses/LICENSE-2.0.html 
 
-Autor
------
+Author
+------
 Raphael Michel
 http://www.raphaelmichel.de
 raphael@geeksfactory.de
-
-Technisches
-===========
-
-Intents
--------
-android.intent.action.VIEW, opac://de.geeksfactory.opacclient?…
-
-Parameter:
-* id (Mediennr.)
-oder
-* titel
-* verfasser
-* schlag_a
-* schlag_b
-* isbn
-* jahr_von
-* jahr_bis
-* verlag
-
-Kompatibilität
----------------
-Aufbau der Einträge  in assets/bibs.json -> bibs
-
-    "Ort":["Basis-URL", [Tabelle Exemplare], [Tabelle Entliehen], [Tabelle Vorbestellt]],
-
-Tabelle Exemplare
-
-    Barcode, Zweigstelle, Abteilung, Standort, Status, Rückgabe, Vorbestellt
-
-Tabelle Entliehen
-
-    Barcode, Verfasser, Titel, Frist, Ausleihstatus, Zweigstelle, Ausleihstelle, Verl.-Link
-
-Tabelle Vorbestellt
-
-    Verfasser, Titel, Bereit, Zweigstelle, Abbr.-Link

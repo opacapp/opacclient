@@ -1,0 +1,21 @@
+{
+ "api": "bond26", 
+ "city": "Haslach", 
+ "data": {
+  "accounttable": null, 
+  "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-haslach", 
+  "copiestable": [
+   -1, 
+   -1, 
+   -1, 
+   0, 
+   1, 
+   2, 
+   -1
+  ], 
+  "information": "http://www.bibliotheken.bw-online.de/read-haslach/info.html",
+  "reservationtable": null
+ }, 
+ "support": "Katalogsuche", 
+ "title": null
+}

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="slidingmenu_offset">200dp</dimen>
+
+    <integer name="num_cols">2</integer>
+
+</resources>

@@ -1,0 +1,11 @@
+{
+ "api": "oclc2011", 
+ "city": "Chemnitz", 
+ "data": {
+  "baseurl": "http://opac.stadtbibliothek-chemnitz.de/webOPACClient", 
+  "information": "http://www.stadtbibliothek-chemnitz.de/service-auskunft/oeffnungszeiten.html",
+  "startparams": "Login=opsb"
+ }, 
+ "support": "Katalogsuche und Konto (experimentell)", 
+ "title": null
+}

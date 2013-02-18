@@ -1,0 +1,21 @@
+{
+ "api": "bond26", 
+ "city": "Magdeburg", 
+ "data": {
+  "accounttable": [0, 1, -1, 2, 3], 
+  "baseurl": "http://auskunft.stadtbibliothek.magdeburg.de/webopac", 
+  "copiestable": [
+   -1, 
+   0, 
+   -1, 
+   2, 
+   4, 
+   5, 
+   -1
+  ], 
+  "information": "http://www.magdeburg-stadtbibliothek.de/texte/seite.php?id=98014", 
+  "reservationtable": [0, 1, -1, 2, 3]
+ }, 
+ "support": "Katalogsuche und Konto", 
+ "title": null
+}

@@ -1,0 +1,21 @@
+{
+ "api": "bond26", 
+ "city": "Stuhr", 
+ "data": {
+  "accounttable":  [5, 0, 2, 1, 3, 4, -1], 
+  "baseurl": "http://bibliothek.stuhr.de", 
+  "copiestable": [
+   6, 
+   0, 
+   2, 
+   1, 
+   4, 
+   5, 
+   -1
+  ], 
+  "information": "/read/info.html", 
+  "reservationtable": [0, 1, -1, -1, 2]
+ }, 
+ "support": "Katalogsuche und Konto", 
+ "title": null
+}

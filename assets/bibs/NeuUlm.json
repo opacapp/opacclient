@@ -1,0 +1,36 @@
+{
+ "api": "bond26", 
+ "city": "Neu-Ulm", 
+ "data": {
+  "accounttable": [
+   -1, 
+   1, 
+   2, 
+   3, 
+   -1, 
+   4, 
+   4, 
+   5
+  ], 
+  "baseurl": "http://wwwopac.stadt.neu-ulm.de/webopac", 
+  "copiestable": [
+   -1, 
+   0, 
+   -1, 
+   1, 
+   3, 
+   4, 
+   -1
+  ], 
+  "information": "/../read/info.html", 
+  "reservationtable": [
+   1, 
+   2, 
+   4, 
+   3, 
+   5
+  ]
+ }, 
+ "support": "Katalogsuche und Konto", 
+ "title": null
+}

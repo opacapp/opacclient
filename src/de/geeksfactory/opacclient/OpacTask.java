@@ -6,15 +6,10 @@ public abstract class OpacTask<Result> extends
 		AsyncTask<Object, Object, Result> {
 	protected OpacClient a;
 
+	@Override
 	protected Result doInBackground(Object... arg0) {
+		@SuppressWarnings("unused")
 		OpacClient a = (OpacClient) arg0[0];
 		return null;
-	}
-
-	protected void onProgressUpdate(Object... arg0) {
-		if (((String) arg0[1]).equals("ioerror")) {
-			if(a != null)
-				a.web_error((Exception) arg0[0], "ioerror");
-		}
 	}
 }

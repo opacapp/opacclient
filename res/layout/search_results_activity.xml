@@ -18,26 +18,4 @@
         android:layout_weight="1" >
     </ListView>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <ImageView
-            android:id="@+id/btPrev"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="left"
-            android:layout_weight="1"
-            android:src="@drawable/navigate_prev" />
-
-        <ImageView
-            android:id="@+id/btNext"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="right"
-            android:layout_weight="1"
-            android:src="@drawable/navigate_next"
-            android:text=">" />
-    </LinearLayout>
-
 </LinearLayout>

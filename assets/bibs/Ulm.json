@@ -1,0 +1,36 @@
+{
+ "api": "bond26", 
+ "city": "Ulm", 
+ "data": {
+  "accounttable": [
+   4, 
+   2, 
+   3, 
+   5, 
+   -1, 
+   0, 
+   0, 
+   6
+  ], 
+  "baseurl": "http://www2opac.stadtbibliothek.ulm.de/wwwopac", 
+  "copiestable": [
+   -1, 
+   0, 
+   1, 
+   2, 
+   4, 
+   5, 
+   -1
+  ], 
+  "information": "http://www.ulm.de/kultur_tourismus/bibliotheken_und_literatur/oeffnungszeiten.33574.3076,3963,3669,30713,33574.htm#artikel",
+  "reservationtable": [
+   2, 
+   3, 
+   4, 
+   0, 
+   5
+  ]
+ }, 
+ "support": "Katalogsuche und Konto", 
+ "title": null
+}

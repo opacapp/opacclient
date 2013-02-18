@@ -1,0 +1,21 @@
+{
+ "api": "bond26", 
+ "city": "Gaildorf", 
+ "data": {
+  "accounttable": null, 
+  "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-gaildorf", 
+  "copiestable": [
+   -1, 
+   -1, 
+   -1, 
+   1, 
+   3, 
+   4, 
+   -1
+  ], 
+  "information": "/../read-gaildorf/info.html", 
+  "reservationtable": null
+ }, 
+ "support": "Katalogsuche", 
+ "title": null
+}

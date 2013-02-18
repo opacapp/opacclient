@@ -1,0 +1,10 @@
+{
+ "api": "oclc2011", 
+ "city": "Weimar", 
+ "data": {
+  "baseurl": "http://katalog.stadtbibo-weimar.de:8080/webOPACClient", 
+  "information": "http://stadtbibo-weimar.de/index.html"
+ }, 
+ "support": "Katalogsuche und Konto (experimentell)", 
+ "title": null
+}

@@ -4,69 +4,137 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="5dp" >
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/rlAccHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentTop="true"
+            android:background="@color/account_head_bg"
+            android:orientation="vertical"
+            android:padding="8dp" >
+
+            <TextView
+                android:id="@+id/tvAccLabel"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:ellipsize="end"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/account_head_fg" />
+
+            <TextView
+                android:id="@+id/tvAccCity"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="false"
+                android:layout_below="@id/tvAccLabel"
+                android:layout_marginBottom="4dp"
+                android:textColor="@color/account_head_fg" />
+
+            <TextView
+                android:id="@+id/tvAccUser"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/tvAccCity"
+                android:layout_marginBottom="4dp"
+                android:textColor="@color/account_head_fg"
+                android:textIsSelectable="true" />
+
+        </RelativeLayout>
 
         <TextView
-            android:id="@+id/tvEntlHeader"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="8dp"
-            android:drawableBottom="@drawable/section_header"
-            android:drawablePadding="4dp"
-            android:paddingLeft="4dp"
-            android:text="@string/entl_head"
-            android:textAllCaps="true"
-            android:textColor="@color/emphasis"
-            android:textSize="14sp" />
-
-        <TableLayout
-            android:id="@+id/tlMedien"
+            android:id="@+id/tvError"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:shrinkColumns="0,1"
-            android:stretchColumns="0,1" >
-
-            <TableRow
-                android:id="@+id/tableRow2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-            </TableRow>
-        </TableLayout>
-
-        <Button
-            android:id="@+id/btExtendall"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/extendall"
+            android:layout_below="@id/rlAccHeader"
+            android:background="@color/error_bg"
+            android:gravity="center"
+            android:padding="5dp"
+            android:textColor="@color/error_fg"
+            android:textStyle="bold"
             android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/tvResHeader"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="8dp"
-            android:drawableBottom="@drawable/section_header"
-            android:drawablePadding="4dp"
-            android:paddingLeft="4dp"
-            android:text="@string/reservations_head"
-            android:textAllCaps="true"
-            android:textColor="@color/emphasis"
-            android:textSize="14sp" />
-
-        <TableLayout
-            android:id="@+id/tlReservations"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:shrinkColumns="*"
-            android:stretchColumns="*" >
-        </TableLayout>
-    </LinearLayout>
+            android:layout_below="@id/tvError"
+            android:orientation="vertical"
+            android:padding="5dp" >
+
+            <TextView
+                android:id="@+id/tvEntlHeader"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="8dp"
+                android:drawableBottom="@drawable/section_header"
+                android:drawablePadding="4dp"
+                android:paddingLeft="4dp"
+                android:text="@string/entl_head"
+                android:textAllCaps="true"
+                android:textColor="@color/emphasis"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:id="@+id/llLent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvEntlHeader"
+                android:orientation="vertical" >
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btExtendall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/llLent"
+                android:text="@string/extendall"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tvResHeader"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btExtendall"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="8dp"
+                android:drawableBottom="@drawable/section_header"
+                android:drawablePadding="4dp"
+                android:paddingLeft="4dp"
+                android:text="@string/reservations_head"
+                android:textAllCaps="true"
+                android:textColor="@color/emphasis"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:id="@+id/llReservations"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvResHeader"
+                android:orientation="vertical" >
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvAge"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/llReservations"
+                android:layout_marginTop="4dp"
+                android:gravity="center|top"
+                android:textColor="@color/account_age"
+                android:textStyle="italic" />
+
+        </RelativeLayout>
+    </RelativeLayout>
 
 </ScrollView>

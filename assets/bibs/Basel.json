@@ -1,0 +1,10 @@
+{
+ "api": "oclc2011", 
+ "city": "Basel", 
+ "data": {
+  "baseurl": "http://www.stadtbibliothekbasel.ch:8080/InfoGuideClient.sisis", 
+  "information": "http://www.stadtbibliothekbasel.ch/index.php?id=bibliotheken#c477" 
+ }, 
+ "support": "Katalogsuche und Konto (experimentell)", 
+ "title": null
+}

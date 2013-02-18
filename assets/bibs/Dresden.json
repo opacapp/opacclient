@@ -1,0 +1,10 @@
+{
+ "api": "oclc2011", 
+ "city": "Dresden",
+ "data": {
+  "baseurl": "http://217.5.176.101/webOPACClient", 
+  "information": "http://www.bibo-dresden.de/4/index_4.html"
+ }, 
+ "support": "Katalogsuche und Konto (experimentell)", 
+ "title": null
+}

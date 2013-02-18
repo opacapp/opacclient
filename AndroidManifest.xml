@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.geeksfactory.opacclient"
-    android:versionCode="27"
-    android:versionName="1.3.3" >
+    android:versionCode="28"
+    android:versionName="2.0.0-beta3" >
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="16" />
+        android:targetSdkVersion="17" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -16,10 +16,11 @@
         android:name=".OpacClient"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Holo.Theme.Sherlock.Light" >
+        android:theme="@style/Theme.opac" >
         <activity
-            android:name=".frontend.FrontpageActivity"
-            android:label="@string/launcher_name" >
+            android:name=".frontend.SearchActivity"
+            android:label="@string/launcher_name"
+            android:uiOptions="splitActionBarWhenNarrow" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -42,22 +43,16 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="www.raphaelmichel.de"
-                    android:pathPrefix="/opacclient/bibproxy.php/go"
+                    android:host="opacapp.de"
+                    android:pathPrefix="/:"
                     android:scheme="http" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".frontend.SearchActivity"
-            android:label="@string/search" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.geeksfactory.opacclient.frontend.FrontpageActivity" />
-        </activity>
-        <activity
             android:name=".frontend.SearchResultsActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:label="@string/search_results" >
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/search_results"
+            android:uiOptions="splitActionBarWhenNarrow" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.geeksfactory.opacclient.frontend.SearchActivity" />
@@ -65,29 +60,23 @@
         <activity
             android:name=".frontend.MainPreferenceActivity"
             android:label="@string/prefs" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.geeksfactory.opacclient.frontend.FrontpageActivity" />
         </activity>
         <activity
             android:name=".frontend.SearchResultDetailsActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:label="@string/details" >
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/details"
+            android:uiOptions="splitActionBarWhenNarrow" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.geeksfactory.opacclient.frontend.SearchResultsActivity" />
         </activity>
         <activity
             android:name=".frontend.AccountActivity"
-            android:configChanges="keyboardHidden|orientation"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/account" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.geeksfactory.opacclient.frontend.FrontpageActivity" />
         </activity>
         <activity
             android:name=".frontend.WelcomeActivity"
-            android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name" >
         </activity>
         <activity
@@ -95,27 +84,45 @@
             android:label="@string/about" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.geeksfactory.opacclient.frontend.FrontpageActivity" />
+                android:value="de.geeksfactory.opacclient.frontend.MainPreferenceActivity" />
         </activity>
         <activity
-            android:name=".frontend.ErrorActivity"
-            android:excludeFromRecents="true"
-            android:label="@string/app_name"
-            android:noHistory="true" />
+            android:name=".frontend.ChangelogActivity"
+            android:label="@string/changelog" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.geeksfactory.opacclient.frontend.MainPreferenceActivity" />
+        </activity>
         <activity
             android:name=".frontend.StarredActivity"
             android:label="@string/starred_list" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.geeksfactory.opacclient.frontend.FrontpageActivity" />
         </activity>
         <activity
             android:name=".frontend.InfoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/info" >
+        </activity>
+        <activity
+            android:name=".frontend.AccountListActivity"
+            android:label="@string/title_activity_account_list"
+            android:uiOptions="splitActionBarWhenNarrow" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.geeksfactory.opacclient.frontend.FrontpageActivity" />
+                android:value="de.geeksfactory.opacclient.frontend.MainPreferenceActivity" />
         </activity>
+        <activity
+            android:name=".frontend.AccountEditActivity"
+            android:label="@string/title_activity_account_edit" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.geeksfactory.opacclient.frontend.AccountListActivity" />
+        </activity>
+        <activity
+            android:name="org.acra.CrashReportDialog"
+            android:excludeFromRecents="true"
+            android:finishOnTaskLaunch="true"
+            android:launchMode="singleInstance"
+            android:theme="@android:style/Theme.Dialog" />
 
         <service android:name=".reminder.ReminderCheckService" >
         </service>

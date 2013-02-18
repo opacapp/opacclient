@@ -1,0 +1,36 @@
+{
+ "api": "bond26", 
+ "city": "Veitshöchheim", 
+ "data": {
+  "accounttable": [
+   -1, 
+   0, 
+   1, 
+   2, 
+   -1, 
+   -1, 
+   -1, 
+   3
+  ], 
+  "baseurl": "http://opac.bib.veitshoechheim.de/webopac", 
+  "copiestable": [
+   -1, 
+   -1, 
+   -1, 
+   0, 
+   3, 
+   4, 
+   -1
+  ], 
+  "information": "http://www.bib.veitshoechheim.de/",
+  "reservationtable": [
+   0, 
+   1, 
+   2, 
+   -1, 
+   3
+  ]
+ }, 
+ "support": "Katalogsuche und Konto", 
+ "title": null
+}

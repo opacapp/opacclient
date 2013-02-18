@@ -1,0 +1,10 @@
+{
+ "api": "oclc2011", 
+ "city": "Amberg-Weiden", 
+ "data": {
+  "baseurl": "https://opac.haw-aw.de/InfoGuideClient.fawsis", 
+  "information": "http://www.haw-aw.de/einrichtungen/bibliothek/oeffnungszeiten/" 
+ }, 
+ "support": "Katalogsuche und Konto (experimentell)", 
+ "title": "Hochschule"
+}

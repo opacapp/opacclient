@@ -4,29 +4,58 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
-import android.support.v4.app.NavUtils;
+import android.preference.PreferenceManager;
 
-import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
 
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.reminder.ReminderCheckService;
+import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.storage.MetaDataSource;
+import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 
-public class MainPreferenceActivity extends SherlockPreferenceActivity {
+public class MainPreferenceActivity extends OpacPreferenceActivity {
+	@Override
 	@SuppressWarnings("deprecation")
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		
+
 		addPreferencesFromResource(R.xml.settings);
 
-		Preference assistant = (Preference) findPreference("welcome_assistant");
+		Preference assistant = findPreference("accounts");
 		assistant.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference arg0) {
 				Intent intent = new Intent(MainPreferenceActivity.this,
-						WelcomeActivity.class);
+						AccountListActivity.class);
 				startActivity(intent);
+				return false;
+			}
+		});
+
+		Preference meta = findPreference("meta_clear");
+		meta.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference arg0) {
+				MetaDataSource data = new SQLMetaDataSource(
+						MainPreferenceActivity.this);
+				data.open();
+				data.clearMeta();
+				data.close();
+				AccountDataSource adata = new AccountDataSource(
+						MainPreferenceActivity.this);
+				adata.open();
+				adata.invalidateCachedData();
+				adata.close();
+				PreferenceManager
+						.getDefaultSharedPreferences(
+								MainPreferenceActivity.this).edit()
+						.putLong("notification_last", 0).commit();
+				Intent i = new Intent(MainPreferenceActivity.this,
+						ReminderCheckService.class);
+				startService(i);
 				return false;
 			}
 		});
@@ -35,9 +64,6 @@ public class MainPreferenceActivity extends SherlockPreferenceActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			NavUtils.navigateUpFromSameTask(this);
-			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}

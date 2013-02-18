@@ -1,0 +1,36 @@
+{
+ "api": "bond26", 
+ "city": "Weinheim", 
+ "data": {
+  "accounttable": [
+   -1, 
+   0, 
+   1, 
+   2, 
+   -1, 
+   -1, 
+   -1, 
+   3
+  ], 
+  "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-weinheim", 
+  "copiestable": [
+   -1, 
+   -1, 
+   -1, 
+   1, 
+   2, 
+   3, 
+   4
+  ], 
+  "information": "http://www.weinheim.de/servlet/PB/menu/1075105_l1/index.html", 
+  "reservationtable": [
+   0, 
+   1, 
+   2, 
+   -1, 
+   3
+  ]
+ }, 
+ "support": "Katalogsuche und Konto", 
+ "title": null
+}

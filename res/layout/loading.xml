@@ -5,17 +5,10 @@
     android:gravity="center"
     android:orientation="vertical" >
 
-    <com.WazaBe.HoloEverywhere.widget.ProgressBar
+    <org.holoeverywhere.widget.ProgressBar
         android:id="@+id/progressBar1"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/tvLoading"
-        android:layout_width="wrap_content"
-        android:paddingTop="10dp"
-        android:layout_height="wrap_content"
-        android:text="@string/loading" />
 
 </LinearLayout>

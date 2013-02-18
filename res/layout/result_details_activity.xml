@@ -6,42 +6,36 @@
     android:orientation="vertical"
     android:padding="5dp" >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <LinearLayout
-            android:id="@+id/topbar"
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:paddingBottom="8dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textIsSelectable="true" />
+
+        <ImageView
+            android:id="@+id/ivCover"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" >
-
-            <ImageView
-                android:id="@+id/ivCover"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:contentDescription="Cover"
-                android:gravity="center"
-                android:visibility="gone" />
-
-            <Button
-                android:id="@+id/btReserve"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/go_button"
-                android:gravity="center"
-                android:text="@string/reserve"
-                android:textColor="@color/go_button_text"
-                android:visibility="gone" />
-        </LinearLayout>
+            android:layout_below="@id/tvTitle"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="Cover"
+            android:gravity="center"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tvDetails"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/ivCover"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="8dp"
             android:drawableBottom="@drawable/section_header"
@@ -52,24 +46,19 @@
             android:textColor="@color/emphasis"
             android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/tvTitle"
+        <LinearLayout
+            android:id="@+id/llDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <TableLayout
-            android:id="@+id/tlDetails"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:shrinkColumns="1"
-            android:stretchColumns="1" >
-        </TableLayout>
+            android:layout_below="@id/tvDetails"
+            android:orientation="vertical" >
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tvCopies"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/llDetails"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="8dp"
             android:drawableBottom="@drawable/section_header"
@@ -80,13 +69,14 @@
             android:textColor="@color/emphasis"
             android:textSize="14sp" />
 
-        <TableLayout
-            android:id="@+id/tlExemplare"
+        <LinearLayout
+            android:id="@+id/llCopies"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:shrinkColumns="0"
-            android:stretchColumns="0" >
-        </TableLayout>
-    </LinearLayout>
+            android:layout_below="@id/tvCopies"
+            android:divider="@drawable/list_divider_holo_light"
+            android:orientation="vertical" >
+        </LinearLayout>
+    </RelativeLayout>
 
 </ScrollView>
