@@ -1,0 +1,13 @@
+{
+ "api": "bond26", 
+ "city": "Frankenthal", 
+ "data": {
+  "baseurl": "http://176.94.11.2:2255/webopac", 
+  "information": "http://www.frankenthal.de/sv_frankenthal/de/Homepage/Kultur%20und%20Bildung/Stadtb%C3%BCcherei/", 
+  "copiestable": [0, 4, 2, 1, 3, 5, -1], 
+  "reservationtable": [0, 1, 2, -1, 3], 
+  "accounttable": [-1, 0, 1, 2, -1, -1, -1, 3]
+ }, 
+ "support": "Katalogsuche und Konto", 
+ "title": null
+}
