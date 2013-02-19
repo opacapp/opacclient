@@ -331,7 +331,7 @@ public class OCLC2011 implements OpacApi {
 		}
 
 		this.results = doc.select(".box-header h2").first().text();
-		if (results.contains("(1/1)")) {
+		if (results.contains("(1/1)") || results.contains(" 1/1")) {
 			reusehtml = html;
 			last_error = "is_a_redirect";
 			return null;
