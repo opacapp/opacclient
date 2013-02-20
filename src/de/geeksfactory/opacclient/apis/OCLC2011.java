@@ -953,7 +953,7 @@ public class OCLC2011 implements OpacApi {
 		List<ContentValues> medien = new ArrayList<ContentValues>();
 		Document doc = Jsoup.parse(html);
 		int resultNum = Integer.parseInt(doc.select("#label1").text()
-				.replaceAll(".*\\(([0-9]+)\\).*", "$1"));
+				.trim().replaceAll(".*\\(([0-9]+)\\).*", "$1"));
 		parse_medialist(medien, doc, 1);
 		for (Element link : doc.select(".box-right").first().select("a")) {
 			Uri uri = Uri.parse(link.attr("abs:href"));
@@ -972,7 +972,7 @@ public class OCLC2011 implements OpacApi {
 		doc = Jsoup.parse(html);
 		parse_reslist("6", reserved, doc, 1);
 		resultNum = Integer.parseInt(doc.select("#label6").text()
-				.replaceAll(".*\\(([0-9]+)\\).*", "$1"));
+				.trim().replaceAll(".*\\(([0-9]+)\\).*", "$1"));
 		for (Element link : doc.select(".box-right").first().select("a")) {
 			Uri uri = Uri.parse(link.attr("abs:href"));
 			if (uri.getQueryParameter("methodToCall").equals("pos")) {
@@ -988,7 +988,7 @@ public class OCLC2011 implements OpacApi {
 		doc = Jsoup.parse(html);
 		parse_reslist("7", reserved, doc, 1);
 		resultNum += Integer.parseInt(doc.select("#label7").text()
-				.replaceAll(".*\\(([0-9]+)\\).*", "$1"));
+				.trim().replaceAll(".*\\(([0-9]+)\\).*", "$1"));
 		for (Element link : doc.select(".box-right").first().select("a")) {
 			Uri uri = Uri.parse(link.attr("abs:href"));
 			if (uri.getQueryParameter("methodToCall").equals("pos")) {

@@ -3,7 +3,7 @@
 
     <string name="hello">Hello World!</string>
     <string name="app_name">Web Opac</string>
-    <string name="launcher_name">Stadtbibliothek</string>
+    <string name="launcher_name">Web Opac</string>
     <string name="web_opac">Web-Opac</string>
     <string name="opac_usernr">Ausweisnummer</string>
     <string name="opac_usernr_desc">Gib eine Ausweisnummer an, um auf dein Konto zugreifen zu können</string>
