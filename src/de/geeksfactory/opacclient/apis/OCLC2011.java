@@ -452,7 +452,7 @@ public class OCLC2011 implements OpacApi {
 			ex.printStackTrace();
 		}
 		List<String> reservationlinks = new ArrayList<String>();
-		for (Element link : doc3.select("#tab-content a")) {
+		for (Element link : doc3.select("#vormerkung a, #tab-content a")) {
 			Uri href = Uri.parse(link.absUrl("href"));
 			if (result.getId() == null) {
 				// ID retrieval
