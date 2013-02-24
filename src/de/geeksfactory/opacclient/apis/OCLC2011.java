@@ -10,6 +10,7 @@ import java.net.URI;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.acra.ACRA;
@@ -43,6 +44,7 @@ import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchResult;
+import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
@@ -84,6 +86,29 @@ public class OCLC2011 implements OpacApi {
 	private long logged_in;
 	private Account logged_in_as;
 	private final long SESSION_LIFETIME = 1000 * 60 * 3;
+
+	private static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
+	static {
+		defaulttypes.put("97", MediaType.EBOOK);
+		defaulttypes.put("15", MediaType.DVD);
+		defaulttypes.put("20", MediaType.DVD);
+		defaulttypes.put("16", MediaType.MOVIE);
+		defaulttypes.put("17", MediaType.MOVIE);
+		defaulttypes.put("18", MediaType.MOVIE);
+		defaulttypes.put("19", MediaType.MOVIE);
+		defaulttypes.put("96", MediaType.EBOOK);
+		defaulttypes.put("99", MediaType.EBOOK);
+		defaulttypes.put("27", MediaType.CD);
+		defaulttypes.put("7", MediaType.CD_MUSIC);
+		defaulttypes.put("8", MediaType.CD_MUSIC);
+		defaulttypes.put("13", MediaType.BOARDGAME);
+		defaulttypes.put("22", MediaType.BOARDGAME);
+		defaulttypes.put("21", MediaType.SCORE_MUSIC);
+		defaulttypes.put("buch01", MediaType.BOOK);
+		defaulttypes.put("buch02", MediaType.PACKAGE_BOOKS);
+		defaulttypes.put("buch03", MediaType.PACKAGE_BOOKS);
+		defaulttypes.put("buch04", MediaType.PACKAGE_BOOKS);
+	}
 
 	@Override
 	public String getResults() {
@@ -329,8 +354,25 @@ public class OCLC2011 implements OpacApi {
 			if (tr.select("td a img").size() > 0) {
 				String[] fparts = tr.select("td a img").get(0).attr("src")
 						.split("/");
-				sr.setType(fparts[fparts.length - 1].replace(".jpg", ".png")
-						.replace(".gif", ".png").toLowerCase());
+				String fname = fparts[fparts.length - 1];
+				if (data.has("mediatypes")) {
+					try {
+						sr.setType(MediaType.valueOf(data.getJSONObject(
+								"mediatypes").getString(fname)));
+					} catch (JSONException e) {
+						sr.setType(defaulttypes.get(fname.toLowerCase()
+								.replace(".jpg", "").replace(".gif", "")
+								.replace(".png", "")));
+					} catch (IllegalArgumentException e) {
+						sr.setType(defaulttypes.get(fname.toLowerCase()
+								.replace(".jpg", "").replace(".gif", "")
+								.replace(".png", "")));
+					}
+				} else {
+					sr.setType(defaulttypes.get(fname.toLowerCase()
+							.replace(".jpg", "").replace(".gif", "")
+							.replace(".png", "")));
+				}
 			}
 
 			String desc = "";

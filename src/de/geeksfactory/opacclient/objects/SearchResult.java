@@ -6,22 +6,33 @@ package de.geeksfactory.opacclient.objects;
  * @author Raphael Michel
  */
 public class SearchResult {
-	private String type;
+	private MediaType type;
 	private int nr;
 	private String id;
 	private String innerhtml;
 
 	/**
+	 * Supported media types.
+	 * 
+	 * @since 2.0.3
+	 */
+	public enum MediaType {
+		NONE, BOOK, CD, CD_SOFTWARE, CD_MUSIC, DVD, MOVIE, AUDIOBOOK, PACKAGE,
+		GAME_CONSOLE, EBOOK, SCORE_MUSIC, PACKAGE_BOOKS, UNKNOWN, NEWSPAPER,
+		BOARDGAME, SCHOOL_VERSION, MAP, BLURAY
+	}
+
+	/**
 	 * Create a new SearchResult object
 	 * 
 	 * @param type
-	 *            media type (like "book")
+	 *            media type (like "BOOK")
 	 * @param nr
 	 *            Position in result list
 	 * @param innerhtml
 	 *            HTML to display
 	 */
-	public SearchResult(String type, int nr, String innerhtml) {
+	public SearchResult(MediaType type, int nr, String innerhtml) {
 		this.type = type;
 		this.nr = nr;
 		this.innerhtml = innerhtml;
@@ -31,7 +42,7 @@ public class SearchResult {
 	 * Create an empty object
 	 */
 	public SearchResult() {
-		this.type = "";
+		this.type = MediaType.NONE;
 		this.nr = 0;
 		this.innerhtml = "";
 	}
@@ -56,12 +67,11 @@ public class SearchResult {
 	}
 
 	/**
-	 * Get this item's media type. There is a mapping to drawables in
-	 * de.geeksfactory.opacclient.frontend.ResultsAdapter
+	 * Get this item's media type.
 	 * 
 	 * @return Media type or <code>null</code> if unknown
 	 */
-	public String getType() {
+	public MediaType getType() {
 		return type;
 	}
 
@@ -71,7 +81,7 @@ public class SearchResult {
 	 * @param type
 	 *            Media type
 	 */
-	public void setType(String type) {
+	public void setType(MediaType type) {
 		this.type = type;
 	}
 

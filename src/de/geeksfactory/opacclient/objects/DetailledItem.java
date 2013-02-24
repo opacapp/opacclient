@@ -78,7 +78,7 @@ public class DetailledItem {
 
 	/**
 	 * Unique media identifier of a child item for
-	 * {@link OpacApi#getResultById(String)}. Required.
+	 * {@link OpacApi#getResultById(String, String)}. Required.
 	 * 
 	 * ContentValues key for {@link #addBand(ContentValues)}:
 	 */

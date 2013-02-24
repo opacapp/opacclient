@@ -9,6 +9,7 @@ import java.net.SocketException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.acra.ACRA;
@@ -40,6 +41,7 @@ import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchResult;
+import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
@@ -62,6 +64,35 @@ public class Bond26 implements OpacApi {
 	private Account logged_in_as;
 
 	private final long SESSION_LIFETIME = 1000 * 60 * 3;
+
+	private static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
+	static {
+		defaulttypes.put("mbuchs", MediaType.BOOK);
+		defaulttypes.put("cdkl", MediaType.CD);
+		defaulttypes.put("cdromkl", MediaType.CD_SOFTWARE);
+		defaulttypes.put("mcdroms", MediaType.CD);
+		defaulttypes.put("ekl", MediaType.EBOOK);
+		defaulttypes.put("emedium", MediaType.EBOOK);
+		defaulttypes.put("monleihe", MediaType.EBOOK);
+		defaulttypes.put("mbmonos", MediaType.PACKAGE_BOOKS);
+		defaulttypes.put("mbuechers", MediaType.PACKAGE_BOOKS);
+		defaulttypes.put("mdvds", MediaType.DVD);
+		defaulttypes.put("mdvd", MediaType.DVD);
+		defaulttypes.put("mfilms", MediaType.MOVIE);
+		defaulttypes.put("mvideos", MediaType.MOVIE);
+		defaulttypes.put("mhoerbuchs", MediaType.AUDIOBOOK);
+		defaulttypes.put("mmusikcds", MediaType.CD_MUSIC);
+		defaulttypes.put("mcdns", MediaType.CD_MUSIC);
+		defaulttypes.put("mnoten1s", MediaType.SCORE_MUSIC);
+		defaulttypes.put("munselbs", MediaType.UNKNOWN);
+		defaulttypes.put("mztgs", MediaType.NEWSPAPER);
+		defaulttypes.put("zeitung", MediaType.NEWSPAPER);
+		defaulttypes.put("spielekl", MediaType.BOARDGAME);
+		defaulttypes.put("mspiels", MediaType.BOARDGAME);
+		defaulttypes.put("tafelkl", MediaType.SCHOOL_VERSION);
+		defaulttypes.put("spiel_konsol", MediaType.GAME_CONSOLE);
+		defaulttypes.put("wii", MediaType.GAME_CONSOLE);
+	}
 
 	private String httpGet(String url) throws ClientProtocolException,
 			IOException {
@@ -267,8 +298,25 @@ public class Bond26 implements OpacApi {
 			SearchResult sr = new SearchResult();
 			String[] fparts = tr.select("td a img").get(0).attr("src")
 					.split("/");
-			sr.setType(fparts[fparts.length - 1].replace(".jpg", ".png")
-					.replace(".gif", ".png").toLowerCase());
+			String fname = fparts[fparts.length - 1];
+			if (data.has("mediatypes")) {
+				try {
+					sr.setType(MediaType.valueOf(data.getJSONObject(
+							"mediatypes").getString(fname)));
+				} catch (JSONException e) {
+					sr.setType(defaulttypes.get(fname.toLowerCase()
+							.replace(".jpg", "").replace(".gif", "")
+							.replace(".png", "")));
+				} catch (IllegalArgumentException e) {
+					sr.setType(defaulttypes.get(fname.toLowerCase()
+							.replace(".jpg", "").replace(".gif", "")
+							.replace(".png", "")));
+				}
+			} else {
+				sr.setType(defaulttypes.get(fname.toLowerCase()
+						.replace(".jpg", "").replace(".gif", "")
+						.replace(".png", "")));
+			}
 			try {
 				Comment c = (Comment) tr.child(1).childNode(0);
 				String comment = c.getData().trim();
@@ -286,8 +334,8 @@ public class Bond26 implements OpacApi {
 	}
 
 	@Override
-	public DetailledItem getResultById(String a, String homebranch) throws IOException,
-			NotReachableException {
+	public DetailledItem getResultById(String a, String homebranch)
+			throws IOException, NotReachableException {
 		if (!initialised)
 			start();
 		String html = httpGet(opac_url + "/index.asp?MedienNr=" + a);

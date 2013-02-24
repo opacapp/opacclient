@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.acra.ACRA;
@@ -37,6 +38,7 @@ import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchResult;
+import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
@@ -58,6 +60,18 @@ public class Zones22 implements OpacApi {
 	private Library library;
 	private int page;
 	private String searchobj;
+
+	private static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
+	static {
+		defaulttypes.put("Buch", MediaType.BOOK);
+		defaulttypes.put("Buch Erwachsene", MediaType.BOOK);
+		defaulttypes.put("Buch Kinder/Jugendliche", MediaType.BOOK);
+		defaulttypes.put("DVD", MediaType.DVD);
+		defaulttypes.put("Konsolenspiele", MediaType.GAME_CONSOLE);
+		defaulttypes.put("Blu-ray Disc", MediaType.BLURAY);
+		defaulttypes.put("Compact Disc", MediaType.CD);
+		defaulttypes.put("CD-ROM", MediaType.CD_SOFTWARE);
+	}
 
 	private String httpGet(String url) throws ClientProtocolException,
 			IOException {
@@ -284,8 +298,20 @@ public class Zones22 implements OpacApi {
 			Element tr = table.get(i);
 			SearchResult sr = new SearchResult();
 
-			sr.setType(tr.select(".SummaryMaterialTypeField").text()
-					.replace("\n", " ").trim());
+			String typetext = tr.select(".SummaryMaterialTypeField").text()
+					.replace("\n", " ").trim();
+			if (data.has("mediatypes")) {
+				try {
+					sr.setType(MediaType.valueOf(data.getJSONObject(
+							"mediatypes").getString(typetext)));
+				} catch (JSONException e) {
+					sr.setType(defaulttypes.get(typetext));
+				} catch (IllegalArgumentException e) {
+					sr.setType(defaulttypes.get(typetext));
+				}
+			} else {
+				sr.setType(defaulttypes.get(typetext));
+			}
 
 			String desc = "";
 			Elements children = tr
@@ -328,8 +354,8 @@ public class Zones22 implements OpacApi {
 	}
 
 	@Override
-	public DetailledItem getResultById(String id, String homebranch) throws IOException,
-			NotReachableException {
+	public DetailledItem getResultById(String id, String homebranch)
+			throws IOException, NotReachableException {
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
