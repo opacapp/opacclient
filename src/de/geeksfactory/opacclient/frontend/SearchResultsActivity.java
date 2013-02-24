@@ -19,6 +19,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
+import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.SearchResult;
@@ -93,6 +94,7 @@ public class SearchResultsActivity extends OpacActivity {
 
 	public class SearchStartTask extends OpacTask<List<SearchResult>> {
 		private boolean success;
+		private Exception exception;
 
 		@Override
 		protected List<SearchResult> doInBackground(Object... arg0) {
@@ -105,11 +107,13 @@ public class SearchResultsActivity extends OpacActivity {
 				return res;
 			} catch (java.net.UnknownHostException e) {
 				success = false;
+				exception = e;
 				e.printStackTrace();
 			} catch (java.net.SocketException e) {
 				success = false;
-				e.printStackTrace();
+				exception = e;
 			} catch (Exception e) {
+				exception = e;
 				ACRA.getErrorReporter().handleException(e);
 				success = false;
 			}
@@ -146,6 +150,10 @@ public class SearchResultsActivity extends OpacActivity {
 				}
 			} else {
 				setContentView(R.layout.connectivity_error);
+				if (exception != null
+						&& exception instanceof NotReachableException)
+					((TextView) findViewById(R.id.tvErrBody))
+							.setText(R.string.connection_error_detail_nre);
 				((Button) findViewById(R.id.btRetry))
 						.setOnClickListener(new OnClickListener() {
 							@Override

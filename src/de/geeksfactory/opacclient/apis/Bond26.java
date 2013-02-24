@@ -63,6 +63,31 @@ public class Bond26 implements OpacApi {
 
 	private final long SESSION_LIFETIME = 1000 * 60 * 3;
 
+	private String httpGet(String url) throws ClientProtocolException,
+			IOException {
+		HttpGet httpget = new HttpGet(url);
+		HttpResponse response = ahc.execute(httpget);
+		if (response.getStatusLine().getStatusCode() >= 400) {
+			throw new NotReachableException();
+		}
+		String html = convertStreamToString(response.getEntity().getContent());
+		response.getEntity().consumeContent();
+		return html;
+	}
+
+	private String httpPost(String url, UrlEncodedFormEntity data)
+			throws ClientProtocolException, IOException {
+		HttpPost httppost = new HttpPost(url);
+		httppost.setEntity(data);
+		HttpResponse response = ahc.execute(httppost);
+		if (response.getStatusLine().getStatusCode() >= 400) {
+			throw new NotReachableException();
+		}
+		String html = convertStreamToString(response.getEntity().getContent());
+		response.getEntity().consumeContent();
+		return html;
+	}
+
 	@Override
 	public String getResults() {
 		return results;
@@ -136,25 +161,17 @@ public class Bond26 implements OpacApi {
 	public void start() throws ClientProtocolException, SocketException,
 			IOException, NotReachableException {
 		initialised = true;
-		HttpGet httpget = new HttpGet(opac_url + "/woload.asp?lkz=1&nextpage=");
-		HttpResponse response = ahc.execute(httpget);
-
-		if (response.getStatusLine().getStatusCode() == 500) {
-			throw new NotReachableException();
-		}
-
-		response.getEntity().consumeContent();
+		httpGet(opac_url + "/woload.asp?lkz=1&nextpage=");
 
 		metadata.open();
 		if (!metadata.hasMeta(library.getIdent())) {
-			HttpPost httppost = new HttpPost(opac_url + "/index.asp");
+			HttpPost httppost = new HttpPost();
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("link_profis.x", "0"));
 			nameValuePairs.add(new BasicNameValuePair("link_profis.y", "1"));
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-			response = ahc.execute(httppost);
-			String html = convertStreamToString(response.getEntity()
-					.getContent());
+			String html = httpPost(opac_url + "/index.asp",
+					new UrlEncodedFormEntity(nameValuePairs));
 			metadata.close();
 			extract_meta(html);
 		} else {
@@ -193,8 +210,6 @@ public class Bond26 implements OpacApi {
 		if (!initialised)
 			start();
 
-		HttpPost httppost = new HttpPost(opac_url + "/index.asp");
-
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 		nameValuePairs.add(new BasicNameValuePair("stichtit", "stich"));
 		nameValuePairs.add(new BasicNameValuePair("stichwort",
@@ -227,15 +242,8 @@ public class Bond26 implements OpacApi {
 		nameValuePairs.add(new BasicNameValuePair("suche_starten.y", "1"));
 		nameValuePairs.add(new BasicNameValuePair("QL_Nr", ""));
 
-		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-		HttpResponse response = ahc.execute(httppost);
-
-		if (response.getStatusLine().getStatusCode() == 500) {
-			throw new NotReachableException();
-		}
-
-		String html = convertStreamToString(response.getEntity().getContent());
-		response.getEntity().consumeContent();
+		String html = httpPost(opac_url + "/index.asp",
+				new UrlEncodedFormEntity(nameValuePairs));
 		return parse_search(html);
 	}
 
@@ -245,12 +253,7 @@ public class Bond26 implements OpacApi {
 		if (!initialised)
 			start();
 
-		HttpGet httpget = new HttpGet(opac_url + "/index.asp?scrollAction="
-				+ page);
-		HttpResponse response = ahc.execute(httpget);
-
-		String html = convertStreamToString(response.getEntity().getContent());
-		response.getEntity().consumeContent();
+		String html = httpGet(opac_url + "/index.asp?scrollAction=" + page);
 		return parse_search(html);
 	}
 
@@ -287,24 +290,13 @@ public class Bond26 implements OpacApi {
 			NotReachableException {
 		if (!initialised)
 			start();
-		HttpGet httpget = new HttpGet(opac_url + "/index.asp?MedienNr=" + a);
-
-		HttpResponse response = ahc.execute(httpget);
-
-		String html = convertStreamToString(response.getEntity().getContent());
-		response.getEntity().consumeContent();
-
+		String html = httpGet(opac_url + "/index.asp?MedienNr=" + a);
 		return parse_result(html);
 	}
 
 	@Override
 	public DetailledItem getResult(int nr) throws IOException {
-		HttpGet httpget = new HttpGet(opac_url + "/index.asp?detmediennr=" + nr);
-
-		HttpResponse response = ahc.execute(httpget);
-
-		String html = convertStreamToString(response.getEntity().getContent());
-		response.getEntity().consumeContent();
+		String html = httpGet(opac_url + "/index.asp?detmediennr=" + nr);
 
 		return parse_result(html);
 	}
@@ -385,32 +377,22 @@ public class Bond26 implements OpacApi {
 			int useraction, String selection) throws IOException {
 		final String branch_inputfield = "zstauswahl";
 
-		HttpPost httppost;
-		HttpGet httpget;
-		HttpResponse response;
 		Document doc = null;
 
 		if (useraction == ReservationResult.ACTION_CONFIRMATION) {
-			httppost = new HttpPost(opac_url + "/index.asp");
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs
 					.add(new BasicNameValuePair("button1", "Bestaetigung"));
 			nameValuePairs.add(new BasicNameValuePair("target", "makevorbest"));
-			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-			response = ahc.execute(httppost);
+			httpPost(opac_url + "/index.asp", new UrlEncodedFormEntity(
+					nameValuePairs));
 			return new ReservationResult(Status.OK);
 		} else if (selection == null || useraction == 0) {
-			httpget = new HttpGet(opac_url + "/" + reservation_info);
-
-			response = ahc.execute(httpget);
-			String html = convertStreamToString(response.getEntity()
-					.getContent());
-			response.getEntity().consumeContent();
+			String html = httpGet(opac_url + "/" + reservation_info);
 			doc = Jsoup.parse(html);
 
 			if (doc.select("input[name=AUSWEIS]").size() > 0) {
 				// Login vonnöten
-				httppost = new HttpPost(opac_url + "/index.asp");
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
 						2);
 				nameValuePairs.add(new BasicNameValuePair("AUSWEIS", acc
@@ -421,10 +403,8 @@ public class Bond26 implements OpacApi {
 				nameValuePairs.add(new BasicNameValuePair("target", doc.select(
 						"input[name=target]").val()));
 				nameValuePairs.add(new BasicNameValuePair("type", "VT2"));
-				httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-				response = ahc.execute(httppost);
-
-				html = convertStreamToString(response.getEntity().getContent());
+				html = httpPost(opac_url + "/index.asp",
+						new UrlEncodedFormEntity(nameValuePairs));
 				doc = Jsoup.parse(html);
 			}
 			if (doc.select("select[name=" + branch_inputfield + "]").size() > 0) {
@@ -448,17 +428,13 @@ public class Bond26 implements OpacApi {
 				return result;
 			}
 		} else if (useraction == ReservationResult.ACTION_BRANCH) {
-			httppost = new HttpPost(opac_url + "/index.asp");
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("zstauswahl", selection));
 			nameValuePairs.add(new BasicNameValuePair("button2", "weiter"));
 			nameValuePairs.add(new BasicNameValuePair("target",
 					"vorbesttranskonto"));
-			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-			response = ahc.execute(httppost);
-
-			String html = convertStreamToString(response.getEntity()
-					.getContent());
+			String html = httpPost(opac_url + "/index.asp",
+					new UrlEncodedFormEntity(nameValuePairs));
 			doc = Jsoup.parse(html);
 		}
 
@@ -513,25 +489,20 @@ public class Bond26 implements OpacApi {
 				return false;
 			}
 		}
-		HttpGet httpget = new HttpGet(opac_url + "/" + a);
-		HttpResponse response = ahc.execute(httpget);
-		String html = convertStreamToString(response.getEntity().getContent());
+		String html = httpGet(opac_url + "/" + a);
 		Document doc = Jsoup.parse(html);
-		response.getEntity().consumeContent();
 
 		if (doc.getElementsByClass("kontomeldung").size() == 1) {
 			last_error = doc.getElementsByClass("kontomeldung").get(0).text();
 			return false;
 		}
 		if (doc.select("#verlaengern").size() == 1) {
-			HttpPost httppost = new HttpPost(opac_url + "/index.asp");
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("target", "make_vl"));
 			nameValuePairs.add(new BasicNameValuePair("verlaengern",
 					"Bestätigung"));
-			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-			response = ahc.execute(httppost);
-			response.getEntity().consumeContent();
+			httpPost(opac_url + "/index.asp", new UrlEncodedFormEntity(
+					nameValuePairs));
 
 			if (doc.getElementsByClass("kontomeldung").size() == 1) {
 				last_error = doc.getElementsByClass("kontomeldung").get(0)
@@ -565,18 +536,14 @@ public class Bond26 implements OpacApi {
 				return false;
 			}
 		}
-		HttpGet httpget = new HttpGet(opac_url + "/" + a);
-		HttpResponse response = ahc.execute(httpget);
-		response.getEntity().consumeContent();
+		httpGet(opac_url + "/" + a);
 
-		HttpPost httppost = new HttpPost(opac_url + "/index.asp");
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 		nameValuePairs.add(new BasicNameValuePair("target", "delvorbest"));
 		nameValuePairs
 				.add(new BasicNameValuePair("vorbdelbest", "Bestätigung"));
-		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-		response = ahc.execute(httppost);
-		response.getEntity().consumeContent();
+		httpPost(opac_url + "/index.asp", new UrlEncodedFormEntity(
+				nameValuePairs));
 		return true;
 	}
 
@@ -585,7 +552,6 @@ public class Bond26 implements OpacApi {
 			NotReachableException, JSONException, SocketException {
 		if (!initialised)
 			start();
-		HttpGet httpget;
 
 		if (acc.getName() == null || acc.getName().equals("null"))
 			return null;
@@ -597,11 +563,11 @@ public class Bond26 implements OpacApi {
 		nameValuePairs.add(new BasicNameValuePair("link_konto.y", "0"));
 		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 		HttpResponse response = ahc.execute(httppost);
+		String html = "";
 
 		if (response.getStatusLine().getStatusCode() == 200) {
 			// Login vonnöten
 			response.getEntity().consumeContent();
-			httppost = new HttpPost(opac_url + "/index.asp");
 			nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs
 					.add(new BasicNameValuePair("AUSWEIS", acc.getName()));
@@ -610,20 +576,17 @@ public class Bond26 implements OpacApi {
 			nameValuePairs.add(new BasicNameValuePair("B1", "weiter"));
 			nameValuePairs.add(new BasicNameValuePair("target", "konto"));
 			nameValuePairs.add(new BasicNameValuePair("type", "K"));
-			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-			response = ahc.execute(httppost);
+			html = httpPost(opac_url + "/index.asp", new UrlEncodedFormEntity(
+					nameValuePairs));
 		} else if (response.getStatusLine().getStatusCode() == 302) {
 			// Bereits eingeloggt
 			response.getEntity().consumeContent();
-			httpget = new HttpGet(opac_url + "/index.asp?target=konto");
-			response = ahc.execute(httpget);
-		} else if (response.getStatusLine().getStatusCode() == 500) {
+			html = httpGet(opac_url + "/index.asp?target=konto");
+		} else if (response.getStatusLine().getStatusCode() >= 400) {
 			throw new NotReachableException();
 		}
 
-		String html = convertStreamToString(response.getEntity().getContent());
 		Document doc = Jsoup.parse(html);
-		response.getEntity().consumeContent();
 
 		if (doc.getElementsByClass("kontomeldung").size() == 1) {
 			last_error = doc.getElementsByClass("kontomeldung").get(0).text();
@@ -740,7 +703,8 @@ public class Bond26 implements OpacApi {
 			NotReachableException {
 		if (!initialised)
 			start();
-		HttpGet httpget;
+
+		String html = "";
 
 		if (acc.getName() == null || acc.getName().equals("null"))
 			return null;
@@ -756,7 +720,6 @@ public class Bond26 implements OpacApi {
 		if (response.getStatusLine().getStatusCode() == 200) {
 			// Login vonnöten
 			response.getEntity().consumeContent();
-			httppost = new HttpPost(opac_url + "/index.asp");
 			nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs
 					.add(new BasicNameValuePair("AUSWEIS", acc.getName()));
@@ -765,18 +728,16 @@ public class Bond26 implements OpacApi {
 			nameValuePairs.add(new BasicNameValuePair("B1", "weiter"));
 			nameValuePairs.add(new BasicNameValuePair("target", "konto"));
 			nameValuePairs.add(new BasicNameValuePair("type", "K"));
-			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-			response = ahc.execute(httppost);
+			html = httpPost(opac_url + "/index.asp", new UrlEncodedFormEntity(
+					nameValuePairs));
 		} else if (response.getStatusLine().getStatusCode() == 302) {
 			// Bereits eingeloggt
 			response.getEntity().consumeContent();
-			httpget = new HttpGet(opac_url + "/index.asp?target=konto");
-			response = ahc.execute(httpget);
+			html = httpGet(opac_url + "/index.asp?target=konto");
 		} else if (response.getStatusLine().getStatusCode() == 500) {
 			throw new NotReachableException();
 		}
 
-		String html = convertStreamToString(response.getEntity().getContent());
 		return html;
 
 	}

@@ -35,7 +35,6 @@ import org.jsoup.select.Elements;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult.Status;
 import de.geeksfactory.opacclient.objects.Account;
@@ -80,7 +79,6 @@ public class OCLC2011 implements OpacApi {
 	private String CSId;
 	private String identifier;
 	private String reusehtml;
-	private String last_id;
 	private int resultcount = 10;
 
 	private long logged_in;
@@ -168,17 +166,9 @@ public class OCLC2011 implements OpacApi {
 			}
 		}
 
-		HttpGet httpget = new HttpGet(opac_url + "/start.do" + startparams);
-		HttpResponse response = ahc.execute(httpget);
-
-		if (response.getStatusLine().getStatusCode() == 500) {
-			throw new NotReachableException();
-		}
+		String html = httpGet(opac_url + "/start.do" + startparams);
 
 		initialised = true;
-
-		String html = convertStreamToString(response.getEntity().getContent());
-		response.getEntity().consumeContent();
 
 		Document doc = Jsoup.parse(html);
 		CSId = doc.select("input[name=CSId]").val();
@@ -288,22 +278,15 @@ public class OCLC2011 implements OpacApi {
 
 			params.add(new BasicNameValuePair("selectedSearchBranchlib", query
 					.getString(KEY_SEARCH_QUERY_BRANCH)));
-			if (!query.getString(KEY_SEARCH_QUERY_HOME_BRANCH).equals(""))
+			if (query.containsKey(KEY_SEARCH_QUERY_HOME_BRANCH)
+					&& !query.getString(KEY_SEARCH_QUERY_HOME_BRANCH)
+							.equals(""))
 				params.add(new BasicNameValuePair("selectedViewBranchlib",
 						query.getString(KEY_SEARCH_QUERY_HOME_BRANCH)));
 		}
 
-		HttpGet httpget = new HttpGet(opac_url + "/search.do?"
+		String html = httpGet(opac_url + "/search.do?"
 				+ URLEncodedUtils.format(params, "UTF-8"));
-
-		HttpResponse response = ahc.execute(httpget);
-
-		if (response.getStatusLine().getStatusCode() == 500) {
-			throw new NotReachableException();
-		}
-
-		String html = convertStreamToString(response.getEntity().getContent());
-		response.getEntity().consumeContent();
 		return parse_search(html);
 	}
 
@@ -579,8 +562,6 @@ public class OCLC2011 implements OpacApi {
 			int useraction, String selection) throws IOException {
 		final String branch_inputfield = "issuepoint";
 
-		HttpPost httppost;
-		HttpResponse response;
 		Document doc = null;
 
 		String action = "reservation";
@@ -589,15 +570,11 @@ public class OCLC2011 implements OpacApi {
 		}
 
 		if (useraction == ReservationResult.ACTION_CONFIRMATION) {
-			httppost = new HttpPost(opac_url + "/" + action + ".do");
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("methodToCall", action));
 			nameValuePairs.add(new BasicNameValuePair("CSId", CSId));
-			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-			response = ahc.execute(httppost);
-
-			String html = convertStreamToString(response.getEntity()
-					.getContent());
+			String html = httpPost(opac_url + "/" + action + ".do",
+					new UrlEncodedFormEntity(nameValuePairs));
 			doc = Jsoup.parse(html);
 		} else if (selection == null || useraction == 0) {
 			String html = httpGet(opac_url + "/availability.do?"
@@ -606,7 +583,6 @@ public class OCLC2011 implements OpacApi {
 
 			if (doc.select("input[name=username]").size() > 0) {
 				// Login vonnöten
-				httppost = new HttpPost(opac_url + "/login.do");
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
 						2);
 				nameValuePairs.add(new BasicNameValuePair("username", acc
@@ -618,10 +594,9 @@ public class OCLC2011 implements OpacApi {
 				nameValuePairs.add(new BasicNameValuePair("CSId", CSId));
 				nameValuePairs.add(new BasicNameValuePair("login_action",
 						"Login"));
-				httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-				response = ahc.execute(httppost);
 
-				html = convertStreamToString(response.getEntity().getContent());
+				html = httpPost(opac_url + "/login.do",
+						new UrlEncodedFormEntity(nameValuePairs));
 				doc = Jsoup.parse(html);
 
 				if (doc.getElementsByClass("error").size() == 0) {
@@ -647,17 +622,14 @@ public class OCLC2011 implements OpacApi {
 				return result;
 			}
 		} else if (useraction == ReservationResult.ACTION_BRANCH) {
-			httppost = new HttpPost(opac_url + "/" + action + ".do");
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair(branch_inputfield,
 					selection));
 			nameValuePairs.add(new BasicNameValuePair("methodToCall", action));
 			nameValuePairs.add(new BasicNameValuePair("CSId", CSId));
-			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-			response = ahc.execute(httppost);
 
-			String html = convertStreamToString(response.getEntity()
-					.getContent());
+			String html = httpPost(opac_url + "/" + action + ".do",
+					new UrlEncodedFormEntity(nameValuePairs));
 			doc = Jsoup.parse(html);
 		}
 
@@ -775,8 +747,7 @@ public class OCLC2011 implements OpacApi {
 	}
 
 	private boolean login(Account acc) {
-		HttpPost httppost = new HttpPost(opac_url + "/login.do");
-
+		String html;
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 		nameValuePairs.add(new BasicNameValuePair("username", acc.getName()));
 		nameValuePairs
@@ -784,18 +755,11 @@ public class OCLC2011 implements OpacApi {
 		nameValuePairs.add(new BasicNameValuePair("CSId", CSId));
 		nameValuePairs.add(new BasicNameValuePair("methodToCall", "submit"));
 		try {
-			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			html = httpPost(opac_url + "/login.do", new UrlEncodedFormEntity(
+					nameValuePairs));
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return false;
-		}
-
-		HttpResponse response;
-		String html;
-		try {
-			response = ahc.execute(httppost);
-			html = convertStreamToString(response.getEntity().getContent());
-			response.getEntity().consumeContent();
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 			return false;
@@ -934,6 +898,22 @@ public class OCLC2011 implements OpacApi {
 			IOException {
 		HttpGet httpget = new HttpGet(url);
 		HttpResponse response = ahc.execute(httpget);
+		if (response.getStatusLine().getStatusCode() >= 400) {
+			throw new NotReachableException();
+		}
+		String html = convertStreamToString(response.getEntity().getContent());
+		response.getEntity().consumeContent();
+		return html;
+	}
+
+	private String httpPost(String url, UrlEncodedFormEntity data)
+			throws ClientProtocolException, IOException {
+		HttpPost httppost = new HttpPost(url);
+		httppost.setEntity(data);
+		HttpResponse response = ahc.execute(httppost);
+		if (response.getStatusLine().getStatusCode() >= 400) {
+			throw new NotReachableException();
+		}
 		String html = convertStreamToString(response.getEntity().getContent());
 		response.getEntity().consumeContent();
 		return html;
@@ -952,8 +932,8 @@ public class OCLC2011 implements OpacApi {
 				+ "/userAccount.do?methodToCall=showAccount&typ=1");
 		List<ContentValues> medien = new ArrayList<ContentValues>();
 		Document doc = Jsoup.parse(html);
-		int resultNum = Integer.parseInt(doc.select("#label1").text()
-				.trim().replaceAll(".*\\(([0-9]+)\\).*", "$1"));
+		int resultNum = Integer.parseInt(doc.select("#label1").text().trim()
+				.replaceAll(".*\\(([0-9]+)\\).*", "$1"));
 		parse_medialist(medien, doc, 1);
 		for (Element link : doc.select(".box-right").first().select("a")) {
 			Uri uri = Uri.parse(link.attr("abs:href"));
@@ -971,8 +951,8 @@ public class OCLC2011 implements OpacApi {
 		List<ContentValues> reserved = new ArrayList<ContentValues>();
 		doc = Jsoup.parse(html);
 		parse_reslist("6", reserved, doc, 1);
-		resultNum = Integer.parseInt(doc.select("#label6").text()
-				.trim().replaceAll(".*\\(([0-9]+)\\).*", "$1"));
+		resultNum = Integer.parseInt(doc.select("#label6").text().trim()
+				.replaceAll(".*\\(([0-9]+)\\).*", "$1"));
 		for (Element link : doc.select(".box-right").first().select("a")) {
 			Uri uri = Uri.parse(link.attr("abs:href"));
 			if (uri.getQueryParameter("methodToCall").equals("pos")) {
@@ -987,8 +967,8 @@ public class OCLC2011 implements OpacApi {
 				+ "/userAccount.do?methodToCall=showAccount&typ=7");
 		doc = Jsoup.parse(html);
 		parse_reslist("7", reserved, doc, 1);
-		resultNum += Integer.parseInt(doc.select("#label7").text()
-				.trim().replaceAll(".*\\(([0-9]+)\\).*", "$1"));
+		resultNum += Integer.parseInt(doc.select("#label7").text().trim()
+				.replaceAll(".*\\(([0-9]+)\\).*", "$1"));
 		for (Element link : doc.select(".box-right").first().select("a")) {
 			Uri uri = Uri.parse(link.attr("abs:href"));
 			if (uri.getQueryParameter("methodToCall").equals("pos")) {

@@ -42,6 +42,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
+import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
@@ -432,6 +433,7 @@ public class AccountActivity extends OpacActivity {
 	public class LoadTask extends OpacTask<AccountData> {
 
 		private boolean success = true;
+		private Exception exception;
 
 		@Override
 		protected AccountData doInBackground(Object... arg0) {
@@ -443,11 +445,14 @@ public class AccountActivity extends OpacActivity {
 				return res;
 			} catch (java.net.UnknownHostException e) {
 				success = false;
+				exception = e;
 			} catch (java.net.SocketException e) {
 				success = false;
+				exception = e;
 			} catch (Exception e) {
 				ACRA.getErrorReporter().handleException(e);
 				success = false;
+				exception = e;
 			}
 			return null;
 		}
@@ -460,18 +465,20 @@ public class AccountActivity extends OpacActivity {
 				refreshing = false;
 				invalidateOptionsMenu();
 
-				show_connectivity_error();
+				show_connectivity_error(exception);
 			}
 		}
 	}
 
-	public void show_connectivity_error() {
+	public void show_connectivity_error(Exception e) {
 		View tvError = findViewById(R.id.tvError);
 		if (tvError != null) {
 			tvError.setVisibility(View.VISIBLE);
 			((TextView) tvError).setText(R.string.error_connection);
 		} else {
 			setContentView(R.layout.connectivity_error);
+			if(e != null && e instanceof NotReachableException)
+				((TextView) findViewById(R.id.tvErrBody)).setText(R.string.connection_error_detail_nre);
 			((Button) findViewById(R.id.btRetry))
 					.setOnClickListener(new OnClickListener() {
 						@Override
@@ -490,7 +497,7 @@ public class AccountActivity extends OpacActivity {
 
 			if (app.getApi().getLast_error() == null
 					|| app.getApi().getLast_error().equals("")) {
-				show_connectivity_error();
+				show_connectivity_error(null);
 			} else
 				dialog_wrong_credentials(app.getApi().getLast_error(), true);
 			return;

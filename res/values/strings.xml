@@ -124,6 +124,8 @@
     <string name="info_unsupported">Deine Bücherei stellt keine zusätzlichen Informationen bereit, die wir dir anzeigen könnten.</string>
     <string name="connection_error">Fehler</string>
     <string name="connection_error_detail">Der Aufbau einer Verbindung zum Bibliotheksserver ist fehlgeschlagen. Prüfe, ob eine Verbindung zum Internet verfügbar ist. Möglicherweise hat auch der Bibliotheksserver ein Problem oder die App konnte seine Antwort nicht auswerten.</string>
+    <string name="connection_error_detail_nre">Der Aufbau einer Verbindung zum Bibliotheksserver ist fehlgeschlagen. Prüfe, ob eine Verbindung zum Internet verfügbar ist. Wenn ja, hat wahrscheinlich der Bibliotheksserver ein Problem.</string>
+    
     <string name="retry">Erneut versuchen</string>
     <string name="default_account_name">Unbenanntes Konto</string>
     <string name="connecting_initially">Baue erstmalige Verbindung mit Bibliotheksserver auf…</string>

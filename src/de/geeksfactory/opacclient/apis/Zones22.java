@@ -59,6 +59,18 @@ public class Zones22 implements OpacApi {
 	private int page;
 	private String searchobj;
 
+	private String httpGet(String url) throws ClientProtocolException,
+			IOException {
+		HttpGet httpget = new HttpGet(url);
+		HttpResponse response = ahc.execute(httpget);
+		if (response.getStatusLine().getStatusCode() >= 400) {
+			throw new NotReachableException();
+		}
+		String html = convertStreamToString(response.getEntity().getContent());
+		response.getEntity().consumeContent();
+		return html;
+	}
+
 	@Override
 	public String getResults() {
 		return results;
@@ -117,18 +129,11 @@ public class Zones22 implements OpacApi {
 	@Override
 	public void start() throws ClientProtocolException, SocketException,
 			IOException, NotReachableException {
-		HttpGet httpget = new HttpGet(
-				opac_url
-						+ "/APS_ZONES?fn=AdvancedSearch&Style=Portal3&SubStyle=&Lang=GER&ResponseEncoding=utf-8");
-		HttpResponse response = ahc.execute(httpget);
-
-		if (response.getStatusLine().getStatusCode() == 500) {
-			throw new NotReachableException();
-		}
+		String html = httpGet(opac_url
+				+ "/APS_ZONES?fn=AdvancedSearch&Style=Portal3&SubStyle=&Lang=GER&ResponseEncoding=utf-8");
 
 		initialised = true;
 
-		String html = convertStreamToString(response.getEntity().getContent());
 		Document doc = Jsoup.parse(html);
 
 		searchobj = doc.select("#ExpertSearch").attr("action");
@@ -226,17 +231,8 @@ public class Zones22 implements OpacApi {
 			return null;
 		}
 
-		HttpGet httpget = new HttpGet(opac_url + "/" + searchobj + "?"
+		String html = httpGet(opac_url + "/" + searchobj + "?"
 				+ URLEncodedUtils.format(params, "UTF-8"));
-
-		HttpResponse response = ahc.execute(httpget);
-
-		if (response.getStatusLine().getStatusCode() == 500) {
-			throw new NotReachableException();
-		}
-
-		String html = convertStreamToString(response.getEntity().getContent());
-		response.getEntity().consumeContent();
 
 		page = 1;
 
@@ -259,18 +255,8 @@ public class Zones22 implements OpacApi {
 		}
 		params.add(new BasicNameValuePair("PageSize", "10"));
 
-		HttpGet httpget = new HttpGet(opac_url + "/" + searchobj + "?"
+		String html = httpGet(opac_url + "/" + searchobj + "?"
 				+ URLEncodedUtils.format(params, "UTF-8"));
-
-		HttpResponse response = ahc.execute(httpget);
-
-		if (response.getStatusLine().getStatusCode() == 500) {
-			throw new NotReachableException();
-		}
-
-		String html = convertStreamToString(response.getEntity().getContent());
-		response.getEntity().consumeContent();
-
 		this.page = page;
 
 		return parse_search(html);
@@ -353,17 +339,8 @@ public class Zones22 implements OpacApi {
 		params.add(new BasicNameValuePair("ResponseEncoding", "utf-8"));
 		params.add(new BasicNameValuePair("no", id));
 
-		HttpGet httpget = new HttpGet(opac_url + "/APS_PRESENT_BIB?"
+		String html = httpGet(opac_url + "/APS_PRESENT_BIB?"
 				+ URLEncodedUtils.format(params, "UTF-8"));
-
-		HttpResponse response = ahc.execute(httpget);
-
-		if (response.getStatusLine().getStatusCode() == 500) {
-			throw new NotReachableException();
-		}
-
-		String html = convertStreamToString(response.getEntity().getContent());
-		response.getEntity().consumeContent();
 
 		return parse_result(id, html);
 	}

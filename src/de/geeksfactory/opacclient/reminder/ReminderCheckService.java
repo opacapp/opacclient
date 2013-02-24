@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.acra.ACRA;
 import org.apache.http.client.ClientProtocolException;
-import org.json.JSONException;
 
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -146,9 +145,8 @@ public class ReminderCheckService extends Service {
 					e.printStackTrace();
 				} catch (IOException e) {
 					e.printStackTrace();
-				} catch (JSONException e) {
+				} catch (Exception e) {
 					ACRA.getErrorReporter().handleException(e);
-					e.printStackTrace();
 				}
 			}
 			data.close();
