@@ -45,7 +45,6 @@ public class ReminderCheckService extends Service {
 			new CheckTask().execute();
 		} else {
 			waittime = (1000 * 3600 * 1);
-			stopSelf();
 		}
 
 		if (!notification_on) {
@@ -61,7 +60,10 @@ public class ReminderCheckService extends Service {
 		am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + waittime,
 				sender);
 
-		return START_STICKY;
+		if (!((OpacClient) getApplication()).isOnline())
+			stopSelf();
+
+		return START_NOT_STICKY;
 	}
 
 	@Override
