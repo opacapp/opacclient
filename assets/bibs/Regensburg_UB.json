@@ -1,0 +1,10 @@
+{
+ "api": "oclc2011", 
+ "city": "Regensburg", 
+ "data": {
+  "baseurl": "https://www.regensburger-katalog.de/InfoGuideClient.ubrsis", 
+  "information": "http://www.uni-regensburg.de/bibliothek/oeffnungszeiten/index.html"
+ }, 
+ "support": "Katalogsuche und Konto (experimentell)", 
+ "title": "Unibibliothek/Regensburger Katalog"
+}
