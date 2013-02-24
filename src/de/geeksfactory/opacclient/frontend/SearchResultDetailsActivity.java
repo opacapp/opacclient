@@ -14,10 +14,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.TextUtils.TruncateAt;
 import android.text.util.Linkify;
@@ -360,7 +362,12 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		protected Integer doInBackground(Object... arg0) {
 			try {
 				if (id != null) {
-					app.getApi().getResultById(id);
+					SharedPreferences sp = PreferenceManager
+							.getDefaultSharedPreferences(SearchResultDetailsActivity.this);
+					String homebranch = sp.getString(
+							OpacClient.PREF_HOME_BRANCH_PREFIX
+									+ app.getAccount().getId(), null);
+					app.getApi().getResultById(id, homebranch);
 					return 0;
 				} else
 					ACRA.getErrorReporter().handleException(
@@ -620,7 +627,12 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			String a = (String) arg0[1];
 
 			try {
-				DetailledItem res = app.getApi().getResultById(a);
+				SharedPreferences sp = PreferenceManager
+						.getDefaultSharedPreferences(SearchResultDetailsActivity.this);
+				String homebranch = sp.getString(
+						OpacClient.PREF_HOME_BRANCH_PREFIX
+								+ app.getAccount().getId(), null);
+				DetailledItem res = app.getApi().getResultById(a, homebranch);
 				URL newurl;
 				try {
 					newurl = new URL(res.getCover());

@@ -3,7 +3,9 @@ package de.geeksfactory.opacclient.frontend;
 import java.util.List;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -12,7 +14,9 @@ import android.widget.ListView;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
+import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.objects.Starred;
 import de.geeksfactory.opacclient.storage.StarDataSource;
 
@@ -51,10 +55,17 @@ public class StarredActivity extends OpacActivity {
 							|| items.get(position).getMNr().equals("null")
 							|| items.get(position).getMNr().equals("")) {
 
+						SharedPreferences sp = PreferenceManager
+								.getDefaultSharedPreferences(StarredActivity.this);
 						Intent myIntent = new Intent(StarredActivity.this,
 								SearchResultsActivity.class);
 						Bundle query = new Bundle();
-						query.putString("titel", items.get(position).getTitle());
+						query.putString(OpacApi.KEY_SEARCH_QUERY_TITLE, items
+								.get(position).getTitle());
+						query.putString(
+								OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH,
+								sp.getString(OpacClient.PREF_HOME_BRANCH_PREFIX
+										+ app.getAccount().getId(), null));
 						myIntent.putExtra("query", query);
 						startActivity(myIntent);
 					} else {

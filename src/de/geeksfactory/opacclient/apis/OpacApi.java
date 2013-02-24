@@ -247,11 +247,16 @@ public interface OpacApi {
 	 * 
 	 * @param id
 	 *            id of object to fetch
+	 * @param homebranch
+	 *            The users "home branch". Only filled if your library system
+	 *            supports <code>KEY_SEARCH_QUERY_HOME_BRANCH</code>. Assume
+	 *            that it can be <code>null</code>. If in doubt, ignore.
 	 * @return Media details
 	 * @see de.geeksfactory.opacclient.objects.DetailledItem
+	 * @see #KEY_SEARCH_QUERY_HOME_BRANCH
 	 */
-	public DetailledItem getResultById(String id) throws IOException,
-			NotReachableException;
+	public DetailledItem getResultById(String id, String homebranch)
+			throws IOException, NotReachableException;
 
 	/**
 	 * Get details for the item at <code>position</code> from last

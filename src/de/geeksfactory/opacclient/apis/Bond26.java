@@ -286,7 +286,7 @@ public class Bond26 implements OpacApi {
 	}
 
 	@Override
-	public DetailledItem getResultById(String a) throws IOException,
+	public DetailledItem getResultById(String a, String homebranch) throws IOException,
 			NotReachableException {
 		if (!initialised)
 			start();

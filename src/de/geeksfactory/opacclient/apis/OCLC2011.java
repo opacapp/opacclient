@@ -381,10 +381,10 @@ public class OCLC2011 implements OpacApi {
 	}
 
 	@Override
-	public DetailledItem getResultById(String a) throws IOException,
-			NotReachableException {
+	public DetailledItem getResultById(String id, String homebranch)
+			throws IOException, NotReachableException {
 
-		if (a == null && reusehtml != null) {
+		if (id == null && reusehtml != null) {
 			return parse_result(reusehtml);
 		}
 
@@ -398,8 +398,12 @@ public class OCLC2011 implements OpacApi {
 			}
 		}
 
+		String hbp = "";
+		if (homebranch != null)
+			hbp = "&selectedViewBranchlib=" + homebranch;
+
 		String html = httpGet(opac_url + "/start.do?" + startparams
-				+ "searchType=1&Query=0%3D%22" + a + "%22");
+				+ "searchType=1&Query=0%3D%22" + id + "%22" + hbp);
 
 		return parse_result(html);
 	}

@@ -328,7 +328,7 @@ public class Zones22 implements OpacApi {
 	}
 
 	@Override
-	public DetailledItem getResultById(String id) throws IOException,
+	public DetailledItem getResultById(String id, String homebranch) throws IOException,
 			NotReachableException {
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
