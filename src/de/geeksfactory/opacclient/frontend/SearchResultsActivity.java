@@ -35,6 +35,7 @@ public class SearchResultsActivity extends OpacActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		getSlidingMenu().setSlidingEnabled(false);
 		setContentView(R.layout.loading);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		page = 1;
