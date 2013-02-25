@@ -349,68 +349,6 @@ public class SearchActivity extends OpacActivity {
 		setTitle(R.string.search);
 		sp = PreferenceManager.getDefaultSharedPreferences(this);
 
-		if (app.getLibrary() == null) {
-			if (!sp.getString("opac_bib", "").equals("")) {
-				// Migrate
-				Map<String, String> renamed_libs = new HashMap<String, String>();
-				renamed_libs.put("Trier (Palais Walderdorff)", "Trier");
-				renamed_libs.put("Ludwigshafen (Rhein)", "Ludwigshafen Rhein");
-				renamed_libs.put("Neu-Ulm", "NeuUlm");
-				renamed_libs.put("Hann. Münden", "HannMünden");
-				renamed_libs.put("Münster", "Munster");
-				renamed_libs.put("Tübingen", "Tubingen");
-				renamed_libs.put("Göttingen", "Gottingen");
-				renamed_libs.put("Schwäbisch Hall", "Schwabisch Hall");
-
-				StarDataSource stardata = new StarDataSource(this);
-				stardata.open();
-				stardata.renameLibraries(renamed_libs);
-				stardata.close();
-
-				Library lib = null;
-				try {
-					if (renamed_libs.containsKey(sp.getString("opac_bib", "")))
-						lib = app.getLibrary(renamed_libs.get(sp.getString(
-								"opac_bib", "")));
-					else
-						lib = app.getLibrary(sp.getString("opac_bib", ""));
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-				if (lib != null) {
-					AccountDataSource data = new AccountDataSource(this);
-					data.open();
-					Account acc = new Account();
-					acc.setLibrary(lib.getIdent());
-					acc.setLabel(getString(R.string.default_account_name));
-					if (!sp.getString("opac_usernr", "").equals("")) {
-						acc.setName(sp.getString("opac_usernr", ""));
-						acc.setPassword(sp.getString("opac_password", ""));
-					}
-					long insertedid = data.addAccount(acc);
-					data.close();
-					app.setAccount(insertedid);
-
-					Toast.makeText(
-							this,
-							"Neue Version! Alte Accountdaten wurden wiederhergestellt.",
-							Toast.LENGTH_LONG).show();
-
-				} else {
-					Toast.makeText(
-							this,
-							"Neue Version! Wiederherstellung alter Zugangsdaten ist fehlgeschlagen.",
-							Toast.LENGTH_LONG).show();
-				}
-			} else {
-				// Create new
-				Intent intent = new Intent(this, WelcomeActivity.class);
-				startActivity(intent);
-				return;
-			}
-		}
-
 		if (getIntent().getBooleanExtra("barcode", false)) {
 			BarcodeScanIntegrator integrator = new BarcodeScanIntegrator(
 					SearchActivity.this);

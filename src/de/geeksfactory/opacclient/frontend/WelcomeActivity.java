@@ -47,6 +47,13 @@ public class WelcomeActivity extends SherlockActivity {
 		});
 	}
 
+	@Override
+	public void onBackPressed() {
+		System.exit(0);
+		super.onBackPressed();
+	}
+
+	
 	public void add() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		// Get the layout inflater

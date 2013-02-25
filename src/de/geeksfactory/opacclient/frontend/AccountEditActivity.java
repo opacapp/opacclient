@@ -94,8 +94,10 @@ public class AccountEditActivity extends SherlockActivity {
 				.getId()) {
 			List<Account> available_accounts = data.getAllAccounts();
 			if (available_accounts.size() == 0) {
+				((OpacClient) getApplication()).setAccount(0);
 				Intent intent = new Intent(this, WelcomeActivity.class);
 				startActivity(intent);
+				finish();
 			} else {
 				((OpacClient) getApplication()).setAccount(available_accounts
 						.get(0).getId());
@@ -113,6 +115,10 @@ public class AccountEditActivity extends SherlockActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.activity_account_edit, menu);
+		if (getIntent().hasExtra("adding")
+				&& getIntent().getBooleanExtra("adding", false)) {
+			menu.findItem(R.id.action_delete).setVisible(false);
+		}
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -159,13 +165,14 @@ public class AccountEditActivity extends SherlockActivity {
 									finish();
 								}
 							})
-					.setOnCancelListener(new DialogInterface.OnCancelListener() {
-						@Override
-						public void onCancel(DialogInterface d) {
-							if (d != null)
-								d.cancel();
-						}
-					});
+					.setOnCancelListener(
+							new DialogInterface.OnCancelListener() {
+								@Override
+								public void onCancel(DialogInterface d) {
+									if (d != null)
+										d.cancel();
+								}
+							});
 			AlertDialog alert = builder.create();
 			alert.show();
 			return true;
