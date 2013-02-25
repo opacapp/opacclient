@@ -1,21 +1,60 @@
 {
- "api": "bond26", 
- "city": "Magdeburg", 
- "data": {
-  "accounttable": [0, 1, -1, 2, 3], 
-  "baseurl": "http://auskunft.stadtbibliothek.magdeburg.de/webopac", 
-  "copiestable": [
-   -1, 
-   0, 
-   -1, 
-   2, 
-   4, 
-   5, 
-   -1
-  ], 
-  "information": "http://www.magdeburg-stadtbibliothek.de/texte/seite.php?id=98014", 
-  "reservationtable": [0, 1, -1, 2, 3]
- }, 
- "support": "Katalogsuche und Konto", 
- "title": null
+    "city": "Magdeburg", 
+    "support": "Katalogsuche und Konto", 
+    "api": "bond26", 
+    "data": {
+        "information": "http://www.magdeburg-stadtbibliothek.de/texte/seite.php?id=98014", 
+        "copiestable": [
+            -1, 
+            0, 
+            -1, 
+            2, 
+            4, 
+            5, 
+            -1
+        ], 
+        "accounttable": [
+            0, 
+            1, 
+            2, 
+            3, 
+            -1, 
+            4, 
+            4, 
+            5
+        ], 
+        "baseurl": "http://auskunft.stadtbibliothek.magdeburg.de/webopac", 
+        "reservationtable": [
+            0, 
+            1, 
+            -1, 
+            2, 
+            3
+        ], 
+        "mediatypes": {
+            "mk.gif": "PACKAGE", 
+            "blue-ray_Kind.gif": "BLURAY", 
+            "romk.gif": "CD_SOFTWARE", 
+            "cdhk.gif": "AUDIOBOOK", 
+            "BS.gif": "BOOK", 
+            "cdk.gif": "CD", 
+            "CDH.gif": "AUDIOBOOK", 
+            "zssk.gif": "MAGAZINE", 
+            "ROM.gif": "CD_SOFTWARE", 
+            "CD.gif": "CD", 
+            "dm.gif": "SCORE_MUSIC", 
+            "em.gif": "EBOOK", 
+            "x.gif": "UNKNOWN", 
+            "DVDK.gif": "DVD", 
+            "DVDBR.gif": "BLURAY", 
+            "dvd.gif": "DVD", 
+            "mkk.gif": "PACKAGE", 
+            "lk.gif": "MAP", 
+            "Zt.gif": "NEWSPAPER", 
+            "BK.gif": "BOOK", 
+            "B.gif": "BOOK", 
+            "zss.gif": "MAGAZINE"
+        }
+    }, 
+    "title": null
 }

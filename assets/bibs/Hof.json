@@ -1,36 +1,52 @@
 {
- "api": "bond26", 
- "city": "Hof", 
- "data": {
-  "accounttable": [
-   -1, 
-   0, 
-   1, 
-   2, 
-   -1, 
-   -1, 
-   -1, 
-   3
-  ], 
-  "baseurl": "http://opac.stadt-hof.org", 
-  "copiestable": [
-   -1, 
-   3, 
-   -1, 
-   0, 
-   2, 
-   4, 
-   -1
-  ], 
-  "information": "http://www.hof.de/hof/stadtbuecherei/deu/index.php", 
-  "reservationtable": [
-   0, 
-   1, 
-   2, 
-   -1, 
-   3
-  ]
- }, 
- "support": "Katalogsuche und Konto", 
- "title": null
+    "city": "Hof", 
+    "support": "Katalogsuche und Konto", 
+    "api": "bond26", 
+    "data": {
+        "information": "http://www.hof.de/hof/stadtbuecherei/deu/index.php", 
+        "copiestable": [
+            -1, 
+            3, 
+            1, 
+            0, 
+            2, 
+            4, 
+            -1
+        ], 
+        "accounttable": [
+            -1, 
+            0, 
+            1, 
+            2, 
+            -1, 
+            -1, 
+            -1, 
+            3
+        ], 
+        "baseurl": "http://opac.stadt-hof.org", 
+        "reservationtable": [
+            0, 
+            1, 
+            2, 
+            -1, 
+            3
+        ], 
+        "mediatypes": {
+            "spiel_konsol.gif": "GAME_CONSOLE", 
+            "buch_blau.jpg": "BOOK", 
+            "buch_gelb.jpg": "BOOK", 
+            "mUnselbS.gif": "MAP", 
+            "mCasetteS.gif": "AUDIO_CASSETTE", 
+            "mDVDS.gif": "DVD", 
+            "mDVD3.gif": "DVD", 
+            "mFilmS.gif": "MOVIE", 
+            "cdrom_kl.gif": "CD_SOFTWARE", 
+            "spiele_kl.jpg": "BOARDGAME", 
+            "buch_rot.jpg": "BOOK", 
+            "film.bmp": "MOVIE", 
+            "cd_kl.jpg": "CD", 
+            "zeitung_kl.jpg": "MAGAZINE"
+        }
+    }, 
+    "title": null
 }

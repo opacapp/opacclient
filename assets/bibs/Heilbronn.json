@@ -1,36 +1,53 @@
 {
- "api": "bond26", 
- "city": "Heilbronn", 
- "data": {
-  "accounttable": [
-   6, 
-   0, 
-   1, 
-   2, 
-   3, 
-   5, 
-   5, 
-   7
-  ], 
-  "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-heilbronn", 
-  "copiestable": [
-   3, 
-   0, 
-   -1, 
-   1, 
-   4, 
-   5, 
-   -1
-  ], 
-  "information": "http://www.stadtbibliothek-heilbronn.de/ueber_uns/standort/?webopac=1",
-  "reservationtable": [
-   0, 
-   1, 
-   3, 
-   4, 
-   5
-  ]
- }, 
- "support": "Katalogsuche und Konto", 
- "title": null
+    "city": "Heilbronn", 
+    "support": "Katalogsuche und Konto", 
+    "api": "bond26", 
+    "data": {
+        "information": "http://www.stadtbibliothek-heilbronn.de/ueber_uns/standort/?webopac=1", 
+        "copiestable": [
+            3, 
+            0, 
+            1, 
+            2, 
+            4, 
+            -1, 
+            -1
+        ], 
+        "accounttable": [
+            6, 
+            0, 
+            1, 
+            2, 
+            3, 
+            5, 
+            5, 
+            7
+        ], 
+        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-heilbronn", 
+        "reservationtable": [
+            0, 
+            1, 
+            3, 
+            2, 
+            4
+        ], 
+        "mediatypes": {
+            "mCDROMkS.gif": "CD_SOFTWARE", 
+            "Picto-klein.GIF": "EBOOK", 
+            "mMedipS.gif": "PACKAGE", 
+            "mLPs.gif": "LP_RECORD", 
+            "bibnetzS.gif": "UNKNOWN", 
+            "mCasetteS.gif": "AUDIO_CASSETTE", 
+            "mReise2S.gif": "MAP", 
+            "mCDS.gif": "CD", 
+            "mDVDS.gif": "DVD", 
+            "mNoten1S.gif": "SCORE_MUSIC", 
+            "mCDROM-TopS.gif": "CD_SOFTWARE", 
+            "mBuecherS.gif": "BOOK", 
+            "TopDVD-S.gif": "MOVIE", 
+            "mMonoS.gif": "BOOK", 
+            "TOP-CDS.gif": "CD"
+        }
+    }, 
+    "title": null
 }

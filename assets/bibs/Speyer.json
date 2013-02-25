@@ -1,36 +1,42 @@
 {
- "api": "bond26", 
- "city": "Speyer", 
- "data": {
-  "accounttable": [
-   -1, 
-   0, 
-   1, 
-   2, 
-   -1, 
-   -1, 
-   -1, 
-   3
-  ], 
-  "baseurl": "http://buecherei.speyer.de", 
-  "copiestable": [
-   0, 
-   4, 
-   -1, 
-   2, 
-   3, 
-   5, 
-   -1
-  ], 
-  "information": "http://www.speyer.de/de/bildung/bibliotheken/stadtbuecherei", 
-  "reservationtable": [
-   0, 
-   1, 
-   2, 
-   -1, 
-   3
-  ]
- }, 
- "support": "Katalogsuche und Konto", 
- "title": null
+    "city": "Speyer", 
+    "support": "Katalogsuche und Konto", 
+    "api": "bond26", 
+    "data": {
+        "information": "http://www.speyer.de/de/bildung/bibliotheken/stadtbuecherei", 
+        "copiestable": [
+            0, 
+            4, 
+            2, 
+            1, 
+            3, 
+            5, 
+            -1
+        ], 
+        "accounttable": [
+            -1, 
+            0, 
+            1, 
+            2, 
+            -1, 
+            -1, 
+            -1, 
+            3
+        ], 
+        "baseurl": "http://buecherei.speyer.de", 
+        "reservationtable": [
+            0, 
+            1, 
+            2, 
+            -1, 
+            3
+        ], 
+        "mediatypes": {
+            "mCasetteS.gif": "AUDIO_CASSETTE", 
+            "mFilmS.gif": "MOVIE", 
+            "ekl.gif": "EBOOK", 
+            "mDVDS.gif": "DVD"
+        }
+    }, 
+    "title": null
 }

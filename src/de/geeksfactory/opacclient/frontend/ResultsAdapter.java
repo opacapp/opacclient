@@ -40,6 +40,10 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
 		case PACKAGE:
 			return R.drawable.type_package;
 		case GAME_CONSOLE:
+		case GAME_CONSOLE_NINTENDO:
+		case GAME_CONSOLE_PLAYSTATION:
+		case GAME_CONSOLE_WII:
+		case GAME_CONSOLE_XBOX:
 			return R.drawable.type_game_console;
 		case EBOOK:
 			return R.drawable.type_ebook;
@@ -49,14 +53,13 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
 			return R.drawable.type_package_books;
 		case UNKNOWN:
 			return R.drawable.type_unknown;
+		case MAGAZINE:
 		case NEWSPAPER:
 			return R.drawable.type_newspaper;
 		case BOARDGAME:
 			return R.drawable.type_boardgame;
 		case SCHOOL_VERSION:
 			return R.drawable.type_school_version;
-		case MAP:
-			return 0; // TODO: get icon
 		}
 
 		return R.drawable.type_unknown;

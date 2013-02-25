@@ -1,36 +1,54 @@
 {
- "api": "bond26", 
- "city": "Bielefeld", 
- "data": {
-  "accounttable": [
-   -1, 
-   0, 
-   1, 
-   2, 
-   4, 
-   3, 
-   3, 
-   5
-  ], 
-  "baseurl": "https://www1.stadtbibliothek-bielefeld.de/webopac", 
-  "copiestable": [
-   -1, 
-   0, 
-   -1, 
-   2, 
-   3, 
-   4, 
-   -1
-  ], 
-  "information": "http://www.stadtbibliothek-bielefeld.de/p_296.html", 
-  "reservationtable": [
-   0, 
-   1, 
-   2, 
-   3, 
-   4
-  ]
- }, 
- "support": "Katalogsuche und Konto", 
- "title": null
+    "city": "Bielefeld", 
+    "support": "Katalogsuche und Konto", 
+    "api": "bond26", 
+    "data": {
+        "information": "http://www.stadtbibliothek-bielefeld.de/p_296.html", 
+        "copiestable": [
+            -1, 
+            0, 
+            2, 
+            1, 
+            3, 
+            4, 
+            -1
+        ], 
+        "accounttable": [
+            -1, 
+            0, 
+            1, 
+            2, 
+            4, 
+            3, 
+            3, 
+            5
+        ], 
+        "baseurl": "https://www1.stadtbibliothek-bielefeld.de/webopac", 
+        "reservationtable": [
+            0, 
+            1, 
+            2, 
+            3, 
+            4
+        ], 
+        "mediatypes": {
+            "mpspS.gif": "GAME_CONSOLE_PLAYSTATION", 
+            "mps2S.gif": "GAME_CONSOLE_PLAYSTATION", 
+            "meBibS.gif": "EBOOK", 
+            "mps3S.gif": "GAME_CONSOLE_PLAYSTATION", 
+            "mBlurayS.gif": "BLURAY", 
+            "mCasetteS.gif": "AUDIO_CASSETTE", 
+            "mZtgS.gif": "NEWSPAPER", 
+            "mMunzS.gif": "UNKNOWN", 
+            "mDVDS.gif": "DVD", 
+            "mgamesS.gif": "CD_SOFTWARE", 
+            "mvideo2S.gif": "MOVIE", 
+            "mWiiS.gif": "GAME_CONSOLE_WII", 
+            "mMagS.gif": "NEWSPAPER", 
+            "mNoten1S.gif": "SCORE_MUSIC", 
+            "mHoerbuchS.gif": "AUDIOBOOK", 
+            "mMalenS.gif": "ART"
+        }
+    }, 
+    "title": null
 }

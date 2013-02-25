@@ -1,13 +1,53 @@
 {
- "api": "bond26", 
- "city": "Hattingen", 
- "data": {
-  "copiestable": [0, -1, 3, 2, 5, 6, -1], 
-  "reservationtable": [0, 1, 2, -1, 3], 
-  "accounttable": [-1, 0, 1, 2, -1, -1, -1, 3],
-  "baseurl": "http://webopac.hattingen.de/webopac", 
-  "information": "http://www.bibliothek.hattingen.de/oeffnungszeiten.php"
- }, 
- "support": "Katalogsuche und Konto", 
- "title": null
+    "city": "Hattingen", 
+    "support": "Katalogsuche und Konto", 
+    "api": "bond26", 
+    "data": {
+        "information": "http://www.bibliothek.hattingen.de/oeffnungszeiten.php", 
+        "copiestable": [
+            0, 
+            -1, 
+            3, 
+            2, 
+            5, 
+            6, 
+            -1
+        ], 
+        "accounttable": [
+            -1, 
+            0, 
+            1, 
+            2, 
+            -1, 
+            -1, 
+            -1, 
+            4
+        ], 
+        "baseurl": "http://webopac.hattingen.de/webopac", 
+        "reservationtable": [
+            0, 
+            1, 
+            2, 
+            -1, 
+            3
+        ], 
+        "mediatypes": {
+            "ePaperS.gif": "EBOOK", 
+            "Zeit.jpg": "MAGAZINE", 
+            "Hoerbuch30.gif": "AUDIOBOOK", 
+            "mCasetteS.gif": "AUDIO_CASSETTE", 
+            "Spiele30.gif": "BOARDGAME", 
+            "mDVDS.gif": "DVD", 
+            "Film30.gif": "DVD", 
+            "mFilmS.gif": "MOVIE", 
+            "tom30.gif": "BOOK", 
+            "eVideoS.gif": "MOVIE", 
+            "games30.gif": "BOARDGAME", 
+            "tipp30.gif": "BOOK", 
+            "eAudioS.gif": "AUDIOBOOK", 
+            "mMusikCDS.gif": "CD_MUSIC", 
+            "eBookS.gif": "EBOOK"
+        }
+    }, 
+    "title": null
 }

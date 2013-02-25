@@ -1,11 +1,55 @@
 {
- "api": "bond26", 
- "city": "Bayreuth", 
- "data": {
-  "copiestable": [-1, 6, 1, 3, 4, 5, -1], "reservationtable": [0, 1, -1, -1, 2], "accounttable": [-1, 0, 1, 2, -1, -1, -1, 3],
-  "baseurl": "http://online-dienste.bayreuth.de/wwwopac", 
-  "information": "http://bayreuth.de/rathaus_buerger_service/bildung_wissenschaft/stadtbibliothek_2388.html"
- }, 
- "support": "Katalogsuche und Konto", 
- "title": null
+    "city": "Bayreuth", 
+    "support": "Katalogsuche und Konto", 
+    "api": "bond26", 
+    "data": {
+        "information": "http://bayreuth.de/rathaus_buerger_service/bildung_wissenschaft/stadtbibliothek_2388.html", 
+        "copiestable": [
+            -1, 
+            6, 
+            1, 
+            3, 
+            4, 
+            5, 
+            -1
+        ], 
+        "accounttable": [
+            -1, 
+            0, 
+            1, 
+            2, 
+            -1, 
+            -1, 
+            -1, 
+            4
+        ], 
+        "baseurl": "http://online-dienste.bayreuth.de/wwwopac", 
+        "reservationtable": [
+            0, 
+            1, 
+            -1, 
+            -1, 
+            2
+        ], 
+        "mediatypes": {
+            "mDisket1S.gif": "GAME_CONSOLE", 
+            "mComic2S.gif": "BOOK", 
+            "mPS3S.gif": "GAME_CONSOLE_PLAYSTATION", 
+            "mWiiS.gif": "GAME_CONSOLE_WII", 
+            "mCasetteS.gif": "AUDIO_CASSETTE", 
+            "mReise2S.gif": "MAP", 
+            "mComput2S.gif": "PACKAGE", 
+            "mMunzS.gif": "UNKNOWN", 
+            "mNoten1S.gif": "SCORE_MUSIC", 
+            "mCDROMS.gif": "CD_SOFTWARE", 
+            "mDVDS.gif": "DVD", 
+            "mFilmS.gif": "MOVIE", 
+            "mTip_S.gif": "BOOK", 
+            "mOnleiheS.gif": "EBOOK", 
+            "mSpielS.gif": "BOARDGAME", 
+            "mMusikcdS.gif": "CD", 
+            "mZtgS.gif": "NEWSPAPER"
+        }
+    }, 
+    "title": null
 }

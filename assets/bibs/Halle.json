@@ -1,13 +1,56 @@
 {
- "api": "bond26", 
- "city": "Halle (Saale)", 
- "data": {
-  "baseurl": "https://secure.halle.de/wwwopac", 
-  "information": "/../read/info.html", 
-  "copiestable": [-1, 0, 2, 3, 4, 5, -1], 
-  "reservationtable": [1, 2, -1, 0, 3], 
-  "accounttable": [-1, 1, 2, 3, 4, 0, -1, 5]
- }, 
- "support": "Katalogsuche und Konto", 
- "title": null
+    "city": "Halle (Saale)", 
+    "support": "Katalogsuche und Konto", 
+    "api": "bond26", 
+    "data": {
+        "information": "/../read/info.html", 
+        "copiestable": [
+            -1, 
+            0, 
+            2, 
+            3, 
+            4, 
+            5, 
+            -1
+        ], 
+        "accounttable": [
+            -1, 
+            1, 
+            2, 
+            3, 
+            5, 
+            0, 
+            -1, 
+            6
+        ], 
+        "baseurl": "https://secure.halle.de/wwwopac", 
+        "reservationtable": [
+            1, 
+            2, 
+            -1, 
+            0, 
+            3
+        ], 
+        "mediatypes": {
+            "haldvdroms.gif": "DVD", 
+            "haldvds.gif": "DVD", 
+            "konsolen32.gif": "GAME_CONSOLE", 
+            "schallplatte_32.gif": "UNKNOWN", 
+            "halkidcdroms.gif": "CD_SOFTWARE", 
+            "halcdroms.gif": "CD_SOFTWARE", 
+            "mReise2s.gif": "MAP", 
+            "halsprachkursb.gif": "UNKNOWN", 
+            "mNoten1S.gif": "SCORE_MUSIC", 
+            "halarts.gif": "ART", 
+            "CDs.gif": "CD", 
+            "multimedia.gif": "PACKAGE", 
+            "iconmunzinger32.gif": "EBOOK", 
+            "halkiddvds.gif": "DVD", 
+            "mBuchS2.gif": "BOOK", 
+            "blu-ray_32.gif": "BLURAY", 
+            "halkidcds.gif": "CD", 
+            "halbks.gif": "BOOK"
+        }
+    }, 
+    "title": null
 }

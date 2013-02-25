@@ -1,36 +1,49 @@
 {
- "api": "bond26", 
- "city": "Ulm", 
- "data": {
-  "accounttable": [
-   4, 
-   2, 
-   3, 
-   5, 
-   -1, 
-   0, 
-   0, 
-   6
-  ], 
-  "baseurl": "http://www2opac.stadtbibliothek.ulm.de/wwwopac", 
-  "copiestable": [
-   -1, 
-   0, 
-   1, 
-   2, 
-   4, 
-   5, 
-   -1
-  ], 
-  "information": "http://www.ulm.de/kultur_tourismus/bibliotheken_und_literatur/oeffnungszeiten.33574.3076,3963,3669,30713,33574.htm#artikel",
-  "reservationtable": [
-   2, 
-   3, 
-   4, 
-   0, 
-   5
-  ]
- }, 
- "support": "Katalogsuche und Konto", 
- "title": null
+    "city": "Ulm", 
+    "support": "Katalogsuche und Konto", 
+    "api": "bond26", 
+    "data": {
+        "information": "http://www.ulm.de/kultur_tourismus/bibliotheken_und_literatur/oeffnungszeiten.33574.3076,3963,3669,30713,33574.htm#artikel", 
+        "copiestable": [
+            -1, 
+            0, 
+            3, 
+            2, 
+            4, 
+            5, 
+            -1
+        ], 
+        "accounttable": [
+            4, 
+            2, 
+            3, 
+            5, 
+            -1, 
+            0, 
+            -1, 
+            6
+        ], 
+        "baseurl": "http://www2opac.stadtbibliothek.ulm.de/wwwopac", 
+        "reservationtable": [
+            1, 
+            2, 
+            3, 
+            0, 
+            4
+        ], 
+        "mediatypes": {
+            "dvdkl.gif": "DVD", 
+            "wii_32.gif": "GAME_CONSOLE_WII", 
+            "mCasetteS.gif": "AUDIO_CASSETTE", 
+            "mComic1S.gif": "BOOK", 
+            "DVDkl.gif": "DVD", 
+            "Onleihekl.gif": "EBOOK", 
+            "MCASETTES.gif": "AUDIO_CASSETTE", 
+            "cdrom.gif": "CD_SOFTWARE", 
+            "blu-ray_32.gif": "BLURAY", 
+            "EDokukl.gif": "URL", 
+            "mNoten3S.gif": "SCORE_MUSIC"
+        }
+    }, 
+    "title": null
 }
