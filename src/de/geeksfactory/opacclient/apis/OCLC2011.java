@@ -89,25 +89,36 @@ public class OCLC2011 implements OpacApi {
 
 	private static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
 	static {
-		defaulttypes.put("97", MediaType.EBOOK);
+		defaulttypes.put("g", MediaType.EBOOK);
+		defaulttypes.put("d", MediaType.CD);
+		defaulttypes.put("0", MediaType.BOOK);
+		defaulttypes.put("2", MediaType.BOOK);
+		defaulttypes.put("7", MediaType.CD_MUSIC);
+		defaulttypes.put("8", MediaType.CD_MUSIC);
+		defaulttypes.put("12", MediaType.AUDIO_CASSETTE);
+		defaulttypes.put("13", MediaType.CD);
 		defaulttypes.put("15", MediaType.DVD);
-		defaulttypes.put("20", MediaType.DVD);
-		defaulttypes.put("16", MediaType.MOVIE);
+		defaulttypes.put("16", MediaType.CD);
 		defaulttypes.put("17", MediaType.MOVIE);
 		defaulttypes.put("18", MediaType.MOVIE);
 		defaulttypes.put("19", MediaType.MOVIE);
-		defaulttypes.put("96", MediaType.EBOOK);
-		defaulttypes.put("99", MediaType.EBOOK);
-		defaulttypes.put("27", MediaType.CD);
-		defaulttypes.put("7", MediaType.CD_MUSIC);
-		defaulttypes.put("8", MediaType.CD_MUSIC);
-		defaulttypes.put("13", MediaType.BOARDGAME);
-		defaulttypes.put("22", MediaType.BOARDGAME);
+		defaulttypes.put("20", MediaType.DVD);
 		defaulttypes.put("21", MediaType.SCORE_MUSIC);
+		defaulttypes.put("22", MediaType.BOARDGAME);
+		defaulttypes.put("26", MediaType.CD);
+		defaulttypes.put("27", MediaType.CD);
+		defaulttypes.put("37", MediaType.CD);
+		defaulttypes.put("29", MediaType.AUDIOBOOK);
+		defaulttypes.put("46", MediaType.GAME_CONSOLE_NINTENDO);
+		defaulttypes.put("56", MediaType.EBOOK);
+		defaulttypes.put("96", MediaType.EBOOK);
+		defaulttypes.put("97", MediaType.EBOOK);
+		defaulttypes.put("99", MediaType.EBOOK);
 		defaulttypes.put("buch01", MediaType.BOOK);
 		defaulttypes.put("buch02", MediaType.PACKAGE_BOOKS);
-		defaulttypes.put("buch03", MediaType.PACKAGE_BOOKS);
+		defaulttypes.put("buch03", MediaType.BOOK);
 		defaulttypes.put("buch04", MediaType.PACKAGE_BOOKS);
+		defaulttypes.put("buch05", MediaType.PACKAGE_BOOKS);
 	}
 
 	@Override
