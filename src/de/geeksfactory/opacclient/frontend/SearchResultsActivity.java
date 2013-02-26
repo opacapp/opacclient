@@ -7,6 +7,7 @@ import org.acra.ACRA;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -27,6 +28,7 @@ import de.geeksfactory.opacclient.objects.SearchResult;
 public class SearchResultsActivity extends OpacActivity {
 
 	protected List<SearchResult> items;
+	private SparseArray<List<SearchResult>> cache = new SparseArray<List<SearchResult>>();
 	private int page;
 
 	private SearchStartTask st;
@@ -59,16 +61,32 @@ public class SearchResultsActivity extends OpacActivity {
 		switch (item.getItemId()) {
 		case R.id.action_prev:
 			setContentView(R.layout.loading);
+			if (sst != null) {
+				sst.cancel(false);
+			}
 			page--;
-			sst = new SearchPageTask();
-			sst.execute(app, page);
+			if (cache.get(page) != null) {
+				items = cache.get(page);
+				loaded();
+			} else {
+				sst = new SearchPageTask();
+				sst.execute(app, page);
+			}
 			invalidateOptionsMenu();
 			return true;
 		case R.id.action_next:
 			setContentView(R.layout.loading);
+			if (sst != null) {
+				sst.cancel(false);
+			}
 			page++;
-			sst = new SearchPageTask();
-			sst.execute(app, page);
+			if (cache.get(page) != null) {
+				items = cache.get(page);
+				loaded();
+			} else {
+				sst = new SearchPageTask();
+				sst.execute(app, page);
+			}
 			invalidateOptionsMenu();
 			return true;
 		case android.R.id.home:
@@ -147,6 +165,12 @@ public class SearchResultsActivity extends OpacActivity {
 							});
 				} else {
 					items = result;
+					if (items != null) {
+						if (items.size() > 0) {
+							if (items.get(0).getId() != null)
+								cache.put(page, items);
+						}
+					}
 					loaded();
 				}
 			} else {
@@ -220,6 +244,13 @@ public class SearchResultsActivity extends OpacActivity {
 		protected void onPostExecute(List<SearchResult> result) {
 			if (success) {
 				items = result;
+				items = result;
+				if (items != null) {
+					if (items.size() > 0) {
+						if (items.get(0).getId() != null)
+							cache.put(page, items);
+					}
+				}
 				loaded();
 			} else {
 				setContentView(R.layout.connectivity_error);
