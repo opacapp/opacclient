@@ -185,6 +185,14 @@ public class Bond26 implements OpacApi {
 						library.getIdent(), opt.val(), opt.text());
 		}
 
+		mg_opts = doc.select("#mediart option");
+		for (int i = 0; i < mg_opts.size(); i++) {
+			Element opt = mg_opts.get(i);
+			if (!opt.val().equals(""))
+				metadata.addMeta(MetaDataSource.META_TYPE_CATEGORY,
+						library.getIdent(), "$" + opt.val(), opt.text());
+		}
+
 		metadata.close();
 	}
 
@@ -192,7 +200,15 @@ public class Bond26 implements OpacApi {
 	public void start() throws ClientProtocolException, SocketException,
 			IOException, NotReachableException {
 		initialised = true;
-		httpGet(opac_url + "/woload.asp?lkz=1&nextpage=");
+		String db = "";
+		if (data.has("db")) {
+			try {
+				db = "&db=" + data.getString("db");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		httpGet(opac_url + "/woload.asp?lkz=1&nextpage=" + db);
 
 		metadata.open();
 		if (!metadata.hasMeta(library.getIdent())) {
@@ -253,8 +269,16 @@ public class Bond26 implements OpacApi {
 				getStringFromBundle(query, KEY_SEARCH_QUERY_KEYWORDB)));
 		nameValuePairs.add(new BasicNameValuePair("zst", getStringFromBundle(
 				query, KEY_SEARCH_QUERY_BRANCH)));
-		nameValuePairs.add(new BasicNameValuePair("medigrp",
-				getStringFromBundle(query, KEY_SEARCH_QUERY_CATEGORY)));
+
+		String cat = getStringFromBundle(query, KEY_SEARCH_QUERY_CATEGORY);
+		if (cat.startsWith("$"))
+			nameValuePairs.add(new BasicNameValuePair("mediart",
+					getStringFromBundle(query, KEY_SEARCH_QUERY_CATEGORY)
+							.substring(1)));
+		else
+			nameValuePairs.add(new BasicNameValuePair("medigrp",
+					getStringFromBundle(query, KEY_SEARCH_QUERY_CATEGORY)));
+
 		nameValuePairs.add(new BasicNameValuePair("isbn", getStringFromBundle(
 				query, KEY_SEARCH_QUERY_ISBN)));
 		nameValuePairs.add(new BasicNameValuePair("jahr_von",
