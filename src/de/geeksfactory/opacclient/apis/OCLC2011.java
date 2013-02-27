@@ -1078,4 +1078,14 @@ public class OCLC2011 implements OpacApi {
 			return opac_url + "/start.do?" + startparams
 					+ "searchType=1&Query=-1%3D%22" + title + "%22";
 	}
+
+	@Override
+	public int getSupportFlags() {
+		return 0;
+	}
+
+	@Override
+	public boolean prolongAll(Account account) throws IOException {
+		return false;
+	}
 }

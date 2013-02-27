@@ -46,6 +46,7 @@ import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Library;
@@ -174,7 +175,7 @@ public class AccountActivity extends OpacActivity {
 
 		account = app.getAccount();
 		if (!app.getApi().isAccountSupported(app.getLibrary())
-				&& !app.getApi().isAccountExtendable()) {
+				&& (app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ACCOUNT_EXTENDABLE) == 0) {
 			// Not supported with this api at all
 			setContentView(R.layout.unsupported_error);
 			((TextView) findViewById(R.id.tvErrBody))

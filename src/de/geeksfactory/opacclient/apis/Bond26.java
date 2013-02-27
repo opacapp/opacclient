@@ -588,6 +588,11 @@ public class Bond26 implements OpacApi {
 	}
 
 	@Override
+	public boolean prolongAll(Account account) throws IOException {
+		return false;
+	}
+
+	@Override
 	public boolean cancel(Account account, String a) throws IOException,
 			NotReachableException {
 		if (!initialised)
@@ -818,5 +823,10 @@ public class Bond26 implements OpacApi {
 	public String getShareUrl(String id, String title) {
 		// We use the default proxy at opacapp.de here
 		return null;
+	}
+
+	@Override
+	public int getSupportFlags() {
+		return SUPPORT_FLAG_ACCOUNT_EXTENDABLE | SUPPORT_FLAG_ACCOUNT_PROLONG_ALL;
 	}
 }
