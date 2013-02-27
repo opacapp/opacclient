@@ -66,6 +66,7 @@
     <string name="accept">OK</string>
     <string name="doing_cancel">Vorbestellung wird gelöscht…</string>
     <string name="doing_prolong">Verlängerung wird durchgeführt…</string>
+    <string name="doing_prolong_all">Medien, die verlängert werden können, werden verlängert…</string>
     <string name="opac_error">Meldung vom Web-Opac:</string>
     <string name="welcome">Herzlich Willkommen</string>
     <string name="welcome_select">Zuerst muss ein Bibliothekskonto eingerichtet werden.</string>
@@ -125,7 +126,6 @@
     <string name="connection_error">Fehler</string>
     <string name="connection_error_detail">Der Aufbau einer Verbindung zum Bibliotheksserver ist fehlgeschlagen. Prüfe, ob eine Verbindung zum Internet verfügbar ist. Möglicherweise hat auch der Bibliotheksserver ein Problem oder die App konnte seine Antwort nicht auswerten.</string>
     <string name="connection_error_detail_nre">Der Aufbau einer Verbindung zum Bibliotheksserver ist fehlgeschlagen. Prüfe, ob eine Verbindung zum Internet verfügbar ist. Wenn ja, hat wahrscheinlich der Bibliotheksserver ein Problem.</string>
-    
     <string name="retry">Erneut versuchen</string>
     <string name="default_account_name">Unbenanntes Konto</string>
     <string name="connecting_initially">Baue erstmalige Verbindung mit Bibliotheksserver auf…</string>
@@ -160,6 +160,7 @@
     <string name="crash_toast_text">Ein Fehler ist aufgetreten. Bitte warten Sie einen Augenblick.</string>
     <string name="crash_dialog_text">In der Opac App ist ein Fehler aufgetreten! Bitte schicken Sie uns den Fehlerbericht per E-Mail ein, dann können wir ihn beheben.</string>
     <string name="refresh">Aktualisieren</string>
+    <string name="prolong_all">Alle verlängern</string>
     <string name="account_no_concurrent">Bitte warten, bis die Ansicht aktualisiert wurde.</string>
     <string name="error_connection">Verbindungsfehler</string>
     <string name="confirm_title">Bestätigen</string>

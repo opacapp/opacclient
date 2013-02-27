@@ -589,7 +589,32 @@ public class Bond26 implements OpacApi {
 
 	@Override
 	public boolean prolongAll(Account account) throws IOException {
-		return false;
+		if (!initialised)
+			start();
+		if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
+				|| logged_in_as == null) {
+			try {
+				account(account);
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return false;
+			}
+		} else if (logged_in_as.getId() != account.getId()) {
+			try {
+				account(account);
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+		String html = httpGet(opac_url + "/index.asp?target=alleverl");
+		Document doc = Jsoup.parse(html);
+
+		if (doc.getElementsByClass("kontomeldung").size() == 1) {
+			last_error = doc.getElementsByClass("kontomeldung").get(0).text();
+			return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -827,6 +852,7 @@ public class Bond26 implements OpacApi {
 
 	@Override
 	public int getSupportFlags() {
-		return SUPPORT_FLAG_ACCOUNT_EXTENDABLE | SUPPORT_FLAG_ACCOUNT_PROLONG_ALL;
+		return SUPPORT_FLAG_ACCOUNT_EXTENDABLE
+				| SUPPORT_FLAG_ACCOUNT_PROLONG_ALL;
 	}
 }

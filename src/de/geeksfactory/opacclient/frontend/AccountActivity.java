@@ -64,7 +64,7 @@ public class AccountActivity extends OpacActivity {
 
 	private LoadTask lt;
 	private CancelTask ct;
-	private ProlongTask pt;
+	private OpacTask<Integer> pt;
 
 	private Account account;
 
@@ -147,7 +147,29 @@ public class AccountActivity extends OpacActivity {
 				setSupportProgressBarIndeterminateVisibility(false);
 			}
 		}
+		if ((app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ACCOUNT_PROLONG_ALL) != 0) {
+			menu.findItem(R.id.action_prolong_all).setVisible(true);
+		} else {
+			menu.findItem(R.id.action_prolong_all).setVisible(false);
+		}
 		return super.onCreateOptionsMenu(menu);
+	}
+
+	private void prolongAll() {
+		long age = System.currentTimeMillis() - refreshtime;
+		if (refreshing || age > MAX_CACHE_AGE) {
+			Toast.makeText(this, R.string.account_no_concurrent,
+					Toast.LENGTH_LONG).show();
+			if (!refreshing) {
+				refresh();
+			}
+			return;
+		}
+		dialog = ProgressDialog.show(AccountActivity.this, "",
+				getString(R.string.doing_prolong_all), true);
+		dialog.show();
+		pt = new ProlongAllTask();
+		pt.execute(app);
 	}
 
 	@Override
@@ -155,6 +177,9 @@ public class AccountActivity extends OpacActivity {
 		switch (item.getItemId()) {
 		case R.id.action_refresh:
 			refresh();
+			break;
+		case R.id.action_prolong_all:
+			prolongAll();
 			break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -819,6 +844,56 @@ public class AccountActivity extends OpacActivity {
 			String a = (String) arg0[1];
 			try {
 				boolean res = app.getApi().prolong(account, a);
+				success = true;
+				if (res) {
+					return STATUS_SUCCESS;
+				} else {
+					return STATUS_FAILED;
+				}
+			} catch (java.net.UnknownHostException e) {
+				success = false;
+			} catch (java.net.SocketException e) {
+				success = false;
+			} catch (Exception e) {
+				ACRA.getErrorReporter().handleException(e);
+				success = false;
+			}
+			return STATUS_SUCCESS;
+		}
+
+		@Override
+		protected void onPostExecute(Integer result) {
+			dialog.dismiss();
+
+			if (success) {
+				prolong_done(result);
+			} else {
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						AccountActivity.this);
+				builder.setMessage(R.string.connection_error)
+						.setCancelable(true)
+						.setNegativeButton(R.string.dismiss,
+								new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog,
+											int id) {
+										dialog.cancel();
+									}
+								});
+				AlertDialog alert = builder.create();
+				alert.show();
+			}
+		}
+	}
+
+	public class ProlongAllTask extends OpacTask<Integer> {
+		private boolean success = true;
+
+		@Override
+		protected Integer doInBackground(Object... arg0) {
+			super.doInBackground(arg0);
+			try {
+				boolean res = app.getApi().prolongAll(account);
 				success = true;
 				if (res) {
 					return STATUS_SUCCESS;
