@@ -212,7 +212,23 @@ public class AccountActivity extends OpacActivity {
 				|| account.getName().equals("null")
 				|| account.getName().equals("")) {
 			// No credentials entered
-			dialog_no_user(true);
+
+			setContentView(R.layout.answer_error);
+			((Button) findViewById(R.id.btPrefs))
+					.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							Intent intent = new Intent(AccountActivity.this,
+									AccountEditActivity.class);
+							intent.putExtra(
+									AccountEditActivity.EXTRA_ACCOUNT_ID, app
+											.getAccount().getId());
+							startActivity(intent);
+						}
+					});
+			((TextView) findViewById(R.id.tvErrHead)).setText("");
+			((TextView) findViewById(R.id.tvErrBody))
+					.setText(R.string.status_nouser);
 
 		} else if (!app.getApi().isAccountSupported(app.getLibrary())) {
 
@@ -477,8 +493,9 @@ public class AccountActivity extends OpacActivity {
 			((TextView) tvError).setText(R.string.error_connection);
 		} else {
 			setContentView(R.layout.connectivity_error);
-			if(e != null && e instanceof NotReachableException)
-				((TextView) findViewById(R.id.tvErrBody)).setText(R.string.connection_error_detail_nre);
+			if (e != null && e instanceof NotReachableException)
+				((TextView) findViewById(R.id.tvErrBody))
+						.setText(R.string.connection_error_detail_nre);
 			((Button) findViewById(R.id.btRetry))
 					.setOnClickListener(new OnClickListener() {
 						@Override
@@ -487,6 +504,22 @@ public class AccountActivity extends OpacActivity {
 						}
 					});
 		}
+	}
+
+	protected void dialog_wrong_credentials(String s, final boolean finish) {
+		setContentView(R.layout.answer_error);
+		((Button) findViewById(R.id.btPrefs))
+				.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(AccountActivity.this,
+								AccountEditActivity.class);
+						intent.putExtra(AccountEditActivity.EXTRA_ACCOUNT_ID,
+								account.getId());
+						startActivity(intent);
+					}
+				});
+		((TextView) findViewById(R.id.tvErrBody)).setText(s);
 	}
 
 	public void loaded(final AccountData result) {
@@ -498,8 +531,13 @@ public class AccountActivity extends OpacActivity {
 			if (app.getApi().getLast_error() == null
 					|| app.getApi().getLast_error().equals("")) {
 				show_connectivity_error(null);
-			} else
+			} else {
+				AccountDataSource adatasource = new AccountDataSource(this);
+				adatasource.open();
+				adatasource.invalidateCachedAccountData(account);
+				adatasource.close();
 				dialog_wrong_credentials(app.getApi().getLast_error(), true);
+			}
 			return;
 		}
 

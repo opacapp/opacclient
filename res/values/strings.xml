@@ -135,7 +135,7 @@
     <string name="account_add">Konto hinzufügen</string>
     <string name="accounts">Konten</string>
     <string name="account_header">KONTO: %s</string>
-    <string name="accounts_edit">Konten bearbeiten</string>
+    <string name="accounts_edit">Konto bearbeiten</string>
     <string name="accounts_desc">Genutzte Bibliotheken und Mitgliedsnummern verwalten</string>
     <string name="account_label">Bezeichnung</string>
     <string name="account_nr">Ausweisnummer/-name (optional)</string>

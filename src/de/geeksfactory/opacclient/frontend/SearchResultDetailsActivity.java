@@ -94,8 +94,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		}
 	}
 
-	@Override
-	protected void dialog_no_user() {
+	protected void dialog_no_credentials() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage(R.string.status_nouser)
 				.setCancelable(false)
@@ -112,7 +111,10 @@ public class SearchResultDetailsActivity extends OpacActivity {
 							public void onClick(DialogInterface dialog, int id) {
 								Intent intent = new Intent(
 										SearchResultDetailsActivity.this,
-										AccountListActivity.class);
+										AccountEditActivity.class);
+								intent.putExtra(
+										AccountEditActivity.EXTRA_ACCOUNT_ID,
+										app.getAccount().getId());
 								startActivity(intent);
 							}
 						});
@@ -127,7 +129,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				.getLibrary().getIdent());
 		data.close();
 		if (accounts.size() == 0) {
-			dialog_no_user();
+			dialog_no_credentials();
 			return;
 		} else if (accounts.size() > 1) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -592,7 +594,6 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		}
 	}
 
-	@Override
 	protected void dialog_wrong_credentials(String s, final boolean finish) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage(getString(R.string.opac_error) + " " + s)
@@ -612,7 +613,10 @@ public class SearchResultDetailsActivity extends OpacActivity {
 							public void onClick(DialogInterface dialog, int id) {
 								Intent intent = new Intent(
 										SearchResultDetailsActivity.this,
-										MainPreferenceActivity.class);
+										AccountEditActivity.class);
+								intent.putExtra(
+										AccountEditActivity.EXTRA_ACCOUNT_ID,
+										app.getAccount().getId());
 								startActivity(intent);
 							}
 						});

@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.acra.ACRA;
 import org.holoeverywhere.app.AlertDialog;
-import org.holoeverywhere.app.ProgressDialog;
 import org.json.JSONException;
 
 import android.content.DialogInterface;
@@ -21,12 +20,13 @@ import com.actionbarsherlock.view.MenuItem;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
-import de.geeksfactory.opacclient.frontend.AccountActivity.CancelTask;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 
 public class AccountEditActivity extends SherlockActivity {
+
+	public static final String EXTRA_ACCOUNT_ID = "id";
 
 	private Account account;
 	private EditText etLabel;
@@ -46,7 +46,8 @@ public class AccountEditActivity extends SherlockActivity {
 
 		AccountDataSource data = new AccountDataSource(this);
 		data.open();
-		account = data.getAccount(getIntent().getLongExtra("id", -1));
+		account = data.getAccount(getIntent()
+				.getLongExtra(EXTRA_ACCOUNT_ID, -1));
 		data.close();
 
 		etLabel.setText(account.getLabel());

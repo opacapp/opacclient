@@ -163,40 +163,6 @@ public abstract class OpacActivity extends SlidingFragmentActivity {
 		return super.onCreateOptionsMenu(menu);
 	}
 
-	protected void dialog_no_user() {
-		dialog_no_user(false);
-	}
-
-	protected void dialog_no_user(final boolean finish) {
-		setContentView(R.layout.answer_error);
-		((Button) findViewById(R.id.btPrefs))
-				.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						Intent intent = new Intent(OpacActivity.this,
-								AccountListActivity.class);
-						startActivity(intent);
-					}
-				});
-		((TextView) findViewById(R.id.tvErrHead)).setText("");
-		((TextView) findViewById(R.id.tvErrBody))
-				.setText(R.string.status_nouser);
-	}
-
-	protected void dialog_wrong_credentials(String s, final boolean finish) {
-		setContentView(R.layout.answer_error);
-		((Button) findViewById(R.id.btPrefs))
-				.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						Intent intent = new Intent(OpacActivity.this,
-								AccountListActivity.class);
-						startActivity(intent);
-					}
-				});
-		((TextView) findViewById(R.id.tvErrBody)).setText(s);
-	}
-
 	public interface AccountSelectedListener {
 		void accountSelected(Account account);
 	}
