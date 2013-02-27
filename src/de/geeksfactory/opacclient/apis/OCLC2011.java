@@ -314,11 +314,11 @@ public class OCLC2011 implements OpacApi {
 
 			params.add(new BasicNameValuePair("selectedSearchBranchlib", query
 					.getString(KEY_SEARCH_QUERY_BRANCH)));
-			if (query.containsKey(KEY_SEARCH_QUERY_HOME_BRANCH)
-					&& !query.getString(KEY_SEARCH_QUERY_HOME_BRANCH)
-							.equals(""))
-				params.add(new BasicNameValuePair("selectedViewBranchlib",
-						query.getString(KEY_SEARCH_QUERY_HOME_BRANCH)));
+			if (query.getString(KEY_SEARCH_QUERY_HOME_BRANCH) != null) {
+				if (!query.getString(KEY_SEARCH_QUERY_HOME_BRANCH).equals(""))
+					params.add(new BasicNameValuePair("selectedViewBranchlib",
+							query.getString(KEY_SEARCH_QUERY_HOME_BRANCH)));
+			}
 		}
 
 		String html = httpGet(opac_url + "/search.do?"
