@@ -1,0 +1,30 @@
+{
+	"city": "Offenburg", 
+	"group": "Baden-W\u00fcrttemberg", 
+	"title": null,
+	"support": "Katalogsuche", 
+	"api": "biber1992", 
+	"data": {
+		"baseurl": "http://217.86.216.47", 
+		"information": "http://www.stadtbibliothek.offenburg.de/",
+		"opacdir": "opac", 
+		"searchtable": [2, 3, 4, 5],
+        "mediatypes": {
+            "01": "BOOK", 
+            "10": "BOOK", 
+            "11": "BOOK", 
+            "13": "BOOK", 
+            "14": "BOOK", 
+            "33": "MAGAZINE", 
+            "33": "MAP", 
+            "20": "CD", 
+            "22": "CD", 
+            "23": "CD_MUSIC", 
+            "26": "GAME_CONSOLE_NINTENDO", 
+            "31": "DVD", 
+            "35": "BLURAY", 
+            "32": "BOARDGAME",
+            "40": "EBOOK" 
+        }
+	} 
+}

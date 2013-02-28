@@ -21,6 +21,7 @@ import android.content.res.AssetManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import de.geeksfactory.opacclient.apis.BiBer1992;
 import de.geeksfactory.opacclient.apis.Bond26;
 import de.geeksfactory.opacclient.apis.OCLC2011;
 import de.geeksfactory.opacclient.apis.OpacApi;
@@ -62,6 +63,8 @@ public class OpacClient extends Application {
 			newApiInstance = new OCLC2011();
 		else if (lib.getApi().equals("zones22"))
 			newApiInstance = new Zones22();
+		else if (lib.getApi().equals("biber1992"))
+			newApiInstance = new BiBer1992();
 		else
 			return null;
 
