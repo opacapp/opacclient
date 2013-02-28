@@ -1,5 +1,7 @@
 {
     "city": "Herten", 
+    "group": "Nordrhein-Westfalen", 
+    "title": null, 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {
@@ -33,23 +35,22 @@
         ], 
         "mediatypes": {
             "mDisket1S.gif": "PACKAGE", 
+            "mLosebS.gif": "UNKNOWN", 
+            "mComicS.gif": "BOOK", 
             "E-Ausleihe1.gif": "EBOOK", 
-            "mCasetteS.gif": "AUDIO_CASSETTE", 
             "monooS.gif": "BOOK", 
             "mReise2S.gif": "MAP", 
-            "mZtgS.gif": "MAGAZINE", 
             "mDVDS.gif": "DVD", 
             "mCDROMS.gif": "CD_SOFTWARE", 
             "CDS.gif": "CD", 
             "mFilmS.gif": "MOVIE", 
-            "mLosebS.gif": "UNKNOWN", 
+            "mCasetteS.gif": "AUDIO_CASSETTE", 
             "Video1S.gif": "MOVIE", 
             "mBuecherS.gif": "SCHOOL_VERSION", 
             "Munzingerk.gif": "UNKNOWN", 
             "mSpielS.gif": "BOARDGAME", 
             "mMusikCDS.gif": "CD", 
-            "mComicS.gif": "BOOK"
+            "mZtgS.gif": "MAGAZINE"
         }
-    }, 
-    "title": null
+    }
 }

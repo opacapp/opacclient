@@ -6,5 +6,6 @@
   "information": "http://www.stadtbuecherei.augsburg.de/index.php?id=sb_standorte" 
  }, 
  "support": "Katalogsuche und Konto (experimentell)", 
- "title": null
+ "title": null,
+ "group": "Bayern"
 }

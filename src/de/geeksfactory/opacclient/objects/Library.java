@@ -8,13 +8,14 @@ import org.json.JSONObject;
  * 
  * @author Raphael Michel
  */
-public class Library {
+public class Library implements Comparable<Library> {
 	private String ident;
 	private String city;
 	private String title;
 	private String support;
 	private String api;
 	private JSONObject data;
+	private String group;
 
 	/**
 	 * Create a Library object based on a <code>JSONObject</code>.
@@ -36,6 +37,7 @@ public class Library {
 		lib.setCity(input.getString("city"));
 		lib.setTitle(input.getString("title"));
 		lib.setSupport(input.getString("support"));
+		lib.setGroup(input.getString("group"));
 		lib.setData(input.getJSONObject("data"));
 		if (lib.getTitle().equals(""))
 			lib.setTitle(null);
@@ -161,5 +163,31 @@ public class Library {
 	 */
 	public void setData(JSONObject data) {
 		this.data = data;
+	}
+
+	/**
+	 * Get group the library belongs to
+	 * 
+	 * @return Group label
+	 */
+	public String getGroup() {
+		return group;
+	}
+
+	/**
+	 * Set group the library belongs to
+	 * 
+	 * @param data
+	 *            Group label
+	 */
+	public void setGroup(String group) {
+		this.group = group;
+	}
+
+	public int compareTo(Library arg0) {
+		int g = group.compareTo(arg0.getGroup());
+		if (g == 0)
+			g = city.compareTo(arg0.getCity());
+		return g;
 	}
 }

@@ -1,5 +1,7 @@
 {
     "city": "Sigmaringen", 
+    "group": "Baden-W\u00fcrttemberg", 
+    "title": null, 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {
@@ -39,6 +41,5 @@
             "schwalbe.gif": "UNKNOWN", 
             "spielekl.gif": "BOARDGAME"
         }
-    }, 
-    "title": null
+    }
 }

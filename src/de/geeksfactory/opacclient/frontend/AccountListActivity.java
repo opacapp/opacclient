@@ -1,10 +1,13 @@
 package de.geeksfactory.opacclient.frontend;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import org.acra.ACRA;
 import org.holoeverywhere.app.AlertDialog;
+import org.holoeverywhere.widget.ExpandableListView;
+import org.holoeverywhere.widget.ExpandableListView.OnChildClickListener;
 import org.json.JSONException;
 
 import android.content.DialogInterface;
@@ -41,15 +44,15 @@ public class AccountListActivity extends SherlockActivity {
 	}
 
 	public void add() {
-
 		AlertDialog.Builder builder = new AlertDialog.Builder(
 				AccountListActivity.this);
 		// Get the layout inflater
 		LayoutInflater inflater = getLayoutInflater();
 
-		View view = inflater.inflate(R.layout.simple_list_dialog, null);
+		View view = inflater.inflate(R.layout.expandable_list_dialog, null);
 
-		ListView lv = (ListView) view.findViewById(R.id.lvBibs);
+		ExpandableListView lv = (ExpandableListView) view
+				.findViewById(R.id.lvBibs);
 		try {
 			libraries = ((OpacClient) getApplication()).getLibraries();
 		} catch (IOException e) {
@@ -57,17 +60,23 @@ public class AccountListActivity extends SherlockActivity {
 		} catch (JSONException e) {
 			ACRA.getErrorReporter().handleException(e);
 		}
-		lv.setAdapter(new LibraryListAdapter(AccountListActivity.this,
-				libraries));
-		lv.setOnItemClickListener(new OnItemClickListener() {
+		final LibraryListAdapter la = new LibraryListAdapter(this);
+		Collections.sort(libraries);
+		for (Library lib : libraries) {
+			la.addItem(lib);
+		}
+		lv.setAdapter(la);
+		lv.setOnChildClickListener(new OnChildClickListener() {
+
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
+			public boolean onChildClick(ExpandableListView arg0, View arg1,
+					int groupPosition, int childPosition, long arg4) {
 				AccountDataSource data = new AccountDataSource(
 						AccountListActivity.this);
 				data.open();
 				Account acc = new Account();
-				acc.setLibrary(libraries.get(position).getIdent());
+				acc.setLibrary(la.getChild(groupPosition, childPosition)
+						.getIdent());
 				acc.setLabel(getString(R.string.default_account_name));
 				long insertedid = data.addAccount(acc);
 				data.close();
@@ -78,6 +87,7 @@ public class AccountListActivity extends SherlockActivity {
 				i.putExtra("id", insertedid);
 				i.putExtra("adding", true);
 				startActivity(i);
+				return false;
 			}
 		});
 

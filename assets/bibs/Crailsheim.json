@@ -1,21 +1,22 @@
 {
- "api": "bond26", 
- "city": "Crailsheim", 
- "data": {
-  "accounttable": null, 
-  "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-crailsheim", 
-  "copiestable": [
-   -1, 
-   -1, 
-   -1, 
-   1, 
-   2, 
-   3, 
-   -1
-  ], 
-  "information": "/../read-crailsheim/info.html", 
-  "reservationtable": null
- }, 
- "support": "Katalogsuche", 
- "title": null
+    "city": "Crailsheim", 
+    "group": "Baden-W\u00fcrttemberg", 
+    "title": null, 
+    "support": "Katalogsuche", 
+    "api": "bond26", 
+    "data": {
+        "information": "/../read-crailsheim/info.html", 
+        "copiestable": [
+            -1, 
+            -1, 
+            -1, 
+            1, 
+            2, 
+            3, 
+            -1
+        ], 
+        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-crailsheim", 
+        "reservationtable": null, 
+        "accounttable": null
+    }
 }

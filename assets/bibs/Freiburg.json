@@ -1,10 +1,11 @@
 {
- "api": "oclc2011", 
- "city": "Freiburg", 
- "data": {
-  "baseurl": "https://katalog.stadtbibliothek.freiburg.de/webOPACClient", 
-  "information": "http://www.freiburg.de/pb/,Lde/235320.html#anker278151" 
- }, 
- "support": "Katalogsuche und Konto (experimentell)", 
- "title": null
+    "city": "Freiburg", 
+    "group": "Baden-W\u00fcrttemberg", 
+    "title": null, 
+    "support": "Katalogsuche und Konto (experimentell)", 
+    "api": "oclc2011", 
+    "data": {
+        "information": "http://www.freiburg.de/pb/,Lde/235320.html#anker278151", 
+        "baseurl": "https://katalog.stadtbibliothek.freiburg.de/webOPACClient"
+    }
 }

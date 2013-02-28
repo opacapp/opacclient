@@ -1,5 +1,7 @@
 {
     "city": "Pforzheim", 
+    "group": "Baden-W\u00fcrttemberg", 
+    "title": null, 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {
@@ -35,24 +37,23 @@
             "mCDROMks.gif": "CD_SOFTWARE", 
             "mDVDkS.gif": "DVD", 
             "mMedipS.gif": "PACKAGE", 
-            "DVDGEBk.jpg": "DVD", 
+            "mMusikcdS.gif": "CD", 
             "MP3S.gif": "MP3", 
-            "EReaderS.jpg": "EBOOK", 
             "heissauflesenS.jpg": "BOOK", 
             "mCasetteS.gif": "AUDIO_CASSETTE", 
             "monooS.gif": "BOOK", 
-            "Bluray1S.jpg": "BLURAY", 
+            "mSpielS.gif": "BOARDGAME", 
             "mNoten1S.gif": "SCORE_MUSIC", 
             "mVideoS.gif": "MOVIE", 
             "bluraydiscS.jpg": "BLURAY", 
-            "bestsellerS.jpg": "MOVIE", 
-            "konsoleS.jpg": "GAME_CONSOLE", 
-            "mSpielS.gif": "BOARDGAME", 
-            "mMusikcdS.gif": "CD", 
-            "mZtgs.gif": "MAGAZINE", 
             "DMedienS.jpg": "EBOOK", 
+            "konsoleS.jpg": "GAME_CONSOLE", 
+            "mZtgs.gif": "MAGAZINE", 
+            "Bluray1S.jpg": "BLURAY", 
+            "DVDGEBk.jpg": "DVD", 
+            "EReaderS.jpg": "EBOOK", 
+            "bestsellerS.jpg": "MOVIE", 
             "konsole1S.jpg": "GAME_CONSOLE"
         }
-    }, 
-    "title": null
+    }
 }

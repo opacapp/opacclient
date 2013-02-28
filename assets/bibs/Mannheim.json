@@ -46,8 +46,9 @@
             "mMusikCDS.gif": "CD_MUSIC", 
             "cdkl.gif": "CD", 
             "MDVD.gif": "DVD",
-            "mBuchS.gif": BOOK
+            "mBuchS.gif": "BOOK"
         }
     }, 
-    "title": null
+    "title": null,
+	"group": "Baden-Württemberg"
 }

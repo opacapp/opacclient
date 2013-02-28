@@ -1,5 +1,7 @@
 {
     "city": "Stuhr", 
+    "group": "Niedersachsen", 
+    "title": null, 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {
@@ -36,15 +38,14 @@
             "diakl.gif": "UNKNOWN", 
             "mCasetteS.gif": "AUDIO_CASSETTE", 
             "NintendoDS.gif": "GAME_CONSOLE_NINTENDO", 
-            "zeitschriftkl.gif": "MAGAZINE", 
+            "spielekl.gif": "BOARDGAME", 
             "mDVDS.gif": "DVD", 
             "mCDROMS.gif": "CD_SOFTWARE", 
             "mFilmS.gif": "MOVIE", 
             "Wii.gif": "GAME_CONSOLE_WII", 
-            "spielekl.gif": "BOARDGAME", 
+            "zeitschriftkl.gif": "MAGAZINE", 
             "mMusikCDS.gif": "CD_MUSIC", 
             "cdkl.gif": "CD"
         }
-    }, 
-    "title": null
+    }
 }

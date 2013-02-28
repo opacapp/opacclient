@@ -1,5 +1,7 @@
 {
     "city": "Neu-Ulm", 
+    "group": "Bayern", 
+    "title": null, 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {
@@ -32,7 +34,7 @@
             4
         ], 
         "mediatypes": {
-            "mBUCHs.gif": "BOOK",
+            "mBUCHs.gif": "BOOK", 
             "EGR.BMP": "EBOOK", 
             "mCasetteS.gif": "AUDIO_CASSETTE", 
             "mZEITSCHRs.gif": "MAGAZINE", 
@@ -41,6 +43,5 @@
             "mCDRs.gif": "CD_SOFTWARE", 
             "mSPIELs.gif": "BOARDGAME"
         }
-    }, 
-    "title": null
+    }
 }

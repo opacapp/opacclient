@@ -1,10 +1,11 @@
 {
- "api": "oclc2011", 
- "city": "Dortmund", 
- "data": {
-  "baseurl": "https://www.ub.tu-dortmund.de/webOPACClient", 
-  "information": "http://www.ub.tu-dortmund.de/Ueberuns/Oeffnungszeiten.html" 
- }, 
- "support": "Katalogsuche und Konto (experimentell)", 
- "title": "Unibibliothek TU"
+    "city": "Dortmund", 
+    "group": "Nordrhein-Westfalen", 
+    "title": "Unibibliothek TU", 
+    "support": "Katalogsuche und Konto (experimentell)", 
+    "api": "oclc2011", 
+    "data": {
+        "information": "http://www.ub.tu-dortmund.de/Ueberuns/Oeffnungszeiten.html", 
+        "baseurl": "https://www.ub.tu-dortmund.de/webOPACClient"
+    }
 }

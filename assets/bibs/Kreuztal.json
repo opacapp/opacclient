@@ -1,5 +1,7 @@
 {
     "city": "Kreuztal", 
+    "group": "Nordrhein-Westfalen", 
+    "title": null, 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {
@@ -34,16 +36,15 @@
         ], 
         "mediatypes": {
             "dvdkl.gif": "DVD", 
-            "mComicS.gif": "BOOK", 
+            "cdkl.gif": "CD_SOFTWARE", 
             "kassettekl.gif": "AUDIO_CASSETTE", 
             "musersS.gif": "CD", 
             "mBmonoS.gif": "BOOK", 
             "videokl.gif": "MOVIE", 
             "mAboS.gif": "MAGAZINE", 
             "mMusikCDS.gif": "CD_MUSIC", 
-            "cdkl.gif": "CD_SOFTWARE", 
+            "mComicS.gif": "BOOK", 
             "mZeitS.gif": "NEWSPAPER"
         }
-    }, 
-    "title": null
+    }
 }

@@ -1,10 +1,11 @@
 {
- "api": "oclc2011", 
- "city": "Rüsselsheim", 
- "data": {
-  "baseurl": "http://stadtbuecherei.ruesselsheim.de/webOPACClient", 
-  "information": "http://www.stadt-ruesselsheim.de/Stadtbuecherei.html"
- }, 
- "support": "Katalogsuche und Konto (experimentell)", 
- "title": null
+    "city": "R\u00fcsselsheim", 
+    "group": "Hessen", 
+    "title": null, 
+    "support": "Katalogsuche und Konto (experimentell)", 
+    "api": "oclc2011", 
+    "data": {
+        "information": "http://www.stadt-ruesselsheim.de/Stadtbuecherei.html", 
+        "baseurl": "http://stadtbuecherei.ruesselsheim.de/webOPACClient"
+    }
 }

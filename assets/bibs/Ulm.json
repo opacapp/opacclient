@@ -1,5 +1,7 @@
 {
     "city": "Ulm", 
+    "group": "Baden-W\u00fcrttemberg", 
+    "title": null, 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {
@@ -33,17 +35,16 @@
         ], 
         "mediatypes": {
             "dvdkl.gif": "DVD", 
-            "wii_32.gif": "GAME_CONSOLE_WII", 
             "mCasetteS.gif": "AUDIO_CASSETTE", 
             "mComic1S.gif": "BOOK", 
             "DVDkl.gif": "DVD", 
             "Onleihekl.gif": "EBOOK", 
             "MCASETTES.gif": "AUDIO_CASSETTE", 
+            "wii_32.gif": "GAME_CONSOLE_WII", 
             "cdrom.gif": "CD_SOFTWARE", 
             "blu-ray_32.gif": "BLURAY", 
             "EDokukl.gif": "URL", 
             "mNoten3S.gif": "SCORE_MUSIC"
         }
-    }, 
-    "title": null
+    }
 }
