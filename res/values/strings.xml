@@ -44,6 +44,7 @@
     <string name="order">Sortierung</string>
     <string name="ret">Rückgabe</string>
     <string name="res">Vorbestellt</string>
+    <string name="export">Details exportieren</string>
     <string name="reserve">Vorbestellen</string>
     <string name="res_zst">Zweigstelle auswählen</string>
     <string name="doing_res">Führe Vorbestellung durch…</string>
