@@ -1,0 +1,30 @@
+{
+	"city": "Hagen",
+	"group": "Nordrhein-Westfalen", 
+	"title": null,
+	"support": "Katalogsuche", 
+	"api": "biber1992", 
+	"data": {
+  		"baseurl": "https://www.hagen.de", 
+  		"information": "https://www.hagen.de/web/de/webseiten/43sb/43sb_u/43SB-U.html", 
+  		"opacdir": "opax", 
+  		"searchtable": [2, 3, 4, 5],
+		"copiestable": [2, 1, 3, -1, 4, -1, -1],  		
+        "mediatypes": {
+            "1": "BOOK", 
+            "2": "MAGAZINE", 
+            "3": "CD_SOFTWARE", 
+            "6": "CD_MUSIC", 
+            "7": "LP_RECORD", 
+            "8": "SCORE_MUSIC", 
+            "9": "BOARDGAME",
+            "11": "DVD", 
+            "16": "BOOK", 
+            "18": "AUDIO_CASSETTE", 
+            "20": "AUDIOBOOK", 
+            "24": "BOOK", 
+            "25": "GAME_CONSOLE_WII", 
+            "26": "EBOOK" 
+        }
+	} 
+}

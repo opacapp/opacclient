@@ -1,0 +1,25 @@
+{
+	"city": "Aschaffenburg", 
+	"group": "Bayern", 
+	"title": null,
+	"support": "Katalogsuche", 
+	"api": "biber1992", 
+	"data": {
+		"baseurl": "http://www.stadtbibliothek-aschaffenburg.de", 
+		"information": "http://www.stadtbibliothek-aschaffenburg.de/relaunch/content/start/anschrift_oeffnungszeit.html",
+		"opacdir": "opac", 
+		"searchtable": [2, 3, 4, 5],
+		"rows_per_hit": 1, 
+        "mediatypes": {
+            "1": "BOOK", 
+            "2": "MAGAZINE", 
+            "3": "CD_SOFTWARE", 
+            "9": "BOARDGAME", 
+            "10": "MAP",
+            "11": "DVD",
+            "19": "BOOK",
+            "20": "CD_MUSIC",
+            "30": "EBOOK" 
+        }
+	} 
+}

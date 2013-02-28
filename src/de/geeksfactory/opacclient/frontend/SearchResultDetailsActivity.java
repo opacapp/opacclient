@@ -521,68 +521,75 @@ public class SearchResultDetailsActivity extends OpacActivity {
 					llCopies.addView(v);
 				}
 			} else {
-				for (ContentValues copy : result.getCopies()) {
-					View v = getLayoutInflater().inflate(
-							R.layout.copy_listitem, null);
+				if (result.getCopies().size() == 0) {
+					findViewById(R.id.tvCopies).setVisibility(View.GONE);
+				} else {
+					for (ContentValues copy : result.getCopies()) {
+						View v = getLayoutInflater().inflate(
+								R.layout.copy_listitem, null);
 
-					if (copy.containsKey(DetailledItem.KEY_COPY_LOCATION)) {
-						((TextView) v.findViewById(R.id.tvLocation))
-								.setText(copy
-										.getAsString(DetailledItem.KEY_COPY_LOCATION));
-						((TextView) v.findViewById(R.id.tvLocation))
-								.setVisibility(View.VISIBLE);
-					} else if (copy.containsKey(DetailledItem.KEY_COPY_BARCODE)) {
-						((TextView) v.findViewById(R.id.tvLocation))
-								.setText(copy
-										.getAsString(DetailledItem.KEY_COPY_BARCODE));
-						((TextView) v.findViewById(R.id.tvLocation))
-								.setVisibility(View.VISIBLE);
-					} else {
-						((TextView) v.findViewById(R.id.tvLocation))
-								.setVisibility(View.GONE);
-					}
-					if (copy.containsKey(DetailledItem.KEY_COPY_BRANCH)) {
-						((TextView) v.findViewById(R.id.tvZst)).setText(copy
-								.getAsString(DetailledItem.KEY_COPY_BRANCH));
-						((TextView) v.findViewById(R.id.tvZst))
-								.setVisibility(View.VISIBLE);
-					} else {
-						((TextView) v.findViewById(R.id.tvZst))
-								.setVisibility(View.GONE);
-					}
-					if (copy.containsKey(DetailledItem.KEY_COPY_STATUS)) {
-						((TextView) v.findViewById(R.id.tvStatus)).setText(copy
-								.getAsString(DetailledItem.KEY_COPY_STATUS));
-						((TextView) v.findViewById(R.id.tvStatus))
-								.setVisibility(View.VISIBLE);
-					} else {
-						((TextView) v.findViewById(R.id.tvStatus))
-								.setVisibility(View.GONE);
-					}
-					if (copy.containsKey(DetailledItem.KEY_COPY_RESERVATIONS)) {
-						((TextView) v.findViewById(R.id.tvVorbestellt))
-								.setText(getString(R.string.res)
-										+ ": "
-										+ copy.getAsString(DetailledItem.KEY_COPY_RESERVATIONS));
-						((TextView) v.findViewById(R.id.tvVorbestellt))
-								.setVisibility(View.VISIBLE);
-					} else {
-						((TextView) v.findViewById(R.id.tvVorbestellt))
-								.setVisibility(View.GONE);
-					}
-					if (copy.containsKey("rueckgabe")) {
-						((TextView) v.findViewById(R.id.tvRueckgabe))
-								.setText(getString(R.string.ret)
-										+ ": "
-										+ copy.getAsString(DetailledItem.KEY_COPY_RETURN));
-						((TextView) v.findViewById(R.id.tvRueckgabe))
-								.setVisibility(View.VISIBLE);
-					} else {
-						((TextView) v.findViewById(R.id.tvRueckgabe))
-								.setVisibility(View.GONE);
-					}
+						if (copy.containsKey(DetailledItem.KEY_COPY_LOCATION)) {
+							((TextView) v.findViewById(R.id.tvLocation))
+									.setText(copy
+											.getAsString(DetailledItem.KEY_COPY_LOCATION));
+							((TextView) v.findViewById(R.id.tvLocation))
+									.setVisibility(View.VISIBLE);
+						} else if (copy
+								.containsKey(DetailledItem.KEY_COPY_BARCODE)) {
+							((TextView) v.findViewById(R.id.tvLocation))
+									.setText(copy
+											.getAsString(DetailledItem.KEY_COPY_BARCODE));
+							((TextView) v.findViewById(R.id.tvLocation))
+									.setVisibility(View.VISIBLE);
+						} else {
+							((TextView) v.findViewById(R.id.tvLocation))
+									.setVisibility(View.GONE);
+						}
+						if (copy.containsKey(DetailledItem.KEY_COPY_BRANCH)) {
+							((TextView) v.findViewById(R.id.tvZst))
+									.setText(copy
+											.getAsString(DetailledItem.KEY_COPY_BRANCH));
+							((TextView) v.findViewById(R.id.tvZst))
+									.setVisibility(View.VISIBLE);
+						} else {
+							((TextView) v.findViewById(R.id.tvZst))
+									.setVisibility(View.GONE);
+						}
+						if (copy.containsKey(DetailledItem.KEY_COPY_STATUS)) {
+							((TextView) v.findViewById(R.id.tvStatus))
+									.setText(copy
+											.getAsString(DetailledItem.KEY_COPY_STATUS));
+							((TextView) v.findViewById(R.id.tvStatus))
+									.setVisibility(View.VISIBLE);
+						} else {
+							((TextView) v.findViewById(R.id.tvStatus))
+									.setVisibility(View.GONE);
+						}
+						if (copy.containsKey(DetailledItem.KEY_COPY_RESERVATIONS)) {
+							((TextView) v.findViewById(R.id.tvVorbestellt))
+									.setText(getString(R.string.res)
+											+ ": "
+											+ copy.getAsString(DetailledItem.KEY_COPY_RESERVATIONS));
+							((TextView) v.findViewById(R.id.tvVorbestellt))
+									.setVisibility(View.VISIBLE);
+						} else {
+							((TextView) v.findViewById(R.id.tvVorbestellt))
+									.setVisibility(View.GONE);
+						}
+						if (copy.containsKey("rueckgabe")) {
+							((TextView) v.findViewById(R.id.tvRueckgabe))
+									.setText(getString(R.string.ret)
+											+ ": "
+											+ copy.getAsString(DetailledItem.KEY_COPY_RETURN));
+							((TextView) v.findViewById(R.id.tvRueckgabe))
+									.setVisibility(View.VISIBLE);
+						} else {
+							((TextView) v.findViewById(R.id.tvRueckgabe))
+									.setVisibility(View.GONE);
+						}
 
-					llCopies.addView(v);
+						llCopies.addView(v);
+					}
 				}
 			}
 

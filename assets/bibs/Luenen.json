@@ -1,0 +1,24 @@
+{
+	"city": "L\u00fcnen", 
+	"group": "Nordrhein-Westfalen", 
+	"title": null,
+	"support": "Katalogsuche", 
+	"api": "biber1992", 
+	"data": {
+		"baseurl": "http://opac.luenen.de", 
+		"information": "https://www.luenen.de/kultur/buch/index.php",
+		"opacdir": "opac", 
+		"searchtable": [2, 3, 4, 5],
+        "mediatypes": {
+            "1": "BOOK", 
+            "2": "MAGAZINE", 
+            "3": "MOVIE", 
+            "4": "CD", 
+            "5": "DVD", 
+            "6": "CD", 
+            "8": "BOOK", 
+            "30": "EBOOK", 
+            "31": "CD_SOFTWARE" 
+        }
+	} 
+}

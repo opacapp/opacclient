@@ -1,0 +1,27 @@
+{
+	"city": "Würzburg", 
+	"group": "Bayern", 
+	"title": null,
+	"api": "biber1992", 
+	"support": "Katalogsuche", 
+	"data": {
+		"baseurl": "http://217.7.118.50", 
+		"information": "http://www.wuerzburg.de/de/buerger/stadtbuecherei/index.html", 
+		"opacdir": "opax", 
+		"searchtable": [2, 3, 4, 5],
+		"copiestable": [3, 1, 2, -1, 4, -1, -1], 
+        "mediatypes": {
+            "1": "BOOK", 
+            "2": "MAGAZINE",
+            "3": "CD_SOFTWARE", 
+            "6": "CD_MUSIC", 
+            "8": "SCORE_MUSIC", 
+            "9": "BOARDGAME", 
+            "10": "MAP", 
+            "11": "DVD", 
+            "19": "BOOK", 
+            "24": "BLURAY",             
+            "30": "EBOOK" 
+        }
+	} 
+}
