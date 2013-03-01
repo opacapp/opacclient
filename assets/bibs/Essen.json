@@ -1,0 +1,13 @@
+{
+	"city": "Essen", 
+ 	"group": "Nordrhein-Westfalen", 
+	"title": null,
+	"support": "Katalogsuche", 
+	"api": "biber1992", 
+	"data": {
+		"baseurl": "http://katalog.stadtbibliothek-essen.de", 
+		"information": "http://www.stadtbibliothek-essen.de/de/oeffnungszeiten/oeffnungszeiten.html", 
+		"opacdir": "opac", 
+		"searchtable": [1, 2, 3, 4]
+	} 
+}

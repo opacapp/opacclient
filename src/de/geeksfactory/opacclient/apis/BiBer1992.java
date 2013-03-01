@@ -15,7 +15,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -58,15 +57,15 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  * 
  * Katalogsuche tested with
  * 
- * Name				Media	amazon	mixed	Media	
- * 					type	Bitmaps	Table	types
- * 					images			Layout	search
- * ---------------------------------------------------------
- * Offenburg		ok		no		no		yes
- * Essen			no		no		no		yes
- * Hagen        	ok		yes		yes		yes
- * Würzburg			ok		yes		yes		yes
- * Friedrichshafen: ok		yes		yes		yes
+ * Name					Media	amazon	mixed	Media	Branch	
+ * 						type	Bitmaps	Table	types
+ * 						images			Layout	search
+ * ------------------------------------------------------------
+ * BaWü/Offenburg		ok		no		no		yes		no
+ * NRW/Essen			no		no		no		yes		not sup.
+ * NRW/Hagen       		ok		yes		yes		yes		yes		
+ * Bay/Würzburg			ok		yes		yes		yes		yes
+ * BaWü/Friedrichshafen	ok		yes		yes		yes		yes
  *
  */
 public class BiBer1992 implements OpacApi {
@@ -114,7 +113,8 @@ public class BiBer1992 implements OpacApi {
 				KEY_SEARCH_QUERY_YEAR, 
 				KEY_SEARCH_QUERY_SYSTEM,
 				KEY_SEARCH_QUERY_PUBLISHER,
-				KEY_SEARCH_QUERY_CATEGORY};
+				KEY_SEARCH_QUERY_CATEGORY,
+				KEY_SEARCH_QUERY_BRANCH};
 	}
 
 	@Override
@@ -190,6 +190,7 @@ public class BiBer1992 implements OpacApi {
 		return result;
 	}	
 	/*
+	 * ----- media types -----
      * Example Wuerzburg:
      *    <td ...><input type="checkbox" name="MT" value="1" ...></td>
      *    <td ...><img src="../image/spacer.gif.S" title="Buch"><br>Buch</td>
@@ -207,6 +208,18 @@ public class BiBer1992 implements OpacApi {
      * Example Essen:
 	 *   <input type="radio" name="MT" checked value="MTYP0"><img src="../image/all.gif.S" title="Alles">
      *   <input type="radio" name="MT" value="MTYP7"><img src="../image/cdrom.gif.S" title="CD-ROM">
+     *   
+     * ----- Branches -----
+     * Example Essen:  no closing </option> !!!
+     *   <select name="AORT">
+     *     <option value="ZWST1">Altendorf
+     *   </select>
+     * 
+     * Example Hagen, Würzburg, Friedrichshafen:
+     *   <select name="ZW" class="sel1">
+     *     <option selected value="ZWST0">Alle Bibliotheksorte</option>
+     *   </select>
+     *   
 	 */
 	private void extract_meta(Document doc) {
 		m_metadata.open();
@@ -251,6 +264,20 @@ public class BiBer1992 implements OpacApi {
 				}
 			}
 		}
+		
+		// get branches
+		Elements br_opts = doc.select("form select[name=ZW] option");
+		for (int i = 0; i < br_opts.size(); i++) {
+			Element opt = br_opts.get(i);
+			// suppress "Alle Standorte", because "all" is added anyway by this app 
+			if (!opt.val().equals("") && 
+				!opt.text().equals("") && 
+				!opt.text().startsWith("Alle")) {
+				m_metadata.addMeta(MetaDataSource.META_TYPE_BRANCH,
+						m_library.getIdent(), opt.val(), opt.text());
+			}
+		}
+		
 		m_metadata.close();
 	}
 	
@@ -332,6 +359,11 @@ public class BiBer1992 implements OpacApi {
 			mediaType = "MTYP0";	// key for "All"
 		}
 		
+		String branch = getStringFromBundle(query, KEY_SEARCH_QUERY_BRANCH);
+		if (branch.equals("")) {
+			branch = "ZWST0";	// key for "All"
+		}
+		
 		m_nameValuePairs.clear();
 		m_nameValuePairs.add(new BasicNameValuePair("CNN1", "AND"));
 		m_nameValuePairs.add(new BasicNameValuePair("CNN2", "AND"));
@@ -359,6 +391,7 @@ public class BiBer1992 implements OpacApi {
 		m_nameValuePairs.add(new BasicNameValuePair("REG7", "PY"));
 		m_nameValuePairs.add(new BasicNameValuePair("SHOW", "20")); // but result brings 50
 		m_nameValuePairs.add(new BasicNameValuePair("SHOWSTAT", "N"));
+		m_nameValuePairs.add(new BasicNameValuePair("ZW",   branch));
 		m_nameValuePairs.add(new BasicNameValuePair("FROMPOS", "1"));
 
 		return searchGetPage(1);

@@ -1,0 +1,25 @@
+{
+	"city": "Friedrichshafen", 
+	"group": "Baden-W\u00fcrttemberg", 
+	"title": "Medienhaus am See",
+	"support": "Katalogsuche", 
+	"api": "biber1992", 
+	"data": {
+		"baseurl": "http://medienkatalog.friedrichshafen.de", 
+		"information": "http://www.medienhaus-am-see.de/wir-ueber-uns/",
+		"opacdir": "opax", 
+		"searchtable": [2, 3, 4, 5],
+        "mediatypes": {
+            "1": "BOOK", 
+            "2": "MAGAZINE",
+            "6": "CD_MUSIC", 
+            "9": "BOARDGAME", 
+            "10": "MAP", 
+            "11": "MOVIE", 
+            "23": "CD_SOFTWARE", 
+            "26": "GAME_CONSOLE_NINTENDO",             
+            "30": "EBOOK", 
+            "61": "AUDIOBOOK" 
+        }
+	} 
+}
