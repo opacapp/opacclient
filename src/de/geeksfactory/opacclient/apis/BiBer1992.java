@@ -61,12 +61,13 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  * 						type	Bitmaps	Table	types
  * 						images			Layout	search
  * ------------------------------------------------------------
- * BaWü/Offenburg		ok		no		no		yes		no
- * NRW/Essen			no		no		no		yes		not sup.
+ * BaWü/Offenburg		ok		n/a		no		yes		n/a
+ * NRW/Essen			n/a		n/a		no		yes		not sup.
  * NRW/Hagen       		ok		yes		yes		yes		yes		
  * Bay/Würzburg			ok		yes		yes		yes		yes
  * BaWü/Friedrichshafen	ok		yes		yes		yes		yes
- *
+ * Bay/Aschaffenburg	ok		n/a		no		yes		n/a
+ * 
  */
 public class BiBer1992 implements OpacApi {
 
@@ -205,7 +206,7 @@ public class BiBer1992 implements OpacApi {
      * Unfortunately Biber miss the end tag </input>, so opt.text() does not work!
      * (at least Offenburg)
      * 
-     * Example Essen:
+     * Example Essen, Aschaffenburg:
 	 *   <input type="radio" name="MT" checked value="MTYP0"><img src="../image/all.gif.S" title="Alles">
      *   <input type="radio" name="MT" value="MTYP7"><img src="../image/cdrom.gif.S" title="CD-ROM">
      *   
@@ -232,11 +233,15 @@ public class BiBer1992 implements OpacApi {
 			if (!opt.val().equals("")) {
 				String text = opt.text();
 				if (text.length() == 0) {
-					// text is empty, check layout Essen: 
-					// <input name="MT"><img title="mediatype">
+					// text is empty, check layouts: 
+					// Essen:	  <input name="MT"><img title="mediatype">
+					// Schaffenb: <input name="MT"><img alt="mediatype">
 					Element img = opt.nextElementSibling();
 					if (img != null && img.tagName().equals("img")) {
 						text = img.attr("title");
+						if (text.equals("")) {
+							text = img.attr("alt");
+						}
 					}
 				}
 				if (text.length() == 0) {
@@ -424,7 +429,9 @@ public class BiBer1992 implements OpacApi {
 	}
 
 	/*
-	 * result table format: Two <tr> per hit
+	 * result table format: 
+	 * 		JSON "rows_per_hit" = 1: One <tr> per hit
+	 * 		JSON "rows_per_hit" = 2: Two <tr> per hit  (default)
 	 * <form>
 	 * <table>
 	 * <tr valign="top">
@@ -446,14 +453,21 @@ public class BiBer1992 implements OpacApi {
 		Document doc = Jsoup.parse(html);
 		Elements trList = doc.select("form table tr[valign]");  // <tr valign="top">
 		Elements elem = null;
+		int rows_per_hit = 2;
+		
+		try {
+			int rows = m_data.getInt("rows_per_hit");
+			rows_per_hit = rows;
+		} catch (JSONException e) {			
+		}
 
 		// limit to 20 entries
-		int numOfEntries = trList.size() / 2;	// two rows per entry
+		int numOfEntries = trList.size() / rows_per_hit;	// two rows per entry
 		if (numOfEntries > numOfResultsPerPage)
 			numOfEntries = numOfResultsPerPage;
 
 		for (int i = 0; i < numOfEntries; i++) {
-			Element tr = trList.get(i*2);
+			Element tr = trList.get(i * rows_per_hit);
 			SearchResult sr = new SearchResult();
 			
 			// ID as href tag
@@ -499,7 +513,7 @@ public class BiBer1992 implements OpacApi {
 			sr.setInnerhtml( desc );
 			
 			// number
-			sr.setNr(i/2);
+			sr.setNr(i / rows_per_hit);
 			results.add(sr);
 		}
 		
