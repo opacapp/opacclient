@@ -1,0 +1,27 @@
+{
+	"city": "Gelsenkirchen", 
+	"group": "Nordrhein-Westfalen", 
+	"title": null,
+	"api": "biber1992", 
+	"support": "Katalogsuche", 
+	"data": {
+		"baseurl": "http://katalog.stadtbibliothek-ge.de", 
+		"information": "http://stadtbibliothek.gelsenkirchen.de/Homepage/Kontakt/oeffnungszeiten.asp", 
+		"opacdir": "opax", 
+		"searchtable": [2, 3, 4, 5],
+        "mediatypes": {
+            "1": "BOOK", 
+            "2": "MAGAZINE",
+            "3": "CD_SOFTWARE", 
+            "6": "CD_MUSIC", 
+            "9": "BOARDGAME", 
+            "11": "DVD", 
+            "13": "AUDIOBOOK", 
+            "17": "SCHOOL_VERSION",
+            "18": "PACKAGE",
+            "20": "AUDIOBOOK", 
+            "25": "GAME_CONSOLE",             
+            "30": "EBOOK" 
+        }
+	} 
+}
