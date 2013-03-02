@@ -68,7 +68,10 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  * BaWü/Friedrichshafen	ok		yes		yes		yes		yes
  * Bay/Aschaffenburg	ok		n/a		no		yes		n/a
  * NRW/Gelsenkirchen	ok		yes		yes		yes		yes	
- * 
+ * NRW/Herford			n/a		yes		yes		yes		n/a
+ * NRW/Lünen			ok		yes		no		yes		n/a
+ * BRW/Duisburg			ok		yes		yes		yes		n/a
+ * 			 
  */
 public class BiBer1992 implements OpacApi {
 

@@ -1,0 +1,13 @@
+{
+	"city": "Herford", 
+	"group": "Nordrhein-Westfalen", 
+	"title": null,
+	"api": "biber1992", 
+	"support": "Katalogsuche", 
+	"data": {
+		"baseurl": "http://62.153.231.37", 
+		"information": "http://www.bibliothek.herford.de", 
+		"opacdir": "opax", 
+		"searchtable": [2, 3, 4]
+	} 
+}

@@ -1,0 +1,25 @@
+{
+	"city": "Duisburg", 
+	"group": "Nordrhein-Westfalen", 
+	"title": null,
+	"api": "biber1992", 
+	"support": "Katalogsuche", 
+	"data": {
+		"baseurl": "http://opac.stadtbibliothek.duisburg.de", 
+		"information": "http://www.duisburg.de/stadtbib/vorort/index.php", 
+		"opacdir": "opax", 
+		"searchtable": [2, 3, 4, 5],
+        "mediatypes": {
+            "1": "BOOK", 
+            "2": "MAGAZINE",
+            "3": "CD", 
+            "4": "MOVIE", 
+            "5": "AUDIO_CASSETTE", 
+            "6": "CD_MUSIC", 
+            "8": "SCORE_MUSIC", 
+            "11": "DVD", 
+            "18": "EBOOK", 
+            "27": "BLURAY"             
+        }
+	} 
+}
