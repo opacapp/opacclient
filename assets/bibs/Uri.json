@@ -1,0 +1,11 @@
+{
+ "api": "oclc2011", 
+ "city": "Uri", 
+ "data": {
+  "baseurl": "http://kbu.ur.ch/webOPACClient.sisis", 
+  "information": "http://www.kbu.ch/oeffnungszeiten.html"
+ }, 
+ "support": "Katalogsuche und Konto (experimentell)", 
+ "title": "Kantonsbibliothek Altdorf",
+ "group": "Schweiz"
+}
