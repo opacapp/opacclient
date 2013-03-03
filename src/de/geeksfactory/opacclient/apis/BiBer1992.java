@@ -1,11 +1,23 @@
 /**
- * BiBer gestartet mit Stadtbibliothek Offenburg
- * start URL: http://217.86.216.47/opac/de/qsim_frm.html.S
+ * Copyright (C) 2013 by Rüdiger Wurth under the MIT license:
  * 
- *  open:
- *  issue #23: Basic support for library system "Biber" -> Essen
- *  issue #32: Integration of "BiBer" (copyright 2006) -> Karlsruhe https://opac.karlsruhe.de/ 
- *  issue #33: Integration of "BiBer" (copyright 1992) -> Essen
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), 
+ * to deal in the Software without restriction, including without limitation 
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the Software 
+ * is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+ * DEALINGS IN THE SOFTWARE.
  */
 package de.geeksfactory.opacclient.apis;
 
@@ -50,6 +62,14 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
 /**
  * @author Ruediger Wurth, 16.02.2013 
  * Web identification: "copyright 1992-2011 by BiBer GmbH"
+ * 
+ * BiBer gestartet mit Stadtbibliothek Offenburg
+ * start URL: http://217.86.216.47/opac/de/qsim_frm.html.S
+ * 
+ *  open:
+ *  issue #23: Basic support for library system "Biber" -> Essen
+ *  issue #32: Integration of "BiBer" (copyright 2006) -> Karlsruhe https://opac.karlsruhe.de/ 
+ *  issue #33: Integration of "BiBer" (copyright 1992) -> Essen
  * 
  * Features:
  * In getResult(), mixed table layout is supported: column-wise and row-wise
@@ -450,7 +470,7 @@ public class BiBer1992 implements OpacApi {
 	 * 	 <td class="td3" ...>&nbsp;...</td>
 	 *   <td class="td2" ...>&nbsp;...</td>
 	 *   <td colspan="4" ...><font size="-1"><font class="p1">Erwachsenenbibliothek</font></font><div class="hr4"></div></td>
-	 * </tr> 
+	 * </tr>
 	 */
 	private List<SearchResult> parse_search(String html) {
 		List<SearchResult> results = new ArrayList<SearchResult>();
@@ -465,6 +485,18 @@ public class BiBer1992 implements OpacApi {
 		} catch (JSONException e) {			
 		}
 
+		// Overall search results
+		// are very differently layouted, but have always the text:  
+		// "....Treffer Gesamt (nnn)"
+		Pattern pattern = Pattern.compile("Treffer Gesamt \\(([0-9]+)\\)");
+		Matcher matcher = pattern.matcher(html);
+		if (matcher.find()) {
+			m_results = "Treffer Gesamt: " + matcher.group(1);
+		} else {
+			m_results = "";
+		}
+
+		
 		// limit to 20 entries
 		int numOfEntries = trList.size() / rows_per_hit;	// two rows per entry
 		if (numOfEntries > numOfResultsPerPage)
@@ -524,6 +556,7 @@ public class BiBer1992 implements OpacApi {
 		//m_resultcount = results.size();
 		return results;
 	}
+
 	
 	/* (non-Javadoc)
 	 * @see de.geeksfactory.opacclient.apis.OpacApi#getResultById(java.lang.String)
@@ -715,7 +748,13 @@ public class BiBer1992 implements OpacApi {
 
 	@Override
 	public String getShareUrl(String id, String title) {
-		return null;
+		// id is normally full path like   "/opac/ftitle.C?LANG=de&FUNC=full&331313252=YES"
+		// but sometimes (Wuerzburg)       "ftitle.C?LANG=de&FUNC=full&331313252=YES"
+		if (! id.startsWith("/")) {
+			id = "/" + m_opac_dir + "/" + id;
+		}
+		
+		return m_opac_url + id;
 	}
 	
 	@Override
