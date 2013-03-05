@@ -803,6 +803,49 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			finish();
 			return true;
 
+		case R.id.action_export:
+			if (this.item == null) {
+				Toast toast = Toast.makeText(SearchResultDetailsActivity.this,
+						getString(R.string.share_wait), Toast.LENGTH_SHORT);
+				toast.show();
+			} else {
+				Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+				intent.setType("text/plain");
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+
+				// Add data to the intent, the receiving app will decide
+				// what to do with it.
+				intent.putExtra(Intent.EXTRA_SUBJECT, title);
+
+				String t = title;
+				try {
+					bib = java.net.URLEncoder.encode(app.getLibrary()
+							.getIdent(), "UTF-8");
+					t = java.net.URLEncoder.encode(t, "UTF-8");
+				} catch (UnsupportedEncodingException e) {
+				}
+
+				String text = title + "\n\n";
+
+				for (Detail detail : this.item.getDetails()) {
+					String colon = "";
+					if (!detail.getDesc().endsWith(":"))
+						colon = ":";
+					text += detail.getDesc() + colon + "\n"
+							+ detail.getContent() + "\n\n";
+				}
+
+				String shareUrl = app.getApi().getShareUrl(id, title);
+				if (shareUrl != null)
+					text += shareUrl;
+				else
+					text += "http://opacapp.de/:" + bib + ":" + id + ":" + t;
+
+				intent.putExtra(Intent.EXTRA_TEXT, text);
+				startActivity(Intent.createChooser(intent, getResources()
+						.getString(R.string.share)));
+			}
+			return true;
 		case R.id.action_share:
 			if (this.item == null) {
 				Toast toast = Toast.makeText(SearchResultDetailsActivity.this,
