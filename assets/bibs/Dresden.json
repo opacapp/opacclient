@@ -6,6 +6,7 @@
     "api": "oclc2011", 
     "data": {
         "information": "http://www.bibo-dresden.de/4/index_4.html", 
-        "baseurl": "http://217.5.176.101/webOPACClient"
+        "baseurl": "http://217.5.176.101/webOPACClient",
+        "startparams": "Login=webopac"
     }
 }

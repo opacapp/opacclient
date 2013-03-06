@@ -3,10 +3,8 @@ package de.geeksfactory.opacclient.frontend;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.acra.ACRA;
@@ -24,7 +22,6 @@ import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -35,11 +32,9 @@ import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.barcode.BarcodeScanIntegrator;
 import de.geeksfactory.opacclient.objects.Account;
-import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
-import de.geeksfactory.opacclient.storage.StarDataSource;
 
 public class SearchActivity extends OpacActivity {
 
@@ -51,6 +46,7 @@ public class SearchActivity extends OpacActivity {
 	private Set<String> fields;
 	private LoadMetaDataTask lmdt;
 	public boolean metaDataLoading = false;
+	private long last_meta_try = 0;
 
 	public void urlintent() {
 		Uri d = getIntent().getData();
@@ -509,6 +505,10 @@ public class SearchActivity extends OpacActivity {
 	public void loadMetaData(String lib, boolean force) {
 		if (metaDataLoading)
 			return;
+		if (System.currentTimeMillis()-last_meta_try < 3600){
+			return;
+		}
+		last_meta_try = System.currentTimeMillis();
 		MetaDataSource data = new SQLMetaDataSource(this);
 		data.open();
 		boolean fetch = !data.hasMeta(lib);
