@@ -8,6 +8,7 @@
 		"baseurl": "http://62.153.231.37", 
 		"information": "http://www.bibliothek.herford.de", 
 		"opacdir": "opax", 
-		"searchtable": [2, 3, 4]
+		"searchtable": [2, 3, 4],
+		"copiestable": [3, 1, 2, -1, 4, -1, -1] 
 	} 
 }

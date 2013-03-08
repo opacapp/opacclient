@@ -48,6 +48,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import android.content.ContentValues;
 import android.os.Bundle;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
@@ -77,20 +78,20 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  * 
  * Katalogsuche tested with
  * 
- * Name					Media	amazon	mixed	Media	Branch	
- * 						type	Bitmaps	Table	types
- * 						images			Layout	search
+ * Name					Media	amazon	copy	Media	Branch	
+ * 						type	Bitmaps	table	types
+ * 						images			avail	search
  * ------------------------------------------------------------
- * BaWü/Offenburg		ok		n/a		no		yes		n/a
- * NRW/Essen			n/a		n/a		no		yes		not sup.
- * NRW/Hagen       		ok		yes		yes		yes		yes		
- * Bay/Würzburg			ok		yes		yes		yes		yes
  * BaWü/Friedrichshafen	ok		yes		yes		yes		yes
+ * BaWü/Offenburg		ok		n/a		no		yes		n/a
  * Bay/Aschaffenburg	ok		n/a		no		yes		n/a
+ * Bay/Würzburg			ok		yes		yes		yes		yes
+ * NRW/Duisburg			ok		yes		yes		yes		n/a
+ * NRW/Essen			n/a		n/a		no		yes		not sup.
  * NRW/Gelsenkirchen	ok		yes		yes		yes		yes	
+ * NRW/Hagen       		ok		yes		yes		yes		yes		
  * NRW/Herford			n/a		yes		yes		yes		n/a
  * NRW/Lünen			ok		yes		no		yes		n/a
- * BRW/Duisburg			ok		yes		yes		yes		n/a
  * 			 
  */
 public class BiBer1992 implements OpacApi {
@@ -546,6 +547,10 @@ public class BiBer1992 implements OpacApi {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			// remove links "<a ...>...</a>
+			// needed for Friedrichshafen: "Warenkorb", "Vormerkung"
+			//            Herford: "Medienkorb"
+			desc = desc.replaceAll("<a .*?</a>", ""); 
 			sr.setInnerhtml( desc );
 			
 			// number
@@ -600,8 +605,8 @@ public class BiBer1992 implements OpacApi {
 	 * In some rows, the 1st column is empty, 
 	 * then 2nd column is continued text from row above.
 	 * 
-	 * Some libraries have mixed layout.
-	 * Like above but additionally in the two last rows reverse layout.
+	 * Some libraries have a second section for the copies in stock (Exemplare).
+	 * This 2nd section has reverse layout.
 	 * 
 	 * |-------------------|
 	 * | Subject | Content |
@@ -612,7 +617,7 @@ public class BiBer1992 implements OpacApi {
 	 * |-------------------|
 	 * | Subject | Content |
 	 * |-------------------------------------------------|
-	 * |         | Subject | Subject | Subject | Subject |
+	 * |         | Site    | Signatur| ID      | State   |
 	 * |-------------------------------------------------|
 	 * |         | Content | Content | Content | Content |
 	 * |-------------------------------------------------|
@@ -625,10 +630,34 @@ public class BiBer1992 implements OpacApi {
 		Elements rows = document.select("html body form table tr");
 		//Elements rows = document.select("html body div form table tr");
 		
-		Element rowReverseSubject = null;
-
+		//Element rowReverseSubject = null;
 		Detail detail = null;
+		
+		// prepare copiestable
+		ContentValues copy_last_content = null;
+		int copy_row = 0;
+		
+		String[] copy_keys = new String[] { 
+				DetailledItem.KEY_COPY_BARCODE,		// "barcode";
+				DetailledItem.KEY_COPY_BRANCH,		// "zst";
+				DetailledItem.KEY_COPY_DEPARTMENT,	// "abt";
+				DetailledItem.KEY_COPY_LOCATION,	// "ort"; 
+				DetailledItem.KEY_COPY_STATUS,		// "status";
+				DetailledItem.KEY_COPY_RETURN,		// "rueckgabe";
+				DetailledItem.KEY_COPY_RESERVATIONS // "vorbestellt";
+			};
+		int[] copy_map = new int[] { -1, -1, -1, -1, -1, -1, -1 };
 
+		try {
+			JSONArray map = m_data.getJSONArray("copiestable");
+			for (int i=0; i < copy_keys.length; i++) {
+				copy_map[i] = map.getInt(i);
+			}
+		} catch (Exception e) {
+			// "copiestable" is optional
+		}
+
+		// go through all rows
 		for (Element row : rows) {
 			Elements columns = row.select("td");
 
@@ -661,32 +690,43 @@ public class BiBer1992 implements OpacApi {
 					}
 				}
 			} else if (columns.size() > 2) {
-				// here the data is suddenly column by column, instead row by row
-				if (rowReverseSubject == null) {
-					// store the reverse row with all the subjects
-					rowReverseSubject = row;
-				}
-				else
-				{
-					// reverse row with all the content
-					Elements subjectColumns = rowReverseSubject.select("td");
-					Elements contentColumns = row.select("td");
-					if (subjectColumns.size() == contentColumns.size())	{
-						for (int i=0; i < subjectColumns.size(); i++) {
-							String subjectText = subjectColumns.get(i).text().replace("\u00a0"," ").trim();
-							String contentText = contentColumns.get(i).text().replace("\u00a0"," ").trim();
-							if (subjectText.length() > 0 && contentText.length() > 0) {
-								detail = new Detail(subjectText, contentText);
-								item.getDetails().add(detail);
+				// This is the second section: the copies in stock ("Exemplare")
+				// With reverse layout: first row is headline, skipped via (copy_row > 0)
+				if (copy_row > 0) {
+					ContentValues e = new ContentValues();
+					for (int j = 0; j < copy_keys.length; j++) {
+						int col = copy_map[j];
+						if (col > -1) {
+							String text = "";
+							if (copy_keys[j].equals(DetailledItem.KEY_COPY_BRANCH))
+							{
+								// for "Standort" only use ownText() to suppress Link "Wegweiser"
+								text = columns.get(col).ownText().replace("\u00a0"," ").trim();
 							}							
+							if (text.length() == 0) {
+								// text of children
+								text = columns.get(col).text().replace("\u00a0"," ").trim();
+							}
+							if (text.length() == 0) {
+								// empty table cell, take the one above
+								// this is sometimes the case for "Standort"
+								if (copy_keys[j].equals(DetailledItem.KEY_COPY_STATUS)) {
+									// but do it not for Status
+									text = " ";
+								} else {
+									text = copy_last_content.getAsString(copy_keys[j]);
+								} 
+							}
+							e.put(copy_keys[j], text);
 						}
 					}
-					// clean up
-					rowReverseSubject = null;
-					detail = null;
-				}
-			}
-		}
+					item.addCopy(e);
+					copy_last_content = e;
+				}//ignore 1st row
+				copy_row++;
+				
+			}//if columns.size
+		}//for rows
 		
 		return item;
 	}
