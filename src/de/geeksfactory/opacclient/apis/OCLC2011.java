@@ -390,7 +390,7 @@ public class OCLC2011 implements OpacApi {
 			List<Node> children = tr.child(2).childNodes();
 			int childrennum = children.size();
 			boolean haslink = false;
-
+			
 			for (int ch = 0; ch < childrennum; ch++) {
 				Node node = children.get(ch);
 				if (node instanceof TextNode) {
@@ -398,7 +398,9 @@ public class OCLC2011 implements OpacApi {
 					if (!text.equals(""))
 						desc += text + "<br />";
 				} else if (node instanceof Element) {
-					if (((Element) node).tag().getName().equals("a")) {
+					if (((Element) node).tag().getName().equals("div")) {
+						desc += ((Element) node).text() + "<br />";
+					} else if (((Element) node).tag().getName().equals("a")) {
 						if (node.hasAttr("href") && !haslink) {
 							haslink = true;
 							desc += ((Element) node).text() + "<br />";
@@ -981,6 +983,8 @@ public class OCLC2011 implements OpacApi {
 			NotReachableException, JSONException, SocketException {
 		start(); // TODO: Is this necessary?
 
+		int resultNum;
+		
 		if (!login(acc))
 			return null;
 
@@ -989,8 +993,6 @@ public class OCLC2011 implements OpacApi {
 				+ "/userAccount.do?methodToCall=showAccount&typ=1");
 		List<ContentValues> medien = new ArrayList<ContentValues>();
 		Document doc = Jsoup.parse(html);
-		int resultNum = Integer.parseInt(doc.select("#label1").text().trim()
-				.replaceAll(".*\\(([0-9]+)\\).*", "$1"));
 		parse_medialist(medien, doc, 1);
 		for (Element link : doc.select(".box-right").first().select("a")) {
 			Uri uri = Uri.parse(link.attr("abs:href"));
@@ -1000,7 +1002,11 @@ public class OCLC2011 implements OpacApi {
 						Integer.parseInt(uri.getQueryParameter("anzPos")));
 			}
 		}
-		assert (resultNum == medien.size());
+		if (doc.select("#label1").size() > 0) {
+			resultNum = Integer.parseInt(doc.select("#label1").text()
+					.trim().replaceAll(".*\\(([0-9]+)\\).*", "$1"));
+			assert (resultNum == medien.size());
+		}
 
 		// Bestellte Medien
 		html = httpGet(opac_url
@@ -1008,8 +1014,7 @@ public class OCLC2011 implements OpacApi {
 		List<ContentValues> reserved = new ArrayList<ContentValues>();
 		doc = Jsoup.parse(html);
 		parse_reslist("6", reserved, doc, 1);
-		resultNum = Integer.parseInt(doc.select("#label6").text().trim()
-				.replaceAll(".*\\(([0-9]+)\\).*", "$1"));
+		Elements label6 = doc.select("#label6");
 		for (Element link : doc.select(".box-right").first().select("a")) {
 			Uri uri = Uri.parse(link.attr("abs:href"));
 			if (uri.getQueryParameter("methodToCall").equals("pos")) {
@@ -1024,8 +1029,6 @@ public class OCLC2011 implements OpacApi {
 				+ "/userAccount.do?methodToCall=showAccount&typ=7");
 		doc = Jsoup.parse(html);
 		parse_reslist("7", reserved, doc, 1);
-		resultNum += Integer.parseInt(doc.select("#label7").text().trim()
-				.replaceAll(".*\\(([0-9]+)\\).*", "$1"));
 		for (Element link : doc.select(".box-right").first().select("a")) {
 			Uri uri = Uri.parse(link.attr("abs:href"));
 			if (uri.getQueryParameter("methodToCall").equals("pos")) {
@@ -1034,8 +1037,13 @@ public class OCLC2011 implements OpacApi {
 						Integer.parseInt(uri.getQueryParameter("anzPos")));
 			}
 		}
-
-		assert (resultNum == reserved.size());
+		if (label6.size() > 0 && doc.select("#label7").size() > 0) {
+			resultNum = Integer.parseInt(label6.text().trim()
+					.replaceAll(".*\\(([0-9]+)\\).*", "$1"));
+			resultNum += Integer.parseInt(doc.select("#label7").text().trim()
+					.replaceAll(".*\\(([0-9]+)\\).*", "$1"));
+			assert (resultNum == reserved.size());
+		}
 
 		AccountData res = new AccountData(acc.getId());
 		res.setLent(medien);
@@ -1077,5 +1085,15 @@ public class OCLC2011 implements OpacApi {
 		else
 			return opac_url + "/start.do?" + startparams
 					+ "searchType=1&Query=-1%3D%22" + title + "%22";
+	}
+
+	@Override
+	public int getSupportFlags() {
+		return 0;
+	}
+
+	@Override
+	public boolean prolongAll(Account account) throws IOException {
+		return false;
 	}
 }

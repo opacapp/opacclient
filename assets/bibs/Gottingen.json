@@ -1,5 +1,7 @@
 {
     "city": "G\u00f6ttingen", 
+    "group": "Niedersachsen", 
+    "title": null, 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {
@@ -57,6 +59,5 @@
             "gamepad.gif": "GAME_CONSOLE", 
             "cd.gif": "CD"
         }
-    }, 
-    "title": null
+    }
 }

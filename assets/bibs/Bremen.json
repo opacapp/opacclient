@@ -1,10 +1,11 @@
 {
- "api": "oclc2011", 
- "city": "Bremen", 
- "data": {
-  "baseurl": "https://opac.stadtbibliothek-bremen.de/webOPACClient", 
-  "information": "http://www.stadtbibliothek-bremen.de/Bibliotheken.html"
- }, 
- "support": "Katalogsuche und Konto (experimentell)", 
- "title": null
+    "city": "Bremen", 
+    "group": "Bremen", 
+    "title": null, 
+    "support": "Katalogsuche und Konto (experimentell)", 
+    "api": "oclc2011", 
+    "data": {
+        "information": "http://www.stadtbibliothek-bremen.de/Bibliotheken.html", 
+        "baseurl": "https://opac.stadtbibliothek-bremen.de/webOPACClient"
+    }
 }

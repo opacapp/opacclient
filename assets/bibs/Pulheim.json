@@ -1,10 +1,11 @@
 {
- "api": "oclc2011", 
- "city": "Pulheim", 
- "data": {
-  "baseurl": "http://212.16.253.33:8080/webOPACClient", 
-  "information": "http://www.pulheim.de/bildung-und-kultur/buechereien/?id=7752#cntnr_14330" 
- }, 
- "support": "Katalogsuche und Konto (experimentell)", 
- "title": null
+    "city": "Pulheim", 
+    "group": "Nordrhein-Westfalen", 
+    "title": null, 
+    "support": "Katalogsuche und Konto (experimentell)", 
+    "api": "oclc2011", 
+    "data": {
+        "information": "http://www.pulheim.de/bildung-und-kultur/buechereien/?id=7752#cntnr_14330", 
+        "baseurl": "http://212.16.253.33:8080/webOPACClient"
+    }
 }

@@ -1,10 +1,11 @@
 {
- "api": "oclc2011", 
- "city": "Würzburg", 
- "data": {
-  "baseurl": "http://katalog.bibliothek.uni-wuerzburg.de/InfoGuideClient.ubwsis", 
-  "information": "http://www.bibliothek.uni-wuerzburg.de/ub_infos/oeffnungszeiten/"
- }, 
- "support": "Katalogsuche und Konto (experimentell)", 
- "title": "Unibibliothek"
+    "city": "W\u00fcrzburg", 
+    "group": "Bayern", 
+    "title": "Unibibliothek", 
+    "support": "Katalogsuche und Konto (experimentell)", 
+    "api": "oclc2011", 
+    "data": {
+        "information": "http://www.bibliothek.uni-wuerzburg.de/ub_infos/oeffnungszeiten/", 
+        "baseurl": "http://katalog.bibliothek.uni-wuerzburg.de/InfoGuideClient.ubwsis"
+    }
 }

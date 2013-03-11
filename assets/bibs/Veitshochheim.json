@@ -1,5 +1,7 @@
 {
     "city": "Veitsh\u00f6chheim", 
+    "group": "Bayern", 
+    "title": null, 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {
@@ -36,6 +38,5 @@
             "mFilmS.gif": "MOVIE", 
             "mDVDS.gif": "DVD"
         }
-    }, 
-    "title": null
+    }
 }

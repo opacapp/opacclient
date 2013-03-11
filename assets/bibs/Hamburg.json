@@ -1,10 +1,11 @@
 {
- "api": "zones22", 
- "city": "Hamburg", 
- "data": {
-  "baseurl": "https://www.buecherhallen.de/alswww2.dll/",
-  "information": "http://www.buecherhallen.de/ca/d/r/"
- }, 
- "support": "Katalogsuche", 
- "title": null
+    "city": "Hamburg", 
+    "group": "Hamburg", 
+    "title": null, 
+    "support": "Katalogsuche", 
+    "api": "zones22", 
+    "data": {
+        "information": "http://www.buecherhallen.de/ca/d/r/", 
+        "baseurl": "https://www.buecherhallen.de/alswww2.dll/"
+    }
 }

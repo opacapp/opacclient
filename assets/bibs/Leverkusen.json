@@ -1,5 +1,7 @@
 {
     "city": "Leverkusen", 
+    "group": "Nordrhein-Westfalen", 
+    "title": null, 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {
@@ -35,6 +37,5 @@
             "mDVDS.gif": "DVD", 
             "mCDROMS.gif": "CD_SOFTWARE"
         }
-    }, 
-    "title": null
+    }
 }

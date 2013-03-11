@@ -1,21 +1,22 @@
 {
- "api": "bond26", 
- "city": "Langenfeld", 
- "data": {
-  "accounttable": null, 
-  "baseurl": "http://www1.langenfeld.de/webopac", 
-  "copiestable": [
-   5, 
-   -1, 
-   -1, 
-   1, 
-   0, 
-   3, 
-   -1
-  ], 
-  "information": "/../read/info.html", 
-  "reservationtable": null
- }, 
- "support": "Katalogsuche", 
- "title": null
+    "city": "Langenfeld", 
+    "group": "Nordrhein-Westfalen", 
+    "title": null, 
+    "support": "Katalogsuche", 
+    "api": "bond26", 
+    "data": {
+        "information": "/../read/info.html", 
+        "copiestable": [
+            5, 
+            -1, 
+            -1, 
+            1, 
+            0, 
+            3, 
+            -1
+        ], 
+        "baseurl": "http://www1.langenfeld.de/webopac", 
+        "reservationtable": null, 
+        "accounttable": null
+    }
 }

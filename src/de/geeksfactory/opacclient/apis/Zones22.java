@@ -512,4 +512,14 @@ public class Zones22 implements OpacApi {
 		return opac_url + "/APS_PRESENT_BIB?"
 				+ URLEncodedUtils.format(params, "UTF-8");
 	}
+
+	@Override
+	public int getSupportFlags() {
+		return 0;
+	}
+
+	@Override
+	public boolean prolongAll(Account account) throws IOException {
+		return false;
+	}
 }

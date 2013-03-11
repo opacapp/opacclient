@@ -1,5 +1,7 @@
 {
     "city": "Iserlohn", 
+    "group": "Nordrhein-Westfalen", 
+    "title": null, 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {
@@ -34,14 +36,13 @@
         "mediatypes": {
             "mCasetteS.gif": "AUDIO_CASSETTE", 
             "mZtgS.gif": "MAGAZINE", 
-            "cdkl.gif": "DVD", 
             "mComic1S.gif": "BOOK", 
             "mFilmS.gif": "MOVIE", 
             "cdrom.gif": "CD_SOFTWARE", 
+            "dvdgr.gif": "DVD", 
             "mMusik2S.gif": "CD_MUSIC", 
             "mOnleiheS.gif": "EBOOK", 
-            "dvdgr.gif": "DVD"
+            "cdkl.gif": "DVD"
         }
-    }, 
-    "title": null
+    }
 }

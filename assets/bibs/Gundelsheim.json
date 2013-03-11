@@ -1,21 +1,22 @@
 {
- "api": "bond26", 
- "city": "Gundelsheim", 
- "data": {
-  "accounttable": null, 
-  "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-gundelsheim", 
-  "copiestable": [
-   -1, 
-   -1, 
-   -1, 
-   0, 
-   2, 
-   3, 
-   -1
-  ], 
-  "information": "http://www.bibliotheken.bw-online.de/read-gundelsheim/info.html", 
-  "reservationtable": null
- }, 
- "support": "Katalogsuche", 
- "title": null
+    "city": "Gundelsheim", 
+    "group": "Baden-Württemberg", 
+    "title": null, 
+    "support": "Katalogsuche", 
+    "api": "bond26", 
+    "data": {
+        "information": "http://www.bibliotheken.bw-online.de/read-gundelsheim/info.html", 
+        "copiestable": [
+            -1, 
+            -1, 
+            -1, 
+            0, 
+            2, 
+            3, 
+            -1
+        ], 
+        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-gundelsheim", 
+        "reservationtable": null, 
+        "accounttable": null
+    }
 }

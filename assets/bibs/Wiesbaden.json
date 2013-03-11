@@ -1,36 +1,37 @@
 {
- "api": "bond26", 
- "city": "Wiesbaden", 
- "data": {
-  "accounttable": [
-   4, 
-   0, 
-   1, 
-   2, 
-   3, 
-   5, 
-   5, 
-   7
-  ], 
-  "baseurl": "https://bond.wiesbaden.de/webopac", 
-  "copiestable": [
-   -1, 
-   0, 
-   4, 
-   3, 
-   1, 
-   2, 
-   5
-  ], 
-  "information": "/../read/info.html", 
-  "reservationtable": [
-   0, 
-   1, 
-   5, 
-   2, 
-   6
-  ]
- }, 
- "support": "Katalogsuche und Konto", 
- "title": null
+    "city": "Wiesbaden", 
+    "group": "Hessen", 
+    "title": null, 
+    "support": "Katalogsuche und Konto", 
+    "api": "bond26", 
+    "data": {
+        "information": "/../read/info.html", 
+        "copiestable": [
+            -1, 
+            0, 
+            4, 
+            3, 
+            1, 
+            2, 
+            5
+        ], 
+        "baseurl": "https://bond.wiesbaden.de/webopac", 
+        "reservationtable": [
+            0, 
+            1, 
+            5, 
+            2, 
+            6
+        ], 
+        "accounttable": [
+            4, 
+            0, 
+            1, 
+            2, 
+            3, 
+            5, 
+            5, 
+            7
+        ]
+    }
 }

@@ -1,5 +1,7 @@
 {
     "city": "Rostock", 
+    "group": "Mecklenburg-Vorpommern", 
+    "title": null, 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {
@@ -33,22 +35,21 @@
         ], 
         "mediatypes": {
             "zta_s.gif": "NEWSPAPER", 
-            "edocs.gif": "UNKNOWN", 
             "linge_lingk_s.gif": "UNKNOWN", 
-            "tme_s.gif": "CD_MUSIC", 
+            "fsp_sfe_s.gif": "MOVIE", 
             "zts_s.gif": "NEWSPAPER", 
             "bbe_bse_s.gif": "BOOK", 
             "HBE_HSE_HBK_HSK_s.gif": "AUDIOBOOK", 
             "tmk_s.gif": "CD_MUSIC", 
             "fk_sfk_s.gif": "MOVIE", 
-            "fsp_sfe_s.gif": "MOVIE", 
+            "tme_s.gif": "CD_MUSIC", 
             "game_s.gif": "BOARDGAME", 
             "elearning_kl.gif": "EBOOK", 
             "note_s.gif": "SCORE_MUSIC", 
-            "pce_pck_s.gif": "CD_SOFTWARE", 
             "karten_s.gif": "MAP", 
-            "bbk_bsk_s.gif": "BOOK"
+            "pce_pck_s.gif": "CD_SOFTWARE", 
+            "bbk_bsk_s.gif": "BOOK", 
+            "edocs.gif": "UNKNOWN"
         }
-    }, 
-    "title": null
+    }
 }

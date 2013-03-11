@@ -1,0 +1,11 @@
+{
+ "api": "oclc2011", 
+ "city": "Bamberg", 
+ "data": {
+  "baseurl": "https://katalog.ub.uni-bamberg.de/InfoGuideClient.ubgsis", 
+  "information": "http://www.uni-bamberg.de/ub/oeffnungszeiten/"
+ }, 
+ "support": "Katalogsuche und Konto (experimentell)", 
+ "title": "Universität",
+ "group": "Bayern"
+}

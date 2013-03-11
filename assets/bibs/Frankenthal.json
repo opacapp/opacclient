@@ -1,5 +1,7 @@
 {
     "city": "Frankenthal", 
+    "group": "Rheinland-Pfalz", 
+    "title": null, 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {
@@ -34,13 +36,12 @@
         "mediatypes": {
             "dvdkl.gif": "DVD", 
             "mCasetteS.gif": "AUDIO_CASSETTE", 
+            "mComput1S.gif": "CD_SOFTWARE", 
             "mNoten1S.gif": "SCORE_MUSIC", 
             "mFilmS.gif": "MOVIE", 
             "spielekl.gif": "BOARDGAME", 
-            "mComput1S.gif": "CD_SOFTWARE", 
             "mComicS.gif": "BOOK", 
             "logokatalog-e.jpg": "EBOOK"
         }
-    }, 
-    "title": null
+    }
 }

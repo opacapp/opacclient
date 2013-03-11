@@ -21,5 +21,7 @@
     <color name="account_head_fg">#F3F3F3</color>
     <color name="error_bg">#cc0000</color>
     <color name="error_fg">#ffffff</color>
+    <color name="liblist_group_bg">#dddddd</color>
+    <color name="liblist_group_bg_active">#aaaaaa</color>
 
 </resources>

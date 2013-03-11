@@ -1,63 +1,126 @@
 package de.geeksfactory.opacclient.frontend;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.Library;
 
-public class LibraryListAdapter extends ArrayAdapter<Library> {
-	private List<Library> objects;
+public class LibraryListAdapter extends BaseExpandableListAdapter {
+	private Context context;
+	private ArrayList<String> groups;
+	private ArrayList<ArrayList<Library>> children;
 
 	@Override
-	public View getView(int position, View contentView, ViewGroup viewGroup) {
-		View view = null;
+	public boolean areAllItemsEnabled() {
+		return true;
+	}
 
-		// position always 0-7
-		if (objects.get(position) == null) {
-			LayoutInflater layoutInflater = (LayoutInflater) getContext()
+	public LibraryListAdapter(Context context) {
+		this.context = context;
+		this.groups = new ArrayList<String>();
+		this.children = new ArrayList<ArrayList<Library>>();
+	}
+
+	public void addItem(Library library) {
+		if (!groups.contains(library.getGroup())) {
+			groups.add(library.getGroup());
+		}
+		int index = groups.indexOf(library.getGroup());
+		if (children.size() < index + 1) {
+			children.add(new ArrayList<Library>());
+		}
+		children.get(index).add(library);
+	}
+
+	@Override
+	public Library getChild(int groupPosition, int childPosition) {
+		return children.get(groupPosition).get(childPosition);
+	}
+
+	@Override
+	public long getChildId(int groupPosition, int childPosition) {
+		return childPosition;
+	}
+
+	@Override
+	public View getChildView(int groupPosition, int childPosition,
+			boolean isLastChild, View convertView, ViewGroup parent) {
+		Library item = (Library) getChild(groupPosition, childPosition);
+
+		if (convertView == null) {
+			LayoutInflater infalInflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			view = layoutInflater.inflate(R.layout.library_listitem, viewGroup,
-					false);
-			return view;
+			convertView = infalInflater
+					.inflate(R.layout.library_listitem, null);
 		}
 
-		Library item = objects.get(position);
-
-		if (contentView == null) {
-			LayoutInflater layoutInflater = (LayoutInflater) getContext()
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			view = layoutInflater.inflate(R.layout.library_listitem, viewGroup,
-					false);
-		} else {
-			view = contentView;
-		}
-
-		TextView tvCity = (TextView) view.findViewById(R.id.tvCity);
+		TextView tvCity = (TextView) convertView.findViewById(R.id.tvCity);
 		tvCity.setText(item.getCity());
-		TextView tvTitle = (TextView) view.findViewById(R.id.tvTitle);
+		TextView tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
 		if (item.getTitle() != null && !item.getTitle().equals("null")) {
 			tvTitle.setText(item.getTitle());
 			tvTitle.setVisibility(View.VISIBLE);
 		} else
 			tvTitle.setVisibility(View.GONE);
-		TextView tvSupport = (TextView) view.findViewById(R.id.tvSupport);
+		TextView tvSupport = (TextView) convertView
+				.findViewById(R.id.tvSupport);
 		if (item.getSupport() != null && !item.getSupport().equals("null")) {
 			tvSupport.setText(item.getSupport());
 			tvSupport.setVisibility(View.VISIBLE);
 		} else
 			tvSupport.setVisibility(View.GONE);
 
-		return view;
+		return convertView;
 	}
 
-	public LibraryListAdapter(Context context, List<Library> objects) {
-		super(context, R.layout.library_listitem, objects);
-		this.objects = objects;
+	@Override
+	public int getChildrenCount(int groupPosition) {
+		return children.get(groupPosition).size();
+	}
+
+	@Override
+	public Object getGroup(int groupPosition) {
+		return groups.get(groupPosition);
+	}
+
+	@Override
+	public int getGroupCount() {
+		return groups.size();
+	}
+
+	@Override
+	public long getGroupId(int groupPosition) {
+		return groupPosition;
+	}
+
+	@Override
+	public View getGroupView(int groupPosition, boolean isExpanded,
+			View convertView, ViewGroup parent) {
+		String group = (String) getGroup(groupPosition);
+		if (convertView == null) {
+			LayoutInflater infalInflater = (LayoutInflater) context
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			convertView = infalInflater.inflate(R.layout.group_listitem, null);
+		}
+		TextView tv = (TextView) convertView.findViewById(R.id.tvTitle);
+		tv.setText(group);
+		return convertView;
+	}
+
+	@Override
+	public boolean hasStableIds() {
+		return true;
+	}
+
+	@Override
+	public boolean isChildSelectable(int arg0, int arg1) {
+		return true;
 	}
 }

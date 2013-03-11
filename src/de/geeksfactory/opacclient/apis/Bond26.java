@@ -185,6 +185,14 @@ public class Bond26 implements OpacApi {
 						library.getIdent(), opt.val(), opt.text());
 		}
 
+		mg_opts = doc.select("#mediart option");
+		for (int i = 0; i < mg_opts.size(); i++) {
+			Element opt = mg_opts.get(i);
+			if (!opt.val().equals(""))
+				metadata.addMeta(MetaDataSource.META_TYPE_CATEGORY,
+						library.getIdent(), "$" + opt.val(), opt.text());
+		}
+
 		metadata.close();
 	}
 
@@ -192,7 +200,15 @@ public class Bond26 implements OpacApi {
 	public void start() throws ClientProtocolException, SocketException,
 			IOException, NotReachableException {
 		initialised = true;
-		httpGet(opac_url + "/woload.asp?lkz=1&nextpage=");
+		String db = "";
+		if (data.has("db")) {
+			try {
+				db = "&db=" + data.getString("db");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		httpGet(opac_url + "/woload.asp?lkz=1&nextpage=" + db);
 
 		metadata.open();
 		if (!metadata.hasMeta(library.getIdent())) {
@@ -253,8 +269,16 @@ public class Bond26 implements OpacApi {
 				getStringFromBundle(query, KEY_SEARCH_QUERY_KEYWORDB)));
 		nameValuePairs.add(new BasicNameValuePair("zst", getStringFromBundle(
 				query, KEY_SEARCH_QUERY_BRANCH)));
-		nameValuePairs.add(new BasicNameValuePair("medigrp",
-				getStringFromBundle(query, KEY_SEARCH_QUERY_CATEGORY)));
+
+		String cat = getStringFromBundle(query, KEY_SEARCH_QUERY_CATEGORY);
+		if (cat.startsWith("$"))
+			nameValuePairs.add(new BasicNameValuePair("mediart",
+					getStringFromBundle(query, KEY_SEARCH_QUERY_CATEGORY)
+							.substring(1)));
+		else
+			nameValuePairs.add(new BasicNameValuePair("medigrp",
+					getStringFromBundle(query, KEY_SEARCH_QUERY_CATEGORY)));
+
 		nameValuePairs.add(new BasicNameValuePair("isbn", getStringFromBundle(
 				query, KEY_SEARCH_QUERY_ISBN)));
 		nameValuePairs.add(new BasicNameValuePair("jahr_von",
@@ -564,6 +588,36 @@ public class Bond26 implements OpacApi {
 	}
 
 	@Override
+	public boolean prolongAll(Account account) throws IOException {
+		if (!initialised)
+			start();
+		if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
+				|| logged_in_as == null) {
+			try {
+				account(account);
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return false;
+			}
+		} else if (logged_in_as.getId() != account.getId()) {
+			try {
+				account(account);
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+		String html = httpGet(opac_url + "/index.asp?target=alleverl");
+		Document doc = Jsoup.parse(html);
+
+		if (doc.getElementsByClass("kontomeldung").size() == 1) {
+			last_error = doc.getElementsByClass("kontomeldung").get(0).text();
+			return false;
+		}
+		return true;
+	}
+
+	@Override
 	public boolean cancel(Account account, String a) throws IOException,
 			NotReachableException {
 		if (!initialised)
@@ -794,5 +848,11 @@ public class Bond26 implements OpacApi {
 	public String getShareUrl(String id, String title) {
 		// We use the default proxy at opacapp.de here
 		return null;
+	}
+
+	@Override
+	public int getSupportFlags() {
+		return SUPPORT_FLAG_ACCOUNT_EXTENDABLE
+				| SUPPORT_FLAG_ACCOUNT_PROLONG_ALL;
 	}
 }

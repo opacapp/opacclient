@@ -7,5 +7,11 @@
         android:showAsAction="always"
         android:title="@string/refresh">
     </item>
+    <item
+        android:id="@+id/action_prolong_all"
+        android:icon="@drawable/ic_action_prolong"
+        android:showAsAction="never"
+        android:title="@string/prolong_all">
+    </item>
 
 </menu>

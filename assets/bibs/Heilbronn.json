@@ -1,5 +1,7 @@
 {
     "city": "Heilbronn", 
+    "group": "Baden-W\u00fcrttemberg", 
+    "title": null, 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {
@@ -33,21 +35,20 @@
         ], 
         "mediatypes": {
             "mCDROMkS.gif": "CD_SOFTWARE", 
-            "Picto-klein.GIF": "EBOOK", 
+            "mCDROM-TopS.gif": "CD_SOFTWARE", 
             "mMedipS.gif": "PACKAGE", 
             "mLPs.gif": "LP_RECORD", 
-            "bibnetzS.gif": "UNKNOWN", 
             "mCasetteS.gif": "AUDIO_CASSETTE", 
             "mReise2S.gif": "MAP", 
             "mCDS.gif": "CD", 
+            "TOP-CDS.gif": "CD", 
             "mDVDS.gif": "DVD", 
             "mNoten1S.gif": "SCORE_MUSIC", 
-            "mCDROM-TopS.gif": "CD_SOFTWARE", 
+            "Picto-klein.GIF": "EBOOK", 
             "mBuecherS.gif": "BOOK", 
             "TopDVD-S.gif": "MOVIE", 
             "mMonoS.gif": "BOOK", 
-            "TOP-CDS.gif": "CD"
+            "bibnetzS.gif": "UNKNOWN"
         }
-    }, 
-    "title": null
+    }
 }

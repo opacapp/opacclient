@@ -168,6 +168,24 @@ public interface OpacApi {
 	public static final String KEY_SEARCH_QUERY_CATEGORY = "mediengruppe";
 
 	/**
+	 * Returns whether – if account view is not supported in the given library –
+	 * there is an automatic mechanism to help implementing account support in
+	 * this city. Only makes sense when {@link #isAccountSupported(Library)} can
+	 * return true and {@link #getAccountExtendableInfo(Account)} returns
+	 * something useful.
+	 * 
+	 * Flag to be present in the result of {@link #getSupportFlags()}.
+	 */
+	public static final int SUPPORT_FLAG_ACCOUNT_EXTENDABLE = 0x0000001;
+
+	/**
+	 * Availability of the "prolong all lent items" feature
+	 * 
+	 * Flag to be present in the result of {@link #getSupportFlags()}.
+	 */
+	public static final int SUPPORT_FLAG_ACCOUNT_PROLONG_ALL = 0x0000002;
+
+	/**
 	 * May be called on application startup and you are free to call it in <our
 	 * {@link #search} implementation or similar positions. It is commonly used
 	 * to initialize a session. You MUST NOT rely on it being called and should
@@ -460,11 +478,27 @@ public interface OpacApi {
 	 * @param media
 	 *            Media identification
 	 * @return <code>true</code> on success, <code>false</code> on failure. In
-	 *         case of failure, <code>getLast_error</code> will be called for
-	 *         more information.
+	 *         case of failure, {@link #getLast_error()} will be called for more
+	 *         information.
 	 * @see de.geeksfactory.opacclient.objects.AccountData
 	 */
 	public boolean prolong(Account account, String media) throws IOException;
+
+	/**
+	 * Extend the lending period of all lent items. Will only be called if your
+	 * {@link #getSupportFlags()} implementation's return value contains the
+	 * {@link #SUPPORT_FLAG_ACCOUNT_PROLONG_ALL} flag. If you don't support the
+	 * feature, just implement a stub method, like <code>return false;</code>
+	 * 
+	 * This function is always called from a background thread, you can use
+	 * blocking network operations in it.
+	 * 
+	 * @return <code>true</code> on success, <code>false</code> on failure. In
+	 *         case of failure, {@link #getLast_error()} will be called for more
+	 *         information.
+	 * @see de.geeksfactory.opacclient.objects.AccountData
+	 */
+	public boolean prolongAll(Account account) throws IOException;
 
 	/**
 	 * Cancel a media reservation/order identified by the given String (see
@@ -546,6 +580,9 @@ public interface OpacApi {
 	 * 
 	 * @return <code>true</code> if account support can easily be implemented
 	 *         with some extra information or <code>false</code> if it can't.
+	 * @deprecated Functionality is provided by {@link #getSupportFlags()},
+	 *             please return <code>SUPPORT_FLAG_ACCOUNT_EXTENDABLE</code>
+	 *             from <code>getSupportFlags</code>.
 	 */
 	public boolean isAccountExtendable();
 
@@ -579,5 +616,12 @@ public interface OpacApi {
 	 *      href="https://github.com/raphaelm/opacclient.web/blob/master/bibproxy.php">bibproxy.php</a>
 	 */
 	public String getShareUrl(String id, String title);
+
+	/**
+	 * Return which optional features your API implementation supports.
+	 * 
+	 * @return combination (bitwise OR) of <code>SUPPORT_FLAG_*</code> constants
+	 */
+	public int getSupportFlags();
 
 }
