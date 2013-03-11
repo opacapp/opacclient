@@ -1,0 +1,11 @@
+{
+    "city": "W\u00dc/SW/AB/CO", 
+    "group": "Bayern", 
+    "title": "Hochschulbibliothek", 
+    "support": "Katalogsuche und Konto (experimentell)", 
+    "api": "oclc2011", 
+    "data": {
+        "information": "http://www.fh-sw.de/sw/bibliothek/zeiten.php", 
+        "baseurl": "https://recherche.bibkatalog.de/InfoGuideClient.fwssis"
+    }
+}

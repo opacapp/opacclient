@@ -390,7 +390,7 @@ public class OCLC2011 implements OpacApi {
 			List<Node> children = tr.child(2).childNodes();
 			int childrennum = children.size();
 			boolean haslink = false;
-
+			
 			for (int ch = 0; ch < childrennum; ch++) {
 				Node node = children.get(ch);
 				if (node instanceof TextNode) {
@@ -398,7 +398,9 @@ public class OCLC2011 implements OpacApi {
 					if (!text.equals(""))
 						desc += text + "<br />";
 				} else if (node instanceof Element) {
-					if (((Element) node).tag().getName().equals("a")) {
+					if (((Element) node).tag().getName().equals("div")) {
+						desc += ((Element) node).text() + "<br />";
+					} else if (((Element) node).tag().getName().equals("a")) {
 						if (node.hasAttr("href") && !haslink) {
 							haslink = true;
 							desc += ((Element) node).text() + "<br />";
