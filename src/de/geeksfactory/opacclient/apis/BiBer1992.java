@@ -26,14 +26,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.acra.ACRA;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -78,20 +82,20 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  * 
  * Katalogsuche tested with
  * 
- * Name					Media	amazon	copy	Media	Branch	
- * 						type	Bitmaps	table	types
+ * Name					Media	amazon	copy	Media	Branch	Account	
+ * 						type	Bitmaps	table	types			support
  * 						images			avail	search
- * ------------------------------------------------------------
- * BaWü/Friedrichshafen	ok		yes		yes		yes		yes
- * BaWü/Offenburg		ok		n/a		no		yes		n/a
- * Bay/Aschaffenburg	ok		n/a		no		yes		n/a
- * Bay/Würzburg			ok		yes		yes		yes		yes
- * NRW/Duisburg			ok		yes		yes		yes		n/a
- * NRW/Essen			n/a		n/a		no		yes		not sup.
- * NRW/Gelsenkirchen	ok		yes		yes		yes		yes	
- * NRW/Hagen       		ok		yes		yes		yes		yes		
- * NRW/Herford			n/a		yes		yes		yes		n/a
- * NRW/Lünen			ok		yes		no		yes		n/a
+ * --------------------------------------------------------------------
+ * BaWü/Friedrichshafen	ok		yes		yes		yes		yes		-
+ * BaWü/Offenburg		ok		n/a		no		yes		n/a		yes
+ * Bay/Aschaffenburg	ok		n/a		no		yes		n/a		-
+ * Bay/Würzburg			ok		yes		yes		yes		yes		-
+ * NRW/Duisburg			ok		yes		yes		yes		n/a		-
+ * NRW/Essen			n/a		n/a		no		yes		not sup.-
+ * NRW/Gelsenkirchen	ok		yes		yes		yes		yes		-
+ * NRW/Hagen       		ok		yes		yes		yes		yes		-
+ * NRW/Herford			n/a		yes		yes		yes		n/a		-
+ * NRW/Lünen			ok		yes		no		yes		n/a		-
  * 			 
  */
 public class BiBer1992 implements OpacApi {
@@ -115,6 +119,19 @@ public class BiBer1992 implements OpacApi {
 	// number of results is always 50 which is too much
 	final private int numOfResultsPerPage = 20;	
 	
+	private String httpPost(String url, UrlEncodedFormEntity data)
+			throws ClientProtocolException, IOException {
+		HttpPost httppost = new HttpPost(url);
+		httppost.setEntity(data);
+		HttpResponse response = m_ahc.execute(httppost);
+		if (response.getStatusLine().getStatusCode() >= 400) {
+			throw new NotReachableException();
+		}
+		String html = convertStreamToString(response.getEntity().getContent());
+		response.getEntity().consumeContent();
+		return html;
+	}
+
 	@Override
 	public String getResults() {
 		return m_results;
@@ -440,16 +457,8 @@ public class BiBer1992 implements OpacApi {
 		m_nameValuePairs.remove(m_nameValuePairs.size()-1);
 		m_nameValuePairs.add(new BasicNameValuePair("FROMPOS", String.valueOf(startNum)));
 		
-		HttpPost httppost = new HttpPost(m_opac_url + "/" + m_opac_dir + "/query.C");		
-		httppost.setEntity(new UrlEncodedFormEntity(m_nameValuePairs));
-		HttpResponse response = m_ahc.execute(httppost);
-
-		if (response.getStatusLine().getStatusCode() == 500) {
-			throw new NotReachableException();
-		}
-
-		String html = convertStreamToString(response.getEntity().getContent());
-		response.getEntity().consumeContent();
+		String html = httpPost(m_opac_url + "/" + m_opac_dir + "/query.C", 
+							   new UrlEncodedFormEntity(m_nameValuePairs));
 		return parse_search(html);		
 	}
 
@@ -738,16 +747,78 @@ public class BiBer1992 implements OpacApi {
 	public ReservationResult reservation(String reservation_info,
 			Account account, int useraction, String selection)
 			throws IOException {
-		// TODO Auto-generated method stub
+		// TODO reservations not yet supported
 		return null;
 	}
 
 	/* (non-Javadoc)
 	 * @see de.geeksfactory.opacclient.apis.OpacApi#prolong(de.geeksfactory.opacclient.objects.Account, java.lang.String)
+	 * 
+	 * Offenburg, prolong negative result:
+	 * <table border="1" width="100%">
+	 *   <tr>
+	 *   	<th ...>Nr</th>
+	 *   	<th ...>Signatur / Kurztitel</th>
+	 *   	<th ...>F&auml;llig</th>
+	 *   	<th ...>Status</th>
+	 *   </tr>
+	 *   <tr>
+	 *   	<td ...>101103778</td>
+	 *   	<td ...>Hyde / Hyde, Anthony: Der Mann aus </td>
+	 *   	<td ...>09.04.2013</td>
+	 *   	<td ...><font class="p1">verl&auml;ngerbar ab 03.04.13, nicht verl&auml;ngert</font>
+	 *   	  <br>Bitte wenden Sie sich an Ihre Bibliothek!</td>
+	 *   </tr>
+	 * </table>
+	 * 
+	 * Offenburg, prolong positive result:
+	 * TO BE DESCRIBED
+	 * 
 	 */
 	@Override
 	public boolean prolong(Account account, String media) throws IOException {
-		// TODO Auto-generated method stub
+
+		// prolong media via http POST
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+		nameValuePairs.add(new BasicNameValuePair(media, "YES"));
+		nameValuePairs.add(new BasicNameValuePair("DUM1", ""));
+		nameValuePairs.add(new BasicNameValuePair("DUM2", ""));
+		nameValuePairs.add(new BasicNameValuePair("DUM3", ""));
+		nameValuePairs.add(new BasicNameValuePair("FUNC", "verl"));
+		nameValuePairs.add(new BasicNameValuePair("LANG", "de"));
+
+		String html = httpPost(m_opac_url + "/" + m_opac_dir + "/verl.C", 
+				   new UrlEncodedFormEntity(nameValuePairs));
+
+		Document doc = Jsoup.parse(html);
+		
+		// Check result:		
+		// Search cell with content "Status", then take text from cell below.
+		// Hopefully this works also with other libraries.
+		Elements rowElements = doc.select("table tr");
+		
+		// rows: skip last row because below we will look forward one row 
+		for (int i = 0; i < rowElements.size() - 1; i++) {
+			Element tr = rowElements.get(i);
+			Elements tdList = tr.children();  // <th> or <td>
+			
+			// columns: look for "Status"
+			for (int j = 0; j < tdList.size(); j++) {
+				String cellText = tdList.get(j).text().trim();
+				if (cellText.equals("Status")) {
+					// "Status" found, check cell below
+					String resultText = rowElements.get(i+1).child(j).text().trim();
+					if (resultText.startsWith("verlängert")) {
+						return true;
+					} else {
+						m_last_error = resultText;
+						return false;
+					}
+				}
+			}
+		}
+		m_last_error = "unknown result";  // should not occur
+
 		return false;
 	}
 
@@ -756,23 +827,116 @@ public class BiBer1992 implements OpacApi {
 	 */
 	@Override
 	public boolean cancel(Account account, String media) throws IOException {
-		// TODO Auto-generated method stub
+		// TODO reservations not yet supported
 		return false;
 	}
 
 	/* (non-Javadoc)
 	 * @see de.geeksfactory.opacclient.apis.OpacApi#account(de.geeksfactory.opacclient.objects.Account)
+	 * 
+	 * POST-format:
+	 * BENUTZER	xxxxxxxxx
+	 * FUNC		medk
+	 * LANG		de
+	 * PASSWORD	ddmmyyyy
 	 */
 	@Override
 	public AccountData account(Account account) throws IOException,
 			JSONException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		// get media list via http POST
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+		nameValuePairs.add(new BasicNameValuePair("FUNC", "medk"));
+		nameValuePairs.add(new BasicNameValuePair("LANG", "de"));
+		nameValuePairs.add(new BasicNameValuePair("BENUTZER", account.getName()));
+		nameValuePairs.add(new BasicNameValuePair("PASSWORD", account.getPassword()));
+
+		String html = httpPost(m_opac_url + "/" + m_opac_dir + "/user.C", 
+				   new UrlEncodedFormEntity(nameValuePairs));
+
+		Document doc = Jsoup.parse(html);
+
+		// Error recognition
+		// <title>OPAC Fehler</title>
+		if (doc.title().contains("Fehler")) {
+			String errText = "unknown error";
+			Elements elTable = doc.select("table");
+			if (elTable.size() > 0) {
+				errText = elTable.get(0).text();
+			}
+			m_last_error = errText;
+			return null;
+		}
+		
+		// parse result list
+		List<ContentValues> medien = new ArrayList<ContentValues>();
+
+		JSONArray copymap = m_data.getJSONArray("accounttable");
+
+		String[] copymap_keys = new String[] { 
+				AccountData.KEY_LENT_BARCODE,
+				AccountData.KEY_LENT_AUTHOR, 
+				AccountData.KEY_LENT_TITLE,
+				AccountData.KEY_LENT_DEADLINE, 
+				AccountData.KEY_LENT_STATUS,
+				AccountData.KEY_LENT_BRANCH,
+				AccountData.KEY_LENT_LENDING_BRANCH, 
+				AccountData.KEY_LENT_LINK };
+		int copymap_num = copymap_keys.length;
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+		Elements rowElements = doc.select("form[name=medkl] table tr");
+		
+		// rows: skip 1st row -> title row
+		for (int i = 1; i < rowElements.size(); i++) {
+			Element tr = rowElements.get(i);
+			ContentValues e = new ContentValues();
+		
+			// columns: all elements of one media
+			for (int j = 0; j < copymap_num; j++) {
+				if (copymap.getInt(j) > -1) {
+					String key = copymap_keys[j];
+					String value = tr.child(copymap.getInt(j)).text();
+					// Author and Title is the same field: "autor: title"
+					if (key.equals(AccountData.KEY_LENT_AUTHOR)) {
+						// Autor: remove everything starting at ":"
+						value = value.replaceFirst("\\:.*", "").trim();
+					} else if (key.equals(AccountData.KEY_LENT_TITLE)) {
+						// Title: remove everything up to ":"
+						value = value.replaceFirst(".*\\:", "").trim();
+					}
+					e.put(key, value);
+				}
+			}
+			// calculate lent timestamp for notification purpose
+			if (e.containsKey(AccountData.KEY_LENT_DEADLINE)) {
+				try {
+					e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
+							sdf.parse(
+									e.getAsString(AccountData.KEY_LENT_DEADLINE))
+									.getTime());
+				} catch (ParseException e1) {
+					e1.printStackTrace();
+				}
+			}
+
+			medien.add(e);
+
+		}
+
+		// reservations not yet supported (not supported for "Offenburg")
+		List<ContentValues> reservations = new ArrayList<ContentValues>();
+
+
+		AccountData res = new AccountData(account.getId());
+		res.setLent(medien);
+		res.setReservations(reservations);
+		return res;
 	}
 
 	@Override
 	public boolean isAccountSupported(Library library) {
-		return false;
+		return !library.getData().isNull("accounttable");
 	}
 
 	@Override

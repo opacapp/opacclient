@@ -2,13 +2,14 @@
 	"city": "Offenburg", 
 	"group": "Baden-W\u00fcrttemberg", 
 	"title": null,
-	"support": "Katalogsuche", 
+	"support": "Katalogsuche und Konto", 
 	"api": "biber1992", 
 	"data": {
 		"baseurl": "http://217.86.216.47", 
 		"information": "http://www.stadtbibliothek.offenburg.de/",
 		"opacdir": "opac", 
 		"searchtable": [2, 3, 4, 5],
+		"accounttable": [3, 6, 6, 2, 4, -1, -1, 3],
         "mediatypes": {
             "01": "BOOK", 
             "10": "BOOK", 
