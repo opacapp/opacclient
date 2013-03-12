@@ -80,6 +80,10 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+		load();
+	}
+
+	private void load() {
 		if (getIntent().hasExtra("item_id")
 				&& !getIntent().getStringExtra("item_id").equals("")) {
 			id = getIntent().getStringExtra("item_id");
@@ -436,7 +440,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 						.setOnClickListener(new OnClickListener() {
 							@Override
 							public void onClick(View v) {
-								onCreate(null);
+								load();
 							}
 						});
 				return;
