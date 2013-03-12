@@ -135,6 +135,7 @@ public class AccountActivity extends OpacActivity {
 			if (Build.VERSION.SDK_INT >= 14) {
 				menu.findItem(R.id.action_refresh).setActionView(
 						R.layout.loading_indicator);
+				setSupportProgressBarIndeterminateVisibility(false);
 			} else {
 				menu.findItem(R.id.action_refresh).setVisible(false);
 				setSupportProgressBarIndeterminateVisibility(true);
@@ -142,6 +143,7 @@ public class AccountActivity extends OpacActivity {
 		} else {
 			if (Build.VERSION.SDK_INT >= 14) {
 				menu.findItem(R.id.action_refresh).setActionView(null);
+				setSupportProgressBarIndeterminateVisibility(false);
 			} else {
 				menu.findItem(R.id.action_refresh).setActionView(null);
 				setSupportProgressBarIndeterminateVisibility(false);
