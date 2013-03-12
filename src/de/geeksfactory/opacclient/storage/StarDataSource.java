@@ -8,26 +8,14 @@ import java.util.Map.Entry;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
 import de.geeksfactory.opacclient.objects.Starred;
 
 public class StarDataSource {
-	// Database fields
-	private SQLiteDatabase database;
-	private StarDatabase dbHelper;
-	private String[] allColumns = StarDatabase.COLUMNS;
+
+	private Context context;
 
 	public StarDataSource(Context context) {
-		dbHelper = new StarDatabase(context);
-	}
-
-	public void open() throws SQLException {
-		database = dbHelper.getWritableDatabase();
-	}
-
-	public void close() {
-		dbHelper.close();
+		this.context = context;
 	}
 
 	public void star(String nr, String title, String bib) {
@@ -35,14 +23,16 @@ public class StarDataSource {
 		values.put("medianr", nr);
 		values.put("title", title);
 		values.put("bib", bib);
-		database.insert("starred", null, values);
+		context.getContentResolver().insert(StarContentProvider.STAR_URI,
+				values);
 	}
 
 	public List<Starred> getAllItems(String bib) {
 		List<Starred> items = new ArrayList<Starred>();
 		String[] selA = { bib };
-		Cursor cursor = database.query("starred", allColumns, "bib = ?", selA,
-				null, null, null);
+		Cursor cursor = context.getContentResolver().query(
+				StarContentProvider.STAR_URI, StarDatabase.COLUMNS,
+				StarDatabase.STAR_WHERE_LIB, selA, null);
 
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
@@ -55,10 +45,11 @@ public class StarDataSource {
 		return items;
 	}
 
-	public Starred getItemTitle(String bib, String title) {
+	public Starred getItemByTitle(String bib, String title) {
 		String[] selA = { bib, title };
-		Cursor cursor = database.query("starred", allColumns,
-				"bib = ? AND title = ?", selA, null, null, null);
+		Cursor cursor = context.getContentResolver().query(
+				StarContentProvider.STAR_URI, StarDatabase.COLUMNS,
+				StarDatabase.STAR_WHERE_TITLE_LIB, selA, null);
 		Starred item = null;
 
 		cursor.moveToFirst();
@@ -73,8 +64,26 @@ public class StarDataSource {
 
 	public Starred getItem(String bib, String id) {
 		String[] selA = { bib, id };
-		Cursor cursor = database.query("starred", allColumns,
-				"bib = ? AND medianr = ?", selA, null, null, null);
+		Cursor cursor = context.getContentResolver().query(
+				StarContentProvider.STAR_URI, StarDatabase.COLUMNS,
+				StarDatabase.STAR_WHERE_NR_LIB, selA, null);
+		Starred item = null;
+
+		cursor.moveToFirst();
+		if (!cursor.isAfterLast()) {
+			item = cursorToItem(cursor);
+			cursor.moveToNext();
+		}
+		// Make sure to close the cursor
+		cursor.close();
+		return item;
+	}
+
+	public Starred getItem(long id) {
+		String[] selA = { String.valueOf(id) };
+		Cursor cursor = context.getContentResolver().query(
+				StarContentProvider.STAR_URI, StarDatabase.COLUMNS,
+				StarDatabase.STAR_WHERE_ID, selA, null);
 		Starred item = null;
 
 		cursor.moveToFirst();
@@ -91,8 +100,9 @@ public class StarDataSource {
 		if (id == null)
 			return false;
 		String[] selA = { bib, id };
-		Cursor cursor = database.query("starred", allColumns,
-				"bib = ? AND medianr = ?", selA, null, null, null);
+		Cursor cursor = context.getContentResolver().query(
+				StarContentProvider.STAR_URI, StarDatabase.COLUMNS,
+				StarDatabase.STAR_WHERE_NR_LIB, selA, null);
 		int c = cursor.getCount();
 		cursor.close();
 		return (c > 0);
@@ -102,14 +112,15 @@ public class StarDataSource {
 		if (title == null)
 			return false;
 		String[] selA = { bib, title };
-		Cursor cursor = database.query("starred", allColumns,
-				"bib = ? AND title = ?", selA, null, null, null);
+		Cursor cursor = context.getContentResolver().query(
+				StarContentProvider.STAR_URI, StarDatabase.COLUMNS,
+				StarDatabase.STAR_WHERE_TITLE_LIB, selA, null);
 		int c = cursor.getCount();
 		cursor.close();
 		return (c > 0);
 	}
 
-	private Starred cursorToItem(Cursor cursor) {
+	public static Starred cursorToItem(Cursor cursor) {
 		Starred item = new Starred();
 		item.setId(cursor.getInt(0));
 		item.setMNr(cursor.getString(1));
@@ -119,14 +130,17 @@ public class StarDataSource {
 
 	public void remove(Starred item) {
 		String[] selA = { "" + item.getId() };
-		database.delete("starred", "id=?", selA);
+		context.getContentResolver().delete(StarContentProvider.STAR_URI,
+				StarDatabase.STAR_WHERE_ID, selA);
 	}
 
 	public void renameLibraries(Map<String, String> map) {
 		for (Entry<String, String> entry : map.entrySet()) {
 			ContentValues cv = new ContentValues();
 			cv.put("bib", entry.getValue());
-			database.update("starred", cv, "bib = ?",
+
+			context.getContentResolver().update(StarContentProvider.STAR_URI,
+					cv, StarDatabase.STAR_WHERE_LIB,
 					new String[] { entry.getKey() });
 		}
 	}

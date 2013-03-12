@@ -780,7 +780,6 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
 		String bib = app.getLibrary().getIdent();
 		StarDataSource data = new StarDataSource(this);
-		data.open();
 		if ((id == null || id.equals("")) && item != null) {
 			if (data.isStarredTitle(bib, title)) {
 				menu.findItem(R.id.action_star).setIcon(
@@ -792,7 +791,6 @@ public class SearchResultDetailsActivity extends OpacActivity {
 						R.drawable.ic_action_star_1);
 			}
 		}
-		data.close();
 
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -889,7 +887,6 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		case R.id.action_star:
 			StarDataSource star = new StarDataSource(
 					SearchResultDetailsActivity.this);
-			star.open();
 
 			if (this.item == null) {
 				Toast toast = Toast.makeText(SearchResultDetailsActivity.this,
@@ -897,7 +894,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				toast.show();
 			} else if (id == null || id.equals("")) {
 				if (star.isStarredTitle(bib, title)) {
-					star.remove(star.getItemTitle(bib, title));
+					star.remove(star.getItemByTitle(bib, title));
 					item.setIcon(R.drawable.ic_action_star_0);
 				} else {
 					star.star(null, title, bib);
@@ -920,7 +917,6 @@ public class SearchResultDetailsActivity extends OpacActivity {
 					item.setIcon(R.drawable.ic_action_star_1);
 				}
 			}
-			star.close();
 			return true;
 
 		default:

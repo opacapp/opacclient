@@ -99,9 +99,7 @@ public abstract class OpacActivity extends SlidingFragmentActivity {
 				renamed_libs.put("Schwäbisch Hall", "Schwabisch Hall");
 
 				StarDataSource stardata = new StarDataSource(this);
-				stardata.open();
 				stardata.renameLibraries(renamed_libs);
-				stardata.close();
 
 				Library lib = null;
 				try {

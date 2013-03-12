@@ -134,6 +134,11 @@
         </receiver>
         <receiver android:name=".reminder.ReminderAlarmReceiver" >
         </receiver>
+
+        <provider
+            android:name=".storage.StarContentProvider"
+            android:authorities="de.geeksfactory.opacclient.starprovider"
+            android:exported="false" />
     </application>
 
 </manifest>
