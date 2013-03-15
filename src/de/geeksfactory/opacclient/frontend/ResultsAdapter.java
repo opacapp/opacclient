@@ -60,6 +60,14 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
 			return R.drawable.type_boardgame;
 		case SCHOOL_VERSION:
 			return R.drawable.type_school_version;
+		case AUDIO_CASSETTE:
+			return R.drawable.type_audio_cassette;
+		case URL:
+			return R.drawable.type_url;
+		case MP3:
+			return R.drawable.type_mp3;
+		case ART:
+			return R.drawable.type_art;
 		}
 
 		return R.drawable.type_unknown;
