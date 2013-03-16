@@ -447,7 +447,7 @@ public class Bond26 implements OpacApi {
 	@Override
 	public ReservationResult reservation(String reservation_info, Account acc,
 			int useraction, String selection) throws IOException {
-		final String branch_inputfield = "zstauswahl";
+		String branch_inputfield = "zstauswahl";
 
 		Document doc = null;
 
@@ -479,6 +479,11 @@ public class Bond26 implements OpacApi {
 						new UrlEncodedFormEntity(nameValuePairs));
 				doc = Jsoup.parse(html);
 			}
+			if (doc.select("select[name=" + branch_inputfield + "]").size() == 0) {
+				if (doc.select("select[name=VZST]").size() > 0) {
+					branch_inputfield = "VZST";
+				}
+			}
 			if (doc.select("select[name=" + branch_inputfield + "]").size() > 0) {
 				ContentValues branches = new ContentValues();
 				for (Element option : doc
@@ -501,7 +506,8 @@ public class Bond26 implements OpacApi {
 			}
 		} else if (useraction == ReservationResult.ACTION_BRANCH) {
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			nameValuePairs.add(new BasicNameValuePair("zstauswahl", selection));
+			nameValuePairs.add(new BasicNameValuePair(branch_inputfield,
+					selection));
 			nameValuePairs.add(new BasicNameValuePair("button2", "weiter"));
 			nameValuePairs.add(new BasicNameValuePair("target",
 					"vorbesttranskonto"));
