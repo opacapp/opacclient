@@ -47,6 +47,8 @@ public class StarredActivity extends OpacActivity implements
 
 		final StarDataSource data = new StarDataSource(this);
 		List<Starred> items = data.getAllItems(bib);
+		
+		adapter = new ItemListAdapter();
 
 		ListView lv = (ListView) findViewById(R.id.lvStarred);
 
@@ -89,7 +91,6 @@ public class StarredActivity extends OpacActivity implements
 			getSupportLoaderManager().initLoader(0, null, this);
 			lv.setAdapter(adapter);
 		}
-		adapter = new ItemListAdapter();
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
