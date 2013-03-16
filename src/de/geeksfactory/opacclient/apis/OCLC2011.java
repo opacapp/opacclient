@@ -996,6 +996,8 @@ public class OCLC2011 implements OpacApi {
 		parse_medialist(medien, doc, 1);
 		for (Element link : doc.select(".box-right").first().select("a")) {
 			Uri uri = Uri.parse(link.attr("abs:href"));
+			if(uri.getQueryParameter("methodToCall") != null)
+				break;
 			if (uri.getQueryParameter("methodToCall").equals("pos")) {
 				html = httpGet(uri.toString());
 				parse_medialist(medien, Jsoup.parse(html),
@@ -1017,6 +1019,8 @@ public class OCLC2011 implements OpacApi {
 		Elements label6 = doc.select("#label6");
 		for (Element link : doc.select(".box-right").first().select("a")) {
 			Uri uri = Uri.parse(link.attr("abs:href"));
+			if(uri.getQueryParameter("methodToCall") != null)
+				break;
 			if (uri.getQueryParameter("methodToCall").equals("pos")) {
 				html = httpGet(uri.toString());
 				parse_reslist("6", medien, Jsoup.parse(html),
@@ -1031,6 +1035,8 @@ public class OCLC2011 implements OpacApi {
 		parse_reslist("7", reserved, doc, 1);
 		for (Element link : doc.select(".box-right").first().select("a")) {
 			Uri uri = Uri.parse(link.attr("abs:href"));
+			if(uri.getQueryParameter("methodToCall") != null)
+				break;
 			if (uri.getQueryParameter("methodToCall").equals("pos")) {
 				html = httpGet(uri.toString());
 				parse_reslist("7", medien, Jsoup.parse(html),
