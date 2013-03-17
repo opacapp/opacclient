@@ -12,7 +12,7 @@
    -1, 
    3
   ], 
-  "baseurl": "http://buecherei.bergheim.de/webopac", 
+  "baseurl": "http://buecherei.bergheim.de", 
   "copiestable": [
    -1, 
    0, 
@@ -22,7 +22,7 @@
    2, 
    5
   ], 
-  "information": "/read/info.html", 
+  "information": "http://www.stadtbibliothek.bergheim.de/", 
   "reservationtable": [
    0, 
    1, 
