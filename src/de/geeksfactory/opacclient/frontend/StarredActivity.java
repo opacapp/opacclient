@@ -28,7 +28,6 @@ import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.objects.Starred;
-import de.geeksfactory.opacclient.storage.StarContentProvider;
 import de.geeksfactory.opacclient.storage.StarDataSource;
 import de.geeksfactory.opacclient.storage.StarDatabase;
 
@@ -47,51 +46,46 @@ public class StarredActivity extends OpacActivity implements
 
 		final StarDataSource data = new StarDataSource(this);
 		List<Starred> items = data.getAllItems(bib);
-		
+
 		adapter = new ItemListAdapter();
 
 		ListView lv = (ListView) findViewById(R.id.lvStarred);
 
-		if (items.size() == 0) {
-			setContentView(R.layout.starred_empty);
-		} else {
-			lv.setOnItemClickListener(new OnItemClickListener() {
-				@Override
-				public void onItemClick(AdapterView<?> parent, View view,
-						int position, long id) {
-					Starred item = (Starred) view.findViewById(R.id.ivDelete)
-							.getTag();
-					if (item.getMNr() == null || item.getMNr().equals("null")
-							|| item.getMNr().equals("")) {
+		lv.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Starred item = (Starred) view.findViewById(R.id.ivDelete)
+						.getTag();
+				if (item.getMNr() == null || item.getMNr().equals("null")
+						|| item.getMNr().equals("")) {
 
-						SharedPreferences sp = PreferenceManager
-								.getDefaultSharedPreferences(StarredActivity.this);
-						Intent myIntent = new Intent(StarredActivity.this,
-								SearchResultsActivity.class);
-						Bundle query = new Bundle();
-						query.putString(OpacApi.KEY_SEARCH_QUERY_TITLE,
-								item.getTitle());
-						query.putString(
-								OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH,
-								sp.getString(OpacClient.PREF_HOME_BRANCH_PREFIX
-										+ app.getAccount().getId(), null));
-						myIntent.putExtra("query", query);
-						startActivity(myIntent);
-					} else {
-						Intent intent = new Intent(StarredActivity.this,
-								SearchResultDetailsActivity.class);
-						intent.putExtra("item_id", item.getMNr());
-						startActivity(intent);
-					}
+					SharedPreferences sp = PreferenceManager
+							.getDefaultSharedPreferences(StarredActivity.this);
+					Intent myIntent = new Intent(StarredActivity.this,
+							SearchResultsActivity.class);
+					Bundle query = new Bundle();
+					query.putString(OpacApi.KEY_SEARCH_QUERY_TITLE,
+							item.getTitle());
+					query.putString(
+							OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH,
+							sp.getString(OpacClient.PREF_HOME_BRANCH_PREFIX
+									+ app.getAccount().getId(), null));
+					myIntent.putExtra("query", query);
+					startActivity(myIntent);
+				} else {
+					Intent intent = new Intent(StarredActivity.this,
+							SearchResultDetailsActivity.class);
+					intent.putExtra("item_id", item.getMNr());
+					startActivity(intent);
 				}
-			});
-			lv.setClickable(true);
-			lv.setTextFilterEnabled(true);
+			}
+		});
+		lv.setClickable(true);
+		lv.setTextFilterEnabled(true);
 
-			getSupportLoaderManager().initLoader(0, null, this);
-			lv.setAdapter(adapter);
-		}
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportLoaderManager().initLoader(0, null, this);
+		lv.setAdapter(adapter);
 	}
 
 	@Override
@@ -158,6 +152,10 @@ public class StarredActivity extends OpacActivity implements
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 		adapter.swapCursor(cursor);
+		if (cursor.getCount() == 0)
+			findViewById(R.id.tvWelcome).setVisibility(View.VISIBLE);
+		else
+			findViewById(R.id.tvWelcome).setVisibility(View.GONE);
 	}
 
 	@Override
