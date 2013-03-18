@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 by Rüdiger Wurth under the MIT license:
+ * Copyright (C) 2013 by RÃ¼diger Wurth under the MIT license:
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), 
@@ -86,16 +86,16 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  * 						type	Bitmaps	table	types			support
  * 						images			avail	search
  * --------------------------------------------------------------------
- * BaWü/Friedrichshafen	ok		yes		yes		yes		yes		-
- * BaWü/Offenburg		ok		n/a		no		yes		n/a		yes
+ * BaWÃ¼/Friedrichshafen	ok		yes		yes		yes		yes		-
+ * BaWÃ¼/Offenburg		ok		n/a		no		yes		n/a		yes
  * Bay/Aschaffenburg	ok		n/a		no		yes		n/a		-
- * Bay/Würzburg			ok		yes		yes		yes		yes		-
+ * Bay/WÃ¼rzburg			ok		yes		yes		yes		yes		-
  * NRW/Duisburg			ok		yes		yes		yes		n/a		-
  * NRW/Essen			n/a		n/a		no		yes		not sup.-
  * NRW/Gelsenkirchen	ok		yes		yes		yes		yes		-
  * NRW/Hagen       		ok		yes		yes		yes		yes		-
  * NRW/Herford			n/a		yes		yes		yes		n/a		-
- * NRW/Lünen			ok		yes		no		yes		n/a		-
+ * NRW/Lï¿½nen			ok		yes		no		yes		n/a		-
  * 			 
  */
 public class BiBer1992 implements OpacApi {
@@ -258,7 +258,7 @@ public class BiBer1992 implements OpacApi {
      *     <option value="ZWST1">Altendorf
      *   </select>
      * 
-     * Example Hagen, Würzburg, Friedrichshafen:
+     * Example Hagen, Wï¿½rzburg, Friedrichshafen:
      *   <select name="ZW" class="sel1">
      *     <option selected value="ZWST0">Alle Bibliotheksorte</option>
      *   </select>
@@ -808,7 +808,7 @@ public class BiBer1992 implements OpacApi {
 				if (cellText.equals("Status")) {
 					// "Status" found, check cell below
 					String resultText = rowElements.get(i+1).child(j).text().trim();
-					if (resultText.startsWith("verlängert")) {
+					if (resultText.startsWith("verlÃ¤ngert")) {
 						return true;
 					} else {
 						m_last_error = resultText;
