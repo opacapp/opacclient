@@ -21,35 +21,34 @@
             2, 
             3, 
             4, 
-            -1, 
             5, 
-            6
+            6, 
+            7
         ], 
         "baseurl": "http://katalog.mannheim.de/wopac", 
         "reservationtable": [
             0, 
             1, 
             -1, 
-            -1, 
-            4, 
+            3, 
+            5, 
             2
         ], 
         "mediatypes": {
-            "mBmonoS.gif": "Gesamtwerk", 
-            "tafelkl.jpg": "Klassensatz", 
-            "mCasetteS.gif": "Kassette", 
-            "mZtgS.gif": "ZS4", 
-            "ekl.gif": "Digitale Medien", 
-            "mNoten1S.gif": "Noten", 
-            "cdromkl.gif": "Software", 
-            "mFilmS.gif": "Sachvideo", 
-            "mBuecherS.gif": "Medienpaket", 
-            "mhoerbuchS.gif": "H\u00f6rbuchKiJu", 
-            "spielekl.gif": "Spiel", 
-            "mBuchSsich.gif": "Pr\u00e4senz", 
-            "mMusikCDS.gif": "CDMusik", 
-            "cdkl.gif": "LP", 
-            "MDVD.gif": "DVDMusikfilm"
+            "tafelkl.jpg": "SCHOOL_VERSION", 
+            "mCasetteS.gif": "AUDIO_CASSETTE", 
+            "mZtgS.gif": "NEWSPAPER", 
+            "ekl.gif": "EBOOK", 
+            "mNoten1S.gif": "SCORE_MUSIC", 
+            "cdromkl.gif": "CD_SOFTWARE", 
+            "mFilmS.gif": "MOVIE", 
+            "mBuecherS.gif": "PACKAGE", 
+            "mhoerbuchS.gif": "AUDIOBOOK", 
+            "spielekl.gif": "BOARDGAME", 
+            "mBuchSsich.gif": "BOOK", 
+            "mMusikCDS.gif": "CD_MUSIC", 
+            "cdkl.gif": "LP_RECORD", 
+            "MDVD.gif": "DVD"
         }
     }
 }
