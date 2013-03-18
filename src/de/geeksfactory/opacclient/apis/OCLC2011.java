@@ -390,7 +390,7 @@ public class OCLC2011 implements OpacApi {
 			List<Node> children = tr.child(2).childNodes();
 			int childrennum = children.size();
 			boolean haslink = false;
-			
+
 			for (int ch = 0; ch < childrennum; ch++) {
 				Node node = children.get(ch);
 				if (node instanceof TextNode) {
@@ -984,7 +984,7 @@ public class OCLC2011 implements OpacApi {
 		start(); // TODO: Is this necessary?
 
 		int resultNum;
-		
+
 		if (!login(acc))
 			return null;
 
@@ -993,11 +993,12 @@ public class OCLC2011 implements OpacApi {
 				+ "/userAccount.do?methodToCall=showAccount&typ=1");
 		List<ContentValues> medien = new ArrayList<ContentValues>();
 		Document doc = Jsoup.parse(html);
+		doc.setBaseUri(opac_url);
 		parse_medialist(medien, doc, 1);
 		for (Element link : doc.select(".box-right").first().select("a")) {
 			Uri uri = Uri.parse(link.attr("abs:href"));
-			if(uri.getQueryParameter("methodToCall") != null)
-				break;
+			if (uri == null || uri.getQueryParameter("methodToCall") == null)
+				continue;
 			if (uri.getQueryParameter("methodToCall").equals("pos")) {
 				html = httpGet(uri.toString());
 				parse_medialist(medien, Jsoup.parse(html),
@@ -1005,8 +1006,8 @@ public class OCLC2011 implements OpacApi {
 			}
 		}
 		if (doc.select("#label1").size() > 0) {
-			resultNum = Integer.parseInt(doc.select("#label1").text()
-					.trim().replaceAll(".*\\(([0-9]+)\\).*", "$1"));
+			resultNum = Integer.parseInt(doc.select("#label1").text().trim()
+					.replaceAll(".*\\(([0-9]+)\\).*", "$1"));
 			assert (resultNum == medien.size());
 		}
 
@@ -1015,11 +1016,12 @@ public class OCLC2011 implements OpacApi {
 				+ "/userAccount.do?methodToCall=showAccount&typ=6");
 		List<ContentValues> reserved = new ArrayList<ContentValues>();
 		doc = Jsoup.parse(html);
+		doc.setBaseUri(opac_url);
 		parse_reslist("6", reserved, doc, 1);
 		Elements label6 = doc.select("#label6");
 		for (Element link : doc.select(".box-right").first().select("a")) {
 			Uri uri = Uri.parse(link.attr("abs:href"));
-			if(uri.getQueryParameter("methodToCall") != null)
+			if (uri == null || uri.getQueryParameter("methodToCall") == null)
 				break;
 			if (uri.getQueryParameter("methodToCall").equals("pos")) {
 				html = httpGet(uri.toString());
@@ -1032,10 +1034,11 @@ public class OCLC2011 implements OpacApi {
 		html = httpGet(opac_url
 				+ "/userAccount.do?methodToCall=showAccount&typ=7");
 		doc = Jsoup.parse(html);
+		doc.setBaseUri(opac_url);
 		parse_reslist("7", reserved, doc, 1);
 		for (Element link : doc.select(".box-right").first().select("a")) {
 			Uri uri = Uri.parse(link.attr("abs:href"));
-			if(uri.getQueryParameter("methodToCall") != null)
+			if (uri == null || uri.getQueryParameter("methodToCall") == null)
 				break;
 			if (uri.getQueryParameter("methodToCall").equals("pos")) {
 				html = httpGet(uri.toString());
