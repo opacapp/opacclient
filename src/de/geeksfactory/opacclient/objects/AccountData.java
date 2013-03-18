@@ -104,6 +104,15 @@ public class AccountData {
 	public static final String KEY_RESERVATION_READY = "bereit";
 
 	/**
+	 * Date of expiration. Optional.
+	 * 
+	 * ContentValues key for {@link #setReservations(List)}
+	 * 
+	 * @since 2.0.6
+	 */
+	public static final String KEY_RESERVATION_EXPIRE = "expire";
+
+	/**
 	 * Library branch an item is ordered to. Optional, but should be set if your
 	 * library has multiple branches.
 	 * 

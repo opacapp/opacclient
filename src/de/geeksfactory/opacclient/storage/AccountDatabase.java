@@ -12,7 +12,7 @@ import de.geeksfactory.opacclient.objects.AccountData;
 public class AccountDatabase extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "accounts.db";
-	private static final int DATABASE_VERSION = 4; // REPLACE ONUPGRADE IF YOU
+	private static final int DATABASE_VERSION = 7; // REPLACE ONUPGRADE IF YOU
 													// CHANGE THIS
 
 	public static final String[] COLUMNS = { "id", "bib", "label", "name",
@@ -39,6 +39,7 @@ public class AccountDatabase extends SQLiteOpenHelper {
 		bMap.put(AccountData.KEY_RESERVATION_BRANCH, "branch");
 		bMap.put(AccountData.KEY_RESERVATION_CANCEL, "cancel");
 		bMap.put(AccountData.KEY_RESERVATION_READY, "ready");
+		bMap.put(AccountData.KEY_RESERVATION_EXPIRE, "expire");
 		bMap.put(AccountData.KEY_RESERVATION_TITLE, "title");
 		COLUMNS_RESERVATIONS = Collections.unmodifiableMap(bMap);
 	}
@@ -60,7 +61,7 @@ public class AccountDatabase extends SQLiteOpenHelper {
 		db.execSQL("create table "
 				+ "accountdata_reservations ( account integer, "
 				+ "title text," + "author text," + "ready text,"
-				+ "branch text," + "cancel text" + ");");
+				+ "branch text," + "cancel text" + ", expire text);");
 	}
 
 	@Override
@@ -88,6 +89,10 @@ public class AccountDatabase extends SQLiteOpenHelper {
 			// App version 2.0.0-alpha4 to 2.0.0-alpha5, adding tables for
 			// account data
 			db.execSQL("alter table accountdata_lent add column deadline_ts integer");
+		}
+		if (oldVersion < 7) {
+			// App version 2.0.5-1 to 2.0.6, adding "expire" to reservations
+			db.execSQL("alter table accountdata_reservations add column expire text");
 		}
 
 	}

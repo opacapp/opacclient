@@ -762,7 +762,8 @@ public class Bond26 implements OpacApi {
 				AccountData.KEY_RESERVATION_TITLE,
 				AccountData.KEY_RESERVATION_READY,
 				AccountData.KEY_RESERVATION_BRANCH,
-				AccountData.KEY_RESERVATION_CANCEL };
+				AccountData.KEY_RESERVATION_CANCEL,
+				AccountData.KEY_RESERVATION_EXPIRE};
 		copymap_num = copymap_keys.length;
 
 		List<ContentValues> reservations = new ArrayList<ContentValues>();
@@ -773,16 +774,20 @@ public class Bond26 implements OpacApi {
 			ContentValues e = new ContentValues();
 
 			for (int j = 0; j < copymap_num; j++) {
-				if (copymap.getInt(j) > -1) {
-					if (copymap_keys[j].equals("cancel")) {
-						if (tr.child(copymap.getInt(j)).children().size() > 0) {
+				try {
+					if (copymap.getInt(j) > -1) {
+						if (copymap_keys[j].equals("cancel")) {
+							if (tr.child(copymap.getInt(j)).children().size() > 0) {
+								e.put(copymap_keys[j], tr.child(copymap.getInt(j))
+										.child(0).attr("href"));
+							}
+						} else {
 							e.put(copymap_keys[j], tr.child(copymap.getInt(j))
-									.child(0).attr("href"));
+									.text());
 						}
-					} else {
-						e.put(copymap_keys[j], tr.child(copymap.getInt(j))
-								.text());
 					}
+				} catch(JSONException ex) {
+					
 				}
 			}
 

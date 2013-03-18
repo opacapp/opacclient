@@ -1,5 +1,7 @@
 {
     "city": "Mannheim", 
+    "group": "Baden-W\u00fcrttemberg", 
+    "title": null, 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {
@@ -19,36 +21,35 @@
             2, 
             3, 
             4, 
+            -1, 
             5, 
-            6, 
-            7
+            6
         ], 
         "baseurl": "http://katalog.mannheim.de/wopac", 
         "reservationtable": [
             0, 
             1, 
-            2, 
-            3, 
-            4
+            -1, 
+            -1, 
+            4, 
+            2
         ], 
         "mediatypes": {
-            "mBmonoS.gif": "PACKAGE_BOOKS", 
-            "tafelkl.jpg": "SCHOOL_VERSION", 
-            "mZtgS.gif": "NEWSPAPER", 
-            "ekl.gif": "EBOOK", 
-            "mNoten1S.gif": "SCORE_MUSIC", 
-            "cdromkl.gif": "CD_SOFTWARE", 
-            "mFilmS.gif": "MOVIE", 
-            "mBuecherS.gif": "PACKAGE", 
-            "mhoerbuchS.gif": "AUDIOBOOK", 
-            "spielekl.gif": "BOARDGAME", 
-            "mBuchSsich.gif": "BOOK", 
-            "mMusikCDS.gif": "CD_MUSIC", 
-            "cdkl.gif": "CD", 
-            "MDVD.gif": "DVD",
-            "mBuchS.gif": "BOOK"
+            "mBmonoS.gif": "Gesamtwerk", 
+            "tafelkl.jpg": "Klassensatz", 
+            "mCasetteS.gif": "Kassette", 
+            "mZtgS.gif": "ZS4", 
+            "ekl.gif": "Digitale Medien", 
+            "mNoten1S.gif": "Noten", 
+            "cdromkl.gif": "Software", 
+            "mFilmS.gif": "Sachvideo", 
+            "mBuecherS.gif": "Medienpaket", 
+            "mhoerbuchS.gif": "H\u00f6rbuchKiJu", 
+            "spielekl.gif": "Spiel", 
+            "mBuchSsich.gif": "Pr\u00e4senz", 
+            "mMusikCDS.gif": "CDMusik", 
+            "cdkl.gif": "LP", 
+            "MDVD.gif": "DVDMusikfilm"
         }
-    }, 
-    "title": null,
-	"group": "Baden-Württemberg"
+    }
 }
