@@ -1,0 +1,11 @@
+{
+    "city": "M\u00fcnster", 
+    "group": "Nordrhein-Westfalen", 
+    "title": "Uni- und Landesbibliothek", 
+    "support": "Katalogsuche und Konto (experimentell)", 
+    "api": "oclc2011", 
+    "data": {
+        "information": "http://www.ulb.uni-muenster.de/bibliothek/standorte/", 
+        "baseurl": "https://superfix.uni-muenster.de/Katalog"
+    }
+}
