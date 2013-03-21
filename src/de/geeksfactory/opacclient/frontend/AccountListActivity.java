@@ -151,11 +151,10 @@ public class AccountListActivity extends SherlockActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.action_add:
+		if (item.getItemId() == R.id.action_add) {
 			add();
 			return true;
-		case android.R.id.home:
+		} else if (item.getItemId() == android.R.id.home) {
 			finish();
 			return true;
 		}

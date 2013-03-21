@@ -125,11 +125,10 @@ public class AccountEditActivity extends SherlockActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
+		if (item.getItemId() == android.R.id.home) {
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
-		case R.id.action_accept:
+		} else if (item.getItemId() == R.id.action_accept) {
 			if (getIntent().hasExtra("welcome")
 					&& getIntent().getBooleanExtra("welcome", false)) {
 				save();
@@ -140,13 +139,13 @@ public class AccountEditActivity extends SherlockActivity {
 				finish();
 			}
 			return true;
-		case R.id.action_cancel:
+		} else if (item.getItemId() == R.id.action_cancel) {
 			if (getIntent().hasExtra("adding")
 					&& getIntent().getBooleanExtra("adding", false))
 				delete();
 			finish();
 			return true;
-		case R.id.action_delete:
+		} else if (item.getItemId() == R.id.action_delete) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage(R.string.account_delete_confirm)
 					.setCancelable(true)

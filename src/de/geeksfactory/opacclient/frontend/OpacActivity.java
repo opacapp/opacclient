@@ -16,13 +16,11 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +44,10 @@ public abstract class OpacActivity extends SlidingFragmentActivity {
 	protected AlertDialog adialog;
 	protected NavigationFragment mFrag;
 
+	public OpacClient getOpacApplication(){
+		return app;
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -57,7 +59,7 @@ public abstract class OpacActivity extends SlidingFragmentActivity {
 		setBehindContentView(R.layout.menu_frame);
 		FragmentTransaction t = this.getSupportFragmentManager()
 				.beginTransaction();
-		mFrag = new NavigationFragment();
+		mFrag = app.newNavigationFragment();
 		t.replace(R.id.menu_frame, mFrag);
 		t.commit();
 		// Sliding Menu
@@ -80,11 +82,12 @@ public abstract class OpacActivity extends SlidingFragmentActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 	}
-	
+
 	@Override
 	protected void onStart() {
 		super.onStart();
-		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences sp = PreferenceManager
+				.getDefaultSharedPreferences(this);
 		if (app.getAccount() == null || app.getLibrary() == null) {
 			if (!sp.getString("opac_bib", "").equals("")) {
 				// Migrate
@@ -141,9 +144,7 @@ public abstract class OpacActivity extends SlidingFragmentActivity {
 		}
 		if (app.getLibrary() == null) {
 			// Create new
-			Intent intent = new Intent(this, WelcomeActivity.class);
-			startActivity(intent);
-			finish();
+			app.addFirstAccount(this);
 			return;
 		}
 	}

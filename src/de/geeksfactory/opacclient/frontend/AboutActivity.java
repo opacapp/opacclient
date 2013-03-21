@@ -29,11 +29,15 @@ import de.geeksfactory.opacclient.R;
 public class AboutActivity extends OpacPreferenceActivity {
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+		populate();
+	}
+
+	@SuppressWarnings("deprecation")
+	protected void populate() {
 		addPreferencesFromResource(R.xml.about);
 
 		try {

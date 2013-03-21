@@ -9,30 +9,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.acra.ACRA;
+import org.acra.ACRAConfiguration;
 import org.acra.annotation.ReportsCrashes;
 import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import de.geeksfactory.opacclient.apis.BiBer1992;
 import de.geeksfactory.opacclient.apis.Bond26;
 import de.geeksfactory.opacclient.apis.OCLC2011;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.Zones22;
+import de.geeksfactory.opacclient.frontend.NavigationFragment;
+import de.geeksfactory.opacclient.frontend.SearchActivity;
+import de.geeksfactory.opacclient.frontend.SearchResultsActivity;
+import de.geeksfactory.opacclient.frontend.WelcomeActivity;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
-import de.geeksfactory.opacclient.storage.MetaDataSource;
 import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
+import de.geeksfactory.opacclient.storage.StarContentProvider;
 
-@ReportsCrashes(formKey = "", mailTo = "raphael+opac@geeksfactory.de", mode = org.acra.ReportingInteractionMode.DIALOG, resToastText = R.string.crash_toast_text, resDialogText = R.string.crash_dialog_text)
+@ReportsCrashes(formKey = "", mailTo = "raphael+opac@geeksfactory.de", mode = org.acra.ReportingInteractionMode.DIALOG)
 public class OpacClient extends Application {
 
 	public Exception last_exception;
@@ -42,11 +51,35 @@ public class OpacClient extends Application {
 	public static final String PREF_SELECTED_ACCOUNT = "selectedAccount";
 	public static final String PREF_HOME_BRANCH_PREFIX = "homeBranch_";
 
+	public final String LIMIT_TO_LIBRARY = null;
+
 	private SharedPreferences sp;
 
 	private Account account;
 	private OpacApi api;
 	private Library library;
+
+	private final Uri STAR_PROVIDER_STAR_URI = StarContentProvider.STAR_URI;
+
+	public Uri getStarProviderStarUri() {
+		return STAR_PROVIDER_STAR_URI;
+	}
+
+	public void addFirstAccount(Activity activity) {
+		Intent intent = new Intent(activity, WelcomeActivity.class);
+		activity.startActivity(intent);
+		activity.finish();
+	}
+
+	public NavigationFragment newNavigationFragment() {
+		return new NavigationFragment();
+	}
+
+	public void startSearch(Activity caller, Bundle query) {
+		Intent myIntent = new Intent(caller, SearchResultsActivity.class);
+		myIntent.putExtra("query", query);
+		caller.startActivity(myIntent);
+	}
 
 	public boolean isOnline() {
 		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -196,8 +229,14 @@ public class OpacClient extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		ACRA.init(this);
 		sp = PreferenceManager.getDefaultSharedPreferences(this);
+
+		ACRAConfiguration config = ACRA.getNewDefaultConfig(this);
+		config.setResToastText(R.string.crash_toast_text);
+		config.setResDialogText(R.string.crash_dialog_text);
+		ACRA.setConfig(config);
+		ACRA.init(this);
+
 		if (getLibrary() != null) {
 			ACRA.getErrorReporter().putCustomData("library",
 					getLibrary().getIdent());

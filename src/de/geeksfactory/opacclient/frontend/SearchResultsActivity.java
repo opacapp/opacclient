@@ -1,7 +1,5 @@
 package de.geeksfactory.opacclient.frontend;
 
-import java.util.List;
-
 import org.acra.ACRA;
 
 import android.annotation.SuppressLint;
@@ -23,7 +21,7 @@ import com.actionbarsherlock.view.MenuItem;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
-import de.geeksfactory.opacclient.objects.SearchResult;
+import de.geeksfactory.opacclient.objects.SearchRequestResult;
 
 public class SearchResultsActivity extends OpacActivity {
 
@@ -58,8 +56,7 @@ public class SearchResultsActivity extends OpacActivity {
 	@SuppressLint("NewApi")
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.action_prev:
+		if (item.getItemId() == R.id.action_prev) {
 			setContentView(R.layout.loading);
 			if (sst != null) {
 				sst.cancel(false);
@@ -69,12 +66,13 @@ public class SearchResultsActivity extends OpacActivity {
 				items = cache.get(page);
 				loaded();
 			} else {
+				searchresult = null;
 				sst = new SearchPageTask();
 				sst.execute(app, page);
 			}
 			invalidateOptionsMenu();
 			return true;
-		case R.id.action_next:
+		} else if (item.getItemId() == R.id.action_next) {
 			setContentView(R.layout.loading);
 			if (sst != null) {
 				sst.cancel(false);
@@ -84,12 +82,13 @@ public class SearchResultsActivity extends OpacActivity {
 				items = cache.get(page);
 				loaded();
 			} else {
+				searchresult = null;
 				sst = new SearchPageTask();
 				sst.execute(app, page);
 			}
 			invalidateOptionsMenu();
 			return true;
-		case android.R.id.home:
+		} else if (item.getItemId() == android.R.id.home) {
 			finish();
 			return true;
 		}
@@ -190,7 +189,7 @@ public class SearchResultsActivity extends OpacActivity {
 		}
 	}
 
-	private void loaded() {
+	protected void loaded() {
 		setContentView(R.layout.search_results_activity);
 
 		ListView lv = (ListView) findViewById(R.id.lvResults);

@@ -422,8 +422,6 @@ public class SearchActivity extends OpacActivity {
 							.findViewById(R.id.cbMediengruppe))
 							.getSelectedItemPosition()).getAsString("key");
 
-		Intent myIntent = new Intent(SearchActivity.this,
-				SearchResultsActivity.class);
 		Bundle query = new Bundle();
 		query.putString(OpacApi.KEY_SEARCH_QUERY_FREE,
 				((EditText) SearchActivity.this
@@ -478,8 +476,7 @@ public class SearchActivity extends OpacActivity {
 							.getSelectedItemPosition()) + 1)
 							+ "");
 		}
-		myIntent.putExtra("query", query);
-		startActivity(myIntent);
+		app.startSearch(this, query);
 	}
 
 	@Override
@@ -490,8 +487,7 @@ public class SearchActivity extends OpacActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.action_search_go:
+		if (item.getItemId() == R.id.action_search_go) {
 			go();
 			return true;
 		}

@@ -7,15 +7,13 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
 
 public class StarContentProvider extends ContentProvider {
 	private StarDatabase database;
 
-	private static final String AUTHORITY = "de.geeksfactory.opacclient.starprovider";
-	private static final String STAR_TYPE = "star";
-
-	private static final String BASE_URI = "content://" + AUTHORITY + "/";
+	public static final String STAR_TYPE = "star";
+	public static final String AUTHORITY = "de.geeksfactory.opacclient.starprovider";
+	public static final String BASE_URI = "content://" + AUTHORITY + "/";
 	public static final Uri STAR_URI = Uri.parse(BASE_URI + STAR_TYPE);
 
 	private static enum Mime {
@@ -29,7 +27,7 @@ public class StarContentProvider extends ContentProvider {
 	}
 
 	private static final String MIME_PREFIX = "vnd.android.cursor.";
-	private static final String STAR_MIME_POSTFIX = "/vnd." + AUTHORITY + "."
+	private static final String STAR_MIME_POSTFIX = "/vnd.de.opacapp.type"
 			+ STAR_TYPE;
 	private static final String STAR_DIR_MIME = MIME_PREFIX + "dir"
 			+ STAR_MIME_POSTFIX;
@@ -37,7 +35,8 @@ public class StarContentProvider extends ContentProvider {
 			+ STAR_MIME_POSTFIX;
 
 	private static Mime getTypeMime(Uri uri) {
-		if (!AUTHORITY.equals(uri.getAuthority())) {
+		if (!AUTHORITY.equals(uri.getAuthority())
+				&& !uri.getAuthority().startsWith("de.opacapp.")) {
 			return null;
 		}
 		List<String> segments = uri.getPathSegments();

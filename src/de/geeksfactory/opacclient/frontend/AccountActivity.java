@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -176,13 +177,10 @@ public class AccountActivity extends OpacActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.action_refresh:
+		if (item.getItemId() == R.id.action_refresh) {
 			refresh();
-			break;
-		case R.id.action_prolong_all:
+		} else if (item.getItemId() == R.id.action_prolong_all) {
 			prolongAll();
-			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -726,6 +724,14 @@ public class AccountActivity extends OpacActivity {
 					((TextView) v.findViewById(R.id.tvStatus))
 							.setText(Html.fromHtml(item
 									.getAsString(AccountData.KEY_RESERVATION_READY)));
+					((TextView) v.findViewById(R.id.tvStatus))
+							.setVisibility(View.VISIBLE);
+				} else if (item.containsKey(AccountData.KEY_RESERVATION_EXPIRE)
+						&& item.getAsString(AccountData.KEY_RESERVATION_EXPIRE)
+								.length() > 6) {
+					((TextView) v.findViewById(R.id.tvStatus))
+							.setText(Html.fromHtml("bis "
+									+ item.getAsString(AccountData.KEY_RESERVATION_EXPIRE)));
 					((TextView) v.findViewById(R.id.tvStatus))
 							.setVisibility(View.VISIBLE);
 				} else {

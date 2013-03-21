@@ -32,11 +32,15 @@ public class WelcomeActivity extends SherlockActivity {
 	protected AlertDialog dialog;
 	private List<Library> libraries;
 
+	public static int getLayoutResource() {
+		return R.layout.welcome_activity;
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		app = (OpacClient) getApplication();
-		setContentView(R.layout.welcome_activity);
+		setContentView(getLayoutResource());
 
 		Button btAddAccount = (Button) findViewById(R.id.btAddAccount);
 		btAddAccount.setOnClickListener(new OnClickListener() {

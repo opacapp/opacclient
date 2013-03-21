@@ -150,7 +150,7 @@ public class StarredActivity extends OpacActivity implements
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
-		return new CursorLoader(this, StarContentProvider.STAR_URI,
+		return new CursorLoader(this, app.getStarProviderStarUri(),
 				StarDatabase.COLUMNS, StarDatabase.STAR_WHERE_LIB,
 				new String[] { app.getLibrary().getIdent() }, null);
 	}

@@ -803,16 +803,13 @@ public class SearchResultDetailsActivity extends OpacActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		String bib = app.getLibrary().getIdent();
-		switch (item.getItemId()) {
-		case R.id.action_reservation:
+		if (item.getItemId() == R.id.action_reservation) {
 			reservationStart();
 			return true;
-
-		case android.R.id.home:
+		} else if (item.getItemId() == android.R.id.home) {
 			finish();
 			return true;
-
-		case R.id.action_export:
+		} else if (item.getItemId() == R.id.action_export) {
 			if (this.item == null) {
 				Toast toast = Toast.makeText(SearchResultDetailsActivity.this,
 						getString(R.string.share_wait), Toast.LENGTH_SHORT);
@@ -855,7 +852,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 						.getString(R.string.share)));
 			}
 			return true;
-		case R.id.action_share:
+		} else if (item.getItemId() == R.id.action_share) {
 			if (this.item == null) {
 				Toast toast = Toast.makeText(SearchResultDetailsActivity.this,
 						getString(R.string.share_wait), Toast.LENGTH_SHORT);
@@ -887,11 +884,9 @@ public class SearchResultDetailsActivity extends OpacActivity {
 						.getString(R.string.share)));
 			}
 			return true;
-
-		case R.id.action_star:
+		} else if (item.getItemId() == R.id.action_star) {
 			StarDataSource star = new StarDataSource(
 					SearchResultDetailsActivity.this);
-
 			if (this.item == null) {
 				Toast toast = Toast.makeText(SearchResultDetailsActivity.this,
 						getString(R.string.star_wait), Toast.LENGTH_SHORT);
@@ -922,8 +917,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				}
 			}
 			return true;
-
-		default:
+		} else {
 			return super.onOptionsItemSelected(item);
 		}
 	}
