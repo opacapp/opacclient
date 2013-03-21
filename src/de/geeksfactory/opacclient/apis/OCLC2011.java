@@ -42,7 +42,10 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.Filter;
+import de.geeksfactory.opacclient.objects.Filter.Option;
 import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
@@ -69,24 +72,24 @@ public class OCLC2011 implements OpacApi {
 	 * setzt aktuell voraus, dass die Bibliothek die Bibtip Extension benutzt!
 	 * Wir wissen nicht, wie wir anderweitig an die IDs der Medien kommen.
 	 */
-	protected String opac_url = "";
-	protected JSONObject data;
-	protected DefaultHttpClient ahc;
-	protected MetaDataSource metadata;
-	protected boolean initialised = false;
-	protected String last_error;
-	protected Library library;
+	private String opac_url = "";
+	private JSONObject data;
+	private DefaultHttpClient ahc;
+	private MetaDataSource metadata;
+	private boolean initialised = false;
+	private String last_error;
+	private Library library;
 
-	protected String CSId;
-	protected String identifier;
-	protected String reusehtml;
-	protected int resultcount = 10;
+	private String CSId;
+	private String identifier;
+	private String reusehtml;
+	private int resultcount = 10;
 
-	protected long logged_in;
-	protected Account logged_in_as;
-	protected final long SESSION_LIFETIME = 1000 * 60 * 3;
+	private long logged_in;
+	private Account logged_in_as;
+	private final long SESSION_LIFETIME = 1000 * 60 * 3;
 
-	protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
+	private static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
 
 	static {
 		defaulttypes.put("g", MediaType.EBOOK);
@@ -119,11 +122,6 @@ public class OCLC2011 implements OpacApi {
 		defaulttypes.put("buch03", MediaType.BOOK);
 		defaulttypes.put("buch04", MediaType.PACKAGE_BOOKS);
 		defaulttypes.put("buch05", MediaType.PACKAGE_BOOKS);
-	}
-
-	@Override
-	public String getResults() {
-		return results;
 	}
 
 	@Override
@@ -260,7 +258,7 @@ public class OCLC2011 implements OpacApi {
 	}
 
 	@Override
-	public List<SearchResult> search(Bundle query) throws IOException,
+	public SearchRequestResult search(Bundle query) throws IOException,
 			NotReachableException {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
@@ -323,11 +321,11 @@ public class OCLC2011 implements OpacApi {
 
 		String html = httpGet(opac_url + "/search.do?"
 				+ URLEncodedUtils.format(params, "UTF-8"));
-		return parse_search(html);
+		return parse_search(html, 1);
 	}
 
 	@Override
-	public List<SearchResult> searchGetPage(int page) throws IOException,
+	public SearchRequestResult searchGetPage(int page) throws IOException,
 			NotReachableException {
 		if (!initialised)
 			start();
@@ -335,7 +333,7 @@ public class OCLC2011 implements OpacApi {
 		String html = httpGet(opac_url
 				+ "/hitList.do?methodToCall=pos&identifier=" + identifier
 				+ "&curPos=" + (((page - 1) * resultcount) + 1));
-		return parse_search(html);
+		return parse_search(html, page);
 	}
 
 	protected SearchRequestResult parse_search(String html, int page) {
@@ -349,11 +347,16 @@ public class OCLC2011 implements OpacApi {
 			return null;
 		}
 
-		this.results = doc.select(".box-header h2").first().text();
-		if (results.contains("(1/1)") || results.contains(" 1/1")) {
+		int results_total = -1;
+
+		String resultnumstr = doc.select(".box-header h2").first().text();
+		if (resultnumstr.contains("(1/1)") || resultnumstr.contains(" 1/1")) {
 			reusehtml = html;
 			last_error = "is_a_redirect";
 			return null;
+		} else if (resultnumstr.contains("(")) {
+			results_total = Integer.parseInt(resultnumstr.replaceAll(
+					".*\\(([0-9]+)\\).*", "$1"));
 		}
 
 		Elements table = doc.select("table.data tbody tr");
@@ -432,7 +435,7 @@ public class OCLC2011 implements OpacApi {
 			results.add(sr);
 		}
 		resultcount = results.size();
-		return results;
+		return new SearchRequestResult(results, results_total, page);
 	}
 
 	@Override
@@ -1104,5 +1107,12 @@ public class OCLC2011 implements OpacApi {
 	@Override
 	public boolean prolongAll(Account account) throws IOException {
 		return false;
+	}
+
+	@Override
+	public SearchRequestResult filterResults(Filter filter, Option option)
+			throws IOException, NotReachableException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

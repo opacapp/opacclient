@@ -25,8 +25,8 @@ import de.geeksfactory.opacclient.objects.SearchRequestResult;
 
 public class SearchResultsActivity extends OpacActivity {
 
-	protected List<SearchResult> items;
-	private SparseArray<List<SearchResult>> cache = new SparseArray<List<SearchResult>>();
+	protected SearchRequestResult searchresult;
+	private SparseArray<SearchRequestResult> cache = new SparseArray<SearchRequestResult>();
 	private int page;
 
 	private SearchStartTask st;
@@ -63,7 +63,7 @@ public class SearchResultsActivity extends OpacActivity {
 			}
 			page--;
 			if (cache.get(page) != null) {
-				items = cache.get(page);
+				searchresult = cache.get(page);
 				loaded();
 			} else {
 				searchresult = null;
@@ -79,7 +79,7 @@ public class SearchResultsActivity extends OpacActivity {
 			}
 			page++;
 			if (cache.get(page) != null) {
-				items = cache.get(page);
+				searchresult = cache.get(page);
 				loaded();
 			} else {
 				searchresult = null;
@@ -110,17 +110,17 @@ public class SearchResultsActivity extends OpacActivity {
 		return super.onCreateOptionsMenu(menu);
 	}
 
-	public class SearchStartTask extends OpacTask<List<SearchResult>> {
+	public class SearchStartTask extends OpacTask<SearchRequestResult> {
 		private boolean success;
 		private Exception exception;
 
 		@Override
-		protected List<SearchResult> doInBackground(Object... arg0) {
+		protected SearchRequestResult doInBackground(Object... arg0) {
 			super.doInBackground(arg0);
 			Bundle query = (Bundle) arg0[1];
 
 			try {
-				List<SearchResult> res = app.getApi().search(query);
+				SearchRequestResult res = app.getApi().search(query);
 				success = true;
 				return res;
 			} catch (java.net.UnknownHostException e) {
@@ -140,7 +140,7 @@ public class SearchResultsActivity extends OpacActivity {
 		}
 
 		@Override
-		protected void onPostExecute(List<SearchResult> result) {
+		protected void onPostExecute(SearchRequestResult result) {
 			if (success) {
 				if (result == null) {
 
@@ -163,11 +163,11 @@ public class SearchResultsActivity extends OpacActivity {
 								}
 							});
 				} else {
-					items = result;
-					if (items != null) {
-						if (items.size() > 0) {
-							if (items.get(0).getId() != null)
-								cache.put(page, items);
+					searchresult = result;
+					if (searchresult != null) {
+						if (searchresult.getResults().size() > 0) {
+							if (searchresult.getResults().get(0).getId() != null)
+								cache.put(page, searchresult);
 						}
 					}
 					loaded();
@@ -199,31 +199,35 @@ public class SearchResultsActivity extends OpacActivity {
 					int position, long id) {
 				Intent intent = new Intent(SearchResultsActivity.this,
 						SearchResultDetailsActivity.class);
-				intent.putExtra("item", (int) items.get(position).getNr());
+				intent.putExtra("item",
+						(int) searchresult.getResults().get(position).getNr());
 
-				if (items.get(position).getId() != null)
-					intent.putExtra("item_id", items.get(position).getId());
+				if (searchresult.getResults().get(position).getId() != null)
+					intent.putExtra("item_id",
+							searchresult.getResults().get(position).getId());
 				startActivity(intent);
 			}
 		});
 
 		TextView rn = (TextView) findViewById(R.id.tvResultNum);
-		rn.setText(app.getApi().getResults());
+		if (searchresult.getTotal_result_count() >= 0)
+			rn.setText(getString(R.string.result_number,
+					searchresult.getTotal_result_count()));
 
-		lv.setAdapter(new ResultsAdapter(this, (items)));
+		lv.setAdapter(new ResultsAdapter(this, (searchresult.getResults())));
 		lv.setTextFilterEnabled(true);
 	}
 
-	public class SearchPageTask extends OpacTask<List<SearchResult>> {
+	public class SearchPageTask extends OpacTask<SearchRequestResult> {
 		private boolean success;
 
 		@Override
-		protected List<SearchResult> doInBackground(Object... arg0) {
+		protected SearchRequestResult doInBackground(Object... arg0) {
 			super.doInBackground(arg0);
 			Integer page = (Integer) arg0[1];
 
 			try {
-				List<SearchResult> res = app.getApi().searchGetPage(page);
+				SearchRequestResult res = app.getApi().searchGetPage(page);
 				success = true;
 				return res;
 			} catch (java.net.UnknownHostException e) {
@@ -240,14 +244,13 @@ public class SearchResultsActivity extends OpacActivity {
 		}
 
 		@Override
-		protected void onPostExecute(List<SearchResult> result) {
+		protected void onPostExecute(SearchRequestResult result) {
 			if (success) {
-				items = result;
-				items = result;
-				if (items != null) {
-					if (items.size() > 0) {
-						if (items.get(0).getId() != null)
-							cache.put(page, items);
+				searchresult = result;
+				if (searchresult != null) {
+					if (searchresult.getResults().size() > 0) {
+						if (searchresult.getResults().get(0).getId() != null)
+							cache.put(page, searchresult);
 					}
 				}
 				loaded();

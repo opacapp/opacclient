@@ -177,7 +177,7 @@ public class Library implements Comparable<Library> {
 	/**
 	 * Set group the library belongs to
 	 * 
-	 * @param data
+	 * @param group
 	 *            Group label
 	 */
 	public void setGroup(String group) {

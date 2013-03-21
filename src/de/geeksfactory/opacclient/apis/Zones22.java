@@ -36,7 +36,10 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.Filter;
+import de.geeksfactory.opacclient.objects.Filter.Option;
 import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
@@ -51,7 +54,6 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
 public class Zones22 implements OpacApi {
 
 	private String opac_url = "";
-	private String results;
 	private JSONObject data;
 	private DefaultHttpClient ahc;
 	private MetaDataSource metadata;
@@ -83,11 +85,6 @@ public class Zones22 implements OpacApi {
 		String html = convertStreamToString(response.getEntity().getContent());
 		response.getEntity().consumeContent();
 		return html;
-	}
-
-	@Override
-	public String getResults() {
-		return results;
 	}
 
 	@Override
@@ -203,7 +200,7 @@ public class Zones22 implements OpacApi {
 	}
 
 	@Override
-	public List<SearchResult> search(Bundle query) throws IOException,
+	public SearchRequestResult search(Bundle query) throws IOException,
 			NotReachableException {
 		start();
 
@@ -250,11 +247,11 @@ public class Zones22 implements OpacApi {
 
 		page = 1;
 
-		return parse_search(html);
+		return parse_search(html, page);
 	}
 
 	@Override
-	public List<SearchResult> searchGetPage(int page) throws IOException,
+	public SearchRequestResult searchGetPage(int page) throws IOException,
 			NotReachableException {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
@@ -273,10 +270,10 @@ public class Zones22 implements OpacApi {
 				+ URLEncodedUtils.format(params, "UTF-8"));
 		this.page = page;
 
-		return parse_search(html);
+		return parse_search(html, page);
 	}
 
-	private List<SearchResult> parse_search(String html) {
+	private SearchRequestResult parse_search(String html, int page) {
 		Document doc = Jsoup.parse(html);
 		doc.setBaseUri(opac_url + "/APS_PRESENT_BIB");
 
@@ -285,7 +282,12 @@ public class Zones22 implements OpacApi {
 			return null;
 		}
 
-		results = doc.select(".searchHits").first().text().trim();
+		int results_total = -1;
+
+		if (doc.select(".searchHits").size() > 0) {
+			results_total = Integer.parseInt(doc.select(".searchHits").first()
+					.text().trim().replaceAll(".*\\(([0-9]+)\\).*", "$1"));
+		}
 
 		if (doc.select(".pageNavLink").size() > 0) {
 			searchobj = doc.select(".pageNavLink").first().attr("href")
@@ -350,7 +352,7 @@ public class Zones22 implements OpacApi {
 			results.add(sr);
 		}
 
-		return results;
+		return new SearchRequestResult(results, results_total, page);
 	}
 
 	@Override
@@ -521,5 +523,11 @@ public class Zones22 implements OpacApi {
 	@Override
 	public boolean prolongAll(Account account) throws IOException {
 		return false;
+	}
+
+	@Override
+	public SearchRequestResult filterResults(Filter filter, Option option) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -185,5 +185,6 @@
     <string name="barcode_gplay">Google Play</string>
     <string name="barcode_amazon">Amazon</string>
     <string name="barcode_no">Nein</string>
+    <string name="result_number">%d Suchergebnisse</string>
 
 </resources>

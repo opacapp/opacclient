@@ -11,8 +11,9 @@ import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Library;
-import de.geeksfactory.opacclient.objects.SearchResult;
+import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
@@ -230,13 +231,42 @@ public interface OpacApi {
 	 * 
 	 * @param query
 	 *            see above
+	 * @return List of results and additional information, or <code>null</code>
+	 *         on failure. In case of failure, <code>getLast_error</code> will
+	 *         be called for more information.
+	 * @see de.geeksfactory.opacclient.objects.SearchResult
+	 */
+	public SearchRequestResult search(Bundle query) throws IOException,
+			NotReachableException;
+
+	/**
+	 * If your {@link #search(Bundle)} implementation puts something different
+	 * from <code>null</code> into {@link SearchRequestResult#setFilters(List)},
+	 * this will be called to apply a filter to the last search request.
+	 * 
+	 * If your {@link #search(Bundle)} implementation does not set
+	 * {@link SearchRequestResult#setFilters(List)}, this wil never be called.
+	 * Just return <code>null</code>.
+	 * 
+	 * This function is always called from a background thread, you can use
+	 * blocking network operations in it. See documentation on DetailledItem for
+	 * details.
+	 * 
+	 * @param filter
+	 *            The filter to be applied.
+	 * @param option
+	 *            The filters option to be applied. If the
+	 *            <code>option.isApplied()</code> returns <code>true</code>, the
+	 *            filter is to be removed!
 	 * @return List of results or <code>null</code> on failure. In case of
 	 *         failure, <code>getLast_error</code> will be called for more
 	 *         information.
 	 * @see de.geeksfactory.opacclient.objects.SearchResult
+	 * @see de.geeksfactory.opacclient.objects.Filter
+	 * @since 2.0.6
 	 */
-	public List<SearchResult> search(Bundle query) throws IOException,
-			NotReachableException;
+	public SearchRequestResult filterResults(Filter filter, Filter.Option option)
+			throws IOException, NotReachableException;
 
 	/**
 	 * Get result page <code>page</code> of the search performed last with
@@ -254,7 +284,7 @@ public interface OpacApi {
 	 * @see #search(Bundle)
 	 * @see de.geeksfactory.opacclient.objects.SearchResult
 	 */
-	public List<SearchResult> searchGetPage(int page) throws IOException,
+	public SearchRequestResult searchGetPage(int page) throws IOException,
 			NotReachableException;
 
 	/**
@@ -553,13 +583,6 @@ public interface OpacApi {
 	 * @return Error details
 	 */
 	public String getLast_error();
-
-	/**
-	 * Get result information for last search.
-	 * 
-	 * @return A string like "312 items found."
-	 */
-	public String getResults();
 
 	/**
 	 * Returns whether – if account view is not supported in the given library –

@@ -39,7 +39,10 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.Filter;
+import de.geeksfactory.opacclient.objects.Filter.Option;
 import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
@@ -65,6 +68,7 @@ public class Bond26 implements OpacApi {
 	protected final long SESSION_LIFETIME = 1000 * 60 * 3;
 
 	protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
+
 	static {
 		defaulttypes.put("mbuchs", MediaType.BOOK);
 		defaulttypes.put("cdkl", MediaType.CD);
@@ -116,11 +120,6 @@ public class Bond26 implements OpacApi {
 		String html = convertStreamToString(response.getEntity().getContent());
 		response.getEntity().consumeContent();
 		return html;
-	}
-
-	@Override
-	public String getResults() {
-		return results;
 	}
 
 	@Override
@@ -251,7 +250,7 @@ public class Bond26 implements OpacApi {
 	}
 
 	@Override
-	public List<SearchResult> search(Bundle query) throws IOException,
+	public SearchRequestResult search(Bundle query) throws IOException,
 			NotReachableException {
 		if (!initialised)
 			start();
@@ -298,24 +297,28 @@ public class Bond26 implements OpacApi {
 
 		String html = httpPost(opac_url + "/index.asp",
 				new UrlEncodedFormEntity(nameValuePairs));
-		return parse_search(html);
+		return parse_search(html, 1);
 	}
 
 	@Override
-	public List<SearchResult> searchGetPage(int page) throws IOException,
+	public SearchRequestResult searchGetPage(int page) throws IOException,
 			NotReachableException {
 		if (!initialised)
 			start();
 
 		String html = httpGet(opac_url + "/index.asp?scrollAction=" + page);
-		return parse_search(html);
+		return parse_search(html, page);
 	}
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 	private List<SearchResult> parse_search(String html) {
 =======
 	protected SearchRequestResult parse_search(String html, int page) {
 >>>>>>> 945e974... .lib
+=======
+	private SearchRequestResult parse_search(String html, int page) {
+>>>>>>> efd18da... More abstract search() API
 		Document doc = Jsoup.parse(html);
 		Elements table = doc
 				.select(".resulttab tr.result_trefferX, .resulttab tr.result_treffer");
@@ -356,8 +359,12 @@ public class Bond26 implements OpacApi {
 			sr.setNr(i);
 			results.add(sr);
 		}
-		this.results = doc.select(".result_gefunden").text();
-		return results;
+		int results_total = -1;
+		if (doc.select(".result_gefunden").size() > 0) {
+			results_total = Integer.parseInt(doc.select(".result_gefunden")
+					.text().trim().replaceAll(".*([0-9]+).*", "$1"));
+		}
+		return new SearchRequestResult(results, results_total, page);
 	}
 
 	@Override
@@ -763,7 +770,7 @@ public class Bond26 implements OpacApi {
 				AccountData.KEY_RESERVATION_READY,
 				AccountData.KEY_RESERVATION_BRANCH,
 				AccountData.KEY_RESERVATION_CANCEL,
-				AccountData.KEY_RESERVATION_EXPIRE};
+				AccountData.KEY_RESERVATION_EXPIRE };
 		copymap_num = copymap_keys.length;
 
 		List<ContentValues> reservations = new ArrayList<ContentValues>();
@@ -778,16 +785,17 @@ public class Bond26 implements OpacApi {
 					if (copymap.getInt(j) > -1) {
 						if (copymap_keys[j].equals("cancel")) {
 							if (tr.child(copymap.getInt(j)).children().size() > 0) {
-								e.put(copymap_keys[j], tr.child(copymap.getInt(j))
-										.child(0).attr("href"));
+								e.put(copymap_keys[j],
+										tr.child(copymap.getInt(j)).child(0)
+												.attr("href"));
 							}
 						} else {
 							e.put(copymap_keys[j], tr.child(copymap.getInt(j))
 									.text());
 						}
 					}
-				} catch(JSONException ex) {
-					
+				} catch (JSONException ex) {
+
 				}
 			}
 
@@ -868,5 +876,11 @@ public class Bond26 implements OpacApi {
 	public int getSupportFlags() {
 		return SUPPORT_FLAG_ACCOUNT_EXTENDABLE
 				| SUPPORT_FLAG_ACCOUNT_PROLONG_ALL;
+	}
+
+	@Override
+	public SearchRequestResult filterResults(Filter filter, Option option) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
