@@ -860,8 +860,8 @@ public class Bond26 implements OpacApi {
 
 	@Override
 	public String getShareUrl(String id, String title) {
-		// We use the default proxy at opacapp.de here
-		return null;
+		return "http://opacapp.de/:" + library.getIdent() + ":" + id + ":"
+				+ title;
 	}
 
 	@Override

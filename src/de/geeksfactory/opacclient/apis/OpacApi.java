@@ -626,17 +626,16 @@ public interface OpacApi {
 	/**
 	 * Some library systems allow us to share search results. If your library
 	 * system allows this natively (to link directly on search results), you can
-	 * return the corresponding URL with this function. If you return null, the
-	 * app will use its default "Share proxy" on opacapp.de to create a session
-	 * before redirection to the results.
+	 * return the corresponding URL with this function. If your library does not
+	 * support this at all, return <code>null</code>. If you library only
+	 * accepts direkt links when a session is open, get in touch with me
+	 * (mail@raphaelmichel.de) to get it integrated in the opacapp.de proxy.
 	 * 
 	 * @param id
 	 *            Media id of the item to be shared
 	 * @param title
 	 *            Title of the item to be shared
 	 * @return An URL or <strong>null</strong>.
-	 * @see <a
-	 *      href="https://github.com/raphaelm/opacclient.web/blob/master/bibproxy.php">bibproxy.php</a>
 	 */
 	public String getShareUrl(String id, String title);
 

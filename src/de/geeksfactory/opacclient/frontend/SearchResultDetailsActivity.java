@@ -875,13 +875,15 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				}
 
 				String shareUrl = app.getApi().getShareUrl(id, title);
-				if (shareUrl != null)
+				if (shareUrl != null) {
 					intent.putExtra(Intent.EXTRA_TEXT, shareUrl);
-				else
-					intent.putExtra(Intent.EXTRA_TEXT, "http://opacapp.de/:"
-							+ bib + ":" + id + ":" + t);
-				startActivity(Intent.createChooser(intent, getResources()
-						.getString(R.string.share)));
+					startActivity(Intent.createChooser(intent, getResources()
+							.getString(R.string.share)));
+				} else {
+					Toast toast = Toast.makeText(SearchResultDetailsActivity.this,
+							getString(R.string.share_notsupported), Toast.LENGTH_SHORT);
+					toast.show();					
+				}
 			}
 			return true;
 		} else if (item.getItemId() == R.id.action_star) {
