@@ -310,15 +310,7 @@ public class Bond26 implements OpacApi {
 		return parse_search(html, page);
 	}
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-	private List<SearchResult> parse_search(String html) {
-=======
 	protected SearchRequestResult parse_search(String html, int page) {
->>>>>>> 945e974... .lib
-=======
-	private SearchRequestResult parse_search(String html, int page) {
->>>>>>> efd18da... More abstract search() API
 		Document doc = Jsoup.parse(html);
 		Elements table = doc
 				.select(".resulttab tr.result_trefferX, .resulttab tr.result_treffer");
