@@ -2,6 +2,10 @@
     "city": "Bremen", 
     "group": "Bremen", 
     "title": null, 
+    "geo": [
+        53.07929619999999, 
+        8.8016937
+    ], 
     "support": "Katalogsuche und Konto (experimentell)", 
     "api": "oclc2011", 
     "data": {

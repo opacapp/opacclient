@@ -1,5 +1,11 @@
 {
     "city": "Bielefeld", 
+    "group": "Nordrhein-Westfalen", 
+    "title": null, 
+    "geo": [
+        52.0212965, 
+        8.5302966
+    ], 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {
@@ -33,23 +39,21 @@
         ], 
         "mediatypes": {
             "mpspS.gif": "GAME_CONSOLE_PLAYSTATION", 
-            "mps2S.gif": "GAME_CONSOLE_PLAYSTATION", 
             "meBibS.gif": "EBOOK", 
             "mps3S.gif": "GAME_CONSOLE_PLAYSTATION", 
             "mBlurayS.gif": "BLURAY", 
             "mCasetteS.gif": "AUDIO_CASSETTE", 
-            "mZtgS.gif": "NEWSPAPER", 
+            "mMalenS.gif": "ART", 
             "mMunzS.gif": "UNKNOWN", 
             "mDVDS.gif": "DVD", 
             "mgamesS.gif": "CD_SOFTWARE", 
             "mvideo2S.gif": "MOVIE", 
             "mWiiS.gif": "GAME_CONSOLE_WII", 
             "mMagS.gif": "NEWSPAPER", 
-            "mNoten1S.gif": "SCORE_MUSIC", 
+            "mps2S.gif": "GAME_CONSOLE_PLAYSTATION", 
             "mHoerbuchS.gif": "AUDIOBOOK", 
-            "mMalenS.gif": "ART"
+            "mZtgS.gif": "NEWSPAPER", 
+            "mNoten1S.gif": "SCORE_MUSIC"
         }
-    }, 
-    "title": null,
-	 "group": "Nordrhein-Westfalen"
+    }
 }

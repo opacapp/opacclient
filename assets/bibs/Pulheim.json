@@ -2,6 +2,10 @@
     "city": "Pulheim", 
     "group": "Nordrhein-Westfalen", 
     "title": null, 
+    "geo": [
+        50.9995815, 
+        6.807685299999999
+    ], 
     "support": "Katalogsuche und Konto (experimentell)", 
     "api": "oclc2011", 
     "data": {

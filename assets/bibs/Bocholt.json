@@ -1,5 +1,11 @@
 {
     "city": "Bocholt", 
+    "group": "Nordrhein-Westfalen", 
+    "title": null, 
+    "geo": [
+        51.8384277, 
+        6.6150917
+    ], 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {
@@ -45,7 +51,5 @@
             "kartegr.gif": "MAP", 
             "mZtgB.gif": "MAGAZINE"
         }
-    }, 
-    "title": null,
-	"group": "Nordrhein-Westfalen"
+    }
 }

@@ -2,6 +2,10 @@
     "city": "Magdeburg", 
     "group": "Sachsen-Anhalt", 
     "title": null, 
+    "geo": [
+        52.130807, 
+        11.628878
+    ], 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {

@@ -2,6 +2,10 @@
     "city": "Regensburg", 
     "group": "Bayern", 
     "title": "Unibibliothek/Regensburger Katalog", 
+    "geo": [
+        49.0145423, 
+        12.1008559
+    ], 
     "support": "Katalogsuche und Konto (experimentell)", 
     "api": "oclc2011", 
     "data": {

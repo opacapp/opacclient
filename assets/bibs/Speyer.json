@@ -2,6 +2,10 @@
     "city": "Speyer", 
     "group": "Rheinland-Pfalz", 
     "title": null, 
+    "geo": [
+        49.3204789, 
+        8.436217
+    ], 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {

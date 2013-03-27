@@ -1,14 +1,30 @@
 {
-	"city": "Herford", 
-	"group": "Nordrhein-Westfalen", 
-	"title": null,
-	"api": "biber1992", 
-	"support": "Katalogsuche", 
-	"data": {
-		"baseurl": "http://62.153.231.37", 
-		"information": "http://www.bibliothek.herford.de", 
-		"opacdir": "opax", 
-		"searchtable": [2, 3, 4],
-		"copiestable": [3, 1, 2, -1, 4, -1, -1] 
-	} 
+    "city": "Herford", 
+    "group": "Nordrhein-Westfalen", 
+    "title": null, 
+    "geo": [
+        52.1178305, 
+        8.679399799999999
+    ], 
+    "support": "Katalogsuche", 
+    "api": "biber1992", 
+    "data": {
+        "information": "http://www.bibliothek.herford.de", 
+        "copiestable": [
+            3, 
+            1, 
+            2, 
+            -1, 
+            4, 
+            -1, 
+            -1
+        ], 
+        "searchtable": [
+            2, 
+            3, 
+            4
+        ], 
+        "baseurl": "http://62.153.231.37", 
+        "opacdir": "opax"
+    }
 }

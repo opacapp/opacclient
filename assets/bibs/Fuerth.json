@@ -2,6 +2,10 @@
     "city": "F\u00fcrth", 
     "group": "Bayern", 
     "title": null, 
+    "geo": [
+        49.4771169, 
+        10.988667
+    ], 
     "support": "Katalogsuche und Konto (experimentell)", 
     "api": "oclc2011", 
     "data": {

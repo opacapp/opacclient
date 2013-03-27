@@ -2,6 +2,10 @@
     "city": "Hamm", 
     "group": "Nordrhein-Westfalen", 
     "title": null, 
+    "geo": [
+        51.6738583, 
+        7.815981600000001
+    ], 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {

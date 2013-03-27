@@ -2,6 +2,10 @@
     "city": "Stralsund", 
     "group": "Mecklenburg-Vorpommern", 
     "title": null, 
+    "geo": [
+        54.2994048, 
+        13.0877143
+    ], 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {
@@ -34,12 +38,12 @@
             3
         ], 
         "mediatypes": {
-            "emedien.gif": "EBOOK", 
+            "mFilmS.gif": "MOVIE", 
             "Munzinger.gif": "UNKNOWN", 
             "mCasetteS.gif": "AUDIO_CASSETTE", 
             "mDVDS.gif": "DVD", 
             "mCDROMS.gif": "CD_SOFTWARE", 
-            "mFilmS.gif": "MOVIE", 
+            "emedien.gif": "EBOOK", 
             "mLosebS.gif": "UNKNOWN", 
             "mSpielS.gif": "BOARDGAME", 
             "mMusikCDS.gif": "CD_MUSIC", 

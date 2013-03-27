@@ -1,27 +1,44 @@
 {
-	"city": "Würzburg", 
-	"group": "Bayern", 
-	"title": null,
-	"api": "biber1992", 
-	"support": "Katalogsuche", 
-	"data": {
-		"baseurl": "http://217.7.118.50", 
-		"information": "http://www.wuerzburg.de/de/buerger/stadtbuecherei/index.html", 
-		"opacdir": "opax", 
-		"searchtable": [2, 3, 4, 5],
-		"copiestable": [3, 1, 2, -1, 4, -1, -1], 
+    "city": "W\u00fcrzburg", 
+    "group": "Bayern", 
+    "title": null, 
+    "geo": [
+        49.7915953, 
+        9.953571499999999
+    ], 
+    "support": "Katalogsuche", 
+    "api": "biber1992", 
+    "data": {
+        "information": "http://www.wuerzburg.de/de/buerger/stadtbuecherei/index.html", 
+        "copiestable": [
+            3, 
+            1, 
+            2, 
+            -1, 
+            4, 
+            -1, 
+            -1
+        ], 
+        "opacdir": "opax", 
+        "baseurl": "http://217.7.118.50", 
         "mediatypes": {
-            "1": "BOOK", 
-            "2": "MAGAZINE",
-            "3": "CD_SOFTWARE", 
-            "6": "CD_MUSIC", 
-            "8": "SCORE_MUSIC", 
-            "9": "BOARDGAME", 
-            "10": "MAP", 
             "11": "DVD", 
+            "10": "MAP", 
+            "24": "BLURAY", 
             "19": "BOOK", 
-            "24": "BLURAY",             
-            "30": "EBOOK" 
-        }
-	} 
+            "30": "EBOOK", 
+            "1": "BOOK", 
+            "3": "CD_SOFTWARE", 
+            "2": "MAGAZINE", 
+            "6": "CD_MUSIC", 
+            "9": "BOARDGAME", 
+            "8": "SCORE_MUSIC"
+        }, 
+        "searchtable": [
+            2, 
+            3, 
+            4, 
+            5
+        ]
+    }
 }

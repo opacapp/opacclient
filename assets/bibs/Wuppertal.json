@@ -2,6 +2,10 @@
     "city": "Wuppertal", 
     "group": "Nordrhein-Westfalen", 
     "title": null, 
+    "geo": [
+        51.2562128, 
+        7.150763599999999
+    ], 
     "support": "Katalogsuche und Konto (experimentell)", 
     "api": "oclc2011", 
     "data": {

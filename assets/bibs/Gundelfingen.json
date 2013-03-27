@@ -1,7 +1,11 @@
 {
     "city": "Gundelfingen", 
-    "group": "Baden-Württemberg", 
+    "group": "Baden-W\u00fcrttemberg", 
     "title": null, 
+    "geo": [
+        48.04296919999999, 
+        7.8655198
+    ], 
     "support": "Katalogsuche", 
     "api": "bond26", 
     "data": {

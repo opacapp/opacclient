@@ -2,6 +2,10 @@
     "city": "Dortmund", 
     "group": "Nordrhein-Westfalen", 
     "title": "Unibibliothek TU", 
+    "geo": [
+        51.5135872, 
+        7.465298100000001
+    ], 
     "support": "Katalogsuche und Konto (experimentell)", 
     "api": "oclc2011", 
     "data": {

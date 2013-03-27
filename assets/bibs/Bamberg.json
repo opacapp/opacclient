@@ -1,5 +1,11 @@
 {
     "city": "Bamberg", 
+    "group": "Bayern", 
+    "title": null, 
+    "geo": [
+        49.8988135, 
+        10.9027636
+    ], 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {
@@ -32,27 +38,25 @@
             4
         ], 
         "mediatypes": {
-            "mBuchNeuS.gif": "BOOK",
-            "mNotenS.gif": "SCORE_MUSIC", 
+            "mBuchNeuS.gif": "BOOK", 
+            "mMusikCDS.gif": "CD_MUSIC", 
             "mBuchS.gif": "BOOK", 
-            "mSpieleS.gif": "BOARDGAME", 
+            "mHoerbuchS.gif": "AUDIOBOOK", 
+            "mDVDS.gif": "DVD", 
+            "mSachBuchS.gif": "BOOK", 
+            "mCDMCS.gif": "CD", 
             "mVideoS.gif": "MOVIE", 
             "mNintendo02S.gif": "GAME_CONSOLE_NINTENDO", 
-            "mAVmedienS.gif": "UNKNOWN", 
-            "mCDMCS.gif": "CD", 
-            "mCDromS.gif": "CD_SOFTWARE", 
-            "mDVDS.gif": "DVD", 
             "MBuecherS.gif": "PACKAGE_BOOKS", 
+            "mCDromS.gif": "CD_SOFTWARE", 
+            "mSpieleS.gif": "BOARDGAME", 
+            "mAVmedienS.gif": "UNKNOWN", 
             "mCassetteS.gif": "PACKAGE", 
-            "mHoerbuchS.gif": "AUDIOBOOK", 
-            "mSachBuchS.gif": "BOOK", 
-            "MOnleihe2S.gif": "EBOOK", 
-            "mMusikCDS.gif": "CD_MUSIC", 
+            "mNotenS.gif": "SCORE_MUSIC", 
             "mComicS.gif": "BOOK", 
+            "MOnleihe2S.gif": "EBOOK", 
             "mZeitS.gif": "NEWSPAPER", 
             "mRead2S.gif": "EBOOK"
         }
-    }, 
-    "title": null,
-	"group": "Hessen"
+    }
 }

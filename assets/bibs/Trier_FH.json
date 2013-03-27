@@ -2,6 +2,10 @@
     "city": "Trier", 
     "group": "Rheinland-Pfalz", 
     "title": "Fachhochschule", 
+    "geo": [
+        49.7468826, 
+        6.6347507
+    ], 
     "support": "Katalogsuche und Konto (experimentell)", 
     "api": "oclc2011", 
     "data": {

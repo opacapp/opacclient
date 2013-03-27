@@ -1,31 +1,48 @@
 {
-	"city": "Offenburg", 
-	"group": "Baden-W\u00fcrttemberg", 
-	"title": null,
-	"support": "Katalogsuche und Konto", 
-	"api": "biber1992", 
-	"data": {
-		"baseurl": "http://217.86.216.47", 
-		"information": "http://www.stadtbibliothek.offenburg.de/",
-		"opacdir": "opac", 
-		"searchtable": [2, 3, 4, 5],
-		"accounttable": [3, 6, 6, 2, 4, -1, -1, 3],
+    "city": "Offenburg", 
+    "group": "Baden-W\u00fcrttemberg", 
+    "title": null, 
+    "geo": [
+        48.4769251, 
+        7.9492875
+    ], 
+    "support": "Katalogsuche und Konto", 
+    "api": "biber1992", 
+    "data": {
+        "information": "http://www.stadtbibliothek.offenburg.de/", 
+        "accounttable": [
+            3, 
+            6, 
+            6, 
+            2, 
+            4, 
+            -1, 
+            -1, 
+            3
+        ], 
+        "baseurl": "http://217.86.216.47", 
         "mediatypes": {
-            "01": "BOOK", 
-            "10": "BOOK", 
             "11": "BOOK", 
+            "10": "BOOK", 
             "13": "BOOK", 
-            "14": "BOOK", 
-            "33": "MAGAZINE", 
-            "33": "MAP", 
+            "01": "BOOK", 
             "20": "CD", 
+            "14": "BOOK", 
             "22": "CD", 
             "23": "CD_MUSIC", 
-            "26": "GAME_CONSOLE_NINTENDO", 
+            "33": "MAP", 
+            "32": "BOARDGAME", 
             "31": "DVD", 
+            "26": "GAME_CONSOLE_NINTENDO", 
             "35": "BLURAY", 
-            "32": "BOARDGAME",
-            "40": "EBOOK" 
-        }
-	} 
+            "40": "EBOOK"
+        }, 
+        "opacdir": "opac", 
+        "searchtable": [
+            2, 
+            3, 
+            4, 
+            5
+        ]
+    }
 }

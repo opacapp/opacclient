@@ -2,6 +2,10 @@
     "city": "Dachau", 
     "group": "Bayern", 
     "title": null, 
+    "geo": [
+        48.2629984, 
+        11.4339022
+    ], 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {

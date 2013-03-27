@@ -2,6 +2,10 @@
     "city": "Hof", 
     "group": "Bayern", 
     "title": null, 
+    "geo": [
+        50.3135391, 
+        11.9127814
+    ], 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {
@@ -36,8 +40,8 @@
         "mediatypes": {
             "spiel_konsol.gif": "GAME_CONSOLE", 
             "buch_blau.jpg": "BOOK", 
-            "zeitung_kl.jpg": "MAGAZINE", 
             "buch_gelb.jpg": "BOOK", 
+            "mUnselbS.gif": "MAP", 
             "mCasetteS.gif": "AUDIO_CASSETTE", 
             "mDVDS.gif": "DVD", 
             "mDVD3.gif": "DVD", 
@@ -47,7 +51,7 @@
             "buch_rot.jpg": "BOOK", 
             "film.bmp": "MOVIE", 
             "cd_kl.jpg": "CD", 
-            "mUnselbS.gif": "MAP"
+            "zeitung_kl.jpg": "MAGAZINE"
         }
     }
 }

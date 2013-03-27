@@ -1,11 +1,15 @@
 {
- "api": "oclc2011", 
- "city": "Bochum", 
- "data": {
-  "baseurl": "http://opac.ub.rub.de:8080/webOPACClient", 
-  "information": "http://www.ub.rub.de/informationen/oeffnungszeiten.html"
- }, 
- "support": "Katalogsuche und Konto (experimentell)", 
- "title": "Unibibliothek RUB",
- "group": "Nordrhein-Westfalen"
+    "city": "Bochum", 
+    "group": "Nordrhein-Westfalen", 
+    "title": "Unibibliothek RUB", 
+    "geo": [
+        51.4818445, 
+        7.216236299999999
+    ], 
+    "support": "Katalogsuche und Konto (experimentell)", 
+    "api": "oclc2011", 
+    "data": {
+        "information": "http://www.ub.rub.de/informationen/oeffnungszeiten.html", 
+        "baseurl": "http://opac.ub.rub.de:8080/webOPACClient"
+    }
 }

@@ -2,6 +2,10 @@
     "city": "T\u00fcbingen", 
     "group": "Baden-W\u00fcrttemberg", 
     "title": null, 
+    "geo": [
+        48.5216364, 
+        9.0576448
+    ], 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {

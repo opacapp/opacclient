@@ -2,6 +2,10 @@
     "city": "Emsdetten", 
     "group": "Nordrhein-Westfalen", 
     "title": null, 
+    "geo": [
+        52.16818929999999, 
+        7.531058
+    ], 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {

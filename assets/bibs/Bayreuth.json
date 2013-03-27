@@ -1,5 +1,11 @@
 {
     "city": "Bayreuth", 
+    "group": "Bayern", 
+    "title": null, 
+    "geo": [
+        49.9456399, 
+        11.5713346
+    ], 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {
@@ -35,7 +41,7 @@
             "mDisket1S.gif": "GAME_CONSOLE", 
             "mComic2S.gif": "BOOK", 
             "mPS3S.gif": "GAME_CONSOLE_PLAYSTATION", 
-            "mWiiS.gif": "GAME_CONSOLE_WII", 
+            "mFilmS.gif": "MOVIE", 
             "mCasetteS.gif": "AUDIO_CASSETTE", 
             "mReise2S.gif": "MAP", 
             "mComput2S.gif": "PACKAGE", 
@@ -43,14 +49,12 @@
             "mNoten1S.gif": "SCORE_MUSIC", 
             "mCDROMS.gif": "CD_SOFTWARE", 
             "mDVDS.gif": "DVD", 
-            "mFilmS.gif": "MOVIE", 
+            "mWiiS.gif": "GAME_CONSOLE_WII", 
             "mTip_S.gif": "BOOK", 
             "mOnleiheS.gif": "EBOOK", 
             "mSpielS.gif": "BOARDGAME", 
             "mMusikcdS.gif": "CD", 
             "mZtgS.gif": "NEWSPAPER"
         }
-    }, 
-    "title": null,
-	"group": "Bayern"
+    }
 }

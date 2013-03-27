@@ -2,6 +2,10 @@
     "city": "Wolfsburg", 
     "group": "Niedersachsen", 
     "title": null, 
+    "geo": [
+        52.4226503, 
+        10.7865461
+    ], 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {

@@ -2,6 +2,10 @@
     "city": "Frankfurt", 
     "group": "Hessen", 
     "title": null, 
+    "geo": [
+        50.1109221, 
+        8.6821267
+    ], 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {

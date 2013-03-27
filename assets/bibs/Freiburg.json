@@ -2,6 +2,10 @@
     "city": "Freiburg", 
     "group": "Baden-W\u00fcrttemberg", 
     "title": null, 
+    "geo": [
+        47.9990077, 
+        7.842104299999999
+    ], 
     "support": "Katalogsuche und Konto (experimentell)", 
     "api": "oclc2011", 
     "data": {

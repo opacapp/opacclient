@@ -2,6 +2,10 @@
     "city": "Wiesbaden", 
     "group": "Hessen", 
     "title": null, 
+    "geo": [
+        50.0630804, 
+        8.2433437
+    ], 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {

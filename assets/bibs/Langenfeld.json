@@ -2,6 +2,10 @@
     "city": "Langenfeld", 
     "group": "Nordrhein-Westfalen", 
     "title": null, 
+    "geo": [
+        51.1191898, 
+        6.951266299999999
+    ], 
     "support": "Katalogsuche", 
     "api": "bond26", 
     "data": {
