@@ -354,7 +354,7 @@ public class Bond26 implements OpacApi {
 		int results_total = -1;
 		if (doc.select(".result_gefunden").size() > 0) {
 			results_total = Integer.parseInt(doc.select(".result_gefunden")
-					.text().trim().replaceAll(".*([0-9]+).*", "$1"));
+					.text().trim().replaceAll(".*[^0-9]+([0-9]+).*", "$1"));
 		}
 		return new SearchRequestResult(results, results_total, page);
 	}
