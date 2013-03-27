@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.acra.ACRA;
 import org.holoeverywhere.widget.Spinner;
+import org.json.JSONException;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -298,8 +299,17 @@ public class SearchActivity extends OpacActivity {
 		cbZstHome_data = data.getMeta(app.getLibrary().getIdent(),
 				MetaDataSource.META_TYPE_HOME_BRANCH);
 		int selected = 0;
-		String selection = sp.getString(OpacClient.PREF_HOME_BRANCH_PREFIX
-				+ app.getAccount().getId(), "");
+		String selection;
+		if (sp.contains(OpacClient.PREF_HOME_BRANCH_PREFIX))
+			selection = sp.getString(OpacClient.PREF_HOME_BRANCH_PREFIX
+					+ app.getAccount().getId(), "");
+		else {
+			try {
+				selection = app.getLibrary().getData().getString("homebranch");
+			} catch (JSONException e) {
+				selection = "";
+			}
+		}
 		int i = 0;
 		for (ContentValues row : cbZstHome_data) {
 			if (row.getAsString("key").equals(selection)) {
@@ -501,7 +511,7 @@ public class SearchActivity extends OpacActivity {
 	public void loadMetaData(String lib, boolean force) {
 		if (metaDataLoading)
 			return;
-		if (System.currentTimeMillis()-last_meta_try < 3600){
+		if (System.currentTimeMillis() - last_meta_try < 3600) {
 			return;
 		}
 		last_meta_try = System.currentTimeMillis();

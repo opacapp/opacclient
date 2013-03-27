@@ -1,0 +1,17 @@
+{
+    "city": "Aschaffenburg", 
+    "group": "Bayern", 
+    "title": "Hochschulbibliothek", 
+    "geo": [
+        49.97354740000001, 
+        9.1525973
+    ], 
+    "support": "Katalogsuche und Konto (experimentell)", 
+    "api": "oclc2011", 
+    "data": {
+        "information": "http://www.h-ab.de/ueber-die-hochschule/organisation/einrichtungen/bibliothek/kontakt/oeffnungszeiten/", 
+        "homebranch": "3", 
+        "baseurl": "https://recherche.bibkatalog.de/InfoGuideClient.fwssis", 
+        "startparams": "Login=wofwsa"
+    }
+}
