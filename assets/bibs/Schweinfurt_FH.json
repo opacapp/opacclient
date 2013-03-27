@@ -1,17 +1,17 @@
 {
-    "city": "W\u00fcrzburg", 
+    "city": "Schweinfurt", 
     "group": "Bayern", 
     "title": "Hochschulbibliothek", 
     "geo": [
-        49.7915953, 
-        9.953571499999999
+        50.0492047, 
+        10.2194228
     ], 
     "support": "Katalogsuche und Konto (experimentell)", 
     "api": "oclc2011", 
     "data": {
         "information": "http://www.fh-sw.de/sw/bibliothek/zeiten.php", 
-        "homebranch": "0", 
+        "homebranch": "2", 
         "baseurl": "https://recherche.bibkatalog.de/InfoGuideClient.fwssis", 
-        "startparams": "Login=wofwsw"
+        "startparams": "Login=wofwss"
     }
 }

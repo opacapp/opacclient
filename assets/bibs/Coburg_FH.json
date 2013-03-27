@@ -1,17 +1,17 @@
 {
-    "city": "W\u00fcrzburg", 
+    "city": "Coburg", 
     "group": "Bayern", 
     "title": "Hochschulbibliothek", 
     "geo": [
-        49.7915953, 
-        9.953571499999999
+        50.2640337, 
+        10.9633776
     ], 
     "support": "Katalogsuche und Konto (experimentell)", 
     "api": "oclc2011", 
     "data": {
-        "information": "http://www.fh-sw.de/sw/bibliothek/zeiten.php", 
-        "homebranch": "0", 
+        "information": "http://www.hs-coburg.de/library.html", 
+        "homebranch": "5", 
         "baseurl": "https://recherche.bibkatalog.de/InfoGuideClient.fwssis", 
-        "startparams": "Login=wofwsw"
+        "startparams": "Login=wofwss"
     }
 }
