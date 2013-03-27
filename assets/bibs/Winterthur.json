@@ -2,6 +2,10 @@
     "city": "Winterthur", 
     "group": "Schweiz", 
     "title": "Bibliotheksverbund", 
+    "geo": [
+        47.49995, 
+        8.737564599999999
+    ], 
     "support": "Katalogsuche und Konto (experimentell)", 
     "api": "oclc2011", 
     "data": {

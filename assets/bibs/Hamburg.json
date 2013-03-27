@@ -2,6 +2,10 @@
     "city": "Hamburg", 
     "group": "Hamburg", 
     "title": null, 
+    "geo": [
+        53.5510846, 
+        9.9936818
+    ], 
     "support": "Katalogsuche", 
     "api": "zones22", 
     "data": {

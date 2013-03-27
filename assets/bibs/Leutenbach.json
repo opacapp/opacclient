@@ -2,6 +2,10 @@
     "city": "Leutenbach", 
     "group": "Baden-W\u00fcrttemberg", 
     "title": null, 
+    "geo": [
+        48.88809209999999, 
+        9.390455
+    ], 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {

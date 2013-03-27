@@ -2,6 +2,10 @@
     "city": "Erlangen", 
     "group": "Bayern", 
     "title": null, 
+    "geo": [
+        49.5907169, 
+        11.0142675
+    ], 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {
@@ -38,18 +42,18 @@
             "munzS.gif": "EBOOK", 
             "onleihe2s.gif": "EBOOK", 
             "mBuchS.gif": "BOOK", 
-            "mVideoS.gif": "MOVIE", 
             "blurayS.gif": "BLURAY", 
             "mmBuchS.gif": "BOOK", 
             "mDVDS.gif": "DVD", 
-            "mCassetteS.gif": "AUDIO_CASSETTE", 
+            "mVideoS.gif": "MOVIE", 
             "mNoten1S.gif": "SCORE_MUSIC", 
-            "mCDROMS.gif": "CD", 
+            "mCassetteS.gif": "AUDIO_CASSETTE", 
             "zeitschriftkl.gif": "NEWSPAPER", 
             "notenkl.gif": "SCORE_MUSIC", 
             "mSpielS.gif": "BOARDGAME", 
             "mMusikCDS.gif": "CD_MUSIC", 
-            "cdkl.gif": "CD"
+            "cdkl.gif": "CD", 
+            "mCDROMS.gif": "CD"
         }
     }
 }

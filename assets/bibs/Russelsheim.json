@@ -2,6 +2,10 @@
     "city": "R\u00fcsselsheim", 
     "group": "Hessen", 
     "title": null, 
+    "geo": [
+        49.9887497, 
+        8.4216976
+    ], 
     "support": "Katalogsuche und Konto (experimentell)", 
     "api": "oclc2011", 
     "data": {

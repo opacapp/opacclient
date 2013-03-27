@@ -1,5 +1,11 @@
 {
     "city": "Offenau", 
+    "group": "Baden-W\u00fcrttemberg", 
+    "title": null, 
+    "geo": [
+        49.2450112, 
+        9.164699299999999
+    ], 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {
@@ -32,24 +38,22 @@
             3
         ], 
         "mediatypes": {
-            "mBmonoS.gif": "PACKAGE_BOOKS", 
+            "mFilmS.gif": "MOVIE", 
+            "mBuchS.gif": "BOOK", 
             "tafelkl.jpg": "SCHOOL_VERSION", 
-            "mZtgS.gif": "NEWSPAPER", 
+            "b\u00fccher.gif": "BOOK", 
+            "cdkl.gif": "CD", 
             "ekl.gif": "EBOOK", 
             "mNoten1S.gif": "SCORE_MUSIC", 
             "cdromkl.gif": "CD_SOFTWARE", 
-            "mFilmS.gif": "MOVIE", 
+            "mBmonoS.gif": "PACKAGE_BOOKS", 
             "mBuecherS.gif": "PACKAGE", 
             "mhoerbuchS.gif": "AUDIOBOOK", 
             "spielekl.gif": "BOARDGAME", 
             "mBuchSsich.gif": "BOOK", 
             "mMusikCDS.gif": "CD_MUSIC", 
-            "cdkl.gif": "CD", 
-            "MDVD.gif": "DVD",
-            "mBuchS.gif": "BOOK",
-			"bücher.gif": "BOOK"
+            "mZtgS.gif": "NEWSPAPER", 
+            "MDVD.gif": "DVD"
         }
-    }, 
-    "title": null,
-	"group": "Baden-Württemberg"
+    }
 }

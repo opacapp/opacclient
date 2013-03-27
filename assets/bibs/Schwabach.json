@@ -2,6 +2,10 @@
     "city": "Schwabach", 
     "group": "Bayern", 
     "title": null, 
+    "geo": [
+        49.3284557, 
+        11.0247098
+    ], 
     "support": "Katalogsuche", 
     "api": "bond26", 
     "data": {
@@ -35,11 +39,11 @@
         ], 
         "mediatypes": {
             "mBuchS.gif": "BOOK", 
-            "xCancel.gif": "UNKNOWN", 
             "mCasetteS.gif": "AUDIO_CASSETTE", 
-            "mNoten1S.gif": "SCORE_MUSIC", 
             "mDVDS.gif": "DVD", 
+            "xCancel.gif": "UNKNOWN", 
             "mFilmS.gif": "MOVIE", 
+            "mNoten1S.gif": "SCORE_MUSIC", 
             "CD.gif": "AUDIOBOOK", 
             "mZtgS.gif": "MAGAZINE"
         }

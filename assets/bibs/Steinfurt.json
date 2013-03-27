@@ -2,6 +2,10 @@
     "city": "Steinfurt", 
     "group": "Nordrhein-Westfalen", 
     "title": null, 
+    "geo": [
+        52.1475, 
+        7.344167
+    ], 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {

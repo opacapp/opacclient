@@ -2,6 +2,10 @@
     "city": "W\u00fcrzburg", 
     "group": "Bayern", 
     "title": "Unibibliothek", 
+    "geo": [
+        49.7915953, 
+        9.953571499999999
+    ], 
     "support": "Katalogsuche und Konto (experimentell)", 
     "api": "oclc2011", 
     "data": {

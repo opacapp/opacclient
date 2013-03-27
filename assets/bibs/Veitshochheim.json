@@ -2,6 +2,10 @@
     "city": "Veitsh\u00f6chheim", 
     "group": "Bayern", 
     "title": null, 
+    "geo": [
+        49.831826, 
+        9.8850835
+    ], 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {

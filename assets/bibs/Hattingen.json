@@ -2,6 +2,10 @@
     "city": "Hattingen", 
     "group": "Nordrhein-Westfalen", 
     "title": null, 
+    "geo": [
+        51.4018117, 
+        7.1911567
+    ], 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {
@@ -34,10 +38,10 @@
             3
         ], 
         "mediatypes": {
-            "eBookS.gif": "EBOOK", 
-            "Spiele30.gif": "BOARDGAME", 
-            "mCasetteS.gif": "AUDIO_CASSETTE", 
+            "ePaperS.gif": "EBOOK", 
             "Zeit.jpg": "MAGAZINE", 
+            "mCasetteS.gif": "AUDIO_CASSETTE", 
+            "Spiele30.gif": "BOARDGAME", 
             "mDVDS.gif": "DVD", 
             "Film30.gif": "DVD", 
             "mFilmS.gif": "MOVIE", 
@@ -48,7 +52,7 @@
             "tipp30.gif": "BOOK", 
             "eAudioS.gif": "AUDIOBOOK", 
             "mMusikCDS.gif": "CD_MUSIC", 
-            "ePaperS.gif": "EBOOK"
+            "eBookS.gif": "EBOOK"
         }
     }
 }

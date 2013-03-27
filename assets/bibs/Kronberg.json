@@ -2,6 +2,10 @@
     "city": "Kronberg", 
     "group": "Hessen", 
     "title": null, 
+    "geo": [
+        50.1826861, 
+        8.5201703
+    ], 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {

@@ -2,6 +2,10 @@
     "city": "Trier", 
     "group": "Rheinland-Pfalz", 
     "title": "Palais Walderdorff", 
+    "geo": [
+        49.7468826, 
+        6.6347507
+    ], 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {

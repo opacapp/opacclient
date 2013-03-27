@@ -2,6 +2,10 @@
     "city": "Neu-Ulm", 
     "group": "Bayern", 
     "title": null, 
+    "geo": [
+        48.3906042, 
+        10.0060398
+    ], 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {

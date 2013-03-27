@@ -2,6 +2,10 @@
     "city": "Leverkusen", 
     "group": "Nordrhein-Westfalen", 
     "title": null, 
+    "geo": [
+        51.04592479999999, 
+        7.0192196
+    ], 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {

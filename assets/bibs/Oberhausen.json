@@ -2,6 +2,10 @@
     "city": "Oberhausen", 
     "group": "Nordrhein-Westfalen", 
     "title": null, 
+    "geo": [
+        51.4964886, 
+        6.8515156
+    ], 
     "support": "Katalogsuche und Konto (experimentell)", 
     "api": "oclc2011", 
     "data": {

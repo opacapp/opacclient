@@ -2,6 +2,10 @@
     "city": "Radolfzell", 
     "group": "Baden-W\u00fcrttemberg", 
     "title": null, 
+    "geo": [
+        47.745237, 
+        8.9669098
+    ], 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {

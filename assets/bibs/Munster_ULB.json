@@ -2,6 +2,10 @@
     "city": "M\u00fcnster", 
     "group": "Nordrhein-Westfalen", 
     "title": "Uni- und Landesbibliothek", 
+    "geo": [
+        51.9606649, 
+        7.6261347
+    ], 
     "support": "Katalogsuche und Konto (experimentell)", 
     "api": "oclc2011", 
     "data": {

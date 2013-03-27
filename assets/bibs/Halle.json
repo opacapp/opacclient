@@ -2,6 +2,10 @@
     "city": "Halle (Saale)", 
     "group": "Sachsen-Anhalt", 
     "title": null, 
+    "geo": [
+        51.47971, 
+        11.96864
+    ], 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {
@@ -36,22 +40,22 @@
         "mediatypes": {
             "haldvdroms.gif": "DVD", 
             "haldvds.gif": "DVD", 
+            "halkiddvds.gif": "DVD", 
             "schallplatte_32.gif": "UNKNOWN", 
             "halkidcdroms.gif": "CD_SOFTWARE", 
             "halcdroms.gif": "CD_SOFTWARE", 
-            "blu-ray_32.gif": "BLURAY", 
             "mReise2s.gif": "MAP", 
+            "halsprachkursb.gif": "UNKNOWN", 
             "mNoten1S.gif": "SCORE_MUSIC", 
             "halarts.gif": "ART", 
             "CDs.gif": "CD", 
             "multimedia.gif": "PACKAGE", 
-            "halsprachkursb.gif": "UNKNOWN", 
             "iconmunzinger32.gif": "EBOOK", 
+            "blu-ray_32.gif": "BLURAY", 
+            "mBuchS2.gif": "BOOK", 
             "konsolen32.gif": "GAME_CONSOLE", 
-            "halbks.gif": "BOOK", 
-            "halkiddvds.gif": "DVD", 
             "halkidcds.gif": "CD", 
-            "mBuchS2.gif": "BOOK"
+            "halbks.gif": "BOOK"
         }
     }
 }

@@ -2,6 +2,10 @@
     "city": "Engen", 
     "group": "Baden-W\u00fcrttemberg", 
     "title": null, 
+    "geo": [
+        47.854144, 
+        8.7737404
+    ], 
     "support": "Katalogsuche", 
     "api": "bond26", 
     "data": {

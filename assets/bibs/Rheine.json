@@ -2,6 +2,10 @@
     "city": "Rheine", 
     "group": "Nordrhein-Westfalen", 
     "title": null, 
+    "geo": [
+        52.2815691, 
+        7.443409200000001
+    ], 
     "support": "Katalogsuche und Konto", 
     "api": "bond26", 
     "data": {

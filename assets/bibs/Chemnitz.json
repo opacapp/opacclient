@@ -2,6 +2,10 @@
     "city": "Chemnitz", 
     "group": "Sachsen", 
     "title": null, 
+    "geo": [
+        50.827845, 
+        12.9213697
+    ], 
     "support": "Katalogsuche und Konto (experimentell)", 
     "api": "oclc2011", 
     "data": {

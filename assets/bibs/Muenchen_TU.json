@@ -2,6 +2,10 @@
     "city": "M\u00fcnchen", 
     "group": "Bayern", 
     "title": "Unibibliothek TUM", 
+    "geo": [
+        48.1366069, 
+        11.5770851
+    ], 
     "support": "Katalogsuche und Konto (experimentell)", 
     "api": "oclc2011", 
     "data": {
