@@ -328,16 +328,26 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
 		for (String[] detail : result.getDetails()) {
 			TableRow tr = new TableRow(this);
-			TextView tv1 = new TextView(this);
-			tv1.setText(Html.fromHtml(detail[0]));
-			tv1.setTypeface(null, Typeface.BOLD);
-			tv1.setPadding(0, 0, 8, 0);
-			TextView tv2 = new TextView(this);
-			tv2.setText(Html.fromHtml(detail[1]));
-			tv2.setEllipsize(TruncateAt.END);
-			tv2.setSingleLine(false);
-			tr.addView(tv1);
-			tr.addView(tv2);
+			if (detail.length == 2) {
+				TextView tv1 = new TextView(this);
+				tv1.setText(Html.fromHtml(detail[0]));
+				tv1.setTypeface(null, Typeface.BOLD);
+				tv1.setPadding(0, 0, 8, 0);
+				TextView tv2 = new TextView(this);
+				tv2.setText(Html.fromHtml(detail[1]));
+				tv2.setEllipsize(TruncateAt.END);
+				tv2.setSingleLine(false);
+				tr.addView(tv1);
+				tr.addView(tv2);
+			} else if (detail.length == 1) {
+				TextView tv1 = new TextView(this);
+				tv1.setText(Html.fromHtml(detail[0]));
+				tv1.setPadding(0, 2, 0, 2);
+				TableRow.LayoutParams params = new TableRow.LayoutParams(0);
+				params.span = 2;
+				tv1.setLayoutParams(params);
+				tr.addView(tv1);
+			}
 			table.addView(tr);
 		}
 
@@ -880,9 +890,11 @@ public class SearchResultDetailsActivity extends OpacActivity {
 					startActivity(Intent.createChooser(intent, getResources()
 							.getString(R.string.share)));
 				} else {
-					Toast toast = Toast.makeText(SearchResultDetailsActivity.this,
-							getString(R.string.share_notsupported), Toast.LENGTH_SHORT);
-					toast.show();					
+					Toast toast = Toast.makeText(
+							SearchResultDetailsActivity.this,
+							getString(R.string.share_notsupported),
+							Toast.LENGTH_SHORT);
+					toast.show();
 				}
 			}
 			return true;
