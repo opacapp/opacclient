@@ -1,7 +1,6 @@
 package de.geeksfactory.opacclient.frontend;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -26,6 +25,30 @@ public class LibraryListAdapter extends BaseExpandableListAdapter {
 		this.context = context;
 		this.groups = new ArrayList<String>();
 		this.children = new ArrayList<ArrayList<Library>>();
+	}
+
+	/**
+	 * Searches the adapter for the position of a given library
+	 * 
+	 * @param library
+	 *            Library object to search for
+	 * @return Array of groupPosition and childPosition
+	 */
+	public int[] findPosition(Library library) {
+		if (library == null)
+			return null;
+		int groups_len = children.size();
+		for (int i = 0; i < groups_len; i++) {
+			int childs_len = children.get(i).size();
+			ArrayList<Library> child = children.get(i);
+			for (int j = 0; j < childs_len; j++) {
+				if (child.get(j) != null) {
+					if (child.get(j) == library || child.get(j).equals(library))
+						return new int[] { i, j };
+				}
+			}
+		}
+		return null;
 	}
 
 	public void addItem(Library library) {

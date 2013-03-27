@@ -16,6 +16,7 @@ public class Library implements Comparable<Library> {
 	private String api;
 	private JSONObject data;
 	private String group;
+	private double[] geo;
 
 	/**
 	 * Create a Library object based on a <code>JSONObject</code>.
@@ -39,6 +40,13 @@ public class Library implements Comparable<Library> {
 		lib.setSupport(input.getString("support"));
 		lib.setGroup(input.getString("group"));
 		lib.setData(input.getJSONObject("data"));
+		if (input.has("geo")) {
+			double[] geo = new double[2];
+			geo[0] = input.getJSONArray("geo").getDouble(0);
+			geo[1] = input.getJSONArray("geo").getDouble(1);
+			lib.setGeo(geo);
+		}
+
 		if (lib.getTitle().equals(""))
 			lib.setTitle(null);
 		if (lib.getSupport().equals(""))
@@ -184,10 +192,59 @@ public class Library implements Comparable<Library> {
 		this.group = group;
 	}
 
+	/**
+	 * Get latitude and longitude of the library's geolocation
+	 * 
+	 * @return Array of latitude and longitude
+	 */
+	public double[] getGeo() {
+		return geo;
+	}
+
+	/**
+	 * Set latitude and longitude of the library's geolocation
+	 * 
+	 * @param geo
+	 *            Array of latitude and longitude
+	 */
+	public void setGeo(double[] geo) {
+		this.geo = geo;
+	}
+
 	public int compareTo(Library arg0) {
 		int g = group.compareTo(arg0.getGroup());
 		if (g == 0)
 			g = city.compareTo(arg0.getCity());
 		return g;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((ident == null) ? 0 : ident.hashCode());
+		return result;
+	}
+
+	/**
+	 * Evaluates, whether this object represents the same library as the given
+	 * one. Only the library ident (aka. filename) is taken into consideration!
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Library other = (Library) obj;
+		if (ident == null) {
+			if (other.ident != null)
+				return false;
+		} else if (!ident.equals(other.ident))
+			return false;
+		return true;
+	}
+
 }
