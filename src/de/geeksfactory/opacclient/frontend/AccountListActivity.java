@@ -10,15 +10,24 @@ import org.holoeverywhere.widget.ExpandableListView;
 import org.holoeverywhere.widget.ExpandableListView.OnChildClickListener;
 import org.json.JSONException;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
@@ -49,9 +58,9 @@ public class AccountListActivity extends SherlockActivity {
 		// Get the layout inflater
 		LayoutInflater inflater = getLayoutInflater();
 
-		View view = inflater.inflate(R.layout.expandable_list_dialog, null);
+		View view = inflater.inflate(R.layout.library_select_dialog, null);
 
-		ExpandableListView lv = (ExpandableListView) view
+		final ExpandableListView lv = (ExpandableListView) view
 				.findViewById(R.id.lvBibs);
 		try {
 			libraries = ((OpacClient) getApplication()).getLibraries();
@@ -88,6 +97,84 @@ public class AccountListActivity extends SherlockActivity {
 				i.putExtra("adding", true);
 				startActivity(i);
 				return false;
+			}
+		});
+
+		final TextView tvLocateString = (TextView) view
+				.findViewById(R.id.tvLocateString);
+
+		final ImageView ivLocationIcon = (ImageView) view
+				.findViewById(R.id.ivLocationIcon);
+
+		final LinearLayout llLocate = (LinearLayout) view
+				.findViewById(R.id.llLocate);
+
+		final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		Criteria criteria = new Criteria();
+		criteria.setAccuracy(Criteria.ACCURACY_COARSE); // no GPS
+		final String provider = locationManager.getBestProvider(criteria, true);
+		if (provider == null) // no geolocation available
+			llLocate.setVisibility(View.GONE);
+
+		llLocate.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				tvLocateString.setText(R.string.geolocate_progress);
+				ivLocationIcon.setImageResource(R.drawable.ic_locate);
+				locationManager.requestLocationUpdates(provider, 0, 0,
+						new LocationListener() {
+							@Override
+							public void onStatusChanged(String provider,
+									int status, Bundle extras) {
+							}
+
+							@Override
+							public void onProviderEnabled(String provider) {
+							}
+
+							@Override
+							public void onProviderDisabled(String provider) {
+							}
+
+							@Override
+							public void onLocationChanged(Location location) {
+								if (location != null) {
+									double lat = location.getLatitude();
+									double lon = location.getLongitude();
+									float shortest = -1;
+									Library closest = null;
+									// Find closest library
+									for (Library lib : libraries) {
+										float[] result = new float[1];
+										double[] geo = lib.getGeo();
+										if (geo == null)
+											continue;
+										Location.distanceBetween(lat, lon,
+												geo[0], geo[1], result);
+										if (shortest == -1
+												|| result[0] < shortest) {
+											shortest = result[0];
+											closest = lib;
+										}
+									}
+									if (closest != null) {
+										tvLocateString.setText(getString(
+												R.string.geolocate_found,
+												closest.getCity()));
+										ivLocationIcon
+												.setImageResource(R.drawable.ic_located);
+										int[] position = la
+												.findPosition(closest);
+										if (position != null) {
+											lv.expandGroup(position[0], false);
+											lv.setSelectedChild(position[0],
+													position[1], true);
+										}
+									}
+								}
+							}
+						});
 			}
 		});
 

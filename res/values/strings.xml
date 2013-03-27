@@ -188,5 +188,8 @@
     <string name="barcode_no">Nein</string>
     <string name="result_number">%d Suchergebnisse</string>
     <string name="export_starred">Exportieren</string>
+    <string name="geolocate">Finde nächste Bibliothek</string>
+    <string name="geolocate_progress">Standort wird ermittelt…</string>
+    <string name="geolocate_found">Nächste Bibliothek: %s</string>
 
 </resources>
