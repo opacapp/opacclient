@@ -525,6 +525,13 @@ public class Bond26 implements OpacApi {
 			if (doc.select("input[name=target]").attr("value")
 					.equals("makevorbest")) {
 				List<String[]> details = new ArrayList<String[]>();
+
+				if (doc.getElementsByClass("kontomeldung").size() == 1) {
+					details.add(new String[] { doc
+							.getElementsByClass("kontomeldung").get(0).text()
+							.trim() });
+				}
+
 				for (Element row : doc.select(".kontozeile_center table tr")) {
 					if (row.select(".konto_feld").size() == 1
 							&& row.select(".konto_feldinhalt").size() == 1) {
