@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ import org.jsoup.select.Elements;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult.Status;
 import de.geeksfactory.opacclient.objects.Account;
@@ -365,8 +367,8 @@ public class OCLC2011 implements OpacApi {
 		for (int i = 0; i < table.size(); i++) {
 			Element tr = table.get(i);
 			SearchResult sr = new SearchResult();
-			if (tr.select("td a img").size() > 0) {
-				String[] fparts = tr.select("td a img").get(0).attr("src")
+			if (tr.select("td img").size() > 0) {
+				String[] fparts = tr.select("td img").get(0).attr("src")
 						.split("/");
 				String fname = fparts[fparts.length - 1];
 				if (data.has("mediatypes")) {
@@ -389,47 +391,119 @@ public class OCLC2011 implements OpacApi {
 				}
 			}
 
-			String desc = "";
 			List<Node> children = tr.child(2).childNodes();
+			if (tr.child(2).select("div").size() == 1) {
+				children = tr.child(2).select("div").first().childNodes();
+			}
 			int childrennum = children.size();
 			boolean haslink = false;
 
+			List<String[]> strings = new ArrayList<String[]>();
 			for (int ch = 0; ch < childrennum; ch++) {
 				Node node = children.get(ch);
 				if (node instanceof TextNode) {
 					String text = ((TextNode) node).text().trim();
-					if (!text.equals(""))
-						desc += text + "<br />";
+					if (text.length() > 3)
+						strings.add(new String[] { "text", "", text });
 				} else if (node instanceof Element) {
-					if (((Element) node).tag().getName().equals("div")) {
-						desc += ((Element) node).text() + "<br />";
-					} else if (((Element) node).tag().getName().equals("a")) {
-						if (node.hasAttr("href") && !haslink) {
-							haslink = true;
-							desc += ((Element) node).text() + "<br />";
-
-							try {
-								List<NameValuePair> anyurl = URLEncodedUtils
-										.parse(new URI(((Element) node)
-												.attr("href")), "UTF-8");
-								for (NameValuePair nv : anyurl) {
-									if (nv.getName().equals("identifier")) {
-										identifier = nv.getValue();
-										break;
-									}
+					if (node.hasAttr("href") && !haslink) {
+						haslink = true;
+						try {
+							List<NameValuePair> anyurl = URLEncodedUtils.parse(
+									new URI(((Element) node).attr("href")),
+									"UTF-8");
+							for (NameValuePair nv : anyurl) {
+								if (nv.getName().equals("identifier")) {
+									identifier = nv.getValue();
+									break;
 								}
-							} catch (Exception e) {
-								// Not that important
-								e.printStackTrace();
 							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 
+					}
+
+					List<Node> subchildren = node.childNodes();
+					for (int j = 0; j < subchildren.size(); j++) {
+						Node subnode = subchildren.get(j);
+						if (subnode instanceof TextNode) {
+							String text = ((TextNode) subnode).text().trim();
+							if (text.length() > 3)
+								strings.add(new String[] {
+										((Element) node).tag().getName(),
+										"text", text });
+						} else if (subnode instanceof Element) {
+							String text = ((Element) subnode).text().trim();
+							if (text.length() > 3)
+								strings.add(new String[] {
+										((Element) node).tag().getName(),
+										((Element) subnode).tag().getName(),
+										text });
 						}
 					}
 				}
 			}
-			if (desc.endsWith("<br />"))
-				desc = desc.substring(0, desc.length() - 6);
-			sr.setInnerhtml(desc);
+
+			StringBuilder description = null;
+			if (tr.child(2).select("span.Z3988").size() == 1) {
+				// Sometimes there is a <span class="Z3988"> item which provides
+				// data in a standardized format.
+				List<NameValuePair> z3988data;
+				try {
+					description = new StringBuilder();
+					z3988data = URLEncodedUtils.parse(new URI("http://dummy/?"
+							+ tr.child(2).select("span.Z3988").attr("title")),
+							"UTF-8");
+					for (NameValuePair nv : z3988data) {
+						if (nv.getValue() != null) {
+							if (!nv.getValue().trim().equals("")) {
+								if (nv.getName().equals("rft.btitle")) {
+									description.append("<b>" + nv.getValue()
+											+ "</b>");
+								} else if (nv.getName().equals("rft.au")) {
+									description
+											.append("<br />" + nv.getValue());
+								} else if (nv.getName().equals("rft.date")) {
+									description
+											.append("<br />" + nv.getValue());
+								}
+							}
+						}
+					}
+				} catch (URISyntaxException e) {
+					description = null;
+				}
+			}
+			boolean described = false;
+			if (description != null && description.length() > 0) {
+				sr.setInnerhtml(description.toString());
+				described = true;
+			} else {
+				description = new StringBuilder();
+			}
+			int k = 0;
+			boolean yearfound = false;
+			for (String[] part : strings) {
+				if (!described) {
+					if (part[0] == "a" && k == 0) {
+						description.append("<b>" + part[2] + "</b>");
+					} else if (part[2].matches("\\D*[0-9]{4}\\D*")
+							&& part[2].length() <= 10) {
+						yearfound = true;
+						description.append("<br />" + part[2]);
+					} else if (k == 1 && !yearfound
+							&& part[2].matches("^\\s*\\([0-9]{4}\\)$")) {
+						description.append("<br />" + part[2]);
+					} else if (k < 3 && !yearfound) {
+						description.append("<br />" + part[2]);
+					}
+				}
+				k++;
+			}
+			if (!described)
+				sr.setInnerhtml(description.toString());
+
 			sr.setNr(i);
 			sr.setId(null);
 			results.add(sr);
