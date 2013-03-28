@@ -119,6 +119,7 @@ public class OCLC2011 implements OpacApi {
 		defaulttypes.put("96", MediaType.EBOOK);
 		defaulttypes.put("97", MediaType.EBOOK);
 		defaulttypes.put("99", MediaType.EBOOK);
+		defaulttypes.put("EB", MediaType.EBOOK);
 		defaulttypes.put("buch01", MediaType.BOOK);
 		defaulttypes.put("buch02", MediaType.PACKAGE_BOOKS);
 		defaulttypes.put("buch03", MediaType.BOOK);
@@ -435,14 +436,17 @@ public class OCLC2011 implements OpacApi {
 							if (text.length() > 3)
 								strings.add(new String[] {
 										((Element) node).tag().getName(),
-										"text", text });
+										"text", text,
+										((Element) node).className(),
+										((Element) node).attr("style") });
 						} else if (subnode instanceof Element) {
 							String text = ((Element) subnode).text().trim();
 							if (text.length() > 3)
 								strings.add(new String[] {
 										((Element) node).tag().getName(),
 										((Element) subnode).tag().getName(),
-										text });
+										text, ((Element) node).className(),
+										((Element) node).attr("style") });
 						}
 					}
 				}
@@ -500,6 +504,38 @@ public class OCLC2011 implements OpacApi {
 						description.append("<br />" + part[2]);
 					} else if (k < 3 && !yearfound) {
 						description.append("<br />" + part[2]);
+					}
+				}
+				if (part.length == 4) {
+					if (part[0].equals("span") && part[3].equals("textgruen")) {
+						sr.setStatus(SearchResult.Status.GREEN);
+					} else if (part[0].equals("span")
+							&& part[3].equals("textrot")) {
+						sr.setStatus(SearchResult.Status.RED);
+					}
+				} else if (part.length == 5) {
+					if (part[4].contains("purple")) {
+						sr.setStatus(SearchResult.Status.YELLOW);
+					}
+				}
+				if (sr.getStatus() == null) {
+					if (part[2].contains("entliehen")
+							&& part[2]
+									.startsWith("Vormerkung ist leider nicht möglich")) {
+						sr.setStatus(SearchResult.Status.RED);
+					} else if (part[2].startsWith("entliehen")
+							|| part[2]
+									.contains("Ein Exemplar finden Sie in einer anderen Zweigstelle")) {
+						sr.setStatus(SearchResult.Status.YELLOW);
+					} else if ((part[2].startsWith("bestellbar") && !part[2]
+							.contains("nicht bestellbar"))
+							|| (part[2].startsWith("vorbestellbar") && !part[2]
+									.contains("nicht vorbestellbar"))
+							|| (part[2].startsWith("vormerkbar") && !part[2]
+									.contains("nicht vormerkbar"))
+							|| (part[2].contains("ausleihbar") && !part[2]
+									.contains("nicht ausleihbar"))) {
+						sr.setStatus(SearchResult.Status.GREEN);
 					}
 				}
 				k++;
