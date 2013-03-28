@@ -101,13 +101,34 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
 		TextView tv = (TextView) view.findViewById(R.id.tvResult);
 		tv.setText(Html.fromHtml(item.getInnerhtml()));
 
-		ImageView iv = (ImageView) view.findViewById(R.id.ivType);
+		ImageView ivType = (ImageView) view.findViewById(R.id.ivType);
 
 		if (item.getType() != null && item.getType() != MediaType.NONE) {
-			iv.setImageResource(getResourceByMediaType(item.getType()));
-			iv.setVisibility(View.VISIBLE);
+			ivType.setImageResource(getResourceByMediaType(item.getType()));
+			ivType.setVisibility(View.VISIBLE);
 		} else {
-			iv.setVisibility(View.INVISIBLE);
+			ivType.setVisibility(View.INVISIBLE);
+		}
+		ImageView ivStatus = (ImageView) view.findViewById(R.id.ivStatus);
+
+		if (item.getStatus() != null) {
+			ivStatus.setVisibility(View.VISIBLE);
+			switch (item.getStatus()) {
+			case GREEN:
+				ivStatus.setImageResource(R.drawable.status_light_green);
+				break;
+			case RED:
+				ivStatus.setImageResource(R.drawable.status_light_red);
+				break;
+			case YELLOW:
+				ivStatus.setImageResource(R.drawable.status_light_yellow);
+				break;
+			case UNKNOWN:
+				ivStatus.setVisibility(View.INVISIBLE);
+				break;
+			}
+		} else {
+			ivStatus.setVisibility(View.GONE);
 		}
 
 		return view;
