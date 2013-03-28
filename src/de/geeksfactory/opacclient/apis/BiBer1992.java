@@ -89,14 +89,14 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  * 						type	Bitmaps	table	types			support
  * 						images			avail	search
  * --------------------------------------------------------------------
- * BaWü/Friedrichshafen	ok		yes		yes		yes		yes		-
- * BaWü/Offenburg		ok		n/a		no		yes		n/a		yes
+ * BaWu/Friedrichshafen ok		yes		yes		yes		yes		-
+ * BaWu/Offenburg		ok		n/a		no		yes		n/a		yes
  * Bay/Aschaffenburg	ok		n/a		no		yes		n/a		-
- * Bay/Würzburg			ok		yes		yes		yes		yes		-
+ * Bay/Würzburg		ok		yes		yes		yes		yes		-
  * NRW/Duisburg			ok		yes		yes		yes		n/a		-
  * NRW/Essen			n/a		n/a		no		yes		not sup.-
  * NRW/Gelsenkirchen	ok		yes		yes		yes		yes		-
- * NRW/Hagen       		ok		yes		yes		yes		yes		-
+ * NRW/Hagen       		ok		yes		yes		yes		yes		yes
  * NRW/Herford			n/a		yes		yes		yes		n/a		-
  * NRW/Lünen			ok		yes		no		yes		n/a		-
  * 			 
@@ -806,48 +806,71 @@ public class BiBer1992 implements OpacApi {
 	@Override
 	public boolean prolong(Account account, String media) throws IOException {
 
+		String command;
+		
 		// prolong media via http POST
+		// Offenburg: URL is .../opac/verl.C
+		// Hagen:     URL is .../opax/renewmedia.C
+		if (m_opac_dir.equals("opax")) {
+			command = "/renewmedia.C";
+		} else {
+			command = "/verl.C";
+		}
+
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 		nameValuePairs.add(new BasicNameValuePair(media, "YES"));
-		nameValuePairs.add(new BasicNameValuePair("DUM1", ""));
-		nameValuePairs.add(new BasicNameValuePair("DUM2", ""));
-		nameValuePairs.add(new BasicNameValuePair("DUM3", ""));
+		nameValuePairs.add(new BasicNameValuePair("BENUTZER", account.getName()));
 		nameValuePairs.add(new BasicNameValuePair("FUNC", "verl"));
 		nameValuePairs.add(new BasicNameValuePair("LANG", "de"));
+		nameValuePairs.add(new BasicNameValuePair("PASSWORD", account.getPassword()));
 
-		String html = httpPost(m_opac_url + "/" + m_opac_dir + "/verl.C",
+		String html = httpPost(m_opac_url + "/" + m_opac_dir + command,
 				new UrlEncodedFormEntity(nameValuePairs));
 
 		Document doc = Jsoup.parse(html);
 
 		// Check result:
-		// Search cell with content "Status", then take text from cell below.
-		// Hopefully this works also with other libraries.
+		// First we look for a cell with text "Status" 
+		// and store the column number
+		// Then we look in the rows below at this column if
+		// we find any text. Stop at first text we find.
+		// This text must start with "verl�ngert" 
 		Elements rowElements = doc.select("table tr");
 
-		// rows: skip last row because below we will look forward one row
-		for (int i = 0; i < rowElements.size() - 1; i++) {
+		int statusCol = -1; // Status column not yet found 
+
+		// rows loop
+		for (int i = 0; i < rowElements.size(); i++) {
 			Element tr = rowElements.get(i);
 			Elements tdList = tr.children(); // <th> or <td>
 
-			// columns: look for "Status"
+			// columns loop
 			for (int j = 0; j < tdList.size(); j++) {
 				String cellText = tdList.get(j).text().trim();
-				if (cellText.equals("Status")) {
-					// "Status" found, check cell below
-					String resultText = rowElements.get(i + 1).child(j).text()
-							.trim();
-					if (resultText.startsWith("verlängert")) {
-						return true;
-					} else {
-						m_last_error = resultText;
-						return false;
+
+				if (statusCol < 0) {
+					// we look for cell with text "Status"
+					if (cellText.equals("Status")) {
+						statusCol = j;
+						break; // next row
+					}
+				} else {
+					// we look only at Status column
+					// In "Hagen", there are some extra empty rows below
+					if ((j == statusCol) && (cellText.length() > 0)) {
+						// Status found
+						if (cellText.matches("verl.ngert.*")) {
+							return true;
+						} else {
+							m_last_error = cellText;
+							return false;
+						}
 					}
 				}
-			}
-		}
+			}//for columns
+		}//for rows
+		
 		m_last_error = "unknown result"; // should not occur
-
 		return false;
 	}
 
@@ -928,15 +951,25 @@ public class BiBer1992 implements OpacApi {
 				if (copymap.getInt(j) > -1) {
 					String key = copymap_keys[j];
 					String value = tr.child(copymap.getInt(j)).text();
+					
 					// Author and Title is the same field: "autor: title"
+					// sometimes there is no ":" then only the title is given
 					if (key.equals(AccountData.KEY_LENT_AUTHOR)) {
-						// Autor: remove everything starting at ":"
-						value = value.replaceFirst("\\:.*", "").trim();
+						if (value.contains(":")) {
+							// Autor: remove everything starting at ":"
+							value = value.replaceFirst("\\:.*", "").trim();
+						} else {
+							// no Autor given
+							value = "";
+						}
 					} else if (key.equals(AccountData.KEY_LENT_TITLE)) {
 						// Title: remove everything up to ":"
 						value = value.replaceFirst(".*\\:", "").trim();
 					}
-					e.put(key, value);
+					
+					if (value.length() != 0) {
+						e.put(key, value);
+					}
 				}
 			}
 			// calculate lent timestamp for notification purpose
