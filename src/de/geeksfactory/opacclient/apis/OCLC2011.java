@@ -394,6 +394,9 @@ public class OCLC2011 implements OpacApi {
 			List<Node> children = tr.child(2).childNodes();
 			if (tr.child(2).select("div").size() == 1) {
 				children = tr.child(2).select("div").first().childNodes();
+			} else if (tr.child(2).select("span.titleData").size() == 1) {
+				children = tr.child(2).select("span.titleData").first()
+						.childNodes();
 			}
 			int childrennum = children.size();
 			boolean haslink = false;
