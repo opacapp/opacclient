@@ -10,6 +10,7 @@ public class SearchResult {
 	private int nr;
 	private String id;
 	private String innerhtml;
+	private Status status;
 
 	/**
 	 * Supported media types.
@@ -22,6 +23,17 @@ public class SearchResult {
 		BOARDGAME, SCHOOL_VERSION, MAP, BLURAY, AUDIO_CASSETTE, ART, MAGAZINE,
 		GAME_CONSOLE_WII, GAME_CONSOLE_NINTENDO, GAME_CONSOLE_PLAYSTATION,
 		GAME_CONSOLE_XBOX, LP_RECORD, MP3, URL
+	}
+
+	/**
+	 * Media status, simplified like a traffic light, e.g. red for
+	 * "lent out, no reservation possible", yellow for "reservation needed" or
+	 * green for "available".
+	 * 
+	 * @since 2.0.7
+	 */
+	public enum Status {
+		UNKNOWN, RED, YELLOW, GREEN
 	}
 
 	/**
@@ -124,6 +136,25 @@ public class SearchResult {
 	 */
 	public void setInnerhtml(String innerhtml) {
 		this.innerhtml = innerhtml;
+	}
+
+	/**
+	 * Get item status (if known)
+	 * 
+	 * @return Status or <code>null</code> if not set.
+	 * @since 2.0.7
+	 */
+	public Status getStatus() {
+		return status;
+	}
+
+	/**
+	 * Set item status (if known)
+	 * 
+	 * @since 2.0.7
+	 */
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
 	@Override

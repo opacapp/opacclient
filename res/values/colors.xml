@@ -23,5 +23,8 @@
     <color name="error_fg">#ffffff</color>
     <color name="liblist_group_bg">#dddddd</color>
     <color name="liblist_group_bg_active">#aaaaaa</color>
+    <color name="status_red">#cc0000</color>
+    <color name="status_yellow">#cccc00</color>
+    <color name="status_green">#00cc00</color>
 
 </resources>
