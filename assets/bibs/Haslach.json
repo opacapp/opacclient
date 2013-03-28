@@ -1,15 +1,9 @@
 {
+    "api": "bibliotheca", 
     "city": "Haslach", 
-    "group": "Baden-W\u00fcrttemberg", 
-    "title": null, 
-    "geo": [
-        48.2770795, 
-        8.088809900000001
-    ], 
-    "support": "Katalogsuche", 
-    "api": "bond26", 
     "data": {
-        "information": "http://www.bibliotheken.bw-online.de/read-haslach/info.html", 
+        "accounttable": null, 
+        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-haslach", 
         "copiestable": [
             -1, 
             -1, 
@@ -19,8 +13,14 @@
             2, 
             -1
         ], 
-        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-haslach", 
-        "reservationtable": null, 
-        "accounttable": null
-    }
+        "information": "http://www.bibliotheken.bw-online.de/read-haslach/info.html", 
+        "reservationtable": null
+    }, 
+    "geo": [
+        48.2770795, 
+        8.088809900000001
+    ], 
+    "group": "Baden-W\u00fcrttemberg", 
+    "support": "Katalogsuche", 
+    "title": null
 }

@@ -1,15 +1,15 @@
 {
+    "api": "sisis", 
     "city": "Trier", 
-    "group": "Rheinland-Pfalz", 
-    "title": "Fachhochschule", 
+    "data": {
+        "baseurl": "http://bibserv.fh-trier.de:8080/webOPACClient", 
+        "information": "http://www.hochschule-trier.de/index.php?id=1020"
+    }, 
     "geo": [
         49.7468826, 
         6.6347507
     ], 
+    "group": "Rheinland-Pfalz", 
     "support": "Katalogsuche und Konto (experimentell)", 
-    "api": "oclc2011", 
-    "data": {
-        "information": "http://www.hochschule-trier.de/index.php?id=1020", 
-        "baseurl": "http://bibserv.fh-trier.de:8080/webOPACClient"
-    }
+    "title": "Fachhochschule"
 }

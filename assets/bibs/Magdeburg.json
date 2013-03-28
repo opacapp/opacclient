@@ -1,24 +1,7 @@
 {
+    "api": "bibliotheca", 
     "city": "Magdeburg", 
-    "group": "Sachsen-Anhalt", 
-    "title": null, 
-    "geo": [
-        52.130807, 
-        11.628878
-    ], 
-    "support": "Katalogsuche und Konto", 
-    "api": "bond26", 
     "data": {
-        "information": "http://www.magdeburg-stadtbibliothek.de/texte/seite.php?id=98014", 
-        "copiestable": [
-            -1, 
-            0, 
-            -1, 
-            2, 
-            4, 
-            5, 
-            -1
-        ], 
         "accounttable": [
             0, 
             1, 
@@ -30,36 +13,53 @@
             5
         ], 
         "baseurl": "http://auskunft.stadtbibliothek.magdeburg.de/webopac", 
+        "copiestable": [
+            -1, 
+            0, 
+            -1, 
+            2, 
+            4, 
+            5, 
+            -1
+        ], 
+        "information": "http://www.magdeburg-stadtbibliothek.de/texte/seite.php?id=98014", 
+        "mediatypes": {
+            "B.gif": "BOOK", 
+            "BK.gif": "BOOK", 
+            "BS.gif": "BOOK", 
+            "CD.gif": "CD", 
+            "CDH.gif": "AUDIOBOOK", 
+            "DVDBR.gif": "BLURAY", 
+            "DVDK.gif": "DVD", 
+            "ROM.gif": "CD_SOFTWARE", 
+            "Zt.gif": "NEWSPAPER", 
+            "blue-ray_Kind.gif": "BLURAY", 
+            "cdhk.gif": "AUDIOBOOK", 
+            "cdk.gif": "CD", 
+            "dm.gif": "SCORE_MUSIC", 
+            "dvd.gif": "DVD", 
+            "em.gif": "EBOOK", 
+            "lk.gif": "MAP", 
+            "mk.gif": "PACKAGE", 
+            "mkk.gif": "PACKAGE", 
+            "romk.gif": "CD_SOFTWARE", 
+            "x.gif": "UNKNOWN", 
+            "zss.gif": "MAGAZINE", 
+            "zssk.gif": "MAGAZINE"
+        }, 
         "reservationtable": [
             0, 
             1, 
             -1, 
             2, 
             3
-        ], 
-        "mediatypes": {
-            "mk.gif": "PACKAGE", 
-            "blue-ray_Kind.gif": "BLURAY", 
-            "romk.gif": "CD_SOFTWARE", 
-            "cdhk.gif": "AUDIOBOOK", 
-            "BS.gif": "BOOK", 
-            "cdk.gif": "CD", 
-            "CDH.gif": "AUDIOBOOK", 
-            "zssk.gif": "MAGAZINE", 
-            "ROM.gif": "CD_SOFTWARE", 
-            "CD.gif": "CD", 
-            "dm.gif": "SCORE_MUSIC", 
-            "em.gif": "EBOOK", 
-            "x.gif": "UNKNOWN", 
-            "DVDK.gif": "DVD", 
-            "DVDBR.gif": "BLURAY", 
-            "dvd.gif": "DVD", 
-            "mkk.gif": "PACKAGE", 
-            "lk.gif": "MAP", 
-            "Zt.gif": "NEWSPAPER", 
-            "BK.gif": "BOOK", 
-            "B.gif": "BOOK", 
-            "zss.gif": "MAGAZINE"
-        }
-    }
+        ]
+    }, 
+    "geo": [
+        52.130807, 
+        11.628878
+    ], 
+    "group": "Sachsen-Anhalt", 
+    "support": "Katalogsuche und Konto", 
+    "title": null
 }

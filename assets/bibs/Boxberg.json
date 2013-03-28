@@ -1,15 +1,9 @@
 {
+    "api": "bibliotheca", 
     "city": "Boxberg", 
-    "group": "Baden-Württemberg", 
-    "title": null, 
-    "geo": [
-        49.48181779999999, 
-        9.6375251
-    ], 
-    "support": "Katalogsuche", 
-    "api": "bond26", 
     "data": {
-        "information": "/../read-boxberg/info.html", 
+        "accounttable": null, 
+        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-Boxberg", 
         "copiestable": [
             -1, 
             -1, 
@@ -19,8 +13,14 @@
             3, 
             -1
         ], 
-        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-Boxberg", 
-        "reservationtable": null, 
-        "accounttable": null
-    }
+        "information": "/../read-boxberg/info.html", 
+        "reservationtable": null
+    }, 
+    "geo": [
+        49.48181779999999, 
+        9.6375251
+    ], 
+    "group": "Baden-W\u00fcrttemberg", 
+    "support": "Katalogsuche", 
+    "title": null
 }

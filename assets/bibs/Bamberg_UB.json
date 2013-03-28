@@ -1,15 +1,15 @@
 {
+    "api": "sisis", 
     "city": "Bamberg", 
-    "group": "Bayern", 
-    "title": "Universit\u00e4t", 
+    "data": {
+        "baseurl": "https://katalog.ub.uni-bamberg.de/InfoGuideClient.ubgsis", 
+        "information": "http://www.uni-bamberg.de/ub/oeffnungszeiten/"
+    }, 
     "geo": [
         49.8988135, 
         10.9027636
     ], 
+    "group": "Bayern", 
     "support": "Katalogsuche und Konto (experimentell)", 
-    "api": "oclc2011", 
-    "data": {
-        "information": "http://www.uni-bamberg.de/ub/oeffnungszeiten/", 
-        "baseurl": "https://katalog.ub.uni-bamberg.de/InfoGuideClient.ubgsis"
-    }
+    "title": "Universit\u00e4t"
 }

@@ -1,24 +1,7 @@
 {
+    "api": "bibliotheca", 
     "city": "Stralsund", 
-    "group": "Mecklenburg-Vorpommern", 
-    "title": null, 
-    "geo": [
-        54.2994048, 
-        13.0877143
-    ], 
-    "support": "Katalogsuche und Konto", 
-    "api": "bond26", 
     "data": {
-        "information": "http://www.stralsund.de/hst01/content1.nsf/docname/Webseite_C1257401002FE71BC12572BF003C34BF?OpenDocument", 
-        "copiestable": [
-            -1, 
-            0, 
-            2, 
-            1, 
-            4, 
-            5, 
-            -1
-        ], 
         "accounttable": [
             -1, 
             0, 
@@ -30,24 +13,41 @@
             4
         ], 
         "baseurl": "http://opac.stralsund.de/webopac", 
+        "copiestable": [
+            -1, 
+            0, 
+            2, 
+            1, 
+            4, 
+            5, 
+            -1
+        ], 
+        "information": "http://www.stralsund.de/hst01/content1.nsf/docname/Webseite_C1257401002FE71BC12572BF003C34BF?OpenDocument", 
+        "mediatypes": {
+            "Munzinger.gif": "UNKNOWN", 
+            "emedien.gif": "EBOOK", 
+            "mCDROMS.gif": "CD_SOFTWARE", 
+            "mCasetteS.gif": "AUDIO_CASSETTE", 
+            "mDVDS.gif": "DVD", 
+            "mFilmS.gif": "MOVIE", 
+            "mLosebS.gif": "UNKNOWN", 
+            "mMusikCDS.gif": "CD_MUSIC", 
+            "mSpielS.gif": "BOARDGAME", 
+            "mZtgS.gif": "MAGAZINE"
+        }, 
         "reservationtable": [
             0, 
             1, 
             -1, 
             2, 
             3
-        ], 
-        "mediatypes": {
-            "mFilmS.gif": "MOVIE", 
-            "Munzinger.gif": "UNKNOWN", 
-            "mCasetteS.gif": "AUDIO_CASSETTE", 
-            "mDVDS.gif": "DVD", 
-            "mCDROMS.gif": "CD_SOFTWARE", 
-            "emedien.gif": "EBOOK", 
-            "mLosebS.gif": "UNKNOWN", 
-            "mSpielS.gif": "BOARDGAME", 
-            "mMusikCDS.gif": "CD_MUSIC", 
-            "mZtgS.gif": "MAGAZINE"
-        }
-    }
+        ]
+    }, 
+    "geo": [
+        54.2994048, 
+        13.0877143
+    ], 
+    "group": "Mecklenburg-Vorpommern", 
+    "support": "Katalogsuche und Konto", 
+    "title": null
 }

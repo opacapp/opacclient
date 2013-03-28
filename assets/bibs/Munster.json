@@ -1,32 +1,7 @@
 {
+    "api": "bibliotheca", 
     "city": "M\u00fcnster", 
-    "group": "Nordrhein-Westfalen", 
-    "title": null, 
-    "geo": [
-        51.9606649, 
-        7.6261347
-    ], 
-    "support": "Katalogsuche und Konto", 
-    "api": "bond26", 
     "data": {
-        "information": "/../read/info.html", 
-        "copiestable": [
-            -1, 
-            0, 
-            -1, 
-            4, 
-            1, 
-            2, 
-            6
-        ], 
-        "baseurl": "http://www2.stadt-muenster.de/opac10", 
-        "reservationtable": [
-            0, 
-            1, 
-            3, 
-            -1, 
-            4
-        ], 
         "accounttable": [
             3, 
             0, 
@@ -36,6 +11,31 @@
             -1, 
             -1, 
             6
+        ], 
+        "baseurl": "http://www2.stadt-muenster.de/opac10", 
+        "copiestable": [
+            -1, 
+            0, 
+            -1, 
+            4, 
+            1, 
+            2, 
+            6
+        ], 
+        "information": "/../read/info.html", 
+        "reservationtable": [
+            0, 
+            1, 
+            3, 
+            -1, 
+            4
         ]
-    }
+    }, 
+    "geo": [
+        51.9606649, 
+        7.6261347
+    ], 
+    "group": "Nordrhein-Westfalen", 
+    "support": "Katalogsuche und Konto", 
+    "title": null
 }

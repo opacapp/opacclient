@@ -1,17 +1,17 @@
 {
+    "api": "sisis", 
     "city": "W\u00fcrzburg", 
-    "group": "Bayern", 
-    "title": "Hochschulbibliothek", 
+    "data": {
+        "baseurl": "https://recherche.bibkatalog.de/InfoGuideClient.fwssis", 
+        "homebranch": "0", 
+        "information": "http://www.fh-sw.de/sw/bibliothek/zeiten.php", 
+        "startparams": "Login=wofwsw"
+    }, 
     "geo": [
         49.7915953, 
         9.953571499999999
     ], 
+    "group": "Bayern", 
     "support": "Katalogsuche und Konto (experimentell)", 
-    "api": "oclc2011", 
-    "data": {
-        "information": "http://www.fh-sw.de/sw/bibliothek/zeiten.php", 
-        "homebranch": "0", 
-        "baseurl": "https://recherche.bibkatalog.de/InfoGuideClient.fwssis", 
-        "startparams": "Login=wofwsw"
-    }
+    "title": "Hochschulbibliothek"
 }

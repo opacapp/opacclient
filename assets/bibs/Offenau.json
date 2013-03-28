@@ -1,24 +1,7 @@
 {
+    "api": "bibliotheca", 
     "city": "Offenau", 
-    "group": "Baden-W\u00fcrttemberg", 
-    "title": null, 
-    "geo": [
-        49.2450112, 
-        9.164699299999999
-    ], 
-    "support": "Katalogsuche und Konto", 
-    "api": "bond26", 
     "data": {
-        "information": "http://www.bibliotheken.bw-online.de/read-offenau/info.html", 
-        "copiestable": [
-            -1, 
-            -1, 
-            -1, 
-            0, 
-            3, 
-            4, 
-            -1
-        ], 
         "accounttable": [
             -1, 
             0, 
@@ -30,30 +13,47 @@
             3
         ], 
         "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-offenau", 
+        "copiestable": [
+            -1, 
+            -1, 
+            -1, 
+            0, 
+            3, 
+            4, 
+            -1
+        ], 
+        "information": "http://www.bibliotheken.bw-online.de/read-offenau/info.html", 
+        "mediatypes": {
+            "MDVD.gif": "DVD", 
+            "b\u00fccher.gif": "BOOK", 
+            "cdkl.gif": "CD", 
+            "cdromkl.gif": "CD_SOFTWARE", 
+            "ekl.gif": "EBOOK", 
+            "mBmonoS.gif": "PACKAGE_BOOKS", 
+            "mBuchS.gif": "BOOK", 
+            "mBuchSsich.gif": "BOOK", 
+            "mBuecherS.gif": "PACKAGE", 
+            "mFilmS.gif": "MOVIE", 
+            "mMusikCDS.gif": "CD_MUSIC", 
+            "mNoten1S.gif": "SCORE_MUSIC", 
+            "mZtgS.gif": "NEWSPAPER", 
+            "mhoerbuchS.gif": "AUDIOBOOK", 
+            "spielekl.gif": "BOARDGAME", 
+            "tafelkl.jpg": "SCHOOL_VERSION"
+        }, 
         "reservationtable": [
             0, 
             1, 
             2, 
             -1, 
             3
-        ], 
-        "mediatypes": {
-            "mFilmS.gif": "MOVIE", 
-            "mBuchS.gif": "BOOK", 
-            "tafelkl.jpg": "SCHOOL_VERSION", 
-            "b\u00fccher.gif": "BOOK", 
-            "cdkl.gif": "CD", 
-            "ekl.gif": "EBOOK", 
-            "mNoten1S.gif": "SCORE_MUSIC", 
-            "cdromkl.gif": "CD_SOFTWARE", 
-            "mBmonoS.gif": "PACKAGE_BOOKS", 
-            "mBuecherS.gif": "PACKAGE", 
-            "mhoerbuchS.gif": "AUDIOBOOK", 
-            "spielekl.gif": "BOARDGAME", 
-            "mBuchSsich.gif": "BOOK", 
-            "mMusikCDS.gif": "CD_MUSIC", 
-            "mZtgS.gif": "NEWSPAPER", 
-            "MDVD.gif": "DVD"
-        }
-    }
+        ]
+    }, 
+    "geo": [
+        49.2450112, 
+        9.164699299999999
+    ], 
+    "group": "Baden-W\u00fcrttemberg", 
+    "support": "Katalogsuche und Konto", 
+    "title": null
 }

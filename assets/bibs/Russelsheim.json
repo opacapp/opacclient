@@ -1,15 +1,15 @@
 {
+    "api": "sisis", 
     "city": "R\u00fcsselsheim", 
-    "group": "Hessen", 
-    "title": null, 
+    "data": {
+        "baseurl": "http://stadtbuecherei.ruesselsheim.de/webOPACClient", 
+        "information": "http://www.stadt-ruesselsheim.de/Stadtbuecherei.html"
+    }, 
     "geo": [
         49.9887497, 
         8.4216976
     ], 
+    "group": "Hessen", 
     "support": "Katalogsuche und Konto (experimentell)", 
-    "api": "oclc2011", 
-    "data": {
-        "information": "http://www.stadt-ruesselsheim.de/Stadtbuecherei.html", 
-        "baseurl": "http://stadtbuecherei.ruesselsheim.de/webOPACClient"
-    }
+    "title": null
 }

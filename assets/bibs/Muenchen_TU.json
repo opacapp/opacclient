@@ -1,16 +1,16 @@
 {
+    "api": "sisis", 
     "city": "M\u00fcnchen", 
-    "group": "Bayern", 
-    "title": "Unibibliothek TUM", 
+    "data": {
+        "baseurl": "https://opac.ub.tum.de/InfoGuideClient.tumsis", 
+        "information": "http://www.ub.tum.de/so-erreichen-sie-uns/oeffnungszeiten", 
+        "startparams": "Login=wotum"
+    }, 
     "geo": [
         48.1366069, 
         11.5770851
     ], 
+    "group": "Bayern", 
     "support": "Katalogsuche und Konto (experimentell)", 
-    "api": "oclc2011", 
-    "data": {
-        "information": "http://www.ub.tum.de/so-erreichen-sie-uns/oeffnungszeiten", 
-        "baseurl": "https://opac.ub.tum.de/InfoGuideClient.tumsis", 
-        "startparams": "Login=wotum"
-    }
+    "title": "Unibibliothek TUM"
 }

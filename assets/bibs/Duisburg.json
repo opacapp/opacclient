@@ -1,15 +1,8 @@
 {
-    "city": "Duisburg", 
-    "group": "Nordrhein-Westfalen", 
-    "title": null, 
-    "geo": [
-        51.4344079, 
-        6.762329299999999
-    ], 
-    "support": "Katalogsuche", 
     "api": "biber1992", 
+    "city": "Duisburg", 
     "data": {
-        "information": "http://www.duisburg.de/stadtbib/vorort/index.php", 
+        "baseurl": "http://opac.stadtbibliothek.duisburg.de", 
         "copiestable": [
             3, 
             1, 
@@ -19,25 +12,32 @@
             -1, 
             -1
         ], 
-        "opacdir": "opax", 
-        "baseurl": "http://opac.stadtbibliothek.duisburg.de", 
+        "information": "http://www.duisburg.de/stadtbib/vorort/index.php", 
         "mediatypes": {
-            "11": "DVD", 
-            "27": "BLURAY", 
-            "18": "EBOOK", 
             "1": "BOOK", 
-            "3": "CD", 
+            "11": "DVD", 
+            "18": "EBOOK", 
             "2": "MAGAZINE", 
-            "5": "AUDIO_CASSETTE", 
+            "27": "BLURAY", 
+            "3": "CD", 
             "4": "MOVIE", 
+            "5": "AUDIO_CASSETTE", 
             "6": "CD_MUSIC", 
             "8": "SCORE_MUSIC"
         }, 
+        "opacdir": "opax", 
         "searchtable": [
             2, 
             3, 
             4, 
             5
         ]
-    }
+    }, 
+    "geo": [
+        51.4344079, 
+        6.762329299999999
+    ], 
+    "group": "Nordrhein-Westfalen", 
+    "support": "Katalogsuche", 
+    "title": null
 }

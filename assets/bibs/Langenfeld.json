@@ -1,15 +1,9 @@
 {
+    "api": "bibliotheca", 
     "city": "Langenfeld", 
-    "group": "Nordrhein-Westfalen", 
-    "title": null, 
-    "geo": [
-        51.1191898, 
-        6.951266299999999
-    ], 
-    "support": "Katalogsuche", 
-    "api": "bond26", 
     "data": {
-        "information": "/../read/info.html", 
+        "accounttable": null, 
+        "baseurl": "http://www1.langenfeld.de/webopac", 
         "copiestable": [
             5, 
             -1, 
@@ -19,8 +13,14 @@
             3, 
             -1
         ], 
-        "baseurl": "http://www1.langenfeld.de/webopac", 
-        "reservationtable": null, 
-        "accounttable": null
-    }
+        "information": "/../read/info.html", 
+        "reservationtable": null
+    }, 
+    "geo": [
+        51.1191898, 
+        6.951266299999999
+    ], 
+    "group": "Nordrhein-Westfalen", 
+    "support": "Katalogsuche", 
+    "title": null
 }

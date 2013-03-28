@@ -1,15 +1,9 @@
 {
+    "api": "bibliotheca", 
     "city": "Wiesloch", 
-    "group": "Baden-W\u00fcrttemberg", 
-    "title": null, 
-    "geo": [
-        49.2953714, 
-        8.6962064
-    ], 
-    "support": "Katalogsuche", 
-    "api": "bond26", 
     "data": {
-        "information": "http://www.bibliotheken.bw-online.de/read-wiesloch/info.html", 
+        "accounttable": null, 
+        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-wiesloch", 
         "copiestable": [
             -1, 
             -1, 
@@ -19,8 +13,14 @@
             2, 
             -1
         ], 
-        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-wiesloch", 
-        "reservationtable": null, 
-        "accounttable": null
-    }
+        "information": "http://www.bibliotheken.bw-online.de/read-wiesloch/info.html", 
+        "reservationtable": null
+    }, 
+    "geo": [
+        49.2953714, 
+        8.6962064
+    ], 
+    "group": "Baden-W\u00fcrttemberg", 
+    "support": "Katalogsuche", 
+    "title": null
 }

@@ -1,24 +1,7 @@
 {
+    "api": "bibliotheca", 
     "city": "Stuhr", 
-    "group": "Niedersachsen", 
-    "title": null, 
-    "geo": [
-        53.0289775, 
-        8.7361402
-    ], 
-    "support": "Katalogsuche und Konto", 
-    "api": "bond26", 
     "data": {
-        "information": "/read/info.html", 
-        "copiestable": [
-            6, 
-            0, 
-            2, 
-            1, 
-            4, 
-            5, 
-            -1
-        ], 
         "accounttable": [
             -1, 
             0, 
@@ -30,26 +13,43 @@
             3
         ], 
         "baseurl": "http://bibliothek.stuhr.de", 
+        "copiestable": [
+            6, 
+            0, 
+            2, 
+            1, 
+            4, 
+            5, 
+            -1
+        ], 
+        "information": "/read/info.html", 
+        "mediatypes": {
+            "NintendoDS.gif": "GAME_CONSOLE_NINTENDO", 
+            "Wii.gif": "GAME_CONSOLE_WII", 
+            "cdkl.gif": "CD", 
+            "diakl.gif": "UNKNOWN", 
+            "mBuchS.gif": "BOOK", 
+            "mCDROMS.gif": "CD_SOFTWARE", 
+            "mCasetteS.gif": "AUDIO_CASSETTE", 
+            "mDVDS.gif": "DVD", 
+            "mFilmS.gif": "MOVIE", 
+            "mMusikCDS.gif": "CD_MUSIC", 
+            "spielekl.gif": "BOARDGAME", 
+            "zeitschriftkl.gif": "MAGAZINE"
+        }, 
         "reservationtable": [
             0, 
             1, 
             -1, 
             -1, 
             2
-        ], 
-        "mediatypes": {
-            "mBuchS.gif": "BOOK", 
-            "diakl.gif": "UNKNOWN", 
-            "mCasetteS.gif": "AUDIO_CASSETTE", 
-            "NintendoDS.gif": "GAME_CONSOLE_NINTENDO", 
-            "zeitschriftkl.gif": "MAGAZINE", 
-            "mDVDS.gif": "DVD", 
-            "mCDROMS.gif": "CD_SOFTWARE", 
-            "mFilmS.gif": "MOVIE", 
-            "Wii.gif": "GAME_CONSOLE_WII", 
-            "spielekl.gif": "BOARDGAME", 
-            "mMusikCDS.gif": "CD_MUSIC", 
-            "cdkl.gif": "CD"
-        }
-    }
+        ]
+    }, 
+    "geo": [
+        53.0289775, 
+        8.7361402
+    ], 
+    "group": "Niedersachsen", 
+    "support": "Katalogsuche und Konto", 
+    "title": null
 }

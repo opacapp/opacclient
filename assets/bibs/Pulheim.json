@@ -1,15 +1,15 @@
 {
+    "api": "sisis", 
     "city": "Pulheim", 
-    "group": "Nordrhein-Westfalen", 
-    "title": null, 
+    "data": {
+        "baseurl": "http://212.16.253.33:8080/webOPACClient", 
+        "information": "http://www.pulheim.de/bildung-und-kultur/buechereien/?id=7752#cntnr_14330"
+    }, 
     "geo": [
         50.9995815, 
         6.807685299999999
     ], 
+    "group": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto (experimentell)", 
-    "api": "oclc2011", 
-    "data": {
-        "information": "http://www.pulheim.de/bildung-und-kultur/buechereien/?id=7752#cntnr_14330", 
-        "baseurl": "http://212.16.253.33:8080/webOPACClient"
-    }
+    "title": null
 }

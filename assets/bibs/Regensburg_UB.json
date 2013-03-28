@@ -1,15 +1,15 @@
 {
+    "api": "sisis", 
     "city": "Regensburg", 
-    "group": "Bayern", 
-    "title": "Unibibliothek/Regensburger Katalog", 
+    "data": {
+        "baseurl": "https://www.regensburger-katalog.de/InfoGuideClient.ubrsis", 
+        "information": "http://www.uni-regensburg.de/bibliothek/oeffnungszeiten/index.html"
+    }, 
     "geo": [
         49.0145423, 
         12.1008559
     ], 
+    "group": "Bayern", 
     "support": "Katalogsuche und Konto (experimentell)", 
-    "api": "oclc2011", 
-    "data": {
-        "information": "http://www.uni-regensburg.de/bibliothek/oeffnungszeiten/index.html", 
-        "baseurl": "https://www.regensburger-katalog.de/InfoGuideClient.ubrsis"
-    }
+    "title": "Unibibliothek/Regensburger Katalog"
 }

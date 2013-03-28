@@ -1,15 +1,9 @@
 {
+    "api": "bibliotheca", 
     "city": "Engen", 
-    "group": "Baden-W\u00fcrttemberg", 
-    "title": null, 
-    "geo": [
-        47.854144, 
-        8.7737404
-    ], 
-    "support": "Katalogsuche", 
-    "api": "bond26", 
     "data": {
-        "information": "http://www.engen.de/servlet/PB/menu/1254107/index.html", 
+        "accounttable": null, 
+        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-engen", 
         "copiestable": [
             -1, 
             0, 
@@ -19,8 +13,14 @@
             4, 
             -1
         ], 
-        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-engen", 
-        "reservationtable": null, 
-        "accounttable": null
-    }
+        "information": "http://www.engen.de/servlet/PB/menu/1254107/index.html", 
+        "reservationtable": null
+    }, 
+    "geo": [
+        47.854144, 
+        8.7737404
+    ], 
+    "group": "Baden-W\u00fcrttemberg", 
+    "support": "Katalogsuche", 
+    "title": null
 }

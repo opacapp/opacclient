@@ -1,32 +1,7 @@
 {
+    "api": "bibliotheca", 
     "city": "Weinheim", 
-    "group": "Baden-W\u00fcrttemberg", 
-    "title": null, 
-    "geo": [
-        49.544964, 
-        8.660270299999999
-    ], 
-    "support": "Katalogsuche und Konto", 
-    "api": "bond26", 
     "data": {
-        "information": "http://www.weinheim.de/servlet/PB/menu/1075105_l1/index.html", 
-        "copiestable": [
-            -1, 
-            -1, 
-            -1, 
-            1, 
-            2, 
-            3, 
-            4
-        ], 
-        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-weinheim", 
-        "reservationtable": [
-            0, 
-            1, 
-            2, 
-            -1, 
-            3
-        ], 
         "accounttable": [
             -1, 
             0, 
@@ -36,6 +11,31 @@
             -1, 
             -1, 
             3
+        ], 
+        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-weinheim", 
+        "copiestable": [
+            -1, 
+            -1, 
+            -1, 
+            1, 
+            2, 
+            3, 
+            4
+        ], 
+        "information": "http://www.weinheim.de/servlet/PB/menu/1075105_l1/index.html", 
+        "reservationtable": [
+            0, 
+            1, 
+            2, 
+            -1, 
+            3
         ]
-    }
+    }, 
+    "geo": [
+        49.544964, 
+        8.660270299999999
+    ], 
+    "group": "Baden-W\u00fcrttemberg", 
+    "support": "Katalogsuche und Konto", 
+    "title": null
 }

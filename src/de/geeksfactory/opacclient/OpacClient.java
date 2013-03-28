@@ -27,12 +27,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import de.geeksfactory.opacclient.apis.BiBer1992;
-import de.geeksfactory.opacclient.apis.Bond26;
-import de.geeksfactory.opacclient.apis.OCLC2011;
+import de.geeksfactory.opacclient.apis.Bibliotheca;
 import de.geeksfactory.opacclient.apis.OpacApi;
+import de.geeksfactory.opacclient.apis.SISIS;
 import de.geeksfactory.opacclient.apis.Zones22;
 import de.geeksfactory.opacclient.frontend.NavigationFragment;
-import de.geeksfactory.opacclient.frontend.SearchActivity;
 import de.geeksfactory.opacclient.frontend.SearchResultsActivity;
 import de.geeksfactory.opacclient.frontend.WelcomeActivity;
 import de.geeksfactory.opacclient.objects.Account;
@@ -90,10 +89,13 @@ public class OpacClient extends Application {
 	public OpacApi getNewApi(Library lib) throws ClientProtocolException,
 			SocketException, IOException, NotReachableException {
 		OpacApi newApiInstance = null;
-		if (lib.getApi().equals("bond26"))
-			newApiInstance = new Bond26();
-		else if (lib.getApi().equals("oclc2011"))
-			newApiInstance = new OCLC2011();
+		if (lib.getApi().equals("bond26") || lib.getApi().equals("bibliotheca"))
+			// Backwardscompatibility
+			newApiInstance = new Bibliotheca();
+		else if (lib.getApi().equals("oclc2011")
+				|| lib.getApi().equals("sisis"))
+			// Backwards compatibility
+			newApiInstance = new SISIS();
 		else if (lib.getApi().equals("zones22"))
 			newApiInstance = new Zones22();
 		else if (lib.getApi().equals("biber1992"))

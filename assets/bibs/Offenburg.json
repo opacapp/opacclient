@@ -1,15 +1,7 @@
 {
-    "city": "Offenburg", 
-    "group": "Baden-W\u00fcrttemberg", 
-    "title": null, 
-    "geo": [
-        48.4769251, 
-        7.9492875
-    ], 
-    "support": "Katalogsuche und Konto", 
     "api": "biber1992", 
+    "city": "Offenburg", 
     "data": {
-        "information": "http://www.stadtbibliothek.offenburg.de/", 
         "accounttable": [
             3, 
             6, 
@@ -21,19 +13,20 @@
             3
         ], 
         "baseurl": "http://217.86.216.47", 
+        "information": "http://www.stadtbibliothek.offenburg.de/", 
         "mediatypes": {
-            "11": "BOOK", 
-            "10": "BOOK", 
-            "13": "BOOK", 
             "01": "BOOK", 
-            "20": "CD", 
+            "10": "BOOK", 
+            "11": "BOOK", 
+            "13": "BOOK", 
             "14": "BOOK", 
+            "20": "CD", 
             "22": "CD", 
             "23": "CD_MUSIC", 
-            "33": "MAP", 
-            "32": "BOARDGAME", 
-            "31": "DVD", 
             "26": "GAME_CONSOLE_NINTENDO", 
+            "31": "DVD", 
+            "32": "BOARDGAME", 
+            "33": "MAP", 
             "35": "BLURAY", 
             "40": "EBOOK"
         }, 
@@ -44,5 +37,12 @@
             4, 
             5
         ]
-    }
+    }, 
+    "geo": [
+        48.4769251, 
+        7.9492875
+    ], 
+    "group": "Baden-W\u00fcrttemberg", 
+    "support": "Katalogsuche und Konto", 
+    "title": null
 }

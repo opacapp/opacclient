@@ -1,32 +1,7 @@
 {
+    "api": "bibliotheca", 
     "city": "Hamm", 
-    "group": "Nordrhein-Westfalen", 
-    "title": null, 
-    "geo": [
-        51.6738583, 
-        7.815981600000001
-    ], 
-    "support": "Katalogsuche und Konto", 
-    "api": "bond26", 
     "data": {
-        "information": "/../read/info.html", 
-        "copiestable": [
-            -1, 
-            0, 
-            -1, 
-            3, 
-            1, 
-            2, 
-            6
-        ], 
-        "baseurl": "http://opac.hamm.de/opac30", 
-        "reservationtable": [
-            0, 
-            1, 
-            -1, 
-            2, 
-            3
-        ], 
         "accounttable": [
             -1, 
             0, 
@@ -36,6 +11,31 @@
             -1, 
             3, 
             4
+        ], 
+        "baseurl": "http://opac.hamm.de/opac30", 
+        "copiestable": [
+            -1, 
+            0, 
+            -1, 
+            3, 
+            1, 
+            2, 
+            6
+        ], 
+        "information": "/../read/info.html", 
+        "reservationtable": [
+            0, 
+            1, 
+            -1, 
+            2, 
+            3
         ]
-    }
+    }, 
+    "geo": [
+        51.6738583, 
+        7.815981600000001
+    ], 
+    "group": "Nordrhein-Westfalen", 
+    "support": "Katalogsuche und Konto", 
+    "title": null
 }

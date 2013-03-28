@@ -1,17 +1,17 @@
 {
+    "api": "sisis", 
     "city": "Coburg", 
-    "group": "Bayern", 
-    "title": "Hochschulbibliothek", 
+    "data": {
+        "baseurl": "https://recherche.bibkatalog.de/InfoGuideClient.fwssis", 
+        "homebranch": "5", 
+        "information": "http://www.hs-coburg.de/library.html", 
+        "startparams": "Login=wofwss"
+    }, 
     "geo": [
         50.2640337, 
         10.9633776
     ], 
+    "group": "Bayern", 
     "support": "Katalogsuche und Konto (experimentell)", 
-    "api": "oclc2011", 
-    "data": {
-        "information": "http://www.hs-coburg.de/library.html", 
-        "homebranch": "5", 
-        "baseurl": "https://recherche.bibkatalog.de/InfoGuideClient.fwssis", 
-        "startparams": "Login=wofwss"
-    }
+    "title": "Hochschulbibliothek"
 }

@@ -1,15 +1,15 @@
 {
+    "api": "sisis", 
     "city": "Wuppertal", 
-    "group": "Nordrhein-Westfalen", 
-    "title": null, 
+    "data": {
+        "baseurl": "http://webopac.wuppertal.de/webOPACClient.sisis", 
+        "information": "http://www.wuppertal.de/kultur-bildung/stadtbibliothek/index.php"
+    }, 
     "geo": [
         51.2562128, 
         7.150763599999999
     ], 
+    "group": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto (experimentell)", 
-    "api": "oclc2011", 
-    "data": {
-        "information": "http://www.wuppertal.de/kultur-bildung/stadtbibliothek/index.php", 
-        "baseurl": "http://webopac.wuppertal.de/webOPACClient.sisis"
-    }
+    "title": null
 }

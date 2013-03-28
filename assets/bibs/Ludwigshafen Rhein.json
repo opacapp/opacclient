@@ -1,24 +1,7 @@
 {
+    "api": "bibliotheca", 
     "city": "Ludwigshafen (Rhein)", 
-    "group": "Rheinland-Pfalz", 
-    "title": null, 
-    "geo": [
-        49.4908113, 
-        8.4147976
-    ], 
-    "support": "Katalogsuche und Konto", 
-    "api": "bond26", 
     "data": {
-        "information": "http://www.ludwigshafen.de/lebenswert/stadtbibliothek/service/adressen-und-oeffnungszeiten/#mainContentOfPage", 
-        "copiestable": [
-            5, 
-            0, 
-            2, 
-            1, 
-            3, 
-            4, 
-            -1
-        ], 
         "accounttable": [
             5, 
             0, 
@@ -30,25 +13,42 @@
             6
         ], 
         "baseurl": "http://bibliothek-katalog.ludwigshafen.de/webopac", 
+        "copiestable": [
+            5, 
+            0, 
+            2, 
+            1, 
+            3, 
+            4, 
+            -1
+        ], 
+        "information": "http://www.ludwigshafen.de/lebenswert/stadtbibliothek/service/adressen-und-oeffnungszeiten/#mainContentOfPage", 
+        "mediatypes": {
+            "Zeitung.gif": "NEWSPAPER", 
+            "cdkl.gif": "AUDIOBOOK", 
+            "ekl.gif": "EBOOK", 
+            "mCDROMS.gif": "CD_SOFTWARE", 
+            "mCasetteS.gif": "AUDIO_CASSETTE", 
+            "mDVDS.gif": "DVD", 
+            "mFilmS.gif": "MOVIE", 
+            "mMunziS.jpg": "UNKNOWN", 
+            "mNoten2S.gif": "SCORE_MUSIC", 
+            "mReise2S.gif": "MAP", 
+            "slp.gif": "CD"
+        }, 
         "reservationtable": [
             0, 
             1, 
             -1, 
             2, 
             3
-        ], 
-        "mediatypes": {
-            "mCasetteS.gif": "AUDIO_CASSETTE", 
-            "mReise2S.gif": "MAP", 
-            "ekl.gif": "EBOOK", 
-            "mDVDS.gif": "DVD", 
-            "mCDROMS.gif": "CD_SOFTWARE", 
-            "mFilmS.gif": "MOVIE", 
-            "slp.gif": "CD", 
-            "mNoten2S.gif": "SCORE_MUSIC", 
-            "Zeitung.gif": "NEWSPAPER", 
-            "cdkl.gif": "AUDIOBOOK", 
-            "mMunziS.jpg": "UNKNOWN"
-        }
-    }
+        ]
+    }, 
+    "geo": [
+        49.4908113, 
+        8.4147976
+    ], 
+    "group": "Rheinland-Pfalz", 
+    "support": "Katalogsuche und Konto", 
+    "title": null
 }

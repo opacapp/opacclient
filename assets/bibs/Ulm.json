@@ -1,24 +1,7 @@
 {
+    "api": "bibliotheca", 
     "city": "Ulm", 
-    "group": "Baden-W\u00fcrttemberg", 
-    "title": null, 
-    "geo": [
-        48.4042981, 
-        9.979349000000001
-    ], 
-    "support": "Katalogsuche und Konto", 
-    "api": "bond26", 
     "data": {
-        "information": "http://www.ulm.de/kultur_tourismus/bibliotheken_und_literatur/oeffnungszeiten.33574.3076,3963,3669,30713,33574.htm#artikel", 
-        "copiestable": [
-            -1, 
-            0, 
-            3, 
-            2, 
-            4, 
-            5, 
-            -1
-        ], 
         "accounttable": [
             4, 
             2, 
@@ -30,25 +13,42 @@
             6
         ], 
         "baseurl": "http://www2opac.stadtbibliothek.ulm.de/wwwopac", 
+        "copiestable": [
+            -1, 
+            0, 
+            3, 
+            2, 
+            4, 
+            5, 
+            -1
+        ], 
+        "information": "http://www.ulm.de/kultur_tourismus/bibliotheken_und_literatur/oeffnungszeiten.33574.3076,3963,3669,30713,33574.htm#artikel", 
+        "mediatypes": {
+            "DVDkl.gif": "DVD", 
+            "EDokukl.gif": "URL", 
+            "MCASETTES.gif": "AUDIO_CASSETTE", 
+            "Onleihekl.gif": "EBOOK", 
+            "blu-ray_32.gif": "BLURAY", 
+            "cdrom.gif": "CD_SOFTWARE", 
+            "dvdkl.gif": "DVD", 
+            "mCasetteS.gif": "AUDIO_CASSETTE", 
+            "mComic1S.gif": "BOOK", 
+            "mNoten3S.gif": "SCORE_MUSIC", 
+            "wii_32.gif": "GAME_CONSOLE_WII"
+        }, 
         "reservationtable": [
             1, 
             2, 
             3, 
             0, 
             4
-        ], 
-        "mediatypes": {
-            "dvdkl.gif": "DVD", 
-            "wii_32.gif": "GAME_CONSOLE_WII", 
-            "mCasetteS.gif": "AUDIO_CASSETTE", 
-            "mComic1S.gif": "BOOK", 
-            "DVDkl.gif": "DVD", 
-            "Onleihekl.gif": "EBOOK", 
-            "MCASETTES.gif": "AUDIO_CASSETTE", 
-            "cdrom.gif": "CD_SOFTWARE", 
-            "blu-ray_32.gif": "BLURAY", 
-            "EDokukl.gif": "URL", 
-            "mNoten3S.gif": "SCORE_MUSIC"
-        }
-    }
+        ]
+    }, 
+    "geo": [
+        48.4042981, 
+        9.979349000000001
+    ], 
+    "group": "Baden-W\u00fcrttemberg", 
+    "support": "Katalogsuche und Konto", 
+    "title": null
 }

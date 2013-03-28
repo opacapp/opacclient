@@ -1,24 +1,7 @@
 {
+    "api": "bibliotheca", 
     "city": "Bocholt", 
-    "group": "Nordrhein-Westfalen", 
-    "title": null, 
-    "geo": [
-        51.8384277, 
-        6.6150917
-    ], 
-    "support": "Katalogsuche und Konto", 
-    "api": "bond26", 
     "data": {
-        "information": null, 
-        "copiestable": [
-            -1, 
-            0, 
-            -1, 
-            1, 
-            3, 
-            -1, 
-            -1
-        ], 
         "accounttable": [
             -1, 
             0, 
@@ -30,26 +13,43 @@
             3
         ], 
         "baseurl": "http://stadtbibliothek.bocholt.de", 
+        "copiestable": [
+            -1, 
+            0, 
+            -1, 
+            1, 
+            3, 
+            -1, 
+            -1
+        ], 
+        "information": null, 
+        "mediatypes": {
+            "Cdgr.gif": "CD", 
+            "Spiele.gif": "BOARDGAME", 
+            "cdrom.gif": "CD", 
+            "dvd.gif": "DVD", 
+            "ebooklogo.gif": "EBOOK", 
+            "kartegr.gif": "MAP", 
+            "mCDROMB.gif": "CD_SOFTWARE", 
+            "mCasetteB.gif": "AUDIO_CASSETTE", 
+            "mFilmB.gif": "MOVIE", 
+            "mMusikCDB.gif": "CD", 
+            "mNoten3B.gif": "SCORE_MUSIC", 
+            "mZtgB.gif": "MAGAZINE"
+        }, 
         "reservationtable": [
             0, 
             1, 
             2, 
             -1, 
             3
-        ], 
-        "mediatypes": {
-            "mFilmB.gif": "MOVIE", 
-            "Cdgr.gif": "CD", 
-            "dvd.gif": "DVD", 
-            "cdrom.gif": "CD", 
-            "mCasetteB.gif": "AUDIO_CASSETTE", 
-            "mNoten3B.gif": "SCORE_MUSIC", 
-            "mCDROMB.gif": "CD_SOFTWARE", 
-            "ebooklogo.gif": "EBOOK", 
-            "Spiele.gif": "BOARDGAME", 
-            "mMusikCDB.gif": "CD", 
-            "kartegr.gif": "MAP", 
-            "mZtgB.gif": "MAGAZINE"
-        }
-    }
+        ]
+    }, 
+    "geo": [
+        51.8384277, 
+        6.6150917
+    ], 
+    "group": "Nordrhein-Westfalen", 
+    "support": "Katalogsuche und Konto", 
+    "title": null
 }

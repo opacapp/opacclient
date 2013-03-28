@@ -1,18 +1,7 @@
 {
+    "api": "bibliotheca", 
     "city": "Forchheim", 
-    "group": "Bayern", 
-    "title": null, 
     "data": {
-        "information": "http://www.forchheim.de/content/stadtbuecherei", 
-        "copiestable": [
-            0, 
-            -1, 
-            2, 
-            1, 
-            3, 
-            4, 
-            -1
-        ], 
         "accounttable": [
             2, 
             0, 
@@ -24,6 +13,30 @@
             5
         ], 
         "baseurl": "http://gateway.forchheim.de:8081/webopac", 
+        "copiestable": [
+            0, 
+            -1, 
+            2, 
+            1, 
+            3, 
+            4, 
+            -1
+        ], 
+        "information": "http://www.forchheim.de/content/stadtbuecherei", 
+        "mediatypes": {
+            "NDSlogokl.gif": "GAME_CONSOLE_NINTENDO", 
+            "PSlogokl.gif": "GAME_CONSOLE_PLAYSTATION", 
+            "WIIlogokl.gif": "GAME_CONSOLE_WII", 
+            "cdkl.gif": "CD", 
+            "mCasetteS.gif": "AUDIO_CASSETTE", 
+            "mComic1S.gif": "BOOK", 
+            "mCompuS.gif": "CD_SOFTWARE", 
+            "mDVDS.gif": "DVD", 
+            "mFilmS.gif": "MOVIE", 
+            "mMusik2S.gif": "AUDIOBOOK", 
+            "spielekl.gif": "BOARDGAME", 
+            "zeitschriftkl.gif": "MAGAZINE"
+        }, 
         "reservationtable": [
             0, 
             1, 
@@ -31,26 +44,13 @@
             -1, 
             4, 
             -1
-        ], 
-        "mediatypes": {
-            "PSlogokl.gif": "GAME_CONSOLE_PLAYSTATION", 
-            "mCasetteS.gif": "AUDIO_CASSETTE", 
-            "zeitschriftkl.gif": "MAGAZINE", 
-            "mComic1S.gif": "BOOK", 
-            "mDVDS.gif": "DVD", 
-            "mCompuS.gif": "CD_SOFTWARE", 
-            "mFilmS.gif": "MOVIE", 
-            "NDSlogokl.gif": "GAME_CONSOLE_NINTENDO", 
-            "WIIlogokl.gif": "GAME_CONSOLE_WII", 
-            "spielekl.gif": "BOARDGAME", 
-            "cdkl.gif": "CD", 
-            "mMusik2S.gif": "AUDIOBOOK"
-        }
+        ]
     }, 
-    "support": "Katalogsuche und Konto", 
-    "api": "bond26", 
     "geo": [
         49.7213064, 
         11.0698834
-    ]
+    ], 
+    "group": "Bayern", 
+    "support": "Katalogsuche und Konto", 
+    "title": null
 }

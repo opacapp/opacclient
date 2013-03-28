@@ -1,32 +1,7 @@
 {
+    "api": "bibliotheca", 
     "city": "Schw\u00e4bisch Hall", 
-    "group": "Baden-W\u00fcrttemberg", 
-    "title": null, 
-    "geo": [
-        49.1167034, 
-        9.745585799999999
-    ], 
-    "support": "Katalogsuche und Konto", 
-    "api": "bond26", 
     "data": {
-        "information": "http://www.schwaebischhall.de/bildungsstadt/stadtbibliothek.html", 
-        "copiestable": [
-            -1, 
-            0, 
-            -1, 
-            1, 
-            2, 
-            3, 
-            -1
-        ], 
-        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-sha", 
-        "reservationtable": [
-            0, 
-            1, 
-            2, 
-            -1, 
-            3
-        ], 
         "accounttable": [
             -1, 
             0, 
@@ -36,6 +11,31 @@
             -1, 
             -1, 
             3
+        ], 
+        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-sha", 
+        "copiestable": [
+            -1, 
+            0, 
+            -1, 
+            1, 
+            2, 
+            3, 
+            -1
+        ], 
+        "information": "http://www.schwaebischhall.de/bildungsstadt/stadtbibliothek.html", 
+        "reservationtable": [
+            0, 
+            1, 
+            2, 
+            -1, 
+            3
         ]
-    }
+    }, 
+    "geo": [
+        49.1167034, 
+        9.745585799999999
+    ], 
+    "group": "Baden-W\u00fcrttemberg", 
+    "support": "Katalogsuche und Konto", 
+    "title": null
 }
