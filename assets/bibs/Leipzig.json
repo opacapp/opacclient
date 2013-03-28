@@ -1,15 +1,15 @@
 {
+    "api": "sisis", 
     "city": "Leipzig", 
-    "group": "Sachsen", 
-    "title": null, 
+    "data": {
+        "baseurl": "https://webopac.stadtbibliothek-leipzig.de/webOPACClient", 
+        "information": "http://www.leipzig.de/stadtbib/"
+    }, 
     "geo": [
         51.3396955, 
         12.3730747
     ], 
+    "group": "Sachsen", 
     "support": "Katalogsuche und Konto (experimentell)", 
-    "api": "oclc2011", 
-    "data": {
-        "information": "http://www.leipzig.de/stadtbib/", 
-        "baseurl": "https://webopac.stadtbibliothek-leipzig.de/webOPACClient"
-    }
+    "title": null
 }

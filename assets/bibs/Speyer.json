@@ -1,24 +1,7 @@
 {
+    "api": "bibliotheca", 
     "city": "Speyer", 
-    "group": "Rheinland-Pfalz", 
-    "title": null, 
-    "geo": [
-        49.3204789, 
-        8.436217
-    ], 
-    "support": "Katalogsuche und Konto", 
-    "api": "bond26", 
     "data": {
-        "information": "http://www.speyer.de/de/bildung/bibliotheken/stadtbuecherei", 
-        "copiestable": [
-            0, 
-            4, 
-            2, 
-            1, 
-            3, 
-            5, 
-            -1
-        ], 
         "accounttable": [
             -1, 
             0, 
@@ -30,18 +13,35 @@
             3
         ], 
         "baseurl": "http://buecherei.speyer.de", 
+        "copiestable": [
+            0, 
+            4, 
+            2, 
+            1, 
+            3, 
+            5, 
+            -1
+        ], 
+        "information": "http://www.speyer.de/de/bildung/bibliotheken/stadtbuecherei", 
+        "mediatypes": {
+            "ekl.gif": "EBOOK", 
+            "mCasetteS.gif": "AUDIO_CASSETTE", 
+            "mDVDS.gif": "DVD", 
+            "mFilmS.gif": "MOVIE"
+        }, 
         "reservationtable": [
             0, 
             1, 
             2, 
             -1, 
             3
-        ], 
-        "mediatypes": {
-            "mCasetteS.gif": "AUDIO_CASSETTE", 
-            "mFilmS.gif": "MOVIE", 
-            "ekl.gif": "EBOOK", 
-            "mDVDS.gif": "DVD"
-        }
-    }
+        ]
+    }, 
+    "geo": [
+        49.3204789, 
+        8.436217
+    ], 
+    "group": "Rheinland-Pfalz", 
+    "support": "Katalogsuche und Konto", 
+    "title": null
 }

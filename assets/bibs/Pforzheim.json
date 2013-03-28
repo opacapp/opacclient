@@ -1,24 +1,7 @@
 {
+    "api": "bibliotheca", 
     "city": "Pforzheim", 
-    "group": "Baden-W\u00fcrttemberg", 
-    "title": null, 
-    "geo": [
-        48.8926378, 
-        8.693292699999999
-    ], 
-    "support": "Katalogsuche und Konto", 
-    "api": "bond26", 
     "data": {
-        "information": "/read/info.html", 
-        "copiestable": [
-            -1, 
-            0, 
-            1, 
-            2, 
-            3, 
-            4, 
-            -1
-        ], 
         "accounttable": [
             -1, 
             0, 
@@ -30,34 +13,51 @@
             4
         ], 
         "baseurl": "https://opac1.stadt-pforzheim.de", 
+        "copiestable": [
+            -1, 
+            0, 
+            1, 
+            2, 
+            3, 
+            4, 
+            -1
+        ], 
+        "information": "/read/info.html", 
+        "mediatypes": {
+            "Bluray1S.jpg": "BLURAY", 
+            "DMedienS.jpg": "EBOOK", 
+            "DVDGEBk.jpg": "DVD", 
+            "EReaderS.jpg": "EBOOK", 
+            "MP3S.gif": "MP3", 
+            "bestsellerS.jpg": "MOVIE", 
+            "bluraydiscS.jpg": "BLURAY", 
+            "heissauflesenS.jpg": "BOOK", 
+            "konsole1S.jpg": "GAME_CONSOLE", 
+            "konsoleS.jpg": "GAME_CONSOLE", 
+            "mCDROMks.gif": "CD_SOFTWARE", 
+            "mCasetteS.gif": "AUDIO_CASSETTE", 
+            "mDVDkS.gif": "DVD", 
+            "mMedipS.gif": "PACKAGE", 
+            "mMusikcdS.gif": "CD", 
+            "mNoten1S.gif": "SCORE_MUSIC", 
+            "mSpielS.gif": "BOARDGAME", 
+            "mVideoS.gif": "MOVIE", 
+            "mZtgs.gif": "MAGAZINE", 
+            "monooS.gif": "BOOK"
+        }, 
         "reservationtable": [
             0, 
             1, 
             2, 
             3, 
             4
-        ], 
-        "mediatypes": {
-            "mCDROMks.gif": "CD_SOFTWARE", 
-            "mDVDkS.gif": "DVD", 
-            "mMedipS.gif": "PACKAGE", 
-            "DVDGEBk.jpg": "DVD", 
-            "MP3S.gif": "MP3", 
-            "EReaderS.jpg": "EBOOK", 
-            "heissauflesenS.jpg": "BOOK", 
-            "mCasetteS.gif": "AUDIO_CASSETTE", 
-            "monooS.gif": "BOOK", 
-            "Bluray1S.jpg": "BLURAY", 
-            "mNoten1S.gif": "SCORE_MUSIC", 
-            "mVideoS.gif": "MOVIE", 
-            "bluraydiscS.jpg": "BLURAY", 
-            "bestsellerS.jpg": "MOVIE", 
-            "konsoleS.jpg": "GAME_CONSOLE", 
-            "mSpielS.gif": "BOARDGAME", 
-            "mMusikcdS.gif": "CD", 
-            "mZtgs.gif": "MAGAZINE", 
-            "DMedienS.jpg": "EBOOK", 
-            "konsole1S.jpg": "GAME_CONSOLE"
-        }
-    }
+        ]
+    }, 
+    "geo": [
+        48.8926378, 
+        8.693292699999999
+    ], 
+    "group": "Baden-W\u00fcrttemberg", 
+    "support": "Katalogsuche und Konto", 
+    "title": null
 }

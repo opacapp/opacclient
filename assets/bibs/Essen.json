@@ -1,22 +1,22 @@
 {
-    "city": "Essen", 
-    "group": "Nordrhein-Westfalen", 
-    "title": null, 
-    "geo": [
-        51.4556432, 
-        7.0115552
-    ], 
-    "support": "Katalogsuche", 
     "api": "biber1992", 
+    "city": "Essen", 
     "data": {
+        "baseurl": "http://katalog.stadtbibliothek-essen.de", 
         "information": "http://www.stadtbibliothek-essen.de/de/oeffnungszeiten/oeffnungszeiten.html", 
+        "opacdir": "opac", 
         "searchtable": [
             1, 
             2, 
             3, 
             4
-        ], 
-        "baseurl": "http://katalog.stadtbibliothek-essen.de", 
-        "opacdir": "opac"
-    }
+        ]
+    }, 
+    "geo": [
+        51.4556432, 
+        7.0115552
+    ], 
+    "group": "Nordrhein-Westfalen", 
+    "support": "Katalogsuche", 
+    "title": null
 }

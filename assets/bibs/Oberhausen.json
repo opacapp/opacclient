@@ -1,15 +1,15 @@
 {
+    "api": "sisis", 
     "city": "Oberhausen", 
-    "group": "Nordrhein-Westfalen", 
-    "title": null, 
+    "data": {
+        "baseurl": "https://bibliothek.oberhausen.de/webOPACClient.sisis", 
+        "information": "http://www.oberhausen.de/0A1C46AD57614F1B8C5CD011AF1C5911.php"
+    }, 
     "geo": [
         51.4964886, 
         6.8515156
     ], 
+    "group": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto (experimentell)", 
-    "api": "oclc2011", 
-    "data": {
-        "information": "http://www.oberhausen.de/0A1C46AD57614F1B8C5CD011AF1C5911.php", 
-        "baseurl": "https://bibliothek.oberhausen.de/webOPACClient.sisis"
-    }
+    "title": null
 }

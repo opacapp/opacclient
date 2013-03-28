@@ -1,24 +1,7 @@
 {
+    "api": "bibliotheca", 
     "city": "Iserlohn", 
-    "group": "Nordrhein-Westfalen", 
-    "title": null, 
-    "geo": [
-        51.3731684, 
-        7.674391099999998
-    ], 
-    "support": "Katalogsuche und Konto", 
-    "api": "bond26", 
     "data": {
-        "information": "/../read/info.html", 
-        "copiestable": [
-            -1, 
-            0, 
-            3, 
-            4, 
-            1, 
-            2, 
-            -1
-        ], 
         "accounttable": [
             -1, 
             0, 
@@ -30,23 +13,40 @@
             4
         ], 
         "baseurl": "http://opac.iserlohn.de/webopac", 
+        "copiestable": [
+            -1, 
+            0, 
+            3, 
+            4, 
+            1, 
+            2, 
+            -1
+        ], 
+        "information": "/../read/info.html", 
+        "mediatypes": {
+            "cdkl.gif": "DVD", 
+            "cdrom.gif": "CD_SOFTWARE", 
+            "dvdgr.gif": "DVD", 
+            "mCasetteS.gif": "AUDIO_CASSETTE", 
+            "mComic1S.gif": "BOOK", 
+            "mFilmS.gif": "MOVIE", 
+            "mMusik2S.gif": "CD_MUSIC", 
+            "mOnleiheS.gif": "EBOOK", 
+            "mZtgS.gif": "MAGAZINE"
+        }, 
         "reservationtable": [
             0, 
             1, 
             2, 
             3, 
             4
-        ], 
-        "mediatypes": {
-            "mCasetteS.gif": "AUDIO_CASSETTE", 
-            "mZtgS.gif": "MAGAZINE", 
-            "cdkl.gif": "DVD", 
-            "mComic1S.gif": "BOOK", 
-            "mFilmS.gif": "MOVIE", 
-            "cdrom.gif": "CD_SOFTWARE", 
-            "mMusik2S.gif": "CD_MUSIC", 
-            "mOnleiheS.gif": "EBOOK", 
-            "dvdgr.gif": "DVD"
-        }
-    }
+        ]
+    }, 
+    "geo": [
+        51.3731684, 
+        7.674391099999998
+    ], 
+    "group": "Nordrhein-Westfalen", 
+    "support": "Katalogsuche und Konto", 
+    "title": null
 }

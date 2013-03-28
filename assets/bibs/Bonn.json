@@ -1,15 +1,15 @@
 {
+    "api": "sisis", 
     "city": "Bonn", 
-    "group": "Nordrhein-Westfalen", 
-    "title": null, 
+    "data": {
+        "baseurl": "https://www.lib.bonn.de/webOPACClient", 
+        "information": "http://www.bonn.de/familie_gesellschaft_bildung_soziales/stadtbibliothek/zweigstellen/index.html?lang=de"
+    }, 
     "geo": [
         50.73743, 
         7.0982068
     ], 
+    "group": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto (experimentell)", 
-    "api": "oclc2011", 
-    "data": {
-        "information": "http://www.bonn.de/familie_gesellschaft_bildung_soziales/stadtbibliothek/zweigstellen/index.html?lang=de", 
-        "baseurl": "https://www.lib.bonn.de/webOPACClient"
-    }
+    "title": null
 }

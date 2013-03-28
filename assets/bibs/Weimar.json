@@ -1,15 +1,15 @@
 {
+    "api": "sisis", 
     "city": "Weimar", 
-    "group": "Th\u00fcringen", 
-    "title": null, 
+    "data": {
+        "baseurl": "http://katalog.stadtbibo-weimar.de:8080/webOPACClient", 
+        "information": "http://stadtbibo-weimar.de/index.html"
+    }, 
     "geo": [
         50.98471199999999, 
         11.3225398
     ], 
+    "group": "Th\u00fcringen", 
     "support": "Katalogsuche und Konto (experimentell)", 
-    "api": "oclc2011", 
-    "data": {
-        "information": "http://stadtbibo-weimar.de/index.html", 
-        "baseurl": "http://katalog.stadtbibo-weimar.de:8080/webOPACClient"
-    }
+    "title": null
 }

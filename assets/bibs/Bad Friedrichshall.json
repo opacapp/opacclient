@@ -1,15 +1,9 @@
 {
+    "api": "bibliotheca", 
     "city": "Bad Friedrichshall", 
-    "group": "Baden-W\u00fcrttemberg", 
-    "title": null, 
-    "geo": [
-        49.23439440000001, 
-        9.2079738
-    ], 
-    "support": "Katalogsuche", 
-    "api": "bond26", 
     "data": {
-        "information": "/info.html", 
+        "accounttable": null, 
+        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-friedrichshall", 
         "copiestable": [
             -1, 
             3, 
@@ -19,8 +13,14 @@
             2, 
             -1
         ], 
-        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-friedrichshall", 
-        "reservationtable": null, 
-        "accounttable": null
-    }
+        "information": "/info.html", 
+        "reservationtable": null
+    }, 
+    "geo": [
+        49.23439440000001, 
+        9.2079738
+    ], 
+    "group": "Baden-W\u00fcrttemberg", 
+    "support": "Katalogsuche", 
+    "title": null
 }

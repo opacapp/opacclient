@@ -45,4 +45,4 @@ for filename in os.listdir(DIR):
 		data['geo'] = [float(res['geometry']['location']['lat']), float(res['geometry']['location']['lng'])]
 	
 
-	json.dump(data, open(f, 'w'), indent=4)
+	json.dump(data, open(f, 'w'), indent=4, sort_keys=True)

@@ -1,15 +1,9 @@
 {
+    "api": "bibliotheca", 
     "city": "Brackenheim", 
-    "group": "Baden-W\u00fcrttemberg", 
-    "title": null, 
-    "geo": [
-        49.0808636, 
-        9.0703137
-    ], 
-    "support": "Katalogsuche", 
-    "api": "bond26", 
     "data": {
-        "information": "http://www.stadtbuecherei-brackenheim.de/data/index.php", 
+        "accounttable": null, 
+        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-brackenheim", 
         "copiestable": [
             -1, 
             -1, 
@@ -19,8 +13,14 @@
             4, 
             -1
         ], 
-        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-brackenheim", 
-        "reservationtable": null, 
-        "accounttable": null
-    }
+        "information": "http://www.stadtbuecherei-brackenheim.de/data/index.php", 
+        "reservationtable": null
+    }, 
+    "geo": [
+        49.0808636, 
+        9.0703137
+    ], 
+    "group": "Baden-W\u00fcrttemberg", 
+    "support": "Katalogsuche", 
+    "title": null
 }

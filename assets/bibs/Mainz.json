@@ -1,24 +1,7 @@
 {
+    "api": "bibliotheca", 
     "city": "Mainz", 
-    "group": "Rheinland-Pfalz", 
-    "title": null, 
-    "geo": [
-        49.9928617, 
-        8.2472526
-    ], 
-    "support": "Katalogsuche und Konto", 
-    "api": "bond26", 
     "data": {
-        "information": "http://www.mainz.de/WGAPublisher/online/html/default/bibliotheken", 
-        "copiestable": [
-            -1, 
-            0, 
-            -1, 
-            1, 
-            3, 
-            4, 
-            -1
-        ], 
         "accounttable": [
             0, 
             1, 
@@ -30,6 +13,19 @@
             5
         ], 
         "baseurl": "https://online.mainz.de/webopac/", 
+        "copiestable": [
+            -1, 
+            0, 
+            -1, 
+            1, 
+            3, 
+            4, 
+            -1
+        ], 
+        "information": "http://www.mainz.de/WGAPublisher/online/html/default/bibliotheken", 
+        "mediatypes": {
+            "mp.gif": "PACKAGE"
+        }, 
         "reservationtable": [
             0, 
             1, 
@@ -37,9 +33,13 @@
             -1, 
             3, 
             -1
-        ], 
-        "mediatypes": {
-            "mp.gif": "PACKAGE"
-        }
-    }
+        ]
+    }, 
+    "geo": [
+        49.9928617, 
+        8.2472526
+    ], 
+    "group": "Rheinland-Pfalz", 
+    "support": "Katalogsuche und Konto", 
+    "title": null
 }

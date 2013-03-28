@@ -1,15 +1,15 @@
 {
+    "api": "sisis", 
     "city": "Baden (CH)", 
-    "group": "Schweiz", 
-    "title": null, 
+    "data": {
+        "baseurl": "http://62.2.168.69/webOPACClient.baden", 
+        "information": "http://www.baden.ch/xml_1/internet/de/application/d1/d59/f60.cfm#content"
+    }, 
     "geo": [
         47.4737667, 
         8.3064732
     ], 
+    "group": "Schweiz", 
     "support": "Katalogsuche und Konto (experimentell)", 
-    "api": "oclc2011", 
-    "data": {
-        "information": "http://www.baden.ch/xml_1/internet/de/application/d1/d59/f60.cfm#content", 
-        "baseurl": "http://62.2.168.69/webOPACClient.baden"
-    }
+    "title": null
 }

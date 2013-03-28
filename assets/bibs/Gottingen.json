@@ -1,24 +1,7 @@
 {
+    "api": "bibliotheca", 
     "city": "G\u00f6ttingen", 
-    "group": "Niedersachsen", 
-    "title": null, 
-    "geo": [
-        51.538352, 
-        9.9296899
-    ], 
-    "support": "Katalogsuche und Konto", 
-    "api": "bond26", 
     "data": {
-        "information": "http://opac.stadtbibliothek.goettingen.de/read_blue/info.html", 
-        "copiestable": [
-            -1, 
-            0, 
-            -1, 
-            1, 
-            2, 
-            3, 
-            -1
-        ], 
         "accounttable": [
             0, 
             3, 
@@ -30,38 +13,55 @@
             7
         ], 
         "baseurl": "http://opac.stadtbibliothek.goettingen.de/wopac", 
+        "copiestable": [
+            -1, 
+            0, 
+            -1, 
+            1, 
+            2, 
+            3, 
+            -1
+        ], 
+        "information": "http://opac.stadtbibliothek.goettingen.de/read_blue/info.html", 
+        "mediatypes": {
+            "bests.gif": "BOOK", 
+            "box.gif": "PACKAGE", 
+            "bueki.gif": "PACKAGE_BOOKS", 
+            "cd.gif": "CD", 
+            "dvd.gif": "DVD", 
+            "eaudio.gif": "MP3", 
+            "ebook.gif": "EBOOK", 
+            "emusik.gif": "MP3", 
+            "epaper.gif": "EBOOK", 
+            "evideo.gif": "MOVIE", 
+            "gamepad.gif": "GAME_CONSOLE", 
+            "hase.gif": "UNKNOWN", 
+            "hoerb_cd.gif": "AUDIOBOOK", 
+            "hoerb_ks.gif": "AUDIO_CASSETTE", 
+            "karte.gif": "MAP", 
+            "kass.gif": "AUDIO_CASSETTE", 
+            "mbuchs.gif": "UNKNOWN", 
+            "mspiels.gif": "BOARDGAME", 
+            "munz.gif": "EBOOK", 
+            "musikcd.gif": "CD", 
+            "mvideos.gif": "AUDIO_CASSETTE", 
+            "mztgs.gif": "MAGAZINE", 
+            "noten.gif": "SCORE_MUSIC", 
+            "zt.gif": "NEWSPAPER"
+        }, 
         "reservationtable": [
             1, 
             2, 
             3, 
             0, 
             4
-        ], 
-        "mediatypes": {
-            "mvideos.gif": "AUDIO_CASSETTE", 
-            "eaudio.gif": "MP3", 
-            "karte.gif": "MAP", 
-            "zt.gif": "NEWSPAPER", 
-            "ebook.gif": "EBOOK", 
-            "mspiels.gif": "BOARDGAME", 
-            "box.gif": "PACKAGE", 
-            "bueki.gif": "PACKAGE_BOOKS", 
-            "evideo.gif": "MOVIE", 
-            "epaper.gif": "EBOOK", 
-            "hoerb_ks.gif": "AUDIO_CASSETTE", 
-            "hase.gif": "UNKNOWN", 
-            "hoerb_cd.gif": "AUDIOBOOK", 
-            "munz.gif": "EBOOK", 
-            "mbuchs.gif": "UNKNOWN", 
-            "kass.gif": "AUDIO_CASSETTE", 
-            "musikcd.gif": "CD", 
-            "mztgs.gif": "MAGAZINE", 
-            "noten.gif": "SCORE_MUSIC", 
-            "dvd.gif": "DVD", 
-            "bests.gif": "BOOK", 
-            "emusik.gif": "MP3", 
-            "gamepad.gif": "GAME_CONSOLE", 
-            "cd.gif": "CD"
-        }
-    }
+        ]
+    }, 
+    "geo": [
+        51.538352, 
+        9.9296899
+    ], 
+    "group": "Niedersachsen", 
+    "support": "Katalogsuche und Konto", 
+    "title": null
 }

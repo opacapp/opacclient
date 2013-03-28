@@ -37,7 +37,6 @@ import org.jsoup.select.Elements;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult.Status;
 import de.geeksfactory.opacclient.objects.Account;
@@ -53,27 +52,13 @@ import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
- * Api für Web-Opacs zu SunRise von OCLC. Online nur zu erkennen an
- * "Copyright 2009/2011 OCLC"
+ * OpacApi implementation for Web Opacs of the SISIS SunRise product, developed
+ * by OCLC.
  * 
- * TODO: Vorbestellen - Ansicht der Vorbestellungen - Verlängern
- * 
- * Einschränkungen: Die Merkliste wird nur in solchen Bibliotheken gut
- * unterstützt, die die Erweiterung Bibtip einsetzen. In anderen kann nur der
- * Titel in der Merkliste gespeichert werden.
- * 
+ * Restrictions: Bookmarks are only constantly supported if the library uses the
+ * BibTip extension.
  */
-public class OCLC2011 implements OpacApi {
-
-	/*
-	 * OpacApi für WebOpacs "Copyright 2011 OCLC" (echter Name der Software
-	 * scheint SISIS SunRise zu sein) z.B. Bremen
-	 */
-
-	/*
-	 * setzt aktuell voraus, dass die Bibliothek die Bibtip Extension benutzt!
-	 * Wir wissen nicht, wie wir anderweitig an die IDs der Medien kommen.
-	 */
+public class SISIS implements OpacApi {
 	private String opac_url = "";
 	private JSONObject data;
 	private DefaultHttpClient ahc;

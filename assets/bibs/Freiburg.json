@@ -1,15 +1,15 @@
 {
+    "api": "sisis", 
     "city": "Freiburg", 
-    "group": "Baden-W\u00fcrttemberg", 
-    "title": null, 
+    "data": {
+        "baseurl": "https://katalog.stadtbibliothek.freiburg.de/webOPACClient", 
+        "information": "http://www.freiburg.de/pb/,Lde/235320.html#anker278151"
+    }, 
     "geo": [
         47.9990077, 
         7.842104299999999
     ], 
+    "group": "Baden-W\u00fcrttemberg", 
     "support": "Katalogsuche und Konto (experimentell)", 
-    "api": "oclc2011", 
-    "data": {
-        "information": "http://www.freiburg.de/pb/,Lde/235320.html#anker278151", 
-        "baseurl": "https://katalog.stadtbibliothek.freiburg.de/webOPACClient"
-    }
+    "title": null
 }

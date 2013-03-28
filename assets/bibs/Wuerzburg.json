@@ -1,15 +1,8 @@
 {
-    "city": "W\u00fcrzburg", 
-    "group": "Bayern", 
-    "title": null, 
-    "geo": [
-        49.7915953, 
-        9.953571499999999
-    ], 
-    "support": "Katalogsuche", 
     "api": "biber1992", 
+    "city": "W\u00fcrzburg", 
     "data": {
-        "information": "http://www.wuerzburg.de/de/buerger/stadtbuecherei/index.html", 
+        "baseurl": "http://217.7.118.50", 
         "copiestable": [
             3, 
             1, 
@@ -19,26 +12,33 @@
             -1, 
             -1
         ], 
-        "opacdir": "opax", 
-        "baseurl": "http://217.7.118.50", 
+        "information": "http://www.wuerzburg.de/de/buerger/stadtbuecherei/index.html", 
         "mediatypes": {
-            "11": "DVD", 
-            "10": "MAP", 
-            "24": "BLURAY", 
-            "19": "BOOK", 
-            "30": "EBOOK", 
             "1": "BOOK", 
-            "3": "CD_SOFTWARE", 
+            "10": "MAP", 
+            "11": "DVD", 
+            "19": "BOOK", 
             "2": "MAGAZINE", 
+            "24": "BLURAY", 
+            "3": "CD_SOFTWARE", 
+            "30": "EBOOK", 
             "6": "CD_MUSIC", 
-            "9": "BOARDGAME", 
-            "8": "SCORE_MUSIC"
+            "8": "SCORE_MUSIC", 
+            "9": "BOARDGAME"
         }, 
+        "opacdir": "opax", 
         "searchtable": [
             2, 
             3, 
             4, 
             5
         ]
-    }
+    }, 
+    "geo": [
+        49.7915953, 
+        9.953571499999999
+    ], 
+    "group": "Bayern", 
+    "support": "Katalogsuche", 
+    "title": null
 }

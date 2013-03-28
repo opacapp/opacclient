@@ -1,15 +1,9 @@
 {
+    "api": "bibliotheca", 
     "city": "Gaildorf", 
-    "group": "Baden-W\u00fcrttemberg", 
-    "title": null, 
-    "geo": [
-        48.9998717, 
-        9.7655136
-    ], 
-    "support": "Katalogsuche", 
-    "api": "bond26", 
     "data": {
-        "information": "/../read-gaildorf/info.html", 
+        "accounttable": null, 
+        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-gaildorf", 
         "copiestable": [
             -1, 
             -1, 
@@ -19,8 +13,14 @@
             4, 
             -1
         ], 
-        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-gaildorf", 
-        "reservationtable": null, 
-        "accounttable": null
-    }
+        "information": "/../read-gaildorf/info.html", 
+        "reservationtable": null
+    }, 
+    "geo": [
+        48.9998717, 
+        9.7655136
+    ], 
+    "group": "Baden-W\u00fcrttemberg", 
+    "support": "Katalogsuche", 
+    "title": null
 }

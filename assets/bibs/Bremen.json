@@ -1,15 +1,15 @@
 {
+    "api": "sisis", 
     "city": "Bremen", 
-    "group": "Bremen", 
-    "title": null, 
+    "data": {
+        "baseurl": "https://opac.stadtbibliothek-bremen.de/webOPACClient", 
+        "information": "http://www.stadtbibliothek-bremen.de/Bibliotheken.html"
+    }, 
     "geo": [
         53.07929619999999, 
         8.8016937
     ], 
+    "group": "Bremen", 
     "support": "Katalogsuche und Konto (experimentell)", 
-    "api": "oclc2011", 
-    "data": {
-        "information": "http://www.stadtbibliothek-bremen.de/Bibliotheken.html", 
-        "baseurl": "https://opac.stadtbibliothek-bremen.de/webOPACClient"
-    }
+    "title": null
 }

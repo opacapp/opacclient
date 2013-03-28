@@ -1,15 +1,15 @@
 {
+    "api": "sisis", 
     "city": "Berlin", 
-    "group": "Berlin", 
-    "title": "Unibibliothek HTW", 
+    "data": {
+        "baseurl": "https://sisis.rz.htw-berlin.de/InfoGuideClient", 
+        "information": "http://bibliothek.htw-berlin.de/oeffnungszeiten/"
+    }, 
     "geo": [
         52.519171, 
         13.4060912
     ], 
+    "group": "Berlin", 
     "support": "Katalogsuche und Konto (experimentell)", 
-    "api": "oclc2011", 
-    "data": {
-        "information": "http://bibliothek.htw-berlin.de/oeffnungszeiten/", 
-        "baseurl": "https://sisis.rz.htw-berlin.de/InfoGuideClient"
-    }
+    "title": "Unibibliothek HTW"
 }

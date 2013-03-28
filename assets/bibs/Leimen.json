@@ -1,15 +1,9 @@
 {
+    "api": "bibliotheca", 
     "city": "Leimen", 
-    "group": "Baden-W\u00fcrttemberg", 
-    "title": null, 
-    "geo": [
-        49.34908979999999, 
-        8.687885099999999
-    ], 
-    "support": "Katalogsuche", 
-    "api": "bond26", 
     "data": {
-        "information": "http://leimen.de/cms/iwebs/default.aspx?mmid=17&smid=2108", 
+        "accounttable": null, 
+        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-leimen", 
         "copiestable": [
             -1, 
             -1, 
@@ -19,8 +13,14 @@
             4, 
             -1
         ], 
-        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-leimen", 
-        "reservationtable": null, 
-        "accounttable": null
-    }
+        "information": "http://leimen.de/cms/iwebs/default.aspx?mmid=17&smid=2108", 
+        "reservationtable": null
+    }, 
+    "geo": [
+        49.34908979999999, 
+        8.687885099999999
+    ], 
+    "group": "Baden-W\u00fcrttemberg", 
+    "support": "Katalogsuche", 
+    "title": null
 }

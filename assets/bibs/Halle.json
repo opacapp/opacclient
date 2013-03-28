@@ -1,24 +1,7 @@
 {
+    "api": "bibliotheca", 
     "city": "Halle (Saale)", 
-    "group": "Sachsen-Anhalt", 
-    "title": null, 
-    "geo": [
-        51.47971, 
-        11.96864
-    ], 
-    "support": "Katalogsuche und Konto", 
-    "api": "bond26", 
     "data": {
-        "information": "/../read/info.html", 
-        "copiestable": [
-            -1, 
-            0, 
-            2, 
-            3, 
-            4, 
-            5, 
-            -1
-        ], 
         "accounttable": [
             -1, 
             1, 
@@ -30,32 +13,49 @@
             6
         ], 
         "baseurl": "https://secure.halle.de/wwwopac", 
+        "copiestable": [
+            -1, 
+            0, 
+            2, 
+            3, 
+            4, 
+            5, 
+            -1
+        ], 
+        "information": "/../read/info.html", 
+        "mediatypes": {
+            "CDs.gif": "CD", 
+            "blu-ray_32.gif": "BLURAY", 
+            "halarts.gif": "ART", 
+            "halbks.gif": "BOOK", 
+            "halcdroms.gif": "CD_SOFTWARE", 
+            "haldvdroms.gif": "DVD", 
+            "haldvds.gif": "DVD", 
+            "halkidcdroms.gif": "CD_SOFTWARE", 
+            "halkidcds.gif": "CD", 
+            "halkiddvds.gif": "DVD", 
+            "halsprachkursb.gif": "UNKNOWN", 
+            "iconmunzinger32.gif": "EBOOK", 
+            "konsolen32.gif": "GAME_CONSOLE", 
+            "mBuchS2.gif": "BOOK", 
+            "mNoten1S.gif": "SCORE_MUSIC", 
+            "mReise2s.gif": "MAP", 
+            "multimedia.gif": "PACKAGE", 
+            "schallplatte_32.gif": "UNKNOWN"
+        }, 
         "reservationtable": [
             1, 
             2, 
             -1, 
             0, 
             3
-        ], 
-        "mediatypes": {
-            "haldvdroms.gif": "DVD", 
-            "haldvds.gif": "DVD", 
-            "halkiddvds.gif": "DVD", 
-            "schallplatte_32.gif": "UNKNOWN", 
-            "halkidcdroms.gif": "CD_SOFTWARE", 
-            "halcdroms.gif": "CD_SOFTWARE", 
-            "mReise2s.gif": "MAP", 
-            "halsprachkursb.gif": "UNKNOWN", 
-            "mNoten1S.gif": "SCORE_MUSIC", 
-            "halarts.gif": "ART", 
-            "CDs.gif": "CD", 
-            "multimedia.gif": "PACKAGE", 
-            "iconmunzinger32.gif": "EBOOK", 
-            "blu-ray_32.gif": "BLURAY", 
-            "mBuchS2.gif": "BOOK", 
-            "konsolen32.gif": "GAME_CONSOLE", 
-            "halkidcds.gif": "CD", 
-            "halbks.gif": "BOOK"
-        }
-    }
+        ]
+    }, 
+    "geo": [
+        51.47971, 
+        11.96864
+    ], 
+    "group": "Sachsen-Anhalt", 
+    "support": "Katalogsuche und Konto", 
+    "title": null
 }

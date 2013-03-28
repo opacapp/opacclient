@@ -1,15 +1,9 @@
 {
+    "api": "bibliotheca", 
     "city": "Gundelfingen", 
-    "group": "Baden-W\u00fcrttemberg", 
-    "title": null, 
-    "geo": [
-        48.04296919999999, 
-        7.8655198
-    ], 
-    "support": "Katalogsuche", 
-    "api": "bond26", 
     "data": {
-        "information": "http://www.bibliotheken.bw-online.de/read-gundelfingen/startseite.html", 
+        "accounttable": null, 
+        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-gundelfingen", 
         "copiestable": [
             -1, 
             -1, 
@@ -19,8 +13,14 @@
             1, 
             -1
         ], 
-        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-gundelfingen", 
-        "reservationtable": null, 
-        "accounttable": null
-    }
+        "information": "http://www.bibliotheken.bw-online.de/read-gundelfingen/startseite.html", 
+        "reservationtable": null
+    }, 
+    "geo": [
+        48.04296919999999, 
+        7.8655198
+    ], 
+    "group": "Baden-W\u00fcrttemberg", 
+    "support": "Katalogsuche", 
+    "title": null
 }

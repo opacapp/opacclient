@@ -1,32 +1,7 @@
 {
+    "api": "bibliotheca", 
     "city": "T\u00fcbingen", 
-    "group": "Baden-W\u00fcrttemberg", 
-    "title": null, 
-    "geo": [
-        48.5216364, 
-        9.0576448
-    ], 
-    "support": "Katalogsuche und Konto", 
-    "api": "bond26", 
     "data": {
-        "information": "/../readTuebingen/info.html", 
-        "copiestable": [
-            6, 
-            0, 
-            3, 
-            1, 
-            4, 
-            5, 
-            -1
-        ], 
-        "baseurl": "http://wwwopac.rz-as.de/tuebingen", 
-        "reservationtable": [
-            0, 
-            1, 
-            -1, 
-            2, 
-            3
-        ], 
         "accounttable": [
             -1, 
             0, 
@@ -36,6 +11,31 @@
             2, 
             2, 
             4
+        ], 
+        "baseurl": "http://wwwopac.rz-as.de/tuebingen", 
+        "copiestable": [
+            6, 
+            0, 
+            3, 
+            1, 
+            4, 
+            5, 
+            -1
+        ], 
+        "information": "/../readTuebingen/info.html", 
+        "reservationtable": [
+            0, 
+            1, 
+            -1, 
+            2, 
+            3
         ]
-    }
+    }, 
+    "geo": [
+        48.5216364, 
+        9.0576448
+    ], 
+    "group": "Baden-W\u00fcrttemberg", 
+    "support": "Katalogsuche und Konto", 
+    "title": null
 }

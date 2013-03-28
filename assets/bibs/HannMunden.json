@@ -1,24 +1,7 @@
 {
+    "api": "bibliotheca", 
     "city": "Hann. M\u00fcnden", 
-    "group": "Niedersachsen", 
-    "title": null, 
-    "geo": [
-        51.419285, 
-        9.6557588
-    ], 
-    "support": "Katalogsuche und Konto", 
-    "api": "bond26", 
     "data": {
-        "information": "/read/info.html", 
-        "copiestable": [
-            0, 
-            -1, 
-            -1, 
-            1, 
-            2, 
-            3, 
-            -1
-        ], 
         "accounttable": [
             -1, 
             0, 
@@ -30,17 +13,34 @@
             3
         ], 
         "baseurl": "http://www.buecherei.hann.muenden.de", 
+        "copiestable": [
+            0, 
+            -1, 
+            -1, 
+            1, 
+            2, 
+            3, 
+            -1
+        ], 
+        "information": "/read/info.html", 
+        "mediatypes": {
+            "mCasetteS.gif": "AUDIO_CASSETTE", 
+            "mDVDS.gif": "DVD", 
+            "mFilmS.gif": "MOVIE"
+        }, 
         "reservationtable": [
             0, 
             1, 
             2, 
             -1, 
             3
-        ], 
-        "mediatypes": {
-            "mCasetteS.gif": "AUDIO_CASSETTE", 
-            "mFilmS.gif": "MOVIE", 
-            "mDVDS.gif": "DVD"
-        }
-    }
+        ]
+    }, 
+    "geo": [
+        51.419285, 
+        9.6557588
+    ], 
+    "group": "Niedersachsen", 
+    "support": "Katalogsuche und Konto", 
+    "title": null
 }

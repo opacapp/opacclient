@@ -1,24 +1,7 @@
 {
+    "api": "bibliotheca", 
     "city": "Kreuztal", 
-    "group": "Nordrhein-Westfalen", 
-    "title": null, 
-    "geo": [
-        50.9693854, 
-        7.9923572
-    ], 
-    "support": "Katalogsuche und Konto", 
-    "api": "bond26", 
     "data": {
-        "information": "http://www.stadtbibliothek-kreuztal.de/", 
-        "copiestable": [
-            0, 
-            -1, 
-            4, 
-            1, 
-            2, 
-            3, 
-            -1
-        ], 
         "accounttable": [
             -1, 
             0, 
@@ -29,26 +12,43 @@
             -1, 
             4
         ], 
-        "db": "BIBLIO-060", 
         "baseurl": "http://bibliothek.kdz-ws.net/webverbund", 
+        "copiestable": [
+            0, 
+            -1, 
+            4, 
+            1, 
+            2, 
+            3, 
+            -1
+        ], 
+        "db": "BIBLIO-060", 
+        "information": "http://www.stadtbibliothek-kreuztal.de/", 
+        "mediatypes": {
+            "cdkl.gif": "CD_SOFTWARE", 
+            "dvdkl.gif": "DVD", 
+            "kassettekl.gif": "AUDIO_CASSETTE", 
+            "mAboS.gif": "MAGAZINE", 
+            "mBmonoS.gif": "BOOK", 
+            "mComicS.gif": "BOOK", 
+            "mMusikCDS.gif": "CD_MUSIC", 
+            "mZeitS.gif": "NEWSPAPER", 
+            "musersS.gif": "CD", 
+            "videokl.gif": "MOVIE"
+        }, 
         "reservationtable": [
             0, 
             1, 
             2, 
             -1, 
             3
-        ], 
-        "mediatypes": {
-            "dvdkl.gif": "DVD", 
-            "mComicS.gif": "BOOK", 
-            "kassettekl.gif": "AUDIO_CASSETTE", 
-            "musersS.gif": "CD", 
-            "mBmonoS.gif": "BOOK", 
-            "videokl.gif": "MOVIE", 
-            "mAboS.gif": "MAGAZINE", 
-            "mMusikCDS.gif": "CD_MUSIC", 
-            "cdkl.gif": "CD_SOFTWARE", 
-            "mZeitS.gif": "NEWSPAPER"
-        }
-    }
+        ]
+    }, 
+    "geo": [
+        50.9693854, 
+        7.9923572
+    ], 
+    "group": "Nordrhein-Westfalen", 
+    "support": "Katalogsuche und Konto", 
+    "title": null
 }

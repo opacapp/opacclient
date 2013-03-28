@@ -1,24 +1,7 @@
 {
+    "api": "bibliotheca", 
     "city": "Veitsh\u00f6chheim", 
-    "group": "Bayern", 
-    "title": null, 
-    "geo": [
-        49.831826, 
-        9.8850835
-    ], 
-    "support": "Katalogsuche und Konto", 
-    "api": "bond26", 
     "data": {
-        "information": "http://www.bib.veitshoechheim.de/", 
-        "copiestable": [
-            -1, 
-            -1, 
-            1, 
-            2, 
-            3, 
-            4, 
-            -1
-        ], 
         "accounttable": [
             -1, 
             0, 
@@ -30,17 +13,34 @@
             3
         ], 
         "baseurl": "http://opac.bib.veitshoechheim.de/webopac", 
+        "copiestable": [
+            -1, 
+            -1, 
+            1, 
+            2, 
+            3, 
+            4, 
+            -1
+        ], 
+        "information": "http://www.bib.veitshoechheim.de/", 
+        "mediatypes": {
+            "mCasetteS.gif": "AUDIO_CASSETTE", 
+            "mDVDS.gif": "DVD", 
+            "mFilmS.gif": "MOVIE"
+        }, 
         "reservationtable": [
             0, 
             1, 
             2, 
             -1, 
             3
-        ], 
-        "mediatypes": {
-            "mCasetteS.gif": "AUDIO_CASSETTE", 
-            "mFilmS.gif": "MOVIE", 
-            "mDVDS.gif": "DVD"
-        }
-    }
+        ]
+    }, 
+    "geo": [
+        49.831826, 
+        9.8850835
+    ], 
+    "group": "Bayern", 
+    "support": "Katalogsuche und Konto", 
+    "title": null
 }

@@ -1,15 +1,15 @@
 {
+    "api": "sisis", 
     "city": "Basel", 
-    "group": "Schweiz", 
-    "title": null, 
+    "data": {
+        "baseurl": "http://www.stadtbibliothekbasel.ch:8080/InfoGuideClient.sisis", 
+        "information": "http://www.stadtbibliothekbasel.ch/index.php?id=bibliotheken#c477"
+    }, 
     "geo": [
         47.557421, 
         7.592572699999999
     ], 
+    "group": "Schweiz", 
     "support": "Katalogsuche und Konto (experimentell)", 
-    "api": "oclc2011", 
-    "data": {
-        "information": "http://www.stadtbibliothekbasel.ch/index.php?id=bibliotheken#c477", 
-        "baseurl": "http://www.stadtbibliothekbasel.ch:8080/InfoGuideClient.sisis"
-    }
+    "title": null
 }

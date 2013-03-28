@@ -48,12 +48,11 @@ import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
- * Api für Web-Opacs zu BIBLIOTHECA, ursprünglich von BOND, jetzt von OCLC.
- * Funktioniert von 2.6-2.8 recht gut.
- * 
- * TODO: Suchtipps
+ * OpacApi implementation for Bibliotheca Web Opacs, originally developed by
+ * BOND, now owned by OCLC. Known to work well with Web Opac versions from 2.6,
+ * maybe older, to 2.8
  */
-public class Bond26 implements OpacApi {
+public class Bibliotheca implements OpacApi {
 
 	protected String opac_url = "";
 	protected JSONObject data;

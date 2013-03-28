@@ -1,24 +1,7 @@
 {
+    "api": "bibliotheca", 
     "city": "Mannheim", 
-    "group": "Baden-W\u00fcrttemberg", 
-    "title": null, 
-    "geo": [
-        49.4874592, 
-        8.466039499999999
-    ], 
-    "support": "Katalogsuche und Konto", 
-    "api": "bond26", 
     "data": {
-        "information": "/../read/info.html", 
-        "copiestable": [
-            0, 
-            1, 
-            2, 
-            3, 
-            4, 
-            5, 
-            6
-        ], 
         "accounttable": [
             0, 
             1, 
@@ -30,6 +13,32 @@
             7
         ], 
         "baseurl": "http://katalog.mannheim.de/wopac", 
+        "copiestable": [
+            0, 
+            1, 
+            2, 
+            3, 
+            4, 
+            5, 
+            6
+        ], 
+        "information": "/../read/info.html", 
+        "mediatypes": {
+            "MDVD.gif": "DVD", 
+            "cdkl.gif": "LP_RECORD", 
+            "cdromkl.gif": "CD_SOFTWARE", 
+            "ekl.gif": "EBOOK", 
+            "mBuchSsich.gif": "BOOK", 
+            "mBuecherS.gif": "PACKAGE", 
+            "mCasetteS.gif": "AUDIO_CASSETTE", 
+            "mFilmS.gif": "MOVIE", 
+            "mMusikCDS.gif": "CD_MUSIC", 
+            "mNoten1S.gif": "SCORE_MUSIC", 
+            "mZtgS.gif": "NEWSPAPER", 
+            "mhoerbuchS.gif": "AUDIOBOOK", 
+            "spielekl.gif": "BOARDGAME", 
+            "tafelkl.jpg": "SCHOOL_VERSION"
+        }, 
         "reservationtable": [
             0, 
             1, 
@@ -37,22 +46,13 @@
             3, 
             5, 
             2
-        ], 
-        "mediatypes": {
-            "tafelkl.jpg": "SCHOOL_VERSION", 
-            "mCasetteS.gif": "AUDIO_CASSETTE", 
-            "cdkl.gif": "LP_RECORD", 
-            "ekl.gif": "EBOOK", 
-            "mNoten1S.gif": "SCORE_MUSIC", 
-            "cdromkl.gif": "CD_SOFTWARE", 
-            "mFilmS.gif": "MOVIE", 
-            "mBuecherS.gif": "PACKAGE", 
-            "mhoerbuchS.gif": "AUDIOBOOK", 
-            "spielekl.gif": "BOARDGAME", 
-            "mBuchSsich.gif": "BOOK", 
-            "mMusikCDS.gif": "CD_MUSIC", 
-            "mZtgS.gif": "NEWSPAPER", 
-            "MDVD.gif": "DVD"
-        }
-    }
+        ]
+    }, 
+    "geo": [
+        49.4874592, 
+        8.466039499999999
+    ], 
+    "group": "Baden-W\u00fcrttemberg", 
+    "support": "Katalogsuche und Konto", 
+    "title": null
 }
