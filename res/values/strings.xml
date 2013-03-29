@@ -194,5 +194,7 @@
     <string name="geolocate">Finde nächste Bibliothek</string>
     <string name="geolocate_progress">Standort wird ermittelt…</string>
     <string name="geolocate_found">Nächste Bibliothek: %s</string>
-
+    <string name="setting_nfc">NFC-Suche</string>
+    <string name="setting_nfc_desc">Experimentell. Nur mit wenigen Geräten und Bibliotheken.</string>
+    
 </resources>

@@ -2,5 +2,6 @@
 <lint>
     <issue id="NewApi">
         <ignore path="src/de/geeksfactory/opacclient/frontend/AccountActivity.java" />
+        <ignore path="src/de/geeksfactory/opacclient/frontend/SearchActivity.java" />
     </issue>
 </lint>
