@@ -1,11 +1,13 @@
 package de.geeksfactory.opacclient.storage;
 
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import de.geeksfactory.opacclient.objects.AccountData;
 
@@ -92,7 +94,11 @@ public class AccountDatabase extends SQLiteOpenHelper {
 		}
 		if (oldVersion < 7) {
 			// App version 2.0.5-1 to 2.0.6, adding "expire" to reservations
-			db.execSQL("alter table accountdata_reservations add column expire text");
+			try {
+				db.execSQL("alter table accountdata_reservations add column expire text");
+			} catch (SQLiteException sqle) {
+				sqle.printStackTrace();
+			}
 		}
 
 	}
