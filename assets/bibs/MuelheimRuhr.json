@@ -1,17 +1,17 @@
 {
     "api": "biber1992", 
-    "city": "M\u00fclheim/Ruhr", 
+    "city": "M\u00fclheim (Ruhr)", 
     "data": {
-		"accounttable": [
-			4, 
-			7, 
-			7, 
-			3, 
-			5, 
-			-1, 
-			-1, 
-			4
-		],
+        "accounttable": [
+            4, 
+            7, 
+            7, 
+            3, 
+            5, 
+            -1, 
+            -1, 
+            4
+        ], 
         "baseurl": "http://www.muelheim-ruhr.de", 
         "copiestable": [
             2, 
@@ -25,18 +25,18 @@
         "information": "http://www.muelheim-ruhr.de/cms/oeffnungszeiten__anschriften.html", 
         "mediatypes": {
             "1": "BOOK", 
+            "10": "MAP", 
+            "11": "DVD", 
             "2": "MAGAZINE", 
+            "23": "CD_SOFTWARE", 
+            "29": "GAME_CONSOLE_WII", 
             "3": "CD_SOFTWARE", 
+            "30": "EBOOK", 
+            "31": "EBOOK", 
             "5": "AUDIO_CASSETTE", 
             "6": "CD_MUSIC", 
             "8": "SCORE_MUSIC", 
-            "9": "BOARDGAME",
-            "10": "MAP",
-            "11": "DVD", 
-            "23": "CD_SOFTWARE", 
-            "29": "GAME_CONSOLE_WII", 
-            "30": "EBOOK", 
-            "31": "EBOOK" 
+            "9": "BOARDGAME"
         }, 
         "opacdir": "opax", 
         "searchtable": [
@@ -46,6 +46,10 @@
             5
         ]
     }, 
+    "geo": [
+        51.4185682, 
+        6.884522599999999
+    ], 
     "group": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto (experimentell)", 
     "title": null
