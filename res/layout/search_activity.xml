@@ -25,6 +25,7 @@
                 android:layout_alignParentTop="true"
                 android:ems="10"
                 android:hint="@string/search_free"
+                android:inputType="text"
                 android:textColor="@color/account_head_fg" >
 
                 <requestFocus />
