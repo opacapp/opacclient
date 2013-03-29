@@ -863,7 +863,12 @@ public class SISIS implements OpacApi {
 			httpGet(opac_url
 					+ "/userAccount.do?methodToCall=pos&accountTyp=AUSLEIHEN&anzPos="
 					+ offset);
-		httpGet(opac_url + "/userAccount.do?" + query);
+		String html = httpGet(opac_url + "/userAccount.do?" + query);
+		Document doc = Jsoup.parse(html);
+		if (doc.getElementsByClass("textrot").size() == 1) {
+			last_error = doc.getElementsByClass("textrot").text();
+			return false;
+		}
 
 		return true;
 	}
