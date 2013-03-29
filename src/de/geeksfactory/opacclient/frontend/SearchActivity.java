@@ -363,6 +363,7 @@ public class SearchActivity extends OpacActivity {
 	public void accountSelected() {
 		onStart();
 		fillComboBoxes();
+
 		super.accountSelected();
 	}
 
@@ -495,13 +496,10 @@ public class SearchActivity extends OpacActivity {
 			}, 500);
 
 		}
-		SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(SearchActivity.this);
 
 		if (nfc_capable) {
 			if (!getPackageManager().hasSystemFeature(
-					PackageManager.FEATURE_NFC)
-					|| !sp.getBoolean("nfc_search", false)) {
+					PackageManager.FEATURE_NFC)) {
 				nfc_capable = false;
 			}
 		}
@@ -526,7 +524,7 @@ public class SearchActivity extends OpacActivity {
 	@Override
 	public void onPause() {
 		super.onPause();
-		if (nfc_capable) {
+		if (nfc_capable && sp.getBoolean("nfc_search", false)) {
 			mAdapter.disableForegroundDispatch(this);
 		}
 	}
@@ -535,7 +533,7 @@ public class SearchActivity extends OpacActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (nfc_capable) {
+		if (nfc_capable && sp.getBoolean("nfc_search", false)) {
 			mAdapter.enableForegroundDispatch(this, nfcIntent,
 					intentFiltersArray, techListsArray);
 		}
@@ -544,15 +542,22 @@ public class SearchActivity extends OpacActivity {
 	@SuppressLint("NewApi")
 	@Override
 	public void onNewIntent(Intent intent) {
-		if (nfc_capable) {
+		if (nfc_capable && sp.getBoolean("nfc_search", false)) {
 			android.nfc.Tag tag = intent
 					.getParcelableExtra(android.nfc.NfcAdapter.EXTRA_TAG);
 			String scanResult = readPageToString(tag);
 			if (scanResult != null) {
 				if (scanResult.length() > 5) {
-					((EditText) SearchActivity.this
-							.findViewById(R.id.etBarcode)).setText(scanResult);
-					manageVisibility();
+					if (fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE)) {
+						((EditText) SearchActivity.this
+								.findViewById(R.id.etBarcode))
+								.setText(scanResult);
+						manageVisibility();
+					} else {
+						Toast.makeText(this,
+								R.string.barcode_internal_not_supported,
+								Toast.LENGTH_LONG).show();
+					}
 				}
 			}
 		}
