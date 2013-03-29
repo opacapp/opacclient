@@ -74,6 +74,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="4dp"
+                android:singleLine="true"
                 android:text="@string/verfasser" />
 
             <EditText
@@ -82,28 +83,38 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="@string/verfasser_hint"
-                android:inputType="text" />
+                android:inputType="text"
+                android:singleLine="true" />
 
             <TextView
-                android:id="@+id/tvISBN"
+                android:id="@+id/tvBarcodes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="4dp"
-                android:text="@string/ISBN" />
+                android:text="@string/barcodes" />
 
             <LinearLayout
-                android:id="@+id/llISBN"
+                android:id="@+id/llBarcodes"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:layout_height="wrap_content" >
 
                 <EditText
                     android:id="@+id/etISBN"
-                    android:layout_width="0dip"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:inputType="number" />
+                    android:hint="@string/ISBN"
+                    android:singleLine="true" />
+
+                <EditText
+                    android:id="@+id/etBarcode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="@string/barcode_internal"
+                    android:singleLine="true" />
 
                 <ImageView
                     android:id="@+id/ivBarcode"
@@ -239,7 +250,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="text" />
+                android:inputType="text"
+                android:singleLine="true" />
 
             <TextView
                 android:id="@+id/tvSchlag"
@@ -259,7 +271,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:inputType="text" />
+                    android:inputType="text"
+                    android:singleLine="true" />
 
                 <EditText
                     android:id="@+id/etSchlagB"
@@ -267,7 +280,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:inputType="text" />
+                    android:inputType="text"
+                    android:singleLine="true" />
             </LinearLayout>
 
             <TextView
@@ -282,7 +296,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="text" />
+                android:inputType="text"
+                android:singleLine="true" />
 
             <TextView
                 android:id="@+id/tvInteressenkreis"
@@ -296,7 +311,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="text" />
+                android:inputType="text"
+                android:singleLine="true" />
 
             <TextView
                 android:id="@+id/tvOrder"
