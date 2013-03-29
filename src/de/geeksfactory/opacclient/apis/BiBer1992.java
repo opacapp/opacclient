@@ -90,15 +90,17 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  * 						images			avail	search
  * --------------------------------------------------------------------
  * BaWu/Friedrichshafen ok		yes		yes		yes		yes		-
+ * BaWu/Lahr			ok		yes		yes		yes		no		-
  * BaWu/Offenburg		ok		n/a		no		yes		n/a		yes
  * Bay/Aschaffenburg	ok		n/a		no		yes		n/a		-
- * Bay/Würzburg		ok		yes		yes		yes		yes		-
+ * Bay/Wuerzburg		ok		yes		yes		yes		yes		-
  * NRW/Duisburg			ok		yes		yes		yes		n/a		-
  * NRW/Essen			n/a		n/a		no		yes		not sup.-
  * NRW/Gelsenkirchen	ok		yes		yes		yes		yes		-
  * NRW/Hagen       		ok		yes		yes		yes		yes		yes
  * NRW/Herford			n/a		yes		yes		yes		n/a		-
- * NRW/Lünen			ok		yes		no		yes		n/a		-
+ * NRW/Luenen			ok		yes		no		yes		n/a		-
+ * NRW/MuelheimRuhr		ok		yes		yes		yes		yes		yes
  * 			 
  */
 public class BiBer1992 implements OpacApi {
