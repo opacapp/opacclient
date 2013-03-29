@@ -2,16 +2,16 @@
     "api": "biber1992", 
     "city": "Hagen", 
     "data": {
-		"accounttable": [
-			4, 
-			7, 
-			7, 
-			3, 
-			5, 
-			-1, 
-			-1, 
-			4
-		],
+        "accounttable": [
+            4, 
+            7, 
+            7, 
+            3, 
+            5, 
+            -1, 
+            -1, 
+            4
+        ], 
         "baseurl": "https://www.hagen.de", 
         "copiestable": [
             2, 
@@ -53,5 +53,5 @@
     ], 
     "group": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
-    "title": null
+    "title": "Stadtb\u00fccherei"
 }

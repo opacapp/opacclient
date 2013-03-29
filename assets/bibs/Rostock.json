@@ -22,7 +22,7 @@
             3, 
             -1
         ], 
-        "information": null, 
+        "information": "http://www.stadtbibliothek-rostock.de/wOnline/Standorte/index.php", 
         "mediatypes": {
             "HBE_HSE_HBK_HSK_s.gif": "AUDIOBOOK", 
             "bbe_bse_s.gif": "BOOK", 
@@ -55,5 +55,5 @@
     ], 
     "group": "Mecklenburg-Vorpommern", 
     "support": "Katalogsuche und Konto", 
-    "title": null
+    "title": "Stadtbibliothek"
 }

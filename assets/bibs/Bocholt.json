@@ -22,7 +22,7 @@
             -1, 
             -1
         ], 
-        "information": null, 
+        "information": "http://www.bocholt.de/seiten/bocholt/bildung_und_kultur/stadtbibliothek.cfm", 
         "mediatypes": {
             "Cdgr.gif": "CD", 
             "Spiele.gif": "BOARDGAME", 
@@ -51,5 +51,5 @@
     ], 
     "group": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
-    "title": null
+    "title": "Stadtbibliothek"
 }
