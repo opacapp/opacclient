@@ -128,7 +128,8 @@ public class Bibliotheca implements OpacApi {
 				KEY_SEARCH_QUERY_BRANCH, KEY_SEARCH_QUERY_CATEGORY,
 				KEY_SEARCH_QUERY_ISBN, KEY_SEARCH_QUERY_YEAR_RANGE_START,
 				KEY_SEARCH_QUERY_YEAR_RANGE_END, KEY_SEARCH_QUERY_SYSTEM,
-				KEY_SEARCH_QUERY_AUDIENCE, KEY_SEARCH_QUERY_PUBLISHER, "order" };
+				KEY_SEARCH_QUERY_AUDIENCE, KEY_SEARCH_QUERY_PUBLISHER,
+				KEY_SEARCH_QUERY_BARCODE, "order" };
 	}
 
 	@Override
@@ -288,8 +289,17 @@ public class Bibliotheca implements OpacApi {
 				query, KEY_SEARCH_QUERY_AUDIENCE)));
 		nameValuePairs.add(new BasicNameValuePair("verl", getStringFromBundle(
 				query, KEY_SEARCH_QUERY_PUBLISHER)));
+
+		if (!getStringFromBundle(query, KEY_SEARCH_QUERY_BARCODE).equals("")) {
+			nameValuePairs.add(new BasicNameValuePair("feld1",
+					"EXEMPLAR~BUCHUNGSNR~0"));
+			nameValuePairs.add(new BasicNameValuePair("ifeld1",
+					getStringFromBundle(query, KEY_SEARCH_QUERY_BARCODE)));
+		}
+
 		nameValuePairs.add(new BasicNameValuePair("orderselect",
 				getStringFromBundle(query, "order")));
+
 		nameValuePairs.add(new BasicNameValuePair("suche_starten.x", "1"));
 		nameValuePairs.add(new BasicNameValuePair("suche_starten.y", "1"));
 		nameValuePairs.add(new BasicNameValuePair("QL_Nr", ""));
