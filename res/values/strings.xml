@@ -14,6 +14,9 @@
     <string name="zweigstelleSearch">Medien in Zweigstelle</string>
     <string name="interessenkreis">Interessenkreis</string>
     <string name="ISBN">ISBN</string>
+    <string name="barcodes">Strichcodes</string>
+    <string name="barcode_internal">Buchungsnr.</string>
+    <string name="barcode_internal_not_supported">Suche nach Buchungsnr. in dieser Bibliothek nicht unterstützt. Scanne bitte eine ISBN.</string>
     <string name="jahr">Jahr</string>
     <string name="mediengruppe">Mediengruppe</string>
     <string name="schlag">Schlagwörter</string>

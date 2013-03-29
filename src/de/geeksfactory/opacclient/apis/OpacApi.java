@@ -169,6 +169,16 @@ public interface OpacApi {
 	public static final String KEY_SEARCH_QUERY_CATEGORY = "mediengruppe";
 
 	/**
+	 * Unique item identifier. In most libraries, every single book has a unique
+	 * number, most of the time printed on the in form of a barcode, sometimes
+	 * encoded in a NFC chip.
+	 * 
+	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * {@link #getSearchFields()}.
+	 */
+	public static final String KEY_SEARCH_QUERY_BARCODE = "barcode";
+
+	/**
 	 * Returns whether – if account view is not supported in the given library –
 	 * there is an automatic mechanism to help implementing account support in
 	 * this city. Only makes sense when {@link #isAccountSupported(Library)} can

@@ -14,6 +14,7 @@ import org.json.JSONException;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +24,7 @@ import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -144,9 +146,51 @@ public class SearchActivity extends OpacActivity {
 				return;
 			if (scanResult.getContents().length() < 3)
 				return;
-			((EditText) SearchActivity.this.findViewById(R.id.etISBN))
-					.setText(scanResult.getContents());
+
+			// Try to determine whether it is an ISBN number or something
+			// library
+			// internal
+			int target_field = 0;
+			if (scanResult.getFormatName() != null) {
+				if (scanResult.getFormatName().equals("EAN_13")
+						&& scanResult.getContents().startsWith("97")) {
+					target_field = R.id.etISBN;
+				} else if (scanResult.getFormatName().equals("CODE_39")) {
+					target_field = R.id.etBarcode;
+				}
+			}
+			if (target_field == 0) {
+				if (scanResult.getContents().length() == 13
+						&& (scanResult.getContents().startsWith("978") || scanResult
+								.getContents().startsWith("979"))) {
+					target_field = R.id.etISBN;
+				} else if (scanResult.getContents().length() == 10
+						&& is_valid_isbn10(scanResult.getContents()
+								.toCharArray())) {
+					target_field = R.id.etISBN;
+				} else {
+					target_field = R.id.etBarcode;
+				}
+			}
+			if (target_field == R.id.etBarcode
+					&& !fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE)) {
+				Toast.makeText(this, R.string.barcode_internal_not_supported,
+						Toast.LENGTH_LONG).show();
+			} else {
+				((EditText) SearchActivity.this.findViewById(target_field))
+						.setText(scanResult.getContents());
+				manageVisibility();
+			}
+
 		}
+	}
+
+	private static boolean is_valid_isbn10(char[] digits) {
+		int a = 0;
+		for (int i = 0; i < 10; i++) {
+			a += i * Integer.parseInt(String.valueOf(digits[i]));
+		}
+		return a % 11 == Integer.parseInt(String.valueOf(digits[9]));
 	}
 
 	@Override
@@ -163,6 +207,13 @@ public class SearchActivity extends OpacActivity {
 		fields = new HashSet<String>(Arrays.asList(app.getApi()
 				.getSearchFields()));
 
+		manageVisibility();
+		fillComboBoxes();
+		loadingIndicators();
+	}
+
+	protected void manageVisibility() {
+		PackageManager pm = getPackageManager();
 		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_FREE)) {
 			findViewById(R.id.tvSearchAdvHeader).setVisibility(View.VISIBLE);
 			findViewById(R.id.rlSimpleSearch).setVisibility(View.VISIBLE);
@@ -217,13 +268,37 @@ public class SearchActivity extends OpacActivity {
 			findViewById(R.id.llMediengruppe).setVisibility(View.GONE);
 			findViewById(R.id.tvMediengruppe).setVisibility(View.GONE);
 		}
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_ISBN)) {
-			findViewById(R.id.llISBN).setVisibility(View.VISIBLE);
-			findViewById(R.id.tvISBN).setVisibility(View.VISIBLE);
+
+		EditText etBarcode = (EditText) findViewById(R.id.etBarcode);
+		String etBarcodeText = etBarcode.getText().toString();
+		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE)
+				&& (advanced || !etBarcodeText.equals(""))) {
+			etBarcode.setVisibility(View.VISIBLE);
 		} else {
-			findViewById(R.id.llISBN).setVisibility(View.GONE);
-			findViewById(R.id.tvISBN).setVisibility(View.GONE);
+			etBarcode.setVisibility(View.GONE);
 		}
+
+		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_ISBN)) {
+			findViewById(R.id.etISBN).setVisibility(View.VISIBLE);
+			if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+				findViewById(R.id.ivBarcode).setVisibility(View.VISIBLE);
+			} else {
+				findViewById(R.id.ivBarcode).setVisibility(View.GONE);
+			}
+		} else {
+			findViewById(R.id.etISBN).setVisibility(View.GONE);
+		}
+
+		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_ISBN)
+				|| (fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE) && (advanced || !etBarcodeText
+						.equals("")))) {
+			findViewById(R.id.tvBarcodes).setVisibility(View.VISIBLE);
+			findViewById(R.id.llBarcodes).setVisibility(View.VISIBLE);
+		} else {
+			findViewById(R.id.tvBarcodes).setVisibility(View.GONE);
+			findViewById(R.id.llBarcodes).setVisibility(View.GONE);
+		}
+
 		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_YEAR_RANGE_START)
 				&& fields.contains(OpacApi.KEY_SEARCH_QUERY_YEAR_RANGE_END)) {
 			findViewById(R.id.llJahr).setVisibility(View.VISIBLE);
@@ -266,9 +341,6 @@ public class SearchActivity extends OpacActivity {
 			findViewById(R.id.cbOrder).setVisibility(View.GONE);
 			findViewById(R.id.tvOrder).setVisibility(View.GONE);
 		}
-
-		fillComboBoxes();
-		loadingIndicators();
 	}
 
 	@Override
@@ -448,6 +520,9 @@ public class SearchActivity extends OpacActivity {
 		query.putString(OpacApi.KEY_SEARCH_QUERY_CATEGORY, mg);
 		query.putString(OpacApi.KEY_SEARCH_QUERY_ISBN,
 				((EditText) SearchActivity.this.findViewById(R.id.etISBN))
+						.getEditableText().toString());
+		query.putString(OpacApi.KEY_SEARCH_QUERY_BARCODE,
+				((EditText) SearchActivity.this.findViewById(R.id.etBarcode))
 						.getEditableText().toString());
 		query.putString(OpacApi.KEY_SEARCH_QUERY_YEAR,
 				((EditText) SearchActivity.this.findViewById(R.id.etJahr))
