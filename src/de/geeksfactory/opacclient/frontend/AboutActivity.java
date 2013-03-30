@@ -80,7 +80,7 @@ public class AboutActivity extends OpacPreferenceActivity {
 						emailIntent
 								.putExtra(
 										android.content.Intent.EXTRA_EMAIL,
-										new String[] { "raphael+opac@geeksfactory.de" });
+										new String[] { "info@opacapp.de" });
 						emailIntent.setType("text/plain");
 						startActivity(Intent.createChooser(emailIntent,
 								getString(R.string.write_mail)));
@@ -100,17 +100,6 @@ public class AboutActivity extends OpacPreferenceActivity {
 						} catch (ActivityNotFoundException e) {
 							Log.i("rate_play", "no market installed");
 						}
-						return false;
-					}
-				});
-
-		findPreference("rate_am").setOnPreferenceClickListener(
-				new OnPreferenceClickListener() {
-					@Override
-					public boolean onPreferenceClick(Preference preference) {
-						Intent i = new Intent(Intent.ACTION_VIEW, Uri
-								.parse("http://www.amazon.com/dp/B00946RJQO/"));
-						startActivity(i);
 						return false;
 					}
 				});

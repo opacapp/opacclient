@@ -40,7 +40,7 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 import de.geeksfactory.opacclient.storage.StarContentProvider;
 
-@ReportsCrashes(formKey = "", mailTo = "raphael+opac@geeksfactory.de", mode = org.acra.ReportingInteractionMode.DIALOG)
+@ReportsCrashes(formKey = "", mailTo = "info@opacapp.de", mode = org.acra.ReportingInteractionMode.DIALOG)
 public class OpacClient extends Application {
 
 	public Exception last_exception;

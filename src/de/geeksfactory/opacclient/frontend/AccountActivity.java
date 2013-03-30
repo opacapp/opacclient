@@ -220,7 +220,7 @@ public class AccountActivity extends OpacActivity {
 							emailIntent
 									.putExtra(
 											android.content.Intent.EXTRA_EMAIL,
-											new String[] { "raphael+opac@geeksfactory.de" });
+											new String[] { "info@opacapp.de" });
 							emailIntent
 									.putExtra(
 											android.content.Intent.EXTRA_SUBJECT,
@@ -229,7 +229,7 @@ public class AccountActivity extends OpacActivity {
 															.getIdent());
 							emailIntent.putExtra(
 									android.content.Intent.EXTRA_TEXT,
-									"Ich bin interessiert, zu helfen.");
+									"Ich bin interessiert zu helfen.");
 							emailIntent.setType("text/plain");
 							startActivity(Intent.createChooser(emailIntent,
 									getString(R.string.write_mail)));
