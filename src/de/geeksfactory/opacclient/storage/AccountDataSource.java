@@ -111,6 +111,38 @@ public class AccountDataSource {
 		return accs;
 	}
 
+	public boolean notificationIsSent(long account, long timestamp) {
+		String[] selA = { "" + account, "" + timestamp };
+		Cursor cursor = database.query(AccountDatabase.TABLENAME_NOTIFIED,
+				AccountDatabase.COLUMNS_NOTIFIED,
+				"account = ? AND timestamp = ?", selA, null, null, null);
+		Account acc = null;
+		boolean found = cursor.getCount() > 0;
+		cursor.close();
+		return found;
+	}
+
+	public long notificationSave(long account, long timestamp) {
+		if (notificationIsSent(account, timestamp))
+			return 0;
+		ContentValues values = new ContentValues();
+		values.put("account", account);
+		values.put("timestamp", timestamp);
+		return database
+				.insert(AccountDatabase.TABLENAME_NOTIFIED, null, values);
+	}
+
+	public void notificationClearCache(boolean all) {
+		if (all) {
+			database.delete(AccountDatabase.TABLENAME_NOTIFIED, null, null);
+		} else {
+			String[] selA = { ""
+					+ (System.currentTimeMillis() - (1000 * 3600 * 24 * 30)) };
+			database.delete(AccountDatabase.TABLENAME_NOTIFIED,
+					"timestamp < ?", selA);
+		}
+	}
+
 	public Account getAccount(long id) {
 		String[] selA = { "" + id };
 		Cursor cursor = database.query("accounts", allColumns, "id = ?", selA,

@@ -1,6 +1,5 @@
 package de.geeksfactory.opacclient.storage;
 
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,11 +13,13 @@ import de.geeksfactory.opacclient.objects.AccountData;
 public class AccountDatabase extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "accounts.db";
-	private static final int DATABASE_VERSION = 7; // REPLACE ONUPGRADE IF YOU
+	private static final int DATABASE_VERSION = 8; // REPLACE ONUPGRADE IF YOU
 													// CHANGE THIS
 
 	public static final String[] COLUMNS = { "id", "bib", "label", "name",
 			"password", "cached" };
+	public static final String[] COLUMNS_NOTIFIED = { "id", "account",
+			"timestamp" };
 
 	public static final Map<String, String> COLUMNS_LENT;
 	public static final Map<String, String> COLUMNS_RESERVATIONS;
@@ -49,6 +50,7 @@ public class AccountDatabase extends SQLiteOpenHelper {
 	public static final String TABLENAME_ACCOUNTS = "accounts";
 	public static final String TABLENAME_LENT = "accountdata_lent";
 	public static final String TABLENAME_RESERVATION = "accountdata_reservations";
+	public static final String TABLENAME_NOTIFIED = "notified";
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
@@ -64,6 +66,9 @@ public class AccountDatabase extends SQLiteOpenHelper {
 				+ "accountdata_reservations ( account integer, "
 				+ "title text," + "author text," + "ready text,"
 				+ "branch text," + "cancel text" + ", expire text);");
+		db.execSQL("create table "
+				+ "notified ( id integer primary key autoincrement, "
+				+ "account integer, " + "timestamp integer);");
 	}
 
 	@Override
@@ -99,6 +104,12 @@ public class AccountDatabase extends SQLiteOpenHelper {
 			} catch (SQLiteException sqle) {
 				sqle.printStackTrace();
 			}
+		}
+		if (oldVersion < 8) {
+			// App version 2.0.6 to 2.0.7
+			db.execSQL("create table "
+					+ "notified ( id integer primary key autoincrement, "
+					+ "account integer, " + "timestamp integer);");
 		}
 
 	}

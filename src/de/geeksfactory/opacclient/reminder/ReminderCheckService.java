@@ -2,6 +2,7 @@ package de.geeksfactory.opacclient.reminder;
 
 import java.io.IOException;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
@@ -71,10 +73,10 @@ public class ReminderCheckService extends Service {
 		return null;
 	}
 
-	public class CheckTask extends AsyncTask<Object, Object, Long[]> {
+	public class CheckTask extends AsyncTask<Object, Object, Object[]> {
 
 		@Override
-		protected Long[] doInBackground(Object... params) {
+		protected Object[] doInBackground(Object... params) {
 			AccountDataSource data = new AccountDataSource(
 					ReminderCheckService.this);
 			data.open();
@@ -86,8 +88,6 @@ public class ReminderCheckService extends Service {
 					.getDefaultSharedPreferences(ReminderCheckService.this);
 
 			long now = new Date().getTime();
-			long last = sp.getLong("notification_last", 0);
-			long new_last = last;
 			long warning = Long.decode(sp.getString("notification_warning",
 					"367200000"));
 			// long warning = 1000 * 3600 * 24 * 90;
@@ -96,6 +96,7 @@ public class ReminderCheckService extends Service {
 			long affected_accounts = 0;
 			long first = 0;
 			long first_affected_account = 0;
+			Bundle notified = new Bundle();
 
 			OpacClient app = (OpacClient) getApplication();
 			for (Account account : accounts) {
@@ -121,14 +122,15 @@ public class ReminderCheckService extends Service {
 									.getAsLong(AccountData.KEY_LENT_DEADLINE_TIMESTAMP);
 							if ((expiring - now) < warning) {
 								expired_total++;
-								if (expiring >= last) {
+								if (!data.notificationIsSent(account.getId(),
+										expiring)) {
 									expired_new++;
 								}
 								this_account++;
 							}
-							if (expiring > new_last) {
-								new_last = expiring;
-							}
+							notified.putLongArray(account.getId() + ""
+									+ expiring, new long[] { account.getId(),
+									expiring });
 							if (expiring < first || first == 0) {
 								first = expiring;
 							}
@@ -152,12 +154,12 @@ public class ReminderCheckService extends Service {
 				}
 			}
 			data.close();
-			return new Long[] { expired_new, expired_total, new_last, first,
+			return new Object[] { expired_new, expired_total, notified, first,
 					affected_accounts, first_affected_account };
 		}
 
 		@Override
-		protected void onPostExecute(Long[] result) {
+		protected void onPostExecute(Object[] result) {
 			Intent i = new Intent(ReminderCheckService.this,
 					ReminderAlarmReceiver.class);
 			PendingIntent sender = PendingIntent.getBroadcast(
@@ -172,12 +174,12 @@ public class ReminderCheckService extends Service {
 				return;
 			}
 
-			long expired_new = result[0];
-			long expired_total = result[1];
-			long last = result[2];
-			long first = result[3];
-			long affected_accounts = result[4];
-			long first_affected_account = result[5];
+			long expired_new = (Long) result[0];
+			long expired_total = (Long) result[1];
+			Bundle notified = (Bundle) result[2];
+			long first = (Long) result[3];
+			long affected_accounts = (Long) result[4];
+			long first_affected_account = (Long) result[5];
 
 			if (expired_new == 0)
 				return;
@@ -203,7 +205,7 @@ public class ReminderCheckService extends Service {
 
 				Intent notificationIntent = new Intent(
 						ReminderCheckService.this, AccountActivity.class);
-				notificationIntent.putExtra("notif_last", last);
+				notificationIntent.putExtra("notifications", notified);
 				if (affected_accounts > 1) {
 					// If there are notifications for more than one account,
 					// account

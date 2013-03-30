@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.acra.ACRA;
 import org.apache.http.HttpResponse;
@@ -30,7 +31,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -77,15 +77,20 @@ public class AccountActivity extends OpacActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
-		SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(app);
-
 		if (getIntent().getExtras() != null) {
-			if (getIntent().getExtras().getLong("notif_last") > 0) {
-				SharedPreferences.Editor spe = sp.edit();
-				spe.putLong("notification_last", getIntent().getExtras()
-						.getLong("notif_last"));
-				spe.commit();
+			if (getIntent().getExtras().containsKey("notifications")) {
+
+				AccountDataSource adata = new AccountDataSource(this);
+				adata.open();
+				Bundle notif = getIntent().getExtras().getBundle(
+						"notifications");
+				Set<String> keys = notif.keySet();
+				for (String key : keys) {
+					long[] val = notif.getLongArray(key);
+					adata.notificationSave(val[0], val[1]);
+				}
+				adata.close();
+
 				if (getIntent().getExtras().getLong("account") != app
 						.getAccount().getId()) {
 					app.setAccount(getIntent().getExtras().getLong("account"));
@@ -616,6 +621,11 @@ public class AccountActivity extends OpacActivity {
 		LinearLayout llLent = (LinearLayout) findViewById(R.id.llLent);
 		llLent.removeAllViews();
 
+		SharedPreferences sp = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		boolean notification_on = sp.getBoolean("notification_service", false);
+		boolean notification_problems = false;
+
 		if (result.getLent().size() == 0) {
 			TextView t1 = new TextView(this);
 			t1.setText(R.string.entl_none);
@@ -659,6 +669,22 @@ public class AccountActivity extends OpacActivity {
 							.setVisibility(View.GONE);
 				}
 
+				try {
+					if (notification_on
+							&& item.containsKey(AccountData.KEY_LENT_DEADLINE)) {
+						if (!item.getAsString(AccountData.KEY_LENT_DEADLINE)
+								.equals("")) {
+							if (!item
+									.containsKey(AccountData.KEY_LENT_DEADLINE_TIMESTAMP)
+									|| item.getAsLong(AccountData.KEY_LENT_DEADLINE_TIMESTAMP) < 1) {
+								notification_problems = true;
+							}
+						}
+					}
+				} catch (Exception e) {
+					notification_problems = true;
+				}
+
 				if (item.containsKey(AccountData.KEY_LENT_LENDING_BRANCH)) {
 					((TextView) v.findViewById(R.id.tvZst))
 							.setText(Html.fromHtml(item
@@ -694,6 +720,14 @@ public class AccountActivity extends OpacActivity {
 				}
 
 				llLent.addView(v);
+			}
+		}
+
+		if (notification_problems) {
+			View tvError = findViewById(R.id.tvError);
+			if (tvError != null) {
+				tvError.setVisibility(View.VISIBLE);
+				((TextView) tvError).setText(R.string.notification_problems);
 			}
 		}
 

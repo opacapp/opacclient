@@ -55,11 +55,8 @@ public class MainPreferenceActivity extends OpacPreferenceActivity {
 						MainPreferenceActivity.this);
 				adata.open();
 				adata.invalidateCachedData();
+				adata.notificationClearCache(true);
 				adata.close();
-				PreferenceManager
-						.getDefaultSharedPreferences(
-								MainPreferenceActivity.this).edit()
-						.putLong("notification_last", 0).commit();
 				Intent i = new Intent(MainPreferenceActivity.this,
 						ReminderCheckService.class);
 				startService(i);
