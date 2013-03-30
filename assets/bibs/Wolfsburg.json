@@ -22,7 +22,7 @@
             5, 
             -1
         ], 
-        "information": null, 
+        "information": "http://www.wolfsburg.de/irj/portal/anonymous?NavigationTarget=navurl://7e0aa67ee960003ee71c83f4a1d1ee70", 
         "reservationtable": [
             0, 
             1, 
@@ -37,5 +37,5 @@
     ], 
     "group": "Niedersachsen", 
     "support": "Katalogsuche und Konto", 
-    "title": null
+    "title": "Stadtbibliothek"
 }
