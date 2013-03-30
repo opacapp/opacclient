@@ -499,7 +499,7 @@ public class SearchActivity extends OpacActivity {
 
 		if (nfc_capable) {
 			if (!getPackageManager().hasSystemFeature(
-					PackageManager.FEATURE_NFC)) {
+					"android.hardware.nfc")) {
 				nfc_capable = false;
 			}
 		}
