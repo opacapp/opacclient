@@ -1,0 +1,13 @@
+{
+    "city": "Erlangen", 
+    "group": "Bayern", 
+    "title": "Universit\u00E4tsbibliothek", 
+    "support": "Katalogsuche und Konto (experimentell)", 
+    "geo": [49.596689, 11.006667], 
+    "api": "oclc2011", 
+    "data": {
+        "information": "http://www.ub.uni-erlangen.de/ub/oeffnungszeiten/",
+        "baseurl": "https://www.opac.uni-erlangen.de/InfoGuideClient.uersis", 
+        "startparams": "Login=wouer00"
+	}
+}
