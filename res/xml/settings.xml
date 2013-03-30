@@ -34,11 +34,6 @@
             android:summary="@string/setting_nfc_desc"
             android:defaultValue="false"
             android:title="@string/setting_nfc" />
-        
-        <CheckBoxPreference
-            android:key="debug_proxy"
-            android:summary="Nicht benutzen, außer du weißt, was du tust."
-            android:title="Debug-Modus (Proxy)" />
 
         <Preference
             android:key="meta_clear"
