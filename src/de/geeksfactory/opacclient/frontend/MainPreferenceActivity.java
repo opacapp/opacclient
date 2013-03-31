@@ -5,7 +5,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.PreferenceManager;
 
 import com.actionbarsherlock.view.MenuItem;
 
@@ -16,6 +15,13 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
 import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 
 public class MainPreferenceActivity extends OpacPreferenceActivity {
+	
+	protected void openAccountList(){
+		Intent intent = new Intent(this,
+				AccountListActivity.class);
+		startActivity(intent);
+	}
+	
 	@Override
 	@SuppressWarnings("deprecation")
 	public void onCreate(Bundle savedInstanceState) {
@@ -35,9 +41,7 @@ public class MainPreferenceActivity extends OpacPreferenceActivity {
 		assistant.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference arg0) {
-				Intent intent = new Intent(MainPreferenceActivity.this,
-						AccountListActivity.class);
-				startActivity(intent);
+				openAccountList();
 				return false;
 			}
 		});

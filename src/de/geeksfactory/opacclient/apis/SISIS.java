@@ -59,24 +59,24 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  * BibTip extension.
  */
 public class SISIS implements OpacApi {
-	private String opac_url = "";
-	private JSONObject data;
-	private DefaultHttpClient ahc;
-	private MetaDataSource metadata;
-	private boolean initialised = false;
-	private String last_error;
-	private Library library;
+	protected String opac_url = "";
+	protected JSONObject data;
+	protected DefaultHttpClient ahc;
+	protected MetaDataSource metadata;
+	protected boolean initialised = false;
+	protected String last_error;
+	protected Library library;
 
-	private String CSId;
-	private String identifier;
-	private String reusehtml;
-	private int resultcount = 10;
+	protected String CSId;
+	protected String identifier;
+	protected String reusehtml;
+	protected int resultcount = 10;
 
-	private long logged_in;
-	private Account logged_in_as;
-	private final long SESSION_LIFETIME = 1000 * 60 * 3;
+	protected long logged_in;
+	protected Account logged_in_as;
+	protected final long SESSION_LIFETIME = 1000 * 60 * 3;
 
-	private static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
+	protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
 
 	static {
 		defaulttypes.put("g", MediaType.EBOOK);

@@ -34,10 +34,14 @@ public class AccountEditActivity extends SherlockActivity {
 	private EditText etPassword;
 	private Library lib;
 
+	protected int getLayoutResource() {
+		return R.layout.account_edit_activity;
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.account_edit_activity);
+		setContentView(getLayoutResource());
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		etLabel = (EditText) findViewById(R.id.etLabel);
@@ -57,11 +61,13 @@ public class AccountEditActivity extends SherlockActivity {
 		try {
 			lib = ((OpacClient) getApplication()).getLibrary(account
 					.getLibrary());
-			TextView tvCity = (TextView) findViewById(R.id.tvCity);
-			if (lib.getTitle() != null && !lib.getTitle().equals("null")) {
-				tvCity.setText(lib.getCity() + "\n" + lib.getTitle());
-			} else {
-				tvCity.setText(lib.getCity());
+			if (findViewById(R.id.tvCity) != null) {
+				TextView tvCity = (TextView) findViewById(R.id.tvCity);
+				if (lib.getTitle() != null && !lib.getTitle().equals("null")) {
+					tvCity.setText(lib.getCity() + "\n" + lib.getTitle());
+				} else {
+					tvCity.setText(lib.getCity());
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
