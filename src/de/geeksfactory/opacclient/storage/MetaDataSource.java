@@ -24,6 +24,7 @@ public interface MetaDataSource {
 	/**
 	 * Meta type: library branches qualified to be used as a "home branch". You
 	 * normally do not need this.
+	 * 
 	 * @see OpacApi#KEY_SEARCH_QUERY_HOME_BRANCH
 	 */
 	public static String META_TYPE_HOME_BRANCH = "home_branch";
@@ -92,6 +93,18 @@ public interface MetaDataSource {
 	 *         <code>false</code> otherwise
 	 */
 	public boolean hasMeta(String library);
+
+	/**
+	 * Checks whether there is meta data of the given type present for a
+	 * specific library.
+	 * 
+	 * @param library
+	 *            The library identification, see
+	 *            {@link de.geeksfactory.opacclient.objects.Library#getIdent()}
+	 * @return <code>true</code> if datasets for this library exist,
+	 *         <code>false</code> otherwise
+	 */
+	public boolean hasMeta(String library, String type);
 
 	/**
 	 * Clear all meta data for a specific library.

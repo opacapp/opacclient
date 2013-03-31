@@ -58,10 +58,20 @@ public class SQLMetaDataSource implements MetaDataSource {
 	}
 
 	@Override
-	public boolean hasMeta(String bib) {
-		String[] selA = { bib };
+	public boolean hasMeta(String library) {
+		String[] selA = { library };
 		Cursor cursor = database.query("meta", allColumns, "bib = ?", selA,
 				null, null, null);
+		int num = cursor.getCount();
+		cursor.close();
+		return num > 0;
+	}
+
+	@Override
+	public boolean hasMeta(String library, String type) {
+		String[] selA = { library, type };
+		Cursor cursor = database.query("meta", allColumns,
+				"bib = ? AND type = ?", selA, null, null, null);
 		int num = cursor.getCount();
 		cursor.close();
 		return num > 0;
