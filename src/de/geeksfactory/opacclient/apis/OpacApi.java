@@ -197,6 +197,13 @@ public interface OpacApi {
 	public static final int SUPPORT_FLAG_ACCOUNT_PROLONG_ALL = 0x0000002;
 
 	/**
+	 * Availability of the "quicklinks" feature
+	 * 
+	 * Flag to be present in the result of {@link #getSupportFlags()}.
+	 */
+	public static final int SUPPORT_FLAG_QUICKLINKS = 0x0000004;
+
+	/**
 	 * May be called on application startup and you are free to call it in <our
 	 * {@link #search} implementation or similar positions. It is commonly used
 	 * to initialize a session. You MUST NOT rely on it being called and should
