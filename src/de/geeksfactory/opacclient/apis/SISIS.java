@@ -630,6 +630,8 @@ public class SISIS implements OpacApi {
 
 		if (doc.select(".data td strong").size() > 0) {
 			result.setTitle(doc.select(".data td strong").first().text());
+		} else {
+			result.setTitle("");
 		}
 
 		String title = "";
