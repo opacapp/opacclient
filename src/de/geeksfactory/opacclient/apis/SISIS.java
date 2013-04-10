@@ -1103,14 +1103,17 @@ public class SISIS implements OpacApi {
 		Document doc = Jsoup.parse(html);
 		doc.setBaseUri(opac_url);
 		parse_medialist(medien, doc, 1);
-		for (Element link : doc.select(".box-right").first().select("a")) {
-			Uri uri = Uri.parse(link.attr("abs:href"));
-			if (uri == null || uri.getQueryParameter("methodToCall") == null)
-				continue;
-			if (uri.getQueryParameter("methodToCall").equals("pos")) {
-				html = httpGet(uri.toString());
-				parse_medialist(medien, Jsoup.parse(html),
-						Integer.parseInt(uri.getQueryParameter("anzPos")));
+		if (doc.select(".box-right").size() > 0) {
+			for (Element link : doc.select(".box-right").first().select("a")) {
+				Uri uri = Uri.parse(link.attr("abs:href"));
+				if (uri == null
+						|| uri.getQueryParameter("methodToCall") == null)
+					continue;
+				if (uri.getQueryParameter("methodToCall").equals("pos")) {
+					html = httpGet(uri.toString());
+					parse_medialist(medien, Jsoup.parse(html),
+							Integer.parseInt(uri.getQueryParameter("anzPos")));
+				}
 			}
 		}
 		if (doc.select("#label1").size() > 0) {
@@ -1127,14 +1130,17 @@ public class SISIS implements OpacApi {
 		doc.setBaseUri(opac_url);
 		parse_reslist("6", reserved, doc, 1);
 		Elements label6 = doc.select("#label6");
-		for (Element link : doc.select(".box-right").first().select("a")) {
-			Uri uri = Uri.parse(link.attr("abs:href"));
-			if (uri == null || uri.getQueryParameter("methodToCall") == null)
-				break;
-			if (uri.getQueryParameter("methodToCall").equals("pos")) {
-				html = httpGet(uri.toString());
-				parse_reslist("6", medien, Jsoup.parse(html),
-						Integer.parseInt(uri.getQueryParameter("anzPos")));
+		if (doc.select(".box-right").size() > 0) {
+			for (Element link : doc.select(".box-right").first().select("a")) {
+				Uri uri = Uri.parse(link.attr("abs:href"));
+				if (uri == null
+						|| uri.getQueryParameter("methodToCall") == null)
+					break;
+				if (uri.getQueryParameter("methodToCall").equals("pos")) {
+					html = httpGet(uri.toString());
+					parse_reslist("6", medien, Jsoup.parse(html),
+							Integer.parseInt(uri.getQueryParameter("anzPos")));
+				}
 			}
 		}
 
@@ -1144,14 +1150,17 @@ public class SISIS implements OpacApi {
 		doc = Jsoup.parse(html);
 		doc.setBaseUri(opac_url);
 		parse_reslist("7", reserved, doc, 1);
-		for (Element link : doc.select(".box-right").first().select("a")) {
-			Uri uri = Uri.parse(link.attr("abs:href"));
-			if (uri == null || uri.getQueryParameter("methodToCall") == null)
-				break;
-			if (uri.getQueryParameter("methodToCall").equals("pos")) {
-				html = httpGet(uri.toString());
-				parse_reslist("7", medien, Jsoup.parse(html),
-						Integer.parseInt(uri.getQueryParameter("anzPos")));
+		if (doc.select(".box-right").size() > 0) {
+			for (Element link : doc.select(".box-right").first().select("a")) {
+				Uri uri = Uri.parse(link.attr("abs:href"));
+				if (uri == null
+						|| uri.getQueryParameter("methodToCall") == null)
+					break;
+				if (uri.getQueryParameter("methodToCall").equals("pos")) {
+					html = httpGet(uri.toString());
+					parse_reslist("7", medien, Jsoup.parse(html),
+							Integer.parseInt(uri.getQueryParameter("anzPos")));
+				}
 			}
 		}
 		if (label6.size() > 0 && doc.select("#label7").size() > 0) {
