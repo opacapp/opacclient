@@ -628,7 +628,9 @@ public class SISIS implements OpacApi {
 			result.setCover(doc.select(".data td img").first().attr("abs:src"));
 		}
 
-		result.setTitle(doc.select(".data td strong").first().text());
+		if (doc.select(".data td strong").size() > 0) {
+			result.setTitle(doc.select(".data td strong").first().text());
+		}
 
 		String title = "";
 		String text = "";
