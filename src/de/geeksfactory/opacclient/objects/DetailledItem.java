@@ -3,11 +3,10 @@ package de.geeksfactory.opacclient.objects;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.geeksfactory.opacclient.apis.OpacApi;
-
 import android.content.ContentValues;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import de.geeksfactory.opacclient.apis.OpacApi;
 
 /**
  * Object representing all details of a media item

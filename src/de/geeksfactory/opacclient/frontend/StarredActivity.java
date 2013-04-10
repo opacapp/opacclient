@@ -1,6 +1,5 @@
 package de.geeksfactory.opacclient.frontend;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import android.content.Context;
@@ -28,7 +27,6 @@ import com.actionbarsherlock.view.MenuItem;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
-import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.Starred;
 import de.geeksfactory.opacclient.storage.StarDataSource;
 import de.geeksfactory.opacclient.storage.StarDatabase;
@@ -166,29 +164,30 @@ public class StarredActivity extends OpacActivity implements
 	public void onLoaderReset(Loader<Cursor> arg0) {
 		adapter.swapCursor(null);
 	}
-	
+
 	protected void export() {
 		Intent intent = new Intent(android.content.Intent.ACTION_SEND);
 		intent.setType("text/plain");
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-		
+
 		StringBuilder text = new StringBuilder();
-		
+
 		StarDataSource data = new StarDataSource(this);
 		List<Starred> items = data.getAllItems(app.getLibrary().getIdent());
-		for(Starred item : items){
+		for (Starred item : items) {
 			text.append(item.getTitle());
 			text.append("\n");
-			String shareUrl = app.getApi().getShareUrl(item.getMNr(), item.getTitle());
-			if(shareUrl != null) {
+			String shareUrl = app.getApi().getShareUrl(item.getMNr(),
+					item.getTitle());
+			if (shareUrl != null) {
 				text.append(shareUrl);
 				text.append("\n");
 			}
 			text.append("\n");
 		}
-		
+
 		intent.putExtra(Intent.EXTRA_TEXT, text.toString().trim());
-		startActivity(Intent.createChooser(intent, getResources()
-				.getString(R.string.share)));
+		startActivity(Intent.createChooser(intent,
+				getResources().getString(R.string.share)));
 	}
 }

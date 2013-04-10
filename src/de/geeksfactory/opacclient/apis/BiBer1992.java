@@ -30,7 +30,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -836,7 +835,7 @@ public class BiBer1992 implements OpacApi {
 		// and store the column number
 		// Then we look in the rows below at this column if
 		// we find any text. Stop at first text we find.
-		// This text must start with "verlängert" 
+		// This text must start with "verlï¿½ngert" 
 		Elements rowElements = doc.select("table tr");
 
 		int statusCol = -1; // Status column not yet found 

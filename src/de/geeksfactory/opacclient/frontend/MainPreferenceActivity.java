@@ -15,13 +15,12 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
 import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 
 public class MainPreferenceActivity extends OpacPreferenceActivity {
-	
-	protected void openAccountList(){
-		Intent intent = new Intent(this,
-				AccountListActivity.class);
+
+	protected void openAccountList() {
+		Intent intent = new Intent(this, AccountListActivity.class);
 		startActivity(intent);
 	}
-	
+
 	@Override
 	@SuppressWarnings("deprecation")
 	public void onCreate(Bundle savedInstanceState) {

@@ -25,7 +25,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -498,8 +497,7 @@ public class SearchActivity extends OpacActivity {
 		}
 
 		if (nfc_capable) {
-			if (!getPackageManager().hasSystemFeature(
-					"android.hardware.nfc")) {
+			if (!getPackageManager().hasSystemFeature("android.hardware.nfc")) {
 				nfc_capable = false;
 			}
 		}

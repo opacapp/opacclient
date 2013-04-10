@@ -16,11 +16,12 @@ public class StarDatabase extends SQLiteOpenHelper {
 	public static final String STAR_WHERE_LIB = "bib = ?";
 	public static final String STAR_WHERE_TITLE_LIB = "bib = ? AND title = ?";
 	public static final String STAR_WHERE_NR_LIB = "bib = ? AND medianr = ?";
-	
-	private static final String DATABASE_CREATE = "create table "
-			+ STAR_TABLE + " ( id integer primary key autoincrement,"
-			+ " medianr text," + " bib text," + " title text" + ");";
-	public static final String[] COLUMNS = { "id AS _id", "medianr", "bib", "title" };
+
+	private static final String DATABASE_CREATE = "create table " + STAR_TABLE
+			+ " ( id integer primary key autoincrement," + " medianr text,"
+			+ " bib text," + " title text" + ");";
+	public static final String[] COLUMNS = { "id AS _id", "medianr", "bib",
+			"title" };
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {

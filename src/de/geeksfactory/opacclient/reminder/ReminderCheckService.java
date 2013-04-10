@@ -2,7 +2,6 @@ package de.geeksfactory.opacclient.reminder;
 
 import java.io.IOException;
 import java.net.SocketException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 

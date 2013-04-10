@@ -217,10 +217,9 @@ public class AccountActivity extends OpacActivity {
 						public void onClick(View v) {
 							Intent emailIntent = new Intent(
 									android.content.Intent.ACTION_SEND);
-							emailIntent
-									.putExtra(
-											android.content.Intent.EXTRA_EMAIL,
-											new String[] { "info@opacapp.de" });
+							emailIntent.putExtra(
+									android.content.Intent.EXTRA_EMAIL,
+									new String[] { "info@opacapp.de" });
 							emailIntent
 									.putExtra(
 											android.content.Intent.EXTRA_SUBJECT,

@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import de.geeksfactory.opacclient.frontend.OpacActivity;
 import de.geeksfactory.opacclient.objects.Starred;

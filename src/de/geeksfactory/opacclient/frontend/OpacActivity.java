@@ -44,10 +44,10 @@ public abstract class OpacActivity extends SlidingFragmentActivity {
 	protected AlertDialog adialog;
 	protected NavigationFragment mFrag;
 
-	public OpacClient getOpacApplication(){
+	public OpacClient getOpacApplication() {
 		return app;
 	}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

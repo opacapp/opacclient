@@ -2,10 +2,9 @@ package de.geeksfactory.opacclient.storage;
 
 import java.util.List;
 
-import de.geeksfactory.opacclient.apis.OpacApi;
-
 import android.content.ContentValues;
 import android.database.SQLException;
+import de.geeksfactory.opacclient.apis.OpacApi;
 
 /**
  * Data source for library meta data (like e.g. the list of branches) stored in

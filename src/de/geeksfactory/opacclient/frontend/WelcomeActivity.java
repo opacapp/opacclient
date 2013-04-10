@@ -120,25 +120,24 @@ public class WelcomeActivity extends SherlockActivity {
 
 		final ImageView ivLocationIcon = (ImageView) view
 				.findViewById(R.id.ivLocationIcon);
-		
+
 		final LinearLayout llLocate = (LinearLayout) view
 				.findViewById(R.id.llLocate);
 
 		final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		Criteria criteria = new Criteria();
 		criteria.setAccuracy(Criteria.ACCURACY_COARSE); // no GPS
-		final String provider = locationManager.getBestProvider(criteria,
-				true);
+		final String provider = locationManager.getBestProvider(criteria, true);
 		if (provider == null) // no geolocation available
 			llLocate.setVisibility(View.GONE);
-		
+
 		llLocate.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				tvLocateString.setText(R.string.geolocate_progress);
 				ivLocationIcon.setImageResource(R.drawable.ic_locate);
-				
+
 				if (provider == null)
 					return;
 				locationManager.requestLocationUpdates(provider, 0, 0,

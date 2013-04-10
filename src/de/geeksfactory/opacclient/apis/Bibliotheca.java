@@ -390,8 +390,7 @@ public class Bibliotheca implements OpacApi {
 		DetailledItem result = new DetailledItem();
 
 		if (doc.select(".detail_cover img").size() == 1) {
-			result.setCover(doc.select(".detail_cover img").get(0)
-					.attr("src"));
+			result.setCover(doc.select(".detail_cover img").get(0).attr("src"));
 		}
 
 		result.setTitle(doc.select(".detail_titel").text());
