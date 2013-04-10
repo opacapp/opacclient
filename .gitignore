@@ -23,3 +23,5 @@ testproject/
 .classpath
 .project
 proguard-project.txt
+
+*.pyc

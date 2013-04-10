@@ -70,8 +70,8 @@ class Bibliotheca(Api):
 		if inp is not None:
 			datadata['db'] = inp
 			
-			print("Welchen Suffix hat diese Datenbank im System?")
-			inp = getInput(required=False, default='_DB1')
+			print("Welchen Suffix hat diese Datenbank im System? (Bsp. _DB1)")
+			inp = getInput(required=False, default='')
 			if inp is not None:
 				suffix = inp
 				
@@ -240,11 +240,6 @@ if __name__ == '__main__':
 
 	data['city'] = getInput(required=True)
 
-	print("Zu welcher Gruppe soll die Bibliothek gehören?")
-	print("Aktuell benutzen wir für die Gruppennamen die deutschen Bundesländer sowie 'Österreich' und 'Schweiz'")
-
-	data['group'] = getInput(required=True)
-
 	print("Lade Geodaten…")
 
 	geo = loadGeoPossibilities(data['city'])
@@ -256,6 +251,11 @@ if __name__ == '__main__':
 	geokey = int(getInput(default="0"))
 	if geokey > 0:
 		data['geo'] = geo[geokey-1][1]
+
+	print("Zu welcher Gruppe soll die Bibliothek gehören?")
+	print("Aktuell benutzen wir für die Gruppennamen die deutschen Bundesländer sowie 'Österreich' und 'Schweiz'")
+
+	data['group'] = getInput(required=True)
 
 	print("Wie heißt die Bibliothek?")
 	print("Dies sollte etwas in dieser Stadt eindeutiges sein wie 'Stadtbibliothek', 'Unibibliothek' oder 'Ruprecht-Karls-Universität'. Der Name der Stadt soll nicht erneut vorkommen!")
