@@ -1,0 +1,15 @@
+{
+    "api": "bibliotheca", 
+    "city": "B\u00fchl", 
+    "data": {
+        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-buehl", 
+        "information": "http://www.bibliotheken.bw-online.de/wwwopac-buehl/suchanz.asp"
+    }, 
+    "geo": [
+        48.6954722, 
+        8.138060399999999
+    ], 
+    "group": "Baden-W\u00fcrttemberg", 
+    "support": "Katalogsuche", 
+    "title": "Mediathek"
+}

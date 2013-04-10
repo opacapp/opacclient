@@ -1,0 +1,56 @@
+{
+    "api": "bibliotheca", 
+    "city": "Siegen", 
+    "data": {
+        "accounttable": [
+            -1, 
+            0, 
+            1, 
+            3, 
+            -1, 
+            -1, 
+            -1, 
+            4
+        ], 
+        "baseurl": "http://bibliothek.kdz-ws.net/webverbund", 
+        "copiestable": [
+            0, 
+            -1, 
+            -1, 
+            1, 
+            2, 
+            3, 
+            -1
+        ], 
+        "db": "BIBLIO-090", 
+        "information": "http://go-libri.kdz-ws.net/standard/page.sys/455.htm", 
+        "mediatypes": {
+            "cdkl.gif": "CD", 
+            "dvdkl.gif": "DVD", 
+            "kassettekl.gif": "AUDIO_CASSETTE", 
+            "mAboS.gif": "MAGAZINE", 
+            "mBmonoS.gif": "BOOK", 
+            "mComicS.gif": "BOOK", 
+            "mMusikCDS.gif": "CD_MUSIC", 
+            "mOnleiheS.gif": "EBOOK", 
+            "mZeitS.gif": "NEWSPAPER", 
+            "musersS.gif": "CD", 
+            "videokl.gif": "MOVIE"
+        }, 
+        "reservationtable": [
+            0, 
+            1, 
+            2, 
+            -1, 
+            3, 
+            -1
+        ]
+    }, 
+    "geo": [
+        50.8838492, 
+        8.020959099999999
+    ], 
+    "group": "Nordrhein-Westfalen", 
+    "title": "Stadtbibliothek", 
+    "support": "Katalogsuche und Konto"
+}

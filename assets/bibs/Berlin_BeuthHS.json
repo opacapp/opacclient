@@ -1,0 +1,15 @@
+{
+    "api": "sisis", 
+    "city": "Berlin", 
+    "data": {
+        "baseurl": "https://webopac.beuth-hochschule.de/webOPACClient.bhssis", 
+        "information": "http://www.beuth-hochschule.de/782/"
+    }, 
+    "geo": [
+        52.519171, 
+        13.4060912
+    ], 
+    "group": "Berlin", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Beuth-Hochschule"
+}
