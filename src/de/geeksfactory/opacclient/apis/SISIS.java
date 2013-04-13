@@ -1260,10 +1260,15 @@ public class SISIS implements OpacApi {
 			}
 		}
 		if (label6.size() > 0 && doc.select("#label7").size() > 0) {
-			resultNum = Integer.parseInt(label6.text().trim()
-					.replaceAll(".*\\(([0-9]+)\\).*", "$1"));
-			resultNum += Integer.parseInt(doc.select("#label7").text().trim()
-					.replaceAll(".*\\(([0-9]+)\\).*", "$1"));
+			resultNum = 0;
+			String rNum = label6.text().trim()
+					.replaceAll(".*\\(([0-9]*)\\).*", "$1");
+			if (rNum.length() > 0)
+				resultNum = Integer.parseInt(rNum);
+			rNum = doc.select("#label7").text().trim()
+					.replaceAll(".*\\(([0-9]*)\\).*", "$1");
+			if (rNum.length() > 0)
+				resultNum += Integer.parseInt(rNum);
 			assert (resultNum == reserved.size());
 		}
 
