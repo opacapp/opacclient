@@ -339,6 +339,10 @@ public class SISIS implements OpacApi {
 		} else if (doc.select(".nohits").size() > 0) {
 			last_error = doc.select(".nohits").text().trim();
 			return null;
+		} else if (doc.select(".box-header h2").text()
+				.contains("keine Treffer")) {
+			return new SearchRequestResult(new ArrayList<SearchResult>(), 0, 1,
+					1);
 		}
 
 		int results_total = -1;

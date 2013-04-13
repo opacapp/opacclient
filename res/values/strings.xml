@@ -197,5 +197,6 @@
     <string name="setting_nfc">NFC-Suche</string>
     <string name="setting_nfc_desc">Experimentell. Nur mit wenigen Geräten und Bibliotheken.</string>
     <string name="notification_problems">Benachrichtigungen funktionieren u.U. nicht</string>
+    <string name="no_results">Die Suchanfrage lieferte keine Ergebnisse.</string>
     
 </resources>

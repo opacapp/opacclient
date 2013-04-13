@@ -214,6 +214,11 @@ public class SearchResultsActivity extends OpacActivity {
 			rn.setText(getString(R.string.result_number,
 					searchresult.getTotal_result_count()));
 
+		if (searchresult.getResults().size() == 0
+				&& searchresult.getTotal_result_count() == 0) {
+			setContentView(R.layout.no_results);
+		}
+
 		lv.setAdapter(new ResultsAdapter(this, (searchresult.getResults())));
 		lv.setTextFilterEnabled(true);
 	}
