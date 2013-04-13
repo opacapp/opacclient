@@ -40,6 +40,7 @@ import org.jsoup.select.Elements;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.SparseArray;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult.Status;
@@ -353,6 +354,29 @@ public class SISIS implements OpacApi {
 
 		Elements table = doc.select("table.data tbody tr");
 		identifier = null;
+
+		Elements links = doc.select("table.data a");
+		boolean haslink = false;
+		for (int i = 0; i < links.size(); i++) {
+			Element node = links.get(i);
+			if (node.hasAttr("href") && !haslink) {
+				haslink = true;
+				try {
+					List<NameValuePair> anyurl = URLEncodedUtils.parse(new URI(
+							((Element) node).attr("href")), "UTF-8");
+					for (NameValuePair nv : anyurl) {
+						if (nv.getName().equals("identifier")) {
+							identifier = nv.getValue();
+							break;
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+			}
+		}
+
 		List<SearchResult> results = new ArrayList<SearchResult>();
 		for (int i = 0; i < table.size(); i++) {
 			Element tr = table.get(i);
@@ -389,7 +413,6 @@ public class SISIS implements OpacApi {
 						.childNodes();
 			}
 			int childrennum = children.size();
-			boolean haslink = false;
 
 			List<String[]> strings = new ArrayList<String[]>();
 			for (int ch = 0; ch < childrennum; ch++) {
@@ -399,23 +422,6 @@ public class SISIS implements OpacApi {
 					if (text.length() > 3)
 						strings.add(new String[] { "text", "", text });
 				} else if (node instanceof Element) {
-					if (node.hasAttr("href") && !haslink) {
-						haslink = true;
-						try {
-							List<NameValuePair> anyurl = URLEncodedUtils.parse(
-									new URI(((Element) node).attr("href")),
-									"UTF-8");
-							for (NameValuePair nv : anyurl) {
-								if (nv.getName().equals("identifier")) {
-									identifier = nv.getValue();
-									break;
-								}
-							}
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-
-					}
 
 					List<Node> subchildren = node.childNodes();
 					for (int j = 0; j < subchildren.size(); j++) {
@@ -756,7 +762,7 @@ public class SISIS implements OpacApi {
 							tr.child(
 									copy_columnmap
 											.get(DetailledItem.KEY_COPY_LOCATION))
-									.text().trim());
+									.text().trim().replace(" Wegweiser", ""));
 				}
 
 				result.addCopy(e);
