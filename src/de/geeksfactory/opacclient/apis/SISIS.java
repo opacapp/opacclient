@@ -87,6 +87,7 @@ public class SISIS implements OpacApi {
 		defaulttypes.put("g", MediaType.EBOOK);
 		defaulttypes.put("d", MediaType.CD);
 		defaulttypes.put("0", MediaType.BOOK);
+		defaulttypes.put("1", MediaType.BOOK);
 		defaulttypes.put("2", MediaType.BOOK);
 		defaulttypes.put("7", MediaType.CD_MUSIC);
 		defaulttypes.put("8", MediaType.CD_MUSIC);
@@ -452,6 +453,7 @@ public class SISIS implements OpacApi {
 				// Sometimes there is a <span class="Z3988"> item which provides
 				// data in a standardized format.
 				List<NameValuePair> z3988data;
+				boolean hastitle = false;
 				try {
 					description = new StringBuilder();
 					z3988data = URLEncodedUtils.parse(new URI("http://dummy/?"
@@ -460,9 +462,16 @@ public class SISIS implements OpacApi {
 					for (NameValuePair nv : z3988data) {
 						if (nv.getValue() != null) {
 							if (!nv.getValue().trim().equals("")) {
-								if (nv.getName().equals("rft.btitle")) {
+								if (nv.getName().equals("rft.btitle")
+										&& !hastitle) {
 									description.append("<b>" + nv.getValue()
 											+ "</b>");
+									hastitle = true;
+								} else if (nv.getName().equals("rft.atitle")
+										&& !hastitle) {
+									description.append("<b>" + nv.getValue()
+											+ "</b>");
+									hastitle = true;
 								} else if (nv.getName().equals("rft.au")) {
 									description
 											.append("<br />" + nv.getValue());
