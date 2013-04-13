@@ -598,6 +598,11 @@ public class AccountActivity extends OpacActivity {
 
 		this.fromcache = fromcache;
 
+		SharedPreferences sp = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		final long tolerance = Long.decode(sp.getString("notification_warning",
+				"367200000"));
+
 		((TextView) findViewById(R.id.tvAccLabel)).setText(account.getLabel());
 		((TextView) findViewById(R.id.tvAccUser)).setText(account.getName());
 		TextView tvAccCity = (TextView) findViewById(R.id.tvAccCity);
@@ -620,8 +625,6 @@ public class AccountActivity extends OpacActivity {
 		LinearLayout llLent = (LinearLayout) findViewById(R.id.llLent);
 		llLent.removeAllViews();
 
-		SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(this);
 		boolean notification_on = sp.getBoolean("notification_service", false);
 		boolean notification_problems = false;
 
@@ -682,6 +685,20 @@ public class AccountActivity extends OpacActivity {
 					}
 				} catch (Exception e) {
 					notification_problems = true;
+				}
+
+				// Color codes for return dates
+				if (item.containsKey(AccountData.KEY_LENT_DEADLINE_TIMESTAMP)) {
+					if (item.getAsLong(AccountData.KEY_LENT_DEADLINE_TIMESTAMP) < System
+							.currentTimeMillis()) {
+						v.findViewById(R.id.vStatusColor).setBackgroundColor(
+								getResources().getColor(R.color.date_overdue));
+					} else if ((item
+							.getAsLong(AccountData.KEY_LENT_DEADLINE_TIMESTAMP) - System
+							.currentTimeMillis()) <= tolerance) {
+						v.findViewById(R.id.vStatusColor).setBackgroundColor(
+								getResources().getColor(R.color.date_warning));
+					}
 				}
 
 				if (item.containsKey(AccountData.KEY_LENT_LENDING_BRANCH)) {

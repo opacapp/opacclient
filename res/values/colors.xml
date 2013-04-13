@@ -26,5 +26,7 @@
     <color name="status_red">#cc0000</color>
     <color name="status_yellow">#ff8900</color>
     <color name="status_green">#00cc00</color>
+    <color name="date_warning">#ff8900</color>
+    <color name="date_overdue">#cc0000</color>
 
 </resources>
