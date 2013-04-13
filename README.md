@@ -2,7 +2,7 @@ opacclient
 ==========
 Android client for public libraries. German only, but just for now. See [opacapp.de](http://opacapp.de) for details.
 
-![Screenshot](http://opacapp.de/images/screenshot.png)
+![Screenshot](http://opacapp.de/wp-content/themes/opacapp/img/020_menue.png)
 
 
 Features
