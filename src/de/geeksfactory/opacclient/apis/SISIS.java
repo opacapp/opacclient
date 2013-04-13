@@ -13,6 +13,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.acra.ACRA;
 import org.apache.http.HttpResponse;
@@ -37,6 +40,7 @@ import org.jsoup.select.Elements;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.SparseArray;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult.Status;
 import de.geeksfactory.opacclient.objects.Account;
@@ -676,14 +680,85 @@ public class SISIS implements OpacApi {
 			}
 		}
 
+		Map<String, Integer> copy_columnmap = new HashMap<String, Integer>();
+		// Default values
+		copy_columnmap.put(DetailledItem.KEY_COPY_BARCODE, 1);
+		copy_columnmap.put(DetailledItem.KEY_COPY_BRANCH, 3);
+		copy_columnmap.put(DetailledItem.KEY_COPY_STATUS, 4);
+		Elements copy_columns = doc.select("#tab-content .data tr#bg2 th");
+		for (int i = 0; i < copy_columns.size(); i++) {
+			Element th = copy_columns.get(i);
+			String head = th.text().trim();
+			if (head.contains("Status")) {
+				copy_columnmap.put(DetailledItem.KEY_COPY_STATUS, i);
+			}
+			if (head.contains("Zweigstelle")) {
+				copy_columnmap.put(DetailledItem.KEY_COPY_BRANCH, i);
+			}
+			if (head.contains("Mediennummer")) {
+				copy_columnmap.put(DetailledItem.KEY_COPY_BARCODE, i);
+			}
+			if (head.contains("Standort")) {
+				copy_columnmap.put(DetailledItem.KEY_COPY_LOCATION, i);
+			}
+		}
+
+		Pattern status_lent = Pattern
+				.compile("^(entliehen) bis ([0-9]{1,2}.[0-9]{1,2}.[0-9]{2,4}) \\(gesamte Vormerkungen: ([0-9]+)\\)$");
+		Pattern status_and_barcode = Pattern.compile("^(.*) ([0-9A-Za-z]+)$");
+
 		Elements exemplartrs = doc.select("#tab-content .data tr:not(#bg2)");
 		for (int i = 0; i < exemplartrs.size(); i++) {
 			Element tr = exemplartrs.get(i);
 			try {
 				ContentValues e = new ContentValues();
-				e.put(DetailledItem.KEY_COPY_BARCODE, tr.child(1).text().trim());
-				e.put(DetailledItem.KEY_COPY_BRANCH, tr.child(3).text().trim());
-				e.put(DetailledItem.KEY_COPY_STATUS, tr.child(4).text().trim());
+				Element status = tr.child(copy_columnmap
+						.get(DetailledItem.KEY_COPY_STATUS));
+				Element barcode = tr.child(copy_columnmap
+						.get(DetailledItem.KEY_COPY_BARCODE));
+				String barcodetext = barcode.text().trim()
+						.replace(" Wegweiser", "");
+
+				// STATUS
+				String statustext = "";
+				if (status.getElementsByTag("b").size() > 0) {
+					statustext = status.getElementsByTag("b").text().trim();
+				} else {
+					statustext = status.text().trim();
+				}
+				if (copy_columnmap.get(DetailledItem.KEY_COPY_STATUS) == copy_columnmap
+						.get(DetailledItem.KEY_COPY_BARCODE)) {
+					Matcher matcher1 = status_and_barcode.matcher(statustext);
+					if (matcher1.matches()) {
+						statustext = matcher1.group(1);
+						barcodetext = matcher1.group(2);
+					}
+				}
+
+				Matcher matcher = status_lent.matcher(statustext);
+				if (matcher.matches()) {
+					e.put(DetailledItem.KEY_COPY_STATUS, matcher.group(1));
+					e.put(DetailledItem.KEY_COPY_RETURN, matcher.group(2));
+					e.put(DetailledItem.KEY_COPY_RESERVATIONS, matcher.group(3));
+				} else {
+					e.put(DetailledItem.KEY_COPY_STATUS, statustext);
+				}
+				e.put(DetailledItem.KEY_COPY_BARCODE, barcodetext);
+
+				String branchtext = tr
+						.child(copy_columnmap
+								.get(DetailledItem.KEY_COPY_BRANCH)).text()
+						.trim().replace(" Wegweiser", "");
+				e.put(DetailledItem.KEY_COPY_BRANCH, branchtext);
+
+				if (copy_columnmap.containsKey(DetailledItem.KEY_COPY_LOCATION)) {
+					e.put(DetailledItem.KEY_COPY_LOCATION,
+							tr.child(
+									copy_columnmap
+											.get(DetailledItem.KEY_COPY_LOCATION))
+									.text().trim());
+				}
+
 				result.addCopy(e);
 			} catch (Exception ex) {
 				ex.printStackTrace();
