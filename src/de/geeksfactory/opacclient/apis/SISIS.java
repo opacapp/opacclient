@@ -1073,12 +1073,13 @@ public class SISIS implements OpacApi {
 				e.put(AccountData.KEY_LENT_AUTHOR,
 						tr.child(1).html().split("<br />")[1].trim());
 
-				String frist = tr.child(2).html().split("<br />")[0].trim();
+				String[] col2split = tr.child(2).html().split("<br />");
+				String frist = col2split[0].trim();
 				if (frist.contains("-"))
 					frist = frist.split("-")[1].trim();
 				e.put(AccountData.KEY_LENT_DEADLINE, frist);
-				e.put(AccountData.KEY_LENT_BRANCH,
-						tr.child(2).html().split("<br />")[1].trim());
+				if (col2split.length > 1)
+					e.put(AccountData.KEY_LENT_BRANCH, col2split[1].trim());
 
 				if (!frist.equals("")) {
 					try {
