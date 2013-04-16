@@ -481,6 +481,10 @@ public class Bibliotheca implements OpacApi {
 						.getName()));
 				nameValuePairs.add(new BasicNameValuePair("PWD", acc
 						.getPassword()));
+				if (data.has("db")) {
+					nameValuePairs.add(new BasicNameValuePair("vkontodb", data
+							.getString("db")));
+				}
 				nameValuePairs.add(new BasicNameValuePair("B1", "weiter"));
 				nameValuePairs.add(new BasicNameValuePair("target", doc.select(
 						"input[name=target]").val()));
@@ -698,6 +702,10 @@ public class Bibliotheca implements OpacApi {
 					.add(new BasicNameValuePair("AUSWEIS", acc.getName()));
 			nameValuePairs
 					.add(new BasicNameValuePair("PWD", acc.getPassword()));
+			if (data.has("db")) {
+				nameValuePairs.add(new BasicNameValuePair("vkontodb", data
+						.getString("db")));
+			}
 			nameValuePairs.add(new BasicNameValuePair("B1", "weiter"));
 			nameValuePairs.add(new BasicNameValuePair("target", "konto"));
 			nameValuePairs.add(new BasicNameValuePair("type", "K"));
