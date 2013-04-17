@@ -41,10 +41,31 @@ public class AboutActivity extends OpacPreferenceActivity {
 		addPreferencesFromResource(R.xml.about);
 
 		try {
-			findPreference("version")
-					.setSummary(
-							getPackageManager().getPackageInfo(
-									getPackageName(), 0).versionName);
+			String version = getPackageManager().getPackageInfo(
+					getPackageName(), 0).versionName;
+
+			try {
+				String text = "";
+
+				StringBuilder builder = new StringBuilder();
+				InputStream fis;
+				fis = getAssets().open("buildnum.txt");
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(fis, "utf-8"));
+				String line;
+				while ((line = reader.readLine()) != null) {
+					builder.append(line);
+				}
+
+				text = builder.toString();
+				fis.close();
+				if (!text.equals(version))
+					version += " (Build: " + text + ")";
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			findPreference("version").setSummary(version);
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
 		}
