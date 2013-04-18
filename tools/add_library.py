@@ -240,7 +240,7 @@ if __name__ == '__main__':
 
 	data['city'] = getInput(required=True)
 
-	print("Lade Geodaten…")
+	print("Lade Geodaten...")
 
 	geo = loadGeoPossibilities(data['city'])
 	for k, g in enumerate(geo):

@@ -94,6 +94,7 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  * Bay/Aschaffenburg	ok		n/a		no		yes		n/a		-
  * Bay/Wuerzburg		ok		yes		yes		yes		yes		-
  * NRW/Duisburg			ok		yes		yes		yes		n/a		-
+ * NRW/Erkrath			n/a		yes		no		yes		not sup.yes
  * NRW/Essen			n/a		n/a		no		yes		not sup.-
  * NRW/Gelsenkirchen	ok		yes		yes		yes		yes		-
  * NRW/Hagen       		ok		yes		yes		yes		yes		yes
@@ -249,7 +250,8 @@ public class BiBer1992 implements OpacApi {
      *   <input type="radio" name="MT" value="MTYP7"><img src="../image/cdrom.gif.S" title="CD-ROM">
      *   
      * ----- Branches -----
-     * Example Essen:  no closing </option> !!!
+     * Example Essen,Erkrath:  no closing </option> !!! 
+     * cannot be parsed by Jsoup, so not supported
      *   <select name="AORT">
      *     <option value="ZWST1">Altendorf
      *   </select>
