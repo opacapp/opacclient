@@ -32,6 +32,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import android.content.ContentValues;
+import android.net.Uri;
 import android.os.Bundle;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult.Status;
@@ -321,6 +322,7 @@ public class Bibliotheca implements OpacApi {
 
 	protected SearchRequestResult parse_search(String html, int page) {
 		Document doc = Jsoup.parse(html);
+		doc.setBaseUri(opac_url);
 		Elements table = doc
 				.select(".resulttab tr.result_trefferX, .resulttab tr.result_treffer");
 		List<SearchResult> results = new ArrayList<SearchResult>();
@@ -357,7 +359,23 @@ public class Bibliotheca implements OpacApi {
 
 			}
 			sr.setInnerhtml(tr.child(1).child(0).html());
+
 			sr.setNr(i);
+			Element link = tr.child(1).select("a").first();
+			if (link != null && link.attr("href").contains("detmediennr")) {
+				Uri uri = Uri.parse(link.attr("abs:href"));
+				String nr = uri.getQueryParameter("detmediennr");
+				if (nr.length() > (Math.log10(i) + 1)) {
+					// Scheint eine ID zu sein…
+					if (uri.getQueryParameter("detDB") != null) {
+						sr.setId("&detmediennr=" + nr + "&detDB="
+								+ uri.getQueryParameter("detDB"));
+					} else {
+						sr.setId("&detmediennr=" + nr);
+					}
+				}
+			} else {
+			}
 			results.add(sr);
 		}
 		int results_total = -1;
@@ -481,6 +499,15 @@ public class Bibliotheca implements OpacApi {
 						.getName()));
 				nameValuePairs.add(new BasicNameValuePair("PWD", acc
 						.getPassword()));
+				if (data.has("db")) {
+					try {
+						nameValuePairs.add(new BasicNameValuePair("vkontodb",
+								data.getString("db")));
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 				nameValuePairs.add(new BasicNameValuePair("B1", "weiter"));
 				nameValuePairs.add(new BasicNameValuePair("target", doc.select(
 						"input[name=target]").val()));
@@ -698,6 +725,10 @@ public class Bibliotheca implements OpacApi {
 					.add(new BasicNameValuePair("AUSWEIS", acc.getName()));
 			nameValuePairs
 					.add(new BasicNameValuePair("PWD", acc.getPassword()));
+			if (data.has("db")) {
+				nameValuePairs.add(new BasicNameValuePair("vkontodb", data
+						.getString("db")));
+			}
 			nameValuePairs.add(new BasicNameValuePair("B1", "weiter"));
 			nameValuePairs.add(new BasicNameValuePair("target", "konto"));
 			nameValuePairs.add(new BasicNameValuePair("type", "K"));

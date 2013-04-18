@@ -1073,12 +1073,13 @@ public class SISIS implements OpacApi {
 				e.put(AccountData.KEY_LENT_AUTHOR,
 						tr.child(1).html().split("<br />")[1].trim());
 
-				String frist = tr.child(2).html().split("<br />")[0].trim();
+				String[] col2split = tr.child(2).html().split("<br />");
+				String frist = col2split[0].trim();
 				if (frist.contains("-"))
 					frist = frist.split("-")[1].trim();
 				e.put(AccountData.KEY_LENT_DEADLINE, frist);
-				e.put(AccountData.KEY_LENT_BRANCH,
-						tr.child(2).html().split("<br />")[1].trim());
+				if (col2split.length > 1)
+					e.put(AccountData.KEY_LENT_BRANCH, col2split[1].trim());
 
 				if (!frist.equals("")) {
 					try {
@@ -1121,7 +1122,6 @@ public class SISIS implements OpacApi {
 			IOException {
 		Elements copytrs = doc.select(".data tr");
 		doc.setBaseUri(opac_url);
-
 		int trs = copytrs.size();
 		if (trs == 1)
 			return;
@@ -1137,11 +1137,15 @@ public class SISIS implements OpacApi {
 			e.put(AccountData.KEY_RESERVATION_TITLE,
 					tr.child(1).select("strong").text().trim());
 			try {
-				e.put(AccountData.KEY_RESERVATION_AUTHOR, tr.child(1).html()
-						.split("<br />")[1].trim());
+				String[] rowsplit1 = tr.child(1).html().split("<br />");
+				String[] rowsplit2 = tr.child(2).html().split("<br />");
+				if (rowsplit1.length > 1)
+					e.put(AccountData.KEY_RESERVATION_AUTHOR,
+							rowsplit1[1].trim());
 
-				e.put(AccountData.KEY_RESERVATION_BRANCH, tr.child(2).html()
-						.split("<br />")[2].trim());
+				if (rowsplit2.length > 2)
+					e.put(AccountData.KEY_RESERVATION_BRANCH,
+							rowsplit2[2].trim());
 
 				if (tr.select("a").size() == 1)
 					e.put(AccountData.KEY_RESERVATION_CANCEL,
@@ -1151,7 +1155,6 @@ public class SISIS implements OpacApi {
 									+ "$"
 									+ Uri.parse(tr.select("a").attr("abs:href"))
 											.getQuery());
-
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}

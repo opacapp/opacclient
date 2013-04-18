@@ -1,0 +1,72 @@
+{
+    "api": "bibliotheca", 
+    "city": "Datteln", 
+    "data": {
+        "accounttable": [
+            -1, 
+            0, 
+            1, 
+            2, 
+            -1, 
+            -1, 
+            -1, 
+            3
+        ], 
+        "baseurl": "http://www.bibliotheken-im-kreisre.de/webopac", 
+        "copiestable": [
+            5, 
+            0, 
+            -1, 
+            2, 
+            3, 
+            4, 
+            -1
+        ], 
+        "db": "datt", 
+        "information": "http://www.datteln.de/4_Kultur_Bildung/Stadtbuecherei.htm", 
+        "mediatypes": {
+            "EAusakl.gif": "MP3", 
+            "EAusbkl.gif": "EBOOK", 
+            "EAuskl.gif": "EBOOK", 
+            "EAusmkl.gif": "MP3", 
+            "EAuspkl.gif": "EBOOK", 
+            "EAusvkl.gif": "URL", 
+            "EDokukl.gif": "UNKNOWN", 
+            "Zeitunkl.gif": "MAGAZINE", 
+            "cdkl.gif": "GAME_CONSOLE", 
+            "diakl.gif": "UNKNOWN", 
+            "klassekl.gif": "SCHOOL_VERSION", 
+            "konsole.bmp": "GAME_CONSOLE", 
+            "mBmonoS.gif": "UNKNOWN", 
+            "mBuchS.gif": "BOOK", 
+            "mCasetteS.gif": "AUDIO_CASSETTE", 
+            "mComic2S.gif": "BOOK", 
+            "mComput1S.gif": "CD_SOFTWARE", 
+            "mComput2S.gif": "PACKAGE", 
+            "mDVDS.gif": "DVD", 
+            "mMalenS.gif": "ART", 
+            "mMusikCDS.gif": "CD", 
+            "mSpielS.gif": "BOARDGAME", 
+            "mTip_S.gif": "BOOK", 
+            "mono1kl.gif": "BOOK", 
+            "monogkl.gif": "BOOK", 
+            "vhskl.jpg": "UNKNOWN", 
+            "videokl.gif": "MOVIE"
+        }, 
+        "reservationtable": [
+            0, 
+            1, 
+            2, 
+            -1, 
+            3, 
+            -1
+        ]
+    }, 
+    "geo": [
+        51.6461362, 
+        7.3348301
+    ], 
+    "group": "Nordrhein-Westfalen", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Stadtb\u00fccherei"
+}

@@ -98,7 +98,7 @@ class Bibliotheca(Api):
 					inp = ''
 					while inp not in TYPES:
 						print("'%s' ('%s')?" % (v, k))
-						inp = getInput(required=True)
+						inp = getInput(required=False, default="UNKNOWN")
 						datadata['mediatypes'][k] = inp
 			
 		data['data'] = datadata
@@ -240,7 +240,7 @@ if __name__ == '__main__':
 
 	data['city'] = getInput(required=True)
 
-	print("Lade Geodaten…")
+	print("Lade Geodaten...")
 
 	geo = loadGeoPossibilities(data['city'])
 	for k, g in enumerate(geo):
