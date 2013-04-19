@@ -54,6 +54,7 @@ import org.jsoup.select.Elements;
 import android.content.ContentValues;
 import android.os.Bundle;
 import de.geeksfactory.opacclient.NotReachableException;
+import de.geeksfactory.opacclient.networking.HTTPClient;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -365,8 +366,7 @@ public class BiBer1992 implements OpacApi {
 
 	@Override
 	public void init(MetaDataSource metadata, Library lib) {
-		m_ahc = new DefaultHttpClient();
-		HttpProtocolParams.setUserAgent(m_ahc.getParams(), "OpacApp.de");
+		m_ahc = HTTPClient.getNewHttpClient();
 
 		m_metadata = metadata;
 		m_library = lib;

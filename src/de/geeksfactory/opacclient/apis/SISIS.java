@@ -28,6 +28,7 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -44,6 +45,7 @@ import android.util.Log;
 import android.util.SparseArray;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult.Status;
+import de.geeksfactory.opacclient.networking.HTTPClient;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -212,8 +214,7 @@ public class SISIS implements OpacApi {
 
 	@Override
 	public void init(MetaDataSource metadata, Library lib) {
-		ahc = new DefaultHttpClient();
-		HttpProtocolParams.setUserAgent(ahc.getParams(), "OpacApp.de");
+		ahc = HTTPClient.getNewHttpClient();
 
 		this.metadata = metadata;
 		this.library = lib;

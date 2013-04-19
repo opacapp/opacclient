@@ -57,6 +57,8 @@ public class OpacClient extends Application {
 	private Account account;
 	private OpacApi api;
 	private Library library;
+	
+    public static Context context;
 
 	private final Uri STAR_PROVIDER_STAR_URI = StarContentProvider.STAR_URI;
 
@@ -243,6 +245,8 @@ public class OpacClient extends Application {
 			ACRA.getErrorReporter().putCustomData("library",
 					getLibrary().getIdent());
 		}
+		
+		OpacClient.context = getApplicationContext();
 	}
 
 }

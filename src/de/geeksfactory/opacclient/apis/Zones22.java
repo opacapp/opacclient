@@ -32,6 +32,7 @@ import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
 import de.geeksfactory.opacclient.NotReachableException;
+import de.geeksfactory.opacclient.networking.HTTPClient;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -160,8 +161,7 @@ public class Zones22 implements OpacApi {
 
 	@Override
 	public void init(MetaDataSource metadata, Library lib) {
-		ahc = new DefaultHttpClient();
-		HttpProtocolParams.setUserAgent(ahc.getParams(), "OpacApp.de");
+		ahc = HTTPClient.getNewHttpClient();
 
 		this.metadata = metadata;
 		this.library = lib;
