@@ -20,6 +20,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.AssetManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -57,8 +58,9 @@ public class OpacClient extends Application {
 	private Account account;
 	private OpacApi api;
 	private Library library;
-	
-    public static Context context;
+
+	public static Context context;
+	public static String versionName = "unknown";
 
 	private final Uri STAR_PROVIDER_STAR_URI = StarContentProvider.STAR_URI;
 
@@ -245,8 +247,15 @@ public class OpacClient extends Application {
 			ACRA.getErrorReporter().putCustomData("library",
 					getLibrary().getIdent());
 		}
-		
+
 		OpacClient.context = getApplicationContext();
+
+		try {
+			OpacClient.versionName = getPackageManager().getPackageInfo(
+					getPackageName(), 0).versionName;
+		} catch (NameNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.MenuItem;
 
+import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 
 public class AboutActivity extends OpacPreferenceActivity {
@@ -40,35 +41,30 @@ public class AboutActivity extends OpacPreferenceActivity {
 	protected void populate() {
 		addPreferencesFromResource(R.xml.about);
 
+		String version = OpacClient.versionName;
+
 		try {
-			String version = getPackageManager().getPackageInfo(
-					getPackageName(), 0).versionName;
+			String text = "";
 
-			try {
-				String text = "";
-
-				StringBuilder builder = new StringBuilder();
-				InputStream fis;
-				fis = getAssets().open("buildnum.txt");
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(fis, "utf-8"));
-				String line;
-				while ((line = reader.readLine()) != null) {
-					builder.append(line);
-				}
-
-				text = builder.toString();
-				fis.close();
-				if (!text.equals(version))
-					version += " (Build: " + text + ")";
-			} catch (IOException e) {
-				e.printStackTrace();
+			StringBuilder builder = new StringBuilder();
+			InputStream fis;
+			fis = getAssets().open("buildnum.txt");
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					fis, "utf-8"));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				builder.append(line);
 			}
 
-			findPreference("version").setSummary(version);
-		} catch (NameNotFoundException e) {
+			text = builder.toString();
+			fis.close();
+			if (!text.equals(version))
+				version += " (Build: " + text + ")";
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		findPreference("version").setSummary(version);
 
 		findPreference("website").setOnPreferenceClickListener(
 				new OnPreferenceClickListener() {

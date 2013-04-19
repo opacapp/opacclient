@@ -57,7 +57,7 @@ public class HTTPClient {
 			e.printStackTrace();
 			hc = new DefaultHttpClient();
 		}
-		HttpProtocolParams.setUserAgent(hc.getParams(), "OpacApp.de");
+		HttpProtocolParams.setUserAgent(hc.getParams(), "OpacApp/"+OpacClient.versionName+" (Android)");
 		return hc;
 	}
 
