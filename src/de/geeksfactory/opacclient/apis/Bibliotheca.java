@@ -228,7 +228,7 @@ public class Bibliotheca implements OpacApi {
 
 	@Override
 	public void init(MetaDataSource metadata, Library lib) {
-		ahc = HTTPClient.getNewHttpClient();
+		ahc = HTTPClient.getNewHttpClient(lib);
 
 		this.metadata = metadata;
 		this.library = lib;

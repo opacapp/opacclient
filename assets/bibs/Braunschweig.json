@@ -3,7 +3,8 @@
     "city": "Braunschweig", 
     "data": {
         "baseurl": "https://webopac.braunschweig.de/webOPACClient", 
-        "information": "https://www.braunschweig.de/kultur_tourismus/bibliotheken_archive/stadtbibliothek/kontaktdaten.html"
+        "information": "https://www.braunschweig.de/kultur_tourismus/bibliotheken_archive/stadtbibliothek/kontaktdaten.html",
+		"customssl": true
     }, 
     "geo": [
         52.2688736, 

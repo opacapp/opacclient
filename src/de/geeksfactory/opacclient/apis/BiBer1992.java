@@ -366,7 +366,7 @@ public class BiBer1992 implements OpacApi {
 
 	@Override
 	public void init(MetaDataSource metadata, Library lib) {
-		m_ahc = HTTPClient.getNewHttpClient();
+		m_ahc = HTTPClient.getNewHttpClient(lib);
 
 		m_metadata = metadata;
 		m_library = lib;

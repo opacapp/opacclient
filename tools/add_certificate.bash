@@ -14,7 +14,7 @@ BCJAR=tools/bcprov-jdk15on-146.jar
 TRUSTSTORE=res/raw/ssl_trust_store.bks
 STOREPASS=ro5eivoijeeGohsh0daequoo5Zeepaen
 
-ALIAS=`openssl x509 -inform PEM -subject_hash -noout -in $CERT`
+ALIAS=$HOST"-"`openssl x509 -inform PEM -subject_hash -noout -in $CERT`
 
 echo "Adding certificate to $TRUSTSTORE..."
 keytool -import -v -trustcacerts -alias $ALIAS \
