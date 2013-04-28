@@ -549,6 +549,13 @@ public class SearchResultDetailsActivity extends OpacActivity {
 							((TextView) v.findViewById(R.id.tvLocation))
 									.setVisibility(View.VISIBLE);
 						} else if (copy
+								.containsKey(DetailledItem.KEY_COPY_SHELFMARK)) {
+							((TextView) v.findViewById(R.id.tvLocation))
+									.setText(copy
+											.getAsString(DetailledItem.KEY_COPY_SHELFMARK));
+							((TextView) v.findViewById(R.id.tvLocation))
+									.setVisibility(View.VISIBLE);
+						} else if (copy
 								.containsKey(DetailledItem.KEY_COPY_BARCODE)) {
 							((TextView) v.findViewById(R.id.tvLocation))
 									.setText(copy

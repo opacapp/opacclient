@@ -734,6 +734,9 @@ public class SISIS implements OpacApi {
 			if (head.contains("Standort")) {
 				copy_columnmap.put(DetailledItem.KEY_COPY_LOCATION, i);
 			}
+			if (head.contains("Signatur")) {
+				copy_columnmap.put(DetailledItem.KEY_COPY_SHELFMARK, i);
+			}
 		}
 
 		Pattern status_lent = Pattern
@@ -789,6 +792,15 @@ public class SISIS implements OpacApi {
 							tr.child(
 									copy_columnmap
 											.get(DetailledItem.KEY_COPY_LOCATION))
+									.text().trim().replace(" Wegweiser", ""));
+				}
+
+				if (copy_columnmap
+						.containsKey(DetailledItem.KEY_COPY_SHELFMARK)) {
+					e.put(DetailledItem.KEY_COPY_SHELFMARK,
+							tr.child(
+									copy_columnmap
+											.get(DetailledItem.KEY_COPY_SHELFMARK))
 									.text().trim().replace(" Wegweiser", ""));
 				}
 

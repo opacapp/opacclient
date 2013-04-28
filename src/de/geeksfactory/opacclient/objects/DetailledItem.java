@@ -76,6 +76,15 @@ public class DetailledItem {
 	public static final String KEY_COPY_RESERVATIONS = "vorbestellt";
 
 	/**
+	 * Identification in the libraries' shelf system. Optional.
+	 * 
+	 * ContentValues key for {@link #addCopy(ContentValues)}.
+	 * 
+	 * @since 2.0.10
+	 */
+	public static final String KEY_COPY_SHELFMARK = "signatur";
+
+	/**
 	 * Unique media identifier of a child item for
 	 * {@link OpacApi#getResultById(String, String)}. Required.
 	 * 
