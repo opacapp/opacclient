@@ -172,11 +172,20 @@ public class SISIS implements OpacApi {
 		}
 
 		zst_opts = doc.select("#selectedViewBranchlib option");
+		List<String[]> metas = new ArrayList<String[]>();
 		for (int i = 0; i < zst_opts.size(); i++) {
 			Element opt = zst_opts.get(i);
-			if (!opt.val().equals(""))
-				metadata.addMeta(MetaDataSource.META_TYPE_HOME_BRANCH,
-						library.getIdent(), opt.val(), opt.text());
+			if (!opt.val().equals("")) {
+				if (opt.attr("selected").length() != 0)
+					metas.add(0, new String[] { opt.val(), opt.text() });
+				else
+					metas.add(new String[] { opt.val(), opt.text() });
+			}
+		}
+
+		for (String[] meta : metas) {
+			metadata.addMeta(MetaDataSource.META_TYPE_HOME_BRANCH,
+					library.getIdent(), meta[0], meta[1]);
 		}
 
 		metadata.close();
