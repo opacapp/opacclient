@@ -380,8 +380,13 @@ public class Bibliotheca implements OpacApi {
 		}
 		int results_total = -1;
 		if (doc.select(".result_gefunden").size() > 0) {
-			results_total = Integer.parseInt(doc.select(".result_gefunden")
-					.text().trim().replaceAll(".*[^0-9]+([0-9]+).*", "$1"));
+			try {
+				results_total = Integer.parseInt(doc.select(".result_gefunden")
+						.text().trim().replaceAll(".*[^0-9]+([0-9]+).*", "$1"));
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+				results_total = -1;
+			}
 		}
 		return new SearchRequestResult(results, results_total, page);
 	}
