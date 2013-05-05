@@ -769,6 +769,9 @@ public class Bibliotheca implements OpacApi {
 		int copymap_num = copymap_keys.length;
 		List<ContentValues> medien = new ArrayList<ContentValues>();
 
+		if (doc.select(".kontozeile_center table").size() == 0)
+			return null;
+
 		Elements exemplartrs = doc.select(".kontozeile_center table").get(0)
 				.select("tr.tabKonto");
 
