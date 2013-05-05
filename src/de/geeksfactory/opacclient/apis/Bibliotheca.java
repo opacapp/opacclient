@@ -247,6 +247,8 @@ public class Bibliotheca implements OpacApi {
 		String res = bundle.getString(key);
 		if (res == null)
 			res = "";
+		else
+			res = res.trim();
 		return res;
 	}
 
