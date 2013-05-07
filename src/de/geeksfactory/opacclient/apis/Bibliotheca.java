@@ -352,31 +352,34 @@ public class Bibliotheca implements OpacApi {
 						.replace(".jpg", "").replace(".gif", "")
 						.replace(".png", "")));
 			}
+			sr.setInnerhtml(tr.child(1).child(0).html());
+
+			sr.setNr(i);
+			Element link = tr.child(1).select("a").first();
+			try {
+				if (link != null && link.attr("href").contains("detmediennr")) {
+					Uri uri = Uri.parse(link.attr("abs:href"));
+					String nr = uri.getQueryParameter("detmediennr");
+					if (Integer.parseInt(nr) > i + 1) {
+						// Scheint eine ID zu sein…
+						if (uri.getQueryParameter("detDB") != null) {
+							sr.setId("&detmediennr=" + nr + "&detDB="
+									+ uri.getQueryParameter("detDB"));
+						} else {
+							sr.setId("&detmediennr=" + nr);
+						}
+					}
+				} else {
+				}
+			} catch (Exception e) {
+			}
 			try {
 				Comment c = (Comment) tr.child(1).childNode(0);
 				String comment = c.getData().trim();
 				String id = comment.split(": ")[1];
 				sr.setId(id);
 			} catch (Exception e) {
-
-			}
-			sr.setInnerhtml(tr.child(1).child(0).html());
-
-			sr.setNr(i);
-			Element link = tr.child(1).select("a").first();
-			if (link != null && link.attr("href").contains("detmediennr")) {
-				Uri uri = Uri.parse(link.attr("abs:href"));
-				String nr = uri.getQueryParameter("detmediennr");
-				if (nr.length() > (Math.log10(i) + 1)) {
-					// Scheint eine ID zu sein…
-					if (uri.getQueryParameter("detDB") != null) {
-						sr.setId("&detmediennr=" + nr + "&detDB="
-								+ uri.getQueryParameter("detDB"));
-					} else {
-						sr.setId("&detmediennr=" + nr);
-					}
-				}
-			} else {
+				e.printStackTrace();
 			}
 			results.add(sr);
 		}
