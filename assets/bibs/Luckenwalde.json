@@ -1,0 +1,47 @@
+{
+    "api": "bibliotheca", 
+    "city": "Luckenwalde", 
+    "data": {
+        "accounttable": [
+            -1, 
+            0, 
+            1, 
+            2, 
+            -1, 
+            -1, 
+            -1, 
+            3
+        ], 
+        "baseurl": "http://80.153.36.38/webopac", 
+        "copiestable": [
+            0, 
+            4, 
+            2, 
+            1, 
+            3, 
+            5, 
+            -1
+        ], 
+        "information": "http://www.bibliothek.luckenwalde.de/", 
+        "mediatypes": {
+            "mCasetteS.gif": "AUDIO_CASSETTE", 
+            "mDVDS.gif": "DVD", 
+            "mFilmS.gif": "MOVIE"
+        }, 
+        "reservationtable": [
+            0, 
+            1, 
+            2, 
+            -1, 
+            3, 
+            -1
+        ]
+    }, 
+    "geo": [
+        52.0903895, 
+        13.1636906
+    ], 
+    "group": "Brandenburg", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Bibliothek im Bahnhof"
+}
