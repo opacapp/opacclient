@@ -1,0 +1,18 @@
+{
+    "api": "bibliotheca", 
+    "city": "Eberbach", 
+    "data": {
+        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-eberbach", 
+        "information": "http://www.eberbach.de/pb/,Lde/260337.html",
+		"copiestable": [-1, -1, -1, 0, 2, 3, -1],
+		"accountttable": null,
+		"reservationtable": null
+    }, 
+    "geo": [
+        49.4694813, 
+        8.9898436
+    ], 
+    "group": "Baden-W\u00fcrttemberg", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Stadtbibliothek"
+}

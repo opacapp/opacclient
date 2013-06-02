@@ -1,0 +1,53 @@
+{
+    "api": "bibliotheca", 
+    "city": "Salzburg", 
+    "data": {
+        "accounttable": [
+            -1, 
+            1, 
+            2, 
+            3, 
+            -1, 
+            0, 
+            -1, 
+            4
+        ], 
+        "baseurl": "http://buch.stadt-salzburg.at", 
+        "copiestable": [
+            -1, 
+            -1, 
+            1, 
+            2, 
+            3, 
+            4, 
+            -1
+        ], 
+        "information": "http://www.stadt-salzburg.at/internet/websites/bib/lio/thek/fakten/stadt_bibliothek_standort_und_oeffnungsz_219330.htm", 
+        "mediatypes": {
+            "mBuchS.gif": "BOOK", 
+            "mCDROMS.gif": "CD_SOFTWARE", 
+            "mCasetteS.gif": "AUDIO_CASSETTE", 
+            "mDVDS.gif": "DVD", 
+            "mEmedienB.gif": "EBOOK", 
+            "mFilmS.gif": "MOVIE", 
+            "mMusikCDS.gif": "CD_MUSIC", 
+            "mNoten3S.gif": "SCORE_MUSIC", 
+            "mZtgS.gif": "NEWSPAPER"
+        }, 
+        "reservationtable": [
+            1, 
+            2, 
+            3, 
+            0, 
+            4, 
+            -1
+        ]
+    }, 
+    "geo": [
+        47.80949, 
+        13.05501
+    ], 
+    "group": "\u00d6sterreich", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Stadt:Bibliothek"
+}

@@ -2,7 +2,7 @@
     "api": "sisis", 
     "city": "Dresden", 
     "data": {
-        "baseurl": "http://217.5.176.101/webOPACClient", 
+        "baseurl": "http://katalog.bibo-dresden.de/webOPACClient", 
         "information": "http://www.bibo-dresden.de/4/index_4.html", 
         "startparams": "Login=webopac"
     }, 

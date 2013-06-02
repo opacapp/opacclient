@@ -1,0 +1,18 @@
+{
+    "api": "bibliotheca", 
+    "city": "Balingen", 
+    "data": {
+        "baseurl": "http://wwwopac.rz-as.de/balingen", 
+        "information": "http://www.balingen.de/,Lde/Startseite/Familie+_+Bildung/Stadtbuecherei.html",
+        "copiestable": [-1, 5, -1, 4, 0, 1, -1],
+        "accounttable": [-1, 0, 1, 2, -1, -1, -1, 3],
+        "reservationtable": [0, 1, -1, -1, 2]
+    }, 
+    "geo": [
+        48.2748206, 
+        8.8495298
+    ], 
+    "group": "Baden-W\u00fcrttemberg", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Stadtb\u00fccherei"
+}

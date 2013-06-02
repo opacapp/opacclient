@@ -1,0 +1,18 @@
+{
+    "api": "bibliotheca", 
+    "city": "Dietzenbach", 
+    "data": {
+        "baseurl": "http://stadtbuecherei.dietzenbach.de", 
+        "information": "http://dietzenbach.de/index.phtml?mNavID=1799.9&sNavID=1799.987&La=1",
+		"copiestable": [-1, -1, -1, 0, 2, 3, -1],
+		"reservationtable": [0, 1, 2, -1, 3],
+		"accounttable": [-1, 0, 1, 2, -1, -1, -1, 4]
+    }, 
+    "geo": [
+        50.0172906, 
+        8.7869609
+    ], 
+    "group": "Hessen", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Stadtbibliothek"
+}

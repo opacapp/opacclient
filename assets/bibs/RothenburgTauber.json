@@ -1,0 +1,18 @@
+{
+    "api": "bibliotheca", 
+    "city": "Rothenburg ob der Tauber", 
+    "data": {
+        "baseurl": "http://rothenburg.internetopac.de", 
+        "information": "http://rothenburg.internetopac.de/suchanz.asp",
+		"accounttable": [-1, 0, 1, 2, -1, -1, -1, 3],
+		"reservationtable": [0, 1, -1, -1, -1, 2],
+		"copytable": [-1, 2, -1, 0, 1, -1, -1]
+    }, 
+    "geo": [
+        49.3794462, 
+        10.1858862
+    ], 
+    "group": "Bayern", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Stadtb\u00fccherei"
+}
