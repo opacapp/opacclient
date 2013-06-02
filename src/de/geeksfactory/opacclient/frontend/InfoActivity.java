@@ -10,7 +10,7 @@ import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.view.MenuItem;
-import com.slidingmenu.lib.SlidingMenu;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import de.geeksfactory.opacclient.R;
 
