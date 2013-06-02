@@ -670,30 +670,36 @@ public class SISIS implements OpacApi {
 		String title = "";
 		String text = "";
 		Element detailtrs = doc2.select("#tab-content .data td").first();
-		for (Node node : detailtrs.childNodes()) {
-			if (node instanceof Element) {
-				if (((Element) node).tagName().equals("strong")) {
-					if (!text.equals("") && !title.equals("")) {
-						result.addDetail(new Detail(title.trim(), text.trim()));
-						if (title.equals("Titel:")) {
-							result.setTitle(text.trim());
+		if (detailtrs != null) {
+			for (Node node : detailtrs.childNodes()) {
+				if (node instanceof Element) {
+					if (((Element) node).tagName().equals("strong")) {
+						if (!text.equals("") && !title.equals("")) {
+							result.addDetail(new Detail(title.trim(), text
+									.trim()));
+							if (title.equals("Titel:")) {
+								result.setTitle(text.trim());
+							}
+							text = "";
 						}
-						text = "";
-					}
 
-					title = ((Element) node).text().trim();
-				} else {
-					if (((Element) node).tagName().equals("a")
-							&& ((Element) node).text().trim()
-									.equals("hier klicken")) {
-						text = text + ((Element) node).attr("href");
+						title = ((Element) node).text().trim();
 					} else {
-						text = text + ((Element) node).text();
+						if (((Element) node).tagName().equals("a")
+								&& ((Element) node).text().trim()
+										.equals("hier klicken")) {
+							text = text + ((Element) node).attr("href");
+						} else {
+							text = text + ((Element) node).text();
+						}
 					}
+				} else if (node instanceof TextNode) {
+					text = text + ((TextNode) node).text();
 				}
-			} else if (node instanceof TextNode) {
-				text = text + ((TextNode) node).text();
 			}
+		} else {
+			result.addDetail(new Detail("Fehler",
+					"Details konnten nicht abgerufen werden, bitte erneut probieren!"));
 		}
 		if (!text.equals("") && !title.equals("")) {
 			result.addDetail(new Detail(title.trim(), text.trim()));
