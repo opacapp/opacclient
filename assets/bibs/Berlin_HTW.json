@@ -3,8 +3,8 @@
     "city": "Berlin", 
     "data": {
         "baseurl": "https://sisis.rz.htw-berlin.de/InfoGuideClient", 
-        "information": "http://bibliothek.htw-berlin.de/oeffnungszeiten/",
-		"customssl": true
+        "customssl": true, 
+        "information": "http://bibliothek.htw-berlin.de/oeffnungszeiten/"
     }, 
     "geo": [
         52.519171, 

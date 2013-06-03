@@ -2,11 +2,35 @@
     "api": "bibliotheca", 
     "city": "Aichtal", 
     "data": {
+        "accounttable": [
+            -1, 
+            1, 
+            2, 
+            3, 
+            -1, 
+            -1, 
+            -1, 
+            4
+        ], 
         "baseurl": "http://wwwopac.rz-as.de/aichtal", 
-        "information": "http://www.aichtal.de/de/oeffentliche-einrichtungen/buecherei/info-kontakt.html",
-		"copiestable": [-1, -1, -1, 2, 3, 4, -1],
-		"accounttable": [-1, 1, 2, 3, -1, -1, -1, 4],
-		"reservationtable": [1, 2, 3, -1, 4, -1]
+        "copiestable": [
+            -1, 
+            -1, 
+            -1, 
+            2, 
+            3, 
+            4, 
+            -1
+        ], 
+        "information": "http://www.aichtal.de/de/oeffentliche-einrichtungen/buecherei/info-kontakt.html", 
+        "reservationtable": [
+            1, 
+            2, 
+            3, 
+            -1, 
+            4, 
+            -1
+        ]
     }, 
     "geo": [
         48.6290054, 

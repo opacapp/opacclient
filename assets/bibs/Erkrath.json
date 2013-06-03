@@ -13,19 +13,19 @@
             3
         ], 
         "baseurl": "http://opac.erkrath.de", 
-        "information": "http://www.erkrath.de/stadtbuecherei",
+        "information": "http://www.erkrath.de/stadtbuecherei", 
         "mediatypes": {
             "1": "BOOK", 
             "10": "MAP", 
-            "11": "DVD",
-            "12": "ART",
+            "11": "DVD", 
+            "12": "ART", 
             "2": "MAGAZINE", 
             "3": "CD_SOFTWARE", 
             "30": "EBOOK", 
             "4": "MOVIE", 
             "5": "AUDIO_CASSETTE", 
             "6": "CD", 
-            "9": "BOARDGAME" 
+            "9": "BOARDGAME"
         }, 
         "opacdir": "opac", 
         "searchtable": [
