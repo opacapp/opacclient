@@ -18,7 +18,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.HttpProtocolParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -58,7 +57,6 @@ public class Zones22 implements OpacApi {
 	private JSONObject data;
 	private DefaultHttpClient ahc;
 	private MetaDataSource metadata;
-	private boolean initialised = false;
 	private String last_error;
 	private Library library;
 	private int page;
@@ -67,13 +65,23 @@ public class Zones22 implements OpacApi {
 	private static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
 	static {
 		defaulttypes.put("Buch", MediaType.BOOK);
+		defaulttypes.put("Buch/Druckschrift", MediaType.BOOK);
 		defaulttypes.put("Buch Erwachsene", MediaType.BOOK);
 		defaulttypes.put("Buch Kinder/Jugendliche", MediaType.BOOK);
+		defaulttypes.put("Kinder-Buch", MediaType.BOOK);
 		defaulttypes.put("DVD", MediaType.DVD);
+		defaulttypes.put("Kinder-DVD", MediaType.DVD);
 		defaulttypes.put("Konsolenspiele", MediaType.GAME_CONSOLE);
 		defaulttypes.put("Blu-ray Disc", MediaType.BLURAY);
 		defaulttypes.put("Compact Disc", MediaType.CD);
 		defaulttypes.put("CD-ROM", MediaType.CD_SOFTWARE);
+		defaulttypes.put("Kinder-CD", MediaType.CD_SOFTWARE);
+		defaulttypes.put("Noten", MediaType.SCORE_MUSIC);
+		defaulttypes.put("Zeitschrift, Heft", MediaType.MAGAZINE);
+		defaulttypes.put("E-Book", MediaType.EBOOK);
+		defaulttypes.put("CDROM", MediaType.CD_SOFTWARE);
+		defaulttypes.put("E-Audio", MediaType.MP3);
+		defaulttypes.put("CD", MediaType.CD);
 	}
 
 	private String httpGet(String url) throws ClientProtocolException,
@@ -143,8 +151,6 @@ public class Zones22 implements OpacApi {
 			IOException, NotReachableException {
 		String html = httpGet(opac_url
 				+ "/APS_ZONES?fn=AdvancedSearch&Style=Portal3&SubStyle=&Lang=GER&ResponseEncoding=utf-8");
-
-		initialised = true;
 
 		Document doc = Jsoup.parse(html);
 
@@ -383,9 +389,12 @@ public class Zones22 implements OpacApi {
 		Document doc = Jsoup.parse(html);
 
 		DetailledItem result = new DetailledItem();
+		result.setTitle("");
 		boolean title_is_set = false;
 
 		result.setId(id);
+
+		Elements detaildiv = doc.select("div.record-item-new");
 
 		Elements detailtrs1 = doc
 				.select(".DetailDataCell table table:not(.inRecordHeader) tr");
@@ -396,8 +405,59 @@ public class Zones22 implements OpacApi {
 				result.setTitle(tr.child(s - 1).text().trim());
 				title_is_set = true;
 			} else if (s > 1) {
-				result.addDetail(new Detail(tr.child(0).text().trim(), tr
-						.child(s - 1).text().trim()));
+				Element valchild = tr.child(s - 1);
+				if (valchild.select("table").isEmpty()) {
+					String val = valchild.text().trim();
+					if (val.length() > 0)
+						result.addDetail(new Detail(tr.child(0).text().trim(),
+								val));
+				}
+			}
+		}
+
+		if (!detaildiv.isEmpty()) {
+			for (int i = 0; i < detaildiv.size(); i++) {
+				Element dd = detaildiv.get(i);
+				String text = "";
+				for (Node node : dd.childNodes()) {
+					if (node instanceof TextNode) {
+						String snip = ((TextNode) node).text();
+						if (snip.length() > 0)
+							text += snip;
+					} else if (node instanceof Element) {
+						if (((Element) node).tagName().equals("br"))
+							text += "\n";
+						else {
+							String snip = ((Element) node).text().trim();
+							if (snip.length() > 0)
+								text += snip;
+						}
+					}
+				}
+				result.addDetail(new Detail("", text));
+			}
+		}
+
+		if (doc.select("span.z3988").size() > 0) {
+			// Sometimes there is a <span class="Z3988"> item which provides
+			// data in a standardized format.
+			String z3988data = doc.select("span.z3988").first().attr("title")
+					.trim();
+			for (String pair : z3988data.split("\\&")) {
+				String[] nv = pair.split("=", 2);
+				if (nv.length == 2) {
+					if (!nv[1].trim().equals("")) {
+						if (nv[0].equals("rft.btitle")
+								&& result.getTitle().length() == 0) {
+							result.setTitle(nv[1]);
+						} else if (nv[0].equals("rft.atitle")
+								&& result.getTitle().length() == 0) {
+							result.setTitle(nv[1]);
+						} else if (nv[0].equals("rft.au")) {
+							result.addDetail(new Detail("Author", nv[1]));
+						}
+					}
+				}
 			}
 		}
 
