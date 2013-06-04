@@ -1,0 +1,53 @@
+{
+    "api": "bibliotheca", 
+    "city": "Schwaikheim", 
+    "data": {
+        "accounttable": [
+            -1, 
+            0, 
+            1, 
+            2, 
+            -1, 
+            -1, 
+            -1, 
+            3
+        ], 
+        "baseurl": "http://buecherei.schwaikheim.de/webopac", 
+        "copiestable": [
+            -1, 
+            -1, 
+            -1, 
+            1, 
+            2, 
+            3, 
+            -1
+        ], 
+        "information": "http://www.schwaikheim.de/index.php?id=141", 
+        "mediatypes": {
+            "CDkl.gif": "CD", 
+            "Spielekl.gif": "BOARDGAME", 
+            "eaudio.gif": "MP3", 
+            "ebook.gif": "EBOOK", 
+            "epaper.gif": "EBOOK", 
+            "evideo.gif": "MOVIE", 
+            "mCasetteS.gif": "AUDIO_CASSETTE", 
+            "mDVDS.gif": "DVD", 
+            "mFilmS.gif": "MOVIE"
+        }, 
+        "reservationtable": [
+            0, 
+            1, 
+            2, 
+            -1, 
+            3, 
+            -1
+        ]
+    }, 
+    "geo": [
+        48.8732234, 
+        9.3526778
+    ], 
+    "group": "Baden-W\u00fcrttemberg", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Stadtb\u00fccherei"
+}

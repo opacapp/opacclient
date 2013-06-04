@@ -1,0 +1,15 @@
+{
+    "api": "sisis", 
+    "city": "Eberswalde", 
+    "data": {
+        "baseurl": "http://opac.hnee.de/webOPACClient", 
+        "information": "http://www.hnee.de/de/Hochschule/Einrichtungen/Hochschulbibliothek/Oeffnungszeiten/Oeffnungszeiten-K1068.htm"
+    }, 
+    "geo": [
+        52.83713299999999, 
+        13.7875871
+    ], 
+    "group": "Brandenburg", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Hochschulbibliothek"
+}
