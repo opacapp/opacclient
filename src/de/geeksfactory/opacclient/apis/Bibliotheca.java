@@ -54,11 +54,10 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  * BOND, now owned by OCLC. Known to work well with Web Opac versions from 2.6,
  * maybe older, to 2.8
  */
-public class Bibliotheca implements OpacApi {
+public class Bibliotheca extends BaseApi {
 
 	protected String opac_url = "";
 	protected JSONObject data;
-	protected DefaultHttpClient ahc;
 	protected MetaDataSource metadata;
 	protected boolean initialised = false;
 	protected String last_error;
@@ -98,31 +97,6 @@ public class Bibliotheca implements OpacApi {
 		defaulttypes.put("wii", MediaType.GAME_CONSOLE);
 	}
 
-	protected String httpGet(String url) throws ClientProtocolException,
-			IOException {
-		HttpGet httpget = new HttpGet(url);
-		HttpResponse response = ahc.execute(httpget);
-		if (response.getStatusLine().getStatusCode() >= 400) {
-			throw new NotReachableException();
-		}
-		String html = convertStreamToString(response.getEntity().getContent());
-		response.getEntity().consumeContent();
-		return html;
-	}
-
-	protected String httpPost(String url, UrlEncodedFormEntity data)
-			throws ClientProtocolException, IOException {
-		HttpPost httppost = new HttpPost(url);
-		httppost.setEntity(data);
-		HttpResponse response = ahc.execute(httppost);
-		if (response.getStatusLine().getStatusCode() >= 400) {
-			throw new NotReachableException();
-		}
-		String html = convertStreamToString(response.getEntity().getContent());
-		response.getEntity().consumeContent();
-		return html;
-	}
-
 	@Override
 	public String[] getSearchFields() {
 		return new String[] { KEY_SEARCH_QUERY_TITLE, KEY_SEARCH_QUERY_AUTHOR,
@@ -137,30 +111,6 @@ public class Bibliotheca implements OpacApi {
 	@Override
 	public String getLast_error() {
 		return last_error;
-	}
-
-	protected String convertStreamToString(InputStream is) throws IOException {
-		BufferedReader reader;
-		try {
-			reader = new BufferedReader(new InputStreamReader(is, "ISO-8859-1"));
-		} catch (UnsupportedEncodingException e1) {
-			reader = new BufferedReader(new InputStreamReader(is));
-		}
-		StringBuilder sb = new StringBuilder();
-
-		String line = null;
-		try {
-			while ((line = reader.readLine()) != null) {
-				sb.append((line + "\n"));
-			}
-		} finally {
-			try {
-				is.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return sb.toString();
 	}
 
 	public void extract_meta(String html) {
@@ -228,8 +178,7 @@ public class Bibliotheca implements OpacApi {
 
 	@Override
 	public void init(MetaDataSource metadata, Library lib) {
-		ahc = HTTPClient.getNewHttpClient(lib);
-
+		super.init(metadata,lib);
 		this.metadata = metadata;
 		this.library = lib;
 		this.data = lib.getData();
@@ -731,7 +680,7 @@ public class Bibliotheca implements OpacApi {
 		nameValuePairs.add(new BasicNameValuePair("link_konto.x", "0"));
 		nameValuePairs.add(new BasicNameValuePair("link_konto.y", "0"));
 		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-		HttpResponse response = ahc.execute(httppost);
+		HttpResponse response = http_client.execute(httppost);
 		String html = "";
 
 		if (response.getStatusLine().getStatusCode() == 200) {
@@ -890,7 +839,7 @@ public class Bibliotheca implements OpacApi {
 		nameValuePairs.add(new BasicNameValuePair("link_konto.x", "0"));
 		nameValuePairs.add(new BasicNameValuePair("link_konto.y", "0"));
 		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-		HttpResponse response = ahc.execute(httppost);
+		HttpResponse response = http_client.execute(httppost);
 
 		if (response.getStatusLine().getStatusCode() == 200) {
 			// Login vonnöten

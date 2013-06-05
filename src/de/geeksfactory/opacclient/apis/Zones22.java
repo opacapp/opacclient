@@ -51,11 +51,10 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  * TODO: Suche nach Medientypen, alles mit Konten + Vorbestellen
  * 
  */
-public class Zones22 implements OpacApi {
+public class Zones22 extends BaseApi {
 
 	private String opac_url = "";
 	private JSONObject data;
-	private DefaultHttpClient ahc;
 	private MetaDataSource metadata;
 	private String last_error;
 	private Library library;
@@ -84,18 +83,6 @@ public class Zones22 implements OpacApi {
 		defaulttypes.put("CD", MediaType.CD);
 	}
 
-	private String httpGet(String url) throws ClientProtocolException,
-			IOException {
-		HttpGet httpget = new HttpGet(url);
-		HttpResponse response = ahc.execute(httpget);
-		if (response.getStatusLine().getStatusCode() >= 400) {
-			throw new NotReachableException();
-		}
-		String html = convertStreamToString(response.getEntity().getContent());
-		response.getEntity().consumeContent();
-		return html;
-	}
-
 	@Override
 	public String[] getSearchFields() {
 		return new String[] { KEY_SEARCH_QUERY_TITLE, KEY_SEARCH_QUERY_AUTHOR,
@@ -106,30 +93,6 @@ public class Zones22 implements OpacApi {
 	@Override
 	public String getLast_error() {
 		return last_error;
-	}
-
-	private String convertStreamToString(InputStream is) throws IOException {
-		BufferedReader reader;
-		try {
-			reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-		} catch (UnsupportedEncodingException e1) {
-			reader = new BufferedReader(new InputStreamReader(is));
-		}
-		StringBuilder sb = new StringBuilder();
-
-		String line = null;
-		try {
-			while ((line = reader.readLine()) != null) {
-				sb.append((line + "\n"));
-			}
-		} finally {
-			try {
-				is.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return sb.toString();
 	}
 
 	public void extract_meta(Document doc) {
@@ -167,7 +130,7 @@ public class Zones22 implements OpacApi {
 
 	@Override
 	public void init(MetaDataSource metadata, Library lib) {
-		ahc = HTTPClient.getNewHttpClient(lib);
+		super.init(metadata, lib);
 
 		this.metadata = metadata;
 		this.library = lib;

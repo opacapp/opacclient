@@ -22,6 +22,8 @@ public class DetailledItem {
 	private Bitmap coverBitmap;
 	private boolean reservable;
 	private String reservation_info;
+	private boolean bookable;
+	private String booking_info;
 	private String id;
 	private Bundle volumesearch;
 
@@ -194,6 +196,17 @@ public class DetailledItem {
 	}
 
 	/**
+	 * Set list of copies of this item available
+	 * 
+	 * @param copies
+	 *            List of copies
+	 * @see #addCopy(ContentValues)
+	 */
+	public void setCopies(List<ContentValues> copies) {
+		this.copies = copies;
+	}
+
+	/**
 	 * List of child items available
 	 * 
 	 * @return List of child items available
@@ -300,4 +313,33 @@ public class DetailledItem {
 		this.reservation_info = reservation_info;
 	}
 
+	/**
+	 * @return the bookable
+	 */
+	public boolean isBookable() {
+		return bookable;
+	}
+
+	/**
+	 * @param bookable
+	 *            the bookable to set
+	 */
+	public void setBookable(boolean bookable) {
+		this.bookable = bookable;
+	}
+
+	/**
+	 * @return the booking_info
+	 */
+	public String getBooking_info() {
+		return booking_info;
+	}
+
+	/**
+	 * @param booking_info
+	 *            the booking_info to set
+	 */
+	public void setBooking_info(String booking_info) {
+		this.booking_info = booking_info;
+	}
 }

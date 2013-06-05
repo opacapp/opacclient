@@ -47,6 +47,8 @@ import com.actionbarsherlock.view.MenuItem;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.apis.EbookServiceApi;
+import de.geeksfactory.opacclient.apis.EbookServiceApi.BookingResult;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -64,6 +66,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 	private FetchTask ft;
 	private FetchSubTask fst;
 	private ResTask rt;
+	private BookingTask bt;
 	private boolean account_switched = false;
 
 	@Override
@@ -127,6 +130,37 @@ public class SearchResultDetailsActivity extends OpacActivity {
 	}
 
 	protected void reservationStart() {
+		if (app.getApi() instanceof EbookServiceApi) {
+			SharedPreferences sp = PreferenceManager
+					.getDefaultSharedPreferences(this);
+			if (sp.getString("email", "").equals("")
+					&& ((EbookServiceApi) app.getApi()).isEbook(item)) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setMessage(getString(R.string.opac_error_email))
+						.setCancelable(false)
+						.setNegativeButton(R.string.dismiss,
+								new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog,
+											int id) {
+										dialog.cancel();
+									}
+								})
+						.setPositiveButton(R.string.prefs,
+								new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog,
+											int id) {
+										dialog.dismiss();
+										app.toPrefs(SearchResultDetailsActivity.this);
+									}
+								});
+				AlertDialog alert = builder.create();
+				alert.show();
+				return;
+			}
+		}
+
 		AccountDataSource data = new AccountDataSource(this);
 		data.open();
 		final List<Account> accounts = data.getAccountsWithPassword(app
@@ -208,6 +242,16 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		}
 
 		rt = new ResTask();
+		if (app.getApi() instanceof EbookServiceApi) {
+			SharedPreferences sp = PreferenceManager
+					.getDefaultSharedPreferences(this);
+			if (((EbookServiceApi) app.getApi()).isEbook(item)
+					&& selection == null) {
+				rt.execute(app, item.getReservation_info(), 0,
+						sp.getString("email", "invalid@example.org"));
+				return;
+			}
+		}
 		rt.execute(app, item.getReservation_info(), useraction, selection);
 	}
 
@@ -222,6 +266,109 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			break;
 		case SELECTION_NEEDED:
 			reservationSelection(result);
+			break;
+		case ERROR:
+			dialog_wrong_credentials(app.getApi().getLast_error(), false);
+			break;
+		case OK:
+			Intent intent = new Intent(SearchResultDetailsActivity.this,
+					AccountActivity.class);
+			startActivity(intent);
+			break;
+		case UNSUPPORTED:
+			// TODO: Show dialog
+			break;
+		default:
+			break;
+		}
+	}
+
+	protected void bookingStart() {
+		AccountDataSource data = new AccountDataSource(this);
+		data.open();
+		final List<Account> accounts = data.getAccountsWithPassword(app
+				.getLibrary().getIdent());
+		data.close();
+		if (accounts.size() == 0) {
+			dialog_no_credentials();
+			return;
+		} else if (accounts.size() > 1) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			// Get the layout inflater
+			LayoutInflater inflater = getLayoutInflater();
+
+			View view = inflater.inflate(R.layout.simple_list_dialog, null);
+
+			ListView lv = (ListView) view.findViewById(R.id.lvBibs);
+			AccountListAdapter adapter = new AccountListAdapter(this, accounts);
+			lv.setAdapter(adapter);
+			lv.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					bookingDo();
+					adialog.dismiss();
+				}
+			});
+			builder.setTitle(R.string.account_select)
+					.setView(view)
+					.setNegativeButton(R.string.cancel,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int id) {
+									adialog.cancel();
+								}
+							})
+					.setNeutralButton(R.string.accounts_edit,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int id) {
+									adialog.dismiss();
+									Intent intent = new Intent(
+											SearchResultDetailsActivity.this,
+											AccountListActivity.class);
+									startActivity(intent);
+								}
+							});
+			adialog = builder.create();
+			adialog.show();
+		} else {
+			bookingDo();
+		}
+	}
+
+	public void bookingDo() {
+		bookingDo(0, null);
+	}
+
+	public void bookingDo(int useraction, String selection) {
+		if (dialog == null) {
+			dialog = ProgressDialog.show(SearchResultDetailsActivity.this, "",
+					getString(R.string.doing_booking), true);
+			dialog.show();
+		} else if (!dialog.isShowing()) {
+			dialog = ProgressDialog.show(SearchResultDetailsActivity.this, "",
+					getString(R.string.doing_booking), true);
+			dialog.show();
+		}
+
+		bt = new BookingTask();
+		bt.execute(app, item.getBooking_info(), useraction, selection);
+	}
+
+	public void bookingResult(BookingResult result) {
+		AccountDataSource adata = new AccountDataSource(this);
+		adata.open();
+		adata.invalidateCachedAccountData(app.getAccount());
+		adata.close();
+		switch (result.getStatus()) {
+		case CONFIRMATION_NEEDED:
+			bookingConfirmation(result);
+			break;
+		case SELECTION_NEEDED:
+			bookingSelection(result);
 			break;
 		case ERROR:
 			dialog_wrong_credentials(app.getApi().getLast_error(), false);
@@ -298,6 +445,100 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				adialog.dismiss();
 
 				reservationDo(result.getActionIdentifier(),
+						((Entry<String, Object>) possibilities[position])
+								.getKey());
+			}
+		});
+		switch (result.getActionIdentifier()) {
+		case ReservationResult.ACTION_BRANCH:
+			builder.setTitle(R.string.zweigstelle);
+		}
+		builder.setView(view).setNegativeButton(R.string.cancel,
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int id) {
+						adialog.cancel();
+					}
+				});
+		adialog = builder.create();
+		adialog.show();
+	}
+
+	public void bookingConfirmation(final BookingResult result) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+		LayoutInflater inflater = getLayoutInflater();
+
+		View view = inflater.inflate(R.layout.reservation_details_dialog, null);
+
+		TableLayout table = (TableLayout) view.findViewById(R.id.tlDetails);
+
+		for (String[] detail : result.getDetails()) {
+			TableRow tr = new TableRow(this);
+			if (detail.length == 2) {
+				TextView tv1 = new TextView(this);
+				tv1.setText(Html.fromHtml(detail[0]));
+				tv1.setTypeface(null, Typeface.BOLD);
+				tv1.setPadding(0, 0, 8, 0);
+				TextView tv2 = new TextView(this);
+				tv2.setText(Html.fromHtml(detail[1]));
+				tv2.setEllipsize(TruncateAt.END);
+				tv2.setSingleLine(false);
+				tr.addView(tv1);
+				tr.addView(tv2);
+			} else if (detail.length == 1) {
+				TextView tv1 = new TextView(this);
+				tv1.setText(Html.fromHtml(detail[0]));
+				tv1.setPadding(0, 2, 0, 2);
+				TableRow.LayoutParams params = new TableRow.LayoutParams(0);
+				params.span = 2;
+				tv1.setLayoutParams(params);
+				tr.addView(tv1);
+			}
+			table.addView(tr);
+		}
+
+		builder.setTitle(R.string.confirm_title)
+				.setView(view)
+				.setPositiveButton(R.string.confirm,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								reservationDo(
+										ReservationResult.ACTION_CONFIRMATION,
+										"confirmed");
+							}
+						})
+				.setNegativeButton(R.string.cancel,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								adialog.cancel();
+							}
+						});
+		adialog = builder.create();
+		adialog.show();
+	}
+
+	public void bookingSelection(final BookingResult result) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+		LayoutInflater inflater = getLayoutInflater();
+
+		View view = inflater.inflate(R.layout.simple_list_dialog, null);
+
+		ListView lv = (ListView) view.findViewById(R.id.lvBibs);
+		final Object[] possibilities = result.getSelection().valueSet()
+				.toArray();
+
+		lv.setAdapter(new SelectionAdapter(this, possibilities));
+		lv.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				adialog.dismiss();
+
+				bookingDo(result.getActionIdentifier(),
 						((Entry<String, Object>) possibilities[position])
 								.getKey());
 			}
@@ -755,6 +996,62 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		}
 	}
 
+	public class BookingTask extends OpacTask<BookingResult> {
+		private boolean success;
+
+		@Override
+		protected BookingResult doInBackground(Object... arg0) {
+			super.doInBackground(arg0);
+
+			app = (OpacClient) arg0[0];
+			String reservation_info = (String) arg0[1];
+			int useraction = (Integer) arg0[2];
+			String selection = (String) arg0[3];
+
+			try {
+				BookingResult res = ((EbookServiceApi) app.getApi()).booking(
+						reservation_info, app.getAccount(), useraction,
+						selection);
+				success = true;
+				return res;
+			} catch (java.net.UnknownHostException e) {
+				publishProgress(e, "ioerror");
+			} catch (java.net.SocketException e) {
+				success = false;
+				e.printStackTrace();
+			} catch (Exception e) {
+				ACRA.getErrorReporter().handleException(e);
+				success = false;
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(BookingResult res) {
+			dialog.dismiss();
+
+			if (!success || res == null) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						SearchResultDetailsActivity.this);
+				builder.setMessage(R.string.connection_error)
+						.setCancelable(true)
+						.setNegativeButton(R.string.dismiss,
+								new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog,
+											int id) {
+										dialog.cancel();
+									}
+								});
+				AlertDialog alert = builder.create();
+				alert.show();
+				return;
+			}
+
+			bookingResult(res);
+		}
+	}
+
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -777,6 +1074,11 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			if (rt != null) {
 				if (!rt.isCancelled()) {
 					rt.cancel(true);
+				}
+			}
+			if (bt != null) {
+				if (!bt.isCancelled()) {
+					bt.cancel(true);
 				}
 			}
 		} catch (Exception e) {
@@ -802,8 +1104,17 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			} else {
 				menu.findItem(R.id.action_reservation).setVisible(false);
 			}
+			if (item.isBookable() && app.getApi() instanceof EbookServiceApi) {
+				if (((EbookServiceApi) app.getApi()).isEbook(item))
+					menu.findItem(R.id.action_lendebook).setVisible(true);
+				else
+					menu.findItem(R.id.action_lendebook).setVisible(false);
+			} else {
+				menu.findItem(R.id.action_lendebook).setVisible(false);
+			}
 		} else {
 			menu.findItem(R.id.action_reservation).setVisible(false);
+			menu.findItem(R.id.action_lendebook).setVisible(false);
 		}
 
 		String bib = app.getLibrary().getIdent();
@@ -829,6 +1140,9 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		String bib = app.getLibrary().getIdent();
 		if (item.getItemId() == R.id.action_reservation) {
 			reservationStart();
+			return true;
+		} else if (item.getItemId() == R.id.action_lendebook) {
+			bookingStart();
 			return true;
 		} else if (item.getItemId() == android.R.id.home) {
 			finish();

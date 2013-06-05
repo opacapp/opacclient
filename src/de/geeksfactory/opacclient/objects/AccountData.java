@@ -85,6 +85,16 @@ public class AccountData {
 	public static final String KEY_LENT_LINK = "prolongurl";
 
 	/**
+	 * Internal identifier which will be supplied to your
+	 * {@link de.geeksfactory.opacclient.apis.EbookServiceApi#downloadItem(String)}
+	 * implementation for download. Button for download will only be
+	 * displayed if this is set.
+	 * 
+	 * ContentValues key for {@link #setLent(List)}
+	 */
+	public static final String KEY_LENT_DOWNLOAD = "download";
+
+	/**
 	 * Title of an ordered item. Should be set.
 	 * 
 	 * ContentValues key for {@link #setReservations(List)}
