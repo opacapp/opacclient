@@ -75,7 +75,8 @@ public class AccountEditActivity extends SherlockActivity {
 				}
 			}
 
-			if (lib.getReplacedBy() != null) {
+			if (lib.getReplacedBy() != null
+					&& findViewById(R.id.rlReplaced) != null) {
 				findViewById(R.id.rlReplaced).setVisibility(View.VISIBLE);
 				findViewById(R.id.ivReplacedStore).setOnClickListener(
 						new OnClickListener() {
@@ -91,7 +92,7 @@ public class AccountEditActivity extends SherlockActivity {
 								}
 							}
 						});
-			} else {
+			} else if (findViewById(R.id.rlReplaced) != null) {
 				findViewById(R.id.rlReplaced).setVisibility(View.GONE);
 			}
 		} catch (IOException e) {

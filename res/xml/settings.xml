@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <PreferenceCategory android:title="@string/web_opac" >
+    <PreferenceCategory android:title="@string/web_opac" android:key="cat_web_opac">
         <Preference
             android:key="accounts"
             android:summary="@string/accounts_desc"
@@ -12,6 +12,7 @@
             android:key="advanced"
             android:summary="@string/advanced_desc"
             android:title="@string/advanced" />
+        <EditTextPreference android:key="email" android:title="@string/email_address" android:summary="@string/email_address_description"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/notifications" >
         <CheckBoxPreference

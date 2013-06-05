@@ -13,7 +13,7 @@ import de.geeksfactory.opacclient.objects.AccountData;
 public class AccountDatabase extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "accounts.db";
-	private static final int DATABASE_VERSION = 8; // REPLACE ONUPGRADE IF YOU
+	private static final int DATABASE_VERSION = 9; // REPLACE ONUPGRADE IF YOU
 													// CHANGE THIS
 
 	public static final String[] COLUMNS = { "id", "bib", "label", "name",
@@ -33,6 +33,7 @@ public class AccountDatabase extends SQLiteOpenHelper {
 		aMap.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, "deadline_ts");
 		aMap.put(AccountData.KEY_LENT_LENDING_BRANCH, "lending_branch");
 		aMap.put(AccountData.KEY_LENT_LINK, "link");
+		aMap.put(AccountData.KEY_LENT_DOWNLOAD, "download");
 		aMap.put(AccountData.KEY_LENT_STATUS, "status");
 		aMap.put(AccountData.KEY_LENT_TITLE, "title");
 		COLUMNS_LENT = Collections.unmodifiableMap(aMap);
@@ -61,7 +62,8 @@ public class AccountDatabase extends SQLiteOpenHelper {
 		db.execSQL("create table " + "accountdata_lent ( account integer, "
 				+ "title text," + "barcode text," + "author text,"
 				+ "deadline text," + "deadline_ts integer," + "status text,"
-				+ "branch text," + "lending_branch text," + "link text" + ");");
+				+ "branch text," + "lending_branch text," + "link text,"
+				+ "download text" + ");");
 		db.execSQL("create table "
 				+ "accountdata_reservations ( account integer, "
 				+ "title text," + "author text," + "ready text,"
@@ -110,6 +112,10 @@ public class AccountDatabase extends SQLiteOpenHelper {
 			db.execSQL("create table "
 					+ "notified ( id integer primary key autoincrement, "
 					+ "account integer, " + "timestamp integer);");
+		}
+		if (oldVersion < 9) {
+			// App version 2.0.14 to 2.0.15
+			db.execSQL("alter table accountdata_lent add column download text");
 		}
 
 	}

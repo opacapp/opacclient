@@ -24,7 +24,10 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -47,6 +50,7 @@ import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.apis.EbookServiceApi;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -66,6 +70,7 @@ public class AccountActivity extends OpacActivity {
 	private LoadTask lt;
 	private CancelTask ct;
 	private OpacTask<Integer> pt;
+	private OpacTask<Uri> dt;
 
 	private Account account;
 
@@ -375,6 +380,16 @@ public class AccountActivity extends OpacActivity {
 		dialog.show();
 		pt = new ProlongTask();
 		pt.execute(app, a);
+	}
+
+	protected void download(final String a) {
+		if (app.getApi() instanceof EbookServiceApi) {
+			dialog = ProgressDialog.show(AccountActivity.this, "",
+					getString(R.string.doing_download), true);
+			dialog.show();
+			dt = new DownloadTask();
+			dt.execute(app, a);
+		}
 	}
 
 	public class SendTask extends AsyncTask<Object, Object, Integer> {
@@ -730,6 +745,21 @@ public class AccountActivity extends OpacActivity {
 							});
 					((ImageView) v.findViewById(R.id.ivProlong))
 							.setVisibility(View.VISIBLE);
+				} else if (item.containsKey(AccountData.KEY_LENT_DOWNLOAD)
+						&& app.getApi() instanceof EbookServiceApi) {
+					v.findViewById(R.id.ivDownload).setTag(
+							item.getAsString(AccountData.KEY_LENT_DOWNLOAD));
+					((ImageView) v.findViewById(R.id.ivDownload))
+							.setOnClickListener(new OnClickListener() {
+								@Override
+								public void onClick(View arg0) {
+									download((String) arg0.getTag());
+								}
+							});
+					((ImageView) v.findViewById(R.id.ivProlong))
+							.setVisibility(View.GONE);
+					((ImageView) v.findViewById(R.id.ivDownload))
+							.setVisibility(View.VISIBLE);
 				} else {
 					((ImageView) v.findViewById(R.id.ivProlong))
 							.setVisibility(View.INVISIBLE);
@@ -893,6 +923,89 @@ public class AccountActivity extends OpacActivity {
 		}
 	}
 
+	public class DownloadTask extends OpacTask<Uri> {
+		private boolean success = true;
+
+		@Override
+		protected Uri doInBackground(Object... arg0) {
+			super.doInBackground(arg0);
+			String a = (String) arg0[1];
+			Uri url = ((EbookServiceApi) app.getApi()).downloadItem(account, a);
+			return url;
+		}
+
+		@Override
+		protected void onPostExecute(final Uri result) {
+			dialog.dismiss();
+			if (result.toString().contains("acsm")) {
+				String[] download_clients = new String[] {
+						"com.android.aldiko", "com.aldiko.android",
+						"com.bluefirereader",
+						"com.mantano.reader.android.lite",
+						"com.mantano.reader.android.normal",
+						"com.mantano.reader.android", "com.neosoar" };
+				boolean found = false;
+				PackageManager pm = getPackageManager();
+				for (String id : download_clients) {
+					try {
+						pm.getPackageInfo(id, 0);
+						found = true;
+					} catch (NameNotFoundException e) {
+					}
+				}
+				final SharedPreferences sp = PreferenceManager
+						.getDefaultSharedPreferences(AccountActivity.this);
+				if (!found && !sp.contains("reader_needed_ignore")) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							AccountActivity.this);
+					builder.setMessage(R.string.reader_needed)
+							.setCancelable(true)
+							.setNegativeButton(R.string.reader_needed_cancel,
+									new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(
+												DialogInterface dialog, int id) {
+											dialog.cancel();
+										}
+									})
+							.setNeutralButton(R.string.reader_needed_ignore,
+									new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(
+												DialogInterface dialog, int id) {
+											Intent i = new Intent(
+													Intent.ACTION_VIEW);
+											i.setData(result);
+											sp.edit()
+													.putBoolean(
+															"reader_needed_ignore",
+															true).commit();
+											startActivity(i);
+										}
+									})
+							.setPositiveButton(R.string.reader_needed_download,
+									new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(
+												DialogInterface dialog, int id) {
+											dialog.cancel();
+											Intent i = new Intent(
+													Intent.ACTION_VIEW,
+													Uri.parse("market://details?id=de.bluefirereader"));
+											startActivity(i);
+										}
+									});
+					AlertDialog alert = builder.create();
+					alert.show();
+					return;
+				}
+			}
+			Intent i = new Intent(Intent.ACTION_VIEW);
+			i.setData(result);
+			startActivity(i);
+		}
+	}
+
 	public class ProlongTask extends OpacTask<Integer> {
 		private boolean success = true;
 
@@ -1017,6 +1130,11 @@ public class AccountActivity extends OpacActivity {
 			if (pt != null) {
 				if (!pt.isCancelled()) {
 					pt.cancel(true);
+				}
+			}
+			if (dt != null) {
+				if (!dt.isCancelled()) {
+					dt.cancel(true);
 				}
 			}
 		} catch (Exception e) {
