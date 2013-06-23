@@ -542,17 +542,17 @@ public class SearchResultDetailsActivity extends OpacActivity {
 						View v = getLayoutInflater().inflate(
 								R.layout.copy_listitem, null);
 
-						if (copy.containsKey(DetailledItem.KEY_COPY_LOCATION)) {
-							((TextView) v.findViewById(R.id.tvLocation))
-									.setText(copy
-											.getAsString(DetailledItem.KEY_COPY_LOCATION));
-							((TextView) v.findViewById(R.id.tvLocation))
-									.setVisibility(View.VISIBLE);
-						} else if (copy
-								.containsKey(DetailledItem.KEY_COPY_SHELFMARK)) {
+						if (copy.containsKey(DetailledItem.KEY_COPY_SHELFMARK)) {
 							((TextView) v.findViewById(R.id.tvLocation))
 									.setText(copy
 											.getAsString(DetailledItem.KEY_COPY_SHELFMARK));
+							((TextView) v.findViewById(R.id.tvLocation))
+									.setVisibility(View.VISIBLE);
+						} else if (copy
+								.containsKey(DetailledItem.KEY_COPY_LOCATION)) {
+							((TextView) v.findViewById(R.id.tvLocation))
+									.setText(copy
+											.getAsString(DetailledItem.KEY_COPY_LOCATION));
 							((TextView) v.findViewById(R.id.tvLocation))
 									.setVisibility(View.VISIBLE);
 						} else if (copy
@@ -571,6 +571,13 @@ public class SearchResultDetailsActivity extends OpacActivity {
 									.setText(copy
 											.getAsString(DetailledItem.KEY_COPY_BRANCH));
 							((TextView) v.findViewById(R.id.tvZst))
+									.setVisibility(View.VISIBLE);
+						} else if (copy
+								.containsKey(DetailledItem.KEY_COPY_LOCATION)) {
+							((TextView) v.findViewById(R.id.tvLocation))
+									.setText(copy
+											.getAsString(DetailledItem.KEY_COPY_LOCATION));
+							((TextView) v.findViewById(R.id.tvLocation))
 									.setVisibility(View.VISIBLE);
 						} else {
 							((TextView) v.findViewById(R.id.tvZst))
