@@ -21,7 +21,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.HttpProtocolParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -430,6 +429,13 @@ public class Bibliotheca implements OpacApi {
 				result.addDetail(new Detail(tr.child(0).text(), tr.child(1)
 						.text()));
 			}
+		}
+
+		Elements detailcenterlinks = doc
+				.select(".detailzeile_center a.detail_link");
+		for (int i = 0; i < detailcenterlinks.size(); i++) {
+			Element a = detailcenterlinks.get(i);
+			result.addDetail(new Detail(a.text().trim(), a.absUrl("href")));
 		}
 
 		String[] copy_keys = new String[] { DetailledItem.KEY_COPY_BARCODE,
