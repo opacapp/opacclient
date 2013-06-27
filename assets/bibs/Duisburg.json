@@ -2,6 +2,16 @@
     "api": "biber1992", 
     "city": "Duisburg", 
     "data": {
+        "accounttable": {
+            "author": 7, 
+            "barcode": 4, 
+            "homebranch": -1, 
+            "lendingbranch": -1, 
+            "prolongurl": 4, 
+            "returndate": 3, 
+            "status": 5, 
+            "title": 7
+        }, 
         "baseurl": "http://opac.stadtbibliothek.duisburg.de", 
         "copiestable": {
             "barcode": 3, 
@@ -38,6 +48,6 @@
         6.762329299999999
     ], 
     "group": "Nordrhein-Westfalen", 
-    "support": "Katalogsuche", 
+    "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

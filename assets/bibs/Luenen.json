@@ -2,6 +2,16 @@
     "api": "biber1992", 
     "city": "L\u00fcnen", 
     "data": {
+        "accounttable": {
+            "author": 6, 
+            "barcode": 3, 
+            "homebranch": -1, 
+            "lendingbranch": -1, 
+            "prolongurl": 3, 
+            "returndate": 2, 
+            "status": 4, 
+            "title": 6
+        }, 
         "baseurl": "http://opac.luenen.de", 
         "information": "https://www.luenen.de/kultur/buch/index.php", 
         "mediatypes": {
@@ -28,6 +38,6 @@
         7.5285074
     ], 
     "group": "Nordrhein-Westfalen", 
-    "support": "Katalogsuche", 
+    "support": "Katalogsuche und Konto",
     "title": "Stadtb\u00fccherei"
 }
