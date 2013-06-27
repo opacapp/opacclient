@@ -419,12 +419,17 @@ public class SISIS implements OpacApi {
 							.replace(".png", "")));
 				}
 			}
+			Element middlething;
+			if (tr.children().size() > 2)
+				middlething = tr.child(2);
+			else
+				middlething = tr.child(1);
 
-			List<Node> children = tr.child(2).childNodes();
-			if (tr.child(2).select("div").size() == 1) {
-				children = tr.child(2).select("div").first().childNodes();
-			} else if (tr.child(2).select("span.titleData").size() == 1) {
-				children = tr.child(2).select("span.titleData").first()
+			List<Node> children = middlething.childNodes();
+			if (middlething.select("div").not("#hlrightblock,.bestellfunktionen").size() == 1) {
+				children = middlething.select("div").not("#hlrightblock,.bestellfunktionen").first().childNodes();
+			} else if (middlething.select("span.titleData").size() == 1) {
+				children = middlething.select("span.titleData").first()
 						.childNodes();
 			}
 			int childrennum = children.size();
@@ -463,7 +468,7 @@ public class SISIS implements OpacApi {
 			}
 
 			StringBuilder description = null;
-			if (tr.child(2).select("span.Z3988").size() == 1) {
+			if (tr.select("span.Z3988").size() == 1) {
 				// Sometimes there is a <span class="Z3988"> item which provides
 				// data in a standardized format.
 				List<NameValuePair> z3988data;
@@ -471,7 +476,7 @@ public class SISIS implements OpacApi {
 				try {
 					description = new StringBuilder();
 					z3988data = URLEncodedUtils.parse(new URI("http://dummy/?"
-							+ tr.child(2).select("span.Z3988").attr("title")),
+							+ tr.select("span.Z3988").attr("title")),
 							"UTF-8");
 					for (NameValuePair nv : z3988data) {
 						if (nv.getValue() != null) {
