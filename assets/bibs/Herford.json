@@ -3,15 +3,15 @@
     "city": "Herford", 
     "data": {
         "baseurl": "http://62.153.231.37", 
-        "copiestable": [
-            3, 
-            1, 
-            2, 
-            -1, 
-            4, 
-            -1, 
-            -1
-        ], 
+        "copiestable": {
+            "barcode": 3, 
+            "branch": 1, 
+            "department": 2, 
+            "location": -1, 
+            "reservations": -1, 
+            "returndate": -1, 
+            "status": 4
+        }, 
         "information": "http://www.bibliothek.herford.de", 
         "opacdir": "opax", 
         "searchtable": [

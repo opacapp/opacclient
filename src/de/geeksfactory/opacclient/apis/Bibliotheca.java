@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.acra.ACRA;
@@ -438,16 +439,8 @@ public class Bibliotheca implements OpacApi {
 			result.addDetail(new Detail(a.text().trim(), a.absUrl("href")));
 		}
 
-		String[] copy_keys = new String[] { DetailledItem.KEY_COPY_BARCODE,
-				DetailledItem.KEY_COPY_BRANCH,
-				DetailledItem.KEY_COPY_DEPARTMENT,
-				DetailledItem.KEY_COPY_LOCATION, DetailledItem.KEY_COPY_STATUS,
-				DetailledItem.KEY_COPY_RETURN,
-				DetailledItem.KEY_COPY_RESERVATIONS };
-		int copy_keynum = copy_keys.length;
-
 		try {
-			JSONArray copymap = data.getJSONArray("copiestable");
+			JSONObject copymap = data.getJSONObject("copiestable");
 			Elements exemplartrs = doc
 					.select(".exemplartab .tabExemplar, .exemplartab .tabExemplar_");
 			for (int i = 0; i < exemplartrs.size(); i++) {
@@ -455,11 +448,14 @@ public class Bibliotheca implements OpacApi {
 
 				ContentValues e = new ContentValues();
 
-				for (int j = 0; j < copy_keynum; j++) {
-					if (copymap.getInt(j) > -1) {
-						e.put(copy_keys[j], tr.child(copymap.getInt(j)).text());
-					}
+				Iterator<?> keys = copymap.keys();
+				while (keys.hasNext()) {
+					String key = (String) keys.next();
+					int index = copymap.getInt(key);
+					if (index >= 0)
+						e.put(key, tr.child(index).text());
 				}
+
 				result.addCopy(e);
 			}
 		} catch (Exception e) {
@@ -768,16 +764,10 @@ public class Bibliotheca implements OpacApi {
 		logged_in = System.currentTimeMillis();
 		logged_in_as = acc;
 
-		JSONArray copymap = null;
+		JSONObject copymap = null;
 
-		copymap = data.getJSONArray("accounttable");
+		copymap = data.getJSONObject("accounttable");
 
-		String[] copymap_keys = new String[] { AccountData.KEY_LENT_BARCODE,
-				AccountData.KEY_LENT_AUTHOR, AccountData.KEY_LENT_TITLE,
-				AccountData.KEY_LENT_DEADLINE, AccountData.KEY_LENT_STATUS,
-				AccountData.KEY_LENT_BRANCH,
-				AccountData.KEY_LENT_LENDING_BRANCH, AccountData.KEY_LENT_LINK };
-		int copymap_num = copymap_keys.length;
 		List<ContentValues> medien = new ArrayList<ContentValues>();
 
 		if (doc.select(".kontozeile_center table").size() == 0)
@@ -792,19 +782,20 @@ public class Bibliotheca implements OpacApi {
 			Element tr = exemplartrs.get(i);
 			ContentValues e = new ContentValues();
 
-			for (int j = 0; j < copymap_num; j++) {
-				if (copymap.getInt(j) > -1) {
-					if (copymap_keys[j].equals("link")) {
-						if (tr.child(copymap.getInt(j)).children().size() > 0) {
-							e.put(copymap_keys[j], tr.child(copymap.getInt(j))
-									.child(0).attr("href"));
-						}
+			Iterator<?> keys = copymap.keys();
+			while (keys.hasNext()) {
+				String key = (String) keys.next();
+				int index = copymap.getInt(key);
+				if (index >= 0) {
+					if (key.equals(AccountData.KEY_LENT_LINK)) {
+						if (tr.child(index).children().size() > 0)
+							e.put(key, tr.child(index).child(0).attr("href"));
 					} else {
-						e.put(copymap_keys[j], tr.child(copymap.getInt(j))
-								.text());
+						e.put(key, tr.child(index).text());
 					}
 				}
 			}
+
 			if (e.containsKey(AccountData.KEY_LENT_DEADLINE)) {
 				try {
 					e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
@@ -821,14 +812,7 @@ public class Bibliotheca implements OpacApi {
 				.size() > 0);
 		assert (exemplartrs.size() == medien.size());
 
-		copymap = data.getJSONArray("reservationtable");
-		copymap_keys = new String[] { AccountData.KEY_RESERVATION_AUTHOR,
-				AccountData.KEY_RESERVATION_TITLE,
-				AccountData.KEY_RESERVATION_READY,
-				AccountData.KEY_RESERVATION_BRANCH,
-				AccountData.KEY_RESERVATION_CANCEL,
-				AccountData.KEY_RESERVATION_EXPIRE };
-		copymap_num = copymap_keys.length;
+		copymap = data.getJSONObject("reservationtable");
 
 		List<ContentValues> reservations = new ArrayList<ContentValues>();
 		exemplartrs = doc.select(".kontozeile_center table").get(1)
@@ -837,22 +821,17 @@ public class Bibliotheca implements OpacApi {
 			Element tr = exemplartrs.get(i);
 			ContentValues e = new ContentValues();
 
-			for (int j = 0; j < copymap_num; j++) {
-				try {
-					if (copymap.getInt(j) > -1) {
-						if (copymap_keys[j].equals("cancel")) {
-							if (tr.child(copymap.getInt(j)).children().size() > 0) {
-								e.put(copymap_keys[j],
-										tr.child(copymap.getInt(j)).child(0)
-												.attr("href"));
-							}
-						} else {
-							e.put(copymap_keys[j], tr.child(copymap.getInt(j))
-									.text());
-						}
+			Iterator<?> keys = copymap.keys();
+			while (keys.hasNext()) {
+				String key = (String) keys.next();
+				int index = copymap.getInt(key);
+				if (index >= 0) {
+					if (key.equals(AccountData.KEY_RESERVATION_CANCEL)) {
+						if (tr.child(index).children().size() > 0)
+							e.put(key, tr.child(index).child(0).attr("href"));
+					} else {
+						e.put(key, tr.child(index).text());
 					}
-				} catch (JSONException ex) {
-
 				}
 			}
 

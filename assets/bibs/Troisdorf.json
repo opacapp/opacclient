@@ -2,34 +2,35 @@
     "api": "bibliotheca", 
     "city": "Troisdorf", 
     "data": {
-        "accounttable": [
-            -1, 
-            -1, 
-            0, 
-            1, 
-            -1, 
-            -1, 
-            -1, 
-            2
-        ], 
+        "accounttable": {
+            "author": -1, 
+            "barcode": -1, 
+            "homebranch": -1, 
+            "lendingbranch": -1, 
+            "prolongurl": 2, 
+            "returndate": 1, 
+            "status": -1, 
+            "title": 0
+        }, 
         "baseurl": "http://www3.troisdorf.de/wopac126", 
-        "copiestable": [
-            0, 
-            4, 
-            2, 
-            1, 
-            3, 
-            5, 
-            -1
-        ], 
+        "copiestable": {
+            "barcode": 0, 
+            "branch": 4, 
+            "department": 2, 
+            "location": 1, 
+            "reservations": -1, 
+            "returndate": 5, 
+            "status": 3
+        }, 
         "information": "http://web.troisdorf.de/bibliothek/kontakt.asp?menue=1", 
-        "reservationtable": [
-            -1, 
-            0, 
-            1, 
-            -1, 
-            2
-        ]
+        "reservationtable": {
+            "author": -1, 
+            "availability": 1, 
+            "branch": -1, 
+            "cancelurl": 2, 
+            "expirationdate": null, 
+            "title": 0
+        }
     }, 
     "geo": [
         50.8177471, 

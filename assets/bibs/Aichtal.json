@@ -2,35 +2,35 @@
     "api": "bibliotheca", 
     "city": "Aichtal", 
     "data": {
-        "accounttable": [
-            -1, 
-            1, 
-            2, 
-            3, 
-            -1, 
-            -1, 
-            -1, 
-            4
-        ], 
+        "accounttable": {
+            "author": 1, 
+            "barcode": -1, 
+            "homebranch": -1, 
+            "lendingbranch": -1, 
+            "prolongurl": 4, 
+            "returndate": 3, 
+            "status": -1, 
+            "title": 2
+        }, 
         "baseurl": "http://wwwopac.rz-as.de/aichtal", 
-        "copiestable": [
-            -1, 
-            -1, 
-            -1, 
-            2, 
-            3, 
-            4, 
-            -1
-        ], 
+        "copiestable": {
+            "barcode": -1, 
+            "branch": -1, 
+            "department": -1, 
+            "location": 2, 
+            "reservations": -1, 
+            "returndate": 4, 
+            "status": 3
+        }, 
         "information": "http://www.aichtal.de/de/oeffentliche-einrichtungen/buecherei/info-kontakt.html", 
-        "reservationtable": [
-            1, 
-            2, 
-            3, 
-            -1, 
-            4, 
-            -1
-        ]
+        "reservationtable": {
+            "author": 1, 
+            "availability": 3, 
+            "branch": -1, 
+            "cancelurl": 4, 
+            "expirationdate": -1, 
+            "title": 2
+        }
     }, 
     "geo": [
         48.6290054, 

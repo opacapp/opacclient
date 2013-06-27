@@ -2,26 +2,26 @@
     "api": "bibliotheca", 
     "city": "Magdeburg", 
     "data": {
-        "accounttable": [
-            0, 
-            1, 
-            2, 
-            3, 
-            -1, 
-            4, 
-            4, 
-            5
-        ], 
+        "accounttable": {
+            "author": 1, 
+            "barcode": 0, 
+            "homebranch": 4, 
+            "lendingbranch": 4, 
+            "prolongurl": 5, 
+            "returndate": 3, 
+            "status": -1, 
+            "title": 2
+        }, 
         "baseurl": "http://auskunft.stadtbibliothek.magdeburg.de/webopac", 
-        "copiestable": [
-            -1, 
-            0, 
-            -1, 
-            2, 
-            4, 
-            5, 
-            -1
-        ], 
+        "copiestable": {
+            "barcode": -1, 
+            "branch": 0, 
+            "department": -1, 
+            "location": 2, 
+            "reservations": -1, 
+            "returndate": 5, 
+            "status": 4
+        }, 
         "information": "http://www.magdeburg-stadtbibliothek.de/texte/seite.php?id=98014", 
         "mediatypes": {
             "B.gif": "BOOK", 
@@ -47,13 +47,14 @@
             "zss.gif": "MAGAZINE", 
             "zssk.gif": "MAGAZINE"
         }, 
-        "reservationtable": [
-            0, 
-            1, 
-            -1, 
-            2, 
-            3
-        ]
+        "reservationtable": {
+            "author": 0, 
+            "availability": -1, 
+            "branch": 2, 
+            "cancelurl": 3, 
+            "expirationdate": null, 
+            "title": 1
+        }
     }, 
     "geo": [
         52.130807, 

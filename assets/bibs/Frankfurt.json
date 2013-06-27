@@ -2,26 +2,26 @@
     "api": "bibliotheca", 
     "city": "Frankfurt", 
     "data": {
-        "accounttable": [
-            -1, 
-            0, 
-            1, 
-            2, 
-            -1, 
-            3, 
-            3, 
-            4
-        ], 
+        "accounttable": {
+            "author": 0, 
+            "barcode": -1, 
+            "homebranch": 3, 
+            "lendingbranch": 3, 
+            "prolongurl": 4, 
+            "returndate": 2, 
+            "status": -1, 
+            "title": 1
+        }, 
         "baseurl": "http://www.stadtbuecherei-frankfurt.de/opac", 
-        "copiestable": [
-            -1, 
-            0, 
-            1, 
-            2, 
-            3, 
-            4, 
-            -1
-        ], 
+        "copiestable": {
+            "barcode": -1, 
+            "branch": 0, 
+            "department": 1, 
+            "location": 2, 
+            "reservations": -1, 
+            "returndate": 4, 
+            "status": 3
+        }, 
         "information": "http://www.frankfurt.de/sixcms/detail.php?id=2962&_ffmpar[_id_inhalt]=2147168", 
         "mediatypes": {
             "LP.gif": "LP_RECORD", 
@@ -41,13 +41,14 @@
             "mSpielS.gif": "BOARDGAME", 
             "mZtgS.gif": "MAGAZINE"
         }, 
-        "reservationtable": [
-            0, 
-            1, 
-            -1, 
-            2, 
-            3
-        ]
+        "reservationtable": {
+            "author": 0, 
+            "availability": -1, 
+            "branch": 2, 
+            "cancelurl": 3, 
+            "expirationdate": null, 
+            "title": 1
+        }
     }, 
     "geo": [
         50.1109221, 

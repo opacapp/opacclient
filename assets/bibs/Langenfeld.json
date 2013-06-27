@@ -4,15 +4,15 @@
     "data": {
         "accounttable": null, 
         "baseurl": "http://www1.langenfeld.de/webopac", 
-        "copiestable": [
-            5, 
-            -1, 
-            -1, 
-            1, 
-            0, 
-            3, 
-            -1
-        ], 
+        "copiestable": {
+            "barcode": 5, 
+            "branch": -1, 
+            "department": -1, 
+            "location": 1, 
+            "reservations": -1, 
+            "returndate": 3, 
+            "status": 0
+        }, 
         "information": "/../read/info.html", 
         "reservationtable": null
     }, 

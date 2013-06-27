@@ -2,26 +2,26 @@
     "api": "bibliotheca", 
     "city": "Villingen-Schwenningen", 
     "data": {
-        "accounttable": [
-            -1, 
-            0, 
-            1, 
-            2, 
-            -1, 
-            -1, 
-            -1, 
-            3
-        ], 
+        "accounttable": {
+            "author": 0, 
+            "barcode": -1, 
+            "homebranch": -1, 
+            "lendingbranch": -1, 
+            "prolongurl": 3, 
+            "returndate": 2, 
+            "status": -1, 
+            "title": 1
+        }, 
         "baseurl": "http://iserver2.villingen-schwenningen.de/wwwopac", 
-        "copiestable": [
-            -1, 
-            0, 
-            1, 
-            2, 
-            3, 
-            4, 
-            -1
-        ], 
+        "copiestable": {
+            "barcode": -1, 
+            "branch": 0, 
+            "department": 1, 
+            "location": 2, 
+            "reservations": -1, 
+            "returndate": 4, 
+            "status": 3
+        }, 
         "information": "http://www.villingen-schwenningen.de/bildung/stadtbibliothek.html", 
         "mediatypes": {
             "mBuchS.gif ": "BOOK", 
@@ -35,14 +35,14 @@
             "mZtgS.gif": "MAGAZINE", 
             "online.gif": "EBOOK"
         }, 
-        "reservationtable": [
-            0, 
-            1, 
-            -1, 
-            -1, 
-            2, 
-            -1
-        ]
+        "reservationtable": {
+            "author": 0, 
+            "availability": -1, 
+            "branch": -1, 
+            "cancelurl": 2, 
+            "expirationdate": -1, 
+            "title": 1
+        }
     }, 
     "geo": [
         48.0635425, 

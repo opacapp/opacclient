@@ -4,15 +4,15 @@
     "data": {
         "accounttable": null, 
         "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-wiesloch", 
-        "copiestable": [
-            -1, 
-            -1, 
-            -1, 
-            0, 
-            1, 
-            2, 
-            -1
-        ], 
+        "copiestable": {
+            "barcode": -1, 
+            "branch": -1, 
+            "department": -1, 
+            "location": 0, 
+            "reservations": -1, 
+            "returndate": 2, 
+            "status": 1
+        }, 
         "information": "http://www.bibliotheken.bw-online.de/read-wiesloch/info.html", 
         "reservationtable": null
     }, 

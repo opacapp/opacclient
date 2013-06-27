@@ -4,15 +4,15 @@
     "data": {
         "accounttable": null, 
         "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-gundelsheim", 
-        "copiestable": [
-            -1, 
-            -1, 
-            -1, 
-            0, 
-            2, 
-            3, 
-            -1
-        ], 
+        "copiestable": {
+            "barcode": -1, 
+            "branch": -1, 
+            "department": -1, 
+            "location": 0, 
+            "reservations": -1, 
+            "returndate": 3, 
+            "status": 2
+        }, 
         "information": "http://www.bibliotheken.bw-online.de/read-gundelsheim/info.html", 
         "reservationtable": null
     }, 

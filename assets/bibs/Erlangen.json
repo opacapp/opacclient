@@ -2,26 +2,26 @@
     "api": "bibliotheca", 
     "city": "Erlangen", 
     "data": {
-        "accounttable": [
-            -1, 
-            0, 
-            1, 
-            2, 
-            -1, 
-            -1, 
-            -1, 
-            3
-        ], 
+        "accounttable": {
+            "author": 0, 
+            "barcode": -1, 
+            "homebranch": -1, 
+            "lendingbranch": -1, 
+            "prolongurl": 3, 
+            "returndate": 2, 
+            "status": -1, 
+            "title": 1
+        }, 
         "baseurl": "http://stadtbibliothek.erlangen.de/wwwopac", 
-        "copiestable": [
-            -1, 
-            3, 
-            1, 
-            0, 
-            2, 
-            4, 
-            -1
-        ], 
+        "copiestable": {
+            "barcode": -1, 
+            "branch": 3, 
+            "department": 1, 
+            "location": 0, 
+            "reservations": -1, 
+            "returndate": 4, 
+            "status": 2
+        }, 
         "information": "http://www.erlangen.de/bibliothek/", 
         "mediatypes": {
             "blurayS.gif": "BLURAY", 
@@ -40,14 +40,14 @@
             "onleihe2s.gif": "EBOOK", 
             "zeitschriftkl.gif": "NEWSPAPER"
         }, 
-        "reservationtable": [
-            0, 
-            1, 
-            -1, 
-            -1, 
-            3, 
-            2
-        ]
+        "reservationtable": {
+            "author": 0, 
+            "availability": -1, 
+            "branch": -1, 
+            "cancelurl": 3, 
+            "expirationdate": 2, 
+            "title": 1
+        }
     }, 
     "geo": [
         49.5907169, 

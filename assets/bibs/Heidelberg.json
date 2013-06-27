@@ -2,34 +2,35 @@
     "api": "bibliotheca", 
     "city": "Heidelberg", 
     "data": {
-        "accounttable": [
-            3, 
-            -1, 
-            1, 
-            2, 
-            -1, 
-            4, 
-            4, 
-            5
-        ], 
+        "accounttable": {
+            "author": -1, 
+            "barcode": 3, 
+            "homebranch": 4, 
+            "lendingbranch": 4, 
+            "prolongurl": 5, 
+            "returndate": 2, 
+            "status": -1, 
+            "title": 1
+        }, 
         "baseurl": "http://ww3.heidelberg.de/wwwopac", 
-        "copiestable": [
-            5, 
-            0, 
-            2, 
-            1, 
-            3, 
-            4, 
-            -1
-        ], 
+        "copiestable": {
+            "barcode": 5, 
+            "branch": 0, 
+            "department": 2, 
+            "location": 1, 
+            "reservations": -1, 
+            "returndate": 4, 
+            "status": 3
+        }, 
         "information": "http://www.stadtbuecherei-heidelberg.bib-bw.de/seiten/seite301.htm", 
-        "reservationtable": [
-            -1, 
-            0, 
-            2, 
-            1, 
-            3
-        ]
+        "reservationtable": {
+            "author": -1, 
+            "availability": 2, 
+            "branch": 1, 
+            "cancelurl": 3, 
+            "expirationdate": null, 
+            "title": 0
+        }
     }, 
     "geo": [
         49.3987524, 

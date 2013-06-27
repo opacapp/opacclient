@@ -604,7 +604,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 							((TextView) v.findViewById(R.id.tvVorbestellt))
 									.setVisibility(View.GONE);
 						}
-						if (copy.containsKey("rueckgabe")) {
+						if (copy.containsKey(DetailledItem.KEY_COPY_RETURN)) {
 							((TextView) v.findViewById(R.id.tvRueckgabe))
 									.setText(getString(R.string.ret)
 											+ ": "

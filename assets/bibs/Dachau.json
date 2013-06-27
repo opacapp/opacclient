@@ -2,34 +2,35 @@
     "api": "bibliotheca", 
     "city": "Dachau", 
     "data": {
-        "accounttable": [
-            -1, 
-            0, 
-            1, 
-            2, 
-            -1, 
-            -1, 
-            -1, 
-            3
-        ], 
+        "accounttable": {
+            "author": 0, 
+            "barcode": -1, 
+            "homebranch": -1, 
+            "lendingbranch": -1, 
+            "prolongurl": 3, 
+            "returndate": 2, 
+            "status": -1, 
+            "title": 1
+        }, 
         "baseurl": "http://opac.dachau.de/webopac", 
-        "copiestable": [
-            0, 
-            4, 
-            -1, 
-            2, 
-            3, 
-            5, 
-            -1
-        ], 
+        "copiestable": {
+            "barcode": 0, 
+            "branch": 4, 
+            "department": -1, 
+            "location": 2, 
+            "reservations": -1, 
+            "returndate": 5, 
+            "status": 3
+        }, 
         "information": "http://www.dachau.de/bildung-soziales/stadtbuecherei/oeffnungszeiten-kontakt-lage.html?L=vpcbsbhzsucmlk%23content", 
-        "reservationtable": [
-            0, 
-            1, 
-            2, 
-            -1, 
-            3
-        ]
+        "reservationtable": {
+            "author": 0, 
+            "availability": 2, 
+            "branch": -1, 
+            "cancelurl": 3, 
+            "expirationdate": null, 
+            "title": 1
+        }
     }, 
     "geo": [
         48.2629984, 

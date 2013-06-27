@@ -4,15 +4,15 @@
     "data": {
         "accounttable": null, 
         "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-gundelfingen", 
-        "copiestable": [
-            -1, 
-            -1, 
-            -1, 
-            3, 
-            0, 
-            1, 
-            -1
-        ], 
+        "copiestable": {
+            "barcode": -1, 
+            "branch": -1, 
+            "department": -1, 
+            "location": 3, 
+            "reservations": -1, 
+            "returndate": 1, 
+            "status": 0
+        }, 
         "information": "http://www.bibliotheken.bw-online.de/read-gundelfingen/startseite.html", 
         "reservationtable": null
     }, 

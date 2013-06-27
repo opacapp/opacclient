@@ -2,26 +2,26 @@
     "api": "bibliotheca", 
     "city": "Halle (Saale)", 
     "data": {
-        "accounttable": [
-            -1, 
-            1, 
-            2, 
-            3, 
-            5, 
-            0, 
-            -1, 
-            6
-        ], 
+        "accounttable": {
+            "author": 1, 
+            "barcode": -1, 
+            "homebranch": 0, 
+            "lendingbranch": -1, 
+            "prolongurl": 6, 
+            "returndate": 3, 
+            "status": 5, 
+            "title": 2
+        }, 
         "baseurl": "https://secure.halle.de/wwwopac", 
-        "copiestable": [
-            -1, 
-            0, 
-            2, 
-            3, 
-            4, 
-            5, 
-            -1
-        ], 
+        "copiestable": {
+            "barcode": -1, 
+            "branch": 0, 
+            "department": 2, 
+            "location": 3, 
+            "reservations": -1, 
+            "returndate": 5, 
+            "status": 4
+        }, 
         "information": "/../read/info.html", 
         "mediatypes": {
             "CDs.gif": "CD", 
@@ -43,13 +43,14 @@
             "multimedia.gif": "PACKAGE", 
             "schallplatte_32.gif": "UNKNOWN"
         }, 
-        "reservationtable": [
-            1, 
-            2, 
-            -1, 
-            0, 
-            3
-        ]
+        "reservationtable": {
+            "author": 1, 
+            "availability": -1, 
+            "branch": 0, 
+            "cancelurl": 3, 
+            "expirationdate": null, 
+            "title": 2
+        }
     }, 
     "geo": [
         51.47971, 

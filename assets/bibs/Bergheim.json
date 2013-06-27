@@ -2,34 +2,35 @@
     "api": "bibliotheca", 
     "city": "Bergheim", 
     "data": {
-        "accounttable": [
-            -1, 
-            0, 
-            1, 
-            2, 
-            -1, 
-            -1, 
-            -1, 
-            3
-        ], 
+        "accounttable": {
+            "author": 0, 
+            "barcode": -1, 
+            "homebranch": -1, 
+            "lendingbranch": -1, 
+            "prolongurl": 3, 
+            "returndate": 2, 
+            "status": -1, 
+            "title": 1
+        }, 
         "baseurl": "http://buecherei.bergheim.de", 
-        "copiestable": [
-            -1, 
-            0, 
-            -1, 
-            3, 
-            1, 
-            2, 
-            5
-        ], 
+        "copiestable": {
+            "barcode": -1, 
+            "branch": 0, 
+            "department": -1, 
+            "location": 3, 
+            "reservations": 5, 
+            "returndate": 2, 
+            "status": 1
+        }, 
         "information": "http://www.stadtbibliothek.bergheim.de/", 
-        "reservationtable": [
-            0, 
-            1, 
-            -1, 
-            -1, 
-            2
-        ]
+        "reservationtable": {
+            "author": 0, 
+            "availability": -1, 
+            "branch": -1, 
+            "cancelurl": 2, 
+            "expirationdate": null, 
+            "title": 1
+        }
     }, 
     "geo": [
         50.9451945, 

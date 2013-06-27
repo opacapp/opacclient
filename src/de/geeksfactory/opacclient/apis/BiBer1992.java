@@ -29,6 +29,7 @@ import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,7 +43,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.HttpProtocolParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -68,41 +68,33 @@ import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
- * @author Ruediger Wurth, 16.02.2013 
- * Web identification: "copyright 1992-2011 by BiBer GmbH"
+ * @author Ruediger Wurth, 16.02.2013 Web identification:
+ *         "copyright 1992-2011 by BiBer GmbH"
  * 
- * BiBer gestartet mit Stadtbibliothek Offenburg
- * start URL: http://217.86.216.47/opac/de/qsim_frm.html.S
+ *         BiBer gestartet mit Stadtbibliothek Offenburg start URL:
+ *         http://217.86.216.47/opac/de/qsim_frm.html.S
  * 
- *  open:
- *  issue #23: Basic support for library system "Biber" -> Essen
- *  issue #32: Integration of "BiBer" (copyright 2006) -> Karlsruhe https://opac.karlsruhe.de/ 
- *  issue #33: Integration of "BiBer" (copyright 1992) -> Essen
+ *         open: issue #23: Basic support for library system "Biber" -> Essen
+ *         issue #32: Integration of "BiBer" (copyright 2006) -> Karlsruhe
+ *         https://opac.karlsruhe.de/ issue #33: Integration of "BiBer"
+ *         (copyright 1992) -> Essen
  * 
- * Features:
- * In getResult(), mixed table layout is supported: column-wise and row-wise
- * In getResult(), amazon bitmaps are supported
+ *         Features: In getResult(), mixed table layout is supported:
+ *         column-wise and row-wise In getResult(), amazon bitmaps are supported
  * 
- * Katalogsuche tested with
+ *         Katalogsuche tested with
  * 
- * Name					Media	amazon	copy	Media	Branch	Account	
- * 						type	Bitmaps	table	types			support
- * 						images			avail	search
- * --------------------------------------------------------------------
- * BaWu/Friedrichshafen ok		yes		yes		yes		yes		-
- * BaWu/Lahr			ok		yes		yes		yes		no		-
- * BaWu/Offenburg		ok		n/a		no		yes		n/a		yes
- * Bay/Aschaffenburg	ok		n/a		no		yes		n/a		-
- * Bay/Wuerzburg		ok		yes		yes		yes		yes		-
- * NRW/Duisburg			ok		yes		yes		yes		n/a		-
- * NRW/Erkrath			n/a		yes		no		yes		not sup.yes
- * NRW/Essen			n/a		n/a		no		yes		not sup.-
- * NRW/Gelsenkirchen	ok		yes		yes		yes		yes		-
- * NRW/Hagen       		ok		yes		yes		yes		yes		yes
- * NRW/Herford			n/a		yes		yes		yes		n/a		-
- * NRW/Luenen			ok		yes		no		yes		n/a		-
- * NRW/MuelheimRuhr		ok		yes		yes		yes		yes		yes
- * 			 
+ *         Name Media amazon copy Media Branch Account type Bitmaps table types
+ *         support images avail search
+ *         --------------------------------------------------------------------
+ *         BaWu/Friedrichshafen ok yes yes yes yes - BaWu/Lahr ok yes yes yes no
+ *         - BaWu/Offenburg ok n/a no yes n/a yes Bay/Aschaffenburg ok n/a no
+ *         yes n/a - Bay/Wuerzburg ok yes yes yes yes - NRW/Duisburg ok yes yes
+ *         yes n/a - NRW/Erkrath n/a yes no yes not sup.yes NRW/Essen n/a n/a no
+ *         yes not sup.- NRW/Gelsenkirchen ok yes yes yes yes - NRW/Hagen ok yes
+ *         yes yes yes yes NRW/Herford n/a yes yes yes n/a - NRW/Luenen ok yes
+ *         no yes n/a - NRW/MuelheimRuhr ok yes yes yes yes yes
+ * 
  */
 public class BiBer1992 implements OpacApi {
 
@@ -231,37 +223,30 @@ public class BiBer1992 implements OpacApi {
 	}
 
 	/*
-	 * ----- media types -----
-     * Example Wuerzburg:
-     *    <td ...><input type="checkbox" name="MT" value="1" ...></td>
-     *    <td ...><img src="../image/spacer.gif.S" title="Buch"><br>Buch</td>
-     *    
-     * Example Friedrichshafen:
-     *    <td ...><input type="checkbox" name="MS" value="1" ...></td>
-     *    <td ...><img src="../image/spacer.gif.S" title="Buch"><br>Buch</td>
-     *    
-	 * Example Offenburg:
-	 *   <input type="radio" name="MT" checked value="MTYP0">Alles&nbsp;&nbsp;
-     *   <input type="radio" name="MT" value="MTYP10">Belletristik&nbsp;&nbsp;
-     * Unfortunately Biber miss the end tag </input>, so opt.text() does not work!
-     * (at least Offenburg)
-     * 
-     * Example Essen, Aschaffenburg:
-	 *   <input type="radio" name="MT" checked value="MTYP0"><img src="../image/all.gif.S" title="Alles">
-     *   <input type="radio" name="MT" value="MTYP7"><img src="../image/cdrom.gif.S" title="CD-ROM">
-     *   
-     * ----- Branches -----
-     * Example Essen,Erkrath:  no closing </option> !!! 
-     * cannot be parsed by Jsoup, so not supported
-     *   <select name="AORT">
-     *     <option value="ZWST1">Altendorf
-     *   </select>
-     * 
-     * Example Hagen, Würzburg, Friedrichshafen:
-     *   <select name="ZW" class="sel1">
-     *     <option selected value="ZWST0">Alle Bibliotheksorte</option>
-     *   </select>
-     *   
+	 * ----- media types ----- Example Wuerzburg: <td ...><input type="checkbox"
+	 * name="MT" value="1" ...></td> <td ...><img src="../image/spacer.gif.S"
+	 * title="Buch"><br>Buch</td>
+	 * 
+	 * Example Friedrichshafen: <td ...><input type="checkbox" name="MS"
+	 * value="1" ...></td> <td ...><img src="../image/spacer.gif.S"
+	 * title="Buch"><br>Buch</td>
+	 * 
+	 * Example Offenburg: <input type="radio" name="MT" checked
+	 * value="MTYP0">Alles&nbsp;&nbsp; <input type="radio" name="MT"
+	 * value="MTYP10">Belletristik&nbsp;&nbsp; Unfortunately Biber miss the end
+	 * tag </input>, so opt.text() does not work! (at least Offenburg)
+	 * 
+	 * Example Essen, Aschaffenburg: <input type="radio" name="MT" checked
+	 * value="MTYP0"><img src="../image/all.gif.S" title="Alles"> <input
+	 * type="radio" name="MT" value="MTYP7"><img src="../image/cdrom.gif.S"
+	 * title="CD-ROM">
+	 * 
+	 * ----- Branches ----- Example Essen,Erkrath: no closing </option> !!!
+	 * cannot be parsed by Jsoup, so not supported <select name="AORT"> <option
+	 * value="ZWST1">Altendorf </select>
+	 * 
+	 * Example Hagen, Würzburg, Friedrichshafen: <select name="ZW" class="sel1">
+	 * <option selected value="ZWST0">Alle Bibliotheksorte</option> </select>
 	 */
 	private void extract_meta(Document doc) {
 		m_metadata.open();
@@ -474,24 +459,16 @@ public class BiBer1992 implements OpacApi {
 	}
 
 	/*
-	 * result table format: 
-	 * 		JSON "rows_per_hit" = 1: One <tr> per hit
-	 * 		JSON "rows_per_hit" = 2: Two <tr> per hit  (default)
-	 * <form>
-	 * <table>
-	 * <tr valign="top">
-	 * 	 <td class="td3" ...><a href=...><img ...></a></td>  (row is optional, only in some bibs)
-	 * 	 <td class="td2" ...><input ...></td>
-	 * 	 <td width="34%">TITEL</td>
-	 * 	 <td width="34%">&nbsp;</td>
-	 * 	 <td width="6%" align="center">2009</td>
-	 * 	 <td width="*" align="left">DVD0 Seew</td>
-	 * </tr>
-	 * <tr valign="top">
-	 * 	 <td class="td3" ...>&nbsp;...</td>
-	 *   <td class="td2" ...>&nbsp;...</td>
-	 *   <td colspan="4" ...><font size="-1"><font class="p1">Erwachsenenbibliothek</font></font><div class="hr4"></div></td>
-	 * </tr>
+	 * result table format: JSON "rows_per_hit" = 1: One <tr> per hit JSON
+	 * "rows_per_hit" = 2: Two <tr> per hit (default) <form> <table> <tr
+	 * valign="top"> <td class="td3" ...><a href=...><img ...></a></td> (row is
+	 * optional, only in some bibs) <td class="td2" ...><input ...></td> <td
+	 * width="34%">TITEL</td> <td width="34%">&nbsp;</td> <td width="6%"
+	 * align="center">2009</td> <td width="*" align="left">DVD0 Seew</td> </tr>
+	 * <tr valign="top"> <td class="td3" ...>&nbsp;...</td> <td class="td2"
+	 * ...>&nbsp;...</td> <td colspan="4" ...><font size="-1"><font
+	 * class="p1">Erwachsenenbibliothek</font></font><div
+	 * class="hr4"></div></td> </tr>
 	 */
 	private SearchRequestResult parse_search(String html, int page) {
 		List<SearchResult> results = new ArrayList<SearchResult>();
@@ -626,27 +603,20 @@ public class BiBer1992 implements OpacApi {
 	}
 
 	/*
-	 * Two-column table inside of a form
-	 * 		1st column is category, e.g. "Verfasser"
-	 * 		2nd column is content, e.g.  "Bach, Johann Sebastian"
-	 * In some rows, the 1st column is empty, 
-	 * then 2nd column is continued text from row above.
+	 * Two-column table inside of a form 1st column is category, e.g.
+	 * "Verfasser" 2nd column is content, e.g. "Bach, Johann Sebastian" In some
+	 * rows, the 1st column is empty, then 2nd column is continued text from row
+	 * above.
 	 * 
 	 * Some libraries have a second section for the copies in stock (Exemplare).
 	 * This 2nd section has reverse layout.
 	 * 
-	 * |-------------------|
-	 * | Subject | Content |
-	 * |-------------------|
-	 * | Subject | Content |
-	 * |-------------------|
-	 * |         | Content |
-	 * |-------------------|
-	 * | Subject | Content |
-	 * |-------------------------------------------------|
-	 * |         | Site    | Signatur| ID      | State   |
-	 * |-------------------------------------------------|
-	 * |         | Content | Content | Content | Content |
+	 * |-------------------| | Subject | Content | |-------------------| |
+	 * Subject | Content | |-------------------| | | Content |
+	 * |-------------------| | Subject | Content |
+	 * |-------------------------------------------------| | | Site | Signatur|
+	 * ID | State | |-------------------------------------------------| | |
+	 * Content | Content | Content | Content |
 	 * |-------------------------------------------------|
 	 */
 	private DetailledItem parse_result(String html) {
@@ -675,9 +645,10 @@ public class BiBer1992 implements OpacApi {
 		int[] copy_map = new int[] { -1, -1, -1, -1, -1, -1, -1 };
 
 		try {
-			JSONArray map = m_data.getJSONArray("copiestable");
+			JSONObject map = m_data.getJSONObject("copiestable");
 			for (int i = 0; i < copy_keys.length; i++) {
-				copy_map[i] = map.getInt(i);
+				if (map.has(copy_keys[i]))
+					copy_map[i] = map.getInt(copy_keys[i]);
 			}
 		} catch (Exception e) {
 			// "copiestable" is optional
@@ -783,37 +754,31 @@ public class BiBer1992 implements OpacApi {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.geeksfactory.opacclient.apis.OpacApi#prolong(de.geeksfactory.opacclient.objects.Account, java.lang.String)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * Offenburg, prolong negative result:
-	 * <table border="1" width="100%">
-	 *   <tr>
-	 *   	<th ...>Nr</th>
-	 *   	<th ...>Signatur / Kurztitel</th>
-	 *   	<th ...>F&auml;llig</th>
-	 *   	<th ...>Status</th>
-	 *   </tr>
-	 *   <tr>
-	 *   	<td ...>101103778</td>
-	 *   	<td ...>Hyde / Hyde, Anthony: Der Mann aus </td>
-	 *   	<td ...>09.04.2013</td>
-	 *   	<td ...><font class="p1">verl&auml;ngerbar ab 03.04.13, nicht verl&auml;ngert</font>
-	 *   	  <br>Bitte wenden Sie sich an Ihre Bibliothek!</td>
-	 *   </tr>
-	 * </table>
+	 * @see
+	 * de.geeksfactory.opacclient.apis.OpacApi#prolong(de.geeksfactory.opacclient
+	 * .objects.Account, java.lang.String)
 	 * 
-	 * Offenburg, prolong positive result:
-	 * TO BE DESCRIBED
+	 * Offenburg, prolong negative result: <table border="1" width="100%"> <tr>
+	 * <th ...>Nr</th> <th ...>Signatur / Kurztitel</th> <th
+	 * ...>F&auml;llig</th> <th ...>Status</th> </tr> <tr> <td
+	 * ...>101103778</td> <td ...>Hyde / Hyde, Anthony: Der Mann aus </td> <td
+	 * ...>09.04.2013</td> <td ...><font class="p1">verl&auml;ngerbar ab
+	 * 03.04.13, nicht verl&auml;ngert</font> <br>Bitte wenden Sie sich an Ihre
+	 * Bibliothek!</td> </tr> </table>
+	 * 
+	 * Offenburg, prolong positive result: TO BE DESCRIBED
 	 */
 	@Override
 	public boolean prolong(Account account, String media) throws IOException {
 
 		String command;
-		
+
 		// prolong media via http POST
 		// Offenburg: URL is .../opac/verl.C
-		// Hagen:     URL is .../opax/renewmedia.C
+		// Hagen: URL is .../opax/renewmedia.C
 		if (m_opac_dir.equals("opax")) {
 			command = "/renewmedia.C";
 		} else {
@@ -822,10 +787,12 @@ public class BiBer1992 implements OpacApi {
 
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 		nameValuePairs.add(new BasicNameValuePair(media, "YES"));
-		nameValuePairs.add(new BasicNameValuePair("BENUTZER", account.getName()));
+		nameValuePairs
+				.add(new BasicNameValuePair("BENUTZER", account.getName()));
 		nameValuePairs.add(new BasicNameValuePair("FUNC", "verl"));
 		nameValuePairs.add(new BasicNameValuePair("LANG", "de"));
-		nameValuePairs.add(new BasicNameValuePair("PASSWORD", account.getPassword()));
+		nameValuePairs.add(new BasicNameValuePair("PASSWORD", account
+				.getPassword()));
 
 		String html = httpPost(m_opac_url + "/" + m_opac_dir + command,
 				new UrlEncodedFormEntity(nameValuePairs));
@@ -833,14 +800,14 @@ public class BiBer1992 implements OpacApi {
 		Document doc = Jsoup.parse(html);
 
 		// Check result:
-		// First we look for a cell with text "Status" 
+		// First we look for a cell with text "Status"
 		// and store the column number
 		// Then we look in the rows below at this column if
 		// we find any text. Stop at first text we find.
-		// This text must start with "verl�ngert" 
+		// This text must start with "verl�ngert"
 		Elements rowElements = doc.select("table tr");
 
-		int statusCol = -1; // Status column not yet found 
+		int statusCol = -1; // Status column not yet found
 
 		// rows loop
 		for (int i = 0; i < rowElements.size(); i++) {
@@ -870,9 +837,9 @@ public class BiBer1992 implements OpacApi {
 						}
 					}
 				}
-			}//for columns
-		}//for rows
-		
+			}// for columns
+		}// for rows
+
 		m_last_error = "unknown result"; // should not occur
 		return false;
 	}
@@ -890,14 +857,14 @@ public class BiBer1992 implements OpacApi {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.geeksfactory.opacclient.apis.OpacApi#account(de.geeksfactory.opacclient.objects.Account)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * POST-format:
-	 * BENUTZER	xxxxxxxxx
-	 * FUNC		medk
-	 * LANG		de
-	 * PASSWORD	ddmmyyyy
+	 * @see
+	 * de.geeksfactory.opacclient.apis.OpacApi#account(de.geeksfactory.opacclient
+	 * .objects.Account)
+	 * 
+	 * POST-format: BENUTZER xxxxxxxxx FUNC medk LANG de PASSWORD ddmmyyyy
 	 */
 	@Override
 	public AccountData account(Account account) throws IOException,
@@ -932,14 +899,7 @@ public class BiBer1992 implements OpacApi {
 		// parse result list
 		List<ContentValues> medien = new ArrayList<ContentValues>();
 
-		JSONArray copymap = m_data.getJSONArray("accounttable");
-
-		String[] copymap_keys = new String[] { AccountData.KEY_LENT_BARCODE,
-				AccountData.KEY_LENT_AUTHOR, AccountData.KEY_LENT_TITLE,
-				AccountData.KEY_LENT_DEADLINE, AccountData.KEY_LENT_STATUS,
-				AccountData.KEY_LENT_BRANCH,
-				AccountData.KEY_LENT_LENDING_BRANCH, AccountData.KEY_LENT_LINK };
-		int copymap_num = copymap_keys.length;
+		JSONObject copymap = m_data.getJSONObject("accounttable");
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 		Elements rowElements = doc.select("form[name=medkl] table tr");
@@ -950,11 +910,13 @@ public class BiBer1992 implements OpacApi {
 			ContentValues e = new ContentValues();
 
 			// columns: all elements of one media
-			for (int j = 0; j < copymap_num; j++) {
-				if (copymap.getInt(j) > -1) {
-					String key = copymap_keys[j];
-					String value = tr.child(copymap.getInt(j)).text();
-					
+			Iterator<?> keys = copymap.keys();
+			while (keys.hasNext()) {
+				String key = (String) keys.next();
+				int index = copymap.getInt(key);
+				if (index >= 0) {
+					String value = tr.child(index).text();
+
 					// Author and Title is the same field: "autor: title"
 					// sometimes there is no ":" then only the title is given
 					if (key.equals(AccountData.KEY_LENT_AUTHOR)) {
@@ -969,12 +931,13 @@ public class BiBer1992 implements OpacApi {
 						// Title: remove everything up to ":"
 						value = value.replaceFirst(".*\\:", "").trim();
 					}
-					
+
 					if (value.length() != 0) {
 						e.put(key, value);
 					}
 				}
 			}
+
 			// calculate lent timestamp for notification purpose
 			if (e.containsKey(AccountData.KEY_LENT_DEADLINE)) {
 				try {

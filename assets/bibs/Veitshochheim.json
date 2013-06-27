@@ -2,39 +2,40 @@
     "api": "bibliotheca", 
     "city": "Veitsh\u00f6chheim", 
     "data": {
-        "accounttable": [
-            -1, 
-            0, 
-            1, 
-            2, 
-            -1, 
-            -1, 
-            -1, 
-            3
-        ], 
+        "accounttable": {
+            "author": 0, 
+            "barcode": -1, 
+            "homebranch": -1, 
+            "lendingbranch": -1, 
+            "prolongurl": 3, 
+            "returndate": 2, 
+            "status": -1, 
+            "title": 1
+        }, 
         "baseurl": "http://opac.bib.veitshoechheim.de/webopac", 
-        "copiestable": [
-            -1, 
-            -1, 
-            1, 
-            2, 
-            3, 
-            4, 
-            -1
-        ], 
+        "copiestable": {
+            "barcode": -1, 
+            "branch": -1, 
+            "department": 1, 
+            "location": 2, 
+            "reservations": -1, 
+            "returndate": 4, 
+            "status": 3
+        }, 
         "information": "http://www.bib.veitshoechheim.de/", 
         "mediatypes": {
             "mCasetteS.gif": "AUDIO_CASSETTE", 
             "mDVDS.gif": "DVD", 
             "mFilmS.gif": "MOVIE"
         }, 
-        "reservationtable": [
-            0, 
-            1, 
-            2, 
-            -1, 
-            3
-        ]
+        "reservationtable": {
+            "author": 0, 
+            "availability": 2, 
+            "branch": -1, 
+            "cancelurl": 3, 
+            "expirationdate": null, 
+            "title": 1
+        }
     }, 
     "geo": [
         49.831826, 

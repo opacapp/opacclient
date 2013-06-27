@@ -2,26 +2,26 @@
     "api": "bibliotheca", 
     "city": "Bruchsal", 
     "data": {
-        "accounttable": [
-            -1, 
-            0, 
-            1, 
-            3, 
-            -1, 
-            -1, 
-            -1, 
-            4
-        ], 
+        "accounttable": {
+            "author": 0, 
+            "barcode": -1, 
+            "homebranch": -1, 
+            "lendingbranch": -1, 
+            "prolongurl": 4, 
+            "returndate": 3, 
+            "status": -1, 
+            "title": 1
+        }, 
         "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-bruchsal", 
-        "copiestable": [
-            -1, 
-            -1, 
-            -1, 
-            0, 
-            1, 
-            2, 
-            -1
-        ], 
+        "copiestable": {
+            "barcode": -1, 
+            "branch": -1, 
+            "department": -1, 
+            "location": 0, 
+            "reservations": -1, 
+            "returndate": 2, 
+            "status": 1
+        }, 
         "information": "http://www.bruchsal.de/servlet/PB/menu/1339276_l1/index.html", 
         "mediatypes": {
             "CDkl.gif": "CD_SOFTWARE", 
@@ -41,14 +41,14 @@
             "mmusikcdS.gif": "CD", 
             "monooS.gif": "BOOK"
         }, 
-        "reservationtable": [
-            0, 
-            1, 
-            2, 
-            -1, 
-            3, 
-            -1
-        ]
+        "reservationtable": {
+            "author": 0, 
+            "availability": 2, 
+            "branch": -1, 
+            "cancelurl": 3, 
+            "expirationdate": -1, 
+            "title": 1
+        }
     }, 
     "geo": [
         49.1249712, 

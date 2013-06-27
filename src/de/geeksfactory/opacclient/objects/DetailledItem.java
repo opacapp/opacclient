@@ -37,14 +37,14 @@ public class DetailledItem {
 	 * 
 	 * ContentValues key for {@link #addCopy(ContentValues)}:
 	 */
-	public static final String KEY_COPY_LOCATION = "ort";
+	public static final String KEY_COPY_LOCATION = "location";
 
 	/**
 	 * The department (like "music library") of a copy. Optional.
 	 * 
 	 * ContentValues key for {@link #addCopy(ContentValues)}:
 	 */
-	public static final String KEY_COPY_DEPARTMENT = "abt";
+	public static final String KEY_COPY_DEPARTMENT = "department";
 
 	/**
 	 * The branch a copy is in. Should be set, if your library has more than one
@@ -52,7 +52,7 @@ public class DetailledItem {
 	 * 
 	 * ContentValues key for {@link #addCopy(ContentValues)}:
 	 */
-	public static final String KEY_COPY_BRANCH = "zst";
+	public static final String KEY_COPY_BRANCH = "branch";
 
 	/**
 	 * Current status of a copy ("lent", "free", ...). Should be set.
@@ -66,14 +66,14 @@ public class DetailledItem {
 	 * 
 	 * ContentValues key for {@link #addCopy(ContentValues)}:
 	 */
-	public static final String KEY_COPY_RETURN = "rueckgabe";
+	public static final String KEY_COPY_RETURN = "returndate";
 
 	/**
 	 * Number of pending reservations if a copy is currently lent out. Optional.
 	 * 
 	 * ContentValues key for {@link #addCopy(ContentValues)}:
 	 */
-	public static final String KEY_COPY_RESERVATIONS = "vorbestellt";
+	public static final String KEY_COPY_RESERVATIONS = "reservations";
 
 	/**
 	 * Identification in the libraries' shelf system. Optional.
@@ -82,7 +82,7 @@ public class DetailledItem {
 	 * 
 	 * @since 2.0.10
 	 */
-	public static final String KEY_COPY_SHELFMARK = "signatur";
+	public static final String KEY_COPY_SHELFMARK = "signature";
 
 	/**
 	 * Unique media identifier of a child item for

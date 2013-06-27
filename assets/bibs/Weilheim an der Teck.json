@@ -2,26 +2,26 @@
     "api": "bibliotheca", 
     "city": "Weilheim an der Teck", 
     "data": {
-        "accounttable": [
-            -1, 
-            0, 
-            1, 
-            2, 
-            -1, 
-            -1, 
-            -1, 
-            3
-        ], 
+        "accounttable": {
+            "author": 0, 
+            "barcode": -1, 
+            "homebranch": -1, 
+            "lendingbranch": -1, 
+            "prolongurl": 3, 
+            "returndate": 2, 
+            "status": -1, 
+            "title": 1
+        }, 
         "baseurl": "http://217.7.135.254/webopac", 
-        "copiestable": [
-            0, 
-            4, 
-            2, 
-            1, 
-            3, 
-            5, 
-            -1
-        ], 
+        "copiestable": {
+            "barcode": 0, 
+            "branch": 4, 
+            "department": 2, 
+            "location": 1, 
+            "reservations": -1, 
+            "returndate": 5, 
+            "status": 3
+        }, 
         "information": "http://www.weilheim-teck.de/index.php?id=118", 
         "mediatypes": {
             "cdkl.gif": "CD", 
@@ -31,13 +31,14 @@
             "spielekl.gif": "BOARDGAME", 
             "zeit.jpg": "MAGAZINE"
         }, 
-        "reservationtable": [
-            0, 
-            1, 
-            2, 
-            -1, 
-            3
-        ]
+        "reservationtable": {
+            "author": 0, 
+            "availability": 2, 
+            "branch": -1, 
+            "cancelurl": 3, 
+            "expirationdate": null, 
+            "title": 1
+        }
     }, 
     "geo": [
         48.6179469, 

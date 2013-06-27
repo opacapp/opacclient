@@ -108,9 +108,9 @@ class Bibliotheca(Api):
 		config = configparser.RawConfigParser(allow_no_value=True)
 		config.read_string(urllib.request.urlopen(url+'/w3oini.txt').read().decode('iso-8859-1'))
 		data = {
-			'accounttable': [-1]*8,
-			'reservationtable': [-1]*6,
-			'copiestable': [-1]*7
+			'accounttable': {},
+			'reservationtable': {},
+			'copiestable':{},
 		}
 		i_acc = 0
 		i_res = 0
@@ -120,47 +120,47 @@ class Bibliotheca(Api):
 			key = conf.split("#")[0]
 			
 			if key == 'buchungsnr':
-				data['accounttable'][0] = i_acc
+				data['accounttable']['barcode'] = i_acc
 				i_acc += 1
 			elif key == 'verf':
-				data['accounttable'][1] = i_acc
-				data['reservationtable'][0] = i_res
+				data['accounttable']['author'] = i_acc
+				data['reservationtable']['author'] = i_res
 				i_acc += 1
 				i_res += 1
 			elif key == 'titel':
-				data['accounttable'][2] = i_acc
-				data['reservationtable'][1] = i_res
+				data['accounttable']['title'] = i_acc
+				data['reservationtable']['title'] = i_res
 				i_acc += 1
 				i_res += 1
 			elif key == 'frist':
-				data['accounttable'][3] = i_acc
+				data['accounttable']['returndate'] = i_acc
 				i_acc += 1
 			elif key == 'bereit':
-				data['reservationtable'][2] = i_res
+				data['reservationtable']['availability'] = i_res
 				i_res += 1
 			elif key == 'ausleihstatus':
-				data['accounttable'][4] = i_acc
+				data['accounttable']['status'] = i_acc
 				i_acc += 1
 			elif key == 'zwst':
-				data['accounttable'][5] = i_acc
-				data['reservationtable'][3] = i_res
+				data['accounttable']['homebranch'] = i_acc
+				data['reservationtable']['branch'] = i_res
 				i_acc += 1
 				i_res += 1
 			elif key == 'ausleihstelle':
-				data['accounttable'][6] = i_acc
+				data['accounttable']['lendingbranch'] = i_acc
 				i_acc += 1
 			elif key == 'mediengrp':
 				i_acc += 1
 			elif key == 'bereit bis':
-				data['reservationtable'][5] = i_res
+				data['reservationtable']['expirationdate'] = i_res
 				i_res += 1
 			else:
 				print("WARNING! NOT COUNTING ", key, url)
 				sys.exit(0)
-		data['accounttable'][-1] = i_acc
-		data['reservationtable'][-2] = i_res
-		if data['accounttable'][6] == -1 and data['accounttable'][5] > 0:
-			data['accounttable'][6] = data['accounttable'][5]
+		data['accounttable']['prolongurl'] = i_acc
+		data['reservationtable']['cancelurl'] = i_res
+		if data['accounttable']['lendingbranch'] == -1 and data['accounttable']['homebranch'] > 0:
+			data['accounttable']['lendingbranch'] = data['accounttable']['homebranch']
 
 		i_copy = 0
 		for i in range(1,11):
@@ -168,19 +168,19 @@ class Bibliotheca(Api):
 			if conf == '': continue
 			key = conf.split("#")[1]
 			if key == 'buchungsnr':
-				data['copiestable'][0] = i_copy
+				data['copiestable']['barcode'] = i_copy
 			elif key == 'zweigstelle':
-				data['copiestable'][1] = i_copy
+				data['copiestable']['branch'] = i_copy
 			elif key == 'standort2':
-				data['copiestable'][2] = i_copy
+				data['copiestable']['department'] = i_copy
 			elif key == 'standort':
-				data['copiestable'][3] = i_copy
+				data['copiestable']['location'] = i_copy
 			elif key == 'exemplarstatus':
-				data['copiestable'][4] = i_copy
+				data['copiestable']['status'] = i_copy
 			elif key == 'rueckgabedatum':
-				data['copiestable'][5] = i_copy
+				data['copiestable']['returndate'] = i_copy
 			elif key == 'Auslanzvorbestakt':
-				data['copiestable'][6] = i_copy
+				data['copiestable']['reservations'] = i_copy
 			i_copy += 1
 			
 		data['mediatypes'] = {}

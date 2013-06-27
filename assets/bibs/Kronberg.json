@@ -2,26 +2,26 @@
     "api": "bibliotheca", 
     "city": "Kronberg", 
     "data": {
-        "accounttable": [
-            -1, 
-            0, 
-            1, 
-            3, 
-            -1, 
-            -1, 
-            -1, 
-            4
-        ], 
+        "accounttable": {
+            "author": 0, 
+            "barcode": -1, 
+            "homebranch": -1, 
+            "lendingbranch": -1, 
+            "prolongurl": 4, 
+            "returndate": 3, 
+            "status": -1, 
+            "title": 1
+        }, 
         "baseurl": "http://webopac.kronberg.de", 
-        "copiestable": [
-            0, 
-            4, 
-            2, 
-            1, 
-            3, 
-            5, 
-            -1
-        ], 
+        "copiestable": {
+            "barcode": 0, 
+            "branch": 4, 
+            "department": 2, 
+            "location": 1, 
+            "reservations": -1, 
+            "returndate": 5, 
+            "status": 3
+        }, 
         "information": "http://stadtbuecherei.kronberg.de/sv_kronberg_stadtbuecherei/Home/", 
         "mediatypes": {
             "Icon_ovheAudio.JPG": "AUDIOBOOK", 
@@ -33,13 +33,14 @@
             "mDVDS.gif": "DVD", 
             "mFilmS.gif": "MOVIE"
         }, 
-        "reservationtable": [
-            0, 
-            1, 
-            2, 
-            -1, 
-            3
-        ]
+        "reservationtable": {
+            "author": 0, 
+            "availability": 2, 
+            "branch": -1, 
+            "cancelurl": 3, 
+            "expirationdate": null, 
+            "title": 1
+        }
     }, 
     "geo": [
         50.1826861, 

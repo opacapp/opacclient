@@ -2,26 +2,26 @@
     "api": "bibliotheca", 
     "city": "G\u00f6ttingen", 
     "data": {
-        "accounttable": [
-            0, 
-            3, 
-            4, 
-            6, 
-            5, 
-            1, 
-            1, 
-            7
-        ], 
+        "accounttable": {
+            "author": 3, 
+            "barcode": 0, 
+            "homebranch": 1, 
+            "lendingbranch": 1, 
+            "prolongurl": 7, 
+            "returndate": 6, 
+            "status": 5, 
+            "title": 4
+        }, 
         "baseurl": "http://opac.stadtbibliothek.goettingen.de/wopac", 
-        "copiestable": [
-            -1, 
-            0, 
-            -1, 
-            1, 
-            2, 
-            3, 
-            -1
-        ], 
+        "copiestable": {
+            "barcode": -1, 
+            "branch": 0, 
+            "department": -1, 
+            "location": 1, 
+            "reservations": -1, 
+            "returndate": 3, 
+            "status": 2
+        }, 
         "information": "http://opac.stadtbibliothek.goettingen.de/read_blue/info.html", 
         "mediatypes": {
             "bests.gif": "BOOK", 
@@ -49,13 +49,14 @@
             "noten.gif": "SCORE_MUSIC", 
             "zt.gif": "NEWSPAPER"
         }, 
-        "reservationtable": [
-            1, 
-            2, 
-            3, 
-            0, 
-            4
-        ]
+        "reservationtable": {
+            "author": 1, 
+            "availability": 3, 
+            "branch": 0, 
+            "cancelurl": 4, 
+            "expirationdate": null, 
+            "title": 2
+        }
     }, 
     "geo": [
         51.538352, 

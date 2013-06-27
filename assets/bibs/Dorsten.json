@@ -2,26 +2,26 @@
     "api": "bibliotheca", 
     "city": "Dorsten / Wulfen", 
     "data": {
-        "accounttable": [
-            -1, 
-            0, 
-            1, 
-            2, 
-            -1, 
-            -1, 
-            -1, 
-            3
-        ], 
+        "accounttable": {
+            "author": 0, 
+            "barcode": -1, 
+            "homebranch": -1, 
+            "lendingbranch": -1, 
+            "prolongurl": 3, 
+            "returndate": 2, 
+            "status": -1, 
+            "title": 1
+        }, 
         "baseurl": "http://www.bibliotheken-im-kreisre.de/webopac", 
-        "copiestable": [
-            5, 
-            0, 
-            -1, 
-            2, 
-            3, 
-            4, 
-            -1
-        ], 
+        "copiestable": {
+            "barcode": 5, 
+            "branch": 0, 
+            "department": -1, 
+            "location": 2, 
+            "reservations": -1, 
+            "returndate": 4, 
+            "status": 3
+        }, 
         "db": "dors", 
         "information": "http://www.vhsundkultur-dorsten.de/stadtbibliothek/index.php", 
         "mediatypes": {
@@ -53,14 +53,14 @@
             "vhskl.jpg": "UNKNOWN", 
             "videokl.gif": "MOVIE"
         }, 
-        "reservationtable": [
-            0, 
-            1, 
-            2, 
-            -1, 
-            3, 
-            -1
-        ]
+        "reservationtable": {
+            "author": 0, 
+            "availability": 2, 
+            "branch": -1, 
+            "cancelurl": 3, 
+            "expirationdate": -1, 
+            "title": 1
+        }
     }, 
     "geo": [
         51.7166667, 

@@ -2,26 +2,26 @@
     "api": "bibliotheca", 
     "city": "Ulm", 
     "data": {
-        "accounttable": [
-            4, 
-            2, 
-            3, 
-            5, 
-            -1, 
-            0, 
-            -1, 
-            6
-        ], 
+        "accounttable": {
+            "author": 2, 
+            "barcode": 4, 
+            "homebranch": 0, 
+            "lendingbranch": -1, 
+            "prolongurl": 6, 
+            "returndate": 5, 
+            "status": -1, 
+            "title": 3
+        }, 
         "baseurl": "http://www2opac.stadtbibliothek.ulm.de/wwwopac", 
-        "copiestable": [
-            -1, 
-            0, 
-            3, 
-            2, 
-            4, 
-            5, 
-            -1
-        ], 
+        "copiestable": {
+            "barcode": -1, 
+            "branch": 0, 
+            "department": 3, 
+            "location": 2, 
+            "reservations": -1, 
+            "returndate": 5, 
+            "status": 4
+        }, 
         "information": "http://www.ulm.de/kultur_tourismus/bibliotheken_und_literatur/oeffnungszeiten.33574.3076,3963,3669,30713,33574.htm#artikel", 
         "mediatypes": {
             "DVDkl.gif": "DVD", 
@@ -36,13 +36,14 @@
             "mNoten3S.gif": "SCORE_MUSIC", 
             "wii_32.gif": "GAME_CONSOLE_WII"
         }, 
-        "reservationtable": [
-            1, 
-            2, 
-            3, 
-            0, 
-            4
-        ]
+        "reservationtable": {
+            "author": 1, 
+            "availability": 3, 
+            "branch": 0, 
+            "cancelurl": 4, 
+            "expirationdate": null, 
+            "title": 2
+        }
     }, 
     "geo": [
         48.4042981, 

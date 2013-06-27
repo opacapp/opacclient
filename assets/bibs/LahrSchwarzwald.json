@@ -3,15 +3,15 @@
     "city": "Lahr (Schwarzwald)", 
     "data": {
         "baseurl": "http://lahr.bibdia-hosts.de", 
-        "copiestable": [
-            3, 
-            1, 
-            2, 
-            -1, 
-            4, 
-            -1, 
-            -1
-        ], 
+        "copiestable": {
+            "barcode": 3, 
+            "branch": 1, 
+            "department": 2, 
+            "location": -1, 
+            "reservations": -1, 
+            "returndate": -1, 
+            "status": 4
+        }, 
         "information": "http://www.lahr.de/mediathek", 
         "mediatypes": {
             "1": "BOOK", 

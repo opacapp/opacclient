@@ -2,34 +2,35 @@
     "api": "bibliotheca", 
     "city": "Hamm", 
     "data": {
-        "accounttable": [
-            -1, 
-            0, 
-            1, 
-            2, 
-            -1, 
-            -1, 
-            3, 
-            4
-        ], 
+        "accounttable": {
+            "author": 0, 
+            "barcode": -1, 
+            "homebranch": -1, 
+            "lendingbranch": 3, 
+            "prolongurl": 4, 
+            "returndate": 2, 
+            "status": -1, 
+            "title": 1
+        }, 
         "baseurl": "http://opac.hamm.de/opac30", 
-        "copiestable": [
-            -1, 
-            0, 
-            -1, 
-            3, 
-            1, 
-            2, 
-            6
-        ], 
+        "copiestable": {
+            "barcode": -1, 
+            "branch": 0, 
+            "department": -1, 
+            "location": 3, 
+            "reservations": 6, 
+            "returndate": 2, 
+            "status": 1
+        }, 
         "information": "/../read/info.html", 
-        "reservationtable": [
-            0, 
-            1, 
-            -1, 
-            2, 
-            3
-        ]
+        "reservationtable": {
+            "author": 0, 
+            "availability": -1, 
+            "branch": 2, 
+            "cancelurl": 3, 
+            "expirationdate": null, 
+            "title": 1
+        }
     }, 
     "geo": [
         51.6738583, 

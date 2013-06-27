@@ -2,26 +2,26 @@
     "api": "bibliotheca", 
     "city": "Bayreuth", 
     "data": {
-        "accounttable": [
-            -1, 
-            0, 
-            1, 
-            2, 
-            -1, 
-            -1, 
-            -1, 
-            4
-        ], 
+        "accounttable": {
+            "author": 0, 
+            "barcode": -1, 
+            "homebranch": -1, 
+            "lendingbranch": -1, 
+            "prolongurl": 4, 
+            "returndate": 2, 
+            "status": -1, 
+            "title": 1
+        }, 
         "baseurl": "http://online-dienste.bayreuth.de/wwwopac", 
-        "copiestable": [
-            -1, 
-            6, 
-            1, 
-            3, 
-            4, 
-            5, 
-            -1
-        ], 
+        "copiestable": {
+            "barcode": -1, 
+            "branch": 6, 
+            "department": 1, 
+            "location": 3, 
+            "reservations": -1, 
+            "returndate": 5, 
+            "status": 4
+        }, 
         "information": "http://bayreuth.de/rathaus_buerger_service/bildung_wissenschaft/stadtbibliothek_2388.html", 
         "mediatypes": {
             "mCDROMS.gif": "CD_SOFTWARE", 
@@ -42,13 +42,14 @@
             "mWiiS.gif": "GAME_CONSOLE_WII", 
             "mZtgS.gif": "NEWSPAPER"
         }, 
-        "reservationtable": [
-            0, 
-            1, 
-            -1, 
-            -1, 
-            2
-        ]
+        "reservationtable": {
+            "author": 0, 
+            "availability": -1, 
+            "branch": -1, 
+            "cancelurl": 2, 
+            "expirationdate": null, 
+            "title": 1
+        }
     }, 
     "geo": [
         49.9456399, 

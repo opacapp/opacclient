@@ -2,38 +2,39 @@
     "api": "bibliotheca", 
     "city": "Leverkusen", 
     "data": {
-        "accounttable": [
-            -1, 
-            1, 
-            2, 
-            3, 
-            5, 
-            0, 
-            -1, 
-            6
-        ], 
+        "accounttable": {
+            "author": 1, 
+            "barcode": -1, 
+            "homebranch": 0, 
+            "lendingbranch": -1, 
+            "prolongurl": 6, 
+            "returndate": 3, 
+            "status": 5, 
+            "title": 2
+        }, 
         "baseurl": "http://www.bibliothek.leverkusen.de/wwwopac", 
-        "copiestable": [
-            -1, 
-            0, 
-            2, 
-            1, 
-            3, 
-            4, 
-            -1
-        ], 
+        "copiestable": {
+            "barcode": -1, 
+            "branch": 0, 
+            "department": 2, 
+            "location": 1, 
+            "reservations": -1, 
+            "returndate": 4, 
+            "status": 3
+        }, 
         "information": "http://www.bibliothek.leverkusen.de/read_blue/info.html", 
         "mediatypes": {
             "mCDROMS.gif": "CD_SOFTWARE", 
             "mDVDS.gif": "DVD"
         }, 
-        "reservationtable": [
-            1, 
-            2, 
-            -1, 
-            0, 
-            3
-        ]
+        "reservationtable": {
+            "author": 1, 
+            "availability": -1, 
+            "branch": 0, 
+            "cancelurl": 3, 
+            "expirationdate": null, 
+            "title": 2
+        }
     }, 
     "geo": [
         51.04592479999999, 
