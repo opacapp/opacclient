@@ -1,0 +1,42 @@
+{
+    "api": "bibliotheca", 
+    "city": "Aichwald", 
+    "data": {
+        "accounttable": {
+            "author": 0, 
+            "barcode": -1, 
+            "homebranch": -1, 
+            "lendingbranch": -1, 
+            "prolongurl": 3, 
+            "returndate": 2, 
+            "status": -1, 
+            "title": 1
+        }, 
+        "baseurl": "http://wwwopac.rz-as.de/aichwald", 
+        "copiestable": {
+            "barcode": -1,
+            "branch": -1, 
+            "department": -1, 
+            "location": 2, 
+            "reservations": -1, 
+            "returndate": 4, 
+            "status": 3
+        }, 
+        "information": "http://www.aichwald.de/servlet/PB/menu/1135848_l1/index.html",
+        "reservationtable": {
+            "author": 0, 
+            "availability": 2, 
+            "branch": -1, 
+            "cancelurl": 3, 
+            "expirationdate": -1, 
+            "title": 1
+        }
+    }, 
+    "geo": [
+        48.7617612, 
+        9.388987499999999
+    ], 
+    "group": "Baden-W\u00fcrttemberg", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Ortsb\u00fccherei"
+}
