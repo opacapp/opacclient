@@ -135,45 +135,7 @@ public class AboutActivity extends OpacPreferenceActivity {
 				new OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
-
-						final Dialog dialog = new Dialog(AboutActivity.this);
-						dialog.setContentView(R.layout.osl_dialog);
-						dialog.setTitle(R.string.osl);
-						TextView textview1 = (TextView) dialog
-								.findViewById(R.id.textView1);
-
-						String text = "";
-
-						StringBuilder builder = new StringBuilder();
-						InputStream fis;
-						try {
-							fis = getAssets().open("licenses.html");
-							BufferedReader reader = new BufferedReader(
-									new InputStreamReader(fis, "utf-8"));
-							String line;
-							while ((line = reader.readLine()) != null) {
-								builder.append(line);
-							}
-
-							text = builder.toString();
-							fis.close();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-
-						textview1.setText(Html.fromHtml(text));
-
-						Button dialogButton = (Button) dialog
-								.findViewById(R.id.button1);
-						// if button is clicked, close the custom dialog
-						dialogButton.setOnClickListener(new OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								dialog.dismiss();
-							}
-						});
-
-						dialog.show();
+						asset_dialog("licenses.html");
 
 						return false;
 					}
@@ -183,46 +145,7 @@ public class AboutActivity extends OpacPreferenceActivity {
 				new OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
-
-						final Dialog dialog = new Dialog(AboutActivity.this);
-						dialog.setContentView(R.layout.osl_dialog);
-						dialog.setTitle(R.string.privacy);
-						TextView textview1 = (TextView) dialog
-								.findViewById(R.id.textView1);
-
-						String text = "";
-
-						StringBuilder builder = new StringBuilder();
-						InputStream fis;
-						try {
-							fis = getAssets().open("privacy.html");
-							BufferedReader reader = new BufferedReader(
-									new InputStreamReader(fis, "utf-8"));
-							String line;
-							while ((line = reader.readLine()) != null) {
-								builder.append(line);
-							}
-
-							text = builder.toString();
-							fis.close();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-
-						textview1.setText(Html.fromHtml(text));
-
-						Button dialogButton = (Button) dialog
-								.findViewById(R.id.button1);
-						// if button is clicked, close the custom dialog
-						dialogButton.setOnClickListener(new OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								dialog.dismiss();
-							}
-						});
-
-						dialog.show();
-
+						asset_dialog("privacy.html");
 						return false;
 					}
 				});
@@ -231,46 +154,7 @@ public class AboutActivity extends OpacPreferenceActivity {
 				new OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
-
-						final Dialog dialog = new Dialog(AboutActivity.this);
-						dialog.setContentView(R.layout.osl_dialog);
-						dialog.setTitle(R.string.thanks);
-						TextView textview1 = (TextView) dialog
-								.findViewById(R.id.textView1);
-
-						String text = "";
-
-						StringBuilder builder = new StringBuilder();
-						InputStream fis;
-						try {
-							fis = getAssets().open("thanks.html");
-							BufferedReader reader = new BufferedReader(
-									new InputStreamReader(fis, "utf-8"));
-							String line;
-							while ((line = reader.readLine()) != null) {
-								builder.append(line);
-							}
-
-							text = builder.toString();
-							fis.close();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-
-						textview1.setText(Html.fromHtml(text));
-
-						Button dialogButton = (Button) dialog
-								.findViewById(R.id.button1);
-						// if button is clicked, close the custom dialog
-						dialogButton.setOnClickListener(new OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								dialog.dismiss();
-							}
-						});
-
-						dialog.show();
-
+						asset_dialog("thanks.html");
 						return false;
 					}
 				});
@@ -279,9 +163,7 @@ public class AboutActivity extends OpacPreferenceActivity {
 				new OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference arg0) {
-						Intent intent = new Intent(AboutActivity.this,
-								ChangelogActivity.class);
-						startActivity(intent);
+						asset_dialog("changelog.html");
 						return false;
 					}
 				});
@@ -295,5 +177,45 @@ public class AboutActivity extends OpacPreferenceActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void asset_dialog(String filename) {
+
+		final Dialog dialog = new Dialog(AboutActivity.this);
+		dialog.setContentView(R.layout.osl_dialog);
+		dialog.setTitle(R.string.privacy);
+		TextView textview1 = (TextView) dialog.findViewById(R.id.textView1);
+
+		String text = "";
+
+		StringBuilder builder = new StringBuilder();
+		InputStream fis;
+		try {
+			fis = getAssets().open(filename);
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					fis, "utf-8"));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				builder.append(line);
+			}
+
+			text = builder.toString();
+			fis.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		textview1.setText(Html.fromHtml(text));
+
+		Button dialogButton = (Button) dialog.findViewById(R.id.button1);
+		// if button is clicked, close the custom dialog
+		dialogButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
+
+		dialog.show();
 	}
 }
