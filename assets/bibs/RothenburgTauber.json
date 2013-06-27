@@ -13,7 +13,7 @@
             3
         ], 
         "baseurl": "http://rothenburg.internetopac.de", 
-        "copytable": [
+        "copiestable": [
             -1, 
             2, 
             -1, 
