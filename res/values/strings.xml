@@ -198,5 +198,6 @@
     <string name="setting_nfc_desc">Experimentell. Nur mit wenigen Geräten und Bibliotheken.</string>
     <string name="notification_problems">Benachrichtigungen funktionieren u.U. nicht</string>
     <string name="no_results">Die Suchanfrage lieferte keine Ergebnisse.</string>
+    <string name="replacedby">Diese Bibliothek verfügt neuerdings über eine eigene Android-App mit erweitertem Funktionsumfang. Wenn du auf diese spezielle App wechseln möchtest, klicke einfach rechts auf das Play Store Icon.</string>
     
 </resources>
