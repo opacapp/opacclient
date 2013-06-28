@@ -135,7 +135,7 @@ public class AboutActivity extends OpacPreferenceActivity {
 				new OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
-						asset_dialog("licenses.html");
+						asset_dialog("licenses.html", R.string.osl);
 
 						return false;
 					}
@@ -145,7 +145,7 @@ public class AboutActivity extends OpacPreferenceActivity {
 				new OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
-						asset_dialog("privacy.html");
+						asset_dialog("privacy.html", R.string.privacy);
 						return false;
 					}
 				});
@@ -154,7 +154,7 @@ public class AboutActivity extends OpacPreferenceActivity {
 				new OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
-						asset_dialog("thanks.html");
+						asset_dialog("thanks.html", R.string.changelog);
 						return false;
 					}
 				});
@@ -163,7 +163,7 @@ public class AboutActivity extends OpacPreferenceActivity {
 				new OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference arg0) {
-						asset_dialog("changelog.html");
+						asset_dialog("changelog.html", R.string.changelog);
 						return false;
 					}
 				});
@@ -179,11 +179,11 @@ public class AboutActivity extends OpacPreferenceActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void asset_dialog(String filename) {
+	private void asset_dialog(String filename, int title) {
 
 		final Dialog dialog = new Dialog(AboutActivity.this);
 		dialog.setContentView(R.layout.osl_dialog);
-		dialog.setTitle(R.string.privacy);
+		dialog.setTitle(title);
 		TextView textview1 = (TextView) dialog.findViewById(R.id.textView1);
 
 		String text = "";
