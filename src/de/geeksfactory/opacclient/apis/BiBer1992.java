@@ -913,7 +913,12 @@ public class BiBer1992 implements OpacApi {
 			Iterator<?> keys = copymap.keys();
 			while (keys.hasNext()) {
 				String key = (String) keys.next();
-				int index = copymap.getInt(key);
+				int index;
+				try {
+					index = copymap.has(key) ? copymap.getInt(key) : -1;
+				} catch (JSONException e1) {
+					index = -1;
+				}
 				if (index >= 0) {
 					String value = tr.child(index).text();
 
