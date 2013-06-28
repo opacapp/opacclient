@@ -74,31 +74,31 @@ public class AccountEditActivity extends SherlockActivity {
 					tvCity.setText(lib.getCity());
 				}
 			}
+
+			if (lib.getReplacedBy() != null) {
+				findViewById(R.id.rlReplaced).setVisibility(View.VISIBLE);
+				findViewById(R.id.ivReplacedStore).setOnClickListener(
+						new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								try {
+									Intent i = new Intent(Intent.ACTION_VIEW,
+											Uri.parse("market://details?id="
+													+ lib.getReplacedBy()));
+									startActivity(i);
+								} catch (ActivityNotFoundException e) {
+									Log.i("play", "no market installed");
+								}
+							}
+						});
+			} else {
+				findViewById(R.id.rlReplaced).setVisibility(View.GONE);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {
 			ACRA.getErrorReporter().handleException(e);
 			e.printStackTrace();
-		}
-
-		if (lib.getReplacedBy() != null) {
-			findViewById(R.id.rlReplaced).setVisibility(View.VISIBLE);
-			findViewById(R.id.ivReplacedStore).setOnClickListener(
-					new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							try {
-								Intent i = new Intent(Intent.ACTION_VIEW, Uri
-										.parse("market://details?id="
-												+ lib.getReplacedBy()));
-								startActivity(i);
-							} catch (ActivityNotFoundException e) {
-								Log.i("play", "no market installed");
-							}
-						}
-					});
-		} else {
-			findViewById(R.id.rlReplaced).setVisibility(View.GONE);
 		}
 	}
 
