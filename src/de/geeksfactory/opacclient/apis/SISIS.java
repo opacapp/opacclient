@@ -374,7 +374,8 @@ public class SISIS implements OpacApi {
 		boolean haslink = false;
 		for (int i = 0; i < links.size(); i++) {
 			Element node = links.get(i);
-			if (node.hasAttr("href") && !haslink) {
+			if (node.hasAttr("href")
+					& node.attr("href").contains("singleHit.do") && !haslink) {
 				haslink = true;
 				try {
 					List<NameValuePair> anyurl = URLEncodedUtils.parse(new URI(
@@ -426,8 +427,11 @@ public class SISIS implements OpacApi {
 				middlething = tr.child(1);
 
 			List<Node> children = middlething.childNodes();
-			if (middlething.select("div").not("#hlrightblock,.bestellfunktionen").size() == 1) {
-				children = middlething.select("div").not("#hlrightblock,.bestellfunktionen").first().childNodes();
+			if (middlething.select("div")
+					.not("#hlrightblock,.bestellfunktionen").size() == 1) {
+				children = middlething.select("div")
+						.not("#hlrightblock,.bestellfunktionen").first()
+						.childNodes();
 			} else if (middlething.select("span.titleData").size() == 1) {
 				children = middlething.select("span.titleData").first()
 						.childNodes();
@@ -476,8 +480,7 @@ public class SISIS implements OpacApi {
 				try {
 					description = new StringBuilder();
 					z3988data = URLEncodedUtils.parse(new URI("http://dummy/?"
-							+ tr.select("span.Z3988").attr("title")),
-							"UTF-8");
+							+ tr.select("span.Z3988").attr("title")), "UTF-8");
 					for (NameValuePair nv : z3988data) {
 						if (nv.getValue() != null) {
 							if (!nv.getValue().trim().equals("")) {
@@ -618,6 +621,7 @@ public class SISIS implements OpacApi {
 				+ "/singleHit.do?methodToCall=activateTab&tab=showTitleActive");
 
 		Document doc2 = Jsoup.parse(html2);
+		doc2.setBaseUri(opac_url);
 
 		String html3 = httpGet(opac_url
 				+ "/singleHit.do?methodToCall=activateTab&tab=showAvailabilityActive");
@@ -666,10 +670,17 @@ public class SISIS implements OpacApi {
 			result.setCover(doc.select(".data td img").first().attr("abs:src"));
 		}
 
-		if (doc.select(".data td strong").size() > 0) {
-			result.setTitle(doc.select(".data td strong").first().text());
+		if (doc.select(".aw_teaser_title").size() == 1) {
+			result.setTitle(doc.select(".aw_teaser_title").first().text()
+					.trim());
+		} else if (doc.select(".data td strong").size() > 0) {
+			result.setTitle(doc.select(".data td strong").first().text().trim());
 		} else {
 			result.setTitle("");
+		}
+		if (doc.select(".aw_teaser_title_zusatz").size() > 0) {
+			result.addDetail(new Detail("Titelzusatz", doc
+					.select(".aw_teaser_title_zusatz").text().trim()));
 		}
 
 		String title = "";
@@ -703,8 +714,23 @@ public class SISIS implements OpacApi {
 				}
 			}
 		} else {
-			result.addDetail(new Detail("Fehler",
-					"Details konnten nicht abgerufen werden, bitte erneut probieren!"));
+			if (doc2.select("#tab-content .fulltitle tr").size() > 0) {
+				Elements rows = doc2.select("#tab-content .fulltitle tr");
+				for (Element tr : rows) {
+					if (tr.children().size() == 2) {
+						Element valcell = tr.child(1);
+						String value = valcell.text().trim();
+						if (valcell.select("a").size() == 1) {
+							value = valcell.select("a").first().absUrl("href");
+						}
+						result.addDetail(new Detail(tr.child(0).text().trim(),
+								value));
+					}
+				}
+			} else {
+				result.addDetail(new Detail("Fehler",
+						"Details konnten nicht abgerufen werden, bitte erneut probieren!"));
+			}
 		}
 		if (!text.equals("") && !title.equals("")) {
 			result.addDetail(new Detail(title.trim(), text.trim()));
@@ -754,9 +780,8 @@ public class SISIS implements OpacApi {
 				.compile("^(entliehen) bis ([0-9]{1,2}.[0-9]{1,2}.[0-9]{2,4}) \\(gesamte Vormerkungen: ([0-9]+)\\)$");
 		Pattern status_and_barcode = Pattern.compile("^(.*) ([0-9A-Za-z]+)$");
 
-		Elements exemplartrs = doc.select("#tab-content .data tr:not(#bg2)");
-		for (int i = 0; i < exemplartrs.size(); i++) {
-			Element tr = exemplartrs.get(i);
+		Elements exemplartrs = doc.select("#tab-content .data tr").not("#bg2");
+		for (Element tr : exemplartrs) {
 			try {
 				ContentValues e = new ContentValues();
 				Element status = tr.child(copy_columnmap
