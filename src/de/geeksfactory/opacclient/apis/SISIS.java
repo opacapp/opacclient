@@ -365,6 +365,9 @@ public class SISIS implements OpacApi {
 		} else if (resultnumstr.contains("(")) {
 			results_total = Integer.parseInt(resultnumstr.replaceAll(
 					".*\\(([0-9]+)\\).*", "$1"));
+		} else if (resultnumstr.contains(": ")) {
+			results_total = Integer.parseInt(resultnumstr.replaceAll(
+					".*: ([0-9]+)$", "$1"));
 		}
 
 		Elements table = doc.select("table.data tbody tr");
@@ -429,9 +432,10 @@ public class SISIS implements OpacApi {
 			List<Node> children = middlething.childNodes();
 			if (middlething.select("div")
 					.not("#hlrightblock,.bestellfunktionen").size() == 1) {
-				children = middlething.select("div")
-						.not("#hlrightblock,.bestellfunktionen").first()
-						.childNodes();
+				Element indiv = middlething.select("div")
+						.not("#hlrightblock,.bestellfunktionen").first();
+				if (indiv.children().size() > 1)
+					children = indiv.childNodes();
 			} else if (middlething.select("span.titleData").size() == 1) {
 				children = middlething.select("span.titleData").first()
 						.childNodes();

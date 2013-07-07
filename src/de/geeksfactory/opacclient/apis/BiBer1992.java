@@ -925,6 +925,10 @@ public class BiBer1992 implements OpacApi {
 					// Author and Title is the same field: "autor: title"
 					// sometimes there is no ":" then only the title is given
 					if (key.equals(AccountData.KEY_LENT_AUTHOR)) {
+						if (value.contains("/")) {
+							// Autor: remove everything before "/"
+							value = value.replaceFirst(".*/", "").trim();
+						}
 						if (value.contains(":")) {
 							// Autor: remove everything starting at ":"
 							value = value.replaceFirst("\\:.*", "").trim();
