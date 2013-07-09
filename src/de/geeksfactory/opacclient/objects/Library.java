@@ -16,6 +16,7 @@ public class Library implements Comparable<Library> {
 	private String api;
 	private JSONObject data;
 	private String group;
+	private String replacedby;
 	private double[] geo;
 
 	/**
@@ -40,6 +41,8 @@ public class Library implements Comparable<Library> {
 		lib.setSupport(input.getString("support"));
 		lib.setGroup(input.getString("group"));
 		lib.setData(input.getJSONObject("data"));
+		if (input.has("replacedby"))
+			lib.setReplacedBy(input.getString("replacedby"));
 		if (input.has("geo")) {
 			double[] geo = new double[2];
 			geo[0] = input.getJSONArray("geo").getDouble(0);
@@ -209,6 +212,14 @@ public class Library implements Comparable<Library> {
 	 */
 	public void setGeo(double[] geo) {
 		this.geo = geo;
+	}
+
+	public String getReplacedBy() {
+		return replacedby;
+	}
+
+	public void setReplacedBy(String replacedby) {
+		this.replacedby = replacedby;
 	}
 
 	public int compareTo(Library arg0) {

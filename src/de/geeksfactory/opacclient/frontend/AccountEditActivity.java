@@ -7,10 +7,15 @@ import org.acra.ACRA;
 import org.holoeverywhere.app.AlertDialog;
 import org.json.JSONException;
 
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -68,6 +73,26 @@ public class AccountEditActivity extends SherlockActivity {
 				} else {
 					tvCity.setText(lib.getCity());
 				}
+			}
+
+			if (lib.getReplacedBy() != null) {
+				findViewById(R.id.rlReplaced).setVisibility(View.VISIBLE);
+				findViewById(R.id.ivReplacedStore).setOnClickListener(
+						new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								try {
+									Intent i = new Intent(Intent.ACTION_VIEW,
+											Uri.parse("market://details?id="
+													+ lib.getReplacedBy()));
+									startActivity(i);
+								} catch (ActivityNotFoundException e) {
+									Log.i("play", "no market installed");
+								}
+							}
+						});
+			} else {
+				findViewById(R.id.rlReplaced).setVisibility(View.GONE);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

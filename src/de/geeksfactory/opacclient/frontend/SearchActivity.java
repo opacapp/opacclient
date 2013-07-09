@@ -14,6 +14,7 @@ import org.json.JSONException;
 
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -25,6 +26,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -229,6 +231,30 @@ public class SearchActivity extends OpacActivity {
 
 	protected void manageVisibility() {
 		PackageManager pm = getPackageManager();
+
+		if (app.getLibrary().getReplacedBy() != null
+				&& sp.getInt("annoyed", 0) < 5) {
+			findViewById(R.id.rlReplaced).setVisibility(View.VISIBLE);
+			findViewById(R.id.ivReplacedStore).setOnClickListener(
+					new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							try {
+								Intent i = new Intent(Intent.ACTION_VIEW, Uri
+										.parse("market://details?id="
+												+ app.getLibrary()
+														.getReplacedBy()));
+								startActivity(i);
+							} catch (ActivityNotFoundException e) {
+								Log.i("play", "no market installed");
+							}
+						}
+					});
+			sp.edit().putInt("annoyed", sp.getInt("annoyed", 0) + 1).commit();
+		} else {
+			findViewById(R.id.rlReplaced).setVisibility(View.GONE);
+		}
+
 		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_FREE)) {
 			findViewById(R.id.tvSearchAdvHeader).setVisibility(View.VISIBLE);
 			findViewById(R.id.rlSimpleSearch).setVisibility(View.VISIBLE);

@@ -913,13 +913,22 @@ public class BiBer1992 implements OpacApi {
 			Iterator<?> keys = copymap.keys();
 			while (keys.hasNext()) {
 				String key = (String) keys.next();
-				int index = copymap.getInt(key);
+				int index;
+				try {
+					index = copymap.has(key) ? copymap.getInt(key) : -1;
+				} catch (JSONException e1) {
+					index = -1;
+				}
 				if (index >= 0) {
 					String value = tr.child(index).text();
 
 					// Author and Title is the same field: "autor: title"
 					// sometimes there is no ":" then only the title is given
 					if (key.equals(AccountData.KEY_LENT_AUTHOR)) {
+						if (value.contains("/")) {
+							// Autor: remove everything before "/"
+							value = value.replaceFirst(".*/", "").trim();
+						}
 						if (value.contains(":")) {
 							// Autor: remove everything starting at ":"
 							value = value.replaceFirst("\\:.*", "").trim();

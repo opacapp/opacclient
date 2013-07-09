@@ -1,0 +1,16 @@
+{
+    "api": "sisis", 
+    "city": "Bayreuth", 
+    "data": {
+        "baseurl": "https://opac.uni-bayreuth.de/InfoGuideClient", 
+        "information": "http://www.ub.uni-bayreuth.de/de/index.html", 
+        "startparams": "Login=opacweb"
+    }, 
+    "geo": [
+        49.9456399, 
+        11.5713346
+    ], 
+    "group": "Bayern", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Unibibliothek"
+}

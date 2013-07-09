@@ -54,6 +54,7 @@
         11.0142675
     ], 
     "group": "Bayern", 
+	"replacedby": "de.opacapp.erlangen",
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

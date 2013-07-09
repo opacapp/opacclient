@@ -78,7 +78,7 @@ public class HTTPClient {
 		RedirectHandler customRedirectHandler = new HTTPClient.CustomRedirectHandler();
 		hc.setRedirectHandler(customRedirectHandler);
 		HttpProtocolParams.setUserAgent(hc.getParams(), "OpacApp/"
-				+ OpacClient.versionName + " (Android)");
+				+ OpacClient.versionName);
 		return hc;
 	}
 

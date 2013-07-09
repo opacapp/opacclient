@@ -40,6 +40,34 @@
             android:orientation="vertical"
             android:padding="8dp" >
 
+            <RelativeLayout
+                android:id="@+id/rlReplaced"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/note_replacedby"
+                android:padding="4dp"
+                android:visibility="gone" >
+
+                <ImageView
+                    android:id="@+id/ivReplacedStore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/playstore" />
+
+                <TextView
+                    android:id="@+id/tvReplacedNote"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/ivReplacedStore"
+                    android:text="@string/replacedby" />
+            </RelativeLayout>
+
             <org.holoeverywhere.widget.TextView
                 android:id="@+id/tvSearchAdvHeader"
                 android:layout_width="fill_parent"
