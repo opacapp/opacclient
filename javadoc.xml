@@ -11,7 +11,7 @@
 				noindex="false" nonavbar="false" notree="false" 
 				packagenames="de.geeksfactory.opacclient.objects" 
 				source="1.6"
-				sourcefiles="src/de/geeksfactory/opacclient/apis/OpacApi.java,src/de/geeksfactory/opacclient/storage/MetaDataSource.java" 
+				sourcefiles="src/de/geeksfactory/opacclient/apis/OpacApi.java,src/de/geeksfactory/opacclient/apis/BaseApi.java,src/de/geeksfactory/opacclient/apis/EbookServiceApi.java,src/de/geeksfactory/opacclient/storage/MetaDataSource.java" 
 				sourcepath="gen:src" splitindex="true" 
 				use="true" version="true"
 				header="OpacClient public API"

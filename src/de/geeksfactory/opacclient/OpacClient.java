@@ -32,6 +32,7 @@ import de.geeksfactory.opacclient.apis.Bibliotheca;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.SISIS;
 import de.geeksfactory.opacclient.apis.Zones22;
+import de.geeksfactory.opacclient.frontend.MainPreferenceActivity;
 import de.geeksfactory.opacclient.frontend.NavigationFragment;
 import de.geeksfactory.opacclient.frontend.SearchResultsActivity;
 import de.geeksfactory.opacclient.frontend.WelcomeActivity;
@@ -230,6 +231,12 @@ public class OpacClient extends Application {
 		}
 
 		return libs;
+	}
+
+	public void toPrefs(Activity activity) {
+		Intent intent = new Intent(activity,
+				MainPreferenceActivity.class);
+		activity.startActivity(intent);
 	}
 
 	@Override

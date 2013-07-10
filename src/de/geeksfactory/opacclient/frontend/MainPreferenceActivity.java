@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceCategory;
 
 import com.actionbarsherlock.view.MenuItem;
 
@@ -19,6 +20,10 @@ public class MainPreferenceActivity extends OpacPreferenceActivity {
 	protected void openAccountList() {
 		Intent intent = new Intent(this, AccountListActivity.class);
 		startActivity(intent);
+	}
+
+	protected boolean ebooksSupported() {
+		return false;
 	}
 
 	@Override
@@ -44,6 +49,11 @@ public class MainPreferenceActivity extends OpacPreferenceActivity {
 				return false;
 			}
 		});
+
+		if (!ebooksSupported()) {
+			((PreferenceCategory) findPreference("cat_web_opac"))
+					.removePreference(findPreference("email"));
+		}
 
 		Preference meta = findPreference("meta_clear");
 		meta.setOnPreferenceClickListener(new OnPreferenceClickListener() {

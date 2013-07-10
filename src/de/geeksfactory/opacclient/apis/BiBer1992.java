@@ -21,11 +21,7 @@
  */
 package de.geeksfactory.opacclient.apis;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,11 +33,8 @@ import java.util.regex.Pattern;
 import org.acra.ACRA;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -96,12 +89,11 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  *         no yes n/a - NRW/MuelheimRuhr ok yes yes yes yes yes
  * 
  */
-public class BiBer1992 implements OpacApi {
+public class BiBer1992 extends BaseApi {
 
 	private String m_opac_url = "";
 	private String m_opac_dir = "opac"; // sometimes also "opax"
 	private JSONObject m_data;
-	private DefaultHttpClient m_ahc;
 	private MetaDataSource m_metadata;
 	private boolean m_initialised = false;
 	private String m_last_error;
@@ -117,19 +109,6 @@ public class BiBer1992 implements OpacApi {
 	// work:
 	// number of results is always 50 which is too much
 	final private int numOfResultsPerPage = 20;
-
-	private String httpPost(String url, UrlEncodedFormEntity data)
-			throws ClientProtocolException, IOException {
-		HttpPost httppost = new HttpPost(url);
-		httppost.setEntity(data);
-		HttpResponse response = m_ahc.execute(httppost);
-		if (response.getStatusLine().getStatusCode() >= 400) {
-			throw new NotReachableException();
-		}
-		String html = convertStreamToString(response.getEntity().getContent());
-		response.getEntity().consumeContent();
-		return html;
-	}
 
 	// from HTML:
 	// <option value="AW">Autor</option>
@@ -152,30 +131,6 @@ public class BiBer1992 implements OpacApi {
 	@Override
 	public String getLast_error() {
 		return m_last_error;
-	}
-
-	private String convertStreamToString(InputStream is) throws IOException {
-		BufferedReader reader;
-		try {
-			reader = new BufferedReader(new InputStreamReader(is, "ISO-8859-1"));
-		} catch (UnsupportedEncodingException e1) {
-			reader = new BufferedReader(new InputStreamReader(is));
-		}
-		StringBuilder sb = new StringBuilder();
-
-		String line = null;
-		try {
-			while ((line = reader.readLine()) != null) {
-				sb.append((line + "\n"));
-			}
-		} finally {
-			try {
-				is.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return sb.toString();
 	}
 
 	private void setMediaTypeFromImageFilename(SearchResult sr, String imagename) {
@@ -326,7 +281,7 @@ public class BiBer1992 implements OpacApi {
 			httpget = new HttpGet(m_opac_url + "/" + m_opac_dir
 					+ "/de/qsim_main.S");
 
-		HttpResponse response = m_ahc.execute(httpget);
+		HttpResponse response = http_client.execute(httpget);
 
 		if (response.getStatusLine().getStatusCode() == 500) {
 			throw new NotReachableException();
@@ -351,7 +306,7 @@ public class BiBer1992 implements OpacApi {
 
 	@Override
 	public void init(MetaDataSource metadata, Library lib) {
-		m_ahc = HTTPClient.getNewHttpClient(lib);
+		http_client = HTTPClient.getNewHttpClient(lib);
 
 		m_metadata = metadata;
 		m_library = lib;
@@ -582,7 +537,7 @@ public class BiBer1992 implements OpacApi {
 
 		HttpGet httpget = new HttpGet(m_opac_url + id);
 
-		HttpResponse response = m_ahc.execute(httpget);
+		HttpResponse response = http_client.execute(httpget);
 
 		String html = convertStreamToString(response.getEntity().getContent());
 		response.getEntity().consumeContent();

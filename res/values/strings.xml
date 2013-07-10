@@ -44,8 +44,11 @@
     <string name="res">Vorbestellt</string>
     <string name="export">Details exportieren</string>
     <string name="reserve">Vorbestellen</string>
+    <string name="lendebook">Ebook leihen</string>
     <string name="res_zst">Zweigstelle auswählen</string>
     <string name="doing_res">Führe Vorbestellung durch…</string>
+    <string name="opac_error_email">Für diesen Vorgang müssen Sie leider Ihre E-Mail-Adresse in den Einstellungen hinterlegen.</string>
+    <string name="doing_booking">Führe Ausleihe durch…</string>
     <string name="status_nouser">In den Einstellungen sind zu diesem Konto keine Ausweisdaten hinterlegt.</string>
     <string name="dismiss">Schließen</string>
     <string name="loading_account">Lade Konto…</string>
@@ -65,6 +68,11 @@
     <string name="accept">OK</string>
     <string name="doing_cancel">Vorbestellung wird gelöscht…</string>
     <string name="doing_prolong">Verlängerung wird durchgeführt…</string>
+    <string name="doing_download">Download-Informationen werden abgerufen</string>
+    <string name="reader_needed">Um die E-Book-Datei zu lesen, benötigen Sie leider eine weitere App. Klicken Sie auf Ignorieren, wenn Sie bereits eine solche App haben. Diese Meldung erscheint dann nicht wieder. Klicken Sie auf Download, um in den Play Store zu gelangen und Bluefire Reader herunterzuladen.</string>
+    <string name="reader_needed_ignore">Ignorieren</string>
+    <string name="reader_needed_cancel">Abbrechen</string>
+    <string name="reader_needed_download">Download</string>
     <string name="doing_prolong_all">Medien, die verlängert werden können, werden verlängert…</string>
     <string name="opac_error">Meldung vom Web-Opac:</string>
     <string name="welcome">Herzlich Willkommen</string>
@@ -199,5 +207,7 @@
     <string name="notification_problems">Benachrichtigungen funktionieren u.U. nicht</string>
     <string name="no_results">Die Suchanfrage lieferte keine Ergebnisse.</string>
     <string name="replacedby">Diese Bibliothek verfügt neuerdings über eine eigene Android-App mit erweitertem Funktionsumfang. Wenn du auf diese spezielle App wechseln möchtest, klicke einfach rechts auf das Play Store Icon.</string>
-    
+    <string name="email_address">E-Mail-Adresse</string>
+    <string name="email_address_description">Benötigt für E-Book-Reservierungen</string>
+
 </resources>

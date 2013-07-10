@@ -1,9 +1,6 @@
 package de.geeksfactory.opacclient.apis;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
 import java.net.URI;
@@ -18,17 +15,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.acra.ACRA;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -41,8 +32,6 @@ import org.jsoup.select.Elements;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-import android.util.SparseArray;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult.Status;
 import de.geeksfactory.opacclient.networking.HTTPClient;
@@ -65,10 +54,9 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  * Restrictions: Bookmarks are only constantly supported if the library uses the
  * BibTip extension.
  */
-public class SISIS implements OpacApi {
+public class SISIS extends BaseApi implements OpacApi {
 	protected String opac_url = "";
 	protected JSONObject data;
-	protected DefaultHttpClient ahc;
 	protected MetaDataSource metadata;
 	protected boolean initialised = false;
 	protected String last_error;
@@ -135,30 +123,6 @@ public class SISIS implements OpacApi {
 		return last_error;
 	}
 
-	protected String convertStreamToString(InputStream is) throws IOException {
-		BufferedReader reader;
-		try {
-			reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-		} catch (UnsupportedEncodingException e1) {
-			reader = new BufferedReader(new InputStreamReader(is));
-		}
-		StringBuilder sb = new StringBuilder();
-
-		String line = null;
-		try {
-			while ((line = reader.readLine()) != null) {
-				sb.append((line + "\n"));
-			}
-		} finally {
-			try {
-				is.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return sb.toString();
-	}
-
 	public void extract_meta(Document doc) {
 		// Zweigstellen auslesen
 		Elements zst_opts = doc.select("#selectedSearchBranchlib option");
@@ -223,7 +187,7 @@ public class SISIS implements OpacApi {
 
 	@Override
 	public void init(MetaDataSource metadata, Library lib) {
-		ahc = HTTPClient.getNewHttpClient(lib);
+		super.init(metadata, lib);
 
 		this.metadata = metadata;
 		this.library = lib;
@@ -1224,31 +1188,6 @@ public class SISIS implements OpacApi {
 			reservations.add(e);
 		}
 		assert (reservations.size() == trs - 1);
-	}
-
-	protected String httpGet(String url) throws ClientProtocolException,
-			IOException {
-		HttpGet httpget = new HttpGet(url);
-		HttpResponse response = ahc.execute(httpget);
-		if (response.getStatusLine().getStatusCode() >= 400) {
-			throw new NotReachableException();
-		}
-		String html = convertStreamToString(response.getEntity().getContent());
-		response.getEntity().consumeContent();
-		return html;
-	}
-
-	protected String httpPost(String url, UrlEncodedFormEntity data)
-			throws ClientProtocolException, IOException {
-		HttpPost httppost = new HttpPost(url);
-		httppost.setEntity(data);
-		HttpResponse response = ahc.execute(httppost);
-		if (response.getStatusLine().getStatusCode() >= 400) {
-			throw new NotReachableException();
-		}
-		String html = convertStreamToString(response.getEntity().getContent());
-		response.getEntity().consumeContent();
-		return html;
 	}
 
 	@Override

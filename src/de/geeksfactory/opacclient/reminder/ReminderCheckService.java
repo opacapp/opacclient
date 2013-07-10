@@ -116,6 +116,13 @@ public class ReminderCheckService extends Service {
 					int this_account = 0;
 
 					for (ContentValues item : res.getLent()) {
+						if (item.containsKey(AccountData.KEY_LENT_DOWNLOAD)) {
+							// Don't remember people of bringing back ebooks,
+							// because ... uhm...
+							if (item.getAsString(AccountData.KEY_LENT_DOWNLOAD)
+									.startsWith("http"))
+								continue;
+						}
 						if (item.containsKey(AccountData.KEY_LENT_DEADLINE_TIMESTAMP)) {
 							long expiring = item
 									.getAsLong(AccountData.KEY_LENT_DEADLINE_TIMESTAMP);
