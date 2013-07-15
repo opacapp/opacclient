@@ -862,6 +862,8 @@ public class BiBer1992 extends BaseApi {
 		// rows: skip 1st row -> title row
 		for (int i = 1; i < rowElements.size(); i++) {
 			Element tr = rowElements.get(i);
+			if(tr.child(0).tagName().equals("th"))
+				continue;
 			ContentValues e = new ContentValues();
 
 			// columns: all elements of one media
