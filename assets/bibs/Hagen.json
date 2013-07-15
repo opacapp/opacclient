@@ -39,7 +39,15 @@
             "8": "SCORE_MUSIC", 
             "9": "BOARDGAME"
         }, 
-        "opacdir": "opax", 
+        "opacdir": "opax",
+        "reservationtable": {
+            "author": -1, 
+            "availability": 6, 
+            "branch": -1, 
+            "cancelurl": -1, 
+            "expirationdate": 5, 
+            "title": 3
+        },         
         "searchtable": [
             2, 
             3, 
