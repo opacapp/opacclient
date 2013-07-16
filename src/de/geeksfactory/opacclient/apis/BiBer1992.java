@@ -80,14 +80,19 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  *         Name Media amazon copy Media Branch Account type Bitmaps table types
  *         support images avail search
  *         --------------------------------------------------------------------
- *         BaWu/Friedrichshafen ok yes yes yes yes - BaWu/Lahr ok yes yes yes no
- *         - BaWu/Offenburg ok n/a no yes n/a yes Bay/Aschaffenburg ok n/a no
- *         yes n/a - Bay/Wuerzburg ok yes yes yes yes - NRW/Duisburg ok yes yes
- *         yes n/a - NRW/Erkrath n/a yes no yes not sup.yes NRW/Essen n/a n/a no
- *         yes not sup.- NRW/Gelsenkirchen ok yes yes yes yes - NRW/Hagen ok yes
- *         yes yes yes yes NRW/Herford n/a yes yes yes n/a - NRW/Luenen ok yes
- *         no yes n/a - NRW/MuelheimRuhr ok yes yes yes yes yes
- * 
+ *         BaWu/Friedrichshafen ok yes yes yes yes - 
+ *         BaWu/Lahr ok yes yes yes no - 
+ *         BaWu/Offenburg ok n/a no yes n/a yes 
+ *         Bay/Aschaffenburg ok n/a no yes n/a - 
+ *         Bay/Wuerzburg ok yes yes yes yes - 
+ *         NRW/Duisburg ok yes yes yes n/a - 
+ *         NRW/Erkrath n/a yes no yes not sup.yes 
+ *         NRW/Essen n/a n/a no yes not sup.- 
+ *         NRW/Gelsenkirchen ok yes yes yes yes - 
+ *         NRW/Hagen ok yes yes yes yes yes 
+ *         NRW/Herford n/a yes yes yes n/a - 
+ *         NRW/Luenen ok yes no yes n/a - 
+ *         NRW/MuelheimRuhr ok yes yes yes yes yes
  */
 public class BiBer1992 extends BaseApi {
 
@@ -825,35 +830,31 @@ public class BiBer1992 extends BaseApi {
 	public AccountData account(Account account) throws IOException,
 			JSONException {
 
+		AccountData res = new AccountData(account.getId());
+
+		// get media
+		List<ContentValues> medien = accountGetMedia(account);
+		res.setLent(medien);
+
+		// get reservations
+		List<ContentValues> reservations = accountGetReservations(account);
+		res.setReservations(reservations);
+		
+		return res;
+	}
+
+	private List<ContentValues> accountGetMedia(Account account) 
+			throws IOException, JSONException {
+		
+		List<ContentValues> medien = new ArrayList<ContentValues>();
+
 		// get media list via http POST
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-		nameValuePairs.add(new BasicNameValuePair("FUNC", "medk"));
-		nameValuePairs.add(new BasicNameValuePair("LANG", "de"));
-		nameValuePairs
-				.add(new BasicNameValuePair("BENUTZER", account.getName()));
-		nameValuePairs.add(new BasicNameValuePair("PASSWORD", account
-				.getPassword()));
-
-		String html = httpPost(m_opac_url + "/" + m_opac_dir + "/user.C",
-				new UrlEncodedFormEntity(nameValuePairs));
-
-		Document doc = Jsoup.parse(html);
-
-		// Error recognition
-		// <title>OPAC Fehler</title>
-		if (doc.title().contains("Fehler")) {
-			String errText = "unknown error";
-			Elements elTable = doc.select("table");
-			if (elTable.size() > 0) {
-				errText = elTable.get(0).text();
-			}
-			m_last_error = errText;
-			return null;
+		Document doc = accountHttpPost(account,"medk");
+		if (doc == null) {
+			return medien;
 		}
 
 		// parse result list
-		List<ContentValues> medien = new ArrayList<ContentValues>();
-
 		JSONObject copymap = m_data.getJSONObject("accounttable");
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
@@ -862,6 +863,8 @@ public class BiBer1992 extends BaseApi {
 		// rows: skip 1st row -> title row
 		for (int i = 1; i < rowElements.size(); i++) {
 			Element tr = rowElements.get(i);
+			if(tr.child(0).tagName().equals("th"))
+				continue;
 			ContentValues e = new ContentValues();
 
 			// columns: all elements of one media
@@ -880,10 +883,6 @@ public class BiBer1992 extends BaseApi {
 					// Author and Title is the same field: "autor: title"
 					// sometimes there is no ":" then only the title is given
 					if (key.equals(AccountData.KEY_LENT_AUTHOR)) {
-						if (value.contains("/")) {
-							// Autor: remove everything before "/"
-							value = value.replaceFirst(".*/", "").trim();
-						}
 						if (value.contains(":")) {
 							// Autor: remove everything starting at ":"
 							value = value.replaceFirst("\\:.*", "").trim();
@@ -915,16 +914,85 @@ public class BiBer1992 extends BaseApi {
 			}
 
 			medien.add(e);
-
 		}
-
-		// reservations not yet supported (not supported for "Offenburg")
+		
+		return medien;
+	}
+	
+	private List<ContentValues> accountGetReservations(Account account) 
+			throws IOException, JSONException {
+		
 		List<ContentValues> reservations = new ArrayList<ContentValues>();
 
-		AccountData res = new AccountData(account.getId());
-		res.setLent(medien);
-		res.setReservations(reservations);
-		return res;
+		if (! m_data.has("reservationtable")) {
+			// reservations not supported
+			return reservations;
+		}
+
+		// get reservations list via http POST
+		Document doc = accountHttpPost(account,"vorm");
+		if (doc == null) {
+			// error message as html result
+			return reservations;
+		}
+
+		// parse result list
+		JSONObject copymap = m_data.getJSONObject("reservationtable");
+		Elements rowElements = doc.select("form[name=vorml] table tr");
+
+		// rows: skip 1st row -> title row
+		for (int i = 1; i < rowElements.size(); i++) {
+			Element tr = rowElements.get(i);
+			ContentValues e = new ContentValues();
+			
+			// columns: all elements of one media
+			Iterator<?> keys = copymap.keys();
+			while (keys.hasNext()) {
+				String key = (String) keys.next();
+				int index = copymap.getInt(key);
+				if (index >= 0) {
+					String value = tr.child(index).text();
+
+					if (value.length() != 0) {
+						e.put(key, value);
+					}
+				}
+			}
+			reservations.add(e);			
+		}
+
+		return reservations;
+	}
+
+	private Document accountHttpPost(Account account, String func) throws IOException
+	{
+		// get media list via http POST
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+		nameValuePairs.add(new BasicNameValuePair("FUNC", func));
+		nameValuePairs.add(new BasicNameValuePair("LANG", "de"));
+		nameValuePairs
+				.add(new BasicNameValuePair("BENUTZER", account.getName()));
+		nameValuePairs.add(new BasicNameValuePair("PASSWORD", account
+				.getPassword()));
+
+		String html = httpPost(m_opac_url + "/" + m_opac_dir + "/user.C",
+				new UrlEncodedFormEntity(nameValuePairs));
+
+		Document doc = Jsoup.parse(html);
+
+		// Error recognition
+		// <title>OPAC Fehler</title>
+		if (doc.title().contains("Fehler")) {
+			String errText = "unknown error";
+			Elements elTable = doc.select("table");
+			if (elTable.size() > 0) {
+				errText = elTable.get(0).text();
+			}
+			m_last_error = errText;
+			return null;
+		}
+
+		return doc;
 	}
 
 	@Override
