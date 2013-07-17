@@ -34,7 +34,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult.Status;
-import de.geeksfactory.opacclient.networking.HTTPClient;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
