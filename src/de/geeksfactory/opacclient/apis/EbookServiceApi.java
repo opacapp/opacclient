@@ -22,18 +22,9 @@ public interface EbookServiceApi {
 	public AccountData account(Account account) throws IOException,
 			JSONException;
 
-	public enum Availability {
-		AVAILABLE, UNAVAILABLE, ERROR
-	}
-
 	/**
-	 * Check whether an item, identified by item_id in the ebook system is
-	 * currently available for download.
-	 */
-	public Availability getAvailability(String item_id);
-
-	/**
-	 * The result of a {@link #booking(String, Account, int, String)} call
+	 * The result of a {@link #booking(String, Account, int, String)} call. The
+	 * structure of the call and response is similar to {@link OpacApi#reservation(String, Account, int, String)}.
 	 */
 	public class BookingResult extends OpacApi.ReservationResult {
 
@@ -43,7 +34,9 @@ public interface EbookServiceApi {
 	}
 
 	/**
-	 * Book an electronical item identified by booking_info to the users account
+	 * Book an electronical item identified by booking_info to the users account.
+	 * booking_info is what you returned in your DetailledItem object in your
+	 * getResult hook.
 	 */
 	public BookingResult booking(String booking_info, Account account,
 			int useraction, String selection) throws IOException;
