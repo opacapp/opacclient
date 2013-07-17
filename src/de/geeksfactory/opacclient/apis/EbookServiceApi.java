@@ -11,7 +11,9 @@ import de.geeksfactory.opacclient.objects.DetailledItem;
 
 /**
  * If an {@link OpacApi} implementation also implements this interface, the
- * library can be used to download ebooks directly inside the app.
+ * library can be used to download ebooks directly inside the app. This is
+ * currently NOT implemented or used in the open source version and is more
+ * like a bridge between the "Community Edition" and the "Plus Edition" of the App.
  * 
  * @author Raphael Michel
  */
