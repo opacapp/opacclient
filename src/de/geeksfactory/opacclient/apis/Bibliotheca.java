@@ -691,11 +691,11 @@ public class Bibliotheca extends BaseApi {
 			nameValuePairs.add(new BasicNameValuePair("target", "konto"));
 			nameValuePairs.add(new BasicNameValuePair("type", "K"));
 			html = httpPost(opac_url + "/index.asp", new UrlEncodedFormEntity(
-					nameValuePairs));
+					nameValuePairs), "ISO-8859-1", true);
 		} else if (response.getStatusLine().getStatusCode() == 302) {
 			// Bereits eingeloggt
 			response.getEntity().consumeContent();
-			html = httpGet(opac_url + "/index.asp?target=konto");
+			html = httpGet(opac_url + "/index.asp?target=konto", "ISO-8859-1", true);
 		} else if (response.getStatusLine().getStatusCode() >= 400) {
 			throw new NotReachableException();
 		}
