@@ -19,6 +19,11 @@
             android:key="notification_service"
             android:summary="@string/notification_service_desc"
             android:title="@string/notification_service" />
+        <CheckBoxPreference
+            android:key="notification_service_wifionly"
+            android:summary="@string/notification_service_wifionly_desc"
+            android:title="@string/notification_service_wifionly"
+            android:dependency="notification_service" />
 
         <ListPreference
             android:defaultValue="259200000"
