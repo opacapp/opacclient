@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.acra.ACRA;
 import org.apache.http.HttpResponse;
@@ -27,6 +28,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -34,13 +36,24 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.Html;
+import android.text.TextUtils.TruncateAt;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -52,6 +65,10 @@ import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.EbookServiceApi;
 import de.geeksfactory.opacclient.apis.OpacApi;
+import de.geeksfactory.opacclient.apis.EbookServiceApi.BookingResult;
+import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
+import de.geeksfactory.opacclient.frontend.SearchResultDetailsActivity.BookingTask;
+import de.geeksfactory.opacclient.frontend.SearchResultDetailsActivity.SelectionAdapter;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Library;
@@ -71,6 +88,7 @@ public class AccountActivity extends OpacActivity {
 	private CancelTask ct;
 	private OpacTask<Integer> pt;
 	private OpacTask<Uri> dt;
+	private BookingTask bt;
 
 	private Account account;
 
@@ -830,7 +848,22 @@ public class AccountActivity extends OpacActivity {
 							.setVisibility(View.GONE);
 				}
 
-				if (item.containsKey(AccountData.KEY_RESERVATION_CANCEL)) {
+				if (item.containsKey(AccountData.KEY_RESERVATION_BOOKING)) {
+					v.findViewById(R.id.ivBooking)
+							.setTag(item
+									.getAsString(AccountData.KEY_RESERVATION_BOOKING));
+					((ImageView) v.findViewById(R.id.ivBooking))
+							.setOnClickListener(new OnClickListener() {
+								@Override
+								public void onClick(View arg0) {
+									bookingStart((String) arg0.getTag());
+								}
+							});
+					((ImageView) v.findViewById(R.id.ivBooking))
+							.setVisibility(View.VISIBLE);
+					((ImageView) v.findViewById(R.id.ivCancel))
+					.setVisibility(View.GONE);
+				} else if (item.containsKey(AccountData.KEY_RESERVATION_CANCEL)) {
 					v.findViewById(R.id.ivCancel)
 							.setTag(item
 									.getAsString(AccountData.KEY_RESERVATION_CANCEL));
@@ -843,9 +876,13 @@ public class AccountActivity extends OpacActivity {
 							});
 					((ImageView) v.findViewById(R.id.ivCancel))
 							.setVisibility(View.VISIBLE);
+					((ImageView) v.findViewById(R.id.ivBooking))
+					.setVisibility(View.GONE);
 				} else {
 					((ImageView) v.findViewById(R.id.ivCancel))
 							.setVisibility(View.INVISIBLE);
+					((ImageView) v.findViewById(R.id.ivBooking))
+					.setVisibility(View.GONE);
 				}
 				llRes.addView(v);
 			}
@@ -1105,6 +1142,267 @@ public class AccountActivity extends OpacActivity {
 				AlertDialog alert = builder.create();
 				alert.show();
 			}
+		}
+	}
+
+	public void bookingStart(String booking_info) {
+		long age = System.currentTimeMillis() - refreshtime;
+		if (refreshing || fromcache) {
+			Toast.makeText(this, R.string.account_no_concurrent,
+					Toast.LENGTH_LONG).show();
+			if (!refreshing) {
+				refresh();
+			}
+			return;
+		}
+		bookingDo(booking_info);
+	}
+
+	public void bookingDo(String booking_info) {
+		bookingDo(booking_info, 0, null);
+	}
+
+	public void bookingDo(String booking_info, int useraction, String selection) {
+		if (dialog == null) {
+			dialog = ProgressDialog.show(AccountActivity.this, "",
+					getString(R.string.doing_booking), true);
+			dialog.show();
+		} else if (!dialog.isShowing()) {
+			dialog = ProgressDialog.show(AccountActivity.this, "",
+					getString(R.string.doing_booking), true);
+			dialog.show();
+		}
+
+		bt = new BookingTask();
+		bt.execute(app, booking_info, useraction, selection);
+	}
+
+	public void bookingResult(String booking_info, BookingResult result) {
+		AccountDataSource adata = new AccountDataSource(this);
+		adata.open();
+		adata.invalidateCachedAccountData(app.getAccount());
+		adata.close();
+		switch (result.getStatus()) {
+		case CONFIRMATION_NEEDED:
+			bookingConfirmation(booking_info, result);
+			break;
+		case SELECTION_NEEDED:
+			bookingSelection(booking_info, result);
+			break;
+		case ERROR:
+			dialog_wrong_credentials(app.getApi().getLast_error(), false);
+			break;
+		case OK:
+			invalidateData();
+			break;
+		case UNSUPPORTED:
+			// TODO: Show dialog
+			break;
+		default:
+			break;
+		}
+	}
+
+	public void bookingConfirmation(final String booking_info,
+			final BookingResult result) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+		LayoutInflater inflater = getLayoutInflater();
+
+		View view = inflater.inflate(R.layout.reservation_details_dialog, null);
+
+		TableLayout table = (TableLayout) view.findViewById(R.id.tlDetails);
+
+		if (result.getDetails().size() == 1
+				&& result.getDetails().get(0).length == 1) {
+			((RelativeLayout) view.findViewById(R.id.rlConfirm))
+					.removeView(table);
+			TextView tv = new TextView(this);
+			tv.setText(result.getDetails().get(0)[0]);
+			tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+					LayoutParams.WRAP_CONTENT));
+			((RelativeLayout) view.findViewById(R.id.rlConfirm)).addView(tv);
+		} else {
+			for (String[] detail : result.getDetails()) {
+				TableRow tr = new TableRow(this);
+				if (detail.length == 2) {
+					TextView tv1 = new TextView(this);
+					tv1.setText(Html.fromHtml(detail[0]));
+					tv1.setTypeface(null, Typeface.BOLD);
+					tv1.setPadding(0, 0, 8, 0);
+					TextView tv2 = new TextView(this);
+					tv2.setText(Html.fromHtml(detail[1]));
+					tv2.setEllipsize(TruncateAt.END);
+					tv2.setSingleLine(false);
+					tr.addView(tv1);
+					tr.addView(tv2);
+				} else if (detail.length == 1) {
+					TextView tv1 = new TextView(this);
+					tv1.setText(Html.fromHtml(detail[0]));
+					tv1.setPadding(0, 2, 0, 2);
+					TableRow.LayoutParams params = new TableRow.LayoutParams(0);
+					params.span = 2;
+					tv1.setLayoutParams(params);
+					tr.addView(tv1);
+				}
+				table.addView(tr);
+			}
+		}
+
+		builder.setTitle(R.string.confirm_title)
+				.setView(view)
+				.setPositiveButton(R.string.confirm,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								bookingDo(booking_info,
+										ReservationResult.ACTION_CONFIRMATION,
+										"confirmed");
+							}
+						})
+				.setNegativeButton(R.string.cancel,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								adialog.cancel();
+							}
+						});
+		adialog = builder.create();
+		adialog.show();
+	}
+
+	public void bookingSelection(final String booking_info,
+			final BookingResult result) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+		LayoutInflater inflater = getLayoutInflater();
+
+		View view = inflater.inflate(R.layout.simple_list_dialog, null);
+
+		ListView lv = (ListView) view.findViewById(R.id.lvBibs);
+		final Object[] possibilities = result.getSelection().valueSet()
+				.toArray();
+
+		lv.setAdapter(new SelectionAdapter(this, possibilities));
+		lv.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				adialog.dismiss();
+
+				bookingDo(booking_info, result.getActionIdentifier(),
+						((Entry<String, Object>) possibilities[position])
+								.getKey());
+			}
+		});
+		switch (result.getActionIdentifier()) {
+		case ReservationResult.ACTION_BRANCH:
+			builder.setTitle(R.string.zweigstelle);
+		}
+		builder.setView(view).setNegativeButton(R.string.cancel,
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int id) {
+						adialog.cancel();
+					}
+				});
+		adialog = builder.create();
+		adialog.show();
+	}
+
+	public class SelectionAdapter extends ArrayAdapter<Object> {
+
+		private Object[] objects;
+
+		@Override
+		public View getView(int position, View contentView, ViewGroup viewGroup) {
+			View view = null;
+
+			if (objects[position] == null) {
+				LayoutInflater layoutInflater = (LayoutInflater) getContext()
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				view = layoutInflater.inflate(R.layout.zst_listitem, viewGroup,
+						false);
+				return view;
+			}
+
+			String item = ((Entry<String, Object>) objects[position])
+					.getValue().toString();
+
+			if (contentView == null) {
+				LayoutInflater layoutInflater = (LayoutInflater) getContext()
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				view = layoutInflater.inflate(R.layout.zst_listitem, viewGroup,
+						false);
+			} else {
+				view = contentView;
+			}
+
+			TextView tvText = (TextView) view.findViewById(android.R.id.text1);
+			tvText.setText(item);
+			return view;
+		}
+
+		public SelectionAdapter(Context context, Object[] objects) {
+			super(context, R.layout.simple_spinner_item, objects);
+			this.objects = objects;
+		}
+
+	}
+
+	public class BookingTask extends OpacTask<BookingResult> {
+		private boolean success;
+		private String booking_info;
+
+		@Override
+		protected BookingResult doInBackground(Object... arg0) {
+			super.doInBackground(arg0);
+
+			app = (OpacClient) arg0[0];
+			booking_info = (String) arg0[1];
+			int useraction = (Integer) arg0[2];
+			String selection = (String) arg0[3];
+
+			try {
+				BookingResult res = ((EbookServiceApi) app.getApi()).booking(
+						booking_info, app.getAccount(), useraction, selection);
+				success = true;
+				return res;
+			} catch (java.net.UnknownHostException e) {
+				publishProgress(e, "ioerror");
+			} catch (java.net.SocketException e) {
+				success = false;
+				e.printStackTrace();
+			} catch (Exception e) {
+				ACRA.getErrorReporter().handleException(e);
+				success = false;
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(BookingResult res) {
+			dialog.dismiss();
+
+			if (!success || res == null) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						AccountActivity.this);
+				builder.setMessage(R.string.connection_error)
+						.setCancelable(true)
+						.setNegativeButton(R.string.dismiss,
+								new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog,
+											int id) {
+										dialog.cancel();
+									}
+								});
+				AlertDialog alert = builder.create();
+				alert.show();
+				return;
+			}
+
+			bookingResult(booking_info, res);
 		}
 	}
 

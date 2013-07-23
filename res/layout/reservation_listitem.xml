@@ -19,6 +19,14 @@
         android:padding="8dp"
         android:src="@drawable/ic_cancel" />
 
+    <ImageView
+        android:id="@+id/ivBooking"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentRight="true"
+        android:padding="8dp"
+        android:src="@drawable/ic_booking" />
+
     <TextView
         android:id="@+id/tvTitel"
         android:layout_width="wrap_content"

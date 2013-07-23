@@ -141,6 +141,16 @@ public class AccountData {
 	public static final String KEY_RESERVATION_CANCEL = "cancelurl";
 
 	/**
+	 * Internal identifier which will be supplied to your
+	 * {@link de.geeksfactory.opacclient.apis.EbookServiceApi#booking(String, Account, int, String)}
+	 * implementation when the user wants to cancel the order. Cancel button
+	 * won't be displayed if this is not set.
+	 * 
+	 * ContentValues key for {@link #setReservations(List)}
+	 */
+	public static final String KEY_RESERVATION_BOOKING = "bookingurl";
+
+	/**
 	 * Get lent items
 	 * 
 	 * Each <code>ContentValues</code> can contain any of the

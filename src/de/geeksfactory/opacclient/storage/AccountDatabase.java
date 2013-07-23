@@ -13,7 +13,7 @@ import de.geeksfactory.opacclient.objects.AccountData;
 public class AccountDatabase extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "accounts.db";
-	private static final int DATABASE_VERSION = 9; // REPLACE ONUPGRADE IF YOU
+	private static final int DATABASE_VERSION = 11; // REPLACE ONUPGRADE IF YOU
 													// CHANGE THIS
 
 	public static final String[] COLUMNS = { "id", "bib", "label", "name",
@@ -45,6 +45,7 @@ public class AccountDatabase extends SQLiteOpenHelper {
 		bMap.put(AccountData.KEY_RESERVATION_READY, "ready");
 		bMap.put(AccountData.KEY_RESERVATION_EXPIRE, "expire");
 		bMap.put(AccountData.KEY_RESERVATION_TITLE, "title");
+		bMap.put(AccountData.KEY_RESERVATION_BOOKING, "bookingurl");
 		COLUMNS_RESERVATIONS = Collections.unmodifiableMap(bMap);
 	}
 
@@ -67,7 +68,8 @@ public class AccountDatabase extends SQLiteOpenHelper {
 		db.execSQL("create table "
 				+ "accountdata_reservations ( account integer, "
 				+ "title text," + "author text," + "ready text,"
-				+ "branch text," + "cancel text" + ", expire text);");
+				+ "branch text," + "cancel text," + "expire text,"
+				+ "bookingurl text);");
 		db.execSQL("create table "
 				+ "notified ( id integer primary key autoincrement, "
 				+ "account integer, " + "timestamp integer);");
@@ -116,6 +118,10 @@ public class AccountDatabase extends SQLiteOpenHelper {
 		if (oldVersion < 9) {
 			// App version 2.0.14 to 2.0.15
 			db.execSQL("alter table accountdata_lent add column download text");
+		}
+		if (oldVersion < 11) {
+			// App version 2.0.15 to 2.0.16
+			db.execSQL("alter table accountdata_reservations add column bookingurl text");
 		}
 
 	}
