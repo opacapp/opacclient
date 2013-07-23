@@ -594,7 +594,7 @@ public interface OpacApi {
 	 * Sometimes if one of your methods fails and you return null, it makes
 	 * sense to provide additional information. If the error occured in search,
 	 * it is displayed to the user. There are also some special hooks (like
-	 * <code>is_a_redirect</code> for <code>OCLC2011</code>) which activate
+	 * <code>is_a_redirect</code> for <code>SISIS</code>) which activate
 	 * certain methods in calling activities.
 	 * 
 	 * @return Error details

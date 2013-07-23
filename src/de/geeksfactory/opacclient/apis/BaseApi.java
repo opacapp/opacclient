@@ -43,11 +43,11 @@ public abstract class BaseApi implements OpacApi {
 	 *             Thrown when server returns a HTTP status code greater or
 	 *             equal than 400.
 	 */
-	protected String httpGet(String url, String encoding)
+	protected String httpGet(String url, String encoding, boolean ignore_errors)
 			throws ClientProtocolException, IOException {
 		HttpGet httpget = new HttpGet(url);
 		HttpResponse response = http_client.execute(httpget);
-		if (response.getStatusLine().getStatusCode() >= 400) {
+		if (!ignore_errors && response.getStatusLine().getStatusCode() >= 400) {
 			throw new NotReachableException();
 		}
 		String html = convertStreamToString(response.getEntity().getContent(),
@@ -56,9 +56,14 @@ public abstract class BaseApi implements OpacApi {
 		return html;
 	}
 
+	protected String httpGet(String url, String encoding)
+			throws ClientProtocolException, IOException {
+		return httpGet(url, encoding, false);
+	}
+
 	protected String httpGet(String url) throws ClientProtocolException,
 			IOException {
-		return httpGet(url, "ISO-8859-1");
+		return httpGet(url, "ISO-8859-1", false);
 	}
 
 	/**
@@ -74,21 +79,28 @@ public abstract class BaseApi implements OpacApi {
 	 *             equal than 400.
 	 */
 	protected String httpPost(String url, UrlEncodedFormEntity data,
-			String encoding) throws ClientProtocolException, IOException {
+			String encoding, boolean ignore_errors)
+			throws ClientProtocolException, IOException {
 		HttpPost httppost = new HttpPost(url);
 		httppost.setEntity(data);
 		HttpResponse response = http_client.execute(httppost);
-		if (response.getStatusLine().getStatusCode() >= 400) {
+		if (!ignore_errors && response.getStatusLine().getStatusCode() >= 400) {
 			throw new NotReachableException();
 		}
-		String html = convertStreamToString(response.getEntity().getContent(), encoding);
+		String html = convertStreamToString(response.getEntity().getContent(),
+				encoding);
 		response.getEntity().consumeContent();
 		return html;
 	}
 
+	protected String httpPost(String url, UrlEncodedFormEntity data,
+			String encoding) throws ClientProtocolException, IOException {
+		return httpPost(url, data, encoding, false);
+	}
+
 	protected String httpPost(String url, UrlEncodedFormEntity data)
 			throws ClientProtocolException, IOException {
-		return httpPost(url, data, "ISO-8859-1");
+		return httpPost(url, data, "ISO-8859-1", false);
 	}
 
 	/**

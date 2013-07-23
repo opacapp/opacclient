@@ -942,6 +942,7 @@ public class AccountActivity extends OpacActivity {
 						"com.android.aldiko", "com.aldiko.android",
 						"com.bluefirereader",
 						"com.mantano.reader.android.lite",
+						"com.datalogics.dlreader",
 						"com.mantano.reader.android.normal",
 						"com.mantano.reader.android", "com.neosoar" };
 				boolean found = false;

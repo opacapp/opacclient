@@ -14,6 +14,7 @@
             "returndate": 3, 
             "status": 2
         }, 
+        "ignore_http_errors": 1,
         "information": "http://stadtbibliothek-verden.de/index.asp?link_info2.x=2&type=FE", 
         "mediatypes": {
             "Epaperkl.gif": "EBOOK", 

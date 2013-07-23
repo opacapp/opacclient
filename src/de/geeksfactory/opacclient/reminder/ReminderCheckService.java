@@ -17,11 +17,14 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
@@ -41,11 +44,21 @@ public class ReminderCheckService extends Service {
 				.getDefaultSharedPreferences(ReminderCheckService.this);
 		notification_on = sp.getBoolean("notification_service", false);
 		long waittime = (1000 * 3600 * 5);
+		boolean executed = false;
 
-		if (((OpacClient) getApplication()).isOnline()) {
-			new CheckTask().execute();
+		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+		if (networkInfo != null) {
+			if (sp.getBoolean("notification_service_wifionly", false) == false
+					|| networkInfo.getType() == ConnectivityManager.TYPE_WIFI
+					|| networkInfo.getType() == ConnectivityManager.TYPE_ETHERNET) {
+				executed = true;
+				new CheckTask().execute();
+			} else {
+				waittime = (1000 * 1800);
+			}
 		} else {
-			waittime = (1000 * 3600 * 1);
+			waittime = (1000 * 1800);
 		}
 
 		if (!notification_on) {
@@ -61,7 +74,7 @@ public class ReminderCheckService extends Service {
 		am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + waittime,
 				sender);
 
-		if (!((OpacClient) getApplication()).isOnline())
+		if (!executed)
 			stopSelf();
 
 		return START_NOT_STICKY;
@@ -83,6 +96,9 @@ public class ReminderCheckService extends Service {
 			if (accounts.size() == 0)
 				return null;
 
+			Log.i("ReminderCheckService",
+					"Opac App Service: ReminderCheckService started");
+
 			SharedPreferences sp = PreferenceManager
 					.getDefaultSharedPreferences(ReminderCheckService.this);
 
@@ -99,6 +115,8 @@ public class ReminderCheckService extends Service {
 
 			OpacClient app = (OpacClient) getApplication();
 			for (Account account : accounts) {
+				Log.i("ReminderCheckService",
+						"Opac App Service: " + account.toString());
 				try {
 					Library library = app.getLibrary(account.getLibrary());
 					OpacApi api = app.getNewApi(library);
@@ -174,6 +192,7 @@ public class ReminderCheckService extends Service {
 			AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
 			if (result == null) {
+				Log.i("ReminderCheckService", "Opac App Service: Quick repeat");
 				// Try again in one hour
 				am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
 						+ (1000 * 3600), sender);

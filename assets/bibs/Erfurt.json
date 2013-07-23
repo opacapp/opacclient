@@ -1,0 +1,16 @@
+{
+    "api": "sisis", 
+    "city": "Erfurt", 
+    "data": {
+        "baseurl": "https://opac.erfurt.de/webOPACClient", 
+        "information": "http://www.erfurt.de/ef/de/leben/bildung/sturb/index.html", 
+        "startparams": "Login=sisis"
+    }, 
+    "geo": [
+        50.98476789999999, 
+        11.0298799
+    ], 
+    "group": "Th\u00fcringen", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Stadtbibliothek"
+}
