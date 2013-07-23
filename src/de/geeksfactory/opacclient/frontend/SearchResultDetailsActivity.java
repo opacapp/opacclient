@@ -388,84 +388,6 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		}
 	}
 
-	public class SelectionAdapter extends ArrayAdapter<Object> {
-
-		private Object[] objects;
-
-		@Override
-		public View getView(int position, View contentView, ViewGroup viewGroup) {
-			View view = null;
-
-			if (objects[position] == null) {
-				LayoutInflater layoutInflater = (LayoutInflater) getContext()
-						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				view = layoutInflater.inflate(R.layout.zst_listitem, viewGroup,
-						false);
-				return view;
-			}
-
-			String item = ((Entry<String, Object>) objects[position])
-					.getValue().toString();
-
-			if (contentView == null) {
-				LayoutInflater layoutInflater = (LayoutInflater) getContext()
-						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				view = layoutInflater.inflate(R.layout.zst_listitem, viewGroup,
-						false);
-			} else {
-				view = contentView;
-			}
-
-			TextView tvText = (TextView) view.findViewById(android.R.id.text1);
-			tvText.setText(item);
-			return view;
-		}
-
-		public SelectionAdapter(Context context, Object[] objects) {
-			super(context, R.layout.simple_spinner_item, objects);
-			this.objects = objects;
-		}
-
-	}
-
-	public void reservationSelection(final ReservationResult result) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-		LayoutInflater inflater = getLayoutInflater();
-
-		View view = inflater.inflate(R.layout.simple_list_dialog, null);
-
-		ListView lv = (ListView) view.findViewById(R.id.lvBibs);
-		final Object[] possibilities = result.getSelection().valueSet()
-				.toArray();
-
-		lv.setAdapter(new SelectionAdapter(this, possibilities));
-		lv.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				adialog.dismiss();
-
-				reservationDo(result.getActionIdentifier(),
-						((Entry<String, Object>) possibilities[position])
-								.getKey());
-			}
-		});
-		switch (result.getActionIdentifier()) {
-		case ReservationResult.ACTION_BRANCH:
-			builder.setTitle(R.string.zweigstelle);
-		}
-		builder.setView(view).setNegativeButton(R.string.cancel,
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-						adialog.cancel();
-					}
-				});
-		adialog = builder.create();
-		adialog.show();
-	}
-
 	public void bookingConfirmation(final BookingResult result) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -551,6 +473,84 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				adialog.dismiss();
 
 				bookingDo(result.getActionIdentifier(),
+						((Entry<String, Object>) possibilities[position])
+								.getKey());
+			}
+		});
+		switch (result.getActionIdentifier()) {
+		case ReservationResult.ACTION_BRANCH:
+			builder.setTitle(R.string.zweigstelle);
+		}
+		builder.setView(view).setNegativeButton(R.string.cancel,
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int id) {
+						adialog.cancel();
+					}
+				});
+		adialog = builder.create();
+		adialog.show();
+	}
+
+	public class SelectionAdapter extends ArrayAdapter<Object> {
+
+		private Object[] objects;
+
+		@Override
+		public View getView(int position, View contentView, ViewGroup viewGroup) {
+			View view = null;
+
+			if (objects[position] == null) {
+				LayoutInflater layoutInflater = (LayoutInflater) getContext()
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				view = layoutInflater.inflate(R.layout.zst_listitem, viewGroup,
+						false);
+				return view;
+			}
+
+			String item = ((Entry<String, Object>) objects[position])
+					.getValue().toString();
+
+			if (contentView == null) {
+				LayoutInflater layoutInflater = (LayoutInflater) getContext()
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				view = layoutInflater.inflate(R.layout.zst_listitem, viewGroup,
+						false);
+			} else {
+				view = contentView;
+			}
+
+			TextView tvText = (TextView) view.findViewById(android.R.id.text1);
+			tvText.setText(item);
+			return view;
+		}
+
+		public SelectionAdapter(Context context, Object[] objects) {
+			super(context, R.layout.simple_spinner_item, objects);
+			this.objects = objects;
+		}
+
+	}
+
+	public void reservationSelection(final ReservationResult result) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+		LayoutInflater inflater = getLayoutInflater();
+
+		View view = inflater.inflate(R.layout.simple_list_dialog, null);
+
+		ListView lv = (ListView) view.findViewById(R.id.lvBibs);
+		final Object[] possibilities = result.getSelection().valueSet()
+				.toArray();
+
+		lv.setAdapter(new SelectionAdapter(this, possibilities));
+		lv.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				adialog.dismiss();
+
+				reservationDo(result.getActionIdentifier(),
 						((Entry<String, Object>) possibilities[position])
 								.getKey());
 			}
