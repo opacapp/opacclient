@@ -1,5 +1,5 @@
 {
-    "api": "oclc2011", 
+    "api": "sisis", 
     "city": "Erlangen-N\u00fcrnberg", 
     "data": {
         "baseurl": "https://www.opac.uni-erlangen.de/InfoGuideClient.uersis", 
