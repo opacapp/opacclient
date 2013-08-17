@@ -80,19 +80,13 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  *         Name Media amazon copy Media Branch Account type Bitmaps table types
  *         support images avail search
  *         --------------------------------------------------------------------
- *         BaWu/Friedrichshafen ok yes yes yes yes - 
- *         BaWu/Lahr ok yes yes yes no - 
- *         BaWu/Offenburg ok n/a no yes n/a yes 
- *         Bay/Aschaffenburg ok n/a no yes n/a - 
- *         Bay/Wuerzburg ok yes yes yes yes - 
- *         NRW/Duisburg ok yes yes yes n/a - 
- *         NRW/Erkrath n/a yes no yes not sup.yes 
- *         NRW/Essen n/a n/a no yes not sup.- 
- *         NRW/Gelsenkirchen ok yes yes yes yes - 
- *         NRW/Hagen ok yes yes yes yes yes 
- *         NRW/Herford n/a yes yes yes n/a - 
- *         NRW/Luenen ok yes no yes n/a - 
- *         NRW/MuelheimRuhr ok yes yes yes yes yes
+ *         BaWu/Friedrichshafen ok yes yes yes yes - BaWu/Lahr ok yes yes yes no
+ *         - BaWu/Offenburg ok n/a no yes n/a yes Bay/Aschaffenburg ok n/a no
+ *         yes n/a - Bay/Wuerzburg ok yes yes yes yes - NRW/Duisburg ok yes yes
+ *         yes n/a - NRW/Erkrath n/a yes no yes not sup.yes NRW/Essen n/a n/a no
+ *         yes not sup.- NRW/Gelsenkirchen ok yes yes yes yes - NRW/Hagen ok yes
+ *         yes yes yes yes NRW/Herford n/a yes yes yes n/a - NRW/Luenen ok yes
+ *         no yes n/a - NRW/MuelheimRuhr ok yes yes yes yes yes
  */
 public class BiBer1992 extends BaseApi {
 
@@ -839,17 +833,17 @@ public class BiBer1992 extends BaseApi {
 		// get reservations
 		List<ContentValues> reservations = accountGetReservations(account);
 		res.setReservations(reservations);
-		
+
 		return res;
 	}
 
-	private List<ContentValues> accountGetMedia(Account account) 
+	private List<ContentValues> accountGetMedia(Account account)
 			throws IOException, JSONException {
-		
+
 		List<ContentValues> medien = new ArrayList<ContentValues>();
 
 		// get media list via http POST
-		Document doc = accountHttpPost(account,"medk");
+		Document doc = accountHttpPost(account, "medk");
 		if (doc == null) {
 			return medien;
 		}
@@ -863,7 +857,7 @@ public class BiBer1992 extends BaseApi {
 		// rows: skip 1st row -> title row
 		for (int i = 1; i < rowElements.size(); i++) {
 			Element tr = rowElements.get(i);
-			if(tr.child(0).tagName().equals("th"))
+			if (tr.child(0).tagName().equals("th"))
 				continue;
 			ContentValues e = new ContentValues();
 
@@ -886,6 +880,7 @@ public class BiBer1992 extends BaseApi {
 						if (value.contains(":")) {
 							// Autor: remove everything starting at ":"
 							value = value.replaceFirst("\\:.*", "").trim();
+							value = value.replaceFirst("^.* /", "").trim();
 						} else {
 							// no Autor given
 							value = "";
@@ -915,22 +910,35 @@ public class BiBer1992 extends BaseApi {
 
 			medien.add(e);
 		}
-		
+
 		return medien;
 	}
-	
-	private List<ContentValues> accountGetReservations(Account account) 
+
+	private List<ContentValues> accountGetReservations(Account account)
 			throws IOException, JSONException {
-		
+
 		List<ContentValues> reservations = new ArrayList<ContentValues>();
 
-		if (! m_data.has("reservationtable")) {
-			// reservations not supported
-			return reservations;
+		if (!m_data.has("reservationtable")) {
+			// reservations not specifically supported, let's just try it
+			// with default values but fail silently
+			JSONObject restblobj = new JSONObject();
+			restblobj.put("author", 3);
+			restblobj.put("availability", 6);
+			restblobj.put("branch", -1);
+			restblobj.put("cancelurl", -1);
+			restblobj.put("expirationdate", 5);
+			restblobj.put("title", 3);
+			m_data.put("reservationtable", restblobj);
+			try {
+				return accountGetReservations(account);
+			} catch (Exception e) {
+				return reservations;
+			}
 		}
 
 		// get reservations list via http POST
-		Document doc = accountHttpPost(account,"vorm");
+		Document doc = accountHttpPost(account, "vorm");
 		if (doc == null) {
 			// error message as html result
 			return reservations;
@@ -943,8 +951,10 @@ public class BiBer1992 extends BaseApi {
 		// rows: skip 1st row -> title row
 		for (int i = 1; i < rowElements.size(); i++) {
 			Element tr = rowElements.get(i);
+			if (tr.child(0).tagName().equals("th"))
+				continue;
 			ContentValues e = new ContentValues();
-			
+
 			// columns: all elements of one media
 			Iterator<?> keys = copymap.keys();
 			while (keys.hasNext()) {
@@ -953,19 +963,35 @@ public class BiBer1992 extends BaseApi {
 				if (index >= 0) {
 					String value = tr.child(index).text();
 
+					// Author and Title is the same field: "autor: title"
+					// sometimes there is no ":" then only the title is given
+					if (key.equals(AccountData.KEY_RESERVATION_AUTHOR)) {
+						if (value.contains(":")) {
+							// Autor: remove everything starting at ":"
+							value = value.replaceFirst("\\:.*", "").trim();
+							value = value.replaceFirst("^.* /", "").trim();
+						} else {
+							// no Autor given
+							value = "";
+						}
+					} else if (key.equals(AccountData.KEY_RESERVATION_TITLE)) {
+						// Title: remove everything up to ":"
+						value = value.replaceFirst(".*\\:", "").trim();
+					}
+
 					if (value.length() != 0) {
 						e.put(key, value);
 					}
 				}
 			}
-			reservations.add(e);			
+			reservations.add(e);
 		}
 
 		return reservations;
 	}
 
-	private Document accountHttpPost(Account account, String func) throws IOException
-	{
+	private Document accountHttpPost(Account account, String func)
+			throws IOException {
 		// get media list via http POST
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 		nameValuePairs.add(new BasicNameValuePair("FUNC", func));
