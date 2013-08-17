@@ -248,6 +248,7 @@ public class SISIS extends BaseApi implements OpacApi {
 					"submitSearch"));
 			params.add(new BasicNameValuePair("callingPage", "searchParameters"));
 			params.add(new BasicNameValuePair("submitSearch", "Suchen"));
+			params.add(new BasicNameValuePair("numberOfHits", "10"));
 
 			index = addParameters(query, KEY_SEARCH_QUERY_FREE, "-1", params,
 					index);
@@ -539,7 +540,7 @@ public class SISIS extends BaseApi implements OpacApi {
 			if (!described)
 				sr.setInnerhtml(description.toString());
 
-			sr.setNr(i);
+			sr.setNr(10 * (page - 1) + i);
 			sr.setId(null);
 			results.add(sr);
 		}
