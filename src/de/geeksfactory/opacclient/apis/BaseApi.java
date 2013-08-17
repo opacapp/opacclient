@@ -63,7 +63,7 @@ public abstract class BaseApi implements OpacApi {
 
 	protected String httpGet(String url) throws ClientProtocolException,
 			IOException {
-		return httpGet(url, "ISO-8859-1", false);
+		return httpGet(url, getDefaultEncoding(), false);
 	}
 
 	/**
@@ -100,7 +100,7 @@ public abstract class BaseApi implements OpacApi {
 
 	protected String httpPost(String url, UrlEncodedFormEntity data)
 			throws ClientProtocolException, IOException {
-		return httpPost(url, data, "ISO-8859-1", false);
+		return httpPost(url, data, getDefaultEncoding(), false);
 	}
 
 	/**
@@ -138,5 +138,9 @@ public abstract class BaseApi implements OpacApi {
 	protected static String convertStreamToString(InputStream is)
 			throws IOException {
 		return convertStreamToString(is, "ISO-8859-1");
+	}
+
+	protected String getDefaultEncoding() {
+		return "ISO-8859-1";
 	}
 }
