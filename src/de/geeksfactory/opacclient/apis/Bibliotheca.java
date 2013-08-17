@@ -170,7 +170,7 @@ public class Bibliotheca extends BaseApi {
 
 	@Override
 	public void init(MetaDataSource metadata, Library lib) {
-		super.init(metadata,lib);
+		super.init(metadata, lib);
 		this.metadata = metadata;
 		this.library = lib;
 		this.data = lib.getData();
@@ -272,31 +272,37 @@ public class Bibliotheca extends BaseApi {
 		for (int i = 0; i < table.size(); i++) {
 			Element tr = table.get(i);
 			SearchResult sr = new SearchResult();
-			String[] fparts = tr.select("td a img").get(0).attr("src")
-					.split("/");
-			String fname = fparts[fparts.length - 1];
-			if (data.has("mediatypes")) {
-				try {
-					sr.setType(MediaType.valueOf(data.getJSONObject(
-							"mediatypes").getString(fname)));
-				} catch (JSONException e) {
-					sr.setType(defaulttypes.get(fname.toLowerCase()
-							.replace(".jpg", "").replace(".gif", "")
-							.replace(".png", "")));
-				} catch (IllegalArgumentException e) {
+			int contentindex = 1;
+			if (tr.select("td a img").size() > 0) {
+				String[] fparts = tr.select("td a img").get(0).attr("src")
+						.split("/");
+				String fname = fparts[fparts.length - 1];
+				if (data.has("mediatypes")) {
+					try {
+						sr.setType(MediaType.valueOf(data.getJSONObject(
+								"mediatypes").getString(fname)));
+					} catch (JSONException e) {
+						sr.setType(defaulttypes.get(fname.toLowerCase()
+								.replace(".jpg", "").replace(".gif", "")
+								.replace(".png", "")));
+					} catch (IllegalArgumentException e) {
+						sr.setType(defaulttypes.get(fname.toLowerCase()
+								.replace(".jpg", "").replace(".gif", "")
+								.replace(".png", "")));
+					}
+				} else {
 					sr.setType(defaulttypes.get(fname.toLowerCase()
 							.replace(".jpg", "").replace(".gif", "")
 							.replace(".png", "")));
 				}
 			} else {
-				sr.setType(defaulttypes.get(fname.toLowerCase()
-						.replace(".jpg", "").replace(".gif", "")
-						.replace(".png", "")));
+				if(tr.children().size() == 3)
+					contentindex = 2;
 			}
-			sr.setInnerhtml(tr.child(1).child(0).html());
+			sr.setInnerhtml(tr.child(contentindex).child(0).html());
 
 			sr.setNr(i);
-			Element link = tr.child(1).select("a").first();
+			Element link = tr.child(contentindex).select("a").first();
 			try {
 				if (link != null && link.attr("href").contains("detmediennr")) {
 					Uri uri = Uri.parse(link.attr("abs:href"));
@@ -695,7 +701,8 @@ public class Bibliotheca extends BaseApi {
 		} else if (response.getStatusLine().getStatusCode() == 302) {
 			// Bereits eingeloggt
 			response.getEntity().consumeContent();
-			html = httpGet(opac_url + "/index.asp?target=konto", "ISO-8859-1", true);
+			html = httpGet(opac_url + "/index.asp?target=konto", "ISO-8859-1",
+					true);
 		} else if (response.getStatusLine().getStatusCode() >= 400) {
 			throw new NotReachableException();
 		}
@@ -867,7 +874,7 @@ public class Bibliotheca extends BaseApi {
 	@Override
 	public int getSupportFlags() {
 		int flags = SUPPORT_FLAG_ACCOUNT_EXTENDABLE;
-		if(!data.has("disableProlongAll")){
+		if (!data.has("disableProlongAll")) {
 			flags |= SUPPORT_FLAG_ACCOUNT_PROLONG_ALL;
 		}
 		return flags;

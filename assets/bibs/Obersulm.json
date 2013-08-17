@@ -1,0 +1,26 @@
+{
+    "api": "bibliotheca", 
+    "city": "Obersulm", 
+    "data": {
+		"accounttable": null,
+        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-obersulm", 
+		"copiestable": {
+			"barcode": -1,
+			"branch": 4,
+			"department": 0,
+			"location": 1,
+			"reservations": -1,
+			"returndate": 3,
+			"status": 2
+		},
+        "information": "http://www.obersulm.de/gemeindebuecherei",
+		"reservationtable": null
+    }, 
+    "geo": [
+        49.13806899999999, 
+        9.372016499999999
+    ], 
+    "group": "Baden-W\u00fcrttemberg", 
+    "support": "Katalogsuche", 
+    "title": "Gemeindebibliothek"
+}
