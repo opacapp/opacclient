@@ -242,13 +242,10 @@ public class SISIS extends BaseApi implements OpacApi {
 			int index = 0;
 			start();
 
-			params.add(new BasicNameValuePair("CSId", CSId));
 			params.add(new BasicNameValuePair("methodToCall", "submit"));
+			params.add(new BasicNameValuePair("CSId", CSId));
 			params.add(new BasicNameValuePair("methodToCallParameter",
 					"submitSearch"));
-			params.add(new BasicNameValuePair("callingPage", "searchParameters"));
-			params.add(new BasicNameValuePair("submitSearch", "Suchen"));
-			params.add(new BasicNameValuePair("numberOfHits", "10"));
 
 			index = addParameters(query, KEY_SEARCH_QUERY_FREE, "-1", params,
 					index);
@@ -279,6 +276,10 @@ public class SISIS extends BaseApi implements OpacApi {
 				last_error = "Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.";
 				return null;
 			}
+
+			params.add(new BasicNameValuePair("submitSearch", "Suchen"));
+			params.add(new BasicNameValuePair("callingPage", "searchParameters"));
+			params.add(new BasicNameValuePair("numberOfHits", "10"));
 
 			params.add(new BasicNameValuePair("selectedSearchBranchlib", query
 					.getString(KEY_SEARCH_QUERY_BRANCH)));
