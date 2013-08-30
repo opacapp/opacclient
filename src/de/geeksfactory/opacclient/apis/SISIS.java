@@ -70,6 +70,8 @@ public class SISIS extends BaseApi implements OpacApi {
 	protected Account logged_in_as;
 	protected final long SESSION_LIFETIME = 1000 * 60 * 3;
 
+	protected String ENCODING = "UTF-8";
+
 	protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
 
 	static {
@@ -168,7 +170,7 @@ public class SISIS extends BaseApi implements OpacApi {
 			}
 		}
 
-		String html = httpGet(opac_url + "/start.do" + startparams);
+		String html = httpGet(opac_url + "/start.do" + startparams, ENCODING);
 
 		initialised = true;
 
@@ -240,12 +242,10 @@ public class SISIS extends BaseApi implements OpacApi {
 			int index = 0;
 			start();
 
-			params.add(new BasicNameValuePair("CSId", CSId));
 			params.add(new BasicNameValuePair("methodToCall", "submit"));
+			params.add(new BasicNameValuePair("CSId", CSId));
 			params.add(new BasicNameValuePair("methodToCallParameter",
 					"submitSearch"));
-			params.add(new BasicNameValuePair("callingPage", "searchParameters"));
-			params.add(new BasicNameValuePair("submitSearch", "Suchen"));
 
 			index = addParameters(query, KEY_SEARCH_QUERY_FREE, "-1", params,
 					index);
@@ -277,6 +277,10 @@ public class SISIS extends BaseApi implements OpacApi {
 				return null;
 			}
 
+			params.add(new BasicNameValuePair("submitSearch", "Suchen"));
+			params.add(new BasicNameValuePair("callingPage", "searchParameters"));
+			params.add(new BasicNameValuePair("numberOfHits", "10"));
+
 			params.add(new BasicNameValuePair("selectedSearchBranchlib", query
 					.getString(KEY_SEARCH_QUERY_BRANCH)));
 			if (query.getString(KEY_SEARCH_QUERY_HOME_BRANCH) != null) {
@@ -286,8 +290,9 @@ public class SISIS extends BaseApi implements OpacApi {
 			}
 		}
 
-		String html = httpGet(opac_url + "/search.do?"
-				+ URLEncodedUtils.format(params, "UTF-8"));
+		String html = httpGet(
+				opac_url + "/search.do?"
+						+ URLEncodedUtils.format(params, "UTF-8"), ENCODING);
 		return parse_search(html, 1);
 	}
 
@@ -299,7 +304,7 @@ public class SISIS extends BaseApi implements OpacApi {
 
 		String html = httpGet(opac_url
 				+ "/hitList.do?methodToCall=pos&identifier=" + identifier
-				+ "&curPos=" + (((page - 1) * resultcount) + 1));
+				+ "&curPos=" + (((page - 1) * resultcount) + 1), ENCODING);
 		return parse_search(html, page);
 	}
 
@@ -345,7 +350,7 @@ public class SISIS extends BaseApi implements OpacApi {
 				haslink = true;
 				try {
 					List<NameValuePair> anyurl = URLEncodedUtils.parse(new URI(
-							((Element) node).attr("href")), "UTF-8");
+							((Element) node).attr("href")), ENCODING);
 					for (NameValuePair nv : anyurl) {
 						if (nv.getName().equals("identifier")) {
 							identifier = nv.getValue();
@@ -536,7 +541,7 @@ public class SISIS extends BaseApi implements OpacApi {
 			if (!described)
 				sr.setInnerhtml(description.toString());
 
-			sr.setNr(i);
+			sr.setNr(10 * (page - 1) + i);
 			sr.setId(null);
 			results.add(sr);
 		}
@@ -567,16 +572,17 @@ public class SISIS extends BaseApi implements OpacApi {
 			hbp = "&selectedViewBranchlib=" + homebranch;
 
 		String html = httpGet(opac_url + "/start.do?" + startparams
-				+ "searchType=1&Query=0%3D%22" + id + "%22" + hbp);
+				+ "searchType=1&Query=0%3D%22" + id + "%22" + hbp, ENCODING);
 
 		return parse_result(html);
 	}
 
 	@Override
 	public DetailledItem getResult(int nr) throws IOException {
-		String html = httpGet(opac_url
-				+ "/singleHit.do?tab=showExemplarActive&methodToCall=showHit&curPos="
-				+ (nr + 1) + "&identifier=" + identifier);
+		String html = httpGet(
+				opac_url
+						+ "/singleHit.do?tab=showExemplarActive&methodToCall=showHit&curPos="
+						+ (nr + 1) + "&identifier=" + identifier, ENCODING);
 
 		return parse_result(html);
 	}
@@ -585,13 +591,16 @@ public class SISIS extends BaseApi implements OpacApi {
 		Document doc = Jsoup.parse(html);
 
 		String html2 = httpGet(opac_url
-				+ "/singleHit.do?methodToCall=activateTab&tab=showTitleActive");
+				+ "/singleHit.do?methodToCall=activateTab&tab=showTitleActive",
+				ENCODING);
 
 		Document doc2 = Jsoup.parse(html2);
 		doc2.setBaseUri(opac_url);
 
-		String html3 = httpGet(opac_url
-				+ "/singleHit.do?methodToCall=activateTab&tab=showAvailabilityActive");
+		String html3 = httpGet(
+				opac_url
+						+ "/singleHit.do?methodToCall=activateTab&tab=showAvailabilityActive",
+				ENCODING);
 
 		Document doc3 = Jsoup.parse(html3);
 		doc3.setBaseUri(opac_url);
@@ -861,11 +870,11 @@ public class SISIS extends BaseApi implements OpacApi {
 			nameValuePairs.add(new BasicNameValuePair("methodToCall", action));
 			nameValuePairs.add(new BasicNameValuePair("CSId", CSId));
 			String html = httpPost(opac_url + "/" + action + ".do",
-					new UrlEncodedFormEntity(nameValuePairs));
+					new UrlEncodedFormEntity(nameValuePairs), ENCODING);
 			doc = Jsoup.parse(html);
 		} else if (selection == null || useraction == 0) {
 			String html = httpGet(opac_url + "/availability.do?"
-					+ reservation_info);
+					+ reservation_info, ENCODING);
 			doc = Jsoup.parse(html);
 
 			if (doc.select("input[name=username]").size() > 0) {
@@ -883,7 +892,7 @@ public class SISIS extends BaseApi implements OpacApi {
 						"Login"));
 
 				html = httpPost(opac_url + "/login.do",
-						new UrlEncodedFormEntity(nameValuePairs));
+						new UrlEncodedFormEntity(nameValuePairs), ENCODING);
 				doc = Jsoup.parse(html);
 
 				if (doc.getElementsByClass("error").size() == 0) {
@@ -916,7 +925,7 @@ public class SISIS extends BaseApi implements OpacApi {
 			nameValuePairs.add(new BasicNameValuePair("CSId", CSId));
 
 			String html = httpPost(opac_url + "/" + action + ".do",
-					new UrlEncodedFormEntity(nameValuePairs));
+					new UrlEncodedFormEntity(nameValuePairs), ENCODING);
 			doc = Jsoup.parse(html);
 		}
 
@@ -985,12 +994,13 @@ public class SISIS extends BaseApi implements OpacApi {
 		}
 
 		// We have to call the page we originally found the link on first...
-		httpGet(opac_url + "/userAccount.do?methodToCall=showAccount&typ=1");
+		httpGet(opac_url + "/userAccount.do?methodToCall=showAccount&typ=1",
+				ENCODING);
 		if (offset != "1")
 			httpGet(opac_url
 					+ "/userAccount.do?methodToCall=pos&accountTyp=AUSLEIHEN&anzPos="
-					+ offset);
-		String html = httpGet(opac_url + "/userAccount.do?" + query);
+					+ offset, ENCODING);
+		String html = httpGet(opac_url + "/userAccount.do?" + query, ENCODING);
 		Document doc = Jsoup.parse(html);
 		if (doc.getElementsByClass("textrot").size() == 1) {
 			last_error = doc.getElementsByClass("textrot").text();
@@ -1030,11 +1040,11 @@ public class SISIS extends BaseApi implements OpacApi {
 
 		// We have to call the page we originally found the link on first...
 		httpGet(opac_url + "/userAccount.do?methodToCall=showAccount&typ="
-				+ type);
+				+ type, ENCODING);
 		if (offset != "1")
 			httpGet(opac_url + "/userAccount.do?methodToCall=pos&anzPos="
-					+ offset);
-		httpGet(opac_url + "/userAccount.do?" + query);
+					+ offset, ENCODING);
+		httpGet(opac_url + "/userAccount.do?" + query, ENCODING);
 		return true;
 	}
 
@@ -1201,7 +1211,7 @@ public class SISIS extends BaseApi implements OpacApi {
 
 		// Geliehene Medien
 		String html = httpGet(opac_url
-				+ "/userAccount.do?methodToCall=showAccount&typ=1");
+				+ "/userAccount.do?methodToCall=showAccount&typ=1", ENCODING);
 		List<ContentValues> medien = new ArrayList<ContentValues>();
 		Document doc = Jsoup.parse(html);
 		doc.setBaseUri(opac_url);
@@ -1231,7 +1241,7 @@ public class SISIS extends BaseApi implements OpacApi {
 
 		// Bestellte Medien
 		html = httpGet(opac_url
-				+ "/userAccount.do?methodToCall=showAccount&typ=6");
+				+ "/userAccount.do?methodToCall=showAccount&typ=6", ENCODING);
 		List<ContentValues> reserved = new ArrayList<ContentValues>();
 		doc = Jsoup.parse(html);
 		doc.setBaseUri(opac_url);
@@ -1244,7 +1254,7 @@ public class SISIS extends BaseApi implements OpacApi {
 						|| uri.getQueryParameter("methodToCall") == null)
 					break;
 				if (uri.getQueryParameter("methodToCall").equals("pos")) {
-					html = httpGet(uri.toString());
+					html = httpGet(uri.toString(), ENCODING);
 					parse_reslist("6", medien, Jsoup.parse(html),
 							Integer.parseInt(uri.getQueryParameter("anzPos")));
 				}
@@ -1253,7 +1263,7 @@ public class SISIS extends BaseApi implements OpacApi {
 
 		// Vorgemerkte Medien
 		html = httpGet(opac_url
-				+ "/userAccount.do?methodToCall=showAccount&typ=7");
+				+ "/userAccount.do?methodToCall=showAccount&typ=7", ENCODING);
 		doc = Jsoup.parse(html);
 		doc.setBaseUri(opac_url);
 		parse_reslist("7", reserved, doc, 1);
@@ -1264,7 +1274,7 @@ public class SISIS extends BaseApi implements OpacApi {
 						|| uri.getQueryParameter("methodToCall") == null)
 					break;
 				if (uri.getQueryParameter("methodToCall").equals("pos")) {
-					html = httpGet(uri.toString());
+					html = httpGet(uri.toString(), ENCODING);
 					parse_reslist("7", medien, Jsoup.parse(html),
 							Integer.parseInt(uri.getQueryParameter("anzPos")));
 				}

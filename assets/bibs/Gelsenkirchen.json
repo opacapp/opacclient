@@ -2,6 +2,16 @@
     "api": "biber1992", 
     "city": "Gelsenkirchen", 
     "data": {
+        "accounttable": {
+            "author": 7, 
+            "barcode": 4, 
+            "homebranch": -1, 
+            "lendingbranch": -1, 
+            "prolongurl": 4, 
+            "returndate": 3, 
+            "status": 5, 
+            "title": 7
+        }, 
         "baseurl": "http://katalog.stadtbibliothek-ge.de", 
         "copiestable": {
             "barcode": 3, 
@@ -40,6 +50,6 @@
         7.085717199999999
     ], 
     "group": "Nordrhein-Westfalen", 
-    "support": "Katalogsuche", 
+    "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

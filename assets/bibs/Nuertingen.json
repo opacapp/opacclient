@@ -39,6 +39,14 @@
             "8": "BOOK"
         }, 
         "opacdir": "opax", 
+		"reservationtable": {
+			"author": 3,
+			"availability": 6,
+			"branch": -1,
+			"cancelurl": -1, 
+			"expirationdate": 5,
+			"title": 3
+		},
         "searchtable": [
             2, 
             3, 

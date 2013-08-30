@@ -3,7 +3,7 @@
     "city": "Langenfeld", 
     "data": {
         "accounttable": null, 
-        "baseurl": "http://www1.langenfeld.de/webopac", 
+        "baseurl": "http://www1.langenfeld.de/OPAC", 
         "copiestable": {
             "barcode": 5, 
             "branch": -1, 

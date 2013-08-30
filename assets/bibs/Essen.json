@@ -2,6 +2,16 @@
     "api": "biber1992", 
     "city": "Essen", 
     "data": {
+        "accounttable": {
+            "author": 7, 
+            "barcode": 4, 
+            "homebranch": -1, 
+            "lendingbranch": -1, 
+            "prolongurl": 4, 
+            "returndate": 3, 
+            "status": 5, 
+            "title": 7
+        }, 
         "baseurl": "http://katalog.stadtbibliothek-essen.de", 
         "information": "http://www.stadtbibliothek-essen.de/de/oeffnungszeiten/oeffnungszeiten.html", 
         "opacdir": "opac", 
@@ -17,6 +27,6 @@
         7.0115552
     ], 
     "group": "Nordrhein-Westfalen", 
-    "support": "Katalogsuche", 
+    "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }
