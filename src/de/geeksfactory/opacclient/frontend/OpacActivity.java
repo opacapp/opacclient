@@ -1,5 +1,8 @@
 package de.geeksfactory.opacclient.frontend;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -144,6 +147,26 @@ public abstract class OpacActivity extends SlidingFragmentActivity {
 		}
 		if (app.getLibrary() == null) {
 			// Create new
+			if (app.getAccount() != null) {
+				try {
+					InputStream stream = getAssets().open(
+							OpacClient.ASSETS_BIBSDIR + "/"
+									+ app.getAccount().getLibrary() + ".json");
+					stream.close();
+				} catch (IOException e) {
+					AccountDataSource data = new AccountDataSource(this);
+					data.open();
+					data.remove(app.getAccount());
+					List<Account> available_accounts = data.getAllAccounts();
+					if (available_accounts.size() > 0) {
+						((OpacClient) getApplication())
+								.setAccount(available_accounts.get(0).getId());
+					}
+					data.close();
+					if (app.getLibrary() != null)
+						return;
+				}
+			}
 			app.addFirstAccount(this);
 			return;
 		}
