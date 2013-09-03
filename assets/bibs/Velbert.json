@@ -1,0 +1,16 @@
+{
+    "api": "bibliotheca", 
+    "city": "Velbert", 
+    "data": {
+        "baseurl": "http://www.bibnet.de/webopac", 
+        "db": "ve", 
+        "information": "http://www.stadtbuecherei.velbert.de/default.asp"
+    }, 
+    "geo": [
+        51.33707030000001, 
+        7.0426775
+    ], 
+    "group": "Nordrhein-Westfalen", 
+    "support": "Katalogsuche", 
+    "title": "Stadtb\u00fccherei"
+}
