@@ -26,6 +26,7 @@ public class DetailledItem {
 	private String booking_info;
 	private String id;
 	private Bundle volumesearch;
+	private String collectionid;
 
 	/**
 	 * The barcode of a copy. Optional.
@@ -341,5 +342,27 @@ public class DetailledItem {
 	 */
 	public void setBooking_info(String booking_info) {
 		this.booking_info = booking_info;
+	}
+
+	/**
+	 * Get the ID of the item which is a collection containing this item as a
+	 * child item
+	 * 
+	 * @since 2.0.17
+	 */
+	public String getCollectionId() {
+		return collectionid;
+	}
+
+	/**
+	 * Sets the ID of the item which is a collection containing this item as a
+	 * child item
+	 * 
+	 * @param collectionid
+	 *            the collectionid to set
+	 * @since 2.0.17
+	 */
+	public void setCollectionId(String collectionid) {
+		this.collectionid = collectionid;
 	}
 }

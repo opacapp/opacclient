@@ -43,6 +43,7 @@
     <string name="ret">Rückgabe</string>
     <string name="res">Vorbestellt</string>
     <string name="export">Details exportieren</string>
+    <string name="tocollection">Zum Gesamtwerk</string>
     <string name="reserve">Vorbestellen</string>
     <string name="lendebook">Ebook leihen</string>
     <string name="res_zst">Zweigstelle auswählen</string>

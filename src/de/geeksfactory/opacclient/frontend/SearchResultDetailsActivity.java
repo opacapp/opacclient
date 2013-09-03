@@ -68,6 +68,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 	private ResTask rt;
 	private BookingTask bt;
 	private boolean account_switched = false;
+	private boolean invalidated = false;
 
 	@Override
 	public void accountSelected() {
@@ -130,6 +131,9 @@ public class SearchResultDetailsActivity extends OpacActivity {
 	}
 
 	protected void reservationStart() {
+		if (invalidated) {
+			new RestoreSessionTask().execute(false);
+		}
 		if (app.getApi() instanceof EbookServiceApi) {
 			SharedPreferences sp = PreferenceManager
 					.getDefaultSharedPreferences(this);
@@ -615,8 +619,11 @@ public class SearchResultDetailsActivity extends OpacActivity {
 	}
 
 	public class RestoreSessionTask extends OpacTask<Integer> {
+		private boolean reservation = true;
+
 		@Override
 		protected Integer doInBackground(Object... arg0) {
+			reservation = (Boolean) arg0[0];
 			try {
 				if (id != null) {
 					SharedPreferences sp = PreferenceManager
@@ -641,7 +648,9 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
 		@Override
 		protected void onPostExecute(Integer result) {
-			reservationDo();
+			if (reservation) {
+				reservationDo();
+			}
 		}
 
 	}
@@ -770,6 +779,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 									intent.putExtra(
 											"item_id",
 											band.getAsString(DetailledItem.KEY_CHILD_ID));
+									intent.putExtra("from_collection", true);
 									startActivity(intent);
 								}
 							});
@@ -1112,9 +1122,12 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			} else {
 				menu.findItem(R.id.action_lendebook).setVisible(false);
 			}
+			menu.findItem(R.id.action_tocollection).setVisible(
+					item.getCollectionId() != null);
 		} else {
 			menu.findItem(R.id.action_reservation).setVisible(false);
 			menu.findItem(R.id.action_lendebook).setVisible(false);
+			menu.findItem(R.id.action_tocollection).setVisible(false);
 		}
 
 		String bib = app.getLibrary().getIdent();
@@ -1146,6 +1159,17 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			return true;
 		} else if (item.getItemId() == android.R.id.home) {
 			finish();
+			return true;
+		} else if (item.getItemId() == R.id.action_tocollection) {
+			if (getIntent().getBooleanExtra("from_collection", false)) {
+				finish();
+			} else {
+				Intent intent = new Intent(SearchResultDetailsActivity.this,
+						SearchResultDetailsActivity.class);
+				intent.putExtra("item_id", this.item.getCollectionId());
+				startActivity(intent);
+				finish();
+			}
 			return true;
 		} else if (item.getItemId() == R.id.action_export) {
 			if (this.item == null) {

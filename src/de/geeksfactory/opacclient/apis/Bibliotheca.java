@@ -2,6 +2,8 @@ package de.geeksfactory.opacclient.apis;
 
 import java.io.IOException;
 import java.net.SocketException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -296,7 +299,7 @@ public class Bibliotheca extends BaseApi {
 							.replace(".png", "")));
 				}
 			} else {
-				if(tr.children().size() == 3)
+				if (tr.children().size() == 3)
 					contentindex = 2;
 			}
 			sr.setInnerhtml(tr.child(contentindex).child(0).html());
@@ -361,6 +364,7 @@ public class Bibliotheca extends BaseApi {
 
 	protected DetailledItem parse_result(String html) {
 		Document doc = Jsoup.parse(html);
+		doc.setBaseUri(opac_url);
 
 		DetailledItem result = new DetailledItem();
 
@@ -374,8 +378,25 @@ public class Bibliotheca extends BaseApi {
 		for (int i = 0; i < detailtrs.size(); i++) {
 			Element tr = detailtrs.get(i);
 			if (tr.child(0).hasClass("detail_feld")) {
-				result.addDetail(new Detail(tr.child(0).text(), tr.child(1)
-						.text()));
+				String title = tr.child(0).text();
+				String content = tr.child(1).text();
+				if (title.equals("Gesamtwerk:")) {
+					try {
+						if (tr.child(1).select("a").size() > 0) {
+							Element link = tr.child(1).select("a").first();
+							List<NameValuePair> query = URLEncodedUtils.parse(
+									new URI(link.absUrl("href")), "UTF-8");
+							for (NameValuePair q : query) {
+								if (q.getName().equals("MedienNr")) {
+									result.setCollectionId(q.getValue());
+								}
+							}
+						}
+					} catch (URISyntaxException e) {
+					}
+				} else {
+					result.addDetail(new Detail(title, content));
+				}
 			}
 		}
 
