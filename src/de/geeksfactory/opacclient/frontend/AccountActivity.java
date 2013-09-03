@@ -709,9 +709,12 @@ public class AccountActivity extends OpacActivity {
 							&& item.containsKey(AccountData.KEY_LENT_DEADLINE)) {
 						if (!item.getAsString(AccountData.KEY_LENT_DEADLINE)
 								.equals("")) {
-							if (!item
-									.containsKey(AccountData.KEY_LENT_DEADLINE_TIMESTAMP)
-									|| item.getAsLong(AccountData.KEY_LENT_DEADLINE_TIMESTAMP) < 1) {
+							if ((!item
+									.containsKey(AccountData.KEY_LENT_DEADLINE_TIMESTAMP) || item
+									.getAsLong(AccountData.KEY_LENT_DEADLINE_TIMESTAMP) < 1)
+									&& !"Onleihe"
+											.equals(item
+													.getAsString(AccountData.KEY_LENT_BRANCH))) {
 								notification_problems = true;
 							}
 						}
@@ -862,7 +865,7 @@ public class AccountActivity extends OpacActivity {
 					((ImageView) v.findViewById(R.id.ivBooking))
 							.setVisibility(View.VISIBLE);
 					((ImageView) v.findViewById(R.id.ivCancel))
-					.setVisibility(View.GONE);
+							.setVisibility(View.GONE);
 				} else if (item.containsKey(AccountData.KEY_RESERVATION_CANCEL)) {
 					v.findViewById(R.id.ivCancel)
 							.setTag(item
@@ -877,12 +880,12 @@ public class AccountActivity extends OpacActivity {
 					((ImageView) v.findViewById(R.id.ivCancel))
 							.setVisibility(View.VISIBLE);
 					((ImageView) v.findViewById(R.id.ivBooking))
-					.setVisibility(View.GONE);
+							.setVisibility(View.GONE);
 				} else {
 					((ImageView) v.findViewById(R.id.ivCancel))
 							.setVisibility(View.INVISIBLE);
 					((ImageView) v.findViewById(R.id.ivBooking))
-					.setVisibility(View.GONE);
+							.setVisibility(View.GONE);
 				}
 				llRes.addView(v);
 			}
