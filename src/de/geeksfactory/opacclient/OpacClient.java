@@ -30,6 +30,7 @@ import android.preference.PreferenceManager;
 import de.geeksfactory.opacclient.apis.BiBer1992;
 import de.geeksfactory.opacclient.apis.Bibliotheca;
 import de.geeksfactory.opacclient.apis.OpacApi;
+import de.geeksfactory.opacclient.apis.Pica;
 import de.geeksfactory.opacclient.apis.SISIS;
 import de.geeksfactory.opacclient.apis.Zones22;
 import de.geeksfactory.opacclient.frontend.MainPreferenceActivity;
@@ -105,6 +106,8 @@ public class OpacClient extends Application {
 			newApiInstance = new Zones22();
 		else if (lib.getApi().equals("biber1992"))
 			newApiInstance = new BiBer1992();
+		else if (lib.getApi().equals("pica"))
+			newApiInstance = new Pica();
 		else
 			return null;
 
