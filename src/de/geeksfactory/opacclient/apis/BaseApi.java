@@ -8,10 +8,14 @@ import java.io.UnsupportedEncodingException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
 
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.networking.HTTPClient;
@@ -43,10 +47,24 @@ public abstract class BaseApi implements OpacApi {
 	 *             Thrown when server returns a HTTP status code greater or
 	 *             equal than 400.
 	 */
-	protected String httpGet(String url, String encoding, boolean ignore_errors)
+	
+	protected String httpGet(String url, String encoding, boolean ignore_errors, CookieStore cookieStore)
 			throws ClientProtocolException, IOException {
+		
 		HttpGet httpget = new HttpGet(url);
-		HttpResponse response = http_client.execute(httpget);
+		HttpResponse response;
+		
+		if (cookieStore != null) {
+			// Create local HTTP context
+		    HttpContext localContext = new BasicHttpContext();
+		    // Bind custom cookie store to the local context
+		    localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+
+			response = http_client.execute(httpget, localContext);
+	    } else {
+	    	response = http_client.execute(httpget);
+	    }
+				
 		if (!ignore_errors && response.getStatusLine().getStatusCode() >= 400) {
 			throw new NotReachableException();
 		}
@@ -55,15 +73,20 @@ public abstract class BaseApi implements OpacApi {
 		response.getEntity().consumeContent();
 		return html;
 	}
+	
+	protected String httpGet(String url, String encoding, boolean ignore_errors)
+			throws ClientProtocolException, IOException {
+		return httpGet(url, encoding, ignore_errors, null);
+	}
 
 	protected String httpGet(String url, String encoding)
 			throws ClientProtocolException, IOException {
-		return httpGet(url, encoding, false);
+		return httpGet(url, encoding, false, null);
 	}
 
 	protected String httpGet(String url) throws ClientProtocolException,
 			IOException {
-		return httpGet(url, getDefaultEncoding(), false);
+		return httpGet(url, getDefaultEncoding(), false, null);
 	}
 
 	/**
