@@ -2,17 +2,17 @@ package de.geeksfactory.opacclient.apis;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.acra.ACRA;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,8 +24,8 @@ import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 import android.content.ContentValues;
-import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -54,6 +54,8 @@ public class Pica extends BaseApi implements OpacApi {
 	protected String ENCODING = "UTF-8";
 	protected int resultcount = 10;
 	protected String reusehtml;
+	protected Integer searchSet;
+	CookieStore cookieStore = new BasicCookieStore();
 	
 	protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
 
@@ -78,9 +80,11 @@ public class Pica extends BaseApi implements OpacApi {
 	@Override
 	public void start() throws IOException, NotReachableException {
 		String html = httpGet(opac_url
-				+ "/DB=1/SET=1/TTL=1/ADVANCED_SEARCHFILTER");
+				+ "/DB=1/SET=1/TTL=1/ADVANCED_SEARCHFILTER", getDefaultEncoding(), false, cookieStore);
 
 		Document doc = Jsoup.parse(html);
+		
+		updateSearchSetValue(doc);
 
 		metadata.open();
 		if (!metadata.hasMeta(library.getIdent())) {
@@ -139,7 +143,7 @@ public class Pica extends BaseApi implements OpacApi {
 			params.add(new BasicNameValuePair("PARSE_OPWORDS", "N"));
 			params.add(new BasicNameValuePair("PARSE_OLDSETS", "N"));
 
-			index = addParameters(query, KEY_SEARCH_QUERY_TITLE, "1016", params,
+			index = addParameters(query, KEY_SEARCH_QUERY_FREE, "1016", params,
 					index);
 			index = addParameters(query, KEY_SEARCH_QUERY_AUTHOR, "1004",
 					params, index);
@@ -166,26 +170,17 @@ public class Pica extends BaseApi implements OpacApi {
 				return null;
 			}
 
-			//params.add(new BasicNameValuePair("submitSearch", "Suchen"));
-			//params.add(new BasicNameValuePair("callingPage", "searchParameters"));
-			//params.add(new BasicNameValuePair("numberOfHits", "10"));
-
-			//params.add(new BasicNameValuePair("selectedSearchBranchlib", query
-			//		.getString(KEY_SEARCH_QUERY_BRANCH)));
-//			if (query.getString(KEY_SEARCH_QUERY_HOME_BRANCH) != null) {
-//				if (!query.getString(KEY_SEARCH_QUERY_HOME_BRANCH).equals(""))
-//					params.add(new BasicNameValuePair("selectedViewBranchlib",
-//							query.getString(KEY_SEARCH_QUERY_HOME_BRANCH)));
-//			}
-
 		String html = httpGet(
 				opac_url + "/DB=1/SET=1/TTL=1/CMD?"
-						+ URLEncodedUtils.format(params, "UTF-8"), ENCODING);
+						+ URLEncodedUtils.format(params, "UTF-8"), ENCODING, false, cookieStore);
+		
 		return parse_search(html, 1);
 	}
 	
 	protected SearchRequestResult parse_search(String html, int page) {
 		Document doc = Jsoup.parse(html);
+		
+		updateSearchSetValue(doc);
 
 		if (doc.select(".error").size() > 0) {
 			if (doc.select(".error").text().trim().equals("Es wurde nichts gefunden.")) {
@@ -208,11 +203,6 @@ public class Pica extends BaseApi implements OpacApi {
 		if(m.find()) {
 		    resultnumstr = m.group();
 		}
-//		if (resultnumstr.contains("(1/1)") || resultnumstr.contains(" 1/1")) {
-//			reusehtml = html;
-//			last_error = "is_a_redirect";
-//			return null;
-//		} else
 		if (resultnumstr.contains("(")) {
 			results_total = Integer.parseInt(resultnumstr.replaceAll(
 					".*\\(([0-9]+)\\).*", "$1"));
@@ -228,11 +218,10 @@ public class Pica extends BaseApi implements OpacApi {
 		if (results_total == 1) {
 			//Only one result
 			try {
-				//TODO: Fix single item result!
 				DetailledItem singleResult = parse_result(html);
 				SearchResult sr = new SearchResult();
-				sr.setType(MediaType.UNKNOWN); //TODO: implement getting MediaTypes for single items
-				sr.setInnerhtml(singleResult.getTitle());
+				sr.setType(getMediaTypeInSingleResult(html));
+				sr.setInnerhtml("<b>" + singleResult.getTitle() +  "</b><br>" + singleResult.getDetails().get(0).getContent());
 				results.add(sr);
 				
 			} catch (IOException e) {
@@ -333,52 +322,12 @@ public class Pica extends BaseApi implements OpacApi {
 			StringBuilder description = new StringBuilder();
 			
 			int k = 0;
-			boolean yearfound = false;
 			for (String[] part : strings) {
 					if (part[0] == "a" && k == 0) {
 						description.append("<b>" + part[2] + "</b>");
-					} else if (part[2].matches("\\D*[0-9]{4}\\D*")
-							&& part[2].length() <= 10) {
-						yearfound = true;
-						description.append("<br />" + part[2]);
-					} else if (k == 1 && !yearfound
-							&& part[2].matches("^\\s*\\([0-9]{4}\\)$")) {
-						description.append("<br />" + part[2]);
-					} else if (k < 3 && !yearfound) {
+					} else if (k < 3) {
 						description.append("<br />" + part[2]);
 					}
-				if (part.length == 4) {
-					if (part[0].equals("span") && part[3].equals("textgruen")) {
-						sr.setStatus(SearchResult.Status.GREEN);
-					} else if (part[0].equals("span")
-							&& part[3].equals("textrot")) {
-						sr.setStatus(SearchResult.Status.RED);
-					}
-				} else if (part.length == 5) {
-					if (part[4].contains("purple")) {
-						sr.setStatus(SearchResult.Status.YELLOW);
-					}
-				}
-				if (sr.getStatus() == null) {
-					if (part[2].contains("entliehen")
-							&& part[2]
-									.startsWith("Vormerkung ist leider nicht mÃ¶glich")) {
-						sr.setStatus(SearchResult.Status.RED);
-					} else if (part[2].startsWith("entliehen")
-							|| part[2]
-									.contains("Ein Exemplar finden Sie in einer anderen Zweigstelle")) {
-						sr.setStatus(SearchResult.Status.YELLOW);
-					} else if ((part[2].startsWith("bestellbar") && !part[2]
-							.contains("nicht bestellbar"))
-							|| (part[2].startsWith("vorbestellbar") && !part[2]
-									.contains("nicht vorbestellbar"))
-							|| (part[2].startsWith("vormerkbar") && !part[2]
-									.contains("nicht vormerkbar"))
-							|| (part[2].contains("ausleihbar") && !part[2]
-									.contains("nicht ausleihbar"))) {
-						sr.setStatus(SearchResult.Status.GREEN);
-					}
-				}
 				k++;
 			}
 			sr.setInnerhtml(description.toString());
@@ -398,14 +347,13 @@ public class Pica extends BaseApi implements OpacApi {
 			start();
 
 		String html = httpGet(opac_url
-				+ "/DB=1/SET=1/TTL=1/NXT?FRST=" + (((page - 1) * resultcount) + 1), ENCODING);
+				+ "/DB=1/SET=" + searchSet + "/TTL=1/NXT?FRST=" + (((page - 1) * resultcount) + 1), ENCODING, false, cookieStore);
 		return parse_search(html, page);
 	}
 
 	@Override
 	public SearchRequestResult filterResults(Filter filter, Option option)
 			throws IOException, NotReachableException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -414,23 +362,21 @@ public class Pica extends BaseApi implements OpacApi {
 	public DetailledItem getResultById(String id, String homebranch)
 			throws IOException, NotReachableException {
 
-//		if (id == null && reusehtml != null) {
-//			return parse_result(reusehtml);
-//		}
-//
-//		String html = httpGet(opac_url + "/start.do?" + startparams
-//				+ "searchType=1&Query=0%3D%22" + id + "%22" + hbp, ENCODING);
-//
-//		return parse_result(html);
-		return null;
+		if (id == null && reusehtml != null) {
+			return parse_result(reusehtml);
+		}
+
+		String html = httpGet(id, ENCODING);
+
+		return parse_result(html);
 	}
 
 	@Override
 	public DetailledItem getResult(int position) throws IOException {
 		String html = httpGet(
 				opac_url
-						+ "DB=1/SET=1/TTL=1/SHW?FRST="
-						+ (position + 1), ENCODING);
+						+ "DB=1/SET=" + searchSet + "/TTL=1/SHW?FRST="
+						+ (position + 1), ENCODING, false, cookieStore);
 
 		return parse_result(html);
 	}
@@ -439,224 +385,76 @@ public class Pica extends BaseApi implements OpacApi {
 		Document doc = Jsoup.parse(html);
 
 		DetailledItem result = new DetailledItem();
+		
+		String id = opac_url + doc.select("img[alt=Zitierlink]").get(0).parent().attr("href");
+		result.setId(id);		
+		
+//		TODO: There seem to be no cover images in Kiel Uni Library, so covers are not implemented
 
-		try {
-			result.setId(doc.select("td.preslabel:contains(Signatur) + td.presvalue").text().trim());
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-//		List<String> reservationlinks = new ArrayList<String>();
-//		for (Element link : doc3.select("#vormerkung a, #tab-content a")) {
-//			Uri href = Uri.parse(link.absUrl("href"));
-//			if (result.getId() == null) {
-//				// ID retrieval
-//				String key = href.getQueryParameter("katkey");
-//				if (key != null) {
-//					result.setId(key);
-//					break;
-//				}
-//			}
-//
-//			// Vormerken
-//			if (href.getQueryParameter("methodToCall") != null) {
-//				if (href.getQueryParameter("methodToCall").equals(
-//						"doVormerkung")
-//						|| href.getQueryParameter("methodToCall").equals(
-//								"doBestellung"))
-//					reservationlinks.add(href.getQuery());
-//			}
-//		}
-//		if (reservationlinks.size() == 1) {
-//			result.setReservable(true);
-//			result.setReservation_info(reservationlinks.get(0));
-//		} else if (reservationlinks.size() == 0) {
-//			result.setReservable(false);
-//		} else {
-//			// Multiple options - handle this case!
-//		}
-
-//		TODO: There seem to be no cover images in Kiel Uni Library, so covers are not implemented (the code below is copy from SISIS)
-//		if (doc.select(".data td img").size() == 1) {
-//			result.setCover(doc.select(".data td img").first().attr("abs:src"));
-//		}
-
+		//GET TITLE AND SUBTITLE
 		String titleAndSubtitle = "";
-		if (doc.select("td.preslabel:contains(Titel) + td.presvalue").size() == 1) {
+		if (doc.select("td.preslabel:contains(Titel) + td.presvalue").size() > 0) {
 			titleAndSubtitle = doc.select("td.preslabel:contains(Titel) + td.presvalue").first().text().trim();
 			String title = titleAndSubtitle.substring(0, titleAndSubtitle.indexOf("/")).trim();
 			result.setTitle(title);
 			
-			String subtitle = titleAndSubtitle.substring(titleAndSubtitle.indexOf("/")).trim();
+			String subtitle = titleAndSubtitle.substring(titleAndSubtitle.indexOf("/") + 1).trim();
+			result.addDetail(new Detail("Titelzusatz", subtitle));
+		} else if (doc.select("td.preslabel:contains(Aufsatz) + td.presvalue").size() > 0) {
+			titleAndSubtitle = doc.select("td.preslabel:contains(Aufsatz) + td.presvalue").first().text().trim();
+			String title = titleAndSubtitle.substring(0, titleAndSubtitle.indexOf("/")).trim();
+			result.setTitle(title);
+			
+			String subtitle = titleAndSubtitle.substring(titleAndSubtitle.indexOf("/") + 1).trim();
 			result.addDetail(new Detail("Titelzusatz", subtitle));
 		} else {
 			result.setTitle("");
 		}
-
-		String title = "";
-		String text = "";
 		
-		Element detailtrs = doc.select("table[summary=layout] table tbody").first();
-		if (detailtrs != null) {
-			for (Node node : detailtrs.childNodes()) {
-				if (node instanceof Element) {
-					if (((Element) node).tagName().equals("strong")) {
-						if (!text.equals("") && !title.equals("")) {
-							result.addDetail(new Detail(title.trim(), text
-									.trim()));
-							if (title.equals("Titel:")) {
-								result.setTitle(text.trim());
-							}
-							text = "";
-						}
-
-						title = ((Element) node).text().trim();
-					} else {
-						if (((Element) node).tagName().equals("a")
-								&& ((Element) node).text().trim()
-										.equals("hier klicken")) {
-							text = text + ((Element) node).attr("href");
-						} else {
-							text = text + ((Element) node).text();
-						}
-					}
-				} else if (node instanceof TextNode) {
-					text = text + ((TextNode) node).text();
+		//GET OTHER INFORMATION
+		ContentValues e = new ContentValues();		
+		String location = "";
+		
+		for (Element element : doc.select("td.preslabel + td.presvalue")) {
+			String detail = element.text().trim();
+			String title = element.firstElementSibling().text().trim().replace("\u00a0", "");
+			
+			if (element.select("hr").size() > 0 && location != "") { //multiple copies
+				e.put(DetailledItem.KEY_COPY_BRANCH, location);				
+				result.addCopy(e);
+				location = "";
+				e = new ContentValues();
+			}
+			
+			if (!title.equals("")) {
+				
+				if (title.indexOf(":") != -1) {
+					title = title.substring(0, title.indexOf(":")); //remove colon
+				}
+				
+				if (title.contains("Status")) {
+					e.put(DetailledItem.KEY_COPY_STATUS, detail);
+				} else if (title.contains("Standort")) {
+					location += detail;
+				} else if (title.contains("Sonderstandort")) {
+					location += " - " + detail;
+				} else if (title.contains("Fachnummer")) {
+					e.put(DetailledItem.KEY_COPY_LOCATION, detail);
+				} else if (title.contains("Signatur")) {
+					e.put(DetailledItem.KEY_COPY_SHELFMARK, detail);
+				} else if (title.contains("Status")) {
+					detail = detail.replace("Bestellen", "").trim();
+					detail = detail.replace("verfuegbar", "verfügbar");
+					detail = detail.replace("Verfuegbar", "verfügbar");
+					e.put(DetailledItem.KEY_COPY_STATUS, detail);
+				} else if (!title.contains("Titel")) {
+					result.addDetail(new Detail(title, detail));
 				}
 			}
-		} else {
-			result.addDetail(new Detail("Fehler",
-					"Details konnten nicht abgerufen werden, bitte erneut probieren!"));
 		}
-		if (!text.equals("") && !title.equals("")) {
-			result.addDetail(new Detail(title.trim(), text.trim()));
-			if (title.equals("Titel:")) {
-				result.setTitle(text.trim());
-			}
-		}
-
-//		Map<String, Integer> copy_columnmap = new HashMap<String, Integer>();
-//		// Default values
-//		copy_columnmap.put(DetailledItem.KEY_COPY_BARCODE, 1);
-//		copy_columnmap.put(DetailledItem.KEY_COPY_BRANCH, 3);
-//		copy_columnmap.put(DetailledItem.KEY_COPY_STATUS, 4);
-//		Elements copy_columns = doc.select("#tab-content .data tr#bg2 th");
-//		for (int i = 0; i < copy_columns.size(); i++) {
-//			Element th = copy_columns.get(i);
-//			String head = th.text().trim();
-//			if (head.contains("Status")) {
-//				copy_columnmap.put(DetailledItem.KEY_COPY_STATUS, i);
-//			}
-//			if (head.contains("Zweigstelle")) {
-//				copy_columnmap.put(DetailledItem.KEY_COPY_BRANCH, i);
-//			}
-//			if (head.contains("Mediennummer")) {
-//				copy_columnmap.put(DetailledItem.KEY_COPY_BARCODE, i);
-//			}
-//			if (head.contains("Standort")) {
-//				copy_columnmap.put(DetailledItem.KEY_COPY_LOCATION, i);
-//			}
-//			if (head.contains("Signatur")) {
-//				copy_columnmap.put(DetailledItem.KEY_COPY_SHELFMARK, i);
-//			}
-//		}
-//
-//		Pattern status_lent = Pattern
-//				.compile("^(entliehen) bis ([0-9]{1,2}.[0-9]{1,2}.[0-9]{2,4}) \\(gesamte Vormerkungen: ([0-9]+)\\)$");
-//		Pattern status_and_barcode = Pattern.compile("^(.*) ([0-9A-Za-z]+)$");
-//
-//		Elements exemplartrs = doc.select("#tab-content .data tr").not("#bg2");
-//		for (Element tr : exemplartrs) {
-//			try {
-//				ContentValues e = new ContentValues();
-//				Element status = tr.child(copy_columnmap
-//						.get(DetailledItem.KEY_COPY_STATUS));
-//				Element barcode = tr.child(copy_columnmap
-//						.get(DetailledItem.KEY_COPY_BARCODE));
-//				String barcodetext = barcode.text().trim()
-//						.replace(" Wegweiser", "");
-//
-//				// STATUS
-//				String statustext = "";
-//				if (status.getElementsByTag("b").size() > 0) {
-//					statustext = status.getElementsByTag("b").text().trim();
-//				} else {
-//					statustext = status.text().trim();
-//				}
-//				if (copy_columnmap.get(DetailledItem.KEY_COPY_STATUS) == copy_columnmap
-//						.get(DetailledItem.KEY_COPY_BARCODE)) {
-//					Matcher matcher1 = status_and_barcode.matcher(statustext);
-//					if (matcher1.matches()) {
-//						statustext = matcher1.group(1);
-//						barcodetext = matcher1.group(2);
-//					}
-//				}
-//
-//				Matcher matcher = status_lent.matcher(statustext);
-//				if (matcher.matches()) {
-//					e.put(DetailledItem.KEY_COPY_STATUS, matcher.group(1));
-//					e.put(DetailledItem.KEY_COPY_RETURN, matcher.group(2));
-//					e.put(DetailledItem.KEY_COPY_RESERVATIONS, matcher.group(3));
-//				} else {
-//					e.put(DetailledItem.KEY_COPY_STATUS, statustext);
-//				}
-//				e.put(DetailledItem.KEY_COPY_BARCODE, barcodetext);
-//
-//				String branchtext = tr
-//						.child(copy_columnmap
-//								.get(DetailledItem.KEY_COPY_BRANCH)).text()
-//						.trim().replace(" Wegweiser", "");
-//				e.put(DetailledItem.KEY_COPY_BRANCH, branchtext);
-//
-//				if (copy_columnmap.containsKey(DetailledItem.KEY_COPY_LOCATION)) {
-//					e.put(DetailledItem.KEY_COPY_LOCATION,
-//							tr.child(
-//									copy_columnmap
-//											.get(DetailledItem.KEY_COPY_LOCATION))
-//									.text().trim().replace(" Wegweiser", ""));
-//				}
-//
-//				if (copy_columnmap
-//						.containsKey(DetailledItem.KEY_COPY_SHELFMARK)) {
-//					e.put(DetailledItem.KEY_COPY_SHELFMARK,
-//							tr.child(
-//									copy_columnmap
-//											.get(DetailledItem.KEY_COPY_SHELFMARK))
-//									.text().trim().replace(" Wegweiser", ""));
-//				}
-//
-//				result.addCopy(e);
-//			} catch (Exception ex) {
-//				ex.printStackTrace();
-//			}
-//		}
-//
-//		try {
-//			Element isvolume = null;
-//			Bundle volume = new Bundle();
-//			Elements links = doc.select(".data td a");
-//			int elcount = links.size();
-//			for (int eli = 0; eli < elcount; eli++) {
-//				List<NameValuePair> anyurl = URLEncodedUtils.parse(new URI(
-//						links.get(eli).attr("href")), "UTF-8");
-//				for (NameValuePair nv : anyurl) {
-//					if (nv.getName().equals("methodToCall")
-//							&& nv.getValue().equals("volumeSearch")) {
-//						isvolume = links.get(eli);
-//					} else if (nv.getName().equals("catKey")) {
-//						volume.putString("catKey", nv.getValue());
-//					} else if (nv.getName().equals("dbIdentifier")) {
-//						volume.putString("dbIdentifier", nv.getValue());
-//					}
-//				}
-//				if (isvolume != null) {
-//					volume.putBoolean("volume", true);
-//					result.setVolumesearch(volume);
-//					break;
-//				}
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		
+		e.put(DetailledItem.KEY_COPY_BRANCH, location);				
+		result.addCopy(e);
 
 		return result;
 	}
@@ -665,38 +463,33 @@ public class Pica extends BaseApi implements OpacApi {
 	public ReservationResult reservation(String reservation_info,
 			Account account, int useraction, String selection)
 			throws IOException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public boolean prolong(Account account, String media) throws IOException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean prolongAll(Account account) throws IOException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean cancel(Account account, String media) throws IOException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public AccountData account(Account account) throws IOException,
 			JSONException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String[] getSearchFields() {
-		return new String[] { KEY_SEARCH_QUERY_TITLE,
+		return new String[] { KEY_SEARCH_QUERY_FREE,
 				KEY_SEARCH_QUERY_AUTHOR, KEY_SEARCH_QUERY_KEYWORDA,
 				KEY_SEARCH_QUERY_KEYWORDB, KEY_SEARCH_QUERY_YEAR, 
 				KEY_SEARCH_QUERY_SYSTEM, KEY_SEARCH_QUERY_PUBLISHER };
@@ -704,39 +497,74 @@ public class Pica extends BaseApi implements OpacApi {
 
 	@Override
 	public String getLast_error() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public boolean isAccountSupported(Library library) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean isAccountExtendable() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public String getAccountExtendableInfo(Account account) throws IOException,
 			NotReachableException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getShareUrl(String id, String title) {
-		// TODO Auto-generated method stub
-		return null;
+		return id;
 	}
 
 	@Override
 	public int getSupportFlags() {
-		// TODO Auto-generated method stub
 		return 0;
+		
+	}
+	
+	public void updateSearchSetValue(Document doc) {
+		String url = doc.select("base").first().attr("href");
+		Integer setPosition = url.indexOf("SET=") + 4;
+		String searchSetString = url.substring(setPosition, url.indexOf("/", setPosition));
+		searchSet = Integer.parseInt(searchSetString);
+	}
+	
+	public MediaType getMediaTypeInSingleResult(String html) {
+		Document doc = Jsoup.parse(html);		
+		MediaType mediatype = MediaType.UNKNOWN;
+		
+		if (doc.select("table[summary=presentation switch] img").size() > 0) {
+			
+			String[] fparts = doc.select("table[summary=presentation switch] img").get(0).attr("src")
+					.split("/");
+			String fname = fparts[fparts.length - 1];
+			
+			if (data.has("mediatypes")) {
+				try {
+					mediatype = MediaType.valueOf(data.getJSONObject(
+							"mediatypes").getString(fname));
+				} catch (JSONException e) {
+					mediatype = defaulttypes.get(fname.toLowerCase()
+							.replace(".jpg", "").replace(".gif", "")
+							.replace(".png", ""));
+				} catch (IllegalArgumentException e) {
+					mediatype = defaulttypes.get(fname.toLowerCase()
+							.replace(".jpg", "").replace(".gif", "")
+							.replace(".png", ""));
+				}
+			} else {
+				mediatype = defaulttypes.get(fname.toLowerCase()
+						.replace(".jpg", "").replace(".gif", "")
+						.replace(".png", ""));
+			}
+		}
+		
+		return mediatype;
 	}
 
 }
