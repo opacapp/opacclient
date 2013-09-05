@@ -3,8 +3,6 @@ package de.geeksfactory.opacclient.objects;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
-
 /**
  * Object representing a supported library
  * 
