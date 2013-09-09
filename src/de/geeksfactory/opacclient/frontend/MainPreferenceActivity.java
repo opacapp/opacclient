@@ -1,5 +1,6 @@
 package de.geeksfactory.opacclient.frontend;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,9 +18,9 @@ import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 
 public class MainPreferenceActivity extends OpacPreferenceActivity {
 
-	protected void openAccountList() {
-		Intent intent = new Intent(this, AccountListActivity.class);
-		startActivity(intent);
+	public static void openAccountList(Activity ctx) {
+		Intent intent = new Intent(ctx, AccountListActivity.class);
+		ctx.startActivity(intent);
 	}
 
 	protected boolean ebooksSupported() {
@@ -45,7 +46,7 @@ public class MainPreferenceActivity extends OpacPreferenceActivity {
 		assistant.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference arg0) {
-				openAccountList();
+				openAccountList(MainPreferenceActivity.this);
 				return false;
 			}
 		});

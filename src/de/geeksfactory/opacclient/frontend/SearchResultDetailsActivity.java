@@ -215,10 +215,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 								public void onClick(DialogInterface dialog,
 										int id) {
 									adialog.dismiss();
-									Intent intent = new Intent(
-											SearchResultDetailsActivity.this,
-											AccountListActivity.class);
-									startActivity(intent);
+									MainPreferenceActivity.openAccountList(SearchResultDetailsActivity.this);
 								}
 							});
 			adialog = builder.create();
