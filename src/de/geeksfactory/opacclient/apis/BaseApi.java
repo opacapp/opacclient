@@ -102,10 +102,23 @@ public abstract class BaseApi implements OpacApi {
 	 *             equal than 400.
 	 */
 	protected String httpPost(String url, UrlEncodedFormEntity data,
-			String encoding, boolean ignore_errors)
+			String encoding, boolean ignore_errors, CookieStore cookieStore)
 			throws ClientProtocolException, IOException {
 		HttpPost httppost = new HttpPost(url);
 		httppost.setEntity(data);
+		
+
+		if (cookieStore != null) {
+			// Create local HTTP context
+		    HttpContext localContext = new BasicHttpContext();
+		    // Bind custom cookie store to the local context
+		    localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+
+			HttpResponse response = http_client.execute(httppost, localContext);
+	    } else {
+			HttpResponse response = http_client.execute(httppost);
+	    }
+		
 		HttpResponse response = http_client.execute(httppost);
 		if (!ignore_errors && response.getStatusLine().getStatusCode() >= 400) {
 			throw new NotReachableException();
@@ -117,13 +130,18 @@ public abstract class BaseApi implements OpacApi {
 	}
 
 	protected String httpPost(String url, UrlEncodedFormEntity data,
+			String encoding, boolean ignore_errors) throws ClientProtocolException, IOException {
+		return httpPost(url, data, encoding, ignore_errors, null);
+	}
+
+	protected String httpPost(String url, UrlEncodedFormEntity data,
 			String encoding) throws ClientProtocolException, IOException {
-		return httpPost(url, data, encoding, false);
+		return httpPost(url, data, encoding, false, null);
 	}
 
 	protected String httpPost(String url, UrlEncodedFormEntity data)
 			throws ClientProtocolException, IOException {
-		return httpPost(url, data, getDefaultEncoding(), false);
+		return httpPost(url, data, getDefaultEncoding(), false, null);
 	}
 
 	/**
