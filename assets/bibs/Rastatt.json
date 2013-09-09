@@ -1,0 +1,26 @@
+{
+    "api": "bibliotheca", 
+    "city": "Rastatt", 
+    "data": {
+		"accounttable": null,
+        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-rastatt", 
+		"copiestable": {
+			"barcode": -1,
+			"branch": -1,
+			"department": -1,
+			"location": 0,
+			"reservations": -1,
+			"returndate": 2,
+			"status": 1
+		},
+        "information": "http://www.stadtbibliothek-rastatt.de/",
+		"reservationtable": null
+    }, 
+    "geo": [
+        48.8590879, 
+        8.209575599999999
+    ], 
+    "group": "Baden-W\u00fcrttemberg", 
+    "support": "Katalogsuche", 
+    "title": "Stadtbibliothek"
+}
