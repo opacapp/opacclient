@@ -42,29 +42,36 @@ public abstract class BaseApi implements OpacApi {
 	 * 
 	 * @param url
 	 *            URL to fetch
+	 * @param encoding
+	 *            Expected encoding of the response body
+	 * @param ignore_errors
+	 *            If true, status codes above 400 do not raise an exception
+	 * @param cookieStore
+	 *            If set, the given cookieStore is used instead of the built-in
+	 *            one.
 	 * @return Answer content
 	 * @throws NotReachableException
 	 *             Thrown when server returns a HTTP status code greater or
 	 *             equal than 400.
 	 */
-	
-	protected String httpGet(String url, String encoding, boolean ignore_errors, CookieStore cookieStore)
+	public String httpGet(String url, String encoding,
+			boolean ignore_errors, CookieStore cookieStore)
 			throws ClientProtocolException, IOException {
-		
+
 		HttpGet httpget = new HttpGet(url);
 		HttpResponse response;
-		
+
 		if (cookieStore != null) {
 			// Create local HTTP context
-		    HttpContext localContext = new BasicHttpContext();
-		    // Bind custom cookie store to the local context
-		    localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+			HttpContext localContext = new BasicHttpContext();
+			// Bind custom cookie store to the local context
+			localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
 
 			response = http_client.execute(httpget, localContext);
-	    } else {
-	    	response = http_client.execute(httpget);
-	    }
-				
+		} else {
+			response = http_client.execute(httpget);
+		}
+
 		if (!ignore_errors && response.getStatusLine().getStatusCode() >= 400) {
 			throw new NotReachableException();
 		}
@@ -73,18 +80,18 @@ public abstract class BaseApi implements OpacApi {
 		response.getEntity().consumeContent();
 		return html;
 	}
-	
-	protected String httpGet(String url, String encoding, boolean ignore_errors)
+
+	public String httpGet(String url, String encoding, boolean ignore_errors)
 			throws ClientProtocolException, IOException {
 		return httpGet(url, encoding, ignore_errors, null);
 	}
 
-	protected String httpGet(String url, String encoding)
+	public String httpGet(String url, String encoding)
 			throws ClientProtocolException, IOException {
 		return httpGet(url, encoding, false, null);
 	}
 
-	protected String httpGet(String url) throws ClientProtocolException,
+	public String httpGet(String url) throws ClientProtocolException,
 			IOException {
 		return httpGet(url, getDefaultEncoding(), false, null);
 	}
@@ -96,29 +103,35 @@ public abstract class BaseApi implements OpacApi {
 	 *            URL to fetch
 	 * @param data
 	 *            POST data to send
+	 * @param encoding
+	 *            Expected encoding of the response body
+	 * @param ignore_errors
+	 *            If true, status codes above 400 do not raise an exception
+	 * @param cookieStore
+	 *            If set, the given cookieStore is used instead of the built-in
+	 *            one.
 	 * @return Answer content
 	 * @throws NotReachableException
 	 *             Thrown when server returns a HTTP status code greater or
 	 *             equal than 400.
 	 */
-	protected String httpPost(String url, UrlEncodedFormEntity data,
+	public String httpPost(String url, UrlEncodedFormEntity data,
 			String encoding, boolean ignore_errors, CookieStore cookieStore)
 			throws ClientProtocolException, IOException {
 		HttpPost httppost = new HttpPost(url);
 		httppost.setEntity(data);
-		
 
 		if (cookieStore != null) {
 			// Create local HTTP context
-		    HttpContext localContext = new BasicHttpContext();
-		    // Bind custom cookie store to the local context
-		    localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+			HttpContext localContext = new BasicHttpContext();
+			// Bind custom cookie store to the local context
+			localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
 
 			HttpResponse response = http_client.execute(httppost, localContext);
-	    } else {
+		} else {
 			HttpResponse response = http_client.execute(httppost);
-	    }
-		
+		}
+
 		HttpResponse response = http_client.execute(httppost);
 		if (!ignore_errors && response.getStatusLine().getStatusCode() >= 400) {
 			throw new NotReachableException();
@@ -129,17 +142,18 @@ public abstract class BaseApi implements OpacApi {
 		return html;
 	}
 
-	protected String httpPost(String url, UrlEncodedFormEntity data,
-			String encoding, boolean ignore_errors) throws ClientProtocolException, IOException {
+	public String httpPost(String url, UrlEncodedFormEntity data,
+			String encoding, boolean ignore_errors)
+			throws ClientProtocolException, IOException {
 		return httpPost(url, data, encoding, ignore_errors, null);
 	}
 
-	protected String httpPost(String url, UrlEncodedFormEntity data,
+	public String httpPost(String url, UrlEncodedFormEntity data,
 			String encoding) throws ClientProtocolException, IOException {
 		return httpPost(url, data, encoding, false, null);
 	}
 
-	protected String httpPost(String url, UrlEncodedFormEntity data)
+	public String httpPost(String url, UrlEncodedFormEntity data)
 			throws ClientProtocolException, IOException {
 		return httpPost(url, data, getDefaultEncoding(), false, null);
 	}

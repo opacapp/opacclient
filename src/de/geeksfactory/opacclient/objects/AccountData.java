@@ -76,7 +76,7 @@ public class AccountData {
 
 	/**
 	 * Internal identifier which will be supplied to your
-	 * {@link de.geeksfactory.opacclient.apis.OpacApi#prolong(Account, String)}
+	 * {@link de.geeksfactory.opacclient.apis.OpacApi#prolong(String, Account, int, String)}
 	 * implementation for prolonging. Button for prolonging will only be
 	 * displayed if this is set.
 	 * 
@@ -86,9 +86,9 @@ public class AccountData {
 
 	/**
 	 * Internal identifier which will be supplied to your
-	 * {@link de.geeksfactory.opacclient.apis.EbookServiceApi#downloadItem(String)}
-	 * implementation for download. Button for download will only be
-	 * displayed if this is set.
+	 * {@link de.geeksfactory.opacclient.apis.EbookServiceApi#downloadItem(Account, String)}
+	 * implementation for download. Button for download will only be displayed
+	 * if this is set.
 	 * 
 	 * ContentValues key for {@link #setLent(List)}
 	 */

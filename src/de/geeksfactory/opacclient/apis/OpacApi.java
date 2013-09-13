@@ -204,8 +204,17 @@ public interface OpacApi {
 	public static final int SUPPORT_FLAG_QUICKLINKS = 0x0000004;
 
 	/**
-	 * The result of a multi-step-supporting method call. Used for reservations
-	 * and prolonging.
+	 * The result of a multi-step-supporting method call.
+	 * 
+	 * This is a way of implementing an operating which may need an unregular
+	 * number of steps with user interaction. When the user starts the
+	 * operation, the method is called. It may return success or error, after
+	 * which the operation does not continue, but it also may return that it
+	 * requires user interaction - either a selection or a confirmation. After
+	 * the user interacted, the same method is being called again, but with
+	 * other parameters.
+	 * 
+	 * @since 2.0.18
 	 */
 	public abstract class MultiStepResult {
 
@@ -249,7 +258,7 @@ public interface OpacApi {
 
 		/**
 		 * Create a new Result object holding the return status of the
-		 * reservation() operation.
+		 * operation.
 		 * 
 		 * @param status
 		 *            The return status
@@ -260,11 +269,11 @@ public interface OpacApi {
 		}
 
 		/**
-		 * Get the return status of the prolong() operation. Can be
-		 * <code>OK</code> if the operation was successful, <code>ERROR</code>
-		 * if the operation failed, <code>SELECTION_NEEDED</code> if the user
-		 * should select one of the options presented in {@link #getSelection()}
-		 * or <code>CONFIRMATION_NEEDED</code> if the user should confirm the
+		 * Get the return status of the operation. Can be <code>OK</code> if the
+		 * operation was successful, <code>ERROR</code> if the operation failed,
+		 * <code>SELECTION_NEEDED</code> if the user should select one of the
+		 * options presented in {@link #getSelection()} or
+		 * <code>CONFIRMATION_NEEDED</code> if the user should confirm the
 		 * details returned by <code>getDetails</code>. .
 		 */
 		public Status getStatus() {
