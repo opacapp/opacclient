@@ -31,7 +31,6 @@ import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
 import de.geeksfactory.opacclient.NotReachableException;
-import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult.Status;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -471,7 +470,7 @@ public class Bibliotheca extends BaseApi {
 			nameValuePairs.add(new BasicNameValuePair("target", "makevorbest"));
 			httpPost(opac_url + "/index.asp", new UrlEncodedFormEntity(
 					nameValuePairs));
-			return new ReservationResult(Status.OK);
+			return new ReservationResult(MultiStepResult.Status.OK);
 		} else if (selection == null || useraction == 0) {
 			String html = httpGet(opac_url + "/" + reservation_info);
 			doc = Jsoup.parse(html);
@@ -521,7 +520,7 @@ public class Bibliotheca extends BaseApi {
 					branches.put(key, value);
 				}
 				ReservationResult result = new ReservationResult(
-						Status.SELECTION_NEEDED);
+						MultiStepResult.Status.SELECTION_NEEDED);
 				result.setActionIdentifier(ReservationResult.ACTION_BRANCH);
 				result.setSelection(branches);
 				return result;
@@ -539,7 +538,7 @@ public class Bibliotheca extends BaseApi {
 		}
 
 		if (doc == null)
-			return new ReservationResult(Status.ERROR);
+			return new ReservationResult(MultiStepResult.Status.ERROR);
 
 		if (doc.select("input[name=target]").size() > 0) {
 			if (doc.select("input[name=target]").attr("value")
@@ -561,7 +560,7 @@ public class Bibliotheca extends BaseApi {
 					}
 				}
 				ReservationResult result = new ReservationResult(
-						Status.CONFIRMATION_NEEDED);
+						MultiStepResult.Status.CONFIRMATION_NEEDED);
 				result.setDetails(details);
 				return result;
 			}
@@ -569,15 +568,15 @@ public class Bibliotheca extends BaseApi {
 
 		if (doc.getElementsByClass("kontomeldung").size() == 1) {
 			last_error = doc.getElementsByClass("kontomeldung").get(0).text();
-			return new ReservationResult(Status.ERROR);
+			return new ReservationResult(MultiStepResult.Status.ERROR);
 		}
 
-		return new ReservationResult(Status.ERROR);
+		return new ReservationResult(MultiStepResult.Status.ERROR);
 	}
 
 	@Override
-	public boolean prolong(Account account, String a) throws IOException,
-			NotReachableException {
+	public ProlongResult prolong(String a, Account account, int useraction,
+			String selection) throws IOException, NotReachableException {
 		if (!initialised)
 			start();
 		if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
@@ -586,24 +585,18 @@ public class Bibliotheca extends BaseApi {
 				account(account);
 			} catch (JSONException e) {
 				e.printStackTrace();
-				return false;
+				return new ProlongResult(MultiStepResult.Status.ERROR);
 			}
 		} else if (logged_in_as.getId() != account.getId()) {
 			try {
 				account(account);
 			} catch (JSONException e) {
 				e.printStackTrace();
-				return false;
+				return new ProlongResult(MultiStepResult.Status.ERROR);
 			}
 		}
-		String html = httpGet(opac_url + "/" + a);
-		Document doc = Jsoup.parse(html);
 
-		if (doc.getElementsByClass("kontomeldung").size() == 1) {
-			last_error = doc.getElementsByClass("kontomeldung").get(0).text();
-			return false;
-		}
-		if (doc.select("#verlaengern").size() == 1) {
+		if (useraction == ReservationResult.ACTION_CONFIRMATION) {
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("target", "make_vl"));
 			nameValuePairs.add(new BasicNameValuePair("verlaengern",
@@ -611,15 +604,52 @@ public class Bibliotheca extends BaseApi {
 			httpPost(opac_url + "/index.asp", new UrlEncodedFormEntity(
 					nameValuePairs));
 
+			return new ProlongResult(MultiStepResult.Status.OK);
+		} else {
+
+			String html = httpGet(opac_url + "/" + a);
+			Document doc = Jsoup.parse(html);
+
 			if (doc.getElementsByClass("kontomeldung").size() == 1) {
 				last_error = doc.getElementsByClass("kontomeldung").get(0)
 						.text();
+				return new ProlongResult(MultiStepResult.Status.ERROR);
 			}
+			if (doc.select("#verlaengern").size() == 1) {
+				if (doc.select(".kontozeile_center table").size() == 1) {
+					Element table = doc.select(".kontozeile_center table")
+							.first();
+					ProlongResult res = new ProlongResult(
+							MultiStepResult.Status.CONFIRMATION_NEEDED);
+					List<String[]> details = new ArrayList<String[]>();
 
-			return true;
+					for (Element row : table.select("tr")) {
+						if (row.select(".konto_feld").size() == 1
+								&& row.select(".konto_feldinhalt").size() == 1) {
+							details.add(new String[] {
+									row.select(".konto_feld").text().trim(),
+									row.select(".konto_feldinhalt").text()
+											.trim() });
+						}
+					}
+					res.setDetails(details);
+					return res;
+				} else {
+					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
+							2);
+					nameValuePairs.add(new BasicNameValuePair("target",
+							"make_vl"));
+					nameValuePairs.add(new BasicNameValuePair("verlaengern",
+							"Bestätigung"));
+					httpPost(opac_url + "/index.asp", new UrlEncodedFormEntity(
+							nameValuePairs));
+
+					return new ProlongResult(MultiStepResult.Status.OK);
+				}
+			}
 		}
 		last_error = "??";
-		return false;
+		return new ProlongResult(MultiStepResult.Status.ERROR);
 	}
 
 	@Override

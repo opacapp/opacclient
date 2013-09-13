@@ -25,18 +25,17 @@ import org.jsoup.select.Elements;
 
 import android.content.ContentValues;
 import android.os.Bundle;
-import android.util.Log;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
-import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.Filter.Option;
-import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
+import de.geeksfactory.opacclient.objects.SearchResult;
+import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
@@ -444,8 +443,8 @@ public class Pica extends BaseApi implements OpacApi {
 					e.put(DetailledItem.KEY_COPY_SHELFMARK, detail);
 				} else if (title.contains("Status")) {
 					detail = detail.replace("Bestellen", "").trim();
-					detail = detail.replace("verfuegbar", "verfügbar");
-					detail = detail.replace("Verfuegbar", "verfügbar");
+					detail = detail.replace("verfuegbar", "verfï¿½gbar");
+					detail = detail.replace("Verfuegbar", "verfï¿½gbar");
 					e.put(DetailledItem.KEY_COPY_STATUS, detail);
 				} else if (!title.contains("Titel")) {
 					result.addDetail(new Detail(title, detail));
@@ -467,8 +466,9 @@ public class Pica extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public boolean prolong(Account account, String media) throws IOException {
-		return false;
+	public ProlongResult prolong(String media, Account account, int useraction,
+			String Selection) throws IOException {
+		return new ProlongResult(MultiStepResult.Status.UNSUPPORTED);
 	}
 
 	@Override

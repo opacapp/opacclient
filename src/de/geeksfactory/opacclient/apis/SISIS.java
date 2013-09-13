@@ -33,7 +33,9 @@ import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
 import de.geeksfactory.opacclient.NotReachableException;
-import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult.Status;
+import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult;
+import de.geeksfactory.opacclient.apis.OpacApi.ProlongResult;
+import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult.Status;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -912,7 +914,7 @@ public class SISIS extends BaseApi implements OpacApi {
 					branches.put(key, value);
 				}
 				ReservationResult result = new ReservationResult(
-						Status.SELECTION_NEEDED);
+						MultiStepResult.Status.SELECTION_NEEDED);
 				result.setActionIdentifier(ReservationResult.ACTION_BRANCH);
 				result.setSelection(branches);
 				return result;
@@ -930,11 +932,11 @@ public class SISIS extends BaseApi implements OpacApi {
 		}
 
 		if (doc == null)
-			return new ReservationResult(Status.ERROR);
+			return new ReservationResult(MultiStepResult.Status.ERROR);
 
 		if (doc.getElementsByClass("error").size() >= 1) {
 			last_error = doc.getElementsByClass("error").get(0).text();
-			return new ReservationResult(Status.ERROR);
+			return new ReservationResult(MultiStepResult.Status.ERROR);
 		}
 
 		if (doc.select("#CirculationForm p").size() > 0) {
@@ -961,14 +963,14 @@ public class SISIS extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public boolean prolong(Account account, String a) throws IOException,
-			NotReachableException {
+	public ProlongResult prolong(String a, Account account, int useraction,
+			String Selection) throws IOException {
 		// Internal convention: a is either a § followed by an error message or
 		// the URI of the page this item was found on and the query string the
 		// prolonging link links to, seperated by a $.
 		if (a.startsWith("§")) {
 			last_error = a.substring(1);
-			return false;
+			return new ProlongResult(MultiStepResult.Status.ERROR);
 		}
 		String[] parts = a.split("\\$");
 		String offset = parts[0];
@@ -982,14 +984,14 @@ public class SISIS extends BaseApi implements OpacApi {
 				account(account);
 			} catch (JSONException e) {
 				e.printStackTrace();
-				return false;
+				return new ProlongResult(MultiStepResult.Status.ERROR);
 			}
 		} else if (logged_in_as.getId() != account.getId()) {
 			try {
 				account(account);
 			} catch (JSONException e) {
 				e.printStackTrace();
-				return false;
+				return new ProlongResult(MultiStepResult.Status.ERROR);
 			}
 		}
 
@@ -1004,10 +1006,10 @@ public class SISIS extends BaseApi implements OpacApi {
 		Document doc = Jsoup.parse(html);
 		if (doc.getElementsByClass("textrot").size() == 1) {
 			last_error = doc.getElementsByClass("textrot").text();
-			return false;
+			return new ProlongResult(MultiStepResult.Status.ERROR);
 		}
 
-		return true;
+		return new ProlongResult(MultiStepResult.Status.OK);
 	}
 
 	@Override

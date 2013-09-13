@@ -12,8 +12,8 @@ import de.geeksfactory.opacclient.objects.DetailledItem;
 /**
  * If an {@link OpacApi} implementation also implements this interface, the
  * library can be used to download ebooks directly inside the app. This is
- * currently NOT implemented or used in the open source version and is more
- * like a bridge between the "Community Edition" and the "Plus Edition" of the App.
+ * currently NOT implemented or used in the open source version and is more like
+ * a bridge between the "Community Edition" and the "Plus Edition" of the App.
  * 
  * @author Raphael Michel
  */
@@ -24,9 +24,10 @@ public interface EbookServiceApi {
 
 	/**
 	 * The result of a {@link #booking(String, Account, int, String)} call. The
-	 * structure of the call and response is similar to {@link OpacApi#reservation(String, Account, int, String)}.
+	 * structure of the call and response is similar to
+	 * {@link OpacApi#reservation(String, Account, int, String)}.
 	 */
-	public class BookingResult extends OpacApi.ReservationResult {
+	public class BookingResult extends OpacApi.MultiStepResult {
 
 		public BookingResult(Status status) {
 			super(status);
@@ -34,9 +35,9 @@ public interface EbookServiceApi {
 	}
 
 	/**
-	 * Book an electronical item identified by booking_info to the users account.
-	 * booking_info is what you returned in your DetailledItem object in your
-	 * getResult hook.
+	 * Book an electronical item identified by booking_info to the users
+	 * account. booking_info is what you returned in your DetailledItem object
+	 * in your getResult hook.
 	 */
 	public BookingResult booking(String booking_info, Account account,
 			int useraction, String selection) throws IOException;

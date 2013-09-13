@@ -482,9 +482,9 @@ public class Zones22 extends BaseApi {
 	}
 
 	@Override
-	public boolean prolong(Account account, String a) throws IOException,
-			NotReachableException {
-		return false;
+	public ProlongResult prolong(String media, Account account, int useraction,
+			String Selection) throws IOException {
+		return new ProlongResult(MultiStepResult.Status.UNSUPPORTED);
 	}
 
 	@Override

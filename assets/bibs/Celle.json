@@ -20,6 +20,7 @@
             "status": 3
         }, 
         "db": "webbiblio", 
+        "disableProlongAll": true,
         "information": "http://www.celle.de/Leben/Kultur/Stadtbibliothek", 
         "mediatypes": {
             "e_22S.gif": "EBOOK", 

@@ -75,6 +75,7 @@
     <string name="reader_needed_cancel">Abbrechen</string>
     <string name="reader_needed_download">Download</string>
     <string name="doing_prolong_all">Medien, die verlängert werden können, werden verlängert…</string>
+    <string name="prolong_all_confirm">Wirklich alle Medien (die verlängert werden können) verlängern? In manchen Bibliotheken können für manche Medien Gebühren anfallen.</string>
     <string name="opac_error">Meldung vom Web-Opac:</string>
     <string name="welcome">Herzlich Willkommen</string>
     <string name="welcome_select">Zuerst muss ein Bibliothekskonto eingerichtet werden.</string>
