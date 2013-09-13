@@ -1004,8 +1004,8 @@ public class SISIS extends BaseApi implements OpacApi {
 					+ offset, ENCODING);
 		String html = httpGet(opac_url + "/userAccount.do?" + query, ENCODING);
 		Document doc = Jsoup.parse(html);
-		if (doc.getElementsByClass("textrot").size() == 1) {
-			last_error = doc.getElementsByClass("textrot").text();
+		if (doc.select("#middle .textrot").size() > 0) {
+			last_error = doc.select("#middle .textrot").first().text();
 			return new ProlongResult(MultiStepResult.Status.ERROR);
 		}
 
