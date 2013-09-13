@@ -239,6 +239,18 @@ public class AccountDataSource {
 		cursor.close();
 		adata.setReservations(res);
 
+		String[] selA = { "" + account.getId() };
+		cursor = database.query("accounts", new String[] { "pendingFees" },
+				"id = ?", selA, null, null, null);
+		Account acc = null;
+		cursor.moveToFirst();
+		if (!cursor.isAfterLast()) {
+			adata.setPendingFees(cursor.getString(0));
+			cursor.moveToNext();
+		}
+		// Make sure to close the cursor
+		cursor.close();
+
 		return adata;
 	}
 
@@ -247,6 +259,8 @@ public class AccountDataSource {
 		database.delete(AccountDatabase.TABLENAME_RESERVATION, null, null);
 		ContentValues update = new ContentValues();
 		update.put("cached", 0);
+		String pf = null;
+		update.put("pendingFees", pf);
 		database.update(AccountDatabase.TABLENAME_ACCOUNTS, update, null, null);
 	}
 
@@ -257,6 +271,8 @@ public class AccountDataSource {
 				new String[] { "" + account.getId() });
 		ContentValues update = new ContentValues();
 		update.put("cached", 0);
+		String pf = null;
+		update.put("pendingFees", pf);
 		database.update(AccountDatabase.TABLENAME_ACCOUNTS, update, "id = ?",
 				new String[] { "" + account.getId() });
 	}
@@ -272,6 +288,7 @@ public class AccountDataSource {
 		long time = System.currentTimeMillis();
 		ContentValues update = new ContentValues();
 		update.put("cached", time);
+		update.put("pendingFees", adata.getPendingFees());
 		database.update(AccountDatabase.TABLENAME_ACCOUNTS, update, "id = ?",
 				new String[] { "" + account.getId() });
 

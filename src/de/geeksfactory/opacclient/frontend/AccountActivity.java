@@ -907,6 +907,16 @@ public class AccountActivity extends OpacActivity {
 				llRes.addView(v);
 			}
 		}
+
+		if (result.getPendingFees() != null) {
+			findViewById(R.id.tvPendingFeesLabel).setVisibility(View.VISIBLE);
+			findViewById(R.id.tvPendingFees).setVisibility(View.VISIBLE);
+			((TextView) findViewById(R.id.tvPendingFees)).setText(result
+					.getPendingFees());
+		} else {
+			findViewById(R.id.tvPendingFeesLabel).setVisibility(View.GONE);
+			findViewById(R.id.tvPendingFees).setVisibility(View.GONE);
+		}
 		refreshage();
 	}
 

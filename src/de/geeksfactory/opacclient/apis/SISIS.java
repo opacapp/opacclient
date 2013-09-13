@@ -1296,6 +1296,18 @@ public class SISIS extends BaseApi implements OpacApi {
 		}
 
 		AccountData res = new AccountData(acc.getId());
+
+		if (doc.select("#label8").size() > 0) {
+			String text = doc.select("#label8").first().text().trim();
+			if (text.matches("Geb.+hren[^\\(]+\\(([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr)\\)")) {
+				text = text
+						.replaceAll(
+								"Geb.+hren[^\\(]+\\(([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr)\\)",
+								"$1 $2");
+				res.setPendingFees(text);
+			}
+		}
+
 		res.setLent(medien);
 		res.setReservations(reserved);
 		return res;

@@ -13,6 +13,7 @@ public class AccountData {
 	private List<ContentValues> lent;
 	private List<ContentValues> reservations;
 	private long account;
+	private String pendingFees;
 
 	/**
 	 * Title of a lent item.
@@ -233,6 +234,25 @@ public class AccountData {
 	public AccountData(long account) {
 		super();
 		this.account = account;
+	}
+
+	/**
+	 * @return pending fees of the user's library account
+	 * @since 2.0.18
+	 */
+	public String getPendingFees() {
+		return pendingFees;
+	}
+
+	/**
+	 * Set the user's library account's pending fees.
+	 * 
+	 * @param a
+	 *            human-readable String
+	 * @since 2.0.18
+	 */
+	public void setPendingFees(String pendingFees) {
+		this.pendingFees = pendingFees;
 	}
 
 }

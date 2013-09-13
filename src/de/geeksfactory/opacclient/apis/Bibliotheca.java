@@ -856,6 +856,18 @@ public class Bibliotheca extends BaseApi {
 		assert (exemplartrs.size() == reservations.size());
 
 		AccountData res = new AccountData(acc.getId());
+
+		for (Element row : doc.select(".kontozeile_center")) {
+			String text = row.text().trim();
+			if (text.matches("Ausstehende Geb.+hren:[^0-9]+([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr.)")) {
+				text = text
+						.replaceAll(
+								"Ausstehende Geb.+hren:[^0-9]+([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr.)",
+								"$1 $2");
+				res.setPendingFees(text);
+			}
+		}
+
 		res.setLent(medien);
 		res.setReservations(reservations);
 		return res;
