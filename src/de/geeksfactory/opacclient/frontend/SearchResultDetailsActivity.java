@@ -194,7 +194,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 								SearchResultDetailsActivity.this, "",
 								getString(R.string.doing_res), true);
 						dialog.show();
-						new RestoreSessionTask().execute();
+						new RestoreSessionTask().execute(true);
 					} else {
 						reservationDo();
 					}
