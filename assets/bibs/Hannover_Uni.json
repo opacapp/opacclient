@@ -3,7 +3,8 @@
     "city": "Hannover",
     "data": {
         "baseurl": "http://opac.tib.uni-hannover.de/",
-        "information": "http://www.tib.uni-hannover.de/"
+        "information": "http://www.tib.uni-hannover.de/",
+        "db": "1"
     },
     "geo": [
         52.38142,

@@ -40,7 +40,7 @@ import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
- * @author Johan von Forstner, 04.09.2013
+ * @author Johan von Forstner, 16.09.2013
  *  */
 
 public class Pica extends BaseApi implements OpacApi {
@@ -55,6 +55,7 @@ public class Pica extends BaseApi implements OpacApi {
 	protected int resultcount = 10;
 	protected String reusehtml;
 	protected Integer searchSet;
+	protected String db;
 	CookieStore cookieStore = new BasicCookieStore();
 	
 	protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
@@ -80,7 +81,7 @@ public class Pica extends BaseApi implements OpacApi {
 	@Override
 	public void start() throws IOException, NotReachableException {
 		//String html = httpGet(opac_url
-		//		+ "/DB=1/SET=1/TTL=1/ADVANCED_SEARCHFILTER", getDefaultEncoding(), false, cookieStore);
+		//		+ "/DB=" + db + "/SET=1/TTL=1/ADVANCED_SEARCHFILTER", getDefaultEncoding(), false, cookieStore);
 
 		//Document doc = Jsoup.parse(html);
 		
@@ -105,6 +106,7 @@ public class Pica extends BaseApi implements OpacApi {
 
 		try {
 			this.opac_url = data.getString("baseurl");
+			this.db = data.getString("db");
 		} catch (JSONException e) {
 			ACRA.getErrorReporter().handleException(e);
 		}
@@ -171,7 +173,7 @@ public class Pica extends BaseApi implements OpacApi {
 			}
 
 		String html = httpGet(
-				opac_url + "/DB=1/SET=1/TTL=1/CMD?"
+				opac_url + "/DB="+ db + "/SET=1/TTL=1/CMD?"
 						+ URLEncodedUtils.format(params, "UTF-8"), ENCODING, false, cookieStore);
 		
 		return parse_search(html, 1);
@@ -347,7 +349,7 @@ public class Pica extends BaseApi implements OpacApi {
 			start();
 
 		String html = httpGet(opac_url
-				+ "/DB=1/SET=" + searchSet + "/TTL=1/NXT?FRST=" + (((page - 1) * resultcount) + 1), ENCODING, false, cookieStore);
+				+ "/DB=" + db + "/SET=" + searchSet + "/TTL=1/NXT?FRST=" + (((page - 1) * resultcount) + 1), ENCODING, false, cookieStore);
 		return parse_search(html, page);
 	}
 
@@ -375,7 +377,7 @@ public class Pica extends BaseApi implements OpacApi {
 	public DetailledItem getResult(int position) throws IOException {
 		String html = httpGet(
 				opac_url
-						+ "DB=1/SET=" + searchSet + "/TTL=1/SHW?FRST="
+						+ "DB=" + db + "/SET=" + searchSet + "/TTL=1/SHW?FRST="
 						+ (position + 1), ENCODING, false, cookieStore);
 
 		return parse_result(html);
