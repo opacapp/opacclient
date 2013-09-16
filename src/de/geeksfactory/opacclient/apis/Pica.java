@@ -25,7 +25,6 @@ import org.jsoup.select.Elements;
 
 import android.content.ContentValues;
 import android.os.Bundle;
-import android.util.Log;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -535,9 +534,6 @@ public class Pica extends BaseApi implements OpacApi {
 		Integer setPosition = url.indexOf("SET=") + 4;
 		String searchSetString = url.substring(setPosition, url.indexOf("/", setPosition));
 		searchSet = Integer.parseInt(searchSetString);
-		Log.d("OPACCLIENT", "Url " + doc.baseUri());
-		Log.d("OPACCLIENT", "BaseUrl " + url);
-		Log.d("OPACCLIENT", "searchSet " + searchSet);
 	}
 	
 	public MediaType getMediaTypeInSingleResult(String html) {
