@@ -25,6 +25,7 @@ import org.jsoup.select.Elements;
 
 import android.content.ContentValues;
 import android.os.Bundle;
+import android.util.Log;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -78,12 +79,12 @@ public class Pica extends BaseApi implements OpacApi {
 
 	@Override
 	public void start() throws IOException, NotReachableException {
-		String html = httpGet(opac_url
-				+ "/DB=1/SET=1/TTL=1/ADVANCED_SEARCHFILTER", getDefaultEncoding(), false, cookieStore);
+		//String html = httpGet(opac_url
+		//		+ "/DB=1/SET=1/TTL=1/ADVANCED_SEARCHFILTER", getDefaultEncoding(), false, cookieStore);
 
-		Document doc = Jsoup.parse(html);
+		//Document doc = Jsoup.parse(html);
 		
-		updateSearchSetValue(doc);
+		//updateSearchSetValue(doc);
 
 		metadata.open();
 		if (!metadata.hasMeta(library.getIdent())) {
@@ -385,7 +386,7 @@ public class Pica extends BaseApi implements OpacApi {
 
 		DetailledItem result = new DetailledItem();
 		
-		String id = opac_url + doc.select("img[alt=Zitierlink]").get(0).parent().attr("href");
+		String id = opac_url + doc.select("img[src*=permalink], img[src*=zitierlink]").get(0).parent().attr("href");
 		result.setId(id);		
 		
 //		TODO: There seem to be no cover images in Kiel Uni Library, so covers are not implemented
@@ -532,6 +533,9 @@ public class Pica extends BaseApi implements OpacApi {
 		Integer setPosition = url.indexOf("SET=") + 4;
 		String searchSetString = url.substring(setPosition, url.indexOf("/", setPosition));
 		searchSet = Integer.parseInt(searchSetString);
+		Log.d("OPACCLIENT", "Url " + doc.baseUri());
+		Log.d("OPACCLIENT", "BaseUrl " + url);
+		Log.d("OPACCLIENT", "searchSet " + searchSet);
 	}
 	
 	public MediaType getMediaTypeInSingleResult(String html) {
