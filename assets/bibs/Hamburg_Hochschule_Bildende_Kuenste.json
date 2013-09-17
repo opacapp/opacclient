@@ -1,0 +1,16 @@
+{
+    "api": "pica",
+    "city": "Hamburg",
+    "data": {
+        "baseurl": "https://kataloge.uni-hamburg.de/",
+        "information": "http://www.hfbk-hamburg.de/?id=bibliothek",
+        "db": "11"
+    },
+    "geo": [
+        53.5674294,
+        10.0306706
+    ],
+    "group": "Hamburg",
+    "support": "Katalogsuche",
+    "title": "Hochschule für bildende Künste"
+}

@@ -1,0 +1,16 @@
+{
+    "api": "pica",
+    "city": "Hamburg",
+    "data": {
+        "baseurl": "https://kataloge.uni-hamburg.de/",
+        "information": "http://hdp.hamburg.de/bibliothek/",
+        "db": "8"
+    },
+    "geo": [
+        53.60248,
+        10.00075
+    ],
+    "group": "Hamburg",
+    "support": "Katalogsuche",
+    "title": "Polizei/Hochschule der Polizei"
+}
