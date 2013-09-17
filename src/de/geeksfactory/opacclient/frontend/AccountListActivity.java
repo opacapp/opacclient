@@ -66,8 +66,6 @@ public class AccountListActivity extends SherlockActivity {
 			libraries = ((OpacClient) getApplication()).getLibraries();
 		} catch (IOException e) {
 			ACRA.getErrorReporter().handleException(e);
-		} catch (JSONException e) {
-			ACRA.getErrorReporter().handleException(e);
 		}
 		final LibraryListAdapter la = new LibraryListAdapter(this);
 		Collections.sort(libraries);

@@ -26,6 +26,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.preference.PreferenceManager;
 import de.geeksfactory.opacclient.apis.BiBer1992;
 import de.geeksfactory.opacclient.apis.Bibliotheca;
@@ -205,7 +206,7 @@ public class OpacClient extends Application {
 
 	public static final String ASSETS_BIBSDIR = "bibs";
 
-	public List<Library> getLibraries() throws IOException, JSONException {
+	public List<Library> getLibraries() throws IOException {
 		AssetManager assets = getAssets();
 		String[] files = assets.list(ASSETS_BIBSDIR);
 		int num = files.length;
@@ -229,8 +230,14 @@ public class OpacClient extends Application {
 
 			fis.close();
 			json = builder.toString();
-			libs.add(Library.fromJSON(files[i].replace(".json", ""),
-					new JSONObject(json)));
+			try {
+				Library lib = Library.fromJSON(files[i].replace(".json", ""),
+											   new JSONObject(json));
+				libs.add(lib);
+			} catch (JSONException e) {
+				Log.w("JSON library files", "Failed parsing library " + files[i]);
+				e.printStackTrace();
+			}
 		}
 
 		return libs;
