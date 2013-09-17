@@ -20,7 +20,7 @@ Not all of the features are availably for every library.
 
 Support
 -------
-Supports web catalogues of different library system vendors, see [wiki](https://github.com/raphaelm/opacclient/wiki/Supported-library-types) for details.
+Supports web catalogues of different library system vendors, see [website](http://opacapp.de/kompatibilitaet/) or [wiki](https://github.com/raphaelm/opacclient/wiki/Supported-library-types) for details.
 
 License
 -------
@@ -31,7 +31,8 @@ This code is released under the terms of the MIT License[1]. It contains or uses
 * [SlidingMenu](https://github.com/jfeinstein10/SlidingMenu), [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 
-Author
-------
-Raphael Michel <raphael+opac@geeksfactory.de> www.raphaelmichel.de
-
+Authors
+-------
+* Raphael Michel <mail@raphaelmichel.de> www.raphaelmichel.de
+* BiBer1992 integration by Rüdiger Wurth
+* PICA integration by Johan von Fostner
