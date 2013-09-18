@@ -8,34 +8,37 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:layout_height="wrap_content" >
 
-        <TextView
-            android:id="@+id/tvTitle"
+        <LinearLayout
+            android:id="@+id/llTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:paddingBottom="8dp"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textIsSelectable="true" />
+            android:orientation="horizontal" >
 
-        <ImageView
-            android:id="@+id/ivCover"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvTitle"
-            android:layout_centerHorizontal="true"
-            android:contentDescription="Cover"
-            android:gravity="center"
-            android:visibility="gone" />
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingBottom="8dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textIsSelectable="true" />
+
+            <ImageView
+                android:id="@+id/ivCover"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="Cover"
+                android:gravity="center"
+                android:visibility="gone" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tvDetails"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/ivCover"
+            android:layout_below="@id/llTitle"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="8dp"
             android:drawableBottom="@drawable/section_header"
