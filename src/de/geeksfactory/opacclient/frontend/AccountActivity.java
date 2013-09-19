@@ -1,11 +1,32 @@
+/**
+ * Copyright (C) 2013 by Raphael Michel under the MIT license:
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), 
+ * to deal in the Software without restriction, including without limitation 
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the Software 
+ * is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+ * DEALINGS IN THE SOFTWARE.
+ */
 package de.geeksfactory.opacclient.frontend;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.acra.ACRA;
 import org.apache.http.HttpResponse;
@@ -39,10 +60,11 @@ import android.text.Html;
 import android.text.TextUtils.TruncateAt;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -53,7 +75,6 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -64,11 +85,11 @@ import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.EbookServiceApi;
-import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.EbookServiceApi.BookingResult;
+import de.geeksfactory.opacclient.apis.OpacApi;
+import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult;
+import de.geeksfactory.opacclient.apis.OpacApi.ProlongResult;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
-import de.geeksfactory.opacclient.frontend.SearchResultDetailsActivity.BookingTask;
-import de.geeksfactory.opacclient.frontend.SearchResultDetailsActivity.SelectionAdapter;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Library;
@@ -86,7 +107,7 @@ public class AccountActivity extends OpacActivity {
 
 	private LoadTask lt;
 	private CancelTask ct;
-	private OpacTask<Integer> pt;
+	private OpacTask pt;
 	private OpacTask<Uri> dt;
 	private BookingTask bt;
 
@@ -196,11 +217,32 @@ public class AccountActivity extends OpacActivity {
 			}
 			return;
 		}
-		dialog = ProgressDialog.show(AccountActivity.this, "",
-				getString(R.string.doing_prolong_all), true);
-		dialog.show();
-		pt = new ProlongAllTask();
-		pt.execute(app);
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(R.string.prolong_all_confirm)
+				.setCancelable(true)
+				.setNegativeButton(R.string.no,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface d, int id) {
+								d.cancel();
+							}
+						})
+				.setPositiveButton(R.string.yes,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface d, int id) {
+								d.dismiss();
+								dialog = ProgressDialog.show(
+										AccountActivity.this, "",
+										getString(R.string.doing_prolong_all),
+										true);
+								dialog.show();
+								pt = new ProlongAllTask();
+								pt.execute(app);
+							}
+						});
+		AlertDialog alert = builder.create();
+		alert.show();
 	}
 
 	@Override
@@ -393,11 +435,7 @@ public class AccountActivity extends OpacActivity {
 			}
 			return;
 		}
-		dialog = ProgressDialog.show(AccountActivity.this, "",
-				getString(R.string.doing_prolong), true);
-		dialog.show();
-		pt = new ProlongTask();
-		pt.execute(app, a);
+		prolongDo(a);
 	}
 
 	protected void download(final String a) {
@@ -890,6 +928,16 @@ public class AccountActivity extends OpacActivity {
 				llRes.addView(v);
 			}
 		}
+
+		if (result.getPendingFees() != null) {
+			findViewById(R.id.tvPendingFeesLabel).setVisibility(View.VISIBLE);
+			findViewById(R.id.tvPendingFees).setVisibility(View.VISIBLE);
+			((TextView) findViewById(R.id.tvPendingFees)).setText(result
+					.getPendingFees());
+		} else {
+			findViewById(R.id.tvPendingFeesLabel).setVisibility(View.GONE);
+			findViewById(R.id.tvPendingFees).setVisibility(View.GONE);
+		}
 		refreshage();
 	}
 
@@ -1047,39 +1095,41 @@ public class AccountActivity extends OpacActivity {
 		}
 	}
 
-	public class ProlongTask extends OpacTask<Integer> {
+	public class ProlongTask extends OpacTask<ProlongResult> {
 		private boolean success = true;
+		private String media;
 
 		@Override
-		protected Integer doInBackground(Object... arg0) {
+		protected ProlongResult doInBackground(Object... arg0) {
 			super.doInBackground(arg0);
-			String a = (String) arg0[1];
+
+			app = (OpacClient) arg0[0];
+			media = (String) arg0[1];
+			int useraction = (Integer) arg0[2];
+			String selection = (String) arg0[3];
+
 			try {
-				boolean res = app.getApi().prolong(account, a);
+				ProlongResult res = app.getApi().prolong(media, account,
+						useraction, selection);
 				success = true;
-				if (res) {
-					return STATUS_SUCCESS;
-				} else {
-					return STATUS_FAILED;
-				}
+				return res;
 			} catch (java.net.UnknownHostException e) {
-				success = false;
+				publishProgress(e, "ioerror");
 			} catch (java.net.SocketException e) {
 				success = false;
+				e.printStackTrace();
 			} catch (Exception e) {
 				ACRA.getErrorReporter().handleException(e);
 				success = false;
 			}
-			return STATUS_SUCCESS;
+			return null;
 		}
 
 		@Override
-		protected void onPostExecute(Integer result) {
+		protected void onPostExecute(ProlongResult res) {
 			dialog.dismiss();
 
-			if (success) {
-				prolong_done(result);
-			} else {
+			if (!success || res == null) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						AccountActivity.this);
 				builder.setMessage(R.string.connection_error)
@@ -1094,7 +1144,10 @@ public class AccountActivity extends OpacActivity {
 								});
 				AlertDialog alert = builder.create();
 				alert.show();
+				return;
 			}
+
+			prolongResult(media, res);
 		}
 	}
 
@@ -1259,7 +1312,7 @@ public class AccountActivity extends OpacActivity {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
 								bookingDo(booking_info,
-										ReservationResult.ACTION_CONFIRMATION,
+										MultiStepResult.ACTION_CONFIRMATION,
 										"confirmed");
 							}
 						})
@@ -1294,6 +1347,189 @@ public class AccountActivity extends OpacActivity {
 				adialog.dismiss();
 
 				bookingDo(booking_info, result.getActionIdentifier(),
+						((Entry<String, Object>) possibilities[position])
+								.getKey());
+			}
+		});
+		switch (result.getActionIdentifier()) {
+		case ReservationResult.ACTION_BRANCH:
+			builder.setTitle(R.string.zweigstelle);
+		}
+		builder.setView(view).setNegativeButton(R.string.cancel,
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int id) {
+						adialog.cancel();
+					}
+				});
+		adialog = builder.create();
+		adialog.show();
+	}
+
+	public void prolongStart(String media) {
+		long age = System.currentTimeMillis() - refreshtime;
+		if (refreshing || fromcache) {
+			Toast.makeText(this, R.string.account_no_concurrent,
+					Toast.LENGTH_LONG).show();
+			if (!refreshing) {
+				refresh();
+			}
+			return;
+		}
+		prolongDo(media);
+	}
+
+	public void prolongDo(String media) {
+		prolongDo(media, 0, null);
+	}
+
+	public void prolongDo(String media, int useraction, String selection) {
+		if (dialog == null) {
+			dialog = ProgressDialog.show(AccountActivity.this, "",
+					getString(R.string.doing_prolong), true);
+			dialog.show();
+		} else if (!dialog.isShowing()) {
+			dialog = ProgressDialog.show(AccountActivity.this, "",
+					getString(R.string.doing_prolong), true);
+			dialog.show();
+		}
+
+		pt = new ProlongTask();
+		pt.execute(app, media, useraction, selection);
+	}
+
+	public void prolongResult(String media, ProlongResult result) {
+		AccountDataSource adata = new AccountDataSource(this);
+		adata.open();
+		adata.invalidateCachedAccountData(app.getAccount());
+		adata.close();
+		switch (result.getStatus()) {
+		case CONFIRMATION_NEEDED:
+			prolongConfirmation(media, result);
+			break;
+		case SELECTION_NEEDED:
+			prolongSelection(media, result);
+			break;
+		case ERROR:
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage(app.getApi().getLast_error())
+					.setCancelable(true)
+					.setNegativeButton(R.string.dismiss,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface d, int id) {
+									d.cancel();
+								}
+							})
+					.setOnCancelListener(
+							new DialogInterface.OnCancelListener() {
+								@Override
+								public void onCancel(DialogInterface d) {
+									if (d != null)
+										d.cancel();
+								}
+							});
+			AlertDialog alert = builder.create();
+			alert.show();
+			break;
+		case OK:
+			invalidateData();
+			break;
+		case UNSUPPORTED:
+			// TODO: Show dialog
+			break;
+		default:
+			break;
+		}
+	}
+
+	public void prolongConfirmation(final String media,
+			final ProlongResult result) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+		LayoutInflater inflater = getLayoutInflater();
+
+		View view = inflater.inflate(R.layout.reservation_details_dialog, null);
+
+		TableLayout table = (TableLayout) view.findViewById(R.id.tlDetails);
+
+		if (result.getDetails().size() == 1
+				&& result.getDetails().get(0).length == 1) {
+			((RelativeLayout) view.findViewById(R.id.rlConfirm))
+					.removeView(table);
+			TextView tv = new TextView(this);
+			tv.setText(result.getDetails().get(0)[0]);
+			tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+					LayoutParams.WRAP_CONTENT));
+			((RelativeLayout) view.findViewById(R.id.rlConfirm)).addView(tv);
+		} else {
+			for (String[] detail : result.getDetails()) {
+				TableRow tr = new TableRow(this);
+				if (detail.length == 2) {
+					TextView tv1 = new TextView(this);
+					tv1.setText(Html.fromHtml(detail[0]));
+					tv1.setTypeface(null, Typeface.BOLD);
+					tv1.setPadding(0, 0, 8, 0);
+					TextView tv2 = new TextView(this);
+					tv2.setText(Html.fromHtml(detail[1]));
+					tv2.setEllipsize(TruncateAt.END);
+					tv2.setSingleLine(false);
+					tr.addView(tv1);
+					tr.addView(tv2);
+				} else if (detail.length == 1) {
+					TextView tv1 = new TextView(this);
+					tv1.setText(Html.fromHtml(detail[0]));
+					tv1.setPadding(0, 2, 0, 2);
+					TableRow.LayoutParams params = new TableRow.LayoutParams(0);
+					params.span = 2;
+					tv1.setLayoutParams(params);
+					tr.addView(tv1);
+				}
+				table.addView(tr);
+			}
+		}
+
+		builder.setTitle(R.string.confirm_title)
+				.setView(view)
+				.setPositiveButton(R.string.confirm,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								prolongDo(media,
+										MultiStepResult.ACTION_CONFIRMATION,
+										"confirmed");
+							}
+						})
+				.setNegativeButton(R.string.cancel,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								adialog.cancel();
+							}
+						});
+		adialog = builder.create();
+		adialog.show();
+	}
+
+	public void prolongSelection(final String media, final ProlongResult result) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+		LayoutInflater inflater = getLayoutInflater();
+
+		View view = inflater.inflate(R.layout.simple_list_dialog, null);
+
+		ListView lv = (ListView) view.findViewById(R.id.lvBibs);
+		final Object[] possibilities = result.getSelection().valueSet()
+				.toArray();
+
+		lv.setAdapter(new SelectionAdapter(this, possibilities));
+		lv.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				adialog.dismiss();
+
+				prolongDo(media, result.getActionIdentifier(),
 						((Entry<String, Object>) possibilities[position])
 								.getKey());
 			}

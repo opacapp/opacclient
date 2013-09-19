@@ -1,3 +1,24 @@
+/**
+ * Copyright (C) 2013 by Raphael Michel under the MIT license:
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), 
+ * to deal in the Software without restriction, including without limitation 
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the Software 
+ * is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+ * DEALINGS IN THE SOFTWARE.
+ */
 package de.geeksfactory.opacclient.storage;
 
 import java.util.ArrayList;
@@ -239,6 +260,18 @@ public class AccountDataSource {
 		cursor.close();
 		adata.setReservations(res);
 
+		String[] selA = { "" + account.getId() };
+		cursor = database.query("accounts", new String[] { "pendingFees" },
+				"id = ?", selA, null, null, null);
+		Account acc = null;
+		cursor.moveToFirst();
+		if (!cursor.isAfterLast()) {
+			adata.setPendingFees(cursor.getString(0));
+			cursor.moveToNext();
+		}
+		// Make sure to close the cursor
+		cursor.close();
+
 		return adata;
 	}
 
@@ -247,6 +280,8 @@ public class AccountDataSource {
 		database.delete(AccountDatabase.TABLENAME_RESERVATION, null, null);
 		ContentValues update = new ContentValues();
 		update.put("cached", 0);
+		String pf = null;
+		update.put("pendingFees", pf);
 		database.update(AccountDatabase.TABLENAME_ACCOUNTS, update, null, null);
 	}
 
@@ -257,6 +292,8 @@ public class AccountDataSource {
 				new String[] { "" + account.getId() });
 		ContentValues update = new ContentValues();
 		update.put("cached", 0);
+		String pf = null;
+		update.put("pendingFees", pf);
 		database.update(AccountDatabase.TABLENAME_ACCOUNTS, update, "id = ?",
 				new String[] { "" + account.getId() });
 	}
@@ -272,6 +309,7 @@ public class AccountDataSource {
 		long time = System.currentTimeMillis();
 		ContentValues update = new ContentValues();
 		update.put("cached", time);
+		update.put("pendingFees", adata.getPendingFees());
 		database.update(AccountDatabase.TABLENAME_ACCOUNTS, update, "id = ?",
 				new String[] { "" + account.getId() });
 

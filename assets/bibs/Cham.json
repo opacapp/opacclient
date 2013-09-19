@@ -1,0 +1,43 @@
+{
+    "api": "bibliotheca", 
+    "city": "Cham", 
+    "data": {
+        "accounttable": {
+            "author": 0, 
+            "prolongurl": 4, 
+            "returndate": 3, 
+            "title": 1
+        }, 
+        "baseurl": "http://217.6.119.210/webopac", 
+        "copiestable": {
+            "barcode": 0, 
+            "branch": 3, 
+            "location": 1, 
+            "returndate": 4, 
+            "status": 2
+        }, 
+        "information": "http://www.cham.de/deCham/kulturbildung/bibliothek/stadtbibliothek/stadtbibliothek.php?navid=179", 
+        "mediatypes": {
+            "CDkl.gif": "CD", 
+            "film.gif": "MOVIE", 
+            "mCDROMS.gif": "CD_SOFTWARE", 
+            "mCasetteS.gif": "AUDIO_CASSETTE", 
+            "mDVDS.gif": "DVD", 
+            "mFilmS.gif": "MOVIE", 
+            "mMusik2S.gif": "AUDIOBOOK"
+        }, 
+        "reservationtable": {
+            "author": 0, 
+            "availability": 2, 
+            "cancelurl": 3, 
+            "title": 1
+        }
+    }, 
+    "geo": [
+        49.2238643, 
+        12.6620845
+    ], 
+    "group": "Bayern", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Stadtb\u00fccherei"
+}

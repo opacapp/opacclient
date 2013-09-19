@@ -1,0 +1,16 @@
+{
+    "api": "pica",
+    "city": "Kiel",
+    "data": {
+        "baseurl": "http://kiopc4.ub.uni-kiel.de:8080/",
+        "information": "http://www.ub.uni-kiel.de/",
+        "db": "1"
+    },
+    "geo": [
+        54.3462487,
+        10.1115432
+    ],
+    "group": "Schleswig-Holstein",
+    "support": "Katalogsuche",
+    "title": "Unibibliothek"
+}

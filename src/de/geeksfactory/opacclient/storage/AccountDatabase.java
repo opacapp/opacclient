@@ -1,3 +1,24 @@
+/**
+ * Copyright (C) 2013 by Raphael Michel under the MIT license:
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), 
+ * to deal in the Software without restriction, including without limitation 
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the Software 
+ * is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+ * DEALINGS IN THE SOFTWARE.
+ */
 package de.geeksfactory.opacclient.storage;
 
 import java.util.Collections;
@@ -13,11 +34,11 @@ import de.geeksfactory.opacclient.objects.AccountData;
 public class AccountDatabase extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "accounts.db";
-	private static final int DATABASE_VERSION = 11; // REPLACE ONUPGRADE IF YOU
+	private static final int DATABASE_VERSION = 12; // REPLACE ONUPGRADE IF YOU
 													// CHANGE THIS
 
 	public static final String[] COLUMNS = { "id", "bib", "label", "name",
-			"password", "cached" };
+			"password", "cached", "pendingFees" };
 	public static final String[] COLUMNS_NOTIFIED = { "id", "account",
 			"timestamp" };
 
@@ -59,7 +80,8 @@ public class AccountDatabase extends SQLiteOpenHelper {
 		db.execSQL("create table "
 				+ "accounts ( id integer primary key autoincrement,"
 				+ " bib text," + " label text," + " name text,"
-				+ " password text," + " cached integer" + ");");
+				+ " password text," + " cached integer," + " pendingFees text"
+				+ ");");
 		db.execSQL("create table " + "accountdata_lent ( account integer, "
 				+ "title text," + "barcode text," + "author text,"
 				+ "deadline text," + "deadline_ts integer," + "status text,"
@@ -122,6 +144,10 @@ public class AccountDatabase extends SQLiteOpenHelper {
 		if (oldVersion < 11) {
 			// App version 2.0.15 to 2.0.16
 			db.execSQL("alter table accountdata_reservations add column bookingurl text");
+		}
+		if (oldVersion < 12) {
+			// App version 2.0.17 to 2.0.18
+			db.execSQL("alter table accounts add column pendingFees text");
 		}
 
 	}

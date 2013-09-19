@@ -1,3 +1,24 @@
+/**
+ * Copyright (C) 2013 by Raphael Michel under the MIT license:
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), 
+ * to deal in the Software without restriction, including without limitation 
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the Software 
+ * is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+ * DEALINGS IN THE SOFTWARE.
+ */
 package de.geeksfactory.opacclient.frontend;
 
 import java.io.UnsupportedEncodingException;
@@ -70,6 +91,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 	private ResTask rt;
 	private BookingTask bt;
 	private boolean account_switched = false;
+	private boolean invalidated = false;
 
 	@Override
 	public void accountSelected() {
@@ -132,6 +154,9 @@ public class SearchResultDetailsActivity extends OpacActivity {
 	}
 
 	protected void reservationStart() {
+		if (invalidated) {
+			new RestoreSessionTask().execute(false);
+		}
 		if (app.getApi() instanceof EbookServiceApi) {
 			SharedPreferences sp = PreferenceManager
 					.getDefaultSharedPreferences(this);
@@ -192,7 +217,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 								SearchResultDetailsActivity.this, "",
 								getString(R.string.doing_res), true);
 						dialog.show();
-						new RestoreSessionTask().execute();
+						new RestoreSessionTask().execute(true);
 					} else {
 						reservationDo();
 					}
@@ -624,8 +649,11 @@ public class SearchResultDetailsActivity extends OpacActivity {
 	}
 
 	public class RestoreSessionTask extends OpacTask<Integer> {
+		private boolean reservation = true;
+
 		@Override
 		protected Integer doInBackground(Object... arg0) {
+			reservation = (Boolean) arg0[0];
 			try {
 				if (id != null) {
 					SharedPreferences sp = PreferenceManager
@@ -650,7 +678,9 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
 		@Override
 		protected void onPostExecute(Integer result) {
-			reservationDo();
+			if (reservation) {
+				reservationDo();
+			}
 		}
 
 	}
@@ -779,6 +809,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 									intent.putExtra(
 											"item_id",
 											band.getAsString(DetailledItem.KEY_CHILD_ID));
+									intent.putExtra("from_collection", true);
 									startActivity(intent);
 								}
 							});
@@ -1121,9 +1152,12 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			} else {
 				menu.findItem(R.id.action_lendebook).setVisible(false);
 			}
+			menu.findItem(R.id.action_tocollection).setVisible(
+					item.getCollectionId() != null);
 		} else {
 			menu.findItem(R.id.action_reservation).setVisible(false);
 			menu.findItem(R.id.action_lendebook).setVisible(false);
+			menu.findItem(R.id.action_tocollection).setVisible(false);
 		}
 
 		String bib = app.getLibrary().getIdent();
@@ -1155,6 +1189,17 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			return true;
 		} else if (item.getItemId() == android.R.id.home) {
 			finish();
+			return true;
+		} else if (item.getItemId() == R.id.action_tocollection) {
+			if (getIntent().getBooleanExtra("from_collection", false)) {
+				finish();
+			} else {
+				Intent intent = new Intent(SearchResultDetailsActivity.this,
+						SearchResultDetailsActivity.class);
+				intent.putExtra("item_id", this.item.getCollectionId());
+				startActivity(intent);
+				finish();
+			}
 			return true;
 		} else if (item.getItemId() == R.id.action_export) {
 			if (this.item == null) {

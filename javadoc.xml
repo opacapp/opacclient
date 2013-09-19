@@ -5,7 +5,7 @@
 				access="public" 
 				additionalparam="-linkoffline http://d.android.com/reference file:/opt/android-sdk-linux_x86/docs/reference" 
 				author="true" 
-				classpath="3dparty/SlidingMenu/library/libs/android-support-v4.jar:3dparty/SlidingMenu/library/bin/opacclient_lib_slidingmenu.jar:libs/jsoup-1.6.3.jar:libs/acra-4.4.0.jar:3dparty/HoloEverywhere/library/bin/opacclient_lib_holoeverywhere.jar:3dparty/HoloEverywhere/contrib/ActionBarSherlock/actionbarsherlock/bin/opacclient_lib_abs.jar:/opt/android-sdk-linux_x86/platforms/android-17/android.jar" 
+				classpath="3dparty/SlidingMenu/library/libs/android-support-v4.jar:3dparty/SlidingMenu/library/bin/opacclient_lib_slidingmenu.jar:libs/jsoup-1.6.3.jar:libs/acra-4.5.0.jar:3dparty/HoloEverywhere/library/bin/opacclient_lib_holoeverywhere.jar:3dparty/HoloEverywhere/contrib/ActionBarSherlock/actionbarsherlock/bin/opacclient_lib_abs.jar:/opt/android-sdk-linux_x86/platforms/android-17/android.jar" 
 				destdir="doc"
 				nodeprecated="false" nodeprecatedlist="false" 
 				noindex="false" nonavbar="false" notree="false" 

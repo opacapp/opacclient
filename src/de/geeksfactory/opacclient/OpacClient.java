@@ -1,3 +1,24 @@
+/**
+ * Copyright (C) 2013 by Raphael Michel under the MIT license:
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), 
+ * to deal in the Software without restriction, including without limitation 
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the Software 
+ * is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+ * DEALINGS IN THE SOFTWARE.
+ */
 package de.geeksfactory.opacclient;
 
 import java.io.BufferedReader;
@@ -26,10 +47,13 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.preference.PreferenceManager;
 import de.geeksfactory.opacclient.apis.BiBer1992;
 import de.geeksfactory.opacclient.apis.Bibliotheca;
+import de.geeksfactory.opacclient.apis.IOpac;
 import de.geeksfactory.opacclient.apis.OpacApi;
+import de.geeksfactory.opacclient.apis.Pica;
 import de.geeksfactory.opacclient.apis.SISIS;
 import de.geeksfactory.opacclient.apis.Zones22;
 import de.geeksfactory.opacclient.frontend.MainPreferenceActivity;
@@ -105,6 +129,10 @@ public class OpacClient extends Application {
 			newApiInstance = new Zones22();
 		else if (lib.getApi().equals("biber1992"))
 			newApiInstance = new BiBer1992();
+		else if (lib.getApi().equals("pica"))
+			newApiInstance = new Pica();
+		else if (lib.getApi().equals("iopac"))
+			newApiInstance = new IOpac();
 		else
 			return null;
 
@@ -202,7 +230,7 @@ public class OpacClient extends Application {
 
 	public static final String ASSETS_BIBSDIR = "bibs";
 
-	public List<Library> getLibraries() throws IOException, JSONException {
+	public List<Library> getLibraries() throws IOException {
 		AssetManager assets = getAssets();
 		String[] files = assets.list(ASSETS_BIBSDIR);
 		int num = files.length;
@@ -226,8 +254,14 @@ public class OpacClient extends Application {
 
 			fis.close();
 			json = builder.toString();
-			libs.add(Library.fromJSON(files[i].replace(".json", ""),
-					new JSONObject(json)));
+			try {
+				Library lib = Library.fromJSON(files[i].replace(".json", ""),
+											   new JSONObject(json));
+				libs.add(lib);
+			} catch (JSONException e) {
+				Log.w("JSON library files", "Failed parsing library " + files[i]);
+				e.printStackTrace();
+			}
 		}
 
 		return libs;

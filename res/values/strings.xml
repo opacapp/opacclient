@@ -43,6 +43,7 @@
     <string name="ret">Rückgabe</string>
     <string name="res">Vorbestellt</string>
     <string name="export">Details exportieren</string>
+    <string name="tocollection">Zum Gesamtwerk</string>
     <string name="reserve">Vorbestellen</string>
     <string name="lendebook">Ebook leihen</string>
     <string name="res_zst">Zweigstelle auswählen</string>
@@ -52,6 +53,8 @@
     <string name="status_nouser">In den Einstellungen sind zu diesem Konto keine Ausweisdaten hinterlegt.</string>
     <string name="dismiss">Schließen</string>
     <string name="loading_account">Lade Konto…</string>
+    <string name="pending_fees">Ausstehende Gebühren:</string>
+    <string name="no_garanty">Alle Angaben ohne Gewähr.</string>
     <string name="entl">Entliehen</string>
     <string name="reservations">Vorbestellungen</string>
     <string name="entl_head">ENTLIEHEN</string>
@@ -74,6 +77,7 @@
     <string name="reader_needed_cancel">Abbrechen</string>
     <string name="reader_needed_download">Download</string>
     <string name="doing_prolong_all">Medien, die verlängert werden können, werden verlängert…</string>
+    <string name="prolong_all_confirm">Wirklich alle Medien (die verlängert werden können) verlängern? In manchen Bibliotheken können für manche Medien Gebühren anfallen.</string>
     <string name="opac_error">Meldung vom Web-Opac:</string>
     <string name="welcome">Herzlich Willkommen</string>
     <string name="welcome_select">Zuerst muss ein Bibliothekskonto eingerichtet werden.</string>

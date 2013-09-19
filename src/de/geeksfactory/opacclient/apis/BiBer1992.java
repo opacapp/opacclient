@@ -726,7 +726,8 @@ public class BiBer1992 extends BaseApi {
 	 * Offenburg, prolong positive result: TO BE DESCRIBED
 	 */
 	@Override
-	public boolean prolong(Account account, String media) throws IOException {
+	public ProlongResult prolong(String media, Account account, int useraction,
+			String Selection) throws IOException {
 
 		String command;
 
@@ -784,10 +785,11 @@ public class BiBer1992 extends BaseApi {
 					if ((j == statusCol) && (cellText.length() > 0)) {
 						// Status found
 						if (cellText.matches("verl.ngert.*")) {
-							return true;
+							return new ProlongResult(MultiStepResult.Status.OK);
 						} else {
 							m_last_error = cellText;
-							return false;
+							return new ProlongResult(
+									MultiStepResult.Status.ERROR);
 						}
 					}
 				}
@@ -795,7 +797,7 @@ public class BiBer1992 extends BaseApi {
 		}// for rows
 
 		m_last_error = "unknown result"; // should not occur
-		return false;
+		return new ProlongResult(MultiStepResult.Status.ERROR);
 	}
 
 	/*

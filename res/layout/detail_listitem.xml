@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<org.apmem.tools.layouts.FlowLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:f="http://schemas.android.com/apk/res/de.geeksfactory.opacclient"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="4dp"
-    android:paddingTop="0dp" >
+    android:padding="0dp"
+    f:horizontalSpacing="8dip"
+    f:verticalSpacing="0dip" >
 
     <TextView
         android:id="@+id/tvDesc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ellipsize="end"
+        android:minWidth="120dp"
+        android:paddingBottom="0dip"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/detail_desc" />
@@ -19,8 +23,9 @@
         android:id="@+id/tvContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvDesc"
+        android:layout_alignParentRight="true"
+        android:paddingBottom="4dip"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textIsSelectable="true" />
 
-</RelativeLayout>
+</org.apmem.tools.layouts.FlowLayout>

@@ -1,0 +1,42 @@
+{
+    "api": "bibliotheca", 
+    "city": "Bietigheim-Bissingen", 
+    "data": {
+		"accounttable": {
+			"author": 1,
+			"barcode": -1,
+			"homebranch": 0,
+			"lendingbranch": 0,
+			"prolongurl": 5,
+			"returndate": 3,
+			"status": -1,
+			"title": 2
+		},
+        "baseurl": "http://wwwopac.rz-as.de/bietigheim-bissingen", 
+		"copiestable": {
+			"barcode": -1,
+			"branch": 1,
+			"department": 4,
+			"location": 3,
+			"reservations": 5,
+			"returndate": 2,
+			"status": 0
+		},
+        "information": "http://www.bietigheim-bissingen.de/Infos_Bestand_OEffnungszeiten.172.0.html",
+		"reservationtable": {
+			"author": 1,
+			"availability": 4,
+			"branch": 0,
+			"cancelurl": 5,
+			"expirationdate": -1,
+			"title": 2
+		}
+    }, 
+    "geo": [
+        48.9471605, 
+        9.1305037
+    ], 
+    "group": "Baden-W\u00fcrttemberg", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Otto-Rombach-B\u00fccherei"
+}

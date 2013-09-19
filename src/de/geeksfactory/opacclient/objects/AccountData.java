@@ -1,3 +1,24 @@
+/**
+ * Copyright (C) 2013 by Raphael Michel under the MIT license:
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), 
+ * to deal in the Software without restriction, including without limitation 
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the Software 
+ * is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+ * DEALINGS IN THE SOFTWARE.
+ */
 package de.geeksfactory.opacclient.objects;
 
 import java.util.List;
@@ -13,6 +34,7 @@ public class AccountData {
 	private List<ContentValues> lent;
 	private List<ContentValues> reservations;
 	private long account;
+	private String pendingFees;
 
 	/**
 	 * Title of a lent item.
@@ -76,7 +98,7 @@ public class AccountData {
 
 	/**
 	 * Internal identifier which will be supplied to your
-	 * {@link de.geeksfactory.opacclient.apis.OpacApi#prolong(Account, String)}
+	 * {@link de.geeksfactory.opacclient.apis.OpacApi#prolong(String, Account, int, String)}
 	 * implementation for prolonging. Button for prolonging will only be
 	 * displayed if this is set.
 	 * 
@@ -86,9 +108,9 @@ public class AccountData {
 
 	/**
 	 * Internal identifier which will be supplied to your
-	 * {@link de.geeksfactory.opacclient.apis.EbookServiceApi#downloadItem(String)}
-	 * implementation for download. Button for download will only be
-	 * displayed if this is set.
+	 * {@link de.geeksfactory.opacclient.apis.EbookServiceApi#downloadItem(Account, String)}
+	 * implementation for download. Button for download will only be displayed
+	 * if this is set.
 	 * 
 	 * ContentValues key for {@link #setLent(List)}
 	 */
@@ -233,6 +255,25 @@ public class AccountData {
 	public AccountData(long account) {
 		super();
 		this.account = account;
+	}
+
+	/**
+	 * @return pending fees of the user's library account
+	 * @since 2.0.18
+	 */
+	public String getPendingFees() {
+		return pendingFees;
+	}
+
+	/**
+	 * Set the user's library account's pending fees.
+	 * 
+	 * @param a
+	 *            human-readable String
+	 * @since 2.0.18
+	 */
+	public void setPendingFees(String pendingFees) {
+		this.pendingFees = pendingFees;
 	}
 
 }

@@ -1,7 +1,30 @@
+/**
+ * Copyright (C) 2013 by Raphael Michel under the MIT license:
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), 
+ * to deal in the Software without restriction, including without limitation 
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the Software 
+ * is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+ * DEALINGS IN THE SOFTWARE.
+ */
 package de.geeksfactory.opacclient.apis;
 
 import java.io.IOException;
 import java.net.SocketException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,6 +38,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,7 +52,6 @@ import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
 import de.geeksfactory.opacclient.NotReachableException;
-import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult.Status;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -296,7 +319,7 @@ public class Bibliotheca extends BaseApi {
 							.replace(".png", "")));
 				}
 			} else {
-				if(tr.children().size() == 3)
+				if (tr.children().size() == 3)
 					contentindex = 2;
 			}
 			sr.setInnerhtml(tr.child(contentindex).child(0).html());
@@ -361,6 +384,7 @@ public class Bibliotheca extends BaseApi {
 
 	protected DetailledItem parse_result(String html) {
 		Document doc = Jsoup.parse(html);
+		doc.setBaseUri(opac_url);
 
 		DetailledItem result = new DetailledItem();
 
@@ -374,8 +398,25 @@ public class Bibliotheca extends BaseApi {
 		for (int i = 0; i < detailtrs.size(); i++) {
 			Element tr = detailtrs.get(i);
 			if (tr.child(0).hasClass("detail_feld")) {
-				result.addDetail(new Detail(tr.child(0).text(), tr.child(1)
-						.text()));
+				String title = tr.child(0).text();
+				String content = tr.child(1).text();
+				if (title.equals("Gesamtwerk:")) {
+					try {
+						if (tr.child(1).select("a").size() > 0) {
+							Element link = tr.child(1).select("a").first();
+							List<NameValuePair> query = URLEncodedUtils.parse(
+									new URI(link.absUrl("href")), "UTF-8");
+							for (NameValuePair q : query) {
+								if (q.getName().equals("MedienNr")) {
+									result.setCollectionId(q.getValue());
+								}
+							}
+						}
+					} catch (URISyntaxException e) {
+					}
+				} else {
+					result.addDetail(new Detail(title, content));
+				}
 			}
 		}
 
@@ -450,7 +491,7 @@ public class Bibliotheca extends BaseApi {
 			nameValuePairs.add(new BasicNameValuePair("target", "makevorbest"));
 			httpPost(opac_url + "/index.asp", new UrlEncodedFormEntity(
 					nameValuePairs));
-			return new ReservationResult(Status.OK);
+			return new ReservationResult(MultiStepResult.Status.OK);
 		} else if (selection == null || useraction == 0) {
 			String html = httpGet(opac_url + "/" + reservation_info);
 			doc = Jsoup.parse(html);
@@ -500,7 +541,7 @@ public class Bibliotheca extends BaseApi {
 					branches.put(key, value);
 				}
 				ReservationResult result = new ReservationResult(
-						Status.SELECTION_NEEDED);
+						MultiStepResult.Status.SELECTION_NEEDED);
 				result.setActionIdentifier(ReservationResult.ACTION_BRANCH);
 				result.setSelection(branches);
 				return result;
@@ -518,7 +559,7 @@ public class Bibliotheca extends BaseApi {
 		}
 
 		if (doc == null)
-			return new ReservationResult(Status.ERROR);
+			return new ReservationResult(MultiStepResult.Status.ERROR);
 
 		if (doc.select("input[name=target]").size() > 0) {
 			if (doc.select("input[name=target]").attr("value")
@@ -540,7 +581,7 @@ public class Bibliotheca extends BaseApi {
 					}
 				}
 				ReservationResult result = new ReservationResult(
-						Status.CONFIRMATION_NEEDED);
+						MultiStepResult.Status.CONFIRMATION_NEEDED);
 				result.setDetails(details);
 				return result;
 			}
@@ -548,15 +589,15 @@ public class Bibliotheca extends BaseApi {
 
 		if (doc.getElementsByClass("kontomeldung").size() == 1) {
 			last_error = doc.getElementsByClass("kontomeldung").get(0).text();
-			return new ReservationResult(Status.ERROR);
+			return new ReservationResult(MultiStepResult.Status.ERROR);
 		}
 
-		return new ReservationResult(Status.ERROR);
+		return new ReservationResult(MultiStepResult.Status.ERROR);
 	}
 
 	@Override
-	public boolean prolong(Account account, String a) throws IOException,
-			NotReachableException {
+	public ProlongResult prolong(String a, Account account, int useraction,
+			String selection) throws IOException, NotReachableException {
 		if (!initialised)
 			start();
 		if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
@@ -565,24 +606,18 @@ public class Bibliotheca extends BaseApi {
 				account(account);
 			} catch (JSONException e) {
 				e.printStackTrace();
-				return false;
+				return new ProlongResult(MultiStepResult.Status.ERROR);
 			}
 		} else if (logged_in_as.getId() != account.getId()) {
 			try {
 				account(account);
 			} catch (JSONException e) {
 				e.printStackTrace();
-				return false;
+				return new ProlongResult(MultiStepResult.Status.ERROR);
 			}
 		}
-		String html = httpGet(opac_url + "/" + a);
-		Document doc = Jsoup.parse(html);
 
-		if (doc.getElementsByClass("kontomeldung").size() == 1) {
-			last_error = doc.getElementsByClass("kontomeldung").get(0).text();
-			return false;
-		}
-		if (doc.select("#verlaengern").size() == 1) {
+		if (useraction == ReservationResult.ACTION_CONFIRMATION) {
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("target", "make_vl"));
 			nameValuePairs.add(new BasicNameValuePair("verlaengern",
@@ -590,15 +625,52 @@ public class Bibliotheca extends BaseApi {
 			httpPost(opac_url + "/index.asp", new UrlEncodedFormEntity(
 					nameValuePairs));
 
+			return new ProlongResult(MultiStepResult.Status.OK);
+		} else {
+
+			String html = httpGet(opac_url + "/" + a);
+			Document doc = Jsoup.parse(html);
+
 			if (doc.getElementsByClass("kontomeldung").size() == 1) {
 				last_error = doc.getElementsByClass("kontomeldung").get(0)
 						.text();
+				return new ProlongResult(MultiStepResult.Status.ERROR);
 			}
+			if (doc.select("#verlaengern").size() == 1) {
+				if (doc.select(".kontozeile_center table").size() == 1) {
+					Element table = doc.select(".kontozeile_center table")
+							.first();
+					ProlongResult res = new ProlongResult(
+							MultiStepResult.Status.CONFIRMATION_NEEDED);
+					List<String[]> details = new ArrayList<String[]>();
 
-			return true;
+					for (Element row : table.select("tr")) {
+						if (row.select(".konto_feld").size() == 1
+								&& row.select(".konto_feldinhalt").size() == 1) {
+							details.add(new String[] {
+									row.select(".konto_feld").text().trim(),
+									row.select(".konto_feldinhalt").text()
+											.trim() });
+						}
+					}
+					res.setDetails(details);
+					return res;
+				} else {
+					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
+							2);
+					nameValuePairs.add(new BasicNameValuePair("target",
+							"make_vl"));
+					nameValuePairs.add(new BasicNameValuePair("verlaengern",
+							"Bestätigung"));
+					httpPost(opac_url + "/index.asp", new UrlEncodedFormEntity(
+							nameValuePairs));
+
+					return new ProlongResult(MultiStepResult.Status.OK);
+				}
+			}
 		}
 		last_error = "??";
-		return false;
+		return new ProlongResult(MultiStepResult.Status.ERROR);
 	}
 
 	@Override
@@ -805,6 +877,18 @@ public class Bibliotheca extends BaseApi {
 		assert (exemplartrs.size() == reservations.size());
 
 		AccountData res = new AccountData(acc.getId());
+
+		for (Element row : doc.select(".kontozeile_center")) {
+			String text = row.text().trim();
+			if (text.matches("Ausstehende Geb.+hren:[^0-9]+([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr.)")) {
+				text = text
+						.replaceAll(
+								"Ausstehende Geb.+hren:[^0-9]+([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr.)",
+								"$1 $2");
+				res.setPendingFees(text);
+			}
+		}
+
 		res.setLent(medien);
 		res.setReservations(reservations);
 		return res;

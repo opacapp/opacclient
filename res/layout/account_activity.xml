@@ -48,6 +48,25 @@
                 android:textColor="@color/account_head_fg"
                 android:textIsSelectable="true" />
 
+            <TextView
+                android:id="@+id/tvPendingFeesLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/tvAccUser"
+                android:layout_marginBottom="4dp"
+                android:text="@string/pending_fees"
+                android:textColor="@color/account_head_fg" />
+
+            <TextView
+                android:id="@+id/tvPendingFees"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/tvAccUser"
+                android:layout_marginBottom="4dp"
+                android:textColor="@color/account_head_fg"
+                android:textIsSelectable="true" />
         </RelativeLayout>
 
         <TextView
@@ -89,7 +108,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvEntlHeader"
                 android:orientation="vertical" >
-
             </LinearLayout>
 
             <Button
@@ -121,7 +139,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvResHeader"
                 android:orientation="vertical" >
-
             </LinearLayout>
 
             <TextView
@@ -134,6 +151,16 @@
                 android:textColor="@color/account_age"
                 android:textStyle="italic" />
 
+            <TextView
+                android:id="@+id/tvNoGaranty"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvAge"
+                android:layout_marginTop="4dp"
+                android:gravity="center|top"
+                android:text="@string/no_garanty"
+                android:textColor="@color/account_age"
+                android:textStyle="italic" />
         </RelativeLayout>
     </RelativeLayout>
 

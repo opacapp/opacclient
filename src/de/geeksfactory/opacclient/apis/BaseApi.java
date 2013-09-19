@@ -1,3 +1,24 @@
+/**
+ * Copyright (C) 2013 by Raphael Michel under the MIT license:
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), 
+ * to deal in the Software without restriction, including without limitation 
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the Software 
+ * is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+ * DEALINGS IN THE SOFTWARE.
+ */
 package de.geeksfactory.opacclient.apis;
 
 import java.io.BufferedReader;
@@ -8,10 +29,14 @@ import java.io.UnsupportedEncodingException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
 
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.networking.HTTPClient;
@@ -38,15 +63,36 @@ public abstract class BaseApi implements OpacApi {
 	 * 
 	 * @param url
 	 *            URL to fetch
+	 * @param encoding
+	 *            Expected encoding of the response body
+	 * @param ignore_errors
+	 *            If true, status codes above 400 do not raise an exception
+	 * @param cookieStore
+	 *            If set, the given cookieStore is used instead of the built-in
+	 *            one.
 	 * @return Answer content
 	 * @throws NotReachableException
 	 *             Thrown when server returns a HTTP status code greater or
 	 *             equal than 400.
 	 */
-	protected String httpGet(String url, String encoding, boolean ignore_errors)
+	public String httpGet(String url, String encoding,
+			boolean ignore_errors, CookieStore cookieStore)
 			throws ClientProtocolException, IOException {
+
 		HttpGet httpget = new HttpGet(url);
-		HttpResponse response = http_client.execute(httpget);
+		HttpResponse response;
+
+		if (cookieStore != null) {
+			// Create local HTTP context
+			HttpContext localContext = new BasicHttpContext();
+			// Bind custom cookie store to the local context
+			localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+
+			response = http_client.execute(httpget, localContext);
+		} else {
+			response = http_client.execute(httpget);
+		}
+
 		if (!ignore_errors && response.getStatusLine().getStatusCode() >= 400) {
 			throw new NotReachableException();
 		}
@@ -56,14 +102,19 @@ public abstract class BaseApi implements OpacApi {
 		return html;
 	}
 
-	protected String httpGet(String url, String encoding)
+	public String httpGet(String url, String encoding, boolean ignore_errors)
 			throws ClientProtocolException, IOException {
-		return httpGet(url, encoding, false);
+		return httpGet(url, encoding, ignore_errors, null);
 	}
 
-	protected String httpGet(String url) throws ClientProtocolException,
+	public String httpGet(String url, String encoding)
+			throws ClientProtocolException, IOException {
+		return httpGet(url, encoding, false, null);
+	}
+
+	public String httpGet(String url) throws ClientProtocolException,
 			IOException {
-		return httpGet(url, getDefaultEncoding(), false);
+		return httpGet(url, getDefaultEncoding(), false, null);
 	}
 
 	/**
@@ -73,16 +124,35 @@ public abstract class BaseApi implements OpacApi {
 	 *            URL to fetch
 	 * @param data
 	 *            POST data to send
+	 * @param encoding
+	 *            Expected encoding of the response body
+	 * @param ignore_errors
+	 *            If true, status codes above 400 do not raise an exception
+	 * @param cookieStore
+	 *            If set, the given cookieStore is used instead of the built-in
+	 *            one.
 	 * @return Answer content
 	 * @throws NotReachableException
 	 *             Thrown when server returns a HTTP status code greater or
 	 *             equal than 400.
 	 */
-	protected String httpPost(String url, UrlEncodedFormEntity data,
-			String encoding, boolean ignore_errors)
+	public String httpPost(String url, UrlEncodedFormEntity data,
+			String encoding, boolean ignore_errors, CookieStore cookieStore)
 			throws ClientProtocolException, IOException {
 		HttpPost httppost = new HttpPost(url);
 		httppost.setEntity(data);
+
+		if (cookieStore != null) {
+			// Create local HTTP context
+			HttpContext localContext = new BasicHttpContext();
+			// Bind custom cookie store to the local context
+			localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+
+			HttpResponse response = http_client.execute(httppost, localContext);
+		} else {
+			HttpResponse response = http_client.execute(httppost);
+		}
+
 		HttpResponse response = http_client.execute(httppost);
 		if (!ignore_errors && response.getStatusLine().getStatusCode() >= 400) {
 			throw new NotReachableException();
@@ -93,14 +163,20 @@ public abstract class BaseApi implements OpacApi {
 		return html;
 	}
 
-	protected String httpPost(String url, UrlEncodedFormEntity data,
-			String encoding) throws ClientProtocolException, IOException {
-		return httpPost(url, data, encoding, false);
+	public String httpPost(String url, UrlEncodedFormEntity data,
+			String encoding, boolean ignore_errors)
+			throws ClientProtocolException, IOException {
+		return httpPost(url, data, encoding, ignore_errors, null);
 	}
 
-	protected String httpPost(String url, UrlEncodedFormEntity data)
+	public String httpPost(String url, UrlEncodedFormEntity data,
+			String encoding) throws ClientProtocolException, IOException {
+		return httpPost(url, data, encoding, false, null);
+	}
+
+	public String httpPost(String url, UrlEncodedFormEntity data)
 			throws ClientProtocolException, IOException {
-		return httpPost(url, data, getDefaultEncoding(), false);
+		return httpPost(url, data, getDefaultEncoding(), false, null);
 	}
 
 	/**

@@ -1,3 +1,24 @@
+/**
+ * Copyright (C) 2013 by Raphael Michel under the MIT license:
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), 
+ * to deal in the Software without restriction, including without limitation 
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the Software 
+ * is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+ * DEALINGS IN THE SOFTWARE.
+ */
 package de.geeksfactory.opacclient.apis;
 
 import java.io.IOException;
@@ -204,6 +225,155 @@ public interface OpacApi {
 	public static final int SUPPORT_FLAG_QUICKLINKS = 0x0000004;
 
 	/**
+	 * The result of a multi-step-supporting method call.
+	 * 
+	 * This is a way of implementing an operating which may need an unregular
+	 * number of steps with user interaction. When the user starts the
+	 * operation, the method is called. It may return success or error, after
+	 * which the operation does not continue, but it also may return that it
+	 * requires user interaction - either a selection or a confirmation. After
+	 * the user interacted, the same method is being called again, but with
+	 * other parameters.
+	 * 
+	 * @since 2.0.18
+	 */
+	public abstract class MultiStepResult {
+
+		public enum Status {
+			/**
+			 * Everything went well
+			 */
+			OK,
+			/**
+			 * This is not supported in this API implementation
+			 */
+			UNSUPPORTED,
+			/**
+			 * An error occured
+			 */
+			ERROR,
+			/**
+			 * The user has to make a selection
+			 */
+			SELECTION_NEEDED,
+			/**
+			 * The user has to confirm the prolonging
+			 */
+			CONFIRMATION_NEEDED
+		};
+
+		protected Status status;
+		protected ContentValues selection;
+		protected List<String[]> details;
+		protected int actionidentifier;
+
+		/**
+		 * Action type identifier for process confirmation
+		 */
+		public static final int ACTION_CONFIRMATION = 2;
+
+		/**
+		 * Action number to use for custom selection type identifiers.
+		 */
+		public static final int ACTION_USER = 100;
+
+		/**
+		 * Create a new Result object holding the return status of the
+		 * operation.
+		 * 
+		 * @param status
+		 *            The return status
+		 * @see #getStatus()
+		 */
+		public MultiStepResult(Status status) {
+			this.status = status;
+		}
+
+		/**
+		 * Get the return status of the operation. Can be <code>OK</code> if the
+		 * operation was successful, <code>ERROR</code> if the operation failed,
+		 * <code>SELECTION_NEEDED</code> if the user should select one of the
+		 * options presented in {@link #getSelection()} or
+		 * <code>CONFIRMATION_NEEDED</code> if the user should confirm the
+		 * details returned by <code>getDetails</code>. .
+		 */
+		public Status getStatus() {
+			return status;
+		}
+
+		/**
+		 * Identifier for the type of user selection if {@link #getStatus()} is
+		 * <code>SELECTION_NEEDED</code>.
+		 * 
+		 * @return One of the <code>ACTION_</code> constants or a number above
+		 *         <code>ACTION_USER</code>.
+		 */
+		public int getActionIdentifier() {
+			return actionidentifier;
+		}
+
+		/**
+		 * Set identifier for the type of user selection if {@link #getStatus()}
+		 * is <code>SELECTION_NEEDED</code>.
+		 * 
+		 * @param actionidentifier
+		 *            One of the <code>ACTION_</code> constants or a number
+		 *            above <code>ACTION_USER</code>.
+		 */
+		public void setActionIdentifier(int actionidentifier) {
+			this.actionidentifier = actionidentifier;
+		}
+
+		/**
+		 * Get values the user should select one of if {@link #getStatus()} is
+		 * <code>SELECTION_NEEDED</code>.
+		 * 
+		 * @return ContentValue tuples with key to give back and value to show
+		 *         to the users.
+		 */
+		public ContentValues getSelection() {
+			return selection;
+		}
+
+		/**
+		 * Set values the user should select one of if {@link #getStatus()} is
+		 * set to <code>SELECTION_NEEDED</code>.
+		 * 
+		 * @param selection
+		 *            Store with key-value-tuples where the key is what is to be
+		 *            returned back to reservation() and the value is what is to
+		 *            be displayed to the user.
+		 */
+		public void setSelection(ContentValues selection) {
+			this.selection = selection;
+		}
+
+		/**
+		 * Set details the user should confirm if {@link #getStatus()} is
+		 * <code>CONFIRMATION_NEEDED</code>.
+		 * 
+		 * @return ContentValue tuples with key to give back and value to show
+		 *         to the users.
+		 */
+		public List<String[]> getDetails() {
+			return details;
+		}
+
+		/**
+		 * Set values the user should select one of if {@link #getStatus()} is
+		 * set to <code>CONFIRMATION_NEEDED</code> .
+		 * 
+		 * @param details
+		 *            List containing reservation details. A detail is stored as
+		 *            an array of two strings, the detail's description (e.g.
+		 *            "Fee") and the detail itself (e.g. "2 EUR")
+		 */
+		public void setDetails(List<String[]> details) {
+			this.details = details;
+		}
+	}
+
+	/**
 	 * May be called on application startup and you are free to call it in <our
 	 * {@link #search} implementation or similar positions. It is commonly used
 	 * to initialize a session. You MUST NOT rely on it being called and should
@@ -375,143 +545,26 @@ public interface OpacApi {
 	 * The result of a {@link OpacApi#reservation(String, Account, int, String)}
 	 * call
 	 */
-	public class ReservationResult {
-		public enum Status {
-			/**
-			 * Everything went well
-			 */
-			OK,
-			/**
-			 * This is not supported in this API implementation
-			 */
-			UNSUPPORTED,
-			/**
-			 * An error occured
-			 */
-			ERROR,
-			/**
-			 * The user has to make a selection
-			 */
-			SELECTION_NEEDED,
-			/**
-			 * The user has to confirm the reservation
-			 */
-			CONFIRMATION_NEEDED
-		};
-
-		private Status status;
-		private ContentValues selection;
-		private List<String[]> details;
-		private int actionidentifier;
+	public class ReservationResult extends MultiStepResult {
 
 		/**
 		 * Action type identifier for library branch selection
 		 */
 		public static final int ACTION_BRANCH = 1;
 
-		/**
-		 * Action type identifier for process confirmation
-		 */
-		public static final int ACTION_CONFIRMATION = 2;
-
-		/**
-		 * Action number to use for custom selection type identifiers.
-		 */
-		public static final int ACTION_USER = 100;
-
-		/**
-		 * Create a new ReservationResult object holding the return status of
-		 * the reservation() operation.
-		 * 
-		 * @param status
-		 *            The return status
-		 * @see #getStatus()
-		 */
 		public ReservationResult(Status status) {
-			this.status = status;
+			super(status);
 		}
+	}
 
-		/**
-		 * Get the return status of the reservation() operation. Can be
-		 * <code>OK</code> if the operation was successful, <code>ERROR</code>
-		 * if the operation failed, <code>SELECTION_NEEDED</code> if the user
-		 * should select one of the options presented in {@link #getSelection()}
-		 * or <code>CONFIRMATION_NEEDED</code> if the user should confirm the
-		 * details returned by <code>getDetails</code>. .
-		 */
-		public Status getStatus() {
-			return status;
-		}
+	/**
+	 * The result of a {@link OpacApi#prolong(String, Account, int, String)}
+	 * call
+	 */
+	public class ProlongResult extends MultiStepResult {
 
-		/**
-		 * Identifier for the type of user selection if {@link #getStatus()} is
-		 * <code>SELECTION_NEEDED</code>.
-		 * 
-		 * @return One of the <code>ACTION_</code> constants or a number above
-		 *         <code>ACTION_USER</code>.
-		 */
-		public int getActionIdentifier() {
-			return actionidentifier;
-		}
-
-		/**
-		 * Set identifier for the type of user selection if {@link #getStatus()}
-		 * is <code>SELECTION_NEEDED</code>.
-		 * 
-		 * @param actionidentifier
-		 *            One of the <code>ACTION_</code> constants or a number
-		 *            above <code>ACTION_USER</code>.
-		 */
-		public void setActionIdentifier(int actionidentifier) {
-			this.actionidentifier = actionidentifier;
-		}
-
-		/**
-		 * Get values the user should select one of if {@link #getStatus()} is
-		 * <code>SELECTION_NEEDED</code>.
-		 * 
-		 * @return ContentValue tuples with key to give back and value to show
-		 *         to the users.
-		 */
-		public ContentValues getSelection() {
-			return selection;
-		}
-
-		/**
-		 * Set values the user should select one of if {@link #getStatus()} is
-		 * set to <code>SELECTION_NEEDED</code>.
-		 * 
-		 * @param selection
-		 *            Store with key-value-tuples where the key is what is to be
-		 *            returned back to reservation() and the value is what is to
-		 *            be displayed to the user.
-		 */
-		public void setSelection(ContentValues selection) {
-			this.selection = selection;
-		}
-
-		/**
-		 * Set details the user should confirm if {@link #getStatus()} is
-		 * <code>CONFIRMATION_NEEDED</code>.
-		 * 
-		 * @return ContentValue tuples with key to give back and value to show
-		 *         to the users.
-		 */
-		public List<String[]> getDetails() {
-			return details;
-		}
-
-		/**
-		 * Set values the user should select one of if {@link #getStatus()} is
-		 * set to <code>CONFIRMATION_NEEDED</code> .
-		 * 
-		 * @param details
-		 *            List containing reservation details. A detail is stored as
-		 *            an array of two strings, the detail's description (e.g.
-		 *            "Fee") and the detail itself (e.g. "2 EUR")
-		 */
-		public void setDetails(List<String[]> details) {
-			this.details = details;
+		public ProlongResult(Status status) {
+			super(status);
 		}
 	}
 
@@ -524,12 +577,27 @@ public interface OpacApi {
 	 * 
 	 * @param media
 	 *            Media identification
-	 * @return <code>true</code> on success, <code>false</code> on failure. In
-	 *         case of failure, {@link #getLast_error()} will be called for more
-	 *         information.
-	 * @see de.geeksfactory.opacclient.objects.AccountData
+	 * @param account
+	 *            Account to be used
+	 * @param useraction
+	 *            Identifier for the selection made by the user in
+	 *            <code>selection</code>, if a selection was made (see
+	 *            {@link ReservationResult#getActionIdentifier()}) or 0, if no
+	 *            selection was required. If your last method call returned
+	 *            <code>CONFIRMATION_NEEDED</code>, this is set to
+	 *            <code>ACTION_CONFIRMATION</code> if the user positively
+	 *            confirmed the action.
+	 * @param selection
+	 *            When the method is called for the first time or if useraction
+	 *            is <code>ACTION_CONFIRMATION</code>, this parameter is null.
+	 *            If you return <code>SELECTION</code> in your
+	 *            {@link ReservationResult#getStatus()}, this method will be
+	 *            called again with the user's selection present in selection.
+	 * @return A <code>ReservationResult</code> object which has to have the
+	 *         status set.
 	 */
-	public boolean prolong(Account account, String media) throws IOException;
+	public ProlongResult prolong(String media, Account account, int useraction,
+			String selection) throws IOException;
 
 	/**
 	 * Extend the lending period of all lent items. Will only be called if your
@@ -594,8 +662,8 @@ public interface OpacApi {
 	 * Sometimes if one of your methods fails and you return null, it makes
 	 * sense to provide additional information. If the error occured in search,
 	 * it is displayed to the user. There are also some special hooks (like
-	 * <code>is_a_redirect</code> for <code>SISIS</code>) which activate
-	 * certain methods in calling activities.
+	 * <code>is_a_redirect</code> for <code>SISIS</code>) which activate certain
+	 * methods in calling activities.
 	 * 
 	 * @return Error details
 	 */
