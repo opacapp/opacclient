@@ -1,0 +1,16 @@
+﻿{
+    "api": "pica",
+    "city": "Rostock",
+    "data": {
+        "baseurl": "http://katalog.ub.uni-rostock.de/",
+        "information": "http://www.ub.uni-rostock.de/",
+        "db": "1"
+    },
+    "geo": [
+        54.07613,
+        12.10484
+    ],
+    "group": "Mecklenburg-Vorpommern",
+    "support": "Katalogsuche",
+    "title": "Unibibliothek/Regionalkatalog"
+}
