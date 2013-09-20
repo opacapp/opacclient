@@ -27,6 +27,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.acra.ACRA;
 import org.apache.http.NameValuePair;
@@ -102,13 +104,54 @@ public class IOpac extends BaseApi implements OpacApi {
 		defaulttypes.put("x", MediaType.MAGAZINE);
 	}
 
+	public void extract_meta() {
+		// Extract available media types.
+		// We have to parse JavaScript. Doing this with RegEx is evil.
+		// But not as evil as including a JavaScript VM into the app.
+		// And I honestly do not see another way.
+		String html;
+
+		Pattern pattern_key = Pattern
+				.compile("mtyp\\[[0-9]+\\]\\[\"typ\"\\] = \"([^\"]+)\";");
+		Pattern pattern_value = Pattern
+				.compile("mtyp\\[[0-9]+\\]\\[\"bez\"\\] = \"([^\"]+)\";");
+
+		try {
+			html = httpGet(opac_url + "/iopac/mtyp.js");
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
+		}
+
+		metadata.open();
+		metadata.clearMeta(library.getIdent());
+		String[] parts = html.split("new Array\\(\\);");
+		for (String part : parts) {
+			Matcher matcher1 = pattern_key.matcher(part);
+			String key = "";
+			String value = "";
+			if (matcher1.find()) {
+				key = matcher1.group(1);
+			}
+			Matcher matcher2 = pattern_value.matcher(part);
+			if (matcher2.find()) {
+				value = matcher2.group(1);
+			}
+			if (value != "")
+				metadata.addMeta(MetaDataSource.META_TYPE_CATEGORY,
+						library.getIdent(), key, value);
+		}
+
+		metadata.close();
+	}
+
 	@Override
 	public void start() throws IOException, NotReachableException {
 
 		metadata.open();
 		if (!metadata.hasMeta(library.getIdent())) {
 			metadata.close();
-			// extract_meta(doc);
+			extract_meta();
 		} else {
 			metadata.close();
 		}
@@ -162,8 +205,15 @@ public class IOpac extends BaseApi implements OpacApi {
 		index = addParameters(query, KEY_SEARCH_QUERY_YEAR, "sleJahr", params,
 				index);
 
-		params.add(new BasicNameValuePair("Medientyp",
-				"A, B, C, D, E, G, I, J, K, L, M, N, O, P, Q, R, S, U, V, W, X, Z, 9"));
+		if (query.containsKey(KEY_SEARCH_QUERY_CATEGORY)
+				&& !"".equals(query.getString(KEY_SEARCH_QUERY_CATEGORY))) {
+			params.add(new BasicNameValuePair("Medientyp", query
+					.getString(KEY_SEARCH_QUERY_CATEGORY)));
+		} else {
+			params.add(new BasicNameValuePair("Medientyp",
+					"A, B, C, D, E, G, I, J, K, L, M, N, O, P, Q, R, S, U, V, W, X, Z, 9"));
+		}
+
 		params.add(new BasicNameValuePair("Anzahl", "10"));
 		params.add(new BasicNameValuePair("pshStart", "Suchen"));
 
@@ -435,7 +485,8 @@ public class IOpac extends BaseApi implements OpacApi {
 							"value");
 					httpGet(opac_url + "/cgi-bin/di.exe?mode=8&kndnr="
 							+ account.getName() + "&mednr=" + mednr
-							+ "&sessionid=" + sessionid + "&psh100=Verl%C3%A4ngern");
+							+ "&sessionid=" + sessionid
+							+ "&psh100=Verl%C3%A4ngern");
 					return new ProlongResult(MultiStepResult.Status.OK);
 				} catch (Throwable e) {
 					e.printStackTrace();
@@ -569,7 +620,7 @@ public class IOpac extends BaseApi implements OpacApi {
 		return new String[] { KEY_SEARCH_QUERY_FREE, KEY_SEARCH_QUERY_AUTHOR,
 				KEY_SEARCH_QUERY_KEYWORDA, KEY_SEARCH_QUERY_TITLE,
 				KEY_SEARCH_QUERY_YEAR, KEY_SEARCH_QUERY_SYSTEM,
-				KEY_SEARCH_QUERY_PUBLISHER };
+				KEY_SEARCH_QUERY_PUBLISHER, KEY_SEARCH_QUERY_CATEGORY };
 	}
 
 	@Override
