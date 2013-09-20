@@ -214,11 +214,11 @@ public class LibraryListDialogFactory {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				if (getAdapter(lv) instanceof ArrayAdapter) {
+				if (getAdapter(slv) instanceof ArrayAdapter) {
 					AccountDataSource data = new AccountDataSource(ctx);
 					data.open();
 					Account acc = new Account();
-					acc.setLibrary(((Library) getAdapter(lv).getItem(position))
+					acc.setLibrary(((Library) getAdapter(slv).getItem(position))
 							.getIdent());
 					acc.setLabel(ctx.getString(R.string.default_account_name));
 					long insertedid = data.addAccount(acc);
