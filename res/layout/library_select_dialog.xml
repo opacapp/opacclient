@@ -6,15 +6,15 @@
 
     <LinearLayout
         android:id="@+id/llLocate"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_alignRight="@+id/lvBibs"
         android:background="@drawable/list_selector_holo_light"
         android:clickable="true"
-        android:padding="16dp"
-        android:focusable="true" >
+        android:focusable="true"
+        android:padding="16dp" >
 
         <ImageView
             android:id="@+id/ivLocationIcon"
@@ -24,7 +24,8 @@
 
         <TextView
             android:id="@+id/tvLocateString"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="8dp"
@@ -39,5 +40,15 @@
         android:layout_below="@id/llLocate"
         android:groupIndicator="@drawable/expander_group_holo_light" >
     </org.holoeverywhere.widget.ExpandableListView>
+
+    <ListView
+        android:id="@+id/lvSimple"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/llLocate"
+        android:groupIndicator="@drawable/expander_group_holo_light"
+        android:visibility="gone" >
+    </ListView>
 
 </RelativeLayout>
