@@ -172,7 +172,7 @@ public class IOpac extends BaseApi implements OpacApi {
 			return null;
 		}
 
-		String html = httpPost(opac_url + "cgi-bin/di.exe",
+		String html = httpPost(opac_url + "/cgi-bin/di.exe",
 				new UrlEncodedFormEntity(params, "iso-8859-1"));
 
 		return parse_search(html, 1);
@@ -305,7 +305,7 @@ public class IOpac extends BaseApi implements OpacApi {
 			return parse_result(reusehtml);
 		}
 
-		String html = httpGet(opac_url + "cgi-bin/di.exe?cMedNr=" + id
+		String html = httpGet(opac_url + "/cgi-bin/di.exe?cMedNr=" + id
 				+ "&mode=23");
 
 		return parse_result(html);
@@ -391,7 +391,7 @@ public class IOpac extends BaseApi implements OpacApi {
 	public ReservationResult reservation(String reservation_info,
 			Account account, int useraction, String selection)
 			throws IOException {
-		String html = httpGet(opac_url + reservation_info);
+		String html = httpGet(opac_url + "/" + reservation_info);
 		Document doc = Jsoup.parse(html);
 		if (doc.select("form[name=form1]").size() > 0) {
 			List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
@@ -417,7 +417,7 @@ public class IOpac extends BaseApi implements OpacApi {
 	@Override
 	public ProlongResult prolong(String media, Account account, int useraction,
 			String Selection) throws IOException {
-		String html = httpGet(opac_url + media);
+		String html = httpGet(opac_url + "/" + media);
 		Document doc = Jsoup.parse(html);
 		if (doc.select("table th").size() > 0) {
 			if (doc.select("table th").first().text()
@@ -453,7 +453,7 @@ public class IOpac extends BaseApi implements OpacApi {
 
 	@Override
 	public boolean cancel(Account account, String media) throws IOException {
-		String html = httpGet(opac_url + media);
+		String html = httpGet(opac_url + "/" + media);
 		Document doc = Jsoup.parse(html);
 		try {
 			Element form = doc.select("form[name=form1]").first();
@@ -478,7 +478,7 @@ public class IOpac extends BaseApi implements OpacApi {
 		params.add(new BasicNameValuePair("slePw", account.getPassword()));
 		params.add(new BasicNameValuePair("pshLogin", "Login"));
 
-		String html = httpPost(opac_url + "cgi-bin/di.exe",
+		String html = httpPost(opac_url + "/cgi-bin/di.exe",
 				new UrlEncodedFormEntity(params, "iso-8859-1"));
 		Document doc = Jsoup.parse(html);
 
@@ -595,7 +595,7 @@ public class IOpac extends BaseApi implements OpacApi {
 
 	@Override
 	public String getShareUrl(String id, String title) {
-		return opac_url + "cgi-bin/di.exe?cMedNr=" + id + "&mode=23";
+		return opac_url + "/cgi-bin/di.exe?cMedNr=" + id + "&mode=23";
 	}
 
 	@Override
