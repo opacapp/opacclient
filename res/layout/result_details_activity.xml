@@ -20,7 +20,7 @@
                 android:id="@+id/tvTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:paddingBottom="8dp"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textIsSelectable="true" />
@@ -29,6 +29,8 @@
                 android:id="@+id/ivCover"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
                 android:contentDescription="Cover"
                 android:gravity="center"
                 android:visibility="gone" />
