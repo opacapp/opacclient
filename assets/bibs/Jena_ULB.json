@@ -1,0 +1,16 @@
+﻿{
+    "api": "pica",
+    "city": "Jena",
+    "data": {
+        "baseurl": "http://kataloge.thulb.uni-jena.de/",
+        "information": "http://www.thulb.uni-jena.de/",
+        "db": "1"
+    },
+    "geo": [
+        50.9306975,
+        11.5880013
+    ],
+    "group": "Thüringen",
+    "support": "Katalogsuche",
+    "title": "Universitäts- und Landesbibliothek"
+}
