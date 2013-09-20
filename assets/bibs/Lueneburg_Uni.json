@@ -1,0 +1,16 @@
+﻿{
+    "api": "pica",
+    "city": "Lüneburg",
+    "data": {
+        "baseurl": "http://opac.ub.uni-lueneburg.de/",
+        "information": "http://www.leuphana.de/bibliothek.html",
+        "db": "1"
+    },
+    "geo": [
+        53.2296879,
+        10.4019633
+    ],
+    "group": "Niedersachsen",
+    "support": "Katalogsuche",
+    "title": "Unibibliothek"
+}
