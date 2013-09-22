@@ -8,7 +8,7 @@
             "returndate": 2, 
             "title": 1
         }, 
-        "baseurl": "http://bibliothek-doebeln.dyndns.info/webopac", 
+        "baseurl": "http://87.138.107.89/bibliothek-doebeln", 
         "copiestable": {
             "department": 2, 
             "location": 1, 

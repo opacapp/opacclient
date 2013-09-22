@@ -21,6 +21,8 @@
  */
 package de.geeksfactory.opacclient.objects;
 
+import java.util.Comparator;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,6 +41,7 @@ public class Library implements Comparable<Library> {
 	private String group;
 	private String replacedby;
 	private double[] geo;
+	private float geo_distance;
 
 	/**
 	 * Create a Library object based on a <code>JSONObject</code>.
@@ -241,6 +244,21 @@ public class Library implements Comparable<Library> {
 
 	public void setReplacedBy(String replacedby) {
 		this.replacedby = replacedby;
+	}
+
+	/**
+	 * @return Geo distance - only for temporary use.
+	 */
+	public float getGeo_distance() {
+		return geo_distance;
+	}
+
+	/**
+	 * @param geo_distance
+	 *            Set the geo distance - only for temporary use.
+	 */
+	public void setGeo_distance(float geo_distance) {
+		this.geo_distance = geo_distance;
 	}
 
 	public int compareTo(Library arg0) {
