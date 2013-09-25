@@ -84,7 +84,7 @@ public class StarredActivity extends OpacActivity implements
 					SharedPreferences sp = PreferenceManager
 							.getDefaultSharedPreferences(StarredActivity.this);
 					Intent myIntent = new Intent(StarredActivity.this,
-							SearchResultsActivity.class);
+							app.getSearchResultsActivityClass());
 					Bundle query = new Bundle();
 					query.putString(OpacApi.KEY_SEARCH_QUERY_TITLE,
 							item.getTitle());

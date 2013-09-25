@@ -103,6 +103,10 @@ public class OpacClient extends Application {
 		return new NavigationFragment();
 	}
 
+	public Class getSearchResultsActivityClass() {
+		return SearchResultsActivity.class;
+	}
+	
 	public void startSearch(Activity caller, Bundle query) {
 		Intent myIntent = new Intent(caller, SearchResultsActivity.class);
 		myIntent.putExtra("query", query);
