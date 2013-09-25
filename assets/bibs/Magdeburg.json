@@ -52,7 +52,7 @@
             "availability": -1, 
             "branch": 2, 
             "cancelurl": 3, 
-            "expirationdate": null, 
+            "expirationdate": -1, 
             "title": 1
         }
     }, 

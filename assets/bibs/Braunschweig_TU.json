@@ -1,0 +1,16 @@
+{
+    "api": "pica",
+    "city": "Braunschweig",
+    "data": {
+        "baseurl": "http://sunny.biblio.etc.tu-bs.de:8080/",
+        "information": "http://www.biblio.tu-bs.de/",
+        "db": "1"
+    },
+    "geo": [
+        52.27387,
+        10.52911
+    ],
+    "group": "Niedersachsen",
+    "support": "Katalogsuche",
+    "title": "Universitätsbibliothek"
+}

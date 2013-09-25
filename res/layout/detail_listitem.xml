@@ -2,10 +2,10 @@
 <org.apmem.tools.layouts.FlowLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    horizontalSpacing="0dip"
+    verticalSpacing="0dip"
     android:orientation="vertical"
-    android:padding="0dp"
-    horizontalSpacing="8dip"
-    verticalSpacing="0dip" >
+    android:padding="0dp" >
 
     <TextView
         android:id="@+id/tvDesc"
@@ -14,6 +14,7 @@
         android:ellipsize="end"
         android:minWidth="120dp"
         android:paddingBottom="0dip"
+        android:paddingRight="8dp"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/detail_desc" />

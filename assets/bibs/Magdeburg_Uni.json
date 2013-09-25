@@ -1,0 +1,16 @@
+{
+    "api": "pica",
+    "city": "Magdeburg",
+    "data": {
+        "baseurl": "https://opac.uni-magdeburg.de/",
+        "information": "http://www.ub.ovgu.de/",
+        "db": "1"
+    },
+    "geo": [
+        52.139144,
+        11.6409926
+    ],
+    "group": "Sachsen-Anhalt",
+    "support": "Katalogsuche",
+    "title": "Universitätsbibliothek"
+}

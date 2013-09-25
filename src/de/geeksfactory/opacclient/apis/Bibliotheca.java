@@ -177,11 +177,9 @@ public class Bibliotheca extends BaseApi {
 
 		metadata.open();
 		if (!metadata.hasMeta(library.getIdent())) {
-			HttpPost httppost = new HttpPost();
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("link_profis.x", "0"));
 			nameValuePairs.add(new BasicNameValuePair("link_profis.y", "1"));
-			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 			String html = httpPost(opac_url + "/index.asp",
 					new UrlEncodedFormEntity(nameValuePairs));
 			metadata.close();
