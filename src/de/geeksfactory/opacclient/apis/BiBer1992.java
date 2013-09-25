@@ -787,17 +787,15 @@ public class BiBer1992 extends BaseApi {
 						if (cellText.matches("verl.ngert.*")) {
 							return new ProlongResult(MultiStepResult.Status.OK);
 						} else {
-							m_last_error = cellText;
 							return new ProlongResult(
-									MultiStepResult.Status.ERROR);
+									MultiStepResult.Status.ERROR, cellText);
 						}
 					}
 				}
 			}// for columns
 		}// for rows
 
-		m_last_error = "unknown result"; // should not occur
-		return new ProlongResult(MultiStepResult.Status.ERROR);
+		return new ProlongResult(MultiStepResult.Status.ERROR, "unknown result");
 	}
 
 	/*

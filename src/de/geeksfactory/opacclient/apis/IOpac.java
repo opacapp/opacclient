@@ -474,8 +474,7 @@ public class IOpac extends BaseApi implements OpacApi {
 					.contains("da die maximale Anzahl.")) {
 				// Comparing to the full string would be cleaner, but because I
 				// can't test it I only want the part without äöü in there.
-				last_error = doc.select("table th").first().text();
-				return new ProlongResult(MultiStepResult.Status.ERROR);
+				return new ProlongResult(MultiStepResult.Status.ERROR, doc.select("table th").first().text());
 			} else {
 				try {
 					Element form = doc.select("form[name=form1]").first();

@@ -29,6 +29,7 @@ import org.json.JSONException;
 import android.content.ContentValues;
 import android.os.Bundle;
 import de.geeksfactory.opacclient.NotReachableException;
+import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult.Status;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.DetailledItem;
@@ -266,6 +267,7 @@ public interface OpacApi {
 		protected ContentValues selection;
 		protected List<String[]> details;
 		protected int actionidentifier;
+		protected String message;
 
 		/**
 		 * Action type identifier for process confirmation
@@ -287,6 +289,21 @@ public interface OpacApi {
 		 */
 		public MultiStepResult(Status status) {
 			this.status = status;
+		}
+
+		/**
+		 * Create a new Result object holding the return status of the operation
+		 * and a message
+		 * 
+		 * @param status
+		 *            The return status
+		 * @param message
+		 *            A message
+		 * @see #getStatus()
+		 */
+		public MultiStepResult(Status status, String message) {
+			this.status = status;
+			this.message = message;
 		}
 
 		/**
@@ -371,6 +388,21 @@ public interface OpacApi {
 		public void setDetails(List<String[]> details) {
 			this.details = details;
 		}
+
+		/**
+		 * @return A optional message, e.g. to explain an error status code
+		 */
+		public String getMessage() {
+			return message;
+		}
+
+		/**
+		 * Set an optional message, e.g. to explain an error status code
+		 */
+		public void setMessage(String message) {
+			this.message = message;
+		}
+
 	}
 
 	/**
@@ -555,6 +587,10 @@ public interface OpacApi {
 		public ReservationResult(Status status) {
 			super(status);
 		}
+		
+		public ReservationResult(Status status, String message) {
+			super(status, message);
+		}
 	}
 
 	/**
@@ -565,6 +601,10 @@ public interface OpacApi {
 
 		public ProlongResult(Status status) {
 			super(status);
+		}
+		
+		public ProlongResult(Status status, String message) {
+			super(status, message);
 		}
 	}
 

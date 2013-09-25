@@ -292,7 +292,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			reservationSelection(result);
 			break;
 		case ERROR:
-			dialog_wrong_credentials(app.getApi().getLast_error(), false);
+			dialog_wrong_credentials(result.getMessage(), false);
 			break;
 		case OK:
 			Intent intent = new Intent(SearchResultDetailsActivity.this,
@@ -395,7 +395,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			bookingSelection(result);
 			break;
 		case ERROR:
-			dialog_wrong_credentials(app.getApi().getLast_error(), false);
+			dialog_wrong_credentials(result.getMessage(), false);
 			break;
 		case OK:
 			Intent intent = new Intent(SearchResultDetailsActivity.this,

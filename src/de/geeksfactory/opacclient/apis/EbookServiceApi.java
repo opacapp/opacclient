@@ -53,6 +53,10 @@ public interface EbookServiceApi {
 		public BookingResult(Status status) {
 			super(status);
 		}
+		
+		public BookingResult(Status status, String message) {
+			super(status, message);
+		}
 	}
 
 	/**

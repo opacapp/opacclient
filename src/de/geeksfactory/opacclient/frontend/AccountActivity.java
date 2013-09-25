@@ -1246,7 +1246,7 @@ public class AccountActivity extends OpacActivity {
 			bookingSelection(booking_info, result);
 			break;
 		case ERROR:
-			dialog_wrong_credentials(app.getApi().getLast_error(), false);
+			dialog_wrong_credentials(result.getMessage(), false);
 			break;
 		case OK:
 			invalidateData();
@@ -1412,7 +1412,7 @@ public class AccountActivity extends OpacActivity {
 			break;
 		case ERROR:
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage(app.getApi().getLast_error())
+			builder.setMessage(result.getMessage())
 					.setCancelable(true)
 					.setNegativeButton(R.string.dismiss,
 							new DialogInterface.OnClickListener() {

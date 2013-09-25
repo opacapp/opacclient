@@ -586,11 +586,12 @@ public class Bibliotheca extends BaseApi {
 		}
 
 		if (doc.getElementsByClass("kontomeldung").size() == 1) {
-			last_error = doc.getElementsByClass("kontomeldung").get(0).text();
-			return new ReservationResult(MultiStepResult.Status.ERROR);
+			return new ReservationResult(MultiStepResult.Status.ERROR, doc
+					.getElementsByClass("kontomeldung").get(0).text());
 		}
 
-		return new ReservationResult(MultiStepResult.Status.ERROR);
+		return new ReservationResult(MultiStepResult.Status.ERROR,
+				"Unbekannter Fehler");
 	}
 
 	@Override
@@ -604,14 +605,16 @@ public class Bibliotheca extends BaseApi {
 				account(account);
 			} catch (JSONException e) {
 				e.printStackTrace();
-				return new ProlongResult(MultiStepResult.Status.ERROR);
+				return new ProlongResult(MultiStepResult.Status.ERROR,
+						"Konto konnte nicht geladen werden");
 			}
 		} else if (logged_in_as.getId() != account.getId()) {
 			try {
 				account(account);
 			} catch (JSONException e) {
 				e.printStackTrace();
-				return new ProlongResult(MultiStepResult.Status.ERROR);
+				return new ProlongResult(MultiStepResult.Status.ERROR,
+						"Konto konnte nicht geladen werden");
 			}
 		}
 
@@ -630,9 +633,8 @@ public class Bibliotheca extends BaseApi {
 			Document doc = Jsoup.parse(html);
 
 			if (doc.getElementsByClass("kontomeldung").size() == 1) {
-				last_error = doc.getElementsByClass("kontomeldung").get(0)
-						.text();
-				return new ProlongResult(MultiStepResult.Status.ERROR);
+				return new ProlongResult(MultiStepResult.Status.ERROR, doc
+						.getElementsByClass("kontomeldung").get(0).text());
 			}
 			if (doc.select("#verlaengern").size() == 1) {
 				if (doc.select(".kontozeile_center table").size() == 1) {
@@ -667,8 +669,7 @@ public class Bibliotheca extends BaseApi {
 				}
 			}
 		}
-		last_error = "??";
-		return new ProlongResult(MultiStepResult.Status.ERROR);
+		return new ProlongResult(MultiStepResult.Status.ERROR, "??");
 	}
 
 	@Override

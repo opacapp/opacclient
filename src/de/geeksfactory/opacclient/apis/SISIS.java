@@ -955,8 +955,8 @@ public class SISIS extends BaseApi implements OpacApi {
 			return new ReservationResult(MultiStepResult.Status.ERROR);
 
 		if (doc.getElementsByClass("error").size() >= 1) {
-			last_error = doc.getElementsByClass("error").get(0).text();
-			return new ReservationResult(MultiStepResult.Status.ERROR);
+			return new ReservationResult(MultiStepResult.Status.ERROR, doc
+					.getElementsByClass("error").get(0).text());
 		}
 
 		if (doc.select("#CirculationForm p").size() > 0) {
@@ -989,8 +989,8 @@ public class SISIS extends BaseApi implements OpacApi {
 		// the URI of the page this item was found on and the query string the
 		// prolonging link links to, seperated by a $.
 		if (a.startsWith("§")) {
-			last_error = a.substring(1);
-			return new ProlongResult(MultiStepResult.Status.ERROR);
+			return new ProlongResult(MultiStepResult.Status.ERROR,
+					a.substring(1));
 		}
 		String[] parts = a.split("\\$");
 		String offset = parts[0];
@@ -1025,8 +1025,8 @@ public class SISIS extends BaseApi implements OpacApi {
 		String html = httpGet(opac_url + "/userAccount.do?" + query, ENCODING);
 		Document doc = Jsoup.parse(html);
 		if (doc.select("#middle .textrot").size() > 0) {
-			last_error = doc.select("#middle .textrot").first().text();
-			return new ProlongResult(MultiStepResult.Status.ERROR);
+			return new ProlongResult(MultiStepResult.Status.ERROR, doc
+					.select("#middle .textrot").first().text());
 		}
 
 		return new ProlongResult(MultiStepResult.Status.OK);
