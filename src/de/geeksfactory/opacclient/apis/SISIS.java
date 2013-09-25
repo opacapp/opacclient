@@ -700,7 +700,7 @@ public class SISIS extends BaseApi implements OpacApi {
 					} else {
 						if (((Element) node).tagName().equals("a")
 								&& ((Element) node).text().trim()
-										.equals("hier klicken")) {
+										.contains("hier klicken")) {
 							text = text + ((Element) node).attr("href");
 						} else {
 							text = text + ((Element) node).text();
