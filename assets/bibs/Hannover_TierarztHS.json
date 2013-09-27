@@ -3,6 +3,7 @@
     "city": "Hannover", 
     "data": {
         "baseurl": "http://opac.tib.uni-hannover.de", 
+		"db": "5",
         "information": "http://www.tiho-hannover.de/de/kliniken-institute/bibliothek/"
     }, 
     "geo": [
