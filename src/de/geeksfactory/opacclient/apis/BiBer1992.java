@@ -896,6 +896,11 @@ public class BiBer1992 extends BaseApi {
 				}
 			}
 
+			if (tr.select("input[type=checkbox][value=YES]").size() > 0)
+				e.put(AccountData.KEY_LENT_LINK,
+						tr.select("input[type=checkbox][value=YES]").attr(
+								"name"));
+
 			// calculate lent timestamp for notification purpose
 			if (e.containsKey(AccountData.KEY_LENT_DEADLINE)) {
 				try {
