@@ -230,11 +230,23 @@ class Zones22(Api):
     def getDefaultSupportString(self):
         return 'Katalogsuche'
 
+class Pica(Api):
+
+    def getDefaultSupportString(self):
+        return 'Katalogsuche'
+
+class IOpac(Api):
+
+    def getDefaultSupportString(self):
+        return 'Katalogsuche und Konto'
+
 APIS = {
         'bibliotheca' : Bibliotheca,
         'sisis'       : Sisis,
         'biber1992'   : Biber1992,
-        'zones22'     : Zones22
+        'zones22'     : Zones22,
+        'iopac'       : IOpac,
+        'pica'        : Pica,
     }
 
 data = {}
