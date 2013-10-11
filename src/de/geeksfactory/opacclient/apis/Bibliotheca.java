@@ -743,19 +743,16 @@ public class Bibliotheca extends BaseApi {
 		if (acc.getName() == null || acc.getName().equals("null"))
 			return null;
 
-		// Login vonnöten
-		HttpPost httppost = new HttpPost(opac_url + "/index.asp");
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 		nameValuePairs.add(new BasicNameValuePair("link_konto.x", "0"));
 		nameValuePairs.add(new BasicNameValuePair("link_konto.y", "0"));
-		httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-		HttpResponse response = http_client.execute(httppost);
-		String html = "";
+		String html = httpPost(opac_url + "/index.asp",
+				new UrlEncodedFormEntity(nameValuePairs), "ISO-8859-1");
+		Document doc = Jsoup.parse(html);
 
-		if (response.getStatusLine().getStatusCode() == 200) {
+		if (doc.select("input[name=AUSWEIS]").size() > 0) {
 			// Login vonnöten
-			response.getEntity().consumeContent();
-			nameValuePairs = new ArrayList<NameValuePair>(2);
+			nameValuePairs = new ArrayList<NameValuePair>();
 			nameValuePairs
 					.add(new BasicNameValuePair("AUSWEIS", acc.getName()));
 			nameValuePairs
@@ -769,16 +766,16 @@ public class Bibliotheca extends BaseApi {
 			nameValuePairs.add(new BasicNameValuePair("type", "K"));
 			html = httpPost(opac_url + "/index.asp", new UrlEncodedFormEntity(
 					nameValuePairs), "ISO-8859-1", true);
-		} else if (response.getStatusLine().getStatusCode() == 302) {
-			// Bereits eingeloggt
-			response.getEntity().consumeContent();
-			html = httpGet(opac_url + "/index.asp?target=konto", "ISO-8859-1",
-					true);
-		} else if (response.getStatusLine().getStatusCode() >= 400) {
-			throw new NotReachableException();
+			doc = Jsoup.parse(html);
 		}
-
-		Document doc = Jsoup.parse(html);
+		// } else if (response.getStatusLine().getStatusCode() == 302) {
+		// Bereits eingeloggt
+		// html = httpGet(opac_url + "/index.asp?target=konto",
+		// "ISO-8859-1",
+		// true);
+		// } else if (response.getStatusLine().getStatusCode() >= 400) {
+		// throw new NotReachableException();
+		// }
 
 		if (doc.getElementsByClass("kontomeldung").size() == 1) {
 			last_error = doc.getElementsByClass("kontomeldung").get(0).text();

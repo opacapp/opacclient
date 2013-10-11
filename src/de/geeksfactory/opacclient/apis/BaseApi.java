@@ -142,18 +142,18 @@ public abstract class BaseApi implements OpacApi {
 		HttpPost httppost = new HttpPost(url);
 		httppost.setEntity(data);
 
+		HttpResponse response = null;
 		if (cookieStore != null) {
 			// Create local HTTP context
 			HttpContext localContext = new BasicHttpContext();
 			// Bind custom cookie store to the local context
 			localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
 
-			HttpResponse response = http_client.execute(httppost, localContext);
+			response = http_client.execute(httppost, localContext);
 		} else {
-			HttpResponse response = http_client.execute(httppost);
+			response = http_client.execute(httppost);
 		}
 
-		HttpResponse response = http_client.execute(httppost);
 		if (!ignore_errors && response.getStatusLine().getStatusCode() >= 400) {
 			throw new NotReachableException();
 		}
