@@ -222,6 +222,11 @@ class Biber1992(Api):
         return 'Katalogsuche'
 
     def prompt(self, data):
+        print("Opac-Ordner?")
+        inp = getInput(required=False, default='opax')
+        if inp is not None:
+            data['data']['opacdir'] = inp
+        return data
         print("WARNUNG! Konfiguration kann nicht ausgelesen werden. HANDARBEIT NÖTIG!")
         return data
 

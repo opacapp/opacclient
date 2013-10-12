@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -100,6 +101,11 @@ public class BiBer1992 extends BaseApi {
 	private List<NameValuePair> m_nameValuePairs = new ArrayList<NameValuePair>(
 			2);
 
+	protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
+
+	static {
+	}
+
 	// private int m_resultcount = 10;
 	// private long logged_in;
 	// private Account logged_in_as;
@@ -143,7 +149,13 @@ public class BiBer1992 extends BaseApi {
 						lookup);
 				sr.setType(MediaType.valueOf(typeStr));
 			} catch (Exception e) {
-				// set no mediatype
+				if (defaulttypes.containsKey(lookup)) {
+					sr.setType(defaulttypes.get(lookup));
+				}
+			}
+		} else {
+			if (defaulttypes.containsKey(lookup)) {
+				sr.setType(defaulttypes.get(lookup));
 			}
 		}
 	}
@@ -596,7 +608,7 @@ public class BiBer1992 extends BaseApi {
 				DetailledItem.KEY_COPY_RETURN, // "rueckgabe";
 				DetailledItem.KEY_COPY_RESERVATIONS // "vorbestellt";
 		};
-		int[] copy_map = new int[] { -1, -1, -1, -1, -1, -1, -1 };
+		int[] copy_map = new int[] { 3, 1, -1, 1, 4, -1, -1 };
 
 		try {
 			JSONObject map = m_data.getJSONObject("copiestable");
@@ -682,6 +694,12 @@ public class BiBer1992 extends BaseApi {
 							e.put(copy_keys[j], text);
 						}
 					}
+					if (e.containsKey(DetailledItem.KEY_COPY_BRANCH)
+							&& e.containsKey(DetailledItem.KEY_COPY_LOCATION)
+							&& e.getAsString(DetailledItem.KEY_COPY_LOCATION)
+									.equals(e
+											.getAsString(DetailledItem.KEY_COPY_BRANCH)))
+						e.remove(DetailledItem.KEY_COPY_LOCATION);
 					item.addCopy(e);
 					copy_last_content = e;
 				}// ignore 1st row
