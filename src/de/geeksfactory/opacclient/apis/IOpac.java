@@ -548,8 +548,7 @@ public class IOpac extends BaseApi implements OpacApi {
 
 	protected void parse_medialist(List<ContentValues> medien, Document doc,
 			int offset) throws ClientProtocolException, IOException {
-		Elements copytrs = doc.select("a[name=AUS] ~ table").first()
-				.select("tr");
+		Elements copytrs = doc.select("a[name=AUS] ~ table tr");
 		doc.setBaseUri(opac_url);
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
