@@ -83,8 +83,6 @@ public class StarredActivity extends OpacActivity implements
 
 					SharedPreferences sp = PreferenceManager
 							.getDefaultSharedPreferences(StarredActivity.this);
-					Intent myIntent = new Intent(StarredActivity.this,
-							app.getSearchResultsActivityClass());
 					Bundle query = new Bundle();
 					query.putString(OpacApi.KEY_SEARCH_QUERY_TITLE,
 							item.getTitle());
@@ -92,8 +90,7 @@ public class StarredActivity extends OpacActivity implements
 							OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH,
 							sp.getString(OpacClient.PREF_HOME_BRANCH_PREFIX
 									+ app.getAccount().getId(), null));
-					myIntent.putExtra("query", query);
-					startActivity(myIntent);
+					app.startSearch(StarredActivity.this, query);
 				} else {
 					Intent intent = new Intent(StarredActivity.this,
 							SearchResultDetailsActivity.class);
