@@ -75,11 +75,12 @@ public abstract class BaseApi implements OpacApi {
 	 *             Thrown when server returns a HTTP status code greater or
 	 *             equal than 400.
 	 */
-	public String httpGet(String url, String encoding,
-			boolean ignore_errors, CookieStore cookieStore)
-			throws ClientProtocolException, IOException {
+	public String httpGet(String url, String encoding, boolean ignore_errors,
+			CookieStore cookieStore) throws ClientProtocolException,
+			IOException {
 
-		HttpGet httpget = new HttpGet(url);
+		HttpGet httpget = new HttpGet(url.replace(" ", "%20").replace("&amp;",
+				"&"));
 		HttpResponse response;
 
 		if (cookieStore != null) {
@@ -139,7 +140,8 @@ public abstract class BaseApi implements OpacApi {
 	public String httpPost(String url, UrlEncodedFormEntity data,
 			String encoding, boolean ignore_errors, CookieStore cookieStore)
 			throws ClientProtocolException, IOException {
-		HttpPost httppost = new HttpPost(url);
+		HttpPost httppost = new HttpPost(url.replace(" ", "%20").replace(
+				"&amp;", "&"));
 		httppost.setEntity(data);
 
 		HttpResponse response = null;
