@@ -372,7 +372,8 @@ public class SISIS extends BaseApi implements OpacApi {
 				haslink = true;
 				try {
 					List<NameValuePair> anyurl = URLEncodedUtils.parse(new URI(
-							((Element) node).attr("href")), ENCODING);
+							((Element) node).attr("href").replace(" ", "%20")
+									.replace("&amp;", "&")), ENCODING);
 					for (NameValuePair nv : anyurl) {
 						if (nv.getName().equals("identifier")) {
 							identifier = nv.getValue();
