@@ -78,6 +78,7 @@ public class InfoActivity extends OpacActivity {
 
 		wvInfo = (WebView) findViewById(R.id.wvInfo);
 		wvInfo.getSettings().setSupportZoom(true);
+		wvInfo.getSettings().setJavaScriptEnabled(true);
 		wvInfo.setWebChromeClient(new WebChromeClient() {
 			@Override
 			public void onProgressChanged(WebView view, int progress) {
