@@ -1081,7 +1081,7 @@ public class SISIS extends BaseApi implements OpacApi {
 		nameValuePairs.add(new BasicNameValuePair("methodToCall", "submit"));
 		try {
 			html = httpPost(opac_url + "/login.do", new UrlEncodedFormEntity(
-					nameValuePairs));
+					nameValuePairs), ENCODING);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return false;
@@ -1245,8 +1245,9 @@ public class SISIS extends BaseApi implements OpacApi {
 				if (uri == null
 						|| uri.getQueryParameter("methodToCall") == null)
 					continue;
-				if (uri.getQueryParameter("methodToCall").equals("pos")) {
-					html = httpGet(uri.toString());
+				if (uri.getQueryParameter("methodToCall").equals("pos")
+						&& !"1".equals(uri.getQueryParameter("anzPos"))) {
+					html = httpGet(uri.toString(), ENCODING);
 					parse_medialist(medien, Jsoup.parse(html),
 							Integer.parseInt(uri.getQueryParameter("anzPos")));
 				}
@@ -1276,7 +1277,8 @@ public class SISIS extends BaseApi implements OpacApi {
 				if (uri == null
 						|| uri.getQueryParameter("methodToCall") == null)
 					break;
-				if (uri.getQueryParameter("methodToCall").equals("pos")) {
+				if (uri.getQueryParameter("methodToCall").equals("pos")
+						&& !"1".equals(uri.getQueryParameter("anzPos"))) {
 					html = httpGet(uri.toString(), ENCODING);
 					parse_reslist("6", medien, Jsoup.parse(html),
 							Integer.parseInt(uri.getQueryParameter("anzPos")));
@@ -1296,7 +1298,8 @@ public class SISIS extends BaseApi implements OpacApi {
 				if (uri == null
 						|| uri.getQueryParameter("methodToCall") == null)
 					break;
-				if (uri.getQueryParameter("methodToCall").equals("pos")) {
+				if (uri.getQueryParameter("methodToCall").equals("pos")
+						&& !"1".equals(uri.getQueryParameter("anzPos"))) {
 					html = httpGet(uri.toString(), ENCODING);
 					parse_reslist("7", medien, Jsoup.parse(html),
 							Integer.parseInt(uri.getQueryParameter("anzPos")));
