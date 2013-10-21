@@ -397,7 +397,7 @@ public class Pica extends BaseApi implements OpacApi {
 	public DetailledItem getResult(int position) throws IOException {
 		String html = httpGet(
 				opac_url
-						+ "DB=" + db + "/SET=" + searchSet + "/TTL=1/SHW?FRST="
+						+ "/DB=" + db + "/SET=" + searchSet + "/TTL=1/SHW?FRST="
 						+ (position + 1), ENCODING, false, cookieStore);
 
 		return parse_result(html);
