@@ -113,6 +113,7 @@ public abstract class BaseApi implements OpacApi {
 		return httpGet(url, encoding, false, null);
 	}
 
+	@Deprecated
 	public String httpGet(String url) throws ClientProtocolException,
 			IOException {
 		return httpGet(url, getDefaultEncoding(), false, null);
@@ -176,6 +177,7 @@ public abstract class BaseApi implements OpacApi {
 		return httpPost(url, data, encoding, false, null);
 	}
 
+	@Deprecated
 	public String httpPost(String url, UrlEncodedFormEntity data)
 			throws ClientProtocolException, IOException {
 		return httpPost(url, data, getDefaultEncoding(), false, null);
