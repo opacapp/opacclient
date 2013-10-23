@@ -1,0 +1,16 @@
+{
+    "api": "sisis", 
+    "city": "M\u00fcnchen", 
+    "data": {
+        "baseurl": "https://fhmoz3.bib-bvb.de/InfoGuideClient.fhmsis", 
+        "information": "http://www.bib.hm.edu/aktuelles/index.de.html", 
+        "startparams": "Login=wofhmze"
+    }, 
+    "geo": [
+        48.1367203, 
+        11.576754
+    ], 
+    "group": "Bayern", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Hochschulbibliothek"
+}
