@@ -46,6 +46,7 @@ import org.jsoup.select.Elements;
 
 import android.content.ContentValues;
 import android.os.Bundle;
+import android.util.Log;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -230,8 +231,8 @@ public class IOpac extends BaseApi implements OpacApi {
 
 	protected SearchRequestResult parse_search(String html, int page) {
 		Document doc = Jsoup.parse(html);
-
-		updateRechnr(doc);
+		
+		Log.d("OPACCLIENT", "Anzahl h1: " + doc.select("h1").size());
 
 		if (doc.select("h4").size() > 0) {
 			if (doc.select("h4").text().trim().contains("0 gefundene Medien")) {
@@ -246,7 +247,20 @@ public class IOpac extends BaseApi implements OpacApi {
 				last_error = doc.select("h4").text().trim();
 				return null;
 			}
+		} else if (doc.select("h1").size() > 0) {
+			if (doc.select("h1").text().trim().contains("RUNTIME ERROR")) {
+				//Server Error
+				last_error = "Serverfehler. Bitte probieren Sie es später noch einmal.";
+				return null;
+			} else {
+				last_error = "Unbekannter Fehler: " + doc.select("h1").text().trim();
+				return null;
+			}
+		} else {
+			return null;
 		}
+		
+		updateRechnr(doc);
 
 		reusehtml = html;
 
@@ -532,57 +546,75 @@ public class IOpac extends BaseApi implements OpacApi {
 		String html = httpPost(opac_url + "/cgi-bin/di.exe",
 				new UrlEncodedFormEntity(params, "iso-8859-1"));
 		Document doc = Jsoup.parse(html);
-
-		List<ContentValues> medien = new ArrayList<ContentValues>();
-		parse_medialist(medien, doc, 1);
-
-		List<ContentValues> reserved = new ArrayList<ContentValues>();
-		parse_reslist(reserved, doc, 1);
-
-		AccountData res = new AccountData(account.getId());
-		res.setLent(medien);
-		res.setReservations(reserved);
-
+		
+		AccountData res = null;
+		
+		if (doc.select("a[name=AUS]").size() > 0) {
+			
+			List<ContentValues> medien = new ArrayList<ContentValues>();
+			parse_medialist(medien, doc, 1);
+	
+			List<ContentValues> reserved = new ArrayList<ContentValues>();
+			parse_reslist(reserved, doc, 1);
+	
+			res = new AccountData(account.getId());
+			res.setLent(medien);
+			res.setReservations(reserved);
+			
+		} else if (doc.select("h1").size() > 0) {
+			if (doc.select("h1").text().trim().contains("RUNTIME ERROR")) {
+				//Server Error
+				last_error = "Serverfehler. Bitte probieren Sie es später noch einmal.";
+				return null;
+			} else {
+				last_error = "Unbekannter Fehler: " + doc.select("h1").text().trim() + " Bitte prüfen Sie, ob ihre Kontodaten korrekt sind.";
+				return null;
+			}
+		} else {
+			last_error = "Unbekannter Fehler. Bitte prüfen Sie, ob ihre Kontodaten korrekt sind.";
+		}
 		return res;
+
 	}
 
 	protected void parse_medialist(List<ContentValues> medien, Document doc,
 			int offset) throws ClientProtocolException, IOException {
-		Elements copytrs = doc.select("a[name=AUS] ~ table tr");
-		doc.setBaseUri(opac_url);
-
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-
-		int trs = copytrs.size();
-		if (trs < 2)
-			return;
-		assert (trs > 0);
-		for (int i = 1; i < trs; i++) {
-			Element tr = copytrs.get(i);
-			ContentValues e = new ContentValues();
-
-			e.put(AccountData.KEY_LENT_TITLE, tr.child(0).text().trim()
-					.replace("\u00a0", ""));
-			e.put(AccountData.KEY_LENT_AUTHOR, tr.child(1).text().trim()
-					.replace("\u00a0", ""));
-			e.put(AccountData.KEY_LENT_STATUS, tr.child(3).text().trim()
-					.replace("\u00a0", "")
-					+ "x verl.");
-			e.put(AccountData.KEY_LENT_DEADLINE, tr.child(4).text().trim()
-					.replace("\u00a0", ""));
-			try {
-				e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
-						sdf.parse(e.getAsString(AccountData.KEY_LENT_DEADLINE))
-								.getTime());
-			} catch (ParseException e1) {
-				e1.printStackTrace();
+		
+			Elements copytrs = doc.select("a[name=AUS] ~ table tr");
+			doc.setBaseUri(opac_url);
+	
+			SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+	
+			int trs = copytrs.size();
+			if (trs < 2)
+				return;
+			assert (trs > 0);
+			for (int i = 1; i < trs; i++) {
+				Element tr = copytrs.get(i);
+				ContentValues e = new ContentValues();
+	
+				e.put(AccountData.KEY_LENT_TITLE, tr.child(0).text().trim()
+						.replace("\u00a0", ""));
+				e.put(AccountData.KEY_LENT_AUTHOR, tr.child(1).text().trim()
+						.replace("\u00a0", ""));
+				e.put(AccountData.KEY_LENT_STATUS, tr.child(3).text().trim()
+						.replace("\u00a0", "")
+						+ "x verl.");
+				e.put(AccountData.KEY_LENT_DEADLINE, tr.child(4).text().trim()
+						.replace("\u00a0", ""));
+				try {
+					e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
+							sdf.parse(e.getAsString(AccountData.KEY_LENT_DEADLINE))
+									.getTime());
+				} catch (ParseException e1) {
+					e1.printStackTrace();
+				}
+				e.put(AccountData.KEY_LENT_LINK,
+						tr.child(5).select("a").attr("href"));
+	
+				medien.add(e);
 			}
-			e.put(AccountData.KEY_LENT_LINK,
-					tr.child(5).select("a").attr("href"));
-
-			medien.add(e);
-		}
-		assert (medien.size() == trs - 1);
+			assert (medien.size() == trs - 1);
 
 	}
 
@@ -624,7 +656,7 @@ public class IOpac extends BaseApi implements OpacApi {
 
 	@Override
 	public String getLast_error() {
-		return null;
+		return last_error;
 	}
 
 	@Override
