@@ -46,7 +46,6 @@ import org.jsoup.select.Elements;
 
 import android.content.ContentValues;
 import android.os.Bundle;
-import android.util.Log;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -231,8 +230,6 @@ public class IOpac extends BaseApi implements OpacApi {
 
 	protected SearchRequestResult parse_search(String html, int page) {
 		Document doc = Jsoup.parse(html);
-		
-		Log.d("OPACCLIENT", "Anzahl h1: " + doc.select("h1").size());
 
 		if (doc.select("h4").size() > 0) {
 			if (doc.select("h4").text().trim().contains("0 gefundene Medien")) {
