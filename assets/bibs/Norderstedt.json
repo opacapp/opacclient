@@ -2,6 +2,16 @@
     "api": "biber1992", 
     "city": "Norderstedt", 
     "data": {
+        "accounttable": {
+            "author": 7, 
+            "barcode": 4, 
+            "homebranch": -1, 
+            "lendingbranch": -1, 
+            "prolongurl": 4, 
+            "returndate": 3, 
+            "status": 5, 
+            "title": 7
+        }, 
         "baseurl": "https://opac.buecherei.norderstedt.de", 
         "information": "http://www.norderstedt.de/Bildung-Kultur/Bildung/Stadtb%C3%BCcherei",
         "mediatypes": {
@@ -19,6 +29,7 @@
             "30": "EBOOK"
         }, 
         "opacdir": "opax", 
+		"reservationtable": null,
         "searchtable": [
             2, 
             3, 
