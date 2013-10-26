@@ -568,7 +568,7 @@ public class IOpac extends BaseApi implements OpacApi {
 				return null;
 			}
 		} else {
-			last_error = "Unbekannter Fehler. Bitte pr�fen Sie, ob ihre Kontodaten korrekt sind.";
+			last_error = "Unbekannter Fehler. Bitte prüfen Sie, ob ihre Kontodaten korrekt sind.";
 		}
 		return res;
 
