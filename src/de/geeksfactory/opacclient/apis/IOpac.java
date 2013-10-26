@@ -250,7 +250,7 @@ public class IOpac extends BaseApi implements OpacApi {
 		} else if (doc.select("h1").size() > 0) {
 			if (doc.select("h1").text().trim().contains("RUNTIME ERROR")) {
 				//Server Error
-				last_error = "Serverfehler. Bitte probieren Sie es später noch einmal.";
+				last_error = "Serverfehler. Bitte probieren Sie es spÃ¤ter noch einmal.";
 				return null;
 			} else {
 				last_error = "Unbekannter Fehler: " + doc.select("h1").text().trim();
@@ -564,14 +564,14 @@ public class IOpac extends BaseApi implements OpacApi {
 		} else if (doc.select("h1").size() > 0) {
 			if (doc.select("h1").text().trim().contains("RUNTIME ERROR")) {
 				//Server Error
-				last_error = "Serverfehler. Bitte probieren Sie es später noch einmal.";
+				last_error = "Serverfehler. Bitte probieren Sie es spÃ¤ter noch einmal.";
 				return null;
 			} else {
-				last_error = "Unbekannter Fehler: " + doc.select("h1").text().trim() + " Bitte prüfen Sie, ob ihre Kontodaten korrekt sind.";
+				last_error = "Unbekannter Fehler: " + doc.select("h1").text().trim() + " Bitte prÃ¼fen Sie, ob ihre Kontodaten korrekt sind.";
 				return null;
 			}
 		} else {
-			last_error = "Unbekannter Fehler. Bitte prüfen Sie, ob ihre Kontodaten korrekt sind.";
+			last_error = "Unbekannter Fehler. Bitte prï¿½fen Sie, ob ihre Kontodaten korrekt sind.";
 		}
 		return res;
 
