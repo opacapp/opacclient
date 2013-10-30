@@ -1331,6 +1331,20 @@ public class SISIS extends BaseApi implements OpacApi {
 				res.setPendingFees(text);
 			}
 		}
+		Pattern p = Pattern.compile("[^0-9.]*", Pattern.MULTILINE);
+		if (doc.select(".box3").size() > 0) {
+			for (Element box : doc.select(".box3")) {
+				if (box.select("strong").size() == 1) {
+					String text = box.select("strong").text();
+					if (text.equals("Jahresgebühren")) {
+						text = box.text();
+						text = p.matcher(text).replaceAll("");
+						res.setValidUntil(text);
+					}
+				}
+
+			}
+		}
 
 		res.setLent(medien);
 		res.setReservations(reserved);

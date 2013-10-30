@@ -67,6 +67,26 @@
                 android:layout_marginBottom="4dp"
                 android:textColor="@color/account_head_fg"
                 android:textIsSelectable="true" />
+
+            <TextView
+                android:id="@+id/tvValidUntilLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/tvPendingFeesLabel"
+                android:layout_marginBottom="4dp"
+                android:text="@string/valid_until"
+                android:textColor="@color/account_head_fg" />
+
+            <TextView
+                android:id="@+id/tvValidUntil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/tvPendingFees"
+                android:layout_marginBottom="4dp"
+                android:textColor="@color/account_head_fg"
+                android:textIsSelectable="true" />
         </RelativeLayout>
 
         <TextView

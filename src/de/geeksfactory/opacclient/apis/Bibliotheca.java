@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.acra.ACRA;
 import org.apache.http.HttpResponse;
@@ -882,6 +883,10 @@ public class Bibliotheca extends BaseApi {
 								"Ausstehende Geb.+hren:[^0-9]+([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr.)",
 								"$1 $2");
 				res.setPendingFees(text);
+			}
+			if (text.matches("Ihr Ausweis ist g.ltig bis:.*")) {
+				text = text.replaceAll("Ihr Ausweis ist g.ltig bis:[^A-Za-z0-9]+", "");
+				res.setValidUntil(text);
 			}
 		}
 

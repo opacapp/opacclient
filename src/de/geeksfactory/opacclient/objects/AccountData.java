@@ -35,6 +35,7 @@ public class AccountData {
 	private List<ContentValues> reservations;
 	private long account;
 	private String pendingFees;
+	private String validUntil;
 
 	/**
 	 * Title of a lent item.
@@ -274,6 +275,24 @@ public class AccountData {
 	 */
 	public void setPendingFees(String pendingFees) {
 		this.pendingFees = pendingFees;
+	}
+
+	/**
+	 * Expiration date of a library account
+	 * 
+	 * @return A date
+	 * @since 2.0.24
+	 */
+	public String getValidUntil() {
+		return validUntil;
+	}
+
+	/**
+	 * @param validUntil
+	 *            the Expiration date of a library account
+	 */
+	public void setValidUntil(String validUntil) {
+		this.validUntil = validUntil;
 	}
 
 }
