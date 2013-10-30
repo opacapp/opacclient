@@ -45,7 +45,7 @@
     <string name="export">Details exportieren</string>
     <string name="tocollection">Zum Gesamtwerk</string>
     <string name="reserve">Vorbestellen</string>
-    <string name="lendebook">Ebook leihen</string>
+    <string name="lendebook">Ebook ausleihen</string>
     <string name="res_zst">Zweigstelle auswählen</string>
     <string name="doing_res">Führe Vorbestellung durch…</string>
     <string name="opac_error_email">Für diesen Vorgang müssen Sie leider Ihre E-Mail-Adresse in den Einstellungen hinterlegen.</string>
