@@ -212,12 +212,33 @@ public class SearchActivity extends OpacActivity {
 				Toast.makeText(this, R.string.barcode_internal_not_supported,
 						Toast.LENGTH_LONG).show();
 			} else {
+				clear();
 				((EditText) SearchActivity.this.findViewById(target_field))
 						.setText(scanResult.getContents());
 				manageVisibility();
+				go();
 			}
 
 		}
+	}
+
+	public void clear() {
+		((EditText) findViewById(R.id.etSimpleSearch)).setText("");
+		((EditText) findViewById(R.id.etTitel)).setText("");
+		((EditText) findViewById(R.id.etVerfasser)).setText("");
+		((EditText) findViewById(R.id.etSchlagA)).setText("");
+		((EditText) findViewById(R.id.etSchlagB)).setText("");
+		((EditText) findViewById(R.id.etBarcode)).setText("");
+		((EditText) findViewById(R.id.etISBN)).setText("");
+		((EditText) findViewById(R.id.etJahr)).setText("");
+		((EditText) findViewById(R.id.etJahrBis)).setText("");
+		((EditText) findViewById(R.id.etJahrVon)).setText("");
+		((EditText) findViewById(R.id.etSystematik)).setText("");
+		((EditText) findViewById(R.id.etInteressenkreis)).setText("");
+		((EditText) findViewById(R.id.etVerlag)).setText("");
+		((Spinner) findViewById(R.id.cbBranch)).setSelection(0);
+		((Spinner) findViewById(R.id.cbHomeBranch)).setSelection(0);
+		((Spinner) findViewById(R.id.cbMediengruppe)).setSelection(0);
 	}
 
 	private static boolean is_valid_isbn10(char[] digits) {
