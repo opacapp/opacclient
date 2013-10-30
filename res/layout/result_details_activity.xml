@@ -10,37 +10,31 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <LinearLayout
-            android:id="@+id/llTitle"
+        <TextView
+            android:id="@+id/tvTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:paddingBottom="8dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textIsSelectable="true" />
 
-            <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:paddingBottom="8dp"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textIsSelectable="true" />
-
-            <ImageView
-                android:id="@+id/ivCover"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:adjustViewBounds="true"
-                android:contentDescription="Cover"
-                android:gravity="center"
-                android:visibility="gone" />
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/ivCover"
+            android:layout_width="fill_parent"
+            android:layout_height="120dp"
+            android:layout_below="@id/tvTitle"
+            android:layout_centerHorizontal="true"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:contentDescription="Cover"
+            android:gravity="center"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tvDetails"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/llTitle"
+            android:layout_below="@id/ivCover"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="8dp"
             android:drawableBottom="@drawable/section_header"
