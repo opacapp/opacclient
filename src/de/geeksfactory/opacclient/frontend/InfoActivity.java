@@ -24,9 +24,12 @@ package de.geeksfactory.opacclient.frontend;
 import org.holoeverywhere.widget.ProgressBar;
 import org.json.JSONException;
 
+import android.app.Activity;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.TextView;
 
@@ -43,7 +46,10 @@ public class InfoActivity extends OpacActivity {
 		wvInfo = (WebView) findViewById(R.id.wvInfo);
 		TextView tvErr = (TextView) findViewById(R.id.tvErr);
 		wvInfo.loadData(getString(R.string.loading), "text/html", null);
+
 		try {
+			ConnectivityManager cm = (ConnectivityManager) this
+					.getSystemService(Activity.CONNECTIVITY_SERVICE);
 			String infoUrl = app.getLibrary().getData()
 					.getString("information");
 			if (infoUrl == null || infoUrl.equals("null")) {
@@ -77,8 +83,13 @@ public class InfoActivity extends OpacActivity {
 		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
 
 		wvInfo = (WebView) findViewById(R.id.wvInfo);
+
 		wvInfo.getSettings().setSupportZoom(true);
 		wvInfo.getSettings().setJavaScriptEnabled(true);
+		wvInfo.getSettings().setAppCacheMaxSize(5 * 1024 * 1024);
+		wvInfo.getSettings().setAppCacheEnabled(true);
+		wvInfo.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+
 		wvInfo.setWebChromeClient(new WebChromeClient() {
 			@Override
 			public void onProgressChanged(WebView view, int progress) {
