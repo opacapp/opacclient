@@ -77,7 +77,7 @@ public class AccountDatabase extends SQLiteOpenHelper {
 	public static final String TABLENAME_NOTIFIED = "notified";
 
 	@Override
-	public void onCreate(SQLit eDatabase db) {
+	public void onCreate(SQLiteDatabase db) {
 		db.execSQL("create table "
 				+ "accounts ( id integer primary key autoincrement,"
 				+ " bib text," + " label text," + " name text,"
