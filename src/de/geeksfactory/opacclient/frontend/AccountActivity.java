@@ -676,12 +676,15 @@ public class AccountActivity extends OpacActivity {
 
 		((TextView) findViewById(R.id.tvAccLabel)).setText(account.getLabel());
 		((TextView) findViewById(R.id.tvAccUser)).setText(account.getName());
-		TextView tvAccCity = (TextView) findViewById(R.id.tvAccCity);
+		TextView tvAccCity = null;
+		if (findViewById(R.id.tvAccCity) != null)
+			tvAccCity = (TextView) findViewById(R.id.tvAccCity);
 		Library lib;
 		try {
 			lib = ((OpacClient) getApplication()).getLibrary(account
 					.getLibrary());
-			if (tvAccCity != null && lib.getTitle() != null && !lib.getTitle().equals("null")) {
+			if (tvAccCity != null && lib.getTitle() != null
+					&& !lib.getTitle().equals("null")) {
 				tvAccCity.setText(lib.getCity() + " · " + lib.getTitle());
 			} else {
 				tvAccCity.setText(lib.getCity());
