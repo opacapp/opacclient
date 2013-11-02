@@ -43,6 +43,7 @@ public class Filter {
 		private String identifier;
 		private int results_expected;
 		private boolean is_applied;
+		private boolean is_loadnext;
 
 		/**
 		 * @return The label of the option.
@@ -103,6 +104,20 @@ public class Filter {
 		 */
 		public void setApplied(boolean is_applied) {
 			this.is_applied = is_applied;
+		}
+
+		/**
+		 * @return the is_loadnext
+		 */
+		public boolean getLoadnext() {
+			return is_loadnext;
+		}
+
+		/**
+		 * @param is_loadnext the is_loadnext to set
+		 */
+		public void setLoadnext(boolean is_loadnext) {
+			this.is_loadnext = is_loadnext;
 		}
 
 		/**
