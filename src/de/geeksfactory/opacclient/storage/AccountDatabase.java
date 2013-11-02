@@ -34,7 +34,7 @@ import de.geeksfactory.opacclient.objects.AccountData;
 public class AccountDatabase extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "accounts.db";
-	private static final int DATABASE_VERSION = 13; // REPLACE ONUPGRADE IF YOU
+	private static final int DATABASE_VERSION = 15; // REPLACE ONUPGRADE IF YOU
 													// CHANGE THIS
 
 	public static final String[] COLUMNS = { "id", "bib", "label", "name",
@@ -55,6 +55,7 @@ public class AccountDatabase extends SQLiteOpenHelper {
 		aMap.put(AccountData.KEY_LENT_LENDING_BRANCH, "lending_branch");
 		aMap.put(AccountData.KEY_LENT_LINK, "link");
 		aMap.put(AccountData.KEY_LENT_DOWNLOAD, "download");
+		aMap.put(AccountData.KEY_LENT_FORMAT, "format");
 		aMap.put(AccountData.KEY_LENT_STATUS, "status");
 		aMap.put(AccountData.KEY_LENT_TITLE, "title");
 		COLUMNS_LENT = Collections.unmodifiableMap(aMap);
@@ -76,17 +77,17 @@ public class AccountDatabase extends SQLiteOpenHelper {
 	public static final String TABLENAME_NOTIFIED = "notified";
 
 	@Override
-	public void onCreate(SQLiteDatabase db) {
+	public void onCreate(SQLit eDatabase db) {
 		db.execSQL("create table "
 				+ "accounts ( id integer primary key autoincrement,"
 				+ " bib text," + " label text," + " name text,"
-				+ " password text," + " cached integer," + " pendingFees text," + " validUntil text"
-				+ ");");
+				+ " password text," + " cached integer," + " pendingFees text,"
+				+ " validUntil text" + ");");
 		db.execSQL("create table " + "accountdata_lent ( account integer, "
 				+ "title text," + "barcode text," + "author text,"
 				+ "deadline text," + "deadline_ts integer," + "status text,"
 				+ "branch text," + "lending_branch text," + "link text,"
-				+ "download text" + ");");
+				+ "format text," + "download text" + ");");
 		db.execSQL("create table "
 				+ "accountdata_reservations ( account integer, "
 				+ "title text," + "author text," + "ready text,"
@@ -150,10 +151,13 @@ public class AccountDatabase extends SQLiteOpenHelper {
 			db.execSQL("alter table accounts add column pendingFees text");
 		}
 		if (oldVersion < 13) {
-			// App version 2.0.23 to 2.0.23
+			// App version 2.0.23 to 2.0.24
 			db.execSQL("alter table accounts add column validUntil text");
 		}
-
+		if (oldVersion < 15) {
+			// App version 2.0.23 to 2.0.24
+			db.execSQL("alter table accountdata_lent add column format text");
+		}
 
 	}
 

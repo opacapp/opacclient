@@ -3,9 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
     android:paddingRight="4dp"
-    android:paddingBottom="4dp" >
+    android:paddingTop="4dp" >
 
     <View
         android:id="@+id/strut"
@@ -58,8 +58,8 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:padding="8dp"
-        android:visibility="gone"
-        android:src="@drawable/ic_download" />
+        android:src="@drawable/ic_download"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tvVerfasser"
@@ -78,6 +78,18 @@
         android:layout_below="@id/tvVerfasser"
         android:layout_toLeftOf="@id/ivProlong"
         android:layout_toRightOf="@id/strut"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textIsSelectable="true" />
+
+    <TextView
+        android:id="@+id/tvFmt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/tvZst"
+        android:layout_toLeftOf="@id/ivProlong"
+        android:visibility="gone"
         android:ellipsize="end"
         android:singleLine="true"
         android:textIsSelectable="true" />

@@ -741,6 +741,16 @@ public class AccountActivity extends OpacActivity {
 					((TextView) v.findViewById(R.id.tvStatus))
 							.setVisibility(View.GONE);
 				}
+				if (item.containsKey(AccountData.KEY_LENT_FORMAT)) {
+					((TextView) v.findViewById(R.id.tvFmt)).setText(Html
+							.fromHtml(item
+									.getAsString(AccountData.KEY_LENT_FORMAT)));
+					((TextView) v.findViewById(R.id.tvFmt))
+							.setVisibility(View.VISIBLE);
+				} else {
+					((TextView) v.findViewById(R.id.tvFmt))
+							.setVisibility(View.GONE);
+				}
 
 				try {
 					if (notification_on

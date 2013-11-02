@@ -91,6 +91,13 @@ public class AccountData {
 	public static final String KEY_LENT_BRANCH = "homebranch";
 
 	/**
+	 * Item format. Optional.
+	 * 
+	 * ContentValues key for {@link #setLent(List)}
+	 */
+	public static final String KEY_LENT_FORMAT = "format";
+
+	/**
 	 * Library branch the item was lent from. Optional.
 	 * 
 	 * ContentValues key for {@link #setLent(List)}
