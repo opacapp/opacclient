@@ -21,7 +21,9 @@
  */
 package de.geeksfactory.opacclient.objects;
 
+import java.text.Collator;
 import java.util.Comparator;
+import java.util.Locale;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -262,9 +264,12 @@ public class Library implements Comparable<Library> {
 	}
 
 	public int compareTo(Library arg0) {
-		int g = group.compareTo(arg0.getGroup());
+		Collator deCollator = Collator.getInstance(Locale.GERMAN);
+		deCollator.setStrength(Collator.PRIMARY);
+
+		int g = deCollator.compare(group, arg0.getGroup());
 		if (g == 0)
-			g = city.compareTo(arg0.getCity());
+			g = deCollator.compare(city, arg0.getCity());
 		return g;
 	}
 
