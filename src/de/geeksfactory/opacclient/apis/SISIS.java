@@ -105,6 +105,7 @@ public class SISIS extends BaseApi implements OpacApi {
 		defaulttypes.put("8", MediaType.CD_MUSIC);
 		defaulttypes.put("12", MediaType.AUDIO_CASSETTE);
 		defaulttypes.put("13", MediaType.CD);
+		defaulttypes.put("14", MediaType.CD);
 		defaulttypes.put("15", MediaType.DVD);
 		defaulttypes.put("16", MediaType.CD);
 		defaulttypes.put("17", MediaType.MOVIE);
@@ -115,6 +116,7 @@ public class SISIS extends BaseApi implements OpacApi {
 		defaulttypes.put("22", MediaType.BOARDGAME);
 		defaulttypes.put("26", MediaType.CD);
 		defaulttypes.put("27", MediaType.CD);
+		defaulttypes.put("28", MediaType.EBOOK);
 		defaulttypes.put("37", MediaType.CD);
 		defaulttypes.put("29", MediaType.AUDIOBOOK);
 		defaulttypes.put("46", MediaType.GAME_CONSOLE_NINTENDO);
