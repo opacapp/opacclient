@@ -29,7 +29,6 @@
             "30": "EBOOK"
         }, 
         "opacdir": "opax", 
-		"reservationtable": null,
         "searchtable": [
             2, 
             3, 
