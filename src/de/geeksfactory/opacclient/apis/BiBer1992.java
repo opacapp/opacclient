@@ -845,7 +845,7 @@ public class BiBer1992 extends BaseApi {
 		AccountData res = new AccountData(account.getId());
 
 		// get media
-		List<ContentValues> medien = accountGetMedia(account);
+		List<ContentValues> medien = accountGetMedia(account, res);
 		res.setLent(medien);
 
 		// get reservations
@@ -855,7 +855,7 @@ public class BiBer1992 extends BaseApi {
 		return res;
 	}
 
-	private List<ContentValues> accountGetMedia(Account account)
+	private List<ContentValues> accountGetMedia(Account account, AccountData res)
 			throws IOException, JSONException {
 
 		List<ContentValues> medien = new ArrayList<ContentValues>();
@@ -869,6 +869,16 @@ public class BiBer1992 extends BaseApi {
 		// parse result list
 		JSONObject copymap = m_data.getJSONObject("accounttable");
 
+		Pattern expire = Pattern.compile("Ausweisg.ltigkeit: ([0-9.]+)");
+		Pattern fees = Pattern.compile("([0-9,.]+) .");
+		for (Element td : doc.select(".td01x09n")) {
+			String text = td.text().trim();
+			if (expire.matcher(text).matches()) {
+				res.setValidUntil(expire.matcher(text).replaceAll("$1"));
+			} else if (fees.matcher(text).matches()) {
+				res.setPendingFees(text);
+			}
+		}
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 		Elements rowElements = doc.select("form[name=medkl] table tr");
 
@@ -890,7 +900,7 @@ public class BiBer1992 extends BaseApi {
 					index = -1;
 				}
 				if (index >= 0) {
-					String value = tr.child(index).text();
+					String value = tr.child(index).text().trim();
 
 					// Author and Title is the same field: "autor: title"
 					// sometimes there is no ":" then only the title is given
