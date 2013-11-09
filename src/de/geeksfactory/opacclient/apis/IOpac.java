@@ -46,7 +46,6 @@ import org.jsoup.select.Elements;
 
 import android.content.ContentValues;
 import android.os.Bundle;
-import android.util.Log;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -544,9 +543,6 @@ public class IOpac extends BaseApi implements OpacApi {
 		String html = httpPost(opac_url + "/cgi-bin/di.exe",
 				new UrlEncodedFormEntity(params, "iso-8859-1"));
 		Document doc = Jsoup.parse(html);
-		
-		Log.d("Opacclient", html);
-		Log.d("Opacclient", doc.select("h4").text().trim());
 		
 		AccountData res = new AccountData(account.getId());
 			
