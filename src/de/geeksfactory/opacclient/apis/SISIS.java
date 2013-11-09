@@ -298,6 +298,8 @@ public class SISIS extends BaseApi implements OpacApi {
 					params, index);
 			index = addParameters(query, KEY_SEARCH_QUERY_AUDIENCE, "1001",
 					params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_LOCATION, "714",
+					params, index);
 
 			if (index == 0) {
 				last_error = "Es wurden keine Suchkriterien eingegeben.";

@@ -201,6 +201,14 @@ public interface OpacApi {
 	public static final String KEY_SEARCH_QUERY_BARCODE = "barcode";
 
 	/**
+	 * Item location in library. Currently  not in use.
+	 * 
+	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * {@link #getSearchFields()}.
+	 */
+	public static final String KEY_SEARCH_QUERY_LOCATION = "location";
+
+	/**
 	 * Restrict search to digital media.
 	 * 
 	 * Bundle key for {@link #search(Bundle)} and possible value for
