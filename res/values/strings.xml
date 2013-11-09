@@ -19,6 +19,7 @@
     <string name="barcode_internal_not_supported">Suche nach Buchungsnr. in dieser Bibliothek nicht unterstützt. Scanne bitte eine ISBN.</string>
     <string name="jahr">Jahr</string>
     <string name="mediengruppe">Mediengruppe</string>
+    <string name="digital">Nur digitale Medien</string>
     <string name="schlag">Schlagwörter</string>
     <string name="systematik">Systematik</string>
     <string name="go_search">Suche starten</string>

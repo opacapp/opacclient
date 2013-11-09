@@ -51,6 +51,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -236,6 +237,7 @@ public class SearchActivity extends OpacActivity {
 		((EditText) findViewById(R.id.etSystematik)).setText("");
 		((EditText) findViewById(R.id.etInteressenkreis)).setText("");
 		((EditText) findViewById(R.id.etVerlag)).setText("");
+		((CheckBox) findViewById(R.id.cbDigital)).setChecked(true);
 		((Spinner) findViewById(R.id.cbBranch)).setSelection(0);
 		((Spinner) findViewById(R.id.cbHomeBranch)).setSelection(0);
 		((Spinner) findViewById(R.id.cbMediengruppe)).setSelection(0);
@@ -365,6 +367,12 @@ public class SearchActivity extends OpacActivity {
 			findViewById(R.id.etISBN).setVisibility(View.VISIBLE);
 		} else {
 			findViewById(R.id.etISBN).setVisibility(View.GONE);
+		}
+
+		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_DIGITAL)) {
+			findViewById(R.id.cbDigital).setVisibility(View.VISIBLE);
+		} else {
+			findViewById(R.id.cbDigital).setVisibility(View.GONE);
 		}
 
 		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_ISBN)
@@ -727,6 +735,8 @@ public class SearchActivity extends OpacActivity {
 		query.putString(OpacApi.KEY_SEARCH_QUERY_YEAR_RANGE_END,
 				((EditText) SearchActivity.this.findViewById(R.id.etJahrBis))
 						.getEditableText().toString());
+		query.putBoolean(OpacApi.KEY_SEARCH_QUERY_DIGITAL,
+				((CheckBox) findViewById(R.id.cbDigital)).isChecked());
 		if (advanced) {
 			query.putString(OpacApi.KEY_SEARCH_QUERY_KEYWORDA,
 					((EditText) SearchActivity.this
