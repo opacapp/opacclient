@@ -722,6 +722,8 @@ public class AccountActivity extends OpacActivity {
 				((TextView) v.findViewById(R.id.tvStatus))
 						.setVisibility(View.VISIBLE);
 				if (item.containsKey(AccountData.KEY_LENT_STATUS)
+						&& !"".equals(item
+								.containsKey(AccountData.KEY_LENT_STATUS))
 						&& item.containsKey(AccountData.KEY_LENT_DEADLINE)) {
 					((TextView) v.findViewById(R.id.tvStatus))
 							.setText(Html.fromHtml(item
