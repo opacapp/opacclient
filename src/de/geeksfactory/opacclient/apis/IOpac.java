@@ -46,6 +46,7 @@ import org.jsoup.select.Elements;
 
 import android.content.ContentValues;
 import android.os.Bundle;
+import android.util.Log;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -544,31 +545,39 @@ public class IOpac extends BaseApi implements OpacApi {
 				new UrlEncodedFormEntity(params, "iso-8859-1"));
 		Document doc = Jsoup.parse(html);
 		
-		AccountData res = null;
+		Log.d("Opacclient", html);
+		Log.d("Opacclient", doc.select("h4").text().trim());
 		
+		AccountData res = new AccountData(account.getId());
+			
+		List<ContentValues> medien = new ArrayList<ContentValues>();
+		List<ContentValues> reserved = new ArrayList<ContentValues>();
 		if (doc.select("a[name=AUS]").size() > 0) {
-			
-			List<ContentValues> medien = new ArrayList<ContentValues>();
 			parse_medialist(medien, doc, 1);
-	
-			List<ContentValues> reserved = new ArrayList<ContentValues>();
+		}
+		if (doc.select("a[name=RES]").size() > 0) {
 			parse_reslist(reserved, doc, 1);
-	
-			res = new AccountData(account.getId());
-			res.setLent(medien);
-			res.setReservations(reserved);
-			
-		} else if (doc.select("h1").size() > 0) {
-			if (doc.select("h1").text().trim().contains("RUNTIME ERROR")) {
-				//Server Error
-				last_error = "Serverfehler. Bitte probieren Sie es später noch einmal.";
-				return null;
+		}
+		
+		res.setLent(medien);
+		res.setReservations(reserved);
+		
+		if (medien.isEmpty() && reserved.isEmpty()) {
+			if (doc.select("h1").size() > 0) {
+				if (doc.select("h4").text().trim().contains("keine ausgeliehenen Medien")) {
+					//There is no lent media, but the server is working correctly
+				} else if (doc.select("h1").text().trim().contains("RUNTIME ERROR")) {
+					//Server Error
+					last_error = "Serverfehler. Bitte probieren Sie es später noch einmal.";
+					return null;
+				} else {
+					last_error = "Unbekannter Fehler: " + doc.select("h1").text().trim() + " Bitte prüfen Sie, ob ihre Kontodaten korrekt sind.";
+					return null;
+				}
 			} else {
-				last_error = "Unbekannter Fehler: " + doc.select("h1").text().trim() + " Bitte prüfen Sie, ob ihre Kontodaten korrekt sind.";
+				last_error = "Unbekannter Fehler. Bitte prüfen Sie, ob ihre Kontodaten korrekt sind.";
 				return null;
 			}
-		} else {
-			last_error = "Unbekannter Fehler. Bitte prüfen Sie, ob ihre Kontodaten korrekt sind.";
 		}
 		return res;
 
