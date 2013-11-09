@@ -521,19 +521,29 @@ public class SISIS extends BaseApi implements OpacApi {
 			}
 			int k = 0;
 			boolean yearfound = false;
+			boolean titlefound = false;
 			for (String[] part : strings) {
 				if (!described) {
-					if (part[0] == "a" && k == 0) {
+					if (part[0] == "a" && (k == 0 || !titlefound)) {
+						if (k != 0)
+							description.append("<br />");
 						description.append("<b>" + part[2] + "</b>");
+						titlefound = true;
 					} else if (part[2].matches("\\D*[0-9]{4}\\D*")
 							&& part[2].length() <= 10) {
 						yearfound = true;
-						description.append("<br />" + part[2]);
+						if (k != 0)
+							description.append("<br />");
+						description.append(part[2]);
 					} else if (k == 1 && !yearfound
 							&& part[2].matches("^\\s*\\([0-9]{4}\\)$")) {
-						description.append("<br />" + part[2]);
+						if (k != 0)
+							description.append("<br />");
+						description.append(part[2]);
 					} else if (k < 3 && !yearfound) {
-						description.append("<br />" + part[2]);
+						if (k != 0)
+							description.append("<br />");
+						description.append(part[2]);
 					}
 				}
 				if (part.length == 4) {
@@ -1082,7 +1092,22 @@ public class SISIS extends BaseApi implements OpacApi {
 
 	protected boolean login(Account acc) {
 		String html;
+
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+
+		try {
+			String loginPage;
+			loginPage = httpGet(opac_url
+					+ "/userAccount.do?methodToCall=show&type=1", ENCODING);
+			Document loginPageDoc = Jsoup.parse(loginPage);
+			if (loginPageDoc.select("input[name=as_fid]").size() > 0)
+				nameValuePairs.add(new BasicNameValuePair("as_fid",
+						loginPageDoc.select("input[name=as_fid]").first()
+								.attr("value")));
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+
 		nameValuePairs.add(new BasicNameValuePair("username", acc.getName()));
 		nameValuePairs
 				.add(new BasicNameValuePair("password", acc.getPassword()));
