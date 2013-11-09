@@ -425,6 +425,16 @@ public class SISIS extends BaseApi implements OpacApi {
 							.replace(".png", "")));
 				}
 			}
+			String alltext = tr.text();
+			if (alltext.contains("eAudio") || alltext.contains("eMusic"))
+				sr.setType(MediaType.MP3);
+			else if (alltext.contains("eVideo"))
+				sr.setType(MediaType.EVIDEO);
+			else if (alltext.contains("eBook"))
+				sr.setType(MediaType.EBOOK);
+			else if (alltext.contains("Munzinger"))
+				sr.setType(MediaType.EDOC);
+
 			Element middlething;
 			if (tr.children().size() > 2)
 				middlething = tr.child(2);
