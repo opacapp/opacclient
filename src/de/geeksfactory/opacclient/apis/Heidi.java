@@ -28,8 +28,6 @@ import java.util.List;
 
 import org.acra.ACRA;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
@@ -49,6 +47,7 @@ import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Filter.Option;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
+import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 public class Heidi extends BaseApi implements OpacApi {
@@ -60,6 +59,8 @@ public class Heidi extends BaseApi implements OpacApi {
 	protected String sessid;
 	protected String ENCODING = "UTF-8";
 	protected String last_error;
+	protected int pagesize = 20;
+	protected Bundle lastBundle;
 
 	@Override
 	public void start() throws IOException, NotReachableException {
@@ -108,7 +109,6 @@ public class Heidi extends BaseApi implements OpacApi {
 							library.getIdent(), opt.val(), opt.text());
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -153,7 +153,7 @@ public class Heidi extends BaseApi implements OpacApi {
 	public SearchRequestResult search(Bundle query) throws IOException,
 			NotReachableException {
 
-		// TODO: Homebranch selection
+		lastBundle = query;
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
@@ -163,7 +163,11 @@ public class Heidi extends BaseApi implements OpacApi {
 		params.add(new BasicNameValuePair("fsubmit", "1"));
 		params.add(new BasicNameValuePair("sess", sessid));
 		params.add(new BasicNameValuePair("art", "f"));
-		params.add(new BasicNameValuePair("pagesize", "20"));
+		params.add(new BasicNameValuePair("pagesize", String.valueOf(pagesize)));
+		if (query.containsKey("_heidi_page")) {
+			params.add(new BasicNameValuePair("start", String.valueOf((query
+					.getInt("_heidi_page") - 1) * pagesize + 1)));
+		}
 		params.add(new BasicNameValuePair("vr", "1"));
 
 		index = addParameters(query, KEY_SEARCH_QUERY_FREE, "freitext", params,
@@ -200,37 +204,58 @@ public class Heidi extends BaseApi implements OpacApi {
 			return null;
 		}
 
+		// Homebranch auswahl
+		httpGet(opac_url + "/zweigstelle.cgi?sess=" + sessid + "&zweig="
+				+ query.getString(KEY_SEARCH_QUERY_HOME_BRANCH), ENCODING);
+		// Die eigentliche Suche
 		String html = httpGet(
 				opac_url + "/search.cgi?"
 						+ URLEncodedUtils.format(params, "UTF-8"), ENCODING);
-		// return parse_search(html, 1);
-		return null;
+		if (query.containsKey("_heidi_page")) {
+			return parse_search(html, query.getInt("_heidi_page"));
+		}
+		return parse_search(html, 1);
+	}
+
+	private SearchRequestResult parse_search(String html, int page) {
+		Document doc = Jsoup.parse(html);
+		doc.setBaseUri(opac_url);
+		List<SearchResult> results = new ArrayList<SearchResult>();
+		int results_total = 0;
+		// TODO
+		return new SearchRequestResult(results, results_total, page);
 	}
 
 	@Override
 	public SearchRequestResult filterResults(Filter filter, Option option)
 			throws IOException, NotReachableException {
-		// TODO Auto-generated method stub
+		// Not implemented
 		return null;
 	}
 
 	@Override
 	public SearchRequestResult searchGetPage(int page) throws IOException,
 			NotReachableException {
-		// TODO Auto-generated method stub
-		return null;
+		lastBundle.putInt("_heidi_page", page);
+		return search(lastBundle);
 	}
 
 	@Override
 	public DetailledItem getResultById(String id, String homebranch)
 			throws IOException, NotReachableException {
-		// TODO Auto-generated method stub
+		// TODO: Homebranch?
+		if (sessid == null)
+			start();
+		String html = httpGet(opac_url + "/titel.cgi?katkey=" + id + "&sess="
+				+ sessid, ENCODING);
+		Document doc = Jsoup.parse(html);
+		// TODO
 		return null;
 	}
 
 	@Override
 	public DetailledItem getResult(int position) throws IOException {
-		// TODO Auto-generated method stub
+		// Not implemented
 		return null;
 	}
 
@@ -270,46 +295,39 @@ public class Heidi extends BaseApi implements OpacApi {
 
 	@Override
 	public String[] getSearchFields() {
-		return new String[] { OpacApi.KEY_SEARCH_QUERY_AUTHOR,
-				OpacApi.KEY_SEARCH_QUERY_FREE, OpacApi.KEY_SEARCH_QUERY_TITLE,
-				OpacApi.KEY_SEARCH_QUERY_YEAR,
-				OpacApi.KEY_SEARCH_QUERY_KEYWORDA,
-				OpacApi.KEY_SEARCH_QUERY_SYSTEM, OpacApi.KEY_SEARCH_QUERY_ISBN,
-				OpacApi.KEY_SEARCH_QUERY_PUBLISHER,
-				OpacApi.KEY_SEARCH_QUERY_BARCODE,
-				OpacApi.KEY_SEARCH_QUERY_BRANCH,
-				OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH };
+		return new String[] { KEY_SEARCH_QUERY_AUTHOR, KEY_SEARCH_QUERY_FREE,
+				KEY_SEARCH_QUERY_TITLE, KEY_SEARCH_QUERY_YEAR,
+				KEY_SEARCH_QUERY_KEYWORDA, KEY_SEARCH_QUERY_SYSTEM,
+				KEY_SEARCH_QUERY_ISBN, KEY_SEARCH_QUERY_PUBLISHER,
+				KEY_SEARCH_QUERY_BARCODE, KEY_SEARCH_QUERY_BRANCH,
+				KEY_SEARCH_QUERY_HOME_BRANCH };
 	}
 
 	@Override
 	public String getLast_error() {
-		// TODO Auto-generated method stub
-		return null;
+		return last_error;
 	}
 
 	@Override
 	public boolean isAccountSupported(Library library) {
-		// TODO Auto-generated method stub
-		return false;
+		return false; // TODO
 	}
 
 	@Override
 	public boolean isAccountExtendable() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public String getAccountExtendableInfo(Account account) throws IOException,
 			NotReachableException {
-		// TODO Auto-generated method stub
+		// Not implemented
 		return null;
 	}
 
 	@Override
 	public String getShareUrl(String id, String title) {
-		// TODO Auto-generated method stub
-		return null;
+		return opac_url + "/titel.cgi?katkey=" + id;
 	}
 
 	@Override

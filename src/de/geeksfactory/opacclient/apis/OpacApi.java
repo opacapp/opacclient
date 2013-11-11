@@ -604,6 +604,11 @@ public interface OpacApi {
 	 * Get details for the item at <code>position</code> from last
 	 * {@link #search} or {@link #searchGetPage} call.
 	 * 
+	 * We generally prefer {@link #getResultById(String, String)}, so if you
+	 * implement <code>getResultById</code> <strong>AND</strong> <em>every</em>
+	 * search result of your driver has an id set, you can omit this method
+	 * (respectively, return null).
+	 * 
 	 * This function is always called from a background thread, you can use
 	 * blocking network operations in it.
 	 * 
