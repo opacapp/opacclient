@@ -23,12 +23,19 @@
 package de.geeksfactory.opacclient.apis;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.acra.ACRA;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,17 +44,21 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Filter.Option;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
+import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
+import de.geeksfactory.opacclient.objects.SearchResult.Status;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 public class Heidi extends BaseApi implements OpacApi {
@@ -61,11 +72,14 @@ public class Heidi extends BaseApi implements OpacApi {
 	protected String last_error;
 	protected int pagesize = 20;
 	protected Bundle lastBundle;
+	protected CookieStore cookieStore = new BasicCookieStore();
 
 	@Override
 	public void start() throws IOException, NotReachableException {
-		String html = httpGet(opac_url + "/search.cgi?art=f", ENCODING);
+		String html = httpGet(opac_url + "/search.cgi?art=f", ENCODING, false,
+				cookieStore);
 		Document doc = Jsoup.parse(html);
+		doc.setBaseUri(opac_url);
 		sessid = null;
 		for (Element link : doc.select("a")) {
 			Uri href = Uri.parse(link.absUrl("href"));
@@ -100,7 +114,8 @@ public class Heidi extends BaseApi implements OpacApi {
 
 		try {
 			Document doc2 = Jsoup.parse(httpGet(opac_url
-					+ "/zweigstelle.cgi?sess=" + sessid, ENCODING));
+					+ "/zweigstelle.cgi?sess=" + sessid, ENCODING, false,
+					cookieStore));
 			Elements home_opts = doc2.select("#zweig option");
 			for (int i = 0; i < home_opts.size(); i++) {
 				Element opt = home_opts.get(i);
@@ -157,7 +172,8 @@ public class Heidi extends BaseApi implements OpacApi {
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-		start();
+		if (sessid == null)
+			start();
 		int index = 0;
 
 		params.add(new BasicNameValuePair("fsubmit", "1"));
@@ -190,8 +206,8 @@ public class Heidi extends BaseApi implements OpacApi {
 				index);
 
 		if (query.containsKey(KEY_SEARCH_QUERY_BRANCH)
-				&& "".equals(query.getString(KEY_SEARCH_QUERY_BRANCH))) {
-			params.add(new BasicNameValuePair("f[tiel2]", query
+				&& !"".equals(query.getString(KEY_SEARCH_QUERY_BRANCH))) {
+			params.add(new BasicNameValuePair("f[teil2]", query
 					.getString(KEY_SEARCH_QUERY_BRANCH)));
 		}
 
@@ -203,14 +219,23 @@ public class Heidi extends BaseApi implements OpacApi {
 			last_error = "Diese Bibliothek unterstützt nur bis zu drei benutzte Suchkriterien.";
 			return null;
 		}
+		while (index < 3) {
+			index++;
+			if (index != 3)
+				params.add(new BasicNameValuePair("op" + index, "AND"));
+			params.add(new BasicNameValuePair("kat" + index, "freitext"));
+			params.add(new BasicNameValuePair("var" + index, ""));
+		}
 
 		// Homebranch auswahl
 		httpGet(opac_url + "/zweigstelle.cgi?sess=" + sessid + "&zweig="
-				+ query.getString(KEY_SEARCH_QUERY_HOME_BRANCH), ENCODING);
+				+ query.getString(KEY_SEARCH_QUERY_HOME_BRANCH), ENCODING,
+				false, cookieStore);
 		// Die eigentliche Suche
 		String html = httpGet(
 				opac_url + "/search.cgi?"
-						+ URLEncodedUtils.format(params, "UTF-8"), ENCODING);
+						+ URLEncodedUtils.format(params, "UTF-8"), ENCODING,
+				false, cookieStore);
 		if (query.containsKey("_heidi_page")) {
 			return parse_search(html, query.getInt("_heidi_page"));
 		}
@@ -220,8 +245,117 @@ public class Heidi extends BaseApi implements OpacApi {
 	private SearchRequestResult parse_search(String html, int page) {
 		Document doc = Jsoup.parse(html);
 		doc.setBaseUri(opac_url);
-		List<SearchResult> results = new ArrayList<SearchResult>();
+
 		int results_total = 0;
+		if (doc.select("#heiditreffer").size() > 0) {
+			String resstr = doc.select("#heiditreffer").text();
+			String resnum = resstr.replaceAll("\\(([0-9.]+)([^0-9]*)\\)", "$1")
+					.replace(".", "");
+			results_total = Integer.parseInt(resnum);
+		}
+
+		Elements table = doc.select("table.treffer tr");
+		List<SearchResult> results = new ArrayList<SearchResult>();
+		for (int i = 0; i < table.size(); i++) {
+			Element tr = table.get(i);
+			SearchResult sr = new SearchResult();
+
+			StringBuilder description = null;
+			String author = "";
+
+			for (Element link : tr.select("a")) {
+				Uri href = Uri.parse(link.absUrl("href"));
+				String kk = href.getQueryParameter("katkey");
+				if (kk != null) {
+					sr.setId(kk);
+					break;
+				}
+			}
+
+			if (tr.select("span.Z3988").size() == 1) {
+				// Luckily there is a <span class="Z3988"> item which provides
+				// data in a standardized format.
+				List<NameValuePair> z3988data;
+				boolean hastitle = false;
+				try {
+					description = new StringBuilder();
+					z3988data = URLEncodedUtils.parse(new URI("http://dummy/?"
+							+ tr.select("span.Z3988").attr("title")), "UTF-8");
+					for (NameValuePair nv : z3988data) {
+						if (nv.getValue() != null) {
+							if (!nv.getValue().trim().equals("")) {
+								if (nv.getName().equals("rft.btitle")
+										&& !hastitle) {
+									description.append("<b>" + nv.getValue()
+											+ "</b>");
+									hastitle = true;
+								} else if (nv.getName().equals("rft.atitle")
+										&& !hastitle) {
+									description.append("<b>" + nv.getValue()
+											+ "</b>");
+									hastitle = true;
+								} else if (nv.getName().equals("rft.au")) {
+									author = nv.getValue();
+								} else if (nv.getName().equals("rft.aufirst")) {
+									author = author + ", " + nv.getValue();
+								} else if (nv.getName().equals("rft.aulast")) {
+									author = nv.getValue();
+								} else if (nv.getName().equals("rft.date")) {
+									description
+											.append("<br />" + nv.getValue());
+								}
+							}
+						}
+					}
+				} catch (URISyntaxException e) {
+					description = null;
+				}
+			}
+			if (!"".equals(author))
+				author = author + "<br />";
+			sr.setInnerhtml(author + description.toString());
+
+			if (tr.select(".kurzstat").size() > 0) {
+				String stattext = tr.select(".kurzstat").first().text();
+				if (stattext.contains("ausleihbar"))
+					sr.setStatus(Status.GREEN);
+				else if (stattext.contains("online"))
+					sr.setStatus(Status.GREEN);
+				else if (stattext.contains("entliehen"))
+					sr.setStatus(Status.RED);
+				else if (stattext.contains("Präsenznutzung"))
+					sr.setStatus(Status.YELLOW);
+				else if (stattext.contains("bestellen"))
+					sr.setStatus(Status.YELLOW);
+			}
+			if (tr.select(".typbild").size() > 0) {
+				String typtext = tr.select(".typbild").first().text();
+				if (typtext.contains("Buch"))
+					sr.setType(MediaType.BOOK);
+				else if (typtext.contains("DVD-ROM"))
+					sr.setType(MediaType.CD_SOFTWARE);
+				else if (typtext.contains("Online-Ressource"))
+					sr.setType(MediaType.EDOC);
+				else if (typtext.contains("DVD"))
+					sr.setType(MediaType.DVD);
+				else if (typtext.contains("Film"))
+					sr.setType(MediaType.MOVIE);
+				else if (typtext.contains("Zeitschrift"))
+					sr.setType(MediaType.MAGAZINE);
+				else if (typtext.contains("Musiknoten"))
+					sr.setType(MediaType.SCORE_MUSIC);
+				else if (typtext.contains("Bildliche Darstellung"))
+					sr.setType(MediaType.ART);
+				else if (typtext.contains("Zeitung"))
+					sr.setType(MediaType.NEWSPAPER);
+				else if (typtext.contains("Karte"))
+					sr.setType(MediaType.MAP);
+				else if (typtext.contains("Mehrteilig"))
+					sr.setType(MediaType.PACKAGE_BOOKS);
+			}
+
+			results.add(sr);
+		}
 		// TODO
 		return new SearchRequestResult(results, results_total, page);
 	}
@@ -241,16 +375,67 @@ public class Heidi extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public DetailledItem getResultById(String id, String homebranch)
+	public DetailledItem getResultById(String id, final String homebranch)
 			throws IOException, NotReachableException {
-		// TODO: Homebranch?
+
 		if (sessid == null)
 			start();
+
+		// Homebranch
+		if (homebranch != null && !"".equals(homebranch))
+			cookieStore.addCookie(new BasicClientCookie("zweig", homebranch));
+
 		String html = httpGet(opac_url + "/titel.cgi?katkey=" + id + "&sess="
-				+ sessid, ENCODING);
+				+ sessid, ENCODING, false, cookieStore);
 		Document doc = Jsoup.parse(html);
-		// TODO
-		return null;
+
+		DetailledItem item = new DetailledItem();
+		item.setId(id);
+
+		Elements table = doc.select(".titelsatz tr");
+		for (Element tr : table) {
+			if(tr.select("th").size() == 0 || tr.select("td").size() == 0)
+				continue;
+			String d = tr.select("th").first().text();
+			String c = tr.select("td").first().text();
+			if (d.equals("Titel:")) {
+				item.setTitle(c);
+			} else if (d.contains("URL") || d.contains("Link")) {
+				item.addDetail(new Detail(d, tr.select("td").first().html(),
+						true));
+			} else {
+				item.addDetail(new Detail(d, c));
+			}
+		}
+
+		if (doc.select(".ex table tr").size() > 0) {
+			table = doc.select(".ex table tr");
+			for (Element tr : table) {
+				if (tr.hasClass("exueber") || tr.select(".exsig").size() == 0
+						|| tr.select(".exso").size() == 0
+						|| tr.select(".exstatus").size() == 0)
+					continue;
+				ContentValues e = new ContentValues();
+				e.put(DetailledItem.KEY_COPY_SHELFMARK, tr.select(".exsig")
+						.first().text());
+				e.put(DetailledItem.KEY_COPY_BRANCH, tr.select(".exso").first()
+						.text());
+				String status = tr.select(".exstatus").first().text();
+				if (status.contains("entliehen bis")) {
+					e.put(DetailledItem.KEY_COPY_RETURN, status.replaceAll(
+							"entliehen bis ([0-9.]+) .*", "$1"));
+					e.put(DetailledItem.KEY_COPY_RESERVATIONS, status
+							.replaceAll(".*\\(.*Vormerkungen: ([0-9]+)\\)",
+									"$1"));
+					e.put(DetailledItem.KEY_COPY_STATUS, "entliehen");
+				} else {
+					e.put(DetailledItem.KEY_COPY_STATUS, status);
+				}
+				item.addCopy(e);
+			}
+		}
+
+		return item;
 	}
 
 	@Override

@@ -29,6 +29,7 @@ package de.geeksfactory.opacclient.objects;
 public class Detail {
 	private String desc;
 	private String content;
+	private boolean html;
 
 	/**
 	 * Create a new detail
@@ -42,6 +43,20 @@ public class Detail {
 		super();
 		this.desc = desc;
 		this.content = content;
+	}
+	/**
+	 * Create a new detail
+	 * 
+	 * @param desc
+	 *            Description
+	 * @param content
+	 *            Content
+	 */
+	public Detail(String desc, String content, boolean html) {
+		super();
+		this.desc = desc;
+		this.content = content;
+		this.html = true;
 	}
 
 	/**
@@ -84,6 +99,18 @@ public class Detail {
 		this.content = content;
 	}
 
+	/**
+	 * @return the html
+	 */
+	public boolean isHtml() {
+		return html;
+	}
+	/**
+	 * @param html the html to set
+	 */
+	public void setHtml(boolean html) {
+		this.html = html;
+	}
 	@Override
 	public String toString() {
 		return "Detail [desc=" + desc + ", content=" + content + "]";
