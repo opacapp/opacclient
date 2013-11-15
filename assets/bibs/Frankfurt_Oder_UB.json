@@ -1,0 +1,15 @@
+{
+    "api": "sisis", 
+    "city": "Frankfurt (Oder)", 
+    "data": {
+        "baseurl": "http://saturn2.euv-frankfurt-o.de:8080/webOPACClient", 
+        "information": "http://www.ub.europa-uni.de/de/index.html"
+    }, 
+    "geo": [
+        52.342491, 
+        14.53813
+    ], 
+    "group": "Brandenburg", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Europa-Universit\u00e4t"
+}
