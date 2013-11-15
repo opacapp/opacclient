@@ -885,7 +885,11 @@ public class Bibliotheca extends BaseApi {
 				res.setPendingFees(text);
 			}
 			if (text.matches("Ihr Ausweis ist g.ltig bis:.*")) {
-				text = text.replaceAll("Ihr Ausweis ist g.ltig bis:[^A-Za-z0-9]+", "");
+				text = text.replaceAll(
+						"Ihr Ausweis ist g.ltig bis:[^A-Za-z0-9]+", "");
+				res.setValidUntil(text);
+			} else if (text.matches("Ausweis g.ltig bis:.*")) {
+				text = text.replaceAll("Ausweis g.ltig bis:[^A-Za-z0-9]+", "");
 				res.setValidUntil(text);
 			}
 		}
