@@ -417,10 +417,17 @@ public class Pica extends BaseApi implements OpacApi {
 		String titleAndSubtitle = "";
 		if (doc.select("td.preslabel:contains(Titel) + td.presvalue").size() > 0) {
 			titleAndSubtitle = doc.select("td.preslabel:contains(Titel) + td.presvalue").first().text().trim();
-			String title = titleAndSubtitle.substring(0, titleAndSubtitle.indexOf("/")).trim();
-			result.setTitle(title);
-			
-			String subtitle = titleAndSubtitle.substring(titleAndSubtitle.indexOf("/") + 1).trim();
+			int slashPosition = titleAndSubtitle.indexOf("/");
+			String title;
+			String subtitle;
+			if (slashPosition > 0) {
+				title = titleAndSubtitle.substring(0, slashPosition).trim();
+				subtitle = titleAndSubtitle.substring(slashPosition + 1).trim();
+			} else {
+				title = titleAndSubtitle;
+				subtitle = "";
+			}
+			result.setTitle(title);			
 			result.addDetail(new Detail("Titelzusatz", subtitle));
 		} else if (doc.select("td.preslabel:contains(Aufsatz) + td.presvalue").size() > 0) {
 			titleAndSubtitle = doc.select("td.preslabel:contains(Aufsatz) + td.presvalue").first().text().trim();
