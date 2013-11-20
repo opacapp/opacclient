@@ -88,15 +88,18 @@ public class Bibliotheca extends BaseApi {
 	static {
 		defaulttypes.put("mbuchs", MediaType.BOOK);
 		defaulttypes.put("cdkl", MediaType.CD);
+		defaulttypes.put("cd", MediaType.CD);
 		defaulttypes.put("cdromkl", MediaType.CD_SOFTWARE);
 		defaulttypes.put("mcdroms", MediaType.CD);
 		defaulttypes.put("ekl", MediaType.EBOOK);
 		defaulttypes.put("emedium", MediaType.EBOOK);
 		defaulttypes.put("monleihe", MediaType.EBOOK);
+		defaulttypes.put("mdivis", MediaType.EBOOK);
 		defaulttypes.put("mbmonos", MediaType.PACKAGE_BOOKS);
 		defaulttypes.put("mbuechers", MediaType.PACKAGE_BOOKS);
 		defaulttypes.put("mdvds", MediaType.DVD);
 		defaulttypes.put("mdvd", MediaType.DVD);
+		defaulttypes.put("Blu-Ray--Disc_s_35x35", MediaType.BLURAY);
 		defaulttypes.put("mfilms", MediaType.MOVIE);
 		defaulttypes.put("mvideos", MediaType.MOVIE);
 		defaulttypes.put("mhoerbuchs", MediaType.AUDIOBOOK);
