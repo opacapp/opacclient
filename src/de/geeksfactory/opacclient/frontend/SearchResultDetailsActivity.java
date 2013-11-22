@@ -240,7 +240,8 @@ public class SearchResultDetailsActivity extends OpacActivity {
 								public void onClick(DialogInterface dialog,
 										int id) {
 									adialog.dismiss();
-									MainPreferenceActivity.openAccountList(SearchResultDetailsActivity.this);
+									MainPreferenceActivity
+											.openAccountList(SearchResultDetailsActivity.this);
 								}
 							});
 			adialog = builder.create();
@@ -421,7 +422,8 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
 		if (result.getDetails().size() == 1
 				&& result.getDetails().get(0).length == 1) {
-			((RelativeLayout) view.findViewById(R.id.rlConfirm)).removeView(table);
+			((RelativeLayout) view.findViewById(R.id.rlConfirm))
+					.removeView(table);
 			TextView tv = new TextView(this);
 			tv.setText(result.getDetails().get(0)[0]);
 			tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
@@ -885,7 +887,9 @@ public class SearchResultDetailsActivity extends OpacActivity {
 							((TextView) v.findViewById(R.id.tvVorbestellt))
 									.setVisibility(View.GONE);
 						}
-						if (copy.containsKey(DetailledItem.KEY_COPY_RETURN)) {
+						if (copy.containsKey(DetailledItem.KEY_COPY_RETURN)
+								&& !"".equals(copy
+										.getAsString(DetailledItem.KEY_COPY_RETURN))) {
 							((TextView) v.findViewById(R.id.tvRueckgabe))
 									.setText(getString(R.string.ret)
 											+ ": "
