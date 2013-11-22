@@ -2,6 +2,16 @@
     "api": "bibliotheca", 
     "city": "\u00d6hringen", 
     "data": {
+        "accounttable": {
+            "author": 0, 
+            "barcode": -1, 
+            "homebranch": -1, 
+            "lendingbranch": -1, 
+            "prolongurl": 4, 
+            "returndate": 2, 
+            "status": 3, 
+            "title": 1
+        }, 
         "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-oehringen", 
         "copiestable": {
             "barcode": -1, 
@@ -12,13 +22,21 @@
             "returndate": 3, 
             "status": 2
         }, 
-        "information": "http://www.stadtbuecherei-oehringen.de/"
+        "information": "http://www.stadtbuecherei-oehringen.de/",
+        "reservationtable": {
+            "author": 0, 
+            "availability": 2, 
+            "branch": -1, 
+            "cancelurl": 4, 
+            "expirationdate": 3, 
+            "title": 1
+        }
     }, 
     "geo": [
         49.199931, 
         9.5029492
     ], 
     "group": "Baden-W\u00fcrttemberg", 
-    "support": "Katalogsuche", 
+    "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

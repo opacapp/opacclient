@@ -2,6 +2,16 @@
     "api": "biber1992", 
     "city": "Neu-Isenburg", 
     "data": {
+        "accounttable": {
+            "author": 7, 
+            "barcode": 4, 
+            "homebranch": -1, 
+            "lendingbranch": -1, 
+            "prolongurl": 4, 
+            "returndate": 3, 
+            "status": 5, 
+            "title": 7
+        }, 
         "baseurl": "http://217.91.45.155", 
         "information": "http://www.neu-isenburg.de/erlebniswelt/stadtbibliothek",
         "mediatypes": {
@@ -33,6 +43,6 @@
         8.6952638
     ], 
     "group": "Hessen", 
-    "support": "Katalogsuche", 
+    "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }
