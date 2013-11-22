@@ -443,9 +443,29 @@ public class SearchActivity extends OpacActivity {
 	}
 
 	private void fillComboBoxes() {
-		// TODO: Preserve previously selected values
+
 		Spinner cbZst = (Spinner) findViewById(R.id.cbBranch);
 		Spinner cbZstHome = (Spinner) findViewById(R.id.cbHomeBranch);
+		Spinner cbMg = (Spinner) findViewById(R.id.cbMediengruppe);
+
+		String zst_home_before = "";
+		String zst_before = "";
+		String mg_before = "";
+		String selection;
+		int selected = 0, i = 0;
+
+		if (cbZstHome_data != null && cbZstHome_data.size() > 0) {
+			zst_home_before = cbZstHome_data.get(
+					cbZstHome.getSelectedItemPosition()).getAsString("key");
+		}
+		if (cbZst_data != null && cbZst_data.size() > 1) {
+			zst_before = cbZst_data.get(cbZst.getSelectedItemPosition())
+					.getAsString("key");
+		}
+		if (cbMg_data != null && cbMg_data.size() > 1) {
+			mg_before = cbMg_data.get(cbMg.getSelectedItemPosition())
+					.getAsString("key");
+		}
 
 		MetaDataSource data = new SQLMetaDataSource(this);
 		data.open();
@@ -459,22 +479,37 @@ public class SearchActivity extends OpacActivity {
 		cbZst_data.add(0, all);
 		cbZst.setAdapter(new MetaAdapter(this, cbZst_data,
 				R.layout.simple_spinner_item));
+		if (!"".equals(zst_before)) {
+			for (ContentValues row : cbZst_data) {
+				if (row.getAsString("key").equals(zst_before)) {
+					selected = i;
+				}
+				i++;
+			}
+			cbZst.setSelection(selected);
+		}
 
 		cbZstHome_data = data.getMeta(app.getLibrary().getIdent(),
 				MetaDataSource.META_TYPE_HOME_BRANCH);
-		int selected = 0;
-		String selection;
-		if (sp.contains(OpacClient.PREF_HOME_BRANCH_PREFIX))
-			selection = sp.getString(OpacClient.PREF_HOME_BRANCH_PREFIX
-					+ app.getAccount().getId(), "");
-		else {
-			try {
-				selection = app.getLibrary().getData().getString("homebranch");
-			} catch (JSONException e) {
-				selection = "";
+		selected = 0;
+		i = 0;
+		if (!"".equals(zst_home_before)) {
+			selection = zst_home_before;
+		} else {
+			if (sp.contains(OpacClient.PREF_HOME_BRANCH_PREFIX
+					+ app.getAccount().getId()))
+				selection = sp.getString(OpacClient.PREF_HOME_BRANCH_PREFIX
+						+ app.getAccount().getId(), "");
+			else {
+				try {
+					selection = app.getLibrary().getData()
+							.getString("homebranch");
+				} catch (JSONException e) {
+					selection = "";
+				}
 			}
 		}
-		int i = 0;
+
 		for (ContentValues row : cbZstHome_data) {
 			if (row.getAsString("key").equals(selection)) {
 				selected = i;
@@ -485,12 +520,22 @@ public class SearchActivity extends OpacActivity {
 				R.layout.simple_spinner_item));
 		cbZstHome.setSelection(selected);
 
-		Spinner cbMg = (Spinner) findViewById(R.id.cbMediengruppe);
 		cbMg_data = data.getMeta(app.getLibrary().getIdent(),
 				MetaDataSource.META_TYPE_CATEGORY);
 		cbMg_data.add(0, all);
 		cbMg.setAdapter(new MetaAdapter(this, cbMg_data,
 				R.layout.simple_spinner_item));
+		if (!"".equals(mg_before)) {
+			selected = 0;
+			i = 0;
+			for (ContentValues row : cbZst_data) {
+				if (row.getAsString("key").equals(zst_before)) {
+					selected = i;
+				}
+				i++;
+			}
+			cbZst.setSelection(selected);
+		}
 
 		if ((cbZst_data.size() == 1 || !fields
 				.contains(OpacApi.KEY_SEARCH_QUERY_BRANCH))
