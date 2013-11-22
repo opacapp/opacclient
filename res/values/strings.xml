@@ -132,7 +132,7 @@
     <string name="share_wait">Bitte warten, bis die Details geladen wurden</string>
     <string name="share_notsupported">In dieser Bibliothek nicht unterstützt</string>
     <string name="unsupported">Funktion nicht unterstützt</string>
-    <string name="account_unsupported_api">Diese Funktion wird in deiner Bibliothek noch nicht unterstützt. Um das zu ändern brauchen wir Hilfe von Lesern dieser Bibliothek. Wenn du helfen möchtest, melde dich unter raphael@geeksfactory.de</string>
+    <string name="account_unsupported_api">Diese Funktion wird in deiner Bibliothek noch nicht unterstützt. Um das zu ändern brauchen wir Hilfe von Lesern dieser Bibliothek. Wenn du helfen möchtest, melde dich unter info@opacapp.de</string>
     <string name="account_unsupported">Diese Funktion wird in deiner Bibliothek noch nicht unterstützt. Um das zu ändern brauchen wir Hilfe von Lesern dieser Bibliothek: Wenn du auf „Bericht senden“ klickst, können wir versuchen, das im nächsten Update zu ändern. Wir kennen dann eventuell deine Ausweisnummer und was du für Bücher ausgeliehen hast (nicht dein Passwort, nicht deinen Namen und auch sonst nichts zu deiner Person!) aber wir gehen mit den Daten verantwortungsbewusst um und löschen sie, sobald wir sie ausgewertet haben.</string>
     <string name="info">Infos</string>
     <string name="write_mail">E-Mail schreiben</string>
