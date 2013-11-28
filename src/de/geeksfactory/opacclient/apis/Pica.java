@@ -23,6 +23,8 @@ package de.geeksfactory.opacclient.apis;
 
 import java.io.IOException;
 import java.net.URI;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +33,9 @@ import java.util.regex.Pattern;
 
 import org.acra.ACRA;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.message.BasicNameValuePair;
@@ -46,6 +50,7 @@ import org.jsoup.select.Elements;
 
 import android.content.ContentValues;
 import android.os.Bundle;
+import android.util.Log;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -514,7 +519,85 @@ public class Pica extends BaseApi implements OpacApi {
 	@Override
 	public AccountData account(Account account) throws IOException,
 			JSONException {
-		return null;
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("ACT", "UI_DATA"));
+		params.add(new BasicNameValuePair("HOST_NAME", ""));
+		params.add(new BasicNameValuePair("HOST_PORT", ""));
+		params.add(new BasicNameValuePair("HOST_SCRIPT", ""));
+		params.add(new BasicNameValuePair("LOGIN", "KNOWNUSER"));
+		params.add(new BasicNameValuePair("STATUS", "HML_OK"));
+		
+		params.add(new BasicNameValuePair("BOR_U", account.getName()));
+		params.add(new BasicNameValuePair("BOR_PW", account.getPassword()));
+
+		String html = httpPost("https://lhopc4.ub.uni-kiel.de/loan/DB=1/LNG=DU/USERINFO",
+				new UrlEncodedFormEntity(params, "utf-8"));
+		Document doc = Jsoup.parse(html);
+		
+		Log.d("OPACCLIENT", html.substring(html.indexOf("tab0")));
+		
+		String pwEncoded = doc.select("a.tab0").attr("href");
+		pwEncoded = pwEncoded.substring(pwEncoded.indexOf("PW_ENC=") + 7);
+		
+		html = httpGet(opac_url + "/loan/DB=1/USERINFO?ACT=UI_LOL&BOR_U=" + account.getName() + "&BOR_PW_ENC=" + pwEncoded);
+		doc = Jsoup.parse(html);
+		
+		Log.d("OPACCLIENT", html);
+		
+		AccountData res = new AccountData(account.getId());
+			
+		List<ContentValues> medien = new ArrayList<ContentValues>();
+		List<ContentValues> reserved = new ArrayList<ContentValues>();
+		if (doc.select("tr[valign=top] ~ table[summary=list of loans - data]").size() > 0) {
+			parse_medialist(medien, doc, 1);
+		}
+//		if (doc.select("a[name=RES]").size() > 0) {
+//			parse_reslist(reserved, doc, 1);
+//		}
+		
+		res.setLent(medien);
+		res.setReservations(reserved);
+		
+		if (medien.isEmpty() && reserved.isEmpty()) {
+				last_error = "Unbekannter Fehler. Bitte pruefen Sie, ob ihre Kontodaten korrekt sind.";
+				Log.d("OPACCLIENT", html);
+				return null;
+		}
+		return res;
+
+	}
+	
+	protected void parse_medialist(List<ContentValues> medien, Document doc,
+			int offset) throws ClientProtocolException, IOException {
+		
+			Elements copytrs = doc.select("tr[valign=top] ~ table[summary=list of loans - data]");
+			doc.setBaseUri(opac_url);
+	
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+			
+			int trs = copytrs.size();
+			if (trs < 1)
+				return;
+			assert (trs > 0);
+			for (int i = 0; i < trs - 1; i++) {
+				Element tr = copytrs.get(i);
+				ContentValues e = new ContentValues();
+	
+				e.put(AccountData.KEY_LENT_TITLE, tr.child(4).text().trim());
+				e.put(AccountData.KEY_LENT_STATUS, tr.child(13).text().trim());
+				e.put(AccountData.KEY_LENT_DEADLINE, tr.child(21).text().trim());
+				try {
+					e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
+							sdf.parse(e.getAsString(AccountData.KEY_LENT_DEADLINE))
+									.getTime());
+				} catch (ParseException e1) {
+					e1.printStackTrace();
+				}
+				e.put(AccountData.KEY_LENT_LINK, i);
+	
+				medien.add(e);
+			}
+			assert (medien.size() == trs - 1);
 	}
 
 	@Override
@@ -532,7 +615,7 @@ public class Pica extends BaseApi implements OpacApi {
 
 	@Override
 	public boolean isAccountSupported(Library library) {
-		return false;
+		return !library.getData().isNull("accountSupported");
 	}
 
 	@Override

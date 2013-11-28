@@ -4,7 +4,8 @@
     "data": {
         "baseurl": "http://kiopc4.ub.uni-kiel.de:8080/",
         "information": "http://www.ub.uni-kiel.de/",
-        "db": "1"
+        "db": "1",
+        "accountSupported": true
     },
     "geo": [
         54.3462487,
