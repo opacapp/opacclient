@@ -51,6 +51,7 @@ import android.util.Log;
 import android.preference.PreferenceManager;
 import de.geeksfactory.opacclient.apis.BiBer1992;
 import de.geeksfactory.opacclient.apis.Bibliotheca;
+import de.geeksfactory.opacclient.apis.Bibliotheca24;
 import de.geeksfactory.opacclient.apis.IOpac;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.Pica;
@@ -106,7 +107,7 @@ public class OpacClient extends Application {
 	public Class getSearchResultsActivityClass() {
 		return SearchResultsActivity.class;
 	}
-	
+
 	public void startSearch(Activity caller, Bundle query) {
 		Intent myIntent = new Intent(caller, SearchResultsActivity.class);
 		myIntent.putExtra("query", query);
@@ -125,6 +126,8 @@ public class OpacClient extends Application {
 		if (lib.getApi().equals("bond26") || lib.getApi().equals("bibliotheca"))
 			// Backwardscompatibility
 			newApiInstance = new Bibliotheca();
+		else if (lib.getApi().equals("bibliotheca24"))
+			newApiInstance = new Bibliotheca24();
 		else if (lib.getApi().equals("oclc2011")
 				|| lib.getApi().equals("sisis"))
 			// Backwards compatibility
@@ -260,10 +263,11 @@ public class OpacClient extends Application {
 			json = builder.toString();
 			try {
 				Library lib = Library.fromJSON(files[i].replace(".json", ""),
-											   new JSONObject(json));
+						new JSONObject(json));
 				libs.add(lib);
 			} catch (JSONException e) {
-				Log.w("JSON library files", "Failed parsing library " + files[i]);
+				Log.w("JSON library files", "Failed parsing library "
+						+ files[i]);
 				e.printStackTrace();
 			}
 		}
@@ -272,8 +276,7 @@ public class OpacClient extends Application {
 	}
 
 	public void toPrefs(Activity activity) {
-		Intent intent = new Intent(activity,
-				MainPreferenceActivity.class);
+		Intent intent = new Intent(activity, MainPreferenceActivity.class);
 		activity.startActivity(intent);
 	}
 

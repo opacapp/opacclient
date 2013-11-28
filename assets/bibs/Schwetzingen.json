@@ -1,0 +1,38 @@
+{
+    "api": "bibliotheca24", 
+    "city": "Schwetzingen", 
+    "data": {
+        "accounttable": {
+            "author": 0, 
+            "prolongurl": 3, 
+            "returndate": 2, 
+            "title": 1
+        }, 
+        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-schwetzingen", 
+        "copiestable": {
+            "branch": 0, 
+            "location": 1, 
+            "returndate": 3, 
+            "status": 2
+        }, 
+        "information": "www.schwetzingen.de/pb/,Lde/120127.html", 
+        "mediatypes": {
+            "mCDROMS.gif": "CD_SOFTWARE", 
+            "mCasetteS.gif": "AUDIO_CASSETTE", 
+            "mMusikcdS.gif": "CD_MUSIC", 
+            "mReise2S.gif": "MAP"
+        }, 
+        "reservationtable": {
+            "author": 0, 
+            "cancelurl": 2, 
+            "title": 1
+        }
+    }, 
+    "geo": [
+        49.3852193, 
+        8.5722445
+    ], 
+    "group": "Baden-W\u00fcrttemberg", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Stadtbibliothek"
+}
