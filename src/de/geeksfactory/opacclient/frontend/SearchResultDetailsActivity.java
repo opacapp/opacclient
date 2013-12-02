@@ -698,7 +698,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			try {
 				DetailledItem res = app.getApi().getResult(nr);
 				URL newurl;
-				if (res.getCover() != null) {
+				if (res.getCover() != null && res.getCoverBitmap() == null) {
 					try {
 						newurl = new URL(res.getCover());
 						Bitmap mIcon_val = BitmapFactory.decodeStream(newurl

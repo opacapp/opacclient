@@ -652,6 +652,7 @@ public class SISIS extends BaseApi implements OpacApi {
 
 	protected DetailledItem parse_result(String html) throws IOException {
 		Document doc = Jsoup.parse(html);
+		doc.setBaseUri(opac_url);
 
 		String html2 = httpGet(opac_url
 				+ "/singleHit.do?methodToCall=activateTab&tab=showTitleActive",
@@ -707,6 +708,7 @@ public class SISIS extends BaseApi implements OpacApi {
 
 		if (doc.select(".data td img").size() == 1) {
 			result.setCover(doc.select(".data td img").first().attr("abs:src"));
+			downloadCover(result);
 		}
 
 		if (doc.select(".aw_teaser_title").size() == 1) {

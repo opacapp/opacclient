@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
@@ -37,9 +38,13 @@ import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.EntityUtils;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.networking.HTTPClient;
+import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
@@ -117,6 +122,31 @@ public abstract class BaseApi implements OpacApi {
 	public String httpGet(String url) throws ClientProtocolException,
 			IOException {
 		return httpGet(url, getDefaultEncoding(), false, null);
+	}
+
+	public void downloadCover(DetailledItem item) {
+		if (item.getCover() == null)
+			return;
+		HttpGet httpget = new HttpGet(item.getCover());
+		HttpResponse response;
+
+		try {
+			response = http_client.execute(httpget);
+
+			if (response.getStatusLine().getStatusCode() >= 400) {
+				return;
+			}
+			HttpEntity entity = response.getEntity();
+			byte[] bytes = EntityUtils.toByteArray(entity);
+
+			Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0,
+					bytes.length);
+			item.setCoverBitmap(bitmap);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
+		}
 	}
 
 	/**
