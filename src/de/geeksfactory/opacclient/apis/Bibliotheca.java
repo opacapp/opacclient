@@ -573,6 +573,14 @@ public class Bibliotheca extends BaseApi {
 							.getElementsByClass("kontomeldung").get(0).text()
 							.trim() });
 				}
+				Pattern p = Pattern.compile("geb.hr", Pattern.MULTILINE);
+				for (Element div : doc.select(".kontozeile_center")) {
+					String text = div.text();
+					if (p.matcher(text).find() && !text.contains("usstehend")
+							&& text.contains("orbestellung")) {
+						details.add(new String[] { text.trim() });
+					}
+				}
 
 				for (Element row : doc.select(".kontozeile_center table tr")) {
 					if (row.select(".konto_feld").size() == 1
