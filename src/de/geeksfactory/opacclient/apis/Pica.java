@@ -50,7 +50,6 @@ import org.jsoup.select.Elements;
 
 import android.content.ContentValues;
 import android.os.Bundle;
-import android.util.Log;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -71,6 +70,7 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
 public class Pica extends BaseApi implements OpacApi {
 	
 	protected String opac_url = "";
+	protected String https_url = "";
 	protected JSONObject data;
 	protected MetaDataSource metadata;
 	protected boolean initialised = false;
@@ -81,6 +81,7 @@ public class Pica extends BaseApi implements OpacApi {
 	protected String reusehtml;
 	protected Integer searchSet;
 	protected String db;
+	protected String pwEncoded;
 	CookieStore cookieStore = new BasicCookieStore();
 	
 	protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
@@ -132,6 +133,8 @@ public class Pica extends BaseApi implements OpacApi {
 		try {
 			this.opac_url = data.getString("baseurl");
 			this.db = data.getString("db");
+			if (!library.getData().isNull("accountSupported"))
+				this.https_url = data.getString("httpsbaseurl");
 		} catch (JSONException e) {
 			ACRA.getErrorReporter().handleException(e);
 		}
@@ -503,7 +506,31 @@ public class Pica extends BaseApi implements OpacApi {
 	@Override
 	public ProlongResult prolong(String media, Account account, int useraction,
 			String Selection) throws IOException {
-		return new ProlongResult(MultiStepResult.Status.UNSUPPORTED);
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("ACT", "UI_RENEWLOAN"));
+		
+		params.add(new BasicNameValuePair("BOR_U", account.getName()));
+		params.add(new BasicNameValuePair("BOR_PW_ENC", pwEncoded));
+		
+		params.add(new BasicNameValuePair("VB", media));
+		
+		String html = httpPost(https_url + "loan/DB=" + db + "/USERINFO", new UrlEncodedFormEntity(params, "utf-8"));
+		Document doc = Jsoup.parse(html);
+		
+		if (doc.select("td.regular-text").text().contains("Die Leihfrist Ihrer ausgeliehenen Publikationen ist ")) {
+			return new ProlongResult(MultiStepResult.Status.OK);
+		} else if (doc.select(".alert").text().contains("identify yourself")) {
+			try {
+				account(account);				
+				return prolong(media, account, useraction, Selection);
+			} catch (JSONException e) {
+				return new ProlongResult(MultiStepResult.Status.ERROR);
+			}
+		} else {
+			ProlongResult res = new ProlongResult(MultiStepResult.Status.ERROR);
+			res.setMessage(doc.select(".cnt").text());
+			return res;
+		}
 	}
 
 	@Override
@@ -530,37 +557,35 @@ public class Pica extends BaseApi implements OpacApi {
 		params.add(new BasicNameValuePair("BOR_U", account.getName()));
 		params.add(new BasicNameValuePair("BOR_PW", account.getPassword()));
 
-		String html = httpPost("https://lhopc4.ub.uni-kiel.de/loan/DB=1/LNG=DU/USERINFO",
+		String html = httpPost(https_url + "loan/DB=" + db + "/LNG=DU/USERINFO",
 				new UrlEncodedFormEntity(params, "utf-8"));
 		Document doc = Jsoup.parse(html);
 		
-		Log.d("OPACCLIENT", html.substring(html.indexOf("tab0")));
-		
-		String pwEncoded = doc.select("a.tab0").attr("href");
+		pwEncoded = doc.select("a.tab0").attr("href");
 		pwEncoded = pwEncoded.substring(pwEncoded.indexOf("PW_ENC=") + 7);
 		
-		html = httpGet(opac_url + "/loan/DB=1/USERINFO?ACT=UI_LOL&BOR_U=" + account.getName() + "&BOR_PW_ENC=" + pwEncoded);
+		html = httpGet(https_url + "loan/DB=" + db + "/USERINFO?ACT=UI_LOL&BOR_U=" + account.getName() + "&BOR_PW_ENC=" + pwEncoded);
 		doc = Jsoup.parse(html);
 		
-		Log.d("OPACCLIENT", html);
+		pwEncoded = doc.select("input[name=BOR_PW_ENC]").attr("value");
 		
 		AccountData res = new AccountData(account.getId());
 			
 		List<ContentValues> medien = new ArrayList<ContentValues>();
 		List<ContentValues> reserved = new ArrayList<ContentValues>();
-		if (doc.select("tr[valign=top] ~ table[summary=list of loans - data]").size() > 0) {
-			parse_medialist(medien, doc, 1);
+		if (doc.select("table[summary^=list]").size() > 0) {
+			parse_medialist(medien, doc, 1, account.getName());
 		}
-//		if (doc.select("a[name=RES]").size() > 0) {
+//		if (doc.select("").size() > 0) {
 //			parse_reslist(reserved, doc, 1);
 //		}
 		
 		res.setLent(medien);
 		res.setReservations(reserved);
 		
-		if (medien.isEmpty() && reserved.isEmpty()) {
+		if (medien == null || reserved == null) {
 				last_error = "Unbekannter Fehler. Bitte pruefen Sie, ob ihre Kontodaten korrekt sind.";
-				Log.d("OPACCLIENT", html);
+				//Log.d("OPACCLIENT", html);
 				return null;
 		}
 		return res;
@@ -568,23 +593,27 @@ public class Pica extends BaseApi implements OpacApi {
 	}
 	
 	protected void parse_medialist(List<ContentValues> medien, Document doc,
-			int offset) throws ClientProtocolException, IOException {
+			int offset, String accountName) throws ClientProtocolException, IOException {
 		
-			Elements copytrs = doc.select("tr[valign=top] ~ table[summary=list of loans - data]");
-			doc.setBaseUri(opac_url);
+			Elements copytrs = doc.select("table[summary^=list] tr[valign=top]");
 	
 			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 			
 			int trs = copytrs.size();
-			if (trs < 1)
+			if (trs < 1) {
+				medien = null;
 				return;
+			}
 			assert (trs > 0);
-			for (int i = 0; i < trs - 1; i++) {
+			for (int i = 0; i < trs; i++) {
 				Element tr = copytrs.get(i);
+				String html = httpGet(https_url + "nr_renewals.php?U=" + accountName + "&DB=" + db + "&VBAR=" + tr.child(1).select("input").attr("value"));
+				String prolongNr = Jsoup.parse(html).text();
 				ContentValues e = new ContentValues();
+				
 	
 				e.put(AccountData.KEY_LENT_TITLE, tr.child(4).text().trim());
-				e.put(AccountData.KEY_LENT_STATUS, tr.child(13).text().trim());
+				e.put(AccountData.KEY_LENT_STATUS, tr.child(13).text().trim() + ", " + tr.child(25).text().trim() + " Vormerkungen, " + prolongNr + " Verlängerungen");
 				e.put(AccountData.KEY_LENT_DEADLINE, tr.child(21).text().trim());
 				try {
 					e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
@@ -593,7 +622,7 @@ public class Pica extends BaseApi implements OpacApi {
 				} catch (ParseException e1) {
 					e1.printStackTrace();
 				}
-				e.put(AccountData.KEY_LENT_LINK, i);
+				e.put(AccountData.KEY_LENT_LINK, tr.child(1).select("input").attr("value"));
 	
 				medien.add(e);
 			}

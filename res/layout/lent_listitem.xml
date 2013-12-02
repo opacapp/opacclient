@@ -38,8 +38,6 @@
         android:layout_below="@id/tvTitel"
         android:layout_toLeftOf="@id/strut"
         android:layout_toRightOf="@id/vStatusColor"
-        android:ellipsize="end"
-        android:singleLine="true"
         android:textIsSelectable="true" />
 
     <ImageView

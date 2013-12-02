@@ -3,7 +3,9 @@
     "city": "Kiel",
     "data": {
         "baseurl": "http://kiopc4.ub.uni-kiel.de:8080/",
+        "httpsbaseurl": "https://lhopc4.ub.uni-kiel.de/",
         "information": "http://www.ub.uni-kiel.de/",
+        "customssl": true, 
         "db": "1",
         "accountSupported": true
     },
