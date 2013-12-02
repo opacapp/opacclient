@@ -583,8 +583,11 @@ public class SISIS extends BaseApi implements OpacApi {
 							.contains("nicht bestellbar"))
 							|| (part[2].startsWith("vorbestellbar") && !part[2]
 									.contains("nicht vorbestellbar"))
+							|| (part[2].startsWith("vorbestellbar") && !part[2]
+									.contains("nicht vorbestellbar"))
 							|| (part[2].startsWith("vormerkbar") && !part[2]
 									.contains("nicht vormerkbar"))
+							|| (part[2].contains("heute zurückgebucht"))
 							|| (part[2].contains("ausleihbar") && !part[2]
 									.contains("nicht ausleihbar"))) {
 						sr.setStatus(SearchResult.Status.GREEN);
