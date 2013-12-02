@@ -589,6 +589,12 @@ public class SISIS extends BaseApi implements OpacApi {
 									.contains("nicht ausleihbar"))) {
 						sr.setStatus(SearchResult.Status.GREEN);
 					}
+					if (sr.getType().equals(MediaType.EBOOK)
+							|| sr.getType().equals(MediaType.EVIDEO)
+							|| sr.getType().equals(MediaType.MP3))
+						// Especially Onleihe.de ebooks are often marked green
+						// though they are not available.
+						sr.setStatus(SearchResult.Status.UNKNOWN);
 				}
 				k++;
 			}
