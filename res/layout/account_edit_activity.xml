@@ -64,6 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:ems="10"
+            android:hint="@string/default_account_name"
             android:singleLine="true" >
 
             <requestFocus />
