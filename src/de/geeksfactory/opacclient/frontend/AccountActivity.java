@@ -788,6 +788,9 @@ public class AccountActivity extends OpacActivity {
 						v.findViewById(R.id.vStatusColor).setBackgroundColor(
 								getResources().getColor(R.color.account_downloadable));
 					}
+				} else if (item.containsKey(AccountData.KEY_LENT_DOWNLOAD)) {
+					v.findViewById(R.id.vStatusColor).setBackgroundColor(
+							getResources().getColor(R.color.account_downloadable));
 				}
 
 				if (item.containsKey(AccountData.KEY_LENT_LENDING_BRANCH)) {
