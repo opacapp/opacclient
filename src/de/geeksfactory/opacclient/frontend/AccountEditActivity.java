@@ -158,7 +158,6 @@ public class AccountEditActivity extends SherlockActivity {
 			if (available_accounts.size() == 0) {
 				((OpacClient) getApplication()).setAccount(0);
 				((OpacClient) getApplication()).addFirstAccount(this);
-				finish();
 			} else {
 				((OpacClient) getApplication()).setAccount(available_accounts
 						.get(0).getId());
