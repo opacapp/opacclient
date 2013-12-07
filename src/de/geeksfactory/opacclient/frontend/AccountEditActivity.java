@@ -157,8 +157,7 @@ public class AccountEditActivity extends SherlockActivity {
 			List<Account> available_accounts = data.getAllAccounts();
 			if (available_accounts.size() == 0) {
 				((OpacClient) getApplication()).setAccount(0);
-				Intent intent = new Intent(this, WelcomeActivity.class);
-				startActivity(intent);
+				((OpacClient) getApplication()).addFirstAccount(this);
 				finish();
 			} else {
 				((OpacClient) getApplication()).setAccount(available_accounts
