@@ -608,12 +608,19 @@ public class Pica extends BaseApi implements OpacApi {
 			for (int i = 0; i < trs; i++) {
 				Element tr = copytrs.get(i);
 				String html = httpGet(https_url + "nr_renewals.php?U=" + accountName + "&DB=" + db + "&VBAR=" + tr.child(1).select("input").attr("value"));
-				String prolongNr = Jsoup.parse(html).text();
+				String prolongCount = Jsoup.parse(html).text();
+				String reminderCount = tr.child(13).text().trim();
+				reminderCount = reminderCount.substring(reminderCount.indexOf("(") +1, reminderCount.indexOf(" Mahn"));
 				ContentValues e = new ContentValues();
 				
 	
 				e.put(AccountData.KEY_LENT_TITLE, tr.child(4).text().trim());
-				e.put(AccountData.KEY_LENT_STATUS, tr.child(13).text().trim() + ", " + tr.child(25).text().trim() + " Vormerkungen, " + prolongNr + " Verlängerungen");
+				String status = "";
+				if (!reminderCount.equals("0")) {
+					status += reminderCount + " Mahnungen, ";
+				}
+				status += prolongCount + "x verl."; // + tr.child(25).text().trim() + " Vormerkungen");
+				e.put(AccountData.KEY_LENT_STATUS,  status); 
 				e.put(AccountData.KEY_LENT_DEADLINE, tr.child(21).text().trim());
 				try {
 					e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
