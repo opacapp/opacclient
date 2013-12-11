@@ -540,7 +540,29 @@ public class Pica extends BaseApi implements OpacApi {
 
 	@Override
 	public boolean cancel(Account account, String media) throws IOException {
-		return false;
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("ACT", "UI_CANCELRES"));
+		
+		params.add(new BasicNameValuePair("BOR_U", account.getName()));
+		params.add(new BasicNameValuePair("BOR_PW_ENC", pwEncoded));
+		
+		params.add(new BasicNameValuePair("VB", media));
+		
+		String html = httpPost(https_url + "loan/DB=" + db + "/USERINFO", new UrlEncodedFormEntity(params, "utf-8"));
+		Document doc = Jsoup.parse(html);
+		
+		if (doc.select("td.regular-text").text().contains("Ihre Vormerkungen sind ")) {
+			return true;
+		} else if (doc.select(".alert").text().contains("identify yourself")) {
+			try {
+				account(account);				
+				return cancel(account, media);
+			} catch (JSONException e) {
+				return false;
+			}
+		} else {
+			return false;
+		}
 	}
 
 	@Override
@@ -567,6 +589,9 @@ public class Pica extends BaseApi implements OpacApi {
 		html = httpGet(https_url + "loan/DB=" + db + "/USERINFO?ACT=UI_LOL&BOR_U=" + account.getName() + "&BOR_PW_ENC=" + pwEncoded);
 		doc = Jsoup.parse(html);
 		
+		html = httpGet(https_url + "loan/DB=" + db + "/USERINFO?ACT=UI_LOR&BOR_U=" + account.getName() + "&BOR_PW_ENC=" + pwEncoded);
+		Document doc2 = Jsoup.parse(html);
+		
 		pwEncoded = doc.select("input[name=BOR_PW_ENC]").attr("value");
 		
 		AccountData res = new AccountData(account.getId());
@@ -576,9 +601,9 @@ public class Pica extends BaseApi implements OpacApi {
 		if (doc.select("table[summary^=list]").size() > 0) {
 			parse_medialist(medien, doc, 1, account.getName());
 		}
-//		if (doc.select("").size() > 0) {
-//			parse_reslist(reserved, doc, 1);
-//		}
+		if (doc2.select("table[summary^=list]").size() > 0) {
+			parse_reslist(reserved, doc2, 1);
+		}
 		
 		res.setLent(medien);
 		res.setReservations(reserved);
@@ -630,6 +655,32 @@ public class Pica extends BaseApi implements OpacApi {
 					e1.printStackTrace();
 				}
 				e.put(AccountData.KEY_LENT_LINK, tr.child(1).select("input").attr("value"));
+	
+				medien.add(e);
+			}
+			assert (medien.size() == trs - 1);
+	}
+	
+	protected void parse_reslist(List<ContentValues> medien, Document doc,
+			int offset) throws ClientProtocolException, IOException {
+		
+			Elements copytrs = doc.select("table[summary^=list] tr[valign=top]");
+	
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+			
+			int trs = copytrs.size();
+			if (trs < 1) {
+				medien = null;
+				return;
+			}
+			assert (trs > 0);
+			for (int i = 0; i < trs; i++) {
+				Element tr = copytrs.get(i);
+				ContentValues e = new ContentValues();
+				
+				e.put(AccountData.KEY_RESERVATION_TITLE, tr.child(5).text().trim()); 
+				e.put(AccountData.KEY_RESERVATION_READY, tr.child(17).text().trim());
+				e.put(AccountData.KEY_RESERVATION_CANCEL, tr.child(1).select("input").attr("value"));
 	
 				medien.add(e);
 			}
