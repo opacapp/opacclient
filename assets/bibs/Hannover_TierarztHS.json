@@ -4,13 +4,14 @@
     "data": {
         "baseurl": "http://opac.tib.uni-hannover.de", 
 		"db": "5",
-        "information": "http://www.tiho-hannover.de/de/kliniken-institute/bibliothek/"
+        "information": "http://www.tiho-hannover.de/de/kliniken-institute/bibliothek/",
+		"accountSupported": true
     }, 
     "geo": [
         52.3758916, 
         9.732010400000002
     ], 
     "group": "Niedersachsen", 
-    "support": "Katalogsuche", 
+    "support": "Katalogsuche und Konto", 
     "title": "Tier\u00e4rztliche Hochschule"
 }

@@ -133,8 +133,13 @@ public class Pica extends BaseApi implements OpacApi {
 		try {
 			this.opac_url = data.getString("baseurl");
 			this.db = data.getString("db");
-			if (!library.getData().isNull("accountSupported"))
-				this.https_url = data.getString("httpsbaseurl");
+			if (!library.getData().isNull("accountSupported")){
+				if(data.has("httpsbaseurl")){
+					this.https_url = data.getString("httpsbaseurl");
+				} else {
+					this.https_url = this.opac_url;
+				}
+			}
 		} catch (JSONException e) {
 			ACRA.getErrorReporter().handleException(e);
 		}

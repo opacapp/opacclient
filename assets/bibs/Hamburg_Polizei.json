@@ -4,13 +4,14 @@
     "data": {
         "baseurl": "https://kataloge.uni-hamburg.de/",
         "information": "http://hdp.hamburg.de/bibliothek/",
-        "db": "8"
+        "db": "8",
+		"accountSupported": true
     },
     "geo": [
         53.60248,
         10.00075
     ],
     "group": "Hamburg",
-    "support": "Katalogsuche",
+    "support": "Katalogsuche und Konto",
     "title": "Polizei/Hochschule der Polizei"
 }

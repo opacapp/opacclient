@@ -2,15 +2,16 @@
     "api": "pica",
     "city": "Hannover",
     "data": {
-        "baseurl": "http://opac.tib.uni-hannover.de/",
+        "baseurl": "https://opac.tib.uni-hannover.de/",
         "information": "http://www.tib.uni-hannover.de/",
-        "db": "1"
+        "db": "1",
+		"accountSupported": true
     },
     "geo": [
         52.38142,
         9.72007
     ],
     "group": "Niedersachsen",
-    "support": "Katalogsuche",
+    "support": "Katalogsuche und Konto",
     "title": "Unibibliothek + techn. Informationsbibliothek"
 }

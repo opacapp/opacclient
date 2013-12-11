@@ -4,13 +4,14 @@
     "data": {
         "baseurl": "https://kataloge.uni-hamburg.de/",
         "information": "http://www.sub.uni-hamburg.de/home.html",
-        "db": "3"
+        "db": "3",
+		"accountSupported": true
     },
     "geo": [
         53.55291,
         10.00468
     ],
     "group": "Hamburg",
-    "support": "Katalogsuche",
+    "support": "Katalogsuche und Konto",
     "title": "Museumsbibliotheken"
 }
