@@ -15,7 +15,7 @@
         "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-moeckmuehl", 
         "copiestable": {
             "barcode": -1, 
-            "branch": -, 
+            "branch": -1, 
             "department": 1, 
             "location": 0, 
             "reservations": -1, 
