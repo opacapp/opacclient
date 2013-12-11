@@ -481,27 +481,25 @@ public class IOpac extends BaseApi implements OpacApi {
 		String html = httpGet(opac_url + "/" + media);
 		Document doc = Jsoup.parse(html);
 		if (doc.select("table th").size() > 0) {
-			if (doc.select("table th").first().text()
-					.contains("da die maximale Anzahl.")) {
-				// Comparing to the full string would be cleaner, but because I
-				// can't test it I only want the part without äöü in there.
-				return new ProlongResult(MultiStepResult.Status.ERROR, doc.select("table th").first().text());
-			} else {
-				try {
-					Element form = doc.select("form[name=form1]").first();
-					String sessionid = form.select("input[name=sessionid]")
-							.attr("value");
-					String mednr = form.select("input[name=mednr]").attr(
-							"value");
-					httpGet(opac_url + "/cgi-bin/di.exe?mode=8&kndnr="
-							+ account.getName() + "&mednr=" + mednr
-							+ "&sessionid=" + sessionid
-							+ "&psh100=Verl%C3%A4ngern");
-					return new ProlongResult(MultiStepResult.Status.OK);
-				} catch (Throwable e) {
-					e.printStackTrace();
-					return new ProlongResult(MultiStepResult.Status.ERROR);
+			if (doc.select("h1").size() > 0) {
+				if(doc.select("h1").first().text().contains("Hinweis")) {
+					return new ProlongResult(MultiStepResult.Status.ERROR, doc.select("table th").first().text());
 				}
+			}
+			try {
+				Element form = doc.select("form[name=form1]").first();
+				String sessionid = form.select("input[name=sessionid]")
+						.attr("value");
+				String mednr = form.select("input[name=mednr]").attr(
+						"value");
+				httpGet(opac_url + "/cgi-bin/di.exe?mode=8&kndnr="
+						+ account.getName() + "&mednr=" + mednr
+						+ "&sessionid=" + sessionid
+						+ "&psh100=Verl%C3%A4ngern");
+				return new ProlongResult(MultiStepResult.Status.OK);
+			} catch (Throwable e) {
+				e.printStackTrace();
+				return new ProlongResult(MultiStepResult.Status.ERROR);
 			}
 		}
 		return new ProlongResult(MultiStepResult.Status.ERROR);
