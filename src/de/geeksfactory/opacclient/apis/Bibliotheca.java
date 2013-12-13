@@ -417,6 +417,13 @@ public class Bibliotheca extends BaseApi {
 					} catch (URISyntaxException e) {
 					}
 				} else {
+
+					if (content.contains("hier klicken")
+							&& tr.child(1).select("a").size() > 0) {
+						content += " "
+								+ tr.child(1).select("a").first().attr("href");
+					}
+
 					result.addDetail(new Detail(title, content));
 				}
 			}

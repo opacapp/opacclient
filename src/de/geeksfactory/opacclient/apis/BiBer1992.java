@@ -637,6 +637,14 @@ public class BiBer1992 extends BaseApi {
 						detail = null;
 						item.setTitle(secondColumn);
 					} else {
+
+						if (secondColumn.contains("hier klicken")
+								&& columns.get(1).select("a").size() > 0) {
+							secondColumn += " "
+									+ columns.get(1).select("a").first()
+											.attr("href");
+						}
+
 						detail = new Detail(firstColumn, secondColumn);
 						item.getDetails().add(detail);
 					}
