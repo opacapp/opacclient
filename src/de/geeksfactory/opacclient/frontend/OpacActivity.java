@@ -88,7 +88,7 @@ public abstract class OpacActivity extends SlidingFragmentActivity {
 		t.commit();
 		// Sliding Menu
 		SlidingMenu sm = getSlidingMenu();
-		if (app.SLIDING_MENU) {
+		if (app.getSlidingMenuEnabled()) {
 			sm.setShadowWidthRes(R.dimen.shadow_width);
 			sm.setShadowDrawable(R.drawable.shadow);
 			sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
@@ -359,7 +359,7 @@ public abstract class OpacActivity extends SlidingFragmentActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			if (app.SLIDING_MENU) {
+			if (app.getSlidingMenuEnabled()) {
 				toggle();
 			} else {
 				NavUtils.navigateUpFromSameTask(this);
