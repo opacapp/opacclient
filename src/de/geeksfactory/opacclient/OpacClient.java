@@ -77,6 +77,7 @@ public class OpacClient extends Application {
 	public static final String PREF_HOME_BRANCH_PREFIX = "homeBranch_";
 
 	public final String LIMIT_TO_LIBRARY = null;
+	public final boolean SLIDING_MENU = true;
 
 	private SharedPreferences sp;
 
