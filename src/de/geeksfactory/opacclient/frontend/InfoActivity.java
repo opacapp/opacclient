@@ -36,6 +36,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.view.MenuItem;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
+import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 
 public class InfoActivity extends OpacActivity {
@@ -79,8 +80,11 @@ public class InfoActivity extends OpacActivity {
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		SlidingMenu sm = getSlidingMenu();
-		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+
+		if (((OpacClient) getApplication()).getSlidingMenuEnabled()) {
+			SlidingMenu sm = getSlidingMenu();
+			sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+		}
 
 		wvInfo = (WebView) findViewById(R.id.wvInfo);
 
