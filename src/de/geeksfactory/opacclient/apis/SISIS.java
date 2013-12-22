@@ -534,6 +534,7 @@ public class SISIS extends BaseApi implements OpacApi {
 			int k = 0;
 			boolean yearfound = false;
 			boolean titlefound = false;
+			boolean sigfound = false;
 			for (String[] part : strings) {
 				if (!described) {
 					if (part[0] == "a" && (k == 0 || !titlefound)) {
@@ -552,9 +553,15 @@ public class SISIS extends BaseApi implements OpacApi {
 						if (k != 0)
 							description.append("<br />");
 						description.append(part[2]);
-					} else if (k < 3 && !yearfound) {
+					} else if (k == 1 && !yearfound
+							&& part[2].matches("^\\s*\\([0-9]{4}\\)$")) {
 						if (k != 0)
 							description.append("<br />");
+						description.append(part[2]);
+					} else if (k > 1 && k < 4 && !sigfound
+							&& part[0].equals("text")
+							&& part[2].matches("^[A-Za-z0-9,\\- ]+$")) {
+						description.append("<br />");
 						description.append(part[2]);
 					}
 				}
