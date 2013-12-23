@@ -782,11 +782,8 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				btnVolume.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Intent myIntent = new Intent(
-								SearchResultDetailsActivity.this,
-								SearchResultsActivity.class);
-						myIntent.putExtra("query", item.getVolumesearch());
-						startActivity(myIntent);
+						app.startSearch(SearchResultDetailsActivity.this,
+								item.getVolumesearch());
 					}
 				});
 				llCopies.addView(btnVolume);
