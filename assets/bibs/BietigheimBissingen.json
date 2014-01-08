@@ -12,7 +12,7 @@
 			"status": -1,
 			"title": 2
 		},
-        "baseurl": "http://wwwopac.rz-as.de/bietigheim-bissingen", 
+        "baseurl": "http://wwwopac.rz-kiru.de/bietigheim-bissingen", 
 		"copiestable": {
 			"barcode": -1,
 			"branch": 1,

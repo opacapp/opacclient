@@ -12,7 +12,7 @@
             "status": 4, 
             "title": 1
         }, 
-        "baseurl": "http://wwwopac.rz-as.de/holzgerlingen", 
+        "baseurl": "http://wwwopac.rz-kiru.de/holzgerlingen", 
         "copiestable": {
             "barcode": -1, 
             "branch": -1, 

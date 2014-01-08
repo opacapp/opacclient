@@ -12,7 +12,7 @@
             "status": -1, 
             "title": 1
         }, 
-        "baseurl": "http://wwwopac.rz-as.de/balingen", 
+        "baseurl": "http://wwwopac.rz-kiru.de/balingen", 
         "copiestable": {
             "barcode": -1, 
             "branch": 5, 
