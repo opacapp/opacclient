@@ -24,8 +24,6 @@ package de.geeksfactory.opacclient.frontend;
 import org.holoeverywhere.widget.ProgressBar;
 import org.json.JSONException;
 
-import android.app.Activity;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -33,6 +31,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
@@ -49,8 +48,6 @@ public class InfoActivity extends OpacActivity {
 		wvInfo.loadData(getString(R.string.loading), "text/html", null);
 
 		try {
-			ConnectivityManager cm = (ConnectivityManager) this
-					.getSystemService(Activity.CONNECTIVITY_SERVICE);
 			String infoUrl = app.getLibrary().getData()
 					.getString("information");
 			if (infoUrl == null || infoUrl.equals("null")) {
@@ -79,7 +76,6 @@ public class InfoActivity extends OpacActivity {
 		load();
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
 
 		if (((OpacClient) getApplication()).getSlidingMenuEnabled()) {
 			SlidingMenu sm = getSlidingMenu();
@@ -117,8 +113,16 @@ public class InfoActivity extends OpacActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
+		if (item.getItemId() == R.id.action_refresh) {
+			wvInfo.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+			load();
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getSupportMenuInflater().inflate(R.menu.activity_info, menu);
+		return super.onCreateOptionsMenu(menu);
 	}
 }
