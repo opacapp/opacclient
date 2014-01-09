@@ -717,6 +717,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				success = false;
 				e.printStackTrace();
 			} catch (Exception e) {
+				e.printStackTrace();
 				ACRA.getErrorReporter().handleException(e);
 				success = false;
 			}
@@ -976,6 +977,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				success = false;
 				e.printStackTrace();
 			} catch (Exception e) {
+				e.printStackTrace();
 				publishProgress(e, "ioerror");
 			}
 

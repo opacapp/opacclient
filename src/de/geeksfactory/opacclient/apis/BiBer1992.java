@@ -622,8 +622,8 @@ public class BiBer1992 extends BaseApi {
 
 		// go through all rows
 		for (Element row : rows) {
-			Elements columns = row.select("td");
-
+			Elements columns = row.children();
+			
 			if (columns.size() == 2) {
 				// HTML tag "&nbsp;" is encoded as 0xA0
 				String firstColumn = columns.get(0).text()
@@ -665,7 +665,7 @@ public class BiBer1992 extends BaseApi {
 
 					}
 				}
-			} else if (columns.size() > 2) {
+			} else if (columns.size() > 3) {
 				// This is the second section: the copies in stock ("Exemplare")
 				// With reverse layout: first row is headline, skipped via
 				// (copy_row > 0)
@@ -695,8 +695,11 @@ public class BiBer1992 extends BaseApi {
 									// but do it not for Status
 									text = " ";
 								} else {
-									text = copy_last_content
-											.getAsString(copy_keys[j]);
+									if (copy_last_content != null)
+										text = copy_last_content
+												.getAsString(copy_keys[j]);
+									else
+										text = "";
 								}
 							}
 							e.put(copy_keys[j], text);
