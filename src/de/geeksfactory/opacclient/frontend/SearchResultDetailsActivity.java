@@ -71,6 +71,7 @@ import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.EbookServiceApi;
+import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.EbookServiceApi.BookingResult;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
 import de.geeksfactory.opacclient.objects.Account;
@@ -196,7 +197,8 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		if (accounts.size() == 0) {
 			dialog_no_credentials();
 			return;
-		} else if (accounts.size() > 1) {
+		} else if (accounts.size() > 1
+				&& !getIntent().getBooleanExtra("reservation", false)) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			// Get the layout inflater
 			LayoutInflater inflater = getLayoutInflater();
@@ -212,12 +214,25 @@ public class SearchResultDetailsActivity extends OpacActivity {
 						int position, long id) {
 					if (accounts.get(position).getId() != app.getAccount()
 							.getId() || account_switched) {
-						app.setAccount(accounts.get(position).getId());
-						dialog = ProgressDialog.show(
-								SearchResultDetailsActivity.this, "",
-								getString(R.string.doing_res), true);
-						dialog.show();
-						new RestoreSessionTask().execute(true);
+
+						if (SearchResultDetailsActivity.this.id == null
+								|| SearchResultDetailsActivity.this.id
+										.equals("null")
+								|| SearchResultDetailsActivity.this.id
+										.equals("")) {
+							Toast.makeText(SearchResultDetailsActivity.this,
+									R.string.accchange_sorry, Toast.LENGTH_LONG)
+									.show();
+						} else {
+							app.setAccount(accounts.get(position).getId());
+							Intent intent = new Intent(
+									SearchResultDetailsActivity.this,
+									SearchResultDetailsActivity.class);
+							intent.putExtra("item_id",
+									SearchResultDetailsActivity.this.id);
+							intent.putExtra("reservation", true);
+							startActivity(intent);
+						}
 					} else {
 						reservationDo();
 					}
@@ -911,6 +926,10 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			}
 
 			invalidateOptionsMenu();
+
+			if (getIntent().hasExtra("reservation")
+					&& getIntent().getBooleanExtra("reservation", false))
+				reservationStart();
 		}
 	}
 
@@ -956,6 +975,11 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				String homebranch = sp.getString(
 						OpacClient.PREF_HOME_BRANCH_PREFIX
 								+ app.getAccount().getId(), null);
+
+				if (getIntent().hasExtra("reservation")
+						&& getIntent().getBooleanExtra("reservation", false))
+					app.getApi().start();
+
 				DetailledItem res = app.getApi().getResultById(a, homebranch);
 				URL newurl;
 				try {
