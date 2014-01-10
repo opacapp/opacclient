@@ -59,6 +59,7 @@ import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
+import de.geeksfactory.opacclient.objects.SearchResult.Status;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
@@ -518,6 +519,17 @@ public class BiBer1992 extends BaseApi {
 			desc = desc.replaceAll("<a .*?</a>", "");
 			sr.setInnerhtml(desc);
 
+			if (tr.select("font.p04x09b").size() > 0
+					&& tr.select("font.p02x09b").size() == 0) {
+				sr.setStatus(Status.GREEN);
+			} else if (tr.select("font.p04x09b").size() == 0
+					&& tr.select("font.p02x09b").size() > 0) {
+				sr.setStatus(Status.RED);
+			} else if (tr.select("font.p04x09b").size() > 0
+					&& tr.select("font.p02x09b").size() > 0) {
+				sr.setStatus(Status.YELLOW);
+			}
+
 			// number
 			sr.setNr(i / rows_per_hit);
 			results.add(sr);
@@ -623,7 +635,7 @@ public class BiBer1992 extends BaseApi {
 		// go through all rows
 		for (Element row : rows) {
 			Elements columns = row.children();
-			
+
 			if (columns.size() == 2) {
 				// HTML tag "&nbsp;" is encoded as 0xA0
 				String firstColumn = columns.get(0).text()
