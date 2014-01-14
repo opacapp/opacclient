@@ -2,7 +2,16 @@
     "api": "bibliotheca", 
     "city": "Gundelsheim", 
     "data": {
-        "accounttable": null, 
+        "accounttable": {
+            "author": 0, 
+            "barcode": -1, 
+            "homebranch": -1, 
+            "lendingbranch": -1, 
+            "prolongurl": 3, 
+            "returndate": 2, 
+            "status": -1, 
+            "title": 1
+        }, 
         "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-gundelsheim", 
         "copiestable": {
             "barcode": -1, 
@@ -14,7 +23,14 @@
             "status": 2
         }, 
         "information": "http://www.bibliotheken.bw-online.de/read-gundelsheim/info.html", 
-        "reservationtable": null
+        "reservationtable": {
+            "author": 0, 
+            "availability": -2, 
+            "branch": -1, 
+            "cancelurl": 3, 
+            "expirationdate": -1, 
+            "title": 1
+        }
     }, 
     "geo": [
         49.28155659999999, 
