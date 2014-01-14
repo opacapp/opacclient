@@ -12,7 +12,8 @@
             "status": 4, 
             "title": 1
         }, 
-        "baseurl": "http://wwwopac.rz-kiru.de/radolfzell", 
+        "baseurl": "https://wwwopac.rz-kiru.de/radolfzell", 
+		"customssl": true,
         "copiestable": {
             "barcode": -1, 
             "branch": 0, 

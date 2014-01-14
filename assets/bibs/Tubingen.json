@@ -12,7 +12,8 @@
             "status": -1, 
             "title": 1
         }, 
-        "baseurl": "http://wwwopac.rz-kiru.de/tuebingen", 
+        "baseurl": "https://wwwopac.rz-kiru.de/tuebingen", 
+		"customssl": true,
         "copiestable": {
             "barcode": 6, 
             "branch": 0, 

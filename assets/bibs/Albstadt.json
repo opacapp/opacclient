@@ -12,7 +12,8 @@
             "status": 5, 
             "title": 2
         }, 
-        "baseurl": "http://wwwopac.rz-kiru.de/albstadt", 
+        "baseurl": "https://wwwopac.rz-kiru.de/albstadt", 
+		"customssl": true,
         "copiestable": {
             "barcode": -1, 
             "branch": 0, 
@@ -22,7 +23,7 @@
             "returndate": 5, 
             "status": 4
         },
-        "information": "http://wwwopac.rz-kiru.de/readalbstadt/startseite.html",
+        "information": "https://wwwopac.rz-kiru.de/readalbstadt/startseite.html",
         "reservationtable": {
             "author": 1, 
             "availability": 4,
