@@ -286,7 +286,7 @@ public class BiBer1992 extends BaseApi {
 	@Override
 	public void start() throws IOException, NotReachableException {
 		HttpGet httpget;
-		if (m_opac_dir.equals("opax"))
+		if (m_opac_dir.equals("opax") || m_opac_dir.equals("opax13"))
 			httpget = new HttpGet(m_opac_url + "/" + m_opac_dir
 					+ "/de/qsim.html.S");
 		else
@@ -925,7 +925,7 @@ public class BiBer1992 extends BaseApi {
 				if (index >= 0) {
 					String value = tr.child(index).text().trim();
 
-					// Author and Title is the same field: "autor: title"
+					// Signature, Author and Title is the same field: "autor: title"
 					// sometimes there is no ":" then only the title is given
 					if (key.equals(AccountData.KEY_LENT_AUTHOR)) {
 						if (value.contains(":")) {
@@ -937,8 +937,13 @@ public class BiBer1992 extends BaseApi {
 							value = "";
 						}
 					} else if (key.equals(AccountData.KEY_LENT_TITLE)) {
-						// Title: remove everything up to ":"
-						value = value.replaceFirst(".*\\:", "").trim();
+						if (value.contains(":")) {
+							// Title: remove everything up to ":"
+							value = value.replaceFirst(".*\\:", "").trim();
+						} else {
+							// Remove everything except the signature
+							value = value.replaceFirst("^.* /", "").trim();
+						}
 					}
 
 					if (value.length() != 0) {
