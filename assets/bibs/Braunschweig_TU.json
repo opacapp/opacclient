@@ -5,6 +5,7 @@
         "baseurl": "https://opac.lbs-braunschweig.gbv.de",
         "information": "http://www.biblio.tu-bs.de/",
         "db": "1",
+		"customssl": true,
 		"accountSupported": true
     },
     "geo": [
