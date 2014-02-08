@@ -1,0 +1,17 @@
+{
+    "api": "pica", 
+    "city": "Magdeburg", 
+    "data": {
+        "accountSupported": true, 
+        "baseurl": "https://opac.uni-magdeburg.de", 
+        "db": "3", 
+        "information": "https://www.hs-magdeburg.de/hochschule/einrichtung/hochschulbibliothek/kontakt"
+    }, 
+    "geo": [
+        52.130807, 
+        11.628878
+    ], 
+    "group": "Sachsen-Anhalt", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Hochschulbibliothek"
+}

@@ -8,23 +8,28 @@
             "returndate": 2, 
             "title": 1
         }, 
-        "baseurl": "http://www.unna.de/webopac", 
+        "baseurl": "http://ekvw.cidoli.de", 
         "copiestable": {
             "barcode": 0, 
-            "branch": 3, 
+            "branch": 4, 
+            "department": 2, 
             "location": 1, 
-            "returndate": 4, 
-            "status": 2
+            "returndate": 5, 
+            "status": 3
         }, 
-        "information": "http://www.unna.de/kreisstadt+unna/konzern-stadt/kulturbetriebe-unna/bibliothek/bibliothek-im-zib.html", 
+        "db": "w_ekvw_unna", 
+        "information": "http://www.evangelisch-in-unna.de/mediothek.html", 
         "mediatypes": {
-            "at_33_ebooks.png": "EBOOK", 
-            "at_33_emusic.png": "EBOOK", 
-            "at_33_epaper.png": "EBOOK", 
-            "at_33_evideo.png": "EBOOK", 
+            "Bild_PI.gif": "ART", 
+            "Buch_PI.gif": "BOOK", 
+            "CD_ROM_PI.gif": "CD_SOFTWARE", 
+            "Dia_PI.gif": "ART", 
+            "Folie_PI.gif": "UNKNOWN", 
+            "Go_PI.gif": "UNKNOWN", 
+            "Video_PI.gif": "MOVIE", 
+            "mCasette.gif": "AUDIO_CASSETTE", 
             "mCasetteS.gif": "AUDIO_CASSETTE", 
-            "mDVDS.gif": "DVD", 
-            "mFilmS.gif": "MOVIE"
+            "mDVD_PI.gif": "DVD"
         }, 
         "reservationtable": {
             "author": 0, 
@@ -39,5 +44,5 @@
     ], 
     "group": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
-    "title": "Stadtbibliothek"
+    "title": "Mediothek Kirchenkreis"
 }
