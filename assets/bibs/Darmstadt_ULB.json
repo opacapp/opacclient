@@ -3,7 +3,7 @@
     "city": "Darmstadt", 
     "data": {
         "accountSupported": true, 
-        "baseurl": "http://pica1l.ulb.tu-darmstadt.de", 
+        "baseurl": "https://pica1l.ulb.tu-darmstadt.de", 
         "db": "LHBDA", 
         "information": "http://www.ulb.tu-darmstadt.de/service/start/index.de.jsp",
 		"searchindex": {
