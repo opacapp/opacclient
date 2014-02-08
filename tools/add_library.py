@@ -115,7 +115,7 @@ class Bibliotheca(Api):
         return data
 
     def _fetchData(self, url, suff = ''):
-        config = configparser.RawConfigParser(allow_no_value=True)
+        config = configparser.RawConfigParser(allow_no_value=True, strict=False)
         config.read_string(urllib.request.urlopen(url+'/w3oini.txt').read().decode('iso-8859-1'))
         data = {
             'accounttable': {},
