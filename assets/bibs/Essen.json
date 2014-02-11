@@ -14,7 +14,7 @@
         }, 
         "baseurl": "http://katalog.stadtbibliothek-essen.de", 
         "information": "http://www.stadtbibliothek-essen.de/de/oeffnungszeiten/oeffnungszeiten.html", 
-        "opacdir": "opac", 
+        "opacdir": "opax", 
         "searchtable": [
             1, 
             2, 

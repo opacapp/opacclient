@@ -390,7 +390,7 @@ public class BiBer1992 extends BaseApi {
 		m_nameValuePairs.add(new BasicNameValuePair("REG1", "AW"));
 		m_nameValuePairs.add(new BasicNameValuePair("REG2", "TW"));
 		m_nameValuePairs.add(new BasicNameValuePair("REG3", "DW"));
-		m_nameValuePairs.add(new BasicNameValuePair("REG4", "PP"));
+		m_nameValuePairs.add(new BasicNameValuePair("REG4", "SG"));
 		m_nameValuePairs.add(new BasicNameValuePair("REG5", "IS"));
 		m_nameValuePairs.add(new BasicNameValuePair("REG6", "PU"));
 		m_nameValuePairs.add(new BasicNameValuePair("REG7", "PY"));
