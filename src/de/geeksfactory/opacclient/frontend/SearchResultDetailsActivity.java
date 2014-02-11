@@ -1220,7 +1220,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
-		String bib = app.getLibrary().getIdent();
+		final String bib = app.getLibrary().getIdent();
 		if (item.getItemId() == R.id.action_reservation) {
 			reservationStart();
 			return true;
@@ -1241,84 +1241,103 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				finish();
 			}
 			return true;
-		} else if (item.getItemId() == R.id.action_export) {
-			if (this.item == null) {
-				Toast toast = Toast.makeText(SearchResultDetailsActivity.this,
-						getString(R.string.share_wait), Toast.LENGTH_SHORT);
-				toast.show();
-			} else {
-				Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-				intent.setType("text/plain");
-				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-
-				// Add data to the intent, the receiving app will decide
-				// what to do with it.
-				intent.putExtra(Intent.EXTRA_SUBJECT, title);
-
-				String t = title;
-				try {
-					bib = java.net.URLEncoder.encode(app.getLibrary()
-							.getIdent(), "UTF-8");
-					t = java.net.URLEncoder.encode(t, "UTF-8");
-				} catch (UnsupportedEncodingException e) {
-				}
-
-				String text = title + "\n\n";
-
-				for (Detail detail : this.item.getDetails()) {
-					String colon = "";
-					if (!detail.getDesc().endsWith(":"))
-						colon = ":";
-					text += detail.getDesc() + colon + "\n"
-							+ detail.getContent() + "\n\n";
-				}
-
-				String shareUrl = app.getApi().getShareUrl(id, title);
-				if (shareUrl != null)
-					text += shareUrl;
-				else
-					text += "http://opacapp.de/:" + bib + ":" + id + ":" + t;
-
-				intent.putExtra(Intent.EXTRA_TEXT, text);
-				startActivity(Intent.createChooser(intent, getResources()
-						.getString(R.string.share)));
-			}
-			return true;
 		} else if (item.getItemId() == R.id.action_share) {
 			if (this.item == null) {
 				Toast toast = Toast.makeText(SearchResultDetailsActivity.this,
 						getString(R.string.share_wait), Toast.LENGTH_SHORT);
 				toast.show();
 			} else {
-				Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-				intent.setType("text/plain");
-				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+				final CharSequence[] items = { getString(R.string.share_link),
+						getString(R.string.share_details) };
 
-				// Add data to the intent, the receiving app will decide
-				// what to do with it.
-				intent.putExtra(Intent.EXTRA_SUBJECT, title);
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setTitle(R.string.share_dialog_select);
+				builder.setItems(items, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int di) {
+						String bib = app.getLibrary().getIdent();
+						if (di == 0) {
+							// Share link
+							Intent intent = new Intent(
+									android.content.Intent.ACTION_SEND);
+							intent.setType("text/plain");
+							intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 
-				String t = title;
-				try {
-					bib = java.net.URLEncoder.encode(app.getLibrary()
-							.getIdent(), "UTF-8");
-					t = java.net.URLEncoder.encode(t, "UTF-8");
-				} catch (UnsupportedEncodingException e) {
-				}
+							// Add data to the intent, the receiving app will
+							// decide
+							// what to do with it.
+							intent.putExtra(Intent.EXTRA_SUBJECT, title);
 
-				String shareUrl = app.getApi().getShareUrl(id, title);
-				if (shareUrl != null) {
-					intent.putExtra(Intent.EXTRA_TEXT, shareUrl);
-					startActivity(Intent.createChooser(intent, getResources()
-							.getString(R.string.share)));
-				} else {
-					Toast toast = Toast.makeText(
-							SearchResultDetailsActivity.this,
-							getString(R.string.share_notsupported),
-							Toast.LENGTH_SHORT);
-					toast.show();
-				}
+							String t = title;
+							try {
+								bib = java.net.URLEncoder.encode(app
+										.getLibrary().getIdent(), "UTF-8");
+								t = java.net.URLEncoder.encode(t, "UTF-8");
+							} catch (UnsupportedEncodingException e) {
+							}
+
+							String shareUrl = app.getApi().getShareUrl(id,
+									title);
+							if (shareUrl != null) {
+								intent.putExtra(Intent.EXTRA_TEXT, shareUrl);
+								startActivity(Intent.createChooser(intent,
+										getResources()
+												.getString(R.string.share)));
+							} else {
+								Toast toast = Toast.makeText(
+										SearchResultDetailsActivity.this,
+										getString(R.string.share_notsupported),
+										Toast.LENGTH_SHORT);
+								toast.show();
+							}
+						} else { // Share details
+							Intent intent = new Intent(
+									android.content.Intent.ACTION_SEND);
+							intent.setType("text/plain");
+							intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+
+							// Add data to the intent, the receiving app will
+							// decide
+							// what to do with it.
+							intent.putExtra(Intent.EXTRA_SUBJECT, title);
+
+							String t = title;
+							try {
+								bib = java.net.URLEncoder.encode(app
+										.getLibrary().getIdent(), "UTF-8");
+								t = java.net.URLEncoder.encode(t, "UTF-8");
+							} catch (UnsupportedEncodingException e) {
+							}
+
+							String text = title + "\n\n";
+
+							for (Detail detail : SearchResultDetailsActivity.this.item
+									.getDetails()) {
+								String colon = "";
+								if (!detail.getDesc().endsWith(":"))
+									colon = ":";
+								text += detail.getDesc() + colon + "\n"
+										+ detail.getContent() + "\n\n";
+							}
+
+							String shareUrl = app.getApi().getShareUrl(id,
+									title);
+							if (shareUrl != null)
+								text += shareUrl;
+							else
+								text += "http://opacapp.de/:" + bib + ":" + id
+										+ ":" + t;
+
+							intent.putExtra(Intent.EXTRA_TEXT, text);
+							startActivity(Intent.createChooser(intent,
+									getResources().getString(R.string.share)));
+						}
+					}
+				});
+				AlertDialog alert = builder.create();
+
+				alert.show();
 			}
+
 			return true;
 		} else if (item.getItemId() == R.id.action_star) {
 			StarDataSource star = new StarDataSource(

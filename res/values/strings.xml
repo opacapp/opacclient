@@ -219,5 +219,8 @@
     <string name="email_address">E-Mail-Adresse</string>
     <string name="email_address_description">Benötigt für E-Book-Reservierungen</string>
     <string name="accchange_sorry">Account-Wechsel hier leider nicht möglich, bitte neu suchen.</string>
+    <string name="share_dialog_select">Ergebnis teilen</string>
+    <string name="share_link">Link teilen</string>
+    <string name="share_details">Details exportieren</string>
 
 </resources>
