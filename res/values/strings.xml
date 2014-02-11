@@ -222,5 +222,6 @@
     <string name="share_dialog_select">Ergebnis teilen</string>
     <string name="share_link">Link teilen</string>
     <string name="share_details">Details exportieren</string>
+    <string name="no_ssl">Diese Bibliothek unterstützt keine sichere HTTPS-Verbindung. Wenn Sie in ungeschützten öffentlichen Netzwerken die Kontofunktionen benutzen oder die Erinnerungsfunktion aktiviert haben, kann ihr Passwort theoretisch von anderen Nutzern im Netzwerk mitgelesen werden.</string>
 
 </resources>

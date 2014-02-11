@@ -120,6 +120,13 @@ public class AccountEditActivity extends SherlockActivity {
 			} else if (findViewById(R.id.rlReplaced) != null) {
 				findViewById(R.id.rlReplaced).setVisibility(View.GONE);
 			}
+
+			if (!lib.getData().getString("baseurl").contains("https")
+					&& findViewById(R.id.no_ssl) != null) {
+				findViewById(R.id.no_ssl).setVisibility(View.VISIBLE);
+			} else if (findViewById(R.id.no_ssl) != null) {
+				findViewById(R.id.no_ssl).setVisibility(View.GONE);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {

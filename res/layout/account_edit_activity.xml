@@ -97,6 +97,16 @@
             android:ems="10"
             android:inputType="textPassword"
             android:singleLine="true" />
+
+        <TextView
+            android:id="@+id/no_ssl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@color/warning"
+            android:padding="16dp"
+            android:text="@string/no_ssl"
+            android:visibility="gone" />
     </LinearLayout>
 
 </ScrollView>
