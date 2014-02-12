@@ -125,6 +125,13 @@ public class AccountData {
 	public static final String KEY_LENT_DOWNLOAD = "download";
 
 	/**
+	 * Media ID to open detail page, if possible.
+	 * 
+	 * ContentValues key for {@link #setLent(List)}
+	 */
+	public static final String KEY_LENT_ID = "id";
+
+	/**
 	 * Title of an ordered item. Should be set.
 	 * 
 	 * ContentValues key for {@link #setReservations(List)}
@@ -179,6 +186,20 @@ public class AccountData {
 	 * ContentValues key for {@link #setReservations(List)}
 	 */
 	public static final String KEY_RESERVATION_BOOKING = "bookingurl";
+
+	/**
+	 * Media ID to open detail page, if possible.
+	 * 
+	 * ContentValues key for {@link #setReservations(List)}
+	 */
+	public static final String KEY_RESERVATION_ID = "id";
+
+	/**
+	 * Item format
+	 * 
+	 * ContentValues key for {@link #setReservations(List)}
+	 */
+	public static final String KEY_RESERVATION_FORMAT = "format";
 
 	/**
 	 * Get lent items

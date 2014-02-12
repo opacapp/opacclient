@@ -429,21 +429,17 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
 		LayoutInflater inflater = getLayoutInflater();
-
-		View view = inflater.inflate(R.layout.reservation_details_dialog, null);
-
-		TableLayout table = (TableLayout) view.findViewById(R.id.tlDetails);
-
+		View view;
+		
 		if (result.getDetails().size() == 1
 				&& result.getDetails().get(0).length == 1) {
-			((RelativeLayout) view.findViewById(R.id.rlConfirm))
-					.removeView(table);
-			TextView tv = new TextView(this);
+			view = inflater.inflate(R.layout.reservation_details_dialog_simple, null);
+			TextView tv = (TextView) view.findViewById(R.id.tvDetails);
 			tv.setText(result.getDetails().get(0)[0]);
-			tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
-					LayoutParams.WRAP_CONTENT));
-			((RelativeLayout) view.findViewById(R.id.rlConfirm)).addView(tv);
 		} else {
+			view = inflater.inflate(R.layout.reservation_details_dialog, null);
+			TableLayout table = (TableLayout) view.findViewById(R.id.tlDetails);
+			
 			for (String[] detail : result.getDetails()) {
 				TableRow tr = new TableRow(this);
 				if (detail.length == 2) {
@@ -613,33 +609,41 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
 		LayoutInflater inflater = getLayoutInflater();
 
-		View view = inflater.inflate(R.layout.reservation_details_dialog, null);
+		View view;
 
-		TableLayout table = (TableLayout) view.findViewById(R.id.tlDetails);
-
-		for (String[] detail : result.getDetails()) {
-			TableRow tr = new TableRow(this);
-			if (detail.length == 2) {
-				TextView tv1 = new TextView(this);
-				tv1.setText(Html.fromHtml(detail[0]));
-				tv1.setTypeface(null, Typeface.BOLD);
-				tv1.setPadding(0, 0, 8, 0);
-				TextView tv2 = new TextView(this);
-				tv2.setText(Html.fromHtml(detail[1]));
-				tv2.setEllipsize(TruncateAt.END);
-				tv2.setSingleLine(false);
-				tr.addView(tv1);
-				tr.addView(tv2);
-			} else if (detail.length == 1) {
-				TextView tv1 = new TextView(this);
-				tv1.setText(Html.fromHtml(detail[0]));
-				tv1.setPadding(0, 2, 0, 2);
-				TableRow.LayoutParams params = new TableRow.LayoutParams(0);
-				params.span = 2;
-				tv1.setLayoutParams(params);
-				tr.addView(tv1);
+		if (result.getDetails().size() == 1
+				&& result.getDetails().get(0).length == 1) {
+			view = inflater.inflate(R.layout.reservation_details_dialog_simple, null);
+			TextView tv = (TextView) view.findViewById(R.id.tvDetails);
+			tv.setText(result.getDetails().get(0)[0]);
+		} else {
+			view = inflater.inflate(R.layout.reservation_details_dialog, null);
+			TableLayout table = (TableLayout) view.findViewById(R.id.tlDetails);
+			
+			for (String[] detail : result.getDetails()) {
+				TableRow tr = new TableRow(this);
+				if (detail.length == 2) {
+					TextView tv1 = new TextView(this);
+					tv1.setText(Html.fromHtml(detail[0]));
+					tv1.setTypeface(null, Typeface.BOLD);
+					tv1.setPadding(0, 0, 8, 0);
+					TextView tv2 = new TextView(this);
+					tv2.setText(Html.fromHtml(detail[1]));
+					tv2.setEllipsize(TruncateAt.END);
+					tv2.setSingleLine(false);
+					tr.addView(tv1);
+					tr.addView(tv2);
+				} else if (detail.length == 1) {
+					TextView tv1 = new TextView(this);
+					tv1.setText(Html.fromHtml(detail[0]));
+					tv1.setPadding(0, 2, 0, 2);
+					TableRow.LayoutParams params = new TableRow.LayoutParams(0);
+					params.span = 2;
+					tv1.setLayoutParams(params);
+					tr.addView(tv1);
+				}
+				table.addView(tr);
 			}
-			table.addView(tr);
 		}
 
 		builder.setTitle(R.string.confirm_title)

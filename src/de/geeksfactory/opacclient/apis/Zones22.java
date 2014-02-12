@@ -22,14 +22,20 @@
 package de.geeksfactory.opacclient.apis;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.acra.ACRA;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
@@ -73,6 +79,7 @@ public class Zones22 extends BaseApi {
 	private Library library;
 	private int page;
 	private String searchobj;
+	private String accountobj;
 
 	private static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
 	static {
@@ -125,8 +132,10 @@ public class Zones22 extends BaseApi {
 	@Override
 	public void start() throws ClientProtocolException, SocketException,
 			IOException, NotReachableException {
-		String html = httpGet(opac_url
-				+ "/APS_ZONES?fn=AdvancedSearch&Style=Portal3&SubStyle=&Lang=GER&ResponseEncoding=utf-8");
+		String html = httpGet(
+				opac_url
+						+ "/APS_ZONES?fn=AdvancedSearch&Style=Portal3&SubStyle=&Lang=GER&ResponseEncoding=utf-8",
+				getDefaultEncoding());
 
 		Document doc = Jsoup.parse(html);
 
@@ -225,7 +234,7 @@ public class Zones22 extends BaseApi {
 		}
 
 		String html = httpGet(opac_url + "/" + searchobj + "?"
-				+ URLEncodedUtils.format(params, "UTF-8"));
+				+ URLEncodedUtils.format(params, "UTF-8"), getDefaultEncoding());
 
 		page = 1;
 
@@ -249,7 +258,7 @@ public class Zones22 extends BaseApi {
 		params.add(new BasicNameValuePair("PageSize", "10"));
 
 		String html = httpGet(opac_url + "/" + searchobj + "?"
-				+ URLEncodedUtils.format(params, "UTF-8"));
+				+ URLEncodedUtils.format(params, "UTF-8"), getDefaultEncoding());
 		this.page = page;
 
 		return parse_search(html, page);
@@ -391,6 +400,13 @@ public class Zones22 extends BaseApi {
 			}
 		}
 
+		for (Element a : doc.select("a.SummaryActionLink")) {
+			if (a.text().contains("Vormerken")) {
+				result.setReservable(true);
+				result.setReservation_info(a.attr("href"));
+			}
+		}
+
 		if (!detaildiv.isEmpty()) {
 			for (int i = 0; i < detaildiv.size(); i++) {
 				Element dd = detaildiv.get(i);
@@ -494,18 +510,107 @@ public class Zones22 extends BaseApi {
 		return result;
 	}
 
-	// No account support for now.
-
 	@Override
 	public ReservationResult reservation(String reservation_info, Account acc,
 			int useraction, String selection) throws IOException {
-		return new ReservationResult(ReservationResult.Status.UNSUPPORTED);
+		String html = httpGet(opac_url + "/" + reservation_info,
+				getDefaultEncoding());
+		Document doc = Jsoup.parse(html);
+		if (html.contains("Geheimnummer")) {
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			for (Element input : doc.select("#MainForm input")) {
+				if (!input.attr("name").equals("BRWR")
+						&& !input.attr("name").equals("PIN")) {
+					params.add(new BasicNameValuePair(input.attr("name"), input
+							.attr("value")));
+				}
+			}
+			params.add(new BasicNameValuePair("BRWR", acc.getName()));
+			params.add(new BasicNameValuePair("PIN", acc.getPassword()));
+			html = httpGet(
+					opac_url
+							+ "/"
+							+ doc.select("#MainForm").attr("action")
+							+ "?"
+							+ URLEncodedUtils.format(params,
+									getDefaultEncoding()), getDefaultEncoding());
+			doc = Jsoup.parse(html);
+		}
+
+		if (useraction == ReservationResult.ACTION_BRANCH) {
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			for (Element input : doc.select("#MainForm input")) {
+				if (!input.attr("name").equals("Confirm")) {
+					params.add(new BasicNameValuePair(input.attr("name"), input
+							.attr("value")));
+				}
+
+			}
+			params.add(new BasicNameValuePair(
+					"MakeResTypeDef.Reservation.RecipientLocn", selection));
+			params.add(new BasicNameValuePair("Confirm", "1"));
+			html = httpGet(
+					opac_url
+							+ "/"
+							+ doc.select("#MainForm").attr("action")
+							+ "?"
+							+ URLEncodedUtils.format(params,
+									getDefaultEncoding()), getDefaultEncoding());
+			return new ReservationResult(MultiStepResult.Status.OK);
+		}
+
+		if (useraction == 0) {
+			ReservationResult res = null;
+			for (Node n : doc.select("#MainForm").first().childNodes()) {
+				if (n instanceof TextNode) {
+					if (((TextNode) n).text().contains("Entgelt")) {
+						res = new ReservationResult(
+								ReservationResult.Status.CONFIRMATION_NEEDED);
+						List<String[]> details = new ArrayList<String[]>();
+						details.add(new String[] { ((TextNode) n).text().trim() });
+						res.setDetails(details);
+						res.setMessage(((TextNode) n).text().trim());
+						res.setActionIdentifier(ReservationResult.ACTION_CONFIRMATION);
+					}
+				}
+			}
+			if (res != null)
+				return res;
+		}
+		if (doc.select("#MainForm select").size() > 0) {
+			ReservationResult res = new ReservationResult(
+					ReservationResult.Status.SELECTION_NEEDED);
+			ContentValues sel = new ContentValues();
+			for (Element opt : doc.select("#MainForm select option")) {
+				sel.put(opt.attr("value"), opt.text().trim());
+			}
+			res.setSelection(sel);
+			res.setMessage("Bitte Zweigstelle auswählen");
+			res.setActionIdentifier(ReservationResult.ACTION_BRANCH);
+			return res;
+		}
+
+		return new ReservationResult(ReservationResult.Status.ERROR);
 	}
 
 	@Override
 	public ProlongResult prolong(String media, Account account, int useraction,
 			String Selection) throws IOException {
-		return new ProlongResult(MultiStepResult.Status.UNSUPPORTED);
+		if (accountobj == null) {
+			login(account);
+		}
+		String html = httpGet(opac_url + "/" + media, getDefaultEncoding());
+		Document doc = Jsoup.parse(html);
+		if ((html.contains("document.location.replace") || html
+				.contains("Schnellsuche")) && useraction == 0) {
+			login(account);
+			prolong(media, account, 1, null);
+		}
+		String dialog = doc.select(".SSRenewDlgContent").text();
+		if (dialog.contains("erfolgreich"))
+			return new ProlongResult(MultiStepResult.Status.OK, dialog);
+		else
+			return new ProlongResult(MultiStepResult.Status.ERROR, dialog);
 	}
 
 	@Override
@@ -514,15 +619,179 @@ public class Zones22 extends BaseApi {
 		return false;
 	}
 
+	private Document login(Account acc) throws IOException {
+		String html = httpGet(
+				opac_url
+						+ "/APS_ZONES?fn=MyZone&Style=Portal3&SubStyle=&Lang=GER&ResponseEncoding=utf-8",
+				getDefaultEncoding());
+		Document doc = Jsoup.parse(html);
+		doc.setBaseUri(opac_url + "/APS_ZONES");
+		if (doc.select(".AccountSummaryCounterLink").size() > 0) {
+			return doc;
+		}
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+		for (Element input : doc.select("#LoginForm input")) {
+			if (!input.attr("name").equals("BRWR")
+					&& !input.attr("name").equals("PIN"))
+				params.add(new BasicNameValuePair(input.attr("name"), input
+						.attr("value")));
+		}
+		params.add(new BasicNameValuePair("BRWR", acc.getName()));
+		params.add(new BasicNameValuePair("PIN", acc.getPassword()));
+
+		String loginHtml;
+		try {
+			loginHtml = httpPost(
+					doc.select("#LoginForm").get(0).absUrl("action"),
+					new UrlEncodedFormEntity(params), getDefaultEncoding());
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		if (!loginHtml.contains("Kontostand")) {
+			last_error = "Login fehlgeschlagen.";
+			return null;
+		}
+
+		Document doc2 = Jsoup.parse(loginHtml);
+		Pattern objid_pat = Pattern.compile("Obj_([0-9]+)\\?.*");
+		for (Element a : doc2.select("a")) {
+			Matcher objid_matcher = objid_pat.matcher(a.attr("href"));
+			if (objid_matcher.matches()) {
+				accountobj = objid_matcher.group(1);
+			}
+		}
+
+		return doc2;
+	}
+
 	@Override
 	public AccountData account(Account acc) throws IOException,
 			NotReachableException, JSONException, SocketException {
-		return null;
+		Document login = login(acc);
+		if (login == null)
+			return null;
+
+		AccountData res = new AccountData(acc.getId());
+
+		String lent_link = null;
+		String res_link = null;
+		int lent_cnt = -1;
+		int res_cnt = -1;
+		for (Element td : login
+				.select(".AccountSummaryCounterNameCell, .AccountSummaryCounterNameCellStripe, .CAccountDetailFieldNameCellStripe, .CAccountDetailFieldNameCell")) {
+			String section = td.text().trim();
+			if (section.contains("Entliehene Medien")) {
+				lent_link = td.select("a").attr("href");
+				lent_cnt = Integer.parseInt(td.nextElementSibling().text()
+						.trim());
+			} else if (section.contains("Vormerkungen")) {
+				res_link = td.select("a").attr("href");
+				res_cnt = Integer.parseInt(td.nextElementSibling().text()
+						.trim());
+			} else if (section.contains("Kontostand")) {
+				res.setPendingFees(td.nextElementSibling().text().trim());
+			} else if (section.matches("Ausweis g.ltig bis")) {
+				res.setValidUntil(td.nextElementSibling().text().trim());
+			}
+		}
+		assert (lent_cnt >= 0);
+		assert (res_cnt >= 0);
+		if (lent_link == null)
+			return null;
+
+		String lent_html = httpGet(opac_url + "/" + lent_link,
+				getDefaultEncoding());
+		Document lent_doc = Jsoup.parse(lent_html);
+		List<ContentValues> lent = new ArrayList<ContentValues>();
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		Pattern id_pat = Pattern
+				.compile("javascript:renewItem\\('[0-9]+','(.*)'\\)");
+
+		for (Element table : lent_doc
+				.select(".LoansBrowseItemDetailsCellStripe table, .LoansBrowseItemDetailsCell table")) {
+			ContentValues item = new ContentValues();
+
+			for (Element tr : table.select("tr")) {
+				String desc = tr.select(".LoanBrowseFieldNameCell").text()
+						.trim();
+				String value = tr.select(".LoanBrowseFieldDataCell").text()
+						.trim();
+				if (desc.equals("Titel"))
+					item.put(AccountData.KEY_LENT_TITLE, value);
+				if (desc.equals("Verfasser"))
+					item.put(AccountData.KEY_LENT_AUTHOR, value);
+				if (desc.equals("Mediennummer"))
+					item.put(AccountData.KEY_LENT_BARCODE, value);
+				if (desc.equals("ausgeliehen in"))
+					item.put(AccountData.KEY_LENT_BRANCH, value);
+				if (desc.matches("F.+lligkeits.*datum")) {
+					value = value.split(" ")[0];
+					item.put(AccountData.KEY_LENT_DEADLINE, value);
+					try {
+						item.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, sdf
+								.parse(value).getTime());
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			if (table.select(".button[Title~=Zum]").size() == 1) {
+				Matcher matcher1 = id_pat.matcher(table.select(
+						".button[Title~=Zum]").attr("href"));
+				if (matcher1.matches()) {
+					item.put(AccountData.KEY_LENT_LINK, matcher1.group(1));
+				}
+			}
+			lent.add(item);
+		}
+		res.setLent(lent);
+		assert (lent_cnt <= lent.size());
+
+		List<ContentValues> reservations = new ArrayList<ContentValues>();
+		String res_html = httpGet(opac_url + "/" + res_link,
+				getDefaultEncoding());
+		Document res_doc = Jsoup.parse(res_html);
+
+		for (Element table : res_doc
+				.select(".MessageBrowseItemDetailsCell table, .MessageBrowseItemDetailsCellStripe table")) {
+			ContentValues item = new ContentValues();
+
+			for (Element tr : table.select("tr")) {
+				String desc = tr.select(".MessageBrowseFieldNameCell").text()
+						.trim();
+				String value = tr.select(".MessageBrowseFieldDataCell").text()
+						.trim();
+				if (desc.equals("Titel"))
+					item.put(AccountData.KEY_RESERVATION_TITLE, value);
+				if (desc.equals("Publikationsform"))
+					item.put(AccountData.KEY_RESERVATION_FORMAT, value);
+				if (desc.equals("Liefern an"))
+					item.put(AccountData.KEY_RESERVATION_BRANCH, value);
+				if (desc.equals("Status"))
+					item.put(AccountData.KEY_RESERVATION_READY, value);
+			}
+			if ("Gelöscht".equals(item
+					.getAsString(AccountData.KEY_RESERVATION_READY))) {
+				continue;
+			}
+			reservations.add(item);
+		}
+		res.setReservations(reservations);
+		assert (reservations.size() >= res_cnt);
+
+		return res;
 	}
 
 	@Override
 	public boolean isAccountSupported(Library library) {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -566,4 +835,10 @@ public class Zones22 extends BaseApi {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	protected String getDefaultEncoding() {
+		return "UTF-8";
+	}
+
 }
