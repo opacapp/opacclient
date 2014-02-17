@@ -564,7 +564,7 @@ public class Pica extends BaseApi implements OpacApi {
 
 		params.add(new BasicNameValuePair("VB", media));
 
-		String html = httpPost(https_url + "loan/DB=" + db + "/USERINFO",
+		String html = httpPost(https_url + "/loan/DB=" + db + "/USERINFO",
 				new UrlEncodedFormEntity(params, "utf-8"));
 		Document doc = Jsoup.parse(html);
 
@@ -602,7 +602,7 @@ public class Pica extends BaseApi implements OpacApi {
 
 		params.add(new BasicNameValuePair("VB", media));
 
-		String html = httpPost(https_url + "loan/DB=" + db + "/USERINFO",
+		String html = httpPost(https_url + "/loan/DB=" + db + "/USERINFO",
 				new UrlEncodedFormEntity(params, "utf-8"));
 		Document doc = Jsoup.parse(html);
 
@@ -636,19 +636,19 @@ public class Pica extends BaseApi implements OpacApi {
 		params.add(new BasicNameValuePair("BOR_PW", account.getPassword()));
 
 		String html = httpPost(
-				https_url + "loan/DB=" + db + "/LNG=DU/USERINFO",
+				https_url + "/loan/DB=" + db + "/LNG=DU/USERINFO",
 				new UrlEncodedFormEntity(params, "utf-8"));
 		Document doc = Jsoup.parse(html);
 
 		pwEncoded = doc.select("a.tab0").attr("href");
 		pwEncoded = pwEncoded.substring(pwEncoded.indexOf("PW_ENC=") + 7);
 
-		html = httpGet(https_url + "loan/DB=" + db
+		html = httpGet(https_url + "/loan/DB=" + db
 				+ "/USERINFO?ACT=UI_LOL&BOR_U=" + account.getName()
 				+ "&BOR_PW_ENC=" + pwEncoded);
 		doc = Jsoup.parse(html);
 
-		html = httpGet(https_url + "loan/DB=" + db
+		html = httpGet(https_url + "/loan/DB=" + db
 				+ "/USERINFO?ACT=UI_LOR&BOR_U=" + account.getName()
 				+ "&BOR_PW_ENC=" + pwEncoded);
 		Document doc2 = Jsoup.parse(html);
@@ -694,7 +694,7 @@ public class Pica extends BaseApi implements OpacApi {
 		assert (trs > 0);
 		for (int i = 0; i < trs; i++) {
 			Element tr = copytrs.get(i);
-			String html = httpGet(https_url + "nr_renewals.php?U="
+			String html = httpGet(https_url + "/nr_renewals.php?U="
 					+ accountName + "&DB=" + db + "&VBAR="
 					+ tr.child(1).select("input").attr("value"));
 			String prolongCount = Jsoup.parse(html).text();
