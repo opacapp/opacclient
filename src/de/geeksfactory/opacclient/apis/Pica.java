@@ -521,7 +521,8 @@ public class Pica extends BaseApi implements OpacApi {
 
 				if (title.contains("Status")) {
 					e.put(DetailledItem.KEY_COPY_STATUS, detail);
-				} else if (title.contains("Standort") || title.contains("Vorhanden in")) {
+				} else if (title.contains("Standort")
+						|| title.contains("Vorhanden in")) {
 					location += detail;
 				} else if (title.contains("Sonderstandort")) {
 					location += " - " + detail;
@@ -529,7 +530,8 @@ public class Pica extends BaseApi implements OpacApi {
 					e.put(DetailledItem.KEY_COPY_LOCATION, detail);
 				} else if (title.contains("Signatur")) {
 					e.put(DetailledItem.KEY_COPY_SHELFMARK, detail);
-				} else if (title.contains("Status") || title.contains("Ausleihinfo")) {
+				} else if (title.contains("Status")
+						|| title.contains("Ausleihinfo")) {
 					detail = detail.replace("Bestellen", "").trim();
 					detail = detail.replace("verfuegbar", "verf�gbar");
 					detail = detail.replace("Verfuegbar", "verf�gbar");
@@ -635,9 +637,8 @@ public class Pica extends BaseApi implements OpacApi {
 		params.add(new BasicNameValuePair("BOR_U", account.getName()));
 		params.add(new BasicNameValuePair("BOR_PW", account.getPassword()));
 
-		String html = httpPost(
-				https_url + "/loan/DB=" + db + "/LNG=DU/USERINFO",
-				new UrlEncodedFormEntity(params, "utf-8"));
+		String html = httpPost(https_url + "/loan/DB=" + db
+				+ "/LNG=DU/USERINFO", new UrlEncodedFormEntity(params, "utf-8"));
 		Document doc = Jsoup.parse(html);
 
 		pwEncoded = doc.select("a.tab0").attr("href");
@@ -694,17 +695,27 @@ public class Pica extends BaseApi implements OpacApi {
 		assert (trs > 0);
 		for (int i = 0; i < trs; i++) {
 			Element tr = copytrs.get(i);
-			String html = httpGet(https_url + "/nr_renewals.php?U="
-					+ accountName + "&DB=" + db + "&VBAR="
-					+ tr.child(1).select("input").attr("value"));
-			String prolongCount = Jsoup.parse(html).text();
+			String prolongCount = "";
+			try {
+				String html = httpGet(https_url + "/nr_renewals.php?U="
+						+ accountName + "&DB=" + db + "&VBAR="
+						+ tr.child(1).select("input").attr("value"));
+				prolongCount = Jsoup.parse(html).text();
+			} catch (IOException e) {
+
+			}
 			String reminderCount = tr.child(13).text().trim();
 			reminderCount = reminderCount.substring(
 					reminderCount.indexOf("(") + 1,
 					reminderCount.indexOf(" Mahn"));
 			ContentValues e = new ContentValues();
 
-			e.put(AccountData.KEY_LENT_TITLE, tr.child(4).text().trim());
+			if (tr.child(4).text().trim().length() < 5
+					&& tr.child(5).text().trim().length() > 4) {
+				e.put(AccountData.KEY_LENT_TITLE, tr.child(5).text().trim());
+			} else {
+				e.put(AccountData.KEY_LENT_TITLE, tr.child(4).text().trim());
+			}
 			String status = "";
 			if (!reminderCount.equals("0")) {
 				status += reminderCount + " Mahnungen, ";
