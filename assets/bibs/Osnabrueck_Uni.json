@@ -2,15 +2,16 @@
     "api": "pica",
     "city": "Osnabrück",
     "data": {
-        "baseurl": "http://osopc4.ub.uni-osnabrueck.de:8080/",
+        "baseurl": "https://opac.ub.uni-osnabrueck.de",
         "information": "http://www.ub.uni-osnabrueck.de/",
-        "db": "1"
+        "db": "1",
+		"accountSupported": true
     },
     "geo": [
         52.2729596,
         8.0453083
     ],
     "group": "Niedersachsen",
-    "support": "Katalogsuche",
+    "support": "Katalogsuche und Konto",
     "title": "Unibibliothek"
 }

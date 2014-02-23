@@ -4,13 +4,14 @@
     "data": {
         "baseurl": "https://opac.bibliothek.uni-halle.de/",
         "information": "http://bibliothek.uni-halle.de/",
-        "db": "1"
+        "db": "1",
+		"accountSupported": true
     },
     "geo": [
         51.4887849,
         11.970509
     ],
     "group": "Sachsen-Anhalt",
-    "support": "Katalogsuche",
+    "support": "Katalogsuche und Konto",
     "title": "Unibibliothek"
 }

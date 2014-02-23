@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/action_export" android:title="@string/export_starred" android:showAsAction="never"></item>
+
+    <item
+        android:id="@+id/action_export"
+        android:icon="@drawable/ic_action_share"
+        android:showAsAction="ifRoom"
+        android:title="@string/export_starred">
+    </item>
 
 </menu>

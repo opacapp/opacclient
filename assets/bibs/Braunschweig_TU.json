@@ -2,15 +2,17 @@
     "api": "pica",
     "city": "Braunschweig",
     "data": {
-        "baseurl": "http://sunny.biblio.etc.tu-bs.de:8080/",
+        "baseurl": "https://opac.lbs-braunschweig.gbv.de",
         "information": "http://www.biblio.tu-bs.de/",
-        "db": "1"
+        "db": "1",
+		"customssl": true,
+		"accountSupported": true
     },
     "geo": [
         52.27387,
         10.52911
     ],
     "group": "Niedersachsen",
-    "support": "Katalogsuche",
+    "support": "Katalogsuche und Konto",
     "title": "Universitätsbibliothek"
 }

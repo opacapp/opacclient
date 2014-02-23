@@ -12,7 +12,8 @@
             "status": -1, 
             "title": 2
         }, 
-        "baseurl": "http://wwwopac.rz-as.de/korntalmuenchingen", 
+        "baseurl": "https://wwwopac.rz-kiru.de/korntalmuenchingen", 
+		"customssl": true,
         "copiestable": {
             "barcode": -1, 
             "branch": 0, 

@@ -1,42 +1,43 @@
 {
     "api": "bibliotheca", 
-    "city": "Rheine", 
+    "city": "Ellwangen", 
     "data": {
         "accounttable": {
             "author": 0, 
             "barcode": -1, 
             "homebranch": -1, 
             "lendingbranch": -1, 
-            "prolongurl": 3, 
+            "prolongurl": 5, 
             "returndate": 2, 
-            "status": -1, 
+            "status": 3, 
             "title": 1
         }, 
-        "baseurl": "http://www.rheine-bibliothek.de/webopac", 
+        "baseurl": "https://wwwopac.rz-kiru.de/ellwangen", 
+		"customssl": true,
         "copiestable": {
             "barcode": -1, 
-            "branch": 4, 
+            "branch": 5, 
             "department": -1, 
             "location": 2, 
             "reservations": -1, 
-            "returndate": 5, 
+            "returndate": 4, 
             "status": 3
         }, 
-        "information": "http://www.rheine.de/staticsite/staticsite.php?menuid=494&topmenu=672&keepmenu=inactive#tbl_804", 
+        "information": "http://www.ellwangen.de/index.php?id=215",
         "reservationtable": {
             "author": 0, 
-            "availability": 2, 
+            "availability": 3, 
             "branch": -1, 
-            "cancelurl": 3, 
-            "expirationdate": null, 
+            "cancelurl": 4, 
+            "expirationdate": -1, 
             "title": 1
         }
     }, 
     "geo": [
-        52.2815691, 
-        7.443409200000001
+        48.96268329999999, 
+        10.1301513
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "group": "Baden-W\u00fcrttemberg", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

@@ -1,0 +1,42 @@
+{
+    "api": "bibliotheca", 
+    "city": "Sinsheim", 
+    "data": {
+        "accounttable": {
+            "author": 1, 
+            "barcode": -1, 
+            "homebranch": 4, 
+            "lendingbranch": 4, 
+            "prolongurl": 5, 
+            "returndate": 3, 
+            "status": -1, 
+            "title": 2
+        }, 
+        "baseurl": "https://stadtbibliothek.sinsheim.de/webopac", 
+        "copiestable": {
+            "barcode": -1, 
+            "branch": 0, 
+            "department": 1, 
+            "location": 2, 
+            "reservations": 5, 
+            "returndate": 4, 
+            "status": 3
+        }, 
+        "information": "http://www.sinsheim.de/pb/sinsheim,Lde/Home/Bildung+_+Soziales/Stadtbibliothek.html",
+        "reservationtable": {
+            "author": 1, 
+            "availability": 4, 
+            "branch": 3, 
+            "cancelurl": 5, 
+            "expirationdate": -1, 
+            "title": 2
+        }
+    }, 
+    "geo": [
+        49.2488637, 
+        8.8884905
+    ], 
+    "group": "Baden-W\u00fcrttemberg", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Stadtbibliothek"
+}

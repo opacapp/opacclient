@@ -115,7 +115,7 @@ class Bibliotheca(Api):
         return data
 
     def _fetchData(self, url, suff = ''):
-        config = configparser.RawConfigParser(allow_no_value=True)
+        config = configparser.RawConfigParser(allow_no_value=True, strict=False)
         config.read_string(urllib.request.urlopen(url+'/w3oini.txt').read().decode('iso-8859-1'))
         data = {
             'accounttable': {},
@@ -236,9 +236,22 @@ class Zones22(Api):
         return 'Katalogsuche'
 
 class Pica(Api):
+    account = False
 
     def getDefaultSupportString(self):
-        return 'Katalogsuche'
+        return 'Katalogsuche und Konto' if self.account else 'Katalogsuche'
+
+    def prompt(self, data):
+        print("Konto unterstützt?")
+        inp = getInput(required=False, default='nein')
+        if inp.lower() in ("ja", "yes", "y", "j", "true", "1"):
+            data['data']['accountSupported'] = True
+            self.account = True
+        print("DB-Nummer?")
+        inp = getInput(required=True)
+        data['data']['db'] = inp
+        return data
+
 
 class IOpac(Api):
 
@@ -246,13 +259,13 @@ class IOpac(Api):
         return 'Katalogsuche und Konto'
 
 APIS = {
-        'bibliotheca' : Bibliotheca,
-        'sisis'       : Sisis,
-        'biber1992'   : Biber1992,
-        'zones22'     : Zones22,
-        'iopac'       : IOpac,
-        'pica'        : Pica,
-    }
+    'bibliotheca' : Bibliotheca,
+    'sisis'       : Sisis,
+    'biber1992'   : Biber1992,
+    'zones22'     : Zones22,
+    'iopac'       : IOpac,
+    'pica'        : Pica,
+}
 
 data = {}
 

@@ -59,6 +59,7 @@ import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
+import de.geeksfactory.opacclient.objects.SearchResult.Status;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
@@ -285,7 +286,7 @@ public class BiBer1992 extends BaseApi {
 	@Override
 	public void start() throws IOException, NotReachableException {
 		HttpGet httpget;
-		if (m_opac_dir.equals("opax"))
+		if (m_opac_dir.equals("opax") || m_opac_dir.equals("opax13"))
 			httpget = new HttpGet(m_opac_url + "/" + m_opac_dir
 					+ "/de/qsim.html.S");
 		else
@@ -389,7 +390,7 @@ public class BiBer1992 extends BaseApi {
 		m_nameValuePairs.add(new BasicNameValuePair("REG1", "AW"));
 		m_nameValuePairs.add(new BasicNameValuePair("REG2", "TW"));
 		m_nameValuePairs.add(new BasicNameValuePair("REG3", "DW"));
-		m_nameValuePairs.add(new BasicNameValuePair("REG4", "PP"));
+		m_nameValuePairs.add(new BasicNameValuePair("REG4", "SG"));
 		m_nameValuePairs.add(new BasicNameValuePair("REG5", "IS"));
 		m_nameValuePairs.add(new BasicNameValuePair("REG6", "PU"));
 		m_nameValuePairs.add(new BasicNameValuePair("REG7", "PY"));
@@ -518,6 +519,17 @@ public class BiBer1992 extends BaseApi {
 			desc = desc.replaceAll("<a .*?</a>", "");
 			sr.setInnerhtml(desc);
 
+			if (tr.select("font.p04x09b").size() > 0
+					&& tr.select("font.p02x09b").size() == 0) {
+				sr.setStatus(Status.GREEN);
+			} else if (tr.select("font.p04x09b").size() == 0
+					&& tr.select("font.p02x09b").size() > 0) {
+				sr.setStatus(Status.RED);
+			} else if (tr.select("font.p04x09b").size() > 0
+					&& tr.select("font.p02x09b").size() > 0) {
+				sr.setStatus(Status.YELLOW);
+			}
+
 			// number
 			sr.setNr(i / rows_per_hit);
 			results.add(sr);
@@ -622,7 +634,7 @@ public class BiBer1992 extends BaseApi {
 
 		// go through all rows
 		for (Element row : rows) {
-			Elements columns = row.select("td");
+			Elements columns = row.children();
 
 			if (columns.size() == 2) {
 				// HTML tag "&nbsp;" is encoded as 0xA0
@@ -637,6 +649,14 @@ public class BiBer1992 extends BaseApi {
 						detail = null;
 						item.setTitle(secondColumn);
 					} else {
+
+						if (secondColumn.contains("hier klicken")
+								&& columns.get(1).select("a").size() > 0) {
+							secondColumn += " "
+									+ columns.get(1).select("a").first()
+											.attr("href");
+						}
+
 						detail = new Detail(firstColumn, secondColumn);
 						item.getDetails().add(detail);
 					}
@@ -657,7 +677,7 @@ public class BiBer1992 extends BaseApi {
 
 					}
 				}
-			} else if (columns.size() > 2) {
+			} else if (columns.size() > 3) {
 				// This is the second section: the copies in stock ("Exemplare")
 				// With reverse layout: first row is headline, skipped via
 				// (copy_row > 0)
@@ -687,8 +707,11 @@ public class BiBer1992 extends BaseApi {
 									// but do it not for Status
 									text = " ";
 								} else {
-									text = copy_last_content
-											.getAsString(copy_keys[j]);
+									if (copy_last_content != null)
+										text = copy_last_content
+												.getAsString(copy_keys[j]);
+									else
+										text = "";
 								}
 							}
 							e.put(copy_keys[j], text);
@@ -902,7 +925,7 @@ public class BiBer1992 extends BaseApi {
 				if (index >= 0) {
 					String value = tr.child(index).text().trim();
 
-					// Author and Title is the same field: "autor: title"
+					// Signature, Author and Title is the same field: "autor: title"
 					// sometimes there is no ":" then only the title is given
 					if (key.equals(AccountData.KEY_LENT_AUTHOR)) {
 						if (value.contains(":")) {
@@ -914,8 +937,13 @@ public class BiBer1992 extends BaseApi {
 							value = "";
 						}
 					} else if (key.equals(AccountData.KEY_LENT_TITLE)) {
-						// Title: remove everything up to ":"
-						value = value.replaceFirst(".*\\:", "").trim();
+						if (value.contains(":")) {
+							// Title: remove everything up to ":"
+							value = value.replaceFirst(".*\\:", "").trim();
+						} else {
+							// Remove everything except the signature
+							value = value.replaceFirst("^.* /", "").trim();
+						}
 					}
 
 					if (value.length() != 0) {

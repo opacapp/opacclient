@@ -12,7 +12,8 @@
 			"status": 5,
 			"title": 1
 		},
-        "baseurl": "http://wwwopac.rz-as.de/rottweil",
+        "baseurl": "https://wwwopac.rz-kiru.de/rottweil",
+		"customssl": true,
 		"copiestable": {
 			"barcode": -1,
 			"branch": -1,

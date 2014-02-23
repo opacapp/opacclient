@@ -12,7 +12,8 @@
             "status": 4, 
             "title": 1
         }, 
-        "baseurl": "http://wwwopac.rz-as.de/holzgerlingen", 
+        "baseurl": "https://wwwopac.rz-kiru.de/holzgerlingen", 
+		"customssl": true,
         "copiestable": {
             "barcode": -1, 
             "branch": -1, 

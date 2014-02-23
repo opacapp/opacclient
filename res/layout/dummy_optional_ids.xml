@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/svAccount" >
+
+    <View android:id="@+id/no_ssl" />
+
+    <View android:id="@+id/tvBranch" />
+
+    <View android:id="@+id/tvDepartment" />
+
+    <View android:id="@+id/tvLocation" />
+
+    <View android:id="@+id/tvShelfmark" />
+
+    <View android:id="@+id/tvStatus" />
+
+    <View android:id="@+id/tvReturndate" />
+
+    <View android:id="@+id/tvReservations" />
+
+</View>

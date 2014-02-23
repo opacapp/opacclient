@@ -4,13 +4,14 @@
     "data": {
         "baseurl": "https://kataloge.uni-hamburg.de/",
         "information": "http://www.hamburg.de/staatsarchiv/",
-        "db": "7"
+        "db": "7",
+		"accountSupported": true
     },
     "geo": [
         53.574907,
         10.0688597
     ],
     "group": "Hamburg",
-    "support": "Katalogsuche",
+    "support": "Katalogsuche und Konto",
     "title": "Staatsarchiv"
 }

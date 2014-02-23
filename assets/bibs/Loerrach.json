@@ -12,7 +12,8 @@
 			"status": 5,
 			"title": 1
 		},
-        "baseurl": "http://wwwopac.rz-as.de/loerrach", 
+        "baseurl": "https://wwwopac.rz-kiru.de/loerrach", 
+		"customssl": true,
 		"copiestable": {
 			"barcode": 0,
 			"branch": -1,

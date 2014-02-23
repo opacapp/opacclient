@@ -4,13 +4,14 @@
     "data": {
         "baseurl": "https://kataloge.uni-hamburg.de/",
         "information": "http://www.sub.uni-hamburg.de/home.html",
-        "db": "5"
+        "db": "5",
+		"accountSupported": true
     },
     "geo": [
         53.5740555,
         10.0322024
     ],
     "group": "Hamburg",
-    "support": "Katalogsuche",
+    "support": "Katalogsuche und Konto",
     "title": "Behördenbibliotheken und Hamburg Port Authority"
 }

@@ -417,6 +417,13 @@ public class Bibliotheca extends BaseApi {
 					} catch (URISyntaxException e) {
 					}
 				} else {
+
+					if (content.contains("hier klicken")
+							&& tr.child(1).select("a").size() > 0) {
+						content += " "
+								+ tr.child(1).select("a").first().attr("href");
+					}
+
 					result.addDetail(new Detail(title, content));
 				}
 			}
@@ -430,7 +437,35 @@ public class Bibliotheca extends BaseApi {
 		}
 
 		try {
-			JSONObject copymap = data.getJSONObject("copiestable");
+			JSONObject copymap = new JSONObject();
+			if (data.has("copiestable")) {
+				copymap = data.getJSONObject("copiestable");
+			} else {
+				Elements ths = doc.select(".exemplartab .exemplarmenubar th");
+				for(int i = 0; i < ths.size(); i++){
+					Element th = ths.get(i);
+					String head = th.text().trim();
+					if(head.equals("Zweigstelle")){
+						copymap.put(DetailledItem.KEY_COPY_BRANCH, i);
+					}else if(head.equals("Abteilung")){
+						copymap.put(DetailledItem.KEY_COPY_DEPARTMENT, i);
+					}else if(head.equals("Bereich")){
+						copymap.put(DetailledItem.KEY_COPY_LOCATION, i);
+					}else if(head.equals("Standort")){
+						copymap.put(DetailledItem.KEY_COPY_LOCATION, i);
+					}else if(head.equals("Signatur")){
+						copymap.put(DetailledItem.KEY_COPY_SHELFMARK, i);
+					}else if(head.equals("Barcode") || head.equals("Medien-Nummer")){
+						copymap.put(DetailledItem.KEY_COPY_BARCODE, i);
+					}else if(head.equals("Status")){
+						copymap.put(DetailledItem.KEY_COPY_STATUS, i);
+					}else if(head.equals("Frist") || head.matches("Verf.+gbar")){
+						copymap.put(DetailledItem.KEY_COPY_RETURN, i);
+					}else if(head.equals("Vorbestellungen") || head.equals("Reservierungen")){
+						copymap.put(DetailledItem.KEY_COPY_RESERVATIONS, i);
+					}
+				}
+			}
 			Elements exemplartrs = doc
 					.select(".exemplartab .tabExemplar, .exemplartab .tabExemplar_");
 			for (int i = 0; i < exemplartrs.size(); i++) {
@@ -572,6 +607,14 @@ public class Bibliotheca extends BaseApi {
 					details.add(new String[] { doc
 							.getElementsByClass("kontomeldung").get(0).text()
 							.trim() });
+				}
+				Pattern p = Pattern.compile("geb.hr", Pattern.MULTILINE);
+				for (Element div : doc.select(".kontozeile_center")) {
+					String text = div.text();
+					if (p.matcher(text).find() && !text.contains("usstehend")
+							&& text.contains("orbestellung")) {
+						details.add(new String[] { text.trim() });
+					}
 				}
 
 				for (Element row : doc.select(".kontozeile_center table tr")) {

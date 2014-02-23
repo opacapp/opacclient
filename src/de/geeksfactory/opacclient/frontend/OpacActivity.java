@@ -21,7 +21,6 @@
  */
 package de.geeksfactory.opacclient.frontend;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -38,6 +37,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NavUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,21 +88,26 @@ public abstract class OpacActivity extends SlidingFragmentActivity {
 		t.commit();
 		// Sliding Menu
 		SlidingMenu sm = getSlidingMenu();
-		sm.setShadowWidthRes(R.dimen.shadow_width);
-		sm.setShadowDrawable(R.drawable.shadow);
-		sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-		sm.setFadeDegree(0.35f);
-		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-		sm.setOnOpenListener(new OnOpenListener() {
-			@Override
-			public void onOpen() {
-				if (getCurrentFocus() != null) {
-					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-					imm.hideSoftInputFromWindow(getCurrentFocus()
-							.getWindowToken(), 0);
+		if (app.getSlidingMenuEnabled()) {
+			sm.setShadowWidthRes(R.dimen.shadow_width);
+			sm.setShadowDrawable(R.drawable.shadow);
+			sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+			sm.setFadeDegree(0.35f);
+			sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+			sm.setOnOpenListener(new OnOpenListener() {
+				@Override
+				public void onOpen() {
+					if (getCurrentFocus() != null) {
+						InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+						imm.hideSoftInputFromWindow(getCurrentFocus()
+								.getWindowToken(), 0);
+					}
 				}
-			}
-		});
+			});
+		} else {
+			sm.setEnabled(false);
+			sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
+		}
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 	}
@@ -354,7 +359,11 @@ public abstract class OpacActivity extends SlidingFragmentActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			toggle();
+			if (app.getSlidingMenuEnabled()) {
+				toggle();
+			} else {
+				NavUtils.navigateUpFromSameTask(this);
+			}
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

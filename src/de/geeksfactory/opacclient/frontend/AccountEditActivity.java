@@ -80,7 +80,11 @@ public class AccountEditActivity extends SherlockActivity {
 				.getLongExtra(EXTRA_ACCOUNT_ID, -1));
 		data.close();
 
-		etLabel.setText(account.getLabel());
+		if (account.getLabel().equals(getString(R.string.default_account_name))) {
+			etLabel.setText("");
+		} else {
+			etLabel.setText(account.getLabel());
+		}
 		etName.setText(account.getName());
 		etPassword.setText(account.getPassword());
 
@@ -116,6 +120,13 @@ public class AccountEditActivity extends SherlockActivity {
 			} else if (findViewById(R.id.rlReplaced) != null) {
 				findViewById(R.id.rlReplaced).setVisibility(View.GONE);
 			}
+
+			if (!lib.getData().getString("baseurl").contains("https")
+					&& findViewById(R.id.no_ssl) != null) {
+				findViewById(R.id.no_ssl).setVisibility(View.VISIBLE);
+			} else if (findViewById(R.id.no_ssl) != null) {
+				findViewById(R.id.no_ssl).setVisibility(View.GONE);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {
@@ -125,7 +136,11 @@ public class AccountEditActivity extends SherlockActivity {
 	}
 
 	private void save() {
-		account.setLabel(etLabel.getText().toString());
+		if (etLabel.getText().toString().equals("")) {
+			account.setLabel(getString(R.string.default_account_name));
+		} else {
+			account.setLabel(etLabel.getText().toString());
+		}
 		account.setName(etName.getText().toString());
 		account.setPassword(etPassword.getText().toString());
 		AccountDataSource data = new AccountDataSource(this);
@@ -149,9 +164,7 @@ public class AccountEditActivity extends SherlockActivity {
 			List<Account> available_accounts = data.getAllAccounts();
 			if (available_accounts.size() == 0) {
 				((OpacClient) getApplication()).setAccount(0);
-				Intent intent = new Intent(this, WelcomeActivity.class);
-				startActivity(intent);
-				finish();
+				((OpacClient) getApplication()).addFirstAccount(this);
 			} else {
 				((OpacClient) getApplication()).setAccount(available_accounts
 						.get(0).getId());

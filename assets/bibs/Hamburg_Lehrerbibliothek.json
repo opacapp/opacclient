@@ -4,13 +4,14 @@
     "data": {
         "baseurl": "https://kataloge.uni-hamburg.de/",
         "information": "http://li.hamburg.de/lehrerbibliothek/",
-        "db": "4"
+        "db": "4",
+		"accountSupported": true
     },
     "geo": [
         53.5712303,
         9.9682266
     ],
     "group": "Hamburg",
-    "support": "Katalogsuche",
+    "support": "Katalogsuche und Konto",
     "title": "Lehrerbibliothek"
 }

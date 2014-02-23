@@ -196,7 +196,8 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		if (accounts.size() == 0) {
 			dialog_no_credentials();
 			return;
-		} else if (accounts.size() > 1) {
+		} else if (accounts.size() > 1
+				&& !getIntent().getBooleanExtra("reservation", false)) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			// Get the layout inflater
 			LayoutInflater inflater = getLayoutInflater();
@@ -212,12 +213,25 @@ public class SearchResultDetailsActivity extends OpacActivity {
 						int position, long id) {
 					if (accounts.get(position).getId() != app.getAccount()
 							.getId() || account_switched) {
-						app.setAccount(accounts.get(position).getId());
-						dialog = ProgressDialog.show(
-								SearchResultDetailsActivity.this, "",
-								getString(R.string.doing_res), true);
-						dialog.show();
-						new RestoreSessionTask().execute(true);
+
+						if (SearchResultDetailsActivity.this.id == null
+								|| SearchResultDetailsActivity.this.id
+										.equals("null")
+								|| SearchResultDetailsActivity.this.id
+										.equals("")) {
+							Toast.makeText(SearchResultDetailsActivity.this,
+									R.string.accchange_sorry, Toast.LENGTH_LONG)
+									.show();
+						} else {
+							app.setAccount(accounts.get(position).getId());
+							Intent intent = new Intent(
+									SearchResultDetailsActivity.this,
+									SearchResultDetailsActivity.class);
+							intent.putExtra("item_id",
+									SearchResultDetailsActivity.this.id);
+							intent.putExtra("reservation", true);
+							startActivity(intent);
+						}
 					} else {
 						reservationDo();
 					}
@@ -415,21 +429,17 @@ public class SearchResultDetailsActivity extends OpacActivity {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
 		LayoutInflater inflater = getLayoutInflater();
-
-		View view = inflater.inflate(R.layout.reservation_details_dialog, null);
-
-		TableLayout table = (TableLayout) view.findViewById(R.id.tlDetails);
-
+		View view;
+		
 		if (result.getDetails().size() == 1
 				&& result.getDetails().get(0).length == 1) {
-			((RelativeLayout) view.findViewById(R.id.rlConfirm))
-					.removeView(table);
-			TextView tv = new TextView(this);
+			view = inflater.inflate(R.layout.reservation_details_dialog_simple, null);
+			TextView tv = (TextView) view.findViewById(R.id.tvDetails);
 			tv.setText(result.getDetails().get(0)[0]);
-			tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
-					LayoutParams.WRAP_CONTENT));
-			((RelativeLayout) view.findViewById(R.id.rlConfirm)).addView(tv);
 		} else {
+			view = inflater.inflate(R.layout.reservation_details_dialog, null);
+			TableLayout table = (TableLayout) view.findViewById(R.id.tlDetails);
+			
 			for (String[] detail : result.getDetails()) {
 				TableRow tr = new TableRow(this);
 				if (detail.length == 2) {
@@ -599,33 +609,41 @@ public class SearchResultDetailsActivity extends OpacActivity {
 
 		LayoutInflater inflater = getLayoutInflater();
 
-		View view = inflater.inflate(R.layout.reservation_details_dialog, null);
+		View view;
 
-		TableLayout table = (TableLayout) view.findViewById(R.id.tlDetails);
-
-		for (String[] detail : result.getDetails()) {
-			TableRow tr = new TableRow(this);
-			if (detail.length == 2) {
-				TextView tv1 = new TextView(this);
-				tv1.setText(Html.fromHtml(detail[0]));
-				tv1.setTypeface(null, Typeface.BOLD);
-				tv1.setPadding(0, 0, 8, 0);
-				TextView tv2 = new TextView(this);
-				tv2.setText(Html.fromHtml(detail[1]));
-				tv2.setEllipsize(TruncateAt.END);
-				tv2.setSingleLine(false);
-				tr.addView(tv1);
-				tr.addView(tv2);
-			} else if (detail.length == 1) {
-				TextView tv1 = new TextView(this);
-				tv1.setText(Html.fromHtml(detail[0]));
-				tv1.setPadding(0, 2, 0, 2);
-				TableRow.LayoutParams params = new TableRow.LayoutParams(0);
-				params.span = 2;
-				tv1.setLayoutParams(params);
-				tr.addView(tv1);
+		if (result.getDetails().size() == 1
+				&& result.getDetails().get(0).length == 1) {
+			view = inflater.inflate(R.layout.reservation_details_dialog_simple, null);
+			TextView tv = (TextView) view.findViewById(R.id.tvDetails);
+			tv.setText(result.getDetails().get(0)[0]);
+		} else {
+			view = inflater.inflate(R.layout.reservation_details_dialog, null);
+			TableLayout table = (TableLayout) view.findViewById(R.id.tlDetails);
+			
+			for (String[] detail : result.getDetails()) {
+				TableRow tr = new TableRow(this);
+				if (detail.length == 2) {
+					TextView tv1 = new TextView(this);
+					tv1.setText(Html.fromHtml(detail[0]));
+					tv1.setTypeface(null, Typeface.BOLD);
+					tv1.setPadding(0, 0, 8, 0);
+					TextView tv2 = new TextView(this);
+					tv2.setText(Html.fromHtml(detail[1]));
+					tv2.setEllipsize(TruncateAt.END);
+					tv2.setSingleLine(false);
+					tr.addView(tv1);
+					tr.addView(tv2);
+				} else if (detail.length == 1) {
+					TextView tv1 = new TextView(this);
+					tv1.setText(Html.fromHtml(detail[0]));
+					tv1.setPadding(0, 2, 0, 2);
+					TableRow.LayoutParams params = new TableRow.LayoutParams(0);
+					params.span = 2;
+					tv1.setLayoutParams(params);
+					tr.addView(tv1);
+				}
+				table.addView(tr);
 			}
-			table.addView(tr);
 		}
 
 		builder.setTitle(R.string.confirm_title)
@@ -698,7 +716,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			try {
 				DetailledItem res = app.getApi().getResult(nr);
 				URL newurl;
-				if (res.getCover() != null) {
+				if (res.getCover() != null && res.getCoverBitmap() == null) {
 					try {
 						newurl = new URL(res.getCover());
 						Bitmap mIcon_val = BitmapFactory.decodeStream(newurl
@@ -717,6 +735,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				success = false;
 				e.printStackTrace();
 			} catch (Exception e) {
+				e.printStackTrace();
 				ACRA.getErrorReporter().handleException(e);
 				success = false;
 			}
@@ -782,11 +801,8 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				btnVolume.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Intent myIntent = new Intent(
-								SearchResultDetailsActivity.this,
-								SearchResultsActivity.class);
-						myIntent.putExtra("query", item.getVolumesearch());
-						startActivity(myIntent);
+						app.startSearch(SearchResultDetailsActivity.this,
+								item.getVolumesearch());
 					}
 				});
 				llCopies.addView(btnVolume);
@@ -825,25 +841,35 @@ public class SearchResultDetailsActivity extends OpacActivity {
 						View v = getLayoutInflater().inflate(
 								R.layout.copy_listitem, null);
 
-						if (v.findViewById(R.id.tvLocation) != null) {
-							if (copy.containsKey(DetailledItem.KEY_COPY_SHELFMARK)) {
-								((TextView) v.findViewById(R.id.tvLocation))
+						if (v.findViewById(R.id.tvBranch) != null) {
+							if (copy.containsKey(DetailledItem.KEY_COPY_BRANCH)) {
+								((TextView) v.findViewById(R.id.tvBranch))
 										.setText(copy
-												.getAsString(DetailledItem.KEY_COPY_SHELFMARK));
-								((TextView) v.findViewById(R.id.tvLocation))
+												.getAsString(DetailledItem.KEY_COPY_BRANCH));
+								((TextView) v.findViewById(R.id.tvBranch))
 										.setVisibility(View.VISIBLE);
-							} else if (copy
-									.containsKey(DetailledItem.KEY_COPY_LOCATION)) {
+							} else {
+								((TextView) v.findViewById(R.id.tvBranch))
+										.setVisibility(View.GONE);
+							}
+						}
+						if (v.findViewById(R.id.tvDepartment) != null) {
+							if (copy.containsKey(DetailledItem.KEY_COPY_DEPARTMENT)) {
+								((TextView) v.findViewById(R.id.tvDepartment))
+										.setText(copy
+												.getAsString(DetailledItem.KEY_COPY_DEPARTMENT));
+								((TextView) v.findViewById(R.id.tvDepartment))
+										.setVisibility(View.VISIBLE);
+							} else {
+								((TextView) v.findViewById(R.id.tvDepartment))
+										.setVisibility(View.GONE);
+							}
+						}
+						if (v.findViewById(R.id.tvLocation) != null) {
+							if (copy.containsKey(DetailledItem.KEY_COPY_LOCATION)) {
 								((TextView) v.findViewById(R.id.tvLocation))
 										.setText(copy
 												.getAsString(DetailledItem.KEY_COPY_LOCATION));
-								((TextView) v.findViewById(R.id.tvLocation))
-										.setVisibility(View.VISIBLE);
-							} else if (copy
-									.containsKey(DetailledItem.KEY_COPY_BARCODE)) {
-								((TextView) v.findViewById(R.id.tvLocation))
-										.setText(copy
-												.getAsString(DetailledItem.KEY_COPY_BARCODE));
 								((TextView) v.findViewById(R.id.tvLocation))
 										.setVisibility(View.VISIBLE);
 							} else {
@@ -851,56 +877,58 @@ public class SearchResultDetailsActivity extends OpacActivity {
 										.setVisibility(View.GONE);
 							}
 						}
-						if (copy.containsKey(DetailledItem.KEY_COPY_BRANCH)) {
-							((TextView) v.findViewById(R.id.tvZst))
-									.setText(copy
-											.getAsString(DetailledItem.KEY_COPY_BRANCH));
-							((TextView) v.findViewById(R.id.tvZst))
-									.setVisibility(View.VISIBLE);
-						} else if (copy
-								.containsKey(DetailledItem.KEY_COPY_LOCATION)) {
-							((TextView) v.findViewById(R.id.tvZst))
-									.setText(copy
-											.getAsString(DetailledItem.KEY_COPY_LOCATION));
-							((TextView) v.findViewById(R.id.tvZst))
-									.setVisibility(View.VISIBLE);
-						} else {
-							((TextView) v.findViewById(R.id.tvZst))
-									.setVisibility(View.GONE);
+						if (v.findViewById(R.id.tvShelfmark) != null) {
+							if (copy.containsKey(DetailledItem.KEY_COPY_SHELFMARK)) {
+								((TextView) v.findViewById(R.id.tvShelfmark))
+										.setText(copy
+												.getAsString(DetailledItem.KEY_COPY_SHELFMARK));
+								((TextView) v.findViewById(R.id.tvShelfmark))
+										.setVisibility(View.VISIBLE);
+							} else {
+								((TextView) v.findViewById(R.id.tvShelfmark))
+										.setVisibility(View.GONE);
+							}
 						}
-						if (copy.containsKey(DetailledItem.KEY_COPY_STATUS)) {
-							((TextView) v.findViewById(R.id.tvStatus))
-									.setText(copy
-											.getAsString(DetailledItem.KEY_COPY_STATUS));
-							((TextView) v.findViewById(R.id.tvStatus))
-									.setVisibility(View.VISIBLE);
-						} else {
-							((TextView) v.findViewById(R.id.tvStatus))
-									.setVisibility(View.GONE);
+						if (v.findViewById(R.id.tvStatus) != null) {
+							if (copy.containsKey(DetailledItem.KEY_COPY_STATUS)) {
+								((TextView) v.findViewById(R.id.tvStatus))
+										.setText(copy
+												.getAsString(DetailledItem.KEY_COPY_STATUS));
+								((TextView) v.findViewById(R.id.tvStatus))
+										.setVisibility(View.VISIBLE);
+							} else {
+								((TextView) v.findViewById(R.id.tvStatus))
+										.setVisibility(View.GONE);
+							}
 						}
-						if (copy.containsKey(DetailledItem.KEY_COPY_RESERVATIONS)) {
-							((TextView) v.findViewById(R.id.tvVorbestellt))
-									.setText(getString(R.string.res)
-											+ ": "
-											+ copy.getAsString(DetailledItem.KEY_COPY_RESERVATIONS));
-							((TextView) v.findViewById(R.id.tvVorbestellt))
-									.setVisibility(View.VISIBLE);
-						} else {
-							((TextView) v.findViewById(R.id.tvVorbestellt))
-									.setVisibility(View.GONE);
+
+						if (v.findViewById(R.id.tvReservations) != null) {
+							if (copy.containsKey(DetailledItem.KEY_COPY_RESERVATIONS)) {
+								((TextView) v.findViewById(R.id.tvReservations))
+										.setText(getString(R.string.res)
+												+ ": "
+												+ copy.getAsString(DetailledItem.KEY_COPY_RESERVATIONS));
+								((TextView) v.findViewById(R.id.tvReservations))
+										.setVisibility(View.VISIBLE);
+							} else {
+								((TextView) v.findViewById(R.id.tvReservations))
+										.setVisibility(View.GONE);
+							}
 						}
-						if (copy.containsKey(DetailledItem.KEY_COPY_RETURN)
-								&& !"".equals(copy
-										.getAsString(DetailledItem.KEY_COPY_RETURN))) {
-							((TextView) v.findViewById(R.id.tvRueckgabe))
-									.setText(getString(R.string.ret)
-											+ ": "
-											+ copy.getAsString(DetailledItem.KEY_COPY_RETURN));
-							((TextView) v.findViewById(R.id.tvRueckgabe))
-									.setVisibility(View.VISIBLE);
-						} else {
-							((TextView) v.findViewById(R.id.tvRueckgabe))
-									.setVisibility(View.GONE);
+						if (v.findViewById(R.id.tvReturndate) != null) {
+							if (copy.containsKey(DetailledItem.KEY_COPY_RETURN)
+									&& !"".equals(copy
+											.getAsString(DetailledItem.KEY_COPY_RETURN))) {
+								((TextView) v.findViewById(R.id.tvReturndate))
+										.setText(getString(R.string.ret)
+												+ ": "
+												+ copy.getAsString(DetailledItem.KEY_COPY_RETURN));
+								((TextView) v.findViewById(R.id.tvReturndate))
+										.setVisibility(View.VISIBLE);
+							} else {
+								((TextView) v.findViewById(R.id.tvReturndate))
+										.setVisibility(View.GONE);
+							}
 						}
 
 						llCopies.addView(v);
@@ -913,6 +941,10 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			}
 
 			invalidateOptionsMenu();
+
+			if (getIntent().hasExtra("reservation")
+					&& getIntent().getBooleanExtra("reservation", false))
+				reservationStart();
 		}
 	}
 
@@ -958,6 +990,11 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				String homebranch = sp.getString(
 						OpacClient.PREF_HOME_BRANCH_PREFIX
 								+ app.getAccount().getId(), null);
+
+				if (getIntent().hasExtra("reservation")
+						&& getIntent().getBooleanExtra("reservation", false))
+					app.getApi().start();
+
 				DetailledItem res = app.getApi().getResultById(a, homebranch);
 				URL newurl;
 				try {
@@ -979,6 +1016,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				success = false;
 				e.printStackTrace();
 			} catch (Exception e) {
+				e.printStackTrace();
 				publishProgress(e, "ioerror");
 			}
 
@@ -1186,7 +1224,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
-		String bib = app.getLibrary().getIdent();
+		final String bib = app.getLibrary().getIdent();
 		if (item.getItemId() == R.id.action_reservation) {
 			reservationStart();
 			return true;
@@ -1207,84 +1245,103 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				finish();
 			}
 			return true;
-		} else if (item.getItemId() == R.id.action_export) {
-			if (this.item == null) {
-				Toast toast = Toast.makeText(SearchResultDetailsActivity.this,
-						getString(R.string.share_wait), Toast.LENGTH_SHORT);
-				toast.show();
-			} else {
-				Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-				intent.setType("text/plain");
-				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-
-				// Add data to the intent, the receiving app will decide
-				// what to do with it.
-				intent.putExtra(Intent.EXTRA_SUBJECT, title);
-
-				String t = title;
-				try {
-					bib = java.net.URLEncoder.encode(app.getLibrary()
-							.getIdent(), "UTF-8");
-					t = java.net.URLEncoder.encode(t, "UTF-8");
-				} catch (UnsupportedEncodingException e) {
-				}
-
-				String text = title + "\n\n";
-
-				for (Detail detail : this.item.getDetails()) {
-					String colon = "";
-					if (!detail.getDesc().endsWith(":"))
-						colon = ":";
-					text += detail.getDesc() + colon + "\n"
-							+ detail.getContent() + "\n\n";
-				}
-
-				String shareUrl = app.getApi().getShareUrl(id, title);
-				if (shareUrl != null)
-					text += shareUrl;
-				else
-					text += "http://opacapp.de/:" + bib + ":" + id + ":" + t;
-
-				intent.putExtra(Intent.EXTRA_TEXT, text);
-				startActivity(Intent.createChooser(intent, getResources()
-						.getString(R.string.share)));
-			}
-			return true;
 		} else if (item.getItemId() == R.id.action_share) {
 			if (this.item == null) {
 				Toast toast = Toast.makeText(SearchResultDetailsActivity.this,
 						getString(R.string.share_wait), Toast.LENGTH_SHORT);
 				toast.show();
 			} else {
-				Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-				intent.setType("text/plain");
-				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+				final CharSequence[] items = { getString(R.string.share_link),
+						getString(R.string.share_details) };
 
-				// Add data to the intent, the receiving app will decide
-				// what to do with it.
-				intent.putExtra(Intent.EXTRA_SUBJECT, title);
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setTitle(R.string.share_dialog_select);
+				builder.setItems(items, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int di) {
+						String bib = app.getLibrary().getIdent();
+						if (di == 0) {
+							// Share link
+							Intent intent = new Intent(
+									android.content.Intent.ACTION_SEND);
+							intent.setType("text/plain");
+							intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 
-				String t = title;
-				try {
-					bib = java.net.URLEncoder.encode(app.getLibrary()
-							.getIdent(), "UTF-8");
-					t = java.net.URLEncoder.encode(t, "UTF-8");
-				} catch (UnsupportedEncodingException e) {
-				}
+							// Add data to the intent, the receiving app will
+							// decide
+							// what to do with it.
+							intent.putExtra(Intent.EXTRA_SUBJECT, title);
 
-				String shareUrl = app.getApi().getShareUrl(id, title);
-				if (shareUrl != null) {
-					intent.putExtra(Intent.EXTRA_TEXT, shareUrl);
-					startActivity(Intent.createChooser(intent, getResources()
-							.getString(R.string.share)));
-				} else {
-					Toast toast = Toast.makeText(
-							SearchResultDetailsActivity.this,
-							getString(R.string.share_notsupported),
-							Toast.LENGTH_SHORT);
-					toast.show();
-				}
+							String t = title;
+							try {
+								bib = java.net.URLEncoder.encode(app
+										.getLibrary().getIdent(), "UTF-8");
+								t = java.net.URLEncoder.encode(t, "UTF-8");
+							} catch (UnsupportedEncodingException e) {
+							}
+
+							String shareUrl = app.getApi().getShareUrl(id,
+									title);
+							if (shareUrl != null) {
+								intent.putExtra(Intent.EXTRA_TEXT, shareUrl);
+								startActivity(Intent.createChooser(intent,
+										getResources()
+												.getString(R.string.share)));
+							} else {
+								Toast toast = Toast.makeText(
+										SearchResultDetailsActivity.this,
+										getString(R.string.share_notsupported),
+										Toast.LENGTH_SHORT);
+								toast.show();
+							}
+						} else { // Share details
+							Intent intent = new Intent(
+									android.content.Intent.ACTION_SEND);
+							intent.setType("text/plain");
+							intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+
+							// Add data to the intent, the receiving app will
+							// decide
+							// what to do with it.
+							intent.putExtra(Intent.EXTRA_SUBJECT, title);
+
+							String t = title;
+							try {
+								bib = java.net.URLEncoder.encode(app
+										.getLibrary().getIdent(), "UTF-8");
+								t = java.net.URLEncoder.encode(t, "UTF-8");
+							} catch (UnsupportedEncodingException e) {
+							}
+
+							String text = title + "\n\n";
+
+							for (Detail detail : SearchResultDetailsActivity.this.item
+									.getDetails()) {
+								String colon = "";
+								if (!detail.getDesc().endsWith(":"))
+									colon = ":";
+								text += detail.getDesc() + colon + "\n"
+										+ detail.getContent() + "\n\n";
+							}
+
+							String shareUrl = app.getApi().getShareUrl(id,
+									title);
+							if (shareUrl != null)
+								text += shareUrl;
+							else
+								text += "http://opacapp.de/:" + bib + ":" + id
+										+ ":" + t;
+
+							intent.putExtra(Intent.EXTRA_TEXT, text);
+							startActivity(Intent.createChooser(intent,
+									getResources().getString(R.string.share)));
+						}
+					}
+				});
+				AlertDialog alert = builder.create();
+
+				alert.show();
 			}
+
 			return true;
 		} else if (item.getItemId() == R.id.action_star) {
 			StarDataSource star = new StarDataSource(

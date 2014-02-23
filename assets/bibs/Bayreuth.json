@@ -12,7 +12,7 @@
             "status": -1, 
             "title": 1
         }, 
-        "baseurl": "http://online-dienste.bayreuth.de/wwwopac", 
+        "baseurl": "https://wwwopac.stadt.bayreuth.de", 
         "copiestable": {
             "barcode": -1, 
             "branch": 6, 

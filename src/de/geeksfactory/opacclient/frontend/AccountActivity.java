@@ -784,7 +784,13 @@ public class AccountActivity extends OpacActivity {
 							.currentTimeMillis()) <= tolerance) {
 						v.findViewById(R.id.vStatusColor).setBackgroundColor(
 								getResources().getColor(R.color.date_warning));
+					} else if (item.containsKey(AccountData.KEY_LENT_DOWNLOAD)) {
+						v.findViewById(R.id.vStatusColor).setBackgroundColor(
+								getResources().getColor(R.color.account_downloadable));
 					}
+				} else if (item.containsKey(AccountData.KEY_LENT_DOWNLOAD)) {
+					v.findViewById(R.id.vStatusColor).setBackgroundColor(
+							getResources().getColor(R.color.account_downloadable));
 				}
 
 				if (item.containsKey(AccountData.KEY_LENT_LENDING_BRANCH)) {

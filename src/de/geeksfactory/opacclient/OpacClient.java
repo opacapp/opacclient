@@ -77,6 +77,7 @@ public class OpacClient extends Application {
 	public static final String PREF_HOME_BRANCH_PREFIX = "homeBranch_";
 
 	public final String LIMIT_TO_LIBRARY = null;
+	public final boolean SLIDING_MENU = true;
 
 	private SharedPreferences sp;
 
@@ -106,7 +107,7 @@ public class OpacClient extends Application {
 	public Class getSearchResultsActivityClass() {
 		return SearchResultsActivity.class;
 	}
-	
+
 	public void startSearch(Activity caller, Bundle query) {
 		Intent myIntent = new Intent(caller, SearchResultsActivity.class);
 		myIntent.putExtra("query", query);
@@ -260,10 +261,11 @@ public class OpacClient extends Application {
 			json = builder.toString();
 			try {
 				Library lib = Library.fromJSON(files[i].replace(".json", ""),
-											   new JSONObject(json));
+						new JSONObject(json));
 				libs.add(lib);
 			} catch (JSONException e) {
-				Log.w("JSON library files", "Failed parsing library " + files[i]);
+				Log.w("JSON library files", "Failed parsing library "
+						+ files[i]);
 				e.printStackTrace();
 			}
 		}
@@ -272,8 +274,7 @@ public class OpacClient extends Application {
 	}
 
 	public void toPrefs(Activity activity) {
-		Intent intent = new Intent(activity,
-				MainPreferenceActivity.class);
+		Intent intent = new Intent(activity, MainPreferenceActivity.class);
 		activity.startActivity(intent);
 	}
 
@@ -301,6 +302,10 @@ public class OpacClient extends Application {
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public boolean getSlidingMenuEnabled() {
+		return SLIDING_MENU;
 	}
 
 }

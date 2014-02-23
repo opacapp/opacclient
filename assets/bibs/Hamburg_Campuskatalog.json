@@ -4,13 +4,14 @@
     "data": {
         "baseurl": "https://kataloge.uni-hamburg.de/",
         "information": "http://www.sub.uni-hamburg.de/home.html",
-        "db": "1"
+        "db": "1",
+		"accountSupported": true
     },
     "geo": [
         53.56448,
         9.98553
     ],
     "group": "Hamburg",
-    "support": "Katalogsuche",
+    "support": "Katalogsuche und Konto",
     "title": "Campus-Katalog (Staatsbibliothek und Fachbibliotheken)"
 }

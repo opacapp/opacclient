@@ -115,6 +115,12 @@
                 android:inputType="text"
                 android:singleLine="true" />
 
+            <CheckBox
+                android:id="@+id/cbDigital"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/digital" />
+
             <TextView
                 android:id="@+id/tvBarcodes"
                 android:layout_width="wrap_content"
@@ -240,12 +246,6 @@
                     android:layout_height="match_parent"
                     android:visibility="gone" />
             </LinearLayout>
-
-            <CheckBox
-                android:id="@+id/cbDigital"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/digital" />
 
             <TextView
                 android:id="@+id/tvMediengruppe"

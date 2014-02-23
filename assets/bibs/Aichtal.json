@@ -12,7 +12,8 @@
             "status": -1, 
             "title": 2
         }, 
-        "baseurl": "http://wwwopac.rz-as.de/aichtal", 
+        "baseurl": "https://wwwopac.rz-kiru.de/aichtal", 
+		"customssl": true,
         "copiestable": {
             "barcode": -1, 
             "branch": -1, 

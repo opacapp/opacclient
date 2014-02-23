@@ -12,7 +12,8 @@
             "status": -1, 
             "title": 1
         }, 
-        "baseurl": "http://wwwopac.rz-as.de/aichwald", 
+        "baseurl": "https://wwwopac.rz-kiru.de/aichwald", 
+		"customssl": true,
         "copiestable": {
             "barcode": -1,
             "branch": -1, 

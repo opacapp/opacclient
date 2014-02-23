@@ -598,7 +598,8 @@ public class SearchActivity extends OpacActivity {
 			}
 		}
 
-		if (!sp.getBoolean("version2.0.0-introduced", false)) {
+		if (!sp.getBoolean("version2.0.0-introduced", false)
+				&& app.getSlidingMenuEnabled()) {
 			final Handler handler = new Handler();
 			// Just show the menu to explain that is there if people start
 			// version 2 for the first time.

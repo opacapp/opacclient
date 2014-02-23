@@ -534,6 +534,7 @@ public class SISIS extends BaseApi implements OpacApi {
 			int k = 0;
 			boolean yearfound = false;
 			boolean titlefound = false;
+			boolean sigfound = false;
 			for (String[] part : strings) {
 				if (!described) {
 					if (part[0] == "a" && (k == 0 || !titlefound)) {
@@ -552,9 +553,15 @@ public class SISIS extends BaseApi implements OpacApi {
 						if (k != 0)
 							description.append("<br />");
 						description.append(part[2]);
-					} else if (k < 3 && !yearfound) {
+					} else if (k == 1 && !yearfound
+							&& part[2].matches("^\\s*\\([0-9]{4}\\)$")) {
 						if (k != 0)
 							description.append("<br />");
+						description.append(part[2]);
+					} else if (k > 1 && k < 4 && !sigfound
+							&& part[0].equals("text")
+							&& part[2].matches("^[A-Za-z0-9,\\- ]+$")) {
+						description.append("<br />");
 						description.append(part[2]);
 					}
 				}
@@ -583,11 +590,22 @@ public class SISIS extends BaseApi implements OpacApi {
 							.contains("nicht bestellbar"))
 							|| (part[2].startsWith("vorbestellbar") && !part[2]
 									.contains("nicht vorbestellbar"))
+							|| (part[2].startsWith("vorbestellbar") && !part[2]
+									.contains("nicht vorbestellbar"))
 							|| (part[2].startsWith("vormerkbar") && !part[2]
 									.contains("nicht vormerkbar"))
+							|| (part[2].contains("heute zurückgebucht"))
 							|| (part[2].contains("ausleihbar") && !part[2]
 									.contains("nicht ausleihbar"))) {
 						sr.setStatus(SearchResult.Status.GREEN);
+					}
+					if (sr.getType() != null) {
+						if (sr.getType().equals(MediaType.EBOOK)
+								|| sr.getType().equals(MediaType.EVIDEO)
+								|| sr.getType().equals(MediaType.MP3))
+							// Especially Onleihe.de ebooks are often marked
+							// green though they are not available.
+							sr.setStatus(SearchResult.Status.UNKNOWN);
 					}
 				}
 				k++;
@@ -643,6 +661,7 @@ public class SISIS extends BaseApi implements OpacApi {
 
 	protected DetailledItem parse_result(String html) throws IOException {
 		Document doc = Jsoup.parse(html);
+		doc.setBaseUri(opac_url);
 
 		String html2 = httpGet(opac_url
 				+ "/singleHit.do?methodToCall=activateTab&tab=showTitleActive",
@@ -698,6 +717,7 @@ public class SISIS extends BaseApi implements OpacApi {
 
 		if (doc.select(".data td img").size() == 1) {
 			result.setCover(doc.select(".data td img").first().attr("abs:src"));
+			downloadCover(result);
 		}
 
 		if (doc.select(".aw_teaser_title").size() == 1) {

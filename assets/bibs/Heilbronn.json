@@ -13,15 +13,6 @@
             "title": 1
         }, 
         "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-heilbronn", 
-        "copiestable": {
-            "barcode": 3, 
-            "branch": 0, 
-            "department": 1, 
-            "location": 2, 
-            "reservations": -1, 
-            "returndate": -1, 
-            "status": 4
-        }, 
         "information": "http://www.stadtbibliothek-heilbronn.de/ueber_uns/standort/?webopac=1", 
         "mediatypes": {
             "Picto-klein.GIF": "EBOOK", 
