@@ -280,15 +280,11 @@ public class IOpac extends BaseApi implements OpacApi {
 			Element tr = tables.get(i);
 			SearchResult sr = new SearchResult();
 
-			// This library system can show cover images on the search results
-			// page. If the API would
-			// support it, cover URLs could be saved like this:
-			//
-			// if(tr.select("td").first().select("img").size() > 0) {
-			// String imgUrl =
-			// tr.select("td").first().select("img").first().attr("src");
-			// sr.setCoverUrl(imgUrl);
-			// }
+			if(tr.select("td").first().select("img").size() > 0) {
+				String imgUrl =
+				tr.select("td").first().select("img").first().attr("src");
+				sr.setCover(imgUrl);
+			}
 
 			// Media Type
 			String mType = tr.select("td").last().text().trim()
