@@ -21,6 +21,8 @@
  */
 package de.geeksfactory.opacclient.objects;
 
+import android.graphics.Bitmap;
+
 /**
  * Object representing a search result
  * 
@@ -32,6 +34,8 @@ public class SearchResult {
 	private String id;
 	private String innerhtml;
 	private Status status;
+	private Bitmap coverBitmap;
+	private String cover;
 
 	/**
 	 * Supported media types.
@@ -176,6 +180,34 @@ public class SearchResult {
 	 */
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+	
+	/**
+	 * Get cover image bitmap
+	 */
+	public Bitmap getCoverBitmap() {
+		return coverBitmap;
+	}
+
+	/**
+	 * Set cover image bitmap
+	 */
+	public void setCoverBitmap(Bitmap coverBitmap) {
+		this.coverBitmap = coverBitmap;
+	}
+	
+	/**
+	 * Get cover image URL
+	 */
+	public String getCover() {
+		return cover;
+	}
+
+	/**
+	 * Set cover image URL
+	 */
+	public void setCover(String cover) {
+		this.cover = cover;
 	}
 
 	@Override

@@ -21,10 +21,14 @@
  */
 package de.geeksfactory.opacclient.frontend;
 
+import java.net.URL;
+
 import org.acra.ACRA;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.View;
@@ -43,6 +47,7 @@ import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
+import de.geeksfactory.opacclient.objects.SearchResult;
 
 public class SearchResultsActivity extends OpacActivity {
 
@@ -142,6 +147,8 @@ public class SearchResultsActivity extends OpacActivity {
 
 			try {
 				SearchRequestResult res = app.getApi().search(query);
+				//Load cover images, if search worked and covers available
+				if (res != null) loadCovers(res);
 				success = true;
 				return res;
 			} catch (java.net.UnknownHostException e) {
@@ -254,6 +261,8 @@ public class SearchResultsActivity extends OpacActivity {
 
 			try {
 				SearchRequestResult res = app.getApi().searchGetPage(page);
+				//Load cover images, if search worked and covers available
+				if (res != null) loadCovers(res);
 				success = true;
 				return res;
 			} catch (java.net.UnknownHostException e) {
@@ -318,5 +327,27 @@ public class SearchResultsActivity extends OpacActivity {
 		super.onDestroy();
 		unbindDrawables(findViewById(R.id.rootView));
 		System.gc();
+	}
+	
+	private void loadCovers(SearchRequestResult res) {
+		URL newurl;
+		for(SearchResult item:res.getResults()) {
+			if (item.getCover() != null && item.getCoverBitmap() == null) {
+				try {
+					newurl = new URL(item.getCover());
+					Bitmap mIcon_val = BitmapFactory.decodeStream(newurl
+							.openConnection().getInputStream());
+					if(mIcon_val.getHeight() > 1 && mIcon_val.getWidth() > 1) {
+						item.setCoverBitmap(mIcon_val);
+					} else {
+						//When images embedded from Amazon aren't available, a 1x1
+						//pixel image is returned
+						item.setCover(null);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}	
+		}
 	}
 }

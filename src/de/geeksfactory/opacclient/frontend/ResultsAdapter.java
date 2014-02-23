@@ -128,7 +128,10 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
 
 		ImageView ivType = (ImageView) view.findViewById(R.id.ivType);
 
-		if (item.getType() != null && item.getType() != MediaType.NONE) {
+		if(item.getCoverBitmap() != null){
+			ivType.setImageBitmap(item.getCoverBitmap());
+			ivType.setVisibility(View.VISIBLE);
+		} else if (item.getType() != null && item.getType() != MediaType.NONE) {
 			ivType.setImageResource(getResourceByMediaType(item.getType()));
 			ivType.setVisibility(View.VISIBLE);
 		} else {
@@ -155,7 +158,7 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
 		} else {
 			ivStatus.setVisibility(View.GONE);
 		}
-
+		
 		return view;
 	}
 
