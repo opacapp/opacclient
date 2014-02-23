@@ -341,7 +341,7 @@ public class SearchResultsActivity extends OpacActivity {
 						item.setCoverBitmap(mIcon_val);
 					} else {
 						//When images embedded from Amazon aren't available, a 1x1
-						//pixel image is returned
+						//pixel image is returned (iOPAC)
 						item.setCover(null);
 					}
 				} catch (Exception e) {
