@@ -305,6 +305,12 @@ public class Zones22 extends BaseApi {
 			} else {
 				sr.setType(defaulttypes.get(typetext));
 			}
+			
+			if(tr.select(".SummaryImageCell img[id^=Bookcover]").size() > 0) {
+				String imgUrl =
+				tr.select(".SummaryImageCell img[id^=Bookcover]").first().attr("src");
+				sr.setCover(imgUrl);
+			}
 
 			String desc = "";
 			Elements children = tr
