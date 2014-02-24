@@ -444,26 +444,29 @@ public class Bibliotheca extends BaseApi {
 				copymap = data.getJSONObject("copiestable");
 			} else {
 				Elements ths = doc.select(".exemplartab .exemplarmenubar th");
-				for(int i = 0; i < ths.size(); i++){
+				for (int i = 0; i < ths.size(); i++) {
 					Element th = ths.get(i);
 					String head = th.text().trim();
-					if(head.equals("Zweigstelle")){
+					if (head.equals("Zweigstelle")) {
 						copymap.put(DetailledItem.KEY_COPY_BRANCH, i);
-					}else if(head.equals("Abteilung")){
+					} else if (head.equals("Abteilung")) {
 						copymap.put(DetailledItem.KEY_COPY_DEPARTMENT, i);
-					}else if(head.equals("Bereich")){
+					} else if (head.equals("Bereich")) {
 						copymap.put(DetailledItem.KEY_COPY_LOCATION, i);
-					}else if(head.equals("Standort")){
+					} else if (head.equals("Standort")) {
 						copymap.put(DetailledItem.KEY_COPY_LOCATION, i);
-					}else if(head.equals("Signatur")){
+					} else if (head.equals("Signatur")) {
 						copymap.put(DetailledItem.KEY_COPY_SHELFMARK, i);
-					}else if(head.equals("Barcode") || head.equals("Medien-Nummer")){
+					} else if (head.equals("Barcode")
+							|| head.equals("Medien-Nummer")) {
 						copymap.put(DetailledItem.KEY_COPY_BARCODE, i);
-					}else if(head.equals("Status")){
+					} else if (head.equals("Status")) {
 						copymap.put(DetailledItem.KEY_COPY_STATUS, i);
-					}else if(head.equals("Frist") || head.matches("Verf.+gbar")){
+					} else if (head.equals("Frist")
+							|| head.matches("Verf.+gbar")) {
 						copymap.put(DetailledItem.KEY_COPY_RETURN, i);
-					}else if(head.equals("Vorbestellungen") || head.equals("Reservierungen")){
+					} else if (head.equals("Vorbestellungen")
+							|| head.equals("Reservierungen")) {
 						copymap.put(DetailledItem.KEY_COPY_RESERVATIONS, i);
 					}
 				}

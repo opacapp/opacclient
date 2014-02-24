@@ -606,7 +606,7 @@ public class Zones22 extends BaseApi {
 			login(account);
 			prolong(media, account, 1, null);
 		}
-		String dialog = doc.select(".SSRenewDlgContent").text();
+		String dialog = doc.select("#SSRenewDlgContent").text();
 		if (dialog.contains("erfolgreich"))
 			return new ProlongResult(MultiStepResult.Status.OK, dialog);
 		else
