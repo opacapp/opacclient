@@ -343,6 +343,7 @@ public class SISIS extends BaseApi implements OpacApi {
 
 	protected SearchRequestResult parse_search(String html, int page) {
 		Document doc = Jsoup.parse(html);
+		doc.setBaseUri(opac_url + "/searchfoo");
 
 		if (doc.select(".error").size() > 0) {
 			last_error = doc.select(".error").text().trim();
@@ -434,7 +435,15 @@ public class SISIS extends BaseApi implements OpacApi {
 				sr.setType(MediaType.EBOOK);
 			else if (alltext.contains("Munzinger"))
 				sr.setType(MediaType.EDOC);
-
+			
+			if (tr.children().size() > 3
+					&& tr.child(3).select("img[title*=cover]").size() == 1) {
+				sr.setCover(tr.child(3).select("img[title*=cover]")
+						.attr("abs:src"));
+				if (sr.getCover().contains("showCover.do"))
+					downloadCover(sr);
+			}
+			
 			Element middlething;
 			if (tr.children().size() > 2)
 				middlething = tr.child(2);
