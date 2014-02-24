@@ -21,9 +21,13 @@
  */
 package de.geeksfactory.opacclient.frontend;
 
+import java.net.URL;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -128,8 +132,13 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
 
 		ImageView ivType = (ImageView) view.findViewById(R.id.ivType);
 
-		if(item.getCoverBitmap() != null){
+		if (item.getCoverBitmap() != null) {
 			ivType.setImageBitmap(item.getCoverBitmap());
+			ivType.setVisibility(View.VISIBLE);
+		} else if (item.getCover() != null) {
+			LoadCoverTask lct = new LoadCoverTask();
+			lct.execute(ivType, item);
+			ivType.setImageResource(R.drawable.cover_loading);
 			ivType.setVisibility(View.VISIBLE);
 		} else if (item.getType() != null && item.getType() != MediaType.NONE) {
 			ivType.setImageResource(getResourceByMediaType(item.getType()));
@@ -158,12 +167,56 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
 		} else {
 			ivStatus.setVisibility(View.GONE);
 		}
-		
+
 		return view;
 	}
 
 	public ResultsAdapter(Context context, List<SearchResult> objects) {
 		super(context, R.layout.searchresult_listitem, objects);
 		this.objects = objects;
+	}
+
+	public class LoadCoverTask extends AsyncTask<Object, Integer, SearchResult> {
+		protected SearchResult item;
+		protected ImageView iv;
+
+		@Override
+		protected SearchResult doInBackground(Object... arg0) {
+			iv = (ImageView) arg0[0];
+			item = (SearchResult) arg0[1];
+			URL newurl;
+			if (item.getCover() != null && item.getCoverBitmap() == null) {
+				try {
+					newurl = new URL(item.getCover());
+					Bitmap mIcon_val = BitmapFactory.decodeStream(newurl
+							.openConnection().getInputStream());
+					if (mIcon_val.getHeight() > 1 && mIcon_val.getWidth() > 1) {
+						item.setCoverBitmap(mIcon_val);
+					} else {
+						// When images embedded from Amazon aren't available, a
+						// 1x1
+						// pixel image is returned (iOPAC)
+						item.setCover(null);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			return item;
+		}
+
+		@Override
+		protected void onPostExecute(SearchResult result) {
+			if (item.getCover() != null && item.getCoverBitmap() != null) {
+				iv.setImageBitmap(item.getCoverBitmap());
+				iv.setVisibility(View.VISIBLE);
+			} else if (item.getType() != null
+					&& item.getType() != MediaType.NONE) {
+				iv.setImageResource(getResourceByMediaType(item.getType()));
+				iv.setVisibility(View.VISIBLE);
+			} else {
+				iv.setVisibility(View.INVISIBLE);
+			}
+		}
 	}
 }
