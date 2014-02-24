@@ -34,7 +34,7 @@ import de.geeksfactory.opacclient.apis.OpacApi;
  * 
  * @author Raphael Michel
  */
-public class DetailledItem {
+public class DetailledItem implements CoverHolder {
 	private List<Detail> details = new ArrayList<Detail>();
 	private List<ContentValues> copies = new ArrayList<ContentValues>();
 	private List<ContentValues> baende = new ArrayList<ContentValues>();

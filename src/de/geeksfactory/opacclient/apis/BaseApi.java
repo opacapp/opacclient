@@ -44,8 +44,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.networking.HTTPClient;
+import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
@@ -124,7 +126,7 @@ public abstract class BaseApi implements OpacApi {
 		return httpGet(url, getDefaultEncoding(), false, null);
 	}
 
-	public void downloadCover(DetailledItem item) {
+	public void downloadCover(CoverHolder item) {
 		if (item.getCover() == null)
 			return;
 		HttpGet httpget = new HttpGet(item.getCover());
