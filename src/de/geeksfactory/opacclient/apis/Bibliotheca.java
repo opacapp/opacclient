@@ -22,9 +22,11 @@
 package de.geeksfactory.opacclient.apis;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1002,8 +1004,13 @@ public class Bibliotheca extends BaseApi {
 
 	@Override
 	public String getShareUrl(String id, String title) {
-		return "http://opacapp.de/:" + library.getIdent() + ":" + id + ":"
-				+ title;
+		try {
+			return "http://opacapp.de/:" + library.getIdent() + ":" + id + ":"
+					+ URLEncoder.encode(title, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			return "http://opacapp.de/:" + library.getIdent() + ":" + id + ":"
+					+ title;
+		}
 	}
 
 	@Override
