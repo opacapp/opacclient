@@ -26,16 +26,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.ClientContext;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
@@ -45,9 +51,7 @@ import android.graphics.BitmapFactory;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.networking.HTTPClient;
 import de.geeksfactory.opacclient.objects.CoverHolder;
-import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Library;
-import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
@@ -86,8 +90,7 @@ public abstract class BaseApi implements OpacApi {
 			CookieStore cookieStore) throws ClientProtocolException,
 			IOException {
 
-		HttpGet httpget = new HttpGet(url.replace(" ", "%20").replace("&amp;",
-				"&"));
+		HttpGet httpget = new HttpGet(cleanUrl(url));
 		HttpResponse response;
 
 		if (cookieStore != null) {
@@ -126,10 +129,37 @@ public abstract class BaseApi implements OpacApi {
 		return httpGet(url, getDefaultEncoding(), false, null);
 	}
 
+	public static String cleanUrl(String myURL) {
+		String[] parts = myURL.split("\\?");
+		String url = parts[0];
+		try {
+			if (parts.length > 1) {
+				url += "?";
+				List<NameValuePair> params = new ArrayList<NameValuePair>();
+				String[] pairs = parts[1].split("&");
+				for (String pair : pairs) {
+					String[] kv = pair.split("=");
+					if (kv.length > 1)
+						params.add(new BasicNameValuePair(URLDecoder.decode(
+								kv[0], "UTF-8"), URLDecoder.decode(kv[1],
+								"UTF-8")));
+					else
+						params.add(new BasicNameValuePair(URLDecoder.decode(
+								kv[0], "UTF-8"), ""));
+				}
+				url += URLEncodedUtils.format(params, "UTF-8");
+			}
+			return url;
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return myURL;
+		}
+	}
+
 	public void downloadCover(CoverHolder item) {
 		if (item.getCover() == null)
 			return;
-		HttpGet httpget = new HttpGet(item.getCover());
+		HttpGet httpget = new HttpGet(cleanUrl(item.getCover()));
 		HttpResponse response;
 
 		try {
@@ -173,8 +203,7 @@ public abstract class BaseApi implements OpacApi {
 	public String httpPost(String url, UrlEncodedFormEntity data,
 			String encoding, boolean ignore_errors, CookieStore cookieStore)
 			throws ClientProtocolException, IOException {
-		HttpPost httppost = new HttpPost(url.replace(" ", "%20").replace(
-				"&amp;", "&"));
+		HttpPost httppost = new HttpPost(cleanUrl(url));
 		httppost.setEntity(data);
 
 		HttpResponse response = null;
