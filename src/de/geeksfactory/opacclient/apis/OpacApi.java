@@ -563,7 +563,7 @@ public interface OpacApi {
 	 * This function is always called from a background thread, you can use
 	 * blocking network operations in it.
 	 * 
-	 * @param reservation_info
+	 * @param item
 	 *            The item to place a reservation for.
 	 * @param account
 	 *            Account to be used

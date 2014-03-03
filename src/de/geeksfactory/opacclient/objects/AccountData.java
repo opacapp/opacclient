@@ -297,7 +297,7 @@ public class AccountData {
 	/**
 	 * Set the user's library account's pending fees.
 	 * 
-	 * @param a
+	 * @param pendingFees
 	 *            human-readable String
 	 * @since 2.0.18
 	 */

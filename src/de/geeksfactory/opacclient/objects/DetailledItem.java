@@ -93,6 +93,13 @@ public class DetailledItem implements CoverHolder {
 	public static final String KEY_COPY_RETURN = "returndate";
 
 	/**
+	 * Expected date of return if a copy is lent out as a timestamp. Optional.
+	 * 
+	 * ContentValues key for {@link #addCopy(ContentValues)}:
+	 */
+	public static final String KEY_COPY_RETURN_TIMESTAMP = "returndate_ts";
+
+	/**
 	 * Number of pending reservations if a copy is currently lent out. Optional.
 	 * 
 	 * ContentValues key for {@link #addCopy(ContentValues)}:
@@ -107,6 +114,15 @@ public class DetailledItem implements CoverHolder {
 	 * @since 2.0.10
 	 */
 	public static final String KEY_COPY_SHELFMARK = "signature";
+
+	/**
+	 * Reservation information copy-based reservations.
+	 * 
+	 * ContentValues key for {@link #addCopy(ContentValues)}.
+	 * 
+	 * @since 2.0.10
+	 */
+	public static final String KEY_COPY_RESINFO = "resinfo";
 
 	/**
 	 * Unique media identifier of a child item for
@@ -314,7 +330,7 @@ public class DetailledItem implements CoverHolder {
 
 	/**
 	 * Get extra information stored to be returned to your
-	 * {@link de.geeksfactory.opacclient.apis.OpacApi#reservation(String, Account, int, String)}
+	 * {@link de.geeksfactory.opacclient.apis.OpacApi#reservation(DetailledItem, Account, int, String)}
 	 * implementation.
 	 * 
 	 * @return Some custom information.
@@ -325,7 +341,7 @@ public class DetailledItem implements CoverHolder {
 
 	/**
 	 * Set extra information stored to be returned to your
-	 * {@link de.geeksfactory.opacclient.apis.OpacApi#reservation(String, Account, int, String)}
+	 * {@link de.geeksfactory.opacclient.apis.OpacApi#reservation(DetailledItem, Account, int, String)}
 	 * implementation.
 	 * 
 	 * @param reservation_info

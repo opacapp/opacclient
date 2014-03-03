@@ -46,7 +46,7 @@ public interface EbookServiceApi {
 	/**
 	 * The result of a {@link #booking(String, Account, int, String)} call. The
 	 * structure of the call and response is similar to
-	 * {@link OpacApi#reservation(String, Account, int, String)}.
+	 * {@link OpacApi#reservation(DetailledItem, Account, int, String)}.
 	 */
 	public class BookingResult extends OpacApi.MultiStepResult {
 
