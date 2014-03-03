@@ -840,6 +840,7 @@ public class SISIS extends BaseApi implements OpacApi {
 		Pattern status_and_barcode = Pattern.compile("^(.*) ([0-9A-Za-z]+)$");
 
 		Elements exemplartrs = doc.select("#tab-content .data tr").not("#bg2");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 		for (Element tr : exemplartrs) {
 			try {
 				ContentValues e = new ContentValues();
@@ -871,10 +872,15 @@ public class SISIS extends BaseApi implements OpacApi {
 					e.put(DetailledItem.KEY_COPY_STATUS, matcher.group(1));
 					e.put(DetailledItem.KEY_COPY_RETURN, matcher.group(2));
 					e.put(DetailledItem.KEY_COPY_RESERVATIONS, matcher.group(3));
+					e.put(DetailledItem.KEY_COPY_RETURN_TIMESTAMP,
+							sdf.parse(matcher.group(2)).getTime());
 				} else {
 					e.put(DetailledItem.KEY_COPY_STATUS, statustext);
 				}
 				e.put(DetailledItem.KEY_COPY_BARCODE, barcodetext);
+				if(status.select("a[href*=doVormerkung]").size() == 1){
+					e.put(DetailledItem.KEY_COPY_RESINFO, status.select("a[href*=doVormerkung]").attr("href").split("\\?")[1]);
+				}
 
 				String branchtext = tr
 						.child(copy_columnmap
@@ -1021,8 +1027,37 @@ public class SISIS extends BaseApi implements OpacApi {
 					.getElementsByClass("error").get(0).text());
 		}
 		if (doc.getElementsByClass("textrot").size() >= 1) {
-			return new ReservationResult(MultiStepResult.Status.ERROR, doc
-					.getElementsByClass("textrot").get(0).text());
+			String errmsg = doc.getElementsByClass("textrot").get(0).text();
+			if (errmsg
+					.contains("Dieses oder andere Exemplare in anderer Zweigstelle ausleihbar")) {
+				ContentValues best = null;
+				for (ContentValues copy : item.getCopies()) {
+					if (!copy.containsKey(DetailledItem.KEY_COPY_RESINFO)) {
+						continue;
+					}
+					if (best == null) {
+						best = copy;
+						continue;
+					}
+					if (copy.getAsInteger(DetailledItem.KEY_COPY_RESERVATIONS) < best
+							.getAsInteger(DetailledItem.KEY_COPY_RESERVATIONS)) {
+						best = copy;
+					} else if (copy
+							.getAsInteger(DetailledItem.KEY_COPY_RESERVATIONS) == best
+							.getAsInteger(DetailledItem.KEY_COPY_RESERVATIONS)) {
+						if (copy.getAsInteger(DetailledItem.KEY_COPY_RETURN_TIMESTAMP) < best
+								.getAsInteger(DetailledItem.KEY_COPY_RETURN_TIMESTAMP)) {
+							best = copy;
+						}
+					}
+				}
+				if (best != null) {
+					item.setReservation_info(best
+							.getAsString(DetailledItem.KEY_COPY_RESINFO));
+					return reservation(item, acc, 0, null);
+				}
+			}
+			return new ReservationResult(MultiStepResult.Status.ERROR, errmsg);
 		}
 
 		if (doc.select("#CirculationForm p").size() > 0) {
@@ -1192,7 +1227,7 @@ public class SISIS extends BaseApi implements OpacApi {
 		doc.setBaseUri(opac_url);
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-
+		
 		int trs = copytrs.size();
 		if (trs == 1)
 			return;
