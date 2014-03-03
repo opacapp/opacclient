@@ -1020,6 +1020,10 @@ public class SISIS extends BaseApi implements OpacApi {
 			return new ReservationResult(MultiStepResult.Status.ERROR, doc
 					.getElementsByClass("error").get(0).text());
 		}
+		if (doc.getElementsByClass("textrot").size() >= 1) {
+			return new ReservationResult(MultiStepResult.Status.ERROR, doc
+					.getElementsByClass("textrot").get(0).text());
+		}
 
 		if (doc.select("#CirculationForm p").size() > 0) {
 			List<String[]> details = new ArrayList<String[]>();
