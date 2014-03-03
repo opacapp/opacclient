@@ -549,7 +549,7 @@ public class Pica extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public ReservationResult reservation(String reservation_info,
+	public ReservationResult reservation(DetailledItem item,
 			Account account, int useraction, String selection)
 			throws IOException {
 		return null;

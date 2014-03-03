@@ -445,9 +445,10 @@ public class IOpac extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public ReservationResult reservation(String reservation_info,
+	public ReservationResult reservation(DetailledItem item,
 			Account account, int useraction, String selection)
 			throws IOException {
+		String reservation_info = item.getReservation_info();
 		String html = httpGet(opac_url + "/" + reservation_info);
 		Document doc = Jsoup.parse(html);
 		if (doc.select("form[name=form1]").size() > 0) {

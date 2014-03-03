@@ -747,7 +747,7 @@ public class BiBer1992 extends BaseApi {
 	 * de.geeksfactory.opacclient.objects.Account, int, java.lang.String)
 	 */
 	@Override
-	public ReservationResult reservation(String reservation_info,
+	public ReservationResult reservation(DetailledItem item,
 			Account account, int useraction, String selection)
 			throws IOException {
 		// TODO reservations not yet supported

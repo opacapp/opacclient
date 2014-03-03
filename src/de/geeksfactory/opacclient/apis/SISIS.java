@@ -937,8 +937,9 @@ public class SISIS extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public ReservationResult reservation(String reservation_info, Account acc,
+	public ReservationResult reservation(DetailledItem item, Account acc,
 			int useraction, String selection) throws IOException {
+		String reservation_info = item.getReservation_info();
 		final String branch_inputfield = "issuepoint";
 
 		Document doc = null;

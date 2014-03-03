@@ -564,8 +564,7 @@ public interface OpacApi {
 	 * blocking network operations in it.
 	 * 
 	 * @param reservation_info
-	 *            Data your <code>getDetail</code> implementation returned as
-	 *            reservation_info for this item.
+	 *            The item to place a reservation for.
 	 * @param account
 	 *            Account to be used
 	 * @param useraction
@@ -585,12 +584,12 @@ public interface OpacApi {
 	 * @return A <code>ReservationResult</code> object which has to have the
 	 *         status set.
 	 */
-	public ReservationResult reservation(String reservation_info,
+	public ReservationResult reservation(DetailledItem item,
 			Account account, int useraction, String selection)
 			throws IOException;
 
 	/**
-	 * The result of a {@link OpacApi#reservation(String, Account, int, String)}
+	 * The result of a {@link OpacApi#reservation(DetailledItem, Account, int, String)}
 	 * call
 	 */
 	public class ReservationResult extends MultiStepResult {
