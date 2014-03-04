@@ -1107,7 +1107,7 @@ public class AccountActivity extends OpacActivity {
 											dialog.cancel();
 											Intent i = new Intent(
 													Intent.ACTION_VIEW,
-													Uri.parse("market://details?id=de.bluefirereader"));
+													Uri.parse("market://details?id=com.bluefirereader"));
 											startActivity(i);
 										}
 									});
