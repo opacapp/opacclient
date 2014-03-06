@@ -8,8 +8,8 @@
     <color name="inactive_account">#F7F7F7</color>
     <color name="detail_desc">#7E7E7E</color>
     <color name="account_age">#7E7E7E</color>
-    <color name="nav_bg">#303030</color>
-    <color name="nav_fg">#F3F3F3</color>
+    <color name="nav_bg">#F3F3F3</color>
+    <color name="nav_fg">#303030</color>
     <color name="nav_headline">#9F9F9F</color>
     <color name="nav_active">#CCff4444</color>
     <color name="nav_highlight">#CCff44</color>

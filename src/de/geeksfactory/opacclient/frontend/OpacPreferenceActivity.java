@@ -21,13 +21,13 @@
  */
 package de.geeksfactory.opacclient.frontend;
 
+import org.holoeverywhere.preference.PreferenceActivity;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.MenuItem;
 
-import com.actionbarsherlock.app.SherlockPreferenceActivity;
-import com.actionbarsherlock.view.MenuItem;
-
-public abstract class OpacPreferenceActivity extends SherlockPreferenceActivity {
+public abstract class OpacPreferenceActivity extends PreferenceActivity {
 	protected Fragment mFrag;
 
 	@Override

@@ -1,0 +1,9 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_search_go"
+        android:showAsAction="always|withText"
+        android:title="@string/go_search">
+    </item>
+
+</menu>
