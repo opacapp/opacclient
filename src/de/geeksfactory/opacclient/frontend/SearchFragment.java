@@ -31,6 +31,9 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -60,6 +63,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 		view = inflater.inflate(R.layout.fragment_search, container, false);
+		setHasOptionsMenu(true);
 		
 		sp = ((OpacActivity) getActivity()).getDefaultSharedPreferences();
 		app = (OpacClient) getActivity().getApplication();
@@ -597,5 +601,20 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
             throw new ClassCastException(activity.toString() + " must implement SearchFragment.Callback");
         }
     }
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.fragment_search, menu);
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.action_search_go) {
+			go();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 	
 }

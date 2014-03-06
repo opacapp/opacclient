@@ -41,13 +41,6 @@ public class MainActivity extends OpacActivity implements SearchFragment.Callbac
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
-	@Override
 	public void scanBarcode() {
 		BarcodeScanIntegrator integrator = new BarcodeScanIntegrator(MainActivity.this);
 		integrator.initiateScan();
@@ -133,15 +126,6 @@ public class MainActivity extends OpacActivity implements SearchFragment.Callbac
 			finish();
 			return;
 		}
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.action_search_go) {
-			((SearchFragment) fragment).go();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
