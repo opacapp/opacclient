@@ -23,9 +23,7 @@ package de.geeksfactory.opacclient.frontend;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
@@ -44,8 +42,6 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NavUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -58,15 +54,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.frontend.NavigationAdapter.Item;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
-import de.geeksfactory.opacclient.storage.StarDataSource;
 
 public abstract class OpacActivity extends Activity {
 	protected OpacClient app;
@@ -241,7 +234,7 @@ public abstract class OpacActivity extends Activity {
 	    				break;
 	    		case 3: //fragment = new StarredFragment();
     				break;
-	    		case 4: //fragment = new InfoFragment();
+	    		case 4: fragment = new InfoFragment();
     				break;
 	    	}
 			if(position == count - 2) {
