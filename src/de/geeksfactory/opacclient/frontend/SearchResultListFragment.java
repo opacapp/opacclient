@@ -4,6 +4,7 @@ import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.ListFragment;
 import org.holoeverywhere.widget.ListView;
 
+import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import android.os.Bundle;
 import android.view.View;
@@ -143,15 +144,15 @@ public class SearchResultListFragment extends ListFragment {
 	}
 
 	public void setSearchResult(SearchRequestResult searchresult) {
-//TODO:		TextView rn = (TextView) findViewById(R.id.tvResultNum);
-//		if (searchresult.getTotal_result_count() >= 0)
-//			rn.setText(getString(R.string.result_number,
-//					searchresult.getTotal_result_count()));
+		if (searchresult.getTotal_result_count() >= 0)
+			getSupportActionBar().setSubtitle(
+					getString(R.string.result_number,
+							searchresult.getTotal_result_count()));
 
-//TODO:		if (searchresult.getResults().size() == 0
-//				&& searchresult.getTotal_result_count() == 0) {
-//			setContentView(R.layout.no_results);
-//		}
+		if (searchresult.getResults().size() == 0
+				&& searchresult.getTotal_result_count() == 0) {
+			setEmptyText(getString(R.string.no_results));
+		}
 		this.searchresult = searchresult;
 		setListAdapter(new ResultsAdapter(getActivity(), (searchresult.getResults())));
 		getListView().setTextFilterEnabled(true);

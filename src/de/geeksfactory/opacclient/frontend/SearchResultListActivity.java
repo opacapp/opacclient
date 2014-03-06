@@ -178,6 +178,8 @@ public class SearchResultListActivity extends OpacActivity implements
 				if (result == null) {
 
 //TODO:					if (app.getApi().getLast_error().equals("is_a_redirect")) {    (what is this for?)
+//						// Some libraries (SISIS) do not show a result list if only one result
+//						// is found but instead directly show the result details.
 //						Intent intent = new Intent(SearchResultsListActivity.this,
 //								SearchResultDetailsActivity.class);
 //						startActivity(intent);
