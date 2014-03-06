@@ -145,16 +145,16 @@ public abstract class OpacActivity extends Activity {
 			drawerList = (ListView) findViewById(R.id.drawer_list);
 			navAdapter = new NavigationAdapter(this);
 			drawerList.setAdapter(navAdapter);
-			navAdapter.addSeperatorItem("Bibliothek");
-			navAdapter.addTextItemWithIcon("Katalogsuche", R.drawable.ic_action_search);
-			navAdapter.addTextItemWithIcon("Konto", R.drawable.ic_action_account);
-			navAdapter.addTextItemWithIcon("Merkliste", R.drawable.ic_action_star_1);
-			navAdapter.addTextItemWithIcon("Informationen", R.drawable.ic_action_info);
+			navAdapter.addSeperatorItem(getString(R.string.nav_hl_library));
+			navAdapter.addTextItemWithIcon(getString(R.string.nav_search), R.drawable.ic_action_search);
+			navAdapter.addTextItemWithIcon(getString(R.string.nav_account), R.drawable.ic_action_account);
+			navAdapter.addTextItemWithIcon(getString(R.string.nav_starred), R.drawable.ic_action_star_1);
+			navAdapter.addTextItemWithIcon(getString(R.string.nav_info), R.drawable.ic_action_info);
 			
 			aData.open();
 			accounts = aData.getAllAccounts();
 			if (accounts.size() > 1) {	
-				navAdapter.addSeperatorItem("Kontoauswahl");
+				navAdapter.addSeperatorItem(getString(R.string.nav_hl_accountlist));
 				
 				long tolerance = Long.decode(sp.getString("notification_warning",
 						"367200000"));
@@ -180,9 +180,9 @@ public abstract class OpacActivity extends Activity {
 				selectItem(5); //selects first account
 			}
 			
-			navAdapter.addSeperatorItem("Sonstiges");
-			navAdapter.addTextItemWithIcon("Einstellungen", R.drawable.ic_action_settings);
-			navAdapter.addTextItemWithIcon("Über die App", R.drawable.ic_action_help);
+			navAdapter.addSeperatorItem(getString(R.string.nav_hl_other));
+			navAdapter.addTextItemWithIcon(getString(R.string.nav_settings), R.drawable.ic_action_settings);
+			navAdapter.addTextItemWithIcon(getString(R.string.nav_about), R.drawable.ic_action_help);
 			
 			drawerList.setOnItemClickListener(new DrawerItemClickListener());		
 			
