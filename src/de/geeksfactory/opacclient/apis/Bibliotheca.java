@@ -22,9 +22,11 @@
 package de.geeksfactory.opacclient.apis;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -442,26 +444,29 @@ public class Bibliotheca extends BaseApi {
 				copymap = data.getJSONObject("copiestable");
 			} else {
 				Elements ths = doc.select(".exemplartab .exemplarmenubar th");
-				for(int i = 0; i < ths.size(); i++){
+				for (int i = 0; i < ths.size(); i++) {
 					Element th = ths.get(i);
 					String head = th.text().trim();
-					if(head.equals("Zweigstelle")){
+					if (head.equals("Zweigstelle")) {
 						copymap.put(DetailledItem.KEY_COPY_BRANCH, i);
-					}else if(head.equals("Abteilung")){
+					} else if (head.equals("Abteilung")) {
 						copymap.put(DetailledItem.KEY_COPY_DEPARTMENT, i);
-					}else if(head.equals("Bereich")){
+					} else if (head.equals("Bereich")) {
 						copymap.put(DetailledItem.KEY_COPY_LOCATION, i);
-					}else if(head.equals("Standort")){
+					} else if (head.equals("Standort")) {
 						copymap.put(DetailledItem.KEY_COPY_LOCATION, i);
-					}else if(head.equals("Signatur")){
+					} else if (head.equals("Signatur")) {
 						copymap.put(DetailledItem.KEY_COPY_SHELFMARK, i);
-					}else if(head.equals("Barcode") || head.equals("Medien-Nummer")){
+					} else if (head.equals("Barcode")
+							|| head.equals("Medien-Nummer")) {
 						copymap.put(DetailledItem.KEY_COPY_BARCODE, i);
-					}else if(head.equals("Status")){
+					} else if (head.equals("Status")) {
 						copymap.put(DetailledItem.KEY_COPY_STATUS, i);
-					}else if(head.equals("Frist") || head.matches("Verf.+gbar")){
+					} else if (head.equals("Frist")
+							|| head.matches("Verf.+gbar")) {
 						copymap.put(DetailledItem.KEY_COPY_RETURN, i);
-					}else if(head.equals("Vorbestellungen") || head.equals("Reservierungen")){
+					} else if (head.equals("Vorbestellungen")
+							|| head.equals("Reservierungen")) {
 						copymap.put(DetailledItem.KEY_COPY_RESERVATIONS, i);
 					}
 				}
@@ -515,8 +520,9 @@ public class Bibliotheca extends BaseApi {
 	}
 
 	@Override
-	public ReservationResult reservation(String reservation_info, Account acc,
+	public ReservationResult reservation(DetailledItem item, Account acc,
 			int useraction, String selection) throws IOException {
+		String reservation_info = item.getReservation_info();
 		String branch_inputfield = "zstauswahl";
 
 		Document doc = null;
@@ -1002,8 +1008,13 @@ public class Bibliotheca extends BaseApi {
 
 	@Override
 	public String getShareUrl(String id, String title) {
-		return "http://opacapp.de/:" + library.getIdent() + ":" + id + ":"
-				+ title;
+		try {
+			return "http://opacapp.de/:" + library.getIdent() + ":" + id + ":"
+					+ URLEncoder.encode(title, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			return "http://opacapp.de/:" + library.getIdent() + ":" + id + ":"
+					+ title;
+		}
 	}
 
 	@Override

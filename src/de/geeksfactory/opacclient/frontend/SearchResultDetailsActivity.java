@@ -291,7 +291,7 @@ public class SearchResultDetailsActivity extends OpacActivity {
 				return;
 			}
 		}
-		rt.execute(app, item.getReservation_info(), useraction, selection);
+		rt.execute(app, item, useraction, selection);
 	}
 
 	public void reservationResult(ReservationResult result) {
@@ -1038,13 +1038,13 @@ public class SearchResultDetailsActivity extends OpacActivity {
 			super.doInBackground(arg0);
 
 			app = (OpacClient) arg0[0];
-			String reservation_info = (String) arg0[1];
+			DetailledItem item = (DetailledItem) arg0[1];
 			int useraction = (Integer) arg0[2];
 			String selection = (String) arg0[3];
 
 			try {
 				ReservationResult res = app.getApi().reservation(
-						reservation_info, app.getAccount(), useraction,
+						item, app.getAccount(), useraction,
 						selection);
 				success = true;
 				return res;

@@ -517,8 +517,9 @@ public class Zones22 extends BaseApi {
 	}
 
 	@Override
-	public ReservationResult reservation(String reservation_info, Account acc,
+	public ReservationResult reservation(DetailledItem item, Account acc,
 			int useraction, String selection) throws IOException {
+		String reservation_info = item.getReservation_info();
 		String html = httpGet(opac_url + "/" + reservation_info,
 				getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
@@ -612,7 +613,7 @@ public class Zones22 extends BaseApi {
 			login(account);
 			prolong(media, account, 1, null);
 		}
-		String dialog = doc.select(".SSRenewDlgContent").text();
+		String dialog = doc.select("#SSRenewDlgContent").text();
 		if (dialog.contains("erfolgreich"))
 			return new ProlongResult(MultiStepResult.Status.OK, dialog);
 		else

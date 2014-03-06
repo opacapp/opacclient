@@ -28,7 +28,7 @@ import android.graphics.Bitmap;
  * 
  * @author Raphael Michel
  */
-public class SearchResult {
+public class SearchResult implements CoverHolder {
 	private MediaType type;
 	private int nr;
 	private String id;
