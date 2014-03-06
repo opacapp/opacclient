@@ -39,6 +39,15 @@ public class MainActivity extends OpacActivity implements SearchFragment.Callbac
 		
 		selectItem(1);	
 	}
+	
+	
+	@Override
+	public void accountSelected(Account account) {
+		if(fragment instanceof OpacActivity.AccountSelectedListener){
+			((OpacActivity.AccountSelectedListener) fragment).accountSelected(account);
+		}
+	}
+
 
 	@Override
 	public void scanBarcode() {

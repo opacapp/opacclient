@@ -271,6 +271,7 @@ public abstract class OpacActivity extends Activity {
 			deselectLibraryItems();
 			drawerList.setItemChecked(position, true);
 			selectaccount(accounts.get(position-6).getId());
+		    drawerLayout.closeDrawer(drawerList);
 			return;
 		}
 	}
@@ -414,8 +415,7 @@ public abstract class OpacActivity extends Activity {
 
 	}
 
-	public void accountSelected() {
-
+	public void accountSelected(Account account) {
 	}
 
 	public void selectaccount() {
@@ -469,7 +469,7 @@ public abstract class OpacActivity extends Activity {
 	
 	public void selectaccount(long id) {
 		((OpacClient) getApplication()).setAccount(id);
-		accountSelected();
+		accountSelected(((OpacClient) getApplication()).getAccount());
 	}
 
 	protected static void unbindDrawables(View view) {
