@@ -12,6 +12,7 @@ import org.holoeverywhere.app.ProgressDialog;
 import org.holoeverywhere.widget.Button;
 import org.holoeverywhere.widget.LinearLayout;
 import org.holoeverywhere.widget.TextView;
+import org.holoeverywhere.widget.Toast;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -24,11 +25,13 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.util.Linkify;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
-
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
@@ -160,6 +163,7 @@ public class SearchResultDetailFragment extends Fragment {
 		View rootView = inflater.inflate(R.layout.fragment_searchresult_detail,
 				container, false);
 		view = rootView;
+		setHasOptionsMenu(true);
 		return rootView;
 	}
 	
@@ -402,6 +406,8 @@ public class SearchResultDetailFragment extends Fragment {
 			if (id == null || id.equals("")) {
 				id = getItem().getId();
 			}
+			
+			getActivity().supportInvalidateOptionsMenu();
 
 //TODO:			if (getIntent().hasExtra("reservation")
 //					&& getIntent().getBooleanExtra("reservation", false))
@@ -636,6 +642,212 @@ public class SearchResultDetailFragment extends Fragment {
 		super.onDestroy();
 		OpacActivity.unbindDrawables(view.findViewById(R.id.rootView));
 		System.gc();
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.search_result_details_activity, menu);
+
+		if (item != null) {
+			if (item.isReservable()) {
+				menu.findItem(R.id.action_reservation).setVisible(true);
+			} else {
+				menu.findItem(R.id.action_reservation).setVisible(false);
+			}
+			if (item.isBookable() && app.getApi() instanceof EbookServiceApi) {
+				if (((EbookServiceApi) app.getApi()).isEbook(item))
+					menu.findItem(R.id.action_lendebook).setVisible(true);
+				else
+					menu.findItem(R.id.action_lendebook).setVisible(false);
+			} else {
+				menu.findItem(R.id.action_lendebook).setVisible(false);
+			}
+			menu.findItem(R.id.action_tocollection).setVisible(
+					item.getCollectionId() != null);
+		} else {
+			menu.findItem(R.id.action_reservation).setVisible(false);
+			menu.findItem(R.id.action_lendebook).setVisible(false);
+			menu.findItem(R.id.action_tocollection).setVisible(false);
+		}
+
+		String bib = app.getLibrary().getIdent();
+		StarDataSource data = new StarDataSource(getActivity());
+		if ((id == null || id.equals("")) && item != null) {
+			if (data.isStarredTitle(bib, title)) {
+				menu.findItem(R.id.action_star).setIcon(
+						R.drawable.ic_action_star_1);
+			}
+		} else {
+			if (data.isStarred(bib, id)) {
+				menu.findItem(R.id.action_star).setIcon(
+						R.drawable.ic_action_star_1);
+			}
+		}
+
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		final String bib = app.getLibrary().getIdent();
+		if (item.getItemId() == R.id.action_reservation) {
+//TODO:			reservationStart();
+			return true;
+		} else if (item.getItemId() == R.id.action_lendebook) {
+//TODO:			bookingStart();
+			return true;
+		} else if (item.getItemId() == R.id.action_tocollection) {
+//			if (getActivity().getIntent().getBooleanExtra("from_collection", false)) {
+//				// TODO
+//			finish();
+//			} else {
+			Intent intent = new Intent(getActivity(),
+					SearchResultDetailActivity.class);
+			intent.putExtra("item_id", getItem().getCollectionId());
+			startActivity(intent);
+			//finish(); // TODO
+//			}
+			return true;
+		} else if (item.getItemId() == R.id.action_share) {
+			if (getItem() == null) {
+				Toast toast = Toast.makeText(getActivity(),
+						getString(R.string.share_wait), Toast.LENGTH_SHORT);
+				toast.show();
+			} else {
+				final String title = getItem().getTitle();
+				final String id = getItem().getId();
+				final CharSequence[] items = { getString(R.string.share_link),
+						getString(R.string.share_details) };
+
+				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+				builder.setTitle(R.string.share_dialog_select);
+				builder.setItems(items, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int di) {
+						String bib = app.getLibrary().getIdent();
+						if (di == 0) {
+							// Share link
+							Intent intent = new Intent(
+									android.content.Intent.ACTION_SEND);
+							intent.setType("text/plain");
+							intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+
+							// Add data to the intent, the receiving app will
+							// decide
+							// what to do with it.
+							intent.putExtra(Intent.EXTRA_SUBJECT, title);
+
+							String t = title;
+							try {
+								bib = java.net.URLEncoder.encode(app
+										.getLibrary().getIdent(), "UTF-8");
+								t = java.net.URLEncoder.encode(t, "UTF-8");
+							} catch (UnsupportedEncodingException e) {
+							}
+
+							String shareUrl = app.getApi().getShareUrl(id,
+									title);
+							if (shareUrl != null) {
+								intent.putExtra(Intent.EXTRA_TEXT, shareUrl);
+								startActivity(Intent.createChooser(intent,
+										getResources()
+												.getString(R.string.share)));
+							} else {
+								Toast toast = Toast.makeText(
+										getActivity(),
+										getString(R.string.share_notsupported),
+										Toast.LENGTH_SHORT);
+								toast.show();
+							}
+						} else { // Share details
+							Intent intent = new Intent(
+									android.content.Intent.ACTION_SEND);
+							intent.setType("text/plain");
+							intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+
+							// Add data to the intent, the receiving app will
+							// decide
+							// what to do with it.
+							intent.putExtra(Intent.EXTRA_SUBJECT, title);
+
+							String t = title;
+							try {
+								bib = java.net.URLEncoder.encode(app
+										.getLibrary().getIdent(), "UTF-8");
+								t = java.net.URLEncoder.encode(t, "UTF-8");
+							} catch (UnsupportedEncodingException e) {
+							}
+
+							String text = title + "\n\n";
+
+							for (Detail detail : getItem()
+									.getDetails()) {
+								String colon = "";
+								if (!detail.getDesc().endsWith(":"))
+									colon = ":";
+								text += detail.getDesc() + colon + "\n"
+										+ detail.getContent() + "\n\n";
+							}
+
+							String shareUrl = app.getApi().getShareUrl(id,
+									title);
+							if (shareUrl != null)
+								text += shareUrl;
+							else
+								text += "http://opacapp.de/:" + bib + ":" + id
+										+ ":" + t;
+
+							intent.putExtra(Intent.EXTRA_TEXT, text);
+							startActivity(Intent.createChooser(intent,
+									getResources().getString(R.string.share)));
+						}
+					}
+				});
+				AlertDialog alert = builder.create();
+
+				alert.show();
+			}
+
+			return true;
+		} else if (item.getItemId() == R.id.action_star) {
+			StarDataSource star = new StarDataSource(
+					getActivity());
+			if (getItem() == null) {
+				Toast toast = Toast.makeText(getActivity(),
+						getString(R.string.star_wait), Toast.LENGTH_SHORT);
+				toast.show();
+			} else if (getItem().getId() == null || getItem().getId().equals("")) {
+				final String title = getItem().getTitle();
+				final String id = getItem().getId();
+				if (star.isStarredTitle(bib, title)) {
+					star.remove(star.getItemByTitle(bib, title));
+					item.setIcon(R.drawable.ic_action_star_0);
+				} else {
+					star.star(null, title, bib);
+					Toast toast = Toast.makeText(
+							getActivity(),
+							getString(R.string.starred), Toast.LENGTH_SHORT);
+					toast.show();
+					item.setIcon(R.drawable.ic_action_star_1);
+				}
+			} else {
+				final String title = getItem().getTitle();
+				final String id = getItem().getId();
+				if (star.isStarred(bib, id)) {
+					star.remove(star.getItem(bib, id));
+					item.setIcon(R.drawable.ic_action_star_0);
+				} else {
+					star.star(id, title, bib);
+					Toast toast = Toast.makeText(getActivity(),
+							getString(R.string.starred), Toast.LENGTH_SHORT);
+					toast.show();
+					item.setIcon(R.drawable.ic_action_star_1);
+				}
+			}
+			return true;
+		} else {
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	
