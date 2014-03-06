@@ -1,9 +1,3 @@
 [submodule "3dparty/HoloEverywhere"]
 	path = 3dparty/HoloEverywhere
-	url = https://github.com/raphaelm/HoloEverywhere.git
-[submodule "3dparty/SlidingMenu"]
-	path = 3dparty/SlidingMenu
-	url = https://github.com/raphaelm/SlidingMenu.git
-[submodule "/3dparty/HoloEverywhere"]
-	path = /3dparty/HoloEverywhere
 	url = https://github.com/Prototik/HoloEverywhere.git
