@@ -20,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -62,8 +63,11 @@ public class SearchResultListActivity extends OpacActivity implements
 	private SearchResultDetailFragment detailFragment;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {		
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		
 		super.onCreate(savedInstanceState);
+		
 		// Show the Up button in the action bar.
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
@@ -98,49 +102,7 @@ public class SearchResultListActivity extends OpacActivity implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() ==  android.R.id.home) {
-			// This ID represents the Home or Up button. In the case of this
-			// activity, the Up button is shown. Use NavUtils to allow users
-			// to navigate up one level in the application structure. For
-			// more details, see the Navigation pattern on Android Design:
-			//
-			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
-			//
-			NavUtils.navigateUpFromSameTask(this);
-			return true;
-		} else if (item.getItemId() == R.id.action_prev) {
-			listFragment.setListShown(false);
-			if (sst != null) {
-				sst.cancel(false);
-			}
-			page--;
-			if (cache.get(page) != null) {
-				searchresult = cache.get(page);
-				loaded();
-			} else {
-				searchresult = null;
-				sst = new SearchPageTask();
-				sst.execute(app, page);
-			}
-			supportInvalidateOptionsMenu();
-			return true;
-		} else if (item.getItemId() == R.id.action_next) {
-			listFragment.setListShown(false);
-			if (sst != null) {
-				sst.cancel(false);
-			}
-			page++;
-			if (cache.get(page) != null) {
-				searchresult = cache.get(page);
-				loaded();
-			} else {
-				searchresult = null;
-				sst = new SearchPageTask();
-				sst.execute(app, page);
-			}
-			supportInvalidateOptionsMenu();
-			return true;
-		} else if (item.getItemId() == android.R.id.home) {
+		if (item.getItemId() == android.R.id.home) {
 			finish();
 			return true;
 		}
@@ -151,14 +113,6 @@ public class SearchResultListActivity extends OpacActivity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater mi = new MenuInflater(this);
 		mi.inflate(R.menu.activity_search_results, menu);
-
-		if (page == 1) {
-			menu.findItem(R.id.action_prev).setVisible(false);
-		} else {
-
-			menu.findItem(R.id.action_prev).setVisible(true);
-		}
-
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -197,6 +151,10 @@ public class SearchResultListActivity extends OpacActivity implements
 	public class SearchStartTask extends OpacTask<SearchRequestResult> {
 		protected boolean success;
 		protected Exception exception;
+		
+		protected void onPreExecute() {
+			if(page != 1) setProgressBarIndeterminateVisibility(true); 
+		}
 
 		@Override
 		protected SearchRequestResult doInBackground(Object... arg0) {
@@ -226,6 +184,7 @@ public class SearchResultListActivity extends OpacActivity implements
 
 		@Override
 		protected void onPostExecute(SearchRequestResult result) {
+			if(page != 1) setProgressBarIndeterminateVisibility(false); 
 			if (success) {
 				if (result == null) {
 
@@ -307,7 +266,7 @@ public class SearchResultListActivity extends OpacActivity implements
 
 	protected void loaded() {		
 		listFragment.setListShown(true);
-		listFragment.setSearchResult(searchresult);
+		listFragment.setSearchResult(searchresult, page == 1);
 	}
 
 	@Override
@@ -318,5 +277,11 @@ public class SearchResultListActivity extends OpacActivity implements
 	@Override
 	public void removeFragment() {
 		getSupportFragmentManager().beginTransaction().remove(detailFragment).commit();
+	}
+
+	@Override
+	public void loadMoreData(int page) {
+		this.page = page;
+		performsearch();
 	}
 }

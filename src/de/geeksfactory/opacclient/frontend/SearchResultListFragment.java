@@ -6,6 +6,7 @@ import org.holoeverywhere.widget.ListView;
 
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
+import de.geeksfactory.opacclient.objects.SearchResult;
 import android.os.Bundle;
 import android.view.View;
 
@@ -39,6 +40,8 @@ public class SearchResultListFragment extends ListFragment {
 
 	private SearchRequestResult searchresult;
 
+	private ResultsAdapter adapter;
+
 	/**
 	 * A callback interface that all activities containing this fragment must
 	 * implement. This mechanism allows activities to be notified of item
@@ -50,6 +53,7 @@ public class SearchResultListFragment extends ListFragment {
 		 * @param nr 
 		 */
 		public void onItemSelected(int nr, String id);
+		public void loadMoreData(int page);
 	}
 
 	/**
@@ -59,6 +63,9 @@ public class SearchResultListFragment extends ListFragment {
 	private static Callbacks sDummyCallbacks = new Callbacks() {
 		@Override
 		public void onItemSelected(int nr, String id) {
+		}
+		@Override
+		public void loadMoreData(int page) {
 		}
 	};
 
@@ -143,19 +150,33 @@ public class SearchResultListFragment extends ListFragment {
 		mActivatedPosition = position;
 	}
 
-	public void setSearchResult(SearchRequestResult searchresult) {
-		if (searchresult.getTotal_result_count() >= 0)
-			getSupportActionBar().setSubtitle(
-					getString(R.string.result_number,
-							searchresult.getTotal_result_count()));
-
-		if (searchresult.getResults().size() == 0
-				&& searchresult.getTotal_result_count() == 0) {
-			setEmptyText(getString(R.string.no_results));
+	public void setSearchResult(SearchRequestResult searchresult, boolean clear) {
+		if(clear) {
+			if (searchresult.getTotal_result_count() >= 0)
+				getSupportActionBar().setSubtitle(
+						getString(R.string.result_number,
+								searchresult.getTotal_result_count()));
+	
+			if (searchresult.getResults().size() == 0
+					&& searchresult.getTotal_result_count() == 0) {
+				setEmptyText(getString(R.string.no_results));
+			}
+			this.searchresult = searchresult;
+			adapter = new ResultsAdapter(getActivity(), (searchresult.getResults()));
+			setListAdapter(adapter);
+			getListView().setTextFilterEnabled(true);
+			getListView().setOnScrollListener(new EndlessScrollListener() {
+	
+				@Override
+				public void onLoadMore(int page, int totalItemsCount) {
+					mCallbacks.loadMoreData(page);
+				}
+				
+			});
+		} else {
+			adapter.addAll(searchresult.getResults());
+			adapter.notifyDataSetChanged();
 		}
-		this.searchresult = searchresult;
-		setListAdapter(new ResultsAdapter(getActivity(), (searchresult.getResults())));
-		getListView().setTextFilterEnabled(true);
 	}
 	
 }
