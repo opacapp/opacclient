@@ -27,18 +27,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
+import org.holoeverywhere.app.Fragment;
+import org.holoeverywhere.widget.DrawerLayout;
+import org.json.JSONException;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -49,24 +60,31 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnOpenListener;
-import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
-
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.frontend.NavigationAdapter.Item;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.StarDataSource;
 
-public abstract class OpacActivity extends SlidingFragmentActivity {
+public abstract class OpacActivity extends Activity {
 	protected OpacClient app;
 	protected AlertDialog adialog;
-	protected NavigationFragment mFrag;
+	protected AccountDataSource aData;
+	
+	private int selectedItemPos;
+	
+	private NavigationAdapter navAdapter;
+	private ListView drawerList;
+	private DrawerLayout drawerLayout;
+	private ActionBarDrawerToggle drawerToggle;
+	private CharSequence mTitle;
+	
+	private List<Account> accounts;
+	
+	protected Fragment fragment;
+	protected boolean hasDrawer = false;
 
 	public OpacClient getOpacApplication() {
 		return app;
@@ -75,41 +93,207 @@ public abstract class OpacActivity extends SlidingFragmentActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		this.getSupportActionBar().setHomeButtonEnabled(true);
-
+		
+		setContentView(getContentView());
 		app = (OpacClient) getApplication();
+		
+		aData = new AccountDataSource(this);
+		setupDrawer();
 
-		setContentView(R.layout.empty_workaround);
-		setBehindContentView(R.layout.menu_frame);
-		FragmentTransaction t = this.getSupportFragmentManager()
-				.beginTransaction();
-		mFrag = app.newNavigationFragment();
-		t.replace(R.id.menu_frame, mFrag);
-		t.commit();
-		// Sliding Menu
-		SlidingMenu sm = getSlidingMenu();
-		if (app.getSlidingMenuEnabled()) {
-			sm.setShadowWidthRes(R.dimen.shadow_width);
-			sm.setShadowDrawable(R.drawable.shadow);
-			sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-			sm.setFadeDegree(0.35f);
-			sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-			sm.setOnOpenListener(new OnOpenListener() {
-				@Override
-				public void onOpen() {
-					if (getCurrentFocus() != null) {
+	}
+
+	protected abstract int getContentView();
+
+	private void setupDrawer() {
+		SharedPreferences sp = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		
+		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		if(drawerLayout != null) {
+			hasDrawer = true;
+			drawerToggle = new ActionBarDrawerToggle(
+	                this,                  /* host Activity */
+	                drawerLayout,         /* DrawerLayout object */
+	                R.drawable.ic_drawer,  /* nav drawer icon to replace 'Up' caret */
+	                R.string.drawer_open,  /* "open drawer" description */
+	                R.string.drawer_close  /* "close drawer" description */
+	                ) {
+	
+	            /** Called when a drawer has settled in a completely closed state. */
+	            public void onDrawerClosed(View view) {
+	                super.onDrawerClosed(view);
+	                getSupportActionBar().setTitle(mTitle);
+	            }
+	
+	            /** Called when a drawer has settled in a completely open state. */
+	            public void onDrawerOpened(View drawerView) {
+	                super.onDrawerOpened(drawerView);
+	                getSupportActionBar().setTitle(app.getResources().getString(R.string.app_name));
+	                if (getCurrentFocus() != null) {
 						InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 						imm.hideSoftInputFromWindow(getCurrentFocus()
 								.getWindowToken(), 0);
 					}
+	            }
+	        };
+	
+	        // Set the drawer toggle as the DrawerListener
+	        drawerLayout.setDrawerListener(drawerToggle);
+	        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+	        getSupportActionBar().setHomeButtonEnabled(true);
+			
+			drawerList = (ListView) findViewById(R.id.drawer_list);
+			navAdapter = new NavigationAdapter(this);
+			drawerList.setAdapter(navAdapter);
+			navAdapter.addSeperatorItem("Bibliothek");
+			navAdapter.addTextItemWithIcon("Katalogsuche", R.drawable.ic_action_search);
+			navAdapter.addTextItemWithIcon("Konto", R.drawable.ic_action_account);
+			navAdapter.addTextItemWithIcon("Merkliste", R.drawable.ic_action_star_1);
+			navAdapter.addTextItemWithIcon("Informationen", R.drawable.ic_action_info);
+			
+			aData.open();
+			accounts = aData.getAllAccounts();
+			if (accounts.size() > 1) {	
+				navAdapter.addSeperatorItem("Kontoauswahl");
+				
+				long tolerance = Long.decode(sp.getString("notification_warning",
+						"367200000"));
+				
+				for (final Account account : accounts) {
+					Library library;
+					try {
+						library = ((OpacClient) getApplication())
+								.getLibrary(account.getLibrary());
+						int expiring = aData.getExpiring(account, tolerance);
+						String expiringText = "";
+						if (expiring > 0) {
+							expiringText = String.valueOf(expiring);
+						}
+						navAdapter.addLibraryItem(account.getLabel(), library.getCity(), expiringText);
+						
+					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
 				}
-			});
-		} else {
-			sm.setEnabled(false);
-			sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
+				selectItem(5); //selects first account
+			}
+			
+			navAdapter.addSeperatorItem("Sonstiges");
+			navAdapter.addTextItemWithIcon("Einstellungen", R.drawable.ic_action_settings);
+			navAdapter.addTextItemWithIcon("Über die App", R.drawable.ic_action_help);
+			
+			drawerList.setOnItemClickListener(new DrawerItemClickListener());		
+			
+			if (!sp.getBoolean("version2.0.0-introduced", false)
+					&& app.getSlidingMenuEnabled()) {
+				final Handler handler = new Handler();
+				// Just show the menu to explain that is there if people start
+				// version 2 for the first time.
+				// We need a handler because if we just put this in onCreate nothing
+				// happens. I don't have any idea, why.
+				handler.postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						SharedPreferences sp = PreferenceManager
+								.getDefaultSharedPreferences(OpacActivity.this);
+						drawerLayout.openDrawer(drawerList);
+						sp.edit().putBoolean("version2.0.0-introduced", true)
+								.commit();
+					}
+				}, 500);
+	
+			}
 		}
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+	}
+	
+	private class DrawerItemClickListener implements OnItemClickListener {
+		@Override
+		public void onItemClick(AdapterView parent, View view, int position, long id) {
+			selectItem(position);
+		}		
+	}
+	
+	 @Override
+	    protected void onPostCreate(Bundle savedInstanceState) {
+	        super.onPostCreate(savedInstanceState);
+	        if(hasDrawer) drawerToggle.syncState();
+	    }
 
+	    @Override
+	    public void onConfigurationChanged(Configuration newConfig) {
+	        super.onConfigurationChanged(newConfig);
+	        if(hasDrawer) drawerToggle.onConfigurationChanged(newConfig);
+	    }
+	
+	/** Swaps fragments in the main content view */
+	protected void selectItem(int position) {
+	    final int count = navAdapter.getCount();
+	    if (navAdapter.getItemViewType(position) == Item.TYPE_SEPARATOR) {
+	    	//clicked on a separator
+	    	return;
+	    } else if (navAdapter.getItemViewType(position) == Item.TYPE_TEXT) {
+	    	switch (position) {
+	    		case 1: fragment = new SearchFragment();
+	    				break;
+	    		case 2: //fragment = new AccountFragment();
+	    				break;
+	    		case 3: //fragment = new StarredFragment();
+    				break;
+	    		case 4: //fragment = new InfoFragment();
+    				break;
+	    	}
+			if(position == count - 2) {
+				Intent intent = new Intent(this, MainPreferenceActivity.class);
+				startActivity(intent);
+				return;
+			} else if (position == count - 1) {
+				//fragment = new AboutFragment();
+			}
+			
+
+		    // Insert the fragment by replacing any existing fragment
+		    FragmentManager fragmentManager = getSupportFragmentManager();
+		    fragmentManager.beginTransaction()
+		                   .replace(R.id.content_frame, fragment)
+		                   .commit();
+
+		    // Highlight the selected item, update the title, and close the drawer
+		    deselectNavItems();
+		    drawerList.setItemChecked(position, true);
+		    drawerList.setItemChecked(selectedItemPos, false);
+		    selectedItemPos = position;
+		    setTitle(navAdapter.getItem(position).text);
+		    drawerLayout.closeDrawer(drawerList);
+			
+		} else if (navAdapter.getItemViewType(position) == Item.TYPE_LIBRARY) {
+			deselectLibraryItems();
+			drawerList.setItemChecked(position, true);
+			selectaccount(accounts.get(position-6).getId());
+			return;
+		}
+	}
+	
+	@Override
+	public void setTitle(CharSequence title) {
+		super.setTitle(title);
+		mTitle = title;
+	}
+
+	private void deselectLibraryItems() {
+		for(int i = 6; i < drawerList.getCount() - 2; i++) {
+			drawerList.setItemChecked(i, false);
+		}
+	}
+	
+	private void deselectNavItems() {
+		for(int i = 1; i < 5; i++) {
+			drawerList.setItemChecked(i, false);
+		}
+		for(int i = drawerList.getCount() - 2; i < drawerList.getCount(); i++) {
+			drawerList.setItemChecked(i, false);
+		}
 	}
 
 	@Override
@@ -201,7 +385,7 @@ public abstract class OpacActivity extends SlidingFragmentActivity {
 	@Override
 	protected void onStop() {
 		super.onStop();
-		showContent();
+//		showContent();
 	}
 
 	@Override
@@ -313,7 +497,7 @@ public abstract class OpacActivity extends SlidingFragmentActivity {
 
 				adialog.dismiss();
 
-				accountSelected();
+				((AccountSelectedListener) fragment).accountSelected(accounts.get(position));
 			}
 		});
 		builder.setTitle(R.string.account_select)
@@ -330,16 +514,21 @@ public abstract class OpacActivity extends SlidingFragmentActivity {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
 								dialog.dismiss();
-								Intent intent = new Intent(OpacActivity.this,
-										AccountListActivity.class);
-								startActivity(intent);
+//TODO:								Intent intent = new Intent(OpacActivity.this,
+//										AccountListActivity.class);
+//								startActivity(intent);
 							}
 						});
 		adialog = builder.create();
 		adialog.show();
 	}
+	
+	public void selectaccount(long id) {
+		((OpacClient) getApplication()).setAccount(id);
+		accountSelected();
+	}
 
-	protected void unbindDrawables(View view) {
+	protected static void unbindDrawables(View view) {
 		if (view == null)
 			return;
 		if (view.getBackground() != null) {
@@ -357,16 +546,12 @@ public abstract class OpacActivity extends SlidingFragmentActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			if (app.getSlidingMenuEnabled()) {
-				toggle();
-			} else {
-				NavUtils.navigateUpFromSameTask(this);
-			}
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
+		// Pass the event to ActionBarDrawerToggle, if it returns
+        // true, then it has handled the app icon touch event
+        if (hasDrawer && drawerToggle.onOptionsItemSelected(item)) {
+          return true;
+        }
+        
+        return super.onOptionsItemSelected(item);
 	}
 }

@@ -23,19 +23,18 @@ package de.geeksfactory.opacclient.frontend;
 
 import java.util.List;
 
+import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
-
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
@@ -43,7 +42,7 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 
-public class AccountListActivity extends SherlockActivity {
+public class AccountListActivity extends Activity {
 
 	private List<Account> accounts;
 	private List<Library> libraries;
@@ -105,7 +104,7 @@ public class AccountListActivity extends SherlockActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.activity_account_list, menu);
+		getMenuInflater().inflate(R.menu.activity_account_list, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 

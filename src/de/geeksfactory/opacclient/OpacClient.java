@@ -33,11 +33,11 @@ import org.acra.ACRA;
 import org.acra.ACRAConfiguration;
 import org.acra.annotation.ReportsCrashes;
 import org.apache.http.client.ClientProtocolException;
+import org.holoeverywhere.app.Application;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -56,9 +56,7 @@ import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.Pica;
 import de.geeksfactory.opacclient.apis.SISIS;
 import de.geeksfactory.opacclient.apis.Zones22;
-import de.geeksfactory.opacclient.frontend.MainPreferenceActivity;
-import de.geeksfactory.opacclient.frontend.NavigationFragment;
-import de.geeksfactory.opacclient.frontend.SearchResultsActivity;
+import de.geeksfactory.opacclient.frontend.SearchResultListActivity;
 import de.geeksfactory.opacclient.frontend.WelcomeActivity;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
@@ -100,16 +98,12 @@ public class OpacClient extends Application {
 		activity.finish();
 	}
 
-	public NavigationFragment newNavigationFragment() {
-		return new NavigationFragment();
-	}
-
-	public Class getSearchResultsActivityClass() {
-		return SearchResultsActivity.class;
-	}
+//	public Class getSearchResultsActivityClass() {
+//		return SearchResultsActivity.class;
+//	}
 
 	public void startSearch(Activity caller, Bundle query) {
-		Intent myIntent = new Intent(caller, SearchResultsActivity.class);
+		Intent myIntent = new Intent(caller, SearchResultListActivity.class);
 		myIntent.putExtra("query", query);
 		caller.startActivity(myIntent);
 	}
@@ -274,8 +268,8 @@ public class OpacClient extends Application {
 	}
 
 	public void toPrefs(Activity activity) {
-		Intent intent = new Intent(activity, MainPreferenceActivity.class);
-		activity.startActivity(intent);
+//		Intent intent = new Intent(activity, MainPreferenceActivity.class);
+//		activity.startActivity(intent);
 	}
 
 	@Override

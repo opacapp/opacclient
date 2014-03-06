@@ -49,7 +49,6 @@ import android.util.Log;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
-import de.geeksfactory.opacclient.frontend.AccountActivity;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Library;
@@ -249,23 +248,23 @@ public class ReminderCheckService extends Service {
 				nb.setNumber((int) expired_new);
 				nb.setSound(null);
 
-				Intent notificationIntent = new Intent(
-						ReminderCheckService.this, AccountActivity.class);
-				notificationIntent.putExtra("notifications", notified);
-				if (affected_accounts > 1) {
-					// If there are notifications for more than one account,
-					// account
-					// menu should be opened
-					notificationIntent.putExtra("showmenu", true);
-				}
-				notificationIntent.putExtra("account", first_affected_account);
-				PendingIntent contentIntent = PendingIntent.getActivity(
-						ReminderCheckService.this, 0, notificationIntent, 0);
-				nb.setContentIntent(contentIntent);
-				nb.setAutoCancel(true);
-
-				Notification notification = nb.build();
-				mNotificationManager.notify(OpacClient.NOTIF_ID, notification);
+//	TODO:			Intent notificationIntent = new Intent(
+//						ReminderCheckService.this, AccountActivity.class);
+//				notificationIntent.putExtra("notifications", notified);
+//				if (affected_accounts > 1) {
+//					// If there are notifications for more than one account,
+//					// account
+//					// menu should be opened
+//					notificationIntent.putExtra("showmenu", true);
+//				}
+//				notificationIntent.putExtra("account", first_affected_account);
+//				PendingIntent contentIntent = PendingIntent.getActivity(
+//						ReminderCheckService.this, 0, notificationIntent, 0);
+//				nb.setContentIntent(contentIntent);
+//				nb.setAutoCancel(true);
+//
+//				Notification notification = nb.build();
+//				mNotificationManager.notify(OpacClient.NOTIF_ID, notification);
 			}
 
 			stopSelf();

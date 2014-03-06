@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.acra.ACRA;
+import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
 import org.json.JSONException;
 
@@ -35,14 +36,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
@@ -50,7 +49,7 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 
-public class AccountEditActivity extends SherlockActivity {
+public class AccountEditActivity extends Activity {
 
 	public static final String EXTRA_ACCOUNT_ID = "id";
 
@@ -181,7 +180,7 @@ public class AccountEditActivity extends SherlockActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.activity_account_edit, menu);
+		getMenuInflater().inflate(R.menu.activity_account_edit, menu);
 		if (getIntent().hasExtra("adding")
 				&& getIntent().getBooleanExtra("adding", false)) {
 			menu.findItem(R.id.action_delete).setVisible(false);
@@ -198,7 +197,7 @@ public class AccountEditActivity extends SherlockActivity {
 			if (getIntent().hasExtra("welcome")
 					&& getIntent().getBooleanExtra("welcome", false)) {
 				save();
-				Intent i = new Intent(this, SearchActivity.class);
+				Intent i = new Intent(this, MainActivity.class);
 				startActivity(i);
 			} else {
 				save();

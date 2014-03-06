@@ -25,14 +25,13 @@
         android:required="false" />
 
     <application
-        android:name=".OpacClient"
+        android:name="de.geeksfactory.opacclient.OpacClient"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.opac" >
+        android:theme="@style/Holo.Theme.Light.DarkActionBar" >
         <activity
-            android:name=".frontend.SearchActivity"
-            android:label="@string/launcher_name"
-            android:uiOptions="splitActionBarWhenNarrow" >
+            android:name="de.geeksfactory.opacclient.frontend.MainActivity"
+            android:label="@string/launcher_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -61,54 +60,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".frontend.SearchResultsActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/search_results"
-            android:uiOptions="splitActionBarWhenNarrow" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.geeksfactory.opacclient.frontend.SearchActivity" />
-        </activity>
-        <activity
-            android:name=".frontend.MainPreferenceActivity"
-            android:label="@string/prefs" >
-        </activity>
-        <activity
-            android:name=".frontend.SearchResultDetailsActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/details"
-            android:uiOptions="splitActionBarWhenNarrow" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.geeksfactory.opacclient.frontend.SearchResultsActivity" />
-        </activity>
-        <activity
-            android:name=".frontend.AccountActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/account" >
-        </activity>
-        <activity
-            android:name=".frontend.WelcomeActivity"
+            android:name="de.geeksfactory.opacclient.frontend.WelcomeActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".frontend.AboutActivity"
-            android:label="@string/about" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.geeksfactory.opacclient.frontend.MainPreferenceActivity" />
+            android:name="de.geeksfactory.opacclient.frontend.AccountEditActivity"
+            android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".frontend.StarredActivity"
-            android:label="@string/starred_list" >
+            android:name="de.geeksfactory.opacclient.frontend.MainPreferenceActivity"
+            android:label="@string/prefs" >
         </activity>
         <activity
-            android:name=".frontend.InfoActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/info" >
-        </activity>
-        <activity
-            android:name=".frontend.AccountListActivity"
+            android:name="de.geeksfactory.opacclient.frontend.AccountListActivity"
             android:label="@string/title_activity_account_list"
             android:uiOptions="splitActionBarWhenNarrow" >
             <meta-data
@@ -116,34 +80,49 @@
                 android:value="de.geeksfactory.opacclient.frontend.MainPreferenceActivity" />
         </activity>
         <activity
-            android:name=".frontend.AccountEditActivity"
-            android:label="@string/title_activity_account_edit" >
+            android:name="de.geeksfactory.opacclient.frontend.AccountActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/account" >
+        </activity>        
+        <activity
+            android:name="de.geeksfactory.opacclient.frontend.SearchResultListActivity"
+            android:label="@string/title_searchresult_list"
+            android:parentActivityName="de.geeksfactory.opacclient.frontend.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.geeksfactory.opacclient.frontend.AccountListActivity" />
+                android:value="de.geeksfactory.opacclient.frontend.MainActivity" />
+        </activity>
+        <activity
+            android:name="de.geeksfactory.opacclient.frontend.SearchResultDetailActivity"
+            android:label="@string/title_searchresult_detail"
+            android:parentActivityName="de.geeksfactory.opacclient.frontend.SearchResultListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".SearchResultListActivity" />
         </activity>
         <activity
             android:name="org.acra.CrashReportDialog"
             android:excludeFromRecents="true"
             android:finishOnTaskLaunch="true"
             android:launchMode="singleInstance"
-            android:theme="@android:style/Theme.Dialog" />
+            android:theme="@style/Holo.Theme.Dialog" />
 
-        <service android:name=".reminder.ReminderCheckService" >
+        <service android:name="de.geeksfactory.opacclient.reminder.ReminderCheckService" >
         </service>
 
-        <receiver android:name=".reminder.ReminderBootBroadcastReceiver" >
+        <receiver android:name="de.geeksfactory.opacclient.reminder.ReminderBootBroadcastReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".reminder.ReminderAlarmReceiver" >
+        <receiver android:name="de.geeksfactory.opacclient.reminder.ReminderAlarmReceiver" >
         </receiver>
 
         <provider
-            android:name=".storage.StarContentProvider"
+            android:name="de.geeksfactory.opacclient.storage.StarContentProvider"
             android:authorities="de.geeksfactory.opacclient.starprovider"
             android:exported="false" />
     </application>
 
 </manifest>
+>>>>>>> 258e82c17c0295c60791e48ab90148d578c65d48
