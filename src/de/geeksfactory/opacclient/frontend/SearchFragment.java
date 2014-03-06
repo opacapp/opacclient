@@ -14,15 +14,6 @@ import org.holoeverywhere.widget.EditText;
 import org.holoeverywhere.widget.Spinner;
 import org.json.JSONException;
 
-import de.geeksfactory.opacclient.OpacClient;
-import de.geeksfactory.opacclient.OpacTask;
-import de.geeksfactory.opacclient.R;
-import de.geeksfactory.opacclient.apis.OpacApi;
-import de.geeksfactory.opacclient.frontend.OpacActivity.AccountSelectedListener;
-import de.geeksfactory.opacclient.frontend.OpacActivity.MetaAdapter;
-import de.geeksfactory.opacclient.objects.Account;
-import de.geeksfactory.opacclient.storage.MetaDataSource;
-import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -31,10 +22,21 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import de.geeksfactory.opacclient.OpacClient;
+import de.geeksfactory.opacclient.OpacTask;
+import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.apis.OpacApi;
+import de.geeksfactory.opacclient.frontend.OpacActivity.AccountSelectedListener;
+import de.geeksfactory.opacclient.objects.Account;
+import de.geeksfactory.opacclient.storage.MetaDataSource;
+import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 
 public class SearchFragment extends Fragment implements AccountSelectedListener {
 	private SharedPreferences sp;
@@ -60,6 +62,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 		view = inflater.inflate(R.layout.fragment_search, container, false);
+		setHasOptionsMenu(true);
 		
 		sp = ((OpacActivity) getActivity()).getDefaultSharedPreferences();
 		app = (OpacClient) getActivity().getApplication();
@@ -113,19 +116,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		if (!(app.getLibrary() == null)) {
-			metaDataLoading = false;
-	
-			advanced = sp.getBoolean("advanced", false);
-	
-			fields = new HashSet<String>(Arrays.asList(app.getApi()
-					.getSearchFields()));
-	
-//TODO:			if (!fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE))
-//				nfc_capable = false;
-	
-			manageVisibility();
-			fillComboBoxes();
-			loadingIndicators();
+			accountSelected(app.getAccount());
 		}
 	}
 	
@@ -497,8 +488,17 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 	
 	@Override
 	public void accountSelected(Account account) {
-		onStart();
+		metaDataLoading = false;
+		advanced = sp.getBoolean("advanced", false);
+		fields = new HashSet<String>(Arrays.asList(app.getApi()
+				.getSearchFields()));
+
+//TODO:			if (!fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE))
+//			nfc_capable = false;
+
+		manageVisibility();
 		fillComboBoxes();
+		loadingIndicators();
 	}
 	
 	public void go() {
@@ -597,5 +597,20 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
             throw new ClassCastException(activity.toString() + " must implement SearchFragment.Callback");
         }
     }
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.fragment_search, menu);
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.action_search_go) {
+			go();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 	
 }

@@ -118,31 +118,49 @@ public class IOpac extends BaseApi implements OpacApi {
 
 		try {
 			html = httpGet(opac_url + "/iopac/mtyp.js");
+
+			metadata.open();
+			metadata.clearMeta(library.getIdent());
+			String[] parts = html.split("new Array\\(\\);");
+			for (String part : parts) {
+				Matcher matcher1 = pattern_key.matcher(part);
+				String key = "";
+				String value = "";
+				if (matcher1.find()) {
+					key = matcher1.group(1);
+				}
+				Matcher matcher2 = pattern_value.matcher(part);
+				if (matcher2.find()) {
+					value = matcher2.group(1);
+				}
+				if (value != "")
+					metadata.addMeta(MetaDataSource.META_TYPE_CATEGORY,
+							library.getIdent(), key, value);
+			}
+
+			metadata.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				html = httpGet(opac_url
+						+ "/iopac/frames/search_form.php?bReset=1?bReset=1");
+				Document doc = Jsoup.parse(html);
+
+				metadata.open();
+				metadata.clearMeta(library.getIdent());
+
+				for (Element opt : doc.select("#imtyp option")) {
+					metadata.addMeta(MetaDataSource.META_TYPE_CATEGORY,
+							library.getIdent(), opt.attr("value"), opt.text());
+				}
+
+				metadata.close();
+
+			} catch (IOException e1) {
+				e1.printStackTrace();
+				return;
+			}
 			return;
 		}
-
-		metadata.open();
-		metadata.clearMeta(library.getIdent());
-		String[] parts = html.split("new Array\\(\\);");
-		for (String part : parts) {
-			Matcher matcher1 = pattern_key.matcher(part);
-			String key = "";
-			String value = "";
-			if (matcher1.find()) {
-				key = matcher1.group(1);
-			}
-			Matcher matcher2 = pattern_value.matcher(part);
-			if (matcher2.find()) {
-				value = matcher2.group(1);
-			}
-			if (value != "")
-				metadata.addMeta(MetaDataSource.META_TYPE_CATEGORY,
-						library.getIdent(), key, value);
-		}
-
-		metadata.close();
 	}
 
 	@Override
@@ -657,6 +675,13 @@ public class IOpac extends BaseApi implements OpacApi {
 
 	@Override
 	public boolean isAccountSupported(Library library) {
+		if(data.has("account")){
+			try {
+				return data.getBoolean("account");
+			} catch (JSONException e) {
+				return true;
+			}
+		}
 		return true;
 	}
 

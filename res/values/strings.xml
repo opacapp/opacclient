@@ -169,7 +169,7 @@
     <string name="nav_hl_other">Sonstiges</string>
     <string name="nav_settings">Einstellungen</string>
     <string name="nav_about">Über die App</string>
-    <string name="nav_hl_ccountlist">Kontoauswahl</string>
+    <string name="nav_hl_accountlist">Kontoauswahl</string>
     <string name="pagination_next">Nächste Seite</string>
     <string name="pagination_prev">Vorige Seite</string>
     <string name="crash_toast_text">Ein Fehler ist aufgetreten. Bitte warten Sie einen Augenblick.</string>
@@ -225,7 +225,7 @@
     <string name="no_ssl">Diese Bibliothek unterstützt keine sichere HTTPS-Verbindung. Wenn Sie in ungeschützten öffentlichen Netzwerken die Kontofunktionen benutzen oder die Erinnerungsfunktion aktiviert haben, kann ihr Passwort theoretisch von anderen Nutzern im Netzwerk mitgelesen werden.</string>
     <string name="drawer_open">Navigation öffnen</string>
     <string name="drawer_close">Navigation schließen</string>
-    <string name="title_searchresult_list">SearchResults</string>
-    <string name="title_searchresult_detail">SearchResult Detail</string>
+    <string name="title_searchresult_list">Suchergebnisse</string>
+    <string name="title_searchresult_detail">Suchergebnis</string>
 
 </resources>

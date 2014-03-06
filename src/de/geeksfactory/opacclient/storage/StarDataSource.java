@@ -26,16 +26,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
-import de.geeksfactory.opacclient.frontend.OpacActivity;
+import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.objects.Starred;
 
 public class StarDataSource {
 
-	private OpacActivity context;
+	private Activity context;
 
-	public StarDataSource(OpacActivity context) {
+	public StarDataSource(Activity context) {
 		this.context = context;
 	}
 
@@ -44,16 +45,21 @@ public class StarDataSource {
 		values.put("medianr", nr);
 		values.put("title", title);
 		values.put("bib", bib);
-		context.getContentResolver().insert(
-				context.getOpacApplication().getStarProviderStarUri(), values);
+		context.getContentResolver()
+				.insert(((OpacClient) context.getApplication())
+						.getStarProviderStarUri(),
+						values);
 	}
 
 	public List<Starred> getAllItems(String bib) {
 		List<Starred> items = new ArrayList<Starred>();
 		String[] selA = { bib };
-		Cursor cursor = context.getContentResolver().query(
-				context.getOpacApplication().getStarProviderStarUri(),
-				StarDatabase.COLUMNS, StarDatabase.STAR_WHERE_LIB, selA, null);
+		Cursor cursor = context
+				.getContentResolver()
+				.query(((OpacClient) context.getApplication())
+						.getStarProviderStarUri(),
+						StarDatabase.COLUMNS, StarDatabase.STAR_WHERE_LIB,
+						selA, null);
 
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
@@ -68,10 +74,12 @@ public class StarDataSource {
 
 	public Starred getItemByTitle(String bib, String title) {
 		String[] selA = { bib, title };
-		Cursor cursor = context.getContentResolver().query(
-				context.getOpacApplication().getStarProviderStarUri(),
-				StarDatabase.COLUMNS, StarDatabase.STAR_WHERE_TITLE_LIB, selA,
-				null);
+		Cursor cursor = context
+				.getContentResolver()
+				.query(((OpacClient) context.getApplication())
+						.getStarProviderStarUri(),
+						StarDatabase.COLUMNS,
+						StarDatabase.STAR_WHERE_TITLE_LIB, selA, null);
 		Starred item = null;
 
 		cursor.moveToFirst();
@@ -86,10 +94,12 @@ public class StarDataSource {
 
 	public Starred getItem(String bib, String id) {
 		String[] selA = { bib, id };
-		Cursor cursor = context.getContentResolver().query(
-				context.getOpacApplication().getStarProviderStarUri(),
-				StarDatabase.COLUMNS, StarDatabase.STAR_WHERE_NR_LIB, selA,
-				null);
+		Cursor cursor = context
+				.getContentResolver()
+				.query(((OpacClient) context.getApplication())
+						.getStarProviderStarUri(),
+						StarDatabase.COLUMNS, StarDatabase.STAR_WHERE_NR_LIB,
+						selA, null);
 		Starred item = null;
 
 		cursor.moveToFirst();
@@ -104,9 +114,12 @@ public class StarDataSource {
 
 	public Starred getItem(long id) {
 		String[] selA = { String.valueOf(id) };
-		Cursor cursor = context.getContentResolver().query(
-				context.getOpacApplication().getStarProviderStarUri(),
-				StarDatabase.COLUMNS, StarDatabase.STAR_WHERE_ID, selA, null);
+		Cursor cursor = context
+				.getContentResolver()
+				.query(((OpacClient) context.getApplication())
+						.getStarProviderStarUri(),
+						StarDatabase.COLUMNS, StarDatabase.STAR_WHERE_ID, selA,
+						null);
 		Starred item = null;
 
 		cursor.moveToFirst();
@@ -123,10 +136,12 @@ public class StarDataSource {
 		if (id == null)
 			return false;
 		String[] selA = { bib, id };
-		Cursor cursor = context.getContentResolver().query(
-				context.getOpacApplication().getStarProviderStarUri(),
-				StarDatabase.COLUMNS, StarDatabase.STAR_WHERE_NR_LIB, selA,
-				null);
+		Cursor cursor = context
+				.getContentResolver()
+				.query(((OpacClient) context.getApplication())
+						.getStarProviderStarUri(),
+						StarDatabase.COLUMNS, StarDatabase.STAR_WHERE_NR_LIB,
+						selA, null);
 		int c = cursor.getCount();
 		cursor.close();
 		return (c > 0);
@@ -136,10 +151,12 @@ public class StarDataSource {
 		if (title == null)
 			return false;
 		String[] selA = { bib, title };
-		Cursor cursor = context.getContentResolver().query(
-				context.getOpacApplication().getStarProviderStarUri(),
-				StarDatabase.COLUMNS, StarDatabase.STAR_WHERE_TITLE_LIB, selA,
-				null);
+		Cursor cursor = context
+				.getContentResolver()
+				.query(((OpacClient) context.getApplication())
+						.getStarProviderStarUri(),
+						StarDatabase.COLUMNS,
+						StarDatabase.STAR_WHERE_TITLE_LIB, selA, null);
 		int c = cursor.getCount();
 		cursor.close();
 		return (c > 0);
@@ -155,9 +172,10 @@ public class StarDataSource {
 
 	public void remove(Starred item) {
 		String[] selA = { "" + item.getId() };
-		context.getContentResolver().delete(
-				context.getOpacApplication().getStarProviderStarUri(),
-				StarDatabase.STAR_WHERE_ID, selA);
+		context.getContentResolver()
+				.delete(((OpacClient) context.getApplication())
+						.getStarProviderStarUri(),
+						StarDatabase.STAR_WHERE_ID, selA);
 	}
 
 	public void renameLibraries(Map<String, String> map) {
@@ -165,11 +183,11 @@ public class StarDataSource {
 			ContentValues cv = new ContentValues();
 			cv.put("bib", entry.getValue());
 
-			context.getContentResolver().update(
-					context.getOpacApplication().getStarProviderStarUri(), cv,
-					StarDatabase.STAR_WHERE_LIB,
-					new String[] { entry.getKey() });
+			context.getContentResolver()
+					.update(((OpacClient) context.getApplication())
+							.getStarProviderStarUri(),
+							cv, StarDatabase.STAR_WHERE_LIB,
+							new String[] { entry.getKey() });
 		}
 	}
-
 }

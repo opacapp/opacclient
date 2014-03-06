@@ -121,7 +121,7 @@ public class AccountEditActivity extends Activity {
 			}
 
 			if (!lib.getData().getString("baseurl").contains("https")
-					&& findViewById(R.id.no_ssl) != null) {
+					&& findViewById(R.id.no_ssl) != null && lib.getSupport().contains("Konto")) {
 				findViewById(R.id.no_ssl).setVisibility(View.VISIBLE);
 			} else if (findViewById(R.id.no_ssl) != null) {
 				findViewById(R.id.no_ssl).setVisibility(View.GONE);
