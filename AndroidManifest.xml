@@ -28,7 +28,7 @@
         android:name="de.geeksfactory.opacclient.OpacClient"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Holo.Theme.Light.DarkActionBar" >
+        android:theme="@style/Theme.Opacapp" >
         <activity
             android:name="de.geeksfactory.opacclient.frontend.MainActivity"
             android:label="@string/launcher_name" >
