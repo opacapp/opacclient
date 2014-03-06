@@ -4,16 +4,19 @@ import org.acra.ACRA;
 import org.holoeverywhere.app.Activity;
 
 import de.geeksfactory.opacclient.NotReachableException;
+import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.R.id;
 import de.geeksfactory.opacclient.R.layout;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
-
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.SparseArray;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -53,7 +56,7 @@ public class SearchResultListActivity extends OpacActivity implements
 	private int page;
 
 	private SearchStartTask st;
-	//private SearchPageTask sst;
+	private SearchPageTask sst;
 	
 	private SearchResultListFragment listFragment;
 	private SearchResultDetailFragment detailFragment;
@@ -88,15 +91,14 @@ public class SearchResultListActivity extends OpacActivity implements
 			st = new SearchStartTask();
 			st.execute(app, getIntent().getBundleExtra("query"));
 		} else {
-//TODO:			sst = new SearchPageTask();
-//			sst.execute(app, page);
+			sst = new SearchPageTask();
+			sst.execute(app, page);
 		}
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
+		if (item.getItemId() ==  android.R.id.home) {
 			// This ID represents the Home or Up button. In the case of this
 			// activity, the Up button is shown. Use NavUtils to allow users
 			// to navigate up one level in the application structure. For
@@ -106,8 +108,58 @@ public class SearchResultListActivity extends OpacActivity implements
 			//
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
+		} else if (item.getItemId() == R.id.action_prev) {
+			listFragment.setListShown(false);
+			if (sst != null) {
+				sst.cancel(false);
+			}
+			page--;
+			if (cache.get(page) != null) {
+				searchresult = cache.get(page);
+				loaded();
+			} else {
+				searchresult = null;
+				sst = new SearchPageTask();
+				sst.execute(app, page);
+			}
+			supportInvalidateOptionsMenu();
+			return true;
+		} else if (item.getItemId() == R.id.action_next) {
+			listFragment.setListShown(false);
+			if (sst != null) {
+				sst.cancel(false);
+			}
+			page++;
+			if (cache.get(page) != null) {
+				searchresult = cache.get(page);
+				loaded();
+			} else {
+				searchresult = null;
+				sst = new SearchPageTask();
+				sst.execute(app, page);
+			}
+			supportInvalidateOptionsMenu();
+			return true;
+		} else if (item.getItemId() == android.R.id.home) {
+			finish();
+			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater mi = new MenuInflater(this);
+		mi.inflate(R.menu.activity_search_results, menu);
+
+		if (page == 1) {
+			menu.findItem(R.id.action_prev).setVisible(false);
+		} else {
+
+			menu.findItem(R.id.action_prev).setVisible(true);
+		}
+
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	/**
@@ -143,8 +195,8 @@ public class SearchResultListActivity extends OpacActivity implements
 	}
 	
 	public class SearchStartTask extends OpacTask<SearchRequestResult> {
-		private boolean success;
-		private Exception exception;
+		protected boolean success;
+		protected Exception exception;
 
 		@Override
 		protected SearchRequestResult doInBackground(Object... arg0) {
@@ -223,24 +275,38 @@ public class SearchResultListActivity extends OpacActivity implements
 			}
 		}
 	}
+	
+	public class SearchPageTask extends SearchStartTask {
 
-	protected void loaded() {
-//		lv.setOnItemClickListener(new OnItemClickListener() {
-//			@Override
-//			public void onItemClick(AdapterView<?> parent, View view,
-//					int position, long id) {
-//				Intent intent = new Intent(SearchResultsActivity.this,
-//						SearchResultDetailsActivity.class);
-//				intent.putExtra("item",
-//						(int) searchresult.getResults().get(position).getNr());
-//
-//				if (searchresult.getResults().get(position).getId() != null)
-//					intent.putExtra("item_id",
-//							searchresult.getResults().get(position).getId());
-//				startActivity(intent);
-//			}
-//		});
-		
+		@Override
+		protected SearchRequestResult doInBackground(Object... arg0) {
+			OpacClient a = (OpacClient) arg0[0];
+			Integer page = (Integer) arg0[1];
+
+			try {
+				SearchRequestResult res = app.getApi().searchGetPage(page);
+				//Load cover images, if search worked and covers available
+				success = true;
+				return res;
+			} catch (java.net.UnknownHostException e) {
+				success = false;
+				exception = e;
+				e.printStackTrace();
+			} catch (java.net.SocketException e) {
+				success = false;
+				exception = e;
+			} catch (Exception e) {
+				exception = e;
+				ACRA.getErrorReporter().handleException(e);
+				success = false;
+			}
+
+			return null;
+		}
+	}
+
+	protected void loaded() {		
+		listFragment.setListShown(true);
 		listFragment.setSearchResult(searchresult);
 	}
 
