@@ -252,7 +252,8 @@ public abstract class OpacActivity extends Activity {
 			case 2:
 				fragment = new AccountFragment();
 				break;
-			case 3: // fragment = new StarredFragment();
+			case 3: 
+				fragment = new StarredFragment();
 				break;
 			case 4:
 				fragment = new InfoFragment();
