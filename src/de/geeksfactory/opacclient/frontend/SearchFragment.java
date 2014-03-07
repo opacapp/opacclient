@@ -96,28 +96,6 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 			}
 		});
 
-		// TODO: if (nfc_capable) {
-		// if (!getPackageManager().hasSystemFeature("android.hardware.nfc")) {
-		// nfc_capable = false;
-		// }
-		// }
-		// if (nfc_capable) {
-		// mAdapter = android.nfc.NfcAdapter.getDefaultAdapter(this);
-		// nfcIntent = PendingIntent.getActivity(this, 0, new Intent(this,
-		// getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-		// IntentFilter ndef = new IntentFilter(
-		// android.nfc.NfcAdapter.ACTION_TECH_DISCOVERED);
-		// try {
-		// ndef.addDataType("*/*");
-		// } catch (MalformedMimeTypeException e) {
-		// throw new RuntimeException("fail", e);
-		// }
-		// intentFiltersArray = new IntentFilter[] { ndef, };
-		// techListsArray = new String[][] { new String[] {
-		// android.nfc.tech.NfcV.class
-		// .getName() } };
-		// }
-
 		return view;
 	}
 
