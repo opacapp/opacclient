@@ -74,10 +74,17 @@ public class MainActivity extends OpacActivity implements
 		
 		sp = PreferenceManager
 				.getDefaultSharedPreferences(this);
+		
+		getSupportActionBar().setSubtitle(
+				app.getLibrary().getCity() + " · "
+						+ app.getLibrary().getTitle());
 	}
 
 	@Override
 	public void accountSelected(Account account) {
+		getSupportActionBar().setSubtitle(
+				app.getLibrary().getCity() + " · "
+						+ app.getLibrary().getTitle());
 		if (fragment instanceof OpacActivity.AccountSelectedListener) {
 			((OpacActivity.AccountSelectedListener) fragment)
 					.accountSelected(account);

@@ -6,6 +6,6 @@
         android:height="1dp"
         android:width="1000dp" />
 
-    <solid android:color="@color/nav_headline" />
+    <solid android:color="@color/nav_seperator_fg" />
 
 </shape>

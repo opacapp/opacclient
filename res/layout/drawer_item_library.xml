@@ -1,37 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llAccount"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/nav_item"
+    android:gravity="center|left"
     android:minHeight="48dp"
-    android:padding="8dp"
-    android:background="?activatedBackgroundIndicator" >
+    android:orientation="horizontal" >
 
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:text="Medium Text"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+    <View
+        android:id="@+id/viewRedbar"
+        android:layout_width="8dp"
+        android:layout_height="fill_parent"
+        android:background="@drawable/nav_border"
+        android:duplicateParentState="true" >
+    </View>
 
-    <TextView
-        android:id="@+id/smallText"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="0dip"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/text"
-        android:text="Small Text"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:layout_marginLeft="8dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp" >
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/nav_fg" />
+
+        <TextView
+            android:id="@+id/smallText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text"
+            android:textColor="@color/nav_fg" />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:text="1"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="30sp" />
+        android:textColor="@color/nav_highlight" />
 
-</RelativeLayout>
+</LinearLayout>

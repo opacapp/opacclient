@@ -5,12 +5,13 @@
 
     <TextView
         android:id="@+id/text"
-        style="@style/Holo.TextView.ListSeparator.Light"
+        style="@style/Holo.TextView.ListSeparator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:text="Medium Text"
+        android:paddingLeft="16dp"
+        android:textColor="@color/nav_seperator_fg"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>

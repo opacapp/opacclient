@@ -161,7 +161,7 @@ public abstract class OpacActivity extends Activity {
 
 				long tolerance = Long.decode(sp.getString(
 						"notification_warning", "367200000"));
-
+				int selected = -1;
 				for (final Account account : accounts) {
 					Library library;
 					try {
@@ -175,6 +175,9 @@ public abstract class OpacActivity extends Activity {
 						navAdapter.addLibraryItem(account.getLabel(),
 								library.getCity(), expiringText,
 								account.getId());
+						if(account.getId() == app.getAccount().getId()) {
+							selected = navAdapter.getCount() - 1;
+						}
 
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -182,7 +185,9 @@ public abstract class OpacActivity extends Activity {
 						e.printStackTrace();
 					}
 				}
-				selectItem(5); // selects first account
+				if(selected > 0){
+					drawerList.setItemChecked(selected, true);
+				}
 			}
 
 			navAdapter.addSeperatorItem(getString(R.string.nav_hl_other));
@@ -245,6 +250,7 @@ public abstract class OpacActivity extends Activity {
 			// clicked on a separator
 			return;
 		} else if (item.type == Item.TYPE_TEXT) {
+			
 			if (item.tag.equals("search"))
 				fragment = new SearchFragment();
 			else if (item.tag.equals("account"))
@@ -256,10 +262,12 @@ public abstract class OpacActivity extends Activity {
 			else if (item.tag.equals("settings")) {
 				Intent intent = new Intent(this, MainPreferenceActivity.class);
 				startActivity(intent);
+				drawerList.setItemChecked(position, false);
 				return;
 			} else if (item.tag.equals("about")) {
 				Intent intent = new Intent(this, AboutActivity.class);
 				startActivity(intent);
+				drawerList.setItemChecked(position, false);
 				return;
 			}
 
@@ -270,15 +278,15 @@ public abstract class OpacActivity extends Activity {
 
 			// Highlight the selected item, update the title, and close the
 			// drawer
-			deselectNavItems();
-			drawerList.setItemChecked(position, true);
+			deselectItemsByType(Item.TYPE_TEXT);
 			drawerList.setItemChecked(selectedItemPos, false);
+			drawerList.setItemChecked(position, true);
 			selectedItemPos = position;
 			setTitle(navAdapter.getItem(position).text);
 			drawerLayout.closeDrawer(drawerList);
 
-		} else if (item.type == Item.TYPE_LIBRARY) {
-			deselectLibraryItems();
+		} else if (item.type == Item.TYPE_ACCOUNT) {
+			deselectItemsByType(Item.TYPE_ACCOUNT);
 			drawerList.setItemChecked(position, true);
 			selectaccount(item.accountId);
 			drawerLayout.closeDrawer(drawerList);
@@ -292,17 +300,9 @@ public abstract class OpacActivity extends Activity {
 		mTitle = title;
 	}
 
-	private void deselectLibraryItems() {
-		for (int i = 6; i < drawerList.getCount() - 2; i++) {
-			drawerList.setItemChecked(i, false);
-		}
-	}
-
-	private void deselectNavItems() {
-		for (int i = 1; i < 5; i++) {
-			drawerList.setItemChecked(i, false);
-		}
-		for (int i = drawerList.getCount() - 2; i < drawerList.getCount(); i++) {
+	private void deselectItemsByType(int type) {
+		for (int i = 0; i < navAdapter.getCount(); i++) {
+			if(navAdapter.getItemViewType(i) == type)
 			drawerList.setItemChecked(i, false);
 		}
 	}

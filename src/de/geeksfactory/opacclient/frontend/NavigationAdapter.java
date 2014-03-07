@@ -55,7 +55,7 @@ public class NavigationAdapter extends BaseAdapter {
 	public void addLibraryItem(final String text, final String smallText,
 			final String number, final long accountId) {
 		Item item = new Item();
-		item.type = Item.TYPE_LIBRARY;
+		item.type = Item.TYPE_ACCOUNT;
 		item.text = text;
 		item.smallText = smallText;
 		item.number = number;
@@ -102,7 +102,7 @@ public class NavigationAdapter extends BaseAdapter {
 				holder.text = (TextView) convertView.findViewById(R.id.text);
 				holder.icon = (ImageView) convertView.findViewById(R.id.icon);
 				break;
-			case Item.TYPE_LIBRARY:
+			case Item.TYPE_ACCOUNT:
 				convertView = mInflater.inflate(R.layout.drawer_item_library,
 						null);
 				holder.text = (TextView) convertView.findViewById(R.id.text);
@@ -130,7 +130,7 @@ public class NavigationAdapter extends BaseAdapter {
 			} else
 				holder.icon.setVisibility(View.INVISIBLE);
 			break;
-		case Item.TYPE_LIBRARY:
+		case Item.TYPE_ACCOUNT:
 			holder.text.setText(mData.get(position).text);
 			holder.smallText.setText(mData.get(position).smallText);
 			holder.number.setText(mData.get(position).number);
@@ -154,6 +154,10 @@ public class NavigationAdapter extends BaseAdapter {
 		public TextView number;
 		public ImageView icon;
 	}
+	
+	public enum Type {
+		TYPE_TEXT, TYPE_LIBRARY, TYPE_SEPERATOR
+	}
 
 	public static class Item {
 		public int type;
@@ -165,7 +169,7 @@ public class NavigationAdapter extends BaseAdapter {
 		public long accountId;
 
 		static final int TYPE_TEXT = 0;
-		static final int TYPE_LIBRARY = 1;
+		static final int TYPE_ACCOUNT = 1;
 		static final int TYPE_SEPARATOR = 2;
 		static final int TYPE_MAX_COUNT = TYPE_SEPARATOR + 1;
 	}
