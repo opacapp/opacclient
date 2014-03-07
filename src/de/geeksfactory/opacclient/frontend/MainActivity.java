@@ -1,27 +1,22 @@
 package de.geeksfactory.opacclient.frontend;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.holoeverywhere.widget.Toast;
+
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
 import de.geeksfactory.opacclient.R;
-import de.geeksfactory.opacclient.R.layout;
-import de.geeksfactory.opacclient.R.menu;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.barcode.BarcodeScanIntegrator;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
-import android.net.Uri;
-import android.os.Bundle;
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Intent;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.Toast;
 
 public class MainActivity extends OpacActivity implements SearchFragment.Callback {
 
@@ -47,55 +42,17 @@ public class MainActivity extends OpacActivity implements SearchFragment.Callbac
 			((OpacActivity.AccountSelectedListener) fragment).accountSelected(account);
 		}
 	}
-
-
-	@Override
-	public void scanBarcode() {
-		BarcodeScanIntegrator integrator = new BarcodeScanIntegrator(MainActivity.this);
-		integrator.initiateScan();
-	}
 	
 	public void urlintent() {
 		Uri d = getIntent().getData();
 
-		if (d.getHost().equals("de.geeksfactory.opacclient")) {
-			String medianr = d.getQueryParameter("id");
-
-			if (medianr != null) {
-//TODO:				Intent intent = new Intent(MainActivity.this, SearchResultDetailsActivity.class);
-//				intent.putExtra("item_id", medianr);
-//				startActivity(intent);
-				finish();
-				return;
-			}
-
-			String titel = d.getQueryParameter("titel");
-			String verfasser = d.getQueryParameter("verfasser");
-			String schlag_a = d.getQueryParameter("schlag_a");
-			String schlag_b = d.getQueryParameter("schlag_b");
-			String isbn = d.getQueryParameter("isbn");
-			String jahr_von = d.getQueryParameter("jahr_von");
-			String jahr_bis = d.getQueryParameter("jahr_bis");
-			String verlag = d.getQueryParameter("verlag");
-//TODO:			Intent myIntent = new Intent(MainActivity.this,
-//					SearchResultsActivity.class);
-//			myIntent.putExtra("titel", (titel != null ? titel : ""));
-//			myIntent.putExtra("verfasser", (verfasser != null ? verfasser : ""));
-//			myIntent.putExtra("schlag_a", (schlag_a != null ? schlag_a : ""));
-//			myIntent.putExtra("schlag_b", (schlag_b != null ? schlag_b : ""));
-//			myIntent.putExtra("isbn", (isbn != null ? isbn : ""));
-//			myIntent.putExtra("jahr_von", (jahr_von != null ? jahr_von : ""));
-//			myIntent.putExtra("jahr_bis", (jahr_bis != null ? jahr_bis : ""));
-//			myIntent.putExtra("verlag", (verlag != null ? verlag : ""));
-//			startActivity(myIntent);
-			finish();
-		} else if (d.getHost().equals("opacapp.de")) {
+		if (d.getHost().equals("opacapp.de")) {
 			String[] split = d.getPath().split(":");
 			String bib;
 			try {
 				bib = URLDecoder.decode(split[1], "UTF-8");
 			} catch (UnsupportedEncodingException e) {
-				bib = URLDecoder.decode(split[1]);
+			    throw new AssertionError("UTF-8 is unknown");
 			}
 
 			if (!app.getLibrary().getIdent().equals(bib)) {
@@ -114,23 +71,23 @@ public class MainActivity extends OpacActivity implements SearchFragment.Callbac
 			}
 			String medianr = split[2];
 			if (medianr.length() > 1) {
-//TODO:				Intent intent = new Intent(SearchActivity.this,
-//						SearchResultDetailsActivity.class);
-//				intent.putExtra("item_id", medianr);
-//				startActivity(intent);
+				Intent intent = new Intent(MainActivity.this,
+						SearchResultDetailActivity.class);
+				intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID, medianr);
+				startActivity(intent);
 			} else {
 				String title;
 				try {
 					title = URLDecoder.decode(split[3], "UTF-8");
 				} catch (UnsupportedEncodingException e) {
-					title = URLDecoder.decode(split[3]);
+				    throw new AssertionError("UTF-8 is unknown");
 				}
 				Bundle query = new Bundle();
 				query.putString(OpacApi.KEY_SEARCH_QUERY_TITLE, title);
-//TODO:				Intent intent = new Intent(SearchActivity.this,
-//						SearchResultsActivity.class);
-//				intent.putExtra("query", query);
-//				startActivity(intent);
+				Intent intent = new Intent(MainActivity.this,
+						SearchResultListActivity.class);
+				intent.putExtra("query", query);
+				startActivity(intent);
 			}
 			finish();
 			return;
@@ -141,59 +98,75 @@ public class MainActivity extends OpacActivity implements SearchFragment.Callbac
 	protected int getContentView() {
 		return R.layout.activity_main;
 	}
+
+	private static boolean is_valid_isbn10(char[] digits) {
+		int a = 0;
+		for (int i = 0; i < 10; i++) {
+			a += i * Integer.parseInt(String.valueOf(digits[i]));
+		}
+		return a % 11 == Integer.parseInt(String.valueOf(digits[9]));
+	}
 	
-//TODO:	@Override
-//	public void onActivityResult(int requestCode, int resultCode, Intent idata) {
-//		super.onActivityResult(requestCode, resultCode, idata);
-//
-//		// Barcode
-//		BarcodeScanIntegrator.ScanResult scanResult = BarcodeScanIntegrator
-//				.parseActivityResult(requestCode, resultCode, idata);
-//		if (resultCode != RESULT_CANCELED && scanResult != null) {
-//			if (scanResult.getContents() == null)
-//				return;
-//			if (scanResult.getContents().length() < 3)
-//				return;
-//
-//			// Try to determine whether it is an ISBN number or something
-//			// library
-//			// internal
-//			int target_field = 0;
-//			if (scanResult.getFormatName() != null) {
-//				if (scanResult.getFormatName().equals("EAN_13")
-//						&& scanResult.getContents().startsWith("97")) {
-//					target_field = R.id.etISBN;
-//				} else if (scanResult.getFormatName().equals("CODE_39")) {
-//					target_field = R.id.etBarcode;
-//				}
-//			}
-//			if (target_field == 0) {
-//				if (scanResult.getContents().length() == 13
-//						&& (scanResult.getContents().startsWith("978") || scanResult
-//								.getContents().startsWith("979"))) {
-//					target_field = R.id.etISBN;
-//				} else if (scanResult.getContents().length() == 10
-//						&& is_valid_isbn10(scanResult.getContents()
-//								.toCharArray())) {
-//					target_field = R.id.etISBN;
-//				} else {
-//					target_field = R.id.etBarcode;
-//				}
-//			}
-//			if (target_field == R.id.etBarcode
-//					&& !fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE)) {
-//				Toast.makeText(this, R.string.barcode_internal_not_supported,
-//						Toast.LENGTH_LONG).show();
-//			} else {
-//				clear();
-//				((EditText) SearchActivity.this.findViewById(target_field))
-//						.setText(scanResult.getContents());
-//				manageVisibility();
-//				go();
-//			}
-//
-//		}
-//	}
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent idata) {
+		super.onActivityResult(requestCode, resultCode, idata);
+
+		// Barcode
+		BarcodeScanIntegrator.ScanResult scanResult = BarcodeScanIntegrator
+				.parseActivityResult(requestCode, resultCode, idata);
+		if (resultCode != RESULT_CANCELED && scanResult != null) {
+			if (scanResult.getContents() == null)
+				return;
+			if (scanResult.getContents().length() < 3)
+				return;
+
+			// Try to determine whether it is an ISBN number or something
+			// library internal
+			String target_field = null;
+			if (scanResult.getFormatName() != null) {
+				if (scanResult.getFormatName().equals("EAN_13")
+						&& scanResult.getContents().startsWith("97")) {
+					target_field = OpacApi.KEY_SEARCH_QUERY_ISBN;
+				} else if (scanResult.getFormatName().equals("CODE_39")) {
+					target_field = OpacApi.KEY_SEARCH_QUERY_BARCODE;
+				}
+			}
+			if (target_field == null) {
+				if (scanResult.getContents().length() == 13
+						&& (scanResult.getContents().startsWith("978") || scanResult
+								.getContents().startsWith("979"))) {
+					target_field = OpacApi.KEY_SEARCH_QUERY_ISBN;
+				} else if (scanResult.getContents().length() == 10
+						&& is_valid_isbn10(scanResult.getContents()
+								.toCharArray())) {
+					target_field = OpacApi.KEY_SEARCH_QUERY_ISBN;
+				} else {
+					target_field = OpacApi.KEY_SEARCH_QUERY_BARCODE;
+				}
+			}
+			Set<String> fields = new HashSet<String>(Arrays.asList(app.getApi()
+					.getSearchFields()));
+			if (target_field.equals(OpacApi.KEY_SEARCH_QUERY_BARCODE)
+					&& !fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE)) {
+				Toast.makeText(this, R.string.barcode_internal_not_supported,
+						Toast.LENGTH_LONG).show();
+			} else {
+				Bundle query = new Bundle();
+				query.putString(target_field, scanResult.getContents());
+				Intent intent = new Intent(MainActivity.this,
+						SearchResultListActivity.class);
+				intent.putExtra("query", query);
+				startActivity(intent);
+			}
+
+		}
+	}
+
+	@Override
+	public void scanBarcode() {
+		BarcodeScanIntegrator integrator = new BarcodeScanIntegrator(this);
+		integrator.initiateScan();
+	}
 	
 //TODO:	@SuppressLint("NewApi")
 //	@Override

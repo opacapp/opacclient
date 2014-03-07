@@ -19,7 +19,6 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.AvoidXfermode;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -51,13 +50,15 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 	private OpacClient app;
 	private Bundle savedState;
 
-	public boolean metaDataLoading = false;
 	private boolean advanced = false;
 	private Set<String> fields;
-	private List<ContentValues> cbMg_data;
-	private List<ContentValues> cbZst_data;
-	private List<ContentValues> cbZstHome_data;
+	
+	private List<ContentValues> spinnerCategory_data;
+	private List<ContentValues> spinnerBranch_data;
+	private List<ContentValues> spinnerHomeBranch_data;
+	
 	private long last_meta_try = 0;
+	public boolean metaDataLoading = false;
 	private LoadMetaDataTask lmdt;
 
 	@Override
@@ -65,7 +66,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		view = inflater.inflate(R.layout.fragment_search, container, false);
+		
 		setHasOptionsMenu(true);
+		
 		setRetainInstance(true);
 
 		sp = ((OpacActivity) getActivity()).getDefaultSharedPreferences();
@@ -327,22 +330,22 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		String selection;
 		int selected = 0, i = 0;
 
-		if (cbZstHome_data != null && cbZstHome_data.size() > 0
-				&& cbZstHome_data.size() > cbZstHome.getSelectedItemPosition()
+		if (spinnerHomeBranch_data != null && spinnerHomeBranch_data.size() > 0
+				&& spinnerHomeBranch_data.size() > cbZstHome.getSelectedItemPosition()
 				&& cbZstHome.getSelectedItemPosition() > 0) {
-			zst_home_before = cbZstHome_data.get(
+			zst_home_before = spinnerHomeBranch_data.get(
 					cbZstHome.getSelectedItemPosition()).getAsString("key");
 		}
-		if (cbZst_data != null
-				&& cbZst_data.size() > cbZst.getSelectedItemPosition()
+		if (spinnerBranch_data != null
+				&& spinnerBranch_data.size() > cbZst.getSelectedItemPosition()
 				&& cbZst.getSelectedItemPosition() > 0) {
-			zst_before = cbZst_data.get(cbZst.getSelectedItemPosition())
+			zst_before = spinnerBranch_data.get(cbZst.getSelectedItemPosition())
 					.getAsString("key");
 		}
-		if (cbMg_data != null
-				&& cbMg_data.size() > cbMg.getSelectedItemPosition()
+		if (spinnerCategory_data != null
+				&& spinnerCategory_data.size() > cbMg.getSelectedItemPosition()
 				&& cbMg.getSelectedItemPosition() > 0) {
-			mg_before = cbMg_data.get(cbMg.getSelectedItemPosition())
+			mg_before = spinnerCategory_data.get(cbMg.getSelectedItemPosition())
 					.getAsString("key");
 		}
 
@@ -353,13 +356,13 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		all.put("key", "");
 		all.put("value", getString(R.string.all));
 
-		cbZst_data = data.getMeta(app.getLibrary().getIdent(),
+		spinnerBranch_data = data.getMeta(app.getLibrary().getIdent(),
 				MetaDataSource.META_TYPE_BRANCH);
-		cbZst_data.add(0, all);
+		spinnerBranch_data.add(0, all);
 		cbZst.setAdapter(((OpacActivity) getActivity()).new MetaAdapter(
-				getActivity(), cbZst_data, R.layout.simple_spinner_item));
+				getActivity(), spinnerBranch_data, R.layout.simple_spinner_item));
 		if (!"".equals(zst_before)) {
-			for (ContentValues row : cbZst_data) {
+			for (ContentValues row : spinnerBranch_data) {
 				if (row.getAsString("key").equals(zst_before)) {
 					selected = i;
 				}
@@ -368,7 +371,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 			cbZst.setSelection(selected);
 		}
 
-		cbZstHome_data = data.getMeta(app.getLibrary().getIdent(),
+		spinnerHomeBranch_data = data.getMeta(app.getLibrary().getIdent(),
 				MetaDataSource.META_TYPE_HOME_BRANCH);
 		selected = 0;
 		i = 0;
@@ -389,25 +392,25 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 			}
 		}
 
-		for (ContentValues row : cbZstHome_data) {
+		for (ContentValues row : spinnerHomeBranch_data) {
 			if (row.getAsString("key").equals(selection)) {
 				selected = i;
 			}
 			i++;
 		}
 		cbZstHome.setAdapter(((OpacActivity) getActivity()).new MetaAdapter(
-				getActivity(), cbZstHome_data, R.layout.simple_spinner_item));
+				getActivity(), spinnerHomeBranch_data, R.layout.simple_spinner_item));
 		cbZstHome.setSelection(selected);
 
-		cbMg_data = data.getMeta(app.getLibrary().getIdent(),
+		spinnerCategory_data = data.getMeta(app.getLibrary().getIdent(),
 				MetaDataSource.META_TYPE_CATEGORY);
-		cbMg_data.add(0, all);
+		spinnerCategory_data.add(0, all);
 		cbMg.setAdapter(((OpacActivity) getActivity()).new MetaAdapter(
-				getActivity(), cbMg_data, R.layout.simple_spinner_item));
+				getActivity(), spinnerCategory_data, R.layout.simple_spinner_item));
 		if (!"".equals(mg_before)) {
 			selected = 0;
 			i = 0;
-			for (ContentValues row : cbZst_data) {
+			for (ContentValues row : spinnerBranch_data) {
 				if (row.getAsString("key").equals(zst_before)) {
 					selected = i;
 				}
@@ -416,11 +419,11 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 			cbZst.setSelection(selected);
 		}
 
-		if ((cbZst_data.size() == 1 || !fields
+		if ((spinnerBranch_data.size() == 1 || !fields
 				.contains(OpacApi.KEY_SEARCH_QUERY_BRANCH))
-				&& (cbMg_data.size() == 1 || !fields
+				&& (spinnerCategory_data.size() == 1 || !fields
 						.contains(OpacApi.KEY_SEARCH_QUERY_CATEGORY))
-				&& (cbZstHome_data.size() == 0 || !fields
+				&& (spinnerHomeBranch_data.size() == 0 || !fields
 						.contains(OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH))) {
 			loadMetaData(app.getLibrary().getIdent(), true);
 			loadingIndicators();
@@ -498,14 +501,6 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		}
 	}
 
-	private static boolean is_valid_isbn10(char[] digits) {
-		int a = 0;
-		for (int i = 0; i < 10; i++) {
-			a += i * Integer.parseInt(String.valueOf(digits[i]));
-		}
-		return a % 11 == Integer.parseInt(String.valueOf(digits[9]));
-	}
-
 	@Override
 	public void accountSelected(Account account) {
 		metaDataLoading = false;
@@ -529,12 +524,12 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		String zst = "";
 		String mg = "";
 		String zst_home = "";
-		if (cbZst_data.size() > 1)
-			zst = cbZst_data.get(
+		if (spinnerBranch_data.size() > 1)
+			zst = spinnerBranch_data.get(
 					((Spinner) view.findViewById(R.id.cbBranch))
 							.getSelectedItemPosition()).getAsString("key");
-		if (cbZstHome_data.size() > 0) {
-			zst_home = cbZstHome_data.get(
+		if (spinnerHomeBranch_data.size() > 0) {
+			zst_home = spinnerHomeBranch_data.get(
 					((Spinner) view.findViewById(R.id.cbHomeBranch))
 							.getSelectedItemPosition()).getAsString("key");
 			sp.edit()
@@ -543,8 +538,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 									+ app.getAccount().getId(), zst_home)
 					.commit();
 		}
-		if (cbMg_data.size() > 1)
-			mg = cbMg_data.get(
+		if (spinnerCategory_data.size() > 1)
+			mg = spinnerCategory_data.get(
 					((Spinner) view.findViewById(R.id.cbMediengruppe))
 							.getSelectedItemPosition()).getAsString("key");
 
@@ -617,7 +612,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
 		Spinner spBranch = (Spinner) view.findViewById(R.id.cbBranch);
 		int i = 0;
-		for (ContentValues row : cbZst_data) {
+		for (ContentValues row : spinnerBranch_data) {
 			if (row.getAsString("key").equals(
 					query.getString(OpacApi.KEY_SEARCH_QUERY_BRANCH))) {
 				spBranch.setSelection(i);
@@ -627,7 +622,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		}
 		Spinner spHomeBranch = (Spinner) view.findViewById(R.id.cbHomeBranch);
 		i = 0;
-		for (ContentValues row : cbZstHome_data) {
+		for (ContentValues row : spinnerHomeBranch_data) {
 			if (row.getAsString("key").equals(
 					query.getString(OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH))) {
 				spHomeBranch.setSelection(i);
@@ -637,7 +632,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		}
 		Spinner spCategory = (Spinner) view.findViewById(R.id.cbMediengruppe);
 		i = 0;
-		for (ContentValues row : cbMg_data) {
+		for (ContentValues row : spinnerCategory_data) {
 			if (row.getAsString("key").equals(
 					query.getString(OpacApi.KEY_SEARCH_QUERY_CATEGORY))) {
 				spCategory.setSelection(i);
