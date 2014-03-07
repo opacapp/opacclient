@@ -86,10 +86,10 @@ public abstract class OpacActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		supportRequestWindowFeature(android.view.Window.FEATURE_INDETERMINATE_PROGRESS);
 		setSupportProgressBarIndeterminateVisibility(false);
-		
+
 		setContentView(getContentView());
 		app = (OpacClient) getApplication();
 
@@ -145,13 +145,13 @@ public abstract class OpacActivity extends Activity {
 			drawerList.setAdapter(navAdapter);
 			navAdapter.addSeperatorItem(getString(R.string.nav_hl_library));
 			navAdapter.addTextItemWithIcon(getString(R.string.nav_search),
-					R.drawable.ic_action_search);
+					R.drawable.ic_action_search, "search");
 			navAdapter.addTextItemWithIcon(getString(R.string.nav_account),
-					R.drawable.ic_action_account);
+					R.drawable.ic_action_account, "account");
 			navAdapter.addTextItemWithIcon(getString(R.string.nav_starred),
-					R.drawable.ic_action_star_1);
+					R.drawable.ic_action_star_1, "starred");
 			navAdapter.addTextItemWithIcon(getString(R.string.nav_info),
-					R.drawable.ic_action_info);
+					R.drawable.ic_action_info, "info");
 
 			aData.open();
 			accounts = aData.getAllAccounts();
@@ -173,7 +173,8 @@ public abstract class OpacActivity extends Activity {
 							expiringText = String.valueOf(expiring);
 						}
 						navAdapter.addLibraryItem(account.getLabel(),
-								library.getCity(), expiringText);
+								library.getCity(), expiringText,
+								account.getId());
 
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -186,9 +187,9 @@ public abstract class OpacActivity extends Activity {
 
 			navAdapter.addSeperatorItem(getString(R.string.nav_hl_other));
 			navAdapter.addTextItemWithIcon(getString(R.string.nav_settings),
-					R.drawable.ic_action_settings);
+					R.drawable.ic_action_settings, "settings");
 			navAdapter.addTextItemWithIcon(getString(R.string.nav_about),
-					R.drawable.ic_action_help);
+					R.drawable.ic_action_help, "about");
 
 			drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -239,31 +240,24 @@ public abstract class OpacActivity extends Activity {
 
 	/** Swaps fragments in the main content view */
 	protected void selectItem(int position) {
-		final int count = navAdapter.getCount();
-		if (navAdapter.getItemViewType(position) == Item.TYPE_SEPARATOR) {
+		Item item = navAdapter.getItem(position);
+		if (item.type == Item.TYPE_SEPARATOR) {
 			// clicked on a separator
 			return;
-		} else if (navAdapter.getItemViewType(position) == Item.TYPE_TEXT) {
-			// TODO: This should absolutely not be based on positions.
-			switch (position) {
-			case 1:
+		} else if (item.type == Item.TYPE_TEXT) {
+			if (item.tag.equals("search"))
 				fragment = new SearchFragment();
-				break;
-			case 2:
+			else if (item.tag.equals("account"))
 				fragment = new AccountFragment();
-				break;
-			case 3: 
+			else if (item.tag.equals("starred"))
 				fragment = new StarredFragment();
-				break;
-			case 4:
+			else if (item.tag.equals("info"))
 				fragment = new InfoFragment();
-				break;
-			}
-			if (position == count - 2) {
+			else if (item.tag.equals("settings")) {
 				Intent intent = new Intent(this, MainPreferenceActivity.class);
 				startActivity(intent);
 				return;
-			} else if (position == count - 1) {
+			} else if (item.tag.equals("about")) {
 				Intent intent = new Intent(this, AboutActivity.class);
 				startActivity(intent);
 				return;
@@ -283,10 +277,10 @@ public abstract class OpacActivity extends Activity {
 			setTitle(navAdapter.getItem(position).text);
 			drawerLayout.closeDrawer(drawerList);
 
-		} else if (navAdapter.getItemViewType(position) == Item.TYPE_LIBRARY) {
+		} else if (item.type == Item.TYPE_LIBRARY) {
 			deselectLibraryItems();
 			drawerList.setItemChecked(position, true);
-			selectaccount(accounts.get(position - 6).getId());
+			selectaccount(item.accountId);
 			drawerLayout.closeDrawer(drawerList);
 			return;
 		}
