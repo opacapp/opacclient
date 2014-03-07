@@ -71,7 +71,9 @@ public class SearchResultListActivity extends OpacActivity implements
 		}
 		
 		page = 1;
-		performsearch();
+
+		if (savedInstanceState == null)
+			performsearch();
 	}
 	
 	public void performsearch() {
