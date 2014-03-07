@@ -80,11 +80,6 @@
                 android:value="de.geeksfactory.opacclient.frontend.MainPreferenceActivity" />
         </activity>
         <activity
-            android:name="de.geeksfactory.opacclient.frontend.AccountActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/account" >
-        </activity>        
-        <activity
             android:name="de.geeksfactory.opacclient.frontend.SearchResultListActivity"
             android:label="@string/title_searchresult_list"
             android:parentActivityName="de.geeksfactory.opacclient.frontend.MainActivity" >

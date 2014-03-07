@@ -86,7 +86,10 @@ public abstract class OpacActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
+		supportRequestWindowFeature(android.view.Window.FEATURE_INDETERMINATE_PROGRESS);
+		setSupportProgressBarIndeterminateVisibility(false);
+		
 		setContentView(getContentView());
 		app = (OpacClient) getApplication();
 
@@ -246,7 +249,8 @@ public abstract class OpacActivity extends Activity {
 			case 1:
 				fragment = new SearchFragment();
 				break;
-			case 2: // fragment = new AccountFragment();
+			case 2:
+				fragment = new AccountFragment();
 				break;
 			case 3: // fragment = new StarredFragment();
 				break;
