@@ -2,7 +2,9 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/tablet_padding"
+    android:paddingRight="@dimen/tablet_padding" >
 
     <RelativeLayout
         android:id="@+id/rlOuter"

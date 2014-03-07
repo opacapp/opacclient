@@ -66,7 +66,7 @@ public class StarredFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		view = inflater.inflate(R.layout.starred_activity);
+		view = inflater.inflate(R.layout.fragment_starred);
 		app = (OpacClient) getActivity().getApplication();
 
 		adapter = new ItemListAdapter();

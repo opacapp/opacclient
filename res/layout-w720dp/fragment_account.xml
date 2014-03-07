@@ -82,9 +82,10 @@
                     android:id="@+id/tvPendingFees"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
                     android:layout_below="@id/tvAccUser"
                     android:layout_marginBottom="4dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_toRightOf="@id/tvPendingFeesLabel"
                     android:textColor="@color/account_head_fg"
                     android:textIsSelectable="true" />
 
@@ -92,9 +93,9 @@
                     android:id="@+id/tvValidUntilLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_below="@id/tvPendingFeesLabel"
+                    android:layout_below="@id/tvAccUser"
                     android:layout_marginBottom="4dp"
+                    android:layout_toLeftOf="@id/tvValidUntil"
                     android:text="@string/valid_until"
                     android:textColor="@color/account_head_fg" />
 
@@ -103,8 +104,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_below="@id/tvPendingFees"
+                    android:layout_below="@id/tvAccUser"
                     android:layout_marginBottom="4dp"
+                    android:layout_marginLeft="8dp"
                     android:textColor="@color/account_head_fg"
                     android:textIsSelectable="true" />
             </RelativeLayout>
@@ -121,63 +123,93 @@
                 android:textStyle="bold"
                 android:visibility="gone" />
 
-            <RelativeLayout
+            <LinearLayout
+                android:id="@+id/llCols"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvError"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/tablet_padding"
+                android:paddingRight="@dimen/tablet_padding" >
+
+                <RelativeLayout
+                    android:id="@+id/rlLent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:padding="5dp" >
+
+                    <TextView
+                        android:id="@+id/tvEntlHeader"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="8dp"
+                        android:drawableBottom="@drawable/section_header"
+                        android:drawablePadding="4dp"
+                        android:paddingLeft="4dp"
+                        android:text="@string/entl_head"
+                        android:textAllCaps="true"
+                        android:textColor="@color/emphasis"
+                        android:textSize="14sp" />
+
+                    <LinearLayout
+                        android:id="@+id/llLent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tvEntlHeader"
+                        android:orientation="vertical" >
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rlRes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:padding="5dp" >
+
+                    <TextView
+                        android:id="@+id/tvResHeader"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="8dp"
+                        android:drawableBottom="@drawable/section_header"
+                        android:drawablePadding="4dp"
+                        android:paddingLeft="4dp"
+                        android:text="@string/reservations_head"
+                        android:textAllCaps="true"
+                        android:textColor="@color/emphasis"
+                        android:textSize="14sp" />
+
+                    <LinearLayout
+                        android:id="@+id/llReservations"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tvResHeader"
+                        android:orientation="vertical" >
+                    </LinearLayout>
+                </RelativeLayout>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/rlMeta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/llCols"
                 android:orientation="vertical"
                 android:padding="5dp" >
-
-                <TextView
-                    android:id="@+id/tvEntlHeader"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="8dp"
-                    android:drawableBottom="@drawable/section_header"
-                    android:drawablePadding="4dp"
-                    android:paddingLeft="4dp"
-                    android:text="@string/entl_head"
-                    android:textAllCaps="true"
-                    android:textColor="@color/emphasis"
-                    android:textSize="14sp" />
-
-                <LinearLayout
-                    android:id="@+id/llLent"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/tvEntlHeader"
-                    android:orientation="vertical" >
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/tvResHeader"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/llLent"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="8dp"
-                    android:drawableBottom="@drawable/section_header"
-                    android:drawablePadding="4dp"
-                    android:paddingLeft="4dp"
-                    android:text="@string/reservations_head"
-                    android:textAllCaps="true"
-                    android:textColor="@color/emphasis"
-                    android:textSize="14sp" />
-
-                <LinearLayout
-                    android:id="@+id/llReservations"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/tvResHeader"
-                    android:orientation="vertical" >
-                </LinearLayout>
 
                 <TextView
                     android:id="@+id/tvAge"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/llReservations"
+                    android:layout_alignParentTop="true"
                     android:layout_marginTop="4dp"
                     android:gravity="center|top"
                     android:textColor="@color/account_age"
