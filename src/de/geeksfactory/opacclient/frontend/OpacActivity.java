@@ -245,6 +245,7 @@ public abstract class OpacActivity extends Activity {
 			// clicked on a separator
 			return;
 		} else if (navAdapter.getItemViewType(position) == Item.TYPE_TEXT) {
+			// TODO: This should absolutely not be based on positions.
 			switch (position) {
 			case 1:
 				fragment = new SearchFragment();
@@ -264,7 +265,9 @@ public abstract class OpacActivity extends Activity {
 				startActivity(intent);
 				return;
 			} else if (position == count - 1) {
-				// fragment = new AboutFragment();
+				Intent intent = new Intent(this, AboutActivity.class);
+				startActivity(intent);
+				return;
 			}
 
 			// Insert the fragment by replacing any existing fragment

@@ -72,6 +72,10 @@
             android:label="@string/prefs" >
         </activity>
         <activity
+            android:name="de.geeksfactory.opacclient.frontend.AboutActivity"
+            android:label="@string/about" >
+        </activity>
+        <activity
             android:name="de.geeksfactory.opacclient.frontend.AccountListActivity"
             android:label="@string/title_activity_account_list"
             android:uiOptions="splitActionBarWhenNarrow" >
