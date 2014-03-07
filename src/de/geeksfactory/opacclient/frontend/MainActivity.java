@@ -36,8 +36,8 @@ public class MainActivity extends OpacActivity implements SearchFragment.Callbac
 			}
 		}
 		
-		
-		selectItem(1);	
+		if(savedInstanceState == null)
+			selectItem(1);	
 	}
 	
 	

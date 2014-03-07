@@ -95,7 +95,6 @@ public abstract class OpacActivity extends Activity {
 
 		aData = new AccountDataSource(this);
 		setupDrawer();
-
 	}
 
 	protected abstract int getContentView();

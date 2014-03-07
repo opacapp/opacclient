@@ -19,6 +19,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.AvoidXfermode;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,15 +41,16 @@ import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 
 public class SearchFragment extends Fragment implements AccountSelectedListener {
 	private SharedPreferences sp;
-	
+
 	public interface Callback {
 		public void scanBarcode();
 	}
-	
+
 	private Callback mCallback;
 	private View view;
 	private OpacClient app;
-	
+	private Bundle savedState;
+
 	public boolean metaDataLoading = false;
 	private boolean advanced = false;
 	private Set<String> fields;
@@ -57,29 +59,31 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 	private List<ContentValues> cbZstHome_data;
 	private long last_meta_try = 0;
 	private LoadMetaDataTask lmdt;
-	
+
 	@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		// Inflate the layout for this fragment
 		view = inflater.inflate(R.layout.fragment_search, container, false);
 		setHasOptionsMenu(true);
-		
+		setRetainInstance(true);
+
 		sp = ((OpacActivity) getActivity()).getDefaultSharedPreferences();
 		app = (OpacClient) getActivity().getApplication();
 
-//		if (getIntent().getBooleanExtra("barcode", false)) {
-//			BarcodeScanIntegrator integrator = new BarcodeScanIntegrator(
-//					SearchActivity.this);
-//			integrator.initiateScan();
-//		} else {
-//			ArrayAdapter<CharSequence> order_adapter = ArrayAdapter
-//					.createFromResource(this, R.array.orders,
-//							R.layout.simple_spinner_item);
-//			order_adapter
-//					.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
-//			((Spinner) SearchActivity.this.findViewById(R.id.cbOrder))
-//					.setAdapter(order_adapter);
-//		}
+		// if (getIntent().getBooleanExtra("barcode", false)) {
+		// BarcodeScanIntegrator integrator = new BarcodeScanIntegrator(
+		// SearchActivity.this);
+		// integrator.initiateScan();
+		// } else {
+		// ArrayAdapter<CharSequence> order_adapter = ArrayAdapter
+		// .createFromResource(this, R.array.orders,
+		// R.layout.simple_spinner_item);
+		// order_adapter
+		// .setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
+		// ((Spinner) SearchActivity.this.findViewById(R.id.cbOrder))
+		// .setAdapter(order_adapter);
+		// }
 
 		ImageView ivBarcode = (ImageView) view.findViewById(R.id.ivBarcode);
 		ivBarcode.setOnClickListener(new OnClickListener() {
@@ -89,37 +93,44 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 			}
 		});
 
-//TODO:		if (nfc_capable) {
-//			if (!getPackageManager().hasSystemFeature("android.hardware.nfc")) {
-//				nfc_capable = false;
-//			}
-//		}
-//		if (nfc_capable) {
-//			mAdapter = android.nfc.NfcAdapter.getDefaultAdapter(this);
-//			nfcIntent = PendingIntent.getActivity(this, 0, new Intent(this,
-//					getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-//			IntentFilter ndef = new IntentFilter(
-//					android.nfc.NfcAdapter.ACTION_TECH_DISCOVERED);
-//			try {
-//				ndef.addDataType("*/*");
-//			} catch (MalformedMimeTypeException e) {
-//				throw new RuntimeException("fail", e);
-//			}
-//			intentFiltersArray = new IntentFilter[] { ndef, };
-//			techListsArray = new String[][] { new String[] { android.nfc.tech.NfcV.class
-//					.getName() } };
-//		}
-		
-        return view; 
-    }
-	
+		// TODO: if (nfc_capable) {
+		// if (!getPackageManager().hasSystemFeature("android.hardware.nfc")) {
+		// nfc_capable = false;
+		// }
+		// }
+		// if (nfc_capable) {
+		// mAdapter = android.nfc.NfcAdapter.getDefaultAdapter(this);
+		// nfcIntent = PendingIntent.getActivity(this, 0, new Intent(this,
+		// getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+		// IntentFilter ndef = new IntentFilter(
+		// android.nfc.NfcAdapter.ACTION_TECH_DISCOVERED);
+		// try {
+		// ndef.addDataType("*/*");
+		// } catch (MalformedMimeTypeException e) {
+		// throw new RuntimeException("fail", e);
+		// }
+		// intentFiltersArray = new IntentFilter[] { ndef, };
+		// techListsArray = new String[][] { new String[] {
+		// android.nfc.tech.NfcV.class
+		// .getName() } };
+		// }
+
+		return view;
+	}
+
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		if (!(app.getLibrary() == null)) {
 			accountSelected(app.getAccount());
 		}
+		if (savedInstanceState != null
+				&& savedInstanceState.containsKey("query")) {
+			savedState = savedInstanceState.getBundle("query");
+		}
+		if (savedState != null)
+			loadQuery(savedState);
 	}
-	
+
 	public void clear() {
 		((EditText) view.findViewById(R.id.etSimpleSearch)).setText("");
 		((EditText) view.findViewById(R.id.etTitel)).setText("");
@@ -139,7 +150,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		((Spinner) view.findViewById(R.id.cbHomeBranch)).setSelection(0);
 		((Spinner) view.findViewById(R.id.cbMediengruppe)).setSelection(0);
 	}
-	
+
 	protected void manageVisibility() {
 		PackageManager pm = getActivity().getPackageManager();
 
@@ -167,7 +178,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		}
 
 		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_FREE)) {
-			view.findViewById(R.id.tvSearchAdvHeader).setVisibility(View.VISIBLE);
+			view.findViewById(R.id.tvSearchAdvHeader).setVisibility(
+					View.VISIBLE);
 			view.findViewById(R.id.rlSimpleSearch).setVisibility(View.VISIBLE);
 		} else {
 			view.findViewById(R.id.tvSearchAdvHeader).setVisibility(View.GONE);
@@ -279,8 +291,10 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 			view.findViewById(R.id.tvSystematik).setVisibility(View.GONE);
 		}
 		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_AUDIENCE) && advanced) {
-			view.findViewById(R.id.etInteressenkreis).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.tvInteressenkreis).setVisibility(View.VISIBLE);
+			view.findViewById(R.id.etInteressenkreis).setVisibility(
+					View.VISIBLE);
+			view.findViewById(R.id.tvInteressenkreis).setVisibility(
+					View.VISIBLE);
 		} else {
 			view.findViewById(R.id.etInteressenkreis).setVisibility(View.GONE);
 			view.findViewById(R.id.tvInteressenkreis).setVisibility(View.GONE);
@@ -300,7 +314,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 			view.findViewById(R.id.tvOrder).setVisibility(View.GONE);
 		}
 	}
-	
+
 	private void fillComboBoxes() {
 
 		Spinner cbZst = (Spinner) view.findViewById(R.id.cbBranch);
@@ -313,15 +327,21 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		String selection;
 		int selected = 0, i = 0;
 
-		if (cbZstHome_data != null && cbZstHome_data.size() > 0) {
+		if (cbZstHome_data != null && cbZstHome_data.size() > 0
+				&& cbZstHome_data.size() > cbZstHome.getSelectedItemPosition()
+				&& cbZstHome.getSelectedItemPosition() > 0) {
 			zst_home_before = cbZstHome_data.get(
 					cbZstHome.getSelectedItemPosition()).getAsString("key");
 		}
-		if (cbZst_data != null && cbZst_data.size() > 1) {
+		if (cbZst_data != null
+				&& cbZst_data.size() > cbZst.getSelectedItemPosition()
+				&& cbZst.getSelectedItemPosition() > 0) {
 			zst_before = cbZst_data.get(cbZst.getSelectedItemPosition())
 					.getAsString("key");
 		}
-		if (cbMg_data != null && cbMg_data.size() > 1) {
+		if (cbMg_data != null
+				&& cbMg_data.size() > cbMg.getSelectedItemPosition()
+				&& cbMg.getSelectedItemPosition() > 0) {
 			mg_before = cbMg_data.get(cbMg.getSelectedItemPosition())
 					.getAsString("key");
 		}
@@ -336,8 +356,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		cbZst_data = data.getMeta(app.getLibrary().getIdent(),
 				MetaDataSource.META_TYPE_BRANCH);
 		cbZst_data.add(0, all);
-		cbZst.setAdapter(((OpacActivity) getActivity()).new MetaAdapter(getActivity(), cbZst_data,
-				R.layout.simple_spinner_item));
+		cbZst.setAdapter(((OpacActivity) getActivity()).new MetaAdapter(
+				getActivity(), cbZst_data, R.layout.simple_spinner_item));
 		if (!"".equals(zst_before)) {
 			for (ContentValues row : cbZst_data) {
 				if (row.getAsString("key").equals(zst_before)) {
@@ -375,15 +395,15 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 			}
 			i++;
 		}
-		cbZstHome.setAdapter(((OpacActivity) getActivity()).new MetaAdapter(getActivity(), cbZstHome_data,
-				R.layout.simple_spinner_item));
+		cbZstHome.setAdapter(((OpacActivity) getActivity()).new MetaAdapter(
+				getActivity(), cbZstHome_data, R.layout.simple_spinner_item));
 		cbZstHome.setSelection(selected);
 
 		cbMg_data = data.getMeta(app.getLibrary().getIdent(),
 				MetaDataSource.META_TYPE_CATEGORY);
 		cbMg_data.add(0, all);
-		cbMg.setAdapter(((OpacActivity) getActivity()).new MetaAdapter(getActivity(), cbMg_data,
-				R.layout.simple_spinner_item));
+		cbMg.setAdapter(((OpacActivity) getActivity()).new MetaAdapter(
+				getActivity(), cbMg_data, R.layout.simple_spinner_item));
 		if (!"".equals(mg_before)) {
 			selected = 0;
 			i = 0;
@@ -415,7 +435,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		view.findViewById(R.id.pbHomeBranch).setVisibility(visibility);
 		view.findViewById(R.id.pbMediengruppe).setVisibility(visibility);
 	}
-	
+
 	public void loadMetaData(String lib) {
 		loadMetaData(lib, false);
 	}
@@ -477,7 +497,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 			}
 		}
 	}
-	
+
 	private static boolean is_valid_isbn10(char[] digits) {
 		int a = 0;
 		for (int i = 0; i < 10; i++) {
@@ -485,7 +505,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		}
 		return a % 11 == Integer.parseInt(String.valueOf(digits[9]));
 	}
-	
+
 	@Override
 	public void accountSelected(Account account) {
 		metaDataLoading = false;
@@ -493,15 +513,19 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		fields = new HashSet<String>(Arrays.asList(app.getApi()
 				.getSearchFields()));
 
-//TODO:			if (!fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE))
-//			nfc_capable = false;
+		// TODO: if (!fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE))
+		// nfc_capable = false;
 
 		manageVisibility();
 		fillComboBoxes();
 		loadingIndicators();
 	}
-	
+
 	public void go() {
+		app.startSearch(getActivity(), saveQuery());
+	}
+
+	public Bundle saveQuery() {
 		String zst = "";
 		String mg = "";
 		String zst_home = "";
@@ -511,8 +535,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 							.getSelectedItemPosition()).getAsString("key");
 		if (cbZstHome_data.size() > 0) {
 			zst_home = cbZstHome_data.get(
-					((Spinner) view
-							.findViewById(R.id.cbHomeBranch))
+					((Spinner) view.findViewById(R.id.cbHomeBranch))
 							.getSelectedItemPosition()).getAsString("key");
 			sp.edit()
 					.putString(
@@ -522,33 +545,26 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		}
 		if (cbMg_data.size() > 1)
 			mg = cbMg_data.get(
-					((Spinner) view
-							.findViewById(R.id.cbMediengruppe))
+					((Spinner) view.findViewById(R.id.cbMediengruppe))
 							.getSelectedItemPosition()).getAsString("key");
 
 		Bundle query = new Bundle();
-		query.putString(OpacApi.KEY_SEARCH_QUERY_FREE,
-				((EditText) view
-						.findViewById(R.id.etSimpleSearch)).getEditableText()
-						.toString());
-		query.putString(OpacApi.KEY_SEARCH_QUERY_TITLE,
-				((EditText) view.findViewById(R.id.etTitel))
-						.getEditableText().toString());
-		query.putString(OpacApi.KEY_SEARCH_QUERY_AUTHOR,
-				((EditText) view.findViewById(R.id.etVerfasser))
-						.getEditableText().toString());
+		query.putString(OpacApi.KEY_SEARCH_QUERY_FREE, ((EditText) view
+				.findViewById(R.id.etSimpleSearch)).getEditableText()
+				.toString());
+		query.putString(OpacApi.KEY_SEARCH_QUERY_TITLE, ((EditText) view
+				.findViewById(R.id.etTitel)).getEditableText().toString());
+		query.putString(OpacApi.KEY_SEARCH_QUERY_AUTHOR, ((EditText) view
+				.findViewById(R.id.etVerfasser)).getEditableText().toString());
 		query.putString(OpacApi.KEY_SEARCH_QUERY_BRANCH, zst);
 		query.putString(OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH, zst_home);
 		query.putString(OpacApi.KEY_SEARCH_QUERY_CATEGORY, mg);
-		query.putString(OpacApi.KEY_SEARCH_QUERY_ISBN,
-				((EditText) view.findViewById(R.id.etISBN))
-						.getEditableText().toString());
-		query.putString(OpacApi.KEY_SEARCH_QUERY_BARCODE,
-				((EditText) view.findViewById(R.id.etBarcode))
-						.getEditableText().toString());
-		query.putString(OpacApi.KEY_SEARCH_QUERY_YEAR,
-				((EditText) view.findViewById(R.id.etJahr))
-						.getEditableText().toString());
+		query.putString(OpacApi.KEY_SEARCH_QUERY_ISBN, ((EditText) view
+				.findViewById(R.id.etISBN)).getEditableText().toString());
+		query.putString(OpacApi.KEY_SEARCH_QUERY_BARCODE, ((EditText) view
+				.findViewById(R.id.etBarcode)).getEditableText().toString());
+		query.putString(OpacApi.KEY_SEARCH_QUERY_YEAR, ((EditText) view
+				.findViewById(R.id.etJahr)).getEditableText().toString());
 		query.putString(OpacApi.KEY_SEARCH_QUERY_YEAR_RANGE_START,
 				((EditText) view.findViewById(R.id.etJahrVon))
 						.getEditableText().toString());
@@ -558,52 +574,109 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		query.putBoolean(OpacApi.KEY_SEARCH_QUERY_DIGITAL,
 				((CheckBox) view.findViewById(R.id.cbDigital)).isChecked());
 		if (advanced) {
-			query.putString(OpacApi.KEY_SEARCH_QUERY_KEYWORDA,
-					((EditText) view
-							.findViewById(R.id.etSchlagA)).getEditableText()
-							.toString());
-			query.putString(OpacApi.KEY_SEARCH_QUERY_KEYWORDB,
-					((EditText) view
-							.findViewById(R.id.etSchlagB)).getEditableText()
-							.toString());
-			query.putString(OpacApi.KEY_SEARCH_QUERY_SYSTEM,
-					((EditText) view
-							.findViewById(R.id.etSystematik)).getEditableText()
-							.toString());
-			query.putString(OpacApi.KEY_SEARCH_QUERY_AUDIENCE,
-					((EditText) view
-							.findViewById(R.id.etInteressenkreis))
-							.getEditableText().toString());
-			query.putString(
-					OpacApi.KEY_SEARCH_QUERY_PUBLISHER,
+			query.putString(OpacApi.KEY_SEARCH_QUERY_KEYWORDA, ((EditText) view
+					.findViewById(R.id.etSchlagA)).getEditableText().toString());
+			query.putString(OpacApi.KEY_SEARCH_QUERY_KEYWORDB, ((EditText) view
+					.findViewById(R.id.etSchlagB)).getEditableText().toString());
+			query.putString(OpacApi.KEY_SEARCH_QUERY_SYSTEM, ((EditText) view
+					.findViewById(R.id.etSystematik)).getEditableText()
+					.toString());
+			query.putString(OpacApi.KEY_SEARCH_QUERY_AUDIENCE, ((EditText) view
+					.findViewById(R.id.etInteressenkreis)).getEditableText()
+					.toString());
+			query.putString(OpacApi.KEY_SEARCH_QUERY_PUBLISHER,
 					((EditText) view.findViewById(R.id.etVerlag))
 							.getEditableText().toString());
 			query.putString(
 					"order",
-					(((Integer) ((Spinner) view
-							.findViewById(R.id.cbOrder))
-							.getSelectedItemPosition()) + 1)
-							+ "");
+					(((Integer) ((Spinner) view.findViewById(R.id.cbOrder))
+							.getSelectedItemPosition()) + 1) + "");
 		}
-		app.startSearch(getActivity(), query);
+		return query;
 	}
-	
+
+	public void loadQuery(Bundle query) {
+		((EditText) view.findViewById(R.id.etSimpleSearch)).setText(query
+				.getString(OpacApi.KEY_SEARCH_QUERY_FREE));
+		((EditText) view.findViewById(R.id.etTitel)).setText(query
+				.getString(OpacApi.KEY_SEARCH_QUERY_TITLE));
+		((EditText) view.findViewById(R.id.etVerfasser)).setText(query
+				.getString(OpacApi.KEY_SEARCH_QUERY_AUTHOR));
+		((EditText) view.findViewById(R.id.etISBN)).setText(query
+				.getString(OpacApi.KEY_SEARCH_QUERY_ISBN));
+		((EditText) view.findViewById(R.id.etBarcode)).setText(query
+				.getString(OpacApi.KEY_SEARCH_QUERY_BARCODE));
+		((EditText) view.findViewById(R.id.etJahr)).setText(query
+				.getString(OpacApi.KEY_SEARCH_QUERY_YEAR));
+		((EditText) view.findViewById(R.id.etJahrVon)).setText(query
+				.getString(OpacApi.KEY_SEARCH_QUERY_YEAR_RANGE_START));
+		((EditText) view.findViewById(R.id.etJahrBis)).setText(query
+				.getString(OpacApi.KEY_SEARCH_QUERY_YEAR_RANGE_END));
+		((CheckBox) view.findViewById(R.id.cbDigital)).setChecked(query
+				.getBoolean(OpacApi.KEY_SEARCH_QUERY_DIGITAL));
+
+		Spinner spBranch = (Spinner) view.findViewById(R.id.cbBranch);
+		int i = 0;
+		for (ContentValues row : cbZst_data) {
+			if (row.getAsString("key").equals(
+					query.getString(OpacApi.KEY_SEARCH_QUERY_BRANCH))) {
+				spBranch.setSelection(i);
+				break;
+			}
+			i++;
+		}
+		Spinner spHomeBranch = (Spinner) view.findViewById(R.id.cbHomeBranch);
+		i = 0;
+		for (ContentValues row : cbZstHome_data) {
+			if (row.getAsString("key").equals(
+					query.getString(OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH))) {
+				spHomeBranch.setSelection(i);
+				break;
+			}
+			i++;
+		}
+		Spinner spCategory = (Spinner) view.findViewById(R.id.cbMediengruppe);
+		i = 0;
+		for (ContentValues row : cbMg_data) {
+			if (row.getAsString("key").equals(
+					query.getString(OpacApi.KEY_SEARCH_QUERY_CATEGORY))) {
+				spCategory.setSelection(i);
+				break;
+			}
+			i++;
+		}
+
+		if (advanced) {
+			((EditText) view.findViewById(R.id.etSchlagA)).setText(query
+					.getString(OpacApi.KEY_SEARCH_QUERY_KEYWORDA));
+			((EditText) view.findViewById(R.id.etSchlagB)).setText(query
+					.getString(OpacApi.KEY_SEARCH_QUERY_KEYWORDB));
+			((EditText) view.findViewById(R.id.etSystematik)).setText(query
+					.getString(OpacApi.KEY_SEARCH_QUERY_SYSTEM));
+			((EditText) view.findViewById(R.id.etInteressenkreis))
+					.setText(query.getString(OpacApi.KEY_SEARCH_QUERY_AUDIENCE));
+			((EditText) view.findViewById(R.id.etVerlag)).setText(query
+					.getString(OpacApi.KEY_SEARCH_QUERY_PUBLISHER));
+		}
+	}
+
 	@Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mCallback = (Callback) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement SearchFragment.Callback");
-        }
-    }
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		try {
+			mCallback = (Callback) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must implement SearchFragment.Callback");
+		}
+	}
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.fragment_search, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.action_search_go) {
@@ -612,5 +685,12 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		savedState = saveQuery();
+		outState.putBundle("query", savedState);
+		super.onSaveInstanceState(outState);
+	}
+
 }
