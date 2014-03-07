@@ -85,6 +85,7 @@
         <activity
             android:name="de.geeksfactory.opacclient.frontend.SearchResultDetailActivity"
             android:label="@string/title_searchresult_detail"
+            android:uiOptions="splitActionBarWhenNarrow"
             android:parentActivityName="de.geeksfactory.opacclient.frontend.SearchResultListActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
