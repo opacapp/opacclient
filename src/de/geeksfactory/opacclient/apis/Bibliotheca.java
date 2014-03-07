@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import org.acra.ACRA;
@@ -179,7 +180,8 @@ public class Bibliotheca extends BaseApi {
 				e.printStackTrace();
 			}
 		}
-		httpGet(opac_url + "/woload.asp?lkz=1&nextpage=" + db);
+		httpGet(opac_url + "/woload.asp?lkz=1&nextpage=" + db,
+				getDefaultEncoding());
 
 		metadata.open();
 		if (!metadata.hasMeta(library.getIdent())) {
@@ -187,7 +189,7 @@ public class Bibliotheca extends BaseApi {
 			nameValuePairs.add(new BasicNameValuePair("link_profis.x", "0"));
 			nameValuePairs.add(new BasicNameValuePair("link_profis.y", "1"));
 			String html = httpPost(opac_url + "/index.asp",
-					new UrlEncodedFormEntity(nameValuePairs));
+					new UrlEncodedFormEntity(nameValuePairs), getDefaultEncoding());
 			metadata.close();
 			extract_meta(html);
 		} else {
@@ -276,7 +278,7 @@ public class Bibliotheca extends BaseApi {
 		nameValuePairs.add(new BasicNameValuePair("QL_Nr", ""));
 
 		String html = httpPost(opac_url + "/index.asp",
-				new UrlEncodedFormEntity(nameValuePairs));
+				new UrlEncodedFormEntity(nameValuePairs), getDefaultEncoding());
 		return parse_search(html, 1);
 	}
 
@@ -286,7 +288,8 @@ public class Bibliotheca extends BaseApi {
 		if (!initialised)
 			start();
 
-		String html = httpGet(opac_url + "/index.asp?scrollAction=" + page);
+		String html = httpGet(opac_url + "/index.asp?scrollAction=" + page,
+				getDefaultEncoding());
 		return parse_search(html, page);
 	}
 
@@ -309,18 +312,18 @@ public class Bibliotheca extends BaseApi {
 						sr.setType(MediaType.valueOf(data.getJSONObject(
 								"mediatypes").getString(fname)));
 					} catch (JSONException e) {
-						sr.setType(defaulttypes.get(fname.toLowerCase()
-								.replace(".jpg", "").replace(".gif", "")
-								.replace(".png", "")));
+						sr.setType(defaulttypes.get(fname
+								.toLowerCase(Locale.GERMAN).replace(".jpg", "")
+								.replace(".gif", "").replace(".png", "")));
 					} catch (IllegalArgumentException e) {
-						sr.setType(defaulttypes.get(fname.toLowerCase()
-								.replace(".jpg", "").replace(".gif", "")
-								.replace(".png", "")));
+						sr.setType(defaulttypes.get(fname
+								.toLowerCase(Locale.GERMAN).replace(".jpg", "")
+								.replace(".gif", "").replace(".png", "")));
 					}
 				} else {
-					sr.setType(defaulttypes.get(fname.toLowerCase()
-							.replace(".jpg", "").replace(".gif", "")
-							.replace(".png", "")));
+					sr.setType(defaulttypes.get(fname
+							.toLowerCase(Locale.GERMAN).replace(".jpg", "")
+							.replace(".gif", "").replace(".png", "")));
 				}
 			} else {
 				if (tr.children().size() == 3)
@@ -375,13 +378,15 @@ public class Bibliotheca extends BaseApi {
 			throws IOException, NotReachableException {
 		if (!initialised)
 			start();
-		String html = httpGet(opac_url + "/index.asp?MedienNr=" + a);
+		String html = httpGet(opac_url + "/index.asp?MedienNr=" + a,
+				getDefaultEncoding());
 		return parse_result(html);
 	}
 
 	@Override
 	public DetailledItem getResult(int nr) throws IOException {
-		String html = httpGet(opac_url + "/index.asp?detmediennr=" + nr);
+		String html = httpGet(opac_url + "/index.asp?detmediennr=" + nr,
+				getDefaultEncoding());
 
 		return parse_result(html);
 	}
@@ -533,10 +538,10 @@ public class Bibliotheca extends BaseApi {
 					.add(new BasicNameValuePair("button1", "Bestaetigung"));
 			nameValuePairs.add(new BasicNameValuePair("target", "makevorbest"));
 			httpPost(opac_url + "/index.asp", new UrlEncodedFormEntity(
-					nameValuePairs));
+					nameValuePairs), getDefaultEncoding());
 			return new ReservationResult(MultiStepResult.Status.OK);
 		} else if (selection == null || useraction == 0) {
-			String html = httpGet(opac_url + "/" + reservation_info);
+			String html = httpGet(opac_url + "/" + reservation_info, getDefaultEncoding());
 			doc = Jsoup.parse(html);
 
 			if (doc.select("input[name=AUSWEIS]").size() > 0) {
@@ -561,7 +566,8 @@ public class Bibliotheca extends BaseApi {
 						"input[name=target]").val()));
 				nameValuePairs.add(new BasicNameValuePair("type", "VT2"));
 				html = httpPost(opac_url + "/index.asp",
-						new UrlEncodedFormEntity(nameValuePairs));
+						new UrlEncodedFormEntity(nameValuePairs),
+						getDefaultEncoding());
 				doc = Jsoup.parse(html);
 			}
 			if (doc.select("select[name=" + branch_inputfield + "]").size() == 0) {
@@ -597,7 +603,8 @@ public class Bibliotheca extends BaseApi {
 			nameValuePairs.add(new BasicNameValuePair("target",
 					"vorbesttranskonto"));
 			String html = httpPost(opac_url + "/index.asp",
-					new UrlEncodedFormEntity(nameValuePairs));
+					new UrlEncodedFormEntity(nameValuePairs),
+					getDefaultEncoding());
 			doc = Jsoup.parse(html);
 		}
 
@@ -677,12 +684,12 @@ public class Bibliotheca extends BaseApi {
 			nameValuePairs.add(new BasicNameValuePair("verlaengern",
 					"Bestätigung"));
 			httpPost(opac_url + "/index.asp", new UrlEncodedFormEntity(
-					nameValuePairs));
+					nameValuePairs), getDefaultEncoding());
 
 			return new ProlongResult(MultiStepResult.Status.OK);
 		} else {
 
-			String html = httpGet(opac_url + "/" + a);
+			String html = httpGet(opac_url + "/" + a, getDefaultEncoding());
 			Document doc = Jsoup.parse(html);
 
 			if (doc.getElementsByClass("kontomeldung").size() == 1) {
@@ -716,7 +723,7 @@ public class Bibliotheca extends BaseApi {
 					nameValuePairs.add(new BasicNameValuePair("verlaengern",
 							"Bestätigung"));
 					httpPost(opac_url + "/index.asp", new UrlEncodedFormEntity(
-							nameValuePairs));
+							nameValuePairs), getDefaultEncoding());
 
 					return new ProlongResult(MultiStepResult.Status.OK);
 				}
@@ -745,7 +752,7 @@ public class Bibliotheca extends BaseApi {
 				return false;
 			}
 		}
-		String html = httpGet(opac_url + "/index.asp?target=alleverl");
+		String html = httpGet(opac_url + "/index.asp?target=alleverl", getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 
 		if (doc.getElementsByClass("kontomeldung").size() == 1) {
@@ -776,14 +783,14 @@ public class Bibliotheca extends BaseApi {
 				return false;
 			}
 		}
-		httpGet(opac_url + "/" + a);
+		httpGet(opac_url + "/" + a, getDefaultEncoding());
 
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 		nameValuePairs.add(new BasicNameValuePair("target", "delvorbest"));
 		nameValuePairs
 				.add(new BasicNameValuePair("vorbdelbest", "Bestätigung"));
 		httpPost(opac_url + "/index.asp", new UrlEncodedFormEntity(
-				nameValuePairs));
+				nameValuePairs), getDefaultEncoding());
 		return true;
 	}
 
@@ -850,7 +857,7 @@ public class Bibliotheca extends BaseApi {
 		Elements exemplartrs = doc.select(".kontozeile_center table").get(0)
 				.select("tr.tabKonto");
 
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
 
 		for (int i = 0; i < exemplartrs.size(); i++) {
 			Element tr = exemplartrs.get(i);
@@ -993,11 +1000,12 @@ public class Bibliotheca extends BaseApi {
 			nameValuePairs.add(new BasicNameValuePair("target", "konto"));
 			nameValuePairs.add(new BasicNameValuePair("type", "K"));
 			html = httpPost(opac_url + "/index.asp", new UrlEncodedFormEntity(
-					nameValuePairs));
+					nameValuePairs), getDefaultEncoding());
 		} else if (response.getStatusLine().getStatusCode() == 302) {
 			// Bereits eingeloggt
 			response.getEntity().consumeContent();
-			html = httpGet(opac_url + "/index.asp?target=konto");
+			html = httpGet(opac_url + "/index.asp?target=konto",
+					getDefaultEncoding());
 		} else if (response.getStatusLine().getStatusCode() == 500) {
 			throw new NotReachableException();
 		}

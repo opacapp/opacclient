@@ -104,7 +104,7 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 
 	private LoadTask lt;
 	private CancelTask ct;
-	private OpacTask pt;
+	private OpacTask<?> pt;
 	private OpacTask<Uri> dt;
 	private BookingTask bt;
 
@@ -377,7 +377,7 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 
 	protected void cancel(final String a) {
 		long age = System.currentTimeMillis() - refreshtime;
-		if (refreshing || fromcache) {
+		if (refreshing || fromcache || age > MAX_CACHE_AGE) {
 			Toast.makeText(getActivity(), R.string.account_no_concurrent,
 					Toast.LENGTH_LONG).show();
 			if (!refreshing) {
@@ -1236,7 +1236,7 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 
 	public void bookingStart(String booking_info) {
 		long age = System.currentTimeMillis() - refreshtime;
-		if (refreshing || fromcache) {
+		if (refreshing || fromcache || age > MAX_CACHE_AGE) {
 			Toast.makeText(getActivity(), R.string.account_no_concurrent,
 					Toast.LENGTH_LONG).show();
 			if (!refreshing) {
@@ -1378,7 +1378,6 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				adialog.dismiss();
-
 				bookingDo(booking_info, result.getActionIdentifier(),
 						((Entry<String, Object>) possibilities[position])
 								.getKey());
@@ -1401,7 +1400,7 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 
 	public void prolongStart(String media) {
 		long age = System.currentTimeMillis() - refreshtime;
-		if (refreshing || fromcache) {
+		if (refreshing || fromcache || age > MAX_CACHE_AGE) {
 			Toast.makeText(getActivity(), R.string.account_no_concurrent,
 					Toast.LENGTH_LONG).show();
 			if (!refreshing) {

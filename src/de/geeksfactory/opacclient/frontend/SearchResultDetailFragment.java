@@ -834,7 +834,6 @@ public class SearchResultDetailFragment extends Fragment {
 				toast.show();
 			} else if (getItem().getId() == null || getItem().getId().equals("")) {
 				final String title = getItem().getTitle();
-				final String id = getItem().getId();
 				if (star.isStarredTitle(bib, title)) {
 					star.remove(star.getItemByTitle(bib, title));
 					item.setIcon(R.drawable.ic_action_star_0);

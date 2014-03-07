@@ -217,7 +217,7 @@ public abstract class OpacActivity extends Activity {
 
 	private class DrawerItemClickListener implements OnItemClickListener {
 		@Override
-		public void onItemClick(AdapterView parent, View view, int position,
+		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			selectItem(position);
 		}

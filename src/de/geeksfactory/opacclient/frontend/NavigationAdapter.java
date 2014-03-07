@@ -1,19 +1,16 @@
 package de.geeksfactory.opacclient.frontend;
 
 import java.util.ArrayList;
-import java.util.TreeSet;
 
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.widget.TextView;
 
-import de.geeksfactory.opacclient.R;
-
 import android.content.Context;
-import android.text.Spanned;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import de.geeksfactory.opacclient.R;
 
 public class NavigationAdapter extends BaseAdapter {
 

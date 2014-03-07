@@ -21,8 +21,6 @@
  */
 package de.geeksfactory.opacclient.frontend;
 
-import java.util.List;
-
 import org.acra.ACRA;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
@@ -32,11 +30,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
-import de.geeksfactory.opacclient.objects.Library;
 
 public class WelcomeActivity extends Activity {
 	protected OpacClient app;

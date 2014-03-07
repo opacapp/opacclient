@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -421,7 +422,7 @@ public class BiBer1992 extends BaseApi {
 				.valueOf(startNum)));
 
 		String html = httpPost(m_opac_url + "/" + m_opac_dir + "/query.C",
-				new UrlEncodedFormEntity(m_nameValuePairs));
+				new UrlEncodedFormEntity(m_nameValuePairs), getDefaultEncoding());
 		return parse_search(html, page);
 	}
 
@@ -796,7 +797,7 @@ public class BiBer1992 extends BaseApi {
 				.getPassword()));
 
 		String html = httpPost(m_opac_url + "/" + m_opac_dir + command,
-				new UrlEncodedFormEntity(nameValuePairs));
+				new UrlEncodedFormEntity(nameValuePairs), getDefaultEncoding());
 
 		Document doc = Jsoup.parse(html);
 
@@ -907,7 +908,7 @@ public class BiBer1992 extends BaseApi {
 				res.setPendingFees(text);
 			}
 		}
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
 		Elements rowElements = doc.select("form[name=medkl] table tr");
 
 		// rows: skip 1st row -> title row
@@ -1068,7 +1069,7 @@ public class BiBer1992 extends BaseApi {
 				.getPassword()));
 
 		String html = httpPost(m_opac_url + "/" + m_opac_dir + "/user.C",
-				new UrlEncodedFormEntity(nameValuePairs));
+				new UrlEncodedFormEntity(nameValuePairs), getDefaultEncoding());
 
 		Document doc = Jsoup.parse(html);
 

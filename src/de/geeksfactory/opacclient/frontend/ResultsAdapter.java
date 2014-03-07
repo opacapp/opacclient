@@ -97,6 +97,9 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
 			return R.drawable.type_evideo;
 		case ART:
 			return R.drawable.type_art;
+		case MAP:
+		case LP_RECORD:
+			return R.drawable.type_unknown;
 		}
 
 		return R.drawable.type_unknown;

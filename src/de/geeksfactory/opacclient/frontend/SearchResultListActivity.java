@@ -268,7 +268,7 @@ public class SearchResultListActivity extends OpacActivity implements
 
 		@Override
 		protected SearchRequestResult doInBackground(Object... arg0) {
-			OpacClient a = (OpacClient) arg0[0];
+			OpacClient app = (OpacClient) arg0[0];
 			Integer page = (Integer) arg0[1];
 
 			try {

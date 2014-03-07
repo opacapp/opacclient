@@ -25,4 +25,6 @@ import java.net.SocketException;
 
 public class NotReachableException extends SocketException {
 
+	private static final long serialVersionUID = 9209411947611368678L;
+
 }

@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -117,7 +118,7 @@ public class IOpac extends BaseApi implements OpacApi {
 				.compile("mtyp\\[[0-9]+\\]\\[\"bez\"\\] = \"([^\"]+)\";");
 
 		try {
-			html = httpGet(opac_url + "/iopac/mtyp.js");
+			html = httpGet(opac_url + "/iopac/mtyp.js", getDefaultEncoding());
 
 			metadata.open();
 			metadata.clearMeta(library.getIdent());
@@ -142,7 +143,7 @@ public class IOpac extends BaseApi implements OpacApi {
 		} catch (IOException e) {
 			try {
 				html = httpGet(opac_url
-						+ "/iopac/frames/search_form.php?bReset=1?bReset=1");
+						+ "/iopac/frames/search_form.php?bReset=1?bReset=1", getDefaultEncoding());
 				Document doc = Jsoup.parse(html);
 
 				metadata.open();
@@ -241,7 +242,7 @@ public class IOpac extends BaseApi implements OpacApi {
 		}
 
 		String html = httpPost(opac_url + "/cgi-bin/di.exe",
-				new UrlEncodedFormEntity(params, "iso-8859-1"));
+				new UrlEncodedFormEntity(params, "iso-8859-1"), getDefaultEncoding());
 
 		return parse_search(html, 1);
 	}
@@ -311,14 +312,14 @@ public class IOpac extends BaseApi implements OpacApi {
 			if (data.has("mediatypes")) {
 				try {
 					sr.setType(MediaType.valueOf(data.getJSONObject(
-							"mediatypes").getString(mType.toLowerCase())));
+							"mediatypes").getString(mType.toLowerCase(Locale.GERMAN))));
 				} catch (JSONException e) {
-					sr.setType(defaulttypes.get(mType.toLowerCase()));
+					sr.setType(defaulttypes.get(mType.toLowerCase(Locale.GERMAN)));
 				} catch (IllegalArgumentException e) {
-					sr.setType(defaulttypes.get(mType.toLowerCase()));
+					sr.setType(defaulttypes.get(mType.toLowerCase(Locale.GERMAN)));
 				}
 			} else {
-				sr.setType(defaulttypes.get(mType.toLowerCase()));
+				sr.setType(defaulttypes.get(mType.toLowerCase(Locale.GERMAN)));
 			}
 
 			// Title and additional info
@@ -362,7 +363,7 @@ public class IOpac extends BaseApi implements OpacApi {
 			start();
 
 		String html = httpGet(opac_url + "/cgi-bin/di.exe?page=" + page
-				+ "&rechnr=" + rechnr + "&Anzahl=10&FilNr=");
+				+ "&rechnr=" + rechnr + "&Anzahl=10&FilNr=", getDefaultEncoding());
 		return parse_search(html, page);
 	}
 
@@ -381,7 +382,7 @@ public class IOpac extends BaseApi implements OpacApi {
 		}
 
 		String html = httpGet(opac_url + "/cgi-bin/di.exe?cMedNr=" + id
-				+ "&mode=23");
+				+ "&mode=23", getDefaultEncoding());
 
 		return parse_result(html);
 	}
@@ -392,7 +393,7 @@ public class IOpac extends BaseApi implements OpacApi {
 
 		String html = httpGet(opac_url + "/cgi-bin/di.exe?page=" + page
 				+ "&rechnr=" + rechnr + "&Anzahl=10&recno=" + (position + 1)
-				+ "&FilNr=");
+				+ "&FilNr=", getDefaultEncoding());
 
 		return parse_result(html);
 	}
@@ -467,7 +468,7 @@ public class IOpac extends BaseApi implements OpacApi {
 			Account account, int useraction, String selection)
 			throws IOException {
 		String reservation_info = item.getReservation_info();
-		String html = httpGet(opac_url + "/" + reservation_info);
+		String html = httpGet(opac_url + "/" + reservation_info, getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 		if (doc.select("form[name=form1]").size() > 0) {
 			List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
@@ -484,7 +485,7 @@ public class IOpac extends BaseApi implements OpacApi {
 			params.add(new BasicNameValuePair("pshLogin", "Reservieren"));
 
 			httpPost(opac_url + "/cgi-bin/di.exe", new UrlEncodedFormEntity(
-					params));
+					params), getDefaultEncoding());
 			return new ReservationResult(MultiStepResult.Status.OK);
 		}
 		return new ReservationResult(MultiStepResult.Status.ERROR);
@@ -493,7 +494,7 @@ public class IOpac extends BaseApi implements OpacApi {
 	@Override
 	public ProlongResult prolong(String media, Account account, int useraction,
 			String Selection) throws IOException {
-		String html = httpGet(opac_url + "/" + media);
+		String html = httpGet(opac_url + "/" + media, getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 		if (doc.select("table th").size() > 0) {
 			if (doc.select("h1").size() > 0) {
@@ -510,7 +511,7 @@ public class IOpac extends BaseApi implements OpacApi {
 				httpGet(opac_url + "/cgi-bin/di.exe?mode=8&kndnr="
 						+ account.getName() + "&mednr=" + mednr
 						+ "&sessionid=" + sessionid
-						+ "&psh100=Verl%C3%A4ngern");
+						+ "&psh100=Verl%C3%A4ngern", getDefaultEncoding());
 				return new ProlongResult(MultiStepResult.Status.OK);
 			} catch (Throwable e) {
 				e.printStackTrace();
@@ -527,7 +528,7 @@ public class IOpac extends BaseApi implements OpacApi {
 
 	@Override
 	public boolean cancel(Account account, String media) throws IOException {
-		String html = httpGet(opac_url + "/" + media);
+		String html = httpGet(opac_url + "/" + media, getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 		try {
 			Element form = doc.select("form[name=form1]").first();
@@ -536,7 +537,7 @@ public class IOpac extends BaseApi implements OpacApi {
 			String mednr = form.select("input[name=mednr]").attr("value");
 			httpGet(opac_url + "/cgi-bin/di.exe?mode=9&kndnr="
 					+ account.getName() + "&mednr=" + mednr + "&sessionid="
-					+ sessionid + "&psh100=Stornieren");
+					+ sessionid + "&psh100=Stornieren", getDefaultEncoding());
 			return true;
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -553,7 +554,7 @@ public class IOpac extends BaseApi implements OpacApi {
 		params.add(new BasicNameValuePair("pshLogin", "Login"));
 
 		String html = httpPost(opac_url + "/cgi-bin/di.exe",
-				new UrlEncodedFormEntity(params, "iso-8859-1"));
+				new UrlEncodedFormEntity(params, "iso-8859-1"), getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 		
 		AccountData res = new AccountData(account.getId());
@@ -597,7 +598,7 @@ public class IOpac extends BaseApi implements OpacApi {
 			Elements copytrs = doc.select("a[name=AUS] ~ table tr");
 			doc.setBaseUri(opac_url);
 	
-			SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+			SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
 	
 			int trs = copytrs.size();
 			if (trs < 2)

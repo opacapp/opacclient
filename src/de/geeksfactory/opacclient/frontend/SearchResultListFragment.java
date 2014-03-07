@@ -4,10 +4,10 @@ import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.ListFragment;
 import org.holoeverywhere.widget.ListView;
 
-import de.geeksfactory.opacclient.R;
-import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import android.os.Bundle;
 import android.view.View;
+import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.objects.SearchRequestResult;
 
 /**
  * A list fragment representing a list of SearchResults. This fragment also

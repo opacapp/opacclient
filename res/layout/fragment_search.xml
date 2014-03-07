@@ -57,6 +57,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
+                    android:contentDescription="@string/replacedby"
                     android:layout_centerVertical="true"
                     android:src="@drawable/playstore" />
 
@@ -157,6 +158,7 @@
                     android:id="@+id/ivBarcode"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:contentDescription="@string/barcodes"
                     android:src="@drawable/ic_barcode" />
             </LinearLayout>
 
@@ -212,7 +214,7 @@
 
                 <org.holoeverywhere.widget.Spinner
                     android:id="@+id/cbBranch"
-                    android:layout_width="fill_parent"
+                    android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
 
@@ -238,7 +240,7 @@
 
                 <org.holoeverywhere.widget.Spinner
                     android:id="@+id/cbHomeBranch"
-                    android:layout_width="fill_parent"
+                    android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
 
@@ -264,7 +266,7 @@
 
                 <org.holoeverywhere.widget.Spinner
                     android:id="@+id/cbMediengruppe"
-                    android:layout_width="fill_parent"
+                    android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
 

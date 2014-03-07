@@ -30,7 +30,6 @@ import org.acra.ACRA;
 import org.apache.http.client.ClientProtocolException;
 
 import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;

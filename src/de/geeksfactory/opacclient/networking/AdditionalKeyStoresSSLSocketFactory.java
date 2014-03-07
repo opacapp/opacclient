@@ -60,9 +60,6 @@ public class AdditionalKeyStoresSSLSocketFactory extends SSLSocketFactory {
 	public static class AdditionalKeyStoresTrustManager implements
 			X509TrustManager {
 
-		private static final String TAG = AdditionalKeyStoresTrustManager.class
-				.getSimpleName();
-
 		static class LocalStoreX509TrustManager implements X509TrustManager {
 
 			private X509TrustManager trustManager;
