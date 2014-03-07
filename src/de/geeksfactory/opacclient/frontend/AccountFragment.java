@@ -185,7 +185,7 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 			// We want it to look as good as possible everywhere
 			if (Build.VERSION.SDK_INT >= 14) {
 				menu.findItem(R.id.action_refresh).setActionView(
-						R.layout.loading_indicator);
+						R.layout.actionbar_loading_indicator);
 				getSupportActivity().setSupportProgressBarIndeterminateVisibility(false);
 			} else {
 				// TODO: Does this crash on pre-14?
@@ -706,7 +706,7 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 			llLent.addView(t1);
 		} else {
 			for (ContentValues item : result.getLent()) {
-				View v = getLayoutInflater().inflate(R.layout.lent_listitem,
+				View v = getLayoutInflater().inflate(R.layout.listitem_account_lent,
 						null);
 
 				if (item.containsKey(AccountData.KEY_LENT_TITLE)) {
@@ -865,7 +865,7 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 		} else {
 			for (ContentValues item : result.getReservations()) {
 				View v = getLayoutInflater().inflate(
-						R.layout.reservation_listitem, null);
+						R.layout.listitem_account_reservation, null);
 
 				if (item.containsKey(AccountData.KEY_RESERVATION_TITLE)) {
 					((TextView) v.findViewById(R.id.tvTitel))
@@ -1298,7 +1298,7 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 
 		LayoutInflater inflater = getLayoutInflater();
 
-		View view = inflater.inflate(R.layout.reservation_details_dialog, null);
+		View view = inflater.inflate(R.layout.dialog_reservation_details, null);
 
 		TableLayout table = (TableLayout) view.findViewById(R.id.tlDetails);
 
@@ -1366,7 +1366,7 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 
 		LayoutInflater inflater = getLayoutInflater();
 
-		View view = inflater.inflate(R.layout.simple_list_dialog, null);
+		View view = inflater.inflate(R.layout.dialog_simple_list, null);
 
 		ListView lv = (ListView) view.findViewById(R.id.lvBibs);
 		final Object[] possibilities = result.getSelection().valueSet()
@@ -1482,7 +1482,7 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 
 		LayoutInflater inflater = getLayoutInflater();
 
-		View view = inflater.inflate(R.layout.reservation_details_dialog, null);
+		View view = inflater.inflate(R.layout.dialog_reservation_details, null);
 
 		TableLayout table = (TableLayout) view.findViewById(R.id.tlDetails);
 
@@ -1549,7 +1549,7 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 
 		LayoutInflater inflater = getLayoutInflater();
 
-		View view = inflater.inflate(R.layout.simple_list_dialog, null);
+		View view = inflater.inflate(R.layout.dialog_simple_list, null);
 
 		ListView lv = (ListView) view.findViewById(R.id.lvBibs);
 		final Object[] possibilities = result.getSelection().valueSet()
@@ -1593,7 +1593,7 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 			if (objects[position] == null) {
 				LayoutInflater layoutInflater = (LayoutInflater) getContext()
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				view = layoutInflater.inflate(R.layout.zst_listitem, viewGroup,
+				view = layoutInflater.inflate(R.layout.listitem_branch, viewGroup,
 						false);
 				return view;
 			}
@@ -1604,7 +1604,7 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 			if (contentView == null) {
 				LayoutInflater layoutInflater = (LayoutInflater) getContext()
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				view = layoutInflater.inflate(R.layout.zst_listitem, viewGroup,
+				view = layoutInflater.inflate(R.layout.listitem_branch, viewGroup,
 						false);
 			} else {
 				view = contentView;

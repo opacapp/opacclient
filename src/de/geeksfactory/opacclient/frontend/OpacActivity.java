@@ -439,7 +439,7 @@ public abstract class OpacActivity extends Activity {
 		// Get the layout inflater
 		LayoutInflater inflater = getLayoutInflater();
 
-		View view = inflater.inflate(R.layout.simple_list_dialog, null);
+		View view = inflater.inflate(R.layout.dialog_simple_list, null);
 
 		ListView lv = (ListView) view.findViewById(R.id.lvBibs);
 		AccountDataSource data = new AccountDataSource(this);

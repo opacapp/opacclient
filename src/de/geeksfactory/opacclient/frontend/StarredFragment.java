@@ -159,7 +159,7 @@ public class StarredFragment extends Fragment implements
 		}
 
 		public ItemListAdapter() {
-			super(getActivity(), R.layout.starred_item, null,
+			super(getActivity(), R.layout.listitem_starred, null,
 					new String[] { "bib" }, null, 0);
 		}
 	}

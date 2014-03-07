@@ -37,7 +37,7 @@ public class PlainLibraryListAdapter extends ArrayAdapter<Library> {
 	private List<Library> objects;
 
 	public PlainLibraryListAdapter(Context context, List<Library> objects) {
-		super(context, R.layout.library_listitem, objects);
+		super(context, R.layout.listitem_library, objects);
 		this.objects = objects;
 		this.context = context;
 	}
@@ -50,7 +50,7 @@ public class PlainLibraryListAdapter extends ArrayAdapter<Library> {
 			LayoutInflater infalInflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			contentView = infalInflater
-					.inflate(R.layout.library_listitem, null);
+					.inflate(R.layout.listitem_library, null);
 		}
 
 		TextView tvCity = (TextView) contentView.findViewById(R.id.tvCity);

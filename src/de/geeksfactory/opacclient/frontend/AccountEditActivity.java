@@ -60,7 +60,7 @@ public class AccountEditActivity extends Activity {
 	private Library lib;
 
 	protected int getLayoutResource() {
-		return R.layout.account_edit_activity;
+		return R.layout.activity_account_edit;
 	}
 
 	@Override

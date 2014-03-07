@@ -43,7 +43,7 @@ public class WelcomeActivity extends Activity {
 	protected AlertDialog dialog;
 
 	public static int getLayoutResource() {
-		return R.layout.welcome_activity;
+		return R.layout.activity_welcome;
 	}
 
 	@Override

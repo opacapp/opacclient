@@ -50,7 +50,7 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
 		if (objects.get(position) == null) {
 			LayoutInflater layoutInflater = (LayoutInflater) getContext()
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			view = layoutInflater.inflate(R.layout.account_listitem, viewGroup,
+			view = layoutInflater.inflate(R.layout.listitem_account, viewGroup,
 					false);
 			return view;
 		}
@@ -60,7 +60,7 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
 		if (contentView == null) {
 			LayoutInflater layoutInflater = (LayoutInflater) getContext()
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			view = layoutInflater.inflate(R.layout.account_listitem, viewGroup,
+			view = layoutInflater.inflate(R.layout.listitem_account, viewGroup,
 					false);
 		} else {
 			view = contentView;
@@ -99,7 +99,7 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
 	}
 
 	public AccountListAdapter(Context context, List<Account> objects) {
-		super(context, R.layout.account_listitem, objects);
+		super(context, R.layout.listitem_account, objects);
 		this.context = context;
 		this.objects = objects;
 	}

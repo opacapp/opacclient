@@ -200,7 +200,7 @@ public class AboutActivity extends OpacPreferenceActivity {
 	private void asset_dialog(String filename, int title) {
 
 		final Dialog dialog = new Dialog(AboutActivity.this);
-		dialog.setContentView(R.layout.osl_dialog);
+		dialog.setContentView(R.layout.dialog_about);
 		dialog.setTitle(title);
 		TextView textview1 = (TextView) dialog.findViewById(R.id.textView1);
 

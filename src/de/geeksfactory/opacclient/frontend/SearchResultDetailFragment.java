@@ -248,7 +248,7 @@ public class SearchResultDetailFragment extends Fragment {
 
 			LinearLayout llDetails = (LinearLayout) view.findViewById(R.id.llDetails);
 			for (Detail detail : result.getDetails()) {
-				View v = getLayoutInflater().inflate(R.layout.detail_listitem,
+				View v = getLayoutInflater().inflate(R.layout.listitem_detail,
 						null);
 				((TextView) v.findViewById(R.id.tvDesc)).setText(detail
 						.getDesc());
@@ -280,7 +280,7 @@ public class SearchResultDetailFragment extends Fragment {
 
 				for (final ContentValues band : result.getBaende()) {
 					View v = getLayoutInflater().inflate(
-							R.layout.band_listitem, null);
+							R.layout.listitem_volume, null);
 					((TextView) v.findViewById(R.id.tvTitel)).setText(band
 							.getAsString(DetailledItem.KEY_CHILD_TITLE));
 
@@ -306,7 +306,7 @@ public class SearchResultDetailFragment extends Fragment {
 				} else {
 					for (ContentValues copy : result.getCopies()) {
 						View v = getLayoutInflater().inflate(
-								R.layout.copy_listitem, null);
+								R.layout.listitem_copy, null);
 
 						if (v.findViewById(R.id.tvBranch) != null) {
 							if (copy.containsKey(DetailledItem.KEY_COPY_BRANCH)) {
