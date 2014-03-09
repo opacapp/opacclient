@@ -184,13 +184,13 @@
                     android:textStyle="italic" />
 
                 <TextView
-                    android:id="@+id/tvNoGaranty"
+                    android:id="@+id/tvNoWarranty"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvAge"
                     android:layout_marginTop="4dp"
                     android:gravity="center|top"
-                    android:text="@string/no_garanty"
+                    android:text="@string/no_warranty"
                     android:textColor="@color/account_age"
                     android:textStyle="italic" />
             </RelativeLayout>

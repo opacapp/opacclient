@@ -56,7 +56,7 @@
     <string name="loading_account">Lade Konto…</string>
     <string name="pending_fees">Ausstehende Gebühren:</string>
     <string name="valid_until">Ausweis gültig bis:</string>
-    <string name="no_garanty">Alle Angaben ohne Gewähr.</string>
+    <string name="no_warranty">Alle Angaben ohne Gewähr.</string>
     <string name="entl">Entliehen</string>
     <string name="reservations">Vorbestellungen</string>
     <string name="entl_head">ENTLIEHEN</string>
