@@ -38,6 +38,7 @@ import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.app.ProgressDialog;
+import org.holoeverywhere.widget.FrameLayout;
 import org.holoeverywhere.widget.LinearLayout;
 import org.holoeverywhere.widget.ListView;
 import org.holoeverywhere.widget.TextView;
@@ -69,6 +70,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -77,6 +79,7 @@ import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.Toast;
+import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
@@ -252,6 +255,7 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 		view.findViewById(R.id.svAccount).setVisibility(View.GONE);
 		view.findViewById(R.id.unsupported_error).setVisibility(View.GONE);
 		view.findViewById(R.id.answer_error).setVisibility(View.GONE);
+		((FrameLayout) view.findViewById(R.id.error_view)).removeAllViews();
 		view.findViewById(R.id.llLoading).setVisibility(View.VISIBLE);
 		
 		refreshing = false;
@@ -361,6 +365,12 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 
 	public void refresh() {
 		refreshing = true;
+		
+		view.findViewById(R.id.svAccount).setVisibility(View.GONE);
+		view.findViewById(R.id.unsupported_error).setVisibility(View.GONE);
+		view.findViewById(R.id.answer_error).setVisibility(View.GONE);
+		((FrameLayout) view.findViewById(R.id.error_view)).removeAllViews();
+		
 		getActivity().supportInvalidateOptionsMenu();
 		lt = new LoadTask();
 		lt.execute(app);
@@ -578,41 +588,40 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 	}
 
 	public void show_connectivity_error(Exception e) {
-		// TODO
-//		View tvError = findViewById(R.id.tvError);
-//		if (tvError != null) {
-//			tvError.setVisibility(View.VISIBLE);
-//			((TextView) tvError).setText(R.string.error_connection);
-//		} else {
-//			setContentView(R.layout.connectivity_error);
-//			if (e != null && e instanceof NotReachableException)
-//				((TextView) findViewById(R.id.tvErrBody))
-//						.setText(R.string.connection_error_detail_nre);
-//			((Button) findViewById(R.id.btRetry))
-//					.setOnClickListener(new OnClickListener() {
-//						@Override
-//						public void onClick(View v) {
-//							onStart();
-//						}
-//					});
-//		}
+		final FrameLayout errorView = (FrameLayout) getView().findViewById(R.id.error_view);
+		errorView.removeAllViews();
+		View connError = getActivity().getLayoutInflater().inflate(R.layout.error_connectivity, errorView);
+		
+		if (e != null && e instanceof NotReachableException)
+			((TextView) connError.findViewById(R.id.tvErrBody))
+					.setText(R.string.connection_error_detail_nre);
+		((Button) connError.findViewById(R.id.btRetry))
+				.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						refresh();
+					}
+				});
+		view.findViewById(R.id.llLoading).setVisibility(View.GONE);
+		view.findViewById(R.id.svAccount).setVisibility(View.GONE);
+		connError.setVisibility(View.VISIBLE);			
 	}
 
 	protected void dialog_wrong_credentials(String s, final boolean finish) {
-		// TODO
-//		setContentView(R.layout.answer_error);
-//		((Button) findViewById(R.id.btPrefs))
-//				.setOnClickListener(new OnClickListener() {
-//					@Override
-//					public void onClick(View v) {
-//						Intent intent = new Intent(AccountFragment.this,
-//								AccountEditActivity.class);
-//						intent.putExtra(AccountEditActivity.EXTRA_ACCOUNT_ID,
-//								account.getId());
-//						startActivity(intent);
-//					}
-//				});
-//		((TextView) findViewById(R.id.tvErrBody)).setText(s);
+		view.findViewById(R.id.llLoading).setVisibility(View.GONE);
+		view.findViewById(R.id.answer_error).setVisibility(View.VISIBLE);
+		((Button) view.findViewById(R.id.btPrefs))
+				.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(getActivity(),
+								AccountEditActivity.class);
+						intent.putExtra(AccountEditActivity.EXTRA_ACCOUNT_ID,
+								account.getId());
+						startActivity(intent);
+					}
+				});
+		((TextView) view.findViewById(R.id.tvErrBody)).setText(s);
 	}
 
 	public void loaded(final AccountData result) {
