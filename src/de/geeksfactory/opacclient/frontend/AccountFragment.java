@@ -38,12 +38,17 @@ import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.app.ProgressDialog;
+import org.holoeverywhere.widget.LinearLayout;
+import org.holoeverywhere.widget.ListView;
+import org.holoeverywhere.widget.TextView;
+import org.holoeverywhere.widget.Button;
 import org.json.JSONException;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -68,12 +73,9 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-import android.widget.TextView;
 import android.widget.Toast;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
@@ -145,20 +147,6 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 //				NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 //				nMgr.cancel(OpacClient.NOTIF_ID);
 //			}
-//			if (getIntent().getExtras().getBoolean("showmenu", false)) {
-//				final Handler handler = new Handler();
-//				// Just show the menu to explain that is there if people start
-//				// version 2 for the first time.
-//				// We need a handler because if we just put this in onCreate
-//				// nothing happens. I don't have any idea, why.
-//				handler.postDelayed(new Runnable() {
-//					@Override
-//					public void run() {
-//						getSlidingMenu().showMenu(true);
-//					}
-//				}, 500);
-//			}
-//		}
 
 		setHasOptionsMenu(true);
 		
@@ -262,6 +250,8 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 	public void accountSelected(Account account) {
 
 		view.findViewById(R.id.svAccount).setVisibility(View.GONE);
+		view.findViewById(R.id.unsupported_error).setVisibility(View.GONE);
+		view.findViewById(R.id.answer_error).setVisibility(View.GONE);
 		view.findViewById(R.id.llLoading).setVisibility(View.VISIBLE);
 		
 		refreshing = false;
@@ -270,35 +260,35 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 		account = app.getAccount();
 		if (!app.getApi().isAccountSupported(app.getLibrary())
 				&& (app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ACCOUNT_EXTENDABLE) == 0) {
-			// TODO:
-//			// Not supported with this api at all
-//			setContentView(R.layout.unsupported_error);
-//			((TextView) findViewById(R.id.tvErrBody))
-//					.setText(R.string.account_unsupported_api);
-//			((Button) findViewById(R.id.btSend)).setText(R.string.write_mail);
-//			((Button) findViewById(R.id.btSend))
-//					.setOnClickListener(new OnClickListener() {
-//						@Override
-//						public void onClick(View v) {
-//							Intent emailIntent = new Intent(
-//									android.content.Intent.ACTION_SEND);
-//							emailIntent.putExtra(
-//									android.content.Intent.EXTRA_EMAIL,
-//									new String[] { "info@opacapp.de" });
-//							emailIntent
-//									.putExtra(
-//											android.content.Intent.EXTRA_SUBJECT,
-//											"Bibliothek "
-//													+ app.getLibrary()
-//															.getIdent());
-//							emailIntent.putExtra(
-//									android.content.Intent.EXTRA_TEXT,
-//									"Ich bin interessiert zu helfen.");
-//							emailIntent.setType("text/plain");
-//							startActivity(Intent.createChooser(emailIntent,
-//									getString(R.string.write_mail)));
-//						}
-//					});
+			// Not supported with this api at all
+			view.findViewById(R.id.llLoading).setVisibility(View.GONE);
+			view.findViewById(R.id.unsupported_error).setVisibility(View.VISIBLE);
+			((TextView) view.findViewById(R.id.tvErrBody))
+					.setText(R.string.account_unsupported_api);
+			((Button) view.findViewById(R.id.btSend)).setText(R.string.write_mail);
+			((Button) view.findViewById(R.id.btSend))
+					.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							Intent emailIntent = new Intent(
+									android.content.Intent.ACTION_SEND);
+							emailIntent.putExtra(
+									android.content.Intent.EXTRA_EMAIL,
+									new String[] { "info@opacapp.de" });
+							emailIntent
+									.putExtra(
+											android.content.Intent.EXTRA_SUBJECT,
+											"Bibliothek "
+													+ app.getLibrary()
+															.getIdent());
+							emailIntent.putExtra(
+									android.content.Intent.EXTRA_TEXT,
+									"Ich bin interessiert zu helfen.");
+							emailIntent.setType("text/plain");
+							startActivity(Intent.createChooser(emailIntent,
+									getString(R.string.write_mail)));
+						}
+					});
 
 		} else if (account.getPassword() == null
 				|| account.getPassword().equals("null")
@@ -306,49 +296,50 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 				|| account.getName() == null
 				|| account.getName().equals("null")
 				|| account.getName().equals("")) {
-//			// No credentials entered
-//
-//			setContentView(R.layout.answer_error);
-//			((Button) findViewById(R.id.btPrefs))
-//					.setOnClickListener(new OnClickListener() {
-//						@Override
-//						public void onClick(View v) {
-//							Intent intent = new Intent(AccountFragment.this,
-//									AccountEditActivity.class);
-//							intent.putExtra(
-//									AccountEditActivity.EXTRA_ACCOUNT_ID, app
-//											.getAccount().getId());
-//							startActivity(intent);
-//						}
-//					});
-//			((TextView) findViewById(R.id.tvErrHead)).setText("");
-//			((TextView) findViewById(R.id.tvErrBody))
-//					.setText(R.string.status_nouser);
+			// No credentials entered
+			view.findViewById(R.id.llLoading).setVisibility(View.GONE);
+			view.findViewById(R.id.answer_error).setVisibility(View.VISIBLE);
+			((Button) view.findViewById(R.id.btPrefs))
+					.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							Intent intent = new Intent(getActivity(),
+									AccountEditActivity.class);
+							intent.putExtra(
+									AccountEditActivity.EXTRA_ACCOUNT_ID, app
+											.getAccount().getId());
+							startActivity(intent);
+						}
+					});
+			((TextView) view.findViewById(R.id.tvErrHead)).setText("");
+			((TextView) view.findViewById(R.id.tvErrBody))
+					.setText(R.string.status_nouser);
 
 		} else if (!app.getApi().isAccountSupported(app.getLibrary())) {
-//
-//			// We need help
-//			setContentView(R.layout.unsupported_error);
-//
-//			((TextView) findViewById(R.id.tvErrBody))
-//					.setText(R.string.account_unsupported);
-//			((Button) findViewById(R.id.btSend))
-//					.setOnClickListener(new OnClickListener() {
-//						@Override
-//						public void onClick(View v) {
-//							dialog = ProgressDialog.show(AccountFragment.this,
-//									"", getString(R.string.report_sending),
-//									true, true, new OnCancelListener() {
-//										@Override
-//										public void onCancel(
-//												DialogInterface arg0) {
-//											finish();
-//										}
-//									});
-//							dialog.show();
-//							new SendTask().execute(this);
-//						}
-//					});
+
+			// We need help
+			view.findViewById(R.id.llLoading).setVisibility(View.GONE);
+			view.findViewById(R.id.unsupported_error).setVisibility(View.VISIBLE);
+
+			((TextView) view.findViewById(R.id.tvErrBody))
+					.setText(R.string.account_unsupported);
+			((Button) view.findViewById(R.id.btSend))
+					.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							dialog = ProgressDialog.show(getActivity(),
+									"", getString(R.string.report_sending),
+									true, true, new OnCancelListener() {
+										@Override
+										public void onCancel(
+												DialogInterface arg0) {
+											//TODO: finish();
+										}
+									});
+							dialog.show();
+							new SendTask().execute(this);
+						}
+					});
 
 		} else {
 			// Supported
@@ -503,18 +494,17 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 		@Override
 		protected void onPostExecute(Integer result) {
 			dialog.dismiss();
-			// TODO
-//			Button btSend = (Button) findViewById(R.id.btSend);
-//			btSend.setEnabled(false);
-//			if (result == 0) {
-//				Toast toast = Toast.makeText(getActivity(),
-//						getString(R.string.report_sent), Toast.LENGTH_SHORT);
-//				toast.show();
-//			} else {
-//				Toast toast = Toast.makeText(getActivity(),
-//						getString(R.string.report_error), Toast.LENGTH_SHORT);
-//				toast.show();
-//			}
+			Button btSend = (Button) view.findViewById(R.id.btSend);
+			btSend.setEnabled(false);
+			if (result == 0) {
+				Toast toast = Toast.makeText(getActivity(),
+						getString(R.string.report_sent), Toast.LENGTH_SHORT);
+				toast.show();
+			} else {
+				Toast toast = Toast.makeText(getActivity(),
+						getString(R.string.report_error), Toast.LENGTH_SHORT);
+				toast.show();
+			}
 
 		}
 	}

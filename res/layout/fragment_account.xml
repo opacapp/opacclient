@@ -196,5 +196,69 @@
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>
+    
+    <LinearLayout
+        android:id="@+id/unsupported_error"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:gravity="center"
+	    android:orientation="vertical"
+	    android:padding="16dp" 
+	    android:visibility="gone" >
+	
+	    <TextView
+	        android:id="@+id/tvErrHead"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/unsupported"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+	
+	    <TextView
+	        android:id="@+id/tvErrBody"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:gravity="center"
+	        android:padding="10dp"
+	        android:text="@string/account_unsupported" />
+	
+	    <Button
+	        android:id="@+id/btSend"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/report" />
+	
+	</LinearLayout>
+	
+    <LinearLayout
+        android:id="@+id/answer_error"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:gravity="center"
+	    android:padding="16dp"
+	    android:orientation="vertical"
+		android:visibility="gone">
+	
+	    <TextView
+	        android:id="@+id/tvErrHead"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/opac_error"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+	
+	    <TextView
+	        android:id="@+id/tvErrBody"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:gravity="center"
+	        android:padding="10dp"
+	        android:text="@string/connection_error_detail" />
+	
+	    <Button
+	        android:id="@+id/btPrefs"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/accounts_edit" />
+	
+	</LinearLayout>
 
 </RelativeLayout>
