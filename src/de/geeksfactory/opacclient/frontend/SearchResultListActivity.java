@@ -9,6 +9,7 @@ import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
@@ -219,7 +220,7 @@ public class SearchResultListActivity extends OpacActivity implements
 			if (success) {
 				if (result == null) {
 
-//TODO:					if (app.getApi().getLast_error().equals("is_a_redirect")) {    (what is this for?)
+//TODO:					if (app.getApi().getLast_error().equals("is_a_redirect")) {
 //						// Some libraries (SISIS) do not show a result list if only one result
 //						// is found but instead directly show the result details.
 //						Intent intent = new Intent(SearchResultsListActivity.this,
@@ -229,16 +230,7 @@ public class SearchResultListActivity extends OpacActivity implements
 //						return;
 //					}
 
-//TODO:					setContentView(R.layout.connectivity_error);
-//					((TextView) findViewById(R.id.tvErrBody)).setText(app
-//							.getApi().getLast_error());
-//					((Button) findViewById(R.id.btRetry))
-//							.setOnClickListener(new OnClickListener() {
-//								@Override
-//								public void onClick(View v) {
-//									performsearch();
-//								}
-//							});
+					listFragment.showConnectivityError(app.getApi().getLast_error());
 				} else {
 					searchresult = result;
 					if (searchresult != null) {
@@ -249,19 +241,12 @@ public class SearchResultListActivity extends OpacActivity implements
 					}
 					loaded();
 				}
-			} else {
-//TODO:				setContentView(R.layout.connectivity_error);
-//				if (exception != null
-//						&& exception instanceof NotReachableException)
-//					((TextView) findViewById(R.id.tvErrBody))
-//							.setText(R.string.connection_error_detail_nre);
-//				((Button) findViewById(R.id.btRetry))
-//						.setOnClickListener(new OnClickListener() {
-//							@Override
-//							public void onClick(View v) {
-//								performsearch();
-//							}
-//						});
+			} else {				
+				if (exception != null
+						&& exception instanceof NotReachableException)
+					listFragment.showConnectivityError(getResources().getString(R.string.connection_error_detail_nre));
+				else
+					listFragment.showConnectivityError();
 			}
 		}
 	}
@@ -308,5 +293,10 @@ public class SearchResultListActivity extends OpacActivity implements
 	@Override
 	public void removeFragment() {
 		getSupportFragmentManager().beginTransaction().remove(detailFragment).commit();
+	}
+
+	@Override
+	public void reload() {
+		performsearch();
 	}
 }
