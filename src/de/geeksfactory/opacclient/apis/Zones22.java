@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -365,7 +366,7 @@ public class Zones22 extends BaseApi {
 		params.add(new BasicNameValuePair("no", id));
 
 		String html = httpGet(opac_url + "/APS_PRESENT_BIB?"
-				+ URLEncodedUtils.format(params, "UTF-8"));
+				+ URLEncodedUtils.format(params, "UTF-8"), getDefaultEncoding());
 
 		return parse_result(id, html);
 	}
@@ -717,7 +718,7 @@ public class Zones22 extends BaseApi {
 		Document lent_doc = Jsoup.parse(lent_html);
 		List<ContentValues> lent = new ArrayList<ContentValues>();
 
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.GERMAN);
 		Pattern id_pat = Pattern
 				.compile("javascript:renewItem\\('[0-9]+','(.*)'\\)");
 

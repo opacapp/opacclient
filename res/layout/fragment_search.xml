@@ -2,7 +2,9 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/tablet_padding"
+    android:paddingRight="@dimen/tablet_padding" >
 
     <RelativeLayout
         android:id="@+id/rlOuter"
@@ -55,6 +57,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
+                    android:contentDescription="@string/replacedby"
                     android:layout_centerVertical="true"
                     android:src="@drawable/playstore" />
 
@@ -155,6 +158,7 @@
                     android:id="@+id/ivBarcode"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:contentDescription="@string/barcodes"
                     android:src="@drawable/ic_barcode" />
             </LinearLayout>
 
@@ -210,7 +214,7 @@
 
                 <org.holoeverywhere.widget.Spinner
                     android:id="@+id/cbBranch"
-                    android:layout_width="fill_parent"
+                    android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
 
@@ -236,7 +240,7 @@
 
                 <org.holoeverywhere.widget.Spinner
                     android:id="@+id/cbHomeBranch"
-                    android:layout_width="fill_parent"
+                    android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
 
@@ -262,7 +266,7 @@
 
                 <org.holoeverywhere.widget.Spinner
                     android:id="@+id/cbMediengruppe"
-                    android:layout_width="fill_parent"
+                    android:layout_width="0dip"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
 

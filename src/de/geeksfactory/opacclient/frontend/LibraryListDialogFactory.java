@@ -70,7 +70,7 @@ public class LibraryListDialogFactory {
 
 		final List<Library> libraries;
 
-		View view = inflater.inflate(R.layout.library_select_dialog, null);
+		View view = inflater.inflate(R.layout.dialog_library_select, null);
 
 		final ExpandableListView lv = (ExpandableListView) view
 				.findViewById(R.id.lvBibs);

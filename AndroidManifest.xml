@@ -28,6 +28,7 @@
         android:name="de.geeksfactory.opacclient.OpacClient"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
+        android:allowBackup="false"
         android:theme="@style/Theme.Opacapp" >
         <activity
             android:name="de.geeksfactory.opacclient.frontend.MainActivity"
@@ -36,16 +37,6 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="de.geeksfactory.opacclient"
-                    android:scheme="opac" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -72,6 +63,10 @@
             android:label="@string/prefs" >
         </activity>
         <activity
+            android:name="de.geeksfactory.opacclient.frontend.AboutActivity"
+            android:label="@string/about" >
+        </activity>
+        <activity
             android:name="de.geeksfactory.opacclient.frontend.AccountListActivity"
             android:label="@string/title_activity_account_list"
             android:uiOptions="splitActionBarWhenNarrow" >
@@ -79,11 +74,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.geeksfactory.opacclient.frontend.MainPreferenceActivity" />
         </activity>
-        <activity
-            android:name="de.geeksfactory.opacclient.frontend.AccountActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/account" >
-        </activity>        
         <activity
             android:name="de.geeksfactory.opacclient.frontend.SearchResultListActivity"
             android:label="@string/title_searchresult_list"
@@ -95,6 +85,7 @@
         <activity
             android:name="de.geeksfactory.opacclient.frontend.SearchResultDetailActivity"
             android:label="@string/title_searchresult_detail"
+            android:uiOptions="splitActionBarWhenNarrow"
             android:parentActivityName="de.geeksfactory.opacclient.frontend.SearchResultListActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

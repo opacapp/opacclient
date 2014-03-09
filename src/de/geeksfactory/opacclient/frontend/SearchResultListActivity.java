@@ -1,16 +1,7 @@
 package de.geeksfactory.opacclient.frontend;
 
 import org.acra.ACRA;
-import org.holoeverywhere.app.Activity;
 
-import de.geeksfactory.opacclient.NotReachableException;
-import de.geeksfactory.opacclient.OpacClient;
-import de.geeksfactory.opacclient.OpacTask;
-import de.geeksfactory.opacclient.R;
-import de.geeksfactory.opacclient.R.id;
-import de.geeksfactory.opacclient.R.layout;
-import de.geeksfactory.opacclient.objects.SearchRequestResult;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -18,13 +9,10 @@ import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
+import de.geeksfactory.opacclient.OpacClient;
+import de.geeksfactory.opacclient.OpacTask;
+import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.objects.SearchRequestResult;
 
 /**
  * An activity representing a list of SearchResults. This activity has different
@@ -83,7 +71,9 @@ public class SearchResultListActivity extends OpacActivity implements
 		}
 		
 		page = 1;
-		performsearch();
+
+		if (savedInstanceState == null)
+			performsearch();
 	}
 	
 	public void performsearch() {
@@ -280,7 +270,7 @@ public class SearchResultListActivity extends OpacActivity implements
 
 		@Override
 		protected SearchRequestResult doInBackground(Object... arg0) {
-			OpacClient a = (OpacClient) arg0[0];
+			OpacClient app = (OpacClient) arg0[0];
 			Integer page = (Integer) arg0[1];
 
 			try {

@@ -22,7 +22,6 @@
 package de.geeksfactory.opacclient.objects;
 
 import java.text.Collator;
-import java.util.Comparator;
 import java.util.Locale;
 
 import org.json.JSONException;

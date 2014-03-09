@@ -137,7 +137,6 @@ public class AccountDataSource {
 		Cursor cursor = database.query(AccountDatabase.TABLENAME_NOTIFIED,
 				AccountDatabase.COLUMNS_NOTIFIED,
 				"account = ? AND timestamp = ?", selA, null, null, null);
-		Account acc = null;
 		boolean found = cursor.getCount() > 0;
 		cursor.close();
 		return found;
@@ -263,7 +262,6 @@ public class AccountDataSource {
 		String[] selA = { "" + account.getId() };
 		cursor = database.query("accounts", new String[] { "pendingFees",
 				"validUntil" }, "id = ?", selA, null, null, null);
-		Account acc = null;
 		cursor.moveToFirst();
 		if (!cursor.isAfterLast()) {
 			adata.setPendingFees(cursor.getString(0));

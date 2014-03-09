@@ -28,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -317,16 +318,16 @@ public class Pica extends BaseApi implements OpacApi {
 						sr.setType(MediaType.valueOf(data.getJSONObject(
 								"mediatypes").getString(fname)));
 					} catch (JSONException e) {
-						sr.setType(defaulttypes.get(fname.toLowerCase()
+						sr.setType(defaulttypes.get(fname.toLowerCase(Locale.GERMAN)
 								.replace(".jpg", "").replace(".gif", "")
 								.replace(".png", "")));
 					} catch (IllegalArgumentException e) {
-						sr.setType(defaulttypes.get(fname.toLowerCase()
+						sr.setType(defaulttypes.get(fname.toLowerCase(Locale.GERMAN)
 								.replace(".jpg", "").replace(".gif", "")
 								.replace(".png", "")));
 					}
 				} else {
-					sr.setType(defaulttypes.get(fname.toLowerCase()
+					sr.setType(defaulttypes.get(fname.toLowerCase(Locale.GERMAN)
 							.replace(".jpg", "").replace(".gif", "")
 							.replace(".png", "")));
 				}
@@ -567,7 +568,7 @@ public class Pica extends BaseApi implements OpacApi {
 		params.add(new BasicNameValuePair("VB", media));
 
 		String html = httpPost(https_url + "/loan/DB=" + db + "/USERINFO",
-				new UrlEncodedFormEntity(params, "utf-8"));
+				new UrlEncodedFormEntity(params, "utf-8"), getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 
 		if (doc.select("td.regular-text")
@@ -605,7 +606,7 @@ public class Pica extends BaseApi implements OpacApi {
 		params.add(new BasicNameValuePair("VB", media));
 
 		String html = httpPost(https_url + "/loan/DB=" + db + "/USERINFO",
-				new UrlEncodedFormEntity(params, "utf-8"));
+				new UrlEncodedFormEntity(params, "utf-8"), getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 
 		if (doc.select("td.regular-text").text()
@@ -638,7 +639,7 @@ public class Pica extends BaseApi implements OpacApi {
 		params.add(new BasicNameValuePair("BOR_PW", account.getPassword()));
 
 		String html = httpPost(https_url + "/loan/DB=" + db
-				+ "/LNG=DU/USERINFO", new UrlEncodedFormEntity(params, "utf-8"));
+				+ "/LNG=DU/USERINFO", new UrlEncodedFormEntity(params, "utf-8"), getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 
 		pwEncoded = doc.select("a.tab0").attr("href");
@@ -646,12 +647,12 @@ public class Pica extends BaseApi implements OpacApi {
 
 		html = httpGet(https_url + "/loan/DB=" + db
 				+ "/USERINFO?ACT=UI_LOL&BOR_U=" + account.getName()
-				+ "&BOR_PW_ENC=" + pwEncoded);
+				+ "&BOR_PW_ENC=" + pwEncoded, getDefaultEncoding());
 		doc = Jsoup.parse(html);
 
 		html = httpGet(https_url + "/loan/DB=" + db
 				+ "/USERINFO?ACT=UI_LOR&BOR_U=" + account.getName()
-				+ "&BOR_PW_ENC=" + pwEncoded);
+				+ "&BOR_PW_ENC=" + pwEncoded, getDefaultEncoding());
 		Document doc2 = Jsoup.parse(html);
 
 		pwEncoded = doc.select("input[name=BOR_PW_ENC]").attr("value");
@@ -685,7 +686,7 @@ public class Pica extends BaseApi implements OpacApi {
 
 		Elements copytrs = doc.select("table[summary^=list] tr[valign=top]");
 
-		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.GERMAN);
 
 		int trs = copytrs.size();
 		if (trs < 1) {
@@ -699,7 +700,7 @@ public class Pica extends BaseApi implements OpacApi {
 			try {
 				String html = httpGet(https_url + "/nr_renewals.php?U="
 						+ accountName + "&DB=" + db + "&VBAR="
-						+ tr.child(1).select("input").attr("value"));
+						+ tr.child(1).select("input").attr("value"), getDefaultEncoding());
 				prolongCount = Jsoup.parse(html).text();
 			} catch (IOException e) {
 
@@ -745,8 +746,6 @@ public class Pica extends BaseApi implements OpacApi {
 			int offset) throws ClientProtocolException, IOException {
 
 		Elements copytrs = doc.select("table[summary^=list] tr[valign=top]");
-
-		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
 		int trs = copytrs.size();
 		if (trs < 1) {
@@ -832,16 +831,16 @@ public class Pica extends BaseApi implements OpacApi {
 					mediatype = MediaType.valueOf(data.getJSONObject(
 							"mediatypes").getString(fname));
 				} catch (JSONException e) {
-					mediatype = defaulttypes.get(fname.toLowerCase()
+					mediatype = defaulttypes.get(fname.toLowerCase(Locale.GERMAN)
 							.replace(".jpg", "").replace(".gif", "")
 							.replace(".png", ""));
 				} catch (IllegalArgumentException e) {
-					mediatype = defaulttypes.get(fname.toLowerCase()
+					mediatype = defaulttypes.get(fname.toLowerCase(Locale.GERMAN)
 							.replace(".jpg", "").replace(".gif", "")
 							.replace(".png", ""));
 				}
 			} else {
-				mediatype = defaulttypes.get(fname.toLowerCase()
+				mediatype = defaulttypes.get(fname.toLowerCase(Locale.GERMAN)
 						.replace(".jpg", "").replace(".gif", "")
 						.replace(".png", ""));
 			}

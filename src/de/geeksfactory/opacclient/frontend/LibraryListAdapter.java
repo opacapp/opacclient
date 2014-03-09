@@ -102,7 +102,7 @@ public class LibraryListAdapter extends BaseExpandableListAdapter {
 			LayoutInflater infalInflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = infalInflater
-					.inflate(R.layout.library_listitem, null);
+					.inflate(R.layout.listitem_library, null);
 		}
 
 		TextView tvCity = (TextView) convertView.findViewById(R.id.tvCity);
@@ -151,7 +151,7 @@ public class LibraryListAdapter extends BaseExpandableListAdapter {
 		if (convertView == null) {
 			LayoutInflater infalInflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = infalInflater.inflate(R.layout.group_listitem, null);
+			convertView = infalInflater.inflate(R.layout.listitem_group, null);
 		}
 		TextView tv = (TextView) convertView.findViewById(R.id.tvTitle);
 		tv.setText(group);

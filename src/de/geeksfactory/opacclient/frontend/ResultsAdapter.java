@@ -97,6 +97,9 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
 			return R.drawable.type_evideo;
 		case ART:
 			return R.drawable.type_art;
+		case MAP:
+		case LP_RECORD:
+			return R.drawable.type_unknown;
 		}
 
 		return R.drawable.type_unknown;
@@ -111,7 +114,7 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
 		if (objects.get(position) == null) {
 			LayoutInflater layoutInflater = (LayoutInflater) getContext()
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			view = layoutInflater.inflate(R.layout.searchresult_listitem,
+			view = layoutInflater.inflate(R.layout.listitem_searchresult,
 					viewGroup, false);
 			return view;
 		}
@@ -121,7 +124,7 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
 		if (contentView == null) {
 			LayoutInflater layoutInflater = (LayoutInflater) getContext()
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			view = layoutInflater.inflate(R.layout.searchresult_listitem,
+			view = layoutInflater.inflate(R.layout.listitem_searchresult,
 					viewGroup, false);
 		} else {
 			view = contentView;
@@ -172,7 +175,7 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
 	}
 
 	public ResultsAdapter(Context context, List<SearchResult> objects) {
-		super(context, R.layout.searchresult_listitem, objects);
+		super(context, R.layout.listitem_searchresult, objects);
 		this.objects = objects;
 	}
 

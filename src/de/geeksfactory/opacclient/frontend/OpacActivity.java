@@ -87,12 +87,14 @@ public abstract class OpacActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		supportRequestWindowFeature(android.view.Window.FEATURE_INDETERMINATE_PROGRESS);
+		setSupportProgressBarIndeterminateVisibility(false);
+
 		setContentView(getContentView());
 		app = (OpacClient) getApplication();
 
 		aData = new AccountDataSource(this);
 		setupDrawer();
-
 	}
 
 	protected abstract int getContentView();
@@ -143,13 +145,13 @@ public abstract class OpacActivity extends Activity {
 			drawerList.setAdapter(navAdapter);
 			navAdapter.addSeperatorItem(getString(R.string.nav_hl_library));
 			navAdapter.addTextItemWithIcon(getString(R.string.nav_search),
-					R.drawable.ic_action_search);
+					R.drawable.ic_action_search, "search");
 			navAdapter.addTextItemWithIcon(getString(R.string.nav_account),
-					R.drawable.ic_action_account);
+					R.drawable.ic_action_account, "account");
 			navAdapter.addTextItemWithIcon(getString(R.string.nav_starred),
-					R.drawable.ic_action_star_1);
+					R.drawable.ic_action_star_1, "starred");
 			navAdapter.addTextItemWithIcon(getString(R.string.nav_info),
-					R.drawable.ic_action_info);
+					R.drawable.ic_action_info, "info");
 
 			aData.open();
 			accounts = aData.getAllAccounts();
@@ -159,7 +161,7 @@ public abstract class OpacActivity extends Activity {
 
 				long tolerance = Long.decode(sp.getString(
 						"notification_warning", "367200000"));
-
+				int selected = -1;
 				for (final Account account : accounts) {
 					Library library;
 					try {
@@ -171,7 +173,11 @@ public abstract class OpacActivity extends Activity {
 							expiringText = String.valueOf(expiring);
 						}
 						navAdapter.addLibraryItem(account.getLabel(),
-								library.getCity(), expiringText);
+								library.getCity(), expiringText,
+								account.getId());
+						if(account.getId() == app.getAccount().getId()) {
+							selected = navAdapter.getCount() - 1;
+						}
 
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -179,14 +185,16 @@ public abstract class OpacActivity extends Activity {
 						e.printStackTrace();
 					}
 				}
-				selectItem(5); // selects first account
+				if(selected > 0){
+					drawerList.setItemChecked(selected, true);
+				}
 			}
 
 			navAdapter.addSeperatorItem(getString(R.string.nav_hl_other));
 			navAdapter.addTextItemWithIcon(getString(R.string.nav_settings),
-					R.drawable.ic_action_settings);
+					R.drawable.ic_action_settings, "settings");
 			navAdapter.addTextItemWithIcon(getString(R.string.nav_about),
-					R.drawable.ic_action_help);
+					R.drawable.ic_action_help, "about");
 
 			drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -215,7 +223,7 @@ public abstract class OpacActivity extends Activity {
 
 	private class DrawerItemClickListener implements OnItemClickListener {
 		@Override
-		public void onItemClick(AdapterView parent, View view, int position,
+		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			selectItem(position);
 		}
@@ -237,29 +245,30 @@ public abstract class OpacActivity extends Activity {
 
 	/** Swaps fragments in the main content view */
 	protected void selectItem(int position) {
-		final int count = navAdapter.getCount();
-		if (navAdapter.getItemViewType(position) == Item.TYPE_SEPARATOR) {
+		Item item = navAdapter.getItem(position);
+		if (item.type == Item.TYPE_SEPARATOR) {
 			// clicked on a separator
 			return;
-		} else if (navAdapter.getItemViewType(position) == Item.TYPE_TEXT) {
-			switch (position) {
-			case 1:
+		} else if (item.type == Item.TYPE_TEXT) {
+			
+			if (item.tag.equals("search"))
 				fragment = new SearchFragment();
-				break;
-			case 2: // fragment = new AccountFragment();
-				break;
-			case 3: // fragment = new StarredFragment();
-				break;
-			case 4:
+			else if (item.tag.equals("account"))
+				fragment = new AccountFragment();
+			else if (item.tag.equals("starred"))
+				fragment = new StarredFragment();
+			else if (item.tag.equals("info"))
 				fragment = new InfoFragment();
-				break;
-			}
-			if (position == count - 2) {
+			else if (item.tag.equals("settings")) {
 				Intent intent = new Intent(this, MainPreferenceActivity.class);
 				startActivity(intent);
+				drawerList.setItemChecked(position, false);
 				return;
-			} else if (position == count - 1) {
-				// fragment = new AboutFragment();
+			} else if (item.tag.equals("about")) {
+				Intent intent = new Intent(this, AboutActivity.class);
+				startActivity(intent);
+				drawerList.setItemChecked(position, false);
+				return;
 			}
 
 			// Insert the fragment by replacing any existing fragment
@@ -269,17 +278,17 @@ public abstract class OpacActivity extends Activity {
 
 			// Highlight the selected item, update the title, and close the
 			// drawer
-			deselectNavItems();
-			drawerList.setItemChecked(position, true);
+			deselectItemsByType(Item.TYPE_TEXT);
 			drawerList.setItemChecked(selectedItemPos, false);
+			drawerList.setItemChecked(position, true);
 			selectedItemPos = position;
 			setTitle(navAdapter.getItem(position).text);
 			drawerLayout.closeDrawer(drawerList);
 
-		} else if (navAdapter.getItemViewType(position) == Item.TYPE_LIBRARY) {
-			deselectLibraryItems();
+		} else if (item.type == Item.TYPE_ACCOUNT) {
+			deselectItemsByType(Item.TYPE_ACCOUNT);
 			drawerList.setItemChecked(position, true);
-			selectaccount(accounts.get(position - 6).getId());
+			selectaccount(item.accountId);
 			drawerLayout.closeDrawer(drawerList);
 			return;
 		}
@@ -291,17 +300,9 @@ public abstract class OpacActivity extends Activity {
 		mTitle = title;
 	}
 
-	private void deselectLibraryItems() {
-		for (int i = 6; i < drawerList.getCount() - 2; i++) {
-			drawerList.setItemChecked(i, false);
-		}
-	}
-
-	private void deselectNavItems() {
-		for (int i = 1; i < 5; i++) {
-			drawerList.setItemChecked(i, false);
-		}
-		for (int i = drawerList.getCount() - 2; i < drawerList.getCount(); i++) {
+	private void deselectItemsByType(int type) {
+		for (int i = 0; i < navAdapter.getCount(); i++) {
+			if(navAdapter.getItemViewType(i) == type)
 			drawerList.setItemChecked(i, false);
 		}
 	}
@@ -432,7 +433,7 @@ public abstract class OpacActivity extends Activity {
 		// Get the layout inflater
 		LayoutInflater inflater = getLayoutInflater();
 
-		View view = inflater.inflate(R.layout.simple_list_dialog, null);
+		View view = inflater.inflate(R.layout.dialog_simple_list, null);
 
 		ListView lv = (ListView) view.findViewById(R.id.lvBibs);
 		AccountDataSource data = new AccountDataSource(this);

@@ -42,7 +42,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.Account;
@@ -60,7 +59,7 @@ public class AccountEditActivity extends Activity {
 	private Library lib;
 
 	protected int getLayoutResource() {
-		return R.layout.account_edit_activity;
+		return R.layout.activity_account_edit;
 	}
 
 	@Override
