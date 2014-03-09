@@ -13,6 +13,7 @@ import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.app.ProgressDialog;
 import org.holoeverywhere.widget.Button;
 import org.holoeverywhere.widget.LinearLayout;
+import org.holoeverywhere.widget.ProgressBar;
 import org.holoeverywhere.widget.TextView;
 import org.holoeverywhere.widget.Toast;
 
@@ -37,6 +38,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -90,6 +92,7 @@ public class SearchResultDetailFragment extends Fragment {
 
 	private boolean account_switched = false;
 	private boolean invalidated = false;
+	private boolean progress = false;
 
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
@@ -138,7 +141,43 @@ public class SearchResultDetailFragment extends Fragment {
 		}
 	}
 	
+	public void setProgress(boolean show, boolean animate) {
+		progress = show;
+				
+		if(view != null) {
+			ProgressBar progress = (ProgressBar) view.findViewById(R.id.progress);
+			View content = view.findViewById(R.id.rootView);
+			
+			if(show) {
+				if(animate) {
+					progress.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in));
+					content.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_out));
+				} else {
+					progress.clearAnimation();
+					content.clearAnimation();
+				}
+				progress.setVisibility(View.VISIBLE);
+				content.setVisibility(View.GONE);
+			} else {
+				if(animate) {
+					progress.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_out));
+					content.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in));
+				} else {
+					progress.clearAnimation();
+					content.clearAnimation();
+				}
+				progress.setVisibility(View.GONE);
+				content.setVisibility(View.VISIBLE);
+			}
+		}
+	}
+	
+	public void setProgress() {
+		setProgress(progress, false);
+	}
+	
 	private void load(int nr, String id) {
+		setProgress(true, true);
 		if (id != null && !id.equals("")) {
 			Log.d("Opac", "load id");
 			this.id = id;
@@ -179,6 +218,7 @@ public class SearchResultDetailFragment extends Fragment {
 				container, false);
 		view = rootView;
 		setHasOptionsMenu(true);
+		setProgress();
 		return rootView;
 	}
 	
@@ -421,6 +461,8 @@ public class SearchResultDetailFragment extends Fragment {
 			if (id == null || id.equals("")) {
 				id = getItem().getId();
 			}
+			
+			setProgress(false, true);
 			
 			getActivity().supportInvalidateOptionsMenu();
 
