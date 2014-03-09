@@ -12,6 +12,7 @@ import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.app.ProgressDialog;
 import org.holoeverywhere.widget.Button;
+import org.holoeverywhere.widget.FrameLayout;
 import org.holoeverywhere.widget.LinearLayout;
 import org.holoeverywhere.widget.ProgressBar;
 import org.holoeverywhere.widget.TextView;
@@ -79,6 +80,7 @@ public class SearchResultDetailFragment extends Fragment {
 	private DetailledItem item;	
 	private String title;
 	private String id;
+	private Integer nr;
 	
 	private OpacClient app;
 	private View view;
@@ -172,22 +174,45 @@ public class SearchResultDetailFragment extends Fragment {
 		}
 	}
 	
+	public void showConnectivityError() {
+		ProgressBar progress = (ProgressBar) view.findViewById(R.id.progress);
+		FrameLayout errorView = (FrameLayout) view.findViewById(R.id.error_view);
+		errorView.removeAllViews();
+		View connError = getActivity().getLayoutInflater().inflate(R.layout.error_connectivity, errorView);
+		
+		((Button) connError.findViewById(R.id.btRetry))
+		.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				reload();
+			}
+		});
+		
+		progress.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_out));
+		connError.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in));
+		progress.setVisibility(View.GONE);
+		connError.setVisibility(View.VISIBLE);
+	}
+	
 	public void setProgress() {
 		setProgress(progress, false);
 	}
 	
 	private void load(int nr, String id) {
 		setProgress(true, true);
+		this.id = id;
+		this.nr = nr;
 		if (id != null && !id.equals("")) {
-			Log.d("Opac", "load id");
-			this.id = id;
 			fst = new FetchSubTask();
 			fst.execute(app, id);
 		} else {
-			Log.d("Opac", "load nr");
 			ft = new FetchTask();
 			ft.execute(app, nr);
 		}
+	}
+	
+	private void reload() {
+		load(nr, id);
 	}
 	
 	public void onAttach(Activity activity) {
@@ -269,17 +294,10 @@ public class SearchResultDetailFragment extends Fragment {
 		@Override
 		@SuppressLint("NewApi")
 		protected void onPostExecute(DetailledItem result) {
-//			if (!success || result == null) {
-//				setContentView(R.layout.connectivity_error);
-//				((Button) findViewById(R.id.btRetry))
-//						.setOnClickListener(new OnClickListener() {
-//							@Override
-//							public void onClick(View v) {
-//								load();
-//							}
-//						});
-//				return;
-//			}
+			if (!success || result == null) {
+				showConnectivityError();
+				return;
+			}
 
 			item = result;
 
