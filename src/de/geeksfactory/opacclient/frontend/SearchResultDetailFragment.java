@@ -176,7 +176,7 @@ public class SearchResultDetailFragment extends Fragment {
 	
 	public void showConnectivityError() {
 		ProgressBar progress = (ProgressBar) view.findViewById(R.id.progress);
-		FrameLayout errorView = (FrameLayout) view.findViewById(R.id.error_view);
+		final FrameLayout errorView = (FrameLayout) view.findViewById(R.id.error_view);
 		errorView.removeAllViews();
 		View connError = getActivity().getLayoutInflater().inflate(R.layout.error_connectivity, errorView);
 		
@@ -184,6 +184,7 @@ public class SearchResultDetailFragment extends Fragment {
 		.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				errorView.removeAllViews();
 				reload();
 			}
 		});
