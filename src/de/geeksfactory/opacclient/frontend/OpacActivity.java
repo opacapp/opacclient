@@ -108,7 +108,7 @@ public abstract class OpacActivity extends Activity {
 			hasDrawer = true;
 			drawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
 			drawerLayout, /* DrawerLayout object */
-			R.drawable.ic_drawer, /* nav drawer icon to replace 'Up' caret */
+			R.drawable.ic_navigation_drawer, /* nav drawer icon to replace 'Up' caret */
 			R.string.drawer_open, /* "open drawer" description */
 			R.string.drawer_close /* "close drawer" description */
 			) {
@@ -247,6 +247,14 @@ public abstract class OpacActivity extends Activity {
 		int pos = navAdapter.getPositionByTag(tag);
 		if (pos >= 0)
 			selectItem(pos);
+	}
+	
+	@Override
+	protected void onResume() {
+		setupDrawer();
+		if (hasDrawer)
+			drawerToggle.syncState();
+		super.onResume();
 	}
 
 	/** Swaps fragments in the main content view */

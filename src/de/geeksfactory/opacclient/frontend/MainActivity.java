@@ -235,7 +235,6 @@ public class MainActivity extends OpacActivity implements
 			mAdapter.enableForegroundDispatch(this, nfcIntent,
 					intentFiltersArray, techListsArray);
 		}
-		setupDrawer();
 	}
 
 	@SuppressLint("NewApi")
