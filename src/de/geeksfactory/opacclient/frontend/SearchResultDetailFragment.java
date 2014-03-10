@@ -295,6 +295,9 @@ public class SearchResultDetailFragment extends Fragment {
 		@Override
 		@SuppressLint("NewApi")
 		protected void onPostExecute(DetailledItem result) {
+			if(getActivity() == null)
+				return;
+			
 			if (!success || result == null) {
 				showConnectivityError();
 				return;
@@ -600,6 +603,8 @@ public class SearchResultDetailFragment extends Fragment {
 		@Override
 		protected void onPostExecute(ReservationResult res) {
 			dialog.dismiss();
+			if(getActivity() == null)
+				return;
 
 			if (!success || res == null) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -656,6 +661,8 @@ public class SearchResultDetailFragment extends Fragment {
 		@Override
 		protected void onPostExecute(BookingResult res) {
 			dialog.dismiss();
+			if(getActivity() == null)
+				return;
 
 			if (!success || res == null) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -1508,6 +1515,8 @@ public class SearchResultDetailFragment extends Fragment {
 
 		@Override
 		protected void onPostExecute(Integer result) {
+			if(getActivity() == null)
+				return;
 			if (reservation) {
 				reservationDo();
 			}

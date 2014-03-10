@@ -1025,6 +1025,8 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 		@Override
 		protected void onPostExecute(Integer result) {
 			dialog.dismiss();
+			if(getActivity() == null)
+				return;
 
 			if (success) {
 				cancel_done(result);
@@ -1060,6 +1062,8 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 		@Override
 		protected void onPostExecute(final Uri result) {
 			dialog.dismiss();
+			if(getActivity() == null)
+				return;
 			if (result.toString().contains("acsm")) {
 				String[] download_clients = new String[] {
 						"com.android.aldiko", "com.aldiko.android",
@@ -1162,6 +1166,8 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 		@Override
 		protected void onPostExecute(ProlongResult res) {
 			dialog.dismiss();
+			if(getActivity() == null)
+				return;
 
 			if (!success || res == null) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -1212,6 +1218,8 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 		@Override
 		protected void onPostExecute(Integer result) {
 			dialog.dismiss();
+			if(getActivity() == null)
+				return;
 
 			if (success) {
 				prolong_done(result);
@@ -1653,6 +1661,8 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 		@Override
 		protected void onPostExecute(BookingResult res) {
 			dialog.dismiss();
+			if(getActivity() == null)
+				return;
 
 			if (!success || res == null) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
