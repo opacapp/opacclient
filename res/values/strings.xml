@@ -226,6 +226,6 @@
     <string name="drawer_open">Navigation öffnen</string>
     <string name="drawer_close">Navigation schließen</string>
     <string name="title_searchresult_list">Suchergebnisse</string>
-    <string name="title_searchresult_detail">Suchergebnis</string>
+    <string name="title_searchresult_detail">Detail</string>
 
 </resources>

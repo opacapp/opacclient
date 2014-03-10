@@ -321,7 +321,6 @@ public class SearchResultDetailFragment extends Fragment {
 
 			TextView tvTitel = (TextView) view.findViewById(R.id.tvTitle);
 			tvTitel.setText(getItem().getTitle());
-			getActivity().setTitle(getItem().getTitle());
 
 			LinearLayout llDetails = (LinearLayout) view.findViewById(R.id.llDetails);
 			for (Detail detail : result.getDetails()) {
