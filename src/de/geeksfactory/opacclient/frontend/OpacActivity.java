@@ -24,19 +24,20 @@ package de.geeksfactory.opacclient.frontend;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.widget.DrawerLayout;
 import org.json.JSONException;
-
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -108,7 +109,10 @@ public abstract class OpacActivity extends Activity {
 			hasDrawer = true;
 			drawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
 			drawerLayout, /* DrawerLayout object */
-			R.drawable.ic_navigation_drawer, /* nav drawer icon to replace 'Up' caret */
+			R.drawable.ic_navigation_drawer, /*
+											 * nav drawer icon to replace 'Up'
+											 * caret
+											 */
 			R.string.drawer_open, /* "open drawer" description */
 			R.string.drawer_close /* "close drawer" description */
 			) {
@@ -248,7 +252,7 @@ public abstract class OpacActivity extends Activity {
 		if (pos >= 0)
 			selectItem(pos);
 	}
-	
+
 	@Override
 	protected void onResume() {
 		setupDrawer();
@@ -258,6 +262,7 @@ public abstract class OpacActivity extends Activity {
 	}
 
 	/** Swaps fragments in the main content view */
+	@SuppressLint("NewApi")
 	protected void selectItem(int position) {
 		Item item = navAdapter.getItem(position);
 		if (item.type == Item.TYPE_SEPARATOR) {
@@ -265,15 +270,15 @@ public abstract class OpacActivity extends Activity {
 			return;
 		} else if (item.type == Item.TYPE_TEXT) {
 
-			if (item.tag.equals("search"))
+			if (item.tag.equals("search")) {
 				fragment = new SearchFragment();
-			else if (item.tag.equals("account"))
+			} else if (item.tag.equals("account")) {
 				fragment = new AccountFragment();
-			else if (item.tag.equals("starred"))
+			} else if (item.tag.equals("starred")) {
 				fragment = new StarredFragment();
-			else if (item.tag.equals("info"))
+			} else if (item.tag.equals("info")) {
 				fragment = new InfoFragment();
-			else if (item.tag.equals("settings")) {
+			} else if (item.tag.equals("settings")) {
 				Intent intent = new Intent(this, MainPreferenceActivity.class);
 				startActivity(intent);
 				drawerList.setItemChecked(position, false);
@@ -483,10 +488,9 @@ public abstract class OpacActivity extends Activity {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
 								dialog.dismiss();
-								// TODO: Intent intent = new
-								// Intent(OpacActivity.this,
-								// AccountListActivity.class);
-								// startActivity(intent);
+								Intent intent = new Intent(OpacActivity.this,
+										AccountListActivity.class);
+								startActivity(intent);
 							}
 						});
 		adialog = builder.create();

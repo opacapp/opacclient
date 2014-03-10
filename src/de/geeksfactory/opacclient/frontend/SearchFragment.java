@@ -488,9 +488,6 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		fields = new HashSet<String>(Arrays.asList(app.getApi()
 				.getSearchFields()));
 
-		// TODO: if (!fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE))
-		// nfc_capable = false;
-
 		manageVisibility();
 		fillComboBoxes();
 		loadingIndicators();

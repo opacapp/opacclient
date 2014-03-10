@@ -30,6 +30,7 @@ import org.acra.ACRA;
 import org.apache.http.client.ClientProtocolException;
 
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -48,6 +49,7 @@ import android.util.Log;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
+import de.geeksfactory.opacclient.frontend.MainActivity;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Library;
@@ -230,6 +232,7 @@ public class ReminderCheckService extends Service {
 
 			SharedPreferences sp = PreferenceManager
 					.getDefaultSharedPreferences(ReminderCheckService.this);
+			notification_on = sp.getBoolean("notification_service", false);
 
 			if (notification_on) {
 				NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -247,23 +250,24 @@ public class ReminderCheckService extends Service {
 				nb.setNumber((int) expired_new);
 				nb.setSound(null);
 
-//	TODO:			Intent notificationIntent = new Intent(
-//						ReminderCheckService.this, AccountActivity.class);
-//				notificationIntent.putExtra("notifications", notified);
-//				if (affected_accounts > 1) {
-//					// If there are notifications for more than one account,
-//					// account
-//					// menu should be opened
-//					notificationIntent.putExtra("showmenu", true);
-//				}
-//				notificationIntent.putExtra("account", first_affected_account);
-//				PendingIntent contentIntent = PendingIntent.getActivity(
-//						ReminderCheckService.this, 0, notificationIntent, 0);
-//				nb.setContentIntent(contentIntent);
-//				nb.setAutoCancel(true);
-//
-//				Notification notification = nb.build();
-//				mNotificationManager.notify(OpacClient.NOTIF_ID, notification);
+				Intent notificationIntent = new Intent(
+						ReminderCheckService.this, MainActivity.class);
+				notificationIntent.putExtra("fragment", "account");
+				notificationIntent.putExtra("notifications", notified);
+				if (affected_accounts > 1) {
+					// If there are notifications for more than one account,
+					// account
+					// menu should be opened
+					notificationIntent.putExtra("showmenu", true);
+				}
+				notificationIntent.putExtra("account", first_affected_account);
+				PendingIntent contentIntent = PendingIntent.getActivity(
+						ReminderCheckService.this, 0, notificationIntent, 0);
+				nb.setContentIntent(contentIntent);
+				nb.setAutoCancel(true);
+
+				Notification notification = nb.build();
+				mNotificationManager.notify(OpacClient.NOTIF_ID, notification);
 			}
 
 			stopSelf();

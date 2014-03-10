@@ -49,7 +49,7 @@ public class MainActivity extends OpacActivity implements
 		}
 
 		if (savedInstanceState == null) {
-			if(getIntent().hasExtra("fragment")) {
+			if (getIntent().hasExtra("fragment")) {
 				selectItem(getIntent().getStringExtra("fragment"));
 			} else {
 				selectItem(1);
@@ -76,10 +76,9 @@ public class MainActivity extends OpacActivity implements
 			techListsArray = new String[][] { new String[] { android.nfc.tech.NfcV.class
 					.getName() } };
 		}
-		
-		sp = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		
+
+		sp = PreferenceManager.getDefaultSharedPreferences(this);
+
 		getSupportActionBar().setSubtitle(
 				app.getLibrary().getCity() + " · "
 						+ app.getLibrary().getTitle());
@@ -94,6 +93,11 @@ public class MainActivity extends OpacActivity implements
 			((OpacActivity.AccountSelectedListener) fragment)
 					.accountSelected(account);
 		}
+
+		Set<String> fields = new HashSet<String>(Arrays.asList(app.getApi()
+				.getSearchFields()));
+		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE))
+			nfc_capable = false;
 	}
 
 	public void urlintent() {
@@ -246,11 +250,12 @@ public class MainActivity extends OpacActivity implements
 			String scanResult = readPageToString(tag);
 			if (scanResult != null) {
 				if (scanResult.length() > 5) {
-					Set<String> fields = new HashSet<String>(Arrays.asList(app.getApi()
-							.getSearchFields()));
+					Set<String> fields = new HashSet<String>(Arrays.asList(app
+							.getApi().getSearchFields()));
 					if (fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE)) {
 						Bundle query = new Bundle();
-						query.putString(OpacApi.KEY_SEARCH_QUERY_BARCODE, scanResult);
+						query.putString(OpacApi.KEY_SEARCH_QUERY_BARCODE,
+								scanResult);
 						app.startSearch(this, query);
 					} else {
 						Toast.makeText(this,

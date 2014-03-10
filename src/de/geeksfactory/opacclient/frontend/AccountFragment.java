@@ -26,6 +26,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.acra.ACRA;
 import org.apache.http.HttpResponse;
@@ -46,6 +47,7 @@ import org.holoeverywhere.widget.Button;
 import org.json.JSONException;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -130,30 +132,30 @@ public class AccountFragment extends Fragment implements
 		app = (OpacClient) getActivity().getApplication();
 		account = app.getAccount();
 
-		// TODO:
-		// if (getIntent().getExtras() != null) {
-		// if (getIntent().getExtras().containsKey("notifications")) {
-		//
-		// AccountDataSource adata = new AccountDataSource(this);
-		// adata.open();
-		// Bundle notif = getIntent().getExtras().getBundle(
-		// "notifications");
-		// Set<String> keys = notif.keySet();
-		// for (String key : keys) {
-		// long[] val = notif.getLongArray(key);
-		// adata.notificationSave(val[0], val[1]);
-		// }
-		// adata.close();
-		//
-		// if (getIntent().getExtras().getLong("account") != app
-		// .getAccount().getId()) {
-		// app.setAccount(getIntent().getExtras().getLong("account"));
-		// accountSelected();
-		// }
-		// NotificationManager nMgr = (NotificationManager)
-		// getSystemService(Context.NOTIFICATION_SERVICE);
-		// nMgr.cancel(OpacClient.NOTIF_ID);
-		// }
+		if (getActivity().getIntent().getExtras() != null) {
+			if (getActivity().getIntent().getExtras()
+					.containsKey("notifications")) {
+				AccountDataSource adata = new AccountDataSource(getActivity());
+				adata.open();
+				Bundle notif = getActivity().getIntent().getExtras()
+						.getBundle("notifications");
+				Set<String> keys = notif.keySet();
+				for (String key : keys) {
+					long[] val = notif.getLongArray(key);
+					adata.notificationSave(val[0], val[1]);
+				}
+				adata.close();
+
+				if (getActivity().getIntent().getExtras().getLong("account") != app
+						.getAccount().getId()) {
+					app.setAccount(getActivity().getIntent().getExtras()
+							.getLong("account"));
+					accountSelected(app.getAccount());
+				}
+				NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+				nMgr.cancel(OpacClient.NOTIF_ID);
+			}
+		}
 
 		setHasOptionsMenu(true);
 
@@ -325,7 +327,6 @@ public class AccountFragment extends Fragment implements
 										@Override
 										public void onCancel(
 												DialogInterface arg0) {
-											// TODO: finish();
 										}
 									});
 							dialog.show();

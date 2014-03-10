@@ -787,7 +787,7 @@ public class SearchResultDetailFragment extends Fragment {
 			reservationStart();
 			return true;
 		} else if (item.getItemId() == R.id.action_lendebook) {
-			// TODO: bookingStart();
+			bookingStart();
 			return true;
 		} else if (item.getItemId() == R.id.action_tocollection) {
 			// if (getActivity().getIntent().getBooleanExtra("from_collection",
