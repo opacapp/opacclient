@@ -381,11 +381,6 @@ public class AccountFragment extends Fragment implements
 	public void refresh() {
 		refreshing = true;
 
-		view.findViewById(R.id.svAccount).setVisibility(View.GONE);
-		view.findViewById(R.id.unsupported_error).setVisibility(View.GONE);
-		view.findViewById(R.id.answer_error).setVisibility(View.GONE);
-		((FrameLayout) view.findViewById(R.id.error_view)).removeAllViews();
-
 		getActivity().supportInvalidateOptionsMenu();
 		lt = new LoadTask();
 		lt.execute(app);
@@ -540,6 +535,7 @@ public class AccountFragment extends Fragment implements
 		adatasource.open();
 		adatasource.invalidateCachedAccountData(account);
 		adatasource.close();
+		view.findViewById(R.id.svAccount).setVisibility(View.GONE);
 		accountSelected(account);
 	}
 
@@ -684,6 +680,9 @@ public class AccountFragment extends Fragment implements
 	public void displaydata(AccountData result, boolean fromcache) {
 		view.findViewById(R.id.svAccount).setVisibility(View.VISIBLE);
 		view.findViewById(R.id.llLoading).setVisibility(View.GONE);
+		view.findViewById(R.id.unsupported_error).setVisibility(View.GONE);
+		view.findViewById(R.id.answer_error).setVisibility(View.GONE);
+		((FrameLayout) view.findViewById(R.id.error_view)).removeAllViews();
 
 		this.fromcache = fromcache;
 
