@@ -499,9 +499,10 @@ public class SearchResultDetailFragment extends Fragment {
 
 			getActivity().supportInvalidateOptionsMenu();
 
-			// TODO: if (getIntent().hasExtra("reservation")
-			// && getIntent().getBooleanExtra("reservation", false))
-			// reservationStart();
+			if (getActivity().getIntent().hasExtra("reservation")
+					&& getActivity().getIntent().getBooleanExtra("reservation",
+							false))
+				reservationStart();
 		}
 	}
 
@@ -547,9 +548,10 @@ public class SearchResultDetailFragment extends Fragment {
 						OpacClient.PREF_HOME_BRANCH_PREFIX
 								+ app.getAccount().getId(), null);
 
-				// TODO: if (getIntent().hasExtra("reservation")
-				// && getIntent().getBooleanExtra("reservation", false))
-				// app.getApi().start();
+				if (getActivity().getIntent().hasExtra("reservation")
+						&& getActivity().getIntent().getBooleanExtra(
+								"reservation", false))
+					app.getApi().start();
 
 				DetailledItem res = app.getApi().getResultById(a, homebranch);
 				URL newurl;
@@ -790,19 +792,17 @@ public class SearchResultDetailFragment extends Fragment {
 			bookingStart();
 			return true;
 		} else if (item.getItemId() == R.id.action_tocollection) {
-			// if (getActivity().getIntent().getBooleanExtra("from_collection",
-			// false)) {
-			// // TODO
-			// finish();
-			// } else {
-			Intent intent = new Intent(getActivity(),
-					SearchResultDetailActivity.class);
-			intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID, getItem()
-					.getCollectionId());
-			startActivity(intent);
-			// TODO: refresh fragment instead
-			// finish();
-			// }
+			if (getActivity().getIntent().getBooleanExtra("from_collection",
+					false)) {
+				getActivity().finish();
+			} else {
+				Intent intent = new Intent(getActivity(),
+						SearchResultDetailActivity.class);
+				intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
+						getItem().getCollectionId());
+				startActivity(intent);
+				getActivity().finish();
+			}
 			return true;
 		} else if (item.getItemId() == R.id.action_share) {
 			if (getItem() == null) {
