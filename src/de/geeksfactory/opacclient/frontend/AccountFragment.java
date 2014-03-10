@@ -1074,7 +1074,6 @@ public class AccountFragment extends Fragment implements
 	}
 
 	public class DownloadTask extends OpacTask<Uri> {
-		private boolean success = true;
 
 		@Override
 		protected Uri doInBackground(Object... arg0) {

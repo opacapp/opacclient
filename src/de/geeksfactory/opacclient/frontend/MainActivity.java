@@ -48,8 +48,13 @@ public class MainActivity extends OpacActivity implements
 			}
 		}
 
-		if (savedInstanceState == null)
-			selectItem(1);
+		if (savedInstanceState == null) {
+			if(getIntent().hasExtra("fragment")) {
+				selectItem(getIntent().getStringExtra("fragment"));
+			} else {
+				selectItem(1);
+			}
+		}
 
 		if (nfc_capable) {
 			if (!getPackageManager().hasSystemFeature("android.hardware.nfc")) {

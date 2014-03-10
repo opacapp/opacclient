@@ -175,7 +175,7 @@ public abstract class OpacActivity extends Activity {
 						navAdapter.addLibraryItem(account.getLabel(),
 								library.getCity(), expiringText,
 								account.getId());
-						if(account.getId() == app.getAccount().getId()) {
+						if (account.getId() == app.getAccount().getId()) {
 							selected = navAdapter.getCount() - 1;
 						}
 
@@ -185,7 +185,7 @@ public abstract class OpacActivity extends Activity {
 						e.printStackTrace();
 					}
 				}
-				if(selected > 0){
+				if (selected > 0) {
 					drawerList.setItemChecked(selected, true);
 				}
 			}
@@ -243,6 +243,12 @@ public abstract class OpacActivity extends Activity {
 			drawerToggle.onConfigurationChanged(newConfig);
 	}
 
+	protected void selectItem(String tag) {
+		int pos = navAdapter.getPositionByTag(tag);
+		if (pos >= 0)
+			selectItem(pos);
+	}
+
 	/** Swaps fragments in the main content view */
 	protected void selectItem(int position) {
 		Item item = navAdapter.getItem(position);
@@ -250,7 +256,7 @@ public abstract class OpacActivity extends Activity {
 			// clicked on a separator
 			return;
 		} else if (item.type == Item.TYPE_TEXT) {
-			
+
 			if (item.tag.equals("search"))
 				fragment = new SearchFragment();
 			else if (item.tag.equals("account"))
@@ -302,8 +308,8 @@ public abstract class OpacActivity extends Activity {
 
 	private void deselectItemsByType(int type) {
 		for (int i = 0; i < navAdapter.getCount(); i++) {
-			if(navAdapter.getItemViewType(i) == type)
-			drawerList.setItemChecked(i, false);
+			if (navAdapter.getItemViewType(i) == type)
+				drawerList.setItemChecked(i, false);
 		}
 	}
 
