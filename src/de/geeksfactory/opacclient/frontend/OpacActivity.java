@@ -99,7 +99,7 @@ public abstract class OpacActivity extends Activity {
 
 	protected abstract int getContentView();
 
-	private void setupDrawer() {
+	protected void setupDrawer() {
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(this);
 
