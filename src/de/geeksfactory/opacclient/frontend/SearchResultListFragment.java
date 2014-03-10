@@ -1,13 +1,25 @@
 package de.geeksfactory.opacclient.frontend;
 
+import java.util.ArrayList;
+
+import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.ListFragment;
+import org.holoeverywhere.widget.Button;
+import org.holoeverywhere.widget.FrameLayout;
+import org.holoeverywhere.widget.LinearLayout;
 import org.holoeverywhere.widget.ListView;
+import org.holoeverywhere.widget.ProgressBar;
+import org.holoeverywhere.widget.TextView;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
+import de.geeksfactory.opacclient.objects.SearchResult;
 
 /**
  * A list fragment representing a list of SearchResults. This fragment also
@@ -50,6 +62,7 @@ public class SearchResultListFragment extends ListFragment {
 		 * @param nr 
 		 */
 		public void onItemSelected(int nr, String id);
+		public void reload();
 	}
 
 	/**
@@ -60,6 +73,8 @@ public class SearchResultListFragment extends ListFragment {
 		@Override
 		public void onItemSelected(int nr, String id) {
 		}
+		public void reload() {			
+		}
 	};
 
 	/**
@@ -69,6 +84,11 @@ public class SearchResultListFragment extends ListFragment {
 	public SearchResultListFragment() {
 	}
 
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceSate) {
+		return inflater.inflate(R.layout.fragment_searchresult_list);
+	}
+	
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
@@ -154,8 +174,40 @@ public class SearchResultListFragment extends ListFragment {
 			setEmptyText(getString(R.string.no_results));
 		}
 		this.searchresult = searchresult;
-		setListAdapter(new ResultsAdapter(getActivity(), (searchresult.getResults())));
+		setListAdapter(new ResultsAdapter(getActivity(), searchresult.getResults()));
 		getListView().setTextFilterEnabled(true);
+		setListShown(true);
+	}
+	
+	public void showConnectivityError() {
+		showConnectivityError(null);
+	}
+	
+	public void showConnectivityError(String description) {
+		LinearLayout progressContainer = (LinearLayout) getView().findViewById(R.id.progressContainer);
+		final FrameLayout errorView = (FrameLayout) getView().findViewById(R.id.error_view);
+		errorView.removeAllViews();
+		View connError = getActivity().getLayoutInflater().inflate(R.layout.error_connectivity, errorView);
+		
+		((Button) connError.findViewById(R.id.btRetry))
+		.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				errorView.removeAllViews();
+				setListShown(false);
+				mCallbacks.reload();
+			}
+		});
+		
+		if(description != null) {
+			((TextView) connError.findViewById(R.id.tvErrBody))
+			.setText(description);
+		}
+		
+		progressContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_out));
+		connError.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in));
+		progressContainer.setVisibility(View.GONE);
+		connError.setVisibility(View.VISIBLE);
 	}
 	
 }

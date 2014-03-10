@@ -1,82 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rootView"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/frame"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp" >
+    android:layout_height="match_parent" >
 
-    <RelativeLayout
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+    <FrameLayout
+        android:id="@+id/error_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="match_parent" >
+    </FrameLayout>
 
-        <TextView
-            android:id="@+id/tvTitle"
+    <ScrollView
+        android:id="@+id/rootView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp" >
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="8dp"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textIsSelectable="true" />
+            android:layout_height="wrap_content" >
 
-        <ImageView
-            android:id="@+id/ivCover"
-            android:layout_width="fill_parent"
-            android:layout_height="120dp"
-            android:layout_below="@id/tvTitle"
-            android:layout_centerHorizontal="true"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
-            android:contentDescription="Cover"
-            android:gravity="center"
-            android:visibility="gone" />
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textIsSelectable="true" />
 
-        <TextView
-            android:id="@+id/tvDetails"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/ivCover"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="8dp"
-            android:drawableBottom="@drawable/section_header"
-            android:drawablePadding="4dp"
-            android:paddingLeft="4dp"
-            android:text="@string/details_head"
-            android:textAllCaps="true"
-            android:textColor="@color/emphasis"
-            android:textSize="14sp" />
+            <ImageView
+                android:id="@+id/ivCover"
+                android:layout_width="fill_parent"
+                android:layout_height="120dp"
+                android:layout_below="@id/tvTitle"
+                android:layout_centerHorizontal="true"
+                android:adjustViewBounds="true"
+                android:contentDescription="Cover"
+                android:gravity="center"
+                android:scaleType="fitCenter"
+                android:visibility="gone" />
 
-        <LinearLayout
-            android:id="@+id/llDetails"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvDetails"
-            android:orientation="vertical" >
-        </LinearLayout>
+            <TextView
+                android:id="@+id/tvDetails"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ivCover"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="8dp"
+                android:drawableBottom="@drawable/section_header"
+                android:drawablePadding="4dp"
+                android:paddingLeft="4dp"
+                android:text="@string/details_head"
+                android:textAllCaps="true"
+                android:textColor="@color/emphasis"
+                android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/tvCopies"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/llDetails"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="8dp"
-            android:drawableBottom="@drawable/section_header"
-            android:drawablePadding="4dp"
-            android:paddingLeft="4dp"
-            android:text="@string/copies_head"
-            android:textAllCaps="true"
-            android:textColor="@color/emphasis"
-            android:textSize="14sp" />
+            <LinearLayout
+                android:id="@+id/llDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvDetails"
+                android:orientation="vertical" >
+            </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/llCopies"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvCopies"
-            android:divider="@drawable/list_divider_holo_light"
-            android:orientation="vertical" >
-        </LinearLayout>
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/tvCopies"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/llDetails"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="8dp"
+                android:drawableBottom="@drawable/section_header"
+                android:drawablePadding="4dp"
+                android:paddingLeft="4dp"
+                android:text="@string/copies_head"
+                android:textAllCaps="true"
+                android:textColor="@color/emphasis"
+                android:textSize="14sp" />
 
-</ScrollView>
-
+            <LinearLayout
+                android:id="@+id/llCopies"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvCopies"
+                android:divider="@drawable/list_divider_holo_light"
+                android:orientation="vertical" >
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>    
+</FrameLayout>
