@@ -24,6 +24,7 @@ package de.geeksfactory.opacclient.frontend;
 import java.util.List;
 
 import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
 
 import android.content.Context;
@@ -50,6 +51,7 @@ import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.frontend.OpacActivity.AccountSelectedListener;
+import de.geeksfactory.opacclient.frontend.SearchFragment.Callback;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Starred;
 import de.geeksfactory.opacclient.storage.StarDataSource;
@@ -61,6 +63,11 @@ public class StarredFragment extends Fragment implements
 	private ItemListAdapter adapter;
 	protected View view;
 	protected OpacClient app;
+	private Callback mCallback;
+	
+	public interface Callback {
+		public void showDetail(String mNr);
+	}
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -93,10 +100,7 @@ public class StarredFragment extends Fragment implements
 									+ app.getAccount().getId(), null));
 					app.startSearch(getActivity(), query);
 				} else {
-					Intent intent = new Intent(getActivity(),
-							SearchResultDetailActivity.class);
-					intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID, item.getMNr());
-					startActivity(intent);
+					mCallback.showDetail(item.getMNr());
 				}
 			}
 		});
@@ -209,5 +213,16 @@ public class StarredFragment extends Fragment implements
 		intent.putExtra(Intent.EXTRA_TEXT, text.toString().trim());
 		startActivity(Intent.createChooser(intent,
 				getResources().getString(R.string.share)));
+	}
+	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		try {
+			mCallback = (Callback) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must implement SearchFragment.Callback");
+		}
 	}
 }

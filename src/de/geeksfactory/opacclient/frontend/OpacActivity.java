@@ -35,9 +35,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -272,12 +270,16 @@ public abstract class OpacActivity extends Activity {
 
 			if (item.tag.equals("search")) {
 				fragment = new SearchFragment();
+				setTwoPane(false);
 			} else if (item.tag.equals("account")) {
 				fragment = new AccountFragment();
+				setTwoPane(false);
 			} else if (item.tag.equals("starred")) {
 				fragment = new StarredFragment();
+				setTwoPane(true);
 			} else if (item.tag.equals("info")) {
 				fragment = new InfoFragment();
+				setTwoPane(false);
 			} else if (item.tag.equals("settings")) {
 				Intent intent = new Intent(this, MainPreferenceActivity.class);
 				startActivity(intent);
@@ -527,5 +529,16 @@ public abstract class OpacActivity extends Activity {
 		}
 
 		return super.onOptionsItemSelected(item);
+	}
+	
+	protected boolean isTablet() {
+		return findViewById(R.id.content_frame_right) != null;
+	}
+	
+	protected void setTwoPane(boolean active) {
+		if(isTablet()) {
+			findViewById(R.id.content_frame_right).setVisibility(
+					active ? View.VISIBLE : View.GONE);
+		}
 	}
 }
