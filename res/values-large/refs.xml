@@ -9,5 +9,6 @@
     -->
     <item name="activity_searchresult_list" type="layout">@layout/activity_searchresult_twopane</item>
     <item name="activity_main" type="layout">@layout/activity_main_twopane</item>
+    <item name="tablet_panel_bg" type="drawable">@drawable/panel_bg_holo_light</item>
 
 </resources>

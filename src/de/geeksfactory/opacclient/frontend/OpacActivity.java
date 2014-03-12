@@ -77,6 +77,8 @@ public abstract class OpacActivity extends Activity {
 
 	protected Fragment fragment;
 	protected boolean hasDrawer = false;
+	
+	private boolean twoPane;
 
 	public OpacClient getOpacApplication() {
 		return app;
@@ -256,6 +258,7 @@ public abstract class OpacActivity extends Activity {
 		setupDrawer();
 		if (hasDrawer)
 			drawerToggle.syncState();
+		setTwoPane(twoPane);
 		super.onResume();
 	}
 
@@ -536,6 +539,7 @@ public abstract class OpacActivity extends Activity {
 	}
 	
 	protected void setTwoPane(boolean active) {
+		twoPane = active;
 		if(isTablet()) {
 			findViewById(R.id.content_frame_right).setVisibility(
 					active ? View.VISIBLE : View.GONE);
