@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.widget.Toast;
 
 import android.annotation.SuppressLint;
@@ -20,6 +21,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentManager;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.barcode.BarcodeScanIntegrator;
@@ -27,7 +29,7 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 
 public class MainActivity extends OpacActivity implements
-		SearchFragment.Callback {
+		SearchFragment.Callback, StarredFragment.Callback, SearchResultDetailFragment.Callbacks {
 
 	private String[][] techListsArray;
 	private IntentFilter[] intentFiltersArray;
@@ -35,6 +37,7 @@ public class MainActivity extends OpacActivity implements
 	private boolean nfc_capable = Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 	private android.nfc.NfcAdapter mAdapter;
 	private SharedPreferences sp;
+	private Fragment rightFragment;
 
 	@SuppressLint("NewApi")
 	@Override
@@ -309,6 +312,31 @@ public class MainActivity extends OpacActivity implements
 			return null;
 		}
 		return stringbuilder.toString().trim();
+	}
+
+	@Override
+	public void showDetail(String mNr) {	
+		if(isTablet()) {
+			rightFragment = new SearchResultDetailFragment();
+			Bundle args = new Bundle();
+			args.putString(SearchResultDetailFragment.ARG_ITEM_ID, mNr);
+			rightFragment.setArguments(args);
+			
+			// Insert the fragment
+			FragmentManager fragmentManager = getSupportFragmentManager();
+			fragmentManager.beginTransaction()
+					.replace(R.id.content_frame_right, rightFragment).commit();
+		} else {
+			Intent intent = new Intent(this,
+					SearchResultDetailActivity.class);
+			intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID, mNr);
+			startActivity(intent);
+		}
+	}
+
+	@Override
+	public void removeFragment() {
+		getSupportFragmentManager().beginTransaction().remove(rightFragment).commit();
 	}
 
 }
