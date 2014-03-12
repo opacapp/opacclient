@@ -74,17 +74,16 @@ public class SearchResultDetailFragment extends Fragment {
 	public static final String ARG_ITEM_NR = "item_nr";
 
 	/**
-	 * The detailled item that this fragment
-	 * represents.
+	 * The detailled item that this fragment represents.
 	 */
-	private DetailledItem item;	
+	private DetailledItem item;
 	private String title;
 	private String id;
 	private Integer nr;
-	
+
 	private OpacClient app;
 	private View view;
-	
+
 	private FetchTask ft;
 	private FetchSubTask fst;
 	private ResTask rt;
@@ -102,13 +101,13 @@ public class SearchResultDetailFragment extends Fragment {
 	 */
 	public SearchResultDetailFragment() {
 	}
-	
+
 	/**
 	 * The fragment's current callback object, which is notified of list item
 	 * clicks.
 	 */
 	private Callbacks mCallbacks = sDummyCallbacks;
-	
+
 	/**
 	 * A callback interface that all activities containing this fragment must
 	 * implement. This mechanism allows activities to be notified of item
@@ -120,7 +119,7 @@ public class SearchResultDetailFragment extends Fragment {
 		 */
 		public void removeFragment();
 	}
-	
+
 	/**
 	 * A dummy implementation of the {@link Callbacks} interface that does
 	 * nothing. Used only when this fragment is not attached to an activity.
@@ -135,25 +134,30 @@ public class SearchResultDetailFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (getArguments().containsKey(ARG_ITEM_ID) || getArguments().containsKey(ARG_ITEM_NR)) {
+		if (getArguments().containsKey(ARG_ITEM_ID)
+				|| getArguments().containsKey(ARG_ITEM_NR)) {
 			// Load the dummy content specified by the fragment
 			// arguments. In a real-world scenario, use a Loader
 			// to load content from a content provider.
-			load(getArguments().getInt(ARG_ITEM_NR), getArguments().getString(ARG_ITEM_ID));
+			load(getArguments().getInt(ARG_ITEM_NR),
+					getArguments().getString(ARG_ITEM_ID));
 		}
 	}
-	
+
 	public void setProgress(boolean show, boolean animate) {
 		progress = show;
-				
-		if(view != null) {
-			ProgressBar progress = (ProgressBar) view.findViewById(R.id.progress);
+
+		if (view != null) {
+			ProgressBar progress = (ProgressBar) view
+					.findViewById(R.id.progress);
 			View content = view.findViewById(R.id.rootView);
-			
-			if(show) {
-				if(animate) {
-					progress.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in));
-					content.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_out));
+
+			if (show) {
+				if (animate) {
+					progress.startAnimation(AnimationUtils.loadAnimation(
+							getActivity(), R.anim.fade_in));
+					content.startAnimation(AnimationUtils.loadAnimation(
+							getActivity(), R.anim.fade_out));
 				} else {
 					progress.clearAnimation();
 					content.clearAnimation();
@@ -161,9 +165,11 @@ public class SearchResultDetailFragment extends Fragment {
 				progress.setVisibility(View.VISIBLE);
 				content.setVisibility(View.GONE);
 			} else {
-				if(animate) {
-					progress.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_out));
-					content.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in));
+				if (animate) {
+					progress.startAnimation(AnimationUtils.loadAnimation(
+							getActivity(), R.anim.fade_out));
+					content.startAnimation(AnimationUtils.loadAnimation(
+							getActivity(), R.anim.fade_in));
 				} else {
 					progress.clearAnimation();
 					content.clearAnimation();
@@ -173,32 +179,36 @@ public class SearchResultDetailFragment extends Fragment {
 			}
 		}
 	}
-	
+
 	public void showConnectivityError() {
 		ProgressBar progress = (ProgressBar) view.findViewById(R.id.progress);
-		final FrameLayout errorView = (FrameLayout) view.findViewById(R.id.error_view);
+		final FrameLayout errorView = (FrameLayout) view
+				.findViewById(R.id.error_view);
 		errorView.removeAllViews();
-		View connError = getActivity().getLayoutInflater().inflate(R.layout.error_connectivity, errorView);
-		
+		View connError = getActivity().getLayoutInflater().inflate(
+				R.layout.error_connectivity, errorView);
+
 		((Button) connError.findViewById(R.id.btRetry))
-		.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				errorView.removeAllViews();
-				reload();
-			}
-		});
-		
-		progress.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_out));
-		connError.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in));
+				.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						errorView.removeAllViews();
+						reload();
+					}
+				});
+
+		progress.startAnimation(AnimationUtils.loadAnimation(getActivity(),
+				R.anim.fade_out));
+		connError.startAnimation(AnimationUtils.loadAnimation(getActivity(),
+				R.anim.fade_in));
 		progress.setVisibility(View.GONE);
 		connError.setVisibility(View.VISIBLE);
 	}
-	
+
 	public void setProgress() {
 		setProgress(progress, false);
 	}
-	
+
 	private void load(int nr, String id) {
 		setProgress(true, true);
 		this.id = id;
@@ -211,15 +221,15 @@ public class SearchResultDetailFragment extends Fragment {
 			ft.execute(app, nr);
 		}
 	}
-	
+
 	private void reload() {
 		load(nr, id);
 	}
-	
+
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		app = (OpacClient) activity.getApplication();
-		
+
 		// Activities containing this fragment must implement its callbacks.
 		if (!(activity instanceof Callbacks)) {
 			throw new IllegalStateException(
@@ -228,7 +238,7 @@ public class SearchResultDetailFragment extends Fragment {
 
 		mCallbacks = (Callbacks) activity;
 	}
-	
+
 	@Override
 	public void onDetach() {
 		super.onDetach();
@@ -247,8 +257,7 @@ public class SearchResultDetailFragment extends Fragment {
 		setProgress();
 		return rootView;
 	}
-	
-	
+
 	public class FetchTask extends OpacTask<DetailledItem> {
 		protected boolean success = true;
 
@@ -265,11 +274,13 @@ public class SearchResultDetailFragment extends Fragment {
 						newurl = new URL(res.getCover());
 						Bitmap mIcon_val = BitmapFactory.decodeStream(newurl
 								.openConnection().getInputStream());
-						if(mIcon_val.getHeight() > 1 && mIcon_val.getWidth() > 1) {
+						if (mIcon_val.getHeight() > 1
+								&& mIcon_val.getWidth() > 1) {
 							res.setCoverBitmap(mIcon_val);
 						} else {
-							//When images embedded from Amazon aren't available, a 1x1
-							//pixel image is returned (iOPAC)
+							// When images embedded from Amazon aren't
+							// available, a 1x1
+							// pixel image is returned (iOPAC)
 							res.setCover(null);
 						}
 					} catch (Exception e) {
@@ -295,6 +306,9 @@ public class SearchResultDetailFragment extends Fragment {
 		@Override
 		@SuppressLint("NewApi")
 		protected void onPostExecute(DetailledItem result) {
+			if (getActivity() == null)
+				return;
+
 			if (!success || result == null) {
 				showConnectivityError();
 				return;
@@ -318,9 +332,9 @@ public class SearchResultDetailFragment extends Fragment {
 
 			TextView tvTitel = (TextView) view.findViewById(R.id.tvTitle);
 			tvTitel.setText(getItem().getTitle());
-			getActivity().setTitle(getItem().getTitle());
 
-			LinearLayout llDetails = (LinearLayout) view.findViewById(R.id.llDetails);
+			LinearLayout llDetails = (LinearLayout) view
+					.findViewById(R.id.llDetails);
 			for (Detail detail : result.getDetails()) {
 				View v = getLayoutInflater().inflate(R.layout.listitem_detail,
 						null);
@@ -333,7 +347,8 @@ public class SearchResultDetailFragment extends Fragment {
 				llDetails.addView(v);
 			}
 
-			LinearLayout llCopies = (LinearLayout) view.findViewById(R.id.llCopies);
+			LinearLayout llCopies = (LinearLayout) view
+					.findViewById(R.id.llCopies);
 			if (result.getVolumesearch() != null) {
 				TextView tvC = (TextView) view.findViewById(R.id.tvCopies);
 				tvC.setText(R.string.baende);
@@ -342,8 +357,8 @@ public class SearchResultDetailFragment extends Fragment {
 				btnVolume.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						app.startSearch(getActivity(),
-								getItem().getVolumesearch());
+						app.startSearch(getActivity(), getItem()
+								.getVolumesearch());
 					}
 				});
 				llCopies.addView(btnVolume);
@@ -362,8 +377,7 @@ public class SearchResultDetailFragment extends Fragment {
 							new OnClickListener() {
 								@Override
 								public void onClick(View v) {
-									Intent intent = new Intent(
-											getActivity(),
+									Intent intent = new Intent(getActivity(),
 											SearchResultDetailActivity.class);
 									intent.putExtra(
 											ARG_ITEM_ID,
@@ -480,14 +494,15 @@ public class SearchResultDetailFragment extends Fragment {
 			if (id == null || id.equals("")) {
 				id = getItem().getId();
 			}
-			
+
 			setProgress(false, true);
-			
+
 			getActivity().supportInvalidateOptionsMenu();
 
-//TODO:			if (getIntent().hasExtra("reservation")
-//					&& getIntent().getBooleanExtra("reservation", false))
-//				reservationStart();
+			if (getActivity().getIntent().hasExtra("reservation")
+					&& getActivity().getIntent().getBooleanExtra("reservation",
+							false))
+				reservationStart();
 		}
 	}
 
@@ -508,8 +523,7 @@ public class SearchResultDetailFragment extends Fragment {
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
-								Intent intent = new Intent(
-										getActivity(),
+								Intent intent = new Intent(getActivity(),
 										AccountEditActivity.class);
 								intent.putExtra(
 										AccountEditActivity.EXTRA_ACCOUNT_ID,
@@ -534,9 +548,10 @@ public class SearchResultDetailFragment extends Fragment {
 						OpacClient.PREF_HOME_BRANCH_PREFIX
 								+ app.getAccount().getId(), null);
 
-//TODO:				if (getIntent().hasExtra("reservation")
-//						&& getIntent().getBooleanExtra("reservation", false))
-//					app.getApi().start();
+				if (getActivity().getIntent().hasExtra("reservation")
+						&& getActivity().getIntent().getBooleanExtra(
+								"reservation", false))
+					app.getApi().start();
 
 				DetailledItem res = app.getApi().getResultById(a, homebranch);
 				URL newurl;
@@ -580,9 +595,8 @@ public class SearchResultDetailFragment extends Fragment {
 			String selection = (String) arg0[3];
 
 			try {
-				ReservationResult res = app.getApi().reservation(
-						item, app.getAccount(), useraction,
-						selection);
+				ReservationResult res = app.getApi().reservation(item,
+						app.getAccount(), useraction, selection);
 				success = true;
 				return res;
 			} catch (java.net.UnknownHostException e) {
@@ -600,6 +614,8 @@ public class SearchResultDetailFragment extends Fragment {
 		@Override
 		protected void onPostExecute(ReservationResult res) {
 			dialog.dismiss();
+			if (getActivity() == null)
+				return;
 
 			if (!success || res == null) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -619,7 +635,7 @@ public class SearchResultDetailFragment extends Fragment {
 				return;
 			}
 
-			//TODO: reservationResult(res);
+			reservationResult(res);
 		}
 	}
 
@@ -656,6 +672,8 @@ public class SearchResultDetailFragment extends Fragment {
 		@Override
 		protected void onPostExecute(BookingResult res) {
 			dialog.dismiss();
+			if (getActivity() == null)
+				return;
 
 			if (!success || res == null) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -675,7 +693,7 @@ public class SearchResultDetailFragment extends Fragment {
 				return;
 			}
 
-			//TODO:bookingResult(res);
+			bookingResult(res);
 		}
 	}
 
@@ -762,7 +780,7 @@ public class SearchResultDetailFragment extends Fragment {
 
 		super.onCreateOptionsMenu(menu, inflater);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -771,20 +789,20 @@ public class SearchResultDetailFragment extends Fragment {
 			reservationStart();
 			return true;
 		} else if (item.getItemId() == R.id.action_lendebook) {
-//TODO:			bookingStart();
+			bookingStart();
 			return true;
 		} else if (item.getItemId() == R.id.action_tocollection) {
-//			if (getActivity().getIntent().getBooleanExtra("from_collection", false)) {
-//				// TODO
-//			finish();
-//			} else {
-			Intent intent = new Intent(getActivity(),
-					SearchResultDetailActivity.class);
-			intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID, getItem().getCollectionId());
-			startActivity(intent);
-			// TODO: refresh fragment instead
-			//finish(); 	
-//			}
+			if (getActivity().getIntent().getBooleanExtra("from_collection",
+					false)) {
+				getActivity().finish();
+			} else {
+				Intent intent = new Intent(getActivity(),
+						SearchResultDetailActivity.class);
+				intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
+						getItem().getCollectionId());
+				startActivity(intent);
+				getActivity().finish();
+			}
 			return true;
 		} else if (item.getItemId() == R.id.action_share) {
 			if (getItem() == null) {
@@ -797,7 +815,8 @@ public class SearchResultDetailFragment extends Fragment {
 				final CharSequence[] items = { getString(R.string.share_link),
 						getString(R.string.share_details) };
 
-				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						getActivity());
 				builder.setTitle(R.string.share_dialog_select);
 				builder.setItems(items, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int di) {
@@ -830,8 +849,7 @@ public class SearchResultDetailFragment extends Fragment {
 										getResources()
 												.getString(R.string.share)));
 							} else {
-								Toast toast = Toast.makeText(
-										getActivity(),
+								Toast toast = Toast.makeText(getActivity(),
 										getString(R.string.share_notsupported),
 										Toast.LENGTH_SHORT);
 								toast.show();
@@ -857,8 +875,7 @@ public class SearchResultDetailFragment extends Fragment {
 
 							String text = title + "\n\n";
 
-							for (Detail detail : getItem()
-									.getDetails()) {
+							for (Detail detail : getItem().getDetails()) {
 								String colon = "";
 								if (!detail.getDesc().endsWith(":"))
 									colon = ":";
@@ -887,21 +904,20 @@ public class SearchResultDetailFragment extends Fragment {
 
 			return true;
 		} else if (item.getItemId() == R.id.action_star) {
-			StarDataSource star = new StarDataSource(
-					getActivity());
+			StarDataSource star = new StarDataSource(getActivity());
 			if (getItem() == null) {
 				Toast toast = Toast.makeText(getActivity(),
 						getString(R.string.star_wait), Toast.LENGTH_SHORT);
 				toast.show();
-			} else if (getItem().getId() == null || getItem().getId().equals("")) {
+			} else if (getItem().getId() == null
+					|| getItem().getId().equals("")) {
 				final String title = getItem().getTitle();
 				if (star.isStarredTitle(bib, title)) {
 					star.remove(star.getItemByTitle(bib, title));
 					item.setIcon(R.drawable.ic_action_star_0);
 				} else {
 					star.star(null, title, bib);
-					Toast toast = Toast.makeText(
-							getActivity(),
+					Toast toast = Toast.makeText(getActivity(),
 							getString(R.string.starred), Toast.LENGTH_SHORT);
 					toast.show();
 					item.setIcon(R.drawable.ic_action_star_1);
@@ -926,7 +942,6 @@ public class SearchResultDetailFragment extends Fragment {
 		}
 	}
 
-	
 	public DetailledItem getItem() {
 		return item;
 	}
@@ -946,8 +961,7 @@ public class SearchResultDetailFragment extends Fragment {
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
-								Intent intent = new Intent(
-										getActivity(),
+								Intent intent = new Intent(getActivity(),
 										AccountEditActivity.class);
 								intent.putExtra(
 										AccountEditActivity.EXTRA_ACCOUNT_ID,
@@ -959,7 +973,6 @@ public class SearchResultDetailFragment extends Fragment {
 		alert.show();
 	}
 
-
 	protected void reservationStart() {
 		if (invalidated) {
 			new RestoreSessionTask().execute(false);
@@ -969,7 +982,8 @@ public class SearchResultDetailFragment extends Fragment {
 					.getDefaultSharedPreferences(getActivity());
 			if (sp.getString("email", "").equals("")
 					&& ((EbookServiceApi) app.getApi()).isEbook(item)) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						getActivity());
 				builder.setMessage(getString(R.string.opac_error_email))
 						.setCancelable(false)
 						.setNegativeButton(R.string.dismiss,
@@ -1004,7 +1018,8 @@ public class SearchResultDetailFragment extends Fragment {
 			dialog_no_credentials();
 			return;
 		} else if (accounts.size() > 1
-				&& !getActivity().getIntent().getBooleanExtra("reservation", false)) {
+				&& !getActivity().getIntent().getBooleanExtra("reservation",
+						false)) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 			// Get the layout inflater
 			LayoutInflater inflater = getLayoutInflater();
@@ -1012,7 +1027,8 @@ public class SearchResultDetailFragment extends Fragment {
 			View view = inflater.inflate(R.layout.dialog_simple_list, null);
 
 			ListView lv = (ListView) view.findViewById(R.id.lvBibs);
-			AccountListAdapter adapter = new AccountListAdapter(getActivity(), accounts);
+			AccountListAdapter adapter = new AccountListAdapter(getActivity(),
+					accounts);
 			lv.setAdapter(adapter);
 			lv.setOnItemClickListener(new OnItemClickListener() {
 				@Override
@@ -1031,10 +1047,10 @@ public class SearchResultDetailFragment extends Fragment {
 									.show();
 						} else {
 							app.setAccount(accounts.get(position).getId());
-							Intent intent = new Intent(
-									getActivity(),
+							Intent intent = new Intent(getActivity(),
 									SearchResultDetailActivity.class);
-							intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
+							intent.putExtra(
+									SearchResultDetailFragment.ARG_ITEM_ID,
 									SearchResultDetailFragment.this.id);
 							// TODO: refresh fragment instead
 							intent.putExtra("reservation", true);
@@ -1118,10 +1134,10 @@ public class SearchResultDetailFragment extends Fragment {
 			dialog_wrong_credentials(result.getMessage(), false);
 			break;
 		case OK:
-// TODO: Redirect to AccountFragment
-//			Intent intent = new Intent(getActivity(),
-//					AccountActivity.class);
-//			startActivity(intent);
+			Intent intent = new Intent(getActivity(), MainActivity.class);
+			intent.putExtra("fragment", "account");
+			getActivity().startActivity(intent);
+			getActivity().finish();
 			break;
 		case UNSUPPORTED:
 			// TODO: Show dialog
@@ -1148,7 +1164,8 @@ public class SearchResultDetailFragment extends Fragment {
 			View view = inflater.inflate(R.layout.dialog_simple_list, null);
 
 			ListView lv = (ListView) view.findViewById(R.id.lvBibs);
-			AccountListAdapter adapter = new AccountListAdapter(getActivity(), accounts);
+			AccountListAdapter adapter = new AccountListAdapter(getActivity(),
+					accounts);
 			lv.setAdapter(adapter);
 			lv.setOnItemClickListener(new OnItemClickListener() {
 				@Override
@@ -1174,8 +1191,7 @@ public class SearchResultDetailFragment extends Fragment {
 								public void onClick(DialogInterface dialog,
 										int id) {
 									adialog.dismiss();
-									Intent intent = new Intent(
-											getActivity(),
+									Intent intent = new Intent(getActivity(),
 											AccountListActivity.class);
 									startActivity(intent);
 								}
@@ -1222,10 +1238,10 @@ public class SearchResultDetailFragment extends Fragment {
 			dialog_wrong_credentials(result.getMessage(), false);
 			break;
 		case OK:
-			// TODO:
-//			Intent intent = new Intent(getActivity(),
-//					AccountActivity.class);
-//			startActivity(intent);
+			Intent intent = new Intent(getActivity(), MainActivity.class);
+			intent.putExtra("fragment", "account");
+			getActivity().startActivity(intent);
+			getActivity().finish();
 			break;
 		case UNSUPPORTED:
 			// TODO: Show dialog
@@ -1240,16 +1256,17 @@ public class SearchResultDetailFragment extends Fragment {
 
 		LayoutInflater inflater = getLayoutInflater();
 		View view;
-		
+
 		if (result.getDetails().size() == 1
 				&& result.getDetails().get(0).length == 1) {
-			view = inflater.inflate(R.layout.dialog_reservation_details_simple, null);
+			view = inflater.inflate(R.layout.dialog_reservation_details_simple,
+					null);
 			TextView tv = (TextView) view.findViewById(R.id.tvDetails);
 			tv.setText(result.getDetails().get(0)[0]);
 		} else {
 			view = inflater.inflate(R.layout.dialog_reservation_details, null);
 			TableLayout table = (TableLayout) view.findViewById(R.id.tlDetails);
-			
+
 			for (String[] detail : result.getDetails()) {
 				TableRow tr = new TableRow(getActivity());
 				if (detail.length == 2) {
@@ -1347,8 +1364,8 @@ public class SearchResultDetailFragment extends Fragment {
 			if (objects[position] == null) {
 				LayoutInflater layoutInflater = (LayoutInflater) getContext()
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				view = layoutInflater.inflate(R.layout.listitem_branch, viewGroup,
-						false);
+				view = layoutInflater.inflate(R.layout.listitem_branch,
+						viewGroup, false);
 				return view;
 			}
 
@@ -1358,8 +1375,8 @@ public class SearchResultDetailFragment extends Fragment {
 			if (contentView == null) {
 				LayoutInflater layoutInflater = (LayoutInflater) getContext()
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				view = layoutInflater.inflate(R.layout.listitem_branch, viewGroup,
-						false);
+				view = layoutInflater.inflate(R.layout.listitem_branch,
+						viewGroup, false);
 			} else {
 				view = contentView;
 			}
@@ -1423,13 +1440,14 @@ public class SearchResultDetailFragment extends Fragment {
 
 		if (result.getDetails().size() == 1
 				&& result.getDetails().get(0).length == 1) {
-			view = inflater.inflate(R.layout.dialog_reservation_details_simple, null);
+			view = inflater.inflate(R.layout.dialog_reservation_details_simple,
+					null);
 			TextView tv = (TextView) view.findViewById(R.id.tvDetails);
 			tv.setText(result.getDetails().get(0)[0]);
 		} else {
 			view = inflater.inflate(R.layout.dialog_reservation_details, null);
 			TableLayout table = (TableLayout) view.findViewById(R.id.tlDetails);
-			
+
 			for (String[] detail : result.getDetails()) {
 				TableRow tr = new TableRow(getActivity());
 				if (detail.length == 2) {
@@ -1508,11 +1526,13 @@ public class SearchResultDetailFragment extends Fragment {
 
 		@Override
 		protected void onPostExecute(Integer result) {
+			if (getActivity() == null)
+				return;
 			if (reservation) {
 				reservationDo();
 			}
 		}
 
 	}
-	
+
 }

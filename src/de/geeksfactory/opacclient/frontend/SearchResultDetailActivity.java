@@ -1,6 +1,8 @@
 package de.geeksfactory.opacclient.frontend;
 
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.view.MenuItem;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 
@@ -65,5 +67,14 @@ public class SearchResultDetailActivity extends OpacActivity implements SearchRe
 	@Override
 	protected int getContentView() {
 		return R.layout.activity_searchresult_detail;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() ==  android.R.id.home) {
+			finish();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 }

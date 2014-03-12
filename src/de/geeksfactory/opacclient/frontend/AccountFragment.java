@@ -26,6 +26,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.acra.ACRA;
 import org.apache.http.HttpResponse;
@@ -46,6 +47,7 @@ import org.holoeverywhere.widget.Button;
 import org.json.JSONException;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -95,7 +97,8 @@ import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 
-public class AccountFragment extends Fragment implements AccountSelectedListener {
+public class AccountFragment extends Fragment implements
+		AccountSelectedListener {
 
 	protected ProgressDialog dialog;
 	protected AlertDialog adialog;
@@ -119,42 +122,45 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 	private long refreshtime;
 	private boolean fromcache;
 	protected View view;
+	private boolean supported = true;
 
 	@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		view = inflater.inflate(R.layout.fragment_account, container, false);
 		app = (OpacClient) getActivity().getApplication();
 		account = app.getAccount();
-		
-		// TODO:
-//		if (getIntent().getExtras() != null) {
-//			if (getIntent().getExtras().containsKey("notifications")) {
-//
-//				AccountDataSource adata = new AccountDataSource(this);
-//				adata.open();
-//				Bundle notif = getIntent().getExtras().getBundle(
-//						"notifications");
-//				Set<String> keys = notif.keySet();
-//				for (String key : keys) {
-//					long[] val = notif.getLongArray(key);
-//					adata.notificationSave(val[0], val[1]);
-//				}
-//				adata.close();
-//
-//				if (getIntent().getExtras().getLong("account") != app
-//						.getAccount().getId()) {
-//					app.setAccount(getIntent().getExtras().getLong("account"));
-//					accountSelected();
-//				}
-//				NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//				nMgr.cancel(OpacClient.NOTIF_ID);
-//			}
+
+		if (getActivity().getIntent().getExtras() != null) {
+			if (getActivity().getIntent().getExtras()
+					.containsKey("notifications")) {
+				AccountDataSource adata = new AccountDataSource(getActivity());
+				adata.open();
+				Bundle notif = getActivity().getIntent().getExtras()
+						.getBundle("notifications");
+				Set<String> keys = notif.keySet();
+				for (String key : keys) {
+					long[] val = notif.getLongArray(key);
+					adata.notificationSave(val[0], val[1]);
+				}
+				adata.close();
+
+				if (getActivity().getIntent().getExtras().getLong("account") != app
+						.getAccount().getId()) {
+					app.setAccount(getActivity().getIntent().getExtras()
+							.getLong("account"));
+					accountSelected(app.getAccount());
+				}
+				NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+				nMgr.cancel(OpacClient.NOTIF_ID);
+			}
+		}
 
 		setHasOptionsMenu(true);
-		
+
 		accountSelected(app.getAccount());
-		
+
 		final Handler handler = new Handler();
 		// schedule alarm here and post runnable as soon as scheduled
 		handler.post(new Runnable() {
@@ -164,7 +170,7 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 				handler.postDelayed(this, 60000);
 			}
 		});
-		
+
 		return view;
 	}
 
@@ -177,20 +183,24 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 			if (Build.VERSION.SDK_INT >= 14) {
 				menu.findItem(R.id.action_refresh).setActionView(
 						R.layout.actionbar_loading_indicator);
-				getSupportActivity().setSupportProgressBarIndeterminateVisibility(false);
+				getSupportActivity()
+						.setSupportProgressBarIndeterminateVisibility(false);
 			} else {
 				// TODO: Does this crash on pre-14?
 				menu.findItem(R.id.action_refresh).setVisible(false);
-				getSupportActivity().setSupportProgressBarIndeterminateVisibility(true);
+				getSupportActivity()
+						.setSupportProgressBarIndeterminateVisibility(true);
 			}
 		} else {
 			if (Build.VERSION.SDK_INT >= 14) {
 				menu.findItem(R.id.action_refresh).setActionView(null);
-				getSupportActivity().setSupportProgressBarIndeterminateVisibility(false);
+				getSupportActivity()
+						.setSupportProgressBarIndeterminateVisibility(false);
 			} else {
 				// TODO: Does this crash on pre-14?
 				menu.findItem(R.id.action_refresh).setActionView(null);
-				getSupportActivity().setSupportProgressBarIndeterminateVisibility(false);
+				getSupportActivity()
+						.setSupportProgressBarIndeterminateVisibility(false);
 			}
 		}
 		if ((app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ACCOUNT_PROLONG_ALL) != 0) {
@@ -198,6 +208,7 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 		} else {
 			menu.findItem(R.id.action_prolong_all).setVisible(false);
 		}
+		menu.findItem(R.id.action_refresh).setVisible(supported);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
@@ -226,8 +237,7 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 							@Override
 							public void onClick(DialogInterface d, int id) {
 								d.dismiss();
-								dialog = ProgressDialog.show(
-										getActivity(), "",
+								dialog = ProgressDialog.show(getActivity(), "",
 										getString(R.string.doing_prolong_all),
 										true);
 								dialog.show();
@@ -257,19 +267,22 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 		view.findViewById(R.id.answer_error).setVisibility(View.GONE);
 		((FrameLayout) view.findViewById(R.id.error_view)).removeAllViews();
 		view.findViewById(R.id.llLoading).setVisibility(View.VISIBLE);
-		
+
 		refreshing = false;
-		getActivity().supportInvalidateOptionsMenu();
+		supported = true;
 
 		account = app.getAccount();
 		if (!app.getApi().isAccountSupported(app.getLibrary())
 				&& (app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ACCOUNT_EXTENDABLE) == 0) {
+			supported = false;
 			// Not supported with this api at all
 			view.findViewById(R.id.llLoading).setVisibility(View.GONE);
-			view.findViewById(R.id.unsupported_error).setVisibility(View.VISIBLE);
-			((TextView) view.findViewById(R.id.tvErrBody))
+			view.findViewById(R.id.unsupported_error).setVisibility(
+					View.VISIBLE);
+			((TextView) view.findViewById(R.id.tvErrBodyU))
 					.setText(R.string.account_unsupported_api);
-			((Button) view.findViewById(R.id.btSend)).setText(R.string.write_mail);
+			((Button) view.findViewById(R.id.btSend))
+					.setText(R.string.write_mail);
 			((Button) view.findViewById(R.id.btSend))
 					.setOnClickListener(new OnClickListener() {
 						@Override
@@ -294,6 +307,33 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 						}
 					});
 
+		} else if (!app.getApi().isAccountSupported(app.getLibrary())) {
+			supported = false;
+
+			// We need help
+			view.findViewById(R.id.llLoading).setVisibility(View.GONE);
+			view.findViewById(R.id.unsupported_error).setVisibility(
+					View.VISIBLE);
+
+			((TextView) view.findViewById(R.id.tvErrBodyU))
+					.setText(R.string.account_unsupported);
+			((Button) view.findViewById(R.id.btSend))
+					.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							dialog = ProgressDialog.show(getActivity(), "",
+									getString(R.string.report_sending), true,
+									true, new OnCancelListener() {
+										@Override
+										public void onCancel(
+												DialogInterface arg0) {
+										}
+									});
+							dialog.show();
+							new SendTask().execute(this);
+						}
+					});
+
 		} else if (account.getPassword() == null
 				|| account.getPassword().equals("null")
 				|| account.getPassword().equals("")
@@ -315,35 +355,9 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 							startActivity(intent);
 						}
 					});
-			((TextView) view.findViewById(R.id.tvErrHead)).setText("");
-			((TextView) view.findViewById(R.id.tvErrBody))
+			((TextView) view.findViewById(R.id.tvErrHeadA)).setText("");
+			((TextView) view.findViewById(R.id.tvErrBodyA))
 					.setText(R.string.status_nouser);
-
-		} else if (!app.getApi().isAccountSupported(app.getLibrary())) {
-
-			// We need help
-			view.findViewById(R.id.llLoading).setVisibility(View.GONE);
-			view.findViewById(R.id.unsupported_error).setVisibility(View.VISIBLE);
-
-			((TextView) view.findViewById(R.id.tvErrBody))
-					.setText(R.string.account_unsupported);
-			((Button) view.findViewById(R.id.btSend))
-					.setOnClickListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							dialog = ProgressDialog.show(getActivity(),
-									"", getString(R.string.report_sending),
-									true, true, new OnCancelListener() {
-										@Override
-										public void onCancel(
-												DialogInterface arg0) {
-											//TODO: finish();
-										}
-									});
-							dialog.show();
-							new SendTask().execute(this);
-						}
-					});
 
 		} else {
 			// Supported
@@ -361,16 +375,13 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 			}
 			adatasource.close();
 		}
+
+		getActivity().supportInvalidateOptionsMenu();
 	}
 
 	public void refresh() {
 		refreshing = true;
-		
-		view.findViewById(R.id.svAccount).setVisibility(View.GONE);
-		view.findViewById(R.id.unsupported_error).setVisibility(View.GONE);
-		view.findViewById(R.id.answer_error).setVisibility(View.GONE);
-		((FrameLayout) view.findViewById(R.id.error_view)).removeAllViews();
-		
+
 		getActivity().supportInvalidateOptionsMenu();
 		lt = new LoadTask();
 		lt.execute(app);
@@ -401,8 +412,7 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 							@Override
 							public void onClick(DialogInterface d, int id) {
 								d.dismiss();
-								dialog = ProgressDialog.show(
-										getActivity(), "",
+								dialog = ProgressDialog.show(getActivity(), "",
 										getString(R.string.doing_cancel), true);
 								dialog.show();
 								ct = new CancelTask();
@@ -461,8 +471,10 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 			try {
 				nameValuePairs
 						.add(new BasicNameValuePair("version",
-								getActivity().getPackageManager().getPackageInfo(
-										getActivity().getPackageName(), 0).versionName));
+								getActivity().getPackageManager()
+										.getPackageInfo(
+												getActivity().getPackageName(),
+												0).versionName));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -524,6 +536,7 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 		adatasource.open();
 		adatasource.invalidateCachedAccountData(account);
 		adatasource.close();
+		view.findViewById(R.id.svAccount).setVisibility(View.GONE);
 		accountSelected(account);
 	}
 
@@ -588,10 +601,12 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 	}
 
 	public void show_connectivity_error(Exception e) {
-		final FrameLayout errorView = (FrameLayout) getView().findViewById(R.id.error_view);
+		final FrameLayout errorView = (FrameLayout) getView().findViewById(
+				R.id.error_view);
 		errorView.removeAllViews();
-		View connError = getActivity().getLayoutInflater().inflate(R.layout.error_connectivity, errorView);
-		
+		View connError = getActivity().getLayoutInflater().inflate(
+				R.layout.error_connectivity, errorView);
+
 		if (e != null && e instanceof NotReachableException)
 			((TextView) connError.findViewById(R.id.tvErrBody))
 					.setText(R.string.connection_error_detail_nre);
@@ -604,7 +619,7 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 				});
 		view.findViewById(R.id.llLoading).setVisibility(View.GONE);
 		view.findViewById(R.id.svAccount).setVisibility(View.GONE);
-		connError.setVisibility(View.VISIBLE);			
+		connError.setVisibility(View.VISIBLE);
 	}
 
 	protected void dialog_wrong_credentials(String s, final boolean finish) {
@@ -621,7 +636,7 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 						startActivity(intent);
 					}
 				});
-		((TextView) view.findViewById(R.id.tvErrBody)).setText(s);
+		((TextView) view.findViewById(R.id.tvErrBodyA)).setText(s);
 	}
 
 	public void loaded(final AccountData result) {
@@ -634,7 +649,8 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 					|| app.getApi().getLast_error().equals("")) {
 				show_connectivity_error(null);
 			} else {
-				AccountDataSource adatasource = new AccountDataSource(getActivity());
+				AccountDataSource adatasource = new AccountDataSource(
+						getActivity());
 				adatasource.open();
 				adatasource.invalidateCachedAccountData(account);
 				adatasource.close();
@@ -661,11 +677,13 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 		}
 
 	}
-	
 
 	public void displaydata(AccountData result, boolean fromcache) {
 		view.findViewById(R.id.svAccount).setVisibility(View.VISIBLE);
 		view.findViewById(R.id.llLoading).setVisibility(View.GONE);
+		view.findViewById(R.id.unsupported_error).setVisibility(View.GONE);
+		view.findViewById(R.id.answer_error).setVisibility(View.GONE);
+		((FrameLayout) view.findViewById(R.id.error_view)).removeAllViews();
 
 		this.fromcache = fromcache;
 
@@ -674,13 +692,14 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 		final long tolerance = Long.decode(sp.getString("notification_warning",
 				"367200000"));
 
-		((TextView) view.findViewById(R.id.tvAccLabel)).setText(account.getLabel());
-		((TextView) view.findViewById(R.id.tvAccUser)).setText(account.getName());
+		((TextView) view.findViewById(R.id.tvAccLabel)).setText(account
+				.getLabel());
+		((TextView) view.findViewById(R.id.tvAccUser)).setText(account
+				.getName());
 		TextView tvAccCity = (TextView) view.findViewById(R.id.tvAccCity);
 		Library lib;
 		try {
-			lib = app.getLibrary(account
-					.getLibrary());
+			lib = app.getLibrary(account.getLibrary());
 			if (lib.getTitle() != null && !lib.getTitle().equals("null")) {
 				tvAccCity.setText(lib.getCity() + " · " + lib.getTitle());
 			} else {
@@ -705,8 +724,8 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 			llLent.addView(t1);
 		} else {
 			for (ContentValues item : result.getLent()) {
-				View v = getLayoutInflater().inflate(R.layout.listitem_account_lent,
-						null);
+				View v = getLayoutInflater().inflate(
+						R.layout.listitem_account_lent, null);
 
 				if (item.containsKey(AccountData.KEY_LENT_TITLE)) {
 					((TextView) v.findViewById(R.id.tvTitel)).setText(Html
@@ -786,11 +805,13 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 								getResources().getColor(R.color.date_warning));
 					} else if (item.containsKey(AccountData.KEY_LENT_DOWNLOAD)) {
 						v.findViewById(R.id.vStatusColor).setBackgroundColor(
-								getResources().getColor(R.color.account_downloadable));
+								getResources().getColor(
+										R.color.account_downloadable));
 					}
 				} else if (item.containsKey(AccountData.KEY_LENT_DOWNLOAD)) {
 					v.findViewById(R.id.vStatusColor).setBackgroundColor(
-							getResources().getColor(R.color.account_downloadable));
+							getResources().getColor(
+									R.color.account_downloadable));
 				}
 
 				if (item.containsKey(AccountData.KEY_LENT_LENDING_BRANCH)) {
@@ -854,7 +875,8 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 			}
 		}
 
-		LinearLayout llRes = (LinearLayout) view.findViewById(R.id.llReservations);
+		LinearLayout llRes = (LinearLayout) view
+				.findViewById(R.id.llReservations);
 		llRes.removeAllViews();
 
 		if (result.getReservations().size() == 0) {
@@ -948,7 +970,8 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 		}
 
 		if (result.getPendingFees() != null) {
-			view.findViewById(R.id.tvPendingFeesLabel).setVisibility(View.VISIBLE);
+			view.findViewById(R.id.tvPendingFeesLabel).setVisibility(
+					View.VISIBLE);
 			view.findViewById(R.id.tvPendingFees).setVisibility(View.VISIBLE);
 			((TextView) view.findViewById(R.id.tvPendingFees)).setText(result
 					.getPendingFees());
@@ -957,7 +980,8 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 			view.findViewById(R.id.tvPendingFees).setVisibility(View.GONE);
 		}
 		if (result.getValidUntil() != null) {
-			view.findViewById(R.id.tvValidUntilLabel).setVisibility(View.VISIBLE);
+			view.findViewById(R.id.tvValidUntilLabel).setVisibility(
+					View.VISIBLE);
 			view.findViewById(R.id.tvValidUntil).setVisibility(View.VISIBLE);
 			((TextView) view.findViewById(R.id.tvValidUntil)).setText(result
 					.getValidUntil());
@@ -1025,11 +1049,14 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 		@Override
 		protected void onPostExecute(Integer result) {
 			dialog.dismiss();
+			if (getActivity() == null)
+				return;
 
 			if (success) {
 				cancel_done(result);
 			} else {
-				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						getActivity());
 				builder.setMessage(R.string.connection_error)
 						.setCancelable(true)
 						.setNegativeButton(R.string.dismiss,
@@ -1047,7 +1074,6 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 	}
 
 	public class DownloadTask extends OpacTask<Uri> {
-		private boolean success = true;
 
 		@Override
 		protected Uri doInBackground(Object... arg0) {
@@ -1060,6 +1086,8 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 		@Override
 		protected void onPostExecute(final Uri result) {
 			dialog.dismiss();
+			if (getActivity() == null)
+				return;
 			if (result.toString().contains("acsm")) {
 				String[] download_clients = new String[] {
 						"com.android.aldiko", "com.aldiko.android",
@@ -1080,7 +1108,8 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 				final SharedPreferences sp = PreferenceManager
 						.getDefaultSharedPreferences(getActivity());
 				if (!found && !sp.contains("reader_needed_ignore")) {
-					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							getActivity());
 					builder.setMessage(R.string.reader_needed)
 							.setCancelable(true)
 							.setNegativeButton(R.string.reader_needed_cancel,
@@ -1162,9 +1191,12 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 		@Override
 		protected void onPostExecute(ProlongResult res) {
 			dialog.dismiss();
+			if (getActivity() == null)
+				return;
 
 			if (!success || res == null) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						getActivity());
 				builder.setMessage(R.string.connection_error)
 						.setCancelable(true)
 						.setNegativeButton(R.string.dismiss,
@@ -1212,11 +1244,14 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 		@Override
 		protected void onPostExecute(Integer result) {
 			dialog.dismiss();
+			if (getActivity() == null)
+				return;
 
 			if (success) {
 				prolong_done(result);
 			} else {
-				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						getActivity());
 				builder.setMessage(R.string.connection_error)
 						.setCancelable(true)
 						.setNegativeButton(R.string.dismiss,
@@ -1591,8 +1626,8 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 			if (objects[position] == null) {
 				LayoutInflater layoutInflater = (LayoutInflater) getContext()
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				view = layoutInflater.inflate(R.layout.listitem_branch, viewGroup,
-						false);
+				view = layoutInflater.inflate(R.layout.listitem_branch,
+						viewGroup, false);
 				return view;
 			}
 
@@ -1602,8 +1637,8 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 			if (contentView == null) {
 				LayoutInflater layoutInflater = (LayoutInflater) getContext()
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				view = layoutInflater.inflate(R.layout.listitem_branch, viewGroup,
-						false);
+				view = layoutInflater.inflate(R.layout.listitem_branch,
+						viewGroup, false);
 			} else {
 				view = contentView;
 			}
@@ -1653,9 +1688,12 @@ public class AccountFragment extends Fragment implements AccountSelectedListener
 		@Override
 		protected void onPostExecute(BookingResult res) {
 			dialog.dismiss();
+			if (getActivity() == null)
+				return;
 
 			if (!success || res == null) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						getActivity());
 				builder.setMessage(R.string.connection_error)
 						.setCancelable(true)
 						.setNegativeButton(R.string.dismiss,

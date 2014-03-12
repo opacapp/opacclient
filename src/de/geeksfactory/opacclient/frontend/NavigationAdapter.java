@@ -84,6 +84,16 @@ public class NavigationAdapter extends BaseAdapter {
 		return mData.get(position);
 	}
 
+	public int getPositionByTag(String tag) {
+		for (int i = 0; i < mData.size(); i++) {
+			if (mData != null && mData.get(i) != null
+					&& tag.equals(mData.get(i).tag)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
 	@Override
 	public long getItemId(int position) {
 		return position;
@@ -154,7 +164,7 @@ public class NavigationAdapter extends BaseAdapter {
 		public TextView number;
 		public ImageView icon;
 	}
-	
+
 	public enum Type {
 		TYPE_TEXT, TYPE_LIBRARY, TYPE_SEPERATOR
 	}

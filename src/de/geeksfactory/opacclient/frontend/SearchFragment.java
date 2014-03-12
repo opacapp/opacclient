@@ -297,7 +297,6 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 	}
 
 	private void fillComboBoxes() {
-
 		Spinner cbZst = (Spinner) view.findViewById(R.id.cbBranch);
 		Spinner cbZstHome = (Spinner) view.findViewById(R.id.cbHomeBranch);
 		Spinner cbMg = (Spinner) view.findViewById(R.id.cbMediengruppe);
@@ -470,6 +469,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
 		@Override
 		protected void onPostExecute(Boolean result) {
+			if(getActivity() == null)
+				return;
+			
 			if (account == app.getAccount().getId()) {
 				metaDataLoading = false;
 				loadingIndicators();
@@ -485,9 +487,6 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		advanced = sp.getBoolean("advanced", false);
 		fields = new HashSet<String>(Arrays.asList(app.getApi()
 				.getSearchFields()));
-
-		// TODO: if (!fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE))
-		// nfc_capable = false;
 
 		manageVisibility();
 		fillComboBoxes();
