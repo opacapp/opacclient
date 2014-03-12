@@ -60,10 +60,13 @@ import de.geeksfactory.opacclient.storage.StarDatabase;
 public class StarredFragment extends Fragment implements
 		LoaderCallbacks<Cursor>, AccountSelectedListener {
 
+	private static final String STATE_ACTIVATED_POSITION = "activated_position";
 	private ItemListAdapter adapter;
 	protected View view;
 	protected OpacClient app;
 	private Callback mCallback;
+	private ListView listView;
+	private int mActivatedPosition = ListView.INVALID_POSITION;
 	
 	public interface Callback {
 		public void showDetail(String mNr);
@@ -78,9 +81,9 @@ public class StarredFragment extends Fragment implements
 
 		adapter = new ItemListAdapter();
 
-		ListView lv = (ListView) view.findViewById(R.id.lvStarred);
+		listView = (ListView) view.findViewById(R.id.lvStarred);
 
-		lv.setOnItemClickListener(new OnItemClickListener() {
+		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
@@ -104,11 +107,21 @@ public class StarredFragment extends Fragment implements
 				}
 			}
 		});
-		lv.setClickable(true);
-		lv.setTextFilterEnabled(true);
+		listView.setClickable(true);
+		listView.setTextFilterEnabled(true);
 
 		getSupportActivity().getSupportLoaderManager().initLoader(0, null, this);
-		lv.setAdapter(adapter);
+		listView.setAdapter(adapter);
+		
+		// Restore the previously serialized activated item position.
+		if (savedInstanceState != null
+				&& savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
+			setActivatedPosition(savedInstanceState
+					.getInt(STATE_ACTIVATED_POSITION));
+		}
+		
+		setActivateOnItemClick(
+				((OpacActivity) getActivity()).isTablet());
 		
 		return view;
 	}
@@ -219,10 +232,41 @@ public class StarredFragment extends Fragment implements
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			mCallback = (Callback) activity;
+			mCallback = (Callback) activity;			
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement SearchFragment.Callback");
+		}
+	}
+	
+	/**
+	 * Turns on activate-on-click mode. When this mode is on, list items will be
+	 * given the 'activated' state when touched.
+	 */
+	private void setActivateOnItemClick(boolean activateOnItemClick) {
+		// When setting CHOICE_MODE_SINGLE, ListView will automatically
+		// give items the 'activated' state when touched.
+		listView.setChoiceMode(
+				activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
+						: ListView.CHOICE_MODE_NONE);
+	}
+
+	private void setActivatedPosition(int position) {
+		if (position == ListView.INVALID_POSITION) {
+			listView.setItemChecked(mActivatedPosition, false);
+		} else {
+			listView.setItemChecked(position, true);
+		}
+
+		mActivatedPosition = position;
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		if (mActivatedPosition != ListView.INVALID_POSITION) {
+			// Serialize and persist the activated item position.
+			outState.putInt(STATE_ACTIVATED_POSITION, mActivatedPosition);
 		}
 	}
 }

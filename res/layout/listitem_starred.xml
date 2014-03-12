@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="5dp" >
+    android:padding="5dp"
+    android:background="?attr/activatedBackgroundIndicator" >
 
     <ImageView
         android:id="@+id/ivDelete"

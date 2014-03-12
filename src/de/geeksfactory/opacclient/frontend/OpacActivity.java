@@ -96,6 +96,10 @@ public abstract class OpacActivity extends Activity {
 
 		aData = new AccountDataSource(this);
 		setupDrawer();
+		
+		if(savedInstanceState != null) {
+			setTwoPane(savedInstanceState.getBoolean("twoPane"));
+		}
 	}
 
 	protected abstract int getContentView();
@@ -544,5 +548,11 @@ public abstract class OpacActivity extends Activity {
 			findViewById(R.id.content_frame_right).setVisibility(
 					active ? View.VISIBLE : View.GONE);
 		}
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putBoolean("twoPane", twoPane);
 	}
 }
