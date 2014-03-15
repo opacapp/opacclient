@@ -380,7 +380,11 @@ public class Bibliotheca extends BaseApi {
 			start();
 		String html = httpGet(opac_url + "/index.asp?MedienNr=" + a,
 				getDefaultEncoding());
-		return parse_result(html);
+		DetailledItem result = parse_result(html);
+		if(result.getId() == null) {
+			result.setId(a);
+		}
+		return result;
 	}
 
 	@Override

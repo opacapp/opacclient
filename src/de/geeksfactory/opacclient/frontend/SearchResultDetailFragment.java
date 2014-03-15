@@ -554,6 +554,9 @@ public class SearchResultDetailFragment extends Fragment {
 					app.getApi().start();
 
 				DetailledItem res = app.getApi().getResultById(a, homebranch);
+				if(res.getId() == null) {
+					res.setId(a);
+				}
 				URL newurl;
 				try {
 					newurl = new URL(res.getCover());
