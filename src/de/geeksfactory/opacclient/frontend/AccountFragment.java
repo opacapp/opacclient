@@ -677,6 +677,7 @@ public class AccountFragment extends Fragment implements
 
 	}
 
+	@SuppressWarnings("deprecation")
 	public void displaydata(AccountData result, boolean fromcache) {
 		view.findViewById(R.id.svAccount).setVisibility(View.VISIBLE);
 		view.findViewById(R.id.llLoading).setVisibility(View.GONE);
@@ -842,6 +843,12 @@ public class AccountFragment extends Fragment implements
 							});
 					((ImageView) v.findViewById(R.id.ivProlong))
 							.setVisibility(View.VISIBLE);
+					if (item.containsKey(AccountData.KEY_LENT_RENEWABLE)) {
+						((ImageView) v.findViewById(R.id.ivProlong))
+								.setAlpha(item.getAsString(
+										AccountData.KEY_LENT_RENEWABLE).equals(
+										"Y") ? 255 : 100);
+					}
 				} else if (item.containsKey(AccountData.KEY_LENT_DOWNLOAD)
 						&& app.getApi() instanceof EbookServiceApi) {
 					v.findViewById(R.id.ivDownload).setTag(

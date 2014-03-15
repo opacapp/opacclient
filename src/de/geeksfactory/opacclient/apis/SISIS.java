@@ -1272,12 +1272,14 @@ public class SISIS extends BaseApi implements OpacApi {
 								"renewalPossible")) {
 							e.put(AccountData.KEY_LENT_LINK,
 									offset + "$" + uri.getQuery());
+							e.put(AccountData.KEY_LENT_RENEWABLE, "Y");
 							break;
 						}
 					}
-				} else if (tr.select(".textrot, .textgruen").size() == 1) {
+				} else if (tr.select(".textrot, .textgruen, .textdunkelblau").size() > 0) {
 					e.put(AccountData.KEY_LENT_LINK,
-							"§" + tr.select(".textrot, .textgruen").text());
+							"§" + tr.select(".textrot, .textgruen, .textdunkelblau").text());
+					e.put(AccountData.KEY_LENT_RENEWABLE, "N");
 				}
 
 			} catch (Exception ex) {

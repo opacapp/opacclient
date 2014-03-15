@@ -878,8 +878,12 @@ public class Bibliotheca extends BaseApi {
 				}
 				if (index >= 0) {
 					if (key.equals(AccountData.KEY_LENT_LINK)) {
-						if (tr.child(index).children().size() > 0)
+						if (tr.child(index).children().size() > 0) {
 							e.put(key, tr.child(index).child(0).attr("href"));
+							e.put(AccountData.KEY_LENT_RENEWABLE,
+									tr.child(index).child(0).attr("href")
+											.contains("vermsg") ? "N" : "Y");
+						}
 					} else {
 						e.put(key, tr.child(index).text());
 					}

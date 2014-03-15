@@ -34,7 +34,7 @@ import de.geeksfactory.opacclient.objects.AccountData;
 public class AccountDatabase extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "accounts.db";
-	private static final int DATABASE_VERSION = 15; // REPLACE ONUPGRADE IF YOU
+	private static final int DATABASE_VERSION = 16; // REPLACE ONUPGRADE IF YOU
 													// CHANGE THIS
 
 	public static final String[] COLUMNS = { "id", "bib", "label", "name",
@@ -54,6 +54,7 @@ public class AccountDatabase extends SQLiteOpenHelper {
 		aMap.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, "deadline_ts");
 		aMap.put(AccountData.KEY_LENT_LENDING_BRANCH, "lending_branch");
 		aMap.put(AccountData.KEY_LENT_LINK, "link");
+		aMap.put(AccountData.KEY_LENT_RENEWABLE, "renewable");
 		aMap.put(AccountData.KEY_LENT_DOWNLOAD, "download");
 		aMap.put(AccountData.KEY_LENT_FORMAT, "format");
 		aMap.put(AccountData.KEY_LENT_STATUS, "status");
@@ -87,7 +88,7 @@ public class AccountDatabase extends SQLiteOpenHelper {
 				+ "title text," + "barcode text," + "author text,"
 				+ "deadline text," + "deadline_ts integer," + "status text,"
 				+ "branch text," + "lending_branch text," + "link text,"
-				+ "format text," + "download text" + ");");
+				+ "renewable text," + "format text," + "download text" + ");");
 		db.execSQL("create table "
 				+ "accountdata_reservations ( account integer, "
 				+ "title text," + "author text," + "ready text,"
@@ -157,6 +158,10 @@ public class AccountDatabase extends SQLiteOpenHelper {
 		if (oldVersion < 15) {
 			// App version 2.0.23 to 2.0.24
 			db.execSQL("alter table accountdata_lent add column format text");
+		}
+		if (oldVersion < 16) {
+			// App version 2.1.1 to 3.0.0beta
+			db.execSQL("alter table accountdata_lent add column renewable text");
 		}
 
 	}
