@@ -37,7 +37,10 @@
                 android:layout_alignParentTop="true"
                 android:background="@color/account_head_bg"
                 android:orientation="vertical"
-                android:padding="8dp" >
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="@dimen/tablet_padding"
+                android:paddingRight="@dimen/tablet_padding"  >
 
                 <TextView
                     android:id="@+id/tvAccLabel"
