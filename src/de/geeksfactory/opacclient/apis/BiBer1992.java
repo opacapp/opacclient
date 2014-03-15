@@ -917,7 +917,8 @@ public class BiBer1992 extends BaseApi {
 			if (tr.child(0).tagName().equals("th"))
 				continue;
 			ContentValues e = new ContentValues();
-
+			
+			Pattern itemIdPat = Pattern.compile("javascript:smAcc\\('[a-z]+','[a-z]+','([A-Za-z0-9]+)'\\)");
 			// columns: all elements of one media
 			Iterator<?> keys = copymap.keys();
 			while (keys.hasNext()) {
@@ -949,6 +950,14 @@ public class BiBer1992 extends BaseApi {
 						} else {
 							// Remove everything except the signature
 							value = value.replaceFirst("^.* /", "").trim();
+						}
+					}
+
+					if (tr.child(index).select("a").size() == 1) {
+						Matcher matcher = itemIdPat.matcher(tr.child(index)
+								.select("a").attr("href"));
+						if (matcher.find()) {
+							e.put(AccountData.KEY_LENT_ID, matcher.group(1));
 						}
 					}
 

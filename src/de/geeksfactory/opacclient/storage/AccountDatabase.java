@@ -34,7 +34,7 @@ import de.geeksfactory.opacclient.objects.AccountData;
 public class AccountDatabase extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "accounts.db";
-	private static final int DATABASE_VERSION = 16; // REPLACE ONUPGRADE IF YOU
+	private static final int DATABASE_VERSION = 18; // REPLACE ONUPGRADE IF YOU
 													// CHANGE THIS
 
 	public static final String[] COLUMNS = { "id", "bib", "label", "name",
@@ -59,6 +59,7 @@ public class AccountDatabase extends SQLiteOpenHelper {
 		aMap.put(AccountData.KEY_LENT_FORMAT, "format");
 		aMap.put(AccountData.KEY_LENT_STATUS, "status");
 		aMap.put(AccountData.KEY_LENT_TITLE, "title");
+		aMap.put(AccountData.KEY_LENT_ID, "itemid");
 		COLUMNS_LENT = Collections.unmodifiableMap(aMap);
 
 		Map<String, String> bMap = new HashMap<String, String>();
@@ -69,6 +70,7 @@ public class AccountDatabase extends SQLiteOpenHelper {
 		bMap.put(AccountData.KEY_RESERVATION_EXPIRE, "expire");
 		bMap.put(AccountData.KEY_RESERVATION_TITLE, "title");
 		bMap.put(AccountData.KEY_RESERVATION_BOOKING, "bookingurl");
+		bMap.put(AccountData.KEY_RESERVATION_ID, "itemid");
 		COLUMNS_RESERVATIONS = Collections.unmodifiableMap(bMap);
 	}
 
@@ -88,12 +90,13 @@ public class AccountDatabase extends SQLiteOpenHelper {
 				+ "title text," + "barcode text," + "author text,"
 				+ "deadline text," + "deadline_ts integer," + "status text,"
 				+ "branch text," + "lending_branch text," + "link text,"
-				+ "renewable text," + "format text," + "download text" + ");");
+				+ "itemid text," + "renewable text," + "format text,"
+				+ "download text" + ");");
 		db.execSQL("create table "
 				+ "accountdata_reservations ( account integer, "
 				+ "title text," + "author text," + "ready text,"
 				+ "branch text," + "cancel text," + "expire text,"
-				+ "bookingurl text);");
+				+ "itemid text," + "bookingurl text);");
 		db.execSQL("create table "
 				+ "notified ( id integer primary key autoincrement, "
 				+ "account integer, " + "timestamp integer);");
@@ -163,6 +166,15 @@ public class AccountDatabase extends SQLiteOpenHelper {
 			// App version 2.1.1 to 3.0.0beta
 			db.execSQL("alter table accountdata_lent add column renewable text");
 		}
+		if (oldVersion < 17) {
+			// App version 2.1.1 to 3.0.0beta
+			db.execSQL("alter table accountdata_lent add column itemid text");
+		}
+		if (oldVersion < 18) {
+			// App version 2.1.1 to 3.0.0beta
+			db.execSQL("alter table accountdata_reservations add column itemid text");
+		}
+
 
 	}
 

@@ -600,6 +600,7 @@ public class AccountFragment extends Fragment implements
 	}
 
 	public void show_connectivity_error(Exception e) {
+		e.printStackTrace();
 		final FrameLayout errorView = (FrameLayout) getView().findViewById(
 				R.id.error_view);
 		errorView.removeAllViews();
@@ -723,10 +724,26 @@ public class AccountFragment extends Fragment implements
 			t1.setText(R.string.entl_none);
 			llLent.addView(t1);
 		} else {
-			for (ContentValues item : result.getLent()) {
+			for (final ContentValues item : result.getLent()) {
 				View v = getLayoutInflater().inflate(
 						R.layout.listitem_account_lent, null);
 
+				if (item.containsKey(AccountData.KEY_LENT_ID)) {
+					View.OnClickListener gotoDetails = new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							Intent intent = new Intent(getActivity(),
+									SearchResultDetailActivity.class);
+							intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
+									item.getAsString(AccountData.KEY_LENT_ID));
+							startActivity(intent);
+							getActivity().finish();
+						}
+					};
+					v.findViewById(R.id.tvTitel).setOnClickListener(gotoDetails);
+					v.findViewById(R.id.tvVerfasser).setOnClickListener(gotoDetails);
+				}
+				
 				if (item.containsKey(AccountData.KEY_LENT_TITLE)) {
 					((TextView) v.findViewById(R.id.tvTitel)).setText(Html
 							.fromHtml(item
