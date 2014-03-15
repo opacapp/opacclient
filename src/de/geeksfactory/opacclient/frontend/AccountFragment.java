@@ -271,7 +271,7 @@ public class AccountFragment extends Fragment implements
 		refreshing = false;
 		supported = true;
 
-		account = app.getAccount();
+		this.account = app.getAccount();
 		if (!app.getApi().isAccountSupported(app.getLibrary())
 				&& (app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ACCOUNT_EXTENDABLE) == 0) {
 			supported = false;
