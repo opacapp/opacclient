@@ -133,7 +133,9 @@ public class SearchResultDetailFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
+		setRetainInstance(true);
+		
 		if (getArguments().containsKey(ARG_ITEM_ID)
 				|| getArguments().containsKey(ARG_ITEM_NR)) {
 			// Load the dummy content specified by the fragment
@@ -240,6 +242,15 @@ public class SearchResultDetailFragment extends Fragment {
 	}
 
 	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		
+		if(item != null) {
+			display();
+		}
+	}
+
+	@Override
 	public void onDetach() {
 		super.onDetach();
 
@@ -254,6 +265,7 @@ public class SearchResultDetailFragment extends Fragment {
 				container, false);
 		view = rootView;
 		setHasOptionsMenu(true);
+		setRetainInstance(true);
 		setProgress();
 		return rootView;
 	}
@@ -316,194 +328,198 @@ public class SearchResultDetailFragment extends Fragment {
 
 			item = result;
 
-			try {
-				Log.i("result", getItem().toString());
-			} catch (Exception e) {
-				ACRA.getErrorReporter().handleException(e);
-			}
-			ImageView iv = (ImageView) view.findViewById(R.id.ivCover);
-
-			if (getItem().getCoverBitmap() != null) {
-				iv.setVisibility(View.VISIBLE);
-				iv.setImageBitmap(getItem().getCoverBitmap());
-			} else {
-				iv.setVisibility(View.GONE);
-			}
-
-			TextView tvTitel = (TextView) view.findViewById(R.id.tvTitle);
-			tvTitel.setText(getItem().getTitle());
-
-			LinearLayout llDetails = (LinearLayout) view
-					.findViewById(R.id.llDetails);
-			for (Detail detail : result.getDetails()) {
-				View v = getLayoutInflater().inflate(R.layout.listitem_detail,
-						null);
-				((TextView) v.findViewById(R.id.tvDesc)).setText(detail
-						.getDesc());
-				((TextView) v.findViewById(R.id.tvContent)).setText(detail
-						.getContent());
-				Linkify.addLinks((TextView) v.findViewById(R.id.tvContent),
-						Linkify.WEB_URLS);
-				llDetails.addView(v);
-			}
-
-			LinearLayout llCopies = (LinearLayout) view
-					.findViewById(R.id.llCopies);
-			if (result.getVolumesearch() != null) {
-				TextView tvC = (TextView) view.findViewById(R.id.tvCopies);
-				tvC.setText(R.string.baende);
-				Button btnVolume = new Button(getActivity());
-				btnVolume.setText(R.string.baende_volumesearch);
-				btnVolume.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						app.startSearch(getActivity(), getItem()
-								.getVolumesearch());
-					}
-				});
-				llCopies.addView(btnVolume);
-
-			} else if (result.getBaende().size() > 0) {
-				TextView tvC = (TextView) view.findViewById(R.id.tvCopies);
-				tvC.setText(R.string.baende);
-
-				for (final ContentValues band : result.getBaende()) {
-					View v = getLayoutInflater().inflate(
-							R.layout.listitem_volume, null);
-					((TextView) v.findViewById(R.id.tvTitel)).setText(band
-							.getAsString(DetailledItem.KEY_CHILD_TITLE));
-
-					v.findViewById(R.id.llItem).setOnClickListener(
-							new OnClickListener() {
-								@Override
-								public void onClick(View v) {
-									Intent intent = new Intent(getActivity(),
-											SearchResultDetailActivity.class);
-									intent.putExtra(
-											ARG_ITEM_ID,
-											band.getAsString(DetailledItem.KEY_CHILD_ID));
-									intent.putExtra("from_collection", true);
-									startActivity(intent);
-								}
-							});
-					llCopies.addView(v);
-				}
-			} else {
-				if (result.getCopies().size() == 0) {
-					view.findViewById(R.id.tvCopies).setVisibility(View.GONE);
-				} else {
-					for (ContentValues copy : result.getCopies()) {
-						View v = getLayoutInflater().inflate(
-								R.layout.listitem_copy, null);
-
-						if (v.findViewById(R.id.tvBranch) != null) {
-							if (copy.containsKey(DetailledItem.KEY_COPY_BRANCH)) {
-								((TextView) v.findViewById(R.id.tvBranch))
-										.setText(copy
-												.getAsString(DetailledItem.KEY_COPY_BRANCH));
-								((TextView) v.findViewById(R.id.tvBranch))
-										.setVisibility(View.VISIBLE);
-							} else {
-								((TextView) v.findViewById(R.id.tvBranch))
-										.setVisibility(View.GONE);
-							}
-						}
-						if (v.findViewById(R.id.tvDepartment) != null) {
-							if (copy.containsKey(DetailledItem.KEY_COPY_DEPARTMENT)) {
-								((TextView) v.findViewById(R.id.tvDepartment))
-										.setText(copy
-												.getAsString(DetailledItem.KEY_COPY_DEPARTMENT));
-								((TextView) v.findViewById(R.id.tvDepartment))
-										.setVisibility(View.VISIBLE);
-							} else {
-								((TextView) v.findViewById(R.id.tvDepartment))
-										.setVisibility(View.GONE);
-							}
-						}
-						if (v.findViewById(R.id.tvLocation) != null) {
-							if (copy.containsKey(DetailledItem.KEY_COPY_LOCATION)) {
-								((TextView) v.findViewById(R.id.tvLocation))
-										.setText(copy
-												.getAsString(DetailledItem.KEY_COPY_LOCATION));
-								((TextView) v.findViewById(R.id.tvLocation))
-										.setVisibility(View.VISIBLE);
-							} else {
-								((TextView) v.findViewById(R.id.tvLocation))
-										.setVisibility(View.GONE);
-							}
-						}
-						if (v.findViewById(R.id.tvShelfmark) != null) {
-							if (copy.containsKey(DetailledItem.KEY_COPY_SHELFMARK)) {
-								((TextView) v.findViewById(R.id.tvShelfmark))
-										.setText(copy
-												.getAsString(DetailledItem.KEY_COPY_SHELFMARK));
-								((TextView) v.findViewById(R.id.tvShelfmark))
-										.setVisibility(View.VISIBLE);
-							} else {
-								((TextView) v.findViewById(R.id.tvShelfmark))
-										.setVisibility(View.GONE);
-							}
-						}
-						if (v.findViewById(R.id.tvStatus) != null) {
-							if (copy.containsKey(DetailledItem.KEY_COPY_STATUS)) {
-								((TextView) v.findViewById(R.id.tvStatus))
-										.setText(copy
-												.getAsString(DetailledItem.KEY_COPY_STATUS));
-								((TextView) v.findViewById(R.id.tvStatus))
-										.setVisibility(View.VISIBLE);
-							} else {
-								((TextView) v.findViewById(R.id.tvStatus))
-										.setVisibility(View.GONE);
-							}
-						}
-
-						if (v.findViewById(R.id.tvReservations) != null) {
-							if (copy.containsKey(DetailledItem.KEY_COPY_RESERVATIONS)) {
-								((TextView) v.findViewById(R.id.tvReservations))
-										.setText(getString(R.string.res)
-												+ ": "
-												+ copy.getAsString(DetailledItem.KEY_COPY_RESERVATIONS));
-								((TextView) v.findViewById(R.id.tvReservations))
-										.setVisibility(View.VISIBLE);
-							} else {
-								((TextView) v.findViewById(R.id.tvReservations))
-										.setVisibility(View.GONE);
-							}
-						}
-						if (v.findViewById(R.id.tvReturndate) != null) {
-							if (copy.containsKey(DetailledItem.KEY_COPY_RETURN)
-									&& !"".equals(copy
-											.getAsString(DetailledItem.KEY_COPY_RETURN))) {
-								((TextView) v.findViewById(R.id.tvReturndate))
-										.setText(getString(R.string.ret)
-												+ ": "
-												+ copy.getAsString(DetailledItem.KEY_COPY_RETURN));
-								((TextView) v.findViewById(R.id.tvReturndate))
-										.setVisibility(View.VISIBLE);
-							} else {
-								((TextView) v.findViewById(R.id.tvReturndate))
-										.setVisibility(View.GONE);
-							}
-						}
-
-						llCopies.addView(v);
-					}
-				}
-			}
-
-			if (id == null || id.equals("")) {
-				id = getItem().getId();
-			}
-
-			setProgress(false, true);
-
-			getActivity().supportInvalidateOptionsMenu();
+			display();
 
 			if (getActivity().getIntent().hasExtra("reservation")
 					&& getActivity().getIntent().getBooleanExtra("reservation",
 							false))
 				reservationStart();
 		}
+	}
+	
+	protected void display() {
+		try {
+			Log.i("result", getItem().toString());
+		} catch (Exception e) {
+			ACRA.getErrorReporter().handleException(e);
+		}
+		ImageView iv = (ImageView) view.findViewById(R.id.ivCover);
+
+		if (getItem().getCoverBitmap() != null) {
+			iv.setVisibility(View.VISIBLE);
+			iv.setImageBitmap(getItem().getCoverBitmap());
+		} else {
+			iv.setVisibility(View.GONE);
+		}
+
+		TextView tvTitel = (TextView) view.findViewById(R.id.tvTitle);
+		tvTitel.setText(getItem().getTitle());
+
+		LinearLayout llDetails = (LinearLayout) view
+				.findViewById(R.id.llDetails);
+		for (Detail detail : item.getDetails()) {
+			View v = getLayoutInflater().inflate(R.layout.listitem_detail,
+					null);
+			((TextView) v.findViewById(R.id.tvDesc)).setText(detail
+					.getDesc());
+			((TextView) v.findViewById(R.id.tvContent)).setText(detail
+					.getContent());
+			Linkify.addLinks((TextView) v.findViewById(R.id.tvContent),
+					Linkify.WEB_URLS);
+			llDetails.addView(v);
+		}
+
+		LinearLayout llCopies = (LinearLayout) view
+				.findViewById(R.id.llCopies);
+		if (item.getVolumesearch() != null) {
+			TextView tvC = (TextView) view.findViewById(R.id.tvCopies);
+			tvC.setText(R.string.baende);
+			Button btnVolume = new Button(getActivity());
+			btnVolume.setText(R.string.baende_volumesearch);
+			btnVolume.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					app.startSearch(getActivity(), getItem()
+							.getVolumesearch());
+				}
+			});
+			llCopies.addView(btnVolume);
+
+		} else if (item.getBaende().size() > 0) {
+			TextView tvC = (TextView) view.findViewById(R.id.tvCopies);
+			tvC.setText(R.string.baende);
+
+			for (final ContentValues band : item.getBaende()) {
+				View v = getLayoutInflater().inflate(
+						R.layout.listitem_volume, null);
+				((TextView) v.findViewById(R.id.tvTitel)).setText(band
+						.getAsString(DetailledItem.KEY_CHILD_TITLE));
+
+				v.findViewById(R.id.llItem).setOnClickListener(
+						new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								Intent intent = new Intent(getActivity(),
+										SearchResultDetailActivity.class);
+								intent.putExtra(
+										ARG_ITEM_ID,
+										band.getAsString(DetailledItem.KEY_CHILD_ID));
+								intent.putExtra("from_collection", true);
+								startActivity(intent);
+							}
+						});
+				llCopies.addView(v);
+			}
+		} else {
+			if (item.getCopies().size() == 0) {
+				view.findViewById(R.id.tvCopies).setVisibility(View.GONE);
+			} else {
+				for (ContentValues copy : item.getCopies()) {
+					View v = getLayoutInflater().inflate(
+							R.layout.listitem_copy, null);
+
+					if (v.findViewById(R.id.tvBranch) != null) {
+						if (copy.containsKey(DetailledItem.KEY_COPY_BRANCH)) {
+							((TextView) v.findViewById(R.id.tvBranch))
+									.setText(copy
+											.getAsString(DetailledItem.KEY_COPY_BRANCH));
+							((TextView) v.findViewById(R.id.tvBranch))
+									.setVisibility(View.VISIBLE);
+						} else {
+							((TextView) v.findViewById(R.id.tvBranch))
+									.setVisibility(View.GONE);
+						}
+					}
+					if (v.findViewById(R.id.tvDepartment) != null) {
+						if (copy.containsKey(DetailledItem.KEY_COPY_DEPARTMENT)) {
+							((TextView) v.findViewById(R.id.tvDepartment))
+									.setText(copy
+											.getAsString(DetailledItem.KEY_COPY_DEPARTMENT));
+							((TextView) v.findViewById(R.id.tvDepartment))
+									.setVisibility(View.VISIBLE);
+						} else {
+							((TextView) v.findViewById(R.id.tvDepartment))
+									.setVisibility(View.GONE);
+						}
+					}
+					if (v.findViewById(R.id.tvLocation) != null) {
+						if (copy.containsKey(DetailledItem.KEY_COPY_LOCATION)) {
+							((TextView) v.findViewById(R.id.tvLocation))
+									.setText(copy
+											.getAsString(DetailledItem.KEY_COPY_LOCATION));
+							((TextView) v.findViewById(R.id.tvLocation))
+									.setVisibility(View.VISIBLE);
+						} else {
+							((TextView) v.findViewById(R.id.tvLocation))
+									.setVisibility(View.GONE);
+						}
+					}
+					if (v.findViewById(R.id.tvShelfmark) != null) {
+						if (copy.containsKey(DetailledItem.KEY_COPY_SHELFMARK)) {
+							((TextView) v.findViewById(R.id.tvShelfmark))
+									.setText(copy
+											.getAsString(DetailledItem.KEY_COPY_SHELFMARK));
+							((TextView) v.findViewById(R.id.tvShelfmark))
+									.setVisibility(View.VISIBLE);
+						} else {
+							((TextView) v.findViewById(R.id.tvShelfmark))
+									.setVisibility(View.GONE);
+						}
+					}
+					if (v.findViewById(R.id.tvStatus) != null) {
+						if (copy.containsKey(DetailledItem.KEY_COPY_STATUS)) {
+							((TextView) v.findViewById(R.id.tvStatus))
+									.setText(copy
+											.getAsString(DetailledItem.KEY_COPY_STATUS));
+							((TextView) v.findViewById(R.id.tvStatus))
+									.setVisibility(View.VISIBLE);
+						} else {
+							((TextView) v.findViewById(R.id.tvStatus))
+									.setVisibility(View.GONE);
+						}
+					}
+
+					if (v.findViewById(R.id.tvReservations) != null) {
+						if (copy.containsKey(DetailledItem.KEY_COPY_RESERVATIONS)) {
+							((TextView) v.findViewById(R.id.tvReservations))
+									.setText(getString(R.string.res)
+											+ ": "
+											+ copy.getAsString(DetailledItem.KEY_COPY_RESERVATIONS));
+							((TextView) v.findViewById(R.id.tvReservations))
+									.setVisibility(View.VISIBLE);
+						} else {
+							((TextView) v.findViewById(R.id.tvReservations))
+									.setVisibility(View.GONE);
+						}
+					}
+					if (v.findViewById(R.id.tvReturndate) != null) {
+						if (copy.containsKey(DetailledItem.KEY_COPY_RETURN)
+								&& !"".equals(copy
+										.getAsString(DetailledItem.KEY_COPY_RETURN))) {
+							((TextView) v.findViewById(R.id.tvReturndate))
+									.setText(getString(R.string.ret)
+											+ ": "
+											+ copy.getAsString(DetailledItem.KEY_COPY_RETURN));
+							((TextView) v.findViewById(R.id.tvReturndate))
+									.setVisibility(View.VISIBLE);
+						} else {
+							((TextView) v.findViewById(R.id.tvReturndate))
+									.setVisibility(View.GONE);
+						}
+					}
+
+					llCopies.addView(v);
+				}
+			}
+		}
+
+		if (id == null || id.equals("")) {
+			id = getItem().getId();
+		}
+
+		setProgress(false, true);
+
+		getActivity().supportInvalidateOptionsMenu();
 	}
 
 	protected void dialog_wrong_credentials(String s, final boolean finish) {

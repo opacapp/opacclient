@@ -71,10 +71,11 @@ public class SearchResultListActivity extends OpacActivity implements
 			listFragment.setActivateOnItemClick(true);
 		}
 		
-		page = 1;
 
-		if (savedInstanceState == null)
+		if (savedInstanceState == null) {
+			page = 1;
 			performsearch();
+		}
 	}
 	
 	public void performsearch() {

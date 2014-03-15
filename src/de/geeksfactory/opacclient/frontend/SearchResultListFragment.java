@@ -86,6 +86,9 @@ public class SearchResultListFragment extends ListFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceSate) {
+	
+		setRetainInstance(true);
+		
 		return inflater.inflate(R.layout.fragment_searchresult_list);
 	}
 	
