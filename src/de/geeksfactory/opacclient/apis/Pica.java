@@ -707,7 +707,8 @@ public class Pica extends BaseApi implements OpacApi {
 			}
 			String reminderCount = tr.child(13).text().trim();
 			if (reminderCount.indexOf(" Mahn") >= 0
-					&& reminderCount.indexOf("(") >= 0)
+					&& reminderCount.indexOf("(") >= 0
+					&& reminderCount.indexOf("(") < reminderCount.indexOf(" Mahn"))
 				reminderCount = reminderCount.substring(
 						reminderCount.indexOf("(") + 1,
 						reminderCount.indexOf(" Mahn"));

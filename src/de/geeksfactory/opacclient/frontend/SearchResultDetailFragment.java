@@ -1129,7 +1129,7 @@ public class SearchResultDetailFragment extends Fragment {
 					.getDefaultSharedPreferences(getActivity());
 			if (((EbookServiceApi) app.getApi()).isEbook(item)
 					&& selection == null) {
-				rt.execute(app, item.getReservation_info(), 0,
+				rt.execute(app, item, 0,
 						sp.getString("email", "invalid@example.org"));
 				return;
 			}
