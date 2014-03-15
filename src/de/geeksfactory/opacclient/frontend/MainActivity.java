@@ -81,10 +81,12 @@ public class MainActivity extends OpacActivity implements
 		}
 
 		sp = PreferenceManager.getDefaultSharedPreferences(this);
-
-		getSupportActionBar().setSubtitle(
-				app.getLibrary().getCity() + " · "
-						+ app.getLibrary().getTitle());
+		
+		if (app.getLibrary() != null) {
+			getSupportActionBar().setSubtitle(
+					app.getLibrary().getCity() + " · "
+							+ app.getLibrary().getTitle());
+		}
 	}
 
 	@Override

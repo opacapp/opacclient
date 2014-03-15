@@ -86,11 +86,16 @@ public abstract class OpacActivity extends Activity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		supportRequestWindowFeature(android.view.Window.FEATURE_INDETERMINATE_PROGRESS);
+		
 		super.onCreate(savedInstanceState);
 
-		supportRequestWindowFeature(android.view.Window.FEATURE_INDETERMINATE_PROGRESS);
-		setSupportProgressBarIndeterminateVisibility(false);
+		try {
+			setSupportProgressBarIndeterminateVisibility(false);
+		} catch (Exception e) {
 
+		}
+		
 		setContentView(getContentView());
 		app = (OpacClient) getApplication();
 

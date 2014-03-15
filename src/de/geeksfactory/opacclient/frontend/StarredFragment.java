@@ -75,6 +75,8 @@ public class StarredFragment extends Fragment implements
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		setHasOptionsMenu(true);
 
 		view = inflater.inflate(R.layout.fragment_starred);
 		app = (OpacClient) getActivity().getApplication();
@@ -125,7 +127,7 @@ public class StarredFragment extends Fragment implements
 		
 		return view;
 	}
-
+    
 	@Override
 	public void onCreateOptionsMenu(android.view.Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.activity_starred, menu);

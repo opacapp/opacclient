@@ -63,6 +63,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.view.MenuItemCompat;
 import android.text.Html;
 import android.text.TextUtils.TruncateAt;
 import android.view.Menu;
@@ -186,7 +187,6 @@ public class AccountFragment extends Fragment implements
 				getSupportActivity()
 						.setSupportProgressBarIndeterminateVisibility(false);
 			} else {
-				// TODO: Does this crash on pre-14?
 				menu.findItem(R.id.action_refresh).setVisible(false);
 				getSupportActivity()
 						.setSupportProgressBarIndeterminateVisibility(true);
@@ -197,8 +197,7 @@ public class AccountFragment extends Fragment implements
 				getSupportActivity()
 						.setSupportProgressBarIndeterminateVisibility(false);
 			} else {
-				// TODO: Does this crash on pre-14?
-				menu.findItem(R.id.action_refresh).setActionView(null);
+				menu.findItem(R.id.action_refresh).setVisible(true);
 				getSupportActivity()
 						.setSupportProgressBarIndeterminateVisibility(false);
 			}

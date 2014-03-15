@@ -73,6 +73,8 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.geeksfactory.opacclient.frontend.MainPreferenceActivity" />
+            <meta-data android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
         </activity>
         <activity
             android:name="de.geeksfactory.opacclient.frontend.SearchResultListActivity"
@@ -81,6 +83,8 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.geeksfactory.opacclient.frontend.MainActivity" />
+            <meta-data android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
         </activity>
         <activity
             android:name="de.geeksfactory.opacclient.frontend.SearchResultDetailActivity"
@@ -90,6 +94,8 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".SearchResultListActivity" />
+            <meta-data android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
         </activity>
         <activity
             android:name="org.acra.CrashReportDialog"
