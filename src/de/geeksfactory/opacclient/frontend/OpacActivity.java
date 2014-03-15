@@ -269,6 +269,25 @@ public abstract class OpacActivity extends Activity {
 			drawerToggle.syncState();
 		setTwoPane(twoPane);
 		super.onResume();
+		fixNavigationSelection();
+	}
+
+	protected void fixNavigationSelection() {
+		if (fragment == null)
+			return;
+		if (fragment instanceof SearchFragment) {
+			drawerList.setItemChecked(navAdapter.getPositionByTag("search"),
+					true);
+		} else if (fragment instanceof AccountFragment) {
+			drawerList.setItemChecked(navAdapter.getPositionByTag("account"),
+					true);
+		} else if (fragment instanceof StarredFragment) {
+			drawerList.setItemChecked(navAdapter.getPositionByTag("starred"),
+					true);
+		} else if (fragment instanceof InfoFragment) {
+			drawerList.setItemChecked(navAdapter.getPositionByTag("info"),
+					true);
+		}
 	}
 
 	/** Swaps fragments in the main content view */
