@@ -113,6 +113,20 @@
         <item>259200000</item>
         <item>604800000</item>
     </string-array>
+    <string name="startup_title">Startbildschirm</string>
+    <string name="startup_summary">Welcher Bildschirm soll beim Start der App angezeigt werden?</string>
+    <string-array name="startup_labels">
+        <item>Katalogsuche</item>
+        <item>Konto</item>
+        <item>Merkliste</item>
+        <item>Informationen</item>
+    </string-array>
+    <string-array name="startup_values">
+        <item>search</item>
+        <item>account</item>
+        <item>starred</item>
+        <item>info</item>
+    </string-array>
 
     <string name="notification_warning">Warnzeitraum</string>
     <string name="notification_warning_desc">Wie lange vorher soll benachrichtigt werden?</string>
