@@ -282,9 +282,13 @@ public class SearchResultListActivity extends OpacActivity implements
 		}
 	}
 
-	protected void loaded() {		
-		listFragment.setListShown(true);
-		listFragment.setSearchResult(searchresult);
+	protected void loaded() {
+		try {
+			listFragment.setListShown(true);
+			listFragment.setSearchResult(searchresult);
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
