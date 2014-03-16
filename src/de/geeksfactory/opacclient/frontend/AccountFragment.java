@@ -92,6 +92,8 @@ import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.apis.OpacApi.ProlongAllResult;
 import de.geeksfactory.opacclient.apis.OpacApi.ProlongResult;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
+import de.geeksfactory.opacclient.frontend.MultiStepResultHelper.Callback;
+import de.geeksfactory.opacclient.frontend.MultiStepResultHelper.SelectionAdapter;
 import de.geeksfactory.opacclient.frontend.OpacActivity.AccountSelectedListener;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -408,7 +410,52 @@ public class AccountFragment extends Fragment implements
 			}
 			return;
 		}
-		prolongDo(a);
+
+		MultiStepResultHelper msrhProlong = new MultiStepResultHelper(
+				getSupportActivity(), a, new ProlongTask());
+		msrhProlong.setCallback(new Callback() {
+			@Override
+			public void onSuccess(MultiStepResult result) {
+				AccountDataSource adata = new AccountDataSource(getActivity());
+				adata.open();
+				adata.invalidateCachedAccountData(app.getAccount());
+				adata.close();
+				invalidateData();
+			}
+
+			@Override
+			public void onError(MultiStepResult result) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+				builder.setMessage(result.getMessage())
+						.setCancelable(true)
+						.setNegativeButton(R.string.dismiss,
+								new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface d, int id) {
+										d.cancel();
+									}
+								})
+						.setOnCancelListener(
+								new DialogInterface.OnCancelListener() {
+									@Override
+									public void onCancel(DialogInterface d) {
+										if (d != null)
+											d.cancel();
+									}
+								});
+				AlertDialog alert = builder.create();
+				alert.show();			
+			}
+
+			@Override
+			public void onUnhandledResult(MultiStepResult result) {
+			}
+
+			@Override
+			public void onUserCancel() {
+			}
+		});
+		msrhProlong.start();
 	}
 
 	protected void download(final String a) {
@@ -540,9 +587,8 @@ public class AccountFragment extends Fragment implements
 
 	public void show_connectivity_error(Exception e) {
 		e.printStackTrace();
-		if(e instanceof OpacErrorException) {
-			AccountDataSource adatasource = new AccountDataSource(
-					getActivity());
+		if (e instanceof OpacErrorException) {
+			AccountDataSource adatasource = new AccountDataSource(getActivity());
 			adatasource.open();
 			adatasource.invalidateCachedAccountData(account);
 			adatasource.close();
@@ -1135,12 +1181,12 @@ public class AccountFragment extends Fragment implements
 		}
 	}
 
-	public class ProlongTask extends OpacTask<ProlongResult> {
+	public class ProlongTask extends MultiStepResultHelper.StepTask {
 		private boolean success = true;
 		private String media;
 
 		@Override
-		protected ProlongResult doInBackground(Object... arg0) {
+		protected MultiStepResult doInBackground(Object... arg0) {
 			super.doInBackground(arg0);
 
 			app = (OpacClient) arg0[0];
@@ -1166,8 +1212,7 @@ public class AccountFragment extends Fragment implements
 		}
 
 		@Override
-		protected void onPostExecute(ProlongResult res) {
-			dialog.dismiss();
+		protected void onPostExecute(MultiStepResult res) {
 			if (getActivity() == null)
 				return;
 
@@ -1188,8 +1233,8 @@ public class AccountFragment extends Fragment implements
 				alert.show();
 				return;
 			}
-
-			prolongResult(media, res);
+			
+			super.onPostExecute(res);
 		}
 	}
 
@@ -1386,189 +1431,6 @@ public class AccountFragment extends Fragment implements
 					int position, long id) {
 				adialog.dismiss();
 				bookingDo(booking_info, result.getActionIdentifier(),
-						((Entry<String, Object>) possibilities[position])
-								.getKey());
-			}
-		});
-		switch (result.getActionIdentifier()) {
-		case ReservationResult.ACTION_BRANCH:
-			builder.setTitle(R.string.zweigstelle);
-		}
-		builder.setView(view).setNegativeButton(R.string.cancel,
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-						adialog.cancel();
-					}
-				});
-		adialog = builder.create();
-		adialog.show();
-	}
-
-	public void prolongStart(String media) {
-		long age = System.currentTimeMillis() - refreshtime;
-		if (refreshing || fromcache || age > MAX_CACHE_AGE) {
-			Toast.makeText(getActivity(), R.string.account_no_concurrent,
-					Toast.LENGTH_LONG).show();
-			if (!refreshing) {
-				refresh();
-			}
-			return;
-		}
-		prolongDo(media);
-	}
-
-	public void prolongDo(String media) {
-		prolongDo(media, 0, null);
-	}
-
-	public void prolongDo(String media, int useraction, String selection) {
-		if (dialog == null) {
-			dialog = ProgressDialog.show(getActivity(), "",
-					getString(R.string.doing_prolong), true);
-			dialog.show();
-		} else if (!dialog.isShowing()) {
-			dialog = ProgressDialog.show(getActivity(), "",
-					getString(R.string.doing_prolong), true);
-			dialog.show();
-		}
-
-		pt = new ProlongTask();
-		pt.execute(app, media, useraction, selection);
-	}
-
-	public void prolongResult(String media, ProlongResult result) {
-		AccountDataSource adata = new AccountDataSource(getActivity());
-		adata.open();
-		adata.invalidateCachedAccountData(app.getAccount());
-		adata.close();
-		switch (result.getStatus()) {
-		case CONFIRMATION_NEEDED:
-			prolongConfirmation(media, result);
-			break;
-		case SELECTION_NEEDED:
-			prolongSelection(media, result);
-			break;
-		case ERROR:
-			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			builder.setMessage(result.getMessage())
-					.setCancelable(true)
-					.setNegativeButton(R.string.dismiss,
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface d, int id) {
-									d.cancel();
-								}
-							})
-					.setOnCancelListener(
-							new DialogInterface.OnCancelListener() {
-								@Override
-								public void onCancel(DialogInterface d) {
-									if (d != null)
-										d.cancel();
-								}
-							});
-			AlertDialog alert = builder.create();
-			alert.show();
-			break;
-		case OK:
-			invalidateData();
-			break;
-		case UNSUPPORTED:
-			// TODO: Show dialog
-			break;
-		default:
-			break;
-		}
-	}
-
-	public void prolongConfirmation(final String media,
-			final ProlongResult result) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-		LayoutInflater inflater = getLayoutInflater();
-
-		View view = inflater.inflate(R.layout.dialog_reservation_details, null);
-
-		TableLayout table = (TableLayout) view.findViewById(R.id.tlDetails);
-
-		if (result.getDetails().size() == 1
-				&& result.getDetails().get(0).length == 1) {
-			((RelativeLayout) view.findViewById(R.id.rlConfirm))
-					.removeView(table);
-			TextView tv = new TextView(getActivity());
-			tv.setText(result.getDetails().get(0)[0]);
-			tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
-					LayoutParams.WRAP_CONTENT));
-			((RelativeLayout) view.findViewById(R.id.rlConfirm)).addView(tv);
-		} else {
-			for (String[] detail : result.getDetails()) {
-				TableRow tr = new TableRow(getActivity());
-				if (detail.length == 2) {
-					TextView tv1 = new TextView(getActivity());
-					tv1.setText(Html.fromHtml(detail[0]));
-					tv1.setTypeface(null, Typeface.BOLD);
-					tv1.setPadding(0, 0, 8, 0);
-					TextView tv2 = new TextView(getActivity());
-					tv2.setText(Html.fromHtml(detail[1]));
-					tv2.setEllipsize(TruncateAt.END);
-					tv2.setSingleLine(false);
-					tr.addView(tv1);
-					tr.addView(tv2);
-				} else if (detail.length == 1) {
-					TextView tv1 = new TextView(getActivity());
-					tv1.setText(Html.fromHtml(detail[0]));
-					tv1.setPadding(0, 2, 0, 2);
-					TableRow.LayoutParams params = new TableRow.LayoutParams(0);
-					params.span = 2;
-					tv1.setLayoutParams(params);
-					tr.addView(tv1);
-				}
-				table.addView(tr);
-			}
-		}
-
-		builder.setTitle(R.string.confirm_title)
-				.setView(view)
-				.setPositiveButton(R.string.confirm,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-								prolongDo(media,
-										MultiStepResult.ACTION_CONFIRMATION,
-										"confirmed");
-							}
-						})
-				.setNegativeButton(R.string.cancel,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-								adialog.cancel();
-							}
-						});
-		adialog = builder.create();
-		adialog.show();
-	}
-
-	public void prolongSelection(final String media, final ProlongResult result) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-		LayoutInflater inflater = getLayoutInflater();
-
-		View view = inflater.inflate(R.layout.dialog_simple_list, null);
-
-		ListView lv = (ListView) view.findViewById(R.id.lvBibs);
-		final Object[] possibilities = result.getSelection().valueSet()
-				.toArray();
-
-		lv.setAdapter(new SelectionAdapter(getActivity(), possibilities));
-		lv.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				adialog.dismiss();
-
-				prolongDo(media, result.getActionIdentifier(),
 						((Entry<String, Object>) possibilities[position])
 								.getKey());
 			}
@@ -1855,46 +1717,6 @@ public class AccountFragment extends Fragment implements
 		}
 
 		public ProlongAllResultAdapter(Context context, Object[] objects) {
-			super(context, R.layout.simple_spinner_item, objects);
-			this.objects = objects;
-		}
-
-	}
-
-	public class SelectionAdapter extends ArrayAdapter<Object> {
-
-		private Object[] objects;
-
-		@Override
-		public View getView(int position, View contentView, ViewGroup viewGroup) {
-			View view = null;
-
-			if (objects[position] == null) {
-				LayoutInflater layoutInflater = (LayoutInflater) getContext()
-						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				view = layoutInflater.inflate(R.layout.listitem_branch,
-						viewGroup, false);
-				return view;
-			}
-
-			String item = ((Entry<String, Object>) objects[position])
-					.getValue().toString();
-
-			if (contentView == null) {
-				LayoutInflater layoutInflater = (LayoutInflater) getContext()
-						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				view = layoutInflater.inflate(R.layout.listitem_branch,
-						viewGroup, false);
-			} else {
-				view = contentView;
-			}
-
-			TextView tvText = (TextView) view.findViewById(android.R.id.text1);
-			tvText.setText(item);
-			return view;
-		}
-
-		public SelectionAdapter(Context context, Object[] objects) {
 			super(context, R.layout.simple_spinner_item, objects);
 			this.objects = objects;
 		}
