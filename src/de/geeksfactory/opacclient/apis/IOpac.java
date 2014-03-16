@@ -78,6 +78,7 @@ public class IOpac extends BaseApi implements OpacApi {
 	protected String reusehtml;
 	protected String rechnr;
 	protected int results_total;
+	protected int maxProlongCount = -1;
 	CookieStore cookieStore = new BasicCookieStore();
 
 	protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
@@ -185,6 +186,8 @@ public class IOpac extends BaseApi implements OpacApi {
 
 		try {
 			this.opac_url = data.getString("baseurl");
+			if(data.has("maxprolongcount"))
+				this.maxProlongCount = data.getInt("maxprolongcount");
 		} catch (JSONException e) {
 			ACRA.getErrorReporter().handleException(e);
 		}
@@ -605,9 +608,16 @@ public class IOpac extends BaseApi implements OpacApi {
 						.replace("\u00a0", ""));
 				e.put(AccountData.KEY_LENT_AUTHOR, tr.child(1).text().trim()
 						.replace("\u00a0", ""));
-				e.put(AccountData.KEY_LENT_STATUS, tr.child(3).text().trim()
-						.replace("\u00a0", "")
-						+ "x verl.");
+				int prolongCount = Integer.parseInt(tr.child(3).text().trim()
+						.replace("\u00a0", ""));
+/*				not needed currently, because in Schleswig books can only be pro-
+ * 				longed once, so the prolong count is visible from the renewable status
+ *				e.put(AccountData.KEY_LENT_STATUS, String.valueOf(prolongCount)
+ *						+ "x verl."); */
+				if(maxProlongCount != -1) {
+					e.put(AccountData.KEY_LENT_RENEWABLE, prolongCount <
+							maxProlongCount ? "Y" : "N");
+				}
 				e.put(AccountData.KEY_LENT_DEADLINE, tr.child(4).text().trim()
 						.replace("\u00a0", ""));
 				try {

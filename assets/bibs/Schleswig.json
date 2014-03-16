@@ -3,7 +3,8 @@
     "city": "Schleswig",
     "data": {
         "baseurl": "http://176.94.16.49",
-        "information": "http://stadtbuecherei-schleswig.de/"
+        "information": "http://stadtbuecherei-schleswig.de/",
+        "maxprolongcount": 1
     },
     "geo": [
         54.51599,
