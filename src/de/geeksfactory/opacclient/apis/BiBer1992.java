@@ -98,7 +98,6 @@ public class BiBer1992 extends BaseApi {
 	private JSONObject m_data;
 	private MetaDataSource m_metadata;
 	private boolean m_initialised = false;
-	private String m_last_error;
 	private Library m_library;
 	private List<NameValuePair> m_nameValuePairs = new ArrayList<NameValuePair>(
 			2);
@@ -133,11 +132,6 @@ public class BiBer1992 extends BaseApi {
 				KEY_SEARCH_QUERY_YEAR, KEY_SEARCH_QUERY_SYSTEM,
 				KEY_SEARCH_QUERY_PUBLISHER, KEY_SEARCH_QUERY_CATEGORY,
 				KEY_SEARCH_QUERY_BRANCH };
-	}
-
-	@Override
-	public String getLast_error() {
-		return m_last_error;
 	}
 
 	private void setMediaTypeFromImageFilename(SearchResult sr, String imagename) {
@@ -1093,7 +1087,7 @@ public class BiBer1992 extends BaseApi {
 			if (elTable.size() > 0) {
 				errText = elTable.get(0).text();
 			}
-			m_last_error = errText;
+			// TODO: m_last_error = errText;
 			return null;
 		}
 

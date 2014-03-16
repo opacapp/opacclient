@@ -88,6 +88,7 @@ import de.geeksfactory.opacclient.apis.EbookServiceApi;
 import de.geeksfactory.opacclient.apis.EbookServiceApi.BookingResult;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult;
+import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.apis.OpacApi.ProlongAllResult;
 import de.geeksfactory.opacclient.apis.OpacApi.ProlongResult;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
@@ -501,30 +502,8 @@ public class AccountFragment extends Fragment implements
 		accountSelected(account);
 	}
 
-	public void prolong_done(int result) {
-		if (result == STATUS_SUCCESS) {
-			invalidateData();
-		} else if (result == STATUS_FAILED) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			builder.setMessage(
-					"Der Web-Opac meldet: " + app.getApi().getLast_error())
-					.setCancelable(true)
-					.setNegativeButton(R.string.dismiss,
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int id) {
-									dialog.cancel();
-								}
-							});
-			AlertDialog alert = builder.create();
-			alert.show();
-		}
-	}
-
 	public class LoadTask extends OpacTask<AccountData> {
 
-		private boolean success = true;
 		private Exception exception;
 
 		@Override
@@ -532,17 +511,15 @@ public class AccountFragment extends Fragment implements
 			super.doInBackground(arg0);
 			try {
 				AccountData res = app.getApi().account(app.getAccount());
-				success = true;
 				return res;
 			} catch (java.net.UnknownHostException e) {
-				success = false;
 				exception = e;
 			} catch (java.net.SocketException e) {
-				success = false;
+				exception = e;
+			} catch (OpacErrorException e) {
 				exception = e;
 			} catch (Exception e) {
 				ACRA.getErrorReporter().handleException(e);
-				success = false;
 				exception = e;
 			}
 			return null;
@@ -550,7 +527,7 @@ public class AccountFragment extends Fragment implements
 
 		@Override
 		protected void onPostExecute(AccountData result) {
-			if (success) {
+			if (result != null) {
 				loaded(result);
 			} else {
 				refreshing = false;
@@ -563,6 +540,15 @@ public class AccountFragment extends Fragment implements
 
 	public void show_connectivity_error(Exception e) {
 		e.printStackTrace();
+		if(e instanceof OpacErrorException) {
+			AccountDataSource adatasource = new AccountDataSource(
+					getActivity());
+			adatasource.open();
+			adatasource.invalidateCachedAccountData(account);
+			adatasource.close();
+			dialog_wrong_credentials(e.getMessage(), true);
+			return;
+		}
 		final FrameLayout errorView = (FrameLayout) getView().findViewById(
 				R.id.error_view);
 		errorView.removeAllViews();
@@ -602,24 +588,6 @@ public class AccountFragment extends Fragment implements
 	}
 
 	public void loaded(final AccountData result) {
-
-		if (result == null) {
-			refreshing = false;
-			getActivity().supportInvalidateOptionsMenu();
-
-			if (app.getApi().getLast_error() == null
-					|| app.getApi().getLast_error().equals("")) {
-				show_connectivity_error(null);
-			} else {
-				AccountDataSource adatasource = new AccountDataSource(
-						getActivity());
-				adatasource.open();
-				adatasource.invalidateCachedAccountData(account);
-				adatasource.close();
-				dialog_wrong_credentials(app.getApi().getLast_error(), true);
-			}
-			return;
-		}
 
 		AccountDataSource adatasource = new AccountDataSource(getActivity());
 		adatasource.open();

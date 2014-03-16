@@ -34,7 +34,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.acra.ACRA;
@@ -81,7 +80,6 @@ public class Bibliotheca extends BaseApi {
 	protected JSONObject data;
 	protected MetaDataSource metadata;
 	protected boolean initialised = false;
-	protected String last_error;
 	protected Library library;
 	protected long logged_in;
 	protected Account logged_in_as;
@@ -130,11 +128,6 @@ public class Bibliotheca extends BaseApi {
 				KEY_SEARCH_QUERY_YEAR_RANGE_END, KEY_SEARCH_QUERY_SYSTEM,
 				KEY_SEARCH_QUERY_AUDIENCE, KEY_SEARCH_QUERY_PUBLISHER,
 				KEY_SEARCH_QUERY_BARCODE, "order" };
-	}
-
-	@Override
-	public String getLast_error() {
-		return last_error;
 	}
 
 	public void extract_meta(String html) {
@@ -673,6 +666,9 @@ public class Bibliotheca extends BaseApi {
 				e.printStackTrace();
 				return new ProlongResult(MultiStepResult.Status.ERROR,
 						"Konto konnte nicht geladen werden");
+			} catch (OpacErrorException e) {
+				return new ProlongResult(MultiStepResult.Status.ERROR,
+						e.getMessage());
 			}
 		} else if (logged_in_as.getId() != account.getId()) {
 			try {
@@ -681,6 +677,9 @@ public class Bibliotheca extends BaseApi {
 				e.printStackTrace();
 				return new ProlongResult(MultiStepResult.Status.ERROR,
 						"Konto konnte nicht geladen werden");
+			} catch (OpacErrorException e) {
+				return new ProlongResult(MultiStepResult.Status.ERROR,
+						e.getMessage());
 			}
 		}
 
@@ -750,6 +749,9 @@ public class Bibliotheca extends BaseApi {
 			} catch (JSONException e) {
 				e.printStackTrace();
 				return new ProlongAllResult(MultiStepResult.Status.ERROR, "Verbindungsfehler.");
+			} catch (OpacErrorException e) {
+				return new ProlongAllResult(MultiStepResult.Status.ERROR,
+						e.getMessage());
 			}
 		} else if (logged_in_as.getId() != account.getId()) {
 			try {
@@ -757,14 +759,17 @@ public class Bibliotheca extends BaseApi {
 			} catch (JSONException e) {
 				e.printStackTrace();
 				return new ProlongAllResult(MultiStepResult.Status.ERROR, "Verbindungsfehler.");
+			} catch (OpacErrorException e) {
+				return new ProlongAllResult(MultiStepResult.Status.ERROR,
+						e.getMessage());
 			}
 		}
 		String html = httpGet(opac_url + "/index.asp?target=alleverl", getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 
 		if (doc.getElementsByClass("kontomeldung").size() == 1) {
-			last_error = doc.getElementsByClass("kontomeldung").get(0).text();
-			return new ProlongAllResult(MultiStepResult.Status.ERROR, last_error);
+			String err = doc.getElementsByClass("kontomeldung").get(0).text();
+			return new ProlongAllResult(MultiStepResult.Status.ERROR, err);
 		}
 		
 		if(doc.select(".kontozeile table").size() == 1) {
@@ -811,7 +816,7 @@ public class Bibliotheca extends BaseApi {
 
 	@Override
 	public boolean cancel(Account account, String a) throws IOException,
-			NotReachableException {
+			NotReachableException, OpacErrorException {
 		if (!initialised)
 			start();
 		if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
@@ -843,7 +848,7 @@ public class Bibliotheca extends BaseApi {
 
 	@Override
 	public AccountData account(Account acc) throws IOException,
-			NotReachableException, JSONException, SocketException {
+			NotReachableException, JSONException, SocketException, OpacErrorException {
 		if (!initialised)
 			start();
 
@@ -885,8 +890,7 @@ public class Bibliotheca extends BaseApi {
 		// }
 
 		if (doc.getElementsByClass("kontomeldung").size() == 1) {
-			last_error = doc.getElementsByClass("kontomeldung").get(0).text();
-			return null;
+			throw new OpacErrorException(doc.getElementsByClass("kontomeldung").get(0).text());
 		}
 
 		logged_in = System.currentTimeMillis();

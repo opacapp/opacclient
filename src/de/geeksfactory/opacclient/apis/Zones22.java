@@ -76,7 +76,6 @@ public class Zones22 extends BaseApi {
 	private String opac_url = "";
 	private JSONObject data;
 	private MetaDataSource metadata;
-	private String last_error;
 	private Library library;
 	private int page;
 	private String searchobj;
@@ -109,11 +108,6 @@ public class Zones22 extends BaseApi {
 		return new String[] { KEY_SEARCH_QUERY_TITLE, KEY_SEARCH_QUERY_AUTHOR,
 				KEY_SEARCH_QUERY_KEYWORDA, KEY_SEARCH_QUERY_BRANCH,
 				KEY_SEARCH_QUERY_ISBN, KEY_SEARCH_QUERY_YEAR };
-	}
-
-	@Override
-	public String getLast_error() {
-		return last_error;
 	}
 
 	public void extract_meta(Document doc) {
@@ -193,7 +187,7 @@ public class Zones22 extends BaseApi {
 
 	@Override
 	public SearchRequestResult search(Bundle query) throws IOException,
-			NotReachableException {
+			NotReachableException, OpacErrorException {
 		start();
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -227,11 +221,11 @@ public class Zones22 extends BaseApi {
 					.getString(KEY_SEARCH_QUERY_BRANCH)));
 
 		if (index > 3) {
-			last_error = "Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.";
-			return null;
+			throw new OpacErrorException(
+					"Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.");
 		} else if (index == 1) {
-			last_error = "Es wurden keine Suchkriterien eingegeben.";
-			return null;
+			throw new OpacErrorException(
+					"Es wurden keine Suchkriterien eingegeben.");
 		}
 
 		String html = httpGet(opac_url + "/" + searchobj + "?"
@@ -244,7 +238,7 @@ public class Zones22 extends BaseApi {
 
 	@Override
 	public SearchRequestResult searchGetPage(int page) throws IOException,
-			NotReachableException {
+			NotReachableException, OpacErrorException {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 		params.add(new BasicNameValuePair("Style", "Portal3"));
@@ -265,13 +259,14 @@ public class Zones22 extends BaseApi {
 		return parse_search(html, page);
 	}
 
-	private SearchRequestResult parse_search(String html, int page) {
+	private SearchRequestResult parse_search(String html, int page)
+			throws OpacErrorException {
 		Document doc = Jsoup.parse(html);
 		doc.setBaseUri(opac_url + "/APS_PRESENT_BIB");
 
 		if (doc.select("#ErrorAdviceRow").size() > 0) {
-			last_error = doc.select("#ErrorAdviceRow").text().trim();
-			return null;
+			throw new OpacErrorException(doc.select("#ErrorAdviceRow").text()
+					.trim());
 		}
 
 		int results_total = -1;
@@ -306,10 +301,11 @@ public class Zones22 extends BaseApi {
 			} else {
 				sr.setType(defaulttypes.get(typetext));
 			}
-			
-			if(tr.select(".SummaryImageCell img[id^=Bookcover]").size() > 0) {
-				String imgUrl =
-				tr.select(".SummaryImageCell img[id^=Bookcover]").first().attr("src");
+
+			if (tr.select(".SummaryImageCell img[id^=Bookcover]").size() > 0) {
+				String imgUrl = tr
+						.select(".SummaryImageCell img[id^=Bookcover]").first()
+						.attr("src");
 				sr.setCover(imgUrl);
 			}
 
@@ -365,8 +361,10 @@ public class Zones22 extends BaseApi {
 		params.add(new BasicNameValuePair("ResponseEncoding", "utf-8"));
 		params.add(new BasicNameValuePair("no", id));
 
-		String html = httpGet(opac_url + "/APS_PRESENT_BIB?"
-				+ URLEncodedUtils.format(params, "UTF-8"), getDefaultEncoding());
+		String html = httpGet(
+				opac_url + "/APS_PRESENT_BIB?"
+						+ URLEncodedUtils.format(params, "UTF-8"),
+				getDefaultEncoding());
 
 		return parse_result(id, html);
 	}
@@ -605,13 +603,23 @@ public class Zones22 extends BaseApi {
 	public ProlongResult prolong(String media, Account account, int useraction,
 			String Selection) throws IOException {
 		if (accountobj == null) {
-			login(account);
+			try {
+				login(account);
+			} catch (OpacErrorException e) {
+				return new ProlongResult(MultiStepResult.Status.ERROR,
+						e.getMessage());
+			}
 		}
 		String html = httpGet(opac_url + "/" + media, getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 		if ((html.contains("document.location.replace") || html
 				.contains("Schnellsuche")) && useraction == 0) {
-			login(account);
+			try {
+				login(account);
+			} catch (OpacErrorException e) {
+				return new ProlongResult(MultiStepResult.Status.ERROR,
+						e.getMessage());
+			}
 			prolong(media, account, 1, null);
 		}
 		String dialog = doc.select("#SSRenewDlgContent").text();
@@ -627,7 +635,7 @@ public class Zones22 extends BaseApi {
 		return false;
 	}
 
-	private Document login(Account acc) throws IOException {
+	private Document login(Account acc) throws IOException, OpacErrorException {
 		String html = httpGet(
 				opac_url
 						+ "/APS_ZONES?fn=MyZone&Style=Portal3&SubStyle=&Lang=GER&ResponseEncoding=utf-8",
@@ -662,8 +670,7 @@ public class Zones22 extends BaseApi {
 		}
 
 		if (!loginHtml.contains("Kontostand")) {
-			last_error = "Login fehlgeschlagen.";
-			return null;
+			throw new OpacErrorException("Login fehlgeschlagen.");
 		}
 
 		Document doc2 = Jsoup.parse(loginHtml);
@@ -680,7 +687,8 @@ public class Zones22 extends BaseApi {
 
 	@Override
 	public AccountData account(Account acc) throws IOException,
-			NotReachableException, JSONException, SocketException {
+			NotReachableException, JSONException, SocketException,
+			OpacErrorException {
 		Document login = login(acc);
 		if (login == null)
 			return null;

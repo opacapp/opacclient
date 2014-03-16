@@ -73,7 +73,6 @@ public class IOpac extends BaseApi implements OpacApi {
 	protected JSONObject data;
 	protected MetaDataSource metadata;
 	protected boolean initialised = false;
-	protected String last_error;
 	protected Library library;
 	protected int resultcount = 10;
 	protected String reusehtml;
@@ -203,7 +202,7 @@ public class IOpac extends BaseApi implements OpacApi {
 
 	@Override
 	public SearchRequestResult search(Bundle query) throws IOException,
-			NotReachableException {
+			NotReachableException, OpacErrorException {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 		int index = 0;
@@ -237,8 +236,7 @@ public class IOpac extends BaseApi implements OpacApi {
 		params.add(new BasicNameValuePair("pshStart", "Suchen"));
 
 		if (index == 0) {
-			last_error = "Es wurden keine Suchkriterien eingegeben.";
-			return null;
+			throw new OpacErrorException("Es wurden keine Suchkriterien eingegeben.");
 		}
 
 		String html = httpPost(opac_url + "/cgi-bin/di.exe",
@@ -247,7 +245,7 @@ public class IOpac extends BaseApi implements OpacApi {
 		return parse_search(html, 1);
 	}
 
-	protected SearchRequestResult parse_search(String html, int page) {
+	protected SearchRequestResult parse_search(String html, int page) throws OpacErrorException {
 		Document doc = Jsoup.parse(html);
 
 		if (doc.select("h4").size() > 0) {
@@ -260,17 +258,14 @@ public class IOpac extends BaseApi implements OpacApi {
 					&& !doc.select("h4").text().trim()
 							.contains("Es wurden mehr als")) {
 				// error
-				last_error = doc.select("h4").text().trim();
-				return null;
+				throw new OpacErrorException(doc.select("h4").text().trim());
 			}
 		} else if (doc.select("h1").size() > 0) {
 			if (doc.select("h1").text().trim().contains("RUNTIME ERROR")) {
 				//Server Error
-				last_error = "Serverfehler. Bitte probieren Sie es später noch einmal.";
-				return null;
+				throw new OpacErrorException("Serverfehler. Bitte probieren Sie es später noch einmal.");
 			} else {
-				last_error = "Unbekannter Fehler: " + doc.select("h1").text().trim();
-				return null;
+				throw new OpacErrorException("Unbekannter Fehler: " + doc.select("h1").text().trim());
 			}
 		} else {
 			return null;
@@ -358,7 +353,7 @@ public class IOpac extends BaseApi implements OpacApi {
 
 	@Override
 	public SearchRequestResult searchGetPage(int page) throws IOException,
-			NotReachableException {
+			NotReachableException, OpacErrorException {
 		if (!initialised)
 			start();
 
@@ -548,7 +543,7 @@ public class IOpac extends BaseApi implements OpacApi {
 
 	@Override
 	public AccountData account(Account account) throws IOException,
-			JSONException {
+			JSONException, OpacErrorException {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("sleKndNr", account.getName()));
 		params.add(new BasicNameValuePair("slePw", account.getPassword()));
@@ -578,15 +573,12 @@ public class IOpac extends BaseApi implements OpacApi {
 					//There is no lent media, but the server is working correctly
 				} else if (doc.select("h1").text().trim().contains("RUNTIME ERROR")) {
 					//Server Error
-					last_error = "Serverfehler. Bitte probieren Sie es später noch einmal.";
-					return null;
+					throw new OpacErrorException("Serverfehler. Bitte probieren Sie es später noch einmal.");
 				} else {
-					last_error = "Unbekannter Fehler: " + doc.select("h1").text().trim() + " Bitte prüfen Sie, ob ihre Kontodaten korrekt sind.";
-					return null;
+					throw new OpacErrorException("Unbekannter Fehler: " + doc.select("h1").text().trim() + " Bitte prüfen Sie, ob ihre Kontodaten korrekt sind.");
 				}
 			} else {
-				last_error = "Unbekannter Fehler. Bitte prüfen Sie, ob ihre Kontodaten korrekt sind.";
-				return null;
+				throw new OpacErrorException("Unbekannter Fehler. Bitte prüfen Sie, ob ihre Kontodaten korrekt sind.");
 			}
 		}
 		return res;
@@ -668,11 +660,6 @@ public class IOpac extends BaseApi implements OpacApi {
 				KEY_SEARCH_QUERY_KEYWORDA, KEY_SEARCH_QUERY_TITLE,
 				KEY_SEARCH_QUERY_YEAR, KEY_SEARCH_QUERY_SYSTEM,
 				KEY_SEARCH_QUERY_PUBLISHER, KEY_SEARCH_QUERY_CATEGORY };
-	}
-
-	@Override
-	public String getLast_error() {
-		return last_error;
 	}
 
 	@Override
