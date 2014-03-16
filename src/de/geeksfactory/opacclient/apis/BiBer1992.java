@@ -557,6 +557,9 @@ public class BiBer1992 extends BaseApi {
 		if (!m_initialised)
 			start();
 
+		if (!id.contains("ftitle.C")) {
+			id = "ftitle.C?LANG=de&FUNC=full&" + id + "=YES";
+		}
 		// normally full path like
 		// "/opac/ftitle.C?LANG=de&FUNC=full&331313252=YES"
 		// but sometimes (Wuerzburg) "ftitle.C?LANG=de&FUNC=full&331313252=YES"

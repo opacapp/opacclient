@@ -737,11 +737,11 @@ public class AccountFragment extends Fragment implements
 							intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
 									item.getAsString(AccountData.KEY_LENT_ID));
 							startActivity(intent);
-							getActivity().finish();
 						}
 					};
 					v.findViewById(R.id.tvTitel).setOnClickListener(gotoDetails);
 					v.findViewById(R.id.tvVerfasser).setOnClickListener(gotoDetails);
+					v.findViewById(R.id.tvStatus).setOnClickListener(gotoDetails);
 				}
 				
 				if (item.containsKey(AccountData.KEY_LENT_TITLE)) {
@@ -907,9 +907,25 @@ public class AccountFragment extends Fragment implements
 			t1.setText(R.string.reservations_none);
 			llRes.addView(t1);
 		} else {
-			for (ContentValues item : result.getReservations()) {
+			for (final ContentValues item : result.getReservations()) {
 				View v = getLayoutInflater().inflate(
 						R.layout.listitem_account_reservation, null);
+
+				if (item.containsKey(AccountData.KEY_RESERVATION_ID)) {
+					View.OnClickListener gotoDetails = new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							Intent intent = new Intent(getActivity(),
+									SearchResultDetailActivity.class);
+							intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
+									item.getAsString(AccountData.KEY_LENT_ID));
+							startActivity(intent);
+						}
+					};
+					v.findViewById(R.id.tvTitel).setOnClickListener(gotoDetails);
+					v.findViewById(R.id.tvVerfasser).setOnClickListener(gotoDetails);
+					v.findViewById(R.id.tvStatus).setOnClickListener(gotoDetails);
+				}
 
 				if (item.containsKey(AccountData.KEY_RESERVATION_TITLE)) {
 					((TextView) v.findViewById(R.id.tvTitel))
