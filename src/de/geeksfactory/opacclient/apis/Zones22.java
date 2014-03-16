@@ -834,8 +834,9 @@ public class Zones22 extends BaseApi {
 	}
 
 	@Override
-	public boolean prolongAll(Account account) throws IOException {
-		return false;
+	public ProlongAllResult prolongAll(Account account, int useraction,
+			String selection) throws IOException {
+		return null;
 	}
 
 	@Override

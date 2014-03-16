@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.acra.ACRA;
@@ -55,6 +56,7 @@ import org.jsoup.select.Elements;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.SparseArray;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -737,7 +739,8 @@ public class Bibliotheca extends BaseApi {
 	}
 
 	@Override
-	public boolean prolongAll(Account account) throws IOException {
+	public ProlongAllResult prolongAll(Account account, int useraction,
+			String selection) throws IOException {
 		if (!initialised)
 			start();
 		if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
@@ -746,14 +749,14 @@ public class Bibliotheca extends BaseApi {
 				account(account);
 			} catch (JSONException e) {
 				e.printStackTrace();
-				return false;
+				return new ProlongAllResult(MultiStepResult.Status.ERROR, "Verbindungsfehler.");
 			}
 		} else if (logged_in_as.getId() != account.getId()) {
 			try {
 				account(account);
 			} catch (JSONException e) {
 				e.printStackTrace();
-				return false;
+				return new ProlongAllResult(MultiStepResult.Status.ERROR, "Verbindungsfehler.");
 			}
 		}
 		String html = httpGet(opac_url + "/index.asp?target=alleverl", getDefaultEncoding());
@@ -761,9 +764,49 @@ public class Bibliotheca extends BaseApi {
 
 		if (doc.getElementsByClass("kontomeldung").size() == 1) {
 			last_error = doc.getElementsByClass("kontomeldung").get(0).text();
-			return false;
+			return new ProlongAllResult(MultiStepResult.Status.ERROR, last_error);
 		}
-		return true;
+		
+		if(doc.select(".kontozeile table").size() == 1) {
+			SparseArray<String> colmap = new SparseArray<String>();
+			List<ContentValues> result = new ArrayList<ContentValues>();
+			for(Element tr : doc.select(".kontozeile table tr")) {
+				if(tr.select(".tabHeaderKonto").size() > 0) {
+					int i = 0;
+					for (Element th : tr.select("th")) {
+						if (th.text().contains("Verfasser")) {
+							colmap.put(i,
+									OpacApi.ProlongAllResult.KEY_LINE_AUTHOR);
+						} else if (th.text().contains("Titel")) {
+							colmap.put(i,
+									OpacApi.ProlongAllResult.KEY_LINE_TITLE);
+						} else if (th.text().contains("Neue")) {
+							colmap.put(
+									i,
+									OpacApi.ProlongAllResult.KEY_LINE_NEW_RETURNDATE);
+						} else if (th.text().contains("Frist")) {
+							colmap.put(
+									i,
+									OpacApi.ProlongAllResult.KEY_LINE_OLD_RETURNDATE);
+						} else if (th.text().contains("Status")) {
+							colmap.put(i,
+									OpacApi.ProlongAllResult.KEY_LINE_MESSAGE);
+						}
+						i++;
+					}
+				} else {
+					ContentValues line = new ContentValues();
+					for (int i = 0; i < colmap.size(); i++) {
+						line.put(colmap.get(colmap.keyAt(i)), tr.child(i)
+								.text().trim());
+					}
+					result.add(line);
+				}
+			}
+			return new ProlongAllResult(MultiStepResult.Status.OK, result);
+		}
+		
+		return new ProlongAllResult(MultiStepResult.Status.ERROR, "Parse error");
 	}
 
 	@Override

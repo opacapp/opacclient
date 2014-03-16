@@ -31,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -412,16 +413,16 @@ public class SISIS extends BaseApi implements OpacApi {
 						sr.setType(MediaType.valueOf(data.getJSONObject(
 								"mediatypes").getString(fname)));
 					} catch (JSONException e) {
-						sr.setType(defaulttypes.get(fname.toLowerCase()
+						sr.setType(defaulttypes.get(fname.toLowerCase(Locale.GERMAN)
 								.replace(".jpg", "").replace(".gif", "")
 								.replace(".png", "")));
 					} catch (IllegalArgumentException e) {
-						sr.setType(defaulttypes.get(fname.toLowerCase()
+						sr.setType(defaulttypes.get(fname.toLowerCase(Locale.GERMAN)
 								.replace(".jpg", "").replace(".gif", "")
 								.replace(".png", "")));
 					}
 				} else {
-					sr.setType(defaulttypes.get(fname.toLowerCase()
+					sr.setType(defaulttypes.get(fname.toLowerCase(Locale.GERMAN)
 							.replace(".jpg", "").replace(".gif", "")
 							.replace(".png", "")));
 				}
@@ -840,7 +841,7 @@ public class SISIS extends BaseApi implements OpacApi {
 		Pattern status_and_barcode = Pattern.compile("^(.*) ([0-9A-Za-z]+)$");
 
 		Elements exemplartrs = doc.select("#tab-content .data tr").not("#bg2");
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
 		for (Element tr : exemplartrs) {
 			try {
 				ContentValues e = new ContentValues();
@@ -1226,7 +1227,7 @@ public class SISIS extends BaseApi implements OpacApi {
 		Elements copytrs = doc.select(".data tr");
 		doc.setBaseUri(opac_url);
 
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
 		
 		int trs = copytrs.size();
 		if (trs == 1)
@@ -1510,8 +1511,9 @@ public class SISIS extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public boolean prolongAll(Account account) throws IOException {
-		return false;
+	public ProlongAllResult prolongAll(Account account, int useraction,
+			String selection) throws IOException {
+		return null;
 	}
 
 	@Override

@@ -39,11 +39,11 @@ import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.app.ProgressDialog;
+import org.holoeverywhere.widget.Button;
 import org.holoeverywhere.widget.FrameLayout;
 import org.holoeverywhere.widget.LinearLayout;
 import org.holoeverywhere.widget.ListView;
 import org.holoeverywhere.widget.TextView;
-import org.holoeverywhere.widget.Button;
 import org.json.JSONException;
 
 import android.annotation.SuppressLint;
@@ -63,7 +63,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.v4.view.MenuItemCompat;
 import android.text.Html;
 import android.text.TextUtils.TruncateAt;
 import android.view.Menu;
@@ -73,7 +72,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -90,6 +88,7 @@ import de.geeksfactory.opacclient.apis.EbookServiceApi;
 import de.geeksfactory.opacclient.apis.EbookServiceApi.BookingResult;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult;
+import de.geeksfactory.opacclient.apis.OpacApi.ProlongAllResult;
 import de.geeksfactory.opacclient.apis.OpacApi.ProlongResult;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
 import de.geeksfactory.opacclient.frontend.OpacActivity.AccountSelectedListener;
@@ -211,49 +210,12 @@ public class AccountFragment extends Fragment implements
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
-	private void prolongAll() {
-		long age = System.currentTimeMillis() - refreshtime;
-		if (refreshing || age > MAX_CACHE_AGE) {
-			Toast.makeText(getActivity(), R.string.account_no_concurrent,
-					Toast.LENGTH_LONG).show();
-			if (!refreshing) {
-				refresh();
-			}
-			return;
-		}
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setMessage(R.string.prolong_all_confirm)
-				.setCancelable(true)
-				.setNegativeButton(R.string.no,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface d, int id) {
-								d.cancel();
-							}
-						})
-				.setPositiveButton(R.string.yes,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface d, int id) {
-								d.dismiss();
-								dialog = ProgressDialog.show(getActivity(), "",
-										getString(R.string.doing_prolong_all),
-										true);
-								dialog.show();
-								pt = new ProlongAllTask();
-								pt.execute(app);
-							}
-						});
-		AlertDialog alert = builder.create();
-		alert.show();
-	}
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.action_refresh) {
 			refresh();
 		} else if (item.getItemId() == R.id.action_prolong_all) {
-			prolongAll();
+			prolongAllStart();
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -734,16 +696,20 @@ public class AccountFragment extends Fragment implements
 						public void onClick(View v) {
 							Intent intent = new Intent(getActivity(),
 									SearchResultDetailActivity.class);
-							intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
+							intent.putExtra(
+									SearchResultDetailFragment.ARG_ITEM_ID,
 									item.getAsString(AccountData.KEY_LENT_ID));
 							startActivity(intent);
 						}
 					};
-					v.findViewById(R.id.tvTitel).setOnClickListener(gotoDetails);
-					v.findViewById(R.id.tvVerfasser).setOnClickListener(gotoDetails);
-					v.findViewById(R.id.tvStatus).setOnClickListener(gotoDetails);
+					v.findViewById(R.id.tvTitel)
+							.setOnClickListener(gotoDetails);
+					v.findViewById(R.id.tvVerfasser).setOnClickListener(
+							gotoDetails);
+					v.findViewById(R.id.tvStatus).setOnClickListener(
+							gotoDetails);
 				}
-				
+
 				if (item.containsKey(AccountData.KEY_LENT_TITLE)) {
 					((TextView) v.findViewById(R.id.tvTitel)).setText(Html
 							.fromHtml(item
@@ -917,14 +883,18 @@ public class AccountFragment extends Fragment implements
 						public void onClick(View v) {
 							Intent intent = new Intent(getActivity(),
 									SearchResultDetailActivity.class);
-							intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
+							intent.putExtra(
+									SearchResultDetailFragment.ARG_ITEM_ID,
 									item.getAsString(AccountData.KEY_LENT_ID));
 							startActivity(intent);
 						}
 					};
-					v.findViewById(R.id.tvTitel).setOnClickListener(gotoDetails);
-					v.findViewById(R.id.tvVerfasser).setOnClickListener(gotoDetails);
-					v.findViewById(R.id.tvStatus).setOnClickListener(gotoDetails);
+					v.findViewById(R.id.tvTitel)
+							.setOnClickListener(gotoDetails);
+					v.findViewById(R.id.tvVerfasser).setOnClickListener(
+							gotoDetails);
+					v.findViewById(R.id.tvStatus).setOnClickListener(
+							gotoDetails);
 				}
 
 				if (item.containsKey(AccountData.KEY_RESERVATION_TITLE)) {
@@ -1255,20 +1225,16 @@ public class AccountFragment extends Fragment implements
 		}
 	}
 
-	public class ProlongAllTask extends OpacTask<Integer> {
+	public class ProlongAllTask extends OpacTask<ProlongAllResult> {
 		private boolean success = true;
 
 		@Override
-		protected Integer doInBackground(Object... arg0) {
+		protected ProlongAllResult doInBackground(Object... arg0) {
 			super.doInBackground(arg0);
 			try {
-				boolean res = app.getApi().prolongAll(account);
-				success = true;
-				if (res) {
-					return STATUS_SUCCESS;
-				} else {
-					return STATUS_FAILED;
-				}
+				ProlongAllResult res = app.getApi()
+						.prolongAll(account, 0, null);
+				return res;
 			} catch (java.net.UnknownHostException e) {
 				success = false;
 			} catch (java.net.SocketException e) {
@@ -1277,17 +1243,17 @@ public class AccountFragment extends Fragment implements
 				ACRA.getErrorReporter().handleException(e);
 				success = false;
 			}
-			return STATUS_SUCCESS;
+			return null;
 		}
 
 		@Override
-		protected void onPostExecute(Integer result) {
+		protected void onPostExecute(ProlongAllResult result) {
 			dialog.dismiss();
 			if (getActivity() == null)
 				return;
 
 			if (success) {
-				prolong_done(result);
+				prolongAllResult(result);
 			} else {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						getActivity());
@@ -1652,6 +1618,279 @@ public class AccountFragment extends Fragment implements
 				});
 		adialog = builder.create();
 		adialog.show();
+	}
+
+	public void prolongAllStart() {
+		if (refreshing) {
+			Toast.makeText(getActivity(), R.string.account_no_concurrent,
+					Toast.LENGTH_LONG).show();
+			if (!refreshing) {
+				refresh();
+			}
+			return;
+		}
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		builder.setMessage(R.string.prolong_all_confirm)
+				.setCancelable(true)
+				.setNegativeButton(R.string.no,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface d, int id) {
+								d.cancel();
+							}
+						})
+				.setPositiveButton(R.string.yes,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface d, int id) {
+								prolongAllDo();
+							}
+						});
+		AlertDialog alert = builder.create();
+		alert.show();
+
+	}
+
+	public void prolongAllDo() {
+		prolongAllDo(0, null);
+	}
+
+	public void prolongAllDo(int useraction, String selection) {
+		if (dialog == null) {
+			dialog = ProgressDialog.show(getActivity(), "",
+					getString(R.string.doing_prolong_all), true);
+			dialog.show();
+		} else if (!dialog.isShowing()) {
+			dialog = ProgressDialog.show(getActivity(), "",
+					getString(R.string.doing_prolong_all), true);
+			dialog.show();
+		}
+
+		pt = new ProlongAllTask();
+		pt.execute(app);
+	}
+
+	public void prolongAllResult(ProlongAllResult result) {
+		AccountDataSource adata = new AccountDataSource(getActivity());
+		adata.open();
+		adata.invalidateCachedAccountData(app.getAccount());
+		adata.close();
+		switch (result.getStatus()) {
+		case CONFIRMATION_NEEDED:
+			prolongAllConfirmation(result);
+			break;
+		case SELECTION_NEEDED:
+			prolongAllSelection(result);
+			break;
+		case ERROR:
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			builder.setMessage(result.getMessage())
+					.setCancelable(true)
+					.setNegativeButton(R.string.dismiss,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface d, int id) {
+									d.cancel();
+								}
+							})
+					.setOnCancelListener(
+							new DialogInterface.OnCancelListener() {
+								@Override
+								public void onCancel(DialogInterface d) {
+									if (d != null)
+										d.cancel();
+								}
+							});
+			AlertDialog alert = builder.create();
+			alert.show();
+			break;
+		case OK:
+			builder = new AlertDialog.Builder(getActivity());
+
+			LayoutInflater inflater = getLayoutInflater();
+
+			View view = inflater.inflate(R.layout.dialog_simple_list, null);
+
+			ListView lv = (ListView) view.findViewById(R.id.lvBibs);
+
+			lv.setAdapter(new ProlongAllResultAdapter(getActivity(), result
+					.getResults().toArray()));
+			switch (result.getActionIdentifier()) {
+			case ReservationResult.ACTION_BRANCH:
+				builder.setTitle(R.string.zweigstelle);
+			}
+			builder.setView(view).setNeutralButton(R.string.dismiss,
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int id) {
+							adialog.cancel();
+							invalidateData();
+						}
+					});
+			adialog = builder.create();
+			adialog.show();
+			break;
+		case UNSUPPORTED:
+			// TODO: Show dialog
+			break;
+		default:
+			break;
+		}
+	}
+
+	public void prolongAllConfirmation(final ProlongAllResult result) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+		LayoutInflater inflater = getLayoutInflater();
+
+		View view = inflater.inflate(R.layout.dialog_reservation_details, null);
+
+		TableLayout table = (TableLayout) view.findViewById(R.id.tlDetails);
+
+		if (result.getDetails().size() == 1
+				&& result.getDetails().get(0).length == 1) {
+			((RelativeLayout) view.findViewById(R.id.rlConfirm))
+					.removeView(table);
+			TextView tv = new TextView(getActivity());
+			tv.setText(result.getDetails().get(0)[0]);
+			tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+					LayoutParams.WRAP_CONTENT));
+			((RelativeLayout) view.findViewById(R.id.rlConfirm)).addView(tv);
+		} else {
+			for (String[] detail : result.getDetails()) {
+				TableRow tr = new TableRow(getActivity());
+				if (detail.length == 2) {
+					TextView tv1 = new TextView(getActivity());
+					tv1.setText(Html.fromHtml(detail[0]));
+					tv1.setTypeface(null, Typeface.BOLD);
+					tv1.setPadding(0, 0, 8, 0);
+					TextView tv2 = new TextView(getActivity());
+					tv2.setText(Html.fromHtml(detail[1]));
+					tv2.setEllipsize(TruncateAt.END);
+					tv2.setSingleLine(false);
+					tr.addView(tv1);
+					tr.addView(tv2);
+				} else if (detail.length == 1) {
+					TextView tv1 = new TextView(getActivity());
+					tv1.setText(Html.fromHtml(detail[0]));
+					tv1.setPadding(0, 2, 0, 2);
+					TableRow.LayoutParams params = new TableRow.LayoutParams(0);
+					params.span = 2;
+					tv1.setLayoutParams(params);
+					tr.addView(tv1);
+				}
+				table.addView(tr);
+			}
+		}
+
+		builder.setTitle(R.string.confirm_title)
+				.setView(view)
+				.setPositiveButton(R.string.confirm,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								prolongAllDo(
+										MultiStepResult.ACTION_CONFIRMATION,
+										"confirmed");
+							}
+						})
+				.setNegativeButton(R.string.cancel,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								adialog.cancel();
+							}
+						});
+		adialog = builder.create();
+		adialog.show();
+	}
+
+	public void prolongAllSelection(final ProlongAllResult result) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+		LayoutInflater inflater = getLayoutInflater();
+
+		View view = inflater.inflate(R.layout.dialog_simple_list, null);
+
+		ListView lv = (ListView) view.findViewById(R.id.lvBibs);
+		final Object[] possibilities = result.getSelection().valueSet()
+				.toArray();
+
+		lv.setAdapter(new SelectionAdapter(getActivity(), possibilities));
+		lv.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				adialog.dismiss();
+
+				prolongAllDo(result.getActionIdentifier(),
+						((Entry<String, Object>) possibilities[position])
+								.getKey());
+			}
+		});
+		switch (result.getActionIdentifier()) {
+		case ReservationResult.ACTION_BRANCH:
+			builder.setTitle(R.string.zweigstelle);
+		}
+		builder.setView(view).setNegativeButton(R.string.cancel,
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int id) {
+						adialog.cancel();
+					}
+				});
+		adialog = builder.create();
+		adialog.show();
+	}
+
+	public class ProlongAllResultAdapter extends ArrayAdapter<Object> {
+
+		private Object[] objects;
+
+		@Override
+		public View getView(int position, View contentView, ViewGroup viewGroup) {
+			View view = null;
+
+			if (objects[position] == null) {
+				LayoutInflater layoutInflater = (LayoutInflater) getContext()
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				view = layoutInflater.inflate(
+						R.layout.listitem_prolongall_result, viewGroup, false);
+				return view;
+			}
+
+			ContentValues item = ((ContentValues) objects[position]);
+
+			if (contentView == null) {
+				LayoutInflater layoutInflater = (LayoutInflater) getContext()
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				view = layoutInflater.inflate(
+						R.layout.listitem_prolongall_result, viewGroup, false);
+			} else {
+				view = contentView;
+			}
+
+			TextView tvAuthor = (TextView) view.findViewById(R.id.tvAuthor);
+			tvAuthor.setText(item.getAsString(ProlongAllResult.KEY_LINE_AUTHOR));
+			TextView tvTitle = (TextView) view.findViewById(R.id.tvTitle);
+			tvTitle.setText(item.getAsString(ProlongAllResult.KEY_LINE_TITLE));
+			TextView tvOld = (TextView) view.findViewById(R.id.tvOld);
+			tvOld.setText(item
+					.getAsString(ProlongAllResult.KEY_LINE_OLD_RETURNDATE));
+			TextView tvNew = (TextView) view.findViewById(R.id.tvNew);
+			tvNew.setText(item
+					.getAsString(ProlongAllResult.KEY_LINE_NEW_RETURNDATE));
+			TextView tvMsg = (TextView) view.findViewById(R.id.tvMsg);
+			tvMsg.setText(item.getAsString(ProlongAllResult.KEY_LINE_MESSAGE));
+			return view;
+		}
+
+		public ProlongAllResultAdapter(Context context, Object[] objects) {
+			super(context, R.layout.simple_spinner_item, objects);
+			this.objects = objects;
+		}
+
 	}
 
 	public class SelectionAdapter extends ArrayAdapter<Object> {

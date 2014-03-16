@@ -653,6 +653,42 @@ public interface OpacApi {
 	public ProlongResult prolong(String media, Account account, int useraction,
 			String selection) throws IOException;
 
+
+	/**
+	 * The result of a {@link OpacApi#prolongAll(Account)}
+	 * call
+	 */
+	public class ProlongAllResult extends MultiStepResult {
+
+		protected List<ContentValues> results;
+
+		public static final String KEY_LINE_TITLE = "title";
+		public static final String KEY_LINE_AUTHOR = "author";
+		public static final String KEY_LINE_NR = "nr";
+		public static final String KEY_LINE_OLD_RETURNDATE = "olddate";
+		public static final String KEY_LINE_NEW_RETURNDATE = "newdate";
+		public static final String KEY_LINE_MESSAGE = "message";
+		
+		/**
+		 * @param results
+		 *            A list of ContentValues containing the success values for
+		 *            all the single items we (tried to) renew.
+		 */
+		public ProlongAllResult(Status status, List<ContentValues> results) {
+			super(status);
+			this.results = results;
+		}
+		
+		public ProlongAllResult(Status status, String message) {
+			super(status, message);
+		}
+
+		public List<ContentValues> getResults() {
+			return results;
+		}
+		
+	}
+	
 	/**
 	 * Extend the lending period of all lent items. Will only be called if your
 	 * {@link #getSupportFlags()} implementation's return value contains the
@@ -667,7 +703,8 @@ public interface OpacApi {
 	 *         information.
 	 * @see de.geeksfactory.opacclient.objects.AccountData
 	 */
-	public boolean prolongAll(Account account) throws IOException;
+	public ProlongAllResult prolongAll(Account account, int useraction,
+			String selection) throws IOException;
 
 	/**
 	 * Cancel a media reservation/order identified by the given String (see

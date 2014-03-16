@@ -522,8 +522,9 @@ public class IOpac extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public boolean prolongAll(Account account) throws IOException {
-		return false;
+	public ProlongAllResult prolongAll(Account account, int useraction,
+			String selection) throws IOException {
+		return null;
 	}
 
 	@Override
