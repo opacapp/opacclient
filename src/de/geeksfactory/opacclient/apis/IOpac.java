@@ -617,8 +617,15 @@ public class IOpac extends BaseApi implements OpacApi {
 				} catch (ParseException e1) {
 					e1.printStackTrace();
 				}
-				e.put(AccountData.KEY_LENT_LINK,
-						tr.child(5).select("a").attr("href"));
+				String link = tr.child(5).select("a").attr("href");
+				e.put(AccountData.KEY_LENT_LINK, link);
+				//find media number with regex
+				Pattern pattern = Pattern.compile("mednr=(\\d*)&");
+				Matcher matcher = pattern.matcher(link);
+				matcher.find();
+				if(matcher.group() != null) {
+					e.put(AccountData.KEY_LENT_ID, matcher.group(1));
+				}
 	
 				medien.add(e);
 			}
