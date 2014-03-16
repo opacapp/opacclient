@@ -682,6 +682,10 @@ public interface OpacApi {
 		public ProlongAllResult(Status status, String message) {
 			super(status, message);
 		}
+		
+		public ProlongAllResult(Status status) {
+			super(status);
+		}
 
 		public List<ContentValues> getResults() {
 			return results;

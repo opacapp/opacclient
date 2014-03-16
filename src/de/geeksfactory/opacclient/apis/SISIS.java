@@ -54,7 +54,10 @@ import org.jsoup.select.Elements;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.SparseArray;
 import de.geeksfactory.opacclient.NotReachableException;
+import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult;
+import de.geeksfactory.opacclient.apis.OpacApi.ProlongAllResult;
 import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult.Status;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -1507,13 +1510,77 @@ public class SISIS extends BaseApi implements OpacApi {
 
 	@Override
 	public int getSupportFlags() {
-		return 0;
+		return OpacApi.SUPPORT_FLAG_ACCOUNT_PROLONG_ALL;
 	}
 
 	@Override
 	public ProlongAllResult prolongAll(Account account, int useraction,
 			String selection) throws IOException {
-		return null;
+		if (!initialised)
+			start();
+		if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
+				|| logged_in_as == null) {
+			try {
+				account(account);
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return new ProlongAllResult(MultiStepResult.Status.ERROR);
+			}
+		} else if (logged_in_as.getId() != account.getId()) {
+			try {
+				account(account);
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return new ProlongAllResult(MultiStepResult.Status.ERROR);
+			}
+		}
+
+		// We have to call the page we originally found the link on first...
+		String html = httpGet(
+				opac_url
+						+ "/userAccount.do?methodToCall=renewalPossible&renewal=account",
+				ENCODING);
+		Document doc = Jsoup.parse(html);
+
+		if (doc.select("table.data").size() > 0) {
+			List<ContentValues> result = new ArrayList<ContentValues>();
+			for (Element td : doc.select("table.data tr td")) {
+				ContentValues line = new ContentValues();
+				if (!td.text().contains("Titel")
+						|| !td.text().contains("Status"))
+					continue;
+				String nextNodeIs = "";
+				for (Node n : td.childNodes()) {
+					String text = "";
+					if (n instanceof Element) {
+						text = ((Element) n).text();
+					} else if (n instanceof TextNode) {
+						text = ((TextNode) n).text();
+					} else
+						continue;
+					if (text.trim().length() == 0)
+						continue;
+					if (text.contains("Titel:"))
+						nextNodeIs = ProlongAllResult.KEY_LINE_TITLE;
+					else if (text.contains("Verfasser:"))
+						nextNodeIs = ProlongAllResult.KEY_LINE_AUTHOR;
+					else if (text.contains("Leihfristende:"))
+						nextNodeIs = ProlongAllResult.KEY_LINE_NEW_RETURNDATE;
+					else if (text.contains("Status:"))
+						nextNodeIs = ProlongAllResult.KEY_LINE_MESSAGE;
+					else if (text.contains("Mediennummer:") || text.contains("Signatur:"))
+						nextNodeIs = "";
+					else if (nextNodeIs.length() > 0) {
+						line.put(nextNodeIs, text.trim());
+						nextNodeIs = "";
+					}
+				}
+				result.add(line);
+			}
+			return new ProlongAllResult(MultiStepResult.Status.OK, result);
+		}
+		
+		return new ProlongAllResult(MultiStepResult.Status.ERROR, "Fehler bei Verbindung/Login");
 	}
 
 	@Override
