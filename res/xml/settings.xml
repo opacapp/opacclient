@@ -15,6 +15,14 @@
             android:summary="@string/advanced_desc"
             android:title="@string/advanced" />
 
+        <ListPreference
+            android:entries="@array/startup_labels"
+            android:key="startup_fragment"
+            android:title="@string/startup_title"
+            android:summary="@string/startup_summary"
+            android:defaultValue="search"
+            android:entryValues="@array/startup_values" />
+
         <EditTextPreference
             android:key="email"
             android:summary="@string/email_address_description"

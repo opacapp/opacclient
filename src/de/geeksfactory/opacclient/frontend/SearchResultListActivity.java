@@ -13,6 +13,7 @@ import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 
 /**
@@ -71,10 +72,11 @@ public class SearchResultListActivity extends OpacActivity implements
 			listFragment.setActivateOnItemClick(true);
 		}
 		
-		page = 1;
 
-		if (savedInstanceState == null)
+		if (savedInstanceState == null) {
+			page = 1;
 			performsearch();
+		}
 	}
 	
 	public void performsearch() {
@@ -186,7 +188,6 @@ public class SearchResultListActivity extends OpacActivity implements
 	}
 	
 	public class SearchStartTask extends OpacTask<SearchRequestResult> {
-		protected boolean success;
 		protected Exception exception;
 
 		@Override
@@ -197,19 +198,17 @@ public class SearchResultListActivity extends OpacActivity implements
 			try {
 				SearchRequestResult res = app.getApi().search(query);
 				//Load cover images, if search worked and covers available
-				success = true;
 				return res;
 			} catch (java.net.UnknownHostException e) {
-				success = false;
 				exception = e;
 				e.printStackTrace();
 			} catch (java.net.SocketException e) {
-				success = false;
+				exception = e;
+			} catch (OpacErrorException e) {
 				exception = e;
 			} catch (Exception e) {
 				exception = e;
 				ACRA.getErrorReporter().handleException(e);
-				success = false;
 			}
 
 			return null;
@@ -217,10 +216,10 @@ public class SearchResultListActivity extends OpacActivity implements
 
 		@Override
 		protected void onPostExecute(SearchRequestResult result) {
-			if (success) {
-				if (result == null) {
-
-					if (app.getApi().getLast_error().equals("is_a_redirect")) {
+			if (result == null) {
+				
+				if(exception instanceof OpacErrorException) {
+					if (exception.getMessage().equals("is_a_redirect")) {
 						// Some libraries (SISIS) do not show a result list if only one result
 						// is found but instead directly show the result details.
 						Intent intent = new Intent(SearchResultListActivity.this,
@@ -231,23 +230,20 @@ public class SearchResultListActivity extends OpacActivity implements
 						return;
 					}
 
-					listFragment.showConnectivityError(app.getApi().getLast_error());
-				} else {
-					searchresult = result;
-					if (searchresult != null) {
-						if (searchresult.getResults().size() > 0) {
-							if (searchresult.getResults().get(0).getId() != null)
-								cache.put(page, searchresult);
-						}
-					}
-					loaded();
-				}
-			} else {				
-				if (exception != null
-						&& exception instanceof NotReachableException)
+					listFragment.showConnectivityError(exception.getMessage());
+				} else if (exception instanceof NotReachableException)
 					listFragment.showConnectivityError(getResources().getString(R.string.connection_error_detail_nre));
 				else
 					listFragment.showConnectivityError();
+			} else {
+				searchresult = result;
+				if (searchresult != null) {
+					if (searchresult.getResults().size() > 0) {
+						if (searchresult.getResults().get(0).getId() != null)
+							cache.put(page, searchresult);
+					}
+				}
+				loaded();
 			}
 		}
 	}
@@ -262,28 +258,30 @@ public class SearchResultListActivity extends OpacActivity implements
 			try {
 				SearchRequestResult res = app.getApi().searchGetPage(page);
 				//Load cover images, if search worked and covers available
-				success = true;
 				return res;
 			} catch (java.net.UnknownHostException e) {
-				success = false;
 				exception = e;
 				e.printStackTrace();
 			} catch (java.net.SocketException e) {
-				success = false;
+				exception = e;
+			} catch (OpacErrorException e) {
 				exception = e;
 			} catch (Exception e) {
 				exception = e;
 				ACRA.getErrorReporter().handleException(e);
-				success = false;
 			}
 
 			return null;
 		}
 	}
 
-	protected void loaded() {		
-		listFragment.setListShown(true);
-		listFragment.setSearchResult(searchresult);
+	protected void loaded() {
+		try {
+			listFragment.setListShown(true);
+			listFragment.setSearchResult(searchresult);
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

@@ -200,7 +200,7 @@ public interface OpacApi {
 	public static final String KEY_SEARCH_QUERY_BARCODE = "barcode";
 
 	/**
-	 * Item location in library. Currently  not in use.
+	 * Item location in library. Currently not in use.
 	 * 
 	 * Bundle key for {@link #search(Bundle)} and possible value for
 	 * {@link #getSearchFields()}.
@@ -239,6 +239,19 @@ public interface OpacApi {
 	 * Flag to be present in the result of {@link #getSupportFlags()}.
 	 */
 	public static final int SUPPORT_FLAG_QUICKLINKS = 0x0000004;
+
+	/**
+	 * A general exception containing a human-readable error message
+	 */
+	public class OpacErrorException extends Exception {
+
+		public OpacErrorException(String message) {
+			super(message);
+		}
+
+		private static final long serialVersionUID = 5834803212488872907L;
+
+	}
 
 	/**
 	 * The result of a multi-step-supporting method call.
@@ -465,13 +478,12 @@ public interface OpacApi {
 	 * 
 	 * @param query
 	 *            see above
-	 * @return List of results and additional information, or <code>null</code>
-	 *         on failure. In case of failure, <code>getLast_error</code> will
-	 *         be called for more information.
+	 * @return List of results and additional information, or result object with
+	 *         the error flag set to true.
 	 * @see de.geeksfactory.opacclient.objects.SearchResult
 	 */
 	public SearchRequestResult search(Bundle query) throws IOException,
-			NotReachableException;
+			NotReachableException, OpacErrorException;
 
 	/**
 	 * If your {@link #search(Bundle)} implementation puts something different
@@ -492,9 +504,8 @@ public interface OpacApi {
 	 *            The filters option to be applied. If the
 	 *            <code>option.isApplied()</code> returns <code>true</code>, the
 	 *            filter is to be removed!
-	 * @return List of results or <code>null</code> on failure. In case of
-	 *         failure, <code>getLast_error</code> will be called for more
-	 *         information.
+	 * @return List of results and additional information, or result object with
+	 *         the error flag set to true.
 	 * @see de.geeksfactory.opacclient.objects.SearchResult
 	 * @see de.geeksfactory.opacclient.objects.Filter
 	 * @since 2.0.6
@@ -512,14 +523,13 @@ public interface OpacApi {
 	 * 
 	 * @param page
 	 *            page number to fetch
-	 * @return List of results or <code>null</code> on failure. In case of
-	 *         failure, <code>getLast_error</code> will be called for more
-	 *         information.
+	 * @return List of results and additional information, or result object with
+	 *         the error flag set to true.
 	 * @see #search(Bundle)
 	 * @see de.geeksfactory.opacclient.objects.SearchResult
 	 */
 	public SearchRequestResult searchGetPage(int page) throws IOException,
-			NotReachableException;
+			NotReachableException, OpacErrorException;
 
 	/**
 	 * Get details for the item with unique ID id.
@@ -538,7 +548,7 @@ public interface OpacApi {
 	 * @see #KEY_SEARCH_QUERY_HOME_BRANCH
 	 */
 	public DetailledItem getResultById(String id, String homebranch)
-			throws IOException, NotReachableException;
+			throws IOException, NotReachableException, OpacErrorException;
 
 	/**
 	 * Get details for the item at <code>position</code> from last
@@ -552,7 +562,8 @@ public interface OpacApi {
 	 * @return Media details
 	 * @see de.geeksfactory.opacclient.objects.DetailledItem
 	 */
-	public DetailledItem getResult(int position) throws IOException;
+	public DetailledItem getResult(int position) throws IOException,
+			OpacErrorException;
 
 	/**
 	 * Perform a reservation on the item last fetched with
@@ -583,13 +594,12 @@ public interface OpacApi {
 	 * @return A <code>ReservationResult</code> object which has to have the
 	 *         status set.
 	 */
-	public ReservationResult reservation(DetailledItem item,
-			Account account, int useraction, String selection)
-			throws IOException;
+	public ReservationResult reservation(DetailledItem item, Account account,
+			int useraction, String selection) throws IOException;
 
 	/**
-	 * The result of a {@link OpacApi#reservation(DetailledItem, Account, int, String)}
-	 * call
+	 * The result of a
+	 * {@link OpacApi#reservation(DetailledItem, Account, int, String)} call
 	 */
 	public class ReservationResult extends MultiStepResult {
 
@@ -601,7 +611,7 @@ public interface OpacApi {
 		public ReservationResult(Status status) {
 			super(status);
 		}
-		
+
 		public ReservationResult(Status status, String message) {
 			super(status, message);
 		}
@@ -616,7 +626,7 @@ public interface OpacApi {
 		public ProlongResult(Status status) {
 			super(status);
 		}
-		
+
 		public ProlongResult(Status status, String message) {
 			super(status, message);
 		}
@@ -654,6 +664,44 @@ public interface OpacApi {
 			String selection) throws IOException;
 
 	/**
+	 * The result of a {@link OpacApi#prolongAll(Account)} call
+	 */
+	public class ProlongAllResult extends MultiStepResult {
+
+		protected List<ContentValues> results;
+
+		public static final String KEY_LINE_TITLE = "title";
+		public static final String KEY_LINE_AUTHOR = "author";
+		public static final String KEY_LINE_NR = "nr";
+		public static final String KEY_LINE_OLD_RETURNDATE = "olddate";
+		public static final String KEY_LINE_NEW_RETURNDATE = "newdate";
+		public static final String KEY_LINE_MESSAGE = "message";
+
+		/**
+		 * @param results
+		 *            A list of ContentValues containing the success values for
+		 *            all the single items we (tried to) renew.
+		 */
+		public ProlongAllResult(Status status, List<ContentValues> results) {
+			super(status);
+			this.results = results;
+		}
+
+		public ProlongAllResult(Status status, String message) {
+			super(status, message);
+		}
+
+		public ProlongAllResult(Status status) {
+			super(status);
+		}
+
+		public List<ContentValues> getResults() {
+			return results;
+		}
+
+	}
+
+	/**
 	 * Extend the lending period of all lent items. Will only be called if your
 	 * {@link #getSupportFlags()} implementation's return value contains the
 	 * {@link #SUPPORT_FLAG_ACCOUNT_PROLONG_ALL} flag. If you don't support the
@@ -662,12 +710,12 @@ public interface OpacApi {
 	 * This function is always called from a background thread, you can use
 	 * blocking network operations in it.
 	 * 
-	 * @return <code>true</code> on success, <code>false</code> on failure. In
-	 *         case of failure, {@link #getLast_error()} will be called for more
-	 *         information.
+	 * @return A <code>ProlongAllResult</code> object which has to have the
+	 *         status set.
 	 * @see de.geeksfactory.opacclient.objects.AccountData
 	 */
-	public boolean prolongAll(Account account) throws IOException;
+	public ProlongAllResult prolongAll(Account account, int useraction,
+			String selection) throws IOException;
 
 	/**
 	 * Cancel a media reservation/order identified by the given String (see
@@ -678,12 +726,13 @@ public interface OpacApi {
 	 * 
 	 * @param media
 	 *            Media identification
-	 * @return <code>true</code> on success, <code>false</code> on failure. In
-	 *         case of failure, <code>getLast_error</code> will be called for
-	 *         more information.
+	 * @return <code>true</code> on success, <code>false</code> on failure.
 	 * @see de.geeksfactory.opacclient.objects.AccountData
+	 * 
+	 *      TODO: Convert this to a multistep method
 	 */
-	public boolean cancel(Account account, String media) throws IOException;
+	public boolean cancel(Account account, String media) throws IOException,
+			OpacErrorException;
 
 	/**
 	 * Load account view (borrowed and reserved items, see
@@ -694,13 +743,11 @@ public interface OpacApi {
 	 * 
 	 * @param account
 	 *            The account to display
-	 * @return Account details or <code>null</code> on failure. In case of
-	 *         failure, <code>getLast_error</code> will be called for more
-	 *         information.
+	 * @return Account details
 	 * @see de.geeksfactory.opacclient.objects.AccountData
 	 */
 	public AccountData account(Account account) throws IOException,
-			JSONException;
+			JSONException, OpacErrorException;
 
 	/**
 	 * Returns an array of search criterias which are supported by this OPAC and
@@ -711,17 +758,6 @@ public interface OpacApi {
 	 * @see #search
 	 */
 	public String[] getSearchFields();
-
-	/**
-	 * Sometimes if one of your methods fails and you return null, it makes
-	 * sense to provide additional information. If the error occured in search,
-	 * it is displayed to the user. There are also some special hooks (like
-	 * <code>is_a_redirect</code> for <code>SISIS</code>) which activate certain
-	 * methods in calling activities.
-	 * 
-	 * @return Error details
-	 */
-	public String getLast_error();
 
 	/**
 	 * Returns whether – if account view is not supported in the given library –

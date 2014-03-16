@@ -77,7 +77,7 @@
     </style>
     
     <!-- this style is only referenced in a Light.DarkActionBar based theme -->
-    <style name="Theme.Opacapp.Widget" parent="@style/Theme.AppCompat">
+    <style name="Theme.Opacapp.Widget" parent="@style/Holo.Theme.Light.DarkActionBar">
         <item name="popupMenuStyle">@style/PopupMenu.Opacapp</item>
         <item name="dropDownListViewStyle">@style/DropDownListView.Opacapp</item>
     </style>

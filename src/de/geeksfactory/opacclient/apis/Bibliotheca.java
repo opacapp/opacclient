@@ -55,6 +55,7 @@ import org.jsoup.select.Elements;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.SparseArray;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -79,7 +80,6 @@ public class Bibliotheca extends BaseApi {
 	protected JSONObject data;
 	protected MetaDataSource metadata;
 	protected boolean initialised = false;
-	protected String last_error;
 	protected Library library;
 	protected long logged_in;
 	protected Account logged_in_as;
@@ -128,11 +128,6 @@ public class Bibliotheca extends BaseApi {
 				KEY_SEARCH_QUERY_YEAR_RANGE_END, KEY_SEARCH_QUERY_SYSTEM,
 				KEY_SEARCH_QUERY_AUDIENCE, KEY_SEARCH_QUERY_PUBLISHER,
 				KEY_SEARCH_QUERY_BARCODE, "order" };
-	}
-
-	@Override
-	public String getLast_error() {
-		return last_error;
 	}
 
 	public void extract_meta(String html) {
@@ -380,7 +375,11 @@ public class Bibliotheca extends BaseApi {
 			start();
 		String html = httpGet(opac_url + "/index.asp?MedienNr=" + a,
 				getDefaultEncoding());
-		return parse_result(html);
+		DetailledItem result = parse_result(html);
+		if(result.getId() == null) {
+			result.setId(a);
+		}
+		return result;
 	}
 
 	@Override
@@ -667,6 +666,9 @@ public class Bibliotheca extends BaseApi {
 				e.printStackTrace();
 				return new ProlongResult(MultiStepResult.Status.ERROR,
 						"Konto konnte nicht geladen werden");
+			} catch (OpacErrorException e) {
+				return new ProlongResult(MultiStepResult.Status.ERROR,
+						e.getMessage());
 			}
 		} else if (logged_in_as.getId() != account.getId()) {
 			try {
@@ -675,6 +677,9 @@ public class Bibliotheca extends BaseApi {
 				e.printStackTrace();
 				return new ProlongResult(MultiStepResult.Status.ERROR,
 						"Konto konnte nicht geladen werden");
+			} catch (OpacErrorException e) {
+				return new ProlongResult(MultiStepResult.Status.ERROR,
+						e.getMessage());
 			}
 		}
 
@@ -733,7 +738,8 @@ public class Bibliotheca extends BaseApi {
 	}
 
 	@Override
-	public boolean prolongAll(Account account) throws IOException {
+	public ProlongAllResult prolongAll(Account account, int useraction,
+			String selection) throws IOException {
 		if (!initialised)
 			start();
 		if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
@@ -742,29 +748,75 @@ public class Bibliotheca extends BaseApi {
 				account(account);
 			} catch (JSONException e) {
 				e.printStackTrace();
-				return false;
+				return new ProlongAllResult(MultiStepResult.Status.ERROR, "Verbindungsfehler.");
+			} catch (OpacErrorException e) {
+				return new ProlongAllResult(MultiStepResult.Status.ERROR,
+						e.getMessage());
 			}
 		} else if (logged_in_as.getId() != account.getId()) {
 			try {
 				account(account);
 			} catch (JSONException e) {
 				e.printStackTrace();
-				return false;
+				return new ProlongAllResult(MultiStepResult.Status.ERROR, "Verbindungsfehler.");
+			} catch (OpacErrorException e) {
+				return new ProlongAllResult(MultiStepResult.Status.ERROR,
+						e.getMessage());
 			}
 		}
 		String html = httpGet(opac_url + "/index.asp?target=alleverl", getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 
 		if (doc.getElementsByClass("kontomeldung").size() == 1) {
-			last_error = doc.getElementsByClass("kontomeldung").get(0).text();
-			return false;
+			String err = doc.getElementsByClass("kontomeldung").get(0).text();
+			return new ProlongAllResult(MultiStepResult.Status.ERROR, err);
 		}
-		return true;
+		
+		if(doc.select(".kontozeile table").size() == 1) {
+			SparseArray<String> colmap = new SparseArray<String>();
+			List<ContentValues> result = new ArrayList<ContentValues>();
+			for(Element tr : doc.select(".kontozeile table tr")) {
+				if(tr.select(".tabHeaderKonto").size() > 0) {
+					int i = 0;
+					for (Element th : tr.select("th")) {
+						if (th.text().contains("Verfasser")) {
+							colmap.put(i,
+									OpacApi.ProlongAllResult.KEY_LINE_AUTHOR);
+						} else if (th.text().contains("Titel")) {
+							colmap.put(i,
+									OpacApi.ProlongAllResult.KEY_LINE_TITLE);
+						} else if (th.text().contains("Neue")) {
+							colmap.put(
+									i,
+									OpacApi.ProlongAllResult.KEY_LINE_NEW_RETURNDATE);
+						} else if (th.text().contains("Frist")) {
+							colmap.put(
+									i,
+									OpacApi.ProlongAllResult.KEY_LINE_OLD_RETURNDATE);
+						} else if (th.text().contains("Status")) {
+							colmap.put(i,
+									OpacApi.ProlongAllResult.KEY_LINE_MESSAGE);
+						}
+						i++;
+					}
+				} else {
+					ContentValues line = new ContentValues();
+					for (int i = 0; i < colmap.size(); i++) {
+						line.put(colmap.get(colmap.keyAt(i)), tr.child(i)
+								.text().trim());
+					}
+					result.add(line);
+				}
+			}
+			return new ProlongAllResult(MultiStepResult.Status.OK, result);
+		}
+		
+		return new ProlongAllResult(MultiStepResult.Status.ERROR, "Parse error");
 	}
 
 	@Override
 	public boolean cancel(Account account, String a) throws IOException,
-			NotReachableException {
+			NotReachableException, OpacErrorException {
 		if (!initialised)
 			start();
 		if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
@@ -796,7 +848,7 @@ public class Bibliotheca extends BaseApi {
 
 	@Override
 	public AccountData account(Account acc) throws IOException,
-			NotReachableException, JSONException, SocketException {
+			NotReachableException, JSONException, SocketException, OpacErrorException {
 		if (!initialised)
 			start();
 
@@ -838,8 +890,7 @@ public class Bibliotheca extends BaseApi {
 		// }
 
 		if (doc.getElementsByClass("kontomeldung").size() == 1) {
-			last_error = doc.getElementsByClass("kontomeldung").get(0).text();
-			return null;
+			throw new OpacErrorException(doc.getElementsByClass("kontomeldung").get(0).text());
 		}
 
 		logged_in = System.currentTimeMillis();
@@ -874,8 +925,12 @@ public class Bibliotheca extends BaseApi {
 				}
 				if (index >= 0) {
 					if (key.equals(AccountData.KEY_LENT_LINK)) {
-						if (tr.child(index).children().size() > 0)
+						if (tr.child(index).children().size() > 0) {
 							e.put(key, tr.child(index).child(0).attr("href"));
+							e.put(AccountData.KEY_LENT_RENEWABLE,
+									tr.child(index).child(0).attr("href")
+											.contains("vermsg") ? "N" : "Y");
+						}
 					} else {
 						e.put(key, tr.child(index).text());
 					}

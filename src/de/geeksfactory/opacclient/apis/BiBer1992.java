@@ -98,7 +98,6 @@ public class BiBer1992 extends BaseApi {
 	private JSONObject m_data;
 	private MetaDataSource m_metadata;
 	private boolean m_initialised = false;
-	private String m_last_error;
 	private Library m_library;
 	private List<NameValuePair> m_nameValuePairs = new ArrayList<NameValuePair>(
 			2);
@@ -133,11 +132,6 @@ public class BiBer1992 extends BaseApi {
 				KEY_SEARCH_QUERY_YEAR, KEY_SEARCH_QUERY_SYSTEM,
 				KEY_SEARCH_QUERY_PUBLISHER, KEY_SEARCH_QUERY_CATEGORY,
 				KEY_SEARCH_QUERY_BRANCH };
-	}
-
-	@Override
-	public String getLast_error() {
-		return m_last_error;
 	}
 
 	private void setMediaTypeFromImageFilename(SearchResult sr, String imagename) {
@@ -557,6 +551,9 @@ public class BiBer1992 extends BaseApi {
 		if (!m_initialised)
 			start();
 
+		if (!id.contains("ftitle.C")) {
+			id = "ftitle.C?LANG=de&FUNC=full&" + id + "=YES";
+		}
 		// normally full path like
 		// "/opac/ftitle.C?LANG=de&FUNC=full&331313252=YES"
 		// but sometimes (Wuerzburg) "ftitle.C?LANG=de&FUNC=full&331313252=YES"
@@ -917,7 +914,8 @@ public class BiBer1992 extends BaseApi {
 			if (tr.child(0).tagName().equals("th"))
 				continue;
 			ContentValues e = new ContentValues();
-
+			
+			Pattern itemIdPat = Pattern.compile("javascript:smAcc\\('[a-z]+','[a-z]+','([A-Za-z0-9]+)'\\)");
 			// columns: all elements of one media
 			Iterator<?> keys = copymap.keys();
 			while (keys.hasNext()) {
@@ -949,6 +947,14 @@ public class BiBer1992 extends BaseApi {
 						} else {
 							// Remove everything except the signature
 							value = value.replaceFirst("^.* /", "").trim();
+						}
+					}
+
+					if (tr.child(index).select("a").size() == 1) {
+						Matcher matcher = itemIdPat.matcher(tr.child(index)
+								.select("a").attr("href"));
+						if (matcher.find()) {
+							e.put(AccountData.KEY_LENT_ID, matcher.group(1));
 						}
 					}
 
@@ -1081,7 +1087,7 @@ public class BiBer1992 extends BaseApi {
 			if (elTable.size() > 0) {
 				errText = elTable.get(0).text();
 			}
-			m_last_error = errText;
+			// TODO: m_last_error = errText;
 			return null;
 		}
 
@@ -1122,8 +1128,9 @@ public class BiBer1992 extends BaseApi {
 	}
 
 	@Override
-	public boolean prolongAll(Account account) throws IOException {
-		return false;
+	public ProlongAllResult prolongAll(Account account, int useraction,
+			String selection) throws IOException {
+		return null;
 	}
 
 	@Override

@@ -113,6 +113,13 @@ public class AccountData {
 	 * ContentValues key for {@link #setLent(List)}
 	 */
 	public static final String KEY_LENT_LINK = "prolongurl";
+	
+	/**
+	 * Indicates whether this item is renewable, "Y" or "N"
+	 * 
+	 * ContentValues key for {@link #setLent(List)}
+	 */
+	public static final String KEY_LENT_RENEWABLE = "renewable";
 
 	/**
 	 * Internal identifier which will be supplied to your

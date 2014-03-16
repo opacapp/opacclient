@@ -51,9 +51,13 @@ public class MainActivity extends OpacActivity implements
 			}
 		}
 
+		sp = PreferenceManager.getDefaultSharedPreferences(this);
+
 		if (savedInstanceState == null) {
 			if (getIntent().hasExtra("fragment")) {
 				selectItem(getIntent().getStringExtra("fragment"));
+			} else if (sp.contains("startup_fragment")) {
+				selectItem(sp.getString("startup_fragment", "search"));
 			} else {
 				selectItem(1);
 			}
@@ -79,12 +83,12 @@ public class MainActivity extends OpacActivity implements
 			techListsArray = new String[][] { new String[] { android.nfc.tech.NfcV.class
 					.getName() } };
 		}
-
-		sp = PreferenceManager.getDefaultSharedPreferences(this);
-
-		getSupportActionBar().setSubtitle(
-				app.getLibrary().getCity() + " · "
-						+ app.getLibrary().getTitle());
+		
+		if (app.getLibrary() != null) {
+			getSupportActionBar().setSubtitle(
+					app.getLibrary().getCity() + " · "
+							+ app.getLibrary().getTitle());
+		}
 	}
 
 	@Override

@@ -31,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -79,7 +80,6 @@ public class SISIS extends BaseApi implements OpacApi {
 	protected JSONObject data;
 	protected MetaDataSource metadata;
 	protected boolean initialised = false;
-	protected String last_error;
 	protected Library library;
 
 	protected String CSId;
@@ -148,11 +148,6 @@ public class SISIS extends BaseApi implements OpacApi {
 				KEY_SEARCH_QUERY_BRANCH, KEY_SEARCH_QUERY_ISBN,
 				KEY_SEARCH_QUERY_YEAR, KEY_SEARCH_QUERY_SYSTEM,
 				KEY_SEARCH_QUERY_AUDIENCE, KEY_SEARCH_QUERY_PUBLISHER };
-	}
-
-	@Override
-	public String getLast_error() {
-		return last_error;
 	}
 
 	public void extract_meta(Document doc) {
@@ -259,7 +254,7 @@ public class SISIS extends BaseApi implements OpacApi {
 
 	@Override
 	public SearchRequestResult search(Bundle query) throws IOException,
-			NotReachableException {
+			NotReachableException, OpacErrorException {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 		if (query.containsKey("volume")) {
@@ -302,12 +297,12 @@ public class SISIS extends BaseApi implements OpacApi {
 					params, index);
 
 			if (index == 0) {
-				last_error = "Es wurden keine Suchkriterien eingegeben.";
-				return null;
+				throw new OpacErrorException(
+						"Es wurden keine Suchkriterien eingegeben.");
 			}
 			if (index > 4) {
-				last_error = "Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.";
-				return null;
+				throw new OpacErrorException(
+						"Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.");
 			}
 
 			params.add(new BasicNameValuePair("submitSearch", "Suchen"));
@@ -331,7 +326,7 @@ public class SISIS extends BaseApi implements OpacApi {
 
 	@Override
 	public SearchRequestResult searchGetPage(int page) throws IOException,
-			NotReachableException {
+			NotReachableException, OpacErrorException {
 		if (!initialised)
 			start();
 
@@ -341,16 +336,15 @@ public class SISIS extends BaseApi implements OpacApi {
 		return parse_search(html, page);
 	}
 
-	protected SearchRequestResult parse_search(String html, int page) {
+	protected SearchRequestResult parse_search(String html, int page)
+			throws OpacErrorException {
 		Document doc = Jsoup.parse(html);
 		doc.setBaseUri(opac_url + "/searchfoo");
 
 		if (doc.select(".error").size() > 0) {
-			last_error = doc.select(".error").text().trim();
-			return null;
+			throw new OpacErrorException(doc.select(".error").text().trim());
 		} else if (doc.select(".nohits").size() > 0) {
-			last_error = doc.select(".nohits").text().trim();
-			return null;
+			throw new OpacErrorException(doc.select(".nohits").text().trim());
 		} else if (doc.select(".box-header h2").text()
 				.contains("keine Treffer")) {
 			return new SearchRequestResult(new ArrayList<SearchResult>(), 0, 1,
@@ -362,8 +356,7 @@ public class SISIS extends BaseApi implements OpacApi {
 		String resultnumstr = doc.select(".box-header h2").first().text();
 		if (resultnumstr.contains("(1/1)") || resultnumstr.contains(" 1/1")) {
 			reusehtml = html;
-			last_error = "is_a_redirect";
-			return null;
+			throw new OpacErrorException("is_a_redirect");
 		} else if (resultnumstr.contains("(")) {
 			results_total = Integer.parseInt(resultnumstr.replaceAll(
 					".*\\(([0-9]+)\\).*", "$1"));
@@ -412,18 +405,18 @@ public class SISIS extends BaseApi implements OpacApi {
 						sr.setType(MediaType.valueOf(data.getJSONObject(
 								"mediatypes").getString(fname)));
 					} catch (JSONException e) {
-						sr.setType(defaulttypes.get(fname.toLowerCase()
-								.replace(".jpg", "").replace(".gif", "")
-								.replace(".png", "")));
+						sr.setType(defaulttypes.get(fname
+								.toLowerCase(Locale.GERMAN).replace(".jpg", "")
+								.replace(".gif", "").replace(".png", "")));
 					} catch (IllegalArgumentException e) {
-						sr.setType(defaulttypes.get(fname.toLowerCase()
-								.replace(".jpg", "").replace(".gif", "")
-								.replace(".png", "")));
+						sr.setType(defaulttypes.get(fname
+								.toLowerCase(Locale.GERMAN).replace(".jpg", "")
+								.replace(".gif", "").replace(".png", "")));
 					}
 				} else {
-					sr.setType(defaulttypes.get(fname.toLowerCase()
-							.replace(".jpg", "").replace(".gif", "")
-							.replace(".png", "")));
+					sr.setType(defaulttypes.get(fname
+							.toLowerCase(Locale.GERMAN).replace(".jpg", "")
+							.replace(".gif", "").replace(".png", "")));
 				}
 			}
 			String alltext = tr.text();
@@ -435,7 +428,7 @@ public class SISIS extends BaseApi implements OpacApi {
 				sr.setType(MediaType.EBOOK);
 			else if (alltext.contains("Munzinger"))
 				sr.setType(MediaType.EDOC);
-			
+
 			if (tr.children().size() > 3
 					&& tr.child(3).select("img[title*=cover]").size() == 1) {
 				sr.setCover(tr.child(3).select("img[title*=cover]")
@@ -443,7 +436,7 @@ public class SISIS extends BaseApi implements OpacApi {
 				if (sr.getCover().contains("showCover.do"))
 					downloadCover(sr);
 			}
-			
+
 			Element middlething;
 			if (tr.children().size() > 2)
 				middlething = tr.child(2);
@@ -840,7 +833,7 @@ public class SISIS extends BaseApi implements OpacApi {
 		Pattern status_and_barcode = Pattern.compile("^(.*) ([0-9A-Za-z]+)$");
 
 		Elements exemplartrs = doc.select("#tab-content .data tr").not("#bg2");
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
 		for (Element tr : exemplartrs) {
 			try {
 				ContentValues e = new ContentValues();
@@ -878,8 +871,10 @@ public class SISIS extends BaseApi implements OpacApi {
 					e.put(DetailledItem.KEY_COPY_STATUS, statustext);
 				}
 				e.put(DetailledItem.KEY_COPY_BARCODE, barcodetext);
-				if(status.select("a[href*=doVormerkung]").size() == 1){
-					e.put(DetailledItem.KEY_COPY_RESINFO, status.select("a[href*=doVormerkung]").attr("href").split("\\?")[1]);
+				if (status.select("a[href*=doVormerkung]").size() == 1) {
+					e.put(DetailledItem.KEY_COPY_RESINFO,
+							status.select("a[href*=doVormerkung]").attr("href")
+									.split("\\?")[1]);
 				}
 
 				String branchtext = tr
@@ -1106,6 +1101,9 @@ public class SISIS extends BaseApi implements OpacApi {
 			} catch (JSONException e) {
 				e.printStackTrace();
 				return new ProlongResult(MultiStepResult.Status.ERROR);
+			} catch (OpacErrorException e) {
+				return new ProlongResult(MultiStepResult.Status.ERROR,
+						e.getMessage());
 			}
 		} else if (logged_in_as.getId() != account.getId()) {
 			try {
@@ -1113,6 +1111,9 @@ public class SISIS extends BaseApi implements OpacApi {
 			} catch (JSONException e) {
 				e.printStackTrace();
 				return new ProlongResult(MultiStepResult.Status.ERROR);
+			} catch (OpacErrorException e) {
+				return new ProlongResult(MultiStepResult.Status.ERROR,
+						e.getMessage());
 			}
 		}
 
@@ -1135,7 +1136,7 @@ public class SISIS extends BaseApi implements OpacApi {
 
 	@Override
 	public boolean cancel(Account account, String a) throws IOException,
-			NotReachableException {
+			NotReachableException, OpacErrorException {
 		if (!initialised)
 			start();
 
@@ -1171,7 +1172,7 @@ public class SISIS extends BaseApi implements OpacApi {
 		return true;
 	}
 
-	protected boolean login(Account acc) {
+	protected boolean login(Account acc) throws OpacErrorException {
 		String html;
 
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
@@ -1211,8 +1212,8 @@ public class SISIS extends BaseApi implements OpacApi {
 		Document doc = Jsoup.parse(html);
 
 		if (doc.getElementsByClass("error").size() > 0) {
-			last_error = doc.getElementsByClass("error").get(0).text();
-			return false;
+			throw new OpacErrorException(doc.getElementsByClass("error").get(0)
+					.text());
 		}
 
 		logged_in = System.currentTimeMillis();
@@ -1226,8 +1227,8 @@ public class SISIS extends BaseApi implements OpacApi {
 		Elements copytrs = doc.select(".data tr");
 		doc.setBaseUri(opac_url);
 
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
+
 		int trs = copytrs.size();
 		if (trs == 1)
 			return;
@@ -1272,12 +1273,18 @@ public class SISIS extends BaseApi implements OpacApi {
 								"renewalPossible")) {
 							e.put(AccountData.KEY_LENT_LINK,
 									offset + "$" + uri.getQuery());
+							e.put(AccountData.KEY_LENT_RENEWABLE, "Y");
 							break;
 						}
 					}
-				} else if (tr.select(".textrot, .textgruen").size() == 1) {
+				} else if (tr.select(".textrot, .textgruen, .textdunkelblau")
+						.size() > 0) {
 					e.put(AccountData.KEY_LENT_LINK,
-							"§" + tr.select(".textrot, .textgruen").text());
+							"§"
+									+ tr.select(
+											".textrot, .textgruen, .textdunkelblau")
+											.text());
+					e.put(AccountData.KEY_LENT_RENEWABLE, "N");
 				}
 
 			} catch (Exception ex) {
@@ -1339,7 +1346,8 @@ public class SISIS extends BaseApi implements OpacApi {
 
 	@Override
 	public AccountData account(Account acc) throws IOException,
-			NotReachableException, JSONException, SocketException {
+			NotReachableException, JSONException, SocketException,
+			OpacErrorException {
 		start(); // TODO: Is this necessary?
 
 		int resultNum;
@@ -1504,12 +1512,85 @@ public class SISIS extends BaseApi implements OpacApi {
 
 	@Override
 	public int getSupportFlags() {
-		return 0;
+		return OpacApi.SUPPORT_FLAG_ACCOUNT_PROLONG_ALL;
 	}
 
 	@Override
-	public boolean prolongAll(Account account) throws IOException {
-		return false;
+	public ProlongAllResult prolongAll(Account account, int useraction,
+			String selection) throws IOException {
+		if (!initialised)
+			start();
+		if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
+				|| logged_in_as == null) {
+			try {
+				account(account);
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return new ProlongAllResult(MultiStepResult.Status.ERROR);
+			} catch (OpacErrorException e) {
+				return new ProlongAllResult(MultiStepResult.Status.ERROR,
+						e.getMessage());
+			}
+		} else if (logged_in_as.getId() != account.getId()) {
+			try {
+				account(account);
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return new ProlongAllResult(MultiStepResult.Status.ERROR);
+			} catch (OpacErrorException e) {
+				return new ProlongAllResult(MultiStepResult.Status.ERROR,
+						e.getMessage());
+			}
+		}
+
+		// We have to call the page we originally found the link on first...
+		String html = httpGet(
+				opac_url
+						+ "/userAccount.do?methodToCall=renewalPossible&renewal=account",
+				ENCODING);
+		Document doc = Jsoup.parse(html);
+
+		if (doc.select("table.data").size() > 0) {
+			List<ContentValues> result = new ArrayList<ContentValues>();
+			for (Element td : doc.select("table.data tr td")) {
+				ContentValues line = new ContentValues();
+				if (!td.text().contains("Titel")
+						|| !td.text().contains("Status"))
+					continue;
+				String nextNodeIs = "";
+				for (Node n : td.childNodes()) {
+					String text = "";
+					if (n instanceof Element) {
+						text = ((Element) n).text();
+					} else if (n instanceof TextNode) {
+						text = ((TextNode) n).text();
+					} else
+						continue;
+					if (text.trim().length() == 0)
+						continue;
+					if (text.contains("Titel:"))
+						nextNodeIs = ProlongAllResult.KEY_LINE_TITLE;
+					else if (text.contains("Verfasser:"))
+						nextNodeIs = ProlongAllResult.KEY_LINE_AUTHOR;
+					else if (text.contains("Leihfristende:"))
+						nextNodeIs = ProlongAllResult.KEY_LINE_NEW_RETURNDATE;
+					else if (text.contains("Status:"))
+						nextNodeIs = ProlongAllResult.KEY_LINE_MESSAGE;
+					else if (text.contains("Mediennummer:")
+							|| text.contains("Signatur:"))
+						nextNodeIs = "";
+					else if (nextNodeIs.length() > 0) {
+						line.put(nextNodeIs, text.trim());
+						nextNodeIs = "";
+					}
+				}
+				result.add(line);
+			}
+			return new ProlongAllResult(MultiStepResult.Status.OK, result);
+		}
+
+		return new ProlongAllResult(MultiStepResult.Status.ERROR,
+				"Fehler bei Verbindung/Login");
 	}
 
 	@Override

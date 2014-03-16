@@ -76,7 +76,6 @@ public class Pica extends BaseApi implements OpacApi {
 	protected JSONObject data;
 	protected MetaDataSource metadata;
 	protected boolean initialised = false;
-	protected String last_error;
 	protected Library library;
 	protected String ENCODING = "UTF-8";
 	protected int resultcount = 10;
@@ -175,7 +174,7 @@ public class Pica extends BaseApi implements OpacApi {
 
 	@Override
 	public SearchRequestResult search(Bundle query) throws IOException,
-			NotReachableException {
+			NotReachableException, OpacErrorException {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 		int index = 0;
@@ -209,12 +208,12 @@ public class Pica extends BaseApi implements OpacApi {
 				.getString(KEY_SEARCH_QUERY_YEAR)));
 
 		if (index == 0) {
-			last_error = "Es wurden keine Suchkriterien eingegeben.";
-			return null;
+			throw new OpacErrorException(
+					"Es wurden keine Suchkriterien eingegeben.");
 		}
 		if (index > 4) {
-			last_error = "Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.";
-			return null;
+			throw new OpacErrorException(
+					"Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.");
 		}
 
 		String html = httpGet(opac_url + "/DB=" + db + "/SET=1/TTL=1/CMD?"
@@ -224,7 +223,8 @@ public class Pica extends BaseApi implements OpacApi {
 		return parse_search(html, 1);
 	}
 
-	protected SearchRequestResult parse_search(String html, int page) {
+	protected SearchRequestResult parse_search(String html, int page)
+			throws OpacErrorException {
 		Document doc = Jsoup.parse(html);
 
 		updateSearchSetValue(doc);
@@ -237,8 +237,8 @@ public class Pica extends BaseApi implements OpacApi {
 						0, 1, 1);
 			} else {
 				// error
-				last_error = doc.select(".error").first().text().trim();
-				return null;
+				throw new OpacErrorException(doc.select(".error").first()
+						.text().trim());
 			}
 		}
 
@@ -318,18 +318,18 @@ public class Pica extends BaseApi implements OpacApi {
 						sr.setType(MediaType.valueOf(data.getJSONObject(
 								"mediatypes").getString(fname)));
 					} catch (JSONException e) {
-						sr.setType(defaulttypes.get(fname.toLowerCase(Locale.GERMAN)
-								.replace(".jpg", "").replace(".gif", "")
-								.replace(".png", "")));
+						sr.setType(defaulttypes.get(fname
+								.toLowerCase(Locale.GERMAN).replace(".jpg", "")
+								.replace(".gif", "").replace(".png", "")));
 					} catch (IllegalArgumentException e) {
-						sr.setType(defaulttypes.get(fname.toLowerCase(Locale.GERMAN)
-								.replace(".jpg", "").replace(".gif", "")
-								.replace(".png", "")));
+						sr.setType(defaulttypes.get(fname
+								.toLowerCase(Locale.GERMAN).replace(".jpg", "")
+								.replace(".gif", "").replace(".png", "")));
 					}
 				} else {
-					sr.setType(defaulttypes.get(fname.toLowerCase(Locale.GERMAN)
-							.replace(".jpg", "").replace(".gif", "")
-							.replace(".png", "")));
+					sr.setType(defaulttypes.get(fname
+							.toLowerCase(Locale.GERMAN).replace(".jpg", "")
+							.replace(".gif", "").replace(".png", "")));
 				}
 			}
 			Element middlething = tr.child(2);
@@ -393,7 +393,7 @@ public class Pica extends BaseApi implements OpacApi {
 
 	@Override
 	public SearchRequestResult searchGetPage(int page) throws IOException,
-			NotReachableException {
+			NotReachableException, OpacErrorException {
 		if (!initialised)
 			start();
 
@@ -550,9 +550,8 @@ public class Pica extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public ReservationResult reservation(DetailledItem item,
-			Account account, int useraction, String selection)
-			throws IOException {
+	public ReservationResult reservation(DetailledItem item, Account account,
+			int useraction, String selection) throws IOException {
 		return null;
 	}
 
@@ -582,6 +581,9 @@ public class Pica extends BaseApi implements OpacApi {
 				return prolong(media, account, useraction, Selection);
 			} catch (JSONException e) {
 				return new ProlongResult(MultiStepResult.Status.ERROR);
+			} catch (OpacErrorException e) {
+				return new ProlongResult(MultiStepResult.Status.ERROR,
+						e.getMessage());
 			}
 		} else {
 			ProlongResult res = new ProlongResult(MultiStepResult.Status.ERROR);
@@ -591,12 +593,14 @@ public class Pica extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public boolean prolongAll(Account account) throws IOException {
-		return false;
+	public ProlongAllResult prolongAll(Account account, int useraction,
+			String selection) throws IOException {
+		return null;
 	}
 
 	@Override
-	public boolean cancel(Account account, String media) throws IOException {
+	public boolean cancel(Account account, String media) throws IOException,
+			OpacErrorException {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("ACT", "UI_CANCELRES"));
 
@@ -626,7 +630,7 @@ public class Pica extends BaseApi implements OpacApi {
 
 	@Override
 	public AccountData account(Account account) throws IOException,
-			JSONException {
+			JSONException, OpacErrorException {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("ACT", "UI_DATA"));
 		params.add(new BasicNameValuePair("HOST_NAME", ""));
@@ -639,7 +643,8 @@ public class Pica extends BaseApi implements OpacApi {
 		params.add(new BasicNameValuePair("BOR_PW", account.getPassword()));
 
 		String html = httpPost(https_url + "/loan/DB=" + db
-				+ "/LNG=DU/USERINFO", new UrlEncodedFormEntity(params, "utf-8"), getDefaultEncoding());
+				+ "/LNG=DU/USERINFO",
+				new UrlEncodedFormEntity(params, "utf-8"), getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 
 		pwEncoded = doc.select("a.tab0").attr("href");
@@ -672,9 +677,9 @@ public class Pica extends BaseApi implements OpacApi {
 		res.setReservations(reserved);
 
 		if (medien == null || reserved == null) {
-			last_error = "Unbekannter Fehler. Bitte pruefen Sie, ob ihre Kontodaten korrekt sind.";
+			throw new OpacErrorException(
+					"Unbekannter Fehler. Bitte prüfen Sie, ob ihre Kontodaten korrekt sind.");
 			// Log.d("OPACCLIENT", html);
-			return null;
 		}
 		return res;
 
@@ -700,14 +705,17 @@ public class Pica extends BaseApi implements OpacApi {
 			try {
 				String html = httpGet(https_url + "/nr_renewals.php?U="
 						+ accountName + "&DB=" + db + "&VBAR="
-						+ tr.child(1).select("input").attr("value"), getDefaultEncoding());
+						+ tr.child(1).select("input").attr("value"),
+						getDefaultEncoding());
 				prolongCount = Jsoup.parse(html).text();
 			} catch (IOException e) {
 
 			}
 			String reminderCount = tr.child(13).text().trim();
 			if (reminderCount.indexOf(" Mahn") >= 0
-					&& reminderCount.indexOf("(") >= 0)
+					&& reminderCount.indexOf("(") >= 0
+					&& reminderCount.indexOf("(") < reminderCount
+							.indexOf(" Mahn"))
 				reminderCount = reminderCount.substring(
 						reminderCount.indexOf("(") + 1,
 						reminderCount.indexOf(" Mahn"));
@@ -776,11 +784,6 @@ public class Pica extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public String getLast_error() {
-		return last_error;
-	}
-
-	@Override
 	public boolean isAccountSupported(Library library) {
 		return !library.getData().isNull("accountSupported");
 	}
@@ -831,13 +834,13 @@ public class Pica extends BaseApi implements OpacApi {
 					mediatype = MediaType.valueOf(data.getJSONObject(
 							"mediatypes").getString(fname));
 				} catch (JSONException e) {
-					mediatype = defaulttypes.get(fname.toLowerCase(Locale.GERMAN)
-							.replace(".jpg", "").replace(".gif", "")
-							.replace(".png", ""));
+					mediatype = defaulttypes.get(fname
+							.toLowerCase(Locale.GERMAN).replace(".jpg", "")
+							.replace(".gif", "").replace(".png", ""));
 				} catch (IllegalArgumentException e) {
-					mediatype = defaulttypes.get(fname.toLowerCase(Locale.GERMAN)
-							.replace(".jpg", "").replace(".gif", "")
-							.replace(".png", ""));
+					mediatype = defaulttypes.get(fname
+							.toLowerCase(Locale.GERMAN).replace(".jpg", "")
+							.replace(".gif", "").replace(".png", ""));
 				}
 			} else {
 				mediatype = defaulttypes.get(fname.toLowerCase(Locale.GERMAN)
