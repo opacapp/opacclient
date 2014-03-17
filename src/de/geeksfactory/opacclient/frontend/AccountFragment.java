@@ -899,7 +899,7 @@ public class AccountFragment extends Fragment implements
 									SearchResultDetailActivity.class);
 							intent.putExtra(
 									SearchResultDetailFragment.ARG_ITEM_ID,
-									item.getAsString(AccountData.KEY_LENT_ID));
+									item.getAsString(AccountData.KEY_RESERVATION_ID));
 							startActivity(intent);
 						}
 					};
