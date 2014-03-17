@@ -20,7 +20,7 @@
      limitations under the License.
 -->
 
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Theme.Opacapp" parent="@style/Holo.Theme.Light.DarkActionBar">
         <item name="actionBarItemBackground">@drawable/selectable_background_opacapp</item>
@@ -80,6 +80,7 @@
     <style name="Theme.Opacapp.Widget" parent="@style/Holo.Theme.Light.DarkActionBar">
         <item name="popupMenuStyle">@style/PopupMenu.Opacapp</item>
         <item name="dropDownListViewStyle">@style/DropDownListView.Opacapp</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
 </resources>
