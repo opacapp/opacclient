@@ -531,7 +531,7 @@ public class Bibliotheca extends BaseApi {
 
 		Document doc = null;
 
-		if (useraction == ReservationResult.ACTION_CONFIRMATION) {
+		if (useraction == MultiStepResult.ACTION_CONFIRMATION) {
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs
 					.add(new BasicNameValuePair("button1", "Bestaetigung"));
@@ -683,7 +683,7 @@ public class Bibliotheca extends BaseApi {
 			}
 		}
 
-		if (useraction == ReservationResult.ACTION_CONFIRMATION) {
+		if (useraction == MultiStepResult.ACTION_CONFIRMATION) {
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("target", "make_vl"));
 			nameValuePairs.add(new BasicNameValuePair("verlaengern",

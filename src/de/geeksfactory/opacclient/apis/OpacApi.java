@@ -813,6 +813,7 @@ public interface OpacApi {
 	 *             please return <code>SUPPORT_FLAG_ACCOUNT_EXTENDABLE</code>
 	 *             from <code>getSupportFlags</code>.
 	 */
+	@Deprecated
 	public boolean isAccountExtendable();
 
 	/**

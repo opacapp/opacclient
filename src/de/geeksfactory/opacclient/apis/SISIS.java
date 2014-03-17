@@ -377,7 +377,7 @@ public class SISIS extends BaseApi implements OpacApi {
 				haslink = true;
 				try {
 					List<NameValuePair> anyurl = URLEncodedUtils.parse(new URI(
-							((Element) node).attr("href").replace(" ", "%20")
+							node.attr("href").replace(" ", "%20")
 									.replace("&amp;", "&")), ENCODING);
 					for (NameValuePair nv : anyurl) {
 						if (nv.getName().equals("identifier")) {
@@ -950,7 +950,7 @@ public class SISIS extends BaseApi implements OpacApi {
 			action = "order";
 		}
 
-		if (useraction == ReservationResult.ACTION_CONFIRMATION) {
+		if (useraction == MultiStepResult.ACTION_CONFIRMATION) {
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("methodToCall", action));
 			nameValuePairs.add(new BasicNameValuePair("CSId", CSId));

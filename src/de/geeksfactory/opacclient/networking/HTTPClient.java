@@ -112,6 +112,7 @@ public class HTTPClient {
 			super();
 		}
 
+		@Override
 		public URI getLocationURI(final HttpResponse response,
 				final HttpContext context) throws ProtocolException {
 			if (response == null) {

@@ -65,6 +65,7 @@ public abstract class BaseApi implements OpacApi {
 	/**
 	 * Initializes HTTP client
 	 */
+	@Override
 	public void init(MetaDataSource metadata, Library library) {
 		http_client = HTTPClient.getNewHttpClient(library);
 	}

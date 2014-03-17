@@ -3,8 +3,6 @@ package de.geeksfactory.opacclient.frontend;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.List;
-import java.util.Map.Entry;
-
 import org.acra.ACRA;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
@@ -20,17 +18,13 @@ import org.holoeverywhere.widget.Toast;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.text.Html;
-import android.text.TextUtils.TruncateAt;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Menu;
@@ -42,11 +36,8 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
@@ -229,6 +220,7 @@ public class SearchResultDetailFragment extends Fragment {
 		load(nr, id);
 	}
 
+	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		app = (OpacClient) activity.getApplication();
@@ -816,6 +808,7 @@ public class SearchResultDetailFragment extends Fragment {
 						getActivity());
 				builder.setTitle(R.string.share_dialog_select);
 				builder.setItems(items, new DialogInterface.OnClickListener() {
+					@Override
 					public void onClick(DialogInterface dialog, int di) {
 						String bib = app.getLibrary().getIdent();
 						if (di == 0) {

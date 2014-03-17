@@ -91,7 +91,7 @@ public class MultiStepResultHelper  {
 			throw new IllegalStateException("Callback not set!");
 		}
 		task = callback.newTask();
-		task.execute(((OpacClient) context.getApplication()), argument,
+		task.execute((context.getApplication()), argument,
 				useraction, selection, this);
 	}
 

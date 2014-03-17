@@ -576,7 +576,7 @@ public class Zones22 extends BaseApi {
 						details.add(new String[] { ((TextNode) n).text().trim() });
 						res.setDetails(details);
 						res.setMessage(((TextNode) n).text().trim());
-						res.setActionIdentifier(ReservationResult.ACTION_CONFIRMATION);
+						res.setActionIdentifier(MultiStepResult.ACTION_CONFIRMATION);
 					}
 				}
 			}

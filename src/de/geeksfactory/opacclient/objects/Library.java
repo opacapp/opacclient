@@ -262,6 +262,7 @@ public class Library implements Comparable<Library> {
 		this.geo_distance = geo_distance;
 	}
 
+	@Override
 	public int compareTo(Library arg0) {
 		Collator deCollator = Collator.getInstance(Locale.GERMAN);
 		deCollator.setStrength(Collator.PRIMARY);
