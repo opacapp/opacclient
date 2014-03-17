@@ -29,30 +29,31 @@ import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
 
-public class MultiStepResultHelper {
+public class MultiStepResultHelper  {
 
 	protected Activity context;
 	protected Object argument;
-	protected StepTask task;
+	protected StepTask<?> task;
 	protected Callback callback;
+	protected int loadingstring;
 	
 	protected ProgressDialog pdialog;
 	protected AlertDialog adialog;
 
-	public static abstract class StepTask extends OpacTask<MultiStepResult> {
+	public static abstract class StepTask<T extends MultiStepResult> extends OpacTask<T> {
 		protected MultiStepResultHelper helper;
 		
 		@Override
-		protected void onPostExecute(MultiStepResult res) {
+		protected void onPostExecute(T res) {
 			super.onPostExecute(res);
+			if(helper.pdialog != null)
+				helper.pdialog.dismiss();
 			helper.handleResult(res);
 		}
 		
 		@Override
-		protected MultiStepResult doInBackground(Object... arg0) {
+		protected T doInBackground(Object... arg0) {
 			helper = (MultiStepResultHelper) arg0[4];
-			if(helper.pdialog != null)
-				helper.pdialog.dismiss();
 			return super.doInBackground(arg0);
 		}
 	}
@@ -65,11 +66,12 @@ public class MultiStepResultHelper {
 	}
 
 	public MultiStepResultHelper(Activity context, Object argument,
-			StepTask task) {
+			StepTask<?> task, int loadingstring) {
 		super();
 		this.context = context;
 		this.argument = argument;
 		this.task = task;
+		this.loadingstring = loadingstring;
 	}
 
 	public void setCallback(Callback callback) {
@@ -81,13 +83,9 @@ public class MultiStepResultHelper {
 	}
 
 	public void doStep(int useraction, String selection) {
-		if (pdialog == null) {
+		if (pdialog == null || !pdialog.isShowing()) {
 			pdialog = ProgressDialog.show(context, "",
-					context.getString(R.string.doing_prolong), true);
-			pdialog.show();
-		} else if (!pdialog.isShowing()) {
-			pdialog = ProgressDialog.show(context, "",
-					context.getString(R.string.doing_prolong), true);
+					context.getString(loadingstring), true);
 			pdialog.show();
 		}
 
