@@ -52,7 +52,10 @@ import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.EbookServiceApi;
 import de.geeksfactory.opacclient.apis.EbookServiceApi.BookingResult;
+import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
+import de.geeksfactory.opacclient.frontend.MultiStepResultHelper.Callback;
+import de.geeksfactory.opacclient.frontend.MultiStepResultHelper.StepTask;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
@@ -86,8 +89,6 @@ public class SearchResultDetailFragment extends Fragment {
 
 	private FetchTask ft;
 	private FetchSubTask fst;
-	private ResTask rt;
-	private BookingTask bt;
 	private ProgressDialog dialog;
 	private AlertDialog adialog;
 
@@ -133,9 +134,9 @@ public class SearchResultDetailFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		setRetainInstance(true);
-		
+
 		if (getArguments().containsKey(ARG_ITEM_ID)
 				|| getArguments().containsKey(ARG_ITEM_NR)) {
 			// Load the dummy content specified by the fragment
@@ -244,8 +245,8 @@ public class SearchResultDetailFragment extends Fragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		
-		if(item != null) {
+
+		if (item != null) {
 			display();
 		}
 	}
@@ -336,7 +337,7 @@ public class SearchResultDetailFragment extends Fragment {
 				reservationStart();
 		}
 	}
-	
+
 	protected void display() {
 		try {
 			Log.i("result", getItem().toString());
@@ -358,10 +359,9 @@ public class SearchResultDetailFragment extends Fragment {
 		LinearLayout llDetails = (LinearLayout) view
 				.findViewById(R.id.llDetails);
 		for (Detail detail : item.getDetails()) {
-			View v = getLayoutInflater().inflate(R.layout.listitem_detail,
-					null);
-			((TextView) v.findViewById(R.id.tvDesc)).setText(detail
-					.getDesc());
+			View v = getLayoutInflater()
+					.inflate(R.layout.listitem_detail, null);
+			((TextView) v.findViewById(R.id.tvDesc)).setText(detail.getDesc());
 			((TextView) v.findViewById(R.id.tvContent)).setText(detail
 					.getContent());
 			Linkify.addLinks((TextView) v.findViewById(R.id.tvContent),
@@ -369,8 +369,7 @@ public class SearchResultDetailFragment extends Fragment {
 			llDetails.addView(v);
 		}
 
-		LinearLayout llCopies = (LinearLayout) view
-				.findViewById(R.id.llCopies);
+		LinearLayout llCopies = (LinearLayout) view.findViewById(R.id.llCopies);
 		if (item.getVolumesearch() != null) {
 			TextView tvC = (TextView) view.findViewById(R.id.tvCopies);
 			tvC.setText(R.string.baende);
@@ -379,8 +378,7 @@ public class SearchResultDetailFragment extends Fragment {
 			btnVolume.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					app.startSearch(getActivity(), getItem()
-							.getVolumesearch());
+					app.startSearch(getActivity(), getItem().getVolumesearch());
 				}
 			});
 			llCopies.addView(btnVolume);
@@ -390,8 +388,8 @@ public class SearchResultDetailFragment extends Fragment {
 			tvC.setText(R.string.baende);
 
 			for (final ContentValues band : item.getBaende()) {
-				View v = getLayoutInflater().inflate(
-						R.layout.listitem_volume, null);
+				View v = getLayoutInflater().inflate(R.layout.listitem_volume,
+						null);
 				((TextView) v.findViewById(R.id.tvTitel)).setText(band
 						.getAsString(DetailledItem.KEY_CHILD_TITLE));
 
@@ -570,7 +568,7 @@ public class SearchResultDetailFragment extends Fragment {
 					app.getApi().start();
 
 				DetailledItem res = app.getApi().getResultById(a, homebranch);
-				if(res.getId() == null) {
+				if (res.getId() == null) {
 					res.setId(a);
 				}
 				URL newurl;
@@ -601,8 +599,7 @@ public class SearchResultDetailFragment extends Fragment {
 		}
 	}
 
-	public class ResTask extends OpacTask<ReservationResult> {
-		private boolean success;
+	public class ResTask extends StepTask<ReservationResult> {
 
 		@Override
 		protected ReservationResult doInBackground(Object... arg0) {
@@ -616,27 +613,23 @@ public class SearchResultDetailFragment extends Fragment {
 			try {
 				ReservationResult res = app.getApi().reservation(item,
 						app.getAccount(), useraction, selection);
-				success = true;
 				return res;
 			} catch (java.net.UnknownHostException e) {
 				publishProgress(e, "ioerror");
 			} catch (java.net.SocketException e) {
-				success = false;
 				e.printStackTrace();
 			} catch (Exception e) {
 				ACRA.getErrorReporter().handleException(e);
-				success = false;
 			}
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(ReservationResult res) {
-			dialog.dismiss();
 			if (getActivity() == null)
 				return;
 
-			if (!success || res == null) {
+			if (res == null) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						getActivity());
 				builder.setMessage(R.string.connection_error)
@@ -654,47 +647,42 @@ public class SearchResultDetailFragment extends Fragment {
 				return;
 			}
 
-			reservationResult(res);
+			super.onPostExecute(res);
 		}
 	}
 
-	public class BookingTask extends OpacTask<BookingResult> {
-		private boolean success;
+	public class BookingTask extends StepTask<BookingResult> {
 
 		@Override
 		protected BookingResult doInBackground(Object... arg0) {
 			super.doInBackground(arg0);
 
 			app = (OpacClient) arg0[0];
-			String reservation_info = (String) arg0[1];
+			DetailledItem item = (DetailledItem) arg0[1];
 			int useraction = (Integer) arg0[2];
 			String selection = (String) arg0[3];
 
 			try {
 				BookingResult res = ((EbookServiceApi) app.getApi()).booking(
-						reservation_info, app.getAccount(), useraction,
-						selection);
-				success = true;
+						item.getReservation_info(), app.getAccount(),
+						useraction, selection);
 				return res;
 			} catch (java.net.UnknownHostException e) {
 				publishProgress(e, "ioerror");
 			} catch (java.net.SocketException e) {
-				success = false;
 				e.printStackTrace();
 			} catch (Exception e) {
 				ACRA.getErrorReporter().handleException(e);
-				success = false;
 			}
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(BookingResult res) {
-			dialog.dismiss();
 			if (getActivity() == null)
 				return;
 
-			if (!success || res == null) {
+			if (res == null) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						getActivity());
 				builder.setMessage(R.string.connection_error)
@@ -712,7 +700,7 @@ public class SearchResultDetailFragment extends Fragment {
 				return;
 			}
 
-			bookingResult(res);
+			super.onPostExecute(res);
 		}
 	}
 
@@ -733,16 +721,6 @@ public class SearchResultDetailFragment extends Fragment {
 			if (fst != null) {
 				if (!fst.isCancelled()) {
 					fst.cancel(true);
-				}
-			}
-			if (rt != null) {
-				if (!rt.isCancelled()) {
-					rt.cancel(true);
-				}
-			}
-			if (bt != null) {
-				if (!bt.isCancelled()) {
-					bt.cancel(true);
 				}
 			}
 		} catch (Exception e) {
@@ -1109,61 +1087,40 @@ public class SearchResultDetailFragment extends Fragment {
 	}
 
 	public void reservationDo() {
-		reservationDo(0, null);
-	}
-
-	public void reservationDo(int useraction, String selection) {
-		if (dialog == null) {
-			dialog = ProgressDialog.show(getActivity(), "",
-					getString(R.string.doing_res), true);
-			dialog.show();
-		} else if (!dialog.isShowing()) {
-			dialog = ProgressDialog.show(getActivity(), "",
-					getString(R.string.doing_res), true);
-			dialog.show();
-		}
-
-		rt = new ResTask();
-		if (app.getApi() instanceof EbookServiceApi) {
-			SharedPreferences sp = PreferenceManager
-					.getDefaultSharedPreferences(getActivity());
-			if (((EbookServiceApi) app.getApi()).isEbook(item)
-					&& selection == null) {
-				rt.execute(app, item, 0,
-						sp.getString("email", "invalid@example.org"));
-				return;
+		MultiStepResultHelper msrhReservation = new MultiStepResultHelper(
+				getSupportActivity(), item, R.string.doing_res);
+		msrhReservation.setCallback(new Callback() {
+			@Override
+			public void onSuccess(MultiStepResult result) {
+				AccountDataSource adata = new AccountDataSource(getActivity());
+				adata.open();
+				adata.invalidateCachedAccountData(app.getAccount());
+				adata.close();
+				Intent intent = new Intent(getActivity(), MainActivity.class);
+				intent.putExtra("fragment", "account");
+				getActivity().startActivity(intent);
+				getActivity().finish();
 			}
-		}
-		rt.execute(app, item, useraction, selection);
-	}
 
-	public void reservationResult(ReservationResult result) {
-		AccountDataSource adata = new AccountDataSource(getActivity());
-		adata.open();
-		adata.invalidateCachedAccountData(app.getAccount());
-		adata.close();
-		switch (result.getStatus()) {
-		case CONFIRMATION_NEEDED:
-			reservationConfirmation(result);
-			break;
-		case SELECTION_NEEDED:
-			reservationSelection(result);
-			break;
-		case ERROR:
-			dialog_wrong_credentials(result.getMessage(), false);
-			break;
-		case OK:
-			Intent intent = new Intent(getActivity(), MainActivity.class);
-			intent.putExtra("fragment", "account");
-			getActivity().startActivity(intent);
-			getActivity().finish();
-			break;
-		case UNSUPPORTED:
-			// TODO: Show dialog
-			break;
-		default:
-			break;
-		}
+			@Override
+			public void onError(MultiStepResult result) {
+				dialog_wrong_credentials(result.getMessage(), false);
+			}
+
+			@Override
+			public void onUnhandledResult(MultiStepResult result) {
+			}
+
+			@Override
+			public void onUserCancel() {
+			}
+
+			@Override
+			public StepTask<?> newTask() {
+				return new ResTask();
+			}
+		});
+		msrhReservation.start();
 	}
 
 	protected void bookingStart() {
@@ -1223,296 +1180,40 @@ public class SearchResultDetailFragment extends Fragment {
 	}
 
 	public void bookingDo() {
-		bookingDo(0, null);
-	}
-
-	public void bookingDo(int useraction, String selection) {
-		if (dialog == null) {
-			dialog = ProgressDialog.show(getActivity(), "",
-					getString(R.string.doing_booking), true);
-			dialog.show();
-		} else if (!dialog.isShowing()) {
-			dialog = ProgressDialog.show(getActivity(), "",
-					getString(R.string.doing_booking), true);
-			dialog.show();
-		}
-
-		bt = new BookingTask();
-		bt.execute(app, item.getBooking_info(), useraction, selection);
-	}
-
-	public void bookingResult(BookingResult result) {
-		AccountDataSource adata = new AccountDataSource(getActivity());
-		adata.open();
-		adata.invalidateCachedAccountData(app.getAccount());
-		adata.close();
-		switch (result.getStatus()) {
-		case CONFIRMATION_NEEDED:
-			bookingConfirmation(result);
-			break;
-		case SELECTION_NEEDED:
-			bookingSelection(result);
-			break;
-		case ERROR:
-			dialog_wrong_credentials(result.getMessage(), false);
-			break;
-		case OK:
-			Intent intent = new Intent(getActivity(), MainActivity.class);
-			intent.putExtra("fragment", "account");
-			getActivity().startActivity(intent);
-			getActivity().finish();
-			break;
-		case UNSUPPORTED:
-			// TODO: Show dialog
-			break;
-		default:
-			break;
-		}
-	}
-
-	public void bookingConfirmation(final BookingResult result) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-		LayoutInflater inflater = getLayoutInflater();
-		View view;
-
-		if (result.getDetails().size() == 1
-				&& result.getDetails().get(0).length == 1) {
-			view = inflater.inflate(R.layout.dialog_reservation_details_simple,
-					null);
-			TextView tv = (TextView) view.findViewById(R.id.tvDetails);
-			tv.setText(result.getDetails().get(0)[0]);
-		} else {
-			view = inflater.inflate(R.layout.dialog_reservation_details, null);
-			TableLayout table = (TableLayout) view.findViewById(R.id.tlDetails);
-
-			for (String[] detail : result.getDetails()) {
-				TableRow tr = new TableRow(getActivity());
-				if (detail.length == 2) {
-					TextView tv1 = new TextView(getActivity());
-					tv1.setText(Html.fromHtml(detail[0]));
-					tv1.setTypeface(null, Typeface.BOLD);
-					tv1.setPadding(0, 0, 8, 0);
-					TextView tv2 = new TextView(getActivity());
-					tv2.setText(Html.fromHtml(detail[1]));
-					tv2.setEllipsize(TruncateAt.END);
-					tv2.setSingleLine(false);
-					tr.addView(tv1);
-					tr.addView(tv2);
-				} else if (detail.length == 1) {
-					TextView tv1 = new TextView(getActivity());
-					tv1.setText(Html.fromHtml(detail[0]));
-					tv1.setPadding(0, 2, 0, 2);
-					TableRow.LayoutParams params = new TableRow.LayoutParams(0);
-					params.span = 2;
-					tv1.setLayoutParams(params);
-					tr.addView(tv1);
-				}
-				table.addView(tr);
-			}
-		}
-
-		builder.setTitle(R.string.confirm_title)
-				.setView(view)
-				.setPositiveButton(R.string.confirm,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-								bookingDo(
-										ReservationResult.ACTION_CONFIRMATION,
-										"confirmed");
-							}
-						})
-				.setNegativeButton(R.string.cancel,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-								adialog.cancel();
-							}
-						});
-		adialog = builder.create();
-		adialog.show();
-	}
-
-	public void bookingSelection(final BookingResult result) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-		LayoutInflater inflater = getLayoutInflater();
-
-		View view = inflater.inflate(R.layout.dialog_simple_list, null);
-
-		ListView lv = (ListView) view.findViewById(R.id.lvBibs);
-		final Object[] possibilities = result.getSelection().valueSet()
-				.toArray();
-
-		lv.setAdapter(new SelectionAdapter(getActivity(), possibilities));
-		lv.setOnItemClickListener(new OnItemClickListener() {
+		MultiStepResultHelper msrhBooking = new MultiStepResultHelper(
+				getSupportActivity(), item, R.string.doing_res);
+		msrhBooking.setCallback(new Callback() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				adialog.dismiss();
+			public void onSuccess(MultiStepResult result) {
+				AccountDataSource adata = new AccountDataSource(getActivity());
+				adata.open();
+				adata.invalidateCachedAccountData(app.getAccount());
+				adata.close();
+				Intent intent = new Intent(getActivity(), MainActivity.class);
+				intent.putExtra("fragment", "account");
+				getActivity().startActivity(intent);
+				getActivity().finish();
+			}
 
-				bookingDo(result.getActionIdentifier(),
-						((Entry<String, Object>) possibilities[position])
-								.getKey());
+			@Override
+			public void onError(MultiStepResult result) {
+				dialog_wrong_credentials(result.getMessage(), false);
+			}
+
+			@Override
+			public void onUnhandledResult(MultiStepResult result) {
+			}
+
+			@Override
+			public void onUserCancel() {
+			}
+
+			@Override
+			public StepTask<?> newTask() {
+				return new BookingTask();
 			}
 		});
-		switch (result.getActionIdentifier()) {
-		case ReservationResult.ACTION_BRANCH:
-			builder.setTitle(R.string.zweigstelle);
-		}
-		builder.setView(view).setNegativeButton(R.string.cancel,
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-						adialog.cancel();
-					}
-				});
-		adialog = builder.create();
-		adialog.show();
-	}
-
-	public class SelectionAdapter extends ArrayAdapter<Object> {
-
-		private Object[] objects;
-
-		@Override
-		public View getView(int position, View contentView, ViewGroup viewGroup) {
-			View view = null;
-
-			if (objects[position] == null) {
-				LayoutInflater layoutInflater = (LayoutInflater) getContext()
-						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				view = layoutInflater.inflate(R.layout.listitem_branch,
-						viewGroup, false);
-				return view;
-			}
-
-			String item = ((Entry<String, Object>) objects[position])
-					.getValue().toString();
-
-			if (contentView == null) {
-				LayoutInflater layoutInflater = (LayoutInflater) getContext()
-						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				view = layoutInflater.inflate(R.layout.listitem_branch,
-						viewGroup, false);
-			} else {
-				view = contentView;
-			}
-
-			TextView tvText = (TextView) view.findViewById(android.R.id.text1);
-			tvText.setText(item);
-			return view;
-		}
-
-		public SelectionAdapter(Context context, Object[] objects) {
-			super(context, R.layout.simple_spinner_item, objects);
-			this.objects = objects;
-		}
-
-	}
-
-	public void reservationSelection(final ReservationResult result) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-		LayoutInflater inflater = getLayoutInflater();
-
-		View view = inflater.inflate(R.layout.dialog_simple_list, null);
-
-		ListView lv = (ListView) view.findViewById(R.id.lvBibs);
-		final Object[] possibilities = result.getSelection().valueSet()
-				.toArray();
-
-		lv.setAdapter(new SelectionAdapter(getActivity(), possibilities));
-		lv.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				adialog.dismiss();
-
-				reservationDo(result.getActionIdentifier(),
-						((Entry<String, Object>) possibilities[position])
-								.getKey());
-			}
-		});
-		switch (result.getActionIdentifier()) {
-		case ReservationResult.ACTION_BRANCH:
-			builder.setTitle(R.string.zweigstelle);
-		}
-		builder.setView(view).setNegativeButton(R.string.cancel,
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-						adialog.cancel();
-					}
-				});
-		adialog = builder.create();
-		adialog.show();
-	}
-
-	public void reservationConfirmation(final ReservationResult result) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-		LayoutInflater inflater = getLayoutInflater();
-
-		View view;
-
-		if (result.getDetails().size() == 1
-				&& result.getDetails().get(0).length == 1) {
-			view = inflater.inflate(R.layout.dialog_reservation_details_simple,
-					null);
-			TextView tv = (TextView) view.findViewById(R.id.tvDetails);
-			tv.setText(result.getDetails().get(0)[0]);
-		} else {
-			view = inflater.inflate(R.layout.dialog_reservation_details, null);
-			TableLayout table = (TableLayout) view.findViewById(R.id.tlDetails);
-
-			for (String[] detail : result.getDetails()) {
-				TableRow tr = new TableRow(getActivity());
-				if (detail.length == 2) {
-					TextView tv1 = new TextView(getActivity());
-					tv1.setText(Html.fromHtml(detail[0]));
-					tv1.setTypeface(null, Typeface.BOLD);
-					tv1.setPadding(0, 0, 8, 0);
-					TextView tv2 = new TextView(getActivity());
-					tv2.setText(Html.fromHtml(detail[1]));
-					tv2.setEllipsize(TruncateAt.END);
-					tv2.setSingleLine(false);
-					tr.addView(tv1);
-					tr.addView(tv2);
-				} else if (detail.length == 1) {
-					TextView tv1 = new TextView(getActivity());
-					tv1.setText(Html.fromHtml(detail[0]));
-					tv1.setPadding(0, 2, 0, 2);
-					TableRow.LayoutParams params = new TableRow.LayoutParams(0);
-					params.span = 2;
-					tv1.setLayoutParams(params);
-					tr.addView(tv1);
-				}
-				table.addView(tr);
-			}
-		}
-
-		builder.setTitle(R.string.confirm_title)
-				.setView(view)
-				.setPositiveButton(R.string.confirm,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-								reservationDo(
-										ReservationResult.ACTION_CONFIRMATION,
-										"confirmed");
-							}
-						})
-				.setNegativeButton(R.string.cancel,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-								adialog.cancel();
-							}
-						});
-		adialog = builder.create();
-		adialog.show();
+		msrhBooking.start();
 	}
 
 	public class RestoreSessionTask extends OpacTask<Integer> {

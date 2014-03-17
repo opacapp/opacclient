@@ -94,6 +94,7 @@ import de.geeksfactory.opacclient.apis.OpacApi.ProlongResult;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
 import de.geeksfactory.opacclient.frontend.MultiStepResultHelper.Callback;
 import de.geeksfactory.opacclient.frontend.MultiStepResultHelper.SelectionAdapter;
+import de.geeksfactory.opacclient.frontend.MultiStepResultHelper.StepTask;
 import de.geeksfactory.opacclient.frontend.OpacActivity.AccountSelectedListener;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -411,7 +412,7 @@ public class AccountFragment extends Fragment implements
 		}
 
 		MultiStepResultHelper msrhProlong = new MultiStepResultHelper(
-				getSupportActivity(), a, new ProlongTask(),
+				getSupportActivity(), a,
 				R.string.doing_prolong);
 		msrhProlong.setCallback(new Callback() {
 			@Override
@@ -455,6 +456,11 @@ public class AccountFragment extends Fragment implements
 
 			@Override
 			public void onUserCancel() {
+			}
+
+			@Override
+			public StepTask<?> newTask() {
+				return new ProlongAllTask();
 			}
 		});
 		msrhProlong.start();
@@ -1482,7 +1488,7 @@ public class AccountFragment extends Fragment implements
 	public void prolongAllDo() {
 
 		MultiStepResultHelper msrhProlong = new MultiStepResultHelper(
-				getSupportActivity(), null, new ProlongAllTask(),
+				getSupportActivity(), null,
 				R.string.doing_prolong_all);
 		msrhProlong.setCallback(new Callback() {
 			@Override
@@ -1547,6 +1553,11 @@ public class AccountFragment extends Fragment implements
 
 			@Override
 			public void onUserCancel() {
+			}
+
+			@Override
+			public StepTask<?> newTask() {
+				return new ProlongTask();
 			}
 		});
 		msrhProlong.start();

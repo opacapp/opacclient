@@ -63,14 +63,13 @@ public class MultiStepResultHelper  {
 		public void onError(MultiStepResult result);
 		public void onUnhandledResult(MultiStepResult result);
 		public void onUserCancel();
+		public StepTask<?> newTask();
 	}
 
-	public MultiStepResultHelper(Activity context, Object argument,
-			StepTask<?> task, int loadingstring) {
+	public MultiStepResultHelper(Activity context, Object argument, int loadingstring) {
 		super();
 		this.context = context;
 		this.argument = argument;
-		this.task = task;
 		this.loadingstring = loadingstring;
 	}
 
@@ -88,7 +87,10 @@ public class MultiStepResultHelper  {
 					context.getString(loadingstring), true);
 			pdialog.show();
 		}
-
+		if (callback == null) {
+			throw new IllegalStateException("Callback not set!");
+		}
+		task = callback.newTask();
 		task.execute(((OpacClient) context.getApplication()), argument,
 				useraction, selection, this);
 	}
