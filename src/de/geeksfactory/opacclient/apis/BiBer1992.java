@@ -850,9 +850,9 @@ public class BiBer1992 extends BaseApi {
 	 * .objects.Account, java.lang.String)
 	 */
 	@Override
-	public boolean cancel(Account account, String media) throws IOException {
-		// TODO reservations not yet supported
-		return false;
+	public CancelResult cancel(String media, Account account, int useraction,
+			String selection) throws IOException, OpacErrorException {
+		throw new UnsupportedOperationException();
 	}
 
 	/*

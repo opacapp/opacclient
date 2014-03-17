@@ -1135,12 +1135,12 @@ public class SISIS extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public boolean cancel(Account account, String a) throws IOException,
-			NotReachableException, OpacErrorException {
+	public CancelResult cancel(String media, Account account, int useraction,
+			String selection) throws IOException, OpacErrorException {
 		if (!initialised)
 			start();
 
-		String[] parts = a.split("\\$");
+		String[] parts = media.split("\\$");
 		String type = parts[0];
 		String offset = parts[1];
 		String query = parts[2];
@@ -1151,14 +1151,14 @@ public class SISIS extends BaseApi implements OpacApi {
 				account(account);
 			} catch (JSONException e) {
 				e.printStackTrace();
-				return false;
+				throw new OpacErrorException("Interner Fehler.");
 			}
 		} else if (logged_in_as.getId() != account.getId()) {
 			try {
 				account(account);
 			} catch (JSONException e) {
 				e.printStackTrace();
-				return false;
+				throw new OpacErrorException("Interner Fehler.");
 			}
 		}
 
@@ -1169,7 +1169,7 @@ public class SISIS extends BaseApi implements OpacApi {
 			httpGet(opac_url + "/userAccount.do?methodToCall=pos&anzPos="
 					+ offset, ENCODING);
 		httpGet(opac_url + "/userAccount.do?" + query, ENCODING);
-		return true;
+		return new CancelResult(MultiStepResult.Status.OK);
 	}
 
 	protected boolean login(Account acc) throws OpacErrorException {

@@ -630,9 +630,9 @@ public class Zones22 extends BaseApi {
 	}
 
 	@Override
-	public boolean cancel(Account account, String a) throws IOException,
-			NotReachableException {
-		return false;
+	public CancelResult cancel(String media, Account account, int useraction,
+			String selection) throws IOException, OpacErrorException {
+		throw new UnsupportedOperationException();
 	}
 
 	private Document login(Account acc) throws IOException, OpacErrorException {

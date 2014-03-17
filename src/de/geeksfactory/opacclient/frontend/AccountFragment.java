@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.acra.ACRA;
@@ -56,7 +55,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -64,21 +62,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.Html;
-import android.text.TextUtils.TruncateAt;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.Toast;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
@@ -87,13 +78,13 @@ import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.EbookServiceApi;
 import de.geeksfactory.opacclient.apis.EbookServiceApi.BookingResult;
 import de.geeksfactory.opacclient.apis.OpacApi;
+import de.geeksfactory.opacclient.apis.OpacApi.CancelResult;
 import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult;
 import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.apis.OpacApi.ProlongAllResult;
 import de.geeksfactory.opacclient.apis.OpacApi.ProlongResult;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
 import de.geeksfactory.opacclient.frontend.MultiStepResultHelper.Callback;
-import de.geeksfactory.opacclient.frontend.MultiStepResultHelper.SelectionAdapter;
 import de.geeksfactory.opacclient.frontend.MultiStepResultHelper.StepTask;
 import de.geeksfactory.opacclient.frontend.OpacActivity.AccountSelectedListener;
 import de.geeksfactory.opacclient.objects.Account;
@@ -376,11 +367,60 @@ public class AccountFragment extends Fragment implements
 							@Override
 							public void onClick(DialogInterface d, int id) {
 								d.dismiss();
-								dialog = ProgressDialog.show(getActivity(), "",
-										getString(R.string.doing_cancel), true);
-								dialog.show();
-								ct = new CancelTask();
-								ct.execute(app, a);
+
+								MultiStepResultHelper msrhCancel = new MultiStepResultHelper(
+										getSupportActivity(), a,
+										R.string.doing_cancel);
+								msrhCancel.setCallback(new Callback() {
+									@Override
+									public void onSuccess(MultiStepResult result) {
+										invalidateData();
+									}
+
+									@Override
+									public void onError(MultiStepResult result) {
+										AlertDialog.Builder builder = new AlertDialog.Builder(
+												getActivity());
+										builder.setMessage(result.getMessage())
+												.setCancelable(true)
+												.setNegativeButton(
+														R.string.dismiss,
+														new DialogInterface.OnClickListener() {
+															@Override
+															public void onClick(
+																	DialogInterface d,
+																	int id) {
+																d.cancel();
+															}
+														})
+												.setOnCancelListener(
+														new DialogInterface.OnCancelListener() {
+															@Override
+															public void onCancel(
+																	DialogInterface d) {
+																if (d != null)
+																	d.cancel();
+															}
+														});
+										AlertDialog alert = builder.create();
+										alert.show();
+									}
+
+									@Override
+									public void onUnhandledResult(
+											MultiStepResult result) {
+									}
+
+									@Override
+									public void onUserCancel() {
+									}
+
+									@Override
+									public StepTask<?> newTask() {
+										return new CancelTask();
+									}
+								});
+								msrhCancel.start();
 							}
 						})
 				.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -392,12 +432,6 @@ public class AccountFragment extends Fragment implements
 				});
 		AlertDialog alert = builder.create();
 		alert.show();
-	}
-
-	public void cancel_done(int result) {
-		if (result == STATUS_SUCCESS) {
-			invalidateData();
-		}
 	}
 
 	protected void prolong(final String a) {
@@ -412,15 +446,10 @@ public class AccountFragment extends Fragment implements
 		}
 
 		MultiStepResultHelper msrhProlong = new MultiStepResultHelper(
-				getSupportActivity(), a,
-				R.string.doing_prolong);
+				getSupportActivity(), a, R.string.doing_prolong);
 		msrhProlong.setCallback(new Callback() {
 			@Override
 			public void onSuccess(MultiStepResult result) {
-				AccountDataSource adata = new AccountDataSource(getActivity());
-				adata.open();
-				adata.invalidateCachedAccountData(app.getAccount());
-				adata.close();
 				invalidateData();
 			}
 
@@ -1056,36 +1085,32 @@ public class AccountFragment extends Fragment implements
 		}
 	}
 
-	public class CancelTask extends OpacTask<Integer> {
-		private boolean success = true;
+	public class CancelTask extends StepTask<CancelResult> {
 
 		@Override
-		protected Integer doInBackground(Object... arg0) {
+		protected CancelResult doInBackground(Object... arg0) {
 			super.doInBackground(arg0);
 			String a = (String) arg0[1];
+			int useraction = (Integer) arg0[2];
+			String selection = (String) arg0[3];
 			try {
-				app.getApi().cancel(account, a);
-				success = true;
+				return app.getApi().cancel(a, account, useraction, selection);
 			} catch (java.net.UnknownHostException e) {
-				success = false;
+				e.printStackTrace();
 			} catch (java.net.SocketException e) {
-				success = false;
+				e.printStackTrace();
 			} catch (Exception e) {
 				ACRA.getErrorReporter().handleException(e);
-				success = false;
 			}
-			return STATUS_SUCCESS;
+			return null;
 		}
 
 		@Override
-		protected void onPostExecute(Integer result) {
-			dialog.dismiss();
+		protected void onPostExecute(CancelResult result) {
 			if (getActivity() == null)
 				return;
 
-			if (success) {
-				cancel_done(result);
-			} else {
+			if (result == null) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						getActivity());
 				builder.setMessage(R.string.connection_error)
@@ -1101,6 +1126,8 @@ public class AccountFragment extends Fragment implements
 				AlertDialog alert = builder.create();
 				alert.show();
 			}
+
+			super.onPostExecute(result);
 		}
 	}
 
@@ -1189,7 +1216,8 @@ public class AccountFragment extends Fragment implements
 		}
 	}
 
-	public class ProlongTask extends MultiStepResultHelper.StepTask<ProlongResult> {
+	public class ProlongTask extends
+			MultiStepResultHelper.StepTask<ProlongResult> {
 		private boolean success = true;
 		private String media;
 
@@ -1246,14 +1274,19 @@ public class AccountFragment extends Fragment implements
 		}
 	}
 
-	public class ProlongAllTask extends MultiStepResultHelper.StepTask<ProlongAllResult> {
+	public class ProlongAllTask extends
+			MultiStepResultHelper.StepTask<ProlongAllResult> {
 
 		@Override
 		protected ProlongAllResult doInBackground(Object... arg0) {
 			super.doInBackground(arg0);
+
+			int useraction = (Integer) arg0[2];
+			String selection = (String) arg0[3];
+
 			try {
-				ProlongAllResult res = app.getApi()
-						.prolongAll(account, 0, null);
+				ProlongAllResult res = app.getApi().prolongAll(account,
+						useraction, selection);
 				return res;
 			} catch (java.net.UnknownHostException e) {
 			} catch (java.net.SocketException e) {
@@ -1299,158 +1332,55 @@ public class AccountFragment extends Fragment implements
 			}
 			return;
 		}
-		bookingDo(booking_info);
-	}
 
-	public void bookingDo(String booking_info) {
-		bookingDo(booking_info, 0, null);
-	}
-
-	public void bookingDo(String booking_info, int useraction, String selection) {
-		if (dialog == null) {
-			dialog = ProgressDialog.show(getActivity(), "",
-					getString(R.string.doing_booking), true);
-			dialog.show();
-		} else if (!dialog.isShowing()) {
-			dialog = ProgressDialog.show(getActivity(), "",
-					getString(R.string.doing_booking), true);
-			dialog.show();
-		}
-
-		bt = new BookingTask();
-		bt.execute(app, booking_info, useraction, selection);
-	}
-
-	public void bookingResult(String booking_info, BookingResult result) {
-		AccountDataSource adata = new AccountDataSource(getActivity());
-		adata.open();
-		adata.invalidateCachedAccountData(app.getAccount());
-		adata.close();
-		switch (result.getStatus()) {
-		case CONFIRMATION_NEEDED:
-			bookingConfirmation(booking_info, result);
-			break;
-		case SELECTION_NEEDED:
-			bookingSelection(booking_info, result);
-			break;
-		case ERROR:
-			dialog_wrong_credentials(result.getMessage(), false);
-			break;
-		case OK:
-			invalidateData();
-			break;
-		case UNSUPPORTED:
-			// TODO: Show dialog
-			break;
-		default:
-			break;
-		}
-	}
-
-	public void bookingConfirmation(final String booking_info,
-			final BookingResult result) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-		LayoutInflater inflater = getLayoutInflater();
-
-		View view = inflater.inflate(R.layout.dialog_reservation_details, null);
-
-		TableLayout table = (TableLayout) view.findViewById(R.id.tlDetails);
-
-		if (result.getDetails().size() == 1
-				&& result.getDetails().get(0).length == 1) {
-			((RelativeLayout) view.findViewById(R.id.rlConfirm))
-					.removeView(table);
-			TextView tv = new TextView(getActivity());
-			tv.setText(result.getDetails().get(0)[0]);
-			tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
-					LayoutParams.WRAP_CONTENT));
-			((RelativeLayout) view.findViewById(R.id.rlConfirm)).addView(tv);
-		} else {
-			for (String[] detail : result.getDetails()) {
-				TableRow tr = new TableRow(getActivity());
-				if (detail.length == 2) {
-					TextView tv1 = new TextView(getActivity());
-					tv1.setText(Html.fromHtml(detail[0]));
-					tv1.setTypeface(null, Typeface.BOLD);
-					tv1.setPadding(0, 0, 8, 0);
-					TextView tv2 = new TextView(getActivity());
-					tv2.setText(Html.fromHtml(detail[1]));
-					tv2.setEllipsize(TruncateAt.END);
-					tv2.setSingleLine(false);
-					tr.addView(tv1);
-					tr.addView(tv2);
-				} else if (detail.length == 1) {
-					TextView tv1 = new TextView(getActivity());
-					tv1.setText(Html.fromHtml(detail[0]));
-					tv1.setPadding(0, 2, 0, 2);
-					TableRow.LayoutParams params = new TableRow.LayoutParams(0);
-					params.span = 2;
-					tv1.setLayoutParams(params);
-					tr.addView(tv1);
-				}
-				table.addView(tr);
-			}
-		}
-
-		builder.setTitle(R.string.confirm_title)
-				.setView(view)
-				.setPositiveButton(R.string.confirm,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-								bookingDo(booking_info,
-										MultiStepResult.ACTION_CONFIRMATION,
-										"confirmed");
-							}
-						})
-				.setNegativeButton(R.string.cancel,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-								adialog.cancel();
-							}
-						});
-		adialog = builder.create();
-		adialog.show();
-	}
-
-	public void bookingSelection(final String booking_info,
-			final BookingResult result) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-		LayoutInflater inflater = getLayoutInflater();
-
-		View view = inflater.inflate(R.layout.dialog_simple_list, null);
-
-		ListView lv = (ListView) view.findViewById(R.id.lvBibs);
-		final Object[] possibilities = result.getSelection().valueSet()
-				.toArray();
-
-		lv.setAdapter(new SelectionAdapter(getActivity(), possibilities));
-		lv.setOnItemClickListener(new OnItemClickListener() {
+		MultiStepResultHelper msrhBooking = new MultiStepResultHelper(
+				getSupportActivity(), booking_info, R.string.doing_booking);
+		msrhBooking.setCallback(new Callback() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				adialog.dismiss();
-				bookingDo(booking_info, result.getActionIdentifier(),
-						((Entry<String, Object>) possibilities[position])
-								.getKey());
+			public void onSuccess(MultiStepResult result) {
+				invalidateData();
+			}
+
+			@Override
+			public void onError(MultiStepResult result) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						getActivity());
+				builder.setMessage(result.getMessage())
+						.setCancelable(true)
+						.setNegativeButton(R.string.dismiss,
+								new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface d,
+											int id) {
+										d.cancel();
+									}
+								})
+						.setOnCancelListener(
+								new DialogInterface.OnCancelListener() {
+									@Override
+									public void onCancel(DialogInterface d) {
+										if (d != null)
+											d.cancel();
+									}
+								});
+				AlertDialog alert = builder.create();
+				alert.show();
+			}
+
+			@Override
+			public void onUnhandledResult(MultiStepResult result) {
+			}
+
+			@Override
+			public void onUserCancel() {
+			}
+
+			@Override
+			public StepTask<?> newTask() {
+				return new BookingTask();
 			}
 		});
-		switch (result.getActionIdentifier()) {
-		case ReservationResult.ACTION_BRANCH:
-			builder.setTitle(R.string.zweigstelle);
-		}
-		builder.setView(view).setNegativeButton(R.string.cancel,
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-						adialog.cancel();
-					}
-				});
-		adialog = builder.create();
-		adialog.show();
+		msrhBooking.start();
 	}
 
 	public void prolongAllStart() {
@@ -1488,8 +1418,7 @@ public class AccountFragment extends Fragment implements
 	public void prolongAllDo() {
 
 		MultiStepResultHelper msrhProlong = new MultiStepResultHelper(
-				getSupportActivity(), null,
-				R.string.doing_prolong_all);
+				getSupportActivity(), null, R.string.doing_prolong_all);
 		msrhProlong.setCallback(new Callback() {
 			@Override
 			public void onSuccess(MultiStepResult result) {
@@ -1612,8 +1541,7 @@ public class AccountFragment extends Fragment implements
 
 	}
 
-	public class BookingTask extends OpacTask<BookingResult> {
-		private boolean success;
+	public class BookingTask extends StepTask<BookingResult> {
 		private String booking_info;
 
 		@Override
@@ -1628,27 +1556,23 @@ public class AccountFragment extends Fragment implements
 			try {
 				BookingResult res = ((EbookServiceApi) app.getApi()).booking(
 						booking_info, app.getAccount(), useraction, selection);
-				success = true;
 				return res;
 			} catch (java.net.UnknownHostException e) {
 				publishProgress(e, "ioerror");
 			} catch (java.net.SocketException e) {
-				success = false;
 				e.printStackTrace();
 			} catch (Exception e) {
 				ACRA.getErrorReporter().handleException(e);
-				success = false;
 			}
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(BookingResult res) {
-			dialog.dismiss();
 			if (getActivity() == null)
 				return;
 
-			if (!success || res == null) {
+			if (res == null) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						getActivity());
 				builder.setMessage(R.string.connection_error)
@@ -1666,7 +1590,7 @@ public class AccountFragment extends Fragment implements
 				return;
 			}
 
-			bookingResult(booking_info, res);
+			super.onPostExecute(res);
 		}
 	}
 

@@ -646,7 +646,7 @@ public interface OpacApi {
 	 * @param useraction
 	 *            Identifier for the selection made by the user in
 	 *            <code>selection</code>, if a selection was made (see
-	 *            {@link ReservationResult#getActionIdentifier()}) or 0, if no
+	 *            {@link ProlongResult#getActionIdentifier()}) or 0, if no
 	 *            selection was required. If your last method call returned
 	 *            <code>CONFIRMATION_NEEDED</code>, this is set to
 	 *            <code>ACTION_CONFIRMATION</code> if the user positively
@@ -655,9 +655,9 @@ public interface OpacApi {
 	 *            When the method is called for the first time or if useraction
 	 *            is <code>ACTION_CONFIRMATION</code>, this parameter is null.
 	 *            If you return <code>SELECTION</code> in your
-	 *            {@link ReservationResult#getStatus()}, this method will be
+	 *            {@link ProlongResult#getStatus()}, this method will be
 	 *            called again with the user's selection present in selection.
-	 * @return A <code>ReservationResult</code> object which has to have the
+	 * @return A <code>ProlongResult</code> object which has to have the
 	 *         status set.
 	 */
 	public ProlongResult prolong(String media, Account account, int useraction,
@@ -712,11 +712,27 @@ public interface OpacApi {
 	 * 
 	 * @return A <code>ProlongAllResult</code> object which has to have the
 	 *         status set.
+	 * @see OpacApi#prolong(String, Account, int, String)
 	 * @see de.geeksfactory.opacclient.objects.AccountData
 	 */
 	public ProlongAllResult prolongAll(Account account, int useraction,
 			String selection) throws IOException;
 
+	/**
+	 * The result of a {@link OpacApi#prolong(String, Account, int, String)}
+	 * call
+	 */
+	public class CancelResult extends MultiStepResult {
+
+		public CancelResult(Status status) {
+			super(status);
+		}
+
+		public CancelResult(Status status, String message) {
+			super(status, message);
+		}
+	}
+	
 	/**
 	 * Cancel a media reservation/order identified by the given String (see
 	 * AccountData documentation) (see <code>AccountData</code>)
@@ -724,15 +740,30 @@ public interface OpacApi {
 	 * This function is always called from a background thread, you can use
 	 * blocking network operations in it.
 	 * 
+	 * 
 	 * @param media
 	 *            Media identification
-	 * @return <code>true</code> on success, <code>false</code> on failure.
-	 * @see de.geeksfactory.opacclient.objects.AccountData
-	 * 
-	 *      TODO: Convert this to a multistep method
+	 * @param account
+	 *            Account to be used
+	 * @param useraction
+	 *            Identifier for the selection made by the user in
+	 *            <code>selection</code>, if a selection was made (see
+	 *            {@link CancelResult#getActionIdentifier()}) or 0, if no
+	 *            selection was required. If your last method call returned
+	 *            <code>CONFIRMATION_NEEDED</code>, this is set to
+	 *            <code>ACTION_CONFIRMATION</code> if the user positively
+	 *            confirmed the action.
+	 * @param selection
+	 *            When the method is called for the first time or if useraction
+	 *            is <code>ACTION_CONFIRMATION</code>, this parameter is null.
+	 *            If you return <code>SELECTION</code> in your
+	 *            {@link CancelResult#getStatus()}, this method will be
+	 *            called again with the user's selection present in selection.
+	 * @return A <code>CancelResult</code> object which has to have the
+	 *         status set.
 	 */
-	public boolean cancel(Account account, String media) throws IOException,
-			OpacErrorException;
+	public CancelResult cancel(String media, Account account, int useraction,
+			String selection) throws IOException, OpacErrorException;
 
 	/**
 	 * Load account view (borrowed and reserved items, see
