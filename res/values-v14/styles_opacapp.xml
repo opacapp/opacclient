@@ -51,6 +51,7 @@
     <style name="Theme.Opacapp.Widget" parent="@style/Holo.Theme.Light.DarkActionBar">
         <item name="android:popupMenuStyle">@style/PopupMenu.Opacapp</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Opacapp</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
 </resources>
