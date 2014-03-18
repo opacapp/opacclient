@@ -144,7 +144,7 @@ public class AccountFragment extends Fragment implements
 						.getAccount().getId()) {
 					app.setAccount(getActivity().getIntent().getExtras()
 							.getLong("account"));
-					accountSelected(app.getAccount());
+					((OpacActivity) getActivity()).accountSelected(app.getAccount());
 				}
 				NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 				nMgr.cancel(OpacClient.NOTIF_ID);
