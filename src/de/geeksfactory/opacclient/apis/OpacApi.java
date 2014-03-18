@@ -241,6 +241,16 @@ public interface OpacApi {
 	public static final int SUPPORT_FLAG_QUICKLINKS = 0x0000004;
 
 	/**
+	 * By default, if you load page 1 and then page 2 of the search results and
+	 * you then go back to page 1 it is not reloaded but just displayed from
+	 * cache. In some libraries this should not happen, as it leads to session
+	 * incoherences.
+	 * 
+	 * Flag to be present in the result of {@link #getSupportFlags()}.
+	 */
+	public static final int SUPPORT_FLAG_PAGECACHE_FORBIDDEN = 0x0000008;
+
+	/**
 	 * A general exception containing a human-readable error message
 	 */
 	public class OpacErrorException extends Exception {

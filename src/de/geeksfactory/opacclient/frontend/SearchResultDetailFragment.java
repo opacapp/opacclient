@@ -877,9 +877,6 @@ public class SearchResultDetailFragment extends Fragment {
 									title);
 							if (shareUrl != null)
 								text += shareUrl;
-							else
-								text += "http://opacapp.de/:" + bib + ":" + id
-										+ ":" + t;
 
 							intent.putExtra(Intent.EXTRA_TEXT, text);
 							startActivity(Intent.createChooser(intent,
