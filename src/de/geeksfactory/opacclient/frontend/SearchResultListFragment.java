@@ -1,7 +1,5 @@
 package de.geeksfactory.opacclient.frontend;
 
-import java.util.ArrayList;
-
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.ListFragment;
@@ -9,7 +7,6 @@ import org.holoeverywhere.widget.Button;
 import org.holoeverywhere.widget.FrameLayout;
 import org.holoeverywhere.widget.LinearLayout;
 import org.holoeverywhere.widget.ListView;
-import org.holoeverywhere.widget.ProgressBar;
 import org.holoeverywhere.widget.TextView;
 
 import android.os.Bundle;
@@ -17,9 +14,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
-import de.geeksfactory.opacclient.objects.SearchResult;
 
 /**
  * A list fragment representing a list of SearchResults. This fragment also
@@ -73,6 +70,7 @@ public class SearchResultListFragment extends ListFragment {
 		@Override
 		public void onItemSelected(int nr, String id) {
 		}
+		@Override
 		public void reload() {			
 		}
 	};
@@ -138,7 +136,7 @@ public class SearchResultListFragment extends ListFragment {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		if (mActivatedPosition != ListView.INVALID_POSITION) {
+		if (mActivatedPosition != AdapterView.INVALID_POSITION) {
 			// Serialize and persist the activated item position.
 			outState.putInt(STATE_ACTIVATED_POSITION, mActivatedPosition);
 		}
@@ -157,7 +155,7 @@ public class SearchResultListFragment extends ListFragment {
 	}
 
 	private void setActivatedPosition(int position) {
-		if (position == ListView.INVALID_POSITION) {
+		if (position == AdapterView.INVALID_POSITION) {
 			getListView().setItemChecked(mActivatedPosition, false);
 		} else {
 			getListView().setItemChecked(position, true);

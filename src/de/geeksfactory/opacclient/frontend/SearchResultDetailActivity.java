@@ -1,7 +1,6 @@
 package de.geeksfactory.opacclient.frontend;
 
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;

@@ -49,6 +49,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import de.geeksfactory.opacclient.apis.Adis;
 import de.geeksfactory.opacclient.apis.BiBer1992;
 import de.geeksfactory.opacclient.apis.Bibliotheca;
 import de.geeksfactory.opacclient.apis.IOpac;
@@ -132,6 +133,8 @@ public class OpacClient extends Application {
 			newApiInstance = new Pica();
 		else if (lib.getApi().equals("iopac"))
 			newApiInstance = new IOpac();
+		else if (lib.getApi().equals("adis"))
+			newApiInstance = new Adis();
 		else
 			return null;
 

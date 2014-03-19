@@ -236,7 +236,7 @@ public class AccountDataSource {
 
 		List<ContentValues> res = new ArrayList<ContentValues>();
 		cursor = database.query(AccountDatabase.TABLENAME_RESERVATION,
-				(String[]) AccountDatabase.COLUMNS_RESERVATIONS.values()
+				AccountDatabase.COLUMNS_RESERVATIONS.values()
 						.toArray(new String[] {}), "account = ?",
 				selectionArgs, null, null, null);
 		cursor.moveToFirst();

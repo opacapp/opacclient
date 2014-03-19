@@ -185,6 +185,7 @@ public class SearchResult implements CoverHolder {
 	/**
 	 * Get cover image bitmap
 	 */
+	@Override
 	public Bitmap getCoverBitmap() {
 		return coverBitmap;
 	}
@@ -192,6 +193,7 @@ public class SearchResult implements CoverHolder {
 	/**
 	 * Set cover image bitmap
 	 */
+	@Override
 	public void setCoverBitmap(Bitmap coverBitmap) {
 		this.coverBitmap = coverBitmap;
 	}
@@ -199,6 +201,7 @@ public class SearchResult implements CoverHolder {
 	/**
 	 * Get cover image URL
 	 */
+	@Override
 	public String getCover() {
 		return cover;
 	}
@@ -206,6 +209,7 @@ public class SearchResult implements CoverHolder {
 	/**
 	 * Set cover image URL
 	 */
+	@Override
 	public void setCover(String cover) {
 		this.cover = cover;
 	}

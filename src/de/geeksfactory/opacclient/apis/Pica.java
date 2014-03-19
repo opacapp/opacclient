@@ -292,7 +292,7 @@ public class Pica extends BaseApi implements OpacApi {
 				haslink = true;
 				try {
 					List<NameValuePair> anyurl = URLEncodedUtils.parse(new URI(
-							((Element) node).attr("href")), ENCODING);
+							node.attr("href")), ENCODING);
 					for (NameValuePair nv : anyurl) {
 						if (nv.getName().equals("identifier")) {
 							// identifier = nv.getValue();
@@ -599,8 +599,8 @@ public class Pica extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public boolean cancel(Account account, String media) throws IOException,
-			OpacErrorException {
+	public CancelResult cancel(String media, Account account, int useraction,
+			String selection) throws IOException, OpacErrorException {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("ACT", "UI_CANCELRES"));
 
@@ -615,16 +615,16 @@ public class Pica extends BaseApi implements OpacApi {
 
 		if (doc.select("td.regular-text").text()
 				.contains("Ihre Vormerkungen sind ")) {
-			return true;
+			return new CancelResult(MultiStepResult.Status.OK);
 		} else if (doc.select(".alert").text().contains("identify yourself")) {
 			try {
 				account(account);
-				return cancel(account, media);
+				return cancel(media, account, useraction, selection);
 			} catch (JSONException e) {
-				return false;
+				throw new OpacErrorException("Interner Fehler");
 			}
 		} else {
-			return false;
+			throw new OpacErrorException("Verbindungsfehler.");
 		}
 	}
 

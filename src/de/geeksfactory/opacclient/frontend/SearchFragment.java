@@ -561,7 +561,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 							.getEditableText().toString());
 			query.putString(
 					"order",
-					(((Integer) ((Spinner) view.findViewById(R.id.cbOrder))
+					((((Spinner) view.findViewById(R.id.cbOrder))
 							.getSelectedItemPosition()) + 1) + "");
 		}
 		return query;

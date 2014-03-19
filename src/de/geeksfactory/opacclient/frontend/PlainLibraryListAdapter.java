@@ -44,7 +44,7 @@ public class PlainLibraryListAdapter extends ArrayAdapter<Library> {
 
 	@Override
 	public View getView(int position, View contentView, ViewGroup viewGroup) {
-		Library item = (Library) objects.get(position);
+		Library item = objects.get(position);
 
 		if (contentView == null) {
 			LayoutInflater infalInflater = (LayoutInflater) context

@@ -531,7 +531,7 @@ public class Bibliotheca extends BaseApi {
 
 		Document doc = null;
 
-		if (useraction == ReservationResult.ACTION_CONFIRMATION) {
+		if (useraction == MultiStepResult.ACTION_CONFIRMATION) {
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs
 					.add(new BasicNameValuePair("button1", "Bestaetigung"));
@@ -683,7 +683,7 @@ public class Bibliotheca extends BaseApi {
 			}
 		}
 
-		if (useraction == ReservationResult.ACTION_CONFIRMATION) {
+		if (useraction == MultiStepResult.ACTION_CONFIRMATION) {
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("target", "make_vl"));
 			nameValuePairs.add(new BasicNameValuePair("verlaengern",
@@ -815,8 +815,8 @@ public class Bibliotheca extends BaseApi {
 	}
 
 	@Override
-	public boolean cancel(Account account, String a) throws IOException,
-			NotReachableException, OpacErrorException {
+	public CancelResult cancel(String media, Account account, int useraction,
+			String selection) throws IOException, OpacErrorException {
 		if (!initialised)
 			start();
 		if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
@@ -824,18 +824,18 @@ public class Bibliotheca extends BaseApi {
 			try {
 				account(account);
 			} catch (JSONException e) {
-				e.printStackTrace();
-				return false;
+				return new CancelResult(MultiStepResult.Status.ERROR,
+						"Konto konnte nicht geladen werden");
 			}
 		} else if (logged_in_as.getId() != account.getId()) {
 			try {
 				account(account);
 			} catch (JSONException e) {
-				e.printStackTrace();
-				return false;
+				return new CancelResult(MultiStepResult.Status.ERROR,
+						"Konto konnte nicht geladen werden");
 			}
 		}
-		httpGet(opac_url + "/" + a, getDefaultEncoding());
+		httpGet(opac_url + "/" + media, getDefaultEncoding());
 
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 		nameValuePairs.add(new BasicNameValuePair("target", "delvorbest"));
@@ -843,7 +843,7 @@ public class Bibliotheca extends BaseApi {
 				.add(new BasicNameValuePair("vorbdelbest", "Bestätigung"));
 		httpPost(opac_url + "/index.asp", new UrlEncodedFormEntity(
 				nameValuePairs), getDefaultEncoding());
-		return true;
+		return new CancelResult(MultiStepResult.Status.OK);
 	}
 
 	@Override

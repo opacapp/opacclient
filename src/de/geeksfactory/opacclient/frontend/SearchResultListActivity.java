@@ -13,6 +13,7 @@ import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 
@@ -33,21 +34,22 @@ import de.geeksfactory.opacclient.objects.SearchRequestResult;
  * selections.
  */
 public class SearchResultListActivity extends OpacActivity implements
-		SearchResultListFragment.Callbacks, SearchResultDetailFragment.Callbacks {
+		SearchResultListFragment.Callbacks,
+		SearchResultDetailFragment.Callbacks {
 
 	/**
 	 * Whether or not the activity is in two-pane mode, i.e. running on a tablet
 	 * device.
 	 */
 	private boolean mTwoPane;
-	
+
 	protected SearchRequestResult searchresult;
 	private SparseArray<SearchRequestResult> cache = new SparseArray<SearchRequestResult>();
 	private int page;
 
 	private SearchStartTask st;
 	private SearchPageTask sst;
-	
+
 	private SearchResultListFragment listFragment;
 	private SearchResultDetailFragment detailFragment;
 
@@ -56,7 +58,7 @@ public class SearchResultListActivity extends OpacActivity implements
 		super.onCreate(savedInstanceState);
 		// Show the Up button in the action bar.
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		
+
 		listFragment = (SearchResultListFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.searchresult_list);
 
@@ -71,14 +73,13 @@ public class SearchResultListActivity extends OpacActivity implements
 			// 'activated' state when touched.
 			listFragment.setActivateOnItemClick(true);
 		}
-		
 
 		if (savedInstanceState == null) {
 			page = 1;
 			performsearch();
 		}
 	}
-	
+
 	public void performsearch() {
 		if (page == 1) {
 			st = new SearchStartTask();
@@ -91,7 +92,7 @@ public class SearchResultListActivity extends OpacActivity implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() ==  android.R.id.home) {
+		if (item.getItemId() == android.R.id.home) {
 			// This ID represents the Home or Up button. In the case of this
 			// activity, the Up button is shown. Use NavUtils to allow users
 			// to navigate up one level in the application structure. For
@@ -107,7 +108,8 @@ public class SearchResultListActivity extends OpacActivity implements
 				sst.cancel(false);
 			}
 			page--;
-			if (cache.get(page) != null) {
+			if (cache.get(page) != null
+					&& (app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_PAGECACHE_FORBIDDEN) == 0) {
 				searchresult = cache.get(page);
 				loaded();
 			} else {
@@ -123,7 +125,8 @@ public class SearchResultListActivity extends OpacActivity implements
 				sst.cancel(false);
 			}
 			page++;
-			if (cache.get(page) != null) {
+			if (cache.get(page) != null
+					&& (app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_PAGECACHE_FORBIDDEN) == 0) {
 				searchresult = cache.get(page);
 				loaded();
 			} else {
@@ -167,11 +170,12 @@ public class SearchResultListActivity extends OpacActivity implements
 			// fragment transaction.
 			Bundle arguments = new Bundle();
 			arguments.putInt(SearchResultDetailFragment.ARG_ITEM_NR, nr);
-			if(id != null)
+			if (id != null)
 				arguments.putString(SearchResultDetailFragment.ARG_ITEM_ID, id);
 			detailFragment = new SearchResultDetailFragment();
 			detailFragment.setArguments(arguments);
-			getSupportFragmentManager().beginTransaction()
+			getSupportFragmentManager()
+					.beginTransaction()
 					.replace(R.id.searchresult_detail_container, detailFragment)
 					.commit();
 
@@ -181,12 +185,13 @@ public class SearchResultListActivity extends OpacActivity implements
 			Intent detailIntent = new Intent(this,
 					SearchResultDetailActivity.class);
 			detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_NR, nr);
-			if(id != null)
-				detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID, id);
+			if (id != null)
+				detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
+						id);
 			startActivity(detailIntent);
 		}
 	}
-	
+
 	public class SearchStartTask extends OpacTask<SearchRequestResult> {
 		protected Exception exception;
 
@@ -197,7 +202,7 @@ public class SearchResultListActivity extends OpacActivity implements
 
 			try {
 				SearchRequestResult res = app.getApi().search(query);
-				//Load cover images, if search worked and covers available
+				// Load cover images, if search worked and covers available
 				return res;
 			} catch (java.net.UnknownHostException e) {
 				exception = e;
@@ -217,14 +222,18 @@ public class SearchResultListActivity extends OpacActivity implements
 		@Override
 		protected void onPostExecute(SearchRequestResult result) {
 			if (result == null) {
-				
-				if(exception instanceof OpacErrorException) {
+
+				if (exception instanceof OpacErrorException) {
 					if (exception.getMessage().equals("is_a_redirect")) {
-						// Some libraries (SISIS) do not show a result list if only one result
-						// is found but instead directly show the result details.
-						Intent intent = new Intent(SearchResultListActivity.this,
+						// Some libraries (SISIS) do not show a result list if
+						// only one result
+						// is found but instead directly show the result
+						// details.
+						Intent intent = new Intent(
+								SearchResultListActivity.this,
 								SearchResultDetailActivity.class);
-						intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID, (String) null);
+						intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
+								(String) null);
 						startActivity(intent);
 						finish();
 						return;
@@ -232,7 +241,8 @@ public class SearchResultListActivity extends OpacActivity implements
 
 					listFragment.showConnectivityError(exception.getMessage());
 				} else if (exception instanceof NotReachableException)
-					listFragment.showConnectivityError(getResources().getString(R.string.connection_error_detail_nre));
+					listFragment.showConnectivityError(getResources()
+							.getString(R.string.connection_error_detail_nre));
 				else
 					listFragment.showConnectivityError();
 			} else {
@@ -247,7 +257,7 @@ public class SearchResultListActivity extends OpacActivity implements
 			}
 		}
 	}
-	
+
 	public class SearchPageTask extends SearchStartTask {
 
 		@Override
@@ -257,7 +267,7 @@ public class SearchResultListActivity extends OpacActivity implements
 
 			try {
 				SearchRequestResult res = app.getApi().searchGetPage(page);
-				//Load cover images, if search worked and covers available
+				// Load cover images, if search worked and covers available
 				return res;
 			} catch (java.net.UnknownHostException e) {
 				exception = e;
@@ -291,7 +301,8 @@ public class SearchResultListActivity extends OpacActivity implements
 
 	@Override
 	public void removeFragment() {
-		getSupportFragmentManager().beginTransaction().remove(detailFragment).commit();
+		getSupportFragmentManager().beginTransaction().remove(detailFragment)
+				.commit();
 	}
 
 	@Override
