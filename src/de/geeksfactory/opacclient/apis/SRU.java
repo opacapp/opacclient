@@ -50,6 +50,8 @@ public class SRU extends BaseApi implements OpacApi {
 	private String currentSearchParams;
 	private Document searchDoc;
 	private HashMap<String, String> searchQueries = new HashMap<String, String>();
+	private String idSearchQuery;
+	protected String shareUrl;
 	
 	protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
 	static {
@@ -74,6 +76,8 @@ public class SRU extends BaseApi implements OpacApi {
 			this.opac_url = data.getString("baseurl");
 			JSONObject searchQueriesJson = data.getJSONObject("searchqueries");
 			addSearchQueries(searchQueriesJson);
+			if(data.has("sharelink"))
+				shareUrl = data.getString("sharelink");
 		} catch (JSONException e) {
 			ACRA.getErrorReporter().handleException(e);
 		}
@@ -100,6 +104,13 @@ public class SRU extends BaseApi implements OpacApi {
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
+		}
+		try {
+			if(searchQueriesJson.has("id")) {
+				idSearchQuery = searchQueriesJson.getString("id");
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -177,6 +188,7 @@ public class SRU extends BaseApi implements OpacApi {
 			sr.setInnerhtml("<b>" + title + "</b><br>" + additionalInfo);
 			sr.setType(defaulttypes.get(mType));
 			sr.setNr(i);
+			sr.setId(getDetail(record, "recordIdentifier"));
 			if (coverUrl.equals(""))
 				sr.setCover("http://images.amazon.com/images/P/" + isbn13to10(isbn) + ".01.THUMBZZZ");
 			else
@@ -199,7 +211,6 @@ public class SRU extends BaseApi implements OpacApi {
 	@Override
 	public SearchRequestResult filterResults(Filter filter, Option option)
 			throws IOException, NotReachableException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -219,9 +230,23 @@ public class SRU extends BaseApi implements OpacApi {
 
 	@Override
 	public DetailledItem getResultById(String id, String homebranch)
-			throws IOException, NotReachableException, OpacErrorException {
-		// TODO Auto-generated method stub
-		return null;
+			throws IOException, NotReachableException, OpacErrorException {	
+		if(idSearchQuery != null) {
+			String xml = httpGet(opac_url +
+					"?version=1.1&operation=searchRetrieve&maximumRecords=" + resultcount +
+					"&recordSchema=mods&sortKeys=relevance,,1&query=" + idSearchQuery + "%3D" + id,
+					getDefaultEncoding());
+			searchDoc = Jsoup.parse(xml, "", Parser.xmlParser());
+			if(searchDoc.select("diag|diagnostic").size() > 0) {
+				throw new OpacErrorException(searchDoc.select("diag|message").text());
+			}
+			if(searchDoc.select("zs|record").size() != 1) { //should not happen
+				throw new OpacErrorException("nicht gefunden");
+			}
+			return parse_detail(searchDoc.select("zs|record").first());
+		} else {
+			return null;
+		}
 	}
 
 	private DetailledItem parse_detail(Element record) {
@@ -263,28 +288,24 @@ public class SRU extends BaseApi implements OpacApi {
 	@Override
 	public ReservationResult reservation(DetailledItem item, Account account,
 			int useraction, String selection) throws IOException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public ProlongResult prolong(String media, Account account, int useraction,
 			String selection) throws IOException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public ProlongAllResult prolongAll(Account account, int useraction,
 			String selection) throws IOException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public AccountData account(Account account) throws IOException,
 			JSONException, OpacErrorException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -295,39 +316,36 @@ public class SRU extends BaseApi implements OpacApi {
 
 	@Override
 	public boolean isAccountSupported(Library library) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean isAccountExtendable() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public String getAccountExtendableInfo(Account account) throws IOException,
 			NotReachableException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getShareUrl(String id, String title) {
-		// TODO Auto-generated method stub
-		return null;
+		if(shareUrl != null)
+			return String.format(shareUrl, id);
+		else
+			return null;
 	}
 
 	@Override
 	public int getSupportFlags() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public CancelResult cancel(String media, Account account, int useraction,
 			String selection) throws IOException, OpacErrorException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	

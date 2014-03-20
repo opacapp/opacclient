@@ -10,8 +10,10 @@
 			"verfasser": "pica.PER",
 			"isbn": "pica.ISB",
 			"jahr": "pica.JAH",
-			"verlag": "pica.VLG"			
-		}
+			"verlag": "pica.VLG";	
+			"id": "pica.PPN"
+		},
+		"sharelink": "http://gso.gbv.de/DB=2.1/PPNSET?PPN=%s"
     },
     "group": "Bibliothekenverbunde",
     "support": "Katalogsuche",
