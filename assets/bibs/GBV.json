@@ -3,7 +3,15 @@
     "city": "GVK",
     "data": {
         "baseurl": "http://sru.gbv.de/gvk",
-        "information": "http://gso.gbv.de/"
+        "information": "http://gso.gbv.de/",
+		"searchqueries": {
+			"free": "pica.ALL",
+			"titel": "pica.TIT",
+			"verfasser": "pica.PER",
+			"isbn": "pica.ISB",
+			"jahr": "pica.JAH",
+			"verlag": "pica.VLG"			
+		}
     },
     "group": "Bibliothekenverbunde",
     "support": "Katalogsuche",

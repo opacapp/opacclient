@@ -49,6 +49,7 @@ public class SRU extends BaseApi implements OpacApi {
 	protected int resultcount = 10;
 	private String currentSearchParams;
 	private Document searchDoc;
+	private HashMap<String, String> searchQueries = new HashMap<String, String>();
 	
 	protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
 	static {
@@ -58,6 +59,7 @@ public class SRU extends BaseApi implements OpacApi {
 		defaulttypes.put("electronic", MediaType.EBOOK);
 		defaulttypes.put("microfiche", MediaType.UNKNOWN);
 		defaulttypes.put("microfilm", MediaType.UNKNOWN);
+		defaulttypes.put("Tontraeger", MediaType.AUDIOBOOK);
 	}
 	
 	@Override
@@ -70,8 +72,34 @@ public class SRU extends BaseApi implements OpacApi {
 
 		try {
 			this.opac_url = data.getString("baseurl");
+			JSONObject searchQueriesJson = data.getJSONObject("searchqueries");
+			addSearchQueries(searchQueriesJson);
 		} catch (JSONException e) {
 			ACRA.getErrorReporter().handleException(e);
+		}
+	}
+	
+	
+
+	private void addSearchQueries(JSONObject searchQueriesJson) {
+		String[] queries = {
+				KEY_SEARCH_QUERY_FREE, KEY_SEARCH_QUERY_TITLE,
+				KEY_SEARCH_QUERY_AUTHOR, KEY_SEARCH_QUERY_KEYWORDA,
+				KEY_SEARCH_QUERY_KEYWORDB, KEY_SEARCH_QUERY_BRANCH,
+				KEY_SEARCH_QUERY_HOME_BRANCH, KEY_SEARCH_QUERY_ISBN,
+				KEY_SEARCH_QUERY_YEAR, KEY_SEARCH_QUERY_YEAR_RANGE_START,
+				KEY_SEARCH_QUERY_YEAR_RANGE_END, KEY_SEARCH_QUERY_SYSTEM,
+				KEY_SEARCH_QUERY_AUDIENCE, KEY_SEARCH_QUERY_PUBLISHER,
+				KEY_SEARCH_QUERY_CATEGORY, KEY_SEARCH_QUERY_BARCODE,
+				KEY_SEARCH_QUERY_LOCATION, KEY_SEARCH_QUERY_DIGITAL
+		};
+		for(String query:queries) {
+			if(searchQueriesJson.has(query))
+				try {
+					searchQueries.put(query, searchQueriesJson.getString(query));
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 		}
 	}
 
@@ -90,6 +118,7 @@ public class SRU extends BaseApi implements OpacApi {
 			StringBuilder params, int index) {
 		if (!query.containsKey(key) || query.getString(key).equals(""))
 			return index;
+		if(index != 0) params.append("%20and%20");
 		params.append(searchkey + "%3D" + query.getString(key));
 		return index + 1;
 
@@ -103,8 +132,10 @@ public class SRU extends BaseApi implements OpacApi {
 		int index = 0;
 		start();
 
-		index = addParameters(query, KEY_SEARCH_QUERY_FREE, "pica.ALL",
-				params, index);
+		for(String parameter:searchQueries.keySet()) {
+			index = addParameters(query, parameter,
+					searchQueries.get(parameter), params, index);
+		}
 		
 		if (index == 0) {
 			throw new OpacErrorException(
@@ -120,8 +151,12 @@ public class SRU extends BaseApi implements OpacApi {
 		return parse_result(xml);
 	}
 
-	private SearchRequestResult parse_result(String xml) {
+	private SearchRequestResult parse_result(String xml) throws OpacErrorException {
 		searchDoc = Jsoup.parse(xml, "", Parser.xmlParser());
+		if(searchDoc.select("diag|diagnostic").size() > 0) {
+			throw new OpacErrorException(searchDoc.select("diag|message").text());
+		}
+		
 		int resultcount = 0;
 		List<SearchResult> results = new ArrayList<SearchResult>();
 		
@@ -136,14 +171,14 @@ public class SRU extends BaseApi implements OpacApi {
 			String lastName = getDetail(record, "name > namePart[type=family]");
 			String year = getDetail(record, "dateIssued");
 			String mType = getDetail(record, "physicalDescription > form");
-			String isbn =  getDetail(record, "identifier[type=isbn]").replaceAll("[^\\d.]", ""); //Remove all characters that aren't digits
+			String isbn =  getDetail(record, "identifier[type=isbn]").replaceAll("[^\\d|X]", ""); //Remove all characters that aren't digits or X
 			String coverUrl = getDetail(record, "url[displayLabel=C Cover]");
 			String additionalInfo = firstName + " " + lastName + ", " + year;
 			sr.setInnerhtml("<b>" + title + "</b><br>" + additionalInfo);
 			sr.setType(defaulttypes.get(mType));
 			sr.setNr(i);
 			if (coverUrl.equals(""))
-				sr.setCover("http://images.amazon.com/images/P/" + isbn + ".01.THUMBZZZ");
+				sr.setCover("http://images.amazon.com/images/P/" + isbn13to10(isbn) + ".01.THUMBZZZ");
 			else
 				sr.setCover(coverUrl);
 			results.add(sr);
@@ -195,7 +230,7 @@ public class SRU extends BaseApi implements OpacApi {
 		String lastName = getDetail(record, "name > namePart[type=family]");
 		String year = getDetail(record, "dateIssued");
 		String desc = getDetail(record, "abstract");
-		String isbn = getDetail(record, "identifier[type=isbn]").replaceAll("[^\\d.]", ""); //Remove all characters that aren't digits
+		String isbn = getDetail(record, "identifier[type=isbn]").replaceAll("[^\\d|X]", ""); //Remove all characters that aren't digits or X
 		String coverUrl = getDetail(record, "url[displayLabel=C Cover]");
 		
 		DetailledItem item = new DetailledItem();
@@ -203,10 +238,12 @@ public class SRU extends BaseApi implements OpacApi {
 		item.addDetail(new Detail("Autor", firstName + " " + lastName));
 		item.addDetail(new Detail("Jahr", year));
 		item.addDetail(new Detail("Beschreibung", desc));
-		if (coverUrl.equals("") && isbn.length() > 0)
-			item.setCover("http://images.amazon.com/images/P/" + isbn + ".01.L");
-		else if (!coverUrl.equals(""))
+		if (coverUrl.equals("") && isbn.length() > 0) {
+			Log.d("Opac", isbn + " -> " + isbn13to10(isbn));
+			item.setCover("http://images.amazon.com/images/P/" + isbn13to10(isbn) + ".01.L");
+		} else if (!coverUrl.equals("")) {
 			item.setCover(coverUrl);
+		}
 		
 		if(isbn.length() > 0) {
 			item.addDetail(new Detail("ISBN", isbn));
@@ -253,7 +290,7 @@ public class SRU extends BaseApi implements OpacApi {
 
 	@Override
 	public String[] getSearchFields() {
-		return new String[] { KEY_SEARCH_QUERY_FREE };
+		return searchQueries.keySet().toArray(new String[0]);
 	}
 
 	@Override
@@ -292,6 +329,39 @@ public class SRU extends BaseApi implements OpacApi {
 			String selection) throws IOException, OpacErrorException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public static String isbn13to10(String isbn13)
+	{		
+		isbn13 = isbn13.replace("-", "").replace(" ", "");
+		
+		if(isbn13.length() != 13) return isbn13;
+		
+		String isbn10 = isbn13.substring(3, 12);
+		int checksum = 0;
+		int weight = 10;
+		
+		for(int i = 0; i < isbn10.length(); i++)
+		{
+			char c = isbn10.charAt(i); 
+			checksum += (int)Character.getNumericValue(c) * weight;
+			weight--;
+		}
+		
+		checksum = 11-(checksum % 11);
+		if (checksum == 10)
+			isbn10 += "X";
+		else if (checksum == 11)
+			isbn10 += "0";
+		else
+			isbn10 += checksum;
+		
+		return isbn10;
+	}
+	
+	@Override
+	protected String getDefaultEncoding() {
+		return "UTF-8";
 	}
 
 }
