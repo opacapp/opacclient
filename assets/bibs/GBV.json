@@ -1,0 +1,11 @@
+{
+    "api": "sru",
+    "city": "GVK",
+    "data": {
+        "baseurl": "http://sru.gbv.de/gvk",
+        "information": "http://gso.gbv.de/"
+    },
+    "group": "Bibliothekenverbunde",
+    "support": "Katalogsuche",
+    "title": "Gemeinsamer Verbundkatalog"
+}
