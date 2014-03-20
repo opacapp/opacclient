@@ -56,6 +56,7 @@ import de.geeksfactory.opacclient.apis.IOpac;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.Pica;
 import de.geeksfactory.opacclient.apis.SISIS;
+import de.geeksfactory.opacclient.apis.SRU;
 import de.geeksfactory.opacclient.apis.Zones22;
 import de.geeksfactory.opacclient.frontend.SearchResultListActivity;
 import de.geeksfactory.opacclient.frontend.WelcomeActivity;
@@ -135,6 +136,8 @@ public class OpacClient extends Application {
 			newApiInstance = new IOpac();
 		else if (lib.getApi().equals("adis"))
 			newApiInstance = new Adis();
+		else if (lib.getApi().equals("sru"))
+			newApiInstance = new SRU();
 		else
 			return null;
 
