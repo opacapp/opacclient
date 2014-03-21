@@ -1,14 +1,18 @@
 package de.geeksfactory.opacclient.frontend;
 
+import java.io.IOException;
+
 import org.acra.ACRA;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.Window;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
@@ -55,6 +59,7 @@ public class SearchResultListActivity extends OpacActivity implements
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
 		// Show the Up button in the action bar.
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -93,50 +98,6 @@ public class SearchResultListActivity extends OpacActivity implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == android.R.id.home) {
-			// This ID represents the Home or Up button. In the case of this
-			// activity, the Up button is shown. Use NavUtils to allow users
-			// to navigate up one level in the application structure. For
-			// more details, see the Navigation pattern on Android Design:
-			//
-			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
-			//
-			NavUtils.navigateUpFromSameTask(this);
-			return true;
-		} else if (item.getItemId() == R.id.action_prev) {
-			listFragment.setListShown(false);
-			if (sst != null) {
-				sst.cancel(false);
-			}
-			page--;
-			if (cache.get(page) != null
-					&& (app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_PAGECACHE_FORBIDDEN) == 0) {
-				searchresult = cache.get(page);
-				loaded();
-			} else {
-				searchresult = null;
-				sst = new SearchPageTask();
-				sst.execute(app, page);
-			}
-			supportInvalidateOptionsMenu();
-			return true;
-		} else if (item.getItemId() == R.id.action_next) {
-			listFragment.setListShown(false);
-			if (sst != null) {
-				sst.cancel(false);
-			}
-			page++;
-			if (cache.get(page) != null
-					&& (app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_PAGECACHE_FORBIDDEN) == 0) {
-				searchresult = cache.get(page);
-				loaded();
-			} else {
-				searchresult = null;
-				sst = new SearchPageTask();
-				sst.execute(app, page);
-			}
-			supportInvalidateOptionsMenu();
-			return true;
-		} else if (item.getItemId() == android.R.id.home) {
 			finish();
 			return true;
 		}
@@ -148,13 +109,6 @@ public class SearchResultListActivity extends OpacActivity implements
 		MenuInflater mi = new MenuInflater(this);
 		mi.inflate(R.menu.activity_search_results, menu);
 
-		if (page == 1) {
-			menu.findItem(R.id.action_prev).setVisible(false);
-		} else {
-
-			menu.findItem(R.id.action_prev).setVisible(true);
-		}
-
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -163,7 +117,15 @@ public class SearchResultListActivity extends OpacActivity implements
 	 * indicating that the item with the given ID was selected.
 	 */
 	@Override
-	public void onItemSelected(int nr, String id) {
+	public void onItemSelected(int nr, String id, int page) {
+		if((app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING) == 0 && page != this.page) {
+			new ReloadOldPageTask().execute(app, page, nr, id);
+		} else {
+			showDetail(nr, id);
+		}
+	}
+	
+	public void showDetail(int nr, String id) {		
 		if (mTwoPane) {
 			// In two-pane mode, show the detail view in this activity by
 			// adding or replacing the detail fragment using a
@@ -194,6 +156,10 @@ public class SearchResultListActivity extends OpacActivity implements
 
 	public class SearchStartTask extends OpacTask<SearchRequestResult> {
 		protected Exception exception;
+		
+		protected void onPreExecute() {
+			if(page != 1) setProgressBarIndeterminateVisibility(true); 
+		}
 
 		@Override
 		protected SearchRequestResult doInBackground(Object... arg0) {
@@ -221,6 +187,7 @@ public class SearchResultListActivity extends OpacActivity implements
 
 		@Override
 		protected void onPostExecute(SearchRequestResult result) {
+			if(page != 1) setProgressBarIndeterminateVisibility(false);
 			if (result == null) {
 
 				if (exception instanceof OpacErrorException) {
@@ -284,11 +251,56 @@ public class SearchResultListActivity extends OpacActivity implements
 			return null;
 		}
 	}
+	
+	public class ReloadOldPageTask extends SearchPageTask {
+		int nr;
+		String id;
+		
+		@Override
+		protected SearchRequestResult doInBackground(Object... arg0) {
+			nr = (Integer) arg0[2];
+			id = (String) arg0[3];
+			return super.doInBackground(arg0);
+		}
+		
+		@Override
+		protected void onPostExecute(SearchRequestResult result) {
+			if(page != 1) setProgressBarIndeterminateVisibility(false);
+			if (result == null) {
+
+				if (exception instanceof OpacErrorException) {
+					if (exception.getMessage().equals("is_a_redirect")) {
+						// Some libraries (SISIS) do not show a result list if
+						// only one result
+						// is found but instead directly show the result
+						// details.
+						Intent intent = new Intent(
+								SearchResultListActivity.this,
+								SearchResultDetailActivity.class);
+						intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
+								(String) null);
+						startActivity(intent);
+						finish();
+						return;
+					}
+
+					listFragment.showConnectivityError(exception.getMessage());
+				} else if (exception instanceof NotReachableException)
+					listFragment.showConnectivityError(getResources()
+							.getString(R.string.connection_error_detail_nre));
+				else
+					listFragment.showConnectivityError();
+			} else {
+				//Everything ran correctly, show Detail
+				showDetail(nr, id);
+			}
+		}
+	}
 
 	protected void loaded() {
 		try {
 			listFragment.setListShown(true);
-			listFragment.setSearchResult(searchresult);
+			listFragment.setSearchResult(searchresult, page == 1);
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
 		}
@@ -307,6 +319,13 @@ public class SearchResultListActivity extends OpacActivity implements
 
 	@Override
 	public void reload() {
+		performsearch();
+	}
+	
+	@Override
+	public void loadMoreData(int page) {
+		Log.d("Opac", "loadMoreData");
+		this.page = page;
 		performsearch();
 	}
 }
