@@ -1,0 +1,17 @@
+{
+    "api": "pica",
+    "city": "Weimar",
+    "data": {
+        "baseurl": "http://opac.ub.uni-weimar.de/",
+        "information": "http://www.uni-weimar.de/de/universitaet/struktur/zentrale-einrichtungen/universitaetsbibliothek/",
+        "db": "1",
+        "accountSupported": false
+    },
+    "geo": [
+        50.979444,
+        11.329722
+    ],
+    "group": "Thüringen",
+    "support": "Katalogsuche",
+    "title": "Unibibliothek"
+}

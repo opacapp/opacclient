@@ -1,17 +1,10 @@
 package de.geeksfactory.opacclient.apis;
 
 import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-
 import org.acra.ACRA;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -19,14 +12,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
 import android.os.Bundle;
-import android.util.Log;
-import android.util.Xml;
+import de.geeksfactory.opacclient.ISBNTools;
 import de.geeksfactory.opacclient.NotReachableException;
-import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -157,7 +145,6 @@ public class SRU extends BaseApi implements OpacApi {
 				"?version=1.1&operation=searchRetrieve&maximumRecords=" + resultcount +
 				"&recordSchema=mods&sortKeys=relevance,,1&query=" + currentSearchParams,
 				getDefaultEncoding());
-		Log.d("Opac", xml);
 		
 		return parse_result(xml);
 	}
@@ -182,7 +169,7 @@ public class SRU extends BaseApi implements OpacApi {
 			String lastName = getDetail(record, "name > namePart[type=family]");
 			String year = getDetail(record, "dateIssued");
 			String mType = getDetail(record, "physicalDescription > form");
-			String isbn =  getDetail(record, "identifier[type=isbn]").replaceAll("[^\\d|X]", ""); //Remove all characters that aren't digits or X
+			String isbn =  getDetail(record, "identifier[type=isbn]");
 			String coverUrl = getDetail(record, "url[displayLabel=C Cover]");
 			String additionalInfo = firstName + " " + lastName + ", " + year;
 			sr.setInnerhtml("<b>" + title + "</b><br>" + additionalInfo);
@@ -190,7 +177,7 @@ public class SRU extends BaseApi implements OpacApi {
 			sr.setNr(i);
 			sr.setId(getDetail(record, "recordIdentifier"));
 			if (coverUrl.equals(""))
-				sr.setCover("http://images.amazon.com/images/P/" + isbn13to10(isbn) + ".01.THUMBZZZ");
+				sr.setCover(ISBNTools.getAmazonCoverURL(isbn, false));
 			else
 				sr.setCover(coverUrl);
 			results.add(sr);
@@ -255,7 +242,7 @@ public class SRU extends BaseApi implements OpacApi {
 		String lastName = getDetail(record, "name > namePart[type=family]");
 		String year = getDetail(record, "dateIssued");
 		String desc = getDetail(record, "abstract");
-		String isbn = getDetail(record, "identifier[type=isbn]").replaceAll("[^\\d|X]", ""); //Remove all characters that aren't digits or X
+		String isbn = getDetail(record, "identifier[type=isbn]");
 		String coverUrl = getDetail(record, "url[displayLabel=C Cover]");
 		
 		DetailledItem item = new DetailledItem();
@@ -264,8 +251,7 @@ public class SRU extends BaseApi implements OpacApi {
 		item.addDetail(new Detail("Jahr", year));
 		item.addDetail(new Detail("Beschreibung", desc));
 		if (coverUrl.equals("") && isbn.length() > 0) {
-			Log.d("Opac", isbn + " -> " + isbn13to10(isbn));
-			item.setCover("http://images.amazon.com/images/P/" + isbn13to10(isbn) + ".01.L");
+			item.setCover(ISBNTools.getAmazonCoverURL(isbn, true));
 		} else if (!coverUrl.equals("")) {
 			item.setCover(coverUrl);
 		}
@@ -280,8 +266,6 @@ public class SRU extends BaseApi implements OpacApi {
 	@Override
 	public DetailledItem getResult(int position) throws IOException,
 			OpacErrorException {
-		Log.d("Opac", String.valueOf(searchDoc.select("zs|records > zs|record").size()));
-		Log.d("Opac", String.valueOf(position));
 		return parse_detail(searchDoc.select("zs|records > zs|record").get(position));
 	}
 
@@ -347,34 +331,6 @@ public class SRU extends BaseApi implements OpacApi {
 	public CancelResult cancel(String media, Account account, int useraction,
 			String selection) throws IOException, OpacErrorException {
 		return null;
-	}
-	
-	public static String isbn13to10(String isbn13)
-	{		
-		isbn13 = isbn13.replace("-", "").replace(" ", "");
-		
-		if(isbn13.length() != 13) return isbn13;
-		
-		String isbn10 = isbn13.substring(3, 12);
-		int checksum = 0;
-		int weight = 10;
-		
-		for(int i = 0; i < isbn10.length(); i++)
-		{
-			char c = isbn10.charAt(i); 
-			checksum += (int)Character.getNumericValue(c) * weight;
-			weight--;
-		}
-		
-		checksum = 11-(checksum % 11);
-		if (checksum == 10)
-			isbn10 += "X";
-		else if (checksum == 11)
-			isbn10 += "0";
-		else
-			isbn10 += checksum;
-		
-		return isbn10;
 	}
 	
 	@Override

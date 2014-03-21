@@ -1,0 +1,18 @@
+{
+    "api": "pica",
+    "city": "Erfurt",
+    "data": {
+        "baseurl": "http://opac.uni-erfurt.de/",
+		"httpsbaseurl": "https://opac.uni-erfurt.de/",
+        "information": "http://www.uni-erfurt.de/bibliothek/ub/",
+        "db": "1",
+        "accountSupported": true
+    },
+    "geo": [
+        50.979444,
+        11.329722
+    ],
+    "group": "Thüringen",
+    "support": "Katalogsuche",
+    "title": "Universitäts- und Forschungsbibliothek Erfurt/Gotha"
+}
