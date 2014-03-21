@@ -1,17 +1,10 @@
 package de.geeksfactory.opacclient.apis;
 
 import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-
 import org.acra.ACRA;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -19,15 +12,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
 import android.os.Bundle;
-import android.util.Log;
-import android.util.Xml;
 import de.geeksfactory.opacclient.ISBNTools;
 import de.geeksfactory.opacclient.NotReachableException;
-import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -158,7 +145,6 @@ public class SRU extends BaseApi implements OpacApi {
 				"?version=1.1&operation=searchRetrieve&maximumRecords=" + resultcount +
 				"&recordSchema=mods&sortKeys=relevance,,1&query=" + currentSearchParams,
 				getDefaultEncoding());
-		Log.d("Opac", xml);
 		
 		return parse_result(xml);
 	}
@@ -280,8 +266,6 @@ public class SRU extends BaseApi implements OpacApi {
 	@Override
 	public DetailledItem getResult(int position) throws IOException,
 			OpacErrorException {
-		Log.d("Opac", String.valueOf(searchDoc.select("zs|records > zs|record").size()));
-		Log.d("Opac", String.valueOf(position));
 		return parse_detail(searchDoc.select("zs|records > zs|record").get(position));
 	}
 

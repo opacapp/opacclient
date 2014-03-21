@@ -52,7 +52,6 @@ import org.jsoup.select.Elements;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import de.geeksfactory.opacclient.ISBNTools;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
@@ -471,7 +470,6 @@ public class Pica extends BaseApi implements OpacApi {
 			        break;
 			    }
 			}
-			Log.d("Opac", isbn);
 			result.setCover(ISBNTools.getAmazonCoverURL(isbn, true));
 		}
 
