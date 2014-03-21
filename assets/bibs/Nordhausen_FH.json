@@ -4,7 +4,7 @@
     "data": {
         "baseurl": "http://opac.uni-erfurt.de/",
 		"httpsbaseurl": "https://opac.uni-erfurt.de/",
-        "information": "http://www.uni-erfurt.de/bibliothek/ub/",
+        "information": "http://www.fh-nordhausen.de/bibliothek.html",
         "db": "5",
         "accountSupported": true
     },
