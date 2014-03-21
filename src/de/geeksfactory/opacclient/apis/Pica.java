@@ -52,6 +52,8 @@ import org.jsoup.select.Elements;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import de.geeksfactory.opacclient.ISBNTools;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -201,7 +203,7 @@ public class Pica extends BaseApi implements OpacApi {
 		index = addParameters(query, KEY_SEARCH_QUERY_SYSTEM, "20", params,
 				index);
 
-		params.add(new BasicNameValuePair("SRT", "YOP"));
+		params.add(new BasicNameValuePair("SRT", "RLV"));
 
 		// year has a special command
 		params.add(new BasicNameValuePair("ADI_JVU", query
@@ -459,8 +461,19 @@ public class Pica extends BaseApi implements OpacApi {
 
 		}
 
-		// TODO: There seem to be no cover images in Kiel Uni Library, so covers
-		// are not implemented
+		//GET COVER
+		if (doc.select("td.preslabel:contains(ISBN) + td.presvalue").size() > 0) {
+			Element isbnElement = doc.select("td.preslabel:contains(ISBN) + td.presvalue").first();
+			String isbn = "";
+			for (Node child : isbnElement.childNodes()) {
+			    if (child instanceof TextNode) {
+			        isbn = ((TextNode) child).text().trim();
+			        break;
+			    }
+			}
+			Log.d("Opac", isbn);
+			result.setCover(ISBNTools.getAmazonCoverURL(isbn, true));
+		}
 
 		// GET TITLE AND SUBTITLE
 		String titleAndSubtitle = "";
@@ -474,24 +487,29 @@ public class Pica extends BaseApi implements OpacApi {
 			if (slashPosition > 0) {
 				title = titleAndSubtitle.substring(0, slashPosition).trim();
 				subtitle = titleAndSubtitle.substring(slashPosition + 1).trim();
+				result.addDetail(new Detail("Titelzusatz", subtitle));
 			} else {
 				title = titleAndSubtitle;
 				subtitle = "";
 			}
-			result.setTitle(title);
-			result.addDetail(new Detail("Titelzusatz", subtitle));
+			result.setTitle(title);			
 		} else if (doc.select("td.preslabel:contains(Aufsatz) + td.presvalue")
 				.size() > 0) {
 			titleAndSubtitle = doc
 					.select("td.preslabel:contains(Aufsatz) + td.presvalue")
 					.first().text().trim();
-			String title = titleAndSubtitle.substring(0,
-					titleAndSubtitle.indexOf("/")).trim();
-			result.setTitle(title);
-
-			String subtitle = titleAndSubtitle.substring(
-					titleAndSubtitle.indexOf("/") + 1).trim();
-			result.addDetail(new Detail("Titelzusatz", subtitle));
+			int slashPosition = titleAndSubtitle.indexOf("/");
+			String title;
+			String subtitle;
+			if (slashPosition > 0) {
+				title = titleAndSubtitle.substring(0, slashPosition).trim();
+				subtitle = titleAndSubtitle.substring(slashPosition + 1).trim();
+				result.addDetail(new Detail("Titelzusatz", subtitle));
+			} else {
+				title = titleAndSubtitle;
+				subtitle = "";
+			}
+			result.setTitle(title);			
 		} else {
 			result.setTitle("");
 		}
