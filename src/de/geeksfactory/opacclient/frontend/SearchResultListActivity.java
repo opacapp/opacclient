@@ -4,7 +4,6 @@ import org.acra.ACRA;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -100,7 +99,7 @@ public class SearchResultListActivity extends OpacActivity implements
 			//
 			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
 			//
-			NavUtils.navigateUpFromSameTask(this);
+			finish();
 			return true;
 		} else if (item.getItemId() == R.id.action_prev) {
 			listFragment.setListShown(false);
