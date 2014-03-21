@@ -1,0 +1,17 @@
+{
+    "api": "pica",
+    "city": "Hannover",
+    "data": {
+        "baseurl": "https://opac.tib.uni-hannover.de/",
+        "information": "http://www.hs-hannover.de/bibl/",
+        "db": "4",
+		"accountSupported": true
+    },
+    "geo": [
+        52.38142,
+        9.72007
+    ],
+    "group": "Niedersachsen",
+    "support": "Katalogsuche und Konto",
+    "title": "Bibliothek der Hochschule"
+}
