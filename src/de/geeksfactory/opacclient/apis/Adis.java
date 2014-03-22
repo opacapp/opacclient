@@ -3,9 +3,12 @@ package de.geeksfactory.opacclient.apis;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,6 +30,7 @@ import org.jsoup.nodes.Element;
 import android.content.ContentValues;
 import android.os.Bundle;
 import de.geeksfactory.opacclient.NotReachableException;
+import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult.Status;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -51,9 +55,11 @@ public class Adis extends BaseApi implements OpacApi {
 	protected String s_service;
 	protected String s_sid;
 	protected String s_exts;
+	protected String s_alink;
 	protected List<NameValuePair> s_pageform;
 	protected int s_lastpage;
 	protected Document s_reusedoc;
+	protected boolean s_accountcalled;
 
 	protected static HashMap<String, MediaType> types = new HashMap<String, MediaType>();
 
@@ -144,6 +150,7 @@ public class Adis extends BaseApi implements OpacApi {
 
 	@Override
 	public void start() throws IOException, NotReachableException {
+		s_accountcalled = false;
 
 		try {
 			Document doc = htmlGet(opac_url + "?"
@@ -454,6 +461,12 @@ public class Adis extends BaseApi implements OpacApi {
 				res.setTitle(tr.child(1).text().split("[:/;]")[0].trim());
 			}
 		}
+
+		if (doc.select("input[value=Reservieren]").size() > 0) {
+			res.setReservable(true);
+			res.setReservation_info(id);
+		}
+
 		for (Element tr : doc.select("#R08 table.rTable_table tbody tr")) {
 			ContentValues line = new ContentValues();
 			line.put(DetailledItem.KEY_COPY_BRANCH, tr.child(0).text().trim());
@@ -508,36 +521,569 @@ public class Adis extends BaseApi implements OpacApi {
 	@Override
 	public ReservationResult reservation(DetailledItem item, Account account,
 			int useraction, String selection) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+
+		Document doc;
+		List<NameValuePair> nvpairs;
+		ReservationResult res = null;
+
+		// Load details
+		nvpairs = s_pageform;
+		int i = 0;
+		List<Integer> indexes = new ArrayList<Integer>();
+		for (NameValuePair np : nvpairs) {
+			if (np.getName().contains("$Toolbar_")
+					|| np.getName().contains("selected")) {
+				indexes.add(i);
+			}
+			i++;
+		}
+		for (int j = indexes.size() - 1; j >= 0; j--) {
+			nvpairs.remove((int) indexes.get(j));
+		}
+		nvpairs.add(new BasicNameValuePair("selected", "ZTEXT       "
+				+ item.getReservation_info()));
+		doc = htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs);
+		doc = htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs); // Yep, two
+																	// times.
+
+		List<NameValuePair> form = new ArrayList<NameValuePair>();
+		for (Element input : doc.select("input, select")) {
+			if (!"image".equals(input.attr("type"))
+					&& !"submit".equals(input.attr("type"))
+					&& !"checkbox".equals(input.attr("type"))
+					&& !"".equals(input.attr("name"))) {
+				form.add(new BasicNameValuePair(input.attr("name"), input
+						.attr("value")));
+			}
+		}
+		form.add(new BasicNameValuePair("textButton$1", "Reservieren"));
+		doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+		try {
+			doc = handleLoginForm(doc, account);
+		} catch (OpacErrorException e1) {
+			return new ReservationResult(MultiStepResult.Status.ERROR,
+					e1.getMessage());
+		}
+
+		if (useraction == 0 && selection == null
+				&& doc.select("#AUSGAB_1").size() == 0) {
+			res = new ReservationResult(
+					MultiStepResult.Status.CONFIRMATION_NEEDED);
+			List<String[]> details = new ArrayList<String[]>();
+			details.add(new String[] { doc.select("#F23").text() });
+			res.setDetails(details);
+		} else if (doc.select("#AUSGAB_1").size() > 0 && selection == null) {
+			ContentValues sel = new ContentValues();
+			for (Element opt : doc.select("#AUSGAB_1 option")) {
+				if (opt.text().trim().length() > 0)
+					sel.put(opt.val(), opt.text());
+			}
+			res = new ReservationResult(
+					MultiStepResult.Status.SELECTION_NEEDED, doc.select("#F23")
+							.text());
+			res.setSelection(sel);
+		} else if (selection != null || doc.select("#AUSGAB_1").size() == 0) {
+			if (doc.select("#AUSGAB_1").size() > 0) {
+				doc.select("#AUSGAB_1").attr("value", selection);
+			}
+			form = new ArrayList<NameValuePair>();
+			for (Element input : doc.select("input, select")) {
+				if (!"image".equals(input.attr("type"))
+						&& !"submit".equals(input.attr("type"))
+						&& !"checkbox".equals(input.attr("type"))
+						&& !"".equals(input.attr("name"))) {
+					form.add(new BasicNameValuePair(input.attr("name"), input
+							.attr("value")));
+				}
+			}
+			form.add(new BasicNameValuePair("textButton",
+					"Reservation abschicken"));
+			res = new ReservationResult(MultiStepResult.Status.OK);
+			doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+
+			if (doc.select(".message h1").size() > 0) {
+				String msg = doc.select(".message h1").text().trim();
+				form = new ArrayList<NameValuePair>();
+				for (Element input : doc.select("input")) {
+					if (!"image".equals(input.attr("type"))
+							&& !"checkbox".equals(input.attr("type"))
+							&& !"".equals(input.attr("name"))) {
+						form.add(new BasicNameValuePair(input.attr("name"),
+								input.attr("value")));
+					}
+				}
+				doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+				if (!msg.contains("Reservation ist erfolgt")) {
+					res = new ReservationResult(MultiStepResult.Status.ERROR,
+							msg);
+				} else {
+					res = new ReservationResult(MultiStepResult.Status.OK, msg);
+				}
+			} else if (doc.select("#R01").text()
+					.contains("Informationen zu Ihrer Reservation")) {
+				String msg = doc.select("#OPACLI").text().trim();
+				form = new ArrayList<NameValuePair>();
+				for (Element input : doc.select("input")) {
+					if (!"image".equals(input.attr("type"))
+							&& !"checkbox".equals(input.attr("type"))
+							&& !"".equals(input.attr("name"))) {
+						form.add(new BasicNameValuePair(input.attr("name"),
+								input.attr("value")));
+					}
+				}
+				doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+				if (!msg.contains("Reservation ist erfolgt")) {
+					res = new ReservationResult(MultiStepResult.Status.ERROR,
+							msg);
+				} else {
+					res = new ReservationResult(MultiStepResult.Status.OK, msg);
+				}
+			}
+		}
+
+		if (res == null
+				|| res.getStatus() == MultiStepResult.Status.SELECTION_NEEDED
+				|| res.getStatus() == MultiStepResult.Status.CONFIRMATION_NEEDED) {
+			form = new ArrayList<NameValuePair>();
+			for (Element input : doc.select("input, select")) {
+				if (!"image".equals(input.attr("type"))
+						&& !"submit".equals(input.attr("type"))
+						&& !"checkbox".equals(input.attr("type"))
+						&& !"".equals(input.attr("name"))) {
+					form.add(new BasicNameValuePair(input.attr("name"), input
+							.attr("value")));
+				}
+			}
+			form.add(new BasicNameValuePair("textButton$0", "Abbrechen"));
+			doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+		}
+
+		// Reset
+		s_pageform = new ArrayList<NameValuePair>();
+		for (Element input : doc.select("input, select")) {
+			if (!"image".equals(input.attr("type"))
+					&& !"submit".equals(input.attr("type"))
+					&& !"checkbox".equals(input.attr("type"))
+					&& !"".equals(input.attr("name"))) {
+				s_pageform.add(new BasicNameValuePair(input.attr("name"), input
+						.attr("value")));
+			}
+		}
+		try {
+			nvpairs = s_pageform;
+			nvpairs.add(new BasicNameValuePair("$Toolbar_1.x", "1"));
+			nvpairs.add(new BasicNameValuePair("$Toolbar_1.y", "1"));
+			parse_search(htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs),
+					1);
+			nvpairs = s_pageform;
+			nvpairs.add(new BasicNameValuePair("$Toolbar_3.x", "1"));
+			nvpairs.add(new BasicNameValuePair("$Toolbar_3.y", "1"));
+			parse_search(htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs),
+					1);
+		} catch (OpacErrorException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return res;
 	}
 
 	@Override
 	public ProlongResult prolong(String media, Account account, int useraction,
 			String selection) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		String alink = null;
+		Document doc;
+		if (s_accountcalled) {
+			alink = media.split("\\|")[1].replace("requestCount=", "fooo=");
+		} else {
+			start();
+			doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
+					+ s_service + "&sp=SBK");
+			try {
+				doc = handleLoginForm(doc, account);
+			} catch (OpacErrorException e) {
+				return new ProlongResult(Status.ERROR, e.getMessage());
+			}
+			for (Element tr : doc.select(".rTable_div tr")) {
+				if (tr.select("a").size() == 1) {
+					if (tr.select("a").first().absUrl("href")
+							.contains("sp=SZA")) {
+						alink = tr.select("a").first().absUrl("href");
+					}
+				}
+			}
+			if (alink == null)
+				return new ProlongResult(Status.ERROR);
+		}
+
+		doc = htmlGet(alink);
+
+		List<NameValuePair> form = new ArrayList<NameValuePair>();
+		for (Element input : doc.select("input, select")) {
+			if (!"image".equals(input.attr("type"))
+					&& !"submit".equals(input.attr("type"))
+					&& !"checkbox".equals(input.attr("type"))
+					&& !"".equals(input.attr("name"))) {
+				form.add(new BasicNameValuePair(input.attr("name"), input
+						.attr("value")));
+			}
+		}
+		for (Element tr : doc.select(".rTable_div tr")) {
+			if (tr.select("input").attr("name").equals(media.split("\\|")[0])
+					&& tr.select("input").hasAttr("disabled")) {
+				form.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
+				form.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
+				doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+				return new ProlongResult(Status.ERROR, tr.child(4).text()
+						.trim());
+			}
+		}
+		form.add(new BasicNameValuePair(media.split("\\|")[0], "on"));
+		form.add(new BasicNameValuePair("textButton$1",
+				"Markierte Titel verlängern"));
+		doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+
+		form = new ArrayList<NameValuePair>();
+		for (Element input : doc.select("input, select")) {
+			if (!"image".equals(input.attr("type"))
+					&& !"submit".equals(input.attr("type"))
+					&& !"checkbox".equals(input.attr("type"))
+					&& !"".equals(input.attr("name"))) {
+				form.add(new BasicNameValuePair(input.attr("name"), input
+						.attr("value")));
+			}
+		}
+		form.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
+		form.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
+		doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+
+		return new ProlongResult(Status.OK);
 	}
 
 	@Override
 	public ProlongAllResult prolongAll(Account account, int useraction,
 			String selection) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		String alink = null;
+		Document doc;
+		if (s_accountcalled) {
+			alink = s_alink.replace("requestCount=", "fooo=");
+		} else {
+			start();
+			doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
+					+ s_service + "&sp=SBK");
+			try {
+				doc = handleLoginForm(doc, account);
+			} catch (OpacErrorException e) {
+				return new ProlongAllResult(Status.ERROR, e.getMessage());
+			}
+			for (Element tr : doc.select(".rTable_div tr")) {
+				if (tr.select("a").size() == 1) {
+					if (tr.select("a").first().absUrl("href")
+							.contains("sp=SZA")) {
+						alink = tr.select("a").first().absUrl("href");
+					}
+				}
+			}
+			if (alink == null)
+				return new ProlongAllResult(Status.ERROR);
+		}
+
+		doc = htmlGet(alink);
+
+		List<NameValuePair> form = new ArrayList<NameValuePair>();
+		for (Element input : doc.select("input, select")) {
+			if (!"image".equals(input.attr("type"))
+					&& !"submit".equals(input.attr("type"))
+					&& !"checkbox".equals(input.attr("type"))
+					&& !"".equals(input.attr("name"))) {
+				form.add(new BasicNameValuePair(input.attr("name"), input
+						.attr("value")));
+			}
+			if ("checkbox".equals(input.attr("type"))
+					&& !input.hasAttr("disabled")) {
+				form.add(new BasicNameValuePair(input.attr("name"), "on"));
+			}
+		}
+		form.add(new BasicNameValuePair("textButton$1",
+				"Markierte Titel verlängern"));
+		doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+
+		List<ContentValues> result = new ArrayList<ContentValues>();
+		for (Element tr : doc.select(".rTable_div tbody tr")) {
+			ContentValues line = new ContentValues();
+			line.put(ProlongAllResult.KEY_LINE_TITLE,
+					tr.child(3).text().split("[:/;]")[0].trim());
+			line.put(ProlongAllResult.KEY_LINE_NEW_RETURNDATE, tr.child(1)
+					.text());
+			line.put(ProlongAllResult.KEY_LINE_MESSAGE, tr.child(4).text());
+			result.add(line);
+		}
+
+		form = new ArrayList<NameValuePair>();
+		for (Element input : doc.select("input, select")) {
+			if (!"image".equals(input.attr("type"))
+					&& !"submit".equals(input.attr("type"))
+					&& !"checkbox".equals(input.attr("type"))
+					&& !"".equals(input.attr("name"))) {
+				form.add(new BasicNameValuePair(input.attr("name"), input
+						.attr("value")));
+			}
+		}
+		form.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
+		form.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
+		doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+
+		return new ProlongAllResult(Status.OK, result);
 	}
 
 	@Override
 	public CancelResult cancel(String media, Account account, int useraction,
 			String selection) throws IOException, OpacErrorException {
-		// TODO Auto-generated method stub
-		return null;
+		String rlink = null;
+		Document doc;
+		if (s_accountcalled) {
+			rlink = media.split("\\|")[1].replace("requestCount=", "fooo=");
+		} else {
+			start();
+			doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
+					+ s_service + "&sp=SBK");
+			try {
+				doc = handleLoginForm(doc, account);
+			} catch (OpacErrorException e) {
+				return new CancelResult(Status.ERROR, e.getMessage());
+			}
+			for (Element tr : doc.select(".rTable_div tr")) {
+				if (tr.select("a").size() == 1) {
+					if (tr.text().contains("Reservationen")
+							&& !tr.child(0).text().trim().equals("")
+							&& tr.select("a").first().attr("href")
+									.toUpperCase(Locale.GERMAN)
+									.contains("SP=SZM")) {
+						rlink = tr.select("a").first().absUrl("href");
+					}
+				}
+			}
+			if (rlink == null)
+				return new CancelResult(Status.ERROR);
+		}
+
+		doc = htmlGet(rlink);
+
+		List<NameValuePair> form = new ArrayList<NameValuePair>();
+		for (Element input : doc.select("input, select")) {
+			if (!"image".equals(input.attr("type"))
+					&& !"submit".equals(input.attr("type"))
+					&& !"checkbox".equals(input.attr("type"))
+					&& !"".equals(input.attr("name"))) {
+				form.add(new BasicNameValuePair(input.attr("name"), input
+						.attr("value")));
+			}
+		}
+		form.add(new BasicNameValuePair(media.split("\\|")[0], "on"));
+		form.add(new BasicNameValuePair("textButton$0",
+				"Markierte Titel löschen"));
+		doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+
+		form = new ArrayList<NameValuePair>();
+		for (Element input : doc.select("input, select")) {
+			if (!"image".equals(input.attr("type"))
+					&& !"submit".equals(input.attr("type"))
+					&& !"checkbox".equals(input.attr("type"))
+					&& !"".equals(input.attr("name"))) {
+				form.add(new BasicNameValuePair(input.attr("name"), input
+						.attr("value")));
+			}
+		}
+		form.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
+		form.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
+		doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+
+		return new CancelResult(Status.OK);
 	}
 
 	@Override
 	public AccountData account(Account account) throws IOException,
 			JSONException, OpacErrorException {
-		// TODO Auto-generated method stub
-		return null;
+		start();
+		s_accountcalled = true;
+
+		Document doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
+				+ s_service + "&sp=SBK");
+		doc = handleLoginForm(doc, account);
+
+		AccountData adata = new AccountData(account.getId());
+		for (Element tr : doc.select(".aDISListe tr")) {
+			if (tr.child(0).text().matches(".*F.+llige Geb.+hren.*")) {
+				adata.setPendingFees(tr.child(1).text().trim());
+			}
+			if (tr.child(0).text().matches(".*Ausweis g.+ltig bis.*")) {
+				adata.setValidUntil(tr.child(1).text().trim());
+			}
+		}
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
+
+		// Ausleihen
+		String alink = null;
+		int anum = -1;
+		List<ContentValues> lent = new ArrayList<ContentValues>();
+		for (Element tr : doc.select(".rTable_div tr")) {
+			if (tr.select("a").size() == 1) {
+				if (tr.select("a").first().absUrl("href").contains("sp=SZA")) {
+					alink = tr.select("a").first().absUrl("href");
+					anum = Integer.parseInt(tr.child(0).text().trim());
+				}
+			}
+		}
+		if (alink != null) {
+			Document adoc = htmlGet(alink);
+			s_alink = alink;
+			List<NameValuePair> form = new ArrayList<NameValuePair>();
+			for (Element input : adoc.select("input, select")) {
+				if (!"image".equals(input.attr("type"))
+						&& !"submit".equals(input.attr("type"))
+						&& !"".equals(input.attr("name"))) {
+					if (input.attr("type").equals("checkbox")
+							&& !input.hasAttr("value")) {
+						input.val("on");
+					}
+					form.add(new BasicNameValuePair(input.attr("name"), input
+							.attr("value")));
+				}
+			}
+			form.add(new BasicNameValuePair("textButton$2",
+					"Markierte Titel verlängerbar?"));
+			adoc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+			for (Element tr : adoc.select(".rTable_div tbody tr")) {
+				ContentValues line = new ContentValues();
+				line.put(AccountData.KEY_LENT_TITLE,
+						tr.child(3).text().split("[:/;]")[0].trim());
+				line.put(AccountData.KEY_LENT_DEADLINE, tr.child(1).text()
+						.trim());
+				try {
+					line.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, sdf
+							.parse(tr.child(1).text().trim()).getTime());
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				line.put(AccountData.KEY_LENT_BRANCH, tr.child(2).text().trim());
+				line.put(AccountData.KEY_LENT_LINK,
+						tr.select("input[type=checkbox]").attr("name") + "|"
+								+ alink);
+				// line.put(AccountData.KEY_LENT_RENEWABLE, tr.child(4).text()
+				// .matches(".*nicht verl.+ngerbar.*") ? "N" : "Y");
+				lent.add(line);
+			}
+			assert (lent.size() == anum);
+			form = new ArrayList<NameValuePair>();
+			for (Element input : adoc.select("input, select")) {
+				if (!"image".equals(input.attr("type"))
+						&& !"submit".equals(input.attr("type"))
+						&& !"checkbox".equals(input.attr("type"))
+						&& !"".equals(input.attr("name"))) {
+					form.add(new BasicNameValuePair(input.attr("name"), input
+							.attr("value")));
+				}
+			}
+			form.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
+			form.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
+			doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+		}
+
+		adata.setLent(lent);
+
+		List<String> rlinks = new ArrayList<String>();
+		int rnum = 0;
+		List<ContentValues> res = new ArrayList<ContentValues>();
+		for (Element tr : doc.select(".rTable_div tr")) {
+			if (tr.select("a").size() == 1) {
+				if (tr.text().contains("Reservationen")
+						&& !tr.child(0).text().trim().equals("")) {
+					rlinks.add(tr.select("a").first().absUrl("href"));
+					rnum += Integer.parseInt(tr.child(0).text().trim());
+				}
+			}
+		}
+		for (String rlink : rlinks) {
+			Document rdoc = htmlGet(rlink);
+			for (Element tr : rdoc.select(".rTable_div tbody tr")) {
+				ContentValues line = new ContentValues();
+				line.put(AccountData.KEY_RESERVATION_TITLE, tr.child(2).text()
+						.split("[:/;]")[0].trim());
+				line.put(AccountData.KEY_RESERVATION_READY, tr.child(3).text()
+						.trim().substring(0, 10));
+				line.put(AccountData.KEY_RESERVATION_BRANCH, tr.child(1).text()
+						.trim());
+				if (tr.select("input[type=checkbox]").size() > 0
+						&& rlink.toUpperCase(Locale.GERMAN).contains("SP=SZM"))
+					line.put(AccountData.KEY_RESERVATION_CANCEL,
+							tr.select("input[type=checkbox]").attr("name")
+									+ "|" + rlink);
+				res.add(line);
+			}
+			List<NameValuePair> form = new ArrayList<NameValuePair>();
+			for (Element input : rdoc.select("input, select")) {
+				if (!"image".equals(input.attr("type"))
+						&& !"submit".equals(input.attr("type"))
+						&& !"checkbox".equals(input.attr("type"))
+						&& !"".equals(input.attr("name"))) {
+					form.add(new BasicNameValuePair(input.attr("name"), input
+							.attr("value")));
+				}
+			}
+			form.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
+			form.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
+			doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+		}
+
+		assert (res.size() == rnum);
+
+		adata.setReservations(res);
+
+		return adata;
+	}
+
+	protected Document handleLoginForm(Document doc, Account account)
+			throws IOException, OpacErrorException {
+
+		if (doc.select("#LPASSW_1").size() == 0) {
+			return doc;
+		}
+
+		doc.select("#LPASSW_1").val(account.getPassword());
+
+		List<NameValuePair> form = new ArrayList<NameValuePair>();
+		for (Element input : doc.select("input, select")) {
+			if (!"image".equals(input.attr("type"))
+					&& !"checkbox".equals(input.attr("type"))
+					&& !"".equals(input.attr("name"))) {
+				if (input.attr("id").equals("L#AUSW_1")) {
+					input.attr("value", account.getName());
+				}
+				form.add(new BasicNameValuePair(input.attr("name"), input
+						.attr("value")));
+			}
+		}
+		doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+
+		if (doc.select(".message h1").size() > 0) {
+			String msg = doc.select(".message h1").text().trim();
+			form = new ArrayList<NameValuePair>();
+			for (Element input : doc.select("input")) {
+				if (!"image".equals(input.attr("type"))
+						&& !"checkbox".equals(input.attr("type"))
+						&& !"".equals(input.attr("name"))) {
+					form.add(new BasicNameValuePair(input.attr("name"), input
+							.attr("value")));
+				}
+			}
+			doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+			if (!msg.contains("Sie sind angemeldet")) {
+				throw new OpacErrorException(msg);
+			}
+			return doc;
+		} else {
+			return doc;
+		}
 	}
 
 	@Override
@@ -550,21 +1096,18 @@ public class Adis extends BaseApi implements OpacApi {
 
 	@Override
 	public boolean isAccountSupported(Library library) {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isAccountExtendable() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public String getAccountExtendableInfo(Account account) throws IOException,
 			NotReachableException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -575,7 +1118,8 @@ public class Adis extends BaseApi implements OpacApi {
 
 	@Override
 	public int getSupportFlags() {
-		return SUPPORT_FLAG_PAGECACHE_FORBIDDEN;
+		return SUPPORT_FLAG_PAGECACHE_FORBIDDEN
+				| SUPPORT_FLAG_ACCOUNT_PROLONG_ALL;
 	}
 
 	public static Map<String, List<String>> getQueryParams(String url) {
