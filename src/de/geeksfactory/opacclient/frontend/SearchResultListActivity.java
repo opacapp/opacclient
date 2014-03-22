@@ -48,7 +48,6 @@ public class SearchResultListActivity extends OpacActivity implements
 	private boolean mTwoPane;
 
 	protected SearchRequestResult searchresult;
-	private SparseArray<SearchRequestResult> cache = new SparseArray<SearchRequestResult>();
 	private int page;
 
 	private SearchStartTask st;
@@ -209,12 +208,6 @@ public class SearchResultListActivity extends OpacActivity implements
 					listFragment.showConnectivityError();
 			} else {
 				searchresult = result;
-				if (searchresult != null) {
-					if (searchresult.getResults().size() > 0) {
-						if (searchresult.getResults().get(0).getId() != null)
-							cache.put(page, searchresult);
-					}
-				}
 				loaded();
 			}
 		}
