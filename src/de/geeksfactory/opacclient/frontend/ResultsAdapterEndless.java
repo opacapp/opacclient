@@ -26,7 +26,6 @@ import java.util.List;
 import com.commonsware.cwac.endless.EndlessAdapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import de.geeksfactory.opacclient.R;
@@ -75,15 +74,19 @@ public class ResultsAdapterEndless extends EndlessAdapter {
 
 	@Override
 	protected boolean cacheInBackground() throws Exception {
-		if(page < maxPage || getWrappedAdapter().getCount() < resultCount) {
+		if (page < maxPage || getWrappedAdapter().getCount() < resultCount) {
 			page++;
 			itemsToAppend = listener.onLoadMore(page);
-			for(SearchResult item:itemsToAppend) {
-				Log.d("Opac", item.getInnerhtml());
+			for (SearchResult item:itemsToAppend) {
+				item.setPage(page);
 			}
 			return itemsToAppend != null;
 		} else {
 			return false;
 		}
+	}
+	
+	public int getPage() {
+		return page;
 	}
 }

@@ -2,7 +2,6 @@ package de.geeksfactory.opacclient.frontend;
 
 import java.util.List;
 
-import org.acra.ACRA;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.ListFragment;
@@ -12,10 +11,7 @@ import org.holoeverywhere.widget.LinearLayout;
 import org.holoeverywhere.widget.ListView;
 import org.holoeverywhere.widget.TextView;
 
-import com.commonsware.cwac.endless.EndlessAdapter;
-
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -23,7 +19,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
-import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.frontend.ResultsAdapterEndless.OnLoadMoreListener;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
@@ -72,7 +67,7 @@ public class SearchResultListFragment extends ListFragment {
 		 * Callback for when an item has been selected.
 		 * @param nr 
 		 */
-		public void onItemSelected(int nr, String id, int page);
+		public void onItemSelected(int nr, String id, boolean otherPage);
 		public void reload();
 		public void loadMoreData(int page);
 	}
@@ -83,7 +78,7 @@ public class SearchResultListFragment extends ListFragment {
 	 */
 	private static Callbacks sDummyCallbacks = new Callbacks() {
 		@Override
-		public void onItemSelected(int nr, String id, int page) {
+		public void onItemSelected(int nr, String id, boolean otherPage) {
 		}
 		@Override
 		public void reload() {			
@@ -151,7 +146,7 @@ public class SearchResultListFragment extends ListFragment {
 		// fragment is attached to one) that an item has been selected.
 		mCallbacks.onItemSelected(searchresult.getResults().get(position).getNr(),
 				searchresult.getResults().get(position).getId(),
-				searchresult.getResults().get(position).getPage());
+				searchresult.getResults().get(position).getPage() != adapter.getPage());
 	}
 
 	@Override

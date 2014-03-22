@@ -117,8 +117,8 @@ public class SearchResultListActivity extends OpacActivity implements
 	 * indicating that the item with the given ID was selected.
 	 */
 	@Override
-	public void onItemSelected(int nr, String id, int page) {
-		if((app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING) == 0 && page != this.page) {
+	public void onItemSelected(int nr, String id, boolean otherPage) {
+		if((app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING) == 0 && otherPage) {
 			new ReloadOldPageTask().execute(app, page, nr, id);
 		} else {
 			showDetail(nr, id);
@@ -156,10 +156,6 @@ public class SearchResultListActivity extends OpacActivity implements
 
 	public class SearchStartTask extends OpacTask<SearchRequestResult> {
 		protected Exception exception;
-		
-		protected void onPreExecute() {
-			if(page != 1) setProgressBarIndeterminateVisibility(true); 
-		}
 
 		@Override
 		protected SearchRequestResult doInBackground(Object... arg0) {
@@ -187,7 +183,6 @@ public class SearchResultListActivity extends OpacActivity implements
 
 		@Override
 		protected void onPostExecute(SearchRequestResult result) {
-			if(page != 1) setProgressBarIndeterminateVisibility(false);
 			if (result == null) {
 
 				if (exception instanceof OpacErrorException) {
@@ -257,6 +252,11 @@ public class SearchResultListActivity extends OpacActivity implements
 		String id;
 		
 		@Override
+		protected void onPreExecute() {
+			setProgressBarIndeterminateVisibility(true);
+		}
+		
+		@Override
 		protected SearchRequestResult doInBackground(Object... arg0) {
 			nr = (Integer) arg0[2];
 			id = (String) arg0[3];
@@ -265,7 +265,7 @@ public class SearchResultListActivity extends OpacActivity implements
 		
 		@Override
 		protected void onPostExecute(SearchRequestResult result) {
-			if(page != 1) setProgressBarIndeterminateVisibility(false);
+			setProgressBarIndeterminateVisibility(false);
 			if (result == null) {
 
 				if (exception instanceof OpacErrorException) {
