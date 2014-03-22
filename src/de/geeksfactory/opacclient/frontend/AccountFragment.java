@@ -452,6 +452,23 @@ public class AccountFragment extends Fragment implements
 			@Override
 			public void onSuccess(MultiStepResult result) {
 				invalidateData();
+
+				if (result.getMessage() != null) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							getActivity());
+					builder.setMessage(result.getMessage())
+							.setCancelable(false)
+							.setNegativeButton(R.string.dismiss,
+									new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(
+												DialogInterface dialog, int id) {
+											dialog.cancel();
+										}
+									});
+					AlertDialog alert = builder.create();
+					alert.show();
+				}
 			}
 
 			@Override
