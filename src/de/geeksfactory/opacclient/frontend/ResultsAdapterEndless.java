@@ -38,6 +38,7 @@ public class ResultsAdapterEndless extends EndlessAdapter {
 	private OnLoadMoreListener listener;
 	private int page = 1;
 	private int maxPage;
+	private int resultCount;
 	private List<SearchResult> itemsToAppend;
 	
 	public interface OnLoadMoreListener {
@@ -50,6 +51,7 @@ public class ResultsAdapterEndless extends EndlessAdapter {
 		this.objects = result.getResults();
 		this.listener = listener;
 		this.maxPage = result.getPage_count();
+		this.resultCount = result.getTotal_result_count();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -73,7 +75,7 @@ public class ResultsAdapterEndless extends EndlessAdapter {
 
 	@Override
 	protected boolean cacheInBackground() throws Exception {
-		if(page < maxPage) {
+		if(page < maxPage || getWrappedAdapter().getCount() < resultCount) {
 			page++;
 			itemsToAppend = listener.onLoadMore(page);
 			for(SearchResult item:itemsToAppend) {

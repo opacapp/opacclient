@@ -388,9 +388,8 @@ public class Pica extends BaseApi implements OpacApi {
 			sr.setId(null);
 			results.add(sr);
 		}
-		SearchRequestResult result = new SearchRequestResult(results, results_total, page);
-		result.setPage_count((int) Math.ceil(((double) results_total)/resultcount));
-		return result;
+		resultcount = results.size();
+		return new SearchRequestResult(results, results_total, page);
 	}
 
 	@Override
@@ -509,6 +508,23 @@ public class Pica extends BaseApi implements OpacApi {
 				subtitle = "";
 			}
 			result.setTitle(title);			
+		} else if (doc.select("td.preslabel:contains(Zeitschrift) + td.presvalue")
+					.size() > 0) {
+				titleAndSubtitle = doc
+						.select("td.preslabel:contains(Zeitschrift) + td.presvalue")
+						.first().text().trim();
+				int slashPosition = titleAndSubtitle.indexOf("/");
+				String title;
+				String subtitle;
+				if (slashPosition > 0) {
+					title = titleAndSubtitle.substring(0, slashPosition).trim();
+					subtitle = titleAndSubtitle.substring(slashPosition + 1).trim();
+					result.addDetail(new Detail("Titelzusatz", subtitle));
+				} else {
+					title = titleAndSubtitle;
+					subtitle = "";
+				}
+				result.setTitle(title);		
 		} else {
 			result.setTitle("");
 		}
