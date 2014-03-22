@@ -36,6 +36,7 @@ public class SearchResult implements CoverHolder {
 	private Status status;
 	private Bitmap coverBitmap;
 	private String cover;
+	private int page;
 
 	/**
 	 * Supported media types.
@@ -180,6 +181,14 @@ public class SearchResult implements CoverHolder {
 	 */
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+	
+	public int getPage() {
+		return page;
+	}
+	
+	public void setPage(int page) {
+		this.page = page;
 	}
 	
 	/**

@@ -508,6 +508,23 @@ public class Pica extends BaseApi implements OpacApi {
 				subtitle = "";
 			}
 			result.setTitle(title);			
+		} else if (doc.select("td.preslabel:contains(Zeitschrift) + td.presvalue")
+					.size() > 0) {
+				titleAndSubtitle = doc
+						.select("td.preslabel:contains(Zeitschrift) + td.presvalue")
+						.first().text().trim();
+				int slashPosition = titleAndSubtitle.indexOf("/");
+				String title;
+				String subtitle;
+				if (slashPosition > 0) {
+					title = titleAndSubtitle.substring(0, slashPosition).trim();
+					subtitle = titleAndSubtitle.substring(slashPosition + 1).trim();
+					result.addDetail(new Detail("Titelzusatz", subtitle));
+				} else {
+					title = titleAndSubtitle;
+					subtitle = "";
+				}
+				result.setTitle(title);		
 		} else {
 			result.setTitle("");
 		}
@@ -822,8 +839,7 @@ public class Pica extends BaseApi implements OpacApi {
 
 	@Override
 	public int getSupportFlags() {
-		return 0;
-
+		return SUPPORT_FLAG_ENDLESS_SCROLLING;
 	}
 
 	public void updateSearchSetValue(Document doc) {
