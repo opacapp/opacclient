@@ -1,5 +1,7 @@
 package de.geeksfactory.opacclient.frontend;
 
+import java.util.List;
+
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.ListFragment;
@@ -15,8 +17,11 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.frontend.ResultsAdapterEndless.OnLoadMoreListener;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
+import de.geeksfactory.opacclient.objects.SearchResult;
 
 /**
  * A list fragment representing a list of SearchResults. This fragment also
@@ -48,6 +53,10 @@ public class SearchResultListFragment extends ListFragment {
 
 	private SearchRequestResult searchresult;
 
+	public ResultsAdapterEndless adapter;
+	
+	private OpacClient app;
+
 	/**
 	 * A callback interface that all activities containing this fragment must
 	 * implement. This mechanism allows activities to be notified of item
@@ -58,8 +67,9 @@ public class SearchResultListFragment extends ListFragment {
 		 * Callback for when an item has been selected.
 		 * @param nr 
 		 */
-		public void onItemSelected(int nr, String id);
+		public void onItemSelected(int nr, String id, boolean otherPage);
 		public void reload();
+		public void loadMoreData(int page);
 	}
 
 	/**
@@ -68,10 +78,13 @@ public class SearchResultListFragment extends ListFragment {
 	 */
 	private static Callbacks sDummyCallbacks = new Callbacks() {
 		@Override
-		public void onItemSelected(int nr, String id) {
+		public void onItemSelected(int nr, String id, boolean otherPage) {
 		}
 		@Override
 		public void reload() {			
+		}
+		@Override
+		public void loadMoreData(int page) {
 		}
 	};
 
@@ -113,6 +126,7 @@ public class SearchResultListFragment extends ListFragment {
 		}
 
 		mCallbacks = (Callbacks) activity;
+		app = (OpacClient) activity.getApplication();
 	}
 
 	@Override
@@ -130,7 +144,9 @@ public class SearchResultListFragment extends ListFragment {
 
 		// Notify the active callbacks interface (the activity, if the
 		// fragment is attached to one) that an item has been selected.
-		mCallbacks.onItemSelected(searchresult.getResults().get(position).getNr(), searchresult.getResults().get(position).getId());
+		mCallbacks.onItemSelected(searchresult.getResults().get(position).getNr(),
+				searchresult.getResults().get(position).getId(),
+				searchresult.getResults().get(position).getPage() != adapter.getPage());
 	}
 
 	@Override
@@ -164,7 +180,10 @@ public class SearchResultListFragment extends ListFragment {
 		mActivatedPosition = position;
 	}
 
-	public void setSearchResult(SearchRequestResult searchresult) {
+	public void setSearchResult(SearchRequestResult searchresult, boolean clear) {
+		for(SearchResult result:searchresult.getResults()) {
+			result.setPage(searchresult.getPage_index());
+		}
 		if (searchresult.getTotal_result_count() >= 0)
 			getSupportActionBar().setSubtitle(
 					getString(R.string.result_number,
@@ -175,7 +194,14 @@ public class SearchResultListFragment extends ListFragment {
 			setEmptyText(getString(R.string.no_results));
 		}
 		this.searchresult = searchresult;
-		setListAdapter(new ResultsAdapter(getActivity(), searchresult.getResults()));
+		adapter = new ResultsAdapterEndless(getActivity(), searchresult, new OnLoadMoreListener() {
+			@Override
+			public List<SearchResult> onLoadMore(int page) throws Exception {
+				SearchRequestResult res = app.getApi().searchGetPage(page);
+				return res.getResults();
+			}	
+		});
+		setListAdapter(adapter);
 		getListView().setTextFilterEnabled(true);
 		setListShown(true);
 	}

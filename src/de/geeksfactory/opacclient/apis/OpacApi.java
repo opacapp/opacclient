@@ -249,6 +249,14 @@ public interface OpacApi {
 	 * Flag to be present in the result of {@link #getSupportFlags()}.
 	 */
 	public static final int SUPPORT_FLAG_PAGECACHE_FORBIDDEN = 0x0000008;
+	
+	/**
+	 * When the results are shown as an endless scrolling list, will reload the
+	 * page the selected result is located on if this flag is not present.
+	 * 
+	 * Flag to be present in the result of {@link #getSupportFlags()}.
+	 */
+	public static final int SUPPORT_FLAG_ENDLESS_SCROLLING = 0x0000016;
 
 	/**
 	 * A general exception containing a human-readable error message

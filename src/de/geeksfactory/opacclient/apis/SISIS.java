@@ -1512,7 +1512,9 @@ public class SISIS extends BaseApi implements OpacApi {
 
 	@Override
 	public int getSupportFlags() {
-		return OpacApi.SUPPORT_FLAG_ACCOUNT_PROLONG_ALL;
+		int flags = SUPPORT_FLAG_ACCOUNT_PROLONG_ALL;
+		flags |= SUPPORT_FLAG_ENDLESS_SCROLLING;
+		return flags;
 	}
 
 	@Override
