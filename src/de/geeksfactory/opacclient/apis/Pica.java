@@ -388,8 +388,9 @@ public class Pica extends BaseApi implements OpacApi {
 			sr.setId(null);
 			results.add(sr);
 		}
-		resultcount = results.size();
-		return new SearchRequestResult(results, results_total, page);
+		SearchRequestResult result = new SearchRequestResult(results, results_total, page);
+		result.setPage_count((int) Math.ceil(((double) results_total)/resultcount));
+		return result;
 	}
 
 	@Override

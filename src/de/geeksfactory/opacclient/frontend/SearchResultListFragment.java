@@ -1,5 +1,8 @@
 package de.geeksfactory.opacclient.frontend;
 
+import java.util.List;
+
+import org.acra.ACRA;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.ListFragment;
@@ -9,6 +12,8 @@ import org.holoeverywhere.widget.LinearLayout;
 import org.holoeverywhere.widget.ListView;
 import org.holoeverywhere.widget.TextView;
 
+import com.commonsware.cwac.endless.EndlessAdapter;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,7 +21,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
+import de.geeksfactory.opacclient.frontend.ResultsAdapterEndless.OnLoadMoreListener;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 
@@ -50,7 +58,9 @@ public class SearchResultListFragment extends ListFragment {
 
 	private SearchRequestResult searchresult;
 
-	public ResultsAdapter adapter;
+	public ResultsAdapterEndless adapter;
+	
+	private OpacClient app;
 
 	/**
 	 * A callback interface that all activities containing this fragment must
@@ -121,6 +131,7 @@ public class SearchResultListFragment extends ListFragment {
 		}
 
 		mCallbacks = (Callbacks) activity;
+		app = (OpacClient) activity.getApplication();
 	}
 
 	@Override
@@ -178,36 +189,26 @@ public class SearchResultListFragment extends ListFragment {
 		for(SearchResult result:searchresult.getResults()) {
 			result.setPage(searchresult.getPage_index());
 		}
-		if(clear) {
-			if (searchresult.getTotal_result_count() >= 0)
-				getSupportActionBar().setSubtitle(
-						getString(R.string.result_number,
-								searchresult.getTotal_result_count()));
-	
-			if (searchresult.getResults().size() == 0
-					&& searchresult.getTotal_result_count() == 0) {
-				setEmptyText(getString(R.string.no_results));
-			}
-			this.searchresult = searchresult;
-			adapter = new ResultsAdapter(getActivity(), (searchresult.getResults()));
-			setListAdapter(adapter);
-			getListView().setTextFilterEnabled(true);
-			getListView().setOnScrollListener(new EndlessScrollListener() {	
-				@Override
-				public void onLoadMore(int page, int totalItemsCount) {
-					Log.d("Opac", "total: " + String.valueOf(SearchResultListFragment.this.searchresult.getTotal_result_count()));
-					Log.d("Opac", "current: " + String.valueOf(totalItemsCount));
-					Log.d("Opac", String.valueOf(totalItemsCount < SearchResultListFragment.this.searchresult.getTotal_result_count()));
-					if(totalItemsCount < SearchResultListFragment.this.searchresult.getTotal_result_count()); {
-						mCallbacks.loadMoreData(page);
-					}
-				}		
-			});
-			setListShown(true);
-		} else {
-			adapter.addAll(searchresult.getResults());
-			adapter.notifyDataSetChanged();
+		if (searchresult.getTotal_result_count() >= 0)
+			getSupportActionBar().setSubtitle(
+					getString(R.string.result_number,
+							searchresult.getTotal_result_count()));
+
+		if (searchresult.getResults().size() == 0
+				&& searchresult.getTotal_result_count() == 0) {
+			setEmptyText(getString(R.string.no_results));
 		}
+		this.searchresult = searchresult;
+		adapter = new ResultsAdapterEndless(getActivity(), searchresult, new OnLoadMoreListener() {
+			@Override
+			public List<SearchResult> onLoadMore(int page) throws Exception {
+				SearchRequestResult res = app.getApi().searchGetPage(page);
+				return res.getResults();
+			}	
+		});
+		setListAdapter(adapter);
+		getListView().setTextFilterEnabled(true);
+		setListShown(true);
 	}
 	
 	public void showConnectivityError() {
