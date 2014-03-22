@@ -189,8 +189,8 @@ public class Pica extends BaseApi implements OpacApi {
 		params.add(new BasicNameValuePair("PARSE_OPWORDS", "N"));
 		params.add(new BasicNameValuePair("PARSE_OLDSETS", "N"));
 
-		index = addParameters(query, KEY_SEARCH_QUERY_FREE, "1016", params,
-				index);
+		index = addParameters(query, KEY_SEARCH_QUERY_FREE,
+				data.optString("KEY_SEARCH_QUERY_FREE", "1016"), params, index);
 		index = addParameters(query, KEY_SEARCH_QUERY_AUTHOR, "1004", params,
 				index);
 		index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDA, "46", params,
