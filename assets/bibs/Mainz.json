@@ -12,7 +12,7 @@
             "status": -1, 
             "title": 2
         }, 
-        "baseurl": "https://online.mainz.de/webopac/", 
+        "baseurl": "https://webopac.mainz.de/webopac/", 
         "copiestable": {
             "barcode": -1, 
             "branch": 0, 
