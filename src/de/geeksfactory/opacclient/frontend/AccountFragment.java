@@ -1486,7 +1486,7 @@ public class AccountFragment extends Fragment implements
 
 			@Override
 			public StepTask<?> newTask() {
-				return new ProlongTask();
+				return new ProlongAllTask();
 			}
 		});
 		msrhProlong.start();
