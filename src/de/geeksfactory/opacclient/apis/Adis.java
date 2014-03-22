@@ -1118,8 +1118,7 @@ public class Adis extends BaseApi implements OpacApi {
 
 	@Override
 	public int getSupportFlags() {
-		return SUPPORT_FLAG_PAGECACHE_FORBIDDEN
-				| SUPPORT_FLAG_ACCOUNT_PROLONG_ALL;
+		return SUPPORT_FLAG_ACCOUNT_PROLONG_ALL;
 	}
 
 	public static Map<String, List<String>> getQueryParams(String url) {
