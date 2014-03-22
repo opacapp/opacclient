@@ -95,14 +95,14 @@ public abstract class OpacActivity extends Activity {
 		} catch (Exception e) {
 
 		}
-		
+
 		setContentView(getContentView());
 		app = (OpacClient) getApplication();
 
 		aData = new AccountDataSource(this);
 		setupDrawer();
-		
-		if(savedInstanceState != null) {
+
+		if (savedInstanceState != null) {
 			setTwoPane(savedInstanceState.getBoolean("twoPane"));
 		}
 	}
@@ -287,9 +287,13 @@ public abstract class OpacActivity extends Activity {
 			drawerList.setItemChecked(navAdapter.getPositionByTag("starred"),
 					true);
 		} else if (fragment instanceof InfoFragment) {
-			drawerList.setItemChecked(navAdapter.getPositionByTag("info"),
-					true);
+			drawerList
+					.setItemChecked(navAdapter.getPositionByTag("info"), true);
 		}
+		if (app.getLibrary() != null)
+			getSupportActionBar().setSubtitle(
+					app.getLibrary().getCity() + " · "
+							+ app.getLibrary().getTitle());
 	}
 
 	/** Swaps fragments in the main content view */
@@ -563,19 +567,19 @@ public abstract class OpacActivity extends Activity {
 
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	protected boolean isTablet() {
 		return findViewById(R.id.content_frame_right) != null;
 	}
-	
+
 	protected void setTwoPane(boolean active) {
 		twoPane = active;
-		if(isTablet()) {
+		if (isTablet()) {
 			findViewById(R.id.content_frame_right).setVisibility(
 					active ? View.VISIBLE : View.GONE);
 		}
 	}
-	
+
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
