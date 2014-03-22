@@ -144,7 +144,8 @@ public class AccountFragment extends Fragment implements
 						.getAccount().getId()) {
 					app.setAccount(getActivity().getIntent().getExtras()
 							.getLong("account"));
-					((OpacActivity) getActivity()).accountSelected(app.getAccount());
+					((OpacActivity) getActivity()).accountSelected(app
+							.getAccount());
 				}
 				NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 				nMgr.cancel(OpacClient.NOTIF_ID);
@@ -1520,6 +1521,9 @@ public class AccountFragment extends Fragment implements
 			}
 
 			TextView tvAuthor = (TextView) view.findViewById(R.id.tvAuthor);
+			tvAuthor.setVisibility(item
+					.containsKey(ProlongAllResult.KEY_LINE_AUTHOR) ? View.VISIBLE
+					: View.GONE);
 			tvAuthor.setText(item.getAsString(ProlongAllResult.KEY_LINE_AUTHOR));
 			TextView tvTitle = (TextView) view.findViewById(R.id.tvTitle);
 			tvTitle.setText(item.getAsString(ProlongAllResult.KEY_LINE_TITLE));
