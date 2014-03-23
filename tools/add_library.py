@@ -114,19 +114,20 @@ class Bibliotheca(Api):
         data['data'] = datadata
         return data
 
-    def _fetchData(self, url, suff = ''):
+    def _fetchData(self, url, suff=''):
         config = configparser.RawConfigParser(allow_no_value=True, strict=False)
-        config.read_string(urllib.request.urlopen(url+'/w3oini.txt').read().decode('iso-8859-1'))
+        config.read_string(urllib.request.urlopen(url + '/w3oini.txt').read().decode('iso-8859-1'))
         data = {
             'accounttable': {},
             'reservationtable': {},
-            'copiestable':{},
+            'copiestable': {},
         }
         i_acc = 0
         i_res = 0
-        for i in range(1,21):
-            conf = config.get("ANZEIGEKONTOFELDER", "konto"+str(i))
-            if conf == '': continue
+        for i in range(1, 21):
+            conf = config.get("ANZEIGEKONTOFELDER", "konto" + str(i))
+            if conf == '':
+                continue
             key = conf.split("#")[0]
 
             if key == 'buchungsnr':
@@ -175,9 +176,10 @@ class Bibliotheca(Api):
             data['accounttable']['lendingbranch'] = data['accounttable']['homebranch']
 
         i_copy = 0
-        for i in range(1,11):
-            conf = config.get("ANZEIGE_EXEMPLAR"+suff, "AE"+str(i))
-            if conf == '': continue
+        for i in range(1, 11):
+            conf = config.get("ANZEIGE_EXEMPLAR" +  suff, "AE" + str(i))
+            if conf == '':
+                continue
             key = conf.split("#")[1]
             if key == 'buchungsnr':
                 data['copiestable']['barcode'] = i_copy
@@ -196,12 +198,14 @@ class Bibliotheca(Api):
             i_copy += 1
 
         data['mediatypes'] = {}
-        for i in range(1,100):
-            conf = config.get("ANZEIGE_MEDIGRPPIC", "MEDIGRPPIC"+str(i))
-            if conf == '': continue
+        for i in range(1, 100):
+            conf = config.get("ANZEIGE_MEDIGRPPIC", "MEDIGRPPIC" + str(i))
+            if conf == '':
+                continue
             split = conf.split("#")
             data['mediatypes'][split[1]] = split[2]
         return data
+
 
 class Sisis(Api):
 
@@ -215,6 +219,21 @@ class Sisis(Api):
         if inp is not None:
             data['data']['startparams'] = inp
         return data
+
+
+class Adis(Api):
+
+    def getDefaultSupportString(self):
+        return 'Katalogsuche und Konto (experimentell)'
+
+    def prompt(self, data):
+        print("Sind zusätzliche Parameter nötig?")
+        print("Ein häufiges Beispiel wäre sowas wie 'service=direct/0/Home/$DirectLink&sp=S127.0.0.1%3A23002&sp=SS10000000'")
+        inp = getInput(required=False)
+        if inp is not None:
+            data['data']['startparams'] = inp
+        return data
+
 
 class Biber1992(Api):
 
@@ -265,6 +284,7 @@ APIS = {
     'zones22'     : Zones22,
     'iopac'       : IOpac,
     'pica'        : Pica,
+    'adis'        : Adis,
 }
 
 data = {}

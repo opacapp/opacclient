@@ -29,6 +29,7 @@ import org.jsoup.nodes.Element;
 
 import android.content.ContentValues;
 import android.os.Bundle;
+import android.util.SparseArray;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult.Status;
 import de.geeksfactory.opacclient.objects.Account;
@@ -74,8 +75,10 @@ public class Adis extends BaseApi implements OpacApi {
 		types.put("Konsolenspiel", MediaType.GAME_CONSOLE);
 		types.put("CD", MediaType.CD);
 		types.put("Zeitschrift", MediaType.MAGAZINE);
+		types.put("Zeitschriftenheft", MediaType.MAGAZINE);
 		types.put("Zeitung", MediaType.NEWSPAPER);
 		types.put("Beitrag E-Book", MediaType.EBOOK);
+		types.put("E-Book", MediaType.EBOOK);
 		types.put("Karte", MediaType.MAP);
 	}
 
@@ -159,7 +162,7 @@ public class Adis extends BaseApi implements OpacApi {
 			Pattern padSid = Pattern
 					.compile(".*;jsessionid=([0-9A-Fa-f]+)[^0-9A-Fa-f].*");
 			for (Element navitem : doc.select("#unav li a")) {
-				if (navitem.attr("href").contains("service")) {
+				if (navitem.attr("href").contains("service=")) {
 					s_service = getQueryParams(navitem.attr("href")).get(
 							"service").get(0);
 				}
@@ -235,42 +238,64 @@ public class Adis extends BaseApi implements OpacApi {
 					doc.select("select#AUSGAB_1").val(
 							query.getString(KEY_SEARCH_QUERY_BRANCH));
 					continue;
+				} else if (field.equals(KEY_SEARCH_QUERY_YEAR)) {
+					doc.select("input#GEJAHR_1").val(
+							query.getString(KEY_SEARCH_QUERY_YEAR));
+					continue;
 				}
 
 				cnt++;
 
-				for (Element opt : doc.select("select#SUCH01_" + cnt
-						+ " option")) {
-					if (field.equals(KEY_SEARCH_QUERY_FREE)
-							&& (opt.text().contains("Alle Felder") || opt
-									.text().contains("Freie Suche"))) {
-						doc.select("select#SUCH01_" + cnt).val(opt.val());
-						break;
-					} else if (field.equals(KEY_SEARCH_QUERY_TITLE)
-							&& opt.text().contains("Titel")) {
-						doc.select("select#SUCH01_" + cnt).val(opt.val());
-						break;
-					} else if (field.equals(KEY_SEARCH_QUERY_AUTHOR)
-							&& (opt.text().contains("Autor") || opt.text()
-									.contains("Person"))) {
-						doc.select("select#SUCH01_" + cnt).val(opt.val());
-						break;
-					} else if (field.equals(KEY_SEARCH_QUERY_ISBN)
-							&& opt.text().contains("ISBN")) {
-						doc.select("select#SUCH01_" + cnt).val(opt.val());
-						break;
-					} else if (field.equals(KEY_SEARCH_QUERY_KEYWORDA)
-							&& opt.text().contains("Schlagwort")) {
-						doc.select("select#SUCH01_" + cnt).val(opt.val());
-						break;
+				if (s_exts.equals("SS2")) {
+					if (field.equals(KEY_SEARCH_QUERY_FREE)) {
+						doc.select("input#THEMA2_1")
+								.val(query.getString(field));
+					} else if (field.equals(KEY_SEARCH_QUERY_AUTHOR)) {
+						doc.select("input#AUTOR_1").val(query.getString(field));
+					} else if (field.equals(KEY_SEARCH_QUERY_TITLE)) {
+						doc.select("input#TITEL_1").val(query.getString(field));
+					} else if (field.equals(KEY_SEARCH_QUERY_ISBN)) {
+						doc.select("input#NUMMES_1")
+								.val(query.getString(field));
+					} else if (field.equals(KEY_SEARCH_QUERY_KEYWORDA)) {
+						doc.select("input#THEMA1_1")
+								.val(query.getString(field));
 					}
-				}
+				} else {
+					for (Element opt : doc.select("select#SUCH01_" + cnt
+							+ " option")) {
+						if (field.equals(KEY_SEARCH_QUERY_FREE)
+								&& (opt.text().contains("Alle Felder") || opt
+										.text().contains("Freie Suche"))) {
+							doc.select("select#SUCH01_" + cnt).val(opt.val());
+							break;
+						} else if (field.equals(KEY_SEARCH_QUERY_TITLE)
+								&& opt.text().contains("Titel")) {
+							doc.select("select#SUCH01_" + cnt).val(opt.val());
+							break;
+						} else if (field.equals(KEY_SEARCH_QUERY_AUTHOR)
+								&& (opt.text().contains("Autor") || opt.text()
+										.contains("Person"))) {
+							doc.select("select#SUCH01_" + cnt).val(opt.val());
+							break;
+						} else if (field.equals(KEY_SEARCH_QUERY_ISBN)
+								&& opt.text().contains("ISBN")) {
+							doc.select("select#SUCH01_" + cnt).val(opt.val());
+							break;
+						} else if (field.equals(KEY_SEARCH_QUERY_KEYWORDA)
+								&& opt.text().contains("Schlagwort")) {
+							doc.select("select#SUCH01_" + cnt).val(opt.val());
+							break;
+						}
+					}
 
-				doc.select("input#FELD01_" + cnt).val(query.getString(field));
+					doc.select("input#FELD01_" + cnt).val(
+							query.getString(field));
 
-				if (cnt > 4) {
-					throw new OpacErrorException(
-							"Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.");
+					if (cnt > 4) {
+						throw new OpacErrorException(
+								"Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.");
+					}
 				}
 			}
 		}
@@ -344,6 +369,9 @@ public class Adis extends BaseApi implements OpacApi {
 					.attr("title");
 			if (types.containsKey(typetext))
 				res.setType(types.get(typetext));
+			else if (typetext.contains("+")
+					&& types.containsKey(typetext.split("\\+")[0].trim()))
+				res.setType(types.get(typetext.split("\\+")[0].trim()));
 
 			results.add(res);
 		}
@@ -449,12 +477,20 @@ public class Adis extends BaseApi implements OpacApi {
 		}
 		DetailledItem res = new DetailledItem();
 
-		if (doc.select("#R001 img").size() == 1)
+		if (doc.select("#R001 img").size() == 1) {
 			res.setCover(doc.select("#R001 img").first().absUrl("src"));
+		}
 
 		for (Element tr : doc.select("#R06 .aDISListe table tbody tr")) {
-			res.addDetail(new Detail(tr.child(0).text().trim(), tr.child(1)
-					.text().trim()));
+			if(tr.children().size() < 2)
+				continue;
+			if (tr.child(1).text().contains("hier klicken")) {
+				res.addDetail(new Detail(tr.child(0).text().trim(), tr.child(1)
+						.select("a").first().absUrl("href")));
+			} else {
+				res.addDetail(new Detail(tr.child(0).text().trim(), tr.child(1)
+						.text().trim()));
+			}
 
 			if (tr.child(0).text().trim().contains("Titel")
 					&& res.getTitle() == null) {
@@ -467,18 +503,40 @@ public class Adis extends BaseApi implements OpacApi {
 			res.setReservation_info(id);
 		}
 
+		SparseArray<String> colmap = new SparseArray<String>();
+		int i = 0;
+		for (Element th : doc.select("#R08 table.rTable_table thead tr th")) {
+			String head = th.text().trim();
+			if (head.contains("Bibliothek")) {
+				colmap.append(i, DetailledItem.KEY_COPY_BRANCH);
+			} else if (head.contains("Standort")) {
+				colmap.append(i, DetailledItem.KEY_COPY_LOCATION);
+			} else if (head.contains("Signatur")) {
+				colmap.append(i, DetailledItem.KEY_COPY_SHELFMARK);
+			} else if (head.contains("Status") || head.contains("Hinweis")
+					|| head.matches(".*Verf.+gbarkeit.*")) {
+				colmap.append(i, DetailledItem.KEY_COPY_STATUS);
+			}
+			i++;
+		}
+
 		for (Element tr : doc.select("#R08 table.rTable_table tbody tr")) {
 			ContentValues line = new ContentValues();
-			line.put(DetailledItem.KEY_COPY_BRANCH, tr.child(0).text().trim());
-			line.put(DetailledItem.KEY_COPY_LOCATION, tr.child(1).text().trim());
-			line.put(DetailledItem.KEY_COPY_SHELFMARK, tr.child(2).text()
-					.trim());
-			String status = tr.child(3).text().trim();
-			if (status.contains(" am: ")) {
-				line.put(DetailledItem.KEY_COPY_STATUS, status.split("-")[0]);
-				line.put(DetailledItem.KEY_COPY_RETURN, status.split(": ")[1]);
-			} else {
-				line.put(DetailledItem.KEY_COPY_STATUS, status);
+			for (int j = 0; j < colmap.size(); j++) {
+				if (colmap.valueAt(j).equals(DetailledItem.KEY_COPY_STATUS)) {
+					String status = tr.child(colmap.keyAt(j)).text().trim();
+					if (status.contains(" am: ")) {
+						line.put(DetailledItem.KEY_COPY_STATUS,
+								status.split("-")[0]);
+						line.put(DetailledItem.KEY_COPY_RETURN,
+								status.split(": ")[1]);
+					} else {
+						line.put(DetailledItem.KEY_COPY_STATUS, status);
+					}
+				} else {
+					line.put(colmap.valueAt(j), tr.child(colmap.keyAt(j))
+							.text().trim());
+				}
 			}
 			res.addCopy(line);
 		}
@@ -1091,7 +1149,7 @@ public class Adis extends BaseApi implements OpacApi {
 		return new String[] { KEY_SEARCH_QUERY_FREE, KEY_SEARCH_QUERY_TITLE,
 				KEY_SEARCH_QUERY_ISBN, KEY_SEARCH_QUERY_AUTHOR,
 				KEY_SEARCH_QUERY_KEYWORDA, KEY_SEARCH_QUERY_BRANCH,
-				KEY_SEARCH_QUERY_CATEGORY, };
+				KEY_SEARCH_QUERY_CATEGORY, KEY_SEARCH_QUERY_YEAR };
 	}
 
 	@Override
@@ -1118,7 +1176,8 @@ public class Adis extends BaseApi implements OpacApi {
 
 	@Override
 	public int getSupportFlags() {
-		return SUPPORT_FLAG_ACCOUNT_PROLONG_ALL;
+		return SUPPORT_FLAG_ACCOUNT_PROLONG_ALL
+				| SUPPORT_FLAG_ENDLESS_SCROLLING;
 	}
 
 	public static Map<String, List<String>> getQueryParams(String url) {
