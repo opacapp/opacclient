@@ -1,0 +1,16 @@
+{
+    "api": "adis", 
+    "city": "Trossingen", 
+    "data": {
+        "baseurl": "https://bsz.ibs-bw.de/aDISWeb/app", 
+        "information": "http://www.mh-trossingen.de/hochschule/bibliothek.html", 
+        "startparams": "service=direct/0/Home/%24DirectLink&sp=S127.0.0.1:23342"
+    }, 
+    "geo": [
+        48.0756997, 
+        8.6338475
+    ], 
+    "group": "Baden-W\u00fcrttemberg", 
+    "support": "Katalogsuche und Konto (experimentell)", 
+    "title": "Musikhochschule"
+}

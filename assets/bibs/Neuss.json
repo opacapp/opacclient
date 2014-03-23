@@ -1,0 +1,16 @@
+{
+    "api": "adis", 
+    "city": "Neuss", 
+    "data": {
+        "baseurl": "https://webopac.itk-rheinland.de/aDISWeb/app", 
+        "information": "http://www.stadtbibliothek-neuss.de/", 
+        "startparams": "service=direct/0/Home/%24DirectLink&sp=S127.0.0.1:23022&sp=SS100000000"
+    }, 
+    "geo": [
+        51.2041968, 
+        6.6879511
+    ], 
+    "group": "Nordrhein-Westfalen", 
+    "support": "Katalogsuche und Konto (experimentell)", 
+    "title": "Stadtbibliothek"
+}

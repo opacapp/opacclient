@@ -1,0 +1,16 @@
+{
+    "api": "adis", 
+    "city": "Freiburg", 
+    "data": {
+        "baseurl": "https://fbg.ibs-bw.de/aDISWeb/app", 
+        "information": "http://www.ub.uni-freiburg.de/index.php?id=zeiten", 
+        "startparams": "service=direct/0/Home/%24DirectLink&sp=S127.0.0.1:23022"
+    }, 
+    "geo": [
+        47.9990077, 
+        7.842104299999999
+    ], 
+    "group": "Baden-W\u00fcrttemberg", 
+    "support": "Katalogsuche (experimentell)", 
+    "title": "Unibibliothek"
+}
