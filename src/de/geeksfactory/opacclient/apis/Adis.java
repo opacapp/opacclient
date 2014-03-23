@@ -78,6 +78,7 @@ public class Adis extends BaseApi implements OpacApi {
 		types.put("Zeitschriftenheft", MediaType.MAGAZINE);
 		types.put("Zeitung", MediaType.NEWSPAPER);
 		types.put("Beitrag E-Book", MediaType.EBOOK);
+		types.put("Elektronische Ressource", MediaType.EBOOK);
 		types.put("E-Book", MediaType.EBOOK);
 		types.put("Karte", MediaType.MAP);
 	}
@@ -175,6 +176,8 @@ public class Adis extends BaseApi implements OpacApi {
 					s_sid = objid_matcher.group(1);
 				}
 			}
+			if (s_exts == null)
+				s_exts = "SS6";
 
 			metadata.open();
 			if (!metadata.hasMeta(library.getIdent())) {
@@ -480,8 +483,8 @@ public class Adis extends BaseApi implements OpacApi {
 						&& !"checkbox".equals(input.attr("type"))
 						&& !"".equals(input.attr("name"))
 						&& !"selected".equals(input.attr("name"))) {
-					form.add(new BasicNameValuePair(input.attr("name"),
-							input.attr("value")));
+					form.add(new BasicNameValuePair(input.attr("name"), input
+							.attr("value")));
 				}
 			}
 			form.add(new BasicNameValuePair("selected", "ZTEXT       " + id));
