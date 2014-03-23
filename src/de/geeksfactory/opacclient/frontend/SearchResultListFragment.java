@@ -17,8 +17,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.frontend.ResultsAdapterEndless.OnLoadMoreListener;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
@@ -199,6 +201,18 @@ public class SearchResultListFragment extends ListFragment {
 				SearchRequestResult res = app.getApi().searchGetPage(page);
 				setLastLoadedPage(page);
 				return res.getResults();
+			}
+
+			@Override
+			public void onError(Exception e) {
+				if (e instanceof OpacErrorException) {
+					showConnectivityError(e.getMessage());
+				} else if (e instanceof NotReachableException) {
+					showConnectivityError(getResources()
+							.getString(R.string.connection_error_detail_nre));
+				} else {
+					showConnectivityError();
+				}
 			}	
 		});
 		setListAdapter(adapter);
@@ -211,7 +225,7 @@ public class SearchResultListFragment extends ListFragment {
 	}
 	
 	public void showConnectivityError(String description) {
-		LinearLayout progressContainer = (LinearLayout) getView().findViewById(R.id.progressContainer);
+		final LinearLayout progressContainer = (LinearLayout) getView().findViewById(R.id.progressContainer);
 		final FrameLayout errorView = (FrameLayout) getView().findViewById(R.id.error_view);
 		errorView.removeAllViews();
 		View connError = getActivity().getLayoutInflater().inflate(R.layout.error_connectivity, errorView);
@@ -222,6 +236,7 @@ public class SearchResultListFragment extends ListFragment {
 			public void onClick(View v) {
 				errorView.removeAllViews();
 				setListShown(false);
+				progressContainer.setVisibility(View.VISIBLE);
 				mCallbacks.reload();
 			}
 		});
@@ -231,6 +246,7 @@ public class SearchResultListFragment extends ListFragment {
 			.setText(description);
 		}
 		
+		setListShown(false);
 		progressContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_out));
 		connError.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in));
 		progressContainer.setVisibility(View.GONE);
