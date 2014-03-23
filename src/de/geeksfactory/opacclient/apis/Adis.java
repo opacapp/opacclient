@@ -472,7 +472,20 @@ public class Adis extends BaseApi implements OpacApi {
 			}
 			nvpairs.add(new BasicNameValuePair("selected", "ZTEXT       " + id));
 			doc = htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs);
-			doc = htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs);
+
+			List<NameValuePair> form = new ArrayList<NameValuePair>();
+			for (Element input : doc.select("input, select")) {
+				if (!"image".equals(input.attr("type"))
+						&& !"submit".equals(input.attr("type"))
+						&& !"checkbox".equals(input.attr("type"))
+						&& !"".equals(input.attr("name"))
+						&& !"selected".equals(input.attr("name"))) {
+					form.add(new BasicNameValuePair(input.attr("name"),
+							input.attr("value")));
+				}
+			}
+			form.add(new BasicNameValuePair("selected", "ZTEXT       " + id));
+			doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
 			// Yep, two times.
 		}
 		DetailledItem res = new DetailledItem();
@@ -482,7 +495,7 @@ public class Adis extends BaseApi implements OpacApi {
 		}
 
 		for (Element tr : doc.select("#R06 .aDISListe table tbody tr")) {
-			if(tr.children().size() < 2)
+			if (tr.children().size() < 2)
 				continue;
 			if (tr.child(1).text().contains("hier klicken")) {
 				res.addDetail(new Detail(tr.child(0).text().trim(), tr.child(1)
