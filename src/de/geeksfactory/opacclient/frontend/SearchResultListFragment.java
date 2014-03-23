@@ -56,6 +56,8 @@ public class SearchResultListFragment extends ListFragment {
 	public ResultsAdapterEndless adapter;
 	
 	private OpacClient app;
+	
+	private int lastLoadedPage;
 
 	/**
 	 * A callback interface that all activities containing this fragment must
@@ -67,9 +69,8 @@ public class SearchResultListFragment extends ListFragment {
 		 * Callback for when an item has been selected.
 		 * @param nr 
 		 */
-		public void onItemSelected(int nr, String id, boolean otherPage);
+		public void onItemSelected(int nr, String id, int pageToLoad);
 		public void reload();
-		public void loadMoreData(int page);
 	}
 
 	/**
@@ -78,13 +79,10 @@ public class SearchResultListFragment extends ListFragment {
 	 */
 	private static Callbacks sDummyCallbacks = new Callbacks() {
 		@Override
-		public void onItemSelected(int nr, String id, boolean otherPage) {
+		public void onItemSelected(int nr, String id, int pageToLoad) {
 		}
 		@Override
 		public void reload() {			
-		}
-		@Override
-		public void loadMoreData(int page) {
 		}
 	};
 
@@ -146,7 +144,8 @@ public class SearchResultListFragment extends ListFragment {
 		// fragment is attached to one) that an item has been selected.
 		mCallbacks.onItemSelected(searchresult.getResults().get(position).getNr(),
 				searchresult.getResults().get(position).getId(),
-				searchresult.getResults().get(position).getPage() != adapter.getPage());
+				searchresult.getResults().get(position).getPage());
+		
 	}
 
 	@Override
@@ -180,7 +179,7 @@ public class SearchResultListFragment extends ListFragment {
 		mActivatedPosition = position;
 	}
 
-	public void setSearchResult(SearchRequestResult searchresult, boolean clear) {
+	public void setSearchResult(SearchRequestResult searchresult) {
 		for(SearchResult result:searchresult.getResults()) {
 			result.setPage(searchresult.getPage_index());
 		}
@@ -198,6 +197,7 @@ public class SearchResultListFragment extends ListFragment {
 			@Override
 			public List<SearchResult> onLoadMore(int page) throws Exception {
 				SearchRequestResult res = app.getApi().searchGetPage(page);
+				setLastLoadedPage(page);
 				return res.getResults();
 			}	
 		});
@@ -235,6 +235,14 @@ public class SearchResultListFragment extends ListFragment {
 		connError.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in));
 		progressContainer.setVisibility(View.GONE);
 		connError.setVisibility(View.VISIBLE);
+	}
+
+	public int getLastLoadedPage() {
+		return lastLoadedPage;
+	}
+
+	public void setLastLoadedPage(int lastLoadedPage) {
+		this.lastLoadedPage = lastLoadedPage;
 	}
 	
 }
