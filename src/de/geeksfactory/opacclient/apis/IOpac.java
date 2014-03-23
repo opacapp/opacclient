@@ -58,6 +58,7 @@ import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
+import de.geeksfactory.opacclient.objects.SearchResult.Status;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
@@ -352,11 +353,23 @@ public class IOpac extends BaseApi implements OpacApi {
 			String year = tr.select("td").get(4).text().trim()
 					.replace("\u00a0", "");
 			additionalInfo += ", " + year + ")";
-
+						
 			sr.setInnerhtml("<b>" + title + "</b><br>" + additionalInfo);
-
+			
+			//Status
+			String status = tr.select("td").get(7).text().trim()
+					.replace("\u00a0", "");
+			if (status.equals("")) {
+				sr.setStatus(Status.GREEN);
+			} else {
+				sr.setStatus(Status.RED);	
+				sr.setInnerhtml(sr.getInnerhtml() + 
+						"<br><i>verliehen bis " + status + "</i>");
+			}
+			
 			sr.setNr(10 * (page - 1) + i);
-			sr.setId(null);
+			sr.setId(null);	
+			
 			results.add(sr);
 		}
 		resultcount = results.size();
