@@ -27,8 +27,6 @@ import java.util.List;
 import android.content.ContentValues;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import de.geeksfactory.opacclient.apis.OpacApi;
 
 /**
@@ -36,7 +34,7 @@ import de.geeksfactory.opacclient.apis.OpacApi;
  * 
  * @author Raphael Michel
  */
-public class DetailledItem implements CoverHolder, Parcelable {
+public class DetailledItem implements CoverHolder {
 	private List<Detail> details = new ArrayList<Detail>();
 	private List<ContentValues> copies = new ArrayList<ContentValues>();
 	private List<ContentValues> baende = new ArrayList<ContentValues>();
@@ -408,88 +406,4 @@ public class DetailledItem implements CoverHolder, Parcelable {
 	public void setCollectionId(String collectionid) {
 		this.collectionid = collectionid;
 	}
-	
-	public DetailledItem() {
-	
-	}
-	
-	protected DetailledItem(Parcel in) {
-        if (in.readByte() == 0x01) {
-            details = new ArrayList<Detail>();
-            in.readList(details, Detail.class.getClassLoader());
-        } else {
-            details = null;
-        }
-        if (in.readByte() == 0x01) {
-            copies = new ArrayList<ContentValues>();
-            in.readList(copies, ContentValues.class.getClassLoader());
-        } else {
-            copies = null;
-        }
-        if (in.readByte() == 0x01) {
-            baende = new ArrayList<ContentValues>();
-            in.readList(baende, ContentValues.class.getClassLoader());
-        } else {
-            baende = null;
-        }
-        cover = in.readString();
-        title = in.readString();
-        coverBitmap = Bitmap.CREATOR.createFromParcel(in);
-        reservable = in.readByte() != 0x00;
-        reservation_info = in.readString();
-        bookable = in.readByte() != 0x00;
-        booking_info = in.readString();
-        id = in.readString();
-        volumesearch = in.readBundle();
-        collectionid = in.readString();
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        if (details == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(details);
-        }
-        if (copies == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(copies);
-        }
-        if (baende == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(baende);
-        }
-        dest.writeString(cover);
-        dest.writeString(title);
-        coverBitmap.writeToParcel(dest, 0);
-        dest.writeByte((byte) (reservable ? 0x01 : 0x00));
-        dest.writeString(reservation_info);
-        dest.writeByte((byte) (bookable ? 0x01 : 0x00));
-        dest.writeString(booking_info);
-        dest.writeString(id);
-        dest.writeBundle(volumesearch);
-        dest.writeString(collectionid);
-    }
-
-    public static final Parcelable.Creator<DetailledItem> CREATOR = new Parcelable.Creator<DetailledItem>() {
-        @Override
-        public DetailledItem createFromParcel(Parcel in) {
-            return new DetailledItem(in);
-        }
-
-        @Override
-        public DetailledItem[] newArray(int size) {
-            return new DetailledItem[size];
-        }
-    };
 }

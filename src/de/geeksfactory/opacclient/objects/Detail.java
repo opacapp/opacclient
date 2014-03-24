@@ -21,15 +21,12 @@
  */
 package de.geeksfactory.opacclient.objects;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 /**
  * Object representing a detail of a media item
  * 
  * @author Raphael Michel
  */
-public class Detail implements Parcelable {
+public class Detail {
 	private String desc;
 	private String content;
 
@@ -91,32 +88,4 @@ public class Detail implements Parcelable {
 	public String toString() {
 		return "Detail [desc=" + desc + ", content=" + content + "]";
 	}
-
-    protected Detail(Parcel in) {
-        desc = in.readString();
-        content = in.readString();
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(desc);
-        dest.writeString(content);
-    }
-
-    public static final Parcelable.Creator<Detail> CREATOR = new Parcelable.Creator<Detail>() {
-        @Override
-        public Detail createFromParcel(Parcel in) {
-            return new Detail(in);
-        }
-
-        @Override
-        public Detail[] newArray(int size) {
-            return new Detail[size];
-        }
-    };
 }

@@ -127,9 +127,10 @@ public class SearchResultDetailFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if ((getArguments().containsKey(ARG_ITEM_ID)
-				|| getArguments().containsKey(ARG_ITEM_NR))
-				&& savedInstanceState == null) {
+		setRetainInstance(true);
+
+		if (getArguments().containsKey(ARG_ITEM_ID)
+				|| getArguments().containsKey(ARG_ITEM_NR)) {
 			// Load the dummy content specified by the fragment
 			// arguments. In a real-world scenario, use a Loader
 			// to load content from a content provider.
@@ -237,8 +238,8 @@ public class SearchResultDetailFragment extends Fragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		if (savedInstanceState != null) {
-			item = savedInstanceState.getParcelable("item");
+
+		if (item != null) {
 			display();
 		}
 	}
@@ -258,6 +259,7 @@ public class SearchResultDetailFragment extends Fragment {
 				container, false);
 		view = rootView;
 		setHasOptionsMenu(true);
+		setRetainInstance(true);
 		setProgress();
 		return rootView;
 	}
@@ -330,7 +332,6 @@ public class SearchResultDetailFragment extends Fragment {
 	}
 
 	protected void display() {
-		Log.d("Opac", "display() called");
 		try {
 			Log.i("result", getItem().toString());
 		} catch (Exception e) {
@@ -351,14 +352,12 @@ public class SearchResultDetailFragment extends Fragment {
 		LinearLayout llDetails = (LinearLayout) view
 				.findViewById(R.id.llDetails);
 		for (Detail detail : item.getDetails()) {
-			ViewGroup v = (ViewGroup) getLayoutInflater()
-					.inflate(R.layout.listitem_detail, llDetails, false);
-			((TextView) v.getChildAt(0)).setText(detail.getDesc());
-			((TextView) v.getChildAt(1)).setText(detail
+			View v = getLayoutInflater()
+					.inflate(R.layout.listitem_detail, null);
+			((TextView) v.findViewById(R.id.tvDesc)).setText(detail.getDesc());
+			((TextView) v.findViewById(R.id.tvContent)).setText(detail
 					.getContent());
-			Log.d("Opac", v.toString());
-			Log.d("Opac", v.getChildAt(1).toString());
-			Linkify.addLinks((TextView) v.getChildAt(1),
+			Linkify.addLinks((TextView) v.findViewById(R.id.tvContent),
 					Linkify.WEB_URLS);
 			llDetails.addView(v);
 		}
@@ -1279,11 +1278,6 @@ public class SearchResultDetailFragment extends Fragment {
 			}
 		}
 
-	}
-	
-	public void onSaveInstanceState(Bundle outState) {
-		outState.putParcelable("item", item);
-		super.onSaveInstanceState(outState);
 	}
 
 }
