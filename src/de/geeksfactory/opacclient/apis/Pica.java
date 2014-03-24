@@ -78,7 +78,6 @@ public class Pica extends BaseApi implements OpacApi {
 	protected MetaDataSource metadata;
 	protected boolean initialised = false;
 	protected Library library;
-	protected String ENCODING = "UTF-8";
 	protected int resultcount = 10;
 	protected String reusehtml;
 	protected Integer searchSet;
@@ -218,7 +217,7 @@ public class Pica extends BaseApi implements OpacApi {
 		}
 
 		String html = httpGet(opac_url + "/DB=" + db + "/SET=1/TTL=1/CMD?"
-				+ URLEncodedUtils.format(params, "UTF-8"), ENCODING, false,
+				+ URLEncodedUtils.format(params, getDefaultEncoding()), getDefaultEncoding(), false,
 				cookieStore);
 
 		return parse_search(html, 1);
@@ -293,7 +292,7 @@ public class Pica extends BaseApi implements OpacApi {
 				haslink = true;
 				try {
 					List<NameValuePair> anyurl = URLEncodedUtils.parse(new URI(
-							node.attr("href")), ENCODING);
+							node.attr("href")), getDefaultEncoding());
 					for (NameValuePair nv : anyurl) {
 						if (nv.getName().equals("identifier")) {
 							// identifier = nv.getValue();
@@ -400,7 +399,7 @@ public class Pica extends BaseApi implements OpacApi {
 
 		String html = httpGet(opac_url + "/DB=" + db + "/SET=" + searchSet
 				+ "/TTL=1/NXT?FRST=" + (((page - 1) * resultcount) + 1),
-				ENCODING, false, cookieStore);
+				getDefaultEncoding(), false, cookieStore);
 		return parse_search(html, page);
 	}
 
@@ -418,7 +417,7 @@ public class Pica extends BaseApi implements OpacApi {
 			return parse_result(reusehtml);
 		}
 
-		String html = httpGet(id, ENCODING);
+		String html = httpGet(id, getDefaultEncoding());
 
 		return parse_result(html);
 	}
@@ -426,7 +425,7 @@ public class Pica extends BaseApi implements OpacApi {
 	@Override
 	public DetailledItem getResult(int position) throws IOException {
 		String html = httpGet(opac_url + "/DB=" + db + "/SET=" + searchSet
-				+ "/TTL=1/SHW?FRST=" + (position + 1), ENCODING, false,
+				+ "/TTL=1/SHW?FRST=" + (position + 1), getDefaultEncoding(), false,
 				cookieStore);
 
 		return parse_result(html);
@@ -583,7 +582,7 @@ public class Pica extends BaseApi implements OpacApi {
 		params.add(new BasicNameValuePair("VB", media));
 
 		String html = httpPost(https_url + "/loan/DB=" + db + "/USERINFO",
-				new UrlEncodedFormEntity(params, "utf-8"), getDefaultEncoding());
+				new UrlEncodedFormEntity(params, getDefaultEncoding()), getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 
 		if (doc.select("td.regular-text")
@@ -626,7 +625,7 @@ public class Pica extends BaseApi implements OpacApi {
 		params.add(new BasicNameValuePair("VB", media));
 
 		String html = httpPost(https_url + "/loan/DB=" + db + "/USERINFO",
-				new UrlEncodedFormEntity(params, "utf-8"), getDefaultEncoding());
+				new UrlEncodedFormEntity(params, getDefaultEncoding()), getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 
 		if (doc.select("td.regular-text").text()
@@ -660,7 +659,7 @@ public class Pica extends BaseApi implements OpacApi {
 
 		String html = httpPost(https_url + "/loan/DB=" + db
 				+ "/LNG=DU/USERINFO",
-				new UrlEncodedFormEntity(params, "utf-8"), getDefaultEncoding());
+				new UrlEncodedFormEntity(params, getDefaultEncoding()), getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 
 		pwEncoded = doc.select("a.tab0").attr("href");
@@ -876,7 +875,7 @@ public class Pica extends BaseApi implements OpacApi {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		return super.getDefaultEncoding();
+		return "UTF-8";
 	}
 
 }
