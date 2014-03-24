@@ -42,6 +42,7 @@ public class ResultsAdapterEndless extends EndlessAdapter {
 	
 	public interface OnLoadMoreListener {
 		public List<SearchResult> onLoadMore(int page) throws Exception;
+		public void onError(Exception e);
 	}
 
 	public ResultsAdapterEndless(Context context, SearchRequestResult result, OnLoadMoreListener listener) {
@@ -68,7 +69,7 @@ public class ResultsAdapterEndless extends EndlessAdapter {
 	
 	@Override
 	protected boolean onException(View pendingView, Exception e) {
-		e.printStackTrace();
+		listener.onError(e);
 		return false;
 	}
 

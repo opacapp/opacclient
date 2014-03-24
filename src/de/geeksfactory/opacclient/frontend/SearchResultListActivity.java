@@ -4,7 +4,6 @@ import org.acra.ACRA;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -44,10 +43,8 @@ public class SearchResultListActivity extends OpacActivity implements
 	private boolean mTwoPane;
 
 	protected SearchRequestResult searchresult;
-	private int page;
 
 	private SearchStartTask st;
-	private SearchPageTask sst;
 
 	private SearchResultListFragment listFragment;
 	private SearchResultDetailFragment detailFragment;
@@ -75,19 +72,13 @@ public class SearchResultListActivity extends OpacActivity implements
 		}
 
 		if (savedInstanceState == null) {
-			page = 1;
 			performsearch();
 		}
 	}
 
 	public void performsearch() {
-		if (page == 1) {
-			st = new SearchStartTask();
-			st.execute(app, getIntent().getBundleExtra("query"));
-		} else {
-			sst = new SearchPageTask();
-			sst.execute(app, page);
-		}
+		st = new SearchStartTask();
+		st.execute(app, getIntent().getBundleExtra("query"));
 	}
 
 	@Override
@@ -112,9 +103,10 @@ public class SearchResultListActivity extends OpacActivity implements
 	 * indicating that the item with the given ID was selected.
 	 */
 	@Override
-	public void onItemSelected(int nr, String id, boolean otherPage) {
-		if((app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING) == 0 && otherPage) {
-			new ReloadOldPageTask().execute(app, page, nr, id);
+	public void onItemSelected(int nr, String id, int pageToLoad) {
+		if((app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING) == 0 &&
+				pageToLoad != listFragment.getLastLoadedPage()) {
+			new ReloadOldPageTask().execute(app, pageToLoad, nr, id);
 		} else {
 			showDetail(nr, id);
 		}
@@ -208,17 +200,27 @@ public class SearchResultListActivity extends OpacActivity implements
 			}
 		}
 	}
-
-	public class SearchPageTask extends SearchStartTask {
-
+	
+	public class ReloadOldPageTask extends OpacTask<SearchRequestResult> {
+		int nr;
+		String id;
+		Integer page;
+		Exception exception;
+		
+		@Override
+		protected void onPreExecute() {
+			setProgressBarIndeterminateVisibility(true);
+		}
+		
 		@Override
 		protected SearchRequestResult doInBackground(Object... arg0) {
+			page = (Integer) arg0[1];
+			nr = (Integer) arg0[2];
+			id = (String) arg0[3];
 			OpacClient app = (OpacClient) arg0[0];
-			Integer page = (Integer) arg0[1];
 
 			try {
 				SearchRequestResult res = app.getApi().searchGetPage(page);
-				// Load cover images, if search worked and covers available
 				return res;
 			} catch (java.net.UnknownHostException e) {
 				exception = e;
@@ -234,23 +236,6 @@ public class SearchResultListActivity extends OpacActivity implements
 
 			return null;
 		}
-	}
-	
-	public class ReloadOldPageTask extends SearchPageTask {
-		int nr;
-		String id;
-		
-		@Override
-		protected void onPreExecute() {
-			setProgressBarIndeterminateVisibility(true);
-		}
-		
-		@Override
-		protected SearchRequestResult doInBackground(Object... arg0) {
-			nr = (Integer) arg0[2];
-			id = (String) arg0[3];
-			return super.doInBackground(arg0);
-		}
 		
 		@Override
 		protected void onPostExecute(SearchRequestResult result) {
@@ -258,21 +243,6 @@ public class SearchResultListActivity extends OpacActivity implements
 			if (result == null) {
 
 				if (exception instanceof OpacErrorException) {
-					if (exception.getMessage().equals("is_a_redirect")) {
-						// Some libraries (SISIS) do not show a result list if
-						// only one result
-						// is found but instead directly show the result
-						// details.
-						Intent intent = new Intent(
-								SearchResultListActivity.this,
-								SearchResultDetailActivity.class);
-						intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
-								(String) null);
-						startActivity(intent);
-						finish();
-						return;
-					}
-
 					listFragment.showConnectivityError(exception.getMessage());
 				} else if (exception instanceof NotReachableException)
 					listFragment.showConnectivityError(getResources()
@@ -281,6 +251,7 @@ public class SearchResultListActivity extends OpacActivity implements
 					listFragment.showConnectivityError();
 			} else {
 				//Everything ran correctly, show Detail
+				listFragment.setLastLoadedPage(page);
 				showDetail(nr, id);
 			}
 		}
@@ -289,7 +260,7 @@ public class SearchResultListActivity extends OpacActivity implements
 	protected void loaded() {
 		try {
 			listFragment.setListShown(true);
-			listFragment.setSearchResult(searchresult, page == 1);
+			listFragment.setSearchResult(searchresult);
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
 		}
@@ -308,13 +279,6 @@ public class SearchResultListActivity extends OpacActivity implements
 
 	@Override
 	public void reload() {
-		performsearch();
-	}
-	
-	@Override
-	public void loadMoreData(int page) {
-		Log.d("Opac", "loadMoreData");
-		this.page = page;
 		performsearch();
 	}
 }
