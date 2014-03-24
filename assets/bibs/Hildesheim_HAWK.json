@@ -1,17 +1,18 @@
 {
-    "api": "pica",
-    "city": "Hildesheim",
+    "api": "pica", 
+    "city": "Hildesheim", 
+    "country": "Deutschland", 
     "data": {
-        "baseurl": "http://opac.lbs-hildesheim.gbv.de/",
-        "information": "http://www.hawk-hhg.de/bibliothek/",
-        "db": "2",
-        "accountSupported": true
-    },
+        "accountSupported": true, 
+        "baseurl": "http://opac.lbs-hildesheim.gbv.de/", 
+        "db": "2", 
+        "information": "http://www.hawk-hhg.de/bibliothek/"
+    }, 
     "geo": [
-        52.15,
-		9.95
-    ],
-    "group": "Niedersachsen",
-    "support": "Katalogsuche und Konto",
-    "title": "Bibliothek der HAWK Hildesheim-Holzminden-Göttingen"
+        52.15, 
+        9.95
+    ], 
+    "state": "Niedersachsen", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Bibliothek der HAWK Hildesheim-Holzminden-G\u00f6ttingen"
 }

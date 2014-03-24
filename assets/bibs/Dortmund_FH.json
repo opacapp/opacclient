@@ -1,6 +1,7 @@
 {
     "api": "sisis", 
     "city": "Dortmund", 
+    "country": "Deutschland", 
     "data": {
         "baseurl": "http://193.25.18.8/webOPACClient", 
         "information": "http://www.fh-dortmund.de/de/hs/servicebe/bibl/index.php", 
@@ -10,7 +11,7 @@
         51.5135872, 
         7.465298100000001
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Fachhochschulbibliothek"
 }

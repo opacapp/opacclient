@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Kronberg", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -46,7 +47,7 @@
         50.1826861, 
         8.5201703
     ], 
-    "group": "Hessen", 
+    "state": "Hessen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

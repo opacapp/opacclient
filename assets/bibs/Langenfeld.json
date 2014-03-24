@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Langenfeld", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": null, 
         "baseurl": "http://www1.langenfeld.de/OPAC", 
@@ -20,7 +21,7 @@
         51.1191898, 
         6.951266299999999
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche", 
     "title": "Stadtbibliothek"
 }

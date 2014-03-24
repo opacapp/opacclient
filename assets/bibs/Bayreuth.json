@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Bayreuth", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -55,7 +56,7 @@
         49.9456399, 
         11.5713346
     ], 
-    "group": "Bayern", 
+    "state": "Bayern", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

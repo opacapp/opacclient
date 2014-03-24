@@ -1,6 +1,7 @@
 {
     "api": "pica", 
     "city": "Stendal", 
+    "country": "Deutschland", 
     "data": {
         "accountSupported": true, 
         "baseurl": "https://opac.uni-magdeburg.de", 
@@ -11,7 +12,7 @@
         52.6040587, 
         11.8538356
     ], 
-    "group": "Sachsen-Anhalt", 
+    "state": "Sachsen-Anhalt", 
     "support": "Katalogsuche und Konto", 
     "title": "Hochschulbibliothek"
 }

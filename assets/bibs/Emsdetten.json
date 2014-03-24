@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Emsdetten", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -41,7 +42,7 @@
         52.16818929999999, 
         7.531058
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

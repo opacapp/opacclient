@@ -1,6 +1,7 @@
 {
     "api": "biber1992", 
     "city": "Friedrichshafen", 
+    "country": "Deutschland", 
     "data": {
         "baseurl": "http://medienkatalog.friedrichshafen.de", 
         "copiestable": {
@@ -37,7 +38,7 @@
         47.6617648, 
         9.4800113
     ], 
-    "group": "Baden-W\u00fcrttemberg", 
+    "state": "Baden-W\u00fcrttemberg", 
     "support": "Katalogsuche", 
     "title": "Medienhaus am See"
 }

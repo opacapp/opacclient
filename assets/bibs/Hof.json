@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Hof", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -52,7 +53,7 @@
         50.3135391, 
         11.9127814
     ], 
-    "group": "Bayern", 
+    "state": "Bayern", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

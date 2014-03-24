@@ -1,6 +1,7 @@
 {
     "api": "biber1992", 
     "city": "Bochum", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 7, 
@@ -16,24 +17,24 @@
         "information": "http://www.bochum.de/stadtbuecherei", 
         "mediatypes": {
             "1": "BOOK", 
-			"20": "AUDIOBOOK",
-            "8": "SCORE_MUSIC", 
-            "6": "CD_MUSIC", 
             "11": "DVD", 
-            "9": "BOARDGAME", 
-            "30": "EBOOK"
+            "20": "AUDIOBOOK", 
+            "30": "EBOOK", 
+            "6": "CD_MUSIC", 
+            "8": "SCORE_MUSIC", 
+            "9": "BOARDGAME"
         }, 
-        "opacdir": "opax",
-		"searchtable": [
-			2,
-			3
-		]
+        "opacdir": "opax", 
+        "searchtable": [
+            2, 
+            3
+        ]
     }, 
     "geo": [
         51.4818445, 
         7.216236299999999
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

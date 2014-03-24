@@ -1,6 +1,7 @@
 {
     "api": "biber1992", 
     "city": "Gelsenkirchen", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 7, 
@@ -49,7 +50,7 @@
         51.517744, 
         7.085717199999999
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

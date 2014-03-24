@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Wien", 
+    "country": "\u00d6sterreich", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -66,7 +67,7 @@
         48.2081743, 
         16.3738189
     ], 
-    "group": "\u00d6sterreich", 
+    "state": "Wien", 
     "support": "Katalogsuche und Konto", 
     "title": "B\u00fcchereien"
 }

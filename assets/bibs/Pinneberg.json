@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Pinneberg", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -36,7 +37,7 @@
         53.6545225, 
         9.7938212
     ], 
-    "group": "Schleswig-Holstein", 
+    "state": "Schleswig-Holstein", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

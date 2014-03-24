@@ -1,6 +1,7 @@
 {
     "api": "sisis", 
     "city": "Pulheim", 
+    "country": "Deutschland", 
     "data": {
         "baseurl": "http://212.16.253.33:8080/webOPACClient", 
         "information": "http://www.pulheim.de/bildung-und-kultur/buechereien/?id=7752#cntnr_14330"
@@ -9,7 +10,7 @@
         50.9995815, 
         6.807685299999999
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

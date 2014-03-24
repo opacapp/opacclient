@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Dessau", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -37,7 +38,7 @@
         51.8222436, 
         12.2424516
     ], 
-    "group": "Sachsen-Anhalt", 
+    "state": "Sachsen-Anhalt", 
     "support": "Katalogsuche und Konto", 
     "title": "Landesb\u00fccherei"
 }

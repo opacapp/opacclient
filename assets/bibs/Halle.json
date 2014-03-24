@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Halle (Saale)", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 1, 
@@ -56,7 +57,7 @@
         51.47971, 
         11.96864
     ], 
-    "group": "Sachsen-Anhalt", 
+    "state": "Sachsen-Anhalt", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

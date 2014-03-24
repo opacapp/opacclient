@@ -1,6 +1,7 @@
 {
     "api": "sisis", 
     "city": "M\u00fcnster", 
+    "country": "Deutschland", 
     "data": {
         "baseurl": "https://hb063.fh-muenster.de/webOPACClient", 
         "information": "https://www.fh-muenster.de/BIBL/index.php", 
@@ -10,7 +11,7 @@
         51.9606649, 
         7.6261347
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Fachhochschule"
 }

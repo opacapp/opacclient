@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Darmstadt", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 2, 
@@ -46,7 +47,7 @@
         49.8776483, 
         8.6517617
     ], 
-    "group": "Hessen", 
+    "state": "Hessen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

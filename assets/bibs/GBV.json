@@ -1,21 +1,22 @@
 {
-    "api": "sru",
-    "city": "GVK",
+    "api": "sru", 
+    "city": "GVK", 
+    "country": "Deutschland", 
     "data": {
-        "baseurl": "http://sru.gbv.de/gvk",
-        "information": "http://gso.gbv.de/",
-		"searchqueries": {
-			"free": "pica.ALL",
-			"titel": "pica.TIT",
-			"verfasser": "pica.PER",
-			"isbn": "pica.ISB",
-			"jahr": "pica.JAH",
-			"verlag": "pica.VLG";	
-			"id": "pica.PPN"
-		},
-		"sharelink": "http://gso.gbv.de/DB=2.1/PPNSET?PPN=%s"
-    },
-    "group": "Bibliothekenverbunde",
-    "support": "Katalogsuche",
+        "baseurl": "http://sru.gbv.de/gvk", 
+        "information": "http://gso.gbv.de/", 
+        "searchqueries": {
+            "free": "pica.ALL", 
+            "id": "pica.PPN", 
+            "isbn": "pica.ISB", 
+            "jahr": "pica.JAH", 
+            "titel": "pica.TIT", 
+            "verfasser": "pica.PER", 
+            "verlag": "pica.VLG"
+        }, 
+        "sharelink": "http://gso.gbv.de/DB=2.1/PPNSET?PPN=%s"
+    }, 
+    "state": "Bibliothekenverbunde", 
+    "support": "Katalogsuche", 
     "title": "Gemeinsamer Verbundkatalog"
 }

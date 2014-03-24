@@ -1,19 +1,20 @@
 {
     "api": "pica", 
     "city": "Mainz", 
+    "country": "Deutschland", 
     "data": {
+        "KEY_SEARCH_QUERY_FREE": "6015", 
         "accountSupported": true, 
         "baseurl": "https://opac.ub.uni-mainz.de", 
+        "charset": "ISO-8859-1", 
         "db": "1", 
-		"charset": "ISO-8859-1",
-        "information": "http://www.ub.uni-mainz.de/",
-		"KEY_SEARCH_QUERY_FREE": "6015"
+        "information": "http://www.ub.uni-mainz.de/"
     }, 
     "geo": [
         49.9928617, 
         8.2472526
     ], 
-    "group": "Rheinland-Pfalz", 
+    "state": "Rheinland-Pfalz", 
     "support": "Katalogsuche und Konto", 
     "title": "Universit\u00e4tsbibliothek"
 }

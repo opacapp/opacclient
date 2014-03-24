@@ -1,6 +1,7 @@
 {
     "api": "sisis", 
     "city": "Braunschweig", 
+    "country": "Deutschland", 
     "data": {
         "baseurl": "https://webopac.braunschweig.de/webOPACClient", 
         "customssl": true, 
@@ -10,7 +11,7 @@
         52.2688736, 
         10.5267696
     ], 
-    "group": "Niedersachsen", 
+    "state": "Niedersachsen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

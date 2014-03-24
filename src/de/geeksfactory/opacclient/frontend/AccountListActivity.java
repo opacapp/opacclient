@@ -24,7 +24,6 @@ package de.geeksfactory.opacclient.frontend;
 import java.util.List;
 
 import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.AlertDialog;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -43,7 +42,6 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 public class AccountListActivity extends Activity {
 
 	private List<Account> accounts;
-	private AlertDialog dialog;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -53,9 +51,8 @@ public class AccountListActivity extends Activity {
 	}
 
 	public void add() {
-		dialog = LibraryListDialogFactory.newInstance(this,
-				((OpacClient) getApplication()), false);
-		dialog.show();
+		Intent i = new Intent(this, LibraryListActivity.class);
+		startActivity(i);
 	}
 
 	private void refreshLv() {

@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Holzgerlingen", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -13,7 +14,6 @@
             "title": 1
         }, 
         "baseurl": "https://wwwopac.rz-kiru.de/holzgerlingen", 
-		"customssl": true,
         "copiestable": {
             "barcode": -1, 
             "branch": -1, 
@@ -23,7 +23,8 @@
             "returndate": 3, 
             "status": 2
         }, 
-        "information": "http://www.stabue-holzgerlingen.de/index.html",
+        "customssl": true, 
+        "information": "http://www.stabue-holzgerlingen.de/index.html", 
         "reservationtable": {
             "author": 0, 
             "availability": 3, 
@@ -37,7 +38,7 @@
         48.63942549999999, 
         9.018112799999999
     ], 
-    "group": "Baden-W\u00fcrttemberg", 
+    "state": "Baden-W\u00fcrttemberg", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

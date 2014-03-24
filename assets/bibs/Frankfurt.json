@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Frankfurt", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -54,7 +55,7 @@
         50.1109221, 
         8.6821267
     ], 
-    "group": "Hessen", 
+    "state": "Hessen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

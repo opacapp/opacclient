@@ -1,17 +1,18 @@
 {
-    "api": "pica",
-    "city": "Hamburg",
+    "api": "pica", 
+    "city": "Hamburg", 
+    "country": "Deutschland", 
     "data": {
-        "baseurl": "https://ub.hsu-hh.de/",
-        "information": "http://ub.hsu-hh.de/",
-        "db": "1",
-		"accountSupported": true
-    },
+        "accountSupported": true, 
+        "baseurl": "https://ub.hsu-hh.de/", 
+        "db": "1", 
+        "information": "http://ub.hsu-hh.de/"
+    }, 
     "geo": [
-        53.56882,
+        53.56882, 
         10.10725
-    ],
-    "group": "Hamburg",
-    "support": "Katalogsuche und Konto",
-    "title": "Bibliothek der Helmut-Schmidt-Universität"
+    ], 
+    "state": "Hamburg", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Bibliothek der Helmut-Schmidt-Universit\u00e4t"
 }

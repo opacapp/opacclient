@@ -1,6 +1,7 @@
 {
     "api": "pica", 
     "city": "Fulda", 
+    "country": "Deutschland", 
     "data": {
         "accountSupported": true, 
         "baseurl": "https://opac.uni-giessen.de", 
@@ -11,7 +12,7 @@
         50.5558095, 
         9.6808449
     ], 
-    "group": "Hessen", 
+    "state": "Hessen", 
     "support": "Katalogsuche und Konto", 
     "title": "HLB"
 }

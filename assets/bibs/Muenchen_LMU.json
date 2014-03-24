@@ -1,6 +1,7 @@
 {
     "api": "sisis", 
     "city": "M\u00fcnchen", 
+    "country": "Deutschland", 
     "data": {
         "baseurl": "https://opacplus.ub.uni-muenchen.de/InfoGuideClient.ubmsis", 
         "information": "http://www.ub.uni-muenchen.de/oeffnungszeiten/", 
@@ -10,7 +11,7 @@
         48.1366069, 
         11.5770851
     ], 
-    "group": "Bayern", 
+    "state": "Bayern", 
     "support": "Katalogsuche und Konto", 
     "title": "Unibibliothek LMU"
 }

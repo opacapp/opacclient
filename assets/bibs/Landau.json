@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Landau", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -37,7 +38,7 @@
         49.19888599999999, 
         8.1185622
     ], 
-    "group": "Rheinland-Pfalz", 
+    "state": "Rheinland-Pfalz", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

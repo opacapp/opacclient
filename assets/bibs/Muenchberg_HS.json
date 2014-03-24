@@ -1,6 +1,7 @@
 {
     "api": "sisis", 
     "city": "M\u00fcnchberg", 
+    "country": "Deutschland", 
     "data": {
         "baseurl": "https://opac.hof-university.de/InfoGuideClient.fhosis", 
         "information": "http://www.hof-university.de/studierende/info-service/bibliothek.html", 
@@ -10,7 +11,7 @@
         50.1905748, 
         11.789879
     ], 
-    "group": "Bayern", 
+    "state": "Bayern", 
     "support": "Katalogsuche und Konto", 
     "title": "Hochschulbibliothek Hof"
 }

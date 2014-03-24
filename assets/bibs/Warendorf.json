@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Warendorf", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -41,7 +42,7 @@
         51.9538685, 
         7.9908987
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

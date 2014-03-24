@@ -1,6 +1,7 @@
 {
     "api": "biber1992", 
     "city": "M\u00fclheim (Ruhr)", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 7, 
@@ -50,7 +51,7 @@
         51.4185682, 
         6.884522599999999
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

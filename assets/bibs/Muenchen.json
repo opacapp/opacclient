@@ -1,6 +1,7 @@
 {
     "api": "adis", 
     "city": "M\u00fcnchen", 
+    "country": "Deutschland", 
     "data": {
         "baseurl": "https://ssl.muenchen.de/aDISWeb/app", 
         "information": "http://www.muenchner-stadtbibliothek.de/info-service/", 
@@ -10,7 +11,7 @@
         48.1351253, 
         11.5819806
     ], 
-    "group": "Bayern", 
+    "state": "Bayern", 
     "support": "Katalogsuche und Konto (experimentell)", 
     "title": "Stadtbibliothek"
 }

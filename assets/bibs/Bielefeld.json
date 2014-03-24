@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Bielefeld", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -54,7 +55,7 @@
         52.0212965, 
         8.5302966
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

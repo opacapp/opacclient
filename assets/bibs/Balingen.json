@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Balingen", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -13,7 +14,6 @@
             "title": 1
         }, 
         "baseurl": "https://wwwopac.rz-kiru.de/balingen", 
-		"customssl": true,
         "copiestable": {
             "barcode": -1, 
             "branch": 5, 
@@ -23,6 +23,7 @@
             "returndate": 1, 
             "status": 0
         }, 
+        "customssl": true, 
         "information": "http://www.balingen.de/,Lde/Startseite/Familie+_+Bildung/Stadtbuecherei.html", 
         "reservationtable": {
             "author": 0, 
@@ -37,7 +38,7 @@
         48.2748206, 
         8.8495298
     ], 
-    "group": "Baden-W\u00fcrttemberg", 
+    "state": "Baden-W\u00fcrttemberg", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

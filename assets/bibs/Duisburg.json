@@ -1,6 +1,7 @@
 {
     "api": "biber1992", 
     "city": "Duisburg", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 7, 
@@ -47,7 +48,7 @@
         51.4344079, 
         6.762329299999999
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

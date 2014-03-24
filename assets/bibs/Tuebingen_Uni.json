@@ -1,6 +1,7 @@
 {
     "api": "adis", 
     "city": "T\u00fcbingen", 
+    "country": "Deutschland", 
     "data": {
         "baseurl": "https://tue.ibs-bw.de/aDISWeb/app", 
         "information": "http://www.uni-tuebingen.de/nc/einrichtungen/universitaetsbibliothek/home.html", 
@@ -10,7 +11,7 @@
         48.5216364, 
         9.0576448
     ], 
-    "group": "Baden-W\u00fcrttemberg", 
+    "state": "Baden-W\u00fcrttemberg", 
     "support": "Katalogsuche und Konto", 
     "title": "Unibibliothek"
 }

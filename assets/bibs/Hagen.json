@@ -1,6 +1,7 @@
 {
     "api": "biber1992", 
     "city": "Hagen", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 7, 
@@ -39,7 +40,7 @@
             "8": "SCORE_MUSIC", 
             "9": "BOARDGAME"
         }, 
-        "opacdir": "opax",
+        "opacdir": "opax", 
         "reservationtable": {
             "author": -1, 
             "availability": 6, 
@@ -47,7 +48,7 @@
             "cancelurl": -1, 
             "expirationdate": 5, 
             "title": 3
-        },         
+        }, 
         "searchtable": [
             2, 
             3, 
@@ -59,7 +60,7 @@
         51.3670777, 
         7.4632841
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

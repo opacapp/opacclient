@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Lohmar", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -34,7 +35,7 @@
         50.8378015, 
         7.212664900000001
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

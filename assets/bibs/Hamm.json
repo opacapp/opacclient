@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Hamm", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -36,7 +37,7 @@
         51.6738583, 
         7.815981600000001
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

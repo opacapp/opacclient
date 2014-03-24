@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Offenau", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -54,7 +55,7 @@
         49.2450112, 
         9.164699299999999
     ], 
-    "group": "Baden-W\u00fcrttemberg", 
+    "state": "Baden-W\u00fcrttemberg", 
     "support": "Katalogsuche und Konto", 
     "title": "Gemeindeb\u00fccherei"
 }

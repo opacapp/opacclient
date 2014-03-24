@@ -1,6 +1,7 @@
 {
     "api": "biber1992", 
     "city": "Offenburg", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 6, 
@@ -42,7 +43,7 @@
         48.4769251, 
         7.9492875
     ], 
-    "group": "Baden-W\u00fcrttemberg", 
+    "state": "Baden-W\u00fcrttemberg", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

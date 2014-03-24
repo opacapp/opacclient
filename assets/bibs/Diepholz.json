@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Diepholz", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -34,7 +35,7 @@
         52.6056456, 
         8.3707878
     ], 
-    "group": "Niedersachsen", 
+    "state": "Niedersachsen", 
     "support": "Katalogsuche und Konto", 
     "title": "Mediothek"
 }

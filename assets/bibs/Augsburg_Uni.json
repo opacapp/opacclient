@@ -1,6 +1,7 @@
 {
     "api": "sisis", 
     "city": "Augsburg", 
+    "country": "Deutschland", 
     "data": {
         "baseurl": "https://opac.bibliothek.uni-augsburg.de/InfoGuideClient.ubasis", 
         "information": "http://www.bibliothek.uni-augsburg.de/wir_ueber_uns/anschrift/", 
@@ -10,7 +11,7 @@
         48.37144070000001, 
         10.8982552
     ], 
-    "group": "Bayern", 
+    "state": "Bayern", 
     "support": "Katalogsuche und Konto", 
     "title": "Unibibliothek"
 }

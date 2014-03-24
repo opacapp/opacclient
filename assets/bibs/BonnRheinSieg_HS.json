@@ -1,6 +1,7 @@
 {
     "api": "sisis", 
     "city": "Sankt Augustin", 
+    "country": "Deutschland", 
     "data": {
         "baseurl": "https://bib-sisis.bib.hochschule-bonn-rhein-sieg.de/webOPACClient", 
         "information": "http://www.bib.hochschule-bonn-rhein-sieg.de/"
@@ -9,7 +10,7 @@
         50.7694775, 
         7.187578599999999
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "FH Bonn-Rhein-Sieg"
 }

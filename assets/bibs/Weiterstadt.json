@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Weiterstadt", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -38,7 +39,7 @@
         49.8991611, 
         8.5991073
     ], 
-    "group": "Hessen", 
+    "state": "Hessen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

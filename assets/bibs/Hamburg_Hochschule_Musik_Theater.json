@@ -1,17 +1,18 @@
 {
-    "api": "pica",
-    "city": "Hamburg",
+    "api": "pica", 
+    "city": "Hamburg", 
+    "country": "Deutschland", 
     "data": {
-        "baseurl": "https://kataloge.uni-hamburg.de/",
-        "information": "http://www.hfmt-hamburg.de/hochschule/bibliothek/",
-        "db": "6",
-		"accountSupported": true
-    },
+        "accountSupported": true, 
+        "baseurl": "https://kataloge.uni-hamburg.de/", 
+        "db": "6", 
+        "information": "http://www.hfmt-hamburg.de/hochschule/bibliothek/"
+    }, 
     "geo": [
-        53.57057,
+        53.57057, 
         9.999
-    ],
-    "group": "Hamburg",
-    "support": "Katalogsuche und Konto",
-    "title": "Hochschule für Musik und Theater"
+    ], 
+    "state": "Hamburg", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Hochschule f\u00fcr Musik und Theater"
 }

@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "K\u00f6nigswinter-Oberpleis", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -15,7 +16,7 @@
             "returndate": 3, 
             "status": 2
         }, 
-        "information": "http://www.bibliothek-oberpleis.de/bibliothek/page_oeffnungszeiten/infobereich.html",
+        "information": "http://www.bibliothek-oberpleis.de/bibliothek/page_oeffnungszeiten/infobereich.html", 
         "mediatypes": {
             "Mono.gif": "UNKNOWN", 
             "Spiele.gif": "BOARDGAME", 
@@ -40,7 +41,7 @@
         50.705619, 
         7.269544
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "\u00d6ffentliche Bibliothek"
 }

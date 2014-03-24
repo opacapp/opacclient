@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Sinsheim", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 1, 
@@ -22,7 +23,7 @@
             "returndate": 4, 
             "status": 3
         }, 
-        "information": "http://www.sinsheim.de/pb/sinsheim,Lde/Home/Bildung+_+Soziales/Stadtbibliothek.html",
+        "information": "http://www.sinsheim.de/pb/sinsheim,Lde/Home/Bildung+_+Soziales/Stadtbibliothek.html", 
         "reservationtable": {
             "author": 1, 
             "availability": 4, 
@@ -36,7 +37,7 @@
         49.2488637, 
         8.8884905
     ], 
-    "group": "Baden-W\u00fcrttemberg", 
+    "state": "Baden-W\u00fcrttemberg", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

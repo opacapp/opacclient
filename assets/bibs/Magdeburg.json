@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Magdeburg", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 1, 
@@ -60,7 +61,7 @@
         52.130807, 
         11.628878
     ], 
-    "group": "Sachsen-Anhalt", 
+    "state": "Sachsen-Anhalt", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

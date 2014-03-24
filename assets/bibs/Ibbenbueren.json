@@ -1,21 +1,22 @@
 {
     "api": "biber1992", 
     "city": "Ibbenb\u00fcren", 
+    "country": "Deutschland", 
     "data": {
-		"accounttable": null,
+        "accounttable": null, 
         "baseurl": "http://www.stadtbuecherei-ibbenbueren.de", 
         "information": "http://www.stadtbuecherei-ibbenbueren.de/wwwcms/cms/front_content.php", 
         "mediatypes": {
             "1": "BOOK", 
-            "2": "MAGAZINE",
-			"6": "CD",
-			"3": "CD_SOFTWARE",
             "11": "DVD", 
-            "9": "BOARDGAME", 
+            "2": "MAGAZINE", 
             "25": "GAME_CONSOLE_WII", 
-            "30": "EBOOK" 
+            "3": "CD_SOFTWARE", 
+            "30": "EBOOK", 
+            "6": "CD", 
+            "9": "BOARDGAME"
         }, 
-        "opacdir": "opax",
+        "opacdir": "opax", 
         "searchtable": [
             2, 
             3, 
@@ -26,7 +27,7 @@
         52.2796291, 
         7.720426300000001
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche", 
     "title": "Stadtb\u00fccherei"
 }

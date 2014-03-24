@@ -1,6 +1,7 @@
 {
     "api": "biber1992", 
     "city": "Essen", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 6, 
@@ -26,7 +27,7 @@
         51.4556432, 
         7.0115552
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

@@ -1,6 +1,7 @@
 {
     "api": "biber1992", 
     "city": "Bad Kreuznach", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 8, 
@@ -25,19 +26,19 @@
         "information": "http://www.bad-kreuznach.de/sv_bad_kreuznach/Tourismus,%20Kultur,%20Sport/Stadtbibliothek/", 
         "mediatypes": {
             "1": "BOOK", 
-            "33": "BOOK", 
-            "19": "BOOK", 
-			"2": "MAGAZINE",
-			"3": "CD_SOFTWARE",
-			"6": "CD",
-			"20": "AUDIOBOOK",
-			"21": "AUDIOBOOK",
-            "26": "GAME_CONSOLE", 
             "11": "DVD", 
             "12": "DVD", 
-            "30": "EBOOK"
+            "19": "BOOK", 
+            "2": "MAGAZINE", 
+            "20": "AUDIOBOOK", 
+            "21": "AUDIOBOOK", 
+            "26": "GAME_CONSOLE", 
+            "3": "CD_SOFTWARE", 
+            "30": "EBOOK", 
+            "33": "BOOK", 
+            "6": "CD"
         }, 
-        "opacdir": "opax",
+        "opacdir": "opax", 
         "searchtable": [
             2, 
             3, 
@@ -48,7 +49,7 @@
         49.8440162, 
         7.873134599999999
     ], 
-    "group": "Rheinland-Pfalz", 
+    "state": "Rheinland-Pfalz", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

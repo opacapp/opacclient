@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Stuhr", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -50,7 +51,7 @@
         53.0289775, 
         8.7361402
     ], 
-    "group": "Niedersachsen", 
+    "state": "Niedersachsen", 
     "support": "Katalogsuche und Konto", 
     "title": "Bibliothek"
 }

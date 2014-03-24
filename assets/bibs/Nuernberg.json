@@ -1,6 +1,7 @@
 {
     "api": "adis", 
     "city": "N\u00fcrnberg", 
+    "country": "Deutschland", 
     "data": {
         "baseurl": "https://online-service2.nuernberg.de/aDISWeb/app", 
         "information": "http://www.nuernberg.de/internet/stadtbibliothek/", 
@@ -10,7 +11,7 @@
         49.45203, 
         11.07675
     ], 
-    "group": "Bayern", 
+    "state": "Bayern", 
     "support": "Katalogsuche und Konto (experimentell)", 
     "title": "Stadtbibliothek"
 }

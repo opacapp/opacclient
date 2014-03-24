@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Reichenbach (Vogtland)", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -33,7 +34,7 @@
         50.62083330000001, 
         12.3030556
     ], 
-    "group": "Sachsen", 
+    "state": "Sachsen", 
     "support": "Katalogsuche und Konto", 
     "title": "J\u00fcrgen-Fuchs-Bibliothek"
 }

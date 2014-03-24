@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Bamberg", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -57,7 +58,7 @@
         49.8988135, 
         10.9027636
     ], 
-    "group": "Bayern", 
+    "state": "Bayern", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

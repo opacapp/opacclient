@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Unna", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -42,7 +43,7 @@
         51.5426349, 
         7.685311400000001
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Mediothek Kirchenkreis"
 }

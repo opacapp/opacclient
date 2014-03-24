@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Siegen", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -50,7 +51,7 @@
         50.8838492, 
         8.020959099999999
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

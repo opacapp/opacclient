@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Kulmbach", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -41,7 +42,7 @@
         50.1039282, 
         11.4448178
     ], 
-    "group": "Bayern", 
+    "state": "Bayern", 
     "support": "Katalogsuche und Konto", 
     "title": "B\u00fccherei am Stadtpark"
 }

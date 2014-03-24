@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Hiltrup", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -65,7 +66,7 @@
             "title": 1
         }
     }, 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Bistum M\u00fcnster Zweigstelle"
 }

@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Korntal-M\u00fcnchingen", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 1, 
@@ -13,7 +14,6 @@
             "title": 2
         }, 
         "baseurl": "https://wwwopac.rz-kiru.de/korntalmuenchingen", 
-		"customssl": true,
         "copiestable": {
             "barcode": -1, 
             "branch": 0, 
@@ -23,7 +23,8 @@
             "returndate": 4, 
             "status": 3
         }, 
-        "information": "http://www.korntal-muenchingen.de/servlet/PB/menu/1222559_l1/index.html",
+        "customssl": true, 
+        "information": "http://www.korntal-muenchingen.de/servlet/PB/menu/1222559_l1/index.html", 
         "reservationtable": {
             "author": 1, 
             "availability": 4, 
@@ -37,7 +38,7 @@
         48.8463801, 
         9.1072089
     ], 
-    "group": "Baden-W\u00fcrttemberg", 
+    "state": "Baden-W\u00fcrttemberg", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

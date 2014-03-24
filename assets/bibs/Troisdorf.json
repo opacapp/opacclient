@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Troisdorf", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": -1, 
@@ -36,7 +37,7 @@
         50.8177471, 
         7.1430246
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

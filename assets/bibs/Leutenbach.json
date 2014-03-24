@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Leutenbach", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -36,7 +37,7 @@
         48.88809209999999, 
         9.390455
     ], 
-    "group": "Baden-W\u00fcrttemberg", 
+    "state": "Baden-W\u00fcrttemberg", 
     "support": "Katalogsuche und Konto", 
     "title": "Ortsb\u00fccherei"
 }

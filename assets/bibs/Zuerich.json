@@ -1,16 +1,17 @@
 {
     "api": "adis", 
-    "city": "Zürich", 
+    "city": "Z\u00fcrich", 
+    "country": "Schweiz", 
     "data": {
         "baseurl": "http://adis.pbz.ch/aDISWeb/app", 
         "information": "http://pbz.ch/", 
         "startparams": "service=direct/0/Home/$DirectLink&sp=S127.0.0.1%3A23002&sp=SS100000000"
     }, 
     "geo": [
-        47.377455,
+        47.377455, 
         8.536715
     ], 
-    "group": "Schweiz", 
+    "state": "Z\u00fcrich", 
     "support": "Katalogsuche und Konto", 
     "title": "Pestalozzi-Bibliothek"
 }

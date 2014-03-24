@@ -64,8 +64,9 @@ public class WelcomeActivity extends Activity {
 	}
 
 	public void add() {
-		dialog = LibraryListDialogFactory.newInstance(this, app, true);
-		dialog.show();
+		Intent i = new Intent(this, LibraryListActivity.class);
+		i.putExtra("welcome", true);
+		startActivity(i);
 	}
 
 	public class InitTask extends OpacTask<Integer> {
@@ -87,8 +88,7 @@ public class WelcomeActivity extends Activity {
 		@Override
 		protected void onPostExecute(Integer result) {
 			dialog.dismiss();
-			Intent intent = new Intent(WelcomeActivity.this,
-					MainActivity.class);
+			Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
 			startActivity(intent);
 		}
 	}

@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Bocholt", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -50,7 +51,7 @@
         51.8384277, 
         6.6150917
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

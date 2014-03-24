@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Br\u00fchl", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -22,7 +23,7 @@
             "returndate": 5, 
             "status": 3
         }, 
-        "information": "http://www.bruehl.de/tourismus/buecherei/index.php",
+        "information": "http://www.bruehl.de/tourismus/buecherei/index.php", 
         "reservationtable": {
             "author": 0, 
             "availability": 2, 
@@ -36,7 +37,7 @@
         50.82687259999999, 
         6.900167
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

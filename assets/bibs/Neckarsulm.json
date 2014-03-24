@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Neckarsulm", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -39,7 +40,7 @@
         49.1922581, 
         9.228708899999999
     ], 
-    "group": "Baden-W\u00fcrttemberg", 
+    "state": "Baden-W\u00fcrttemberg", 
     "support": "Katalogsuche und Konto", 
     "title": "Mediathek"
 }

@@ -1,6 +1,7 @@
 {
     "api": "sisis", 
     "city": "Brandenburg", 
+    "country": "Deutschland", 
     "data": {
         "baseurl": "https://opac.fh-brandenburg.de/InfoGuideClient.bfbsis", 
         "information": "http://www.fh-brandenburg.de/1558.html", 
@@ -10,7 +11,7 @@
         52.4125287, 
         12.5316444
     ], 
-    "group": "Brandenburg", 
+    "state": "Brandenburg", 
     "support": "Katalogsuche und Konto", 
     "title": "Fachhochschule"
 }

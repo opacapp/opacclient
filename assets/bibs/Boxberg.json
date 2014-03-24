@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Boxberg", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": null, 
         "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-Boxberg", 
@@ -20,7 +21,7 @@
         49.48181779999999, 
         9.6375251
     ], 
-    "group": "Baden-W\u00fcrttemberg", 
+    "state": "Baden-W\u00fcrttemberg", 
     "support": "Katalogsuche", 
     "title": "Mediothek"
 }

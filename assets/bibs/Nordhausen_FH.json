@@ -1,18 +1,19 @@
 {
-    "api": "pica",
-    "city": "Nordhausen",
+    "api": "pica", 
+    "city": "Nordhausen", 
+    "country": "Deutschland", 
     "data": {
-        "baseurl": "http://opac.uni-erfurt.de/",
-		"httpsbaseurl": "https://opac.uni-erfurt.de/",
-        "information": "http://www.fh-nordhausen.de/bibliothek.html",
-        "db": "5",
-        "accountSupported": true
-    },
+        "accountSupported": true, 
+        "baseurl": "http://opac.uni-erfurt.de/", 
+        "db": "5", 
+        "httpsbaseurl": "https://opac.uni-erfurt.de/", 
+        "information": "http://www.fh-nordhausen.de/bibliothek.html"
+    }, 
     "geo": [
-        51.500278,
+        51.500278, 
         10.791389
-    ],
-    "group": "Thüringen",
-    "support": "Katalogsuche",
+    ], 
+    "state": "Th\u00fcringen", 
+    "support": "Katalogsuche", 
     "title": "Bibliothek der Fachhochschule"
 }

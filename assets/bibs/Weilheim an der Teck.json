@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Weilheim an der Teck", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -44,7 +45,7 @@
         48.6179469, 
         9.5355679
     ], 
-    "group": "Baden-W\u00fcrttemberg", 
+    "state": "Baden-W\u00fcrttemberg", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

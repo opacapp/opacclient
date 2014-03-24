@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Salzburg", 
+    "country": "\u00d6sterreich", 
     "data": {
         "accounttable": {
             "author": 1, 
@@ -47,7 +48,7 @@
         47.80949, 
         13.05501
     ], 
-    "group": "\u00d6sterreich", 
+    "state": "Salzburg", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadt:Bibliothek"
 }
