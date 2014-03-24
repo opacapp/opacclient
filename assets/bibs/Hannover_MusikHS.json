@@ -1,0 +1,17 @@
+{
+    "api": "pica",
+    "city": "Hannover",
+    "data": {
+        "baseurl": "https://opac.tib.uni-hannover.de/",
+        "information": "http://www.tib.uni-hannover.de/",
+        "db": "8",
+		"accountSupported": true
+    },
+    "geo": [
+        52.38142,
+        9.72007
+    ],
+    "group": "Niedersachsen",
+    "support": "Katalogsuche und Konto",
+    "title": "Bibliothek Hochschule für Musik, Theater und Medien (Bereich Musik)"
+}

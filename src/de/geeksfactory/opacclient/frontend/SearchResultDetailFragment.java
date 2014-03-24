@@ -3,6 +3,7 @@ package de.geeksfactory.opacclient.frontend;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.List;
+
 import org.acra.ACRA;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
@@ -1086,10 +1087,44 @@ public class SearchResultDetailFragment extends Fragment {
 				adata.open();
 				adata.invalidateCachedAccountData(app.getAccount());
 				adata.close();
-				Intent intent = new Intent(getActivity(), MainActivity.class);
-				intent.putExtra("fragment", "account");
-				getActivity().startActivity(intent);
-				getActivity().finish();
+				if (result.getMessage() != null) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							getActivity());
+					builder.setMessage(
+							getString(R.string.opac_error) + " "
+									+ result.getMessage())
+							.setCancelable(false)
+							.setNegativeButton(R.string.dismiss,
+									new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(
+												DialogInterface dialog, int id) {
+											dialog.cancel();
+										}
+									})
+							.setPositiveButton(R.string.account,
+									new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(
+												DialogInterface dialog, int id) {
+											Intent intent = new Intent(
+													getActivity(),
+													MainActivity.class);
+											intent.putExtra("fragment",
+													"account");
+											getActivity().startActivity(intent);
+											getActivity().finish();
+										}
+									});
+					AlertDialog alert = builder.create();
+					alert.show();
+				} else {
+					Intent intent = new Intent(getActivity(),
+							MainActivity.class);
+					intent.putExtra("fragment", "account");
+					getActivity().startActivity(intent);
+					getActivity().finish();
+				}
 			}
 
 			@Override

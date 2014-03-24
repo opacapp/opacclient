@@ -376,8 +376,8 @@ public class SISIS extends BaseApi implements OpacApi {
 					& node.attr("href").contains("singleHit.do") && !haslink) {
 				haslink = true;
 				try {
-					List<NameValuePair> anyurl = URLEncodedUtils.parse(new URI(
-							node.attr("href").replace(" ", "%20")
+					List<NameValuePair> anyurl = URLEncodedUtils.parse(
+							new URI(node.attr("href").replace(" ", "%20")
 									.replace("&amp;", "&")), ENCODING);
 					for (NameValuePair nv : anyurl) {
 						if (nv.getName().equals("identifier")) {
@@ -628,7 +628,9 @@ public class SISIS extends BaseApi implements OpacApi {
 			throws IOException, NotReachableException {
 
 		if (id == null && reusehtml != null) {
-			return parse_result(reusehtml);
+			DetailledItem r = parse_result(reusehtml);
+			reusehtml = null;
+			return r;
 		}
 
 		// Some libraries require start parameters for start.do, like Login=foo
@@ -653,6 +655,10 @@ public class SISIS extends BaseApi implements OpacApi {
 
 	@Override
 	public DetailledItem getResult(int nr) throws IOException {
+		if (reusehtml != null) {
+			return getResultById(null, null);
+		}
+
 		String html = httpGet(
 				opac_url
 						+ "/singleHit.do?tab=showExemplarActive&methodToCall=showHit&curPos="
@@ -1512,7 +1518,9 @@ public class SISIS extends BaseApi implements OpacApi {
 
 	@Override
 	public int getSupportFlags() {
-		return OpacApi.SUPPORT_FLAG_ACCOUNT_PROLONG_ALL;
+		int flags = SUPPORT_FLAG_ACCOUNT_PROLONG_ALL;
+		flags |= SUPPORT_FLAG_ENDLESS_SCROLLING;
+		return flags;
 	}
 
 	@Override

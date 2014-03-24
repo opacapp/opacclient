@@ -188,8 +188,8 @@ public class Pica extends BaseApi implements OpacApi {
 		params.add(new BasicNameValuePair("PARSE_OPWORDS", "N"));
 		params.add(new BasicNameValuePair("PARSE_OLDSETS", "N"));
 
-		index = addParameters(query, KEY_SEARCH_QUERY_FREE, "1016", params,
-				index);
+		index = addParameters(query, KEY_SEARCH_QUERY_FREE,
+				data.optString("KEY_SEARCH_QUERY_FREE", "1016"), params, index);
 		index = addParameters(query, KEY_SEARCH_QUERY_AUTHOR, "1004", params,
 				index);
 		index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDA, "46", params,
@@ -459,15 +459,16 @@ public class Pica extends BaseApi implements OpacApi {
 
 		}
 
-		//GET COVER
+		// GET COVER
 		if (doc.select("td.preslabel:contains(ISBN) + td.presvalue").size() > 0) {
-			Element isbnElement = doc.select("td.preslabel:contains(ISBN) + td.presvalue").first();
+			Element isbnElement = doc.select(
+					"td.preslabel:contains(ISBN) + td.presvalue").first();
 			String isbn = "";
 			for (Node child : isbnElement.childNodes()) {
-			    if (child instanceof TextNode) {
-			        isbn = ((TextNode) child).text().trim();
-			        break;
-			    }
+				if (child instanceof TextNode) {
+					isbn = ((TextNode) child).text().trim();
+					break;
+				}
 			}
 			result.setCover(ISBNTools.getAmazonCoverURL(isbn, true));
 		}
@@ -489,7 +490,7 @@ public class Pica extends BaseApi implements OpacApi {
 				title = titleAndSubtitle;
 				subtitle = "";
 			}
-			result.setTitle(title);			
+			result.setTitle(title);
 		} else if (doc.select("td.preslabel:contains(Aufsatz) + td.presvalue")
 				.size() > 0) {
 			titleAndSubtitle = doc
@@ -506,7 +507,24 @@ public class Pica extends BaseApi implements OpacApi {
 				title = titleAndSubtitle;
 				subtitle = "";
 			}
-			result.setTitle(title);			
+			result.setTitle(title);
+		} else if (doc.select(
+				"td.preslabel:contains(Zeitschrift) + td.presvalue").size() > 0) {
+			titleAndSubtitle = doc
+					.select("td.preslabel:contains(Zeitschrift) + td.presvalue")
+					.first().text().trim();
+			int slashPosition = titleAndSubtitle.indexOf("/");
+			String title;
+			String subtitle;
+			if (slashPosition > 0) {
+				title = titleAndSubtitle.substring(0, slashPosition).trim();
+				subtitle = titleAndSubtitle.substring(slashPosition + 1).trim();
+				result.addDetail(new Detail("Titelzusatz", subtitle));
+			} else {
+				title = titleAndSubtitle;
+				subtitle = "";
+			}
+			result.setTitle(title);
 		} else {
 			result.setTitle("");
 		}
@@ -588,7 +606,9 @@ public class Pica extends BaseApi implements OpacApi {
 		if (doc.select("td.regular-text")
 				.text()
 				.contains(
-						"Die Leihfrist Ihrer ausgeliehenen Publikationen ist ")) {
+						"Die Leihfrist Ihrer ausgeliehenen Publikationen ist ")
+				|| doc.select("td.regular-text").text()
+						.contains("Ihre ausgeliehenen Publikationen sind verl")) {
 			return new ProlongResult(MultiStepResult.Status.OK);
 		} else if (doc.select(".alert").text().contains("identify yourself")) {
 			try {
@@ -821,8 +841,7 @@ public class Pica extends BaseApi implements OpacApi {
 
 	@Override
 	public int getSupportFlags() {
-		return 0;
-
+		return SUPPORT_FLAG_ENDLESS_SCROLLING;
 	}
 
 	public void updateSearchSetValue(Document doc) {

@@ -1,5 +1,7 @@
 package de.geeksfactory.opacclient.frontend;
 
+import java.util.List;
+
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.ListFragment;
@@ -10,13 +12,16 @@ import org.holoeverywhere.widget.ListView;
 import org.holoeverywhere.widget.TextView;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import de.geeksfactory.opacclient.NotReachableException;
+import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
+import de.geeksfactory.opacclient.frontend.ResultsAdapterEndless.OnLoadMoreListener;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 
@@ -50,7 +55,11 @@ public class SearchResultListFragment extends ListFragment {
 
 	private SearchRequestResult searchresult;
 
-	public ResultsAdapter adapter;
+	public ResultsAdapterEndless adapter;
+	
+	private OpacClient app;
+	
+	private int lastLoadedPage;
 
 	/**
 	 * A callback interface that all activities containing this fragment must
@@ -62,9 +71,8 @@ public class SearchResultListFragment extends ListFragment {
 		 * Callback for when an item has been selected.
 		 * @param nr 
 		 */
-		public void onItemSelected(int nr, String id, int page);
+		public void onItemSelected(int nr, String id, int pageToLoad);
 		public void reload();
-		public void loadMoreData(int page);
 	}
 
 	/**
@@ -73,13 +81,10 @@ public class SearchResultListFragment extends ListFragment {
 	 */
 	private static Callbacks sDummyCallbacks = new Callbacks() {
 		@Override
-		public void onItemSelected(int nr, String id, int page) {
+		public void onItemSelected(int nr, String id, int pageToLoad) {
 		}
 		@Override
 		public void reload() {			
-		}
-		@Override
-		public void loadMoreData(int page) {
 		}
 	};
 
@@ -121,6 +126,7 @@ public class SearchResultListFragment extends ListFragment {
 		}
 
 		mCallbacks = (Callbacks) activity;
+		app = (OpacClient) activity.getApplication();
 	}
 
 	@Override
@@ -141,6 +147,7 @@ public class SearchResultListFragment extends ListFragment {
 		mCallbacks.onItemSelected(searchresult.getResults().get(position).getNr(),
 				searchresult.getResults().get(position).getId(),
 				searchresult.getResults().get(position).getPage());
+		
 	}
 
 	@Override
@@ -174,40 +181,43 @@ public class SearchResultListFragment extends ListFragment {
 		mActivatedPosition = position;
 	}
 
-	public void setSearchResult(SearchRequestResult searchresult, boolean clear) {
+	public void setSearchResult(SearchRequestResult searchresult) {
 		for(SearchResult result:searchresult.getResults()) {
 			result.setPage(searchresult.getPage_index());
 		}
-		if(clear) {
-			if (searchresult.getTotal_result_count() >= 0)
-				getSupportActionBar().setSubtitle(
-						getString(R.string.result_number,
-								searchresult.getTotal_result_count()));
-	
-			if (searchresult.getResults().size() == 0
-					&& searchresult.getTotal_result_count() == 0) {
-				setEmptyText(getString(R.string.no_results));
-			}
-			this.searchresult = searchresult;
-			adapter = new ResultsAdapter(getActivity(), (searchresult.getResults()));
-			setListAdapter(adapter);
-			getListView().setTextFilterEnabled(true);
-			getListView().setOnScrollListener(new EndlessScrollListener() {	
-				@Override
-				public void onLoadMore(int page, int totalItemsCount) {
-					Log.d("Opac", "total: " + String.valueOf(SearchResultListFragment.this.searchresult.getTotal_result_count()));
-					Log.d("Opac", "current: " + String.valueOf(totalItemsCount));
-					Log.d("Opac", String.valueOf(totalItemsCount < SearchResultListFragment.this.searchresult.getTotal_result_count()));
-					if(totalItemsCount < SearchResultListFragment.this.searchresult.getTotal_result_count()); {
-						mCallbacks.loadMoreData(page);
-					}
-				}		
-			});
-			setListShown(true);
-		} else {
-			adapter.addAll(searchresult.getResults());
-			adapter.notifyDataSetChanged();
+		if (searchresult.getTotal_result_count() >= 0)
+			getSupportActionBar().setSubtitle(
+					getString(R.string.result_number,
+							searchresult.getTotal_result_count()));
+
+		if (searchresult.getResults().size() == 0
+				&& searchresult.getTotal_result_count() == 0) {
+			setEmptyText(getString(R.string.no_results));
 		}
+		this.searchresult = searchresult;
+		adapter = new ResultsAdapterEndless(getActivity(), searchresult, new OnLoadMoreListener() {
+			@Override
+			public List<SearchResult> onLoadMore(int page) throws Exception {
+				SearchRequestResult res = app.getApi().searchGetPage(page);
+				setLastLoadedPage(page);
+				return res.getResults();
+			}
+
+			@Override
+			public void onError(Exception e) {
+				if (e instanceof OpacErrorException) {
+					showConnectivityError(e.getMessage());
+				} else if (e instanceof NotReachableException) {
+					showConnectivityError(getResources()
+							.getString(R.string.connection_error_detail_nre));
+				} else {
+					showConnectivityError();
+				}
+			}	
+		});
+		setListAdapter(adapter);
+		getListView().setTextFilterEnabled(true);
+		setListShown(true);
 	}
 	
 	public void showConnectivityError() {
@@ -215,7 +225,7 @@ public class SearchResultListFragment extends ListFragment {
 	}
 	
 	public void showConnectivityError(String description) {
-		LinearLayout progressContainer = (LinearLayout) getView().findViewById(R.id.progressContainer);
+		final LinearLayout progressContainer = (LinearLayout) getView().findViewById(R.id.progressContainer);
 		final FrameLayout errorView = (FrameLayout) getView().findViewById(R.id.error_view);
 		errorView.removeAllViews();
 		View connError = getActivity().getLayoutInflater().inflate(R.layout.error_connectivity, errorView);
@@ -226,6 +236,7 @@ public class SearchResultListFragment extends ListFragment {
 			public void onClick(View v) {
 				errorView.removeAllViews();
 				setListShown(false);
+				progressContainer.setVisibility(View.VISIBLE);
 				mCallbacks.reload();
 			}
 		});
@@ -235,10 +246,19 @@ public class SearchResultListFragment extends ListFragment {
 			.setText(description);
 		}
 		
+		setListShown(false);
 		progressContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_out));
 		connError.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in));
 		progressContainer.setVisibility(View.GONE);
 		connError.setVisibility(View.VISIBLE);
+	}
+
+	public int getLastLoadedPage() {
+		return lastLoadedPage;
+	}
+
+	public void setLastLoadedPage(int lastLoadedPage) {
+		this.lastLoadedPage = lastLoadedPage;
 	}
 	
 }

@@ -23,34 +23,34 @@ import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
 
-public class MultiStepResultHelper  {
+public class MultiStepResultHelper {
 
 	protected Activity context;
 	protected Object argument;
 	protected StepTask<?> task;
 	protected Callback callback;
 	protected int loadingstring;
-	
+
 	protected ProgressDialog pdialog;
 	protected AlertDialog adialog;
 
-	public static abstract class StepTask<T extends MultiStepResult> extends OpacTask<T> {
+	public static abstract class StepTask<T extends MultiStepResult> extends
+			OpacTask<T> {
 		protected MultiStepResultHelper helper;
-		
+
 		@Override
 		protected void onPostExecute(T res) {
 			super.onPostExecute(res);
-			if(helper.pdialog != null)
+			if (helper.pdialog != null)
 				helper.pdialog.dismiss();
 			helper.handleResult(res);
 		}
-		
+
 		@Override
 		protected T doInBackground(Object... arg0) {
 			helper = (MultiStepResultHelper) arg0[4];
@@ -60,13 +60,18 @@ public class MultiStepResultHelper  {
 
 	public interface Callback {
 		public void onSuccess(MultiStepResult result);
+
 		public void onError(MultiStepResult result);
+
 		public void onUnhandledResult(MultiStepResult result);
+
 		public void onUserCancel();
+
 		public StepTask<?> newTask();
 	}
 
-	public MultiStepResultHelper(Activity context, Object argument, int loadingstring) {
+	public MultiStepResultHelper(Activity context, Object argument,
+			int loadingstring) {
 		super();
 		this.context = context;
 		this.argument = argument;
@@ -91,8 +96,8 @@ public class MultiStepResultHelper  {
 			throw new IllegalStateException("Callback not set!");
 		}
 		task = callback.newTask();
-		task.execute((context.getApplication()), argument,
-				useraction, selection, this);
+		task.execute((context.getApplication()), argument, useraction,
+				selection, this);
 	}
 
 	public void handleResult(MultiStepResult result) {
@@ -105,7 +110,7 @@ public class MultiStepResultHelper  {
 			break;
 		case ERROR:
 			if (callback != null)
-				callback.onError(result);	
+				callback.onError(result);
 			break;
 		case OK:
 			if (callback != null)
@@ -212,6 +217,13 @@ public class MultiStepResultHelper  {
 								.getKey());
 			}
 		});
+
+		if (result.getMessage() != null) {
+			((android.widget.TextView) view.findViewById(R.id.tvMessage))
+					.setText(result.getMessage());
+			view.findViewById(R.id.tvMessage).setVisibility(View.VISIBLE);
+		}
+
 		switch (result.getActionIdentifier()) {
 		case ReservationResult.ACTION_BRANCH:
 			builder.setTitle(R.string.zweigstelle);

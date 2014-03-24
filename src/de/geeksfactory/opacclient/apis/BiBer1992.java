@@ -1124,7 +1124,7 @@ public class BiBer1992 extends BaseApi {
 
 	@Override
 	public int getSupportFlags() {
-		return 0;
+		return SUPPORT_FLAG_ENDLESS_SCROLLING;
 	}
 
 	@Override

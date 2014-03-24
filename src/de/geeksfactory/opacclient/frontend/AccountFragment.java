@@ -144,7 +144,8 @@ public class AccountFragment extends Fragment implements
 						.getAccount().getId()) {
 					app.setAccount(getActivity().getIntent().getExtras()
 							.getLong("account"));
-					((OpacActivity) getActivity()).accountSelected(app.getAccount());
+					((OpacActivity) getActivity()).accountSelected(app
+							.getAccount());
 				}
 				NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 				nMgr.cancel(OpacClient.NOTIF_ID);
@@ -451,6 +452,23 @@ public class AccountFragment extends Fragment implements
 			@Override
 			public void onSuccess(MultiStepResult result) {
 				invalidateData();
+
+				if (result.getMessage() != null) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							getActivity());
+					builder.setMessage(result.getMessage())
+							.setCancelable(false)
+							.setNegativeButton(R.string.dismiss,
+									new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(
+												DialogInterface dialog, int id) {
+											dialog.cancel();
+										}
+									});
+					AlertDialog alert = builder.create();
+					alert.show();
+				}
 			}
 
 			@Override
@@ -489,7 +507,7 @@ public class AccountFragment extends Fragment implements
 
 			@Override
 			public StepTask<?> newTask() {
-				return new ProlongAllTask();
+				return new ProlongTask();
 			}
 		});
 		msrhProlong.start();
@@ -1486,7 +1504,7 @@ public class AccountFragment extends Fragment implements
 
 			@Override
 			public StepTask<?> newTask() {
-				return new ProlongTask();
+				return new ProlongAllTask();
 			}
 		});
 		msrhProlong.start();
@@ -1520,6 +1538,9 @@ public class AccountFragment extends Fragment implements
 			}
 
 			TextView tvAuthor = (TextView) view.findViewById(R.id.tvAuthor);
+			tvAuthor.setVisibility(item
+					.containsKey(ProlongAllResult.KEY_LINE_AUTHOR) ? View.VISIBLE
+					: View.GONE);
 			tvAuthor.setText(item.getAsString(ProlongAllResult.KEY_LINE_AUTHOR));
 			TextView tvTitle = (TextView) view.findViewById(R.id.tvTitle);
 			tvTitle.setText(item.getAsString(ProlongAllResult.KEY_LINE_TITLE));
