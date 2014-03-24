@@ -298,7 +298,7 @@ public class LibraryListActivity extends Activity {
 			if (fragment4 != null)
 				getSupportFragmentManager().beginTransaction()
 						.detach(fragment4).commit();
-		} else if (data.size() > 1) {
+		} else if (data.size() > 1 || !list.get(0).equals(state)) {
 			this.fragment = fragment;
 			getSupportFragmentManager().beginTransaction()
 					.replace(R.id.container, fragment).addToBackStack(null)
