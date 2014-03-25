@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Engen", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": null, 
         "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-engen", 
@@ -20,7 +21,7 @@
         47.854144, 
         8.7737404
     ], 
-    "group": "Baden-W\u00fcrttemberg", 
+    "state": "Baden-W\u00fcrttemberg", 
     "support": "Katalogsuche", 
     "title": "Stadtbibliothek"
 }

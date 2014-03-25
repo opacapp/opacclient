@@ -1,6 +1,7 @@
 {
     "api": "biber1992", 
     "city": "Detmold", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 6, 
@@ -25,20 +26,20 @@
         "information": "http://www.stadtdetmold.de/1990.0.html", 
         "mediatypes": {
             "1": "BOOK", 
-            "2": "MAGAZINE",
-			"3": "CD_SOFTWARE",
-			"25": "GAME_CONSOLE_WII",
-			"4": "MOVIE",
-			"5": "AUDIO_CASSETTE",
-            "9": "BOARDGAME", 
-            "6": "CD", 
             "10": "MAP", 
             "11": "DVD", 
-            "16": "ART",
-			"30": "EBOOK",
-			"33": "EDOC"
+            "16": "ART", 
+            "2": "MAGAZINE", 
+            "25": "GAME_CONSOLE_WII", 
+            "3": "CD_SOFTWARE", 
+            "30": "EBOOK", 
+            "33": "EDOC", 
+            "4": "MOVIE", 
+            "5": "AUDIO_CASSETTE", 
+            "6": "CD", 
+            "9": "BOARDGAME"
         }, 
-        "opacdir": "opac",
+        "opacdir": "opac", 
         "searchtable": [
             2, 
             3, 
@@ -49,7 +50,7 @@
         51.9384783, 
         8.868637999999999
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

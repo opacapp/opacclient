@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Iserlohn", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -47,7 +48,7 @@
         51.3731684, 
         7.674391099999998
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

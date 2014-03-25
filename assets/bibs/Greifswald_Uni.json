@@ -1,18 +1,19 @@
 {
-    "api": "pica",
-    "city": "Greifswald",
+    "api": "pica", 
+    "city": "Greifswald", 
+    "country": "Deutschland", 
     "data": {
-        "baseurl": "http://opac.ub.uni-greifswald.de/",
-        "httpsbaseurl": "https://opac.ub.uni-greifswald.de/",
-        "information": "http://www.uni-greifswald.de/bibliothek.html",
-        "db": "1",
-        "accountSupported": true
-    },
+        "accountSupported": true, 
+        "baseurl": "http://opac.ub.uni-greifswald.de/", 
+        "db": "1", 
+        "httpsbaseurl": "https://opac.ub.uni-greifswald.de/", 
+        "information": "http://www.uni-greifswald.de/bibliothek.html"
+    }, 
     "geo": [
-        54.095833,
+        54.095833, 
         13.381111
     ], 
-    "group": "Mecklenburg-Vorpommern", 
-    "support": "Katalogsuche und Konto",
+    "state": "Mecklenburg-Vorpommern", 
+    "support": "Katalogsuche und Konto", 
     "title": "Unibibliothek"
 }

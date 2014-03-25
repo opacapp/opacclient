@@ -1,17 +1,18 @@
 {
-    "api": "pica",
-    "city": "Hamburg",
+    "api": "pica", 
+    "city": "Hamburg", 
+    "country": "Deutschland", 
     "data": {
-        "baseurl": "https://kataloge.uni-hamburg.de/",
-        "information": "http://www.hfbk-hamburg.de/?id=bibliothek",
-        "db": "11",
-		"accountSupported": true
-    },
+        "accountSupported": true, 
+        "baseurl": "https://kataloge.uni-hamburg.de/", 
+        "db": "11", 
+        "information": "http://www.hfbk-hamburg.de/?id=bibliothek"
+    }, 
     "geo": [
-        53.5674294,
+        53.5674294, 
         10.0306706
-    ],
-    "group": "Hamburg",
-    "support": "Katalogsuche und Konto",
-    "title": "Hochschule für bildende Künste"
+    ], 
+    "state": "Hamburg", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Hochschule f\u00fcr bildende K\u00fcnste"
 }

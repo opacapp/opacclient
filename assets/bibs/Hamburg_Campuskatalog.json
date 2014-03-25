@@ -1,17 +1,18 @@
 {
-    "api": "pica",
-    "city": "Hamburg",
+    "api": "pica", 
+    "city": "Hamburg", 
+    "country": "Deutschland", 
     "data": {
-        "baseurl": "https://kataloge.uni-hamburg.de/",
-        "information": "http://www.sub.uni-hamburg.de/home.html",
-        "db": "1",
-		"accountSupported": true
-    },
+        "accountSupported": true, 
+        "baseurl": "https://kataloge.uni-hamburg.de/", 
+        "db": "1", 
+        "information": "http://www.sub.uni-hamburg.de/home.html"
+    }, 
     "geo": [
-        53.56448,
+        53.56448, 
         9.98553
-    ],
-    "group": "Hamburg",
-    "support": "Katalogsuche und Konto",
+    ], 
+    "state": "Hamburg", 
+    "support": "Katalogsuche und Konto", 
     "title": "Campus-Katalog (Staatsbibliothek und Fachbibliotheken)"
 }

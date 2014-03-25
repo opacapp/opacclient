@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Erlangen", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -22,7 +23,7 @@
             "returndate": 4, 
             "status": 2
         }, 
-        "disableProlongAll": true,
+        "disableProlongAll": true, 
         "information": "http://www.erlangen.de/bibliothek/", 
         "mediatypes": {
             "blurayS.gif": "BLURAY", 
@@ -54,8 +55,8 @@
         49.5907169, 
         11.0142675
     ], 
-    "group": "Bayern", 
-	"replacedby": "de.opacapp.erlangen",
+    "replacedby": "de.opacapp.erlangen", 
+    "state": "Bayern", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

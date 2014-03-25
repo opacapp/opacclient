@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Eppingen", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": null, 
         "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-eppingen", 
@@ -20,7 +21,7 @@
         49.13544, 
         8.911586
     ], 
-    "group": "Baden-W\u00fcrttemberg", 
+    "state": "Baden-W\u00fcrttemberg", 
     "support": "Katalogsuche", 
     "title": "Stadtb\u00fccherei"
 }

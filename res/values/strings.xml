@@ -113,8 +113,10 @@
         <item>259200000</item>
         <item>604800000</item>
     </string-array>
+
     <string name="startup_title">Startbildschirm</string>
     <string name="startup_summary">Welcher Bildschirm soll beim Start der App angezeigt werden?</string>
+
     <string-array name="startup_labels">
         <item>Katalogsuche</item>
         <item>Konto</item>
@@ -158,8 +160,6 @@
     <string name="retry">Erneut versuchen</string>
     <string name="default_account_name">Unbenanntes Konto</string>
     <string name="connecting_initially">Baue erstmalige Verbindung mit Bibliotheksserver auf…</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="menu_settings">Settings</string>
     <string name="title_activity_account_list">Konten</string>
     <string name="account_add">Konto hinzufügen</string>
     <string name="accounts">Konten</string>
@@ -221,10 +221,10 @@
     <string name="barcode_no">Nein</string>
     <string name="result_number">%d Suchergebnisse</string>
     <string name="export_starred">Exportieren</string>
-    <string name="geolocate">Finde nächste Bibliotheken</string>
+    <string name="geolocate">Finde Bibliotheken in meiner Nähe</string>
     <string name="geolocate_progress">Standort wird ermittelt…</string>
     <string name="geolocate_found">Nächste Bibliothek: %s</string>
-    <string name="alphabetic_list">Alphabetische Liste</string>
+    <string name="alphabetic_list">Vollständige Liste anzeigen</string>
     <string name="setting_nfc">NFC-Suche</string>
     <string name="setting_nfc_desc">Experimentell. Nur mit wenigen Geräten und Bibliotheken.</string>
     <string name="notification_problems">Benachrichtigungen funktionieren u.U. nicht</string>
@@ -241,5 +241,7 @@
     <string name="drawer_close">Navigation schließen</string>
     <string name="title_searchresult_list">Suchergebnisse</string>
     <string name="title_searchresult_detail">Detail</string>
+    <string name="title_activity_library_list">Bibliotheksauswahl</string>
+    <string name="action_settings">Settings</string>
 
 </resources>

@@ -1,17 +1,18 @@
 {
-    "api": "pica",
-    "city": "Hamburg",
+    "api": "pica", 
+    "city": "Hamburg", 
+    "country": "Deutschland", 
     "data": {
-        "baseurl": "https://kataloge.uni-hamburg.de/",
-        "information": "http://li.hamburg.de/lehrerbibliothek/",
-        "db": "4",
-		"accountSupported": true
-    },
+        "accountSupported": true, 
+        "baseurl": "https://kataloge.uni-hamburg.de/", 
+        "db": "4", 
+        "information": "http://li.hamburg.de/lehrerbibliothek/"
+    }, 
     "geo": [
-        53.5712303,
+        53.5712303, 
         9.9682266
-    ],
-    "group": "Hamburg",
-    "support": "Katalogsuche und Konto",
+    ], 
+    "state": "Hamburg", 
+    "support": "Katalogsuche und Konto", 
     "title": "Lehrerbibliothek"
 }

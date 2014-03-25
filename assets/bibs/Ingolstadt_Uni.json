@@ -1,6 +1,7 @@
 {
     "api": "sisis", 
     "city": "Eichst\u00e4tt-Ingolstadt", 
+    "country": "Deutschland", 
     "data": {
         "baseurl": "https://opac.ku.de/InfoGuideClient", 
         "information": "http://www.ku.de/Bibliothek", 
@@ -10,7 +11,7 @@
         48.7665351, 
         11.4257541
     ], 
-    "group": "Bayern", 
+    "state": "Bayern", 
     "support": "Katalogsuche und Konto", 
     "title": "Universit\u00e4tsbibliothek"
 }

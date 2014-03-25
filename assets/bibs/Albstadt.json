@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Albstadt", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 1, 
@@ -13,7 +14,6 @@
             "title": 2
         }, 
         "baseurl": "https://wwwopac.rz-kiru.de/albstadt", 
-		"customssl": true,
         "copiestable": {
             "barcode": -1, 
             "branch": 0, 
@@ -22,13 +22,14 @@
             "reservations": -1, 
             "returndate": 5, 
             "status": 4
-        },
-        "information": "https://wwwopac.rz-kiru.de/readalbstadt/startseite.html",
+        }, 
+        "customssl": true, 
+        "information": "https://wwwopac.rz-kiru.de/readalbstadt/startseite.html", 
         "reservationtable": {
             "author": 1, 
-            "availability": 4,
+            "availability": 4, 
             "branch": 0, 
-            "cancelurl": 5,
+            "cancelurl": 5, 
             "expirationdate": -1, 
             "title": 2
         }
@@ -37,7 +38,7 @@
         48.2356473, 
         9.0014225
     ], 
-    "group": "Baden-W\u00fcrttemberg", 
+    "state": "Baden-W\u00fcrttemberg", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

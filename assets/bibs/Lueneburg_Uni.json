@@ -1,17 +1,18 @@
 {
-    "api": "pica",
-    "city": "Lüneburg",
+    "api": "pica", 
+    "city": "L\u00fcneburg", 
+    "country": "Deutschland", 
     "data": {
-        "baseurl": "http://lhlue.gbv.de",
-        "information": "http://www.leuphana.de/bibliothek.html",
-        "db": "1",
-		"accountSupported": true
-    },
+        "accountSupported": true, 
+        "baseurl": "http://lhlue.gbv.de", 
+        "db": "1", 
+        "information": "http://www.leuphana.de/bibliothek.html"
+    }, 
     "geo": [
-        53.2296879,
+        53.2296879, 
         10.4019633
-    ],
-    "group": "Niedersachsen",
-    "support": "Katalogsuche und Konto",
+    ], 
+    "state": "Niedersachsen", 
+    "support": "Katalogsuche und Konto", 
     "title": "Unibibliothek"
 }

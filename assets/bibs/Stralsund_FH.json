@@ -1,18 +1,19 @@
 {
-    "api": "pica",
-    "city": "Stralsund",
+    "api": "pica", 
+    "city": "Stralsund", 
+    "country": "Deutschland", 
     "data": {
-        "baseurl": "http://opac.ub.uni-greifswald.de/",
-        "httpsbaseurl": "https://opac.ub.uni-greifswald.de/",
-        "information": "http://www.fh-stralsund.de/fh_stralsund/powerslave,id,765,nodeid,.html",
-        "db": "2",
-        "accountSupported": true
-    },
+        "accountSupported": true, 
+        "baseurl": "http://opac.ub.uni-greifswald.de/", 
+        "db": "2", 
+        "httpsbaseurl": "https://opac.ub.uni-greifswald.de/", 
+        "information": "http://www.fh-stralsund.de/fh_stralsund/powerslave,id,765,nodeid,.html"
+    }, 
     "geo": [
         54.2994048, 
         13.0877143
     ], 
-    "group": "Mecklenburg-Vorpommern", 
-    "support": "Katalogsuche und Konto",
+    "state": "Mecklenburg-Vorpommern", 
+    "support": "Katalogsuche und Konto", 
     "title": "Hochschulbibliothek"
 }

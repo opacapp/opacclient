@@ -1,6 +1,7 @@
 {
     "api": "sisis", 
     "city": "Weimar", 
+    "country": "Deutschland", 
     "data": {
         "baseurl": "http://katalog.stadtbibo-weimar.de:8080/webOPACClient", 
         "information": "http://stadtbibo-weimar.de/index.html"
@@ -9,7 +10,7 @@
         50.98471199999999, 
         11.3225398
     ], 
-    "group": "Th\u00fcringen", 
+    "state": "Th\u00fcringen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

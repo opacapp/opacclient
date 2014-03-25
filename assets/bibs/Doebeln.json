@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "D\u00f6beln", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -35,7 +36,7 @@
         51.1229322, 
         13.1167196
     ], 
-    "group": "Sachsen", 
+    "state": "Sachsen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

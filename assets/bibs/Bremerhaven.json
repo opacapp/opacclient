@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Bremerhaven", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -22,7 +23,7 @@
             "returndate": 4, 
             "status": 3
         }, 
-        "information": "http://www.stadtbibliothek-bremerhaven.de/oeffnungszeiten.html",
+        "information": "http://www.stadtbibliothek-bremerhaven.de/oeffnungszeiten.html", 
         "reservationtable": {
             "author": 0, 
             "availability": 2, 
@@ -36,7 +37,7 @@
         53.548243, 
         8.582657
     ], 
-    "group": "Bremen", 
+    "state": "Bremen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

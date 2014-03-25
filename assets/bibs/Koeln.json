@@ -1,6 +1,7 @@
 {
     "api": "zones22", 
     "city": "K\u00f6ln", 
+    "country": "Deutschland", 
     "data": {
         "baseurl": "https://katalog.stbib-koeln.de/alswww2.dll", 
         "information": "http://www.stadt-koeln.de/5/stadtbibliothek/bibliotheken-archive/"
@@ -9,7 +10,7 @@
         50.937531, 
         6.9602786
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

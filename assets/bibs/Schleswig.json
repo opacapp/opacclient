@@ -1,16 +1,17 @@
 {
-    "api": "iopac",
-    "city": "Schleswig",
+    "api": "iopac", 
+    "city": "Schleswig", 
+    "country": "Deutschland", 
     "data": {
-        "baseurl": "http://176.94.16.49",
-        "information": "http://stadtbuecherei-schleswig.de/",
+        "baseurl": "http://176.94.16.49", 
+        "information": "http://stadtbuecherei-schleswig.de/", 
         "maxprolongcount": 1
-    },
+    }, 
     "geo": [
-        54.51599,
+        54.51599, 
         9.55839
-    ],
-    "group": "Schleswig-Holstein",
-    "support": "Katalogsuche und Konto",
-    "title": "Stadtbücherei"
+    ], 
+    "state": "Schleswig-Holstein", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Stadtb\u00fccherei"
 }

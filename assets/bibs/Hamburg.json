@@ -1,6 +1,7 @@
 {
     "api": "zones22", 
     "city": "Hamburg", 
+    "country": "Deutschland", 
     "data": {
         "baseurl": "https://www.buecherhallen.de/alswww2.dll/", 
         "information": "http://www.buecherhallen.de/ca/d/r/"
@@ -9,7 +10,7 @@
         53.5510846, 
         9.9936818
     ], 
-    "group": "Hamburg", 
+    "state": "Hamburg", 
     "support": "Katalogsuche und Konto", 
     "title": "B\u00fccherhallen"
 }

@@ -1,18 +1,19 @@
 {
-    "api": "pica",
-    "city": "Braunschweig",
+    "api": "pica", 
+    "city": "Braunschweig", 
+    "country": "Deutschland", 
     "data": {
-        "baseurl": "https://opac.lbs-braunschweig.gbv.de",
-        "information": "http://www.ostfalia.de/cms/de/bib/",
-        "db": "5",
-		"customssl": true,
-		"accountSupported": false
-    },
+        "accountSupported": false, 
+        "baseurl": "https://opac.lbs-braunschweig.gbv.de", 
+        "customssl": true, 
+        "db": "5", 
+        "information": "http://www.ostfalia.de/cms/de/bib/"
+    }, 
     "geo": [
-        52.27387,
+        52.27387, 
         10.52911
-    ],
-    "group": "Niedersachsen",
-    "support": "Katalogsuche und Konto",
-    "title": "Ostfalia Hochschule für angewandte Wissenschaften"
+    ], 
+    "state": "Niedersachsen", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Ostfalia Hochschule f\u00fcr angewandte Wissenschaften"
 }

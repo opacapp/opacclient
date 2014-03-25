@@ -1,6 +1,7 @@
 {
     "api": "sisis", 
     "city": "Bochum", 
+    "country": "Deutschland", 
     "data": {
         "baseurl": "http://opac.ub.rub.de:8080/webOPACClient", 
         "information": "http://www.ub.rub.de/informationen/oeffnungszeiten.html"
@@ -9,7 +10,7 @@
         51.4818445, 
         7.216236299999999
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Unibibliothek RUB"
 }

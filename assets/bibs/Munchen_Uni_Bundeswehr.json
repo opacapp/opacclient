@@ -1,6 +1,7 @@
 {
     "api": "sisis", 
     "city": "Neubiberg", 
+    "country": "Deutschland", 
     "data": {
         "baseurl": "https://opac.unibw.de/InfoGuideClient.ubysis", 
         "information": "https://www.unibw.de/unibib/ubinfo/oeffnungszeiten/index_html", 
@@ -10,7 +11,7 @@
         48.0747033, 
         11.6714622
     ], 
-    "group": "Bayern", 
+    "state": "Bayern", 
     "support": "Katalogsuche und Konto", 
     "title": "Unibibliothek UniBw M"
 }

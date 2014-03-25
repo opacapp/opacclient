@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Veitsh\u00f6chheim", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -41,7 +42,7 @@
         49.831826, 
         9.8850835
     ], 
-    "group": "Bayern", 
+    "state": "Bayern", 
     "support": "Katalogsuche und Konto", 
     "title": "B\u00fccherei im Bahnhof"
 }

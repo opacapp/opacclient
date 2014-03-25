@@ -1,6 +1,7 @@
 {
     "api": "biber1992", 
     "city": "L\u00fcnen", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 6, 
@@ -37,7 +38,7 @@
         51.6104829, 
         7.5285074
     ], 
-    "group": "Nordrhein-Westfalen", 
-    "support": "Katalogsuche und Konto",
+    "state": "Nordrhein-Westfalen", 
+    "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

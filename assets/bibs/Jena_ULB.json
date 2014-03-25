@@ -1,17 +1,18 @@
 {
-    "api": "pica",
-    "city": "Jena",
+    "api": "pica", 
+    "city": "Jena", 
+    "country": "Deutschland", 
     "data": {
-        "baseurl": "https://kataloge.thulb.uni-jena.de/",
-        "information": "http://www.thulb.uni-jena.de/",
-        "db": "1",
-		"accountSupported": true
-    },
+        "accountSupported": true, 
+        "baseurl": "https://kataloge.thulb.uni-jena.de/", 
+        "db": "1", 
+        "information": "http://www.thulb.uni-jena.de/"
+    }, 
     "geo": [
-        50.9306975,
+        50.9306975, 
         11.5880013
-    ],
-    "group": "Thüringen",
-    "support": "Katalogsuche und Konto",
-    "title": "Universitäts- und Landesbibliothek"
+    ], 
+    "state": "Th\u00fcringen", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Universit\u00e4ts- und Landesbibliothek"
 }

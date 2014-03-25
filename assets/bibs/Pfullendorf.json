@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Pfullendorf", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -48,7 +49,7 @@
         47.925227, 
         9.2486506
     ], 
-    "group": "Baden-W\u00fcrttemberg", 
+    "state": "Baden-W\u00fcrttemberg", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

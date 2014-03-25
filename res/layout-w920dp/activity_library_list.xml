@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/lvBibs"
         android:background="@drawable/list_selector_holo_light"
         android:clickable="true"
         android:focusable="true"
@@ -20,35 +19,55 @@
             android:id="@+id/ivLocationIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/geolocate"
             android:src="@drawable/ic_locate" />
 
         <TextView
             android:id="@+id/tvLocateString"
-            android:layout_width="fill_parent"
-            android:layout_weight="1"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="8dp"
+            android:layout_weight="1"
             android:text="@string/geolocate" />
     </LinearLayout>
 
-    <org.holoeverywhere.widget.ExpandableListView
-        android:id="@+id/lvBibs"
+    <LinearLayout
+        android:id="@+id/llFragments"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/llLocate"
-        android:groupIndicator="@drawable/expander_group_holo_light" >
-    </org.holoeverywhere.widget.ExpandableListView>
+        android:baselineAligned="true"
+        android:orientation="horizontal" >
 
-    <ListView
-        android:id="@+id/lvSimple"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/llLocate"
-        android:groupIndicator="@drawable/expander_group_holo_light"
-        android:visibility="gone" >
-    </ListView>
+        <FrameLayout
+            android:id="@+id/container"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1" >
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/container2"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1" >
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/container3"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1" >
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/container4"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1" >
+        </FrameLayout>
+    </LinearLayout>
 
 </RelativeLayout>

@@ -1,19 +1,20 @@
 {
-    "api": "pica",
-    "city": "Kiel",
+    "api": "pica", 
+    "city": "Kiel", 
+    "country": "Deutschland", 
     "data": {
-        "baseurl": "http://kiopc4.ub.uni-kiel.de:8080/",
-        "httpsbaseurl": "https://lhopc4.ub.uni-kiel.de/",
-        "information": "http://www.ub.uni-kiel.de/",
+        "accountSupported": true, 
+        "baseurl": "http://kiopc4.ub.uni-kiel.de:8080/", 
         "customssl": true, 
-        "db": "1",
-        "accountSupported": true
-    },
+        "db": "1", 
+        "httpsbaseurl": "https://lhopc4.ub.uni-kiel.de/", 
+        "information": "http://www.ub.uni-kiel.de/"
+    }, 
     "geo": [
-        54.3462487,
+        54.3462487, 
         10.1115432
-    ],
-    "group": "Schleswig-Holstein",
-    "support": "Katalogsuche und Konto",
+    ], 
+    "state": "Schleswig-Holstein", 
+    "support": "Katalogsuche und Konto", 
     "title": "Unibibliothek"
 }

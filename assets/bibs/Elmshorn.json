@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Elmshorn", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -42,7 +43,7 @@
         53.7513549, 
         9.6632521
     ], 
-    "group": "Schleswig-Holstein", 
+    "state": "Schleswig-Holstein", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

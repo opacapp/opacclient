@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Herten", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -55,7 +56,7 @@
         51.6020534, 
         7.1389575
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

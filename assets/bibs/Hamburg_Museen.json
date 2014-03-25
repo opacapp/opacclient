@@ -1,17 +1,18 @@
 {
-    "api": "pica",
-    "city": "Hamburg",
+    "api": "pica", 
+    "city": "Hamburg", 
+    "country": "Deutschland", 
     "data": {
-        "baseurl": "https://kataloge.uni-hamburg.de/",
-        "information": "http://www.sub.uni-hamburg.de/home.html",
-        "db": "3",
-		"accountSupported": true
-    },
+        "accountSupported": true, 
+        "baseurl": "https://kataloge.uni-hamburg.de/", 
+        "db": "3", 
+        "information": "http://www.sub.uni-hamburg.de/home.html"
+    }, 
     "geo": [
-        53.55291,
+        53.55291, 
         10.00468
-    ],
-    "group": "Hamburg",
-    "support": "Katalogsuche und Konto",
+    ], 
+    "state": "Hamburg", 
+    "support": "Katalogsuche und Konto", 
     "title": "Museumsbibliotheken"
 }

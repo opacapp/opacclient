@@ -1,6 +1,7 @@
 {
     "api": "sisis", 
     "city": "Augsburg", 
+    "country": "Deutschland", 
     "data": {
         "baseurl": "https://stadtbuecherei1.augsburg.de/webOPACClient.stasis", 
         "information": "http://www.stadtbuecherei.augsburg.de/index.php?id=sb_standorte"
@@ -9,7 +10,7 @@
         48.37144070000001, 
         10.8982552
     ], 
-    "group": "Bayern", 
+    "state": "Bayern", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

@@ -1,13 +1,14 @@
 {
     "api": "bibliotheca", 
     "city": "Hilden", 
+    "country": "Deutschland", 
     "data": {
         "baseurl": "http://www.bibnet.de/webopac", 
         "copiestable": {
             "barcode": 0, 
             "branch": 5, 
             "department": -1, 
-            "location": 1,
+            "location": 1, 
             "reservations": -1, 
             "returndate": 4, 
             "status": 3
@@ -19,7 +20,7 @@
         51.16785669999999, 
         6.9352253
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche", 
     "title": "Stadtb\u00fccherei"
 }

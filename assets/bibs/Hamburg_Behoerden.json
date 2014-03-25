@@ -1,17 +1,18 @@
 {
-    "api": "pica",
-    "city": "Hamburg",
+    "api": "pica", 
+    "city": "Hamburg", 
+    "country": "Deutschland", 
     "data": {
-        "baseurl": "https://kataloge.uni-hamburg.de/",
-        "information": "http://www.sub.uni-hamburg.de/home.html",
-        "db": "5",
-		"accountSupported": true
-    },
+        "accountSupported": true, 
+        "baseurl": "https://kataloge.uni-hamburg.de/", 
+        "db": "5", 
+        "information": "http://www.sub.uni-hamburg.de/home.html"
+    }, 
     "geo": [
-        53.5740555,
+        53.5740555, 
         10.0322024
-    ],
-    "group": "Hamburg",
-    "support": "Katalogsuche und Konto",
-    "title": "Behördenbibliotheken und Hamburg Port Authority"
+    ], 
+    "state": "Hamburg", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Beh\u00f6rdenbibliotheken und Hamburg Port Authority"
 }

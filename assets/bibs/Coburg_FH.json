@@ -1,6 +1,7 @@
 {
     "api": "sisis", 
     "city": "Coburg", 
+    "country": "Deutschland", 
     "data": {
         "baseurl": "https://recherche.bibkatalog.de/InfoGuideClient.fwssis", 
         "homebranch": "5", 
@@ -11,7 +12,7 @@
         50.2640337, 
         10.9633776
     ], 
-    "group": "Bayern", 
+    "state": "Bayern", 
     "support": "Katalogsuche und Konto", 
     "title": "Hochschulbibliothek"
 }

@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Lehrte", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -33,7 +34,7 @@
         52.3746255, 
         9.9784211
     ], 
-    "group": "Niedersachsen", 
+    "state": "Niedersachsen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

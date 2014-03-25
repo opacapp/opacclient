@@ -1,17 +1,18 @@
 {
-    "api": "pica",
-    "city": "Hamburg",
+    "api": "pica", 
+    "city": "Hamburg", 
+    "country": "Deutschland", 
     "data": {
-        "baseurl": "https://kataloge.uni-hamburg.de/",
-        "information": "http://www.haw-hamburg.de/hibs.html",
-        "db": "2",
-		"accountSupported": true
-    },
+        "accountSupported": true, 
+        "baseurl": "https://kataloge.uni-hamburg.de/", 
+        "db": "2", 
+        "information": "http://www.haw-hamburg.de/hibs.html"
+    }, 
     "geo": [
-        53.5651789,
+        53.5651789, 
         10.0223076
-    ],
-    "group": "Hamburg",
-    "support": "Katalogsuche und Konto",
+    ], 
+    "state": "Hamburg", 
+    "support": "Katalogsuche und Konto", 
     "title": "Hochschulinformations- und Bibliotheksservice (HIBS) der HAW"
 }

@@ -1,6 +1,7 @@
 {
     "api": "sisis", 
     "city": "Erlangen-N\u00fcrnberg", 
+    "country": "Deutschland", 
     "data": {
         "baseurl": "https://www.opac.uni-erlangen.de/InfoGuideClient.uersis", 
         "information": "http://www.ub.uni-erlangen.de/ub/oeffnungszeiten/", 
@@ -10,7 +11,7 @@
         49.596689, 
         11.006667
     ], 
-    "group": "Bayern", 
+    "state": "Bayern", 
     "support": "Katalogsuche und Konto (experimentell)", 
     "title": "Universit\u00e4tsbibliothek"
 }

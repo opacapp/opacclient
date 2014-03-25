@@ -1,6 +1,7 @@
 {
     "api": "biber1992", 
     "city": "Erkrath", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 6, 
@@ -39,7 +40,7 @@
         51.2213125, 
         6.9073473
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "G\u00f6ttingen", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 3, 
@@ -62,7 +63,7 @@
         51.538352, 
         9.9296899
     ], 
-    "group": "Niedersachsen", 
+    "state": "Niedersachsen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

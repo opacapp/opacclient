@@ -1,6 +1,7 @@
 {
     "api": "biber1992", 
     "city": "Herford", 
+    "country": "Deutschland", 
     "data": {
         "baseurl": "http://62.153.231.37", 
         "copiestable": {
@@ -24,7 +25,7 @@
         52.1178305, 
         8.679399799999999
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche", 
     "title": "Stadtbibliothek"
 }

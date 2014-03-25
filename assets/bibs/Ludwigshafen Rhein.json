@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Ludwigshafen (Rhein)", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -49,7 +50,7 @@
         49.4908113, 
         8.4147976
     ], 
-    "group": "Rheinland-Pfalz", 
+    "state": "Rheinland-Pfalz", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

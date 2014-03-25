@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Reutlingen", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 1, 
@@ -56,7 +57,7 @@
         48.50693889999999, 
         9.2038043
     ], 
-    "group": "Baden-W\u00fcrttemberg", 
+    "state": "Baden-W\u00fcrttemberg", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

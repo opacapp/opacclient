@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Forchheim", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -50,7 +51,7 @@
         49.7213064, 
         11.0698834
     ], 
-    "group": "Bayern", 
+    "state": "Bayern", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

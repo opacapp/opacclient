@@ -1,18 +1,19 @@
 {
-    "api": "pica",
-    "city": "Schmalkalden",
+    "api": "pica", 
+    "city": "Schmalkalden", 
+    "country": "Deutschland", 
     "data": {
-        "baseurl": "http://opac.lbs-ilmenau.gbv.de/",
-        "httpsbaseurl": "https://opac.lbs-ilmenau.gbv.de/",
-        "information": "http://www.fh-schmalkalden.de/Bibliothek-path-1,5.html",
-        "db": "2",
-        "accountSupported": true
-    },
+        "accountSupported": true, 
+        "baseurl": "http://opac.lbs-ilmenau.gbv.de/", 
+        "db": "2", 
+        "httpsbaseurl": "https://opac.lbs-ilmenau.gbv.de/", 
+        "information": "http://www.fh-schmalkalden.de/Bibliothek-path-1,5.html"
+    }, 
     "geo": [
-        50.721389,
-		10.451111
+        50.721389, 
+        10.451111
     ], 
-    "group": "Thüringen", 
-    "support": "Katalogsuche und Konto",
+    "state": "Th\u00fcringen", 
+    "support": "Katalogsuche und Konto", 
     "title": "Bibliothek der FH"
 }

@@ -1,6 +1,7 @@
 {
     "api": "sisis", 
     "city": "Bremen", 
+    "country": "Deutschland", 
     "data": {
         "baseurl": "https://opac.stadtbibliothek-bremen.de/webOPACClient", 
         "information": "http://www.stadtbibliothek-bremen.de/bibliotheken.php"
@@ -9,8 +10,8 @@
         53.07929619999999, 
         8.8016937
     ], 
-    "group": "Bremen", 
-	"replacedby": "de.opacapp.bremen",
+    "replacedby": "de.opacapp.bremen", 
+    "state": "Bremen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

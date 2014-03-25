@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Bergheim", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -36,7 +37,7 @@
         50.9451945, 
         6.6555022
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

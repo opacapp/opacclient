@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Wolfsburg", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -36,7 +37,7 @@
         52.4226503, 
         10.7865461
     ], 
-    "group": "Niedersachsen", 
+    "state": "Niedersachsen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

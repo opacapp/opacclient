@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "T\u00fcbingen", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -13,7 +14,6 @@
             "title": 1
         }, 
         "baseurl": "https://wwwopac.rz-kiru.de/tuebingen", 
-		"customssl": true,
         "copiestable": {
             "barcode": 6, 
             "branch": 0, 
@@ -23,6 +23,7 @@
             "returndate": 5, 
             "status": 4
         }, 
+        "customssl": true, 
         "information": "/../readTuebingen/info.html", 
         "reservationtable": {
             "author": 0, 
@@ -37,7 +38,7 @@
         48.5216364, 
         9.0576448
     ], 
-    "group": "Baden-W\u00fcrttemberg", 
+    "state": "Baden-W\u00fcrttemberg", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

@@ -1,6 +1,7 @@
 {
     "api": "sisis", 
     "city": "Aschaffenburg", 
+    "country": "Deutschland", 
     "data": {
         "baseurl": "https://recherche.bibkatalog.de/InfoGuideClient.fwssis", 
         "homebranch": "3", 
@@ -11,7 +12,7 @@
         49.97354740000001, 
         9.1525973
     ], 
-    "group": "Bayern", 
+    "state": "Bayern", 
     "support": "Katalogsuche und Konto", 
     "title": "Hochschulbibliothek"
 }

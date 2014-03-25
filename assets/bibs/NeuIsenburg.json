@@ -1,6 +1,7 @@
 {
     "api": "biber1992", 
     "city": "Neu-Isenburg", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 7, 
@@ -13,23 +14,23 @@
             "title": 7
         }, 
         "baseurl": "http://217.91.45.155", 
-        "information": "http://www.neu-isenburg.de/erlebniswelt/stadtbibliothek",
+        "information": "http://www.neu-isenburg.de/erlebniswelt/stadtbibliothek", 
         "mediatypes": {
             "1": "BOOK", 
+            "10": "MAP", 
+            "11": "DVD", 
             "19": "BOOK", 
             "2": "MAGAZINE", 
+            "20": "AUDIOBOOK", 
+            "26": "GAME_CONSOLE", 
             "3": "CD_SOFTWARE", 
+            "30": "EBOOK", 
+            "31": "EBOOK", 
             "4": "MOVIE", 
             "5": "AUDIO_CASSETTE", 
             "6": "CD_MUSIC", 
             "8": "SCORE_MUSIC", 
-            "9": "BOARDGAME", 
-            "10": "MAP", 
-            "11": "DVD", 
-            "20": "AUDIOBOOK", 
-            "26": "GAME_CONSOLE", 
-            "30": "EBOOK", 
-            "31": "EBOOK"
+            "9": "BOARDGAME"
         }, 
         "opacdir": "opax", 
         "searchtable": [
@@ -42,7 +43,7 @@
         50.0522076, 
         8.6952638
     ], 
-    "group": "Hessen", 
+    "state": "Hessen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }

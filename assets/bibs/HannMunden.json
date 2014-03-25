@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Hann. M\u00fcnden", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -41,7 +42,7 @@
         51.419285, 
         9.6557588
     ], 
-    "group": "Niedersachsen", 
+    "state": "Niedersachsen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

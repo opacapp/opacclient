@@ -1,6 +1,7 @@
 {
     "api": "pica", 
     "city": "Magdeburg", 
+    "country": "Deutschland", 
     "data": {
         "accountSupported": true, 
         "baseurl": "https://opac.uni-magdeburg.de", 
@@ -11,7 +12,7 @@
         52.130807, 
         11.628878
     ], 
-    "group": "Sachsen-Anhalt", 
+    "state": "Sachsen-Anhalt", 
     "support": "Katalogsuche und Konto", 
     "title": "Hochschulbibliothek"
 }

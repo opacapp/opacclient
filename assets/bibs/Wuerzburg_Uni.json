@@ -1,6 +1,7 @@
 {
     "api": "sisis", 
     "city": "W\u00fcrzburg", 
+    "country": "Deutschland", 
     "data": {
         "baseurl": "http://katalog.bibliothek.uni-wuerzburg.de/InfoGuideClient.ubwsis", 
         "information": "http://www.bibliothek.uni-wuerzburg.de/ub_infos/oeffnungszeiten/"
@@ -9,7 +10,7 @@
         49.7915953, 
         9.953571499999999
     ], 
-    "group": "Bayern", 
+    "state": "Bayern", 
     "support": "Katalogsuche und Konto", 
     "title": "Unibibliothek"
 }

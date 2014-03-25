@@ -1,6 +1,7 @@
 {
     "api": "biber1992", 
     "city": "N\u00fcrtingen", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 8, 
@@ -22,31 +23,29 @@
             "returndate": -1, 
             "status": 4
         }, 
-        "information": "http://www.nuertingen.de/?id=260",
+        "information": "http://www.nuertingen.de/?id=260", 
         "mediatypes": {
             "1": "BOOK", 
-            "2": "BOOK",
-			"10": "MAGAZINE",
-			"3": "BOOK",
-			"6": "CD",
-			"4": "MOVIE",
+            "10": "MAGAZINE", 
             "11": "MOVIE", 
-            "5": "CD", 
-            "9": "BOARDGAME", 
-            "4": "GAME_CONSOLE_WII", 
+            "2": "BOOK", 
+            "3": "BOOK", 
             "30": "EBOOK", 
+            "4": "GAME_CONSOLE_WII", 
+            "5": "CD", 
             "6": "CD", 
-            "8": "BOOK"
+            "8": "BOOK", 
+            "9": "BOARDGAME"
         }, 
         "opacdir": "opax", 
-		"reservationtable": {
-			"author": 3,
-			"availability": 6,
-			"branch": -1,
-			"cancelurl": -1, 
-			"expirationdate": 5,
-			"title": 3
-		},
+        "reservationtable": {
+            "author": 3, 
+            "availability": 6, 
+            "branch": -1, 
+            "cancelurl": -1, 
+            "expirationdate": 5, 
+            "title": 3
+        }, 
         "searchtable": [
             2, 
             3, 
@@ -57,7 +56,7 @@
         48.624421, 
         9.3469069
     ], 
-    "group": "Baden-W\u00fcrttemberg", 
+    "state": "Baden-W\u00fcrttemberg", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

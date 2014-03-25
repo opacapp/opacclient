@@ -39,7 +39,8 @@ public class Library implements Comparable<Library> {
 	private String support;
 	private String api;
 	private JSONObject data;
-	private String group;
+	private String country;
+	private String state;
 	private String replacedby;
 	private double[] geo;
 	private float geo_distance;
@@ -64,7 +65,8 @@ public class Library implements Comparable<Library> {
 		lib.setCity(input.getString("city"));
 		lib.setTitle(input.getString("title"));
 		lib.setSupport(input.getString("support"));
-		lib.setGroup(input.getString("group"));
+		lib.setCountry(input.getString("country"));
+		lib.setState(input.getString("state"));
 		lib.setData(input.getJSONObject("data"));
 		if (input.has("replacedby"))
 			lib.setReplacedBy(input.getString("replacedby"));
@@ -202,22 +204,33 @@ public class Library implements Comparable<Library> {
 	}
 
 	/**
-	 * Get group the library belongs to
-	 * 
-	 * @return Group label
+	 * @return the country
 	 */
-	public String getGroup() {
-		return group;
+	public String getCountry() {
+		return country;
 	}
 
 	/**
-	 * Set group the library belongs to
-	 * 
-	 * @param group
-	 *            Group label
+	 * @param country
+	 *            the country to set
 	 */
-	public void setGroup(String group) {
-		this.group = group;
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	/**
+	 * @return the state
+	 */
+	public String getState() {
+		return state;
+	}
+
+	/**
+	 * @param state
+	 *            the state to set
+	 */
+	public void setState(String state) {
+		this.state = state;
 	}
 
 	/**
@@ -267,9 +280,13 @@ public class Library implements Comparable<Library> {
 		Collator deCollator = Collator.getInstance(Locale.GERMAN);
 		deCollator.setStrength(Collator.PRIMARY);
 
-		int g = deCollator.compare(group, arg0.getGroup());
-		if (g == 0)
-			g = deCollator.compare(city, arg0.getCity());
+		int g = deCollator.compare(country, arg0.getCountry());
+		if (g == 0) {
+			g = deCollator.compare(state, arg0.getState());
+			if (g == 0) {
+				g = deCollator.compare(city, arg0.getCity());
+			}
+		}
 		return g;
 	}
 

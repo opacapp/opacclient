@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Marl", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -66,7 +67,7 @@
         51.65913, 
         7.106011
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

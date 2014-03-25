@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Datteln", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -66,7 +67,7 @@
         51.6461362, 
         7.3348301
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

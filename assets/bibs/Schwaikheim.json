@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Schwaikheim", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -47,7 +48,7 @@
         48.8732234, 
         9.3526778
     ], 
-    "group": "Baden-W\u00fcrttemberg", 
+    "state": "Baden-W\u00fcrttemberg", 
     "support": "Katalogsuche und Konto", 
     "title": "Gemeindeb\u00fccherei"
 }

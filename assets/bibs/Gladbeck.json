@@ -1,6 +1,7 @@
 {
     "api": "bibliotheca", 
     "city": "Gladbeck", 
+    "country": "Deutschland", 
     "data": {
         "accounttable": {
             "author": 0, 
@@ -66,7 +67,7 @@
         51.5706624, 
         6.985392099999999
     ], 
-    "group": "Nordrhein-Westfalen", 
+    "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
     "title": "Stadtb\u00fccherei"
 }

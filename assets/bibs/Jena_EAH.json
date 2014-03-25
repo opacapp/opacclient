@@ -1,17 +1,18 @@
 {
-    "api": "pica",
-    "city": "Jena",
+    "api": "pica", 
+    "city": "Jena", 
+    "country": "Deutschland", 
     "data": {
-        "baseurl": "https://kataloge.thulb.uni-jena.de/",
-        "information": "http://www.fh-jena.de/fhj/bib/de/Seiten/default.aspx",
-        "db": "2",
-		"accountSupported": true
-    },
+        "accountSupported": true, 
+        "baseurl": "https://kataloge.thulb.uni-jena.de/", 
+        "db": "2", 
+        "information": "http://www.fh-jena.de/fhj/bib/de/Seiten/default.aspx"
+    }, 
     "geo": [
-        50.9306975,
+        50.9306975, 
         11.5880013
-    ],
-    "group": "Thüringen",
-    "support": "Katalogsuche und Konto",
+    ], 
+    "state": "Th\u00fcringen", 
+    "support": "Katalogsuche und Konto", 
     "title": "Bibliothek Ernst-Abbe-Fachhochschule"
 }
