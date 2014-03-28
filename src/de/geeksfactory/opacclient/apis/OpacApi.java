@@ -519,7 +519,7 @@ public interface OpacApi {
 	 * @since 2.0.6
 	 */
 	public SearchRequestResult filterResults(Filter filter, Filter.Option option)
-			throws IOException, NotReachableException;
+			throws IOException, NotReachableException, OpacErrorException;
 
 	/**
 	 * Get result page <code>page</code> of the search performed last with
