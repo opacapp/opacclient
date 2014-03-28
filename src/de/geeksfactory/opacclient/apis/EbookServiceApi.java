@@ -26,6 +26,7 @@ import java.io.IOException;
 import org.json.JSONException;
 
 import android.net.Uri;
+import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.DetailledItem;
@@ -41,7 +42,7 @@ import de.geeksfactory.opacclient.objects.DetailledItem;
 public interface EbookServiceApi {
 
 	public AccountData account(Account account) throws IOException,
-			JSONException;
+			JSONException, OpacErrorException;
 
 	/**
 	 * The result of a {@link #booking(String, Account, int, String)} call. The
@@ -53,7 +54,7 @@ public interface EbookServiceApi {
 		public BookingResult(Status status) {
 			super(status);
 		}
-		
+
 		public BookingResult(Status status, String message) {
 			super(status, message);
 		}
@@ -65,7 +66,8 @@ public interface EbookServiceApi {
 	 * in your getResult hook.
 	 */
 	public BookingResult booking(String booking_info, Account account,
-			int useraction, String selection) throws IOException;
+			int useraction, String selection) throws IOException,
+			OpacErrorException;
 
 	/**
 	 * Is this a supported downloadable ebook? May not do network requests.
