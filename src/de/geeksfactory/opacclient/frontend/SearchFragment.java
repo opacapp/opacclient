@@ -52,11 +52,11 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
 	private boolean advanced = false;
 	private Set<String> fields;
-	
+
 	private List<ContentValues> spinnerCategory_data;
 	private List<ContentValues> spinnerBranch_data;
 	private List<ContentValues> spinnerHomeBranch_data;
-	
+
 	private long last_meta_try = 0;
 	public boolean metaDataLoading = false;
 	private LoadMetaDataTask lmdt;
@@ -66,9 +66,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		view = inflater.inflate(R.layout.fragment_search, container, false);
-		
+
 		setHasOptionsMenu(true);
-		
+
 		setRetainInstance(true);
 
 		sp = ((OpacActivity) getActivity()).getDefaultSharedPreferences();
@@ -307,8 +307,10 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		String selection;
 		int selected = 0, i = 0;
 
-		if (spinnerHomeBranch_data != null && spinnerHomeBranch_data.size() > 0
-				&& spinnerHomeBranch_data.size() > cbZstHome.getSelectedItemPosition()
+		if (spinnerHomeBranch_data != null
+				&& spinnerHomeBranch_data.size() > 0
+				&& spinnerHomeBranch_data.size() > cbZstHome
+						.getSelectedItemPosition()
 				&& cbZstHome.getSelectedItemPosition() > 0) {
 			zst_home_before = spinnerHomeBranch_data.get(
 					cbZstHome.getSelectedItemPosition()).getAsString("key");
@@ -316,14 +318,14 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		if (spinnerBranch_data != null
 				&& spinnerBranch_data.size() > cbZst.getSelectedItemPosition()
 				&& cbZst.getSelectedItemPosition() > 0) {
-			zst_before = spinnerBranch_data.get(cbZst.getSelectedItemPosition())
-					.getAsString("key");
+			zst_before = spinnerBranch_data
+					.get(cbZst.getSelectedItemPosition()).getAsString("key");
 		}
 		if (spinnerCategory_data != null
 				&& spinnerCategory_data.size() > cbMg.getSelectedItemPosition()
 				&& cbMg.getSelectedItemPosition() > 0) {
-			mg_before = spinnerCategory_data.get(cbMg.getSelectedItemPosition())
-					.getAsString("key");
+			mg_before = spinnerCategory_data
+					.get(cbMg.getSelectedItemPosition()).getAsString("key");
 		}
 
 		MetaDataSource data = new SQLMetaDataSource(app);
@@ -376,14 +378,16 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 			i++;
 		}
 		cbZstHome.setAdapter(((OpacActivity) getActivity()).new MetaAdapter(
-				getActivity(), spinnerHomeBranch_data, R.layout.simple_spinner_item));
+				getActivity(), spinnerHomeBranch_data,
+				R.layout.simple_spinner_item));
 		cbZstHome.setSelection(selected);
 
 		spinnerCategory_data = data.getMeta(app.getLibrary().getIdent(),
 				MetaDataSource.META_TYPE_CATEGORY);
 		spinnerCategory_data.add(0, all);
 		cbMg.setAdapter(((OpacActivity) getActivity()).new MetaAdapter(
-				getActivity(), spinnerCategory_data, R.layout.simple_spinner_item));
+				getActivity(), spinnerCategory_data,
+				R.layout.simple_spinner_item));
 		if (!"".equals(mg_before)) {
 			selected = 0;
 			i = 0;
@@ -469,9 +473,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
 		@Override
 		protected void onPostExecute(Boolean result) {
-			if(getActivity() == null)
+			if (getActivity() == null)
 				return;
-			
+
 			if (account == app.getAccount().getId()) {
 				metaDataLoading = false;
 				loadingIndicators();
@@ -501,6 +505,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		String zst = "";
 		String mg = "";
 		String zst_home = "";
+		if (spinnerBranch_data == null)
+			return null;
 		if (spinnerBranch_data.size() > 1)
 			zst = spinnerBranch_data.get(
 					((Spinner) view.findViewById(R.id.cbBranch))

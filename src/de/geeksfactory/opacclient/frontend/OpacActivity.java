@@ -65,15 +65,15 @@ public abstract class OpacActivity extends Activity {
 	protected AlertDialog adialog;
 	protected AccountDataSource aData;
 
-	private int selectedItemPos;
+	protected int selectedItemPos;
 
-	private NavigationAdapter navAdapter;
-	private ListView drawerList;
-	private DrawerLayout drawerLayout;
-	private ActionBarDrawerToggle drawerToggle;
-	private CharSequence mTitle;
+	protected NavigationAdapter navAdapter;
+	protected ListView drawerList;
+	protected DrawerLayout drawerLayout;
+	protected ActionBarDrawerToggle drawerToggle;
+	protected CharSequence mTitle;
 
-	private List<Account> accounts;
+	protected List<Account> accounts;
 
 	protected Fragment fragment;
 	protected boolean hasDrawer = false;
@@ -236,7 +236,7 @@ public abstract class OpacActivity extends Activity {
 		}
 	}
 
-	private class DrawerItemClickListener implements OnItemClickListener {
+	public class DrawerItemClickListener implements OnItemClickListener {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
@@ -358,7 +358,7 @@ public abstract class OpacActivity extends Activity {
 		mTitle = title;
 	}
 
-	private void deselectItemsByType(int type) {
+	protected void deselectItemsByType(int type) {
 		for (int i = 0; i < navAdapter.getCount(); i++) {
 			if (navAdapter.getItemViewType(i) == type)
 				drawerList.setItemChecked(i, false);

@@ -40,14 +40,14 @@ public class SearchResultListActivity extends OpacActivity implements
 	 * Whether or not the activity is in two-pane mode, i.e. running on a tablet
 	 * device.
 	 */
-	private boolean mTwoPane;
+	protected boolean mTwoPane;
 
 	protected SearchRequestResult searchresult;
 
-	private SearchStartTask st;
+	protected SearchStartTask st;
 
-	private SearchResultListFragment listFragment;
-	private SearchResultDetailFragment detailFragment;
+	protected SearchResultListFragment listFragment;
+	protected SearchResultDetailFragment detailFragment;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

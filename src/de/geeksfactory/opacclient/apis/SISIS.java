@@ -1603,7 +1603,7 @@ public class SISIS extends BaseApi implements OpacApi {
 
 	@Override
 	public SearchRequestResult filterResults(Filter filter, Option option)
-			throws IOException, NotReachableException {
+			throws IOException, NotReachableException, OpacErrorException {
 		// TODO Auto-generated method stub
 		return null;
 	}

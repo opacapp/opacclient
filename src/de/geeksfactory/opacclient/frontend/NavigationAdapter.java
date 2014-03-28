@@ -14,9 +14,9 @@ import de.geeksfactory.opacclient.R;
 
 public class NavigationAdapter extends BaseAdapter {
 
-	private ArrayList<Item> mData = new ArrayList<Item>();
-	private LayoutInflater mInflater;
-	private Context mContext;
+	protected ArrayList<Item> mData = new ArrayList<Item>();
+	protected LayoutInflater mInflater;
+	protected Context mContext;
 
 	public NavigationAdapter(Context context) {
 		mContext = context;
@@ -178,10 +178,10 @@ public class NavigationAdapter extends BaseAdapter {
 		public String tag;
 		public long accountId;
 
-		static final int TYPE_TEXT = 0;
-		static final int TYPE_ACCOUNT = 1;
-		static final int TYPE_SEPARATOR = 2;
-		static final int TYPE_MAX_COUNT = TYPE_SEPARATOR + 1;
+		public static final int TYPE_TEXT = 0;
+		public static final int TYPE_ACCOUNT = 1;
+		public static final int TYPE_SEPARATOR = 2;
+		public static final int TYPE_MAX_COUNT = TYPE_SEPARATOR + 1;
 	}
 
 }
