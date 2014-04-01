@@ -165,10 +165,6 @@ public class NavigationAdapter extends BaseAdapter {
 		public ImageView icon;
 	}
 
-	public enum Type {
-		TYPE_TEXT, TYPE_LIBRARY, TYPE_SEPERATOR
-	}
-
 	public static class Item {
 		public int type;
 		public Integer iconDrawable;
@@ -181,7 +177,7 @@ public class NavigationAdapter extends BaseAdapter {
 		public static final int TYPE_TEXT = 0;
 		public static final int TYPE_ACCOUNT = 1;
 		public static final int TYPE_SEPARATOR = 2;
-		public static final int TYPE_MAX_COUNT = TYPE_SEPARATOR + 1;
+		public static int TYPE_MAX_COUNT = TYPE_SEPARATOR + 1;
 	}
 
 }

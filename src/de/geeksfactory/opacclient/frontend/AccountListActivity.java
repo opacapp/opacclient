@@ -41,7 +41,7 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 
 public class AccountListActivity extends Activity {
 
-	private List<Account> accounts;
+	protected List<Account> accounts;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -55,7 +55,7 @@ public class AccountListActivity extends Activity {
 		startActivity(i);
 	}
 
-	private void refreshLv() {
+	public void refreshLv() {
 		ListView lvAccounts = (ListView) findViewById(R.id.lvAccounts);
 		AccountDataSource data = new AccountDataSource(this);
 		data.open();
