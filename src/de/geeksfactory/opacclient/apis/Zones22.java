@@ -645,6 +645,9 @@ public class Zones22 extends BaseApi {
 		if (doc.select(".AccountSummaryCounterLink").size() > 0) {
 			return doc;
 		}
+		if(doc.select("#LoginForm").size() == 0) {
+			throw new NotReachableException();
+		}
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 		for (Element input : doc.select("#LoginForm input")) {
@@ -656,6 +659,7 @@ public class Zones22 extends BaseApi {
 		params.add(new BasicNameValuePair("BRWR", acc.getName()));
 		params.add(new BasicNameValuePair("PIN", acc.getPassword()));
 
+		
 		String loginHtml;
 		try {
 			loginHtml = httpPost(
