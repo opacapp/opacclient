@@ -3,7 +3,7 @@
     "city": "Augsburg", 
     "country": "Deutschland", 
     "data": {
-        "baseurl": "https://stadtbuecherei1.augsburg.de/webOPACClient.stasis", 
+        "baseurl": "https://opac-stadtbuecherei.augsburg.de/webOPACClient.stasis", 
         "information": "http://www.stadtbuecherei.augsburg.de/index.php?id=sb_standorte"
     }, 
     "geo": [

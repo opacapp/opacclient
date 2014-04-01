@@ -642,7 +642,7 @@ public class AccountFragment extends Fragment implements
 
 		@Override
 		protected void onPostExecute(AccountData result) {
-			if (result != null) {
+			if (exception == null) {
 				loaded(result);
 			} else {
 				refreshing = false;
