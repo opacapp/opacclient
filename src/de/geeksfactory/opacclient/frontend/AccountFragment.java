@@ -337,6 +337,19 @@ public class AccountFragment extends Fragment implements
 	}
 
 	public void refresh() {
+
+		if ((!app.getApi().isAccountSupported(app.getLibrary()) && (app
+				.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ACCOUNT_EXTENDABLE) == 0)
+				|| !app.getApi().isAccountSupported(app.getLibrary())
+				|| account.getPassword() == null
+				|| account.getPassword().equals("null")
+				|| account.getPassword().equals("")
+				|| account.getName() == null
+				|| account.getName().equals("null")
+				|| account.getName().equals("")) {
+			return;
+		}
+
 		refreshing = true;
 
 		getActivity().supportInvalidateOptionsMenu();
@@ -630,7 +643,7 @@ public class AccountFragment extends Fragment implements
 
 		@Override
 		protected void onPostExecute(AccountData result) {
-			if (result != null) {
+			if (exception == null) {
 				loaded(result);
 			} else {
 				refreshing = false;

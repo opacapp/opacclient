@@ -98,6 +98,12 @@ public class SISIS extends BaseApi implements OpacApi {
 	static {
 		defaulttypes.put("g", MediaType.EBOOK);
 		defaulttypes.put("d", MediaType.CD);
+		defaulttypes.put("Buch", MediaType.BOOK);
+		defaulttypes.put("Bücher", MediaType.BOOK);
+		defaulttypes.put("Printmedien", MediaType.BOOK);
+		defaulttypes.put("Zeitschrift", MediaType.MAGAZINE);
+		defaulttypes.put("Zeitschriften", MediaType.MAGAZINE);
+		defaulttypes.put("Einzelband einer Serie, siehe auch übergeordnete Titel", MediaType.BOOK);
 		defaulttypes.put("0", MediaType.BOOK);
 		defaulttypes.put("1", MediaType.BOOK);
 		defaulttypes.put("2", MediaType.BOOK);
@@ -106,16 +112,22 @@ public class SISIS extends BaseApi implements OpacApi {
 		defaulttypes.put("6", MediaType.SCORE_MUSIC);
 		defaulttypes.put("7", MediaType.CD_MUSIC);
 		defaulttypes.put("8", MediaType.CD_MUSIC);
+		defaulttypes.put("Tonträger", MediaType.CD_MUSIC);
 		defaulttypes.put("12", MediaType.CD);
 		defaulttypes.put("13", MediaType.CD);
+		defaulttypes.put("CD", MediaType.CD);
+		defaulttypes.put("DVD", MediaType.DVD);
 		defaulttypes.put("14", MediaType.CD);
 		defaulttypes.put("15", MediaType.DVD);
 		defaulttypes.put("16", MediaType.CD);
+		defaulttypes.put("Film", MediaType.MOVIE);
+		defaulttypes.put("Filme", MediaType.MOVIE);
 		defaulttypes.put("17", MediaType.MOVIE);
 		defaulttypes.put("18", MediaType.MOVIE);
 		defaulttypes.put("19", MediaType.MOVIE);
 		defaulttypes.put("20", MediaType.DVD);
 		defaulttypes.put("21", MediaType.SCORE_MUSIC);
+		defaulttypes.put("Noten", MediaType.SCORE_MUSIC);
 		defaulttypes.put("22", MediaType.BOARDGAME);
 		defaulttypes.put("26", MediaType.CD);
 		defaulttypes.put("27", MediaType.CD);
@@ -135,9 +147,12 @@ public class SISIS extends BaseApi implements OpacApi {
 		defaulttypes.put("EB", MediaType.EBOOK);
 		defaulttypes.put("buch01", MediaType.BOOK);
 		defaulttypes.put("buch02", MediaType.PACKAGE_BOOKS);
+		defaulttypes.put("Medienpaket", MediaType.PACKAGE);
+		defaulttypes.put("Medienpaket, Lernkiste, Lesekiste", MediaType.PACKAGE);
 		defaulttypes.put("buch03", MediaType.BOOK);
 		defaulttypes.put("buch04", MediaType.PACKAGE_BOOKS);
 		defaulttypes.put("buch05", MediaType.PACKAGE_BOOKS);
+		defaulttypes.put("Web-Link", MediaType.URL);
 	}
 
 	@Override
@@ -397,26 +412,27 @@ public class SISIS extends BaseApi implements OpacApi {
 			Element tr = table.get(i);
 			SearchResult sr = new SearchResult();
 			if (tr.select("td img").size() > 0) {
+				String title = tr.select("td img").get(0).attr("title");
 				String[] fparts = tr.select("td img").get(0).attr("src")
 						.split("/");
 				String fname = fparts[fparts.length - 1];
+				MediaType default_by_fname = defaulttypes.get(fname
+						.toLowerCase(Locale.GERMAN).replace(".jpg", "")
+						.replace(".gif", "").replace(".png", ""));
+				MediaType default_by_title = defaulttypes.get(title);
+				MediaType default_name = default_by_title != null ? default_by_title
+						: default_by_fname;
 				if (data.has("mediatypes")) {
 					try {
 						sr.setType(MediaType.valueOf(data.getJSONObject(
 								"mediatypes").getString(fname)));
 					} catch (JSONException e) {
-						sr.setType(defaulttypes.get(fname
-								.toLowerCase(Locale.GERMAN).replace(".jpg", "")
-								.replace(".gif", "").replace(".png", "")));
+						sr.setType(default_name);
 					} catch (IllegalArgumentException e) {
-						sr.setType(defaulttypes.get(fname
-								.toLowerCase(Locale.GERMAN).replace(".jpg", "")
-								.replace(".gif", "").replace(".png", "")));
+						sr.setType(default_name);
 					}
 				} else {
-					sr.setType(defaulttypes.get(fname
-							.toLowerCase(Locale.GERMAN).replace(".jpg", "")
-							.replace(".gif", "").replace(".png", "")));
+					sr.setType(default_name);
 				}
 			}
 			String alltext = tr.text();
