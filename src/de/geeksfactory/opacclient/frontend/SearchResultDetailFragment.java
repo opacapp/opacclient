@@ -1090,9 +1090,7 @@ public class SearchResultDetailFragment extends Fragment {
 				if (result.getMessage() != null) {
 					AlertDialog.Builder builder = new AlertDialog.Builder(
 							getActivity());
-					builder.setMessage(
-							getString(R.string.opac_error) + " "
-									+ result.getMessage())
+					builder.setMessage(result.getMessage())
 							.setCancelable(false)
 							.setNegativeButton(R.string.dismiss,
 									new DialogInterface.OnClickListener() {
