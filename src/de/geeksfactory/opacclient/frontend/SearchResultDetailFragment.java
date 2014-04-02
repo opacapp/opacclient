@@ -657,8 +657,7 @@ public class SearchResultDetailFragment extends Fragment {
 
 			try {
 				BookingResult res = ((EbookServiceApi) app.getApi()).booking(
-						item, app.getAccount(),
-						useraction, selection);
+						item, app.getAccount(), useraction, selection);
 				return res;
 			} catch (java.net.UnknownHostException e) {
 				publishProgress(e, "ioerror");
@@ -1117,8 +1116,8 @@ public class SearchResultDetailFragment extends Fragment {
 					AlertDialog alert = builder.create();
 					alert.show();
 				} else {
-					Intent intent = new Intent(getActivity(),
-							app.getMainActivity());
+					Intent intent = new Intent(getActivity(), app
+							.getMainActivity());
 					intent.putExtra("fragment", "account");
 					getActivity().startActivity(intent);
 					getActivity().finish();

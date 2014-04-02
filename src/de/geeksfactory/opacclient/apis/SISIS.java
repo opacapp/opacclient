@@ -273,28 +273,28 @@ public class SISIS extends BaseApi implements OpacApi {
 			params.add(new BasicNameValuePair("methodToCallParameter",
 					"submitSearch"));
 
-			index = addParameters(query, KEY_SEARCH_QUERY_FREE, "-1", params,
-					index);
-			index = addParameters(query, KEY_SEARCH_QUERY_TITLE, "331", params,
-					index);
-			index = addParameters(query, KEY_SEARCH_QUERY_AUTHOR, "100",
-					params, index);
-			index = addParameters(query, KEY_SEARCH_QUERY_ISBN, "540", params,
-					index);
-			index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDA, "902",
-					params, index);
-			index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDB, "710",
-					params, index);
-			index = addParameters(query, KEY_SEARCH_QUERY_YEAR, "425", params,
-					index);
-			index = addParameters(query, KEY_SEARCH_QUERY_PUBLISHER, "412",
-					params, index);
-			index = addParameters(query, KEY_SEARCH_QUERY_SYSTEM, "700",
-					params, index);
-			index = addParameters(query, KEY_SEARCH_QUERY_AUDIENCE, "1001",
-					params, index);
-			index = addParameters(query, KEY_SEARCH_QUERY_LOCATION, "714",
-					params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_FREE,
+					data.optString("field_FREE", "-1"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_TITLE,
+					data.optString("field_TITLE", "331"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_AUTHOR,
+					data.optString("field_AUTHOR", "100"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_ISBN,
+					data.optString("field_ISBN", "540"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDA,
+					data.optString("field_KEYWORDA", "902"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDB,
+					data.optString("field_KEYWORDB", "710"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_YEAR,
+					data.optString("field_YEAR", "425"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_PUBLISHER,
+					data.optString("field_PUBLISHER", "412"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_SYSTEM,
+					data.optString("field_SYSTEM", "700"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_AUDIENCE,
+					data.optString("field_AUDIENCE", "1001"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_LOCATION,
+					data.optString("field_LOCATION", "714"), params, index);
 
 			if (index == 0) {
 				throw new OpacErrorException(
