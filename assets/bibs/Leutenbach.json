@@ -13,7 +13,7 @@
             "status": -1, 
             "title": 1
         }, 
-        "baseurl": "http://opac.leutenbach.de", 
+        "baseurl": "http://opac.buecherei-leutenbach.de", 
         "copiestable": {
             "barcode": -1, 
             "branch": 0, 
