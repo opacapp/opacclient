@@ -64,10 +64,16 @@
         <activity
             android:name="de.geeksfactory.opacclient.frontend.MainPreferenceActivity"
             android:label="@string/prefs" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.geeksfactory.opacclient.frontend.MainActivity" />
         </activity>
         <activity
             android:name="de.geeksfactory.opacclient.frontend.AboutActivity"
             android:label="@string/about" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.geeksfactory.opacclient.frontend.MainActivity" />
         </activity>
         <activity
             android:name="de.geeksfactory.opacclient.frontend.AccountListActivity"
