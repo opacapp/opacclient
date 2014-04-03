@@ -288,28 +288,28 @@ public class SISIS extends BaseApi implements OpacApi {
 			params.add(new BasicNameValuePair("methodToCallParameter",
 					"submitSearch"));
 
-			index = addParameters(query, KEY_SEARCH_QUERY_FREE, "-1", params,
-					index);
-			index = addParameters(query, KEY_SEARCH_QUERY_TITLE, "331", params,
-					index);
-			index = addParameters(query, KEY_SEARCH_QUERY_AUTHOR, "100",
-					params, index);
-			index = addParameters(query, KEY_SEARCH_QUERY_ISBN, "540", params,
-					index);
-			index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDA, "902",
-					params, index);
-			index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDB, "710",
-					params, index);
-			index = addParameters(query, KEY_SEARCH_QUERY_YEAR, "425", params,
-					index);
-			index = addParameters(query, KEY_SEARCH_QUERY_PUBLISHER, "412",
-					params, index);
-			index = addParameters(query, KEY_SEARCH_QUERY_SYSTEM, "700",
-					params, index);
-			index = addParameters(query, KEY_SEARCH_QUERY_AUDIENCE, "1001",
-					params, index);
-			index = addParameters(query, KEY_SEARCH_QUERY_LOCATION, "714",
-					params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_FREE,
+					data.optString("field_FREE", "-1"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_TITLE,
+					data.optString("field_TITLE", "331"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_AUTHOR,
+					data.optString("field_AUTHOR", "100"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_ISBN,
+					data.optString("field_ISBN", "540"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDA,
+					data.optString("field_KEYWORDA", "902"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDB,
+					data.optString("field_KEYWORDB", "710"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_YEAR,
+					data.optString("field_YEAR", "425"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_PUBLISHER,
+					data.optString("field_PUBLISHER", "412"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_SYSTEM,
+					data.optString("field_SYSTEM", "700"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_AUDIENCE,
+					data.optString("field_AUDIENCE", "1001"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_LOCATION,
+					data.optString("field_LOCATION", "714"), params, index);
 
 			if (index == 0) {
 				throw new OpacErrorException(
@@ -1007,6 +1007,19 @@ public class SISIS extends BaseApi implements OpacApi {
 					logged_in_as = acc;
 				}
 			}
+			if (doc.select("input[name=expressorder]").size() > 0) {
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
+						2);
+				nameValuePairs.add(new BasicNameValuePair(branch_inputfield,
+						selection));
+				nameValuePairs.add(new BasicNameValuePair("methodToCall",
+						action));
+				nameValuePairs.add(new BasicNameValuePair("CSId", CSId));
+				nameValuePairs.add(new BasicNameValuePair("expressorder", " "));
+				html = httpPost(opac_url + "/" + action + ".do",
+						new UrlEncodedFormEntity(nameValuePairs), ENCODING);
+				doc = Jsoup.parse(html);
+			}
 			if (doc.select("input[name=" + branch_inputfield + "]").size() > 0) {
 				ContentValues branches = new ContentValues();
 				for (Element option : doc
@@ -1043,6 +1056,28 @@ public class SISIS extends BaseApi implements OpacApi {
 			return new ReservationResult(MultiStepResult.Status.ERROR, doc
 					.getElementsByClass("error").get(0).text());
 		}
+
+		if (doc.select("#CirculationForm p").size() > 0
+				&& doc.select("input[type=button]").size() >= 2) {
+			List<String[]> details = new ArrayList<String[]>();
+			for (String row : doc.select("#CirculationForm p").first().html()
+					.split("<br />")) {
+				Document frag = Jsoup.parseBodyFragment(row);
+				if (frag.text().contains(":")) {
+					String[] split = frag.text().split(":");
+					if (split.length >= 2)
+						details.add(new String[] { split[0].trim() + ":",
+								split[1].trim() });
+				} else {
+					details.add(new String[] { "", frag.text().trim() });
+				}
+			}
+			ReservationResult result = new ReservationResult(
+					Status.CONFIRMATION_NEEDED);
+			result.setDetails(details);
+			return result;
+		}
+
 		if (doc.getElementsByClass("textrot").size() >= 1) {
 			String errmsg = doc.getElementsByClass("textrot").get(0).text();
 			if (errmsg
@@ -1077,26 +1112,11 @@ public class SISIS extends BaseApi implements OpacApi {
 			return new ReservationResult(MultiStepResult.Status.ERROR, errmsg);
 		}
 
-		if (doc.select("#CirculationForm p").size() > 0) {
-			List<String[]> details = new ArrayList<String[]>();
-			for (String row : doc.select("#CirculationForm p").first().html()
-					.split("<br />")) {
-				Document frag = Jsoup.parseBodyFragment(row);
-				if (frag.text().contains(":")) {
-					String[] split = frag.text().split(":");
-					if (split.length >= 2)
-						details.add(new String[] { split[0].trim() + ":",
-								split[1].trim() });
-				} else {
-					details.add(new String[] { "", frag.text().trim() });
-				}
-			}
-			ReservationResult result = new ReservationResult(
-					Status.CONFIRMATION_NEEDED);
-			result.setDetails(details);
-			return result;
+		if (doc.select("#CirculationForm td[colspan=2] strong").size() >= 1) {
+			return new ReservationResult(MultiStepResult.Status.OK, doc
+					.select("#CirculationForm td[colspan=2] strong").get(0)
+					.text());
 		}
-
 		return new ReservationResult(Status.OK);
 	}
 

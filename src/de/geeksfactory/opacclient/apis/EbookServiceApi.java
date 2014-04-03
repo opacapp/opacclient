@@ -65,7 +65,7 @@ public interface EbookServiceApi {
 	 * account. booking_info is what you returned in your DetailledItem object
 	 * in your getResult hook.
 	 */
-	public BookingResult booking(String booking_info, Account account,
+	public BookingResult booking(DetailledItem item, Account account,
 			int useraction, String selection) throws IOException,
 			OpacErrorException;
 

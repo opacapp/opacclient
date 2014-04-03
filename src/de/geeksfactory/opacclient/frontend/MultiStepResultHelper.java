@@ -11,6 +11,7 @@ import org.holoeverywhere.widget.TextView;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.text.Html;
 import android.text.TextUtils.TruncateAt;
@@ -107,6 +108,10 @@ public class MultiStepResultHelper {
 			break;
 		case SELECTION_NEEDED:
 			askForSelection(result);
+			break;
+		case EMAIL_NEEDED:
+			SharedPreferences sp = context.getDefaultSharedPreferences();
+			doStep(result.getActionIdentifier(), sp.getString("email", ""));
 			break;
 		case ERROR:
 			if (callback != null)

@@ -58,6 +58,7 @@ import de.geeksfactory.opacclient.apis.Pica;
 import de.geeksfactory.opacclient.apis.SISIS;
 import de.geeksfactory.opacclient.apis.SRU;
 import de.geeksfactory.opacclient.apis.Zones22;
+import de.geeksfactory.opacclient.frontend.MainActivity;
 import de.geeksfactory.opacclient.frontend.SearchResultListActivity;
 import de.geeksfactory.opacclient.frontend.WelcomeActivity;
 import de.geeksfactory.opacclient.objects.Account;
@@ -306,6 +307,10 @@ public class OpacClient extends Application {
 
 	public boolean getSlidingMenuEnabled() {
 		return SLIDING_MENU;
+	}
+
+	public Class getMainActivity() {
+		return MainActivity.class;
 	}
 
 }

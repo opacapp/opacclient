@@ -89,6 +89,7 @@ import de.geeksfactory.opacclient.frontend.MultiStepResultHelper.StepTask;
 import de.geeksfactory.opacclient.frontend.OpacActivity.AccountSelectedListener;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 
@@ -1363,9 +1364,11 @@ public class AccountFragment extends Fragment implements
 			}
 			return;
 		}
-
+		DetailledItem item = new DetailledItem();
+		item.setBookable(true);
+		item.setBooking_info(booking_info);
 		MultiStepResultHelper msrhBooking = new MultiStepResultHelper(
-				getSupportActivity(), booking_info, R.string.doing_booking);
+				getSupportActivity(), item, R.string.doing_booking);
 		msrhBooking.setCallback(new Callback() {
 			@Override
 			public void onSuccess(MultiStepResult result) {
@@ -1576,20 +1579,20 @@ public class AccountFragment extends Fragment implements
 	}
 
 	public class BookingTask extends StepTask<BookingResult> {
-		private String booking_info;
+		private DetailledItem item;
 
 		@Override
 		protected BookingResult doInBackground(Object... arg0) {
 			super.doInBackground(arg0);
 
 			app = (OpacClient) arg0[0];
-			booking_info = (String) arg0[1];
+			item = (DetailledItem) arg0[1];
 			int useraction = (Integer) arg0[2];
 			String selection = (String) arg0[3];
 
 			try {
 				BookingResult res = ((EbookServiceApi) app.getApi()).booking(
-						booking_info, app.getAccount(), useraction, selection);
+						item, app.getAccount(), useraction, selection);
 				return res;
 			} catch (java.net.UnknownHostException e) {
 				publishProgress(e, "ioerror");
