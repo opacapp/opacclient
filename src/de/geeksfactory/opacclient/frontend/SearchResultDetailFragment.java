@@ -351,6 +351,7 @@ public class SearchResultDetailFragment extends Fragment {
 
 		LinearLayout llDetails = (LinearLayout) view
 				.findViewById(R.id.llDetails);
+		llDetails.removeAllViews();
 		for (Detail detail : item.getDetails()) {
 			View v = getLayoutInflater()
 					.inflate(R.layout.listitem_detail, null);
@@ -363,6 +364,7 @@ public class SearchResultDetailFragment extends Fragment {
 		}
 
 		LinearLayout llCopies = (LinearLayout) view.findViewById(R.id.llCopies);
+		llCopies.removeAllViews();
 		if (item.getVolumesearch() != null) {
 			TextView tvC = (TextView) view.findViewById(R.id.tvCopies);
 			tvC.setText(R.string.baende);
@@ -511,6 +513,13 @@ public class SearchResultDetailFragment extends Fragment {
 		setProgress(false, true);
 
 		getActivity().supportInvalidateOptionsMenu();
+	}
+
+	@Override
+	public void onViewStateRestored(Bundle savedInstanceState) {
+		super.onViewStateRestored(savedInstanceState);
+		if (item != null)
+			display();
 	}
 
 	protected void dialog_wrong_credentials(String s, final boolean finish) {
