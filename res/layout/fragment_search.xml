@@ -3,8 +3,8 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:paddingLeft="@dimen/tablet_padding"
-    android:paddingRight="@dimen/tablet_padding" >
+    android:paddingLeft="@dimen/tablet_padding_or_zero"
+    android:paddingRight="@dimen/tablet_padding_or_zero" >
 
     <RelativeLayout
         android:id="@+id/rlOuter"
