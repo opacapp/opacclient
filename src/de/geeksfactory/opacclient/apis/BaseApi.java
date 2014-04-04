@@ -25,6 +25,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.InterruptedIOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
@@ -94,15 +96,42 @@ public abstract class BaseApi implements OpacApi {
 		HttpGet httpget = new HttpGet(cleanUrl(url));
 		HttpResponse response;
 
-		if (cookieStore != null) {
-			// Create local HTTP context
-			HttpContext localContext = new BasicHttpContext();
-			// Bind custom cookie store to the local context
-			localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+		try {
+			if (cookieStore != null) {
+				// Create local HTTP context
+				HttpContext localContext = new BasicHttpContext();
+				// Bind custom cookie store to the local context
+				localContext.setAttribute(ClientContext.COOKIE_STORE,
+						cookieStore);
 
-			response = http_client.execute(httpget, localContext);
-		} else {
-			response = http_client.execute(httpget);
+				response = http_client.execute(httpget, localContext);
+			} else {
+				response = http_client.execute(httpget);
+			}
+		} catch (ConnectTimeoutException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (javax.net.ssl.SSLPeerUnverifiedException e) {
+			// TODO: Handly this well
+			throw e;
+		} catch (javax.net.ssl.SSLException e) {
+			// TODO: Handly this well
+			// Can be "Not trusted server certificate" or can be a
+			// aborted/interrupted handshake/connection
+			throw e;
+		} catch (InterruptedIOException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (IOException e) {
+			if (e.getMessage().contains("Request aborted")) {
+				e.printStackTrace();
+				throw new NotReachableException();
+			} else {
+				throw e;
+			}
 		}
 
 		if (!ignore_errors && response.getStatusLine().getStatusCode() >= 400) {
@@ -208,15 +237,42 @@ public abstract class BaseApi implements OpacApi {
 		httppost.setEntity(data);
 
 		HttpResponse response = null;
-		if (cookieStore != null) {
-			// Create local HTTP context
-			HttpContext localContext = new BasicHttpContext();
-			// Bind custom cookie store to the local context
-			localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+		try {
+			if (cookieStore != null) {
+				// Create local HTTP context
+				HttpContext localContext = new BasicHttpContext();
+				// Bind custom cookie store to the local context
+				localContext.setAttribute(ClientContext.COOKIE_STORE,
+						cookieStore);
 
-			response = http_client.execute(httppost, localContext);
-		} else {
-			response = http_client.execute(httppost);
+				response = http_client.execute(httppost, localContext);
+			} else {
+				response = http_client.execute(httppost);
+			}
+		} catch (ConnectTimeoutException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (javax.net.ssl.SSLPeerUnverifiedException e) {
+			// TODO: Handly this well
+			throw e;
+		} catch (javax.net.ssl.SSLException e) {
+			// TODO: Handly this well
+			// Can be "Not trusted server certificate" or can be a
+			// aborted/interrupted handshake/connection
+			throw e;
+		} catch (InterruptedIOException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (IOException e) {
+			if (e.getMessage().contains("Request aborted")) {
+				e.printStackTrace();
+				throw new NotReachableException();
+			} else {
+				throw e;
+			}
 		}
 
 		if (!ignore_errors && response.getStatusLine().getStatusCode() >= 400) {

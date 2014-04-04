@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -101,6 +102,10 @@ public class LibraryListActivity extends Activity {
 				}
 			}
 		});
+	}
+
+	public boolean isTablet() {
+		return findViewById(R.id.container2) != null;
 	}
 
 	public void showListGeo() {
@@ -225,7 +230,6 @@ public class LibraryListActivity extends Activity {
 				getSupportFragmentManager().beginTransaction()
 						.replace(R.id.container, fragment).commit();
 		}
-
 	}
 
 	public void showListStates(String country) {
@@ -345,7 +349,8 @@ public class LibraryListActivity extends Activity {
 	 * A placeholder fragment containing a simple view.
 	 */
 	public static class LibraryListFragment extends ListFragment {
-		int level;
+		public int level;
+		public View view;
 
 		@Override
 		public void onListItemClick(ListView l, View v, int position, long id) {
@@ -401,7 +406,12 @@ public class LibraryListActivity extends Activity {
 				ViewGroup container, Bundle savedInstanceState) {
 			level = getArguments().getInt("level", LEVEL_COUNTRY);
 			setRetainInstance(true);
-			return super.onCreateView(inflater, container, savedInstanceState);
+			view = super.onCreateView(inflater, container, savedInstanceState);
+			((ListView) view.findViewById(android.R.id.list))
+					.setChoiceMode(((LibraryListActivity) getActivity())
+							.isTablet() ? AbsListView.CHOICE_MODE_SINGLE
+							: AbsListView.CHOICE_MODE_NONE);
+			return view;
 		}
 	}
 

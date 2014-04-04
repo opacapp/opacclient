@@ -795,6 +795,11 @@ public class BiBer1992 extends BaseApi {
 
 		String html = httpPost(m_opac_url + "/" + m_opac_dir + command,
 				new UrlEncodedFormEntity(nameValuePairs), getDefaultEncoding());
+		if (html.contains("no such key")) {
+			html = httpPost(
+					m_opac_url + "/" + m_opac_dir + command.replace(".C", ".S"),
+					new UrlEncodedFormEntity(nameValuePairs), getDefaultEncoding());
+		}
 
 		Document doc = Jsoup.parse(html);
 

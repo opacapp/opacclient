@@ -351,6 +351,7 @@ public class SearchResultDetailFragment extends Fragment {
 
 		LinearLayout llDetails = (LinearLayout) view
 				.findViewById(R.id.llDetails);
+		llDetails.removeAllViews();
 		for (Detail detail : item.getDetails()) {
 			View v = getLayoutInflater()
 					.inflate(R.layout.listitem_detail, null);
@@ -363,6 +364,7 @@ public class SearchResultDetailFragment extends Fragment {
 		}
 
 		LinearLayout llCopies = (LinearLayout) view.findViewById(R.id.llCopies);
+		llCopies.removeAllViews();
 		if (item.getVolumesearch() != null) {
 			TextView tvC = (TextView) view.findViewById(R.id.tvCopies);
 			tvC.setText(R.string.baende);
@@ -513,6 +515,13 @@ public class SearchResultDetailFragment extends Fragment {
 		getActivity().supportInvalidateOptionsMenu();
 	}
 
+	@Override
+	public void onViewStateRestored(Bundle savedInstanceState) {
+		super.onViewStateRestored(savedInstanceState);
+		if (item != null)
+			display();
+	}
+
 	protected void dialog_wrong_credentials(String s, final boolean finish) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setMessage(getString(R.string.opac_error) + " " + s)
@@ -657,8 +666,7 @@ public class SearchResultDetailFragment extends Fragment {
 
 			try {
 				BookingResult res = ((EbookServiceApi) app.getApi()).booking(
-						item.getReservation_info(), app.getAccount(),
-						useraction, selection);
+						item, app.getAccount(), useraction, selection);
 				return res;
 			} catch (java.net.UnknownHostException e) {
 				publishProgress(e, "ioerror");
@@ -1090,9 +1098,7 @@ public class SearchResultDetailFragment extends Fragment {
 				if (result.getMessage() != null) {
 					AlertDialog.Builder builder = new AlertDialog.Builder(
 							getActivity());
-					builder.setMessage(
-							getString(R.string.opac_error) + " "
-									+ result.getMessage())
+					builder.setMessage(result.getMessage())
 							.setCancelable(false)
 							.setNegativeButton(R.string.dismiss,
 									new DialogInterface.OnClickListener() {
@@ -1119,8 +1125,8 @@ public class SearchResultDetailFragment extends Fragment {
 					AlertDialog alert = builder.create();
 					alert.show();
 				} else {
-					Intent intent = new Intent(getActivity(),
-							MainActivity.class);
+					Intent intent = new Intent(getActivity(), app
+							.getMainActivity());
 					intent.putExtra("fragment", "account");
 					getActivity().startActivity(intent);
 					getActivity().finish();
@@ -1214,7 +1220,7 @@ public class SearchResultDetailFragment extends Fragment {
 				adata.open();
 				adata.invalidateCachedAccountData(app.getAccount());
 				adata.close();
-				Intent intent = new Intent(getActivity(), MainActivity.class);
+				Intent intent = new Intent(getActivity(), app.getMainActivity());
 				intent.putExtra("fragment", "account");
 				getActivity().startActivity(intent);
 				getActivity().finish();

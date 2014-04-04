@@ -296,7 +296,11 @@ public interface OpacApi {
 			/**
 			 * The user has to confirm the prolonging
 			 */
-			CONFIRMATION_NEEDED
+			CONFIRMATION_NEEDED,
+			/**
+			 * We need the user's emaila ddress
+			 */
+			EMAIL_NEEDED
 		};
 
 		protected Status status;
@@ -519,7 +523,7 @@ public interface OpacApi {
 	 * @since 2.0.6
 	 */
 	public SearchRequestResult filterResults(Filter filter, Filter.Option option)
-			throws IOException, NotReachableException;
+			throws IOException, NotReachableException, OpacErrorException;
 
 	/**
 	 * Get result page <code>page</code> of the search performed last with
@@ -610,7 +614,7 @@ public interface OpacApi {
 	 * {@link OpacApi#reservation(DetailledItem, Account, int, String)} call
 	 */
 	public class ReservationResult extends MultiStepResult {
-
+		
 		/**
 		 * Action type identifier for library branch selection
 		 */

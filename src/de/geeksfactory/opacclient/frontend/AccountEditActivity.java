@@ -118,12 +118,16 @@ public class AccountEditActivity extends Activity {
 			} else if (findViewById(R.id.rlReplaced) != null) {
 				findViewById(R.id.rlReplaced).setVisibility(View.GONE);
 			}
+			try {
+				if (!lib.getData().getString("baseurl").contains("https")
+						&& findViewById(R.id.no_ssl) != null
+						&& lib.getSupport().contains("Konto")) {
+					findViewById(R.id.no_ssl).setVisibility(View.VISIBLE);
+				} else if (findViewById(R.id.no_ssl) != null) {
+					findViewById(R.id.no_ssl).setVisibility(View.GONE);
+				}
+			} catch (Exception e) {
 
-			if (!lib.getData().getString("baseurl").contains("https")
-					&& findViewById(R.id.no_ssl) != null && lib.getSupport().contains("Konto")) {
-				findViewById(R.id.no_ssl).setVisibility(View.VISIBLE);
-			} else if (findViewById(R.id.no_ssl) != null) {
-				findViewById(R.id.no_ssl).setVisibility(View.GONE);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

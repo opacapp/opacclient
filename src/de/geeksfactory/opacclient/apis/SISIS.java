@@ -98,6 +98,12 @@ public class SISIS extends BaseApi implements OpacApi {
 	static {
 		defaulttypes.put("g", MediaType.EBOOK);
 		defaulttypes.put("d", MediaType.CD);
+		defaulttypes.put("Buch", MediaType.BOOK);
+		defaulttypes.put("Bücher", MediaType.BOOK);
+		defaulttypes.put("Printmedien", MediaType.BOOK);
+		defaulttypes.put("Zeitschrift", MediaType.MAGAZINE);
+		defaulttypes.put("Zeitschriften", MediaType.MAGAZINE);
+		defaulttypes.put("Einzelband einer Serie, siehe auch übergeordnete Titel", MediaType.BOOK);
 		defaulttypes.put("0", MediaType.BOOK);
 		defaulttypes.put("1", MediaType.BOOK);
 		defaulttypes.put("2", MediaType.BOOK);
@@ -106,16 +112,22 @@ public class SISIS extends BaseApi implements OpacApi {
 		defaulttypes.put("6", MediaType.SCORE_MUSIC);
 		defaulttypes.put("7", MediaType.CD_MUSIC);
 		defaulttypes.put("8", MediaType.CD_MUSIC);
+		defaulttypes.put("Tonträger", MediaType.CD_MUSIC);
 		defaulttypes.put("12", MediaType.CD);
 		defaulttypes.put("13", MediaType.CD);
+		defaulttypes.put("CD", MediaType.CD);
+		defaulttypes.put("DVD", MediaType.DVD);
 		defaulttypes.put("14", MediaType.CD);
 		defaulttypes.put("15", MediaType.DVD);
 		defaulttypes.put("16", MediaType.CD);
+		defaulttypes.put("Film", MediaType.MOVIE);
+		defaulttypes.put("Filme", MediaType.MOVIE);
 		defaulttypes.put("17", MediaType.MOVIE);
 		defaulttypes.put("18", MediaType.MOVIE);
 		defaulttypes.put("19", MediaType.MOVIE);
 		defaulttypes.put("20", MediaType.DVD);
 		defaulttypes.put("21", MediaType.SCORE_MUSIC);
+		defaulttypes.put("Noten", MediaType.SCORE_MUSIC);
 		defaulttypes.put("22", MediaType.BOARDGAME);
 		defaulttypes.put("26", MediaType.CD);
 		defaulttypes.put("27", MediaType.CD);
@@ -135,9 +147,12 @@ public class SISIS extends BaseApi implements OpacApi {
 		defaulttypes.put("EB", MediaType.EBOOK);
 		defaulttypes.put("buch01", MediaType.BOOK);
 		defaulttypes.put("buch02", MediaType.PACKAGE_BOOKS);
+		defaulttypes.put("Medienpaket", MediaType.PACKAGE);
+		defaulttypes.put("Medienpaket, Lernkiste, Lesekiste", MediaType.PACKAGE);
 		defaulttypes.put("buch03", MediaType.BOOK);
 		defaulttypes.put("buch04", MediaType.PACKAGE_BOOKS);
 		defaulttypes.put("buch05", MediaType.PACKAGE_BOOKS);
+		defaulttypes.put("Web-Link", MediaType.URL);
 	}
 
 	@Override
@@ -273,28 +288,28 @@ public class SISIS extends BaseApi implements OpacApi {
 			params.add(new BasicNameValuePair("methodToCallParameter",
 					"submitSearch"));
 
-			index = addParameters(query, KEY_SEARCH_QUERY_FREE, "-1", params,
-					index);
-			index = addParameters(query, KEY_SEARCH_QUERY_TITLE, "331", params,
-					index);
-			index = addParameters(query, KEY_SEARCH_QUERY_AUTHOR, "100",
-					params, index);
-			index = addParameters(query, KEY_SEARCH_QUERY_ISBN, "540", params,
-					index);
-			index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDA, "902",
-					params, index);
-			index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDB, "710",
-					params, index);
-			index = addParameters(query, KEY_SEARCH_QUERY_YEAR, "425", params,
-					index);
-			index = addParameters(query, KEY_SEARCH_QUERY_PUBLISHER, "412",
-					params, index);
-			index = addParameters(query, KEY_SEARCH_QUERY_SYSTEM, "700",
-					params, index);
-			index = addParameters(query, KEY_SEARCH_QUERY_AUDIENCE, "1001",
-					params, index);
-			index = addParameters(query, KEY_SEARCH_QUERY_LOCATION, "714",
-					params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_FREE,
+					data.optString("field_FREE", "-1"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_TITLE,
+					data.optString("field_TITLE", "331"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_AUTHOR,
+					data.optString("field_AUTHOR", "100"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_ISBN,
+					data.optString("field_ISBN", "540"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDA,
+					data.optString("field_KEYWORDA", "902"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDB,
+					data.optString("field_KEYWORDB", "710"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_YEAR,
+					data.optString("field_YEAR", "425"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_PUBLISHER,
+					data.optString("field_PUBLISHER", "412"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_SYSTEM,
+					data.optString("field_SYSTEM", "700"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_AUDIENCE,
+					data.optString("field_AUDIENCE", "1001"), params, index);
+			index = addParameters(query, KEY_SEARCH_QUERY_LOCATION,
+					data.optString("field_LOCATION", "714"), params, index);
 
 			if (index == 0) {
 				throw new OpacErrorException(
@@ -397,26 +412,27 @@ public class SISIS extends BaseApi implements OpacApi {
 			Element tr = table.get(i);
 			SearchResult sr = new SearchResult();
 			if (tr.select("td img").size() > 0) {
+				String title = tr.select("td img").get(0).attr("title");
 				String[] fparts = tr.select("td img").get(0).attr("src")
 						.split("/");
 				String fname = fparts[fparts.length - 1];
+				MediaType default_by_fname = defaulttypes.get(fname
+						.toLowerCase(Locale.GERMAN).replace(".jpg", "")
+						.replace(".gif", "").replace(".png", ""));
+				MediaType default_by_title = defaulttypes.get(title);
+				MediaType default_name = default_by_title != null ? default_by_title
+						: default_by_fname;
 				if (data.has("mediatypes")) {
 					try {
 						sr.setType(MediaType.valueOf(data.getJSONObject(
 								"mediatypes").getString(fname)));
 					} catch (JSONException e) {
-						sr.setType(defaulttypes.get(fname
-								.toLowerCase(Locale.GERMAN).replace(".jpg", "")
-								.replace(".gif", "").replace(".png", "")));
+						sr.setType(default_name);
 					} catch (IllegalArgumentException e) {
-						sr.setType(defaulttypes.get(fname
-								.toLowerCase(Locale.GERMAN).replace(".jpg", "")
-								.replace(".gif", "").replace(".png", "")));
+						sr.setType(default_name);
 					}
 				} else {
-					sr.setType(defaulttypes.get(fname
-							.toLowerCase(Locale.GERMAN).replace(".jpg", "")
-							.replace(".gif", "").replace(".png", "")));
+					sr.setType(default_name);
 				}
 			}
 			String alltext = tr.text();
@@ -991,6 +1007,19 @@ public class SISIS extends BaseApi implements OpacApi {
 					logged_in_as = acc;
 				}
 			}
+			if (doc.select("input[name=expressorder]").size() > 0) {
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
+						2);
+				nameValuePairs.add(new BasicNameValuePair(branch_inputfield,
+						selection));
+				nameValuePairs.add(new BasicNameValuePair("methodToCall",
+						action));
+				nameValuePairs.add(new BasicNameValuePair("CSId", CSId));
+				nameValuePairs.add(new BasicNameValuePair("expressorder", " "));
+				html = httpPost(opac_url + "/" + action + ".do",
+						new UrlEncodedFormEntity(nameValuePairs), ENCODING);
+				doc = Jsoup.parse(html);
+			}
 			if (doc.select("input[name=" + branch_inputfield + "]").size() > 0) {
 				ContentValues branches = new ContentValues();
 				for (Element option : doc
@@ -1027,6 +1056,28 @@ public class SISIS extends BaseApi implements OpacApi {
 			return new ReservationResult(MultiStepResult.Status.ERROR, doc
 					.getElementsByClass("error").get(0).text());
 		}
+
+		if (doc.select("#CirculationForm p").size() > 0
+				&& doc.select("input[type=button]").size() >= 2) {
+			List<String[]> details = new ArrayList<String[]>();
+			for (String row : doc.select("#CirculationForm p").first().html()
+					.split("<br />")) {
+				Document frag = Jsoup.parseBodyFragment(row);
+				if (frag.text().contains(":")) {
+					String[] split = frag.text().split(":");
+					if (split.length >= 2)
+						details.add(new String[] { split[0].trim() + ":",
+								split[1].trim() });
+				} else {
+					details.add(new String[] { "", frag.text().trim() });
+				}
+			}
+			ReservationResult result = new ReservationResult(
+					Status.CONFIRMATION_NEEDED);
+			result.setDetails(details);
+			return result;
+		}
+
 		if (doc.getElementsByClass("textrot").size() >= 1) {
 			String errmsg = doc.getElementsByClass("textrot").get(0).text();
 			if (errmsg
@@ -1061,26 +1112,11 @@ public class SISIS extends BaseApi implements OpacApi {
 			return new ReservationResult(MultiStepResult.Status.ERROR, errmsg);
 		}
 
-		if (doc.select("#CirculationForm p").size() > 0) {
-			List<String[]> details = new ArrayList<String[]>();
-			for (String row : doc.select("#CirculationForm p").first().html()
-					.split("<br />")) {
-				Document frag = Jsoup.parseBodyFragment(row);
-				if (frag.text().contains(":")) {
-					String[] split = frag.text().split(":");
-					if (split.length >= 2)
-						details.add(new String[] { split[0].trim() + ":",
-								split[1].trim() });
-				} else {
-					details.add(new String[] { "", frag.text().trim() });
-				}
-			}
-			ReservationResult result = new ReservationResult(
-					Status.CONFIRMATION_NEEDED);
-			result.setDetails(details);
-			return result;
+		if (doc.select("#CirculationForm td[colspan=2] strong").size() >= 1) {
+			return new ReservationResult(MultiStepResult.Status.OK, doc
+					.select("#CirculationForm td[colspan=2] strong").get(0)
+					.text());
 		}
-
 		return new ReservationResult(Status.OK);
 	}
 
@@ -1603,7 +1639,7 @@ public class SISIS extends BaseApi implements OpacApi {
 
 	@Override
 	public SearchRequestResult filterResults(Filter filter, Option option)
-			throws IOException, NotReachableException {
+			throws IOException, NotReachableException, OpacErrorException {
 		// TODO Auto-generated method stub
 		return null;
 	}

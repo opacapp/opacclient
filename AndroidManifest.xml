@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.geeksfactory.opacclient"
-    android:versionCode="71"
-    android:versionName="2.1.1" >
+    android:versionCode="73"
+    android:versionName="3.0.0" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -64,10 +64,16 @@
         <activity
             android:name="de.geeksfactory.opacclient.frontend.MainPreferenceActivity"
             android:label="@string/prefs" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.geeksfactory.opacclient.frontend.MainActivity" />
         </activity>
         <activity
             android:name="de.geeksfactory.opacclient.frontend.AboutActivity"
             android:label="@string/about" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.geeksfactory.opacclient.frontend.MainActivity" />
         </activity>
         <activity
             android:name="de.geeksfactory.opacclient.frontend.AccountListActivity"

@@ -74,7 +74,6 @@ public class StarredFragment extends Fragment implements
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		
 		setHasOptionsMenu(true);
 
@@ -241,6 +240,12 @@ public class StarredFragment extends Fragment implements
 		}
 	}
 	
+	@Override
+	public void onResume() {
+		getActivity().getSupportLoaderManager().restartLoader(0, null, this);
+		super.onResume();
+	}
+
 	/**
 	 * Turns on activate-on-click mode. When this mode is on, list items will be
 	 * given the 'activated' state when touched.

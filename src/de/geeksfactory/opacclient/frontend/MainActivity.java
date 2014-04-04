@@ -29,7 +29,8 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 
 public class MainActivity extends OpacActivity implements
-		SearchFragment.Callback, StarredFragment.Callback, SearchResultDetailFragment.Callbacks {
+		SearchFragment.Callback, StarredFragment.Callback,
+		SearchResultDetailFragment.Callbacks {
 
 	private String[][] techListsArray;
 	private IntentFilter[] intentFiltersArray;
@@ -83,7 +84,7 @@ public class MainActivity extends OpacActivity implements
 			techListsArray = new String[][] { new String[] { android.nfc.tech.NfcV.class
 					.getName() } };
 		}
-		
+
 		if (app.getLibrary() != null) {
 			getSupportActionBar().setSubtitle(
 					app.getLibrary().getCity() + " · "
@@ -319,20 +320,19 @@ public class MainActivity extends OpacActivity implements
 	}
 
 	@Override
-	public void showDetail(String mNr) {	
-		if(isTablet()) {
+	public void showDetail(String mNr) {
+		if (isTablet()) {
 			rightFragment = new SearchResultDetailFragment();
 			Bundle args = new Bundle();
 			args.putString(SearchResultDetailFragment.ARG_ITEM_ID, mNr);
 			rightFragment.setArguments(args);
-			
+
 			// Insert the fragment
 			FragmentManager fragmentManager = getSupportFragmentManager();
 			fragmentManager.beginTransaction()
 					.replace(R.id.content_frame_right, rightFragment).commit();
 		} else {
-			Intent intent = new Intent(this,
-					SearchResultDetailActivity.class);
+			Intent intent = new Intent(this, SearchResultDetailActivity.class);
 			intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID, mNr);
 			startActivity(intent);
 		}
@@ -340,7 +340,20 @@ public class MainActivity extends OpacActivity implements
 
 	@Override
 	public void removeFragment() {
-		getSupportFragmentManager().beginTransaction().remove(rightFragment).commit();
+		getSupportFragmentManager().beginTransaction().remove(rightFragment)
+				.commit();
+	}
+
+	@Override
+	protected void setTwoPane(boolean active) {
+		super.setTwoPane(active);
+		if (!active && rightFragment != null) {
+			try {
+				removeFragment();
+			} catch (Exception e) {
+
+			}
+		}
 	}
 
 }
