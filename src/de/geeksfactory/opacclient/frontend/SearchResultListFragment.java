@@ -215,10 +215,11 @@ public class SearchResultListFragment extends ListFragment {
 		this.searchresult = searchresult;
 		adapter = new ResultsAdapterEndless(getActivity(), searchresult, new OnLoadMoreListener() {
 			@Override
-			public List<SearchResult> onLoadMore(int page) throws Exception {
+			public SearchRequestResult onLoadMore(int page) throws Exception {
 				SearchRequestResult res = app.getApi().searchGetPage(page);
 				setLastLoadedPage(page);
-				return res.getResults();
+				
+				return res;
 			}
 
 			@Override
@@ -231,6 +232,16 @@ public class SearchResultListFragment extends ListFragment {
 				} else {
 					showConnectivityError();
 				}
+			}
+
+			@Override
+			public void updateResultCount(int resultCount) {				
+				/* When IOpac finds more than 200 results, the real result count is
+				not known until the second page is loaded */
+				if (resultCount >= 0)
+					getSupportActionBar().setSubtitle(
+							getString(R.string.result_number,
+									resultCount));
 			}	
 		});
 		setListAdapter(adapter);
