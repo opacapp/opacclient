@@ -769,6 +769,18 @@ public class AccountFragment extends Fragment implements
 			t1.setText(R.string.entl_none);
 			llLent.addView(t1);
 		} else {
+
+			View tvWarning = view.findViewById(R.id.tvWarning);
+			if (tvWarning != null) {
+				if (result.getWarning() != null
+						&& result.getWarning().length() > 1) {
+					tvWarning.setVisibility(View.VISIBLE);
+					((TextView) tvWarning).setText(result.getWarning());
+				} else {
+					tvWarning.setVisibility(View.GONE);
+				}
+			}
+			
 			for (final ContentValues item : result.getLent()) {
 				View v = getLayoutInflater().inflate(
 						R.layout.listitem_account_lent, null);
@@ -944,16 +956,6 @@ public class AccountFragment extends Fragment implements
 			if (tvError != null) {
 				tvError.setVisibility(View.VISIBLE);
 				((TextView) tvError).setText(R.string.notification_problems);
-			}
-		}
-		
-		if(result.getWarning() != null && result.getWarning().length() > 1) {
-			View tvWarning = view.findViewById(R.id.tvWarning);
-			if (tvWarning != null) {
-				tvWarning.setVisibility(View.VISIBLE);
-				((TextView) tvWarning).setText(result.getWarning());
-			} else {
-				tvWarning.setVisibility(View.GONE);
 			}
 		}
 
