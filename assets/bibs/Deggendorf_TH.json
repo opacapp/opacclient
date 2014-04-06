@@ -1,0 +1,17 @@
+{
+    "api": "sisis",
+    "city": "Deggendorf",
+	"country": "Deutschland",
+    "data": {
+        "baseurl": "https://opac.fh-deggendorf.de/InfoGuideClient.fhdsis",
+        "information": "https://www.th-deg.de/studium/bibliothek",
+        "startparams": "Login=wofhdext"
+    },
+    "geo": [
+        48.8408515,
+        12.9574787
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche und Konto",
+    "title": "Technische Hochschule"
+}
