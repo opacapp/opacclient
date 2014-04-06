@@ -314,10 +314,11 @@ if __name__ == '__main__':
     if geokey > 0:
         data['geo'] = geo[geokey-1][1]
 
-    print("Zu welcher Gruppe soll die Bibliothek gehören?")
-    print("Aktuell benutzen wir für die Gruppennamen die deutschen Bundesländer sowie 'Österreich' und 'Schweiz'")
+    print("In welchem Land liegt die Bibliothek?")
+    data['country'] = getInput(required=True)
 
-    data['group'] = getInput(required=True)
+    print("In welchem Bundesland liegt die Bibliothek?")
+    data['state'] = getInput(required=True)
 
     print("Wie heißt die Bibliothek?")
     print("Dies sollte etwas in dieser Stadt eindeutiges sein wie 'Stadtbibliothek', 'Unibibliothek' oder 'Ruprecht-Karls-Universität'. Der Name der Stadt soll nicht erneut vorkommen!")
