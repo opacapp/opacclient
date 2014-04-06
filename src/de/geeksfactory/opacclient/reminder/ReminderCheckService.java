@@ -49,6 +49,7 @@ import android.util.Log;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
+import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.frontend.MainActivity;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -193,6 +194,8 @@ public class ReminderCheckService extends Service {
 				} catch (SocketException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (OpacErrorException e) {
 					e.printStackTrace();
 				} catch (Exception e) {
 					ACRA.getErrorReporter().handleException(e);
