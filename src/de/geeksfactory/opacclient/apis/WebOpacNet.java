@@ -30,7 +30,6 @@ import java.util.List;
 
 import org.acra.ACRA;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,9 +37,7 @@ import org.json.JSONObject;
 
 import android.content.ContentValues;
 import android.os.Bundle;
-import android.util.Log;
 import de.geeksfactory.opacclient.NotReachableException;
-import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -316,7 +313,6 @@ public class WebOpacNet extends BaseApi implements OpacApi {
 					if (j != 0)
 						value += ", ";
 					String content = valJson.getString("dval");
-					Log.d("Opac", content);
 					content = content.replaceAll("<span[^>]*>", "");
 					content = content.replaceAll("</span>", "");
 					value += content;
@@ -438,8 +434,19 @@ public class WebOpacNet extends BaseApi implements OpacApi {
 
 	@Override
 	public String getShareUrl(String id, String title) {
-		// TODO Auto-generated method stub
-		return null;
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("id", id));
+		
+		String url;
+		try {
+			url = opac_url + "default.aspx"
+					+ buildHttpGetParams(params, getDefaultEncoding());
+			return url;
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		return null;						
 	}
 
 	@Override
