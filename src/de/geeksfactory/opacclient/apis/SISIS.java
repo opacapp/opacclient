@@ -103,7 +103,9 @@ public class SISIS extends BaseApi implements OpacApi {
 		defaulttypes.put("Printmedien", MediaType.BOOK);
 		defaulttypes.put("Zeitschrift", MediaType.MAGAZINE);
 		defaulttypes.put("Zeitschriften", MediaType.MAGAZINE);
-		defaulttypes.put("Einzelband einer Serie, siehe auch übergeordnete Titel", MediaType.BOOK);
+		defaulttypes.put(
+				"Einzelband einer Serie, siehe auch übergeordnete Titel",
+				MediaType.BOOK);
 		defaulttypes.put("0", MediaType.BOOK);
 		defaulttypes.put("1", MediaType.BOOK);
 		defaulttypes.put("2", MediaType.BOOK);
@@ -148,7 +150,8 @@ public class SISIS extends BaseApi implements OpacApi {
 		defaulttypes.put("buch01", MediaType.BOOK);
 		defaulttypes.put("buch02", MediaType.PACKAGE_BOOKS);
 		defaulttypes.put("Medienpaket", MediaType.PACKAGE);
-		defaulttypes.put("Medienpaket, Lernkiste, Lesekiste", MediaType.PACKAGE);
+		defaulttypes
+				.put("Medienpaket, Lernkiste, Lesekiste", MediaType.PACKAGE);
 		defaulttypes.put("buch03", MediaType.BOOK);
 		defaulttypes.put("buch04", MediaType.PACKAGE_BOOKS);
 		defaulttypes.put("buch05", MediaType.PACKAGE_BOOKS);
@@ -998,8 +1001,8 @@ public class SISIS extends BaseApi implements OpacApi {
 				nameValuePairs.add(new BasicNameValuePair("login_action",
 						"Login"));
 
-				html = httpPost(opac_url + "/login.do",
-						new UrlEncodedFormEntity(nameValuePairs), ENCODING);
+				html = handleLoginMessage(httpPost(opac_url + "/login.do",
+						new UrlEncodedFormEntity(nameValuePairs), ENCODING));
 				doc = Jsoup.parse(html);
 
 				if (doc.getElementsByClass("error").size() == 0) {
@@ -1214,6 +1217,14 @@ public class SISIS extends BaseApi implements OpacApi {
 		return new CancelResult(MultiStepResult.Status.OK);
 	}
 
+	protected String handleLoginMessage(String html)
+			throws ClientProtocolException, IOException {
+		if (html.contains("methodToCall=done"))
+			return httpGet(opac_url + "/login.do?methodToCall=done", ENCODING);
+		else
+			return html;
+	}
+
 	protected boolean login(Account acc) throws OpacErrorException {
 		String html;
 
@@ -1238,8 +1249,8 @@ public class SISIS extends BaseApi implements OpacApi {
 		nameValuePairs.add(new BasicNameValuePair("CSId", CSId));
 		nameValuePairs.add(new BasicNameValuePair("methodToCall", "submit"));
 		try {
-			html = httpPost(opac_url + "/login.do", new UrlEncodedFormEntity(
-					nameValuePairs), ENCODING);
+			html = handleLoginMessage(httpPost(opac_url + "/login.do",
+					new UrlEncodedFormEntity(nameValuePairs), ENCODING));
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return false;
