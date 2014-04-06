@@ -114,7 +114,7 @@ public class AccountData {
 	 * ContentValues key for {@link #setLent(List)}
 	 */
 	public static final String KEY_LENT_LINK = "prolongurl";
-	
+
 	/**
 	 * Indicates whether this item is renewable, "Y" or "N"
 	 * 
@@ -335,6 +335,12 @@ public class AccountData {
 		return warning;
 	}
 
+	/**
+	 * Set a warning which is shown to the user above the account data in a
+	 * yellow bar.
+	 * 
+	 * @param warning
+	 */
 	public void setWarning(String warning) {
 		this.warning = warning;
 	}
