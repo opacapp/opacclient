@@ -946,6 +946,16 @@ public class AccountFragment extends Fragment implements
 				((TextView) tvError).setText(R.string.notification_problems);
 			}
 		}
+		
+		if(result.getWarning() != null && result.getWarning().length() > 1) {
+			View tvWarning = view.findViewById(R.id.tvWarning);
+			if (tvWarning != null) {
+				tvWarning.setVisibility(View.VISIBLE);
+				((TextView) tvWarning).setText(result.getWarning());
+			} else {
+				tvWarning.setVisibility(View.GONE);
+			}
+		}
 
 		LinearLayout llRes = (LinearLayout) view
 				.findViewById(R.id.llReservations);

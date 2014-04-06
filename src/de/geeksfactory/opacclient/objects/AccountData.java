@@ -36,6 +36,7 @@ public class AccountData {
 	private long account;
 	private String pendingFees;
 	private String validUntil;
+	private String warning;
 
 	/**
 	 * Title of a lent item.
@@ -328,6 +329,14 @@ public class AccountData {
 	 */
 	public void setValidUntil(String validUntil) {
 		this.validUntil = validUntil;
+	}
+
+	public String getWarning() {
+		return warning;
+	}
+
+	public void setWarning(String warning) {
+		this.warning = warning;
 	}
 
 }
