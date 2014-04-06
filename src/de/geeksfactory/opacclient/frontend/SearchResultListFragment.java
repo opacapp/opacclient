@@ -2,6 +2,7 @@ package de.geeksfactory.opacclient.frontend;
 
 import java.util.List;
 
+import org.acra.ACRA;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.ListFragment;
@@ -11,6 +12,7 @@ import org.holoeverywhere.widget.LinearLayout;
 import org.holoeverywhere.widget.ListView;
 import org.holoeverywhere.widget.TextView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,6 +21,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
+import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.frontend.ResultsAdapterEndless.OnLoadMoreListener;
@@ -60,6 +63,8 @@ public class SearchResultListFragment extends ListFragment {
 	private OpacClient app;
 	
 	private int lastLoadedPage;
+	
+	protected SearchStartTask st;
 
 	/**
 	 * A callback interface that all activities containing this fragment must
@@ -72,7 +77,6 @@ public class SearchResultListFragment extends ListFragment {
 		 * @param nr 
 		 */
 		public void onItemSelected(int nr, String id, int pageToLoad);
-		public void reload();
 	}
 
 	/**
@@ -83,9 +87,6 @@ public class SearchResultListFragment extends ListFragment {
 		@Override
 		public void onItemSelected(int nr, String id, int pageToLoad) {
 		}
-		@Override
-		public void reload() {			
-		}
 	};
 
 	/**
@@ -94,6 +95,14 @@ public class SearchResultListFragment extends ListFragment {
 	 */
 	public SearchResultListFragment() {
 	}
+	
+	public static SearchResultListFragment getInstance(Bundle query) {
+		SearchResultListFragment frag = new SearchResultListFragment();
+		Bundle args = new Bundle();
+		args.putBundle("query", query);
+		frag.setArguments(args);
+		return frag;
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceSate) {
@@ -101,6 +110,11 @@ public class SearchResultListFragment extends ListFragment {
 		setRetainInstance(true);
 		
 		return inflater.inflate(R.layout.fragment_searchresult_list);
+	}
+	
+	public void performsearch() {
+		st = new SearchStartTask();
+		st.execute(app, getArguments().getBundle("query"));
 	}
 	
 	@Override
@@ -112,6 +126,10 @@ public class SearchResultListFragment extends ListFragment {
 				&& savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
 			setActivatedPosition(savedInstanceState
 					.getInt(STATE_ACTIVATED_POSITION));
+		}
+		
+		if (savedInstanceState == null) {
+			performsearch();
 		}
 	}
 
@@ -237,7 +255,7 @@ public class SearchResultListFragment extends ListFragment {
 				errorView.removeAllViews();
 				setListShown(false);
 				progressContainer.setVisibility(View.VISIBLE);
-				mCallbacks.reload();
+				performsearch();
 			}
 		});
 		
@@ -259,6 +277,74 @@ public class SearchResultListFragment extends ListFragment {
 
 	public void setLastLoadedPage(int lastLoadedPage) {
 		this.lastLoadedPage = lastLoadedPage;
+	}
+	
+	public class SearchStartTask extends OpacTask<SearchRequestResult> {
+		protected Exception exception;
+
+		@Override
+		protected SearchRequestResult doInBackground(Object... arg0) {
+			super.doInBackground(arg0);
+			Bundle query = (Bundle) arg0[1];
+
+			try {
+				SearchRequestResult res = app.getApi().search(query);
+				// Load cover images, if search worked and covers available
+				return res;
+			} catch (java.net.UnknownHostException e) {
+				exception = e;
+				e.printStackTrace();
+			} catch (java.net.SocketException e) {
+				exception = e;
+			} catch (OpacErrorException e) {
+				exception = e;
+			} catch (Exception e) {
+				exception = e;
+				ACRA.getErrorReporter().handleException(e);
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(SearchRequestResult result) {
+			if (result == null) {
+
+				if (exception instanceof OpacErrorException) {
+					if (exception.getMessage().equals("is_a_redirect")) {
+						// Some libraries (SISIS) do not show a result list if
+						// only one result
+						// is found but instead directly show the result
+						// details.
+						Intent intent = new Intent(
+								getActivity(),
+								SearchResultDetailActivity.class);
+						intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
+								(String) null);
+						startActivity(intent);
+						getActivity().finish();
+						return;
+					}
+
+					showConnectivityError(exception.getMessage());
+				} else if (exception instanceof NotReachableException)
+					showConnectivityError(getResources()
+							.getString(R.string.connection_error_detail_nre));
+				else
+					showConnectivityError();
+			} else {
+				loaded(result);
+			}
+		}
+	}
+	
+	protected void loaded(SearchRequestResult searchresult) {
+		try {
+			setListShown(true);
+			setSearchResult(searchresult);
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }
