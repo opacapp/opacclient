@@ -41,7 +41,8 @@ public class ResultsAdapterEndless extends EndlessAdapter {
 	private List<SearchResult> itemsToAppend;
 	
 	public interface OnLoadMoreListener {
-		public List<SearchResult> onLoadMore(int page) throws Exception;
+		public SearchRequestResult onLoadMore(int page) throws Exception;
+		public void updateResultCount(int resultCount);
 		public void onError(Exception e);
 	}
 
@@ -57,6 +58,7 @@ public class ResultsAdapterEndless extends EndlessAdapter {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void appendCachedData() {
+		listener.updateResultCount(resultCount);
 		if(itemsToAppend != null) {
 			for(SearchResult item:itemsToAppend) {
 				((ArrayAdapter<SearchResult>) getWrappedAdapter()).add(item);
@@ -77,7 +79,14 @@ public class ResultsAdapterEndless extends EndlessAdapter {
 	protected boolean cacheInBackground() throws Exception {
 		if (page < maxPage || getWrappedAdapter().getCount() < resultCount) {
 			page++;
-			itemsToAppend = listener.onLoadMore(page);
+			SearchRequestResult result = listener.onLoadMore(page);
+			itemsToAppend = result.getResults();
+			
+			/* When IOpac finds more than 200 results, the real result count is
+			not known until the second page is loaded */
+			maxPage = result.getPage_count();
+			resultCount = result.getTotal_result_count();
+			
 			for (SearchResult item:itemsToAppend) {
 				item.setPage(page);
 			}
