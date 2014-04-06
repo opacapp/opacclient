@@ -764,23 +764,22 @@ public class AccountFragment extends Fragment implements
 		boolean notification_on = sp.getBoolean("notification_service", false);
 		boolean notification_problems = false;
 
+		View tvWarning = view.findViewById(R.id.tvWarning);
+		if (tvWarning != null) {
+			if (result.getWarning() != null
+					&& result.getWarning().length() > 1) {
+				tvWarning.setVisibility(View.VISIBLE);
+				((TextView) tvWarning).setText(result.getWarning());
+			} else {
+				tvWarning.setVisibility(View.GONE);
+			}
+		}
+
 		if (result.getLent().size() == 0) {
 			TextView t1 = new TextView(getActivity());
 			t1.setText(R.string.entl_none);
 			llLent.addView(t1);
 		} else {
-
-			View tvWarning = view.findViewById(R.id.tvWarning);
-			if (tvWarning != null) {
-				if (result.getWarning() != null
-						&& result.getWarning().length() > 1) {
-					tvWarning.setVisibility(View.VISIBLE);
-					((TextView) tvWarning).setText(result.getWarning());
-				} else {
-					tvWarning.setVisibility(View.GONE);
-				}
-			}
-			
 			for (final ContentValues item : result.getLent()) {
 				View v = getLayoutInflater().inflate(
 						R.layout.listitem_account_lent, null);
