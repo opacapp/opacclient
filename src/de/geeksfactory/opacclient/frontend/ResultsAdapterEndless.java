@@ -27,7 +27,6 @@ import com.commonsware.cwac.endless.EndlessAdapter;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
@@ -55,17 +54,12 @@ public class ResultsAdapterEndless extends EndlessAdapter {
 		this.resultCount = result.getTotal_result_count();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void appendCachedData() {
 		listener.updateResultCount(resultCount);
 		if(itemsToAppend != null) {
-			for(SearchResult item:itemsToAppend) {
-				((ArrayAdapter<SearchResult>) getWrappedAdapter()).add(item);
-			}
 			objects.addAll(itemsToAppend);
 			notifyDataSetChanged();
-			itemsToAppend = null;
 		}
 	}
 	
