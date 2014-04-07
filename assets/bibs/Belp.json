@@ -1,0 +1,16 @@
+{
+    "api": "webopac.net",
+    "city": "Belp",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.winmedio.net/belp",
+        "information": "http://www.belp.ch/kultur-freizeit-und-sport/freizeit/gemeindebibliothek.html"
+    },
+    "geo": [
+        46.8927297,
+        7.498100000000001
+    ],
+    "state": "Bern",
+    "support": "Katalogsuche",
+    "title": "Gemeindebibliothek"
+}

@@ -1,0 +1,16 @@
+{
+    "api": "webopac.net",
+    "city": "Unterkulm",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.winmedio.net/unterkulm",
+        "information": "http://www.unterkulm.ch/xml_1/internet/de/application/d61/f67.cfm"
+    },
+    "geo": [
+        47.3122301,
+        8.1136607
+    ],
+    "state": "Aargau",
+    "support": "Katalogsuche",
+    "title": "Regionale Bibliothek"
+}

@@ -1,0 +1,16 @@
+{
+    "api": "webopac.net",
+    "city": "D\u00fcdingen",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.winmedio.net/duedingen",
+        "information": "http://www.duedingen.ch/kultur-sport-freizeit/bibliothek/index.html"
+    },
+    "geo": [
+        46.8481195,
+        7.1915796
+    ],
+    "state": "Freiburg",
+    "support": "Katalogsuche",
+    "title": "Bibliothek"
+}

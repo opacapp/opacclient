@@ -1,0 +1,16 @@
+{
+    "api": "webopac.net",
+    "city": "Rorschach",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.winmedio.net/rorschach-pestalozzi",
+        "information": "http://www.schule.rorschach.ch/pestalozzi/pages/bibliothek.html"
+    },
+    "geo": [
+        47.4738018,
+        9.4927814
+    ],
+    "state": "St. Gallen",
+    "support": "Katalogsuche",
+    "title": "Schulbibliothek Pestalozzi"
+}
