@@ -28,10 +28,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.acra.ACRA;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
@@ -45,8 +45,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import android.content.ContentValues;
-import android.os.Bundle;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -191,22 +189,22 @@ public class IOpac extends BaseApi implements OpacApi {
 			if (data.has("maxprolongcount"))
 				this.maxProlongCount = data.getInt("maxprolongcount");
 		} catch (JSONException e) {
-			ACRA.getErrorReporter().handleException(e);
+			throw new RuntimeException(e);
 		}
 	}
 
-	protected int addParameters(Bundle query, String key, String searchkey,
+	protected int addParameters(Map<String, String> query, String key, String searchkey,
 			List<NameValuePair> params, int index) {
-		if (!query.containsKey(key) || query.getString(key).equals(""))
+		if (!query.containsKey(key) || query.get(key).equals(""))
 			return index;
 
-		params.add(new BasicNameValuePair(searchkey, query.getString(key)));
+		params.add(new BasicNameValuePair(searchkey, query.get(key)));
 		return index + 1;
 
 	}
 
 	@Override
-	public SearchRequestResult search(Bundle query) throws IOException,
+	public SearchRequestResult search(Map<String, String> query) throws IOException,
 			NotReachableException, OpacErrorException {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
@@ -229,9 +227,9 @@ public class IOpac extends BaseApi implements OpacApi {
 				index);
 
 		if (query.containsKey(KEY_SEARCH_QUERY_CATEGORY)
-				&& !"".equals(query.getString(KEY_SEARCH_QUERY_CATEGORY))) {
+				&& !"".equals(query.get(KEY_SEARCH_QUERY_CATEGORY))) {
 			params.add(new BasicNameValuePair("Medientyp", query
-					.getString(KEY_SEARCH_QUERY_CATEGORY)));
+					.get(KEY_SEARCH_QUERY_CATEGORY)));
 		} else {
 			params.add(new BasicNameValuePair("Medientyp",
 					"A, B, C, D, E, G, I, J, K, L, M, N, O, P, Q, R, S, U, V, W, X, Z, 9"));
@@ -440,7 +438,7 @@ public class IOpac extends BaseApi implements OpacApi {
 		result.setCover(imgUrl);
 
 		// GET INFORMATION
-		ContentValues e = new ContentValues();
+		Map<String, String> e = new HashMap<String, String>();
 
 		for (Element element : table) {
 			String detail = element.select("td").text().trim()
@@ -470,7 +468,7 @@ public class IOpac extends BaseApi implements OpacApi {
 		}
 
 		// GET RESERVATION INFO
-		if (e.getAsString(DetailledItem.KEY_COPY_STATUS).equals("verfügbar")) {
+		if ("verfügbar".equals(e.get(DetailledItem.KEY_COPY_STATUS))) {
 			result.setReservable(false);
 		} else {
 			result.setReservable(true);
@@ -583,8 +581,8 @@ public class IOpac extends BaseApi implements OpacApi {
 
 		AccountData res = new AccountData(account.getId());
 
-		List<ContentValues> medien = new ArrayList<ContentValues>();
-		List<ContentValues> reserved = new ArrayList<ContentValues>();
+		List<Map<String, String>> medien = new ArrayList<Map<String, String>>();
+		List<Map<String, String>> reserved = new ArrayList<Map<String, String>>();
 		if (doc.select("a[name=AUS]").size() > 0) {
 			parse_medialist(medien, doc, 1);
 		}
@@ -621,7 +619,7 @@ public class IOpac extends BaseApi implements OpacApi {
 
 	}
 
-	protected void parse_medialist(List<ContentValues> medien, Document doc,
+	protected void parse_medialist(List<Map<String, String>> medien, Document doc,
 			int offset) throws ClientProtocolException, IOException {
 
 		Elements copytrs = doc.select("a[name=AUS] ~ table tr");
@@ -635,7 +633,7 @@ public class IOpac extends BaseApi implements OpacApi {
 		assert (trs > 0);
 		for (int i = 1; i < trs; i++) {
 			Element tr = copytrs.get(i);
-			ContentValues e = new ContentValues();
+			Map<String, String> e = new HashMap<String, String>();
 
 			e.put(AccountData.KEY_LENT_TITLE, tr.child(0).text().trim()
 					.replace("\u00a0", ""));
@@ -656,9 +654,10 @@ public class IOpac extends BaseApi implements OpacApi {
 			e.put(AccountData.KEY_LENT_DEADLINE, tr.child(4).text().trim()
 					.replace("\u00a0", ""));
 			try {
-				e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
-						sdf.parse(e.getAsString(AccountData.KEY_LENT_DEADLINE))
-								.getTime());
+				e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String
+						.valueOf(sdf
+								.parse(e.get(AccountData.KEY_LENT_DEADLINE))
+								.getTime()));
 			} catch (ParseException e1) {
 				e1.printStackTrace();
 			}
@@ -678,7 +677,7 @@ public class IOpac extends BaseApi implements OpacApi {
 
 	}
 
-	protected void parse_reslist(List<ContentValues> medien, Document doc,
+	protected void parse_reslist(List<Map<String, String>> medien, Document doc,
 			int offset) throws ClientProtocolException, IOException {
 		Elements copytrs = doc.select("a[name=RES] ~ table tr");
 		doc.setBaseUri(opac_url);
@@ -689,7 +688,7 @@ public class IOpac extends BaseApi implements OpacApi {
 		assert (trs > 0);
 		for (int i = 1; i < trs; i++) {
 			Element tr = copytrs.get(i);
-			ContentValues e = new ContentValues();
+			Map<String, String> e = new HashMap<String, String>();
 
 			e.put(AccountData.KEY_RESERVATION_TITLE, tr.child(0).text().trim()
 					.replace("\u00a0", ""));

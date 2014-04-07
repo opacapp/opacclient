@@ -29,10 +29,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.acra.ACRA;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
@@ -49,9 +49,6 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
-import android.content.ContentValues;
-import android.net.Uri;
-import android.os.Bundle;
 import de.geeksfactory.opacclient.ISBNTools;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
@@ -143,13 +140,13 @@ public class Pica extends BaseApi implements OpacApi {
 				}
 			}
 		} catch (JSONException e) {
-			ACRA.getErrorReporter().handleException(e);
+			throw new RuntimeException(e);
 		}
 	}
 
-	protected int addParameters(Bundle query, String key, String searchkey,
+	protected int addParameters(Map<String, String> query, String key, String searchkey,
 			List<NameValuePair> params, int index) {
-		if (!query.containsKey(key) || query.getString(key).equals(""))
+		if (!query.containsKey(key) || query.get(key).equals(""))
 			return index;
 		try {
 			if (data.has("searchindex")
@@ -167,13 +164,13 @@ public class Pica extends BaseApi implements OpacApi {
 		}
 
 		params.add(new BasicNameValuePair("IKT" + index, searchkey));
-		params.add(new BasicNameValuePair("TRM" + index, query.getString(key)));
+		params.add(new BasicNameValuePair("TRM" + index, query.get(key)));
 		return index + 1;
 
 	}
 
 	@Override
-	public SearchRequestResult search(Bundle query) throws IOException,
+	public SearchRequestResult search(Map<String, String> query) throws IOException,
 			NotReachableException, OpacErrorException {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
@@ -205,7 +202,7 @@ public class Pica extends BaseApi implements OpacApi {
 
 		// year has a special command
 		params.add(new BasicNameValuePair("ADI_JVU", query
-				.getString(KEY_SEARCH_QUERY_YEAR)));
+				.get(KEY_SEARCH_QUERY_YEAR)));
 
 		if (index == 0) {
 			throw new OpacErrorException(
@@ -445,8 +442,8 @@ public class Pica extends BaseApi implements OpacApi {
 		} else {
 			for (Element a : doc.select("a")) {
 				if (a.attr("href").contains("PPN=")) {
-					Uri href = Uri.parse(a.absUrl("href"));
-					String ppn = href.getQueryParameter("PPN");
+					Map<String, String> hrefq = getQueryParamsFirst(a.absUrl("href"));
+					String ppn = hrefq.get("PPN");
 					try {
 						result.setId(opac_url + "/DB=" + data.getString("db")
 								+ "/PPNSET?PPN=" + ppn);
@@ -530,7 +527,7 @@ public class Pica extends BaseApi implements OpacApi {
 		}
 
 		// GET OTHER INFORMATION
-		ContentValues e = new ContentValues();
+		Map<String, String> e = new HashMap<String, String>();
 		String location = "";
 
 		for (Element element : doc.select("td.preslabel + td.presvalue")) {
@@ -543,7 +540,7 @@ public class Pica extends BaseApi implements OpacApi {
 				e.put(DetailledItem.KEY_COPY_BRANCH, location);
 				result.addCopy(e);
 				location = "";
-				e = new ContentValues();
+				e = new HashMap<String, String>();
 			}
 
 			if (!title.equals("")) {
@@ -699,8 +696,8 @@ public class Pica extends BaseApi implements OpacApi {
 
 		AccountData res = new AccountData(account.getId());
 
-		List<ContentValues> medien = new ArrayList<ContentValues>();
-		List<ContentValues> reserved = new ArrayList<ContentValues>();
+		List<Map<String, String>> medien = new ArrayList<Map<String, String>>();
+		List<Map<String, String>> reserved = new ArrayList<Map<String, String>>();
 		if (doc.select("table[summary^=list]").size() > 0) {
 			parse_medialist(medien, doc, 1, account.getName());
 		}
@@ -720,7 +717,7 @@ public class Pica extends BaseApi implements OpacApi {
 
 	}
 
-	protected void parse_medialist(List<ContentValues> medien, Document doc,
+	protected void parse_medialist(List<Map<String, String>> medien, Document doc,
 			int offset, String accountName) throws ClientProtocolException,
 			IOException {
 
@@ -754,7 +751,7 @@ public class Pica extends BaseApi implements OpacApi {
 				reminderCount = reminderCount.substring(
 						reminderCount.indexOf("(") + 1,
 						reminderCount.indexOf(" Mahn"));
-			ContentValues e = new ContentValues();
+			Map<String, String> e = new HashMap<String, String>();
 
 			if (tr.child(4).text().trim().length() < 5
 					&& tr.child(5).text().trim().length() > 4) {
@@ -771,9 +768,10 @@ public class Pica extends BaseApi implements OpacApi {
 			e.put(AccountData.KEY_LENT_STATUS, status);
 			e.put(AccountData.KEY_LENT_DEADLINE, tr.child(21).text().trim());
 			try {
-				e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
-						sdf.parse(e.getAsString(AccountData.KEY_LENT_DEADLINE))
-								.getTime());
+				e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String
+						.valueOf(sdf
+								.parse(e.get(AccountData.KEY_LENT_DEADLINE))
+								.getTime()));
 			} catch (ParseException e1) {
 				e1.printStackTrace();
 			}
@@ -785,7 +783,7 @@ public class Pica extends BaseApi implements OpacApi {
 		assert (medien.size() == trs - 1);
 	}
 
-	protected void parse_reslist(List<ContentValues> medien, Document doc,
+	protected void parse_reslist(List<Map<String, String>> medien, Document doc,
 			int offset) throws ClientProtocolException, IOException {
 
 		Elements copytrs = doc.select("table[summary^=list] tr[valign=top]");
@@ -798,7 +796,7 @@ public class Pica extends BaseApi implements OpacApi {
 		assert (trs > 0);
 		for (int i = 0; i < trs; i++) {
 			Element tr = copytrs.get(i);
-			ContentValues e = new ContentValues();
+			Map<String, String> e = new HashMap<String, String>();
 
 			e.put(AccountData.KEY_RESERVATION_TITLE, tr.child(5).text().trim());
 			e.put(AccountData.KEY_RESERVATION_READY, tr.child(17).text().trim());

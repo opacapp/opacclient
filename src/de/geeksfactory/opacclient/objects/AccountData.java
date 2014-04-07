@@ -22,8 +22,7 @@
 package de.geeksfactory.opacclient.objects;
 
 import java.util.List;
-
-import android.content.ContentValues;
+import java.util.Map;
 
 /**
  * Object representing details of an library account
@@ -31,8 +30,8 @@ import android.content.ContentValues;
  * @author Raphael Michel
  */
 public class AccountData {
-	private List<ContentValues> lent;
-	private List<ContentValues> reservations;
+	private List<Map<String, String>> lent;
+	private List<Map<String, String>> reservations;
 	private long account;
 	private String pendingFees;
 	private String validUntil;
@@ -218,7 +217,7 @@ public class AccountData {
 	 * @return List of lent items
 	 * @see #setLent(List)
 	 */
-	public List<ContentValues> getLent() {
+	public List<Map<String, String>> getLent() {
 		return lent;
 	}
 
@@ -231,7 +230,7 @@ public class AccountData {
 	 * @param lent
 	 *            List of items, see above
 	 */
-	public void setLent(List<ContentValues> lent) {
+	public void setLent(List<Map<String, String>> lent) {
 		this.lent = lent;
 	}
 
@@ -244,7 +243,7 @@ public class AccountData {
 	 * @return List of reservations
 	 * @see #setReservations(List)
 	 */
-	public List<ContentValues> getReservations() {
+	public List<Map<String, String>> getReservations() {
 		return reservations;
 	}
 
@@ -257,7 +256,7 @@ public class AccountData {
 	 * @param reservations
 	 *            List of reservations, see above
 	 */
-	public void setReservations(List<ContentValues> reservations) {
+	public void setReservations(List<Map<String, String>> reservations) {
 		this.reservations = reservations;
 	}
 

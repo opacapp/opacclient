@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.acra.ACRA;
@@ -108,7 +109,7 @@ public class AccountFragment extends Fragment implements
 
 	private LoadTask lt;
 	private CancelTask ct;
-	private OpacTask<Uri> dt;
+	private OpacTask<String> dt;
 	private BookingTask bt;
 
 	private Account account;
@@ -766,8 +767,7 @@ public class AccountFragment extends Fragment implements
 
 		View tvWarning = view.findViewById(R.id.tvWarning);
 		if (tvWarning != null) {
-			if (result.getWarning() != null
-					&& result.getWarning().length() > 1) {
+			if (result.getWarning() != null && result.getWarning().length() > 1) {
 				tvWarning.setVisibility(View.VISIBLE);
 				((TextView) tvWarning).setText(result.getWarning());
 			} else {
@@ -780,7 +780,7 @@ public class AccountFragment extends Fragment implements
 			t1.setText(R.string.entl_none);
 			llLent.addView(t1);
 		} else {
-			for (final ContentValues item : result.getLent()) {
+			for (final Map<String, String> item : result.getLent()) {
 				View v = getLayoutInflater().inflate(
 						R.layout.listitem_account_lent, null);
 
@@ -792,7 +792,7 @@ public class AccountFragment extends Fragment implements
 									SearchResultDetailActivity.class);
 							intent.putExtra(
 									SearchResultDetailFragment.ARG_ITEM_ID,
-									item.getAsString(AccountData.KEY_LENT_ID));
+									item.get(AccountData.KEY_LENT_ID));
 							startActivity(intent);
 						}
 					};
@@ -806,13 +806,11 @@ public class AccountFragment extends Fragment implements
 
 				if (item.containsKey(AccountData.KEY_LENT_TITLE)) {
 					((TextView) v.findViewById(R.id.tvTitel)).setText(Html
-							.fromHtml(item
-									.getAsString(AccountData.KEY_LENT_TITLE)));
+							.fromHtml(item.get(AccountData.KEY_LENT_TITLE)));
 				}
 				if (item.containsKey(AccountData.KEY_LENT_AUTHOR)) {
 					((TextView) v.findViewById(R.id.tvVerfasser)).setText(Html
-							.fromHtml(item
-									.getAsString(AccountData.KEY_LENT_AUTHOR)));
+							.fromHtml(item.get(AccountData.KEY_LENT_AUTHOR)));
 				}
 
 				((TextView) v.findViewById(R.id.tvStatus))
@@ -821,28 +819,24 @@ public class AccountFragment extends Fragment implements
 						&& !"".equals(item
 								.containsKey(AccountData.KEY_LENT_STATUS))
 						&& item.containsKey(AccountData.KEY_LENT_DEADLINE)) {
-					((TextView) v.findViewById(R.id.tvStatus))
-							.setText(Html.fromHtml(item
-									.getAsString(AccountData.KEY_LENT_DEADLINE)
+					((TextView) v.findViewById(R.id.tvStatus)).setText(Html
+							.fromHtml(item.get(AccountData.KEY_LENT_DEADLINE)
 									+ " ("
-									+ item.getAsString(AccountData.KEY_LENT_STATUS)
+									+ item.get(AccountData.KEY_LENT_STATUS)
 									+ ")"));
 				} else if (item.containsKey(AccountData.KEY_LENT_STATUS)) {
 					((TextView) v.findViewById(R.id.tvStatus)).setText(Html
-							.fromHtml(item
-									.getAsString(AccountData.KEY_LENT_STATUS)));
+							.fromHtml(item.get(AccountData.KEY_LENT_STATUS)));
 				} else if (item.containsKey(AccountData.KEY_LENT_DEADLINE)) {
-					((TextView) v.findViewById(R.id.tvStatus))
-							.setText(Html.fromHtml(item
-									.getAsString(AccountData.KEY_LENT_DEADLINE)));
+					((TextView) v.findViewById(R.id.tvStatus)).setText(Html
+							.fromHtml(item.get(AccountData.KEY_LENT_DEADLINE)));
 				} else {
 					((TextView) v.findViewById(R.id.tvStatus))
 							.setVisibility(View.GONE);
 				}
 				if (item.containsKey(AccountData.KEY_LENT_FORMAT)) {
 					((TextView) v.findViewById(R.id.tvFmt)).setText(Html
-							.fromHtml(item
-									.getAsString(AccountData.KEY_LENT_FORMAT)));
+							.fromHtml(item.get(AccountData.KEY_LENT_FORMAT)));
 					((TextView) v.findViewById(R.id.tvFmt))
 							.setVisibility(View.VISIBLE);
 				} else {
@@ -853,14 +847,13 @@ public class AccountFragment extends Fragment implements
 				try {
 					if (notification_on
 							&& item.containsKey(AccountData.KEY_LENT_DEADLINE)) {
-						if (!item.getAsString(AccountData.KEY_LENT_DEADLINE)
-								.equals("")) {
+						if (!item.get(AccountData.KEY_LENT_DEADLINE).equals("")) {
 							if ((!item
-									.containsKey(AccountData.KEY_LENT_DEADLINE_TIMESTAMP) || item
-									.getAsLong(AccountData.KEY_LENT_DEADLINE_TIMESTAMP) < 1)
-									&& !"Onleihe"
-											.equals(item
-													.getAsString(AccountData.KEY_LENT_BRANCH))) {
+									.containsKey(AccountData.KEY_LENT_DEADLINE_TIMESTAMP) || Long
+									.parseLong(item
+											.get(AccountData.KEY_LENT_DEADLINE_TIMESTAMP)) < 1)
+									&& !"Onleihe".equals(item
+											.get(AccountData.KEY_LENT_BRANCH))) {
 								notification_problems = true;
 							}
 						}
@@ -871,12 +864,13 @@ public class AccountFragment extends Fragment implements
 
 				// Color codes for return dates
 				if (item.containsKey(AccountData.KEY_LENT_DEADLINE_TIMESTAMP)) {
-					if (item.getAsLong(AccountData.KEY_LENT_DEADLINE_TIMESTAMP) < System
+					if (Long.parseLong(item
+							.get(AccountData.KEY_LENT_DEADLINE_TIMESTAMP)) < System
 							.currentTimeMillis()) {
 						v.findViewById(R.id.vStatusColor).setBackgroundColor(
 								getResources().getColor(R.color.date_overdue));
-					} else if ((item
-							.getAsLong(AccountData.KEY_LENT_DEADLINE_TIMESTAMP) - System
+					} else if ((Long.parseLong(item
+							.get(AccountData.KEY_LENT_DEADLINE_TIMESTAMP)) - System
 							.currentTimeMillis()) <= tolerance) {
 						v.findViewById(R.id.vStatusColor).setBackgroundColor(
 								getResources().getColor(R.color.date_warning));
@@ -892,15 +886,14 @@ public class AccountFragment extends Fragment implements
 				}
 
 				if (item.containsKey(AccountData.KEY_LENT_LENDING_BRANCH)) {
-					((TextView) v.findViewById(R.id.tvZst))
-							.setText(Html.fromHtml(item
-									.getAsString(AccountData.KEY_LENT_LENDING_BRANCH)));
+					((TextView) v.findViewById(R.id.tvZst)).setText(Html
+							.fromHtml(item
+									.get(AccountData.KEY_LENT_LENDING_BRANCH)));
 					((TextView) v.findViewById(R.id.tvZst))
 							.setVisibility(View.VISIBLE);
 				} else if (item.containsKey(AccountData.KEY_LENT_BRANCH)) {
 					((TextView) v.findViewById(R.id.tvZst)).setText(Html
-							.fromHtml(item
-									.getAsString(AccountData.KEY_LENT_BRANCH)));
+							.fromHtml(item.get(AccountData.KEY_LENT_BRANCH)));
 					((TextView) v.findViewById(R.id.tvZst))
 							.setVisibility(View.VISIBLE);
 				} else {
@@ -910,7 +903,7 @@ public class AccountFragment extends Fragment implements
 
 				if (item.containsKey(AccountData.KEY_LENT_LINK)) {
 					v.findViewById(R.id.ivProlong).setTag(
-							item.getAsString(AccountData.KEY_LENT_LINK));
+							item.get(AccountData.KEY_LENT_LINK));
 					((ImageView) v.findViewById(R.id.ivProlong))
 							.setOnClickListener(new OnClickListener() {
 								@Override
@@ -922,14 +915,14 @@ public class AccountFragment extends Fragment implements
 							.setVisibility(View.VISIBLE);
 					if (item.containsKey(AccountData.KEY_LENT_RENEWABLE)) {
 						((ImageView) v.findViewById(R.id.ivProlong))
-								.setAlpha(item.getAsString(
+								.setAlpha(item.get(
 										AccountData.KEY_LENT_RENEWABLE).equals(
 										"Y") ? 255 : 100);
 					}
 				} else if (item.containsKey(AccountData.KEY_LENT_DOWNLOAD)
 						&& app.getApi() instanceof EbookServiceApi) {
 					v.findViewById(R.id.ivDownload).setTag(
-							item.getAsString(AccountData.KEY_LENT_DOWNLOAD));
+							item.get(AccountData.KEY_LENT_DOWNLOAD));
 					((ImageView) v.findViewById(R.id.ivDownload))
 							.setOnClickListener(new OnClickListener() {
 								@Override
@@ -967,7 +960,7 @@ public class AccountFragment extends Fragment implements
 			t1.setText(R.string.reservations_none);
 			llRes.addView(t1);
 		} else {
-			for (final ContentValues item : result.getReservations()) {
+			for (final Map<String, String> item : result.getReservations()) {
 				View v = getLayoutInflater().inflate(
 						R.layout.listitem_account_reservation, null);
 
@@ -979,7 +972,7 @@ public class AccountFragment extends Fragment implements
 									SearchResultDetailActivity.class);
 							intent.putExtra(
 									SearchResultDetailFragment.ARG_ITEM_ID,
-									item.getAsString(AccountData.KEY_RESERVATION_ID));
+									item.get(AccountData.KEY_RESERVATION_ID));
 							startActivity(intent);
 						}
 					};
@@ -992,28 +985,28 @@ public class AccountFragment extends Fragment implements
 				}
 
 				if (item.containsKey(AccountData.KEY_RESERVATION_TITLE)) {
-					((TextView) v.findViewById(R.id.tvTitel))
-							.setText(Html.fromHtml(item
-									.getAsString(AccountData.KEY_RESERVATION_TITLE)));
+					((TextView) v.findViewById(R.id.tvTitel)).setText(Html
+							.fromHtml(item
+									.get(AccountData.KEY_RESERVATION_TITLE)));
 				}
 				if (item.containsKey(AccountData.KEY_RESERVATION_AUTHOR)) {
-					((TextView) v.findViewById(R.id.tvVerfasser))
-							.setText(Html.fromHtml(item
-									.getAsString(AccountData.KEY_RESERVATION_AUTHOR)));
+					((TextView) v.findViewById(R.id.tvVerfasser)).setText(Html
+							.fromHtml(item
+									.get(AccountData.KEY_RESERVATION_AUTHOR)));
 				}
 
 				if (item.containsKey(AccountData.KEY_RESERVATION_READY)) {
-					((TextView) v.findViewById(R.id.tvStatus))
-							.setText(Html.fromHtml(item
-									.getAsString(AccountData.KEY_RESERVATION_READY)));
+					((TextView) v.findViewById(R.id.tvStatus)).setText(Html
+							.fromHtml(item
+									.get(AccountData.KEY_RESERVATION_READY)));
 					((TextView) v.findViewById(R.id.tvStatus))
 							.setVisibility(View.VISIBLE);
 				} else if (item.containsKey(AccountData.KEY_RESERVATION_EXPIRE)
-						&& item.getAsString(AccountData.KEY_RESERVATION_EXPIRE)
+						&& item.get(AccountData.KEY_RESERVATION_EXPIRE)
 								.length() > 6) {
 					((TextView) v.findViewById(R.id.tvStatus))
 							.setText(Html.fromHtml("bis "
-									+ item.getAsString(AccountData.KEY_RESERVATION_EXPIRE)));
+									+ item.get(AccountData.KEY_RESERVATION_EXPIRE)));
 					((TextView) v.findViewById(R.id.tvStatus))
 							.setVisibility(View.VISIBLE);
 				} else {
@@ -1022,9 +1015,9 @@ public class AccountFragment extends Fragment implements
 				}
 
 				if (item.containsKey(AccountData.KEY_RESERVATION_BRANCH)) {
-					((TextView) v.findViewById(R.id.tvZst))
-							.setText(Html.fromHtml(item
-									.getAsString(AccountData.KEY_RESERVATION_BRANCH)));
+					((TextView) v.findViewById(R.id.tvZst)).setText(Html
+							.fromHtml(item
+									.get(AccountData.KEY_RESERVATION_BRANCH)));
 					((TextView) v.findViewById(R.id.tvZst))
 							.setVisibility(View.VISIBLE);
 				} else {
@@ -1033,9 +1026,8 @@ public class AccountFragment extends Fragment implements
 				}
 
 				if (item.containsKey(AccountData.KEY_RESERVATION_BOOKING)) {
-					v.findViewById(R.id.ivBooking)
-							.setTag(item
-									.getAsString(AccountData.KEY_RESERVATION_BOOKING));
+					v.findViewById(R.id.ivBooking).setTag(
+							item.get(AccountData.KEY_RESERVATION_BOOKING));
 					((ImageView) v.findViewById(R.id.ivBooking))
 							.setOnClickListener(new OnClickListener() {
 								@Override
@@ -1048,9 +1040,8 @@ public class AccountFragment extends Fragment implements
 					((ImageView) v.findViewById(R.id.ivCancel))
 							.setVisibility(View.GONE);
 				} else if (item.containsKey(AccountData.KEY_RESERVATION_CANCEL)) {
-					v.findViewById(R.id.ivCancel)
-							.setTag(item
-									.getAsString(AccountData.KEY_RESERVATION_CANCEL));
+					v.findViewById(R.id.ivCancel).setTag(
+							item.get(AccountData.KEY_RESERVATION_CANCEL));
 					((ImageView) v.findViewById(R.id.ivCancel))
 							.setOnClickListener(new OnClickListener() {
 								@Override
@@ -1174,18 +1165,19 @@ public class AccountFragment extends Fragment implements
 		}
 	}
 
-	public class DownloadTask extends OpacTask<Uri> {
+	public class DownloadTask extends OpacTask<String> {
 
 		@Override
-		protected Uri doInBackground(Object... arg0) {
+		protected String doInBackground(Object... arg0) {
 			super.doInBackground(arg0);
 			String a = (String) arg0[1];
-			Uri url = ((EbookServiceApi) app.getApi()).downloadItem(account, a);
+			String url = ((EbookServiceApi) app.getApi()).downloadItem(account,
+					a);
 			return url;
 		}
 
 		@Override
-		protected void onPostExecute(final Uri result) {
+		protected void onPostExecute(final String result) {
 			dialog.dismiss();
 			if (getActivity() == null)
 				return;
@@ -1228,7 +1220,7 @@ public class AccountFragment extends Fragment implements
 												DialogInterface dialog, int id) {
 											Intent i = new Intent(
 													Intent.ACTION_VIEW);
-											i.setData(result);
+											i.setData(Uri.parse(result));
 											sp.edit()
 													.putBoolean(
 															"reader_needed_ignore",
@@ -1254,7 +1246,7 @@ public class AccountFragment extends Fragment implements
 				}
 			}
 			Intent i = new Intent(Intent.ACTION_VIEW);
-			i.setData(result);
+			i.setData(Uri.parse(result));
 			startActivity(i);
 		}
 	}

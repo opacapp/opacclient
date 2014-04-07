@@ -30,10 +30,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.acra.ACRA;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -48,9 +48,6 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
-import android.content.ContentValues;
-import android.net.Uri;
-import android.os.Bundle;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -156,22 +153,23 @@ public class Zones22 extends BaseApi {
 		try {
 			this.opac_url = data.getString("baseurl");
 		} catch (JSONException e) {
-			ACRA.getErrorReporter().handleException(e);
+			throw new RuntimeException(e);
 		}
 	}
 
-	public static String getStringFromBundle(Bundle bundle, String key) {
+	public static String getStringFromBundle(Map<String, String> bundle,
+			String key) {
 		// Workaround for Bundle.getString(key, default) being available not
 		// before API 12
-		String res = bundle.getString(key);
+		String res = bundle.get(key);
 		if (res == null)
 			res = "";
 		return res;
 	}
 
-	private int addParameters(Bundle query, String key, String searchkey,
-			List<NameValuePair> params, int index) {
-		if (!query.containsKey(key) || query.getString(key).equals(""))
+	private int addParameters(Map<String, String> query, String key,
+			String searchkey, List<NameValuePair> params, int index) {
+		if (!query.containsKey(key) || query.get(key).equals(""))
 			return index;
 
 		if (index != 1)
@@ -180,13 +178,13 @@ public class Zones22 extends BaseApi {
 		params.add(new BasicNameValuePair("q.form.t" + index + ".term",
 				searchkey));
 		params.add(new BasicNameValuePair("q.form.t" + index + ".expr", query
-				.getString(key)));
+				.get(key)));
 		return index + 1;
 
 	}
 
 	@Override
-	public SearchRequestResult search(Bundle query) throws IOException,
+	public SearchRequestResult search(Map<String, String> query) throws IOException,
 			NotReachableException, OpacErrorException {
 		start();
 
@@ -216,9 +214,9 @@ public class Zones22 extends BaseApi {
 				index);
 
 		if (query.containsKey(KEY_SEARCH_QUERY_BRANCH)
-				&& !query.getString(KEY_SEARCH_QUERY_BRANCH).equals(""))
+				&& !query.get(KEY_SEARCH_QUERY_BRANCH).equals(""))
 			params.add(new BasicNameValuePair("q.limits.limit", query
-					.getString(KEY_SEARCH_QUERY_BRANCH)));
+					.get(KEY_SEARCH_QUERY_BRANCH)));
 
 		if (index > 3) {
 			throw new OpacErrorException(
@@ -332,9 +330,11 @@ public class Zones22 extends BaseApi {
 
 				if (node.select(".SummaryFieldData a.SummaryFieldLink").size() > 0
 						&& haslink == false) {
-					sr.setId(Uri.parse(
-							node.select(".SummaryFieldData a.SummaryFieldLink")
-									.attr("abs:href")).getQueryParameter("no"));
+					String href = node.select(
+							".SummaryFieldData a.SummaryFieldLink").attr(
+							"abs:href");
+					Map<String, String> hrefq = getQueryParamsFirst(href);
+					sr.setId(hrefq.get("no"));
 					haslink = true;
 				}
 			}
@@ -468,7 +468,7 @@ public class Zones22 extends BaseApi {
 				continue;
 			}
 
-			ContentValues copy = new ContentValues();
+			Map<String, String> copy = new HashMap<String, String>();
 
 			// This is getting very ugly - check if it is valid for libraries
 			// which are not
@@ -586,7 +586,7 @@ public class Zones22 extends BaseApi {
 		if (doc.select("#MainForm select").size() > 0) {
 			ReservationResult res = new ReservationResult(
 					ReservationResult.Status.SELECTION_NEEDED);
-			ContentValues sel = new ContentValues();
+			Map<String, String> sel = new HashMap<String, String>();
 			for (Element opt : doc.select("#MainForm select option")) {
 				sel.put(opt.attr("value"), opt.text().trim());
 			}
@@ -645,7 +645,7 @@ public class Zones22 extends BaseApi {
 		if (doc.select(".AccountSummaryCounterLink").size() > 0) {
 			return doc;
 		}
-		if(doc.select("#LoginForm").size() == 0) {
+		if (doc.select("#LoginForm").size() == 0) {
 			throw new NotReachableException();
 		}
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -659,7 +659,6 @@ public class Zones22 extends BaseApi {
 		params.add(new BasicNameValuePair("BRWR", acc.getName()));
 		params.add(new BasicNameValuePair("PIN", acc.getPassword()));
 
-		
 		String loginHtml;
 		try {
 			loginHtml = httpPost(
@@ -728,7 +727,7 @@ public class Zones22 extends BaseApi {
 		String lent_html = httpGet(opac_url + "/" + lent_link,
 				getDefaultEncoding());
 		Document lent_doc = Jsoup.parse(lent_html);
-		List<ContentValues> lent = new ArrayList<ContentValues>();
+		List<Map<String, String>> lent = new ArrayList<Map<String, String>>();
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.GERMAN);
 		Pattern id_pat = Pattern
@@ -736,7 +735,7 @@ public class Zones22 extends BaseApi {
 
 		for (Element table : lent_doc
 				.select(".LoansBrowseItemDetailsCellStripe table, .LoansBrowseItemDetailsCell table")) {
-			ContentValues item = new ContentValues();
+			Map<String, String> item = new HashMap<String, String>();
 
 			for (Element tr : table.select("tr")) {
 				String desc = tr.select(".LoanBrowseFieldNameCell").text()
@@ -755,8 +754,8 @@ public class Zones22 extends BaseApi {
 					value = value.split(" ")[0];
 					item.put(AccountData.KEY_LENT_DEADLINE, value);
 					try {
-						item.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, sdf
-								.parse(value).getTime());
+						item.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
+								String.valueOf(sdf.parse(value).getTime()));
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}
@@ -774,14 +773,14 @@ public class Zones22 extends BaseApi {
 		res.setLent(lent);
 		assert (lent_cnt <= lent.size());
 
-		List<ContentValues> reservations = new ArrayList<ContentValues>();
+		List<Map<String, String>> reservations = new ArrayList<Map<String, String>>();
 		String res_html = httpGet(opac_url + "/" + res_link,
 				getDefaultEncoding());
 		Document res_doc = Jsoup.parse(res_html);
 
 		for (Element table : res_doc
 				.select(".MessageBrowseItemDetailsCell table, .MessageBrowseItemDetailsCellStripe table")) {
-			ContentValues item = new ContentValues();
+			Map<String, String> item = new HashMap<String, String>();
 
 			for (Element tr : table.select("tr")) {
 				String desc = tr.select(".MessageBrowseFieldNameCell").text()
@@ -797,8 +796,7 @@ public class Zones22 extends BaseApi {
 				if (desc.equals("Status"))
 					item.put(AccountData.KEY_RESERVATION_READY, value);
 			}
-			if ("Gelöscht".equals(item
-					.getAsString(AccountData.KEY_RESERVATION_READY))) {
+			if ("Gelöscht".equals(item.get(AccountData.KEY_RESERVATION_READY))) {
 				continue;
 			}
 			reservations.add(item);

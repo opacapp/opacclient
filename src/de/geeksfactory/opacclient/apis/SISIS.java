@@ -36,7 +36,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.acra.ACRA;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -51,9 +50,6 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
-import android.content.ContentValues;
-import android.net.Uri;
-import android.os.Bundle;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult.Status;
 import de.geeksfactory.opacclient.objects.Account;
@@ -241,22 +237,23 @@ public class SISIS extends BaseApi implements OpacApi {
 		try {
 			this.opac_url = data.getString("baseurl");
 		} catch (JSONException e) {
-			ACRA.getErrorReporter().handleException(e);
+			throw new RuntimeException(e);
 		}
 	}
 
-	public static String getStringFromBundle(Bundle bundle, String key) {
+	public static String getStringFromBundle(Map<String, String> bundle,
+			String key) {
 		// Workaround for Bundle.getString(key, default) being available not
 		// before API 12
-		String res = bundle.getString(key);
+		String res = bundle.get(key);
 		if (res == null)
 			res = "";
 		return res;
 	}
 
-	protected int addParameters(Bundle query, String key, String searchkey,
-			List<NameValuePair> params, int index) {
-		if (!query.containsKey(key) || query.getString(key).equals(""))
+	protected int addParameters(Map<String, String> query, String key,
+			String searchkey, List<NameValuePair> params, int index) {
+		if (!query.containsKey(key) || query.get(key).equals(""))
 			return index;
 
 		if (index != 0)
@@ -265,22 +262,21 @@ public class SISIS extends BaseApi implements OpacApi {
 		params.add(new BasicNameValuePair("searchCategories[" + index + "]",
 				searchkey));
 		params.add(new BasicNameValuePair("searchString[" + index + "]", query
-				.getString(key)));
+				.get(key)));
 		return index + 1;
 
 	}
 
 	@Override
-	public SearchRequestResult search(Bundle query) throws IOException,
-			NotReachableException, OpacErrorException {
+	public SearchRequestResult search(Map<String, String> query)
+			throws IOException, NotReachableException, OpacErrorException {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 		if (query.containsKey("volume")) {
 			params.add(new BasicNameValuePair("methodToCall", "volumeSearch"));
 			params.add(new BasicNameValuePair("dbIdentifier", query
-					.getString("dbIdentifier")));
-			params.add(new BasicNameValuePair("catKey", query
-					.getString("catKey")));
+					.get("dbIdentifier")));
+			params.add(new BasicNameValuePair("catKey", query.get("catKey")));
 			params.add(new BasicNameValuePair("periodical", "N"));
 		} else {
 			int index = 0;
@@ -328,11 +324,11 @@ public class SISIS extends BaseApi implements OpacApi {
 			params.add(new BasicNameValuePair("numberOfHits", "10"));
 
 			params.add(new BasicNameValuePair("selectedSearchBranchlib", query
-					.getString(KEY_SEARCH_QUERY_BRANCH)));
-			if (query.getString(KEY_SEARCH_QUERY_HOME_BRANCH) != null) {
-				if (!query.getString(KEY_SEARCH_QUERY_HOME_BRANCH).equals(""))
+					.get(KEY_SEARCH_QUERY_BRANCH)));
+			if (query.get(KEY_SEARCH_QUERY_HOME_BRANCH) != null) {
+				if (!query.get(KEY_SEARCH_QUERY_HOME_BRANCH).equals(""))
 					params.add(new BasicNameValuePair("selectedViewBranchlib",
-							query.getString(KEY_SEARCH_QUERY_HOME_BRANCH)));
+							query.get(KEY_SEARCH_QUERY_HOME_BRANCH)));
 			}
 		}
 
@@ -714,10 +710,11 @@ public class SISIS extends BaseApi implements OpacApi {
 		}
 		List<String> reservationlinks = new ArrayList<String>();
 		for (Element link : doc3.select("#vormerkung a, #tab-content a")) {
-			Uri href = Uri.parse(link.absUrl("href"));
+			String href = link.absUrl("href");
+			Map<String, String> hrefq = getQueryParamsFirst(href);
 			if (result.getId() == null) {
 				// ID retrieval
-				String key = href.getQueryParameter("katkey");
+				String key = hrefq.get("katkey");
 				if (key != null) {
 					result.setId(key);
 					break;
@@ -725,12 +722,10 @@ public class SISIS extends BaseApi implements OpacApi {
 			}
 
 			// Vormerken
-			if (href.getQueryParameter("methodToCall") != null) {
-				if (href.getQueryParameter("methodToCall").equals(
-						"doVormerkung")
-						|| href.getQueryParameter("methodToCall").equals(
-								"doBestellung"))
-					reservationlinks.add(href.getQuery());
+			if (hrefq.get("methodToCall") != null) {
+				if (hrefq.get("methodToCall").equals("doVormerkung")
+						|| hrefq.get("methodToCall").equals("doBestellung"))
+					reservationlinks.add(href.split("\\?")[1]);
 			}
 		}
 		if (reservationlinks.size() == 1) {
@@ -816,10 +811,10 @@ public class SISIS extends BaseApi implements OpacApi {
 			}
 		}
 		for (Element link : doc3.select("#tab-content a")) {
-			Uri href = Uri.parse(link.absUrl("href"));
+			Map<String, String> hrefq = getQueryParamsFirst(link.absUrl("href"));
 			if (result.getId() == null) {
 				// ID retrieval
-				String key = href.getQueryParameter("katkey");
+				String key = hrefq.get("katkey");
 				if (key != null) {
 					result.setId(key);
 					break;
@@ -861,7 +856,7 @@ public class SISIS extends BaseApi implements OpacApi {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
 		for (Element tr : exemplartrs) {
 			try {
-				ContentValues e = new ContentValues();
+				Map<String, String> e = new HashMap<String, String>();
 				Element status = tr.child(copy_columnmap
 						.get(DetailledItem.KEY_COPY_STATUS));
 				Element barcode = tr.child(copy_columnmap
@@ -890,8 +885,8 @@ public class SISIS extends BaseApi implements OpacApi {
 					e.put(DetailledItem.KEY_COPY_STATUS, matcher.group(1));
 					e.put(DetailledItem.KEY_COPY_RETURN, matcher.group(2));
 					e.put(DetailledItem.KEY_COPY_RESERVATIONS, matcher.group(3));
-					e.put(DetailledItem.KEY_COPY_RETURN_TIMESTAMP,
-							sdf.parse(matcher.group(2)).getTime());
+					e.put(DetailledItem.KEY_COPY_RETURN_TIMESTAMP, String
+							.valueOf(sdf.parse(matcher.group(2)).getTime()));
 				} else {
 					e.put(DetailledItem.KEY_COPY_STATUS, statustext);
 				}
@@ -933,7 +928,7 @@ public class SISIS extends BaseApi implements OpacApi {
 
 		try {
 			Element isvolume = null;
-			Bundle volume = new Bundle();
+			Map<String, String> volume = new HashMap<String, String>();
 			Elements links = doc.select(".data td a");
 			int elcount = links.size();
 			for (int eli = 0; eli < elcount; eli++) {
@@ -944,13 +939,13 @@ public class SISIS extends BaseApi implements OpacApi {
 							&& nv.getValue().equals("volumeSearch")) {
 						isvolume = links.get(eli);
 					} else if (nv.getName().equals("catKey")) {
-						volume.putString("catKey", nv.getValue());
+						volume.put("catKey", nv.getValue());
 					} else if (nv.getName().equals("dbIdentifier")) {
-						volume.putString("dbIdentifier", nv.getValue());
+						volume.put("dbIdentifier", nv.getValue());
 					}
 				}
 				if (isvolume != null) {
-					volume.putBoolean("volume", true);
+					volume.put("volume", "true");
 					result.setVolumesearch(volume);
 					break;
 				}
@@ -1024,7 +1019,7 @@ public class SISIS extends BaseApi implements OpacApi {
 				doc = Jsoup.parse(html);
 			}
 			if (doc.select("input[name=" + branch_inputfield + "]").size() > 0) {
-				ContentValues branches = new ContentValues();
+				Map<String, String> branches = new HashMap<String, String>();
 				for (Element option : doc
 						.select("input[name=" + branch_inputfield + "]")
 						.first().parent().parent().parent().select("td")) {
@@ -1085,8 +1080,8 @@ public class SISIS extends BaseApi implements OpacApi {
 			String errmsg = doc.getElementsByClass("textrot").get(0).text();
 			if (errmsg
 					.contains("Dieses oder andere Exemplare in anderer Zweigstelle ausleihbar")) {
-				ContentValues best = null;
-				for (ContentValues copy : item.getCopies()) {
+				Map<String, String> best = null;
+				for (Map<String, String> copy : item.getCopies()) {
 					if (!copy.containsKey(DetailledItem.KEY_COPY_RESINFO)) {
 						continue;
 					}
@@ -1094,21 +1089,26 @@ public class SISIS extends BaseApi implements OpacApi {
 						best = copy;
 						continue;
 					}
-					if (copy.getAsInteger(DetailledItem.KEY_COPY_RESERVATIONS) < best
-							.getAsInteger(DetailledItem.KEY_COPY_RESERVATIONS)) {
+					if (Integer.parseInt(copy
+							.get(DetailledItem.KEY_COPY_RESERVATIONS)) < Integer
+							.parseInt(best
+									.get(DetailledItem.KEY_COPY_RESERVATIONS))) {
 						best = copy;
-					} else if (copy
-							.getAsInteger(DetailledItem.KEY_COPY_RESERVATIONS) == best
-							.getAsInteger(DetailledItem.KEY_COPY_RESERVATIONS)) {
-						if (copy.getAsInteger(DetailledItem.KEY_COPY_RETURN_TIMESTAMP) < best
-								.getAsInteger(DetailledItem.KEY_COPY_RETURN_TIMESTAMP)) {
+					} else if (Integer.parseInt(copy
+							.get(DetailledItem.KEY_COPY_RESERVATIONS)) == Integer
+							.parseInt(best
+									.get(DetailledItem.KEY_COPY_RESERVATIONS))) {
+						if (Integer.parseInt(copy
+								.get(DetailledItem.KEY_COPY_RETURN_TIMESTAMP)) < Integer
+								.parseInt(best
+										.get(DetailledItem.KEY_COPY_RETURN_TIMESTAMP))) {
 							best = copy;
 						}
 					}
 				}
 				if (best != null) {
 					item.setReservation_info(best
-							.getAsString(DetailledItem.KEY_COPY_RESINFO));
+							.get(DetailledItem.KEY_COPY_RESINFO));
 					return reservation(item, acc, 0, null);
 				}
 			}
@@ -1275,8 +1275,9 @@ public class SISIS extends BaseApi implements OpacApi {
 		return true;
 	}
 
-	protected void parse_medialist(List<ContentValues> medien, Document doc,
-			int offset) throws ClientProtocolException, IOException {
+	protected void parse_medialist(List<Map<String, String>> medien,
+			Document doc, int offset) throws ClientProtocolException,
+			IOException {
 		Elements copytrs = doc.select(".data tr");
 		doc.setBaseUri(opac_url);
 
@@ -1288,7 +1289,7 @@ public class SISIS extends BaseApi implements OpacApi {
 		assert (trs > 0);
 		for (int i = 1; i < trs; i++) {
 			Element tr = copytrs.get(i);
-			ContentValues e = new ContentValues();
+			Map<String, String> e = new HashMap<String, String>();
 
 			if (tr.text().contains("keine Daten")) {
 				return;
@@ -1310,10 +1311,10 @@ public class SISIS extends BaseApi implements OpacApi {
 
 				if (!frist.equals("")) {
 					try {
-						e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
-								sdf.parse(
-										e.getAsString(AccountData.KEY_LENT_DEADLINE))
-										.getTime());
+						e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String
+								.valueOf(sdf.parse(
+										e.get(AccountData.KEY_LENT_DEADLINE))
+										.getTime()));
 					} catch (ParseException e1) {
 						e1.printStackTrace();
 					}
@@ -1321,11 +1322,11 @@ public class SISIS extends BaseApi implements OpacApi {
 
 				if (tr.select("a").size() > 0) {
 					for (Element link : tr.select("a")) {
-						Uri uri = Uri.parse(link.attr("abs:href"));
-						if (uri.getQueryParameter("methodToCall").equals(
-								"renewalPossible")) {
-							e.put(AccountData.KEY_LENT_LINK,
-									offset + "$" + uri.getQuery());
+						String href = link.attr("abs:href");
+						Map<String, String> hrefq = getQueryParamsFirst(href);
+						if (hrefq.get("methodToCall").equals("renewalPossible")) {
+							e.put(AccountData.KEY_LENT_LINK, offset + "$"
+									+ href.split("\\?")[0]);
 							e.put(AccountData.KEY_LENT_RENEWABLE, "Y");
 							break;
 						}
@@ -1350,9 +1351,9 @@ public class SISIS extends BaseApi implements OpacApi {
 
 	}
 
-	protected void parse_reslist(String type, List<ContentValues> reservations,
-			Document doc, int offset) throws ClientProtocolException,
-			IOException {
+	protected void parse_reslist(String type,
+			List<Map<String, String>> reservations, Document doc, int offset)
+			throws ClientProtocolException, IOException {
 		Elements copytrs = doc.select(".data tr");
 		doc.setBaseUri(opac_url);
 		int trs = copytrs.size();
@@ -1361,7 +1362,7 @@ public class SISIS extends BaseApi implements OpacApi {
 		assert (trs > 0);
 		for (int i = 1; i < trs; i++) {
 			Element tr = copytrs.get(i);
-			ContentValues e = new ContentValues();
+			Map<String, String> e = new HashMap<String, String>();
 
 			if (tr.text().contains("keine Daten")) {
 				return;
@@ -1381,13 +1382,9 @@ public class SISIS extends BaseApi implements OpacApi {
 							rowsplit2[2].trim());
 
 				if (tr.select("a").size() == 1)
-					e.put(AccountData.KEY_RESERVATION_CANCEL,
-							type
-									+ "$"
-									+ offset
-									+ "$"
-									+ Uri.parse(tr.select("a").attr("abs:href"))
-											.getQuery());
+					e.put(AccountData.KEY_RESERVATION_CANCEL, type + "$"
+							+ offset + "$"
+							+ tr.select("a").attr("abs:href").split("\\?")[1]);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -1411,21 +1408,21 @@ public class SISIS extends BaseApi implements OpacApi {
 		// Geliehene Medien
 		String html = httpGet(opac_url
 				+ "/userAccount.do?methodToCall=showAccount&typ=1", ENCODING);
-		List<ContentValues> medien = new ArrayList<ContentValues>();
+		List<Map<String, String>> medien = new ArrayList<Map<String, String>>();
 		Document doc = Jsoup.parse(html);
 		doc.setBaseUri(opac_url);
 		parse_medialist(medien, doc, 1);
 		if (doc.select(".box-right").size() > 0) {
 			for (Element link : doc.select(".box-right").first().select("a")) {
-				Uri uri = Uri.parse(link.attr("abs:href"));
-				if (uri == null
-						|| uri.getQueryParameter("methodToCall") == null)
+				String href = link.attr("abs:href");
+				Map<String, String> hrefq = getQueryParamsFirst(href);
+				if (hrefq == null || hrefq.get("methodToCall") == null)
 					continue;
-				if (uri.getQueryParameter("methodToCall").equals("pos")
-						&& !"1".equals(uri.getQueryParameter("anzPos"))) {
-					html = httpGet(uri.toString(), ENCODING);
+				if (hrefq.get("methodToCall").equals("pos")
+						&& !"1".equals(hrefq.get("anzPos"))) {
+					html = httpGet(href, ENCODING);
 					parse_medialist(medien, Jsoup.parse(html),
-							Integer.parseInt(uri.getQueryParameter("anzPos")));
+							Integer.parseInt(hrefq.get("anzPos")));
 				}
 			}
 		}
@@ -1442,22 +1439,22 @@ public class SISIS extends BaseApi implements OpacApi {
 		// Bestellte Medien
 		html = httpGet(opac_url
 				+ "/userAccount.do?methodToCall=showAccount&typ=6", ENCODING);
-		List<ContentValues> reserved = new ArrayList<ContentValues>();
+		List<Map<String, String>> reserved = new ArrayList<Map<String, String>>();
 		doc = Jsoup.parse(html);
 		doc.setBaseUri(opac_url);
 		parse_reslist("6", reserved, doc, 1);
 		Elements label6 = doc.select("#label6");
 		if (doc.select(".box-right").size() > 0) {
 			for (Element link : doc.select(".box-right").first().select("a")) {
-				Uri uri = Uri.parse(link.attr("abs:href"));
-				if (uri == null
-						|| uri.getQueryParameter("methodToCall") == null)
+				String href = link.attr("abs:href");
+				Map<String, String> hrefq = getQueryParamsFirst(href);
+				if (hrefq == null || hrefq.get("methodToCall") == null)
 					break;
-				if (uri.getQueryParameter("methodToCall").equals("pos")
-						&& !"1".equals(uri.getQueryParameter("anzPos"))) {
-					html = httpGet(uri.toString(), ENCODING);
+				if (hrefq.get("methodToCall").equals("pos")
+						&& !"1".equals(hrefq.get("anzPos"))) {
+					html = httpGet(href, ENCODING);
 					parse_reslist("6", medien, Jsoup.parse(html),
-							Integer.parseInt(uri.getQueryParameter("anzPos")));
+							Integer.parseInt(hrefq.get("anzPos")));
 				}
 			}
 		}
@@ -1470,15 +1467,15 @@ public class SISIS extends BaseApi implements OpacApi {
 		parse_reslist("7", reserved, doc, 1);
 		if (doc.select(".box-right").size() > 0) {
 			for (Element link : doc.select(".box-right").first().select("a")) {
-				Uri uri = Uri.parse(link.attr("abs:href"));
-				if (uri == null
-						|| uri.getQueryParameter("methodToCall") == null)
+				String href = link.attr("abs:href");
+				Map<String, String> hrefq = getQueryParamsFirst(href);
+				if (hrefq == null || hrefq.get("methodToCall") == null)
 					break;
-				if (uri.getQueryParameter("methodToCall").equals("pos")
-						&& !"1".equals(uri.getQueryParameter("anzPos"))) {
-					html = httpGet(uri.toString(), ENCODING);
+				if (hrefq.get("methodToCall").equals("pos")
+						&& !"1".equals(hrefq.get("anzPos"))) {
+					html = httpGet(href, ENCODING);
 					parse_reslist("7", medien, Jsoup.parse(html),
-							Integer.parseInt(uri.getQueryParameter("anzPos")));
+							Integer.parseInt(hrefq.get("anzPos")));
 				}
 			}
 		}
@@ -1606,9 +1603,9 @@ public class SISIS extends BaseApi implements OpacApi {
 		Document doc = Jsoup.parse(html);
 
 		if (doc.select("table.data").size() > 0) {
-			List<ContentValues> result = new ArrayList<ContentValues>();
+			List<Map<String, String>> result = new ArrayList<Map<String, String>>();
 			for (Element td : doc.select("table.data tr td")) {
-				ContentValues line = new ContentValues();
+				Map<String, String> line = new HashMap<String, String>();
 				if (!td.text().contains("Titel")
 						|| !td.text().contains("Status"))
 					continue;

@@ -23,6 +23,7 @@ package de.geeksfactory.opacclient.objects;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import android.content.ContentValues;
 import android.graphics.Bitmap;
@@ -36,8 +37,8 @@ import de.geeksfactory.opacclient.apis.OpacApi;
  */
 public class DetailledItem implements CoverHolder {
 	private List<Detail> details = new ArrayList<Detail>();
-	private List<ContentValues> copies = new ArrayList<ContentValues>();
-	private List<ContentValues> baende = new ArrayList<ContentValues>();
+	private List<Map<String, String>> copies = new ArrayList<Map<String, String>>();
+	private List<Map<String, String>> baende = new ArrayList<Map<String, String>>();
 	private String cover;
 	private String title;
 	private Bitmap coverBitmap;
@@ -46,7 +47,7 @@ public class DetailledItem implements CoverHolder {
 	private boolean bookable;
 	private String booking_info;
 	private String id;
-	private Bundle volumesearch;
+	private Map<String, String> volumesearch;
 	private String collectionid;
 
 	/**
@@ -233,7 +234,7 @@ public class DetailledItem implements CoverHolder {
 	 * @return List of copies
 	 * @see #addCopy(ContentValues)
 	 */
-	public List<ContentValues> getCopies() {
+	public List<Map<String, String>> getCopies() {
 		return copies;
 	}
 
@@ -244,7 +245,7 @@ public class DetailledItem implements CoverHolder {
 	 *            List of copies
 	 * @see #addCopy(ContentValues)
 	 */
-	public void setCopies(List<ContentValues> copies) {
+	public void setCopies(List<Map<String, String>> copies) {
 		this.copies = copies;
 	}
 
@@ -254,7 +255,7 @@ public class DetailledItem implements CoverHolder {
 	 * @return List of child items available
 	 * @see #addBand(ContentValues)
 	 */
-	public List<ContentValues> getBaende() {
+	public List<Map<String, String>> getBaende() {
 		return baende;
 	}
 
@@ -275,7 +276,7 @@ public class DetailledItem implements CoverHolder {
 	 *            An object representing a copy
 	 * @see Detail
 	 */
-	public void addCopy(ContentValues copy) {
+	public void addCopy(Map<String, String> copy) {
 		copies.add(copy);
 	}
 
@@ -288,7 +289,7 @@ public class DetailledItem implements CoverHolder {
 	 * 
 	 * @see Detail
 	 */
-	public void addBand(ContentValues child) {
+	public void addBand(Map<String, String> child) {
 		baende.add(child);
 	}
 
@@ -300,7 +301,7 @@ public class DetailledItem implements CoverHolder {
 	 * @return Search query or <code>null</code> if not applicable
 	 * @see Detail
 	 */
-	public Bundle getVolumesearch() {
+	public Map<String, String> getVolumesearch() {
 		return volumesearch;
 	}
 
@@ -312,7 +313,7 @@ public class DetailledItem implements CoverHolder {
 	 * @param volumesearch
 	 *            Search query
 	 */
-	public void setVolumesearch(Bundle volumesearch) {
+	public void setVolumesearch(Map<String, String> volumesearch) {
 		this.volumesearch = volumesearch;
 	}
 

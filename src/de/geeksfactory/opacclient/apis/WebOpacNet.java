@@ -27,16 +27,14 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.acra.ACRA;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.ContentValues;
-import android.os.Bundle;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -72,7 +70,7 @@ public class WebOpacNet extends BaseApi implements OpacApi {
 	protected MetaDataSource metadata;
 	protected JSONObject data;
 	protected Library library;
-	protected Bundle query;
+	protected Map<String, String> query;
 	
 	protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
 	
@@ -137,12 +135,12 @@ public class WebOpacNet extends BaseApi implements OpacApi {
 		try {
 			this.opac_url = data.getString("baseurl");
 		} catch (JSONException e) {
-			ACRA.getErrorReporter().handleException(e);
+			throw new RuntimeException(e);
 		}
 	}
 
 	@Override
-	public SearchRequestResult search(Bundle query) throws IOException,
+	public SearchRequestResult search(Map<String, String> query) throws IOException,
 			NotReachableException, OpacErrorException {
 		this.query = query;
 		List<NameValuePair> params = new ArrayList<NameValuePair>();	
@@ -162,21 +160,21 @@ public class WebOpacNet extends BaseApi implements OpacApi {
 		return parse_search(json, 1);
 	}
 	
-	protected int addParameters(Bundle query, String key, int searchkey,
+	protected int addParameters(Map<String, String> query, String key, int searchkey,
 			StringBuilder params, int index) {
-		if (!query.containsKey(key) || query.getString(key).equals(""))
+		if (!query.containsKey(key) || query.get(key).equals(""))
 			return index;
 		
-		params.append("|" + String.valueOf(searchkey) + "|" + query.getString(key));
+		params.append("|" + String.valueOf(searchkey) + "|" + query.get(key));
 		return index + 1;
 	}
 	
-	protected void addFilters(Bundle query, String key, String searchkey,
+	protected void addFilters(Map<String, String> query, String key, String searchkey,
 			StringBuilder params) {
-		if (!query.containsKey(key) || query.getString(key).equals(""))
+		if (!query.containsKey(key) || query.get(key).equals(""))
 			return;
 		
-		params.append("&" + String.valueOf(searchkey) + "=" + query.getString(key));
+		params.append("&" + String.valueOf(searchkey) + "=" + query.get(key));
 	}
 
 	private SearchRequestResult parse_search(String text, int page) throws OpacErrorException {
@@ -247,7 +245,7 @@ public class WebOpacNet extends BaseApi implements OpacApi {
 		return parse_search(json, page);
 	}
 
-	private int buildParams(Bundle query, List<NameValuePair> params, int page) {
+	private int buildParams(Map<String, String> query, List<NameValuePair> params, int page) {
 		int index = 0;
 		
 		StringBuilder queries = new StringBuilder();
@@ -326,7 +324,7 @@ public class WebOpacNet extends BaseApi implements OpacApi {
 			JSONArray copies = json.getJSONArray("exemplare");
 			for (int i = 0; i < copies.length(); i++) {
 				JSONObject copyJson = copies.getJSONObject(i);
-				ContentValues copy = new ContentValues();
+				Map<String, String> copy = new HashMap<String, String>();
 				
 				JSONArray values = copyJson.getJSONArray("rows");
 				for (int j = 0; j < values.length(); j++) {
@@ -343,11 +341,11 @@ public class WebOpacNet extends BaseApi implements OpacApi {
 							copy.put(DetailledItem.KEY_COPY_LOCATION, value);
 						else if (name.equals("Themenabteilung")) {
 							if (copy.containsKey(DetailledItem.KEY_COPY_DEPARTMENT))
-								value = copy.getAsString(DetailledItem.KEY_COPY_DEPARTMENT) + value;
+								value = copy.get(DetailledItem.KEY_COPY_DEPARTMENT) + value;
 							copy.put(DetailledItem.KEY_COPY_DEPARTMENT, value);
 						} else if (name.equals("Themenbereich")) {
 							if (copy.containsKey(DetailledItem.KEY_COPY_DEPARTMENT))
-								value = copy.getAsString(DetailledItem.KEY_COPY_DEPARTMENT) + value;
+								value = copy.get(DetailledItem.KEY_COPY_DEPARTMENT) + value;
 							copy.put(DetailledItem.KEY_COPY_DEPARTMENT, value);
 						}
 					}

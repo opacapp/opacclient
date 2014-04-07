@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import org.acra.ACRA;
+import java.util.Map;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -12,7 +13,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
-import android.os.Bundle;
+
 import de.geeksfactory.opacclient.ISBNTools;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
@@ -67,7 +68,7 @@ public class SRU extends BaseApi implements OpacApi {
 			if(data.has("sharelink"))
 				shareUrl = data.getString("sharelink");
 		} catch (JSONException e) {
-			ACRA.getErrorReporter().handleException(e);
+			throw new RuntimeException(e);
 		}
 	}
 	
@@ -113,18 +114,18 @@ public class SRU extends BaseApi implements OpacApi {
 		}
 	}
 	
-	protected int addParameters(Bundle query, String key, String searchkey,
+	protected int addParameters(Map<String, String> query, String key, String searchkey,
 			StringBuilder params, int index) {
-		if (!query.containsKey(key) || query.getString(key).equals(""))
+		if (!query.containsKey(key) || query.get(key).equals(""))
 			return index;
 		if(index != 0) params.append("%20and%20");
-		params.append(searchkey + "%3D" + query.getString(key));
+		params.append(searchkey + "%3D" + query.get(key));
 		return index + 1;
 
 	}
 
 	@Override
-	public SearchRequestResult search(Bundle query) throws IOException,
+	public SearchRequestResult search(Map<String, String> query) throws IOException,
 			NotReachableException, OpacErrorException {
 		StringBuilder params = new StringBuilder();
 

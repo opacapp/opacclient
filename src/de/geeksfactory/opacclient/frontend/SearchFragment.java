@@ -1,8 +1,10 @@
 package de.geeksfactory.opacclient.frontend;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.acra.ACRA;
@@ -501,7 +503,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		app.startSearch(getActivity(), saveQuery());
 	}
 
-	public Bundle saveQuery() {
+	public Map<String, String> saveQuery() {
 		String zst = "";
 		String mg = "";
 		String zst_home = "";
@@ -526,46 +528,44 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 					((Spinner) view.findViewById(R.id.cbMediengruppe))
 							.getSelectedItemPosition()).getAsString("key");
 
-		Bundle query = new Bundle();
-		query.putString(OpacApi.KEY_SEARCH_QUERY_FREE, ((EditText) view
+		Map<String, String> query = new HashMap<String, String>();
+		query.put(OpacApi.KEY_SEARCH_QUERY_FREE, ((EditText) view
 				.findViewById(R.id.etSimpleSearch)).getEditableText()
 				.toString());
-		query.putString(OpacApi.KEY_SEARCH_QUERY_TITLE, ((EditText) view
+		query.put(OpacApi.KEY_SEARCH_QUERY_TITLE, ((EditText) view
 				.findViewById(R.id.etTitel)).getEditableText().toString());
-		query.putString(OpacApi.KEY_SEARCH_QUERY_AUTHOR, ((EditText) view
+		query.put(OpacApi.KEY_SEARCH_QUERY_AUTHOR, ((EditText) view
 				.findViewById(R.id.etVerfasser)).getEditableText().toString());
-		query.putString(OpacApi.KEY_SEARCH_QUERY_BRANCH, zst);
-		query.putString(OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH, zst_home);
-		query.putString(OpacApi.KEY_SEARCH_QUERY_CATEGORY, mg);
-		query.putString(OpacApi.KEY_SEARCH_QUERY_ISBN, ((EditText) view
+		query.put(OpacApi.KEY_SEARCH_QUERY_BRANCH, zst);
+		query.put(OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH, zst_home);
+		query.put(OpacApi.KEY_SEARCH_QUERY_CATEGORY, mg);
+		query.put(OpacApi.KEY_SEARCH_QUERY_ISBN, ((EditText) view
 				.findViewById(R.id.etISBN)).getEditableText().toString());
-		query.putString(OpacApi.KEY_SEARCH_QUERY_BARCODE, ((EditText) view
+		query.put(OpacApi.KEY_SEARCH_QUERY_BARCODE, ((EditText) view
 				.findViewById(R.id.etBarcode)).getEditableText().toString());
-		query.putString(OpacApi.KEY_SEARCH_QUERY_YEAR, ((EditText) view
+		query.put(OpacApi.KEY_SEARCH_QUERY_YEAR, ((EditText) view
 				.findViewById(R.id.etJahr)).getEditableText().toString());
-		query.putString(OpacApi.KEY_SEARCH_QUERY_YEAR_RANGE_START,
-				((EditText) view.findViewById(R.id.etJahrVon))
-						.getEditableText().toString());
-		query.putString(OpacApi.KEY_SEARCH_QUERY_YEAR_RANGE_END,
-				((EditText) view.findViewById(R.id.etJahrBis))
-						.getEditableText().toString());
-		query.putBoolean(OpacApi.KEY_SEARCH_QUERY_DIGITAL,
-				((CheckBox) view.findViewById(R.id.cbDigital)).isChecked());
+		query.put(OpacApi.KEY_SEARCH_QUERY_YEAR_RANGE_START, ((EditText) view
+				.findViewById(R.id.etJahrVon)).getEditableText().toString());
+		query.put(OpacApi.KEY_SEARCH_QUERY_YEAR_RANGE_END, ((EditText) view
+				.findViewById(R.id.etJahrBis)).getEditableText().toString());
+		query.put(OpacApi.KEY_SEARCH_QUERY_DIGITAL, String
+				.valueOf(((CheckBox) view.findViewById(R.id.cbDigital))
+						.isChecked()));
 		if (advanced) {
-			query.putString(OpacApi.KEY_SEARCH_QUERY_KEYWORDA, ((EditText) view
+			query.put(OpacApi.KEY_SEARCH_QUERY_KEYWORDA, ((EditText) view
 					.findViewById(R.id.etSchlagA)).getEditableText().toString());
-			query.putString(OpacApi.KEY_SEARCH_QUERY_KEYWORDB, ((EditText) view
+			query.put(OpacApi.KEY_SEARCH_QUERY_KEYWORDB, ((EditText) view
 					.findViewById(R.id.etSchlagB)).getEditableText().toString());
-			query.putString(OpacApi.KEY_SEARCH_QUERY_SYSTEM, ((EditText) view
+			query.put(OpacApi.KEY_SEARCH_QUERY_SYSTEM, ((EditText) view
 					.findViewById(R.id.etSystematik)).getEditableText()
 					.toString());
-			query.putString(OpacApi.KEY_SEARCH_QUERY_AUDIENCE, ((EditText) view
+			query.put(OpacApi.KEY_SEARCH_QUERY_AUDIENCE, ((EditText) view
 					.findViewById(R.id.etInteressenkreis)).getEditableText()
 					.toString());
-			query.putString(OpacApi.KEY_SEARCH_QUERY_PUBLISHER,
-					((EditText) view.findViewById(R.id.etVerlag))
-							.getEditableText().toString());
-			query.putString(
+			query.put(OpacApi.KEY_SEARCH_QUERY_PUBLISHER, ((EditText) view
+					.findViewById(R.id.etVerlag)).getEditableText().toString());
+			query.put(
 					"order",
 					((((Spinner) view.findViewById(R.id.cbOrder))
 							.getSelectedItemPosition()) + 1) + "");
@@ -666,7 +666,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
-		savedState = saveQuery();
+		savedState = OpacClient.mapToBundle(saveQuery());
 		outState.putBundle("query", savedState);
 		super.onSaveInstanceState(outState);
 	}

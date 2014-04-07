@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.holoeverywhere.app.Fragment;
@@ -221,8 +223,8 @@ public class MainActivity extends OpacActivity implements
 				Toast.makeText(this, R.string.barcode_internal_not_supported,
 						Toast.LENGTH_LONG).show();
 			} else {
-				Bundle query = new Bundle();
-				query.putString(target_field, scanResult.getContents());
+				Map<String, String> query = new HashMap<String, String>();
+				query.put(target_field, scanResult.getContents());
 				app.startSearch(this, query);
 			}
 
@@ -274,9 +276,8 @@ public class MainActivity extends OpacActivity implements
 					Set<String> fields = new HashSet<String>(Arrays.asList(app
 							.getApi().getSearchFields()));
 					if (fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE)) {
-						Bundle query = new Bundle();
-						query.putString(OpacApi.KEY_SEARCH_QUERY_BARCODE,
-								scanResult);
+						Map<String, String> query = new HashMap<String, String>();
+						query.put(OpacApi.KEY_SEARCH_QUERY_BARCODE, scanResult);
 						app.startSearch(this, query);
 					} else {
 						Toast.makeText(this,

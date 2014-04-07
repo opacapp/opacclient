@@ -1,6 +1,7 @@
 package de.geeksfactory.opacclient.frontend;
 
 import java.util.List;
+import java.util.Map;
 
 import org.acra.ACRA;
 import org.holoeverywhere.LayoutInflater;
@@ -114,7 +115,7 @@ public class SearchResultListFragment extends ListFragment {
 	
 	public void performsearch() {
 		st = new SearchStartTask();
-		st.execute(app, getArguments().getBundle("query"));
+		st.execute(app, OpacClient.bundleToMap(getArguments().getBundle("query")));
 	}
 	
 	@Override
@@ -296,7 +297,7 @@ public class SearchResultListFragment extends ListFragment {
 		@Override
 		protected SearchRequestResult doInBackground(Object... arg0) {
 			super.doInBackground(arg0);
-			Bundle query = (Bundle) arg0[1];
+			Map<String, String> query = (Map<String, String>) arg0[1];
 
 			try {
 				SearchRequestResult res = app.getApi().search(query);
