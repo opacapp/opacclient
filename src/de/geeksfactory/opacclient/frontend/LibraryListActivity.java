@@ -33,6 +33,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 import de.geeksfactory.opacclient.OpacClient;
@@ -106,6 +107,18 @@ public class LibraryListActivity extends Activity {
 					showListGeo();
 				}
 			}
+		});
+		
+		
+		RelativeLayout rlSuggestLibrary = (RelativeLayout) findViewById(R.id.rlSuggestLibrary);
+		rlSuggestLibrary.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(LibraryListActivity.this, SuggestLibraryActivity.class);
+				startActivity(intent);
+			}
+			
 		});
 	}
 

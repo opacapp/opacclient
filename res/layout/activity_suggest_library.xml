@@ -20,7 +20,7 @@
             android:text="@string/country" />
 
         <EditText
-            android:id="@+id/etLabel"
+            android:id="@+id/etCountry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -37,14 +37,26 @@
             android:text="@string/state" />
 
         <EditText
-            android:id="@+id/etLabel"
+            android:id="@+id/etState"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:ems="10"
-            android:singleLine="true" >
+            android:singleLine="true" />
+        
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/city" />
 
-        </EditText>
+        <EditText
+            android:id="@+id/etCity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:ems="10"
+            android:singleLine="true" />
 
         <TextView
             android:id="@+id/textView2"
@@ -59,19 +71,32 @@
             android:layout_marginBottom="8dp"
             android:ems="10"
             android:singleLine="true" />
-
+            
         <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/comment" />
+
+        <EditText
+            android:id="@+id/etComment"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginBottom="8dp"
+            android:ems="10" />
+
+        <!-- <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/opac_url" />
 
         <EditText
-            android:id="@+id/etPassword"
+            android:id="@+id/etUrl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:ems="10"
-            android:inputType="textPassword"
             android:singleLine="true" />
 
         <TextView
@@ -81,8 +106,14 @@
             android:layout_height="wrap_content"
             android:text="Diese Bibliothek nutzt die Software 'OCLC PICA' und kann wahrscheinlich sehr einfach integriert werden"
             android:padding="8dp"
-            android:background="#99CC00" />
-        
-    </LinearLayout>
+            android:background="#99CC00" /> -->
+
+        <Button
+            android:id="@+id/btnSend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/send" />
+
+</LinearLayout>
 
 </ScrollView>

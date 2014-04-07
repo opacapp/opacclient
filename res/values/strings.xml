@@ -243,11 +243,14 @@
     <string name="title_searchresult_detail">Detail</string>
     <string name="title_activity_library_list">Bibliotheksauswahl</string>
     <string name="action_settings">Settings</string>
-    <string name="suggest_library">Deine Bibliothek wird nicht unterstützt? Schlage sie uns vor!</string>
+    <string name="suggest_library">Deine Bibliothek wird nicht unterstützt? Schlage sie vor!</string>
+    <string name="title_activity_suggest_library">Bibliothek vorschlagen</string>
     <string name="country">Land</string>
     <string name="state">Bundesland/Kanton</string>
     <string name="city">Stadt</string>
     <string name="library_name">Name der Bibliothek</string>
     <string name="opac_url">Adresse des Online-Katalogs</string>
+    <string name="comment">Kommentar</string>
+    <string name="send">Senden</string>
 
 </resources>

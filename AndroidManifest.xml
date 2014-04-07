@@ -114,6 +114,10 @@
             android:label="@string/title_activity_library_list" >
         </activity>
         <activity
+            android:name="de.geeksfactory.opacclient.frontend.SuggestLibraryActivity"
+            android:label="@string/title_activity_suggest_library" >
+        </activity>
+        <activity
             android:name="org.acra.CrashReportDialog"
             android:excludeFromRecents="true"
             android:finishOnTaskLaunch="true"
