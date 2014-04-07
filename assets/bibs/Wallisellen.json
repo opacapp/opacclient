@@ -1,0 +1,16 @@
+{
+    "api": "webopac.net",
+    "city": "Wallisellen",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.winmedio.net/wallisellen",
+        "information": "http://www.schule.wallisellen.ch/de/dienste/bibliotheken/"
+    },
+    "geo": [
+        47.4156626,
+        8.595200799999999
+    ],
+    "state": "Z\u00fcrich",
+    "support": "Katalogsuche",
+    "title": "Bibliotheken"
+}

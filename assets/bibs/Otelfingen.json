@@ -1,0 +1,16 @@
+{
+    "api": "webopac.net",
+    "city": "Otelfingen",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.winmedio.net/otelfingen",
+        "information": "http://www.sekuf.ch/index.php?article_id=8"
+    },
+    "geo": [
+        47.4613,
+        8.388570000000001
+    ],
+    "state": "Z\u00fcrich",
+    "support": "Katalogsuche",
+    "title": "Schul- und Regionalbibliothek"
+}

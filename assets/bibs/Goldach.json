@@ -1,0 +1,16 @@
+{
+    "api": "webopac.net",
+    "city": "Goldach",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.winmedio.net/goldach",
+        "information": "http://www.goldach.ch/de/bildung/bibliotheken/"
+    },
+    "geo": [
+        47.4761387,
+        9.471350900000001
+    ],
+    "state": "St. Gallen",
+    "support": "Katalogsuche",
+    "title": "Gemeindebibliothek"
+}

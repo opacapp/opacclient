@@ -1,0 +1,16 @@
+{
+    "api": "webopac.net",
+    "city": "Langenthal",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.winmedio.net/langenthal",
+        "information": "http://www.bibliothek-langenthal.ch/de/"
+    },
+    "geo": [
+        47.2139734,
+        7.7847334
+    ],
+    "state": "Bern",
+    "support": "Katalogsuche",
+    "title": "Bibliothek"
+}

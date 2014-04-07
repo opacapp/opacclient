@@ -1,0 +1,16 @@
+{
+    "api": "webopac.net",
+    "city": "Buchs",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.winmedio.net/buchs",
+        "information": "http://www.bibliothek-buchs.ch/"
+    },
+    "geo": [
+        47.1655641,
+        9.4699878
+    ],
+    "state": "St. Gallen",
+    "support": "Katalogsuche",
+    "title": "Gemeindebibliothek"
+}

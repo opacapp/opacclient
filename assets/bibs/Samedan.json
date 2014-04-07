@@ -1,0 +1,16 @@
+{
+    "api": "webopac.net",
+    "city": "Samedan",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.winmedio.net/samedan-bever",
+        "information": "http://www.biblioteca-samedan.ch/"
+    },
+    "geo": [
+        46.4189818,
+        9.8607328
+    ],
+    "state": "Graub\u00fcnden",
+    "support": "Katalogsuche",
+    "title": "Gemeindebibliothek"
+}

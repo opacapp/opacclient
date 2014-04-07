@@ -1,0 +1,16 @@
+{
+    "api": "webopac.net",
+    "city": "Hilterfingen",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.winmedio.net/hilterfingen",
+        "information": "http://www.hilterfingen.ch/kultur-freizeit/bibliothek/"
+    },
+    "geo": [
+        46.7356,
+        7.65836
+    ],
+    "state": "Bern",
+    "support": "Katalogsuche",
+    "title": "Bibliothek"
+}

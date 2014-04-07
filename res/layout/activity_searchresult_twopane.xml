@@ -21,13 +21,11 @@
     http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters
     -->
 
-    <fragment
-        android:id="@+id/searchresult_list"
-        android:name="de.geeksfactory.opacclient.frontend.SearchResultListFragment"
+    <FrameLayout
+        android:id="@+id/searchresult_list_container"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        tools:layout="@android:layout/list_content" />
+        android:layout_weight="1" />
 
     <FrameLayout
         android:id="@+id/searchresult_detail_container"

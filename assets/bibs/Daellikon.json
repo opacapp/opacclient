@@ -1,0 +1,16 @@
+{
+    "api": "webopac.net",
+    "city": "D\u00e4llikon",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.winmedio.net/daellikon",
+        "information": "http://www.mediothek-daellikon.ch/de/"
+    },
+    "geo": [
+        47.4392,
+        8.4387399
+    ],
+    "state": "Z\u00fcrich",
+    "support": "Katalogsuche",
+    "title": "Mediothek"
+}

@@ -820,7 +820,14 @@ public class Pica extends BaseApi implements OpacApi {
 
 	@Override
 	public boolean isAccountSupported(Library library) {
-		return !library.getData().isNull("accountSupported");
+		if(!library.getData().isNull("accountSupported")) {
+			try {
+				return library.getData().getBoolean("accountSupported");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
 	}
 
 	@Override

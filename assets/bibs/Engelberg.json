@@ -1,0 +1,16 @@
+{
+    "api": "webopac.net",
+    "city": "Engelberg",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.winmedio.net/engelberg",
+        "information": "http://www.gde-engelberg.ch/de/bildung/bibliothekfs/"
+    },
+    "geo": [
+        46.8199317,
+        8.4069869
+    ],
+    "state": "Obwalden",
+    "support": "Katalogsuche",
+    "title": "Schul- und Gemeindebibliothek"
+}

@@ -44,8 +44,6 @@ public class SearchResultListActivity extends OpacActivity implements
 
 	protected SearchRequestResult searchresult;
 
-	protected SearchStartTask st;
-
 	protected SearchResultListFragment listFragment;
 	protected SearchResultDetailFragment detailFragment;
 
@@ -56,8 +54,10 @@ public class SearchResultListActivity extends OpacActivity implements
 		// Show the Up button in the action bar.
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		listFragment = (SearchResultListFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.searchresult_list);
+		listFragment = SearchResultListFragment.getInstance(
+				getIntent().getBundleExtra("query"));
+		getSupportFragmentManager().beginTransaction()
+			.replace(R.id.searchresult_list_container, listFragment).commit();
 
 		if (findViewById(R.id.searchresult_detail_container) != null) {
 			// The detail container view will be present only in the
@@ -70,15 +70,6 @@ public class SearchResultListActivity extends OpacActivity implements
 			// 'activated' state when touched.
 			listFragment.setActivateOnItemClick(true);
 		}
-
-		if (savedInstanceState == null) {
-			performsearch();
-		}
-	}
-
-	public void performsearch() {
-		st = new SearchStartTask();
-		st.execute(app, getIntent().getBundleExtra("query"));
 	}
 
 	@Override
@@ -141,64 +132,15 @@ public class SearchResultListActivity extends OpacActivity implements
 		}
 	}
 
-	public class SearchStartTask extends OpacTask<SearchRequestResult> {
-		protected Exception exception;
+	@Override
+	protected int getContentView() {
+		return R.layout.activity_searchresult_list;
+	}
 
-		@Override
-		protected SearchRequestResult doInBackground(Object... arg0) {
-			super.doInBackground(arg0);
-			Bundle query = (Bundle) arg0[1];
-
-			try {
-				SearchRequestResult res = app.getApi().search(query);
-				// Load cover images, if search worked and covers available
-				return res;
-			} catch (java.net.UnknownHostException e) {
-				exception = e;
-				e.printStackTrace();
-			} catch (java.net.SocketException e) {
-				exception = e;
-			} catch (OpacErrorException e) {
-				exception = e;
-			} catch (Exception e) {
-				exception = e;
-				ACRA.getErrorReporter().handleException(e);
-			}
-
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(SearchRequestResult result) {
-			if (result == null) {
-
-				if (exception instanceof OpacErrorException) {
-					if (exception.getMessage().equals("is_a_redirect")) {
-						// Some libraries (SISIS) do not show a result list if
-						// only one result
-						// is found but instead directly show the result
-						// details.
-						Intent intent = new Intent(
-								SearchResultListActivity.this,
-								SearchResultDetailActivity.class);
-						intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
-								(String) null);
-						startActivity(intent);
-						finish();
-						return;
-					}
-
-					listFragment.showConnectivityError(exception.getMessage());
-				} else if (exception instanceof NotReachableException)
-					listFragment.showConnectivityError(getResources()
-							.getString(R.string.connection_error_detail_nre));
-				else
-					listFragment.showConnectivityError();
-			} else {
-				searchresult = result;
-				loaded();
-			}
-		}
+	@Override
+	public void removeFragment() {
+		getSupportFragmentManager().beginTransaction().remove(detailFragment)
+				.commit();
 	}
 	
 	public class ReloadOldPageTask extends OpacTask<SearchRequestResult> {
@@ -255,30 +197,5 @@ public class SearchResultListActivity extends OpacActivity implements
 				showDetail(nr, id);
 			}
 		}
-	}
-
-	protected void loaded() {
-		try {
-			listFragment.setListShown(true);
-			listFragment.setSearchResult(searchresult);
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	protected int getContentView() {
-		return R.layout.activity_searchresult_list;
-	}
-
-	@Override
-	public void removeFragment() {
-		getSupportFragmentManager().beginTransaction().remove(detailFragment)
-				.commit();
-	}
-
-	@Override
-	public void reload() {
-		performsearch();
 	}
 }
