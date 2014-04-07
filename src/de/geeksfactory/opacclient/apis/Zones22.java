@@ -110,7 +110,11 @@ public class Zones22 extends BaseApi {
 	public void extract_meta(Document doc) {
 		// Zweigstellen auslesen
 		Elements zst_opts = doc.select(".TabRechAv .limitChoice label");
-		metadata.open();
+		try {
+			metadata.open();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		metadata.clearMeta(library.getIdent());
 		for (int i = 0; i < zst_opts.size(); i++) {
 			Element opt = zst_opts.get(i);
@@ -133,7 +137,11 @@ public class Zones22 extends BaseApi {
 
 		searchobj = doc.select("#ExpertSearch").attr("action");
 
-		metadata.open();
+		try {
+			metadata.open();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		if (!metadata.hasMeta(library.getIdent())) {
 			metadata.close();
 			extract_meta(doc);

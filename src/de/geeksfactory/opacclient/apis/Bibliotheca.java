@@ -132,7 +132,11 @@ public class Bibliotheca extends BaseApi {
 		Document doc = Jsoup.parse(html);
 
 		Elements zst_opts = doc.select("#zst option");
-		metadata.open();
+		try {
+			metadata.open();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		metadata.clearMeta(library.getIdent());
 		for (int i = 0; i < zst_opts.size(); i++) {
 			Element opt = zst_opts.get(i);
@@ -175,7 +179,11 @@ public class Bibliotheca extends BaseApi {
 		httpGet(opac_url + "/woload.asp?lkz=1&nextpage=" + db,
 				getDefaultEncoding());
 
-		metadata.open();
+		try {
+			metadata.open();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		if (!metadata.hasMeta(library.getIdent())) {
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("link_profis.x", "0"));

@@ -209,7 +209,11 @@ public class BiBer1992 extends BaseApi {
 	 * <option selected value="ZWST0">Alle Bibliotheksorte</option> </select>
 	 */
 	private void extract_meta(Document doc) {
-		m_metadata.open();
+		try {
+			m_metadata.open();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		m_metadata.clearMeta(m_library.getIdent());
 
 		// get media types
@@ -299,7 +303,11 @@ public class BiBer1992 extends BaseApi {
 
 		Document doc = Jsoup.parse(html);
 
-		m_metadata.open();
+		try {
+			m_metadata.open();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		if (!m_metadata.hasMeta(m_library.getIdent())) {
 			m_metadata.close();
 			extract_meta(doc);

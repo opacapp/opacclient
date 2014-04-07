@@ -112,7 +112,11 @@ public class Pica extends BaseApi implements OpacApi {
 
 		// updateSearchSetValue(doc);
 
-		metadata.open();
+		try {
+			metadata.open();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		if (!metadata.hasMeta(library.getIdent())) {
 			metadata.close();
 			// extract_meta(doc);

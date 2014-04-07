@@ -119,7 +119,11 @@ public class IOpac extends BaseApi implements OpacApi {
 		try {
 			html = httpGet(opac_url + "/iopac/mtyp.js", getDefaultEncoding());
 
-			metadata.open();
+			try {
+				metadata.open();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
 			metadata.clearMeta(library.getIdent());
 			String[] parts = html.split("new Array\\(\\);");
 			for (String part : parts) {
@@ -146,7 +150,11 @@ public class IOpac extends BaseApi implements OpacApi {
 						getDefaultEncoding());
 				Document doc = Jsoup.parse(html);
 
-				metadata.open();
+				try {
+					metadata.open();
+				} catch (Exception e1) {
+					throw new RuntimeException(e1);
+				}
 				metadata.clearMeta(library.getIdent());
 
 				for (Element opt : doc.select("#imtyp option")) {
@@ -167,7 +175,11 @@ public class IOpac extends BaseApi implements OpacApi {
 	@Override
 	public void start() throws IOException, NotReachableException {
 
-		metadata.open();
+		try {
+			metadata.open();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		if (!metadata.hasMeta(library.getIdent())) {
 			metadata.close();
 			extract_meta();

@@ -1,6 +1,5 @@
 package de.geeksfactory.opacclient.frontend;
 
-import java.util.List;
 import java.util.Map;
 
 import org.acra.ACRA;

@@ -167,7 +167,11 @@ public class SISIS extends BaseApi implements OpacApi {
 	public void extract_meta(Document doc) {
 		// Zweigstellen auslesen
 		Elements zst_opts = doc.select("#selectedSearchBranchlib option");
-		metadata.open();
+		try {
+			metadata.open();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		metadata.clearMeta(library.getIdent());
 		for (int i = 0; i < zst_opts.size(); i++) {
 			Element opt = zst_opts.get(i);
@@ -217,7 +221,11 @@ public class SISIS extends BaseApi implements OpacApi {
 		Document doc = Jsoup.parse(html);
 		CSId = doc.select("input[name=CSId]").val();
 
-		metadata.open();
+		try {
+			metadata.open();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		if (!metadata.hasMeta(library.getIdent())) {
 			metadata.close();
 			extract_meta(doc);

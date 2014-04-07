@@ -17,7 +17,6 @@ import org.holoeverywhere.widget.Spinner;
 import org.json.JSONException;
 
 import android.content.ActivityNotFoundException;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -55,9 +54,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 	private boolean advanced = false;
 	private Set<String> fields;
 
-	private List<ContentValues> spinnerCategory_data;
-	private List<ContentValues> spinnerBranch_data;
-	private List<ContentValues> spinnerHomeBranch_data;
+	private List<Map<String, String>> spinnerCategory_data;
+	private List<Map<String, String>> spinnerBranch_data;
+	private List<Map<String, String>> spinnerHomeBranch_data;
 
 	private long last_meta_try = 0;
 	public boolean metaDataLoading = false;
@@ -315,25 +314,29 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 						.getSelectedItemPosition()
 				&& cbZstHome.getSelectedItemPosition() > 0) {
 			zst_home_before = spinnerHomeBranch_data.get(
-					cbZstHome.getSelectedItemPosition()).getAsString("key");
+					cbZstHome.getSelectedItemPosition()).get("key");
 		}
 		if (spinnerBranch_data != null
 				&& spinnerBranch_data.size() > cbZst.getSelectedItemPosition()
 				&& cbZst.getSelectedItemPosition() > 0) {
 			zst_before = spinnerBranch_data
-					.get(cbZst.getSelectedItemPosition()).getAsString("key");
+					.get(cbZst.getSelectedItemPosition()).get("key");
 		}
 		if (spinnerCategory_data != null
 				&& spinnerCategory_data.size() > cbMg.getSelectedItemPosition()
 				&& cbMg.getSelectedItemPosition() > 0) {
 			mg_before = spinnerCategory_data
-					.get(cbMg.getSelectedItemPosition()).getAsString("key");
+					.get(cbMg.getSelectedItemPosition()).get("key");
 		}
 
 		MetaDataSource data = new SQLMetaDataSource(app);
-		data.open();
+		try {
+			data.open();
+		} catch (Exception e1) {
+			throw new RuntimeException(e1);
+		}
 
-		ContentValues all = new ContentValues();
+		Map<String, String> all = new HashMap<String, String>();
 		all.put("key", "");
 		all.put("value", getString(R.string.all));
 
@@ -343,8 +346,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		cbZst.setAdapter(((OpacActivity) getActivity()).new MetaAdapter(
 				getActivity(), spinnerBranch_data, R.layout.simple_spinner_item));
 		if (!"".equals(zst_before)) {
-			for (ContentValues row : spinnerBranch_data) {
-				if (row.getAsString("key").equals(zst_before)) {
+			for (Map<String, String> row : spinnerBranch_data) {
+				if (row.get("key").equals(zst_before)) {
 					selected = i;
 				}
 				i++;
@@ -373,8 +376,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 			}
 		}
 
-		for (ContentValues row : spinnerHomeBranch_data) {
-			if (row.getAsString("key").equals(selection)) {
+		for (Map<String, String> row : spinnerHomeBranch_data) {
+			if (row.get("key").equals(selection)) {
 				selected = i;
 			}
 			i++;
@@ -393,8 +396,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		if (!"".equals(mg_before)) {
 			selected = 0;
 			i = 0;
-			for (ContentValues row : spinnerBranch_data) {
-				if (row.getAsString("key").equals(zst_before)) {
+			for (Map<String, String> row : spinnerBranch_data) {
+				if (row.get("key").equals(zst_before)) {
 					selected = i;
 				}
 				i++;
@@ -434,7 +437,11 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		}
 		last_meta_try = System.currentTimeMillis();
 		MetaDataSource data = new SQLMetaDataSource(getActivity());
-		data.open();
+		try {
+			data.open();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		boolean fetch = !data.hasMeta(lib);
 		data.close();
 		if (fetch || force) {
@@ -512,11 +519,11 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		if (spinnerBranch_data.size() > 1)
 			zst = spinnerBranch_data.get(
 					((Spinner) view.findViewById(R.id.cbBranch))
-							.getSelectedItemPosition()).getAsString("key");
+							.getSelectedItemPosition()).get("key");
 		if (spinnerHomeBranch_data.size() > 0) {
 			zst_home = spinnerHomeBranch_data.get(
 					((Spinner) view.findViewById(R.id.cbHomeBranch))
-							.getSelectedItemPosition()).getAsString("key");
+							.getSelectedItemPosition()).get("key");
 			sp.edit()
 					.putString(
 							OpacClient.PREF_HOME_BRANCH_PREFIX
@@ -526,7 +533,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		if (spinnerCategory_data.size() > 1)
 			mg = spinnerCategory_data.get(
 					((Spinner) view.findViewById(R.id.cbMediengruppe))
-							.getSelectedItemPosition()).getAsString("key");
+							.getSelectedItemPosition()).get("key");
 
 		Map<String, String> query = new HashMap<String, String>();
 		query.put(OpacApi.KEY_SEARCH_QUERY_FREE, ((EditText) view
@@ -595,8 +602,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
 		Spinner spBranch = (Spinner) view.findViewById(R.id.cbBranch);
 		int i = 0;
-		for (ContentValues row : spinnerBranch_data) {
-			if (row.getAsString("key").equals(
+		for (Map<String, String> row : spinnerBranch_data) {
+			if (row.get("key").equals(
 					query.getString(OpacApi.KEY_SEARCH_QUERY_BRANCH))) {
 				spBranch.setSelection(i);
 				break;
@@ -605,8 +612,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		}
 		Spinner spHomeBranch = (Spinner) view.findViewById(R.id.cbHomeBranch);
 		i = 0;
-		for (ContentValues row : spinnerHomeBranch_data) {
-			if (row.getAsString("key").equals(
+		for (Map<String, String> row : spinnerHomeBranch_data) {
+			if (row.get("key").equals(
 					query.getString(OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH))) {
 				spHomeBranch.setSelection(i);
 				break;
@@ -615,8 +622,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		}
 		Spinner spCategory = (Spinner) view.findViewById(R.id.cbMediengruppe);
 		i = 0;
-		for (ContentValues row : spinnerCategory_data) {
-			if (row.getAsString("key").equals(
+		for (Map<String, String> row : spinnerCategory_data) {
+			if (row.get("key").equals(
 					query.getString(OpacApi.KEY_SEARCH_QUERY_CATEGORY))) {
 				spCategory.setSelection(i);
 				break;

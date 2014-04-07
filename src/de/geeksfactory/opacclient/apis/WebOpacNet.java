@@ -42,10 +42,10 @@ import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Filter.Option;
-import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
+import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
@@ -96,7 +96,11 @@ public class WebOpacNet extends BaseApi implements OpacApi {
 					mediatypes = filter.getJSONArray("restrictions");
 				i++;
 			}
-			metadata.open();
+			try {
+				metadata.open();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
 			metadata.clearMeta(library.getIdent());
 			
 			for (i = 0; i < mediatypes.length(); i++) {
@@ -115,7 +119,11 @@ public class WebOpacNet extends BaseApi implements OpacApi {
 	}
 	
 	public void extract_meta() {
-		metadata.open();
+		try {
+			metadata.open();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		if (!metadata.hasMeta(library.getIdent())) {
 			metadata.close();
 			extract_meta();

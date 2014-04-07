@@ -186,13 +186,19 @@ public class Adis extends BaseApi implements OpacApi {
 
 		} catch (JSONException e) {
 			throw new RuntimeException(e);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 
 		initialised = true;
 	}
 
 	protected void extract_meta() throws ClientProtocolException, IOException {
-		metadata.open();
+		try {
+			metadata.open();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		metadata.clearMeta(library.getIdent());
 		Document doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
 				+ s_service + "&sp=" + s_exts);
@@ -216,8 +222,8 @@ public class Adis extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public SearchRequestResult search(Map<String, String> query) throws IOException,
-			NotReachableException, OpacErrorException {
+	public SearchRequestResult search(Map<String, String> query)
+			throws IOException, NotReachableException, OpacErrorException {
 		start();
 		// TODO: There are also libraries with a different search form,
 		// s_exts=SS2 instead of s_exts=SS6
@@ -248,18 +254,15 @@ public class Adis extends BaseApi implements OpacApi {
 
 				if (s_exts.equals("SS2")) {
 					if (field.equals(KEY_SEARCH_QUERY_FREE)) {
-						doc.select("input#THEMA2_1")
-								.val(query.get(field));
+						doc.select("input#THEMA2_1").val(query.get(field));
 					} else if (field.equals(KEY_SEARCH_QUERY_AUTHOR)) {
 						doc.select("input#AUTOR_1").val(query.get(field));
 					} else if (field.equals(KEY_SEARCH_QUERY_TITLE)) {
 						doc.select("input#TITEL_1").val(query.get(field));
 					} else if (field.equals(KEY_SEARCH_QUERY_ISBN)) {
-						doc.select("input#NUMMES_1")
-								.val(query.get(field));
+						doc.select("input#NUMMES_1").val(query.get(field));
 					} else if (field.equals(KEY_SEARCH_QUERY_KEYWORDA)) {
-						doc.select("input#THEMA1_1")
-								.val(query.get(field));
+						doc.select("input#THEMA1_1").val(query.get(field));
 					}
 				} else {
 					for (Element opt : doc.select("select#SUCH01_" + cnt
@@ -289,8 +292,7 @@ public class Adis extends BaseApi implements OpacApi {
 						}
 					}
 
-					doc.select("input#FELD01_" + cnt).val(
-							query.get(field));
+					doc.select("input#FELD01_" + cnt).val(query.get(field));
 
 					if (cnt > 4) {
 						throw new OpacErrorException(
@@ -546,8 +548,8 @@ public class Adis extends BaseApi implements OpacApi {
 						line.put(DetailledItem.KEY_COPY_STATUS, status);
 					}
 				} else {
-					line.put(entry.getValue(), tr.child(entry.getKey())
-							.text().trim());
+					line.put(entry.getValue(), tr.child(entry.getKey()).text()
+							.trim());
 				}
 			}
 			res.addCopy(line);

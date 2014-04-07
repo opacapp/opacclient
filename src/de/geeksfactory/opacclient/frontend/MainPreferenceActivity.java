@@ -82,7 +82,11 @@ public class MainPreferenceActivity extends OpacPreferenceActivity {
 			public boolean onPreferenceClick(Preference arg0) {
 				MetaDataSource data = new SQLMetaDataSource(
 						MainPreferenceActivity.this);
-				data.open();
+				try {
+					data.open();
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
 				data.clearMeta();
 				data.close();
 				AccountDataSource adata = new AccountDataSource(
