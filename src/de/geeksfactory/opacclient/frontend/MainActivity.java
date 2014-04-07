@@ -63,26 +63,31 @@ public class MainActivity extends OpacActivity implements
 				selectItem(1);
 			}
 		}
-
-		if (nfc_capable) {
-			if (!getPackageManager().hasSystemFeature("android.hardware.nfc")) {
-				nfc_capable = false;
+		try {
+			if (nfc_capable) {
+				if (!getPackageManager().hasSystemFeature(
+						"android.hardware.nfc")) {
+					nfc_capable = false;
+				}
 			}
-		}
-		if (nfc_capable) {
-			mAdapter = android.nfc.NfcAdapter.getDefaultAdapter(this);
-			nfcIntent = PendingIntent.getActivity(this, 0, new Intent(this,
-					getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-			IntentFilter ndef = new IntentFilter(
-					android.nfc.NfcAdapter.ACTION_TECH_DISCOVERED);
-			try {
-				ndef.addDataType("*/*");
-			} catch (MalformedMimeTypeException e) {
-				throw new RuntimeException("fail", e);
+			if (nfc_capable) {
+				mAdapter = android.nfc.NfcAdapter.getDefaultAdapter(this);
+				nfcIntent = PendingIntent.getActivity(this, 0, new Intent(this,
+						getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
+						0);
+				IntentFilter ndef = new IntentFilter(
+						android.nfc.NfcAdapter.ACTION_TECH_DISCOVERED);
+				try {
+					ndef.addDataType("*/*");
+				} catch (MalformedMimeTypeException e) {
+					throw new RuntimeException("fail", e);
+				}
+				intentFiltersArray = new IntentFilter[] { ndef, };
+				techListsArray = new String[][] { new String[] { android.nfc.tech.NfcV.class
+						.getName() } };
 			}
-			intentFiltersArray = new IntentFilter[] { ndef, };
-			techListsArray = new String[][] { new String[] { android.nfc.tech.NfcV.class
-					.getName() } };
+		} catch (SecurityException e) {
+			e.printStackTrace();
 		}
 
 		if (app.getLibrary() != null) {
@@ -235,7 +240,11 @@ public class MainActivity extends OpacActivity implements
 	public void onPause() {
 		super.onPause();
 		if (nfc_capable && sp.getBoolean("nfc_search", false)) {
-			mAdapter.disableForegroundDispatch(this);
+			try {
+				mAdapter.disableForegroundDispatch(this);
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -244,8 +253,12 @@ public class MainActivity extends OpacActivity implements
 	public void onResume() {
 		super.onResume();
 		if (nfc_capable && sp.getBoolean("nfc_search", false)) {
-			mAdapter.enableForegroundDispatch(this, nfcIntent,
-					intentFiltersArray, techListsArray);
+			try {
+				mAdapter.enableForegroundDispatch(this, nfcIntent,
+						intentFiltersArray, techListsArray);
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
