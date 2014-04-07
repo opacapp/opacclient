@@ -19,7 +19,6 @@ import org.jsoup.Jsoup;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import de.geeksfactory.opacclient.NotReachableException;
@@ -40,13 +39,14 @@ import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.storage.DummyMetaDataSource;
 
-@RunWith(Parameterized.class)
-public class BasicLibraryTest {
+@RunWith(Parallelized.class)
+public class LibraryApiTestCases {
 
 	private Library library;
 	private OpacApi api;
 
-	public BasicLibraryTest(String library) throws JSONException, IOException {
+	public LibraryApiTestCases(String library) throws JSONException,
+			IOException {
 		this.library = Library.fromJSON(
 				library,
 				new JSONObject(readFile("../assets/bibs/" + library + ".json",
@@ -130,8 +130,8 @@ public class BasicLibraryTest {
 		else
 			detail = api.getResult(third.getNr());
 		confirmDetail(third, detail);
-		
-		if(res.getResults().size() < res.getTotal_result_count()) {
+
+		if (res.getResults().size() < res.getTotal_result_count()) {
 			api.searchGetPage(2);
 			SearchResult second = res.getResults().get(1);
 			DetailledItem detail2 = null;
@@ -142,12 +142,12 @@ public class BasicLibraryTest {
 			confirmDetail(second, detail2);
 		}
 	}
-	
+
 	private void confirmDetail(SearchResult result, DetailledItem detail) {
 		assert (detail != null);
 		assert (detail.getDetails().size() > 0);
-		if(detail.isReservable())
-			assert(detail.getReservation_info() != null);
+		if (detail.isReservable())
+			assert (detail.getReservation_info() != null);
 		if (detail.getId() != null) {
 			assert (result.getId() == detail.getId());
 		}
