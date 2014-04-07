@@ -2,6 +2,7 @@ package de.geeksfactory.opacclient.frontend;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -14,12 +15,14 @@ import org.holoeverywhere.app.ListFragment;
 import org.holoeverywhere.widget.ArrayAdapter;
 import org.holoeverywhere.widget.ListView;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -29,6 +32,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SectionIndexer;
 import android.widget.TextView;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
@@ -292,7 +296,7 @@ public class LibraryListActivity extends Activity {
 			showListLibraries(country, state, list.get(0));
 		}
 		Collections.sort(list);
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+		ArrayAdapter<String> adapter = new CityAdapter(this,
 				R.layout.listitem_simple, R.id.text1, list);
 		fragment.setListAdapter(adapter);
 		if (findViewById(R.id.llFragments) != null) {
@@ -401,16 +405,22 @@ public class LibraryListActivity extends Activity {
 			super();
 		}
 
+		@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 		@Override
 		public View onCreateView(org.holoeverywhere.LayoutInflater inflater,
 				ViewGroup container, Bundle savedInstanceState) {
 			level = getArguments().getInt("level", LEVEL_COUNTRY);
 			setRetainInstance(true);
 			view = super.onCreateView(inflater, container, savedInstanceState);
-			((ListView) view.findViewById(android.R.id.list))
-					.setChoiceMode(((LibraryListActivity) getActivity())
+			ListView lv = ((ListView) view.findViewById(android.R.id.list));
+			lv.setChoiceMode(((LibraryListActivity) getActivity())
 							.isTablet() ? AbsListView.CHOICE_MODE_SINGLE
 							: AbsListView.CHOICE_MODE_NONE);
+			if(level == LEVEL_CITY) {
+				lv.setFastScrollEnabled(true);
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+					lv.setFastScrollAlwaysVisible(true);
+			}
 			return view;
 		}
 	}
@@ -457,6 +467,42 @@ public class LibraryListActivity extends Activity {
 			this.resource = resource;
 		}
 
+	}
+	
+	public static class CityAdapter extends ArrayAdapter<String> implements SectionIndexer {
+
+		public CityAdapter(Context context, int resource,
+				int textViewResourceId, List<String> objects) {
+			super(context, resource, textViewResourceId, objects);
+		}
+
+		private final static String[] letters = {"A","Ä","B","C","D","E","F","G","H","I","J","K","L","M","N","O","Ö","P","Q","R","S","T","U","Ü","V","W","X","Y","Z"};
+		
+		@Override
+		public int getPositionForSection(int sectionIndex) {
+			boolean found = false;
+			int i = 0;
+			while(i<getCount() && !found) {
+				String city = getItem(i);
+				String letter = city.substring(0,1);
+				if(Arrays.asList(letters).indexOf(letter) >= sectionIndex)
+					found = true;
+				else
+					i++;					
+			}
+			return i;
+		}
+
+		@Override
+		public int getSectionForPosition(int position) {
+			String letter = getItem(position).substring(0,1);
+			return Arrays.asList(letters).indexOf(letter);
+		}
+
+		@Override
+		public Object[] getSections() {
+			return letters;
+		}
 	}
 
 	public static class DistanceComparator implements Comparator<Library> {
