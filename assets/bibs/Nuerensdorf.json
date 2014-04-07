@@ -3,7 +3,7 @@
     "city": "Nürensdorf", 
     "country": "Schweiz", 
     "data": {
-        "baseurl": "http://www.winmedio.net/nuerensdorf/", 
+        "baseurl": "http://www.winmedio.net/nuerensdorf", 
         "information": "http://www.nuerensdorf.ch/de/freizeit_kultur/bibliothek.html"
     }, 
     "geo": [

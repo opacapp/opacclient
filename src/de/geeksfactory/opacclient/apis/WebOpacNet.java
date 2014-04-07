@@ -81,12 +81,13 @@ public class WebOpacNet extends BaseApi implements OpacApi {
 		defaulttypes.put("2", MediaType.CD_MUSIC);
 		defaulttypes.put("3", MediaType.AUDIOBOOK);
 		defaulttypes.put("4", MediaType.DVD);
+		defaulttypes.put("5", MediaType.CD_SOFTWARE);
 		defaulttypes.put("8", MediaType.MAGAZINE);
 	}
 
 	@Override
 	public void start() throws IOException, NotReachableException {
-		String text = httpGet(opac_url + "de/mobile/GetRestrictions.ashx", getDefaultEncoding());
+		String text = httpGet(opac_url + "/de/mobile/GetRestrictions.ashx", getDefaultEncoding());
 		try {
 			JSONArray filters = new JSONObject(text).getJSONArray("restrcontainers");
 			JSONArray mediatypes = null;
@@ -154,7 +155,7 @@ public class WebOpacNet extends BaseApi implements OpacApi {
 					"Es wurden keine Suchkriterien eingegeben.");
 		}
 		
-		String json = httpGet(opac_url + "de/mobile/GetMedien.ashx"
+		String json = httpGet(opac_url + "/de/mobile/GetMedien.ashx"
 				+ buildHttpGetParams(params, getDefaultEncoding()),
 				getDefaultEncoding());
 		
@@ -239,7 +240,7 @@ public class WebOpacNet extends BaseApi implements OpacApi {
 					"Es wurden keine Suchkriterien eingegeben.");
 		}
 		
-		String json = httpGet(opac_url + "de/mobile/GetMedien.ashx"
+		String json = httpGet(opac_url + "/de/mobile/GetMedien.ashx"
 				+ buildHttpGetParams(params, getDefaultEncoding()),
 				getDefaultEncoding());
 		
@@ -284,7 +285,7 @@ public class WebOpacNet extends BaseApi implements OpacApi {
 		params.add(new BasicNameValuePair("id", id));
 		params.add(new BasicNameValuePair("orientation", "1"));
 		
-		String json = httpGet(opac_url + "de/mobile/GetDetail.ashx"
+		String json = httpGet(opac_url + "/de/mobile/GetDetail.ashx"
 				+ buildHttpGetParams(params, getDefaultEncoding()),
 				getDefaultEncoding());
 		
@@ -439,7 +440,7 @@ public class WebOpacNet extends BaseApi implements OpacApi {
 		
 		String url;
 		try {
-			url = opac_url + "default.aspx"
+			url = opac_url + "/default.aspx"
 					+ buildHttpGetParams(params, getDefaultEncoding());
 			return url;
 		} catch (UnsupportedEncodingException e) {
