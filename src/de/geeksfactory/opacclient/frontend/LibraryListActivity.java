@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.acra.ACRA;
@@ -476,7 +477,8 @@ public class LibraryListActivity extends Activity {
 			super(context, resource, textViewResourceId, objects);
 		}
 
-		private final static String[] letters = {"A","Ä","B","C","D","E","F","G","H","I","J","K","L","M","N","O","Ö","P","Q","R","S","T","U","Ü","V","W","X","Y","Z"};
+		private final static String[] letters = {"A","B","C","D","E","F","G","H","I","J","K","L","M",
+			"N","O","P","Q","R","S","T","U","V","W","X","Y","Z","Ä","Ö","Ü"};
 		
 		@Override
 		public int getPositionForSection(int sectionIndex) {
@@ -484,7 +486,7 @@ public class LibraryListActivity extends Activity {
 			int i = 0;
 			while(i<getCount() && !found) {
 				String city = getItem(i);
-				String letter = city.substring(0,1);
+				String letter = city.substring(0,1).toUpperCase(Locale.GERMAN);
 				if(Arrays.asList(letters).indexOf(letter) >= sectionIndex)
 					found = true;
 				else
@@ -495,7 +497,7 @@ public class LibraryListActivity extends Activity {
 
 		@Override
 		public int getSectionForPosition(int position) {
-			String letter = getItem(position).substring(0,1);
+			String letter = getItem(position).substring(0,1).toUpperCase(Locale.GERMAN);
 			return Arrays.asList(letters).indexOf(letter);
 		}
 
