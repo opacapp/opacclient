@@ -1,0 +1,16 @@
+{
+    "api": "webopac.net",
+    "city": "Windisch",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.winmedio.net/windisch",
+        "information": "http://www.windisch.ch/de/tourismus/bibliothek/"
+    },
+    "geo": [
+        47.4779,
+        8.21669
+    ],
+    "state": "Aargau",
+    "support": "Katalogsuche",
+    "title": "Gemeinde- und Schulbibliothek"
+}

@@ -1,0 +1,12 @@
+{
+    "api": "webopac.net",
+    "city": "Entlebuch",
+	"state": "Luzern",
+    "data": {
+        "baseurl": "http://www.winmedio.net/entlebuch",
+        "information": "http://www.entlebuch.ch/xml_1/internet/de/application/d65/d553/f555.cfm"
+    },
+    "country": "Schweiz",
+    "support": "Katalogsuche",
+    "title": "Schul- und Gemeindebibliothek"
+}

@@ -1,0 +1,16 @@
+{
+    "api": "webopac.net",
+    "city": "Herzogenbuchsee",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.winmedio.net/herzogenbuchsee",
+        "information": "http://www.herzogenbuchsee.ch/topic2729.html"
+    },
+    "geo": [
+        47.1881119,
+        7.7009241
+    ],
+    "state": "Bern",
+    "support": "Katalogsuche",
+    "title": "Gemeindebibliothek"
+}

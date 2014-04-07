@@ -1,0 +1,16 @@
+{
+    "api": "webopac.net",
+    "city": "Uznach",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.winmedio.net/uznach",
+        "information": "http://www.bibliothek-uznach.ch/"
+    },
+    "geo": [
+        47.2256714,
+        8.9828324
+    ],
+    "state": "St. Gallen",
+    "support": "Katalogsuche",
+    "title": "Bibliothek"
+}
