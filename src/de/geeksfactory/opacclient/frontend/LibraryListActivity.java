@@ -82,7 +82,13 @@ public class LibraryListActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(null);
 		setContentView(R.layout.activity_library_list);
-		getSupportActionBar().setHomeButtonEnabled(false);
+		
+		if(!getIntent().hasExtra("welcome")) {
+			getSupportActionBar().setHomeButtonEnabled(true);
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		} else {
+			getSupportActionBar().setHomeButtonEnabled(false);
+		}
 
 		try {
 			libraries = ((OpacClient) getApplication()).getLibraries();
@@ -134,6 +140,8 @@ public class LibraryListActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(LibraryListActivity.this, SuggestLibraryActivity.class);
+				if (getIntent().hasExtra("welcome"))
+					intent.putExtra("welcome", true);
 				startActivity(intent);
 			}
 			
@@ -456,7 +464,7 @@ public class LibraryListActivity extends Activity {
 	}
 		
 	public void search(String query) {
-		LibraryListFragment fragment = new LocatedLibraryListFragment();
+		fragment = new LocatedLibraryListFragment();
 		Bundle args = new Bundle();
 		args.putInt("level", LEVEL_LIBRARY);
 		fragment.setArguments(args);
@@ -485,17 +493,21 @@ public class LibraryListActivity extends Activity {
 		LibraryAdapter adapter = new LibraryAdapter(this,
 				R.layout.listitem_library, R.id.tvTitle, libraries);
 		fragment.setListAdapter(adapter);
-		if (findViewById(R.id.llFragments) != null) {
-			fragment4 = fragment;
+		getSupportFragmentManager()
+			.beginTransaction()
+			.addToBackStack(null)
+			.setTransition(
+				FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+			.replace(R.id.container, fragment).commit();
+		if (fragment2 != null)
 			getSupportFragmentManager().beginTransaction()
-					.replace(R.id.container4, fragment4).commit();
-		} else {
-			this.fragment = fragment;
+					.detach(fragment2).commit();
+		if (fragment3 != null)
 			getSupportFragmentManager().beginTransaction()
-					.replace(R.id.container, fragment).addToBackStack(null)
-					.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-					.commit();
-		}
+					.detach(fragment3).commit();
+		if (fragment4 != null)
+			getSupportFragmentManager().beginTransaction()
+					.detach(fragment4).commit();
 		
 		TextView tvLocateString = (TextView) findViewById(R.id.tvLocateString);
 		ImageView ivLocationIcon = (ImageView) findViewById(R.id.ivLocationIcon);
@@ -576,6 +588,10 @@ public class LibraryListActivity extends Activity {
 					lv.setFastScrollAlwaysVisible(true);
 			}
 			return view;
+		}
+		
+		public void onViewCreated(View view, Bundle savedInstanceState) {
+			setEmptyText(getResources().getString(R.string.no_results));
 		}
 	}
 
