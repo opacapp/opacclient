@@ -65,10 +65,6 @@ public class SearchResultListActivity extends OpacActivity implements
 			// res/values-sw600dp). If this view is present, then the
 			// activity should be in two-pane mode.
 			mTwoPane = true;
-
-			// In two-pane mode, list items should be given the
-			// 'activated' state when touched.
-			listFragment.setActivateOnItemClick(true);
 		}
 	}
 
@@ -197,5 +193,10 @@ public class SearchResultListActivity extends OpacActivity implements
 				showDetail(nr, id);
 			}
 		}
+	}
+
+	@Override
+	public boolean isTwoPane() {
+		return mTwoPane;
 	}
 }
