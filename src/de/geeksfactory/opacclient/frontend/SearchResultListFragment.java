@@ -77,6 +77,7 @@ public class SearchResultListFragment extends ListFragment {
 		 * @param nr 
 		 */
 		public void onItemSelected(int nr, String id, int pageToLoad);
+		public boolean isTwoPane();
 	}
 
 	/**
@@ -86,6 +87,9 @@ public class SearchResultListFragment extends ListFragment {
 	private static Callbacks sDummyCallbacks = new Callbacks() {
 		@Override
 		public void onItemSelected(int nr, String id, int pageToLoad) {
+		}
+		public boolean isTwoPane() {
+			return false;
 		}
 	};
 
@@ -120,6 +124,8 @@ public class SearchResultListFragment extends ListFragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+			
+		setActivateOnItemClick(mCallbacks.isTwoPane());
 
 		// Restore the previously serialized activated item position.
 		if (savedInstanceState != null
