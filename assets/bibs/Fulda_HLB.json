@@ -6,7 +6,14 @@
         "accountSupported": true, 
         "baseurl": "https://opac.uni-giessen.de", 
         "db": "52", 
-        "information": "http://www.hs-fulda.de/index.php?id=169"
+        "information": "http://www.hs-fulda.de/index.php?id=169",
+		"KEY_SEARCH_QUERY_FREE": "6015",
+		"KEY_SEARCH_QUERY_AUTHOR": "1004",
+		"KEY_SEARCH_QUERY_KEYWORDA": "8530",
+		"KEY_SEARCH_QUERY_KEYWORDB": "8530",
+		"KEY_SEARCH_QUERY_PUBLISHER": "8580",
+		"KEY_SEARCH_QUERY_SYSTEM": "53",
+		"KEY_SEARCH_QUERY_ISBN": "8520"
     }, 
     "geo": [
         50.5558095, 

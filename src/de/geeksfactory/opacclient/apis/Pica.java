@@ -191,15 +191,20 @@ public class Pica extends BaseApi implements OpacApi {
 
 		index = addParameters(query, KEY_SEARCH_QUERY_FREE,
 				data.optString("KEY_SEARCH_QUERY_FREE", "1016"), params, index);
-		index = addParameters(query, KEY_SEARCH_QUERY_AUTHOR, "1004", params,
+		index = addParameters(query, KEY_SEARCH_QUERY_AUTHOR, 
+				data.optString("KEY_SEARCH_QUERY_AUTHOR", "1004"), params,
 				index);
-		index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDA, "46", params,
+		index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDA, 
+				data.optString("KEY_SEARCH_QUERY_KEYWORDA", "46"), params,
 				index);
-		index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDB, "46", params,
-				index);
-		index = addParameters(query, KEY_SEARCH_QUERY_PUBLISHER, "1004",
+		index = addParameters(query, KEY_SEARCH_QUERY_PUBLISHER,
+				data.optString("KEY_SEARCH_QUERY_PUBLISHER", "1004"),
 				params, index);
-		index = addParameters(query, KEY_SEARCH_QUERY_SYSTEM, "20", params,
+		index = addParameters(query, KEY_SEARCH_QUERY_SYSTEM,
+				data.optString("KEY_SEARCH_QUERY_SYSTEM", "20"), params,
+				index);
+		index = addParameters(query, KEY_SEARCH_QUERY_ISBN, 
+				data.optString("KEY_SEARCH_QUERY_ISBN", "1007"), params,
 				index);
 
 		params.add(new BasicNameValuePair("SRT", "RLV"));
@@ -815,9 +820,9 @@ public class Pica extends BaseApi implements OpacApi {
 	@Override
 	public String[] getSearchFields() {
 		return new String[] { KEY_SEARCH_QUERY_FREE, KEY_SEARCH_QUERY_AUTHOR,
-				KEY_SEARCH_QUERY_KEYWORDA, KEY_SEARCH_QUERY_KEYWORDB,
-				KEY_SEARCH_QUERY_YEAR, KEY_SEARCH_QUERY_SYSTEM,
-				KEY_SEARCH_QUERY_PUBLISHER };
+				KEY_SEARCH_QUERY_KEYWORDA, KEY_SEARCH_QUERY_YEAR, 
+				KEY_SEARCH_QUERY_SYSTEM, KEY_SEARCH_QUERY_PUBLISHER,
+				KEY_SEARCH_QUERY_ISBN };
 	}
 
 	@Override
