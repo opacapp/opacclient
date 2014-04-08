@@ -28,6 +28,7 @@
     <color name="date_overdue">#cc0000</color>
     <color name="note_replacedby">#ffff00</color>
     <color name="warning">#FFF582</color>
+    <color name="suggest_library">#FFF582</color>
     <color name="warning_fg">#000000</color>
 
 </resources>

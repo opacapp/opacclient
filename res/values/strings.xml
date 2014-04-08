@@ -243,5 +243,18 @@
     <string name="title_searchresult_detail">Detail</string>
     <string name="title_activity_library_list">Bibliotheksauswahl</string>
     <string name="action_settings">Settings</string>
+    <string name="suggest_library">Deine Bibliothek wird nicht unterstützt? Schlage sie vor!</string>
+    <string name="title_activity_suggest_library">Bibliothek vorschlagen</string>
+    <string name="country">Land</string>
+    <string name="state">Bundesland/Kanton</string>
+    <string name="city">Stadt</string>
+    <string name="library_name">Name der Bibliothek</string>
+    <string name="hint_library_name">z.B. "Stadtbibliothek", "Unibibliothek", "Ruprecht-Karls-Universität", …</string>
+    <string name="opac_url">Adresse des Online-Katalogs</string>
+    <string name="comment">Kommentar</string>
+    <string name="send">Senden</string>
+    <string name="select_mail_app">E-Mail-App auswählen…</string>
+    <string name="search_libraries_hint">Bibliothek suchen…</string>
+    <string name="action_search">Suchen</string>
 
 </resources>

@@ -14,9 +14,11 @@ import org.acra.ACRA;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.ListFragment;
 import org.holoeverywhere.widget.ArrayAdapter;
+import org.holoeverywhere.widget.EditText;
 import org.holoeverywhere.widget.ListView;
 
 import android.annotation.TargetApi;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Criteria;
@@ -26,13 +28,19 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 import de.geeksfactory.opacclient.OpacClient;
@@ -54,6 +62,9 @@ public class LibraryListActivity extends Activity {
 	protected LibraryListFragment fragment3;
 	protected LibraryListFragment fragment4;
 	protected boolean visible;
+	
+	protected SearchView searchView;
+	protected MenuItem searchItem;
 
 	@Override
 	protected void onPause() {
@@ -83,7 +94,14 @@ public class LibraryListActivity extends Activity {
 		final ImageView ivLocationIcon = (ImageView) findViewById(R.id.ivLocationIcon);
 		final LinearLayout llLocate = (LinearLayout) findViewById(R.id.llLocate);
 
-		showListCountries(false);
+		// Get the intent, verify the action and get the query
+	    Intent intent = getIntent();
+	    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+	      String query = intent.getStringExtra(SearchManager.QUERY);
+	      search(query);
+	    } else {
+	    	showListCountries(false);
+	    }
 
 		final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		Criteria criteria = new Criteria();
@@ -97,6 +115,7 @@ public class LibraryListActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				if (fragment instanceof LocatedLibraryListFragment) {
+					MenuItemCompat.collapseActionView(searchItem);
 					showListCountries(true);
 					tvLocateString.setText(R.string.geolocate);
 					ivLocationIcon.setImageResource(R.drawable.ic_locate);
@@ -107,7 +126,50 @@ public class LibraryListActivity extends Activity {
 				}
 			}
 		});
+		
+		
+		RelativeLayout rlSuggestLibrary = (RelativeLayout) findViewById(R.id.rlSuggestLibrary);
+		rlSuggestLibrary.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(LibraryListActivity.this, SuggestLibraryActivity.class);
+				startActivity(intent);
+			}
+			
+		});
 	}
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+			String query = intent.getStringExtra(SearchManager.QUERY);
+			search(query);
+		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the options menu from XML
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.activity_library_list, menu);
+
+	    // Get the SearchView and set the searchable configuration
+	    SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+	    searchItem = menu.findItem(R.id.action_search);
+	    searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+	    // Assumes current activity is the searchable activity
+	    searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+	    searchView.setIconifiedByDefault(true);
+	    setSearchTextColor(searchView);
+
+	    return true;
+	}
+	
+	private void setSearchTextColor(SearchView searchView) {
+        EditText searchPlate = (EditText) searchView.findViewById(R.id.search_src_text);
+        searchPlate.setTextColor(getResources().getColor(android.R.color.white));
+    }
 
 	public boolean isTablet() {
 		return findViewById(R.id.container2) != null;
@@ -348,6 +410,97 @@ public class LibraryListActivity extends Activity {
 					.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
 					.commit();
 		}
+	}
+	
+	private static class LibrarySearchResult implements Comparable<LibrarySearchResult> {
+		private Library library;
+		private int rank;
+		
+		public LibrarySearchResult(Library library, int rank) {
+			this.library = library;
+			this.rank = rank;
+		}
+		
+		public Library getLibrary() {
+			return library;
+		}
+		
+		public int getRank() {
+			return rank;
+		}
+
+		@Override
+		public int hashCode() {
+			return library.hashCode();
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if(obj instanceof LibrarySearchResult)
+				return library.equals(((LibrarySearchResult) obj).getLibrary());
+			else
+				return false;
+		}
+
+		@Override
+		public int compareTo(LibrarySearchResult another) {
+			if (another.rank == rank)
+				return library.getCity().compareTo(another.getLibrary().getCity());
+			else if (another.rank < rank)
+				return -1;
+			else
+				return 1;
+		}
+		
+		
+	}
+		
+	public void search(String query) {
+		LibraryListFragment fragment = new LocatedLibraryListFragment();
+		Bundle args = new Bundle();
+		args.putInt("level", LEVEL_LIBRARY);
+		fragment.setArguments(args);
+		Set<LibrarySearchResult> data = new HashSet<LibrarySearchResult>();
+		query = query.toLowerCase(Locale.GERMAN);
+		for (Library lib : libraries) {
+			int rank = 0;
+			if (lib.getCity().toLowerCase(Locale.GERMAN).contains(query))
+				rank += 3;
+			if (lib.getTitle().toLowerCase(Locale.GERMAN).contains(query))
+				rank += 3;
+			if (lib.getState().toLowerCase(Locale.GERMAN).contains(query))
+				rank += 2;
+			if (lib.getCountry().toLowerCase(Locale.GERMAN).contains(query))
+				rank += 1;
+			if (rank > 0) {
+				data.add(new LibrarySearchResult(lib, rank));
+			}
+		}
+		List<LibrarySearchResult> list = new ArrayList<LibrarySearchResult>(data);
+		Collections.sort(list);
+		List<Library> libraries = new ArrayList<Library>();
+		for(LibrarySearchResult sr : list) {
+			libraries.add(sr.getLibrary());
+		}
+		LibraryAdapter adapter = new LibraryAdapter(this,
+				R.layout.listitem_library, R.id.tvTitle, libraries);
+		fragment.setListAdapter(adapter);
+		if (findViewById(R.id.llFragments) != null) {
+			fragment4 = fragment;
+			getSupportFragmentManager().beginTransaction()
+					.replace(R.id.container4, fragment4).commit();
+		} else {
+			this.fragment = fragment;
+			getSupportFragmentManager().beginTransaction()
+					.replace(R.id.container, fragment).addToBackStack(null)
+					.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+					.commit();
+		}
+		
+		TextView tvLocateString = (TextView) findViewById(R.id.tvLocateString);
+		ImageView ivLocationIcon = (ImageView) findViewById(R.id.ivLocationIcon);
+		tvLocateString.setText(R.string.alphabetic_list);
+		ivLocationIcon.setImageResource(R.drawable.ic_list);
 	}
 
 	/**
