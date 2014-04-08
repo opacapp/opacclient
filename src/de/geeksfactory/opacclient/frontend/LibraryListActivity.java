@@ -82,7 +82,13 @@ public class LibraryListActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(null);
 		setContentView(R.layout.activity_library_list);
-		getSupportActionBar().setHomeButtonEnabled(false);
+		
+		if(!getIntent().hasExtra("welcome")) {
+			getSupportActionBar().setHomeButtonEnabled(true);
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		} else {
+			getSupportActionBar().setHomeButtonEnabled(false);
+		}
 
 		try {
 			libraries = ((OpacClient) getApplication()).getLibraries();
@@ -134,6 +140,8 @@ public class LibraryListActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(LibraryListActivity.this, SuggestLibraryActivity.class);
+				if (getIntent().hasExtra("welcome"))
+					intent.putExtra("welcome", true);
 				startActivity(intent);
 			}
 			

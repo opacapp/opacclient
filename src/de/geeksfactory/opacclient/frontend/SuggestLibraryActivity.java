@@ -22,9 +22,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -46,6 +48,8 @@ public class SuggestLibraryActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_suggest_library);
+		
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		etCity = (AutoCompleteTextView) findViewById(R.id.etCity);
 		etName = (EditText) findViewById(R.id.etName);
@@ -143,6 +147,20 @@ public class SuggestLibraryActivity extends Activity {
 		outState.putCharSequence("name", etName.getText());
 		outState.putCharSequence("comment", etComment.getText());
 		outState.putSerializable("selectedCity", selectedCity);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+	    // Respond to the action bar's Up/Home button
+	    case android.R.id.home:
+	        Intent intent = NavUtils.getParentActivityIntent(this);
+			if (getIntent().hasExtra("welcome"))
+				intent.putExtra("welcome", true);
+			NavUtils.navigateUpTo(this, intent);
+	        return true;
+	    }
+	    return super.onOptionsItemSelected(item);
 	}
 	
 	private static final String GEOCODE_API = "https://maps.googleapis.com/maps/api/geocode/json";
