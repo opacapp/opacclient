@@ -72,6 +72,7 @@ public class StarredFragment extends Fragment implements
 
 	public interface Callback {
 		public void showDetail(String mNr);
+		public void removeFragment();
 	}
 
 	@Override
@@ -174,7 +175,9 @@ public class StarredFragment extends Fragment implements
 			iv.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View arg0) {
-					remove((Starred) arg0.getTag());
+					Starred item = (Starred) arg0.getTag();
+					remove(item);
+					mCallback.removeFragment();
 				}
 			});
 		}

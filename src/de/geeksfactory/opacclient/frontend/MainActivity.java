@@ -354,8 +354,9 @@ public class MainActivity extends OpacActivity implements
 
 	@Override
 	public void removeFragment() {
-		getSupportFragmentManager().beginTransaction().remove(rightFragment)
-				.commit();
+		if(rightFragment != null)
+			getSupportFragmentManager().beginTransaction().remove(rightFragment)
+					.commit();
 	}
 
 	@Override
