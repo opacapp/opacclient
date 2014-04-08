@@ -2,6 +2,7 @@ package de.geeksfactory.opacclient.frontend;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -55,6 +56,7 @@ public class SuggestLibraryActivity extends Activity {
 			etCity.setText(savedInstanceState.getCharSequence("city"));
 			etName.setText(savedInstanceState.getCharSequence("name"));
 			etComment.setText(savedInstanceState.getCharSequence("comment"));
+			selectedCity = (City) savedInstanceState.getSerializable("selectedCity");
 		}
 		
 		final PlacesAutoCompleteAdapter adapter = new PlacesAutoCompleteAdapter(this, android.R.layout.simple_dropdown_item_1line);
@@ -140,6 +142,7 @@ public class SuggestLibraryActivity extends Activity {
 		outState.putCharSequence("city", etCity.getText());
 		outState.putCharSequence("name", etName.getText());
 		outState.putCharSequence("comment", etComment.getText());
+		outState.putSerializable("selectedCity", selectedCity);
 	}
 	
 	private static final String GEOCODE_API = "https://maps.googleapis.com/maps/api/geocode/json";
@@ -228,7 +231,7 @@ public class SuggestLibraryActivity extends Activity {
 		return false;
 	}
 	
-	private class City {
+	private class City implements Serializable {
 		public String name;
 		public String state;
 		public String country;

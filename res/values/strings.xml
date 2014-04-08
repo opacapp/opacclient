@@ -249,6 +249,7 @@
     <string name="state">Bundesland/Kanton</string>
     <string name="city">Stadt</string>
     <string name="library_name">Name der Bibliothek</string>
+    <string name="hint_library_name">z.B. "Stadtbibliothek", "Unibibliothek", "Ruprecht-Karls-Universität", ...</string>
     <string name="opac_url">Adresse des Online-Katalogs</string>
     <string name="comment">Kommentar</string>
     <string name="send">Senden</string>
