@@ -207,7 +207,7 @@ public class MultiStepResultHelper {
 		View view = inflater.inflate(R.layout.dialog_simple_list, null);
 
 		ListView lv = (ListView) view.findViewById(R.id.lvBibs);
-		final Object[] possibilities = result.getSelection().valueSet()
+		final Object[] possibilities = result.getSelection().values()
 				.toArray();
 
 		lv.setAdapter(new SelectionAdapter(context, possibilities));

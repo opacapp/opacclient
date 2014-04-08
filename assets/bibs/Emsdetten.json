@@ -13,7 +13,7 @@
             "status": -1, 
             "title": 1
         }, 
-        "baseurl": "http://91.190.226.2/webopac", 
+        "baseurl": "http://91.190.226.12/webopac", 
         "copiestable": {
             "barcode": 0, 
             "branch": 4, 

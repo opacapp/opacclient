@@ -9,7 +9,7 @@
             "returndate": 3, 
             "title": 1
         }, 
-        "baseurl": "http://217.6.119.210/webopac", 
+        "baseurl": "http://bibliothek.cham.de/webopac", 
         "copiestable": {
             "barcode": 0, 
             "branch": 3, 

@@ -34,11 +34,11 @@ import de.geeksfactory.opacclient.objects.AccountData;
 public class AccountDatabase extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "accounts.db";
-	private static final int DATABASE_VERSION = 18; // REPLACE ONUPGRADE IF YOU
+	private static final int DATABASE_VERSION = 20; // REPLACE ONUPGRADE IF YOU
 													// CHANGE THIS
 
 	public static final String[] COLUMNS = { "id", "bib", "label", "name",
-			"password", "cached", "pendingFees", "validUntil" };
+			"password", "cached", "pendingFees", "validUntil", "warning" };
 	public static final String[] COLUMNS_NOTIFIED = { "id", "account",
 			"timestamp" };
 
@@ -85,7 +85,7 @@ public class AccountDatabase extends SQLiteOpenHelper {
 				+ "accounts ( id integer primary key autoincrement,"
 				+ " bib text," + " label text," + " name text,"
 				+ " password text," + " cached integer," + " pendingFees text,"
-				+ " validUntil text" + ");");
+				+ " validUntil text," + " warning text" + ");");
 		db.execSQL("create table " + "accountdata_lent ( account integer, "
 				+ "title text," + "barcode text," + "author text,"
 				+ "deadline text," + "deadline_ts integer," + "status text,"
@@ -173,6 +173,10 @@ public class AccountDatabase extends SQLiteOpenHelper {
 		if (oldVersion < 18) {
 			// App version 2.1.1 to 3.0.0beta
 			db.execSQL("alter table accountdata_reservations add column itemid text");
+		}
+		if (oldVersion < 20) {
+			// App version 3.0.1 to 3.0.2
+			db.execSQL("alter table accounts add column warning text");
 		}
 
 

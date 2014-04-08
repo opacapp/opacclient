@@ -25,7 +25,6 @@ import java.io.IOException;
 
 import org.json.JSONException;
 
-import android.net.Uri;
 import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -78,5 +77,5 @@ public interface EbookServiceApi {
 	 * Download the item identified by item_id. Returns an URL where the item
 	 * can be downloaded from.
 	 */
-	public Uri downloadItem(Account account, String item_id);
+	public String downloadItem(Account account, String item_id);
 }

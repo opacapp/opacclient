@@ -23,11 +23,10 @@ package de.geeksfactory.opacclient.apis;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONException;
 
-import android.content.ContentValues;
-import android.os.Bundle;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -239,7 +238,7 @@ public interface OpacApi {
 	 * Flag to be present in the result of {@link #getSupportFlags()}.
 	 */
 	public static final int SUPPORT_FLAG_QUICKLINKS = 0x0000004;
-	
+
 	/**
 	 * When the results are shown as an endless scrolling list, will reload the
 	 * page the selected result is located on if this flag is not present.
@@ -304,7 +303,7 @@ public interface OpacApi {
 		};
 
 		protected Status status;
-		protected ContentValues selection;
+		protected Map<String, String> selection;
 		protected List<String[]> details;
 		protected int actionidentifier;
 		protected String message;
@@ -388,7 +387,7 @@ public interface OpacApi {
 		 * @return ContentValue tuples with key to give back and value to show
 		 *         to the users.
 		 */
-		public ContentValues getSelection() {
+		public Map<String, String> getSelection() {
 			return selection;
 		}
 
@@ -401,7 +400,7 @@ public interface OpacApi {
 		 *            returned back to reservation() and the value is what is to
 		 *            be displayed to the user.
 		 */
-		public void setSelection(ContentValues selection) {
+		public void setSelection(Map<String, String> selection) {
 			this.selection = selection;
 		}
 
@@ -494,8 +493,8 @@ public interface OpacApi {
 	 *         the error flag set to true.
 	 * @see de.geeksfactory.opacclient.objects.SearchResult
 	 */
-	public SearchRequestResult search(Bundle query) throws IOException,
-			NotReachableException, OpacErrorException;
+	public SearchRequestResult search(Map<String, String> query)
+			throws IOException, NotReachableException, OpacErrorException;
 
 	/**
 	 * If your {@link #search(Bundle)} implementation puts something different
@@ -614,7 +613,7 @@ public interface OpacApi {
 	 * {@link OpacApi#reservation(DetailledItem, Account, int, String)} call
 	 */
 	public class ReservationResult extends MultiStepResult {
-		
+
 		/**
 		 * Action type identifier for library branch selection
 		 */
@@ -667,10 +666,10 @@ public interface OpacApi {
 	 *            When the method is called for the first time or if useraction
 	 *            is <code>ACTION_CONFIRMATION</code>, this parameter is null.
 	 *            If you return <code>SELECTION</code> in your
-	 *            {@link ProlongResult#getStatus()}, this method will be
-	 *            called again with the user's selection present in selection.
-	 * @return A <code>ProlongResult</code> object which has to have the
-	 *         status set.
+	 *            {@link ProlongResult#getStatus()}, this method will be called
+	 *            again with the user's selection present in selection.
+	 * @return A <code>ProlongResult</code> object which has to have the status
+	 *         set.
 	 */
 	public ProlongResult prolong(String media, Account account, int useraction,
 			String selection) throws IOException;
@@ -680,7 +679,7 @@ public interface OpacApi {
 	 */
 	public class ProlongAllResult extends MultiStepResult {
 
-		protected List<ContentValues> results;
+		protected List<Map<String, String>> results;
 
 		public static final String KEY_LINE_TITLE = "title";
 		public static final String KEY_LINE_AUTHOR = "author";
@@ -694,7 +693,7 @@ public interface OpacApi {
 		 *            A list of ContentValues containing the success values for
 		 *            all the single items we (tried to) renew.
 		 */
-		public ProlongAllResult(Status status, List<ContentValues> results) {
+		public ProlongAllResult(Status status, List<Map<String, String>> results) {
 			super(status);
 			this.results = results;
 		}
@@ -707,7 +706,7 @@ public interface OpacApi {
 			super(status);
 		}
 
-		public List<ContentValues> getResults() {
+		public List<Map<String, String>> getResults() {
 			return results;
 		}
 
@@ -744,7 +743,7 @@ public interface OpacApi {
 			super(status, message);
 		}
 	}
-	
+
 	/**
 	 * Cancel a media reservation/order identified by the given String (see
 	 * AccountData documentation) (see <code>AccountData</code>)
@@ -769,10 +768,10 @@ public interface OpacApi {
 	 *            When the method is called for the first time or if useraction
 	 *            is <code>ACTION_CONFIRMATION</code>, this parameter is null.
 	 *            If you return <code>SELECTION</code> in your
-	 *            {@link CancelResult#getStatus()}, this method will be
-	 *            called again with the user's selection present in selection.
-	 * @return A <code>CancelResult</code> object which has to have the
-	 *         status set.
+	 *            {@link CancelResult#getStatus()}, this method will be called
+	 *            again with the user's selection present in selection.
+	 * @return A <code>CancelResult</code> object which has to have the status
+	 *         set.
 	 */
 	public CancelResult cancel(String media, Account account, int useraction,
 			String selection) throws IOException, OpacErrorException;

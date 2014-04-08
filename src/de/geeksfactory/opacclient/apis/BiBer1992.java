@@ -29,10 +29,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.acra.ACRA;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -46,8 +46,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import android.content.ContentValues;
-import android.os.Bundle;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.networking.HTTPClient;
 import de.geeksfactory.opacclient.objects.Account;
@@ -211,7 +209,11 @@ public class BiBer1992 extends BaseApi {
 	 * <option selected value="ZWST0">Alle Bibliotheksorte</option> </select>
 	 */
 	private void extract_meta(Document doc) {
-		m_metadata.open();
+		try {
+			m_metadata.open();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		m_metadata.clearMeta(m_library.getIdent());
 
 		// get media types
@@ -301,7 +303,11 @@ public class BiBer1992 extends BaseApi {
 
 		Document doc = Jsoup.parse(html);
 
-		m_metadata.open();
+		try {
+			m_metadata.open();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		if (!m_metadata.hasMeta(m_library.getIdent())) {
 			m_metadata.close();
 			extract_meta(doc);
@@ -323,15 +329,16 @@ public class BiBer1992 extends BaseApi {
 			m_opac_url = m_data.getString("baseurl");
 			m_opac_dir = m_data.getString("opacdir");
 		} catch (JSONException e) {
-			ACRA.getErrorReporter().handleException(e);
+			throw new RuntimeException(e);
 		}
 
 	}
 
-	public static String getStringFromBundle(Bundle bundle, String key) {
+	public static String getStringFromBundle(Map<String, String> bundle,
+			String key) {
 		// Workaround for Bundle.getString(key, default) being available not
 		// before API 12
-		String res = bundle.getString(key);
+		String res = bundle.get(key);
 		if (res == null)
 			res = "";
 		return res;
@@ -341,8 +348,8 @@ public class BiBer1992 extends BaseApi {
 	 * HTTP Push
 	 */
 	@Override
-	public SearchRequestResult search(Bundle query) throws IOException,
-			NotReachableException {
+	public SearchRequestResult search(Map<String, String> query)
+			throws IOException, NotReachableException {
 
 		if (!m_initialised)
 			start();
@@ -416,7 +423,8 @@ public class BiBer1992 extends BaseApi {
 				.valueOf(startNum)));
 
 		String html = httpPost(m_opac_url + "/" + m_opac_dir + "/query.C",
-				new UrlEncodedFormEntity(m_nameValuePairs), getDefaultEncoding());
+				new UrlEncodedFormEntity(m_nameValuePairs),
+				getDefaultEncoding());
 		return parse_search(html, page);
 	}
 
@@ -612,7 +620,7 @@ public class BiBer1992 extends BaseApi {
 		Detail detail = null;
 
 		// prepare copiestable
-		ContentValues copy_last_content = null;
+		Map<String, String> copy_last_content = null;
 		int copy_row = 0;
 
 		String[] copy_keys = new String[] { DetailledItem.KEY_COPY_BARCODE, // "barcode";
@@ -685,7 +693,7 @@ public class BiBer1992 extends BaseApi {
 				// With reverse layout: first row is headline, skipped via
 				// (copy_row > 0)
 				if (copy_row > 0) {
-					ContentValues e = new ContentValues();
+					Map<String, String> e = new HashMap<String, String>();
 					for (int j = 0; j < copy_keys.length; j++) {
 						int col = copy_map[j];
 						if (col > -1) {
@@ -712,7 +720,7 @@ public class BiBer1992 extends BaseApi {
 								} else {
 									if (copy_last_content != null)
 										text = copy_last_content
-												.getAsString(copy_keys[j]);
+												.get(copy_keys[j]);
 									else
 										text = "";
 								}
@@ -722,9 +730,8 @@ public class BiBer1992 extends BaseApi {
 					}
 					if (e.containsKey(DetailledItem.KEY_COPY_BRANCH)
 							&& e.containsKey(DetailledItem.KEY_COPY_LOCATION)
-							&& e.getAsString(DetailledItem.KEY_COPY_LOCATION)
-									.equals(e
-											.getAsString(DetailledItem.KEY_COPY_BRANCH)))
+							&& e.get(DetailledItem.KEY_COPY_LOCATION).equals(
+									e.get(DetailledItem.KEY_COPY_BRANCH)))
 						e.remove(DetailledItem.KEY_COPY_LOCATION);
 					item.addCopy(e);
 					copy_last_content = e;
@@ -745,9 +752,8 @@ public class BiBer1992 extends BaseApi {
 	 * de.geeksfactory.opacclient.objects.Account, int, java.lang.String)
 	 */
 	@Override
-	public ReservationResult reservation(DetailledItem item,
-			Account account, int useraction, String selection)
-			throws IOException {
+	public ReservationResult reservation(DetailledItem item, Account account,
+			int useraction, String selection) throws IOException {
 		// TODO reservations not yet supported
 		return null;
 	}
@@ -798,7 +804,8 @@ public class BiBer1992 extends BaseApi {
 		if (html.contains("no such key")) {
 			html = httpPost(
 					m_opac_url + "/" + m_opac_dir + command.replace(".C", ".S"),
-					new UrlEncodedFormEntity(nameValuePairs), getDefaultEncoding());
+					new UrlEncodedFormEntity(nameValuePairs),
+					getDefaultEncoding());
 		}
 
 		Document doc = Jsoup.parse(html);
@@ -876,20 +883,20 @@ public class BiBer1992 extends BaseApi {
 		AccountData res = new AccountData(account.getId());
 
 		// get media
-		List<ContentValues> medien = accountGetMedia(account, res);
+		List<Map<String, String>> medien = accountGetMedia(account, res);
 		res.setLent(medien);
 
 		// get reservations
-		List<ContentValues> reservations = accountGetReservations(account);
+		List<Map<String, String>> reservations = accountGetReservations(account);
 		res.setReservations(reservations);
 
 		return res;
 	}
 
-	private List<ContentValues> accountGetMedia(Account account, AccountData res)
-			throws IOException, JSONException {
+	private List<Map<String, String>> accountGetMedia(Account account,
+			AccountData res) throws IOException, JSONException {
 
-		List<ContentValues> medien = new ArrayList<ContentValues>();
+		List<Map<String, String>> medien = new ArrayList<Map<String, String>>();
 
 		// get media list via http POST
 		Document doc = accountHttpPost(account, "medk");
@@ -918,9 +925,10 @@ public class BiBer1992 extends BaseApi {
 			Element tr = rowElements.get(i);
 			if (tr.child(0).tagName().equals("th"))
 				continue;
-			ContentValues e = new ContentValues();
-			
-			Pattern itemIdPat = Pattern.compile("javascript:smAcc\\('[a-z]+','[a-z]+','([A-Za-z0-9]+)'\\)");
+			Map<String, String> e = new HashMap<String, String>();
+
+			Pattern itemIdPat = Pattern
+					.compile("javascript:smAcc\\('[a-z]+','[a-z]+','([A-Za-z0-9]+)'\\)");
 			// columns: all elements of one media
 			Iterator<?> keys = copymap.keys();
 			while (keys.hasNext()) {
@@ -934,7 +942,8 @@ public class BiBer1992 extends BaseApi {
 				if (index >= 0) {
 					String value = tr.child(index).text().trim();
 
-					// Signature, Author and Title is the same field: "autor: title"
+					// Signature, Author and Title is the same field:
+					// "autor: title"
 					// sometimes there is no ":" then only the title is given
 					if (key.equals(AccountData.KEY_LENT_AUTHOR)) {
 						if (value.contains(":")) {
@@ -977,10 +986,10 @@ public class BiBer1992 extends BaseApi {
 			// calculate lent timestamp for notification purpose
 			if (e.containsKey(AccountData.KEY_LENT_DEADLINE)) {
 				try {
-					e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
-							sdf.parse(
-									e.getAsString(AccountData.KEY_LENT_DEADLINE))
-									.getTime());
+					e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String
+							.valueOf(sdf.parse(
+									e.get(AccountData.KEY_LENT_DEADLINE))
+									.getTime()));
 				} catch (ParseException e1) {
 					e1.printStackTrace();
 				}
@@ -992,10 +1001,10 @@ public class BiBer1992 extends BaseApi {
 		return medien;
 	}
 
-	private List<ContentValues> accountGetReservations(Account account)
+	private List<Map<String, String>> accountGetReservations(Account account)
 			throws IOException, JSONException {
 
-		List<ContentValues> reservations = new ArrayList<ContentValues>();
+		List<Map<String, String>> reservations = new ArrayList<Map<String, String>>();
 
 		if (!m_data.has("reservationtable")) {
 			// reservations not specifically supported, let's just try it
@@ -1031,7 +1040,7 @@ public class BiBer1992 extends BaseApi {
 			Element tr = rowElements.get(i);
 			if (tr.child(0).tagName().equals("th"))
 				continue;
-			ContentValues e = new ContentValues();
+			Map<String, String> e = new HashMap<String, String>();
 
 			// columns: all elements of one media
 			Iterator<?> keys = copymap.keys();

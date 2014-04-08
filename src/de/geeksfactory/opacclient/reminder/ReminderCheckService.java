@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.net.SocketException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.acra.ACRA;
 import org.apache.http.client.ClientProtocolException;
@@ -34,7 +35,6 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -155,17 +155,17 @@ public class ReminderCheckService extends Service {
 
 					int this_account = 0;
 
-					for (ContentValues item : res.getLent()) {
+					for (Map<String, String> item : res.getLent()) {
 						if (item.containsKey(AccountData.KEY_LENT_DOWNLOAD)) {
 							// Don't remember people of bringing back ebooks,
 							// because ... uhm...
-							if (item.getAsString(AccountData.KEY_LENT_DOWNLOAD)
+							if (item.get(AccountData.KEY_LENT_DOWNLOAD)
 									.startsWith("http"))
 								continue;
 						}
 						if (item.containsKey(AccountData.KEY_LENT_DEADLINE_TIMESTAMP)) {
-							long expiring = item
-									.getAsLong(AccountData.KEY_LENT_DEADLINE_TIMESTAMP);
+							long expiring = Long.parseLong(item
+									.get(AccountData.KEY_LENT_DEADLINE_TIMESTAMP));
 							if ((expiring - now) < warning) {
 								expired_total++;
 								if (!data.notificationIsSent(account.getId(),

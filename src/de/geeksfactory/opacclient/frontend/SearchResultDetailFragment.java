@@ -3,6 +3,7 @@ package de.geeksfactory.opacclient.frontend;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
 import org.acra.ACRA;
 import org.holoeverywhere.LayoutInflater;
@@ -18,7 +19,6 @@ import org.holoeverywhere.widget.TextView;
 import org.holoeverywhere.widget.Toast;
 
 import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -382,11 +382,11 @@ public class SearchResultDetailFragment extends Fragment {
 			TextView tvC = (TextView) view.findViewById(R.id.tvCopies);
 			tvC.setText(R.string.baende);
 
-			for (final ContentValues band : item.getBaende()) {
+			for (final Map<String, String> band : item.getBaende()) {
 				View v = getLayoutInflater().inflate(R.layout.listitem_volume,
 						null);
 				((TextView) v.findViewById(R.id.tvTitel)).setText(band
-						.getAsString(DetailledItem.KEY_CHILD_TITLE));
+						.get(DetailledItem.KEY_CHILD_TITLE));
 
 				v.findViewById(R.id.llItem).setOnClickListener(
 						new OnClickListener() {
@@ -394,9 +394,8 @@ public class SearchResultDetailFragment extends Fragment {
 							public void onClick(View v) {
 								Intent intent = new Intent(getActivity(),
 										SearchResultDetailActivity.class);
-								intent.putExtra(
-										ARG_ITEM_ID,
-										band.getAsString(DetailledItem.KEY_CHILD_ID));
+								intent.putExtra(ARG_ITEM_ID,
+										band.get(DetailledItem.KEY_CHILD_ID));
 								intent.putExtra("from_collection", true);
 								startActivity(intent);
 							}
@@ -407,7 +406,7 @@ public class SearchResultDetailFragment extends Fragment {
 			if (item.getCopies().size() == 0) {
 				view.findViewById(R.id.tvCopies).setVisibility(View.GONE);
 			} else {
-				for (ContentValues copy : item.getCopies()) {
+				for (Map<String, String> copy : item.getCopies()) {
 					View v = getLayoutInflater().inflate(
 							R.layout.listitem_copy, null);
 
@@ -415,7 +414,7 @@ public class SearchResultDetailFragment extends Fragment {
 						if (copy.containsKey(DetailledItem.KEY_COPY_BRANCH)) {
 							((TextView) v.findViewById(R.id.tvBranch))
 									.setText(copy
-											.getAsString(DetailledItem.KEY_COPY_BRANCH));
+											.get(DetailledItem.KEY_COPY_BRANCH));
 							((TextView) v.findViewById(R.id.tvBranch))
 									.setVisibility(View.VISIBLE);
 						} else {
@@ -427,7 +426,7 @@ public class SearchResultDetailFragment extends Fragment {
 						if (copy.containsKey(DetailledItem.KEY_COPY_DEPARTMENT)) {
 							((TextView) v.findViewById(R.id.tvDepartment))
 									.setText(copy
-											.getAsString(DetailledItem.KEY_COPY_DEPARTMENT));
+											.get(DetailledItem.KEY_COPY_DEPARTMENT));
 							((TextView) v.findViewById(R.id.tvDepartment))
 									.setVisibility(View.VISIBLE);
 						} else {
@@ -439,7 +438,7 @@ public class SearchResultDetailFragment extends Fragment {
 						if (copy.containsKey(DetailledItem.KEY_COPY_LOCATION)) {
 							((TextView) v.findViewById(R.id.tvLocation))
 									.setText(copy
-											.getAsString(DetailledItem.KEY_COPY_LOCATION));
+											.get(DetailledItem.KEY_COPY_LOCATION));
 							((TextView) v.findViewById(R.id.tvLocation))
 									.setVisibility(View.VISIBLE);
 						} else {
@@ -451,7 +450,7 @@ public class SearchResultDetailFragment extends Fragment {
 						if (copy.containsKey(DetailledItem.KEY_COPY_SHELFMARK)) {
 							((TextView) v.findViewById(R.id.tvShelfmark))
 									.setText(copy
-											.getAsString(DetailledItem.KEY_COPY_SHELFMARK));
+											.get(DetailledItem.KEY_COPY_SHELFMARK));
 							((TextView) v.findViewById(R.id.tvShelfmark))
 									.setVisibility(View.VISIBLE);
 						} else {
@@ -463,7 +462,7 @@ public class SearchResultDetailFragment extends Fragment {
 						if (copy.containsKey(DetailledItem.KEY_COPY_STATUS)) {
 							((TextView) v.findViewById(R.id.tvStatus))
 									.setText(copy
-											.getAsString(DetailledItem.KEY_COPY_STATUS));
+											.get(DetailledItem.KEY_COPY_STATUS));
 							((TextView) v.findViewById(R.id.tvStatus))
 									.setVisibility(View.VISIBLE);
 						} else {
@@ -477,7 +476,7 @@ public class SearchResultDetailFragment extends Fragment {
 							((TextView) v.findViewById(R.id.tvReservations))
 									.setText(getString(R.string.res)
 											+ ": "
-											+ copy.getAsString(DetailledItem.KEY_COPY_RESERVATIONS));
+											+ copy.get(DetailledItem.KEY_COPY_RESERVATIONS));
 							((TextView) v.findViewById(R.id.tvReservations))
 									.setVisibility(View.VISIBLE);
 						} else {
@@ -488,11 +487,11 @@ public class SearchResultDetailFragment extends Fragment {
 					if (v.findViewById(R.id.tvReturndate) != null) {
 						if (copy.containsKey(DetailledItem.KEY_COPY_RETURN)
 								&& !"".equals(copy
-										.getAsString(DetailledItem.KEY_COPY_RETURN))) {
+										.get(DetailledItem.KEY_COPY_RETURN))) {
 							((TextView) v.findViewById(R.id.tvReturndate))
 									.setText(getString(R.string.ret)
 											+ ": "
-											+ copy.getAsString(DetailledItem.KEY_COPY_RETURN));
+											+ copy.get(DetailledItem.KEY_COPY_RETURN));
 							((TextView) v.findViewById(R.id.tvReturndate))
 									.setVisibility(View.VISIBLE);
 						} else {

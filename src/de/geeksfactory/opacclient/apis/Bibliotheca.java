@@ -34,9 +34,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
-import org.acra.ACRA;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -52,10 +53,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import android.content.ContentValues;
-import android.net.Uri;
-import android.os.Bundle;
-import android.util.SparseArray;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -135,7 +132,11 @@ public class Bibliotheca extends BaseApi {
 		Document doc = Jsoup.parse(html);
 
 		Elements zst_opts = doc.select("#zst option");
-		metadata.open();
+		try {
+			metadata.open();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		metadata.clearMeta(library.getIdent());
 		for (int i = 0; i < zst_opts.size(); i++) {
 			Element opt = zst_opts.get(i);
@@ -178,7 +179,11 @@ public class Bibliotheca extends BaseApi {
 		httpGet(opac_url + "/woload.asp?lkz=1&nextpage=" + db,
 				getDefaultEncoding());
 
-		metadata.open();
+		try {
+			metadata.open();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		if (!metadata.hasMeta(library.getIdent())) {
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 			nameValuePairs.add(new BasicNameValuePair("link_profis.x", "0"));
@@ -202,14 +207,14 @@ public class Bibliotheca extends BaseApi {
 		try {
 			this.opac_url = data.getString("baseurl");
 		} catch (JSONException e) {
-			ACRA.getErrorReporter().handleException(e);
+			throw new RuntimeException(e);
 		}
 	}
 
-	public static String getStringFromBundle(Bundle bundle, String key) {
+	public static String getStringFromBundle(Map<String, String> bundle, String key) {
 		// Workaround for Bundle.getString(key, default) being available not
 		// before API 12
-		String res = bundle.getString(key);
+		String res = bundle.get(key);
 		if (res == null)
 			res = "";
 		else
@@ -218,7 +223,7 @@ public class Bibliotheca extends BaseApi {
 	}
 
 	@Override
-	public SearchRequestResult search(Bundle query) throws IOException,
+	public SearchRequestResult search(Map<String, String> query) throws IOException,
 			NotReachableException {
 		if (!initialised)
 			start();
@@ -330,13 +335,14 @@ public class Bibliotheca extends BaseApi {
 			Element link = tr.child(contentindex).select("a").first();
 			try {
 				if (link != null && link.attr("href").contains("detmediennr")) {
-					Uri uri = Uri.parse(link.attr("abs:href"));
-					String nr = uri.getQueryParameter("detmediennr");
+					Map<String, String> params = getQueryParamsFirst(link
+							.attr("abs:href"));
+					String nr = params.get("detmediennr");
 					if (Integer.parseInt(nr) > i + 1) {
 						// Scheint eine ID zu sein…
-						if (uri.getQueryParameter("detDB") != null) {
+						if (params.get("detDB") != null) {
 							sr.setId("&detmediennr=" + nr + "&detDB="
-									+ uri.getQueryParameter("detDB"));
+									+ params.get("detDB"));
 						} else {
 							sr.setId("&detmediennr=" + nr);
 						}
@@ -480,7 +486,7 @@ public class Bibliotheca extends BaseApi {
 			for (int i = 0; i < exemplartrs.size(); i++) {
 				Element tr = exemplartrs.get(i);
 
-				ContentValues e = new ContentValues();
+				Map<String, String> e = new HashMap<String, String>();
 
 				Iterator<?> keys = copymap.keys();
 				while (keys.hasNext()) {
@@ -506,7 +512,7 @@ public class Bibliotheca extends BaseApi {
 			for (int i = 0; i < bandtrs.size(); i++) {
 				Element tr = bandtrs.get(i);
 
-				ContentValues e = new ContentValues();
+				Map<String, String> e = new HashMap<String, String>();
 				e.put(DetailledItem.KEY_CHILD_ID, tr.attr("href").split("=")[1]);
 				e.put(DetailledItem.KEY_CHILD_TITLE, tr.text());
 				result.addBand(e);
@@ -575,7 +581,7 @@ public class Bibliotheca extends BaseApi {
 				}
 			}
 			if (doc.select("select[name=" + branch_inputfield + "]").size() > 0) {
-				ContentValues branches = new ContentValues();
+				Map<String, String> branches = new HashMap<String, String>();
 				for (Element option : doc
 						.select("select[name=" + branch_inputfield + "]")
 						.first().children()) {
@@ -773,8 +779,8 @@ public class Bibliotheca extends BaseApi {
 		}
 		
 		if(doc.select(".kontozeile table").size() == 1) {
-			SparseArray<String> colmap = new SparseArray<String>();
-			List<ContentValues> result = new ArrayList<ContentValues>();
+			Map<Integer, String> colmap = new HashMap<Integer, String>();
+			List<Map<String, String>> result = new ArrayList<Map<String, String>>();
 			for(Element tr : doc.select(".kontozeile table tr")) {
 				if(tr.select(".tabHeaderKonto").size() > 0) {
 					int i = 0;
@@ -800,10 +806,10 @@ public class Bibliotheca extends BaseApi {
 						i++;
 					}
 				} else {
-					ContentValues line = new ContentValues();
-					for (int i = 0; i < colmap.size(); i++) {
-						line.put(colmap.get(colmap.keyAt(i)), tr.child(i)
-								.text().trim());
+					Map<String, String> line = new HashMap<String, String>();
+					for (Entry<Integer, String> entry : colmap.entrySet()) {
+						line.put(colmap.get(entry.getValue()),
+								tr.child(entry.getKey()).text().trim());
 					}
 					result.add(line);
 				}
@@ -900,7 +906,7 @@ public class Bibliotheca extends BaseApi {
 
 		copymap = data.getJSONObject("accounttable");
 
-		List<ContentValues> medien = new ArrayList<ContentValues>();
+		List<Map<String, String>> medien = new ArrayList<Map<String, String>>();
 
 		if (doc.select(".kontozeile_center table").size() == 0)
 			return null;
@@ -912,7 +918,7 @@ public class Bibliotheca extends BaseApi {
 
 		for (int i = 0; i < exemplartrs.size(); i++) {
 			Element tr = exemplartrs.get(i);
-			ContentValues e = new ContentValues();
+			Map<String, String> e = new HashMap<String, String>();
 
 			Iterator<?> keys = copymap.keys();
 			while (keys.hasNext()) {
@@ -939,10 +945,10 @@ public class Bibliotheca extends BaseApi {
 
 			if (e.containsKey(AccountData.KEY_LENT_DEADLINE)) {
 				try {
-					e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
-							sdf.parse(
-									e.getAsString(AccountData.KEY_LENT_DEADLINE))
-									.getTime());
+					e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String
+							.valueOf(sdf.parse(
+									e.get(AccountData.KEY_LENT_DEADLINE))
+									.getTime()));
 				} catch (ParseException e1) {
 					e1.printStackTrace();
 				}
@@ -955,12 +961,12 @@ public class Bibliotheca extends BaseApi {
 
 		copymap = data.getJSONObject("reservationtable");
 
-		List<ContentValues> reservations = new ArrayList<ContentValues>();
+		List<Map<String, String>> reservations = new ArrayList<Map<String, String>>();
 		exemplartrs = doc.select(".kontozeile_center table").get(1)
 				.select("tr.tabKonto");
 		for (int i = 0; i < exemplartrs.size(); i++) {
 			Element tr = exemplartrs.get(i);
-			ContentValues e = new ContentValues();
+			Map<String, String> e = new HashMap<String, String>();
 
 			Iterator<?> keys = copymap.keys();
 			while (keys.hasNext()) {

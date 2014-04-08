@@ -22,7 +22,9 @@
 package de.geeksfactory.opacclient.storage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -61,15 +63,15 @@ public class SQLMetaDataSource implements MetaDataSource {
 	}
 
 	@Override
-	public List<ContentValues> getMeta(String bib, String type) {
-		List<ContentValues> meta = new ArrayList<ContentValues>();
+	public List<Map<String, String>> getMeta(String bib, String type) {
+		List<Map<String, String>> meta = new ArrayList<Map<String, String>>();
 		String[] selA = { bib, type };
 		Cursor cursor = database.query("meta", allColumns,
 				"bib = ? AND type = ?", selA, null, null, null);
 
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
-			ContentValues m = cursorToMeta(cursor);
+			Map<String, String> m = cursorToMeta(cursor);
 			meta.add(m);
 			cursor.moveToNext();
 		}
@@ -98,9 +100,9 @@ public class SQLMetaDataSource implements MetaDataSource {
 		return num > 0;
 	}
 
-	private ContentValues cursorToMeta(Cursor cursor) {
-		ContentValues meta = new ContentValues();
-		meta.put("id", cursor.getLong(0));
+	private Map<String, String> cursorToMeta(Cursor cursor) {
+		Map<String, String> meta = new HashMap<String, String>();
+		meta.put("id", String.valueOf(cursor.getLong(0)));
 		meta.put("type", cursor.getString(1));
 		meta.put("bib", cursor.getString(2));
 		meta.put("key", cursor.getString(3));

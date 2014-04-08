@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.holoeverywhere.app.Fragment;
@@ -63,26 +65,31 @@ public class MainActivity extends OpacActivity implements
 				selectItem(1);
 			}
 		}
-
-		if (nfc_capable) {
-			if (!getPackageManager().hasSystemFeature("android.hardware.nfc")) {
-				nfc_capable = false;
+		try {
+			if (nfc_capable) {
+				if (!getPackageManager().hasSystemFeature(
+						"android.hardware.nfc")) {
+					nfc_capable = false;
+				}
 			}
-		}
-		if (nfc_capable) {
-			mAdapter = android.nfc.NfcAdapter.getDefaultAdapter(this);
-			nfcIntent = PendingIntent.getActivity(this, 0, new Intent(this,
-					getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-			IntentFilter ndef = new IntentFilter(
-					android.nfc.NfcAdapter.ACTION_TECH_DISCOVERED);
-			try {
-				ndef.addDataType("*/*");
-			} catch (MalformedMimeTypeException e) {
-				throw new RuntimeException("fail", e);
+			if (nfc_capable) {
+				mAdapter = android.nfc.NfcAdapter.getDefaultAdapter(this);
+				nfcIntent = PendingIntent.getActivity(this, 0, new Intent(this,
+						getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
+						0);
+				IntentFilter ndef = new IntentFilter(
+						android.nfc.NfcAdapter.ACTION_TECH_DISCOVERED);
+				try {
+					ndef.addDataType("*/*");
+				} catch (MalformedMimeTypeException e) {
+					throw new RuntimeException("fail", e);
+				}
+				intentFiltersArray = new IntentFilter[] { ndef, };
+				techListsArray = new String[][] { new String[] { android.nfc.tech.NfcV.class
+						.getName() } };
 			}
-			intentFiltersArray = new IntentFilter[] { ndef, };
-			techListsArray = new String[][] { new String[] { android.nfc.tech.NfcV.class
-					.getName() } };
+		} catch (SecurityException e) {
+			e.printStackTrace();
 		}
 
 		if (app.getLibrary() != null) {
@@ -216,8 +223,8 @@ public class MainActivity extends OpacActivity implements
 				Toast.makeText(this, R.string.barcode_internal_not_supported,
 						Toast.LENGTH_LONG).show();
 			} else {
-				Bundle query = new Bundle();
-				query.putString(target_field, scanResult.getContents());
+				Map<String, String> query = new HashMap<String, String>();
+				query.put(target_field, scanResult.getContents());
 				app.startSearch(this, query);
 			}
 
@@ -235,7 +242,11 @@ public class MainActivity extends OpacActivity implements
 	public void onPause() {
 		super.onPause();
 		if (nfc_capable && sp.getBoolean("nfc_search", false)) {
-			mAdapter.disableForegroundDispatch(this);
+			try {
+				mAdapter.disableForegroundDispatch(this);
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -244,8 +255,12 @@ public class MainActivity extends OpacActivity implements
 	public void onResume() {
 		super.onResume();
 		if (nfc_capable && sp.getBoolean("nfc_search", false)) {
-			mAdapter.enableForegroundDispatch(this, nfcIntent,
-					intentFiltersArray, techListsArray);
+			try {
+				mAdapter.enableForegroundDispatch(this, nfcIntent,
+						intentFiltersArray, techListsArray);
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -261,9 +276,8 @@ public class MainActivity extends OpacActivity implements
 					Set<String> fields = new HashSet<String>(Arrays.asList(app
 							.getApi().getSearchFields()));
 					if (fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE)) {
-						Bundle query = new Bundle();
-						query.putString(OpacApi.KEY_SEARCH_QUERY_BARCODE,
-								scanResult);
+						Map<String, String> query = new HashMap<String, String>();
+						query.put(OpacApi.KEY_SEARCH_QUERY_BARCODE, scanResult);
 						app.startSearch(this, query);
 					} else {
 						Toast.makeText(this,

@@ -22,6 +22,7 @@
 package de.geeksfactory.opacclient.storage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -210,14 +211,14 @@ public class AccountDataSource {
 	public AccountData getCachedAccountData(Account account) {
 		AccountData adata = new AccountData(account.getId());
 
-		List<ContentValues> lent = new ArrayList<ContentValues>();
+		List<Map<String, String>> lent = new ArrayList<Map<String, String>>();
 		String[] selectionArgs = { "" + account.getId() };
 		Cursor cursor = database.query(AccountDatabase.TABLENAME_LENT,
 				AccountDatabase.COLUMNS_LENT.values().toArray(new String[] {}),
 				"account = ?", selectionArgs, null, null, null);
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
-			ContentValues entry = new ContentValues();
+			Map<String, String> entry = new HashMap<String, String>();
 			for (Object o : AccountDatabase.COLUMNS_LENT.entrySet()) {
 				Map.Entry<String, String> field = (Map.Entry<String, String>) o;
 				String value = cursor.getString(cursor.getColumnIndex(field
@@ -234,7 +235,7 @@ public class AccountDataSource {
 		cursor.close();
 		adata.setLent(lent);
 
-		List<ContentValues> res = new ArrayList<ContentValues>();
+		List<Map<String, String>> res = new ArrayList<Map<String, String>>();
 		cursor = database.query(AccountDatabase.TABLENAME_RESERVATION,
 				AccountDatabase.COLUMNS_RESERVATIONS.values()
 						.toArray(new String[] {}), "account = ?",
@@ -242,7 +243,7 @@ public class AccountDataSource {
 		cursor.moveToFirst();
 
 		while (!cursor.isAfterLast()) {
-			ContentValues entry = new ContentValues();
+			Map<String, String> entry = new HashMap<String, String>();
 			for (Object o : AccountDatabase.COLUMNS_RESERVATIONS.entrySet()) {
 				Map.Entry<String, String> field = (Map.Entry<String, String>) o;
 				String value = cursor.getString(cursor.getColumnIndex(field
@@ -261,11 +262,12 @@ public class AccountDataSource {
 
 		String[] selA = { "" + account.getId() };
 		cursor = database.query("accounts", new String[] { "pendingFees",
-				"validUntil" }, "id = ?", selA, null, null, null);
+				"validUntil", "warning" }, "id = ?", selA, null, null, null);
 		cursor.moveToFirst();
 		if (!cursor.isAfterLast()) {
 			adata.setPendingFees(cursor.getString(0));
 			adata.setValidUntil(cursor.getString(1));
+			adata.setWarning(cursor.getString(2));
 			cursor.moveToNext();
 		}
 		// Make sure to close the cursor
@@ -282,6 +284,7 @@ public class AccountDataSource {
 		String pf = null;
 		update.put("pendingFees", pf);
 		update.put("validUntil", pf);
+		update.put("warning", pf);
 		database.update(AccountDatabase.TABLENAME_ACCOUNTS, update, null, null);
 	}
 
@@ -295,6 +298,7 @@ public class AccountDataSource {
 		String pf = null;
 		update.put("pendingFees", pf);
 		update.put("validUntil", pf);
+		update.put("warning", pf);
 		database.update(AccountDatabase.TABLENAME_ACCOUNTS, update, "id = ?",
 				new String[] { "" + account.getId() });
 	}
@@ -312,23 +316,18 @@ public class AccountDataSource {
 		update.put("cached", time);
 		update.put("pendingFees", adata.getPendingFees());
 		update.put("validUntil", adata.getValidUntil());
+		update.put("warning", adata.getWarning());
 		database.update(AccountDatabase.TABLENAME_ACCOUNTS, update, "id = ?",
 				new String[] { "" + account.getId() });
 
 		database.delete(AccountDatabase.TABLENAME_LENT, "account = ?",
 				new String[] { "" + account.getId() });
-		for (ContentValues entry : adata.getLent()) {
+		for (Map<String, String> entry : adata.getLent()) {
 			ContentValues insertmapping = new ContentValues();
-			for (Entry<String, Object> inner : entry.valueSet()) {
-
-				if (inner.getValue() instanceof Long)
-					insertmapping.put(
-							AccountDatabase.COLUMNS_LENT.get(inner.getKey()),
-							((Long) inner.getValue()).toString());
-				else
-					insertmapping.put(
-							AccountDatabase.COLUMNS_LENT.get(inner.getKey()),
-							(String) inner.getValue());
+			for (Entry<String, String> inner : entry.entrySet()) {
+				insertmapping.put(
+						AccountDatabase.COLUMNS_LENT.get(inner.getKey()),
+						inner.getValue());
 			}
 			insertmapping.put("account", account.getId());
 			database.insert(AccountDatabase.TABLENAME_LENT, null, insertmapping);
@@ -336,11 +335,12 @@ public class AccountDataSource {
 
 		database.delete(AccountDatabase.TABLENAME_RESERVATION, "account = ?",
 				new String[] { "" + account.getId() });
-		for (ContentValues entry : adata.getReservations()) {
+		for (Map<String, String> entry : adata.getReservations()) {
 			ContentValues insertmapping = new ContentValues();
-			for (Entry<String, Object> inner : entry.valueSet()) {
-				insertmapping.put(AccountDatabase.COLUMNS_RESERVATIONS
-						.get(inner.getKey()), (String) inner.getValue());
+			for (Entry<String, String> inner : entry.entrySet()) {
+				insertmapping.put(
+						AccountDatabase.COLUMNS_RESERVATIONS.get(inner.getKey()),
+						inner.getValue());
 			}
 			insertmapping.put("account", account.getId());
 			database.insert(AccountDatabase.TABLENAME_RESERVATION, null,

@@ -9,7 +9,7 @@ import urllib.error
 
 LIBDIR = 'assets/bibs/'
 TYPES = [
-    'NONE', 'BOOK', 'CD', 'CD_SOFTWARE', 'CD_MUSIC', 'DVD', 'MOVIE', 'AUDIOBOOK', 'PACKAGE',
+        'NONE', 'BOOK', 'CD', 'CD_SOFTWARE', 'CD_MUSIC', 'DVD', 'MOVIE', 'AUDIOBOOK', 'PACKAGE',
         'GAME_CONSOLE', 'EBOOK', 'SCORE_MUSIC', 'PACKAGE_BOOKS', 'UNKNOWN', 'NEWSPAPER',
         'BOARDGAME', 'SCHOOL_VERSION', 'MAP', 'BLURAY', 'AUDIO_CASSETTE', 'ART', 'MAGAZINE',
         'GAME_CONSOLE_WII', 'GAME_CONSOLE_NINTENDO', 'GAME_CONSOLE_PLAYSTATION',
@@ -289,7 +289,7 @@ APIS = {
     'iopac'       : IOpac,
     'pica'        : Pica,
     'adis'        : Adis,
-	'webopac.net' : WebOpacNet,
+    'webopac.net' : WebOpacNet,
 }
 
 data = {}
@@ -311,18 +311,17 @@ if __name__ == '__main__':
 
     geo = loadGeoPossibilities(data['city'])
     for k, g in enumerate(geo):
-        print("[%d]    %s" % (k+1, g[0]))
+        print("[%d]    %s" % (k + 1, g[0]))
 
     print("Welche dieser Positionen trifft am besten zu? 0 für keine.")
     print("Nummer", end=" ")
     geokey = int(getInput(default="0"))
     if geokey > 0:
-        data['geo'] = geo[geokey-1][1]
+        data['geo'] = geo[geokey - 1][1]
 
-    print("In welchem Land ist die Bibliothek?")
+    print("In welchem Land liegt die Bibliothek?")
+    data['country'] = getInput(required=True, default="Deutschland")
 
-    data['country'] = getInput(default="Deutschland")
-	
     print("In welchem Bundesland ist die Bibliothek?")
     print("In Deutschland und Österreich werden Bundesländer benutzt, in der Schweiz Kantone.")
 
@@ -364,5 +363,5 @@ if __name__ == '__main__':
     ident = getInput(required=True)
 
     print(json.dumps(data, indent=4, sort_keys=True), end="\n\n")
-    json.dump(data, open(LIBDIR+ident+'.json', 'w'), sort_keys=True, indent=4)
-    print("In Datei %s geschrieben." % (LIBDIR+ident+'.json'))
+    json.dump(data, open(LIBDIR + ident + '.json', 'w'), sort_keys=True, indent=4)
+    print("In Datei %s geschrieben." % (LIBDIR + ident + '.json'))

@@ -23,10 +23,11 @@ package de.geeksfactory.opacclient.frontend;
 
 import java.util.List;
 
-import com.commonsware.cwac.endless.EndlessAdapter;
-
 import android.content.Context;
 import android.view.View;
+
+import com.commonsware.cwac.endless.EndlessAdapter;
+
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;

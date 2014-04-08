@@ -22,9 +22,8 @@
 package de.geeksfactory.opacclient.storage;
 
 import java.util.List;
+import java.util.Map;
 
-import android.content.ContentValues;
-import android.database.SQLException;
 import de.geeksfactory.opacclient.apis.OpacApi;
 
 /**
@@ -61,7 +60,7 @@ public interface MetaDataSource {
 	 * @throws SQLException
 	 *             on failure
 	 */
-	public void open() throws SQLException;
+	public void open() throws Exception;
 
 	/**
 	 * Close the connection to the data source. Implementations might require
@@ -101,7 +100,7 @@ public interface MetaDataSource {
 	 *            specific to your OpacApi implementation.
 	 * @return A list of datasets, stored in <code>ContentValues</code> objects.
 	 */
-	public List<ContentValues> getMeta(String library, String type);
+	public List<Map<String, String>> getMeta(String library, String type);
 
 	/**
 	 * Checks whether there is meta data present for a specific library.

@@ -27,7 +27,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.acra.ACRA;
 import org.acra.ACRAConfiguration;
@@ -106,9 +109,9 @@ public class OpacClient extends Application {
 //		return SearchResultsActivity.class;
 //	}
 
-	public void startSearch(Activity caller, Bundle query) {
+	public void startSearch(Activity caller, Map<String, String> query) {
 		Intent myIntent = new Intent(caller, SearchResultListActivity.class);
-		myIntent.putExtra("query", query);
+		myIntent.putExtra("query", mapToBundle(query));
 		caller.startActivity(myIntent);
 	}
 
@@ -314,6 +317,22 @@ public class OpacClient extends Application {
 
 	public Class getMainActivity() {
 		return MainActivity.class;
+	}
+	
+	public static Bundle mapToBundle(Map<String, String> map) {
+		Bundle b = new Bundle();
+		for(Entry<String, String> e : map.entrySet()) {
+			b.putString(e.getKey(), e.getValue());
+		}
+		return b;
+	}
+
+	public static Map<String, String> bundleToMap(Bundle bundle) {
+		Map<String, String> map = new HashMap<String, String>();
+		for(String e : bundle.keySet()) {
+			map.put(e, (String) bundle.get(e));
+		}
+		return map;
 	}
 
 }

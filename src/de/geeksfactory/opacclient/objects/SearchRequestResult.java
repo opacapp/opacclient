@@ -23,8 +23,6 @@ package de.geeksfactory.opacclient.objects;
 
 import java.util.List;
 
-import android.os.Bundle;
-
 /**
  * Object representing a search result
  * 
@@ -102,7 +100,7 @@ public class SearchRequestResult {
 	 * with the options "book", "cd" or "movie" or "Language" with "German" or
 	 * "English". If a library does support this, this returns the filters
 	 * available for the search results last displayed by
-	 * {@link de.geeksfactory.opacclient.apis.OpacApi#search(Bundle)}. If a
+	 * {@link de.geeksfactory.opacclient.apis.OpacApi#search(Map<String, String>)}. If a
 	 * library does not, this is <code>null</code> .
 	 * 
 	 * @return List of filters available
@@ -119,7 +117,7 @@ public class SearchRequestResult {
 	 * with the options "book", "cd" or "movie" or "Language" with "German" or
 	 * "English". If your library does support this, this must return the
 	 * filters available for the search results last displayed by
-	 * {@link de.geeksfactory.opacclient.apis.OpacApi#search(Bundle)}. If your
+	 * {@link de.geeksfactory.opacclient.apis.OpacApi#search(Map<String, String>)}. If your
 	 * library does not, just set <code>null</code>.
 	 * 
 	 * @param filters

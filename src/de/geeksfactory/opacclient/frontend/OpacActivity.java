@@ -24,13 +24,15 @@ package de.geeksfactory.opacclient.frontend;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
+
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.widget.DrawerLayout;
 import org.json.JSONException;
+
 import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -412,9 +414,9 @@ public abstract class OpacActivity extends Activity {
 		void accountSelected(Account account);
 	}
 
-	public class MetaAdapter extends ArrayAdapter<ContentValues> {
+	public class MetaAdapter extends ArrayAdapter<Map<String, String>> {
 
-		private List<ContentValues> objects;
+		private List<Map<String, String>> objects;
 		private int spinneritem;
 
 		@Override
@@ -431,7 +433,7 @@ public abstract class OpacActivity extends Activity {
 				return view;
 			}
 
-			ContentValues item = objects.get(position);
+			Map<String, String> item = objects.get(position);
 
 			if (contentView == null) {
 				LayoutInflater layoutInflater = (LayoutInflater) getContext()
@@ -444,7 +446,7 @@ public abstract class OpacActivity extends Activity {
 			}
 
 			TextView tvText = (TextView) view.findViewById(android.R.id.text1);
-			tvText.setText(item.getAsString("value"));
+			tvText.setText(item.get("value"));
 			return view;
 		}
 
@@ -459,7 +461,7 @@ public abstract class OpacActivity extends Activity {
 				return view;
 			}
 
-			ContentValues item = objects.get(position);
+			Map<String, String> item = objects.get(position);
 
 			if (contentView == null) {
 				LayoutInflater layoutInflater = (LayoutInflater) getContext()
@@ -470,11 +472,11 @@ public abstract class OpacActivity extends Activity {
 			}
 
 			TextView tvText = (TextView) view.findViewById(android.R.id.text1);
-			tvText.setText(item.getAsString("value"));
+			tvText.setText(item.get("value"));
 			return view;
 		}
 
-		public MetaAdapter(Context context, List<ContentValues> objects,
+		public MetaAdapter(Context context, List<Map<String, String>> objects,
 				int spinneritem) {
 			super(context, R.layout.simple_spinner_item, objects);
 			this.objects = objects;

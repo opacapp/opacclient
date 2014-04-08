@@ -126,11 +126,23 @@
                 android:textStyle="bold"
                 android:visibility="gone" />
 
+            <TextView
+                android:id="@+id/tvWarning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvError"
+                android:background="@color/warning"
+                android:gravity="center"
+                android:padding="5dp"
+                android:textColor="@color/warning_fg"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
             <LinearLayout
                 android:id="@+id/llCols"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tvError"
+                android:layout_below="@id/tvWarning"
                 android:baselineAligned="false"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/tablet_padding"

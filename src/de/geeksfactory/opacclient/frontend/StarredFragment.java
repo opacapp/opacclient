@@ -21,7 +21,9 @@
  */
 package de.geeksfactory.opacclient.frontend;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
@@ -67,14 +69,15 @@ public class StarredFragment extends Fragment implements
 	private Callback mCallback;
 	private ListView listView;
 	private int mActivatedPosition = ListView.INVALID_POSITION;
-	
+
 	public interface Callback {
 		public void showDetail(String mNr);
 	}
 
 	@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+
 		setHasOptionsMenu(true);
 
 		view = inflater.inflate(R.layout.fragment_starred);
@@ -95,10 +98,9 @@ public class StarredFragment extends Fragment implements
 
 					SharedPreferences sp = PreferenceManager
 							.getDefaultSharedPreferences(getActivity());
-					Bundle query = new Bundle();
-					query.putString(OpacApi.KEY_SEARCH_QUERY_TITLE,
-							item.getTitle());
-					query.putString(
+					Map<String, String> query = new HashMap<String, String>();
+					query.put(OpacApi.KEY_SEARCH_QUERY_TITLE, item.getTitle());
+					query.put(
 							OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH,
 							sp.getString(OpacClient.PREF_HOME_BRANCH_PREFIX
 									+ app.getAccount().getId(), null));
@@ -111,24 +113,25 @@ public class StarredFragment extends Fragment implements
 		listView.setClickable(true);
 		listView.setTextFilterEnabled(true);
 
-		getSupportActivity().getSupportLoaderManager().initLoader(0, null, this);
+		getSupportActivity().getSupportLoaderManager()
+				.initLoader(0, null, this);
 		listView.setAdapter(adapter);
-		
+
 		// Restore the previously serialized activated item position.
 		if (savedInstanceState != null
 				&& savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
 			setActivatedPosition(savedInstanceState
 					.getInt(STATE_ACTIVATED_POSITION));
 		}
-		
-		setActivateOnItemClick(
-				((OpacActivity) getActivity()).isTablet());
-		
+
+		setActivateOnItemClick(((OpacActivity) getActivity()).isTablet());
+
 		return view;
 	}
-    
+
 	@Override
-	public void onCreateOptionsMenu(android.view.Menu menu, MenuInflater inflater) {
+	public void onCreateOptionsMenu(android.view.Menu menu,
+			MenuInflater inflater) {
 		inflater.inflate(R.menu.activity_starred, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
@@ -228,18 +231,18 @@ public class StarredFragment extends Fragment implements
 		startActivity(Intent.createChooser(intent,
 				getResources().getString(R.string.share)));
 	}
-	
+
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			mCallback = (Callback) activity;			
+			mCallback = (Callback) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement SearchFragment.Callback");
 		}
 	}
-	
+
 	@Override
 	public void onResume() {
 		getActivity().getSupportLoaderManager().restartLoader(0, null, this);
@@ -253,9 +256,8 @@ public class StarredFragment extends Fragment implements
 	private void setActivateOnItemClick(boolean activateOnItemClick) {
 		// When setting CHOICE_MODE_SINGLE, ListView will automatically
 		// give items the 'activated' state when touched.
-		listView.setChoiceMode(
-				activateOnItemClick ? AbsListView.CHOICE_MODE_SINGLE
-						: AbsListView.CHOICE_MODE_NONE);
+		listView.setChoiceMode(activateOnItemClick ? AbsListView.CHOICE_MODE_SINGLE
+				: AbsListView.CHOICE_MODE_NONE);
 	}
 
 	private void setActivatedPosition(int position) {
@@ -267,7 +269,7 @@ public class StarredFragment extends Fragment implements
 
 		mActivatedPosition = position;
 	}
-	
+
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
