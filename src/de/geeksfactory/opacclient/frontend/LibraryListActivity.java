@@ -30,7 +30,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -413,24 +412,78 @@ public class LibraryListActivity extends Activity {
 		}
 	}
 	
+	private static class LibrarySearchResult implements Comparable<LibrarySearchResult> {
+		private Library library;
+		private int rank;
+		
+		public LibrarySearchResult(Library library, int rank) {
+			this.library = library;
+			this.rank = rank;
+		}
+		
+		public Library getLibrary() {
+			return library;
+		}
+		
+		public int getRank() {
+			return rank;
+		}
+
+		@Override
+		public int hashCode() {
+			return library.hashCode();
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if(obj instanceof LibrarySearchResult)
+				return library.equals(((LibrarySearchResult) obj).getLibrary());
+			else
+				return false;
+		}
+
+		@Override
+		public int compareTo(LibrarySearchResult another) {
+			if (another.rank == rank)
+				return library.getCity().compareTo(another.getLibrary().getCity());
+			else if (another.rank < rank)
+				return -1;
+			else
+				return 1;
+		}
+		
+		
+	}
+		
 	public void search(String query) {
 		LibraryListFragment fragment = new LocatedLibraryListFragment();
 		Bundle args = new Bundle();
 		args.putInt("level", LEVEL_LIBRARY);
 		fragment.setArguments(args);
-		Set<Library> data = new HashSet<Library>();
+		Set<LibrarySearchResult> data = new HashSet<LibrarySearchResult>();
 		query = query.toLowerCase(Locale.GERMAN);
 		for (Library lib : libraries) {
-			if (lib.getCity().toLowerCase(Locale.GERMAN).contains(query)
-					|| lib.getTitle().toLowerCase(Locale.GERMAN).contains(query)
-					|| lib.getState().toLowerCase(Locale.GERMAN).contains(query)
-					|| lib.getCountry().toLowerCase(Locale.GERMAN).contains(query)) {
-				data.add(lib);
+			int rank = 0;
+			if (lib.getCity().toLowerCase(Locale.GERMAN).contains(query))
+				rank += 3;
+			if (lib.getTitle().toLowerCase(Locale.GERMAN).contains(query))
+				rank += 3;
+			if (lib.getState().toLowerCase(Locale.GERMAN).contains(query))
+				rank += 2;
+			if (lib.getCountry().toLowerCase(Locale.GERMAN).contains(query))
+				rank += 1;
+			if (rank > 0) {
+				data.add(new LibrarySearchResult(lib, rank));
 			}
 		}
-		List<Library> list = new ArrayList<Library>(data);
+		List<LibrarySearchResult> list = new ArrayList<LibrarySearchResult>(data);
+		Collections.sort(list);
+		List<Library> libraries = new ArrayList<Library>();
+		for(LibrarySearchResult sr : list) {
+			libraries.add(sr.getLibrary());
+		}
 		LibraryAdapter adapter = new LibraryAdapter(this,
-				R.layout.listitem_library, R.id.tvTitle, list);
+				R.layout.listitem_library, R.id.tvTitle, libraries);
 		fragment.setListAdapter(adapter);
 		if (findViewById(R.id.llFragments) != null) {
 			fragment4 = fragment;
