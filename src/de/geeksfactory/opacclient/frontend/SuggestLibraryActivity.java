@@ -98,7 +98,7 @@ public class SuggestLibraryActivity extends Activity {
 				Uri uri = Uri.parse(uriText);
 
 				send.setData(uri);
-				startActivity(Intent.createChooser(send, "Send mail..."));
+				startActivity(Intent.createChooser(send, getResources().getString(R.string.select_mail_app)));
 				finish();
 			}
 			

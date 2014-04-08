@@ -253,5 +253,6 @@
     <string name="opac_url">Adresse des Online-Katalogs</string>
     <string name="comment">Kommentar</string>
     <string name="send">Senden</string>
+    <string name="select_mail_app">E-Mail-App auswählen...</string>
 
 </resources>
