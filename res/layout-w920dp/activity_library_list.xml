@@ -36,6 +36,7 @@
         android:id="@+id/llFragments"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_above="@+id/rlSuggestLibrary"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/llLocate"
         android:baselineAligned="true"
@@ -69,5 +70,23 @@
             android:layout_weight="1" >
         </FrameLayout>
     </LinearLayout>
+    
+     <RelativeLayout
+        android:id="@+id/rlSuggestLibrary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="8dp" >
+
+        <TextView
+            android:id="@+id/tvSuggestLibrary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/suggest_library"
+            android:background="@drawable/suggest_library_background"
+            android:padding="8dp" />
+
+    </RelativeLayout>
 
 </RelativeLayout>
