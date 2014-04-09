@@ -278,7 +278,7 @@ public class Library implements Comparable<Library> {
 	@Override
 	public int compareTo(Library arg0) {
 		Collator deCollator = Collator.getInstance(Locale.GERMAN);
-		deCollator.setStrength(Collator.PRIMARY);
+		deCollator.setStrength(Collator.TERTIARY);
 
 		int g = deCollator.compare(country, arg0.getCountry());
 		if (g == 0) {

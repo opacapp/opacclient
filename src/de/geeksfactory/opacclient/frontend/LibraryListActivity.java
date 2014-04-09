@@ -1,6 +1,7 @@
 package de.geeksfactory.opacclient.frontend;
 
 import java.io.IOException;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -277,7 +278,9 @@ public class LibraryListActivity extends Activity {
 			}
 		}
 		List<String> list = new ArrayList<String>(data);
-		Collections.sort(list);
+		Collator deCollator = Collator.getInstance(Locale.GERMAN);
+		deCollator.setStrength(Collator.TERTIARY);
+		Collections.sort(list, deCollator);
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				R.layout.listitem_simple, R.id.text1,
 				list.toArray(new String[] {}));
@@ -324,7 +327,9 @@ public class LibraryListActivity extends Activity {
 		if (data.size() == 1) {
 			showListCities(country, list.get(0));
 		}
-		Collections.sort(list);
+		Collator deCollator = Collator.getInstance(Locale.GERMAN);
+		deCollator.setStrength(Collator.TERTIARY);
+		Collections.sort(list, deCollator);
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				R.layout.listitem_simple, R.id.text1, list);
 		fragment.setListAdapter(adapter);
@@ -366,7 +371,9 @@ public class LibraryListActivity extends Activity {
 		if (data.size() == 1 && list.get(0).equals(state)) { // City states
 			showListLibraries(country, state, list.get(0));
 		}
-		Collections.sort(list);
+		Collator deCollator = Collator.getInstance(Locale.GERMAN);
+		deCollator.setStrength(Collator.TERTIARY);
+		Collections.sort(list, deCollator);
 		ArrayAdapter<String> adapter = new CityAdapter(this,
 				R.layout.listitem_simple, R.id.text1, list);
 		fragment.setListAdapter(adapter);
