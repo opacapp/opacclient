@@ -43,26 +43,26 @@ public class SearchResultListFragment extends ListFragment {
 	 * The serialization (saved instance state) Bundle key representing the
 	 * activated item position. Only used on tablets.
 	 */
-	private static final String STATE_ACTIVATED_POSITION = "activated_position";
+	protected static final String STATE_ACTIVATED_POSITION = "activated_position";
 
 	/**
 	 * The fragment's current callback object, which is notified of list item
 	 * clicks.
 	 */
-	private Callbacks mCallbacks = sDummyCallbacks;
+	protected Callbacks mCallbacks = sDummyCallbacks;
 
 	/**
 	 * The current activated item position. Only used on tablets.
 	 */
-	private int mActivatedPosition = ListView.INVALID_POSITION;
+	protected int mActivatedPosition = ListView.INVALID_POSITION;
 
-	private SearchRequestResult searchresult;
+	protected SearchRequestResult searchresult;
 
 	public ResultsAdapterEndless adapter;
 	
-	private OpacClient app;
+	protected OpacClient app;
 	
-	private int lastLoadedPage;
+	protected int lastLoadedPage;
 	
 	protected SearchStartTask st;
 
@@ -110,8 +110,8 @@ public class SearchResultListFragment extends ListFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceSate) {
-	
 		setRetainInstance(true);
+		setHasOptionsMenu(true);
 		
 		return inflater.inflate(R.layout.fragment_searchresult_list);
 	}
@@ -355,7 +355,7 @@ public class SearchResultListFragment extends ListFragment {
 		}
 	}
 	
-	protected void loaded(SearchRequestResult searchresult) {
+	public void loaded(SearchRequestResult searchresult) {
 		try {
 			setListShown(true);
 			setSearchResult(searchresult);
