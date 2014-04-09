@@ -54,7 +54,8 @@ public class SearchResultListActivity extends OpacActivity implements
 		// Show the Up button in the action bar.
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		setup();
+		if(savedInstanceState == null)
+			setup();
 
 		if (findViewById(R.id.searchresult_detail_container) != null) {
 			// The detail container view will be present only in the
