@@ -1,5 +1,7 @@
 package de.geeksfactory.opacclient.frontend;
 
+import java.io.InterruptedIOException;
+
 import org.acra.ACRA;
 
 import android.content.Intent;
@@ -164,6 +166,8 @@ public class SearchResultListActivity extends OpacActivity implements
 				exception = e;
 				e.printStackTrace();
 			} catch (java.net.SocketException e) {
+				exception = e;
+			} catch (InterruptedIOException e) {
 				exception = e;
 			} catch (OpacErrorException e) {
 				exception = e;

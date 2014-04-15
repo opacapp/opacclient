@@ -1,5 +1,6 @@
 package de.geeksfactory.opacclient.frontend;
 
+import java.io.InterruptedIOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.List;
@@ -299,6 +300,9 @@ public class SearchResultDetailFragment extends Fragment {
 				success = false;
 				e.printStackTrace();
 			} catch (java.net.SocketException e) {
+				success = false;
+				e.printStackTrace();
+			} catch (InterruptedIOException e) {
 				success = false;
 				e.printStackTrace();
 			} catch (Exception e) {
@@ -619,6 +623,8 @@ public class SearchResultDetailFragment extends Fragment {
 				publishProgress(e, "ioerror");
 			} catch (java.net.SocketException e) {
 				e.printStackTrace();
+			} catch (InterruptedIOException e) {
+				e.printStackTrace();
 			} catch (Exception e) {
 				ACRA.getErrorReporter().handleException(e);
 			}
@@ -670,6 +676,8 @@ public class SearchResultDetailFragment extends Fragment {
 			} catch (java.net.UnknownHostException e) {
 				publishProgress(e, "ioerror");
 			} catch (java.net.SocketException e) {
+				e.printStackTrace();
+			} catch (InterruptedIOException e) {
 				e.printStackTrace();
 			} catch (Exception e) {
 				ACRA.getErrorReporter().handleException(e);
@@ -1265,6 +1273,8 @@ public class SearchResultDetailFragment extends Fragment {
 					ACRA.getErrorReporter().handleException(
 							new Throwable("No ID supplied"));
 			} catch (java.net.SocketException e) {
+				e.printStackTrace();
+			} catch (InterruptedIOException e) {
 				e.printStackTrace();
 			} catch (java.net.UnknownHostException e) {
 				e.printStackTrace();

@@ -1,5 +1,6 @@
 package de.geeksfactory.opacclient.frontend;
 
+import java.io.InterruptedIOException;
 import java.util.Map;
 
 import org.acra.ACRA;
@@ -314,6 +315,8 @@ public class SearchResultListFragment extends ListFragment {
 			} catch (java.net.SocketException e) {
 				exception = e;
 			} catch (OpacErrorException e) {
+				exception = e;
+			} catch (InterruptedIOException e) {
 				exception = e;
 			} catch (Exception e) {
 				exception = e;

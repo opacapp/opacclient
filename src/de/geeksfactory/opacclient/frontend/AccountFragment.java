@@ -22,6 +22,7 @@
 package de.geeksfactory.opacclient.frontend;
 
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -632,6 +633,8 @@ public class AccountFragment extends Fragment implements
 			} catch (java.net.UnknownHostException e) {
 				exception = e;
 			} catch (java.net.SocketException e) {
+				exception = e;
+			} catch (InterruptedIOException e) {
 				exception = e;
 			} catch (OpacErrorException e) {
 				exception = e;
@@ -1545,7 +1548,7 @@ public class AccountFragment extends Fragment implements
 				return view;
 			}
 
-			ContentValues item = ((ContentValues) objects[position]);
+			Map<String, String> item = ((Map<String, String>) objects[position]);
 
 			if (contentView == null) {
 				LayoutInflater layoutInflater = (LayoutInflater) getContext()
@@ -1560,17 +1563,15 @@ public class AccountFragment extends Fragment implements
 			tvAuthor.setVisibility(item
 					.containsKey(ProlongAllResult.KEY_LINE_AUTHOR) ? View.VISIBLE
 					: View.GONE);
-			tvAuthor.setText(item.getAsString(ProlongAllResult.KEY_LINE_AUTHOR));
+			tvAuthor.setText(item.get(ProlongAllResult.KEY_LINE_AUTHOR));
 			TextView tvTitle = (TextView) view.findViewById(R.id.tvTitle);
-			tvTitle.setText(item.getAsString(ProlongAllResult.KEY_LINE_TITLE));
+			tvTitle.setText(item.get(ProlongAllResult.KEY_LINE_TITLE));
 			TextView tvOld = (TextView) view.findViewById(R.id.tvOld);
-			tvOld.setText(item
-					.getAsString(ProlongAllResult.KEY_LINE_OLD_RETURNDATE));
+			tvOld.setText(item.get(ProlongAllResult.KEY_LINE_OLD_RETURNDATE));
 			TextView tvNew = (TextView) view.findViewById(R.id.tvNew);
-			tvNew.setText(item
-					.getAsString(ProlongAllResult.KEY_LINE_NEW_RETURNDATE));
+			tvNew.setText(item.get(ProlongAllResult.KEY_LINE_NEW_RETURNDATE));
 			TextView tvMsg = (TextView) view.findViewById(R.id.tvMsg);
-			tvMsg.setText(item.getAsString(ProlongAllResult.KEY_LINE_MESSAGE));
+			tvMsg.setText(item.get(ProlongAllResult.KEY_LINE_MESSAGE));
 			return view;
 		}
 
