@@ -659,7 +659,8 @@ public class AccountFragment extends Fragment implements
 	}
 
 	public void show_connectivity_error(Exception e) {
-		e.printStackTrace();
+		if (e != null)
+			e.printStackTrace();
 		if (e instanceof OpacErrorException) {
 			AccountDataSource adatasource = new AccountDataSource(getActivity());
 			adatasource.open();

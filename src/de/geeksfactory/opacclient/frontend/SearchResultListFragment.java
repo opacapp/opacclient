@@ -142,7 +142,7 @@ public class SearchResultListFragment extends ListFragment {
 
 		if (savedInstanceState == null && searchresult == null) {
 			performsearch();
-		} else {
+		} else if(searchresult != null) {
 			if (searchresult.getTotal_result_count() >= 0)
 				getSupportActionBar().setSubtitle(
 						getString(R.string.result_number,
