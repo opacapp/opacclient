@@ -21,6 +21,8 @@
  */
 package de.geeksfactory.opacclient.frontend;
 
+import java.io.InterruptedIOException;
+
 import org.acra.ACRA;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
@@ -78,6 +80,8 @@ public class WelcomeActivity extends Activity {
 			} catch (java.net.UnknownHostException e) {
 				e.printStackTrace();
 			} catch (java.net.SocketException e) {
+				e.printStackTrace();
+			} catch (InterruptedIOException e) {
 				e.printStackTrace();
 			} catch (Exception e) {
 				ACRA.getErrorReporter().handleException(e);

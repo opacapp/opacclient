@@ -1,5 +1,7 @@
 package de.geeksfactory.opacclient.frontend;
 
+import java.io.InterruptedIOException;
+
 import org.acra.ACRA;
 
 import android.content.Intent;
@@ -54,10 +56,8 @@ public class SearchResultListActivity extends OpacActivity implements
 		// Show the Up button in the action bar.
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		listFragment = SearchResultListFragment.getInstance(
-				getIntent().getBundleExtra("query"));
-		getSupportFragmentManager().beginTransaction()
-			.replace(R.id.searchresult_list_container, listFragment).commit();
+		if(savedInstanceState == null)
+			setup();
 
 		if (findViewById(R.id.searchresult_detail_container) != null) {
 			// The detail container view will be present only in the
@@ -66,6 +66,14 @@ public class SearchResultListActivity extends OpacActivity implements
 			// activity should be in two-pane mode.
 			mTwoPane = true;
 		}
+	}
+
+	protected void setup() {
+		listFragment = SearchResultListFragment.getInstance(getIntent()
+				.getBundleExtra("query"));
+		getSupportFragmentManager().beginTransaction()
+				.replace(R.id.searchresult_list_container, listFragment)
+				.commit();
 	}
 
 	@Override
@@ -91,15 +99,15 @@ public class SearchResultListActivity extends OpacActivity implements
 	 */
 	@Override
 	public void onItemSelected(int nr, String id, int pageToLoad) {
-		if((app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING) == 0 &&
-				pageToLoad != listFragment.getLastLoadedPage()) {
+		if ((app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING) == 0
+				&& pageToLoad != listFragment.getLastLoadedPage()) {
 			new ReloadOldPageTask().execute(app, pageToLoad, nr, id);
 		} else {
 			showDetail(nr, id);
 		}
 	}
-	
-	public void showDetail(int nr, String id) {		
+
+	public void showDetail(int nr, String id) {
 		if (mTwoPane) {
 			// In two-pane mode, show the detail view in this activity by
 			// adding or replacing the detail fragment using a
@@ -138,18 +146,18 @@ public class SearchResultListActivity extends OpacActivity implements
 		getSupportFragmentManager().beginTransaction().remove(detailFragment)
 				.commit();
 	}
-	
+
 	public class ReloadOldPageTask extends OpacTask<SearchRequestResult> {
 		int nr;
 		String id;
 		Integer page;
 		Exception exception;
-		
+
 		@Override
 		protected void onPreExecute() {
 			setProgressBarIndeterminateVisibility(true);
 		}
-		
+
 		@Override
 		protected SearchRequestResult doInBackground(Object... arg0) {
 			page = (Integer) arg0[1];
@@ -165,6 +173,8 @@ public class SearchResultListActivity extends OpacActivity implements
 				e.printStackTrace();
 			} catch (java.net.SocketException e) {
 				exception = e;
+			} catch (InterruptedIOException e) {
+				exception = e;
 			} catch (OpacErrorException e) {
 				exception = e;
 			} catch (Exception e) {
@@ -174,7 +184,7 @@ public class SearchResultListActivity extends OpacActivity implements
 
 			return null;
 		}
-		
+
 		@Override
 		protected void onPostExecute(SearchRequestResult result) {
 			setProgressBarIndeterminateVisibility(false);
@@ -188,7 +198,7 @@ public class SearchResultListActivity extends OpacActivity implements
 				else
 					listFragment.showConnectivityError();
 			} else {
-				//Everything ran correctly, show Detail
+				// Everything ran correctly, show Detail
 				listFragment.setLastLoadedPage(page);
 				showDetail(nr, id);
 			}

@@ -3,6 +3,16 @@
     "city": "W\u00fcrzburg", 
     "country": "Deutschland", 
     "data": {
+        "accounttable": {
+            "author": 8, 
+            "barcode": 4, 
+            "homebranch": -1, 
+            "lendingbranch": -1, 
+            "prolongurl": 4, 
+            "returndate": 3, 
+            "status": 6, 
+            "title": 8
+        }, 
         "baseurl": "http://217.7.118.50", 
         "copiestable": {
             "barcode": 3, 

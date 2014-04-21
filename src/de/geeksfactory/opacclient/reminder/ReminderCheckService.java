@@ -22,6 +22,7 @@
 package de.geeksfactory.opacclient.reminder;
 
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.net.SocketException;
 import java.util.Date;
 import java.util.List;
@@ -192,6 +193,8 @@ public class ReminderCheckService extends Service {
 				} catch (ClientProtocolException e) {
 					e.printStackTrace();
 				} catch (SocketException e) {
+					e.printStackTrace();
+				} catch (InterruptedIOException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
 					e.printStackTrace();

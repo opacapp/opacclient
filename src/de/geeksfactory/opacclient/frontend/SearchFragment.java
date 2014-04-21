@@ -1,5 +1,6 @@
 package de.geeksfactory.opacclient.frontend;
 
+import java.io.InterruptedIOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -472,6 +473,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 			} catch (java.net.UnknownHostException e) {
 				success = false;
 			} catch (java.net.SocketException e) {
+				success = false;
+			} catch (InterruptedIOException e) {
 				success = false;
 			} catch (Exception e) {
 				ACRA.getErrorReporter().handleException(e);

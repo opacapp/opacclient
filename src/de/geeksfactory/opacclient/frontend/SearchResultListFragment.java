@@ -1,5 +1,6 @@
 package de.geeksfactory.opacclient.frontend;
 
+import java.io.InterruptedIOException;
 import java.util.Map;
 
 import org.acra.ACRA;
@@ -43,27 +44,27 @@ public class SearchResultListFragment extends ListFragment {
 	 * The serialization (saved instance state) Bundle key representing the
 	 * activated item position. Only used on tablets.
 	 */
-	private static final String STATE_ACTIVATED_POSITION = "activated_position";
+	protected static final String STATE_ACTIVATED_POSITION = "activated_position";
 
 	/**
 	 * The fragment's current callback object, which is notified of list item
 	 * clicks.
 	 */
-	private Callbacks mCallbacks = sDummyCallbacks;
+	protected Callbacks mCallbacks = sDummyCallbacks;
 
 	/**
 	 * The current activated item position. Only used on tablets.
 	 */
-	private int mActivatedPosition = ListView.INVALID_POSITION;
+	protected int mActivatedPosition = ListView.INVALID_POSITION;
 
-	private SearchRequestResult searchresult;
+	protected SearchRequestResult searchresult;
 
 	public ResultsAdapterEndless adapter;
-	
-	private OpacClient app;
-	
-	private int lastLoadedPage;
-	
+
+	protected OpacClient app;
+
+	protected int lastLoadedPage;
+
 	protected SearchStartTask st;
 
 	/**
@@ -74,9 +75,11 @@ public class SearchResultListFragment extends ListFragment {
 	public interface Callbacks {
 		/**
 		 * Callback for when an item has been selected.
-		 * @param nr 
+		 * 
+		 * @param nr
 		 */
 		public void onItemSelected(int nr, String id, int pageToLoad);
+
 		public boolean isTwoPane();
 	}
 
@@ -88,6 +91,7 @@ public class SearchResultListFragment extends ListFragment {
 		@Override
 		public void onItemSelected(int nr, String id, int pageToLoad) {
 		}
+
 		public boolean isTwoPane() {
 			return false;
 		}
@@ -99,7 +103,7 @@ public class SearchResultListFragment extends ListFragment {
 	 */
 	public SearchResultListFragment() {
 	}
-	
+
 	public static SearchResultListFragment getInstance(Bundle query) {
 		SearchResultListFragment frag = new SearchResultListFragment();
 		Bundle args = new Bundle();
@@ -109,22 +113,24 @@ public class SearchResultListFragment extends ListFragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceSate) {
-	
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceSate) {
 		setRetainInstance(true);
-		
+		setHasOptionsMenu(true);
+
 		return inflater.inflate(R.layout.fragment_searchresult_list);
 	}
-	
+
 	public void performsearch() {
 		st = new SearchStartTask();
-		st.execute(app, OpacClient.bundleToMap(getArguments().getBundle("query")));
+		st.execute(app,
+				OpacClient.bundleToMap(getArguments().getBundle("query")));
 	}
-	
+
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-			
+
 		setActivateOnItemClick(mCallbacks.isTwoPane());
 
 		// Restore the previously serialized activated item position.
@@ -133,9 +139,14 @@ public class SearchResultListFragment extends ListFragment {
 			setActivatedPosition(savedInstanceState
 					.getInt(STATE_ACTIVATED_POSITION));
 		}
-		
-		if (savedInstanceState == null) {
+
+		if (savedInstanceState == null && searchresult == null) {
 			performsearch();
+		} else if(searchresult != null) {
+			if (searchresult.getTotal_result_count() >= 0)
+				getSupportActionBar().setSubtitle(
+						getString(R.string.result_number,
+								searchresult.getTotal_result_count()));
 		}
 	}
 
@@ -168,10 +179,10 @@ public class SearchResultListFragment extends ListFragment {
 
 		// Notify the active callbacks interface (the activity, if the
 		// fragment is attached to one) that an item has been selected.
-		mCallbacks.onItemSelected(searchresult.getResults().get(position).getNr(),
-				searchresult.getResults().get(position).getId(),
+		mCallbacks.onItemSelected(searchresult.getResults().get(position)
+				.getNr(), searchresult.getResults().get(position).getId(),
 				searchresult.getResults().get(position).getPage());
-		
+
 	}
 
 	@Override
@@ -206,7 +217,7 @@ public class SearchResultListFragment extends ListFragment {
 	}
 
 	public void setSearchResult(SearchRequestResult searchresult) {
-		for(SearchResult result:searchresult.getResults()) {
+		for (SearchResult result : searchresult.getResults()) {
 			result.setPage(searchresult.getPage_index());
 		}
 		if (searchresult.getTotal_result_count() >= 0)
@@ -219,71 +230,82 @@ public class SearchResultListFragment extends ListFragment {
 			setEmptyText(getString(R.string.no_results));
 		}
 		this.searchresult = searchresult;
-		adapter = new ResultsAdapterEndless(getActivity(), searchresult, new OnLoadMoreListener() {
-			@Override
-			public SearchRequestResult onLoadMore(int page) throws Exception {
-				SearchRequestResult res = app.getApi().searchGetPage(page);
-				setLastLoadedPage(page);
-				
-				return res;
-			}
+		adapter = new ResultsAdapterEndless(getActivity(), searchresult,
+				new OnLoadMoreListener() {
+					@Override
+					public SearchRequestResult onLoadMore(int page)
+							throws Exception {
+						SearchRequestResult res = app.getApi().searchGetPage(
+								page);
+						setLastLoadedPage(page);
 
-			@Override
-			public void onError(Exception e) {
-				if (e instanceof OpacErrorException) {
-					showConnectivityError(e.getMessage());
-				} else if (e instanceof NotReachableException) {
-					showConnectivityError(getResources()
-							.getString(R.string.connection_error_detail_nre));
-				} else {
-					showConnectivityError();
-				}
-			}
+						return res;
+					}
 
-			@Override
-			public void updateResultCount(int resultCount) {				
-				/* When IOpac finds more than 200 results, the real result count is
-				not known until the second page is loaded */
-				if (resultCount >= 0)
-					getSupportActionBar().setSubtitle(
-							getString(R.string.result_number,
-									resultCount));
-			}	
-		});
+					@Override
+					public void onError(Exception e) {
+						if (e instanceof OpacErrorException) {
+							showConnectivityError(e.getMessage());
+						} else if (e instanceof NotReachableException) {
+							showConnectivityError(getResources().getString(
+									R.string.connection_error_detail_nre));
+						} else {
+							showConnectivityError();
+						}
+					}
+
+					@Override
+					public void updateResultCount(int resultCount) {
+						/*
+						 * When IOpac finds more than 200 results, the real
+						 * result count is not known until the second page is
+						 * loaded
+						 */
+						if (resultCount >= 0)
+							getSupportActionBar().setSubtitle(
+									getString(R.string.result_number,
+											resultCount));
+					}
+				});
 		setListAdapter(adapter);
 		getListView().setTextFilterEnabled(true);
 		setListShown(true);
 	}
-	
+
 	public void showConnectivityError() {
 		showConnectivityError(null);
 	}
-	
+
 	public void showConnectivityError(String description) {
-		final LinearLayout progressContainer = (LinearLayout) getView().findViewById(R.id.progressContainer);
-		final FrameLayout errorView = (FrameLayout) getView().findViewById(R.id.error_view);
+		final LinearLayout progressContainer = (LinearLayout) getView()
+				.findViewById(R.id.progressContainer);
+		final FrameLayout errorView = (FrameLayout) getView().findViewById(
+				R.id.error_view);
 		errorView.removeAllViews();
-		View connError = getActivity().getLayoutInflater().inflate(R.layout.error_connectivity, errorView);
-		
+		View connError = getActivity().getLayoutInflater().inflate(
+				R.layout.error_connectivity, errorView);
+
 		((Button) connError.findViewById(R.id.btRetry))
-		.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				errorView.removeAllViews();
-				setListShown(false);
-				progressContainer.setVisibility(View.VISIBLE);
-				performsearch();
-			}
-		});
-		
-		if(description != null) {
+				.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						errorView.removeAllViews();
+						setListShown(false);
+						progressContainer.setVisibility(View.VISIBLE);
+						performsearch();
+					}
+				});
+
+		if (description != null) {
 			((TextView) connError.findViewById(R.id.tvErrBody))
-			.setText(description);
+					.setText(description);
 		}
-		
+
 		setListShown(false);
-		progressContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_out));
-		connError.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in));
+		progressContainer.startAnimation(AnimationUtils.loadAnimation(
+				getActivity(), R.anim.fade_out));
+		connError.startAnimation(AnimationUtils.loadAnimation(getActivity(),
+				R.anim.fade_in));
 		progressContainer.setVisibility(View.GONE);
 		connError.setVisibility(View.VISIBLE);
 	}
@@ -295,7 +317,7 @@ public class SearchResultListFragment extends ListFragment {
 	public void setLastLoadedPage(int lastLoadedPage) {
 		this.lastLoadedPage = lastLoadedPage;
 	}
-	
+
 	public class SearchStartTask extends OpacTask<SearchRequestResult> {
 		protected Exception exception;
 
@@ -315,6 +337,8 @@ public class SearchResultListFragment extends ListFragment {
 				exception = e;
 			} catch (OpacErrorException e) {
 				exception = e;
+			} catch (InterruptedIOException e) {
+				exception = e;
 			} catch (Exception e) {
 				exception = e;
 				ACRA.getErrorReporter().handleException(e);
@@ -333,8 +357,7 @@ public class SearchResultListFragment extends ListFragment {
 						// only one result
 						// is found but instead directly show the result
 						// details.
-						Intent intent = new Intent(
-								getActivity(),
+						Intent intent = new Intent(getActivity(),
 								SearchResultDetailActivity.class);
 						intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
 								(String) null);
@@ -345,8 +368,8 @@ public class SearchResultListFragment extends ListFragment {
 
 					showConnectivityError(exception.getMessage());
 				} else if (exception instanceof NotReachableException)
-					showConnectivityError(getResources()
-							.getString(R.string.connection_error_detail_nre));
+					showConnectivityError(getResources().getString(
+							R.string.connection_error_detail_nre));
 				else
 					showConnectivityError();
 			} else {
@@ -354,8 +377,8 @@ public class SearchResultListFragment extends ListFragment {
 			}
 		}
 	}
-	
-	protected void loaded(SearchRequestResult searchresult) {
+
+	public void loaded(SearchRequestResult searchresult) {
 		try {
 			setListShown(true);
 			setSearchResult(searchresult);
@@ -363,5 +386,5 @@ public class SearchResultListFragment extends ListFragment {
 			e.printStackTrace();
 		}
 	}
-	
+
 }
