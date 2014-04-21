@@ -1,0 +1,16 @@
+{
+    "api": "iopac", 
+    "city": "Eckernförde", 
+    "country": "Deutschland", 
+    "data": {
+        "baseurl": "http://iopac-eck.no-ip.biz/", 
+        "information": "http://www.stadtbuecherei-eckernfoerde.de/"
+    }, 
+    "geo": [
+        54.4709032,
+		9.8258719
+    ], 
+    "state": "Schleswig-Holstein", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Stadtb\u00fccherei"
+}
