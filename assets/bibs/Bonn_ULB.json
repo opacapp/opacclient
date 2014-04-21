@@ -1,0 +1,16 @@
+{
+    "api": "sisis",
+    "city": "Bonn",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://opac.ulb.uni-bonn.de:8080/webOPACClient",
+        "information": "http://www.ulb.uni-bonn.de/"
+    },
+    "geo": [
+        50.73743,
+        7.0982068
+    ],
+    "state": "Nordrhein-Westfalen",
+    "support": "Katalogsuche und Konto",
+    "title": "Uni- und Landesbibliothek"
+}
