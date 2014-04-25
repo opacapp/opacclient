@@ -1121,8 +1121,8 @@ public class SearchResultDetailFragment extends Fragment {
 										public void onClick(
 												DialogInterface dialog, int id) {
 											Intent intent = new Intent(
-													getActivity(),
-													MainActivity.class);
+													getActivity(), app
+															.getMainActivity());
 											intent.putExtra("fragment",
 													"account");
 											getActivity().startActivity(intent);
@@ -1205,9 +1205,8 @@ public class SearchResultDetailFragment extends Fragment {
 								public void onClick(DialogInterface dialog,
 										int id) {
 									adialog.dismiss();
-									Intent intent = new Intent(getActivity(),
-											AccountListActivity.class);
-									startActivity(intent);
+									MainPreferenceActivity
+											.openAccountList(getActivity());
 								}
 							});
 			adialog = builder.create();
