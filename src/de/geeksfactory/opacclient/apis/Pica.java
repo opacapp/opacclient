@@ -23,6 +23,7 @@ package de.geeksfactory.opacclient.apis;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
+import android.util.Log;
 import de.geeksfactory.opacclient.ISBNTools;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
@@ -692,9 +694,14 @@ public class Pica extends BaseApi implements OpacApi {
 			throw new OpacErrorException(doc.select(".cnt .alert").text());
 		}
 
-		pwEncoded = doc.select("a.tab0").attr("href");
-		pwEncoded = pwEncoded.substring(pwEncoded.indexOf("PW_ENC=") + 7);
-
+		String pwEncodedUrl = doc.select("a.tab0").attr("href");
+		Map<String, String> queryParams = getQueryParamsFirst(pwEncodedUrl);
+		if(queryParams.containsKey("BOR_PW_ENC")) {
+			pwEncoded = URLEncoder.encode(getQueryParamsFirst(pwEncodedUrl).get("BOR_PW_ENC"), "UTF-8");
+		} else {
+			throw new OpacErrorException("Fehler, URL war " + pwEncodedUrl);
+		}
+		
 		html = httpGet(https_url + "/loan/DB=" + db
 				+ "/USERINFO?ACT=UI_LOL&BOR_U=" + account.getName()
 				+ "&BOR_PW_ENC=" + pwEncoded, getDefaultEncoding());
