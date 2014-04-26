@@ -447,9 +447,9 @@ public class BiBer1992 extends BaseApi {
 																// valign="top">
 		Elements elem = null;
 		int rows_per_hit = 2;
-		if (trList.size() > 1
-				&& trList.get(0).select("input[type=checkbox]").size() > 0
-				&& trList.get(1).select("input[type=checkbox]").size() > 0) {
+		if (trList.size() == 1
+				|| (trList.get(0).select("input[type=checkbox]").size() > 0 && trList
+						.get(1).select("input[type=checkbox]").size() > 0)) {
 			rows_per_hit = 1;
 		}
 
