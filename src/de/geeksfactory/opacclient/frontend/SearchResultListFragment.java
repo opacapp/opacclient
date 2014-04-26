@@ -261,7 +261,7 @@ public class SearchResultListFragment extends ListFragment {
 						 * result count is not known until the second page is
 						 * loaded
 						 */
-						if (resultCount >= 0)
+						if (resultCount >= 0 && getActivity() != null)
 							getSupportActionBar().setSubtitle(
 									getString(R.string.result_number,
 											resultCount));
@@ -277,6 +277,8 @@ public class SearchResultListFragment extends ListFragment {
 	}
 
 	public void showConnectivityError(String description) {
+		if(getView() == null)
+			return;
 		final LinearLayout progressContainer = (LinearLayout) getView()
 				.findViewById(R.id.progressContainer);
 		final FrameLayout errorView = (FrameLayout) getView().findViewById(

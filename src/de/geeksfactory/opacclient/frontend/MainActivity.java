@@ -298,6 +298,8 @@ public class MainActivity extends OpacActivity implements
 	 */
 	@SuppressLint("NewApi")
 	public static String readPageToString(android.nfc.Tag tag) {
+		if(tag == null)
+			return null;
 		byte[] id = tag.getId();
 		android.nfc.tech.NfcV tech = android.nfc.tech.NfcV.get(tag);
 		byte[] readCmd = new byte[3 + id.length];

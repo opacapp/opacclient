@@ -105,9 +105,9 @@ public class OpacClient extends Application {
 		activity.finish();
 	}
 
-//	public Class getSearchResultsActivityClass() {
-//		return SearchResultsActivity.class;
-//	}
+	// public Class getSearchResultsActivityClass() {
+	// return SearchResultsActivity.class;
+	// }
 
 	public void startSearch(Activity caller, Map<String, String> query) {
 		Intent myIntent = new Intent(caller, SearchResultListActivity.class);
@@ -281,8 +281,8 @@ public class OpacClient extends Application {
 	}
 
 	public void toPrefs(Activity activity) {
-//		Intent intent = new Intent(activity, MainPreferenceActivity.class);
-//		activity.startActivity(intent);
+		// Intent intent = new Intent(activity, MainPreferenceActivity.class);
+		// activity.startActivity(intent);
 	}
 
 	@Override
@@ -318,18 +318,22 @@ public class OpacClient extends Application {
 	public Class getMainActivity() {
 		return MainActivity.class;
 	}
-	
+
 	public static Bundle mapToBundle(Map<String, String> map) {
+		if (map == null)
+			return null;
 		Bundle b = new Bundle();
-		for(Entry<String, String> e : map.entrySet()) {
+		for (Entry<String, String> e : map.entrySet()) {
 			b.putString(e.getKey(), e.getValue());
 		}
 		return b;
 	}
 
 	public static Map<String, String> bundleToMap(Bundle bundle) {
+		if (bundle == null)
+			return null;
 		Map<String, String> map = new HashMap<String, String>();
-		for(String e : bundle.keySet()) {
+		for (String e : bundle.keySet()) {
 			map.put(e, (String) bundle.get(e));
 		}
 		return map;

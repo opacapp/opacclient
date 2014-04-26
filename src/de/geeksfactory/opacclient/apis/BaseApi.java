@@ -344,6 +344,9 @@ public abstract class BaseApi implements OpacApi {
 		return "ISO-8859-1";
 	}
 	
+	/*
+	 * Gets all values of all query parameters in an URL. 
+	 */
 	public static Map<String, List<String>> getQueryParams(String url) {
 	    try {
 	        Map<String, List<String>> params = new HashMap<String, List<String>>();
@@ -372,7 +375,12 @@ public abstract class BaseApi implements OpacApi {
 	        throw new AssertionError(ex);
 	    }
 	}
-	
+
+	/*
+	 * Gets the value for every query parameter in the URL. If a parameter name
+	 * occurs twice or more, only the first occurance is interpreted by this
+	 * method
+	 */
 	public static Map<String, String> getQueryParamsFirst(String url) {
 	    try {
 	        Map<String, String> params = new HashMap<String, String>();
