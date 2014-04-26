@@ -190,8 +190,8 @@ public abstract class OpacActivity extends Activity {
 							expiringText = String.valueOf(expiring);
 						}
 						navAdapter.addLibraryItem(account.getLabel(),
-								library.getCity(), expiringText,
-								account.getId());
+								library.getCity() + " · " + library.getTitle(),
+								expiringText, account.getId());
 						if (account.getId() == app.getAccount().getId()) {
 							selected = navAdapter.getCount() - 1;
 						}
