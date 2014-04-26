@@ -50,7 +50,6 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
-import android.util.Log;
 import de.geeksfactory.opacclient.ISBNTools;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
