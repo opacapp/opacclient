@@ -694,13 +694,8 @@ public class Pica extends BaseApi implements OpacApi {
 			throw new OpacErrorException(doc.select(".cnt .alert, .cnt .error").text());
 		}
 
-		String pwEncodedUrl = doc.select("a.tab0").attr("href");
-		Map<String, String> queryParams = getQueryParamsFirst(pwEncodedUrl);
-		if(queryParams.containsKey("BOR_PW_ENC")) {
-			pwEncoded = URLEncoder.encode(getQueryParamsFirst(pwEncodedUrl).get("BOR_PW_ENC"), "UTF-8");
-		} else {
-			throw new OpacErrorException("Fehler, URL war " + pwEncodedUrl);
-		}
+		pwEncoded = URLEncoder.encode(
+				doc.select("input[name=BOR_PW_ENC]").attr("value"), "UTF-8");;
 		
 		html = httpGet(https_url + "/loan/DB=" + db
 				+ "/USERINFO?ACT=UI_LOL&BOR_U=" + account.getName()
@@ -711,8 +706,6 @@ public class Pica extends BaseApi implements OpacApi {
 				+ "/USERINFO?ACT=UI_LOR&BOR_U=" + account.getName()
 				+ "&BOR_PW_ENC=" + pwEncoded, getDefaultEncoding());
 		Document doc2 = Jsoup.parse(html);
-
-		pwEncoded = doc.select("input[name=BOR_PW_ENC]").attr("value");
 
 		AccountData res = new AccountData(account.getId());
 
