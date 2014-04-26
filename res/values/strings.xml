@@ -240,7 +240,7 @@
     <string name="drawer_open">Navigation öffnen</string>
     <string name="drawer_close">Navigation schließen</string>
     <string name="title_searchresult_list">Suchergebnisse</string>
-    <string name="title_searchresult_detail">Detail</string>
+    <string name="title_searchresult_detail">Details</string>
     <string name="title_activity_library_list">Bibliotheksauswahl</string>
     <string name="action_settings">Settings</string>
     <string name="suggest_library">Deine Bibliothek wird nicht unterstützt? Schlage sie vor!</string>
