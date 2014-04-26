@@ -690,8 +690,8 @@ public class Pica extends BaseApi implements OpacApi {
 				new UrlEncodedFormEntity(params, getDefaultEncoding()), getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 
-		if (doc.select(".cnt .alert").size() > 0) {
-			throw new OpacErrorException(doc.select(".cnt .alert").text());
+		if (doc.select(".cnt .alert, .cnt .error").size() > 0) {
+			throw new OpacErrorException(doc.select(".cnt .alert, .cnt .error").text());
 		}
 
 		String pwEncodedUrl = doc.select("a.tab0").attr("href");
