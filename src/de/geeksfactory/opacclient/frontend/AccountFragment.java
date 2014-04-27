@@ -109,6 +109,7 @@ public class AccountFragment extends Fragment implements
 	public static final long MAX_CACHE_AGE = (1000 * 3600 * 2);
 
 	private LoadTask lt;
+
 	private CancelTask ct;
 	private OpacTask<String> dt;
 	private BookingTask bt;
@@ -216,6 +217,11 @@ public class AccountFragment extends Fragment implements
 			prolongAllStart();
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	@Override
+	public void onResume() {
+		super.onResume();
+		accountSelected(account);
 	}
 
 	@Override
