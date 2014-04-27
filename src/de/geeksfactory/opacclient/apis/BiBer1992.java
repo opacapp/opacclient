@@ -559,7 +559,7 @@ public class BiBer1992 extends BaseApi {
 		if (!m_initialised)
 			start();
 
-		if (!id.contains("ftitle.C")) {
+		if (!id.contains("ftitle")) {
 			id = "ftitle.C?LANG=de&FUNC=full&" + id + "=YES";
 		}
 		// normally full path like
