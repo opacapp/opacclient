@@ -692,11 +692,12 @@ public class Pica extends BaseApi implements OpacApi {
 		if (doc.select(".cnt .alert, .cnt .error").size() > 0) {
 			throw new OpacErrorException(doc.select(".cnt .alert, .cnt .error").text());
 		}
-		if (doc.select("input[name=BOR_PW_ENC]").size() > 0)
+		if (doc.select("input[name=BOR_PW_ENC]").size() > 0) {
 			pwEncoded = URLEncoder.encode(
 					doc.select("input[name=BOR_PW_ENC]").attr("value"), "UTF-8");
-		else
+		} else {
 			//TODO: do something here to help fix bug #229
+		}
 		
 		html = httpGet(https_url + "/loan/DB=" + db
 				+ "/USERINFO?ACT=UI_LOL&BOR_U=" + account.getName()
