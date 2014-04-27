@@ -878,7 +878,7 @@ public class BiBer1992 extends BaseApi {
 	 */
 	@Override
 	public AccountData account(Account account) throws IOException,
-			JSONException {
+			JSONException, OpacErrorException {
 
 		AccountData res = new AccountData(account.getId());
 
@@ -894,7 +894,7 @@ public class BiBer1992 extends BaseApi {
 	}
 
 	private List<Map<String, String>> accountGetMedia(Account account,
-			AccountData res) throws IOException, JSONException {
+			AccountData res) throws IOException, JSONException, OpacErrorException {
 
 		List<Map<String, String>> medien = new ArrayList<Map<String, String>>();
 
@@ -1002,7 +1002,7 @@ public class BiBer1992 extends BaseApi {
 	}
 
 	private List<Map<String, String>> accountGetReservations(Account account)
-			throws IOException, JSONException {
+			throws IOException, JSONException, OpacErrorException {
 
 		List<Map<String, String>> reservations = new ArrayList<Map<String, String>>();
 
@@ -1078,7 +1078,7 @@ public class BiBer1992 extends BaseApi {
 	}
 
 	private Document accountHttpPost(Account account, String func)
-			throws IOException {
+			throws IOException, OpacErrorException {
 		// get media list via http POST
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 		nameValuePairs.add(new BasicNameValuePair("FUNC", func));
@@ -1095,14 +1095,15 @@ public class BiBer1992 extends BaseApi {
 
 		// Error recognition
 		// <title>OPAC Fehler</title>
-		if (doc.title().contains("Fehler")) {
+		if (doc.title().contains("Fehler")
+				|| (doc.select("h2").size() > 0 && doc.select("h2").text()
+						.contains("Fehler"))) {
 			String errText = "unknown error";
 			Elements elTable = doc.select("table");
 			if (elTable.size() > 0) {
 				errText = elTable.get(0).text();
 			}
-			// TODO: m_last_error = errText;
-			return null;
+			throw new OpacErrorException(errText);
 		}
 
 		return doc;
