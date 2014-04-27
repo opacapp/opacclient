@@ -1081,8 +1081,7 @@ public class SearchResultDetailFragment extends Fragment {
 								public void onClick(DialogInterface dialog,
 										int id) {
 									adialog.dismiss();
-									MainPreferenceActivity
-											.openAccountList(getActivity());
+									app.openAccountList(getActivity());
 								}
 							});
 			adialog = builder.create();
@@ -1205,8 +1204,7 @@ public class SearchResultDetailFragment extends Fragment {
 								public void onClick(DialogInterface dialog,
 										int id) {
 									adialog.dismiss();
-									MainPreferenceActivity
-											.openAccountList(getActivity());
+									app.openAccountList(getActivity());
 								}
 							});
 			adialog = builder.create();

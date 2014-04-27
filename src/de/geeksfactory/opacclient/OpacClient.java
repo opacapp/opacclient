@@ -62,6 +62,7 @@ import de.geeksfactory.opacclient.apis.SISIS;
 import de.geeksfactory.opacclient.apis.SRU;
 import de.geeksfactory.opacclient.apis.WebOpacNet;
 import de.geeksfactory.opacclient.apis.Zones22;
+import de.geeksfactory.opacclient.frontend.AccountListActivity;
 import de.geeksfactory.opacclient.frontend.MainActivity;
 import de.geeksfactory.opacclient.frontend.SearchResultListActivity;
 import de.geeksfactory.opacclient.frontend.WelcomeActivity;
@@ -317,6 +318,11 @@ public class OpacClient extends Application {
 
 	public Class getMainActivity() {
 		return MainActivity.class;
+	}
+
+	public void openAccountList(Activity ctx) {
+		Intent intent = new Intent(ctx, AccountListActivity.class);
+		ctx.startActivity(intent);
 	}
 
 	public static Bundle mapToBundle(Map<String, String> map) {
