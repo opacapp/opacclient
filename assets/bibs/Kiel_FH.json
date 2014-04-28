@@ -1,0 +1,20 @@
+{
+    "api": "pica", 
+    "city": "Kiel", 
+    "country": "Deutschland", 
+    "data": {
+        "accountSupported": true, 
+        "baseurl": "http://kiopc4.ub.uni-kiel.de:8080/", 
+        "customssl": true, 
+        "db": "2", 
+        "httpsbaseurl": "https://lhopc4.ub.uni-kiel.de/", 
+        "information": "http://www.fh-kiel.de/index.php?id=118"
+    }, 
+    "geo": [
+        54.3462487, 
+        10.1115432
+    ], 
+    "state": "Schleswig-Holstein", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Bibliothek der FH"
+}

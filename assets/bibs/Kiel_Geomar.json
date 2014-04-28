@@ -1,0 +1,18 @@
+{
+    "api": "pica", 
+    "city": "Kiel", 
+    "country": "Deutschland", 
+    "data": {
+        "accountSupported": true, 
+        "baseurl": "http://vzopc4.gbv.de:8080/", 
+        "db": "37", 
+        "information": "http://www.geomar.de/zentrum/einrichtungen/bibliothek/"
+    }, 
+    "geo": [
+        54.3462487, 
+        10.1115432
+    ], 
+    "state": "Schleswig-Holstein", 
+    "support": "Katalogsuche und Konto", 
+    "title": "Bibliothek des GEOMAR"
+}
