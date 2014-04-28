@@ -4,7 +4,7 @@
     "country": "Deutschland", 
     "data": {
         "accountSupported": true, 
-        "baseurl": "http://kiopc4.ub.uni-kiel.de:8080/", 
+        "baseurl": "http://kiopc4.ub.uni-kiel.de:8080", 
         "customssl": true, 
         "db": "1", 
         "httpsbaseurl": "https://lhopc4.ub.uni-kiel.de/", 

@@ -4,7 +4,7 @@
     "country": "Deutschland", 
     "data": {
         "accountSupported": true, 
-        "baseurl": "http://vzopc4.gbv.de:8080/", 
+        "baseurl": "http://vzopc4.gbv.de:8080", 
         "db": "37", 
         "information": "http://www.geomar.de/zentrum/einrichtungen/bibliothek/"
     }, 
