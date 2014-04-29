@@ -1334,7 +1334,7 @@ public class SISIS extends BaseApi implements OpacApi {
 						Map<String, String> hrefq = getQueryParamsFirst(href);
 						if (hrefq.get("methodToCall").equals("renewalPossible")) {
 							e.put(AccountData.KEY_LENT_LINK, offset + "$"
-									+ href.split("\\?")[0]);
+									+ href.split("\\?")[1]);
 							e.put(AccountData.KEY_LENT_RENEWABLE, "Y");
 							break;
 						}
