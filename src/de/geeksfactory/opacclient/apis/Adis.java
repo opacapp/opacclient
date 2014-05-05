@@ -1015,7 +1015,7 @@ public class Adis extends BaseApi implements OpacApi {
 
 		// Ausleihen
 		String alink = null;
-		int anum = -1;
+		int anum = 0;
 		List<Map<String, String>> lent = new ArrayList<Map<String, String>>();
 		for (Element tr : doc.select(".rTable_div tr")) {
 			if (tr.select("a").size() == 1) {
@@ -1079,6 +1079,8 @@ public class Adis extends BaseApi implements OpacApi {
 			form.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
 			form.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
 			doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+		} else {
+			assert(anum == 0);
 		}
 
 		adata.setLent(lent);
