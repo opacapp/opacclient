@@ -1105,6 +1105,9 @@ public class BiBer1992 extends BaseApi {
 			}
 			throw new OpacErrorException(errText);
 		}
+		if(doc.select("tr td font[color=red]").size() == 1) {
+			throw new OpacErrorException(doc.select("font[color=red]").text());			
+		}
 
 		return doc;
 	}
