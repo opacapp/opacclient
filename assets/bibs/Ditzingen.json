@@ -26,7 +26,7 @@
         "information": "http://ditzingen.de/index.php?id=506",
         "reservationtable": {
             "author": 1, 
-            "availability": 4 
+            "availability": 4,
             "branch": 0, 
             "cancelurl": 5, 
             "expirationdate": -1, 
