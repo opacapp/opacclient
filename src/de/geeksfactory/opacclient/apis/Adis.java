@@ -640,8 +640,8 @@ public class Adis extends BaseApi implements OpacApi {
 				if (!"image".equals(input.attr("type"))
 						&& !"checkbox".equals(input.attr("type"))
 						&& !"".equals(input.attr("name"))) {
-					form.add(new BasicNameValuePair(input.attr("name"),
-							input.attr("value")));
+					form.add(new BasicNameValuePair(input.attr("name"), input
+							.attr("value")));
 				}
 			}
 			doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
@@ -1029,6 +1029,7 @@ public class Adis extends BaseApi implements OpacApi {
 			Document adoc = htmlGet(alink);
 			s_alink = alink;
 			List<NameValuePair> form = new ArrayList<NameValuePair>();
+			String prolongTest = null;
 			for (Element input : adoc.select("input, select")) {
 				if (!"image".equals(input.attr("type"))
 						&& !"submit".equals(input.attr("type"))
@@ -1039,11 +1040,15 @@ public class Adis extends BaseApi implements OpacApi {
 					}
 					form.add(new BasicNameValuePair(input.attr("name"), input
 							.attr("value")));
+				} else if (input.val().matches(".+verl.+ngerbar.+")) {
+					prolongTest = input.attr("name");
 				}
 			}
-			form.add(new BasicNameValuePair("textButton$2",
-					"Markierte Titel verlängerbar?"));
-			adoc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+			if (prolongTest != null) {
+				form.add(new BasicNameValuePair(prolongTest,
+						"Markierte Titel verlängerbar?"));
+				adoc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+			}
 			for (Element tr : adoc.select(".rTable_div tbody tr")) {
 				Map<String, String> line = new HashMap<String, String>();
 				line.put(AccountData.KEY_LENT_TITLE,
@@ -1080,7 +1085,7 @@ public class Adis extends BaseApi implements OpacApi {
 			form.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
 			doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
 		} else {
-			assert(anum == 0);
+			assert (anum == 0);
 		}
 
 		adata.setLent(lent);
@@ -1149,6 +1154,7 @@ public class Adis extends BaseApi implements OpacApi {
 		for (Element input : doc.select("input, select")) {
 			if (!"image".equals(input.attr("type"))
 					&& !"checkbox".equals(input.attr("type"))
+					&& !input.attr("value").contains("vergessen")
 					&& !"".equals(input.attr("name"))) {
 				if (input.attr("id").equals("L#AUSW_1")
 						|| input.attr("id").equals("IDENT_1")) {
