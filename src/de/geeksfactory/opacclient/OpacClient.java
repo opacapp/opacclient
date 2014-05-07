@@ -95,6 +95,17 @@ public class OpacClient extends Application {
 	public static String versionName = "unknown";
 
 	private final Uri STAR_PROVIDER_STAR_URI = StarContentProvider.STAR_URI;
+	
+    private static OpacClient instance;
+    
+    public OpacClient() {
+    	super();
+    	instance = this;
+    }
+    
+    public static Context getEmergencyContext() {
+    	return instance.getApplicationContext();
+    }
 
 	public Uri getStarProviderStarUri() {
 		return STAR_PROVIDER_STAR_URI;

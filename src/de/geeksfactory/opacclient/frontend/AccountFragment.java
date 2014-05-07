@@ -32,6 +32,7 @@ import java.util.Set;
 import org.acra.ACRA;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -218,6 +219,7 @@ public class AccountFragment extends Fragment implements
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -326,8 +328,9 @@ public class AccountFragment extends Fragment implements
 
 		} else {
 			// Supported
-
-			AccountDataSource adatasource = new AccountDataSource(getActivity());
+			Context ctx = getActivity() != null ? getActivity() : OpacClient
+					.getEmergencyContext();
+			AccountDataSource adatasource = new AccountDataSource(ctx);
 			adatasource.open();
 			refreshtime = adatasource.getCachedAccountDataTime(account);
 			if (refreshtime > 0) {
@@ -341,7 +344,8 @@ public class AccountFragment extends Fragment implements
 			adatasource.close();
 		}
 
-		getActivity().supportInvalidateOptionsMenu();
+		if (getActivity() != null)
+			getActivity().supportInvalidateOptionsMenu();
 	}
 
 	public void refresh() {
@@ -473,6 +477,8 @@ public class AccountFragment extends Fragment implements
 		msrhProlong.setCallback(new Callback() {
 			@Override
 			public void onSuccess(MultiStepResult result) {
+				if (getActivity() == null)
+					return;
 				invalidateData();
 
 				if (result.getMessage() != null) {
@@ -495,6 +501,8 @@ public class AccountFragment extends Fragment implements
 
 			@Override
 			public void onError(MultiStepResult result) {
+				if (getActivity() == null)
+					return;
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						getActivity());
 				builder.setMessage(result.getMessage())
@@ -601,6 +609,9 @@ public class AccountFragment extends Fragment implements
 
 		@Override
 		protected void onPostExecute(Integer result) {
+			if (getActivity() == null)
+				return;
+			
 			dialog.dismiss();
 			Button btSend = (Button) view.findViewById(R.id.btSend);
 			btSend.setEnabled(false);
@@ -642,6 +653,8 @@ public class AccountFragment extends Fragment implements
 				exception = e;
 			} catch (InterruptedIOException e) {
 				exception = e;
+			} catch (NoHttpResponseException e) {
+				exception = e;
 			} catch (OpacErrorException e) {
 				exception = e;
 			} catch (Exception e) {
@@ -657,7 +670,8 @@ public class AccountFragment extends Fragment implements
 				loaded(result);
 			} else {
 				refreshing = false;
-				getActivity().supportInvalidateOptionsMenu();
+				if (getActivity() != null)
+					getActivity().supportInvalidateOptionsMenu();
 
 				show_connectivity_error(exception);
 			}
@@ -667,6 +681,8 @@ public class AccountFragment extends Fragment implements
 	public void show_connectivity_error(Exception e) {
 		if (e != null)
 			e.printStackTrace();
+		if (getActivity() == null)
+			return;
 		if (e instanceof OpacErrorException) {
 			AccountDataSource adatasource = new AccountDataSource(getActivity());
 			adatasource.open();
@@ -714,8 +730,13 @@ public class AccountFragment extends Fragment implements
 	}
 
 	public void loaded(final AccountData result) {
+		AccountDataSource adatasource;
+		if (getActivity() == null)
+			adatasource = new AccountDataSource(
+					OpacClient.getEmergencyContext());
+		else
+			adatasource = new AccountDataSource(getActivity());
 
-		AccountDataSource adatasource = new AccountDataSource(getActivity());
 		adatasource.open();
 		adatasource.storeCachedAccountData(
 				adatasource.getAccount(result.getAccount()), result);
@@ -1141,6 +1162,8 @@ public class AccountFragment extends Fragment implements
 				return app.getApi().cancel(a, account, useraction, selection);
 			} catch (java.net.UnknownHostException e) {
 				e.printStackTrace();
+			} catch (NoHttpResponseException e) {
+				e.printStackTrace();
 			} catch (java.net.SocketException e) {
 				e.printStackTrace();
 			} catch (Exception e) {
@@ -1282,6 +1305,8 @@ public class AccountFragment extends Fragment implements
 				return res;
 			} catch (java.net.UnknownHostException e) {
 				publishProgress(e, "ioerror");
+			} catch (NoHttpResponseException e) {
+				publishProgress(e, "ioerror");
 			} catch (java.net.SocketException e) {
 				success = false;
 				e.printStackTrace();
@@ -1335,6 +1360,7 @@ public class AccountFragment extends Fragment implements
 				return res;
 			} catch (java.net.UnknownHostException e) {
 			} catch (java.net.SocketException e) {
+			} catch (NoHttpResponseException e) {
 			} catch (Exception e) {
 				ACRA.getErrorReporter().handleException(e);
 			}
@@ -1469,6 +1495,8 @@ public class AccountFragment extends Fragment implements
 		msrhProlong.setCallback(new Callback() {
 			@Override
 			public void onSuccess(MultiStepResult result) {
+				if (getActivity() == null)
+					return;
 				ProlongAllResult res = (ProlongAllResult) result;
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						getActivity());
@@ -1499,6 +1527,8 @@ public class AccountFragment extends Fragment implements
 
 			@Override
 			public void onError(MultiStepResult result) {
+				if (getActivity() == null)
+					return;
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						getActivity());
 				builder.setMessage(result.getMessage())
@@ -1609,6 +1639,8 @@ public class AccountFragment extends Fragment implements
 				publishProgress(e, "ioerror");
 			} catch (java.net.SocketException e) {
 				e.printStackTrace();
+			} catch (NoHttpResponseException e) {
+				publishProgress(e, "ioerror");
 			} catch (Exception e) {
 				ACRA.getErrorReporter().handleException(e);
 			}

@@ -35,7 +35,10 @@ import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.MalformedChunkCodingException;
 import org.apache.http.NameValuePair;
+import org.apache.http.NoHttpResponseException;
+import org.apache.http.auth.MalformedChallengeException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -114,6 +117,12 @@ public abstract class BaseApi implements OpacApi {
 			e.printStackTrace();
 			throw new NotReachableException();
 		} catch (IllegalStateException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (NoHttpResponseException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (MalformedChunkCodingException e) {
 			e.printStackTrace();
 			throw new NotReachableException();
 		} catch (javax.net.ssl.SSLPeerUnverifiedException e) {
@@ -255,6 +264,12 @@ public abstract class BaseApi implements OpacApi {
 			e.printStackTrace();
 			throw new NotReachableException();
 		} catch (IllegalStateException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (NoHttpResponseException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (MalformedChunkCodingException e) {
 			e.printStackTrace();
 			throw new NotReachableException();
 		} catch (javax.net.ssl.SSLPeerUnverifiedException e) {

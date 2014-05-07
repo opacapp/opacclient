@@ -526,6 +526,8 @@ public class SearchResultDetailFragment extends Fragment {
 	}
 
 	protected void dialog_wrong_credentials(String s, final boolean finish) {
+		if (getActivity() == null)
+			return;
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setMessage(getString(R.string.opac_error) + " " + s)
 				.setCancelable(false)
@@ -950,6 +952,8 @@ public class SearchResultDetailFragment extends Fragment {
 	}
 
 	protected void dialog_no_credentials() {
+		if (getActivity() == null)
+			return;
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setMessage(R.string.status_nouser)
 				.setCancelable(false)
@@ -1220,6 +1224,8 @@ public class SearchResultDetailFragment extends Fragment {
 		msrhBooking.setCallback(new Callback() {
 			@Override
 			public void onSuccess(MultiStepResult result) {
+				if (getActivity() == null)
+					return;
 				AccountDataSource adata = new AccountDataSource(getActivity());
 				adata.open();
 				adata.invalidateCachedAccountData(app.getAccount());
@@ -1232,6 +1238,8 @@ public class SearchResultDetailFragment extends Fragment {
 
 			@Override
 			public void onError(MultiStepResult result) {
+				if (getActivity() == null)
+					return;
 				dialog_wrong_credentials(result.getMessage(), false);
 			}
 

@@ -4,6 +4,7 @@ import java.io.InterruptedIOException;
 import java.util.Map;
 
 import org.acra.ACRA;
+import org.apache.http.NoHttpResponseException;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.ListFragment;
@@ -277,7 +278,7 @@ public class SearchResultListFragment extends ListFragment {
 	}
 
 	public void showConnectivityError(String description) {
-		if(getView() == null)
+		if(getView() == null || getActivity() == null)
 			return;
 		final LinearLayout progressContainer = (LinearLayout) getView()
 				.findViewById(R.id.progressContainer);
@@ -337,6 +338,8 @@ public class SearchResultListFragment extends ListFragment {
 				e.printStackTrace();
 			} catch (java.net.SocketException e) {
 				exception = e;
+			} catch (NoHttpResponseException e) {
+				exception = e;
 			} catch (OpacErrorException e) {
 				exception = e;
 			} catch (InterruptedIOException e) {
@@ -354,7 +357,7 @@ public class SearchResultListFragment extends ListFragment {
 			if (result == null) {
 
 				if (exception instanceof OpacErrorException) {
-					if (exception.getMessage().equals("is_a_redirect")) {
+					if (exception.getMessage().equals("is_a_redirect") && getActivity() != null) {
 						// Some libraries (SISIS) do not show a result list if
 						// only one result
 						// is found but instead directly show the result

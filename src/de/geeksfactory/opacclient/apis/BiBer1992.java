@@ -448,7 +448,8 @@ public class BiBer1992 extends BaseApi {
 		Elements elem = null;
 		int rows_per_hit = 2;
 		if (trList.size() == 1
-				|| (trList.get(0).select("input[type=checkbox]").size() > 0 && trList
+				|| (trList.size() > 1
+						&& trList.get(0).select("input[type=checkbox]").size() > 0 && trList
 						.get(1).select("input[type=checkbox]").size() > 0)) {
 			rows_per_hit = 1;
 		}
@@ -894,7 +895,8 @@ public class BiBer1992 extends BaseApi {
 	}
 
 	private List<Map<String, String>> accountGetMedia(Account account,
-			AccountData res) throws IOException, JSONException, OpacErrorException {
+			AccountData res) throws IOException, JSONException,
+			OpacErrorException {
 
 		List<Map<String, String>> medien = new ArrayList<Map<String, String>>();
 
@@ -1105,8 +1107,8 @@ public class BiBer1992 extends BaseApi {
 			}
 			throw new OpacErrorException(errText);
 		}
-		if(doc.select("tr td font[color=red]").size() == 1) {
-			throw new OpacErrorException(doc.select("font[color=red]").text());			
+		if (doc.select("tr td font[color=red]").size() == 1) {
+			throw new OpacErrorException(doc.select("font[color=red]").text());
 		}
 
 		return doc;
