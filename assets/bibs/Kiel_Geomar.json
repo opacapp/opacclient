@@ -4,11 +4,9 @@
     "country": "Deutschland", 
     "data": {
         "accountSupported": true, 
-        "baseurl": "http://kiopc4.ub.uni-kiel.de:8080", 
-        "customssl": true, 
-        "db": "1", 
-        "httpsbaseurl": "https://lhopc4.ub.uni-kiel.de/", 
-        "information": "http://www.ub.uni-kiel.de/"
+        "baseurl": "http://vzopc4.gbv.de:8080", 
+        "db": "37", 
+        "information": "http://www.geomar.de/zentrum/einrichtungen/bibliothek/"
     }, 
     "geo": [
         54.3462487, 
@@ -16,5 +14,5 @@
     ], 
     "state": "Schleswig-Holstein", 
     "support": "Katalogsuche und Konto", 
-    "title": "Unibibliothek"
+    "title": "Bibliothek des GEOMAR"
 }

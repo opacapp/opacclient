@@ -23,6 +23,7 @@ package de.geeksfactory.opacclient.apis;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -688,13 +689,16 @@ public class Pica extends BaseApi implements OpacApi {
 				new UrlEncodedFormEntity(params, getDefaultEncoding()), getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 
-		if (doc.select(".cnt .alert").size() > 0) {
-			throw new OpacErrorException(doc.select(".cnt .alert").text());
+		if (doc.select(".cnt .alert, .cnt .error").size() > 0) {
+			throw new OpacErrorException(doc.select(".cnt .alert, .cnt .error").text());
 		}
-
-		pwEncoded = doc.select("a.tab0").attr("href");
-		pwEncoded = pwEncoded.substring(pwEncoded.indexOf("PW_ENC=") + 7);
-
+		if (doc.select("input[name=BOR_PW_ENC]").size() > 0) {
+			pwEncoded = URLEncoder.encode(
+					doc.select("input[name=BOR_PW_ENC]").attr("value"), "UTF-8");
+		} else {
+			//TODO: do something here to help fix bug #229
+		}
+		
 		html = httpGet(https_url + "/loan/DB=" + db
 				+ "/USERINFO?ACT=UI_LOL&BOR_U=" + account.getName()
 				+ "&BOR_PW_ENC=" + pwEncoded, getDefaultEncoding());
@@ -704,8 +708,6 @@ public class Pica extends BaseApi implements OpacApi {
 				+ "/USERINFO?ACT=UI_LOR&BOR_U=" + account.getName()
 				+ "&BOR_PW_ENC=" + pwEncoded, getDefaultEncoding());
 		Document doc2 = Jsoup.parse(html);
-
-		pwEncoded = doc.select("input[name=BOR_PW_ENC]").attr("value");
 
 		AccountData res = new AccountData(account.getId());
 

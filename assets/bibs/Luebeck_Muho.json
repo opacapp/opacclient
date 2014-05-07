@@ -1,20 +1,20 @@
 {
     "api": "pica", 
-    "city": "Kiel", 
+    "city": "Lübeck", 
     "country": "Deutschland", 
     "data": {
         "accountSupported": true, 
         "baseurl": "http://kiopc4.ub.uni-kiel.de:8080", 
         "customssl": true, 
-        "db": "1", 
+        "db": "8", 
         "httpsbaseurl": "https://lhopc4.ub.uni-kiel.de/", 
-        "information": "http://www.ub.uni-kiel.de/"
+        "information": "http://www.mh-luebeck.de/hochschule/bibliothek/"
     }, 
     "geo": [
-        54.3462487, 
-        10.1115432
+        53.8810006,
+		10.7613749
     ], 
     "state": "Schleswig-Holstein", 
     "support": "Katalogsuche und Konto", 
-    "title": "Unibibliothek"
+    "title": "Bibliothek der Musikhochschule"
 }
