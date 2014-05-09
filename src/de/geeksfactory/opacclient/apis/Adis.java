@@ -1,8 +1,10 @@
 package de.geeksfactory.opacclient.apis;
 
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,11 +17,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.MalformedChunkCodingException;
 import org.apache.http.NameValuePair;
+import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -91,7 +96,42 @@ public class Adis extends BaseApi implements OpacApi {
 		HttpGet httpget = new HttpGet(cleanUrl(url));
 		HttpResponse response;
 
-		response = http_client.execute(httpget);
+		try {
+			response = http_client.execute(httpget);
+		} catch (ConnectTimeoutException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (NoHttpResponseException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (MalformedChunkCodingException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (javax.net.ssl.SSLPeerUnverifiedException e) {
+			// TODO: Handly this well
+			throw e;
+		} catch (javax.net.ssl.SSLException e) {
+			// TODO: Handly this well
+			// Can be "Not trusted server certificate" or can be a
+			// aborted/interrupted handshake/connection
+			throw e;
+		} catch (InterruptedIOException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (IOException e) {
+			if (e.getMessage().contains("Request aborted")) {
+				e.printStackTrace();
+				throw new NotReachableException();
+			} else {
+				throw e;
+			}
+		}
 
 		if (response.getStatusLine().getStatusCode() >= 400) {
 			throw new NotReachableException();
@@ -128,7 +168,44 @@ public class Adis extends BaseApi implements OpacApi {
 
 		httppost.setEntity(new UrlEncodedFormEntity(data));
 		HttpResponse response = null;
-		response = http_client.execute(httppost);
+
+		try {
+			response = http_client.execute(httppost);
+
+		} catch (ConnectTimeoutException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (NoHttpResponseException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (MalformedChunkCodingException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (javax.net.ssl.SSLPeerUnverifiedException e) {
+			// TODO: Handle this well
+			throw e;
+		} catch (javax.net.ssl.SSLException e) {
+			// TODO: Handle this well
+			// Can be "Not trusted server certificate" or can be a
+			// aborted/interrupted handshake/connection
+			throw e;
+		} catch (InterruptedIOException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (IOException e) {
+			if (e.getMessage().contains("Request aborted")) {
+				e.printStackTrace();
+				throw new NotReachableException();
+			} else {
+				throw e;
+			}
+		}
 
 		if (response.getStatusLine().getStatusCode() >= 400) {
 			throw new NotReachableException();

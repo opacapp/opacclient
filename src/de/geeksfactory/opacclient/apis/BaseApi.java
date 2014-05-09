@@ -28,6 +28,7 @@ import java.io.InputStreamReader;
 import java.io.InterruptedIOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -114,6 +115,9 @@ public abstract class BaseApi implements OpacApi {
 				response = http_client.execute(httpget);
 			}
 		} catch (ConnectTimeoutException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (UnknownHostException e) {
 			e.printStackTrace();
 			throw new NotReachableException();
 		} catch (IllegalStateException e) {
@@ -266,6 +270,9 @@ public abstract class BaseApi implements OpacApi {
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
 			throw new NotReachableException();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
 		} catch (NoHttpResponseException e) {
 			e.printStackTrace();
 			throw new NotReachableException();
@@ -273,10 +280,10 @@ public abstract class BaseApi implements OpacApi {
 			e.printStackTrace();
 			throw new NotReachableException();
 		} catch (javax.net.ssl.SSLPeerUnverifiedException e) {
-			// TODO: Handly this well
+			// TODO: Handle this well
 			throw e;
 		} catch (javax.net.ssl.SSLException e) {
-			// TODO: Handly this well
+			// TODO: Handle this well
 			// Can be "Not trusted server certificate" or can be a
 			// aborted/interrupted handshake/connection
 			throw e;
