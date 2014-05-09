@@ -1372,7 +1372,7 @@ public class SISIS extends BaseApi implements OpacApi {
 			Element tr = copytrs.get(i);
 			Map<String, String> e = new HashMap<String, String>();
 
-			if (tr.text().contains("keine Daten")) {
+			if (tr.text().contains("keine Daten") || tr.children().size() == 1) {
 				return;
 			}
 
