@@ -23,6 +23,7 @@ package de.geeksfactory.opacclient.apis;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -598,11 +599,21 @@ public class Pica extends BaseApi implements OpacApi {
 	@Override
 	public ProlongResult prolong(String media, Account account, int useraction,
 			String Selection) throws IOException {
+		if(pwEncoded == null)
+			try {
+				account(account);
+			} catch (JSONException e1) {
+				return new ProlongResult(MultiStepResult.Status.ERROR);
+			} catch (OpacErrorException e1) {
+				return new ProlongResult(MultiStepResult.Status.ERROR,
+						e1.getMessage());
+			}
+		
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("ACT", "UI_RENEWLOAN"));
 
 		params.add(new BasicNameValuePair("BOR_U", account.getName()));
-		params.add(new BasicNameValuePair("BOR_PW_ENC", pwEncoded));
+		params.add(new BasicNameValuePair("BOR_PW_ENC", URLDecoder.decode(pwEncoded, "UTF-8")));
 
 		params.add(new BasicNameValuePair("VB", media));
 
@@ -617,7 +628,7 @@ public class Pica extends BaseApi implements OpacApi {
 				|| doc.select("td.regular-text").text()
 						.contains("Ihre ausgeliehenen Publikationen sind verl")) {
 			return new ProlongResult(MultiStepResult.Status.OK);
-		} else if (doc.select(".alert").text().contains("identify yourself")) {
+		} else if (doc.select(".cnt").text().contains("identify")) {
 			try {
 				account(account);
 				return prolong(media, account, useraction, Selection);
