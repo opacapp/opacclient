@@ -178,27 +178,30 @@ public class AccountFragment extends Fragment implements
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.activity_account, menu);
-		if (refreshing) {
-			// We want it to look as good as possible everywhere
-			if (Build.VERSION.SDK_INT >= 14) {
-				menu.findItem(R.id.action_refresh).setActionView(
-						R.layout.actionbar_loading_indicator);
-				getSupportActivity()
-						.setSupportProgressBarIndeterminateVisibility(false);
+		if (getSupportActivity() != null
+				&& menu.findItem(R.id.action_refresh) != null) {
+			if (refreshing) {
+				// We want it to look as good as possible everywhere
+				if (Build.VERSION.SDK_INT >= 14) {
+					menu.findItem(R.id.action_refresh).setActionView(
+							R.layout.actionbar_loading_indicator);
+					getSupportActivity()
+							.setSupportProgressBarIndeterminateVisibility(false);
+				} else {
+					menu.findItem(R.id.action_refresh).setVisible(false);
+					getSupportActivity()
+							.setSupportProgressBarIndeterminateVisibility(true);
+				}
 			} else {
-				menu.findItem(R.id.action_refresh).setVisible(false);
-				getSupportActivity()
-						.setSupportProgressBarIndeterminateVisibility(true);
-			}
-		} else {
-			if (Build.VERSION.SDK_INT >= 14) {
-				menu.findItem(R.id.action_refresh).setActionView(null);
-				getSupportActivity()
-						.setSupportProgressBarIndeterminateVisibility(false);
-			} else {
-				menu.findItem(R.id.action_refresh).setVisible(true);
-				getSupportActivity()
-						.setSupportProgressBarIndeterminateVisibility(false);
+				if (Build.VERSION.SDK_INT >= 14) {
+					menu.findItem(R.id.action_refresh).setActionView(null);
+					getSupportActivity()
+							.setSupportProgressBarIndeterminateVisibility(false);
+				} else {
+					menu.findItem(R.id.action_refresh).setVisible(true);
+					getSupportActivity()
+							.setSupportProgressBarIndeterminateVisibility(false);
+				}
 			}
 		}
 		if ((app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ACCOUNT_PROLONG_ALL) != 0) {
@@ -611,7 +614,7 @@ public class AccountFragment extends Fragment implements
 		protected void onPostExecute(Integer result) {
 			if (getActivity() == null)
 				return;
-			
+
 			dialog.dismiss();
 			Button btSend = (Button) view.findViewById(R.id.btSend);
 			btSend.setEnabled(false);
@@ -731,10 +734,10 @@ public class AccountFragment extends Fragment implements
 
 	public void loaded(final AccountData result) {
 		AccountDataSource adatasource;
-		if (getActivity() == null)
+		if (getActivity() == null && OpacClient.getEmergencyContext() != null) {
 			adatasource = new AccountDataSource(
 					OpacClient.getEmergencyContext());
-		else
+		} else
 			adatasource = new AccountDataSource(getActivity());
 
 		adatasource.open();

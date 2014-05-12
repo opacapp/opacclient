@@ -253,7 +253,11 @@ public class Adis extends BaseApi implements OpacApi {
 			if (s_exts == null)
 				s_exts = "SS6";
 
-			metadata.open();
+			try {
+				metadata.open();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
 			if (!metadata.hasMeta(library.getIdent())) {
 				metadata.close();
 				extract_meta();
@@ -262,8 +266,6 @@ public class Adis extends BaseApi implements OpacApi {
 			}
 
 		} catch (JSONException e) {
-			throw new RuntimeException(e);
-		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 
@@ -1266,10 +1268,26 @@ public class Adis extends BaseApi implements OpacApi {
 
 	@Override
 	public String[] getSearchFields() {
-		return new String[] { KEY_SEARCH_QUERY_FREE, KEY_SEARCH_QUERY_TITLE,
-				KEY_SEARCH_QUERY_ISBN, KEY_SEARCH_QUERY_AUTHOR,
-				KEY_SEARCH_QUERY_KEYWORDA, KEY_SEARCH_QUERY_BRANCH,
-				KEY_SEARCH_QUERY_CATEGORY, KEY_SEARCH_QUERY_YEAR };
+		String[] defa = new String[] { KEY_SEARCH_QUERY_FREE,
+				KEY_SEARCH_QUERY_TITLE, KEY_SEARCH_QUERY_ISBN,
+				KEY_SEARCH_QUERY_AUTHOR, KEY_SEARCH_QUERY_KEYWORDA,
+				KEY_SEARCH_QUERY_BRANCH, KEY_SEARCH_QUERY_CATEGORY,
+				KEY_SEARCH_QUERY_YEAR };
+
+		try {
+			if (data.has("searchFields")) {
+				String[] sf;
+				sf = new String[data.getJSONArray("searchFields").length()];
+				for (int i = 0; i < data.getJSONArray("searchFields").length(); i++) {
+					sf[i] = data.getJSONArray("searchFields").getString(i);
+				}
+				return sf;
+			} else {
+				return defa;
+			}
+		} catch (JSONException e) {
+			return defa;
+		}
 	}
 
 	@Override
