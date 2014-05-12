@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.geeksfactory.opacclient"
-    android:versionCode="77"
-    android:versionName="3.0.4" >
+    android:versionCode="79"
+    android:versionName="3.0.5" >
 
     <uses-sdk
         android:minSdkVersion="8"
