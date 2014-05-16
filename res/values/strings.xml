@@ -105,11 +105,13 @@
 
     <string-array name="warning">
         <item>Am selben Tag</item>
+        <item>1 Tag vorher</item>
         <item>3 Tage vorher</item>
         <item>1 Woche vorher</item>
     </string-array>
     <string-array name="warning_n">
         <item>86400000</item>
+        <item>172800000</item>
         <item>259200000</item>
         <item>604800000</item>
     </string-array>
