@@ -242,8 +242,16 @@ public class AccountFragment extends Fragment implements
 		supported = true;
 
 		this.account = app.getAccount();
-		if (!app.getApi().isAccountSupported(app.getLibrary())
-				&& (app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ACCOUNT_EXTENDABLE) == 0) {
+		OpacApi api = null;
+		try {
+			api = app.getApi();
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			return;
+		}
+		if (api != null
+				&& !api.isAccountSupported(app.getLibrary())
+				&& (api.getSupportFlags() & OpacApi.SUPPORT_FLAG_ACCOUNT_EXTENDABLE) == 0) {
 			supported = false;
 			// Not supported with this api at all
 			view.findViewById(R.id.llLoading).setVisibility(View.GONE);
@@ -277,7 +285,7 @@ public class AccountFragment extends Fragment implements
 						}
 					});
 
-		} else if (!app.getApi().isAccountSupported(app.getLibrary())) {
+		} else if (api != null && !api.isAccountSupported(app.getLibrary())) {
 			supported = false;
 
 			// We need help
@@ -749,7 +757,8 @@ public class AccountFragment extends Fragment implements
 			// The account this data is for is still visible
 
 			refreshing = false;
-			getActivity().supportInvalidateOptionsMenu();
+			if (getActivity() != null)
+				getActivity().supportInvalidateOptionsMenu();
 
 			refreshtime = System.currentTimeMillis();
 
