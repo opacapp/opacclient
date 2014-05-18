@@ -872,7 +872,7 @@ public class Pica extends BaseApi implements OpacApi {
 
 	@Override
 	public int getSupportFlags() {
-		return SUPPORT_FLAG_ENDLESS_SCROLLING;
+		return SUPPORT_FLAG_ENDLESS_SCROLLING | SUPPORT_FLAG_CHANGE_ACCOUNT;
 	}
 
 	public void updateSearchSetValue(Document doc) {

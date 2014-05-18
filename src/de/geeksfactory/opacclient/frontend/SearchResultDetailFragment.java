@@ -45,6 +45,7 @@ import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.EbookServiceApi;
 import de.geeksfactory.opacclient.apis.EbookServiceApi.BookingResult;
+import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
 import de.geeksfactory.opacclient.frontend.MultiStepResultHelper.Callback;
@@ -1026,7 +1027,11 @@ public class SearchResultDetailFragment extends Fragment {
 			return;
 		} else if (accounts.size() > 1
 				&& !getActivity().getIntent().getBooleanExtra("reservation",
-						false)) {
+						false)
+				&& (app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_CHANGE_ACCOUNT) != 0
+				&& !(SearchResultDetailFragment.this.id == null
+						|| SearchResultDetailFragment.this.id.equals("null") || SearchResultDetailFragment.this.id
+							.equals(""))) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 			// Get the layout inflater
 			LayoutInflater inflater = getLayoutInflater();

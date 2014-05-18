@@ -848,7 +848,7 @@ public class Zones22 extends BaseApi {
 
 	@Override
 	public int getSupportFlags() {
-		return SUPPORT_FLAG_ENDLESS_SCROLLING;
+		return SUPPORT_FLAG_ENDLESS_SCROLLING | SUPPORT_FLAG_CHANGE_ACCOUNT;
 	}
 
 	@Override

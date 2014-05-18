@@ -248,6 +248,13 @@ public interface OpacApi {
 	public static final int SUPPORT_FLAG_ENDLESS_SCROLLING = 0x0000008;
 
 	/**
+	 * Allow account change on reservation click.
+	 * 
+	 * Flag to be present in the result of {@link #getSupportFlags()}.
+	 */
+	public static final int SUPPORT_FLAG_CHANGE_ACCOUNT = 0x0000010;
+
+	/**
 	 * A general exception containing a human-readable error message
 	 */
 	public class OpacErrorException extends Exception {
