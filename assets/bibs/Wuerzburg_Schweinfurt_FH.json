@@ -5,7 +5,7 @@
     "data": {
         "baseurl": "https://recherche.bibkatalog.de/InfoGuideClient.fwssis", 
         "homebranch": "0", 
-        "information": "http://www.fh-sw.de/sw/bibliothek/zeiten.php", 
+        "information": "http://bibliothek.fhws.de/zeiten.html", 
         "startparams": "Login=wofwsw"
     }, 
     "geo": [

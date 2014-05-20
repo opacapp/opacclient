@@ -606,9 +606,10 @@ public class SISIS extends BaseApi implements OpacApi {
 					}
 				}
 				if (sr.getStatus() == null) {
-					if (part[2].contains("entliehen")
-							&& part[2]
-									.startsWith("Vormerkung ist leider nicht möglich")) {
+					if ((part[2].contains("entliehen") && part[2]
+							.startsWith("Vormerkung ist leider nicht möglich"))
+							|| part[2]
+									.contains("nur in anderer Zweigstelle ausleihbar und nicht bestellbar")) {
 						sr.setStatus(SearchResult.Status.RED);
 					} else if (part[2].startsWith("entliehen")
 							|| part[2]
@@ -1573,7 +1574,8 @@ public class SISIS extends BaseApi implements OpacApi {
 
 	@Override
 	public int getSupportFlags() {
-		int flags = SUPPORT_FLAG_ACCOUNT_PROLONG_ALL | SUPPORT_FLAG_CHANGE_ACCOUNT;
+		int flags = SUPPORT_FLAG_ACCOUNT_PROLONG_ALL
+				| SUPPORT_FLAG_CHANGE_ACCOUNT;
 		flags |= SUPPORT_FLAG_ENDLESS_SCROLLING;
 		return flags;
 	}
