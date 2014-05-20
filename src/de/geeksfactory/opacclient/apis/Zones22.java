@@ -732,7 +732,7 @@ public class Zones22 extends BaseApi {
 		if (lent_link == null)
 			return null;
 
-		String lent_html = httpGet(opac_url + "/" + lent_link,
+		String lent_html = httpGet(opac_url + "/" + lent_link.replace("utf-8?Method", "utf-8&Method"),
 				getDefaultEncoding());
 		Document lent_doc = Jsoup.parse(lent_html);
 		List<Map<String, String>> lent = new ArrayList<Map<String, String>>();
