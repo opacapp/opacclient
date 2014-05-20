@@ -165,8 +165,9 @@ public class ReminderCheckService extends Service {
 								continue;
 						}
 						if (item.containsKey(AccountData.KEY_LENT_DEADLINE_TIMESTAMP)) {
-							long expiring = Long.parseLong(item
-									.get(AccountData.KEY_LENT_DEADLINE_TIMESTAMP));
+							long expiring = Long
+									.parseLong(item
+											.get(AccountData.KEY_LENT_DEADLINE_TIMESTAMP));
 							if ((expiring - now) < warning) {
 								expired_total++;
 								if (!data.notificationIsSent(account.getId(),
@@ -257,7 +258,8 @@ public class ReminderCheckService extends Service {
 				nb.setSound(null);
 
 				Intent notificationIntent = new Intent(
-						ReminderCheckService.this, MainActivity.class);
+						ReminderCheckService.this,
+						((OpacClient) getApplication()).getMainActivity());
 				notificationIntent.putExtra("fragment", "account");
 				notificationIntent.putExtra("notifications", notified);
 				if (affected_accounts > 1) {
