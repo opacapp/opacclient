@@ -769,7 +769,28 @@ public class SISIS extends BaseApi implements OpacApi {
 
 		String title = "";
 		String text = "";
-		Element detailtrs = doc2.select("#tab-content .data td").first();
+		Element detailtrs = doc2.select(".box-container .data td").first();
+		for (Node node : detailtrs.childNodes()) {
+			if (node instanceof Element) {
+				if (((Element) node).tagName().equals("strong")) {
+					title = ((Element) node).text().trim();
+					text = "";
+				} else {
+					if (((Element) node).tagName().equals("a")
+							&& (((Element) node).text().trim()
+									.contains("hier klicken") || title
+									.equals("Link:"))) {
+						text = text + ((Element) node).attr("href");
+						break;
+					}
+				}
+			} else if (node instanceof TextNode) {
+				text = text + ((TextNode) node).text();
+			}
+		}
+		
+		
+		detailtrs = doc2.select("#tab-content .data td").first();
 		if (detailtrs != null) {
 			for (Node node : detailtrs.childNodes()) {
 				if (node instanceof Element) {
@@ -786,8 +807,9 @@ public class SISIS extends BaseApi implements OpacApi {
 						title = ((Element) node).text().trim();
 					} else {
 						if (((Element) node).tagName().equals("a")
-								&& ((Element) node).text().trim()
-										.contains("hier klicken")) {
+								&& (((Element) node).text().trim()
+										.contains("hier klicken") || title
+										.equals("Link:"))) {
 							text = text + ((Element) node).attr("href");
 						} else {
 							text = text + ((Element) node).text();
