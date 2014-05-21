@@ -778,7 +778,7 @@ public class AccountFragment extends Fragment implements
 		this.fromcache = fromcache;
 
 		SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(getActivity());
+				.getDefaultSharedPreferences(app.getApplicationContext());
 		final long tolerance = Long.decode(sp.getString("notification_warning",
 				"367200000"));
 
