@@ -255,6 +255,8 @@ public class Adis extends BaseApi implements OpacApi {
 
 			try {
 				metadata.open();
+			} catch (IOException e) {
+				throw e;
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}

@@ -189,7 +189,8 @@ public class Bibliotheca extends BaseApi {
 			nameValuePairs.add(new BasicNameValuePair("link_profis.x", "0"));
 			nameValuePairs.add(new BasicNameValuePair("link_profis.y", "1"));
 			String html = httpPost(opac_url + "/index.asp",
-					new UrlEncodedFormEntity(nameValuePairs), getDefaultEncoding());
+					new UrlEncodedFormEntity(nameValuePairs),
+					getDefaultEncoding());
 			metadata.close();
 			extract_meta(html);
 		} else {
@@ -211,7 +212,8 @@ public class Bibliotheca extends BaseApi {
 		}
 	}
 
-	public static String getStringFromBundle(Map<String, String> bundle, String key) {
+	public static String getStringFromBundle(Map<String, String> bundle,
+			String key) {
 		// Workaround for Bundle.getString(key, default) being available not
 		// before API 12
 		String res = bundle.get(key);
@@ -223,8 +225,8 @@ public class Bibliotheca extends BaseApi {
 	}
 
 	@Override
-	public SearchRequestResult search(Map<String, String> query) throws IOException,
-			NotReachableException {
+	public SearchRequestResult search(Map<String, String> query)
+			throws IOException, NotReachableException {
 		if (!initialised)
 			start();
 
@@ -352,10 +354,12 @@ public class Bibliotheca extends BaseApi {
 			} catch (Exception e) {
 			}
 			try {
-				Comment c = (Comment) tr.child(1).childNode(0);
-				String comment = c.getData().trim();
-				String id = comment.split(": ")[1];
-				sr.setId(id);
+				if (tr.child(1).childNode(0) instanceof Comment) {
+					Comment c = (Comment) tr.child(1).childNode(0);
+					String comment = c.getData().trim();
+					String id = comment.split(": ")[1];
+					sr.setId(id);
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -382,7 +386,7 @@ public class Bibliotheca extends BaseApi {
 		String html = httpGet(opac_url + "/index.asp?MedienNr=" + a,
 				getDefaultEncoding());
 		DetailledItem result = parse_result(html);
-		if(result.getId() == null) {
+		if (result.getId() == null) {
 			result.setId(a);
 		}
 		return result;
@@ -546,7 +550,8 @@ public class Bibliotheca extends BaseApi {
 					nameValuePairs), getDefaultEncoding());
 			return new ReservationResult(MultiStepResult.Status.OK);
 		} else if (selection == null || useraction == 0) {
-			String html = httpGet(opac_url + "/" + reservation_info, getDefaultEncoding());
+			String html = httpGet(opac_url + "/" + reservation_info,
+					getDefaultEncoding());
 			doc = Jsoup.parse(html);
 
 			if (doc.select("input[name=AUSWEIS]").size() > 0) {
@@ -754,7 +759,8 @@ public class Bibliotheca extends BaseApi {
 				account(account);
 			} catch (JSONException e) {
 				e.printStackTrace();
-				return new ProlongAllResult(MultiStepResult.Status.ERROR, "Verbindungsfehler.");
+				return new ProlongAllResult(MultiStepResult.Status.ERROR,
+						"Verbindungsfehler.");
 			} catch (OpacErrorException e) {
 				return new ProlongAllResult(MultiStepResult.Status.ERROR,
 						e.getMessage());
@@ -764,25 +770,27 @@ public class Bibliotheca extends BaseApi {
 				account(account);
 			} catch (JSONException e) {
 				e.printStackTrace();
-				return new ProlongAllResult(MultiStepResult.Status.ERROR, "Verbindungsfehler.");
+				return new ProlongAllResult(MultiStepResult.Status.ERROR,
+						"Verbindungsfehler.");
 			} catch (OpacErrorException e) {
 				return new ProlongAllResult(MultiStepResult.Status.ERROR,
 						e.getMessage());
 			}
 		}
-		String html = httpGet(opac_url + "/index.asp?target=alleverl", getDefaultEncoding());
+		String html = httpGet(opac_url + "/index.asp?target=alleverl",
+				getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 
 		if (doc.getElementsByClass("kontomeldung").size() == 1) {
 			String err = doc.getElementsByClass("kontomeldung").get(0).text();
 			return new ProlongAllResult(MultiStepResult.Status.ERROR, err);
 		}
-		
-		if(doc.select(".kontozeile table").size() == 1) {
+
+		if (doc.select(".kontozeile table").size() == 1) {
 			Map<Integer, String> colmap = new HashMap<Integer, String>();
 			List<Map<String, String>> result = new ArrayList<Map<String, String>>();
-			for(Element tr : doc.select(".kontozeile table tr")) {
-				if(tr.select(".tabHeaderKonto").size() > 0) {
+			for (Element tr : doc.select(".kontozeile table tr")) {
+				if (tr.select(".tabHeaderKonto").size() > 0) {
 					int i = 0;
 					for (Element th : tr.select("th")) {
 						if (th.text().contains("Verfasser")) {
@@ -816,7 +824,7 @@ public class Bibliotheca extends BaseApi {
 			}
 			return new ProlongAllResult(MultiStepResult.Status.OK, result);
 		}
-		
+
 		return new ProlongAllResult(MultiStepResult.Status.ERROR, "Parse error");
 	}
 
@@ -854,7 +862,8 @@ public class Bibliotheca extends BaseApi {
 
 	@Override
 	public AccountData account(Account acc) throws IOException,
-			NotReachableException, JSONException, SocketException, OpacErrorException {
+			NotReachableException, JSONException, SocketException,
+			OpacErrorException {
 		if (!initialised)
 			start();
 
@@ -896,7 +905,8 @@ public class Bibliotheca extends BaseApi {
 		// }
 
 		if (doc.getElementsByClass("kontomeldung").size() == 1) {
-			throw new OpacErrorException(doc.getElementsByClass("kontomeldung").get(0).text());
+			throw new OpacErrorException(doc.getElementsByClass("kontomeldung")
+					.get(0).text());
 		}
 
 		logged_in = System.currentTimeMillis();
@@ -1088,7 +1098,8 @@ public class Bibliotheca extends BaseApi {
 
 	@Override
 	public int getSupportFlags() {
-		int flags = SUPPORT_FLAG_ACCOUNT_EXTENDABLE | SUPPORT_FLAG_CHANGE_ACCOUNT;
+		int flags = SUPPORT_FLAG_ACCOUNT_EXTENDABLE
+				| SUPPORT_FLAG_CHANGE_ACCOUNT;
 		flags |= SUPPORT_FLAG_ENDLESS_SCROLLING;
 		if (!data.has("disableProlongAll")) {
 			flags |= SUPPORT_FLAG_ACCOUNT_PROLONG_ALL;
