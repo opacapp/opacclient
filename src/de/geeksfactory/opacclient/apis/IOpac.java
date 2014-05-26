@@ -545,6 +545,10 @@ public class IOpac extends BaseApi implements OpacApi {
 		String html = httpGet(opac_url + "/" + reservation_info,
 				getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
+		if (doc.select("table").first().text().contains("kann nicht")) {
+			return new ReservationResult(MultiStepResult.Status.ERROR, doc
+					.select("table").first().text().trim());
+		}
 		if (doc.select("form[name=form1]").size() > 0) {
 			List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
 			params.add(new BasicNameValuePair("sleKndNr", account.getName()));
@@ -559,8 +563,13 @@ public class IOpac extends BaseApi implements OpacApi {
 					"input[name=recno]").attr("value")));
 			params.add(new BasicNameValuePair("pshLogin", "Reservieren"));
 
-			httpPost(opac_url + "/cgi-bin/di.exe", new UrlEncodedFormEntity(
+			html = httpPost(opac_url + "/cgi-bin/di.exe", new UrlEncodedFormEntity(
 					params), getDefaultEncoding());
+			doc = Jsoup.parse(html);
+			if (doc.select("h1").text().contains("fehlgeschlagen")) {
+				return new ReservationResult(MultiStepResult.Status.ERROR, doc
+						.select("table").first().text().trim());
+			}
 			return new ReservationResult(MultiStepResult.Status.OK);
 		}
 		return new ReservationResult(MultiStepResult.Status.ERROR);
