@@ -372,10 +372,11 @@ public class SearchResultListFragment extends ListFragment {
 					}
 
 					showConnectivityError(exception.getMessage());
-				} else if (exception instanceof NotReachableException)
-					showConnectivityError(getResources().getString(
-							R.string.connection_error_detail_nre));
-				else
+				} else if (exception instanceof NotReachableException) {
+					if (getActivity() != null)
+						showConnectivityError(getResources().getString(
+								R.string.connection_error_detail_nre));
+				} else
 					showConnectivityError();
 			} else {
 				loaded(result);
