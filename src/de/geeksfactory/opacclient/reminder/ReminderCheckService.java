@@ -110,6 +110,8 @@ public class ReminderCheckService extends Service {
 
 	public class CheckTask extends AsyncTask<Object, Object, Object[]> {
 
+		private boolean exception = false;
+
 		@Override
 		protected Object[] doInBackground(Object... params) {
 			AccountDataSource data = new AccountDataSource(
@@ -191,14 +193,15 @@ public class ReminderCheckService extends Service {
 							first_affected_account = account.getId();
 					}
 
-				} catch (ClientProtocolException e) {
-					e.printStackTrace();
 				} catch (SocketException e) {
 					e.printStackTrace();
+					exception = true;
 				} catch (InterruptedIOException e) {
 					e.printStackTrace();
+					exception = true;
 				} catch (IOException e) {
 					e.printStackTrace();
+					exception = true;
 				} catch (OpacErrorException e) {
 					e.printStackTrace();
 				} catch (Exception e) {
@@ -219,12 +222,13 @@ public class ReminderCheckService extends Service {
 					i, PendingIntent.FLAG_UPDATE_CURRENT);
 			AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
-			if (result == null) {
+			if (result == null || exception) {
 				Log.i("ReminderCheckService", "Opac App Service: Quick repeat");
 				// Try again in one hour
 				am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
 						+ (1000 * 3600), sender);
-				return;
+				if (result == null)
+					return;
 			}
 
 			long expired_new = (Long) result[0];
