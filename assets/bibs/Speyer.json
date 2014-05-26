@@ -13,7 +13,7 @@
             "status": -1, 
             "title": 1
         }, 
-        "baseurl": "http://buecherei.speyer.de", 
+        "baseurl": "http://www.stadtbibliothek.speyer.de", 
         "copiestable": {
             "barcode": 0, 
             "branch": 4, 

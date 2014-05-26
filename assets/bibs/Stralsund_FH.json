@@ -4,9 +4,8 @@
     "country": "Deutschland", 
     "data": {
         "accountSupported": true, 
-        "baseurl": "http://opac.ub.uni-greifswald.de/", 
+        "baseurl": "https://lhgrw.gbv.de", 
         "db": "2", 
-        "httpsbaseurl": "https://opac.ub.uni-greifswald.de/", 
         "information": "http://www.fh-stralsund.de/fh_stralsund/powerslave,id,765,nodeid,.html"
     }, 
     "geo": [
