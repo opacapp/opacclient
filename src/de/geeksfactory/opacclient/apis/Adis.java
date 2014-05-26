@@ -680,6 +680,9 @@ public class Adis extends BaseApi implements OpacApi {
 		List<NameValuePair> nvpairs;
 		ReservationResult res = null;
 
+		if (s_pageform == null)
+			return new ReservationResult(Status.ERROR);
+
 		// Load details
 		nvpairs = s_pageform;
 		int i = 0;
