@@ -131,6 +131,7 @@ public class LibraryApiTestCases extends TestCase {
 			detail = api.getResultById(third.getId(), "");
 		else
 			detail = api.getResult(third.getNr());
+		assertNotNull(detail);
 		confirmDetail(third, detail);
 
 		if (res.getResults().size() < res.getTotal_result_count()) {
@@ -150,7 +151,7 @@ public class LibraryApiTestCases extends TestCase {
 		assertTrue(detail.getDetails().size() > 0);
 		if (detail.isReservable())
 			assertTrue(detail.getReservation_info() != null);
-		if (detail.getId() != null && !detail.getId().equals("")) {
+		if (result.getId() != null && detail.getId() != null && !detail.getId().equals("")) {
 			assertTrue(result.getId().equals(detail.getId()));
 		}
 		if (detail.getTitle() != null) {
