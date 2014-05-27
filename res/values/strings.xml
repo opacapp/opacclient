@@ -20,6 +20,7 @@
     <string name="jahr">Jahr</string>
     <string name="mediengruppe">Mediengruppe</string>
     <string name="digital">Nur digitale Medien</string>
+    <string name="available">Nur verfügbare Medien</string>
     <string name="schlag">Schlagwörter</string>
     <string name="systematik">Systematik</string>
     <string name="go_search">Suche starten</string>
