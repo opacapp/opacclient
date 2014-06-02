@@ -769,6 +769,8 @@ public class AccountFragment extends Fragment implements
 
 	@SuppressWarnings("deprecation")
 	public void displaydata(AccountData result, boolean fromcache) {
+		if (getActivity() == null)
+			return;
 		view.findViewById(R.id.svAccount).setVisibility(View.VISIBLE);
 		view.findViewById(R.id.llLoading).setVisibility(View.GONE);
 		view.findViewById(R.id.unsupported_error).setVisibility(View.GONE);
