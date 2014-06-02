@@ -50,7 +50,6 @@ import org.json.JSONException;
 
 import android.annotation.SuppressLint;
 import android.app.NotificationManager;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;

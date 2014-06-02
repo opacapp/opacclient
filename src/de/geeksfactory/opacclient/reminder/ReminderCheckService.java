@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.acra.ACRA;
-import org.apache.http.client.ClientProtocolException;
 
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -51,7 +50,6 @@ import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
-import de.geeksfactory.opacclient.frontend.MainActivity;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Library;

@@ -25,7 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import android.content.ContentValues;
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import de.geeksfactory.opacclient.apis.OpacApi;
 
 /**

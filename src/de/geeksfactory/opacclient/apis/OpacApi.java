@@ -27,6 +27,7 @@ import java.util.Map;
 
 import org.json.JSONException;
 
+import android.os.Bundle;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;

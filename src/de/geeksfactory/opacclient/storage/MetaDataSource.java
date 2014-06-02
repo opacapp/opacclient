@@ -24,6 +24,7 @@ package de.geeksfactory.opacclient.storage;
 import java.util.List;
 import java.util.Map;
 
+import android.database.SQLException;
 import de.geeksfactory.opacclient.apis.OpacApi;
 
 /**
