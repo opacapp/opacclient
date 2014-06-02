@@ -72,6 +72,7 @@ public class StarredFragment extends Fragment implements
 
 	public interface Callback {
 		public void showDetail(String mNr);
+
 		public void removeFragment();
 	}
 
@@ -190,9 +191,13 @@ public class StarredFragment extends Fragment implements
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
-		return new CursorLoader(getActivity(), app.getStarProviderStarUri(),
-				StarDatabase.COLUMNS, StarDatabase.STAR_WHERE_LIB,
-				new String[] { app.getLibrary().getIdent() }, null);
+		if (app.getLibrary() != null)
+			return new CursorLoader(getActivity(),
+					app.getStarProviderStarUri(), StarDatabase.COLUMNS,
+					StarDatabase.STAR_WHERE_LIB, new String[] { app
+							.getLibrary().getIdent() }, null);
+		else
+			return null;
 	}
 
 	@Override
