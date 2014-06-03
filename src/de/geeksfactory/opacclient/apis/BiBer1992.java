@@ -950,8 +950,8 @@ public class BiBer1992 extends BaseApi {
 					if (key.equals(AccountData.KEY_LENT_AUTHOR)) {
 						if (value.contains(":")) {
 							// Autor: remove everything starting at ":"
-							value = value.replaceFirst("\\:.*", "").trim();
 							value = value.replaceFirst("^.* /", "").trim();
+							value = value.replaceFirst("\\:.*", "").trim();
 						} else {
 							// no Autor given
 							value = "";
