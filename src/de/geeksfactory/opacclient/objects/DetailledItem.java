@@ -25,9 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import android.content.ContentValues;
 import android.graphics.Bitmap;
-import android.os.Bundle;
 import de.geeksfactory.opacclient.apis.OpacApi;
 
 /**
@@ -53,21 +51,21 @@ public class DetailledItem implements CoverHolder {
 	/**
 	 * The barcode of a copy. Optional.
 	 * 
-	 * ContentValues key for {@link #addCopy(ContentValues)}:
+	 * ContentValues key for {@link #addCopy(Map)}:
 	 */
 	public static final String KEY_COPY_BARCODE = "barcode";
 
 	/**
 	 * The location (like "third floor") of a copy. Optional.
 	 * 
-	 * ContentValues key for {@link #addCopy(ContentValues)}:
+	 * ContentValues key for {@link #addCopy(Map)}:
 	 */
 	public static final String KEY_COPY_LOCATION = "location";
 
 	/**
 	 * The department (like "music library") of a copy. Optional.
 	 * 
-	 * ContentValues key for {@link #addCopy(ContentValues)}:
+	 * ContentValues key for {@link #addCopy(Map)}:
 	 */
 	public static final String KEY_COPY_DEPARTMENT = "department";
 
@@ -75,42 +73,42 @@ public class DetailledItem implements CoverHolder {
 	 * The branch a copy is in. Should be set, if your library has more than one
 	 * branch.
 	 * 
-	 * ContentValues key for {@link #addCopy(ContentValues)}:
+	 * ContentValues key for {@link #addCopy(Map)}:
 	 */
 	public static final String KEY_COPY_BRANCH = "branch";
 
 	/**
 	 * Current status of a copy ("lent", "free", ...). Should be set.
 	 * 
-	 * ContentValues key for {@link #addCopy(ContentValues)}:
+	 * ContentValues key for {@link #addCopy(Map)}:
 	 */
 	public static final String KEY_COPY_STATUS = "status";
 
 	/**
 	 * Expected date of return if a copy is lent out. Optional.
 	 * 
-	 * ContentValues key for {@link #addCopy(ContentValues)}:
+	 * ContentValues key for {@link #addCopy(Map)}:
 	 */
 	public static final String KEY_COPY_RETURN = "returndate";
 
 	/**
 	 * Expected date of return if a copy is lent out as a timestamp. Optional.
 	 * 
-	 * ContentValues key for {@link #addCopy(ContentValues)}:
+	 * ContentValues key for {@link #addCopy(Map)}:
 	 */
 	public static final String KEY_COPY_RETURN_TIMESTAMP = "returndate_ts";
 
 	/**
 	 * Number of pending reservations if a copy is currently lent out. Optional.
 	 * 
-	 * ContentValues key for {@link #addCopy(ContentValues)}:
+	 * ContentValues key for {@link #addCopy(Map)}:
 	 */
 	public static final String KEY_COPY_RESERVATIONS = "reservations";
 
 	/**
 	 * Identification in the libraries' shelf system. Optional.
 	 * 
-	 * ContentValues key for {@link #addCopy(ContentValues)}.
+	 * ContentValues key for {@link #addCopy(Map)}.
 	 * 
 	 * @since 2.0.10
 	 */
@@ -119,7 +117,7 @@ public class DetailledItem implements CoverHolder {
 	/**
 	 * Reservation information copy-based reservations.
 	 * 
-	 * ContentValues key for {@link #addCopy(ContentValues)}.
+	 * ContentValues key for {@link #addCopy(Map)}.
 	 * 
 	 * @since 2.0.10
 	 */
@@ -129,14 +127,14 @@ public class DetailledItem implements CoverHolder {
 	 * Unique media identifier of a child item for
 	 * {@link OpacApi#getResultById(String, String)}. Required.
 	 * 
-	 * ContentValues key for {@link #addBand(ContentValues)}:
+	 * ContentValues key for {@link #addBand(Map)}:
 	 */
 	public static final String KEY_CHILD_ID = "id";
 
 	/**
 	 * Title of a child item. Required.
 	 * 
-	 * ContentValues key for {@link #addBand(ContentValues)}:
+	 * ContentValues key for {@link #addBand(Map)}:
 	 */
 	public static final String KEY_CHILD_TITLE = "titel";
 
@@ -232,7 +230,7 @@ public class DetailledItem implements CoverHolder {
 	 * List of copies of this item available
 	 * 
 	 * @return List of copies
-	 * @see #addCopy(ContentValues)
+	 * @see #addCopy(Map)
 	 */
 	public List<Map<String, String>> getCopies() {
 		return copies;
@@ -243,7 +241,7 @@ public class DetailledItem implements CoverHolder {
 	 * 
 	 * @param copies
 	 *            List of copies
-	 * @see #addCopy(ContentValues)
+	 * @see #addCopy(Map)
 	 */
 	public void setCopies(List<Map<String, String>> copies) {
 		this.copies = copies;
@@ -253,7 +251,7 @@ public class DetailledItem implements CoverHolder {
 	 * List of child items available
 	 * 
 	 * @return List of child items available
-	 * @see #addBand(ContentValues)
+	 * @see #addBand(Map)
 	 */
 	public List<Map<String, String>> getBaende() {
 		return baende;
@@ -295,7 +293,7 @@ public class DetailledItem implements CoverHolder {
 
 	/**
 	 * Can return a
-	 * {@link de.geeksfactory.opacclient.apis.OpacApi#search(Bundle)} query
+	 * {@link de.geeksfactory.opacclient.apis.OpacApi#search(Map)} query
 	 * <code>Bundle</code> for a volume search based on this item.
 	 * 
 	 * @return Search query or <code>null</code> if not applicable
@@ -307,7 +305,7 @@ public class DetailledItem implements CoverHolder {
 
 	/**
 	 * Sets a search query which is passed back to your
-	 * {@link de.geeksfactory.opacclient.apis.OpacApi#search(Bundle)}
+	 * {@link de.geeksfactory.opacclient.apis.OpacApi#search(Map)}
 	 * implementation for a volume search based on this item-
 	 * 
 	 * @param volumesearch

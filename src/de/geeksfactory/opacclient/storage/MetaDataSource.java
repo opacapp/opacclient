@@ -24,7 +24,6 @@ package de.geeksfactory.opacclient.storage;
 import java.util.List;
 import java.util.Map;
 
-import android.database.SQLException;
 import de.geeksfactory.opacclient.apis.OpacApi;
 
 /**
@@ -58,7 +57,7 @@ public interface MetaDataSource {
 	 * Open up the connection to the data source. Needs to be called before any
 	 * read or write operation.
 	 * 
-	 * @throws SQLException
+	 * @throws Exception
 	 *             on failure
 	 */
 	public void open() throws Exception;
