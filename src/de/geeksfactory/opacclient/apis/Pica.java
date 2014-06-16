@@ -777,6 +777,8 @@ public class Pica extends BaseApi implements OpacApi {
 				reminderCount = reminderCount.substring(
 						reminderCount.indexOf("(") + 1,
 						reminderCount.indexOf(" Mahn"));
+			else
+				reminderCount = "";
 			Map<String, String> e = new HashMap<String, String>();
 
 			if (tr.child(4).text().trim().length() < 5
@@ -786,7 +788,7 @@ public class Pica extends BaseApi implements OpacApi {
 				e.put(AccountData.KEY_LENT_TITLE, tr.child(4).text().trim());
 			}
 			String status = "";
-			if (!reminderCount.equals("0")) {
+			if (!reminderCount.equals("0") && !reminderCount.equals("")) {
 				status += reminderCount + " Mahnungen, ";
 			}
 			status += prolongCount + "x verl."; // + tr.child(25).text().trim()
