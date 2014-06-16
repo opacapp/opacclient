@@ -190,6 +190,9 @@
     <string name="pagination_next">Nächste Seite</string>
     <string name="pagination_prev">Vorige Seite</string>
     <string name="crash_toast_text">Ein Fehler ist aufgetreten. Bitte warten Sie einen Augenblick.</string>
+    <string name="crash_notif_ticker_text">Web Opac App: Ein Fehler ist aufgetreten.</string>
+    <string name="crash_notif_text">Bitte klicken Sie hier, um den Fehlerbericht einzuschicken.</string>
+    <string name="crash_notif_title">Die Web Opac App ist abgestürzt</string>
     <string name="crash_dialog_text">In der Opac App ist ein Fehler aufgetreten! Bitte schicken Sie uns den Fehlerbericht per E-Mail ein, dann können wir ihn beheben.</string>
     <string name="refresh">Aktualisieren</string>
     <string name="prolong_all">Alle verlängern</string>

@@ -72,7 +72,14 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 import de.geeksfactory.opacclient.storage.StarContentProvider;
 
-@ReportsCrashes(formKey = "", mailTo = "info@opacapp.de", mode = org.acra.ReportingInteractionMode.DIALOG)
+@ReportsCrashes(formKey = "", mailTo = "info@opacapp.de", mode = org.acra.ReportingInteractionMode.NOTIFICATION,
+resToastText = R.string.crash_toast_text, // optional, displayed as soon as the crash occurs, before collecting data which can take a few seconds
+resNotifTickerText = R.string.crash_notif_ticker_text,
+resNotifTitle = R.string.crash_notif_title,
+resNotifText = R.string.crash_notif_text,
+resNotifIcon = android.R.drawable.stat_notify_error,
+resDialogText = R.string.crash_dialog_text
+)
 public class OpacClient extends Application {
 
 	public Exception last_exception;
