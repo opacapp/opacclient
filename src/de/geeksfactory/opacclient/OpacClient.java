@@ -72,14 +72,7 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 import de.geeksfactory.opacclient.storage.StarContentProvider;
 
-@ReportsCrashes(formKey = "", mailTo = "info@opacapp.de", mode = org.acra.ReportingInteractionMode.NOTIFICATION,
-resToastText = R.string.crash_toast_text, // optional, displayed as soon as the crash occurs, before collecting data which can take a few seconds
-resNotifTickerText = R.string.crash_notif_ticker_text,
-resNotifTitle = R.string.crash_notif_title,
-resNotifText = R.string.crash_notif_text,
-resNotifIcon = android.R.drawable.stat_notify_error,
-resDialogText = R.string.crash_dialog_text
-)
+@ReportsCrashes(formKey = "", mailTo = "info@opacapp.de", mode = org.acra.ReportingInteractionMode.NOTIFICATION)
 public class OpacClient extends Application {
 
 	public Exception last_exception;
@@ -102,17 +95,17 @@ public class OpacClient extends Application {
 	public static String versionName = "unknown";
 
 	private final Uri STAR_PROVIDER_STAR_URI = StarContentProvider.STAR_URI;
-	
-    private static OpacClient instance;
-    
-    public OpacClient() {
-    	super();
-    	instance = this;
-    }
-    
-    public static Context getEmergencyContext() {
-    	return instance.getApplicationContext();
-    }
+
+	private static OpacClient instance;
+
+	public OpacClient() {
+		super();
+		instance = this;
+	}
+
+	public static Context getEmergencyContext() {
+		return instance.getApplicationContext();
+	}
 
 	public Uri getStarProviderStarUri() {
 		return STAR_PROVIDER_STAR_URI;
@@ -311,6 +304,12 @@ public class OpacClient extends Application {
 
 		ACRAConfiguration config = ACRA.getNewDefaultConfig(this);
 		config.setResToastText(R.string.crash_toast_text);
+		config.setResDialogText(R.string.crash_dialog_text);
+		config.setResToastText(R.string.crash_toast_text);
+		config.setResNotifTickerText(R.string.crash_notif_ticker_text);
+		config.setResNotifTitle(R.string.crash_notif_title);
+		config.setResNotifText(R.string.crash_notif_text);
+		config.setResNotifIcon(android.R.drawable.stat_notify_error);
 		config.setResDialogText(R.string.crash_dialog_text);
 		ACRA.setConfig(config);
 		ACRA.init(this);
