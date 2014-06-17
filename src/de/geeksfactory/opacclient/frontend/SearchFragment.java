@@ -41,27 +41,27 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
 import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 
 public class SearchFragment extends Fragment implements AccountSelectedListener {
-	private SharedPreferences sp;
+	protected SharedPreferences sp;
 
 	public interface Callback {
 		public void scanBarcode();
 	}
 
-	private Callback mCallback;
-	private View view;
-	private OpacClient app;
-	private Bundle savedState;
+	protected Callback mCallback;
+	protected View view;
+	protected OpacClient app;
+	protected Bundle savedState;
 
-	private boolean advanced = false;
-	private Set<String> fields;
+	protected boolean advanced = false;
+	protected Set<String> fields;
 
-	private List<Map<String, String>> spinnerCategory_data;
-	private List<Map<String, String>> spinnerBranch_data;
-	private List<Map<String, String>> spinnerHomeBranch_data;
+	protected List<Map<String, String>> spinnerCategory_data;
+	protected List<Map<String, String>> spinnerBranch_data;
+	protected List<Map<String, String>> spinnerHomeBranch_data;
 
-	private long last_meta_try = 0;
+	protected long last_meta_try = 0;
 	public boolean metaDataLoading = false;
-	private LoadMetaDataTask lmdt;
+	protected LoadMetaDataTask lmdt;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -305,7 +305,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		}
 	}
 
-	private void fillComboBoxes() {
+	protected void fillComboBoxes() {
 		Spinner cbZst = (Spinner) view.findViewById(R.id.cbBranch);
 		Spinner cbZstHome = (Spinner) view.findViewById(R.id.cbHomeBranch);
 		Spinner cbMg = (Spinner) view.findViewById(R.id.cbMediengruppe);
@@ -426,7 +426,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		data.close();
 	}
 
-	private void loadingIndicators() {
+	protected void loadingIndicators() {
 		int visibility = metaDataLoading ? View.VISIBLE : View.GONE;
 		view.findViewById(R.id.pbBranch).setVisibility(visibility);
 		view.findViewById(R.id.pbHomeBranch).setVisibility(visibility);
