@@ -1,0 +1,18 @@
+{
+    "api": "pica",
+    "city": "Frankfurt",
+    "country": "Deutschland",
+    "data": {
+        "accountSupported": true,
+        "baseurl": "https://lbsopac.rz.uni-frankfurt.de",
+        "db": "50",
+        "information": "https://www.fh-frankfurt.de/einrichtungen-services/verwaltung-einrichtungen/bibliothek.html"
+    },
+    "geo": [
+        50.1109221,
+        8.6821267
+    ],
+    "state": "Hessen",
+    "support": "Katalogsuche und Konto",
+    "title": "Fachhochschulbibliothek"
+}

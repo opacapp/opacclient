@@ -1,0 +1,16 @@
+{
+    "api": "sisis",
+    "city": "Remscheid",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.remscheid.de/webOPACClient.remscheid",
+        "information": "http://www.remscheid.de/freizeit-und-kultur/bibliothek/bibliothek.php"
+    },
+    "geo": [
+        51.1787418,
+        7.189696199999998
+    ],
+    "state": "Nordrhein-Westfalen",
+    "support": "Katalogsuche und Konto",
+    "title": "Stadtbibliothek"
+}

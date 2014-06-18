@@ -1,0 +1,16 @@
+{
+    "api": "sisis",
+    "city": "Brandenburg (Havel)",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "https://bibliothek.stadt-brandenburg.de/webOPACClient",
+        "information": "http://www.stadt-brandenburg.de/bildung/fouque-bibliothek/"
+    },
+    "geo": [
+        52.4125287,
+        12.5316444
+    ],
+    "state": "Brandenburg",
+    "support": "Katalogsuche und Konto",
+    "title": "Fouqu\u00e9-Bibliothek"
+}
