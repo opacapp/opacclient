@@ -1241,7 +1241,8 @@ public class Adis extends BaseApi implements OpacApi {
 					&& !input.attr("value").contains("vergessen")
 					&& !"".equals(input.attr("name"))) {
 				if (input.attr("id").equals("L#AUSW_1")
-						|| input.attr("id").equals("IDENT_1")) {
+						|| input.attr("id").equals("IDENT_1")
+						|| input.attr("id").equals("LMATNR_1")) {
 					input.attr("value", account.getName());
 				}
 				form.add(new BasicNameValuePair(input.attr("name"), input
