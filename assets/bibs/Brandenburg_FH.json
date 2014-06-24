@@ -1,6 +1,6 @@
 {
     "api": "sisis", 
-    "city": "Brandenburg", 
+    "city": "Brandenburg (Havel)", 
     "country": "Deutschland", 
     "data": {
         "baseurl": "https://opac.fh-brandenburg.de/InfoGuideClient.bfbsis", 

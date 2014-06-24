@@ -4,7 +4,8 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://bibliothek.stadt-brandenburg.de/webOPACClient",
-        "information": "http://www.stadt-brandenburg.de/bildung/fouque-bibliothek/"
+        "information": "http://www.stadt-brandenburg.de/bildung/fouque-bibliothek/",
+		"startparams": "Login=opac"
     },
     "geo": [
         52.4125287,

@@ -4,8 +4,8 @@
     "country": "Deutschland", 
     "data": {
         "accounttable": null, 
-        "baseurl": "http://www.stadtbuecherei-ibbenbueren.de", 
-        "information": "http://www.stadtbuecherei-ibbenbueren.de/wwwcms/cms/front_content.php", 
+        "baseurl": "http://opac.stadtbuecherei-ibbenbueren.de", 
+        "information": "http://www.stadtbuecherei-ibbenbueren.de/", 
         "mediatypes": {
             "1": "BOOK", 
             "11": "DVD", 
