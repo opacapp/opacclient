@@ -48,7 +48,7 @@ public class MainActivity extends OpacActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (getIntent().getAction() != null) {
+		if (getIntent() != null && getIntent().getAction() != null) {
 			if (getIntent().getAction().equals("android.intent.action.VIEW")) {
 				urlintent();
 				return;
