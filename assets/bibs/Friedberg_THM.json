@@ -1,0 +1,18 @@
+{
+    "api": "pica",
+    "city": "Friedberg",
+    "country": "Deutschland",
+    "data": {
+        "accountSupported": true,
+        "baseurl": "https://opac.uni-giessen.de",
+        "db": "40",
+        "information": "http://www.thm.de/bibliothek/"
+    },
+    "geo": [
+        50.335278,
+        8.754999999999999
+    ],
+    "state": "Hessen",
+    "support": "Katalogsuche und Konto",
+    "title": "Hochschulbibliothek THM"
+}
