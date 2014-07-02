@@ -100,6 +100,7 @@ public class Bibliotheca extends BaseApi {
 		defaulttypes.put("mdvds", MediaType.DVD);
 		defaulttypes.put("mdvd", MediaType.DVD);
 		defaulttypes.put("blu-ray--disc_s_35x35", MediaType.BLURAY);
+		defaulttypes.put("mblurays", MediaType.BLURAY);
 		defaulttypes.put("mfilms", MediaType.MOVIE);
 		defaulttypes.put("mvideos", MediaType.MOVIE);
 		defaulttypes.put("mhoerbuchs", MediaType.AUDIOBOOK);
