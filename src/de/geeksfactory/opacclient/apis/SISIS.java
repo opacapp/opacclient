@@ -1134,21 +1134,26 @@ public class SISIS extends BaseApi implements OpacApi {
 						best = copy;
 						continue;
 					}
-					if (Integer.parseInt(copy
-							.get(DetailledItem.KEY_COPY_RESERVATIONS)) < Long
-							.parseLong(best
-									.get(DetailledItem.KEY_COPY_RESERVATIONS))) {
-						best = copy;
-					} else if (Integer.parseInt(copy
-							.get(DetailledItem.KEY_COPY_RESERVATIONS)) == Long
-							.parseLong(best
-									.get(DetailledItem.KEY_COPY_RESERVATIONS))) {
+					try {
 						if (Integer.parseInt(copy
-								.get(DetailledItem.KEY_COPY_RETURN_TIMESTAMP)) < Long
+								.get(DetailledItem.KEY_COPY_RESERVATIONS)) < Long
 								.parseLong(best
-										.get(DetailledItem.KEY_COPY_RETURN_TIMESTAMP))) {
+										.get(DetailledItem.KEY_COPY_RESERVATIONS))) {
 							best = copy;
+						} else if (Integer.parseInt(copy
+								.get(DetailledItem.KEY_COPY_RESERVATIONS)) == Long
+								.parseLong(best
+										.get(DetailledItem.KEY_COPY_RESERVATIONS))) {
+							if (Integer
+									.parseInt(copy
+											.get(DetailledItem.KEY_COPY_RETURN_TIMESTAMP)) < Long
+									.parseLong(best
+											.get(DetailledItem.KEY_COPY_RETURN_TIMESTAMP))) {
+								best = copy;
+							}
 						}
+					} catch (NumberFormatException e) {
+
 					}
 				}
 				if (best != null) {
