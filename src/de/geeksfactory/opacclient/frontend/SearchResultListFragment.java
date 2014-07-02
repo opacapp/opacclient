@@ -143,7 +143,7 @@ public class SearchResultListFragment extends ListFragment {
 
 		if (savedInstanceState == null && searchresult == null) {
 			performsearch();
-		} else if(searchresult != null) {
+		} else if (searchresult != null) {
 			if (searchresult.getTotal_result_count() >= 0)
 				getSupportActionBar().setSubtitle(
 						getString(R.string.result_number,
@@ -245,13 +245,15 @@ public class SearchResultListFragment extends ListFragment {
 
 					@Override
 					public void onError(Exception e) {
-						if (e instanceof OpacErrorException) {
-							showConnectivityError(e.getMessage());
-						} else if (e instanceof NotReachableException) {
-							showConnectivityError(getResources().getString(
-									R.string.connection_error_detail_nre));
-						} else {
-							showConnectivityError();
+						if (getActivity() != null) {
+							if (e instanceof OpacErrorException) {
+								showConnectivityError(e.getMessage());
+							} else if (e instanceof NotReachableException) {
+								showConnectivityError(getResources().getString(
+										R.string.connection_error_detail_nre));
+							} else {
+								showConnectivityError();
+							}
 						}
 					}
 
@@ -278,7 +280,7 @@ public class SearchResultListFragment extends ListFragment {
 	}
 
 	public void showConnectivityError(String description) {
-		if(getView() == null || getActivity() == null)
+		if (getView() == null || getActivity() == null)
 			return;
 		final LinearLayout progressContainer = (LinearLayout) getView()
 				.findViewById(R.id.progressContainer);
@@ -357,7 +359,8 @@ public class SearchResultListFragment extends ListFragment {
 			if (result == null) {
 
 				if (exception instanceof OpacErrorException) {
-					if (exception.getMessage().equals("is_a_redirect") && getActivity() != null) {
+					if (exception.getMessage().equals("is_a_redirect")
+							&& getActivity() != null) {
 						// Some libraries (SISIS) do not show a result list if
 						// only one result
 						// is found but instead directly show the result
