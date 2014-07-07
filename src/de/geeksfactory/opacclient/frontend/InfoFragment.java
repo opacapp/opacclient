@@ -27,6 +27,8 @@ import org.holoeverywhere.widget.ProgressBar;
 import org.json.JSONException;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -35,6 +37,7 @@ import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
@@ -76,11 +79,12 @@ public class InfoFragment extends Fragment implements AccountSelectedListener {
 	@SuppressWarnings("deprecation")
 	@SuppressLint("SetJavaScriptEnabled")
 	@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		view = inflater.inflate(R.layout.fragment_info, container, false);
 		app = (OpacClient) getActivity().getApplication();
-		
+
 		setHasOptionsMenu(true);
 
 		load();
@@ -98,7 +102,8 @@ public class InfoFragment extends Fragment implements AccountSelectedListener {
 		wvInfo.setWebChromeClient(new WebChromeClient() {
 			@Override
 			public void onProgressChanged(WebView v, int progress) {
-				ProgressBar Pbar = (ProgressBar) view.findViewById(R.id.pbWebProgress);
+				ProgressBar Pbar = (ProgressBar) view
+						.findViewById(R.id.pbWebProgress);
 				if (progress < 100 && Pbar.getVisibility() == View.GONE) {
 					Pbar.setVisibility(View.VISIBLE);
 				}
@@ -107,8 +112,23 @@ public class InfoFragment extends Fragment implements AccountSelectedListener {
 					Pbar.setVisibility(View.GONE);
 				}
 			}
+
 		});
-		
+		wvInfo.setWebViewClient(new WebViewClient() {
+
+			@Override
+			public boolean shouldOverrideUrlLoading(WebView view, String url) {
+				if (url.contains(app.getLibrary().getData()
+						.optString("webviewcontain", "NOPE"))) {
+					return false;
+				}
+				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+				startActivity(intent);
+				return true;
+			}
+
+		});
+
 		return view;
 	}
 
@@ -123,7 +143,8 @@ public class InfoFragment extends Fragment implements AccountSelectedListener {
 	}
 
 	@Override
-	public void onCreateOptionsMenu(android.view.Menu menu, MenuInflater inflater) {
+	public void onCreateOptionsMenu(android.view.Menu menu,
+			MenuInflater inflater) {
 		inflater.inflate(R.menu.activity_info, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
