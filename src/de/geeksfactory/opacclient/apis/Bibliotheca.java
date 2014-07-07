@@ -817,8 +817,8 @@ public class Bibliotheca extends BaseApi {
 				} else {
 					Map<String, String> line = new HashMap<String, String>();
 					for (Entry<Integer, String> entry : colmap.entrySet()) {
-						line.put(colmap.get(entry.getValue()),
-								tr.child(entry.getKey()).text().trim());
+						line.put(entry.getValue(), tr.child(entry.getKey())
+								.text().trim());
 					}
 					result.add(line);
 				}
