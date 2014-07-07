@@ -43,9 +43,9 @@ import de.geeksfactory.opacclient.objects.Account;
 
 public class InfoFragment extends Fragment implements AccountSelectedListener {
 
-	private WebView wvInfo;
-	private OpacClient app;
-	private View view;
+	protected WebView wvInfo;
+	protected OpacClient app;
+	protected View view;
 
 	public void load() {
 		wvInfo = (WebView) view.findViewById(R.id.wvInfo);
