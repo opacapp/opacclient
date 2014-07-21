@@ -13,7 +13,7 @@
             "status": -1, 
             "title": 1
         }, 
-        "baseurl": "http://wwwopac.rz-as.de/muensingen",
+        "baseurl": "https://wwwopac.rz-kiru.de/muensingen",
         "copiestable": {
             "barcode": -1, 
             "branch": -1, 
