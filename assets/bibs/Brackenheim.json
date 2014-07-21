@@ -1,27 +1,49 @@
 {
-    "api": "bibliotheca", 
-    "city": "Brackenheim", 
-    "country": "Deutschland", 
+    "api": "bibliotheca",
+    "city": "Brackenheim",
+    "country": "Deutschland",
     "data": {
-        "accounttable": null, 
-        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-brackenheim", 
+        "accounttable": {
+            "author": 0,
+            "prolongurl": 4,
+            "returndate": 3,
+            "title": 1
+        },
+        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-brackenheim",
         "copiestable": {
-            "barcode": -1, 
-            "branch": -1, 
-            "department": -1, 
-            "location": 1, 
-            "reservations": -1, 
-            "returndate": 4, 
-            "status": 3
-        }, 
-        "information": "http://www.stadtbuecherei-brackenheim.de/data/index.php", 
-        "reservationtable": null
-    }, 
-    "geo": [
-        49.0808636, 
-        9.0703137
-    ], 
-    "state": "Baden-W\u00fcrttemberg", 
-    "support": "Katalogsuche", 
+            "location": 2,
+            "returndate": 5,
+            "status": 4
+        },
+        "information": "http://www.stadtbuecherei-brackenheim.de/",
+        "mediatypes": {
+            "ComicS.gif": "BOOK",
+            "HALkl.gif": "BOOK",
+            "Kassettekl.gif": "AUDIO_CASSETTE",
+            "Munzinger3k.png": "EDOC",
+            "SpielS.gif": "BOARDGAME",
+            "cdkl.gif": "CD",
+            "english.gif": "UNKNOWN",
+            "kirchekl.gif": "UNKNOWN",
+            "mComput2s.gif": "UNKNOWN",
+            "mDVDS.gif": "DVD",
+            "mMusik2S.gif": "AUDIOBOOK",
+            "mMusikCDS.gif": "CD",
+            "mReise2S.gif": "BOOK",
+            "mVideoS.gif": "MOVIE",
+            "mZtgS.gif": "MAGAZINE",
+            "mono1S.gif": "BOOK",
+            "monoS.gif": "BOOK",
+            "picto-klein.gif": "EBOOK"
+        },
+        "reservationtable": {
+            "author": 0,
+            "cancelurl": 3,
+            "expirationdate": 2,
+            "title": 1
+        }
+    },
+    "state": "Baden-W\u00fcrttemberg",
+    "support": "Katalogsuche und Konto",
     "title": "Stadtb\u00fccherei"
 }
