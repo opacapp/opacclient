@@ -310,6 +310,10 @@ public abstract class OpacActivity extends Activity {
 	/** Swaps fragments in the main content view */
 	@SuppressLint("NewApi")
 	protected void selectItem(int position) {
+		try {
+			setSupportProgressBarIndeterminateVisibility(false);
+		} catch (Exception e) {
+		}
 		Item item = navAdapter.getItem(position);
 		if (item.type == Item.TYPE_SEPARATOR) {
 			// clicked on a separator
