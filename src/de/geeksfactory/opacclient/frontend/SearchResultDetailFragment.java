@@ -308,7 +308,6 @@ public class SearchResultDetailFragment extends Fragment {
 				e.printStackTrace();
 			} catch (Exception e) {
 				e.printStackTrace();
-				ACRA.getErrorReporter().handleException(e);
 				success = false;
 			}
 			return null;
