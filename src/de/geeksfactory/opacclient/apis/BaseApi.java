@@ -135,12 +135,19 @@ public abstract class BaseApi implements OpacApi {
 			// TODO: Handly this well
 			// Can be "Not trusted server certificate" or can be a
 			// aborted/interrupted handshake/connection
-			throw e;
+			if (e.getMessage().contains("timed out")
+					|| e.getMessage().contains("reset by")) {
+				e.printStackTrace();
+				throw new NotReachableException();
+			} else {
+				throw e;
+			}
 		} catch (InterruptedIOException e) {
 			e.printStackTrace();
 			throw new NotReachableException();
 		} catch (IOException e) {
-			if (e.getMessage() != null && e.getMessage().contains("Request aborted")) {
+			if (e.getMessage() != null
+					&& e.getMessage().contains("Request aborted")) {
 				e.printStackTrace();
 				throw new NotReachableException();
 			} else {
@@ -280,7 +287,13 @@ public abstract class BaseApi implements OpacApi {
 			throw new NotReachableException();
 		} catch (javax.net.ssl.SSLPeerUnverifiedException e) {
 			// TODO: Handle this well
-			throw e;
+			if (e.getMessage().contains("timed out")
+					|| e.getMessage().contains("reset by")) {
+				e.printStackTrace();
+				throw new NotReachableException();
+			} else {
+				throw e;
+			}
 		} catch (javax.net.ssl.SSLException e) {
 			// TODO: Handle this well
 			// Can be "Not trusted server certificate" or can be a
@@ -290,7 +303,8 @@ public abstract class BaseApi implements OpacApi {
 			e.printStackTrace();
 			throw new NotReachableException();
 		} catch (IOException e) {
-			if (e.getMessage() != null && e.getMessage().contains("Request aborted")) {
+			if (e.getMessage() != null
+					&& e.getMessage().contains("Request aborted")) {
 				e.printStackTrace();
 				throw new NotReachableException();
 			} else {
