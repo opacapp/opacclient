@@ -37,7 +37,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,7 +46,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import android.util.Log;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.networking.HTTPClient;
 import de.geeksfactory.opacclient.objects.Account;
@@ -745,8 +743,12 @@ public class BiBer1992 extends BaseApi {
 		}// for rows
 		
 		item.setReservable(true); //We cannot check if media is reservable
-		item.setReservation_info(document.select("input[type=checkbox]").first().attr("name"));
 		
+		if(m_opac_dir.equals("opax")) {		
+			item.setReservation_info(document.select("input[type=checkbox]").first().attr("name"));		
+		} else {
+			item.setReservation_info(document.select("input[name=ID]").attr("value"));		
+		}
 		return item;
 	}
 
@@ -759,12 +761,19 @@ public class BiBer1992 extends BaseApi {
 	 */
 	@Override
 	public ReservationResult reservation(DetailledItem item, Account account,
-			int useraction, String selection) throws IOException {		
+			int useraction, String selection) throws IOException {	
+		String resinfo = item.getReservation_info();
 		if (selection == null) {
-			Log.d("opac", item.getReservation_info());
 			//STEP 1: Check if reservable and select branch ("ID1")
-			String html = httpGet(m_opac_url + "/" + m_opac_dir + "/reserv.C?LANG=de&FUNC=sigl&" +
-					item.getReservation_info() + "=resF_" + item.getReservation_info(), getDefaultEncoding());
+			
+			//Differences between opax and opac
+			String func = m_opac_dir.equals("opax") ? "sigl" : "resF";
+			String id = m_opac_dir.equals("opax")
+					? resinfo + "=resF_" + resinfo
+					: "ID=" + resinfo;
+			
+			String html = httpGet(m_opac_url + "/" + m_opac_dir + "/reserv.C?LANG=de&FUNC=" + func + "&" +
+					id, getDefaultEncoding());
 			Document doc = Jsoup.parse(html);
 			Elements optionsElements = doc.select("select[name=ID1] option");
 			if(optionsElements.size() > 0) {
@@ -772,34 +781,40 @@ public class BiBer1992 extends BaseApi {
 				for(Element option:optionsElements) {
 					options.put(option.attr("value"), option.text());
 				}
-				
-				ReservationResult res = new ReservationResult(MultiStepResult.Status.SELECTION_NEEDED);
-				res.setSelection(options);
-				return res;
+				if(options.size() > 1) {
+					ReservationResult res = new ReservationResult(MultiStepResult.Status.SELECTION_NEEDED);
+					res.setSelection(options);
+					return res;
+				} else {
+					return reservation(item, account, useraction, options.keySet().iterator().next());
+				}
 			} else {
 				ReservationResult res = new ReservationResult(MultiStepResult.Status.ERROR);
 				res.setMessage("Dieses Medium ist nicht reservierbar.");
 				return res;
 			}
 		} else {
-			Log.d("opac", selection);
 			//STEP 2: Reserve
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 			nameValuePairs.add(new BasicNameValuePair("LANG", "de"));
 			nameValuePairs.add(new BasicNameValuePair("BENUTZER", account.getName()));
 			nameValuePairs.add(new BasicNameValuePair("PASSWORD", account.getPassword()));
 			nameValuePairs.add(new BasicNameValuePair("FUNC", "vors"));
-			nameValuePairs.add(new BasicNameValuePair(item.getReservation_info(), "vors"));
+			if(m_opac_dir.equals("opax")) 
+				nameValuePairs.add(new BasicNameValuePair(resinfo, "vors"));
 			nameValuePairs.add(new BasicNameValuePair("ID1", selection));			
 			
 			String html = httpPost(m_opac_url + "/" + m_opac_dir + "/setreserv.C",
 					new UrlEncodedFormEntity(nameValuePairs), getDefaultEncoding());
 			
 			Document doc = Jsoup.parse(html);
-			if (doc.select(".tab21 .p44b").text().contains("eingetragen")) {
+			if (doc.select(".tab21 .p44b, .p2").text().contains("eingetragen")) {
 				return new ReservationResult(MultiStepResult.Status.OK);
 			} else {
-				return new ReservationResult(MultiStepResult.Status.ERROR);
+				ReservationResult res = new ReservationResult(MultiStepResult.Status.ERROR);
+				if(doc.select(".p1, .p22b").size() > 0)
+					res.setMessage(doc.select(".p1, .p22b").text());
+				return res;
 			}
 		}
 	}
@@ -913,15 +928,19 @@ public class BiBer1992 extends BaseApi {
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 		nameValuePairs.add(new BasicNameValuePair("LANG", "de"));
 		nameValuePairs.add(new BasicNameValuePair("FUNC", "vorl"));
-		nameValuePairs.add(new BasicNameValuePair("BENUTZER", account.getName()));
-		nameValuePairs.add(new BasicNameValuePair("PASSWORD", account.getPassword()));
+		if(m_opac_dir.equals("opax")) {
+			nameValuePairs.add(new BasicNameValuePair("BENUTZER", account.getName()));
+			nameValuePairs.add(new BasicNameValuePair("PASSWORD", account.getPassword()));
+		}
 		nameValuePairs.add(new BasicNameValuePair(media, "YES"));	
 		
-		String html = httpPost(m_opac_url + "/" + m_opac_dir + "/delreserv.C",
+		String action = m_opac_dir.equals("opax") ? "/delreserv.C" : "/vorml.C";
+		
+		String html = httpPost(m_opac_url + "/" + m_opac_dir + action,
 				new UrlEncodedFormEntity(nameValuePairs), getDefaultEncoding());
 		
 		Document doc = Jsoup.parse(html);
-		if (doc.select(".tab21 .p44b").text().contains("Vormerkung wurde")) {
+		if (doc.select(".tab21 .p44b, .p2").text().contains("Vormerkung wurde")) {
 			return new CancelResult(MultiStepResult.Status.OK);
 		} else {
 			return new CancelResult(MultiStepResult.Status.ERROR);
