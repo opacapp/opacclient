@@ -744,7 +744,7 @@ public class BiBer1992 extends BaseApi {
 			}// if columns.size
 		}// for rows
 		
-		item.setReservable(true); //TODO: Check if it is really reservable?
+		item.setReservable(true); //We cannot check if media is reservable
 		item.setReservation_info(document.select("input[type=checkbox]").first().attr("name"));
 		
 		return item;
@@ -767,15 +767,20 @@ public class BiBer1992 extends BaseApi {
 					item.getReservation_info() + "=resF_" + item.getReservation_info(), getDefaultEncoding());
 			Document doc = Jsoup.parse(html);
 			Elements optionsElements = doc.select("select[name=ID1] option");
-			
-			Map<String, String> options = new HashMap<String, String>();
-			for(Element option:optionsElements) {
-				options.put(option.attr("value"), option.text());
+			if(optionsElements.size() > 0) {
+				Map<String, String> options = new HashMap<String, String>();
+				for(Element option:optionsElements) {
+					options.put(option.attr("value"), option.text());
+				}
+				
+				ReservationResult res = new ReservationResult(MultiStepResult.Status.SELECTION_NEEDED);
+				res.setSelection(options);
+				return res;
+			} else {
+				ReservationResult res = new ReservationResult(MultiStepResult.Status.ERROR);
+				res.setMessage("Dieses Medium ist nicht reservierbar.");
+				return res;
 			}
-			
-			ReservationResult res = new ReservationResult(MultiStepResult.Status.SELECTION_NEEDED);
-			res.setSelection(options);
-			return res;
 		} else {
 			Log.d("opac", selection);
 			//STEP 2: Reserve
