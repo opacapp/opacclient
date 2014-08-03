@@ -1,8 +1,10 @@
 package de.geeksfactory.opacclient.apis;
 
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,11 +17,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.MalformedChunkCodingException;
 import org.apache.http.NameValuePair;
+import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -91,7 +96,42 @@ public class Adis extends BaseApi implements OpacApi {
 		HttpGet httpget = new HttpGet(cleanUrl(url));
 		HttpResponse response;
 
-		response = http_client.execute(httpget);
+		try {
+			response = http_client.execute(httpget);
+		} catch (ConnectTimeoutException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (NoHttpResponseException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (MalformedChunkCodingException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (javax.net.ssl.SSLPeerUnverifiedException e) {
+			// TODO: Handly this well
+			throw e;
+		} catch (javax.net.ssl.SSLException e) {
+			// TODO: Handly this well
+			// Can be "Not trusted server certificate" or can be a
+			// aborted/interrupted handshake/connection
+			throw e;
+		} catch (InterruptedIOException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (IOException e) {
+			if (e.getMessage().contains("Request aborted")) {
+				e.printStackTrace();
+				throw new NotReachableException();
+			} else {
+				throw e;
+			}
+		}
 
 		if (response.getStatusLine().getStatusCode() >= 400) {
 			throw new NotReachableException();
@@ -128,7 +168,44 @@ public class Adis extends BaseApi implements OpacApi {
 
 		httppost.setEntity(new UrlEncodedFormEntity(data));
 		HttpResponse response = null;
-		response = http_client.execute(httppost);
+
+		try {
+			response = http_client.execute(httppost);
+
+		} catch (ConnectTimeoutException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (NoHttpResponseException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (MalformedChunkCodingException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (javax.net.ssl.SSLPeerUnverifiedException e) {
+			// TODO: Handle this well
+			throw e;
+		} catch (javax.net.ssl.SSLException e) {
+			// TODO: Handle this well
+			// Can be "Not trusted server certificate" or can be a
+			// aborted/interrupted handshake/connection
+			throw e;
+		} catch (InterruptedIOException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (IOException e) {
+			if (e.getMessage().contains("Request aborted")) {
+				e.printStackTrace();
+				throw new NotReachableException();
+			} else {
+				throw e;
+			}
+		}
 
 		if (response.getStatusLine().getStatusCode() >= 400) {
 			throw new NotReachableException();
@@ -176,7 +253,13 @@ public class Adis extends BaseApi implements OpacApi {
 			if (s_exts == null)
 				s_exts = "SS6";
 
-			metadata.open();
+			try {
+				metadata.open();
+			} catch (IOException e) {
+				throw e;
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
 			if (!metadata.hasMeta(library.getIdent())) {
 				metadata.close();
 				extract_meta();
@@ -185,8 +268,6 @@ public class Adis extends BaseApi implements OpacApi {
 			}
 
 		} catch (JSONException e) {
-			throw new RuntimeException(e);
-		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 
@@ -512,7 +593,8 @@ public class Adis extends BaseApi implements OpacApi {
 			}
 		}
 
-		if (doc.select("input[value=Reservieren]").size() > 0) {
+		if (doc.select("input[value*=Reservieren], input[value*=Vormerken]")
+				.size() > 0) {
 			res.setReservable(true);
 			res.setReservation_info(id);
 		}
@@ -598,6 +680,12 @@ public class Adis extends BaseApi implements OpacApi {
 		List<NameValuePair> nvpairs;
 		ReservationResult res = null;
 
+		if(selection.equals(""))
+			selection = null;
+
+		if (s_pageform == null)
+			return new ReservationResult(Status.ERROR);
+
 		// Load details
 		nvpairs = s_pageform;
 		int i = 0;
@@ -621,94 +709,112 @@ public class Adis extends BaseApi implements OpacApi {
 		List<NameValuePair> form = new ArrayList<NameValuePair>();
 		for (Element input : doc.select("input, select")) {
 			if (!"image".equals(input.attr("type"))
-					&& !"submit".equals(input.attr("type"))
+					&& (!"submit".equals(input.attr("type"))
+							|| input.val().contains("Reservieren") || input
+							.val().contains("Vormerken"))
 					&& !"checkbox".equals(input.attr("type"))
 					&& !"".equals(input.attr("name"))) {
 				form.add(new BasicNameValuePair(input.attr("name"), input
 						.attr("value")));
 			}
 		}
-		form.add(new BasicNameValuePair("textButton$1", "Reservieren"));
 		doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
-		try {
-			doc = handleLoginForm(doc, account);
-		} catch (OpacErrorException e1) {
-			return new ReservationResult(MultiStepResult.Status.ERROR,
-					e1.getMessage());
-		}
-
-		if (useraction == 0 && selection == null
-				&& doc.select("#AUSGAB_1").size() == 0) {
-			res = new ReservationResult(
-					MultiStepResult.Status.CONFIRMATION_NEEDED);
-			List<String[]> details = new ArrayList<String[]>();
-			details.add(new String[] { doc.select("#F23").text() });
-			res.setDetails(details);
-		} else if (doc.select("#AUSGAB_1").size() > 0 && selection == null) {
-			Map<String, String> sel = new HashMap<String, String>();
-			for (Element opt : doc.select("#AUSGAB_1 option")) {
-				if (opt.text().trim().length() > 0)
-					sel.put(opt.val(), opt.text());
-			}
-			res = new ReservationResult(
-					MultiStepResult.Status.SELECTION_NEEDED, doc.select("#F23")
-							.text());
-			res.setSelection(sel);
-		} else if (selection != null || doc.select("#AUSGAB_1").size() == 0) {
-			if (doc.select("#AUSGAB_1").size() > 0) {
-				doc.select("#AUSGAB_1").attr("value", selection);
-			}
+		if (doc.select(".message h1").size() > 0) {
+			String msg = doc.select(".message h1").text().trim();
+			res = new ReservationResult(MultiStepResult.Status.ERROR, msg);
 			form = new ArrayList<NameValuePair>();
-			for (Element input : doc.select("input, select")) {
+			for (Element input : doc.select("input")) {
 				if (!"image".equals(input.attr("type"))
-						&& !"submit".equals(input.attr("type"))
 						&& !"checkbox".equals(input.attr("type"))
 						&& !"".equals(input.attr("name"))) {
 					form.add(new BasicNameValuePair(input.attr("name"), input
 							.attr("value")));
 				}
 			}
-			form.add(new BasicNameValuePair("textButton",
-					"Reservation abschicken"));
-			res = new ReservationResult(MultiStepResult.Status.OK);
 			doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+		} else {
+			try {
+				doc = handleLoginForm(doc, account);
+			} catch (OpacErrorException e1) {
+				return new ReservationResult(MultiStepResult.Status.ERROR,
+						e1.getMessage());
+			}
 
-			if (doc.select(".message h1").size() > 0) {
-				String msg = doc.select(".message h1").text().trim();
+			if (useraction == 0 && selection == null
+					&& doc.select("#AUSGAB_1").size() == 0) {
+				res = new ReservationResult(
+						MultiStepResult.Status.CONFIRMATION_NEEDED);
+				List<String[]> details = new ArrayList<String[]>();
+				details.add(new String[] { doc.select("#F23").text() });
+				res.setDetails(details);
+			} else if (doc.select("#AUSGAB_1").size() > 0 && selection == null) {
+				Map<String, String> sel = new HashMap<String, String>();
+				for (Element opt : doc.select("#AUSGAB_1 option")) {
+					if (opt.text().trim().length() > 0)
+						sel.put(opt.val(), opt.text());
+				}
+				res = new ReservationResult(
+						MultiStepResult.Status.SELECTION_NEEDED, doc.select(
+								"#F23").text());
+				res.setSelection(sel);
+			} else if (selection != null || doc.select("#AUSGAB_1").size() == 0) {
+				if (doc.select("#AUSGAB_1").size() > 0) {
+					doc.select("#AUSGAB_1").attr("value", selection);
+				}
 				form = new ArrayList<NameValuePair>();
-				for (Element input : doc.select("input")) {
+				for (Element input : doc.select("input, select")) {
 					if (!"image".equals(input.attr("type"))
+							&& !"submit".equals(input.attr("type"))
 							&& !"checkbox".equals(input.attr("type"))
 							&& !"".equals(input.attr("name"))) {
 						form.add(new BasicNameValuePair(input.attr("name"),
 								input.attr("value")));
 					}
 				}
+				form.add(new BasicNameValuePair("textButton",
+						"Reservation abschicken"));
+				res = new ReservationResult(MultiStepResult.Status.OK);
 				doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
-				if (!msg.contains("Reservation ist erfolgt")) {
-					res = new ReservationResult(MultiStepResult.Status.ERROR,
-							msg);
-				} else {
-					res = new ReservationResult(MultiStepResult.Status.OK, msg);
-				}
-			} else if (doc.select("#R01").text()
-					.contains("Informationen zu Ihrer Reservation")) {
-				String msg = doc.select("#OPACLI").text().trim();
-				form = new ArrayList<NameValuePair>();
-				for (Element input : doc.select("input")) {
-					if (!"image".equals(input.attr("type"))
-							&& !"checkbox".equals(input.attr("type"))
-							&& !"".equals(input.attr("name"))) {
-						form.add(new BasicNameValuePair(input.attr("name"),
-								input.attr("value")));
+
+				if (doc.select(".message h1").size() > 0) {
+					String msg = doc.select(".message h1").text().trim();
+					form = new ArrayList<NameValuePair>();
+					for (Element input : doc.select("input")) {
+						if (!"image".equals(input.attr("type"))
+								&& !"checkbox".equals(input.attr("type"))
+								&& !"".equals(input.attr("name"))) {
+							form.add(new BasicNameValuePair(input.attr("name"),
+									input.attr("value")));
+						}
 					}
-				}
-				doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
-				if (!msg.contains("Reservation ist erfolgt")) {
-					res = new ReservationResult(MultiStepResult.Status.ERROR,
-							msg);
-				} else {
-					res = new ReservationResult(MultiStepResult.Status.OK, msg);
+					doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+					if (!msg.contains("Reservation ist erfolgt")) {
+						res = new ReservationResult(
+								MultiStepResult.Status.ERROR, msg);
+					} else {
+						res = new ReservationResult(MultiStepResult.Status.OK,
+								msg);
+					}
+				} else if (doc.select("#R01").text()
+						.contains("Informationen zu Ihrer Reservation")) {
+					String msg = doc.select("#OPACLI").text().trim();
+					form = new ArrayList<NameValuePair>();
+					for (Element input : doc.select("input")) {
+						if (!"image".equals(input.attr("type"))
+								&& !"checkbox".equals(input.attr("type"))
+								&& !"".equals(input.attr("name"))) {
+							form.add(new BasicNameValuePair(input.attr("name"),
+									input.attr("value")));
+						}
+					}
+					doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+					if (!msg.contains("Reservation ist erfolgt")) {
+						res = new ReservationResult(
+								MultiStepResult.Status.ERROR, msg);
+					} else {
+						res = new ReservationResult(MultiStepResult.Status.OK,
+								msg);
+					}
 				}
 			}
 		}
@@ -996,7 +1102,7 @@ public class Adis extends BaseApi implements OpacApi {
 
 		// Ausleihen
 		String alink = null;
-		int anum = -1;
+		int anum = 0;
 		List<Map<String, String>> lent = new ArrayList<Map<String, String>>();
 		for (Element tr : doc.select(".rTable_div tr")) {
 			if (tr.select("a").size() == 1) {
@@ -1010,6 +1116,7 @@ public class Adis extends BaseApi implements OpacApi {
 			Document adoc = htmlGet(alink);
 			s_alink = alink;
 			List<NameValuePair> form = new ArrayList<NameValuePair>();
+			String prolongTest = null;
 			for (Element input : adoc.select("input, select")) {
 				if (!"image".equals(input.attr("type"))
 						&& !"submit".equals(input.attr("type"))
@@ -1020,11 +1127,15 @@ public class Adis extends BaseApi implements OpacApi {
 					}
 					form.add(new BasicNameValuePair(input.attr("name"), input
 							.attr("value")));
+				} else if (input.val().matches(".+verl.+ngerbar.+")) {
+					prolongTest = input.attr("name");
 				}
 			}
-			form.add(new BasicNameValuePair("textButton$2",
-					"Markierte Titel verlängerbar?"));
-			adoc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+			if (prolongTest != null) {
+				form.add(new BasicNameValuePair(prolongTest,
+						"Markierte Titel verlängerbar?"));
+				adoc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+			}
 			for (Element tr : adoc.select(".rTable_div tbody tr")) {
 				Map<String, String> line = new HashMap<String, String>();
 				line.put(AccountData.KEY_LENT_TITLE,
@@ -1060,6 +1171,8 @@ public class Adis extends BaseApi implements OpacApi {
 			form.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
 			form.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
 			doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+		} else {
+			assert (anum == 0);
 		}
 
 		adata.setLent(lent);
@@ -1128,8 +1241,11 @@ public class Adis extends BaseApi implements OpacApi {
 		for (Element input : doc.select("input, select")) {
 			if (!"image".equals(input.attr("type"))
 					&& !"checkbox".equals(input.attr("type"))
+					&& !input.attr("value").contains("vergessen")
 					&& !"".equals(input.attr("name"))) {
-				if (input.attr("id").equals("L#AUSW_1")) {
+				if (input.attr("id").equals("L#AUSW_1")
+						|| input.attr("id").equals("IDENT_1")
+						|| input.attr("id").equals("LMATNR_1")) {
 					input.attr("value", account.getName());
 				}
 				form.add(new BasicNameValuePair(input.attr("name"), input
@@ -1161,10 +1277,26 @@ public class Adis extends BaseApi implements OpacApi {
 
 	@Override
 	public String[] getSearchFields() {
-		return new String[] { KEY_SEARCH_QUERY_FREE, KEY_SEARCH_QUERY_TITLE,
-				KEY_SEARCH_QUERY_ISBN, KEY_SEARCH_QUERY_AUTHOR,
-				KEY_SEARCH_QUERY_KEYWORDA, KEY_SEARCH_QUERY_BRANCH,
-				KEY_SEARCH_QUERY_CATEGORY, KEY_SEARCH_QUERY_YEAR };
+		String[] defa = new String[] { KEY_SEARCH_QUERY_FREE,
+				KEY_SEARCH_QUERY_TITLE, KEY_SEARCH_QUERY_ISBN,
+				KEY_SEARCH_QUERY_AUTHOR, KEY_SEARCH_QUERY_KEYWORDA,
+				KEY_SEARCH_QUERY_BRANCH, KEY_SEARCH_QUERY_CATEGORY,
+				KEY_SEARCH_QUERY_YEAR };
+
+		try {
+			if (data.has("searchFields")) {
+				String[] sf;
+				sf = new String[data.getJSONArray("searchFields").length()];
+				for (int i = 0; i < data.getJSONArray("searchFields").length(); i++) {
+					sf[i] = data.getJSONArray("searchFields").getString(i);
+				}
+				return sf;
+			} else {
+				return defa;
+			}
+		} catch (JSONException e) {
+			return defa;
+		}
 	}
 
 	@Override

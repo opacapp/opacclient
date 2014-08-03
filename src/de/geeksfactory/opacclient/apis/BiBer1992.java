@@ -447,9 +447,10 @@ public class BiBer1992 extends BaseApi {
 																// valign="top">
 		Elements elem = null;
 		int rows_per_hit = 2;
-		if (trList.size() > 1
-				&& trList.get(0).select("input[type=checkbox]").size() > 0
-				&& trList.get(1).select("input[type=checkbox]").size() > 0) {
+		if (trList.size() == 1
+				|| (trList.size() > 1
+						&& trList.get(0).select("input[type=checkbox]").size() > 0 && trList
+						.get(1).select("input[type=checkbox]").size() > 0)) {
 			rows_per_hit = 1;
 		}
 
@@ -559,7 +560,7 @@ public class BiBer1992 extends BaseApi {
 		if (!m_initialised)
 			start();
 
-		if (!id.contains("ftitle.C")) {
+		if (!id.contains("ftitle")) {
 			id = "ftitle.C?LANG=de&FUNC=full&" + id + "=YES";
 		}
 		// normally full path like
@@ -878,7 +879,7 @@ public class BiBer1992 extends BaseApi {
 	 */
 	@Override
 	public AccountData account(Account account) throws IOException,
-			JSONException {
+			JSONException, OpacErrorException {
 
 		AccountData res = new AccountData(account.getId());
 
@@ -894,7 +895,8 @@ public class BiBer1992 extends BaseApi {
 	}
 
 	private List<Map<String, String>> accountGetMedia(Account account,
-			AccountData res) throws IOException, JSONException {
+			AccountData res) throws IOException, JSONException,
+			OpacErrorException {
 
 		List<Map<String, String>> medien = new ArrayList<Map<String, String>>();
 
@@ -948,8 +950,8 @@ public class BiBer1992 extends BaseApi {
 					if (key.equals(AccountData.KEY_LENT_AUTHOR)) {
 						if (value.contains(":")) {
 							// Autor: remove everything starting at ":"
+							value = value.replaceFirst("^.*[ 0-9]/", "").trim();
 							value = value.replaceFirst("\\:.*", "").trim();
-							value = value.replaceFirst("^.* /", "").trim();
 						} else {
 							// no Autor given
 							value = "";
@@ -960,7 +962,7 @@ public class BiBer1992 extends BaseApi {
 							value = value.replaceFirst(".*\\:", "").trim();
 						} else {
 							// Remove everything except the signature
-							value = value.replaceFirst("^.* /", "").trim();
+							value = value.replaceFirst("^.*[ 0-9]/", "").trim();
 						}
 					}
 
@@ -1002,7 +1004,7 @@ public class BiBer1992 extends BaseApi {
 	}
 
 	private List<Map<String, String>> accountGetReservations(Account account)
-			throws IOException, JSONException {
+			throws IOException, JSONException, OpacErrorException {
 
 		List<Map<String, String>> reservations = new ArrayList<Map<String, String>>();
 
@@ -1078,7 +1080,7 @@ public class BiBer1992 extends BaseApi {
 	}
 
 	private Document accountHttpPost(Account account, String func)
-			throws IOException {
+			throws IOException, OpacErrorException {
 		// get media list via http POST
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 		nameValuePairs.add(new BasicNameValuePair("FUNC", func));
@@ -1095,14 +1097,18 @@ public class BiBer1992 extends BaseApi {
 
 		// Error recognition
 		// <title>OPAC Fehler</title>
-		if (doc.title().contains("Fehler")) {
+		if (doc.title().contains("Fehler")
+				|| (doc.select("h2").size() > 0 && doc.select("h2").text()
+						.contains("Fehler"))) {
 			String errText = "unknown error";
 			Elements elTable = doc.select("table");
 			if (elTable.size() > 0) {
 				errText = elTable.get(0).text();
 			}
-			// TODO: m_last_error = errText;
-			return null;
+			throw new OpacErrorException(errText);
+		}
+		if (doc.select("tr td font[color=red]").size() == 1) {
+			throw new OpacErrorException(doc.select("font[color=red]").text());
 		}
 
 		return doc;
@@ -1138,7 +1144,7 @@ public class BiBer1992 extends BaseApi {
 
 	@Override
 	public int getSupportFlags() {
-		return SUPPORT_FLAG_ENDLESS_SCROLLING;
+		return SUPPORT_FLAG_ENDLESS_SCROLLING | SUPPORT_FLAG_CHANGE_ACCOUNT;
 	}
 
 	@Override

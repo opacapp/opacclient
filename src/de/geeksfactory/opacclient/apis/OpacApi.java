@@ -48,7 +48,7 @@ public interface OpacApi {
 	 * supported, it must at least search in title and author field, but should
 	 * also search abstract and other things.
 	 * 
-	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * Map key for {@link #search(Map)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_FREE = "free";
@@ -57,7 +57,7 @@ public interface OpacApi {
 	 * Item title to search for. Doesn't have to be the full title, can also be
 	 * a substring to be searched.
 	 * 
-	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * Map key for {@link #search(Map)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_TITLE = "titel";
@@ -65,7 +65,7 @@ public interface OpacApi {
 	/**
 	 * Author name to search for.
 	 * 
-	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * Map key for {@link #search(Map)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_AUTHOR = "verfasser";
@@ -74,7 +74,7 @@ public interface OpacApi {
 	 * "Keyword A". Most libraries require very special input in this field. May
 	 * be only shown if "advanced fields" is set in user preferences.
 	 * 
-	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * Map key for {@link #search(Map)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_KEYWORDA = "schlag_a";
@@ -84,7 +84,7 @@ public interface OpacApi {
 	 * be only shown if "advanced fields" is set in user preferences. Can only
 	 * be set, if <code>KEY_SEARCH_QUERY_KEYWORDA</code> is set as well.
 	 * 
-	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * Map key for {@link #search(Map)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_KEYWORDB = "schlag_b";
@@ -94,7 +94,7 @@ public interface OpacApi {
 	 * options, generated from the MetaData you store in the MetaDataSource you
 	 * get in {@link #init(MetaDataSource, Library)}.
 	 * 
-	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * Map key for {@link #search(Map)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_BRANCH = "zweigstelle";
@@ -105,7 +105,7 @@ public interface OpacApi {
 	 * placed. If in doubt, don't use. Behaves similar to
 	 * <code>KEY_SEARCH_QUERY_BRANCH</code> .
 	 * 
-	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * Map key for {@link #search(Map)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_HOME_BRANCH = "homebranch";
@@ -115,9 +115,9 @@ public interface OpacApi {
 	 * spaces or hyphens in between but it most likely won't. If it makes a
 	 * difference to you, eliminate everythin except numbers and X. We also
 	 * cannot say whether a ISBN10 or a ISBN13 is supplied - if relevant, check
-	 * in your {@link #search(Bundle)} implementation.
+	 * in your {@link #search(Map)} implementation.
 	 * 
-	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * Map key for {@link #search(Map)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_ISBN = "isbn";
@@ -126,7 +126,7 @@ public interface OpacApi {
 	 * Year of publication. Your API can either support this or both the
 	 * <code>KEY_SEARCH_QUERY_YEAR_RANGE_*</code> fields (or none of them).
 	 * 
-	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * Map key for {@link #search(Map)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_YEAR = "jahr";
@@ -136,7 +136,7 @@ public interface OpacApi {
 	 * be combined with <code>KEY_SEARCH_QUERY_YEAR</code> but has to be
 	 * combined with <code>KEY_SEARCH_QUERY_YEAR_RANGE_END</code>.
 	 * 
-	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * Map key for {@link #search(Map)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_YEAR_RANGE_START = "jahr_von";
@@ -146,7 +146,7 @@ public interface OpacApi {
 	 * not be combined with <code>KEY_SEARCH_QUERY_YEAR</code> but has to be
 	 * combined with <code>KEY_SEARCH_QUERY_YEAR_RANGE_START</code>.
 	 * 
-	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * Map key for {@link #search(Map)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_YEAR_RANGE_END = "jahr_bis";
@@ -155,7 +155,7 @@ public interface OpacApi {
 	 * Systematic identification, used in some libraries. Rarely in use. May be
 	 * only shown if "advanced fields" is set in user preferences.
 	 * 
-	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * Map key for {@link #search(Map)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_SYSTEM = "systematik";
@@ -165,7 +165,7 @@ public interface OpacApi {
 	 * Rarely in use. May be only shown if "advanced fields" is set in user
 	 * preferences.
 	 * 
-	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * Map key for {@link #search(Map)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_AUDIENCE = "interessenkreis";
@@ -173,7 +173,7 @@ public interface OpacApi {
 	/**
 	 * The "publisher" search field
 	 * 
-	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * Map key for {@link #search(Map)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_PUBLISHER = "verlag";
@@ -183,7 +183,7 @@ public interface OpacApi {
 	 * multiple options, generated from the MetaData you store in the
 	 * MetaDataSource you get in {@link #init(MetaDataSource, Library)}.
 	 * 
-	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * Map key for {@link #search(Map)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_CATEGORY = "mediengruppe";
@@ -193,7 +193,7 @@ public interface OpacApi {
 	 * number, most of the time printed on the in form of a barcode, sometimes
 	 * encoded in a NFC chip.
 	 * 
-	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * Map key for {@link #search(Map)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_BARCODE = "barcode";
@@ -201,7 +201,7 @@ public interface OpacApi {
 	/**
 	 * Item location in library. Currently not in use.
 	 * 
-	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * Map key for {@link #search(Map)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_LOCATION = "location";
@@ -209,10 +209,18 @@ public interface OpacApi {
 	/**
 	 * Restrict search to digital media.
 	 * 
-	 * Bundle key for {@link #search(Bundle)} and possible value for
+	 * Map key for {@link #search(Map)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_DIGITAL = "digital";
+
+	/**
+	 * Restrict search to available media.
+	 * 
+	 * Map key for {@link #search(Map)} and possible value for
+	 * {@link #getSearchFields()}.
+	 */
+	public static final String KEY_SEARCH_QUERY_AVAILABLE = "available";
 
 	/**
 	 * Returns whether – if account view is not supported in the given library –
@@ -246,6 +254,13 @@ public interface OpacApi {
 	 * Flag to be present in the result of {@link #getSupportFlags()}.
 	 */
 	public static final int SUPPORT_FLAG_ENDLESS_SCROLLING = 0x0000008;
+
+	/**
+	 * Allow account change on reservation click.
+	 * 
+	 * Flag to be present in the result of {@link #getSupportFlags()}.
+	 */
+	public static final int SUPPORT_FLAG_CHANGE_ACCOUNT = 0x0000010;
 
 	/**
 	 * A general exception containing a human-readable error message
@@ -476,11 +491,11 @@ public interface OpacApi {
 	public void init(MetaDataSource metadata, Library library);
 
 	/**
-	 * Performs a catalogue search. The given <code>Bundle</code> contains the
+	 * Performs a catalogue search. The given <code>Map</code> contains the
 	 * search criteria. See documentation on <code>SearchResult</code> for
 	 * details.
 	 * 
-	 * The <code>Bundle</code> can contain any of the <code>KEY_SEARCH_*</code>
+	 * The <code>Map</code> can contain any of the <code>KEY_SEARCH_*</code>
 	 * constants as keys.
 	 * 
 	 * This function is always called from a background thread, you can use
@@ -497,11 +512,11 @@ public interface OpacApi {
 			throws IOException, NotReachableException, OpacErrorException;
 
 	/**
-	 * If your {@link #search(Bundle)} implementation puts something different
+	 * If your {@link #search(Map)} implementation puts something different
 	 * from <code>null</code> into {@link SearchRequestResult#setFilters(List)},
 	 * this will be called to apply a filter to the last search request.
 	 * 
-	 * If your {@link #search(Bundle)} implementation does not set
+	 * If your {@link #search(Map)} implementation does not set
 	 * {@link SearchRequestResult#setFilters(List)}, this wil never be called.
 	 * Just return <code>null</code>.
 	 * 
@@ -536,7 +551,7 @@ public interface OpacApi {
 	 *            page number to fetch
 	 * @return List of results and additional information, or result object with
 	 *         the error flag set to true.
-	 * @see #search(Bundle)
+	 * @see #search(Map)
 	 * @see de.geeksfactory.opacclient.objects.SearchResult
 	 */
 	public SearchRequestResult searchGetPage(int page) throws IOException,

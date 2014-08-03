@@ -32,6 +32,7 @@ import java.util.Set;
 import org.acra.ACRA;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -49,7 +50,6 @@ import org.json.JSONException;
 
 import android.annotation.SuppressLint;
 import android.app.NotificationManager;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -109,6 +109,7 @@ public class AccountFragment extends Fragment implements
 	public static final long MAX_CACHE_AGE = (1000 * 3600 * 2);
 
 	private LoadTask lt;
+
 	private CancelTask ct;
 	private OpacTask<String> dt;
 	private BookingTask bt;
@@ -176,27 +177,30 @@ public class AccountFragment extends Fragment implements
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.activity_account, menu);
-		if (refreshing) {
-			// We want it to look as good as possible everywhere
-			if (Build.VERSION.SDK_INT >= 14) {
-				menu.findItem(R.id.action_refresh).setActionView(
-						R.layout.actionbar_loading_indicator);
-				getSupportActivity()
-						.setSupportProgressBarIndeterminateVisibility(false);
+		if (getSupportActivity() != null
+				&& menu.findItem(R.id.action_refresh) != null) {
+			if (refreshing) {
+				// We want it to look as good as possible everywhere
+				if (Build.VERSION.SDK_INT >= 14) {
+					menu.findItem(R.id.action_refresh).setActionView(
+							R.layout.actionbar_loading_indicator);
+					getSupportActivity()
+							.setSupportProgressBarIndeterminateVisibility(false);
+				} else {
+					menu.findItem(R.id.action_refresh).setVisible(false);
+					getSupportActivity()
+							.setSupportProgressBarIndeterminateVisibility(true);
+				}
 			} else {
-				menu.findItem(R.id.action_refresh).setVisible(false);
-				getSupportActivity()
-						.setSupportProgressBarIndeterminateVisibility(true);
-			}
-		} else {
-			if (Build.VERSION.SDK_INT >= 14) {
-				menu.findItem(R.id.action_refresh).setActionView(null);
-				getSupportActivity()
-						.setSupportProgressBarIndeterminateVisibility(false);
-			} else {
-				menu.findItem(R.id.action_refresh).setVisible(true);
-				getSupportActivity()
-						.setSupportProgressBarIndeterminateVisibility(false);
+				if (Build.VERSION.SDK_INT >= 14) {
+					menu.findItem(R.id.action_refresh).setActionView(null);
+					getSupportActivity()
+							.setSupportProgressBarIndeterminateVisibility(false);
+				} else {
+					menu.findItem(R.id.action_refresh).setVisible(true);
+					getSupportActivity()
+							.setSupportProgressBarIndeterminateVisibility(false);
+				}
 			}
 		}
 		if ((app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ACCOUNT_PROLONG_ALL) != 0) {
@@ -219,6 +223,12 @@ public class AccountFragment extends Fragment implements
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		accountSelected(account);
+	}
+
+	@Override
 	public void accountSelected(Account account) {
 
 		view.findViewById(R.id.svAccount).setVisibility(View.GONE);
@@ -231,8 +241,16 @@ public class AccountFragment extends Fragment implements
 		supported = true;
 
 		this.account = app.getAccount();
-		if (!app.getApi().isAccountSupported(app.getLibrary())
-				&& (app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ACCOUNT_EXTENDABLE) == 0) {
+		OpacApi api = null;
+		try {
+			api = app.getApi();
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			return;
+		}
+		if (api != null
+				&& !api.isAccountSupported(app.getLibrary())
+				&& (api.getSupportFlags() & OpacApi.SUPPORT_FLAG_ACCOUNT_EXTENDABLE) == 0) {
 			supported = false;
 			// Not supported with this api at all
 			view.findViewById(R.id.llLoading).setVisibility(View.GONE);
@@ -266,7 +284,7 @@ public class AccountFragment extends Fragment implements
 						}
 					});
 
-		} else if (!app.getApi().isAccountSupported(app.getLibrary())) {
+		} else if (api != null && !api.isAccountSupported(app.getLibrary())) {
 			supported = false;
 
 			// We need help
@@ -320,8 +338,9 @@ public class AccountFragment extends Fragment implements
 
 		} else {
 			// Supported
-
-			AccountDataSource adatasource = new AccountDataSource(getActivity());
+			Context ctx = getActivity() != null ? getActivity() : OpacClient
+					.getEmergencyContext();
+			AccountDataSource adatasource = new AccountDataSource(ctx);
 			adatasource.open();
 			refreshtime = adatasource.getCachedAccountDataTime(account);
 			if (refreshtime > 0) {
@@ -335,7 +354,8 @@ public class AccountFragment extends Fragment implements
 			adatasource.close();
 		}
 
-		getActivity().supportInvalidateOptionsMenu();
+		if (getActivity() != null)
+			getActivity().supportInvalidateOptionsMenu();
 	}
 
 	public void refresh() {
@@ -467,6 +487,8 @@ public class AccountFragment extends Fragment implements
 		msrhProlong.setCallback(new Callback() {
 			@Override
 			public void onSuccess(MultiStepResult result) {
+				if (getActivity() == null)
+					return;
 				invalidateData();
 
 				if (result.getMessage() != null) {
@@ -489,6 +511,8 @@ public class AccountFragment extends Fragment implements
 
 			@Override
 			public void onError(MultiStepResult result) {
+				if (getActivity() == null)
+					return;
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						getActivity());
 				builder.setMessage(result.getMessage())
@@ -595,6 +619,9 @@ public class AccountFragment extends Fragment implements
 
 		@Override
 		protected void onPostExecute(Integer result) {
+			if (getActivity() == null)
+				return;
+
 			dialog.dismiss();
 			Button btSend = (Button) view.findViewById(R.id.btSend);
 			btSend.setEnabled(false);
@@ -636,6 +663,8 @@ public class AccountFragment extends Fragment implements
 				exception = e;
 			} catch (InterruptedIOException e) {
 				exception = e;
+			} catch (NoHttpResponseException e) {
+				exception = e;
 			} catch (OpacErrorException e) {
 				exception = e;
 			} catch (Exception e) {
@@ -651,7 +680,8 @@ public class AccountFragment extends Fragment implements
 				loaded(result);
 			} else {
 				refreshing = false;
-				getActivity().supportInvalidateOptionsMenu();
+				if (getActivity() != null)
+					getActivity().supportInvalidateOptionsMenu();
 
 				show_connectivity_error(exception);
 			}
@@ -661,6 +691,8 @@ public class AccountFragment extends Fragment implements
 	public void show_connectivity_error(Exception e) {
 		if (e != null)
 			e.printStackTrace();
+		if (getActivity() == null)
+			return;
 		if (e instanceof OpacErrorException) {
 			AccountDataSource adatasource = new AccountDataSource(getActivity());
 			adatasource.open();
@@ -708,8 +740,13 @@ public class AccountFragment extends Fragment implements
 	}
 
 	public void loaded(final AccountData result) {
+		AccountDataSource adatasource;
+		if (getActivity() == null && OpacClient.getEmergencyContext() != null) {
+			adatasource = new AccountDataSource(
+					OpacClient.getEmergencyContext());
+		} else
+			adatasource = new AccountDataSource(getActivity());
 
-		AccountDataSource adatasource = new AccountDataSource(getActivity());
 		adatasource.open();
 		adatasource.storeCachedAccountData(
 				adatasource.getAccount(result.getAccount()), result);
@@ -719,7 +756,8 @@ public class AccountFragment extends Fragment implements
 			// The account this data is for is still visible
 
 			refreshing = false;
-			getActivity().supportInvalidateOptionsMenu();
+			if (getActivity() != null)
+				getActivity().supportInvalidateOptionsMenu();
 
 			refreshtime = System.currentTimeMillis();
 
@@ -730,6 +768,8 @@ public class AccountFragment extends Fragment implements
 
 	@SuppressWarnings("deprecation")
 	public void displaydata(AccountData result, boolean fromcache) {
+		if (getActivity() == null)
+			return;
 		view.findViewById(R.id.svAccount).setVisibility(View.VISIBLE);
 		view.findViewById(R.id.llLoading).setVisibility(View.GONE);
 		view.findViewById(R.id.unsupported_error).setVisibility(View.GONE);
@@ -739,7 +779,7 @@ public class AccountFragment extends Fragment implements
 		this.fromcache = fromcache;
 
 		SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(getActivity());
+				.getDefaultSharedPreferences(app.getApplicationContext());
 		final long tolerance = Long.decode(sp.getString("notification_warning",
 				"367200000"));
 
@@ -1135,6 +1175,8 @@ public class AccountFragment extends Fragment implements
 				return app.getApi().cancel(a, account, useraction, selection);
 			} catch (java.net.UnknownHostException e) {
 				e.printStackTrace();
+			} catch (NoHttpResponseException e) {
+				e.printStackTrace();
 			} catch (java.net.SocketException e) {
 				e.printStackTrace();
 			} catch (Exception e) {
@@ -1276,6 +1318,8 @@ public class AccountFragment extends Fragment implements
 				return res;
 			} catch (java.net.UnknownHostException e) {
 				publishProgress(e, "ioerror");
+			} catch (NoHttpResponseException e) {
+				publishProgress(e, "ioerror");
 			} catch (java.net.SocketException e) {
 				success = false;
 				e.printStackTrace();
@@ -1329,6 +1373,7 @@ public class AccountFragment extends Fragment implements
 				return res;
 			} catch (java.net.UnknownHostException e) {
 			} catch (java.net.SocketException e) {
+			} catch (NoHttpResponseException e) {
 			} catch (Exception e) {
 				ACRA.getErrorReporter().handleException(e);
 			}
@@ -1463,6 +1508,8 @@ public class AccountFragment extends Fragment implements
 		msrhProlong.setCallback(new Callback() {
 			@Override
 			public void onSuccess(MultiStepResult result) {
+				if (getActivity() == null)
+					return;
 				ProlongAllResult res = (ProlongAllResult) result;
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						getActivity());
@@ -1493,6 +1540,8 @@ public class AccountFragment extends Fragment implements
 
 			@Override
 			public void onError(MultiStepResult result) {
+				if (getActivity() == null)
+					return;
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						getActivity());
 				builder.setMessage(result.getMessage())
@@ -1603,6 +1652,8 @@ public class AccountFragment extends Fragment implements
 				publishProgress(e, "ioerror");
 			} catch (java.net.SocketException e) {
 				e.printStackTrace();
+			} catch (NoHttpResponseException e) {
+				publishProgress(e, "ioerror");
 			} catch (Exception e) {
 				ACRA.getErrorReporter().handleException(e);
 			}

@@ -41,13 +41,14 @@ public class MainActivity extends OpacActivity implements
 	private android.nfc.NfcAdapter mAdapter;
 	private SharedPreferences sp;
 	private Fragment rightFragment;
+	private long account;
 
 	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (getIntent().getAction() != null) {
+		if (getIntent() != null && getIntent().getAction() != null) {
 			if (getIntent().getAction().equals("android.intent.action.VIEW")) {
 				urlintent();
 				return;
@@ -101,6 +102,7 @@ public class MainActivity extends OpacActivity implements
 
 	@Override
 	public void accountSelected(Account account) {
+		this.account = account.getId(); 
 		getSupportActionBar().setSubtitle(
 				app.getLibrary().getCity() + " · "
 						+ app.getLibrary().getTitle());
@@ -254,6 +256,9 @@ public class MainActivity extends OpacActivity implements
 	@Override
 	public void onResume() {
 		super.onResume();
+		if (app.getAccount().getId() != account) {
+			accountSelected(app.getAccount());
+		}
 		if (nfc_capable && sp.getBoolean("nfc_search", false)) {
 			try {
 				mAdapter.enableForegroundDispatch(this, nfcIntent,

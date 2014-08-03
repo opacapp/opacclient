@@ -458,7 +458,7 @@ public class WebOpacNet extends BaseApi implements OpacApi {
 
 	@Override
 	public int getSupportFlags() {
-		return SUPPORT_FLAG_ENDLESS_SCROLLING;
+		return SUPPORT_FLAG_ENDLESS_SCROLLING | SUPPORT_FLAG_CHANGE_ACCOUNT;
 	}
 	
 	private String buildHttpGetParams(List<NameValuePair> params, String encoding) throws UnsupportedEncodingException {

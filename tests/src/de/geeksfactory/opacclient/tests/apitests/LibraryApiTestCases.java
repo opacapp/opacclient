@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import junit.framework.TestCase;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -40,7 +42,7 @@ import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.storage.DummyMetaDataSource;
 
 @RunWith(Parallelized.class)
-public class LibraryApiTestCases {
+public class LibraryApiTestCases extends TestCase {
 
 	private Library library;
 	private OpacApi api;
@@ -104,7 +106,7 @@ public class LibraryApiTestCases {
 					"fasgeadstrehdaxydsfstrgdfjxnvgfhdtnbfgn");
 		try {
 			SearchRequestResult res = api.search(query);
-			assert (res.getTotal_result_count() == 0);
+			assertTrue(res.getTotal_result_count() == 0);
 		} catch (OpacErrorException e) {
 			// Expected, should be an empty result.
 		}
@@ -120,8 +122,8 @@ public class LibraryApiTestCases {
 		else
 			query.put(OpacApi.KEY_SEARCH_QUERY_TITLE, "harry");
 		SearchRequestResult res = api.search(query);
-		assert (res.getResults().size() <= res.getTotal_result_count());
-		assert (res.getResults().size() > 0);
+		assertTrue(res.getResults().size() <= res.getTotal_result_count());
+		assertTrue(res.getResults().size() > 0);
 
 		SearchResult third = res.getResults().get(2);
 		DetailledItem detail = null;
@@ -129,6 +131,7 @@ public class LibraryApiTestCases {
 			detail = api.getResultById(third.getId(), "");
 		else
 			detail = api.getResult(third.getNr());
+		assertNotNull(detail);
 		confirmDetail(third, detail);
 
 		if (res.getResults().size() < res.getTotal_result_count()) {
@@ -144,12 +147,12 @@ public class LibraryApiTestCases {
 	}
 
 	private void confirmDetail(SearchResult result, DetailledItem detail) {
-		assert (detail != null);
-		assert (detail.getDetails().size() > 0);
+		assertTrue(detail != null);
+		assertTrue(detail.getDetails().size() > 0);
 		if (detail.isReservable())
-			assert (detail.getReservation_info() != null);
-		if (detail.getId() != null) {
-			assert (result.getId() == detail.getId());
+			assertTrue(detail.getReservation_info() != null);
+		if (result.getId() != null && detail.getId() != null && !detail.getId().equals("")) {
+			assertTrue(result.getId().equals(detail.getId()));
 		}
 		if (detail.getTitle() != null) {
 			// At least 30% of the words in the title should already have been
@@ -162,7 +165,7 @@ public class LibraryApiTestCases {
 					fnd++;
 				cnt++;
 			}
-			assert (fnd > 0.3 * cnt);
+			assertTrue(fnd > 0);
 		}
 	}
 

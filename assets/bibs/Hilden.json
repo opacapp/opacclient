@@ -1,26 +1,44 @@
 {
-    "api": "bibliotheca", 
-    "city": "Hilden", 
-    "country": "Deutschland", 
+    "api": "bibliotheca",
+    "city": "Hilden",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "http://www.bibnet.de/webopac", 
+        "accounttable": {
+            "author": 0, 
+            "barcode": 2, 
+            "homebranch": -1, 
+            "lendingbranch": -1, 
+            "prolongurl": 4, 
+            "returndate": 3, 
+            "status": -1, 
+            "title": 1
+        }, 
+        "baseurl": "http://www.bibnet.de/webopac",
         "copiestable": {
             "barcode": 0, 
             "branch": 5, 
-            "department": -1, 
+            "department": 2, 
             "location": 1, 
             "reservations": -1, 
             "returndate": 4, 
             "status": 3
         }, 
-        "db": "hi", 
-        "information": "http://www.hilden.de/sv_hilden/Besser%20lernen/B%C3%BCcherei/"
-    }, 
+        "db": "hi",
+        "information": "http://www.hilden.de/sv_hilden/Besser%20lernen/B%C3%BCcherei/",
+        "reservationtable": {
+            "author": 0, 
+            "availability": 2, 
+            "branch": -1, 
+            "cancelurl": 3, 
+            "expirationdate": -1, 
+            "title": 1
+        }
+    },
     "geo": [
-        51.16785669999999, 
+        51.16785669999999,
         6.9352253
-    ], 
-    "state": "Nordrhein-Westfalen", 
-    "support": "Katalogsuche", 
+    ],
+    "state": "Nordrhein-Westfalen",
+    "support": "Katalogsuche und Konto",
     "title": "Stadtb\u00fccherei"
 }

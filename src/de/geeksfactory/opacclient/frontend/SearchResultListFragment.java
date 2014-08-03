@@ -4,6 +4,7 @@ import java.io.InterruptedIOException;
 import java.util.Map;
 
 import org.acra.ACRA;
+import org.apache.http.NoHttpResponseException;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.ListFragment;
@@ -142,7 +143,7 @@ public class SearchResultListFragment extends ListFragment {
 
 		if (savedInstanceState == null && searchresult == null) {
 			performsearch();
-		} else if(searchresult != null) {
+		} else if (searchresult != null) {
 			if (searchresult.getTotal_result_count() >= 0)
 				getSupportActionBar().setSubtitle(
 						getString(R.string.result_number,
@@ -244,13 +245,15 @@ public class SearchResultListFragment extends ListFragment {
 
 					@Override
 					public void onError(Exception e) {
-						if (e instanceof OpacErrorException) {
-							showConnectivityError(e.getMessage());
-						} else if (e instanceof NotReachableException) {
-							showConnectivityError(getResources().getString(
-									R.string.connection_error_detail_nre));
-						} else {
-							showConnectivityError();
+						if (getActivity() != null) {
+							if (e instanceof OpacErrorException) {
+								showConnectivityError(e.getMessage());
+							} else if (e instanceof NotReachableException) {
+								showConnectivityError(getResources().getString(
+										R.string.connection_error_detail_nre));
+							} else {
+								showConnectivityError();
+							}
 						}
 					}
 
@@ -277,7 +280,7 @@ public class SearchResultListFragment extends ListFragment {
 	}
 
 	public void showConnectivityError(String description) {
-		if(getView() == null)
+		if (getView() == null || getActivity() == null)
 			return;
 		final LinearLayout progressContainer = (LinearLayout) getView()
 				.findViewById(R.id.progressContainer);
@@ -337,6 +340,8 @@ public class SearchResultListFragment extends ListFragment {
 				e.printStackTrace();
 			} catch (java.net.SocketException e) {
 				exception = e;
+			} catch (NoHttpResponseException e) {
+				exception = e;
 			} catch (OpacErrorException e) {
 				exception = e;
 			} catch (InterruptedIOException e) {
@@ -354,7 +359,8 @@ public class SearchResultListFragment extends ListFragment {
 			if (result == null) {
 
 				if (exception instanceof OpacErrorException) {
-					if (exception.getMessage().equals("is_a_redirect")) {
+					if (exception.getMessage().equals("is_a_redirect")
+							&& getActivity() != null) {
 						// Some libraries (SISIS) do not show a result list if
 						// only one result
 						// is found but instead directly show the result
@@ -369,10 +375,11 @@ public class SearchResultListFragment extends ListFragment {
 					}
 
 					showConnectivityError(exception.getMessage());
-				} else if (exception instanceof NotReachableException)
-					showConnectivityError(getResources().getString(
-							R.string.connection_error_detail_nre));
-				else
+				} else if (exception instanceof NotReachableException) {
+					if (getActivity() != null)
+						showConnectivityError(getResources().getString(
+								R.string.connection_error_detail_nre));
+				} else
 					showConnectivityError();
 			} else {
 				loaded(result);

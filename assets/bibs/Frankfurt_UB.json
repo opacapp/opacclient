@@ -1,0 +1,19 @@
+{
+    "api": "pica",
+    "city": "Frankfurt",
+    "country": "Deutschland",
+    "data": {
+        "accountSupported": true,
+        "baseurl": "https://lbsopac.rz.uni-frankfurt.de",
+		"KEY_SEARCH_QUERY_FREE": 6015,
+        "db": "30",
+        "information": "http://www.ub.uni-frankfurt.de/"
+    },
+    "geo": [
+        50.1109221,
+        8.6821267
+    ],
+    "state": "Hessen",
+    "support": "Katalogsuche und Konto",
+    "title": "UB Goethe-Universit\u00e4t"
+}

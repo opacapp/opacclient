@@ -41,27 +41,27 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
 import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 
 public class SearchFragment extends Fragment implements AccountSelectedListener {
-	private SharedPreferences sp;
+	protected SharedPreferences sp;
 
 	public interface Callback {
 		public void scanBarcode();
 	}
 
-	private Callback mCallback;
-	private View view;
-	private OpacClient app;
-	private Bundle savedState;
+	protected Callback mCallback;
+	protected View view;
+	protected OpacClient app;
+	protected Bundle savedState;
 
-	private boolean advanced = false;
-	private Set<String> fields;
+	protected boolean advanced = false;
+	protected Set<String> fields;
 
-	private List<Map<String, String>> spinnerCategory_data;
-	private List<Map<String, String>> spinnerBranch_data;
-	private List<Map<String, String>> spinnerHomeBranch_data;
+	protected List<Map<String, String>> spinnerCategory_data;
+	protected List<Map<String, String>> spinnerBranch_data;
+	protected List<Map<String, String>> spinnerHomeBranch_data;
 
-	private long last_meta_try = 0;
+	protected long last_meta_try = 0;
 	public boolean metaDataLoading = false;
-	private LoadMetaDataTask lmdt;
+	protected LoadMetaDataTask lmdt;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -128,7 +128,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		((EditText) view.findViewById(R.id.etSystematik)).setText("");
 		((EditText) view.findViewById(R.id.etInteressenkreis)).setText("");
 		((EditText) view.findViewById(R.id.etVerlag)).setText("");
-		((CheckBox) view.findViewById(R.id.cbDigital)).setChecked(true);
+		((CheckBox) view.findViewById(R.id.cbDigital)).setChecked(false);
+		((CheckBox) view.findViewById(R.id.cbAvailable)).setChecked(false);
 		((Spinner) view.findViewById(R.id.cbBranch)).setSelection(0);
 		((Spinner) view.findViewById(R.id.cbHomeBranch)).setSelection(0);
 		((Spinner) view.findViewById(R.id.cbMediengruppe)).setSelection(0);
@@ -237,6 +238,12 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 			view.findViewById(R.id.cbDigital).setVisibility(View.GONE);
 		}
 
+		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_AVAILABLE)) {
+			view.findViewById(R.id.cbAvailable).setVisibility(View.VISIBLE);
+		} else {
+			view.findViewById(R.id.cbAvailable).setVisibility(View.GONE);
+		}
+
 		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_ISBN)
 				|| (fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE) && (advanced || !etBarcodeText
 						.equals("")))) {
@@ -298,7 +305,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		}
 	}
 
-	private void fillComboBoxes() {
+	protected void fillComboBoxes() {
 		Spinner cbZst = (Spinner) view.findViewById(R.id.cbBranch);
 		Spinner cbZstHome = (Spinner) view.findViewById(R.id.cbHomeBranch);
 		Spinner cbMg = (Spinner) view.findViewById(R.id.cbMediengruppe);
@@ -419,7 +426,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		data.close();
 	}
 
-	private void loadingIndicators() {
+	protected void loadingIndicators() {
 		int visibility = metaDataLoading ? View.VISIBLE : View.GONE;
 		view.findViewById(R.id.pbBranch).setVisibility(visibility);
 		view.findViewById(R.id.pbHomeBranch).setVisibility(visibility);
@@ -562,6 +569,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		query.put(OpacApi.KEY_SEARCH_QUERY_DIGITAL, String
 				.valueOf(((CheckBox) view.findViewById(R.id.cbDigital))
 						.isChecked()));
+		query.put(OpacApi.KEY_SEARCH_QUERY_AVAILABLE, String
+				.valueOf(((CheckBox) view.findViewById(R.id.cbAvailable))
+						.isChecked()));
 		if (advanced) {
 			query.put(OpacApi.KEY_SEARCH_QUERY_KEYWORDA, ((EditText) view
 					.findViewById(R.id.etSchlagA)).getEditableText().toString());
@@ -602,6 +612,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 				.getString(OpacApi.KEY_SEARCH_QUERY_YEAR_RANGE_END));
 		((CheckBox) view.findViewById(R.id.cbDigital)).setChecked(query
 				.getBoolean(OpacApi.KEY_SEARCH_QUERY_DIGITAL));
+		((CheckBox) view.findViewById(R.id.cbAvailable)).setChecked(query
+				.getBoolean(OpacApi.KEY_SEARCH_QUERY_AVAILABLE));
 
 		Spinner spBranch = (Spinner) view.findViewById(R.id.cbBranch);
 		int i = 0;

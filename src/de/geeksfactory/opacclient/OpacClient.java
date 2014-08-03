@@ -62,6 +62,7 @@ import de.geeksfactory.opacclient.apis.SISIS;
 import de.geeksfactory.opacclient.apis.SRU;
 import de.geeksfactory.opacclient.apis.WebOpacNet;
 import de.geeksfactory.opacclient.apis.Zones22;
+import de.geeksfactory.opacclient.frontend.AccountListActivity;
 import de.geeksfactory.opacclient.frontend.MainActivity;
 import de.geeksfactory.opacclient.frontend.SearchResultListActivity;
 import de.geeksfactory.opacclient.frontend.WelcomeActivity;
@@ -71,7 +72,7 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 import de.geeksfactory.opacclient.storage.StarContentProvider;
 
-@ReportsCrashes(formKey = "", mailTo = "info@opacapp.de", mode = org.acra.ReportingInteractionMode.DIALOG)
+@ReportsCrashes(formKey = "", mailTo = "info@opacapp.de", mode = org.acra.ReportingInteractionMode.NOTIFICATION)
 public class OpacClient extends Application {
 
 	public Exception last_exception;
@@ -94,6 +95,17 @@ public class OpacClient extends Application {
 	public static String versionName = "unknown";
 
 	private final Uri STAR_PROVIDER_STAR_URI = StarContentProvider.STAR_URI;
+
+	private static OpacClient instance;
+
+	public OpacClient() {
+		super();
+		instance = this;
+	}
+
+	public static Context getEmergencyContext() {
+		return instance.getApplicationContext();
+	}
 
 	public Uri getStarProviderStarUri() {
 		return STAR_PROVIDER_STAR_URI;
@@ -293,6 +305,12 @@ public class OpacClient extends Application {
 		ACRAConfiguration config = ACRA.getNewDefaultConfig(this);
 		config.setResToastText(R.string.crash_toast_text);
 		config.setResDialogText(R.string.crash_dialog_text);
+		config.setResToastText(R.string.crash_toast_text);
+		config.setResNotifTickerText(R.string.crash_notif_ticker_text);
+		config.setResNotifTitle(R.string.crash_notif_title);
+		config.setResNotifText(R.string.crash_notif_text);
+		config.setResNotifIcon(android.R.drawable.stat_notify_error);
+		config.setResDialogText(R.string.crash_dialog_text);
 		ACRA.setConfig(config);
 		ACRA.init(this);
 
@@ -317,6 +335,11 @@ public class OpacClient extends Application {
 
 	public Class getMainActivity() {
 		return MainActivity.class;
+	}
+
+	public void openAccountList(Activity ctx) {
+		Intent intent = new Intent(ctx, AccountListActivity.class);
+		ctx.startActivity(intent);
 	}
 
 	public static Bundle mapToBundle(Map<String, String> map) {

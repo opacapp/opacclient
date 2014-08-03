@@ -13,7 +13,7 @@
             "status": -1, 
             "title": 1
         }, 
-        "baseurl": "http://stadtbibliothek.bocholt.de", 
+        "baseurl": "http://stadtbibliothek.bocholt.de/webopac", 
         "copiestable": {
             "barcode": -1, 
             "branch": 0, 

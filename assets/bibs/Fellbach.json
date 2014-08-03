@@ -4,14 +4,14 @@
     "country": "Deutschland", 
     "data": {
         "accounttable": {
-            "author": 7, 
+            "author": 8, 
             "barcode": 4, 
             "homebranch": -1, 
             "lendingbranch": -1, 
             "prolongurl": 4, 
             "returndate": 3, 
-            "status": 5, 
-            "title": 7
+            "status": 9, 
+            "title": 8
         }, 
         "baseurl": "http://www.biber.fellbach.de", 
         "copiestable": {

@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.acra.ACRA;
-import org.apache.http.client.ClientProtocolException;
 
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -51,7 +50,6 @@ import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
-import de.geeksfactory.opacclient.frontend.MainActivity;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Library;
@@ -110,6 +108,8 @@ public class ReminderCheckService extends Service {
 
 	public class CheckTask extends AsyncTask<Object, Object, Object[]> {
 
+		private boolean exception = false;
+
 		@Override
 		protected Object[] doInBackground(Object... params) {
 			AccountDataSource data = new AccountDataSource(
@@ -165,8 +165,9 @@ public class ReminderCheckService extends Service {
 								continue;
 						}
 						if (item.containsKey(AccountData.KEY_LENT_DEADLINE_TIMESTAMP)) {
-							long expiring = Long.parseLong(item
-									.get(AccountData.KEY_LENT_DEADLINE_TIMESTAMP));
+							long expiring = Long
+									.parseLong(item
+											.get(AccountData.KEY_LENT_DEADLINE_TIMESTAMP));
 							if ((expiring - now) < warning) {
 								expired_total++;
 								if (!data.notificationIsSent(account.getId(),
@@ -190,14 +191,15 @@ public class ReminderCheckService extends Service {
 							first_affected_account = account.getId();
 					}
 
-				} catch (ClientProtocolException e) {
-					e.printStackTrace();
 				} catch (SocketException e) {
 					e.printStackTrace();
+					exception = true;
 				} catch (InterruptedIOException e) {
 					e.printStackTrace();
+					exception = true;
 				} catch (IOException e) {
 					e.printStackTrace();
+					exception = true;
 				} catch (OpacErrorException e) {
 					e.printStackTrace();
 				} catch (Exception e) {
@@ -218,12 +220,13 @@ public class ReminderCheckService extends Service {
 					i, PendingIntent.FLAG_UPDATE_CURRENT);
 			AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
-			if (result == null) {
+			if (result == null || exception) {
 				Log.i("ReminderCheckService", "Opac App Service: Quick repeat");
 				// Try again in one hour
 				am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
 						+ (1000 * 3600), sender);
-				return;
+				if (result == null)
+					return;
 			}
 
 			long expired_new = (Long) result[0];
@@ -257,7 +260,8 @@ public class ReminderCheckService extends Service {
 				nb.setSound(null);
 
 				Intent notificationIntent = new Intent(
-						ReminderCheckService.this, MainActivity.class);
+						ReminderCheckService.this,
+						((OpacClient) getApplication()).getMainActivity());
 				notificationIntent.putExtra("fragment", "account");
 				notificationIntent.putExtra("notifications", notified);
 				if (affected_accounts > 1) {

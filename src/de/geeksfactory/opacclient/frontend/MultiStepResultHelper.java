@@ -49,7 +49,8 @@ public class MultiStepResultHelper {
 			super.onPostExecute(res);
 			if (helper.pdialog != null)
 				helper.pdialog.dismiss();
-			helper.handleResult(res);
+			if(res != null)
+				helper.handleResult(res);
 		}
 
 		@Override

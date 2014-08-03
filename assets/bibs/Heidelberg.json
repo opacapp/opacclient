@@ -10,7 +10,7 @@
             "lendingbranch": 4, 
             "prolongurl": 5, 
             "returndate": 2, 
-            "status": -1, 
+            "status": 0, 
             "title": 1
         }, 
         "baseurl": "http://ww3.heidelberg.de/wwwopac", 
@@ -26,8 +26,8 @@
         "information": "http://www.stadtbuecherei-heidelberg.bib-bw.de/seiten/seite301.htm", 
         "reservationtable": {
             "author": -1, 
-            "availability": 2, 
-            "branch": 1, 
+            "availability": 1, 
+            "branch": 2, 
             "cancelurl": 3, 
             "expirationdate": null, 
             "title": 0

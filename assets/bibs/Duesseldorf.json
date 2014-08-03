@@ -1,0 +1,20 @@
+{
+    "api": "adis",
+    "city": "D\u00fcsseldorf",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "https://webopac.itk-rheinland.de/aDISWeb/app",
+        "information": "http://www.duesseldorf.de/stadtbuechereien/",
+		"searchFields": [
+			"titel", "isbn", "verfasser", "schlag_a", "zweigstelle", "jahr"
+		],
+        "startparams": "service=direct/0/Home/$DirectLink&sp=S127.0.0.1:23072"
+    },
+    "geo": [
+        51.2277411,
+        6.7734556
+    ],
+    "state": "Nordrhein-Westfalen",
+    "support": "Katalogsuche und Konto (experimentell)",
+    "title": "Stadtb\u00fcchereien"
+}

@@ -25,11 +25,11 @@ import org.holoeverywhere.preference.Preference;
 import org.holoeverywhere.preference.Preference.OnPreferenceClickListener;
 import org.holoeverywhere.preference.PreferenceCategory;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
+import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.reminder.ReminderCheckService;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
@@ -37,11 +37,6 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
 import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 
 public class MainPreferenceActivity extends OpacPreferenceActivity {
-
-	public static void openAccountList(Activity ctx) {
-		Intent intent = new Intent(ctx, AccountListActivity.class);
-		ctx.startActivity(intent);
-	}
 
 	protected boolean ebooksSupported() {
 		return false;
@@ -66,7 +61,8 @@ public class MainPreferenceActivity extends OpacPreferenceActivity {
 		assistant.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference arg0) {
-				openAccountList(MainPreferenceActivity.this);
+				((OpacClient) getApplication())
+						.openAccountList(MainPreferenceActivity.this);
 				return false;
 			}
 		});

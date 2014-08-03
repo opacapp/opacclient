@@ -10,8 +10,8 @@
         android:id="@+id/rlOuter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/tablet_panel_bg" >
+        android:background="@drawable/tablet_panel_bg"
+        android:orientation="vertical" >
 
         <RelativeLayout
             android:id="@+id/rlSimpleSearch"
@@ -58,8 +58,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:contentDescription="@string/replacedby"
                     android:layout_centerVertical="true"
+                    android:contentDescription="@string/replacedby"
                     android:src="@drawable/playstore" />
 
                 <TextView
@@ -124,6 +124,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/digital" />
+
+            <CheckBox
+                android:id="@+id/cbAvailable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/available" />
 
             <TextView
                 android:id="@+id/tvBarcodes"

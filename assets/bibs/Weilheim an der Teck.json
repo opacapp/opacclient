@@ -13,7 +13,7 @@
             "status": -1, 
             "title": 1
         }, 
-        "baseurl": "http://217.7.135.254/webopac", 
+        "baseurl": "https://wwwopac.rz-kiru.de/weilheim", 
         "copiestable": {
             "barcode": 0, 
             "branch": 4, 

@@ -3,7 +3,7 @@
     "city": "Eckernförde", 
     "country": "Deutschland", 
     "data": {
-        "baseurl": "http://iopac-eck.no-ip.biz/", 
+        "baseurl": "http://iopac-eck.dtdns.net", 
         "information": "http://www.stadtbuecherei-eckernfoerde.de/"
     }, 
     "geo": [

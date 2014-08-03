@@ -128,7 +128,7 @@ class Bibliotheca(Api):
             conf = config.get("ANZEIGEKONTOFELDER", "konto" + str(i))
             if conf == '':
                 continue
-            key = conf.split("#")[0]
+            key = conf.split("#")[0].lower()
 
             if key == 'buchungsnr':
                 data['accounttable']['barcode'] = i_acc

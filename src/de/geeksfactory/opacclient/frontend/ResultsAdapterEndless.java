@@ -61,6 +61,7 @@ public class ResultsAdapterEndless extends EndlessAdapter {
 		if(itemsToAppend != null) {
 			objects.addAll(itemsToAppend);
 			notifyDataSetChanged();
+			itemsToAppend = null;
 		}
 	}
 	

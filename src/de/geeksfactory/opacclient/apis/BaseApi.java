@@ -28,6 +28,7 @@ import java.io.InputStreamReader;
 import java.io.InterruptedIOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +36,9 @@ import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.MalformedChunkCodingException;
 import org.apache.http.NameValuePair;
+import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -113,7 +116,16 @@ public abstract class BaseApi implements OpacApi {
 		} catch (ConnectTimeoutException e) {
 			e.printStackTrace();
 			throw new NotReachableException();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
 		} catch (IllegalStateException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (NoHttpResponseException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (MalformedChunkCodingException e) {
 			e.printStackTrace();
 			throw new NotReachableException();
 		} catch (javax.net.ssl.SSLPeerUnverifiedException e) {
@@ -123,12 +135,19 @@ public abstract class BaseApi implements OpacApi {
 			// TODO: Handly this well
 			// Can be "Not trusted server certificate" or can be a
 			// aborted/interrupted handshake/connection
-			throw e;
+			if (e.getMessage().contains("timed out")
+					|| e.getMessage().contains("reset by")) {
+				e.printStackTrace();
+				throw new NotReachableException();
+			} else {
+				throw e;
+			}
 		} catch (InterruptedIOException e) {
 			e.printStackTrace();
 			throw new NotReachableException();
 		} catch (IOException e) {
-			if (e.getMessage().contains("Request aborted")) {
+			if (e.getMessage() != null
+					&& e.getMessage().contains("Request aborted")) {
 				e.printStackTrace();
 				throw new NotReachableException();
 			} else {
@@ -257,11 +276,26 @@ public abstract class BaseApi implements OpacApi {
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
 			throw new NotReachableException();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (NoHttpResponseException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (MalformedChunkCodingException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
 		} catch (javax.net.ssl.SSLPeerUnverifiedException e) {
-			// TODO: Handly this well
-			throw e;
+			// TODO: Handle this well
+			if (e.getMessage().contains("timed out")
+					|| e.getMessage().contains("reset by")) {
+				e.printStackTrace();
+				throw new NotReachableException();
+			} else {
+				throw e;
+			}
 		} catch (javax.net.ssl.SSLException e) {
-			// TODO: Handly this well
+			// TODO: Handle this well
 			// Can be "Not trusted server certificate" or can be a
 			// aborted/interrupted handshake/connection
 			throw e;
@@ -269,7 +303,8 @@ public abstract class BaseApi implements OpacApi {
 			e.printStackTrace();
 			throw new NotReachableException();
 		} catch (IOException e) {
-			if (e.getMessage().contains("Request aborted")) {
+			if (e.getMessage() != null
+					&& e.getMessage().contains("Request aborted")) {
 				e.printStackTrace();
 				throw new NotReachableException();
 			} else {
@@ -343,37 +378,37 @@ public abstract class BaseApi implements OpacApi {
 	protected String getDefaultEncoding() {
 		return "ISO-8859-1";
 	}
-	
+
 	/*
-	 * Gets all values of all query parameters in an URL. 
+	 * Gets all values of all query parameters in an URL.
 	 */
 	public static Map<String, List<String>> getQueryParams(String url) {
-	    try {
-	        Map<String, List<String>> params = new HashMap<String, List<String>>();
-	        String[] urlParts = url.split("\\?");
-	        if (urlParts.length > 1) {
-	            String query = urlParts[1];
-	            for (String param : query.split("&")) {
-	                String[] pair = param.split("=");
-	                String key = URLDecoder.decode(pair[0], "UTF-8");
-	                String value = "";
-	                if (pair.length > 1) {
-	                    value = URLDecoder.decode(pair[1], "UTF-8");
-	                }
+		try {
+			Map<String, List<String>> params = new HashMap<String, List<String>>();
+			String[] urlParts = url.split("\\?");
+			if (urlParts.length > 1) {
+				String query = urlParts[1];
+				for (String param : query.split("&")) {
+					String[] pair = param.split("=");
+					String key = URLDecoder.decode(pair[0], "UTF-8");
+					String value = "";
+					if (pair.length > 1) {
+						value = URLDecoder.decode(pair[1], "UTF-8");
+					}
 
-	                List<String> values = params.get(key);
-	                if (values == null) {
-	                    values = new ArrayList<String>();
-	                    params.put(key, values);
-	                }
-	                values.add(value);
-	            }
-	        }
+					List<String> values = params.get(key);
+					if (values == null) {
+						values = new ArrayList<String>();
+						params.put(key, values);
+					}
+					values.add(value);
+				}
+			}
 
-	        return params;
-	    } catch (UnsupportedEncodingException ex) {
-	        throw new AssertionError(ex);
-	    }
+			return params;
+		} catch (UnsupportedEncodingException ex) {
+			throw new AssertionError(ex);
+		}
 	}
 
 	/*
@@ -382,29 +417,29 @@ public abstract class BaseApi implements OpacApi {
 	 * method
 	 */
 	public static Map<String, String> getQueryParamsFirst(String url) {
-	    try {
-	        Map<String, String> params = new HashMap<String, String>();
-	        String[] urlParts = url.split("\\?");
-	        if (urlParts.length > 1) {
-	            String query = urlParts[1];
-	            for (String param : query.split("&")) {
-	                String[] pair = param.split("=");
-	                String key = URLDecoder.decode(pair[0], "UTF-8");
-	                String value = "";
-	                if (pair.length > 1) {
-	                    value = URLDecoder.decode(pair[1], "UTF-8");
-	                }
+		try {
+			Map<String, String> params = new HashMap<String, String>();
+			String[] urlParts = url.split("\\?");
+			if (urlParts.length > 1) {
+				String query = urlParts[1];
+				for (String param : query.split("&")) {
+					String[] pair = param.split("=");
+					String key = URLDecoder.decode(pair[0], "UTF-8");
+					String value = "";
+					if (pair.length > 1) {
+						value = URLDecoder.decode(pair[1], "UTF-8");
+					}
 
-	                String values = params.get(key);
-	                if (values == null) {
-	                    params.put(key, value);
-	                }
-	            }
-	        }
+					String values = params.get(key);
+					if (values == null) {
+						params.put(key, value);
+					}
+				}
+			}
 
-	        return params;
-	    } catch (UnsupportedEncodingException ex) {
-	        throw new AssertionError(ex);
-	    }
+			return params;
+		} catch (UnsupportedEncodingException ex) {
+			throw new AssertionError(ex);
+		}
 	}
 }

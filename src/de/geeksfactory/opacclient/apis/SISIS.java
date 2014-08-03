@@ -99,6 +99,7 @@ public class SISIS extends BaseApi implements OpacApi {
 		defaulttypes.put("Printmedien", MediaType.BOOK);
 		defaulttypes.put("Zeitschrift", MediaType.MAGAZINE);
 		defaulttypes.put("Zeitschriften", MediaType.MAGAZINE);
+		defaulttypes.put("zeitung", MediaType.NEWSPAPER);
 		defaulttypes.put(
 				"Einzelband einer Serie, siehe auch übergeordnete Titel",
 				MediaType.BOOK);
@@ -107,6 +108,7 @@ public class SISIS extends BaseApi implements OpacApi {
 		defaulttypes.put("2", MediaType.BOOK);
 		defaulttypes.put("3", MediaType.BOOK);
 		defaulttypes.put("4", MediaType.BOOK);
+		defaulttypes.put("5", MediaType.BOOK);
 		defaulttypes.put("6", MediaType.SCORE_MUSIC);
 		defaulttypes.put("7", MediaType.CD_MUSIC);
 		defaulttypes.put("8", MediaType.CD_MUSIC);
@@ -118,12 +120,14 @@ public class SISIS extends BaseApi implements OpacApi {
 		defaulttypes.put("14", MediaType.CD);
 		defaulttypes.put("15", MediaType.DVD);
 		defaulttypes.put("16", MediaType.CD);
+		defaulttypes.put("audiocd", MediaType.CD);
 		defaulttypes.put("Film", MediaType.MOVIE);
 		defaulttypes.put("Filme", MediaType.MOVIE);
 		defaulttypes.put("17", MediaType.MOVIE);
 		defaulttypes.put("18", MediaType.MOVIE);
 		defaulttypes.put("19", MediaType.MOVIE);
 		defaulttypes.put("20", MediaType.DVD);
+		defaulttypes.put("dvd", MediaType.DVD);
 		defaulttypes.put("21", MediaType.SCORE_MUSIC);
 		defaulttypes.put("Noten", MediaType.SCORE_MUSIC);
 		defaulttypes.put("22", MediaType.BOARDGAME);
@@ -131,6 +135,7 @@ public class SISIS extends BaseApi implements OpacApi {
 		defaulttypes.put("27", MediaType.CD);
 		defaulttypes.put("28", MediaType.EBOOK);
 		defaulttypes.put("31", MediaType.BOARDGAME);
+		defaulttypes.put("35", MediaType.MOVIE);
 		defaulttypes.put("36", MediaType.DVD);
 		defaulttypes.put("37", MediaType.CD);
 		defaulttypes.put("29", MediaType.AUDIOBOOK);
@@ -143,15 +148,19 @@ public class SISIS extends BaseApi implements OpacApi {
 		defaulttypes.put("97", MediaType.EBOOK);
 		defaulttypes.put("99", MediaType.EBOOK);
 		defaulttypes.put("EB", MediaType.EBOOK);
+		defaulttypes.put("ebook", MediaType.EBOOK);
 		defaulttypes.put("buch01", MediaType.BOOK);
 		defaulttypes.put("buch02", MediaType.PACKAGE_BOOKS);
 		defaulttypes.put("Medienpaket", MediaType.PACKAGE);
+		defaulttypes.put("datenbank", MediaType.PACKAGE);
 		defaulttypes
 				.put("Medienpaket, Lernkiste, Lesekiste", MediaType.PACKAGE);
 		defaulttypes.put("buch03", MediaType.BOOK);
 		defaulttypes.put("buch04", MediaType.PACKAGE_BOOKS);
 		defaulttypes.put("buch05", MediaType.PACKAGE_BOOKS);
 		defaulttypes.put("Web-Link", MediaType.URL);
+		defaulttypes.put("ejournal", MediaType.EDOC);
+		defaulttypes.put("karte", MediaType.MAP);
 	}
 
 	@Override
@@ -603,9 +612,10 @@ public class SISIS extends BaseApi implements OpacApi {
 					}
 				}
 				if (sr.getStatus() == null) {
-					if (part[2].contains("entliehen")
-							&& part[2]
-									.startsWith("Vormerkung ist leider nicht möglich")) {
+					if ((part[2].contains("entliehen") && part[2]
+							.startsWith("Vormerkung ist leider nicht möglich"))
+							|| part[2]
+									.contains("nur in anderer Zweigstelle ausleihbar und nicht bestellbar")) {
 						sr.setStatus(SearchResult.Status.RED);
 					} else if (part[2].startsWith("entliehen")
 							|| part[2]
@@ -765,7 +775,33 @@ public class SISIS extends BaseApi implements OpacApi {
 
 		String title = "";
 		String text = "";
-		Element detailtrs = doc2.select("#tab-content .data td").first();
+		boolean takeover = false;
+		Element detailtrs = doc2.select(".box-container .data td").first();
+		for (Node node : detailtrs.childNodes()) {
+			if (node instanceof Element) {
+				if (((Element) node).tagName().equals("strong")) {
+					title = ((Element) node).text().trim();
+					text = "";
+				} else {
+					if (((Element) node).tagName().equals("a")
+							&& (((Element) node).text().trim()
+									.contains("hier klicken") || title
+									.equals("Link:"))) {
+						text = text + ((Element) node).attr("href");
+						takeover = true;
+						break;
+					}
+				}
+			} else if (node instanceof TextNode) {
+				text = text + ((TextNode) node).text();
+			}
+		}
+		if (!takeover) {
+			text = "";
+			title = "";
+		}
+
+		detailtrs = doc2.select("#tab-content .data td").first();
 		if (detailtrs != null) {
 			for (Node node : detailtrs.childNodes()) {
 				if (node instanceof Element) {
@@ -782,8 +818,9 @@ public class SISIS extends BaseApi implements OpacApi {
 						title = ((Element) node).text().trim();
 					} else {
 						if (((Element) node).tagName().equals("a")
-								&& ((Element) node).text().trim()
-										.contains("hier klicken")) {
+								&& (((Element) node).text().trim()
+										.contains("hier klicken") || title
+										.equals("Link:"))) {
 							text = text + ((Element) node).attr("href");
 						} else {
 							text = text + ((Element) node).text();
@@ -1097,21 +1134,26 @@ public class SISIS extends BaseApi implements OpacApi {
 						best = copy;
 						continue;
 					}
-					if (Integer.parseInt(copy
-							.get(DetailledItem.KEY_COPY_RESERVATIONS)) < Long
-							.parseLong(best
-									.get(DetailledItem.KEY_COPY_RESERVATIONS))) {
-						best = copy;
-					} else if (Integer.parseInt(copy
-							.get(DetailledItem.KEY_COPY_RESERVATIONS)) == Long
-							.parseLong(best
-									.get(DetailledItem.KEY_COPY_RESERVATIONS))) {
+					try {
 						if (Integer.parseInt(copy
-								.get(DetailledItem.KEY_COPY_RETURN_TIMESTAMP)) < Long
+								.get(DetailledItem.KEY_COPY_RESERVATIONS)) < Long
 								.parseLong(best
-										.get(DetailledItem.KEY_COPY_RETURN_TIMESTAMP))) {
+										.get(DetailledItem.KEY_COPY_RESERVATIONS))) {
 							best = copy;
+						} else if (Integer.parseInt(copy
+								.get(DetailledItem.KEY_COPY_RESERVATIONS)) == Long
+								.parseLong(best
+										.get(DetailledItem.KEY_COPY_RESERVATIONS))) {
+							if (Integer
+									.parseInt(copy
+											.get(DetailledItem.KEY_COPY_RETURN_TIMESTAMP)) < Long
+									.parseLong(best
+											.get(DetailledItem.KEY_COPY_RETURN_TIMESTAMP))) {
+								best = copy;
+							}
 						}
+					} catch (NumberFormatException e) {
+
 					}
 				}
 				if (best != null) {
@@ -1334,7 +1376,7 @@ public class SISIS extends BaseApi implements OpacApi {
 						Map<String, String> hrefq = getQueryParamsFirst(href);
 						if (hrefq.get("methodToCall").equals("renewalPossible")) {
 							e.put(AccountData.KEY_LENT_LINK, offset + "$"
-									+ href.split("\\?")[0]);
+									+ href.split("\\?")[1]);
 							e.put(AccountData.KEY_LENT_RENEWABLE, "Y");
 							break;
 						}
@@ -1372,7 +1414,7 @@ public class SISIS extends BaseApi implements OpacApi {
 			Element tr = copytrs.get(i);
 			Map<String, String> e = new HashMap<String, String>();
 
-			if (tr.text().contains("keine Daten")) {
+			if (tr.text().contains("keine Daten") || tr.children().size() == 1) {
 				return;
 			}
 
@@ -1388,6 +1430,10 @@ public class SISIS extends BaseApi implements OpacApi {
 				if (rowsplit2.length > 2)
 					e.put(AccountData.KEY_RESERVATION_BRANCH,
 							rowsplit2[2].trim());
+
+				if (rowsplit2.length > 2)
+					e.put(AccountData.KEY_RESERVATION_READY,
+							rowsplit2[0].trim());
 
 				if (tr.select("a").size() == 1)
 					e.put(AccountData.KEY_RESERVATION_CANCEL, type + "$"
@@ -1570,7 +1616,8 @@ public class SISIS extends BaseApi implements OpacApi {
 
 	@Override
 	public int getSupportFlags() {
-		int flags = SUPPORT_FLAG_ACCOUNT_PROLONG_ALL;
+		int flags = SUPPORT_FLAG_ACCOUNT_PROLONG_ALL
+				| SUPPORT_FLAG_CHANGE_ACCOUNT;
 		flags |= SUPPORT_FLAG_ENDLESS_SCROLLING;
 		return flags;
 	}

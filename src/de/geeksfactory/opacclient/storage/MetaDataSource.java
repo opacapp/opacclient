@@ -57,7 +57,7 @@ public interface MetaDataSource {
 	 * Open up the connection to the data source. Needs to be called before any
 	 * read or write operation.
 	 * 
-	 * @throws SQLException
+	 * @throws Exception
 	 *             on failure
 	 */
 	public void open() throws Exception;
