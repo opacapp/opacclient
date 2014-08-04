@@ -47,6 +47,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import de.geeksfactory.opacclient.NotReachableException;
+import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
 import de.geeksfactory.opacclient.networking.HTTPClient;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -783,6 +784,7 @@ public class BiBer1992 extends BaseApi {
 				}
 				if(options.size() > 1) {
 					ReservationResult res = new ReservationResult(MultiStepResult.Status.SELECTION_NEEDED);
+					res.setActionIdentifier(ReservationResult.ACTION_BRANCH);
 					res.setSelection(options);
 					return res;
 				} else {
