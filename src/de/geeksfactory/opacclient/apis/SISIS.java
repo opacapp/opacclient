@@ -170,7 +170,8 @@ public class SISIS extends BaseApi implements OpacApi {
 				KEY_SEARCH_QUERY_KEYWORDB, KEY_SEARCH_QUERY_HOME_BRANCH,
 				KEY_SEARCH_QUERY_BRANCH, KEY_SEARCH_QUERY_ISBN,
 				KEY_SEARCH_QUERY_YEAR, KEY_SEARCH_QUERY_SYSTEM,
-				KEY_SEARCH_QUERY_AUDIENCE, KEY_SEARCH_QUERY_PUBLISHER };
+				KEY_SEARCH_QUERY_AUDIENCE, KEY_SEARCH_QUERY_PUBLISHER,
+				KEY_SEARCH_QUERY_CATEGORY };
 	}
 
 	public void extract_meta(Document doc) {
@@ -204,6 +205,15 @@ public class SISIS extends BaseApi implements OpacApi {
 		for (String[] meta : metas) {
 			metadata.addMeta(MetaDataSource.META_TYPE_HOME_BRANCH,
 					library.getIdent(), meta[0], meta[1]);
+		}
+		
+		
+		Elements cat_opts = doc.select("#Medienart option");
+		for (int i = 0; i < cat_opts.size(); i++) {
+			Element opt = cat_opts.get(i);
+			if (!opt.val().equals(""))
+				metadata.addMeta(MetaDataSource.META_TYPE_CATEGORY,
+						library.getIdent(), opt.val(), opt.text());
 		}
 
 		metadata.close();
@@ -346,6 +356,14 @@ public class SISIS extends BaseApi implements OpacApi {
 				if (!query.get(KEY_SEARCH_QUERY_HOME_BRANCH).equals(""))
 					params.add(new BasicNameValuePair("selectedViewBranchlib",
 							query.get(KEY_SEARCH_QUERY_HOME_BRANCH)));
+			}
+			if (query.get(KEY_SEARCH_QUERY_CATEGORY) != null) {
+				if (!query.get(KEY_SEARCH_QUERY_CATEGORY).equals("")) {
+					String id = data.optString("field_CATEGORY", "4");
+					params.add(new BasicNameValuePair("searchRestrictionID[0]", id));
+					params.add(new BasicNameValuePair("searchRestrictionValue1[0]",
+							query.get(KEY_SEARCH_QUERY_CATEGORY)));
+				}
 			}
 		}
 
