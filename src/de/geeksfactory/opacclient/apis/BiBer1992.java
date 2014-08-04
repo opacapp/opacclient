@@ -745,8 +745,15 @@ public class BiBer1992 extends BaseApi {
 		
 		item.setReservable(true); //We cannot check if media is reservable
 		
-		if(m_opac_dir.equals("opax")) {		
-			item.setReservation_info(document.select("input[type=checkbox]").first().attr("name"));		
+		if(m_opac_dir.equals("opax")) {	
+			if(document.select("input[type=checkbox]").size() > 0) {
+				item.setReservation_info(document.select("input[type=checkbox]").first().attr("name"));		
+			} else if (document.select("a[href^=reserv.C]").size() > 0) {
+				String href = document.select("a[href^=reserv.C]").first().attr("href");
+				item.setReservation_info(href.substring(href.indexOf("resF_")));		
+			} else {
+				item.setReservable(false);
+			}
 		} else {
 			item.setReservation_info(document.select("input[name=ID]").attr("value"));		
 		}
