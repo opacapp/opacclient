@@ -171,8 +171,7 @@ public class SISIS extends BaseApi implements OpacApi {
 				KEY_SEARCH_QUERY_BRANCH, KEY_SEARCH_QUERY_ISBN,
 				KEY_SEARCH_QUERY_YEAR, KEY_SEARCH_QUERY_SYSTEM,
 				KEY_SEARCH_QUERY_AUDIENCE, KEY_SEARCH_QUERY_PUBLISHER,
-				KEY_SEARCH_QUERY_CATEGORY, KEY_SEARCH_QUERY_YEAR_RANGE_START,
-				KEY_SEARCH_QUERY_YEAR_RANGE_END};
+				KEY_SEARCH_QUERY_CATEGORY };
 	}
 
 	public void extract_meta(Document doc) {
@@ -292,27 +291,7 @@ public class SISIS extends BaseApi implements OpacApi {
 		params.add(new BasicNameValuePair("searchString[" + index + "]", query
 				.get(key)));
 		return index + 1;
-	}
-	
-	protected int addRestrictions(Map<String, String> query, String key,
-			String searchkey, List<NameValuePair> params, int index) {
-		List<String> keys = new ArrayList<String>();
-		keys.add(key);
-		return addRestrictions(query, keys, searchkey, params, index);
-	}
-	
-	protected int addRestrictions(Map<String, String> query, List<String> keys,
-			String searchkey, List<NameValuePair> params, int index) {
-		if (!query.containsKey(keys.get(0)) || query.get(keys.get(0)).equals(""))
-			return index;
-		
-		params.add(new BasicNameValuePair("searchRestrictionID[" + index + "]",
-				searchkey));
-		for (int i = 0; i<keys.size(); i++) {
-			params.add(new BasicNameValuePair("searchRestrictionValue" + (i+1) +
-					"[" + index + "]", query.get(keys.get(i))));
-		}
-		return index + 1;
+
 	}
 
 	@Override
@@ -366,24 +345,6 @@ public class SISIS extends BaseApi implements OpacApi {
 				throw new OpacErrorException(
 						"Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.");
 			}
-			
-			index = 0;
-			index = addRestrictions(query, KEY_SEARCH_QUERY_CATEGORY, 
-					data.optString("field_CATEGORY", "4"), params, index);
-			
-			List<String> yearSearchKeys = new ArrayList<String>();
-			yearSearchKeys.add(KEY_SEARCH_QUERY_YEAR_RANGE_START);
-			yearSearchKeys.add(KEY_SEARCH_QUERY_YEAR_RANGE_END);
-			
-			index = addRestrictions(query, yearSearchKeys,
-					data.optString("field_YEAR_RANGE", "1"), params, index);
-			
-			if (index > 3) {
-				//Should not happen because there are only two restrictions
-				throw new OpacErrorException(
-						"Diese Bibliothek unterstützt nur bis zu drei benutzte Filterkriterien.");
-			}
-			
 
 			params.add(new BasicNameValuePair("submitSearch", "Suchen"));
 			params.add(new BasicNameValuePair("callingPage", "searchParameters"));
@@ -396,14 +357,14 @@ public class SISIS extends BaseApi implements OpacApi {
 					params.add(new BasicNameValuePair("selectedViewBranchlib",
 							query.get(KEY_SEARCH_QUERY_HOME_BRANCH)));
 			}
-//			if (query.get(KEY_SEARCH_QUERY_CATEGORY) != null) {
-//				if (!query.get(KEY_SEARCH_QUERY_CATEGORY).equals("")) {
-//					String id = data.optString("field_CATEGORY", "4");
-//					params.add(new BasicNameValuePair("searchRestrictionID[0]", id));
-//					params.add(new BasicNameValuePair("searchRestrictionValue1[0]",
-//							query.get(KEY_SEARCH_QUERY_CATEGORY)));
-//				}
-//			}
+			if (query.get(KEY_SEARCH_QUERY_CATEGORY) != null) {
+				if (!query.get(KEY_SEARCH_QUERY_CATEGORY).equals("")) {
+					String id = data.optString("field_CATEGORY", "4");
+					params.add(new BasicNameValuePair("searchRestrictionID[0]", id));
+					params.add(new BasicNameValuePair("searchRestrictionValue1[0]",
+							query.get(KEY_SEARCH_QUERY_CATEGORY)));
+				}
+			}
 		}
 
 		String html = httpGet(
