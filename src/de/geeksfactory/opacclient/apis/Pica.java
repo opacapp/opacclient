@@ -51,6 +51,7 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
+import android.util.Log;
 import de.geeksfactory.opacclient.ISBNTools;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
@@ -586,6 +587,15 @@ public class Pica extends BaseApi implements OpacApi {
 
 		e.put(DetailledItem.KEY_COPY_BRANCH, location);
 		result.addCopy(e);
+		
+		//GET RESERVATION INFO
+		if(doc.select("a:contains(Vormerken)").size() > 0) {
+			Element a = doc.select("a:contains(Vormerken)").first();
+			result.setReservation_info(opac_url + a.attr("href"));
+			result.setReservable(true);
+		} else if (doc.select("a:contains(Exemplare)").size() > 0) {
+			//TODO:
+		}
 
 		return result;
 	}
@@ -593,7 +603,32 @@ public class Pica extends BaseApi implements OpacApi {
 	@Override
 	public ReservationResult reservation(DetailledItem item, Account account,
 			int useraction, String selection) throws IOException {
-		return null;
+		Log.d("opac", item.getReservation_info());
+		String html1 = httpGet(item.getReservation_info(), getDefaultEncoding());
+		Document doc1 = Jsoup.parse(html1);
+		//TODO: Check if there are any selections here
+		
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		
+		for (Element input:doc1.select("input[type=hidden]")) {
+			params.add(new BasicNameValuePair(input.attr("name"), input.attr("value")));
+			Log.d("opac", input.attr("name") + "=" + input.attr("value"));
+		}
+		
+		params.add(new BasicNameValuePair("BOR_U", account.getName()));
+		params.add(new BasicNameValuePair("BOR_PW", account.getPassword()));
+		
+		String html2 = httpPost(https_url + "/loan/LNG=DU/DB=" + db + "/SET=" + searchSet + "/TTL=1/RESCONT",
+				new UrlEncodedFormEntity(params, getDefaultEncoding()), getDefaultEncoding());
+		Document doc2 = Jsoup.parse(html2);
+		
+		if(doc2.select(".alert").text().contains("ist fuer Sie vorgemerkt")) {
+			return new ReservationResult(MultiStepResult.Status.OK);
+		} else {
+			ReservationResult res = new ReservationResult(MultiStepResult.Status.ERROR);
+			res.setMessage(doc2.select(".alert").text());
+			return res;
+		}
 	}
 
 	@Override
