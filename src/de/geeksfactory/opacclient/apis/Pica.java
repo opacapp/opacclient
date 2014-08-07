@@ -22,6 +22,7 @@
 package de.geeksfactory.opacclient.apis;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -29,6 +30,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -42,6 +44,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -51,6 +54,7 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
+import android.util.Log;
 import de.geeksfactory.opacclient.ISBNTools;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
@@ -542,30 +546,24 @@ public class Pica extends BaseApi implements OpacApi {
 		// GET OTHER INFORMATION
 		Map<String, String> e = new HashMap<String, String>();
 		String location = "";
+			
+		//reservation info will be stored as JSON, because it can get complicated
+		JSONArray reservationInfo = new JSONArray();
 
 		for (Element element : doc.select("td.preslabel + td.presvalue")) {
+			Element titleElem = element.firstElementSibling();
 			String detail = element.text().trim();
-			String title = element.firstElementSibling().text().trim()
+			String title = titleElem.text().trim()
 					.replace("\u00a0", "");
 
-			if (element.select("hr").size() > 0 && location != "") { // multiple
-																		// copies
-				e.put(DetailledItem.KEY_COPY_BRANCH, location);
-				result.addCopy(e);
-				location = "";
-				e = new HashMap<String, String>();
-			}
-
-			if (!title.equals("")) {
+			if (element.select("hr").size() == 0) { // no separator
 
 				if (title.indexOf(":") != -1) {
 					title = title.substring(0, title.indexOf(":")); // remove
 																	// colon
 				}
 
-				if (title.contains("Status")) {
-					e.put(DetailledItem.KEY_COPY_STATUS, detail);
-				} else if (title.contains("Standort")
+				if (title.contains("Standort")
 						|| title.contains("Vorhanden in")) {
 					location += detail;
 				} else if (title.contains("Sonderstandort")) {
@@ -574,29 +572,47 @@ public class Pica extends BaseApi implements OpacApi {
 					e.put(DetailledItem.KEY_COPY_LOCATION, detail);
 				} else if (title.contains("Signatur")) {
 					e.put(DetailledItem.KEY_COPY_SHELFMARK, detail);
+				} else if (title.contains("Anmerkung")) {
+					location += " (" + detail + ")";
 				} else if (title.contains("Status")
 						|| title.contains("Ausleihinfo")) {
-					detail = detail.replace("Bestellen", "").trim();
-					detail = detail.replace("verfuegbar", "verf�gbar");
-					detail = detail.replace("Verfuegbar", "verf�gbar");
+					detail = detail.replace("Bestellen", "")
+							.replace("verfuegbar", "verfügbar")
+							.replace("Verfuegbar", "verfügbar")
+							.replace("Vormerken", "")
+							.replace("Liste der Exemplare", "").trim();
 					e.put(DetailledItem.KEY_COPY_STATUS, detail);
-				} else if (!title.contains("Titel")) {
-					result.addDetail(new Detail(title, detail));
+					//Get reservation info
+					if(element.select("a:contains(Vormerken), a:contains(Exemplare)").size() > 0) {
+						Log.d("opac", "Vormerken");
+						Element a = element.select("a:contains(Vormerken), a:contains(Exemplare)").first();
+						boolean multipleCopies = a.text().contains("Exemplare");
+						JSONObject reservation = new JSONObject();
+						try {
+							reservation.put("multi", multipleCopies);
+							reservation.put("link", opac_url + a.attr("href"));
+							reservation.put("desc", location);
+							reservationInfo.put(reservation);
+						} catch (JSONException e1) {
+							e1.printStackTrace();
+						}
+						result.setReservable(true);
+					}
+				} else  {
+					//Weitere Eigenschaften
 				}
+			} else if (e.size() > 0) {
+				e.put(DetailledItem.KEY_COPY_BRANCH, location);
+				result.addCopy(e);
+				location = "";
+				e = new HashMap<String, String>();
 			}
 		}
-
+		
 		e.put(DetailledItem.KEY_COPY_BRANCH, location);
 		result.addCopy(e);
 		
-		//GET RESERVATION INFO
-		if(doc.select("a:contains(Vormerken)").size() > 0) {
-			Element a = doc.select("a:contains(Vormerken)").first();
-			result.setReservation_info(opac_url + a.attr("href"));
-			result.setReservable(true);
-		} else if (doc.select("a:contains(Exemplare)").size() > 0) {
-			//TODO:
-		}
+		result.setReservation_info(reservationInfo.toString());;
 
 		return result;
 	}
@@ -604,20 +620,99 @@ public class Pica extends BaseApi implements OpacApi {
 	@Override
 	public ReservationResult reservation(DetailledItem item, Account account,
 			int useraction, String selection) throws IOException {
-		String html1 = httpGet(item.getReservation_info(), getDefaultEncoding());
-		Document doc1 = Jsoup.parse(html1);
-		//TODO: Check if there are any selections here
-		
-		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		
-		for (Element input:doc1.select("input[type=hidden]")) {
-			params.add(new BasicNameValuePair(input.attr("name"), input.attr("value")));
+		try {
+			if(selection == null || !selection.startsWith("{")) {
+				JSONArray json = new JSONArray(item.getReservation_info());
+				int selectedPos;
+				if(selection != null) {
+					selectedPos = Integer.parseInt(selection);
+				} else if (json.length() == 1) {
+					selectedPos = 0;
+				} else {
+					//a location must be selected
+					ReservationResult res = new ReservationResult(MultiStepResult.Status.SELECTION_NEEDED);
+					res.setActionIdentifier(ReservationResult.ACTION_BRANCH);
+					Map<String, String> selections = new HashMap<String, String>();
+					for (int i = 0; i<json.length(); i++) {
+						selections.put(String.valueOf(i), json.getJSONObject(i).getString("desc"));
+					}
+					res.setSelection(selections);		
+					return res;
+				}
+				
+				if(json.getJSONObject(selectedPos).getBoolean("multi")) {
+					//A copy must be selected
+					String html1 = httpGet(json.getJSONObject(selectedPos).getString("link"), getDefaultEncoding());
+					Document doc1 = Jsoup.parse(html1);
+					
+					Elements trs = doc1.select("table[summary=list of volumes header] tr:has(input[type=radio])"); 
+					
+					if(trs.size() > 0) {					
+						Map<String, String> selections = new HashMap<String, String>();
+						for(Element tr:trs) {
+							JSONObject values = new JSONObject();
+							for (Element input:doc1.select("input[type=hidden]")) {
+								values.put(input.attr("name"), input.attr("value"));
+							}
+							values.put(tr.select("input").attr("name"), tr.select("input").attr("value"));
+							selections.put(values.toString(), tr.text());
+						}
+						
+						ReservationResult res = new ReservationResult(MultiStepResult.Status.SELECTION_NEEDED);
+						res.setActionIdentifier(ReservationResult.ACTION_USER);
+						res.setMessage("Welches Exemplar soll reserviert/bestellt werden? (verfügbare Exemplare werden bestellt)");
+						res.setSelection(selections);
+						return res;
+					} else {
+						ReservationResult res = new ReservationResult(MultiStepResult.Status.ERROR);
+						res.setMessage("Es ist kein Exemplar reservierbar.");
+						return res;
+					}
+					
+				} else {
+					String html1 = httpGet(json.getJSONObject(selectedPos).getString("link"), getDefaultEncoding());
+					Document doc1 = Jsoup.parse(html1);
+					
+					List<NameValuePair> params = new ArrayList<NameValuePair>();
+					
+					for (Element input:doc1.select("input[type=hidden]")) {
+						params.add(new BasicNameValuePair(input.attr("name"), input.attr("value")));
+					}
+					
+					params.add(new BasicNameValuePair("BOR_U", account.getName()));
+					params.add(new BasicNameValuePair("BOR_PW", account.getPassword()));
+					
+					return reservation_result(params, false);
+				}
+			} else {
+				//A copy has been selected
+				JSONObject values = new JSONObject(selection);			
+				List<NameValuePair> params = new ArrayList<NameValuePair>();
+				
+				Iterator<String> keys = values.keys();
+				while (keys.hasNext()) {
+					String key = (String) keys.next();
+					String value = values.getString(key);
+					params.add(new BasicNameValuePair(key, value));
+					Log.d("opac", key + " = " + value);
+				}
+				
+				params.add(new BasicNameValuePair("BOR_U", account.getName()));
+				params.add(new BasicNameValuePair("BOR_PW", account.getPassword()));
+				
+				return reservation_result(params, true);
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+			ReservationResult res = new ReservationResult(MultiStepResult.Status.ERROR);
+			res.setMessage("interner Fehler");
+			return res;
 		}
-		
-		params.add(new BasicNameValuePair("BOR_U", account.getName()));
-		params.add(new BasicNameValuePair("BOR_PW", account.getPassword()));
-		
-		String html2 = httpPost(https_url + "/loan/LNG=DU/DB=" + db + "/SET=" + searchSet + "/TTL=1/RESCONT",
+	}
+	
+	public ReservationResult reservation_result(List<NameValuePair> params, boolean multi) throws IOException {
+		String html2 = httpPost(https_url + "/loan/LNG=DU/DB=" + db + "/SET=" + searchSet + "/TTL=1/"
+					+ (multi ? "REQCONT" : "RESCONT"),
 				new UrlEncodedFormEntity(params, getDefaultEncoding()), getDefaultEncoding());
 		Document doc2 = Jsoup.parse(html2);
 		
