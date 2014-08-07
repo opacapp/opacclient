@@ -51,7 +51,6 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
-import android.util.Log;
 import de.geeksfactory.opacclient.ISBNTools;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
@@ -84,6 +83,8 @@ public class Pica extends BaseApi implements OpacApi {
 	protected String db;
 	protected String pwEncoded;
 	CookieStore cookieStore = new BasicCookieStore();
+	
+	protected String lor_reservations;
 
 	protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
 
@@ -603,7 +604,6 @@ public class Pica extends BaseApi implements OpacApi {
 	@Override
 	public ReservationResult reservation(DetailledItem item, Account account,
 			int useraction, String selection) throws IOException {
-		Log.d("opac", item.getReservation_info());
 		String html1 = httpGet(item.getReservation_info(), getDefaultEncoding());
 		Document doc1 = Jsoup.parse(html1);
 		//TODO: Check if there are any selections here
@@ -612,7 +612,6 @@ public class Pica extends BaseApi implements OpacApi {
 		
 		for (Element input:doc1.select("input[type=hidden]")) {
 			params.add(new BasicNameValuePair(input.attr("name"), input.attr("value")));
-			Log.d("opac", input.attr("name") + "=" + input.attr("value"));
 		}
 		
 		params.add(new BasicNameValuePair("BOR_U", account.getName()));
@@ -626,7 +625,7 @@ public class Pica extends BaseApi implements OpacApi {
 			return new ReservationResult(MultiStepResult.Status.OK);
 		} else {
 			ReservationResult res = new ReservationResult(MultiStepResult.Status.ERROR);
-			res.setMessage(doc2.select(".alert").text());
+			res.setMessage(doc2.select(".cnt .alert").text());
 			return res;
 		}
 	}
@@ -693,18 +692,19 @@ public class Pica extends BaseApi implements OpacApi {
 		params.add(new BasicNameValuePair("ACT", "UI_CANCELRES"));
 
 		params.add(new BasicNameValuePair("BOR_U", account.getName()));
-		params.add(new BasicNameValuePair("BOR_PW_ENC", pwEncoded));
-
+		params.add(new BasicNameValuePair("BOR_PW_ENC", URLDecoder.decode(pwEncoded, "UTF-8")));
+		if(lor_reservations != null) params.add(new BasicNameValuePair("LOR_RESERVATIONS", lor_reservations));
+		
 		params.add(new BasicNameValuePair("VB", media));
 
-		String html = httpPost(https_url + "/loan/DB=" + db + "/USERINFO",
+		String html = httpPost(https_url + "/loan/DB=" + db + "/SET=" + searchSet + "/TTL=1/USERINFO",
 				new UrlEncodedFormEntity(params, getDefaultEncoding()), getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 
 		if (doc.select("td.regular-text").text()
 				.contains("Ihre Vormerkungen sind ")) {
 			return new CancelResult(MultiStepResult.Status.OK);
-		} else if (doc.select(".alert").text().contains("identify yourself")) {
+		} else if (doc.select(".cnt .alert").text().contains("identify yourself")) {
 			try {
 				account(account);
 				return cancel(media, account, useraction, selection);
@@ -712,7 +712,9 @@ public class Pica extends BaseApi implements OpacApi {
 				throw new OpacErrorException("Interner Fehler");
 			}
 		} else {
-			throw new OpacErrorException("Verbindungsfehler.");
+			CancelResult res = new CancelResult(MultiStepResult.Status.ERROR);
+			res.setMessage(doc.select(".cnt").text());
+			return res;
 		}
 	}
 
@@ -848,6 +850,10 @@ public class Pica extends BaseApi implements OpacApi {
 
 	protected void parse_reslist(List<Map<String, String>> medien, Document doc,
 			int offset) throws ClientProtocolException, IOException {
+		
+		if(doc.select("input[name=LOR_RESERVATIONS]").size()>0) {
+			lor_reservations = doc.select("input[name=LOR_RESERVATIONS]").attr("value");
+		}
 
 		Elements copytrs = doc.select("table[summary^=list] tr[valign=top]");
 
