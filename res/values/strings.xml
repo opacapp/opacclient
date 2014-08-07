@@ -262,5 +262,6 @@
     <string name="select_mail_app">E-Mail-App auswählen…</string>
     <string name="search_libraries_hint">Bibliothek suchen…</string>
     <string name="action_search">Suchen</string>
+    <string name="snooze">Morgen erneut erinnern</string>
 
 </resources>
