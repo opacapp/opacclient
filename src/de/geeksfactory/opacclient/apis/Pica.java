@@ -598,8 +598,8 @@ public class Pica extends BaseApi implements OpacApi {
 						}
 						result.setReservable(true);
 					}
-				} else  {
-					//Weitere Eigenschaften
+				} else if (!title.equals("Titel")) {
+					result.addDetail(new Detail(title, detail));
 				}
 			} else if (e.size() > 0) {
 				e.put(DetailledItem.KEY_COPY_BRANCH, location);
