@@ -28,3 +28,6 @@ proguard-project.txt
 *.pyc
 
 assets/buildnum.txt
+
+# Windows Thumbnail files
+Thumbs.db

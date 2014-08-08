@@ -58,46 +58,61 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 public class ReminderCheckService extends Service {
 
 	boolean notification_on = false;
+	public static final String ACTION_SNOOZE = "snooze";
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startid) {
-		SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(ReminderCheckService.this);
-		notification_on = sp.getBoolean("notification_service", false);
-		long waittime = (1000 * 3600 * 5);
-		boolean executed = false;
+		if(ACTION_SNOOZE.equals(intent.getAction())) {
+			Intent i = new Intent(ReminderCheckService.this,
+					ReminderAlarmReceiver.class);
+			PendingIntent sender = PendingIntent.getBroadcast(
+					ReminderCheckService.this, OpacClient.BROADCAST_REMINDER,
+					i, PendingIntent.FLAG_UPDATE_CURRENT);
+			AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
-		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-		if (networkInfo != null) {
-			if (sp.getBoolean("notification_service_wifionly", false) == false
-					|| networkInfo.getType() == ConnectivityManager.TYPE_WIFI
-					|| networkInfo.getType() == ConnectivityManager.TYPE_ETHERNET) {
-				executed = true;
-				new CheckTask().execute();
+			Log.i("ReminderCheckService", "Opac App Service: Quick repeat");
+			// Run again in 1 day
+			am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
+					+ (1000 * 3600 * 24), sender);
+		} else {	
+			SharedPreferences sp = PreferenceManager
+					.getDefaultSharedPreferences(ReminderCheckService.this);
+			notification_on = sp.getBoolean("notification_service", false);
+			long waittime = (1000 * 3600 * 5);
+			boolean executed = false;
+	
+			ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+			if (networkInfo != null) {
+				if (sp.getBoolean("notification_service_wifionly", false) == false
+						|| networkInfo.getType() == ConnectivityManager.TYPE_WIFI
+						|| networkInfo.getType() == ConnectivityManager.TYPE_ETHERNET) {
+					executed = true;
+					new CheckTask().execute();
+				} else {
+					waittime = (1000 * 1800);
+				}
 			} else {
 				waittime = (1000 * 1800);
 			}
-		} else {
-			waittime = (1000 * 1800);
+	
+			if (!notification_on) {
+				waittime = (1000 * 3600 * 12);
+			}
+	
+			Intent i = new Intent(ReminderCheckService.this,
+					ReminderAlarmReceiver.class);
+			PendingIntent sender = PendingIntent.getBroadcast(
+					ReminderCheckService.this, OpacClient.BROADCAST_REMINDER, i,
+					PendingIntent.FLAG_UPDATE_CURRENT);
+			AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+			am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + waittime,
+					sender);
+	
+			if (!executed)
+				stopSelf();
 		}
-
-		if (!notification_on) {
-			waittime = (1000 * 3600 * 12);
-		}
-
-		Intent i = new Intent(ReminderCheckService.this,
-				ReminderAlarmReceiver.class);
-		PendingIntent sender = PendingIntent.getBroadcast(
-				ReminderCheckService.this, OpacClient.BROADCAST_REMINDER, i,
-				PendingIntent.FLAG_UPDATE_CURRENT);
-		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + waittime,
-				sender);
-
-		if (!executed)
-			stopSelf();
-
+		
 		return START_NOT_STICKY;
 	}
 
@@ -258,6 +273,11 @@ public class ReminderCheckService extends Service {
 				nb.setWhen(first);
 				nb.setNumber((int) expired_new);
 				nb.setSound(null);
+				
+				Intent snoozeIntent = new Intent(ReminderCheckService.this, ReminderCheckService.class);
+				snoozeIntent.setAction(ACTION_SNOOZE);
+				PendingIntent piSnooze = PendingIntent.getService(ReminderCheckService.this, 0, snoozeIntent, 0);
+				nb.addAction(R.drawable.ic_action_alarms, getResources().getText(R.string.snooze), piSnooze);
 
 				Intent notificationIntent = new Intent(
 						ReminderCheckService.this,
