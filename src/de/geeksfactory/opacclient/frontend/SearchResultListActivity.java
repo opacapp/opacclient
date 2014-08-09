@@ -51,7 +51,6 @@ public class SearchResultListActivity extends OpacActivity implements
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
 		// Show the Up button in the action bar.
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);

@@ -1,0 +1,61 @@
+{
+    "api": "biber1992",
+    "city": "Jena",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "https://opac.jena.de",
+        "information": "http://www.stadtbibliothek.jena.de/de/startseite/359025",
+        "opacdir": "opax",
+		"searchtable": [
+            2, 
+            3
+        ],
+		"mediatypes": {
+            "1": "BOOK", 
+			"2": "MAGAZINE",
+			"3": "CD_SOFTWARE",
+			"4": "MOVIE",
+			"5": "AUDIO_CASSETTE",
+			"6": "CD",
+			"7": "LP_RECORD",
+			"8": "SCORE_MUSIC",
+			"9": "BOARDGAME",
+            "10": "MAP", 
+            "11": "DVD", 
+            "12": "ART",
+            "13": "SCHOOL_VERSION",
+			"20": "AUDIOBOOK",
+			"22": "CD_SOFTWARE",
+			"23": "CD_SOFTWARE",
+			"24": "BLURAY",
+			"26": "GAME_CONSOLE_WII",
+			"30": "EBOOK"
+        },
+		"accounttable": {
+            "author": 8, 
+            "barcode": 5, 
+            "homebranch": -1, 
+            "lendingbranch": -1, 
+            "prolongurl": 2, 
+            "returndate": 4, 
+            "status": 6, 
+            "title": 8
+        }, 
+		"copiestable": {
+            "barcode": 3, 
+            "branch": 1, 
+            "department": -1, 
+            "location": 2, 
+            "reservations": -1, 
+            "returndate": -1, 
+            "status": 4
+        }
+    },
+    "geo": [
+        50.927054,
+        11.5892372
+    ],
+    "state": "Th\u00fcringen",
+    "support": "Katalogsuche",
+    "title": "Ernst-Abbe-B\u00fccherei (Stadtbibliothek)"
+}
