@@ -30,6 +30,25 @@
 			"24": "BLURAY",
 			"26": "GAME_CONSOLE_WII",
 			"30": "EBOOK"
+        },
+		"accounttable": {
+            "author": 8, 
+            "barcode": 5, 
+            "homebranch": -1, 
+            "lendingbranch": -1, 
+            "prolongurl": 2, 
+            "returndate": 4, 
+            "status": 6, 
+            "title": 8
+        }, 
+		"copiestable": {
+            "barcode": 3, 
+            "branch": 1, 
+            "department": -1, 
+            "location": 2, 
+            "reservations": -1, 
+            "returndate": -1, 
+            "status": 4
         }
     },
     "geo": [
