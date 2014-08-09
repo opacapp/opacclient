@@ -92,12 +92,6 @@ public abstract class OpacActivity extends Activity {
 		
 		super.onCreate(savedInstanceState);
 
-		try {
-			setSupportProgressBarIndeterminateVisibility(false);
-		} catch (Exception e) {
-
-		}
-
 		setContentView(getContentView());
 		app = (OpacClient) getApplication();
 
@@ -258,6 +252,7 @@ public abstract class OpacActivity extends Activity {
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
+		setSupportProgressBarIndeterminateVisibility(false);
 		if (hasDrawer)
 			drawerToggle.syncState();
 	}
