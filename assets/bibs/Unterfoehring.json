@@ -1,0 +1,16 @@
+{
+    "api": "winbiap", 
+    "city": "Unterföhring", 
+    "country": "Deutschland", 
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/unterfoehring", 
+        "information": "http://www.buergerhaus-unterfoehring.de/bibliothek/aktuelles.html"
+    }, 
+    "geo": [
+        48.191667,
+		11.652778
+    ], 
+    "state": "Bayern", 
+    "support": "Katalogsuche", 
+    "title": "Gemeindebibliothek"
+}
