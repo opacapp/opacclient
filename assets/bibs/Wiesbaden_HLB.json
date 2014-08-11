@@ -4,14 +4,15 @@
     "country": "Deutschland",
     "data": {
         "accountSupported": true,
-        "baseurl": "http://pica1l.lhb.tu-darmstadt.de",
+        "baseurl": "https://pica1l.lhb.tu-darmstadt.de",
         "db": "HLBWI",
         "information": "http://www.hs-rm.de/bibliothek",
         "searchindex": {
             "free": "6015", 
             "systematik": "53", 
             "titel": "4"
-        }
+        },
+		"charset": "ISO-8859-1"
     },
     "geo": [
         50.0782184,
