@@ -364,10 +364,20 @@ if __name__ == '__main__':
 
     data['support'] = getInput(required=False, default=api.getDefaultSupportString())
 
-    print("Dateiname")
-    print("Sowas wie 'Mannheim' oder 'Heidelberg_Uni'. Möglichst keine Leerzeichen und Umlaute.")
+    ok = False;
+    while not ok:
+        print("Dateiname")
+        print("Sowas wie 'Mannheim' oder 'Heidelberg_Uni'. Möglichst keine Leerzeichen und Umlaute.")
 
-    ident = getInput(required=True)
+        ident = getInput(required=True)
+
+        if os.path.isfile(LIBDIR + ident + '.json'):
+            print("ACHTUNG: Datei existiert bereits. Überschreiben? (j/n)");
+            value = getInput(required=True, default="n")
+            if value == "j":
+                ok = True;
+        else:
+            ok = True;
 
     print(json.dumps(data, indent=4, sort_keys=True), end="\n\n")
     json.dump(data, open(LIBDIR + ident + '.json', 'w'), sort_keys=True, indent=4)
