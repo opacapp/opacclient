@@ -61,6 +61,7 @@ class Api:
 
     def prompt(self, data):
         return data
+		
 
 
 class Bibliotheca(Api):
@@ -224,6 +225,11 @@ class WebOpacNet(Api):
 
     def getDefaultSupportString(self):
         return 'Katalogsuche'
+		
+class WinBiap(Api):
+
+    def getDefaultSupportString(self):
+        return 'Katalogsuche'
 
 class Adis(Api):
 
@@ -290,6 +296,7 @@ APIS = {
     'pica'        : Pica,
     'adis'        : Adis,
     'webopac.net' : WebOpacNet,
+	'winbiap'	  : WinBiap,
 }
 
 data = {}
