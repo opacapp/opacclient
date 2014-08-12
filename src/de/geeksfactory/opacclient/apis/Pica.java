@@ -22,7 +22,6 @@
 package de.geeksfactory.opacclient.apis;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -54,7 +53,6 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
-import android.util.Log;
 import de.geeksfactory.opacclient.ISBNTools;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
@@ -584,7 +582,6 @@ public class Pica extends BaseApi implements OpacApi {
 					e.put(DetailledItem.KEY_COPY_STATUS, detail);
 					//Get reservation info
 					if(element.select("a:contains(Vormerken), a:contains(Exemplare)").size() > 0) {
-						Log.d("opac", "Vormerken");
 						Element a = element.select("a:contains(Vormerken), a:contains(Exemplare)").first();
 						boolean multipleCopies = a.text().contains("Exemplare");
 						JSONObject reservation = new JSONObject();
@@ -694,7 +691,6 @@ public class Pica extends BaseApi implements OpacApi {
 					String key = (String) keys.next();
 					String value = values.getString(key);
 					params.add(new BasicNameValuePair(key, value));
-					Log.d("opac", key + " = " + value);
 				}
 				
 				params.add(new BasicNameValuePair("BOR_U", account.getName()));

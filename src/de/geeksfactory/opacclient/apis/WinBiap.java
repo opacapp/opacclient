@@ -19,8 +19,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import android.util.Base64;
-import android.util.Log;
+import de.geeksfactory.opacclient.Base64;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -212,11 +211,8 @@ public class WinBiap extends BaseApi implements OpacApi {
 		params.add(new BasicNameValuePair("Sort", "Autor"));
 
 		String text = encode(params, "=", "&amp;");
-		Log.d("opac", text);
 		String base64 = URLEncoder.encode(
-				Base64.encodeToString(text.getBytes("UTF-8"), Base64.NO_WRAP),
-				"UTF-8");
-		Log.d("opac", opac_url + "/search.aspx?data=" + base64);
+				Base64.encodeBytes(text.getBytes("UTF-8")), "UTF-8");
 
 		String html = httpGet(opac_url + "/search.aspx?data=" + base64,
 				getDefaultEncoding(), false);
@@ -224,7 +220,7 @@ public class WinBiap extends BaseApi implements OpacApi {
 	}
 
 	private SearchRequestResult parse_search(String html, int page)
-			throws OpacErrorException, UnsupportedEncodingException {
+			throws OpacErrorException, IOException {
 		Document doc = Jsoup.parse(html);
 
 		if (doc.select(".alert h4").text().contains("Keine Treffer gefunden")) {
@@ -245,7 +241,6 @@ public class WinBiap extends BaseApi implements OpacApi {
 		if (matcher.find()) {
 			results_total = Integer.parseInt(matcher.group(1));
 		} else {
-			Log.d("opac", html);
 			throw new OpacErrorException("Fehler beim Erkennen der Trefferzahl");
 		}
 
@@ -272,14 +267,12 @@ public class WinBiap extends BaseApi implements OpacApi {
 			String base64 = getQueryParamsFirst(link).get("data");
 			if (base64.contains("-"))
 				base64 = base64.substring(0, base64.indexOf("-") - 1);
-			String decoded = new String(Base64.decode(base64, Base64.NO_WRAP),
-					"UTF-8");
+			String decoded = new String(Base64.decode(base64), "UTF-8");
 			pattern = Pattern.compile("CatalogueId=(\\d*)");
 			matcher = pattern.matcher(decoded);
 			if (matcher.find()) {
 				sr.setId(matcher.group(1));
 			} else {
-				Log.d("opac", decoded);
 				throw new OpacErrorException("Fehler beim Erkennen eines Links");
 			}
 
@@ -355,11 +348,8 @@ public class WinBiap extends BaseApi implements OpacApi {
 		params.add(new BasicNameValuePair("Sort", "Autor"));
 
 		String text = encode(params, "=", "&amp;");
-		Log.d("opac", text);
 		String base64 = URLEncoder.encode(
-				Base64.encodeToString(text.getBytes("UTF-8"), Base64.NO_WRAP),
-				"UTF-8");
-		Log.d("opac", opac_url + "/search.aspx?data=" + base64);
+				Base64.encodeBytes(text.getBytes("UTF-8")), "UTF-8");
 
 		String html = httpGet(opac_url + "/search.aspx?data=" + base64,
 				getDefaultEncoding(), false);
