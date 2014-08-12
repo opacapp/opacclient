@@ -259,8 +259,7 @@ public class WinBiap extends BaseApi implements OpacApi {
 			String titleAddition = tr.select(".titleZusatz").text();
 			String desc = tr.select(".smallDescription").text();
 			sr.setInnerhtml("<b>"
-					+ author
-					+ "<br />"
+					+ (author.equals("") ? "" : author + "<br />")
 					+ title
 					+ (titleAddition.equals("") ? "" : " - <i>" + titleAddition
 							+ "</i>") + "</b><br /><small>" + desc + "</small>");
@@ -390,6 +389,8 @@ public class WinBiap extends BaseApi implements OpacApi {
 			String value = tr.select(".DetailInformationEntryContent").text();
 			if (name.equals("Titel")) {
 				item.setTitle(value);
+			} else if (name.equals("Stücktitel")) {
+				item.setTitle(item.getTitle() + " " + value);
 			} else {
 				item.addDetail(new Detail(name, value));
 			}
