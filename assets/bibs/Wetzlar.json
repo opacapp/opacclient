@@ -1,0 +1,17 @@
+{
+    "api": "bibliotheca",
+    "city": "Wetzlar",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.wetzlar.de/webopac",
+        "db": "web_biblio",
+        "information": "http://www.bibliotheksverband.de/landesverbaende/hessen/mitglieder.html?tx_3pcdbvmemberdb_pi1%5Bview%5D=details&tx_3pcdbvmemberdb_pi1%5Bid%5D=1531036&cHash=14b9dba8c8"
+    },
+    "geo": [
+        50.5589802,
+        8.508164599999999
+    ],
+    "state": "Hessen",
+    "support": "Katalogsuche und Konto",
+    "title": "Stadtbibliothek"
+}
