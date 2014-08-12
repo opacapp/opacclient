@@ -2,6 +2,7 @@ package de.geeksfactory.opacclient.apis;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -167,7 +168,7 @@ public class WinBiap extends BaseApi implements OpacApi {
 
 		String text = encode(params, "=", "&amp;");
 		Log.d("opac", text);
-		String base64 = Base64.encodeToString(text.getBytes("UTF-8"), Base64.NO_WRAP);
+		String base64 = URLEncoder.encode(Base64.encodeToString(text.getBytes("UTF-8"), Base64.NO_WRAP), "UTF-8");
 		Log.d("opac", opac_url + "/search.aspx?data=" + base64);
 
 		String html = httpGet(opac_url + "/search.aspx?data=" + base64,
@@ -213,7 +214,8 @@ public class WinBiap extends BaseApi implements OpacApi {
 			
 			String link = tr.select("a[href^=detail.aspx]").attr("href");
 			String base64 = getQueryParamsFirst(link).get("data");
-			base64 = base64.substring(0, base64.indexOf("-") - 1);
+			if(base64.contains("-")) 
+				base64 = base64.substring(0, base64.indexOf("-") - 1);
 			String decoded = new String(Base64.decode(base64, Base64.NO_WRAP), "UTF-8");
 			pattern = Pattern.compile("CatalogueId=(\\d*)");
 			matcher = pattern.matcher(decoded);
@@ -296,7 +298,7 @@ public class WinBiap extends BaseApi implements OpacApi {
 
 		String text = encode(params, "=", "&amp;");
 		Log.d("opac", text);
-		String base64 = Base64.encodeToString(text.getBytes("UTF-8"), Base64.NO_WRAP);
+		String base64 = URLEncoder.encode(Base64.encodeToString(text.getBytes("UTF-8"), Base64.NO_WRAP), "UTF-8");
 		Log.d("opac", opac_url + "/search.aspx?data=" + base64);
 
 		String html = httpGet(opac_url + "/search.aspx?data=" + base64,
