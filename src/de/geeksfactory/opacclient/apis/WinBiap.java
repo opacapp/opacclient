@@ -27,10 +27,10 @@ import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
-import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.Filter.Option;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
+import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.Status;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
@@ -55,7 +55,47 @@ public class WinBiap extends BaseApi implements OpacApi {
 
 	@Override
 	public void start() throws IOException, NotReachableException {
+		try {
+			metadata.open();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		if (!metadata.hasMeta(library.getIdent())) {
+			metadata.close();
+			extract_meta();
+		} else {
+			metadata.close();
+		}
+	}
 
+	public void extract_meta() {
+		String html;
+		try {
+			html = httpGet(opac_url + "/search.aspx", getDefaultEncoding());
+			Document doc = Jsoup.parse(html);
+			Elements mediaGroupOptions = doc
+					.select("#ctl00_ContentPlaceHolderMain_searchPanel_ListBoxMediagroups_ListBoxMultiselection option");
+			Elements branchOptions = doc
+					.select("#ctl00_ContentPlaceHolderMain_searchPanel_MultiSelectionBranch_ListBoxMultiselection option");
+			try {
+				metadata.open();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+			metadata.clearMeta(library.getIdent());
+
+			for (Element option : mediaGroupOptions) {
+				metadata.addMeta(MetaDataSource.META_TYPE_CATEGORY,
+						library.getIdent(), option.attr("value"), option.text());
+			}
+			for (Element option : branchOptions) {
+				metadata.addMeta(MetaDataSource.META_TYPE_BRANCH,
+						library.getIdent(), option.attr("value"), option.text());
+			}
+			metadata.close();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 	}
 
 	public void init(MetaDataSource metadata, Library lib) {
@@ -84,24 +124,25 @@ public class WinBiap extends BaseApi implements OpacApi {
 			return index;
 
 		List<NameValuePair> list = new ArrayList<NameValuePair>();
-		list.add(new BasicNameValuePair("c_" + index, "1")); //?
-		list.add(new BasicNameValuePair("m_" + index, "1")); //?
-		list.add(new BasicNameValuePair("f_" + index, searchkey)); //query property
-		list.add(new BasicNameValuePair("o_" + index, type)); //query type
-		list.add(new BasicNameValuePair("v_" + index, query.get(key))); //value
+		list.add(new BasicNameValuePair("c_" + index, "1")); // ?
+		list.add(new BasicNameValuePair("m_" + index, "1")); // ?
+		list.add(new BasicNameValuePair("f_" + index, searchkey)); // query
+																	// property
+		list.add(new BasicNameValuePair("o_" + index, type)); // query type
+		list.add(new BasicNameValuePair("v_" + index, query.get(key))); // value
 		params.add(list);
 		return index + 1;
 
 	}
-	
-	protected int addParametersManual(String c, String m, String f, String o, String v, List<List<NameValuePair>> params,
-			int index) {
+
+	protected int addParametersManual(String c, String m, String f, String o,
+			String v, List<List<NameValuePair>> params, int index) {
 		List<NameValuePair> list = new ArrayList<NameValuePair>();
-		list.add(new BasicNameValuePair("c_" + index, c)); //?
-		list.add(new BasicNameValuePair("m_" + index, m)); //?
-		list.add(new BasicNameValuePair("f_" + index, f)); //query property
-		list.add(new BasicNameValuePair("o_" + index, o)); //query type
-		list.add(new BasicNameValuePair("v_" + index, v)); //value
+		list.add(new BasicNameValuePair("c_" + index, c)); // ?
+		list.add(new BasicNameValuePair("m_" + index, m)); // ?
+		list.add(new BasicNameValuePair("f_" + index, f)); // query property
+		list.add(new BasicNameValuePair("o_" + index, o)); // query type
+		list.add(new BasicNameValuePair("v_" + index, v)); // value
 		params.add(list);
 		return index + 1;
 	}
@@ -145,18 +186,22 @@ public class WinBiap extends BaseApi implements OpacApi {
 		index = addParameters(query, KEY_SEARCH_QUERY_YEAR_RANGE_END,
 				data.optString("KEY_SEARCH_QUERY_BARCODE", "34"), TO,
 				queryParams, index);
-		index = addParametersManual("3", "1", "42", "1", "21|10", queryParams, index);
-		index = addParametersManual("3", "1", "45", "1", "5|4|101|102", queryParams, index);
+		index = addParameters(query, KEY_SEARCH_QUERY_CATEGORY,
+				data.optString("KEY_SEARCH_QUERY_CATEGORY", "42"), EQUALS,
+				queryParams, index);
+		index = addParameters(query, KEY_SEARCH_QUERY_BRANCH,
+				data.optString("KEY_SEARCH_QUERY_BRANCH", "48"), EQUALS,
+				queryParams, index);
 
 		if (index == 0) {
 			throw new OpacErrorException(
 					"Es wurden keine Suchkriterien eingegeben.");
 		}
-//		if (index > 4) {
-//			throw new OpacErrorException(
-//					"Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.");
-//		}
-		
+		// if (index > 4) {
+		// throw new OpacErrorException(
+		// "Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.");
+		// }
+
 		this.query = queryParams;
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -168,7 +213,9 @@ public class WinBiap extends BaseApi implements OpacApi {
 
 		String text = encode(params, "=", "&amp;");
 		Log.d("opac", text);
-		String base64 = URLEncoder.encode(Base64.encodeToString(text.getBytes("UTF-8"), Base64.NO_WRAP), "UTF-8");
+		String base64 = URLEncoder.encode(
+				Base64.encodeToString(text.getBytes("UTF-8"), Base64.NO_WRAP),
+				"UTF-8");
 		Log.d("opac", opac_url + "/search.aspx?data=" + base64);
 
 		String html = httpGet(opac_url + "/search.aspx?data=" + base64,
@@ -179,6 +226,16 @@ public class WinBiap extends BaseApi implements OpacApi {
 	private SearchRequestResult parse_search(String html, int page)
 			throws OpacErrorException, UnsupportedEncodingException {
 		Document doc = Jsoup.parse(html);
+
+		if (doc.select(".alert h4").text().contains("Keine Treffer gefunden")) {
+			// no media found
+			return new SearchRequestResult(new ArrayList<SearchResult>(), 0,
+					page);
+		}
+		if (doc.select("errortype").size() > 0) {
+			// Error (e.g. 404)
+			throw new OpacErrorException(doc.select("errortype").text());
+		}
 
 		// Total count
 		String header = doc.select(".ResultHeader").text();
@@ -207,25 +264,26 @@ public class WinBiap extends BaseApi implements OpacApi {
 					+ title
 					+ (titleAddition.equals("") ? "" : " - <i>" + titleAddition
 							+ "</i>") + "</b><br /><small>" + desc + "</small>");
-			
+
 			String coverUrl = tr.select(".coverWrapper input").attr("src");
 			if (!coverUrl.contains("leer.gif"))
 				sr.setCover(coverUrl);
-			
+
 			String link = tr.select("a[href^=detail.aspx]").attr("href");
 			String base64 = getQueryParamsFirst(link).get("data");
-			if(base64.contains("-")) 
+			if (base64.contains("-"))
 				base64 = base64.substring(0, base64.indexOf("-") - 1);
-			String decoded = new String(Base64.decode(base64, Base64.NO_WRAP), "UTF-8");
+			String decoded = new String(Base64.decode(base64, Base64.NO_WRAP),
+					"UTF-8");
 			pattern = Pattern.compile("CatalogueId=(\\d*)");
 			matcher = pattern.matcher(decoded);
-			if(matcher.find()) {
+			if (matcher.find()) {
 				sr.setId(matcher.group(1));
 			} else {
 				Log.d("opac", decoded);
 				throw new OpacErrorException("Fehler beim Erkennen eines Links");
 			}
-			
+
 			if (tr.select(".mediaStatus").size() > 0) {
 				Element status = tr.select(".mediaStatus").first();
 				if (status.hasClass("StatusNotAvailable")) {
@@ -235,10 +293,12 @@ public class WinBiap extends BaseApi implements OpacApi {
 				} else {
 					sr.setStatus(Status.YELLOW);
 				}
-			} else if (tr.select(".showCopies").size() > 0) { //Multiple copies
-				if (tr.nextElementSibling().select(".StatusNotAvailable").size() == 0) {
+			} else if (tr.select(".showCopies").size() > 0) { // Multiple copies
+				if (tr.nextElementSibling().select(".StatusNotAvailable")
+						.size() == 0) {
 					sr.setStatus(Status.GREEN);
-				} else if (tr.nextElementSibling().select(".StatusAvailable").size() == 0) {
+				} else if (tr.nextElementSibling().select(".StatusAvailable")
+						.size() == 0) {
 					sr.setStatus(Status.RED);
 				} else {
 					sr.setStatus(Status.YELLOW);
@@ -291,14 +351,15 @@ public class WinBiap extends BaseApi implements OpacApi {
 			NotReachableException, OpacErrorException {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("cmd", "1"));
-		params.add(new BasicNameValuePair("sC", encode(query, "=", "%%",
-				"++")));
-		params.add(new BasicNameValuePair("pI", String.valueOf(page-1)));
+		params.add(new BasicNameValuePair("sC", encode(query, "=", "%%", "++")));
+		params.add(new BasicNameValuePair("pI", String.valueOf(page - 1)));
 		params.add(new BasicNameValuePair("Sort", "Autor"));
 
 		String text = encode(params, "=", "&amp;");
 		Log.d("opac", text);
-		String base64 = URLEncoder.encode(Base64.encodeToString(text.getBytes("UTF-8"), Base64.NO_WRAP), "UTF-8");
+		String base64 = URLEncoder.encode(
+				Base64.encodeToString(text.getBytes("UTF-8"), Base64.NO_WRAP),
+				"UTF-8");
 		Log.d("opac", opac_url + "/search.aspx?data=" + base64);
 
 		String html = httpGet(opac_url + "/search.aspx?data=" + base64,
@@ -317,38 +378,42 @@ public class WinBiap extends BaseApi implements OpacApi {
 	private DetailledItem parse_result(String html) {
 		Document doc = Jsoup.parse(html);
 		DetailledItem item = new DetailledItem();
-		
+
 		item.setCover(doc.select(".cover").attr("src"));
 		String permalink = doc.select(".PermalinkTextarea").text();
 		item.setId(getQueryParamsFirst(permalink).get("Id"));
-		
+
 		Elements trs = doc.select("#detail-center .DetailInformation tr");
-		for (Element tr:trs) {
-			String name = tr.select(".DetailInformationEntryName").text().replace(":", "");
+		for (Element tr : trs) {
+			String name = tr.select(".DetailInformationEntryName").text()
+					.replace(":", "");
 			String value = tr.select(".DetailInformationEntryContent").text();
-			if(name.equals("Titel")) {
+			if (name.equals("Titel")) {
 				item.setTitle(value);
 			} else {
 				item.addDetail(new Detail(name, value));
 			}
 		}
-		
+
 		trs = doc.select(".detailCopies .tableCopies tr:not(.headerCopies)");
-		for (Element tr:trs) {
+		for (Element tr : trs) {
 			Map<String, String> copy = new HashMap<String, String>();
-			copy.put(DetailledItem.KEY_COPY_BARCODE, tr.select(".mediaBarcode").text().replace("#", ""));
-			copy.put(DetailledItem.KEY_COPY_STATUS, tr.select(".mediaStatus").text());
-			copy.put(DetailledItem.KEY_COPY_LOCATION, tr.select("#mediaItemLocationWrapper span").text());
+			copy.put(DetailledItem.KEY_COPY_BARCODE, tr.select(".mediaBarcode")
+					.text().replace("#", ""));
+			copy.put(DetailledItem.KEY_COPY_STATUS, tr.select(".mediaStatus")
+					.text());
+			copy.put(DetailledItem.KEY_COPY_LOCATION,
+					tr.select("#mediaItemLocationWrapper span").text());
 			item.addCopy(copy);
 		}
-		
+
 		return item;
 	}
 
 	@Override
 	public DetailledItem getResult(int position) throws IOException,
 			OpacErrorException {
-		//Should not be called because every media has an ID
+		// Should not be called because every media has an ID
 		return null;
 	}
 
@@ -389,7 +454,8 @@ public class WinBiap extends BaseApi implements OpacApi {
 				KEY_SEARCH_QUERY_AUDIENCE, KEY_SEARCH_QUERY_SYSTEM,
 				KEY_SEARCH_QUERY_ISBN, KEY_SEARCH_QUERY_PUBLISHER,
 				KEY_SEARCH_QUERY_BARCODE, KEY_SEARCH_QUERY_YEAR_RANGE_START,
-				KEY_SEARCH_QUERY_YEAR_RANGE_END };
+				KEY_SEARCH_QUERY_YEAR_RANGE_END, KEY_SEARCH_QUERY_BRANCH,
+				KEY_SEARCH_QUERY_CATEGORY };
 	}
 
 	@Override
