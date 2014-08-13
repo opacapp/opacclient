@@ -33,6 +33,7 @@ import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.objects.SearchField;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
@@ -814,7 +815,7 @@ public interface OpacApi {
 	 * @return List of allowed fields
 	 * @see #search
 	 */
-	public String[] getSearchFields();
+	public List<SearchField> getSearchFields();
 
 	/**
 	 * Returns whether – if account view is not supported in the given library –
