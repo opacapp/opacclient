@@ -16,7 +16,6 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.acra.ACRA;
 import org.apache.http.HttpResponse;
 import org.apache.http.MalformedChunkCodingException;
 import org.apache.http.NameValuePair;
@@ -1214,12 +1213,8 @@ public class Adis extends BaseApi implements OpacApi {
 				}
 			}
 			if(error) {
-				// Send a bug report about this the next time the app starts
+				// Maybe we should send a bug report here, but using ACRA breaks the unit tests
 				adata.setWarning("Beim Abrufen der Reservationen ist ein Problem aufgetreten");
-				OpacErrorException e = new OpacErrorException
-						("Fehler beim Abrufen der Reservationen, HTML der Reservierungstabelle: "
-								+ rdoc.select(".rTable_div").html());
-				ACRA.getErrorReporter().handleException(e);
 			}
 			
 			List<NameValuePair> form = new ArrayList<NameValuePair>();
