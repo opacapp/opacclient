@@ -16,6 +16,7 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.acra.ACRA;
 import org.apache.http.HttpResponse;
 import org.apache.http.MalformedChunkCodingException;
 import org.apache.http.NameValuePair;
@@ -1191,6 +1192,7 @@ public class Adis extends BaseApi implements OpacApi {
 		}
 		for (String rlink : rlinks) {
 			Document rdoc = htmlGet(rlink);
+			boolean error = false;
 			for (Element tr : rdoc.select(".rTable_div tbody tr")) {
 				if (tr.children().size() >= 4) {
 					Map<String, String> line = new HashMap<String, String>();
@@ -1208,8 +1210,18 @@ public class Adis extends BaseApi implements OpacApi {
 					res.add(line);
 				} else {
 					// This is a strange bug where sometimes there is only three columns
+					error = true;
 				}
 			}
+			if(error) {
+				// Send a bug report about this the next time the app starts
+				adata.setWarning("Beim Abrufen der Reservationen ist ein Problem aufgetreten");
+				OpacErrorException e = new OpacErrorException
+						("Fehler beim Abrufen der Reservationen, HTML der Reservierungstabelle: "
+								+ rdoc.select(".rTable_div").html());
+				ACRA.getErrorReporter().handleException(e);
+			}
+			
 			List<NameValuePair> form = new ArrayList<NameValuePair>();
 			for (Element input : rdoc.select("input, select")) {
 				if (!"image".equals(input.attr("type"))
