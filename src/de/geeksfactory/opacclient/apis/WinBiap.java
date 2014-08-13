@@ -38,8 +38,63 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  * 
  *         WinBIAP, Version 4.1.0 gestartet mit Bibliothek Unterföhring
  * 
- * 
  *         Unterstützt bisher nur Katalogsuche
+ *         
+ *         Example for a search query (parameter "data" in the URL,
+ *         everything before the hyphen, base64 decoded, added formatting)
+ *         as seen in Unterföhring:
+ *         
+ *         cmd=5&amp;				perform a search
+ *         sC=
+ *         		c_0=1%%				unknown
+ *         		m_0=1%%				unknown
+ *         		f_0=2%%				free search
+ *         		o_0=8%%				contains
+ *         		v_0=schule			"schule"
+ *         ++
+ *         		c_1=1%%				unknown
+ *         		m_1=1%%				unknown
+ *         		f_1=3%%				author
+ *         		o_1=8%%				contains
+ *         		v_1=rowling			"rowling"
+ *         ++
+ *         		c_2=1%%				unknown
+ *         		m_2=1%%				unknown
+ *         		f_2=12%%			title
+ *         		o_2=8%%				contains
+ *         		v_2=potter			"potter"
+ *         ++
+ *         		c_3=1%%				unknown
+ *         		m_3=1%%				unknown
+ *         		f_3=34%%			year
+ *         		o_3=6%%				newer or equal to
+ *         		v_3=2000			"2000"
+ *         ++
+ *         		c_4=1%%				unknown
+ *         		m_4=1%%				unknown
+ *         		f_4=34%%			year
+ *         		o_4=4%%				older or equal to
+ *         		v_4=2014			"2014"
+ *         ++
+ *         		c_5=1%%				unknown
+ *         		m_5=1%%				unknown
+ *         		f_5=42%%			media category
+ *         		o_5=1%%				is equal to
+ *         		v_5=3				"Kinder- und Jugendbücher"
+ *         ++
+ *         		c_6=1%%				unknown
+ *         		m_6=1%%				unknown
+ *         		f_6=48%%			location
+ *         		o_6=1%%				is equal to
+ *         		v_6=1				"Bibliothek Unterföhring"
+ *         ++
+ *         		c_7=3%%				unknown (now changed to 3)	-
+ *         		m_7=1%%				unknown						|	  This group has no
+ *         		f_7=45%%			unknown						|---  effect on the result
+ *         		o_7=1%%				unknown						|	  and can be left out
+ *         		v_7=5|4|101|102		unknown						-
+ *         
+ *     &amp;Sort=Autor				Sort by Author (default)
  * 
  */
 
@@ -109,12 +164,10 @@ public class WinBiap extends BaseApi implements OpacApi {
 		}
 	}
 
-	protected static final String CONTAINS = "8";
-	protected static final String FROM = "6";
-	protected static final String TO = "4";
-	protected static final String STARTS_WITH = "7";
-	protected static final String EQUALS = "1";
-
+	/**
+	 * For documentation of the parameters, @see
+	 * {@link #addParametersManual(String, String, String, String, String, List, int)}
+	 */
 	protected int addParameters(Map<String, String> query, String key,
 			String searchkey, String type, List<List<NameValuePair>> params,
 			int index) {
@@ -122,25 +175,48 @@ public class WinBiap extends BaseApi implements OpacApi {
 			return index;
 
 		List<NameValuePair> list = new ArrayList<NameValuePair>();
-		list.add(new BasicNameValuePair("c_" + index, "1")); // ?
-		list.add(new BasicNameValuePair("m_" + index, "1")); // ?
-		list.add(new BasicNameValuePair("f_" + index, searchkey)); // query
-																	// property
-		list.add(new BasicNameValuePair("o_" + index, type)); // query type
-		list.add(new BasicNameValuePair("v_" + index, query.get(key))); // value
+		list.add(new BasicNameValuePair("c_" + index, "1"));
+		list.add(new BasicNameValuePair("m_" + index, "1"));
+		list.add(new BasicNameValuePair("f_" + index, searchkey));
+		list.add(new BasicNameValuePair("o_" + index, type));
+		list.add(new BasicNameValuePair("v_" + index, query.get(key)));
 		params.add(list);
 		return index + 1;
 
 	}
 
+	protected static final String QUERY_TYPE_CONTAINS = "8";
+	protected static final String QUERY_TYPE_FROM = "6";
+	protected static final String QUERY_TYPE_TO = "4";
+	protected static final String QUERY_TYPE_STARTS_WITH = "7";
+	protected static final String QUERY_TYPE_EQUALS = "1";
+
+	/**
+	 * @param c
+	 *            Meaning unknown, seems to always be "1" except in some
+	 *            mysterious queries the website adds every time that don't
+	 *            change the result
+	 * @param m
+	 *            Meaning unknown, seems to always be "1" except in some
+	 *            mysterious queries the website adds every time that don't
+	 *            change the result
+	 * @param f
+	 *            The key for the property that is queried, for example "12" for
+	 *            "title"
+	 * @param o
+	 *            The type of search that is made (one of the QUERY_TYPE_
+	 *            constants above), for example "8" for "contains"
+	 * @param v
+	 *            The value that was input by the user
+	 */
 	protected int addParametersManual(String c, String m, String f, String o,
 			String v, List<List<NameValuePair>> params, int index) {
 		List<NameValuePair> list = new ArrayList<NameValuePair>();
-		list.add(new BasicNameValuePair("c_" + index, c)); // ?
-		list.add(new BasicNameValuePair("m_" + index, m)); // ?
-		list.add(new BasicNameValuePair("f_" + index, f)); // query property
-		list.add(new BasicNameValuePair("o_" + index, o)); // query type
-		list.add(new BasicNameValuePair("v_" + index, v)); // value
+		list.add(new BasicNameValuePair("c_" + index, c));
+		list.add(new BasicNameValuePair("m_" + index, m));
+		list.add(new BasicNameValuePair("f_" + index, f));
+		list.add(new BasicNameValuePair("o_" + index, o));
+		list.add(new BasicNameValuePair("v_" + index, v));
 		params.add(list);
 		return index + 1;
 	}
@@ -152,43 +228,43 @@ public class WinBiap extends BaseApi implements OpacApi {
 
 		int index = 0;
 		index = addParameters(query, KEY_SEARCH_QUERY_FREE,
-				data.optString("KEY_SEARCH_QUERY_FREE", "2"), CONTAINS,
+				data.optString("KEY_SEARCH_QUERY_FREE", "2"), QUERY_TYPE_CONTAINS,
 				queryParams, index);
 		index = addParameters(query, KEY_SEARCH_QUERY_AUTHOR,
-				data.optString("KEY_SEARCH_QUERY_AUTHOR", "3"), CONTAINS,
+				data.optString("KEY_SEARCH_QUERY_AUTHOR", "3"), QUERY_TYPE_CONTAINS,
 				queryParams, index);
 		index = addParameters(query, KEY_SEARCH_QUERY_TITLE,
-				data.optString("KEY_SEARCH_QUERY_TITLE", "12"), CONTAINS,
+				data.optString("KEY_SEARCH_QUERY_TITLE", "12"), QUERY_TYPE_CONTAINS,
 				queryParams, index);
 		index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDA,
-				data.optString("KEY_SEARCH_QUERY_KEYWORDA", "24"), CONTAINS,
+				data.optString("KEY_SEARCH_QUERY_KEYWORDA", "24"), QUERY_TYPE_CONTAINS,
 				queryParams, index);
 		index = addParameters(query, KEY_SEARCH_QUERY_AUDIENCE,
-				data.optString("KEY_SEARCH_QUERY_AUDIENCE", "25"), CONTAINS,
+				data.optString("KEY_SEARCH_QUERY_AUDIENCE", "25"), QUERY_TYPE_CONTAINS,
 				queryParams, index);
 		index = addParameters(query, KEY_SEARCH_QUERY_SYSTEM,
-				data.optString("KEY_SEARCH_QUERY_SYSTEM", "26"), CONTAINS,
+				data.optString("KEY_SEARCH_QUERY_SYSTEM", "26"), QUERY_TYPE_CONTAINS,
 				queryParams, index);
 		index = addParameters(query, KEY_SEARCH_QUERY_ISBN,
-				data.optString("KEY_SEARCH_QUERY_ISBN", "29"), CONTAINS,
+				data.optString("KEY_SEARCH_QUERY_ISBN", "29"), QUERY_TYPE_CONTAINS,
 				queryParams, index);
 		index = addParameters(query, KEY_SEARCH_QUERY_PUBLISHER,
-				data.optString("KEY_SEARCH_QUERY_PUBLISHER", "32"), CONTAINS,
+				data.optString("KEY_SEARCH_QUERY_PUBLISHER", "32"), QUERY_TYPE_CONTAINS,
 				queryParams, index);
 		index = addParameters(query, KEY_SEARCH_QUERY_BARCODE,
-				data.optString("KEY_SEARCH_QUERY_BARCODE", "46"), CONTAINS,
+				data.optString("KEY_SEARCH_QUERY_BARCODE", "46"), QUERY_TYPE_CONTAINS,
 				queryParams, index);
 		index = addParameters(query, KEY_SEARCH_QUERY_YEAR_RANGE_START,
-				data.optString("KEY_SEARCH_QUERY_BARCODE", "34"), FROM,
+				data.optString("KEY_SEARCH_QUERY_BARCODE", "34"), QUERY_TYPE_FROM,
 				queryParams, index);
 		index = addParameters(query, KEY_SEARCH_QUERY_YEAR_RANGE_END,
-				data.optString("KEY_SEARCH_QUERY_BARCODE", "34"), TO,
+				data.optString("KEY_SEARCH_QUERY_BARCODE", "34"), QUERY_TYPE_TO,
 				queryParams, index);
 		index = addParameters(query, KEY_SEARCH_QUERY_CATEGORY,
-				data.optString("KEY_SEARCH_QUERY_CATEGORY", "42"), EQUALS,
+				data.optString("KEY_SEARCH_QUERY_CATEGORY", "42"), QUERY_TYPE_EQUALS,
 				queryParams, index);
 		index = addParameters(query, KEY_SEARCH_QUERY_BRANCH,
-				data.optString("KEY_SEARCH_QUERY_BRANCH", "48"), EQUALS,
+				data.optString("KEY_SEARCH_QUERY_BRANCH", "48"), QUERY_TYPE_EQUALS,
 				queryParams, index);
 
 		if (index == 0) {
@@ -264,7 +340,9 @@ public class WinBiap extends BaseApi implements OpacApi {
 
 			String link = tr.select("a[href^=detail.aspx]").attr("href");
 			String base64 = getQueryParamsFirst(link).get("data");
-			if (base64.contains("-"))
+			if (base64.contains("-")) // Most of the time, the base64 string is
+									  // followed by a hyphen and some mysterious
+									  // letters that we don't want
 				base64 = base64.substring(0, base64.indexOf("-") - 1);
 			String decoded = new String(Base64.decode(base64), "UTF-8");
 			pattern = Pattern.compile("CatalogueId=(\\d*)");
