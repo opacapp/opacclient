@@ -68,7 +68,7 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  * TODO: Suche nach Medientypen, alles mit Konten + Vorbestellen
  * 
  */
-public class Zones22 extends BaseApi {
+public class Zones22 extends BaseApiCompat {
 
 	private String opac_url = "";
 	private JSONObject data;
@@ -101,7 +101,7 @@ public class Zones22 extends BaseApi {
 	}
 
 	@Override
-	public String[] getSearchFields() {
+	public String[] getSearchFieldsCompat() {
 		return new String[] { KEY_SEARCH_QUERY_TITLE, KEY_SEARCH_QUERY_AUTHOR,
 				KEY_SEARCH_QUERY_KEYWORDA, KEY_SEARCH_QUERY_BRANCH,
 				KEY_SEARCH_QUERY_ISBN, KEY_SEARCH_QUERY_YEAR };

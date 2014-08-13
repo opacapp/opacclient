@@ -64,7 +64,7 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  * 
  */
 
-public class WebOpacNet extends BaseApi implements OpacApi {
+public class WebOpacNet extends BaseApiCompat implements OpacApi {
 	
 	protected String opac_url = "";
 	protected MetaDataSource metadata;
@@ -413,7 +413,7 @@ public class WebOpacNet extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public String[] getSearchFields() {
+	public String[] getSearchFieldsCompat() {
 		return new String[] { KEY_SEARCH_QUERY_FREE, KEY_SEARCH_QUERY_AUTHOR,
 				KEY_SEARCH_QUERY_TITLE, KEY_SEARCH_QUERY_KEYWORDA, KEY_SEARCH_QUERY_ISBN,
 				KEY_SEARCH_QUERY_YEAR, KEY_SEARCH_QUERY_CATEGORY, KEY_SEARCH_QUERY_PUBLISHER};

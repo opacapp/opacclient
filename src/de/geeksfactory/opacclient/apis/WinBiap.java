@@ -43,7 +43,7 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  * 
  */
 
-public class WinBiap extends BaseApi implements OpacApi {
+public class WinBiap extends BaseApiCompat implements OpacApi {
 
 	protected String opac_url = "";
 	protected MetaDataSource metadata;
@@ -438,7 +438,7 @@ public class WinBiap extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public String[] getSearchFields() {
+	public String[] getSearchFieldsCompat() {
 		return new String[] { KEY_SEARCH_QUERY_FREE, KEY_SEARCH_QUERY_AUTHOR,
 				KEY_SEARCH_QUERY_TITLE, KEY_SEARCH_QUERY_KEYWORDA,
 				KEY_SEARCH_QUERY_AUDIENCE, KEY_SEARCH_QUERY_SYSTEM,

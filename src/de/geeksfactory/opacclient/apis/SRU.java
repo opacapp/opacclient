@@ -28,7 +28,7 @@ import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
-public class SRU extends BaseApi implements OpacApi {
+public class SRU extends BaseApiCompat implements OpacApi {
 	
 	protected String opac_url = "";
 	protected JSONObject data;
@@ -299,7 +299,7 @@ public class SRU extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public String[] getSearchFields() {
+	public String[] getSearchFieldsCompat() {
 		return searchQueries.keySet().toArray(new String[0]);
 	}
 

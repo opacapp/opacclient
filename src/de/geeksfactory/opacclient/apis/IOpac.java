@@ -66,7 +66,7 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
 // Implementation of Fleischmann iOpac, currently only works with Stadtbücherei
 // Schleswig, including account support
 
-public class IOpac extends BaseApi implements OpacApi {
+public class IOpac extends BaseApiCompat implements OpacApi {
 
 	protected String opac_url = "";
 	protected JSONObject data;
@@ -771,7 +771,7 @@ public class IOpac extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public String[] getSearchFields() {
+	public String[] getSearchFieldsCompat() {
 		return new String[] { KEY_SEARCH_QUERY_FREE, KEY_SEARCH_QUERY_AUTHOR,
 				KEY_SEARCH_QUERY_KEYWORDA, KEY_SEARCH_QUERY_TITLE,
 				KEY_SEARCH_QUERY_YEAR, KEY_SEARCH_QUERY_SYSTEM,

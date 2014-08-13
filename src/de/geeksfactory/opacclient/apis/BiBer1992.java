@@ -90,7 +90,7 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  *         yes yes yes yes NRW/Herford n/a yes yes yes n/a - NRW/Luenen ok yes
  *         no yes n/a - NRW/MuelheimRuhr ok yes yes yes yes yes
  */
-public class BiBer1992 extends BaseApi {
+public class BiBer1992 extends BaseApiCompat {
 
 	private String m_opac_url = "";
 	private String m_opac_dir = "opac"; // sometimes also "opax"
@@ -125,7 +125,7 @@ public class BiBer1992 extends BaseApi {
 	// <option value="PY">Ersch.-Jahr</option>
 	// <option value="LA">Sprache</option>
 	@Override
-	public String[] getSearchFields() {
+	public String[] getSearchFieldsCompat() {
 		return new String[] { KEY_SEARCH_QUERY_TITLE, KEY_SEARCH_QUERY_AUTHOR,
 				KEY_SEARCH_QUERY_KEYWORDA, KEY_SEARCH_QUERY_ISBN,
 				KEY_SEARCH_QUERY_YEAR, KEY_SEARCH_QUERY_SYSTEM,

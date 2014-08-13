@@ -71,7 +71,7 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  * @author Johan von Forstner, 16.09.2013
  * */
 
-public class Pica extends BaseApi implements OpacApi {
+public class Pica extends BaseApiCompat implements OpacApi {
 
 	protected String opac_url = "";
 	protected String https_url = "";
@@ -969,7 +969,7 @@ public class Pica extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public String[] getSearchFields() {
+	public String[] getSearchFieldsCompat() {
 		return new String[] { KEY_SEARCH_QUERY_FREE, KEY_SEARCH_QUERY_AUTHOR,
 				KEY_SEARCH_QUERY_KEYWORDA, KEY_SEARCH_QUERY_YEAR, 
 				KEY_SEARCH_QUERY_SYSTEM, KEY_SEARCH_QUERY_PUBLISHER,

@@ -46,7 +46,7 @@ import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
-public class Adis extends BaseApi implements OpacApi {
+public class Adis extends BaseApiCompat implements OpacApi {
 
 	protected String opac_url = "";
 	protected JSONObject data;
@@ -314,7 +314,7 @@ public class Adis extends BaseApi implements OpacApi {
 
 		int cnt = 0;
 		List<NameValuePair> nvpairs = new ArrayList<NameValuePair>();
-		for (String field : getSearchFields()) {
+		for (String field : getSearchFieldsCompat()) {
 			if (query.containsKey(field) && !query.get(field).equals("")) {
 
 				if (field.equals(KEY_SEARCH_QUERY_CATEGORY)) {
@@ -1280,7 +1280,7 @@ public class Adis extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public String[] getSearchFields() {
+	public String[] getSearchFieldsCompat() {
 		String[] defa = new String[] { KEY_SEARCH_QUERY_FREE,
 				KEY_SEARCH_QUERY_TITLE, KEY_SEARCH_QUERY_ISBN,
 				KEY_SEARCH_QUERY_AUTHOR, KEY_SEARCH_QUERY_KEYWORDA,

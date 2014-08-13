@@ -71,7 +71,7 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  * Restrictions: Bookmarks are only constantly supported if the library uses the
  * BibTip extension.
  */
-public class SISIS extends BaseApi implements OpacApi {
+public class SISIS extends BaseApiCompat implements OpacApi {
 	protected String opac_url = "";
 	protected JSONObject data;
 	protected MetaDataSource metadata;
@@ -164,7 +164,7 @@ public class SISIS extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public String[] getSearchFields() {
+	public String[] getSearchFieldsCompat() {
 		return new String[] { KEY_SEARCH_QUERY_FREE, KEY_SEARCH_QUERY_TITLE,
 				KEY_SEARCH_QUERY_AUTHOR, KEY_SEARCH_QUERY_KEYWORDA,
 				KEY_SEARCH_QUERY_KEYWORDB, KEY_SEARCH_QUERY_HOME_BRANCH,

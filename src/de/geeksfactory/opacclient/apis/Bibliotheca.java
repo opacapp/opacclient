@@ -71,7 +71,7 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  * BOND, now owned by OCLC. Known to work well with Web Opac versions from 2.6,
  * maybe older, to 2.8
  */
-public class Bibliotheca extends BaseApi {
+public class Bibliotheca extends BaseApiCompat {
 
 	protected String opac_url = "";
 	protected JSONObject data;
@@ -118,7 +118,7 @@ public class Bibliotheca extends BaseApi {
 	}
 
 	@Override
-	public String[] getSearchFields() {
+	public String[] getSearchFieldsCompat() {
 		return new String[] { KEY_SEARCH_QUERY_TITLE, KEY_SEARCH_QUERY_AUTHOR,
 				KEY_SEARCH_QUERY_KEYWORDA, KEY_SEARCH_QUERY_KEYWORDB,
 				KEY_SEARCH_QUERY_BRANCH, KEY_SEARCH_QUERY_CATEGORY,
