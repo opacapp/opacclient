@@ -9,6 +9,9 @@ public class BarcodeSearchField extends SearchField {
 	 *            ID of the search field, later given to your search() function
 	 * @param displayName
 	 *            The name to display for the search field
+	 * @param advanced
+	 * 			  Set if this field should only be shown when showing the advanced
+	 *            search form
 	 * @param hint
 	 *            The hint to display inside the search field
 	 * @param halfWidth
@@ -16,9 +19,9 @@ public class BarcodeSearchField extends SearchField {
 	 *            (only needed on the second field). The displayName will not be
 	 *            shown.
 	 */
-	public BarcodeSearchField(String id, String displayName, boolean halfWidth,
+	public BarcodeSearchField(String id, String displayName, boolean advanced, boolean halfWidth,
 			String hint) {
-		super(id, displayName);
+		super(id, displayName, advanced);
 		this.halfWidth = halfWidth;
 		this.hint = hint;
 	}

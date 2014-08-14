@@ -8,9 +8,12 @@ public class CheckboxSearchField extends SearchField {
 	 *            ID of the search field, later given to your search() function
 	 * @param displayName
 	 *            The name to display for the search field
+	 * @param advanced
+	 * 			  Set if this field should only be shown when showing the advanced
+	 *            search form
 	 */
-	public CheckboxSearchField(String id, String displayName) {
-		super(id, displayName);
+	public CheckboxSearchField(String id, String displayName, boolean advanced) {
+		super(id, displayName, advanced);
 	}
 
 }

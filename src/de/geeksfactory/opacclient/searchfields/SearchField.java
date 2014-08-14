@@ -3,10 +3,12 @@ package de.geeksfactory.opacclient.searchfields;
 public abstract class SearchField {
 	protected String id;
 	protected String displayName;
+	protected boolean advanced;
 
-	public SearchField(String id, String displayName) {
+	public SearchField(String id, String displayName, boolean advanced) {
 		this.id = id;
 		this.displayName = displayName;
+		this.advanced = advanced;
 	}
 
 	/**

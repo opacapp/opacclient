@@ -11,21 +11,24 @@ public class TextSearchField extends SearchField {
 	 *            ID of the search field, later given to your search() function
 	 * @param displayName
 	 *            The name to display for the search field
-	 * @param hint
-	 *            The hint to display inside the search field
+	 * @param advanced
+	 * 			  Set if this field should only be shown when showing the advanced
+	 *            search form
 	 * @param halfWidth
 	 *            Set to true to make the field appear next to the one before
 	 *            (only needed on the second field). The displayName will not be
 	 *            shown.
+	 * @param hint
+	 *            The hint to display inside the search field
 	 * @param freeSearch
 	 *            Set to true if this is the "free search" field. There may only
 	 *            be one or none of those in one library
 	 * @param number
 	 *            Set to true if only numbers are allowed in this field
 	 */
-	public TextSearchField(String id, String displayName, boolean halfWidth,
-			String hint, boolean freeSearch, boolean number) {
-		super(id, displayName);
+	public TextSearchField(String id, String displayName, boolean advanced, 
+			boolean halfWidth, String hint, boolean freeSearch, boolean number) {
+		super(id, displayName, advanced);
 		this.halfWidth = halfWidth;
 		this.hint = hint;
 		this.freeSearch = freeSearch;
