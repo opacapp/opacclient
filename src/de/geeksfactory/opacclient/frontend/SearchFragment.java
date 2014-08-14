@@ -33,6 +33,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
@@ -168,27 +169,60 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		} else {
 			view.findViewById(R.id.rlReplaced).setVisibility(View.GONE);
 		}
-
+		
+		LinearLayout llFormFields = (LinearLayout) view.findViewById(R.id.llFormFields);
+		llFormFields.removeAllViews();
+		
+		RelativeLayout rlSimpleSearch = (RelativeLayout) view.findViewById(R.id.rlSimpleSearch);
+		TextView tvSearchAdvHeader = (TextView) view.findViewById(R.id.tvSearchAdvHeader);
+		EditText etSimpleSearch = (EditText) view.findViewById(R.id.etSimpleSearch);
+		rlSimpleSearch.setVisibility(View.GONE);
+		tvSearchAdvHeader.setVisibility(View.GONE);
+		
 		for (SearchField field:fields) {
 			View v = null;
 			if (field instanceof TextSearchField) {
 				TextSearchField textSearchField = (TextSearchField) field;
-				v = getLayoutInflater().inflate(
-						R.layout.searchfield_text, null);
-				TextView title = (TextView) v.findViewById(R.id.title);
-				title.setText(textSearchField.getDisplayName());
+				if (textSearchField.isFreeSearch()) {
+					rlSimpleSearch.setVisibility(View.VISIBLE);
+					tvSearchAdvHeader.setVisibility(View.VISIBLE);
+					etSimpleSearch.setHint(textSearchField.getHint());
+				} else {
+					v = getLayoutInflater().inflate(
+							R.layout.searchfield_text, llFormFields, false);
+					TextView title = (TextView) v.findViewById(R.id.title);
+					title.setText(textSearchField.getDisplayName());
+					EditText edittext = (EditText) v.findViewById(R.id.edittext);
+					edittext.setHint(textSearchField.getHint());
+					//TODO: Implementation for half-width search fields
+				}
 			} else if (field instanceof BarcodeSearchField) {
+				BarcodeSearchField bcSearchField = (BarcodeSearchField) field;
 				v = getLayoutInflater().inflate(
-						R.layout.searchfield_barcode, null);
+						R.layout.searchfield_barcode, llFormFields, false);
+				TextView title = (TextView) v.findViewById(R.id.title);
+				title.setText(bcSearchField.getDisplayName());
+				EditText edittext = (EditText) v.findViewById(R.id.edittext);
+				edittext.setHint(bcSearchField.getHint());
+				//TODO: Implementation for half-width search fields
 			} else if (field instanceof DropdownSearchField) {
+				DropdownSearchField ddSearchField = (DropdownSearchField) field;
 				v = getLayoutInflater().inflate(
-						R.layout.searchfield_dropdown, null);
+						R.layout.searchfield_dropdown, llFormFields, false);
+				TextView title = (TextView) v.findViewById(R.id.title);
+				title.setText(ddSearchField.getDisplayName());
+				//TODO: Dropdown implementation
 			} else if (field instanceof CheckboxSearchField) {
+				CheckboxSearchField cbSearchField = (CheckboxSearchField) field;
 				v = getLayoutInflater().inflate(
-						R.layout.searchfield_checkbox, null);
+						R.layout.searchfield_checkbox, llFormFields, false);
+				CheckBox checkbox = (CheckBox) v.findViewById(R.id.checkbox);
+				checkbox.setText(cbSearchField.getDisplayName());
 			}
-			v.setTag(field.getId());
-			((LinearLayout) view.findViewById(R.id.llForm)).addView(v);		
+			if (v != null) {
+				v.setTag(field.getId());
+				llFormFields.addView(v);
+			}
 		}
 	}
 
@@ -412,7 +446,12 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		for (SearchField field:fields) {
 			ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
 			if (field instanceof TextSearchField) {
-				EditText text = (EditText) v.findViewById(R.id.edittext);
+				EditText text;
+				if (((TextSearchField) field).isFreeSearch()) {
+					text = (EditText) view.findViewById(R.id.etSimpleSearch);
+				} else {
+					text = (EditText) v.findViewById(R.id.edittext);
+				}
 				query.put(field.getId(), text.getEditableText().toString());
 			} else if (field instanceof BarcodeSearchField) {
 				EditText text = (EditText) v.findViewById(R.id.edittext);
@@ -432,7 +471,12 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		for (SearchField field:fields) {
 			ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
 			if (field instanceof TextSearchField) {
-				EditText text = (EditText) v.findViewById(R.id.edittext);
+				EditText text;
+				if (((TextSearchField) field).isFreeSearch()) {
+					text = (EditText) view.findViewById(R.id.etSimpleSearch);
+				} else {
+					text = (EditText) v.findViewById(R.id.edittext);				
+				}
 				text.setText(query.getString(field.getId()));
 			} else if (field instanceof BarcodeSearchField) {
 				EditText text = (EditText) v.findViewById(R.id.edittext);

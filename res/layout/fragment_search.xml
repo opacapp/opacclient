@@ -85,7 +85,14 @@
                 android:textAllCaps="true"
                 android:textColor="@color/emphasis"
                 android:textSize="14sp" />
-
+			
+            <LinearLayout
+            	android:id="@+id/llFormFields"
+            	android:layout_width="match_parent"
+            	android:layout_height="wrap_content"
+            	android:orientation="vertical">
+                
+            </LinearLayout>
 
         </LinearLayout>
     </RelativeLayout>
