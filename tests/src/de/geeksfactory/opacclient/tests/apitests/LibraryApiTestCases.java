@@ -34,6 +34,7 @@ import de.geeksfactory.opacclient.apis.Pica;
 import de.geeksfactory.opacclient.apis.SISIS;
 import de.geeksfactory.opacclient.apis.SRU;
 import de.geeksfactory.opacclient.apis.WebOpacNet;
+import de.geeksfactory.opacclient.apis.WinBiap;
 import de.geeksfactory.opacclient.apis.Zones22;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Library;
@@ -87,6 +88,8 @@ public class LibraryApiTestCases extends TestCase {
 			api = new Adis();
 		else if (library.getApi().equals("sru"))
 			api = new SRU();
+		else if (library.getApi().equals("winbiap"))
+			api = new WinBiap();
 		else if (library.getApi().equals("webopac.net"))
 			api = new WebOpacNet();
 		else

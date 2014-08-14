@@ -252,6 +252,7 @@ public class SearchResultListFragment extends ListFragment {
 								showConnectivityError(getResources().getString(
 										R.string.connection_error_detail_nre));
 							} else {
+								e.printStackTrace();
 								showConnectivityError();
 							}
 						}

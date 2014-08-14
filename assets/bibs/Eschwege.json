@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Eschwege",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/eschwege",
+        "information": "http://www.eschwege.de/city_info/webaccessibility/index.cfm?waid=348&item_id=850643&old_item_id=0&oldrecord=69579&oldmodul=5&olddesign=0"
+    },
+    "geo": [
+        51.1876662,
+        10.0397725
+    ],
+    "state": "Hessen",
+    "support": "Katalogsuche",
+    "title": "Stadtbibliothek"
+}

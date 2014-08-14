@@ -1191,21 +1191,32 @@ public class Adis extends BaseApi implements OpacApi {
 		}
 		for (String rlink : rlinks) {
 			Document rdoc = htmlGet(rlink);
+			boolean error = false;
 			for (Element tr : rdoc.select(".rTable_div tbody tr")) {
-				Map<String, String> line = new HashMap<String, String>();
-				line.put(AccountData.KEY_RESERVATION_TITLE, tr.child(2).text()
-						.split("[:/;]")[0].trim());
-				line.put(AccountData.KEY_RESERVATION_READY, tr.child(3).text()
-						.trim().substring(0, 10));
-				line.put(AccountData.KEY_RESERVATION_BRANCH, tr.child(1).text()
-						.trim());
-				if (tr.select("input[type=checkbox]").size() > 0
-						&& rlink.toUpperCase(Locale.GERMAN).contains("SP=SZM"))
-					line.put(AccountData.KEY_RESERVATION_CANCEL,
-							tr.select("input[type=checkbox]").attr("name")
-									+ "|" + rlink);
-				res.add(line);
+				if (tr.children().size() >= 4) {
+					Map<String, String> line = new HashMap<String, String>();
+					line.put(AccountData.KEY_RESERVATION_TITLE, tr.child(2).text()
+							.split("[:/;]")[0].trim());
+					line.put(AccountData.KEY_RESERVATION_READY, tr.child(3).text()
+							.trim().substring(0, 10));
+					line.put(AccountData.KEY_RESERVATION_BRANCH, tr.child(1).text()
+							.trim());
+					if (tr.select("input[type=checkbox]").size() > 0
+							&& rlink.toUpperCase(Locale.GERMAN).contains("SP=SZM"))
+						line.put(AccountData.KEY_RESERVATION_CANCEL,
+								tr.select("input[type=checkbox]").attr("name")
+										+ "|" + rlink);
+					res.add(line);
+				} else {
+					// This is a strange bug where sometimes there is only three columns
+					error = true;
+				}
 			}
+			if(error) {
+				// Maybe we should send a bug report here, but using ACRA breaks the unit tests
+				adata.setWarning("Beim Abrufen der Reservationen ist ein Problem aufgetreten");
+			}
+			
 			List<NameValuePair> form = new ArrayList<NameValuePair>();
 			for (Element input : rdoc.select("input, select")) {
 				if (!"image".equals(input.attr("type"))
