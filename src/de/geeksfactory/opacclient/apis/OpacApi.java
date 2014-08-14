@@ -33,8 +33,8 @@ import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Library;
-import de.geeksfactory.opacclient.objects.SearchField;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
+import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**

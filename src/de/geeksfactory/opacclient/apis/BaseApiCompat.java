@@ -3,7 +3,10 @@ package de.geeksfactory.opacclient.apis;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.geeksfactory.opacclient.objects.SearchField;
+import de.geeksfactory.opacclient.searchfields.BarcodeSearchField;
+import de.geeksfactory.opacclient.searchfields.CheckboxSearchField;
+import de.geeksfactory.opacclient.searchfields.SearchField;
+import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
 public abstract class BaseApiCompat extends BaseApi implements OpacApi {
 
@@ -14,43 +17,43 @@ public abstract class BaseApiCompat extends BaseApi implements OpacApi {
 		List<SearchField> searchFields = new ArrayList<SearchField>();
 		for (String field:getSearchFieldsCompat()) {
 			if (field.equals(KEY_SEARCH_QUERY_FREE)) {
-				searchFields.add(SearchField.getTextInstance(field, "", "Freie Suche", false, true, false));
+				searchFields.add(new TextSearchField(field, "", false, "Freie Suche", true, false));
 			} else if (field.equals(KEY_SEARCH_QUERY_TITLE)) {
-				searchFields.add(SearchField.getTextInstance(field, "Titel", "Stichwort", false, false, false));
+				searchFields.add(new TextSearchField(field, "Titel", false, "Stichwort", false, false));
 			} else if (field.equals(KEY_SEARCH_QUERY_AUTHOR)) {
-				searchFields.add(SearchField.getTextInstance(field, "Verfasser", "Nachname, Vorname", false, false, false));
+				searchFields.add(new TextSearchField(field, "Verfasser", false, "Nachname, Vorname", false, false));
 			} else if (field.equals(KEY_SEARCH_QUERY_KEYWORDA)) {
-				searchFields.add(SearchField.getTextInstance(field, "Schlagwort", "", false, false, false));
+				searchFields.add(new TextSearchField(field, "Schlagwort", false, "", false, false));
 			} else if (field.equals(KEY_SEARCH_QUERY_KEYWORDB)) {
-				searchFields.add(SearchField.getTextInstance(field, "Schlagwort", "", true, false, false));
+				searchFields.add(new TextSearchField(field, "Schlagwort", true, "", false, false));
 			} else if (field.equals(KEY_SEARCH_QUERY_BRANCH)) {
 				//TODO:
 			} else if (field.equals(KEY_SEARCH_QUERY_HOME_BRANCH)) {
 				//TODO:
 			} else if (field.equals(KEY_SEARCH_QUERY_ISBN)) {
-				searchFields.add(SearchField.getBarcodeInstance(field, "Strichcode", "ISBN", false));
+				searchFields.add(new BarcodeSearchField(field, "Strichcode", false, "ISBN"));
 			} else if (field.equals(KEY_SEARCH_QUERY_YEAR)) {
-				searchFields.add(SearchField.getTextInstance(field, "Jahr", "", false, false, true));
+				searchFields.add(new TextSearchField(field, "Jahr", false, "", false, true));
 			} else if (field.equals(KEY_SEARCH_QUERY_YEAR_RANGE_START)) {
-				searchFields.add(SearchField.getTextInstance(field, "Jahr", "von", false, false, true));
+				searchFields.add(new TextSearchField(field, "Jahr", false, "von", false, true));
 			} else if (field.equals(KEY_SEARCH_QUERY_YEAR_RANGE_END)) {
-				searchFields.add(SearchField.getTextInstance(field, "Jahr", "bis", true, false, true));
+				searchFields.add(new TextSearchField(field, "Jahr", true, "bis", false, true));
 			} else if (field.equals(KEY_SEARCH_QUERY_SYSTEM)) {
-				searchFields.add(SearchField.getTextInstance(field, "Systematik", "", false, false, false));
+				searchFields.add(new TextSearchField(field, "Systematik", false, "", false, false));
 			} else if (field.equals(KEY_SEARCH_QUERY_AUDIENCE)) {
-				searchFields.add(SearchField.getTextInstance(field, "Interessenkreis", "", false, false, false));
+				searchFields.add(new TextSearchField(field, "Interessenkreis", false, "", false, false));
 			} else if (field.equals(KEY_SEARCH_QUERY_PUBLISHER)) {
-				searchFields.add(SearchField.getTextInstance(field, "Verlag", "", false, false, false));
+				searchFields.add(new TextSearchField(field, "Verlag", false, "", false, false));
 			} else if (field.equals(KEY_SEARCH_QUERY_CATEGORY)) {
 				//TODO:
 			} else if (field.equals(KEY_SEARCH_QUERY_BARCODE)) {
-				searchFields.add(SearchField.getBarcodeInstance(field, "Strichcode", "Buchungsnr.", false));
+				searchFields.add(new BarcodeSearchField(field, "Strichcode", false, "Buchungsnr."));
 			} else if (field.equals(KEY_SEARCH_QUERY_LOCATION)) {
-				searchFields.add(SearchField.getTextInstance(field, "Ort", "", false, false, false));
+				searchFields.add(new TextSearchField(field, "Ort", false, "", false, false));
 			} else if (field.equals(KEY_SEARCH_QUERY_DIGITAL)) {
-				searchFields.add(SearchField.getCheckboxInstance(field, "nur digitale Medien"));
+				searchFields.add(new CheckboxSearchField(field, "nur digitale Medien"));
 			} else if (field.equals(KEY_SEARCH_QUERY_AVAILABLE)) {
-				searchFields.add(SearchField.getCheckboxInstance(field, "nur verfügbare Medien"));
+				searchFields.add(new CheckboxSearchField(field, "nur verfügbare Medien"));
 			}
 		}
 		return searchFields;
