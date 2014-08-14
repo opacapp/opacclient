@@ -28,6 +28,7 @@ import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.barcode.BarcodeScanIntegrator;
 import de.geeksfactory.opacclient.objects.Account;
+import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 
 public class MainActivity extends OpacActivity implements
@@ -111,10 +112,10 @@ public class MainActivity extends OpacActivity implements
 					.accountSelected(account);
 		}
 
-		Set<String> fields = new HashSet<String>(Arrays.asList(app.getApi()
-				.getSearchFields()));
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE))
-			nfc_capable = false;
+		List<SearchField> fields = app.getApi()
+				.getSearchFields();
+		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE)) //TODO: This won't work with the new implementation. But what is it for?
+			nfc_capable = false;							   //  	   Shouldn't this be set to true if the library supports searching for barcodes?
 	}
 
 	public void urlintent() {
@@ -185,7 +186,8 @@ public class MainActivity extends OpacActivity implements
 	public void onActivityResult(int requestCode, int resultCode, Intent idata) {
 		super.onActivityResult(requestCode, resultCode, idata);
 
-		// Barcode
+		//TODO: Rewrite this for the new SearchField implementation
+/*		// Barcode
 		BarcodeScanIntegrator.ScanResult scanResult = BarcodeScanIntegrator
 				.parseActivityResult(requestCode, resultCode, idata);
 		if (resultCode != RESULT_CANCELED && scanResult != null) {
@@ -230,7 +232,7 @@ public class MainActivity extends OpacActivity implements
 				app.startSearch(this, query);
 			}
 
-		}
+		} */
 	}
 
 	@Override
@@ -272,7 +274,8 @@ public class MainActivity extends OpacActivity implements
 	@SuppressLint("NewApi")
 	@Override
 	public void onNewIntent(Intent intent) {
-		if (nfc_capable && sp.getBoolean("nfc_search", false)) {
+		// TODO: Rewrite this for the new SearchField implementation
+		/*if (nfc_capable && sp.getBoolean("nfc_search", false)) {
 			android.nfc.Tag tag = intent
 					.getParcelableExtra(android.nfc.NfcAdapter.EXTRA_TAG);
 			String scanResult = readPageToString(tag);
@@ -291,7 +294,7 @@ public class MainActivity extends OpacActivity implements
 					}
 				}
 			}
-		}
+		} */
 	}
 
 	/**

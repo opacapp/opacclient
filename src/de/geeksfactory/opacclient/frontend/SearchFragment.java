@@ -15,6 +15,8 @@ import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.widget.CheckBox;
 import org.holoeverywhere.widget.EditText;
 import org.holoeverywhere.widget.Spinner;
+import org.holoeverywhere.widget.LinearLayout;
+import org.holoeverywhere.widget.TextView;
 import org.json.JSONException;
 
 import android.content.ActivityNotFoundException;
@@ -37,6 +39,11 @@ import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.frontend.OpacActivity.AccountSelectedListener;
 import de.geeksfactory.opacclient.objects.Account;
+import de.geeksfactory.opacclient.searchfields.BarcodeSearchField;
+import de.geeksfactory.opacclient.searchfields.CheckboxSearchField;
+import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
+import de.geeksfactory.opacclient.searchfields.SearchField;
+import de.geeksfactory.opacclient.searchfields.TextSearchField;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 
@@ -53,7 +60,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 	protected Bundle savedState;
 
 	protected boolean advanced = false;
-	protected Set<String> fields;
+	protected List<SearchField> fields;
 
 	protected List<Map<String, String>> spinnerCategory_data;
 	protected List<Map<String, String>> spinnerBranch_data;
@@ -90,13 +97,13 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		// .setAdapter(order_adapter);
 		// }
 
-		ImageView ivBarcode = (ImageView) view.findViewById(R.id.ivBarcode);
-		ivBarcode.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				mCallback.scanBarcode();
-			}
-		});
+//TODO:		ImageView ivBarcode = (ImageView) view.findViewById(R.id.ivBarcode);
+//		ivBarcode.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View arg0) {
+//				mCallback.scanBarcode();
+//			}
+//		});
 
 		return view;
 	}
@@ -115,24 +122,25 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 	}
 
 	public void clear() {
-		((EditText) view.findViewById(R.id.etSimpleSearch)).setText("");
-		((EditText) view.findViewById(R.id.etTitel)).setText("");
-		((EditText) view.findViewById(R.id.etVerfasser)).setText("");
-		((EditText) view.findViewById(R.id.etSchlagA)).setText("");
-		((EditText) view.findViewById(R.id.etSchlagB)).setText("");
-		((EditText) view.findViewById(R.id.etBarcode)).setText("");
-		((EditText) view.findViewById(R.id.etISBN)).setText("");
-		((EditText) view.findViewById(R.id.etJahr)).setText("");
-		((EditText) view.findViewById(R.id.etJahrBis)).setText("");
-		((EditText) view.findViewById(R.id.etJahrVon)).setText("");
-		((EditText) view.findViewById(R.id.etSystematik)).setText("");
-		((EditText) view.findViewById(R.id.etInteressenkreis)).setText("");
-		((EditText) view.findViewById(R.id.etVerlag)).setText("");
-		((CheckBox) view.findViewById(R.id.cbDigital)).setChecked(false);
-		((CheckBox) view.findViewById(R.id.cbAvailable)).setChecked(false);
-		((Spinner) view.findViewById(R.id.cbBranch)).setSelection(0);
-		((Spinner) view.findViewById(R.id.cbHomeBranch)).setSelection(0);
-		((Spinner) view.findViewById(R.id.cbMediengruppe)).setSelection(0);
+//		TODO: rewrite for new SearchField implementation
+//		((EditText) view.findViewById(R.id.etSimpleSearch)).setText("");
+//		((EditText) view.findViewById(R.id.etTitel)).setText("");
+//		((EditText) view.findViewById(R.id.etVerfasser)).setText("");
+//		((EditText) view.findViewById(R.id.etSchlagA)).setText("");
+//		((EditText) view.findViewById(R.id.etSchlagB)).setText("");
+//		((EditText) view.findViewById(R.id.etBarcode)).setText("");
+//		((EditText) view.findViewById(R.id.etISBN)).setText("");
+//		((EditText) view.findViewById(R.id.etJahr)).setText("");
+//		((EditText) view.findViewById(R.id.etJahrBis)).setText("");
+//		((EditText) view.findViewById(R.id.etJahrVon)).setText("");
+//		((EditText) view.findViewById(R.id.etSystematik)).setText("");
+//		((EditText) view.findViewById(R.id.etInteressenkreis)).setText("");
+//		((EditText) view.findViewById(R.id.etVerlag)).setText("");
+//		((CheckBox) view.findViewById(R.id.cbDigital)).setChecked(false);
+//		((CheckBox) view.findViewById(R.id.cbAvailable)).setChecked(false);
+//		((Spinner) view.findViewById(R.id.cbBranch)).setSelection(0);
+//		((Spinner) view.findViewById(R.id.cbHomeBranch)).setSelection(0);
+//		((Spinner) view.findViewById(R.id.cbMediengruppe)).setSelection(0);
 	}
 
 	protected void manageVisibility() {
@@ -161,276 +169,156 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 			view.findViewById(R.id.rlReplaced).setVisibility(View.GONE);
 		}
 
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_FREE)) {
-			view.findViewById(R.id.tvSearchAdvHeader).setVisibility(
-					View.VISIBLE);
-			view.findViewById(R.id.rlSimpleSearch).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.tvSearchAdvHeader).setVisibility(View.GONE);
-			view.findViewById(R.id.rlSimpleSearch).setVisibility(View.GONE);
-		}
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_TITLE)) {
-			view.findViewById(R.id.etTitel).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.tvTitel).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.etTitel).setVisibility(View.GONE);
-			view.findViewById(R.id.tvTitel).setVisibility(View.GONE);
-		}
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_AUTHOR)) {
-			view.findViewById(R.id.etVerfasser).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.tvVerfasser).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.etVerfasser).setVisibility(View.GONE);
-			view.findViewById(R.id.tvVerfasser).setVisibility(View.GONE);
-		}
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_KEYWORDA) && advanced) {
-			view.findViewById(R.id.llSchlag).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.tvSchlag).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.llSchlag).setVisibility(View.GONE);
-			view.findViewById(R.id.tvSchlag).setVisibility(View.GONE);
-		}
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_KEYWORDB) && advanced) {
-			view.findViewById(R.id.etSchlagB).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.etSchlagB).setVisibility(View.GONE);
-		}
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_BRANCH)) {
-			view.findViewById(R.id.llBranch).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.tvZweigstelle).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.llBranch).setVisibility(View.GONE);
-			view.findViewById(R.id.tvZweigstelle).setVisibility(View.GONE);
-		}
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH)) {
-			view.findViewById(R.id.llHomeBranch).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.tvHomeBranch).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.llHomeBranch).setVisibility(View.GONE);
-			view.findViewById(R.id.tvHomeBranch).setVisibility(View.GONE);
-		}
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_CATEGORY)) {
-			view.findViewById(R.id.llMediengruppe).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.tvMediengruppe).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.llMediengruppe).setVisibility(View.GONE);
-			view.findViewById(R.id.tvMediengruppe).setVisibility(View.GONE);
-		}
-
-		EditText etBarcode = (EditText) view.findViewById(R.id.etBarcode);
-		String etBarcodeText = etBarcode.getText().toString();
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE)
-				&& (advanced || !etBarcodeText.equals(""))) {
-			etBarcode.setVisibility(View.VISIBLE);
-		} else {
-			etBarcode.setVisibility(View.GONE);
-		}
-
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_ISBN)) {
-			view.findViewById(R.id.etISBN).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.etISBN).setVisibility(View.GONE);
-		}
-
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_DIGITAL)) {
-			view.findViewById(R.id.cbDigital).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.cbDigital).setVisibility(View.GONE);
-		}
-
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_AVAILABLE)) {
-			view.findViewById(R.id.cbAvailable).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.cbAvailable).setVisibility(View.GONE);
-		}
-
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_ISBN)
-				|| (fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE) && (advanced || !etBarcodeText
-						.equals("")))) {
-			if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-				view.findViewById(R.id.ivBarcode).setVisibility(View.VISIBLE);
-			} else {
-				view.findViewById(R.id.ivBarcode).setVisibility(View.GONE);
+		for (SearchField field:fields) {
+			View v = null;
+			if (field instanceof TextSearchField) {
+				TextSearchField textSearchField = (TextSearchField) field;
+				v = getLayoutInflater().inflate(
+						R.layout.searchfield_text, null);
+				TextView title = (TextView) v.findViewById(R.id.title);
+				title.setText(textSearchField.getDisplayName());
+			} else if (field instanceof BarcodeSearchField) {
+				v = getLayoutInflater().inflate(
+						R.layout.searchfield_barcode, null);
+			} else if (field instanceof DropdownSearchField) {
+				v = getLayoutInflater().inflate(
+						R.layout.searchfield_dropdown, null);
+			} else if (field instanceof CheckboxSearchField) {
+				v = getLayoutInflater().inflate(
+						R.layout.searchfield_checkbox, null);
 			}
-			view.findViewById(R.id.tvBarcodes).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.llBarcodes).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.tvBarcodes).setVisibility(View.GONE);
-			view.findViewById(R.id.llBarcodes).setVisibility(View.GONE);
-		}
-
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_YEAR_RANGE_START)
-				&& fields.contains(OpacApi.KEY_SEARCH_QUERY_YEAR_RANGE_END)) {
-			view.findViewById(R.id.llJahr).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.tvJahr).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.etJahr).setVisibility(View.GONE);
-		} else if (fields.contains(OpacApi.KEY_SEARCH_QUERY_YEAR)) {
-			view.findViewById(R.id.llJahr).setVisibility(View.GONE);
-			view.findViewById(R.id.etJahr).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.tvJahr).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.llJahr).setVisibility(View.GONE);
-			view.findViewById(R.id.tvJahr).setVisibility(View.GONE);
-			view.findViewById(R.id.etJahr).setVisibility(View.GONE);
-		}
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_SYSTEM) && advanced) {
-			view.findViewById(R.id.etSystematik).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.tvSystematik).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.etSystematik).setVisibility(View.GONE);
-			view.findViewById(R.id.tvSystematik).setVisibility(View.GONE);
-		}
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_AUDIENCE) && advanced) {
-			view.findViewById(R.id.etInteressenkreis).setVisibility(
-					View.VISIBLE);
-			view.findViewById(R.id.tvInteressenkreis).setVisibility(
-					View.VISIBLE);
-		} else {
-			view.findViewById(R.id.etInteressenkreis).setVisibility(View.GONE);
-			view.findViewById(R.id.tvInteressenkreis).setVisibility(View.GONE);
-		}
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_PUBLISHER) && advanced) {
-			view.findViewById(R.id.etVerlag).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.tvVerlag).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.etVerlag).setVisibility(View.GONE);
-			view.findViewById(R.id.tvVerlag).setVisibility(View.GONE);
-		}
-		if (fields.contains("order") && advanced) {
-			view.findViewById(R.id.cbOrder).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.tvOrder).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.cbOrder).setVisibility(View.GONE);
-			view.findViewById(R.id.tvOrder).setVisibility(View.GONE);
+			v.setTag(field.getId());
+			((LinearLayout) view.findViewById(R.id.llForm)).addView(v);		
 		}
 	}
 
 	protected void fillComboBoxes() {
-		Spinner cbZst = (Spinner) view.findViewById(R.id.cbBranch);
-		Spinner cbZstHome = (Spinner) view.findViewById(R.id.cbHomeBranch);
-		Spinner cbMg = (Spinner) view.findViewById(R.id.cbMediengruppe);
-
-		String zst_home_before = "";
-		String zst_before = "";
-		String mg_before = "";
-		String selection;
-		int selected = 0, i = 0;
-
-		if (spinnerHomeBranch_data != null
-				&& spinnerHomeBranch_data.size() > 0
-				&& spinnerHomeBranch_data.size() > cbZstHome
-						.getSelectedItemPosition()
-				&& cbZstHome.getSelectedItemPosition() > 0) {
-			zst_home_before = spinnerHomeBranch_data.get(
-					cbZstHome.getSelectedItemPosition()).get("key");
-		}
-		if (spinnerBranch_data != null
-				&& spinnerBranch_data.size() > cbZst.getSelectedItemPosition()
-				&& cbZst.getSelectedItemPosition() > 0) {
-			zst_before = spinnerBranch_data
-					.get(cbZst.getSelectedItemPosition()).get("key");
-		}
-		if (spinnerCategory_data != null
-				&& spinnerCategory_data.size() > cbMg.getSelectedItemPosition()
-				&& cbMg.getSelectedItemPosition() > 0) {
-			mg_before = spinnerCategory_data
-					.get(cbMg.getSelectedItemPosition()).get("key");
-		}
-
-		MetaDataSource data = new SQLMetaDataSource(app);
-		try {
-			data.open();
-		} catch (Exception e1) {
-			throw new RuntimeException(e1);
-		}
-
-		Map<String, String> all = new HashMap<String, String>();
-		all.put("key", "");
-		all.put("value", getString(R.string.all));
-
-		spinnerBranch_data = data.getMeta(app.getLibrary().getIdent(),
-				MetaDataSource.META_TYPE_BRANCH);
-		spinnerBranch_data.add(0, all);
-		cbZst.setAdapter(((OpacActivity) getActivity()).new MetaAdapter(
-				getActivity(), spinnerBranch_data, R.layout.simple_spinner_item));
-		if (!"".equals(zst_before)) {
-			for (Map<String, String> row : spinnerBranch_data) {
-				if (row.get("key").equals(zst_before)) {
-					selected = i;
-				}
-				i++;
-			}
-			cbZst.setSelection(selected);
-		}
-
-		spinnerHomeBranch_data = data.getMeta(app.getLibrary().getIdent(),
-				MetaDataSource.META_TYPE_HOME_BRANCH);
-		selected = 0;
-		i = 0;
-		if (!"".equals(zst_home_before)) {
-			selection = zst_home_before;
-		} else {
-			if (sp.contains(OpacClient.PREF_HOME_BRANCH_PREFIX
-					+ app.getAccount().getId()))
-				selection = sp.getString(OpacClient.PREF_HOME_BRANCH_PREFIX
-						+ app.getAccount().getId(), "");
-			else {
-				try {
-					selection = app.getLibrary().getData()
-							.getString("homebranch");
-				} catch (JSONException e) {
-					selection = "";
-				}
-			}
-		}
-
-		for (Map<String, String> row : spinnerHomeBranch_data) {
-			if (row.get("key").equals(selection)) {
-				selected = i;
-			}
-			i++;
-		}
-		cbZstHome.setAdapter(((OpacActivity) getActivity()).new MetaAdapter(
-				getActivity(), spinnerHomeBranch_data,
-				R.layout.simple_spinner_item));
-		cbZstHome.setSelection(selected);
-
-		spinnerCategory_data = data.getMeta(app.getLibrary().getIdent(),
-				MetaDataSource.META_TYPE_CATEGORY);
-		spinnerCategory_data.add(0, all);
-		cbMg.setAdapter(((OpacActivity) getActivity()).new MetaAdapter(
-				getActivity(), spinnerCategory_data,
-				R.layout.simple_spinner_item));
-		if (!"".equals(mg_before)) {
-			selected = 0;
-			i = 0;
-			for (Map<String, String> row : spinnerBranch_data) {
-				if (row.get("key").equals(zst_before)) {
-					selected = i;
-				}
-				i++;
-			}
-			cbZst.setSelection(selected);
-		}
-
-		if ((spinnerBranch_data.size() == 1 || !fields
-				.contains(OpacApi.KEY_SEARCH_QUERY_BRANCH))
-				&& (spinnerCategory_data.size() == 1 || !fields
-						.contains(OpacApi.KEY_SEARCH_QUERY_CATEGORY))
-				&& (spinnerHomeBranch_data.size() == 0 || !fields
-						.contains(OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH))) {
-			loadMetaData(app.getLibrary().getIdent(), true);
-			loadingIndicators();
-		}
-
-		data.close();
+//		TODO: rewrite for new SearchField implementation
+//		Spinner cbZst = (Spinner) view.findViewById(R.id.cbBranch);
+//		Spinner cbZstHome = (Spinner) view.findViewById(R.id.cbHomeBranch);
+//		Spinner cbMg = (Spinner) view.findViewById(R.id.cbMediengruppe);
+//
+//		String zst_home_before = "";
+//		String zst_before = "";
+//		String mg_before = "";
+//		String selection;
+//		int selected = 0, i = 0;
+//
+//		if (spinnerHomeBranch_data != null
+//				&& spinnerHomeBranch_data.size() > 0
+//				&& spinnerHomeBranch_data.size() > cbZstHome
+//						.getSelectedItemPosition()
+//				&& cbZstHome.getSelectedItemPosition() > 0) {
+//			zst_home_before = spinnerHomeBranch_data.get(
+//					cbZstHome.getSelectedItemPosition()).get("key");
+//		}
+//		if (spinnerBranch_data != null
+//				&& spinnerBranch_data.size() > cbZst.getSelectedItemPosition()
+//				&& cbZst.getSelectedItemPosition() > 0) {
+//			zst_before = spinnerBranch_data
+//					.get(cbZst.getSelectedItemPosition()).get("key");
+//		}
+//		if (spinnerCategory_data != null
+//				&& spinnerCategory_data.size() > cbMg.getSelectedItemPosition()
+//				&& cbMg.getSelectedItemPosition() > 0) {
+//			mg_before = spinnerCategory_data
+//					.get(cbMg.getSelectedItemPosition()).get("key");
+//		}
+//
+//		MetaDataSource data = new SQLMetaDataSource(app);
+//		try {
+//			data.open();
+//		} catch (Exception e1) {
+//			throw new RuntimeException(e1);
+//		}
+//
+//		Map<String, String> all = new HashMap<String, String>();
+//		all.put("key", "");
+//		all.put("value", getString(R.string.all));
+//
+//		spinnerBranch_data = data.getMeta(app.getLibrary().getIdent(),
+//				MetaDataSource.META_TYPE_BRANCH);
+//		spinnerBranch_data.add(0, all);
+//		cbZst.setAdapter(((OpacActivity) getActivity()).new MetaAdapter(
+//				getActivity(), spinnerBranch_data, R.layout.simple_spinner_item));
+//		if (!"".equals(zst_before)) {
+//			for (Map<String, String> row : spinnerBranch_data) {
+//				if (row.get("key").equals(zst_before)) {
+//					selected = i;
+//				}
+//				i++;
+//			}
+//			cbZst.setSelection(selected);
+//		}
+//
+//		spinnerHomeBranch_data = data.getMeta(app.getLibrary().getIdent(),
+//				MetaDataSource.META_TYPE_HOME_BRANCH);
+//		selected = 0;
+//		i = 0;
+//		if (!"".equals(zst_home_before)) {
+//			selection = zst_home_before;
+//		} else {
+//			if (sp.contains(OpacClient.PREF_HOME_BRANCH_PREFIX
+//					+ app.getAccount().getId()))
+//				selection = sp.getString(OpacClient.PREF_HOME_BRANCH_PREFIX
+//						+ app.getAccount().getId(), "");
+//			else {
+//				try {
+//					selection = app.getLibrary().getData()
+//							.getString("homebranch");
+//				} catch (JSONException e) {
+//					selection = "";
+//				}
+//			}
+//		}
+//
+//		for (Map<String, String> row : spinnerHomeBranch_data) {
+//			if (row.get("key").equals(selection)) {
+//				selected = i;
+//			}
+//			i++;
+//		}
+//		cbZstHome.setAdapter(((OpacActivity) getActivity()).new MetaAdapter(
+//				getActivity(), spinnerHomeBranch_data,
+//				R.layout.simple_spinner_item));
+//		cbZstHome.setSelection(selected);
+//
+//		spinnerCategory_data = data.getMeta(app.getLibrary().getIdent(),
+//				MetaDataSource.META_TYPE_CATEGORY);
+//		spinnerCategory_data.add(0, all);
+//		cbMg.setAdapter(((OpacActivity) getActivity()).new MetaAdapter(
+//				getActivity(), spinnerCategory_data,
+//				R.layout.simple_spinner_item));
+//		if (!"".equals(mg_before)) {
+//			selected = 0;
+//			i = 0;
+//			for (Map<String, String> row : spinnerBranch_data) {
+//				if (row.get("key").equals(zst_before)) {
+//					selected = i;
+//				}
+//				i++;
+//			}
+//			cbZst.setSelection(selected);
+//		}
+//
+//		if ((spinnerBranch_data.size() == 1 || !fields
+//				.contains(OpacApi.KEY_SEARCH_QUERY_BRANCH))
+//				&& (spinnerCategory_data.size() == 1 || !fields
+//						.contains(OpacApi.KEY_SEARCH_QUERY_CATEGORY))
+//				&& (spinnerHomeBranch_data.size() == 0 || !fields
+//						.contains(OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH))) {
+//			loadMetaData(app.getLibrary().getIdent(), true);
+//			loadingIndicators();
+//		}
+//
+//		data.close();
 	}
 
 	protected void loadingIndicators() {
-		int visibility = metaDataLoading ? View.VISIBLE : View.GONE;
-		view.findViewById(R.id.pbBranch).setVisibility(visibility);
-		view.findViewById(R.id.pbHomeBranch).setVisibility(visibility);
-		view.findViewById(R.id.pbMediengruppe).setVisibility(visibility);
+//		int visibility = metaDataLoading ? View.VISIBLE : View.GONE;
+//		view.findViewById(R.id.pbBranch).setVisibility(visibility);
+//		view.findViewById(R.id.pbHomeBranch).setVisibility(visibility);
+//		view.findViewById(R.id.pbMediengruppe).setVisibility(visibility);
 	}
 
 	public void loadMetaData(String lib) {
@@ -508,8 +396,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 	public void accountSelected(Account account) {
 		metaDataLoading = false;
 		advanced = sp.getBoolean("advanced", false);
-		fields = new HashSet<String>(Arrays.asList(app.getApi()
-				.getSearchFields()));
+		fields = app.getApi().getSearchFields();
 
 		manageVisibility();
 		fillComboBoxes();
@@ -521,142 +408,42 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 	}
 
 	public Map<String, String> saveQuery() {
-		String zst = "";
-		String mg = "";
-		String zst_home = "";
-		if (spinnerBranch_data == null)
-			return null;
-		if (spinnerBranch_data.size() > 1)
-			zst = spinnerBranch_data.get(
-					((Spinner) view.findViewById(R.id.cbBranch))
-							.getSelectedItemPosition()).get("key");
-		if (spinnerHomeBranch_data.size() > 0) {
-			zst_home = spinnerHomeBranch_data.get(
-					((Spinner) view.findViewById(R.id.cbHomeBranch))
-							.getSelectedItemPosition()).get("key");
-			sp.edit()
-					.putString(
-							OpacClient.PREF_HOME_BRANCH_PREFIX
-									+ app.getAccount().getId(), zst_home)
-					.commit();
-		}
-		if (spinnerCategory_data.size() > 1)
-			mg = spinnerCategory_data.get(
-					((Spinner) view.findViewById(R.id.cbMediengruppe))
-							.getSelectedItemPosition()).get("key");
-
 		Map<String, String> query = new HashMap<String, String>();
-		query.put(OpacApi.KEY_SEARCH_QUERY_FREE, ((EditText) view
-				.findViewById(R.id.etSimpleSearch)).getEditableText()
-				.toString());
-		query.put(OpacApi.KEY_SEARCH_QUERY_TITLE, ((EditText) view
-				.findViewById(R.id.etTitel)).getEditableText().toString());
-		query.put(OpacApi.KEY_SEARCH_QUERY_AUTHOR, ((EditText) view
-				.findViewById(R.id.etVerfasser)).getEditableText().toString());
-		query.put(OpacApi.KEY_SEARCH_QUERY_BRANCH, zst);
-		query.put(OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH, zst_home);
-		query.put(OpacApi.KEY_SEARCH_QUERY_CATEGORY, mg);
-		query.put(OpacApi.KEY_SEARCH_QUERY_ISBN, ((EditText) view
-				.findViewById(R.id.etISBN)).getEditableText().toString());
-		query.put(OpacApi.KEY_SEARCH_QUERY_BARCODE, ((EditText) view
-				.findViewById(R.id.etBarcode)).getEditableText().toString());
-		query.put(OpacApi.KEY_SEARCH_QUERY_YEAR, ((EditText) view
-				.findViewById(R.id.etJahr)).getEditableText().toString());
-		query.put(OpacApi.KEY_SEARCH_QUERY_YEAR_RANGE_START, ((EditText) view
-				.findViewById(R.id.etJahrVon)).getEditableText().toString());
-		query.put(OpacApi.KEY_SEARCH_QUERY_YEAR_RANGE_END, ((EditText) view
-				.findViewById(R.id.etJahrBis)).getEditableText().toString());
-		query.put(OpacApi.KEY_SEARCH_QUERY_DIGITAL, String
-				.valueOf(((CheckBox) view.findViewById(R.id.cbDigital))
-						.isChecked()));
-		query.put(OpacApi.KEY_SEARCH_QUERY_AVAILABLE, String
-				.valueOf(((CheckBox) view.findViewById(R.id.cbAvailable))
-						.isChecked()));
-		if (advanced) {
-			query.put(OpacApi.KEY_SEARCH_QUERY_KEYWORDA, ((EditText) view
-					.findViewById(R.id.etSchlagA)).getEditableText().toString());
-			query.put(OpacApi.KEY_SEARCH_QUERY_KEYWORDB, ((EditText) view
-					.findViewById(R.id.etSchlagB)).getEditableText().toString());
-			query.put(OpacApi.KEY_SEARCH_QUERY_SYSTEM, ((EditText) view
-					.findViewById(R.id.etSystematik)).getEditableText()
-					.toString());
-			query.put(OpacApi.KEY_SEARCH_QUERY_AUDIENCE, ((EditText) view
-					.findViewById(R.id.etInteressenkreis)).getEditableText()
-					.toString());
-			query.put(OpacApi.KEY_SEARCH_QUERY_PUBLISHER, ((EditText) view
-					.findViewById(R.id.etVerlag)).getEditableText().toString());
-			query.put(
-					"order",
-					((((Spinner) view.findViewById(R.id.cbOrder))
-							.getSelectedItemPosition()) + 1) + "");
+		for (SearchField field:fields) {
+			ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
+			if (field instanceof TextSearchField) {
+				EditText text = (EditText) v.findViewById(R.id.edittext);
+				query.put(field.getId(), text.getEditableText().toString());
+			} else if (field instanceof BarcodeSearchField) {
+				EditText text = (EditText) v.findViewById(R.id.edittext);
+				query.put(field.getId(), text.getEditableText().toString());
+			} else if (field instanceof DropdownSearchField) {
+				Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
+				//TODO: Spinner implementation
+			} else if (field instanceof CheckboxSearchField) {
+				CheckBox checkbox = (CheckBox) v.findViewById(R.id.checkbox);
+				query.put(field.getId(), String.valueOf(checkbox.isChecked()));
+			}
 		}
 		return query;
 	}
 
 	public void loadQuery(Bundle query) {
-		((EditText) view.findViewById(R.id.etSimpleSearch)).setText(query
-				.getString(OpacApi.KEY_SEARCH_QUERY_FREE));
-		((EditText) view.findViewById(R.id.etTitel)).setText(query
-				.getString(OpacApi.KEY_SEARCH_QUERY_TITLE));
-		((EditText) view.findViewById(R.id.etVerfasser)).setText(query
-				.getString(OpacApi.KEY_SEARCH_QUERY_AUTHOR));
-		((EditText) view.findViewById(R.id.etISBN)).setText(query
-				.getString(OpacApi.KEY_SEARCH_QUERY_ISBN));
-		((EditText) view.findViewById(R.id.etBarcode)).setText(query
-				.getString(OpacApi.KEY_SEARCH_QUERY_BARCODE));
-		((EditText) view.findViewById(R.id.etJahr)).setText(query
-				.getString(OpacApi.KEY_SEARCH_QUERY_YEAR));
-		((EditText) view.findViewById(R.id.etJahrVon)).setText(query
-				.getString(OpacApi.KEY_SEARCH_QUERY_YEAR_RANGE_START));
-		((EditText) view.findViewById(R.id.etJahrBis)).setText(query
-				.getString(OpacApi.KEY_SEARCH_QUERY_YEAR_RANGE_END));
-		((CheckBox) view.findViewById(R.id.cbDigital)).setChecked(query
-				.getBoolean(OpacApi.KEY_SEARCH_QUERY_DIGITAL));
-		((CheckBox) view.findViewById(R.id.cbAvailable)).setChecked(query
-				.getBoolean(OpacApi.KEY_SEARCH_QUERY_AVAILABLE));
-
-		Spinner spBranch = (Spinner) view.findViewById(R.id.cbBranch);
-		int i = 0;
-		for (Map<String, String> row : spinnerBranch_data) {
-			if (row.get("key").equals(
-					query.getString(OpacApi.KEY_SEARCH_QUERY_BRANCH))) {
-				spBranch.setSelection(i);
-				break;
+		for (SearchField field:fields) {
+			ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
+			if (field instanceof TextSearchField) {
+				EditText text = (EditText) v.findViewById(R.id.edittext);
+				text.setText(query.getString(field.getId()));
+			} else if (field instanceof BarcodeSearchField) {
+				EditText text = (EditText) v.findViewById(R.id.edittext);
+				text.setText(query.getString(field.getId()));
+			} else if (field instanceof DropdownSearchField) {
+				Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
+				//TODO: Spinner implementation
+			} else if (field instanceof CheckboxSearchField) {
+				CheckBox checkbox = (CheckBox) v.findViewById(R.id.checkbox);
+				checkbox.setChecked(Boolean.valueOf(query.getString(field.getId())));
 			}
-			i++;
-		}
-		Spinner spHomeBranch = (Spinner) view.findViewById(R.id.cbHomeBranch);
-		i = 0;
-		for (Map<String, String> row : spinnerHomeBranch_data) {
-			if (row.get("key").equals(
-					query.getString(OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH))) {
-				spHomeBranch.setSelection(i);
-				break;
-			}
-			i++;
-		}
-		Spinner spCategory = (Spinner) view.findViewById(R.id.cbMediengruppe);
-		i = 0;
-		for (Map<String, String> row : spinnerCategory_data) {
-			if (row.get("key").equals(
-					query.getString(OpacApi.KEY_SEARCH_QUERY_CATEGORY))) {
-				spCategory.setSelection(i);
-				break;
-			}
-			i++;
-		}
-
-		if (advanced) {
-			((EditText) view.findViewById(R.id.etSchlagA)).setText(query
-					.getString(OpacApi.KEY_SEARCH_QUERY_KEYWORDA));
-			((EditText) view.findViewById(R.id.etSchlagB)).setText(query
-					.getString(OpacApi.KEY_SEARCH_QUERY_KEYWORDB));
-			((EditText) view.findViewById(R.id.etSystematik)).setText(query
-					.getString(OpacApi.KEY_SEARCH_QUERY_SYSTEM));
-			((EditText) view.findViewById(R.id.etInteressenkreis))
-					.setText(query.getString(OpacApi.KEY_SEARCH_QUERY_AUDIENCE));
-			((EditText) view.findViewById(R.id.etVerlag)).setText(query
-					.getString(OpacApi.KEY_SEARCH_QUERY_PUBLISHER));
 		}
 	}
 
