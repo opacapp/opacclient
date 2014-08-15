@@ -1,0 +1,45 @@
+{
+    "api": "biber1992",
+    "city": "Oldenburg",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://bibliothek.stadt-oldenburg.de",
+        "information": "http://www.oldenburg.de/microsites/bibliothek/standorte-oeffnungszeiten.html",
+        "opacdir": "opax",
+		"searchtable": [
+            2, 
+            3
+		],
+		"copiestable": {
+            "barcode": 3, 
+            "branch": 1, 
+            "department": -1, 
+            "location": 2, 
+            "reservations": -1, 
+            "returndate": -1, 
+            "status": 4
+        }, 
+		"mediatypes": {
+            "8": "MOVIE",
+			"7": "MOVIE",
+			"9": "DVD",
+			"10": "BOARDGAME",
+			"34": "GAME_CONSOLE",
+			"3": "BOOK",
+			"5": "CD",
+			"1": "BOOK",
+			"2": "BOOK",
+			"11": "SCORE_MUSIC",
+			"4": "MAGAZINE",
+			"101": "EBOOK",
+			"6": "CD_SOFTWARE"
+        }
+    },
+    "geo": [
+        53.1434501,
+        8.214552099999999
+    ],
+    "state": "Niedersachsen",
+    "support": "Katalogsuche",
+    "title": "Stadtbibliothek"
+}
