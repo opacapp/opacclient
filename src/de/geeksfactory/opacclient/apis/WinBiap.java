@@ -449,7 +449,7 @@ public class WinBiap extends BaseApi implements OpacApi {
 		String permalink = doc.select(".PermalinkTextarea").text();
 		item.setId(getQueryParamsFirst(permalink).get("Id"));
 
-		Elements trs = doc.select("#detail-center .DetailInformation tr");
+		Elements trs = doc.select(".DetailInformation").first().select("tr");
 		for (Element tr : trs) {
 			String name = tr.select(".DetailInformationEntryName").text()
 					.replace(":", "");
@@ -470,8 +470,11 @@ public class WinBiap extends BaseApi implements OpacApi {
 					.text().replace("#", ""));
 			copy.put(DetailledItem.KEY_COPY_STATUS, tr.select(".mediaStatus")
 					.text());
+			if(tr.select(".mediaBranch").size() > 0)
+				copy.put(DetailledItem.KEY_COPY_BRANCH, tr.select(".mediaBranch")
+						.text());
 			copy.put(DetailledItem.KEY_COPY_LOCATION,
-					tr.select("#mediaItemLocationWrapper span").text());
+					tr.select(".cellMediaItemLocation span").text());
 			item.addCopy(copy);
 		}
 
