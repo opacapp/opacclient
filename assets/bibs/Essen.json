@@ -4,14 +4,14 @@
     "country": "Deutschland", 
     "data": {
         "accounttable": {
-            "author": 6, 
+            "author": 7, 
             "barcode": 3, 
             "homebranch": -1, 
-            "lendingbranch": -1, 
-            "prolongurl": 3, 
+            "lendingbranch": 4, 
+            "prolongurl": 0, 
             "returndate": 2, 
-            "status": 4, 
-            "title": 6
+            "status": 8, 
+            "title": 7
         }, 
         "baseurl": "http://katalog.stadtbibliothek-essen.de", 
         "information": "http://www.stadtbibliothek-essen.de/de/oeffnungszeiten/oeffnungszeiten.html", 
