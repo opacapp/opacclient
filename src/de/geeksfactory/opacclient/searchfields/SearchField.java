@@ -41,4 +41,18 @@ public abstract class SearchField {
 		this.displayName = displayName;
 	}
 
+	/**
+	 * @return the advanced
+	 */
+	public boolean isAdvanced() {
+		return advanced;
+	}
+
+	/**
+	 * @param advanced the advanced to set
+	 */
+	public void setAdvanced(boolean advanced) {
+		this.advanced = advanced;
+	}
+
 }

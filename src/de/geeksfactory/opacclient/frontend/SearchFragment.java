@@ -157,6 +157,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		tvSearchAdvHeader.setVisibility(View.GONE);
 		
 		for (SearchField field:fields) {
+			if (field.isAdvanced() && !advanced)
+				continue;
 			View v = null;
 			if (field instanceof TextSearchField) {
 				TextSearchField textSearchField = (TextSearchField) field;
@@ -253,6 +255,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 	public Map<String, String> saveQuery() {
 		Map<String, String> query = new HashMap<String, String>();
 		for (SearchField field:fields) {
+			if (field.isAdvanced() && !advanced)
+				continue;
+			
 			ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
 			if (field instanceof TextSearchField) {
 				EditText text;
@@ -280,6 +285,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
 	public void loadQuery(Bundle query) {
 		for (SearchField field:fields) {
+			if (field.isAdvanced() && !advanced)
+				continue;
+			
 			ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
 			if (field instanceof TextSearchField) {
 				EditText text;
