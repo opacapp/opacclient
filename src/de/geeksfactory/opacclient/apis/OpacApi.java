@@ -222,6 +222,14 @@ public interface OpacApi {
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_AVAILABLE = "available";
+	
+	/**
+	 * Sort search results in a specific order
+	 * 
+	 * Map key for {@link #search(Map)} and possible value for
+	 * {@link #getSearchFields()}.
+	 */
+	public static final String KEY_SEARCH_QUERY_ORDER = "order";
 
 	/**
 	 * Returns whether – if account view is not supported in the given library –
