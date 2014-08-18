@@ -26,10 +26,12 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
+import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.barcode.BarcodeScanIntegrator;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 
 public class MainActivity extends OpacActivity implements
 		SearchFragment.Callback, StarredFragment.Callback,
@@ -112,10 +114,14 @@ public class MainActivity extends OpacActivity implements
 					.accountSelected(account);
 		}
 
-		List<SearchField> fields = app.getApi()
-				.getSearchFields();
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE)) //TODO: This won't work with the new implementation. But what is it for?
-			nfc_capable = false;							   //  	   Shouldn't this be set to true if the library supports searching for barcodes?
+//		try {
+//			List<SearchField> fields = app.getApi()
+//					.getSearchFields(new SQLMetaDataSource(app), app.getLibrary());
+//			if (fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE)) //TODO: This won't work with the new implementation. But what is it for?
+//				nfc_capable = false;							   //  	   Shouldn't this be set to true if the library supports searching for barcodes?
+//		} catch (OpacErrorException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	public void urlintent() {

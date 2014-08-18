@@ -816,14 +816,17 @@ public interface OpacApi {
 			JSONException, OpacErrorException;
 
 	/**
-	 * Returns an array of search criterias which are supported by this OPAC and
-	 * should be visible in the search activity. Valid values in returned field
-	 * are the same as the valid keys in <code>search</code>.
+	 * Returns a list of search criterias which are supported by this OPAC and
+	 * should be visible in the search activity. Values should be instances of
+	 * subclasses of the abstract SearchField class. This is called
+	 * asynchronously, so you can load webpages to get the search fields,
+	 * but you should save them to the metadata afterwards to make it faster.
 	 * 
 	 * @return List of allowed fields
+	 * @throws OpacErrorException 
 	 * @see #search
 	 */
-	public List<SearchField> getSearchFields();
+	public List<SearchField> getSearchFields(MetaDataSource metadata, Library lib) throws OpacErrorException;
 
 	/**
 	 * Returns whether – if account view is not supported in the given library –

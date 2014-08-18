@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -38,6 +39,7 @@ import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
+import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.frontend.OpacActivity.AccountSelectedListener;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.searchfields.BarcodeSearchField;
@@ -145,8 +147,6 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 	}
 
 	protected void manageVisibility() {
-		PackageManager pm = getActivity().getPackageManager();
-
 		if (app.getLibrary().getReplacedBy() != null
 				&& sp.getInt("annoyed", 0) < 5) {
 			view.findViewById(R.id.rlReplaced).setVisibility(View.VISIBLE);
@@ -211,7 +211,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 						R.layout.searchfield_dropdown, llFormFields, false);
 				TextView title = (TextView) v.findViewById(R.id.title);
 				title.setText(ddSearchField.getDisplayName());
-				//TODO: Dropdown implementation
+				Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
+				spinner.setAdapter(((OpacActivity) getActivity()).new MetaAdapter(
+						getActivity(), ddSearchField.getDropdownValues(), R.layout.simple_spinner_item));
 			} else if (field instanceof CheckboxSearchField) {
 				CheckboxSearchField cbSearchField = (CheckboxSearchField) field;
 				v = getLayoutInflater().inflate(
@@ -430,11 +432,31 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 	public void accountSelected(Account account) {
 		metaDataLoading = false;
 		advanced = sp.getBoolean("advanced", false);
-		fields = app.getApi().getSearchFields();
+		new LoadSearchFieldsTask().execute();
+	}
+	
+	protected class LoadSearchFieldsTask extends AsyncTask<Void, Void, List<SearchField>> {
 
-		manageVisibility();
-		fillComboBoxes();
-		loadingIndicators();
+		@Override
+		protected List<SearchField> doInBackground(Void... arg0) {
+			try {
+				return app.getApi().getSearchFields(new SQLMetaDataSource(app), app.getLibrary());
+			} catch (OpacErrorException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(List<SearchField> fields) {
+			if(fields != null) {
+				SearchFragment.this.fields = fields;
+				manageVisibility();
+				fillComboBoxes();
+				loadingIndicators();
+			}
+		}
+		
 	}
 
 	public void go() {
@@ -458,7 +480,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 				query.put(field.getId(), text.getEditableText().toString());
 			} else if (field instanceof DropdownSearchField) {
 				Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
-				//TODO: Spinner implementation
+				query.put(field.getId(), 
+						((DropdownSearchField) field).getDropdownValues()
+						.get(spinner.getSelectedItemPosition()).get("key"));
 			} else if (field instanceof CheckboxSearchField) {
 				CheckBox checkbox = (CheckBox) v.findViewById(R.id.checkbox);
 				query.put(field.getId(), String.valueOf(checkbox.isChecked()));

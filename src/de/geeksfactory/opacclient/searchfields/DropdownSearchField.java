@@ -1,10 +1,11 @@
 package de.geeksfactory.opacclient.searchfields;
 
+import java.util.List;
 import java.util.Map;
 
 public class DropdownSearchField extends SearchField {
 
-	protected Map<String, String> dropdownValues;
+	protected List<Map<String, String>> dropdownValues;
 
 	/**
 	 * @return A new dropdown SearchField
@@ -21,7 +22,7 @@ public class DropdownSearchField extends SearchField {
 	 *            value and will not be given to the search() function
 	 */
 	public DropdownSearchField(String id, String displayName,
-			boolean advanced, Map<String, String> dropdownValues) {
+			boolean advanced, List<Map<String, String>> dropdownValues) {
 		super(id, displayName, advanced);
 		this.dropdownValues = dropdownValues;
 	}
@@ -29,7 +30,7 @@ public class DropdownSearchField extends SearchField {
 	/**
 	 * @return the dropdownValues
 	 */
-	public Map<String, String> getDropdownValues() {
+	public List<Map<String, String>> getDropdownValues() {
 		return dropdownValues;
 	}
 
@@ -37,7 +38,7 @@ public class DropdownSearchField extends SearchField {
 	 * @param dropdownValues
 	 *            the dropdownValues to set
 	 */
-	public void setDropdownValues(Map<String, String> dropdownValues) {
+	public void setDropdownValues(List<Map<String, String>> dropdownValues) {
 		this.dropdownValues = dropdownValues;
 	}
 
