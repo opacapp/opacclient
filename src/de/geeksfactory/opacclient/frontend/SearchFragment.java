@@ -1,11 +1,8 @@
 package de.geeksfactory.opacclient.frontend;
 
-import java.io.InterruptedIOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.acra.ACRA;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
@@ -29,7 +26,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import de.geeksfactory.opacclient.OpacClient;
-import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.frontend.OpacActivity.AccountSelectedListener;
@@ -39,7 +35,6 @@ import de.geeksfactory.opacclient.searchfields.CheckboxSearchField;
 import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
-import de.geeksfactory.opacclient.storage.MetaDataSource;
 import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 
 public class SearchFragment extends Fragment implements AccountSelectedListener {
@@ -210,143 +205,24 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		}
 	}
 
-	protected void fillComboBoxes() {
-//		TODO: rewrite for new SearchField implementation
-//		Spinner cbZst = (Spinner) view.findViewById(R.id.cbBranch);
-//		Spinner cbZstHome = (Spinner) view.findViewById(R.id.cbHomeBranch);
-//		Spinner cbMg = (Spinner) view.findViewById(R.id.cbMediengruppe);
-//
-//		String zst_home_before = "";
-//		String zst_before = "";
-//		String mg_before = "";
-//		String selection;
-//		int selected = 0, i = 0;
-//
-//		if (spinnerHomeBranch_data != null
-//				&& spinnerHomeBranch_data.size() > 0
-//				&& spinnerHomeBranch_data.size() > cbZstHome
-//						.getSelectedItemPosition()
-//				&& cbZstHome.getSelectedItemPosition() > 0) {
-//			zst_home_before = spinnerHomeBranch_data.get(
-//					cbZstHome.getSelectedItemPosition()).get("key");
-//		}
-//		if (spinnerBranch_data != null
-//				&& spinnerBranch_data.size() > cbZst.getSelectedItemPosition()
-//				&& cbZst.getSelectedItemPosition() > 0) {
-//			zst_before = spinnerBranch_data
-//					.get(cbZst.getSelectedItemPosition()).get("key");
-//		}
-//		if (spinnerCategory_data != null
-//				&& spinnerCategory_data.size() > cbMg.getSelectedItemPosition()
-//				&& cbMg.getSelectedItemPosition() > 0) {
-//			mg_before = spinnerCategory_data
-//					.get(cbMg.getSelectedItemPosition()).get("key");
-//		}
-//
-//		MetaDataSource data = new SQLMetaDataSource(app);
-//		try {
-//			data.open();
-//		} catch (Exception e1) {
-//			throw new RuntimeException(e1);
-//		}
-//
-//		Map<String, String> all = new HashMap<String, String>();
-//		all.put("key", "");
-//		all.put("value", getString(R.string.all));
-//
-//		spinnerBranch_data = data.getMeta(app.getLibrary().getIdent(),
-//				MetaDataSource.META_TYPE_BRANCH);
-//		spinnerBranch_data.add(0, all);
-//		cbZst.setAdapter(((OpacActivity) getActivity()).new MetaAdapter(
-//				getActivity(), spinnerBranch_data, R.layout.simple_spinner_item));
-//		if (!"".equals(zst_before)) {
-//			for (Map<String, String> row : spinnerBranch_data) {
-//				if (row.get("key").equals(zst_before)) {
-//					selected = i;
-//				}
-//				i++;
-//			}
-//			cbZst.setSelection(selected);
-//		}
-//
-//		spinnerHomeBranch_data = data.getMeta(app.getLibrary().getIdent(),
-//				MetaDataSource.META_TYPE_HOME_BRANCH);
-//		selected = 0;
-//		i = 0;
-//		if (!"".equals(zst_home_before)) {
-//			selection = zst_home_before;
-//		} else {
-//			if (sp.contains(OpacClient.PREF_HOME_BRANCH_PREFIX
-//					+ app.getAccount().getId()))
-//				selection = sp.getString(OpacClient.PREF_HOME_BRANCH_PREFIX
-//						+ app.getAccount().getId(), "");
-//			else {
-//				try {
-//					selection = app.getLibrary().getData()
-//							.getString("homebranch");
-//				} catch (JSONException e) {
-//					selection = "";
-//				}
-//			}
-//		}
-//
-//		for (Map<String, String> row : spinnerHomeBranch_data) {
-//			if (row.get("key").equals(selection)) {
-//				selected = i;
-//			}
-//			i++;
-//		}
-//		cbZstHome.setAdapter(((OpacActivity) getActivity()).new MetaAdapter(
-//				getActivity(), spinnerHomeBranch_data,
-//				R.layout.simple_spinner_item));
-//		cbZstHome.setSelection(selected);
-//
-//		spinnerCategory_data = data.getMeta(app.getLibrary().getIdent(),
-//				MetaDataSource.META_TYPE_CATEGORY);
-//		spinnerCategory_data.add(0, all);
-//		cbMg.setAdapter(((OpacActivity) getActivity()).new MetaAdapter(
-//				getActivity(), spinnerCategory_data,
-//				R.layout.simple_spinner_item));
-//		if (!"".equals(mg_before)) {
-//			selected = 0;
-//			i = 0;
-//			for (Map<String, String> row : spinnerBranch_data) {
-//				if (row.get("key").equals(zst_before)) {
-//					selected = i;
-//				}
-//				i++;
-//			}
-//			cbZst.setSelection(selected);
-//		}
-//
-//		if ((spinnerBranch_data.size() == 1 || !fields
-//				.contains(OpacApi.KEY_SEARCH_QUERY_BRANCH))
-//				&& (spinnerCategory_data.size() == 1 || !fields
-//						.contains(OpacApi.KEY_SEARCH_QUERY_CATEGORY))
-//				&& (spinnerHomeBranch_data.size() == 0 || !fields
-//						.contains(OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH))) {
-//			loadMetaData(app.getLibrary().getIdent(), true);
-//			loadingIndicators();
-//		}
-//
-//		data.close();
-	}
-
-	protected void loadingIndicators() {
-//		int visibility = metaDataLoading ? View.VISIBLE : View.GONE;
-//		view.findViewById(R.id.pbBranch).setVisibility(visibility);
-//		view.findViewById(R.id.pbHomeBranch).setVisibility(visibility);
-//		view.findViewById(R.id.pbMediengruppe).setVisibility(visibility);
-	}
-
 	@Override
 	public void accountSelected(Account account) {
 		advanced = sp.getBoolean("advanced", false);
 		new LoadSearchFieldsTask().execute();
 	}
 	
+	protected void progress(boolean on) {
+		view.findViewById(R.id.progressBar).setVisibility(on ? View.VISIBLE : View.GONE);
+		view.findViewById(R.id.scroll).setVisibility(on ? View.GONE : View.VISIBLE);
+	}
+	
 	protected class LoadSearchFieldsTask extends AsyncTask<Void, Void, List<SearchField>> {
 
+		@Override
+		protected void onPreExecute() {
+			progress(true);
+		}
+		
 		@Override
 		protected List<SearchField> doInBackground(Void... arg0) {
 			try {
@@ -359,11 +235,10 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		
 		@Override
 		protected void onPostExecute(List<SearchField> fields) {
+			progress(false);
 			if (fields != null) {
 				SearchFragment.this.fields = fields;
 				manageVisibility();
-				fillComboBoxes();
-				loadingIndicators();
 				if (savedState != null)
 					loadQuery(savedState);
 			}
@@ -405,7 +280,6 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
 	public void loadQuery(Bundle query) {
 		for (SearchField field:fields) {
-			Log.d("opacclient", "loading " + field.getId());
 			ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
 			if (field instanceof TextSearchField) {
 				EditText text;
