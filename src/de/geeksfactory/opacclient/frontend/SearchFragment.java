@@ -3,6 +3,7 @@ package de.geeksfactory.opacclient.frontend;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
@@ -11,6 +12,7 @@ import org.holoeverywhere.widget.EditText;
 import org.holoeverywhere.widget.Spinner;
 import org.holoeverywhere.widget.LinearLayout;
 import org.holoeverywhere.widget.TextView;
+
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,10 +26,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
+import de.geeksfactory.opacclient.barcode.BarcodeScanIntegrator.ScanResult;
 import de.geeksfactory.opacclient.frontend.OpacActivity.AccountSelectedListener;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.searchfields.BarcodeSearchField;
@@ -51,6 +55,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
 	protected boolean advanced = false;
 	protected List<SearchField> fields;
+	
+	protected String barcodeScanningField;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,14 +84,6 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		// ((Spinner) SearchActivity.this.findViewById(R.id.cbOrder))
 		// .setAdapter(order_adapter);
 		// }
-
-//TODO:		ImageView ivBarcode = (ImageView) view.findViewById(R.id.ivBarcode);
-//		ivBarcode.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View arg0) {
-//				mCallback.scanBarcode();
-//			}
-//		});
 
 		return view;
 	}
@@ -161,7 +159,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		rlSimpleSearch.setVisibility(View.GONE);
 		tvSearchAdvHeader.setVisibility(View.GONE);
 		
-		for (SearchField field:fields) {
+		for (final SearchField field:fields) {
 			if (field.isAdvanced() && !advanced)
 				continue;
 			View v = null;
@@ -187,7 +185,15 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 				TextView title = (TextView) v.findViewById(R.id.title);
 				title.setText(bcSearchField.getDisplayName());
 				EditText edittext = (EditText) v.findViewById(R.id.edittext);
-				edittext.setHint(bcSearchField.getHint());
+				edittext.setHint(bcSearchField.getHint());				
+				ImageView ivBarcode = (ImageView) v.findViewById(R.id.ivBarcode);
+				ivBarcode.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View arg0) {
+						barcodeScanningField = field.getId();
+						mCallback.scanBarcode();
+					}
+				});
 				//TODO: Implementation for half-width search fields
 			} else if (field instanceof DropdownSearchField) {
 				DropdownSearchField ddSearchField = (DropdownSearchField) field;
@@ -353,6 +359,15 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		savedState = OpacClient.mapToBundle(saveQuery());
 		outState.putBundle("query", savedState);
 		super.onSaveInstanceState(outState);
+	}
+
+	public void barcodeScanned(ScanResult scanResult) {
+		if (barcodeScanningField != null) {
+			ViewGroup v = (ViewGroup) view.findViewWithTag(barcodeScanningField);
+			EditText text = (EditText) v.findViewById(R.id.edittext);
+			text.setText(scanResult.getContents());
+			barcodeScanningField = null;
+		}
 	}
 
 }

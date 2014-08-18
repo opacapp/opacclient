@@ -193,7 +193,7 @@ public class MainActivity extends OpacActivity implements
 		super.onActivityResult(requestCode, resultCode, idata);
 
 		//TODO: Rewrite this for the new SearchField implementation
-/*		// Barcode
+		// Barcode
 		BarcodeScanIntegrator.ScanResult scanResult = BarcodeScanIntegrator
 				.parseActivityResult(requestCode, resultCode, idata);
 		if (resultCode != RESULT_CANCELED && scanResult != null) {
@@ -201,44 +201,17 @@ public class MainActivity extends OpacActivity implements
 				return;
 			if (scanResult.getContents().length() < 3)
 				return;
-
-			// Try to determine whether it is an ISBN number or something
-			// library internal
-			String target_field = null;
-			if (scanResult.getFormatName() != null) {
-				if (scanResult.getFormatName().equals("EAN_13")
-						&& scanResult.getContents().startsWith("97")) {
-					target_field = OpacApi.KEY_SEARCH_QUERY_ISBN;
-				} else if (scanResult.getFormatName().equals("CODE_39")) {
-					target_field = OpacApi.KEY_SEARCH_QUERY_BARCODE;
-				}
-			}
-			if (target_field == null) {
-				if (scanResult.getContents().length() == 13
-						&& (scanResult.getContents().startsWith("978") || scanResult
-								.getContents().startsWith("979"))) {
-					target_field = OpacApi.KEY_SEARCH_QUERY_ISBN;
-				} else if (scanResult.getContents().length() == 10
-						&& is_valid_isbn10(scanResult.getContents()
-								.toCharArray())) {
-					target_field = OpacApi.KEY_SEARCH_QUERY_ISBN;
-				} else {
-					target_field = OpacApi.KEY_SEARCH_QUERY_BARCODE;
-				}
-			}
-			Set<String> fields = new HashSet<String>(Arrays.asList(app.getApi()
-					.getSearchFields()));
-			if (target_field.equals(OpacApi.KEY_SEARCH_QUERY_BARCODE)
-					&& !fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE)) {
-				Toast.makeText(this, R.string.barcode_internal_not_supported,
-						Toast.LENGTH_LONG).show();
+			
+			// We won't try to determine which type of barcode was
+			// scanned anymore because of the new SearchField
+			// implementation
+			if (fragment instanceof SearchFragment) {
+				((SearchFragment) fragment).barcodeScanned(scanResult);
 			} else {
-				Map<String, String> query = new HashMap<String, String>();
-				query.put(target_field, scanResult.getContents());
-				app.startSearch(this, query);
+				// this should not happen, but do nothing here just in case
 			}
 
-		} */
+		}
 	}
 
 	@Override
