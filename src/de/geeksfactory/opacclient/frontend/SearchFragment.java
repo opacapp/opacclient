@@ -57,14 +57,6 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 	protected boolean advanced = false;
 	protected List<SearchField> fields;
 
-	protected List<Map<String, String>> spinnerCategory_data;
-	protected List<Map<String, String>> spinnerBranch_data;
-	protected List<Map<String, String>> spinnerHomeBranch_data;
-
-	protected long last_meta_try = 0;
-	public boolean metaDataLoading = false;
-	protected LoadMetaDataTask lmdt;
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -347,80 +339,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 //		view.findViewById(R.id.pbMediengruppe).setVisibility(visibility);
 	}
 
-	public void loadMetaData(String lib) {
-		loadMetaData(lib, false);
-	}
-
-	public void loadMetaData(String lib, boolean force) {
-		if (metaDataLoading)
-			return;
-		if (System.currentTimeMillis() - last_meta_try < 3600) {
-			return;
-		}
-		last_meta_try = System.currentTimeMillis();
-		MetaDataSource data = new SQLMetaDataSource(getActivity());
-		try {
-			data.open();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		boolean fetch = !data.hasMeta(lib);
-		data.close();
-		if (fetch || force) {
-			metaDataLoading = true;
-			lmdt = new LoadMetaDataTask();
-			lmdt.execute(getActivity().getApplication(), lib);
-		}
-	}
-
-	public class LoadMetaDataTask extends OpacTask<Boolean> {
-		private boolean success = true;
-		private long account;
-
-		@Override
-		protected Boolean doInBackground(Object... arg0) {
-			super.doInBackground(arg0);
-
-			String lib = (String) arg0[1];
-			account = app.getAccount().getId();
-
-			try {
-				if (lib.equals(app.getLibrary(lib).getIdent())) {
-					app.getNewApi(app.getLibrary(lib)).start();
-				} else {
-					app.getApi().start();
-				}
-				success = true;
-			} catch (java.net.UnknownHostException e) {
-				success = false;
-			} catch (java.net.SocketException e) {
-				success = false;
-			} catch (InterruptedIOException e) {
-				success = false;
-			} catch (Exception e) {
-				ACRA.getErrorReporter().handleException(e);
-				success = false;
-			}
-			return success;
-		}
-
-		@Override
-		protected void onPostExecute(Boolean result) {
-			if (getActivity() == null)
-				return;
-
-			if (account == app.getAccount().getId()) {
-				metaDataLoading = false;
-				loadingIndicators();
-				if (success)
-					fillComboBoxes();
-			}
-		}
-	}
-
 	@Override
 	public void accountSelected(Account account) {
-		metaDataLoading = false;
 		advanced = sp.getBoolean("advanced", false);
 		new LoadSearchFieldsTask().execute();
 	}
