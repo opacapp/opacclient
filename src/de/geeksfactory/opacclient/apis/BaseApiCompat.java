@@ -21,15 +21,20 @@ public abstract class BaseApiCompat extends BaseApi implements OpacApi {
 	@Override
 	public List<SearchField> getSearchFields(MetaDataSource metadata, Library library) throws OpacErrorException {
 		try {
-			start();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		try {
 			metadata.open();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		if (!metadata.hasMeta(library.getIdent())) {
+			try {
+				start();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if (!metadata.hasMeta(library.getIdent()))
+			throw new OpacErrorException("Fehler beim Laden der Suchfelder");
 				
 		Map<String, String> all = new HashMap<String, String>();
 		all.put("key", "");
