@@ -102,25 +102,30 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 	}
 
 	public void clear() {
-//		TODO: rewrite for new SearchField implementation
-//		((EditText) view.findViewById(R.id.etSimpleSearch)).setText("");
-//		((EditText) view.findViewById(R.id.etTitel)).setText("");
-//		((EditText) view.findViewById(R.id.etVerfasser)).setText("");
-//		((EditText) view.findViewById(R.id.etSchlagA)).setText("");
-//		((EditText) view.findViewById(R.id.etSchlagB)).setText("");
-//		((EditText) view.findViewById(R.id.etBarcode)).setText("");
-//		((EditText) view.findViewById(R.id.etISBN)).setText("");
-//		((EditText) view.findViewById(R.id.etJahr)).setText("");
-//		((EditText) view.findViewById(R.id.etJahrBis)).setText("");
-//		((EditText) view.findViewById(R.id.etJahrVon)).setText("");
-//		((EditText) view.findViewById(R.id.etSystematik)).setText("");
-//		((EditText) view.findViewById(R.id.etInteressenkreis)).setText("");
-//		((EditText) view.findViewById(R.id.etVerlag)).setText("");
-//		((CheckBox) view.findViewById(R.id.cbDigital)).setChecked(false);
-//		((CheckBox) view.findViewById(R.id.cbAvailable)).setChecked(false);
-//		((Spinner) view.findViewById(R.id.cbBranch)).setSelection(0);
-//		((Spinner) view.findViewById(R.id.cbHomeBranch)).setSelection(0);
-//		((Spinner) view.findViewById(R.id.cbMediengruppe)).setSelection(0);
+		for (SearchField field:fields) {
+			if (field.isAdvanced() && !advanced)
+				continue;
+			
+			ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
+			if (field instanceof TextSearchField) {
+				EditText text;
+				if (((TextSearchField) field).isFreeSearch()) {
+					text = (EditText) view.findViewById(R.id.etSimpleSearch);
+				} else {
+					text = (EditText) v.findViewById(R.id.edittext);				
+				}
+				text.setText("");
+			} else if (field instanceof BarcodeSearchField) {
+				EditText text = (EditText) v.findViewById(R.id.edittext);
+				text.setText("");
+			} else if (field instanceof DropdownSearchField) {
+				Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
+				spinner.setSelection(0);
+			} else if (field instanceof CheckboxSearchField) {
+				CheckBox checkbox = (CheckBox) v.findViewById(R.id.checkbox);
+				checkbox.setChecked(false);
+			}
+		}
 	}
 
 	protected void manageVisibility() {
