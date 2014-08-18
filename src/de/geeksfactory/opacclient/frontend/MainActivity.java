@@ -3,16 +3,8 @@ package de.geeksfactory.opacclient.frontend;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.holoeverywhere.app.Fragment;
-import org.holoeverywhere.widget.Toast;
-
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -26,12 +18,9 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
-import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.barcode.BarcodeScanIntegrator;
 import de.geeksfactory.opacclient.objects.Account;
-import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
-import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 
 public class MainActivity extends OpacActivity implements
 		SearchFragment.Callback, StarredFragment.Callback,
