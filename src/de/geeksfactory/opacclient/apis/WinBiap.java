@@ -44,22 +44,57 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  *         before the hyphen, base64 decoded, added formatting) as seen in
  *         Unterföhring:
  * 
- *         cmd=5&amp; perform a search sC= c_0=1%% unknown m_0=1%% unknown
- *         f_0=2%% free search o_0=8%% contains v_0=schule "schule" ++ c_1=1%%
- *         unknown m_1=1%% unknown f_1=3%% author o_1=8%% contains v_1=rowling
- *         "rowling" ++ c_2=1%% unknown m_2=1%% unknown f_2=12%% title o_2=8%%
- *         contains v_2=potter "potter" ++ c_3=1%% unknown m_3=1%% unknown
- *         f_3=34%% year o_3=6%% newer or equal to v_3=2000 "2000" ++ c_4=1%%
- *         unknown m_4=1%% unknown f_4=34%% year o_4=4%% older or equal to
- *         v_4=2014 "2014" ++ c_5=1%% unknown m_5=1%% unknown f_5=42%% media
- *         category o_5=1%% is equal to v_5=3 "Kinder- und Jugendbücher" ++
- *         c_6=1%% unknown m_6=1%% unknown f_6=48%% location o_6=1%% is equal to
- *         v_6=1 "Bibliothek Unterföhring" ++ c_7=3%% unknown (now changed to 3)
- *         - m_7=1%% unknown | This group has no f_7=45%% unknown |--- effect on
- *         the result o_7=1%% unknown | and can be left out v_7=5|4|101|102
- *         unknown -
- * 
- *         &amp;Sort=Autor Sort by Author (default)
+ *        cmd=5&amp;				perform a search
+ *         sC=
+ *         		c_0=1%%				unknown
+ *         		m_0=1%%				unknown
+ *         		f_0=2%%				free search
+ *         		o_0=8%%				contains
+ *         		v_0=schule			"schule"
+ *         ++
+ *         		c_1=1%%				unknown
+ *         		m_1=1%%				unknown
+ *         		f_1=3%%				author
+ *         		o_1=8%%				contains
+ *         		v_1=rowling			"rowling"
+ *         ++
+ *         		c_2=1%%				unknown
+ *         		m_2=1%%				unknown
+ *         		f_2=12%%			title
+ *         		o_2=8%%				contains
+ *         		v_2=potter			"potter"
+ *         ++
+ *         		c_3=1%%				unknown
+ *         		m_3=1%%				unknown
+ *         		f_3=34%%			year
+ *         		o_3=6%%				newer or equal to
+ *         		v_3=2000			"2000"
+ *         ++
+ *         		c_4=1%%				unknown
+ *         		m_4=1%%				unknown
+ *         		f_4=34%%			year
+ *         		o_4=4%%				older or equal to
+ *         		v_4=2014			"2014"
+ *         ++
+ *         		c_5=1%%				unknown
+ *         		m_5=1%%				unknown
+ *         		f_5=42%%			media category
+ *         		o_5=1%%				is equal to
+ *         		v_5=3				"Kinder- und Jugendbücher"
+ *         ++
+ *         		c_6=1%%				unknown
+ *         		m_6=1%%				unknown
+ *         		f_6=48%%			location
+ *         		o_6=1%%				is equal to
+ *         		v_6=1				"Bibliothek Unterföhring"
+ *         ++
+ *         		c_7=3%%				unknown (now changed to 3)	-
+ *         		m_7=1%%				unknown						|	  This group has no
+ *         		f_7=45%%			unknown						|---  effect on the result
+ *         		o_7=1%%				unknown						|	  and can be left out
+ *         		v_7=5|4|101|102		unknown						-
+ *         
+ *     &amp;Sort=Autor				Sort by Author (default)
  * 
  */
 
