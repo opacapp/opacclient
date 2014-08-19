@@ -126,7 +126,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		}
 	}
 
-	protected void manageVisibility() {
+	protected void buildSearchForm() {
 		if (app.getLibrary().getReplacedBy() != null
 				&& sp.getInt("annoyed", 0) < 5) {
 			view.findViewById(R.id.rlReplaced).setVisibility(View.VISIBLE);
@@ -251,7 +251,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 			progress(false);
 			if (fields != null) {
 				SearchFragment.this.fields = fields;
-				manageVisibility();
+				buildSearchForm();
 				if (savedState != null)
 					loadQuery(savedState);
 			}
