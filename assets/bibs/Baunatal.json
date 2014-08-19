@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Baunatal",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/baunatal",
+        "information": "http://www.baunatal.de/de/Sport-und-Freizeit/Stadtbuecherei/Uebersicht.php"
+    },
+    "geo": [
+        51.2537283,
+        9.4146
+    ],
+    "state": "Hessen",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

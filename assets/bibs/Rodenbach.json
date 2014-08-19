@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Rodenbach",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/rodenbach",
+        "information": "http://www.rodenbach.de/Leben-Wohnen/B%C3%BCcherei"
+    },
+    "geo": [
+        50.1313348,
+        9.0601196
+    ],
+    "state": "Hessen",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

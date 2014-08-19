@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Maxh\u00fctte-Haidhof",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/maxhuette",
+        "information": "http://www.maxhuette-haidhof.de/index.phtml?mNavID=1768.5&sNavID=1768.57"
+    },
+    "geo": [
+        49.2,
+        12.1
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

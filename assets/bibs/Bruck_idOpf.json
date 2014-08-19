@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Bruck i.d. Opf.",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/bruck",
+        "information": "http://www.marktbruck.de/leben-in-bruck/buecherei.html"
+    },
+    "geo": [
+        49.2463308,
+        12.3064839
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Marktb\u00fccherei"
+}

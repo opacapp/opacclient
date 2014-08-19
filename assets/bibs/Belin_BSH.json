@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Berlin",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/best-sabel",
+        "information": "http://www.bsb-hochschule.de/Service/Bibliothek/Allgemeine_Informationen_zur_Bibliothek.php"
+    },
+    "geo": [
+        52.52000659999999,
+        13.404954
+    ],
+    "state": "Berlin",
+    "support": "Katalogsuche",
+    "title": "Best-Sabel-Hochschule"
+}

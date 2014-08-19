@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Wertheim",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/wertheim",
+        "information": "http://www.stadtbuecherei-wertheim.de/"
+    },
+    "geo": [
+        49.7586035,
+        9.512851099999999
+    ],
+    "state": "Baden-W\u00fcrttemberg",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

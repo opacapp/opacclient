@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Eislingen",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/eislingen",
+        "information": "http://www.eislingen.de/de/Unsere-Stadt/Stadtb%C3%BCcherei"
+    },
+    "geo": [
+        48.693333,
+        9.706667
+    ],
+    "state": "Baden-W\u00fcrttemberg",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

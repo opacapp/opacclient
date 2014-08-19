@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Karlsfeld",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/karlsfeld",
+        "information": "http://www.karlsfeld.de/index.php?id=222,110"
+    },
+    "geo": [
+        48.2290733,
+        11.4744386
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

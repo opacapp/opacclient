@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Bad Vilbel",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/badvilbel",
+        "information": "http://www.kultur-bad-vilbel.de/stadtbibliothek/"
+    },
+    "geo": [
+        50.18233559999999,
+        8.739480499999999
+    ],
+    "state": "Hessen",
+    "support": "Katalogsuche",
+    "title": "Stadtbibliothek"
+}

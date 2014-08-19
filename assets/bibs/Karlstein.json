@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Karlstein a. Main",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/karlstein",
+        "information": "http://www.dettelbach.de/sites/gensite.asp?SID=cms140820140824258373224&Art=01720&C=2"
+    },
+    "geo": [
+        50.048889,
+        9.018333
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Gemeindebibliothek"
+}

@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Raubling",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/raubling",
+        "information": "http://www.raubling.de/leben-und-freizeit/gemeindebuecherei.html"
+    },
+    "geo": [
+        47.7908741,
+        12.1115921
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

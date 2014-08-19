@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Wimsheim",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/wimsheim",
+        "information": "http://www.wimsheim.de/index.cfm?fuseaction=gemeindeleben&rubrik=buecherei&id=4"
+    },
+    "geo": [
+        48.8505427,
+        8.8258827
+    ],
+    "state": "Baden-W\u00fcrttemberg",
+    "support": "Katalogsuche",
+    "title": "Ortsb\u00fccherei"
+}

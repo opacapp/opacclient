@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Friedberg",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/friedberg",
+        "information": "http://www.marktbruck.de/leben-in-bruck/buecherei.html"
+    },
+    "geo": [
+        48.3559766,
+        10.9865457
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

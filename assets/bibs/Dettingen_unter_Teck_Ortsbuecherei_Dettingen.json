@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Dettingen unter Teck",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/dettingen",
+        "information": "Die Halle verf\u00fcgt \u00fcber eine B\u00fchne und eine Empore. Eine moderne Beschallungsanlage und B\u00fchneneinrichtung sowie eine Gro\u00dfbildleinwand runden das Angebot ab. In der Halle finden 280 Personen (an Tischen) und 378 Personen bei reiner Bestuhlung Platz. Wird die Empore einbezogen erh\u00f6ht sich das Platzangebot auf 322 bzw. 450 Personen."
+    },
+    "geo": [
+        48.62015,
+        9.4516305
+    ],
+    "state": "Baden-W\u00fcrttemberg",
+    "support": "Katalogsuche",
+    "title": "Ortsb\u00fccherei Dettingen"
+}

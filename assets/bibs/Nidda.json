@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Nidda",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://time.nidda.de/webopac",
+        "information": "http://www.stadtbibliothek-nidda.de/"
+    },
+    "geo": [
+        50.4127451,
+        9.007875799999999
+    ],
+    "state": "Hessen",
+    "support": "Katalogsuche",
+    "title": "Stadtbibliothek"
+}

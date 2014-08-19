@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Hungen",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/hungenlich",
+        "information": "http://www.lich.de/kultur-bildung/stadtbibliothek/"
+    },
+    "geo": [
+        50.4754531,
+        8.8990998
+    ],
+    "state": "Hessen",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Allershausen",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/allershausen",
+        "information": "http://www.allershausen.de/dynasite.cfm?dsmid=49700"
+    },
+    "geo": [
+        48.43118459999999,
+        11.5970726
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

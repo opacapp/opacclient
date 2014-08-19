@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Olsberg",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.kdvz.de/olsberg",
+        "information": "http://www.olsberg.de/_rathaus/bildung/stadtbuecherei/"
+    },
+    "geo": [
+        51.3556649,
+        8.4801828
+    ],
+    "state": "Nordrhein-Westfalen",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

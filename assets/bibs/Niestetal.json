@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Niestetal",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/niestetal",
+        "information": "http://www.niestetal.de/Buecherei.110.0.html"
+    },
+    "geo": [
+        51.316667,
+        9.566666999999999
+    ],
+    "state": "Hessen",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

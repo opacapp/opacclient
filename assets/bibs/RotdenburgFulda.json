@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Rotenburg a. d. Fulda",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/mzhr",
+        "information": "http://www.hef-rof.de/landratsamt_und_kreisverwaltung/medienzentrum/"
+    },
+    "geo": [
+        50.996111,
+        9.727777999999999
+    ],
+    "state": "Hessen",
+    "support": "Katalogsuche",
+    "title": "Medienzentrum Hersfeld-Rotenburg"
+}

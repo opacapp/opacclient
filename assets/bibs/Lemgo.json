@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Lemgo",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.lemgo.de",
+        "information": "http://www.lemgo.net/80.html"
+    },
+    "geo": [
+        52.0266732,
+        8.9018625
+    ],
+    "state": "Nordrhein-Westfalen",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

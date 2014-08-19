@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Donauw\u00f6rth",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/donauwoerth",
+        "information": "http://www.donauwoerth.de/html/user_de_Stadtbibliothek+Startseite.html"
+    },
+    "geo": [
+        48.7185826,
+        10.7778041
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Stadtbibliothek"
+}

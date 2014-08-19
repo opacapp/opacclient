@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Hallbergmoos",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/hallbergmoos",
+        "information": "http://www.hallbergmoos.de/index.php?id=0,52"
+    },
+    "geo": [
+        48.3250947,
+        11.7432155
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

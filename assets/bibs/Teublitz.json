@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Teublitz",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/teublitz",
+        "information": "http://www.teublitz.de/index.php?id=0,57"
+    },
+    "geo": [
+        49.2206446,
+        12.0854957
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

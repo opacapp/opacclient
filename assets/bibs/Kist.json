@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Kist",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/kist",
+        "information": "http://www.gemeinde-kist.de/index.php?id=56"
+    },
+    "geo": [
+        49.74408210000001,
+        9.8417865
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

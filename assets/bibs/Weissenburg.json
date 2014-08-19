@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Wei\u00dfenburg",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/weissenburg",
+        "information": "http://www.weissenburg.de/p/d1.asp?artikel_id=1324"
+    },
+    "geo": [
+        49.0272089,
+        10.9710237
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Stadtbibliothek"
+}

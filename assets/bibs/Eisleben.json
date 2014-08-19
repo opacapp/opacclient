@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Eisleben",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://medien.mansfeldportal.de/index.aspx",
+        "information": "http://www.mansfeldportal.de/"
+    },
+    "geo": [
+        51.52742,
+        11.5498999
+    ],
+    "state": "Sachsen-Anhalt",
+    "support": "Katalogsuche",
+    "title": "Regionales Medienzentrum Eisleben"
+}
