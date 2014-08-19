@@ -2,10 +2,14 @@ package de.geeksfactory.opacclient.apis;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import android.util.Log;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.searchfields.BarcodeSearchField;
 import de.geeksfactory.opacclient.searchfields.CheckboxSearchField;
@@ -41,57 +45,76 @@ public abstract class BaseApiCompat extends BaseApi implements OpacApi {
 		all.put("value", "Alle");
 		
 		List<SearchField> searchFields = new ArrayList<SearchField>();
-		for (String field:getSearchFieldsCompat()) {
-			if (field.equals(KEY_SEARCH_QUERY_FREE)) {
-				searchFields.add(new TextSearchField(field, "", false, false, "Freie Suche", true, false));
-			} else if (field.equals(KEY_SEARCH_QUERY_TITLE)) {
-				searchFields.add(new TextSearchField(field, "Titel", false, false, "Stichwort", false, false));
-			} else if (field.equals(KEY_SEARCH_QUERY_AUTHOR)) {
-				searchFields.add(new TextSearchField(field, "Verfasser", false, false, "Nachname, Vorname", false, false));
-			} else if (field.equals(KEY_SEARCH_QUERY_DIGITAL)) {
-				searchFields.add(new CheckboxSearchField(field, "nur digitale Medien", false));
-			} else if (field.equals(KEY_SEARCH_QUERY_AVAILABLE)) {
-				searchFields.add(new CheckboxSearchField(field, "nur verfügbare Medien", false));
-			} else if (field.equals(KEY_SEARCH_QUERY_ISBN)) {
-				searchFields.add(new BarcodeSearchField(field, "Strichcode", false, false, "ISBN"));
-			} else if (field.equals(KEY_SEARCH_QUERY_BARCODE)) {
-				searchFields.add(new BarcodeSearchField(field, "Strichcode", false, false, "Buchungsnr."));
-			} else if (field.equals(KEY_SEARCH_QUERY_YEAR)) {
-				searchFields.add(new TextSearchField(field, "Jahr", false, false, "", false, true));
-			} else if (field.equals(KEY_SEARCH_QUERY_YEAR_RANGE_START)) {
-				searchFields.add(new TextSearchField(field, "Jahr", false, false, "von", false, true));
-			} else if (field.equals(KEY_SEARCH_QUERY_YEAR_RANGE_END)) {
-				searchFields.add(new TextSearchField(field, "Jahr", false, true, "bis", false, true));
-			} else if (field.equals(KEY_SEARCH_QUERY_BRANCH)) {
-				List<Map<String, String>> data = metadata.getMeta(
-						library.getIdent(), MetaDataSource.META_TYPE_BRANCH);
-				data.add(0, all);
-				searchFields.add(new DropdownSearchField(field, "Zweigstelle", false, data));
-			} else if (field.equals(KEY_SEARCH_QUERY_HOME_BRANCH)) {
-				List<Map<String, String>> data = metadata.getMeta(
-						library.getIdent(), MetaDataSource.META_TYPE_HOME_BRANCH);
-				data.add(0, all);
-				searchFields.add(new DropdownSearchField(field, "Aktuelle Zweigstelle („eigene Zweigstelle“)", false, data));
-			} else if (field.equals(KEY_SEARCH_QUERY_CATEGORY)) {
-				List<Map<String, String>> data = metadata.getMeta(
-						library.getIdent(), MetaDataSource.META_TYPE_CATEGORY);
-				data.add(0, all);
-				searchFields.add(new DropdownSearchField(field, "Mediengruppe", false, data));
-			} else if (field.equals(KEY_SEARCH_QUERY_PUBLISHER)) {
-				searchFields.add(new TextSearchField(field, "Verlag", false, false, "", false, false));
-			} else if (field.equals(KEY_SEARCH_QUERY_KEYWORDA)) {
-				searchFields.add(new TextSearchField(field, "Schlagwort", true, false, "", false, false));
-			} else if (field.equals(KEY_SEARCH_QUERY_KEYWORDB)) {
-				searchFields.add(new TextSearchField(field, "Schlagwort", true, true, "", false, false));
-			} else if (field.equals(KEY_SEARCH_QUERY_SYSTEM)) {
-				searchFields.add(new TextSearchField(field, "Systematik", true, false, "", false, false));
-			} else if (field.equals(KEY_SEARCH_QUERY_AUDIENCE)) {
-				searchFields.add(new TextSearchField(field, "Interessenkreis", true, false, "", false, false));		
-			} else if (field.equals(KEY_SEARCH_QUERY_LOCATION)) {
-				searchFields.add(new TextSearchField(field, "Ort", false, false, "", false, false));
-			} else if (field.equals(KEY_SEARCH_QUERY_ORDER)) {
-				//TODO: Implement this (was this even usable before?)
-			}
+		Set<String> fieldsCompat = new HashSet<String>(Arrays.asList(getSearchFieldsCompat()));
+		
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_FREE)) {
+			searchFields.add(new TextSearchField(KEY_SEARCH_QUERY_FREE, "", false, false, "Freie Suche", true, false));
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_TITLE)) {
+			searchFields.add(new TextSearchField(KEY_SEARCH_QUERY_TITLE, "Titel", false, false, "Stichwort", false, false));
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_AUTHOR)) {
+			searchFields.add(new TextSearchField(KEY_SEARCH_QUERY_AUTHOR, "Verfasser", false, false, "Nachname, Vorname", false, false));
+		} 
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_DIGITAL)) {
+			searchFields.add(new CheckboxSearchField(KEY_SEARCH_QUERY_DIGITAL, "nur digitale Medien", false));
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_AVAILABLE)) {
+			searchFields.add(new CheckboxSearchField(KEY_SEARCH_QUERY_AVAILABLE, "nur verfügbare Medien", false));
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_ISBN)) {
+			searchFields.add(new BarcodeSearchField(KEY_SEARCH_QUERY_ISBN, "Strichcode", false, false, "ISBN"));
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_BARCODE)) {
+			searchFields.add(new BarcodeSearchField(KEY_SEARCH_QUERY_BARCODE, "Strichcode", false, true, "Buchungsnr."));
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_YEAR)) {
+			searchFields.add(new TextSearchField(KEY_SEARCH_QUERY_YEAR, "Jahr", false, false, "", false, true));
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_YEAR_RANGE_START)) {
+			searchFields.add(new TextSearchField(KEY_SEARCH_QUERY_YEAR_RANGE_START, "Jahr", false, false, "von", false, true));
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_YEAR_RANGE_END)) {
+			searchFields.add(new TextSearchField(KEY_SEARCH_QUERY_YEAR_RANGE_END, "Jahr", false, true, "bis", false, true));
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_BRANCH)) {
+			List<Map<String, String>> data = metadata.getMeta(
+					library.getIdent(), MetaDataSource.META_TYPE_BRANCH);
+			data.add(0, all);
+			searchFields.add(new DropdownSearchField(KEY_SEARCH_QUERY_BRANCH, "Zweigstelle", false, data));
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_HOME_BRANCH)) {
+			List<Map<String, String>> data = metadata.getMeta(
+					library.getIdent(), MetaDataSource.META_TYPE_HOME_BRANCH);
+			data.add(0, all);
+			searchFields.add(new DropdownSearchField(KEY_SEARCH_QUERY_HOME_BRANCH, "Aktuelle Zweigstelle („eigene Zweigstelle“)", false, data));
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_CATEGORY)) {
+			List<Map<String, String>> data = metadata.getMeta(
+					library.getIdent(), MetaDataSource.META_TYPE_CATEGORY);
+			data.add(0, all);
+			searchFields.add(new DropdownSearchField(KEY_SEARCH_QUERY_CATEGORY, "Mediengruppe", false, data));
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_PUBLISHER)) {
+			searchFields.add(new TextSearchField(KEY_SEARCH_QUERY_PUBLISHER, "Verlag", false, false, "", false, false));
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_KEYWORDA)) {
+			searchFields.add(new TextSearchField(KEY_SEARCH_QUERY_KEYWORDA, "Schlagwort", true, false, "", false, false));
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_KEYWORDB)) {
+			searchFields.add(new TextSearchField(KEY_SEARCH_QUERY_KEYWORDB, "Schlagwort", true, true, "", false, false));
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_SYSTEM)) {
+			searchFields.add(new TextSearchField(KEY_SEARCH_QUERY_SYSTEM, "Systematik", true, false, "", false, false));
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_AUDIENCE)) {
+			searchFields.add(new TextSearchField(KEY_SEARCH_QUERY_AUDIENCE, "Interessenkreis", true, false, "", false, false));		
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_LOCATION)) {
+			searchFields.add(new TextSearchField(KEY_SEARCH_QUERY_LOCATION, "Ort", false, false, "", false, false));
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_ORDER)) {
+			//TODO: Implement this (was this even usable before?)
 		}
 		return searchFields;
 	}
