@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Nettersheim",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/nettersheim",
+        "information": "http://www.nettersheim.de/bildung-kultur/literaturhaus-mit-buecherei.html"
+    },
+    "geo": [
+        50.4920153,
+        6.628375699999999
+    ],
+    "state": "Nordrhein-Westfalen",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

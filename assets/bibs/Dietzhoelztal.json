@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Dietzh\u00f6lztal",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/dietzhoelztal",
+        "information": "http://www.dietzhoelztal.de/pages/rathaus/verwaltung.php"
+    },
+    "geo": [
+        50.833333,
+        8.316666999999999
+    ],
+    "state": "Hessen",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

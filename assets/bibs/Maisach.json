@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Maisach",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/maisach",
+        "information": "http://www.maisach.de/index.php?id=0,51"
+    },
+    "geo": [
+        48.2165127,
+        11.2572401
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

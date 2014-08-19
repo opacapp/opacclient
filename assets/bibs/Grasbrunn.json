@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Grasbrunn",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/grasbrunn",
+        "information": "http://www.grasbrunn.de/index.php?id=0,53"
+    },
+    "geo": [
+        48.0783377,
+        11.7445658
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Ismaning",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/ismaning",
+        "information": "http://bibliothek.ismaning.de/bibliothek"
+    },
+    "geo": [
+        48.2258973,
+        11.6742738
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Gemeindebibliothek"
+}

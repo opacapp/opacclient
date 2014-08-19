@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "G\u00fctersloh",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.stadtbibliothek-guetersloh.de/",
+        "information": "http://www.stadtbibliothek-guetersloh.de/"
+    },
+    "geo": [
+        51.9032375,
+        8.385753500000002
+    ],
+    "state": "Nordrhein-Westfalen",
+    "support": "Katalogsuche",
+    "title": "Stadtbibliothek"
+}

@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Karlstadt",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/karlstadt",
+        "information": "http://www.karlstadt.de/Sites/gensite.asp?SID=cms190820141716084232293&Art=0379"
+    },
+    "geo": [
+        49.9604785,
+        9.7734603
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Stadtbibliothek"
+}

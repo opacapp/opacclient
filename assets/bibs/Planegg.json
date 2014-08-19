@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Planegg",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/planegg",
+        "information": "http://www.planegg.de/buecherei/"
+    },
+    "geo": [
+        48.1068217,
+        11.4242653
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

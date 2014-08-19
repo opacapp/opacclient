@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Heroldsberg",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/heroldsberg",
+        "information": "http://www.heroldsberg.de/kultur-und-bildung/gemeindebuecherei"
+    },
+    "geo": [
+        49.5323509,
+        11.1540547
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei im B\u00fcrgerzentrum"
+}

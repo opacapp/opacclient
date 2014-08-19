@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Gr\u00e4felfing",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/graefelfing",
+        "information": "http://www.buecherei-graefelfing.de/rund-um-die-buecherei/startseite-aktuelles-veranstaltungen-fuer-erwachsene.html"
+    },
+    "geo": [
+        48.1227429,
+        11.4340549
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

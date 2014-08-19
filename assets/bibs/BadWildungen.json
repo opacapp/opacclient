@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Bad Wildungen",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/badwildungen",
+        "information": "http://www.bad-wildungen.de/stadtbuecherei.htm"
+    },
+    "geo": [
+        51.1178991,
+        9.1219134
+    ],
+    "state": "Hessen",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

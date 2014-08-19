@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Schwerte",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.kdvz.de/schwerte/",
+        "information": "http://www.kuwebe.de/html/bucherei_-_aktuelles.html"
+    },
+    "geo": [
+        51.4448257,
+        7.5668312
+    ],
+    "state": "Nordrhein-Westfalen",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

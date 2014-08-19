@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Dillenburg",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://www.winbiap.net/dillenburg",
+        "information": "http://www.stadtbuecherei-dillenburg.de/"
+    },
+    "geo": [
+        50.7452841,
+        8.2807631
+    ],
+    "state": "Hessen",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "K\u00fcnzell",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/kuenzell",
+        "information": "http://www.kuenzell.de/gemeindebuecherei-kuenzell-im-gemeindezentrum-kuenzell_4472.html"
+    },
+    "geo": [
+        50.5356779,
+        9.7200616
+    ],
+    "state": "Hessen",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

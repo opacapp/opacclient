@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "R\u00f6ttingen",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/roettingen",
+        "information": "http://www.roettingen.de/index.php?id=59"
+    },
+    "geo": [
+        49.5122355,
+        9.9718105
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

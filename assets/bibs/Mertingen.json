@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Mertingen",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/mertingen",
+        "information": "http://www.mertingen.de/index.php/mertingen/Rathaus-Verwaltung/Buecherei"
+    },
+    "geo": [
+        48.6571023,
+        10.8058245
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

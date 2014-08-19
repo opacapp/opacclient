@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Kirchheim u. Teck",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.kirchheim-teck.de",
+        "information": "http://www.kirchheim-teck.de/stadtbuecherei"
+    },
+    "geo": [
+        48.6471033,
+        9.4519635
+    ],
+    "state": "Baden-W\u00fcrttemberg",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

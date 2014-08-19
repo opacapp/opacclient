@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Lauingen (Donau)",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/lauingen",
+        "information": "http://www.lauingen.de/1524_DEU_HTML.php"
+    },
+    "geo": [
+        48.570324,
+        10.4300205
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

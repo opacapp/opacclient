@@ -3,7 +3,7 @@
     "city": "Gersthofen",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://gersthofen.webopac.winbiap.net/gersthofen",
+        "baseurl": "http://webopac.winbiap.net/gersthofen",
         "information": "http://www.stadt-gersthofen.de/seite/leben-in-gersthofen/stadtbibliothek.php"
     },
     "geo": [

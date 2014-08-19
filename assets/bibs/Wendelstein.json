@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Wendelstein",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/wendelstein",
+        "information": "http://www.wendelstein.de/Wendelstein/Bildung-und-Soziales/Gemeindebuecherei/E1285.htm"
+    },
+    "geo": [
+        49.3512935,
+        11.1546407
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

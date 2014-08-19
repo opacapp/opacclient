@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Zwingenberg",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/zwingenberg",
+        "information": "http://www.zwingenberg.de/d1/bildung-kultur/buecherei.php?navid=27"
+    },
+    "geo": [
+        49.7250007,
+        8.6109755
+    ],
+    "state": "Hessen",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

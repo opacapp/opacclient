@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Meschede",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.kdvz.de/meschede",
+        "information": "http://www.meschede.de/buecherei/startseite_buecherei.php"
+    },
+    "geo": [
+        51.3511245,
+        8.2851304
+    ],
+    "state": "Nordrhein-Westfalen",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

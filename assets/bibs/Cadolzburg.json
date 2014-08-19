@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Cadolzburg",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/cadolzburg",
+        "information": "http://www.cadolzburg.de/index.php?id=91"
+    },
+    "geo": [
+        49.4594708,
+        10.8582256
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Bibliothek Markt"
+}

@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Usingen",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/usingen",
+        "information": "http://www.usingen.de/jugend.php?aktion=buecherei&linkid=12"
+    },
+    "geo": [
+        50.3353122,
+        8.5320064
+    ],
+    "state": "Hessen",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

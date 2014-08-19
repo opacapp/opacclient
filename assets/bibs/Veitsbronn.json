@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Veitsbronn",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/veitsbronn",
+        "information": "http://www.veitsbronn.de/Buecherei/m2l1/Buecherei.html"
+    },
+    "geo": [
+        49.51201409999999,
+        10.8845724
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

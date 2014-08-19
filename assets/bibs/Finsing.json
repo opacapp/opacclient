@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Finsing",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/finsing",
+        "information": "http://www.finsing.de/index.php?id=0,57"
+    },
+    "geo": [
+        48.2177335,
+        11.8251997
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

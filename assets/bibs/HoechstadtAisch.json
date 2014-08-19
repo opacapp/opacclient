@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "H\u00f6chstadt a. d. Aisch",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/hoechstadt",
+        "information": "http://www.fortuna-kulturfabrik.de/de/stadtbuecherei.html"
+    },
+    "geo": [
+        49.7095692,
+        10.8128359
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Lippstadt",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.kdvz.de/lippstadt/",
+        "information": "http://www.lippstadt.de/kultur/buecherei/117260100000012474.php"
+    },
+    "geo": [
+        51.6712278,
+        8.3406481
+    ],
+    "state": "Nordrhein-Westfalen",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

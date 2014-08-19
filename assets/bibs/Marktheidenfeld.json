@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Marktheidenfeld",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/marktheidenfeld",
+        "information": "http://stadt-marktheidenfeld.de/page2/kultur-bildung/stadtbucherei"
+    },
+    "geo": [
+        49.8454938,
+        9.608814599999999
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

@@ -146,7 +146,7 @@
     <string name="star_noid">Funktion leider in dieser Bibliothek nicht verfügbar</string>
     <string name="star_wait">Bitte warten, bis die Details geladen wurden!</string>
     <string name="starred_list">Merkliste</string>
-    <string name="starred_welcome">Dies ist deine Merkliste. Du kannst in der Detailansicht von jedem Medium den Stern für „Merken“ auswählen, dann erscheint das Medium hier auf der Liste. Die Liste wird für jede Bibliothek, die du benutzt, seperat geführt.</string>
+    <string name="starred_welcome">Dies ist deine Merkliste. Du kannst in der Detailansicht von jedem Medium den Stern für „Merken“ auswählen, dann erscheint das Medium hier auf der Liste. Die Liste wird für jede Bibliothek, die du benutzt, separat geführt.</string>
     <string name="share">Teilen</string>
     <string name="share_wait">Bitte warten, bis die Details geladen wurden</string>
     <string name="share_notsupported">In dieser Bibliothek nicht unterstützt</string>

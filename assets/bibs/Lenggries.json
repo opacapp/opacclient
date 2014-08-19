@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Lenggries",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/lenggries",
+        "information": "http://www.lenggries.de/de/buecherei"
+    },
+    "geo": [
+        47.68256359999999,
+        11.5765039
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}
