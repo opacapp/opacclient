@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import de.geeksfactory.opacclient.OpacClient;
@@ -159,10 +160,11 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		rlSimpleSearch.setVisibility(View.GONE);
 		tvSearchAdvHeader.setVisibility(View.GONE);
 		
+		int i = 0;
 		for (final SearchField field:fields) {
 			if (field.isAdvanced() && !advanced)
 				continue;
-			View v = null;
+			ViewGroup v = null;
 			if (field instanceof TextSearchField) {
 				TextSearchField textSearchField = (TextSearchField) field;
 				if (textSearchField.isFreeSearch()) {
@@ -170,17 +172,24 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 					tvSearchAdvHeader.setVisibility(View.VISIBLE);
 					etSimpleSearch.setHint(textSearchField.getHint());
 				} else {
-					v = getLayoutInflater().inflate(
+					v = (ViewGroup) getLayoutInflater().inflate(
 							R.layout.searchfield_text, llFormFields, false);
 					TextView title = (TextView) v.findViewById(R.id.title);
 					title.setText(textSearchField.getDisplayName());
 					EditText edittext = (EditText) v.findViewById(R.id.edittext);
 					edittext.setHint(textSearchField.getHint());
-					//TODO: Implementation for half-width search fields
+					if (((TextSearchField) field).isHalfWidth() && i >= 1 &&
+							!(fields.get(i-1) instanceof TextSearchField &&
+									((TextSearchField) fields.get(i-1)).isFreeSearch())) {
+						ViewGroup before = (ViewGroup) view.findViewWithTag(fields.get(i-1).getId());
+						llFormFields.removeView(before);
+						v = makeHalfWidth(before, v);
+					}
+						
 				}
 			} else if (field instanceof BarcodeSearchField) {
 				BarcodeSearchField bcSearchField = (BarcodeSearchField) field;
-				v = getLayoutInflater().inflate(
+				v = (ViewGroup) getLayoutInflater().inflate(
 						R.layout.searchfield_barcode, llFormFields, false);
 				TextView title = (TextView) v.findViewById(R.id.title);
 				title.setText(bcSearchField.getDisplayName());
@@ -194,10 +203,16 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 						mCallback.scanBarcode();
 					}
 				});
-				//TODO: Implementation for half-width search fields
+				if (((BarcodeSearchField) field).isHalfWidth() && i >= 1 &&
+						!(fields.get(i-1) instanceof TextSearchField &&
+								((TextSearchField) fields.get(i-1)).isFreeSearch())) {
+					ViewGroup before = (ViewGroup) view.findViewWithTag(fields.get(i-1).getId());
+					llFormFields.removeView(before);
+					v = makeHalfWidth(before, v);
+				}
 			} else if (field instanceof DropdownSearchField) {
 				DropdownSearchField ddSearchField = (DropdownSearchField) field;
-				v = getLayoutInflater().inflate(
+				v = (ViewGroup) getLayoutInflater().inflate(
 						R.layout.searchfield_dropdown, llFormFields, false);
 				TextView title = (TextView) v.findViewById(R.id.title);
 				title.setText(ddSearchField.getDisplayName());
@@ -206,7 +221,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 						getActivity(), ddSearchField.getDropdownValues(), R.layout.simple_spinner_item));
 			} else if (field instanceof CheckboxSearchField) {
 				CheckboxSearchField cbSearchField = (CheckboxSearchField) field;
-				v = getLayoutInflater().inflate(
+				v = (ViewGroup) getLayoutInflater().inflate(
 						R.layout.searchfield_checkbox, llFormFields, false);
 				CheckBox checkbox = (CheckBox) v.findViewById(R.id.checkbox);
 				checkbox.setText(cbSearchField.getDisplayName());
@@ -215,7 +230,25 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 				v.setTag(field.getId());
 				llFormFields.addView(v);
 			}
+			i++;
 		}
+	}
+
+	private ViewGroup makeHalfWidth(ViewGroup left, ViewGroup right) {
+		LinearLayout ll = new LinearLayout(getActivity());
+		ll.setOrientation(LinearLayout.HORIZONTAL);
+		ll.addView(left);
+		ll.addView(right);
+		LinearLayout.LayoutParams params =
+				new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 0.5f);
+		left.setLayoutParams(params);
+		right.setLayoutParams(params);
+		
+		TextView title = (TextView) right.findViewById(R.id.title);
+		if (title != null) {
+			title.setText("");
+		}
+		return ll;
 	}
 
 	@Override
