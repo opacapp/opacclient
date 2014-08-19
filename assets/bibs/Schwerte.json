@@ -3,7 +3,7 @@
     "city": "Schwerte",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.kdvz.de/schwerte/",
+        "baseurl": "http://webopac.kdvz.de/schwerte",
         "information": "http://www.kuwebe.de/html/bucherei_-_aktuelles.html"
     },
     "geo": [
