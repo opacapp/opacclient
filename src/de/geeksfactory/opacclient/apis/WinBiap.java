@@ -147,7 +147,8 @@ public class WinBiap extends BaseApi implements OpacApi {
 			list.add(new BasicNameValuePair("Mode_" + index, "1"));
 			list.add(new BasicNameValuePair("Searchfield_" + index, searchkey));
 			list.add(new BasicNameValuePair("Searchoperator_" + index, type));
-			list.add(new BasicNameValuePair("Searchvalue_" + index, query.get(key)));
+			list.add(new BasicNameValuePair("Searchvalue_" + index, query
+					.get(key)));
 		} else {
 			list.add(new BasicNameValuePair("c_" + index, "1"));
 			list.add(new BasicNameValuePair("m_" + index, "1"));
@@ -184,14 +185,25 @@ public class WinBiap extends BaseApi implements OpacApi {
 	 * @param v
 	 *            "Value": The value that was input by the user
 	 */
-	protected int addParametersManual(String c, String m, String f, String o,
-			String v, List<List<NameValuePair>> params, int index) {
+	protected int addParametersManual(String combination, String mode,
+			String field, String operator, String value,
+			List<List<NameValuePair>> params, int index) {
 		List<NameValuePair> list = new ArrayList<NameValuePair>();
-		list.add(new BasicNameValuePair("c_" + index, c));
-		list.add(new BasicNameValuePair("m_" + index, m));
-		list.add(new BasicNameValuePair("f_" + index, f));
-		list.add(new BasicNameValuePair("o_" + index, o));
-		list.add(new BasicNameValuePair("v_" + index, v));
+		if (data.optBoolean("longParameterNames")) {
+			// A few libraries use longer names for the parameters
+			// (e.g. Hohen Neuendorf)
+			list.add(new BasicNameValuePair("Combination_" + index, combination));
+			list.add(new BasicNameValuePair("Mode_" + index, mode));
+			list.add(new BasicNameValuePair("Searchfield_" + index, field));
+			list.add(new BasicNameValuePair("Searchoperator_" + index, operator));
+			list.add(new BasicNameValuePair("Searchvalue_" + index, value));
+		} else {
+			list.add(new BasicNameValuePair("c_" + index, combination));
+			list.add(new BasicNameValuePair("m_" + index, mode));
+			list.add(new BasicNameValuePair("f_" + index, field));
+			list.add(new BasicNameValuePair("o_" + index, operator));
+			list.add(new BasicNameValuePair("v_" + index, value));
+		}
 		params.add(list);
 		return index + 1;
 	}
@@ -252,14 +264,16 @@ public class WinBiap extends BaseApi implements OpacApi {
 		// }
 
 		this.query = queryParams;
-		String encodedQueryParams = encode(queryParams, "=", "%%",
-				"++");
+		String encodedQueryParams = encode(queryParams, "=", "%%", "++");
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		start();
 		params.add(new BasicNameValuePair("cmd", "5"));
 		if (data.optBoolean("longParameterNames"))
-			params.add(new BasicNameValuePair("searchConditions", encodedQueryParams));
+			// A few libraries use longer names for the parameters
+			// (e.g. Hohen Neuendorf)
+			params.add(new BasicNameValuePair("searchConditions",
+					encodedQueryParams));
 		else
 			params.add(new BasicNameValuePair("sC", encodedQueryParams));
 		params.add(new BasicNameValuePair("Sort", "Autor"));
@@ -398,10 +412,21 @@ public class WinBiap extends BaseApi implements OpacApi {
 	@Override
 	public SearchRequestResult searchGetPage(int page) throws IOException,
 			NotReachableException, OpacErrorException {
+		String encodedQueryParams = encode(query, "=", "%%", "++");
+
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("cmd", "1"));
-		params.add(new BasicNameValuePair("sC", encode(query, "=", "%%", "++")));
-		params.add(new BasicNameValuePair("pI", String.valueOf(page - 1)));
+		if (data.optBoolean("longParameterNames")) {
+			// A few libraries use longer names for the parameters
+			// (e.g. Hohen Neuendorf)
+			params.add(new BasicNameValuePair("searchConditions",
+					encodedQueryParams));
+			params.add(new BasicNameValuePair("PageIndex", String
+					.valueOf(page - 1)));
+		} else {
+			params.add(new BasicNameValuePair("sC", encodedQueryParams));
+			params.add(new BasicNameValuePair("pI", String.valueOf(page - 1)));
+		}
 		params.add(new BasicNameValuePair("Sort", "Autor"));
 
 		String text = encode(params, "=", "&amp;");
