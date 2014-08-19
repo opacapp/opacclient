@@ -3,7 +3,7 @@
     "city": "Dillenburg",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://www.winbiap.net/dillenburg",
+        "baseurl": "http://webopac.winbiap.de/dillenburg",
         "information": "http://www.stadtbuecherei-dillenburg.de/"
     },
     "geo": [
