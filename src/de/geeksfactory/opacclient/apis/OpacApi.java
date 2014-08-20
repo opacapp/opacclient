@@ -222,7 +222,7 @@ public interface OpacApi {
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_AVAILABLE = "available";
-	
+
 	/**
 	 * Sort search results in a specific order
 	 * 
@@ -521,9 +521,9 @@ public interface OpacApi {
 			throws IOException, NotReachableException, OpacErrorException;
 
 	/**
-	 * If your {@link #search(Map)} implementation puts something different
-	 * from <code>null</code> into {@link SearchRequestResult#setFilters(List)},
-	 * this will be called to apply a filter to the last search request.
+	 * If your {@link #search(Map)} implementation puts something different from
+	 * <code>null</code> into {@link SearchRequestResult#setFilters(List)}, this
+	 * will be called to apply a filter to the last search request.
 	 * 
 	 * If your {@link #search(Map)} implementation does not set
 	 * {@link SearchRequestResult#setFilters(List)}, this wil never be called.
@@ -819,14 +819,16 @@ public interface OpacApi {
 	 * Returns a list of search criterias which are supported by this OPAC and
 	 * should be visible in the search activity. Values should be instances of
 	 * subclasses of the abstract SearchField class. This is called
-	 * asynchronously, so you can load webpages to get the search fields,
-	 * but you should save them to the metadata afterwards to make it faster.
+	 * asynchronously, so you can load webpages to get the search fields, but
+	 * you should save them to the metadata afterwards to make it faster.
 	 * 
 	 * @return List of allowed fields
-	 * @throws OpacErrorException 
+	 * @throws OpacErrorException
 	 * @see #search
 	 */
-	public List<SearchField> getSearchFields(MetaDataSource metadata, Library lib) throws OpacErrorException;
+	public List<SearchField> getSearchFields(MetaDataSource metadata,
+			Library lib) throws IOException, NotReachableException,
+			OpacErrorException;
 
 	/**
 	 * Returns whether – if account view is not supported in the given library –
