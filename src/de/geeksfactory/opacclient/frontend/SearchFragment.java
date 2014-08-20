@@ -306,8 +306,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		@Override
 		protected List<SearchField> doInBackground(Void... arg0) {
 			try {
-				List<SearchField> fields = app.getApi().getSearchFields(
-						new SQLMetaDataSource(app), app.getLibrary());
+				List<SearchField> fields = app.getApi().getSearchFields();
 				saveFields(fields);
 				return fields;
 			} catch (OpacErrorException e) {

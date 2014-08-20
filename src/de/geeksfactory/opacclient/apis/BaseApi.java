@@ -68,6 +68,8 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
 public abstract class BaseApi implements OpacApi {
 
 	protected DefaultHttpClient http_client;
+	protected MetaDataSource metadata;
+	protected Library library;
 
 	/**
 	 * Initializes HTTP client
@@ -75,6 +77,8 @@ public abstract class BaseApi implements OpacApi {
 	@Override
 	public void init(MetaDataSource metadata, Library library) {
 		http_client = HTTPClient.getNewHttpClient(library);
+		this.metadata = metadata;
+		this.library = library;
 	}
 
 	/**

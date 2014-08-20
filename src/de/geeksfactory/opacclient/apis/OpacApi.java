@@ -826,9 +826,8 @@ public interface OpacApi {
 	 * @throws OpacErrorException
 	 * @see #search
 	 */
-	public List<SearchField> getSearchFields(MetaDataSource metadata,
-			Library lib) throws IOException, NotReachableException,
-			OpacErrorException;
+	public List<SearchField> getSearchFields() throws IOException,
+			NotReachableException, OpacErrorException;
 
 	/**
 	 * Returns whether – if account view is not supported in the given library –

@@ -22,8 +22,7 @@ public abstract class BaseApiCompat extends BaseApi implements OpacApi {
 	public abstract String[] getSearchFieldsCompat();
 
 	@Override
-	public List<SearchField> getSearchFields(MetaDataSource metadata,
-			Library library) throws OpacErrorException {
+	public List<SearchField> getSearchFields() throws OpacErrorException {
 
 		List<SearchField> searchFields = new ArrayList<SearchField>();
 		Set<String> fieldsCompat = new HashSet<String>(
