@@ -12,6 +12,7 @@ import org.holoeverywhere.widget.EditText;
 import org.holoeverywhere.widget.Spinner;
 import org.holoeverywhere.widget.LinearLayout;
 import org.holoeverywhere.widget.TextView;
+import org.holoeverywhere.widget.Toast;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -272,9 +273,13 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		@Override
 		protected List<SearchField> doInBackground(Void... arg0) {
 			try {
-				return app.getApi().getSearchFields(new SQLMetaDataSource(app), app.getLibrary());
+				List<SearchField> fields = app.getApi().getSearchFields(new SQLMetaDataSource(app), app.getLibrary());
+				saveFields(fields);
+				return fields;
 			} catch (OpacErrorException e) {
 				e.printStackTrace();
+				if (getActivity() != null)
+					Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
 			}
 			return null;
 		}
@@ -289,6 +294,11 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 					loadQuery(savedState);
 			}
 		}
+		
+	}
+	
+
+	public void saveFields(List<SearchField> fields2) {
 		
 	}
 
