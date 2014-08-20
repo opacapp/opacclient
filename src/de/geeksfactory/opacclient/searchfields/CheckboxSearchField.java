@@ -1,5 +1,8 @@
 package de.geeksfactory.opacclient.searchfields;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class CheckboxSearchField extends SearchField {
 
 	/**
@@ -14,6 +17,13 @@ public class CheckboxSearchField extends SearchField {
 	 */
 	public CheckboxSearchField(String id, String displayName, boolean advanced) {
 		super(id, displayName, advanced);
+	}
+	
+	@Override
+	public JSONObject toJSON() throws JSONException {
+		JSONObject json = super.toJSON();
+		json.put("type", "checkbox");
+		return json;
 	}
 
 }

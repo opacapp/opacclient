@@ -3,6 +3,10 @@ package de.geeksfactory.opacclient.searchfields;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class DropdownSearchField extends SearchField {
 
 	protected List<Map<String, String>> dropdownValues;
@@ -40,6 +44,20 @@ public class DropdownSearchField extends SearchField {
 	 */
 	public void setDropdownValues(List<Map<String, String>> dropdownValues) {
 		this.dropdownValues = dropdownValues;
+	}
+	
+	@Override
+	public JSONObject toJSON() throws JSONException {
+		JSONObject json = super.toJSON();
+		json.put("type", "dropdown");
+		JSONArray values = new JSONArray();
+		for (Map<String, String> map:dropdownValues) {
+			JSONObject value = new JSONObject();
+			value.put("key", map.get("key"));
+			value.put("value", map.get("value"));
+		}
+		json.put("dropdownValues", values);
+		return json;
 	}
 
 }

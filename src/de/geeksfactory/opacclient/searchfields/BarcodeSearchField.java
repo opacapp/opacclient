@@ -1,5 +1,8 @@
 package de.geeksfactory.opacclient.searchfields;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class BarcodeSearchField extends SearchField {
 	protected String hint;
 	protected boolean halfWidth;
@@ -53,5 +56,14 @@ public class BarcodeSearchField extends SearchField {
 	 */
 	public void setHalfWidth(boolean halfWidth) {
 		this.halfWidth = halfWidth;
+	}
+	
+	@Override
+	public JSONObject toJSON() throws JSONException {
+		JSONObject json = super.toJSON();
+		json.put("type", "barcode");
+		json.put("hint", hint);
+		json.put("halfWidth", halfWidth);
+		return json;
 	}
 }

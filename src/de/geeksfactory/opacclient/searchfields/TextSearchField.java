@@ -1,5 +1,8 @@
 package de.geeksfactory.opacclient.searchfields;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class TextSearchField extends SearchField {
 	protected String hint;
 	protected boolean freeSearch;
@@ -93,5 +96,16 @@ public class TextSearchField extends SearchField {
 	 */
 	public void setHalfWidth(boolean halfWidth) {
 		this.halfWidth = halfWidth;
+	}
+
+	@Override
+	public JSONObject toJSON() throws JSONException {
+		JSONObject json = super.toJSON();
+		json.put("type", "text");
+		json.put("hint", hint);
+		json.put("freeSearch", freeSearch);
+		json.put("number", number);
+		json.put("halfWidth", halfWidth);
+		return json;
 	}
 }

@@ -1,5 +1,14 @@
 package de.geeksfactory.opacclient.searchfields;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public abstract class SearchField {
 	protected String id;
 	protected String displayName;
@@ -49,10 +58,56 @@ public abstract class SearchField {
 	}
 
 	/**
-	 * @param advanced the advanced to set
+	 * @param advanced
+	 *            the advanced to set
 	 */
 	public void setAdvanced(boolean advanced) {
 		this.advanced = advanced;
+	}
+
+	public JSONObject toJSON() throws JSONException {
+		JSONObject json = new JSONObject();
+		json.put("id", id);
+		json.put("displayName", displayName);
+		json.put("advanced", advanced);
+		return json;
+	}
+
+	public static SearchField fromJSON(JSONObject json) throws JSONException {
+		String id = json.getString("id");
+		String type = json.getString("type");
+		String displayName = json.getString("displayName");
+		boolean advanced = json.getBoolean("advanced");
+
+		SearchField field = null;
+		if (type.equals("text")) {
+			String hint = json.getString("hint");
+			boolean freeSearch = json.getBoolean("freeSearch");
+			boolean number = json.getBoolean("number");
+			boolean halfWidth = json.getBoolean("halfWidth");
+			field = new TextSearchField(id, displayName, advanced, halfWidth,
+					hint, freeSearch, number);
+		} else if (type.equals("barcode")) {
+			String hint = json.getString("hint");
+			boolean halfWidth = json.getBoolean("halfWidth");
+			field = new BarcodeSearchField(id, displayName, advanced,
+					halfWidth, hint);
+		} else if (type.equals("checkbox")) {
+			field = new CheckboxSearchField(id, displayName, advanced);
+		} else if (type.equals("dropbown")) {
+			List<Map<String, String>> dropdownValues = new ArrayList<Map<String, String>>();
+			JSONArray array = json.getJSONArray("dropdownValues");
+			for (int i = 0; i < array.length(); i++) {
+				JSONObject value = array.getJSONObject(i);
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("key", value.getString("key"));
+				map.put("value", value.getString("value"));
+				dropdownValues.add(map);
+			}
+			field = new DropdownSearchField(id, displayName, advanced,
+					dropdownValues);
+		}
+		return field;
 	}
 
 }
