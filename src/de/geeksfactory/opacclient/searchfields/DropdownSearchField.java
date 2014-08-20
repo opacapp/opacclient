@@ -55,6 +55,7 @@ public class DropdownSearchField extends SearchField {
 			JSONObject value = new JSONObject();
 			value.put("key", map.get("key"));
 			value.put("value", map.get("value"));
+			values.put(value);
 		}
 		json.put("dropdownValues", values);
 		return json;
