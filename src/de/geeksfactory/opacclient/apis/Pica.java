@@ -887,7 +887,7 @@ public class Pica extends BaseApi implements OpacApi {
 		assert (trs > 0);
 		for (int i = 0; i < trs; i++) {
 			Element tr = copytrs.get(i);
-			if (tr.select("td").size() == 8) { // According to HTML code from Bug report
+			if (tr.children().size() == 8) { // According to HTML code from Bug report
 											   // (TU Darmstadt)
 				Map<String, String> e = new HashMap<String, String>();
 				//Check if there is a checkbox to prolong this item
