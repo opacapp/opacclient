@@ -24,6 +24,7 @@ public abstract class BaseApiCompat extends BaseApi implements OpacApi {
 	@Override
 	public List<SearchField> getSearchFields(MetaDataSource metadata,
 			Library library) throws OpacErrorException {
+
 		List<SearchField> searchFields = new ArrayList<SearchField>();
 		Set<String> fieldsCompat = new HashSet<String>(
 				Arrays.asList(getSearchFieldsCompat()));
@@ -34,8 +35,8 @@ public abstract class BaseApiCompat extends BaseApi implements OpacApi {
 			e.printStackTrace();
 		}
 		if (fieldsCompat.contains(KEY_SEARCH_QUERY_BRANCH)
-				|| fieldsCompat.contains(KEY_SEARCH_QUERY_HOME_BRANCH) || fieldsCompat
-				.contains(KEY_SEARCH_QUERY_CATEGORY)) {
+				|| fieldsCompat.contains(KEY_SEARCH_QUERY_HOME_BRANCH)
+				|| fieldsCompat.contains(KEY_SEARCH_QUERY_CATEGORY)) {
 			// only look for metadata if we need it
 			if (!metadata.hasMeta(library.getIdent())) {
 				metadata.close();
@@ -50,9 +51,11 @@ public abstract class BaseApiCompat extends BaseApi implements OpacApi {
 					e.printStackTrace();
 				}
 			}
-	
+
 			if (!metadata.hasMeta(library.getIdent()))
-				throw new OpacErrorException("Fehler beim Laden der Suchfelder");
+				throw new OpacErrorException(
+						"Es ist ein Fehler beim Laden der Suchfelder aufgetreten. "
+								+ "Bitte prüfen Sie Ihre Internetverbindung.");
 		}
 
 		Map<String, String> all = new HashMap<String, String>();

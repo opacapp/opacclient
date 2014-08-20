@@ -1,5 +1,6 @@
 package de.geeksfactory.opacclient.frontend;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,12 +8,12 @@ import java.util.Map;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
+import org.holoeverywhere.widget.Button;
 import org.holoeverywhere.widget.CheckBox;
 import org.holoeverywhere.widget.EditText;
 import org.holoeverywhere.widget.Spinner;
 import org.holoeverywhere.widget.LinearLayout;
 import org.holoeverywhere.widget.TextView;
-import org.holoeverywhere.widget.Toast;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -30,6 +31,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
@@ -268,9 +270,13 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 	@Override
 	public void accountSelected(Account account) {
 		advanced = sp.getBoolean("advanced", false);
+
+		ViewGroup errorView = (ViewGroup) view.findViewById(R.id.error_view);
+		errorView.removeAllViews();
+		view.findViewById(R.id.scroll).setVisibility(View.VISIBLE);
+
 		SearchFieldDataSource dataSource = new JsonSearchFieldDataSource(app);
 		if (dataSource.hasSearchFields(app.getLibrary().getIdent())) {
-			Log.d("opac", "datasource has got cached data");
 			fields = dataSource.getSearchFields(app.getLibrary().getIdent());
 			buildSearchForm();
 			if (savedState != null)
@@ -290,6 +296,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 	protected class LoadSearchFieldsTask extends
 			AsyncTask<Void, Void, List<SearchField>> {
 
+		private Exception exception;
+
 		@Override
 		protected void onPreExecute() {
 			progress(true);
@@ -303,6 +311,13 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 				saveFields(fields);
 				return fields;
 			} catch (OpacErrorException e) {
+				exception = e;
+				e.printStackTrace();
+			} catch (NotReachableException e) {
+				exception = e;
+				e.printStackTrace();
+			} catch (IOException e) {
+				exception = e;
 				e.printStackTrace();
 			}
 			return null;
@@ -316,9 +331,45 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 				buildSearchForm();
 				if (savedState != null)
 					loadQuery(savedState);
+			} else {
+				if (exception != null
+						&& exception instanceof OpacErrorException)
+					showConnectivityError(exception.getMessage());
+				else
+					showConnectivityError();
 			}
 		}
 
+	}
+
+	public void showConnectivityError() {
+		showConnectivityError(null);
+	}
+
+	public void showConnectivityError(String description) {
+		if (getView() == null || getActivity() == null)
+			return;
+		final ViewGroup errorView = (ViewGroup) view
+				.findViewById(R.id.error_view);
+		errorView.removeAllViews();
+		View connError = getActivity().getLayoutInflater().inflate(
+				R.layout.error_connectivity, errorView);
+		((Button) connError.findViewById(R.id.btRetry))
+				.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						errorView.removeAllViews();
+						new LoadSearchFieldsTask().execute();
+					}
+				});
+
+		if (description != null) {
+			((TextView) connError.findViewById(R.id.tvErrBody))
+					.setText(description);
+		}
+
+		view.findViewById(R.id.scroll).setVisibility(View.GONE);
+		connError.setVisibility(View.VISIBLE);
 	}
 
 	public void saveFields(List<SearchField> fields) {

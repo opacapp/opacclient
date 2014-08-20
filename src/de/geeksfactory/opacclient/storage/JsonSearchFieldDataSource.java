@@ -16,25 +16,21 @@ import org.json.JSONObject;
 
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import android.content.Context;
-import android.util.Log;
 
 public class JsonSearchFieldDataSource implements SearchFieldDataSource {
 
 	private File dir;
-	private Context context;
 
 	private static final String KEY_FIELDS = "fields";
 	private static final String KEY_TIME = "time";
 
 	public JsonSearchFieldDataSource(Context context) {
-		this.context = context;
 		this.dir = new File(context.getFilesDir(), "fields");
 		dir.mkdirs();
 	}
 
 	@Override
 	public void saveSearchFields(String libraryId, List<SearchField> fields) {
-		Log.d("opac", "saving for " + libraryId);
 		JSONObject object = new JSONObject();
 		JSONArray array = new JSONArray();
 		try {
@@ -43,7 +39,6 @@ public class JsonSearchFieldDataSource implements SearchFieldDataSource {
 			}
 			object.put(KEY_FIELDS, array);
 			object.put(KEY_TIME, System.currentTimeMillis());
-			Log.d("opac", object.toString(2));
 			writeToJsonFile(libraryId, object);
 		} catch (JSONException e) {
 			throw new RuntimeException(e);
@@ -52,10 +47,8 @@ public class JsonSearchFieldDataSource implements SearchFieldDataSource {
 
 	@Override
 	public List<SearchField> getSearchFields(String libraryId) {
-		Log.d("opac", "reading " + libraryId);
 		try {
 			JSONObject json = readJsonFile(libraryId);
-			Log.d("opac", json.toString(2));
 			List<SearchField> list = new ArrayList<SearchField>();
 			JSONArray fields = json.getJSONArray(KEY_FIELDS);
 			for (int i = 0; i < fields.length(); i++) {
