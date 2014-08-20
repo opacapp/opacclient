@@ -350,11 +350,11 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 				query.put(field.getId(), text.getEditableText().toString());
 			} else if (field instanceof DropdownSearchField) {
 				Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
-				query.put(
-						field.getId(),
-						((DropdownSearchField) field).getDropdownValues()
-								.get(spinner.getSelectedItemPosition())
-								.get("key"));
+				if (spinner.getSelectedItemPosition() > 0)
+					query.put(field.getId(),
+							((DropdownSearchField) field).getDropdownValues()
+									.get(spinner.getSelectedItemPosition())
+									.get("key"));
 			} else if (field instanceof CheckboxSearchField) {
 				CheckBox checkbox = (CheckBox) v.findViewById(R.id.checkbox);
 				query.put(field.getId(), String.valueOf(checkbox.isChecked()));
