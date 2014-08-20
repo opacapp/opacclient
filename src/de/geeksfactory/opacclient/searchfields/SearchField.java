@@ -79,22 +79,21 @@ public abstract class SearchField {
 		String displayName = json.getString("displayName");
 		boolean advanced = json.getBoolean("advanced");
 
-		SearchField field = null;
 		if (type.equals("text")) {
 			String hint = json.getString("hint");
 			boolean freeSearch = json.getBoolean("freeSearch");
 			boolean number = json.getBoolean("number");
 			boolean halfWidth = json.getBoolean("halfWidth");
-			field = new TextSearchField(id, displayName, advanced, halfWidth,
+			return new TextSearchField(id, displayName, advanced, halfWidth,
 					hint, freeSearch, number);
 		} else if (type.equals("barcode")) {
 			String hint = json.getString("hint");
 			boolean halfWidth = json.getBoolean("halfWidth");
-			field = new BarcodeSearchField(id, displayName, advanced,
+			return new BarcodeSearchField(id, displayName, advanced,
 					halfWidth, hint);
 		} else if (type.equals("checkbox")) {
-			field = new CheckboxSearchField(id, displayName, advanced);
-		} else if (type.equals("dropbown")) {
+			return new CheckboxSearchField(id, displayName, advanced);
+		} else if (type.equals("dropdown")) {
 			List<Map<String, String>> dropdownValues = new ArrayList<Map<String, String>>();
 			JSONArray array = json.getJSONArray("dropdownValues");
 			for (int i = 0; i < array.length(); i++) {
@@ -104,10 +103,10 @@ public abstract class SearchField {
 				map.put("value", value.getString("value"));
 				dropdownValues.add(map);
 			}
-			field = new DropdownSearchField(id, displayName, advanced,
+			return new DropdownSearchField(id, displayName, advanced,
 					dropdownValues);
 		}
-		return field;
+		return null;
 	}
 
 }
