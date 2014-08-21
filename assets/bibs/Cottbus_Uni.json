@@ -1,0 +1,16 @@
+{
+    "api": "sisis",
+    "city": "Cottbus",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "https://katalog.ub.b-tu.de/InfoGuideClient.btusis",
+        "information": "http://www.tu-cottbus.de/einrichtungen/de/ikmz/servicebereiche/bibliothek/"
+    },
+    "geo": [
+        51.75631079999999,
+        14.3328679
+    ],
+    "state": "Brandenburg",
+    "support": "Katalogsuche und Konto",
+    "title": "Unibibliothek"
+}
