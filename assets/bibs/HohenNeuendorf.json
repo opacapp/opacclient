@@ -4,7 +4,8 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "http://bibliothek.hohen-neuendorf.de",
-        "information": "http://www.hohen-neuendorf.de/hnd/admin/bibliotheken.htm"
+        "information": "http://www.hohen-neuendorf.de/hnd/admin/bibliotheken.htm",
+		"longParameterNames": true
     },
     "geo": [
         52.6720645,

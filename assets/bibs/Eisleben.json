@@ -3,7 +3,7 @@
     "city": "Eisleben",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://medien.mansfeldportal.de/index.aspx",
+        "baseurl": "http://medien.mansfeldportal.de",
         "information": "http://www.mansfeldportal.de/"
     },
     "geo": [

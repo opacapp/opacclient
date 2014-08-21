@@ -3,7 +3,7 @@
     "city": "Bad Hersfeld",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.bad-hersfeld.de",
+        "baseurl": "http://bib.bad-hersfeld.de/webopac",
         "information": "http://www.badhersfeld-tourismus.de/freizeit-und-hobby/stadtbibliothek.html"
     },
     "geo": [

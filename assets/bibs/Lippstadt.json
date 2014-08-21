@@ -3,7 +3,7 @@
     "city": "Lippstadt",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.kdvz.de/lippstadt/",
+        "baseurl": "http://webopac.kdvz.de/lippstadt",
         "information": "http://www.lippstadt.de/kultur/buecherei/117260100000012474.php"
     },
     "geo": [

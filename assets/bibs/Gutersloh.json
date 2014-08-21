@@ -3,7 +3,7 @@
     "city": "G\u00fctersloh",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.stadtbibliothek-guetersloh.de/",
+        "baseurl": "http://webopac.stadtbibliothek-guetersloh.de",
         "information": "http://www.stadtbibliothek-guetersloh.de/"
     },
     "geo": [
