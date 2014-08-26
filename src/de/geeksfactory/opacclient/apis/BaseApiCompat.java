@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.searchfields.BarcodeSearchField;
 import de.geeksfactory.opacclient.searchfields.CheckboxSearchField;
 import de.geeksfactory.opacclient.searchfields.DropdownSearchField;

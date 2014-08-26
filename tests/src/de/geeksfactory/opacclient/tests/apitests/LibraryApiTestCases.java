@@ -7,7 +7,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +39,8 @@ import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
+import de.geeksfactory.opacclient.searchfields.SearchField;
+import de.geeksfactory.opacclient.searchfields.TextSearchField;
 import de.geeksfactory.opacclient.storage.DummyMetaDataSource;
 
 @RunWith(Parallelized.class)
@@ -98,15 +99,14 @@ public class LibraryApiTestCases extends TestCase {
 	}
 
 	@Test
-	public void testEmptySearch() throws NotReachableException, IOException {
+	public void testEmptySearch() throws NotReachableException, IOException,
+			OpacErrorException {
 		Map<String, String> query = new HashMap<String, String>();
-		if (Arrays.asList(api.getSearchFields()).contains(
-				OpacApi.KEY_SEARCH_QUERY_FREE))
-			query.put(OpacApi.KEY_SEARCH_QUERY_FREE,
-					"fasgeadstrehdaxydsfstrgdfjxnvgfhdtnbfgn");
-		else
-			query.put(OpacApi.KEY_SEARCH_QUERY_TITLE,
-					"fasgeadstrehdaxydsfstrgdfjxnvgfhdtnbfgn");
+		SearchField field = findFreeSearchOrTitle(api.getSearchFields());
+		if (field == null)
+			throw new OpacErrorException( //TODO: prevent this
+					"There is no free or title search field");
+		query.put(field.getId(), "fasgeadstrehdaxydsfstrgdfjxnvgfhdtnbfgn");
 		try {
 			SearchRequestResult res = api.search(query);
 			assertTrue(res.getTotal_result_count() == 0);
@@ -119,11 +119,11 @@ public class LibraryApiTestCases extends TestCase {
 	public void testSearchScrolling() throws NotReachableException,
 			IOException, OpacErrorException {
 		Map<String, String> query = new HashMap<String, String>();
-		if (Arrays.asList(api.getSearchFields()).contains(
-				OpacApi.KEY_SEARCH_QUERY_FREE))
-			query.put(OpacApi.KEY_SEARCH_QUERY_FREE, "harry");
-		else
-			query.put(OpacApi.KEY_SEARCH_QUERY_TITLE, "harry");
+		SearchField field = findFreeSearchOrTitle(api.getSearchFields());
+		if (field == null)
+			throw new OpacErrorException( //TODO: prevent this
+					"There is no free or title search field");
+		query.put(field.getId(), "harry");
 		SearchRequestResult res = api.search(query);
 		assertTrue(res.getResults().size() <= res.getTotal_result_count());
 		assertTrue(res.getResults().size() > 0);
@@ -154,7 +154,8 @@ public class LibraryApiTestCases extends TestCase {
 		assertTrue(detail.getDetails().size() > 0);
 		if (detail.isReservable())
 			assertTrue(detail.getReservation_info() != null);
-		if (result.getId() != null && detail.getId() != null && !detail.getId().equals("")) {
+		if (result.getId() != null && detail.getId() != null
+				&& !detail.getId().equals("")) {
 			assertTrue(result.getId().equals(detail.getId()));
 		}
 		if (detail.getTitle() != null) {
@@ -175,5 +176,26 @@ public class LibraryApiTestCases extends TestCase {
 	static String readFile(String path, Charset encoding) throws IOException {
 		byte[] encoded = Files.readAllBytes(Paths.get(path));
 		return encoding.decode(ByteBuffer.wrap(encoded)).toString();
+	}
+
+	/**
+	 * @param fields
+	 *            List of SearchFields
+	 * @return The first free search field from the list. If there is none, the
+	 *         first search field with ID "titel" and if that doesn't exist
+	 *         either, null
+	 */
+	private SearchField findFreeSearchOrTitle(List<SearchField> fields) {
+		for (SearchField field : fields) {
+			if (field instanceof TextSearchField
+					&& ((TextSearchField) field).isFreeSearch())
+				return field;
+		}
+		for (SearchField field : fields) {
+			if (field instanceof TextSearchField
+					&& field.getId().equals(OpacApi.KEY_SEARCH_QUERY_TITLE))
+				return field;
+		}
+		return null;
 	}
 }

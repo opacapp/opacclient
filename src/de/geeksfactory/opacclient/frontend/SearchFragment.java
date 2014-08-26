@@ -509,6 +509,14 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
 	public void barcodeScanned(ScanResult scanResult) {
 		this.scanResult = scanResult;
+		if (barcodeScanningField != null) {
+			ViewGroup v = (ViewGroup) view
+					.findViewWithTag(barcodeScanningField);
+			EditText text = (EditText) v.findViewById(R.id.edittext);
+			text.setText(scanResult.getContents());
+			barcodeScanningField = null;
+			scanResult = null;
+		}
 	}
 
 }
