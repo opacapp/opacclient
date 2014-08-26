@@ -63,6 +63,11 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 	protected List<SearchField> fields;
 
 	protected String barcodeScanningField;
+	protected ScanResult scanResult;
+	
+	public SearchFragment() {
+		
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -99,9 +104,18 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		if (!(app.getLibrary() == null)) {
 			accountSelected(app.getAccount());
 		}
+	}
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
 		if (savedInstanceState != null
 				&& savedInstanceState.containsKey("query")) {
 			savedState = savedInstanceState.getBundle("query");
+		}
+		if (savedInstanceState != null
+				&& savedInstanceState.containsKey("barcodeScanningField")) {
+			barcodeScanningField = savedInstanceState.getString("barcodeScanningField");
 		}
 	}
 
@@ -447,6 +461,15 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 						.getId())));
 			}
 		}
+		
+		if (barcodeScanningField != null && scanResult != null) {
+			ViewGroup v = (ViewGroup) view
+					.findViewWithTag(barcodeScanningField);
+			EditText text = (EditText) v.findViewById(R.id.edittext);
+			text.setText(scanResult.getContents());
+			barcodeScanningField = null;
+			scanResult = null;
+		}
 	}
 
 	@Override
@@ -479,17 +502,13 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 	public void onSaveInstanceState(Bundle outState) {
 		savedState = OpacClient.mapToBundle(saveQuery());
 		outState.putBundle("query", savedState);
+		if (barcodeScanningField != null)
+			outState.putString("barcodeScanningField", barcodeScanningField);
 		super.onSaveInstanceState(outState);
 	}
 
 	public void barcodeScanned(ScanResult scanResult) {
-		if (barcodeScanningField != null) {
-			ViewGroup v = (ViewGroup) view
-					.findViewWithTag(barcodeScanningField);
-			EditText text = (EditText) v.findViewById(R.id.edittext);
-			text.setText(scanResult.getContents());
-			barcodeScanningField = null;
-		}
+		this.scanResult = scanResult;
 	}
 
 }
