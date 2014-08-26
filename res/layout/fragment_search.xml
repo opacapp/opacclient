@@ -111,6 +111,40 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >
                 </LinearLayout>
+                
+                <LinearLayout
+			        android:id="@+id/llExpand"
+			        android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:background="@drawable/list_selector_holo_light"
+			        android:clickable="true"
+			        android:focusable="true"
+			        android:padding="16dp" >
+			
+			        <ImageView
+			            android:id="@+id/ivExpandIcon"
+			            android:layout_width="wrap_content"
+			            android:contentDescription="@string/expand"
+			            android:layout_height="wrap_content"
+			            android:src="@drawable/ic_action_expand" />
+			
+			        <TextView
+			            android:id="@+id/tvExpandString"
+			            android:layout_width="0dp"
+			            android:layout_height="wrap_content"
+			            android:layout_gravity="center"
+			            android:layout_marginLeft="8dp"
+			            android:layout_weight="1"
+			            android:text="@string/expand" />
+			    </LinearLayout>
+                
+                <LinearLayout
+                    android:id="@+id/llAdvancedFields"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone" >
+                </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>

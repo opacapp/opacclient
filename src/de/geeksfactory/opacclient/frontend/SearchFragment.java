@@ -11,8 +11,8 @@ import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.widget.Button;
 import org.holoeverywhere.widget.CheckBox;
 import org.holoeverywhere.widget.EditText;
-import org.holoeverywhere.widget.Spinner;
 import org.holoeverywhere.widget.LinearLayout;
+import org.holoeverywhere.widget.Spinner;
 import org.holoeverywhere.widget.TextView;
 
 import android.content.ActivityNotFoundException;
@@ -29,8 +29,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
@@ -44,7 +46,6 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
-import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 import de.geeksfactory.opacclient.storage.SearchFieldDataSource;
 
 public class SearchFragment extends Fragment implements AccountSelectedListener {
@@ -64,9 +65,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
 	protected String barcodeScanningField;
 	protected ScanResult scanResult;
-	
+
 	public SearchFragment() {
-		
+
 	}
 
 	@Override
@@ -105,7 +106,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 			accountSelected(app.getAccount());
 		}
 	}
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -115,15 +116,13 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		}
 		if (savedInstanceState != null
 				&& savedInstanceState.containsKey("barcodeScanningField")) {
-			barcodeScanningField = savedInstanceState.getString("barcodeScanningField");
+			barcodeScanningField = savedInstanceState
+					.getString("barcodeScanningField");
 		}
 	}
 
 	public void clear() {
 		for (SearchField field : fields) {
-			if (field.isAdvanced() && !advanced)
-				continue;
-
 			ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
 			if (field instanceof TextSearchField) {
 				EditText text;
@@ -173,6 +172,19 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		LinearLayout llFormFields = (LinearLayout) view
 				.findViewById(R.id.llFormFields);
 		llFormFields.removeAllViews();
+		LinearLayout llAdvancedFields = (LinearLayout) view
+				.findViewById(R.id.llAdvancedFields);
+		llAdvancedFields.removeAllViews();
+
+		LinearLayout llExpand = (LinearLayout) view.findViewById(R.id.llExpand);
+		llExpand.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				setAdvanced(!advanced);
+			}
+
+		});
 
 		RelativeLayout rlSimpleSearch = (RelativeLayout) view
 				.findViewById(R.id.rlSimpleSearch);
@@ -185,8 +197,6 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
 		int i = 0;
 		for (final SearchField field : fields) {
-			if (field.isAdvanced() && !advanced)
-				continue;
 			ViewGroup v = null;
 			if (field instanceof TextSearchField) {
 				TextSearchField textSearchField = (TextSearchField) field;
@@ -209,6 +219,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 						ViewGroup before = (ViewGroup) view
 								.findViewWithTag(fields.get(i - 1).getId());
 						llFormFields.removeView(before);
+						llAdvancedFields.removeView(before);
 						v = makeHalfWidth(before, v);
 					}
 
@@ -237,6 +248,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 					ViewGroup before = (ViewGroup) view.findViewWithTag(fields
 							.get(i - 1).getId());
 					llFormFields.removeView(before);
+					llAdvancedFields.removeView(before);
 					v = makeHalfWidth(before, v);
 				}
 			} else if (field instanceof DropdownSearchField) {
@@ -258,9 +270,44 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 			}
 			if (v != null) {
 				v.setTag(field.getId());
-				llFormFields.addView(v);
+				if (field.isAdvanced())
+					llAdvancedFields.addView(v);
+				else
+					llFormFields.addView(v);
 			}
 			i++;
+		}
+	}
+
+	protected void setAdvanced(boolean advanced) {
+		this.advanced = advanced;
+		final ScrollView scroll = (ScrollView) view.findViewById(R.id.scroll);
+		final RelativeLayout rlOuter = (RelativeLayout) view
+				.findViewById(R.id.rlOuter);
+		LinearLayout llAdvancedFields = (LinearLayout) view
+				.findViewById(R.id.llAdvancedFields);
+		if (advanced) {
+			((ImageView) view.findViewById(R.id.ivExpandIcon))
+					.setImageResource(R.drawable.ic_action_collapse);
+			((TextView) view.findViewById(R.id.tvExpandString))
+					.setText(R.string.collapse);
+			llAdvancedFields.setVisibility(View.VISIBLE);
+			rlOuter.getViewTreeObserver().addOnGlobalLayoutListener(
+					new OnGlobalLayoutListener() {
+						@Override
+						public void onGlobalLayout() {
+							rlOuter.getViewTreeObserver()
+									.removeGlobalOnLayoutListener(this);
+							scroll.smoothScrollTo(0, rlOuter.getHeight());
+						}
+					});
+		} else {
+			((ImageView) view.findViewById(R.id.ivExpandIcon))
+					.setImageResource(R.drawable.ic_action_expand);
+			((TextView) view.findViewById(R.id.tvExpandString))
+					.setText(R.string.expand);
+			llAdvancedFields.setVisibility(View.GONE);
+
 		}
 	}
 
@@ -283,8 +330,6 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
 	@Override
 	public void accountSelected(Account account) {
-		advanced = sp.getBoolean("advanced", false);
-
 		ViewGroup errorView = (ViewGroup) view.findViewById(R.id.error_view);
 		errorView.removeAllViews();
 		view.findViewById(R.id.scroll).setVisibility(View.VISIBLE);
@@ -298,6 +343,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		} else {
 			new LoadSearchFieldsTask().execute();
 		}
+		setAdvanced(false);
 	}
 
 	protected void progress(boolean on) {
@@ -397,8 +443,6 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 	public Map<String, String> saveQuery() {
 		Map<String, String> query = new HashMap<String, String>();
 		for (SearchField field : fields) {
-			if (field.isAdvanced() && !advanced)
-				continue;
 
 			ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
 			if (field instanceof TextSearchField) {
@@ -429,9 +473,6 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
 	public void loadQuery(Bundle query) {
 		for (SearchField field : fields) {
-			if (field.isAdvanced() && !advanced)
-				continue;
-
 			ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
 			if (field instanceof TextSearchField) {
 				EditText text;
@@ -461,7 +502,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 						.getId())));
 			}
 		}
-		
+
 		if (barcodeScanningField != null && scanResult != null) {
 			ViewGroup v = (ViewGroup) view
 					.findViewWithTag(barcodeScanningField);
