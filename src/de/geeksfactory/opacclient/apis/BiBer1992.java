@@ -320,6 +320,7 @@ public class BiBer1992 extends BaseApiCompat {
 
 	@Override
 	public void init(MetaDataSource metadata, Library lib) {
+		super.init(metadata, lib);
 		http_client = HTTPClient.getNewHttpClient(lib);
 
 		m_metadata = metadata;
