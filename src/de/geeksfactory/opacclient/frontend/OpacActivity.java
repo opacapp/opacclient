@@ -100,10 +100,12 @@ public abstract class OpacActivity extends Activity {
 
 		if (savedInstanceState != null) {
 			setTwoPane(savedInstanceState.getBoolean("twoPane"));
-			fragment = (Fragment) getSupportFragmentManager().getFragment(
-					savedInstanceState, "fragment");
-			getSupportFragmentManager().beginTransaction()
-				.replace(R.id.content_frame, fragment).commit();
+			if (savedInstanceState.containsKey("framgent")) {
+				fragment = (Fragment) getSupportFragmentManager().getFragment(
+						savedInstanceState, "fragment");
+				getSupportFragmentManager().beginTransaction()
+					.replace(R.id.content_frame, fragment).commit();
+			}
 		}
 	}
 
@@ -598,6 +600,7 @@ public abstract class OpacActivity extends Activity {
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putBoolean("twoPane", twoPane);
-		getSupportFragmentManager().putFragment(outState, "fragment", fragment);
+		if (fragment != null)
+			getSupportFragmentManager().putFragment(outState, "fragment", fragment);
 	}
 }

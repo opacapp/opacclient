@@ -9,6 +9,10 @@ public class TextSearchField extends SearchField {
 	protected boolean number;
 	protected boolean halfWidth;
 
+	public TextSearchField() {
+		
+	}
+	
 	/**
 	 * @param id
 	 *            ID of the search field, later given to your search() function

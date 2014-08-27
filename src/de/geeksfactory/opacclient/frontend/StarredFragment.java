@@ -98,15 +98,15 @@ public class StarredFragment extends Fragment implements
 				if (item.getMNr() == null || item.getMNr().equals("null")
 						|| item.getMNr().equals("")) {
 
-					SharedPreferences sp = PreferenceManager
-							.getDefaultSharedPreferences(getActivity());
-					Map<String, String> query = new HashMap<String, String>();
-					query.put(OpacApi.KEY_SEARCH_QUERY_TITLE, item.getTitle());
-					query.put(
-							OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH,
-							sp.getString(OpacClient.PREF_HOME_BRANCH_PREFIX
-									+ app.getAccount().getId(), null));
-					app.startSearch(getActivity(), query);
+//TODO:					SharedPreferences sp = PreferenceManager
+//							.getDefaultSharedPreferences(getActivity());
+//					Map<String, String> query = new HashMap<String, String>();
+//					query.put(OpacApi.KEY_SEARCH_QUERY_TITLE, item.getTitle());
+//					query.put(
+//							OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH,
+//							sp.getString(OpacClient.PREF_HOME_BRANCH_PREFIX
+//									+ app.getAccount().getId(), null));
+//					app.startSearch(getActivity(), query);
 				} else {
 					mCallback.showDetail(item.getMNr());
 				}

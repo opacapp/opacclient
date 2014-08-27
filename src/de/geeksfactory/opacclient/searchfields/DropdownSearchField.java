@@ -10,6 +10,10 @@ import org.json.JSONObject;
 public class DropdownSearchField extends SearchField {
 
 	protected List<Map<String, String>> dropdownValues;
+	
+	public DropdownSearchField() {
+		
+	}
 
 	/**
 	 * @return A new dropdown SearchField

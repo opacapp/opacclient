@@ -9,16 +9,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.geeksfactory.opacclient.NotReachableException;
+import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.searchfields.BarcodeSearchField;
 import de.geeksfactory.opacclient.searchfields.CheckboxSearchField;
 import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
+import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 public abstract class BaseApiCompat extends BaseApi implements OpacApi {
 
 	public abstract String[] getSearchFieldsCompat();
+	public abstract SearchRequestResult search(Map<String, String> query) throws IOException, NotReachableException, OpacErrorException;
+	
+	public SearchRequestResult search(List<SearchQuery> queryList)
+			throws NotReachableException, IOException, OpacErrorException {
+		Map<String, String> queryMap = new HashMap<String, String>();
+		for (SearchQuery query:queryList) {
+			queryMap.put(query.getKey(), query.getValue());
+		}
+		return search(queryMap);
+	}
 
 	@Override
 	public List<SearchField> getSearchFields() throws OpacErrorException {

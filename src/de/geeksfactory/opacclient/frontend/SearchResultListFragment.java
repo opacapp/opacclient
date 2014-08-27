@@ -1,6 +1,7 @@
 package de.geeksfactory.opacclient.frontend;
 
 import java.io.InterruptedIOException;
+import java.util.List;
 import java.util.Map;
 
 import org.acra.ACRA;
@@ -29,6 +30,7 @@ import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.frontend.ResultsAdapterEndless.OnLoadMoreListener;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
+import de.geeksfactory.opacclient.searchfields.SearchQuery;
 
 /**
  * A list fragment representing a list of SearchResults. This fragment also
@@ -125,7 +127,7 @@ public class SearchResultListFragment extends ListFragment {
 	public void performsearch() {
 		st = new SearchStartTask();
 		st.execute(app,
-				OpacClient.bundleToMap(getArguments().getBundle("query")));
+				OpacClient.bundleToQuery(getArguments().getBundle("query")));
 	}
 
 	@Override
@@ -330,7 +332,7 @@ public class SearchResultListFragment extends ListFragment {
 		@Override
 		protected SearchRequestResult doInBackground(Object... arg0) {
 			super.doInBackground(arg0);
-			Map<String, String> query = (Map<String, String>) arg0[1];
+			List<SearchQuery> query = (List<SearchQuery>) arg0[1];
 
 			try {
 				SearchRequestResult res = app.getApi().search(query);

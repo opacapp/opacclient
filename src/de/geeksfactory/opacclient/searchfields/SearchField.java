@@ -14,6 +14,15 @@ public abstract class SearchField {
 	protected String displayName;
 	protected boolean advanced;
 
+	/**
+	 * A JSONObject where you can save arbitrary data about this Search field
+	 */
+	protected JSONObject data;
+
+	public SearchField() {
+
+	}
+
 	public SearchField(String id, String displayName, boolean advanced) {
 		this.id = id;
 		this.displayName = displayName;
@@ -70,6 +79,8 @@ public abstract class SearchField {
 		json.put("id", id);
 		json.put("displayName", displayName);
 		json.put("advanced", advanced);
+		if (data != null)
+			json.put("data", data);
 		return json;
 	}
 
@@ -77,22 +88,26 @@ public abstract class SearchField {
 		String id = json.getString("id");
 		String type = json.getString("type");
 		String displayName = json.getString("displayName");
+		JSONObject data = null;
+		if (json.has("data"))
+			data = json.getJSONObject("data");
 		boolean advanced = json.getBoolean("advanced");
 
+		SearchField field = null;
 		if (type.equals("text")) {
 			String hint = json.getString("hint");
 			boolean freeSearch = json.getBoolean("freeSearch");
 			boolean number = json.getBoolean("number");
 			boolean halfWidth = json.getBoolean("halfWidth");
-			return new TextSearchField(id, displayName, advanced, halfWidth,
+			field = new TextSearchField(id, displayName, advanced, halfWidth,
 					hint, freeSearch, number);
 		} else if (type.equals("barcode")) {
 			String hint = json.getString("hint");
 			boolean halfWidth = json.getBoolean("halfWidth");
-			return new BarcodeSearchField(id, displayName, advanced,
-					halfWidth, hint);
+			field = new BarcodeSearchField(id, displayName, advanced, halfWidth,
+					hint);
 		} else if (type.equals("checkbox")) {
-			return new CheckboxSearchField(id, displayName, advanced);
+			field = new CheckboxSearchField(id, displayName, advanced);
 		} else if (type.equals("dropdown")) {
 			List<Map<String, String>> dropdownValues = new ArrayList<Map<String, String>>();
 			JSONArray array = json.getJSONArray("dropdownValues");
@@ -103,10 +118,27 @@ public abstract class SearchField {
 				map.put("value", value.getString("value"));
 				dropdownValues.add(map);
 			}
-			return new DropdownSearchField(id, displayName, advanced,
+			field = new DropdownSearchField(id, displayName, advanced,
 					dropdownValues);
 		}
-		return null;
+		if (field != null)
+			field.setData(data);
+		return field;
+	}
+
+	/**
+	 * @return the data
+	 */
+	public JSONObject getData() {
+		return data;
+	}
+
+	/**
+	 * @param data
+	 *            the data to set
+	 */
+	public void setData(JSONObject data) {
+		this.data = data;
 	}
 
 }

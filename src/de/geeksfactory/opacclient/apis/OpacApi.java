@@ -35,6 +35,7 @@ import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.searchfields.SearchField;
+import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
@@ -500,12 +501,9 @@ public interface OpacApi {
 	public void init(MetaDataSource metadata, Library library);
 
 	/**
-	 * Performs a catalogue search. The given <code>Map</code> contains the
+	 * Performs a catalogue search. The given <code>List<SearchQuery></code> contains the
 	 * search criteria. See documentation on <code>SearchResult</code> for
 	 * details.
-	 * 
-	 * The <code>Map</code> can contain any of the <code>KEY_SEARCH_*</code>
-	 * constants as keys.
 	 * 
 	 * This function is always called from a background thread, you can use
 	 * blocking network operations in it. See documentation on DetailledItem for
@@ -515,10 +513,11 @@ public interface OpacApi {
 	 *            see above
 	 * @return List of results and additional information, or result object with
 	 *         the error flag set to true.
+	 * @throws JSONException 
 	 * @see de.geeksfactory.opacclient.objects.SearchResult
 	 */
-	public SearchRequestResult search(Map<String, String> query)
-			throws IOException, NotReachableException, OpacErrorException;
+	public SearchRequestResult search(List<SearchQuery> query)
+			throws IOException, NotReachableException, OpacErrorException, JSONException;
 
 	/**
 	 * If your {@link #search(Map)} implementation puts something different from
@@ -824,10 +823,11 @@ public interface OpacApi {
 	 * 
 	 * @return List of allowed fields
 	 * @throws OpacErrorException
+	 * @throws JSONException 
 	 * @see #search
 	 */
 	public List<SearchField> getSearchFields() throws IOException,
-			NotReachableException, OpacErrorException;
+			NotReachableException, OpacErrorException, JSONException;
 
 	/**
 	 * Returns whether – if account view is not supported in the given library –

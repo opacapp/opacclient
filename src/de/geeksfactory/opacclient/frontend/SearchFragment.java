@@ -1,6 +1,7 @@
 package de.geeksfactory.opacclient.frontend;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import org.holoeverywhere.widget.EditText;
 import org.holoeverywhere.widget.LinearLayout;
 import org.holoeverywhere.widget.Spinner;
 import org.holoeverywhere.widget.TextView;
+import org.json.JSONException;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -44,6 +46,7 @@ import de.geeksfactory.opacclient.searchfields.BarcodeSearchField;
 import de.geeksfactory.opacclient.searchfields.CheckboxSearchField;
 import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
+import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
 import de.geeksfactory.opacclient.storage.SearchFieldDataSource;
@@ -378,6 +381,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 			} catch (IOException e) {
 				exception = e;
 				e.printStackTrace();
+			} catch (JSONException e) {
+				exception = e;
+				e.printStackTrace();
 			}
 			return null;
 		}
@@ -437,7 +443,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 	}
 
 	public void go() {
-		app.startSearch(getActivity(), saveQuery());
+		app.startSearch(getActivity(), saveSearchQuery());
 	}
 
 	public Map<String, String> saveQuery() {
@@ -466,6 +472,40 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 			} else if (field instanceof CheckboxSearchField) {
 				CheckBox checkbox = (CheckBox) v.findViewById(R.id.checkbox);
 				query.put(field.getId(), String.valueOf(checkbox.isChecked()));
+			}
+		}
+		return query;
+	}
+
+	public List<SearchQuery> saveSearchQuery() {
+		List<SearchQuery> query = new ArrayList<SearchQuery>();
+		for (SearchField field : fields) {
+
+			ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
+			if (field instanceof TextSearchField) {
+				EditText text;
+				if (((TextSearchField) field).isFreeSearch()) {
+					text = (EditText) view.findViewById(R.id.etSimpleSearch);
+				} else {
+					text = (EditText) v.findViewById(R.id.edittext);
+				}
+				query.add(new SearchQuery(field, text.getEditableText()
+						.toString()));
+			} else if (field instanceof BarcodeSearchField) {
+				EditText text = (EditText) v.findViewById(R.id.edittext);
+				query.add(new SearchQuery(field, text.getEditableText()
+						.toString()));
+			} else if (field instanceof DropdownSearchField) {
+				Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
+				if (spinner.getSelectedItemPosition() > 0)
+					query.add(new SearchQuery(field,
+							((DropdownSearchField) field).getDropdownValues()
+									.get(spinner.getSelectedItemPosition())
+									.get("key")));
+			} else if (field instanceof CheckboxSearchField) {
+				CheckBox checkbox = (CheckBox) v.findViewById(R.id.checkbox);
+				query.add(new SearchQuery(field, String.valueOf(checkbox
+						.isChecked())));
 			}
 		}
 		return query;
