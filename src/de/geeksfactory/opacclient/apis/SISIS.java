@@ -50,6 +50,7 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
+import android.util.Log;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult.Status;
 import de.geeksfactory.opacclient.objects.Account;
@@ -62,6 +63,10 @@ import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
+import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
+import de.geeksfactory.opacclient.searchfields.SearchField;
+import de.geeksfactory.opacclient.searchfields.SearchQuery;
+import de.geeksfactory.opacclient.searchfields.TextSearchField;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
@@ -71,7 +76,7 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  * Restrictions: Bookmarks are only constantly supported if the library uses the
  * BibTip extension.
  */
-public class SISIS extends BaseApiCompat implements OpacApi {
+public class SISIS extends BaseApi implements OpacApi {
 	protected String opac_url = "";
 	protected JSONObject data;
 	protected MetaDataSource metadata;
@@ -163,15 +168,56 @@ public class SISIS extends BaseApiCompat implements OpacApi {
 		defaulttypes.put("karte", MediaType.MAP);
 	}
 
-	@Override
-	public String[] getSearchFieldsCompat() {
-		return new String[] { KEY_SEARCH_QUERY_FREE, KEY_SEARCH_QUERY_TITLE,
-				KEY_SEARCH_QUERY_AUTHOR, KEY_SEARCH_QUERY_KEYWORDA,
-				KEY_SEARCH_QUERY_KEYWORDB, KEY_SEARCH_QUERY_HOME_BRANCH,
-				KEY_SEARCH_QUERY_BRANCH, KEY_SEARCH_QUERY_ISBN,
-				KEY_SEARCH_QUERY_YEAR, KEY_SEARCH_QUERY_SYSTEM,
-				KEY_SEARCH_QUERY_AUDIENCE, KEY_SEARCH_QUERY_PUBLISHER,
-				KEY_SEARCH_QUERY_CATEGORY };
+	public List<SearchField> getSearchFields() throws IOException, JSONException {
+		if (!initialised)
+			start();
+
+		String html = httpGet(opac_url
+				+ "/search.do?methodToCall=switchSearchPage&SearchType=2",
+				ENCODING);
+		Log.d("opac", html);
+		Document doc = Jsoup.parse(html);
+		List<SearchField> fields = new ArrayList<SearchField>();
+
+		Elements options = doc
+				.select("select[name=searchCategories[0]] option");
+		for (Element option : options) {
+			TextSearchField field = new TextSearchField();
+			field.setDisplayName(option.text());
+			field.setId(option.attr("value"));
+			field.setHint("");
+			fields.add(field);
+		}
+
+		for (Element dropdown : doc.select("#tab-content select")) {
+			parseDropdown(dropdown, fields, doc);
+		}
+
+		return fields;
+	}
+
+	private void parseDropdown(Element dropdownElement, List<SearchField> fields,
+			Document doc) throws JSONException {
+		Elements options = dropdownElement.select("option");
+		DropdownSearchField dropdown = new DropdownSearchField();
+		List<Map<String, String>> values = new ArrayList<Map<String, String>>();
+		if (dropdownElement.parent().select("input[type=hidden]").size() > 0) {
+			dropdown.setId(dropdownElement.parent().select("input[type=hidden]").attr("value"));
+			dropdown.setData(new JSONObject("{\"restriction\": true}"));
+		} else {
+			dropdown.setId(dropdownElement.attr("name"));
+			dropdown.setData(new JSONObject("{\"restriction\": false}"));
+		}
+		for (Element option : options) {
+			Map<String, String> value = new HashMap<String, String>();
+			value.put("key", option.attr("value"));
+			value.put("value", option.text());
+			values.add(value);
+		}
+		dropdown.setDropdownValues(values);
+		dropdown.setDisplayName(dropdownElement.parent().select("label")
+				.text());
+		fields.add(dropdown);
 	}
 
 	public void extract_meta(Document doc) {
@@ -206,8 +252,7 @@ public class SISIS extends BaseApiCompat implements OpacApi {
 			metadata.addMeta(MetaDataSource.META_TYPE_HOME_BRANCH,
 					library.getIdent(), meta[0], meta[1]);
 		}
-		
-		
+
 		Elements cat_opts = doc.select("#Medienart option");
 		for (int i = 0; i < cat_opts.size(); i++) {
 			Element opt = cat_opts.get(i);
@@ -295,47 +340,51 @@ public class SISIS extends BaseApiCompat implements OpacApi {
 	}
 
 	@Override
-	public SearchRequestResult search(Map<String, String> query)
-			throws IOException, NotReachableException, OpacErrorException {
+	public SearchRequestResult search(List<SearchQuery> query)
+			throws IOException, NotReachableException, OpacErrorException, JSONException {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-		if (query.containsKey("volume")) {
+/*		if (query.containsKey("volume")) {		//TODO: What is this for?
 			params.add(new BasicNameValuePair("methodToCall", "volumeSearch"));
 			params.add(new BasicNameValuePair("dbIdentifier", query
 					.get("dbIdentifier")));
 			params.add(new BasicNameValuePair("catKey", query.get("catKey")));
 			params.add(new BasicNameValuePair("periodical", "N"));
-		} else {
+		} else { */
 			int index = 0;
+			int restrictionIndex = 0;
 			start();
 
 			params.add(new BasicNameValuePair("methodToCall", "submit"));
 			params.add(new BasicNameValuePair("CSId", CSId));
 			params.add(new BasicNameValuePair("methodToCallParameter",
 					"submitSearch"));
-
-			index = addParameters(query, KEY_SEARCH_QUERY_FREE,
-					data.optString("field_FREE", "-1"), params, index);
-			index = addParameters(query, KEY_SEARCH_QUERY_TITLE,
-					data.optString("field_TITLE", "331"), params, index);
-			index = addParameters(query, KEY_SEARCH_QUERY_AUTHOR,
-					data.optString("field_AUTHOR", "100"), params, index);
-			index = addParameters(query, KEY_SEARCH_QUERY_ISBN,
-					data.optString("field_ISBN", "540"), params, index);
-			index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDA,
-					data.optString("field_KEYWORDA", "902"), params, index);
-			index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDB,
-					data.optString("field_KEYWORDB", "710"), params, index);
-			index = addParameters(query, KEY_SEARCH_QUERY_YEAR,
-					data.optString("field_YEAR", "425"), params, index);
-			index = addParameters(query, KEY_SEARCH_QUERY_PUBLISHER,
-					data.optString("field_PUBLISHER", "412"), params, index);
-			index = addParameters(query, KEY_SEARCH_QUERY_SYSTEM,
-					data.optString("field_SYSTEM", "700"), params, index);
-			index = addParameters(query, KEY_SEARCH_QUERY_AUDIENCE,
-					data.optString("field_AUDIENCE", "1001"), params, index);
-			index = addParameters(query, KEY_SEARCH_QUERY_LOCATION,
-					data.optString("field_LOCATION", "714"), params, index);
+			
+			for (SearchQuery entry:query) {
+				if (entry.getValue().equals(""))
+					continue;
+				if (entry.getSearchField() instanceof DropdownSearchField) {
+					JSONObject data = entry.getSearchField().getData();
+					if (data.getBoolean("restriction")) {
+						params.add(new BasicNameValuePair("searchRestrictionID[" + restrictionIndex + "]",
+								entry.getSearchField().getId()));
+						params.add(new BasicNameValuePair(
+								"searchRestrictionValue1[" + restrictionIndex + "]", entry.getValue()));
+						restrictionIndex ++;
+					} else {
+						params.add(new BasicNameValuePair(entry.getKey(),
+								entry.getValue()));
+					}
+				} else {
+					if (index != 0)
+						params.add(new BasicNameValuePair("combinationOperator[" + index
+								+ "]", "AND"));
+					params.add(new BasicNameValuePair("searchCategories[" + index + "]",
+							entry.getKey()));
+					params.add(new BasicNameValuePair("searchString[" + index + "]", entry.getValue()));
+					index ++;
+				}
+			}
 
 			if (index == 0) {
 				throw new OpacErrorException(
@@ -349,23 +398,7 @@ public class SISIS extends BaseApiCompat implements OpacApi {
 			params.add(new BasicNameValuePair("submitSearch", "Suchen"));
 			params.add(new BasicNameValuePair("callingPage", "searchParameters"));
 			params.add(new BasicNameValuePair("numberOfHits", "10"));
-
-			params.add(new BasicNameValuePair("selectedSearchBranchlib", query
-					.get(KEY_SEARCH_QUERY_BRANCH)));
-			if (query.get(KEY_SEARCH_QUERY_HOME_BRANCH) != null) {
-				if (!query.get(KEY_SEARCH_QUERY_HOME_BRANCH).equals(""))
-					params.add(new BasicNameValuePair("selectedViewBranchlib",
-							query.get(KEY_SEARCH_QUERY_HOME_BRANCH)));
-			}
-			if (query.get(KEY_SEARCH_QUERY_CATEGORY) != null) {
-				if (!query.get(KEY_SEARCH_QUERY_CATEGORY).equals("")) {
-					String id = data.optString("field_CATEGORY", "4");
-					params.add(new BasicNameValuePair("searchRestrictionID[0]", id));
-					params.add(new BasicNameValuePair("searchRestrictionValue1[0]",
-							query.get(KEY_SEARCH_QUERY_CATEGORY)));
-				}
-			}
-		}
+		//}
 
 		String html = httpGet(
 				opac_url + "/search.do?"
