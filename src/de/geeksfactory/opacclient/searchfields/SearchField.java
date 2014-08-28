@@ -92,6 +92,8 @@ public abstract class SearchField {
 		json.put("advanced", advanced);
 		if (data != null)
 			json.put("data", data);
+		if (meaning != null)
+			json.put("meaning", meaning.toString());
 		return json;
 	}
 
@@ -102,6 +104,9 @@ public abstract class SearchField {
 		JSONObject data = null;
 		if (json.has("data"))
 			data = json.getJSONObject("data");
+		Meaning meaning = null;
+		if (json.has("meaning"))
+			meaning = Meaning.valueOf(json.getString("meaning"));
 		boolean advanced = json.getBoolean("advanced");
 
 		SearchField field = null;
@@ -132,8 +137,10 @@ public abstract class SearchField {
 			field = new DropdownSearchField(id, displayName, advanced,
 					dropdownValues);
 		}
-		if (field != null)
+		if (field != null) {
 			field.setData(data);
+			field.setMeaning(meaning);
+		}
 		return field;
 	}
 
