@@ -55,5 +55,12 @@ public interface SearchFieldDataSource {
 	 * @return Timecode (like System.currentTimeMillis()) for when the data of
 	 *         this library was last updated
 	 */
-	public long getLastSeachFieldUpdateTime(String libraryId);
+	public long getLastSearchFieldUpdateTime(String libraryId);
+	
+	/**
+	 * @param libraryId
+	 *            The ID of the library (Library.getIdent())
+	 * @return Version code of the last app version that updated the search field for this library
+	 */
+	public int getLastSearchFieldUpdateVersion(String libraryId);
 }

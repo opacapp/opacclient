@@ -21,6 +21,7 @@ import org.json.JSONException;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -343,7 +344,17 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		view.findViewById(R.id.scroll).setVisibility(View.VISIBLE);
 
 		SearchFieldDataSource dataSource = new JsonSearchFieldDataSource(app);
-		if (dataSource.hasSearchFields(app.getLibrary().getIdent())) {
+		int versionCode = 0;
+		try {
+			versionCode = app.getPackageManager().getPackageInfo(
+					app.getPackageName(), 0).versionCode;
+		} catch (NameNotFoundException e) {
+			// should not happen
+			e.printStackTrace();
+		}
+		if (dataSource.hasSearchFields(app.getLibrary().getIdent())
+				&& dataSource.getLastSearchFieldUpdateVersion(app.getLibrary()
+						.getIdent()) == versionCode) {
 			fields = dataSource.getSearchFields(app.getLibrary().getIdent());
 			buildSearchForm();
 			if (savedState != null)

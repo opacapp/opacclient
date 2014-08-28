@@ -16,17 +16,21 @@ import org.json.JSONObject;
 
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import android.content.Context;
+import android.content.pm.PackageManager.NameNotFoundException;
 
 public class JsonSearchFieldDataSource implements SearchFieldDataSource {
 
 	private File dir;
+	private Context context;
 
 	private static final String KEY_FIELDS = "fields";
 	private static final String KEY_TIME = "time";
+	private static final String KEY_VERSION = "version";
 
 	public JsonSearchFieldDataSource(Context context) {
 		this.dir = new File(context.getFilesDir(), "fields");
 		dir.mkdirs();
+		this.context = context;
 	}
 
 	@Override
@@ -39,6 +43,15 @@ public class JsonSearchFieldDataSource implements SearchFieldDataSource {
 			}
 			object.put(KEY_FIELDS, array);
 			object.put(KEY_TIME, System.currentTimeMillis());
+			try {
+				object.put(
+						KEY_VERSION,
+						context.getPackageManager().getPackageInfo(
+								context.getPackageName(), 0).versionCode);
+			} catch (NameNotFoundException e) {
+				// should never happen
+				e.printStackTrace();
+			}
 			writeToJsonFile(libraryId, object);
 		} catch (JSONException e) {
 			throw new RuntimeException(e);
@@ -82,10 +95,23 @@ public class JsonSearchFieldDataSource implements SearchFieldDataSource {
 	}
 
 	@Override
-	public long getLastSeachFieldUpdateTime(String libraryId) {
+	public long getLastSearchFieldUpdateTime(String libraryId) {
 		try {
 			JSONObject json = readJsonFile(libraryId);
 			return json.getLong(KEY_TIME);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	@Override
+	public int getLastSearchFieldUpdateVersion(String libraryId) {
+		try {
+			JSONObject json = readJsonFile(libraryId);
+			return json.getInt(KEY_VERSION);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {
