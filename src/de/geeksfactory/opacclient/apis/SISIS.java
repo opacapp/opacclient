@@ -205,8 +205,7 @@ public class SISIS extends BaseApi implements OpacApi {
 			metadata.addMeta(MetaDataSource.META_TYPE_HOME_BRANCH,
 					library.getIdent(), meta[0], meta[1]);
 		}
-		
-		
+
 		Elements cat_opts = doc.select("#Medienart option");
 		for (int i = 0; i < cat_opts.size(); i++) {
 			Element opt = cat_opts.get(i);
@@ -359,9 +358,11 @@ public class SISIS extends BaseApi implements OpacApi {
 			if (query.get(KEY_SEARCH_QUERY_CATEGORY) != null) {
 				if (!query.get(KEY_SEARCH_QUERY_CATEGORY).equals("")) {
 					String id = data.optString("field_CATEGORY", "4");
-					params.add(new BasicNameValuePair("searchRestrictionID[0]", id));
-					params.add(new BasicNameValuePair("searchRestrictionValue1[0]",
-							query.get(KEY_SEARCH_QUERY_CATEGORY)));
+					params.add(new BasicNameValuePair("searchRestrictionID[0]",
+							id));
+					params.add(new BasicNameValuePair(
+							"searchRestrictionValue1[0]", query
+									.get(KEY_SEARCH_QUERY_CATEGORY)));
 				}
 			}
 		}
@@ -881,6 +882,11 @@ public class SISIS extends BaseApi implements OpacApi {
 					result.setId(key);
 					break;
 				}
+			}
+		}
+		for (Element link : doc3.select(".box-container a")) {
+			if (link.text().trim().equals("Download")) {
+				result.addDetail(new Detail("Download", link.absUrl("href")));
 			}
 		}
 
