@@ -290,6 +290,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		final ScrollView scroll = (ScrollView) view.findViewById(R.id.scroll);
 		final RelativeLayout rlOuter = (RelativeLayout) view
 				.findViewById(R.id.rlOuter);
+		final LinearLayout llExpand = (LinearLayout) view
+				.findViewById(R.id.llExpand);
 		LinearLayout llAdvancedFields = (LinearLayout) view
 				.findViewById(R.id.llAdvancedFields);
 		if (advanced) {
@@ -304,7 +306,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 						public void onGlobalLayout() {
 							rlOuter.getViewTreeObserver()
 									.removeGlobalOnLayoutListener(this);
-							scroll.smoothScrollTo(0, rlOuter.getHeight());
+							scroll.smoothScrollTo(0, llExpand.getTop());
 						}
 					});
 		} else {
@@ -380,7 +382,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 						fields.set(i, md.detectMeaning(fields.get(i)));
 					}
 					Collections.sort(fields, new SearchField.OrderComparator());
-				}			
+				}
 
 				saveFields(fields);
 				return fields;
