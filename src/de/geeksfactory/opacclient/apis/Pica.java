@@ -1005,6 +1005,13 @@ public class Pica extends BaseApi implements OpacApi {
 			field.setId(option.attr("value"));
 			field.setHint("");
 			field.setData(new JSONObject("{\"ADI\": false}"));
+			
+			Pattern pattern = Pattern.compile("\\[[A-Z]+\\]");
+			Matcher matcher = pattern.matcher(field.getDisplayName());
+			if (matcher.find()) {
+				field.getData().put("meaning", matcher.group());
+			}
+			
 			fields.add(field);
 		}
 

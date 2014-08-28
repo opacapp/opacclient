@@ -21,20 +21,15 @@
  */
 package de.geeksfactory.opacclient.frontend;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -52,7 +47,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
-import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.frontend.OpacActivity.AccountSelectedListener;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Starred;

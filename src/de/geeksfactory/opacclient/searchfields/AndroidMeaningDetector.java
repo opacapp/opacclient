@@ -1,7 +1,6 @@
 package de.geeksfactory.opacclient.searchfields;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -10,7 +9,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -85,29 +83,42 @@ public class AndroidMeaningDetector implements MeaningDetector {
 
 	@Override
 	public SearchField detectMeaning(SearchField field) {
-		for (Entry<String, String> entry : meanings.entrySet()) {
-			if (field.getDisplayName().contains(entry.getKey())) {
-				Meaning meaning = Meaning.valueOf(entry.getValue());
-				if (field instanceof TextSearchField && meaning == Meaning.FREE) {
-					((TextSearchField) field).setFreeSearch(true);
-					((TextSearchField) field).setHint(field.getDisplayName());
-				} else if (field instanceof TextSearchField
-						&& (meaning == Meaning.BARCODE || meaning == Meaning.ISBN)) {
-					field = new BarcodeSearchField(field.getId(),
-							field.getDisplayName(), field.isAdvanced(),
-							((TextSearchField) field).isHalfWidth(),
-							((TextSearchField) field).getHint());
-				} else if (meaning == Meaning.AUDIENCE
-						|| meaning == Meaning.SYSTEM
-						|| meaning == Meaning.KEYWORD
-						|| meaning == Meaning.PUBLISHER) {
-					field.setAdvanced(true);
-				}
-				field.setMeaning(meaning);
-				return field;
+		if (field.getData() != null && field.getData().has("meaning")) {
+			try {
+				String meaningData = field.getData().getString("meaning");	
+				String meaningName = meanings.get(meaningData);
+				if (meaningName != null)
+					return processMeaning(field, meaningName);
+			} catch (JSONException e) {
+				e.printStackTrace();
 			}
+		} else {
+			String meaningName = meanings.get(field.getDisplayName());
+			if (meaningName != null)
+				return processMeaning(field, meaningName);
 		}
 		field.setAdvanced(true);
+		return field;
+	}
+	
+	private SearchField processMeaning(SearchField field, String meaningName) {
+		Meaning meaning = Meaning.valueOf(meaningName);
+		if (field instanceof TextSearchField && meaning == Meaning.FREE) {
+			((TextSearchField) field).setFreeSearch(true);
+			((TextSearchField) field).setHint(field.getDisplayName());
+		} else if (field instanceof TextSearchField
+				&& (meaning == Meaning.BARCODE || meaning == Meaning.ISBN)) {
+			field = new BarcodeSearchField(field.getId(),
+					field.getDisplayName(), field.isAdvanced(),
+					((TextSearchField) field).isHalfWidth(),
+					((TextSearchField) field).getHint());
+		} else if (meaning == Meaning.AUDIENCE
+				|| meaning == Meaning.SYSTEM
+				|| meaning == Meaning.KEYWORD
+				|| meaning == Meaning.PUBLISHER) {
+			field.setAdvanced(true);
+		}
+		field.setMeaning(meaning);
 		return field;
 	}
 

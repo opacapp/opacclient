@@ -1,6 +1,6 @@
 {
 	"FREE": [
-		"Frei"
+		"Freie Suche"
 	],
 	"TITLE": [
 		"Titel"
@@ -21,7 +21,7 @@
 		"Barcode", "Buchungsnummer", "Buchungsnr", "Mediennummer"
 	],
 	"YEAR": [
-		"Jahr"
+		"Jahr", "Erscheinungsjahr"
 	],
 	"BRANCH": [
 		"Suche in Zweigstelle", "Zweigstelle ist gleich"
@@ -48,6 +48,6 @@
 		"Ort"
 	],
 	"ORDER": [
-		"Sortierung", "Reihenfolge"
+		"Sortierung", "Reihenfolge", "sortiert nach"
 	]
 }

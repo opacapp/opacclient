@@ -38,7 +38,9 @@ public abstract class SearchField {
 	}
 
 	/**
-	 * A JSONObject where you can save arbitrary data about this Search field
+	 * A JSONObject where you can save arbitrary data about this Search field.
+	 * If you add a "meaning" attribute, MeaningDetector will search for
+	 * that string in the meanings list instead of the displayName.
 	 */
 	protected JSONObject data;
 
