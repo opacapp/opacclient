@@ -15,6 +15,7 @@ import de.geeksfactory.opacclient.searchfields.BarcodeSearchField;
 import de.geeksfactory.opacclient.searchfields.CheckboxSearchField;
 import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
+import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
@@ -74,100 +75,142 @@ public abstract class BaseApiCompat extends BaseApi implements OpacApi {
 		all.put("value", "Alle");
 
 		if (fieldsCompat.contains(KEY_SEARCH_QUERY_FREE)) {
-			searchFields.add(new TextSearchField(KEY_SEARCH_QUERY_FREE, "",
-					false, false, "Freie Suche", true, false));
+			SearchField field = new TextSearchField(KEY_SEARCH_QUERY_FREE, "",
+					false, false, "Freie Suche", true, false);
+			field.setMeaning(Meaning.FREE);
+			searchFields.add(field);
 		}
 		if (fieldsCompat.contains(KEY_SEARCH_QUERY_TITLE)) {
-			searchFields.add(new TextSearchField(KEY_SEARCH_QUERY_TITLE,
-					"Titel", false, false, "Stichwort", false, false));
+			SearchField field = new TextSearchField(KEY_SEARCH_QUERY_TITLE,
+					"Titel", false, false, "Stichwort", false, false);
+			field.setMeaning(Meaning.TITLE);
+			searchFields.add(field);
 		}
 		if (fieldsCompat.contains(KEY_SEARCH_QUERY_AUTHOR)) {
-			searchFields.add(new TextSearchField(KEY_SEARCH_QUERY_AUTHOR,
+			SearchField field = new TextSearchField(KEY_SEARCH_QUERY_AUTHOR,
 					"Verfasser", false, false, "Nachname, Vorname", false,
-					false));
+					false);
+			field.setMeaning(Meaning.AUTHOR);
+			searchFields.add(field);
 		}
 		if (fieldsCompat.contains(KEY_SEARCH_QUERY_DIGITAL)) {
-			searchFields.add(new CheckboxSearchField(KEY_SEARCH_QUERY_DIGITAL,
-					"nur digitale Medien", false));
+			SearchField field = new CheckboxSearchField(KEY_SEARCH_QUERY_DIGITAL,
+					"nur digitale Medien", false);
+			field.setMeaning(Meaning.DIGITAL);
+			searchFields.add(field);
 		}
 		if (fieldsCompat.contains(KEY_SEARCH_QUERY_AVAILABLE)) {
-			searchFields
-					.add(new CheckboxSearchField(KEY_SEARCH_QUERY_AVAILABLE,
-							"nur verfügbare Medien", false));
+			SearchField field = new CheckboxSearchField(KEY_SEARCH_QUERY_AVAILABLE,
+							"nur verfügbare Medien", false);
+			field.setMeaning(Meaning.AVAILABLE);
+			searchFields.add(field);
 		}
 		if (fieldsCompat.contains(KEY_SEARCH_QUERY_ISBN)) {
-			searchFields.add(new BarcodeSearchField(KEY_SEARCH_QUERY_ISBN,
-					"Strichcode", false, false, "ISBN"));
+			SearchField field = new BarcodeSearchField(KEY_SEARCH_QUERY_ISBN,
+					"Strichcode", false, false, "ISBN");
+			field.setMeaning(Meaning.ISBN);
+			searchFields.add(field);
 		}
 		if (fieldsCompat.contains(KEY_SEARCH_QUERY_BARCODE)) {
-			searchFields.add(new BarcodeSearchField(KEY_SEARCH_QUERY_BARCODE,
-					"Strichcode", false, true, "Buchungsnr."));
+			SearchField field = new BarcodeSearchField(KEY_SEARCH_QUERY_BARCODE,
+					"Strichcode", false, true, "Buchungsnr.");
+			field.setMeaning(Meaning.BARCODE);
+			searchFields.add(field);
 		}
 		if (fieldsCompat.contains(KEY_SEARCH_QUERY_YEAR)) {
-			searchFields.add(new TextSearchField(KEY_SEARCH_QUERY_YEAR, "Jahr",
-					false, false, "", false, true));
+			SearchField field = new TextSearchField(KEY_SEARCH_QUERY_YEAR, "Jahr",
+					false, false, "", false, true);
+			field.setMeaning(Meaning.YEAR);
+			searchFields.add(field);
 		}
 		if (fieldsCompat.contains(KEY_SEARCH_QUERY_YEAR_RANGE_START)) {
-			searchFields.add(new TextSearchField(
+			SearchField field = new TextSearchField(
 					KEY_SEARCH_QUERY_YEAR_RANGE_START, "Jahr", false, false,
-					"von", false, true));
+					"von", false, true);
+			field.setMeaning(Meaning.YEAR);
+			searchFields.add(field);
 		}
 		if (fieldsCompat.contains(KEY_SEARCH_QUERY_YEAR_RANGE_END)) {
-			searchFields.add(new TextSearchField(
+			SearchField field = new TextSearchField(
 					KEY_SEARCH_QUERY_YEAR_RANGE_END, "Jahr", false, true,
-					"bis", false, true));
+					"bis", false, true);
+			field.setMeaning(Meaning.YEAR);
+			searchFields.add(field);
 		}
 		if (fieldsCompat.contains(KEY_SEARCH_QUERY_BRANCH)) {
 			List<Map<String, String>> data = metadata.getMeta(
 					library.getIdent(), MetaDataSource.META_TYPE_BRANCH);
 			data.add(0, all);
-			searchFields.add(new DropdownSearchField(KEY_SEARCH_QUERY_BRANCH,
-					"Zweigstelle", false, data));
+			SearchField field = new DropdownSearchField(KEY_SEARCH_QUERY_BRANCH,
+					"Zweigstelle", false, data);
+			field.setMeaning(Meaning.BRANCH);
+			searchFields.add(field);
 		}
 		if (fieldsCompat.contains(KEY_SEARCH_QUERY_HOME_BRANCH)) {
 			List<Map<String, String>> data = metadata.getMeta(
 					library.getIdent(), MetaDataSource.META_TYPE_HOME_BRANCH);
 			data.add(0, all);
-			searchFields
-					.add(new DropdownSearchField(KEY_SEARCH_QUERY_HOME_BRANCH,
+			SearchField field =
+					new DropdownSearchField(KEY_SEARCH_QUERY_HOME_BRANCH,
 							"Aktuelle Zweigstelle („eigene Zweigstelle“)",
-							false, data));
+							false, data);
+			field.setMeaning(Meaning.HOME_BRANCH);
+			searchFields.add(field);
 		}
 		if (fieldsCompat.contains(KEY_SEARCH_QUERY_CATEGORY)) {
 			List<Map<String, String>> data = metadata.getMeta(
 					library.getIdent(), MetaDataSource.META_TYPE_CATEGORY);
 			data.add(0, all);
-			searchFields.add(new DropdownSearchField(KEY_SEARCH_QUERY_CATEGORY,
-					"Mediengruppe", false, data));
+			SearchField field = new DropdownSearchField(KEY_SEARCH_QUERY_CATEGORY,
+					"Mediengruppe", false, data);
+			field.setMeaning(Meaning.CATEGORY);
+			searchFields.add(field);
 		}
 		if (fieldsCompat.contains(KEY_SEARCH_QUERY_PUBLISHER)) {
-			searchFields.add(new TextSearchField(KEY_SEARCH_QUERY_PUBLISHER,
-					"Verlag", false, false, "", false, false));
+			SearchField field = new TextSearchField(KEY_SEARCH_QUERY_PUBLISHER,
+					"Verlag", false, false, "", false, false);
+			field.setMeaning(Meaning.PUBLISHER);
+			searchFields.add(field);
 		}
 		if (fieldsCompat.contains(KEY_SEARCH_QUERY_KEYWORDA)) {
-			searchFields.add(new TextSearchField(KEY_SEARCH_QUERY_KEYWORDA,
-					"Schlagwort", true, false, "", false, false));
+			SearchField field = new TextSearchField(KEY_SEARCH_QUERY_KEYWORDA,
+					"Schlagwort", true, false, "", false, false);
+			field.setMeaning(Meaning.KEYWORD);
+			searchFields.add(field);
 		}
 		if (fieldsCompat.contains(KEY_SEARCH_QUERY_KEYWORDB)) {
-			searchFields.add(new TextSearchField(KEY_SEARCH_QUERY_KEYWORDB,
-					"Schlagwort", true, true, "", false, false));
+			SearchField field = new TextSearchField(KEY_SEARCH_QUERY_KEYWORDB,
+					"Schlagwort", true, true, "", false, false);
+			field.setMeaning(Meaning.KEYWORD);
+			searchFields.add(field);
 		}
 		if (fieldsCompat.contains(KEY_SEARCH_QUERY_SYSTEM)) {
-			searchFields.add(new TextSearchField(KEY_SEARCH_QUERY_SYSTEM,
-					"Systematik", true, false, "", false, false));
+			SearchField field = new TextSearchField(KEY_SEARCH_QUERY_SYSTEM,
+					"Systematik", true, false, "", false, false);
+			field.setMeaning(Meaning.SYSTEM);
+			searchFields.add(field);
 		}
 		if (fieldsCompat.contains(KEY_SEARCH_QUERY_AUDIENCE)) {
-			searchFields.add(new TextSearchField(KEY_SEARCH_QUERY_AUDIENCE,
-					"Interessenkreis", true, false, "", false, false));
+			SearchField field = new TextSearchField(KEY_SEARCH_QUERY_AUDIENCE,
+					"Interessenkreis", true, false, "", false, false);
+			field.setMeaning(Meaning.AUDIENCE);
+			searchFields.add(field);
 		}
 		if (fieldsCompat.contains(KEY_SEARCH_QUERY_LOCATION)) {
-			searchFields.add(new TextSearchField(KEY_SEARCH_QUERY_LOCATION,
-					"Ort", false, false, "", false, false));
+			SearchField field = new TextSearchField(KEY_SEARCH_QUERY_LOCATION,
+					"Ort", false, false, "", false, false);
+			field.setMeaning(Meaning.LOCATION);
+			searchFields.add(field);
 		}
 		if (fieldsCompat.contains(KEY_SEARCH_QUERY_ORDER)) {
 			// TODO: Implement this (was this even usable before?)
 		}
 		return searchFields;
+	}
+	
+	@Override
+	public boolean shouldUseMeaningDetector() {
+		return false;
 	}
 
 }

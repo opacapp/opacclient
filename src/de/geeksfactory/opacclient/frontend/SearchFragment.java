@@ -42,9 +42,11 @@ import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.barcode.BarcodeScanIntegrator.ScanResult;
 import de.geeksfactory.opacclient.frontend.OpacActivity.AccountSelectedListener;
 import de.geeksfactory.opacclient.objects.Account;
+import de.geeksfactory.opacclient.searchfields.AndroidMeaningDetector;
 import de.geeksfactory.opacclient.searchfields.BarcodeSearchField;
 import de.geeksfactory.opacclient.searchfields.CheckboxSearchField;
 import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
+import de.geeksfactory.opacclient.searchfields.MeaningDetector;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
@@ -370,6 +372,14 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		protected List<SearchField> doInBackground(Void... arg0) {
 			try {
 				List<SearchField> fields = app.getApi().getSearchFields();
+				if (app.getApi().shouldUseMeaningDetector()) {
+					MeaningDetector md = new AndroidMeaningDetector(
+							getActivity(), app.getLibrary());
+					for (int i = 0; i < fields.size(); i++) {
+						fields.set(i, md.detectMeaning(fields.get(i)));
+					}
+				}
+
 				saveFields(fields);
 				return fields;
 			} catch (OpacErrorException e) {

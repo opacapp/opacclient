@@ -446,4 +446,9 @@ public abstract class BaseApi implements OpacApi {
 			throw new AssertionError(ex);
 		}
 	}
+	
+	@Override
+	public boolean shouldUseMeaningDetector() {
+		return true;
+	}
 }

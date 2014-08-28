@@ -13,6 +13,17 @@ public abstract class SearchField {
 	protected String id;
 	protected String displayName;
 	protected boolean advanced;
+	/**
+	 * Optional attribute, describes the meaning of the search field.
+	 * Used for sorting the search fields in the form.
+	 * Will be assigned automatically by the MeaningDetector if you use it.
+	 */
+	protected Meaning meaning;
+
+	public enum Meaning {
+		FREE, TITLE, AUTHOR, KEYWORD, BRANCH, HOME_BRANCH, ISBN, YEAR, SYSTEM,
+		AUDIENCE, PUBLISHER, CATEGORY, BARCODE, LOCATION, DIGITAL, AVAILABLE, ORDER
+	}
 
 	/**
 	 * A JSONObject where you can save arbitrary data about this Search field
@@ -104,8 +115,8 @@ public abstract class SearchField {
 		} else if (type.equals("barcode")) {
 			String hint = json.getString("hint");
 			boolean halfWidth = json.getBoolean("halfWidth");
-			field = new BarcodeSearchField(id, displayName, advanced, halfWidth,
-					hint);
+			field = new BarcodeSearchField(id, displayName, advanced,
+					halfWidth, hint);
 		} else if (type.equals("checkbox")) {
 			field = new CheckboxSearchField(id, displayName, advanced);
 		} else if (type.equals("dropdown")) {
@@ -139,6 +150,20 @@ public abstract class SearchField {
 	 */
 	public void setData(JSONObject data) {
 		this.data = data;
+	}
+
+	/**
+	 * @return the meaning
+	 */
+	public Meaning getMeaning() {
+		return meaning;
+	}
+
+	/**
+	 * @param meaning the meaning to set
+	 */
+	public void setMeaning(Meaning meaning) {
+		this.meaning = meaning;
 	}
 
 }

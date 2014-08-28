@@ -501,9 +501,9 @@ public interface OpacApi {
 	public void init(MetaDataSource metadata, Library library);
 
 	/**
-	 * Performs a catalogue search. The given <code>List<SearchQuery></code> contains the
-	 * search criteria. See documentation on <code>SearchResult</code> for
-	 * details.
+	 * Performs a catalogue search. The given <code>List<SearchQuery></code>
+	 * contains the search criteria. See documentation on
+	 * <code>SearchResult</code> for details.
 	 * 
 	 * This function is always called from a background thread, you can use
 	 * blocking network operations in it. See documentation on DetailledItem for
@@ -513,11 +513,12 @@ public interface OpacApi {
 	 *            see above
 	 * @return List of results and additional information, or result object with
 	 *         the error flag set to true.
-	 * @throws JSONException 
+	 * @throws JSONException
 	 * @see de.geeksfactory.opacclient.objects.SearchResult
 	 */
 	public SearchRequestResult search(List<SearchQuery> query)
-			throws IOException, NotReachableException, OpacErrorException, JSONException;
+			throws IOException, NotReachableException, OpacErrorException,
+			JSONException;
 
 	/**
 	 * If your {@link #search(Map)} implementation puts something different from
@@ -823,7 +824,7 @@ public interface OpacApi {
 	 * 
 	 * @return List of allowed fields
 	 * @throws OpacErrorException
-	 * @throws JSONException 
+	 * @throws JSONException
 	 * @see #search
 	 */
 	public List<SearchField> getSearchFields() throws IOException,
@@ -891,5 +892,11 @@ public interface OpacApi {
 	 * @return combination (bitwise OR) of <code>SUPPORT_FLAG_*</code> constants
 	 */
 	public int getSupportFlags();
+
+	/**
+	 * @return Whether the MeaningDetector should be used to automatically
+	 *         detect the meanings of this library's search fields
+	 */
+	public boolean shouldUseMeaningDetector();
 
 }
