@@ -50,7 +50,6 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
-import android.util.Log;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult.Status;
 import de.geeksfactory.opacclient.objects.Account;
@@ -175,7 +174,6 @@ public class SISIS extends BaseApi implements OpacApi {
 		String html = httpGet(opac_url
 				+ "/search.do?methodToCall=switchSearchPage&SearchType=2",
 				ENCODING);
-		Log.d("opac", html);
 		Document doc = Jsoup.parse(html);
 		List<SearchField> fields = new ArrayList<SearchField>();
 

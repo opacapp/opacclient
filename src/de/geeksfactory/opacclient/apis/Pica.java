@@ -53,7 +53,6 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
-import android.util.Log;
 import de.geeksfactory.opacclient.ISBNTools;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
@@ -216,8 +215,6 @@ public class Pica extends BaseApi implements OpacApi {
 			throw new OpacErrorException(
 					"Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.");
 		}
-		
-		Log.d("opac", URLEncodedUtils.format(params, getDefaultEncoding()));
 
 		String html = httpGet(opac_url + "/DB=" + db + "/SET=1/TTL=1/CMD?"
 				+ URLEncodedUtils.format(params, getDefaultEncoding()),
