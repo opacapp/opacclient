@@ -1010,6 +1010,7 @@ public class Pica extends BaseApi implements OpacApi {
 			Matcher matcher = pattern.matcher(field.getDisplayName());
 			if (matcher.find()) {
 				field.getData().put("meaning", matcher.group());
+				field.setDisplayName(matcher.replaceFirst("").trim());
 			}
 			
 			fields.add(field);
