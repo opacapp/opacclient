@@ -53,6 +53,7 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
+import android.util.Log;
 import de.geeksfactory.opacclient.ISBNTools;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
@@ -65,13 +66,18 @@ import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
+import de.geeksfactory.opacclient.searchfields.CheckboxSearchField;
+import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
+import de.geeksfactory.opacclient.searchfields.SearchField;
+import de.geeksfactory.opacclient.searchfields.SearchQuery;
+import de.geeksfactory.opacclient.searchfields.TextSearchField;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
  * @author Johan von Forstner, 16.09.2013
  * */
 
-public class Pica extends BaseApiCompat implements OpacApi {
+public class Pica extends BaseApi implements OpacApi {
 
 	protected String opac_url = "";
 	protected String https_url = "";
@@ -85,7 +91,7 @@ public class Pica extends BaseApiCompat implements OpacApi {
 	protected String db;
 	protected String pwEncoded;
 	CookieStore cookieStore = new BasicCookieStore();
-	
+
 	protected String lor_reservations;
 
 	protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
@@ -154,34 +160,37 @@ public class Pica extends BaseApiCompat implements OpacApi {
 		}
 	}
 
-	protected int addParameters(Map<String, String> query, String key, String searchkey,
-			List<NameValuePair> params, int index) {
-		if (!query.containsKey(key) || query.get(key).equals(""))
+	protected int addParameters(SearchQuery query, List<NameValuePair> params, int index) throws JSONException {
+		if (query.getValue().equals("") || query.getValue().equals("false"))
 			return index;
-		try {
-			if (data.has("searchindex")
-					&& data.getJSONObject("searchindex").has(key)) {
-				searchkey = data.getJSONObject("searchindex").getString(key);
+		if (query.getSearchField() instanceof TextSearchField) {
+			if (query.getSearchField().getData().getBoolean("ADI")) {
+				params.add(new BasicNameValuePair(query.getKey(), query.getValue()));
+			} else {
+				if (index == 0) {
+					params.add(new BasicNameValuePair("ACT" + index, "SRCH"));
+				} else {
+					params.add(new BasicNameValuePair("ACT" + index, "*"));
+				}
+		
+				params.add(new BasicNameValuePair("IKT" + index, query.getKey()));
+				params.add(new BasicNameValuePair("TRM" + index, query.getValue()));
+				return index + 1;
 			}
-		} catch (JSONException e) {
-			e.printStackTrace();
+		} else if (query.getSearchField() instanceof CheckboxSearchField) {
+			boolean checked = Boolean.valueOf(query.getValue());
+			if (checked) {
+				params.add(new BasicNameValuePair(query.getKey(), "Y"));
+			}
+		} else if (query.getSearchField() instanceof DropdownSearchField) {
+			params.add(new BasicNameValuePair(query.getKey(), query.getValue()));
 		}
-
-		if (index == 0) {
-			params.add(new BasicNameValuePair("ACT" + index, "SRCH"));
-		} else {
-			params.add(new BasicNameValuePair("ACT" + index, "*"));
-		}
-
-		params.add(new BasicNameValuePair("IKT" + index, searchkey));
-		params.add(new BasicNameValuePair("TRM" + index, query.get(key)));
-		return index + 1;
-
+		return index;
 	}
 
 	@Override
-	public SearchRequestResult search(Map<String, String> query) throws IOException,
-			NotReachableException, OpacErrorException {
+	public SearchRequestResult search(List<SearchQuery> query)
+			throws IOException, NotReachableException, OpacErrorException, JSONException {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 		int index = 0;
@@ -195,29 +204,9 @@ public class Pica extends BaseApiCompat implements OpacApi {
 		params.add(new BasicNameValuePair("PARSE_OPWORDS", "N"));
 		params.add(new BasicNameValuePair("PARSE_OLDSETS", "N"));
 
-		index = addParameters(query, KEY_SEARCH_QUERY_FREE,
-				data.optString("KEY_SEARCH_QUERY_FREE", "1016"), params, index);
-		index = addParameters(query, KEY_SEARCH_QUERY_AUTHOR, 
-				data.optString("KEY_SEARCH_QUERY_AUTHOR", "1004"), params,
-				index);
-		index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDA, 
-				data.optString("KEY_SEARCH_QUERY_KEYWORDA", "46"), params,
-				index);
-		index = addParameters(query, KEY_SEARCH_QUERY_PUBLISHER,
-				data.optString("KEY_SEARCH_QUERY_PUBLISHER", "1004"),
-				params, index);
-		index = addParameters(query, KEY_SEARCH_QUERY_SYSTEM,
-				data.optString("KEY_SEARCH_QUERY_SYSTEM", "20"), params,
-				index);
-		index = addParameters(query, KEY_SEARCH_QUERY_ISBN, 
-				data.optString("KEY_SEARCH_QUERY_ISBN", "1007"), params,
-				index);
-
-		params.add(new BasicNameValuePair("SRT", "RLV"));
-
-		// year has a special command
-		params.add(new BasicNameValuePair("ADI_JVU", query
-				.get(KEY_SEARCH_QUERY_YEAR)));
+		for (SearchQuery singleQuery:query) {
+			index = addParameters(singleQuery, params, index);
+		}
 
 		if (index == 0) {
 			throw new OpacErrorException(
@@ -227,10 +216,12 @@ public class Pica extends BaseApiCompat implements OpacApi {
 			throw new OpacErrorException(
 					"Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.");
 		}
+		
+		Log.d("opac", URLEncodedUtils.format(params, getDefaultEncoding()));
 
 		String html = httpGet(opac_url + "/DB=" + db + "/SET=1/TTL=1/CMD?"
-				+ URLEncodedUtils.format(params, getDefaultEncoding()), getDefaultEncoding(), false,
-				cookieStore);
+				+ URLEncodedUtils.format(params, getDefaultEncoding()),
+				getDefaultEncoding(), false, cookieStore);
 
 		return parse_search(html, 1);
 	}
@@ -437,8 +428,8 @@ public class Pica extends BaseApiCompat implements OpacApi {
 	@Override
 	public DetailledItem getResult(int position) throws IOException {
 		String html = httpGet(opac_url + "/DB=" + db + "/SET=" + searchSet
-				+ "/TTL=1/SHW?FRST=" + (position + 1), getDefaultEncoding(), false,
-				cookieStore);
+				+ "/TTL=1/SHW?FRST=" + (position + 1), getDefaultEncoding(),
+				false, cookieStore);
 
 		return parse_result(html);
 	}
@@ -457,7 +448,8 @@ public class Pica extends BaseApiCompat implements OpacApi {
 		} else {
 			for (Element a : doc.select("a")) {
 				if (a.attr("href").contains("PPN=")) {
-					Map<String, String> hrefq = getQueryParamsFirst(a.absUrl("href"));
+					Map<String, String> hrefq = getQueryParamsFirst(a
+							.absUrl("href"));
 					String ppn = hrefq.get("PPN");
 					try {
 						result.setId(opac_url + "/DB=" + data.getString("db")
@@ -544,15 +536,15 @@ public class Pica extends BaseApiCompat implements OpacApi {
 		// GET OTHER INFORMATION
 		Map<String, String> e = new HashMap<String, String>();
 		String location = "";
-			
-		//reservation info will be stored as JSON, because it can get complicated
+
+		// reservation info will be stored as JSON, because it can get
+		// complicated
 		JSONArray reservationInfo = new JSONArray();
 
 		for (Element element : doc.select("td.preslabel + td.presvalue")) {
 			Element titleElem = element.firstElementSibling();
 			String detail = element.text().trim();
-			String title = titleElem.text().trim()
-					.replace("\u00a0", "");
+			String title = titleElem.text().trim().replace("\u00a0", "");
 
 			if (element.select("hr").size() == 0) { // no separator
 
@@ -580,9 +572,13 @@ public class Pica extends BaseApiCompat implements OpacApi {
 							.replace("Vormerken", "")
 							.replace("Liste der Exemplare", "").trim();
 					e.put(DetailledItem.KEY_COPY_STATUS, detail);
-					//Get reservation info
-					if(element.select("a:contains(Vormerken), a:contains(Exemplare)").size() > 0) {
-						Element a = element.select("a:contains(Vormerken), a:contains(Exemplare)").first();
+					// Get reservation info
+					if (element.select(
+							"a:contains(Vormerken), a:contains(Exemplare)")
+							.size() > 0) {
+						Element a = element.select(
+								"a:contains(Vormerken), a:contains(Exemplare)")
+								.first();
 						boolean multipleCopies = a.text().contains("Exemplare");
 						JSONObject reservation = new JSONObject();
 						try {
@@ -605,11 +601,12 @@ public class Pica extends BaseApiCompat implements OpacApi {
 				e = new HashMap<String, String>();
 			}
 		}
-		
+
 		e.put(DetailledItem.KEY_COPY_BRANCH, location);
 		result.addCopy(e);
-		
-		result.setReservation_info(reservationInfo.toString());;
+
+		result.setReservation_info(reservationInfo.toString());
+		;
 
 		return result;
 	}
@@ -618,104 +615,122 @@ public class Pica extends BaseApiCompat implements OpacApi {
 	public ReservationResult reservation(DetailledItem item, Account account,
 			int useraction, String selection) throws IOException {
 		try {
-			if(selection == null || !selection.startsWith("{")) {
+			if (selection == null || !selection.startsWith("{")) {
 				JSONArray json = new JSONArray(item.getReservation_info());
 				int selectedPos;
-				if(selection != null) {
+				if (selection != null) {
 					selectedPos = Integer.parseInt(selection);
 				} else if (json.length() == 1) {
 					selectedPos = 0;
 				} else {
-					//a location must be selected
-					ReservationResult res = new ReservationResult(MultiStepResult.Status.SELECTION_NEEDED);
+					// a location must be selected
+					ReservationResult res = new ReservationResult(
+							MultiStepResult.Status.SELECTION_NEEDED);
 					res.setActionIdentifier(ReservationResult.ACTION_BRANCH);
 					Map<String, String> selections = new HashMap<String, String>();
-					for (int i = 0; i<json.length(); i++) {
-						selections.put(String.valueOf(i), json.getJSONObject(i).getString("desc"));
+					for (int i = 0; i < json.length(); i++) {
+						selections.put(String.valueOf(i), json.getJSONObject(i)
+								.getString("desc"));
 					}
-					res.setSelection(selections);		
+					res.setSelection(selections);
 					return res;
 				}
-				
-				if(json.getJSONObject(selectedPos).getBoolean("multi")) {
-					//A copy must be selected
-					String html1 = httpGet(json.getJSONObject(selectedPos).getString("link"), getDefaultEncoding());
+
+				if (json.getJSONObject(selectedPos).getBoolean("multi")) {
+					// A copy must be selected
+					String html1 = httpGet(json.getJSONObject(selectedPos)
+							.getString("link"), getDefaultEncoding());
 					Document doc1 = Jsoup.parse(html1);
-					
-					Elements trs = doc1.select("table[summary=list of volumes header] tr:has(input[type=radio])"); 
-					
-					if(trs.size() > 0) {					
+
+					Elements trs = doc1
+							.select("table[summary=list of volumes header] tr:has(input[type=radio])");
+
+					if (trs.size() > 0) {
 						Map<String, String> selections = new HashMap<String, String>();
-						for(Element tr:trs) {
+						for (Element tr : trs) {
 							JSONObject values = new JSONObject();
-							for (Element input:doc1.select("input[type=hidden]")) {
-								values.put(input.attr("name"), input.attr("value"));
+							for (Element input : doc1
+									.select("input[type=hidden]")) {
+								values.put(input.attr("name"),
+										input.attr("value"));
 							}
-							values.put(tr.select("input").attr("name"), tr.select("input").attr("value"));
+							values.put(tr.select("input").attr("name"), tr
+									.select("input").attr("value"));
 							selections.put(values.toString(), tr.text());
 						}
-						
-						ReservationResult res = new ReservationResult(MultiStepResult.Status.SELECTION_NEEDED);
+
+						ReservationResult res = new ReservationResult(
+								MultiStepResult.Status.SELECTION_NEEDED);
 						res.setActionIdentifier(ReservationResult.ACTION_USER);
 						res.setMessage("Welches Exemplar soll reserviert/bestellt werden? (verfügbare Exemplare werden bestellt)");
 						res.setSelection(selections);
 						return res;
 					} else {
-						ReservationResult res = new ReservationResult(MultiStepResult.Status.ERROR);
+						ReservationResult res = new ReservationResult(
+								MultiStepResult.Status.ERROR);
 						res.setMessage("Es ist kein Exemplar reservierbar.");
 						return res;
 					}
-					
+
 				} else {
-					String html1 = httpGet(json.getJSONObject(selectedPos).getString("link"), getDefaultEncoding());
+					String html1 = httpGet(json.getJSONObject(selectedPos)
+							.getString("link"), getDefaultEncoding());
 					Document doc1 = Jsoup.parse(html1);
-					
+
 					List<NameValuePair> params = new ArrayList<NameValuePair>();
-					
-					for (Element input:doc1.select("input[type=hidden]")) {
-						params.add(new BasicNameValuePair(input.attr("name"), input.attr("value")));
+
+					for (Element input : doc1.select("input[type=hidden]")) {
+						params.add(new BasicNameValuePair(input.attr("name"),
+								input.attr("value")));
 					}
-					
-					params.add(new BasicNameValuePair("BOR_U", account.getName()));
-					params.add(new BasicNameValuePair("BOR_PW", account.getPassword()));
-					
+
+					params.add(new BasicNameValuePair("BOR_U", account
+							.getName()));
+					params.add(new BasicNameValuePair("BOR_PW", account
+							.getPassword()));
+
 					return reservation_result(params, false);
 				}
 			} else {
-				//A copy has been selected
-				JSONObject values = new JSONObject(selection);			
+				// A copy has been selected
+				JSONObject values = new JSONObject(selection);
 				List<NameValuePair> params = new ArrayList<NameValuePair>();
-				
+
 				Iterator<String> keys = values.keys();
 				while (keys.hasNext()) {
 					String key = (String) keys.next();
 					String value = values.getString(key);
 					params.add(new BasicNameValuePair(key, value));
 				}
-				
+
 				params.add(new BasicNameValuePair("BOR_U", account.getName()));
-				params.add(new BasicNameValuePair("BOR_PW", account.getPassword()));
-				
+				params.add(new BasicNameValuePair("BOR_PW", account
+						.getPassword()));
+
 				return reservation_result(params, true);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
-			ReservationResult res = new ReservationResult(MultiStepResult.Status.ERROR);
+			ReservationResult res = new ReservationResult(
+					MultiStepResult.Status.ERROR);
 			res.setMessage("interner Fehler");
 			return res;
 		}
 	}
-	
-	public ReservationResult reservation_result(List<NameValuePair> params, boolean multi) throws IOException {
-		String html2 = httpPost(https_url + "/loan/LNG=DU/DB=" + db + "/SET=" + searchSet + "/TTL=1/"
-					+ (multi ? "REQCONT" : "RESCONT"),
-				new UrlEncodedFormEntity(params, getDefaultEncoding()), getDefaultEncoding());
+
+	public ReservationResult reservation_result(List<NameValuePair> params,
+			boolean multi) throws IOException {
+		String html2 = httpPost(https_url + "/loan/LNG=DU/DB=" + db + "/SET="
+				+ searchSet + "/TTL=1/" + (multi ? "REQCONT" : "RESCONT"),
+				new UrlEncodedFormEntity(params, getDefaultEncoding()),
+				getDefaultEncoding());
 		Document doc2 = Jsoup.parse(html2);
-		
-		if(doc2.select(".alert").text().contains("ist fuer Sie vorgemerkt")) {
+
+		if (doc2.select(".alert").text().contains("ist fuer Sie vorgemerkt")) {
 			return new ReservationResult(MultiStepResult.Status.OK);
 		} else {
-			ReservationResult res = new ReservationResult(MultiStepResult.Status.ERROR);
+			ReservationResult res = new ReservationResult(
+					MultiStepResult.Status.ERROR);
 			res.setMessage(doc2.select(".cnt .alert").text());
 			return res;
 		}
@@ -724,7 +739,7 @@ public class Pica extends BaseApiCompat implements OpacApi {
 	@Override
 	public ProlongResult prolong(String media, Account account, int useraction,
 			String Selection) throws IOException {
-		if(pwEncoded == null)
+		if (pwEncoded == null)
 			try {
 				account(account);
 			} catch (JSONException e1) {
@@ -733,17 +748,19 @@ public class Pica extends BaseApiCompat implements OpacApi {
 				return new ProlongResult(MultiStepResult.Status.ERROR,
 						e1.getMessage());
 			}
-		
+
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("ACT", "UI_RENEWLOAN"));
 
 		params.add(new BasicNameValuePair("BOR_U", account.getName()));
-		params.add(new BasicNameValuePair("BOR_PW_ENC", URLDecoder.decode(pwEncoded, "UTF-8")));
+		params.add(new BasicNameValuePair("BOR_PW_ENC", URLDecoder.decode(
+				pwEncoded, "UTF-8")));
 
 		params.add(new BasicNameValuePair("VB", media));
 
 		String html = httpPost(https_url + "/loan/DB=" + db + "/USERINFO",
-				new UrlEncodedFormEntity(params, getDefaultEncoding()), getDefaultEncoding());
+				new UrlEncodedFormEntity(params, getDefaultEncoding()),
+				getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 
 		if (doc.select("td.regular-text")
@@ -783,19 +800,24 @@ public class Pica extends BaseApiCompat implements OpacApi {
 		params.add(new BasicNameValuePair("ACT", "UI_CANCELRES"));
 
 		params.add(new BasicNameValuePair("BOR_U", account.getName()));
-		params.add(new BasicNameValuePair("BOR_PW_ENC", URLDecoder.decode(pwEncoded, "UTF-8")));
-		if(lor_reservations != null) params.add(new BasicNameValuePair("LOR_RESERVATIONS", lor_reservations));
-		
+		params.add(new BasicNameValuePair("BOR_PW_ENC", URLDecoder.decode(
+				pwEncoded, "UTF-8")));
+		if (lor_reservations != null)
+			params.add(new BasicNameValuePair("LOR_RESERVATIONS",
+					lor_reservations));
+
 		params.add(new BasicNameValuePair("VB", media));
 
-		String html = httpPost(https_url + "/loan/DB=" + db + "/SET=" + searchSet + "/TTL=1/USERINFO",
-				new UrlEncodedFormEntity(params, getDefaultEncoding()), getDefaultEncoding());
+		String html = httpPost(https_url + "/loan/DB=" + db + "/SET="
+				+ searchSet + "/TTL=1/USERINFO", new UrlEncodedFormEntity(
+				params, getDefaultEncoding()), getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 
 		if (doc.select("td.regular-text").text()
 				.contains("Ihre Vormerkungen sind ")) {
 			return new CancelResult(MultiStepResult.Status.OK);
-		} else if (doc.select(".cnt .alert").text().contains("identify yourself")) {
+		} else if (doc.select(".cnt .alert").text()
+				.contains("identify yourself")) {
 			try {
 				account(account);
 				return cancel(media, account, useraction, selection);
@@ -824,20 +846,21 @@ public class Pica extends BaseApiCompat implements OpacApi {
 		params.add(new BasicNameValuePair("BOR_PW", account.getPassword()));
 
 		String html = httpPost(https_url + "/loan/DB=" + db
-				+ "/LNG=DU/USERINFO",
-				new UrlEncodedFormEntity(params, getDefaultEncoding()), getDefaultEncoding());
+				+ "/LNG=DU/USERINFO", new UrlEncodedFormEntity(params,
+				getDefaultEncoding()), getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 
 		if (doc.select(".cnt .alert, .cnt .error").size() > 0) {
-			throw new OpacErrorException(doc.select(".cnt .alert, .cnt .error").text());
+			throw new OpacErrorException(doc.select(".cnt .alert, .cnt .error")
+					.text());
 		}
 		if (doc.select("input[name=BOR_PW_ENC]").size() > 0) {
-			pwEncoded = URLEncoder.encode(
-					doc.select("input[name=BOR_PW_ENC]").attr("value"), "UTF-8");
+			pwEncoded = URLEncoder.encode(doc.select("input[name=BOR_PW_ENC]")
+					.attr("value"), "UTF-8");
 		} else {
-			//TODO: do something here to help fix bug #229
+			// TODO: do something here to help fix bug #229
 		}
-		
+
 		html = httpGet(https_url + "/loan/DB=" + db
 				+ "/USERINFO?ACT=UI_LOL&BOR_U=" + account.getName()
 				+ "&BOR_PW_ENC=" + pwEncoded, getDefaultEncoding());
@@ -871,9 +894,9 @@ public class Pica extends BaseApiCompat implements OpacApi {
 
 	}
 
-	protected void parse_medialist(List<Map<String, String>> medien, Document doc,
-			int offset, String accountName) throws ClientProtocolException,
-			IOException {
+	protected void parse_medialist(List<Map<String, String>> medien,
+			Document doc, int offset, String accountName)
+			throws ClientProtocolException, IOException {
 
 		Elements copytrs = doc.select("table[summary^=list] tr[valign=top]");
 
@@ -939,11 +962,13 @@ public class Pica extends BaseApiCompat implements OpacApi {
 		assert (medien.size() == trs - 1);
 	}
 
-	protected void parse_reslist(List<Map<String, String>> medien, Document doc,
-			int offset) throws ClientProtocolException, IOException {
-		
-		if(doc.select("input[name=LOR_RESERVATIONS]").size()>0) {
-			lor_reservations = doc.select("input[name=LOR_RESERVATIONS]").attr("value");
+	protected void parse_reslist(List<Map<String, String>> medien,
+			Document doc, int offset) throws ClientProtocolException,
+			IOException {
+
+		if (doc.select("input[name=LOR_RESERVATIONS]").size() > 0) {
+			lor_reservations = doc.select("input[name=LOR_RESERVATIONS]").attr(
+					"value");
 		}
 
 		Elements copytrs = doc.select("table[summary^=list] tr[valign=top]");
@@ -969,16 +994,80 @@ public class Pica extends BaseApiCompat implements OpacApi {
 	}
 
 	@Override
-	public String[] getSearchFieldsCompat() {
-		return new String[] { KEY_SEARCH_QUERY_FREE, KEY_SEARCH_QUERY_AUTHOR,
-				KEY_SEARCH_QUERY_KEYWORDA, KEY_SEARCH_QUERY_YEAR, 
-				KEY_SEARCH_QUERY_SYSTEM, KEY_SEARCH_QUERY_PUBLISHER,
-				KEY_SEARCH_QUERY_ISBN };
+	public List<SearchField> getSearchFields() throws ClientProtocolException,
+			IOException, JSONException {
+		String html = httpGet(opac_url + "/ADVANCED_SEARCHFILTER",
+				getDefaultEncoding());
+		Document doc = Jsoup.parse(html);
+		List<SearchField> fields = new ArrayList<SearchField>();
+
+		Elements options = doc.select("select[name=IKT0] option");
+		for (Element option : options) {
+			TextSearchField field = new TextSearchField();
+			field.setDisplayName(option.text());
+			field.setId(option.attr("value"));
+			field.setHint("");
+			field.setData(new JSONObject("{\"ADI\": false}"));
+			fields.add(field);
+		}
+
+		Elements sort = doc.select("select[name=SRT]");
+		if (sort.size() > 0) {
+			DropdownSearchField field = new DropdownSearchField();
+			field.setDisplayName(sort.first().parent().parent()
+					.select(".longval").first().text());
+			field.setId("SRT");
+			List<Map<String, String>> sortOptions = new ArrayList<Map<String, String>>();
+			for (Element option : sort.select("option")) {
+				Map<String, String> sortOption = new HashMap<String, String>();
+				sortOption.put("key", option.attr("value"));
+				sortOption.put("value", option.text());
+				sortOptions.add(sortOption);
+			}
+			field.setDropdownValues(sortOptions);
+			fields.add(field);
+		}
+
+		for (Element input : doc.select("input[type=text][name^=ADI]")) {
+			TextSearchField field = new TextSearchField();
+			field.setDisplayName(input.parent().parent().select(".longkey").text());
+			field.setId(input.attr("name"));
+			field.setHint(input.parent().select("span").text());
+			field.setData(new JSONObject("{\"ADI\": true}"));
+			fields.add(field);
+		}
+		
+		for (Element dropdown : doc.select("select[name^=ADI]")) {
+			DropdownSearchField field = new DropdownSearchField();
+			field.setDisplayName(dropdown.parent().parent()
+					.select(".longkey").text());
+			field.setId(dropdown.attr("name"));
+			List<Map<String, String>> dropdownOptions = new ArrayList<Map<String, String>>();
+			for (Element option : dropdown.select("option")) {
+				Map<String, String> dropdownOption = new HashMap<String, String>();
+				dropdownOption.put("key", option.attr("value"));
+				dropdownOption.put("value", option.text());
+				dropdownOptions.add(dropdownOption);
+			}
+			field.setDropdownValues(dropdownOptions);
+			fields.add(field);
+		}
+		
+		Elements fuzzy = doc.select("input[name=FUZZY]");
+		if (fuzzy.size() > 0) {
+			CheckboxSearchField field = new CheckboxSearchField();
+			field.setDisplayName(fuzzy.first().parent().parent()
+					.select(".longkey").first().text());
+			field.setId("FUZZY");
+			fields.add(field);
+		}
+
+		return fields;
 	}
 
 	@Override
 	public boolean isAccountSupported(Library library) {
-		if(!library.getData().isNull("accountSupported")) {
+		if (!library.getData().isNull("accountSupported")) {
 			try {
 				return library.getData().getBoolean("accountSupported");
 			} catch (JSONException e) {
