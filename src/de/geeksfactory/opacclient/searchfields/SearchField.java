@@ -1,6 +1,7 @@
 package de.geeksfactory.opacclient.searchfields;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public abstract class SearchField {
+	public static class OrderComparator implements Comparator<SearchField> {
+		@Override
+		public int compare(SearchField a, SearchField b) {
+			if (a.getMeaning() == null || b.getMeaning() == null) {
+				return 0;
+			} else {
+				return a.getMeaning().compareTo(b.getMeaning());
+			}
+		}
+	}
+
 	protected String id;
 	protected String displayName;
 	protected boolean advanced;
@@ -21,8 +33,8 @@ public abstract class SearchField {
 	protected Meaning meaning;
 
 	public enum Meaning {
-		FREE, TITLE, AUTHOR, KEYWORD, BRANCH, HOME_BRANCH, ISBN, YEAR, SYSTEM,
-		AUDIENCE, PUBLISHER, CATEGORY, BARCODE, LOCATION, DIGITAL, AVAILABLE, ORDER
+		FREE, TITLE, AUTHOR, DIGITAL, AVAILABLE, ISBN, BARCODE, YEAR, BRANCH, HOME_BRANCH,
+		CATEGORY, PUBLISHER, KEYWORD, SYSTEM, AUDIENCE, LOCATION, ORDER
 	}
 
 	/**

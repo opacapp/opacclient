@@ -2,6 +2,7 @@ package de.geeksfactory.opacclient.frontend;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -378,7 +379,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 					for (int i = 0; i < fields.size(); i++) {
 						fields.set(i, md.detectMeaning(fields.get(i)));
 					}
-				}
+					Collections.sort(fields, new SearchField.OrderComparator());
+				}			
 
 				saveFields(fields);
 				return fields;
