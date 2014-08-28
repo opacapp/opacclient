@@ -1,3 +1,53 @@
 {
-	
+	"FREE": [
+		"Frei"
+	],
+	"TITLE": [
+		"Titel"
+	],
+	"AUTHOR": [
+		"Autor", "Verfasser"
+	],
+	"DIGITAL": [
+		"digital"
+	],
+	"AVAILABLE": [
+		"verfügbar"
+	],
+	"ISBN": [
+		"ISBN"
+	],
+	"BARCODE": [
+		"Barcode", "Buchungsnummer", "Buchungsnr", "Mediennummer"
+	],
+	"YEAR": [
+		"Jahr"
+	],
+	"BRANCH": [
+		"Suche in Zweigstelle", "Zweigstelle ist gleich"
+	],
+	"HOME_BRANCH": [
+		"Aktuelle Zweigstelle"
+	],
+	"CATEGORY": [
+		"Kategorie", "Medienart", "Medientyp", "Erscheinungsform"
+	],
+	"PUBLISHER": [
+		"Verlag"
+	],
+	"KEYWORD": [
+		"Schlagwort"
+	],
+	"SYSTEM": [
+		"Systematik"
+	],
+	"AUDIENCE": [
+		"Interessenkreis"
+	],
+	"LOCATION": [
+		"Ort"
+	],
+	"ORDER": [
+		"Sortierung", "Reihenfolge"
+	]
 }
