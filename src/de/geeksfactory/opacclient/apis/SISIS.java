@@ -342,62 +342,68 @@ public class SISIS extends BaseApi implements OpacApi {
 			throws IOException, NotReachableException, OpacErrorException, JSONException {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-/*		if (query.containsKey("volume")) {		//TODO: What is this for?
-			params.add(new BasicNameValuePair("methodToCall", "volumeSearch"));
-			params.add(new BasicNameValuePair("dbIdentifier", query
-					.get("dbIdentifier")));
-			params.add(new BasicNameValuePair("catKey", query.get("catKey")));
-			params.add(new BasicNameValuePair("periodical", "N"));
-		} else { */
-			int index = 0;
-			int restrictionIndex = 0;
-			start();
+		int index = 0;
+		int restrictionIndex = 0;
+		start();
 
-			params.add(new BasicNameValuePair("methodToCall", "submit"));
-			params.add(new BasicNameValuePair("CSId", CSId));
-			params.add(new BasicNameValuePair("methodToCallParameter",
-					"submitSearch"));
-			
-			for (SearchQuery entry:query) {
-				if (entry.getValue().equals(""))
-					continue;
-				if (entry.getSearchField() instanceof DropdownSearchField) {
-					JSONObject data = entry.getSearchField().getData();
-					if (data.getBoolean("restriction")) {
-						params.add(new BasicNameValuePair("searchRestrictionID[" + restrictionIndex + "]",
-								entry.getSearchField().getId()));
-						params.add(new BasicNameValuePair(
-								"searchRestrictionValue1[" + restrictionIndex + "]", entry.getValue()));
-						restrictionIndex ++;
-					} else {
-						params.add(new BasicNameValuePair(entry.getKey(),
-								entry.getValue()));
-					}
+		params.add(new BasicNameValuePair("methodToCall", "submit"));
+		params.add(new BasicNameValuePair("CSId", CSId));
+		params.add(new BasicNameValuePair("methodToCallParameter",
+				"submitSearch"));
+		
+		for (SearchQuery entry:query) {
+			if (entry.getValue().equals(""))
+				continue;
+			if (entry.getSearchField() instanceof DropdownSearchField) {
+				JSONObject data = entry.getSearchField().getData();
+				if (data.getBoolean("restriction")) {
+					params.add(new BasicNameValuePair("searchRestrictionID[" + restrictionIndex + "]",
+							entry.getSearchField().getId()));
+					params.add(new BasicNameValuePair(
+							"searchRestrictionValue1[" + restrictionIndex + "]", entry.getValue()));
+					restrictionIndex ++;
 				} else {
-					if (index != 0)
-						params.add(new BasicNameValuePair("combinationOperator[" + index
-								+ "]", "AND"));
-					params.add(new BasicNameValuePair("searchCategories[" + index + "]",
-							entry.getKey()));
-					params.add(new BasicNameValuePair("searchString[" + index + "]", entry.getValue()));
-					index ++;
+					params.add(new BasicNameValuePair(entry.getKey(),
+							entry.getValue()));
 				}
+			} else {
+				if (index != 0)
+					params.add(new BasicNameValuePair("combinationOperator[" + index
+							+ "]", "AND"));
+				params.add(new BasicNameValuePair("searchCategories[" + index + "]",
+						entry.getKey()));
+				params.add(new BasicNameValuePair("searchString[" + index + "]", entry.getValue()));
+				index ++;
 			}
+		}
 
-			if (index == 0) {
-				throw new OpacErrorException(
-						"Es wurden keine Suchkriterien eingegeben.");
-			}
-			if (index > 4) {
-				throw new OpacErrorException(
-						"Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.");
-			}
+		if (index == 0) {
+			throw new OpacErrorException(
+					"Es wurden keine Suchkriterien eingegeben.");
+		}
+		if (index > 4) {
+			throw new OpacErrorException(
+					"Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.");
+		}
 
-			params.add(new BasicNameValuePair("submitSearch", "Suchen"));
-			params.add(new BasicNameValuePair("callingPage", "searchParameters"));
-			params.add(new BasicNameValuePair("numberOfHits", "10"));
-		//}
+		params.add(new BasicNameValuePair("submitSearch", "Suchen"));
+		params.add(new BasicNameValuePair("callingPage", "searchParameters"));
+		params.add(new BasicNameValuePair("numberOfHits", "10"));
 
+		String html = httpGet(
+				opac_url + "/search.do?"
+						+ URLEncodedUtils.format(params, "UTF-8"), ENCODING);
+		return parse_search(html, 1);
+	}
+	
+	public SearchRequestResult volumeSearch(Map<String, String> query)
+			throws IOException, OpacErrorException {
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("methodToCall", "volumeSearch"));
+		params.add(new BasicNameValuePair("dbIdentifier", query
+				.get("dbIdentifier")));
+		params.add(new BasicNameValuePair("catKey", query.get("catKey")));
+		params.add(new BasicNameValuePair("periodical", "N"));
 		String html = httpGet(
 				opac_url + "/search.do?"
 						+ URLEncodedUtils.format(params, "UTF-8"), ENCODING);

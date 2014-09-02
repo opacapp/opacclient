@@ -59,6 +59,7 @@ import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.networking.HTTPClient;
 import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
@@ -446,9 +447,15 @@ public abstract class BaseApi implements OpacApi {
 			throw new AssertionError(ex);
 		}
 	}
-	
+
 	@Override
 	public boolean shouldUseMeaningDetector() {
 		return true;
+	}
+
+	@Override
+	public SearchRequestResult volumeSearch(Map<String, String> query)
+			throws IOException, OpacErrorException {
+		return null;
 	}
 }

@@ -521,6 +521,23 @@ public interface OpacApi {
 			JSONException;
 
 	/**
+	 * Performs a catalogue search for volumes of an item. The query is given
+	 * to it from {@link DetailledItem.getVolumesearch()}.
+	 * 
+	 * This function is always called from a background thread, you can use
+	 * blocking network operations in it. See documentation on DetailledItem for
+	 * details.
+	 * 
+	 * @param query
+	 *            see above
+	 * @return List of results and additional information, or result object with
+	 *         the error flag set to true.
+	 * @see de.geeksfactory.opacclient.objects.SearchResult
+	 */
+	public SearchRequestResult volumeSearch(Map<String, String> query)
+			throws IOException, OpacErrorException;
+
+	/**
 	 * If your {@link #search(Map)} implementation puts something different from
 	 * <code>null</code> into {@link SearchRequestResult#setFilters(List)}, this
 	 * will be called to apply a filter to the last search request.

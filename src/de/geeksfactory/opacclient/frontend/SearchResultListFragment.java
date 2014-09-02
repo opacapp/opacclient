@@ -114,6 +114,14 @@ public class SearchResultListFragment extends ListFragment {
 		frag.setArguments(args);
 		return frag;
 	}
+	
+	public static SearchResultListFragment getVolumeSearchInstance(Bundle query) {
+		SearchResultListFragment frag = new SearchResultListFragment();
+		Bundle args = new Bundle();
+		args.putBundle("volumeQuery", query);
+		frag.setArguments(args);
+		return frag;
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -126,8 +134,13 @@ public class SearchResultListFragment extends ListFragment {
 
 	public void performsearch() {
 		st = new SearchStartTask();
-		st.execute(app,
-				OpacClient.bundleToQuery(getArguments().getBundle("query")));
+		if (getArguments().containsKey("volumeQuery")) {
+			st.execute(app,
+					OpacClient.bundleToMap(getArguments().getBundle("volumeQuery")));
+		} else {
+			st.execute(app,
+					OpacClient.bundleToQuery(getArguments().getBundle("query")));
+		}
 	}
 
 	@Override
@@ -332,26 +345,49 @@ public class SearchResultListFragment extends ListFragment {
 		@Override
 		protected SearchRequestResult doInBackground(Object... arg0) {
 			super.doInBackground(arg0);
-			List<SearchQuery> query = (List<SearchQuery>) arg0[1];
+			if (arg0[1] instanceof Map<?, ?>) {
+				Map<String, String> query = (Map<String, String>) arg0[1];
+				try {
+					SearchRequestResult res = app.getApi().volumeSearch(query);
+					// Load cover images, if search worked and covers available
+					return res;
+				} catch (java.net.UnknownHostException e) {
+					exception = e;
+					e.printStackTrace();
+				} catch (java.net.SocketException e) {
+					exception = e;
+				} catch (NoHttpResponseException e) {
+					exception = e;
+				} catch (OpacErrorException e) {
+					exception = e;
+				} catch (InterruptedIOException e) {
+					exception = e;
+				} catch (Exception e) {
+					exception = e;
+					ACRA.getErrorReporter().handleException(e);
+				}
+			} else {
+				List<SearchQuery> query = (List<SearchQuery>) arg0[1];
 
-			try {
-				SearchRequestResult res = app.getApi().search(query);
-				// Load cover images, if search worked and covers available
-				return res;
-			} catch (java.net.UnknownHostException e) {
-				exception = e;
-				e.printStackTrace();
-			} catch (java.net.SocketException e) {
-				exception = e;
-			} catch (NoHttpResponseException e) {
-				exception = e;
-			} catch (OpacErrorException e) {
-				exception = e;
-			} catch (InterruptedIOException e) {
-				exception = e;
-			} catch (Exception e) {
-				exception = e;
-				ACRA.getErrorReporter().handleException(e);
+				try {
+					SearchRequestResult res = app.getApi().search(query);
+					// Load cover images, if search worked and covers available
+					return res;
+				} catch (java.net.UnknownHostException e) {
+					exception = e;
+					e.printStackTrace();
+				} catch (java.net.SocketException e) {
+					exception = e;
+				} catch (NoHttpResponseException e) {
+					exception = e;
+				} catch (OpacErrorException e) {
+					exception = e;
+				} catch (InterruptedIOException e) {
+					exception = e;
+				} catch (Exception e) {
+					exception = e;
+					ACRA.getErrorReporter().handleException(e);
+				}
 			}
 
 			return null;

@@ -129,6 +129,12 @@ public class OpacClient extends Application {
 		myIntent.putExtra("query", queryToBundle(query));
 		caller.startActivity(myIntent);
 	}
+	
+	public void startVolumeSearch(Activity caller, Map<String, String> query) {
+		Intent myIntent = new Intent(caller, SearchResultListActivity.class);
+		myIntent.putExtra("volumeQuery", mapToBundle(query));
+		caller.startActivity(myIntent);
+	}
 
 	public boolean isOnline() {
 		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
