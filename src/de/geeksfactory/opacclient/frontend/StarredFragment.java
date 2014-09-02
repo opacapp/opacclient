@@ -23,7 +23,6 @@ package de.geeksfactory.opacclient.frontend;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
