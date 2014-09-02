@@ -14,5 +14,13 @@
 	"[SIG]": "SYSTEM",
 	"[PUB]": "PUBLISHER",
 	"[VRL]": "PUBLISHER",
-	"[BSO]": "BRANCH"
+	"[BSO]": "BRANCH",
+	"(XALL)": "FREE",
+	"(XTHM)": "KEYWORD",
+	"(XSLW)": "KEYWORD",
+	"(XTIT)": "TITLE",
+	"(XPRS)": "AUTHOR",
+	"(XPUB)": "PUBLISHER",
+	"(XNUM)": "ISBN",
+	"(XHAU)": "LOCATION"
 }

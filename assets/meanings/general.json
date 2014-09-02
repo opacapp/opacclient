@@ -1,12 +1,12 @@
 {
 	"FREE": [
-		"Freie Suche", "Alle Felder"
+		"Freie Suche", "Alle Felder", "Suche in allen Feldern"
 	],
 	"TITLE": [
-		"Titel", "Titel/Stichwort", "Titel(wörter)"
+		"Titel", "Titel/Stichwort", "Titel(wörter)", "Titelstichwort(e)", "Titelwörter"
 	],
 	"AUTHOR": [
-		"Autor", "Verfasser", "Name/Autor", "Autor/Hrsg."
+		"Autor", "Verfasser", "Name/Autor", "Autor/Hrsg.", "Verfasser (nur 1)"
 	],
 	"DIGITAL": [
 		"digital"
@@ -15,7 +15,7 @@
 		"verfügbar"
 	],
 	"ISBN": [
-		"ISBN", "ISBN, ISSN u.a."
+		"ISBN", "ISBN, ISSN u.a.", "ISBN / ISSN"
 	],
 	"BARCODE": [
 		"Barcode", "Buchungsnummer", "Buchungsnr", "Mediennummer"
@@ -36,7 +36,7 @@
 		"Verlag", "Ort/Verlag"
 	],
 	"KEYWORD": [
-		"Schlagwort"
+		"Schlagwort", "Schlagwörter"
 	],
 	"SYSTEM": [
 		"Systematik"
