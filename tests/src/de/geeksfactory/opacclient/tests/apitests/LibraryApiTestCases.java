@@ -8,9 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -39,7 +37,10 @@ import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
+import de.geeksfactory.opacclient.searchfields.JavaMeaningDetector;
 import de.geeksfactory.opacclient.searchfields.SearchField;
+import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
+import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 import de.geeksfactory.opacclient.storage.DummyMetaDataSource;
 
@@ -48,6 +49,7 @@ public class LibraryApiTestCases extends TestCase {
 
 	private Library library;
 	private OpacApi api;
+	private List<SearchField> fields;
 
 	public LibraryApiTestCases(String library) throws JSONException,
 			IOException {
@@ -67,7 +69,7 @@ public class LibraryApiTestCases extends TestCase {
 	}
 
 	@Before
-	public void setUp() {
+	public void setUp() throws NotReachableException, IOException, OpacErrorException, JSONException {
 		api = null;
 		if (library.getApi().equals("bond26")
 				|| library.getApi().equals("bibliotheca"))
@@ -96,17 +98,23 @@ public class LibraryApiTestCases extends TestCase {
 		else
 			api = null;
 		api.init(new DummyMetaDataSource(), library);
+		
+		fields = api.getSearchFields();
+		JavaMeaningDetector detector = new JavaMeaningDetector(library);
+		for (int i = 0; i < fields.size(); i++) {
+			fields.set(i, detector.detectMeaning(fields.get(i)));
+		}
 	}
 
 	@Test
 	public void testEmptySearch() throws NotReachableException, IOException,
-			OpacErrorException {
-		Map<String, String> query = new HashMap<String, String>();
-		SearchField field = findFreeSearchOrTitle(api.getSearchFields());
+			OpacErrorException, JSONException {
+		List<SearchQuery> query = new ArrayList<SearchQuery>();
+		SearchField field = findFreeSearchOrTitle(fields);
 		if (field == null)
 			throw new OpacErrorException( //TODO: prevent this
 					"There is no free or title search field");
-		query.put(field.getId(), "fasgeadstrehdaxydsfstrgdfjxnvgfhdtnbfgn");
+		query.add(new SearchQuery(field, "fasgeadstrehdaxydsfstrgdfjxnvgfhdtnbfgn"));
 		try {
 			SearchRequestResult res = api.search(query);
 			assertTrue(res.getTotal_result_count() == 0);
@@ -117,13 +125,13 @@ public class LibraryApiTestCases extends TestCase {
 
 	@Test
 	public void testSearchScrolling() throws NotReachableException,
-			IOException, OpacErrorException {
-		Map<String, String> query = new HashMap<String, String>();
-		SearchField field = findFreeSearchOrTitle(api.getSearchFields());
+			IOException, OpacErrorException, JSONException {
+		List<SearchQuery> query = new ArrayList<SearchQuery>();
+		SearchField field = findFreeSearchOrTitle(fields);
 		if (field == null)
 			throw new OpacErrorException( //TODO: prevent this
 					"There is no free or title search field");
-		query.put(field.getId(), "harry");
+		query.add(new SearchQuery(field, "harry"));
 		SearchRequestResult res = api.search(query);
 		assertTrue(res.getResults().size() <= res.getTotal_result_count());
 		assertTrue(res.getResults().size() > 0);
@@ -182,7 +190,7 @@ public class LibraryApiTestCases extends TestCase {
 	 * @param fields
 	 *            List of SearchFields
 	 * @return The first free search field from the list. If there is none, the
-	 *         first search field with ID "titel" and if that doesn't exist
+	 *         title search fields and if that doesn't exist
 	 *         either, null
 	 */
 	private SearchField findFreeSearchOrTitle(List<SearchField> fields) {
@@ -193,7 +201,7 @@ public class LibraryApiTestCases extends TestCase {
 		}
 		for (SearchField field : fields) {
 			if (field instanceof TextSearchField
-					&& field.getId().equals(OpacApi.KEY_SEARCH_QUERY_TITLE))
+					&& field.getMeaning() == Meaning.TITLE)
 				return field;
 		}
 		return null;

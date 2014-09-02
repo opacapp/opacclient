@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry including="de/geeksfactory/opacclient/ISBNTools.java|de/geeksfactory/opacclient/NotReachableException.java|de/geeksfactory/opacclient/apis/|de/geeksfactory/opacclient/objects/|de/geeksfactory/opacclient/storage/MetaDataSource.java" kind="src" path="upstream"/>
+	<classpathentry including="de/geeksfactory/opacclient/ISBNTools.java|de/geeksfactory/opacclient/Base64.java|de/geeksfactory/opacclient/NotReachableException.java|de/geeksfactory/opacclient/apis/|de/geeksfactory/opacclient/objects/|de/geeksfactory/opacclient/searchfields/|de/geeksfactory/opacclient/storage/MetaDataSource.java" excluding="de/geeksfactory/opacclient/searchfields/AndroidMeaningDetector.java" kind="src" path="upstream"/>
 	<classpathentry kind="src" path="objects"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
