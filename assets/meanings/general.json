@@ -33,7 +33,7 @@
         "Freie Suche",
         "Alle Felder",
         "Suche in allen Feldern",
-        "Volltextsuche",
+        "Volltextsuche"
     ],
     "KEYWORD": [
         "Schlagwort",
@@ -136,7 +136,7 @@
         "Standort",
         "Regalaufstellung",
         "Regalstandort",
-        "Signatur/Standort",
+        "Signatur/Standort"
     ],
     "CATEGORY": [
         "Kategorie",
