@@ -70,35 +70,7 @@ public class LibraryApiTestCases extends TestCase {
 
 	@Before
 	public void setUp() throws NotReachableException, IOException, OpacErrorException, JSONException {
-		api = null;
-		if (library.getApi().equals("bond26")
-				|| library.getApi().equals("bibliotheca"))
-			// Backwardscompatibility
-			api = new Bibliotheca();
-		else if (library.getApi().equals("oclc2011")
-				|| library.getApi().equals("sisis"))
-			// Backwards compatibility
-			api = new SISIS();
-		else if (library.getApi().equals("zones22"))
-			api = new Zones22();
-		else if (library.getApi().equals("biber1992"))
-			api = new BiBer1992();
-		else if (library.getApi().equals("pica"))
-			api = new Pica();
-		else if (library.getApi().equals("iopac"))
-			api = new IOpac();
-		else if (library.getApi().equals("adis"))
-			api = new Adis();
-		else if (library.getApi().equals("sru"))
-			api = new SRU();
-		else if (library.getApi().equals("winbiap"))
-			api = new WinBiap();
-		else if (library.getApi().equals("webopac.net"))
-			api = new WebOpacNet();
-		else
-			api = null;
-		api.init(new DummyMetaDataSource(), library);
-		
+		api = getApi(library);		
 		fields = api.getSearchFields();
 		JavaMeaningDetector detector = new JavaMeaningDetector(library);
 		for (int i = 0; i < fields.size(); i++) {
@@ -205,5 +177,37 @@ public class LibraryApiTestCases extends TestCase {
 				return field;
 		}
 		return null;
+	}
+	
+	public static OpacApi getApi(Library library) {
+		OpacApi api = null;
+		if (library.getApi().equals("bond26")
+				|| library.getApi().equals("bibliotheca"))
+			// Backwardscompatibility
+			api = new Bibliotheca();
+		else if (library.getApi().equals("oclc2011")
+				|| library.getApi().equals("sisis"))
+			// Backwards compatibility
+			api = new SISIS();
+		else if (library.getApi().equals("zones22"))
+			api = new Zones22();
+		else if (library.getApi().equals("biber1992"))
+			api = new BiBer1992();
+		else if (library.getApi().equals("pica"))
+			api = new Pica();
+		else if (library.getApi().equals("iopac"))
+			api = new IOpac();
+		else if (library.getApi().equals("adis"))
+			api = new Adis();
+		else if (library.getApi().equals("sru"))
+			api = new SRU();
+		else if (library.getApi().equals("winbiap"))
+			api = new WinBiap();
+		else if (library.getApi().equals("webopac.net"))
+			api = new WebOpacNet();
+		else
+			api = null;
+		api.init(new DummyMetaDataSource(), library);
+		return api;
 	}
 }
