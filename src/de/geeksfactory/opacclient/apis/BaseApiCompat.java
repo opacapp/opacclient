@@ -55,12 +55,10 @@ public abstract class BaseApiCompat extends BaseApi implements OpacApi {
 				try {
 					start();
 				} catch (IOException e) {
-					e.printStackTrace();
 				}
 				try {
 					metadata.open();
 				} catch (Exception e) {
-					e.printStackTrace();
 				}
 			}
 
