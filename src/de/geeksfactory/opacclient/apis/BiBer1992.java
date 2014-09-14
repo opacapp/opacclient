@@ -1038,19 +1038,21 @@ public class BiBer1992 extends BaseApi {
 					if (key.equals(AccountData.KEY_LENT_AUTHOR)) {
 						if (value.contains(":")) {
 							// Autor: remove everything starting at ":"
-							value = value.replaceFirst("^.*[ 0-9]/", "").trim();
+							value = value.replaceFirst("^[^:]*/", "").trim();
 							value = value.replaceFirst("\\:.*", "").trim();
 						} else {
-							// no Autor given
+							// no Autor given<
 							value = "";
 						}
 					} else if (key.equals(AccountData.KEY_LENT_TITLE)) {
 						if (value.contains(":")) {
 							// Title: remove everything up to ":"
 							value = value.replaceFirst(".*\\:", "").trim();
+							value = value.replaceFirst("^(.*)/[^/]*$", "$1").trim();
 						} else {
 							// Remove everything except the signature
-							value = value.replaceFirst("^.*[ 0-9]/", "").trim();
+							value = value.replaceFirst("^[^/]*/([^/]*)/[^/]*$", "$1").trim();
+							value = value.replaceFirst("^[^/]*/([^/]*)$", "$1").trim();
 						}
 					}
 
