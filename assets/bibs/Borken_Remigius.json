@@ -1,6 +1,6 @@
 {
     "api": "bibliotheca",
-    "city": "M\u00fcnster",
+    "city": "Borken",
     "country": "Deutschland",
     "data": {
         "accounttable": {
@@ -9,7 +9,7 @@
             "returndate": 2,
             "title": 1
         },
-        "baseurl": "http://webopac.bistum-muenster.de/uniklinikms",
+        "baseurl": "http://opac.bistum-muenster.de/borken",
         "copiestable": {
             "barcode": 0,
             "branch": 4,
@@ -18,10 +18,9 @@
             "returndate": 5,
             "status": 3
         },
-        "db": "OPAC_UniklinikMS",
-        "information": "http://www.ukm-klinikbuecherei.de",
+        "information": "http://www.remigius-buecherei.de/",
         "mediatypes": {
-            "Buchklein.GIF": "BOOK",
+            "Buchklein.GIF": "UNKNOWN",
             "CD-ROMklein.GIF": "CD_SOFTWARE",
             "CD1klein.GIF": "CD",
             "CDklein.GIF": "CD",
@@ -35,7 +34,7 @@
             "Jugendbuchklein.GIF": "BOOK",
             "KinderCD_aklein.GIF": "CD",
             "KinderDVD_aklein.GIF": "DVD",
-            "Kinderbuch_aklein.GIF": "BOOK",
+            "Kinderbuch_aklein.GIF": "UNKNOWN",
             "Kindersachbuch_aklein.GIF": "BOOK",
             "Medien-Paketklein.GIF": "PACKAGE",
             "NDS1klein.GIF": "GAME_CONSOLE_NINTENDO",
@@ -47,16 +46,16 @@
             "PS3klein.GIF": "GAME_CONSOLE_PLAYSTATION",
             "SachDVDklein.GIF": "DVD",
             "Sachbuchklein.GIF": "BOOK",
-            "SommerleseclubBuchklein.GIF": "BOOK",
+            "SommerleseclubBuchklein.GIF": "UNKNOWN",
             "Spielklein.GIF": "BOARDGAME",
-            "Videoklein.GIF": "BOOK",
+            "Videoklein.GIF": "MOVIE",
             "Weihnachten1klein.GIF": "UNKNOWN",
             "Wii1klein.GIF": "GAME_CONSOLE_WII",
             "Wiiklein.GIF": "GAME_CONSOLE_WII",
             "Zeitschriftklein.GIF": "MAGAZINE",
             "eAudio_bibloadklein.GIF": "MP3",
             "eBook_bibloadklein.GIF": "EBOOK",
-            "ePaper_bibloadklein.GIF": "EBOOK",
+            "ePaper_bibloadklein.GIF": "EDOC",
             "eVideo_bibloadklein.GIF": "EVIDEO"
         },
         "reservationtable": {
@@ -67,10 +66,10 @@
         }
     },
     "geo": [
-        51.9606649,
-        7.6261347
+        51.84827139999999,
+        6.8594477
     ],
     "state": "Nordrhein-Westfalen",
     "support": "Katalogsuche und Konto",
-    "title": "Klinikbücherei am UKM"
+    "title": "Remigius-B\u00fccherei"
 }

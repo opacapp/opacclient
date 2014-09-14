@@ -1,6 +1,6 @@
 {
     "api": "bibliotheca",
-    "city": "M\u00fcnster",
+    "city": "Raesfeld",
     "country": "Deutschland",
     "data": {
         "accounttable": {
@@ -9,7 +9,7 @@
             "returndate": 2,
             "title": 1
         },
-        "baseurl": "http://webopac.bistum-muenster.de/uniklinikms",
+        "baseurl": "http://opac.bistum-muenster.de/raesfeld",
         "copiestable": {
             "barcode": 0,
             "branch": 4,
@@ -18,10 +18,9 @@
             "returndate": 5,
             "status": 3
         },
-        "db": "OPAC_UniklinikMS",
-        "information": "http://www.ukm-klinikbuecherei.de",
+        "information": "http://www.buecherei-raesfeld.de/",
         "mediatypes": {
-            "Buchklein.GIF": "BOOK",
+            "Buchklein.GIF": "UNKNOWN",
             "CD-ROMklein.GIF": "CD_SOFTWARE",
             "CD1klein.GIF": "CD",
             "CDklein.GIF": "CD",
@@ -49,14 +48,14 @@
             "Sachbuchklein.GIF": "BOOK",
             "SommerleseclubBuchklein.GIF": "BOOK",
             "Spielklein.GIF": "BOARDGAME",
-            "Videoklein.GIF": "BOOK",
+            "Videoklein.GIF": "MOVIE",
             "Weihnachten1klein.GIF": "UNKNOWN",
             "Wii1klein.GIF": "GAME_CONSOLE_WII",
             "Wiiklein.GIF": "GAME_CONSOLE_WII",
             "Zeitschriftklein.GIF": "MAGAZINE",
             "eAudio_bibloadklein.GIF": "MP3",
             "eBook_bibloadklein.GIF": "EBOOK",
-            "ePaper_bibloadklein.GIF": "EBOOK",
+            "ePaper_bibloadklein.GIF": "EDOC",
             "eVideo_bibloadklein.GIF": "EVIDEO"
         },
         "reservationtable": {
@@ -67,10 +66,10 @@
         }
     },
     "geo": [
-        51.9606649,
-        7.6261347
+        51.7702593,
+        6.8392979
     ],
     "state": "Nordrhein-Westfalen",
     "support": "Katalogsuche und Konto",
-    "title": "Klinikbücherei am UKM"
+    "title": "\u00d6ffentliche B\u00fccherei"
 }
