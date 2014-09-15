@@ -473,6 +473,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
 	public Map<String, String> saveQuery() {
 		Map<String, String> query = new HashMap<String, String>();
+		if (fields == null)
+			return query;
 		for (SearchField field : fields) {
 
 			ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());

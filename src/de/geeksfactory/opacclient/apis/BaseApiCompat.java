@@ -23,19 +23,21 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
 public abstract class BaseApiCompat extends BaseApi implements OpacApi {
 
 	public abstract String[] getSearchFieldsCompat();
-	public abstract SearchRequestResult search(Map<String, String> query) throws IOException, NotReachableException, OpacErrorException;
-	
+
+	public abstract SearchRequestResult search(Map<String, String> query)
+			throws IOException, NotReachableException, OpacErrorException;
+
 	public SearchRequestResult search(List<SearchQuery> queryList)
 			throws NotReachableException, IOException, OpacErrorException {
 		Map<String, String> queryMap = new HashMap<String, String>();
-		for (SearchQuery query:queryList) {
+		for (SearchQuery query : queryList) {
 			queryMap.put(query.getKey(), query.getValue());
 		}
 		return search(queryMap);
 	}
 
 	@Override
-	public List<SearchField> getSearchFields() throws OpacErrorException {
+	public List<SearchField> getSearchFields() throws OpacErrorException, NotReachableException {
 
 		List<SearchField> searchFields = new ArrayList<SearchField>();
 		Set<String> fieldsCompat = new HashSet<String>(
@@ -55,17 +57,15 @@ public abstract class BaseApiCompat extends BaseApi implements OpacApi {
 				try {
 					start();
 				} catch (IOException e) {
+					e.printStackTrace();
+					if (e instanceof NotReachableException)
+						throw (NotReachableException) e;
 				}
 				try {
 					metadata.open();
 				} catch (Exception e) {
 				}
 			}
-
-			if (!metadata.hasMeta(library.getIdent()))
-				throw new OpacErrorException(
-						"Es ist ein Fehler beim Laden der Suchfelder aufgetreten. "
-								+ "Bitte prüfen Sie Ihre Internetverbindung.");
 		}
 
 		Map<String, String> all = new HashMap<String, String>();
@@ -92,14 +92,14 @@ public abstract class BaseApiCompat extends BaseApi implements OpacApi {
 			searchFields.add(field);
 		}
 		if (fieldsCompat.contains(KEY_SEARCH_QUERY_DIGITAL)) {
-			SearchField field = new CheckboxSearchField(KEY_SEARCH_QUERY_DIGITAL,
-					"nur digitale Medien", false);
+			SearchField field = new CheckboxSearchField(
+					KEY_SEARCH_QUERY_DIGITAL, "nur digitale Medien", false);
 			field.setMeaning(Meaning.DIGITAL);
 			searchFields.add(field);
 		}
 		if (fieldsCompat.contains(KEY_SEARCH_QUERY_AVAILABLE)) {
-			SearchField field = new CheckboxSearchField(KEY_SEARCH_QUERY_AVAILABLE,
-							"nur verfügbare Medien", false);
+			SearchField field = new CheckboxSearchField(
+					KEY_SEARCH_QUERY_AVAILABLE, "nur verfügbare Medien", false);
 			field.setMeaning(Meaning.AVAILABLE);
 			searchFields.add(field);
 		}
@@ -110,14 +110,15 @@ public abstract class BaseApiCompat extends BaseApi implements OpacApi {
 			searchFields.add(field);
 		}
 		if (fieldsCompat.contains(KEY_SEARCH_QUERY_BARCODE)) {
-			SearchField field = new BarcodeSearchField(KEY_SEARCH_QUERY_BARCODE,
-					"Strichcode", false, true, "Buchungsnr.");
+			SearchField field = new BarcodeSearchField(
+					KEY_SEARCH_QUERY_BARCODE, "Strichcode", false, true,
+					"Buchungsnr.");
 			field.setMeaning(Meaning.BARCODE);
 			searchFields.add(field);
 		}
 		if (fieldsCompat.contains(KEY_SEARCH_QUERY_YEAR)) {
-			SearchField field = new TextSearchField(KEY_SEARCH_QUERY_YEAR, "Jahr",
-					false, false, "", false, true);
+			SearchField field = new TextSearchField(KEY_SEARCH_QUERY_YEAR,
+					"Jahr", false, false, "", false, true);
 			field.setMeaning(Meaning.YEAR);
 			searchFields.add(field);
 		}
@@ -135,32 +136,37 @@ public abstract class BaseApiCompat extends BaseApi implements OpacApi {
 			field.setMeaning(Meaning.YEAR);
 			searchFields.add(field);
 		}
-		if (fieldsCompat.contains(KEY_SEARCH_QUERY_BRANCH)) {
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_BRANCH)
+				&& metadata.hasMeta(library.getIdent(),
+						MetaDataSource.META_TYPE_BRANCH)) {
 			List<Map<String, String>> data = metadata.getMeta(
 					library.getIdent(), MetaDataSource.META_TYPE_BRANCH);
 			data.add(0, all);
-			SearchField field = new DropdownSearchField(KEY_SEARCH_QUERY_BRANCH,
-					"Zweigstelle", false, data);
+			SearchField field = new DropdownSearchField(
+					KEY_SEARCH_QUERY_BRANCH, "Zweigstelle", false, data);
 			field.setMeaning(Meaning.BRANCH);
 			searchFields.add(field);
 		}
-		if (fieldsCompat.contains(KEY_SEARCH_QUERY_HOME_BRANCH)) {
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_HOME_BRANCH)
+				&& metadata.hasMeta(library.getIdent(),
+						MetaDataSource.META_TYPE_HOME_BRANCH)) {
 			List<Map<String, String>> data = metadata.getMeta(
 					library.getIdent(), MetaDataSource.META_TYPE_HOME_BRANCH);
 			data.add(0, all);
-			SearchField field =
-					new DropdownSearchField(KEY_SEARCH_QUERY_HOME_BRANCH,
-							"Aktuelle Zweigstelle („eigene Zweigstelle“)",
-							false, data);
+			SearchField field = new DropdownSearchField(
+					KEY_SEARCH_QUERY_HOME_BRANCH,
+					"Aktuelle Zweigstelle („eigene Zweigstelle“)", false, data);
 			field.setMeaning(Meaning.HOME_BRANCH);
 			searchFields.add(field);
 		}
-		if (fieldsCompat.contains(KEY_SEARCH_QUERY_CATEGORY)) {
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_CATEGORY)
+				&& metadata.hasMeta(library.getIdent(),
+						MetaDataSource.META_TYPE_CATEGORY)) {
 			List<Map<String, String>> data = metadata.getMeta(
 					library.getIdent(), MetaDataSource.META_TYPE_CATEGORY);
 			data.add(0, all);
-			SearchField field = new DropdownSearchField(KEY_SEARCH_QUERY_CATEGORY,
-					"Mediengruppe", false, data);
+			SearchField field = new DropdownSearchField(
+					KEY_SEARCH_QUERY_CATEGORY, "Mediengruppe", false, data);
 			field.setMeaning(Meaning.CATEGORY);
 			searchFields.add(field);
 		}
@@ -205,7 +211,7 @@ public abstract class BaseApiCompat extends BaseApi implements OpacApi {
 		}
 		return searchFields;
 	}
-	
+
 	@Override
 	public boolean shouldUseMeaningDetector() {
 		return false;
