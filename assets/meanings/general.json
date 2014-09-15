@@ -18,7 +18,8 @@
         "Verfasser/Interpret",
         "Autoren / Pers.",
         "Name, Vorname",
-        "Personen"
+        "Personen",
+        "Person, Autor"
     ],
     "AUDIENCE": [
         "Interessenkreis",
@@ -33,7 +34,8 @@
         "Freie Suche",
         "Alle Felder",
         "Suche in allen Feldern",
-        "Volltextsuche"
+        "Volltextsuche",
+        "Alle Wörter"
     ],
     "KEYWORD": [
         "Schlagwort",
@@ -63,7 +65,8 @@
         "ISBN ISSN",
         "ISBN/ISMN",
         "ISBN (mit -)",
-        "ISBN_ISSN"
+        "ISBN_ISSN",
+        "ISBN / ISSN / ISMN"
     ],
     "HOME_BRANCH": [
         "Aktuelle Zweigstelle",
@@ -107,9 +110,17 @@
         "Ort/Verlag",
         "Verlagsort/Verlag",
         "Verlag/Ort",
-        "Verlag/Verlagsort"
+        "Verlag/Verlagsort",
+        "Ort, Verlag"
     ],
     "AVAILABLE": ["verfügbar"],
+    "DIGITAL": [
+        "digital",
+        "E-Books",
+        "nur elektronische Publikationen",
+        "E-Medien",
+        "digitales Objekt"
+    ],
     "BRANCH": [
         "Suche in Zweigstelle",
         "Zweigstelle ist gleich",
@@ -123,13 +134,6 @@
         "Bibliothek",
         "Suche in Teilbibliothek",
         "Anzeige der Titel nur aus Zweigstelle"
-    ],
-    "DIGITAL": [
-        "digital",
-        "E-Books",
-        "nur elektronische Publikationen",
-        "E-Medien",
-        "digitales Objekt"
     ],
     "LOCATION": [
         "Ort",
@@ -166,6 +170,7 @@
         "Titelwort(e)",
         "Titel (wörter)",
         "Titel-Stichwort",
-        "Titel Stichwort"
+        "Titel Stichwort",
+        "Titelstichwörter"
     ]
 }
