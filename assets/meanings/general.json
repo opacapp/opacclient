@@ -115,6 +115,13 @@
         "Ort, Verlag"
     ],
     "AVAILABLE": ["verfügbar"],
+    "DIGITAL": [
+        "digital",
+        "E-Books",
+        "nur elektronische Publikationen",
+        "E-Medien",
+        "digitales Objekt"
+    ],
     "BRANCH": [
         "Suche in Zweigstelle",
         "Zweigstelle ist gleich",
@@ -129,13 +136,6 @@
         "Suche in Teilbibliothek",
         "Anzeige der Titel nur aus Zweigstelle"
     ],
-    "DIGITAL": [
-        "digital",
-        "E-Books",
-        "nur elektronische Publikationen",
-        "E-Medien",
-        "digitales Objekt"
-    ],
     "LOCATION": [
         "Ort",
         "Standort",
@@ -149,7 +149,8 @@
         "Medientyp",
         "Erscheinungsform",
         "Erscheinungsform/Code",
-        "Filter Medienarten"
+        "Filter Medienarten",
+        "Materialart"
     ],
     "BARCODE": [
         "Barcode",

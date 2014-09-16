@@ -1066,6 +1066,27 @@ public class Pica extends BaseApi implements OpacApi {
 			field.setId("FUZZY");
 			fields.add(field);
 		}
+		
+		Elements mediatypes = doc.select("input[name=ADI_MAT]");
+		if (mediatypes.size() > 0) {
+			DropdownSearchField field = new DropdownSearchField();
+			field.setDisplayName("Materialart");
+			field.setId("ADI_MAT");
+			
+			List<Map<String, String>> values = new ArrayList<Map<String, String>>();
+			Map<String, String> all = new HashMap<String, String>();
+			all.put("key", "");
+			all.put("value", "Alle");
+			values.add(all);
+			for (Element mt:mediatypes) {
+				Map<String, String> value = new HashMap<String, String>();
+				value.put("key", mt.attr("value"));
+				value.put("value", mt.parent().nextElementSibling().text().replace("\u00a0", ""));
+				values.add(value);
+			}
+			field.setDropdownValues(values);
+			fields.add(field);
+		}
 
 		return fields;
 	}
