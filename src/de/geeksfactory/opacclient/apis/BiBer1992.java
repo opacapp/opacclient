@@ -178,51 +178,53 @@ public class BiBer1992 extends BaseApi {
 
 		// get media types
 		Elements mt_opts = doc.select("form input[name~=(MT|MS)]");
-		DropdownSearchField mtDropdown = new DropdownSearchField();
-		mtDropdown.setId(mt_opts.get(0).attr("name"));
-		mtDropdown.setDisplayName("Medientyp");
-		List<Map<String, String>> mtOptions = new ArrayList<Map<String, String>>();
-		for (Element opt : mt_opts) {
-			if (!opt.val().equals("")) {
-				String text = opt.text();
-				if (text.length() == 0) {
-					// text is empty, check layouts:
-					// Essen: <input name="MT"><img title="mediatype">
-					// Schaffenb: <input name="MT"><img alt="mediatype">
-					Element img = opt.nextElementSibling();
-					if (img != null && img.tagName().equals("img")) {
-						text = img.attr("title");
-						if (text.equals("")) {
-							text = img.attr("alt");
+		if (mt_opts.size() > 0) {
+			DropdownSearchField mtDropdown = new DropdownSearchField();
+			mtDropdown.setId(mt_opts.get(0).attr("name"));
+			mtDropdown.setDisplayName("Medientyp");
+			List<Map<String, String>> mtOptions = new ArrayList<Map<String, String>>();
+			for (Element opt : mt_opts) {
+				if (!opt.val().equals("")) {
+					String text = opt.text();
+					if (text.length() == 0) {
+						// text is empty, check layouts:
+						// Essen: <input name="MT"><img title="mediatype">
+						// Schaffenb: <input name="MT"><img alt="mediatype">
+						Element img = opt.nextElementSibling();
+						if (img != null && img.tagName().equals("img")) {
+							text = img.attr("title");
+							if (text.equals("")) {
+								text = img.attr("alt");
+							}
 						}
 					}
-				}
-				if (text.length() == 0) {
-					// text is still empty, check table layout, Example
-					// Friedrichshafen
-					// <td><input name="MT"></td> <td><img
-					// title="mediatype"></td>
-					Element td1 = opt.parent();
-					Element td2 = td1.nextElementSibling();
-					if (td2 != null) {
-						Elements td2Children = td2.select("img[title]");
-						if (td2Children.size() > 0) {
-							text = td2Children.get(0).attr("title");
+					if (text.length() == 0) {
+						// text is still empty, check table layout, Example
+						// Friedrichshafen
+						// <td><input name="MT"></td> <td><img
+						// title="mediatype"></td>
+						Element td1 = opt.parent();
+						Element td2 = td1.nextElementSibling();
+						if (td2 != null) {
+							Elements td2Children = td2.select("img[title]");
+							if (td2Children.size() > 0) {
+								text = td2Children.get(0).attr("title");
+							}
 						}
 					}
+					if (text.length() == 0) {
+						// text is still empty: missing end tag like Offenburg
+						text = parse_option_regex(opt);
+					}
+					Map<String, String> value = new HashMap<String, String>();
+					value.put("key", opt.val());
+					value.put("value", text);
+					mtOptions.add(value);
 				}
-				if (text.length() == 0) {
-					// text is still empty: missing end tag like Offenburg
-					text = parse_option_regex(opt);
-				}
-				Map<String, String> value = new HashMap<String, String>();
-				value.put("key", opt.val());
-				value.put("value", text);
-				mtOptions.add(value);
 			}
+			mtDropdown.setDropdownValues(mtOptions);
+			fields.add(mtDropdown);
 		}
-		mtDropdown.setDropdownValues(mtOptions);
-		fields.add(mtDropdown);
 
 		// get branches
 		Elements br_opts = doc.select("form select[name=ZW] option");
