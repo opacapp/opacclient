@@ -52,28 +52,33 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  * 
  * @author Johan von Forstner, 06.04.2014
  * 
- * WebOPAC.net, Version 2.2.70
- * gestartet mit Gemeindebibliothek Nürensdorf (erstes Google-Suchergebnis)
+ *         WebOPAC.net, Version 2.2.70 gestartet mit Gemeindebibliothek
+ *         Nürensdorf (erstes Google-Suchergebnis)
  * 
- * weitere kompatible Bibliotheken:
- * https://www.google.de/search?q=webOpac.net%202.1.30%20powered%20by%20winMedio.net&qscrl=1#q=%22webOpac.net+2.2.70+powered+by+winMedio.net%22+inurl%3Awinmedio&qscrl=1&start=0
+ *         weitere kompatible Bibliotheken:
+ *         https://www.google.de/search?q=webOpac
+ *         .net%202.1.30%20powered%20by%20winMedio
+ *         .net&qscrl=1#q=%22webOpac.net+2.2
+ *         .70+powered+by+winMedio.net%22+inurl%3Awinmedio&qscrl=1&start=0
  * 
- * Unterstützt bisher nur Katalogsuche, Accountunterstüzung könnte (wenn keine Kontodaten verfügbar sind)
- * über den Javascript-Code reverse-engineered werden:
- * http://www.winmedio.net/nuerensdorf/de/mobile/GetScript.ashx?id=mobile.de.min.js&v=20140122
+ *         Unterstützt bisher nur Katalogsuche, Accountunterstüzung könnte (wenn
+ *         keine Kontodaten verfügbar sind) über den Javascript-Code
+ *         reverse-engineered werden:
+ *         http://www.winmedio.net/nuerensdorf/de/mobile
+ *         /GetScript.ashx?id=mobile.de.min.js&v=20140122
  * 
  */
 
 public class WebOpacNet extends BaseApiCompat implements OpacApi {
-	
+
 	protected String opac_url = "";
 	protected MetaDataSource metadata;
 	protected JSONObject data;
 	protected Library library;
 	protected Map<String, String> query;
-	
+
 	protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
-	
+
 	static {
 		defaulttypes.put("1", MediaType.BOOK);
 		defaulttypes.put("2", MediaType.CD_MUSIC);
@@ -85,9 +90,11 @@ public class WebOpacNet extends BaseApiCompat implements OpacApi {
 
 	@Override
 	public void start() throws IOException, NotReachableException {
-		String text = httpGet(opac_url + "/de/mobile/GetRestrictions.ashx", getDefaultEncoding());
+		String text = httpGet(opac_url + "/de/mobile/GetRestrictions.ashx",
+				getDefaultEncoding());
 		try {
-			JSONArray filters = new JSONObject(text).getJSONArray("restrcontainers");
+			JSONArray filters = new JSONObject(text)
+					.getJSONArray("restrcontainers");
 			JSONArray mediatypes = null;
 			int i = 0;
 			while (mediatypes == null && i < filters.length()) {
@@ -102,22 +109,22 @@ public class WebOpacNet extends BaseApiCompat implements OpacApi {
 				throw new RuntimeException(e);
 			}
 			metadata.clearMeta(library.getIdent());
-			
+
 			for (i = 0; i < mediatypes.length(); i++) {
 				JSONObject mediatype = mediatypes.getJSONObject(i);
 				String id = mediatype.getString("id");
 				String name = mediatype.getString("bez");
 				metadata.addMeta(MetaDataSource.META_TYPE_CATEGORY,
-					library.getIdent(), id, name);
+						library.getIdent(), id, name);
 			}
-			
+
 			metadata.close();
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	public void extract_meta() {
 		try {
 			metadata.open();
@@ -131,7 +138,7 @@ public class WebOpacNet extends BaseApiCompat implements OpacApi {
 			metadata.close();
 		}
 	}
-	
+
 	@Override
 	public void init(MetaDataSource metadata, Library lib) {
 		super.init(metadata, lib);
@@ -148,82 +155,88 @@ public class WebOpacNet extends BaseApiCompat implements OpacApi {
 	}
 
 	@Override
-	public SearchRequestResult search(Map<String, String> query) throws IOException,
-			NotReachableException, OpacErrorException {
+	public SearchRequestResult search(Map<String, String> query)
+			throws IOException, NotReachableException, OpacErrorException {
 		this.query = query;
-		List<NameValuePair> params = new ArrayList<NameValuePair>();	
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		start();
-		
-		int index = buildParams(query, params, 1);		
-		
+
+		int index = buildParams(query, params, 1);
+
 		if (index == 0) {
 			throw new OpacErrorException(
 					"Es wurden keine Suchkriterien eingegeben.");
 		}
-		
+
 		String json = httpGet(opac_url + "/de/mobile/GetMedien.ashx"
 				+ buildHttpGetParams(params, getDefaultEncoding()),
 				getDefaultEncoding());
-		
+
 		return parse_search(json, 1);
 	}
-	
-	protected int addParameters(Map<String, String> query, String key, int searchkey,
-			StringBuilder params, int index) {
+
+	protected int addParameters(Map<String, String> query, String key,
+			int searchkey, StringBuilder params, int index) {
 		if (!query.containsKey(key) || query.get(key).equals(""))
 			return index;
-		
+
 		params.append("|" + String.valueOf(searchkey) + "|" + query.get(key));
 		return index + 1;
 	}
-	
-	protected void addFilters(Map<String, String> query, String key, String searchkey,
-			StringBuilder params) {
+
+	protected void addFilters(Map<String, String> query, String key,
+			String searchkey, StringBuilder params) {
 		if (!query.containsKey(key) || query.get(key).equals(""))
 			return;
-		
+
 		params.append("&" + String.valueOf(searchkey) + "=" + query.get(key));
 	}
 
-	private SearchRequestResult parse_search(String text, int page) throws OpacErrorException {
+	private SearchRequestResult parse_search(String text, int page)
+			throws OpacErrorException {
 		if (!text.equals("")) {
 			try {
 				List<SearchResult> results = new ArrayList<SearchResult>();
 				JSONObject json = new JSONObject(text);
-				int total_result_count = Integer.parseInt(json.getString("totalcount"));
-				
+				int total_result_count = Integer.parseInt(json
+						.getString("totalcount"));
+
 				JSONArray resultList = json.getJSONArray("mobmeds");
-				for(int i = 0; i < resultList.length(); i++) {
+				for (int i = 0; i < resultList.length(); i++) {
 					JSONObject resultJson = resultList.getJSONObject(i);
 					SearchResult result = new SearchResult();
 					result.setId(resultJson.getString("medid"));
-					
+
 					String title = resultJson.getString("titel");
 					String publisher = resultJson.getString("verlag");
 					String series = resultJson.getString("reihe");
-					String html = "<b>" + title + "</b><br />"
-							+ publisher + ", " + series;
-					
-					String type = resultJson.getString("iconurl").substring(12,13);
+					String html = "<b>" + title + "</b><br />" + publisher
+							+ ", " + series;
+
+					String type = resultJson.getString("iconurl").substring(12,
+							13);
 					result.setType(defaulttypes.get(type));
-					
+
 					result.setInnerhtml(html);
-					
+
 					if (resultJson.getString("imageurl").length() > 0)
 						result.setCover(resultJson.getString("imageurl"));
-					
+
 					results.add(result);
 				}
-				
-				return new SearchRequestResult(results, total_result_count, page);
+
+				return new SearchRequestResult(results, total_result_count,
+						page);
 			} catch (JSONException e) {
 				e.printStackTrace();
-				throw new OpacErrorException("Fehler beim Parsen: " + e.getMessage());
+				throw new OpacErrorException("Fehler beim Parsen: "
+						+ e.getMessage());
 			}
 		} else {
-			return new SearchRequestResult(new ArrayList<SearchResult>(), 0, page);
+			return new SearchRequestResult(new ArrayList<SearchResult>(), 0,
+					page);
 		}
-		
+
 	}
 
 	@Override
@@ -238,49 +251,44 @@ public class WebOpacNet extends BaseApiCompat implements OpacApi {
 			NotReachableException, OpacErrorException {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		start();
-		
+
 		int index = buildParams(query, params, page);
-		
+
 		if (index == 0) {
 			throw new OpacErrorException(
 					"Es wurden keine Suchkriterien eingegeben.");
 		}
-		
+
 		String json = httpGet(opac_url + "/de/mobile/GetMedien.ashx"
 				+ buildHttpGetParams(params, getDefaultEncoding()),
 				getDefaultEncoding());
-		
+
 		return parse_search(json, page);
 	}
 
-	private int buildParams(Map<String, String> query, List<NameValuePair> params, int page) {
+	private int buildParams(Map<String, String> query,
+			List<NameValuePair> params, int page) {
 		int index = 0;
-		
+
 		StringBuilder queries = new StringBuilder();
 		queries.append("erw:0");
-		
-		index = addParameters(query, KEY_SEARCH_QUERY_FREE, 1,
-				queries, index);
-		index = addParameters(query, KEY_SEARCH_QUERY_AUTHOR, 2,
-				queries, index);
-		index = addParameters(query, KEY_SEARCH_QUERY_TITLE, 3,
-				queries, index);
-		index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDA, 6,
-				queries, index);
-		index = addParameters(query, KEY_SEARCH_QUERY_ISBN, 9,
-				queries, index);
-		index = addParameters(query, KEY_SEARCH_QUERY_PUBLISHER, 8,
-				queries, index);
-		addFilters(query, KEY_SEARCH_QUERY_YEAR, "EJ",
-				queries);
-		addFilters(query, KEY_SEARCH_QUERY_CATEGORY, "XM",
-				queries);
-		
+
+		index = addParameters(query, KEY_SEARCH_QUERY_FREE, 1, queries, index);
+		index = addParameters(query, KEY_SEARCH_QUERY_AUTHOR, 2, queries, index);
+		index = addParameters(query, KEY_SEARCH_QUERY_TITLE, 3, queries, index);
+		index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDA, 6, queries,
+				index);
+		index = addParameters(query, KEY_SEARCH_QUERY_ISBN, 9, queries, index);
+		index = addParameters(query, KEY_SEARCH_QUERY_PUBLISHER, 8, queries,
+				index);
+		addFilters(query, KEY_SEARCH_QUERY_YEAR, "EJ", queries);
+		addFilters(query, KEY_SEARCH_QUERY_CATEGORY, "XM", queries);
+
 		params.add(new BasicNameValuePair("q", queries.toString()));
 		params.add(new BasicNameValuePair("p", String.valueOf(page - 1)));
 		params.add(new BasicNameValuePair("s", "2"));
 		params.add(new BasicNameValuePair("asc", "1"));
-		
+
 		return index;
 	}
 
@@ -290,11 +298,11 @@ public class WebOpacNet extends BaseApiCompat implements OpacApi {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("id", id));
 		params.add(new BasicNameValuePair("orientation", "1"));
-		
+
 		String json = httpGet(opac_url + "/de/mobile/GetDetail.ashx"
 				+ buildHttpGetParams(params, getDefaultEncoding()),
 				getDefaultEncoding());
-		
+
 		return parse_detail(json);
 	}
 
@@ -302,18 +310,18 @@ public class WebOpacNet extends BaseApiCompat implements OpacApi {
 		try {
 			DetailledItem result = new DetailledItem();
 			JSONObject json = new JSONObject(text);
-			
+
 			result.setTitle(json.getString("titel"));
 			result.setCover(json.getString("imageurl"));
 			result.setId(json.getString("medid"));
-			
-			//Details
+
+			// Details
 			JSONArray info = json.getJSONArray("medium");
 			for (int i = 0; i < info.length(); i++) {
 				JSONObject detailJson = info.getJSONObject(i);
 				String name = detailJson.getString("bez");
 				String value = "";
-				
+
 				JSONArray values = detailJson.getJSONArray("values");
 				for (int j = 0; j < values.length(); j++) {
 					JSONObject valJson = values.getJSONObject(j);
@@ -327,20 +335,20 @@ public class WebOpacNet extends BaseApiCompat implements OpacApi {
 				Detail detail = new Detail(name, value);
 				result.addDetail(detail);
 			}
-			
-			//Copies
+
+			// Copies
 			JSONArray copies = json.getJSONArray("exemplare");
 			for (int i = 0; i < copies.length(); i++) {
 				JSONObject copyJson = copies.getJSONObject(i);
 				Map<String, String> copy = new HashMap<String, String>();
-				
+
 				JSONArray values = copyJson.getJSONArray("rows");
 				for (int j = 0; j < values.length(); j++) {
 					JSONObject valJson = values.getJSONObject(j);
 					String name = valJson.getString("bez");
 					String value = valJson.getJSONArray("values")
 							.getJSONObject(0).getString("dval");
-					if(!value.equals("")) {
+					if (!value.equals("")) {
 						if (name.equals("Exemplarstatus"))
 							copy.put(DetailledItem.KEY_COPY_STATUS, value);
 						else if (name.equals("Signatur"))
@@ -349,25 +357,30 @@ public class WebOpacNet extends BaseApiCompat implements OpacApi {
 							copy.put(DetailledItem.KEY_COPY_LOCATION, value);
 						else if (name.equals("Themenabteilung")) {
 							if (copy.containsKey(DetailledItem.KEY_COPY_DEPARTMENT))
-								value = copy.get(DetailledItem.KEY_COPY_DEPARTMENT) + value;
+								value = copy
+										.get(DetailledItem.KEY_COPY_DEPARTMENT)
+										+ value;
 							copy.put(DetailledItem.KEY_COPY_DEPARTMENT, value);
 						} else if (name.equals("Themenbereich")) {
 							if (copy.containsKey(DetailledItem.KEY_COPY_DEPARTMENT))
-								value = copy.get(DetailledItem.KEY_COPY_DEPARTMENT) + value;
+								value = copy
+										.get(DetailledItem.KEY_COPY_DEPARTMENT)
+										+ value;
 							copy.put(DetailledItem.KEY_COPY_DEPARTMENT, value);
 						}
 					}
 				}
 				result.addCopy(copy);
 			}
-			
+
 			return result;
-			
+
 		} catch (JSONException e) {
 			e.printStackTrace();
-			throw new OpacErrorException("Fehler beim Parsen: " + e.getMessage());
+			throw new OpacErrorException("Fehler beim Parsen: "
+					+ e.getMessage());
 		}
-		
+
 	}
 
 	@Override
@@ -415,8 +428,9 @@ public class WebOpacNet extends BaseApiCompat implements OpacApi {
 	@Override
 	public String[] getSearchFieldsCompat() {
 		return new String[] { KEY_SEARCH_QUERY_FREE, KEY_SEARCH_QUERY_AUTHOR,
-				KEY_SEARCH_QUERY_TITLE, KEY_SEARCH_QUERY_KEYWORDA, KEY_SEARCH_QUERY_ISBN,
-				KEY_SEARCH_QUERY_YEAR, KEY_SEARCH_QUERY_CATEGORY, KEY_SEARCH_QUERY_PUBLISHER};
+				KEY_SEARCH_QUERY_TITLE, KEY_SEARCH_QUERY_KEYWORDA,
+				KEY_SEARCH_QUERY_ISBN, KEY_SEARCH_QUERY_YEAR,
+				KEY_SEARCH_QUERY_CATEGORY, KEY_SEARCH_QUERY_PUBLISHER };
 	}
 
 	@Override
@@ -443,7 +457,7 @@ public class WebOpacNet extends BaseApiCompat implements OpacApi {
 	public String getShareUrl(String id, String title) {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("id", id));
-		
+
 		String url;
 		try {
 			url = opac_url + "/default.aspx"
@@ -452,18 +466,19 @@ public class WebOpacNet extends BaseApiCompat implements OpacApi {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		
-		return null;						
+
+		return null;
 	}
 
 	@Override
 	public int getSupportFlags() {
 		return SUPPORT_FLAG_ENDLESS_SCROLLING | SUPPORT_FLAG_CHANGE_ACCOUNT;
 	}
-	
-	private String buildHttpGetParams(List<NameValuePair> params, String encoding) throws UnsupportedEncodingException {
+
+	private String buildHttpGetParams(List<NameValuePair> params,
+			String encoding) throws UnsupportedEncodingException {
 		String string = "?";
-		for(NameValuePair pair:params) {
+		for (NameValuePair pair : params) {
 			String name = URLEncoder.encode(pair.getName(), encoding);
 			String value = URLEncoder.encode(pair.getValue(), encoding);
 			string += name + "=" + value + "&";
@@ -471,7 +486,7 @@ public class WebOpacNet extends BaseApiCompat implements OpacApi {
 		string = string.substring(0, string.length() - 1);
 		return string;
 	}
-	
+
 	@Override
 	protected String getDefaultEncoding() {
 		return "UTF-8";
