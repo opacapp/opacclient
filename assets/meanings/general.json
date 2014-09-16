@@ -28,7 +28,8 @@
         "Altersgruppe",
         "Alterskategorie",
         "Interesse",
-        "Benutzergruppe"
+        "Benutzergruppe",
+        "Interessenskreis"
     ],
     "FREE": [
         "Freie Suche",
@@ -134,14 +135,16 @@
         "Suche in Abteilung (Hauptstelle)",
         "Bibliothek",
         "Suche in Teilbibliothek",
-        "Anzeige der Titel nur aus Zweigstelle"
+        "Anzeige der Titel nur aus Zweigstelle",
+        "Suchort"
     ],
     "LOCATION": [
         "Ort",
         "Standort",
         "Regalaufstellung",
         "Regalstandort",
-        "Signatur/Standort"
+        "Signatur/Standort",
+        "Sonderstandort"
     ],
     "CATEGORY": [
         "Kategorie",
@@ -173,6 +176,7 @@
         "Titel (wörter)",
         "Titel-Stichwort",
         "Titel Stichwort",
-        "Titelstichwörter"
+        "Titelstichwörter",
+        "Titelwort"
     ]
 }
