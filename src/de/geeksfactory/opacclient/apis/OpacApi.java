@@ -581,7 +581,7 @@ public interface OpacApi {
 	 * @see de.geeksfactory.opacclient.objects.SearchResult
 	 */
 	public SearchRequestResult searchGetPage(int page) throws IOException,
-			NotReachableException, OpacErrorException;
+			NotReachableException, OpacErrorException, JSONException;
 
 	/**
 	 * Get details for the item with unique ID id.

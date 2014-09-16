@@ -34,6 +34,10 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
@@ -46,6 +50,10 @@ import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
+import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
+import de.geeksfactory.opacclient.searchfields.SearchField;
+import de.geeksfactory.opacclient.searchfields.SearchQuery;
+import de.geeksfactory.opacclient.searchfields.TextSearchField;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
@@ -69,13 +77,13 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  * 
  */
 
-public class WebOpacNet extends BaseApiCompat implements OpacApi {
+public class WebOpacNet extends BaseApi implements OpacApi {
 
 	protected String opac_url = "";
 	protected MetaDataSource metadata;
 	protected JSONObject data;
 	protected Library library;
-	protected Map<String, String> query;
+	protected List<SearchQuery> query;
 
 	protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
 
@@ -90,38 +98,6 @@ public class WebOpacNet extends BaseApiCompat implements OpacApi {
 
 	@Override
 	public void start() throws IOException, NotReachableException {
-		String text = httpGet(opac_url + "/de/mobile/GetRestrictions.ashx",
-				getDefaultEncoding());
-		try {
-			JSONArray filters = new JSONObject(text)
-					.getJSONArray("restrcontainers");
-			JSONArray mediatypes = null;
-			int i = 0;
-			while (mediatypes == null && i < filters.length()) {
-				JSONObject filter = filters.getJSONObject(i);
-				if (filter.getString("querytyp").equals("XM"))
-					mediatypes = filter.getJSONArray("restrictions");
-				i++;
-			}
-			try {
-				metadata.open();
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-			metadata.clearMeta(library.getIdent());
-
-			for (i = 0; i < mediatypes.length(); i++) {
-				JSONObject mediatype = mediatypes.getJSONObject(i);
-				String id = mediatype.getString("id");
-				String name = mediatype.getString("bez");
-				metadata.addMeta(MetaDataSource.META_TYPE_CATEGORY,
-						library.getIdent(), id, name);
-			}
-
-			metadata.close();
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
 
 	}
 
@@ -155,8 +131,9 @@ public class WebOpacNet extends BaseApiCompat implements OpacApi {
 	}
 
 	@Override
-	public SearchRequestResult search(Map<String, String> query)
-			throws IOException, NotReachableException, OpacErrorException {
+	public SearchRequestResult search(List<SearchQuery> query)
+			throws IOException, NotReachableException, OpacErrorException,
+			JSONException {
 		this.query = query;
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		start();
@@ -175,21 +152,14 @@ public class WebOpacNet extends BaseApiCompat implements OpacApi {
 		return parse_search(json, 1);
 	}
 
-	protected int addParameters(Map<String, String> query, String key,
-			int searchkey, StringBuilder params, int index) {
-		if (!query.containsKey(key) || query.get(key).equals(""))
+	protected int addParameters(SearchQuery query, StringBuilder params,
+			int index) {
+		if (query.getValue().equals(""))
 			return index;
-
-		params.append("|" + String.valueOf(searchkey) + "|" + query.get(key));
+		if (index > 0)
+			params.append("$0");
+		params.append("|" + query.getKey() + "|" + query.getValue());
 		return index + 1;
-	}
-
-	protected void addFilters(Map<String, String> query, String key,
-			String searchkey, StringBuilder params) {
-		if (!query.containsKey(key) || query.get(key).equals(""))
-			return;
-
-		params.append("&" + String.valueOf(searchkey) + "=" + query.get(key));
 	}
 
 	private SearchRequestResult parse_search(String text, int page)
@@ -248,7 +218,7 @@ public class WebOpacNet extends BaseApiCompat implements OpacApi {
 
 	@Override
 	public SearchRequestResult searchGetPage(int page) throws IOException,
-			NotReachableException, OpacErrorException {
+			NotReachableException, OpacErrorException, JSONException {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		start();
 
@@ -266,28 +236,26 @@ public class WebOpacNet extends BaseApiCompat implements OpacApi {
 		return parse_search(json, page);
 	}
 
-	private int buildParams(Map<String, String> query,
-			List<NameValuePair> params, int page) {
+	private int buildParams(List<SearchQuery> queryList,
+			List<NameValuePair> params, int page) throws JSONException {
 		int index = 0;
 
 		StringBuilder queries = new StringBuilder();
 		queries.append("erw:0");
+		for (SearchQuery query : queryList) {
+			if (!query.getSearchField().getData().getBoolean("filter"))
+				index = addParameters(query, queries, index);
+		}
 
-		index = addParameters(query, KEY_SEARCH_QUERY_FREE, 1, queries, index);
-		index = addParameters(query, KEY_SEARCH_QUERY_AUTHOR, 2, queries, index);
-		index = addParameters(query, KEY_SEARCH_QUERY_TITLE, 3, queries, index);
-		index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDA, 6, queries,
-				index);
-		index = addParameters(query, KEY_SEARCH_QUERY_ISBN, 9, queries, index);
-		index = addParameters(query, KEY_SEARCH_QUERY_PUBLISHER, 8, queries,
-				index);
-		addFilters(query, KEY_SEARCH_QUERY_YEAR, "EJ", queries);
-		addFilters(query, KEY_SEARCH_QUERY_CATEGORY, "XM", queries);
+		for (SearchQuery query : queryList) {
+			if (query.getSearchField().getData().getBoolean("filter")
+					&& !query.getValue().equals(""))
+				queries.append("&" + query.getKey() + "=" + query.getValue());
+		}
 
 		params.add(new BasicNameValuePair("q", queries.toString()));
 		params.add(new BasicNameValuePair("p", String.valueOf(page - 1)));
-		params.add(new BasicNameValuePair("s", "2"));
-		params.add(new BasicNameValuePair("asc", "1"));
+		params.add(new BasicNameValuePair("t", "1"));
 
 		return index;
 	}
@@ -426,11 +394,69 @@ public class WebOpacNet extends BaseApiCompat implements OpacApi {
 	}
 
 	@Override
-	public String[] getSearchFieldsCompat() {
-		return new String[] { KEY_SEARCH_QUERY_FREE, KEY_SEARCH_QUERY_AUTHOR,
-				KEY_SEARCH_QUERY_TITLE, KEY_SEARCH_QUERY_KEYWORDA,
-				KEY_SEARCH_QUERY_ISBN, KEY_SEARCH_QUERY_YEAR,
-				KEY_SEARCH_QUERY_CATEGORY, KEY_SEARCH_QUERY_PUBLISHER };
+	public List<SearchField> getSearchFields() throws IOException,
+			JSONException {
+		List<SearchField> fields = new ArrayList<SearchField>();
+
+		// Text fields
+		String html = httpGet(opac_url + "/de/mobile/default.aspx",
+				getDefaultEncoding());
+		Document doc = Jsoup.parse(html);
+		Elements options = doc.select("#drpOptSearchT option");
+		for (Element option : options) {
+			TextSearchField field = new TextSearchField();
+			field.setDisplayName(option.text());
+			field.setId(option.attr("value"));
+			field.setData(new JSONObject("{\"filter\":false}"));
+			field.setHint("");
+			fields.add(field);
+		}
+
+		// Dropdowns
+		String text = httpGet(opac_url + "/de/mobile/GetRestrictions.ashx",
+				getDefaultEncoding());
+		JSONArray filters = new JSONObject(text)
+				.getJSONArray("restrcontainers");
+		for (int i = 0; i < filters.length(); i++) {
+			JSONObject filter = filters.getJSONObject(i);
+			if (filter.getString("querytyp").equals("EJ")) {
+				// Querying by year also works for other years than the ones
+				// listed
+				// -> Make it a text field instead of a dropdown
+				TextSearchField field = new TextSearchField();
+				field.setDisplayName(filter.getString("kopf"));
+				field.setId(filter.getString("querytyp"));
+				field.setData(new JSONObject("{\"filter\":true}"));
+				field.setHint("");
+				fields.add(field);
+			} else {
+				DropdownSearchField field = new DropdownSearchField();
+				field.setId(filter.getString("querytyp"));
+				field.setDisplayName(filter.getString("kopf"));
+
+				JSONArray restrictions = filter.getJSONArray("restrictions");
+				List<Map<String, String>> values = new ArrayList<Map<String, String>>();
+
+				Map<String, String> all = new HashMap<String, String>();
+				all.put("key", "");
+				all.put("value", "Alle");
+				values.add(all);
+
+				for (int j = 0; j < restrictions.length(); j++) {
+					JSONObject restriction = restrictions.getJSONObject(j);
+					Map<String, String> value = new HashMap<String, String>();
+					value.put("key", restriction.getString("id"));
+					value.put("value", restriction.getString("bez"));
+					values.add(value);
+				}
+
+				field.setDropdownValues(values);
+				field.setData(new JSONObject("{\"filter\":true}"));
+				fields.add(field);
+			}
+		}
+
+		return fields;
 	}
 
 	@Override
