@@ -108,10 +108,12 @@ public class AndroidMeaningDetector implements MeaningDetector {
 			((TextSearchField) field).setHint(field.getDisplayName());
 		} else if (field instanceof TextSearchField
 				&& (meaning == Meaning.BARCODE || meaning == Meaning.ISBN)) {
+			JSONObject data = field.getData();
 			field = new BarcodeSearchField(field.getId(),
 					field.getDisplayName(), field.isAdvanced(),
 					((TextSearchField) field).isHalfWidth(),
 					((TextSearchField) field).getHint());
+			field.setData(data);
 		} else if (meaning == Meaning.AUDIENCE
 				|| meaning == Meaning.SYSTEM
 				|| meaning == Meaning.KEYWORD
