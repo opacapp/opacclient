@@ -120,7 +120,13 @@ public class Adis extends BaseApi implements OpacApi {
 			// TODO: Handly this well
 			// Can be "Not trusted server certificate" or can be a
 			// aborted/interrupted handshake/connection
-			throw e;
+			if (e.getMessage().contains("timed out")
+					|| e.getMessage().contains("reset by")) {
+				e.printStackTrace();
+				throw new NotReachableException();
+			} else {
+				throw e;
+			}
 		} catch (InterruptedIOException e) {
 			e.printStackTrace();
 			throw new NotReachableException();
@@ -191,10 +197,16 @@ public class Adis extends BaseApi implements OpacApi {
 			// TODO: Handle this well
 			throw e;
 		} catch (javax.net.ssl.SSLException e) {
-			// TODO: Handle this well
+			// TODO: Handly this well
 			// Can be "Not trusted server certificate" or can be a
 			// aborted/interrupted handshake/connection
-			throw e;
+			if (e.getMessage().contains("timed out")
+					|| e.getMessage().contains("reset by")) {
+				e.printStackTrace();
+				throw new NotReachableException();
+			} else {
+				throw e;
+			}
 		} catch (InterruptedIOException e) {
 			e.printStackTrace();
 			throw new NotReachableException();
