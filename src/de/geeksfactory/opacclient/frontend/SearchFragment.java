@@ -203,6 +203,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		tvSearchAdvHeader.setVisibility(View.GONE);
 
 		int i = 0;
+		if (fields == null)
+			return;
 		for (final SearchField field : fields) {
 			ViewGroup v = null;
 			if (field instanceof TextSearchField) {
