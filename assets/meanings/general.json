@@ -19,7 +19,10 @@
         "Autoren / Pers.",
         "Name, Vorname",
         "Personen",
-        "Person, Autor"
+        "Person, Autor",
+        "Verfasser / Person",
+        "VerfasserIn",
+        "Verfasser / Gruppe"
     ],
     "AUDIENCE": [
         "Interessenkreis",
@@ -36,7 +39,12 @@
         "Alle Felder",
         "Suche in allen Feldern",
         "Volltextsuche",
-        "Alle Wörter"
+        "Alle Wörter",
+        "Stichwörter",
+        "Suchbegriff(e):",
+        "      Suche...",
+        "Suchbegriff",
+        "Suche"
     ],
     "KEYWORD": [
         "Schlagwort",
@@ -53,7 +61,8 @@
         "Schlagwort1",
         "Schlagwort2",
         "(Norm-)Schlagwort",
-        "Schlagwort StB"
+        "Schlagwort StB",
+        "Schlagworter"
     ],
     "ISBN": [
         "ISBN",
@@ -68,7 +77,8 @@
         "ISBN (mit -)",
         "ISBN_ISSN",
         "ISBN / ISSN / ISMN",
-        "ISBN / EAN"
+        "ISBN / EAN",
+        "ISBN/EAN"
     ],
     "HOME_BRANCH": [
         "Aktuelle Zweigstelle",
@@ -100,7 +110,9 @@
         "Erscheinungsjahr(außer Zeitschriften)",
         "Jahr (nur Buch)",
         "Ersch.-Jahr (nur Buch)",
-        "Jahr/Zeitraum"
+        "Jahr/Zeitraum",
+        "Jahr (von bis)",
+        "Jahr(von bis)",
     ],
     "ORDER": [
         "Sortierung",
@@ -113,7 +125,8 @@
         "Verlagsort/Verlag",
         "Verlag/Ort",
         "Verlag/Verlagsort",
-        "Ort, Verlag"
+        "Ort, Verlag",
+        "Verl"
     ],
     "AVAILABLE": ["verfügbar"],
     "DIGITAL": [
@@ -144,7 +157,9 @@
         "Regalaufstellung",
         "Regalstandort",
         "Signatur/Standort",
-        "Sonderstandort"
+        "Sonderstandort",
+        "2.Standort",
+        "Regal"
     ],
     "CATEGORY": [
         "Kategorie",
@@ -153,7 +168,8 @@
         "Erscheinungsform",
         "Erscheinungsform/Code",
         "Filter Medienarten",
-        "Materialart"
+        "Materialart",
+        "Mediengruppe"
     ],
     "BARCODE": [
         "Barcode",
@@ -162,7 +178,8 @@
         "Mediennummer",
         "Katalog-Nr.",
         "Mediencode",
-        "Identifikations-Nummer"
+        "Identifikations-Nummer",
+        "Buchungsnr."
     ],
     "TITLE": [
         "Titel",

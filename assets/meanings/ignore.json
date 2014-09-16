@@ -230,5 +230,12 @@
     "Thema",
     "Sachbegriff",
     "Ersch.-Ort",
-    "MedStatGrp"
+    "MedStatGrp",
+    "Status",
+    "Exemplarstatus",
+    "Medienkennzeichen",
+    "Sachgruppe",
+    "Bereich",
+    "steht unter:",
+    "Exemplarstatus (E=Entliehen / V=Verfügbar / Z=Vorbestellt)"
 ]

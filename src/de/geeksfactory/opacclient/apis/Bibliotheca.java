@@ -51,6 +51,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Comment;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 import de.geeksfactory.opacclient.NotReachableException;
@@ -64,6 +65,10 @@ import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
+import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
+import de.geeksfactory.opacclient.searchfields.SearchField;
+import de.geeksfactory.opacclient.searchfields.SearchQuery;
+import de.geeksfactory.opacclient.searchfields.TextSearchField;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
@@ -71,7 +76,7 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  * BOND, now owned by OCLC. Known to work well with Web Opac versions from 2.6,
  * maybe older, to 2.8
  */
-public class Bibliotheca extends BaseApiCompat {
+public class Bibliotheca extends BaseApi {
 
 	protected String opac_url = "";
 	protected JSONObject data;
@@ -118,51 +123,92 @@ public class Bibliotheca extends BaseApiCompat {
 	}
 
 	@Override
-	public String[] getSearchFieldsCompat() {
-		return new String[] { KEY_SEARCH_QUERY_TITLE, KEY_SEARCH_QUERY_AUTHOR,
-				KEY_SEARCH_QUERY_KEYWORDA, KEY_SEARCH_QUERY_KEYWORDB,
-				KEY_SEARCH_QUERY_BRANCH, KEY_SEARCH_QUERY_CATEGORY,
-				KEY_SEARCH_QUERY_ISBN, KEY_SEARCH_QUERY_YEAR_RANGE_START,
-				KEY_SEARCH_QUERY_YEAR_RANGE_END, KEY_SEARCH_QUERY_SYSTEM,
-				KEY_SEARCH_QUERY_AUDIENCE, KEY_SEARCH_QUERY_PUBLISHER,
-				KEY_SEARCH_QUERY_BARCODE, KEY_SEARCH_QUERY_ORDER };
-	}
+	public List<SearchField> getSearchFields() throws IOException,
+			JSONException {
+		if (!initialised)
+			start();
 
-	public void extract_meta(String html) {
+		List<SearchField> fields = new ArrayList<SearchField>();
 		// Zweigstellen und Mediengruppen auslesen
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+		nameValuePairs.add(new BasicNameValuePair("link_profis.x", "0"));
+		nameValuePairs.add(new BasicNameValuePair("link_profis.y", "1"));
+		String html = httpPost(opac_url + "/index.asp",
+				new UrlEncodedFormEntity(nameValuePairs), getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 
-		Elements zst_opts = doc.select("#zst option");
-		try {
-			metadata.open();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		metadata.clearMeta(library.getIdent());
-		for (int i = 0; i < zst_opts.size(); i++) {
-			Element opt = zst_opts.get(i);
-			if (!opt.val().equals(""))
-				metadata.addMeta(MetaDataSource.META_TYPE_BRANCH,
-						library.getIdent(), opt.val(), opt.text());
-		}
+		Elements fieldElems = doc.select(".suchfeldinhalt");
+		for (Element fieldElem : fieldElems) {
+			String name = fieldElem.select(".suchfeld_inhalt_titel label")
+					.text();
+			List<TextNode> textNodes = fieldElem
+					.select(".suchfeld_inhalt_input").first().textNodes();
+			String hint = textNodes.size() > 0 ? textNodes.get(0)
+					.getWholeText().replace("\n", "") : "";
 
-		Elements mg_opts = doc.select("#medigrp option");
-		for (int i = 0; i < mg_opts.size(); i++) {
-			Element opt = mg_opts.get(i);
-			if (!opt.val().equals(""))
-				metadata.addMeta(MetaDataSource.META_TYPE_CATEGORY,
-						library.getIdent(), opt.val(), opt.text());
-		}
+			Elements inputs = fieldElem
+					.select(".suchfeld_inhalt_input input[type=text], .suchfeld_inhalt_input select");
+			if (inputs.size() == 1) {
+				fields.add(createSearchField(name, hint, inputs.get(0)));
+			} else if (inputs.size() == 2
+					&& inputs.select("input[type=text]").size() == 2) {
+				// Two text fields, e.g. year from/to or two keywords
+				fields.add(createSearchField(name, hint, inputs.get(0)));
+				TextSearchField secondField = (TextSearchField) createSearchField(
+						name, hint, inputs.get(1));
+				secondField.setHalfWidth(true);
+				fields.add(secondField);
+			} else if (inputs.size() == 2
+					&& inputs.get(0).tagName().equals("select")
+					&& inputs.get(1).tagName().equals("input")
+					&& inputs.get(0).attr("name").equals("feld1")) {
+				// A dropdown to select from different search field types.
+				// Break it down into single text fields.
+				for (Element option : inputs.get(0).select("option")) {
+					TextSearchField field = new TextSearchField();
+					field.setHint(hint);
+					field.setDisplayName(option.text());
+					field.setId(inputs.get(1).attr("name") + "$"
+							+ option.attr("value"));
 
-		mg_opts = doc.select("#mediart option");
-		for (int i = 0; i < mg_opts.size(); i++) {
-			Element opt = mg_opts.get(i);
-			if (!opt.val().equals(""))
-				metadata.addMeta(MetaDataSource.META_TYPE_CATEGORY,
-						library.getIdent(), "$" + opt.val(), opt.text());
-		}
+					JSONObject data = new JSONObject();
+					JSONObject params = new JSONObject();
+					params.put(inputs.get(0).attr("name"), option.attr("value"));
+					data.put("additional_params", params);
+					field.setData(data);
 
-		metadata.close();
+					fields.add(field);
+				}
+			}
+		}
+		return fields;
+	}
+
+	private SearchField createSearchField(String name, String hint,
+			Element input) {
+		if (input.tagName().equals("input")
+				&& input.attr("type").equals("text")) {
+			TextSearchField field = new TextSearchField();
+			field.setDisplayName(name);
+			field.setHint(hint);
+			field.setId(input.attr("name"));
+			return field;
+		} else if (input.tagName().equals("select")) {
+			DropdownSearchField field = new DropdownSearchField();
+			field.setDisplayName(name);
+			field.setId(input.attr("name"));
+			List<Map<String, String>> options = new ArrayList<Map<String, String>>();
+			for (Element option : input.select("option")) {
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("key", option.attr("value"));
+				map.put("value", option.text());
+				options.add(map);
+			}
+			field.setDropdownValues(options);
+			return field;
+		} else {
+			return null;
+		}
 	}
 
 	@Override
@@ -179,24 +225,6 @@ public class Bibliotheca extends BaseApiCompat {
 		}
 		httpGet(opac_url + "/woload.asp?lkz=1&nextpage=" + db,
 				getDefaultEncoding());
-
-		try {
-			metadata.open();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		if (!metadata.hasMeta(library.getIdent())) {
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			nameValuePairs.add(new BasicNameValuePair("link_profis.x", "0"));
-			nameValuePairs.add(new BasicNameValuePair("link_profis.y", "1"));
-			String html = httpPost(opac_url + "/index.asp",
-					new UrlEncodedFormEntity(nameValuePairs),
-					getDefaultEncoding());
-			metadata.close();
-			extract_meta(html);
-		} else {
-			metadata.close();
-		}
 	}
 
 	@Override
@@ -226,55 +254,45 @@ public class Bibliotheca extends BaseApiCompat {
 	}
 
 	@Override
-	public SearchRequestResult search(Map<String, String> query)
-			throws IOException, NotReachableException {
+	public SearchRequestResult search(List<SearchQuery> queries)
+			throws IOException, NotReachableException, JSONException,
+			OpacErrorException {
 		if (!initialised)
 			start();
 
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 		nameValuePairs.add(new BasicNameValuePair("stichtit", "stich"));
-		nameValuePairs.add(new BasicNameValuePair("stichwort",
-				getStringFromBundle(query, KEY_SEARCH_QUERY_TITLE)));
-		nameValuePairs.add(new BasicNameValuePair("verfasser",
-				getStringFromBundle(query, KEY_SEARCH_QUERY_AUTHOR)));
-		nameValuePairs.add(new BasicNameValuePair("schlag_a",
-				getStringFromBundle(query, KEY_SEARCH_QUERY_KEYWORDA)));
-		nameValuePairs.add(new BasicNameValuePair("schlag_b",
-				getStringFromBundle(query, KEY_SEARCH_QUERY_KEYWORDB)));
-		nameValuePairs.add(new BasicNameValuePair("zst", getStringFromBundle(
-				query, KEY_SEARCH_QUERY_BRANCH)));
 
-		String cat = getStringFromBundle(query, KEY_SEARCH_QUERY_CATEGORY);
-		if (cat.startsWith("$"))
-			nameValuePairs.add(new BasicNameValuePair("mediart",
-					getStringFromBundle(query, KEY_SEARCH_QUERY_CATEGORY)
-							.substring(1)));
-		else
-			nameValuePairs.add(new BasicNameValuePair("medigrp",
-					getStringFromBundle(query, KEY_SEARCH_QUERY_CATEGORY)));
-
-		nameValuePairs.add(new BasicNameValuePair("isbn", getStringFromBundle(
-				query, KEY_SEARCH_QUERY_ISBN)));
-		nameValuePairs.add(new BasicNameValuePair("jahr_von",
-				getStringFromBundle(query, KEY_SEARCH_QUERY_YEAR_RANGE_START)));
-		nameValuePairs.add(new BasicNameValuePair("jahr_bis",
-				getStringFromBundle(query, KEY_SEARCH_QUERY_YEAR_RANGE_END)));
-		nameValuePairs.add(new BasicNameValuePair("notation",
-				getStringFromBundle(query, KEY_SEARCH_QUERY_SYSTEM)));
-		nameValuePairs.add(new BasicNameValuePair("ikr", getStringFromBundle(
-				query, KEY_SEARCH_QUERY_AUDIENCE)));
-		nameValuePairs.add(new BasicNameValuePair("verl", getStringFromBundle(
-				query, KEY_SEARCH_QUERY_PUBLISHER)));
-
-		if (!getStringFromBundle(query, KEY_SEARCH_QUERY_BARCODE).equals("")) {
-			nameValuePairs.add(new BasicNameValuePair("feld1",
-					"EXEMPLAR~BUCHUNGSNR~0"));
-			nameValuePairs.add(new BasicNameValuePair("ifeld1",
-					getStringFromBundle(query, KEY_SEARCH_QUERY_BARCODE)));
+		int ifeldCount = 0;
+		for (SearchQuery query : queries) {	
+			if (query.getValue().equals(""))
+				continue;
+			String key = query.getKey();
+			if (key.contains("$"))
+				key = key.substring(0, key.indexOf("$"));
+			if (key.contains("ifeld")) {
+				ifeldCount++;
+				if (ifeldCount > 1)
+					throw new OpacErrorException(
+							"Sie haben eine Kombination von Suchfeldern benutzt,"
+									+ " die von dieser Bibliothek nicht unterstützt wird."
+									+ " Bitte probieren Sie eine andere Suche.");
+			}
+			nameValuePairs.add(new BasicNameValuePair(key, query.getValue()));
+			if (query.getSearchField().getData() != null) {
+				JSONObject data = query.getSearchField().getData();
+				if (data.has("additional_params")) {
+					JSONObject params = data.getJSONObject("additional_params");
+					Iterator<String> keys = params.keys();
+					while (keys.hasNext()) {
+						String additionalKey = keys.next();
+						nameValuePairs
+								.add(new BasicNameValuePair(additionalKey,
+										params.getString(additionalKey)));
+					}
+				}
+			}
 		}
-
-		nameValuePairs.add(new BasicNameValuePair("orderselect",
-				getStringFromBundle(query, "order")));
 
 		nameValuePairs.add(new BasicNameValuePair("suche_starten.x", "1"));
 		nameValuePairs.add(new BasicNameValuePair("suche_starten.y", "1"));
