@@ -25,6 +25,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -221,6 +222,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 					EditText edittext = (EditText) v
 							.findViewById(R.id.edittext);
 					edittext.setHint(textSearchField.getHint());
+					if (((TextSearchField) field).isNumber()) {
+						edittext.setInputType(InputType.TYPE_CLASS_NUMBER);
+					}
 					if (((TextSearchField) field).isHalfWidth()
 							&& i >= 1
 							&& !(fields.get(i - 1) instanceof TextSearchField && ((TextSearchField) fields
@@ -231,7 +235,6 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 						llAdvancedFields.removeView(before);
 						v = makeHalfWidth(before, v);
 					}
-
 				}
 			} else if (field instanceof BarcodeSearchField) {
 				BarcodeSearchField bcSearchField = (BarcodeSearchField) field;

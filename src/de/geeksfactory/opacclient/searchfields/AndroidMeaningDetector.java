@@ -85,7 +85,7 @@ public class AndroidMeaningDetector implements MeaningDetector {
 	public SearchField detectMeaning(SearchField field) {
 		if (field.getData() != null && field.getData().has("meaning")) {
 			try {
-				String meaningData = field.getData().getString("meaning");	
+				String meaningData = field.getData().getString("meaning");
 				String meaningName = meanings.get(meaningData);
 				if (meaningName != null)
 					return processMeaning(field, meaningName);
@@ -100,7 +100,7 @@ public class AndroidMeaningDetector implements MeaningDetector {
 		field.setAdvanced(true);
 		return field;
 	}
-	
+
 	private SearchField processMeaning(SearchField field, String meaningName) {
 		Meaning meaning = Meaning.valueOf(meaningName);
 		if (field instanceof TextSearchField && meaning == Meaning.FREE) {
@@ -114,10 +114,10 @@ public class AndroidMeaningDetector implements MeaningDetector {
 					((TextSearchField) field).isHalfWidth(),
 					((TextSearchField) field).getHint());
 			field.setData(data);
-		} else if (meaning == Meaning.AUDIENCE
-				|| meaning == Meaning.SYSTEM
-				|| meaning == Meaning.KEYWORD
-				|| meaning == Meaning.PUBLISHER) {
+		} else if (field instanceof TextSearchField && meaning == Meaning.YEAR) {
+			((TextSearchField) field).setNumber(true);
+		} else if (meaning == Meaning.AUDIENCE || meaning == Meaning.SYSTEM
+				|| meaning == Meaning.KEYWORD || meaning == Meaning.PUBLISHER) {
 			field.setAdvanced(true);
 		}
 		field.setMeaning(meaning);
