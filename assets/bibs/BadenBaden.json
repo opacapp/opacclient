@@ -4,14 +4,14 @@
     "country": "Deutschland",
     "data": {
         "accounttable": {
-            "author": 7, 
+            "author": 8, 
             "barcode": 4, 
             "homebranch": -1, 
             "lendingbranch": -1, 
             "prolongurl": 4, 
             "returndate": 3, 
             "status": 5, 
-            "title": 7
+            "title": 8
         }, 
         "baseurl": "http://wwwopac.baden-baden.de",
         "copiestable": {
@@ -31,7 +31,9 @@
             "111": "MOVIE", 
             "112": "DVD", 
             "19": "BOOK", 
+            "98": "BOOK", 
             "101": "BOOK", 
+            "102": "BOOK", 
 			"8": "SCORE_MUSIC",
             "20": "AUDIOBOOK", 
             "30": "EBOOK", 
