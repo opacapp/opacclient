@@ -21,7 +21,13 @@
             2, 
             3, 
             4
-        ]
+        ],
+		"copiestable": {
+			"branch": 0,
+			"location": 1,
+			"barcode": 2,
+			"status": 3
+		}
     }, 
     "geo": [
         51.4556432, 

@@ -45,7 +45,11 @@
         "searchtable": [
             2, 
             3 
-        ]
+        ],
+		"copiestable": {
+			"location": 0,
+			"status": 2
+		}
     },
     "geo": [
         48.76564,
