@@ -29,11 +29,7 @@ public abstract class BaseApiCompat extends BaseApi implements OpacApi {
 
 	public SearchRequestResult search(List<SearchQuery> queryList)
 			throws NotReachableException, IOException, OpacErrorException {
-		Map<String, String> queryMap = new HashMap<String, String>();
-		for (SearchQuery query : queryList) {
-			queryMap.put(query.getKey(), query.getValue());
-		}
-		return search(queryMap);
+		return search(searchQueryListToMap(queryList));
 	}
 
 	@Override

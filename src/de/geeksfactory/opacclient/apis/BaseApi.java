@@ -60,6 +60,7 @@ import de.geeksfactory.opacclient.networking.HTTPClient;
 import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
+import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
@@ -378,6 +379,14 @@ public abstract class BaseApi implements OpacApi {
 	protected static String convertStreamToString(InputStream is)
 			throws IOException {
 		return convertStreamToString(is, "ISO-8859-1");
+	}
+	
+	protected static Map<String, String> searchQueryListToMap(List<SearchQuery> queryList) {
+		Map<String, String> queryMap = new HashMap<String, String>();
+		for (SearchQuery query : queryList) {
+			queryMap.put(query.getKey(), query.getValue());
+		}
+		return queryMap;
 	}
 
 	protected String getDefaultEncoding() {
