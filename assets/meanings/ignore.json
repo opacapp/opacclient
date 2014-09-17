@@ -237,5 +237,11 @@
     "Sachgruppe",
     "Bereich",
     "steht unter:",
-    "Exemplarstatus (E=Entliehen / V=Verfügbar / Z=Vorbestellt)"
+    "Exemplarstatus (E=Entliehen / V=Verfügbar / Z=Vorbestellt)",
+    "Serie / Band",
+    "Signatur CB",
+    "Signatur SFB/SD",
+    "Cutter-Nummer CB",
+    "E-Book-Paket",
+    "Sponsor"
 ]

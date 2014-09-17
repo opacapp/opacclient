@@ -59,6 +59,10 @@ import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
+import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
+import de.geeksfactory.opacclient.searchfields.SearchField;
+import de.geeksfactory.opacclient.searchfields.SearchQuery;
+import de.geeksfactory.opacclient.searchfields.TextSearchField;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
@@ -68,7 +72,7 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
  * TODO: Suche nach Medientypen, alles mit Konten + Vorbestellen
  * 
  */
-public class Zones22 extends BaseApiCompat {
+public class Zones22 extends BaseApi {
 
 	private String opac_url = "";
 	private JSONObject data;
@@ -101,28 +105,48 @@ public class Zones22 extends BaseApiCompat {
 	}
 
 	@Override
-	public String[] getSearchFieldsCompat() {
-		return new String[] { KEY_SEARCH_QUERY_TITLE, KEY_SEARCH_QUERY_AUTHOR,
-				KEY_SEARCH_QUERY_KEYWORDA, KEY_SEARCH_QUERY_BRANCH,
-				KEY_SEARCH_QUERY_ISBN, KEY_SEARCH_QUERY_YEAR };
-	}
+	public List<SearchField> getSearchFields() throws ClientProtocolException, IOException {
+		List<SearchField> fields = new ArrayList<SearchField>();
+		String html = httpGet(
+				opac_url
+						+ "/APS_ZONES?fn=AdvancedSearch&Style=Portal3&SubStyle=&Lang=GER&ResponseEncoding=utf-8",
+				getDefaultEncoding());
 
-	public void extract_meta(Document doc) {
+		Document doc = Jsoup.parse(html);
+		
+		// Textfelder auslesen
+		Elements txt_opts = doc.select("#formSelectTerm_1 option");
+		for (Element opt:txt_opts) {
+			TextSearchField field = new TextSearchField();
+			field.setId(opt.attr("value"));
+			field.setHint("");
+			field.setDisplayName(opt.text());
+			fields.add(field);
+		}
+		
 		// Zweigstellen auslesen
 		Elements zst_opts = doc.select(".TabRechAv .limitChoice label");
-		try {
-			metadata.open();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
+		if (zst_opts.size() > 0) {
+			DropdownSearchField brDropdown = new DropdownSearchField();
+			brDropdown.setId(zst_opts.get(0).parent().select("input").attr("name"));
+			brDropdown.setDisplayName("Zweigstelle");
+			
+			List<Map<String, String>> brOptions = new ArrayList<Map<String, String>>();			
+			Map<String, String> all = new HashMap<String, String>();
+			all.put("key", "");
+			all.put("value", "Alle");
+			brOptions.add(all);
+			for (Element opt:zst_opts) {			
+				Map<String, String> value = new HashMap<String, String>();
+				value.put("key", opt.attr("for"));
+				value.put("value", opt.text().trim());
+				brOptions.add(value);
+			}
+			brDropdown.setDropdownValues(brOptions);
+			fields.add(brDropdown);
 		}
-		metadata.clearMeta(library.getIdent());
-		for (int i = 0; i < zst_opts.size(); i++) {
-			Element opt = zst_opts.get(i);
-			metadata.addMeta(MetaDataSource.META_TYPE_BRANCH,
-					library.getIdent(), opt.attr("for"), opt.text().trim());
-		}
-
-		metadata.close();
+		
+		return fields;
 	}
 
 	@Override
@@ -136,18 +160,6 @@ public class Zones22 extends BaseApiCompat {
 		Document doc = Jsoup.parse(html);
 
 		searchobj = doc.select("#ExpertSearch").attr("action");
-
-		try {
-			metadata.open();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		if (!metadata.hasMeta(library.getIdent())) {
-			metadata.close();
-			extract_meta(doc);
-		} else {
-			metadata.close();
-		}
 	}
 
 	@Override
@@ -175,24 +187,27 @@ public class Zones22 extends BaseApiCompat {
 		return res;
 	}
 
-	private int addParameters(Map<String, String> query, String key,
-			String searchkey, List<NameValuePair> params, int index) {
-		if (!query.containsKey(key) || query.get(key).equals(""))
+	private int addParameters(SearchQuery query, List<NameValuePair> params, int index) {
+		if (query.getValue().equals(""))
 			return index;
 
-		if (index != 1)
-			params.add(new BasicNameValuePair(".form.t" + index + ".logic",
-					"and"));
-		params.add(new BasicNameValuePair("q.form.t" + index + ".term",
-				searchkey));
-		params.add(new BasicNameValuePair("q.form.t" + index + ".expr", query
-				.get(key)));
-		return index + 1;
-
+		if (query.getSearchField() instanceof TextSearchField) {
+			if (index != 1)
+				params.add(new BasicNameValuePair(".form.t" + index + ".logic",
+						"and"));
+			params.add(new BasicNameValuePair("q.form.t" + index + ".term",
+					query.getKey()));
+			params.add(new BasicNameValuePair("q.form.t" + index + ".expr", query
+					.getValue()));
+			return index + 1;
+		} else if (query.getSearchField() instanceof DropdownSearchField) {
+			params.add(new BasicNameValuePair(query.getKey(), query.getValue()));
+		}
+		return index;
 	}
 
 	@Override
-	public SearchRequestResult search(Map<String, String> query) throws IOException,
+	public SearchRequestResult search(List<SearchQuery> queries) throws IOException,
 			NotReachableException, OpacErrorException {
 		start();
 
@@ -209,26 +224,13 @@ public class Zones22 extends BaseApiCompat {
 		params.add(new BasicNameValuePair("q.PageSize", "10"));
 
 		int index = 1;
-
-		index = addParameters(query, KEY_SEARCH_QUERY_TITLE, "ti=", params,
-				index);
-		index = addParameters(query, KEY_SEARCH_QUERY_AUTHOR, "au=", params,
-				index);
-		index = addParameters(query, KEY_SEARCH_QUERY_ISBN, "sb=", params,
-				index);
-		index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDA, "su=", params,
-				index);
-		index = addParameters(query, KEY_SEARCH_QUERY_YEAR, "dp=", params,
-				index);
-
-		if (query.containsKey(KEY_SEARCH_QUERY_BRANCH)
-				&& !query.get(KEY_SEARCH_QUERY_BRANCH).equals(""))
-			params.add(new BasicNameValuePair("q.limits.limit", query
-					.get(KEY_SEARCH_QUERY_BRANCH)));
+		for (SearchQuery query:queries) {
+			index = addParameters(query, params, index);
+		}
 
 		if (index > 3) {
 			throw new OpacErrorException(
-					"Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.");
+					"Diese Bibliothek unterstützt nur bis zu drei benutzte Suchkriterien.");
 		} else if (index == 1) {
 			throw new OpacErrorException(
 					"Es wurden keine Suchkriterien eingegeben.");

@@ -43,7 +43,8 @@
         "Suchbegriff(e):",
         "      Suche...",
         "Suchbegriff",
-        "Suche"
+        "Suche",
+        "Alle"
     ],
     "KEYWORD": [
         "Schlagwort",
@@ -99,7 +100,10 @@
         "Fachsystematik",
         "Signatur - komplett",
         "Systemgruppe",
-        "Notation/Systemstelle"
+        "Notation/Systemstelle",
+        "Systematik CB",
+        "Systematik SFB/SD",
+        "Systematik RVK"
     ],
     "YEAR": [
         "Jahr",
@@ -111,7 +115,7 @@
         "Ersch.-Jahr (nur Buch)",
         "Jahr/Zeitraum",
         "Jahr (von bis)",
-        "Jahr(von bis)",
+        "Jahr(von bis)"
     ],
     "ORDER": [
         "Sortierung",
@@ -158,7 +162,9 @@
         "Signatur/Standort",
         "Sonderstandort",
         "2.Standort",
-        "Regal"
+        "Regal",
+        "Standorte CB",
+        "Standorte SFB/SD"
     ],
     "CATEGORY": [
         "Kategorie",
