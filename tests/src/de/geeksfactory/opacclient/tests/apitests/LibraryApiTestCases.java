@@ -6,12 +6,14 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.Security;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -70,6 +72,7 @@ public class LibraryApiTestCases extends TestCase {
 
 	@Before
 	public void setUp() throws NotReachableException, IOException, OpacErrorException, JSONException {
+		Security.addProvider(new BouncyCastleProvider());
 		api = getApi(library);		
 		fields = api.getSearchFields();
 		JavaMeaningDetector detector = new JavaMeaningDetector(library);
