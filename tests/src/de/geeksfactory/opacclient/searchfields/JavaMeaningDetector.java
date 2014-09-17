@@ -32,15 +32,17 @@ public class JavaMeaningDetector implements MeaningDetector {
 	public JavaMeaningDetector(Library lib, String assets_fieldsdir) {
 		meanings = new HashMap<String, String>();
 		this.assets_fieldsdir = assets_fieldsdir;
-		File file;
-		if ((file = new File(assets_fieldsdir, "general.json")).exists()) // General
-			loadFile(file);
-		if ((file = new File(assets_fieldsdir, lib.getApi() + ".json")).exists()) // Api
-																// specific
-			loadFile(file);
-		if ((file = new File(assets_fieldsdir, lib.getIdent() + ".json")).exists()) // Library
+		if (lib != null) {
+			File file;
+			if ((file = new File(assets_fieldsdir, "general.json")).exists()) // General
+				loadFile(file);
+			if ((file = new File(assets_fieldsdir, lib.getApi() + ".json")).exists()) // Api
 																	// specific
-			loadFile(file);
+				loadFile(file);
+			if ((file = new File(assets_fieldsdir, lib.getIdent() + ".json")).exists()) // Library
+																		// specific
+				loadFile(file);
+		}
 	}
 
 	private void loadFile(File file) {
