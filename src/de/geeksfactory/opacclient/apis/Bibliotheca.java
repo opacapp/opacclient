@@ -141,10 +141,13 @@ public class Bibliotheca extends BaseApi {
 		for (Element fieldElem : fieldElems) {
 			String name = fieldElem.select(".suchfeld_inhalt_titel label")
 					.text();
-			List<TextNode> textNodes = fieldElem
-					.select(".suchfeld_inhalt_input").first().textNodes();
-			String hint = textNodes.size() > 0 ? textNodes.get(0)
-					.getWholeText().replace("\n", "") : "";
+			String hint = "";
+			if (fieldElem.select(".suchfeld_inhalt_input").size() > 0) {
+				List<TextNode> textNodes = fieldElem
+						.select(".suchfeld_inhalt_input").first().textNodes();
+				if (textNodes.size() > 0)
+					hint = textNodes.get(0).getWholeText().replace("\n", "");
+			}
 
 			Elements inputs = fieldElem
 					.select(".suchfeld_inhalt_input input[type=text], .suchfeld_inhalt_input select");
@@ -264,7 +267,7 @@ public class Bibliotheca extends BaseApi {
 		nameValuePairs.add(new BasicNameValuePair("stichtit", "stich"));
 
 		int ifeldCount = 0;
-		for (SearchQuery query : queries) {	
+		for (SearchQuery query : queries) {
 			if (query.getValue().equals(""))
 				continue;
 			String key = query.getKey();
