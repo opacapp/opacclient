@@ -16,7 +16,7 @@
             "30": "EBOOK", 
             "9": "BOARDGAME"
         }, 
-        "opacdir": "opac", 
+        "opacdir": "opax", 
         "rows_per_hit": 1, 
         "searchtable": [
             2, 
