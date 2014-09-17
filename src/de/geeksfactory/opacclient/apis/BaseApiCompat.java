@@ -91,6 +91,12 @@ public abstract class BaseApiCompat extends BaseApi implements OpacApi {
 			field.setMeaning(Meaning.AUTHOR);
 			searchFields.add(field);
 		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_PUBLISHER)) {
+			SearchField field = new TextSearchField(KEY_SEARCH_QUERY_PUBLISHER,
+					"Verlag", false, false, "", false, false);
+			field.setMeaning(Meaning.PUBLISHER);
+			searchFields.add(field);
+		}
 		if (fieldsCompat.contains(KEY_SEARCH_QUERY_DIGITAL)) {
 			SearchField field = new CheckboxSearchField(
 					KEY_SEARCH_QUERY_DIGITAL, "nur digitale Medien", false);
