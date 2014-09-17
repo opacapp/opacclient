@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Seligenstadt",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/seligenstadt",
+        "information": "http://www.seligenstadt.de/index.phtml?sNavID=1803.219&La=1"
+    },
+    "geo": [
+        50.0437013,
+        8.9711343
+    ],
+    "state": "Hessen",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

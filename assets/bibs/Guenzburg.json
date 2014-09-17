@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "G\u00fcnzburg",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/guenzburg",
+        "information": "http://host4.guenzburg.de/html/user_de_Kultur+Stadtbuecherei+Information.html"
+    },
+    "geo": [
+        48.45284119999999,
+        10.2775127
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

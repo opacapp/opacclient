@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "H\u00f6chberg",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/hoechberg",
+        "information": "http://www.hoechberg.de/sites/gensite.asp?SID=cms190820141713396817132&Art=0429"
+    },
+    "geo": [
+        49.7821907,
+        9.8808945
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Bibliothek"
+}

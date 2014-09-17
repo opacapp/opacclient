@@ -5,9 +5,7 @@
     "data": {
         "accountSupported": true, 
         "baseurl": "http://kiopc4.ub.uni-kiel.de:8080", 
-        "customssl": true, 
         "db": "4", 
-        "httpsbaseurl": "https://lhopc4.ub.uni-kiel.de/", 
         "information": "http://www.zhb.uni-luebeck.de/welcome.htm"
     }, 
     "geo": [

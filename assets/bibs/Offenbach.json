@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Offenbach",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.offenbach.winbiap.net",
+        "information": "http://www.offenbach.de/stadtbibliothek"
+    },
+    "geo": [
+        50.09563620000001,
+        8.776084299999999
+    ],
+    "state": "Hessen",
+    "support": "Katalogsuche",
+    "title": "Stadtbibliothek"
+}

@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Lemf\u00f6rde",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/lemfoerde",
+        "information": "http://www.lemfoerde.de/oeffentliche-einrichtungen/buecherei-am-amtshof/"
+    },
+    "geo": [
+        52.4641331,
+        8.373980399999999
+    ],
+    "state": "Niedersachsen",
+    "support": "Katalogsuche",
+    "title": "Samtgemeinde  - B\u00fccherei"
+}

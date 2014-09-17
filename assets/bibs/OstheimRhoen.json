@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Ostheim v.d.Rh\u00f6n",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/ostheim",
+        "information": "http://www.ostheim.de/internet/index.php?page=12485"
+    },
+    "geo": [
+        50.4608058,
+        10.2305055
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei Ostheim v.d. Rh\u00f6n"
+}

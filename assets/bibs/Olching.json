@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Olching",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/olching",
+        "information": "http://www.olching.de/index.php?id=306,55"
+    },
+    "geo": [
+        48.20706999999999,
+        11.3334755
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

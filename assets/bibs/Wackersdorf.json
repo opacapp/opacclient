@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Wackersdorf",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/wackersdorf",
+        "information": "http://www.vg-wackersdorf.de/Wackersdorf/Leben_Soziales/Kultur_erleben/Gemeindeb%C3%BCcherei/"
+    },
+    "geo": [
+        49.3146228,
+        12.1783476
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Bibliothek"
+}

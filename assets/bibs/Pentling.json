@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Pentling",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/pentling",
+        "information": "http://www.pentling.de/buecherei.html"
+    },
+    "geo": [
+        48.9833268,
+        12.0572285
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

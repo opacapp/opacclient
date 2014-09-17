@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Leutershausen",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/leutershausen",
+        "information": "http://www.landkreis-ansbach.de/Leben-im-Landkreis/Bildung/Bibliotheken/index.php?ModID=9&object=tx%7C2150.3&FID=1504.125.1&NavID=2150.51&La=1"
+    },
+    "geo": [
+        49.2999321,
+        10.413617
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Stadtbibliothek"
+}

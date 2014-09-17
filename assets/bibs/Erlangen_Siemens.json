@@ -1,0 +1,43 @@
+{
+    "api": "bibliotheca",
+    "city": "Erlangen",
+    "country": "Deutschland",
+    "data": {
+        "accounttable": {
+            "author": 0, 
+            "barcode": -1, 
+            "homebranch": -1, 
+            "lendingbranch": -1, 
+            "prolongurl": 3, 
+            "returndate": 2, 
+            "status": -1, 
+            "title": 1
+        }, 
+        "baseurl": "http://siemens-bibliothek-erlangen.internetopac.de",
+        "copiestable": {
+            "barcode": 0, 
+            "branch": 4, 
+            "department": 1, 
+            "location": 2, 
+            "reservations": 6, 
+            "returndate": 5, 
+            "status": 3
+        }, 
+        "information": "https://w9.siemens.com/cms/regionalreferat-erlnbg/de/sb/Seiten/home.aspx",
+        "reservationtable": {
+            "author": 0, 
+            "availability": 2, 
+            "branch": -1, 
+            "cancelurl": 3, 
+            "expirationdate": -1, 
+            "title": 1
+        }
+    },
+    "geo": [
+        49.5896744,
+        11.0119611
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche und Konto",
+    "title": "Siemens Werksbibliothek"
+}

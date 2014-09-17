@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Denklingen",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/denklingen",
+        "information": "http://www.denklingen.de/sites/rathaus/index/index_buecherei.htm"
+    },
+    "geo": [
+        47.9139271,
+        10.8490461
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

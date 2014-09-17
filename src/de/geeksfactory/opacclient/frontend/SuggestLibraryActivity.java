@@ -264,7 +264,9 @@ public class SuggestLibraryActivity extends Activity {
 		return false;
 	}
 
-	private class City implements Serializable {
+	private static class City implements Serializable {
+		private static final long serialVersionUID = 2697131850736622659L;
+		
 		public String name;
 		public String state;
 		public String country;

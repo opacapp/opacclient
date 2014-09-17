@@ -61,7 +61,7 @@ class Api:
 
     def prompt(self, data):
         return data
-		
+
 
 
 class Bibliotheca(Api):
@@ -163,6 +163,8 @@ class Bibliotheca(Api):
                 i_acc += 1
             elif key == 'mediengrp':
                 i_acc += 1
+            elif key == 'reserviert':
+                i_acc += 1
             elif key == 'bereit bis':
                 data['reservationtable']['expirationdate'] = i_res
                 i_res += 1
@@ -225,7 +227,7 @@ class WebOpacNet(Api):
 
     def getDefaultSupportString(self):
         return 'Katalogsuche'
-		
+
 class WinBiap(Api):
 
     def getDefaultSupportString(self):

@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Unterschlei\u00dfheim",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/unterschleissheim",
+        "information": "http://www.forum-unterschleissheim.de/bibliothek/"
+    },
+    "geo": [
+        48.28411999999999,
+        11.5672
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Stadtbibliothek"
+}

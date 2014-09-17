@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "M\u00fchldorf a. Inn",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/muehldorf",
+        "information": "http://buecherei.muehldorf.org/"
+    },
+    "geo": [
+        48.2457722,
+        12.5219895
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

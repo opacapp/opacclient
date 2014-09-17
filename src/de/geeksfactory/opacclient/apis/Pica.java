@@ -895,7 +895,7 @@ public class Pica extends BaseApi implements OpacApi {
 			Document doc, int offset, String accountName)
 			throws ClientProtocolException, IOException {
 
-		Elements copytrs = doc.select("table[summary^=list] tr[valign=top]");
+		Elements copytrs = doc.select("table[summary^=list] > tbody > tr[valign=top]");
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.GERMAN);
 
@@ -907,54 +907,99 @@ public class Pica extends BaseApi implements OpacApi {
 		assert (trs > 0);
 		for (int i = 0; i < trs; i++) {
 			Element tr = copytrs.get(i);
-			String prolongCount = "";
-			try {
-				String html = httpGet(https_url + "/nr_renewals.php?U="
-						+ accountName + "&DB=" + db + "&VBAR="
-						+ tr.child(1).select("input").attr("value"),
-						getDefaultEncoding());
-				prolongCount = Jsoup.parse(html).text();
-			} catch (IOException e) {
+			if (tr.children().size() == 8) { // According to HTML code from Bug report
+											   // (TU Darmstadt)
+				Map<String, String> e = new HashMap<String, String>();
+				//Check if there is a checkbox to prolong this item
+				if (tr.select("input").size() > 0)
+					e.put(AccountData.KEY_LENT_LINK,
+							tr.select("input").attr("value"));
+				else
+					e.put(AccountData.KEY_LENT_RENEWABLE, "N");
+				
+				Elements datatrs = tr.select("table[summary=title data] tr");
+				e.put(AccountData.KEY_LENT_TITLE, datatrs.get(0).text());
+				
+				List<TextNode> textNodes = datatrs.get(1).select("td").first().textNodes();
+				List<TextNode> nodes = new ArrayList<TextNode>();
+				Elements titles = datatrs.get(1).select("span.label-small");
+				
+				for (TextNode node:textNodes) {
+					if (!node.text().equals(" "))
+						nodes.add(node);
+				}
 
+				assert (nodes.size() == titles.size());
+				for (int j = 0; j<nodes.size(); j++) {			
+					String title = titles.get(j).text();
+					String value = nodes.get(j).text().trim().replace(";", "");
+					if (title.contains("Signatur")) {
+						// not supported
+					} else if (title.contains("Status")) {
+						e.put(AccountData.KEY_LENT_STATUS, value);
+					} else if (title.contains("Leihfristende")) {
+						e.put(AccountData.KEY_LENT_DEADLINE, value);
+						try {
+							e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String
+									.valueOf(sdf.parse(value).getTime()));
+						} catch (ParseException e1) {
+							e1.printStackTrace();
+						}
+					} else if (title.contains("Vormerkungen")) {
+						// not supported
+					}
+				}
+				medien.add(e);
+			} else { //like in Kiel
+				String prolongCount = "";
+				try {
+					String html = httpGet(https_url + "/nr_renewals.php?U="
+							+ accountName + "&DB=" + db + "&VBAR="
+							+ tr.child(1).select("input").attr("value"),
+							getDefaultEncoding());
+					prolongCount = Jsoup.parse(html).text();
+				} catch (IOException e) {
+	
+				}
+				String reminderCount = tr.child(13).text().trim();
+				if (reminderCount.indexOf(" Mahn") >= 0
+						&& reminderCount.indexOf("(") >= 0
+						&& reminderCount.indexOf("(") < reminderCount
+								.indexOf(" Mahn"))
+					reminderCount = reminderCount.substring(
+							reminderCount.indexOf("(") + 1,
+							reminderCount.indexOf(" Mahn"));
+				else
+					reminderCount = "";
+				Map<String, String> e = new HashMap<String, String>();
+	
+				if (tr.child(4).text().trim().length() < 5
+						&& tr.child(5).text().trim().length() > 4) {
+					e.put(AccountData.KEY_LENT_TITLE, tr.child(5).text().trim());
+				} else {
+					e.put(AccountData.KEY_LENT_TITLE, tr.child(4).text().trim());
+				}
+				String status = "";
+				if (!reminderCount.equals("0") && !reminderCount.equals("")) {
+					status += reminderCount + " Mahnungen, ";
+				}
+				status += prolongCount + "x verl."; // + tr.child(25).text().trim()
+													// + " Vormerkungen");
+				e.put(AccountData.KEY_LENT_STATUS, status);
+				e.put(AccountData.KEY_LENT_DEADLINE, tr.child(21).text().trim());
+				try {
+					e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String
+							.valueOf(sdf
+									.parse(e.get(AccountData.KEY_LENT_DEADLINE))
+									.getTime()));
+				} catch (ParseException e1) {
+					e1.printStackTrace();
+				}
+				e.put(AccountData.KEY_LENT_LINK,
+						tr.child(1).select("input").attr("value"));
+	
+				medien.add(e);
 			}
-			String reminderCount = tr.child(13).text().trim();
-			if (reminderCount.indexOf(" Mahn") >= 0
-					&& reminderCount.indexOf("(") >= 0
-					&& reminderCount.indexOf("(") < reminderCount
-							.indexOf(" Mahn"))
-				reminderCount = reminderCount.substring(
-						reminderCount.indexOf("(") + 1,
-						reminderCount.indexOf(" Mahn"));
-			else
-				reminderCount = "";
-			Map<String, String> e = new HashMap<String, String>();
-
-			if (tr.child(4).text().trim().length() < 5
-					&& tr.child(5).text().trim().length() > 4) {
-				e.put(AccountData.KEY_LENT_TITLE, tr.child(5).text().trim());
-			} else {
-				e.put(AccountData.KEY_LENT_TITLE, tr.child(4).text().trim());
-			}
-			String status = "";
-			if (!reminderCount.equals("0") && !reminderCount.equals("")) {
-				status += reminderCount + " Mahnungen, ";
-			}
-			status += prolongCount + "x verl."; // + tr.child(25).text().trim()
-												// + " Vormerkungen");
-			e.put(AccountData.KEY_LENT_STATUS, status);
-			e.put(AccountData.KEY_LENT_DEADLINE, tr.child(21).text().trim());
-			try {
-				e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String
-						.valueOf(sdf
-								.parse(e.get(AccountData.KEY_LENT_DEADLINE))
-								.getTime()));
-			} catch (ParseException e1) {
-				e1.printStackTrace();
-			}
-			e.put(AccountData.KEY_LENT_LINK,
-					tr.child(1).select("input").attr("value"));
-
-			medien.add(e);
 		}
 		assert (medien.size() == trs - 1);
 	}

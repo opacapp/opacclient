@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Bad Aibling",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/badaibling",
+        "information": "http://www.bad-aibling.de/buergerservice/stadtbuecherei.html"
+    },
+    "geo": [
+        47.8640182,
+        12.0093171
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Gaimersheim",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/gaimersheim",
+        "information": "http://www.gaimersheim.de/index.php?option=com_content&task=view&id=74&Itemid=99&date=2013-03-01"
+    },
+    "geo": [
+        48.7992529,
+        11.3728005
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "\u00d6ffentliche B\u00fccherei"
+}

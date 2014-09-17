@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Dettelbach",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/dettelbach",
+        "information": "http://www.dettelbach.de/sites/gensite.asp?SID=cms140820140824258373224&Art=01720&C=2"
+    },
+    "geo": [
+        49.8037832,
+        10.165725
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Stadtbibliothek"
+}

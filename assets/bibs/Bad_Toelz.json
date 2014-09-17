@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Bad T\u00f6lz",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/badtoelz",
+        "information": "http://www.bad-toelz.de/buerger/kultur/kunst-und-literatur/stadtbibliothek.html"
+    },
+    "geo": [
+        47.7614737,
+        11.5651524
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Stadtbibliothek"
+}

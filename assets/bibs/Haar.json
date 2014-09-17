@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Haar",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/haar",
+        "information": "http://www.gemeinde-haar.de/Freizeit_in_Haar/Gemeindeb%C3%BCcherei_/"
+    },
+    "geo": [
+        48.1103758,
+        11.7321151
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

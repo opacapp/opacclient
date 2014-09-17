@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Neustadt a.d. Donau",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/neustadtdonau",
+        "information": "http://cms.neustadt-donau.de/default.aspx?tabid=7047"
+    },
+    "geo": [
+        48.8030062,
+        11.7670734
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Stadtbibliothek"
+}

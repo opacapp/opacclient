@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Straubing",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.stadtbibliothek-straubing.de",
+        "information": "http://www.stadtbibliothek-straubing.de/startseite.html"
+    },
+    "geo": [
+        48.8777333,
+        12.5801538
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Stadtbibliothek"
+}

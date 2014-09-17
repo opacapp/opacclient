@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Amberg",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://www.amberg.de/wwwopac",
+        "information": "http://www.amberg.de/index.php?id=190"
+    },
+    "geo": [
+        49.4403198,
+        11.8633445
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Stadtbibliothek"
+}

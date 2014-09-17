@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "P\u00f6ttmes",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/poettmes",
+        "information": "http://www.markt-poettmes.de/index.php?id=315,57"
+    },
+    "geo": [
+        48.583001,
+        11.0913163
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Marktb\u00fccherei"
+}

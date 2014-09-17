@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Wehringen",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/wehringen",
+        "information": "http://www.wehringen.de/gemeindliche-einrichtungen/buecherei/"
+    },
+    "geo": [
+        48.2464008,
+        10.7983806
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

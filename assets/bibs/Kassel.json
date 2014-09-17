@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Kassel",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "https://bibliothek.stadt-kassel.de",
+        "information": "http://www.kassel.de/miniwebs/stadtbib/01816/"
+    },
+    "geo": [
+        51.3127114,
+        9.4797461
+    ],
+    "state": "Hessen",
+    "support": "Katalogsuche",
+    "title": "Stadtbibliothek"
+}

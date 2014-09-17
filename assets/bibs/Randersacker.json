@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Randersacker",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/randersacker",
+        "information": "http://www.randersacker.de/index.php?option=com_content&view=article&id=324:brei&catid=143:einrichtungen&Itemid=111"
+    },
+    "geo": [
+        49.7584752,
+        9.9855474
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

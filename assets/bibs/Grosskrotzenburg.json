@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Gro\u00dfkrotzenburg",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/grosskrotzenburg",
+        "information": "http://www.grosskrotzenburg.de/Buechereien.34.0.html"
+    },
+    "geo": [
+        50.0818163,
+        8.9839637
+    ],
+    "state": "Hessen",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Bobenheim-Roxheim",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/bobrox",
+        "information": "http://www.bobenheim-roxheim.de/gemeinde_bobenheim_roxheim/Leben%20&%20Wohnen/Gemeindeb%C3%BCcherei/"
+    },
+    "geo": [
+        49.5811581,
+        8.3589707
+    ],
+    "state": "Rheinland-Pfalz",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}
