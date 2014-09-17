@@ -57,16 +57,20 @@ import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
 import de.geeksfactory.opacclient.objects.SearchResult.Status;
+import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
+import de.geeksfactory.opacclient.searchfields.SearchField;
+import de.geeksfactory.opacclient.searchfields.SearchQuery;
+import de.geeksfactory.opacclient.searchfields.TextSearchField;
 import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
+ * Implementation of Fleischmann iOpac, including account support Seems to work
+ * in all the libraries currently supported without any modifications.
+ * 
  * @author Johan von Forstner, 17.09.2013
  * */
 
-// Implementation of Fleischmann iOpac, currently only works with Stadtbücherei
-// Schleswig, including account support
-
-public class IOpac extends BaseApiCompat implements OpacApi {
+public class IOpac extends BaseApi implements OpacApi {
 
 	protected String opac_url = "";
 	protected JSONObject data;
@@ -104,88 +108,9 @@ public class IOpac extends BaseApiCompat implements OpacApi {
 		defaulttypes.put("x", MediaType.MAGAZINE);
 	}
 
-	public void extract_meta() {
-		// Extract available media types.
-		// We have to parse JavaScript. Doing this with RegEx is evil.
-		// But not as evil as including a JavaScript VM into the app.
-		// And I honestly do not see another way.
-		String html;
-
-		Pattern pattern_key = Pattern
-				.compile("mtyp\\[[0-9]+\\]\\[\"typ\"\\] = \"([^\"]+)\";");
-		Pattern pattern_value = Pattern
-				.compile("mtyp\\[[0-9]+\\]\\[\"bez\"\\] = \"([^\"]+)\";");
-
-		try {
-			html = httpGet(opac_url + "/iopac/mtyp.js", getDefaultEncoding());
-
-			try {
-				metadata.open();
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-			metadata.clearMeta(library.getIdent());
-			String[] parts = html.split("new Array\\(\\);");
-			for (String part : parts) {
-				Matcher matcher1 = pattern_key.matcher(part);
-				String key = "";
-				String value = "";
-				if (matcher1.find()) {
-					key = matcher1.group(1);
-				}
-				Matcher matcher2 = pattern_value.matcher(part);
-				if (matcher2.find()) {
-					value = matcher2.group(1);
-				}
-				if (value != "")
-					metadata.addMeta(MetaDataSource.META_TYPE_CATEGORY,
-							library.getIdent(), key, value);
-			}
-
-			metadata.close();
-		} catch (IOException e) {
-			try {
-				html = httpGet(opac_url
-						+ "/iopac/frames/search_form.php?bReset=1?bReset=1",
-						getDefaultEncoding());
-				Document doc = Jsoup.parse(html);
-
-				try {
-					metadata.open();
-				} catch (Exception e1) {
-					throw new RuntimeException(e1);
-				}
-				metadata.clearMeta(library.getIdent());
-
-				for (Element opt : doc.select("#imtyp option")) {
-					metadata.addMeta(MetaDataSource.META_TYPE_CATEGORY,
-							library.getIdent(), opt.attr("value"), opt.text());
-				}
-
-				metadata.close();
-
-			} catch (IOException e1) {
-				e1.printStackTrace();
-				return;
-			}
-			return;
-		}
-	}
-
 	@Override
 	public void start() throws IOException, NotReachableException {
 
-		try {
-			metadata.open();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		if (!metadata.hasMeta(library.getIdent())) {
-			metadata.close();
-			extract_meta();
-		} else {
-			metadata.close();
-		}
 	}
 
 	@Override
@@ -205,46 +130,26 @@ public class IOpac extends BaseApiCompat implements OpacApi {
 		}
 	}
 
-	protected int addParameters(Map<String, String> query, String key, String searchkey,
+	protected int addParameters(SearchQuery query,
 			List<NameValuePair> params, int index) {
-		if (!query.containsKey(key) || query.get(key).equals(""))
+		if (query.getValue().equals(""))
 			return index;
 
-		params.add(new BasicNameValuePair(searchkey, query.get(key)));
+		params.add(new BasicNameValuePair(query.getKey(), query.getValue()));
 		return index + 1;
 
 	}
 
 	@Override
-	public SearchRequestResult search(Map<String, String> query) throws IOException,
-			NotReachableException, OpacErrorException {
+	public SearchRequestResult search(List<SearchQuery> queries)
+			throws IOException, NotReachableException, OpacErrorException {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 		int index = 0;
 		start();
 
-		index = addParameters(query, KEY_SEARCH_QUERY_FREE, "sleStichwort",
-				params, index);
-		index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDA,
-				"sleSchlagwort", params, index);
-		index = addParameters(query, KEY_SEARCH_QUERY_AUTHOR, "sleAutor",
-				params, index);
-		index = addParameters(query, KEY_SEARCH_QUERY_TITLE, "sleTitel",
-				params, index);
-		index = addParameters(query, KEY_SEARCH_QUERY_PUBLISHER, "sleVerlag",
-				params, index);
-		index = addParameters(query, KEY_SEARCH_QUERY_SYSTEM, "sleDeweyNr",
-				params, index);
-		index = addParameters(query, KEY_SEARCH_QUERY_YEAR, "sleJahr", params,
-				index);
-
-		if (query.containsKey(KEY_SEARCH_QUERY_CATEGORY)
-				&& !"".equals(query.get(KEY_SEARCH_QUERY_CATEGORY))) {
-			params.add(new BasicNameValuePair("Medientyp", query
-					.get(KEY_SEARCH_QUERY_CATEGORY)));
-		} else {
-			params.add(new BasicNameValuePair("Medientyp",
-					"A, B, C, D, E, G, I, J, K, L, M, N, O, P, Q, R, S, U, V, W, X, Z, 9"));
+		for (SearchQuery query : queries) {
+			index = addParameters(query, params, index);
 		}
 
 		params.add(new BasicNameValuePair("Anzahl", "10"));
@@ -353,14 +258,14 @@ public class IOpac extends BaseApiCompat implements OpacApi {
 			SearchResult sr = new SearchResult();
 
 			if (tr.select("td").get(colmap.get("cover")).select("img").size() > 0) {
-				String imgUrl = tr.select("td").get(colmap.get("cover")).select("img").first()
-						.attr("src");
+				String imgUrl = tr.select("td").get(colmap.get("cover"))
+						.select("img").first().attr("src");
 				sr.setCover(imgUrl);
 			}
 
 			// Media Type
-			String mType = tr.select("td").get(colmap.get("category")).text().trim()
-					.replace("\u00a0", "");
+			String mType = tr.select("td").get(colmap.get("category")).text()
+					.trim().replace("\u00a0", "");
 
 			if (data.has("mediatypes")) {
 				try {
@@ -423,7 +328,7 @@ public class IOpac extends BaseApiCompat implements OpacApi {
 
 			sr.setNr(10 * (page - 1) + i);
 			sr.setId(null);
-			
+
 			results.add(sr);
 		}
 		resultcount = results.size();
@@ -563,8 +468,8 @@ public class IOpac extends BaseApiCompat implements OpacApi {
 					"input[name=recno]").attr("value")));
 			params.add(new BasicNameValuePair("pshLogin", "Reservieren"));
 
-			html = httpPost(opac_url + "/cgi-bin/di.exe", new UrlEncodedFormEntity(
-					params), getDefaultEncoding());
+			html = httpPost(opac_url + "/cgi-bin/di.exe",
+					new UrlEncodedFormEntity(params), getDefaultEncoding());
 			doc = Jsoup.parse(html);
 			if (doc.select("h1").text().contains("fehlgeschlagen")) {
 				return new ReservationResult(MultiStepResult.Status.ERROR, doc
@@ -684,10 +589,12 @@ public class IOpac extends BaseApiCompat implements OpacApi {
 
 	}
 
-	protected void parse_medialist(List<Map<String, String>> medien, Document doc,
-			int offset) throws ClientProtocolException, IOException {
+	protected void parse_medialist(List<Map<String, String>> medien,
+			Document doc, int offset) throws ClientProtocolException,
+			IOException {
 
-		Elements copytrs = doc.select("a[name=AUS] ~ table").first().select("tr");
+		Elements copytrs = doc.select("a[name=AUS] ~ table").first()
+				.select("tr");
 		doc.setBaseUri(opac_url);
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
@@ -742,9 +649,11 @@ public class IOpac extends BaseApiCompat implements OpacApi {
 
 	}
 
-	protected void parse_reslist(List<Map<String, String>> medien, Document doc,
-			int offset) throws ClientProtocolException, IOException {
-		Elements copytrs = doc.select("a[name=RES] ~ table").first().select("tr");
+	protected void parse_reslist(List<Map<String, String>> medien,
+			Document doc, int offset) throws ClientProtocolException,
+			IOException {
+		Elements copytrs = doc.select("a[name=RES] ~ table").first()
+				.select("tr");
 		doc.setBaseUri(opac_url);
 
 		int trs = copytrs.size();
@@ -770,12 +679,130 @@ public class IOpac extends BaseApiCompat implements OpacApi {
 
 	}
 
+	private SearchField createSearchField(Element descTd, Element inputTd) {
+		String name = descTd.select("span").text().replace(":", "").trim().replace("\u00a0","");
+		if (inputTd.select("select").size() > 0
+				&& !name.equals("Treffer/Seite") && !name.equals("Medientypen")) {
+			Element select = inputTd.select("select").first();
+			DropdownSearchField field = new DropdownSearchField();
+			field.setDisplayName(name);
+			field.setId(select.attr("name"));
+			List<Map<String, String>> options = new ArrayList<Map<String, String>>();
+			for (Element option : select.select("option")) {
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("key", option.attr("value"));
+				map.put("value", option.text());
+				options.add(map);
+			}
+			field.setDropdownValues(options);
+			return field;
+		} else if (inputTd.select("input").size() > 0) {
+			TextSearchField field = new TextSearchField();
+			Element input = inputTd.select("input").first();
+			field.setDisplayName(name);
+			field.setId(input.attr("name"));
+			field.setHint("");
+			return field;
+		} else {
+			return null;
+		}
+	}
+
 	@Override
-	public String[] getSearchFieldsCompat() {
-		return new String[] { KEY_SEARCH_QUERY_FREE, KEY_SEARCH_QUERY_AUTHOR,
-				KEY_SEARCH_QUERY_KEYWORDA, KEY_SEARCH_QUERY_TITLE,
-				KEY_SEARCH_QUERY_YEAR, KEY_SEARCH_QUERY_SYSTEM,
-				KEY_SEARCH_QUERY_PUBLISHER, KEY_SEARCH_QUERY_CATEGORY };
+	public List<SearchField> getSearchFields() throws IOException {
+		List<SearchField> fields = new ArrayList<SearchField>();
+
+		// Extract all search fields, except media types
+		String html = httpGet(opac_url + "/iopac/search_expert.htm",
+				getDefaultEncoding());
+		Document doc = Jsoup.parse(html);
+		Elements trs = doc
+				.select("tr.norm:has(input), tr.norm:has(select)");
+		for (Element tr : trs) {
+			Elements tds = tr.select("td");
+			if (tds.size() == 4) {
+				// Two search fields next to each other in one row
+				SearchField field1 = createSearchField(tds.get(0), tds.get(1));
+				SearchField field2 = createSearchField(tds.get(2), tds.get(3));
+				if (field1 != null)
+					fields.add(field1);
+				if (field2 != null)
+					fields.add(field2);
+			} else if (tds.size() == 2) {
+				SearchField field = createSearchField(tds.get(0), tds.get(1));
+				if (field != null)
+					fields.add(field);
+			}
+		}
+
+		// Extract available media types.
+		// We have to parse JavaScript. Doing this with RegEx is evil.
+		// But not as evil as including a JavaScript VM into the app.
+		// And I honestly do not see another way.
+		Pattern pattern_key = Pattern
+				.compile("mtyp\\[[0-9]+\\]\\[\"typ\"\\] = \"([^\"]+)\";");
+		Pattern pattern_value = Pattern
+				.compile("mtyp\\[[0-9]+\\]\\[\"bez\"\\] = \"([^\"]+)\";");
+
+		List<Map<String, String>> mediatypes = new ArrayList<Map<String, String>>();
+		try {
+			html = httpGet(opac_url + "/iopac/mtyp.js", getDefaultEncoding());
+
+			String[] parts = html.split("new Array\\(\\);");
+			for (String part : parts) {
+				Matcher matcher1 = pattern_key.matcher(part);
+				String key = "";
+				String value = "";
+				if (matcher1.find()) {
+					key = matcher1.group(1);
+				}
+				Matcher matcher2 = pattern_value.matcher(part);
+				if (matcher2.find()) {
+					value = matcher2.group(1);
+				}
+				if (value != "") {
+					Map<String, String> mediatype = new HashMap<String, String>();
+					mediatype.put("key", key);
+					mediatype.put("value", value);
+					mediatypes.add(mediatype);
+				}
+			}
+		} catch (IOException e) {
+			try {
+				html = httpGet(opac_url
+						+ "/iopac/frames/search_form.php?bReset=1?bReset=1",
+						getDefaultEncoding());
+				doc = Jsoup.parse(html);
+
+				try {
+					metadata.open();
+				} catch (Exception e1) {
+					throw new RuntimeException(e1);
+				}
+				metadata.clearMeta(library.getIdent());
+
+				for (Element opt : doc.select("#imtyp option")) {
+					Map<String, String> mediatype = new HashMap<String, String>();
+					mediatype.put("key", opt.attr("value"));
+					mediatype.put("value", opt.text());
+					mediatypes.add(mediatype);
+				}
+
+				metadata.close();
+
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+
+		}
+		if (mediatypes.size() > 0) {
+			DropdownSearchField mtyp = new DropdownSearchField();
+			mtyp.setDisplayName("Medientypen");
+			mtyp.setId("Medientyp");
+			mtyp.setDropdownValues(mediatypes);
+			fields.add(mtyp);
+		}
+		return fields;
 	}
 
 	@Override

@@ -132,13 +132,6 @@
         "Verl"
     ],
     "AVAILABLE": ["verfügbar"],
-    "DIGITAL": [
-        "digital",
-        "E-Books",
-        "nur elektronische Publikationen",
-        "E-Medien",
-        "digitales Objekt"
-    ],
     "BRANCH": [
         "Suche in Zweigstelle",
         "Zweigstelle ist gleich",
@@ -153,6 +146,13 @@
         "Suche in Teilbibliothek",
         "Anzeige der Titel nur aus Zweigstelle",
         "Suchort"
+    ],
+    "DIGITAL": [
+        "digital",
+        "E-Books",
+        "nur elektronische Publikationen",
+        "E-Medien",
+        "digitales Objekt"
     ],
     "LOCATION": [
         "Ort",
@@ -174,7 +174,8 @@
         "Erscheinungsform/Code",
         "Filter Medienarten",
         "Materialart",
-        "Mediengruppe"
+        "Mediengruppe",
+        "Medientypen"
     ],
     "BARCODE": [
         "Barcode",
