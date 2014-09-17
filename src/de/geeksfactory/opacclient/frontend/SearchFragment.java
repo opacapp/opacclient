@@ -73,6 +73,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
 	protected String barcodeScanningField;
 	protected ScanResult scanResult;
+	private LoadSearchFieldsTask task;
 
 	public SearchFragment() {
 
@@ -360,12 +361,14 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		if (dataSource.hasSearchFields(app.getLibrary().getIdent())
 				&& dataSource.getLastSearchFieldUpdateVersion(app.getLibrary()
 						.getIdent()) == versionCode) {
+			if (task != null && !task.isCancelled())
+				task.cancel(true);
 			fields = dataSource.getSearchFields(app.getLibrary().getIdent());
 			buildSearchForm();
 			if (savedState != null)
 				loadQuery(savedState);
 		} else {
-			new LoadSearchFieldsTask().execute();
+			executeNewLoadSearchFieldsTask();
 		}
 		setAdvanced(false);
 	}
@@ -454,7 +457,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 					@Override
 					public void onClick(View v) {
 						errorView.removeAllViews();
-						new LoadSearchFieldsTask().execute();
+						executeNewLoadSearchFieldsTask();
 					}
 				});
 
@@ -470,6 +473,13 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 	public void saveFields(List<SearchField> fields) {
 		SearchFieldDataSource dataSource = new JsonSearchFieldDataSource(app);
 		dataSource.saveSearchFields(app.getLibrary().getIdent(), fields);
+	}
+	
+	private void executeNewLoadSearchFieldsTask() {
+		if (task != null && !task.isCancelled())
+			task.cancel(true);
+		task = new LoadSearchFieldsTask();
+		task.execute();
 	}
 
 	public void go() {
