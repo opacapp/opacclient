@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "W\u00f6rth",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/woerth",
+        "information": "http://hoerlkofen.landkreis-erding.de/index.asp?NAVIID=%7B394EFE11-E519-408C-ABA2-31E17E5D875A%7D"
+    },
+    "geo": [
+        49.0514423,
+        8.257337999999999
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

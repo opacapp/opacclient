@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Borken",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/mzborken",
+        "information": "http://www.kreis-borken.de/de/kreisverwaltung/aufgaben/schule-und-sport/medienzentrum/"
+    },
+    "geo": [
+        51.84827139999999,
+        6.8594477
+    ],
+    "state": "Nordrhein-Westfalen",
+    "support": "Katalogsuche",
+    "title": "Medienzentrum"
+}

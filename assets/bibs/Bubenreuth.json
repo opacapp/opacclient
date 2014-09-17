@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Bubenreuth",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/bubenreuth",
+        "information": "http://www.bubenreuth.de/index.php?id=0,57"
+    },
+    "geo": [
+        49.6269937,
+        11.0167038
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

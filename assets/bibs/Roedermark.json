@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "R\u00f6dermark",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "https://medienkatalog.stadtbuecherei.info/webopac",
+        "information": "http://www.roedermark.de/index.php?id=40"
+    },
+    "geo": [
+        49.9729001,
+        8.830189599999999
+    ],
+    "state": "Hessen",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

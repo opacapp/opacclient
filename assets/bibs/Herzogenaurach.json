@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Herzogenaurach",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/herzogenaurach",
+        "information": "http://www.herzogenaurach.de/de/bildung-familie-und-soziales/stadtbuecherei.html"
+    },
+    "geo": [
+        49.5682987,
+        10.8828577
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

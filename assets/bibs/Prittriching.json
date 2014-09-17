@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Prittriching",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/prittriching",
+        "information": "http://s361800474.website-start.de/einrichtungen/b%C3%BCcherei/"
+    },
+    "geo": [
+        48.2005093,
+        10.9282678
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

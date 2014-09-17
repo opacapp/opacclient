@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Geltendorf",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/geltendorf",
+        "information": "http://www.geltendorf.de/index.php?id=287,57"
+    },
+    "geo": [
+        48.1169151,
+        11.0328009
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

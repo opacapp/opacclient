@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Borsdorf",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/borsdorf",
+        "information": "http://www.borsdorf-online.de/borsdorf/bildung/bildung_bibliothek.php4"
+    },
+    "geo": [
+        51.3482636,
+        12.5431488
+    ],
+    "state": "Sachsen",
+    "support": "Katalogsuche",
+    "title": "Bibliothek"
+}

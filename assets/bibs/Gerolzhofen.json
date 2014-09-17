@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Gerolzhofen",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/gerolzhofen",
+        "information": "http://www.gerolzhofen.de/Stadtbibliothek.html"
+    },
+    "geo": [
+        49.9005963,
+        10.3495174
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Stadtbibliothek"
+}

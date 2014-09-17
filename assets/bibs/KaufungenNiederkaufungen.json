@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Kaufungen",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/kaufungen",
+        "information": "http://www.kaufungen.eu/Startseite/B%C3%BCchereien/"
+    },
+    "geo": [
+        51.2831485,
+        9.621238499999999
+    ],
+    "state": "Hessen",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei Niederkaufungen"
+}

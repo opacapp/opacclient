@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Oberding",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/oberding",
+        "information": "http://www.vg-oberding.de/Oberding/buecherei/"
+    },
+    "geo": [
+        48.3216584,
+        11.8463488
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

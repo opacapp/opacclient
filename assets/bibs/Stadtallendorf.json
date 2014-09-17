@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Stadtallendorf",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/stadtallendorf",
+        "information": "http://www.stadtallendorf.de/error.phtml?object=tx%7C2084.41.1&ModID=10&FID=231.56.1&NavID=2084.68&La=1&ort="
+    },
+    "geo": [
+        50.8218537,
+        9.020215100000001
+    ],
+    "state": "Hessen",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

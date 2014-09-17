@@ -921,6 +921,11 @@ public class SISIS extends BaseApi implements OpacApi {
 				}
 			}
 		}
+		for (Element link : doc3.select(".box-container a")) {
+			if (link.text().trim().equals("Download")) {
+				result.addDetail(new Detail("Download", link.absUrl("href")));
+			}
+		}
 
 		Map<String, Integer> copy_columnmap = new HashMap<String, Integer>();
 		// Default values

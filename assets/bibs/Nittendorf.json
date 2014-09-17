@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Nittendorf",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/nittendorf",
+        "information": "http://www.nittendorf.de/Start/Grusswort.aspx"
+    },
+    "geo": [
+        49.0242503,
+        11.9605139
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Marktbibliothek"
+}

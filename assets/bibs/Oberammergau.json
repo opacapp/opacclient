@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Oberammergau",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/oberammergau",
+        "information": "http://www.buecherei-oberammergau.de/"
+    },
+    "geo": [
+        47.5956599,
+        11.072352
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}

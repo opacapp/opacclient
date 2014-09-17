@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Helmbrechts",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/helmbrechts",
+        "information": "http://www.stadt-helmbrechts.de/city_info/webaccessibility/index.cfm?region_id=26&waid=297&design_id=10007&item_id=852506&modul_id=26&record_id=11585&keyword=0&eps=10&cat=42"
+    },
+    "geo": [
+        50.2358872,
+        11.7190245
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

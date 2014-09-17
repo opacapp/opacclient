@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Menden (Sauerland)",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.kdvz.de/menden",
+        "information": "http://www.menden.de/lim/bi/bc/index.php"
+    },
+    "geo": [
+        51.433333,
+        7.8
+    ],
+    "state": "Nordrhein-Westfalen",
+    "support": "Katalogsuche",
+    "title": "Dorte-Hilleke-B\u00fccherei"
+}

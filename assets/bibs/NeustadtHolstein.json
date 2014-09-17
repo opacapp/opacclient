@@ -1,0 +1,45 @@
+{
+    "api": "bibliotheca",
+    "city": "Neustadt in Holstein",
+    "country": "Deutschland",
+    "data": {
+        "accounttable": {
+            "author": 0,
+            "prolongurl": 3,
+            "returndate": 2,
+            "title": 1
+        },
+        "baseurl": "http://87.139.76.248/webopac",
+        "copiestable": {
+            "location": 3,
+            "returndate": 1,
+            "status": 0
+        },
+        "information": "http://www.stadt-neustadt.de/stadtbuecherei",
+        "mediatypes": {
+            "download.jpg": "EBOOK",
+            "mCDROMS.gif": "GAME_CONSOLE_NINTENDO",
+            "mComic2S.gif": "BOOK",
+            "mFILMS.gif": "DVD",
+            "mFilmS.gif": "UNKNOWN",
+            "mMusikCDS.gif": "CD",
+            "mSpielS.gif": "BOARDGAME",
+            "mZtgS.gif": "NEWSPAPER",
+            "mmultmedS.gif": "PACKAGE",
+            "monooS.gif": "BOOK"
+        },
+        "reservationtable": {
+            "author": 0,
+            "availability": 2,
+            "cancelurl": 3,
+            "title": 1
+        }
+    },
+    "geo": [
+        54.1018029,
+        10.8153384
+    ],
+    "state": "Schleswig-Holstein",
+    "support": "Katalogsuche und Konto",
+    "title": "Stadtbibliothek"
+}

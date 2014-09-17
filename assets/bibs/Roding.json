@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Roding",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.net/roding",
+        "information": "http://www.roding.de/Rathaus/OeffentlicheEinrichtungen/Bildungseinrichtungen/Stadtbuecherei.aspx"
+    },
+    "geo": [
+        49.1941496,
+        12.5222943
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}

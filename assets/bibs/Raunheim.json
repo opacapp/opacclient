@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Raunheim",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/raunheim",
+        "information": "http://raunheim.de/sites/gensite.asp?SID=cms100820141646047420923&Art=232"
+    },
+    "geo": [
+        50.0104109,
+        8.4529177
+    ],
+    "state": "Hessen",
+    "support": "Katalogsuche",
+    "title": "Mediathek Stadt"
+}

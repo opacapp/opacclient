@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Untermeitingen",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/untermeitingen",
+        "information": "http://www.lechfeld.de/index.php?id=0,55"
+    },
+    "geo": [
+        48.1622916,
+        10.8115479
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Gemeindeb\u00fccherei"
+}
