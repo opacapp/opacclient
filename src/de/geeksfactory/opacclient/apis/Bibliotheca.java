@@ -69,7 +69,6 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
-import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
  * OpacApi implementation for Bibliotheca Web Opacs, originally developed by
@@ -80,7 +79,6 @@ public class Bibliotheca extends BaseApi {
 
 	protected String opac_url = "";
 	protected JSONObject data;
-	protected MetaDataSource metadata;
 	protected boolean initialised = false;
 	protected Library library;
 	protected long logged_in;
@@ -231,9 +229,8 @@ public class Bibliotheca extends BaseApi {
 	}
 
 	@Override
-	public void init(MetaDataSource metadata, Library lib) {
-		super.init(metadata, lib);
-		this.metadata = metadata;
+	public void init(Library lib) {
+		super.init(lib);
 		this.library = lib;
 		this.data = lib.getData();
 

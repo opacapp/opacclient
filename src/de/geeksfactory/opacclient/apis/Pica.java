@@ -70,7 +70,6 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
-import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
  * @author Johan von Forstner, 16.09.2013
@@ -81,7 +80,6 @@ public class Pica extends BaseApi implements OpacApi {
 	protected String opac_url = "";
 	protected String https_url = "";
 	protected JSONObject data;
-	protected MetaDataSource metadata;
 	protected boolean initialised = false;
 	protected Library library;
 	protected int resultcount = 10;
@@ -122,25 +120,12 @@ public class Pica extends BaseApi implements OpacApi {
 		// Document doc = Jsoup.parse(html);
 
 		// updateSearchSetValue(doc);
-
-		try {
-			metadata.open();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		if (!metadata.hasMeta(library.getIdent())) {
-			metadata.close();
-			// extract_meta(doc);
-		} else {
-			metadata.close();
-		}
 	}
 
 	@Override
-	public void init(MetaDataSource metadata, Library lib) {
-		super.init(metadata, lib);
+	public void init(Library lib) {
+		super.init(lib);
 
-		this.metadata = metadata;
 		this.library = lib;
 		this.data = lib.getData();
 

@@ -13,12 +13,10 @@ import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.searchfields.BarcodeSearchField;
 import de.geeksfactory.opacclient.searchfields.CheckboxSearchField;
-import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
-import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 public abstract class BaseApiCompat extends BaseApi implements OpacApi {
 
@@ -39,7 +37,7 @@ public abstract class BaseApiCompat extends BaseApi implements OpacApi {
 		Set<String> fieldsCompat = new HashSet<String>(
 				Arrays.asList(getSearchFieldsCompat()));
 
-		try {
+		/*try {
 			metadata.open();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -62,7 +60,7 @@ public abstract class BaseApiCompat extends BaseApi implements OpacApi {
 				} catch (Exception e) {
 				}
 			}
-		}
+		}*/
 
 		Map<String, String> all = new HashMap<String, String>();
 		all.put("key", "");
@@ -138,7 +136,7 @@ public abstract class BaseApiCompat extends BaseApi implements OpacApi {
 			field.setMeaning(Meaning.YEAR);
 			searchFields.add(field);
 		}
-		if (fieldsCompat.contains(KEY_SEARCH_QUERY_BRANCH)
+		/* if (fieldsCompat.contains(KEY_SEARCH_QUERY_BRANCH)
 				&& metadata.hasMeta(library.getIdent(),
 						MetaDataSource.META_TYPE_BRANCH)) {
 			List<Map<String, String>> data = metadata.getMeta(
@@ -171,7 +169,7 @@ public abstract class BaseApiCompat extends BaseApi implements OpacApi {
 					KEY_SEARCH_QUERY_CATEGORY, "Mediengruppe", false, data);
 			field.setMeaning(Meaning.CATEGORY);
 			searchFields.add(field);
-		}
+		} */
 		if (fieldsCompat.contains(KEY_SEARCH_QUERY_PUBLISHER)) {
 			SearchField field = new TextSearchField(KEY_SEARCH_QUERY_PUBLISHER,
 					"Verlag", false, false, "", false, false);

@@ -50,13 +50,11 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
-import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 public class Adis extends BaseApi implements OpacApi {
 
 	protected String opac_url = "";
 	protected JSONObject data;
-	protected MetaDataSource metadata;
 	protected boolean initialised = false;
 	protected Library library;
 
@@ -410,10 +408,8 @@ public class Adis extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public void init(MetaDataSource metadata, Library library) {
-		super.init(metadata, library);
-
-		this.metadata = metadata;
+	public void init(Library library) {
+		super.init(library);
 		this.library = library;
 		this.data = library.getData();
 		try {

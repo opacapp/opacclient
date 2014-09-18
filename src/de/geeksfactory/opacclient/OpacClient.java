@@ -72,7 +72,6 @@ import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
-import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 import de.geeksfactory.opacclient.storage.StarContentProvider;
 
 @ReportsCrashes(formKey = "", mailTo = "info@opacapp.de", mode = org.acra.ReportingInteractionMode.NOTIFICATION)
@@ -171,7 +170,7 @@ public class OpacClient extends Application {
 		else
 			return null;
 
-		newApiInstance.init(new SQLMetaDataSource(this), lib);
+		newApiInstance.init(lib);
 		return newApiInstance;
 	}
 

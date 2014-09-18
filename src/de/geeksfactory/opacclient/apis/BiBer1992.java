@@ -63,7 +63,6 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
-import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
  * @author Ruediger Wurth, 16.02.2013 Web identification:
@@ -98,7 +97,6 @@ public class BiBer1992 extends BaseApi {
 	private String m_opac_url = "";
 	private String m_opac_dir = "opac"; // sometimes also "opax"
 	private JSONObject m_data;
-	private MetaDataSource m_metadata;
 	private boolean m_initialised = false;
 	private Library m_library;
 	private List<NameValuePair> m_nameValuePairs = new ArrayList<NameValuePair>(
@@ -307,11 +305,10 @@ public class BiBer1992 extends BaseApi {
 	}
 
 	@Override
-	public void init(MetaDataSource metadata, Library lib) {
-		super.init(metadata, lib);
+	public void init(Library lib) {
+		super.init(lib);
 		http_client = HTTPClient.getNewHttpClient(lib);
 
-		m_metadata = metadata;
 		m_library = lib;
 		m_data = lib.getData();
 

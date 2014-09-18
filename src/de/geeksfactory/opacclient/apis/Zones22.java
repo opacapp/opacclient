@@ -63,7 +63,6 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
-import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
  * API für Web-Opacs von Zones mit dem Hinweis "Zones.2.2.45.04" im Footer.
@@ -76,7 +75,6 @@ public class Zones22 extends BaseApi {
 
 	private String opac_url = "";
 	private JSONObject data;
-	private MetaDataSource metadata;
 	private Library library;
 	private int page;
 	private String searchobj;
@@ -163,10 +161,9 @@ public class Zones22 extends BaseApi {
 	}
 
 	@Override
-	public void init(MetaDataSource metadata, Library lib) {
-		super.init(metadata, lib);
+	public void init(Library lib) {
+		super.init(lib);
 
-		this.metadata = metadata;
 		this.library = lib;
 		this.data = lib.getData();
 

@@ -44,7 +44,6 @@ import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
-import de.geeksfactory.opacclient.storage.DummyMetaDataSource;
 
 @RunWith(Parallelized.class)
 public class LibraryApiTestCases extends TestCase {
@@ -210,7 +209,7 @@ public class LibraryApiTestCases extends TestCase {
 			api = new WebOpacNet();
 		else
 			api = null;
-		api.init(new DummyMetaDataSource(), library);
+		api.init(library);
 		return api;
 	}
 }

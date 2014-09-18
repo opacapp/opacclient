@@ -61,7 +61,6 @@ import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
-import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
  * Abstract Base class for OpacApi implementations providing some helper methods
@@ -70,16 +69,14 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
 public abstract class BaseApi implements OpacApi {
 
 	protected DefaultHttpClient http_client;
-	protected MetaDataSource metadata;
 	protected Library library;
 
 	/**
 	 * Initializes HTTP client
 	 */
 	@Override
-	public void init(MetaDataSource metadata, Library library) {
+	public void init(Library library) {
 		http_client = HTTPClient.getNewHttpClient(library);
-		this.metadata = metadata;
 		this.library = library;
 	}
 

@@ -54,7 +54,6 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
-import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
  * 
@@ -80,7 +79,6 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
 public class WebOpacNet extends BaseApi implements OpacApi {
 
 	protected String opac_url = "";
-	protected MetaDataSource metadata;
 	protected JSONObject data;
 	protected Library library;
 	protected List<SearchQuery> query;
@@ -101,25 +99,10 @@ public class WebOpacNet extends BaseApi implements OpacApi {
 
 	}
 
-	public void extract_meta() {
-		try {
-			metadata.open();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		if (!metadata.hasMeta(library.getIdent())) {
-			metadata.close();
-			extract_meta();
-		} else {
-			metadata.close();
-		}
-	}
-
 	@Override
-	public void init(MetaDataSource metadata, Library lib) {
-		super.init(metadata, lib);
+	public void init(Library lib) {
+		super.init(lib);
 
-		this.metadata = metadata;
 		this.library = lib;
 		this.data = lib.getData();
 

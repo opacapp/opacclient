@@ -36,7 +36,6 @@ import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
-import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
  * Generic interface for accessing online library catalogues.
@@ -498,7 +497,7 @@ public interface OpacApi {
 	 * @param library
 	 *            The library the Api is initialized for
 	 */
-	public void init(MetaDataSource metadata, Library library);
+	public void init(Library library);
 
 	/**
 	 * Performs a catalogue search. The given <code>List<SearchQuery></code>

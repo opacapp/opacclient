@@ -36,7 +36,6 @@ import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
-import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
  * 
@@ -107,59 +106,17 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
 public class WinBiap extends BaseApi implements OpacApi {
 
 	protected String opac_url = "";
-	protected MetaDataSource metadata;
 	protected JSONObject data;
 	protected Library library;
 	protected List<List<NameValuePair>> query;
 
 	@Override
 	public void start() throws IOException, NotReachableException {
-		try {
-			metadata.open();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		if (!metadata.hasMeta(library.getIdent())) {
-			metadata.close();
-			extract_meta();
-		} else {
-			metadata.close();
-		}
+
 	}
 
-	public void extract_meta() {
-		String html;
-		try {
-			html = httpGet(opac_url + "/search.aspx", getDefaultEncoding());
-			Document doc = Jsoup.parse(html);
-			Elements mediaGroupOptions = doc
-					.select("#ctl00_ContentPlaceHolderMain_searchPanel_ListBoxMediagroups_ListBoxMultiselection option");
-			Elements branchOptions = doc
-					.select("#ctl00_ContentPlaceHolderMain_searchPanel_MultiSelectionBranch_ListBoxMultiselection option");
-			try {
-				metadata.open();
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-			metadata.clearMeta(library.getIdent());
-
-			for (Element option : mediaGroupOptions) {
-				metadata.addMeta(MetaDataSource.META_TYPE_CATEGORY,
-						library.getIdent(), option.attr("value"), option.text());
-			}
-			for (Element option : branchOptions) {
-				metadata.addMeta(MetaDataSource.META_TYPE_BRANCH,
-						library.getIdent(), option.attr("value"), option.text());
-			}
-			metadata.close();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-	}
-
-	public void init(MetaDataSource metadata, Library lib) {
-		super.init(metadata, lib);
-		this.metadata = metadata;
+	public void init(Library lib) {
+		super.init(lib);
 		this.library = lib;
 		this.data = lib.getData();
 

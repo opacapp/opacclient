@@ -61,7 +61,6 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
-import de.geeksfactory.opacclient.storage.MetaDataSource;
 
 /**
  * Implementation of Fleischmann iOpac, including account support Seems to work
@@ -74,7 +73,6 @@ public class IOpac extends BaseApi implements OpacApi {
 
 	protected String opac_url = "";
 	protected JSONObject data;
-	protected MetaDataSource metadata;
 	protected boolean initialised = false;
 	protected Library library;
 	protected int resultcount = 10;
@@ -114,10 +112,9 @@ public class IOpac extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public void init(MetaDataSource metadata, Library lib) {
-		super.init(metadata, lib);
+	public void init(Library lib) {
+		super.init(lib);
 
-		this.metadata = metadata;
 		this.library = lib;
 		this.data = lib.getData();
 
@@ -774,21 +771,12 @@ public class IOpac extends BaseApi implements OpacApi {
 						getDefaultEncoding());
 				doc = Jsoup.parse(html);
 
-				try {
-					metadata.open();
-				} catch (Exception e1) {
-					throw new RuntimeException(e1);
-				}
-				metadata.clearMeta(library.getIdent());
-
 				for (Element opt : doc.select("#imtyp option")) {
 					Map<String, String> mediatype = new HashMap<String, String>();
 					mediatype.put("key", opt.attr("value"));
 					mediatype.put("value", opt.text());
 					mediatypes.add(mediatype);
 				}
-
-				metadata.close();
 
 			} catch (IOException e1) {
 				e1.printStackTrace();
