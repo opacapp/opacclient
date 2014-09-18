@@ -234,7 +234,13 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 								.findViewWithTag(fields.get(i - 1).getId());
 						llFormFields.removeView(before);
 						llAdvancedFields.removeView(before);
-						v = makeHalfWidth(before, v);
+						v.setTag(field.getId());
+						View together = makeHalfWidth(before, v);
+						v = null;
+						if (field.isAdvanced())
+							llAdvancedFields.addView(together);
+						else
+							llFormFields.addView(together);
 					}
 				}
 			} else if (field instanceof BarcodeSearchField) {
