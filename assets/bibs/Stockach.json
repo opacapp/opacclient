@@ -6,7 +6,7 @@
         "accounttable": {
             "author": 0,
             "barcode": 4,
-            "prolongurl": 6,
+            "prolongurl": 5,
             "returndate": 2,
             "title": 1
         },
@@ -31,8 +31,9 @@
         },
         "reservationtable": {
             "author": 0,
-            "availability": 2,
-            "cancelurl": 3,
+            "availability": 3,
+            "cancelurl": 5,
+            "expirationdate": 4, 
             "title": 1
         }
     },
