@@ -1,0 +1,16 @@
+{
+    "api": "iopac",
+    "city": "Barmstedt",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://86.103.23.19",
+        "information": "http://www.stadtbuecherei-barmstedt.de/"
+    },
+    "geo": [
+        53.7905563,
+        9.769214900000001
+    ],
+    "state": "Schleswig-Holstein",
+    "support": "Katalogsuche und Konto",
+    "title": "Stadtbibliothek"
+}

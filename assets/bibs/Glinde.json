@@ -1,0 +1,16 @@
+{
+    "api": "iopac",
+    "city": "Glinde",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://iopac-glinde.dyndns.org",
+        "information": "http://www.stadtbuecherei-glinde.de/"
+    },
+    "geo": [
+        53.5435908,
+        10.2165943
+    ],
+    "state": "Schleswig-Holstein",
+    "support": "Katalogsuche und Konto",
+    "title": "Stadtb\u00fccherei"
+}

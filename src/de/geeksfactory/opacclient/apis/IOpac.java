@@ -205,8 +205,8 @@ public class IOpac extends BaseApi implements OpacApi {
 		}
 	}
 
-	protected int addParameters(Map<String, String> query, String key, String searchkey,
-			List<NameValuePair> params, int index) {
+	protected int addParameters(Map<String, String> query, String key,
+			String searchkey, List<NameValuePair> params, int index) {
 		if (!query.containsKey(key) || query.get(key).equals(""))
 			return index;
 
@@ -216,8 +216,8 @@ public class IOpac extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public SearchRequestResult search(Map<String, String> query) throws IOException,
-			NotReachableException, OpacErrorException {
+	public SearchRequestResult search(Map<String, String> query)
+			throws IOException, NotReachableException, OpacErrorException {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 		int index = 0;
@@ -315,7 +315,7 @@ public class IOpac extends BaseApi implements OpacApi {
 				.first();
 		int j = 0;
 		for (Element th : thead.select("th")) {
-			String text = th.text().trim().toLowerCase();
+			String text = th.text().trim().toLowerCase(Locale.GERMAN);
 			if (text.contains("cover"))
 				colmap.put("cover", j);
 			else if (text.contains("titel"))
@@ -328,9 +328,11 @@ public class IOpac extends BaseApi implements OpacApi {
 				colmap.put("year", j);
 			else if (text.contains("signatur"))
 				colmap.put("shelfmark", j);
+			else if (text.contains("info"))
+				colmap.put("info", j);
 			else if (text.contains("abteilung"))
 				colmap.put("department", j);
-			else if (text.contains("verliehen"))
+			else if (text.contains("verliehen") || text.contains("verl."))
 				colmap.put("returndate", j);
 			else if (text.contains("anz.res"))
 				colmap.put("reservations", j);
@@ -353,45 +355,60 @@ public class IOpac extends BaseApi implements OpacApi {
 			SearchResult sr = new SearchResult();
 
 			if (tr.select("td").get(colmap.get("cover")).select("img").size() > 0) {
-				String imgUrl = tr.select("td").get(colmap.get("cover")).select("img").first()
-						.attr("src");
+				String imgUrl = tr.select("td").get(colmap.get("cover"))
+						.select("img").first().attr("src");
 				sr.setCover(imgUrl);
 			}
 
 			// Media Type
-			String mType = tr.select("td").get(colmap.get("category")).text().trim()
-					.replace("\u00a0", "");
+			if (colmap.get("category") != null) {
+				String mType = tr.select("td").get(colmap.get("category"))
+						.text().trim().replace("\u00a0", "");
 
-			if (data.has("mediatypes")) {
-				try {
-					sr.setType(MediaType.valueOf(data.getJSONObject(
-							"mediatypes").getString(
-							mType.toLowerCase(Locale.GERMAN))));
-				} catch (JSONException e) {
-					sr.setType(defaulttypes.get(mType
-							.toLowerCase(Locale.GERMAN)));
-				} catch (IllegalArgumentException e) {
+				if (data.has("mediatypes")) {
+					try {
+						sr.setType(MediaType.valueOf(data.getJSONObject(
+								"mediatypes").getString(
+								mType.toLowerCase(Locale.GERMAN))));
+					} catch (JSONException e) {
+						sr.setType(defaulttypes.get(mType
+								.toLowerCase(Locale.GERMAN)));
+					} catch (IllegalArgumentException e) {
+						sr.setType(defaulttypes.get(mType
+								.toLowerCase(Locale.GERMAN)));
+					}
+				} else {
 					sr.setType(defaulttypes.get(mType
 							.toLowerCase(Locale.GERMAN)));
 				}
-			} else {
-				sr.setType(defaulttypes.get(mType.toLowerCase(Locale.GERMAN)));
 			}
 
 			// Title and additional info
-			String title = tr.select("td").get(colmap.get("title")).text()
-					.trim().replace("\u00a0", "");
+			String title = "";
 			String additionalInfo = "";
-			if (title.contains("(")) {
-				additionalInfo += title.substring(title.indexOf("("));
-				title = title.substring(0, title.indexOf("(") - 1).trim();
-			}
+			if (colmap.get("info") != null) {
+				Element info = tr.select("td").get(colmap.get("info"));
+				title = info.select("a[title=Details-Info]").text().trim();
+				String authorIn = info.text().substring(0,
+						info.text().indexOf(title));
+				if (authorIn.contains(":")) {
+					authorIn = authorIn.replaceFirst("^([^:]*):(.*)$", "$1");
+					additionalInfo += " - " + authorIn;
+				}
+			} else {
+				title = tr.select("td").get(colmap.get("title")).text().trim()
+						.replace("\u00a0", "");
+				if (title.contains("(")) {
+					additionalInfo += title.substring(title.indexOf("("));
+					title = title.substring(0, title.indexOf("(") - 1).trim();
+				}
 
-			// Author
-			if (colmap.containsKey("author")) {
-				String author = tr.select("td").get(colmap.get("author"))
-						.text().trim().replace("\u00a0", "");
-				additionalInfo += " - " + author;
+				// Author
+				if (colmap.containsKey("author")) {
+					String author = tr.select("td").get(colmap.get("author"))
+							.text().trim().replace("\u00a0", "");
+					additionalInfo += " - " + author;
+				}
 			}
 
 			// Publisher
@@ -413,7 +430,9 @@ public class IOpac extends BaseApi implements OpacApi {
 			// Status
 			String status = tr.select("td").get(colmap.get("returndate"))
 					.text().trim().replace("\u00a0", "");
-			if (status.equals("")) {
+			if (status.equals("") || status.contains("Onleihe")
+					|| status.contains("verleihbar")
+					|| status.contains("entleihbar")) {
 				sr.setStatus(Status.GREEN);
 			} else {
 				sr.setStatus(Status.RED);
@@ -423,7 +442,7 @@ public class IOpac extends BaseApi implements OpacApi {
 
 			sr.setNr(10 * (page - 1) + i);
 			sr.setId(null);
-			
+
 			results.add(sr);
 		}
 		resultcount = results.size();
@@ -478,10 +497,20 @@ public class IOpac extends BaseApi implements OpacApi {
 
 		DetailledItem result = new DetailledItem();
 
-		String id = doc.select("table").last().select("td a").first()
-				.attr("href");
-		Integer idPosition = id.indexOf("mednr=") + 6;
-		id = id.substring(idPosition, id.indexOf("&", idPosition)).trim();
+		String id = null;
+
+		if (doc.select("input[name=mednr]").size() > 0)
+			id = doc.select("input[name=mednr]").first().val().trim();
+		else {
+			for (Element a : doc.select("table").last().select("td a")) {
+				if (a.attr("href").contains("mednr=")) {
+					id = a.attr("href");
+					break;
+				}
+			}
+			Integer idPosition = id.indexOf("mednr=") + 6;
+			id = id.substring(idPosition, id.indexOf("&", idPosition)).trim();
+		}
 
 		result.setId(id);
 
@@ -524,7 +553,8 @@ public class IOpac extends BaseApi implements OpacApi {
 		}
 
 		// GET RESERVATION INFO
-		if ("verfügbar".equals(e.get(DetailledItem.KEY_COPY_STATUS))) {
+		if ("verfügbar".equals(e.get(DetailledItem.KEY_COPY_STATUS))
+				|| doc.select("a[href^=/cgi-bin/di.exe?mode=10]").size() == 0) {
 			result.setReservable(false);
 		} else {
 			result.setReservable(true);
@@ -563,8 +593,8 @@ public class IOpac extends BaseApi implements OpacApi {
 					"input[name=recno]").attr("value")));
 			params.add(new BasicNameValuePair("pshLogin", "Reservieren"));
 
-			html = httpPost(opac_url + "/cgi-bin/di.exe", new UrlEncodedFormEntity(
-					params), getDefaultEncoding());
+			html = httpPost(opac_url + "/cgi-bin/di.exe",
+					new UrlEncodedFormEntity(params), getDefaultEncoding());
 			doc = Jsoup.parse(html);
 			if (doc.select("h1").text().contains("fehlgeschlagen")) {
 				return new ReservationResult(MultiStepResult.Status.ERROR, doc
@@ -684,10 +714,12 @@ public class IOpac extends BaseApi implements OpacApi {
 
 	}
 
-	protected void parse_medialist(List<Map<String, String>> medien, Document doc,
-			int offset) throws ClientProtocolException, IOException {
+	protected void parse_medialist(List<Map<String, String>> medien,
+			Document doc, int offset) throws ClientProtocolException,
+			IOException {
 
-		Elements copytrs = doc.select("a[name=AUS] ~ table").first().select("tr");
+		Elements copytrs = doc.select("a[name=AUS] ~ table").first()
+				.select("tr");
 		doc.setBaseUri(opac_url);
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
@@ -729,7 +761,7 @@ public class IOpac extends BaseApi implements OpacApi {
 			String link = tr.child(5).select("a").attr("href");
 			e.put(AccountData.KEY_LENT_LINK, link);
 			// find media number with regex
-			Pattern pattern = Pattern.compile("mednr=(\\d*)&");
+			Pattern pattern = Pattern.compile("mednr=([^&]*)&");
 			Matcher matcher = pattern.matcher(link);
 			matcher.find();
 			if (matcher.group() != null) {
@@ -742,9 +774,11 @@ public class IOpac extends BaseApi implements OpacApi {
 
 	}
 
-	protected void parse_reslist(List<Map<String, String>> medien, Document doc,
-			int offset) throws ClientProtocolException, IOException {
-		Elements copytrs = doc.select("a[name=RES] ~ table").first().select("tr");
+	protected void parse_reslist(List<Map<String, String>> medien,
+			Document doc, int offset) throws ClientProtocolException,
+			IOException {
+		Elements copytrs = doc.select("a[name=RES] ~ table:contains(Titel)")
+				.first().select("tr");
 		doc.setBaseUri(opac_url);
 
 		int trs = copytrs.size();
@@ -813,7 +847,16 @@ public class IOpac extends BaseApi implements OpacApi {
 	}
 
 	public void updateRechnr(Document doc) {
-		String url = doc.select("table th a").first().attr("href");
+		String url = null;
+		for (Element a : doc.select("table a")) {
+			if (a.attr("href").contains("rechnr=")) {
+				url = a.attr("href");
+				break;
+			}
+		}
+		if (url == null)
+			return;
+
 		Integer rechnrPosition = url.indexOf("rechnr=") + 7;
 		rechnr = url
 				.substring(rechnrPosition, url.indexOf("&", rechnrPosition));
