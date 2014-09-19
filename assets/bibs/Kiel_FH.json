@@ -5,9 +5,7 @@
     "data": {
         "accountSupported": true, 
         "baseurl": "http://kiopc4.ub.uni-kiel.de:8080/", 
-        "customssl": true, 
         "db": "2", 
-        "httpsbaseurl": "https://lhopc4.ub.uni-kiel.de/", 
         "information": "http://www.fh-kiel.de/index.php?id=118"
     }, 
     "geo": [
