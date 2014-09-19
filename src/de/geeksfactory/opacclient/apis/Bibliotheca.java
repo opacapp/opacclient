@@ -544,8 +544,8 @@ public class Bibliotheca extends BaseApi {
 
 		if (useraction == MultiStepResult.ACTION_CONFIRMATION) {
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			nameValuePairs
-					.add(new BasicNameValuePair("button1", "Bestaetigung"));
+			nameValuePairs.add(new BasicNameValuePair("make_allvl",
+					"Bestaetigung"));
 			nameValuePairs.add(new BasicNameValuePair("target", "makevorbest"));
 			httpPost(opac_url + "/index.asp", new UrlEncodedFormEntity(
 					nameValuePairs), getDefaultEncoding());
@@ -752,6 +752,7 @@ public class Bibliotheca extends BaseApi {
 	@Override
 	public ProlongAllResult prolongAll(Account account, int useraction,
 			String selection) throws IOException {
+
 		if (!initialised)
 			start();
 		if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
@@ -823,6 +824,15 @@ public class Bibliotheca extends BaseApi {
 					result.add(line);
 				}
 			}
+
+			if (doc.select("input#make_allvl").size() > 0) {
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+				nameValuePairs.add(new BasicNameValuePair("target",
+						"make_allvl_flag"));
+				nameValuePairs.add(new BasicNameValuePair("make_allvl",
+						"Bestaetigung"));
+			}
+			
 			return new ProlongAllResult(MultiStepResult.Status.OK, result);
 		}
 
