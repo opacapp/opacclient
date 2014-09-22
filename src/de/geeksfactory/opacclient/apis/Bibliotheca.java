@@ -37,7 +37,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -53,7 +52,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
-
+import android.annotation.SuppressLint;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -75,6 +74,7 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
  * BOND, now owned by OCLC. Known to work well with Web Opac versions from 2.6,
  * maybe older, to 2.8
  */
+@SuppressLint({ "UseSparseArrays", "Assert" })
 public class Bibliotheca extends BaseApi {
 
 	protected String opac_url = "";

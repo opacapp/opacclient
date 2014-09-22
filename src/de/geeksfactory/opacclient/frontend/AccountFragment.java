@@ -112,7 +112,6 @@ public class AccountFragment extends Fragment implements
 
 	private CancelTask ct;
 	private OpacTask<String> dt;
-	private BookingTask bt;
 
 	private Account account;
 

@@ -98,7 +98,6 @@ public class BiBer1992 extends BaseApi {
 	private String m_opac_dir = "opac"; // sometimes also "opax"
 	private JSONObject m_data;
 	private boolean m_initialised = false;
-	private Library m_library;
 	private List<NameValuePair> m_nameValuePairs = new ArrayList<NameValuePair>(
 			2);
 
@@ -309,7 +308,6 @@ public class BiBer1992 extends BaseApi {
 		super.init(lib);
 		http_client = HTTPClient.getNewHttpClient(lib);
 
-		m_library = lib;
 		m_data = lib.getData();
 
 		try {
