@@ -1,28 +1,31 @@
 package de.geeksfactory.opacclient.frontend;
 
-import java.io.InterruptedIOException;
-import java.util.Arrays;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import org.acra.ACRA;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
+import org.holoeverywhere.widget.Button;
 import org.holoeverywhere.widget.CheckBox;
 import org.holoeverywhere.widget.EditText;
+import org.holoeverywhere.widget.LinearLayout;
 import org.holoeverywhere.widget.Spinner;
+import org.holoeverywhere.widget.TextView;
 import org.json.JSONException;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,15 +33,28 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
-import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
-import de.geeksfactory.opacclient.apis.OpacApi;
+import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
+import de.geeksfactory.opacclient.barcode.BarcodeScanIntegrator.ScanResult;
 import de.geeksfactory.opacclient.frontend.OpacActivity.AccountSelectedListener;
 import de.geeksfactory.opacclient.objects.Account;
-import de.geeksfactory.opacclient.storage.MetaDataSource;
-import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
+import de.geeksfactory.opacclient.searchfields.AndroidMeaningDetector;
+import de.geeksfactory.opacclient.searchfields.BarcodeSearchField;
+import de.geeksfactory.opacclient.searchfields.CheckboxSearchField;
+import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
+import de.geeksfactory.opacclient.searchfields.MeaningDetector;
+import de.geeksfactory.opacclient.searchfields.SearchField;
+import de.geeksfactory.opacclient.searchfields.SearchQuery;
+import de.geeksfactory.opacclient.searchfields.TextSearchField;
+import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
+import de.geeksfactory.opacclient.storage.SearchFieldDataSource;
 
 public class SearchFragment extends Fragment implements AccountSelectedListener {
 	protected SharedPreferences sp;
@@ -53,15 +69,15 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 	protected Bundle savedState;
 
 	protected boolean advanced = false;
-	protected Set<String> fields;
+	protected List<SearchField> fields;
 
-	protected List<Map<String, String>> spinnerCategory_data;
-	protected List<Map<String, String>> spinnerBranch_data;
-	protected List<Map<String, String>> spinnerHomeBranch_data;
+	protected String barcodeScanningField;
+	protected ScanResult scanResult;
+	private LoadSearchFieldsTask task;
 
-	protected long last_meta_try = 0;
-	public boolean metaDataLoading = false;
-	protected LoadMetaDataTask lmdt;
+	public SearchFragment() {
+
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,14 +106,6 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		// .setAdapter(order_adapter);
 		// }
 
-		ImageView ivBarcode = (ImageView) view.findViewById(R.id.ivBarcode);
-		ivBarcode.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				mCallback.scanBarcode();
-			}
-		});
-
 		return view;
 	}
 
@@ -106,38 +114,47 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		if (!(app.getLibrary() == null)) {
 			accountSelected(app.getAccount());
 		}
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
 		if (savedInstanceState != null
 				&& savedInstanceState.containsKey("query")) {
 			savedState = savedInstanceState.getBundle("query");
 		}
-		if (savedState != null)
-			loadQuery(savedState);
+		if (savedInstanceState != null
+				&& savedInstanceState.containsKey("barcodeScanningField")) {
+			barcodeScanningField = savedInstanceState
+					.getString("barcodeScanningField");
+		}
 	}
 
 	public void clear() {
-		((EditText) view.findViewById(R.id.etSimpleSearch)).setText("");
-		((EditText) view.findViewById(R.id.etTitel)).setText("");
-		((EditText) view.findViewById(R.id.etVerfasser)).setText("");
-		((EditText) view.findViewById(R.id.etSchlagA)).setText("");
-		((EditText) view.findViewById(R.id.etSchlagB)).setText("");
-		((EditText) view.findViewById(R.id.etBarcode)).setText("");
-		((EditText) view.findViewById(R.id.etISBN)).setText("");
-		((EditText) view.findViewById(R.id.etJahr)).setText("");
-		((EditText) view.findViewById(R.id.etJahrBis)).setText("");
-		((EditText) view.findViewById(R.id.etJahrVon)).setText("");
-		((EditText) view.findViewById(R.id.etSystematik)).setText("");
-		((EditText) view.findViewById(R.id.etInteressenkreis)).setText("");
-		((EditText) view.findViewById(R.id.etVerlag)).setText("");
-		((CheckBox) view.findViewById(R.id.cbDigital)).setChecked(false);
-		((CheckBox) view.findViewById(R.id.cbAvailable)).setChecked(false);
-		((Spinner) view.findViewById(R.id.cbBranch)).setSelection(0);
-		((Spinner) view.findViewById(R.id.cbHomeBranch)).setSelection(0);
-		((Spinner) view.findViewById(R.id.cbMediengruppe)).setSelection(0);
+		for (SearchField field : fields) {
+			ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
+			if (field instanceof TextSearchField) {
+				EditText text;
+				if (((TextSearchField) field).isFreeSearch()) {
+					text = (EditText) view.findViewById(R.id.etSimpleSearch);
+				} else {
+					text = (EditText) v.findViewById(R.id.edittext);
+				}
+				text.setText("");
+			} else if (field instanceof BarcodeSearchField) {
+				EditText text = (EditText) v.findViewById(R.id.edittext);
+				text.setText("");
+			} else if (field instanceof DropdownSearchField) {
+				Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
+				spinner.setSelection(0);
+			} else if (field instanceof CheckboxSearchField) {
+				CheckBox checkbox = (CheckBox) v.findViewById(R.id.checkbox);
+				checkbox.setChecked(false);
+			}
+		}
 	}
 
-	protected void manageVisibility() {
-		PackageManager pm = getActivity().getPackageManager();
-
+	protected void buildSearchForm() {
 		if (app.getLibrary().getReplacedBy() != null
 				&& sp.getInt("annoyed", 0) < 5) {
 			view.findViewById(R.id.rlReplaced).setVisibility(View.VISIBLE);
@@ -161,502 +178,425 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 			view.findViewById(R.id.rlReplaced).setVisibility(View.GONE);
 		}
 
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_FREE)) {
-			view.findViewById(R.id.tvSearchAdvHeader).setVisibility(
-					View.VISIBLE);
-			view.findViewById(R.id.rlSimpleSearch).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.tvSearchAdvHeader).setVisibility(View.GONE);
-			view.findViewById(R.id.rlSimpleSearch).setVisibility(View.GONE);
-		}
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_TITLE)) {
-			view.findViewById(R.id.etTitel).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.tvTitel).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.etTitel).setVisibility(View.GONE);
-			view.findViewById(R.id.tvTitel).setVisibility(View.GONE);
-		}
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_AUTHOR)) {
-			view.findViewById(R.id.etVerfasser).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.tvVerfasser).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.etVerfasser).setVisibility(View.GONE);
-			view.findViewById(R.id.tvVerfasser).setVisibility(View.GONE);
-		}
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_KEYWORDA) && advanced) {
-			view.findViewById(R.id.llSchlag).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.tvSchlag).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.llSchlag).setVisibility(View.GONE);
-			view.findViewById(R.id.tvSchlag).setVisibility(View.GONE);
-		}
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_KEYWORDB) && advanced) {
-			view.findViewById(R.id.etSchlagB).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.etSchlagB).setVisibility(View.GONE);
-		}
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_BRANCH)) {
-			view.findViewById(R.id.llBranch).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.tvZweigstelle).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.llBranch).setVisibility(View.GONE);
-			view.findViewById(R.id.tvZweigstelle).setVisibility(View.GONE);
-		}
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH)) {
-			view.findViewById(R.id.llHomeBranch).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.tvHomeBranch).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.llHomeBranch).setVisibility(View.GONE);
-			view.findViewById(R.id.tvHomeBranch).setVisibility(View.GONE);
-		}
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_CATEGORY)) {
-			view.findViewById(R.id.llMediengruppe).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.tvMediengruppe).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.llMediengruppe).setVisibility(View.GONE);
-			view.findViewById(R.id.tvMediengruppe).setVisibility(View.GONE);
-		}
+		LinearLayout llFormFields = (LinearLayout) view
+				.findViewById(R.id.llFormFields);
+		llFormFields.removeAllViews();
+		LinearLayout llAdvancedFields = (LinearLayout) view
+				.findViewById(R.id.llAdvancedFields);
+		llAdvancedFields.removeAllViews();
 
-		EditText etBarcode = (EditText) view.findViewById(R.id.etBarcode);
-		String etBarcodeText = etBarcode.getText().toString();
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE)
-				&& (advanced || !etBarcodeText.equals(""))) {
-			etBarcode.setVisibility(View.VISIBLE);
-		} else {
-			etBarcode.setVisibility(View.GONE);
-		}
+		LinearLayout llExpand = (LinearLayout) view.findViewById(R.id.llExpand);
+		llExpand.setOnClickListener(new OnClickListener() {
 
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_ISBN)) {
-			view.findViewById(R.id.etISBN).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.etISBN).setVisibility(View.GONE);
-		}
-
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_DIGITAL)) {
-			view.findViewById(R.id.cbDigital).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.cbDigital).setVisibility(View.GONE);
-		}
-
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_AVAILABLE)) {
-			view.findViewById(R.id.cbAvailable).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.cbAvailable).setVisibility(View.GONE);
-		}
-
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_ISBN)
-				|| (fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE) && (advanced || !etBarcodeText
-						.equals("")))) {
-			if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-				view.findViewById(R.id.ivBarcode).setVisibility(View.VISIBLE);
-			} else {
-				view.findViewById(R.id.ivBarcode).setVisibility(View.GONE);
+			@Override
+			public void onClick(View v) {
+				setAdvanced(!advanced);
 			}
-			view.findViewById(R.id.tvBarcodes).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.llBarcodes).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.tvBarcodes).setVisibility(View.GONE);
-			view.findViewById(R.id.llBarcodes).setVisibility(View.GONE);
-		}
 
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_YEAR_RANGE_START)
-				&& fields.contains(OpacApi.KEY_SEARCH_QUERY_YEAR_RANGE_END)) {
-			view.findViewById(R.id.llJahr).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.tvJahr).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.etJahr).setVisibility(View.GONE);
-		} else if (fields.contains(OpacApi.KEY_SEARCH_QUERY_YEAR)) {
-			view.findViewById(R.id.llJahr).setVisibility(View.GONE);
-			view.findViewById(R.id.etJahr).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.tvJahr).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.llJahr).setVisibility(View.GONE);
-			view.findViewById(R.id.tvJahr).setVisibility(View.GONE);
-			view.findViewById(R.id.etJahr).setVisibility(View.GONE);
-		}
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_SYSTEM) && advanced) {
-			view.findViewById(R.id.etSystematik).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.tvSystematik).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.etSystematik).setVisibility(View.GONE);
-			view.findViewById(R.id.tvSystematik).setVisibility(View.GONE);
-		}
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_AUDIENCE) && advanced) {
-			view.findViewById(R.id.etInteressenkreis).setVisibility(
-					View.VISIBLE);
-			view.findViewById(R.id.tvInteressenkreis).setVisibility(
-					View.VISIBLE);
-		} else {
-			view.findViewById(R.id.etInteressenkreis).setVisibility(View.GONE);
-			view.findViewById(R.id.tvInteressenkreis).setVisibility(View.GONE);
-		}
-		if (fields.contains(OpacApi.KEY_SEARCH_QUERY_PUBLISHER) && advanced) {
-			view.findViewById(R.id.etVerlag).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.tvVerlag).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.etVerlag).setVisibility(View.GONE);
-			view.findViewById(R.id.tvVerlag).setVisibility(View.GONE);
-		}
-		if (fields.contains("order") && advanced) {
-			view.findViewById(R.id.cbOrder).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.tvOrder).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.cbOrder).setVisibility(View.GONE);
-			view.findViewById(R.id.tvOrder).setVisibility(View.GONE);
-		}
-	}
+		});
 
-	protected void fillComboBoxes() {
-		Spinner cbZst = (Spinner) view.findViewById(R.id.cbBranch);
-		Spinner cbZstHome = (Spinner) view.findViewById(R.id.cbHomeBranch);
-		Spinner cbMg = (Spinner) view.findViewById(R.id.cbMediengruppe);
+		RelativeLayout rlSimpleSearch = (RelativeLayout) view
+				.findViewById(R.id.rlSimpleSearch);
+		TextView tvSearchAdvHeader = (TextView) view
+				.findViewById(R.id.tvSearchAdvHeader);
+		EditText etSimpleSearch = (EditText) view
+				.findViewById(R.id.etSimpleSearch);
+		rlSimpleSearch.setVisibility(View.GONE);
+		tvSearchAdvHeader.setVisibility(View.GONE);
 
-		String zst_home_before = "";
-		String zst_before = "";
-		String mg_before = "";
-		String selection;
-		int selected = 0, i = 0;
-
-		if (spinnerHomeBranch_data != null
-				&& spinnerHomeBranch_data.size() > 0
-				&& spinnerHomeBranch_data.size() > cbZstHome
-						.getSelectedItemPosition()
-				&& cbZstHome.getSelectedItemPosition() > 0) {
-			zst_home_before = spinnerHomeBranch_data.get(
-					cbZstHome.getSelectedItemPosition()).get("key");
-		}
-		if (spinnerBranch_data != null
-				&& spinnerBranch_data.size() > cbZst.getSelectedItemPosition()
-				&& cbZst.getSelectedItemPosition() > 0) {
-			zst_before = spinnerBranch_data
-					.get(cbZst.getSelectedItemPosition()).get("key");
-		}
-		if (spinnerCategory_data != null
-				&& spinnerCategory_data.size() > cbMg.getSelectedItemPosition()
-				&& cbMg.getSelectedItemPosition() > 0) {
-			mg_before = spinnerCategory_data
-					.get(cbMg.getSelectedItemPosition()).get("key");
-		}
-
-		MetaDataSource data = new SQLMetaDataSource(app);
-		try {
-			data.open();
-		} catch (Exception e1) {
-			throw new RuntimeException(e1);
-		}
-
-		Map<String, String> all = new HashMap<String, String>();
-		all.put("key", "");
-		all.put("value", getString(R.string.all));
-
-		spinnerBranch_data = data.getMeta(app.getLibrary().getIdent(),
-				MetaDataSource.META_TYPE_BRANCH);
-		spinnerBranch_data.add(0, all);
-		cbZst.setAdapter(((OpacActivity) getActivity()).new MetaAdapter(
-				getActivity(), spinnerBranch_data, R.layout.simple_spinner_item));
-		if (!"".equals(zst_before)) {
-			for (Map<String, String> row : spinnerBranch_data) {
-				if (row.get("key").equals(zst_before)) {
-					selected = i;
+		int i = 0;
+		if (fields == null)
+			return;
+		for (final SearchField field : fields) {
+			ViewGroup v = null;
+			if (field instanceof TextSearchField) {
+				TextSearchField textSearchField = (TextSearchField) field;
+				if (textSearchField.isFreeSearch()) {
+					rlSimpleSearch.setVisibility(View.VISIBLE);
+					tvSearchAdvHeader.setVisibility(View.VISIBLE);
+					etSimpleSearch.setHint(textSearchField.getHint());
+				} else {
+					v = (ViewGroup) getLayoutInflater().inflate(
+							R.layout.searchfield_text, llFormFields, false);
+					TextView title = (TextView) v.findViewById(R.id.title);
+					title.setText(textSearchField.getDisplayName());
+					EditText edittext = (EditText) v
+							.findViewById(R.id.edittext);
+					edittext.setHint(textSearchField.getHint());
+					if (((TextSearchField) field).isNumber()) {
+						edittext.setInputType(InputType.TYPE_CLASS_NUMBER);
+					}
+					if (((TextSearchField) field).isHalfWidth()
+							&& i >= 1
+							&& !(fields.get(i - 1) instanceof TextSearchField && ((TextSearchField) fields
+									.get(i - 1)).isFreeSearch())) {
+						ViewGroup before = (ViewGroup) view
+								.findViewWithTag(fields.get(i - 1).getId());
+						llFormFields.removeView(before);
+						llAdvancedFields.removeView(before);
+						v.setTag(field.getId());
+						View together = makeHalfWidth(before, v);
+						v = null;
+						if (field.isAdvanced())
+							llAdvancedFields.addView(together);
+						else
+							llFormFields.addView(together);
+					}
 				}
-				i++;
-			}
-			cbZst.setSelection(selected);
-		}
-
-		spinnerHomeBranch_data = data.getMeta(app.getLibrary().getIdent(),
-				MetaDataSource.META_TYPE_HOME_BRANCH);
-		selected = 0;
-		i = 0;
-		if (!"".equals(zst_home_before)) {
-			selection = zst_home_before;
-		} else {
-			if (sp.contains(OpacClient.PREF_HOME_BRANCH_PREFIX
-					+ app.getAccount().getId()))
-				selection = sp.getString(OpacClient.PREF_HOME_BRANCH_PREFIX
-						+ app.getAccount().getId(), "");
-			else {
-				try {
-					selection = app.getLibrary().getData()
-							.getString("homebranch");
-				} catch (JSONException e) {
-					selection = "";
+			} else if (field instanceof BarcodeSearchField) {
+				BarcodeSearchField bcSearchField = (BarcodeSearchField) field;
+				v = (ViewGroup) getLayoutInflater().inflate(
+						R.layout.searchfield_barcode, llFormFields, false);
+				TextView title = (TextView) v.findViewById(R.id.title);
+				title.setText(bcSearchField.getDisplayName());
+				EditText edittext = (EditText) v.findViewById(R.id.edittext);
+				edittext.setHint(bcSearchField.getHint());
+				ImageView ivBarcode = (ImageView) v
+						.findViewById(R.id.ivBarcode);
+				ivBarcode.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View arg0) {
+						barcodeScanningField = field.getId();
+						mCallback.scanBarcode();
+					}
+				});
+				if (((BarcodeSearchField) field).isHalfWidth()
+						&& i >= 1
+						&& !(fields.get(i - 1) instanceof TextSearchField && ((TextSearchField) fields
+								.get(i - 1)).isFreeSearch())) {
+					ViewGroup before = (ViewGroup) view.findViewWithTag(fields
+							.get(i - 1).getId());
+					llFormFields.removeView(before);
+					llAdvancedFields.removeView(before);
+					v = makeHalfWidth(before, v);
 				}
+			} else if (field instanceof DropdownSearchField) {
+				DropdownSearchField ddSearchField = (DropdownSearchField) field;
+				v = (ViewGroup) getLayoutInflater().inflate(
+						R.layout.searchfield_dropdown, llFormFields, false);
+				TextView title = (TextView) v.findViewById(R.id.title);
+				title.setText(ddSearchField.getDisplayName());
+				Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
+				spinner.setAdapter(((OpacActivity) getActivity()).new MetaAdapter(
+						getActivity(), ddSearchField.getDropdownValues(),
+						R.layout.simple_spinner_item));
+			} else if (field instanceof CheckboxSearchField) {
+				CheckboxSearchField cbSearchField = (CheckboxSearchField) field;
+				v = (ViewGroup) getLayoutInflater().inflate(
+						R.layout.searchfield_checkbox, llFormFields, false);
+				CheckBox checkbox = (CheckBox) v.findViewById(R.id.checkbox);
+				checkbox.setText(cbSearchField.getDisplayName());
 			}
-		}
-
-		for (Map<String, String> row : spinnerHomeBranch_data) {
-			if (row.get("key").equals(selection)) {
-				selected = i;
+			if (v != null) {
+				v.setTag(field.getId());
+				if (field.isAdvanced())
+					llAdvancedFields.addView(v);
+				else
+					llFormFields.addView(v);
 			}
 			i++;
 		}
-		cbZstHome.setAdapter(((OpacActivity) getActivity()).new MetaAdapter(
-				getActivity(), spinnerHomeBranch_data,
-				R.layout.simple_spinner_item));
-		cbZstHome.setSelection(selected);
-
-		spinnerCategory_data = data.getMeta(app.getLibrary().getIdent(),
-				MetaDataSource.META_TYPE_CATEGORY);
-		spinnerCategory_data.add(0, all);
-		cbMg.setAdapter(((OpacActivity) getActivity()).new MetaAdapter(
-				getActivity(), spinnerCategory_data,
-				R.layout.simple_spinner_item));
-		if (!"".equals(mg_before)) {
-			selected = 0;
-			i = 0;
-			for (Map<String, String> row : spinnerBranch_data) {
-				if (row.get("key").equals(zst_before)) {
-					selected = i;
-				}
-				i++;
-			}
-			cbZst.setSelection(selected);
-		}
-
-		if ((spinnerBranch_data.size() == 1 || !fields
-				.contains(OpacApi.KEY_SEARCH_QUERY_BRANCH))
-				&& (spinnerCategory_data.size() == 1 || !fields
-						.contains(OpacApi.KEY_SEARCH_QUERY_CATEGORY))
-				&& (spinnerHomeBranch_data.size() == 0 || !fields
-						.contains(OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH))) {
-			loadMetaData(app.getLibrary().getIdent(), true);
-			loadingIndicators();
-		}
-
-		data.close();
 	}
 
-	protected void loadingIndicators() {
-		int visibility = metaDataLoading ? View.VISIBLE : View.GONE;
-		view.findViewById(R.id.pbBranch).setVisibility(visibility);
-		view.findViewById(R.id.pbHomeBranch).setVisibility(visibility);
-		view.findViewById(R.id.pbMediengruppe).setVisibility(visibility);
-	}
+	protected void setAdvanced(boolean advanced) {
+		this.advanced = advanced;
+		final ScrollView scroll = (ScrollView) view.findViewById(R.id.scroll);
+		final RelativeLayout rlOuter = (RelativeLayout) view
+				.findViewById(R.id.rlOuter);
+		final LinearLayout llExpand = (LinearLayout) view
+				.findViewById(R.id.llExpand);
+		LinearLayout llAdvancedFields = (LinearLayout) view
+				.findViewById(R.id.llAdvancedFields);
+		if (advanced) {
+			((ImageView) view.findViewById(R.id.ivExpandIcon))
+					.setImageResource(R.drawable.ic_action_collapse);
+			((TextView) view.findViewById(R.id.tvExpandString))
+					.setText(R.string.collapse);
+			llAdvancedFields.setVisibility(View.VISIBLE);
+			rlOuter.getViewTreeObserver().addOnGlobalLayoutListener(
+					new OnGlobalLayoutListener() {
+						@Override
+						public void onGlobalLayout() {
+							rlOuter.getViewTreeObserver()
+									.removeGlobalOnLayoutListener(this);
+							scroll.smoothScrollTo(0, llExpand.getTop());
+						}
+					});
+		} else {
+			((ImageView) view.findViewById(R.id.ivExpandIcon))
+					.setImageResource(R.drawable.ic_action_expand);
+			((TextView) view.findViewById(R.id.tvExpandString))
+					.setText(R.string.expand);
+			llAdvancedFields.setVisibility(View.GONE);
 
-	public void loadMetaData(String lib) {
-		loadMetaData(lib, false);
-	}
-
-	public void loadMetaData(String lib, boolean force) {
-		if (metaDataLoading)
-			return;
-		if (System.currentTimeMillis() - last_meta_try < 3600) {
-			return;
-		}
-		last_meta_try = System.currentTimeMillis();
-		MetaDataSource data = new SQLMetaDataSource(getActivity());
-		try {
-			data.open();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		boolean fetch = !data.hasMeta(lib);
-		data.close();
-		if (fetch || force) {
-			metaDataLoading = true;
-			lmdt = new LoadMetaDataTask();
-			lmdt.execute(getActivity().getApplication(), lib);
 		}
 	}
 
-	public class LoadMetaDataTask extends OpacTask<Boolean> {
-		private boolean success = true;
-		private long account;
+	private ViewGroup makeHalfWidth(ViewGroup left, ViewGroup right) {
+		LinearLayout ll = new LinearLayout(getActivity());
+		ll.setOrientation(LinearLayout.HORIZONTAL);
+		ll.addView(left);
+		ll.addView(right);
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0,
+				LayoutParams.WRAP_CONTENT, 0.5f);
+		left.setLayoutParams(params);
+		right.setLayoutParams(params);
 
-		@Override
-		protected Boolean doInBackground(Object... arg0) {
-			super.doInBackground(arg0);
-
-			String lib = (String) arg0[1];
-			account = app.getAccount().getId();
-
-			try {
-				if (lib.equals(app.getLibrary(lib).getIdent())) {
-					app.getNewApi(app.getLibrary(lib)).start();
-				} else {
-					app.getApi().start();
-				}
-				success = true;
-			} catch (java.net.UnknownHostException e) {
-				success = false;
-			} catch (java.net.SocketException e) {
-				success = false;
-			} catch (InterruptedIOException e) {
-				success = false;
-			} catch (Exception e) {
-				ACRA.getErrorReporter().handleException(e);
-				success = false;
-			}
-			return success;
+		TextView title = (TextView) right.findViewById(R.id.title);
+		if (title != null) {
+			title.setText("");
 		}
-
-		@Override
-		protected void onPostExecute(Boolean result) {
-			if (getActivity() == null)
-				return;
-
-			if (account == app.getAccount().getId()) {
-				metaDataLoading = false;
-				loadingIndicators();
-				if (success)
-					fillComboBoxes();
-			}
-		}
+		return ll;
 	}
 
 	@Override
 	public void accountSelected(Account account) {
-		metaDataLoading = false;
-		advanced = sp.getBoolean("advanced", false);
-		fields = new HashSet<String>(Arrays.asList(app.getApi()
-				.getSearchFields()));
+		ViewGroup errorView = (ViewGroup) view.findViewById(R.id.error_view);
+		errorView.removeAllViews();
+		view.findViewById(R.id.scroll).setVisibility(View.VISIBLE);
 
-		manageVisibility();
-		fillComboBoxes();
-		loadingIndicators();
+		SearchFieldDataSource dataSource = new JsonSearchFieldDataSource(app);
+		int versionCode = 0;
+		try {
+			versionCode = app.getPackageManager().getPackageInfo(
+					app.getPackageName(), 0).versionCode;
+		} catch (NameNotFoundException e) {
+			// should not happen
+			e.printStackTrace();
+		}
+		if (dataSource.hasSearchFields(app.getLibrary().getIdent())
+				&& dataSource.getLastSearchFieldUpdateVersion(app.getLibrary()
+						.getIdent()) == versionCode) {
+			if (task != null && !task.isCancelled())
+				task.cancel(true);
+			fields = dataSource.getSearchFields(app.getLibrary().getIdent());
+			buildSearchForm();
+			if (savedState != null)
+				loadQuery(savedState);
+		} else {
+			executeNewLoadSearchFieldsTask();
+		}
+		setAdvanced(false);
+	}
+
+	protected void progress(boolean on) {
+		view.findViewById(R.id.progressBar).setVisibility(
+				on ? View.VISIBLE : View.GONE);
+		view.findViewById(R.id.scroll).setVisibility(
+				on ? View.GONE : View.VISIBLE);
+	}
+
+	protected class LoadSearchFieldsTask extends
+			AsyncTask<Void, Void, List<SearchField>> {
+
+		private Exception exception;
+
+		@Override
+		protected void onPreExecute() {
+			progress(true);
+		}
+
+		@Override
+		protected List<SearchField> doInBackground(Void... arg0) {
+			try {
+				List<SearchField> fields = app.getApi().getSearchFields();
+				if (app.getApi().shouldUseMeaningDetector()) {
+					MeaningDetector md = new AndroidMeaningDetector(
+							getActivity(), app.getLibrary());
+					for (int i = 0; i < fields.size(); i++) {
+						fields.set(i, md.detectMeaning(fields.get(i)));
+					}
+					Collections.sort(fields, new SearchField.OrderComparator());
+				}
+
+				saveFields(fields);
+				return fields;
+			} catch (OpacErrorException e) {
+				exception = e;
+				e.printStackTrace();
+			} catch (NotReachableException e) {
+				exception = e;
+				e.printStackTrace();
+			} catch (IOException e) {
+				exception = e;
+				e.printStackTrace();
+			} catch (JSONException e) {
+				exception = e;
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(List<SearchField> fields) {
+			progress(false);
+			if (fields != null) {
+				SearchFragment.this.fields = fields;
+				buildSearchForm();
+				if (savedState != null)
+					loadQuery(savedState);
+			} else {
+				if (exception != null
+						&& exception instanceof OpacErrorException)
+					showConnectivityError(exception.getMessage());
+				else
+					showConnectivityError();
+			}
+		}
+
+	}
+
+	public void showConnectivityError() {
+		showConnectivityError(null);
+	}
+
+	public void showConnectivityError(String description) {
+		if (getView() == null || getActivity() == null)
+			return;
+		final ViewGroup errorView = (ViewGroup) view
+				.findViewById(R.id.error_view);
+		errorView.removeAllViews();
+		View connError = getActivity().getLayoutInflater().inflate(
+				R.layout.error_connectivity, errorView);
+		((Button) connError.findViewById(R.id.btRetry))
+				.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						errorView.removeAllViews();
+						executeNewLoadSearchFieldsTask();
+					}
+				});
+
+		if (description != null) {
+			((TextView) connError.findViewById(R.id.tvErrBody))
+					.setText(description);
+		}
+
+		view.findViewById(R.id.scroll).setVisibility(View.GONE);
+		connError.setVisibility(View.VISIBLE);
+	}
+
+	public void saveFields(List<SearchField> fields) {
+		SearchFieldDataSource dataSource = new JsonSearchFieldDataSource(app);
+		dataSource.saveSearchFields(app.getLibrary().getIdent(), fields);
+	}
+	
+	private void executeNewLoadSearchFieldsTask() {
+		if (task != null && !task.isCancelled())
+			task.cancel(true);
+		task = new LoadSearchFieldsTask();
+		task.execute();
 	}
 
 	public void go() {
-		app.startSearch(getActivity(), saveQuery());
+		app.startSearch(getActivity(), saveSearchQuery());
 	}
 
 	public Map<String, String> saveQuery() {
-		String zst = "";
-		String mg = "";
-		String zst_home = "";
-		if (spinnerBranch_data == null)
-			return null;
-		if (spinnerBranch_data.size() > 1)
-			zst = spinnerBranch_data.get(
-					((Spinner) view.findViewById(R.id.cbBranch))
-							.getSelectedItemPosition()).get("key");
-		if (spinnerHomeBranch_data.size() > 0) {
-			zst_home = spinnerHomeBranch_data.get(
-					((Spinner) view.findViewById(R.id.cbHomeBranch))
-							.getSelectedItemPosition()).get("key");
-			sp.edit()
-					.putString(
-							OpacClient.PREF_HOME_BRANCH_PREFIX
-									+ app.getAccount().getId(), zst_home)
-					.commit();
-		}
-		if (spinnerCategory_data.size() > 1)
-			mg = spinnerCategory_data.get(
-					((Spinner) view.findViewById(R.id.cbMediengruppe))
-							.getSelectedItemPosition()).get("key");
-
 		Map<String, String> query = new HashMap<String, String>();
-		query.put(OpacApi.KEY_SEARCH_QUERY_FREE, ((EditText) view
-				.findViewById(R.id.etSimpleSearch)).getEditableText()
-				.toString());
-		query.put(OpacApi.KEY_SEARCH_QUERY_TITLE, ((EditText) view
-				.findViewById(R.id.etTitel)).getEditableText().toString());
-		query.put(OpacApi.KEY_SEARCH_QUERY_AUTHOR, ((EditText) view
-				.findViewById(R.id.etVerfasser)).getEditableText().toString());
-		query.put(OpacApi.KEY_SEARCH_QUERY_BRANCH, zst);
-		query.put(OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH, zst_home);
-		query.put(OpacApi.KEY_SEARCH_QUERY_CATEGORY, mg);
-		query.put(OpacApi.KEY_SEARCH_QUERY_ISBN, ((EditText) view
-				.findViewById(R.id.etISBN)).getEditableText().toString());
-		query.put(OpacApi.KEY_SEARCH_QUERY_BARCODE, ((EditText) view
-				.findViewById(R.id.etBarcode)).getEditableText().toString());
-		query.put(OpacApi.KEY_SEARCH_QUERY_YEAR, ((EditText) view
-				.findViewById(R.id.etJahr)).getEditableText().toString());
-		query.put(OpacApi.KEY_SEARCH_QUERY_YEAR_RANGE_START, ((EditText) view
-				.findViewById(R.id.etJahrVon)).getEditableText().toString());
-		query.put(OpacApi.KEY_SEARCH_QUERY_YEAR_RANGE_END, ((EditText) view
-				.findViewById(R.id.etJahrBis)).getEditableText().toString());
-		query.put(OpacApi.KEY_SEARCH_QUERY_DIGITAL, String
-				.valueOf(((CheckBox) view.findViewById(R.id.cbDigital))
-						.isChecked()));
-		query.put(OpacApi.KEY_SEARCH_QUERY_AVAILABLE, String
-				.valueOf(((CheckBox) view.findViewById(R.id.cbAvailable))
-						.isChecked()));
-		if (advanced) {
-			query.put(OpacApi.KEY_SEARCH_QUERY_KEYWORDA, ((EditText) view
-					.findViewById(R.id.etSchlagA)).getEditableText().toString());
-			query.put(OpacApi.KEY_SEARCH_QUERY_KEYWORDB, ((EditText) view
-					.findViewById(R.id.etSchlagB)).getEditableText().toString());
-			query.put(OpacApi.KEY_SEARCH_QUERY_SYSTEM, ((EditText) view
-					.findViewById(R.id.etSystematik)).getEditableText()
-					.toString());
-			query.put(OpacApi.KEY_SEARCH_QUERY_AUDIENCE, ((EditText) view
-					.findViewById(R.id.etInteressenkreis)).getEditableText()
-					.toString());
-			query.put(OpacApi.KEY_SEARCH_QUERY_PUBLISHER, ((EditText) view
-					.findViewById(R.id.etVerlag)).getEditableText().toString());
-			query.put(
-					"order",
-					((((Spinner) view.findViewById(R.id.cbOrder))
-							.getSelectedItemPosition()) + 1) + "");
+		if (fields == null)
+			return query;
+		for (SearchField field : fields) {
+
+			ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
+			if (field instanceof TextSearchField) {
+				EditText text;
+				if (((TextSearchField) field).isFreeSearch()) {
+					text = (EditText) view.findViewById(R.id.etSimpleSearch);
+				} else {
+					text = (EditText) v.findViewById(R.id.edittext);
+				}
+				query.put(field.getId(), text.getEditableText().toString());
+			} else if (field instanceof BarcodeSearchField) {
+				EditText text = (EditText) v.findViewById(R.id.edittext);
+				query.put(field.getId(), text.getEditableText().toString());
+			} else if (field instanceof DropdownSearchField) {
+				Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
+				if (spinner.getSelectedItemPosition() > 0)
+					query.put(field.getId(),
+							((DropdownSearchField) field).getDropdownValues()
+									.get(spinner.getSelectedItemPosition())
+									.get("key"));
+			} else if (field instanceof CheckboxSearchField) {
+				CheckBox checkbox = (CheckBox) v.findViewById(R.id.checkbox);
+				query.put(field.getId(), String.valueOf(checkbox.isChecked()));
+			}
+		}
+		return query;
+	}
+
+	public List<SearchQuery> saveSearchQuery() {
+		List<SearchQuery> query = new ArrayList<SearchQuery>();
+		for (SearchField field : fields) {
+
+			ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
+			if (field instanceof TextSearchField) {
+				EditText text;
+				if (((TextSearchField) field).isFreeSearch()) {
+					text = (EditText) view.findViewById(R.id.etSimpleSearch);
+				} else {
+					text = (EditText) v.findViewById(R.id.edittext);
+				}
+				query.add(new SearchQuery(field, text.getEditableText()
+						.toString()));
+			} else if (field instanceof BarcodeSearchField) {
+				EditText text = (EditText) v.findViewById(R.id.edittext);
+				query.add(new SearchQuery(field, text.getEditableText()
+						.toString()));
+			} else if (field instanceof DropdownSearchField) {
+				Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
+				String key = ((DropdownSearchField) field).getDropdownValues()
+						.get(spinner.getSelectedItemPosition()).get("key");
+				if (!key.equals(""))
+					query.add(new SearchQuery(field, key));
+			} else if (field instanceof CheckboxSearchField) {
+				CheckBox checkbox = (CheckBox) v.findViewById(R.id.checkbox);
+				query.add(new SearchQuery(field, String.valueOf(checkbox
+						.isChecked())));
+			}
 		}
 		return query;
 	}
 
 	public void loadQuery(Bundle query) {
-		((EditText) view.findViewById(R.id.etSimpleSearch)).setText(query
-				.getString(OpacApi.KEY_SEARCH_QUERY_FREE));
-		((EditText) view.findViewById(R.id.etTitel)).setText(query
-				.getString(OpacApi.KEY_SEARCH_QUERY_TITLE));
-		((EditText) view.findViewById(R.id.etVerfasser)).setText(query
-				.getString(OpacApi.KEY_SEARCH_QUERY_AUTHOR));
-		((EditText) view.findViewById(R.id.etISBN)).setText(query
-				.getString(OpacApi.KEY_SEARCH_QUERY_ISBN));
-		((EditText) view.findViewById(R.id.etBarcode)).setText(query
-				.getString(OpacApi.KEY_SEARCH_QUERY_BARCODE));
-		((EditText) view.findViewById(R.id.etJahr)).setText(query
-				.getString(OpacApi.KEY_SEARCH_QUERY_YEAR));
-		((EditText) view.findViewById(R.id.etJahrVon)).setText(query
-				.getString(OpacApi.KEY_SEARCH_QUERY_YEAR_RANGE_START));
-		((EditText) view.findViewById(R.id.etJahrBis)).setText(query
-				.getString(OpacApi.KEY_SEARCH_QUERY_YEAR_RANGE_END));
-		((CheckBox) view.findViewById(R.id.cbDigital)).setChecked(query
-				.getBoolean(OpacApi.KEY_SEARCH_QUERY_DIGITAL));
-		((CheckBox) view.findViewById(R.id.cbAvailable)).setChecked(query
-				.getBoolean(OpacApi.KEY_SEARCH_QUERY_AVAILABLE));
-
-		Spinner spBranch = (Spinner) view.findViewById(R.id.cbBranch);
-		int i = 0;
-		for (Map<String, String> row : spinnerBranch_data) {
-			if (row.get("key").equals(
-					query.getString(OpacApi.KEY_SEARCH_QUERY_BRANCH))) {
-				spBranch.setSelection(i);
-				break;
+		for (SearchField field : fields) {
+			ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
+			if (field instanceof TextSearchField) {
+				EditText text;
+				if (((TextSearchField) field).isFreeSearch()) {
+					text = (EditText) view.findViewById(R.id.etSimpleSearch);
+				} else {
+					text = (EditText) v.findViewById(R.id.edittext);
+				}
+				text.setText(query.getString(field.getId()));
+			} else if (field instanceof BarcodeSearchField) {
+				EditText text = (EditText) v.findViewById(R.id.edittext);
+				text.setText(query.getString(field.getId()));
+			} else if (field instanceof DropdownSearchField) {
+				Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
+				int i = 0;
+				for (Map<String, String> map : ((DropdownSearchField) field)
+						.getDropdownValues()) {
+					if (map.get("key").equals(query.getString(field.getId()))) {
+						spinner.setSelection(i);
+						break;
+					}
+					i++;
+				}
+			} else if (field instanceof CheckboxSearchField) {
+				CheckBox checkbox = (CheckBox) v.findViewById(R.id.checkbox);
+				checkbox.setChecked(Boolean.valueOf(query.getString(field
+						.getId())));
 			}
-			i++;
-		}
-		Spinner spHomeBranch = (Spinner) view.findViewById(R.id.cbHomeBranch);
-		i = 0;
-		for (Map<String, String> row : spinnerHomeBranch_data) {
-			if (row.get("key").equals(
-					query.getString(OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH))) {
-				spHomeBranch.setSelection(i);
-				break;
-			}
-			i++;
-		}
-		Spinner spCategory = (Spinner) view.findViewById(R.id.cbMediengruppe);
-		i = 0;
-		for (Map<String, String> row : spinnerCategory_data) {
-			if (row.get("key").equals(
-					query.getString(OpacApi.KEY_SEARCH_QUERY_CATEGORY))) {
-				spCategory.setSelection(i);
-				break;
-			}
-			i++;
 		}
 
-		if (advanced) {
-			((EditText) view.findViewById(R.id.etSchlagA)).setText(query
-					.getString(OpacApi.KEY_SEARCH_QUERY_KEYWORDA));
-			((EditText) view.findViewById(R.id.etSchlagB)).setText(query
-					.getString(OpacApi.KEY_SEARCH_QUERY_KEYWORDB));
-			((EditText) view.findViewById(R.id.etSystematik)).setText(query
-					.getString(OpacApi.KEY_SEARCH_QUERY_SYSTEM));
-			((EditText) view.findViewById(R.id.etInteressenkreis))
-					.setText(query.getString(OpacApi.KEY_SEARCH_QUERY_AUDIENCE));
-			((EditText) view.findViewById(R.id.etVerlag)).setText(query
-					.getString(OpacApi.KEY_SEARCH_QUERY_PUBLISHER));
+		if (barcodeScanningField != null && scanResult != null) {
+			ViewGroup v = (ViewGroup) view
+					.findViewWithTag(barcodeScanningField);
+			EditText text = (EditText) v.findViewById(R.id.edittext);
+			text.setText(scanResult.getContents());
+			barcodeScanningField = null;
+			scanResult = null;
 		}
 	}
 
@@ -690,7 +630,21 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 	public void onSaveInstanceState(Bundle outState) {
 		savedState = OpacClient.mapToBundle(saveQuery());
 		outState.putBundle("query", savedState);
+		if (barcodeScanningField != null)
+			outState.putString("barcodeScanningField", barcodeScanningField);
 		super.onSaveInstanceState(outState);
+	}
+
+	public void barcodeScanned(ScanResult scanResult) {
+		this.scanResult = scanResult;
+		if (barcodeScanningField != null) {
+			ViewGroup v = (ViewGroup) view
+					.findViewWithTag(barcodeScanningField);
+			EditText text = (EditText) v.findViewById(R.id.edittext);
+			text.setText(scanResult.getContents());
+			barcodeScanningField = null;
+			scanResult = null;
+		}
 	}
 
 }

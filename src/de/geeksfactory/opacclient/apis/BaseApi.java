@@ -59,7 +59,8 @@ import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.networking.HTTPClient;
 import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.Library;
-import de.geeksfactory.opacclient.storage.MetaDataSource;
+import de.geeksfactory.opacclient.objects.SearchRequestResult;
+import de.geeksfactory.opacclient.searchfields.SearchQuery;
 
 /**
  * Abstract Base class for OpacApi implementations providing some helper methods
@@ -68,13 +69,15 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
 public abstract class BaseApi implements OpacApi {
 
 	protected DefaultHttpClient http_client;
+	protected Library library;
 
 	/**
 	 * Initializes HTTP client
 	 */
 	@Override
-	public void init(MetaDataSource metadata, Library library) {
+	public void init(Library library) {
 		http_client = HTTPClient.getNewHttpClient(library);
+		this.library = library;
 	}
 
 	/**
@@ -374,6 +377,14 @@ public abstract class BaseApi implements OpacApi {
 			throws IOException {
 		return convertStreamToString(is, "ISO-8859-1");
 	}
+	
+	protected static Map<String, String> searchQueryListToMap(List<SearchQuery> queryList) {
+		Map<String, String> queryMap = new HashMap<String, String>();
+		for (SearchQuery query : queryList) {
+			queryMap.put(query.getKey(), query.getValue());
+		}
+		return queryMap;
+	}
 
 	protected String getDefaultEncoding() {
 		return "ISO-8859-1";
@@ -441,5 +452,16 @@ public abstract class BaseApi implements OpacApi {
 		} catch (UnsupportedEncodingException ex) {
 			throw new AssertionError(ex);
 		}
+	}
+
+	@Override
+	public boolean shouldUseMeaningDetector() {
+		return true;
+	}
+
+	@Override
+	public SearchRequestResult volumeSearch(Map<String, String> query)
+			throws IOException, OpacErrorException {
+		return null;
 	}
 }

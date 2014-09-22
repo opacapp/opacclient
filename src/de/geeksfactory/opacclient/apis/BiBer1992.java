@@ -47,7 +47,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import de.geeksfactory.opacclient.NotReachableException;
-import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
 import de.geeksfactory.opacclient.networking.HTTPClient;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -60,7 +59,10 @@ import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
 import de.geeksfactory.opacclient.objects.SearchResult.Status;
-import de.geeksfactory.opacclient.storage.MetaDataSource;
+import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
+import de.geeksfactory.opacclient.searchfields.SearchField;
+import de.geeksfactory.opacclient.searchfields.SearchQuery;
+import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
 /**
  * @author Ruediger Wurth, 16.02.2013 Web identification:
@@ -95,7 +97,6 @@ public class BiBer1992 extends BaseApi {
 	private String m_opac_url = "";
 	private String m_opac_dir = "opac"; // sometimes also "opax"
 	private JSONObject m_data;
-	private MetaDataSource m_metadata;
 	private boolean m_initialised = false;
 	private Library m_library;
 	private List<NameValuePair> m_nameValuePairs = new ArrayList<NameValuePair>(
@@ -115,22 +116,134 @@ public class BiBer1992 extends BaseApi {
 	// number of results is always 50 which is too much
 	final private int numOfResultsPerPage = 20;
 
-	// from HTML:
-	// <option value="AW">Autor</option>
-	// <option value="TW">Titelwort</option>
-	// <option value="DW">Thema</option>
-	// <option value="PP">Standort</option>
-	// <option value="IS">ISBN/ISSN</option>
-	// <option value="PU">Verlag</option>
-	// <option value="PY">Ersch.-Jahr</option>
-	// <option value="LA">Sprache</option>
+	/*
+	 * ----- media types ----- Example Wuerzburg: <td ...><input type="checkbox"
+	 * name="MT" value="1" ...></td> <td ...><img src="../image/spacer.gif.S"
+	 * title="Buch"><br>Buch</td>
+	 * 
+	 * Example Friedrichshafen: <td ...><input type="checkbox" name="MS"
+	 * value="1" ...></td> <td ...><img src="../image/spacer.gif.S"
+	 * title="Buch"><br>Buch</td>
+	 * 
+	 * Example Offenburg: <input type="radio" name="MT" checked
+	 * value="MTYP0">Alles&nbsp;&nbsp; <input type="radio" name="MT"
+	 * value="MTYP10">Belletristik&nbsp;&nbsp; Unfortunately Biber miss the end
+	 * tag </input>, so opt.text() does not work! (at least Offenburg)
+	 * 
+	 * Example Essen, Aschaffenburg: <input type="radio" name="MT" checked
+	 * value="MTYP0"><img src="../image/all.gif.S" title="Alles"> <input
+	 * type="radio" name="MT" value="MTYP7"><img src="../image/cdrom.gif.S"
+	 * title="CD-ROM">
+	 * 
+	 * ----- Branches ----- Example Essen,Erkrath: no closing </option> !!!
+	 * cannot be parsed by Jsoup, so not supported <select name="AORT"> <option
+	 * value="ZWST1">Altendorf </select>
+	 * 
+	 * Example Hagen, Würzburg, Friedrichshafen: <select name="ZW" class="sel1">
+	 * <option selected value="ZWST0">Alle Bibliotheksorte</option> </select>
+	 */
 	@Override
-	public String[] getSearchFields() {
-		return new String[] { KEY_SEARCH_QUERY_TITLE, KEY_SEARCH_QUERY_AUTHOR,
-				KEY_SEARCH_QUERY_KEYWORDA, KEY_SEARCH_QUERY_ISBN,
-				KEY_SEARCH_QUERY_YEAR, KEY_SEARCH_QUERY_SYSTEM,
-				KEY_SEARCH_QUERY_PUBLISHER, KEY_SEARCH_QUERY_CATEGORY,
-				KEY_SEARCH_QUERY_BRANCH };
+	public List<SearchField> getSearchFields() throws IOException {
+		List<SearchField> fields = new ArrayList<SearchField>();
+
+		HttpGet httpget;
+		if (m_opac_dir.equals("opax") || m_opac_dir.equals("opax13"))
+			httpget = new HttpGet(m_opac_url + "/" + m_opac_dir
+					+ "/de/qsel.html.S");
+		else
+			httpget = new HttpGet(m_opac_url + "/" + m_opac_dir
+					+ "/de/qsel_main.S");
+
+		HttpResponse response = http_client.execute(httpget);
+
+		if (response.getStatusLine().getStatusCode() == 500) {
+			throw new NotReachableException();
+		}
+		String html = convertStreamToString(response.getEntity().getContent());
+		response.getEntity().consumeContent();
+
+		Document doc = Jsoup.parse(html);
+
+		// get text fields
+		Elements text_opts = doc.select("form select[name=REG1] option");
+		for (Element opt : text_opts) {
+			TextSearchField field = new TextSearchField();
+			field.setId(opt.attr("value"));
+			field.setDisplayName(opt.text());
+			field.setHint("");
+			fields.add(field);
+		}
+
+		// get media types
+		Elements mt_opts = doc.select("form input[name~=(MT|MS)]");
+		if (mt_opts.size() > 0) {
+			DropdownSearchField mtDropdown = new DropdownSearchField();
+			mtDropdown.setId(mt_opts.get(0).attr("name"));
+			mtDropdown.setDisplayName("Medientyp");
+			List<Map<String, String>> mtOptions = new ArrayList<Map<String, String>>();
+			for (Element opt : mt_opts) {
+				if (!opt.val().equals("")) {
+					String text = opt.text();
+					if (text.length() == 0) {
+						// text is empty, check layouts:
+						// Essen: <input name="MT"><img title="mediatype">
+						// Schaffenb: <input name="MT"><img alt="mediatype">
+						Element img = opt.nextElementSibling();
+						if (img != null && img.tagName().equals("img")) {
+							text = img.attr("title");
+							if (text.equals("")) {
+								text = img.attr("alt");
+							}
+						}
+					}
+					if (text.length() == 0) {
+						// text is still empty, check table layout, Example
+						// Friedrichshafen
+						// <td><input name="MT"></td> <td><img
+						// title="mediatype"></td>
+						Element td1 = opt.parent();
+						Element td2 = td1.nextElementSibling();
+						if (td2 != null) {
+							Elements td2Children = td2.select("img[title]");
+							if (td2Children.size() > 0) {
+								text = td2Children.get(0).attr("title");
+							}
+						}
+					}
+					if (text.length() == 0) {
+						// text is still empty: missing end tag like Offenburg
+						text = parse_option_regex(opt);
+					}
+					Map<String, String> value = new HashMap<String, String>();
+					value.put("key", opt.val());
+					value.put("value", text);
+					mtOptions.add(value);
+				}
+			}
+			mtDropdown.setDropdownValues(mtOptions);
+			fields.add(mtDropdown);
+		}
+
+		// get branches
+		Elements br_opts = doc.select("form select[name=ZW] option");
+		if (br_opts.size() > 0) {
+			DropdownSearchField brDropdown = new DropdownSearchField();
+			brDropdown.setId(br_opts.get(0).parent().attr("name"));
+			brDropdown.setDisplayName(br_opts.get(0).parent().parent()
+					.previousElementSibling().text().replace("\u00a0", "")
+					.replace("?", "").trim());
+			List<Map<String, String>> brOptions = new ArrayList<Map<String, String>>();
+			for (Element opt : br_opts) {
+				Map<String, String> value = new HashMap<String, String>();
+				value.put("key", opt.val());
+				value.put("value", opt.text());
+				brOptions.add(value);
+			}
+			brDropdown.setDropdownValues(brOptions);
+			fields.add(brDropdown);
+		}
+
+		return fields;
 	}
 
 	private void setMediaTypeFromImageFilename(SearchResult sr, String imagename) {
@@ -184,145 +297,18 @@ public class BiBer1992 extends BaseApi {
 	}
 
 	/*
-	 * ----- media types ----- Example Wuerzburg: <td ...><input type="checkbox"
-	 * name="MT" value="1" ...></td> <td ...><img src="../image/spacer.gif.S"
-	 * title="Buch"><br>Buch</td>
-	 * 
-	 * Example Friedrichshafen: <td ...><input type="checkbox" name="MS"
-	 * value="1" ...></td> <td ...><img src="../image/spacer.gif.S"
-	 * title="Buch"><br>Buch</td>
-	 * 
-	 * Example Offenburg: <input type="radio" name="MT" checked
-	 * value="MTYP0">Alles&nbsp;&nbsp; <input type="radio" name="MT"
-	 * value="MTYP10">Belletristik&nbsp;&nbsp; Unfortunately Biber miss the end
-	 * tag </input>, so opt.text() does not work! (at least Offenburg)
-	 * 
-	 * Example Essen, Aschaffenburg: <input type="radio" name="MT" checked
-	 * value="MTYP0"><img src="../image/all.gif.S" title="Alles"> <input
-	 * type="radio" name="MT" value="MTYP7"><img src="../image/cdrom.gif.S"
-	 * title="CD-ROM">
-	 * 
-	 * ----- Branches ----- Example Essen,Erkrath: no closing </option> !!!
-	 * cannot be parsed by Jsoup, so not supported <select name="AORT"> <option
-	 * value="ZWST1">Altendorf </select>
-	 * 
-	 * Example Hagen, Würzburg, Friedrichshafen: <select name="ZW" class="sel1">
-	 * <option selected value="ZWST0">Alle Bibliotheksorte</option> </select>
-	 */
-	private void extract_meta(Document doc) {
-		try {
-			m_metadata.open();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		m_metadata.clearMeta(m_library.getIdent());
-
-		// get media types
-		Elements mt_opts = doc.select("form input[name~=(MT|MS)]");
-		for (int i = 0; i < mt_opts.size(); i++) {
-			Element opt = mt_opts.get(i);
-			if (!opt.val().equals("")) {
-				String text = opt.text();
-				if (text.length() == 0) {
-					// text is empty, check layouts:
-					// Essen: <input name="MT"><img title="mediatype">
-					// Schaffenb: <input name="MT"><img alt="mediatype">
-					Element img = opt.nextElementSibling();
-					if (img != null && img.tagName().equals("img")) {
-						text = img.attr("title");
-						if (text.equals("")) {
-							text = img.attr("alt");
-						}
-					}
-				}
-				if (text.length() == 0) {
-					// text is still empty, check table layout, Example
-					// Friedrichshafen
-					// <td><input name="MT"></td> <td><img
-					// title="mediatype"></td>
-					Element td1 = opt.parent();
-					Element td2 = td1.nextElementSibling();
-					if (td2 != null) {
-						Elements td2Children = td2.select("img[title]");
-						if (td2Children.size() > 0) {
-							text = td2Children.get(0).attr("title");
-						}
-					}
-				}
-				if (text.length() == 0) {
-					// text is still empty: missing end tag like Offenburg
-					text = parse_option_regex(opt);
-				}
-				// ignore "all" because this is anyway added by this app
-				if ((text.length() > 0) && !text.equalsIgnoreCase("alle")
-						&& !text.equalsIgnoreCase("alles")) {
-					m_metadata.addMeta(MetaDataSource.META_TYPE_CATEGORY,
-							m_library.getIdent(), opt.val(), text);
-				}
-			}
-		}
-
-		// get branches
-		Elements br_opts = doc.select("form select[name=ZW] option");
-		for (int i = 0; i < br_opts.size(); i++) {
-			Element opt = br_opts.get(i);
-			// suppress "Alle Standorte", because "all" is added anyway by this
-			// app
-			if (!opt.val().equals("") && !opt.text().equals("")
-					&& !opt.text().startsWith("Alle")) {
-				m_metadata.addMeta(MetaDataSource.META_TYPE_BRANCH,
-						m_library.getIdent(), opt.val(), opt.text());
-			}
-		}
-
-		m_metadata.close();
-	}
-
-	/*
 	 * Check connection to OPAC and get media types
 	 */
 	@Override
 	public void start() throws IOException, NotReachableException {
-		HttpGet httpget;
-		if (m_opac_dir.equals("opax") || m_opac_dir.equals("opax13"))
-			httpget = new HttpGet(m_opac_url + "/" + m_opac_dir
-					+ "/de/qsim.html.S");
-		else
-			httpget = new HttpGet(m_opac_url + "/" + m_opac_dir
-					+ "/de/qsim_main.S");
-
-		HttpResponse response = http_client.execute(httpget);
-
-		if (response.getStatusLine().getStatusCode() == 500) {
-			throw new NotReachableException();
-		}
-
 		m_initialised = true;
-
-		String html = convertStreamToString(response.getEntity().getContent());
-		response.getEntity().consumeContent();
-
-		Document doc = Jsoup.parse(html);
-
-		try {
-			m_metadata.open();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		if (!m_metadata.hasMeta(m_library.getIdent())) {
-			m_metadata.close();
-			extract_meta(doc);
-		} else {
-			m_metadata.close();
-		}
-
 	}
 
 	@Override
-	public void init(MetaDataSource metadata, Library lib) {
+	public void init(Library lib) {
+		super.init(lib);
 		http_client = HTTPClient.getNewHttpClient(lib);
 
-		m_metadata = metadata;
 		m_library = lib;
 		m_data = lib.getData();
 
@@ -349,59 +335,36 @@ public class BiBer1992 extends BaseApi {
 	 * HTTP Push
 	 */
 	@Override
-	public SearchRequestResult search(Map<String, String> query)
+	public SearchRequestResult search(List<SearchQuery> queryList)
 			throws IOException, NotReachableException {
 
 		if (!m_initialised)
 			start();
 
-		String mediaType = getStringFromBundle(query, KEY_SEARCH_QUERY_CATEGORY);
-		if (mediaType.equals("")) {
-			mediaType = "MTYP0"; // key for "All"
-		}
-
-		String branch = getStringFromBundle(query, KEY_SEARCH_QUERY_BRANCH);
-		if (branch.equals("")) {
-			branch = "ZWST0"; // key for "All"
-		}
-
 		m_nameValuePairs.clear();
-		m_nameValuePairs.add(new BasicNameValuePair("CNN1", "AND"));
-		m_nameValuePairs.add(new BasicNameValuePair("CNN2", "AND"));
-		m_nameValuePairs.add(new BasicNameValuePair("CNN3", "AND"));
-		m_nameValuePairs.add(new BasicNameValuePair("CNN4", "AND"));
-		m_nameValuePairs.add(new BasicNameValuePair("CNN5", "AND"));
-		m_nameValuePairs.add(new BasicNameValuePair("CNN6", "AND"));
-		m_nameValuePairs.add(new BasicNameValuePair("CNN7", "AND"));
-		m_nameValuePairs.add(new BasicNameValuePair("FLD1",
-				getStringFromBundle(query, KEY_SEARCH_QUERY_AUTHOR)));
-		m_nameValuePairs.add(new BasicNameValuePair("FLD2",
-				getStringFromBundle(query, KEY_SEARCH_QUERY_TITLE)));
-		m_nameValuePairs.add(new BasicNameValuePair("FLD3",
-				getStringFromBundle(query, KEY_SEARCH_QUERY_KEYWORDA)));
-		m_nameValuePairs.add(new BasicNameValuePair("FLD4",
-				getStringFromBundle(query, KEY_SEARCH_QUERY_SYSTEM)));
-		m_nameValuePairs.add(new BasicNameValuePair("FLD5",
-				getStringFromBundle(query, KEY_SEARCH_QUERY_ISBN)));
-		m_nameValuePairs.add(new BasicNameValuePair("FLD6",
-				getStringFromBundle(query, KEY_SEARCH_QUERY_PUBLISHER)));
-		m_nameValuePairs.add(new BasicNameValuePair("FLD7",
-				getStringFromBundle(query, KEY_SEARCH_QUERY_YEAR)));
+		int count = 1;
+		for (SearchQuery query : queryList) {
+			if (query.getSearchField() instanceof TextSearchField
+					&& !query.getValue().equals("")) {
+				m_nameValuePairs.add(new BasicNameValuePair("CNN" + count,
+						"AND"));
+				m_nameValuePairs.add(new BasicNameValuePair("FLD" + count,
+						query.getValue()));
+				m_nameValuePairs.add(new BasicNameValuePair("REG" + count,
+						query.getKey()));
+				count++;
+			} else if (query.getSearchField() instanceof DropdownSearchField) {
+				m_nameValuePairs.add(new BasicNameValuePair(query.getKey(),
+						query.getValue()));
+			}
+		}
+
 		m_nameValuePairs.add(new BasicNameValuePair("FUNC", "qsel"));
 		m_nameValuePairs.add(new BasicNameValuePair("LANG", "de"));
-		m_nameValuePairs.add(new BasicNameValuePair("MT", mediaType));
-		m_nameValuePairs.add(new BasicNameValuePair("REG1", "AW"));
-		m_nameValuePairs.add(new BasicNameValuePair("REG2", "TW"));
-		m_nameValuePairs.add(new BasicNameValuePair("REG3", "DW"));
-		m_nameValuePairs.add(new BasicNameValuePair("REG4", "SG"));
-		m_nameValuePairs.add(new BasicNameValuePair("REG5", "IS"));
-		m_nameValuePairs.add(new BasicNameValuePair("REG6", "PU"));
-		m_nameValuePairs.add(new BasicNameValuePair("REG7", "PY"));
 		m_nameValuePairs.add(new BasicNameValuePair("SHOW", "20")); // but
 																	// result
 																	// brings 50
 		m_nameValuePairs.add(new BasicNameValuePair("SHOWSTAT", "N"));
-		m_nameValuePairs.add(new BasicNameValuePair("ZW", branch));
 		m_nameValuePairs.add(new BasicNameValuePair("FROMPOS", "1"));
 
 		return searchGetPage(1);

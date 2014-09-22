@@ -69,8 +69,9 @@ import de.geeksfactory.opacclient.frontend.SearchResultListActivity;
 import de.geeksfactory.opacclient.frontend.WelcomeActivity;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.searchfields.SearchField;
+import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
-import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
 import de.geeksfactory.opacclient.storage.StarContentProvider;
 
 @ReportsCrashes(formKey = "", mailTo = "info@opacapp.de", mode = org.acra.ReportingInteractionMode.NOTIFICATION)
@@ -122,9 +123,15 @@ public class OpacClient extends Application {
 	// return SearchResultsActivity.class;
 	// }
 
-	public void startSearch(Activity caller, Map<String, String> query) {
+	public void startSearch(Activity caller, List<SearchQuery> query) {
 		Intent myIntent = new Intent(caller, SearchResultListActivity.class);
-		myIntent.putExtra("query", mapToBundle(query));
+		myIntent.putExtra("query", queryToBundle(query));
+		caller.startActivity(myIntent);
+	}
+	
+	public void startVolumeSearch(Activity caller, Map<String, String> query) {
+		Intent myIntent = new Intent(caller, SearchResultListActivity.class);
+		myIntent.putExtra("volumeQuery", mapToBundle(query));
 		caller.startActivity(myIntent);
 	}
 
@@ -163,7 +170,7 @@ public class OpacClient extends Application {
 		else
 			return null;
 
-		newApiInstance.init(new SQLMetaDataSource(this), lib);
+		newApiInstance.init(lib);
 		return newApiInstance;
 	}
 
@@ -345,6 +352,35 @@ public class OpacClient extends Application {
 		ctx.startActivity(intent);
 	}
 
+	public static Bundle queryToBundle(List<SearchQuery> query) {
+		if (query == null)
+			return null;
+		Bundle b = new Bundle();
+		for (SearchQuery q : query) {
+			try {
+				b.putString(q.getSearchField().toJSON().toString(), q.getValue());
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		return b;
+	}
+
+	public static List<SearchQuery> bundleToQuery(Bundle bundle) {
+		if (bundle == null)
+			return null;
+		List<SearchQuery> query = new ArrayList<SearchQuery>();
+		for (String e : bundle.keySet()) {
+			try {
+				query.add(new SearchQuery(SearchField.fromJSON(new JSONObject(e)),
+						bundle.getString(e)));
+			} catch (JSONException e1) {
+				e1.printStackTrace();
+			}
+		}
+		return query;
+	}
+	
 	public static Bundle mapToBundle(Map<String, String> map) {
 		if (map == null)
 			return null;

@@ -9,6 +9,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -44,13 +46,15 @@ import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
-import de.geeksfactory.opacclient.storage.MetaDataSource;
+import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
+import de.geeksfactory.opacclient.searchfields.SearchField;
+import de.geeksfactory.opacclient.searchfields.SearchQuery;
+import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
 public class Adis extends BaseApi implements OpacApi {
 
 	protected String opac_url = "";
 	protected JSONObject data;
-	protected MetaDataSource metadata;
 	protected boolean initialised = false;
 	protected Library library;
 
@@ -65,6 +69,7 @@ public class Adis extends BaseApi implements OpacApi {
 	protected boolean s_accountcalled;
 
 	protected static HashMap<String, MediaType> types = new HashMap<String, MediaType>();
+	protected static HashSet<String> ignoredFieldNames = new HashSet<String>();
 
 	static {
 		types.put("Buch", MediaType.BOOK);
@@ -83,6 +88,14 @@ public class Adis extends BaseApi implements OpacApi {
 		types.put("Elektronische Ressource", MediaType.EBOOK);
 		types.put("E-Book", MediaType.EBOOK);
 		types.put("Karte", MediaType.MAP);
+
+		// TODO: The following fields from Berlin make no sense and don't work
+		// when they are displayed alone.
+		// We can only include them if we automatically deselect the "Verbund"
+		// checkbox
+		// when one of these dropdowns has a value other than "".
+		ignoredFieldNames.add("oder Bezirk");
+		ignoredFieldNames.add("oder Bibliothek");
 	}
 
 	public Document htmlGet(String url) throws ClientProtocolException,
@@ -265,48 +278,11 @@ public class Adis extends BaseApi implements OpacApi {
 			if (s_exts == null)
 				s_exts = "SS6";
 
-			try {
-				metadata.open();
-			} catch (IOException e) {
-				throw e;
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-			if (!metadata.hasMeta(library.getIdent())) {
-				metadata.close();
-				extract_meta();
-			} else {
-				metadata.close();
-			}
-
 		} catch (JSONException e) {
 			throw new RuntimeException(e);
 		}
 
 		initialised = true;
-	}
-
-	protected void extract_meta() throws ClientProtocolException, IOException {
-		try {
-			metadata.open();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		metadata.clearMeta(library.getIdent());
-		Document doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
-				+ s_service + "&sp=" + s_exts);
-
-		for (Element opt : doc.select("#MEDIUM_1 option")) {
-			metadata.addMeta(MetaDataSource.META_TYPE_CATEGORY,
-					library.getIdent(), opt.attr("value"), opt.text());
-		}
-
-		for (Element opt : doc.select("#AUSGAB_1 option")) {
-			metadata.addMeta(MetaDataSource.META_TYPE_BRANCH,
-					library.getIdent(), opt.attr("value"), opt.text());
-		}
-
-		metadata.close();
 	}
 
 	@Override
@@ -315,7 +291,7 @@ public class Adis extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public SearchRequestResult search(Map<String, String> query)
+	public SearchRequestResult search(List<SearchQuery> queries)
 			throws IOException, NotReachableException, OpacErrorException {
 		start();
 		// TODO: There are also libraries with a different search form,
@@ -326,71 +302,30 @@ public class Adis extends BaseApi implements OpacApi {
 
 		int cnt = 0;
 		List<NameValuePair> nvpairs = new ArrayList<NameValuePair>();
-		for (String field : getSearchFields()) {
-			if (query.containsKey(field) && !query.get(field).equals("")) {
+		for (SearchQuery query : queries) {
+			if (!query.getValue().equals("")) {
 
-				if (field.equals(KEY_SEARCH_QUERY_CATEGORY)) {
-					doc.select("select#MEDIUM_1").val(
-							query.get(KEY_SEARCH_QUERY_CATEGORY));
-					continue;
-				} else if (field.equals(KEY_SEARCH_QUERY_BRANCH)) {
-					doc.select("select#AUSGAB_1").val(
-							query.get(KEY_SEARCH_QUERY_BRANCH));
-					continue;
-				} else if (field.equals(KEY_SEARCH_QUERY_YEAR)) {
-					doc.select("input#GEJAHR_1").val(
-							query.get(KEY_SEARCH_QUERY_YEAR));
+				if (query.getSearchField() instanceof DropdownSearchField) {
+					doc.select("select#" + query.getKey())
+							.val(query.getValue());
 					continue;
 				}
 
 				cnt++;
 
-				if (s_exts.equals("SS2")) {
-					if (field.equals(KEY_SEARCH_QUERY_FREE)) {
-						doc.select("input#THEMA2_1").val(query.get(field));
-					} else if (field.equals(KEY_SEARCH_QUERY_AUTHOR)) {
-						doc.select("input#AUTOR_1").val(query.get(field));
-					} else if (field.equals(KEY_SEARCH_QUERY_TITLE)) {
-						doc.select("input#TITEL_1").val(query.get(field));
-					} else if (field.equals(KEY_SEARCH_QUERY_ISBN)) {
-						doc.select("input#NUMMES_1").val(query.get(field));
-					} else if (field.equals(KEY_SEARCH_QUERY_KEYWORDA)) {
-						doc.select("input#THEMA1_1").val(query.get(field));
-					}
+				if (s_exts.equals("SS2")
+						|| (query.getSearchField().getData() != null && !query
+								.getSearchField().getData()
+								.optBoolean("selectable", true))) {
+					doc.select("input#" + query.getKey()).val(query.getValue());
 				} else {
-					for (Element opt : doc.select("select#SUCH01_" + cnt
-							+ " option")) {
-						if (field.equals(KEY_SEARCH_QUERY_FREE)
-								&& (opt.text().contains("Alle Felder") || opt
-										.text().contains("Freie Suche"))) {
-							doc.select("select#SUCH01_" + cnt).val(opt.val());
-							break;
-						} else if (field.equals(KEY_SEARCH_QUERY_TITLE)
-								&& opt.text().contains("Titel")) {
-							doc.select("select#SUCH01_" + cnt).val(opt.val());
-							break;
-						} else if (field.equals(KEY_SEARCH_QUERY_AUTHOR)
-								&& (opt.text().contains("Autor") || opt.text()
-										.contains("Person"))) {
-							doc.select("select#SUCH01_" + cnt).val(opt.val());
-							break;
-						} else if (field.equals(KEY_SEARCH_QUERY_ISBN)
-								&& opt.text().contains("ISBN")) {
-							doc.select("select#SUCH01_" + cnt).val(opt.val());
-							break;
-						} else if (field.equals(KEY_SEARCH_QUERY_KEYWORDA)
-								&& opt.text().contains("Schlagwort")) {
-							doc.select("select#SUCH01_" + cnt).val(opt.val());
-							break;
-						}
-					}
+					doc.select("select#SUCH01_" + cnt).val(query.getKey());
+					doc.select("input#FELD01_" + cnt).val(query.getValue());
+				}
 
-					doc.select("input#FELD01_" + cnt).val(query.get(field));
-
-					if (cnt > 4) {
-						throw new OpacErrorException(
-								"Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.");
-					}
+				if (cnt > 4) {
+					throw new OpacErrorException(
+							"Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.");
 				}
 			}
 		}
@@ -487,10 +422,8 @@ public class Adis extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public void init(MetaDataSource metadata, Library library) {
-		super.init(metadata, library);
-
-		this.metadata = metadata;
+	public void init(Library library) {
+		super.init(library);
 		this.library = library;
 		this.data = library.getData();
 		try {
@@ -1302,27 +1235,125 @@ public class Adis extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public String[] getSearchFields() {
-		String[] defa = new String[] { KEY_SEARCH_QUERY_FREE,
-				KEY_SEARCH_QUERY_TITLE, KEY_SEARCH_QUERY_ISBN,
-				KEY_SEARCH_QUERY_AUTHOR, KEY_SEARCH_QUERY_KEYWORDA,
-				KEY_SEARCH_QUERY_BRANCH, KEY_SEARCH_QUERY_CATEGORY,
-				KEY_SEARCH_QUERY_YEAR };
+	public List<SearchField> getSearchFields() throws IOException,
+			JSONException {
+		if (!initialised)
+			start();
 
-		try {
-			if (data.has("searchFields")) {
-				String[] sf;
-				sf = new String[data.getJSONArray("searchFields").length()];
-				for (int i = 0; i < data.getJSONArray("searchFields").length(); i++) {
-					sf[i] = data.getJSONArray("searchFields").getString(i);
-				}
-				return sf;
-			} else {
-				return defa;
-			}
-		} catch (JSONException e) {
-			return defa;
+		Document doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
+				+ s_service + "&sp=" + s_exts);
+
+		List<SearchField> fields = new ArrayList<SearchField>();
+		// dropdown to select which field you want to search in
+		for (Element opt : doc.select("#SUCH01_1 option")) {
+			TextSearchField field = new TextSearchField();
+			field.setId(opt.attr("value"));
+			field.setDisplayName(opt.text());
+			field.setHint("");
+			fields.add(field);
 		}
+
+		// Save data so that the search() function knows that this
+		// is not a selectable search field
+		JSONObject selectableData = new JSONObject();
+		selectableData.put("selectable", false);
+
+		for (Element row : doc.select("div[id~=F\\d+]")) {
+			if (row.select("input[type=text]").size() == 1
+					&& row.select("input, select").first().tagName()
+							.equals("input")) {
+				// A single text search field
+				Element input = row.select("input[type=text]").first();
+				TextSearchField field = new TextSearchField();
+				field.setId(input.attr("id"));
+				field.setDisplayName(row.select("label").first().text());
+				field.setHint("");
+				field.setData(selectableData);
+				fields.add(field);
+			} else if (row.select("select").size() == 1
+					&& row.select("input[type=text]").size() == 0) {
+				// Things like language, media type, etc.
+				Element select = row.select("select").first();
+				DropdownSearchField field = new DropdownSearchField();
+				field.setId(select.id());
+				field.setDisplayName(row.select("label").first().text());
+				List<Map<String, String>> values = new ArrayList<Map<String, String>>();
+				for (Element opt : select.select("option")) {
+					Map<String, String> value = new HashMap<String, String>();
+					value.put("key", opt.attr("value"));
+					value.put("value", opt.text());
+					values.add(value);
+				}
+				field.setDropdownValues(values);
+				fields.add(field);
+			} else if (row.select("select").size() == 0
+					&& row.select("input[type=text]").size() == 3
+					&& row.select("label").size() == 3) {
+				// Three text inputs.
+				// Year single/from/to or things like Band-/Heft-/Satznummer
+				String name1 = row.select("label").get(0).text();
+				String name2 = row.select("label").get(1).text();
+				String name3 = row.select("label").get(2).text();
+				Element input1 = row.select("input[type=text]").get(0);
+				Element input2 = row.select("input[type=text]").get(1);
+				Element input3 = row.select("input[type=text]").get(2);
+
+				if (name2.contains("von") && name3.contains("bis")) {
+					TextSearchField field1 = new TextSearchField();
+					field1.setId(input1.id());
+					field1.setDisplayName(name1);
+					field1.setHint("");
+					field1.setData(selectableData);
+					fields.add(field1);
+
+					TextSearchField field2 = new TextSearchField();
+					field2.setId(input2.id());
+					field2.setDisplayName(name2.replace("von", "").trim());
+					field2.setHint("von");
+					field2.setData(selectableData);
+					fields.add(field2);
+
+					TextSearchField field3 = new TextSearchField();
+					field3.setId(input3.id());
+					field3.setDisplayName(name3.replace("bis", "").trim());
+					field3.setHint("bis");
+					field3.setHalfWidth(true);
+					field3.setData(selectableData);
+					fields.add(field3);
+				} else {
+					TextSearchField field1 = new TextSearchField();
+					field1.setId(input1.id());
+					field1.setDisplayName(name1);
+					field1.setHint("");
+					field1.setData(selectableData);
+					fields.add(field1);
+
+					TextSearchField field2 = new TextSearchField();
+					field2.setId(input2.id());
+					field2.setDisplayName(name2);
+					field2.setHint("");
+					field2.setData(selectableData);
+					fields.add(field2);
+
+					TextSearchField field3 = new TextSearchField();
+					field3.setId(input3.id());
+					field3.setDisplayName(name3);
+					field3.setHint("");
+					field3.setData(selectableData);
+					fields.add(field3);
+				}
+			}
+		}
+
+		for (Iterator<SearchField> iterator = fields.iterator(); iterator
+				.hasNext();) {
+			SearchField field = iterator.next();
+			if (ignoredFieldNames.contains(field.getDisplayName())) {
+				iterator.remove();
+			}
+		}
+
+		return fields;
 	}
 
 	@Override

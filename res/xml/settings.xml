@@ -9,12 +9,6 @@
             android:summary="@string/accounts_desc"
             android:title="@string/accounts" />
 
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="advanced"
-            android:summary="@string/advanced_desc"
-            android:title="@string/advanced" />
-
         <ListPreference
             android:entries="@array/startup_labels"
             android:key="startup_fragment"

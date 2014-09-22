@@ -34,7 +34,8 @@ import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
-import de.geeksfactory.opacclient.storage.MetaDataSource;
+import de.geeksfactory.opacclient.searchfields.SearchField;
+import de.geeksfactory.opacclient.searchfields.SearchQuery;
 
 /**
  * Generic interface for accessing online library catalogues.
@@ -221,6 +222,14 @@ public interface OpacApi {
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_AVAILABLE = "available";
+
+	/**
+	 * Sort search results in a specific order
+	 * 
+	 * Map key for {@link #search(Map)} and possible value for
+	 * {@link #getSearchFields()}.
+	 */
+	public static final String KEY_SEARCH_QUERY_ORDER = "order";
 
 	/**
 	 * Returns whether – if account view is not supported in the given library –
@@ -488,15 +497,31 @@ public interface OpacApi {
 	 * @param library
 	 *            The library the Api is initialized for
 	 */
-	public void init(MetaDataSource metadata, Library library);
+	public void init(Library library);
 
 	/**
-	 * Performs a catalogue search. The given <code>Map</code> contains the
-	 * search criteria. See documentation on <code>SearchResult</code> for
+	 * Performs a catalogue search. The given <code>List<SearchQuery></code>
+	 * contains the search criteria. See documentation on
+	 * <code>SearchResult</code> for details.
+	 * 
+	 * This function is always called from a background thread, you can use
+	 * blocking network operations in it. See documentation on DetailledItem for
 	 * details.
 	 * 
-	 * The <code>Map</code> can contain any of the <code>KEY_SEARCH_*</code>
-	 * constants as keys.
+	 * @param query
+	 *            see above
+	 * @return List of results and additional information, or result object with
+	 *         the error flag set to true.
+	 * @throws JSONException
+	 * @see de.geeksfactory.opacclient.objects.SearchResult
+	 */
+	public SearchRequestResult search(List<SearchQuery> query)
+			throws IOException, NotReachableException, OpacErrorException,
+			JSONException;
+
+	/**
+	 * Performs a catalogue search for volumes of an item. The query is given
+	 * to it from {@link DetailledItem.getVolumesearch()}.
 	 * 
 	 * This function is always called from a background thread, you can use
 	 * blocking network operations in it. See documentation on DetailledItem for
@@ -508,13 +533,13 @@ public interface OpacApi {
 	 *         the error flag set to true.
 	 * @see de.geeksfactory.opacclient.objects.SearchResult
 	 */
-	public SearchRequestResult search(Map<String, String> query)
-			throws IOException, NotReachableException, OpacErrorException;
+	public SearchRequestResult volumeSearch(Map<String, String> query)
+			throws IOException, OpacErrorException;
 
 	/**
-	 * If your {@link #search(Map)} implementation puts something different
-	 * from <code>null</code> into {@link SearchRequestResult#setFilters(List)},
-	 * this will be called to apply a filter to the last search request.
+	 * If your {@link #search(Map)} implementation puts something different from
+	 * <code>null</code> into {@link SearchRequestResult#setFilters(List)}, this
+	 * will be called to apply a filter to the last search request.
 	 * 
 	 * If your {@link #search(Map)} implementation does not set
 	 * {@link SearchRequestResult#setFilters(List)}, this wil never be called.
@@ -555,7 +580,7 @@ public interface OpacApi {
 	 * @see de.geeksfactory.opacclient.objects.SearchResult
 	 */
 	public SearchRequestResult searchGetPage(int page) throws IOException,
-			NotReachableException, OpacErrorException;
+			NotReachableException, OpacErrorException, JSONException;
 
 	/**
 	 * Get details for the item with unique ID id.
@@ -807,14 +832,19 @@ public interface OpacApi {
 			JSONException, OpacErrorException;
 
 	/**
-	 * Returns an array of search criterias which are supported by this OPAC and
-	 * should be visible in the search activity. Valid values in returned field
-	 * are the same as the valid keys in <code>search</code>.
+	 * Returns a list of search criterias which are supported by this OPAC and
+	 * should be visible in the search activity. Values should be instances of
+	 * subclasses of the abstract SearchField class. This is called
+	 * asynchronously, so you can load webpages to get the search fields, but
+	 * you should save them to the metadata afterwards to make it faster.
 	 * 
 	 * @return List of allowed fields
+	 * @throws OpacErrorException
+	 * @throws JSONException
 	 * @see #search
 	 */
-	public String[] getSearchFields();
+	public List<SearchField> getSearchFields() throws IOException,
+			NotReachableException, OpacErrorException, JSONException;
 
 	/**
 	 * Returns whether – if account view is not supported in the given library –
@@ -878,5 +908,11 @@ public interface OpacApi {
 	 * @return combination (bitwise OR) of <code>SUPPORT_FLAG_*</code> constants
 	 */
 	public int getSupportFlags();
+
+	/**
+	 * @return Whether the MeaningDetector should be used to automatically
+	 *         detect the meanings of this library's search fields
+	 */
+	public boolean shouldUseMeaningDetector();
 
 }
