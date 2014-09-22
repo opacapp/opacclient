@@ -100,11 +100,14 @@ public abstract class OpacActivity extends Activity {
 
 		if (savedInstanceState != null) {
 			setTwoPane(savedInstanceState.getBoolean("twoPane"));
+			if (savedInstanceState.containsKey("title")) {
+				setTitle(savedInstanceState.getCharSequence("title"));
+			}
 			if (savedInstanceState.containsKey("framgent")) {
 				fragment = (Fragment) getSupportFragmentManager().getFragment(
 						savedInstanceState, "fragment");
 				getSupportFragmentManager().beginTransaction()
-					.replace(R.id.content_frame, fragment).commit();
+						.replace(R.id.content_frame, fragment).commit();
 			}
 		}
 	}
@@ -279,6 +282,10 @@ public abstract class OpacActivity extends Activity {
 	@Override
 	protected void onResume() {
 		setupDrawer();
+
+		fragment = (Fragment) getSupportFragmentManager().findFragmentById(
+				R.id.content_frame);
+
 		if (hasDrawer)
 			drawerToggle.syncState();
 		setTwoPane(twoPane);
@@ -601,6 +608,9 @@ public abstract class OpacActivity extends Activity {
 		super.onSaveInstanceState(outState);
 		outState.putBoolean("twoPane", twoPane);
 		if (fragment != null)
-			getSupportFragmentManager().putFragment(outState, "fragment", fragment);
+			getSupportFragmentManager().putFragment(outState, "fragment",
+					fragment);
+		if (mTitle != null)
+			outState.putCharSequence("title", mTitle);
 	}
 }
