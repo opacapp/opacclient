@@ -88,9 +88,11 @@ public class Adis extends BaseApi implements OpacApi {
 		types.put("Elektronische Ressource", MediaType.EBOOK);
 		types.put("E-Book", MediaType.EBOOK);
 		types.put("Karte", MediaType.MAP);
-		
-		// TODO: The following fields from Berlin make no sense and don't work when they are displayed alone.
-		// We can only include them if we automatically deselect the "Verbund" checkbox
+
+		// TODO: The following fields from Berlin make no sense and don't work
+		// when they are displayed alone.
+		// We can only include them if we automatically deselect the "Verbund"
+		// checkbox
 		// when one of these dropdowns has a value other than "".
 		ignoredFieldNames.add("oder Bezirk");
 		ignoredFieldNames.add("oder Bibliothek");
@@ -1238,7 +1240,6 @@ public class Adis extends BaseApi implements OpacApi {
 			field.setHint("");
 			fields.add(field);
 		}
-		
 
 		// Save data so that the search() function knows that this
 		// is not a selectable search field
@@ -1331,8 +1332,9 @@ public class Adis extends BaseApi implements OpacApi {
 				}
 			}
 		}
-		
-		for (Iterator<SearchField> iterator = fields.iterator(); iterator.hasNext();) {
+
+		for (Iterator<SearchField> iterator = fields.iterator(); iterator
+				.hasNext();) {
 			SearchField field = iterator.next();
 			if (ignoredFieldNames.contains(field.getDisplayName())) {
 				iterator.remove();
