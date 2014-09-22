@@ -14,11 +14,4 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>upstream</name>
-			<type>2</type>
-			<location>D:/Eigene Dateien/git/opacclient/src</location>
-		</link>
-	</linkedResources>
 </projectDescription>
