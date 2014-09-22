@@ -18,7 +18,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.barcode.BarcodeScanIntegrator;

@@ -14,9 +14,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import de.geeksfactory.opacclient.searchfields.SearchField;
 import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
+import de.geeksfactory.opacclient.searchfields.SearchField;
 
 public class JsonSearchFieldDataSource implements SearchFieldDataSource {
 
