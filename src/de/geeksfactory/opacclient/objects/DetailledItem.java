@@ -294,7 +294,7 @@ public class DetailledItem implements CoverHolder {
 	/**
 	 * Can return a
 	 * {@link de.geeksfactory.opacclient.apis.OpacApi#search(Map)} query
-	 * <code>Bundle</code> for a volume search based on this item.
+	 * <code>List</code> for a volume search based on this item.
 	 * 
 	 * @return Search query or <code>null</code> if not applicable
 	 * @see Detail

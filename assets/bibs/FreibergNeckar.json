@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Freiberg am Neckar",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/freiberg",
+        "information": "http://stadtbibliothek-freiberg.de/"
+    },
+    "geo": [
+        48.9334303,
+        9.1992433
+    ],
+    "state": "Baden-W\u00fcrttemberg",
+    "support": "Katalogsuche",
+    "title": "Stadtbibliothek"
+}

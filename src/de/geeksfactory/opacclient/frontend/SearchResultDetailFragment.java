@@ -377,7 +377,7 @@ public class SearchResultDetailFragment extends Fragment {
 			btnVolume.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					app.startSearch(getActivity(), getItem().getVolumesearch());
+					app.startVolumeSearch(getActivity(), getItem().getVolumesearch());
 				}
 			});
 			llCopies.addView(btnVolume);

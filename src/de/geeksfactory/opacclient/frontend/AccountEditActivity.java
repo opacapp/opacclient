@@ -76,6 +76,12 @@ public class AccountEditActivity extends Activity {
 		data.open();
 		account = data.getAccount(getIntent()
 				.getLongExtra(EXTRA_ACCOUNT_ID, -1));
+
+		if (account == null) {
+			finish();
+			return;
+		}
+
 		data.close();
 
 		if (account.getLabel().equals(getString(R.string.default_account_name))) {

@@ -4,7 +4,7 @@
     "country": "Deutschland", 
     "data": {
         "baseurl": "https://opacplus.ub.uni-muenchen.de/InfoGuideClient.ubmsis", 
-        "information": "http://www.ub.uni-muenchen.de/oeffnungszeiten/", 
+        "information": "http://www.ub.uni-muenchen.de/arbeiten/oeffnungszeiten/index.html", 
         "startparams": "Login=igubm"
     }, 
     "geo": [

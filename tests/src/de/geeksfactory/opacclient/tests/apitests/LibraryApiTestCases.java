@@ -6,15 +6,14 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.Security;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -40,13 +39,18 @@ import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
-import de.geeksfactory.opacclient.storage.DummyMetaDataSource;
+import de.geeksfactory.opacclient.searchfields.JavaMeaningDetector;
+import de.geeksfactory.opacclient.searchfields.SearchField;
+import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
+import de.geeksfactory.opacclient.searchfields.SearchQuery;
+import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
 @RunWith(Parallelized.class)
 public class LibraryApiTestCases extends TestCase {
 
 	private Library library;
 	private OpacApi api;
+	private List<SearchField> fields;
 
 	public LibraryApiTestCases(String library) throws JSONException,
 			IOException {
@@ -66,47 +70,25 @@ public class LibraryApiTestCases extends TestCase {
 	}
 
 	@Before
-	public void setUp() {
-		api = null;
-		if (library.getApi().equals("bond26")
-				|| library.getApi().equals("bibliotheca"))
-			// Backwardscompatibility
-			api = new Bibliotheca();
-		else if (library.getApi().equals("oclc2011")
-				|| library.getApi().equals("sisis"))
-			// Backwards compatibility
-			api = new SISIS();
-		else if (library.getApi().equals("zones22"))
-			api = new Zones22();
-		else if (library.getApi().equals("biber1992"))
-			api = new BiBer1992();
-		else if (library.getApi().equals("pica"))
-			api = new Pica();
-		else if (library.getApi().equals("iopac"))
-			api = new IOpac();
-		else if (library.getApi().equals("adis"))
-			api = new Adis();
-		else if (library.getApi().equals("sru"))
-			api = new SRU();
-		else if (library.getApi().equals("winbiap"))
-			api = new WinBiap();
-		else if (library.getApi().equals("webopac.net"))
-			api = new WebOpacNet();
-		else
-			api = null;
-		api.init(new DummyMetaDataSource(), library);
+	public void setUp() throws NotReachableException, IOException, OpacErrorException, JSONException {
+		Security.addProvider(new BouncyCastleProvider());
+		api = getApi(library);		
+		fields = api.getSearchFields();
+		JavaMeaningDetector detector = new JavaMeaningDetector(library);
+		for (int i = 0; i < fields.size(); i++) {
+			fields.set(i, detector.detectMeaning(fields.get(i)));
+		}
 	}
 
 	@Test
-	public void testEmptySearch() throws NotReachableException, IOException {
-		Map<String, String> query = new HashMap<String, String>();
-		if (Arrays.asList(api.getSearchFields()).contains(
-				OpacApi.KEY_SEARCH_QUERY_FREE))
-			query.put(OpacApi.KEY_SEARCH_QUERY_FREE,
-					"fasgeadstrehdaxydsfstrgdfjxnvgfhdtnbfgn");
-		else
-			query.put(OpacApi.KEY_SEARCH_QUERY_TITLE,
-					"fasgeadstrehdaxydsfstrgdfjxnvgfhdtnbfgn");
+	public void testEmptySearch() throws NotReachableException, IOException,
+			OpacErrorException, JSONException {
+		List<SearchQuery> query = new ArrayList<SearchQuery>();
+		SearchField field = findFreeSearchOrTitle(fields);
+		if (field == null)
+			throw new OpacErrorException( //TODO: prevent this
+					"There is no free or title search field");
+		query.add(new SearchQuery(field, "fasgeadstrehdaxydsfstrgdfjxnvgfhdtnbfgn"));
 		try {
 			SearchRequestResult res = api.search(query);
 			assertTrue(res.getTotal_result_count() == 0);
@@ -117,13 +99,13 @@ public class LibraryApiTestCases extends TestCase {
 
 	@Test
 	public void testSearchScrolling() throws NotReachableException,
-			IOException, OpacErrorException {
-		Map<String, String> query = new HashMap<String, String>();
-		if (Arrays.asList(api.getSearchFields()).contains(
-				OpacApi.KEY_SEARCH_QUERY_FREE))
-			query.put(OpacApi.KEY_SEARCH_QUERY_FREE, "harry");
-		else
-			query.put(OpacApi.KEY_SEARCH_QUERY_TITLE, "harry");
+			IOException, OpacErrorException, JSONException {
+		List<SearchQuery> query = new ArrayList<SearchQuery>();
+		SearchField field = findFreeSearchOrTitle(fields);
+		if (field == null)
+			throw new OpacErrorException( //TODO: prevent this
+					"There is no free or title search field");
+		query.add(new SearchQuery(field, "harry"));
 		SearchRequestResult res = api.search(query);
 		assertTrue(res.getResults().size() <= res.getTotal_result_count());
 		assertTrue(res.getResults().size() > 0);
@@ -154,7 +136,8 @@ public class LibraryApiTestCases extends TestCase {
 		assertTrue(detail.getDetails().size() > 0);
 		if (detail.isReservable())
 			assertTrue(detail.getReservation_info() != null);
-		if (result.getId() != null && detail.getId() != null && !detail.getId().equals("")) {
+		if (result.getId() != null && detail.getId() != null
+				&& !detail.getId().equals("")) {
 			assertTrue(result.getId().equals(detail.getId()));
 		}
 		if (detail.getTitle() != null) {
@@ -175,5 +158,58 @@ public class LibraryApiTestCases extends TestCase {
 	static String readFile(String path, Charset encoding) throws IOException {
 		byte[] encoded = Files.readAllBytes(Paths.get(path));
 		return encoding.decode(ByteBuffer.wrap(encoded)).toString();
+	}
+
+	/**
+	 * @param fields
+	 *            List of SearchFields
+	 * @return The first free search field from the list. If there is none, the
+	 *         title search fields and if that doesn't exist
+	 *         either, null
+	 */
+	private SearchField findFreeSearchOrTitle(List<SearchField> fields) {
+		for (SearchField field : fields) {
+			if (field instanceof TextSearchField
+					&& ((TextSearchField) field).isFreeSearch())
+				return field;
+		}
+		for (SearchField field : fields) {
+			if (field instanceof TextSearchField
+					&& field.getMeaning() == Meaning.TITLE)
+				return field;
+		}
+		return null;
+	}
+	
+	public static OpacApi getApi(Library library) {
+		OpacApi api = null;
+		if (library.getApi().equals("bond26")
+				|| library.getApi().equals("bibliotheca"))
+			// Backwardscompatibility
+			api = new Bibliotheca();
+		else if (library.getApi().equals("oclc2011")
+				|| library.getApi().equals("sisis"))
+			// Backwards compatibility
+			api = new SISIS();
+		else if (library.getApi().equals("zones22"))
+			api = new Zones22();
+		else if (library.getApi().equals("biber1992"))
+			api = new BiBer1992();
+		else if (library.getApi().equals("pica"))
+			api = new Pica();
+		else if (library.getApi().equals("iopac"))
+			api = new IOpac();
+		else if (library.getApi().equals("adis"))
+			api = new Adis();
+		else if (library.getApi().equals("sru"))
+			api = new SRU();
+		else if (library.getApi().equals("winbiap"))
+			api = new WinBiap();
+		else if (library.getApi().equals("webopac.net"))
+			api = new WebOpacNet();
+		else
+			api = null;
+		api.init(library);
+		return api;
 	}
 }

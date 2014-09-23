@@ -3,6 +3,16 @@
     "city": "Friedrichshafen", 
     "country": "Deutschland", 
     "data": {
+        "accounttable": {
+            "author": 7, 
+            "barcode": 4, 
+            "homebranch": -1, 
+            "lendingbranch": -1, 
+            "prolongurl": 4, 
+            "returndate": 3, 
+            "status": 5, 
+            "title": 7
+        }, 
         "baseurl": "http://medienkatalog.friedrichshafen.de", 
         "copiestable": {
             "barcode": 3, 
@@ -39,6 +49,6 @@
         9.4800113
     ], 
     "state": "Baden-W\u00fcrttemberg", 
-    "support": "Katalogsuche", 
+    "support": "Katalogsuche und Konto", 
     "title": "Medienhaus am See"
 }

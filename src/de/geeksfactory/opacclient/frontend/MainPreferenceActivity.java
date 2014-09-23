@@ -33,8 +33,8 @@ import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.reminder.ReminderCheckService;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
-import de.geeksfactory.opacclient.storage.MetaDataSource;
-import de.geeksfactory.opacclient.storage.SQLMetaDataSource;
+import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
+import de.geeksfactory.opacclient.storage.SearchFieldDataSource;
 
 public class MainPreferenceActivity extends OpacPreferenceActivity {
 
@@ -76,21 +76,17 @@ public class MainPreferenceActivity extends OpacPreferenceActivity {
 		meta.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference arg0) {
-				MetaDataSource data = new SQLMetaDataSource(
-						MainPreferenceActivity.this);
-				try {
-					data.open();
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
-				data.clearMeta();
-				data.close();
 				AccountDataSource adata = new AccountDataSource(
 						MainPreferenceActivity.this);
 				adata.open();
 				adata.invalidateCachedData();
 				adata.notificationClearCache(true);
 				adata.close();
+
+				SearchFieldDataSource sfdata = new JsonSearchFieldDataSource(
+						MainPreferenceActivity.this);
+				sfdata.clearAll();
+
 				Intent i = new Intent(MainPreferenceActivity.this,
 						ReminderCheckService.class);
 				startService(i);

@@ -1,7 +1,7 @@
 {
-    "api": "bibliotheca", 
-    "city": "Hockenheim", 
-    "country": "Deutschland", 
+    "api": "bibliotheca",
+    "city": "Erlangen",
+    "country": "Deutschland",
     "data": {
         "accounttable": {
             "author": 0, 
@@ -13,22 +13,17 @@
             "status": -1, 
             "title": 1
         }, 
-        "baseurl": "http://hockenheim.internetopac.de", 
+        "baseurl": "http://siemens-bibliothek-erlangen.internetopac.de",
         "copiestable": {
             "barcode": 0, 
             "branch": 4, 
-            "department": 2, 
-            "location": 1, 
-            "reservations": -1, 
+            "department": 1, 
+            "location": 2, 
+            "reservations": 6, 
             "returndate": 5, 
             "status": 3
         }, 
-        "information": "http://www.hockenheim.de/main/bildung_kultur/bibliothek", 
-        "mediatypes": {
-            "mCasetteS.gif": "AUDIO_CASSETTE", 
-            "mDVDS.gif": "DVD", 
-            "mFilmS.gif": "MOVIE"
-        }, 
+        "information": "https://w9.siemens.com/cms/regionalreferat-erlnbg/de/sb/Seiten/home.aspx",
         "reservationtable": {
             "author": 0, 
             "availability": 2, 
@@ -37,12 +32,12 @@
             "expirationdate": -1, 
             "title": 1
         }
-    }, 
+    },
     "geo": [
-        49.31955199999999, 
-        8.5498581
-    ], 
-    "state": "Baden-W\u00fcrttemberg", 
-    "support": "Katalogsuche und Konto", 
-    "title": "Stadtb\u00fccherei"
+        49.5896744,
+        11.0119611
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche und Konto",
+    "title": "Siemens Werksbibliothek"
 }

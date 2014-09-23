@@ -21,20 +21,19 @@
  */
 package de.geeksfactory.opacclient.frontend;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
+import org.holoeverywhere.preference.PreferenceManager;
+import org.holoeverywhere.preference.SharedPreferences;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -52,10 +51,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
-import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.frontend.OpacActivity.AccountSelectedListener;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Starred;
+import de.geeksfactory.opacclient.searchfields.SearchField;
+import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
+import de.geeksfactory.opacclient.searchfields.SearchQuery;
+import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
 import de.geeksfactory.opacclient.storage.StarDataSource;
 import de.geeksfactory.opacclient.storage.StarDatabase;
 
@@ -100,12 +102,18 @@ public class StarredFragment extends Fragment implements
 
 					SharedPreferences sp = PreferenceManager
 							.getDefaultSharedPreferences(getActivity());
-					Map<String, String> query = new HashMap<String, String>();
-					query.put(OpacApi.KEY_SEARCH_QUERY_TITLE, item.getTitle());
-					query.put(
-							OpacApi.KEY_SEARCH_QUERY_HOME_BRANCH,
-							sp.getString(OpacClient.PREF_HOME_BRANCH_PREFIX
-									+ app.getAccount().getId(), null));
+					List<SearchQuery> query = new ArrayList<SearchQuery>();
+					List<SearchField> fields = new JsonSearchFieldDataSource(
+							app).getSearchFields(app.getLibrary().getIdent());
+					for (SearchField field : fields) {
+						if (field.getMeaning() == Meaning.TITLE) {
+							query.add(new SearchQuery(field, item.getTitle()));
+						} else if (field.getMeaning() == Meaning.HOME_BRANCH) {
+							query.add(new SearchQuery(field, sp.getString(
+									OpacClient.PREF_HOME_BRANCH_PREFIX
+											+ app.getAccount().getId(), null)));
+						}
+					}
 					app.startSearch(getActivity(), query);
 				} else {
 					mCallback.showDetail(item.getMNr());

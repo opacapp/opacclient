@@ -30,7 +30,12 @@ import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.Status;
-import de.geeksfactory.opacclient.storage.MetaDataSource;
+import de.geeksfactory.opacclient.searchfields.BarcodeSearchField;
+import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
+import de.geeksfactory.opacclient.searchfields.SearchField;
+import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
+import de.geeksfactory.opacclient.searchfields.SearchQuery;
+import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
 /**
  * 
@@ -101,59 +106,17 @@ import de.geeksfactory.opacclient.storage.MetaDataSource;
 public class WinBiap extends BaseApi implements OpacApi {
 
 	protected String opac_url = "";
-	protected MetaDataSource metadata;
 	protected JSONObject data;
 	protected Library library;
 	protected List<List<NameValuePair>> query;
 
 	@Override
 	public void start() throws IOException, NotReachableException {
-		try {
-			metadata.open();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		if (!metadata.hasMeta(library.getIdent())) {
-			metadata.close();
-			extract_meta();
-		} else {
-			metadata.close();
-		}
+
 	}
 
-	public void extract_meta() {
-		String html;
-		try {
-			html = httpGet(opac_url + "/search.aspx", getDefaultEncoding());
-			Document doc = Jsoup.parse(html);
-			Elements mediaGroupOptions = doc
-					.select("#ctl00_ContentPlaceHolderMain_searchPanel_ListBoxMediagroups_ListBoxMultiselection option");
-			Elements branchOptions = doc
-					.select("#ctl00_ContentPlaceHolderMain_searchPanel_MultiSelectionBranch_ListBoxMultiselection option");
-			try {
-				metadata.open();
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-			metadata.clearMeta(library.getIdent());
-
-			for (Element option : mediaGroupOptions) {
-				metadata.addMeta(MetaDataSource.META_TYPE_CATEGORY,
-						library.getIdent(), option.attr("value"), option.text());
-			}
-			for (Element option : branchOptions) {
-				metadata.addMeta(MetaDataSource.META_TYPE_BRANCH,
-						library.getIdent(), option.attr("value"), option.text());
-			}
-			metadata.close();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-	}
-
-	public void init(MetaDataSource metadata, Library lib) {
-		super.init(metadata, lib);
-		this.metadata = metadata;
+	public void init(Library lib) {
+		super.init(lib);
 		this.library = lib;
 		this.data = lib.getData();
 
@@ -244,8 +207,10 @@ public class WinBiap extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public SearchRequestResult search(Map<String, String> query)
+	public SearchRequestResult search(List<SearchQuery> queries)
 			throws IOException, NotReachableException, OpacErrorException {
+		Map<String, String> query = searchQueryListToMap(queries);
+		
 		List<List<NameValuePair>> queryParams = new ArrayList<List<NameValuePair>>();
 
 		int index = 0;
@@ -559,14 +524,114 @@ public class WinBiap extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public String[] getSearchFields() {
-		return new String[] { KEY_SEARCH_QUERY_FREE, KEY_SEARCH_QUERY_AUTHOR,
-				KEY_SEARCH_QUERY_TITLE, KEY_SEARCH_QUERY_KEYWORDA,
-				KEY_SEARCH_QUERY_AUDIENCE, KEY_SEARCH_QUERY_SYSTEM,
-				KEY_SEARCH_QUERY_ISBN, KEY_SEARCH_QUERY_PUBLISHER,
-				KEY_SEARCH_QUERY_BARCODE, KEY_SEARCH_QUERY_YEAR_RANGE_START,
-				KEY_SEARCH_QUERY_YEAR_RANGE_END, KEY_SEARCH_QUERY_BRANCH,
-				KEY_SEARCH_QUERY_CATEGORY };
+	public List<SearchField> getSearchFields() throws IOException {
+		// extract branches and categories
+		String html = httpGet(opac_url + "/search.aspx", getDefaultEncoding());
+		Document doc = Jsoup.parse(html);
+		Elements mediaGroupOptions = doc
+				.select("#ctl00_ContentPlaceHolderMain_searchPanel_ListBoxMediagroups_ListBoxMultiselection option");
+		Elements branchOptions = doc
+				.select("#ctl00_ContentPlaceHolderMain_searchPanel_MultiSelectionBranch_ListBoxMultiselection option");
+		
+		List<Map<String, String>> mediaGroups = new ArrayList<Map<String, String>>();
+		List<Map<String, String>> branches = new ArrayList<Map<String, String>>();
+
+		Map<String, String> all = new HashMap<String, String>();
+		all.put("key", "");
+		all.put("value", "Alle");
+		mediaGroups.add(all);
+		branches.add(all);
+		
+		for (Element option : mediaGroupOptions) {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("key", option.attr("value"));
+			map.put("value", option.text());
+			mediaGroups.add(map);
+		}
+		for (Element option : branchOptions) {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("key", option.attr("value"));
+			map.put("value", option.text());
+			branches.add(map);
+		}
+		
+		List<SearchField> searchFields = new ArrayList<SearchField>();
+		
+		SearchField field = new TextSearchField(KEY_SEARCH_QUERY_FREE, "",
+				false, false, "Beliebig", true, false);
+		field.setMeaning(Meaning.FREE);
+		searchFields.add(field);
+		
+		field = new TextSearchField(KEY_SEARCH_QUERY_AUTHOR,
+				"Autor", false, false, "Nachname, Vorname", false,
+				false);
+		field.setMeaning(Meaning.AUTHOR);
+		searchFields.add(field);
+		
+		field = new TextSearchField(KEY_SEARCH_QUERY_TITLE,
+				"Titel", false, false, "Stichwort", false, false);
+		field.setMeaning(Meaning.TITLE);
+		searchFields.add(field);
+		
+		field = new TextSearchField(KEY_SEARCH_QUERY_KEYWORDA,
+				"Schlagwort", true, false, "", false, false);
+		field.setMeaning(Meaning.KEYWORD);
+		searchFields.add(field);
+		
+		field = new TextSearchField(KEY_SEARCH_QUERY_AUDIENCE,
+				"Interessenkreis", true, false, "", false, false);
+		field.setMeaning(Meaning.AUDIENCE);
+		searchFields.add(field);
+		
+		field = new TextSearchField(KEY_SEARCH_QUERY_SYSTEM,
+				"Systematik", true, false, "", false, false);
+		field.setMeaning(Meaning.SYSTEM);
+		searchFields.add(field);
+		
+		field = new BarcodeSearchField(KEY_SEARCH_QUERY_ISBN,
+				"Strichcode", false, false, "ISBN");
+		field.setMeaning(Meaning.ISBN);
+		searchFields.add(field);
+		
+		field = new TextSearchField(KEY_SEARCH_QUERY_PUBLISHER,
+				"Verlag", false, false, "", false, false);
+		field.setMeaning(Meaning.PUBLISHER);
+		searchFields.add(field);
+		
+		field = new BarcodeSearchField(
+				KEY_SEARCH_QUERY_BARCODE, "Strichcode", false, true,
+				"Mediennummer");
+		field.setMeaning(Meaning.BARCODE);
+		searchFields.add(field);
+		
+		field = new TextSearchField(
+				KEY_SEARCH_QUERY_YEAR_RANGE_START, "Jahr", false, false,
+				"von", false, true);
+		field.setMeaning(Meaning.YEAR);
+		searchFields.add(field);
+	
+		field = new TextSearchField(
+				KEY_SEARCH_QUERY_YEAR_RANGE_END, "Jahr", false, true,
+				"bis", false, true);
+		field.setMeaning(Meaning.YEAR);
+		searchFields.add(field);
+		
+		field = new DropdownSearchField(
+				KEY_SEARCH_QUERY_BRANCH, "Zweigstelle", false, branches);
+		field.setMeaning(Meaning.BRANCH);
+		searchFields.add(field);
+		
+		field = new DropdownSearchField(
+				KEY_SEARCH_QUERY_CATEGORY, "Mediengruppe", false, mediaGroups);
+		field.setMeaning(Meaning.CATEGORY);
+		searchFields.add(field);
+		
+		return searchFields;
+	}
+	
+	@Override
+	public boolean shouldUseMeaningDetector() {
+		return false;
 	}
 
 	@Override
