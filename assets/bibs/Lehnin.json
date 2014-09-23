@@ -1,0 +1,38 @@
+{
+    "api": "bibliotheca",
+    "city": "Lehnin",
+    "country": "Deutschland",
+    "data": {
+        "accounttable": {
+            "author": 0,
+            "prolongurl": 3,
+            "returndate": 2,
+            "title": 1
+        },
+        "baseurl": "http://www.potsdam-mittelmark.de/webOPAC",
+        "copiestable": {
+            "location": 0,
+            "status": 1
+        },
+        "db": "webb_kle",
+        "information": "http://www.klosterlehnin.de/verzeichnis/visitenkarte.php?mandat=3872",
+        "mediatypes": {
+            "mCasetteS.gif": "AUDIO_CASSETTE",
+            "mDVDS.gif": "DVD",
+            "mFilmS.gif": "MOVIE"
+        },
+        "reservationtable": {
+            "author": 0,
+            "availability": 2,
+            "cancelurl": 3,
+            "title": 1
+        }
+    },
+    "geo": [
+        52.3082956,
+        12.7444476
+    ],
+    "state": "Brandenburg",
+    "support": "Katalogsuche und Konto",
+    "title": "Bibliothek Bettina von Arnim"
+}

@@ -1,378 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:paddingLeft="@dimen/tablet_padding_or_zero"
-    android:paddingRight="@dimen/tablet_padding_or_zero" >
+    android:layout_height="fill_parent" >
 
-    <RelativeLayout
-        android:id="@+id/rlOuter"
+    <FrameLayout
+        android:id="@+id/error_view"
         android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </FrameLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/tablet_panel_bg"
-        android:orientation="vertical" >
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/tablet_padding_or_zero"
+        android:paddingRight="@dimen/tablet_padding_or_zero" >
 
         <RelativeLayout
-            android:id="@+id/rlSimpleSearch"
+            android:id="@+id/rlOuter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/account_head_bg"
-            android:orientation="vertical"
-            android:padding="8dp" >
-
-            <EditText
-                android:id="@+id/etSimpleSearch"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:ems="10"
-                android:hint="@string/search_free"
-                android:inputType="text"
-                android:textColor="@color/account_head_fg" >
-
-                <requestFocus />
-            </EditText>
-        </RelativeLayout>
-
-        <LinearLayout
-            android:id="@+id/llForm"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/rlSimpleSearch"
-            android:orientation="vertical"
-            android:padding="8dp" >
+            android:background="@drawable/tablet_panel_bg"
+            android:orientation="vertical" >
 
             <RelativeLayout
-                android:id="@+id/rlReplaced"
+                android:id="@+id/rlSimpleSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
-                android:background="@color/note_replacedby"
-                android:padding="4dp"
-                android:visibility="gone" >
+                android:background="@color/account_head_bg"
+                android:orientation="vertical"
+                android:padding="8dp" >
 
-                <ImageView
-                    android:id="@+id/ivReplacedStore"
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/etSimpleSearch"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:contentDescription="@string/replacedby"
-                    android:src="@drawable/playstore" />
+                    android:layout_alignParentTop="true"
+                    android:ems="10"
+                    android:hint="@string/search_free"
+                    android:inputType="text"
+                    android:textColor="@color/account_head_fg" >
 
-                <TextView
-                    android:id="@+id/tvReplacedNote"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/ivReplacedStore"
-                    android:text="@string/replacedby" />
+                    <requestFocus />
+                </EditText>
             </RelativeLayout>
 
-            <org.holoeverywhere.widget.TextView
-                android:id="@+id/tvSearchAdvHeader"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="8dp"
-                android:drawableBottom="@drawable/section_header"
-                android:drawablePadding="4dp"
-                android:paddingLeft="4dp"
-                android:text="@string/search_advanced"
-                android:textAllCaps="true"
-                android:textColor="@color/emphasis"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/tvTitel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/titel" />
-
-            <EditText
-                android:id="@+id/etTitel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/titel_hint"
-                android:inputType="text"
-                android:singleLine="true" >
-            </EditText>
-
-            <TextView
-                android:id="@+id/tvVerfasser"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:singleLine="true"
-                android:text="@string/verfasser" />
-
-            <EditText
-                android:id="@+id/etVerfasser"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/verfasser_hint"
-                android:inputType="text"
-                android:singleLine="true" />
-
-            <CheckBox
-                android:id="@+id/cbDigital"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/digital" />
-
-            <CheckBox
-                android:id="@+id/cbAvailable"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/available" />
-
-            <TextView
-                android:id="@+id/tvBarcodes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:text="@string/barcodes" />
-
             <LinearLayout
-                android:id="@+id/llBarcodes"
+                android:id="@+id/llForm"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rlSimpleSearch"
+                android:orientation="vertical"
+                android:padding="8dp" >
 
-                <EditText
-                    android:id="@+id/etISBN"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:id="@+id/rlReplaced"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:hint="@string/ISBN"
-                    android:singleLine="true" />
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/note_replacedby"
+                    android:padding="4dp"
+                    android:visibility="gone" >
 
-                <EditText
-                    android:id="@+id/etBarcode"
-                    android:layout_width="wrap_content"
+                    <ImageView
+                        android:id="@+id/ivReplacedStore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:contentDescription="@string/replacedby"
+                        android:src="@drawable/playstore" />
+
+                    <TextView
+                        android:id="@+id/tvReplacedNote"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/ivReplacedStore"
+                        android:text="@string/replacedby" />
+                </RelativeLayout>
+
+                <org.holoeverywhere.widget.TextView
+                    android:id="@+id/tvSearchAdvHeader"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:hint="@string/barcode_internal"
-                    android:singleLine="true" />
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="8dp"
+                    android:drawableBottom="@drawable/section_header"
+                    android:drawablePadding="4dp"
+                    android:paddingLeft="4dp"
+                    android:text="@string/search_advanced"
+                    android:textAllCaps="true"
+                    android:textColor="@color/emphasis"
+                    android:textSize="14sp" />
 
-                <ImageView
-                    android:id="@+id/ivBarcode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:contentDescription="@string/barcodes"
-                    android:src="@drawable/ic_barcode" />
+                <LinearLayout
+                    android:id="@+id/llFormFields"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+                </LinearLayout>
+                
+                <LinearLayout
+			        android:id="@+id/llExpand"
+			        android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:background="@drawable/list_selector_holo_light"
+			        android:clickable="true"
+			        android:focusable="true"
+			        android:padding="16dp" >
+			
+			        <ImageView
+			            android:id="@+id/ivExpandIcon"
+			            android:layout_width="wrap_content"
+			            android:contentDescription="@string/expand"
+			            android:layout_height="wrap_content"
+			            android:src="@drawable/ic_action_expand" />
+			
+			        <TextView
+			            android:id="@+id/tvExpandString"
+			            android:layout_width="0dp"
+			            android:layout_height="wrap_content"
+			            android:layout_gravity="center"
+			            android:layout_marginLeft="8dp"
+			            android:layout_weight="1"
+			            android:text="@string/expand" />
+			    </LinearLayout>
+                
+                <LinearLayout
+                    android:id="@+id/llAdvancedFields"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone" >
+                </LinearLayout>
             </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
 
-            <TextView
-                android:id="@+id/tvJahr"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:text="@string/jahr" />
-
-            <EditText
-                android:id="@+id/etJahr"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number" />
-
-            <LinearLayout
-                android:id="@+id/llJahr"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-                <EditText
-                    android:id="@+id/etJahrVon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:hint="@string/jahr_von"
-                    android:inputType="number" />
-
-                <EditText
-                    android:id="@+id/etJahrBis"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:hint="@string/jahr_bis"
-                    android:inputType="number" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/tvZweigstelle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:text="@string/zweigstelleSearch" />
-
-            <LinearLayout
-                android:id="@+id/llBranch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
-
-                <org.holoeverywhere.widget.Spinner
-                    android:id="@+id/cbBranch"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <org.holoeverywhere.widget.ProgressBar
-                    android:id="@+id/pbBranch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:visibility="gone" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/tvHomeBranch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:text="@string/homebranch" />
-
-            <LinearLayout
-                android:id="@+id/llHomeBranch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
-
-                <org.holoeverywhere.widget.Spinner
-                    android:id="@+id/cbHomeBranch"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <org.holoeverywhere.widget.ProgressBar
-                    android:id="@+id/pbHomeBranch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:visibility="gone" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/tvMediengruppe"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:text="@string/mediengruppe" />
-
-            <LinearLayout
-                android:id="@+id/llMediengruppe"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
-
-                <org.holoeverywhere.widget.Spinner
-                    android:id="@+id/cbMediengruppe"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <org.holoeverywhere.widget.ProgressBar
-                    android:id="@+id/pbMediengruppe"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:visibility="gone" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/tvVerlag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:text="@string/verlag" />
-
-            <EditText
-                android:id="@+id/etVerlag"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="text"
-                android:singleLine="true" />
-
-            <TextView
-                android:id="@+id/tvSchlag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:text="@string/schlag" />
-
-            <LinearLayout
-                android:id="@+id/llSchlag"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-                <EditText
-                    android:id="@+id/etSchlagA"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="text"
-                    android:singleLine="true" />
-
-                <EditText
-                    android:id="@+id/etSchlagB"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="text"
-                    android:singleLine="true" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/tvSystematik"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:text="@string/systematik" />
-
-            <EditText
-                android:id="@+id/etSystematik"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="text"
-                android:singleLine="true" />
-
-            <TextView
-                android:id="@+id/tvInteressenkreis"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:text="@string/interessenkreis" />
-
-            <EditText
-                android:id="@+id/etInteressenkreis"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="text"
-                android:singleLine="true" />
-
-            <TextView
-                android:id="@+id/tvOrder"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:text="@string/order" />
-
-            <org.holoeverywhere.widget.Spinner
-                android:id="@+id/cbOrder"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:entries="@array/orders" />
-        </LinearLayout>
-    </RelativeLayout>
-
-</ScrollView>
+</FrameLayout>

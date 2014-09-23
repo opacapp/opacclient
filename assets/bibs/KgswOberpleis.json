@@ -4,10 +4,10 @@
     "country": "Deutschland", 
     "data": {
         "accounttable": {
-            "author": 0, 
-            "prolongurl": 3, 
-            "returndate": 2, 
-            "title": 1
+            "author": 1, 
+            "prolongurl": 4, 
+            "returndate": 3, 
+            "title": 2
         }, 
         "baseurl": "http://bib-opl.dyndns.org/webopac", 
         "copiestable": {
@@ -31,10 +31,10 @@
             "zeitung.gif": "MAGAZINE"
         }, 
         "reservationtable": {
-            "author": 0, 
-            "availability": 2, 
-            "cancelurl": 3, 
-            "title": 1
+            "author": 1, 
+            "availability": 3, 
+            "cancelurl": 4, 
+            "title": 2
         }
     }, 
     "geo": [

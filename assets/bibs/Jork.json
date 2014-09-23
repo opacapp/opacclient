@@ -1,0 +1,16 @@
+{
+    "api": "iopac",
+    "city": "Jork",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://jork.iopac.de",
+        "information": "http://www.jork.de/portal/seiten/buecherei-904000084-20380.html"
+    },
+    "geo": [
+        53.53219319999999,
+        9.6838518
+    ],
+    "state": "Niedersachsen",
+    "support": "Katalogsuche und Konto",
+    "title": "B\u00fccherei"
+}

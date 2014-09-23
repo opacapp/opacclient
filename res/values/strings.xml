@@ -263,5 +263,7 @@
     <string name="search_libraries_hint">Bibliothek suchen…</string>
     <string name="action_search">Suchen</string>
     <string name="snooze">Morgen erneut erinnern</string>
+    <string name="expand">Mehr Suchfelder anzeigen</string>
+    <string name="collapse">Weniger Suchfelder anzeigen</string>
 
 </resources>

@@ -5,7 +5,6 @@
     "data": {
         "accountSupported": true, 
         "baseurl": "https://pica1l.ulb.tu-darmstadt.de", 
-        "charset": "ISO-8859-1", 
         "db": "FHBDA", 
         "information": "http://bib.h-da.de/", 
         "searchindex": {

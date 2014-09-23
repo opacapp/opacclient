@@ -1,0 +1,16 @@
+{
+    "api": "iopac",
+    "city": "Nieb\u00fcll",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://217.7.231.217",
+        "information": "http://www.stadtbuecherei-niebuell.de/de/index_de.html"
+    },
+    "geo": [
+        54.7874263,
+        8.8308426
+    ],
+    "state": "Schleswig-Holstein",
+    "support": "Katalogsuche und Konto",
+    "title": "Stadtb\u00fccherei"
+}

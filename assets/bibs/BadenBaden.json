@@ -4,24 +4,24 @@
     "country": "Deutschland",
     "data": {
         "accounttable": {
-            "author": 7, 
+            "author": 8, 
             "barcode": 4, 
             "homebranch": -1, 
             "lendingbranch": -1, 
             "prolongurl": 4, 
             "returndate": 3, 
             "status": 5, 
-            "title": 7
+            "title": 8
         }, 
         "baseurl": "http://wwwopac.baden-baden.de",
         "copiestable": {
             "barcode": -1, 
             "branch": 0, 
-            "department": 1, 
-            "location": 2, 
+            "department": -1, 
+            "location": 1, 
             "reservations": -1, 
             "returndate": -1, 
-            "status": 4
+            "status": 2
         }, 
         "information": "http://www.baden-baden.de/de/buergerservice/stadtbibliothek/",
         "mediatypes": {
@@ -31,9 +31,13 @@
             "111": "MOVIE", 
             "112": "DVD", 
             "19": "BOOK", 
+            "98": "BOOK", 
+            "101": "BOOK", 
+            "102": "BOOK", 
 			"8": "SCORE_MUSIC",
             "20": "AUDIOBOOK", 
             "30": "EBOOK", 
+            "53": "EBOOK", 
             "4": "GAME_CONSOLE_WII", 
             "32": "CD", 
             "6": "CD_MUSIC", 
@@ -45,11 +49,7 @@
         "searchtable": [
             2, 
             3 
-        ],
-		"copiestable": {
-			"location": 0,
-			"status": 2
-		}
+        ]
     },
     "geo": [
         48.76564,

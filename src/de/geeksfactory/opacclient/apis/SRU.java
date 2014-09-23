@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,13 +27,17 @@ import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
-import de.geeksfactory.opacclient.storage.MetaDataSource;
+import de.geeksfactory.opacclient.searchfields.BarcodeSearchField;
+import de.geeksfactory.opacclient.searchfields.CheckboxSearchField;
+import de.geeksfactory.opacclient.searchfields.SearchField;
+import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
+import de.geeksfactory.opacclient.searchfields.SearchQuery;
+import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
 public class SRU extends BaseApi implements OpacApi {
 	
 	protected String opac_url = "";
 	protected JSONObject data;
-	protected MetaDataSource metadata;
 	protected boolean initialised = false;
 	protected Library library;
 	protected int resultcount = 10;
@@ -54,10 +59,9 @@ public class SRU extends BaseApi implements OpacApi {
 	}
 	
 	@Override
-	public void init(MetaDataSource metadata, Library lib) {
-		super.init(metadata, lib);
+	public void init(Library lib) {
+		super.init(lib);
 
-		this.metadata = metadata;
 		this.library = lib;
 		this.data = lib.getData();
 
@@ -105,17 +109,7 @@ public class SRU extends BaseApi implements OpacApi {
 
 	@Override
 	public void start() throws IOException, NotReachableException {
-		try {
-			metadata.open();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		if (!metadata.hasMeta(library.getIdent())) {
-			metadata.close();
-			//extract_meta();
-		} else {
-			metadata.close();
-		}
+
 	}
 	
 	protected int addParameters(Map<String, String> query, String key, String searchkey,
@@ -129,8 +123,9 @@ public class SRU extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public SearchRequestResult search(Map<String, String> query) throws IOException,
-			NotReachableException, OpacErrorException {
+	public SearchRequestResult search(List<SearchQuery> queryList)
+			throws NotReachableException, IOException, OpacErrorException {
+		Map<String, String> query = searchQueryListToMap(queryList);
 		StringBuilder params = new StringBuilder();
 
 		int index = 0;
@@ -299,8 +294,126 @@ public class SRU extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public String[] getSearchFields() {
-		return searchQueries.keySet().toArray(new String[0]);
+	public List<SearchField> getSearchFields() throws OpacErrorException, NotReachableException {
+		List<SearchField> searchFields = new ArrayList<SearchField>();
+		Set<String> fieldsCompat = searchQueries.keySet();
+
+		Map<String, String> all = new HashMap<String, String>();
+		all.put("key", "");
+		all.put("value", "Alle");
+
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_FREE)) {
+			SearchField field = new TextSearchField(KEY_SEARCH_QUERY_FREE, "",
+					false, false, "Freie Suche", true, false);
+			field.setMeaning(Meaning.FREE);
+			searchFields.add(field);
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_TITLE)) {
+			SearchField field = new TextSearchField(KEY_SEARCH_QUERY_TITLE,
+					"Titel", false, false, "Stichwort", false, false);
+			field.setMeaning(Meaning.TITLE);
+			searchFields.add(field);
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_AUTHOR)) {
+			SearchField field = new TextSearchField(KEY_SEARCH_QUERY_AUTHOR,
+					"Verfasser", false, false, "Nachname, Vorname", false,
+					false);
+			field.setMeaning(Meaning.AUTHOR);
+			searchFields.add(field);
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_PUBLISHER)) {
+			SearchField field = new TextSearchField(KEY_SEARCH_QUERY_PUBLISHER,
+					"Verlag", false, false, "", false, false);
+			field.setMeaning(Meaning.PUBLISHER);
+			searchFields.add(field);
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_DIGITAL)) {
+			SearchField field = new CheckboxSearchField(
+					KEY_SEARCH_QUERY_DIGITAL, "nur digitale Medien", false);
+			field.setMeaning(Meaning.DIGITAL);
+			searchFields.add(field);
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_AVAILABLE)) {
+			SearchField field = new CheckboxSearchField(
+					KEY_SEARCH_QUERY_AVAILABLE, "nur verfügbare Medien", false);
+			field.setMeaning(Meaning.AVAILABLE);
+			searchFields.add(field);
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_ISBN)) {
+			SearchField field = new BarcodeSearchField(KEY_SEARCH_QUERY_ISBN,
+					"Strichcode", false, false, "ISBN");
+			field.setMeaning(Meaning.ISBN);
+			searchFields.add(field);
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_BARCODE)) {
+			SearchField field = new BarcodeSearchField(
+					KEY_SEARCH_QUERY_BARCODE, "Strichcode", false, true,
+					"Buchungsnr.");
+			field.setMeaning(Meaning.BARCODE);
+			searchFields.add(field);
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_YEAR)) {
+			SearchField field = new TextSearchField(KEY_SEARCH_QUERY_YEAR,
+					"Jahr", false, false, "", false, true);
+			field.setMeaning(Meaning.YEAR);
+			searchFields.add(field);
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_YEAR_RANGE_START)) {
+			SearchField field = new TextSearchField(
+					KEY_SEARCH_QUERY_YEAR_RANGE_START, "Jahr", false, false,
+					"von", false, true);
+			field.setMeaning(Meaning.YEAR);
+			searchFields.add(field);
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_YEAR_RANGE_END)) {
+			SearchField field = new TextSearchField(
+					KEY_SEARCH_QUERY_YEAR_RANGE_END, "Jahr", false, true,
+					"bis", false, true);
+			field.setMeaning(Meaning.YEAR);
+			searchFields.add(field);
+		}
+
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_PUBLISHER)) {
+			SearchField field = new TextSearchField(KEY_SEARCH_QUERY_PUBLISHER,
+					"Verlag", false, false, "", false, false);
+			field.setMeaning(Meaning.PUBLISHER);
+			searchFields.add(field);
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_KEYWORDA)) {
+			SearchField field = new TextSearchField(KEY_SEARCH_QUERY_KEYWORDA,
+					"Schlagwort", true, false, "", false, false);
+			field.setMeaning(Meaning.KEYWORD);
+			searchFields.add(field);
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_KEYWORDB)) {
+			SearchField field = new TextSearchField(KEY_SEARCH_QUERY_KEYWORDB,
+					"Schlagwort", true, true, "", false, false);
+			field.setMeaning(Meaning.KEYWORD);
+			searchFields.add(field);
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_SYSTEM)) {
+			SearchField field = new TextSearchField(KEY_SEARCH_QUERY_SYSTEM,
+					"Systematik", true, false, "", false, false);
+			field.setMeaning(Meaning.SYSTEM);
+			searchFields.add(field);
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_AUDIENCE)) {
+			SearchField field = new TextSearchField(KEY_SEARCH_QUERY_AUDIENCE,
+					"Interessenkreis", true, false, "", false, false);
+			field.setMeaning(Meaning.AUDIENCE);
+			searchFields.add(field);
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_LOCATION)) {
+			SearchField field = new TextSearchField(KEY_SEARCH_QUERY_LOCATION,
+					"Ort", false, false, "", false, false);
+			field.setMeaning(Meaning.LOCATION);
+			searchFields.add(field);
+		}
+		if (fieldsCompat.contains(KEY_SEARCH_QUERY_ORDER)) {
+			// TODO: Implement this (was this even usable before?)
+		}
+		
+		return searchFields;
 	}
 
 	@Override

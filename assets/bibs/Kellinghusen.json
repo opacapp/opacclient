@@ -1,0 +1,16 @@
+{
+    "api": "iopac",
+    "city": "Kellinghusen",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://server1.buergerhaus-kellinghusen.de",
+        "information": "http://www.buecherei-kellinghusen.de/"
+    },
+    "geo": [
+        53.95402550000001,
+        9.7157793
+    ],
+    "state": "Schleswig-Holstein",
+    "support": "Katalogsuche und Konto",
+    "title": "Stadtb\u00fccherei"
+}

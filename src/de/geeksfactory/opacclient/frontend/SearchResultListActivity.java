@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.Window;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
@@ -55,7 +54,7 @@ public class SearchResultListActivity extends OpacActivity implements
 		// Show the Up button in the action bar.
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		if(savedInstanceState == null)
+		if (savedInstanceState == null)
 			setup();
 
 		if (findViewById(R.id.searchresult_detail_container) != null) {
@@ -68,8 +67,14 @@ public class SearchResultListActivity extends OpacActivity implements
 	}
 
 	protected void setup() {
-		listFragment = SearchResultListFragment.getInstance(getIntent()
-				.getBundleExtra("query"));
+		if (getIntent().hasExtra("volumeQuery")) {
+			listFragment = SearchResultListFragment
+					.getVolumeSearchInstance(getIntent().getBundleExtra(
+							"volumeQuery"));
+		} else {
+			listFragment = SearchResultListFragment.getInstance(getIntent()
+					.getBundleExtra("query"));
+		}
 		getSupportFragmentManager().beginTransaction()
 				.replace(R.id.searchresult_list_container, listFragment)
 				.commit();

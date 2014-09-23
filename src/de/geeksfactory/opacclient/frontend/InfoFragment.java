@@ -122,6 +122,8 @@ public class InfoFragment extends Fragment implements AccountSelectedListener {
 						.optString("webviewcontain", "NOPE"))) {
 					return false;
 				}
+				if (getActivity() == null)
+					return false;
 				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 				startActivity(intent);
 				return true;

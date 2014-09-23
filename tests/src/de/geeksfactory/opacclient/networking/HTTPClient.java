@@ -22,12 +22,11 @@
 
 package de.geeksfactory.opacclient.networking;
 
-import java.io.File;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.security.KeyStore;
 
@@ -66,8 +65,12 @@ public class HTTPClient {
 		if (library.getData().has("customssl")) {
 			try {
 				final KeyStore trustStore = KeyStore.getInstance("BKS");
-
-				final InputStream in = Files.newInputStream(Paths.get("../res/raw/ssl_trust_store.bks"));
+				InputStream in;
+				try {
+					in = Files.newInputStream(Paths.get("../res/raw/ssl_trust_store.bks"));
+				} catch (NoSuchFileException e) {
+					in = Files.newInputStream(Paths.get("../../res/raw/ssl_trust_store.bks"));
+				}
 				try {
 					trustStore.load(in,
 							"ro5eivoijeeGohsh0daequoo5Zeepaen".toCharArray());

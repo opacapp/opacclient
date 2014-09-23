@@ -79,7 +79,7 @@ public abstract class OpacActivity extends Activity {
 
 	protected Fragment fragment;
 	protected boolean hasDrawer = false;
-	
+
 	private boolean twoPane;
 
 	public OpacClient getOpacApplication() {
@@ -89,7 +89,7 @@ public abstract class OpacActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		supportRequestWindowFeature(android.view.Window.FEATURE_INDETERMINATE_PROGRESS);
-		
+
 		super.onCreate(savedInstanceState);
 
 		setContentView(getContentView());
@@ -100,6 +100,15 @@ public abstract class OpacActivity extends Activity {
 
 		if (savedInstanceState != null) {
 			setTwoPane(savedInstanceState.getBoolean("twoPane"));
+			if (savedInstanceState.containsKey("title")) {
+				setTitle(savedInstanceState.getCharSequence("title"));
+			}
+			if (savedInstanceState.containsKey("framgent")) {
+				fragment = (Fragment) getSupportFragmentManager().getFragment(
+						savedInstanceState, "fragment");
+				getSupportFragmentManager().beginTransaction()
+						.replace(R.id.content_frame, fragment).commit();
+			}
 		}
 	}
 
@@ -273,6 +282,10 @@ public abstract class OpacActivity extends Activity {
 	@Override
 	protected void onResume() {
 		setupDrawer();
+
+		fragment = (Fragment) getSupportFragmentManager().findFragmentById(
+				R.id.content_frame);
+
 		if (hasDrawer)
 			drawerToggle.syncState();
 		setTwoPane(twoPane);
@@ -594,5 +607,10 @@ public abstract class OpacActivity extends Activity {
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putBoolean("twoPane", twoPane);
+		if (fragment != null)
+			getSupportFragmentManager().putFragment(outState, "fragment",
+					fragment);
+		if (mTitle != null)
+			outState.putCharSequence("title", mTitle);
 	}
 }
