@@ -1,0 +1,16 @@
+{
+    "api": "webopac.net",
+    "city": "Lyss",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.winmedio.net/lyss",
+        "information": "http://www.lyss.ch/de/07_freizeit/03_kultur/Bibliothek.php"
+    },
+    "geo": [
+        47.0762911,
+        7.3073461
+    ],
+    "state": "Bern",
+    "support": "Katalogsuche",
+    "title": "Gemeindebibliothel"
+}
