@@ -33,7 +33,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -47,7 +46,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
-
+import android.annotation.SuppressLint;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -71,11 +70,11 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
  * TODO: Suche nach Medientypen, alles mit Konten + Vorbestellen
  * 
  */
+@SuppressLint("Assert")
 public class Zones22 extends BaseApi {
 
 	private String opac_url = "";
 	private JSONObject data;
-	private Library library;
 	private int page;
 	private String searchobj;
 	private String accountobj;

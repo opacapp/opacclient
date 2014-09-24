@@ -1,4 +1,4 @@
-package de.geeksfactory.opacclient;
+package de.geeksfactory.opacclient.utils;
 
 public class ISBNTools {
 	public static String isbn13to10(String isbn13) {		
@@ -26,6 +26,15 @@ public class ISBNTools {
 			isbn10 += checksum;
 		
 		return isbn10;
+	}
+
+	public static boolean is_valid_isbn10(char[] digits) {
+		digits = cleanupISBN(digits.toString()).toCharArray();
+		int a = 0;
+		for (int i = 0; i < 10; i++) {
+			a += i * Integer.parseInt(String.valueOf(digits[i]));
+		}
+		return a % 11 == Integer.parseInt(String.valueOf(digits[9]));
 	}
 	
 	private static String cleanupISBN(String isbn) {

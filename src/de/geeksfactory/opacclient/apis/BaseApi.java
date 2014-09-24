@@ -70,7 +70,8 @@ public abstract class BaseApi implements OpacApi {
 
 	protected DefaultHttpClient http_client;
 	protected Library library;
-
+	
+	
 	/**
 	 * Initializes HTTP client
 	 */

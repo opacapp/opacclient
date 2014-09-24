@@ -343,7 +343,7 @@ public class OpacClient extends Application {
 		return SLIDING_MENU;
 	}
 
-	public Class getMainActivity() {
+	public Class<?> getMainActivity() {
 		return MainActivity.class;
 	}
 

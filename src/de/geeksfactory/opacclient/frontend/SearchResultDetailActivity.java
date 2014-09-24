@@ -16,14 +16,11 @@ import de.geeksfactory.opacclient.R;
  */
 public class SearchResultDetailActivity extends OpacActivity implements SearchResultDetailFragment.Callbacks {
 
-	private OpacClient app;
 	SearchResultDetailFragment detailFragment;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		app = (OpacClient) getApplication();
 
 		// Show the Up button in the action bar.
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);

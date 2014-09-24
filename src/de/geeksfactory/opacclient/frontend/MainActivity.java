@@ -171,14 +171,6 @@ public class MainActivity extends OpacActivity implements
 		return R.layout.activity_main;
 	}
 
-	private static boolean is_valid_isbn10(char[] digits) {
-		int a = 0;
-		for (int i = 0; i < 10; i++) {
-			a += i * Integer.parseInt(String.valueOf(digits[i]));
-		}
-		return a % 11 == Integer.parseInt(String.valueOf(digits[9]));
-	}
-
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent idata) {
 		super.onActivityResult(requestCode, resultCode, idata);
