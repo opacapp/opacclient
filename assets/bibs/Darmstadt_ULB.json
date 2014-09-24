@@ -7,12 +7,7 @@
         "baseurl": "https://pica1l.ulb.tu-darmstadt.de", 
         "charset": "ISO-8859-1", 
         "db": "LHBDA", 
-        "information": "http://www.ulb.tu-darmstadt.de/service/start/index.de.jsp", 
-        "searchindex": {
-            "free": "6015", 
-            "systematik": "53", 
-            "titel": "4"
-        }
+        "information": "http://www.ulb.tu-darmstadt.de/service/start/index.de.jsp"
     }, 
     "geo": [
         49.8776483, 

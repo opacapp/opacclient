@@ -127,8 +127,8 @@ public class IOpac extends BaseApi implements OpacApi {
 		}
 	}
 
-	protected int addParameters(SearchQuery query,
-			List<NameValuePair> params, int index) {
+	protected int addParameters(SearchQuery query, List<NameValuePair> params,
+			int index) {
 		if (query.getValue().equals(""))
 			return index;
 
@@ -706,9 +706,11 @@ public class IOpac extends BaseApi implements OpacApi {
 	}
 
 	private SearchField createSearchField(Element descTd, Element inputTd) {
-		String name = descTd.select("span").text().replace(":", "").trim().replace("\u00a0","");
+		String name = descTd.select("span").text().replace(":", "").trim()
+				.replace("\u00a0", "");
 		if (inputTd.select("select").size() > 0
-				&& !name.equals("Treffer/Seite") && !name.equals("Medientypen")) {
+				&& !name.equals("Treffer/Seite") && !name.equals("Medientypen")
+				&& !name.equals("Treffer pro Seite")) {
 			Element select = inputTd.select("select").first();
 			DropdownSearchField field = new DropdownSearchField();
 			field.setDisplayName(name);
@@ -742,8 +744,7 @@ public class IOpac extends BaseApi implements OpacApi {
 		String html = httpGet(opac_url + "/iopac/search_expert.htm",
 				getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
-		Elements trs = doc
-				.select("tr.norm:has(input), tr.norm:has(select)");
+		Elements trs = doc.select("tr.norm:has(input), tr.norm:has(select)");
 		for (Element tr : trs) {
 			Elements tds = tr.select("td");
 			if (tds.size() == 4) {

@@ -3,7 +3,6 @@
     "city": "Mainz", 
     "country": "Deutschland", 
     "data": {
-        "KEY_SEARCH_QUERY_FREE": "6015", 
         "accountSupported": true, 
         "baseurl": "https://opac.ub.uni-mainz.de", 
         "charset": "ISO-8859-1", 

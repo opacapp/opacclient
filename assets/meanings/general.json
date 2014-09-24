@@ -167,7 +167,8 @@
         "Suche in Teilbibliothek",
         "Anzeige der Titel nur aus Zweigstelle",
         "Suchort",
-        "Bibliotheksort"
+        "Bibliotheksort",
+        "Filiale"
     ],
     "DIGITAL": [
         "digital",
@@ -197,7 +198,8 @@
         "Filter Medienarten",
         "Materialart",
         "Mediengruppe",
-        "Medientypen"
+        "Medientypen",
+        "Art des Mediums (CD, DVD...)"
     ],
     "BARCODE": [
         "Barcode",
