@@ -7,13 +7,6 @@
         "baseurl": "https://lbsopac.rz.uni-frankfurt.de", 
         "db": "69", 
         "information": "http://www.eh-darmstadt.de/hochschule/bibliothek/",
-		"KEY_SEARCH_QUERY_FREE": "6015",
-		"KEY_SEARCH_QUERY_AUTHOR": "1004",
-		"KEY_SEARCH_QUERY_KEYWORDA": "8530",
-		"KEY_SEARCH_QUERY_KEYWORDB": "8530",
-		"KEY_SEARCH_QUERY_PUBLISHER": "8580",
-		"KEY_SEARCH_QUERY_SYSTEM": "53",
-		"KEY_SEARCH_QUERY_ISBN": "8520",
 		"charset": "ISO-8859-1"
     }, 
     "geo": [
