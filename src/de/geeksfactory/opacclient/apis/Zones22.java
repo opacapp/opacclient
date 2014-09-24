@@ -46,7 +46,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
-import android.annotation.SuppressLint;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -70,7 +69,6 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
  * TODO: Suche nach Medientypen, alles mit Konten + Vorbestellen
  * 
  */
-@SuppressLint("Assert")
 public class Zones22 extends BaseApi {
 
 	private String opac_url = "";
