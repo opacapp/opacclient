@@ -153,13 +153,6 @@
         "verfügbar",
         "Verfügbarkeit"
     ],
-    "DIGITAL": [
-        "digital",
-        "E-Books",
-        "nur elektronische Publikationen",
-        "E-Medien",
-        "digitales Objekt"
-    ],
     "BRANCH": [
         "Suche in Zweigstelle",
         "Zweigstelle ist gleich",
@@ -176,6 +169,13 @@
         "Suchort",
         "Bibliotheksort",
         "Filiale"
+    ],
+    "DIGITAL": [
+        "digital",
+        "E-Books",
+        "nur elektronische Publikationen",
+        "E-Medien",
+        "digitales Objekt"
     ],
     "LOCATION": [
         "Ort",
@@ -198,7 +198,8 @@
         "Filter Medienarten",
         "Materialart",
         "Mediengruppe",
-        "Medientypen"
+        "Medientypen",
+        "Art des Mediums (CD, DVD...)"
     ],
     "BARCODE": [
         "Barcode",
