@@ -153,6 +153,13 @@
         "verfügbar",
         "Verfügbarkeit"
     ],
+    "DIGITAL": [
+        "digital",
+        "E-Books",
+        "nur elektronische Publikationen",
+        "E-Medien",
+        "digitales Objekt"
+    ],
     "BRANCH": [
         "Suche in Zweigstelle",
         "Zweigstelle ist gleich",
@@ -167,14 +174,8 @@
         "Suche in Teilbibliothek",
         "Anzeige der Titel nur aus Zweigstelle",
         "Suchort",
-        "Bibliotheksort"
-    ],
-    "DIGITAL": [
-        "digital",
-        "E-Books",
-        "nur elektronische Publikationen",
-        "E-Medien",
-        "digitales Objekt"
+        "Bibliotheksort",
+        "Filiale"
     ],
     "LOCATION": [
         "Ort",
