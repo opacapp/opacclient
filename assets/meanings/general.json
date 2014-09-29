@@ -24,6 +24,7 @@
         "VerfasserIn",
         "Verfasser / Gruppe",
         "Autor / Verfasser",
+        "Schlagwort Person",
         "Autor/Person",
         "Autor (Person)",
         "Weitere Person"
@@ -153,6 +154,13 @@
         "verfügbar",
         "Verfügbarkeit"
     ],
+    "DIGITAL": [
+        "digital",
+        "E-Books",
+        "nur elektronische Publikationen",
+        "E-Medien",
+        "digitales Objekt"
+    ],
     "BRANCH": [
         "Suche in Zweigstelle",
         "Zweigstelle ist gleich",
@@ -167,14 +175,8 @@
         "Suche in Teilbibliothek",
         "Anzeige der Titel nur aus Zweigstelle",
         "Suchort",
-        "Bibliotheksort"
-    ],
-    "DIGITAL": [
-        "digital",
-        "E-Books",
-        "nur elektronische Publikationen",
-        "E-Medien",
-        "digitales Objekt"
+        "Bibliotheksort",
+        "Filiale"
     ],
     "LOCATION": [
         "Ort",
@@ -197,7 +199,8 @@
         "Filter Medienarten",
         "Materialart",
         "Mediengruppe",
-        "Medientypen"
+        "Medientypen",
+        "Art des Mediums (CD, DVD...)"
     ],
     "BARCODE": [
         "Barcode",
@@ -222,6 +225,7 @@
         "Titel-Stichwort",
         "Titel Stichwort",
         "Titelstichwörter",
-        "Titelwort"
+        "Titelwort",
+        "Schlagwort Titel"
     ]
 }
