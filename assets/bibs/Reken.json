@@ -20,7 +20,7 @@
         },
         "information": "http://www.buecherei-reken.de/",
         "mediatypes": {
-            "Buchklein.GIF": "UNKNOWN",
+            "Buchklein.GIF": "BOOK",
             "CD-ROMklein.GIF": "CD_SOFTWARE",
             "CD1klein.GIF": "CD",
             "CDklein.GIF": "CD",
