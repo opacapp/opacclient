@@ -6,10 +6,6 @@
         "baseurl": "http://dispatch.opac.d-nb.de",
         "db": "4.1",
         "information": "http://www.dnb.de/DE/Service/Benutzung/oeffnungGesamt.html",
-		"KEY_SEARCH_QUERY_FREE": "8500",
-		"KEY_SEARCH_QUERY_KEYWORDA": "4",
-		"KEY_SEARCH_QUERY_PUBLISHER": "8505",
-		"KEY_SEARCH_QUERY_ISBN": "8506",
 		"charset": "ISO-8859-1"
     },
     "geo": [

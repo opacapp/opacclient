@@ -712,7 +712,8 @@ public class IOpac extends BaseApi implements OpacApi {
 		String name = descTd.select("span").text().replace(":", "").trim()
 				.replace("\u00a0", "");
 		if (inputTd.select("select").size() > 0
-				&& !name.equals("Treffer/Seite") && !name.equals("Medientypen")) {
+				&& !name.equals("Treffer/Seite") && !name.equals("Medientypen")
+				&& !name.equals("Treffer pro Seite")) {
 			Element select = inputTd.select("select").first();
 			DropdownSearchField field = new DropdownSearchField();
 			field.setDisplayName(name);

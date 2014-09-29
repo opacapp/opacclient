@@ -6,12 +6,7 @@
         "accountSupported": true, 
         "baseurl": "https://pica1l.ulb.tu-darmstadt.de", 
         "db": "FHBDA", 
-        "information": "http://bib.h-da.de/", 
-        "searchindex": {
-            "free": "6015", 
-            "systematik": "53", 
-            "titel": "4"
-        }
+        "information": "http://bib.h-da.de/"
     }, 
     "geo": [
         49.8776483, 

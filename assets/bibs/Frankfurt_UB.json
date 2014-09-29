@@ -5,7 +5,6 @@
     "data": {
         "accountSupported": true,
         "baseurl": "https://lbsopac.rz.uni-frankfurt.de",
-		"KEY_SEARCH_QUERY_FREE": 6015,
         "db": "30",
         "information": "http://www.ub.uni-frankfurt.de/"
     },

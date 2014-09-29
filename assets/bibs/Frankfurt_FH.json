@@ -5,7 +5,6 @@
     "data": {
         "accountSupported": true,
         "baseurl": "https://lbsopac.rz.uni-frankfurt.de",
-		"KEY_SEARCH_QUERY_FREE": 6015,
         "db": "50",
         "information": "https://www.fh-frankfurt.de/einrichtungen-services/verwaltung-einrichtungen/bibliothek.html",
 		"charset": "ISO-8859-1"
