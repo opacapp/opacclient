@@ -72,6 +72,7 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
 public class IOpac extends BaseApi implements OpacApi {
 
 	protected String opac_url = "";
+	protected String dir = "/iopac";
 	protected JSONObject data;
 	protected boolean initialised = false;
 	protected Library library;
@@ -122,13 +123,15 @@ public class IOpac extends BaseApi implements OpacApi {
 			this.opac_url = data.getString("baseurl");
 			if (data.has("maxprolongcount"))
 				this.maxProlongCount = data.getInt("maxprolongcount");
+			if (data.has("dir"))
+				this.dir = data.getString("dir");
 		} catch (JSONException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	protected int addParameters(SearchQuery query,
-			List<NameValuePair> params, int index) {
+	protected int addParameters(SearchQuery query, List<NameValuePair> params,
+			int index) {
 		if (query.getValue().equals(""))
 			return index;
 
@@ -706,7 +709,8 @@ public class IOpac extends BaseApi implements OpacApi {
 	}
 
 	private SearchField createSearchField(Element descTd, Element inputTd) {
-		String name = descTd.select("span").text().replace(":", "").trim().replace("\u00a0","");
+		String name = descTd.select("span").text().replace(":", "").trim()
+				.replace("\u00a0", "");
 		if (inputTd.select("select").size() > 0
 				&& !name.equals("Treffer/Seite") && !name.equals("Medientypen")) {
 			Element select = inputTd.select("select").first();
@@ -739,11 +743,10 @@ public class IOpac extends BaseApi implements OpacApi {
 		List<SearchField> fields = new ArrayList<SearchField>();
 
 		// Extract all search fields, except media types
-		String html = httpGet(opac_url + "/iopac/search_expert.htm",
+		String html = httpGet(opac_url + dir + "/search_expert.htm",
 				getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
-		Elements trs = doc
-				.select("tr.norm:has(input), tr.norm:has(select)");
+		Elements trs = doc.select("tr.norm:has(input), tr.norm:has(select)");
 		for (Element tr : trs) {
 			Elements tds = tr.select("td");
 			if (tds.size() == 4) {
@@ -772,7 +775,7 @@ public class IOpac extends BaseApi implements OpacApi {
 
 		List<Map<String, String>> mediatypes = new ArrayList<Map<String, String>>();
 		try {
-			html = httpGet(opac_url + "/iopac/mtyp.js", getDefaultEncoding());
+			html = httpGet(opac_url + dir + "/mtyp.js", getDefaultEncoding());
 
 			String[] parts = html.split("new Array\\(\\);");
 			for (String part : parts) {
@@ -795,8 +798,8 @@ public class IOpac extends BaseApi implements OpacApi {
 			}
 		} catch (IOException e) {
 			try {
-				html = httpGet(opac_url
-						+ "/iopac/frames/search_form.php?bReset=1?bReset=1",
+				html = httpGet(opac_url + dir
+						+ "/frames/search_form.php?bReset=1?bReset=1",
 						getDefaultEncoding());
 				doc = Jsoup.parse(html);
 

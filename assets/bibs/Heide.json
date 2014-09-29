@@ -1,0 +1,17 @@
+{
+    "api": "iopac",
+    "city": "Heide",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://80.153.71.50",
+		"dir": "",
+        "information": "http://www.heide.de/kultur-vhs/stadtbuecherei.html"
+    },
+    "geo": [
+        54.19517639999999,
+        9.1019015
+    ],
+    "state": "Schleswig-Holstein",
+    "support": "Katalogsuche und Konto",
+    "title": "B\u00fccherei"
+}
