@@ -405,6 +405,10 @@ public class BiBer1992 extends BaseApi {
 	private SearchRequestResult parse_search(String html, int page) {
 		List<SearchResult> results = new ArrayList<SearchResult>();
 		Document doc = Jsoup.parse(html);
+		
+		if (doc.select("h3").text().contains("Es wurde nichts gefunden"))
+			return new SearchRequestResult(results, 0, page);
+		
 		Elements trList = doc.select("form table tr[valign]"); // <tr
 																// valign="top">
 		Elements elem = null;
