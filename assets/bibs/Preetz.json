@@ -1,0 +1,16 @@
+{
+    "api": "iopac",
+    "city": "Preetz",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://stabue-preetz.dyndns.org",
+        "information": "http://www.stadtbuecherei-preetz.de/"
+    },
+    "geo": [
+        54.232759,
+        10.2782723
+    ],
+    "state": "Schleswig-Holstein",
+    "support": "Katalogsuche und Konto",
+    "title": "Stadtb\u00fccherei"
+}

@@ -1,6 +1,6 @@
 {
     "api": "bibliotheca",
-    "city": "Reken",
+    "city": "Stadtlohn",
     "country": "Deutschland",
     "data": {
         "accounttable": {
@@ -9,7 +9,7 @@
             "returndate": 2,
             "title": 1
         },
-        "baseurl": "http://webopac.bistum-muenster.de/reken",
+        "baseurl": "http://webopac.bistum-muenster.de/stadtlohn",
         "copiestable": {
             "barcode": 0,
             "branch": 4,
@@ -18,7 +18,7 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "http://www.buecherei-reken.de/",
+        "information": "http://www.buecherei-stadtlohn.de/",
         "mediatypes": {
             "Buchklein.GIF": "BOOK",
             "CD-ROMklein.GIF": "CD_SOFTWARE",
@@ -66,10 +66,10 @@
         }
     },
     "geo": [
-        51.833333,
-        7.044443999999999
+        51.99209090000001,
+        6.913797199999999
     ],
     "state": "Nordrhein-Westfalen",
     "support": "Katalogsuche und Konto",
-    "title": "K\u00d6B St. Heinrich"
+    "title": "\u00d6ffentliche B\u00fccherei St. Otger"
 }

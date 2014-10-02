@@ -280,11 +280,13 @@
     "Reihe / Serie",
     "Körperschaft, Musikgruppe",
     "Zeitungen/Zeitschriften Titel",
-    "[FNM]",
-    "Treffer pro Seite",
+    "Erscheinungsform Alt",
     "Bestseller",
+    "Treffer pro Seite",
     "Schlagwort Körperschaft",
-    "Schlagwort Person",
     "Schlagwort Sache, Geo, Form, Zeit",
-    "Schlagwort Titel"
+    "[PEF]",
+    "[HSS]",
+    "[BCO]",
+    "[STF]"
 ]

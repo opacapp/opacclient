@@ -24,6 +24,7 @@
         "VerfasserIn",
         "Verfasser / Gruppe",
         "Autor / Verfasser",
+        "Schlagwort Person",
         "Autor/Person",
         "Autor (Person)",
         "Weitere Person"
@@ -225,6 +226,7 @@
         "Titel-Stichwort",
         "Titel Stichwort",
         "Titelstichwörter",
-        "Titelwort"
+        "Titelwort",
+        "Schlagwort Titel"
     ]
 }

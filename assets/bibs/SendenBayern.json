@@ -1,0 +1,16 @@
+{
+    "api": "winbiap",
+    "city": "Senden (Bayern)",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/senden",
+        "information": "http://www.josef-senden.de/index.php?g=einrichtungen-stadtbuecherei"
+    },
+    "geo": [
+        48.3255759,
+        10.04927
+    ],
+    "state": "Bayern",
+    "support": "Katalogsuche",
+    "title": "Stadtb\u00fccherei"
+}
