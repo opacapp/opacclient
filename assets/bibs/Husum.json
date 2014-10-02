@@ -1,0 +1,16 @@
+{
+    "api": "iopac",
+    "city": "Husum",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://iopac-husum.dyndns.org",
+        "information": "http://www.stadtbibliothek-husum.de/"
+    },
+    "geo": [
+        54.4837642,
+        9.060062799999999
+    ],
+    "state": "Schleswig-Holstein",
+    "support": "Katalogsuche und Konto",
+    "title": "Stadtb\u00fccherei"
+}

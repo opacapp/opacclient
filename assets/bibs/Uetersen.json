@@ -1,0 +1,16 @@
+{
+    "api": "iopac",
+    "city": "Uetersen",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://stadtbuecherei.uetersen.de",
+        "information": "http://www.uetersen.de/buecherei.html"
+    },
+    "geo": [
+        53.6872441,
+        9.6763338
+    ],
+    "state": "Schleswig-Holstein",
+    "support": "Katalogsuche und Konto",
+    "title": "Stadtb\u00fccherei"
+}

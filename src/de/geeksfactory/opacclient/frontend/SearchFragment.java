@@ -353,7 +353,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 	public void accountSelected(Account account) {
 		ViewGroup errorView = (ViewGroup) view.findViewById(R.id.error_view);
 		errorView.removeAllViews();
-		view.findViewById(R.id.scroll).setVisibility(View.VISIBLE);
+		progress(false);
 
 		SearchFieldDataSource dataSource = new JsonSearchFieldDataSource(app);
 		int versionCode = 0;
@@ -433,7 +433,6 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		protected void onPostExecute(List<SearchField> fields) {
 			if (getActivity() == null)
 				return;
-			
 			progress(false);
 			if (fields != null) {
 				SearchFragment.this.fields = fields;

@@ -1,0 +1,16 @@
+{
+    "api": "iopac",
+    "city": "Brunsb\u00fcttel",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://buchbrb.brunsbuettel.de",
+        "information": "http://www.brunsbuettel.de/Familie_Bildung/Stadtb%C3%BCcherei/"
+    },
+    "geo": [
+        53.8988902,
+        9.1338853
+    ],
+    "state": "Schleswig-Holstein",
+    "support": "Katalogsuche und Konto",
+    "title": "Stadtb\u00fccherei"
+}
