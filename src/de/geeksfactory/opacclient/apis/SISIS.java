@@ -372,7 +372,7 @@ public class SISIS extends BaseApi implements OpacApi {
 			throw new OpacErrorException(doc.select(".error").text().trim());
 		} else if (doc.select(".nohits").size() > 0) {
 			throw new OpacErrorException(doc.select(".nohits").text().trim());
-		} else if (doc.select(".box-header h2").text()
+		} else if (doc.select(".box-header h2, #nohits").text()
 				.contains("keine Treffer")) {
 			return new SearchRequestResult(new ArrayList<SearchResult>(), 0, 1,
 					1);

@@ -709,7 +709,7 @@ public class IOpac extends BaseApi implements OpacApi {
 	}
 
 	private SearchField createSearchField(Element descTd, Element inputTd) {
-		String name = descTd.select("span").text().replace(":", "").trim()
+		String name = descTd.select("span, blockquote").text().replace(":", "").trim()
 				.replace("\u00a0", "");
 		if (inputTd.select("select").size() > 0
 				&& !name.equals("Treffer/Seite") && !name.equals("Medientypen")
@@ -744,10 +744,16 @@ public class IOpac extends BaseApi implements OpacApi {
 		List<SearchField> fields = new ArrayList<SearchField>();
 
 		// Extract all search fields, except media types
-		String html = httpGet(opac_url + dir + "/search_expert.htm",
-				getDefaultEncoding());
+		String html;
+		try {
+			html = httpGet(opac_url + dir + "/search_expert.htm",
+					getDefaultEncoding());
+		} catch (NotReachableException e) {
+			html = httpGet(opac_url + dir + "/iopacie.htm",
+					getDefaultEncoding());
+		}
 		Document doc = Jsoup.parse(html);
-		Elements trs = doc.select("tr.norm:has(input), tr.norm:has(select)");
+		Elements trs = doc.select("form tr:has(input:not([type=submit], [type=reset])), form tr:has(select)");
 		for (Element tr : trs) {
 			Elements tds = tr.select("td");
 			if (tds.size() == 4) {
@@ -758,7 +764,7 @@ public class IOpac extends BaseApi implements OpacApi {
 					fields.add(field1);
 				if (field2 != null)
 					fields.add(field2);
-			} else if (tds.size() == 2) {
+			} else if (tds.size() == 2 || (tds.size() == 3 && tds.get(2).children().size() == 0) ) {
 				SearchField field = createSearchField(tds.get(0), tds.get(1));
 				if (field != null)
 					fields.add(field);

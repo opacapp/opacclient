@@ -17,7 +17,6 @@
             "9": "BOARDGAME"
         }, 
         "opacdir": "opax", 
-        "rows_per_hit": 1, 
         "searchtable": [
             2, 
             3, 

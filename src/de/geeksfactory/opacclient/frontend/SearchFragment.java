@@ -400,6 +400,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		protected List<SearchField> doInBackground(Void... arg0) {
 			try {
 				List<SearchField> fields = app.getApi().getSearchFields();
+				if (getActivity() == null)
+					return null;
 				if (app.getApi().shouldUseMeaningDetector()) {
 					MeaningDetector md = new AndroidMeaningDetector(
 							getActivity(), app.getLibrary());
@@ -429,6 +431,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
 		@Override
 		protected void onPostExecute(List<SearchField> fields) {
+			if (getActivity() == null)
+				return;
 			progress(false);
 			if (fields != null) {
 				SearchFragment.this.fields = fields;
