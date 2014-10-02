@@ -133,7 +133,8 @@
         "Jahr (von bis)",
         "Jahr(von bis)",
         "Jahr präzis",
-        "Erscheinungsjahr (am)"
+        "Erscheinungsjahr (am)",
+        "Jahr (von-bis)"
     ],
     "ORDER": [
         "Sortierung",
@@ -153,6 +154,13 @@
         "verfügbar",
         "Verfügbarkeit"
     ],
+    "DIGITAL": [
+        "digital",
+        "E-Books",
+        "nur elektronische Publikationen",
+        "E-Medien",
+        "digitales Objekt"
+    ],
     "BRANCH": [
         "Suche in Zweigstelle",
         "Zweigstelle ist gleich",
@@ -169,13 +177,6 @@
         "Suchort",
         "Bibliotheksort",
         "Filiale"
-    ],
-    "DIGITAL": [
-        "digital",
-        "E-Books",
-        "nur elektronische Publikationen",
-        "E-Medien",
-        "digitales Objekt"
     ],
     "LOCATION": [
         "Ort",

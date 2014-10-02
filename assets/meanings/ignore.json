@@ -282,5 +282,9 @@
     "Zeitungen/Zeitschriften Titel",
     "[FNM]",
     "Treffer pro Seite",
-    "Bestseller"
+    "Bestseller",
+    "Schlagwort Körperschaft",
+    "Schlagwort Person",
+    "Schlagwort Sache, Geo, Form, Zeit",
+    "Schlagwort Titel"
 ]
