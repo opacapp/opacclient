@@ -160,6 +160,7 @@ public abstract class BaseApi implements OpacApi {
 		}
 
 		if (!ignore_errors && response.getStatusLine().getStatusCode() >= 400) {
+			response.getEntity().consumeContent();
 			throw new NotReachableException();
 		}
 		String html = convertStreamToString(response.getEntity().getContent(),

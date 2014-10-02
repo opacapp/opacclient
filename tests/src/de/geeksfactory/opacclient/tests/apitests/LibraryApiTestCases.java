@@ -110,7 +110,11 @@ public class LibraryApiTestCases extends TestCase {
 		assertTrue(res.getResults().size() <= res.getTotal_result_count());
 		assertTrue(res.getResults().size() > 0);
 
-		SearchResult third = res.getResults().get(2);
+		SearchResult third;
+		if (res.getResults().size() >= 3)
+			third = res.getResults().get(2);
+		else
+			third = res.getResults().get(res.getResults().size() - 1);
 		DetailledItem detail = null;
 		if (third.getId() != null)
 			detail = api.getResultById(third.getId(), "");
