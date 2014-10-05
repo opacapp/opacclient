@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="limited_num_of_queries">Diese Bibliothek unterstützt nur bis zu %d benutzte Suchkriterien.</string>
+</resources>
