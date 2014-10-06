@@ -22,6 +22,8 @@
 package de.geeksfactory.opacclient.apis;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -459,13 +461,22 @@ public class IOpac extends BaseApi implements OpacApi {
 
 		// GET RESERVATION INFO
 		if ("verfügbar".equals(e.get(DetailledItem.KEY_COPY_STATUS))
-				|| doc.select("a[href^=/cgi-bin/di.exe?mode=10]").size() == 0) {
+				|| doc.select(
+						"a[href^=/cgi-bin/di.exe?mode=10], input.resbutton")
+						.size() == 0) {
 			result.setReservable(false);
 		} else {
 			result.setReservable(true);
-			result.setReservation_info(doc
-					.select("a[href^=/cgi-bin/di.exe?mode=10]").first()
-					.attr("href").substring(1).replace(" ", ""));
+			if (doc.select("a[href^=/cgi-bin/di.exe?mode=10]").size() > 0) {
+				// Reservation via link
+				result.setReservation_info(doc
+						.select("a[href^=/cgi-bin/di.exe?mode=10]").first()
+						.attr("href").substring(1).replace(" ", ""));
+			} else {
+				// Reservation via form (method="get")
+				Element form = doc.select("input.resbutton").first().parent();
+				result.setReservation_info(generateQuery(form));
+			}
 		}
 
 		result.addCopy(e);
@@ -473,10 +484,25 @@ public class IOpac extends BaseApi implements OpacApi {
 		return result;
 	}
 
+	private String generateQuery(Element form)
+			throws UnsupportedEncodingException {
+		StringBuilder builder = new StringBuilder();
+		builder.append(form.attr("action").substring(1));
+		int i = 0;
+		for (Element input : form.select("input")) {
+			builder.append(i == 0 ? "?" : "&");
+			builder.append(input.attr("name") + "="
+					+ URLEncoder.encode(input.attr("value"), "UTF-8"));
+			i++;
+		}
+		return builder.toString();
+	}
+
 	@Override
 	public ReservationResult reservation(DetailledItem item, Account account,
 			int useraction, String selection) throws IOException {
 		String reservation_info = item.getReservation_info();
+		// STEP 1: Login page
 		String html = httpGet(opac_url + "/" + reservation_info,
 				getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
@@ -484,30 +510,41 @@ public class IOpac extends BaseApi implements OpacApi {
 			return new ReservationResult(MultiStepResult.Status.ERROR, doc
 					.select("table").first().text().trim());
 		}
-		if (doc.select("form[name=form1]").size() > 0) {
-			List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
-			params.add(new BasicNameValuePair("sleKndNr", account.getName()));
-			params.add(new BasicNameValuePair("slePw", account.getPassword()));
-			params.add(new BasicNameValuePair("mode", "11"));
-			params.add(new BasicNameValuePair("mednr", doc.select(
-					"input[name=mednr]").attr("value")));
-			params.add(new BasicNameValuePair("page", doc.select(
-					"input[name=page]").attr("value")));
-			params.add(new BasicNameValuePair("Anzahl", "10"));
-			params.add(new BasicNameValuePair("recno", doc.select(
-					"input[name=recno]").attr("value")));
-			params.add(new BasicNameValuePair("pshLogin", "Reservieren"));
 
-			html = httpPost(opac_url + "/cgi-bin/di.exe",
-					new UrlEncodedFormEntity(params), getDefaultEncoding());
+		if (doc.select("form[name=form1]").size() == 0)
+			return new ReservationResult(MultiStepResult.Status.ERROR);
+
+		Element form = doc.select("form[name=form1]").first();
+		List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
+		params.add(new BasicNameValuePair("sleKndNr", account.getName()));
+		params.add(new BasicNameValuePair("slePw", account.getPassword()));
+		params.add(new BasicNameValuePair("pshLogin", "Reservieren"));
+		for (Element input : form.select("input[type=hidden]")) {
+			params.add(new BasicNameValuePair(input.attr("name"), input
+					.attr("value")));
+		}
+
+		// STEP 2: Confirmation page
+		html = httpPost(opac_url + "/cgi-bin/di.exe", new UrlEncodedFormEntity(
+				params), getDefaultEncoding());
+		doc = Jsoup.parse(html);
+
+		if (doc.select("form[name=form1]").size() > 0) {
+			// STEP 3: There is another confirmation needed
+			form = doc.select("form[name=form1]").first();
+			html = httpGet(opac_url + "/" + generateQuery(form),
+					getDefaultEncoding());
 			doc = Jsoup.parse(html);
-			if (doc.select("h1").text().contains("fehlgeschlagen")) {
-				return new ReservationResult(MultiStepResult.Status.ERROR, doc
-						.select("table").first().text().trim());
-			}
+		}
+
+		if (doc.select("h1").text().contains("fehlgeschlagen")
+				|| doc.select("h1").text().contains("Achtung")) {
+			return new ReservationResult(MultiStepResult.Status.ERROR, doc
+					.select("table").first().text().trim());
+		} else {
 			return new ReservationResult(MultiStepResult.Status.OK);
 		}
-		return new ReservationResult(MultiStepResult.Status.ERROR);
+
 	}
 
 	@Override
