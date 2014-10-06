@@ -347,7 +347,18 @@ public class IOpac extends BaseApi implements OpacApi {
 						+ status + "</i>");
 			}
 
-			sr.setNr(10 * (page - 1) + i);
+			// In some libraries (for example search for "atelier" in Preetz)
+			// the results are sorted differently than their numbers suggest, so
+			// we need to detect the number ("recno") from the link
+			String link = tr.select("a[href^=/cgi-bin/di.exe?page=]").attr("href");
+			Map<String, String> params = getQueryParamsFirst(link);
+			if (params.containsKey("recno")) {
+				int recno = Integer.valueOf(params.get("recno"));
+				sr.setNr(10 * (page - 1) + recno - 1);
+			} else {
+				// the above should work, but fall back to this if it doesn't
+				sr.setNr(10 * (page - 1) + i);
+			}
 			sr.setId(null);
 
 			results.add(sr);
