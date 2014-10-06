@@ -37,7 +37,6 @@ import org.jsoup.nodes.Element;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult.Status;
 import de.geeksfactory.opacclient.i18n.StringProvider;
-import de.geeksfactory.opacclient.i18n.Strings;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -327,8 +326,8 @@ public class Adis extends BaseApi implements OpacApi {
 
 				if (cnt > 4) {
 					throw new OpacErrorException(
-							StringProvider.getFormattedString(
-									Strings.LIMITED_NUM_OF_QUERIES, 4));
+							stringProvider.getFormattedString(
+									StringProvider.LIMITED_NUM_OF_QUERIES, 4));
 				}
 			}
 		}

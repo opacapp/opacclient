@@ -67,6 +67,7 @@ import de.geeksfactory.opacclient.frontend.AccountListActivity;
 import de.geeksfactory.opacclient.frontend.MainActivity;
 import de.geeksfactory.opacclient.frontend.SearchResultListActivity;
 import de.geeksfactory.opacclient.frontend.WelcomeActivity;
+import de.geeksfactory.opacclient.i18n.AndroidStringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.searchfields.SearchField;
@@ -169,7 +170,7 @@ public class OpacClient extends Application {
 			newApiInstance = new WinBiap();
 		else
 			return null;
-
+		newApiInstance.setStringProvider(new AndroidStringProvider());
 		newApiInstance.init(lib);
 		return newApiInstance;
 	}

@@ -21,24 +21,19 @@
  */
 package de.geeksfactory.opacclient.i18n;
 
-/**
- * Provides internationalized strings for messages in the API implementations
- * 
- * @author Johan v. Forstner
- *
- */
-public class StringProvider {
-	public static String getString(String identifier) {
-		return identifier;
+import de.geeksfactory.opacclient.OpacClient;
+
+public class AndroidStringProvider implements StringProvider {
+	public String getString(String identifier) {
+		int id = OpacClient.context.getResources().getIdentifier(identifier,
+				"string", OpacClient.context.getPackageName());
+		return OpacClient.context.getResources().getString(id);
 	}
 	
-	public static String getFormattedString(String identifier, Object... args) {
-		StringBuilder builder = new StringBuilder();
-		builder.append(identifier);
-		for (Object arg:args) {
-			builder.append(" ");
-			builder.append(arg.toString());
-		}
-		return builder.toString();
+	public String getFormattedString(String identifier, Object... args) {
+		int id = OpacClient.context.getResources().getIdentifier(identifier,
+				"string", OpacClient.context.getPackageName());
+		String format = OpacClient.context.getResources().getString(id);
+		return String.format(format, args);
 	}
 }

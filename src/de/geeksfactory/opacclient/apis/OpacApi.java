@@ -28,6 +28,7 @@ import java.util.Map;
 import org.json.JSONException;
 
 import de.geeksfactory.opacclient.NotReachableException;
+import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.DetailledItem;
@@ -492,8 +493,6 @@ public interface OpacApi {
 	 * it. I use it to initialize my DefaultHTTPClient and to store the metadata
 	 * and library objects.
 	 * 
-	 * @param metadata
-	 *            A MetaDataSource to store metadata in
 	 * @param library
 	 *            The library the Api is initialized for
 	 */
@@ -915,4 +914,10 @@ public interface OpacApi {
 	 */
 	public boolean shouldUseMeaningDetector();
 
+	/**
+	 * Sets the StringProvider to use for error messages etc.
+	 * 
+	 * @param stringProvider the StringProvider to use
+	 */
+	public void setStringProvider(StringProvider stringProvider);
 }

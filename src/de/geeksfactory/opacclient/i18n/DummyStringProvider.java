@@ -21,16 +21,18 @@
  */
 package de.geeksfactory.opacclient.i18n;
 
-/**
- * Provides internationalized strings for messages in the API implementations
- * 
- * @author Johan v. Forstner
- *
- */
-public interface StringProvider {
-	public static String LIMITED_NUM_OF_QUERIES = "limited_num_of_queries";
+public class DummyStringProvider implements StringProvider {
+	public String getString(String identifier) {
+		return identifier;
+	}
 	
-	public abstract String getString(String identifier);
-	
-	public abstract String getFormattedString(String identifier, Object... args);
+	public String getFormattedString(String identifier, Object... args) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(identifier);
+		for (Object arg:args) {
+			builder.append(" ");
+			builder.append(arg.toString());
+		}
+		return builder.toString();
+	}
 }
