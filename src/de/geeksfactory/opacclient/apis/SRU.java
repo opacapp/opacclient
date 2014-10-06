@@ -16,6 +16,7 @@ import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
 import de.geeksfactory.opacclient.NotReachableException;
+import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -35,7 +36,7 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
 import de.geeksfactory.opacclient.utils.ISBNTools;
 
 public class SRU extends BaseApi implements OpacApi {
-	
+
 	protected String opac_url = "";
 	protected JSONObject data;
 	protected boolean initialised = false;
@@ -46,7 +47,7 @@ public class SRU extends BaseApi implements OpacApi {
 	private HashMap<String, String> searchQueries = new HashMap<String, String>();
 	private String idSearchQuery;
 	protected String shareUrl;
-	
+
 	protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
 	static {
 		defaulttypes.put("print", MediaType.BOOK);
@@ -57,7 +58,7 @@ public class SRU extends BaseApi implements OpacApi {
 		defaulttypes.put("microfilm", MediaType.UNKNOWN);
 		defaulttypes.put("Tontraeger", MediaType.AUDIOBOOK);
 	}
-	
+
 	@Override
 	public void init(Library lib) {
 		super.init(lib);
@@ -69,18 +70,15 @@ public class SRU extends BaseApi implements OpacApi {
 			this.opac_url = data.getString("baseurl");
 			JSONObject searchQueriesJson = data.getJSONObject("searchqueries");
 			addSearchQueries(searchQueriesJson);
-			if(data.has("sharelink"))
+			if (data.has("sharelink"))
 				shareUrl = data.getString("sharelink");
 		} catch (JSONException e) {
 			throw new RuntimeException(e);
 		}
 	}
-	
-	
 
 	private void addSearchQueries(JSONObject searchQueriesJson) {
-		String[] queries = {
-				KEY_SEARCH_QUERY_FREE, KEY_SEARCH_QUERY_TITLE,
+		String[] queries = { KEY_SEARCH_QUERY_FREE, KEY_SEARCH_QUERY_TITLE,
 				KEY_SEARCH_QUERY_AUTHOR, KEY_SEARCH_QUERY_KEYWORDA,
 				KEY_SEARCH_QUERY_KEYWORDB, KEY_SEARCH_QUERY_BRANCH,
 				KEY_SEARCH_QUERY_HOME_BRANCH, KEY_SEARCH_QUERY_ISBN,
@@ -88,18 +86,18 @@ public class SRU extends BaseApi implements OpacApi {
 				KEY_SEARCH_QUERY_YEAR_RANGE_END, KEY_SEARCH_QUERY_SYSTEM,
 				KEY_SEARCH_QUERY_AUDIENCE, KEY_SEARCH_QUERY_PUBLISHER,
 				KEY_SEARCH_QUERY_CATEGORY, KEY_SEARCH_QUERY_BARCODE,
-				KEY_SEARCH_QUERY_LOCATION, KEY_SEARCH_QUERY_DIGITAL
-		};
-		for(String query:queries) {
-			if(searchQueriesJson.has(query))
+				KEY_SEARCH_QUERY_LOCATION, KEY_SEARCH_QUERY_DIGITAL };
+		for (String query : queries) {
+			if (searchQueriesJson.has(query))
 				try {
-					searchQueries.put(query, searchQueriesJson.getString(query));
+					searchQueries
+							.put(query, searchQueriesJson.getString(query));
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 		}
 		try {
-			if(searchQueriesJson.has("id")) {
+			if (searchQueriesJson.has("id")) {
 				idSearchQuery = searchQueriesJson.getString("id");
 			}
 		} catch (JSONException e) {
@@ -111,12 +109,13 @@ public class SRU extends BaseApi implements OpacApi {
 	public void start() throws IOException, NotReachableException {
 
 	}
-	
-	protected int addParameters(Map<String, String> query, String key, String searchkey,
-			StringBuilder params, int index) {
+
+	protected int addParameters(Map<String, String> query, String key,
+			String searchkey, StringBuilder params, int index) {
 		if (!query.containsKey(key) || query.get(key).equals(""))
 			return index;
-		if(index != 0) params.append("%20and%20");
+		if (index != 0)
+			params.append("%20and%20");
 		params.append(searchkey + "%3D" + query.get(key));
 		return index + 1;
 
@@ -131,45 +130,49 @@ public class SRU extends BaseApi implements OpacApi {
 		int index = 0;
 		start();
 
-		for(String parameter:searchQueries.keySet()) {
+		for (String parameter : searchQueries.keySet()) {
 			index = addParameters(query, parameter,
 					searchQueries.get(parameter), params, index);
 		}
-		
+
 		if (index == 0) {
 			throw new OpacErrorException(
-					"Es wurden keine Suchkriterien eingegeben.");
+					stringProvider.getString(StringProvider.NO_CRITERIA_INPUT));
 		}
 		currentSearchParams = params.toString();
-		String xml = httpGet(opac_url +
-				"?version=1.1&operation=searchRetrieve&maximumRecords=" + resultcount +
-				"&recordSchema=mods&sortKeys=relevance,,1&query=" + currentSearchParams,
-				getDefaultEncoding());
-		
+		String xml = httpGet(opac_url
+				+ "?version=1.1&operation=searchRetrieve&maximumRecords="
+				+ resultcount
+				+ "&recordSchema=mods&sortKeys=relevance,,1&query="
+				+ currentSearchParams, getDefaultEncoding());
+
 		return parse_result(xml);
 	}
 
-	private SearchRequestResult parse_result(String xml) throws OpacErrorException {
+	private SearchRequestResult parse_result(String xml)
+			throws OpacErrorException {
 		searchDoc = Jsoup.parse(xml, "", Parser.xmlParser());
-		if(searchDoc.select("diag|diagnostic").size() > 0) {
-			throw new OpacErrorException(searchDoc.select("diag|message").text());
+		if (searchDoc.select("diag|diagnostic").size() > 0) {
+			throw new OpacErrorException(searchDoc.select("diag|message")
+					.text());
 		}
-		
+
 		int resultcount = 0;
 		List<SearchResult> results = new ArrayList<SearchResult>();
-		
-		resultcount = Integer.valueOf(searchDoc.select("zs|numberOfRecords").text());
-		
+
+		resultcount = Integer.valueOf(searchDoc.select("zs|numberOfRecords")
+				.text());
+
 		Elements records = searchDoc.select("zs|records > zs|record");
 		int i = 0;
-		for(Element record:records) {
+		for (Element record : records) {
 			SearchResult sr = new SearchResult();
 			String title = getDetail(record, "titleInfo title");
 			String firstName = getDetail(record, "name > namePart[type=given]");
 			String lastName = getDetail(record, "name > namePart[type=family]");
 			String year = getDetail(record, "dateIssued");
 			String mType = getDetail(record, "physicalDescription > form");
-			String isbn =  getDetail(record, "identifier[type=isbn]");
+			String isbn = getDetail(record, "identifier[type=isbn]");
 			String coverUrl = getDetail(record, "url[displayLabel=C Cover]");
 			String additionalInfo = firstName + " " + lastName + ", " + year;
 			sr.setInnerhtml("<b>" + title + "</b><br>" + additionalInfo);
@@ -183,12 +186,12 @@ public class SRU extends BaseApi implements OpacApi {
 			results.add(sr);
 			i++;
 		}
-		
+
 		return new SearchRequestResult(results, resultcount, 1);
 	}
 
 	private String getDetail(Element record, String selector) {
-		if(record.select(selector).size() > 0) {
+		if (record.select(selector).size() > 0) {
 			return record.select(selector).first().text();
 		} else {
 			return "";
@@ -206,29 +209,34 @@ public class SRU extends BaseApi implements OpacApi {
 			NotReachableException, OpacErrorException {
 		if (!initialised)
 			start();
-		
-		String xml = httpGet(opac_url +
-				"?version=1.1&operation=searchRetrieve&maximumRecords=" + resultcount +
-				"&recordSchema=mods&sortKeys=relevance,,1&startRecord=" +
-				String.valueOf(page*resultcount + 1) + "&query=" + currentSearchParams,
-				getDefaultEncoding());
+
+		String xml = httpGet(opac_url
+				+ "?version=1.1&operation=searchRetrieve&maximumRecords="
+				+ resultcount
+				+ "&recordSchema=mods&sortKeys=relevance,,1&startRecord="
+				+ String.valueOf(page * resultcount + 1) + "&query="
+				+ currentSearchParams, getDefaultEncoding());
 		return parse_result(xml);
 	}
 
 	@Override
 	public DetailledItem getResultById(String id, String homebranch)
-			throws IOException, NotReachableException, OpacErrorException {	
-		if(idSearchQuery != null) {
-			String xml = httpGet(opac_url +
-					"?version=1.1&operation=searchRetrieve&maximumRecords=" + resultcount +
-					"&recordSchema=mods&sortKeys=relevance,,1&query=" + idSearchQuery + "%3D" + id,
-					getDefaultEncoding());
+			throws IOException, NotReachableException, OpacErrorException {
+		if (idSearchQuery != null) {
+			String xml = httpGet(opac_url
+					+ "?version=1.1&operation=searchRetrieve&maximumRecords="
+					+ resultcount
+					+ "&recordSchema=mods&sortKeys=relevance,,1&query="
+					+ idSearchQuery + "%3D" + id, getDefaultEncoding());
 			searchDoc = Jsoup.parse(xml, "", Parser.xmlParser());
-			if(searchDoc.select("diag|diagnostic").size() > 0) {
-				throw new OpacErrorException(searchDoc.select("diag|message").text());
+			if (searchDoc.select("diag|diagnostic").size() > 0) {
+				throw new OpacErrorException(searchDoc.select("diag|message")
+						.text());
 			}
-			if(searchDoc.select("zs|record").size() != 1) { //should not happen
-				throw new OpacErrorException("nicht gefunden");
+			if (searchDoc.select("zs|record").size() != 1) { // should not
+																// happen
+				throw new OpacErrorException(
+						stringProvider.getString(StringProvider.INTERNAL_ERROR));
 			}
 			return parse_detail(searchDoc.select("zs|record").first());
 		} else {
@@ -244,7 +252,7 @@ public class SRU extends BaseApi implements OpacApi {
 		String desc = getDetail(record, "abstract");
 		String isbn = getDetail(record, "identifier[type=isbn]");
 		String coverUrl = getDetail(record, "url[displayLabel=C Cover]");
-		
+
 		DetailledItem item = new DetailledItem();
 		item.setTitle(title);
 		item.addDetail(new Detail("Autor", firstName + " " + lastName));
@@ -255,18 +263,19 @@ public class SRU extends BaseApi implements OpacApi {
 		} else if (!coverUrl.equals("")) {
 			item.setCover(coverUrl);
 		}
-		
-		if(isbn.length() > 0) {
+
+		if (isbn.length() > 0) {
 			item.addDetail(new Detail("ISBN", isbn));
 		}
-		
+
 		return item;
 	}
 
 	@Override
 	public DetailledItem getResult(int position) throws IOException,
 			OpacErrorException {
-		return parse_detail(searchDoc.select("zs|records > zs|record").get(position));
+		return parse_detail(searchDoc.select("zs|records > zs|record").get(
+				position));
 	}
 
 	@Override
@@ -294,7 +303,8 @@ public class SRU extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public List<SearchField> getSearchFields() throws OpacErrorException, NotReachableException {
+	public List<SearchField> getSearchFields() throws OpacErrorException,
+			NotReachableException {
 		List<SearchField> searchFields = new ArrayList<SearchField>();
 		Set<String> fieldsCompat = searchQueries.keySet();
 
@@ -412,7 +422,7 @@ public class SRU extends BaseApi implements OpacApi {
 		if (fieldsCompat.contains(KEY_SEARCH_QUERY_ORDER)) {
 			// TODO: Implement this (was this even usable before?)
 		}
-		
+
 		return searchFields;
 	}
 
@@ -434,7 +444,7 @@ public class SRU extends BaseApi implements OpacApi {
 
 	@Override
 	public String getShareUrl(String id, String title) {
-		if(shareUrl != null)
+		if (shareUrl != null)
 			return String.format(shareUrl, id);
 		else
 			return null;
@@ -450,7 +460,7 @@ public class SRU extends BaseApi implements OpacApi {
 			String selection) throws IOException, OpacErrorException {
 		return null;
 	}
-	
+
 	@Override
 	protected String getDefaultEncoding() {
 		return "UTF-8";

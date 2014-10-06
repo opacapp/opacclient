@@ -40,6 +40,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import de.geeksfactory.opacclient.NotReachableException;
+import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -125,7 +126,7 @@ public class WebOpacNet extends BaseApi implements OpacApi {
 
 		if (index == 0) {
 			throw new OpacErrorException(
-					"Es wurden keine Suchkriterien eingegeben.");
+					stringProvider.getString(StringProvider.NO_CRITERIA_INPUT));
 		}
 
 		String json = httpGet(opac_url + "/de/mobile/GetMedien.ashx"
@@ -182,8 +183,9 @@ public class WebOpacNet extends BaseApi implements OpacApi {
 						page);
 			} catch (JSONException e) {
 				e.printStackTrace();
-				throw new OpacErrorException("Fehler beim Parsen: "
-						+ e.getMessage());
+				throw new OpacErrorException(stringProvider.getFormattedString(
+						StringProvider.INTERNAL_ERROR_WITH_DESCRIPTION,
+						e.getMessage()));
 			}
 		} else {
 			return new SearchRequestResult(new ArrayList<SearchResult>(), 0,
@@ -209,7 +211,7 @@ public class WebOpacNet extends BaseApi implements OpacApi {
 
 		if (index == 0) {
 			throw new OpacErrorException(
-					"Es wurden keine Suchkriterien eingegeben.");
+					stringProvider.getString(StringProvider.NO_CRITERIA_INPUT));
 		}
 
 		String json = httpGet(opac_url + "/de/mobile/GetMedien.ashx"
@@ -328,8 +330,9 @@ public class WebOpacNet extends BaseApi implements OpacApi {
 
 		} catch (JSONException e) {
 			e.printStackTrace();
-			throw new OpacErrorException("Fehler beim Parsen: "
-					+ e.getMessage());
+			throw new OpacErrorException(stringProvider.getFormattedString(
+					StringProvider.INTERNAL_ERROR_WITH_DESCRIPTION,
+					e.getMessage()));
 		}
 
 	}

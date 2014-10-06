@@ -327,7 +327,7 @@ public class Adis extends BaseApi implements OpacApi {
 				if (cnt > 4) {
 					throw new OpacErrorException(
 							stringProvider.getFormattedString(
-									StringProvider.LIMITED_NUM_OF_QUERIES, 4));
+									StringProvider.LIMITED_NUM_OF_CRITERIA, 4));
 				}
 			}
 		}
@@ -345,7 +345,7 @@ public class Adis extends BaseApi implements OpacApi {
 
 		if (cnt == 0) {
 			throw new OpacErrorException(
-					"Es wurden keine Suchkriterien eingegeben.");
+					stringProvider.getString(StringProvider.NO_CRITERIA_INPUT));
 		}
 
 		Document docresults = htmlPost(opac_url + ";jsessionid=" + s_sid,

@@ -37,6 +37,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -52,7 +53,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
+
 import de.geeksfactory.opacclient.NotReachableException;
+import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -272,9 +275,8 @@ public class Bibliotheca extends BaseApi {
 				ifeldCount++;
 				if (ifeldCount > 1)
 					throw new OpacErrorException(
-							"Sie haben eine Kombination von Suchfeldern benutzt,"
-									+ " die von dieser Bibliothek nicht unterstützt wird."
-									+ " Bitte probieren Sie eine andere Suche.");
+							stringProvider
+									.getString(StringProvider.COMBINATION_NOT_SUPPORTED));
 			}
 			nameValuePairs.add(new BasicNameValuePair(key, query.getValue()));
 			if (query.getSearchField().getData() != null) {
@@ -842,13 +844,14 @@ public class Bibliotheca extends BaseApi {
 			}
 
 			if (doc.select("input#make_allvl").size() > 0) {
-				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
+						2);
 				nameValuePairs.add(new BasicNameValuePair("target",
 						"make_allvl_flag"));
 				nameValuePairs.add(new BasicNameValuePair("make_allvl",
 						"Bestaetigung"));
 			}
-			
+
 			return new ProlongAllResult(MultiStepResult.Status.OK, result);
 		}
 

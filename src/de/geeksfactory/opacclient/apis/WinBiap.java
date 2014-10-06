@@ -19,6 +19,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import de.geeksfactory.opacclient.NotReachableException;
+import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -256,7 +257,7 @@ public class WinBiap extends BaseApi implements OpacApi {
 
 		if (index == 0) {
 			throw new OpacErrorException(
-					"Es wurden keine Suchkriterien eingegeben.");
+					stringProvider.getString(StringProvider.NO_CRITERIA_INPUT));
 		}
 		// if (index > 4) {
 		// throw new OpacErrorException(
@@ -309,7 +310,8 @@ public class WinBiap extends BaseApi implements OpacApi {
 		if (matcher.find()) {
 			results_total = Integer.parseInt(matcher.group(1));
 		} else {
-			throw new OpacErrorException("Fehler bei der Suche");
+			throw new OpacErrorException(stringProvider.getString(
+					StringProvider.INTERNAL_ERROR));
 		}
 
 		// Results
@@ -344,7 +346,8 @@ public class WinBiap extends BaseApi implements OpacApi {
 			if (matcher.find()) {
 				sr.setId(matcher.group(1));
 			} else {
-				throw new OpacErrorException("Fehler beim Erkennen eines Links");
+				throw new OpacErrorException(stringProvider.getString(
+						StringProvider.INTERNAL_ERROR));
 			}
 
 			if (tr.select(".mediaStatus").size() > 0) {

@@ -46,6 +46,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import de.geeksfactory.opacclient.NotReachableException;
+import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -157,7 +158,7 @@ public class IOpac extends BaseApi implements OpacApi {
 
 		if (index == 0) {
 			throw new OpacErrorException(
-					"Es wurden keine Suchkriterien eingegeben.");
+					stringProvider.getString(StringProvider.NO_CRITERIA_INPUT));
 		}
 
 		String html = httpPost(opac_url + "/cgi-bin/di.exe",
@@ -168,7 +169,7 @@ public class IOpac extends BaseApi implements OpacApi {
 	}
 
 	protected SearchRequestResult parse_search(String html, int page)
-			throws OpacErrorException {
+			throws OpacErrorException, NotReachableException {
 		Document doc = Jsoup.parse(html);
 
 		if (doc.select("h4").size() > 0) {
@@ -186,11 +187,11 @@ public class IOpac extends BaseApi implements OpacApi {
 		} else if (doc.select("h1").size() > 0) {
 			if (doc.select("h1").text().trim().contains("RUNTIME ERROR")) {
 				// Server Error
-				throw new OpacErrorException(
-						"Serverfehler. Bitte probieren Sie es später noch einmal.");
+				throw new NotReachableException();
 			} else {
-				throw new OpacErrorException("Unbekannter Fehler: "
-						+ doc.select("h1").text().trim());
+				throw new OpacErrorException(stringProvider.getFormattedString(
+						StringProvider.UNKNOWN_ERROR_WITH_DESCRIPTION, doc
+								.select("h1").text().trim()));
 			}
 		} else {
 			return null;
@@ -561,7 +562,7 @@ public class IOpac extends BaseApi implements OpacApi {
 			return new CancelResult(MultiStepResult.Status.OK);
 		} catch (Throwable e) {
 			e.printStackTrace();
-			throw new OpacErrorException("Verbindungsfehler.");
+			throw new NotReachableException();
 		}
 	}
 
@@ -601,17 +602,18 @@ public class IOpac extends BaseApi implements OpacApi {
 				} else if (doc.select("h1").text().trim()
 						.contains("RUNTIME ERROR")) {
 					// Server Error
-					throw new OpacErrorException(
-							"Serverfehler. Bitte probieren Sie es später noch einmal.");
+					throw new NotReachableException();
 				} else {
 					throw new OpacErrorException(
-							"Unbekannter Fehler: "
-									+ doc.select("h1").text().trim()
-									+ " Bitte prüfen Sie, ob ihre Kontodaten korrekt sind.");
+							stringProvider
+									.getFormattedString(
+											StringProvider.UNKNOWN_ERROR_ACCOUNT_WITH_DESCRIPTION,
+											doc.select("h1").text().trim()));
 				}
 			} else {
 				throw new OpacErrorException(
-						"Unbekannter Fehler. Bitte prüfen Sie, ob ihre Kontodaten korrekt sind.");
+						stringProvider
+								.getString(StringProvider.UNKNOWN_ERROR_ACCOUNT));
 			}
 		}
 		return res;
@@ -709,8 +711,8 @@ public class IOpac extends BaseApi implements OpacApi {
 	}
 
 	private SearchField createSearchField(Element descTd, Element inputTd) {
-		String name = descTd.select("span, blockquote").text().replace(":", "").trim()
-				.replace("\u00a0", "");
+		String name = descTd.select("span, blockquote").text().replace(":", "")
+				.trim().replace("\u00a0", "");
 		if (inputTd.select("select").size() > 0
 				&& !name.equals("Treffer/Seite") && !name.equals("Medientypen")
 				&& !name.equals("Treffer pro Seite")) {
@@ -753,7 +755,8 @@ public class IOpac extends BaseApi implements OpacApi {
 					getDefaultEncoding());
 		}
 		Document doc = Jsoup.parse(html);
-		Elements trs = doc.select("form tr:has(input:not([type=submit], [type=reset])), form tr:has(select)");
+		Elements trs = doc
+				.select("form tr:has(input:not([type=submit], [type=reset])), form tr:has(select)");
 		for (Element tr : trs) {
 			Elements tds = tr.select("td");
 			if (tds.size() == 4) {
@@ -764,7 +767,8 @@ public class IOpac extends BaseApi implements OpacApi {
 					fields.add(field1);
 				if (field2 != null)
 					fields.add(field2);
-			} else if (tds.size() == 2 || (tds.size() == 3 && tds.get(2).children().size() == 0) ) {
+			} else if (tds.size() == 2
+					|| (tds.size() == 3 && tds.get(2).children().size() == 0)) {
 				SearchField field = createSearchField(tds.get(0), tds.get(1));
 				if (field != null)
 					fields.add(field);

@@ -28,7 +28,16 @@ package de.geeksfactory.opacclient.i18n;
  *
  */
 public interface StringProvider {
-	public static String LIMITED_NUM_OF_QUERIES = "limited_num_of_queries";
+	public static String LIMITED_NUM_OF_CRITERIA = "limited_num_of_criteria";
+	public static String NO_CRITERIA_INPUT = "no_criteria_input";
+	public static String COMBINATION_NOT_SUPPORTED = "combination_not_supported";
+	public static String UNKNOWN_ERROR = "unknown_error";
+	public static String UNKNOWN_ERROR_WITH_DESCRIPTION = "unknown_error_with_description";
+	public static String UNKNOWN_ERROR_ACCOUNT = "unknown_error_account";
+	public static String UNKNOWN_ERROR_ACCOUNT_WITH_DESCRIPTION = "unknown_error_account_with_description";
+	public static String INTERNAL_ERROR = "internal_error";
+	public static String INTERNAL_ERROR_WITH_DESCRIPTION = "internal_error_with_description";
+	public static String LOGIN_FAILED = "login_failed";
 	
 	public abstract String getString(String identifier);
 	
