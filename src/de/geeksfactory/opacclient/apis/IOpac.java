@@ -22,6 +22,8 @@
 package de.geeksfactory.opacclient.apis;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,6 +48,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import de.geeksfactory.opacclient.NotReachableException;
+import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -157,7 +160,7 @@ public class IOpac extends BaseApi implements OpacApi {
 
 		if (index == 0) {
 			throw new OpacErrorException(
-					"Es wurden keine Suchkriterien eingegeben.");
+					stringProvider.getString(StringProvider.NO_CRITERIA_INPUT));
 		}
 
 		String html = httpPost(opac_url + "/cgi-bin/di.exe",
@@ -168,7 +171,7 @@ public class IOpac extends BaseApi implements OpacApi {
 	}
 
 	protected SearchRequestResult parse_search(String html, int page)
-			throws OpacErrorException {
+			throws OpacErrorException, NotReachableException {
 		Document doc = Jsoup.parse(html);
 
 		if (doc.select("h4").size() > 0) {
@@ -186,11 +189,11 @@ public class IOpac extends BaseApi implements OpacApi {
 		} else if (doc.select("h1").size() > 0) {
 			if (doc.select("h1").text().trim().contains("RUNTIME ERROR")) {
 				// Server Error
-				throw new OpacErrorException(
-						"Serverfehler. Bitte probieren Sie es später noch einmal.");
+				throw new NotReachableException();
 			} else {
-				throw new OpacErrorException("Unbekannter Fehler: "
-						+ doc.select("h1").text().trim());
+				throw new OpacErrorException(stringProvider.getFormattedString(
+						StringProvider.UNKNOWN_ERROR_WITH_DESCRIPTION, doc
+								.select("h1").text().trim()));
 			}
 		} else {
 			return null;
@@ -458,13 +461,22 @@ public class IOpac extends BaseApi implements OpacApi {
 
 		// GET RESERVATION INFO
 		if ("verfügbar".equals(e.get(DetailledItem.KEY_COPY_STATUS))
-				|| doc.select("a[href^=/cgi-bin/di.exe?mode=10]").size() == 0) {
+				|| doc.select(
+						"a[href^=/cgi-bin/di.exe?mode=10], input.resbutton")
+						.size() == 0) {
 			result.setReservable(false);
 		} else {
 			result.setReservable(true);
-			result.setReservation_info(doc
-					.select("a[href^=/cgi-bin/di.exe?mode=10]").first()
-					.attr("href").substring(1).replace(" ", ""));
+			if (doc.select("a[href^=/cgi-bin/di.exe?mode=10]").size() > 0) {
+				// Reservation via link
+				result.setReservation_info(doc
+						.select("a[href^=/cgi-bin/di.exe?mode=10]").first()
+						.attr("href").substring(1).replace(" ", ""));
+			} else {
+				// Reservation via form (method="get")
+				Element form = doc.select("input.resbutton").first().parent();
+				result.setReservation_info(generateQuery(form));
+			}
 		}
 
 		result.addCopy(e);
@@ -472,10 +484,25 @@ public class IOpac extends BaseApi implements OpacApi {
 		return result;
 	}
 
+	private String generateQuery(Element form)
+			throws UnsupportedEncodingException {
+		StringBuilder builder = new StringBuilder();
+		builder.append(form.attr("action").substring(1));
+		int i = 0;
+		for (Element input : form.select("input")) {
+			builder.append(i == 0 ? "?" : "&");
+			builder.append(input.attr("name") + "="
+					+ URLEncoder.encode(input.attr("value"), "UTF-8"));
+			i++;
+		}
+		return builder.toString();
+	}
+
 	@Override
 	public ReservationResult reservation(DetailledItem item, Account account,
 			int useraction, String selection) throws IOException {
 		String reservation_info = item.getReservation_info();
+		// STEP 1: Login page
 		String html = httpGet(opac_url + "/" + reservation_info,
 				getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
@@ -483,30 +510,41 @@ public class IOpac extends BaseApi implements OpacApi {
 			return new ReservationResult(MultiStepResult.Status.ERROR, doc
 					.select("table").first().text().trim());
 		}
-		if (doc.select("form[name=form1]").size() > 0) {
-			List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
-			params.add(new BasicNameValuePair("sleKndNr", account.getName()));
-			params.add(new BasicNameValuePair("slePw", account.getPassword()));
-			params.add(new BasicNameValuePair("mode", "11"));
-			params.add(new BasicNameValuePair("mednr", doc.select(
-					"input[name=mednr]").attr("value")));
-			params.add(new BasicNameValuePair("page", doc.select(
-					"input[name=page]").attr("value")));
-			params.add(new BasicNameValuePair("Anzahl", "10"));
-			params.add(new BasicNameValuePair("recno", doc.select(
-					"input[name=recno]").attr("value")));
-			params.add(new BasicNameValuePair("pshLogin", "Reservieren"));
 
-			html = httpPost(opac_url + "/cgi-bin/di.exe",
-					new UrlEncodedFormEntity(params), getDefaultEncoding());
+		if (doc.select("form[name=form1]").size() == 0)
+			return new ReservationResult(MultiStepResult.Status.ERROR);
+
+		Element form = doc.select("form[name=form1]").first();
+		List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
+		params.add(new BasicNameValuePair("sleKndNr", account.getName()));
+		params.add(new BasicNameValuePair("slePw", account.getPassword()));
+		params.add(new BasicNameValuePair("pshLogin", "Reservieren"));
+		for (Element input : form.select("input[type=hidden]")) {
+			params.add(new BasicNameValuePair(input.attr("name"), input
+					.attr("value")));
+		}
+
+		// STEP 2: Confirmation page
+		html = httpPost(opac_url + "/cgi-bin/di.exe", new UrlEncodedFormEntity(
+				params), getDefaultEncoding());
+		doc = Jsoup.parse(html);
+
+		if (doc.select("form[name=form1]").size() > 0) {
+			// STEP 3: There is another confirmation needed
+			form = doc.select("form[name=form1]").first();
+			html = httpGet(opac_url + "/" + generateQuery(form),
+					getDefaultEncoding());
 			doc = Jsoup.parse(html);
-			if (doc.select("h1").text().contains("fehlgeschlagen")) {
-				return new ReservationResult(MultiStepResult.Status.ERROR, doc
-						.select("table").first().text().trim());
-			}
+		}
+
+		if (doc.select("h1").text().contains("fehlgeschlagen")
+				|| doc.select("h1").text().contains("Achtung")) {
+			return new ReservationResult(MultiStepResult.Status.ERROR, doc
+					.select("table").first().text().trim());
+		} else {
 			return new ReservationResult(MultiStepResult.Status.OK);
 		}
-		return new ReservationResult(MultiStepResult.Status.ERROR);
+
 	}
 
 	@Override
@@ -561,7 +599,7 @@ public class IOpac extends BaseApi implements OpacApi {
 			return new CancelResult(MultiStepResult.Status.OK);
 		} catch (Throwable e) {
 			e.printStackTrace();
-			throw new OpacErrorException("Verbindungsfehler.");
+			throw new NotReachableException();
 		}
 	}
 
@@ -601,17 +639,18 @@ public class IOpac extends BaseApi implements OpacApi {
 				} else if (doc.select("h1").text().trim()
 						.contains("RUNTIME ERROR")) {
 					// Server Error
-					throw new OpacErrorException(
-							"Serverfehler. Bitte probieren Sie es später noch einmal.");
+					throw new NotReachableException();
 				} else {
 					throw new OpacErrorException(
-							"Unbekannter Fehler: "
-									+ doc.select("h1").text().trim()
-									+ " Bitte prüfen Sie, ob ihre Kontodaten korrekt sind.");
+							stringProvider
+									.getFormattedString(
+											StringProvider.UNKNOWN_ERROR_ACCOUNT_WITH_DESCRIPTION,
+											doc.select("h1").text().trim()));
 				}
 			} else {
 				throw new OpacErrorException(
-						"Unbekannter Fehler. Bitte prüfen Sie, ob ihre Kontodaten korrekt sind.");
+						stringProvider
+								.getString(StringProvider.UNKNOWN_ERROR_ACCOUNT));
 			}
 		}
 		return res;
@@ -709,8 +748,8 @@ public class IOpac extends BaseApi implements OpacApi {
 	}
 
 	private SearchField createSearchField(Element descTd, Element inputTd) {
-		String name = descTd.select("span, blockquote").text().replace(":", "").trim()
-				.replace("\u00a0", "");
+		String name = descTd.select("span, blockquote").text().replace(":", "")
+				.trim().replace("\u00a0", "");
 		if (inputTd.select("select").size() > 0
 				&& !name.equals("Treffer/Seite") && !name.equals("Medientypen")
 				&& !name.equals("Treffer pro Seite")) {
@@ -753,7 +792,8 @@ public class IOpac extends BaseApi implements OpacApi {
 					getDefaultEncoding());
 		}
 		Document doc = Jsoup.parse(html);
-		Elements trs = doc.select("form tr:has(input:not([type=submit], [type=reset])), form tr:has(select)");
+		Elements trs = doc
+				.select("form tr:has(input:not([type=submit], [type=reset])), form tr:has(select)");
 		for (Element tr : trs) {
 			Elements tds = tr.select("td");
 			if (tds.size() == 4) {
@@ -764,7 +804,8 @@ public class IOpac extends BaseApi implements OpacApi {
 					fields.add(field1);
 				if (field2 != null)
 					fields.add(field2);
-			} else if (tds.size() == 2 || (tds.size() == 3 && tds.get(2).children().size() == 0) ) {
+			} else if (tds.size() == 2
+					|| (tds.size() == 3 && tds.get(2).children().size() == 0)) {
 				SearchField field = createSearchField(tds.get(0), tds.get(1));
 				if (field != null)
 					fields.add(field);

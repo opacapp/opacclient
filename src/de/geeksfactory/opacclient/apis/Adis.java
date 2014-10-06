@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.MalformedChunkCodingException;
 import org.apache.http.NameValuePair;
@@ -32,8 +33,10 @@ import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult.Status;
+import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -323,7 +326,8 @@ public class Adis extends BaseApi implements OpacApi {
 
 				if (cnt > 4) {
 					throw new OpacErrorException(
-							"Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.");
+							stringProvider.getFormattedString(
+									StringProvider.LIMITED_NUM_OF_CRITERIA, 4));
 				}
 			}
 		}
@@ -341,7 +345,7 @@ public class Adis extends BaseApi implements OpacApi {
 
 		if (cnt == 0) {
 			throw new OpacErrorException(
-					"Es wurden keine Suchkriterien eingegeben.");
+					stringProvider.getString(StringProvider.NO_CRITERIA_INPUT));
 		}
 
 		Document docresults = htmlPost(opac_url + ";jsessionid=" + s_sid,

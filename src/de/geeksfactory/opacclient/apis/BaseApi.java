@@ -61,6 +61,8 @@ import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
+import de.geeksfactory.opacclient.i18n.DummyStringProvider;
+import de.geeksfactory.opacclient.i18n.StringProvider;
 
 /**
  * Abstract Base class for OpacApi implementations providing some helper methods
@@ -70,15 +72,17 @@ public abstract class BaseApi implements OpacApi {
 
 	protected DefaultHttpClient http_client;
 	protected Library library;
+	protected StringProvider stringProvider;
 	
 	
 	/**
-	 * Initializes HTTP client
+	 * Initializes HTTP client and String Provider
 	 */
 	@Override
 	public void init(Library library) {
 		http_client = HTTPClient.getNewHttpClient(library);
 		this.library = library;
+		stringProvider = new DummyStringProvider();
 	}
 
 	/**
@@ -465,5 +469,10 @@ public abstract class BaseApi implements OpacApi {
 	public SearchRequestResult volumeSearch(Map<String, String> query)
 			throws IOException, OpacErrorException {
 		return null;
+	}
+	
+	@Override
+	public void setStringProvider(StringProvider stringProvider) {
+		this.stringProvider = stringProvider;
 	}
 }

@@ -52,6 +52,7 @@ import org.jsoup.select.Elements;
 
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult.Status;
+import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -165,7 +166,8 @@ public class SISIS extends BaseApi implements OpacApi {
 		defaulttypes.put("karte", MediaType.MAP);
 	}
 
-	public List<SearchField> getSearchFields() throws IOException, JSONException {
+	public List<SearchField> getSearchFields() throws IOException,
+			JSONException {
 		if (!initialised)
 			start();
 
@@ -192,13 +194,14 @@ public class SISIS extends BaseApi implements OpacApi {
 		return fields;
 	}
 
-	private void parseDropdown(Element dropdownElement, List<SearchField> fields,
-			Document doc) throws JSONException {
+	private void parseDropdown(Element dropdownElement,
+			List<SearchField> fields, Document doc) throws JSONException {
 		Elements options = dropdownElement.select("option");
 		DropdownSearchField dropdown = new DropdownSearchField();
 		List<Map<String, String>> values = new ArrayList<Map<String, String>>();
 		if (dropdownElement.parent().select("input[type=hidden]").size() > 0) {
-			dropdown.setId(dropdownElement.parent().select("input[type=hidden]").attr("value"));
+			dropdown.setId(dropdownElement.parent()
+					.select("input[type=hidden]").attr("value"));
 			dropdown.setData(new JSONObject("{\"restriction\": true}"));
 		} else {
 			dropdown.setId(dropdownElement.attr("name"));
@@ -211,8 +214,7 @@ public class SISIS extends BaseApi implements OpacApi {
 			values.add(value);
 		}
 		dropdown.setDropdownValues(values);
-		dropdown.setDisplayName(dropdownElement.parent().select("label")
-				.text());
+		dropdown.setDisplayName(dropdownElement.parent().select("label").text());
 		fields.add(dropdown);
 	}
 
@@ -280,7 +282,8 @@ public class SISIS extends BaseApi implements OpacApi {
 
 	@Override
 	public SearchRequestResult search(List<SearchQuery> query)
-			throws IOException, NotReachableException, OpacErrorException, JSONException {
+			throws IOException, NotReachableException, OpacErrorException,
+			JSONException {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 		int index = 0;
@@ -291,40 +294,43 @@ public class SISIS extends BaseApi implements OpacApi {
 		params.add(new BasicNameValuePair("CSId", CSId));
 		params.add(new BasicNameValuePair("methodToCallParameter",
 				"submitSearch"));
-		
-		for (SearchQuery entry:query) {
+
+		for (SearchQuery entry : query) {
 			if (entry.getValue().equals(""))
 				continue;
 			if (entry.getSearchField() instanceof DropdownSearchField) {
 				JSONObject data = entry.getSearchField().getData();
 				if (data.getBoolean("restriction")) {
-					params.add(new BasicNameValuePair("searchRestrictionID[" + restrictionIndex + "]",
-							entry.getSearchField().getId()));
+					params.add(new BasicNameValuePair("searchRestrictionID["
+							+ restrictionIndex + "]", entry.getSearchField()
+							.getId()));
 					params.add(new BasicNameValuePair(
-							"searchRestrictionValue1[" + restrictionIndex + "]", entry.getValue()));
-					restrictionIndex ++;
-				} else {
-					params.add(new BasicNameValuePair(entry.getKey(),
+							"searchRestrictionValue1[" + restrictionIndex + "]",
 							entry.getValue()));
+					restrictionIndex++;
+				} else {
+					params.add(new BasicNameValuePair(entry.getKey(), entry
+							.getValue()));
 				}
 			} else {
 				if (index != 0)
-					params.add(new BasicNameValuePair("combinationOperator[" + index
-							+ "]", "AND"));
-				params.add(new BasicNameValuePair("searchCategories[" + index + "]",
-						entry.getKey()));
-				params.add(new BasicNameValuePair("searchString[" + index + "]", entry.getValue()));
-				index ++;
+					params.add(new BasicNameValuePair("combinationOperator["
+							+ index + "]", "AND"));
+				params.add(new BasicNameValuePair("searchCategories[" + index
+						+ "]", entry.getKey()));
+				params.add(new BasicNameValuePair(
+						"searchString[" + index + "]", entry.getValue()));
+				index++;
 			}
 		}
 
 		if (index == 0) {
 			throw new OpacErrorException(
-					"Es wurden keine Suchkriterien eingegeben.");
+					stringProvider.getString(StringProvider.NO_CRITERIA_INPUT));
 		}
 		if (index > 4) {
-			throw new OpacErrorException(
-					"Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.");
+			throw new OpacErrorException(stringProvider.getFormattedString(
+					StringProvider.LIMITED_NUM_OF_CRITERIA, 4));
 		}
 
 		params.add(new BasicNameValuePair("submitSearch", "Suchen"));
@@ -336,7 +342,7 @@ public class SISIS extends BaseApi implements OpacApi {
 						+ URLEncodedUtils.format(params, "UTF-8"), ENCODING);
 		return parse_search(html, 1);
 	}
-	
+
 	public SearchRequestResult volumeSearch(Map<String, String> query)
 			throws IOException, OpacErrorException {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -1247,14 +1253,14 @@ public class SISIS extends BaseApi implements OpacApi {
 				account(account);
 			} catch (JSONException e) {
 				e.printStackTrace();
-				throw new OpacErrorException("Interner Fehler.");
+				throw new OpacErrorException(stringProvider.getString(StringProvider.INTERNAL_ERROR));
 			}
 		} else if (logged_in_as.getId() != account.getId()) {
 			try {
 				account(account);
 			} catch (JSONException e) {
 				e.printStackTrace();
-				throw new OpacErrorException("Interner Fehler.");
+				throw new OpacErrorException(stringProvider.getString(StringProvider.INTERNAL_ERROR));
 			}
 		}
 

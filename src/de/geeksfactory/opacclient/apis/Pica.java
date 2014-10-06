@@ -54,6 +54,7 @@ import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 import de.geeksfactory.opacclient.NotReachableException;
+import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -144,21 +145,24 @@ public class Pica extends BaseApi implements OpacApi {
 		}
 	}
 
-	protected int addParameters(SearchQuery query, List<NameValuePair> params, int index) throws JSONException {
+	protected int addParameters(SearchQuery query, List<NameValuePair> params,
+			int index) throws JSONException {
 		if (query.getValue().equals("") || query.getValue().equals("false"))
 			return index;
 		if (query.getSearchField() instanceof TextSearchField) {
 			if (query.getSearchField().getData().getBoolean("ADI")) {
-				params.add(new BasicNameValuePair(query.getKey(), query.getValue()));
+				params.add(new BasicNameValuePair(query.getKey(), query
+						.getValue()));
 			} else {
 				if (index == 0) {
 					params.add(new BasicNameValuePair("ACT" + index, "SRCH"));
 				} else {
 					params.add(new BasicNameValuePair("ACT" + index, "*"));
 				}
-		
+
 				params.add(new BasicNameValuePair("IKT" + index, query.getKey()));
-				params.add(new BasicNameValuePair("TRM" + index, query.getValue()));
+				params.add(new BasicNameValuePair("TRM" + index, query
+						.getValue()));
 				return index + 1;
 			}
 		} else if (query.getSearchField() instanceof CheckboxSearchField) {
@@ -174,7 +178,8 @@ public class Pica extends BaseApi implements OpacApi {
 
 	@Override
 	public SearchRequestResult search(List<SearchQuery> query)
-			throws IOException, NotReachableException, OpacErrorException, JSONException {
+			throws IOException, NotReachableException, OpacErrorException,
+			JSONException {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 		int index = 0;
@@ -188,17 +193,17 @@ public class Pica extends BaseApi implements OpacApi {
 		params.add(new BasicNameValuePair("PARSE_OPWORDS", "N"));
 		params.add(new BasicNameValuePair("PARSE_OLDSETS", "N"));
 
-		for (SearchQuery singleQuery:query) {
+		for (SearchQuery singleQuery : query) {
 			index = addParameters(singleQuery, params, index);
 		}
 
 		if (index == 0) {
 			throw new OpacErrorException(
-					"Es wurden keine Suchkriterien eingegeben.");
+					stringProvider.getString(StringProvider.NO_CRITERIA_INPUT));
 		}
 		if (index > 4) {
-			throw new OpacErrorException(
-					"Diese Bibliothek unterstützt nur bis zu vier benutzte Suchkriterien.");
+			throw new OpacErrorException(stringProvider.getFormattedString(
+					StringProvider.LIMITED_NUM_OF_CRITERIA, 4));
 		}
 
 		String html = httpGet(opac_url + "/DB=" + db + "/SET=1/TTL=1/CMD?"
@@ -804,7 +809,8 @@ public class Pica extends BaseApi implements OpacApi {
 				account(account);
 				return cancel(media, account, useraction, selection);
 			} catch (JSONException e) {
-				throw new OpacErrorException("Interner Fehler");
+				throw new OpacErrorException(
+						stringProvider.getString(StringProvider.INTERNAL_ERROR));
 			}
 		} else {
 			CancelResult res = new CancelResult(MultiStepResult.Status.ERROR);
@@ -869,7 +875,8 @@ public class Pica extends BaseApi implements OpacApi {
 
 		if (medien == null || reserved == null) {
 			throw new OpacErrorException(
-					"Unbekannter Fehler. Bitte prüfen Sie, ob ihre Kontodaten korrekt sind.");
+					stringProvider
+							.getString(StringProvider.UNKNOWN_ERROR_ACCOUNT));
 			// Log.d("OPACCLIENT", html);
 		}
 		return res;
@@ -880,7 +887,8 @@ public class Pica extends BaseApi implements OpacApi {
 			Document doc, int offset, String accountName)
 			throws ClientProtocolException, IOException {
 
-		Elements copytrs = doc.select("table[summary^=list] > tbody > tr[valign=top]");
+		Elements copytrs = doc
+				.select("table[summary^=list] > tbody > tr[valign=top]");
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.GERMAN);
 
@@ -892,30 +900,32 @@ public class Pica extends BaseApi implements OpacApi {
 		assert (trs > 0);
 		for (int i = 0; i < trs; i++) {
 			Element tr = copytrs.get(i);
-			if (tr.children().size() == 8) { // According to HTML code from Bug report
-											   // (TU Darmstadt)
+			if (tr.children().size() == 8) { // According to HTML code from Bug
+												// report
+												// (TU Darmstadt)
 				Map<String, String> e = new HashMap<String, String>();
-				//Check if there is a checkbox to prolong this item
+				// Check if there is a checkbox to prolong this item
 				if (tr.select("input").size() > 0)
 					e.put(AccountData.KEY_LENT_LINK,
 							tr.select("input").attr("value"));
 				else
 					e.put(AccountData.KEY_LENT_RENEWABLE, "N");
-				
+
 				Elements datatrs = tr.select("table[summary=title data] tr");
 				e.put(AccountData.KEY_LENT_TITLE, datatrs.get(0).text());
-				
-				List<TextNode> textNodes = datatrs.get(1).select("td").first().textNodes();
+
+				List<TextNode> textNodes = datatrs.get(1).select("td").first()
+						.textNodes();
 				List<TextNode> nodes = new ArrayList<TextNode>();
 				Elements titles = datatrs.get(1).select("span.label-small");
-				
-				for (TextNode node:textNodes) {
+
+				for (TextNode node : textNodes) {
 					if (!node.text().equals(" "))
 						nodes.add(node);
 				}
 
 				assert (nodes.size() == titles.size());
-				for (int j = 0; j<nodes.size(); j++) {			
+				for (int j = 0; j < nodes.size(); j++) {
 					String title = titles.get(j).text();
 					String value = nodes.get(j).text().trim().replace(";", "");
 					if (title.contains("Signatur")) {
@@ -925,8 +935,8 @@ public class Pica extends BaseApi implements OpacApi {
 					} else if (title.contains("Leihfristende")) {
 						e.put(AccountData.KEY_LENT_DEADLINE, value);
 						try {
-							e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String
-									.valueOf(sdf.parse(value).getTime()));
+							e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
+									String.valueOf(sdf.parse(value).getTime()));
 						} catch (ParseException e1) {
 							e1.printStackTrace();
 						}
@@ -935,7 +945,7 @@ public class Pica extends BaseApi implements OpacApi {
 					}
 				}
 				medien.add(e);
-			} else { //like in Kiel
+			} else { // like in Kiel
 				String prolongCount = "";
 				try {
 					String html = httpGet(https_url + "/nr_renewals.php?U="
@@ -944,7 +954,7 @@ public class Pica extends BaseApi implements OpacApi {
 							getDefaultEncoding());
 					prolongCount = Jsoup.parse(html).text();
 				} catch (IOException e) {
-	
+
 				}
 				String reminderCount = tr.child(13).text().trim();
 				if (reminderCount.indexOf(" Mahn") >= 0
@@ -957,7 +967,7 @@ public class Pica extends BaseApi implements OpacApi {
 				else
 					reminderCount = "";
 				Map<String, String> e = new HashMap<String, String>();
-	
+
 				if (tr.child(4).text().trim().length() < 5
 						&& tr.child(5).text().trim().length() > 4) {
 					e.put(AccountData.KEY_LENT_TITLE, tr.child(5).text().trim());
@@ -968,21 +978,22 @@ public class Pica extends BaseApi implements OpacApi {
 				if (!reminderCount.equals("0") && !reminderCount.equals("")) {
 					status += reminderCount + " Mahnungen, ";
 				}
-				status += prolongCount + "x verl."; // + tr.child(25).text().trim()
+				status += prolongCount + "x verl."; // +
+													// tr.child(25).text().trim()
 													// + " Vormerkungen");
 				e.put(AccountData.KEY_LENT_STATUS, status);
 				e.put(AccountData.KEY_LENT_DEADLINE, tr.child(21).text().trim());
 				try {
 					e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String
-							.valueOf(sdf
-									.parse(e.get(AccountData.KEY_LENT_DEADLINE))
+							.valueOf(sdf.parse(
+									e.get(AccountData.KEY_LENT_DEADLINE))
 									.getTime()));
 				} catch (ParseException e1) {
 					e1.printStackTrace();
 				}
-				e.put(AccountData.KEY_LENT_LINK,
-						tr.child(1).select("input").attr("value"));
-	
+				e.put(AccountData.KEY_LENT_LINK, tr.child(1).select("input")
+						.attr("value"));
+
 				medien.add(e);
 			}
 		}
@@ -1035,14 +1046,15 @@ public class Pica extends BaseApi implements OpacApi {
 			field.setId(option.attr("value"));
 			field.setHint("");
 			field.setData(new JSONObject("{\"ADI\": false}"));
-			
+
 			Pattern pattern = Pattern.compile("\\[[A-Z:]+\\]|\\([A-Z:]+\\)");
 			Matcher matcher = pattern.matcher(field.getDisplayName());
 			if (matcher.find()) {
-				field.getData().put("meaning", matcher.group().replace(":", ""));
+				field.getData()
+						.put("meaning", matcher.group().replace(":", ""));
 				field.setDisplayName(matcher.replaceFirst("").trim());
 			}
-			
+
 			fields.add(field);
 		}
 
@@ -1065,17 +1077,18 @@ public class Pica extends BaseApi implements OpacApi {
 
 		for (Element input : doc.select("input[type=text][name^=ADI]")) {
 			TextSearchField field = new TextSearchField();
-			field.setDisplayName(input.parent().parent().select(".longkey").text());
+			field.setDisplayName(input.parent().parent().select(".longkey")
+					.text());
 			field.setId(input.attr("name"));
 			field.setHint(input.parent().select("span").text());
 			field.setData(new JSONObject("{\"ADI\": true}"));
 			fields.add(field);
 		}
-		
+
 		for (Element dropdown : doc.select("select[name^=ADI]")) {
 			DropdownSearchField field = new DropdownSearchField();
-			field.setDisplayName(dropdown.parent().parent()
-					.select(".longkey").text());
+			field.setDisplayName(dropdown.parent().parent().select(".longkey")
+					.text());
 			field.setId(dropdown.attr("name"));
 			List<Map<String, String>> dropdownOptions = new ArrayList<Map<String, String>>();
 			for (Element option : dropdown.select("option")) {
@@ -1087,7 +1100,7 @@ public class Pica extends BaseApi implements OpacApi {
 			field.setDropdownValues(dropdownOptions);
 			fields.add(field);
 		}
-		
+
 		Elements fuzzy = doc.select("input[name=FUZZY]");
 		if (fuzzy.size() > 0) {
 			CheckboxSearchField field = new CheckboxSearchField();
@@ -1096,22 +1109,23 @@ public class Pica extends BaseApi implements OpacApi {
 			field.setId("FUZZY");
 			fields.add(field);
 		}
-		
+
 		Elements mediatypes = doc.select("input[name=ADI_MAT]");
 		if (mediatypes.size() > 0) {
 			DropdownSearchField field = new DropdownSearchField();
 			field.setDisplayName("Materialart");
 			field.setId("ADI_MAT");
-			
+
 			List<Map<String, String>> values = new ArrayList<Map<String, String>>();
 			Map<String, String> all = new HashMap<String, String>();
 			all.put("key", "");
 			all.put("value", "Alle");
 			values.add(all);
-			for (Element mt:mediatypes) {
+			for (Element mt : mediatypes) {
 				Map<String, String> value = new HashMap<String, String>();
 				value.put("key", mt.attr("value"));
-				value.put("value", mt.parent().nextElementSibling().text().replace("\u00a0", ""));
+				value.put("value", mt.parent().nextElementSibling().text()
+						.replace("\u00a0", ""));
 				values.add(value);
 			}
 			field.setDropdownValues(values);

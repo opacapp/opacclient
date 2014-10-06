@@ -33,6 +33,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -46,7 +47,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
+
 import de.geeksfactory.opacclient.NotReachableException;
+import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -100,7 +103,8 @@ public class Zones22 extends BaseApi {
 	}
 
 	@Override
-	public List<SearchField> getSearchFields() throws ClientProtocolException, IOException {
+	public List<SearchField> getSearchFields() throws ClientProtocolException,
+			IOException {
 		List<SearchField> fields = new ArrayList<SearchField>();
 		String html = httpGet(
 				opac_url
@@ -108,30 +112,31 @@ public class Zones22 extends BaseApi {
 				getDefaultEncoding());
 
 		Document doc = Jsoup.parse(html);
-		
+
 		// Textfelder auslesen
 		Elements txt_opts = doc.select("#formSelectTerm_1 option");
-		for (Element opt:txt_opts) {
+		for (Element opt : txt_opts) {
 			TextSearchField field = new TextSearchField();
 			field.setId(opt.attr("value"));
 			field.setHint("");
 			field.setDisplayName(opt.text());
 			fields.add(field);
 		}
-		
+
 		// Zweigstellen auslesen
 		Elements zst_opts = doc.select(".TabRechAv .limitChoice label");
 		if (zst_opts.size() > 0) {
 			DropdownSearchField brDropdown = new DropdownSearchField();
-			brDropdown.setId(zst_opts.get(0).parent().select("input").attr("name"));
+			brDropdown.setId(zst_opts.get(0).parent().select("input")
+					.attr("name"));
 			brDropdown.setDisplayName("Zweigstelle");
-			
-			List<Map<String, String>> brOptions = new ArrayList<Map<String, String>>();			
+
+			List<Map<String, String>> brOptions = new ArrayList<Map<String, String>>();
 			Map<String, String> all = new HashMap<String, String>();
 			all.put("key", "");
 			all.put("value", "Alle");
 			brOptions.add(all);
-			for (Element opt:zst_opts) {			
+			for (Element opt : zst_opts) {
 				Map<String, String> value = new HashMap<String, String>();
 				value.put("key", opt.attr("for"));
 				value.put("value", opt.text().trim());
@@ -140,7 +145,7 @@ public class Zones22 extends BaseApi {
 			brDropdown.setDropdownValues(brOptions);
 			fields.add(brDropdown);
 		}
-		
+
 		return fields;
 	}
 
@@ -181,7 +186,8 @@ public class Zones22 extends BaseApi {
 		return res;
 	}
 
-	private int addParameters(SearchQuery query, List<NameValuePair> params, int index) {
+	private int addParameters(SearchQuery query, List<NameValuePair> params,
+			int index) {
 		if (query.getValue().equals(""))
 			return index;
 
@@ -191,8 +197,8 @@ public class Zones22 extends BaseApi {
 						"and"));
 			params.add(new BasicNameValuePair("q.form.t" + index + ".term",
 					query.getKey()));
-			params.add(new BasicNameValuePair("q.form.t" + index + ".expr", query
-					.getValue()));
+			params.add(new BasicNameValuePair("q.form.t" + index + ".expr",
+					query.getValue()));
 			return index + 1;
 		} else if (query.getSearchField() instanceof DropdownSearchField) {
 			params.add(new BasicNameValuePair(query.getKey(), query.getValue()));
@@ -201,8 +207,8 @@ public class Zones22 extends BaseApi {
 	}
 
 	@Override
-	public SearchRequestResult search(List<SearchQuery> queries) throws IOException,
-			NotReachableException, OpacErrorException {
+	public SearchRequestResult search(List<SearchQuery> queries)
+			throws IOException, NotReachableException, OpacErrorException {
 		start();
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -218,16 +224,16 @@ public class Zones22 extends BaseApi {
 		params.add(new BasicNameValuePair("q.PageSize", "10"));
 
 		int index = 1;
-		for (SearchQuery query:queries) {
+		for (SearchQuery query : queries) {
 			index = addParameters(query, params, index);
 		}
 
 		if (index > 3) {
-			throw new OpacErrorException(
-					"Diese Bibliothek unterstützt nur bis zu drei benutzte Suchkriterien.");
+			throw new OpacErrorException(stringProvider.getFormattedString(
+					StringProvider.LIMITED_NUM_OF_CRITERIA, 3));
 		} else if (index == 1) {
 			throw new OpacErrorException(
-					"Es wurden keine Suchkriterien eingegeben.");
+					stringProvider.getString(StringProvider.NO_CRITERIA_INPUT));
 		}
 
 		String html = httpGet(opac_url + "/" + searchobj + "?"
@@ -677,7 +683,8 @@ public class Zones22 extends BaseApi {
 		}
 
 		if (!loginHtml.contains("Kontostand")) {
-			throw new OpacErrorException("Login fehlgeschlagen.");
+			throw new OpacErrorException(stringProvider.getString(
+					StringProvider.LOGIN_FAILED));
 		}
 
 		Document doc2 = Jsoup.parse(loginHtml);
@@ -728,7 +735,9 @@ public class Zones22 extends BaseApi {
 		if (lent_link == null)
 			return null;
 
-		String lent_html = httpGet(opac_url + "/" + lent_link.replace("utf-8?Method", "utf-8&Method"),
+		String lent_html = httpGet(
+				opac_url + "/"
+						+ lent_link.replace("utf-8?Method", "utf-8&Method"),
 				getDefaultEncoding());
 		Document lent_doc = Jsoup.parse(lent_html);
 		List<Map<String, String>> lent = new ArrayList<Map<String, String>>();

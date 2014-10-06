@@ -72,7 +72,7 @@ public class LibraryApiTestCases extends TestCase {
 	@Before
 	public void setUp() throws NotReachableException, IOException, OpacErrorException, JSONException {
 		Security.addProvider(new BouncyCastleProvider());
-		api = getApi(library);		
+		api = getApi(library);	
 		fields = api.getSearchFields();
 		JavaMeaningDetector detector = new JavaMeaningDetector(library);
 		for (int i = 0; i < fields.size(); i++) {
