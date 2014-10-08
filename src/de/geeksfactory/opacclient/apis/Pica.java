@@ -476,7 +476,8 @@ public class Pica extends BaseApi implements OpacApi {
 			if (slashPosition > 0) {
 				title = titleAndSubtitle.substring(0, slashPosition).trim();
 				subtitle = titleAndSubtitle.substring(slashPosition + 1).trim();
-				result.addDetail(new Detail("Titelzusatz", subtitle));
+				result.addDetail(new Detail(stringProvider
+						.getString(StringProvider.SUBTITLE), subtitle));
 			} else {
 				title = titleAndSubtitle;
 				subtitle = "";
@@ -493,7 +494,8 @@ public class Pica extends BaseApi implements OpacApi {
 			if (slashPosition > 0) {
 				title = titleAndSubtitle.substring(0, slashPosition).trim();
 				subtitle = titleAndSubtitle.substring(slashPosition + 1).trim();
-				result.addDetail(new Detail("Titelzusatz", subtitle));
+				result.addDetail(new Detail(stringProvider
+						.getString(StringProvider.SUBTITLE), subtitle));
 			} else {
 				title = titleAndSubtitle;
 				subtitle = "";
@@ -510,7 +512,8 @@ public class Pica extends BaseApi implements OpacApi {
 			if (slashPosition > 0) {
 				title = titleAndSubtitle.substring(0, slashPosition).trim();
 				subtitle = titleAndSubtitle.substring(slashPosition + 1).trim();
-				result.addDetail(new Detail("Titelzusatz", subtitle));
+				result.addDetail(new Detail(stringProvider
+						.getString(StringProvider.SUBTITLE), subtitle));
 			} else {
 				title = titleAndSubtitle;
 				subtitle = "";
@@ -593,7 +596,6 @@ public class Pica extends BaseApi implements OpacApi {
 		result.addCopy(e);
 
 		result.setReservation_info(reservationInfo.toString());
-		;
 
 		return result;
 	}
@@ -649,13 +651,15 @@ public class Pica extends BaseApi implements OpacApi {
 						ReservationResult res = new ReservationResult(
 								MultiStepResult.Status.SELECTION_NEEDED);
 						res.setActionIdentifier(ReservationResult.ACTION_USER);
-						res.setMessage("Welches Exemplar soll reserviert/bestellt werden? (verfügbare Exemplare werden bestellt)");
+						res.setMessage(stringProvider
+								.getString(StringProvider.PICA_WHICH_COPY));
 						res.setSelection(selections);
 						return res;
 					} else {
 						ReservationResult res = new ReservationResult(
 								MultiStepResult.Status.ERROR);
-						res.setMessage("Es ist kein Exemplar reservierbar.");
+						res.setMessage(stringProvider
+								.getString(StringProvider.NO_COPY_RESERVABLE));
 						return res;
 					}
 
@@ -700,7 +704,8 @@ public class Pica extends BaseApi implements OpacApi {
 			e.printStackTrace();
 			ReservationResult res = new ReservationResult(
 					MultiStepResult.Status.ERROR);
-			res.setMessage("interner Fehler");
+			res.setMessage(stringProvider
+					.getString(StringProvider.INTERNAL_ERROR));
 			return res;
 		}
 	}

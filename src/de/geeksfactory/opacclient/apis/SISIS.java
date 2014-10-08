@@ -847,8 +847,9 @@ public class SISIS extends BaseApi implements OpacApi {
 					}
 				}
 			} else {
-				result.addDetail(new Detail("Fehler",
-						"Details konnten nicht abgerufen werden, bitte erneut probieren!"));
+				result.addDetail(new Detail(stringProvider
+						.getString(StringProvider.ERROR), stringProvider
+						.getString(StringProvider.COULD_NOT_LOAD_DETAIL)));
 			}
 		}
 		if (!text.equals("") && !title.equals("")) {
@@ -870,7 +871,9 @@ public class SISIS extends BaseApi implements OpacApi {
 		}
 		for (Element link : doc3.select(".box-container a")) {
 			if (link.text().trim().equals("Download")) {
-				result.addDetail(new Detail("Download", link.absUrl("href")));
+				result.addDetail(new Detail(stringProvider
+						.getString(StringProvider.DOWNLOAD), link
+						.absUrl("href")));
 			}
 		}
 
@@ -1253,14 +1256,16 @@ public class SISIS extends BaseApi implements OpacApi {
 				account(account);
 			} catch (JSONException e) {
 				e.printStackTrace();
-				throw new OpacErrorException(stringProvider.getString(StringProvider.INTERNAL_ERROR));
+				throw new OpacErrorException(
+						stringProvider.getString(StringProvider.INTERNAL_ERROR));
 			}
 		} else if (logged_in_as.getId() != account.getId()) {
 			try {
 				account(account);
 			} catch (JSONException e) {
 				e.printStackTrace();
-				throw new OpacErrorException(stringProvider.getString(StringProvider.INTERNAL_ERROR));
+				throw new OpacErrorException(
+						stringProvider.getString(StringProvider.INTERNAL_ERROR));
 			}
 		}
 
@@ -1704,7 +1709,7 @@ public class SISIS extends BaseApi implements OpacApi {
 		}
 
 		return new ProlongAllResult(MultiStepResult.Status.ERROR,
-				"Fehler bei Verbindung/Login");
+				stringProvider.getString(StringProvider.COULD_NOT_LOAD_ACCOUNT));
 	}
 
 	@Override
