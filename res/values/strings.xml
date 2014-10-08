@@ -265,5 +265,6 @@
     <string name="snooze">Morgen erneut erinnern</string>
     <string name="expand">Mehr Suchfelder anzeigen</string>
     <string name="collapse">Weniger Suchfelder anzeigen</string>
-
+	<string name="interested_to_help">Ich bin interessiert zu helfen.</string>
+	<string name="library_suggestion">Bibliotheksvorschlag</string>
 </resources>

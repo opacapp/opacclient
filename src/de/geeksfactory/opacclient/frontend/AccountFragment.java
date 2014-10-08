@@ -276,7 +276,8 @@ public class AccountFragment extends Fragment implements
 															.getIdent());
 							emailIntent.putExtra(
 									android.content.Intent.EXTRA_TEXT,
-									"Ich bin interessiert zu helfen.");
+									getResources().getString(
+											R.string.interested_to_help));
 							emailIntent.setType("text/plain");
 							startActivity(Intent.createChooser(emailIntent,
 									getString(R.string.write_mail)));
