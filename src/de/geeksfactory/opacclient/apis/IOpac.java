@@ -343,14 +343,16 @@ public class IOpac extends BaseApi implements OpacApi {
 				sr.setStatus(Status.GREEN);
 			} else {
 				sr.setStatus(Status.RED);
-				sr.setInnerhtml(sr.getInnerhtml() + "<br><i>verliehen bis "
-						+ status + "</i>");
+				sr.setInnerhtml(sr.getInnerhtml() + "<br><i>"
+						+ stringProvider.getString(StringProvider.LENT_UNTIL)
+						+ " " + status + "</i>");
 			}
 
 			// In some libraries (for example search for "atelier" in Preetz)
 			// the results are sorted differently than their numbers suggest, so
 			// we need to detect the number ("recno") from the link
-			String link = tr.select("a[href^=/cgi-bin/di.exe?page=]").attr("href");
+			String link = tr.select("a[href^=/cgi-bin/di.exe?page=]").attr(
+					"href");
 			Map<String, String> params = getQueryParamsFirst(link);
 			if (params.containsKey("recno")) {
 				int recno = Integer.valueOf(params.get("recno"));

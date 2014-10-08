@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <string name="app_name">Web Opac</string>
-    <string name="launcher_name">Web Opac</string>
-    <string name="web_opac">Web-Opac</string>
-    <string name="opac_password_hint">Unbekannt? Vielleicht dein Geburtsdatum (TT.MM.JJJJ)</string>
-
-</resources>

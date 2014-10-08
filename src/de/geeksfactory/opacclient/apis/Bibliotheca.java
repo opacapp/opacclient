@@ -680,7 +680,7 @@ public class Bibliotheca extends BaseApi {
 		}
 
 		return new ReservationResult(MultiStepResult.Status.ERROR,
-				"Unbekannter Fehler");
+				stringProvider.getString(StringProvider.UNKNOWN_ERROR));
 	}
 
 	@Override
@@ -694,8 +694,10 @@ public class Bibliotheca extends BaseApi {
 				account(account);
 			} catch (JSONException e) {
 				e.printStackTrace();
-				return new ProlongResult(MultiStepResult.Status.ERROR,
-						"Konto konnte nicht geladen werden");
+				return new ProlongResult(
+						MultiStepResult.Status.ERROR,
+						stringProvider
+								.getString(StringProvider.COULD_NOT_LOAD_ACCOUNT));
 			} catch (OpacErrorException e) {
 				return new ProlongResult(MultiStepResult.Status.ERROR,
 						e.getMessage());
@@ -705,8 +707,10 @@ public class Bibliotheca extends BaseApi {
 				account(account);
 			} catch (JSONException e) {
 				e.printStackTrace();
-				return new ProlongResult(MultiStepResult.Status.ERROR,
-						"Konto konnte nicht geladen werden");
+				return new ProlongResult(
+						MultiStepResult.Status.ERROR,
+						stringProvider
+								.getString(StringProvider.COULD_NOT_LOAD_ACCOUNT));
 			} catch (OpacErrorException e) {
 				return new ProlongResult(MultiStepResult.Status.ERROR,
 						e.getMessage());
@@ -780,7 +784,8 @@ public class Bibliotheca extends BaseApi {
 			} catch (JSONException e) {
 				e.printStackTrace();
 				return new ProlongAllResult(MultiStepResult.Status.ERROR,
-						"Verbindungsfehler.");
+						stringProvider
+								.getString(StringProvider.CONNECTION_ERROR));
 			} catch (OpacErrorException e) {
 				return new ProlongAllResult(MultiStepResult.Status.ERROR,
 						e.getMessage());
@@ -791,7 +796,8 @@ public class Bibliotheca extends BaseApi {
 			} catch (JSONException e) {
 				e.printStackTrace();
 				return new ProlongAllResult(MultiStepResult.Status.ERROR,
-						"Verbindungsfehler.");
+						stringProvider
+								.getString(StringProvider.CONNECTION_ERROR));
 			} catch (OpacErrorException e) {
 				return new ProlongAllResult(MultiStepResult.Status.ERROR,
 						e.getMessage());
@@ -855,7 +861,8 @@ public class Bibliotheca extends BaseApi {
 			return new ProlongAllResult(MultiStepResult.Status.OK, result);
 		}
 
-		return new ProlongAllResult(MultiStepResult.Status.ERROR, "Parse error");
+		return new ProlongAllResult(MultiStepResult.Status.ERROR,
+				stringProvider.getString(StringProvider.INTERNAL_ERROR));
 	}
 
 	@Override
@@ -868,15 +875,19 @@ public class Bibliotheca extends BaseApi {
 			try {
 				account(account);
 			} catch (JSONException e) {
-				return new CancelResult(MultiStepResult.Status.ERROR,
-						"Konto konnte nicht geladen werden");
+				return new CancelResult(
+						MultiStepResult.Status.ERROR,
+						stringProvider
+								.getString(StringProvider.COULD_NOT_LOAD_ACCOUNT));
 			}
 		} else if (logged_in_as.getId() != account.getId()) {
 			try {
 				account(account);
 			} catch (JSONException e) {
-				return new CancelResult(MultiStepResult.Status.ERROR,
-						"Konto konnte nicht geladen werden");
+				return new CancelResult(
+						MultiStepResult.Status.ERROR,
+						stringProvider
+								.getString(StringProvider.COULD_NOT_LOAD_ACCOUNT));
 			}
 		}
 		httpGet(opac_url + "/" + media, getDefaultEncoding());

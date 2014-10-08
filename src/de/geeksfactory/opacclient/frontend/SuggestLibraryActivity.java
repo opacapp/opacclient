@@ -101,8 +101,11 @@ public class SuggestLibraryActivity extends Activity {
 				String uriText = "mailto:"
 						+ Uri.encode("info@opacapp.de")
 						+ "?subject="
-						+ Uri.encode("Bibliotheksvorschlag "
-								+ etCity.getText().toString() + " "
+						+ Uri.encode(getResources().getString(
+								R.string.library_suggestion)
+								+ " "
+								+ etCity.getText().toString()
+								+ " "
 								+ etName.getText().toString()) + "&body="
 						+ Uri.encode(createMessage());
 				Uri uri = Uri.parse(uriText);
@@ -266,7 +269,7 @@ public class SuggestLibraryActivity extends Activity {
 
 	private static class City implements Serializable {
 		private static final long serialVersionUID = 2697131850736622659L;
-		
+
 		public String name;
 		public String state;
 		public String country;

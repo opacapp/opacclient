@@ -10,4 +10,15 @@
     <string name="internal_error">Interner Fehler.</string>
     <string name="internal_error_with_description">Interner Fehler: "%s"</string>
     <string name="login_failed">Login fehlgeschlagen.</string>
+    <string name="could_not_load_account">Konto konnte nicht geladen werden.</string>
+    <string name="connection_error">Verbindungsfehler.</string>
+    <string name="lent_until">verliehen bis</string>
+    <string name="subtitle">Titelzusatz</string>
+    <string name="pica_which_copy">Welches Exemplar soll reserviert/bestellt werden? (verfügbare Exemplare werden bestellt)</string>
+    <string name="no_copy_reservable">Es ist kein Exemplar reservierbar.</string>
+    <string name="could_not_load_detail">Details konnten nicht abgerufen werden, bitte erneut probieren!</string>
+    <string name="error">Fehler</string>
+    <string name="download">Download</string>
+    <string name="reminders">Mahnungen</string>
+    <string name="prolonged_abbr">verl.</string>
 </resources>

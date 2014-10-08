@@ -38,8 +38,19 @@ public interface StringProvider {
 	public static String INTERNAL_ERROR = "internal_error";
 	public static String INTERNAL_ERROR_WITH_DESCRIPTION = "internal_error_with_description";
 	public static String LOGIN_FAILED = "login_failed";
-	
+	public static String COULD_NOT_LOAD_ACCOUNT = "could_not_load_account";
+	public static String CONNECTION_ERROR = "connection_error";
+	public static String LENT_UNTIL = "lent_until";
+	public static String SUBTITLE = "subtitle";
+	public static String PICA_WHICH_COPY = "pica_which_copy";
+	public static String NO_COPY_RESERVABLE = "no_copy_reservable";
+	public static String COULD_NOT_LOAD_DETAIL = "could_not_load_detail";
+	public static String ERROR = "error";
+	public static String DOWNLOAD = "download";
+	public static String REMINDERS = "reminders";
+	public static String PROLONGED_ABBR = "prolonged_abbr";
+
 	public abstract String getString(String identifier);
-	
+
 	public abstract String getFormattedString(String identifier, Object... args);
 }

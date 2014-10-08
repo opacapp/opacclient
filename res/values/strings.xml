@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+	<string name="app_name">Web Opac</string>
+    <string name="launcher_name">Web Opac</string>
+    <string name="web_opac">Web-Opac</string>
+    <string name="opac_password_hint">Unbekannt? Vielleicht dein Geburtsdatum (TT.MM.JJJJ)</string>
     <string name="opac_usernr">Ausweisnummer</string>
     <string name="opac_usernr_desc">Gib eine Ausweisnummer an, um auf dein Konto zugreifen zu können</string>
     <string name="opac_password">Passwort</string>
@@ -201,8 +204,8 @@
     <string name="confirm_title">Bestätigen</string>
     <string name="confirm">Bestätigen</string>
 
+    <string name="account_up_to_date">Die angezeigten Daten sind aktuell.</string>
     <plurals name="account_age_minutes">
-        <item quantity="zero">Die angezeigten Daten sind aktuell.</item>
         <item quantity="one">Die angezeigten Daten sind eine Minute alt.</item>
         <item quantity="other">Die angezeigten Daten sind %d Minuten alt.</item>
     </plurals>
@@ -265,5 +268,6 @@
     <string name="snooze">Morgen erneut erinnern</string>
     <string name="expand">Mehr Suchfelder anzeigen</string>
     <string name="collapse">Weniger Suchfelder anzeigen</string>
-
+	<string name="interested_to_help">Ich bin interessiert zu helfen.</string>
+	<string name="library_suggestion">Bibliotheksvorschlag</string>
 </resources>
