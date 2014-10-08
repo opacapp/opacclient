@@ -2,7 +2,6 @@ package de.geeksfactory.opacclient.frontend;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 
 /**
