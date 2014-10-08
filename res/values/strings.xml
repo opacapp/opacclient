@@ -201,8 +201,8 @@
     <string name="confirm_title">Bestätigen</string>
     <string name="confirm">Bestätigen</string>
 
+    <string name="account_up_to_date">Die angezeigten Daten sind aktuell.</string>
     <plurals name="account_age_minutes">
-        <item quantity="zero">Die angezeigten Daten sind aktuell.</item>
         <item quantity="one">Die angezeigten Daten sind eine Minute alt.</item>
         <item quantity="other">Die angezeigten Daten sind %d Minuten alt.</item>
     </plurals>

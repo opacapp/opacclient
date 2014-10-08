@@ -1136,7 +1136,10 @@ public class AccountFragment extends Fragment implements
 				return;
 
 			long age = System.currentTimeMillis() - refreshtime;
-			if (age < (3600 * 1000)) {
+			if (age < 60 * 1000) {
+				((TextView) view.findViewById(R.id.tvAge))
+					.setText(getResources().getString(R.string.account_up_to_date));
+			} else if (age < (3600 * 1000)) {
 				((TextView) view.findViewById(R.id.tvAge))
 						.setText(getResources().getQuantityString(
 								R.plurals.account_age_minutes,
