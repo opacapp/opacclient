@@ -47,6 +47,8 @@ public interface StringProvider {
 	public static String COULD_NOT_LOAD_DETAIL = "could_not_load_detail";
 	public static String ERROR = "error";
 	public static String DOWNLOAD = "download";
+	public static String REMINDERS = "reminders";
+	public static String PROLONGED_ABBR = "prolonged_abbr";
 
 	public abstract String getString(String identifier);
 

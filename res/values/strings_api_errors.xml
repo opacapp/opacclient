@@ -19,4 +19,6 @@
     <string name="could_not_load_detail">Details konnten nicht abgerufen werden, bitte erneut probieren!</string>
     <string name="error">Fehler</string>
     <string name="download">Download</string>
+    <string name="reminders">Mahnungen</string>
+    <string name="prolonged_abbr">verl.</string>
 </resources>

@@ -981,11 +981,17 @@ public class Pica extends BaseApi implements OpacApi {
 				}
 				String status = "";
 				if (!reminderCount.equals("0") && !reminderCount.equals("")) {
-					status += reminderCount + " Mahnungen, ";
+					status += reminderCount
+							+ " "
+							+ stringProvider
+									.getString(StringProvider.REMINDERS) + ", ";
 				}
-				status += prolongCount + "x verl."; // +
-													// tr.child(25).text().trim()
-													// + " Vormerkungen");
+				status += prolongCount
+						+ "x "
+						+ stringProvider
+								.getString(StringProvider.PROLONGED_ABBR); // +
+				// tr.child(25).text().trim()
+				// + " Vormerkungen");
 				e.put(AccountData.KEY_LENT_STATUS, status);
 				e.put(AccountData.KEY_LENT_DEADLINE, tr.child(21).text().trim());
 				try {
