@@ -47,6 +47,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:padding="8dp"
+        android:contentDescription="@string/prolong"
         android:src="@drawable/ic_prolong" />
 
     <ImageView
@@ -56,6 +57,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:padding="8dp"
+        android:contentDescription="@string/download"
         android:src="@drawable/ic_download"
         android:visibility="gone" />
 

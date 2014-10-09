@@ -12,7 +12,6 @@
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
         android:gravity="center|left"
-        android:text="Zst"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>

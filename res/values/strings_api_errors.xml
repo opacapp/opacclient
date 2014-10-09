@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- These strings may be shown as unused by Android Lint, but are in fact used by the AndroidStringProvider class -->
     <string name="limited_num_of_criteria">Diese Bibliothek unterstützt nur bis zu %d benutzte Suchkriterien.</string>
     <string name="no_criteria_input">Es wurden keine Suchkriterien eingegeben.</string>
     <string name="combination_not_supported">Sie haben eine Kombination von Suchfeldern benutzt, die von dieser Bibliothek nicht unterstützt wird. Bitte probieren Sie eine andere Suche.</string>
@@ -11,7 +12,7 @@
     <string name="internal_error_with_description">Interner Fehler: "%s"</string>
     <string name="login_failed">Login fehlgeschlagen.</string>
     <string name="could_not_load_account">Konto konnte nicht geladen werden.</string>
-    <string name="connection_error">Verbindungsfehler.</string>
+    <string name="api_connection_error">Verbindungsfehler.</string>
     <string name="lent_until">verliehen bis</string>
     <string name="subtitle">Titelzusatz</string>
     <string name="pica_which_copy">Welches Exemplar soll reserviert/bestellt werden? (verfügbare Exemplare werden bestellt)</string>

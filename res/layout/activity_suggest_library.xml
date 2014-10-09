@@ -54,6 +54,7 @@
             android:layout_height="100dp"
             android:layout_marginBottom="8dp"
             android:gravity="top|left"
+            android:inputType="textMultiLine"
             android:ems="10" />
 
         <!-- <TextView

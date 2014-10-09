@@ -13,6 +13,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginRight="10dip"
         android:gravity="center"
+        android:contentDescription="@string/mediatype"
         android:src="@drawable/ic_launcher" />
 
     <ImageView
@@ -24,6 +25,7 @@
         android:visibility="gone"
         android:layout_marginLeft="10dip"
         android:gravity="center"
+        android:contentDescription="@string/status"
         android:src="@drawable/status_light_red" />
     
 
