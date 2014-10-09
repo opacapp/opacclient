@@ -421,7 +421,7 @@ public class AccountFragment extends Fragment implements
 										builder.setMessage(result.getMessage())
 												.setCancelable(true)
 												.setNegativeButton(
-														R.string.dismiss,
+														R.string.close,
 														new DialogInterface.OnClickListener() {
 															@Override
 															public void onClick(
@@ -496,7 +496,7 @@ public class AccountFragment extends Fragment implements
 							getActivity());
 					builder.setMessage(result.getMessage())
 							.setCancelable(false)
-							.setNegativeButton(R.string.dismiss,
+							.setNegativeButton(R.string.close,
 									new DialogInterface.OnClickListener() {
 										@Override
 										public void onClick(
@@ -517,7 +517,7 @@ public class AccountFragment extends Fragment implements
 						getActivity());
 				builder.setMessage(result.getMessage())
 						.setCancelable(true)
-						.setNegativeButton(R.string.dismiss,
+						.setNegativeButton(R.string.close,
 								new DialogInterface.OnClickListener() {
 									@Override
 									public void onClick(DialogInterface d,
@@ -1196,9 +1196,9 @@ public class AccountFragment extends Fragment implements
 			if (result == null) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						getActivity());
-				builder.setMessage(R.string.connection_error)
+				builder.setMessage(R.string.error)
 						.setCancelable(true)
-						.setNegativeButton(R.string.dismiss,
+						.setNegativeButton(R.string.close,
 								new DialogInterface.OnClickListener() {
 									@Override
 									public void onClick(DialogInterface dialog,
@@ -1254,7 +1254,7 @@ public class AccountFragment extends Fragment implements
 							getActivity());
 					builder.setMessage(R.string.reader_needed)
 							.setCancelable(true)
-							.setNegativeButton(R.string.reader_needed_cancel,
+							.setNegativeButton(R.string.cancel,
 									new DialogInterface.OnClickListener() {
 										@Override
 										public void onClick(
@@ -1277,7 +1277,7 @@ public class AccountFragment extends Fragment implements
 											startActivity(i);
 										}
 									})
-							.setPositiveButton(R.string.reader_needed_download,
+							.setPositiveButton(R.string.download,
 									new DialogInterface.OnClickListener() {
 										@Override
 										public void onClick(
@@ -1341,9 +1341,9 @@ public class AccountFragment extends Fragment implements
 			if (!success || res == null) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						getActivity());
-				builder.setMessage(R.string.connection_error)
+				builder.setMessage(R.string.error)
 						.setCancelable(true)
-						.setNegativeButton(R.string.dismiss,
+						.setNegativeButton(R.string.close,
 								new DialogInterface.OnClickListener() {
 									@Override
 									public void onClick(DialogInterface dialog,
@@ -1391,9 +1391,9 @@ public class AccountFragment extends Fragment implements
 			if (result == null) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						getActivity());
-				builder.setMessage(R.string.connection_error)
+				builder.setMessage(R.string.error)
 						.setCancelable(true)
-						.setNegativeButton(R.string.dismiss,
+						.setNegativeButton(R.string.close,
 								new DialogInterface.OnClickListener() {
 									@Override
 									public void onClick(DialogInterface dialog,
@@ -1436,7 +1436,7 @@ public class AccountFragment extends Fragment implements
 						getActivity());
 				builder.setMessage(result.getMessage())
 						.setCancelable(true)
-						.setNegativeButton(R.string.dismiss,
+						.setNegativeButton(R.string.close,
 								new DialogInterface.OnClickListener() {
 									@Override
 									public void onClick(DialogInterface d,
@@ -1529,7 +1529,7 @@ public class AccountFragment extends Fragment implements
 				case ReservationResult.ACTION_BRANCH:
 					builder.setTitle(R.string.zweigstelle);
 				}
-				builder.setView(view).setNeutralButton(R.string.dismiss,
+				builder.setView(view).setNeutralButton(R.string.close,
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
@@ -1549,7 +1549,7 @@ public class AccountFragment extends Fragment implements
 						getActivity());
 				builder.setMessage(result.getMessage())
 						.setCancelable(true)
-						.setNegativeButton(R.string.dismiss,
+						.setNegativeButton(R.string.close,
 								new DialogInterface.OnClickListener() {
 									@Override
 									public void onClick(DialogInterface d,
@@ -1671,9 +1671,9 @@ public class AccountFragment extends Fragment implements
 			if (res == null) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						getActivity());
-				builder.setMessage(R.string.connection_error)
+				builder.setMessage(R.string.error)
 						.setCancelable(true)
-						.setNegativeButton(R.string.dismiss,
+						.setNegativeButton(R.string.close,
 								new DialogInterface.OnClickListener() {
 									@Override
 									public void onClick(DialogInterface dialog,

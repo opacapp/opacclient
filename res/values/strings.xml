@@ -26,7 +26,6 @@
     <string name="opac_error_email">Hinterlegen Sie für diesen Vorgang bitte Ihre E-Mail-Adresse in den Einstellungen.</string>
     <string name="doing_booking">Führe Ausleihe durch…</string>
     <string name="status_nouser">In den Einstellungen sind zu diesem Konto keine Ausweisdaten hinterlegt.</string>
-    <string name="dismiss">Schließen</string>
     <string name="pending_fees">Ausstehende Gebühren:</string>
     <string name="valid_until">Ausweis gültig bis:</string>
     <string name="no_warranty">Alle Angaben ohne Gewähr.</string>
@@ -45,8 +44,6 @@
     <string name="doing_download">Download-Informationen werden abgerufen</string>
     <string name="reader_needed">Um die E-Book-Datei zu lesen, benötigen Sie eine weitere App, z.B. Bluefire Reader. Klicken Sie auf Ignorieren, wenn Sie bereits eine solche App haben. Diese Meldung erscheint dann nicht wieder. Klicken Sie auf Download, um in den Play Store zu gelangen und Bluefire Reader herunterzuladen.</string>
     <string name="reader_needed_ignore">Ignorieren</string>
-    <string name="reader_needed_cancel">Abbrechen</string>
-    <string name="reader_needed_download">Download</string>
     <string name="doing_prolong_all">Medien, die verlängert werden können, werden verlängert…</string>
     <string name="prolong_all_confirm">Wirklich alle Medien (die verlängert werden können) verlängern? In manchen Bibliotheken können für manche Medien Gebühren anfallen.</string>
     <string name="opac_error">Meldung vom Web-Opac:</string>
@@ -112,7 +109,6 @@
     <string name="write_mail">E-Mail schreiben</string>
     <string name="info_error">Die zusätzlichen Informationen der Bibliothek konnten nicht abgerufen werden.</string>
     <string name="info_unsupported">Deine Bücherei stellt keine zusätzlichen Informationen bereit, die wir dir anzeigen könnten.</string>
-    <string name="connection_error">Fehler</string>
     <string name="connection_error_detail">Der Aufbau einer Verbindung zum Bibliotheksserver ist fehlgeschlagen. Prüfe, ob eine Verbindung zum Internet verfügbar ist. Möglicherweise hat auch der Bibliotheksserver ein Problem oder die App konnte seine Antwort nicht auswerten.</string>
     <string name="connection_error_detail_nre">Der Aufbau einer Verbindung zum Bibliotheksserver ist fehlgeschlagen. Prüfe, ob eine Verbindung zum Internet verfügbar ist. Wenn ja, hat wahrscheinlich der Bibliotheksserver ein Problem.</string>
     <string name="retry">Erneut versuchen</string>
@@ -169,7 +165,6 @@
     <string name="barcode_desc">Diese Funktion erfordert einen Barcode-Scanner. Soll er installiert werden?</string>
     <string name="barcode_gplay">Google Play</string>
     <string name="barcode_amazon">Amazon</string>
-    <string name="barcode_no">Nein</string>
     <string name="result_number">%d Suchergebnisse</string>
     <string name="export_starred">Exportieren</string>
     <string name="geolocate">Finde Bibliotheken in meiner Nähe</string>
