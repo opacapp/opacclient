@@ -161,7 +161,7 @@ public class BarcodeScanIntegrator {
 						ctx.startActivity(intent);
 					}
 				});
-		downloadDialog.setNegativeButton(R.string.barcode_no,
+		downloadDialog.setNegativeButton(R.string.no,
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialogInterface, int i) {

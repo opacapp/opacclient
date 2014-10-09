@@ -531,7 +531,7 @@ public class SearchResultDetailFragment extends Fragment {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setMessage(getString(R.string.opac_error) + " " + s)
 				.setCancelable(false)
-				.setNegativeButton(R.string.dismiss,
+				.setNegativeButton(R.string.close,
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
@@ -641,9 +641,9 @@ public class SearchResultDetailFragment extends Fragment {
 			if (res == null) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						getActivity());
-				builder.setMessage(R.string.connection_error)
+				builder.setMessage(R.string.error)
 						.setCancelable(true)
-						.setNegativeButton(R.string.dismiss,
+						.setNegativeButton(R.string.close,
 								new DialogInterface.OnClickListener() {
 									@Override
 									public void onClick(DialogInterface dialog,
@@ -695,9 +695,9 @@ public class SearchResultDetailFragment extends Fragment {
 			if (res == null) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						getActivity());
-				builder.setMessage(R.string.connection_error)
+				builder.setMessage(R.string.error)
 						.setCancelable(true)
-						.setNegativeButton(R.string.dismiss,
+						.setNegativeButton(R.string.close,
 								new DialogInterface.OnClickListener() {
 									@Override
 									public void onClick(DialogInterface dialog,
@@ -957,7 +957,7 @@ public class SearchResultDetailFragment extends Fragment {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setMessage(R.string.status_nouser)
 				.setCancelable(false)
-				.setNegativeButton(R.string.dismiss,
+				.setNegativeButton(R.string.close,
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
@@ -993,7 +993,7 @@ public class SearchResultDetailFragment extends Fragment {
 						getActivity());
 				builder.setMessage(getString(R.string.opac_error_email))
 						.setCancelable(false)
-						.setNegativeButton(R.string.dismiss,
+						.setNegativeButton(R.string.close,
 								new DialogInterface.OnClickListener() {
 									@Override
 									public void onClick(DialogInterface dialog,
@@ -1114,7 +1114,7 @@ public class SearchResultDetailFragment extends Fragment {
 							getActivity());
 					builder.setMessage(result.getMessage())
 							.setCancelable(false)
-							.setNegativeButton(R.string.dismiss,
+							.setNegativeButton(R.string.close,
 									new DialogInterface.OnClickListener() {
 										@Override
 										public void onClick(

@@ -17,6 +17,7 @@
         android:layout_height="48dp"
         android:layout_alignParentRight="true"
         android:padding="8dp"
+        android:contentDescription="@string/reservation_cancel"
         android:src="@drawable/ic_cancel" />
 
     <ImageView
@@ -25,6 +26,7 @@
         android:layout_height="48dp"
         android:layout_alignParentRight="true"
         android:padding="8dp"
+        android:contentDescription="@string/reservation_book"
         android:src="@drawable/ic_booking" />
 
     <TextView

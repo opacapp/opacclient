@@ -43,7 +43,7 @@
                 android:layout_below="@id/tvTitle"
                 android:layout_centerHorizontal="true"
                 android:adjustViewBounds="true"
-                android:contentDescription="Cover"
+                android:contentDescription="@string/cover"
                 android:gravity="center"
                 android:scaleType="fitCenter"
                 android:visibility="gone" />

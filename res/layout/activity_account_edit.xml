@@ -43,6 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:contentDescription="@string/playstore"
                 android:src="@drawable/playstore" />
 
             <TextView
@@ -85,6 +86,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:ems="10"
+            android:inputType="textNoSuggestions"
             android:singleLine="true" />
 
         <TextView
