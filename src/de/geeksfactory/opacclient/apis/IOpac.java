@@ -337,9 +337,11 @@ public class IOpac extends BaseApi implements OpacApi {
 			// Status
 			String status = tr.select("td").get(colmap.get("returndate"))
 					.text().trim().replace("\u00a0", "");
-			if (status.equals("") || status.contains("Onleihe")
+			if (status.equals("")
+					|| status.toLowerCase(Locale.GERMAN).contains("onleihe")
 					|| status.contains("verleihbar")
-					|| status.contains("entleihbar")) {
+					|| status.contains("entleihbar")
+					|| status.contains("ausleihbar")) {
 				sr.setStatus(Status.GREEN);
 			} else {
 				sr.setStatus(Status.RED);
