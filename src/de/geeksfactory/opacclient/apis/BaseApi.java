@@ -73,8 +73,7 @@ public abstract class BaseApi implements OpacApi {
 	protected DefaultHttpClient http_client;
 	protected Library library;
 	protected StringProvider stringProvider;
-	
-	
+
 	/**
 	 * Initializes HTTP client and String Provider
 	 */
@@ -167,9 +166,15 @@ public abstract class BaseApi implements OpacApi {
 			response.getEntity().consumeContent();
 			throw new NotReachableException();
 		}
-		String html = convertStreamToString(response.getEntity().getContent(),
-				encoding);
-		response.getEntity().consumeContent();
+		String html;
+		try {
+			html = convertStreamToString(response.getEntity().getContent(),
+					encoding);
+			response.getEntity().consumeContent();
+		} catch (MalformedChunkCodingException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		}
 		return html;
 	}
 
@@ -324,9 +329,15 @@ public abstract class BaseApi implements OpacApi {
 		if (!ignore_errors && response.getStatusLine().getStatusCode() >= 400) {
 			throw new NotReachableException();
 		}
-		String html = convertStreamToString(response.getEntity().getContent(),
-				encoding);
-		response.getEntity().consumeContent();
+		String html;
+		try {
+			html = convertStreamToString(response.getEntity().getContent(),
+					encoding);
+			response.getEntity().consumeContent();
+		} catch (MalformedChunkCodingException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		}
 		return html;
 	}
 
@@ -383,8 +394,9 @@ public abstract class BaseApi implements OpacApi {
 			throws IOException {
 		return convertStreamToString(is, "ISO-8859-1");
 	}
-	
-	protected static Map<String, String> searchQueryListToMap(List<SearchQuery> queryList) {
+
+	protected static Map<String, String> searchQueryListToMap(
+			List<SearchQuery> queryList) {
 		Map<String, String> queryMap = new HashMap<String, String>();
 		for (SearchQuery query : queryList) {
 			queryMap.put(query.getKey(), query.getValue());
@@ -470,7 +482,7 @@ public abstract class BaseApi implements OpacApi {
 			throws IOException, OpacErrorException {
 		return null;
 	}
-	
+
 	@Override
 	public void setStringProvider(StringProvider stringProvider) {
 		this.stringProvider = stringProvider;
