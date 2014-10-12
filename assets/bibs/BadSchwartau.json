@@ -1,0 +1,16 @@
+{
+    "api": "iopac",
+    "city": "Bad Schwartau",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://bad-schwartau.iopac.de",
+        "information": "http://www.bad-schwartau.de/stadtb%C3%BCcherei/"
+    },
+    "geo": [
+        53.9163386,
+        10.6854143
+    ],
+    "state": "Schleswig-Holstein",
+    "support": "Katalogsuche und Konto",
+    "title": "Stadtb\u00fccherei"
+}

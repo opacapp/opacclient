@@ -49,6 +49,7 @@ public interface StringProvider {
 	public static String DOWNLOAD = "download";
 	public static String REMINDERS = "reminders";
 	public static String PROLONGED_ABBR = "prolonged_abbr";
+	public static String FREE_SEARCH = "free_search";
 
 	public abstract String getString(String identifier);
 

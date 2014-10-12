@@ -825,6 +825,16 @@ public class IOpac extends BaseApi implements OpacApi {
 			}
 		}
 
+		if (fields.size() == 0 && doc.select("[name=sleStichwort]").size() > 0) {
+			TextSearchField field = new TextSearchField();
+			Element input = doc.select("input[name=sleStichwort]").first();
+			field.setDisplayName(stringProvider
+					.getString(StringProvider.FREE_SEARCH));
+			field.setId(input.attr("name"));
+			field.setHint("");
+			fields.add(field);
+		}
+
 		// Extract available media types.
 		// We have to parse JavaScript. Doing this with RegEx is evil.
 		// But not as evil as including a JavaScript VM into the app.

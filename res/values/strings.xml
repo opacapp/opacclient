@@ -210,4 +210,5 @@
 	<string name="reservation_book">Ausleihen</string>
 	<string name="mediatype">Medienart</string>
 	<string name="status">Status</string>
+	<string name="free_search">Freie Suche</string>
 </resources>
