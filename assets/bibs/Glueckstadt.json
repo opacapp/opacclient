@@ -1,0 +1,23 @@
+{
+    "api": "iopac",
+    "city": "Gl\u00fcckstadt",
+    "country": "Deutschland",
+    "data": {
+        "accounttable": {
+            "author": -1, 
+            "prolongurl": 4, 
+            "deadline": 3, 
+            "prolongcount": 2, 
+            "title": 0
+        }, 
+        "baseurl": "https://iopac.glueckstadt.de",
+        "information": "http://www.glueckstadt.de/Leben-Wohnen/Bildung/Stadtb%C3%BCcherei"
+    },
+    "geo": [
+        53.7911914,
+        9.4260898
+    ],
+    "state": "Schleswig-Holstein",
+    "support": "Katalogsuche und Konto",
+    "title": "Stadtb\u00fccherei"
+}
