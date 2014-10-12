@@ -170,8 +170,8 @@ public class OpacClient extends Application {
 			newApiInstance = new WinBiap();
 		else
 			return null;
-		newApiInstance.setStringProvider(new AndroidStringProvider());
 		newApiInstance.init(lib);
+		newApiInstance.setStringProvider(new AndroidStringProvider());
 		return newApiInstance;
 	}
 
