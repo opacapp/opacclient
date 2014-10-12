@@ -533,6 +533,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
 	public List<SearchQuery> saveSearchQuery() {
 		List<SearchQuery> query = new ArrayList<SearchQuery>();
+		if(fields == null)
+			return null;
 		for (SearchField field : fields) {
 
 			ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
