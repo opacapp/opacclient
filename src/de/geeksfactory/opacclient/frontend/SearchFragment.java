@@ -500,8 +500,28 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
 	public Map<String, String> saveQuery() {
 		Map<String, String> query = new HashMap<String, String>();
-		if (fields == null)
-			return query;
+
+		if (fields == null) {
+			SearchFieldDataSource dataSource = new JsonSearchFieldDataSource(app);
+			int versionCode = 0;
+			try {
+				versionCode = app.getPackageManager().getPackageInfo(
+						app.getPackageName(), 0).versionCode;
+			} catch (NameNotFoundException e) {
+				// should not happen
+				e.printStackTrace();
+			}
+			if (dataSource.hasSearchFields(app.getLibrary().getIdent())
+					&& dataSource.getLastSearchFieldUpdateVersion(app.getLibrary()
+							.getIdent()) == versionCode) {
+				if (task != null && !task.isCancelled())
+					task.cancel(true);
+				fields = dataSource.getSearchFields(app.getLibrary().getIdent());
+			} else {
+				return null;
+			}
+		}
+		
 		for (SearchField field : fields) {
 
 			ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
