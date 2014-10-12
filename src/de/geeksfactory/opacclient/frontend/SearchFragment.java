@@ -296,6 +296,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 			}
 			i++;
 		}
+		llExpand.setVisibility(llAdvancedFields.getChildCount() == 0 ? View.GONE
+				: View.VISIBLE);
 	}
 
 	protected void setAdvanced(boolean advanced) {
@@ -484,7 +486,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		SearchFieldDataSource dataSource = new JsonSearchFieldDataSource(app);
 		dataSource.saveSearchFields(app.getLibrary().getIdent(), fields);
 	}
-	
+
 	private void executeNewLoadSearchFieldsTask() {
 		if (task != null && !task.isCancelled())
 			task.cancel(true);
