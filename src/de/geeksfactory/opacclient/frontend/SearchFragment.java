@@ -404,6 +404,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 				List<SearchField> fields = app.getApi().getSearchFields();
 				if (getActivity() == null)
 					return null;
+				if (fields.size() == 0)
+					throw new OpacErrorException(
+							getString(R.string.no_fields_found));
 				if (app.getApi().shouldUseMeaningDetector()) {
 					MeaningDetector md = new AndroidMeaningDetector(
 							getActivity(), app.getLibrary());
@@ -502,7 +505,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		Map<String, String> query = new HashMap<String, String>();
 
 		if (fields == null) {
-			SearchFieldDataSource dataSource = new JsonSearchFieldDataSource(app);
+			SearchFieldDataSource dataSource = new JsonSearchFieldDataSource(
+					app);
 			int versionCode = 0;
 			try {
 				versionCode = app.getPackageManager().getPackageInfo(
@@ -512,16 +516,17 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 				e.printStackTrace();
 			}
 			if (dataSource.hasSearchFields(app.getLibrary().getIdent())
-					&& dataSource.getLastSearchFieldUpdateVersion(app.getLibrary()
-							.getIdent()) == versionCode) {
+					&& dataSource.getLastSearchFieldUpdateVersion(app
+							.getLibrary().getIdent()) == versionCode) {
 				if (task != null && !task.isCancelled())
 					task.cancel(true);
-				fields = dataSource.getSearchFields(app.getLibrary().getIdent());
+				fields = dataSource
+						.getSearchFields(app.getLibrary().getIdent());
 			} else {
 				return null;
 			}
 		}
-		
+
 		for (SearchField field : fields) {
 
 			ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
@@ -553,7 +558,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
 	public List<SearchQuery> saveSearchQuery() {
 		List<SearchQuery> query = new ArrayList<SearchQuery>();
-		if(fields == null)
+		if (fields == null)
 			return null;
 		for (SearchField field : fields) {
 

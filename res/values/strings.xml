@@ -211,5 +211,6 @@
 	<string name="mediatype">Medienart</string>
 	<string name="status">Status</string>
 	<string name="free_search">Freie Suche</string>
+    <string name="no_fields_found">Keine Suchfelder gefunden.</string>
 	<string name="no_search_cache">Fehler. Versuchen Sie evtl. eine Suchabfrage durchzuführen, um das Problem zu beheben.</string>
 </resources>
