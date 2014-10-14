@@ -51,6 +51,7 @@ import de.geeksfactory.opacclient.searchfields.CheckboxSearchField;
 import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.MeaningDetector;
 import de.geeksfactory.opacclient.searchfields.SearchField;
+import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
@@ -280,6 +281,34 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 				spinner.setAdapter(((OpacActivity) getActivity()).new MetaAdapter(
 						getActivity(), ddSearchField.getDropdownValues(),
 						R.layout.simple_spinner_item));
+
+				// Load saved home branch
+				if (field.getMeaning() == Meaning.HOME_BRANCH) {
+					String selection = "";
+					if (sp.contains(OpacClient.PREF_HOME_BRANCH_PREFIX
+							+ app.getAccount().getId()))
+						selection = sp.getString(
+								OpacClient.PREF_HOME_BRANCH_PREFIX
+										+ app.getAccount().getId(), "");
+					else {
+						try {
+							selection = app.getLibrary().getData()
+									.getString("homebranch");
+						} catch (JSONException e) {
+							selection = "";
+						}
+					}
+					if (!selection.equals("")) {
+						int j = 0;
+						for (Map<String, String> row : ddSearchField
+								.getDropdownValues()) {
+							if (row.get("key").equals(selection)) {
+								spinner.setSelection(j);
+							}
+							j++;
+						}
+					}
+				}
 			} else if (field instanceof CheckboxSearchField) {
 				CheckboxSearchField cbSearchField = (CheckboxSearchField) field;
 				v = (ViewGroup) getLayoutInflater().inflate(
@@ -502,6 +531,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 	}
 
 	public Map<String, String> saveQuery() {
+		saveHomeBranch();
 		Map<String, String> query = new HashMap<String, String>();
 
 		if (fields == null) {
@@ -557,6 +587,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 	}
 
 	public List<SearchQuery> saveSearchQuery() {
+		saveHomeBranch();
 		List<SearchQuery> query = new ArrayList<SearchQuery>();
 		if (fields == null)
 			return null;
@@ -592,6 +623,30 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 			}
 		}
 		return query;
+	}
+
+	private void saveHomeBranch() {
+		if (fields == null)
+			return;
+
+		for (SearchField field : fields) {
+			if (field instanceof DropdownSearchField
+					&& field.getMeaning() == Meaning.HOME_BRANCH) {
+				ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
+				Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
+				String homeBranch = ((DropdownSearchField) field)
+						.getDropdownValues()
+						.get(spinner.getSelectedItemPosition()).get("key");
+				if (!homeBranch.equals("")) {
+					sp.edit()
+							.putString(
+									OpacClient.PREF_HOME_BRANCH_PREFIX
+											+ app.getAccount().getId(),
+									homeBranch).commit();
+				}
+				return;
+			}
+		}
 	}
 
 	public void loadQuery(Bundle query) {

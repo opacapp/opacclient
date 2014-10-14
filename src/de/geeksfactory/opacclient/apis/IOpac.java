@@ -363,7 +363,17 @@ public class IOpac extends BaseApi implements OpacApi {
 				// the above should work, but fall back to this if it doesn't
 				sr.setNr(10 * (page - 1) + i);
 			}
-			sr.setId(null);
+
+			// In some libraries (for example Preetz) we can detect the media ID
+			// here using another link present in the search results
+			Elements idLinks = tr.select("a[href^=/cgi-bin/di.exe?cMedNr]");
+			if (idLinks.size() > 0) {
+				Map<String, String> idParams = getQueryParamsFirst(idLinks.first().attr("href"));
+				String id = idParams.get("cMedNr");
+				sr.setId(id);
+			} else {
+				sr.setId(null);
+			}
 
 			results.add(sr);
 		}
@@ -686,14 +696,14 @@ public class IOpac extends BaseApi implements OpacApi {
 		if (trs < 2)
 			return;
 		assert (trs > 0);
-		
+
 		JSONObject copymap = new JSONObject();
 		try {
 			if (data.has("accounttable"))
 				copymap = data.getJSONObject("accounttable");
 		} catch (JSONException e) {
 		}
-		
+
 		for (int i = 1; i < trs; i++) {
 			Element tr = copytrs.get(i);
 			Map<String, String> e = new HashMap<String, String>();

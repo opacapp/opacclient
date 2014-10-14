@@ -19,13 +19,23 @@
             2, 
             3, 
             4
-        ]
+        ],
+		"accounttable": {
+            "author": 8, 
+            "barcode": 4, 
+            "homebranch": -1, 
+            "lendingbranch": -1, 
+            "prolongurl": 1, 
+            "returndate": 3, 
+            "status": 9, 
+            "title": 8
+        }
     }, 
     "geo": [
         52.1178305, 
         8.679399799999999
     ], 
     "state": "Nordrhein-Westfalen", 
-    "support": "Katalogsuche", 
+    "support": "Katalogsuche und Konto", 
     "title": "Stadtbibliothek"
 }
