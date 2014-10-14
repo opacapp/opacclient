@@ -1,6 +1,6 @@
 {
     "api": "bibliotheca", 
-    "city": "Hiltrup", 
+    "city": "Münster", 
     "country": "Deutschland", 
     "data": {
         "accounttable": {
@@ -68,5 +68,5 @@
     }, 
     "state": "Nordrhein-Westfalen", 
     "support": "Katalogsuche und Konto", 
-    "title": "Bistum M\u00fcnster Zweigstelle"
+    "title": "Stadtteilb\u00fccherei Hiltrup St. Clemens"
 }

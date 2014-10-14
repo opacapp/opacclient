@@ -1,0 +1,16 @@
+{
+    "api": "webopac.net",
+    "city": "Bassersdorf",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.bibliotheken-zh.ch/Bassersdorf",
+        "information": "http://www.bassersdorf.ch/xml_1/internet/de/application/d7/f230.cfm"
+    },
+    "geo": [
+        47.4426816,
+        8.6277587
+    ],
+    "state": "Z\u00fcrich",
+    "support": "Katalogsuche",
+    "title": "Gemeindebibliothek"
+}

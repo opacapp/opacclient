@@ -62,7 +62,7 @@ public class ReminderCheckService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startid) {
-		if(ACTION_SNOOZE.equals(intent.getAction())) {
+		if (ACTION_SNOOZE.equals(intent.getAction())) {
 			Intent i = new Intent(ReminderCheckService.this,
 					ReminderAlarmReceiver.class);
 			PendingIntent sender = PendingIntent.getBroadcast(
@@ -74,13 +74,16 @@ public class ReminderCheckService extends Service {
 			// Run again in 1 day
 			am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
 					+ (1000 * 3600 * 24), sender);
-		} else {	
+
+			NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+			mNotificationManager.cancel(OpacClient.NOTIF_ID);
+		} else {
 			SharedPreferences sp = PreferenceManager
 					.getDefaultSharedPreferences(ReminderCheckService.this);
 			notification_on = sp.getBoolean("notification_service", false);
 			long waittime = (1000 * 3600 * 5);
 			boolean executed = false;
-	
+
 			ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 			NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 			if (networkInfo != null) {

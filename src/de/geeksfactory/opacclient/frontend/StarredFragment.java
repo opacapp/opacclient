@@ -49,6 +49,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.frontend.OpacActivity.AccountSelectedListener;
@@ -105,16 +106,24 @@ public class StarredFragment extends Fragment implements
 					List<SearchQuery> query = new ArrayList<SearchQuery>();
 					List<SearchField> fields = new JsonSearchFieldDataSource(
 							app).getSearchFields(app.getLibrary().getIdent());
-					for (SearchField field : fields) {
-						if (field.getMeaning() == Meaning.TITLE) {
-							query.add(new SearchQuery(field, item.getTitle()));
-						} else if (field.getMeaning() == Meaning.HOME_BRANCH) {
-							query.add(new SearchQuery(field, sp.getString(
-									OpacClient.PREF_HOME_BRANCH_PREFIX
-											+ app.getAccount().getId(), null)));
+					if (fields != null) {
+						for (SearchField field : fields) {
+							if (field.getMeaning() == Meaning.TITLE) {
+								query.add(new SearchQuery(field, item
+										.getTitle()));
+							} else if (field.getMeaning() == Meaning.HOME_BRANCH) {
+								query.add(new SearchQuery(field, sp.getString(
+										OpacClient.PREF_HOME_BRANCH_PREFIX
+												+ app.getAccount().getId(),
+										null)));
+							}
 						}
+						app.startSearch(getActivity(), query);
+					} else {
+						Toast.makeText(getActivity(), R.string.no_search_cache,
+								Toast.LENGTH_LONG).show();
+						;
 					}
-					app.startSearch(getActivity(), query);
 				} else {
 					mCallback.showDetail(item.getMNr());
 				}

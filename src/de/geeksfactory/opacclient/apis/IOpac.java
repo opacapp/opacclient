@@ -337,9 +337,11 @@ public class IOpac extends BaseApi implements OpacApi {
 			// Status
 			String status = tr.select("td").get(colmap.get("returndate"))
 					.text().trim().replace("\u00a0", "");
-			if (status.equals("") || status.contains("Onleihe")
+			if (status.equals("")
+					|| status.toLowerCase(Locale.GERMAN).contains("onleihe")
 					|| status.contains("verleihbar")
-					|| status.contains("entleihbar")) {
+					|| status.contains("entleihbar")
+					|| status.contains("ausleihbar")) {
 				sr.setStatus(Status.GREEN);
 			} else {
 				sr.setStatus(Status.RED);
@@ -684,16 +686,31 @@ public class IOpac extends BaseApi implements OpacApi {
 		if (trs < 2)
 			return;
 		assert (trs > 0);
+		
+		JSONObject copymap = new JSONObject();
+		try {
+			if (data.has("accounttable"))
+				copymap = data.getJSONObject("accounttable");
+		} catch (JSONException e) {
+		}
+		
 		for (int i = 1; i < trs; i++) {
 			Element tr = copytrs.get(i);
 			Map<String, String> e = new HashMap<String, String>();
 
-			e.put(AccountData.KEY_LENT_TITLE, tr.child(0).text().trim()
-					.replace("\u00a0", ""));
-			e.put(AccountData.KEY_LENT_AUTHOR, tr.child(1).text().trim()
-					.replace("\u00a0", ""));
-			int prolongCount = Integer.parseInt(tr.child(3).text().trim()
-					.replace("\u00a0", ""));
+			if (copymap.optInt("title", 0) >= 0)
+				e.put(AccountData.KEY_LENT_TITLE,
+						tr.child(copymap.optInt("title", 0)).text().trim()
+								.replace("\u00a0", ""));
+			if (copymap.optInt("author", 0) >= 1)
+				e.put(AccountData.KEY_LENT_AUTHOR,
+						tr.child(copymap.optInt("author", 1)).text().trim()
+								.replace("\u00a0", ""));
+			int prolongCount = 0;
+			if (copymap.optInt("prolongcount", 3) >= 0)
+				prolongCount = Integer.parseInt(tr
+						.child(copymap.optInt("prolongcount", 3)).text().trim()
+						.replace("\u00a0", ""));
 			/*
 			 * not needed currently, because in Schleswig books can only be pro-
 			 * longed once, so the prolong count is visible from the renewable
@@ -704,8 +721,10 @@ public class IOpac extends BaseApi implements OpacApi {
 				e.put(AccountData.KEY_LENT_RENEWABLE,
 						prolongCount < maxProlongCount ? "Y" : "N");
 			}
-			e.put(AccountData.KEY_LENT_DEADLINE, tr.child(4).text().trim()
-					.replace("\u00a0", ""));
+			if (copymap.optInt("deadline", 4) >= 0)
+				e.put(AccountData.KEY_LENT_DEADLINE,
+						tr.child(copymap.optInt("deadline", 4)).text().trim()
+								.replace("\u00a0", ""));
 			try {
 				e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String
 						.valueOf(sdf
@@ -714,14 +733,17 @@ public class IOpac extends BaseApi implements OpacApi {
 			} catch (ParseException e1) {
 				e1.printStackTrace();
 			}
-			String link = tr.child(5).select("a").attr("href");
-			e.put(AccountData.KEY_LENT_LINK, link);
-			// find media number with regex
-			Pattern pattern = Pattern.compile("mednr=([^&]*)&");
-			Matcher matcher = pattern.matcher(link);
-			matcher.find();
-			if (matcher.group() != null) {
-				e.put(AccountData.KEY_LENT_ID, matcher.group(1));
+			if (copymap.optInt("prolongurl", 5) >= 0) {
+				String link = tr.child(copymap.optInt("prolongurl", 5))
+						.select("a").attr("href");
+				e.put(AccountData.KEY_LENT_LINK, link);
+				// find media number with regex
+				Pattern pattern = Pattern.compile("mednr=([^&]*)&");
+				Matcher matcher = pattern.matcher(link);
+				matcher.find();
+				if (matcher.group() != null) {
+					e.put(AccountData.KEY_LENT_ID, matcher.group(1));
+				}
 			}
 
 			medien.add(e);
@@ -823,6 +845,16 @@ public class IOpac extends BaseApi implements OpacApi {
 				if (field != null)
 					fields.add(field);
 			}
+		}
+
+		if (fields.size() == 0 && doc.select("[name=sleStichwort]").size() > 0) {
+			TextSearchField field = new TextSearchField();
+			Element input = doc.select("input[name=sleStichwort]").first();
+			field.setDisplayName(stringProvider
+					.getString(StringProvider.FREE_SEARCH));
+			field.setId(input.attr("name"));
+			field.setHint("");
+			fields.add(field);
 		}
 
 		// Extract available media types.
