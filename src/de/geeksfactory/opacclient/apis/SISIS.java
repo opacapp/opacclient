@@ -1361,9 +1361,9 @@ public class SISIS extends BaseApi implements OpacApi {
 					.text().trim());
 			try {
 				e.put(AccountData.KEY_LENT_AUTHOR,
-						tr.child(1).html().split("<br />")[1].trim());
+						tr.child(1).html().split("<br[ /]*>")[1].trim());
 
-				String[] col2split = tr.child(2).html().split("<br />");
+				String[] col2split = tr.child(2).html().split("<br[ /]*>");
 				String frist = col2split[0].trim();
 				if (frist.contains("-"))
 					frist = frist.split("-")[1].trim();
@@ -1433,8 +1433,8 @@ public class SISIS extends BaseApi implements OpacApi {
 			e.put(AccountData.KEY_RESERVATION_TITLE,
 					tr.child(1).select("strong").text().trim());
 			try {
-				String[] rowsplit1 = tr.child(1).html().split("<br />");
-				String[] rowsplit2 = tr.child(2).html().split("<br />");
+				String[] rowsplit1 = tr.child(1).html().split("<br[ /]*>");
+				String[] rowsplit2 = tr.child(2).html().split("<br[ /]*>");
 				if (rowsplit1.length > 1)
 					e.put(AccountData.KEY_RESERVATION_AUTHOR,
 							rowsplit1[1].trim());
