@@ -209,7 +209,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		if (fields == null)
 			return;
 		for (final SearchField field : fields) {
-			if (field.isVisible())
+			if (!field.isVisible())
 				continue;
 			ViewGroup v = null;
 			if (field instanceof TextSearchField) {
@@ -560,6 +560,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		}
 
 		for (SearchField field : fields) {
+			if (!field.isVisible())
+				continue;
 
 			ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
 			if (field instanceof TextSearchField) {
