@@ -133,6 +133,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
 	public void clear() {
 		for (SearchField field : fields) {
+			if (!field.isVisible())
+				continue;
 			ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
 			if (field instanceof TextSearchField) {
 				EditText text;
@@ -596,7 +598,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		if (fields == null)
 			return null;
 		for (SearchField field : fields) {
-
+			if (!field.isVisible())
+				continue;
 			ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
 			if (field instanceof TextSearchField) {
 				EditText text;
@@ -634,6 +637,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 			return;
 
 		for (SearchField field : fields) {
+			if (!field.isVisible())
+				continue;
 			if (field instanceof DropdownSearchField
 					&& field.getMeaning() == Meaning.HOME_BRANCH) {
 				ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
@@ -655,6 +660,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
 	public void loadQuery(Bundle query) {
 		for (SearchField field : fields) {
+			if (!field.isVisible())
+				continue;
 			ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
 			if (field instanceof TextSearchField) {
 				EditText text;
