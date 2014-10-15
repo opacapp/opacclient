@@ -36,6 +36,7 @@ public class Library implements Comparable<Library> {
 	private String ident;
 	private String city;
 	private String title;
+	private String displayName;
 	private String support;
 	private String api;
 	private JSONObject data;
@@ -68,8 +69,13 @@ public class Library implements Comparable<Library> {
 		lib.setCountry(input.getString("country"));
 		lib.setState(input.getString("state"));
 		lib.setData(input.getJSONObject("data"));
+		
+		if (input.has("displayname"))
+			lib.setDisplayName(input.getString("displayname"));
+		
 		if (input.has("replacedby"))
 			lib.setReplacedBy(input.getString("replacedby"));
+		
 		if (input.has("geo")) {
 			double[] geo = new double[2];
 			geo[0] = input.getJSONArray("geo").getDouble(0);
@@ -142,6 +148,33 @@ public class Library implements Comparable<Library> {
 	 */
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	/**
+	 * The official name of the library to display e.g. in the account detail
+	 * view. Returns "city · title" if not set.
+	 * 
+	 * @return a name, including the city's name
+	 */
+	public String getDisplayName() {
+		if (displayName != null)
+			return displayName;
+		
+		if (getTitle() != null && !getTitle().equals("null")) {
+			return getCity() + " · " + getTitle();
+		} else {
+			return getCity();
+		}
+	}
+
+	/**
+	 * The official name of the library to display e.g. in the account detail
+	 * view. Optional.
+	 * 
+	 * @return a name, including the city's name
+	 */
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
 	}
 
 	/**

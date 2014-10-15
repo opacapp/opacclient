@@ -97,11 +97,7 @@ public class AccountEditActivity extends Activity {
 					.getLibrary());
 			if (findViewById(R.id.tvCity) != null) {
 				TextView tvCity = (TextView) findViewById(R.id.tvCity);
-				if (lib.getTitle() != null && !lib.getTitle().equals("null")) {
-					tvCity.setText(lib.getCity() + "\n" + lib.getTitle());
-				} else {
-					tvCity.setText(lib.getCity());
-				}
+				tvCity.setText(lib.getDisplayName());
 			}
 
 			if (lib.getReplacedBy() != null
