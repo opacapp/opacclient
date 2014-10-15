@@ -113,6 +113,7 @@ public abstract class SearchField {
 		json.put("id", id);
 		json.put("displayName", displayName);
 		json.put("advanced", advanced);
+		json.put("visible", visible);
 		if (data != null)
 			json.put("data", data);
 		if (meaning != null)
@@ -131,6 +132,7 @@ public abstract class SearchField {
 		if (json.has("meaning"))
 			meaning = Meaning.valueOf(json.getString("meaning"));
 		boolean advanced = json.getBoolean("advanced");
+		boolean visible = json.getBoolean("visible");
 
 		SearchField field = null;
 		if (type.equals("text")) {
@@ -163,6 +165,7 @@ public abstract class SearchField {
 		if (field != null) {
 			field.setData(data);
 			field.setMeaning(meaning);
+			field.setVisible(visible);
 		}
 		return field;
 	}
