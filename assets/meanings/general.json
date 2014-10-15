@@ -52,7 +52,8 @@
         "Suche",
         "Alle",
         "Einfache Suche",
-        "Suchbegriffe"
+        "Suchbegriffe",
+        "free_search"
     ],
     "KEYWORD": [
         "Schlagwort",
@@ -71,7 +72,8 @@
         "(Norm-)Schlagwort",
         "Schlagwort StB",
         "Schlagworter",
-        "Schlagwort / Thema"
+        "Schlagwort / Thema",
+        "Schlagwort 1"
     ],
     "ISBN": [
         "ISBN",
