@@ -25,6 +25,7 @@ public abstract class SearchField {
 	protected String id;
 	protected String displayName;
 	protected boolean advanced;
+	protected boolean visible = true;
 	/**
 	 * Optional attribute, describes the meaning of the search field.
 	 * Used for sorting the search fields in the form.
@@ -97,6 +98,14 @@ public abstract class SearchField {
 	 */
 	public void setAdvanced(boolean advanced) {
 		this.advanced = advanced;
+	}
+
+	public boolean isVisible() {
+		return visible;
+	}
+
+	public void setVisible(boolean visible) {
+		this.visible = visible;
 	}
 
 	public JSONObject toJSON() throws JSONException {
