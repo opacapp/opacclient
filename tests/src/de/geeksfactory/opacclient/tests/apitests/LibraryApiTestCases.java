@@ -35,6 +35,7 @@ import de.geeksfactory.opacclient.apis.SRU;
 import de.geeksfactory.opacclient.apis.WebOpacNet;
 import de.geeksfactory.opacclient.apis.WinBiap;
 import de.geeksfactory.opacclient.apis.Zones22;
+import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
@@ -70,9 +71,10 @@ public class LibraryApiTestCases extends TestCase {
 	}
 
 	@Before
-	public void setUp() throws NotReachableException, IOException, OpacErrorException, JSONException {
+	public void setUp() throws NotReachableException, IOException,
+			OpacErrorException, JSONException {
 		Security.addProvider(new BouncyCastleProvider());
-		api = getApi(library);	
+		api = getApi(library);
 		fields = api.getSearchFields();
 		JavaMeaningDetector detector = new JavaMeaningDetector(library);
 		for (int i = 0; i < fields.size(); i++) {
@@ -86,9 +88,10 @@ public class LibraryApiTestCases extends TestCase {
 		List<SearchQuery> query = new ArrayList<SearchQuery>();
 		SearchField field = findFreeSearchOrTitle(fields);
 		if (field == null)
-			throw new OpacErrorException( //TODO: prevent this
+			throw new OpacErrorException( // TODO: prevent this
 					"There is no free or title search field");
-		query.add(new SearchQuery(field, "fasgeadstrehdaxydsfstrgdfjxnvgfhdtnbfgn"));
+		query.add(new SearchQuery(field,
+				"fasgeadstrehdaxydsfstrgdfjxnvgfhdtnbfgn"));
 		try {
 			SearchRequestResult res = api.search(query);
 			assertTrue(res.getTotal_result_count() == 0);
@@ -103,7 +106,7 @@ public class LibraryApiTestCases extends TestCase {
 		List<SearchQuery> query = new ArrayList<SearchQuery>();
 		SearchField field = findFreeSearchOrTitle(fields);
 		if (field == null)
-			throw new OpacErrorException( //TODO: prevent this
+			throw new OpacErrorException( // TODO: prevent this
 					"There is no free or title search field");
 		query.add(new SearchQuery(field, "harry"));
 		SearchRequestResult res = api.search(query);
@@ -133,6 +136,30 @@ public class LibraryApiTestCases extends TestCase {
 				detail2 = api.getResult(second.getNr());
 			confirmDetail(second, detail2);
 		}
+	}
+
+	/**
+	 * Create an account with credentials that probably nobody has and try to
+	 * login. This should normally give an OpacErrorException.
+	 */
+	@Test
+	public void testWrongLogin() throws IOException, JSONException {
+		if (!api.isAccountSupported(library))
+			return;
+		Account account = new Account();
+		account.setId(0);
+		account.setLabel("Test account");
+		account.setLibrary(library.getIdent());
+		account.setName("upvlgFLMNN2AyVsIzowcwzdypRXM2x");
+		account.setPassword("OTqbXhMJMKtjconhxX0LXMqWZsY2Ez");
+		
+		OpacErrorException exception = null;
+		try {
+			api.checkAccountData(account);
+		} catch (OpacErrorException e) {
+			exception = e;
+		}
+		assertTrue(exception != null);
 	}
 
 	private void confirmDetail(SearchResult result, DetailledItem detail) {
@@ -168,8 +195,7 @@ public class LibraryApiTestCases extends TestCase {
 	 * @param fields
 	 *            List of SearchFields
 	 * @return The first free search field from the list. If there is none, the
-	 *         title search fields and if that doesn't exist
-	 *         either, null
+	 *         title search fields and if that doesn't exist either, null
 	 */
 	private SearchField findFreeSearchOrTitle(List<SearchField> fields) {
 		for (SearchField field : fields) {
@@ -184,7 +210,7 @@ public class LibraryApiTestCases extends TestCase {
 		}
 		return null;
 	}
-	
+
 	public static OpacApi getApi(Library library) {
 		OpacApi api = null;
 		if (library.getApi().equals("bond26")
