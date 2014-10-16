@@ -1153,4 +1153,26 @@ public class Bibliotheca extends BaseApi {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public void checkAccountData(Account acc) throws IOException,
+			JSONException, OpacErrorException {
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("AUSWEIS", acc.getName()));
+		nameValuePairs.add(new BasicNameValuePair("PWD", acc.getPassword()));
+		if (data.has("db")) {
+			nameValuePairs.add(new BasicNameValuePair("vkontodb", data
+					.getString("db")));
+		}
+		nameValuePairs.add(new BasicNameValuePair("B1", "weiter"));
+		nameValuePairs.add(new BasicNameValuePair("target", "konto"));
+		nameValuePairs.add(new BasicNameValuePair("type", "K"));
+		String html = httpPost(opac_url + "/index.asp",
+				new UrlEncodedFormEntity(nameValuePairs), "ISO-8859-1", true);
+		Document doc = Jsoup.parse(html);
+
+		if (doc.select(".kontomeldung").size() > 0) {
+			throw new OpacErrorException(doc.select(".kontomeldung").text());
+		}
+	}
 }

@@ -519,8 +519,8 @@ public interface OpacApi {
 			JSONException;
 
 	/**
-	 * Performs a catalogue search for volumes of an item. The query is given
-	 * to it from {@link DetailledItem.getVolumesearch()}.
+	 * Performs a catalogue search for volumes of an item. The query is given to
+	 * it from {@link DetailledItem.getVolumesearch()}.
 	 * 
 	 * This function is always called from a background thread, you can use
 	 * blocking network operations in it. See documentation on DetailledItem for
@@ -831,6 +831,23 @@ public interface OpacApi {
 			JSONException, OpacErrorException;
 
 	/**
+	 * Check the validity of given account data. This is separate from the
+	 * {@link #account(Account)} function because just checking the login can be
+	 * much faster than retrieving all the account data.
+	 * 
+	 * This function is always called from a background thread, you can use
+	 * blocking network operations in it.
+	 * 
+	 * @param account
+	 *            The account to check
+	 * @throws OpacErrorException
+	 *             when the login data is invalid or there's another error
+	 *             message from the OPAC system
+	 */
+	public void checkAccountData(Account account) throws IOException,
+			JSONException, OpacErrorException;
+
+	/**
 	 * Returns a list of search criterias which are supported by this OPAC and
 	 * should be visible in the search activity. Values should be instances of
 	 * subclasses of the abstract SearchField class. This is called
@@ -917,7 +934,8 @@ public interface OpacApi {
 	/**
 	 * Sets the StringProvider to use for error messages etc.
 	 * 
-	 * @param stringProvider the StringProvider to use
+	 * @param stringProvider
+	 *            the StringProvider to use
 	 */
 	public void setStringProvider(StringProvider stringProvider);
 }

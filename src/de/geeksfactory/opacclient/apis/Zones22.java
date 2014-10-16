@@ -873,4 +873,12 @@ public class Zones22 extends BaseApi {
 		return "UTF-8";
 	}
 
+	@Override
+	public void checkAccountData(Account account) throws IOException,
+			JSONException, OpacErrorException {
+		Document login = login(account);
+		if (login == null)
+			throw new NotReachableException();
+	}
+
 }

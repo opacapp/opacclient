@@ -1244,4 +1244,10 @@ public class BiBer1992 extends BaseApi {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public void checkAccountData(Account account) throws IOException,
+			JSONException, OpacErrorException {
+		accountHttpPost(account, "medk");
+	}
 }
