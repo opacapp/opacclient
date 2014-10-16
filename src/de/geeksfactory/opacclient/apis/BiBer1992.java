@@ -1193,8 +1193,8 @@ public class BiBer1992 extends BaseApi {
 			}
 			throw new OpacErrorException(errText);
 		}
-		if (doc.select("tr td font[color=red]").size() == 1) {
-			throw new OpacErrorException(doc.select("font[color=red]").text());
+		if (doc.select("tr td font[color=red], tr td font.p02b").size() == 1) {
+			throw new OpacErrorException(doc.select("font[color=red], tr td font.p02b").text());
 		}
 
 		return doc;
@@ -1248,6 +1248,8 @@ public class BiBer1992 extends BaseApi {
 	@Override
 	public void checkAccountData(Account account) throws IOException,
 			JSONException, OpacErrorException {
-		accountHttpPost(account, "medk");
+		Document doc = accountHttpPost(account, "login");
+		if (doc == null)
+			throw new NotReachableException();
 	}
 }
