@@ -33,6 +33,7 @@ import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
@@ -44,6 +45,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.apis.OpacApi;
+import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
@@ -64,6 +67,7 @@ public class AccountEditActivity extends Activity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		supportRequestWindowFeature(android.view.Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
 		setContentView(getLayoutResource());
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -142,8 +146,14 @@ public class AccountEditActivity extends Activity {
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		setSupportProgressBarIndeterminateVisibility(false);
+	}
 
-	private void save() {
+	private void saveAndCheck() {
 		if (etLabel.getText().toString().equals("")) {
 			account.setLabel(getString(R.string.default_account_name));
 		} else {
@@ -151,14 +161,7 @@ public class AccountEditActivity extends Activity {
 		}
 		account.setName(etName.getText().toString());
 		account.setPassword(etPassword.getText().toString());
-		AccountDataSource data = new AccountDataSource(this);
-		data.open();
-		data.update(account);
-		data.close();
-		if (((OpacClient) getApplication()).getAccount().getId() == account
-				.getId()) {
-			((OpacClient) getApplication()).resetCache();
-		}
+		new CheckAccountDataTask().execute(account);
 	}
 
 	private void delete() {
@@ -203,15 +206,7 @@ public class AccountEditActivity extends Activity {
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
 		} else if (item.getItemId() == R.id.action_accept) {
-			if (getIntent().hasExtra("welcome")
-					&& getIntent().getBooleanExtra("welcome", false)) {
-				save();
-				Intent i = new Intent(this, MainActivity.class);
-				startActivity(i);
-			} else {
-				save();
-				finish();
-			}
+			saveAndCheck();
 			return true;
 		} else if (item.getItemId() == R.id.action_cancel) {
 			if (getIntent().hasExtra("adding")
@@ -252,6 +247,104 @@ public class AccountEditActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	protected class CheckAccountDataTask extends
+			AsyncTask<Account, Void, Exception> {
+		
+		@Override
+		protected void onPreExecute() {
+			setProgressBarIndeterminateVisibility(true);
+		}
+		
+		@Override
+		protected Exception doInBackground(Account... params) {
+			try {
+				OpacApi api = ((OpacClient) getApplication()).getNewApi(lib);
+				api.checkAccountData(account);
+			} catch (IOException e) {
+				return e;
+			} catch (JSONException e) {
+				return e;
+			} catch (OpacErrorException e) {
+				return e;
+			}
+			return null;
+		}
+
+		protected void onPostExecute(Exception result) {
+			setProgressBarIndeterminateVisibility(false);
+			if (result == null) {
+				save();
+				close();
+			} else if (result instanceof OpacErrorException) {
+				OpacErrorException e = (OpacErrorException) result;
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						AccountEditActivity.this);
+				builder.setMessage(
+						String.format(
+								getResources().getString(
+										R.string.user_data_opac_message),
+								e.getMessage()))
+						.setPositiveButton(R.string.yes,
+								new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										save();
+										close();
+									}
+								})
+						.setNegativeButton(R.string.no,
+								new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+									}
+								}).create().show();
+			} else {
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						AccountEditActivity.this);
+				builder.setMessage(R.string.user_data_connection_error)
+						.setPositiveButton(R.string.yes,
+								new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										save();
+										close();
+									}
+								})
+						.setNegativeButton(R.string.no,
+								new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+									}
+								}).create().show();
+			}
+		}
+	}
+
+	private void save() {
+		AccountDataSource data = new AccountDataSource(AccountEditActivity.this);
+		data.open();
+		data.update(account);
+		data.close();
+		if (((OpacClient) getApplication()).getAccount().getId() == account
+				.getId()) {
+			((OpacClient) getApplication()).resetCache();
+		}
+	}
+
+	private void close() {
+		if (getIntent().hasExtra("welcome")
+				&& getIntent().getBooleanExtra("welcome", false)) {
+			Intent i = new Intent(this, MainActivity.class);
+			startActivity(i);
+		} else {
+			finish();
+		}
 	}
 
 }

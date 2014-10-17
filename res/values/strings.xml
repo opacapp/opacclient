@@ -213,4 +213,6 @@
 	<string name="free_search">Freie Suche</string>
     <string name="no_fields_found">Keine Suchfelder gefunden.</string>
 	<string name="no_search_cache">Fehler. Versuchen Sie evtl. eine Suchabfrage durchzuführen, um das Problem zu beheben.</string>
+	<string name="user_data_opac_message">Beim Überprüfen der Benutzerdaten gab die Bibliothek folgende Nachricht zurück: \"%s\"\n\nMöchten Sie diese Benutzerdaten trotzdem speichern?</string>
+	<string name="user_data_connection_error">Beim Überprüfen der Benutzerdaten ist der Aufbau einer Verbindung zum Bibliotheksserver fehlgeschlagen. Möchten Sie diese Benutzerdaten trotzdem speichern?</string>
 </resources>
