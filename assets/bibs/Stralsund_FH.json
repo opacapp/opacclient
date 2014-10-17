@@ -3,7 +3,7 @@
     "city": "Stralsund", 
     "country": "Deutschland", 
     "data": {
-        "accountSupported": true, 
+        "accountSupported": false, 
         "baseurl": "https://lhgrw.gbv.de", 
         "db": "2", 
         "information": "http://www.fh-stralsund.de/fh_stralsund/powerslave,id,765,nodeid,.html"
@@ -13,6 +13,6 @@
         13.0877143
     ], 
     "state": "Mecklenburg-Vorpommern", 
-    "support": "Katalogsuche und Konto", 
+    "support": "Katalogsuche", 
     "title": "Hochschulbibliothek"
 }

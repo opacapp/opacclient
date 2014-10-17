@@ -41,7 +41,9 @@ import java.util.regex.Pattern;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
@@ -1152,5 +1154,43 @@ public class Bibliotheca extends BaseApi {
 	public SearchRequestResult filterResults(Filter filter, Option option) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void checkAccountData(Account acc) throws IOException,
+			JSONException, OpacErrorException {
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("AUSWEIS", acc.getName()));
+		nameValuePairs.add(new BasicNameValuePair("PWD", acc.getPassword()));
+		if (data.has("db")) {
+			nameValuePairs.add(new BasicNameValuePair("vkontodb", data
+					.getString("db")));
+		}
+		nameValuePairs.add(new BasicNameValuePair("B1", "weiter"));
+		nameValuePairs.add(new BasicNameValuePair("target", "konto"));
+		nameValuePairs.add(new BasicNameValuePair("type", "K"));
+		String html = httpPostWithRedirect(opac_url + "/index.asp",
+				new UrlEncodedFormEntity(nameValuePairs), "ISO-8859-1", true);
+		Document doc = Jsoup.parse(html);
+		if (doc.select(".kontomeldung").size() > 0) {
+			throw new OpacErrorException(doc.select(".kontomeldung").text());
+		}
+	}
+
+	private String httpPostWithRedirect(String url, UrlEncodedFormEntity data,
+			String encoding, boolean ignore_errors)
+			throws ClientProtocolException, IOException {
+		HttpPost httppost = new HttpPost(url);
+		httppost.setEntity(data);
+		HttpResponse response = http_client.execute(httppost);
+		if (response.getStatusLine().getStatusCode() == 302) {
+			HttpGet httpget = new HttpGet(url.substring(0,
+					url.lastIndexOf("/") + 1)
+					+ response.getFirstHeader("Location").getValue());
+			response.getEntity().consumeContent();
+			response = http_client.execute(httpget);
+		}
+		return convertStreamToString(response.getEntity().getContent(),
+				encoding);
 	}
 }

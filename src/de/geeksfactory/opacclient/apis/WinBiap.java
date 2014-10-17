@@ -663,4 +663,11 @@ public class WinBiap extends BaseApi implements OpacApi {
 		return SUPPORT_FLAG_ENDLESS_SCROLLING;
 	}
 
+	@Override
+	public void checkAccountData(Account account) throws IOException,
+			JSONException, OpacErrorException {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

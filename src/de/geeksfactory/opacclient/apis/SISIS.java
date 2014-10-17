@@ -1718,4 +1718,13 @@ public class SISIS extends BaseApi implements OpacApi {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public void checkAccountData(Account account) throws IOException,
+			JSONException, OpacErrorException {
+		start(); // TODO: Is this necessary?
+		boolean success = login(account);
+		if (!success)
+			throw new NotReachableException();
+	}
 }

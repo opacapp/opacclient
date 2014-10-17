@@ -368,7 +368,8 @@ public class IOpac extends BaseApi implements OpacApi {
 			// here using another link present in the search results
 			Elements idLinks = tr.select("a[href^=/cgi-bin/di.exe?cMedNr]");
 			if (idLinks.size() > 0) {
-				Map<String, String> idParams = getQueryParamsFirst(idLinks.first().attr("href"));
+				Map<String, String> idParams = getQueryParamsFirst(idLinks
+						.first().attr("href"));
 				String id = idParams.get("cMedNr");
 				sr.setId(id);
 			} else {
@@ -680,6 +681,21 @@ public class IOpac extends BaseApi implements OpacApi {
 		}
 		return res;
 
+	}
+
+	public void checkAccountData(Account account) throws IOException,
+			OpacErrorException {
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("sleKndNr", account.getName()));
+		params.add(new BasicNameValuePair("slePw", account.getPassword()));
+		params.add(new BasicNameValuePair("pshLogin", "Login"));
+
+		String html = httpPost(opac_url + "/cgi-bin/di.exe",
+				new UrlEncodedFormEntity(params, "iso-8859-1"),
+				getDefaultEncoding());
+		Document doc = Jsoup.parse(html);
+		if (doc.select("h1").text().contains("fehlgeschlagen"))
+			throw new OpacErrorException(doc.select("h1, th").text());
 	}
 
 	protected void parse_medialist(List<Map<String, String>> medien,

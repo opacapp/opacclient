@@ -1232,4 +1232,29 @@ public class Pica extends BaseApi implements OpacApi {
 		return "UTF-8";
 	}
 
+	@Override
+	public void checkAccountData(Account account) throws IOException,
+			JSONException, OpacErrorException {
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("ACT", "UI_DATA"));
+		params.add(new BasicNameValuePair("HOST_NAME", ""));
+		params.add(new BasicNameValuePair("HOST_PORT", ""));
+		params.add(new BasicNameValuePair("HOST_SCRIPT", ""));
+		params.add(new BasicNameValuePair("LOGIN", "KNOWNUSER"));
+		params.add(new BasicNameValuePair("STATUS", "HML_OK"));
+
+		params.add(new BasicNameValuePair("BOR_U", account.getName()));
+		params.add(new BasicNameValuePair("BOR_PW", account.getPassword()));
+
+		String html = httpPost(https_url + "/loan/DB=" + db
+				+ "/LNG=DU/USERINFO", new UrlEncodedFormEntity(params,
+				getDefaultEncoding()), getDefaultEncoding());
+		Document doc = Jsoup.parse(html);
+
+		if (doc.select(".cnt .alert, .cnt .error").size() > 0) {
+			throw new OpacErrorException(doc.select(".cnt .alert, .cnt .error")
+					.text());
+		}
+	}
+
 }

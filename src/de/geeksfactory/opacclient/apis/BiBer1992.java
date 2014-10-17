@@ -47,6 +47,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import de.geeksfactory.opacclient.NotReachableException;
+import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.networking.HTTPClient;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -405,10 +406,10 @@ public class BiBer1992 extends BaseApi {
 	private SearchRequestResult parse_search(String html, int page) {
 		List<SearchResult> results = new ArrayList<SearchResult>();
 		Document doc = Jsoup.parse(html);
-		
+
 		if (doc.select("h3").text().contains("Es wurde nichts gefunden"))
 			return new SearchRequestResult(results, 0, page);
-		
+
 		Elements trList = doc.select("form table tr[valign]"); // <tr
 																// valign="top">
 		Elements elem = null;
@@ -1196,6 +1197,12 @@ public class BiBer1992 extends BaseApi {
 		if (doc.select("tr td font[color=red]").size() == 1) {
 			throw new OpacErrorException(doc.select("font[color=red]").text());
 		}
+		if (doc.text().contains("No html file set")
+				|| doc.text().contains(
+						"Der BIBDIA Server konnte den Auftrag nicht")) {
+			throw new OpacErrorException(
+					stringProvider.getString(StringProvider.WRONG_LOGIN_DATA));
+		}
 
 		return doc;
 	}
@@ -1243,5 +1250,13 @@ public class BiBer1992 extends BaseApi {
 	public SearchRequestResult filterResults(Filter filter, Option option) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void checkAccountData(Account account) throws IOException,
+			JSONException, OpacErrorException {
+		Document doc = accountHttpPost(account, "medk");
+		if (doc == null)
+			throw new NotReachableException();
 	}
 }

@@ -466,4 +466,11 @@ public class SRU extends BaseApi implements OpacApi {
 		return "UTF-8";
 	}
 
+	@Override
+	public void checkAccountData(Account account) throws IOException,
+			JSONException, OpacErrorException {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

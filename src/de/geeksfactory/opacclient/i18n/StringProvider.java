@@ -50,6 +50,7 @@ public interface StringProvider {
 	public static String REMINDERS = "reminders";
 	public static String PROLONGED_ABBR = "prolonged_abbr";
 	public static String FREE_SEARCH = "free_search";
+	public static String WRONG_LOGIN_DATA = "wrong_account_data";
 
 	public abstract String getString(String identifier);
 

@@ -1415,4 +1415,15 @@ public class Adis extends BaseApi implements OpacApi {
 		}
 	}
 
+	@Override
+	public void checkAccountData(Account account) throws IOException,
+			JSONException, OpacErrorException {
+		start();
+		s_accountcalled = true;
+
+		Document doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
+				+ s_service + "&sp=SBK");
+		doc = handleLoginForm(doc, account);
+	}
+
 }

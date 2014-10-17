@@ -22,4 +22,5 @@
     <string name="download">Download</string>
     <string name="reminders">Mahnungen</string>
     <string name="prolonged_abbr">verl.</string>
+    <string name="wrong_account_data">Die eingegebenen Benutzerdaten sind falsch.</string>
 </resources>
