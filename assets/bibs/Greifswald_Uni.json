@@ -3,7 +3,7 @@
     "city": "Greifswald", 
     "country": "Deutschland", 
     "data": {
-        "accountSupported": true, 
+        "accountSupported": false, 
         "baseurl": "https://lhgrw.gbv.de", 
         "db": "1", 
         "information": "http://www.uni-greifswald.de/bibliothek.html"
