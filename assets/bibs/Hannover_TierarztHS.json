@@ -4,7 +4,7 @@
     "country": "Deutschland", 
     "data": {
         "accountSupported": true, 
-        "baseurl": "http://opac.tib.uni-hannover.de", 
+        "baseurl": "https://opac.tib.uni-hannover.de", 
         "db": "5", 
         "information": "http://www.tiho-hannover.de/de/kliniken-institute/bibliothek/"
     }, 
