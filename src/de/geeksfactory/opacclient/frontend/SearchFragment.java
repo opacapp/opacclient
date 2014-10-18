@@ -566,6 +566,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 				continue;
 
 			ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
+			if (v == null)
+				return null;
 			if (field instanceof TextSearchField) {
 				EditText text;
 				if (((TextSearchField) field).isFreeSearch()) {

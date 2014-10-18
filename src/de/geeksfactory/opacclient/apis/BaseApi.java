@@ -107,6 +107,7 @@ public abstract class BaseApi implements OpacApi {
 
 		HttpGet httpget = new HttpGet(cleanUrl(url));
 		HttpResponse response;
+		String html;
 
 		try {
 			if (cookieStore != null) {
@@ -120,6 +121,15 @@ public abstract class BaseApi implements OpacApi {
 			} else {
 				response = http_client.execute(httpget);
 			}
+
+			if (!ignore_errors && response.getStatusLine().getStatusCode() >= 400) {
+				response.getEntity().consumeContent();
+				throw new NotReachableException();
+			}
+			
+			html = convertStreamToString(response.getEntity().getContent(),
+					encoding);
+			response.getEntity().consumeContent();
 		} catch (ConnectTimeoutException e) {
 			e.printStackTrace();
 			throw new NotReachableException();
@@ -160,20 +170,6 @@ public abstract class BaseApi implements OpacApi {
 			} else {
 				throw e;
 			}
-		}
-
-		if (!ignore_errors && response.getStatusLine().getStatusCode() >= 400) {
-			response.getEntity().consumeContent();
-			throw new NotReachableException();
-		}
-		String html;
-		try {
-			html = convertStreamToString(response.getEntity().getContent(),
-					encoding);
-			response.getEntity().consumeContent();
-		} catch (MalformedChunkCodingException e) {
-			e.printStackTrace();
-			throw new NotReachableException();
 		}
 		return html;
 	}
@@ -272,6 +268,7 @@ public abstract class BaseApi implements OpacApi {
 		httppost.setEntity(data);
 
 		HttpResponse response = null;
+		String html;
 		try {
 			if (cookieStore != null) {
 				// Create local HTTP context
@@ -284,6 +281,13 @@ public abstract class BaseApi implements OpacApi {
 			} else {
 				response = http_client.execute(httppost);
 			}
+
+			if (!ignore_errors && response.getStatusLine().getStatusCode() >= 400) {
+				throw new NotReachableException();
+			}
+			html = convertStreamToString(response.getEntity().getContent(),
+					encoding);
+			response.getEntity().consumeContent();
 		} catch (ConnectTimeoutException e) {
 			e.printStackTrace();
 			throw new NotReachableException();
@@ -324,19 +328,6 @@ public abstract class BaseApi implements OpacApi {
 			} else {
 				throw e;
 			}
-		}
-
-		if (!ignore_errors && response.getStatusLine().getStatusCode() >= 400) {
-			throw new NotReachableException();
-		}
-		String html;
-		try {
-			html = convertStreamToString(response.getEntity().getContent(),
-					encoding);
-			response.getEntity().consumeContent();
-		} catch (MalformedChunkCodingException e) {
-			e.printStackTrace();
-			throw new NotReachableException();
 		}
 		return html;
 	}
