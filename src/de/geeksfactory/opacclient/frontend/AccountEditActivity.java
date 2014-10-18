@@ -155,6 +155,12 @@ public class AccountEditActivity extends Activity {
 		} else {
 			account.setLabel(etLabel.getText().toString());
 		}
+		if(etPassword.getText().toString().trim().equals("")) {
+			// Don't check user credentials if there are no credentials
+			save();
+			close();
+			return;
+		}
 		account.setName(etName.getText().toString());
 		account.setPassword(etPassword.getText().toString());
 		new CheckAccountDataTask().execute(account);
