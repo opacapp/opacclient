@@ -1,0 +1,17 @@
+{
+    "api": "adis",
+    "city": "Heilbronn",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "https://bsz.ibs-bw.de/aDISWeb/app",
+        "information": "https://www.hs-heilbronn.de/bibliothek",
+        "startparams": "service=direct/0/Home/$DirectLink&sp=S127.0.0.1:23042"
+    },
+    "geo": [
+        49.1426929,
+        9.210879
+    ],
+    "state": "Baden-W\u00fcrttemberg",
+    "support": "Katalogsuche und Konto (experimentell)",
+    "title": "Hochschule"
+}

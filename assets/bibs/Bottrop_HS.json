@@ -1,0 +1,17 @@
+{
+    "api": "sisis",
+    "city": "Bottrop",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "https://katalog.hs-ruhrwest.de/webOPACClient.nmbsis",
+        "information": "http://www.hochschule-ruhr-west.de/campus/bibliothek/oeffnungszeiten.html",
+        "startparams": "Login=wonmbbot"
+    },
+    "geo": [
+        51.529086,
+        6.9446888
+    ],
+    "state": "Nordrhein-Westfalen",
+    "support": "Katalogsuche und Konto",
+    "title": "Hochschule Ruhr West"
+}
