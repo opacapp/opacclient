@@ -38,6 +38,7 @@ import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 import de.geeksfactory.opacclient.utils.Base64;
 
+//@formatter:off
 /**
  * 
  * @author Johan von Forstner, 11.08.2014
@@ -103,6 +104,7 @@ import de.geeksfactory.opacclient.utils.Base64;
  *     &amp;Sort=Autor				Sort by Author (default)
  * 
  */
+//@formatter:on
 
 public class WinBiap extends BaseApi implements OpacApi {
 
@@ -211,7 +213,7 @@ public class WinBiap extends BaseApi implements OpacApi {
 	public SearchRequestResult search(List<SearchQuery> queries)
 			throws IOException, NotReachableException, OpacErrorException {
 		Map<String, String> query = searchQueryListToMap(queries);
-		
+
 		List<List<NameValuePair>> queryParams = new ArrayList<List<NameValuePair>>();
 
 		int index = 0;
@@ -310,8 +312,8 @@ public class WinBiap extends BaseApi implements OpacApi {
 		if (matcher.find()) {
 			results_total = Integer.parseInt(matcher.group(1));
 		} else {
-			throw new OpacErrorException(stringProvider.getString(
-					StringProvider.INTERNAL_ERROR));
+			throw new OpacErrorException(
+					stringProvider.getString(StringProvider.INTERNAL_ERROR));
 		}
 
 		// Results
@@ -346,8 +348,8 @@ public class WinBiap extends BaseApi implements OpacApi {
 			if (matcher.find()) {
 				sr.setId(matcher.group(1));
 			} else {
-				throw new OpacErrorException(stringProvider.getString(
-						StringProvider.INTERNAL_ERROR));
+				throw new OpacErrorException(
+						stringProvider.getString(StringProvider.INTERNAL_ERROR));
 			}
 
 			if (tr.select(".mediaStatus").size() > 0) {
@@ -535,7 +537,7 @@ public class WinBiap extends BaseApi implements OpacApi {
 				.select("#ctl00_ContentPlaceHolderMain_searchPanel_ListBoxMediagroups_ListBoxMultiselection option");
 		Elements branchOptions = doc
 				.select("#ctl00_ContentPlaceHolderMain_searchPanel_MultiSelectionBranch_ListBoxMultiselection option");
-		
+
 		List<Map<String, String>> mediaGroups = new ArrayList<Map<String, String>>();
 		List<Map<String, String>> branches = new ArrayList<Map<String, String>>();
 
@@ -544,7 +546,7 @@ public class WinBiap extends BaseApi implements OpacApi {
 		all.put("value", "Alle");
 		mediaGroups.add(all);
 		branches.add(all);
-		
+
 		for (Element option : mediaGroupOptions) {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("key", option.attr("value"));
@@ -557,81 +559,77 @@ public class WinBiap extends BaseApi implements OpacApi {
 			map.put("value", option.text());
 			branches.add(map);
 		}
-		
+
 		List<SearchField> searchFields = new ArrayList<SearchField>();
-		
+
 		SearchField field = new TextSearchField(KEY_SEARCH_QUERY_FREE, "",
 				false, false, "Beliebig", true, false);
 		field.setMeaning(Meaning.FREE);
 		searchFields.add(field);
-		
-		field = new TextSearchField(KEY_SEARCH_QUERY_AUTHOR,
-				"Autor", false, false, "Nachname, Vorname", false,
-				false);
+
+		field = new TextSearchField(KEY_SEARCH_QUERY_AUTHOR, "Autor", false,
+				false, "Nachname, Vorname", false, false);
 		field.setMeaning(Meaning.AUTHOR);
 		searchFields.add(field);
-		
-		field = new TextSearchField(KEY_SEARCH_QUERY_TITLE,
-				"Titel", false, false, "Stichwort", false, false);
+
+		field = new TextSearchField(KEY_SEARCH_QUERY_TITLE, "Titel", false,
+				false, "Stichwort", false, false);
 		field.setMeaning(Meaning.TITLE);
 		searchFields.add(field);
-		
-		field = new TextSearchField(KEY_SEARCH_QUERY_KEYWORDA,
-				"Schlagwort", true, false, "", false, false);
+
+		field = new TextSearchField(KEY_SEARCH_QUERY_KEYWORDA, "Schlagwort",
+				true, false, "", false, false);
 		field.setMeaning(Meaning.KEYWORD);
 		searchFields.add(field);
-		
+
 		field = new TextSearchField(KEY_SEARCH_QUERY_AUDIENCE,
 				"Interessenkreis", true, false, "", false, false);
 		field.setMeaning(Meaning.AUDIENCE);
 		searchFields.add(field);
-		
-		field = new TextSearchField(KEY_SEARCH_QUERY_SYSTEM,
-				"Systematik", true, false, "", false, false);
+
+		field = new TextSearchField(KEY_SEARCH_QUERY_SYSTEM, "Systematik",
+				true, false, "", false, false);
 		field.setMeaning(Meaning.SYSTEM);
 		searchFields.add(field);
-		
-		field = new BarcodeSearchField(KEY_SEARCH_QUERY_ISBN,
-				"Strichcode", false, false, "ISBN");
+
+		field = new BarcodeSearchField(KEY_SEARCH_QUERY_ISBN, "Strichcode",
+				false, false, "ISBN");
 		field.setMeaning(Meaning.ISBN);
 		searchFields.add(field);
-		
-		field = new TextSearchField(KEY_SEARCH_QUERY_PUBLISHER,
-				"Verlag", false, false, "", false, false);
+
+		field = new TextSearchField(KEY_SEARCH_QUERY_PUBLISHER, "Verlag",
+				false, false, "", false, false);
 		field.setMeaning(Meaning.PUBLISHER);
 		searchFields.add(field);
-		
-		field = new BarcodeSearchField(
-				KEY_SEARCH_QUERY_BARCODE, "Strichcode", false, true,
-				"Mediennummer");
+
+		field = new BarcodeSearchField(KEY_SEARCH_QUERY_BARCODE, "Strichcode",
+				false, true, "Mediennummer");
 		field.setMeaning(Meaning.BARCODE);
 		searchFields.add(field);
-		
-		field = new TextSearchField(
-				KEY_SEARCH_QUERY_YEAR_RANGE_START, "Jahr", false, false,
-				"von", false, true);
+
+		field = new TextSearchField(KEY_SEARCH_QUERY_YEAR_RANGE_START, "Jahr",
+				false, false, "von", false, true);
 		field.setMeaning(Meaning.YEAR);
 		searchFields.add(field);
-	
-		field = new TextSearchField(
-				KEY_SEARCH_QUERY_YEAR_RANGE_END, "Jahr", false, true,
-				"bis", false, true);
+
+		field = new TextSearchField(KEY_SEARCH_QUERY_YEAR_RANGE_END, "Jahr",
+				false, true, "bis", false, true);
 		field.setMeaning(Meaning.YEAR);
 		searchFields.add(field);
-		
-		field = new DropdownSearchField(
-				KEY_SEARCH_QUERY_BRANCH, "Zweigstelle", false, branches);
+
+		field = new DropdownSearchField(KEY_SEARCH_QUERY_BRANCH, "Zweigstelle",
+				false, branches);
 		field.setMeaning(Meaning.BRANCH);
 		searchFields.add(field);
-		
-		field = new DropdownSearchField(
-				KEY_SEARCH_QUERY_CATEGORY, "Mediengruppe", false, mediaGroups);
+
+		field = new DropdownSearchField(KEY_SEARCH_QUERY_CATEGORY,
+				"Mediengruppe", false, mediaGroups);
 		field.setMeaning(Meaning.CATEGORY);
 		searchFields.add(field);
-		
+
 		return searchFields;
 	}
-	
+
 	@Override
 	public boolean shouldUseMeaningDetector() {
 		return false;
@@ -667,7 +665,7 @@ public class WinBiap extends BaseApi implements OpacApi {
 	public void checkAccountData(Account account) throws IOException,
 			JSONException, OpacErrorException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
