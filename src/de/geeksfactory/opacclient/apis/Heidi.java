@@ -25,13 +25,17 @@ package de.geeksfactory.opacclient.apis;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.cookie.BasicClientCookie;
@@ -41,9 +45,12 @@ import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 import de.geeksfactory.opacclient.NotReachableException;
+import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -318,6 +325,15 @@ public class Heidi extends BaseApi implements OpacApi {
 	}
 
 	@Override
+	public SearchRequestResult volumeSearch(Map<String, String> query)
+			throws IOException, OpacErrorException {
+		String html = httpGet(opac_url + "/search.cgi?sess=" + sessid
+				+ "&format=html&query=" + query.get("query"), ENCODING, false,
+				cookieStore);
+		return parse_search(html, 1);
+	}
+
+	@Override
 	public DetailledItem getResultById(String id, final String homebranch)
 			throws IOException, NotReachableException {
 
@@ -378,18 +394,33 @@ public class Heidi extends BaseApi implements OpacApi {
 			}
 		}
 
+		for (Element a : doc.select(".status1 a")) {
+			if (a.attr("href").contains("bestellung.cgi")) {
+				item.setReservable(true);
+				item.setReservation_info(id);
+				break;
+			}
+		}
+		for (Element a : doc.select(".titelsatz a")) {
+			if (a.text().trim().matches("B.+nde")) {
+				Map<String, String> volumesearch = new HashMap<String, String>();
+				volumesearch.put("query", getQueryParamsFirst(a.attr("href"))
+						.get("query"));
+				item.setVolumesearch(volumesearch);
+			}
+		}
+
 		return item;
 	}
 
 	@Override
 	public DetailledItem getResult(int position) throws IOException {
-		// Not implemented
-		return null;
+		throw new UnsupportedOperationException("Not implemented.");
 	}
 
 	@Override
 	public boolean isAccountSupported(Library library) {
-		return false; // TODO
+		return true;
 	}
 
 	@Override
@@ -400,8 +431,7 @@ public class Heidi extends BaseApi implements OpacApi {
 	@Override
 	public String getAccountExtendableInfo(Account account) throws IOException,
 			NotReachableException {
-		// Not implemented
-		return null;
+		throw new UnsupportedOperationException("Not implemented.");
 	}
 
 	@Override
@@ -411,7 +441,8 @@ public class Heidi extends BaseApi implements OpacApi {
 
 	@Override
 	public int getSupportFlags() {
-		return 0;
+		return SUPPORT_FLAG_ENDLESS_SCROLLING
+				| SUPPORT_FLAG_ACCOUNT_PROLONG_ALL;
 	}
 
 	@Override
@@ -483,7 +514,7 @@ public class Heidi extends BaseApi implements OpacApi {
 		pagefield.setVisible(false);
 		pagefield.setDisplayName("Seite");
 		pagefield.setHint("");
-		fields.add(field);
+		fields.add(pagefield);
 
 		return fields;
 	}
@@ -491,8 +522,60 @@ public class Heidi extends BaseApi implements OpacApi {
 	@Override
 	public ReservationResult reservation(DetailledItem item, Account account,
 			int useraction, String selection) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		String html = httpGet(opac_url + "/bestellung.cgi?ks=" + item.getId()
+				+ "&sess=" + sessid, ENCODING, false, cookieStore);
+		Document doc = Jsoup.parse(html);
+		if (doc.select("input[name=pw]").size() > 0) {
+			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+			nameValuePairs.add(new BasicNameValuePair("id", account.getName()));
+			nameValuePairs.add(new BasicNameValuePair("pw", account
+					.getPassword()));
+			nameValuePairs.add(new BasicNameValuePair("sess", sessid));
+			nameValuePairs.add(new BasicNameValuePair("log", "login"));
+			nameValuePairs.add(new BasicNameValuePair("weiter",
+					"bestellung.cgi?ks=" + item.getId()));
+			html = httpPost(opac_url + "/login.cgi", new UrlEncodedFormEntity(
+					nameValuePairs), ENCODING);
+			doc = Jsoup.parse(html);
+			if (doc.select(".loginbox .meld").size() > 0) {
+				return new ReservationResult(MultiStepResult.Status.ERROR, doc
+						.select(".loginbox .meld").text());
+			}
+		}
+		if (doc.select("input[name=ort]").size() > 0) {
+			if (selection != null) {
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
+						2);
+				nameValuePairs.add(new BasicNameValuePair("ks", item.getId()));
+				nameValuePairs.add(new BasicNameValuePair("ort", selection));
+				nameValuePairs.add(new BasicNameValuePair("sess", sessid));
+				nameValuePairs.add(new BasicNameValuePair("funktion",
+						"Vormerkung"));
+				html = httpPost(opac_url + "/bestellung.cgi",
+						new UrlEncodedFormEntity(nameValuePairs), ENCODING);
+				doc = Jsoup.parse(html);
+			} else {
+				Map<String, String> options = new HashMap<String, String>();
+				for (Element input : doc.select("input[name=ort]")) {
+					Element label = doc.select("label[for=" + input.id() + "]")
+							.first();
+					options.put(input.attr("value"), label.text());
+				}
+				ReservationResult res = new ReservationResult(
+						MultiStepResult.Status.SELECTION_NEEDED);
+				res.setSelection(options);
+				return res;
+			}
+		}
+		if (doc.select(".fehler").size() > 0) {
+			String text = doc.select(".fehler").text();
+			return new ReservationResult(MultiStepResult.Status.ERROR, text);
+		}
+		String text = doc.select(".meld2").text();
+		if (text.contains("Das Medium wurde"))
+			return new ReservationResult(MultiStepResult.Status.OK, text);
+		else
+			return new ReservationResult(MultiStepResult.Status.ERROR, text);
 	}
 
 	@Override
@@ -512,22 +595,175 @@ public class Heidi extends BaseApi implements OpacApi {
 	@Override
 	public CancelResult cancel(String media, Account account, int useraction,
 			String selection) throws IOException, OpacErrorException {
-		// TODO Auto-generated method stub
-		return null;
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+		nameValuePairs.add(new BasicNameValuePair("storno",
+				"Vormerkung stornieren"));
+		nameValuePairs.add(new BasicNameValuePair("mark", media));
+		nameValuePairs.add(new BasicNameValuePair("sess", sessid));
+		String html = httpPost(opac_url + "/konto.cgi",
+				new UrlEncodedFormEntity(nameValuePairs), ENCODING);
+		Document doc = Jsoup.parse(html);
+		if (doc.select("input[name=pw]").size() > 0) {
+			login(account);
+			return cancel(media, account, useraction, selection);
+		}
+		if (doc.select(".meld2").size() > 0) {
+			String text = doc.select(".meld2").text();
+			if (text.matches(".*durchgef.+hrt.*"))
+				return new CancelResult(MultiStepResult.Status.OK, text);
+			else
+				return new CancelResult(MultiStepResult.Status.ERROR, text);
+		}
+		return new CancelResult(MultiStepResult.Status.OK);
 	}
 
 	@Override
 	public AccountData account(Account account) throws IOException,
 			JSONException, OpacErrorException {
-		// TODO Auto-generated method stub
-		return null;
+		login(account);
+		String html;
+		Document doc;
+		AccountData adata = new AccountData(account.getId());
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
+
+		html = httpGet(opac_url + "/konto.cgi?sess=" + sessid,
+				getDefaultEncoding());
+		doc = Jsoup.parse(html);
+		doc.setBaseUri(opac_url + "/");
+
+		for (Element td : doc.select("table.konto td")) {
+			if (td.text().contains("Offene")) {
+				String text = td
+						.text()
+						.trim()
+						.replaceAll(
+								"Offene[^0-9]+Geb.+hren:[^0-9]+([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr.)",
+								"$1 $2");
+				adata.setPendingFees(text);
+			}
+		}
+
+		List<Map<String, String>> lent = new ArrayList<Map<String, String>>();
+		for (Element tr : doc.select("table.kontopos tr")) {
+			Map<String, String> row = new HashMap<String, String>();
+			Element desc = tr.child(1).select("label").first();
+			String dates = tr.child(2).text().trim();
+			String kk = getQueryParamsFirst(
+					tr.child(1).select("a").first().absUrl("href")).get(
+					"katkey");
+			row.put(AccountData.KEY_LENT_ID, kk);
+
+			int i = 0;
+			for (Node node : desc.childNodes()) {
+				if (node instanceof TextNode) {
+					String text = ((TextNode) node).text().trim();
+					if (i == 0) {
+						row.put(AccountData.KEY_LENT_AUTHOR, text);
+					} else if (i == 1) {
+						row.put(AccountData.KEY_LENT_TITLE, text);
+					} else if (text.contains("Mediennummer")) {
+						row.put(AccountData.KEY_LENT_BARCODE,
+								text.replace("Mediennummer: ", ""));
+					}
+					i++;
+				}
+			}
+
+			String todate = dates;
+			if (todate.contains("-")) {
+				String[] datesplit = todate.split("-");
+				todate = datesplit[1].trim();
+			}
+			row.put(AccountData.KEY_LENT_DEADLINE, todate);
+			try {
+				row.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
+						String.valueOf(sdf.parse(todate).getTime()));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+
+			lent.add(row);
+		}
+		adata.setLent(lent);
+
+		List<Map<String, String>> reservations = new ArrayList<Map<String, String>>();
+		html = httpGet(opac_url + "/konto.cgi?konto=v&sess=" + sessid,
+				getDefaultEncoding());
+		reservations.addAll(parse_reservations(html));
+		html = httpGet(opac_url + "/konto.cgi?konto=b&sess=" + sessid,
+				getDefaultEncoding());
+		reservations.addAll(parse_reservations(html));
+
+		adata.setReservations(reservations);
+
+		return adata;
+	}
+
+	protected List<Map<String, String>> parse_reservations(String html) {
+		Document doc = Jsoup.parse(html);
+		List<Map<String, String>> reservations = new ArrayList<Map<String, String>>();
+
+		for (Element tr : doc.select("table.kontopos tr")) {
+			Map<String, String> row = new HashMap<String, String>();
+			Element desc = tr.child(1).select("label").first();
+			Element pos = tr.child(3);
+			String kk = getQueryParamsFirst(
+					tr.child(1).select("a").first().absUrl("href")).get(
+					"katkey");
+			row.put(AccountData.KEY_RESERVATION_ID, kk);
+			row.put(AccountData.KEY_RESERVATION_CANCEL,
+					tr.child(0).select("input").first().val());
+
+			int i = 0;
+			for (Node node : desc.childNodes()) {
+				if (node instanceof TextNode) {
+					String text = ((TextNode) node).text().trim();
+					if (i == 0) {
+						row.put(AccountData.KEY_RESERVATION_AUTHOR, text);
+					} else if (i == 1) {
+						row.put(AccountData.KEY_RESERVATION_TITLE, text);
+					}
+					i++;
+				}
+			}
+			i = 0;
+			for (Node node : pos.childNodes()) {
+				if (node instanceof TextNode) {
+					String text = ((TextNode) node).text().trim();
+					if (i == 0 && text.contains("")) {
+						row.put(AccountData.KEY_RESERVATION_READY, text);
+					} else if (i == 1) {
+						row.put(AccountData.KEY_RESERVATION_BRANCH, text);
+					}
+					i++;
+				}
+			}
+			reservations.add(row);
+		}
+		return reservations;
+	}
+
+	protected void login(Account account) throws IOException,
+			OpacErrorException {
+		start();
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+		nameValuePairs.add(new BasicNameValuePair("id", account.getName()));
+		nameValuePairs.add(new BasicNameValuePair("pw", account.getPassword()));
+		nameValuePairs.add(new BasicNameValuePair("sess", sessid));
+		nameValuePairs.add(new BasicNameValuePair("log", "login"));
+		nameValuePairs.add(new BasicNameValuePair("weiter", "konto.cgi"));
+		String html = httpPost(opac_url + "/login.cgi",
+				new UrlEncodedFormEntity(nameValuePairs), ENCODING);
+		Document doc = Jsoup.parse(html);
+		if (doc.select(".loginbox .meld").size() > 0) {
+			throw new OpacErrorException(doc.select(".loginbox .meld").text());
+		}
 	}
 
 	@Override
 	public void checkAccountData(Account account) throws IOException,
 			JSONException, OpacErrorException {
-		// TODO Auto-generated method stub
-
+		login(account);
 	}
 
 }
