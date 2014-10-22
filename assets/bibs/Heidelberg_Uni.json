@@ -1,6 +1,7 @@
 {
     "api": "heidi", 
     "city": "Heidelberg", 
+	"country": "Deutschland",
     "data": {
         "baseurl": "https://katalog.ub.uni-heidelberg.de/cgi-bin", 
         "information": "http://www.ub.uni-heidelberg.de/kontakt/"
@@ -9,7 +10,7 @@
         49.3987524, 
         8.6724335
     ], 
-    "group": "Baden-W\u00fcrttemberg", 
+    "state": "Baden-W\u00fcrttemberg", 
     "support": "Katalogsuche und Konto", 
     "title": "Unibibliothek"
 }

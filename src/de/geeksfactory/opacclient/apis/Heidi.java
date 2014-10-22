@@ -26,14 +26,13 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.acra.ACRA;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
@@ -44,10 +43,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import android.content.ContentValues;
-import android.net.Uri;
-import android.os.Bundle;
 import de.geeksfactory.opacclient.NotReachableException;
+import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -59,19 +56,21 @@ import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
 import de.geeksfactory.opacclient.objects.SearchResult.Status;
-import de.geeksfactory.opacclient.storage.MetaDataSource;
+import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
+import de.geeksfactory.opacclient.searchfields.SearchField;
+import de.geeksfactory.opacclient.searchfields.SearchQuery;
+import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
 public class Heidi extends BaseApi implements OpacApi {
 
 	protected String opac_url = "";
 	protected Library library;
 	protected JSONObject data;
-	protected MetaDataSource metadata;
 	protected String sessid;
 	protected String ENCODING = "UTF-8";
 	protected String last_error;
 	protected int pagesize = 20;
-	protected Bundle lastBundle;
+	protected List<SearchQuery> last_query;
 	protected CookieStore cookieStore = new BasicCookieStore();
 
 	@Override
@@ -82,52 +81,12 @@ public class Heidi extends BaseApi implements OpacApi {
 		doc.setBaseUri(opac_url);
 		sessid = null;
 		for (Element link : doc.select("a")) {
-			Uri href = Uri.parse(link.absUrl("href"));
-			String sid = href.getQueryParameter("sess");
+			String sid = getQueryParamsFirst(link.absUrl("href")).get("sess");
 			if (sid != null) {
 				sessid = sid;
 				break;
 			}
 		}
-
-		metadata.open();
-		if (!metadata.hasMeta(library.getIdent())) {
-			extract_meta(html);
-		} else {
-			metadata.close();
-		}
-	}
-
-	private void extract_meta(String html) {
-		Document doc = Jsoup.parse(html);
-
-		metadata.open();
-		metadata.clearMeta(library.getIdent());
-
-		Elements zst_opts = doc.select("#teilk2 option");
-		for (int i = 0; i < zst_opts.size(); i++) {
-			Element opt = zst_opts.get(i);
-			if (!opt.val().equals(""))
-				metadata.addMeta(MetaDataSource.META_TYPE_BRANCH,
-						library.getIdent(), opt.val(), opt.text());
-		}
-
-		try {
-			Document doc2 = Jsoup.parse(httpGet(opac_url
-					+ "/zweigstelle.cgi?sess=" + sessid, ENCODING, false,
-					cookieStore));
-			Elements home_opts = doc2.select("#zweig option");
-			for (int i = 0; i < home_opts.size(); i++) {
-				Element opt = home_opts.get(i);
-				if (!opt.val().equals(""))
-					metadata.addMeta(MetaDataSource.META_TYPE_HOME_BRANCH,
-							library.getIdent(), opt.val(), opt.text());
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		metadata.close();
 	}
 
 	@Override
@@ -136,89 +95,72 @@ public class Heidi extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public void init(MetaDataSource metadata, Library library) {
-		super.init(metadata, library);
-		this.metadata = metadata;
+	public void init(Library library) {
+		super.init(library);
 		this.library = library;
 		this.data = library.getData();
-
-		try {
-			this.opac_url = data.getString("baseurl");
-		} catch (JSONException e) {
-			ACRA.getErrorReporter().handleException(e);
-		}
+		this.opac_url = data.optString("baseurl", "");
 	}
 
-	protected int addParameters(Bundle query, String key, String searchkey,
+	protected int addParameters(String key, String value,
 			List<NameValuePair> params, int index) {
-		if (!query.containsKey(key) || query.getString(key).equals(""))
-			return index;
-
 		index++;
 
 		if (index != 3)
 			params.add(new BasicNameValuePair("op" + index, "AND"));
-		params.add(new BasicNameValuePair("kat" + index, searchkey));
-		params.add(new BasicNameValuePair("var" + index, query.getString(key)));
+		params.add(new BasicNameValuePair("kat" + index, key));
+		params.add(new BasicNameValuePair("var" + index, value));
 		return index;
 
 	}
 
 	@Override
-	public SearchRequestResult search(Bundle query) throws IOException,
-			NotReachableException {
+	public SearchRequestResult search(List<SearchQuery> queries)
+			throws IOException, NotReachableException, OpacErrorException {
 
-		lastBundle = query;
+		last_query = queries;
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 		if (sessid == null)
 			start();
 		int index = 0;
+		int page = 1;
+		String homebranch = "";
 
 		params.add(new BasicNameValuePair("fsubmit", "1"));
 		params.add(new BasicNameValuePair("sess", sessid));
 		params.add(new BasicNameValuePair("art", "f"));
 		params.add(new BasicNameValuePair("pagesize", String.valueOf(pagesize)));
-		if (query.containsKey("_heidi_page")) {
-			params.add(new BasicNameValuePair("start", String.valueOf((query
-					.getInt("_heidi_page") - 1) * pagesize + 1)));
+
+		for (SearchQuery query : queries) {
+			if (query.getKey().equals("_heidi_page")) {
+				page = Integer.parseInt(query.getValue());
+				params.add(new BasicNameValuePair("start", String
+						.valueOf((page - 1) * pagesize + 1)));
+			} else if (query.getKey().equals("_heidi_branch")) {
+				homebranch = query.getValue();
+			} else if (query.getKey().equals("f[teil2]")) {
+				params.add(new BasicNameValuePair(query.getKey(), query
+						.getValue()));
+			} else {
+				if (!query.getValue().equals(""))
+					index = addParameters(query.getKey(), query.getValue(),
+							params, index);
+			}
 		}
+
 		params.add(new BasicNameValuePair("vr", "1"));
 
-		index = addParameters(query, KEY_SEARCH_QUERY_FREE, "freitext", params,
-				index);
-		index = addParameters(query, KEY_SEARCH_QUERY_TITLE, "ti", params,
-				index);
-		index = addParameters(query, KEY_SEARCH_QUERY_AUTHOR, "au", params,
-				index);
-		index = addParameters(query, KEY_SEARCH_QUERY_ISBN, "is", params, index);
-		index = addParameters(query, KEY_SEARCH_QUERY_KEYWORDA, "sw", params,
-				index);
-		index = addParameters(query, KEY_SEARCH_QUERY_YEAR, "ej", params, index);
-		index = addParameters(query, KEY_SEARCH_QUERY_PUBLISHER, "vl", params,
-				index);
-		index = addParameters(query, KEY_SEARCH_QUERY_SYSTEM, "nt", params,
-				index);
-		index = addParameters(query, KEY_SEARCH_QUERY_BARCODE, "li", params,
-				index);
-		index = addParameters(query, KEY_SEARCH_QUERY_LOCATION, "714", params,
-				index);
-
-		if (query.containsKey(KEY_SEARCH_QUERY_BRANCH)
-				&& !"".equals(query.getString(KEY_SEARCH_QUERY_BRANCH))) {
-			params.add(new BasicNameValuePair("f[teil2]", query
-					.getString(KEY_SEARCH_QUERY_BRANCH)));
-		}
-
 		if (index == 0) {
-			last_error = "Es wurden keine Suchkriterien eingegeben.";
-			return null;
+			throw new OpacErrorException(
+					stringProvider.getString(StringProvider.NO_CRITERIA_INPUT));
 		}
 		if (index > 3) {
-			last_error = "Diese Bibliothek unterstützt nur bis zu drei benutzte Suchkriterien.";
-			return null;
+			throw new OpacErrorException(stringProvider.getFormattedString(
+					StringProvider.LIMITED_NUM_OF_CRITERIA, 3));
 		}
+
 		while (index < 3) {
 			index++;
 			if (index != 3)
@@ -229,17 +171,13 @@ public class Heidi extends BaseApi implements OpacApi {
 
 		// Homebranch auswahl
 		httpGet(opac_url + "/zweigstelle.cgi?sess=" + sessid + "&zweig="
-				+ query.getString(KEY_SEARCH_QUERY_HOME_BRANCH), ENCODING,
-				false, cookieStore);
+				+ homebranch, ENCODING, false, cookieStore);
 		// Die eigentliche Suche
 		String html = httpGet(
 				opac_url + "/search.cgi?"
 						+ URLEncodedUtils.format(params, "UTF-8"), ENCODING,
 				false, cookieStore);
-		if (query.containsKey("_heidi_page")) {
-			return parse_search(html, query.getInt("_heidi_page"));
-		}
-		return parse_search(html, 1);
+		return parse_search(html, page);
 	}
 
 	private SearchRequestResult parse_search(String html, int page) {
@@ -264,8 +202,8 @@ public class Heidi extends BaseApi implements OpacApi {
 			String author = "";
 
 			for (Element link : tr.select("a")) {
-				Uri href = Uri.parse(link.absUrl("href"));
-				String kk = href.getQueryParameter("katkey");
+				String kk = getQueryParamsFirst(link.absUrl("href")).get(
+						"katkey");
 				if (kk != null) {
 					sr.setId(kk);
 					break;
@@ -369,9 +307,14 @@ public class Heidi extends BaseApi implements OpacApi {
 
 	@Override
 	public SearchRequestResult searchGetPage(int page) throws IOException,
-			NotReachableException {
-		lastBundle.putInt("_heidi_page", page);
-		return search(lastBundle);
+			NotReachableException, OpacErrorException {
+		TextSearchField pagefield = new TextSearchField();
+		pagefield.setId("_heidi_page");
+		pagefield.setVisible(false);
+		pagefield.setDisplayName("Seite");
+		pagefield.setHint("");
+		last_query.add(new SearchQuery(pagefield, String.valueOf(page)));
+		return search(last_query);
 	}
 
 	@Override
@@ -394,15 +337,15 @@ public class Heidi extends BaseApi implements OpacApi {
 
 		Elements table = doc.select(".titelsatz tr");
 		for (Element tr : table) {
-			if(tr.select("th").size() == 0 || tr.select("td").size() == 0)
+			if (tr.select("th").size() == 0 || tr.select("td").size() == 0)
 				continue;
 			String d = tr.select("th").first().text();
 			String c = tr.select("td").first().text();
 			if (d.equals("Titel:")) {
 				item.setTitle(c);
 			} else if (d.contains("URL") || d.contains("Link")) {
-				item.addDetail(new Detail(d, tr.select("td").first().html(),
-						true));
+				item.addDetail(new Detail(d, tr.select("td").first()
+						.select("a").first().attr("href")));
 			} else {
 				item.addDetail(new Detail(d, c));
 			}
@@ -415,7 +358,7 @@ public class Heidi extends BaseApi implements OpacApi {
 						|| tr.select(".exso").size() == 0
 						|| tr.select(".exstatus").size() == 0)
 					continue;
-				ContentValues e = new ContentValues();
+				Map<String, String> e = new HashMap<String, String>();
 				e.put(DetailledItem.KEY_COPY_SHELFMARK, tr.select(".exsig")
 						.first().text());
 				e.put(DetailledItem.KEY_COPY_BRANCH, tr.select(".exso").first()
@@ -445,55 +388,6 @@ public class Heidi extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public ReservationResult reservation(String reservation_info,
-			Account account, int useraction, String selection)
-			throws IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ProlongResult prolong(String media, Account account, int useraction,
-			String selection) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean prolongAll(Account account) throws IOException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean cancel(Account account, String media) throws IOException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public AccountData account(Account account) throws IOException,
-			JSONException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String[] getSearchFields() {
-		return new String[] { KEY_SEARCH_QUERY_AUTHOR, KEY_SEARCH_QUERY_FREE,
-				KEY_SEARCH_QUERY_TITLE, KEY_SEARCH_QUERY_YEAR,
-				KEY_SEARCH_QUERY_KEYWORDA, KEY_SEARCH_QUERY_SYSTEM,
-				KEY_SEARCH_QUERY_ISBN, KEY_SEARCH_QUERY_PUBLISHER,
-				KEY_SEARCH_QUERY_BARCODE, KEY_SEARCH_QUERY_BRANCH,
-				KEY_SEARCH_QUERY_HOME_BRANCH };
-	}
-
-	@Override
-	public String getLast_error() {
-		return last_error;
-	}
-
-	@Override
 	public boolean isAccountSupported(Library library) {
 		return false; // TODO
 	}
@@ -518,6 +412,122 @@ public class Heidi extends BaseApi implements OpacApi {
 	@Override
 	public int getSupportFlags() {
 		return 0;
+	}
+
+	@Override
+	public List<SearchField> getSearchFields() throws IOException,
+			NotReachableException, OpacErrorException, JSONException {
+		String html = httpGet(opac_url + "/search.cgi?art=f", ENCODING, false,
+				cookieStore);
+		Document doc = Jsoup.parse(html);
+		doc.setBaseUri(opac_url);
+		List<SearchField> fields = new ArrayList<SearchField>();
+
+		Elements options = doc.select("select[name=kat1] option");
+		for (Element option : options) {
+			TextSearchField field = new TextSearchField();
+			field.setDisplayName(option.text());
+			field.setId(option.attr("value"));
+			field.setHint("");
+			fields.add(field);
+		}
+
+		DropdownSearchField field = new DropdownSearchField();
+		List<Map<String, String>> opts = new ArrayList<Map<String, String>>();
+
+		Elements zst_opts = doc.select("#teilk2 option");
+		for (int i = 0; i < zst_opts.size(); i++) {
+			Element opt = zst_opts.get(i);
+			if (!opt.val().equals("")) {
+				Map<String, String> option = new HashMap<String, String>();
+				option.put("key", opt.val());
+				option.put("value", opt.text());
+				opts.add(option);
+			}
+		}
+		field.setDisplayName("Einrichtung");
+		field.setId("f[teil2]");
+		field.setVisible(true);
+		field.setMeaning(SearchField.Meaning.BRANCH);
+		field.setDropdownValues(opts);
+		fields.add(field);
+
+		try {
+			field = new DropdownSearchField();
+			opts = new ArrayList<Map<String, String>>();
+			Document doc2 = Jsoup.parse(httpGet(opac_url
+					+ "/zweigstelle.cgi?sess=" + sessid, ENCODING, false,
+					cookieStore));
+			Elements home_opts = doc2.select("#zweig option");
+			for (int i = 0; i < home_opts.size(); i++) {
+				Element opt = home_opts.get(i);
+				if (!opt.val().equals("")) {
+					Map<String, String> option = new HashMap<String, String>();
+					option.put("key", opt.val());
+					option.put("value", opt.text());
+					opts.add(option);
+				}
+			}
+			field.setDisplayName("Leihstelle");
+			field.setId("_heidi_branch");
+			field.setVisible(true);
+			field.setMeaning(SearchField.Meaning.HOME_BRANCH);
+			field.setDropdownValues(opts);
+			fields.add(field);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		TextSearchField pagefield = new TextSearchField();
+		pagefield.setId("_heidi_page");
+		pagefield.setVisible(false);
+		pagefield.setDisplayName("Seite");
+		pagefield.setHint("");
+		fields.add(field);
+
+		return fields;
+	}
+
+	@Override
+	public ReservationResult reservation(DetailledItem item, Account account,
+			int useraction, String selection) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ProlongResult prolong(String media, Account account, int useraction,
+			String selection) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ProlongAllResult prolongAll(Account account, int useraction,
+			String selection) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public CancelResult cancel(String media, Account account, int useraction,
+			String selection) throws IOException, OpacErrorException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public AccountData account(Account account) throws IOException,
+			JSONException, OpacErrorException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void checkAccountData(Account account) throws IOException,
+			JSONException, OpacErrorException {
+		// TODO Auto-generated method stub
+
 	}
 
 }
