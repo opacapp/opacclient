@@ -1,0 +1,17 @@
+{
+    "api": "sisis",
+    "city": "M\u00fchlheim an der Ruhr",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "https://katalog.hs-ruhrwest.de/webOPACClient.nmbsis",
+        "information": "http://www.hochschule-ruhr-west.de/campus/bibliothek/oeffnungszeiten.html",
+        "startparams": "Login=wonmbmue"
+    },
+    "geo": [
+        51.4185682,
+        6.884522599999999
+    ],
+    "state": "Nordrhein-Westfalen",
+    "support": "Katalogsuche und Konto",
+    "title": "Hochschule Ruhr West"
+}

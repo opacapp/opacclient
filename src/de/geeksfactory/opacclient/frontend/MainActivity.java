@@ -88,18 +88,15 @@ public class MainActivity extends OpacActivity implements
 		}
 
 		if (app.getLibrary() != null) {
-			getSupportActionBar().setSubtitle(
-					app.getLibrary().getCity() + " · "
-							+ app.getLibrary().getTitle());
+			getSupportActionBar()
+					.setSubtitle(app.getLibrary().getDisplayName());
 		}
 	}
 
 	@Override
 	public void accountSelected(Account account) {
-		this.account = account.getId(); 
-		getSupportActionBar().setSubtitle(
-				app.getLibrary().getCity() + " · "
-						+ app.getLibrary().getTitle());
+		this.account = account.getId();
+		getSupportActionBar().setSubtitle(app.getLibrary().getDisplayName());
 		if (fragment instanceof OpacActivity.AccountSelectedListener) {
 			((OpacActivity.AccountSelectedListener) fragment)
 					.accountSelected(account);

@@ -310,9 +310,8 @@ public abstract class OpacActivity extends Activity {
 					.setItemChecked(navAdapter.getPositionByTag("info"), true);
 		}
 		if (app.getLibrary() != null)
-			getSupportActionBar().setSubtitle(
-					app.getLibrary().getCity() + " · "
-							+ app.getLibrary().getTitle());
+			getSupportActionBar()
+					.setSubtitle(app.getLibrary().getDisplayName());
 	}
 
 	/** Swaps fragments in the main content view */

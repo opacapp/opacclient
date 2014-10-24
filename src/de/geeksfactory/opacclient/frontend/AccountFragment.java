@@ -791,11 +791,7 @@ public class AccountFragment extends Fragment implements
 		Library lib;
 		try {
 			lib = app.getLibrary(account.getLibrary());
-			if (lib.getTitle() != null && !lib.getTitle().equals("null")) {
-				tvAccCity.setText(lib.getCity() + " · " + lib.getTitle());
-			} else {
-				tvAccCity.setText(lib.getCity());
-			}
+			tvAccCity.setText(lib.getDisplayName());
 		} catch (IOException e) {
 			ACRA.getErrorReporter().handleException(e);
 			e.printStackTrace();
@@ -1138,7 +1134,8 @@ public class AccountFragment extends Fragment implements
 			long age = System.currentTimeMillis() - refreshtime;
 			if (age < 60 * 1000) {
 				((TextView) view.findViewById(R.id.tvAge))
-					.setText(getResources().getString(R.string.account_up_to_date));
+						.setText(getResources().getString(
+								R.string.account_up_to_date));
 			} else if (age < (3600 * 1000)) {
 				((TextView) view.findViewById(R.id.tvAge))
 						.setText(getResources().getQuantityString(

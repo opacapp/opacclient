@@ -101,11 +101,7 @@ public class AccountEditActivity extends Activity {
 					.getLibrary());
 			if (findViewById(R.id.tvCity) != null) {
 				TextView tvCity = (TextView) findViewById(R.id.tvCity);
-				if (lib.getTitle() != null && !lib.getTitle().equals("null")) {
-					tvCity.setText(lib.getCity() + "\n" + lib.getTitle());
-				} else {
-					tvCity.setText(lib.getCity());
-				}
+				tvCity.setText(lib.getDisplayName());
 			}
 
 			if (lib.getReplacedBy() != null
@@ -158,6 +154,12 @@ public class AccountEditActivity extends Activity {
 			account.setLabel(getString(R.string.default_account_name));
 		} else {
 			account.setLabel(etLabel.getText().toString());
+		}
+		if(etPassword.getText().toString().trim().equals("")) {
+			// Don't check user credentials if there are no credentials
+			save();
+			close();
+			return;
 		}
 		account.setName(etName.getText().toString());
 		account.setPassword(etPassword.getText().toString());

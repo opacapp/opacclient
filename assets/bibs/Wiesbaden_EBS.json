@@ -6,7 +6,7 @@
         "accountSupported": true, 
         "baseurl": "http://vzlbs2.gbv.de/", 
         "db": "65", 
-        "httpsbaseurl": "https://vzlbs2.gbv.de/", 
+        "httpsbaseurl": "https://opac.vzlbs2.gbv.de/", 
         "information": "http://www.ebs.edu/bibliothek.html"
     }, 
     "geo": [
