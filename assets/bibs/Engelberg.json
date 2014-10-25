@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "webopac.net",
     "city": "Engelberg",
     "country": "Schweiz",
@@ -11,6 +12,5 @@
         8.4069869
     ],
     "state": "Obwalden",
-    "support": "Katalogsuche",
     "title": "Schul- und Gemeindebibliothek"
 }

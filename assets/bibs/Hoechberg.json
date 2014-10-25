@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "H\u00f6chberg",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         9.8808945
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Bibliothek"
 }

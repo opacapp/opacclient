@@ -1,16 +1,16 @@
 {
-    "api": "sisis", 
-    "city": "Schaffhausen", 
-    "country": "Schweiz", 
+    "account_supported": true,
+    "api": "sisis",
+    "city": "Schaffhausen",
+    "country": "Schweiz",
     "data": {
-        "baseurl": "https://webopac.bibliotheken-schaffhausen.ch/webOPACClient", 
+        "baseurl": "https://webopac.bibliotheken-schaffhausen.ch/webOPACClient",
         "information": "http://bibliotheken-schaffhausen.ch/"
-    }, 
+    },
     "geo": [
-        47.6969, 
+        47.6969,
         8.63569
-    ], 
-    "state": "Schaffhausen", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Schaffhausen",
     "title": "Stadtbibliothek"
 }

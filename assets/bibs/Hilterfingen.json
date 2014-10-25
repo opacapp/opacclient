@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "webopac.net",
     "city": "Hilterfingen",
     "country": "Schweiz",
@@ -11,6 +12,5 @@
         7.65836
     ],
     "state": "Bern",
-    "support": "Katalogsuche",
     "title": "Bibliothek"
 }

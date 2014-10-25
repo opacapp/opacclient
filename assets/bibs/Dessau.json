@@ -1,44 +1,44 @@
 {
-    "api": "bibliotheca", 
-    "city": "Dessau", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "bibliotheca",
+    "city": "Dessau",
+    "country": "Deutschland",
     "data": {
         "accounttable": {
-            "author": 0, 
-            "homebranch": 3, 
-            "lendingbranch": 3, 
-            "prolongurl": 5, 
-            "returndate": 2, 
-            "status": 4, 
+            "author": 0,
+            "homebranch": 3,
+            "lendingbranch": 3,
+            "prolongurl": 5,
+            "returndate": 2,
+            "status": 4,
             "title": 1
-        }, 
-        "baseurl": "http://www.opac.bibliothek.dessau.de/webopac", 
+        },
+        "baseurl": "http://www.opac.bibliothek.dessau.de/webopac",
         "copiestable": {
-            "branch": 0, 
-            "department": 1, 
-            "location": 2, 
-            "returndate": 5, 
+            "branch": 0,
+            "department": 1,
+            "location": 2,
+            "returndate": 5,
             "status": 4
-        }, 
-        "information": "http://www.dessau.de/Deutsch/Buergerservice/Dienstleistungen-der-00613/Anhaltische-Landesbu-02901/index.aspx", 
+        },
+        "information": "http://www.dessau.de/Deutsch/Buergerservice/Dienstleistungen-der-00613/Anhaltische-Landesbu-02901/index.aspx",
         "mediatypes": {
-            "mCasetteS.gif": "AUDIO_CASSETTE", 
-            "mDVDS.gif": "DVD", 
+            "mCasetteS.gif": "AUDIO_CASSETTE",
+            "mDVDS.gif": "DVD",
             "mFilmS.gif": "MOVIE"
-        }, 
+        },
         "reservationtable": {
-            "author": 0, 
-            "availability": 2, 
-            "branch": 3, 
-            "cancelurl": 4, 
+            "author": 0,
+            "availability": 2,
+            "branch": 3,
+            "cancelurl": 4,
             "title": 1
         }
-    }, 
+    },
     "geo": [
-        51.8222436, 
+        51.8222436,
         12.2424516
-    ], 
-    "state": "Sachsen-Anhalt", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Sachsen-Anhalt",
     "title": "Landesb\u00fccherei"
 }

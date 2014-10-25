@@ -1,16 +1,16 @@
 {
-    "api": "sisis", 
-    "city": "F\u00fcrth", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "sisis",
+    "city": "F\u00fcrth",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "https://serviceweb.fuerth.de/webOPACClient", 
+        "baseurl": "https://serviceweb.fuerth.de/webOPACClient",
         "information": "http://fuerth.de/Home/Leben-in-Fuerth/schulen-bildung/volksbuecherei.aspx#ctl00_ctl16_cdvBigView_ctl00"
-    }, 
+    },
     "geo": [
-        49.4771169, 
+        49.4771169,
         10.988667
-    ], 
-    "state": "Bayern", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Bayern",
     "title": "Volksb\u00fccherei"
 }

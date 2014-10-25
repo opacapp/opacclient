@@ -1,34 +1,34 @@
 {
-    "api": "biber1992", 
-    "city": "Aschaffenburg", 
-    "country": "Deutschland", 
+    "account_supported": false,
+    "api": "biber1992",
+    "city": "Aschaffenburg",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "http://www.stadtbibliothek-aschaffenburg.de", 
-        "information": "http://www.stadtbibliothek-aschaffenburg.de/relaunch/content/start/anschrift_oeffnungszeit.html", 
+        "baseurl": "http://www.stadtbibliothek-aschaffenburg.de",
+        "information": "http://www.stadtbibliothek-aschaffenburg.de/relaunch/content/start/anschrift_oeffnungszeit.html",
         "mediatypes": {
-            "1": "BOOK", 
-            "10": "MAP", 
-            "11": "DVD", 
-            "19": "BOOK", 
-            "2": "MAGAZINE", 
-            "20": "CD_MUSIC", 
-            "3": "CD_SOFTWARE", 
-            "30": "EBOOK", 
+            "1": "BOOK",
+            "10": "MAP",
+            "11": "DVD",
+            "19": "BOOK",
+            "2": "MAGAZINE",
+            "20": "CD_MUSIC",
+            "3": "CD_SOFTWARE",
+            "30": "EBOOK",
             "9": "BOARDGAME"
-        }, 
-        "opacdir": "opax", 
+        },
+        "opacdir": "opax",
         "searchtable": [
-            2, 
-            3, 
-            4, 
+            2,
+            3,
+            4,
             5
         ]
-    }, 
+    },
     "geo": [
-        49.97354740000001, 
+        49.97354740000001,
         9.1525973
-    ], 
-    "state": "Bayern", 
-    "support": "Katalogsuche", 
+    ],
+    "state": "Bayern",
     "title": "Stadtbibliothek"
 }

@@ -1,17 +1,17 @@
 {
-    "api": "sisis", 
-    "city": "Basel", 
-    "country": "Schweiz", 
+    "account_supported": true,
+    "api": "sisis",
+    "city": "Basel",
+    "country": "Schweiz",
     "data": {
-        "baseurl": "http://www.stadtbibliothekbasel.ch:8080/InfoGuideClient.sisis", 
+        "baseurl": "http://www.stadtbibliothekbasel.ch:8080/InfoGuideClient.sisis",
         "information": "http://www.stadtbibliothekbasel.ch/index.php?id=bibliotheken#c477"
-    }, 
+    },
     "geo": [
-        47.557421, 
+        47.557421,
         7.592572699999999
-    ], 
-    "replacedby": "de.opacapp.basel", 
-    "state": "Basel-Stadt", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "replacedby": "de.opacapp.basel",
+    "state": "Basel-Stadt",
     "title": "Stadtbibliothek"
 }

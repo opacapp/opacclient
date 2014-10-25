@@ -1,16 +1,16 @@
 {
-    "api": "sisis", 
-    "city": "Oberhausen", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "sisis",
+    "city": "Oberhausen",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "https://bibliothek.oberhausen.de/webOPACClient.sisis", 
+        "baseurl": "https://bibliothek.oberhausen.de/webOPACClient.sisis",
         "information": "http://www.oberhausen.de/0A1C46AD57614F1B8C5CD011AF1C5911.php"
-    }, 
+    },
     "geo": [
-        51.4964886, 
+        51.4964886,
         6.8515156
-    ], 
-    "state": "Nordrhein-Westfalen", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Nordrhein-Westfalen",
     "title": "Stadtbibliothek"
 }

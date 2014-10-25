@@ -1,18 +1,17 @@
 {
-    "api": "pica", 
-    "city": "Hamburg", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "pica",
+    "city": "Hamburg",
+    "country": "Deutschland",
     "data": {
-        "accountSupported": true, 
-        "baseurl": "https://kataloge.uni-hamburg.de/", 
-        "db": "8", 
+        "baseurl": "https://kataloge.uni-hamburg.de/",
+        "db": "8",
         "information": "http://hdp.hamburg.de/bibliothek/"
-    }, 
+    },
     "geo": [
-        53.60248, 
+        53.60248,
         10.00075
-    ], 
-    "state": "Hamburg", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Hamburg",
     "title": "Polizei/Hochschule der Polizei"
 }

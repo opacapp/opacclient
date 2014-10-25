@@ -1,17 +1,17 @@
 {
-    "api": "sisis", 
-    "city": "Brandenburg (Havel)", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "sisis",
+    "city": "Brandenburg (Havel)",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "https://opac.fh-brandenburg.de/InfoGuideClient.bfbsis", 
-        "information": "http://www.fh-brandenburg.de/1558.html", 
+        "baseurl": "https://opac.fh-brandenburg.de/InfoGuideClient.bfbsis",
+        "information": "http://www.fh-brandenburg.de/1558.html",
         "startparams": "Login=igbfb"
-    }, 
+    },
     "geo": [
-        52.4125287, 
+        52.4125287,
         12.5316444
-    ], 
-    "state": "Brandenburg", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Brandenburg",
     "title": "Fachhochschule"
 }

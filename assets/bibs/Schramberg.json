@@ -1,23 +1,24 @@
 {
+    "account_supported": true,
     "api": "bibliotheca",
     "city": "Schramberg",
     "country": "Deutschland",
     "data": {
+        "accounttable": {
+            "author": 1,
+            "lendingbranch": 0,
+            "prolongurl": 4,
+            "returndate": 3,
+            "title": 2
+        },
         "baseurl": "https://wwwopac.rz-kiru.de/schramberg",
         "db": "ja",
         "information": "http://www.schramberg.de/de/B%C3%BCrger/Kultur,-Sport,-Freizeit/Mediathek/%C3%96ffnungszeiten-der-Mediathek-Schramberg",
-		"accounttable": {
-            "author": 1, 
-            "lendingbranch": 0, 
-            "prolongurl": 4, 
-            "returndate": 3, 
-            "title": 2
-        }, 
-		"reservationtable": {
-            "author": 1, 
-            "branch": 0, 
-            "cancelurl": 4, 
-            "expirationdate": 3, 
+        "reservationtable": {
+            "author": 1,
+            "branch": 0,
+            "cancelurl": 4,
+            "expirationdate": 3,
             "title": 2
         }
     },
@@ -26,6 +27,5 @@
         8.3844681
     ],
     "state": "Baden-W\u00fcrttemberg",
-    "support": "Katalogsuche und Konto",
     "title": "Mediathek"
 }

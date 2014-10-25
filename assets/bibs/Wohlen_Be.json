@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "webopac.net",
     "city": "Wohlen",
     "country": "Schweiz",
@@ -11,6 +12,5 @@
         7.358383599999999
     ],
     "state": "Bern",
-    "support": "Katalogsuche",
     "title": "Gemeindebibliothek"
 }

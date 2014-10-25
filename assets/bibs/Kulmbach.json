@@ -1,48 +1,48 @@
 {
-    "api": "bibliotheca", 
-    "city": "Kulmbach", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "bibliotheca",
+    "city": "Kulmbach",
+    "country": "Deutschland",
     "data": {
         "accounttable": {
-            "author": 0, 
-            "barcode": -1, 
-            "homebranch": -1, 
-            "lendingbranch": -1, 
-            "prolongurl": 3, 
-            "returndate": 2, 
-            "status": -1, 
+            "author": 0,
+            "barcode": -1,
+            "homebranch": -1,
+            "lendingbranch": -1,
+            "prolongurl": 3,
+            "returndate": 2,
+            "status": -1,
             "title": 1
-        }, 
-        "baseurl": "http://opac.buecherei-kulmbach.de/wwwopac", 
+        },
+        "baseurl": "http://opac.buecherei-kulmbach.de/wwwopac",
         "copiestable": {
-            "barcode": -1, 
-            "branch": -1, 
-            "department": 3, 
-            "location": 2, 
-            "reservations": -1, 
-            "returndate": 1, 
+            "barcode": -1,
+            "branch": -1,
+            "department": 3,
+            "location": 2,
+            "reservations": -1,
+            "returndate": 1,
             "status": 0
-        }, 
-        "information": "http://www.kulmbach.de/xist4c/web/Anschrift/Teledaten/Oeffnungszeiten_id_981_.htm", 
+        },
+        "information": "http://www.kulmbach.de/xist4c/web/Anschrift/Teledaten/Oeffnungszeiten_id_981_.htm",
         "mediatypes": {
-            "EM_klein.jpg": "EBOOK", 
-            "mDVDS.gif": "DVD", 
+            "EM_klein.jpg": "EBOOK",
+            "mDVDS.gif": "DVD",
             "mFilmS.gif": "MOVIE"
-        }, 
+        },
         "reservationtable": {
-            "author": 0, 
-            "availability": 2, 
-            "branch": -1, 
-            "cancelurl": 3, 
-            "expirationdate": -1, 
+            "author": 0,
+            "availability": 2,
+            "branch": -1,
+            "cancelurl": 3,
+            "expirationdate": -1,
             "title": 1
         }
-    }, 
+    },
     "geo": [
-        50.1039282, 
+        50.1039282,
         11.4448178
-    ], 
-    "state": "Bayern", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Bayern",
     "title": "B\u00fccherei am Stadtpark"
 }

@@ -1,40 +1,40 @@
 {
-    "api": "biber1992", 
-    "city": "Bochum", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "biber1992",
+    "city": "Bochum",
+    "country": "Deutschland",
     "data": {
         "accounttable": {
-            "author": 7, 
-            "barcode": 4, 
-            "homebranch": -1, 
-            "lendingbranch": -1, 
-            "prolongurl": 4, 
-            "returndate": 3, 
-            "status": 8, 
+            "author": 7,
+            "barcode": 4,
+            "homebranch": -1,
+            "lendingbranch": -1,
+            "prolongurl": 4,
+            "returndate": 3,
+            "status": 8,
             "title": 7
-        }, 
-        "baseurl": "http://www.stadtbuecherei-bochum.de", 
-        "information": "http://www.bochum.de/stadtbuecherei", 
+        },
+        "baseurl": "http://www.stadtbuecherei-bochum.de",
+        "information": "http://www.bochum.de/stadtbuecherei",
         "mediatypes": {
-            "1": "BOOK", 
-            "11": "DVD", 
-            "20": "AUDIOBOOK", 
-            "30": "EBOOK", 
-            "6": "CD_MUSIC", 
-            "8": "SCORE_MUSIC", 
+            "1": "BOOK",
+            "11": "DVD",
+            "20": "AUDIOBOOK",
+            "30": "EBOOK",
+            "6": "CD_MUSIC",
+            "8": "SCORE_MUSIC",
             "9": "BOARDGAME"
-        }, 
-        "opacdir": "opax", 
+        },
+        "opacdir": "opax",
         "searchtable": [
-            2, 
+            2,
             3
         ]
-    }, 
+    },
     "geo": [
-        51.4818445, 
+        51.4818445,
         7.216236299999999
-    ], 
-    "state": "Nordrhein-Westfalen", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }

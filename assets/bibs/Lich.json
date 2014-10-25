@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Lich",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         8.816677499999999
     ],
     "state": "Hessen",
-    "support": "Katalogsuche",
     "title": "Stadtbibliothek"
 }

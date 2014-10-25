@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Maxh\u00fctte-Haidhof",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         12.1
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Stadtb\u00fccherei"
 }

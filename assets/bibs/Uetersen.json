@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "iopac",
     "city": "Uetersen",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         9.6763338
     ],
     "state": "Schleswig-Holstein",
-    "support": "Katalogsuche und Konto",
     "title": "Stadtb\u00fccherei"
 }

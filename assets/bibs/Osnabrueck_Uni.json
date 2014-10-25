@@ -1,18 +1,17 @@
 {
-    "api": "pica", 
-    "city": "Osnabr\u00fcck", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "pica",
+    "city": "Osnabr\u00fcck",
+    "country": "Deutschland",
     "data": {
-        "accountSupported": true, 
-        "baseurl": "https://opac.ub.uni-osnabrueck.de", 
-        "db": "1", 
+        "baseurl": "https://opac.ub.uni-osnabrueck.de",
+        "db": "1",
         "information": "http://www.ub.uni-osnabrueck.de/"
-    }, 
+    },
     "geo": [
-        52.2729596, 
+        52.2729596,
         8.0453083
-    ], 
-    "state": "Niedersachsen", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Niedersachsen",
     "title": "Unibibliothek"
 }

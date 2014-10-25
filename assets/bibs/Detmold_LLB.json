@@ -1,16 +1,16 @@
 {
-    "api": "sisis", 
-    "city": "Detmold", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "sisis",
+    "city": "Detmold",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "http://www.llb-detmold.de/webOPACClient_sisis", 
+        "baseurl": "http://www.llb-detmold.de/webOPACClient_sisis",
         "information": "http://www.llb-detmold.de/"
-    }, 
+    },
     "geo": [
-        51.9384783, 
+        51.9384783,
         8.868637999999999
-    ], 
-    "state": "Nordrhein-Westfalen", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Nordrhein-Westfalen",
     "title": "Lippische Landesbibliothek"
 }

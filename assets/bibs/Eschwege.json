@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Eschwege",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         10.0397725
     ],
     "state": "Hessen",
-    "support": "Katalogsuche",
     "title": "Stadtbibliothek"
 }

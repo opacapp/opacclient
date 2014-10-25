@@ -1,27 +1,27 @@
 {
-    "api": "bibliotheca", 
-    "city": "Bad Friedrichshall", 
-    "country": "Deutschland", 
+    "account_supported": false,
+    "api": "bibliotheca",
+    "city": "Bad Friedrichshall",
+    "country": "Deutschland",
     "data": {
-        "accounttable": null, 
-        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-friedrichshall", 
+        "accounttable": null,
+        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-friedrichshall",
         "copiestable": {
-            "barcode": -1, 
-            "branch": 3, 
-            "department": -1, 
-            "location": 0, 
-            "reservations": -1, 
-            "returndate": 2, 
+            "barcode": -1,
+            "branch": 3,
+            "department": -1,
+            "location": 0,
+            "reservations": -1,
+            "returndate": 2,
             "status": 1
-        }, 
-        "information": "/info.html", 
+        },
+        "information": "/info.html",
         "reservationtable": null
-    }, 
+    },
     "geo": [
-        49.23439440000001, 
+        49.23439440000001,
         9.2079738
-    ], 
-    "state": "Baden-W\u00fcrttemberg", 
-    "support": "Katalogsuche", 
+    ],
+    "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtb\u00fccherei"
 }

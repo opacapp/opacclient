@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "bibliotheca",
     "city": "Lehnin",
     "country": "Deutschland",
@@ -33,6 +34,5 @@
         12.7444476
     ],
     "state": "Brandenburg",
-    "support": "Katalogsuche und Konto",
     "title": "Bibliothek Bettina von Arnim"
 }

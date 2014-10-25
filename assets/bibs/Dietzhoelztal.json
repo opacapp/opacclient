@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Dietzh\u00f6lztal",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         8.316666999999999
     ],
     "state": "Hessen",
-    "support": "Katalogsuche",
     "title": "Gemeindeb\u00fccherei"
 }

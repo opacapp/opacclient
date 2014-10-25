@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "iopac",
     "city": "Nieb\u00fcll",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         8.8308426
     ],
     "state": "Schleswig-Holstein",
-    "support": "Katalogsuche und Konto",
     "title": "Stadtb\u00fccherei"
 }

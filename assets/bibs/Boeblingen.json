@@ -1,44 +1,45 @@
 {
+    "account_supported": true,
     "api": "biber1992",
     "city": "B\u00f6blingen",
     "country": "Deutschland",
     "data": {
         "accounttable": {
-            "author": 8, 
-            "barcode": 4, 
-            "homebranch": -1, 
-            "lendingbranch": -1, 
-            "prolongurl": 4, 
-            "returndate": 3, 
-            "status": 9, 
+            "author": 8,
+            "barcode": 4,
+            "homebranch": -1,
+            "lendingbranch": -1,
+            "prolongurl": 4,
+            "returndate": 3,
+            "status": 9,
             "title": 8
-        }, 
+        },
         "baseurl": "http://biber-bb.kdrs.de",
         "copiestable": {
-            "barcode": 2, 
-            "branch": 0, 
-            "shelfmark": 1, 
-            "location": -1, 
-            "reservations": -1, 
-            "returndate": -1, 
+            "barcode": 2,
+            "branch": 0,
+            "location": -1,
+            "reservations": -1,
+            "returndate": -1,
+            "shelfmark": 1,
             "status": 3
-        }, 
+        },
         "information": "http://www.boeblingen.de/,Lde/start/FreizeitKultur/Stadtbibliothek.html",
         "mediatypes": {
-            "1": "BOOK", 
-            "2": "MAGAZINE", 
-            "10": "MAP", 
-            "11": "DVD", 
-            "30": "EBOOK", 
-            "26": "GAME_CONSOLE", 
-            "6": "CD", 
-            "3": "CD_SOFTWARE", 
+            "1": "BOOK",
+            "10": "MAP",
+            "11": "DVD",
+            "2": "MAGAZINE",
+            "26": "GAME_CONSOLE",
+            "3": "CD_SOFTWARE",
+            "30": "EBOOK",
+            "6": "CD",
             "9": "BOARDGAME"
-        }, 
+        },
         "opacdir": "opax",
         "searchtable": [
-            2, 
-            3, 
+            2,
+            3,
             4
         ]
     },
@@ -47,6 +48,5 @@
         9.0088299
     ],
     "state": "Baden-W\u00fcrttemberg",
-    "support": "Katalogsuche und Konto",
     "title": "Stadtbibliothek"
 }

@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Bruck i.d. Opf.",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         12.3064839
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Marktb\u00fccherei"
 }

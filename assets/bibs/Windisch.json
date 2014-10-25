@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "webopac.net",
     "city": "Windisch",
     "country": "Schweiz",
@@ -11,6 +12,5 @@
         8.21669
     ],
     "state": "Aargau",
-    "support": "Katalogsuche",
     "title": "Gemeinde- und Schulbibliothek"
 }

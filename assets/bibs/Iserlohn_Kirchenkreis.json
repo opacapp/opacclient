@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "bibliotheca",
     "city": "Iserlohn",
     "country": "Deutschland",
@@ -44,6 +45,5 @@
         7.674391099999998
     ],
     "state": "Nordrhein-Westfalen",
-    "support": "Katalogsuche und Konto",
     "title": "Mediothek Kirchenkreis"
 }

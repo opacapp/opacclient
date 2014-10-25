@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "W\u00f6rth",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         8.257337999999999
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Gemeindeb\u00fccherei"
 }

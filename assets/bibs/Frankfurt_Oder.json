@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Frankfurt (Oder)",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         14.55
     ],
     "state": "Brandenburg",
-    "support": "Katalogsuche",
     "title": "Stadt- & Regionalbibliothek"
 }

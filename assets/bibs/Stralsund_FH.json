@@ -1,18 +1,17 @@
 {
-    "api": "pica", 
-    "city": "Stralsund", 
-    "country": "Deutschland", 
+    "account_supported": false,
+    "api": "pica",
+    "city": "Stralsund",
+    "country": "Deutschland",
     "data": {
-        "accountSupported": false, 
-        "baseurl": "https://lhgrw.gbv.de", 
-        "db": "2", 
+        "baseurl": "https://lhgrw.gbv.de",
+        "db": "2",
         "information": "http://www.fh-stralsund.de/fh_stralsund/powerslave,id,765,nodeid,.html"
-    }, 
+    },
     "geo": [
-        54.2994048, 
+        54.2994048,
         13.0877143
-    ], 
-    "state": "Mecklenburg-Vorpommern", 
-    "support": "Katalogsuche", 
+    ],
+    "state": "Mecklenburg-Vorpommern",
     "title": "Hochschulbibliothek"
 }

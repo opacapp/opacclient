@@ -1,16 +1,16 @@
 {
-    "api": "sisis", 
-    "city": "Amberg-Weiden", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "sisis",
+    "city": "Amberg-Weiden",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "https://opac.haw-aw.de/InfoGuideClient.fawsis", 
+        "baseurl": "https://opac.haw-aw.de/InfoGuideClient.fawsis",
         "information": "http://www.haw-aw.de/einrichtungen/bibliothek/oeffnungszeiten/"
-    }, 
+    },
     "geo": [
-        49.4437292, 
+        49.4437292,
         11.8483773
-    ], 
-    "state": "Bayern", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Bayern",
     "title": "Hochschule"
 }

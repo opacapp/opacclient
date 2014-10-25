@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "bibliotheca",
     "city": "Gescher",
     "country": "Deutschland",
@@ -70,6 +71,5 @@
         7.0031738
     ],
     "state": "Nordrhein-Westfalen",
-    "support": "Katalogsuche und Konto",
     "title": "Stadtb\u00fccherei St. Pankratius"
 }

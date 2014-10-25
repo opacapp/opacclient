@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Rheinau",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         7.9478735
     ],
     "state": "Baden-W\u00fcrttemberg",
-    "support": "Katalogsuche",
     "title": "Stadtbibliothek"
 }

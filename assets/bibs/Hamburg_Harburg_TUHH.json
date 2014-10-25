@@ -1,18 +1,17 @@
 {
-    "api": "pica", 
-    "city": "Hamburg-Harburg", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "pica",
+    "city": "Hamburg-Harburg",
+    "country": "Deutschland",
     "data": {
-        "accountSupported": true, 
-        "baseurl": "https://katalog.b.tu-harburg.de", 
-        "db": "1", 
+        "baseurl": "https://katalog.b.tu-harburg.de",
+        "db": "1",
         "information": "https://www.tub.tu-harburg.de/home/oeffnungszeiten/"
-    }, 
+    },
     "geo": [
-        53.4607681, 
+        53.4607681,
         9.9835844
-    ], 
-    "state": "Hamburg", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Hamburg",
     "title": "Unibibliothek TUHH"
 }

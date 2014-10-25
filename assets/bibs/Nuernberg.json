@@ -1,17 +1,17 @@
 {
-    "api": "adis", 
-    "city": "N\u00fcrnberg", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "adis",
+    "city": "N\u00fcrnberg",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "https://online-service2.nuernberg.de/aDISWeb/app", 
-        "information": "http://www.nuernberg.de/internet/stadtbibliothek/", 
+        "baseurl": "https://online-service2.nuernberg.de/aDISWeb/app",
+        "information": "http://www.nuernberg.de/internet/stadtbibliothek/",
         "startparams": "service=direct/0/Home/$DirectLink&sp=Sapp1%3A4103"
-    }, 
+    },
     "geo": [
-        49.45203, 
+        49.45203,
         11.07675
-    ], 
-    "state": "Bayern", 
-    "support": "Katalogsuche und Konto (experimentell)", 
+    ],
+    "state": "Bayern",
     "title": "Stadtbibliothek"
 }

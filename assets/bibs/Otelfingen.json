@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "webopac.net",
     "city": "Otelfingen",
     "country": "Schweiz",
@@ -11,6 +12,5 @@
         8.388570000000001
     ],
     "state": "Z\u00fcrich",
-    "support": "Katalogsuche",
     "title": "Schul- und Regionalbibliothek"
 }

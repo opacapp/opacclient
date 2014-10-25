@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Bergrheinfeld",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         10.1808934
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Gemeindebibliothek"
 }

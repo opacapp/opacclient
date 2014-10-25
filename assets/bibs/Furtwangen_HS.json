@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "adis",
     "city": "Furtwangen",
     "country": "Deutschland",
@@ -12,6 +13,5 @@
         8.2014192
     ],
     "state": "Baden-W\u00fcrttemberg",
-    "support": "Katalogsuche und Konto (experimentell)",
     "title": "Hochschulbibliothek"
 }

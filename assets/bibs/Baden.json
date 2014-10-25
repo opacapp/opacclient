@@ -1,16 +1,16 @@
 {
-    "api": "sisis", 
-    "city": "Baden", 
-    "country": "Schweiz", 
+    "account_supported": true,
+    "api": "sisis",
+    "city": "Baden",
+    "country": "Schweiz",
     "data": {
-        "baseurl": "http://62.2.168.69/webOPACClient.baden", 
+        "baseurl": "http://62.2.168.69/webOPACClient.baden",
         "information": "http://www.baden.ch/xml_1/internet/de/application/d1/d59/f60.cfm#content"
-    }, 
+    },
     "geo": [
-        47.4737667, 
+        47.4737667,
         8.3064732
-    ], 
-    "state": "Aargau", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Aargau",
     "title": "Stadtbibliothek"
 }

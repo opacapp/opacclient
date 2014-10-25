@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "bibliotheca",
     "city": "Neustadt in Holstein",
     "country": "Deutschland",
@@ -40,6 +41,5 @@
         10.8153384
     ],
     "state": "Schleswig-Holstein",
-    "support": "Katalogsuche und Konto",
     "title": "Stadtbibliothek"
 }

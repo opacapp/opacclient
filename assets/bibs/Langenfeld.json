@@ -1,27 +1,27 @@
 {
-    "api": "bibliotheca", 
-    "city": "Langenfeld", 
-    "country": "Deutschland", 
+    "account_supported": false,
+    "api": "bibliotheca",
+    "city": "Langenfeld",
+    "country": "Deutschland",
     "data": {
-        "accounttable": null, 
-        "baseurl": "http://www1.langenfeld.de/OPAC", 
+        "accounttable": null,
+        "baseurl": "http://www1.langenfeld.de/OPAC",
         "copiestable": {
-            "barcode": 5, 
-            "branch": -1, 
-            "department": -1, 
-            "location": 1, 
-            "reservations": -1, 
-            "returndate": 3, 
+            "barcode": 5,
+            "branch": -1,
+            "department": -1,
+            "location": 1,
+            "reservations": -1,
+            "returndate": 3,
             "status": 0
-        }, 
-        "information": "/../read/info.html", 
+        },
+        "information": "/../read/info.html",
         "reservationtable": null
-    }, 
+    },
     "geo": [
-        51.1191898, 
+        51.1191898,
         6.951266299999999
-    ], 
-    "state": "Nordrhein-Westfalen", 
-    "support": "Katalogsuche", 
+    ],
+    "state": "Nordrhein-Westfalen",
     "title": "Stadtbibliothek"
 }

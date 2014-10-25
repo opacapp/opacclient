@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "bibliotheca",
     "city": "Stockach",
     "country": "Deutschland",
@@ -33,7 +34,7 @@
             "author": 0,
             "availability": 3,
             "cancelurl": 5,
-            "expirationdate": 4, 
+            "expirationdate": 4,
             "title": 1
         }
     },
@@ -42,6 +43,5 @@
         9.009152799999999
     ],
     "state": "Baden-W\u00fcrttemberg",
-    "support": "Katalogsuche und Konto",
     "title": "Stadtb\u00fccherei"
 }

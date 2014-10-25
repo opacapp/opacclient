@@ -1,43 +1,43 @@
 {
-    "api": "bibliotheca", 
-    "city": "Hamm", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "bibliotheca",
+    "city": "Hamm",
+    "country": "Deutschland",
     "data": {
         "accounttable": {
-            "author": 0, 
-            "barcode": -1, 
-            "homebranch": -1, 
-            "lendingbranch": 3, 
-            "prolongurl": 4, 
-            "returndate": 2, 
-            "status": -1, 
+            "author": 0,
+            "barcode": -1,
+            "homebranch": -1,
+            "lendingbranch": 3,
+            "prolongurl": 4,
+            "returndate": 2,
+            "status": -1,
             "title": 1
-        }, 
-        "baseurl": "http://opac.hamm.de/opac30", 
+        },
+        "baseurl": "http://opac.hamm.de/opac30",
         "copiestable": {
-            "barcode": -1, 
-            "branch": 0, 
-            "department": -1, 
-            "location": 3, 
-            "reservations": 6, 
-            "returndate": 2, 
+            "barcode": -1,
+            "branch": 0,
+            "department": -1,
+            "location": 3,
+            "reservations": 6,
+            "returndate": 2,
             "status": 1
-        }, 
-        "information": "/../read/info.html", 
+        },
+        "information": "/../read/info.html",
         "reservationtable": {
-            "author": 0, 
-            "availability": -1, 
-            "branch": 2, 
-            "cancelurl": 3, 
-            "expirationdate": null, 
+            "author": 0,
+            "availability": -1,
+            "branch": 2,
+            "cancelurl": 3,
+            "expirationdate": null,
             "title": 1
         }
-    }, 
+    },
     "geo": [
-        51.6738583, 
+        51.6738583,
         7.815981600000001
-    ], 
-    "state": "Nordrhein-Westfalen", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }

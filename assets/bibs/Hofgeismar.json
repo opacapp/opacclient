@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Hofgeismar",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         9.3860472
     ],
     "state": "Hessen",
-    "support": "Katalogsuche",
     "title": "Stadtb\u00fccherei"
 }

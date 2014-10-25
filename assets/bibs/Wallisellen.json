@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "webopac.net",
     "city": "Wallisellen",
     "country": "Schweiz",
@@ -11,6 +12,5 @@
         8.595200799999999
     ],
     "state": "Z\u00fcrich",
-    "support": "Katalogsuche",
     "title": "Bibliotheken"
 }

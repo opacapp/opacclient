@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "sisis",
     "city": "Leinfelden-Echterdingen",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         9.140742699999999
     ],
     "state": "Baden-W\u00fcrttemberg",
-    "support": "Katalogsuche und Konto",
     "title": "Stadtb\u00fccherei"
 }

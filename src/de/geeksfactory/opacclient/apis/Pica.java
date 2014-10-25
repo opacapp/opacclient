@@ -133,7 +133,7 @@ public class Pica extends BaseApi implements OpacApi {
 		try {
 			this.opac_url = data.getString("baseurl");
 			this.db = data.getString("db");
-			if (!library.getData().isNull("accountSupported")) {
+			if (isAccountSupported(library)) {
 				if (data.has("httpsbaseurl")) {
 					this.https_url = data.getString("httpsbaseurl");
 				} else {
@@ -1148,14 +1148,7 @@ public class Pica extends BaseApi implements OpacApi {
 
 	@Override
 	public boolean isAccountSupported(Library library) {
-		if (!library.getData().isNull("accountSupported")) {
-			try {
-				return library.getData().getBoolean("accountSupported");
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
-		return false;
+		return library.isAccountSupported();
 	}
 
 	@Override

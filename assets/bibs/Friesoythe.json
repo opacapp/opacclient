@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "bibliotheca",
     "city": "Friesoythe",
     "country": "Deutschland",
@@ -71,6 +72,5 @@
         7.8589508
     ],
     "state": "Niedersachsen",
-    "support": "Katalogsuche und Konto",
     "title": "\u00d6ffentliche B\u00fccherei"
 }

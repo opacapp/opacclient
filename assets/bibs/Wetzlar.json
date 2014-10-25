@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "bibliotheca",
     "city": "Wetzlar",
     "country": "Deutschland",
@@ -43,6 +44,5 @@
         8.508164599999999
     ],
     "state": "Hessen",
-    "support": "Katalogsuche und Konto",
     "title": "Stadtbibliothek"
 }

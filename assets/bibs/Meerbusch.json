@@ -1,17 +1,17 @@
 {
-    "api": "adis", 
-    "city": "Meerbusch", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "adis",
+    "city": "Meerbusch",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "https://webopac.itk-rheinland.de/aDISWeb/app", 
-        "information": "http://www.meerbusch.de/C125742000404341/html/CDF376ECCA5A7731C1257424002AAB5D?opendocument&nid1=62301_40356", 
+        "baseurl": "https://webopac.itk-rheinland.de/aDISWeb/app",
+        "information": "http://www.meerbusch.de/C125742000404341/html/CDF376ECCA5A7731C1257424002AAB5D?opendocument&nid1=62301_40356",
         "startparams": "service=direct/0/Home/%24DirectLink&sp=S127.0.0.1:23052"
-    }, 
+    },
     "geo": [
-        51.2503512, 
+        51.2503512,
         6.690717299999999
-    ], 
-    "state": "Nordrhein-Westfalen", 
-    "support": "Katalogsuche und Konto (experimentell)", 
+    ],
+    "state": "Nordrhein-Westfalen",
     "title": "Stadtbibliothek"
 }

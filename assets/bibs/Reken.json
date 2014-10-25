@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "bibliotheca",
     "city": "Reken",
     "country": "Deutschland",
@@ -70,6 +71,5 @@
         7.044443999999999
     ],
     "state": "Nordrhein-Westfalen",
-    "support": "Katalogsuche und Konto",
     "title": "K\u00d6B St. Heinrich"
 }

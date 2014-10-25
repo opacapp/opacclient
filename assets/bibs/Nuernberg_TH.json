@@ -1,17 +1,17 @@
 {
-    "api": "sisis", 
-    "city": "N\u00fcrnberg", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "sisis",
+    "city": "N\u00fcrnberg",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "https://opac.ohm-hochschule.de/InfoGuideClient.fhnsis", 
-        "information": "http://www.th-nuernberg.de/institutionen/bibliothek/bibinfo/oeffnungszeiten_semester/page.html", 
+        "baseurl": "https://opac.ohm-hochschule.de/InfoGuideClient.fhnsis",
+        "information": "http://www.th-nuernberg.de/institutionen/bibliothek/bibinfo/oeffnungszeiten_semester/page.html",
         "startparams": "Login=wofhn00"
-    }, 
+    },
     "geo": [
-        49.452374, 
+        49.452374,
         11.092383
-    ], 
-    "state": "Bayern", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Bayern",
     "title": "Technische Hochschule"
 }

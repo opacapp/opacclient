@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Kaufering",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         10.8567673
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "B\u00fccherei Markt"
 }

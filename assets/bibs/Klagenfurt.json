@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "sisis",
     "city": "Klagenfurt",
     "country": "\u00d6sterreich",
@@ -12,6 +13,5 @@
         14.30899
     ],
     "state": "K\u00e4rnten",
-    "support": "Katalogsuche und Konto",
     "title": "AK Bibliothek"
 }

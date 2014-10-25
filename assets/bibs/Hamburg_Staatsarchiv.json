@@ -1,18 +1,17 @@
 {
-    "api": "pica", 
-    "city": "Hamburg", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "pica",
+    "city": "Hamburg",
+    "country": "Deutschland",
     "data": {
-        "accountSupported": true, 
-        "baseurl": "https://kataloge.uni-hamburg.de/", 
-        "db": "7", 
+        "baseurl": "https://kataloge.uni-hamburg.de/",
+        "db": "7",
         "information": "http://www.hamburg.de/staatsarchiv/"
-    }, 
+    },
     "geo": [
-        53.574907, 
+        53.574907,
         10.0688597
-    ], 
-    "state": "Hamburg", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Hamburg",
     "title": "Staatsarchiv"
 }

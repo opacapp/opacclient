@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "sisis",
     "city": "Witten",
     "country": "Deutschland",
@@ -12,6 +13,5 @@
         7.353197000000001
     ],
     "state": "Nordrhein-Westfalen",
-    "support": "Katalogsuche und Konto",
     "title": "Stadtbibliothek Kulturforum"
 }

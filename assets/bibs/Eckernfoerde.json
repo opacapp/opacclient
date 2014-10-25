@@ -1,16 +1,16 @@
 {
-    "api": "iopac", 
-    "city": "Eckernförde", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "iopac",
+    "city": "Eckernf\u00c3\u00b6rde",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "http://iopac-eck.dtdns.net", 
+        "baseurl": "http://iopac-eck.dtdns.net",
         "information": "http://www.stadtbuecherei-eckernfoerde.de/"
-    }, 
+    },
     "geo": [
         54.4709032,
-		9.8258719
-    ], 
-    "state": "Schleswig-Holstein", 
-    "support": "Katalogsuche und Konto", 
+        9.8258719
+    ],
+    "state": "Schleswig-Holstein",
     "title": "Stadtb\u00fccherei"
 }

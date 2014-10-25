@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "webopac.net",
     "city": "Bassersdorf",
     "country": "Schweiz",
@@ -11,6 +12,5 @@
         8.6277587
     ],
     "state": "Z\u00fcrich",
-    "support": "Katalogsuche",
     "title": "Gemeindebibliothek"
 }

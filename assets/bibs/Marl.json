@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "bibliotheca",
     "city": "Marl",
     "country": "Deutschland",
@@ -64,6 +65,5 @@
         7.1060218
     ],
     "state": "Nordrhein-Westfalen",
-    "support": "Katalogsuche und Konto",
     "title": "Stadtbibliothek"
 }

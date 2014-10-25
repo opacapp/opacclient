@@ -1,18 +1,17 @@
 {
-    "api": "pica", 
-    "city": "Hannover", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "pica",
+    "city": "Hannover",
+    "country": "Deutschland",
     "data": {
-        "accountSupported": true, 
-        "baseurl": "https://opac.tib.uni-hannover.de/", 
-        "db": "1", 
+        "baseurl": "https://opac.tib.uni-hannover.de/",
+        "db": "1",
         "information": "http://www.tib.uni-hannover.de/"
-    }, 
+    },
     "geo": [
-        52.38142, 
+        52.38142,
         9.72007
-    ], 
-    "state": "Niedersachsen", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Niedersachsen",
     "title": "Unibibliothek + techn. Informationsbibliothek"
 }

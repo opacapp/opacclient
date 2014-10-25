@@ -1,19 +1,18 @@
 {
-    "api": "pica", 
-    "city": "Braunschweig", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "pica",
+    "city": "Braunschweig",
+    "country": "Deutschland",
     "data": {
-        "accountSupported": true, 
-        "baseurl": "https://opac.lbs-braunschweig.gbv.de", 
-        "customssl": true, 
-        "db": "1", 
+        "baseurl": "https://opac.lbs-braunschweig.gbv.de",
+        "customssl": true,
+        "db": "1",
         "information": "http://www.biblio.tu-bs.de/"
-    }, 
+    },
     "geo": [
-        52.27387, 
+        52.27387,
         10.52911
-    ], 
-    "state": "Niedersachsen", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Niedersachsen",
     "title": "Universit\u00e4tsbibliothek"
 }

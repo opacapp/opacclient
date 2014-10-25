@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Bobenheim-Roxheim",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         8.3589707
     ],
     "state": "Rheinland-Pfalz",
-    "support": "Katalogsuche",
     "title": "Gemeindeb\u00fccherei"
 }

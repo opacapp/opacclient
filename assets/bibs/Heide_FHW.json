@@ -1,18 +1,17 @@
 {
-    "api": "pica", 
-    "city": "Heide", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "pica",
+    "city": "Heide",
+    "country": "Deutschland",
     "data": {
-        "accountSupported": true, 
-        "baseurl": "http://kiopc4.ub.uni-kiel.de:8080", 
-        "db": "7", 
+        "baseurl": "http://kiopc4.ub.uni-kiel.de:8080",
+        "db": "7",
         "information": "http://www.fh-westkueste.de/startseite/bibliothek/"
-    }, 
+    },
     "geo": [
         54.1896893,
-		9.1324908
-    ], 
-    "state": "Schleswig-Holstein", 
-    "support": "Katalogsuche und Konto", 
-    "title": "Bibliothek der Fachhochschule Westküste"
+        9.1324908
+    ],
+    "state": "Schleswig-Holstein",
+    "title": "Bibliothek der Fachhochschule Westk\u00c3\u00bcste"
 }

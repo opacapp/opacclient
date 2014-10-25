@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "sisis",
     "city": "Bonn",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         7.0982068
     ],
     "state": "Nordrhein-Westfalen",
-    "support": "Katalogsuche und Konto",
     "title": "Uni- und Landesbibliothek"
 }

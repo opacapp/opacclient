@@ -1,17 +1,17 @@
 {
-    "api": "pica", 
-    "city": "Berlin", 
-    "country": "Deutschland", 
+    "account_supported": false,
+    "api": "pica",
+    "city": "Berlin",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "http://stabikat.de/", 
-        "db": "1", 
+        "baseurl": "http://stabikat.de/",
+        "db": "1",
         "information": "http://staatsbibliothek-berlin.de/"
-    }, 
+    },
     "geo": [
-        52.5089536, 
+        52.5089536,
         13.3710152
-    ], 
-    "state": "Berlin", 
-    "support": "Katalogsuche", 
+    ],
+    "state": "Berlin",
     "title": "Staatsbibliothek"
 }

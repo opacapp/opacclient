@@ -1,17 +1,17 @@
 {
-    "api": "sisis", 
-    "city": "Hof", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "sisis",
+    "city": "Hof",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "https://opac.hof-university.de/InfoGuideClient.fhosis", 
-        "information": "http://www.hof-university.de/studierende/info-service/bibliothek.html", 
+        "baseurl": "https://opac.hof-university.de/InfoGuideClient.fhosis",
+        "information": "http://www.hof-university.de/studierende/info-service/bibliothek.html",
         "startparams": "Login=wofhofh"
-    }, 
+    },
     "geo": [
-        50.3135391, 
+        50.3135391,
         11.9127814
-    ], 
-    "state": "Bayern", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Bayern",
     "title": "Hochschulbibliothek"
 }

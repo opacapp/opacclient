@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "webopac.net",
     "city": "Uzwil",
     "country": "Schweiz",
@@ -11,6 +12,5 @@
         9.137796500000002
     ],
     "state": "St. Gallen",
-    "support": "Katalogsuche",
     "title": "Gemeindebibliothek"
 }

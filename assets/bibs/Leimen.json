@@ -1,43 +1,43 @@
 {
-    "api": "bibliotheca", 
-    "city": "Leimen", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "bibliotheca",
+    "city": "Leimen",
+    "country": "Deutschland",
     "data": {
         "accounttable": {
-            "author": 0, 
-            "barcode": -1, 
-            "homebranch": -1, 
-            "lendingbranch": -1, 
-            "prolongurl": 3, 
-            "returndate": 2, 
-            "status": -1, 
+            "author": 0,
+            "barcode": -1,
+            "homebranch": -1,
+            "lendingbranch": -1,
+            "prolongurl": 3,
+            "returndate": 2,
+            "status": -1,
             "title": 1
-        }, 
-        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-leimen", 
+        },
+        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-leimen",
         "copiestable": {
-            "barcode": -1, 
-            "branch": -1, 
-            "department": -1, 
-            "location": 0, 
-            "reservations": -1, 
-            "returndate": 4, 
+            "barcode": -1,
+            "branch": -1,
+            "department": -1,
+            "location": 0,
+            "reservations": -1,
+            "returndate": 4,
             "status": 3
-        }, 
-        "information": "http://leimen.de/cms/iwebs/default.aspx?mmid=17&smid=2108", 
+        },
+        "information": "http://leimen.de/cms/iwebs/default.aspx?mmid=17&smid=2108",
         "reservationtable": {
-            "author": 0, 
-            "availability": 2, 
-            "branch": -1, 
-            "cancelurl": 3, 
-            "expirationdate": -1, 
+            "author": 0,
+            "availability": 2,
+            "branch": -1,
+            "cancelurl": 3,
+            "expirationdate": -1,
             "title": 1
         }
-    }, 
+    },
     "geo": [
-        49.34908979999999, 
+        49.34908979999999,
         8.687885099999999
-    ], 
-    "state": "Baden-W\u00fcrttemberg", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtb\u00fccherei"
 }

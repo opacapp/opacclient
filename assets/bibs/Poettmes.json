@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "P\u00f6ttmes",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         11.0913163
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Marktb\u00fccherei"
 }

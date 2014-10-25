@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "bibliotheca",
     "city": "Bad Honnef",
     "country": "Deutschland",
@@ -35,6 +36,5 @@
         7.226244599999999
     ],
     "state": "Nordrhein-Westfalen",
-    "support": "Katalogsuche und Konto",
     "title": "Stadtb\u00fccherei"
 }

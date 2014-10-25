@@ -1,17 +1,17 @@
 {
-    "api": "sisis", 
-    "city": "Rosenheim", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "sisis",
+    "city": "Rosenheim",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "https://opac.fh-rosenheim.de/InfoGuideClient.frosis", 
-        "information": "http://www.fh-rosenheim.de/die-hochschule/einrichtungen/bibliothek/", 
+        "baseurl": "https://opac.fh-rosenheim.de/InfoGuideClient.frosis",
+        "information": "http://www.fh-rosenheim.de/die-hochschule/einrichtungen/bibliothek/",
         "startparams": "Login=wofro"
-    }, 
+    },
     "geo": [
-        47.8571272, 
+        47.8571272,
         12.1181047
-    ], 
-    "state": "Bayern", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Bayern",
     "title": "Fachhochschule"
 }

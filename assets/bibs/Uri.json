@@ -1,16 +1,16 @@
 {
-    "api": "sisis", 
-    "city": "Uri", 
-    "country": "Schweiz", 
+    "account_supported": true,
+    "api": "sisis",
+    "city": "Uri",
+    "country": "Schweiz",
     "data": {
-        "baseurl": "http://kbu.ur.ch/webOPACClient.sisis", 
+        "baseurl": "http://kbu.ur.ch/webOPACClient.sisis",
         "information": "http://www.kbu.ch/oeffnungszeiten.html"
-    }, 
+    },
     "geo": [
-        46.7738629, 
+        46.7738629,
         8.602515300000002
-    ], 
-    "state": "Uri", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Uri",
     "title": "Kantonsbibliothek Altdorf"
 }

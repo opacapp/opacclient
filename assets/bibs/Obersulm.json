@@ -1,43 +1,43 @@
 {
-    "api": "bibliotheca", 
-    "city": "Obersulm", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "bibliotheca",
+    "city": "Obersulm",
+    "country": "Deutschland",
     "data": {
         "accounttable": {
-            "author": 0, 
-            "barcode": -1, 
-            "homebranch": -1, 
-            "lendingbranch": -1, 
-            "prolongurl": 3, 
-            "returndate": 2, 
-            "status": -1, 
+            "author": 0,
+            "barcode": -1,
+            "homebranch": -1,
+            "lendingbranch": -1,
+            "prolongurl": 3,
+            "returndate": 2,
+            "status": -1,
             "title": 1
-        }, 
-        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-obersulm", 
+        },
+        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-obersulm",
         "copiestable": {
-            "barcode": -1, 
-            "branch": 4, 
-            "department": 0, 
-            "location": 1, 
-            "reservations": -1, 
-            "returndate": 3, 
+            "barcode": -1,
+            "branch": 4,
+            "department": 0,
+            "location": 1,
+            "reservations": -1,
+            "returndate": 3,
             "status": 2
-        }, 
-        "information": "http://www.obersulm.de/gemeindebuecherei", 
+        },
+        "information": "http://www.obersulm.de/gemeindebuecherei",
         "reservationtable": {
-            "author": 0, 
-            "availability": -1, 
-            "branch": -1, 
-            "cancelurl": 2, 
-            "expirationdate": -1, 
+            "author": 0,
+            "availability": -1,
+            "branch": -1,
+            "cancelurl": 2,
+            "expirationdate": -1,
             "title": 1
         }
-    }, 
+    },
     "geo": [
-        49.13806899999999, 
+        49.13806899999999,
         9.372016499999999
-    ], 
-    "state": "Baden-W\u00fcrttemberg", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Baden-W\u00fcrttemberg",
     "title": "Gemeindebibliothek"
 }

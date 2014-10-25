@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Neustadt a.d. Donau",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         11.7670734
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Stadtbibliothek"
 }

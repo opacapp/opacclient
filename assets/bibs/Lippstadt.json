@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Lippstadt",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         8.3406481
     ],
     "state": "Nordrhein-Westfalen",
-    "support": "Katalogsuche",
     "title": "Stadtb\u00fccherei"
 }

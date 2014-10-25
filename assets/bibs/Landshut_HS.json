@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "sisis",
     "city": "Landshut",
     "country": "Deutschland",
@@ -12,6 +13,5 @@
         12.1459218
     ],
     "state": "Bayern",
-    "support": "Katalogsuche und Konto",
     "title": "Hochschulbibliothek"
 }

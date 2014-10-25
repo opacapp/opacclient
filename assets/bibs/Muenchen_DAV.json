@@ -1,17 +1,17 @@
 {
-    "api": "sisis", 
-    "city": "M\u00fcnchen", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "sisis",
+    "city": "M\u00fcnchen",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "https://opac.alpenverein.de/webOPACClient.davsis", 
-        "information": "http://www.alpenverein.de/kultur/bibliothek-archiv/bibliothek-des-dav_aid_10192.html", 
+        "baseurl": "https://opac.alpenverein.de/webOPACClient.davsis",
+        "information": "http://www.alpenverein.de/kultur/bibliothek-archiv/bibliothek-des-dav_aid_10192.html",
         "startparams": "Login=wodav"
-    }, 
+    },
     "geo": [
-        48.1366069, 
+        48.1366069,
         11.5770851
-    ], 
-    "state": "Bayern", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Bayern",
     "title": "Deutscher Alpenverein"
 }

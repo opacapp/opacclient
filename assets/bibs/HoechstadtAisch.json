@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "H\u00f6chstadt a. d. Aisch",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         10.8128359
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Stadtb\u00fccherei"
 }

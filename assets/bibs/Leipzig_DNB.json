@@ -1,18 +1,18 @@
 {
+    "account_supported": false,
     "api": "pica",
     "city": "Leipzig",
     "country": "Deutschland",
     "data": {
         "baseurl": "http://dispatch.opac.d-nb.de",
+        "charset": "ISO-8859-1",
         "db": "4.1",
-        "information": "http://www.dnb.de/DE/Service/Benutzung/oeffnungGesamt.html",
-		"charset": "ISO-8859-1"
+        "information": "http://www.dnb.de/DE/Service/Benutzung/oeffnungGesamt.html"
     },
     "geo": [
         51.3396955,
         12.3730747
     ],
     "state": "Sachsen",
-    "support": "Katalogsuche",
     "title": "Deutsche Nationalbibliothek"
 }

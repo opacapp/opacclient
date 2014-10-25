@@ -1,18 +1,17 @@
 {
-    "api": "pica", 
-    "city": "Hannover", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "pica",
+    "city": "Hannover",
+    "country": "Deutschland",
     "data": {
-        "accountSupported": true, 
-        "baseurl": "https://opac.tib.uni-hannover.de", 
-        "db": "5", 
+        "baseurl": "https://opac.tib.uni-hannover.de",
+        "db": "5",
         "information": "http://www.tiho-hannover.de/de/kliniken-institute/bibliothek/"
-    }, 
+    },
     "geo": [
-        52.3758916, 
+        52.3758916,
         9.732010400000002
-    ], 
-    "state": "Niedersachsen", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Niedersachsen",
     "title": "Tier\u00e4rztliche Hochschule"
 }

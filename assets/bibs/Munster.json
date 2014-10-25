@@ -1,43 +1,43 @@
 {
-    "api": "bibliotheca", 
-    "city": "M\u00fcnster", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "bibliotheca",
+    "city": "M\u00fcnster",
+    "country": "Deutschland",
     "data": {
         "accounttable": {
-            "author": 0, 
-            "barcode": 3, 
-            "homebranch": -1, 
-            "lendingbranch": -1, 
-            "prolongurl": 6, 
-            "returndate": 4, 
-            "status": 5, 
+            "author": 0,
+            "barcode": 3,
+            "homebranch": -1,
+            "lendingbranch": -1,
+            "prolongurl": 6,
+            "returndate": 4,
+            "status": 5,
             "title": 1
-        }, 
-        "baseurl": "http://www2.stadt-muenster.de/opac10", 
+        },
+        "baseurl": "http://www2.stadt-muenster.de/opac10",
         "copiestable": {
-            "barcode": -1, 
-            "branch": 0, 
-            "department": -1, 
-            "location": 4, 
-            "reservations": 6, 
-            "returndate": 2, 
+            "barcode": -1,
+            "branch": 0,
+            "department": -1,
+            "location": 4,
+            "reservations": 6,
+            "returndate": 2,
             "status": 1
-        }, 
-        "information": "/../read/info.html", 
+        },
+        "information": "/../read/info.html",
         "reservationtable": {
-            "author": 0, 
-            "availability": 3, 
-            "branch": -1, 
-            "cancelurl": 4, 
-            "expirationdate": null, 
+            "author": 0,
+            "availability": 3,
+            "branch": -1,
+            "cancelurl": 4,
+            "expirationdate": null,
             "title": 1
         }
-    }, 
+    },
     "geo": [
-        51.9606649, 
+        51.9606649,
         7.6261347
-    ], 
-    "state": "Nordrhein-Westfalen", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Nordrhein-Westfalen",
     "title": "Stadtbibliothek"
 }
