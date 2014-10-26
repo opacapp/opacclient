@@ -153,7 +153,7 @@ public class AboutActivity extends OpacPreferenceActivity {
 				new OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
-						asset_dialog("licenses.html", R.string.osl);
+						res_dialog(R.raw.licenses, R.string.osl);
 
 						return false;
 					}
@@ -163,7 +163,7 @@ public class AboutActivity extends OpacPreferenceActivity {
 				new OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
-						asset_dialog("privacy.html", R.string.privacy);
+						res_dialog(R.raw.privacy, R.string.privacy);
 						return false;
 					}
 				});
@@ -172,7 +172,7 @@ public class AboutActivity extends OpacPreferenceActivity {
 				new OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
-						asset_dialog("thanks.html", R.string.changelog);
+						res_dialog(R.raw.thanks, R.string.thanks);
 						return false;
 					}
 				});
@@ -181,7 +181,7 @@ public class AboutActivity extends OpacPreferenceActivity {
 				new OnPreferenceClickListener() {
 					@Override
 					public boolean onPreferenceClick(Preference arg0) {
-						asset_dialog("changelog.html", R.string.changelog);
+						res_dialog(R.raw.changelog, R.string.changelog);
 						return false;
 					}
 				});
@@ -197,7 +197,7 @@ public class AboutActivity extends OpacPreferenceActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void asset_dialog(String filename, int title) {
+	private void res_dialog(int file, int title) {
 
 		final Dialog dialog = new Dialog(AboutActivity.this);
 		dialog.setContentView(R.layout.dialog_about);
@@ -209,7 +209,7 @@ public class AboutActivity extends OpacPreferenceActivity {
 		StringBuilder builder = new StringBuilder();
 		InputStream fis;
 		try {
-			fis = getAssets().open(filename);
+			fis = getResources().openRawResource(file);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					fis, "utf-8"));
 			String line;
