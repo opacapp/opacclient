@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Bad Birnbach",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         13.0898068
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Bibliothek Mamertus"
 }

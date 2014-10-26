@@ -1,35 +1,36 @@
 {
+    "account_supported": true,
     "api": "bibliotheca",
     "city": "Gammertingen",
     "country": "Deutschland",
     "data": {
         "accounttable": {
-            "author": 1, 
-            "barcode": 0, 
-            "homebranch": -1, 
-            "lendingbranch": -1, 
-            "prolongurl": 4, 
-            "returndate": 3, 
-            "status": -1, 
+            "author": 1,
+            "barcode": 0,
+            "homebranch": -1,
+            "lendingbranch": -1,
+            "prolongurl": 4,
+            "returndate": 3,
+            "status": -1,
             "title": 2
-        }, 
+        },
         "baseurl": "https://wwwopac.rz-kiru.de/gammertingen",
         "copiestable": {
-            "barcode": -1, 
-            "branch": -1, 
-            "department": -1, 
-            "location": 2, 
-            "reservations": 5, 
-            "returndate": 4, 
+            "barcode": -1,
+            "branch": -1,
+            "department": -1,
+            "location": 2,
+            "reservations": 5,
+            "returndate": 4,
             "status": 3
-        }, 
+        },
         "information": "http://www.gammertingen.de/de/menschlich/freizeit-und-kultur/stadtbuecherei.html",
         "reservationtable": {
-            "author": 1, 
-            "availability": 3, 
-            "branch": -1, 
-            "cancelurl": 4, 
-            "expirationdate": -1, 
+            "author": 1,
+            "availability": 3,
+            "branch": -1,
+            "cancelurl": 4,
+            "expirationdate": -1,
             "title": 2
         }
     },
@@ -38,6 +39,5 @@
         9.2152623
     ],
     "state": "Baden-W\u00fcrttemberg",
-    "support": "Katalogsuche und Konto",
     "title": "Stadtb\u00fccherei"
 }

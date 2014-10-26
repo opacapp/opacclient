@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Niedernhausen",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         8.3142131
     ],
     "state": "Hessen",
-    "support": "Katalogsuche",
     "title": "Gemeindeb\u00fccherei"
 }

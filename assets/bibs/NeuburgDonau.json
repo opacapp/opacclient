@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Neuburg a. d. Donau",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         11.1887693
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Stadtb\u00fccherei"
 }

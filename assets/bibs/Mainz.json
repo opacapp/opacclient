@@ -1,46 +1,46 @@
 {
-    "api": "bibliotheca", 
-    "city": "Mainz", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "bibliotheca",
+    "city": "Mainz",
+    "country": "Deutschland",
     "data": {
         "accounttable": {
-            "author": 1, 
-            "barcode": 0, 
-            "homebranch": 4, 
-            "lendingbranch": 4, 
-            "prolongurl": 5, 
-            "returndate": 3, 
-            "status": -1, 
+            "author": 1,
+            "barcode": 0,
+            "homebranch": 4,
+            "lendingbranch": 4,
+            "prolongurl": 5,
+            "returndate": 3,
+            "status": -1,
             "title": 2
-        }, 
-        "baseurl": "https://webopac.mainz.de/webopac/", 
+        },
+        "baseurl": "https://webopac.mainz.de/webopac/",
         "copiestable": {
-            "barcode": -1, 
-            "branch": 0, 
-            "department": -1, 
-            "location": 1, 
-            "reservations": -1, 
-            "returndate": 4, 
+            "barcode": -1,
+            "branch": 0,
+            "department": -1,
+            "location": 1,
+            "reservations": -1,
+            "returndate": 4,
             "status": 3
-        }, 
-        "information": "http://www.mainz.de/WGAPublisher/online/html/default/bibliotheken", 
+        },
+        "information": "http://www.mainz.de/WGAPublisher/online/html/default/bibliotheken",
         "mediatypes": {
             "mp.gif": "PACKAGE"
-        }, 
+        },
         "reservationtable": {
-            "author": 0, 
-            "availability": 2, 
-            "branch": -1, 
-            "cancelurl": 3, 
-            "expirationdate": -1, 
+            "author": 0,
+            "availability": 2,
+            "branch": -1,
+            "cancelurl": 3,
+            "expirationdate": -1,
             "title": 1
         }
-    }, 
+    },
     "geo": [
-        49.9928617, 
+        49.9928617,
         8.2472526
-    ], 
-    "state": "Rheinland-Pfalz", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Rheinland-Pfalz",
     "title": "Anna Seghers"
 }

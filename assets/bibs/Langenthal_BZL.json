@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "webopac.net",
     "city": "Langenthal",
     "country": "Schweiz",
@@ -11,6 +12,5 @@
         7.7847334
     ],
     "state": "Bern",
-    "support": "Katalogsuche",
     "title": "BZL Bibliothek"
 }

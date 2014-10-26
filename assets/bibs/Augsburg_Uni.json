@@ -1,17 +1,17 @@
 {
-    "api": "sisis", 
-    "city": "Augsburg", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "sisis",
+    "city": "Augsburg",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "https://opac.bibliothek.uni-augsburg.de/InfoGuideClient.ubasis", 
-        "information": "http://www.bibliothek.uni-augsburg.de/wir_ueber_uns/anschrift/", 
+        "baseurl": "https://opac.bibliothek.uni-augsburg.de/InfoGuideClient.ubasis",
+        "information": "http://www.bibliothek.uni-augsburg.de/wir_ueber_uns/anschrift/",
         "startparams": "Login=iguba"
-    }, 
+    },
     "geo": [
-        48.37144070000001, 
+        48.37144070000001,
         10.8982552
-    ], 
-    "state": "Bayern", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Bayern",
     "title": "Unibibliothek"
 }

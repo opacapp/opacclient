@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "iopac",
     "city": "Glinde",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         10.2165943
     ],
     "state": "Schleswig-Holstein",
-    "support": "Katalogsuche und Konto",
     "title": "Stadtb\u00fccherei"
 }

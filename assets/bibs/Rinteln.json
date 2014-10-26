@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "bibliotheca",
     "city": "Rinteln",
     "country": "Deutschland",
@@ -36,6 +37,5 @@
         9.0759703
     ],
     "state": "Niedersachsen",
-    "support": "Katalogsuche und Konto",
     "title": "Stadtb\u00fccherei"
 }

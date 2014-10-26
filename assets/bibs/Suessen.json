@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "S\u00fc\u00dfen",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         9.7567784
     ],
     "state": "Baden-W\u00fcrttemberg",
-    "support": "Katalogsuche",
     "title": "Stadtb\u00fccherei"
 }

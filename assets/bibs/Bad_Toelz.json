@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Bad T\u00f6lz",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         11.5651524
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Stadtbibliothek"
 }

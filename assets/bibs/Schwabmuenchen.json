@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Schwabm\u00fcnchen",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         10.7557069
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Stadtb\u00fccherei"
 }

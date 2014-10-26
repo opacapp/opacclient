@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "webopac.net",
     "city": "Menzingen",
     "country": "Schweiz",
@@ -11,6 +12,5 @@
         8.589509999999999
     ],
     "state": "Zug",
-    "support": "Katalogsuche",
     "title": "Gemeindebibliothek"
 }

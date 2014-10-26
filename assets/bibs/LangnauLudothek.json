@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "webopac.net",
     "city": "Langnau am Albis",
     "country": "Schweiz",
@@ -11,6 +12,5 @@
         8.5365507
     ],
     "state": "Z\u00fcrich",
-    "support": "Katalogsuche",
     "title": "Ludothek"
 }

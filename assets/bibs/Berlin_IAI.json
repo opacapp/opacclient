@@ -1,9 +1,9 @@
 {
+    "account_supported": true,
     "api": "pica",
     "city": "Berlin",
     "country": "Deutschland",
     "data": {
-        "accountSupported": true,
         "baseurl": "http://iaiweb1.iai.spk-berlin.de",
         "db": "1",
         "information": "http://www.iai.spk-berlin.de/bibliothek.html"
@@ -13,6 +13,5 @@
         13.404954
     ],
     "state": "Berlin",
-    "support": "Katalogsuche und Konto",
     "title": "Ibero-Amerikanisches Institut"
 }

@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Gro\u00dfkrotzenburg",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         8.9839637
     ],
     "state": "Hessen",
-    "support": "Katalogsuche",
     "title": "Gemeindeb\u00fccherei"
 }

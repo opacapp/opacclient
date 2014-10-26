@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Mertingen",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         10.8058245
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Gemeindeb\u00fccherei"
 }

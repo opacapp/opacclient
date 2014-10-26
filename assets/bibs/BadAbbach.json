@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Bad Abbach",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         12.0462593
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Marktb\u00fccherei"
 }

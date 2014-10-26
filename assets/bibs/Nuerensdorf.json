@@ -1,16 +1,16 @@
 {
-    "api": "webopac.net", 
-    "city": "Nürensdorf", 
-    "country": "Schweiz", 
+    "account_supported": false,
+    "api": "webopac.net",
+    "city": "N\u00c3\u00bcrensdorf",
+    "country": "Schweiz",
     "data": {
-        "baseurl": "http://www.winmedio.net/nuerensdorf", 
+        "baseurl": "http://www.winmedio.net/nuerensdorf",
         "information": "http://www.nuerensdorf.ch/de/freizeit_kultur/bibliothek.html"
-    }, 
+    },
     "geo": [
-        47.446943, 
+        47.446943,
         8.648886
-    ], 
-    "state": "Zürich", 
-    "support": "Katalogsuche", 
+    ],
+    "state": "Z\u00c3\u00bcrich",
     "title": "Gemeindebibliothek"
 }

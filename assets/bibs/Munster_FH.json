@@ -1,17 +1,17 @@
 {
-    "api": "sisis", 
-    "city": "M\u00fcnster", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "sisis",
+    "city": "M\u00fcnster",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "https://hb063.fh-muenster.de/webOPACClient", 
-        "information": "https://www.fh-muenster.de/BIBL/index.php", 
+        "baseurl": "https://hb063.fh-muenster.de/webOPACClient",
+        "information": "https://www.fh-muenster.de/BIBL/index.php",
         "startparams": "Login=jopacf"
-    }, 
+    },
     "geo": [
-        51.9606649, 
+        51.9606649,
         7.6261347
-    ], 
-    "state": "Nordrhein-Westfalen", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Nordrhein-Westfalen",
     "title": "Fachhochschule"
 }

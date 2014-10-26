@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Rotenburg a. d. Fulda",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         9.727777999999999
     ],
     "state": "Hessen",
-    "support": "Katalogsuche",
     "title": "Medienzentrum Hersfeld-Rotenburg"
 }

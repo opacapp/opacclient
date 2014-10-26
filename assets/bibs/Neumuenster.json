@@ -1,34 +1,34 @@
 {
-    "api": "biber1992", 
-    "city": "Neum\u00fcnster", 
-    "country": "Deutschland", 
+    "account_supported": false,
+    "api": "biber1992",
+    "city": "Neum\u00fcnster",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "http://www.opac.neumuenster.de", 
-        "information": "http://www.neumuenster.de/stabue/", 
+        "baseurl": "http://www.opac.neumuenster.de",
+        "information": "http://www.neumuenster.de/stabue/",
         "mediatypes": {
-            "1": "BOOK", 
-            "10": "MAP", 
-            "2": "MAGAZINE", 
-            "3": "CD_SOFTWARE", 
-            "30": "EBOOK", 
-            "4": "MOVIE", 
-            "5": "AUDIO_CASSETTE", 
-            "6": "CD_MUSIC", 
-            "8": "SCORE_MUSIC", 
+            "1": "BOOK",
+            "10": "MAP",
+            "2": "MAGAZINE",
+            "3": "CD_SOFTWARE",
+            "30": "EBOOK",
+            "4": "MOVIE",
+            "5": "AUDIO_CASSETTE",
+            "6": "CD_MUSIC",
+            "8": "SCORE_MUSIC",
             "9": "BOARDGAME"
-        }, 
-        "opacdir": "opax", 
+        },
+        "opacdir": "opax",
         "searchtable": [
-            2, 
-            3, 
+            2,
+            3,
             4
         ]
-    }, 
+    },
     "geo": [
-        54.0729431, 
+        54.0729431,
         9.9840158
-    ], 
-    "state": "Schleswig-Holstein", 
-    "support": "Katalogsuche", 
+    ],
+    "state": "Schleswig-Holstein",
     "title": "Stadtbibliothek"
 }

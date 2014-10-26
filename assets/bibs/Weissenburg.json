@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Wei\u00dfenburg",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         10.9710237
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Stadtbibliothek"
 }

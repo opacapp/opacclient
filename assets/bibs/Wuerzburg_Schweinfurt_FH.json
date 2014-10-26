@@ -1,18 +1,18 @@
 {
-    "api": "sisis", 
-    "city": "W\u00fcrzburg", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "sisis",
+    "city": "W\u00fcrzburg",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "https://recherche.bibkatalog.de/InfoGuideClient.fwssis", 
-        "homebranch": "0", 
-        "information": "http://bibliothek.fhws.de/zeiten.html", 
+        "baseurl": "https://recherche.bibkatalog.de/InfoGuideClient.fwssis",
+        "homebranch": "0",
+        "information": "http://bibliothek.fhws.de/zeiten.html",
         "startparams": "Login=wofwsw"
-    }, 
+    },
     "geo": [
-        49.7915953, 
+        49.7915953,
         9.953571499999999
-    ], 
-    "state": "Bayern", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Bayern",
     "title": "Hochschulbibliothek"
 }

@@ -1,17 +1,17 @@
 {
-    "api": "sisis", 
-    "city": "Garching b. M\u00fcnchen", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "sisis",
+    "city": "Garching b. M\u00fcnchen",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "https://stgoz2.bib-bvb.de/webOPACClient.stgsis", 
-        "information": "http://stadtbuechereigarching.de/", 
+        "baseurl": "https://stgoz2.bib-bvb.de/webOPACClient.stgsis",
+        "information": "http://stadtbuechereigarching.de/",
         "startparams": "Login=wostg"
-    }, 
+    },
     "geo": [
-        48.2488721, 
+        48.2488721,
         11.6532477
-    ], 
-    "state": "Bayern", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Bayern",
     "title": "Stadtb\u00fccherei"
 }

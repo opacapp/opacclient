@@ -1,18 +1,17 @@
 {
-    "api": "pica", 
-    "city": "Halle (Saale)", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "pica",
+    "city": "Halle (Saale)",
+    "country": "Deutschland",
     "data": {
-        "accountSupported": true, 
-        "baseurl": "https://opac.bibliothek.uni-halle.de/", 
-        "db": "1", 
+        "baseurl": "https://opac.bibliothek.uni-halle.de/",
+        "db": "1",
         "information": "http://bibliothek.uni-halle.de/"
-    }, 
+    },
     "geo": [
-        51.4887849, 
+        51.4887849,
         11.970509
-    ], 
-    "state": "Sachsen-Anhalt", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Sachsen-Anhalt",
     "title": "Unibibliothek"
 }

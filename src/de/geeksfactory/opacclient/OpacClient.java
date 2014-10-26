@@ -75,7 +75,7 @@ import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.StarContentProvider;
 
-@ReportsCrashes(formKey = "", mailTo = "info@opacapp.de", mode = org.acra.ReportingInteractionMode.NOTIFICATION)
+@ReportsCrashes(formKey = "", mailTo = "info@opacapp.de", mode = org.acra.ReportingInteractionMode.NOTIFICATION, resToastText = R.string.crash_toast_text)
 public class OpacClient extends Application {
 
 	public Exception last_exception;
@@ -129,7 +129,7 @@ public class OpacClient extends Application {
 		myIntent.putExtra("query", queryToBundle(query));
 		caller.startActivity(myIntent);
 	}
-	
+
 	public void startVolumeSearch(Activity caller, Map<String, String> query) {
 		Intent myIntent = new Intent(caller, SearchResultListActivity.class);
 		myIntent.putExtra("volumeQuery", mapToBundle(query));
@@ -359,7 +359,8 @@ public class OpacClient extends Application {
 		Bundle b = new Bundle();
 		for (SearchQuery q : query) {
 			try {
-				b.putString(q.getSearchField().toJSON().toString(), q.getValue());
+				b.putString(q.getSearchField().toJSON().toString(),
+						q.getValue());
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
@@ -373,15 +374,15 @@ public class OpacClient extends Application {
 		List<SearchQuery> query = new ArrayList<SearchQuery>();
 		for (String e : bundle.keySet()) {
 			try {
-				query.add(new SearchQuery(SearchField.fromJSON(new JSONObject(e)),
-						bundle.getString(e)));
+				query.add(new SearchQuery(SearchField
+						.fromJSON(new JSONObject(e)), bundle.getString(e)));
 			} catch (JSONException e1) {
 				e1.printStackTrace();
 			}
 		}
 		return query;
 	}
-	
+
 	public static Bundle mapToBundle(Map<String, String> map) {
 		if (map == null)
 			return null;

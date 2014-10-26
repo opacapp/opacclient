@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "bibliotheca",
     "city": "Brackenheim",
     "country": "Deutschland",
@@ -44,6 +45,5 @@
         }
     },
     "state": "Baden-W\u00fcrttemberg",
-    "support": "Katalogsuche und Konto",
     "title": "Stadtb\u00fccherei"
 }

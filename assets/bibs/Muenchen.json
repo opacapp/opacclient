@@ -1,17 +1,17 @@
 {
-    "api": "adis", 
-    "city": "M\u00fcnchen", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "adis",
+    "city": "M\u00fcnchen",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "https://ssl.muenchen.de/aDISWeb/app", 
-        "information": "http://www.muenchner-stadtbibliothek.de/info-service/", 
+        "baseurl": "https://ssl.muenchen.de/aDISWeb/app",
+        "information": "http://www.muenchner-stadtbibliothek.de/info-service/",
         "startparams": "service=direct/0/Home/$DirectLink&sp=SOPAC"
-    }, 
+    },
     "geo": [
-        48.1351253, 
+        48.1351253,
         11.5819806
-    ], 
-    "state": "Bayern", 
-    "support": "Katalogsuche und Konto (experimentell)", 
+    ],
+    "state": "Bayern",
     "title": "Stadtbibliothek"
 }

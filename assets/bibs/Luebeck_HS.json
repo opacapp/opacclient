@@ -1,18 +1,17 @@
 {
-    "api": "pica", 
-    "city": "Lübeck", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "pica",
+    "city": "L\u00c3\u00bcbeck",
+    "country": "Deutschland",
     "data": {
-        "accountSupported": true, 
-        "baseurl": "http://kiopc4.ub.uni-kiel.de:8080", 
-        "db": "4", 
+        "baseurl": "http://kiopc4.ub.uni-kiel.de:8080",
+        "db": "4",
         "information": "http://www.zhb.uni-luebeck.de/welcome.htm"
-    }, 
+    },
     "geo": [
         53.8810006,
-		10.7613749
-    ], 
-    "state": "Schleswig-Holstein", 
-    "support": "Katalogsuche und Konto", 
+        10.7613749
+    ],
+    "state": "Schleswig-Holstein",
     "title": "Zentrale Hochschulbibliothek"
 }

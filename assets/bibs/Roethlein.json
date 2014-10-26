@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "R\u00f6thlein",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         10.2181693
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Gemeindebibliothek"
 }

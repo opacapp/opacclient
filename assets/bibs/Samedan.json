@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "webopac.net",
     "city": "Samedan",
     "country": "Schweiz",
@@ -11,6 +12,5 @@
         9.8607328
     ],
     "state": "Graub\u00fcnden",
-    "support": "Katalogsuche",
     "title": "Gemeindebibliothek"
 }

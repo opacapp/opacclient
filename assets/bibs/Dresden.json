@@ -1,17 +1,17 @@
 {
-    "api": "sisis", 
-    "city": "Dresden", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "sisis",
+    "city": "Dresden",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "http://katalog.bibo-dresden.de/webOPACClient", 
-        "information": "http://www.bibo-dresden.de/4/index_4.html", 
+        "baseurl": "http://katalog.bibo-dresden.de/webOPACClient",
+        "information": "http://www.bibo-dresden.de/4/index_4.html",
         "startparams": "Login=webopac"
-    }, 
+    },
     "geo": [
-        51.0504088, 
+        51.0504088,
         13.7372621
-    ], 
-    "state": "Sachsen", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Sachsen",
     "title": "St\u00e4dtische Bibliotheken"
 }

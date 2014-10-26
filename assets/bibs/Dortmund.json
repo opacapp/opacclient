@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "adis",
     "city": "Dortmund",
     "country": "Deutschland",
@@ -12,6 +13,5 @@
         7.465298100000001
     ],
     "state": "Nordrhein-Westfalen",
-    "support": "Katalogsuche und Konto (experimentell)",
     "title": "Stadtbibliothek"
 }

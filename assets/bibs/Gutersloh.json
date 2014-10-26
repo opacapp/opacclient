@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "G\u00fctersloh",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         8.385753500000002
     ],
     "state": "Nordrhein-Westfalen",
-    "support": "Katalogsuche",
     "title": "Stadtbibliothek"
 }

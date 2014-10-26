@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "sisis",
     "city": "Remscheid",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         7.189696199999998
     ],
     "state": "Nordrhein-Westfalen",
-    "support": "Katalogsuche und Konto",
     "title": "Stadtbibliothek"
 }

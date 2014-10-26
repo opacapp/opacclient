@@ -1,9 +1,9 @@
 {
+    "account_supported": true,
     "api": "pica",
     "city": "Braunschweig",
     "country": "Deutschland",
     "data": {
-        "accountSupported": true,
         "baseurl": "https://opac.lbs-braunschweig.gbv.de",
         "db": "3",
         "information": "https://www.hbk-bs.de/einrichtungen/bibliothek/"
@@ -13,6 +13,5 @@
         10.5267696
     ],
     "state": "Niedersachsen",
-    "support": "Katalogsuche und Konto",
     "title": "Hochschule f\u00fcr Bildende K\u00fcnste"
 }

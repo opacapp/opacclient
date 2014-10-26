@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "iopac",
     "city": "Husum",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         9.060062799999999
     ],
     "state": "Schleswig-Holstein",
-    "support": "Katalogsuche und Konto",
     "title": "Stadtbibliothek"
 }

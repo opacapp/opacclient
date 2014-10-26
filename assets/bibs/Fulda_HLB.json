@@ -1,18 +1,17 @@
 {
-    "api": "pica", 
-    "city": "Fulda", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "pica",
+    "city": "Fulda",
+    "country": "Deutschland",
     "data": {
-        "accountSupported": true, 
-        "baseurl": "https://opac.uni-giessen.de", 
-        "db": "52", 
+        "baseurl": "https://opac.uni-giessen.de",
+        "db": "52",
         "information": "http://www.hs-fulda.de/index.php?id=169"
-    }, 
+    },
     "geo": [
-        50.5558095, 
+        50.5558095,
         9.6808449
-    ], 
-    "state": "Hessen", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Hessen",
     "title": "HLB"
 }

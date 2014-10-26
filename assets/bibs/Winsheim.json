@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Wimsheim",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         8.8258827
     ],
     "state": "Baden-W\u00fcrttemberg",
-    "support": "Katalogsuche",
     "title": "Ortsb\u00fccherei"
 }

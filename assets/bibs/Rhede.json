@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "bibliotheca",
     "city": "Rhede",
     "country": "Deutschland",
@@ -70,6 +71,5 @@
         6.6989532
     ],
     "state": "Nordrhein-Westfalen",
-    "support": "Katalogsuche und Konto",
     "title": "\u00d6ffentliche B\u00fccherei St. Gudula"
 }

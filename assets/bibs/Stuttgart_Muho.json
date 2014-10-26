@@ -1,17 +1,17 @@
 {
-    "api": "adis", 
-    "city": "Stuttgart", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "adis",
+    "city": "Stuttgart",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "https://bsz.ibs-bw.de/aDISWeb/app", 
-        "information": "http://www.mh-stuttgart.de/einrichtungen/bibliothek/", 
+        "baseurl": "https://bsz.ibs-bw.de/aDISWeb/app",
+        "information": "http://www.mh-stuttgart.de/einrichtungen/bibliothek/",
         "startparams": "service=direct/0/Home/%24DirectLink&sp=S127.0.0.1:23352"
-    }, 
+    },
     "geo": [
-        48.7754181, 
+        48.7754181,
         9.181758799999999
-    ], 
-    "state": "Baden-W\u00fcrttemberg", 
-    "support": "Katalogsuche und Konto (experimentell)", 
+    ],
+    "state": "Baden-W\u00fcrttemberg",
     "title": "Musikhochschule"
 }

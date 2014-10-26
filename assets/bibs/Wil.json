@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "webopac.net",
     "city": "Wil",
     "country": "Schweiz",
@@ -11,6 +12,5 @@
         9.0479177
     ],
     "state": "St. Gallen",
-    "support": "Katalogsuche",
     "title": "Stadtbibliothek"
 }

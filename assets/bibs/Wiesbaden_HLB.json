@@ -1,19 +1,18 @@
 {
+    "account_supported": true,
     "api": "pica",
     "city": "Wiesbaden",
     "country": "Deutschland",
     "data": {
-        "accountSupported": true,
         "baseurl": "https://pica1l.lhb.tu-darmstadt.de",
+        "charset": "ISO-8859-1",
         "db": "HLBWI",
-        "information": "http://www.hs-rm.de/bibliothek",
-		"charset": "ISO-8859-1"
+        "information": "http://www.hs-rm.de/bibliothek"
     },
     "geo": [
         50.0782184,
         8.239760799999999
     ],
     "state": "Hessen",
-    "support": "Katalogsuche und Konto",
     "title": "HLB RheinMain"
 }

@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "webopac.net",
     "city": "B\u00fctschwil",
     "country": "Schweiz",
@@ -11,6 +12,5 @@
         9.07364
     ],
     "state": "St. Gallen",
-    "support": "Katalogsuche",
     "title": "Bibliothek"
 }

@@ -1,16 +1,16 @@
 {
-    "api": "sisis", 
-    "city": "Wuppertal", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "sisis",
+    "city": "Wuppertal",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.wuppertal.de/webOPACClient.sisis", 
+        "baseurl": "http://webopac.wuppertal.de/webOPACClient.sisis",
         "information": "http://www.wuppertal.de/kultur-bildung/stadtbibliothek/index.php"
-    }, 
+    },
     "geo": [
-        51.2562128, 
+        51.2562128,
         7.150763599999999
-    ], 
-    "state": "Nordrhein-Westfalen", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Nordrhein-Westfalen",
     "title": "Stadtbibliothek"
 }

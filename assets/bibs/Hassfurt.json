@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Ha\u00dffurt",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         10.5169747
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Bibliotheks- und Informationszentrum (BIZ)"
 }

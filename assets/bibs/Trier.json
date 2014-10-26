@@ -1,43 +1,43 @@
 {
-    "api": "bibliotheca", 
-    "city": "Trier", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "bibliotheca",
+    "city": "Trier",
+    "country": "Deutschland",
     "data": {
         "accounttable": {
-            "author": 0, 
-            "barcode": -1, 
-            "homebranch": 3, 
-            "lendingbranch": 3, 
-            "prolongurl": 4, 
-            "returndate": 2, 
-            "status": -1, 
+            "author": 0,
+            "barcode": -1,
+            "homebranch": 3,
+            "lendingbranch": 3,
+            "prolongurl": 4,
+            "returndate": 2,
+            "status": -1,
             "title": 1
-        }, 
-        "baseurl": "https://opac.trier.de/webopac", 
+        },
+        "baseurl": "https://opac.trier.de/webopac",
         "copiestable": {
-            "barcode": -1, 
-            "branch": -1, 
-            "department": -1, 
-            "location": 3, 
-            "reservations": -1, 
-            "returndate": 4, 
+            "barcode": -1,
+            "branch": -1,
+            "department": -1,
+            "location": 3,
+            "reservations": -1,
+            "returndate": 4,
             "status": 0
-        }, 
-        "information": "https://opac.trier.de/read_freshblue/info.html", 
+        },
+        "information": "https://opac.trier.de/read_freshblue/info.html",
         "reservationtable": {
-            "author": 0, 
-            "availability": 2, 
-            "branch": 3, 
-            "cancelurl": 4, 
-            "expirationdate": null, 
+            "author": 0,
+            "availability": 2,
+            "branch": 3,
+            "cancelurl": 4,
+            "expirationdate": null,
             "title": 1
         }
-    }, 
+    },
     "geo": [
-        49.7468826, 
+        49.7468826,
         6.6347507
-    ], 
-    "state": "Rheinland-Pfalz", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Rheinland-Pfalz",
     "title": "Palais Walderdorff"
 }

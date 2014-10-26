@@ -63,7 +63,7 @@ public class LibraryListActivity extends Activity {
 	protected LibraryListFragment fragment3;
 	protected LibraryListFragment fragment4;
 	protected boolean visible;
-	
+
 	protected SearchView searchView;
 	protected MenuItem searchItem;
 
@@ -83,8 +83,8 @@ public class LibraryListActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(null);
 		setContentView(R.layout.activity_library_list);
-		
-		if(!getIntent().hasExtra("welcome")) {
+
+		if (!getIntent().hasExtra("welcome")) {
 			getSupportActionBar().setHomeButtonEnabled(true);
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		} else {
@@ -102,13 +102,13 @@ public class LibraryListActivity extends Activity {
 		final LinearLayout llLocate = (LinearLayout) findViewById(R.id.llLocate);
 
 		// Get the intent, verify the action and get the query
-	    Intent intent = getIntent();
-	    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-	      String query = intent.getStringExtra(SearchManager.QUERY);
-	      search(query);
-	    } else {
-	    	showListCountries(false);
-	    }
+		Intent intent = getIntent();
+		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+			String query = intent.getStringExtra(SearchManager.QUERY);
+			search(query);
+		} else {
+			showListCountries(false);
+		}
 
 		final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		Criteria criteria = new Criteria();
@@ -133,22 +133,22 @@ public class LibraryListActivity extends Activity {
 				}
 			}
 		});
-		
-		
+
 		RelativeLayout rlSuggestLibrary = (RelativeLayout) findViewById(R.id.rlSuggestLibrary);
 		rlSuggestLibrary.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(LibraryListActivity.this, SuggestLibraryActivity.class);
+				Intent intent = new Intent(LibraryListActivity.this,
+						SuggestLibraryActivity.class);
 				if (getIntent().hasExtra("welcome"))
 					intent.putExtra("welcome", true);
 				startActivity(intent);
 			}
-			
+
 		});
 	}
-	
+
 	@Override
 	protected void onNewIntent(Intent intent) {
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
@@ -160,25 +160,28 @@ public class LibraryListActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the options menu from XML
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.activity_library_list, menu);
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.activity_library_list, menu);
 
-	    // Get the SearchView and set the searchable configuration
-	    SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-	    searchItem = menu.findItem(R.id.action_search);
-	    searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-	    // Assumes current activity is the searchable activity
-	    searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-	    searchView.setIconifiedByDefault(true);
-	    setSearchTextColor(searchView);
+		// Get the SearchView and set the searchable configuration
+		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+		searchItem = menu.findItem(R.id.action_search);
+		searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+		// Assumes current activity is the searchable activity
+		searchView.setSearchableInfo(searchManager
+				.getSearchableInfo(getComponentName()));
+		searchView.setIconifiedByDefault(true);
+		setSearchTextColor(searchView);
 
-	    return true;
+		return true;
 	}
-	
+
 	private void setSearchTextColor(SearchView searchView) {
-        EditText searchPlate = (EditText) searchView.findViewById(R.id.search_src_text);
-        searchPlate.setTextColor(getResources().getColor(android.R.color.white));
-    }
+		EditText searchPlate = (EditText) searchView
+				.findViewById(R.id.search_src_text);
+		searchPlate
+				.setTextColor(getResources().getColor(android.R.color.white));
+	}
 
 	public boolean isTablet() {
 		return findViewById(R.id.container2) != null;
@@ -426,20 +429,21 @@ public class LibraryListActivity extends Activity {
 					.commit();
 		}
 	}
-	
-	private static class LibrarySearchResult implements Comparable<LibrarySearchResult> {
+
+	private static class LibrarySearchResult implements
+			Comparable<LibrarySearchResult> {
 		private Library library;
 		private int rank;
-		
+
 		public LibrarySearchResult(Library library, int rank) {
 			this.library = library;
 			this.rank = rank;
 		}
-		
+
 		public Library getLibrary() {
 			return library;
 		}
-		
+
 		public int getRank() {
 			return rank;
 		}
@@ -451,7 +455,7 @@ public class LibraryListActivity extends Activity {
 
 		@Override
 		public boolean equals(Object obj) {
-			if(obj instanceof LibrarySearchResult)
+			if (obj instanceof LibrarySearchResult)
 				return library.equals(((LibrarySearchResult) obj).getLibrary());
 			else
 				return false;
@@ -460,16 +464,16 @@ public class LibraryListActivity extends Activity {
 		@Override
 		public int compareTo(LibrarySearchResult another) {
 			if (another.rank == rank)
-				return library.getCity().compareTo(another.getLibrary().getCity());
+				return library.getCity().compareTo(
+						another.getLibrary().getCity());
 			else if (another.rank < rank)
 				return -1;
 			else
 				return 1;
 		}
-		
-		
+
 	}
-		
+
 	public void search(String query) {
 		fragment = new LocatedLibraryListFragment();
 		Bundle args = new Bundle();
@@ -491,31 +495,29 @@ public class LibraryListActivity extends Activity {
 				data.add(new LibrarySearchResult(lib, rank));
 			}
 		}
-		List<LibrarySearchResult> list = new ArrayList<LibrarySearchResult>(data);
+		List<LibrarySearchResult> list = new ArrayList<LibrarySearchResult>(
+				data);
 		Collections.sort(list);
 		List<Library> libraries = new ArrayList<Library>();
-		for(LibrarySearchResult sr : list) {
+		for (LibrarySearchResult sr : list) {
 			libraries.add(sr.getLibrary());
 		}
 		LibraryAdapter adapter = new LibraryAdapter(this,
 				R.layout.listitem_library, R.id.tvTitle, libraries);
 		fragment.setListAdapter(adapter);
-		getSupportFragmentManager()
-			.beginTransaction()
-			.addToBackStack(null)
-			.setTransition(
-				FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-			.replace(R.id.container, fragment).commit();
+		getSupportFragmentManager().beginTransaction().addToBackStack(null)
+				.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+				.replace(R.id.container, fragment).commit();
 		if (fragment2 != null)
-			getSupportFragmentManager().beginTransaction()
-					.detach(fragment2).commit();
+			getSupportFragmentManager().beginTransaction().detach(fragment2)
+					.commit();
 		if (fragment3 != null)
-			getSupportFragmentManager().beginTransaction()
-					.detach(fragment3).commit();
+			getSupportFragmentManager().beginTransaction().detach(fragment3)
+					.commit();
 		if (fragment4 != null)
-			getSupportFragmentManager().beginTransaction()
-					.detach(fragment4).commit();
-		
+			getSupportFragmentManager().beginTransaction().detach(fragment4)
+					.commit();
+
 		TextView tvLocateString = (TextView) findViewById(R.id.tvLocateString);
 		ImageView ivLocationIcon = (ImageView) findViewById(R.id.ivLocationIcon);
 		tvLocateString.setText(R.string.alphabetic_list);
@@ -586,17 +588,16 @@ public class LibraryListActivity extends Activity {
 			setRetainInstance(true);
 			view = super.onCreateView(inflater, container, savedInstanceState);
 			ListView lv = ((ListView) view.findViewById(android.R.id.list));
-			lv.setChoiceMode(((LibraryListActivity) getActivity())
-							.isTablet() ? AbsListView.CHOICE_MODE_SINGLE
-							: AbsListView.CHOICE_MODE_NONE);
-			if(level == LEVEL_CITY) {
+			lv.setChoiceMode(((LibraryListActivity) getActivity()).isTablet() ? AbsListView.CHOICE_MODE_SINGLE
+					: AbsListView.CHOICE_MODE_NONE);
+			if (level == LEVEL_CITY) {
 				lv.setFastScrollEnabled(true);
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 					lv.setFastScrollAlwaysVisible(true);
 			}
 			return view;
 		}
-		
+
 		public void onViewCreated(View view, Bundle savedInstanceState) {
 			setEmptyText(getResources().getString(R.string.no_results));
 		}
@@ -610,7 +611,7 @@ public class LibraryListActivity extends Activity {
 
 	}
 
-	public static class LibraryAdapter extends ArrayAdapter<Library> {
+	public class LibraryAdapter extends ArrayAdapter<Library> {
 
 		private Context context;
 		private int resource;
@@ -629,7 +630,9 @@ public class LibraryListActivity extends Activity {
 			TextView tvTitle = (TextView) view.findViewById(R.id.tvTitle);
 			TextView tvSupport = (TextView) view.findViewById(R.id.tvSupport);
 			tvTitle.setText(item.getTitle());
-			tvSupport.setText(item.getSupport());
+			tvSupport.setText(getResources().getString(
+					item.isAccountSupported() ? R.string.support_search_account
+							: R.string.support_search));
 			if (view.findViewById(R.id.tvCity) != null) {
 				TextView tvCity = (TextView) view.findViewById(R.id.tvCity);
 				tvCity.setText(item.getCity());
@@ -645,35 +648,38 @@ public class LibraryListActivity extends Activity {
 		}
 
 	}
-	
-	public static class CityAdapter extends ArrayAdapter<String> implements SectionIndexer {
+
+	public static class CityAdapter extends ArrayAdapter<String> implements
+			SectionIndexer {
 
 		public CityAdapter(Context context, int resource,
 				int textViewResourceId, List<String> objects) {
 			super(context, resource, textViewResourceId, objects);
 		}
 
-		private final static String[] letters = {"A","B","C","D","E","F","G","H","I","J","K","L","M",
-			"N","O","P","Q","R","S","T","U","V","W","X","Y","Z","Ä","Ö","Ü"};
-		
+		private final static String[] letters = { "A", "B", "C", "D", "E", "F",
+				"G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R",
+				"S", "T", "U", "V", "W", "X", "Y", "Z", "Ä", "Ö", "Ü" };
+
 		@Override
 		public int getPositionForSection(int sectionIndex) {
 			boolean found = false;
 			int i = 0;
-			while(i<getCount() && !found) {
+			while (i < getCount() && !found) {
 				String city = getItem(i);
-				String letter = city.substring(0,1).toUpperCase(Locale.GERMAN);
-				if(Arrays.asList(letters).indexOf(letter) >= sectionIndex)
+				String letter = city.substring(0, 1).toUpperCase(Locale.GERMAN);
+				if (Arrays.asList(letters).indexOf(letter) >= sectionIndex)
 					found = true;
 				else
-					i++;					
+					i++;
 			}
 			return i;
 		}
 
 		@Override
 		public int getSectionForPosition(int position) {
-			String letter = getItem(position).substring(0,1).toUpperCase(Locale.GERMAN);
+			String letter = getItem(position).substring(0, 1).toUpperCase(
+					Locale.GERMAN);
 			return Arrays.asList(letters).indexOf(letter);
 		}
 

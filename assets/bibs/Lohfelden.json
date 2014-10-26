@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Lohfelden",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         9.546302299999999
     ],
     "state": "Hessen",
-    "support": "Katalogsuche",
     "title": "Gemeinde- und Schulb\u00fccherei"
 }

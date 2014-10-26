@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Ostheim v.d.Rh\u00f6n",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         10.2305055
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Stadtb\u00fccherei Ostheim v.d. Rh\u00f6n"
 }

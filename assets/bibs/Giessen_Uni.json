@@ -1,9 +1,9 @@
 {
+    "account_supported": true,
     "api": "pica",
     "city": "Giessen",
     "country": "Deutschland",
     "data": {
-        "accountSupported": true,
         "baseurl": "https://opac.uni-giessen.de",
         "db": "1",
         "information": "http://www.uni-giessen.de/ub/rnavi/standorte"
@@ -13,6 +13,5 @@
         8.6909259
     ],
     "state": "Hessen",
-    "support": "Katalogsuche und Konto",
     "title": "Unibibliothek"
 }

@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "sisis",
     "city": "Bottrop",
     "country": "Deutschland",
@@ -12,6 +13,5 @@
         6.9446888
     ],
     "state": "Nordrhein-Westfalen",
-    "support": "Katalogsuche und Konto",
     "title": "Hochschule Ruhr West"
 }

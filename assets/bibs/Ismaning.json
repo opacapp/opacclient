@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Ismaning",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         11.6742738
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Gemeindebibliothek"
 }

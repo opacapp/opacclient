@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "webopac.net",
     "city": "Goldach",
     "country": "Schweiz",
@@ -11,6 +12,5 @@
         9.471350900000001
     ],
     "state": "St. Gallen",
-    "support": "Katalogsuche",
     "title": "Gemeindebibliothek"
 }

@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Bad Hersfeld",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         9.7019675
     ],
     "state": "Hessen",
-    "support": "Katalogsuche",
     "title": "Konrad-Duden-Stadtbibliothek"
 }

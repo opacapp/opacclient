@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Sch\u00f6neck",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         8.854167
     ],
     "state": "Hessen",
-    "support": "Katalogsuche",
     "title": "Gemeindeb\u00fcchereien"
 }

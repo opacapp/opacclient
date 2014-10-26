@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "bibliotheca",
     "city": "Harsewinkel",
     "country": "Deutschland",
@@ -70,6 +71,5 @@
         8.2333679
     ],
     "state": "Nordrhein-Westfalen",
-    "support": "Katalogsuche und Konto",
     "title": "Stadtb\u00fccherei St. Lucia"
 }

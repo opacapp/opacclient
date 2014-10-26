@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Wertheim",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         9.512851099999999
     ],
     "state": "Baden-W\u00fcrttemberg",
-    "support": "Katalogsuche",
     "title": "Stadtb\u00fccherei"
 }

@@ -1,16 +1,16 @@
 {
-    "api": "sisis", 
-    "city": "Ansbach", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "sisis",
+    "city": "Ansbach",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "https://fanoz3.bib-bvb.de/InfoGuideClient.fansis", 
+        "baseurl": "https://fanoz3.bib-bvb.de/InfoGuideClient.fansis",
         "information": "http://www.hs-ansbach.de/hochschule/einrichtungen/bibliothek.html"
-    }, 
+    },
     "geo": [
-        49.3004246, 
+        49.3004246,
         10.5719357
-    ], 
-    "state": "Bayern", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Bayern",
     "title": "Ansbacher Katalog"
 }

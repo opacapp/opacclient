@@ -37,7 +37,6 @@ public class Library implements Comparable<Library> {
 	private String city;
 	private String title;
 	private String displayName;
-	private String support;
 	private String api;
 	private JSONObject data;
 	private String country;
@@ -45,6 +44,7 @@ public class Library implements Comparable<Library> {
 	private String replacedby;
 	private double[] geo;
 	private float geo_distance;
+	private boolean account_supported;
 
 	/**
 	 * Create a Library object based on a <code>JSONObject</code>.
@@ -65,17 +65,17 @@ public class Library implements Comparable<Library> {
 		lib.setApi(input.getString("api"));
 		lib.setCity(input.getString("city"));
 		lib.setTitle(input.getString("title"));
-		lib.setSupport(input.getString("support"));
 		lib.setCountry(input.getString("country"));
 		lib.setState(input.getString("state"));
 		lib.setData(input.getJSONObject("data"));
-		
+		lib.setAccountSupported(input.getBoolean("account_supported"));
+
 		if (input.has("displayname"))
 			lib.setDisplayName(input.getString("displayname"));
-		
+
 		if (input.has("replacedby"))
 			lib.setReplacedBy(input.getString("replacedby"));
-		
+
 		if (input.has("geo")) {
 			double[] geo = new double[2];
 			geo[0] = input.getJSONArray("geo").getDouble(0);
@@ -85,8 +85,7 @@ public class Library implements Comparable<Library> {
 
 		if (lib.getTitle().equals(""))
 			lib.setTitle(null);
-		if (lib.getSupport().equals(""))
-			lib.setSupport(null);
+
 		return lib;
 	}
 
@@ -159,7 +158,7 @@ public class Library implements Comparable<Library> {
 	public String getDisplayName() {
 		if (displayName != null)
 			return displayName;
-		
+
 		if (getTitle() != null && !getTitle().equals("null")) {
 			return getCity() + " · " + getTitle();
 		} else {
@@ -175,27 +174,6 @@ public class Library implements Comparable<Library> {
 	 */
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
-	}
-
-	/**
-	 * Get a human-readable string describing what features are supported in
-	 * this library
-	 * 
-	 * @return Support string
-	 */
-	public String getSupport() {
-		return support;
-	}
-
-	/**
-	 * Set a human-readable string describing what features are supported in
-	 * this library
-	 * 
-	 * @param support
-	 *            Support string
-	 */
-	public void setSupport(String support) {
-		this.support = support;
 	}
 
 	/**
@@ -291,6 +269,26 @@ public class Library implements Comparable<Library> {
 
 	public void setReplacedBy(String replacedby) {
 		this.replacedby = replacedby;
+	}
+
+	/**
+	 * Get whether this library supports accounts. This may not be correct in
+	 * 100% of the cases, because {@link OpacApi#isAccountSupported(Library)}
+	 * can still return another value.
+	 * 
+	 * @return boolean describing whether this library supports accounts
+	 */
+	public boolean isAccountSupported() {
+		return account_supported;
+	}
+
+	/**
+	 * Set whether this library supports accounts
+	 * 
+	 * @param boolean describing whether this library supports accounts
+	 */
+	public void setAccountSupported(boolean account_supported) {
+		this.account_supported = account_supported;
 	}
 
 	/**

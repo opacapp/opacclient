@@ -1,17 +1,17 @@
 {
-    "api": "sisis", 
-    "city": "Passau", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "sisis",
+    "city": "Passau",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "https://infoguide.ub.uni-passau.de/InfoGuideClient.upasis", 
-        "information": "http://www.ub.uni-passau.de/?id=6261", 
+        "baseurl": "https://infoguide.ub.uni-passau.de/InfoGuideClient.upasis",
+        "information": "http://www.ub.uni-passau.de/?id=6261",
         "startparams": "Login=igupa"
-    }, 
+    },
     "geo": [
-        48.5667364, 
+        48.5667364,
         13.4319466
-    ], 
-    "state": "Bayern", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Bayern",
     "title": "Unibibliothek"
 }

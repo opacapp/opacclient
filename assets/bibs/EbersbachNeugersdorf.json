@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "bibliotheca",
     "city": "Ebersbach-Neugersdorf",
     "country": "Deutschland",
@@ -36,6 +37,5 @@
         14.6
     ],
     "state": "Sachsen",
-    "support": "Katalogsuche und Konto",
     "title": "Stadtbibliothek"
 }

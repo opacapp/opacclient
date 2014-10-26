@@ -1,18 +1,17 @@
 {
-    "api": "pica", 
-    "city": "Potsdam", 
-    "country": "Deutschland", 
+    "account_supported": false,
+    "api": "pica",
+    "city": "Potsdam",
+    "country": "Deutschland",
     "data": {
-        "accountSupported": false, 
-        "baseurl": "http://opac.ub.uni-potsdam.de/", 
-        "db": "1", 
+        "baseurl": "http://opac.ub.uni-potsdam.de/",
+        "db": "1",
         "information": "http://info.ub.uni-potsdam.de/"
-    }, 
+    },
     "geo": [
-        52.3941887, 
+        52.3941887,
         13.072691
-    ], 
-    "state": "Brandenburg", 
-    "support": "Katalogsuche", 
+    ],
+    "state": "Brandenburg",
     "title": "Unibibliothek"
 }
