@@ -584,11 +584,11 @@ public class Heidi extends BaseApi implements OpacApi {
 		// the URI of the page this item was found on and the query string the
 		// prolonging link links to, seperated by a $.
 		if (media.startsWith("§")) {
-			String error = stringProvider.getString("prolonging_impossible");
+			String error = stringProvider.getString(StringProvider.PROLONGING_IMPOSSIBLE);
 			if (media.substring(1).equals("rot"))
-				error = stringProvider.getString("prolonging_expired");
+				error = stringProvider.getString(StringProvider.PROLONGING_EXPIRED);
 			else if (media.substring(1).equals("gruen"))
-				error = stringProvider.getString("prolonging_expired");
+				error = stringProvider.getString(StringProvider.PROLONGING_WAITING);
 			return new ProlongResult(MultiStepResult.Status.ERROR, error);
 		}
 

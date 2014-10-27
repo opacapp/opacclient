@@ -51,6 +51,9 @@ public interface StringProvider {
 	public static String PROLONGED_ABBR = "prolonged_abbr";
 	public static String FREE_SEARCH = "free_search";
 	public static String WRONG_LOGIN_DATA = "wrong_account_data";
+	public static String PROLONGING_IMPOSSIBLE = "prolonging_impossible";
+	public static String PROLONGING_EXPIRED = "prolonging_expired";
+	public static String PROLONGING_WAITING = "prolonging_expired";
 
 	public abstract String getString(String identifier);
 
