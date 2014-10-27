@@ -22,5 +22,8 @@
     <string name="download">Download</string>
     <string name="reminders">Mahnungen</string>
     <string name="prolonged_abbr">verl.</string>
+    <string name="prolonging_expired">nicht mehr verlängerbar</string>
+    <string name="prolonging_impossible">nicht verlängerbar</string>
+    <string name="prolonging_waiting">noch nicht verlängerbar</string>
     <string name="wrong_account_data">Die eingegebenen Benutzerdaten sind falsch.</string>
 </resources>

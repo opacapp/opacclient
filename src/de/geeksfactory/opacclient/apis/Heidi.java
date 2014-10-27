@@ -50,7 +50,6 @@ import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 import de.geeksfactory.opacclient.NotReachableException;
-import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -581,15 +580,90 @@ public class Heidi extends BaseApi implements OpacApi {
 	@Override
 	public ProlongResult prolong(String media, Account account, int useraction,
 			String selection) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		// Internal convention: a is either a § followed by an error message or
+		// the URI of the page this item was found on and the query string the
+		// prolonging link links to, seperated by a $.
+		if (media.startsWith("§")) {
+			String error = stringProvider.getString("prolonging_impossible");
+			if (media.substring(1).equals("rot"))
+				error = stringProvider.getString("prolonging_expired");
+			else if (media.substring(1).equals("gruen"))
+				error = stringProvider.getString("prolonging_expired");
+			return new ProlongResult(MultiStepResult.Status.ERROR, error);
+		}
+
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+		nameValuePairs
+				.add(new BasicNameValuePair("everl", "Einzelverlängerung"));
+		nameValuePairs.add(new BasicNameValuePair("mailversand", "Ok"));
+		nameValuePairs.add(new BasicNameValuePair("mark", media));
+		nameValuePairs.add(new BasicNameValuePair("sess", sessid));
+		String html = httpPost(opac_url + "/konto.cgi",
+				new UrlEncodedFormEntity(nameValuePairs), ENCODING);
+		Document doc = Jsoup.parse(html);
+		if (doc.select("input[name=pw]").size() > 0) {
+			try {
+				login(account);
+			} catch (OpacErrorException e) {
+				return new ProlongResult(MultiStepResult.Status.ERROR,
+						e.getMessage());
+			}
+			return prolong(media, account, useraction, selection);
+		}
+		if (doc.select(".meld2").size() > 0) {
+			String text = doc.select(".meld2").text();
+			if (text.matches(".*Neues Leihfristende.*"))
+				return new ProlongResult(MultiStepResult.Status.OK, text);
+			else
+				return new ProlongResult(MultiStepResult.Status.ERROR, text);
+		}
+		return new ProlongResult(MultiStepResult.Status.OK);
 	}
 
 	@Override
 	public ProlongAllResult prolongAll(Account account, int useraction,
 			String selection) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		String html = httpGet(opac_url + "/konto.cgi?sess=" + sessid
+				+ "&email=&verl=Gesamtkontoverlängerung", ENCODING);
+		Document doc = Jsoup.parse(html);
+
+		if (doc.select("input[name=pw]").size() > 0) {
+			try {
+				login(account);
+			} catch (OpacErrorException e) {
+				return new ProlongAllResult(MultiStepResult.Status.ERROR,
+						e.getMessage());
+			}
+			return prolongAll(account, useraction, selection);
+		}
+
+		List<Map<String, String>> result = new ArrayList<Map<String, String>>();
+
+		Map<String, String> line = new HashMap<String, String>();
+		for (Element tr : doc.select(".kontobox table tbody tr")) {
+			if (tr.children().size() < 2) {
+				if (line.size() > 0) {
+					line.put(ProlongAllResult.KEY_LINE_MESSAGE, tr.child(0)
+							.text().trim());
+					result.add(line);
+					line = new HashMap<String, String>();
+				}
+				continue;
+			}
+			String label = tr.child(0).text();
+			String text = tr.child(1).text().trim();
+			if (label.contains("Verfasser")) {
+				line.put(ProlongAllResult.KEY_LINE_AUTHOR, text);
+			} else if (label.contains("Titel")) {
+				line.put(ProlongAllResult.KEY_LINE_TITLE, text);
+			} else if (label.contains("Altes Leihfristende")) {
+				line.put(ProlongAllResult.KEY_LINE_OLD_RETURNDATE, text);
+			} else if (label.contains("Neues")) {
+				line.put(ProlongAllResult.KEY_LINE_NEW_RETURNDATE, text);
+			}
+		}
+
+		return new ProlongAllResult(MultiStepResult.Status.OK, result);
 	}
 
 	@Override
@@ -669,6 +743,16 @@ public class Heidi extends BaseApi implements OpacApi {
 				}
 			}
 
+			if (tr.child(0).select("input").size() == 1) {
+				row.put(AccountData.KEY_LENT_LINK, tr.child(0).select("input")
+						.first().val());
+				row.put(AccountData.KEY_LENT_RENEWABLE, "Y");
+			} else {
+				row.put(AccountData.KEY_LENT_LINK,
+						"§" + tr.child(0).select("span").first().attr("class"));
+				row.put(AccountData.KEY_LENT_RENEWABLE, "N");
+			}
+
 			String todate = dates;
 			if (todate.contains("-")) {
 				String[] datesplit = todate.split("-");
@@ -676,8 +760,8 @@ public class Heidi extends BaseApi implements OpacApi {
 			}
 			row.put(AccountData.KEY_LENT_DEADLINE, todate);
 			try {
-				row.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
-						String.valueOf(sdf.parse(todate).getTime()));
+				row.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String
+						.valueOf(sdf.parse(todate.substring(0, 10)).getTime()));
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
