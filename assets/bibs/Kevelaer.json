@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "bibliotheca",
     "city": "Kevelaer",
     "country": "Deutschland",
@@ -70,6 +71,5 @@
         6.245757999999999
     ],
     "state": "Nordrhein-Westfalen",
-    "support": "Katalogsuche und Konto",
     "title": "Petrus-Canisius-B\u00fccherei"
 }

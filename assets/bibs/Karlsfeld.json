@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Karlsfeld",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         11.4744386
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Gemeindeb\u00fccherei"
 }

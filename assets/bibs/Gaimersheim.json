@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Gaimersheim",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         11.3728005
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "\u00d6ffentliche B\u00fccherei"
 }

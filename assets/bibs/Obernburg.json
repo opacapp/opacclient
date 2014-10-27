@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Obernburg",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         9.132358499999999
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Stadtb\u00fccherei"
 }

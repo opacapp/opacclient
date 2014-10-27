@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "webopac.net",
     "city": "Bad Zurzach",
     "country": "Schweiz",
@@ -11,6 +12,5 @@
         8.2919577
     ],
     "state": "Aargau",
-    "support": "Katalogsuche",
     "title": "Fleckenbibliothek"
 }

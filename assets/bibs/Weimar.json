@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "sisis",
     "city": "Weimar",
     "country": "Deutschland",
@@ -12,6 +13,5 @@
         11.3235439
     ],
     "state": "Th\u00fcringen",
-    "support": "Katalogsuche und Konto",
     "title": "Stadtbibliothek"
 }

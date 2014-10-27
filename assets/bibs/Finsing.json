@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Finsing",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         11.8251997
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Gemeindeb\u00fccherei"
 }

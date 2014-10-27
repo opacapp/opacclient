@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "bibliotheca",
     "city": "Hennef (Sieg)",
     "country": "Deutschland",
@@ -36,6 +37,5 @@
         7.283333000000001
     ],
     "state": "Nordrhein-Westfalen",
-    "support": "Katalogsuche und Konto",
     "title": "Stadtbibliothek"
 }

@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "iopac",
     "city": "Barmstedt",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         9.769214900000001
     ],
     "state": "Schleswig-Holstein",
-    "support": "Katalogsuche und Konto",
     "title": "Stadtbibliothek"
 }

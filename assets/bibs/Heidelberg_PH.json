@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "adis",
     "city": "Heidelberg",
     "country": "Deutschland",
@@ -12,6 +13,5 @@
         8.6724335
     ],
     "state": "Baden-W\u00fcrttemberg",
-    "support": "Katalogsuche und Konto (experimentell)",
     "title": "P\u00e4dagogische Hochschule"
 }

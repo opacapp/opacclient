@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "webopac.net",
     "city": "D\u00fcdingen",
     "country": "Schweiz",
@@ -11,6 +12,5 @@
         7.1915796
     ],
     "state": "Freiburg",
-    "support": "Katalogsuche",
     "title": "Bibliothek"
 }

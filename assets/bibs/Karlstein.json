@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Karlstein a. Main",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         9.018333
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Gemeindebibliothek"
 }

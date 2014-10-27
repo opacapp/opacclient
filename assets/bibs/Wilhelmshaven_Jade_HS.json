@@ -1,18 +1,17 @@
 {
-    "api": "pica", 
-    "city": "Wilhelmshaven", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "pica",
+    "city": "Wilhelmshaven",
+    "country": "Deutschland",
     "data": {
-        "accountSupported": true, 
-        "baseurl": "http://lhemd.gbv.de/", 
-        "db": "4", 
+        "baseurl": "http://lhemd.gbv.de/",
+        "db": "4",
         "information": "http://www.jade-hs.de/service-verwaltung/hochschulbibliothek/studienorte/wilhelmshaven/"
-    }, 
+    },
     "geo": [
-        53.521944, 
+        53.521944,
         8.1075
-    ], 
-    "state": "Niedersachsen", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Niedersachsen",
     "title": "Bibliothek der Jade Hochschule"
 }

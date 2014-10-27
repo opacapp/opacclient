@@ -1,16 +1,16 @@
 {
-    "api": "sisis", 
-    "city": "Bamberg", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "sisis",
+    "city": "Bamberg",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "https://katalog.ub.uni-bamberg.de/InfoGuideClient.ubgsis", 
+        "baseurl": "https://katalog.ub.uni-bamberg.de/InfoGuideClient.ubgsis",
         "information": "http://www.uni-bamberg.de/ub/oeffnungszeiten/"
-    }, 
+    },
     "geo": [
-        49.8988135, 
+        49.8988135,
         10.9027636
-    ], 
-    "state": "Bayern", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Bayern",
     "title": "Unibibliothek"
 }

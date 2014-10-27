@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Seligenstadt",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         8.9711343
     ],
     "state": "Hessen",
-    "support": "Katalogsuche",
     "title": "Stadtb\u00fccherei"
 }

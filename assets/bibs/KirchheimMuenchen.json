@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Kirchheim b. M\u00fcnchen",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         11.7558223
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Gemeindeb\u00fccherei Kirchheim"
 }

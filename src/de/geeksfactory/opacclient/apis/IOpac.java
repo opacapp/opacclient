@@ -946,14 +946,7 @@ public class IOpac extends BaseApi implements OpacApi {
 
 	@Override
 	public boolean isAccountSupported(Library library) {
-		if (data.has("account")) {
-			try {
-				return data.getBoolean("account");
-			} catch (JSONException e) {
-				return true;
-			}
-		}
-		return true;
+		return library.isAccountSupported();
 	}
 
 	@Override

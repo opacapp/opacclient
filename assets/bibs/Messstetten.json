@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "bibliotheca",
     "city": "Me\u00dfstetten",
     "country": "Deutschland",
@@ -36,6 +37,5 @@
         8.9626843
     ],
     "state": "Baden-W\u00fcrttemberg",
-    "support": "Katalogsuche und Konto",
     "title": "Stadtb\u00fccherei"
 }

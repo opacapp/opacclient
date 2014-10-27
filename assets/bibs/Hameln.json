@@ -1,31 +1,31 @@
 {
-    "api": "biber1992", 
-    "city": "Hameln", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "biber1992",
+    "city": "Hameln",
+    "country": "Deutschland",
     "data": {
         "accounttable": {
-            "author": 7, 
-            "barcode": 4, 
-            "homebranch": -1, 
-            "lendingbranch": -1, 
-            "prolongurl": 3, 
-            "returndate": 3, 
-            "status": 5, 
+            "author": 7,
+            "barcode": 4,
+            "homebranch": -1,
+            "lendingbranch": -1,
+            "prolongurl": 3,
+            "returndate": 3,
+            "status": 5,
             "title": 7
-        }, 
-        "baseurl": "http://www.stadtbuecherei.hameln.de", 
-        "information": "http://www.hameln.de/kultur/kultur/buecherei/index.htm", 
-        "opacdir": "opax", 
+        },
+        "baseurl": "http://www.stadtbuecherei.hameln.de",
+        "information": "http://www.hameln.de/kultur/kultur/buecherei/index.htm",
+        "opacdir": "opax",
         "searchtable": [
-            2, 
+            2,
             3
         ]
-    }, 
+    },
     "geo": [
-        52.1086866, 
+        52.1086866,
         9.365762799999999
-    ], 
-    "state": "Niedersachsen", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Niedersachsen",
     "title": "Stadtbibliothek"
 }

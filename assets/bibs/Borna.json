@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "bibliotheca",
     "city": "Borna",
     "country": "Deutschland",
@@ -36,6 +37,5 @@
         12.4923222
     ],
     "state": "Sachsen",
-    "support": "Katalogsuche und Konto",
     "title": "Mediothek"
 }

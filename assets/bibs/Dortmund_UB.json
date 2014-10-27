@@ -1,16 +1,16 @@
 {
-    "api": "sisis", 
-    "city": "Dortmund", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "sisis",
+    "city": "Dortmund",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "https://www.ub.tu-dortmund.de/webOPACClient", 
+        "baseurl": "https://www.ub.tu-dortmund.de/webOPACClient",
         "information": "http://www.ub.tu-dortmund.de/Ueberuns/Oeffnungszeiten.html"
-    }, 
+    },
     "geo": [
-        51.5135872, 
+        51.5135872,
         7.465298100000001
-    ], 
-    "state": "Nordrhein-Westfalen", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Nordrhein-Westfalen",
     "title": "Unibibliothek TU"
 }

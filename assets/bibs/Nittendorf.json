@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Nittendorf",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         11.9605139
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Marktbibliothek"
 }

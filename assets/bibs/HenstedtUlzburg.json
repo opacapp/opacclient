@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "iopac",
     "city": "Henstedt-Ulzburg",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         9.9804997
     ],
     "state": "Schleswig-Holstein",
-    "support": "Katalogsuche und Konto",
     "title": "Gemeindeb\u00fccherei und -mediothek"
 }

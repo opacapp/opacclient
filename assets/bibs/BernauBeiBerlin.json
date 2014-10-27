@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "bibliotheca",
     "city": "Bernau bei Berlin",
     "country": "Deutschland",
@@ -43,6 +44,5 @@
         13.5830556
     ],
     "state": "Brandenburg",
-    "support": "Katalogsuche und Konto",
     "title": "Stadtbibliothek"
 }

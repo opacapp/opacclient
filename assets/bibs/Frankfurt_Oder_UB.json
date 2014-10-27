@@ -1,16 +1,16 @@
 {
-    "api": "sisis", 
-    "city": "Frankfurt (Oder)", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "sisis",
+    "city": "Frankfurt (Oder)",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "http://saturn2.euv-frankfurt-o.de:8080/webOPACClient", 
+        "baseurl": "http://saturn2.euv-frankfurt-o.de:8080/webOPACClient",
         "information": "http://www.ub.europa-uni.de/de/index.html"
-    }, 
+    },
     "geo": [
-        52.342491, 
+        52.342491,
         14.53813
-    ], 
-    "state": "Brandenburg", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Brandenburg",
     "title": "Europa-Universit\u00e4t"
 }

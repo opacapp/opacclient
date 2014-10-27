@@ -1,9 +1,9 @@
 {
+    "account_supported": true,
     "api": "pica",
     "city": "Hannover",
     "country": "Deutschland",
     "data": {
-        "accountSupported": true,
         "baseurl": "http://vzlbs2.gbv.de",
         "db": "57",
         "information": "http://www.leibniz-fh.de/kontakt.html"
@@ -13,6 +13,5 @@
         9.732010400000002
     ],
     "state": "Niedersachsen",
-    "support": "Katalogsuche und Konto",
     "title": "Leibniz-FH"
 }

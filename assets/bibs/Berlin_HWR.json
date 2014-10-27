@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "sisis",
     "city": "Berlin",
     "country": "Deutschland",
@@ -12,6 +13,5 @@
         13.404954
     ],
     "state": "Berlin",
-    "support": "Katalogsuche und Konto",
     "title": "Hochschulbibliothek HWR"
 }

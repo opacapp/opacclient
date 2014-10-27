@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Vohburg",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         11.6227267
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Stadtbibliothek"
 }

@@ -1,9 +1,9 @@
 {
+    "account_supported": true,
     "api": "pica",
     "city": "Frankfurt",
     "country": "Deutschland",
     "data": {
-        "accountSupported": true,
         "baseurl": "https://lbsopac.rz.uni-frankfurt.de",
         "db": "60",
         "information": "http://www.sankt-georgen.de/bibliothek/index.html"
@@ -13,6 +13,5 @@
         8.6821267
     ],
     "state": "Hessen",
-    "support": "Katalogsuche und Konto",
     "title": "Phil.-Theol. Hochschule Sankt Georgen"
 }

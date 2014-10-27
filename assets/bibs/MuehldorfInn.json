@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "M\u00fchldorf a. Inn",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         12.5219895
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Stadtb\u00fccherei"
 }

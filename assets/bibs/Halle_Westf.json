@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "bibliotheca",
     "city": "Halle (Westfalen)",
     "country": "Deutschland",
@@ -39,6 +40,5 @@
         8.3588627
     ],
     "state": "Nordrhein-Westfalen",
-    "support": "Katalogsuche und Konto",
     "title": "Stadtb\u00fccherei"
 }

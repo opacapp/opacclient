@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Niestetal",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         9.566666999999999
     ],
     "state": "Hessen",
-    "support": "Katalogsuche",
     "title": "Gemeindeb\u00fccherei"
 }

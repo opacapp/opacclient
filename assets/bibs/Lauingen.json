@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Lauingen (Donau)",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         10.4300205
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Stadtb\u00fccherei"
 }

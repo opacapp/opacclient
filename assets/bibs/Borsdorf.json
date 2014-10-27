@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Borsdorf",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         12.5431488
     ],
     "state": "Sachsen",
-    "support": "Katalogsuche",
     "title": "Bibliothek"
 }

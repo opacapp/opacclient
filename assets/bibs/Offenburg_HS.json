@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "adis",
     "city": "Offenburg",
     "country": "Deutschland",
@@ -12,6 +13,5 @@
         7.9498017
     ],
     "state": "Baden-W\u00fcrttemberg",
-    "support": "Katalogsuche und Konto (experimentell)",
     "title": "Hochschulbibliothek"
 }

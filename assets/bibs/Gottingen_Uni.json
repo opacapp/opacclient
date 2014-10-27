@@ -1,19 +1,18 @@
 {
-    "api": "pica", 
-    "city": "G\u00f6ttingen", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "pica",
+    "city": "G\u00f6ttingen",
+    "country": "Deutschland",
     "data": {
-        "accountSupported": true, 
-        "baseurl": "http://opac.sub.uni-goettingen.de/", 
-        "db": "1", 
-        "httpsbaseurl": "https://opac.sub.uni-goettingen.de/", 
+        "baseurl": "http://opac.sub.uni-goettingen.de/",
+        "db": "1",
+        "httpsbaseurl": "https://opac.sub.uni-goettingen.de/",
         "information": "http://www.sub.uni-goettingen.de/sub-aktuell/"
-    }, 
+    },
     "geo": [
-        51.538352, 
+        51.538352,
         9.9296899
-    ], 
-    "state": "Niedersachsen", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Niedersachsen",
     "title": "Unibibliothek"
 }

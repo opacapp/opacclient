@@ -1,18 +1,17 @@
 {
-    "api": "pica", 
-    "city": "Hildesheim", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "pica",
+    "city": "Hildesheim",
+    "country": "Deutschland",
     "data": {
-        "accountSupported": true, 
-        "baseurl": "http://opac.lbs-hildesheim.gbv.de/", 
-        "db": "1", 
+        "baseurl": "http://opac.lbs-hildesheim.gbv.de/",
+        "db": "1",
         "information": "https://www.uni-hildesheim.de/bibliothek/"
-    }, 
+    },
     "geo": [
-        52.15, 
+        52.15,
         9.95
-    ], 
-    "state": "Niedersachsen", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Niedersachsen",
     "title": "Unibibliothek"
 }

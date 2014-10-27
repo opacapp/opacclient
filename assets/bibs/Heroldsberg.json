@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Heroldsberg",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         11.1540547
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Gemeindeb\u00fccherei im B\u00fcrgerzentrum"
 }

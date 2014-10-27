@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "bibliotheca",
     "city": "M\u00fcnster",
     "country": "Deutschland",
@@ -70,6 +71,5 @@
         7.6261347
     ],
     "state": "Nordrhein-Westfalen",
-    "support": "Katalogsuche und Konto",
     "title": "K\u00d6B Liebfrauen-\u00dcberwasser"
 }

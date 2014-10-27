@@ -1,17 +1,17 @@
 {
-    "api": "sisis", 
-    "city": "M\u00fcnchen", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "sisis",
+    "city": "M\u00fcnchen",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "https://opac.ub.tum.de/InfoGuideClient.tumsis", 
-        "information": "http://www.ub.tum.de/so-erreichen-sie-uns/oeffnungszeiten", 
+        "baseurl": "https://opac.ub.tum.de/InfoGuideClient.tumsis",
+        "information": "http://www.ub.tum.de/so-erreichen-sie-uns/oeffnungszeiten",
         "startparams": "Login=wotum"
-    }, 
+    },
     "geo": [
-        48.1366069, 
+        48.1366069,
         11.5770851
-    ], 
-    "state": "Bayern", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Bayern",
     "title": "Unibibliothek TUM"
 }

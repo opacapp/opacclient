@@ -1,17 +1,17 @@
 {
-    "api": "sisis", 
-    "city": "Lemgo", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "sisis",
+    "city": "Lemgo",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "http://www.hs-owl.de/webOPACClient", 
-        "information": "http://www.hs-owl.de/skim/", 
+        "baseurl": "http://www.hs-owl.de/webOPACClient",
+        "information": "http://www.hs-owl.de/skim/",
         "startparams": "Login=lemgo"
-    }, 
+    },
     "geo": [
-        52.0266732, 
+        52.0266732,
         8.9018625
-    ], 
-    "state": "Nordrhein-Westfalen", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Nordrhein-Westfalen",
     "title": "S(kim) \u2013 Hochschulbibliothek"
 }

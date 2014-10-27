@@ -1,18 +1,17 @@
 {
-    "api": "pica", 
-    "city": "Osnabr\u00fcck", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "pica",
+    "city": "Osnabr\u00fcck",
+    "country": "Deutschland",
     "data": {
-        "accountSupported": true, 
-        "baseurl": "https://opac.ub.uni-osnabrueck.de", 
-        "db": "2", 
+        "baseurl": "https://opac.ub.uni-osnabrueck.de",
+        "db": "2",
         "information": "http://www.bib.hs-osnabrueck.de/1030.html"
-    }, 
+    },
     "geo": [
-        52.2729596, 
+        52.2729596,
         8.0453083
-    ], 
-    "state": "Niedersachsen", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Niedersachsen",
     "title": "Bibliothek der Hochschule"
 }

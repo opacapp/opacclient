@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Bad Vilbel",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         8.739480499999999
     ],
     "state": "Hessen",
-    "support": "Katalogsuche",
     "title": "Stadtbibliothek"
 }

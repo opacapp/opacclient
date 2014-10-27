@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "webopac.net",
     "city": "Trogen",
     "country": "Schweiz",
@@ -7,6 +8,5 @@
         "information": "http://www.kst.ch/index.php?medio-aktuell"
     },
     "state": "Appenzell Ausserrhoden",
-    "support": "Katalogsuche",
     "title": "Mediothek Kantonsschule"
 }

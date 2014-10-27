@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "K\u00fcnzell",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         9.7200616
     ],
     "state": "Hessen",
-    "support": "Katalogsuche",
     "title": "Gemeindeb\u00fccherei"
 }

@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Neu Wulmstorf",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         9.7911544
     ],
     "state": "Niedersachsen",
-    "support": "Katalogsuche",
     "title": "B\u00fccherei"
 }

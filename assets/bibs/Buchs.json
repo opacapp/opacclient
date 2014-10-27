@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "webopac.net",
     "city": "Buchs",
     "country": "Schweiz",
@@ -11,6 +12,5 @@
         9.4699878
     ],
     "state": "St. Gallen",
-    "support": "Katalogsuche",
     "title": "Gemeindebibliothek"
 }

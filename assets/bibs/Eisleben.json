@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Eisleben",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         11.5498999
     ],
     "state": "Sachsen-Anhalt",
-    "support": "Katalogsuche",
     "title": "Regionales Medienzentrum Eisleben"
 }

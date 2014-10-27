@@ -1,17 +1,17 @@
 {
-    "api": "adis", 
-    "city": "Ulm", 
-    "country": "Deutschland", 
+    "account_supported": false,
+    "api": "adis",
+    "city": "Ulm",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "https://ulm.ibs-bw.de/aDISWeb/app", 
-        "information": "https://www.uni-ulm.de/einrichtungen/kiz/bibliothek.html", 
+        "baseurl": "https://ulm.ibs-bw.de/aDISWeb/app",
+        "information": "https://www.uni-ulm.de/einrichtungen/kiz/bibliothek.html",
         "startparams": "service=direct/0/Home/%24DirectLink&sp=S127.0.0.1:23002"
-    }, 
+    },
     "geo": [
-        48.4042981, 
+        48.4042981,
         9.979349000000001
-    ], 
-    "state": "Baden-W\u00fcrttemberg", 
-    "support": "Katalogsuche (experimentell)", 
+    ],
+    "state": "Baden-W\u00fcrttemberg",
     "title": "Unibibliothek"
 }

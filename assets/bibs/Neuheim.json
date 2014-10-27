@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "webopac.net",
     "city": "Neuheim",
     "country": "Schweiz",
@@ -11,6 +12,5 @@
         8.5757774
     ],
     "state": "Zug",
-    "support": "Katalogsuche",
     "title": "Bibliothek"
 }

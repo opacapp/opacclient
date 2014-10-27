@@ -1,19 +1,18 @@
 {
-    "api": "pica", 
-    "city": "Ilmenau", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "pica",
+    "city": "Ilmenau",
+    "country": "Deutschland",
     "data": {
-        "accountSupported": true, 
-        "baseurl": "http://opac.lbs-ilmenau.gbv.de/", 
-        "db": "1", 
-        "httpsbaseurl": "https://opac.lbs-ilmenau.gbv.de/", 
+        "baseurl": "http://opac.lbs-ilmenau.gbv.de/",
+        "db": "1",
+        "httpsbaseurl": "https://opac.lbs-ilmenau.gbv.de/",
         "information": "http://www.tu-ilmenau.de/ub/"
-    }, 
+    },
     "geo": [
-        50.687222, 
+        50.687222,
         10.914167
-    ], 
-    "state": "Th\u00fcringen", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Th\u00fcringen",
     "title": "Unibibliothek"
 }

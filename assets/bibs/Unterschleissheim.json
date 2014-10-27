@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Unterschlei\u00dfheim",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         11.5672
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Stadtbibliothek"
 }

@@ -1,17 +1,17 @@
 {
-    "api": "sisis", 
-    "city": "Liestal", 
-    "country": "Schweiz", 
+    "account_supported": true,
+    "api": "sisis",
+    "city": "Liestal",
+    "country": "Schweiz",
     "data": {
-        "baseurl": "http://xaikb01.bl.ch/InfoGuideClient", 
+        "baseurl": "http://xaikb01.bl.ch/InfoGuideClient",
         "information": "http://www.kbl.ch/OEffnungszeiten.56.0.html"
-    }, 
+    },
     "geo": [
-        47.44181220000001, 
+        47.44181220000001,
         7.7644002
-    ], 
-    "replacedby": "de.opacapp.kbbl", 
-    "state": "Basel-Land", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "replacedby": "de.opacapp.kbbl",
+    "state": "Basel-Land",
     "title": "Kantonsbibliothek Liestal"
 }

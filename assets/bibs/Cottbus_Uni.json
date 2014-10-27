@@ -1,4 +1,5 @@
 {
+    "account_supported": true,
     "api": "sisis",
     "city": "Cottbus",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         14.3328679
     ],
     "state": "Brandenburg",
-    "support": "Katalogsuche und Konto",
     "title": "Unibibliothek"
 }

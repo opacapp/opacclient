@@ -1,18 +1,18 @@
 {
-    "api": "sisis", 
-    "city": "Schweinfurt", 
-    "country": "Deutschland", 
+    "account_supported": true,
+    "api": "sisis",
+    "city": "Schweinfurt",
+    "country": "Deutschland",
     "data": {
-        "baseurl": "https://recherche.bibkatalog.de/InfoGuideClient.fwssis", 
-        "homebranch": "2", 
-        "information": "http://bibliothek.fhws.de/zeiten.html", 
+        "baseurl": "https://recherche.bibkatalog.de/InfoGuideClient.fwssis",
+        "homebranch": "2",
+        "information": "http://bibliothek.fhws.de/zeiten.html",
         "startparams": "Login=wofwss"
-    }, 
+    },
     "geo": [
-        50.0492047, 
+        50.0492047,
         10.2194228
-    ], 
-    "state": "Bayern", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Bayern",
     "title": "Hochschulbibliothek"
 }

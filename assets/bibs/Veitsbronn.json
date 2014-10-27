@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Veitsbronn",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         10.8845724
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Gemeindeb\u00fccherei"
 }

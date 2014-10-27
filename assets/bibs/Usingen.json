@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Usingen",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         8.5320064
     ],
     "state": "Hessen",
-    "support": "Katalogsuche",
     "title": "Stadtb\u00fccherei"
 }

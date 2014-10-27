@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "webopac.net",
     "city": "Unterkulm",
     "country": "Schweiz",
@@ -11,6 +12,5 @@
         8.1136607
     ],
     "state": "Aargau",
-    "support": "Katalogsuche",
     "title": "Regionale Bibliothek"
 }

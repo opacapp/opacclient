@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Allershausen",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         11.5970726
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Gemeindeb\u00fccherei"
 }

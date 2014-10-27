@@ -1,16 +1,16 @@
 {
-    "api": "sisis", 
-    "city": "Schaffhausen", 
-    "country": "Schweiz", 
+    "account_supported": true,
+    "api": "sisis",
+    "city": "Schaffhausen",
+    "country": "Schweiz",
     "data": {
-        "baseurl": "http://sisis.phsh.ch:8080/webOPACClient", 
+        "baseurl": "http://sisis.phsh.ch:8080/webOPACClient",
         "information": "http://phsh.ch/de/Didaktisches-Zentrum/"
-    }, 
+    },
     "geo": [
-        47.7077664, 
+        47.7077664,
         8.641442399999999
-    ], 
-    "state": "Schaffhausen", 
-    "support": "Katalogsuche und Konto", 
+    ],
+    "state": "Schaffhausen",
     "title": "Didaktisches Zentrum"
 }

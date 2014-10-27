@@ -1,4 +1,5 @@
 {
+    "account_supported": false,
     "api": "winbiap",
     "city": "Gerolzhofen",
     "country": "Deutschland",
@@ -11,6 +12,5 @@
         10.3495174
     ],
     "state": "Bayern",
-    "support": "Katalogsuche",
     "title": "Stadtbibliothek"
 }
