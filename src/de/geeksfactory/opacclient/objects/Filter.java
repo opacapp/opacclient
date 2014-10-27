@@ -24,7 +24,10 @@ package de.geeksfactory.opacclient.objects;
 import java.util.List;
 
 /**
- * Object representing a filter which can be applied to a list of search results
+ * Object representing a filter which can be applied to a list of search
+ * results. This is currently NOT implemented or used in the open source version
+ * and is more like a bridge between the "Community Edition" and the
+ * "Plus Edition" of the App.
  * 
  * @since 2.0.6
  * 
@@ -114,7 +117,8 @@ public class Filter {
 		}
 
 		/**
-		 * @param is_loadnext the is_loadnext to set
+		 * @param is_loadnext
+		 *            the is_loadnext to set
 		 */
 		public void setLoadnext(boolean is_loadnext) {
 			this.is_loadnext = is_loadnext;
@@ -198,7 +202,9 @@ public class Filter {
 		this.options = options;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -211,7 +217,9 @@ public class Filter {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

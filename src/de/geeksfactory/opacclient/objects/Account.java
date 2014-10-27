@@ -137,7 +137,7 @@ public class Account {
 	}
 
 	/**
-	 * Set date of last caching
+	 * Get date of last data update
 	 * 
 	 * @return Timestamp in milliseconds
 	 */
@@ -146,7 +146,7 @@ public class Account {
 	}
 
 	/**
-	 * Set date of last caching
+	 * Set date of last data update
 	 * 
 	 * @param cached
 	 *            Timestamp in milliseconds (use

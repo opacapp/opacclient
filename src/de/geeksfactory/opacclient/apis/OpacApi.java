@@ -35,6 +35,7 @@ import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
+import de.geeksfactory.opacclient.searchfields.MeaningDetector;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 
@@ -50,7 +51,7 @@ public interface OpacApi {
 	 * supported, it must at least search in title and author field, but should
 	 * also search abstract and other things.
 	 * 
-	 * Map key for {@link #search(Map)} and possible value for
+	 * Map key for {@link #search(List)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_FREE = "free";
@@ -59,7 +60,7 @@ public interface OpacApi {
 	 * Item title to search for. Doesn't have to be the full title, can also be
 	 * a substring to be searched.
 	 * 
-	 * Map key for {@link #search(Map)} and possible value for
+	 * Map key for {@link #search(List)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_TITLE = "titel";
@@ -67,7 +68,7 @@ public interface OpacApi {
 	/**
 	 * Author name to search for.
 	 * 
-	 * Map key for {@link #search(Map)} and possible value for
+	 * Map key for {@link #search(List)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_AUTHOR = "verfasser";
@@ -76,7 +77,7 @@ public interface OpacApi {
 	 * "Keyword A". Most libraries require very special input in this field. May
 	 * be only shown if "advanced fields" is set in user preferences.
 	 * 
-	 * Map key for {@link #search(Map)} and possible value for
+	 * Map key for {@link #search(List)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_KEYWORDA = "schlag_a";
@@ -86,7 +87,7 @@ public interface OpacApi {
 	 * be only shown if "advanced fields" is set in user preferences. Can only
 	 * be set, if <code>KEY_SEARCH_QUERY_KEYWORDA</code> is set as well.
 	 * 
-	 * Map key for {@link #search(Map)} and possible value for
+	 * Map key for {@link #search(List)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_KEYWORDB = "schlag_b";
@@ -94,9 +95,9 @@ public interface OpacApi {
 	/**
 	 * Library branch to search in. The user is able to select from multiple
 	 * options, generated from the MetaData you store in the MetaDataSource you
-	 * get in {@link #init(MetaDataSource, Library)}.
+	 * get in {@link #init(Library)}.
 	 * 
-	 * Map key for {@link #search(Map)} and possible value for
+	 * Map key for {@link #search(List)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_BRANCH = "zweigstelle";
@@ -107,7 +108,7 @@ public interface OpacApi {
 	 * placed. If in doubt, don't use. Behaves similar to
 	 * <code>KEY_SEARCH_QUERY_BRANCH</code> .
 	 * 
-	 * Map key for {@link #search(Map)} and possible value for
+	 * Map key for {@link #search(List)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_HOME_BRANCH = "homebranch";
@@ -117,9 +118,9 @@ public interface OpacApi {
 	 * spaces or hyphens in between but it most likely won't. If it makes a
 	 * difference to you, eliminate everythin except numbers and X. We also
 	 * cannot say whether a ISBN10 or a ISBN13 is supplied - if relevant, check
-	 * in your {@link #search(Map)} implementation.
+	 * in your {@link #search(List)} implementation.
 	 * 
-	 * Map key for {@link #search(Map)} and possible value for
+	 * Map key for {@link #search(List)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_ISBN = "isbn";
@@ -128,7 +129,7 @@ public interface OpacApi {
 	 * Year of publication. Your API can either support this or both the
 	 * <code>KEY_SEARCH_QUERY_YEAR_RANGE_*</code> fields (or none of them).
 	 * 
-	 * Map key for {@link #search(Map)} and possible value for
+	 * Map key for {@link #search(List)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_YEAR = "jahr";
@@ -138,7 +139,7 @@ public interface OpacApi {
 	 * be combined with <code>KEY_SEARCH_QUERY_YEAR</code> but has to be
 	 * combined with <code>KEY_SEARCH_QUERY_YEAR_RANGE_END</code>.
 	 * 
-	 * Map key for {@link #search(Map)} and possible value for
+	 * Map key for {@link #search(List)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_YEAR_RANGE_START = "jahr_von";
@@ -148,7 +149,7 @@ public interface OpacApi {
 	 * not be combined with <code>KEY_SEARCH_QUERY_YEAR</code> but has to be
 	 * combined with <code>KEY_SEARCH_QUERY_YEAR_RANGE_START</code>.
 	 * 
-	 * Map key for {@link #search(Map)} and possible value for
+	 * Map key for {@link #search(List)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_YEAR_RANGE_END = "jahr_bis";
@@ -157,7 +158,7 @@ public interface OpacApi {
 	 * Systematic identification, used in some libraries. Rarely in use. May be
 	 * only shown if "advanced fields" is set in user preferences.
 	 * 
-	 * Map key for {@link #search(Map)} and possible value for
+	 * Map key for {@link #search(List)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_SYSTEM = "systematik";
@@ -167,7 +168,7 @@ public interface OpacApi {
 	 * Rarely in use. May be only shown if "advanced fields" is set in user
 	 * preferences.
 	 * 
-	 * Map key for {@link #search(Map)} and possible value for
+	 * Map key for {@link #search(List)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_AUDIENCE = "interessenkreis";
@@ -175,7 +176,7 @@ public interface OpacApi {
 	/**
 	 * The "publisher" search field
 	 * 
-	 * Map key for {@link #search(Map)} and possible value for
+	 * Map key for {@link #search(List)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_PUBLISHER = "verlag";
@@ -183,9 +184,9 @@ public interface OpacApi {
 	/**
 	 * Item category (like "book" or "CD"). The user is able to select from
 	 * multiple options, generated from the MetaData you store in the
-	 * MetaDataSource you get in {@link #init(MetaDataSource, Library)}.
+	 * MetaDataSource you get in {@link #init(Library)}.
 	 * 
-	 * Map key for {@link #search(Map)} and possible value for
+	 * Map key for {@link #search(List)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_CATEGORY = "mediengruppe";
@@ -195,7 +196,7 @@ public interface OpacApi {
 	 * number, most of the time printed on the in form of a barcode, sometimes
 	 * encoded in a NFC chip.
 	 * 
-	 * Map key for {@link #search(Map)} and possible value for
+	 * Map key for {@link #search(List)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_BARCODE = "barcode";
@@ -203,7 +204,7 @@ public interface OpacApi {
 	/**
 	 * Item location in library. Currently not in use.
 	 * 
-	 * Map key for {@link #search(Map)} and possible value for
+	 * Map key for {@link #search(List)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_LOCATION = "location";
@@ -211,7 +212,7 @@ public interface OpacApi {
 	/**
 	 * Restrict search to digital media.
 	 * 
-	 * Map key for {@link #search(Map)} and possible value for
+	 * Map key for {@link #search(List)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_DIGITAL = "digital";
@@ -219,7 +220,7 @@ public interface OpacApi {
 	/**
 	 * Restrict search to available media.
 	 * 
-	 * Map key for {@link #search(Map)} and possible value for
+	 * Map key for {@link #search(List)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_AVAILABLE = "available";
@@ -227,7 +228,7 @@ public interface OpacApi {
 	/**
 	 * Sort search results in a specific order
 	 * 
-	 * Map key for {@link #search(Map)} and possible value for
+	 * Map key for {@link #search(List)} and possible value for
 	 * {@link #getSearchFields()}.
 	 */
 	public static final String KEY_SEARCH_QUERY_ORDER = "order";
@@ -520,7 +521,7 @@ public interface OpacApi {
 
 	/**
 	 * Performs a catalogue search for volumes of an item. The query is given to
-	 * it from {@link DetailledItem.getVolumesearch()}.
+	 * it from {@link DetailledItem#getVolumesearch()}.
 	 * 
 	 * This function is always called from a background thread, you can use
 	 * blocking network operations in it. See documentation on DetailledItem for
@@ -536,11 +537,11 @@ public interface OpacApi {
 			throws IOException, OpacErrorException;
 
 	/**
-	 * If your {@link #search(Map)} implementation puts something different from
-	 * <code>null</code> into {@link SearchRequestResult#setFilters(List)}, this
-	 * will be called to apply a filter to the last search request.
+	 * If your {@link #search(List)} implementation puts something different
+	 * from <code>null</code> into {@link SearchRequestResult#setFilters(List)},
+	 * this will be called to apply a filter to the last search request.
 	 * 
-	 * If your {@link #search(Map)} implementation does not set
+	 * If your {@link #search(List)} implementation does not set
 	 * {@link SearchRequestResult#setFilters(List)}, this wil never be called.
 	 * Just return <code>null</code>.
 	 * 
@@ -575,7 +576,7 @@ public interface OpacApi {
 	 *            page number to fetch
 	 * @return List of results and additional information, or result object with
 	 *         the error flag set to true.
-	 * @see #search(Map)
+	 * @see #search(List)
 	 * @see de.geeksfactory.opacclient.objects.SearchResult
 	 */
 	public SearchRequestResult searchGetPage(int page) throws IOException,
@@ -719,7 +720,7 @@ public interface OpacApi {
 			String selection) throws IOException;
 
 	/**
-	 * The result of a {@link OpacApi#prolongAll(Account)} call
+	 * The result of a {@link OpacApi#prolongAll(Account, int, String)} call
 	 */
 	public class ProlongAllResult extends MultiStepResult {
 
@@ -872,11 +873,14 @@ public interface OpacApi {
 	 * there is an automatic mechanism to help implementing account support in
 	 * this city.
 	 * 
+	 * Should be replaced by {@link Library#isAccountSupported()}
+	 * 
 	 * @param library
 	 *            Library to check compatibility
 	 * @return <code>true</code> if account view is supported or
 	 *         <code>false</code> if it isn't.
 	 */
+	@Deprecated
 	public boolean isAccountSupported(Library library);
 
 	/**
@@ -904,6 +908,7 @@ public interface OpacApi {
 	 *            Account data the user entered
 	 * @return Some information to be sent in a crash report
 	 */
+	@Deprecated
 	public String getAccountExtendableInfo(Account account) throws IOException,
 			NotReachableException;
 
@@ -931,8 +936,8 @@ public interface OpacApi {
 	public int getSupportFlags();
 
 	/**
-	 * @return Whether the MeaningDetector should be used to automatically
-	 *         detect the meanings of this library's search fields
+	 * Returns whether the {@link MeaningDetector} should be used to
+	 * automatically detect the meanings of this library's search fields
 	 */
 	public boolean shouldUseMeaningDetector();
 
