@@ -56,8 +56,8 @@ def loadGeoPossibilities(city):
 
 class Api:
 
-    def getDefaultSupportString(self):
-        return 'Katalogsuche und Konto'
+    def accountSupported(self):
+        return True
 
     def prompt(self, data):
         return data
@@ -66,8 +66,8 @@ class Api:
 
 class Bibliotheca(Api):
 
-    def getDefaultSupportString(self):
-        return 'Katalogsuche und Konto'
+    def accountSupported(self):
+        return True
 
     def prompt(self, data):
         datadata = data['data']
@@ -212,8 +212,8 @@ class Bibliotheca(Api):
 
 class Sisis(Api):
 
-    def getDefaultSupportString(self):
-        return 'Katalogsuche und Konto'
+    def accountSupported(self):
+        return True
 
     def prompt(self, data):
         print("Sind zusätzliche Parameter nötig?")
@@ -225,18 +225,18 @@ class Sisis(Api):
 
 class WebOpacNet(Api):
 
-    def getDefaultSupportString(self):
-        return 'Katalogsuche'
+    def accountSupported(self):
+        return False
 
 class WinBiap(Api):
 
-    def getDefaultSupportString(self):
-        return 'Katalogsuche'
+    def accountSupported(self):
+        return False
 
 class Adis(Api):
 
-    def getDefaultSupportString(self):
-        return 'Katalogsuche und Konto (experimentell)'
+    def accountSupported(self):
+        return True
 
     def prompt(self, data):
         print("Sind zusätzliche Parameter nötig?")
@@ -249,8 +249,8 @@ class Adis(Api):
 
 class Biber1992(Api):
 
-    def getDefaultSupportString(self):
-        return 'Katalogsuche'
+    def accountSupported(self):
+        return True
 
     def prompt(self, data):
         print("Opac-Ordner?")
@@ -263,31 +263,26 @@ class Biber1992(Api):
 
 class Zones22(Api):
 
-    def getDefaultSupportString(self):
-        return 'Katalogsuche'
+    def accountSupported(self):
+        return False
 
 class Pica(Api):
     account = False
 
-    def getDefaultSupportString(self):
-        return 'Katalogsuche und Konto' if self.account else 'Katalogsuche'
-
-    def prompt(self, data):
-        print("Konto unterstützt?")
-        inp = getInput(required=False, default='nein')
-        if inp.lower() in ("ja", "yes", "y", "j", "true", "1"):
-            data['data']['accountSupported'] = True
-            self.account = True
-        print("DB-Nummer?")
-        inp = getInput(required=True)
-        data['data']['db'] = inp
-        return data
+    def accountSupported(self):
+        return True
 
 
 class IOpac(Api):
 
-    def getDefaultSupportString(self):
-        return 'Katalogsuche und Konto'
+    def accountSupported(self):
+        return True
+
+    def prompt(self, data):
+        print("DB-Nummer?")
+        inp = getInput(required=True)
+        data['data']['db'] = inp
+        return data
 
 APIS = {
     'bibliotheca' : Bibliotheca,
@@ -362,9 +357,12 @@ if __name__ == '__main__':
     api = APIS[data['api']]()
     data = api.prompt(data)
 
-    print("Grad der Unterstützung")
-
-    data['support'] = getInput(required=False, default=api.getDefaultSupportString())
+    print("Konto unterstützt?")
+    inp = getInput(required=False, default='nein' if not api.accountSupported() else 'ja')
+    if inp.lower() in ("ja", "yes", "y", "j", "true", "1"):
+        data['account_supported'] = True
+    else:
+        data['account_supported'] = False
 
     ok = False;
     while not ok:
