@@ -177,16 +177,8 @@ public class OpacClient extends Application {
 			return null;
 		newApiInstance.init(lib);
 		newApiInstance.setStringProvider(new AndroidStringProvider());
-		Set<String> languages = newApiInstance.getSupportedLanguages();
 		currentLang = getResources().getConfiguration().locale.getLanguage();
-		if (languages != null && languages.size() > 0) {
-			if (languages.contains(currentLang))
-				newApiInstance.setLanguage(currentLang);
-			else if (languages.contains("en"))
-				newApiInstance.setLanguage("en");
-			else if (languages.contains("de"))
-				newApiInstance.setLanguage("de");
-		}
+		newApiInstance.setLanguage(currentLang);
 		return newApiInstance;
 	}
 

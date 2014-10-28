@@ -1259,4 +1259,10 @@ public class BiBer1992 extends BaseApi {
 		if (doc == null)
 			throw new NotReachableException();
 	}
+
+	@Override
+	public void setLanguage(String language) {
+		// TODO Auto-generated method stub
+		
+	}
 }

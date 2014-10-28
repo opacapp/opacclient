@@ -1426,4 +1426,10 @@ public class Adis extends BaseApi implements OpacApi {
 		doc = handleLoginForm(doc, account);
 	}
 
+	@Override
+	public void setLanguage(String language) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

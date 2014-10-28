@@ -987,4 +987,10 @@ public class IOpac extends BaseApi implements OpacApi {
 				.substring(rechnrPosition, url.indexOf("&", rechnrPosition));
 	}
 
+	@Override
+	public void setLanguage(String language) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

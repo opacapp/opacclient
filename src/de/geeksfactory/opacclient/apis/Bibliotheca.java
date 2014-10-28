@@ -1196,4 +1196,10 @@ public class Bibliotheca extends BaseApi {
 		return convertStreamToString(response.getEntity().getContent(),
 				encoding);
 	}
+
+	@Override
+	public void setLanguage(String language) {
+		// TODO Auto-generated method stub
+		
+	}
 }

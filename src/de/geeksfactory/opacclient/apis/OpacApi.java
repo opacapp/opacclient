@@ -235,10 +235,10 @@ public interface OpacApi {
 	public static final String KEY_SEARCH_QUERY_ORDER = "order";
 
 	/**
-	 * Returns whether – if account view is not supported in the given library
-	 * – there is an automatic mechanism to help implementing account support
-	 * in this city. Only makes sense when {@link #isAccountSupported(Library)}
-	 * can return true and {@link #getAccountExtendableInfo(Account)} returns
+	 * Returns whether – if account view is not supported in the given library –
+	 * there is an automatic mechanism to help implementing account support in
+	 * this city. Only makes sense when {@link #isAccountSupported(Library)} can
+	 * return true and {@link #getAccountExtendableInfo(Account)} returns
 	 * something useful.
 	 * 
 	 * Flag to be present in the result of {@link #getSupportFlags()}.
@@ -870,9 +870,9 @@ public interface OpacApi {
 			NotReachableException, OpacErrorException, JSONException;
 
 	/**
-	 * Returns whether – if account view is not supported in the given library
-	 * – there is an automatic mechanism to help implementing account support
-	 * in this city.
+	 * Returns whether – if account view is not supported in the given library –
+	 * there is an automatic mechanism to help implementing account support in
+	 * this city.
 	 * 
 	 * Should be replaced by {@link Library#isAccountSupported()}
 	 * 
@@ -885,9 +885,9 @@ public interface OpacApi {
 	public boolean isAccountSupported(Library library);
 
 	/**
-	 * Returns whether – if account view is not supported in the given library
-	 * – there is an automatic mechanism to help implementing account support
-	 * in this city.
+	 * Returns whether – if account view is not supported in the given library –
+	 * there is an automatic mechanism to help implementing account support in
+	 * this city.
 	 * 
 	 * @return <code>true</code> if account support can easily be implemented
 	 *         with some extra information or <code>false</code> if it can't.
@@ -951,24 +951,15 @@ public interface OpacApi {
 	public void setStringProvider(StringProvider stringProvider);
 
 	/**
-	 * For libraries that support multiple languages, returns a list of
-	 * languages that this library supports. If only one language is supported
-	 * or this API implementation does not support multiple languages, returns
-	 * null. The language codes returned should be those defined in ISO-639-1
-	 * (two-letter codes in lower case, see <a
+	 * Set the language to use. This should be one of the language codes defined
+	 * in ISO-639-1 (two-letter codes in lower case, see <a
 	 * href="http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">this
-	 * list</a>)
-	 */
-	public Set<String> getSupportedLanguages();
-
-	/**
-	 * Set the language to use. Needs to be one of the language codes returned
-	 * by {@link #getSupportedLanguages()}. The API should use a default
-	 * language (normally the language of the library's country) if this is not
-	 * called.
+	 * list</a>). The API should use the default language of the library if this
+	 * is not called and should fall back first to English and then to the
+	 * library's default language if the requested language is not available.
 	 * 
 	 * @param language
 	 *            the language to use
 	 */
-	public void setLanguage(String language) throws IllegalArgumentException;
+	public void setLanguage(String language);
 }

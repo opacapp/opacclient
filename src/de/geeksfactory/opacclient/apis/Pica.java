@@ -422,9 +422,9 @@ public class Pica extends BaseApi implements OpacApi {
 
 	@Override
 	public DetailledItem getResult(int position) throws IOException {
-		String html = httpGet(opac_url + "/DB=" + db + "/SET=" + searchSet
-				+ "/TTL=1/SHW?FRST=" + (position + 1), getDefaultEncoding(),
-				false, cookieStore);
+		String html = httpGet(opac_url + "/DB=" + db + "/LNG=" + language
+				+ "/SET=" + searchSet + "/TTL=1/SHW?FRST=" + (position + 1),
+				getDefaultEncoding(), false, cookieStore);
 
 		return parse_result(html);
 	}
@@ -474,46 +474,11 @@ public class Pica extends BaseApi implements OpacApi {
 
 		// GET TITLE AND SUBTITLE
 		String titleAndSubtitle = "";
-		if (doc.select("td.preslabel:contains(Titel) + td.presvalue").size() > 0) {
-			titleAndSubtitle = doc
-					.select("td.preslabel:contains(Titel) + td.presvalue")
-					.first().text().trim();
-			int slashPosition = titleAndSubtitle.indexOf("/");
-			String title;
-			String subtitle;
-			if (slashPosition > 0) {
-				title = titleAndSubtitle.substring(0, slashPosition).trim();
-				subtitle = titleAndSubtitle.substring(slashPosition + 1).trim();
-				result.addDetail(new Detail(stringProvider
-						.getString(StringProvider.SUBTITLE), subtitle));
-			} else {
-				title = titleAndSubtitle;
-				subtitle = "";
-			}
-			result.setTitle(title);
-		} else if (doc.select("td.preslabel:contains(Aufsatz) + td.presvalue")
-				.size() > 0) {
-			titleAndSubtitle = doc
-					.select("td.preslabel:contains(Aufsatz) + td.presvalue")
-					.first().text().trim();
-			int slashPosition = titleAndSubtitle.indexOf("/");
-			String title;
-			String subtitle;
-			if (slashPosition > 0) {
-				title = titleAndSubtitle.substring(0, slashPosition).trim();
-				subtitle = titleAndSubtitle.substring(slashPosition + 1).trim();
-				result.addDetail(new Detail(stringProvider
-						.getString(StringProvider.SUBTITLE), subtitle));
-			} else {
-				title = titleAndSubtitle;
-				subtitle = "";
-			}
-			result.setTitle(title);
-		} else if (doc.select(
-				"td.preslabel:contains(Zeitschrift) + td.presvalue").size() > 0) {
-			titleAndSubtitle = doc
-					.select("td.preslabel:contains(Zeitschrift) + td.presvalue")
-					.first().text().trim();
+		String selector = "td.preslabel:matches(.*(Titel|Aufsatz|Zeitschrift"
+				+ "|Title|Article|Periodical"
+				+ "|Titre|Article|P.riodique).*) + td.presvalue";
+		if (doc.select(selector).size() > 0) {
+			titleAndSubtitle = doc.select(selector).first().text().trim();
 			int slashPosition = titleAndSubtitle.indexOf("/");
 			String title;
 			String subtitle;
@@ -542,7 +507,7 @@ public class Pica extends BaseApi implements OpacApi {
 		for (Element element : doc.select("td.preslabel + td.presvalue")) {
 			Element titleElem = element.firstElementSibling();
 			String detail = element.text().trim();
-			String title = titleElem.text().trim().replace("\u00a0", "");
+			String title = titleElem.text().replace("\u00a0", " ").trim();
 
 			if (element.select("hr").size() == 0) { // no separator
 
@@ -552,32 +517,32 @@ public class Pica extends BaseApi implements OpacApi {
 				}
 
 				if (title.contains("Standort")
-						|| title.contains("Vorhanden in")) {
+						|| title.contains("Vorhanden in")
+						|| title.contains("Location")) {
 					location += detail;
 				} else if (title.contains("Sonderstandort")) {
 					location += " - " + detail;
-				} else if (title.contains("Fachnummer")) {
+				} else if (title.contains("Fachnummer")
+						|| title.contains("locationnumber")) {
 					e.put(DetailledItem.KEY_COPY_LOCATION, detail);
-				} else if (title.contains("Signatur")) {
+				} else if (title.contains("Signatur")
+						|| title.contains("Shelf mark")) {
 					e.put(DetailledItem.KEY_COPY_SHELFMARK, detail);
 				} else if (title.contains("Anmerkung")) {
 					location += " (" + detail + ")";
 				} else if (title.contains("Status")
-						|| title.contains("Ausleihinfo")) {
-					detail = detail.replace("Bestellen", "")
-							.replace("verfuegbar", "verfügbar")
-							.replace("Verfuegbar", "verfügbar")
-							.replace("Vormerken", "")
-							.replace("Liste der Exemplare", "").trim();
+						|| title.contains("Ausleihinfo")
+						|| title.contains("Request info")) {
+					if (element.select("div").size() > 0)
+						detail = element.select("div").first().ownText();
+					else
+						detail = element.ownText();
 					e.put(DetailledItem.KEY_COPY_STATUS, detail);
 					// Get reservation info
-					if (element.select(
-							"a:contains(Vormerken), a:contains(Exemplare)")
-							.size() > 0) {
-						Element a = element.select(
-								"a:contains(Vormerken), a:contains(Exemplare)")
-								.first();
-						boolean multipleCopies = a.text().contains("Exemplare");
+					if (element.select("a:has(img[src*=inline_arrow])").size() > 0) {
+						Element a = element.select(selector).first();
+						boolean multipleCopies = a.text().matches(
+								".*(Exemplare|Volume list).*");
 						JSONObject reservation = new JSONObject();
 						try {
 							reservation.put("multi", multipleCopies);
@@ -589,7 +554,7 @@ public class Pica extends BaseApi implements OpacApi {
 						}
 						result.setReservable(true);
 					}
-				} else if (!title.equals("Titel")) {
+				} else if (!title.matches("(Titel|Titre|Title)")) {
 					result.addDetail(new Detail(title, detail));
 				}
 			} else if (e.size() > 0) {
@@ -1259,16 +1224,12 @@ public class Pica extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public Set<String> getSupportedLanguages() {
-		return languageCodes.keySet();
-	}
-
-	@Override
 	public void setLanguage(String language) {
 		if (languageCodes.containsKey(language))
 			this.language = languageCodes.get(language);
 		else
-			throw new IllegalArgumentException("language not supported");
+			// Fall back to english if language not available
+			this.language = languageCodes.get("en");
 	}
 
 }

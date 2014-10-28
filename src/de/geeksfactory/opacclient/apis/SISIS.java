@@ -1727,4 +1727,10 @@ public class SISIS extends BaseApi implements OpacApi {
 		if (!success)
 			throw new NotReachableException();
 	}
+
+	@Override
+	public void setLanguage(String language) {
+		// TODO Auto-generated method stub
+		
+	}
 }

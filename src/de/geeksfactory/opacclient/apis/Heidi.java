@@ -850,4 +850,10 @@ public class Heidi extends BaseApi implements OpacApi {
 		login(account);
 	}
 
+	@Override
+	public void setLanguage(String language) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

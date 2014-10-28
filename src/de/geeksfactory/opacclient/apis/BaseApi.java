@@ -480,13 +480,4 @@ public abstract class BaseApi implements OpacApi {
 		this.stringProvider = stringProvider;
 	}
 	
-	@Override
-	public Set<String> getSupportedLanguages() {
-		return null;
-	}
-	
-	@Override
-	public void setLanguage(String language) {
-		
-	}
 }

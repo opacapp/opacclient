@@ -473,4 +473,10 @@ public class SRU extends BaseApi implements OpacApi {
 		
 	}
 
+	@Override
+	public void setLanguage(String language) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
