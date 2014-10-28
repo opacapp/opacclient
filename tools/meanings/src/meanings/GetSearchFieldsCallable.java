@@ -14,14 +14,17 @@ import de.geeksfactory.opacclient.tests.apitests.LibraryApiTestCases;
 
 public class GetSearchFieldsCallable implements Callable<List<SearchField>> {
 	private Library lib;
+	private String language;
 	
-	public GetSearchFieldsCallable(Library lib) {
+	public GetSearchFieldsCallable(Library lib, String language) {
 		this.lib = lib;
+		this.language = language;
 	}
 
 	@Override
 	public List<SearchField> call() {
 		OpacApi api = LibraryApiTestCases.getApi(lib);
+		api.setLanguage(language);
 		try {
 			return api.getSearchFields();
 		} catch (IOException | OpacErrorException | JSONException e) {

@@ -11,6 +11,7 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.Set;
@@ -30,6 +31,15 @@ import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
 
 public class Main {
 
+	private static List<String> languages = new ArrayList<String>();
+
+	static {
+		languages.add("de");
+		languages.add("en");
+		languages.add("fr");
+		languages.add("nl");
+	}
+
 	public static void main(String[] args) throws IOException, JSONException {
 		Security.addProvider(new BouncyCastleProvider());
 		Collection<String[]> libraries = libraries();
@@ -37,7 +47,7 @@ public class Main {
 				"../../assets/meanings").getIgnoredFields();
 		Scanner in = new Scanner(System.in);
 		final ExecutorService service = Executors.newFixedThreadPool(25);
-		List<Entry<Library, Future<List<SearchField>>>> tasks = new ArrayList<Entry<Library, Future<List<SearchField>>>>();
+		List<TaskInfo> tasks = new ArrayList<TaskInfo>();
 		for (String[] libraryNameArray : libraries) {
 			String libraryName = libraryNameArray[0];
 			Library library;
@@ -47,23 +57,25 @@ public class Main {
 						new JSONObject(readFile("../../assets/bibs/"
 								+ libraryName + ".json",
 								Charset.defaultCharset())));
-				Future<List<SearchField>> future = service
-						.submit(new GetSearchFieldsCallable(library));
-				tasks.add(new AbstractMap.SimpleEntry<Library, Future<List<SearchField>>>(
-						library, future));
+				for (String lang : languages) {
+					Future<List<SearchField>> future = service
+							.submit(new GetSearchFieldsCallable(library, lang));
+					tasks.add(new TaskInfo(library, lang, future));
+				}
 			} catch (JSONException | IOException e) {
 				// e.printStackTrace();
 			}
 		}
 
-		for (Entry<Library, Future<List<SearchField>>> entry : tasks) {
-			Library library = entry.getKey();
+		for (TaskInfo entry : tasks) {
+			Library library = entry.lib;
 			try {
-				List<SearchField> fields = entry.getValue().get();
+				List<SearchField> fields = entry.future.get();
 				if (fields == null)
 					continue;
 
-				System.out.println("Bibliothek: " + library.getIdent());
+				System.out.println("Bibliothek: " + library.getIdent()
+						+ ", Sprache: " + new Locale(entry.lang).getDisplayLanguage());
 				JavaMeaningDetector detector = new JavaMeaningDetector(library,
 						"../../assets/meanings");
 				for (int i = 0; i < fields.size(); i++) {
@@ -82,7 +94,8 @@ public class Main {
 							&& field.getData().has("meaning")) {
 						name = field.getData().getString("meaning");
 						System.out.print("Unbekanntes Feld: '" + name
-								+ "' (Anzeigename: " + field.getDisplayName() + ") ");
+								+ "' (Anzeigename: " + field.getDisplayName()
+								+ ") ");
 					} else {
 						name = field.getDisplayName();
 						System.out.print("Unbekanntes Feld: '" + name + "' ");
@@ -132,6 +145,19 @@ public class Main {
 			throws IOException {
 		byte[] encoded = Files.readAllBytes(Paths.get(path));
 		return encoding.decode(ByteBuffer.wrap(encoded)).toString();
+	}
+
+	private static class TaskInfo {
+		public Future<List<SearchField>> future;
+		public String lang;
+		public Library lib;
+
+		public TaskInfo(Library lib, String lang,
+				Future<List<SearchField>> future) {
+			this.future = future;
+			this.lang = lang;
+			this.lib = lib;
+		}
 	}
 
 }

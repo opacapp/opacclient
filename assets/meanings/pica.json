@@ -50,5 +50,8 @@
 	"(XPUB)": "PUBLISHER",
 	"(XNUM)": "ISBN",
 	"(XHAU)": "LOCATION",
-	"(ABT)": "LOCATION"
+	"(ABT)": "LOCATION",
+	"(GOO)": "KEYWORD"
+	"[YOP]": "YEAR",
+    "(JVU)": "YEAR",
 }
