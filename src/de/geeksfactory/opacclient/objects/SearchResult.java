@@ -183,10 +183,16 @@ public class SearchResult implements CoverHolder {
 		this.status = status;
 	}
 	
+	/**
+	 * Get the page this result was found on
+	 */
 	public int getPage() {
 		return page;
 	}
-	
+
+	/**
+	 * Set the page this result was found on
+	 */
 	public void setPage(int page) {
 		this.page = page;
 	}

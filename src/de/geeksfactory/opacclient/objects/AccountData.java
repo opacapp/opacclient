@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Object representing details of an library account
+ * Object representing details of a library account
  * 
  * @author Raphael Michel
  */
@@ -176,7 +176,7 @@ public class AccountData {
 
 	/**
 	 * Internal identifier which will be supplied to your
-	 * {@link de.geeksfactory.opacclient.apis.OpacApi#cancel(Account, String)}
+	 * {@link de.geeksfactory.opacclient.apis.OpacApi#cancel(String, Account, int, String)}
 	 * implementation when the user wants to cancel the order. Cancel button
 	 * won't be displayed if this is not set.
 	 * 
@@ -186,7 +186,7 @@ public class AccountData {
 
 	/**
 	 * Internal identifier which will be supplied to your
-	 * {@link de.geeksfactory.opacclient.apis.EbookServiceApi#booking(String, Account, int, String)}
+	 * {@link de.geeksfactory.opacclient.apis.EbookServiceApi#booking(DetailledItem, Account, int, String)}
 	 * implementation when the user wants to cancel the order. Cancel button
 	 * won't be displayed if this is not set.
 	 * 
@@ -330,6 +330,13 @@ public class AccountData {
 		this.validUntil = validUntil;
 	}
 
+	/**
+	 * Get the warning. Warnings are to be displayed above the data in a yellow
+	 * bar.
+	 * 
+	 * @return warning as a human-readable string or null, if there is no
+	 *         warning.
+	 */
 	public String getWarning() {
 		return warning;
 	}

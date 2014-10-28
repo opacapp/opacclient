@@ -10,7 +10,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * A SearchField is the abstract representation of a criteria input available in
+ * the search form.
+ */
 public abstract class SearchField {
+	/**
+	 * Sorts search fields by the order of the {@link SearchField.Meaning} enum.
+	 */
 	public static class OrderComparator implements Comparator<SearchField> {
 		@Override
 		public int compare(SearchField a, SearchField b) {
@@ -27,21 +34,24 @@ public abstract class SearchField {
 	protected boolean advanced;
 	protected boolean visible = true;
 	/**
-	 * Optional attribute, describes the meaning of the search field.
-	 * Used for sorting the search fields in the form.
-	 * Will be assigned automatically by the MeaningDetector if you use it.
+	 * Optional attribute, describes the meaning of the search field. Used for
+	 * sorting the search fields in the form. Will be assigned automatically by
+	 * the MeaningDetector if you use it.
 	 */
 	protected Meaning meaning;
 
+	/**
+	 * A SearchField can have one of the following meanings. They are used for
+	 * field ordering and providing additional UI features.
+	 */
 	public enum Meaning {
-		FREE, TITLE, AUTHOR, DIGITAL, AVAILABLE, ISBN, BARCODE, YEAR, BRANCH, HOME_BRANCH,
-		CATEGORY, PUBLISHER, KEYWORD, SYSTEM, AUDIENCE, LOCATION, ORDER
+		FREE, TITLE, AUTHOR, DIGITAL, AVAILABLE, ISBN, BARCODE, YEAR, BRANCH, HOME_BRANCH, CATEGORY, PUBLISHER, KEYWORD, SYSTEM, AUDIENCE, LOCATION, ORDER
 	}
 
 	/**
 	 * A JSONObject where you can save arbitrary data about this Search field.
-	 * If you add a "meaning" attribute, MeaningDetector will search for
-	 * that string in the meanings list instead of the displayName.
+	 * If you add a "meaning" attribute, MeaningDetector will search for that
+	 * string in the meanings list instead of the displayName.
 	 */
 	protected JSONObject data;
 
@@ -56,58 +66,64 @@ public abstract class SearchField {
 	}
 
 	/**
-	 * @return the id
+	 * Get this field's internal ID
 	 */
 	public String getId() {
 		return id;
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * Set this field's internal ID
 	 */
 	public void setId(String id) {
 		this.id = id;
 	}
 
 	/**
-	 * @return the displayName
+	 * Get the name of this field to be displayed
 	 */
 	public String getDisplayName() {
 		return displayName;
 	}
 
 	/**
-	 * @param displayName
-	 *            the displayName to set
+	 * Set the name of this field to be displayed
 	 */
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
 	}
 
 	/**
-	 * @return the advanced
+	 * Get whether this field should only be displayed in "advanced mode".
 	 */
 	public boolean isAdvanced() {
 		return advanced;
 	}
 
 	/**
-	 * @param advanced
-	 *            the advanced to set
+	 * Set whether this field should only be displayed in "advanced mode".
 	 */
 	public void setAdvanced(boolean advanced) {
 		this.advanced = advanced;
 	}
 
+	/**
+	 * Get whether this field is visible on the UI
+	 */
 	public boolean isVisible() {
 		return visible;
 	}
 
+	/**
+	 * Set whether this field is visible on the UI
+	 */
 	public void setVisible(boolean visible) {
 		this.visible = visible;
 	}
 
+	/**
+	 * Serialize a SearchField to a JSONObject.
+	 */
 	public JSONObject toJSON() throws JSONException {
 		JSONObject json = new JSONObject();
 		json.put("id", id);
@@ -121,6 +137,9 @@ public abstract class SearchField {
 		return json;
 	}
 
+	/**
+	 * Initialize a SearchField from its JSON-serialized counterpart
+	 */
 	public static SearchField fromJSON(JSONObject json) throws JSONException {
 		String id = json.getString("id");
 		String type = json.getString("type");
@@ -171,29 +190,28 @@ public abstract class SearchField {
 	}
 
 	/**
-	 * @return the data
+	 * Get raw additional SearchField data
 	 */
 	public JSONObject getData() {
 		return data;
 	}
 
 	/**
-	 * @param data
-	 *            the data to set
+	 * Set raw additional SearchField data
 	 */
 	public void setData(JSONObject data) {
 		this.data = data;
 	}
 
 	/**
-	 * @return the meaning
+	 * Returns the SearchField's guessed or specified meaning
 	 */
 	public Meaning getMeaning() {
 		return meaning;
 	}
 
 	/**
-	 * @param meaning the meaning to set
+	 * Set the SearchField's meaning
 	 */
 	public void setMeaning(Meaning meaning) {
 		this.meaning = meaning;

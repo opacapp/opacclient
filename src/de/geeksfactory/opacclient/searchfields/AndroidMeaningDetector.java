@@ -83,6 +83,8 @@ public class AndroidMeaningDetector implements MeaningDetector {
 
 	@Override
 	public SearchField detectMeaning(SearchField field) {
+		if (field.getMeaning() != null)
+			return field;
 		if (field.getData() != null && field.getData().has("meaning")) {
 			try {
 				String meaningData = field.getData().getString("meaning");

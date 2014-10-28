@@ -55,6 +55,7 @@ import android.util.Log;
 import de.geeksfactory.opacclient.apis.Adis;
 import de.geeksfactory.opacclient.apis.BiBer1992;
 import de.geeksfactory.opacclient.apis.Bibliotheca;
+import de.geeksfactory.opacclient.apis.Heidi;
 import de.geeksfactory.opacclient.apis.IOpac;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.Pica;
@@ -168,6 +169,8 @@ public class OpacClient extends Application {
 			newApiInstance = new WebOpacNet();
 		else if (lib.getApi().equals("winbiap"))
 			newApiInstance = new WinBiap();
+		else if (lib.getApi().equals("heidi"))
+			newApiInstance = new Heidi();
 		else
 			return null;
 		newApiInstance.init(lib);

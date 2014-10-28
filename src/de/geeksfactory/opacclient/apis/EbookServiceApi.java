@@ -40,12 +40,17 @@ import de.geeksfactory.opacclient.objects.DetailledItem;
  */
 public interface EbookServiceApi {
 
+	/**
+	 * Proxy for the {@link OpacApi#account(Account)} feature, adding ebook
+	 * entries.
+	 */
 	public AccountData account(Account account) throws IOException,
 			JSONException, OpacErrorException;
 
 	/**
-	 * The result of a {@link #booking(String, Account, int, String)} call. The
-	 * structure of the call and response is similar to
+	 * The result of a
+	 * {@link EbookServiceApi#booking(DetailledItem, Account, int, String)}
+	 * call. The structure of the call and response is similar to
 	 * {@link OpacApi#reservation(DetailledItem, Account, int, String)}.
 	 */
 	public class BookingResult extends OpacApi.MultiStepResult {

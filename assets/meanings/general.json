@@ -53,6 +53,7 @@
         "Alle",
         "Einfache Suche",
         "Suchbegriffe",
+        "Freitext",
         "free_search"
     ],
     "KEYWORD": [
@@ -229,6 +230,7 @@
         "Titel Stichwort",
         "Titelstichwörter",
         "Titelwort",
-        "Schlagwort Titel"
+        "Schlagwort Titel",
+        "Titel (-stichwörter)"
     ]
 }

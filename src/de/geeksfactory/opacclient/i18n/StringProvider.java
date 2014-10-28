@@ -22,9 +22,20 @@
 package de.geeksfactory.opacclient.i18n;
 
 /**
- * Provides internationalized strings for messages in the API implementations
+ * The StringProvider interface exposes an abstract method of translating
+ * strings from the OpacApi classes. Since version 3.2.1, it is highly
+ * discouraged to hardcode any string into the OpacApi implementations which
+ * might be displayed to the user, as this makes internationalization very hard.
+ * 
+ * While Android has a powerful i18n library using the 'string resources'
+ * concept, our apis.* subpackage should not depend on Android, to make it
+ * seperable from the app, e.g. for running our test suite on a PC. Therefore,
+ * this abstract interface provides access to Android's i18n API on Android
+ * devices. It currently performs a no-op on other devices.
+ * 
  * 
  * @author Johan v. Forstner
+ * @since 3.2.1
  *
  */
 public interface StringProvider {
@@ -51,8 +62,27 @@ public interface StringProvider {
 	public static String PROLONGED_ABBR = "prolonged_abbr";
 	public static String FREE_SEARCH = "free_search";
 	public static String WRONG_LOGIN_DATA = "wrong_account_data";
+	public static String PROLONGING_IMPOSSIBLE = "prolonging_impossible";
+	public static String PROLONGING_EXPIRED = "prolonging_expired";
+	public static String PROLONGING_WAITING = "prolonging_expired";
 
+	/**
+	 * Returns the translated string identified by identifier
+	 * 
+	 * @param identifier
+	 *            The ID of the string
+	 * @return the translated string
+	 */
 	public abstract String getString(String identifier);
 
+	/**
+	 * Returns a translated formatted string
+	 * 
+	 * @param identifier
+	 *            The ID of the string
+	 * @param args
+	 *            Formatting arguments
+	 * @return the translated and formatted string
+	 */
 	public abstract String getFormattedString(String identifier, Object... args);
 }

@@ -858,6 +858,9 @@ public class Bibliotheca extends BaseApi {
 						"make_allvl_flag"));
 				nameValuePairs.add(new BasicNameValuePair("make_allvl",
 						"Bestaetigung"));
+				html = httpPost(opac_url + "/index.asp",
+						new UrlEncodedFormEntity(nameValuePairs),
+						getDefaultEncoding());
 			}
 
 			return new ProlongAllResult(MultiStepResult.Status.OK, result);

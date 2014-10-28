@@ -167,10 +167,8 @@ public class Library implements Comparable<Library> {
 	}
 
 	/**
-	 * The official name of the library to display e.g. in the account detail
-	 * view. Optional.
-	 * 
-	 * @return a name, including the city's name
+	 * Set the official name of the library to display e.g. in the account
+	 * detail view. Optional.
 	 */
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
@@ -272,9 +270,7 @@ public class Library implements Comparable<Library> {
 	}
 
 	/**
-	 * Get whether this library supports accounts. This may not be correct in
-	 * 100% of the cases, because {@link OpacApi#isAccountSupported(Library)}
-	 * can still return another value.
+	 * Get whether this library supports accounts.
 	 * 
 	 * @return boolean describing whether this library supports accounts
 	 */
@@ -285,7 +281,8 @@ public class Library implements Comparable<Library> {
 	/**
 	 * Set whether this library supports accounts
 	 * 
-	 * @param boolean describing whether this library supports accounts
+	 * @param account_supported
+	 *            describing whether this library supports accounts
 	 */
 	public void setAccountSupported(boolean account_supported) {
 		this.account_supported = account_supported;

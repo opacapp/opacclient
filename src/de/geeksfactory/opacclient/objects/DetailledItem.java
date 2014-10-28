@@ -293,7 +293,7 @@ public class DetailledItem implements CoverHolder {
 
 	/**
 	 * Can return a
-	 * {@link de.geeksfactory.opacclient.apis.OpacApi#search(Map)} query
+	 * {@link de.geeksfactory.opacclient.apis.OpacApi#search(List)} query
 	 * <code>List</code> for a volume search based on this item.
 	 * 
 	 * @return Search query or <code>null</code> if not applicable
@@ -305,7 +305,7 @@ public class DetailledItem implements CoverHolder {
 
 	/**
 	 * Sets a search query which is passed back to your
-	 * {@link de.geeksfactory.opacclient.apis.OpacApi#search(Map)}
+	 * {@link de.geeksfactory.opacclient.apis.OpacApi#search(List)}
 	 * implementation for a volume search based on this item-
 	 * 
 	 * @param volumesearch
