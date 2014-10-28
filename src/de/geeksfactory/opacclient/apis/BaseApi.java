@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -477,5 +478,15 @@ public abstract class BaseApi implements OpacApi {
 	@Override
 	public void setStringProvider(StringProvider stringProvider) {
 		this.stringProvider = stringProvider;
+	}
+	
+	@Override
+	public Set<String> getSupportedLanguages() {
+		return null;
+	}
+	
+	@Override
+	public void setLanguage(String language) {
+		
 	}
 }

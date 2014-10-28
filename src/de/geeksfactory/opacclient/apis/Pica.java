@@ -33,6 +33,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -88,11 +89,13 @@ public class Pica extends BaseApi implements OpacApi {
 	protected Integer searchSet;
 	protected String db;
 	protected String pwEncoded;
-	CookieStore cookieStore = new BasicCookieStore();
+	protected String language = "DU";
+	protected CookieStore cookieStore = new BasicCookieStore();
 
 	protected String lor_reservations;
 
 	protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
+	protected static HashMap<String, String> languageCodes = new HashMap<String, String>();
 
 	static {
 		defaulttypes.put("book", MediaType.BOOK);
@@ -110,6 +113,11 @@ public class Pica extends BaseApi implements OpacApi {
 		defaulttypes.put("software", MediaType.CD_SOFTWARE);
 		defaulttypes.put("microfilm", MediaType.UNKNOWN);
 		defaulttypes.put("empty", MediaType.UNKNOWN);
+
+		languageCodes.put("de", "DU");
+		languageCodes.put("en", "EN");
+		languageCodes.put("nl", "NE");
+		languageCodes.put("fr", "FR");
 	}
 
 	@Override
@@ -712,7 +720,7 @@ public class Pica extends BaseApi implements OpacApi {
 
 	public ReservationResult reservation_result(List<NameValuePair> params,
 			boolean multi) throws IOException {
-		String html2 = httpPost(https_url + "/loan/LNG=DU/DB=" + db + "/SET="
+		String html2 = httpPost(https_url + "/loan/DB=" + db + "/SET="
 				+ searchSet + "/TTL=1/" + (multi ? "REQCONT" : "RESCONT"),
 				new UrlEncodedFormEntity(params, getDefaultEncoding()),
 				getDefaultEncoding());
@@ -838,9 +846,9 @@ public class Pica extends BaseApi implements OpacApi {
 		params.add(new BasicNameValuePair("BOR_U", account.getName()));
 		params.add(new BasicNameValuePair("BOR_PW", account.getPassword()));
 
-		String html = httpPost(https_url + "/loan/DB=" + db
-				+ "/LNG=DU/USERINFO", new UrlEncodedFormEntity(params,
-				getDefaultEncoding()), getDefaultEncoding());
+		String html = httpPost(https_url + "/loan/DB=" + db + "/USERINFO",
+				new UrlEncodedFormEntity(params, getDefaultEncoding()),
+				getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 
 		if (doc.select(".cnt .alert, .cnt .error").size() > 0) {
@@ -1045,8 +1053,8 @@ public class Pica extends BaseApi implements OpacApi {
 	@Override
 	public List<SearchField> getSearchFields() throws ClientProtocolException,
 			IOException, JSONException {
-		String html = httpGet(opac_url + "/ADVANCED_SEARCHFILTER",
-				getDefaultEncoding());
+		String html = httpGet(opac_url + "/LNG=" + language
+				+ "/ADVANCED_SEARCHFILTER", getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 		List<SearchField> fields = new ArrayList<SearchField>();
 
@@ -1239,15 +1247,28 @@ public class Pica extends BaseApi implements OpacApi {
 		params.add(new BasicNameValuePair("BOR_U", account.getName()));
 		params.add(new BasicNameValuePair("BOR_PW", account.getPassword()));
 
-		String html = httpPost(https_url + "/loan/DB=" + db
-				+ "/LNG=DU/USERINFO", new UrlEncodedFormEntity(params,
-				getDefaultEncoding()), getDefaultEncoding());
+		String html = httpPost(https_url + "/loan/DB=" + db + "/USERINFO",
+				new UrlEncodedFormEntity(params, getDefaultEncoding()),
+				getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 
 		if (doc.select(".cnt .alert, .cnt .error").size() > 0) {
 			throw new OpacErrorException(doc.select(".cnt .alert, .cnt .error")
 					.text());
 		}
+	}
+
+	@Override
+	public Set<String> getSupportedLanguages() {
+		return languageCodes.keySet();
+	}
+
+	@Override
+	public void setLanguage(String language) {
+		if (languageCodes.containsKey(language))
+			this.language = languageCodes.get(language);
+		else
+			throw new IllegalArgumentException("language not supported");
 	}
 
 }

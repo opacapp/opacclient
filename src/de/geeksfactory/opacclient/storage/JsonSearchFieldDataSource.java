@@ -26,6 +26,7 @@ public class JsonSearchFieldDataSource implements SearchFieldDataSource {
 	private static final String KEY_FIELDS = "fields";
 	private static final String KEY_TIME = "time";
 	private static final String KEY_VERSION = "version";
+	private static final String KEY_LANGUAGE = "lang";
 
 	public JsonSearchFieldDataSource(Context context) {
 		this.dir = new File(context.getFilesDir(), "fields");
@@ -43,6 +44,8 @@ public class JsonSearchFieldDataSource implements SearchFieldDataSource {
 			}
 			object.put(KEY_FIELDS, array);
 			object.put(KEY_TIME, System.currentTimeMillis());
+			object.put(KEY_LANGUAGE, context.getResources().getConfiguration().locale
+					.getLanguage());
 			try {
 				object.put(
 						KEY_VERSION,
@@ -118,6 +121,20 @@ public class JsonSearchFieldDataSource implements SearchFieldDataSource {
 			e.printStackTrace();
 		}
 		return 0;
+	}
+	
+
+	@Override
+	public String getSearchFieldLanguage(String libraryId) {
+		try {
+			JSONObject json = readJsonFile(libraryId);
+			return json.getString(KEY_LANGUAGE);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	private void writeToJsonFile(String filename, JSONObject data) {
