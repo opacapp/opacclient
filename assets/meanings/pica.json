@@ -51,7 +51,12 @@
 	"(XNUM)": "ISBN",
 	"(XHAU)": "LOCATION",
 	"(ABT)": "LOCATION",
-	"(GOO)": "KEYWORD"
+	"(GOO)": "KEYWORD",
 	"[YOP]": "YEAR",
     "(JVU)": "YEAR",
+	"[STA]": "LOCATION",
+	"[VLG]": "PUBLISHER",
+	"[JHR]": "YEAR",
+	"[WOE]": "FREE",
+	"[ATR]": "AUTHOR"
 }

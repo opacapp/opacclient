@@ -29,6 +29,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -89,7 +90,7 @@ public class Pica extends BaseApi implements OpacApi {
 	protected Integer searchSet;
 	protected String db;
 	protected String pwEncoded;
-	protected String language = "DU";
+	protected String languageCode;
 	protected CookieStore cookieStore = new BasicCookieStore();
 
 	protected String lor_reservations;
@@ -118,17 +119,6 @@ public class Pica extends BaseApi implements OpacApi {
 		languageCodes.put("en", "EN");
 		languageCodes.put("nl", "NE");
 		languageCodes.put("fr", "FR");
-	}
-
-	@Override
-	public void start() throws IOException, NotReachableException {
-		// String html = httpGet(opac_url
-		// + "/DB=" + db + "/SET=1/TTL=1/ADVANCED_SEARCHFILTER",
-		// getDefaultEncoding(), false, cookieStore);
-
-		// Document doc = Jsoup.parse(html);
-
-		// updateSearchSetValue(doc);
 	}
 
 	@Override
@@ -188,6 +178,9 @@ public class Pica extends BaseApi implements OpacApi {
 	public SearchRequestResult search(List<SearchQuery> query)
 			throws IOException, NotReachableException, OpacErrorException,
 			JSONException {
+		if (!initialised)
+			start();
+		
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 		int index = 0;
@@ -414,6 +407,9 @@ public class Pica extends BaseApi implements OpacApi {
 		if (id == null && reusehtml != null) {
 			return parse_result(reusehtml);
 		}
+		
+		if (!initialised)
+			start();
 
 		String html = httpGet(id, getDefaultEncoding());
 
@@ -422,7 +418,9 @@ public class Pica extends BaseApi implements OpacApi {
 
 	@Override
 	public DetailledItem getResult(int position) throws IOException {
-		String html = httpGet(opac_url + "/DB=" + db + "/LNG=" + language
+		if (!initialised)
+			start();
+		String html = httpGet(opac_url + "/DB=" + db + "/LNG=" + getLang()
 				+ "/SET=" + searchSet + "/TTL=1/SHW?FRST=" + (position + 1),
 				getDefaultEncoding(), false, cookieStore);
 
@@ -800,6 +798,9 @@ public class Pica extends BaseApi implements OpacApi {
 	@Override
 	public AccountData account(Account account) throws IOException,
 			JSONException, OpacErrorException {
+		if (!initialised)
+			start();
+		
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("ACT", "UI_DATA"));
 		params.add(new BasicNameValuePair("HOST_NAME", ""));
@@ -1018,7 +1019,10 @@ public class Pica extends BaseApi implements OpacApi {
 	@Override
 	public List<SearchField> getSearchFields() throws ClientProtocolException,
 			IOException, JSONException {
-		String html = httpGet(opac_url + "/LNG=" + language
+		if (!initialised)
+			start();
+		
+		String html = httpGet(opac_url + "/LNG=" + getLang()
 				+ "/ADVANCED_SEARCHFILTER", getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 		List<SearchField> fields = new ArrayList<SearchField>();
@@ -1031,11 +1035,11 @@ public class Pica extends BaseApi implements OpacApi {
 			field.setHint("");
 			field.setData(new JSONObject("{\"ADI\": false}"));
 
-			Pattern pattern = Pattern.compile("\\[[A-Z:]+\\]|\\([A-Z:]+\\)");
+			Pattern pattern = Pattern.compile("\\[X?[A-Za-z]{2,3}:?\\]|\\(X?[A-Za-z]{2,3}:?\\)");
 			Matcher matcher = pattern.matcher(field.getDisplayName());
 			if (matcher.find()) {
 				field.getData()
-						.put("meaning", matcher.group().replace(":", ""));
+						.put("meaning", matcher.group().replace(":", "").toUpperCase());
 				field.setDisplayName(matcher.replaceFirst("").trim());
 			}
 
@@ -1225,11 +1229,32 @@ public class Pica extends BaseApi implements OpacApi {
 
 	@Override
 	public void setLanguage(String language) {
-		if (languageCodes.containsKey(language))
-			this.language = languageCodes.get(language);
+		this.languageCode = language;
+	}
+	
+	private String getLang() {
+		if (supportedLanguages.contains(languageCode))
+			return languageCodes.get(languageCode);
+		else if (supportedLanguages.contains("en"))
+			// Fall back to English if language not available
+			return languageCodes.get("en");
+		else if (supportedLanguages.contains("de"))
+			// Fall back to German if English not available
+			return languageCodes.get("de");
 		else
-			// Fall back to english if language not available
-			this.language = languageCodes.get("en");
+			return null;
 	}
 
+	@Override
+	public Set<String> getSupportedLanguages() throws IOException {
+		Set<String> langs = new HashSet<String>();
+		for (String lang : languageCodes.keySet()) {
+			String html = httpGet(opac_url + "/DB=" + db + "/LNG="
+					+ languageCodes.get(lang) + "/START_WELCOME",
+					getDefaultEncoding());
+			if (!html.contains("MODE_START"))
+				langs.add(lang);
+		}
+		return langs;
+	}
 }

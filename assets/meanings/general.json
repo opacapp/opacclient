@@ -193,13 +193,6 @@
         "verfügbar",
         "Verfügbarkeit"
     ],
-    "DIGITAL": [
-        "digital",
-        "E-Books",
-        "nur elektronische Publikationen",
-        "E-Medien",
-        "digitales Objekt"
-    ],
     "BRANCH": [
         "Suche in Zweigstelle",
         "Zweigstelle ist gleich",
@@ -218,6 +211,13 @@
         "Filiale",
         "Bibliotheksstandorte",
         "library"
+    ],
+    "DIGITAL": [
+        "digital",
+        "E-Books",
+        "nur elektronische Publikationen",
+        "E-Medien",
+        "digitales Objekt"
     ],
     "LOCATION": [
         "Ort",

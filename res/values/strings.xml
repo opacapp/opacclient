@@ -210,6 +210,8 @@ We might know your library ID then, but not your password, and we will take care
   <string name="no_search_cache">Error. Please try performing a search to solve this problem.</string>
   <string name="user_data_opac_message">When checking your account data, the library returned the following message: \"%s\"\n\nDo you want to save the account data anyway?</string>
   <string name="user_data_connection_error">A connection to the library server could not be established to check your account data. Do you want to save the account data anyway?</string>
+  <string name="support_search_account"></string>
+  <string name="support_search"></string>
   <string name="meta_clear_title"></string>
   <string name="meta_clear"></string>
 </resources>

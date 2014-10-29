@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -98,7 +99,6 @@ public class BiBer1992 extends BaseApi {
 	private String m_opac_url = "";
 	private String m_opac_dir = "opac"; // sometimes also "opax"
 	private JSONObject m_data;
-	private boolean m_initialised = false;
 	private List<NameValuePair> m_nameValuePairs = new ArrayList<NameValuePair>(
 			2);
 
@@ -296,14 +296,6 @@ public class BiBer1992 extends BaseApi {
 		return result;
 	}
 
-	/*
-	 * Check connection to OPAC and get media types
-	 */
-	@Override
-	public void start() throws IOException, NotReachableException {
-		m_initialised = true;
-	}
-
 	@Override
 	public void init(Library lib) {
 		super.init(lib);
@@ -337,7 +329,7 @@ public class BiBer1992 extends BaseApi {
 	public SearchRequestResult search(List<SearchQuery> queryList)
 			throws IOException, NotReachableException {
 
-		if (!m_initialised)
+		if (!initialised)
 			start();
 
 		m_nameValuePairs.clear();
@@ -524,7 +516,7 @@ public class BiBer1992 extends BaseApi {
 	@Override
 	public DetailledItem getResultById(String id, String homebranch)
 			throws IOException, NotReachableException {
-		if (!m_initialised)
+		if (!initialised)
 			start();
 
 		if (!id.contains("ftitle")) {
@@ -1264,5 +1256,11 @@ public class BiBer1992 extends BaseApi {
 	public void setLanguage(String language) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Set<String> getSupportedLanguages() throws IOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

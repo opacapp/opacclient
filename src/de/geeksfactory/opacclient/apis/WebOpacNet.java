@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -93,11 +94,6 @@ public class WebOpacNet extends BaseApi implements OpacApi {
 		defaulttypes.put("4", MediaType.DVD);
 		defaulttypes.put("5", MediaType.CD_SOFTWARE);
 		defaulttypes.put("8", MediaType.MAGAZINE);
-	}
-
-	@Override
-	public void start() throws IOException, NotReachableException {
-
 	}
 
 	@Override
@@ -515,6 +511,12 @@ public class WebOpacNet extends BaseApi implements OpacApi {
 	public void setLanguage(String language) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Set<String> getSupportedLanguages() throws IOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

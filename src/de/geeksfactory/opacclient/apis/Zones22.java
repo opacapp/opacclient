@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -160,6 +161,7 @@ public class Zones22 extends BaseApi {
 		Document doc = Jsoup.parse(html);
 
 		searchobj = doc.select("#ExpertSearch").attr("action");
+		super.start();
 	}
 
 	@Override
@@ -885,6 +887,12 @@ public class Zones22 extends BaseApi {
 	public void setLanguage(String language) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Set<String> getSupportedLanguages() throws IOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -39,7 +39,6 @@ public class SRU extends BaseApi implements OpacApi {
 
 	protected String opac_url = "";
 	protected JSONObject data;
-	protected boolean initialised = false;
 	protected Library library;
 	protected int resultcount = 10;
 	private String currentSearchParams;
@@ -103,11 +102,6 @@ public class SRU extends BaseApi implements OpacApi {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	public void start() throws IOException, NotReachableException {
-
 	}
 
 	protected int addParameters(Map<String, String> query, String key,
@@ -477,6 +471,12 @@ public class SRU extends BaseApi implements OpacApi {
 	public void setLanguage(String language) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Set<String> getSupportedLanguages() throws IOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

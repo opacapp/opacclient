@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -112,11 +113,6 @@ public class WinBiap extends BaseApi implements OpacApi {
 	protected JSONObject data;
 	protected Library library;
 	protected List<List<NameValuePair>> query;
-
-	@Override
-	public void start() throws IOException, NotReachableException {
-
-	}
 
 	public void init(Library lib) {
 		super.init(lib);
@@ -672,6 +668,12 @@ public class WinBiap extends BaseApi implements OpacApi {
 	public void setLanguage(String language) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Set<String> getSupportedLanguages() throws IOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

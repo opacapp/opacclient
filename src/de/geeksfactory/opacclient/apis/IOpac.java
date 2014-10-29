@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -77,7 +78,6 @@ public class IOpac extends BaseApi implements OpacApi {
 	protected String opac_url = "";
 	protected String dir = "/iopac";
 	protected JSONObject data;
-	protected boolean initialised = false;
 	protected Library library;
 	protected int resultcount = 10;
 	protected String reusehtml;
@@ -111,11 +111,6 @@ public class IOpac extends BaseApi implements OpacApi {
 	}
 
 	@Override
-	public void start() throws IOException, NotReachableException {
-
-	}
-
-	@Override
 	public void init(Library lib) {
 		super.init(lib);
 
@@ -146,6 +141,9 @@ public class IOpac extends BaseApi implements OpacApi {
 	@Override
 	public SearchRequestResult search(List<SearchQuery> queries)
 			throws IOException, NotReachableException, OpacErrorException {
+		if (!initialised)
+			start();
+		
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 		int index = 0;
@@ -403,6 +401,9 @@ public class IOpac extends BaseApi implements OpacApi {
 	@Override
 	public DetailledItem getResultById(String id, String homebranch)
 			throws IOException, NotReachableException {
+		
+		if (!initialised)
+			start();
 
 		if (id == null && reusehtml != null) {
 			return parse_result(reusehtml);
@@ -416,6 +417,9 @@ public class IOpac extends BaseApi implements OpacApi {
 
 	@Override
 	public DetailledItem getResult(int position) throws IOException {
+		if (!initialised)
+			start();
+		
 		int page = Double.valueOf(Math.floor(position / 10)).intValue() + 1;
 
 		String html = httpGet(opac_url + "/cgi-bin/di.exe?page=" + page
@@ -632,6 +636,9 @@ public class IOpac extends BaseApi implements OpacApi {
 	@Override
 	public AccountData account(Account account) throws IOException,
 			JSONException, OpacErrorException {
+		if (!initialised)
+			start();
+		
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("sleKndNr", account.getName()));
 		params.add(new BasicNameValuePair("slePw", account.getPassword()));
@@ -991,6 +998,12 @@ public class IOpac extends BaseApi implements OpacApi {
 	public void setLanguage(String language) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Set<String> getSupportedLanguages() throws IOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

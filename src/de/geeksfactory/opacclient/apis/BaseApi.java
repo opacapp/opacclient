@@ -74,6 +74,8 @@ public abstract class BaseApi implements OpacApi {
 	protected DefaultHttpClient http_client;
 	protected Library library;
 	protected StringProvider stringProvider;
+	protected Set<String> supportedLanguages;
+	protected boolean initialised;
 
 	/**
 	 * Initializes HTTP client and String Provider
@@ -83,6 +85,11 @@ public abstract class BaseApi implements OpacApi {
 		http_client = HTTPClient.getNewHttpClient(library);
 		this.library = library;
 		stringProvider = new DummyStringProvider();
+	}
+	
+	public void start() throws IOException, NotReachableException {
+		supportedLanguages = getSupportedLanguages();
+		initialised = true;
 	}
 
 	/**
