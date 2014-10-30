@@ -12,7 +12,7 @@
             "returndate": 2,
             "title": 1
         },
-        "baseurl": "http://www.bibliotheken-im-kreisre.de/webopac",
+        "baseurl": "https://www.bibliotheken-im-kreisre.de/webopac",
         "copiestable": {
             "branch": 0,
             "department": 2,
