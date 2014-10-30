@@ -114,7 +114,7 @@ public class SearchResultListFragment extends ListFragment {
 		frag.setArguments(args);
 		return frag;
 	}
-	
+
 	public static SearchResultListFragment getVolumeSearchInstance(Bundle query) {
 		SearchResultListFragment frag = new SearchResultListFragment();
 		Bundle args = new Bundle();
@@ -345,6 +345,8 @@ public class SearchResultListFragment extends ListFragment {
 		@Override
 		protected SearchRequestResult doInBackground(Object... arg0) {
 			super.doInBackground(arg0);
+			if (arg0[1] == null)
+				return null;
 			if (arg0[1] instanceof Map<?, ?>) {
 				Map<String, String> query = (Map<String, String>) arg0[1];
 				try {

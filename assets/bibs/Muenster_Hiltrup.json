@@ -1,7 +1,7 @@
 {
     "account_supported": true,
     "api": "bibliotheca",
-    "city": "M\u00c3\u00bcnster",
+    "city": "M\u00fcnster",
     "country": "Deutschland",
     "data": {
         "accounttable": {
@@ -10,7 +10,7 @@
             "returndate": 2,
             "title": 1
         },
-        "baseurl": "http://webopac.bistum-muenster.de/webopac",
+        "baseurl": "http://webopac.bistum-muenster.de/hiltrup",
         "copiestable": {
             "barcode": 0,
             "branch": 4,

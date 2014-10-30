@@ -1,7 +1,7 @@
 {
     "account_supported": true,
     "api": "iopac",
-    "city": "Eckernf\u00c3\u00b6rde",
+    "city": "Eckernf\u00f6rde",
     "country": "Deutschland",
     "data": {
         "baseurl": "http://iopac-eck.dtdns.net",

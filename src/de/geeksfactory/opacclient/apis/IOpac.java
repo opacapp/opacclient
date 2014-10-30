@@ -760,15 +760,17 @@ public class IOpac extends BaseApi implements OpacApi {
 				e1.printStackTrace();
 			}
 			if (copymap.optInt("prolongurl", 5) >= 0) {
-				String link = tr.child(copymap.optInt("prolongurl", 5))
-						.select("a").attr("href");
-				e.put(AccountData.KEY_LENT_LINK, link);
-				// find media number with regex
-				Pattern pattern = Pattern.compile("mednr=([^&]*)&");
-				Matcher matcher = pattern.matcher(link);
-				matcher.find();
-				if (matcher.group() != null) {
-					e.put(AccountData.KEY_LENT_ID, matcher.group(1));
+				if (tr.children().size() > copymap.optInt("prolongurl", 5)) {
+					String link = tr.child(copymap.optInt("prolongurl", 5))
+							.select("a").attr("href");
+					e.put(AccountData.KEY_LENT_LINK, link);
+					// find media number with regex
+					Pattern pattern = Pattern.compile("mednr=([^&]*)&");
+					Matcher matcher = pattern.matcher(link);
+					matcher.find();
+					if (matcher.group() != null) {
+						e.put(AccountData.KEY_LENT_ID, matcher.group(1));
+					}
 				}
 			}
 
@@ -799,7 +801,7 @@ public class IOpac extends BaseApi implements OpacApi {
 					.replace("\u00a0", ""));
 			e.put(AccountData.KEY_RESERVATION_READY, tr.child(4).text().trim()
 					.replace("\u00a0", ""));
-			e.put(AccountData.KEY_RESERVATION_CANCEL, tr.child(5).select("a")
+			e.put(AccountData.KEY_RESERVATION_CANCEL, tr.select("a").last()
 					.attr("href"));
 
 			medien.add(e);
