@@ -5,14 +5,14 @@
     "country": "Deutschland",
     "data": {
         "accounttable": {
-            "author": 6,
+            "author": 7,
             "barcode": -1,
             "homebranch": -1,
             "lendingbranch": -1,
             "prolongurl": 1,
             "returndate": 3,
             "status": 5,
-            "title": 6
+            "title": 7
         },
         "baseurl": "http://www.opac.ravensburg.de",
         "copiestable": {
@@ -38,7 +38,11 @@
             "5": "CD",
             "9": "BOARDGAME"
         },
-        "opacdir": "opax"
+        "opacdir": "opax",
+        "searchtable": [
+            2,
+            3
+        ]
     },
     "geo": [
         47.7782704,

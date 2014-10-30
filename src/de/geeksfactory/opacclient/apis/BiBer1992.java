@@ -251,6 +251,10 @@ public class BiBer1992 extends BaseApi {
 		String[] fparts2 = fparts1[fparts1.length - 1].split("\\."); // "31.gif.S"
 		String lookup = fparts2[0]; // "31"
 
+		if (imagename.contains("amazon")) {
+			sr.setCover(imagename);
+		}
+		
 		if (m_data.has("mediatypes")) {
 			try {
 				String typeStr = m_data.getJSONObject("mediatypes").getString(
@@ -465,13 +469,9 @@ public class BiBer1992 extends BaseApi {
 			}
 
 			// media type
-			try {
-				elem = tr.select("td img");
-				if (elem.size() > 0) {
-					setMediaTypeFromImageFilename(sr, elem.get(0).attr("src"));
-				}
-			} catch (NumberFormatException e) {
-
+			elem = tr.select("td img");
+			if (elem.size() > 0) {
+				setMediaTypeFromImageFilename(sr, elem.get(0).attr("src"));
 			}
 
 			// description
