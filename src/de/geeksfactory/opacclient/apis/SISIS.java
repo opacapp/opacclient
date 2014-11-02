@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -78,7 +79,6 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
 public class SISIS extends BaseApi implements OpacApi {
 	protected String opac_url = "";
 	protected JSONObject data;
-	protected boolean initialised = false;
 	protected Library library;
 
 	protected String CSId;
@@ -238,6 +238,8 @@ public class SISIS extends BaseApi implements OpacApi {
 
 		Document doc = Jsoup.parse(html);
 		CSId = doc.select("input[name=CSId]").val();
+		
+		super.start();
 	}
 
 	@Override
@@ -1726,5 +1728,17 @@ public class SISIS extends BaseApi implements OpacApi {
 		boolean success = login(account);
 		if (!success)
 			throw new NotReachableException();
+	}
+
+	@Override
+	public void setLanguage(String language) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Set<String> getSupportedLanguages() throws IOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

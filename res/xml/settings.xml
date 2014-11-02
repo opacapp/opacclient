@@ -51,8 +51,8 @@
 
         <Preference
             android:key="meta_clear"
-            android:summary="Löscht auf dem Handy zwischengespeicherten Zweigstellen, Metadaten, etc."
-            android:title="Cache leeren" />
+            android:summary="@string/meta_clear"
+            android:title="@string/meta_clear_title" />
     </PreferenceCategory>
 
 </PreferenceScreen>

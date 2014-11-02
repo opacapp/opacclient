@@ -24,6 +24,7 @@ package de.geeksfactory.opacclient.apis;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.json.JSONException;
 
@@ -948,4 +949,32 @@ public interface OpacApi {
 	 *            the StringProvider to use
 	 */
 	public void setStringProvider(StringProvider stringProvider);
+
+	/**
+	 * Get all languages supported by this library. This will be a Set of
+	 * language codes defined in ISO-639-1 (two-letter codes in lower case, see
+	 * <a href="http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">this
+	 * list</a>). We don't need to use this function in the app because the API
+	 * will automatically fall back if the language set is not supported, but it
+	 * is used in the MeaningDetector tool to get search fields for all
+	 * supported languages. This function may use blocking network operations
+	 * and may return null if the API doesn't support different languages.
+	 * 
+	 * @throws OpacErrorException
+	 * @throws IOException
+	 */
+	public Set<String> getSupportedLanguages() throws IOException;
+
+	/**
+	 * Set the language to use. This should be one of the language codes defined
+	 * in ISO-639-1 (two-letter codes in lower case, see <a
+	 * href="http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">this
+	 * list</a>). The API should use the default language of the library if this
+	 * is not called and should fall back first to English and then to the
+	 * library's default language if the requested language is not available.
+	 * 
+	 * @param language
+	 *            the language to use
+	 */
+	public void setLanguage(String language);
 }

@@ -29,10 +29,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -88,11 +90,13 @@ public class Pica extends BaseApi implements OpacApi {
 	protected Integer searchSet;
 	protected String db;
 	protected String pwEncoded;
-	CookieStore cookieStore = new BasicCookieStore();
+	protected String languageCode;
+	protected CookieStore cookieStore = new BasicCookieStore();
 
 	protected String lor_reservations;
 
 	protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
+	protected static HashMap<String, String> languageCodes = new HashMap<String, String>();
 
 	static {
 		defaulttypes.put("book", MediaType.BOOK);
@@ -110,17 +114,11 @@ public class Pica extends BaseApi implements OpacApi {
 		defaulttypes.put("software", MediaType.CD_SOFTWARE);
 		defaulttypes.put("microfilm", MediaType.UNKNOWN);
 		defaulttypes.put("empty", MediaType.UNKNOWN);
-	}
 
-	@Override
-	public void start() throws IOException, NotReachableException {
-		// String html = httpGet(opac_url
-		// + "/DB=" + db + "/SET=1/TTL=1/ADVANCED_SEARCHFILTER",
-		// getDefaultEncoding(), false, cookieStore);
-
-		// Document doc = Jsoup.parse(html);
-
-		// updateSearchSetValue(doc);
+		languageCodes.put("de", "DU");
+		languageCodes.put("en", "EN");
+		languageCodes.put("nl", "NE");
+		languageCodes.put("fr", "FR");
 	}
 
 	@Override
@@ -180,6 +178,9 @@ public class Pica extends BaseApi implements OpacApi {
 	public SearchRequestResult search(List<SearchQuery> query)
 			throws IOException, NotReachableException, OpacErrorException,
 			JSONException {
+		if (!initialised)
+			start();
+		
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 		int index = 0;
@@ -406,6 +407,9 @@ public class Pica extends BaseApi implements OpacApi {
 		if (id == null && reusehtml != null) {
 			return parse_result(reusehtml);
 		}
+		
+		if (!initialised)
+			start();
 
 		String html = httpGet(id, getDefaultEncoding());
 
@@ -414,9 +418,11 @@ public class Pica extends BaseApi implements OpacApi {
 
 	@Override
 	public DetailledItem getResult(int position) throws IOException {
-		String html = httpGet(opac_url + "/DB=" + db + "/SET=" + searchSet
-				+ "/TTL=1/SHW?FRST=" + (position + 1), getDefaultEncoding(),
-				false, cookieStore);
+		if (!initialised)
+			start();
+		String html = httpGet(opac_url + "/DB=" + db + "/LNG=" + getLang()
+				+ "/SET=" + searchSet + "/TTL=1/SHW?FRST=" + (position + 1),
+				getDefaultEncoding(), false, cookieStore);
 
 		return parse_result(html);
 	}
@@ -466,46 +472,11 @@ public class Pica extends BaseApi implements OpacApi {
 
 		// GET TITLE AND SUBTITLE
 		String titleAndSubtitle = "";
-		if (doc.select("td.preslabel:contains(Titel) + td.presvalue").size() > 0) {
-			titleAndSubtitle = doc
-					.select("td.preslabel:contains(Titel) + td.presvalue")
-					.first().text().trim();
-			int slashPosition = titleAndSubtitle.indexOf("/");
-			String title;
-			String subtitle;
-			if (slashPosition > 0) {
-				title = titleAndSubtitle.substring(0, slashPosition).trim();
-				subtitle = titleAndSubtitle.substring(slashPosition + 1).trim();
-				result.addDetail(new Detail(stringProvider
-						.getString(StringProvider.SUBTITLE), subtitle));
-			} else {
-				title = titleAndSubtitle;
-				subtitle = "";
-			}
-			result.setTitle(title);
-		} else if (doc.select("td.preslabel:contains(Aufsatz) + td.presvalue")
-				.size() > 0) {
-			titleAndSubtitle = doc
-					.select("td.preslabel:contains(Aufsatz) + td.presvalue")
-					.first().text().trim();
-			int slashPosition = titleAndSubtitle.indexOf("/");
-			String title;
-			String subtitle;
-			if (slashPosition > 0) {
-				title = titleAndSubtitle.substring(0, slashPosition).trim();
-				subtitle = titleAndSubtitle.substring(slashPosition + 1).trim();
-				result.addDetail(new Detail(stringProvider
-						.getString(StringProvider.SUBTITLE), subtitle));
-			} else {
-				title = titleAndSubtitle;
-				subtitle = "";
-			}
-			result.setTitle(title);
-		} else if (doc.select(
-				"td.preslabel:contains(Zeitschrift) + td.presvalue").size() > 0) {
-			titleAndSubtitle = doc
-					.select("td.preslabel:contains(Zeitschrift) + td.presvalue")
-					.first().text().trim();
+		String selector = "td.preslabel:matches(.*(Titel|Aufsatz|Zeitschrift"
+				+ "|Title|Article|Periodical"
+				+ "|Titre|Article|P.riodique).*) + td.presvalue";
+		if (doc.select(selector).size() > 0) {
+			titleAndSubtitle = doc.select(selector).first().text().trim();
 			int slashPosition = titleAndSubtitle.indexOf("/");
 			String title;
 			String subtitle;
@@ -534,7 +505,7 @@ public class Pica extends BaseApi implements OpacApi {
 		for (Element element : doc.select("td.preslabel + td.presvalue")) {
 			Element titleElem = element.firstElementSibling();
 			String detail = element.text().trim();
-			String title = titleElem.text().trim().replace("\u00a0", "");
+			String title = titleElem.text().replace("\u00a0", " ").trim();
 
 			if (element.select("hr").size() == 0) { // no separator
 
@@ -544,32 +515,32 @@ public class Pica extends BaseApi implements OpacApi {
 				}
 
 				if (title.contains("Standort")
-						|| title.contains("Vorhanden in")) {
+						|| title.contains("Vorhanden in")
+						|| title.contains("Location")) {
 					location += detail;
 				} else if (title.contains("Sonderstandort")) {
 					location += " - " + detail;
-				} else if (title.contains("Fachnummer")) {
+				} else if (title.contains("Fachnummer")
+						|| title.contains("locationnumber")) {
 					e.put(DetailledItem.KEY_COPY_LOCATION, detail);
-				} else if (title.contains("Signatur")) {
+				} else if (title.contains("Signatur")
+						|| title.contains("Shelf mark")) {
 					e.put(DetailledItem.KEY_COPY_SHELFMARK, detail);
 				} else if (title.contains("Anmerkung")) {
 					location += " (" + detail + ")";
 				} else if (title.contains("Status")
-						|| title.contains("Ausleihinfo")) {
-					detail = detail.replace("Bestellen", "")
-							.replace("verfuegbar", "verfügbar")
-							.replace("Verfuegbar", "verfügbar")
-							.replace("Vormerken", "")
-							.replace("Liste der Exemplare", "").trim();
+						|| title.contains("Ausleihinfo")
+						|| title.contains("Request info")) {
+					if (element.select("div").size() > 0)
+						detail = element.select("div").first().ownText();
+					else
+						detail = element.ownText();
 					e.put(DetailledItem.KEY_COPY_STATUS, detail);
 					// Get reservation info
-					if (element.select(
-							"a:contains(Vormerken), a:contains(Exemplare)")
-							.size() > 0) {
-						Element a = element.select(
-								"a:contains(Vormerken), a:contains(Exemplare)")
-								.first();
-						boolean multipleCopies = a.text().contains("Exemplare");
+					if (element.select("a:has(img[src*=inline_arrow])").size() > 0) {
+						Element a = element.select(selector).first();
+						boolean multipleCopies = a.text().matches(
+								".*(Exemplare|Volume list).*");
 						JSONObject reservation = new JSONObject();
 						try {
 							reservation.put("multi", multipleCopies);
@@ -581,7 +552,7 @@ public class Pica extends BaseApi implements OpacApi {
 						}
 						result.setReservable(true);
 					}
-				} else if (!title.equals("Titel")) {
+				} else if (!title.matches("(Titel|Titre|Title)")) {
 					result.addDetail(new Detail(title, detail));
 				}
 			} else if (e.size() > 0) {
@@ -712,7 +683,7 @@ public class Pica extends BaseApi implements OpacApi {
 
 	public ReservationResult reservation_result(List<NameValuePair> params,
 			boolean multi) throws IOException {
-		String html2 = httpPost(https_url + "/loan/LNG=DU/DB=" + db + "/SET="
+		String html2 = httpPost(https_url + "/loan/DB=" + db + "/SET="
 				+ searchSet + "/TTL=1/" + (multi ? "REQCONT" : "RESCONT"),
 				new UrlEncodedFormEntity(params, getDefaultEncoding()),
 				getDefaultEncoding());
@@ -827,6 +798,9 @@ public class Pica extends BaseApi implements OpacApi {
 	@Override
 	public AccountData account(Account account) throws IOException,
 			JSONException, OpacErrorException {
+		if (!initialised)
+			start();
+		
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("ACT", "UI_DATA"));
 		params.add(new BasicNameValuePair("HOST_NAME", ""));
@@ -838,9 +812,9 @@ public class Pica extends BaseApi implements OpacApi {
 		params.add(new BasicNameValuePair("BOR_U", account.getName()));
 		params.add(new BasicNameValuePair("BOR_PW", account.getPassword()));
 
-		String html = httpPost(https_url + "/loan/DB=" + db
-				+ "/LNG=DU/USERINFO", new UrlEncodedFormEntity(params,
-				getDefaultEncoding()), getDefaultEncoding());
+		String html = httpPost(https_url + "/loan/DB=" + db + "/USERINFO",
+				new UrlEncodedFormEntity(params, getDefaultEncoding()),
+				getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 
 		if (doc.select(".cnt .alert, .cnt .error").size() > 0) {
@@ -1045,8 +1019,11 @@ public class Pica extends BaseApi implements OpacApi {
 	@Override
 	public List<SearchField> getSearchFields() throws ClientProtocolException,
 			IOException, JSONException {
-		String html = httpGet(opac_url + "/ADVANCED_SEARCHFILTER",
-				getDefaultEncoding());
+		if (!initialised)
+			start();
+		
+		String html = httpGet(opac_url + "/LNG=" + getLang()
+				+ "/ADVANCED_SEARCHFILTER", getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 		List<SearchField> fields = new ArrayList<SearchField>();
 
@@ -1058,11 +1035,11 @@ public class Pica extends BaseApi implements OpacApi {
 			field.setHint("");
 			field.setData(new JSONObject("{\"ADI\": false}"));
 
-			Pattern pattern = Pattern.compile("\\[[A-Z:]+\\]|\\([A-Z:]+\\)");
+			Pattern pattern = Pattern.compile("\\[X?[A-Za-z]{2,3}:?\\]|\\(X?[A-Za-z]{2,3}:?\\)");
 			Matcher matcher = pattern.matcher(field.getDisplayName());
 			if (matcher.find()) {
 				field.getData()
-						.put("meaning", matcher.group().replace(":", ""));
+						.put("meaning", matcher.group().replace(":", "").toUpperCase());
 				field.setDisplayName(matcher.replaceFirst("").trim());
 			}
 
@@ -1239,9 +1216,9 @@ public class Pica extends BaseApi implements OpacApi {
 		params.add(new BasicNameValuePair("BOR_U", account.getName()));
 		params.add(new BasicNameValuePair("BOR_PW", account.getPassword()));
 
-		String html = httpPost(https_url + "/loan/DB=" + db
-				+ "/LNG=DU/USERINFO", new UrlEncodedFormEntity(params,
-				getDefaultEncoding()), getDefaultEncoding());
+		String html = httpPost(https_url + "/loan/DB=" + db + "/USERINFO",
+				new UrlEncodedFormEntity(params, getDefaultEncoding()),
+				getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 
 		if (doc.select(".cnt .alert, .cnt .error").size() > 0) {
@@ -1250,4 +1227,34 @@ public class Pica extends BaseApi implements OpacApi {
 		}
 	}
 
+	@Override
+	public void setLanguage(String language) {
+		this.languageCode = language;
+	}
+	
+	private String getLang() {
+		if (supportedLanguages.contains(languageCode))
+			return languageCodes.get(languageCode);
+		else if (supportedLanguages.contains("en"))
+			// Fall back to English if language not available
+			return languageCodes.get("en");
+		else if (supportedLanguages.contains("de"))
+			// Fall back to German if English not available
+			return languageCodes.get("de");
+		else
+			return null;
+	}
+
+	@Override
+	public Set<String> getSupportedLanguages() throws IOException {
+		Set<String> langs = new HashSet<String>();
+		for (String lang : languageCodes.keySet()) {
+			String html = httpGet(opac_url + "/DB=" + db + "/LNG="
+					+ languageCodes.get(lang) + "/START_WELCOME",
+					getDefaultEncoding());
+			if (!html.contains("MODE_START"))
+				langs.add(lang);
+		}
+		return langs;
+	}
 }

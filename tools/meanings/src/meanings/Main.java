@@ -7,11 +7,10 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.Security;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -37,7 +36,7 @@ public class Main {
 				"../../assets/meanings").getIgnoredFields();
 		Scanner in = new Scanner(System.in);
 		final ExecutorService service = Executors.newFixedThreadPool(25);
-		List<Entry<Library, Future<List<SearchField>>>> tasks = new ArrayList<Entry<Library, Future<List<SearchField>>>>();
+		List<TaskInfo> tasks = new ArrayList<TaskInfo>();
 		for (String[] libraryNameArray : libraries) {
 			String libraryName = libraryNameArray[0];
 			Library library;
@@ -47,65 +46,72 @@ public class Main {
 						new JSONObject(readFile("../../assets/bibs/"
 								+ libraryName + ".json",
 								Charset.defaultCharset())));
-				Future<List<SearchField>> future = service
+				Future<Map<String, List<SearchField>>> future = service
 						.submit(new GetSearchFieldsCallable(library));
-				tasks.add(new AbstractMap.SimpleEntry<Library, Future<List<SearchField>>>(
-						library, future));
+				tasks.add(new TaskInfo(library, future));
 			} catch (JSONException | IOException e) {
 				// e.printStackTrace();
 			}
 		}
 
-		for (Entry<Library, Future<List<SearchField>>> entry : tasks) {
-			Library library = entry.getKey();
+		for (TaskInfo entry : tasks) {
+			Library library = entry.lib;
 			try {
-				List<SearchField> fields = entry.getValue().get();
+				Map<String, List<SearchField>> fields = entry.future.get();
 				if (fields == null)
 					continue;
-
-				System.out.println("Bibliothek: " + library.getIdent());
-				JavaMeaningDetector detector = new JavaMeaningDetector(library,
-						"../../assets/meanings");
-				for (int i = 0; i < fields.size(); i++) {
-					fields.set(i, detector.detectMeaning(fields.get(i)));
-				}
-				for (SearchField field : fields) {
-					if (field.getMeaning() != null
-							|| ignored.contains(field.getDisplayName())
-							|| field.getData() != null
-							&& field.getData().has("meaning")
-							&& ignored.contains(field.getData().getString(
-									"meaning")))
-						continue;
-					String name;
-					if (field.getData() != null
-							&& field.getData().has("meaning")) {
-						name = field.getData().getString("meaning");
-						System.out.print("Unbekanntes Feld: '" + name
-								+ "' (Anzeigename: " + field.getDisplayName() + ") ");
-					} else {
-						name = field.getDisplayName();
-						System.out.print("Unbekanntes Feld: '" + name + "' ");
+				for (String lang : fields.keySet()) {
+					System.out.println("Bibliothek: " + library.getIdent()
+							+ ", Sprache: " + lang);
+					JavaMeaningDetector detector = new JavaMeaningDetector(
+							library, "../../assets/meanings");
+					for (int i = 0; i < fields.get(lang).size(); i++) {
+						fields.get(lang)
+								.set(i,
+										detector.detectMeaning(fields.get(lang)
+												.get(i)));
 					}
-					Meaning meaning = null;
-					boolean ignoredField = false;
-					while (meaning == null && !ignoredField) {
-						String str = in.nextLine();
-						if (str.equals("")
-								|| str.toLowerCase().equals("ignore")) {
-							ignoredField = true;
-							detector.addIgnoredField(name);
-							ignored.add(name);
+					for (SearchField field : fields.get(lang)) {
+						if (field.getMeaning() != null
+								|| ignored.contains(field.getDisplayName())
+								|| field.getData() != null
+								&& field.getData().has("meaning")
+								&& ignored.contains(field.getData().getString(
+										"meaning")))
+							continue;
+						String name;
+						if (field.getData() != null
+								&& field.getData().has("meaning")) {
+							name = field.getData().getString("meaning");
+							System.out.print("Unbekanntes Feld: '" + name
+									+ "' (Anzeigename: "
+									+ field.getDisplayName() + ") ");
 						} else {
-							try {
-								meaning = Meaning.valueOf(str.toUpperCase());
-							} catch (IllegalArgumentException e) {
-								meaning = null;
+							name = field.getDisplayName();
+							System.out.print("Unbekanntes Feld: '" + name
+									+ "' ");
+						}
+						Meaning meaning = null;
+						boolean ignoredField = false;
+						while (meaning == null && !ignoredField) {
+							String str = in.nextLine();
+							if (str.equals("")
+									|| str.toLowerCase().equals("ignore")) {
+								ignoredField = true;
+								detector.addIgnoredField(name);
+								ignored.add(name);
+							} else {
+								try {
+									meaning = Meaning
+											.valueOf(str.toUpperCase());
+								} catch (IllegalArgumentException e) {
+									meaning = null;
+								}
 							}
 						}
-					}
-					if (meaning != null) {
-						detector.addMeaning(name, meaning);
+						if (meaning != null) {
+							detector.addMeaning(name, meaning);
+						}
 					}
 				}
 			} catch (JSONException | IOException e) {
@@ -132,6 +138,17 @@ public class Main {
 			throws IOException {
 		byte[] encoded = Files.readAllBytes(Paths.get(path));
 		return encoding.decode(ByteBuffer.wrap(encoded)).toString();
+	}
+
+	private static class TaskInfo {
+		public Future<Map<String, List<SearchField>>> future;
+		public Library lib;
+
+		public TaskInfo(Library lib,
+				Future<Map<String, List<SearchField>>> future) {
+			this.future = future;
+			this.lib = lib;
+		}
 	}
 
 }

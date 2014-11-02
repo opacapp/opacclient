@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -56,7 +57,6 @@ public class Adis extends BaseApi implements OpacApi {
 
 	protected String opac_url = "";
 	protected JSONObject data;
-	protected boolean initialised = false;
 	protected Library library;
 
 	protected int s_requestCount = 0;
@@ -282,8 +282,7 @@ public class Adis extends BaseApi implements OpacApi {
 		} catch (JSONException e) {
 			throw new RuntimeException(e);
 		}
-
-		initialised = true;
+		super.start();
 	}
 
 	@Override
@@ -1445,6 +1444,18 @@ public class Adis extends BaseApi implements OpacApi {
 		Document doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
 				+ s_service + "&sp=SBK");
 		doc = handleLoginForm(doc, account);
+	}
+
+	@Override
+	public void setLanguage(String language) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Set<String> getSupportedLanguages() throws IOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

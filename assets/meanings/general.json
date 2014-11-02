@@ -27,7 +27,14 @@
         "Schlagwort Person",
         "Autor/Person",
         "Autor (Person)",
-        "Weitere Person"
+        "Weitere Person",
+        "auteur",
+        "persoonsnaam",
+        "persoon",
+        "person/author",
+        "author",
+        "trefwoord: persoon",
+        "Noms des personnes"
     ],
     "AUDIENCE": [
         "Interessenkreis",
@@ -54,7 +61,11 @@
         "Einfache Suche",
         "Suchbegriffe",
         "Freitext",
-        "free_search"
+        "free_search",
+        "alle woorden",
+        "(bijna) alle woorden",
+        "all words",
+        "Tous les mots"
     ],
     "KEYWORD": [
         "Schlagwort",
@@ -74,7 +85,10 @@
         "Schlagwort StB",
         "Schlagworter",
         "Schlagwort / Thema",
-        "Schlagwort 1"
+        "Schlagwort 1",
+        "trefwoord (Stichw.)",
+        "trefwoord",
+        "GOO-trefwoord"
     ],
     "ISBN": [
         "ISBN",
@@ -95,7 +109,14 @@
         "ISBN,ISSN,ISMN,ZDB-ID",
         "ISSN, ISBN, SWB-Nr.",
         "ISSN, ISBN",
-        "ISBN / ISSN / EAN"
+        "ISBN / ISSN / EAN",
+        "nummer",
+        "Nummern",
+        "nummer(ISBN/ISSN)",
+        "ISBN (books)",
+        "ISSN (periodicals)",
+        "ISBN (monografieen)",
+        "ISSN (periodieken)"
     ],
     "HOME_BRANCH": [
         "Aktuelle Zweigstelle",
@@ -123,7 +144,11 @@
         "Systematik RVK",
         "Systematikgruppe",
         "Systematiktitel",
-        "Systematikstichwort"
+        "Systematikstichwort",
+        "systematische code",
+        "signatuur",
+        "shelfmark (String trunc.)",
+        "Code systematique"
     ],
     "YEAR": [
         "Jahr",
@@ -138,7 +163,13 @@
         "Jahr(von bis)",
         "Jahr präzis",
         "Erscheinungsjahr (am)",
-        "Jahr (von-bis)"
+        "Jahr (von-bis)",
+        "year of publication",
+        "année de publication",
+        "jaar van publicatie",
+        "year of publication(except periodicals)",
+        "jaar van publicatieNO_YEAR",
+        "jaar van uitgave"
     ],
     "ORDER": [
         "Sortierung",
@@ -152,18 +183,15 @@
         "Verlag/Ort",
         "Verlag/Verlagsort",
         "Ort, Verlag",
-        "Verl"
+        "Verl",
+        "Ort,Verlag (Stichwort)",
+        "uitgever",
+        "publisher, publishing place (keywords)",
+        "publisher"
     ],
     "AVAILABLE": [
         "verfügbar",
         "Verfügbarkeit"
-    ],
-    "DIGITAL": [
-        "digital",
-        "E-Books",
-        "nur elektronische Publikationen",
-        "E-Medien",
-        "digitales Objekt"
     ],
     "BRANCH": [
         "Suche in Zweigstelle",
@@ -180,7 +208,16 @@
         "Anzeige der Titel nur aus Zweigstelle",
         "Suchort",
         "Bibliotheksort",
-        "Filiale"
+        "Filiale",
+        "Bibliotheksstandorte",
+        "library"
+    ],
+    "DIGITAL": [
+        "digital",
+        "E-Books",
+        "nur elektronische Publikationen",
+        "E-Medien",
+        "digitales Objekt"
     ],
     "LOCATION": [
         "Ort",
@@ -204,7 +241,8 @@
         "Materialart",
         "Mediengruppe",
         "Medientypen",
-        "Art des Mediums (CD, DVD...)"
+        "Art des Mediums (CD, DVD...)",
+        "materiaalcode"
     ],
     "BARCODE": [
         "Barcode",
@@ -231,6 +269,11 @@
         "Titelstichwörter",
         "Titelwort",
         "Schlagwort Titel",
-        "Titel (-stichwörter)"
+        "Titel (-stichwörter)",
+        "Titel (Stichwort)",
+        "titelwoorden",
+        "title (keywords)",
+        "title words",
+        "Mots titre"
     ]
 }

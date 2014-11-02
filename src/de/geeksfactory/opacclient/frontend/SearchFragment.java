@@ -399,9 +399,13 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 			// should not happen
 			e.printStackTrace();
 		}
+		String language = getActivity().getResources().getConfiguration().locale
+				.getLanguage();
 		if (dataSource.hasSearchFields(app.getLibrary().getIdent())
 				&& dataSource.getLastSearchFieldUpdateVersion(app.getLibrary()
-						.getIdent()) == versionCode) {
+						.getIdent()) == versionCode
+				&& language.equals(dataSource.getSearchFieldLanguage(app
+						.getLibrary().getIdent()))) {
 			if (task != null && !task.isCancelled())
 				task.cancel(true);
 			fields = dataSource.getSearchFields(app.getLibrary().getIdent());

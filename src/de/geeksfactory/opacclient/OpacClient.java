@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.acra.ACRA;
 import org.acra.ACRAConfiguration;
@@ -101,6 +102,7 @@ public class OpacClient extends Application {
 	private final Uri STAR_PROVIDER_STAR_URI = StarContentProvider.STAR_URI;
 
 	private static OpacClient instance;
+	private String currentLang;
 
 	public OpacClient() {
 		super();
@@ -175,6 +177,8 @@ public class OpacClient extends Application {
 			return null;
 		newApiInstance.init(lib);
 		newApiInstance.setStringProvider(new AndroidStringProvider());
+		currentLang = getResources().getConfiguration().locale.getLanguage();
+		newApiInstance.setLanguage(currentLang);
 		return newApiInstance;
 	}
 
@@ -192,7 +196,9 @@ public class OpacClient extends Application {
 
 	public OpacApi getApi() {
 		if (account != null && api != null) {
-			if (sp.getLong(PREF_SELECTED_ACCOUNT, 0) == account.getId()) {
+			if (sp.getLong(PREF_SELECTED_ACCOUNT, 0) == account.getId()
+					&& getResources().getConfiguration().locale.getLanguage()
+							.equals(currentLang)) {
 				return api;
 			}
 		}

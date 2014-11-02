@@ -217,4 +217,6 @@
 	<string name="user_data_connection_error">Beim Überprüfen der Benutzerdaten ist der Aufbau einer Verbindung zum Bibliotheksserver fehlgeschlagen. Möchten Sie diese Benutzerdaten trotzdem speichern?</string>
 	<string name="support_search_account">Katalogsuche und Konto</string>
 	<string name="support_search">Katalogsuche</string>
+	<string name="meta_clear_title">Cache leeren</string>
+	<string name="meta_clear">Löscht auf dem Handy zwischengespeicherten Zweigstellen, Metadaten, etc.</string>
 </resources>

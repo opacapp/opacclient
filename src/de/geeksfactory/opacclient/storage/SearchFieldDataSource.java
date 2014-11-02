@@ -56,11 +56,20 @@ public interface SearchFieldDataSource {
 	 *         this library was last updated
 	 */
 	public long getLastSearchFieldUpdateTime(String libraryId);
-	
+
 	/**
 	 * @param libraryId
 	 *            The ID of the library (Library.getIdent())
-	 * @return Version code of the last app version that updated the search field for this library
+	 * @return Version code of the last app version that updated the search
+	 *         field for this library
 	 */
 	public int getLastSearchFieldUpdateVersion(String libraryId);
+
+	/**
+	 * @param libraryId
+	 *            The ID of the library (Library.getIdent())
+	 * @return System language with which the search fields were saved
+	 *         (ISO-639-1 code)
+	 */
+	public String getSearchFieldLanguage(String libraryId);
 }

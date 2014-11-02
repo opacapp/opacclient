@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
@@ -93,6 +94,7 @@ public class Heidi extends BaseApi implements OpacApi {
 				break;
 			}
 		}
+		super.start();
 	}
 
 	@Override
@@ -848,6 +850,18 @@ public class Heidi extends BaseApi implements OpacApi {
 	public void checkAccountData(Account account) throws IOException,
 			JSONException, OpacErrorException {
 		login(account);
+	}
+
+	@Override
+	public void setLanguage(String language) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Set<String> getSupportedLanguages() throws IOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -36,12 +36,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -82,7 +82,6 @@ public class Bibliotheca extends BaseApi {
 
 	protected String opac_url = "";
 	protected JSONObject data;
-	protected boolean initialised = false;
 	protected Library library;
 	protected long logged_in;
 	protected Account logged_in_as;
@@ -218,7 +217,6 @@ public class Bibliotheca extends BaseApi {
 	@Override
 	public void start() throws ClientProtocolException, SocketException,
 			IOException, NotReachableException {
-		initialised = true;
 		String db = "";
 		if (data.has("db")) {
 			try {
@@ -229,6 +227,7 @@ public class Bibliotheca extends BaseApi {
 		}
 		httpGet(opac_url + "/woload.asp?lkz=1&nextpage=" + db,
 				getDefaultEncoding());
+		super.start();
 	}
 
 	@Override
@@ -1207,5 +1206,17 @@ public class Bibliotheca extends BaseApi {
 		}
 		return convertStreamToString(response.getEntity().getContent(),
 				encoding);
+	}
+
+	@Override
+	public void setLanguage(String language) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Set<String> getSupportedLanguages() throws IOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
