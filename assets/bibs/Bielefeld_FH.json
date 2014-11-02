@@ -1,0 +1,16 @@
+{
+    "account_supported": true,
+    "api": "sisis",
+    "city": "Bielefeld",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "https://biblio.fh-bielefeld.de/webOPACClient",
+        "information": "http://www.fh-bielefeld.de/bib"
+    },
+    "geo": [
+        52.0302285,
+        8.532470800000002
+    ],
+    "state": "Nordrhein-Westfalen",
+    "title": "Fachhochschule"
+}
