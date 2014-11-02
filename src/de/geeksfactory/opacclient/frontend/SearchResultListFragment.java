@@ -135,8 +135,10 @@ public class SearchResultListFragment extends ListFragment {
 	public void performsearch() {
 		st = new SearchStartTask();
 		if (getArguments().containsKey("volumeQuery")) {
-			st.execute(app,
-					OpacClient.bundleToMap(getArguments().getBundle("volumeQuery")));
+			st.execute(
+					app,
+					OpacClient.bundleToMap(getArguments().getBundle(
+							"volumeQuery")));
 		} else {
 			st.execute(app,
 					OpacClient.bundleToQuery(getArguments().getBundle("query")));
