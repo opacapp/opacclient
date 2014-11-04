@@ -41,6 +41,12 @@ import de.geeksfactory.opacclient.objects.Library;
 public class AccountListAdapter extends ArrayAdapter<Account> {
 	private List<Account> objects;
 	private Context context;
+	private boolean highlight = true;
+	
+	public AccountListAdapter setHighlightActiveAccount(boolean highlight) {
+		this.highlight = highlight;
+		return this;
+	}
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -68,7 +74,7 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
 		}
 
 		if (((OpacClient) ((Activity) context).getApplication()).getAccount()
-				.getId() == item.getId()) {
+				.getId() == item.getId() && highlight) {
 			view.findViewById(R.id.rlItem).setBackgroundColor(
 					context.getResources().getColor(R.color.active_account));
 		} else {
