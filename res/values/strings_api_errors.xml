@@ -22,5 +22,8 @@
   <string name="download">Download</string>
   <string name="reminders">warnings</string>
   <string name="prolonged_abbr">renew.</string>
+  <string name="prolonging_expired">renewal no longer possible</string>
+  <string name="prolonging_impossible">renewal not possible</string>
+  <string name="prolonging_waiting">not yet renewable</string>
   <string name="wrong_account_data">The user data you entered is wrong.</string>
 </resources>

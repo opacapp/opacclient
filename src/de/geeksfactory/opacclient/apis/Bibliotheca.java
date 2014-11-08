@@ -299,6 +299,15 @@ public class Bibliotheca extends BaseApi {
 		nameValuePairs.add(new BasicNameValuePair("suche_starten.y", "1"));
 		nameValuePairs.add(new BasicNameValuePair("QL_Nr", ""));
 
+		if (data.has("db")) {
+			try {
+				nameValuePairs.add(new BasicNameValuePair("dbase", data
+						.getString("db")));
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+
 		String html = httpPost(opac_url + "/index.asp",
 				new UrlEncodedFormEntity(nameValuePairs), getDefaultEncoding());
 		return parse_search(html, 1);
@@ -916,10 +925,12 @@ public class Bibliotheca extends BaseApi {
 			return null;
 
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-		nameValuePairs.add(new BasicNameValuePair("link_konto.x", "0"));
-		nameValuePairs.add(new BasicNameValuePair("link_konto.y", "0"));
-		String html = httpPost(opac_url + "/index.asp",
-				new UrlEncodedFormEntity(nameValuePairs), "ISO-8859-1");
+		// nameValuePairs.add(new BasicNameValuePair("link_konto.x", "0"));
+		// nameValuePairs.add(new BasicNameValuePair("link_konto.y", "0"));
+		// String html = httpPost(opac_url + "/index.asp",
+		// new UrlEncodedFormEntity(nameValuePairs), "ISO-8859-1");
+		String html = httpGet(opac_url + "/index.asp?kontofenster=start",
+				"ISO-8859-1");
 		Document doc = Jsoup.parse(html);
 
 		if (doc.select("input[name=AUSWEIS]").size() > 0) {
@@ -934,6 +945,7 @@ public class Bibliotheca extends BaseApi {
 						.getString("db")));
 			}
 			nameValuePairs.add(new BasicNameValuePair("B1", "weiter"));
+			nameValuePairs.add(new BasicNameValuePair("kontofenster", "true"));
 			nameValuePairs.add(new BasicNameValuePair("target", "konto"));
 			nameValuePairs.add(new BasicNameValuePair("type", "K"));
 			html = httpPost(opac_url + "/index.asp", new UrlEncodedFormEntity(

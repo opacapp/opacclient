@@ -1,0 +1,17 @@
+{
+    "account_supported": true,
+    "api": "pica",
+    "city": "Hannover",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "https://opac.tib.uni-hannover.de",
+        "db": "2",
+        "information": "http://www.mh-hannover.de/bibliothek_kontakt.html#c97088"
+    },
+    "geo": [
+        52.3758916,
+        9.732010400000002
+    ],
+    "state": "Niedersachsen",
+    "title": "Medizinische Hochschule"
+}

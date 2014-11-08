@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "webopac.net",
+    "city": "Burgdorf",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.winmedio.net/burgdorf",
+        "information": "http://www.burgdorf.ch/bibliothek.html"
+    },
+    "geo": [
+        47.0578381,
+        7.620387
+    ],
+    "state": "Bern",
+    "title": "Stadtbibliothek"
+}

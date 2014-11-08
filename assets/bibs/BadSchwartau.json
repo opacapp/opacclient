@@ -3,7 +3,14 @@
     "api": "iopac",
     "city": "Bad Schwartau",
     "country": "Deutschland",
-    "data": {
+   "data": {
+         "accounttable": {
+            "author": 1,
+            "deadline": 4,
+            "prolongcount": 3,
+            "prolongurl": 5,
+            "title": 0
+        },
         "baseurl": "http://bad-schwartau.iopac.de",
         "information": "http://www.bad-schwartau.de/stadtb%C3%BCcherei/"
     },

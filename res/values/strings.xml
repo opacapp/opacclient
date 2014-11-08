@@ -42,9 +42,9 @@
   <string name="doing_cancel">Reservation is being cancelled…</string>
   <string name="doing_prolong">Performing renewal…</string>
   <string name="doing_download">Download information is being retrieved…</string>
-  <string name="reader_needed">To read the e-book, you need a seperate app, for example \'Bluefire Reader\'. Click \'Ignore\' if you already have such an app, this message won\'t show up again in this case. Click \'Download\' to open up the Play Store to download Bluefire Reader.</string>
+  <string name="reader_needed">To read the e-book, you need a separate app, for example \'Bluefire Reader\'. Click \'Ignore\' if you already have such an app, this message won\'t show up again in this case. Click \'Download\' to open up the Play Store to download Bluefire Reader.</string>
   <string name="reader_needed_ignore">Ignore</string>
-  <string name="doing_prolong_all">All renewable media is being renewed...</string>
+  <string name="doing_prolong_all">All renewable media is being renewed…</string>
   <string name="prolong_all_confirm">Really renew all items in your account? In some libraries this might cause fees.</string>
   <string name="opac_error">Web Opac error message:</string>
   <string name="welcome">Welcome!</string>
@@ -58,7 +58,7 @@
   <string name="notifications">Notifications</string>
   <string name="notification_service">Expiring items</string>
   <string name="notification_service_desc">Notify, if an item is about to expire (no warranties given)</string>
-  <string name="notification_service_wifionly">Check over WiFi only</string>
+  <string name="notification_service_wifionly">Check on WiFi only</string>
   <string name="notification_service_wifionly_desc">Does not download information over mobile networks. (Therefore, no warnings without WiFi!)</string>
   <string-array name="warning">
     <item>Same day</item>
@@ -210,8 +210,8 @@ We might know your library ID then, but not your password, and we will take care
   <string name="no_search_cache">Error. Please try performing a search to solve this problem.</string>
   <string name="user_data_opac_message">When checking your account data, the library returned the following message: \"%s\"\n\nDo you want to save the account data anyway?</string>
   <string name="user_data_connection_error">A connection to the library server could not be established to check your account data. Do you want to save the account data anyway?</string>
-  <string name="support_search_account"></string>
-  <string name="support_search"></string>
-  <string name="meta_clear_title"></string>
-  <string name="meta_clear"></string>
+  <string name="support_search_account">Search and account</string>
+  <string name="support_search">Search only</string>
+  <string name="meta_clear_title">Clear cache</string>
+  <string name="meta_clear">Deletes cached metadata</string>
 </resources>
