@@ -1,10 +1,10 @@
 {
     "account_supported": true,
-    "api": "sisis",
+    "api": "touchpoint",
     "city": "Schaffhausen",
     "country": "Schweiz",
     "data": {
-        "baseurl": "https://webopac.bibliotheken-schaffhausen.ch/webOPACClient",
+        "baseurl": "https://webopac.bibliotheken-schaffhausen.ch/TouchPoint_touchpoint",
         "information": "http://bibliotheken-schaffhausen.ch/"
     },
     "geo": [
