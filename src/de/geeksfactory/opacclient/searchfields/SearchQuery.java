@@ -24,5 +24,11 @@ public class SearchQuery {
 	public String getKey() {
 		return field.getId();
 	}
+
+	@Override
+	public String toString() {
+		return "SearchQuery [field=" + field + ", value=" + getValue()
+				+ ", key=" + getKey() + "]";
+	}
 	
 }

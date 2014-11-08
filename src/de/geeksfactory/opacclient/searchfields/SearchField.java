@@ -217,4 +217,9 @@ public abstract class SearchField {
 		this.meaning = meaning;
 	}
 
+	@Override
+	public String toString() {
+		return "SearchField [id=" + id + "]";
+	}
+
 }

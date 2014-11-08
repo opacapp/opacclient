@@ -707,21 +707,6 @@ public class Adis extends BaseApi implements OpacApi {
 				if (doc.select("#AUSGAB_1").size() > 0) {
 					doc.select("#AUSGAB_1").attr("value", selection);
 				}
-				form = new ArrayList<NameValuePair>();
-				for (Element input : doc.select("input, select")) {
-					if (!"image".equals(input.attr("type"))
-							&& !"submit".equals(input.attr("type"))
-							&& !"checkbox".equals(input.attr("type"))
-							&& !"".equals(input.attr("name"))) {
-						form.add(new BasicNameValuePair(input.attr("name"),
-								input.attr("value")));
-					}
-				}
-				form.add(new BasicNameValuePair("textButton",
-						"Reservation abschicken"));
-				res = new ReservationResult(MultiStepResult.Status.OK);
-				doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
-
 				if (doc.select(".message h1").size() > 0) {
 					String msg = doc.select(".message h1").text().trim();
 					form = new ArrayList<NameValuePair>();
@@ -741,25 +726,61 @@ public class Adis extends BaseApi implements OpacApi {
 						res = new ReservationResult(MultiStepResult.Status.OK,
 								msg);
 					}
-				} else if (doc.select("#R01").text()
-						.contains("Informationen zu Ihrer Reservation")) {
-					String msg = doc.select("#OPACLI").text().trim();
+				} else {
 					form = new ArrayList<NameValuePair>();
-					for (Element input : doc.select("input")) {
+					for (Element input : doc.select("input, select")) {
 						if (!"image".equals(input.attr("type"))
+								&& !"submit".equals(input.attr("type"))
 								&& !"checkbox".equals(input.attr("type"))
 								&& !"".equals(input.attr("name"))) {
 							form.add(new BasicNameValuePair(input.attr("name"),
 									input.attr("value")));
 						}
 					}
+					form.add(new BasicNameValuePair("textButton",
+							"Reservation abschicken"));
+					res = new ReservationResult(MultiStepResult.Status.OK);
 					doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
-					if (!msg.contains("Reservation ist erfolgt")) {
-						res = new ReservationResult(
-								MultiStepResult.Status.ERROR, msg);
-					} else {
-						res = new ReservationResult(MultiStepResult.Status.OK,
-								msg);
+
+					if (doc.select(".message h1").size() > 0) {
+						String msg = doc.select(".message h1").text().trim();
+						form = new ArrayList<NameValuePair>();
+						for (Element input : doc.select("input")) {
+							if (!"image".equals(input.attr("type"))
+									&& !"checkbox".equals(input.attr("type"))
+									&& !"".equals(input.attr("name"))) {
+								form.add(new BasicNameValuePair(input
+										.attr("name"), input.attr("value")));
+							}
+						}
+						doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+						if (!msg.contains("Reservation ist erfolgt")) {
+							res = new ReservationResult(
+									MultiStepResult.Status.ERROR, msg);
+						} else {
+							res = new ReservationResult(
+									MultiStepResult.Status.OK, msg);
+						}
+					} else if (doc.select("#R01").text()
+							.contains("Informationen zu Ihrer Reservation")) {
+						String msg = doc.select("#OPACLI").text().trim();
+						form = new ArrayList<NameValuePair>();
+						for (Element input : doc.select("input")) {
+							if (!"image".equals(input.attr("type"))
+									&& !"checkbox".equals(input.attr("type"))
+									&& !"".equals(input.attr("name"))) {
+								form.add(new BasicNameValuePair(input
+										.attr("name"), input.attr("value")));
+							}
+						}
+						doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+						if (!msg.contains("Reservation ist erfolgt")) {
+							res = new ReservationResult(
+									MultiStepResult.Status.ERROR, msg);
+						} else {
+							res = new ReservationResult(
+									MultiStepResult.Status.OK, msg);
+						}
 					}
 				}
 			}

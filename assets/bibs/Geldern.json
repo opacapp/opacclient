@@ -1,7 +1,7 @@
 {
     "account_supported": true,
     "api": "bibliotheca",
-    "city": "M\u00fcnster",
+    "city": "Geldern",
     "country": "Deutschland",
     "data": {
         "accounttable": {
@@ -10,7 +10,7 @@
             "returndate": 2,
             "title": 1
         },
-        "baseurl": "http://webopac.bistum-muenster.de/hiltrup",
+        "baseurl": "http://webopac.bistum-muenster.de/geldern",
         "copiestable": {
             "barcode": 0,
             "branch": 4,
@@ -19,8 +19,7 @@
             "returndate": 5,
             "status": 3
         },
-        "db": "OPAC_Hiltrup",
-        "information": "http://www.stadtteilbuecherei-hiltrup.de/",
+        "information": "http://www.st-mariamagdalena-geldern.de/html/gruppen-und-verbaende/katholische-oeffentliche-buechereien.html",
         "mediatypes": {
             "Buchklein.GIF": "BOOK",
             "CD-ROMklein.GIF": "CD_SOFTWARE",
@@ -30,7 +29,7 @@
             "Comicklein.GIF": "BOOK",
             "DVD-ROMklein.GIF": "DVD",
             "DVDklein.GIF": "DVD",
-            "Diaserieklein.GIF": "UNKNOWN",
+            "Diaserieklein.GIF": "ART",
             "Hoerbuch1klein.GIF": "MP3",
             "Hoerbuchklein.GIF": "AUDIOBOOK",
             "Jugendbuchklein.GIF": "BOOK",
@@ -39,7 +38,7 @@
             "Kinderbuch_aklein.GIF": "BOOK",
             "Kindersachbuch_aklein.GIF": "BOOK",
             "Medien-Paketklein.GIF": "PACKAGE",
-            "NDS1klein.GIF": "BOARDGAME",
+            "NDS1klein.GIF": "GAME_CONSOLE_NINTENDO",
             "NDSklein.GIF": "GAME_CONSOLE_NINTENDO",
             "Ostern1klein .GIF": "UNKNOWN",
             "PS21klein.GIF": "GAME_CONSOLE_PLAYSTATION",
@@ -48,7 +47,7 @@
             "PS3klein.GIF": "GAME_CONSOLE_PLAYSTATION",
             "SachDVDklein.GIF": "DVD",
             "Sachbuchklein.GIF": "BOOK",
-            "SommerleseclubBuchklein.GIF": "UNKNOWN",
+            "SommerleseclubBuchklein.GIF": "BOOK",
             "Spielklein.GIF": "BOARDGAME",
             "Videoklein.GIF": "MOVIE",
             "Weihnachten1klein.GIF": "UNKNOWN",
@@ -57,8 +56,8 @@
             "Zeitschriftklein.GIF": "MAGAZINE",
             "eAudio_bibloadklein.GIF": "MP3",
             "eBook_bibloadklein.GIF": "EBOOK",
-            "ePaper_bibloadklein.GIF": "EBOOK",
-            "eVideo_bibloadklein.GIF": "UNKNOWN"
+            "ePaper_bibloadklein.GIF": "EDOC",
+            "eVideo_bibloadklein.GIF": "EVIDEO"
         },
         "reservationtable": {
             "author": 0,
@@ -67,6 +66,10 @@
             "title": 1
         }
     },
+    "geo": [
+        51.5204439,
+        6.3257902
+    ],
     "state": "Nordrhein-Westfalen",
-    "title": "Stadtteilb\u00fccherei Hiltrup St. Clemens"
+    "title": "B\u00fccherei St. Maria Magdalena"
 }

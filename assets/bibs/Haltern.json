@@ -14,7 +14,7 @@
             "status": -1,
             "title": 1
         },
-        "baseurl": "http://www.bibliotheken-im-kreisre.de/webopac",
+        "baseurl": "https://www.bibliotheken-im-kreisre.de/webopac",
         "copiestable": {
             "barcode": -1,
             "branch": 0,
