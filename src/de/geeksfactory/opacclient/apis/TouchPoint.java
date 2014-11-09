@@ -51,6 +51,7 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
+import android.util.Log;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult.Status;
 import de.geeksfactory.opacclient.i18n.StringProvider;
@@ -284,31 +285,20 @@ public class TouchPoint extends BaseApi implements OpacApi {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 		int index = 0;
-		int restrictionIndex = 0;
 		start();
 
-		params.add(new BasicNameValuePair("methodToCall", "submit"));
+		params.add(new BasicNameValuePair("methodToCall", "submitButtonCall"));
 		params.add(new BasicNameValuePair("CSId", CSId));
 		params.add(new BasicNameValuePair("methodToCallParameter",
 				"submitSearch"));
+		params.add(new BasicNameValuePair("refine", "false"));
 
 		for (SearchQuery entry : query) {
 			if (entry.getValue().equals(""))
 				continue;
 			if (entry.getSearchField() instanceof DropdownSearchField) {
-				JSONObject data = entry.getSearchField().getData();
-				if (data.getBoolean("restriction")) {
-					params.add(new BasicNameValuePair("searchRestrictionID["
-							+ restrictionIndex + "]", entry.getSearchField()
-							.getId()));
-					params.add(new BasicNameValuePair(
-							"searchRestrictionValue1[" + restrictionIndex + "]",
-							entry.getValue()));
-					restrictionIndex++;
-				} else {
-					params.add(new BasicNameValuePair(entry.getKey(), entry
-							.getValue()));
-				}
+				params.add(new BasicNameValuePair(entry.getKey(), entry
+						.getValue()));
 			} else {
 				if (index != 0)
 					params.add(new BasicNameValuePair("combinationOperator["
@@ -330,8 +320,8 @@ public class TouchPoint extends BaseApi implements OpacApi {
 					StringProvider.LIMITED_NUM_OF_CRITERIA, 4));
 		}
 
-		params.add(new BasicNameValuePair("submitSearch", "Suchen"));
-		params.add(new BasicNameValuePair("callingPage", "searchParameters"));
+		params.add(new BasicNameValuePair("submitButtonCall_submitSearch",
+				"Suchen"));
 		params.add(new BasicNameValuePair("numberOfHits", "10"));
 
 		String html = httpGet(
@@ -367,19 +357,25 @@ public class TouchPoint extends BaseApi implements OpacApi {
 	}
 
 	protected SearchRequestResult parse_search(String html, int page)
-			throws OpacErrorException {
+			throws OpacErrorException, IOException {
 		Document doc = Jsoup.parse(html);
-		doc.setBaseUri(opac_url + "/searchfoo");
 
-		if (doc.select(".error").size() > 0) {
-			throw new OpacErrorException(doc.select(".error").text().trim());
-		} else if (doc.select(".nohits").size() > 0) {
-			throw new OpacErrorException(doc.select(".nohits").text().trim());
-		} else if (doc.select(".box-header h2, #nohits").text()
-				.contains("keine Treffer")) {
+		if (doc.select("#RefineHitListForm").size() > 0) {
+			// the results are located on a different page loaded via AJAX
+			html = httpGet(
+					opac_url + "/speedHitList.do?_="
+							+ String.valueOf(System.currentTimeMillis() / 1000)
+							+ "&hitlistindex=0&exclusionList=", ENCODING);
+			Log.d("opac", html);
+			doc = Jsoup.parse(html);
+		}
+
+		if (doc.select(".nodata").size() > 0) {
 			return new SearchRequestResult(new ArrayList<SearchResult>(), 0, 1,
 					1);
 		}
+
+		doc.setBaseUri(opac_url + "/searchfoo");
 
 		int results_total = -1;
 
@@ -400,8 +396,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 
 		Elements links = doc.select("table.data a");
 		boolean haslink = false;
-		for (int i = 0; i < links.size(); i++) {
-			Element node = links.get(i);
+		for (Element node : links) {
 			if (node.hasAttr("href")
 					& node.attr("href").contains("singleHit.do") && !haslink) {
 				haslink = true;
@@ -426,65 +421,39 @@ public class TouchPoint extends BaseApi implements OpacApi {
 		for (int i = 0; i < table.size(); i++) {
 			Element tr = table.get(i);
 			SearchResult sr = new SearchResult();
-			if (tr.select("td img").size() > 0) {
-				String title = tr.select("td img").get(0).attr("title");
-				String[] fparts = tr.select("td img").get(0).attr("src")
+			if (tr.select(".type .icn").size() > 0) {
+				String[] fparts = tr.select(".type .icn").first().attr("src")
 						.split("/");
 				String fname = fparts[fparts.length - 1];
-				MediaType default_by_fname = defaulttypes.get(fname
+				String changedFname = fname
 						.toLowerCase(Locale.GERMAN).replace(".jpg", "")
-						.replace(".gif", "").replace(".png", ""));
-				MediaType default_by_title = defaulttypes.get(title);
-				MediaType default_name = default_by_title != null ? default_by_title
-						: default_by_fname;
+						.replace(".gif", "").replace(".png", "");
+				// File names can look like this: "20_DVD_Video.gif"
+				Pattern pattern = Pattern.compile("(\\d+)_.*");
+				Matcher matcher = pattern.matcher(changedFname);
+				if (matcher.find())
+					changedFname = matcher.group(1);
+					
+				MediaType defaulttype = defaulttypes.get(changedFname);
 				if (data.has("mediatypes")) {
 					try {
 						sr.setType(MediaType.valueOf(data.getJSONObject(
 								"mediatypes").getString(fname)));
 					} catch (JSONException e) {
-						sr.setType(default_name);
+						sr.setType(defaulttype);
 					} catch (IllegalArgumentException e) {
-						sr.setType(default_name);
+						sr.setType(defaulttype);
 					}
 				} else {
-					sr.setType(default_name);
+					sr.setType(defaulttype);
 				}
 			}
-			String alltext = tr.text();
-			if (alltext.contains("eAudio") || alltext.contains("eMusic"))
-				sr.setType(MediaType.MP3);
-			else if (alltext.contains("eVideo"))
-				sr.setType(MediaType.EVIDEO);
-			else if (alltext.contains("eBook"))
-				sr.setType(MediaType.EBOOK);
-			else if (alltext.contains("Munzinger"))
-				sr.setType(MediaType.EDOC);
 
-			if (tr.children().size() > 3
-					&& tr.child(3).select("img[title*=cover]").size() == 1) {
-				sr.setCover(tr.child(3).select("img[title*=cover]")
-						.attr("abs:src"));
-				if (sr.getCover().contains("showCover.do"))
-					downloadCover(sr);
+			if (tr.select(".cover img").size() > 0) {
+				sr.setCover(tr.select(".cover img").attr("src"));
 			}
 
-			Element middlething;
-			if (tr.children().size() > 2)
-				middlething = tr.child(2);
-			else
-				middlething = tr.child(1);
-
-			List<Node> children = middlething.childNodes();
-			if (middlething.select("div")
-					.not("#hlrightblock,.bestellfunktionen").size() == 1) {
-				Element indiv = middlething.select("div")
-						.not("#hlrightblock,.bestellfunktionen").first();
-				if (indiv.children().size() > 1)
-					children = indiv.childNodes();
-			} else if (middlething.select("span.titleData").size() == 1) {
-				children = middlething.select("span.titleData").first()
-						.childNodes();
-			}
+			List<Node> children = tr.select(".results").first().childNodes();
 			int childrennum = children.size();
 
 			List<String[]> strings = new ArrayList<String[]>();
@@ -520,83 +489,38 @@ public class TouchPoint extends BaseApi implements OpacApi {
 				}
 			}
 
-			StringBuilder description = null;
-			if (tr.select("span.Z3988").size() == 1) {
-				// Sometimes there is a <span class="Z3988"> item which provides
-				// data in a standardized format.
-				List<NameValuePair> z3988data;
-				boolean hastitle = false;
-				try {
-					description = new StringBuilder();
-					z3988data = URLEncodedUtils.parse(new URI("http://dummy/?"
-							+ tr.select("span.Z3988").attr("title")), "UTF-8");
-					for (NameValuePair nv : z3988data) {
-						if (nv.getValue() != null) {
-							if (!nv.getValue().trim().equals("")) {
-								if (nv.getName().equals("rft.btitle")
-										&& !hastitle) {
-									description.append("<b>" + nv.getValue()
-											+ "</b>");
-									hastitle = true;
-								} else if (nv.getName().equals("rft.atitle")
-										&& !hastitle) {
-									description.append("<b>" + nv.getValue()
-											+ "</b>");
-									hastitle = true;
-								} else if (nv.getName().equals("rft.au")) {
-									description
-											.append("<br />" + nv.getValue());
-								} else if (nv.getName().equals("rft.date")) {
-									description
-											.append("<br />" + nv.getValue());
-								}
-							}
-						}
-					}
-				} catch (URISyntaxException e) {
-					description = null;
-				}
-			}
-			boolean described = false;
-			if (description != null && description.length() > 0) {
-				sr.setInnerhtml(description.toString());
-				described = true;
-			} else {
-				description = new StringBuilder();
-			}
+			StringBuilder description = new StringBuilder();
 			int k = 0;
 			boolean yearfound = false;
 			boolean titlefound = false;
 			boolean sigfound = false;
 			for (String[] part : strings) {
-				if (!described) {
-					if (part[0] == "a" && (k == 0 || !titlefound)) {
-						if (k != 0)
-							description.append("<br />");
-						description.append("<b>" + part[2] + "</b>");
-						titlefound = true;
-					} else if (part[2].matches("\\D*[0-9]{4}\\D*")
-							&& part[2].length() <= 10) {
-						yearfound = true;
-						if (k != 0)
-							description.append("<br />");
-						description.append(part[2]);
-					} else if (k == 1 && !yearfound
-							&& part[2].matches("^\\s*\\([0-9]{4}\\)$")) {
-						if (k != 0)
-							description.append("<br />");
-						description.append(part[2]);
-					} else if (k == 1 && !yearfound
-							&& part[2].matches("^\\s*\\([0-9]{4}\\)$")) {
-						if (k != 0)
-							description.append("<br />");
-						description.append(part[2]);
-					} else if (k > 1 && k < 4 && !sigfound
-							&& part[0].equals("text")
-							&& part[2].matches("^[A-Za-z0-9,\\- ]+$")) {
+				if (part[0] == "a" && (k == 0 || !titlefound)) {
+					if (k != 0)
 						description.append("<br />");
-						description.append(part[2]);
-					}
+					description.append("<b>" + part[2] + "</b>");
+					titlefound = true;
+				} else if (part[2].matches("\\D*[0-9]{4}\\D*")
+						&& part[2].length() <= 10) {
+					yearfound = true;
+					if (k != 0)
+						description.append("<br />");
+					description.append(part[2]);
+				} else if (k == 1 && !yearfound
+						&& part[2].matches("^\\s*\\([0-9]{4}\\)$")) {
+					if (k != 0)
+						description.append("<br />");
+					description.append(part[2]);
+				} else if (k == 1 && !yearfound
+						&& part[2].matches("^\\s*\\([0-9]{4}\\)$")) {
+					if (k != 0)
+						description.append("<br />");
+					description.append(part[2]);
+				} else if (k > 1 && k < 4 && !sigfound
+						&& part[0].equals("text")
+						&& part[2].matches("^[A-Za-z0-9,\\- ]+$")) {
+					description.append("<br />");
+					description.append(part[2]);
 				}
 				if (part.length == 4) {
 					if (part[0].equals("span") && part[3].equals("textgruen")) {
@@ -644,8 +568,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 				}
 				k++;
 			}
-			if (!described)
-				sr.setInnerhtml(description.toString());
+			sr.setInnerhtml(description.toString());
 
 			sr.setNr(10 * (page - 1) + i);
 			sr.setId(null);
