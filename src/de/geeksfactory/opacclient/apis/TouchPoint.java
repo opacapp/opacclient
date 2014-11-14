@@ -22,11 +22,8 @@
 package de.geeksfactory.opacclient.apis;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,7 +36,6 @@ import java.util.regex.Pattern;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
@@ -53,7 +49,6 @@ import org.jsoup.select.Elements;
 
 import android.util.Log;
 import de.geeksfactory.opacclient.NotReachableException;
-import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult.Status;
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -425,15 +420,15 @@ public class TouchPoint extends BaseApi implements OpacApi {
 				String[] fparts = tr.select(".type .icn").first().attr("src")
 						.split("/");
 				String fname = fparts[fparts.length - 1];
-				String changedFname = fname
-						.toLowerCase(Locale.GERMAN).replace(".jpg", "")
-						.replace(".gif", "").replace(".png", "");
+				String changedFname = fname.toLowerCase(Locale.GERMAN)
+						.replace(".jpg", "").replace(".gif", "")
+						.replace(".png", "");
 				// File names can look like this: "20_DVD_Video.gif"
 				Pattern pattern = Pattern.compile("(\\d+)_.*");
 				Matcher matcher = pattern.matcher(changedFname);
 				if (matcher.find())
 					changedFname = matcher.group(1);
-					
+
 				MediaType defaulttype = defaulttypes.get(changedFname);
 				if (data.has("mediatypes")) {
 					try {
@@ -935,584 +930,31 @@ public class TouchPoint extends BaseApi implements OpacApi {
 	@Override
 	public ReservationResult reservation(DetailledItem item, Account acc,
 			int useraction, String selection) throws IOException {
-		String reservation_info = item.getReservation_info();
-		final String branch_inputfield = "issuepoint";
-
-		Document doc = null;
-
-		String action = "reservation";
-		if (reservation_info.contains("doBestellung")) {
-			action = "order";
-		}
-
-		if (useraction == MultiStepResult.ACTION_CONFIRMATION) {
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			nameValuePairs.add(new BasicNameValuePair("methodToCall", action));
-			nameValuePairs.add(new BasicNameValuePair("CSId", CSId));
-			String html = httpPost(opac_url + "/" + action + ".do",
-					new UrlEncodedFormEntity(nameValuePairs), ENCODING);
-			doc = Jsoup.parse(html);
-		} else if (selection == null || useraction == 0) {
-			String html = httpGet(opac_url + "/availability.do?"
-					+ reservation_info, ENCODING);
-			doc = Jsoup.parse(html);
-
-			if (doc.select("input[name=username]").size() > 0) {
-				// Login vonnöten
-				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
-						2);
-				nameValuePairs.add(new BasicNameValuePair("username", acc
-						.getName()));
-				nameValuePairs.add(new BasicNameValuePair("password", acc
-						.getPassword()));
-				nameValuePairs.add(new BasicNameValuePair("methodToCall",
-						"submit"));
-				nameValuePairs.add(new BasicNameValuePair("CSId", CSId));
-				nameValuePairs.add(new BasicNameValuePair("login_action",
-						"Login"));
-
-				html = handleLoginMessage(httpPost(opac_url + "/login.do",
-						new UrlEncodedFormEntity(nameValuePairs), ENCODING));
-				doc = Jsoup.parse(html);
-
-				if (doc.getElementsByClass("error").size() == 0) {
-					logged_in = System.currentTimeMillis();
-					logged_in_as = acc;
-				}
-			}
-			if (doc.select("input[name=expressorder]").size() > 0) {
-				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
-						2);
-				nameValuePairs.add(new BasicNameValuePair(branch_inputfield,
-						selection));
-				nameValuePairs.add(new BasicNameValuePair("methodToCall",
-						action));
-				nameValuePairs.add(new BasicNameValuePair("CSId", CSId));
-				nameValuePairs.add(new BasicNameValuePair("expressorder", " "));
-				html = httpPost(opac_url + "/" + action + ".do",
-						new UrlEncodedFormEntity(nameValuePairs), ENCODING);
-				doc = Jsoup.parse(html);
-			}
-			if (doc.select("input[name=" + branch_inputfield + "]").size() > 0) {
-				Map<String, String> branches = new HashMap<String, String>();
-				for (Element option : doc
-						.select("input[name=" + branch_inputfield + "]")
-						.first().parent().parent().parent().select("td")) {
-					if (option.select("input").size() != 1)
-						continue;
-					String value = option.text().trim();
-					String key = option.select("input").val();
-					branches.put(key, value);
-				}
-				ReservationResult result = new ReservationResult(
-						MultiStepResult.Status.SELECTION_NEEDED);
-				result.setActionIdentifier(ReservationResult.ACTION_BRANCH);
-				result.setSelection(branches);
-				return result;
-			}
-		} else if (useraction == ReservationResult.ACTION_BRANCH) {
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			nameValuePairs.add(new BasicNameValuePair(branch_inputfield,
-					selection));
-			nameValuePairs.add(new BasicNameValuePair("methodToCall", action));
-			nameValuePairs.add(new BasicNameValuePair("CSId", CSId));
-
-			String html = httpPost(opac_url + "/" + action + ".do",
-					new UrlEncodedFormEntity(nameValuePairs), ENCODING);
-			doc = Jsoup.parse(html);
-		}
-
-		if (doc == null)
-			return new ReservationResult(MultiStepResult.Status.ERROR);
-
-		if (doc.getElementsByClass("error").size() >= 1) {
-			return new ReservationResult(MultiStepResult.Status.ERROR, doc
-					.getElementsByClass("error").get(0).text());
-		}
-
-		if (doc.select("#CirculationForm p").size() > 0
-				&& doc.select("input[type=button]").size() >= 2) {
-			List<String[]> details = new ArrayList<String[]>();
-			for (String row : doc.select("#CirculationForm p").first().html()
-					.split("<br />")) {
-				Document frag = Jsoup.parseBodyFragment(row);
-				if (frag.text().contains(":")) {
-					String[] split = frag.text().split(":");
-					if (split.length >= 2)
-						details.add(new String[] { split[0].trim() + ":",
-								split[1].trim() });
-				} else {
-					details.add(new String[] { "", frag.text().trim() });
-				}
-			}
-			ReservationResult result = new ReservationResult(
-					Status.CONFIRMATION_NEEDED);
-			result.setDetails(details);
-			return result;
-		}
-
-		if (doc.getElementsByClass("textrot").size() >= 1) {
-			String errmsg = doc.getElementsByClass("textrot").get(0).text();
-			if (errmsg
-					.contains("Dieses oder andere Exemplare in anderer Zweigstelle ausleihbar")) {
-				Map<String, String> best = null;
-				for (Map<String, String> copy : item.getCopies()) {
-					if (!copy.containsKey(DetailledItem.KEY_COPY_RESINFO)) {
-						continue;
-					}
-					if (best == null) {
-						best = copy;
-						continue;
-					}
-					try {
-						if (Integer.parseInt(copy
-								.get(DetailledItem.KEY_COPY_RESERVATIONS)) < Long
-								.parseLong(best
-										.get(DetailledItem.KEY_COPY_RESERVATIONS))) {
-							best = copy;
-						} else if (Integer.parseInt(copy
-								.get(DetailledItem.KEY_COPY_RESERVATIONS)) == Long
-								.parseLong(best
-										.get(DetailledItem.KEY_COPY_RESERVATIONS))) {
-							if (Integer
-									.parseInt(copy
-											.get(DetailledItem.KEY_COPY_RETURN_TIMESTAMP)) < Long
-									.parseLong(best
-											.get(DetailledItem.KEY_COPY_RETURN_TIMESTAMP))) {
-								best = copy;
-							}
-						}
-					} catch (NumberFormatException e) {
-
-					}
-				}
-				if (best != null) {
-					item.setReservation_info(best
-							.get(DetailledItem.KEY_COPY_RESINFO));
-					return reservation(item, acc, 0, null);
-				}
-			}
-			return new ReservationResult(MultiStepResult.Status.ERROR, errmsg);
-		}
-
-		if (doc.select("#CirculationForm td[colspan=2] strong").size() >= 1) {
-			return new ReservationResult(MultiStepResult.Status.OK, doc
-					.select("#CirculationForm td[colspan=2] strong").get(0)
-					.text());
-		}
-		return new ReservationResult(Status.OK);
+		return null;
 	}
 
 	@Override
 	public ProlongResult prolong(String a, Account account, int useraction,
 			String Selection) throws IOException {
-		// Internal convention: a is either a § followed by an error message or
-		// the URI of the page this item was found on and the query string the
-		// prolonging link links to, seperated by a $.
-		if (a.startsWith("§")) {
-			return new ProlongResult(MultiStepResult.Status.ERROR,
-					a.substring(1));
-		}
-		String[] parts = a.split("\\$");
-		String offset = parts[0];
-		String query = parts[1];
-
-		if (!initialised)
-			start();
-		if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
-				|| logged_in_as == null) {
-			try {
-				account(account);
-			} catch (JSONException e) {
-				e.printStackTrace();
-				return new ProlongResult(MultiStepResult.Status.ERROR);
-			} catch (OpacErrorException e) {
-				return new ProlongResult(MultiStepResult.Status.ERROR,
-						e.getMessage());
-			}
-		} else if (logged_in_as.getId() != account.getId()) {
-			try {
-				account(account);
-			} catch (JSONException e) {
-				e.printStackTrace();
-				return new ProlongResult(MultiStepResult.Status.ERROR);
-			} catch (OpacErrorException e) {
-				return new ProlongResult(MultiStepResult.Status.ERROR,
-						e.getMessage());
-			}
-		}
-
-		// We have to call the page we originally found the link on first...
-		httpGet(opac_url + "/userAccount.do?methodToCall=showAccount&typ=1",
-				ENCODING);
-		if (offset != "1")
-			httpGet(opac_url
-					+ "/userAccount.do?methodToCall=pos&accountTyp=AUSLEIHEN&anzPos="
-					+ offset, ENCODING);
-		String html = httpGet(opac_url + "/userAccount.do?" + query, ENCODING);
-		Document doc = Jsoup.parse(html);
-		if (doc.select("#middle .textrot").size() > 0) {
-			return new ProlongResult(MultiStepResult.Status.ERROR, doc
-					.select("#middle .textrot").first().text());
-		}
-
-		return new ProlongResult(MultiStepResult.Status.OK);
+		return null;
 	}
 
 	@Override
 	public CancelResult cancel(String media, Account account, int useraction,
 			String selection) throws IOException, OpacErrorException {
-		if (!initialised)
-			start();
-
-		String[] parts = media.split("\\$");
-		String type = parts[0];
-		String offset = parts[1];
-		String query = parts[2];
-
-		if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
-				|| logged_in_as == null) {
-			try {
-				account(account);
-			} catch (JSONException e) {
-				e.printStackTrace();
-				throw new OpacErrorException(
-						stringProvider.getString(StringProvider.INTERNAL_ERROR));
-			}
-		} else if (logged_in_as.getId() != account.getId()) {
-			try {
-				account(account);
-			} catch (JSONException e) {
-				e.printStackTrace();
-				throw new OpacErrorException(
-						stringProvider.getString(StringProvider.INTERNAL_ERROR));
-			}
-		}
-
-		// We have to call the page we originally found the link on first...
-		httpGet(opac_url + "/userAccount.do?methodToCall=showAccount&typ="
-				+ type, ENCODING);
-		if (offset != "1")
-			httpGet(opac_url + "/userAccount.do?methodToCall=pos&anzPos="
-					+ offset, ENCODING);
-		httpGet(opac_url + "/userAccount.do?" + query, ENCODING);
-		return new CancelResult(MultiStepResult.Status.OK);
-	}
-
-	protected String handleLoginMessage(String html)
-			throws ClientProtocolException, IOException {
-		if (html.contains("methodToCall=done"))
-			return httpGet(opac_url + "/login.do?methodToCall=done", ENCODING);
-		else
-			return html;
-	}
-
-	protected boolean login(Account acc) throws OpacErrorException {
-		String html;
-
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-
-		try {
-			String loginPage;
-			loginPage = httpGet(opac_url
-					+ "/userAccount.do?methodToCall=show&type=1", ENCODING);
-			Document loginPageDoc = Jsoup.parse(loginPage);
-			if (loginPageDoc.select("input[name=as_fid]").size() > 0)
-				nameValuePairs.add(new BasicNameValuePair("as_fid",
-						loginPageDoc.select("input[name=as_fid]").first()
-								.attr("value")));
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-
-		nameValuePairs.add(new BasicNameValuePair("username", acc.getName()));
-		nameValuePairs
-				.add(new BasicNameValuePair("password", acc.getPassword()));
-		nameValuePairs.add(new BasicNameValuePair("CSId", CSId));
-		nameValuePairs.add(new BasicNameValuePair("methodToCall", "submit"));
-		try {
-			html = handleLoginMessage(httpPost(opac_url + "/login.do",
-					new UrlEncodedFormEntity(nameValuePairs), ENCODING));
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return false;
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-			return false;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
-
-		Document doc = Jsoup.parse(html);
-
-		if (doc.getElementsByClass("error").size() > 0) {
-			throw new OpacErrorException(doc.getElementsByClass("error").get(0)
-					.text());
-		}
-
-		logged_in = System.currentTimeMillis();
-		logged_in_as = acc;
-
-		return true;
-	}
-
-	protected void parse_medialist(List<Map<String, String>> medien,
-			Document doc, int offset) throws ClientProtocolException,
-			IOException {
-		Elements copytrs = doc.select(".data tr");
-		doc.setBaseUri(opac_url);
-
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
-
-		int trs = copytrs.size();
-		if (trs == 1)
-			return;
-		assert (trs > 0);
-		for (int i = 1; i < trs; i++) {
-			Element tr = copytrs.get(i);
-			Map<String, String> e = new HashMap<String, String>();
-
-			if (tr.text().contains("keine Daten")) {
-				return;
-			}
-
-			e.put(AccountData.KEY_LENT_TITLE, tr.child(1).select("strong")
-					.text().trim());
-			try {
-				e.put(AccountData.KEY_LENT_AUTHOR,
-						tr.child(1).html().split("<br[ /]*>")[1].trim());
-
-				String[] col2split = tr.child(2).html().split("<br[ /]*>");
-				String frist = col2split[0].trim();
-				if (frist.contains("-"))
-					frist = frist.split("-")[1].trim();
-				e.put(AccountData.KEY_LENT_DEADLINE, frist);
-				if (col2split.length > 1)
-					e.put(AccountData.KEY_LENT_BRANCH, col2split[1].trim());
-
-				if (!frist.equals("")) {
-					try {
-						e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String
-								.valueOf(sdf.parse(
-										e.get(AccountData.KEY_LENT_DEADLINE))
-										.getTime()));
-					} catch (ParseException e1) {
-						e1.printStackTrace();
-					}
-				}
-
-				if (tr.select("a").size() > 0) {
-					for (Element link : tr.select("a")) {
-						String href = link.attr("abs:href");
-						Map<String, String> hrefq = getQueryParamsFirst(href);
-						if (hrefq.get("methodToCall").equals("renewalPossible")) {
-							e.put(AccountData.KEY_LENT_LINK, offset + "$"
-									+ href.split("\\?")[1]);
-							e.put(AccountData.KEY_LENT_RENEWABLE, "Y");
-							break;
-						}
-					}
-				} else if (tr.select(".textrot, .textgruen, .textdunkelblau")
-						.size() > 0) {
-					e.put(AccountData.KEY_LENT_LINK,
-							"§"
-									+ tr.select(
-											".textrot, .textgruen, .textdunkelblau")
-											.text());
-					e.put(AccountData.KEY_LENT_RENEWABLE, "N");
-				}
-
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-
-			medien.add(e);
-		}
-		assert (medien.size() == trs - 1);
-
-	}
-
-	protected void parse_reslist(String type,
-			List<Map<String, String>> reservations, Document doc, int offset)
-			throws ClientProtocolException, IOException {
-		Elements copytrs = doc.select(".data tr");
-		doc.setBaseUri(opac_url);
-		int trs = copytrs.size();
-		if (trs == 1)
-			return;
-		assert (trs > 0);
-		for (int i = 1; i < trs; i++) {
-			Element tr = copytrs.get(i);
-			Map<String, String> e = new HashMap<String, String>();
-
-			if (tr.text().contains("keine Daten") || tr.children().size() == 1) {
-				return;
-			}
-
-			e.put(AccountData.KEY_RESERVATION_TITLE,
-					tr.child(1).select("strong").text().trim());
-			try {
-				String[] rowsplit1 = tr.child(1).html().split("<br[ /]*>");
-				String[] rowsplit2 = tr.child(2).html().split("<br[ /]*>");
-				if (rowsplit1.length > 1)
-					e.put(AccountData.KEY_RESERVATION_AUTHOR,
-							rowsplit1[1].trim());
-
-				if (rowsplit2.length > 2)
-					e.put(AccountData.KEY_RESERVATION_BRANCH,
-							rowsplit2[2].trim());
-
-				if (rowsplit2.length > 2)
-					e.put(AccountData.KEY_RESERVATION_READY,
-							rowsplit2[0].trim());
-
-				if (tr.select("a").size() == 1)
-					e.put(AccountData.KEY_RESERVATION_CANCEL, type + "$"
-							+ offset + "$"
-							+ tr.select("a").attr("abs:href").split("\\?")[1]);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-
-			reservations.add(e);
-		}
-		assert (reservations.size() == trs - 1);
+		return null;
 	}
 
 	@Override
 	public AccountData account(Account acc) throws IOException,
 			NotReachableException, JSONException, SocketException,
 			OpacErrorException {
-		start(); // TODO: Is this necessary?
-
-		int resultNum;
-
-		if (!login(acc))
-			return null;
-
-		// Geliehene Medien
-		String html = httpGet(opac_url
-				+ "/userAccount.do?methodToCall=showAccount&typ=1", ENCODING);
-		List<Map<String, String>> medien = new ArrayList<Map<String, String>>();
-		Document doc = Jsoup.parse(html);
-		doc.setBaseUri(opac_url);
-		parse_medialist(medien, doc, 1);
-		if (doc.select(".box-right").size() > 0) {
-			for (Element link : doc.select(".box-right").first().select("a")) {
-				String href = link.attr("abs:href");
-				Map<String, String> hrefq = getQueryParamsFirst(href);
-				if (hrefq == null || hrefq.get("methodToCall") == null)
-					continue;
-				if (hrefq.get("methodToCall").equals("pos")
-						&& !"1".equals(hrefq.get("anzPos"))) {
-					html = httpGet(href, ENCODING);
-					parse_medialist(medien, Jsoup.parse(html),
-							Integer.parseInt(hrefq.get("anzPos")));
-				}
-			}
-		}
-		if (doc.select("#label1").size() > 0) {
-			resultNum = 0;
-			String rNum = doc.select("#label1").first().text().trim()
-					.replaceAll(".*\\(([0-9]*)\\).*", "$1");
-			if (rNum.length() > 0)
-				resultNum = Integer.parseInt(rNum);
-
-			assert (resultNum == medien.size());
-		}
-
-		// Bestellte Medien
-		html = httpGet(opac_url
-				+ "/userAccount.do?methodToCall=showAccount&typ=6", ENCODING);
-		List<Map<String, String>> reserved = new ArrayList<Map<String, String>>();
-		doc = Jsoup.parse(html);
-		doc.setBaseUri(opac_url);
-		parse_reslist("6", reserved, doc, 1);
-		Elements label6 = doc.select("#label6");
-		if (doc.select(".box-right").size() > 0) {
-			for (Element link : doc.select(".box-right").first().select("a")) {
-				String href = link.attr("abs:href");
-				Map<String, String> hrefq = getQueryParamsFirst(href);
-				if (hrefq == null || hrefq.get("methodToCall") == null)
-					break;
-				if (hrefq.get("methodToCall").equals("pos")
-						&& !"1".equals(hrefq.get("anzPos"))) {
-					html = httpGet(href, ENCODING);
-					parse_reslist("6", medien, Jsoup.parse(html),
-							Integer.parseInt(hrefq.get("anzPos")));
-				}
-			}
-		}
-
-		// Vorgemerkte Medien
-		html = httpGet(opac_url
-				+ "/userAccount.do?methodToCall=showAccount&typ=7", ENCODING);
-		doc = Jsoup.parse(html);
-		doc.setBaseUri(opac_url);
-		parse_reslist("7", reserved, doc, 1);
-		if (doc.select(".box-right").size() > 0) {
-			for (Element link : doc.select(".box-right").first().select("a")) {
-				String href = link.attr("abs:href");
-				Map<String, String> hrefq = getQueryParamsFirst(href);
-				if (hrefq == null || hrefq.get("methodToCall") == null)
-					break;
-				if (hrefq.get("methodToCall").equals("pos")
-						&& !"1".equals(hrefq.get("anzPos"))) {
-					html = httpGet(href, ENCODING);
-					parse_reslist("7", medien, Jsoup.parse(html),
-							Integer.parseInt(hrefq.get("anzPos")));
-				}
-			}
-		}
-		if (label6.size() > 0 && doc.select("#label7").size() > 0) {
-			resultNum = 0;
-			String rNum = label6.text().trim()
-					.replaceAll(".*\\(([0-9]*)\\).*", "$1");
-			if (rNum.length() > 0)
-				resultNum = Integer.parseInt(rNum);
-			rNum = doc.select("#label7").text().trim()
-					.replaceAll(".*\\(([0-9]*)\\).*", "$1");
-			if (rNum.length() > 0)
-				resultNum += Integer.parseInt(rNum);
-			assert (resultNum == reserved.size());
-		}
-
-		AccountData res = new AccountData(acc.getId());
-
-		if (doc.select("#label8").size() > 0) {
-			String text = doc.select("#label8").first().text().trim();
-			if (text.matches("Geb.+hren[^\\(]+\\(([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr)\\)")) {
-				text = text
-						.replaceAll(
-								"Geb.+hren[^\\(]+\\(([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr)\\)",
-								"$1 $2");
-				res.setPendingFees(text);
-			}
-		}
-		Pattern p = Pattern.compile("[^0-9.]*", Pattern.MULTILINE);
-		if (doc.select(".box3").size() > 0) {
-			for (Element box : doc.select(".box3")) {
-				if (box.select("strong").size() == 1) {
-					String text = box.select("strong").text();
-					if (text.equals("Jahresgebühren")) {
-						text = box.text();
-						text = p.matcher(text).replaceAll("");
-						res.setValidUntil(text);
-					}
-				}
-
-			}
-		}
-
-		res.setLent(medien);
-		res.setReservations(reserved);
-		return res;
+		return null;
 	}
 
 	@Override
 	public boolean isAccountSupported(Library library) {
-		return true;
+		return false;
 	}
 
 	@Override
@@ -1642,10 +1084,6 @@ public class TouchPoint extends BaseApi implements OpacApi {
 	@Override
 	public void checkAccountData(Account account) throws IOException,
 			JSONException, OpacErrorException {
-		start(); // TODO: Is this necessary?
-		boolean success = login(account);
-		if (!success)
-			throw new NotReachableException();
 	}
 
 	@Override
