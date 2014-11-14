@@ -73,7 +73,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 	protected String opac_url = "";
 	protected JSONObject data;
 	protected Library library;
-
+	protected String folder = "/TouchPoint_touchpoint";
 	protected String CSId;
 	protected String identifier;
 	protected String reusehtml;
@@ -140,6 +140,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 		defaulttypes.put("46", MediaType.GAME_CONSOLE_NINTENDO);
 		defaulttypes.put("52", MediaType.EBOOK);
 		defaulttypes.put("56", MediaType.EBOOK);
+		defaulttypes.put("91", MediaType.EBOOK);
 		defaulttypes.put("96", MediaType.EBOOK);
 		defaulttypes.put("97", MediaType.EBOOK);
 		defaulttypes.put("99", MediaType.EBOOK);
@@ -164,7 +165,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 		if (!initialised)
 			start();
 
-		String html = httpGet(opac_url
+		String html = httpGet(opac_url + folder
 				+ "/search.do?methodToCall=switchSearchPage&SearchType=2",
 				ENCODING);
 		Document doc = Jsoup.parse(html);
@@ -223,7 +224,8 @@ public class TouchPoint extends BaseApi implements OpacApi {
 			}
 		}
 
-		String html = httpGet(opac_url + "/start.do" + startparams, ENCODING);
+		String html = httpGet(opac_url + folder + "/start.do" + startparams,
+				ENCODING);
 
 		initialised = true;
 
@@ -319,9 +321,8 @@ public class TouchPoint extends BaseApi implements OpacApi {
 				"Suchen"));
 		params.add(new BasicNameValuePair("numberOfHits", "10"));
 
-		String html = httpGet(
-				opac_url + "/search.do?"
-						+ URLEncodedUtils.format(params, "UTF-8"), ENCODING);
+		String html = httpGet(opac_url + folder + "/search.do?"
+				+ URLEncodedUtils.format(params, "UTF-8"), ENCODING);
 		return parse_search(html, 1);
 	}
 
@@ -333,9 +334,8 @@ public class TouchPoint extends BaseApi implements OpacApi {
 				.get("dbIdentifier")));
 		params.add(new BasicNameValuePair("catKey", query.get("catKey")));
 		params.add(new BasicNameValuePair("periodical", "N"));
-		String html = httpGet(
-				opac_url + "/search.do?"
-						+ URLEncodedUtils.format(params, "UTF-8"), ENCODING);
+		String html = httpGet(opac_url + folder + "/search.do?"
+				+ URLEncodedUtils.format(params, "UTF-8"), ENCODING);
 		return parse_search(html, 1);
 	}
 
@@ -345,7 +345,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 		if (!initialised)
 			start();
 
-		String html = httpGet(opac_url
+		String html = httpGet(opac_url + folder
 				+ "/hitList.do?methodToCall=pos&identifier=" + identifier
 				+ "&curPos=" + (((page - 1) * resultcount) + 1), ENCODING);
 		return parse_search(html, page);
@@ -358,10 +358,9 @@ public class TouchPoint extends BaseApi implements OpacApi {
 		if (doc.select("#RefineHitListForm").size() > 0) {
 			// the results are located on a different page loaded via AJAX
 			html = httpGet(
-					opac_url + "/speedHitList.do?_="
+					opac_url + folder + "/speedHitList.do?_="
 							+ String.valueOf(System.currentTimeMillis() / 1000)
 							+ "&hitlistindex=0&exclusionList=", ENCODING);
-			Log.d("opac", html);
 			doc = Jsoup.parse(html);
 		}
 
@@ -370,7 +369,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 					1);
 		}
 
-		doc.setBaseUri(opac_url + "/searchfoo");
+		doc.setBaseUri(opac_url + folder + "/searchfoo");
 
 		int results_total = -1;
 
@@ -444,111 +443,71 @@ public class TouchPoint extends BaseApi implements OpacApi {
 				}
 			}
 
-			if (tr.select(".cover img").size() > 0) {
-				sr.setCover(tr.select(".cover img").attr("src"));
+			String title = tr.select(".title").text();
+			String text = tr.select(".results").first().ownText();
+
+			// we need to do some evil javascript parsing here to get the cover
+			// and loan status of the item
+			if (tr.select(".cover script").size() > 0) {
+				String js = tr.select(".cover script").first().html();
+				String isbn = matchJSVariable(js, "isbn");
+				String ajaxUrl = matchJSVariable(js, "ajaxUrl");
+				if (!"".equals(isbn) && !"".equals(ajaxUrl)) {
+					String url;
+					if (ajaxUrl.startsWith("/"))
+						url = opac_url + ajaxUrl;
+					else
+						url = opac_url + folder + "/" + ajaxUrl;
+					String coverUrl = httpGet(url + "?isbn=" + isbn
+							+ "&size=small", ENCODING);
+					if (!"".equals(coverUrl))
+						sr.setCover(coverUrl.replace("\r\n", "").trim());
+				}
 			}
-
-			List<Node> children = tr.select(".results").first().childNodes();
-			int childrennum = children.size();
-
-			List<String[]> strings = new ArrayList<String[]>();
-			for (int ch = 0; ch < childrennum; ch++) {
-				Node node = children.get(ch);
-				if (node instanceof TextNode) {
-					String text = ((TextNode) node).text().trim();
-					if (text.length() > 3)
-						strings.add(new String[] { "text", "", text });
-				} else if (node instanceof Element) {
-
-					List<Node> subchildren = node.childNodes();
-					for (int j = 0; j < subchildren.size(); j++) {
-						Node subnode = subchildren.get(j);
-						if (subnode instanceof TextNode) {
-							String text = ((TextNode) subnode).text().trim();
-							if (text.length() > 3)
-								strings.add(new String[] {
-										((Element) node).tag().getName(),
-										"text", text,
-										((Element) node).className(),
-										((Element) node).attr("style") });
-						} else if (subnode instanceof Element) {
-							String text = ((Element) subnode).text().trim();
-							if (text.length() > 3)
-								strings.add(new String[] {
-										((Element) node).tag().getName(),
-										((Element) subnode).tag().getName(),
-										text, ((Element) node).className(),
-										((Element) node).attr("style") });
+			if (tr.select("div[id^=loanstatus] + script").size() > 0) {
+				String js = tr.select("div[id^=loanstatus] + script").first()
+						.html();
+				String[] variables = new String[] { "loanstateDBId",
+						"itemIdentifier", "hitlistIdentifier",
+						"hitlistPosition", "duplicateHitlistIdentifier",
+						"itemType", "titleStatus", "typeofHit", "context" };
+				String ajaxUrl = matchJSVariable(js, "ajaxUrl");
+				if (!"".equals(ajaxUrl)) {
+					List<NameValuePair> map = new ArrayList<NameValuePair>();
+					for (String variable : variables) {
+						String value = matchJSVariable(js, variable);
+						if (!"".equals(variable)) {
+							map.add(new BasicNameValuePair(variable, value));
 						}
 					}
-				}
-			}
+					String url;
+					if (ajaxUrl.startsWith("/"))
+						url = opac_url + ajaxUrl;
+					else
+						url = opac_url + folder + "/" + ajaxUrl;
+					String loanStatusHtml = httpGet(
+							url + "?" + URLEncodedUtils.format(map, "UTF-8"),
+							ENCODING).replace("\r\n", "").trim();
+					Document loanStatusDoc = Jsoup.parse(loanStatusHtml);
+					String loanstatus = loanStatusDoc.text().trim();
 
-			StringBuilder description = new StringBuilder();
-			int k = 0;
-			boolean yearfound = false;
-			boolean titlefound = false;
-			boolean sigfound = false;
-			for (String[] part : strings) {
-				if (part[0] == "a" && (k == 0 || !titlefound)) {
-					if (k != 0)
-						description.append("<br />");
-					description.append("<b>" + part[2] + "</b>");
-					titlefound = true;
-				} else if (part[2].matches("\\D*[0-9]{4}\\D*")
-						&& part[2].length() <= 10) {
-					yearfound = true;
-					if (k != 0)
-						description.append("<br />");
-					description.append(part[2]);
-				} else if (k == 1 && !yearfound
-						&& part[2].matches("^\\s*\\([0-9]{4}\\)$")) {
-					if (k != 0)
-						description.append("<br />");
-					description.append(part[2]);
-				} else if (k == 1 && !yearfound
-						&& part[2].matches("^\\s*\\([0-9]{4}\\)$")) {
-					if (k != 0)
-						description.append("<br />");
-					description.append(part[2]);
-				} else if (k > 1 && k < 4 && !sigfound
-						&& part[0].equals("text")
-						&& part[2].matches("^[A-Za-z0-9,\\- ]+$")) {
-					description.append("<br />");
-					description.append(part[2]);
-				}
-				if (part.length == 4) {
-					if (part[0].equals("span") && part[3].equals("textgruen")) {
-						sr.setStatus(SearchResult.Status.GREEN);
-					} else if (part[0].equals("span")
-							&& part[3].equals("textrot")) {
+					if ((loanstatus.startsWith("entliehen")
+							&& loanstatus.contains("keine Vormerkung möglich") || loanstatus
+								.contains("Keine Exemplare verfügbar"))) {
 						sr.setStatus(SearchResult.Status.RED);
-					}
-				} else if (part.length == 5) {
-					if (part[4].contains("purple")) {
+					} else if (loanstatus.startsWith("entliehen")
+							|| loanstatus.contains("andere Zweigstelle")) {
 						sr.setStatus(SearchResult.Status.YELLOW);
-					}
-				}
-				if (sr.getStatus() == null) {
-					if ((part[2].contains("entliehen") && part[2]
-							.startsWith("Vormerkung ist leider nicht möglich"))
-							|| part[2]
-									.contains("nur in anderer Zweigstelle ausleihbar und nicht bestellbar")) {
-						sr.setStatus(SearchResult.Status.RED);
-					} else if (part[2].startsWith("entliehen")
-							|| part[2]
-									.contains("Ein Exemplar finden Sie in einer anderen Zweigstelle")) {
-						sr.setStatus(SearchResult.Status.YELLOW);
-					} else if ((part[2].startsWith("bestellbar") && !part[2]
+					} else if ((loanstatus.startsWith("bestellbar") && !loanstatus
 							.contains("nicht bestellbar"))
-							|| (part[2].startsWith("vorbestellbar") && !part[2]
+							|| (loanstatus.startsWith("vorbestellbar") && !loanstatus
 									.contains("nicht vorbestellbar"))
-							|| (part[2].startsWith("vorbestellbar") && !part[2]
+							|| (loanstatus.startsWith("vorbestellbar") && !loanstatus
 									.contains("nicht vorbestellbar"))
-							|| (part[2].startsWith("vormerkbar") && !part[2]
+							|| (loanstatus.startsWith("vormerkbar") && !loanstatus
 									.contains("nicht vormerkbar"))
-							|| (part[2].contains("heute zurückgebucht"))
-							|| (part[2].contains("ausleihbar") && !part[2]
+							|| (loanstatus.contains("heute zurückgebucht"))
+							|| (loanstatus.contains("ausleihbar") && !loanstatus
 									.contains("nicht ausleihbar"))) {
 						sr.setStatus(SearchResult.Status.GREEN);
 					}
@@ -561,8 +520,12 @@ public class TouchPoint extends BaseApi implements OpacApi {
 							sr.setStatus(SearchResult.Status.UNKNOWN);
 					}
 				}
-				k++;
+
 			}
+
+			StringBuilder description = new StringBuilder();
+			description.append("<b>" + title + "</b><br/>");
+			description.append(text);
 			sr.setInnerhtml(description.toString());
 
 			sr.setNr(10 * (page - 1) + i);
@@ -571,6 +534,16 @@ public class TouchPoint extends BaseApi implements OpacApi {
 		}
 		resultcount = results.size();
 		return new SearchRequestResult(results, results_total, page);
+	}
+
+	private String matchJSVariable(String js, String varName) {
+		Pattern pattern = Pattern.compile("var \\s*" + varName
+				+ "\\s*=\\s*\"([^\"]*)\"\\s*;");
+		Matcher matcher = pattern.matcher(js);
+		if (matcher.find())
+			return matcher.group(1);
+		else
+			return null;
 	}
 
 	@Override
@@ -597,7 +570,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 		if (homebranch != null)
 			hbp = "&selectedViewBranchlib=" + homebranch;
 
-		String html = httpGet(opac_url + "/start.do?" + startparams
+		String html = httpGet(opac_url + folder + "/start.do?" + startparams
 				+ "searchType=1&Query=0%3D%22" + id + "%22" + hbp, ENCODING);
 
 		return parse_result(html);
@@ -619,17 +592,18 @@ public class TouchPoint extends BaseApi implements OpacApi {
 
 	protected DetailledItem parse_result(String html) throws IOException {
 		Document doc = Jsoup.parse(html);
-		doc.setBaseUri(opac_url);
+		doc.setBaseUri(opac_url + folder);
 
-		String html2 = httpGet(opac_url
+		String html2 = httpGet(opac_url + folder
 				+ "/singleHit.do?methodToCall=activateTab&tab=showTitleActive",
 				ENCODING);
 
 		Document doc2 = Jsoup.parse(html2);
-		doc2.setBaseUri(opac_url);
+		doc2.setBaseUri(opac_url + folder);
 
 		String html3 = httpGet(
 				opac_url
+						+ folder
 						+ "/singleHit.do?methodToCall=activateTab&tab=showAvailabilityActive",
 				ENCODING);
 
@@ -981,10 +955,10 @@ public class TouchPoint extends BaseApi implements OpacApi {
 		}
 
 		if (id != null && id != "")
-			return opac_url + "/start.do?" + startparams
+			return opac_url + folder + "/start.do?" + startparams
 					+ "searchType=1&Query=0%3D%22" + id + "%22";
 		else
-			return opac_url + "/start.do?" + startparams
+			return opac_url + folder + "/start.do?" + startparams
 					+ "searchType=1&Query=-1%3D%22" + title + "%22";
 	}
 
@@ -1027,6 +1001,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 		// We have to call the page we originally found the link on first...
 		String html = httpGet(
 				opac_url
+						+ folder
 						+ "/userAccount.do?methodToCall=renewalPossible&renewal=account",
 				ENCODING);
 		Document doc = Jsoup.parse(html);

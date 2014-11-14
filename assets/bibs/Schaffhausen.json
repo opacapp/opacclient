@@ -4,7 +4,7 @@
     "city": "Schaffhausen",
     "country": "Schweiz",
     "data": {
-        "baseurl": "https://webopac.bibliotheken-schaffhausen.ch/TouchPoint_touchpoint",
+        "baseurl": "https://webopac.bibliotheken-schaffhausen.ch",
         "information": "http://bibliotheken-schaffhausen.ch/"
     },
     "geo": [
