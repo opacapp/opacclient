@@ -6,7 +6,8 @@
     "data": {
         "baseurl": "http://kiopc4.ub.uni-kiel.de:8080",
         "db": "6",
-        "information": "http://www.muthesius-kunsthochschule.de/de/werkstaetten-bibliothek-edv/bibliothek/index.php"
+        "information": "http://www.muthesius-kunsthochschule.de/de/werkstaetten-bibliothek-edv/bibliothek/index.php",
+		"renewalsurl": "http://vhweb.ub.uni-kiel.de"
     },
     "geo": [
         54.3462487,

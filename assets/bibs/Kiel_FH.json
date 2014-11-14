@@ -6,7 +6,8 @@
     "data": {
         "baseurl": "http://kiopc4.ub.uni-kiel.de:8080/",
         "db": "2",
-        "information": "http://www.fh-kiel.de/index.php?id=118"
+        "information": "http://www.fh-kiel.de/index.php?id=118",
+		"renewalsurl": "http://vhweb.ub.uni-kiel.de"
     },
     "geo": [
         54.3462487,

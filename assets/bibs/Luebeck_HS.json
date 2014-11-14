@@ -6,7 +6,8 @@
     "data": {
         "baseurl": "http://kiopc4.ub.uni-kiel.de:8080",
         "db": "4",
-        "information": "http://www.zhb.uni-luebeck.de/welcome.htm"
+        "information": "http://www.zhb.uni-luebeck.de/welcome.htm",
+		"renewalsurl": "http://vhweb.ub.uni-kiel.de"
     },
     "geo": [
         53.8810006,

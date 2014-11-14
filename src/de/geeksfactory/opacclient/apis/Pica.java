@@ -92,7 +92,7 @@ public class Pica extends BaseApi implements OpacApi {
 	protected String pwEncoded;
 	protected String languageCode;
 	protected CookieStore cookieStore = new BasicCookieStore();
-
+	protected String renewals_url;
 	protected String lor_reservations;
 
 	protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
@@ -136,6 +136,11 @@ public class Pica extends BaseApi implements OpacApi {
 					this.https_url = data.getString("httpsbaseurl");
 				} else {
 					this.https_url = this.opac_url;
+				}
+				if (data.has("renewalsurl")) {
+					this.renewals_url = data.getString("renewalsurl");
+				} else {
+					this.renewals_url = this.https_url;
 				}
 			}
 		} catch (JSONException e) {
@@ -927,7 +932,7 @@ public class Pica extends BaseApi implements OpacApi {
 			} else { // like in Kiel
 				String prolongCount = "";
 				try {
-					String html = httpGet(https_url + "/nr_renewals.php?U="
+					String html = httpGet(renewals_url + "/nr_renewals.php?U="
 							+ accountName + "&DB=" + db + "&VBAR="
 							+ tr.child(1).select("input").attr("value"),
 							getDefaultEncoding());

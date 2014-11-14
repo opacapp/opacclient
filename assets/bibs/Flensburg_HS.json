@@ -6,7 +6,8 @@
     "data": {
         "baseurl": "http://kiopc4.ub.uni-kiel.de:8080",
         "db": "5",
-        "information": "http://www.zhb-flensburg.de/"
+        "information": "http://www.zhb-flensburg.de/",
+		"renewalsurl": "http://vhweb.ub.uni-kiel.de"
     },
     "geo": [
         54.788101,
