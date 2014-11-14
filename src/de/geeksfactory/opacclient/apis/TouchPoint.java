@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 by Raphael Michel under the MIT license:
+ * Copyright (C) 2014 by Johan von Forstner under the MIT license:
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), 
