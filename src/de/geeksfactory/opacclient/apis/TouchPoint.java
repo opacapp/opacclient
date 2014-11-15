@@ -22,9 +22,10 @@
 package de.geeksfactory.opacclient.apis;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
 import java.net.URI;
-import java.text.SimpleDateFormat;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,11 +44,8 @@ import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
-import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
-import android.util.Log;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
@@ -126,7 +124,8 @@ public class TouchPoint extends BaseApi implements OpacApi {
 		defaulttypes.put("dvd", MediaType.DVD);
 		defaulttypes.put("21", MediaType.SCORE_MUSIC);
 		defaulttypes.put("Noten", MediaType.SCORE_MUSIC);
-		defaulttypes.put("22", MediaType.BOARDGAME);
+		defaulttypes.put("22", MediaType.BLURAY);
+		defaulttypes.put("23", MediaType.GAME_CONSOLE_PLAYSTATION);
 		defaulttypes.put("26", MediaType.CD);
 		defaulttypes.put("27", MediaType.CD);
 		defaulttypes.put("28", MediaType.EBOOK);
@@ -448,6 +447,8 @@ public class TouchPoint extends BaseApi implements OpacApi {
 
 			// we need to do some evil javascript parsing here to get the cover
 			// and loan status of the item
+
+			// get cover
 			if (tr.select(".cover script").size() > 0) {
 				String js = tr.select(".cover script").first().html();
 				String isbn = matchJSVariable(js, "isbn");
@@ -464,63 +465,64 @@ public class TouchPoint extends BaseApi implements OpacApi {
 						sr.setCover(coverUrl.replace("\r\n", "").trim());
 				}
 			}
-			if (tr.select("div[id^=loanstatus] + script").size() > 0) {
-				String js = tr.select("div[id^=loanstatus] + script").first()
-						.html();
-				String[] variables = new String[] { "loanstateDBId",
-						"itemIdentifier", "hitlistIdentifier",
-						"hitlistPosition", "duplicateHitlistIdentifier",
-						"itemType", "titleStatus", "typeofHit", "context" };
-				String ajaxUrl = matchJSVariable(js, "ajaxUrl");
-				if (!"".equals(ajaxUrl)) {
-					List<NameValuePair> map = new ArrayList<NameValuePair>();
-					for (String variable : variables) {
-						String value = matchJSVariable(js, variable);
-						if (!"".equals(variable)) {
-							map.add(new BasicNameValuePair(variable, value));
-						}
+			// get loan status and media ID
+			String js = tr.select("div[id^=loanstatus] + script").first()
+					.html();
+			String[] variables = new String[] { "loanstateDBId",
+					"itemIdentifier", "hitlistIdentifier", "hitlistPosition",
+					"duplicateHitlistIdentifier", "itemType", "titleStatus",
+					"typeofHit", "context" };
+			String ajaxUrl = matchJSVariable(js, "ajaxUrl");
+			if (!"".equals(ajaxUrl)) {
+				List<NameValuePair> map = new ArrayList<NameValuePair>();
+				for (String variable : variables) {
+					String value = matchJSVariable(js, variable);
+					if (!"".equals(value)) {
+						map.add(new BasicNameValuePair(variable, value));
 					}
-					String url;
-					if (ajaxUrl.startsWith("/"))
-						url = opac_url + ajaxUrl;
-					else
-						url = opac_url + folder + "/" + ajaxUrl;
-					String loanStatusHtml = httpGet(
-							url + "?" + URLEncodedUtils.format(map, "UTF-8"),
-							ENCODING).replace("\r\n", "").trim();
-					Document loanStatusDoc = Jsoup.parse(loanStatusHtml);
-					String loanstatus = loanStatusDoc.text().trim();
-
-					if ((loanstatus.startsWith("entliehen")
-							&& loanstatus.contains("keine Vormerkung möglich") || loanstatus
-								.contains("Keine Exemplare verfügbar"))) {
-						sr.setStatus(SearchResult.Status.RED);
-					} else if (loanstatus.startsWith("entliehen")
-							|| loanstatus.contains("andere Zweigstelle")) {
-						sr.setStatus(SearchResult.Status.YELLOW);
-					} else if ((loanstatus.startsWith("bestellbar") && !loanstatus
-							.contains("nicht bestellbar"))
-							|| (loanstatus.startsWith("vorbestellbar") && !loanstatus
-									.contains("nicht vorbestellbar"))
-							|| (loanstatus.startsWith("vorbestellbar") && !loanstatus
-									.contains("nicht vorbestellbar"))
-							|| (loanstatus.startsWith("vormerkbar") && !loanstatus
-									.contains("nicht vormerkbar"))
-							|| (loanstatus.contains("heute zurückgebucht"))
-							|| (loanstatus.contains("ausleihbar") && !loanstatus
-									.contains("nicht ausleihbar"))) {
-						sr.setStatus(SearchResult.Status.GREEN);
-					}
-					if (sr.getType() != null) {
-						if (sr.getType().equals(MediaType.EBOOK)
-								|| sr.getType().equals(MediaType.EVIDEO)
-								|| sr.getType().equals(MediaType.MP3))
-							// Especially Onleihe.de ebooks are often marked
-							// green though they are not available.
-							sr.setStatus(SearchResult.Status.UNKNOWN);
+					if (variable.equals("itemIdentifier")) {
+						sr.setId(value);
 					}
 				}
+				String url;
+				if (ajaxUrl.startsWith("/"))
+					url = opac_url + ajaxUrl;
+				else
+					url = opac_url + folder + "/" + ajaxUrl;
+				String loanStatusHtml = httpGet(
+						url + "?" + URLEncodedUtils.format(map, "UTF-8"),
+						ENCODING).replace("\r\n", "").trim();
+				Document loanStatusDoc = Jsoup.parse(loanStatusHtml);
+				String loanstatus = loanStatusDoc.text().trim();
 
+				if ((loanstatus.startsWith("entliehen")
+						&& loanstatus.contains("keine Vormerkung möglich") || loanstatus
+							.contains("Keine Exemplare verfügbar"))) {
+					sr.setStatus(SearchResult.Status.RED);
+				} else if (loanstatus.startsWith("entliehen")
+						|| loanstatus.contains("andere Zweigstelle")) {
+					sr.setStatus(SearchResult.Status.YELLOW);
+				} else if ((loanstatus.startsWith("bestellbar") && !loanstatus
+						.contains("nicht bestellbar"))
+						|| (loanstatus.startsWith("vorbestellbar") && !loanstatus
+								.contains("nicht vorbestellbar"))
+						|| (loanstatus.startsWith("vorbestellbar") && !loanstatus
+								.contains("nicht vorbestellbar"))
+						|| (loanstatus.startsWith("vormerkbar") && !loanstatus
+								.contains("nicht vormerkbar"))
+						|| (loanstatus.contains("heute zurückgebucht"))
+						|| (loanstatus.contains("ausleihbar") && !loanstatus
+								.contains("nicht ausleihbar"))) {
+					sr.setStatus(SearchResult.Status.GREEN);
+				}
+				if (sr.getType() != null) {
+					if (sr.getType().equals(MediaType.EBOOK)
+							|| sr.getType().equals(MediaType.EVIDEO)
+							|| sr.getType().equals(MediaType.MP3))
+						// Especially Onleihe.de ebooks are often marked
+						// green though they are not available.
+						sr.setStatus(SearchResult.Status.UNKNOWN);
+				}
 			}
 
 			StringBuilder description = new StringBuilder();
@@ -529,7 +531,6 @@ public class TouchPoint extends BaseApi implements OpacApi {
 			sr.setInnerhtml(description.toString());
 
 			sr.setNr(10 * (page - 1) + i);
-			sr.setId(null);
 			results.add(sr);
 		}
 		resultcount = results.size();
@@ -556,22 +557,10 @@ public class TouchPoint extends BaseApi implements OpacApi {
 			return r;
 		}
 
-		// Some libraries require start parameters for start.do, like Login=foo
-		String startparams = "";
-		if (data.has("startparams")) {
-			try {
-				startparams = data.getString("startparams") + "&";
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
-
-		String hbp = "";
-		if (homebranch != null)
-			hbp = "&selectedViewBranchlib=" + homebranch;
-
-		String html = httpGet(opac_url + folder + "/start.do?" + startparams
-				+ "searchType=1&Query=0%3D%22" + id + "%22" + hbp, ENCODING);
+		String html = httpGet(
+				opac_url + folder + "/perma.do?q="
+						+ URLEncoder.encode("0=\"" + id + "\" IN [2]", "UTF-8"),
+				ENCODING);
 
 		return parse_result(html);
 	}
@@ -581,322 +570,97 @@ public class TouchPoint extends BaseApi implements OpacApi {
 		if (reusehtml != null) {
 			return getResultById(null, null);
 		}
-
-		String html = httpGet(
-				opac_url
-						+ "/singleHit.do?tab=showExemplarActive&methodToCall=showHit&curPos="
-						+ (nr + 1) + "&identifier=" + identifier, ENCODING);
-
-		return parse_result(html);
+		return null;
 	}
 
 	protected DetailledItem parse_result(String html) throws IOException {
 		Document doc = Jsoup.parse(html);
 		doc.setBaseUri(opac_url + folder);
 
-		String html2 = httpGet(opac_url + folder
-				+ "/singleHit.do?methodToCall=activateTab&tab=showTitleActive",
-				ENCODING);
-
-		Document doc2 = Jsoup.parse(html2);
-		doc2.setBaseUri(opac_url + folder);
-
-		String html3 = httpGet(
-				opac_url
-						+ folder
-						+ "/singleHit.do?methodToCall=activateTab&tab=showAvailabilityActive",
-				ENCODING);
-
-		Document doc3 = Jsoup.parse(html3);
-		doc3.setBaseUri(opac_url);
-
 		DetailledItem result = new DetailledItem();
 
-		try {
-			result.setId(doc.select("#bibtip_id").text().trim());
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		if (doc.select("#cover script").size() > 0) {
+			String js = doc.select("#cover script").first().html();
+			String isbn = matchJSVariable(js, "isbn");
+			String ajaxUrl = matchJSVariable(js, "ajaxUrl");
+			if (!"".equals(isbn) && !"".equals(ajaxUrl)) {
+				String url;
+				if (ajaxUrl.startsWith("/"))
+					url = opac_url + ajaxUrl;
+				else
+					url = opac_url + folder + "/" + ajaxUrl;
+				String coverUrl = httpGet(url + "?isbn=" + isbn
+						+ "&size=medium", ENCODING);
+				if (!"".equals(coverUrl))
+					result.setCover(coverUrl.replace("\r\n", "").trim());
+			}
 		}
-		List<String> reservationlinks = new ArrayList<String>();
-		for (Element link : doc3.select("#vormerkung a, #tab-content a")) {
-			String href = link.absUrl("href");
-			Map<String, String> hrefq = getQueryParamsFirst(href);
-			if (result.getId() == null) {
-				// ID retrieval
-				String key = hrefq.get("katkey");
-				if (key != null) {
-					result.setId(key);
-					break;
+
+		result.setTitle(doc.select("h1").text());
+		for (Element tr : doc.select(".titleinfo tr")) {
+			result.addDetail(new Detail(tr.select("th").text(), tr.select("td")
+					.text()));
+		}
+
+		// Copies
+		String copiesParameter = doc.select("div[id^=ajax_holdings_url")
+				.attr("ajaxParameter").replace("&amp;", "");
+		if (!"".equals(copiesParameter)) {
+			String copiesHtml = httpGet(opac_url + folder + "/"
+					+ copiesParameter, ENCODING);
+			Document copiesDoc = Jsoup.parse(copiesHtml);
+			List<String> table_keys = new ArrayList<String>();
+			for (Element th : copiesDoc.select(".data tr th")) {
+				if (th.text().contains("Zweigstelle"))
+					table_keys.add(DetailledItem.KEY_COPY_BRANCH);
+				else if (th.text().contains("Status"))
+					table_keys.add(DetailledItem.KEY_COPY_STATUS);
+				else if (th.text().contains("Signatur"))
+					table_keys.add(DetailledItem.KEY_COPY_SHELFMARK);
+				else
+					table_keys.add(null);
+			}
+			for (Element tr : copiesDoc.select(".data tr:has(td)")) {
+				Map<String, String> copy = new HashMap<String, String>();
+				int i = 0;
+				for (Element td : tr.select("td")) {
+					if (table_keys.get(i) != null)
+						copy.put(table_keys.get(i), td.text().trim());
+					i++;
 				}
-			}
-
-			// Vormerken
-			if (hrefq.get("methodToCall") != null) {
-				if (hrefq.get("methodToCall").equals("doVormerkung")
-						|| hrefq.get("methodToCall").equals("doBestellung"))
-					reservationlinks.add(href.split("\\?")[1]);
-			}
-		}
-		if (reservationlinks.size() == 1) {
-			result.setReservable(true);
-			result.setReservation_info(reservationlinks.get(0));
-		} else if (reservationlinks.size() == 0) {
-			result.setReservable(false);
-		} else {
-			// TODO: Multiple options - handle this case!
-		}
-
-		if (doc.select(".data td img").size() == 1) {
-			result.setCover(doc.select(".data td img").first().attr("abs:src"));
-			downloadCover(result);
-		}
-
-		if (doc.select(".aw_teaser_title").size() == 1) {
-			result.setTitle(doc.select(".aw_teaser_title").first().text()
-					.trim());
-		} else if (doc.select(".data td strong").size() > 0) {
-			result.setTitle(doc.select(".data td strong").first().text().trim());
-		} else {
-			result.setTitle("");
-		}
-		if (doc.select(".aw_teaser_title_zusatz").size() > 0) {
-			result.addDetail(new Detail("Titelzusatz", doc
-					.select(".aw_teaser_title_zusatz").text().trim()));
-		}
-
-		String title = "";
-		String text = "";
-		boolean takeover = false;
-		Element detailtrs = doc2.select(".box-container .data td").first();
-		for (Node node : detailtrs.childNodes()) {
-			if (node instanceof Element) {
-				if (((Element) node).tagName().equals("strong")) {
-					title = ((Element) node).text().trim();
-					text = "";
-				} else {
-					if (((Element) node).tagName().equals("a")
-							&& (((Element) node).text().trim()
-									.contains("hier klicken") || title
-									.equals("Link:"))) {
-						text = text + ((Element) node).attr("href");
-						takeover = true;
-						break;
-					}
-				}
-			} else if (node instanceof TextNode) {
-				text = text + ((TextNode) node).text();
-			}
-		}
-		if (!takeover) {
-			text = "";
-			title = "";
-		}
-
-		detailtrs = doc2.select("#tab-content .data td").first();
-		if (detailtrs != null) {
-			for (Node node : detailtrs.childNodes()) {
-				if (node instanceof Element) {
-					if (((Element) node).tagName().equals("strong")) {
-						if (!text.equals("") && !title.equals("")) {
-							result.addDetail(new Detail(title.trim(), text
-									.trim()));
-							if (title.equals("Titel:")) {
-								result.setTitle(text.trim());
-							}
-							text = "";
-						}
-
-						title = ((Element) node).text().trim();
-					} else {
-						if (((Element) node).tagName().equals("a")
-								&& (((Element) node).text().trim()
-										.contains("hier klicken") || title
-										.equals("Link:"))) {
-							text = text + ((Element) node).attr("href");
-						} else {
-							text = text + ((Element) node).text();
-						}
-					}
-				} else if (node instanceof TextNode) {
-					text = text + ((TextNode) node).text();
-				}
-			}
-		} else {
-			if (doc2.select("#tab-content .fulltitle tr").size() > 0) {
-				Elements rows = doc2.select("#tab-content .fulltitle tr");
-				for (Element tr : rows) {
-					if (tr.children().size() == 2) {
-						Element valcell = tr.child(1);
-						String value = valcell.text().trim();
-						if (valcell.select("a").size() == 1) {
-							value = valcell.select("a").first().absUrl("href");
-						}
-						result.addDetail(new Detail(tr.child(0).text().trim(),
-								value));
-					}
-				}
-			} else {
-				result.addDetail(new Detail(stringProvider
-						.getString(StringProvider.ERROR), stringProvider
-						.getString(StringProvider.COULD_NOT_LOAD_DETAIL)));
-			}
-		}
-		if (!text.equals("") && !title.equals("")) {
-			result.addDetail(new Detail(title.trim(), text.trim()));
-			if (title.equals("Titel:")) {
-				result.setTitle(text.trim());
-			}
-		}
-		for (Element link : doc3.select("#tab-content a")) {
-			Map<String, String> hrefq = getQueryParamsFirst(link.absUrl("href"));
-			if (result.getId() == null) {
-				// ID retrieval
-				String key = hrefq.get("katkey");
-				if (key != null) {
-					result.setId(key);
-					break;
-				}
-			}
-		}
-		for (Element link : doc3.select(".box-container a")) {
-			if (link.text().trim().equals("Download")) {
-				result.addDetail(new Detail(stringProvider
-						.getString(StringProvider.DOWNLOAD), link
-						.absUrl("href")));
+				result.addCopy(copy);
 			}
 		}
 
-		Map<String, Integer> copy_columnmap = new HashMap<String, Integer>();
-		// Default values
-		copy_columnmap.put(DetailledItem.KEY_COPY_BARCODE, 1);
-		copy_columnmap.put(DetailledItem.KEY_COPY_BRANCH, 3);
-		copy_columnmap.put(DetailledItem.KEY_COPY_STATUS, 4);
-		Elements copy_columns = doc.select("#tab-content .data tr#bg2 th");
-		for (int i = 0; i < copy_columns.size(); i++) {
-			Element th = copy_columns.get(i);
-			String head = th.text().trim();
-			if (head.contains("Status")) {
-				copy_columnmap.put(DetailledItem.KEY_COPY_STATUS, i);
-			}
-			if (head.contains("Zweigstelle")) {
-				copy_columnmap.put(DetailledItem.KEY_COPY_BRANCH, i);
-			}
-			if (head.contains("Mediennummer")) {
-				copy_columnmap.put(DetailledItem.KEY_COPY_BARCODE, i);
-			}
-			if (head.contains("Standort")) {
-				copy_columnmap.put(DetailledItem.KEY_COPY_LOCATION, i);
-			}
-			if (head.contains("Signatur")) {
-				copy_columnmap.put(DetailledItem.KEY_COPY_SHELFMARK, i);
-			}
-		}
+		// TODO: Volumes
 
-		Pattern status_lent = Pattern
-				.compile("^(entliehen) bis ([0-9]{1,2}.[0-9]{1,2}.[0-9]{2,4}) \\(gesamte Vormerkungen: ([0-9]+)\\)$");
-		Pattern status_and_barcode = Pattern.compile("^(.*) ([0-9A-Za-z]+)$");
-
-		Elements exemplartrs = doc.select("#tab-content .data tr").not("#bg2");
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
-		for (Element tr : exemplartrs) {
-			try {
-				Map<String, String> e = new HashMap<String, String>();
-				Element status = tr.child(copy_columnmap
-						.get(DetailledItem.KEY_COPY_STATUS));
-				Element barcode = tr.child(copy_columnmap
-						.get(DetailledItem.KEY_COPY_BARCODE));
-				String barcodetext = barcode.text().trim()
-						.replace(" Wegweiser", "");
-
-				// STATUS
-				String statustext = "";
-				if (status.getElementsByTag("b").size() > 0) {
-					statustext = status.getElementsByTag("b").text().trim();
-				} else {
-					statustext = status.text().trim();
-				}
-				if (copy_columnmap.get(DetailledItem.KEY_COPY_STATUS) == copy_columnmap
-						.get(DetailledItem.KEY_COPY_BARCODE)) {
-					Matcher matcher1 = status_and_barcode.matcher(statustext);
-					if (matcher1.matches()) {
-						statustext = matcher1.group(1);
-						barcodetext = matcher1.group(2);
-					}
-				}
-
-				Matcher matcher = status_lent.matcher(statustext);
-				if (matcher.matches()) {
-					e.put(DetailledItem.KEY_COPY_STATUS, matcher.group(1));
-					e.put(DetailledItem.KEY_COPY_RETURN, matcher.group(2));
-					e.put(DetailledItem.KEY_COPY_RESERVATIONS, matcher.group(3));
-					e.put(DetailledItem.KEY_COPY_RETURN_TIMESTAMP, String
-							.valueOf(sdf.parse(matcher.group(2)).getTime()));
-				} else {
-					e.put(DetailledItem.KEY_COPY_STATUS, statustext);
-				}
-				e.put(DetailledItem.KEY_COPY_BARCODE, barcodetext);
-				if (status.select("a[href*=doVormerkung]").size() == 1) {
-					e.put(DetailledItem.KEY_COPY_RESINFO,
-							status.select("a[href*=doVormerkung]").attr("href")
-									.split("\\?")[1]);
-				}
-
-				String branchtext = tr
-						.child(copy_columnmap
-								.get(DetailledItem.KEY_COPY_BRANCH)).text()
-						.trim().replace(" Wegweiser", "");
-				e.put(DetailledItem.KEY_COPY_BRANCH, branchtext);
-
-				if (copy_columnmap.containsKey(DetailledItem.KEY_COPY_LOCATION)) {
-					e.put(DetailledItem.KEY_COPY_LOCATION,
-							tr.child(
-									copy_columnmap
-											.get(DetailledItem.KEY_COPY_LOCATION))
-									.text().trim().replace(" Wegweiser", ""));
-				}
-
-				if (copy_columnmap
-						.containsKey(DetailledItem.KEY_COPY_SHELFMARK)) {
-					e.put(DetailledItem.KEY_COPY_SHELFMARK,
-							tr.child(
-									copy_columnmap
-											.get(DetailledItem.KEY_COPY_SHELFMARK))
-									.text().trim().replace(" Wegweiser", ""));
-				}
-
-				result.addCopy(e);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		}
-
-		try {
-			Element isvolume = null;
-			Map<String, String> volume = new HashMap<String, String>();
-			Elements links = doc.select(".data td a");
-			int elcount = links.size();
-			for (int eli = 0; eli < elcount; eli++) {
-				List<NameValuePair> anyurl = URLEncodedUtils.parse(new URI(
-						links.get(eli).attr("href")), "UTF-8");
-				for (NameValuePair nv : anyurl) {
-					if (nv.getName().equals("methodToCall")
-							&& nv.getValue().equals("volumeSearch")) {
-						isvolume = links.get(eli);
-					} else if (nv.getName().equals("catKey")) {
-						volume.put("catKey", nv.getValue());
-					} else if (nv.getName().equals("dbIdentifier")) {
-						volume.put("dbIdentifier", nv.getValue());
-					}
-				}
-				if (isvolume != null) {
-					volume.put("volume", "true");
-					result.setVolumesearch(volume);
-					break;
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		// try {
+		// Element isvolume = null;
+		// Map<String, String> volume = new HashMap<String, String>();
+		// Elements links = doc.select(".data td a");
+		// int elcount = links.size();
+		// for (int eli = 0; eli < elcount; eli++) {
+		// List<NameValuePair> anyurl = URLEncodedUtils.parse(new URI(
+		// links.get(eli).attr("href")), "UTF-8");
+		// for (NameValuePair nv : anyurl) {
+		// if (nv.getName().equals("methodToCall")
+		// && nv.getValue().equals("volumeSearch")) {
+		// isvolume = links.get(eli);
+		// } else if (nv.getName().equals("catKey")) {
+		// volume.put("catKey", nv.getValue());
+		// } else if (nv.getName().equals("dbIdentifier")) {
+		// volume.put("dbIdentifier", nv.getValue());
+		// }
+		// }
+		// if (isvolume != null) {
+		// volume.put("volume", "true");
+		// result.setVolumesearch(volume);
+		// break;
+		// }
+		// }
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
 
 		return result;
 	}
@@ -945,27 +709,18 @@ public class TouchPoint extends BaseApi implements OpacApi {
 
 	@Override
 	public String getShareUrl(String id, String title) {
-		String startparams = "";
-		if (data.has("startparams")) {
-			try {
-				startparams = data.getString("startparams") + "&";
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
+		try {
+			return opac_url + folder + "/perma.do?q="
+					+ URLEncoder.encode("0=\"" + id + "\" IN [2]", "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return null;
 		}
-
-		if (id != null && id != "")
-			return opac_url + folder + "/start.do?" + startparams
-					+ "searchType=1&Query=0%3D%22" + id + "%22";
-		else
-			return opac_url + folder + "/start.do?" + startparams
-					+ "searchType=1&Query=-1%3D%22" + title + "%22";
 	}
 
 	@Override
 	public int getSupportFlags() {
-		int flags = SUPPORT_FLAG_ACCOUNT_PROLONG_ALL
-				| SUPPORT_FLAG_CHANGE_ACCOUNT;
+		int flags = SUPPORT_FLAG_CHANGE_ACCOUNT;
 		flags |= SUPPORT_FLAG_ENDLESS_SCROLLING;
 		return flags;
 	}
@@ -973,80 +728,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 	@Override
 	public ProlongAllResult prolongAll(Account account, int useraction,
 			String selection) throws IOException {
-		if (!initialised)
-			start();
-		if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
-				|| logged_in_as == null) {
-			try {
-				account(account);
-			} catch (JSONException e) {
-				e.printStackTrace();
-				return new ProlongAllResult(MultiStepResult.Status.ERROR);
-			} catch (OpacErrorException e) {
-				return new ProlongAllResult(MultiStepResult.Status.ERROR,
-						e.getMessage());
-			}
-		} else if (logged_in_as.getId() != account.getId()) {
-			try {
-				account(account);
-			} catch (JSONException e) {
-				e.printStackTrace();
-				return new ProlongAllResult(MultiStepResult.Status.ERROR);
-			} catch (OpacErrorException e) {
-				return new ProlongAllResult(MultiStepResult.Status.ERROR,
-						e.getMessage());
-			}
-		}
-
-		// We have to call the page we originally found the link on first...
-		String html = httpGet(
-				opac_url
-						+ folder
-						+ "/userAccount.do?methodToCall=renewalPossible&renewal=account",
-				ENCODING);
-		Document doc = Jsoup.parse(html);
-
-		if (doc.select("table.data").size() > 0) {
-			List<Map<String, String>> result = new ArrayList<Map<String, String>>();
-			for (Element td : doc.select("table.data tr td")) {
-				Map<String, String> line = new HashMap<String, String>();
-				if (!td.text().contains("Titel")
-						|| !td.text().contains("Status"))
-					continue;
-				String nextNodeIs = "";
-				for (Node n : td.childNodes()) {
-					String text = "";
-					if (n instanceof Element) {
-						text = ((Element) n).text();
-					} else if (n instanceof TextNode) {
-						text = ((TextNode) n).text();
-					} else
-						continue;
-					if (text.trim().length() == 0)
-						continue;
-					if (text.contains("Titel:"))
-						nextNodeIs = ProlongAllResult.KEY_LINE_TITLE;
-					else if (text.contains("Verfasser:"))
-						nextNodeIs = ProlongAllResult.KEY_LINE_AUTHOR;
-					else if (text.contains("Leihfristende:"))
-						nextNodeIs = ProlongAllResult.KEY_LINE_NEW_RETURNDATE;
-					else if (text.contains("Status:"))
-						nextNodeIs = ProlongAllResult.KEY_LINE_MESSAGE;
-					else if (text.contains("Mediennummer:")
-							|| text.contains("Signatur:"))
-						nextNodeIs = "";
-					else if (nextNodeIs.length() > 0) {
-						line.put(nextNodeIs, text.trim());
-						nextNodeIs = "";
-					}
-				}
-				result.add(line);
-			}
-			return new ProlongAllResult(MultiStepResult.Status.OK, result);
-		}
-
-		return new ProlongAllResult(MultiStepResult.Status.ERROR,
-				stringProvider.getString(StringProvider.COULD_NOT_LOAD_ACCOUNT));
+		return null;
 	}
 
 	@Override
