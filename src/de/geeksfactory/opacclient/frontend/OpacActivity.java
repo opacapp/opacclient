@@ -103,7 +103,7 @@ public abstract class OpacActivity extends Activity {
 			if (savedInstanceState.containsKey("title")) {
 				setTitle(savedInstanceState.getCharSequence("title"));
 			}
-			if (savedInstanceState.containsKey("framgent")) {
+			if (savedInstanceState.containsKey("fragment")) {
 				fragment = (Fragment) getSupportFragmentManager().getFragment(
 						savedInstanceState, "fragment");
 				getSupportFragmentManager().beginTransaction()
