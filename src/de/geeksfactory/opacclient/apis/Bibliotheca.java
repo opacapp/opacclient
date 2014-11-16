@@ -297,7 +297,6 @@ public class Bibliotheca extends BaseApi {
 
 		nameValuePairs.add(new BasicNameValuePair("suche_starten.x", "1"));
 		nameValuePairs.add(new BasicNameValuePair("suche_starten.y", "1"));
-		nameValuePairs.add(new BasicNameValuePair("QL_Nr", ""));
 
 		if (data.has("db")) {
 			try {
