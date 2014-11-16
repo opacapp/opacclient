@@ -102,7 +102,7 @@ class Bibliotheca(Api):
             if len(fetched['mediatypes']) > 0:
                 print("Bitte weise die Medientypen ihren Entsprechungen in der App zu.")
                 print("Verfügbar sind:")
-                print(" ".join(TYPES))
+                print(" ".join(sorted(TYPES)))
                 print("")
                 datadata['mediatypes'] = {}
                 for k, v in fetched['mediatypes'].items():
@@ -223,6 +223,11 @@ class Sisis(Api):
             data['data']['startparams'] = inp
         return data
 
+class TouchPoint(Api):
+
+    def accountSupported(self):
+        return False
+
 class WebOpacNet(Api):
 
     def accountSupported(self):
@@ -287,6 +292,7 @@ class IOpac(Api):
 APIS = {
     'bibliotheca' : Bibliotheca,
     'sisis'       : Sisis,
+    'touchpoint'  : TouchPoint,
     'biber1992'   : Biber1992,
     'zones22'     : Zones22,
     'iopac'       : IOpac,
@@ -337,7 +343,7 @@ if __name__ == '__main__':
     data['title'] = getInput(default="Stadtbibliothek")
 
     print("Welche API-Implementierung wird genutzt?")
-    print("Verfügbar sind: " + " ".join(APIS.keys()))
+    print("Verfügbar sind: " + " ".join(sorted(APIS.keys())))
 
     data['api'] = ''
     while data['api'] not in APIS.keys():
