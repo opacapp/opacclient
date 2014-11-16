@@ -89,7 +89,10 @@ public class AboutActivity extends OpacPreferenceActivity {
 					@Override
 					public boolean onPreferenceClick(Preference preference) {
 						Intent i = new Intent(Intent.ACTION_VIEW);
-						i.setData(Uri.parse("http://opacapp.de"));
+						if (getString(R.string.website_url).contains("de"))
+							i.setData(Uri.parse("http://de.opacapp.net"));
+						else
+							i.setData(Uri.parse("http://en.opacapp.net"));
 						startActivity(i);
 						return false;
 					}
