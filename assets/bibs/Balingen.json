@@ -25,7 +25,7 @@
             "status": 0
         },
         "customssl": true,
-        "information": "http://www.balingen.de/,Lde/Startseite/Familie+_+Bildung/Stadtbuecherei.html",
+        "information": "http://www.balingen.de/,Lde/Startseite/Familie+_+Bildung/Mediothek.html",
         "reservationtable": {
             "author": 0,
             "availability": -1,
@@ -40,5 +40,5 @@
         8.8495298
     ],
     "state": "Baden-W\u00fcrttemberg",
-    "title": "Stadtb\u00fccherei"
+    "title": "Mediothek"
 }
