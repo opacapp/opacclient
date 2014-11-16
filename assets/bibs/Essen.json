@@ -5,14 +5,14 @@
     "country": "Deutschland",
     "data": {
         "accounttable": {
-            "author": 7,
-            "barcode": 3,
+            "author": 8,
+            "barcode": 4,
             "homebranch": -1,
-            "lendingbranch": 4,
+            "lendingbranch": 3,
             "prolongurl": 0,
-            "returndate": 2,
-            "status": 8,
-            "title": 7
+            "returndate": 3,
+            "status": 9,
+            "title": 8
         },
         "baseurl": "http://katalog.stadtbibliothek-essen.de",
         "copiestable": {
