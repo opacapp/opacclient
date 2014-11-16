@@ -537,7 +537,7 @@ public class Pica extends BaseApi implements OpacApi {
 					e.put(DetailledItem.KEY_COPY_STATUS, detail);
 					// Get reservation info
 					if (element.select("a:has(img[src*=inline_arrow])").size() > 0) {
-						Element a = element.select(selector).first();
+						Element a = element.select("a:has(img[src*=inline_arrow])").first();
 						boolean multipleCopies = a.text().matches(
 								".*(Exemplare|Volume list).*");
 						JSONObject reservation = new JSONObject();
