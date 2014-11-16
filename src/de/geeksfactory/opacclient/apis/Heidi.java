@@ -797,8 +797,9 @@ public class Heidi extends BaseApi implements OpacApi {
 					tr.child(1).select("a").first().absUrl("href")).get(
 					"katkey");
 			row.put(AccountData.KEY_RESERVATION_ID, kk);
-			row.put(AccountData.KEY_RESERVATION_CANCEL,
-					tr.child(0).select("input").first().val());
+			if (tr.child(0).select("input").size() > 0)
+				row.put(AccountData.KEY_RESERVATION_CANCEL,
+						tr.child(0).select("input").first().val());
 
 			int i = 0;
 			for (Node node : desc.childNodes()) {
