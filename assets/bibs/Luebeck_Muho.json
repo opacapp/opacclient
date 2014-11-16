@@ -6,8 +6,7 @@
     "data": {
         "baseurl": "http://kiopc4.ub.uni-kiel.de:8080",
         "db": "8",
-        "information": "http://www.mh-luebeck.de/hochschule/bibliothek/",
-		"renewalsurl": "http://vhweb.ub.uni-kiel.de"
+        "information": "http://www.mh-luebeck.de/hochschule/bibliothek/"
     },
     "geo": [
         53.8810006,

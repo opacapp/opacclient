@@ -6,8 +6,7 @@
     "data": {
         "baseurl": "http://kiopc4.ub.uni-kiel.de:8080",
         "db": "7",
-        "information": "http://www.fh-westkueste.de/startseite/bibliothek/",
-		"renewalsurl": "http://vhweb.ub.uni-kiel.de"
+        "information": "http://www.fh-westkueste.de/startseite/bibliothek/"
     },
     "geo": [
         54.1896893,
