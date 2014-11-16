@@ -1,6 +1,9 @@
 package de.geeksfactory.opacclient.frontend;
 
+import java.io.IOException;
 import java.io.InterruptedIOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -8,14 +11,19 @@ import org.acra.ACRA;
 import org.apache.http.NoHttpResponseException;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.ListFragment;
 import org.holoeverywhere.widget.Button;
 import org.holoeverywhere.widget.FrameLayout;
 import org.holoeverywhere.widget.LinearLayout;
 import org.holoeverywhere.widget.ListView;
 import org.holoeverywhere.widget.TextView;
+import org.holoeverywhere.widget.Toast;
+import org.json.JSONException;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,9 +36,17 @@ import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.frontend.ResultsAdapterEndless.OnLoadMoreListener;
+import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
+import de.geeksfactory.opacclient.searchfields.AndroidMeaningDetector;
+import de.geeksfactory.opacclient.searchfields.MeaningDetector;
+import de.geeksfactory.opacclient.searchfields.SearchField;
+import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
+import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
+import de.geeksfactory.opacclient.storage.SearchFieldDataSource;
 
 /**
  * A list fragment representing a list of SearchResults. This fragment also
@@ -48,6 +64,10 @@ public class SearchResultListFragment extends ListFragment {
 	 * activated item position. Only used on tablets.
 	 */
 	protected static final String STATE_ACTIVATED_POSITION = "activated_position";
+
+	protected static final String ARG_QUERY = "query";
+	protected static final String ARG_VOLUME_QUERY = "volumeQuery";
+	protected static final String ARG_GOOGLE_QUERY = "googleQuery";
 
 	/**
 	 * The fragment's current callback object, which is notified of list item
@@ -110,7 +130,7 @@ public class SearchResultListFragment extends ListFragment {
 	public static SearchResultListFragment getInstance(Bundle query) {
 		SearchResultListFragment frag = new SearchResultListFragment();
 		Bundle args = new Bundle();
-		args.putBundle("query", query);
+		args.putBundle(ARG_QUERY, query);
 		frag.setArguments(args);
 		return frag;
 	}
@@ -118,7 +138,15 @@ public class SearchResultListFragment extends ListFragment {
 	public static SearchResultListFragment getVolumeSearchInstance(Bundle query) {
 		SearchResultListFragment frag = new SearchResultListFragment();
 		Bundle args = new Bundle();
-		args.putBundle("volumeQuery", query);
+		args.putBundle(ARG_VOLUME_QUERY, query);
+		frag.setArguments(args);
+		return frag;
+	}
+
+	public static SearchResultListFragment getGoogleSearchInstance(String query) {
+		SearchResultListFragment frag = new SearchResultListFragment();
+		Bundle args = new Bundle();
+		args.putString(ARG_GOOGLE_QUERY, query);
 		frag.setArguments(args);
 		return frag;
 	}
@@ -133,16 +161,56 @@ public class SearchResultListFragment extends ListFragment {
 	}
 
 	public void performsearch() {
-		st = new SearchStartTask();
-		if (getArguments().containsKey("volumeQuery")) {
-			st.execute(
-					app,
-					OpacClient.bundleToMap(getArguments().getBundle(
-							"volumeQuery")));
+		if (getArguments().containsKey(ARG_GOOGLE_QUERY)) {
+			String query = getArguments().getString(ARG_GOOGLE_QUERY);
+			performGoogleSearch(query);
 		} else {
-			st.execute(app,
-					OpacClient.bundleToQuery(getArguments().getBundle("query")));
+			st = new SearchStartTask();
+			if (getArguments().containsKey(ARG_VOLUME_QUERY)) {
+				st.execute(
+						app,
+						OpacClient.bundleToMap(getArguments().getBundle(
+								ARG_VOLUME_QUERY)));
+			} else {
+				st.execute(
+						app,
+						OpacClient.bundleToQuery(getArguments().getBundle(
+								ARG_QUERY)));
+			}
 		}
+	}
+
+	private void performGoogleSearch(final String query) {
+		AccountDataSource data = new AccountDataSource(getActivity());
+		data.open();
+		final List<Account> accounts = data.getAllAccounts();
+		data.close();
+
+		if (accounts.size() == 0)
+			Toast.makeText(getActivity(), R.string.welcome_select,
+					Toast.LENGTH_LONG).show();
+		else if (accounts.size() == 1)
+			startGoogleSearch(accounts.get(0), query);
+		else
+			new AlertDialog.Builder(getActivity())
+					.setTitle(R.string.account_select)
+					.setAdapter(
+							new AccountListAdapter(getActivity(), accounts)
+									.setHighlightActiveAccount(false),
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									startGoogleSearch(accounts.get(which),
+											query);
+								}
+							}).create().show();
+	}
+
+	private void startGoogleSearch(Account account, String query) {
+		app.setAccount(account.getId());
+		new GoogleSearchTask().execute(query);
 	}
 
 	@Override
@@ -427,6 +495,84 @@ public class SearchResultListFragment extends ListFragment {
 			} else {
 				loaded(result);
 			}
+		}
+	}
+
+	public class GoogleSearchTask extends
+			AsyncTask<String, Void, List<SearchField>> {
+		protected Exception exception;
+		protected String queryString;
+
+		@Override
+		protected List<SearchField> doInBackground(String... arg0) {
+			queryString = arg0[0];
+			SearchFieldDataSource dataSource = new JsonSearchFieldDataSource(
+					app);
+			if (dataSource.hasSearchFields(app.getLibrary().getIdent())) {
+				return dataSource.getSearchFields(app.getLibrary().getIdent());
+			} else {
+				try {
+					List<SearchField> fields = app.getApi().getSearchFields();
+					if (getActivity() == null)
+						return null;
+					if (fields.size() == 0)
+						throw new OpacErrorException(
+								getString(R.string.no_fields_found));
+					if (app.getApi().shouldUseMeaningDetector()) {
+						MeaningDetector md = new AndroidMeaningDetector(
+								getActivity(), app.getLibrary());
+						for (int i = 0; i < fields.size(); i++) {
+							fields.set(i, md.detectMeaning(fields.get(i)));
+						}
+						Collections.sort(fields,
+								new SearchField.OrderComparator());
+					}
+					return fields;
+				} catch (JSONException e) {
+					exception = e;
+					e.printStackTrace();
+				} catch (OpacErrorException e) {
+					exception = e;
+					e.printStackTrace();
+				} catch (IOException e) {
+					exception = e;
+					e.printStackTrace();
+				}
+				return null;
+			}
+		}
+
+		protected void onPostExecute(List<SearchField> result) {
+			if (getActivity() == null)
+				return;
+			if (exception != null) {
+				if (exception instanceof OpacErrorException)
+					showConnectivityError(exception.getMessage());
+				else
+					showConnectivityError();
+				return;
+			}
+			SearchField fieldToUse = findSearchFieldByMeaning(result,
+					Meaning.FREE);
+			if (fieldToUse == null)
+				fieldToUse = findSearchFieldByMeaning(result, Meaning.TITLE);
+			if (fieldToUse == null) {
+				showConnectivityError(getString(R.string.no_fields_found));
+				return;
+			}
+			List<SearchQuery> query = new ArrayList<SearchQuery>();
+			query.add(new SearchQuery(fieldToUse, queryString));
+			st = new SearchStartTask();
+			st.execute(app, query);
+		}
+
+		private SearchField findSearchFieldByMeaning(List<SearchField> fields,
+				Meaning meaning) {
+			for (SearchField field : fields) {
+				if (field.getMeaning() == meaning)
+					return field;
+			}
+			return null;
 		}
 	}
 

@@ -4,6 +4,7 @@ import java.io.InterruptedIOException;
 
 import org.acra.ACRA;
 
+import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -67,7 +68,12 @@ public class SearchResultListActivity extends OpacActivity implements
 	}
 
 	protected void setup() {
-		if (getIntent().hasExtra("volumeQuery")) {
+		if ("com.google.android.gms.actions.SEARCH_ACTION".equals(getIntent()
+				.getAction())) {
+			listFragment = SearchResultListFragment
+					.getGoogleSearchInstance(getIntent()
+							.getStringExtra(SearchManager.QUERY));
+		} else if (getIntent().hasExtra("volumeQuery")) {
 			listFragment = SearchResultListFragment
 					.getVolumeSearchInstance(getIntent().getBundleExtra(
 							"volumeQuery"));

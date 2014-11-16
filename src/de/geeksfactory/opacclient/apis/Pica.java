@@ -92,7 +92,6 @@ public class Pica extends BaseApi implements OpacApi {
 	protected String pwEncoded;
 	protected String languageCode;
 	protected CookieStore cookieStore = new BasicCookieStore();
-
 	protected String lor_reservations;
 
 	protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
@@ -926,14 +925,14 @@ public class Pica extends BaseApi implements OpacApi {
 				medien.add(e);
 			} else { // like in Kiel
 				String prolongCount = "";
-				try {
-					String html = httpGet(https_url + "/nr_renewals.php?U="
-							+ accountName + "&DB=" + db + "&VBAR="
-							+ tr.child(1).select("input").attr("value"),
-							getDefaultEncoding());
-					prolongCount = Jsoup.parse(html).text();
-				} catch (IOException e) {
-
+				if (tr.select("iframe[name=nr_renewals_in_a_box]").size() > 0) {
+					try {
+						String html = httpGet(tr.select("iframe[name=nr_renewals_in_a_box]").attr("src"),
+								getDefaultEncoding());
+						prolongCount = Jsoup.parse(html).text();
+					} catch (IOException e) {
+	
+					}
 				}
 				String reminderCount = tr.child(13).text().trim();
 				if (reminderCount.indexOf(" Mahn") >= 0

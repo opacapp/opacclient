@@ -61,6 +61,7 @@ import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.Pica;
 import de.geeksfactory.opacclient.apis.SISIS;
 import de.geeksfactory.opacclient.apis.SRU;
+import de.geeksfactory.opacclient.apis.TouchPoint;
 import de.geeksfactory.opacclient.apis.WebOpacNet;
 import de.geeksfactory.opacclient.apis.WinBiap;
 import de.geeksfactory.opacclient.apis.Zones22;
@@ -172,6 +173,8 @@ public class OpacClient extends Application {
 			newApiInstance = new WinBiap();
 		else if (lib.getApi().equals("heidi"))
 			newApiInstance = new Heidi();
+		else if (lib.getApi().equals("touchpoint"))
+			newApiInstance = new TouchPoint();
 		else
 			return null;
 		newApiInstance.init(lib);
