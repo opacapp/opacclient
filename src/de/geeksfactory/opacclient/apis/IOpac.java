@@ -822,6 +822,7 @@ public class IOpac extends BaseApi implements OpacApi {
 				.trim().replace("\u00a0", "");
 		if (inputTd.select("select").size() > 0
 				&& !name.equals("Treffer/Seite") && !name.equals("Medientypen")
+				 && !name.equals("Medientyp")
 				&& !name.equals("Treffer pro Seite")) {
 			Element select = inputTd.select("select").first();
 			DropdownSearchField field = new DropdownSearchField();
@@ -865,7 +866,7 @@ public class IOpac extends BaseApi implements OpacApi {
 		Elements trs = doc
 				.select("form tr:has(input:not([type=submit], [type=reset])), form tr:has(select)");
 		for (Element tr : trs) {
-			Elements tds = tr.select("td");
+			Elements tds = tr.children();
 			if (tds.size() == 4) {
 				// Two search fields next to each other in one row
 				SearchField field1 = createSearchField(tds.get(0), tds.get(1));
