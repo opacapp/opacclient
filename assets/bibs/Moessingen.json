@@ -21,7 +21,7 @@
             "department": -1,
             "location": -1,
             "reservations": -1,
-            "returndate": ,
+            "returndate": 3,
             "status": 4
         },
         "information": "http://www.moessingen.de/de/Leben-in-M%C3%B6ssingen/Stadtb%C3%BCcherei",
