@@ -22,5 +22,8 @@
   <string name="download">İndir</string>
   <string name="reminders">uyarı</string>
   <string name="prolonged_abbr">uzat.</string>
+  <string name="prolonging_expired">uzatılamaz</string>
+  <string name="prolonging_impossible">uzatılamaz</string>
+  <string name="prolonging_waiting">henüz uzatılmadı</string>
   <string name="wrong_account_data">Girilen kullanıcı verileri yanlış.</string>
 </resources>
