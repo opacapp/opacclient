@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
 import java.net.URI;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,7 +72,6 @@ public class TouchPoint extends BaseApi implements OpacApi {
 	protected String opac_url = "";
 	protected JSONObject data;
 	protected Library library;
-	protected String folder = "/TouchPoint_touchpoint";
 	protected String CSId;
 	protected String identifier;
 	protected String reusehtml;
@@ -164,7 +164,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 		if (!initialised)
 			start();
 
-		String html = httpGet(opac_url + folder
+		String html = httpGet(opac_url
 				+ "/search.do?methodToCall=switchSearchPage&SearchType=2",
 				ENCODING);
 		Document doc = Jsoup.parse(html);
@@ -223,7 +223,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 			}
 		}
 
-		String html = httpGet(opac_url + folder + "/start.do" + startparams,
+		String html = httpGet(opac_url + "/start.do" + startparams,
 				ENCODING);
 
 		initialised = true;
@@ -320,7 +320,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 				"Suchen"));
 		params.add(new BasicNameValuePair("numberOfHits", "10"));
 
-		String html = httpGet(opac_url + folder + "/search.do?"
+		String html = httpGet(opac_url + "/search.do?"
 				+ URLEncodedUtils.format(params, "UTF-8"), ENCODING);
 		return parse_search(html, 1);
 	}
@@ -333,7 +333,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 				.get("dbIdentifier")));
 		params.add(new BasicNameValuePair("catKey", query.get("catKey")));
 		params.add(new BasicNameValuePair("periodical", "N"));
-		String html = httpGet(opac_url + folder + "/search.do?"
+		String html = httpGet(opac_url + "/search.do?"
 				+ URLEncodedUtils.format(params, "UTF-8"), ENCODING);
 		return parse_search(html, 1);
 	}
@@ -344,7 +344,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 		if (!initialised)
 			start();
 
-		String html = httpGet(opac_url + folder
+		String html = httpGet(opac_url
 				+ "/hitList.do?methodToCall=pos&identifier=" + identifier
 				+ "&curPos=" + (((page - 1) * resultcount) + 1), ENCODING);
 		return parse_search(html, page);
@@ -357,7 +357,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 		if (doc.select("#RefineHitListForm").size() > 0) {
 			// the results are located on a different page loaded via AJAX
 			html = httpGet(
-					opac_url + folder + "/speedHitList.do?_="
+					opac_url + "/speedHitList.do?_="
 							+ String.valueOf(System.currentTimeMillis() / 1000)
 							+ "&hitlistindex=0&exclusionList=", ENCODING);
 			doc = Jsoup.parse(html);
@@ -368,7 +368,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 					1);
 		}
 
-		doc.setBaseUri(opac_url + folder + "/searchfoo");
+		doc.setBaseUri(opac_url + "/searchfoo");
 
 		int results_total = -1;
 
@@ -454,11 +454,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 				String isbn = matchJSVariable(js, "isbn");
 				String ajaxUrl = matchJSVariable(js, "ajaxUrl");
 				if (!"".equals(isbn) && !"".equals(ajaxUrl)) {
-					String url;
-					if (ajaxUrl.startsWith("/"))
-						url = opac_url + ajaxUrl;
-					else
-						url = opac_url + folder + "/" + ajaxUrl;
+					String url = new URL(new URL(opac_url + "/"), ajaxUrl).toString();
 					String coverUrl = httpGet(url + "?isbn=" + isbn
 							+ "&size=small", ENCODING);
 					if (!"".equals(coverUrl))
@@ -484,11 +480,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 						sr.setId(value);
 					}
 				}
-				String url;
-				if (ajaxUrl.startsWith("/"))
-					url = opac_url + ajaxUrl;
-				else
-					url = opac_url + folder + "/" + ajaxUrl;
+				String url = new URL(new URL(opac_url + "/"), ajaxUrl).toString();
 				String loanStatusHtml = httpGet(
 						url + "?" + URLEncodedUtils.format(map, "UTF-8"),
 						ENCODING).replace("\r\n", "").trim();
@@ -558,7 +550,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 		}
 
 		String html = httpGet(
-				opac_url + folder + "/perma.do?q="
+				opac_url + "/perma.do?q="
 						+ URLEncoder.encode("0=\"" + id + "\" IN [2]", "UTF-8"),
 				ENCODING);
 
@@ -575,7 +567,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 
 	protected DetailledItem parse_result(String html) throws IOException {
 		Document doc = Jsoup.parse(html);
-		doc.setBaseUri(opac_url + folder);
+		doc.setBaseUri(opac_url);
 
 		DetailledItem result = new DetailledItem();
 
@@ -584,11 +576,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 			String isbn = matchJSVariable(js, "isbn");
 			String ajaxUrl = matchJSVariable(js, "ajaxUrl");
 			if (!"".equals(isbn) && !"".equals(ajaxUrl)) {
-				String url;
-				if (ajaxUrl.startsWith("/"))
-					url = opac_url + ajaxUrl;
-				else
-					url = opac_url + folder + "/" + ajaxUrl;
+				String url = new URL(new URL(opac_url + "/"), ajaxUrl).toString();
 				String coverUrl = httpGet(url + "?isbn=" + isbn
 						+ "&size=medium", ENCODING);
 				if (!"".equals(coverUrl))
@@ -606,7 +594,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 		String copiesParameter = doc.select("div[id^=ajax_holdings_url")
 				.attr("ajaxParameter").replace("&amp;", "");
 		if (!"".equals(copiesParameter)) {
-			String copiesHtml = httpGet(opac_url + folder + "/"
+			String copiesHtml = httpGet(opac_url + "/"
 					+ copiesParameter, ENCODING);
 			Document copiesDoc = Jsoup.parse(copiesHtml);
 			List<String> table_keys = new ArrayList<String>();
@@ -710,7 +698,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 	@Override
 	public String getShareUrl(String id, String title) {
 		try {
-			return opac_url + folder + "/perma.do?q="
+			return opac_url + "/perma.do?q="
 					+ URLEncoder.encode("0=\"" + id + "\" IN [2]", "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();

@@ -214,4 +214,12 @@ We might know your library ID then, but not your password, and we will take care
   <string name="support_search">Search only</string>
   <string name="meta_clear_title">Clear cache</string>
   <string name="meta_clear">Deletes cached metadata</string>
+  <string name="version">Version</string>
+  <string name="website">Website</string>
+  <string name="website_url">www.opacapp.net</string>
+  <string name="developer">Developer</string>
+  <string name="feedback">Feedback</string>
+  <string name="rate">Rate application</string>
+  <string name="other">Other</string>
+  <string name="source">Source Code</string>
 </resources>

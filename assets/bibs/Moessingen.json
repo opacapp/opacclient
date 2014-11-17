@@ -1,7 +1,7 @@
 {
     "account_supported": true,
     "api": "bibliotheca",
-    "city": "Balingen",
+    "city": "M\u00f6ssingen",
     "country": "Deutschland",
     "data": {
         "accounttable": {
@@ -9,36 +9,35 @@
             "barcode": -1,
             "homebranch": -1,
             "lendingbranch": -1,
-            "prolongurl": 3,
-            "returndate": 2,
-            "status": -1,
+            "prolongurl": 5,
+            "returndate": 3,
+            "status": 4,
             "title": 1
         },
-        "baseurl": "https://wwwopac.rz-kiru.de/balingen",
+        "baseurl": "https://wwwopac.rz-kiru.de/moessingen",
         "copiestable": {
             "barcode": -1,
-            "branch": 5,
+            "branch": -1,
             "department": -1,
-            "location": 4,
+            "location": -1,
             "reservations": -1,
-            "returndate": 1,
-            "status": 0
+            "returndate": 3,
+            "status": 4
         },
-        "customssl": true,
-        "information": "http://www.balingen.de/,Lde/Startseite/Familie+_+Bildung/Mediothek.html",
+        "information": "http://www.moessingen.de/de/Leben-in-M%C3%B6ssingen/Stadtb%C3%BCcherei",
         "reservationtable": {
             "author": 0,
-            "availability": -1,
+            "availability": 3,
             "branch": -1,
-            "cancelurl": 2,
-            "expirationdate": null,
+            "cancelurl": 4,
+            "expirationdate": -1,
             "title": 1
         }
     },
     "geo": [
-        48.2748206,
-        8.8495298
+        48.40716459999999,
+        9.0563024
     ],
     "state": "Baden-W\u00fcrttemberg",
-    "title": "Mediothek"
+    "title": "Stadtb\u00fccherei"
 }

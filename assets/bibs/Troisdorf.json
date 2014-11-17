@@ -14,7 +14,7 @@
             "status": -1,
             "title": 0
         },
-        "baseurl": "http://www3.troisdorf.de/wopac126",
+        "baseurl": "http://troisdorf.internetopac.de",
         "copiestable": {
             "barcode": 0,
             "branch": 4,

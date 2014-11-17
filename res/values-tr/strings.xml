@@ -210,4 +210,8 @@ Rapor gönderdiğinizde bazı verileriniz bize gelir (bu veriler kütüphane şi
   <string name="no_search_cache">Hata. Lütfen bu sorunu çözmek için bir arama yapmayı deneyin.</string>
   <string name="user_data_opac_message">Kullanıcı verileri kontrol edilirken kütüphaneden şu mesaj geldi: \"%s\"\n\nBu kullanıcı verilerini kaydetmek istiyor musunuz?</string>
   <string name="user_data_connection_error">Kullanıcı verileri kontrol edilirken kütüphane sunucusuyla bağlantı sağlanamadı. Bu kullanıcı verilerini kaydetmek istiyor musunuz?</string>
+  <string name="support_search_account">Arama ve hesap</string>
+  <string name="support_search">Sadece arama</string>
+  <string name="meta_clear_title">Önbelleği temizle</string>
+  <string name="meta_clear">Önbellekteki verileri siler</string>
 </resources>

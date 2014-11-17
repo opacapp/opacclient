@@ -92,9 +92,9 @@ public class OpacClient extends Application {
 
 	private SharedPreferences sp;
 
-	private Account account;
-	private OpacApi api;
-	private Library library;
+	protected Account account;
+	protected OpacApi api;
+	protected Library library;
 
 	public static Context context;
 	public static String versionName = "unknown";
@@ -102,7 +102,7 @@ public class OpacClient extends Application {
 	private final Uri STAR_PROVIDER_STAR_URI = StarContentProvider.STAR_URI;
 
 	private static OpacClient instance;
-	private String currentLang;
+	protected String currentLang;
 
 	public OpacClient() {
 		super();

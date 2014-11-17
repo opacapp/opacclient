@@ -539,6 +539,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 	}
 
 	public Map<String, String> saveQuery() {
+		if(app.getLibrary() == null)
+			return null;
+		
 		saveHomeBranch();
 		Map<String, String> query = new HashMap<String, String>();
 

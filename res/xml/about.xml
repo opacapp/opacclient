@@ -5,30 +5,30 @@
         <Preference
             android:key="version"
             android:summary="@string/about_summary"
-            android:title="Version" />
+            android:title="@string/version" />
         <Preference
             android:key="changelog"
             android:title="@string/changelog" />
         <Preference
             android:key="website"
-            android:summary="www.opacapp.de"
-            android:title="Website" />
+            android:summary="@string/website_url"
+            android:title="@string/website" />
         <Preference
             android:key="developer"
             android:summary="Raphael Michel · www.raphaelmichel.de"
-            android:title="Entwickler" />
+            android:title="@string/developer" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Feedback" >
+    <PreferenceCategory android:title="@string/feedback" >
         <Preference
             android:key="feedback"
             android:summary="info@opacapp.de"
-            android:title="Feedback" />
+            android:title="@string/feedback" />
         <Preference
             android:key="rate_play"
             android:summary="Google Play"
-            android:title="Applikation bewerten" />
+            android:title="@string/rate" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Sonstiges" >
+    <PreferenceCategory android:title="@string/other" >
         <Preference
             android:key="thanks"
             android:title="@string/thanks" />

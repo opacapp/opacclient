@@ -1,0 +1,26 @@
+Web Opac: 500+ Kütüphane
+Bu uygulama 500'den fazla halk kütüphanesi ve akademik kütüphaneye erişim sağlar.
+
+Bu ücretsiz Android uygulaması beşyüz'den fazla halk kütüphanesinin kataloglarına ve kullanıcı hesaplarına mobil erişim sağlar. Kütüphanelerin çoğu Almanca konuşulan ülkelerde bulunmaktadır.
+Uygulama özellikleri:
+- Kütüphaneninizin kataloğunda arama yapma
+- Kitaplar için izleme listesi
+- Barkod tarayıcı ile ISBN arama
+Ve bazı kütüphanelerde:
+- Ödünç alınan medyanın görüntülenmesi (birden fazla hesapla da kullanılabilir)
+- Ödünç alınabilen kitapların önsözlerine bakabilme ve rezervasyon iptal edebilme
+- Kitap rezervasyonu yapabilme
+- Kitapların geri verme zamanı geldiğinde bildirim alabilme (garantisi yoktur)
+- Kütüphane hakkında bilgi alabilme (örn. açılış saatleri)
+Uygulama tanımına uymayan kütüphanelerin listesi. Lütfen şu adresteki listeye bakın: http://opacapp.de/bibliotheken/
+Büyük şehir kütüphaneleri: Berlin, Münih, Viyana, Hamburg, Köln, Frankfurt, Mannheim, Basel, Heidelberg, Wiesbaden, Mainz, Leipzig, Dresden, Chemnitz, Salzburg (Liste tam değildir!)
+Büyük üniversite kütüphaneleri: LMU München, Bochum, TU Dortmund, ULB Münster, Hamburg, ... (Liste tam değildir!)
+Hata raporları için lütfen info@opacapp.de adresiyle iletişime geçin veya Android ve uygulamanın "Rapor Gönder" özelliği kullanın.
+Geri bildirimlere her zaman açığız!
+http://opacapp.de
+Bu uygulama ücretsiz yazılımdır. MIT Lisansı ile lisanslanmıştır ve kaynak kodu bu adreste bulunabilir: https://github.com/raphaelm/opacclient
+Kütüphaneler eğer kendi logo ve tasarımları, kendi dağıtımları ve muhtemelen özelleştirilmiş özellikler ile bir uygulama isterlerse benimle info@opacapp.de adresinden direkt iletişime geçebilirler.
+--
+Halk Kütüphaneleri Üniversite Şehit Kütüphaneleri Kitap Ödünç Alma Rezerve Rezervasyon
+--
+Uygulama ikonı dizaynı Raphael Pohl

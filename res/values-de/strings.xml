@@ -219,4 +219,13 @@
 	<string name="support_search">Katalogsuche</string>
 	<string name="meta_clear_title">Cache leeren</string>
 	<string name="meta_clear">Löscht auf dem Handy zwischengespeicherten Zweigstellen, Metadaten, etc.</string>
+	<string name="version">Version</string>
+	<string name="website">Website</string>
+	<string name="website_url">www.opacapp.de</string>
+	<string name="developer">Entwickler</string>
+	<string name="feedback">Feedback</string>
+	<string name="rate">Applikation bewerten</string>
+	<string name="other">Sonstiges</string>
+	<string name="source">Quellcode</string>
+
 </resources>

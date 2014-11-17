@@ -229,7 +229,8 @@
         "2.Standort",
         "Regal",
         "Standorte CB",
-        "Standorte SFB/SD"
+        "Standorte SFB/SD",
+        "Erscheinungsland"
     ],
     "CATEGORY": [
         "Kategorie",
