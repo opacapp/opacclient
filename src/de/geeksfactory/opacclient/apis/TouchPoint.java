@@ -223,8 +223,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 			}
 		}
 
-		String html = httpGet(opac_url + "/start.do" + startparams,
-				ENCODING);
+		String html = httpGet(opac_url + "/start.do" + startparams, ENCODING);
 
 		initialised = true;
 
@@ -320,8 +319,9 @@ public class TouchPoint extends BaseApi implements OpacApi {
 				"Suchen"));
 		params.add(new BasicNameValuePair("numberOfHits", "10"));
 
-		String html = httpGet(opac_url + "/search.do?"
-				+ URLEncodedUtils.format(params, "UTF-8"), ENCODING);
+		String html = httpGet(
+				opac_url + "/search.do?"
+						+ URLEncodedUtils.format(params, "UTF-8"), ENCODING);
 		return parse_search(html, 1);
 	}
 
@@ -333,8 +333,9 @@ public class TouchPoint extends BaseApi implements OpacApi {
 				.get("dbIdentifier")));
 		params.add(new BasicNameValuePair("catKey", query.get("catKey")));
 		params.add(new BasicNameValuePair("periodical", "N"));
-		String html = httpGet(opac_url + "/search.do?"
-				+ URLEncodedUtils.format(params, "UTF-8"), ENCODING);
+		String html = httpGet(
+				opac_url + "/search.do?"
+						+ URLEncodedUtils.format(params, "UTF-8"), ENCODING);
 		return parse_search(html, 1);
 	}
 
@@ -384,7 +385,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 					".*: ([0-9]+)$", "$1"));
 		}
 
-		Elements table = doc.select("table.data tbody tr");
+		Elements table = doc.select("table.data > tbody > tr");
 		identifier = null;
 
 		Elements links = doc.select("table.data a");
@@ -414,13 +415,14 @@ public class TouchPoint extends BaseApi implements OpacApi {
 		for (int i = 0; i < table.size(); i++) {
 			Element tr = table.get(i);
 			SearchResult sr = new SearchResult();
-			if (tr.select(".type .icn").size() > 0) {
-				String[] fparts = tr.select(".type .icn").first().attr("src")
-						.split("/");
+			if (tr.select(".icn, img[width=32]").size() > 0) {
+				String[] fparts = tr.select(".icn, img[width=32]").first()
+						.attr("src").split("/");
 				String fname = fparts[fparts.length - 1];
 				String changedFname = fname.toLowerCase(Locale.GERMAN)
 						.replace(".jpg", "").replace(".gif", "")
 						.replace(".png", "");
+
 				// File names can look like this: "20_DVD_Video.gif"
 				Pattern pattern = Pattern.compile("(\\d+)_.*");
 				Matcher matcher = pattern.matcher(changedFname);
@@ -441,9 +443,15 @@ public class TouchPoint extends BaseApi implements OpacApi {
 					sr.setType(defaulttype);
 				}
 			}
-
-			String title = tr.select(".title").text();
-			String text = tr.select(".results").first().ownText();
+			String title;
+			String text;
+			if (tr.select(".results table").size() > 0) { // e.g. RWTH Aachen
+				title = tr.select(".title a").text();
+				text = tr.select(".title div").text();
+			} else { // e.g. Schaffhausen
+				title = tr.select(".title").text();
+				text = tr.select(".results").first().ownText();
+			}
 
 			// we need to do some evil javascript parsing here to get the cover
 			// and loan status of the item
@@ -454,7 +462,8 @@ public class TouchPoint extends BaseApi implements OpacApi {
 				String isbn = matchJSVariable(js, "isbn");
 				String ajaxUrl = matchJSVariable(js, "ajaxUrl");
 				if (!"".equals(isbn) && !"".equals(ajaxUrl)) {
-					String url = new URL(new URL(opac_url + "/"), ajaxUrl).toString();
+					String url = new URL(new URL(opac_url + "/"), ajaxUrl)
+							.toString();
 					String coverUrl = httpGet(url + "?isbn=" + isbn
 							+ "&size=small", ENCODING);
 					if (!"".equals(coverUrl))
@@ -462,58 +471,62 @@ public class TouchPoint extends BaseApi implements OpacApi {
 				}
 			}
 			// get loan status and media ID
-			String js = tr.select("div[id^=loanstatus] + script").first()
-					.html();
-			String[] variables = new String[] { "loanstateDBId",
-					"itemIdentifier", "hitlistIdentifier", "hitlistPosition",
-					"duplicateHitlistIdentifier", "itemType", "titleStatus",
-					"typeofHit", "context" };
-			String ajaxUrl = matchJSVariable(js, "ajaxUrl");
-			if (!"".equals(ajaxUrl)) {
-				List<NameValuePair> map = new ArrayList<NameValuePair>();
-				for (String variable : variables) {
-					String value = matchJSVariable(js, variable);
-					if (!"".equals(value)) {
-						map.add(new BasicNameValuePair(variable, value));
+			if (tr.select("div[id^=loanstatus] + script").size() > 0) {
+				String js = tr.select("div[id^=loanstatus] + script").first()
+						.html();
+				String[] variables = new String[] { "loanstateDBId",
+						"itemIdentifier", "hitlistIdentifier",
+						"hitlistPosition", "duplicateHitlistIdentifier",
+						"itemType", "titleStatus", "typeofHit", "context" };
+				String ajaxUrl = matchJSVariable(js, "ajaxUrl");
+				if (!"".equals(ajaxUrl)) {
+					List<NameValuePair> map = new ArrayList<NameValuePair>();
+					for (String variable : variables) {
+						String value = matchJSVariable(js, variable);
+						if (!"".equals(value)) {
+							map.add(new BasicNameValuePair(variable, value));
+						}
+						if (variable.equals("itemIdentifier")) {
+							sr.setId(value);
+						}
 					}
-					if (variable.equals("itemIdentifier")) {
-						sr.setId(value);
-					}
-				}
-				String url = new URL(new URL(opac_url + "/"), ajaxUrl).toString();
-				String loanStatusHtml = httpGet(
-						url + "?" + URLEncodedUtils.format(map, "UTF-8"),
-						ENCODING).replace("\r\n", "").trim();
-				Document loanStatusDoc = Jsoup.parse(loanStatusHtml);
-				String loanstatus = loanStatusDoc.text().trim();
+					String url = new URL(new URL(opac_url + "/"), ajaxUrl)
+							.toString();
+					String loanStatusHtml = httpGet(
+							url + "?" + URLEncodedUtils.format(map, "UTF-8"),
+							ENCODING).replace("\r\n", "").trim();
+					Document loanStatusDoc = Jsoup.parse(loanStatusHtml);
+					String loanstatus = loanStatusDoc.text()
+							.replace("\u00bb", "").trim();
 
-				if ((loanstatus.startsWith("entliehen")
-						&& loanstatus.contains("keine Vormerkung möglich") || loanstatus
-							.contains("Keine Exemplare verfügbar"))) {
-					sr.setStatus(SearchResult.Status.RED);
-				} else if (loanstatus.startsWith("entliehen")
-						|| loanstatus.contains("andere Zweigstelle")) {
-					sr.setStatus(SearchResult.Status.YELLOW);
-				} else if ((loanstatus.startsWith("bestellbar") && !loanstatus
-						.contains("nicht bestellbar"))
-						|| (loanstatus.startsWith("vorbestellbar") && !loanstatus
-								.contains("nicht vorbestellbar"))
-						|| (loanstatus.startsWith("vorbestellbar") && !loanstatus
-								.contains("nicht vorbestellbar"))
-						|| (loanstatus.startsWith("vormerkbar") && !loanstatus
-								.contains("nicht vormerkbar"))
-						|| (loanstatus.contains("heute zurückgebucht"))
-						|| (loanstatus.contains("ausleihbar") && !loanstatus
-								.contains("nicht ausleihbar"))) {
-					sr.setStatus(SearchResult.Status.GREEN);
-				}
-				if (sr.getType() != null) {
-					if (sr.getType().equals(MediaType.EBOOK)
-							|| sr.getType().equals(MediaType.EVIDEO)
-							|| sr.getType().equals(MediaType.MP3))
-						// Especially Onleihe.de ebooks are often marked
-						// green though they are not available.
-						sr.setStatus(SearchResult.Status.UNKNOWN);
+					if ((loanstatus.startsWith("entliehen")
+							&& loanstatus.contains("keine Vormerkung möglich") || loanstatus
+								.contains("Keine Exemplare verfügbar"))) {
+						sr.setStatus(SearchResult.Status.RED);
+					} else if (loanstatus.startsWith("entliehen")
+							|| loanstatus.contains("andere Zweigstelle")) {
+						sr.setStatus(SearchResult.Status.YELLOW);
+					} else if ((loanstatus.startsWith("bestellbar") && !loanstatus
+							.contains("nicht bestellbar"))
+							|| (loanstatus.startsWith("vorbestellbar") && !loanstatus
+									.contains("nicht vorbestellbar"))
+							|| (loanstatus.startsWith("vorbestellbar") && !loanstatus
+									.contains("nicht vorbestellbar"))
+							|| (loanstatus.startsWith("vormerkbar") && !loanstatus
+									.contains("nicht vormerkbar"))
+							|| (loanstatus.contains("heute zurückgebucht"))
+							|| (loanstatus.contains("ausleihbar") && !loanstatus
+									.contains("nicht ausleihbar"))) {
+						sr.setStatus(SearchResult.Status.GREEN);
+					}
+					if (sr.getType() != null) {
+						if (sr.getType().equals(MediaType.EBOOK)
+								|| sr.getType().equals(MediaType.EVIDEO)
+								|| sr.getType().equals(MediaType.MP3))
+							// Especially Onleihe.de ebooks are often marked
+							// green though they are not available.
+							sr.setStatus(SearchResult.Status.UNKNOWN);
+					}
 				}
 			}
 
@@ -522,7 +535,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 			description.append(text);
 			sr.setInnerhtml(description.toString());
 
-			sr.setNr(10 * (page - 1) + i);
+			sr.setNr(10 * (page - 1) + i + 1);
 			results.add(sr);
 		}
 		resultcount = results.size();
@@ -562,7 +575,10 @@ public class TouchPoint extends BaseApi implements OpacApi {
 		if (reusehtml != null) {
 			return getResultById(null, null);
 		}
-		return null;
+		String html = httpGet(opac_url
+				+ "/singleHit.do?methodToCall=showHit&curPos=" + nr
+				+ "&identifier=" + identifier, ENCODING);
+		return parse_result(html);
 	}
 
 	protected DetailledItem parse_result(String html) throws IOException {
@@ -576,7 +592,8 @@ public class TouchPoint extends BaseApi implements OpacApi {
 			String isbn = matchJSVariable(js, "isbn");
 			String ajaxUrl = matchJSVariable(js, "ajaxUrl");
 			if (!"".equals(isbn) && !"".equals(ajaxUrl)) {
-				String url = new URL(new URL(opac_url + "/"), ajaxUrl).toString();
+				String url = new URL(new URL(opac_url + "/"), ajaxUrl)
+						.toString();
 				String coverUrl = httpGet(url + "?isbn=" + isbn
 						+ "&size=medium", ENCODING);
 				if (!"".equals(coverUrl))
@@ -586,16 +603,21 @@ public class TouchPoint extends BaseApi implements OpacApi {
 
 		result.setTitle(doc.select("h1").text());
 		for (Element tr : doc.select(".titleinfo tr")) {
-			result.addDetail(new Detail(tr.select("th").text(), tr.select("td")
-					.text()));
+			// Sometimes there is one th and one td, sometimes two tds
+			String detailName = tr.select("th, td").first().text().trim();
+			String detailValue = tr.select("td").last().text().trim();
+			result.addDetail(new Detail(detailName, detailValue));
+			if (detailName.contains("ID in diesem Katalog")) {
+				result.setId(detailValue);
+			}
 		}
 
 		// Copies
 		String copiesParameter = doc.select("div[id^=ajax_holdings_url")
 				.attr("ajaxParameter").replace("&amp;", "");
 		if (!"".equals(copiesParameter)) {
-			String copiesHtml = httpGet(opac_url + "/"
-					+ copiesParameter, ENCODING);
+			String copiesHtml = httpGet(opac_url + "/" + copiesParameter,
+					ENCODING);
 			Document copiesDoc = Jsoup.parse(copiesHtml);
 			List<String> table_keys = new ArrayList<String>();
 			for (Element th : copiesDoc.select(".data tr th")) {
@@ -622,33 +644,33 @@ public class TouchPoint extends BaseApi implements OpacApi {
 
 		// TODO: Volumes
 
-		// try {
-		// Element isvolume = null;
-		// Map<String, String> volume = new HashMap<String, String>();
-		// Elements links = doc.select(".data td a");
-		// int elcount = links.size();
-		// for (int eli = 0; eli < elcount; eli++) {
-		// List<NameValuePair> anyurl = URLEncodedUtils.parse(new URI(
-		// links.get(eli).attr("href")), "UTF-8");
-		// for (NameValuePair nv : anyurl) {
-		// if (nv.getName().equals("methodToCall")
-		// && nv.getValue().equals("volumeSearch")) {
-		// isvolume = links.get(eli);
-		// } else if (nv.getName().equals("catKey")) {
-		// volume.put("catKey", nv.getValue());
-		// } else if (nv.getName().equals("dbIdentifier")) {
-		// volume.put("dbIdentifier", nv.getValue());
-		// }
-		// }
-		// if (isvolume != null) {
-		// volume.put("volume", "true");
-		// result.setVolumesearch(volume);
-		// break;
-		// }
-		// }
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// }
+		try {
+			Element isvolume = null;
+			Map<String, String> volume = new HashMap<String, String>();
+			Elements links = doc.select(".data td a");
+			int elcount = links.size();
+			for (int eli = 0; eli < elcount; eli++) {
+				List<NameValuePair> anyurl = URLEncodedUtils.parse(new URI(
+						links.get(eli).attr("href")), "UTF-8");
+				for (NameValuePair nv : anyurl) {
+					if (nv.getName().equals("methodToCall")
+							&& nv.getValue().equals("volumeSearch")) {
+						isvolume = links.get(eli);
+					} else if (nv.getName().equals("catKey")) {
+						volume.put("catKey", nv.getValue());
+					} else if (nv.getName().equals("dbIdentifier")) {
+						volume.put("dbIdentifier", nv.getValue());
+					}
+				}
+				if (isvolume != null) {
+					volume.put("volume", "true");
+					result.setVolumesearch(volume);
+					break;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		return result;
 	}
