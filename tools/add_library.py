@@ -277,17 +277,16 @@ class Pica(Api):
     def accountSupported(self):
         return True
 
-
-class IOpac(Api):
-
-    def accountSupported(self):
-        return True
-
     def prompt(self, data):
         print("DB-Nummer?")
         inp = getInput(required=True)
         data['data']['db'] = inp
         return data
+
+class IOpac(Api):
+
+    def accountSupported(self):
+        return True
 
 APIS = {
     'bibliotheca' : Bibliotheca,
