@@ -1,0 +1,16 @@
+{
+    "account_supported": true,
+    "api": "iopac",
+    "city": "Osterburg-Stendal",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://80.153.188.140:9080",
+        "information": "http://bibliothek.osterburg.de/"
+    },
+    "geo": [
+        52.796603,
+        11.7590229
+    ],
+    "state": "Sachsen-Anhalt",
+    "title": "Stadt- und Kreisbibliothek"
+}
