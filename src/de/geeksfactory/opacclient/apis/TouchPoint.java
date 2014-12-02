@@ -88,11 +88,11 @@ public class TouchPoint extends BaseApi implements OpacApi {
 	static {
 		defaulttypes.put("g", MediaType.EBOOK);
 		defaulttypes.put("d", MediaType.CD);
-		defaulttypes.put("Buch", MediaType.BOOK);
-		defaulttypes.put("Bücher", MediaType.BOOK);
-		defaulttypes.put("Printmedien", MediaType.BOOK);
-		defaulttypes.put("Zeitschrift", MediaType.MAGAZINE);
-		defaulttypes.put("Zeitschriften", MediaType.MAGAZINE);
+		defaulttypes.put("buch", MediaType.BOOK);
+		defaulttypes.put("bücher", MediaType.BOOK);
+		defaulttypes.put("printmedien", MediaType.BOOK);
+		defaulttypes.put("zeitschrift", MediaType.MAGAZINE);
+		defaulttypes.put("zeitschriften", MediaType.MAGAZINE);
 		defaulttypes.put("zeitung", MediaType.NEWSPAPER);
 		defaulttypes.put(
 				"Einzelband einer Serie, siehe auch übergeordnete Titel",
@@ -106,24 +106,24 @@ public class TouchPoint extends BaseApi implements OpacApi {
 		defaulttypes.put("6", MediaType.SCORE_MUSIC);
 		defaulttypes.put("7", MediaType.CD_MUSIC);
 		defaulttypes.put("8", MediaType.CD_MUSIC);
-		defaulttypes.put("Tonträger", MediaType.CD_MUSIC);
+		defaulttypes.put("tonträger", MediaType.CD_MUSIC);
 		defaulttypes.put("12", MediaType.CD);
 		defaulttypes.put("13", MediaType.CD);
-		defaulttypes.put("CD", MediaType.CD);
-		defaulttypes.put("DVD", MediaType.DVD);
+		defaulttypes.put("cd", MediaType.CD);
+		defaulttypes.put("dvd", MediaType.DVD);
 		defaulttypes.put("14", MediaType.CD);
 		defaulttypes.put("15", MediaType.DVD);
 		defaulttypes.put("16", MediaType.CD);
 		defaulttypes.put("audiocd", MediaType.CD);
-		defaulttypes.put("Film", MediaType.MOVIE);
-		defaulttypes.put("Filme", MediaType.MOVIE);
+		defaulttypes.put("film", MediaType.MOVIE);
+		defaulttypes.put("filme", MediaType.MOVIE);
 		defaulttypes.put("17", MediaType.MOVIE);
 		defaulttypes.put("18", MediaType.MOVIE);
 		defaulttypes.put("19", MediaType.MOVIE);
 		defaulttypes.put("20", MediaType.DVD);
 		defaulttypes.put("dvd", MediaType.DVD);
 		defaulttypes.put("21", MediaType.SCORE_MUSIC);
-		defaulttypes.put("Noten", MediaType.SCORE_MUSIC);
+		defaulttypes.put("noten", MediaType.SCORE_MUSIC);
 		defaulttypes.put("22", MediaType.BLURAY);
 		defaulttypes.put("23", MediaType.GAME_CONSOLE_PLAYSTATION);
 		defaulttypes.put("26", MediaType.CD);
@@ -143,18 +143,18 @@ public class TouchPoint extends BaseApi implements OpacApi {
 		defaulttypes.put("96", MediaType.EBOOK);
 		defaulttypes.put("97", MediaType.EBOOK);
 		defaulttypes.put("99", MediaType.EBOOK);
-		defaulttypes.put("EB", MediaType.EBOOK);
+		defaulttypes.put("eb", MediaType.EBOOK);
 		defaulttypes.put("ebook", MediaType.EBOOK);
 		defaulttypes.put("buch01", MediaType.BOOK);
 		defaulttypes.put("buch02", MediaType.PACKAGE_BOOKS);
-		defaulttypes.put("Medienpaket", MediaType.PACKAGE);
+		defaulttypes.put("medienpaket", MediaType.PACKAGE);
 		defaulttypes.put("datenbank", MediaType.PACKAGE);
 		defaulttypes
-				.put("Medienpaket, Lernkiste, Lesekiste", MediaType.PACKAGE);
+				.put("medienpaket, lernkiste, lesekiste", MediaType.PACKAGE);
 		defaulttypes.put("buch03", MediaType.BOOK);
 		defaulttypes.put("buch04", MediaType.PACKAGE_BOOKS);
 		defaulttypes.put("buch05", MediaType.PACKAGE_BOOKS);
-		defaulttypes.put("Web-Link", MediaType.URL);
+		defaulttypes.put("web-link", MediaType.URL);
 		defaulttypes.put("ejournal", MediaType.EDOC);
 		defaulttypes.put("karte", MediaType.MAP);
 	}
@@ -448,9 +448,10 @@ public class TouchPoint extends BaseApi implements OpacApi {
 			if (tr.select(".results table").size() > 0) { // e.g. RWTH Aachen
 				title = tr.select(".title a").text();
 				text = tr.select(".title div").text();
-			} else { // e.g. Schaffhausen
-				title = tr.select(".title").text();
-				text = tr.select(".results").first().ownText();
+			} else { // e.g. Schaffhausen, BSB München
+				title = tr.select(".title, .hitlistTitle").text();
+				text = tr.select(".results, .hitlistMetadata").first()
+						.ownText();
 			}
 
 			// we need to do some evil javascript parsing here to get the cover
@@ -480,16 +481,24 @@ public class TouchPoint extends BaseApi implements OpacApi {
 						"itemType", "titleStatus", "typeofHit", "context" };
 				String ajaxUrl = matchJSVariable(js, "ajaxUrl");
 				if (!"".equals(ajaxUrl)) {
+					JSONObject id = new JSONObject();
 					List<NameValuePair> map = new ArrayList<NameValuePair>();
 					for (String variable : variables) {
 						String value = matchJSVariable(js, variable);
 						if (!"".equals(value)) {
 							map.add(new BasicNameValuePair(variable, value));
 						}
-						if (variable.equals("itemIdentifier")) {
-							sr.setId(value);
+						try {
+							if (variable.equals("itemIdentifier")) {
+								id.put("id", value);
+							} else if (variable.equals("loanstateDBId")) {
+								id.put("db", value);
+							}
+						} catch (JSONException e) {
+							e.printStackTrace();
 						}
 					}
+					sr.setId(id.toString());
 					String url = new URL(new URL(opac_url + "/"), ajaxUrl)
 							.toString();
 					String loanStatusHtml = httpGet(
@@ -561,11 +570,23 @@ public class TouchPoint extends BaseApi implements OpacApi {
 			reusehtml = null;
 			return r;
 		}
-
-		String html = httpGet(
-				opac_url + "/perma.do?q="
-						+ URLEncoder.encode("0=\"" + id + "\" IN [2]", "UTF-8"),
-				ENCODING);
+		String html;
+		try {
+			JSONObject json = new JSONObject(id);
+			html = httpGet(
+					opac_url
+							+ "/perma.do?q="
+							+ URLEncoder.encode("0=\"" + json.getString("id")
+									+ "\" IN [" + json.getString("db") + "]",
+									"UTF-8"), ENCODING);
+		} catch (JSONException e) {
+			// backwards compatibility
+			html = httpGet(
+					opac_url
+							+ "/perma.do?q="
+							+ URLEncoder.encode("0=\"" + id + "\" IN [2]",
+									"UTF-8"), ENCODING);
+		}
 
 		return parse_result(html);
 	}
@@ -601,7 +622,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 			}
 		}
 
-		result.setTitle(doc.select("h1").text());
+		result.setTitle(doc.select("h1").first().text());
 		for (Element tr : doc.select(".titleinfo tr")) {
 			// Sometimes there is one th and one td, sometimes two tds
 			String detailName = tr.select("th, td").first().text().trim();
@@ -720,8 +741,18 @@ public class TouchPoint extends BaseApi implements OpacApi {
 	@Override
 	public String getShareUrl(String id, String title) {
 		try {
-			return opac_url + "/perma.do?q="
-					+ URLEncoder.encode("0=\"" + id + "\" IN [2]", "UTF-8");
+			try {
+				JSONObject json = new JSONObject(id);
+				return opac_url
+						+ "/perma.do?q="
+						+ URLEncoder.encode("0=\"" + json.getString("id")
+								+ "\" IN [" + json.getString("db") + "]",
+								"UTF-8");
+			} catch (JSONException e) {
+				// backwards compatibility
+				return opac_url + "/perma.do?q="
+						+ URLEncoder.encode("0=\"" + id + "\" IN [2]", "UTF-8");
+			}
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return null;
