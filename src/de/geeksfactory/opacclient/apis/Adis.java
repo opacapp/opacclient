@@ -28,6 +28,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ConnectTimeoutException;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -124,6 +125,9 @@ public class Adis extends BaseApi implements OpacApi {
 		} catch (NoHttpResponseException e) {
 			e.printStackTrace();
 			throw new NotReachableException();
+		} catch (HttpHostConnectException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
 		} catch (MalformedChunkCodingException e) {
 			e.printStackTrace();
 			throw new NotReachableException();
@@ -199,6 +203,9 @@ public class Adis extends BaseApi implements OpacApi {
 			e.printStackTrace();
 			throw new NotReachableException();
 		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			throw new NotReachableException();
+		} catch (HttpHostConnectException e) {
 			e.printStackTrace();
 			throw new NotReachableException();
 		} catch (NoHttpResponseException e) {
