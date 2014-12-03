@@ -1,4 +1,116 @@
 {
+    "SYSTEM": [
+        "Systematik",
+        "Signatur",
+        "Systemstelle",
+        "Fachsystematik",
+        "Signatur - komplett",
+        "Systemgruppe",
+        "Notation/Systemstelle",
+        "Systematik CB",
+        "Systematik SFB/SD",
+        "Systematik RVK",
+        "Systematikgruppe",
+        "Systematiktitel",
+        "Systematikstichwort",
+        "systematische code",
+        "signatuur",
+        "shelfmark (String trunc.)",
+        "Code systematique",
+        "Signatur(alt)"
+    ],
+    "BRANCH": [
+        "Suche in Zweigstelle",
+        "Zweigstelle ist gleich",
+        "Abt./Zweigst.",
+        "Suche im/in",
+        "Zweigstelle",
+        "Suche in Bibliothek",
+        "Suche am Standort",
+        "Suchen in Zweigstelle",
+        "Suche in Abteilung (Hauptstelle)",
+        "Bibliothek",
+        "Suche in Teilbibliothek",
+        "Anzeige der Titel nur aus Zweigstelle",
+        "Suchort",
+        "Bibliotheksort",
+        "Filiale",
+        "Bibliotheksstandorte",
+        "library",
+        "Lesesaalbestand"
+    ],
+    "LOCATION": [
+        "Ort",
+        "Standort",
+        "Regalaufstellung",
+        "Regalstandort",
+        "Signatur/Standort",
+        "Sonderstandort",
+        "2.Standort",
+        "Regal",
+        "Standorte CB",
+        "Standorte SFB/SD",
+        "Erscheinungsland"
+    ],
+    "PUBLISHER": [
+        "Verlag",
+        "Ort/Verlag",
+        "Verlagsort/Verlag",
+        "Verlag/Ort",
+        "Verlag/Verlagsort",
+        "Ort, Verlag",
+        "Verl",
+        "Ort,Verlag (Stichwort)",
+        "uitgever",
+        "publisher, publishing place (keywords)",
+        "publisher",
+        "Ort / Verlag"
+    ],
+    "AUDIENCE": [
+        "Interessenkreis",
+        "Stoffkreis",
+        "Alter",
+        "Altersgruppe",
+        "Alterskategorie",
+        "Interesse",
+        "Benutzergruppe",
+        "Interessenskreis",
+        "Zielgruppe"
+    ],
+    "KEYWORD": [
+        "Schlagwort",
+        "Schlagwörter",
+        "Thema/Schlagwort",
+        "Sach-Schlagwort",
+        "Pers-Schlagwort",
+        "Körp-Schlagwort",
+        "Schlagwort 710",
+        "Stichwort",
+        "lokales Schlagwort",
+        "Schlagwort_1",
+        "Schlagwort (dt.)",
+        "Schlagwort1",
+        "Schlagwort2",
+        "(Norm-)Schlagwort",
+        "Schlagwort StB",
+        "Schlagworter",
+        "Schlagwort / Thema",
+        "Schlagwort 1",
+        "trefwoord (Stichw.)",
+        "trefwoord",
+        "GOO-trefwoord",
+        "Thema (Schlagwort)"
+    ],
+    "BARCODE": [
+        "Barcode",
+        "Buchungsnummer",
+        "Buchungsnr",
+        "Mediennummer",
+        "Katalog-Nr.",
+        "Mediencode",
+        "Identifikations-Nummer",
+        "Buchungsnr."
+    ],
     "AUTHOR": [
         "Autor",
         "Verfasser",
@@ -34,18 +146,9 @@
         "person/author",
         "author",
         "trefwoord: persoon",
-        "Noms des personnes"
-    ],
-    "AUDIENCE": [
-        "Interessenkreis",
-        "Stoffkreis",
-        "Alter",
-        "Altersgruppe",
-        "Alterskategorie",
-        "Interesse",
-        "Benutzergruppe",
-        "Interessenskreis",
-        "Zielgruppe"
+        "Noms des personnes",
+        "Person/Institution",
+        "Autor / Hrsg."
     ],
     "FREE": [
         "Freie Suche",
@@ -65,30 +168,17 @@
         "alle woorden",
         "(bijna) alle woorden",
         "all words",
-        "Tous les mots"
+        "Tous les mots",
+        "Alles"
     ],
-    "KEYWORD": [
-        "Schlagwort",
-        "Schlagwörter",
-        "Thema/Schlagwort",
-        "Sach-Schlagwort",
-        "Pers-Schlagwort",
-        "Körp-Schlagwort",
-        "Schlagwort 710",
-        "Stichwort",
-        "lokales Schlagwort",
-        "Schlagwort_1",
-        "Schlagwort (dt.)",
-        "Schlagwort1",
-        "Schlagwort2",
-        "(Norm-)Schlagwort",
-        "Schlagwort StB",
-        "Schlagworter",
-        "Schlagwort / Thema",
-        "Schlagwort 1",
-        "trefwoord (Stichw.)",
-        "trefwoord",
-        "GOO-trefwoord"
+    "AVAILABLE": [
+        "verfügbar",
+        "Verfügbarkeit"
+    ],
+    "ORDER": [
+        "Sortierung",
+        "Reihenfolge",
+        "sortiert nach"
     ],
     "ISBN": [
         "ISBN",
@@ -118,38 +208,6 @@
         "ISBN (monografieen)",
         "ISSN (periodieken)"
     ],
-    "HOME_BRANCH": [
-        "Aktuelle Zweigstelle",
-        "Ausleihe in",
-        "Aktuelle Zweigstelle (Lieferort für Bestellungen)",
-        "Aktuelle Zweigstelle (Abholort)",
-        "Aktueller Standort",
-        "Ausleihen / Abholen in Zweigstelle",
-        "Abholort für Bestellungen und Vormerkungen",
-        "Zur Vormerkung und Bestellung hier die gewünschte Zweigstelle auswählen:",
-        "Abholort",
-        "Aktuelle Ausleih-Zweigstelle",
-        "Zweigstelle für Vormerkungen und Bestellungen"
-    ],
-    "SYSTEM": [
-        "Systematik",
-        "Signatur",
-        "Systemstelle",
-        "Fachsystematik",
-        "Signatur - komplett",
-        "Systemgruppe",
-        "Notation/Systemstelle",
-        "Systematik CB",
-        "Systematik SFB/SD",
-        "Systematik RVK",
-        "Systematikgruppe",
-        "Systematiktitel",
-        "Systematikstichwort",
-        "systematische code",
-        "signatuur",
-        "shelfmark (String trunc.)",
-        "Code systematique"
-    ],
     "YEAR": [
         "Jahr",
         "Erscheinungsjahr",
@@ -171,66 +229,18 @@
         "jaar van publicatieNO_YEAR",
         "jaar van uitgave"
     ],
-    "ORDER": [
-        "Sortierung",
-        "Reihenfolge",
-        "sortiert nach"
-    ],
-    "PUBLISHER": [
-        "Verlag",
-        "Ort/Verlag",
-        "Verlagsort/Verlag",
-        "Verlag/Ort",
-        "Verlag/Verlagsort",
-        "Ort, Verlag",
-        "Verl",
-        "Ort,Verlag (Stichwort)",
-        "uitgever",
-        "publisher, publishing place (keywords)",
-        "publisher"
-    ],
-    "AVAILABLE": [
-        "verfügbar",
-        "Verfügbarkeit"
-    ],
-    "BRANCH": [
-        "Suche in Zweigstelle",
-        "Zweigstelle ist gleich",
-        "Abt./Zweigst.",
-        "Suche im/in",
-        "Zweigstelle",
-        "Suche in Bibliothek",
-        "Suche am Standort",
-        "Suchen in Zweigstelle",
-        "Suche in Abteilung (Hauptstelle)",
-        "Bibliothek",
-        "Suche in Teilbibliothek",
-        "Anzeige der Titel nur aus Zweigstelle",
-        "Suchort",
-        "Bibliotheksort",
-        "Filiale",
-        "Bibliotheksstandorte",
-        "library"
-    ],
-    "DIGITAL": [
-        "digital",
-        "E-Books",
-        "nur elektronische Publikationen",
-        "E-Medien",
-        "digitales Objekt"
-    ],
-    "LOCATION": [
-        "Ort",
-        "Standort",
-        "Regalaufstellung",
-        "Regalstandort",
-        "Signatur/Standort",
-        "Sonderstandort",
-        "2.Standort",
-        "Regal",
-        "Standorte CB",
-        "Standorte SFB/SD",
-        "Erscheinungsland"
+    "HOME_BRANCH": [
+        "Aktuelle Zweigstelle",
+        "Ausleihe in",
+        "Aktuelle Zweigstelle (Lieferort für Bestellungen)",
+        "Aktuelle Zweigstelle (Abholort)",
+        "Aktueller Standort",
+        "Ausleihen / Abholen in Zweigstelle",
+        "Abholort für Bestellungen und Vormerkungen",
+        "Zur Vormerkung und Bestellung hier die gewünschte Zweigstelle auswählen:",
+        "Abholort",
+        "Aktuelle Ausleih-Zweigstelle",
+        "Zweigstelle für Vormerkungen und Bestellungen"
     ],
     "CATEGORY": [
         "Kategorie",
@@ -244,16 +254,6 @@
         "Medientypen",
         "Art des Mediums (CD, DVD...)",
         "materiaalcode"
-    ],
-    "BARCODE": [
-        "Barcode",
-        "Buchungsnummer",
-        "Buchungsnr",
-        "Mediennummer",
-        "Katalog-Nr.",
-        "Mediencode",
-        "Identifikations-Nummer",
-        "Buchungsnr."
     ],
     "TITLE": [
         "Titel",
@@ -276,5 +276,12 @@
         "title (keywords)",
         "title words",
         "Mots titre"
+    ],
+    "DIGITAL": [
+        "digital",
+        "E-Books",
+        "nur elektronische Publikationen",
+        "E-Medien",
+        "digitales Objekt"
     ]
 }

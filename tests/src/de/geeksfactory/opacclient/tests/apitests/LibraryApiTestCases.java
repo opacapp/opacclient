@@ -32,6 +32,7 @@ import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.apis.Pica;
 import de.geeksfactory.opacclient.apis.SISIS;
 import de.geeksfactory.opacclient.apis.SRU;
+import de.geeksfactory.opacclient.apis.TouchPoint;
 import de.geeksfactory.opacclient.apis.WebOpacNet;
 import de.geeksfactory.opacclient.apis.WinBiap;
 import de.geeksfactory.opacclient.apis.Zones22;
@@ -237,6 +238,8 @@ public class LibraryApiTestCases extends TestCase {
 			api = new WinBiap();
 		else if (library.getApi().equals("webopac.net"))
 			api = new WebOpacNet();
+		else if (library.getApi().equals("touchpoint"))
+			api = new TouchPoint();
 		else
 			api = null;
 		api.init(library);
