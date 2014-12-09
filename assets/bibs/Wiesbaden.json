@@ -6,7 +6,10 @@
     "data": {
         "accounttable": {
             "author": 0,
-            "prolongurl": 3,
+			"barcode": 4,
+			"homebranch": 5,
+			"lendingbranch": 5,
+            "prolongurl": 7,
             "returndate": 2,
             "title": 1
         },
