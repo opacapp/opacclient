@@ -1,0 +1,17 @@
+{
+    "account_supported": true,
+    "api": "pica",
+    "city": "Berlin",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://vzopc4.gbv.de",
+        "db": "40",
+        "information": "http://www.khsb-berlin.de/bibliothek"
+    },
+    "geo": [
+        52.52000659999999,
+        13.404954
+    ],
+    "state": "Berlin",
+    "title": "Katholische HS f\u00fcr Sozialwesen"
+}
