@@ -433,9 +433,8 @@ public class Pica extends BaseApi implements OpacApi {
 		DetailledItem result = new DetailledItem();
 
 		if (doc.select("img[src*=permalink], img[src*=zitierlink]").size() > 0) {
-			String id = opac_url
-					+ doc.select("img[src*=permalink], img[src*=zitierlink]")
-							.get(0).parent().absUrl("href");
+			String id = doc.select("img[src*=permalink], img[src*=zitierlink]")
+					.get(0).parent().absUrl("href");
 			result.setId(id);
 		} else {
 			for (Element a : doc.select("a")) {
