@@ -528,6 +528,7 @@ public class Pica extends BaseApi implements OpacApi {
 					location += " (" + detail + ")";
 				} else if (title.contains("Status")
 						|| title.contains("Ausleihinfo")
+						|| title.contains("Ausleihstatus")
 						|| title.contains("Request info")) {
 					if (element.select("div").size() > 0)
 						detail = element.select("div").first().ownText();
