@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "webopac.net",
+    "city": "Fribourg",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.winmedio.net/deubibfr",
+        "information": "http://www.deutschebibliothekfreiburg.ch/bibliothek.php"
+    },
+    "geo": [
+        46.8016663,
+        7.145568300000001
+    ],
+    "state": "Fribourg",
+    "title": "Deutsche Bibliothek"
+}
