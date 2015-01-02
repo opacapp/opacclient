@@ -1112,8 +1112,16 @@ public class Adis extends BaseApi implements OpacApi {
 			}
 			for (Element tr : adoc.select(".rTable_div tbody tr")) {
 				Map<String, String> line = new HashMap<String, String>();
+				String text = Jsoup.parse(
+						tr.child(3).html().replaceAll("(?i)<br[^>]*>", "#"))
+						.text();
+				String[] split = text.split("[/#\n]");
 				line.put(AccountData.KEY_LENT_TITLE,
-						tr.child(3).text().split("[:/;]")[0].trim());
+						split[0].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1")
+								.trim());
+				if (split.length > 1)
+					line.put(AccountData.KEY_LENT_AUTHOR, split[1].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
+				
 				line.put(AccountData.KEY_LENT_DEADLINE, tr.child(1).text()
 						.trim());
 				try {
@@ -1170,12 +1178,15 @@ public class Adis extends BaseApi implements OpacApi {
 				if (tr.children().size() >= 4) {
 					Map<String, String> line = new HashMap<String, String>();
 					String text = tr.child(2).html();
-					text = Jsoup.parse(text.replaceAll("(?i)<br[^>]*>", ";")).text();
+					text = Jsoup.parse(text.replaceAll("(?i)<br[^>]*>", ";"))
+							.text();
 					String[] split = text.split("[:/;\n]");
-					line.put(AccountData.KEY_RESERVATION_TITLE, split[0].trim());
-					if (split.length >= 1)
-						line.put(AccountData.KEY_RESERVATION_AUTHOR,
-								split[1].trim());
+					line.put(AccountData.KEY_RESERVATION_TITLE, split[0]
+							.replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
+					if (split.length > 1)
+						line.put(AccountData.KEY_RESERVATION_AUTHOR, split[1]
+								.replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1")
+								.trim());
 					line.put(AccountData.KEY_RESERVATION_BRANCH, tr.child(1)
 							.text().trim());
 					if (rlink.contains("SRGLINK_2")) {
