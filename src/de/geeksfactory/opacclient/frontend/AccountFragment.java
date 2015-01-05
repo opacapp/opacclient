@@ -224,6 +224,7 @@ public class AccountFragment extends Fragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
+		account = app.getAccount();
 		accountSelected(account);
 	}
 
