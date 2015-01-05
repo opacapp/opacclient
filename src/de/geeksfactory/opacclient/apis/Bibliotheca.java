@@ -1068,12 +1068,12 @@ public class Bibliotheca extends BaseApi {
 
 		AccountData res = new AccountData(acc.getId());
 
-		for (Element row : doc.select(".kontozeile_center")) {
+		for (Element row : doc.select(".kontozeile_center, div[align=center]")) {
 			String text = row.text().trim();
-			if (text.matches("Ausstehende Geb.+hren:[^0-9]+([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr.)")) {
+			if (text.matches(".*Ausstehende Geb.+hren:[^0-9]+([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr.).*")) {
 				text = text
 						.replaceAll(
-								"Ausstehende Geb.+hren:[^0-9]+([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr.)",
+								".*Ausstehende Geb.+hren:[^0-9]+([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr.).*",
 								"$1 $2");
 				res.setPendingFees(text);
 			}
