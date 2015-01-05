@@ -1224,7 +1224,7 @@ public class SearchResultDetailFragment extends Fragment {
 
 	public void bookingDo() {
 		MultiStepResultHelper msrhBooking = new MultiStepResultHelper(
-				getSupportActivity(), item, R.string.doing_res);
+				getSupportActivity(), item, R.string.doing_booking);
 		msrhBooking.setCallback(new Callback() {
 			@Override
 			public void onSuccess(MultiStepResult result) {
