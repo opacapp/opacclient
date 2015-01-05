@@ -145,8 +145,15 @@ public class Bibliotheca extends BaseApi {
 			if (fieldElem.select(".suchfeld_inhalt_input").size() > 0) {
 				List<TextNode> textNodes = fieldElem
 						.select(".suchfeld_inhalt_input").first().textNodes();
-				if (textNodes.size() > 0)
-					hint = textNodes.get(0).getWholeText().replace("\n", "");
+				if (textNodes.size() > 0) {
+					for (TextNode node : textNodes) {
+						String text = node.getWholeText().replace("\n", "");
+						if (!text.equals("")) {
+							hint = node.getWholeText().replace("\n", "");
+							break;
+						}
+					}
+				}
 			}
 
 			Elements inputs = fieldElem
@@ -1210,7 +1217,7 @@ public class Bibliotheca extends BaseApi {
 	@Override
 	public void setLanguage(String language) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
