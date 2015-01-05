@@ -1179,6 +1179,7 @@ public class Bibliotheca extends BaseApi {
 	@Override
 	public void checkAccountData(Account acc) throws IOException,
 			JSONException, OpacErrorException {
+		start();
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 		nameValuePairs.add(new BasicNameValuePair("AUSWEIS", acc.getName()));
 		nameValuePairs.add(new BasicNameValuePair("PWD", acc.getPassword()));
