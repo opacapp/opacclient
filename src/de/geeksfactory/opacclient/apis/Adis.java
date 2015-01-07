@@ -1112,8 +1112,16 @@ public class Adis extends BaseApi implements OpacApi {
 			}
 			for (Element tr : adoc.select(".rTable_div tbody tr")) {
 				Map<String, String> line = new HashMap<String, String>();
+				String text = Jsoup.parse(
+						tr.child(3).html().replaceAll("(?i)<br[^>]*>", "#"))
+						.text();
+				String[] split = text.split("[/#\n]");
 				line.put(AccountData.KEY_LENT_TITLE,
-						tr.child(3).text().split("[:/;]")[0].trim());
+						split[0].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1")
+								.trim());
+				if (split.length > 1)
+					line.put(AccountData.KEY_LENT_AUTHOR, split[1].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
+				
 				line.put(AccountData.KEY_LENT_DEADLINE, tr.child(1).text()
 						.trim());
 				try {
@@ -1169,18 +1177,34 @@ public class Adis extends BaseApi implements OpacApi {
 			for (Element tr : rdoc.select(".rTable_div tbody tr")) {
 				if (tr.children().size() >= 4) {
 					Map<String, String> line = new HashMap<String, String>();
-					line.put(AccountData.KEY_RESERVATION_TITLE, tr.child(2)
-							.text().split("[:/;]")[0].trim());
-					line.put(AccountData.KEY_RESERVATION_READY, tr.child(3)
-							.text().trim().substring(0, 10));
+					String text = tr.child(2).html();
+					text = Jsoup.parse(text.replaceAll("(?i)<br[^>]*>", ";"))
+							.text();
+					String[] split = text.split("[:/;\n]");
+					line.put(AccountData.KEY_RESERVATION_TITLE, split[0]
+							.replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
+					if (split.length > 1)
+						line.put(AccountData.KEY_RESERVATION_AUTHOR, split[1]
+								.replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1")
+								.trim());
 					line.put(AccountData.KEY_RESERVATION_BRANCH, tr.child(1)
 							.text().trim());
-					if (tr.select("input[type=checkbox]").size() > 0
-							&& rlink.toUpperCase(Locale.GERMAN).contains(
-									"SP=SZM"))
-						line.put(AccountData.KEY_RESERVATION_CANCEL,
-								tr.select("input[type=checkbox]").attr("name")
-										+ "|" + rlink);
+					if (rlink.contains("SRGLINK_2")) {
+						// Abholbereite Bestellungen
+						line.put("available", "bereit");
+						if (tr.child(0).text().trim().length() >= 10)
+							line.put(AccountData.KEY_RESERVATION_EXPIRE, tr
+									.child(0).text().trim().substring(0, 10));
+					} else {
+						// Nicht abholbereite
+						if (tr.select("input[type=checkbox]").size() > 0
+								&& rlink.toUpperCase(Locale.GERMAN).contains(
+										"SP=SZM"))
+							line.put(AccountData.KEY_RESERVATION_CANCEL, tr
+									.select("input[type=checkbox]")
+									.attr("name")
+									+ "|" + rlink);
+					}
 					res.add(line);
 				} else {
 					// This is a strange bug where sometimes there is only three
@@ -1456,7 +1480,7 @@ public class Adis extends BaseApi implements OpacApi {
 	@Override
 	public void setLanguage(String language) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

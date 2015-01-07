@@ -1,7 +1,7 @@
 {
     "account_supported": false,
     "api": "webopac.net",
-    "city": "N\u00c3\u00bcrensdorf",
+    "city": "N\u00fcrensdorf",
     "country": "Schweiz",
     "data": {
         "baseurl": "http://www.winmedio.net/nuerensdorf",
@@ -11,6 +11,6 @@
         47.446943,
         8.648886
     ],
-    "state": "Z\u00c3\u00bcrich",
+    "state": "Z\u00fcrich",
     "title": "Gemeindebibliothek"
 }

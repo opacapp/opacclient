@@ -1,19 +1,16 @@
 {
     "account_supported": true,
     "api": "bibliotheca",
-    "city": "Wiesbaden",
+    "city": "Traunstein",
     "country": "Deutschland",
     "data": {
         "accounttable": {
             "author": 0,
-			"barcode": 4,
-			"homebranch": 5,
-			"lendingbranch": 5,
-            "prolongurl": 7,
+            "prolongurl": 3,
             "returndate": 2,
             "title": 1
         },
-        "baseurl": "https://bond.wiesbaden.de/webopac",
+        "baseurl": "http://80.153.2.146/webopac",
         "copiestable": {
             "barcode": 0,
             "branch": 4,
@@ -22,11 +19,20 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "/../read/info.html",
+        "information": "http://www.stadtbuecherei-traunstein.de/Buecherei.aspx",
         "mediatypes": {
+            "cdkl.gif": "CD",
+            "mBuchS.gif": "BOOK",
+            "mCDROMS.gif": "CD_SOFTWARE",
             "mCasetteS.gif": "AUDIO_CASSETTE",
             "mDVDS.gif": "DVD",
-            "mFilmS.gif": "MOVIE"
+            "mFilmS.gif": "MOVIE",
+            "mKombiS.gif": "PACKAGE",
+            "mMusikCDS.gif": "CD",
+            "mReise2S.gif": "MAP",
+            "monooS.gif": "BOOK",
+            "notenkl.gif": "SCORE_MUSIC",
+            "zeit.gif": "MAGAZINE"
         },
         "reservationtable": {
             "author": 0,
@@ -36,9 +42,9 @@
         }
     },
     "geo": [
-        50.0630804,
-        8.2433437
+        47.8677574,
+        12.6384037
     ],
-    "state": "Hessen",
-    "title": "Stadtbibliothek"
+    "state": "Bayern",
+    "title": "Stadtb\u00fccherei"
 }

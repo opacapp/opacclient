@@ -433,9 +433,8 @@ public class Pica extends BaseApi implements OpacApi {
 		DetailledItem result = new DetailledItem();
 
 		if (doc.select("img[src*=permalink], img[src*=zitierlink]").size() > 0) {
-			String id = opac_url
-					+ doc.select("img[src*=permalink], img[src*=zitierlink]")
-							.get(0).parent().absUrl("href");
+			String id = doc.select("img[src*=permalink], img[src*=zitierlink]")
+					.get(0).parent().absUrl("href");
 			result.setId(id);
 		} else {
 			for (Element a : doc.select("a")) {
@@ -529,6 +528,7 @@ public class Pica extends BaseApi implements OpacApi {
 					location += " (" + detail + ")";
 				} else if (title.contains("Status")
 						|| title.contains("Ausleihinfo")
+						|| title.contains("Ausleihstatus")
 						|| title.contains("Request info")) {
 					if (element.select("div").size() > 0)
 						detail = element.select("div").first().ownText();

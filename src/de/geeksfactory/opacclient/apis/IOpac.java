@@ -808,8 +808,9 @@ public class IOpac extends BaseApi implements OpacApi {
 					.replace("\u00a0", ""));
 			e.put(AccountData.KEY_RESERVATION_READY, tr.child(4).text().trim()
 					.replace("\u00a0", ""));
-			e.put(AccountData.KEY_RESERVATION_CANCEL, tr.select("a").last()
-					.attr("href"));
+			if (tr.select("a").size() > 0)
+				e.put(AccountData.KEY_RESERVATION_CANCEL, tr.select("a").last()
+						.attr("href"));
 
 			medien.add(e);
 		}

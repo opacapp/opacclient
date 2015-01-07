@@ -1,0 +1,17 @@
+{
+    "account_supported": true,
+    "api": "pica",
+    "city": "Clausthal-Zellerfeld",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://lhclz.gbv.de",
+        "db": "1",
+        "information": "http://www.ub.tu-clausthal.de/"
+    },
+    "geo": [
+        51.8080063,
+        10.340707
+    ],
+    "state": "Niedersachsen",
+    "title": "Unibibliothek"
+}

@@ -14,7 +14,7 @@
             "status": 9,
             "title": 8
         },
-        "baseurl": "http://biberdb.bibliothek.potsdam.de",
+        "baseurl": "https://biberdb.bibliothek.potsdam.de",
         "copiestable": {
             "barcode": 3,
             "branch": 1,

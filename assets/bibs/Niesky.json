@@ -1,19 +1,16 @@
 {
     "account_supported": true,
     "api": "bibliotheca",
-    "city": "Wiesbaden",
+    "city": "Niesky",
     "country": "Deutschland",
     "data": {
         "accounttable": {
             "author": 0,
-			"barcode": 4,
-			"homebranch": 5,
-			"lendingbranch": 5,
-            "prolongurl": 7,
+            "prolongurl": 3,
             "returndate": 2,
             "title": 1
         },
-        "baseurl": "https://bond.wiesbaden.de/webopac",
+        "baseurl": "http://niesky.internetopac.de",
         "copiestable": {
             "barcode": 0,
             "branch": 4,
@@ -22,7 +19,7 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "/../read/info.html",
+        "information": "http://www.bibliothek.niesky.de/",
         "mediatypes": {
             "mCasetteS.gif": "AUDIO_CASSETTE",
             "mDVDS.gif": "DVD",
@@ -36,9 +33,9 @@
         }
     },
     "geo": [
-        50.0630804,
-        8.2433437
+        51.2931501,
+        14.8311719
     ],
-    "state": "Hessen",
+    "state": "Sachsen",
     "title": "Stadtbibliothek"
 }

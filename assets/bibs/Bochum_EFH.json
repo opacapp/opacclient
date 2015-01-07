@@ -1,31 +1,26 @@
 {
     "account_supported": true,
     "api": "bibliotheca",
-    "city": "Wiesbaden",
+    "city": "Bochum",
     "country": "Deutschland",
     "data": {
         "accounttable": {
             "author": 0,
-			"barcode": 4,
-			"homebranch": 5,
-			"lendingbranch": 5,
-            "prolongurl": 7,
+            "prolongurl": 3,
             "returndate": 2,
             "title": 1
         },
-        "baseurl": "https://bond.wiesbaden.de/webopac",
+        "baseurl": "http://opac.efh-bochum.de/webopac",
         "copiestable": {
-            "barcode": 0,
-            "branch": 4,
-            "department": 2,
-            "location": 1,
-            "returndate": 5,
-            "status": 3
+            "returndate": 3,
+            "status": 2
         },
-        "information": "/../read/info.html",
+        "information": "http://www.efh-bochum.de/bibliothek/bibliothek.html",
         "mediatypes": {
             "mCasetteS.gif": "AUDIO_CASSETTE",
+            "mCompuS.gif": "EDOC",
             "mDVDS.gif": "DVD",
+            "mEbookS.gif": "EBOOK",
             "mFilmS.gif": "MOVIE"
         },
         "reservationtable": {
@@ -36,9 +31,9 @@
         }
     },
     "geo": [
-        50.0630804,
-        8.2433437
+        51.4818445,
+        7.216236299999999
     ],
-    "state": "Hessen",
-    "title": "Stadtbibliothek"
+    "state": "Nordrhein-Westfalen",
+    "title": "Evangelische Fachhochschule"
 }

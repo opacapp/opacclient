@@ -1,19 +1,16 @@
 {
     "account_supported": true,
     "api": "bibliotheca",
-    "city": "Wiesbaden",
+    "city": "Werther",
     "country": "Deutschland",
     "data": {
         "accounttable": {
             "author": 0,
-			"barcode": 4,
-			"homebranch": 5,
-			"lendingbranch": 5,
-            "prolongurl": 7,
+            "prolongurl": 3,
             "returndate": 2,
             "title": 1
         },
-        "baseurl": "https://bond.wiesbaden.de/webopac",
+        "baseurl": "http://neu.bibliotheken-in-owl.de/webopac/",
         "copiestable": {
             "barcode": 0,
             "branch": 4,
@@ -22,11 +19,14 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "/../read/info.html",
+        "db": "werther",
+        "information": "https://www.stadt-werther.de/index.php?id=285",
         "mediatypes": {
-            "mCasetteS.gif": "AUDIO_CASSETTE",
-            "mDVDS.gif": "DVD",
-            "mFilmS.gif": "MOVIE"
+            "cdkl.gif": "CD",
+            "dvdkl.gif": "DVD",
+            "e_owl_kl.gif": "EBOOK",
+            "kassettekl.gif": "AUDIO_CASSETTE",
+            "videokl.gif": "MOVIE"
         },
         "reservationtable": {
             "author": 0,
@@ -36,9 +36,9 @@
         }
     },
     "geo": [
-        50.0630804,
-        8.2433437
+        52.0738784,
+        8.4147863
     ],
-    "state": "Hessen",
+    "state": "Nordrhein-Westfalen",
     "title": "Stadtbibliothek"
 }
