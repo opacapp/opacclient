@@ -179,7 +179,7 @@ public class Pica extends BaseApi implements OpacApi {
 			JSONException {
 		if (!initialised)
 			start();
-		
+
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 		int index = 0;
@@ -206,8 +206,10 @@ public class Pica extends BaseApi implements OpacApi {
 					StringProvider.LIMITED_NUM_OF_CRITERIA, 4));
 		}
 
-		String html = httpGet(opac_url + "/DB=" + db + "/SET=1/TTL=1/CMD?"
-				+ URLEncodedUtils.format(params, getDefaultEncoding()),
+		String html = httpGet(
+				opac_url + "/LNG=" + getLang() + "/DB=" + db
+						+ "/SET=1/TTL=1/CMD?"
+						+ URLEncodedUtils.format(params, getDefaultEncoding()),
 				getDefaultEncoding(), false, cookieStore);
 
 		return parse_search(html, 1);
@@ -220,15 +222,17 @@ public class Pica extends BaseApi implements OpacApi {
 		updateSearchSetValue(doc);
 
 		if (doc.select(".error").size() > 0) {
-			if (doc.select(".error").text().trim()
-					.equals("Es wurde nichts gefunden.")) {
+			String error = doc.select(".error").first().text().trim();
+			if (error.equals("Es wurde nichts gefunden.")
+					|| error.equals("Nothing has been found")
+					|| error.equals("Er is niets gevonden.")
+					|| error.equals("Rien n'a été trouvé.")) {
 				// nothing found
 				return new SearchRequestResult(new ArrayList<SearchResult>(),
 						0, 1, 1);
 			} else {
 				// error
-				throw new OpacErrorException(doc.select(".error").first()
-						.text().trim());
+				throw new OpacErrorException(error);
 			}
 		}
 
@@ -387,9 +391,10 @@ public class Pica extends BaseApi implements OpacApi {
 		if (!initialised)
 			start();
 
-		String html = httpGet(opac_url + "/DB=" + db + "/SET=" + searchSet
-				+ "/TTL=1/NXT?FRST=" + (((page - 1) * resultcount) + 1),
-				getDefaultEncoding(), false, cookieStore);
+		String html = httpGet(opac_url + "/LNG=" + getLang() + "/DB=" + db
+				+ "/SET=" + searchSet + "/TTL=1/NXT?FRST="
+				+ (((page - 1) * resultcount) + 1), getDefaultEncoding(),
+				false, cookieStore);
 		return parse_search(html, page);
 	}
 
@@ -406,7 +411,7 @@ public class Pica extends BaseApi implements OpacApi {
 		if (id == null && reusehtml != null) {
 			return parse_result(reusehtml);
 		}
-		
+
 		if (!initialised)
 			start();
 
@@ -419,9 +424,10 @@ public class Pica extends BaseApi implements OpacApi {
 	public DetailledItem getResult(int position) throws IOException {
 		if (!initialised)
 			start();
-		String html = httpGet(opac_url + "/DB=" + db + "/LNG=" + getLang()
-				+ "/SET=" + searchSet + "/TTL=1/SHW?FRST=" + (position + 1),
-				getDefaultEncoding(), false, cookieStore);
+		String html = httpGet(opac_url + "/LNG=" + getLang() + "/DB=" + db
+				+ "/LNG=" + getLang() + "/SET=" + searchSet
+				+ "/TTL=1/SHW?FRST=" + (position + 1), getDefaultEncoding(),
+				false, cookieStore);
 
 		return parse_result(html);
 	}
@@ -443,8 +449,8 @@ public class Pica extends BaseApi implements OpacApi {
 							.absUrl("href"));
 					String ppn = hrefq.get("PPN");
 					try {
-						result.setId(opac_url + "/DB=" + data.getString("db")
-								+ "/PPNSET?PPN=" + ppn);
+						result.setId(opac_url + "/LNG=" + getLang() + "/DB="
+								+ data.getString("db") + "/PPNSET?PPN=" + ppn);
 					} catch (JSONException e1) {
 						e1.printStackTrace();
 					}
@@ -537,7 +543,8 @@ public class Pica extends BaseApi implements OpacApi {
 					e.put(DetailledItem.KEY_COPY_STATUS, detail);
 					// Get reservation info
 					if (element.select("a:has(img[src*=inline_arrow])").size() > 0) {
-						Element a = element.select("a:has(img[src*=inline_arrow])").first();
+						Element a = element.select(
+								"a:has(img[src*=inline_arrow])").first();
 						boolean multipleCopies = a.text().matches(
 								".*(Exemplare|Volume list).*");
 						JSONObject reservation = new JSONObject();
@@ -682,13 +689,15 @@ public class Pica extends BaseApi implements OpacApi {
 
 	public ReservationResult reservation_result(List<NameValuePair> params,
 			boolean multi) throws IOException {
-		String html2 = httpPost(https_url + "/loan/DB=" + db + "/SET="
-				+ searchSet + "/TTL=1/" + (multi ? "REQCONT" : "RESCONT"),
-				new UrlEncodedFormEntity(params, getDefaultEncoding()),
-				getDefaultEncoding());
+		String html2 = httpPost(https_url + "/loan/DB=" + db + "/LNG="
+				+ getLang() + "/SET=" + searchSet + "/TTL=1/"
+				+ (multi ? "REQCONT" : "RESCONT"), new UrlEncodedFormEntity(
+				params, getDefaultEncoding()), getDefaultEncoding());
 		Document doc2 = Jsoup.parse(html2);
 
-		if (doc2.select(".alert").text().contains("ist fuer Sie vorgemerkt")) {
+		String alert = doc2.select(".alert").text().trim();
+		if (alert.contains("ist fuer Sie vorgemerkt")
+				|| alert.contains("has been reserved")) {
 			return new ReservationResult(MultiStepResult.Status.OK);
 		} else {
 			ReservationResult res = new ReservationResult(
@@ -720,9 +729,9 @@ public class Pica extends BaseApi implements OpacApi {
 
 		params.add(new BasicNameValuePair("VB", media));
 
-		String html = httpPost(https_url + "/loan/DB=" + db + "/USERINFO",
-				new UrlEncodedFormEntity(params, getDefaultEncoding()),
-				getDefaultEncoding());
+		String html = httpPost(https_url + "/loan/DB=" + db + "/LNG="
+				+ getLang() + "/USERINFO", new UrlEncodedFormEntity(params,
+				getDefaultEncoding()), getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 
 		if (doc.select("td.regular-text")
@@ -770,9 +779,10 @@ public class Pica extends BaseApi implements OpacApi {
 
 		params.add(new BasicNameValuePair("VB", media));
 
-		String html = httpPost(https_url + "/loan/DB=" + db + "/SET="
-				+ searchSet + "/TTL=1/USERINFO", new UrlEncodedFormEntity(
-				params, getDefaultEncoding()), getDefaultEncoding());
+		String html = httpPost(https_url + "/loan/DB=" + db + "/LNG="
+				+ getLang() + "/SET=" + searchSet + "/TTL=1/USERINFO",
+				new UrlEncodedFormEntity(params, getDefaultEncoding()),
+				getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 
 		if (doc.select("td.regular-text").text()
@@ -799,7 +809,7 @@ public class Pica extends BaseApi implements OpacApi {
 			JSONException, OpacErrorException {
 		if (!initialised)
 			start();
-		
+
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("ACT", "UI_DATA"));
 		params.add(new BasicNameValuePair("HOST_NAME", ""));
@@ -811,9 +821,9 @@ public class Pica extends BaseApi implements OpacApi {
 		params.add(new BasicNameValuePair("BOR_U", account.getName()));
 		params.add(new BasicNameValuePair("BOR_PW", account.getPassword()));
 
-		String html = httpPost(https_url + "/loan/DB=" + db + "/USERINFO",
-				new UrlEncodedFormEntity(params, getDefaultEncoding()),
-				getDefaultEncoding());
+		String html = httpPost(https_url + "/loan/DB=" + db + "/LNG="
+				+ getLang() + "/USERINFO", new UrlEncodedFormEntity(params,
+				getDefaultEncoding()), getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 
 		if (doc.select(".cnt .alert, .cnt .error").size() > 0) {
@@ -827,12 +837,12 @@ public class Pica extends BaseApi implements OpacApi {
 			// TODO: do something here to help fix bug #229
 		}
 
-		html = httpGet(https_url + "/loan/DB=" + db
+		html = httpGet(https_url + "/loan/DB=" + db + "/LNG=" + getLang()
 				+ "/USERINFO?ACT=UI_LOL&BOR_U=" + account.getName()
 				+ "&BOR_PW_ENC=" + pwEncoded, getDefaultEncoding());
 		doc = Jsoup.parse(html);
 
-		html = httpGet(https_url + "/loan/DB=" + db
+		html = httpGet(https_url + "/loan/DB=" + db + "/LNG=" + getLang()
 				+ "/USERINFO?ACT=UI_LOR&BOR_U=" + account.getName()
 				+ "&BOR_PW_ENC=" + pwEncoded, getDefaultEncoding());
 		Document doc2 = Jsoup.parse(html);
@@ -906,11 +916,18 @@ public class Pica extends BaseApi implements OpacApi {
 				for (int j = 0; j < nodes.size(); j++) {
 					String title = titles.get(j).text();
 					String value = nodes.get(j).text().trim().replace(";", "");
-					if (title.contains("Signatur")) {
+					if (title.contains("Signatur")
+							|| title.contains("shelf mark")
+							|| title.contains("signatuur")) {
 						// not supported
-					} else if (title.contains("Status")) {
+					} else if (title.contains("Status")
+							|| title.contains("status")
+							|| title.contains("statut")) {
 						e.put(AccountData.KEY_LENT_STATUS, value);
-					} else if (title.contains("Leihfristende")) {
+					} else if (title.contains("Leihfristende")
+							|| title.contains("expiry date")
+							|| title.contains("vervaldatum")
+							|| title.contains("date d'expiration")) {
 						e.put(AccountData.KEY_LENT_DEADLINE, value);
 						try {
 							e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
@@ -918,7 +935,10 @@ public class Pica extends BaseApi implements OpacApi {
 						} catch (ParseException e1) {
 							e1.printStackTrace();
 						}
-					} else if (title.contains("Vormerkungen")) {
+					} else if (title.contains("Vormerkungen")
+							|| title.contains("reservations")
+							|| title.contains("reserveringen")
+							|| title.contains("réservations")) {
 						// not supported
 					}
 				}
@@ -927,11 +947,12 @@ public class Pica extends BaseApi implements OpacApi {
 				String prolongCount = "";
 				if (tr.select("iframe[name=nr_renewals_in_a_box]").size() > 0) {
 					try {
-						String html = httpGet(tr.select("iframe[name=nr_renewals_in_a_box]").attr("src"),
-								getDefaultEncoding());
+						String html = httpGet(
+								tr.select("iframe[name=nr_renewals_in_a_box]")
+										.attr("src"), getDefaultEncoding());
 						prolongCount = Jsoup.parse(html).text();
 					} catch (IOException e) {
-	
+
 					}
 				}
 				String reminderCount = tr.child(13).text().trim();
@@ -975,8 +996,10 @@ public class Pica extends BaseApi implements OpacApi {
 				} catch (ParseException e1) {
 					e1.printStackTrace();
 				}
-				e.put(AccountData.KEY_LENT_LINK, tr.child(1).select("input")
-						.attr("value"));
+				if (tr.child(1).select("input").size() > 0)
+					// If there is no checkbox, the medium is not prolongable
+					e.put(AccountData.KEY_LENT_LINK, tr.child(1)
+							.select("input").attr("value"));
 
 				medien.add(e);
 			}
@@ -1020,9 +1043,9 @@ public class Pica extends BaseApi implements OpacApi {
 			IOException, JSONException {
 		if (!initialised)
 			start();
-		
-		String html = httpGet(opac_url + "/LNG=" + getLang()
-				+ "/ADVANCED_SEARCHFILTER", getDefaultEncoding());
+
+		String html = httpGet(opac_url + "/LNG=" + getLang() + "/LNG="
+				+ getLang() + "/ADVANCED_SEARCHFILTER", getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 		List<SearchField> fields = new ArrayList<SearchField>();
 
@@ -1034,11 +1057,12 @@ public class Pica extends BaseApi implements OpacApi {
 			field.setHint("");
 			field.setData(new JSONObject("{\"ADI\": false}"));
 
-			Pattern pattern = Pattern.compile("\\[X?[A-Za-z]{2,3}:?\\]|\\(X?[A-Za-z]{2,3}:?\\)");
+			Pattern pattern = Pattern
+					.compile("\\[X?[A-Za-z]{2,3}:?\\]|\\(X?[A-Za-z]{2,3}:?\\)");
 			Matcher matcher = pattern.matcher(field.getDisplayName());
 			if (matcher.find()) {
-				field.getData()
-						.put("meaning", matcher.group().replace(":", "").toUpperCase());
+				field.getData().put("meaning",
+						matcher.group().replace(":", "").toUpperCase());
 				field.setDisplayName(matcher.replaceFirst("").trim());
 			}
 
@@ -1215,9 +1239,9 @@ public class Pica extends BaseApi implements OpacApi {
 		params.add(new BasicNameValuePair("BOR_U", account.getName()));
 		params.add(new BasicNameValuePair("BOR_PW", account.getPassword()));
 
-		String html = httpPost(https_url + "/loan/DB=" + db + "/USERINFO",
-				new UrlEncodedFormEntity(params, getDefaultEncoding()),
-				getDefaultEncoding());
+		String html = httpPost(https_url + "/loan/DB=" + db + "/LNG="
+				+ getLang() + "/USERINFO", new UrlEncodedFormEntity(params,
+				getDefaultEncoding()), getDefaultEncoding());
 		Document doc = Jsoup.parse(html);
 
 		if (doc.select(".cnt .alert, .cnt .error").size() > 0) {
@@ -1230,7 +1254,7 @@ public class Pica extends BaseApi implements OpacApi {
 	public void setLanguage(String language) {
 		this.languageCode = language;
 	}
-	
+
 	private String getLang() {
 		if (supportedLanguages.contains(languageCode))
 			return languageCodes.get(languageCode);
