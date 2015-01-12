@@ -711,7 +711,7 @@ public class AccountFragment extends Fragment implements
 
 		if (e != null && e instanceof SSLSecurityException)
 			((TextView) connError.findViewById(R.id.tvErrBody))
-			.setText(R.string.connection_error_detail_security);
+					.setText(R.string.connection_error_detail_security);
 		else if (e != null && e instanceof NotReachableException)
 			((TextView) connError.findViewById(R.id.tvErrBody))
 					.setText(R.string.connection_error_detail_nre);
@@ -824,7 +824,13 @@ public class AccountFragment extends Fragment implements
 			TextView t1 = new TextView(getActivity());
 			t1.setText(R.string.entl_none);
 			llLent.addView(t1);
+			((TextView) view.findViewById(R.id.tvEntlHeader))
+					.setText(getActivity().getString(R.string.entl_head)
+							+ " (0)");
 		} else {
+			((TextView) view.findViewById(R.id.tvEntlHeader))
+					.setText(getActivity().getString(R.string.entl_head) + " ("
+							+ result.getLent().size() + ")");
 			for (final Map<String, String> item : result.getLent()) {
 				View v = getLayoutInflater().inflate(
 						R.layout.listitem_account_lent, null);
@@ -1004,7 +1010,15 @@ public class AccountFragment extends Fragment implements
 			TextView t1 = new TextView(getActivity());
 			t1.setText(R.string.reservations_none);
 			llRes.addView(t1);
+			((TextView) view.findViewById(R.id.tvResHeader))
+					.setText(getActivity()
+							.getString(R.string.reservations_head) + " (0)");
 		} else {
+			((TextView) view.findViewById(R.id.tvResHeader))
+					.setText(getActivity()
+							.getString(R.string.reservations_head)
+							+ " ("
+							+ result.getReservations().size() + ")");
 			for (final Map<String, String> item : result.getReservations()) {
 				View v = getLayoutInflater().inflate(
 						R.layout.listitem_account_reservation, null);
