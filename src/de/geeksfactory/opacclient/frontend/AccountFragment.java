@@ -77,6 +77,7 @@ import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.SSLSecurityException;
 import de.geeksfactory.opacclient.apis.EbookServiceApi;
 import de.geeksfactory.opacclient.apis.EbookServiceApi.BookingResult;
 import de.geeksfactory.opacclient.apis.OpacApi;
@@ -708,7 +709,10 @@ public class AccountFragment extends Fragment implements
 		View connError = getActivity().getLayoutInflater().inflate(
 				R.layout.error_connectivity, errorView);
 
-		if (e != null && e instanceof NotReachableException)
+		if (e != null && e instanceof SSLSecurityException)
+			((TextView) connError.findViewById(R.id.tvErrBody))
+			.setText(R.string.connection_error_detail_security);
+		else if (e != null && e instanceof NotReachableException)
 			((TextView) connError.findViewById(R.id.tvErrBody))
 					.setText(R.string.connection_error_detail_nre);
 		((Button) connError.findViewById(R.id.btRetry))

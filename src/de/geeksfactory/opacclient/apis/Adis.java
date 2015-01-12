@@ -37,6 +37,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import de.geeksfactory.opacclient.NotReachableException;
+import de.geeksfactory.opacclient.SSLSecurityException;
 import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult.Status;
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
@@ -132,10 +133,8 @@ public class Adis extends BaseApi implements OpacApi {
 			e.printStackTrace();
 			throw new NotReachableException();
 		} catch (javax.net.ssl.SSLPeerUnverifiedException e) {
-			// TODO: Handly this well
-			throw e;
+			throw new SSLSecurityException();
 		} catch (javax.net.ssl.SSLException e) {
-			// TODO: Handly this well
 			// Can be "Not trusted server certificate" or can be a
 			// aborted/interrupted handshake/connection
 			if (e.getMessage().contains("timed out")
@@ -143,7 +142,7 @@ public class Adis extends BaseApi implements OpacApi {
 				e.printStackTrace();
 				throw new NotReachableException();
 			} else {
-				throw e;
+				throw new SSLSecurityException();
 			}
 		} catch (InterruptedIOException e) {
 			e.printStackTrace();
@@ -215,10 +214,8 @@ public class Adis extends BaseApi implements OpacApi {
 			e.printStackTrace();
 			throw new NotReachableException();
 		} catch (javax.net.ssl.SSLPeerUnverifiedException e) {
-			// TODO: Handle this well
-			throw e;
+			throw new SSLSecurityException();
 		} catch (javax.net.ssl.SSLException e) {
-			// TODO: Handly this well
 			// Can be "Not trusted server certificate" or can be a
 			// aborted/interrupted handshake/connection
 			if (e.getMessage().contains("timed out")
@@ -226,7 +223,7 @@ public class Adis extends BaseApi implements OpacApi {
 				e.printStackTrace();
 				throw new NotReachableException();
 			} else {
-				throw e;
+				throw new SSLSecurityException();
 			}
 		} catch (InterruptedIOException e) {
 			e.printStackTrace();
