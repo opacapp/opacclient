@@ -1,0 +1,43 @@
+{
+    "account_supported": true,
+    "api": "bibliotheca",
+    "city": "Radeberg",
+    "country": "Deutschland",
+    "data": {
+        "accounttable": {
+            "author": 0,
+            "barcode": -1,
+            "homebranch": -1,
+            "lendingbranch": -1,
+            "prolongurl": 3,
+            "returndate": 2,
+            "status": -1,
+            "title": 1
+        },
+        "baseurl": "http://bibliothek-radeberg.internetopac.de",
+        "copiestable": {
+            "barcode": 0,
+            "branch": 4,
+            "department": -1,
+            "location": 2,
+            "reservations": -1,
+            "returndate": 5,
+            "status": 3
+        },
+        "information": "http://www.radeberg.de/inhalte/radeberg/_inhalt/bildung_soziales/bibliothek/bibliothek",
+        "reservationtable": {
+            "author": 0,
+            "availability": 2,
+            "branch": -1,
+            "cancelurl": 3,
+            "expirationdate": -1,
+			"title": 1
+        }
+    },
+    "geo": [
+        51.1129963,
+        13.9142216
+    ],
+    "state": "Sachsen",
+    "title": "Stadtbibliothek"
+}
