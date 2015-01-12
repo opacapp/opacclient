@@ -877,7 +877,7 @@ public class SearchResultDetailFragment extends Fragment {
 							try {
 								bib = java.net.URLEncoder.encode(app
 										.getLibrary().getIdent(), "UTF-8");
-								t = java.net.URLEncoder.encode(t, "UTF-8");
+								t = t != null ? java.net.URLEncoder.encode(t, "UTF-8") : "";
 							} catch (UnsupportedEncodingException e) {
 							}
 
