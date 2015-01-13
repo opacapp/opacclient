@@ -1082,15 +1082,6 @@ public class SearchResultDetailFragment extends Fragment {
 										int id) {
 									adialog.cancel();
 								}
-							})
-					.setNeutralButton(R.string.accounts_edit,
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int id) {
-									adialog.dismiss();
-									app.openAccountList(getActivity());
-								}
 							});
 			adialog = builder.create();
 			adialog.show();
@@ -1204,15 +1195,6 @@ public class SearchResultDetailFragment extends Fragment {
 								public void onClick(DialogInterface dialog,
 										int id) {
 									adialog.cancel();
-								}
-							})
-					.setNeutralButton(R.string.accounts_edit,
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int id) {
-									adialog.dismiss();
-									app.openAccountList(getActivity());
 								}
 							});
 			adialog = builder.create();
