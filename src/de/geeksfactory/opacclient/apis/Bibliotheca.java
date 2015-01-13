@@ -668,10 +668,14 @@ public class Bibliotheca extends BaseApi {
 				}
 				Pattern p = Pattern.compile("geb.hr", Pattern.MULTILINE);
 				for (Element div : doc.select(".kontozeile_center")) {
-					String text = div.text();
-					if (p.matcher(text).find() && !text.contains("usstehend")
-							&& text.contains("orbestellung")) {
-						details.add(new String[] { text.trim() });
+					for (String text : Jsoup
+							.parse(div.html().replaceAll("(?i)<br[^>]*>",
+									"br2n")).text().split("br2n")) {
+						if (p.matcher(text).find()
+								&& !text.contains("usstehend")
+								&& text.contains("orbestellung")) {
+							details.add(new String[] { text.trim() });
+						}
 					}
 				}
 
