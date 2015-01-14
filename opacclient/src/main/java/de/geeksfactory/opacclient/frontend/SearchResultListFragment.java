@@ -1,23 +1,12 @@
 package de.geeksfactory.opacclient.frontend;
 
-import java.io.IOException;
-import java.io.InterruptedIOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import org.acra.ACRA;
-import org.apache.http.NoHttpResponseException;
-import org.json.JSONException;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.CustomListFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +20,17 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.acra.ACRA;
+import org.apache.http.NoHttpResponseException;
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.io.InterruptedIOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
@@ -60,7 +60,7 @@ import de.geeksfactory.opacclient.storage.SearchFieldDataSource;
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
-public class SearchResultListFragment extends ListFragment {
+public class SearchResultListFragment extends CustomListFragment {
 
 	/**
 	 * The serialization (saved instance state) Bundle key representing the
@@ -159,7 +159,9 @@ public class SearchResultListFragment extends ListFragment {
 			Bundle savedInstanceSate) {
 		setRetainInstance(true);
 		setHasOptionsMenu(true);
-		return inflater.inflate(R.layout.fragment_searchresult_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_searchresult_list, container, false);
+        setupIds(view);
+		return view;
 	}
 
 	public void performsearch() {
