@@ -1036,7 +1036,7 @@ public class SearchResultDetailFragment extends Fragment {
 			// Get the layout inflater
 			LayoutInflater inflater = getLayoutInflater(null);
 
-			View view = inflater.inflate(R.layout.dialog_simple_list, null);
+			View view = inflater.inflate(R.layout.dialog_simple_list, null, false);
 
 			ListView lv = (ListView) view.findViewById(R.id.lvBibs);
 			AccountListAdapter adapter = new AccountListAdapter(getActivity(),
@@ -1174,7 +1174,7 @@ public class SearchResultDetailFragment extends Fragment {
 			// Get the layout inflater
 			LayoutInflater inflater = getLayoutInflater(null);
 
-			View view = inflater.inflate(R.layout.dialog_simple_list, null);
+			View view = inflater.inflate(R.layout.dialog_simple_list, null, false);
 
 			ListView lv = (ListView) view.findViewById(R.id.lvBibs);
 			AccountListAdapter adapter = new AccountListAdapter(getActivity(),

@@ -84,7 +84,7 @@ public class StarredFragment extends Fragment implements
 
 		setHasOptionsMenu(true);
 
-		view = inflater.inflate(R.layout.fragment_starred, container);
+		view = inflater.inflate(R.layout.fragment_starred, container, false);
 		app = (OpacClient) getActivity().getApplication();
 
 		adapter = new ItemListAdapter();

@@ -159,7 +159,7 @@ public class SearchResultListFragment extends ListFragment {
 			Bundle savedInstanceSate) {
 		setRetainInstance(true);
 		setHasOptionsMenu(true);
-		return inflater.inflate(R.layout.fragment_searchresult_list, container);
+		return inflater.inflate(R.layout.fragment_searchresult_list, container, false);
 	}
 
 	public void performsearch() {

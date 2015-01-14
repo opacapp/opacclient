@@ -138,7 +138,7 @@ public class MultiStepResultHelper {
 
 		LayoutInflater inflater = context.getLayoutInflater();
 
-		View view = inflater.inflate(R.layout.dialog_reservation_details, null);
+		View view = inflater.inflate(R.layout.dialog_reservation_details, null, false);
 
 		TableLayout table = (TableLayout) view.findViewById(R.id.tlDetails);
 
@@ -206,7 +206,7 @@ public class MultiStepResultHelper {
 
 		LayoutInflater inflater = context.getLayoutInflater();
 
-		View view = inflater.inflate(R.layout.dialog_simple_list, null);
+		View view = inflater.inflate(R.layout.dialog_simple_list, null, false);
 
 		ListView lv = (ListView) view.findViewById(R.id.lvBibs);
 		final Object[] possibilities = result.getSelection().entrySet()

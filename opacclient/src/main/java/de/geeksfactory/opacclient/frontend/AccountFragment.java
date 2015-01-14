@@ -1531,7 +1531,7 @@ public class AccountFragment extends Fragment implements
 
 				LayoutInflater inflater = getLayoutInflater(null);
 
-				View view = inflater.inflate(R.layout.dialog_simple_list, null);
+				View view = inflater.inflate(R.layout.dialog_simple_list, null, false);
 
 				ListView lv = (ListView) view.findViewById(R.id.lvBibs);
 
