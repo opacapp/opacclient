@@ -15,6 +15,7 @@ import org.acra.ACRA;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
