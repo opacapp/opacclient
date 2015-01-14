@@ -43,6 +43,7 @@ import android.widget.TextView;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.SSLSecurityException;
 import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.barcode.BarcodeScanIntegrator.ScanResult;
 import de.geeksfactory.opacclient.frontend.OpacActivity.AccountSelectedListener;
@@ -487,6 +488,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 				if (exception != null
 						&& exception instanceof OpacErrorException)
 					showConnectivityError(exception.getMessage());
+				else if (exception != null
+						&& exception instanceof SSLSecurityException)
+					showConnectivityError(getString(R.string.connection_error_detail_security));
 				else
 					showConnectivityError();
 			}

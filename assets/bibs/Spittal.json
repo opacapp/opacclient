@@ -1,8 +1,8 @@
 {
     "account_supported": true,
     "api": "bibliotheca",
-    "city": "Werther",
-    "country": "Deutschland",
+    "city": "Spittal an der Drau",
+    "country": "\u00d6sterreich",
     "data": {
         "accounttable": {
             "author": 0,
@@ -10,7 +10,7 @@
             "returndate": 2,
             "title": 1
         },
-        "baseurl": "http://neu.bibliotheken-in-owl.de/webopac",
+        "baseurl": "http://katalog-buecherei.spittal-drau.at/WebOpac",
         "copiestable": {
             "barcode": 0,
             "branch": 4,
@@ -19,14 +19,11 @@
             "returndate": 5,
             "status": 3
         },
-        "db": "werther",
-        "information": "https://www.stadt-werther.de/index.php?id=285",
+        "information": "http://www.stadtbuecherei-spittal.at/",
         "mediatypes": {
-            "cdkl.gif": "CD",
-            "dvdkl.gif": "DVD",
-            "e_owl_kl.gif": "EBOOK",
-            "kassettekl.gif": "AUDIO_CASSETTE",
-            "videokl.gif": "MOVIE"
+            "mCasetteS.gif": "AUDIO_CASSETTE",
+            "mDVDS.gif": "DVD",
+            "mFilmS.gif": "MOVIE"
         },
         "reservationtable": {
             "author": 0,
@@ -36,9 +33,9 @@
         }
     },
     "geo": [
-        52.0738784,
-        8.4147863
+        46.79968,
+        13.4928
     ],
-    "state": "Nordrhein-Westfalen",
-    "title": "Stadtbibliothek"
+    "state": "K\u00e4rnten",
+    "title": "Stadtb\u00fccherei"
 }

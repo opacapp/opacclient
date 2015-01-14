@@ -22,8 +22,10 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.support.v4.view.MenuItemCompat;
@@ -65,8 +67,12 @@ public class LibraryListActivity extends ActionBarActivity {
 	protected LibraryListFragment fragment4;
 	protected boolean visible;
 
+	protected ProgressDialog dialog;
+
 	protected SearchView searchView;
 	protected MenuItem searchItem;
+
+	protected final Handler handler = new Handler();
 
 	@Override
 	protected void onPause() {
@@ -92,24 +98,10 @@ public class LibraryListActivity extends ActionBarActivity {
 			getSupportActionBar().setHomeButtonEnabled(false);
 		}
 
-		try {
-			libraries = ((OpacClient) getApplication()).getLibraries();
-		} catch (IOException e) {
-			ACRA.getErrorReporter().handleException(e);
-			return;
-		}
+		new LoadLibrariesTask().execute((OpacClient) getApplication());
 		final TextView tvLocateString = (TextView) findViewById(R.id.tvLocateString);
 		final ImageView ivLocationIcon = (ImageView) findViewById(R.id.ivLocationIcon);
 		final LinearLayout llLocate = (LinearLayout) findViewById(R.id.llLocate);
-
-		// Get the intent, verify the action and get the query
-		Intent intent = getIntent();
-		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-			String query = intent.getStringExtra(SearchManager.QUERY);
-			search(query);
-		} else {
-			showListCountries(false);
-		}
 
 		final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		Criteria criteria = new Criteria();
@@ -696,6 +688,55 @@ public class LibraryListActivity extends ActionBarActivity {
 			return ((Float) o1.getGeo_distance()).compareTo(o2
 					.getGeo_distance());
 		}
+	}
+
+	protected class LoadLibrariesTask extends
+			AsyncTask<OpacClient, Void, List<Library>> {
+		@Override
+		protected void onPreExecute() {
+			// Show ProgressDialog only if loading takes longer than 500ms
+			handler.postDelayed(pdRunnable, 500);
+		}
+
+		@Override
+		protected List<Library> doInBackground(OpacClient... arg0) {
+			OpacClient app = arg0[0];
+			try {
+				return app.getLibraries();
+			} catch (IOException e) {
+				ACRA.getErrorReporter().handleException(e);
+				return null;
+			}
+		}
+
+		@Override
+		protected void onPostExecute(List<Library> result) {
+			libraries = result;
+			handler.removeCallbacks(pdRunnable);
+			if (dialog != null)
+				dialog.dismiss();
+
+			if (libraries == null)
+				return;
+
+			// Get the intent, verify the action and get the query
+			Intent intent = getIntent();
+			if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+				String query = intent.getStringExtra(SearchManager.QUERY);
+				search(query);
+			} else {
+				showListCountries(false);
+			}
+		}
+
+		final Runnable pdRunnable = new Runnable() {
+			@Override
+			public void run() {
+				dialog = ProgressDialog.show(LibraryListActivity.this, "",
+						getString(R.string.loading_libraries), true, false);
+				dialog.show();
+			}
+		};
 	}
 
 }

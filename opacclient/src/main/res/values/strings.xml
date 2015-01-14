@@ -109,6 +109,7 @@ We might know your library ID then, but not your password, and we will take care
   <string name="connection_error_detail">The connection to the library server failed. Please check your internet connection. If the problem persits, there may have been a problem on the library server or the app was unable to parse the server\'s response.</string>
   <string name="connection_error_detail_nre">The connection to the library server failed. Please check your internet connection. If the problem persits, there may have been a problem on the library server.</string>
   <string name="retry">Try again</string>
+  <string name="connection_error_detail_security">The secure connection to the library server failed. Please try again. If the problem persits, there may be someone intercepting your connection. Please contact info@opacapp.de if the problem persists in multiple WiFi networks.</string>
   <string name="default_account_name">Unnamed account</string>
   <string name="title_activity_account_list">Accounts</string>
   <string name="account_add">Add account</string>
@@ -223,4 +224,5 @@ We might know your library ID then, but not your password, and we will take care
   <string name="other">Other</string>
   <string name="source">Source Code</string>
   <string name="loading">Loading…</string>
+  <string name="loading_libraries">Loading library list...</string>
 </resources>

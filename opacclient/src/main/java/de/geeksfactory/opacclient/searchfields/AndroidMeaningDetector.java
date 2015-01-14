@@ -104,6 +104,10 @@ public class AndroidMeaningDetector implements MeaningDetector {
 	}
 
 	private SearchField processMeaning(SearchField field, String meaningName) {
+		if ("HIDDEN".equals(meaningName)) {
+			field.setVisible(false);
+			return field;
+		}
 		Meaning meaning = Meaning.valueOf(meaningName);
 		if (field instanceof TextSearchField && meaning == Meaning.FREE) {
 			((TextSearchField) field).setFreeSearch(true);

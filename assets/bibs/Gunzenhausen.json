@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "winbiap",
+    "city": "Gunzenhausen",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "https://webopac.gunzenhausen.de",
+        "information": "http://www.buecherei.gunzenhausen.de/index.php/startseite.html"
+    },
+    "geo": [
+        49.114722,
+        10.754167
+    ],
+    "state": "Bayern",
+    "title": "Stadtb\u00fccherei"
+}

@@ -878,7 +878,7 @@ public class SearchResultDetailFragment extends Fragment {
 							try {
 								bib = java.net.URLEncoder.encode(app
 										.getLibrary().getIdent(), "UTF-8");
-								t = java.net.URLEncoder.encode(t, "UTF-8");
+								t = t != null ? java.net.URLEncoder.encode(t, "UTF-8") : "";
 							} catch (UnsupportedEncodingException e) {
 							}
 
@@ -1083,15 +1083,6 @@ public class SearchResultDetailFragment extends Fragment {
 										int id) {
 									adialog.cancel();
 								}
-							})
-					.setNeutralButton(R.string.accounts_edit,
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int id) {
-									adialog.dismiss();
-									app.openAccountList(getActivity());
-								}
 							});
 			adialog = builder.create();
 			adialog.show();
@@ -1205,15 +1196,6 @@ public class SearchResultDetailFragment extends Fragment {
 								public void onClick(DialogInterface dialog,
 										int id) {
 									adialog.cancel();
-								}
-							})
-					.setNeutralButton(R.string.accounts_edit,
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int id) {
-									adialog.dismiss();
-									app.openAccountList(getActivity());
 								}
 							});
 			adialog = builder.create();

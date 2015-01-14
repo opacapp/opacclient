@@ -36,6 +36,7 @@ import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.SSLSecurityException;
 import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.frontend.ResultsAdapterEndless.OnLoadMoreListener;
 import de.geeksfactory.opacclient.objects.Account;
@@ -334,6 +335,9 @@ public class SearchResultListFragment extends ListFragment {
 						if (getActivity() != null) {
 							if (e instanceof OpacErrorException) {
 								showConnectivityError(e.getMessage());
+							} else if (e instanceof SSLSecurityException) {
+								showConnectivityError(getResources().getString(
+										R.string.connection_error_detail_security));
 							} else if (e instanceof NotReachableException) {
 								showConnectivityError(getResources().getString(
 										R.string.connection_error_detail_nre));
@@ -488,6 +492,10 @@ public class SearchResultListFragment extends ListFragment {
 					}
 
 					showConnectivityError(exception.getMessage());
+				} else if (exception instanceof SSLSecurityException) {
+					if (getActivity() != null)
+						showConnectivityError(getResources().getString(
+								R.string.connection_error_detail_security));
 				} else if (exception instanceof NotReachableException) {
 					if (getActivity() != null)
 						showConnectivityError(getResources().getString(

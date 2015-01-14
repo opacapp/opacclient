@@ -1,12 +1,12 @@
 {
-    "account_supported": true,
-    "api": "sisis",
+    "account_supported": false,
+    "api": "touchpoint",
     "city": "Bayreuth",
     "country": "Deutschland",
     "data": {
-        "baseurl": "https://opac.uni-bayreuth.de/InfoGuideClient",
-        "information": "http://www.ub.uni-bayreuth.de/de/index.html",
-        "startparams": "Login=opacweb"
+        "baseurl": "https://katalog.uni-bayreuth.de/TouchPoint_touchpoint",
+		"customssl": true,
+        "information": "http://www.ub.uni-bayreuth.de/de/index.html"
     },
     "geo": [
         49.9456399,

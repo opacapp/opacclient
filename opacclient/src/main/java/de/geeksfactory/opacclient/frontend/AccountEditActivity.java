@@ -155,14 +155,14 @@ public class AccountEditActivity extends ActionBarActivity {
 		} else {
 			account.setLabel(etLabel.getText().toString());
 		}
+		account.setName(etName.getText().toString());
+		account.setPassword(etPassword.getText().toString());
 		if(etPassword.getText().toString().trim().equals("")) {
 			// Don't check user credentials if there are no credentials
 			save();
 			close();
 			return;
 		}
-		account.setName(etName.getText().toString());
-		account.setPassword(etPassword.getText().toString());
 		new CheckAccountDataTask().execute(account);
 	}
 
