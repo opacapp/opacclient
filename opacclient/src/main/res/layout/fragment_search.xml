@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <FrameLayout
+        android:id="@+id/error_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </FrameLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/tablet_padding_or_zero"
+        android:paddingRight="@dimen/tablet_padding_or_zero" >
+
+        <RelativeLayout
+            android:id="@+id/rlOuter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/tablet_panel_bg"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:id="@+id/rlSimpleSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/account_head_bg"
+                android:orientation="vertical"
+                android:padding="8dp" >
+
+                <EditText
+                    android:id="@+id/etSimpleSearch"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:ems="10"
+                    android:hint="@string/search_free"
+                    android:inputType="text"
+                    android:textColor="@color/account_head_fg" >
+
+                    <requestFocus />
+                </EditText>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/llForm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rlSimpleSearch"
+                android:orientation="vertical"
+                android:padding="8dp" >
+
+                <RelativeLayout
+                    android:id="@+id/rlReplaced"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/note_replacedby"
+                    android:padding="4dp"
+                    android:visibility="gone" >
+
+                    <ImageView
+                        android:id="@+id/ivReplacedStore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:contentDescription="@string/replacedby"
+                        android:src="@drawable/playstore" />
+
+                    <TextView
+                        android:id="@+id/tvReplacedNote"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/ivReplacedStore"
+                        android:text="@string/replacedby" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/tvSearchAdvHeader"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="8dp"
+                    android:drawableBottom="@drawable/section_header"
+                    android:drawablePadding="4dp"
+                    android:paddingLeft="4dp"
+                    android:text="@string/search_advanced"
+                    android:textAllCaps="true"
+                    android:textColor="@color/emphasis"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:id="@+id/llFormFields"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+                </LinearLayout>
+                
+                <LinearLayout
+			        android:id="@+id/llExpand"
+			        android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:background="@drawable/list_selector_holo_light"
+			        android:clickable="true"
+			        android:focusable="true"
+			        android:padding="16dp" >
+			
+			        <ImageView
+			            android:id="@+id/ivExpandIcon"
+			            android:layout_width="wrap_content"
+			            android:contentDescription="@string/expand"
+			            android:layout_height="wrap_content"
+			            android:src="@drawable/ic_action_expand" />
+			
+			        <TextView
+			            android:id="@+id/tvExpandString"
+			            android:layout_width="0dp"
+			            android:layout_height="wrap_content"
+			            android:layout_gravity="center"
+			            android:layout_marginLeft="8dp"
+			            android:layout_weight="1"
+			            android:text="@string/expand" />
+			    </LinearLayout>
+                
+                <LinearLayout
+                    android:id="@+id/llAdvancedFields"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone" >
+                </LinearLayout>
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+</FrameLayout>

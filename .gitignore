@@ -12,6 +12,7 @@
 bin/
 gen/
 doc/
+build/
 
 # Local configuration file (sdk path, etc)
 local.properties
@@ -31,3 +32,10 @@ assets/buildnum.txt
 
 # Windows Thumbnail files
 Thumbs.db
+
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
