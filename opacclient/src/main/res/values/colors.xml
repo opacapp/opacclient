@@ -16,6 +16,7 @@
     <color name="nav_highlighted_bg">#505050</color>
     <color name="account_head_bg">#505050</color>
     <color name="account_head_fg">#F3F3F3</color>
+    <color name="hint_fg">#ffcacaca</color>
     <color name="error_bg">#cc0000</color>
     <color name="error_fg">#ffffff</color>
     <color name="liblist_group_bg">#dddddd</color>
