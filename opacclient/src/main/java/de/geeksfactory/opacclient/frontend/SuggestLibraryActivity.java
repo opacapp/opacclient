@@ -50,7 +50,7 @@ public class SuggestLibraryActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_suggest_library);
 
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		etCity = (AutoCompleteTextView) findViewById(R.id.etCity);
 		etName = (EditText) findViewById(R.id.etName);

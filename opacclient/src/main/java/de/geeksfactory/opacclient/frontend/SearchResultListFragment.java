@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -230,7 +231,7 @@ public class SearchResultListFragment extends ListFragment {
 			performsearch();
 		} else if (searchresult != null) {
 			if (searchresult.getTotal_result_count() >= 0)
-				getActivity().getActionBar().setSubtitle(
+                ((ActionBarActivity) getActivity()).getSupportActionBar().setSubtitle(
                         getString(R.string.result_number,
                                 searchresult.getTotal_result_count()));
         }
@@ -307,7 +308,7 @@ public class SearchResultListFragment extends ListFragment {
 			result.setPage(searchresult.getPage_index());
 		}
 		if (searchresult.getTotal_result_count() >= 0)
-			getActivity().getActionBar().setSubtitle(
+            ((ActionBarActivity) getActivity()).getSupportActionBar().setSubtitle(
 					getString(R.string.result_number,
 							searchresult.getTotal_result_count()));
 
@@ -351,7 +352,8 @@ public class SearchResultListFragment extends ListFragment {
 						 * loaded
 						 */
 						if (resultCount >= 0 && getActivity() != null)
-							getActivity().getActionBar().setSubtitle(
+
+                            ((ActionBarActivity) getActivity()).getSupportActionBar().setSubtitle(
 									getString(R.string.result_number,
 											resultCount));
 					}

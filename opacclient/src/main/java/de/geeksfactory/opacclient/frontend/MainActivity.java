@@ -40,7 +40,6 @@ public class MainActivity extends OpacActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		if (getIntent() != null && getIntent().getAction() != null) {
 			if (getIntent().getAction().equals("android.intent.action.VIEW")) {
 				urlintent();
