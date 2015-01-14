@@ -22,9 +22,7 @@
 package de.geeksfactory.opacclient.frontend;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Notification;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -33,12 +31,12 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -86,6 +84,8 @@ public abstract class OpacActivity extends ActionBarActivity {
 
 	private boolean twoPane;
 
+    protected Toolbar toolbar;
+
 	public OpacClient getOpacApplication() {
 		return app;
 	}
@@ -100,6 +100,9 @@ public abstract class OpacActivity extends ActionBarActivity {
 		app = (OpacClient) getApplication();
 
 		aData = new AccountDataSource(this);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null)
+            setSupportActionBar(toolbar);
 		setupDrawer();
 
 		if (savedInstanceState != null) {
@@ -125,16 +128,7 @@ public abstract class OpacActivity extends ActionBarActivity {
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		if (drawerLayout != null) {
 			hasDrawer = true;
-			drawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
-			drawerLayout, /* DrawerLayout object */
-			R.drawable.ic_navigation_drawer, /*
-											 * nav drawer icon to replace 'Up'
-											 * caret
-											 */
-			R.string.drawer_open, /* "open drawer" description */
-			R.string.drawer_close /* "close drawer" description */
-			) {
-
+			drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close ) {
 				/**
 				 * Called when a drawer has settled in a completely closed
 				 * state.

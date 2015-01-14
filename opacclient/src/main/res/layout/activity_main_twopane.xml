@@ -2,35 +2,47 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true" >
     <!-- The main content view -->
-    <LinearLayout 
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-    	android:baselineAligned="false"
-   		android:divider="?dividerHorizontal"
-    	android:orientation="horizontal"
-    	android:showDividers="middle">
-	    <FrameLayout
-	        android:id="@+id/content_frame"
-	        android:layout_width="0dp"
-	        android:layout_height="match_parent" 
-	        android:layout_weight="1" >
-	    </FrameLayout>
-	    <FrameLayout
-	        android:id="@+id/content_frame_right"
-	        android:layout_width="0dp"
-	        android:layout_height="match_parent" 
-	        android:layout_weight="2" >	        
-	   	</FrameLayout>
-   	</LinearLayout>
+        android:orientation="vertical">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:minHeight="?attr/actionBarSize"
+            android:background="?attr/colorPrimary" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:baselineAligned="false"
+            android:divider="?dividerHorizontal"
+            android:orientation="horizontal"
+            android:showDividers="middle">
+            <FrameLayout
+                android:id="@+id/content_frame"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" >
+            </FrameLayout>
+            <FrameLayout
+                android:id="@+id/content_frame_right"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2" >
+            </FrameLayout>
+        </LinearLayout>
+    </LinearLayout>
     <!-- The navigation drawer -->
-    <ListView android:id="@+id/drawer_list"
-        android:layout_width="@dimen/drawer_width"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:choiceMode="multipleChoice"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
-        android:background="@color/nav_bg"/>
+        <ListView android:id="@+id/drawer_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:choiceMode="multipleChoice"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp"
+            android:background="@color/nav_bg" />
 </android.support.v4.widget.DrawerLayout>

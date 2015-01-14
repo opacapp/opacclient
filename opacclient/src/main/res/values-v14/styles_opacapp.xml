@@ -34,6 +34,7 @@
         <item name="android:actionBarWidgetTheme">@style/Theme.Opacapp.Widget</item>
 
     </style>
+    <style name="Theme.Opacapp.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar"></style>
 
     <style name="ActionBar.Solid.Opacapp" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@drawable/ab_solid_opacapp</item>
