@@ -1,44 +1,43 @@
 {
     "account_supported": true,
     "api": "bibliotheca",
-    "city": "Werther",
+    "city": "Radeberg",
     "country": "Deutschland",
     "data": {
         "accounttable": {
             "author": 0,
+            "barcode": -1,
+            "homebranch": -1,
+            "lendingbranch": -1,
             "prolongurl": 3,
             "returndate": 2,
+            "status": -1,
             "title": 1
         },
-        "baseurl": "http://neu.bibliotheken-in-owl.de/webopac",
+        "baseurl": "http://bibliothek-radeberg.internetopac.de",
         "copiestable": {
             "barcode": 0,
             "branch": 4,
-            "department": 2,
-            "location": 1,
+            "department": -1,
+            "location": 2,
+            "reservations": -1,
             "returndate": 5,
             "status": 3
         },
-        "db": "werther",
-        "information": "https://www.stadt-werther.de/index.php?id=285",
-        "mediatypes": {
-            "cdkl.gif": "CD",
-            "dvdkl.gif": "DVD",
-            "e_owl_kl.gif": "EBOOK",
-            "kassettekl.gif": "AUDIO_CASSETTE",
-            "videokl.gif": "MOVIE"
-        },
+        "information": "http://www.radeberg.de/inhalte/radeberg/_inhalt/bildung_soziales/bibliothek/bibliothek",
         "reservationtable": {
             "author": 0,
             "availability": 2,
+            "branch": -1,
             "cancelurl": 3,
-            "title": 1
+            "expirationdate": -1,
+			"title": 1
         }
     },
     "geo": [
-        52.0738784,
-        8.4147863
+        51.1129963,
+        13.9142216
     ],
-    "state": "Nordrhein-Westfalen",
+    "state": "Sachsen",
     "title": "Stadtbibliothek"
 }

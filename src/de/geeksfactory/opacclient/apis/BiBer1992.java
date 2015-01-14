@@ -750,7 +750,7 @@ public class BiBer1992 extends BaseApi {
 			if (optionsElements.size() > 0) {
 				Map<String, String> options = new HashMap<String, String>();
 				for (Element option : optionsElements) {
-					options.put(option.attr("value"), option.text());
+					options.put(option.attr("value") + ":" + option.text(), option.text());
 				}
 				if (options.size() > 1) {
 					ReservationResult res = new ReservationResult(
@@ -779,8 +779,9 @@ public class BiBer1992 extends BaseApi {
 			nameValuePairs.add(new BasicNameValuePair("FUNC", "vors"));
 			if (m_opac_dir.equals("opax"))
 				nameValuePairs.add(new BasicNameValuePair(resinfo.replace(
-						"resF_", ""), "vors"));
-			nameValuePairs.add(new BasicNameValuePair("ID1", selection));
+						"resF_", ""), "vors" + resinfo.replace("resF_", "")));
+			nameValuePairs.add(new BasicNameValuePair("ID11", selection.split(":")[1]));
+			nameValuePairs.add(new BasicNameValuePair("ID1", selection.split(":")[0]));
 
 			String html = httpPost(m_opac_url + "/" + m_opac_dir
 					+ "/setreserv.C", new UrlEncodedFormEntity(nameValuePairs),

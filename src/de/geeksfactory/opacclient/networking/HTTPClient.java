@@ -58,20 +58,24 @@ import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.Library;
 
 public class HTTPClient {
+	
+	public static KeyStore trustStore = null;
 
 	public static DefaultHttpClient getNewHttpClient(Library library) {
 		DefaultHttpClient hc = null;
 		if (library.getData().has("customssl")) {
 			try {
-				final KeyStore trustStore = KeyStore.getInstance("BKS");
-
-				final InputStream in = OpacClient.context.getResources()
-						.openRawResource(R.raw.ssl_trust_store);
-				try {
-					trustStore.load(in,
-							"ro5eivoijeeGohsh0daequoo5Zeepaen".toCharArray());
-				} finally {
-					in.close();
+				if (trustStore == null) {
+					trustStore = KeyStore.getInstance("BKS");
+	
+					final InputStream in = OpacClient.context.getResources()
+							.openRawResource(R.raw.ssl_trust_store);
+					try {
+						trustStore.load(in,
+								"ro5eivoijeeGohsh0daequoo5Zeepaen".toCharArray());
+					} finally {
+						in.close();
+					}
 				}
 
 				SSLSocketFactory sf = new AdditionalKeyStoresSSLSocketFactory(

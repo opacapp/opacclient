@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="app_name">Web Opac</string>
+
+    <string name="app_name">Web Opac</string>
     <string name="launcher_name">Web Opac</string>
     <string name="web_opac">Web-Opac</string>
     <string name="zweigstelle">Zweigstelle</string>
@@ -16,7 +17,7 @@
     <string name="thanks">Mitautoren und Danksagungen</string>
     <string name="developer_settings">Entwickler-Einstellungen</string>
     <string name="details_head">DETAILS</string>
-    <string name="copies_head">EXEMPLARE</string>   
+    <string name="copies_head">EXEMPLARE</string>
     <string name="ret">Rückgabe</string>
     <string name="res">Vorbestellt</string>
     <string name="tocollection">Zum Gesamtwerk</string>
@@ -111,6 +112,7 @@
     <string name="info_unsupported">Deine Bücherei stellt keine zusätzlichen Informationen bereit, die wir dir anzeigen könnten.</string>
     <string name="connection_error_detail">Der Aufbau einer Verbindung zum Bibliotheksserver ist fehlgeschlagen. Prüfe, ob eine Verbindung zum Internet verfügbar ist. Möglicherweise hat auch der Bibliotheksserver ein Problem oder die App konnte seine Antwort nicht auswerten.</string>
     <string name="connection_error_detail_nre">Der Aufbau einer Verbindung zum Bibliotheksserver ist fehlgeschlagen. Prüfe, ob eine Verbindung zum Internet verfügbar ist. Wenn ja, hat wahrscheinlich der Bibliotheksserver ein Problem.</string>
+    <string name="connection_error_detail_security">Der Aufbau einer gesicherten Verbindung zum Bibliotheksserver ist fehlgeschlagen. Bitte probiere es erneut. Wenn das Problem fortbesteht, versucht eventuell jemand, die Verbindung abzuhören. Bitte wende dich an info@opacapp.de, wenn das Problem verschiedenen WLAN-Netzwerken fortbesteht.</string>
     <string name="retry">Erneut versuchen</string>
     <string name="default_account_name">Unbenanntes Konto</string>
     <string name="title_activity_account_list">Konten</string>
@@ -144,8 +146,8 @@
     <string name="account_no_concurrent">Bitte warten, bis die Ansicht aktualisiert wurde.</string>
     <string name="confirm_title">Bestätigen</string>
     <string name="confirm">Bestätigen</string>
-
     <string name="account_up_to_date">Die angezeigten Daten sind aktuell.</string>
+
     <plurals name="account_age_minutes">
         <item quantity="one">Die angezeigten Daten sind eine Minute alt.</item>
         <item quantity="other">Die angezeigten Daten sind %d Minuten alt.</item>
@@ -200,32 +202,32 @@
     <string name="snooze">Morgen erneut erinnern</string>
     <string name="expand">Mehr Suchfelder anzeigen</string>
     <string name="collapse">Weniger Suchfelder anzeigen</string>
-	<string name="interested_to_help">Ich bin interessiert zu helfen.</string>
-	<string name="library_suggestion">Bibliotheksvorschlag</string>
-	<string name="cover">Cover</string>
-	<string name="playstore">Play Store</string>
-	<string name="icon">Icon</string>
-	<string name="prolong">Verlängern</string>
-	<string name="reservation_cancel">Reservierung löschen</string>
-	<string name="reservation_book">Ausleihen</string>
-	<string name="mediatype">Medienart</string>
-	<string name="status">Status</string>
-	<string name="free_search">Freie Suche</string>
+    <string name="interested_to_help">Ich bin interessiert zu helfen.</string>
+    <string name="library_suggestion">Bibliotheksvorschlag</string>
+    <string name="cover">Cover</string>
+    <string name="playstore">Play Store</string>
+    <string name="icon">Icon</string>
+    <string name="prolong">Verlängern</string>
+    <string name="reservation_cancel">Reservierung löschen</string>
+    <string name="reservation_book">Ausleihen</string>
+    <string name="mediatype">Medienart</string>
+    <string name="status">Status</string>
+    <string name="free_search">Freie Suche</string>
     <string name="no_fields_found">Keine Suchfelder gefunden.</string>
-	<string name="no_search_cache">Fehler. Versuchen Sie evtl. eine Suchabfrage durchzuführen, um das Problem zu beheben.</string>
-	<string name="user_data_opac_message">Beim Überprüfen der Benutzerdaten gab die Bibliothek folgende Nachricht zurück: \"%s\"\n\nMöchten Sie diese Benutzerdaten trotzdem speichern?</string>
-	<string name="user_data_connection_error">Beim Überprüfen der Benutzerdaten ist der Aufbau einer Verbindung zum Bibliotheksserver fehlgeschlagen. Möchten Sie diese Benutzerdaten trotzdem speichern?</string>
-	<string name="support_search_account">Katalogsuche und Konto</string>
-	<string name="support_search">Katalogsuche</string>
-	<string name="meta_clear_title">Cache leeren</string>
-	<string name="meta_clear">Löscht auf dem Handy zwischengespeicherten Zweigstellen, Metadaten, etc.</string>
-	<string name="version">Version</string>
-	<string name="website">Website</string>
-	<string name="website_url">www.opacapp.de</string>
-	<string name="developer">Entwickler</string>
-	<string name="feedback">Feedback</string>
-	<string name="rate">Applikation bewerten</string>
-	<string name="other">Sonstiges</string>
-	<string name="source">Quellcode</string>
+    <string name="no_search_cache">Fehler. Versuchen Sie evtl. eine Suchabfrage durchzuführen, um das Problem zu beheben.</string>
+    <string name="user_data_opac_message">Beim Überprüfen der Benutzerdaten gab die Bibliothek folgende Nachricht zurück: \"%s\"\n\nMöchten Sie diese Benutzerdaten trotzdem speichern?</string>
+    <string name="user_data_connection_error">Beim Überprüfen der Benutzerdaten ist der Aufbau einer Verbindung zum Bibliotheksserver fehlgeschlagen. Möchten Sie diese Benutzerdaten trotzdem speichern?</string>
+    <string name="support_search_account">Katalogsuche und Konto</string>
+    <string name="support_search">Katalogsuche</string>
+    <string name="meta_clear_title">Cache leeren</string>
+    <string name="meta_clear">Löscht auf dem Handy zwischengespeicherten Zweigstellen, Metadaten, etc.</string>
+    <string name="version">Version</string>
+    <string name="website">Website</string>
+    <string name="website_url">www.opacapp.de</string>
+    <string name="developer">Entwickler</string>
+    <string name="feedback">Feedback</string>
+    <string name="rate">Applikation bewerten</string>
+    <string name="other">Sonstiges</string>
+    <string name="source">Quellcode</string>
 
 </resources>

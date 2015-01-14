@@ -145,8 +145,15 @@ public class Bibliotheca extends BaseApi {
 			if (fieldElem.select(".suchfeld_inhalt_input").size() > 0) {
 				List<TextNode> textNodes = fieldElem
 						.select(".suchfeld_inhalt_input").first().textNodes();
-				if (textNodes.size() > 0)
-					hint = textNodes.get(0).getWholeText().replace("\n", "");
+				if (textNodes.size() > 0) {
+					for (TextNode node : textNodes) {
+						String text = node.getWholeText().replace("\n", "");
+						if (!text.equals("")) {
+							hint = node.getWholeText().replace("\n", "");
+							break;
+						}
+					}
+				}
 			}
 
 			Elements inputs = fieldElem
@@ -661,10 +668,14 @@ public class Bibliotheca extends BaseApi {
 				}
 				Pattern p = Pattern.compile("geb.hr", Pattern.MULTILINE);
 				for (Element div : doc.select(".kontozeile_center")) {
-					String text = div.text();
-					if (p.matcher(text).find() && !text.contains("usstehend")
-							&& text.contains("orbestellung")) {
-						details.add(new String[] { text.trim() });
+					for (String text : Jsoup
+							.parse(div.html().replaceAll("(?i)<br[^>]*>",
+									"br2n")).text().split("br2n")) {
+						if (p.matcher(text).find()
+								&& !text.contains("usstehend")
+								&& text.contains("orbestellung")) {
+							details.add(new String[] { text.trim() });
+						}
 					}
 				}
 
@@ -1061,12 +1072,12 @@ public class Bibliotheca extends BaseApi {
 
 		AccountData res = new AccountData(acc.getId());
 
-		for (Element row : doc.select(".kontozeile_center")) {
+		for (Element row : doc.select(".kontozeile_center, div[align=center]")) {
 			String text = row.text().trim();
-			if (text.matches("Ausstehende Geb.+hren:[^0-9]+([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr.)")) {
+			if (text.matches(".*Ausstehende Geb.+hren:[^0-9]+([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr.).*")) {
 				text = text
 						.replaceAll(
-								"Ausstehende Geb.+hren:[^0-9]+([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr.)",
+								".*Ausstehende Geb.+hren:[^0-9]+([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr.).*",
 								"$1 $2");
 				res.setPendingFees(text);
 			}
@@ -1172,6 +1183,7 @@ public class Bibliotheca extends BaseApi {
 	@Override
 	public void checkAccountData(Account acc) throws IOException,
 			JSONException, OpacErrorException {
+		start();
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 		nameValuePairs.add(new BasicNameValuePair("AUSWEIS", acc.getName()));
 		nameValuePairs.add(new BasicNameValuePair("PWD", acc.getPassword()));
@@ -1210,7 +1222,7 @@ public class Bibliotheca extends BaseApi {
 	@Override
 	public void setLanguage(String language) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
