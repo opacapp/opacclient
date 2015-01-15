@@ -5,7 +5,7 @@
     <!-- Changes specific to this API level go here -->
     <style name="Theme.Opacapp.NoActionBar" parent="Theme.Opacapp.NoActionBar.Base">
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
 </resources>

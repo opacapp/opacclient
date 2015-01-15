@@ -73,6 +73,7 @@ public abstract class OpacActivity extends ActionBarActivity {
 
 	protected NavigationAdapter navAdapter;
 	protected ListView drawerList;
+    protected View drawer;
 	protected DrawerLayout drawerLayout;
 	protected ActionBarDrawerToggle drawerToggle;
 	protected CharSequence mTitle;
@@ -128,6 +129,7 @@ public abstract class OpacActivity extends ActionBarActivity {
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		if (drawerLayout != null) {
 			hasDrawer = true;
+            drawerLayout.setStatusBarBackground(R.color.primary_red_dark);
 			drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close ) {
 				/**
 				 * Called when a drawer has settled in a completely closed
@@ -157,7 +159,7 @@ public abstract class OpacActivity extends ActionBarActivity {
 			drawerLayout.setDrawerListener(drawerToggle);
 			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 			getSupportActionBar().setHomeButtonEnabled(true);
-
+            drawer = findViewById(R.id.navdrawer);
 			drawerList = (ListView) findViewById(R.id.drawer_list);
 			navAdapter = new NavigationAdapter(this);
 			drawerList.setAdapter(navAdapter);
@@ -238,7 +240,7 @@ public abstract class OpacActivity extends ActionBarActivity {
 					public void run() {
 						SharedPreferences sp = PreferenceManager
 								.getDefaultSharedPreferences(OpacActivity.this);
-						drawerLayout.openDrawer(drawerList);
+						drawerLayout.openDrawer(drawer);
 						sp.edit().putBoolean("version2.0.0-introduced", true)
 								.commit();
 					}
@@ -361,13 +363,13 @@ public abstract class OpacActivity extends ActionBarActivity {
 			drawerList.setItemChecked(position, true);
 			selectedItemPos = position;
 			setTitle(navAdapter.getItem(position).text);
-			drawerLayout.closeDrawer(drawerList);
+			drawerLayout.closeDrawer(drawer);
 
 		} else if (item.type == Item.TYPE_ACCOUNT) {
 			deselectItemsByType(Item.TYPE_ACCOUNT);
 			drawerList.setItemChecked(position, true);
 			selectaccount(item.accountId);
-			drawerLayout.closeDrawer(drawerList);
+			drawerLayout.closeDrawer(drawer);
 			return;
 		}
 	}

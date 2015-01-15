@@ -40,6 +40,15 @@
         </LinearLayout>
     </LinearLayout>
     <!-- The navigation drawer -->
+    <de.geeksfactory.opacclient.ui.ScrimInsetsFrameLayout
+        android:id="@+id/navdrawer"
+        android:layout_width="320dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:paddingTop="24dp"
+        android:elevation="10dp"
+        android:fitsSystemWindows="true"
+        app:insetForeground="#4000">
         <ListView android:id="@+id/drawer_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -48,4 +57,5 @@
             android:divider="@android:color/transparent"
             android:dividerHeight="0dp"
             android:background="@color/nav_bg" />
+    </de.geeksfactory.opacclient.ui.ScrimInsetsFrameLayout>
 </android.support.v4.widget.DrawerLayout>
