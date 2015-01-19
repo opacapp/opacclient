@@ -229,5 +229,5 @@
     <string name="rate">Applikation bewerten</string>
     <string name="other">Sonstiges</string>
     <string name="source">Quellcode</string>
-
+	<string name="loading_libraries">Lade Bibliotheksliste...</string>
 </resources>
