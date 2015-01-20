@@ -5,6 +5,7 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://lbsopac.rz.uni-frankfurt.de",
+		"charset": "ISO-8859-1",
         "db": "60",
         "information": "http://www.sankt-georgen.de/bibliothek/index.html"
     },
