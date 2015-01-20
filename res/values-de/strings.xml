@@ -229,5 +229,12 @@
     <string name="rate">Applikation bewerten</string>
     <string name="other">Sonstiges</string>
     <string name="source">Quellcode</string>
-	<string name="loading_libraries">Lade Bibliotheksliste...</string>
+    <string name="loading_libraries">Lade Bibliotheksliste...</string>
+    <string name="order">Sortierung</string>
+    <string name="order_default">Standardsortierung</string>
+    <string name="order_year_asc">Nach Erscheinungsjahr (aufsteigend)</string>
+    <string name="order_category_asc">Nach Mediengruppe (aufsteigend)</string>
+    <string name="order_year_desc">Nach Erscheinungsjahr (absteigend)</string>
+    <string name="order_category_desc">Nach Mediengruppe (absteigend)</string>
+
 </resources>
