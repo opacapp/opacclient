@@ -1,5 +1,5 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "touchpoint",
     "city": "Chemnitz",
     "country": "Deutschland",
