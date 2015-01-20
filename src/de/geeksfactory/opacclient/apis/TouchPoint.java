@@ -791,7 +791,17 @@ public class TouchPoint extends BaseApi implements OpacApi {
 				ENCODING);
 		List<Map<String, String>> lent = new ArrayList<Map<String, String>>();
 		Document doc = Jsoup.parse(html);
+		doc.setBaseUri(opac_url);
 		parse_medialist(lent, doc);
+		if (doc.select(".pagination").size() > 0) {
+			Element pagination = doc.select(".pagination").first();
+			Elements pages = pagination.select("a");
+			for (int i = 0; i < pages.size(); i++) {
+				html = httpGet(pages.get(i).attr("abs:href"), ENCODING);
+				doc = Jsoup.parse(html);
+				parse_medialist(lent, doc);
+			}
+		}
 		adata.setLent(lent);
 
 		// Reserved media
@@ -800,8 +810,18 @@ public class TouchPoint extends BaseApi implements OpacApi {
 						+ "/userAccount.do?methodToCall=showAccount&accountTyp=requested",
 				ENCODING);
 		doc = Jsoup.parse(html);
+		doc.setBaseUri(opac_url);
 		List<Map<String, String>> requested = new ArrayList<Map<String, String>>();
 		parse_reslist(requested, doc);
+		if (doc.select(".pagination").size() > 0) {
+			Element pagination = doc.select(".pagination").first();
+			Elements pages = pagination.select("a");
+			for (int i = 0; i < pages.size(); i++) {
+				html = httpGet(pages.get(i).attr("abs:href"), ENCODING);
+				doc = Jsoup.parse(html);
+				parse_reslist(requested, doc);
+			}
+		}
 		adata.setReservations(requested);
 
 		// Fees
@@ -880,7 +900,6 @@ public class TouchPoint extends BaseApi implements OpacApi {
 
 			medien.add(e);
 		}
-		assert (medien.size() == trs - 1);
 	}
 
 	protected void parse_reslist(List<Map<String, String>> reservations,
@@ -921,7 +940,6 @@ public class TouchPoint extends BaseApi implements OpacApi {
 
 			reservations.add(e);
 		}
-		assert (reservations.size() == trs - 1);
 	}
 
 	protected boolean login(Account acc) throws OpacErrorException {
