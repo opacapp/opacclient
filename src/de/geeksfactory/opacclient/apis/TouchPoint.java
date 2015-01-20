@@ -50,8 +50,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import android.util.Log;
-
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
@@ -80,6 +78,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 	protected String CSId;
 	protected String identifier;
 	protected String reusehtml;
+	protected String reusehtml_reservation;
 	protected int resultcount = 10;
 
 	protected long logged_in;
@@ -668,21 +667,24 @@ public class TouchPoint extends BaseApi implements OpacApi {
 			}
 		}
 
-		// Reservation Info
-		try {
-			String reservationHtml = httpGet(opac_url
-					+ "/singleHit.do?methodToCall=showDocument&ajax=true",
-					ENCODING);
-			Document reservationDoc = Jsoup.parse(reservationHtml);
-			reservationDoc.setBaseUri(opac_url);
-			if (reservationDoc.select("a").size() == 1) {
-				result.setBookable(true);
-				result.setBooking_info(reservationDoc.select("a").first()
-						.attr("href"));
+		// Reservation Info, only works if the code above could find a URL
+		if (!"".equals(copiesParameter)) {
+			String reservationParameter = copiesParameter.replace(
+					"showHoldings", "showDocument");
+			try {
+				String reservationHtml = httpGet(opac_url + "/"
+						+ reservationParameter, ENCODING);
+				Document reservationDoc = Jsoup.parse(reservationHtml);
+				reservationDoc.setBaseUri(opac_url);
+				if (reservationDoc.select("a").size() == 1) {
+					result.setReservable(true);
+					result.setReservation_info(reservationDoc.select("a")
+							.first().attr("abs:href"));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				// fail silently
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			// fail silently
 		}
 
 		// TODO: Volumes
@@ -721,7 +723,68 @@ public class TouchPoint extends BaseApi implements OpacApi {
 	@Override
 	public ReservationResult reservation(DetailledItem item, Account acc,
 			int useraction, String selection) throws IOException {
-		return null;
+		if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
+				|| logged_in_as == null) {
+			try {
+				login(acc);
+			} catch (OpacErrorException e) {
+				return new ReservationResult(MultiStepResult.Status.ERROR,
+						e.getMessage());
+			}
+		} else if (logged_in_as.getId() != acc.getId()) {
+			try {
+				login(acc);
+			} catch (OpacErrorException e) {
+				return new ReservationResult(MultiStepResult.Status.ERROR,
+						e.getMessage());
+			}
+		}
+		String html;
+		if (reusehtml_reservation != null)
+			html = reusehtml_reservation;
+		else
+			html = httpGet(item.getReservation_info(), ENCODING);
+		Document doc = Jsoup.parse(html);
+		if (doc.select(".message-error").size() > 0) {
+			return new ReservationResult(MultiStepResult.Status.ERROR, doc
+					.select(".message-error").first().text());
+		}
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs
+				.add(new BasicNameValuePair("methodToCall", "requestItem"));
+		if (doc.select("#newNeedBeforeDate").size() > 0) {
+			nameValuePairs.add(new BasicNameValuePair("newNeedBeforeDate", doc
+					.select("#newNeedBeforeDate").val()));
+		}
+		if (doc.select("select[name=location] option").size() > 0
+				&& selection == null) {
+			Elements options = doc.select("select[name=location] option");
+			ReservationResult res = new ReservationResult(
+					MultiStepResult.Status.SELECTION_NEEDED);
+			;
+			Map<String, String> optionsMap = new HashMap<String, String>();
+			for (Element option : options) {
+				optionsMap.put(option.attr("value"), option.text());
+			}
+			res.setSelection(optionsMap);
+			res.setMessage(doc.select("label[for=location]").text());
+			reusehtml_reservation = html;
+			return res;
+		} else if (selection != null) {
+			nameValuePairs.add(new BasicNameValuePair("location", selection));
+			reusehtml_reservation = null;
+		}
+
+		html = httpPost(opac_url + "/requestItem.do", new UrlEncodedFormEntity(
+				nameValuePairs), ENCODING);
+		doc = Jsoup.parse(html);
+		if (doc.select(".message-confirm").size() > 0)
+			return new ReservationResult(MultiStepResult.Status.OK);
+		else if (doc.select(".alert").size() > 0)
+			return new ReservationResult(MultiStepResult.Status.ERROR, doc
+					.select(".alert").text());
+		else
+			return new ReservationResult(MultiStepResult.Status.ERROR);
 	}
 
 	@Override
