@@ -26,4 +26,10 @@
     <string name="prolonging_impossible">nicht verlängerbar</string>
     <string name="prolonging_waiting">noch nicht verlängerbar</string>
     <string name="wrong_account_data">Die eingegebenen Benutzerdaten sind falsch.</string>
+    <string name="order">Sortierung</string>
+    <string name="order_default">Standardsortierung</string>
+    <string name="order_year_asc">Nach Erscheinungsjahr (aufsteigend)</string>
+    <string name="order_category_asc">Nach Mediengruppe (aufsteigend)</string>
+    <string name="order_year_desc">Nach Erscheinungsjahr (absteigend)</string>
+    <string name="order_category_desc">Nach Mediengruppe (absteigend)</string>
 </resources>

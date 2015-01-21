@@ -224,10 +224,4 @@ We might know your library ID then, but not your password, and we will take care
   <string name="other">Other</string>
   <string name="source">Source Code</string>
   <string name="loading_libraries">Loading library list...</string>
-  <string name="order">Sort order</string>
-  <string name="order_default">Default order</string>
-  <string name="order_year_asc">By year (descending)</string>
-  <string name="order_category_asc">By category (ascending)</string>
-  <string name="order_year_desc">By year (descending)</string>
-  <string name="order_category_desc">By category (descending)</string>
 </resources>
