@@ -303,7 +303,7 @@ public class BiBer1992 extends BaseApi {
 	@Override
 	public void init(Library lib) {
 		super.init(lib);
-		http_client = HTTPClient.getNewHttpClient(lib);
+		http_client = HTTPClient.getNewHttpClient(lib.getData().has("customssl"));
 
 		m_data = lib.getData();
 

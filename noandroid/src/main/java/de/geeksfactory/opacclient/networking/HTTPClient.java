@@ -51,30 +51,29 @@ import org.apache.http.protocol.HttpContext;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Paths;
 import java.security.KeyStore;
 
-import de.geeksfactory.opacclient.OpacClient;
-import de.geeksfactory.opacclient.R;
-
 public class HTTPClient {
-	
-	public static KeyStore trustStore = null;
 
 	public static DefaultHttpClient getNewHttpClient(boolean customssl) {
 		DefaultHttpClient hc = null;
 		if (customssl) {
 			try {
-				if (trustStore == null) {
-					trustStore = KeyStore.getInstance("BKS");
-	
-					final InputStream in = OpacClient.context.getResources()
-							.openRawResource(R.raw.ssl_trust_store);
-					try {
-						trustStore.load(in,
-								"ro5eivoijeeGohsh0daequoo5Zeepaen".toCharArray());
-					} finally {
-						in.close();
-					}
+				final KeyStore trustStore = KeyStore.getInstance("BKS");
+				InputStream in;
+				try {
+					in = Files.newInputStream(Paths.get("../res/raw/ssl_trust_store.bks"));
+				} catch (NoSuchFileException e) {
+					in = Files.newInputStream(Paths.get("../opacclient/res/raw/ssl_trust_store.bks"));
+				}
+				try {
+					trustStore.load(in,
+							"ro5eivoijeeGohsh0daequoo5Zeepaen".toCharArray());
+				} finally {
+					in.close();
 				}
 
 				SSLSocketFactory sf = new AdditionalKeyStoresSSLSocketFactory(
@@ -102,8 +101,7 @@ public class HTTPClient {
 		}
 		RedirectHandler customRedirectHandler = new HTTPClient.CustomRedirectHandler();
 		hc.setRedirectHandler(customRedirectHandler);
-		HttpProtocolParams.setUserAgent(hc.getParams(), "OpacApp/"
-				+ OpacClient.versionName);
+		HttpProtocolParams.setUserAgent(hc.getParams(), "OpacApp/Test");
 		return hc;
 	}
 

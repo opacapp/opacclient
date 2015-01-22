@@ -84,7 +84,7 @@ public abstract class BaseApi implements OpacApi {
 	 */
 	@Override
 	public void init(Library library) {
-		http_client = HTTPClient.getNewHttpClient(library);
+		http_client = HTTPClient.getNewHttpClient(library.getData().has("customssl"));
 		this.library = library;
 		stringProvider = new DummyStringProvider();
 	}
