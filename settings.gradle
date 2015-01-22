@@ -1,1 +1,1 @@
-include ':opacclient'
+include ':opacclient', ':libopac', ':tests', ':meaningdetector'

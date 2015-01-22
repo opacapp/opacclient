@@ -8,7 +8,10 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/libopac" />
+            <option value="$PROJECT_DIR$/meaningdetector" />
             <option value="$PROJECT_DIR$/opacclient" />
+            <option value="$PROJECT_DIR$/tests" />
           </set>
         </option>
       </GradleProjectSettings>

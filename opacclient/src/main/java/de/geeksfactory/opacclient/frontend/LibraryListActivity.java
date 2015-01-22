@@ -1,20 +1,6 @@
 package de.geeksfactory.opacclient.frontend;
 
-import java.io.IOException;
-import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
-import org.acra.ACRA;
-
 import android.annotation.TargetApi;
-import android.app.Notification;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
@@ -48,6 +34,20 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
+
+import org.acra.ACRA;
+
+import java.io.IOException;
+import java.text.Collator;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.Account;
