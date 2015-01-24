@@ -6,4 +6,5 @@
     <dimen name="drawer_width">280dp</dimen>
     <dimen name="tablet_padding">16dp</dimen>
 	<dimen name="tablet_padding_or_zero">0dp</dimen>
+    <dimen name="padding_status_bar">0dp</dimen>
 </resources>

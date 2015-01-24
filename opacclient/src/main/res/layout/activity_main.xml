@@ -31,7 +31,7 @@
         android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:paddingTop="24dp"
+        android:paddingTop="@dimen/padding_status_bar"
         android:elevation="10dp"
         android:fitsSystemWindows="true"
         app:insetForeground="#4000">
