@@ -28,6 +28,7 @@ dependencies {
     }
     compile 'ch.acra:acra:4.5.0'
     compile 'org.jsoup:jsoup:1.8.1'
+    compile 'com.github.machinarius:preferencefragment:0.1.1'
     compile 'com.android.support:support-v4:21.+'
     compile 'com.android.support:appcompat-v7:21.+'
     compile files('libs/adapter-1.0.1.jar')
