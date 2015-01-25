@@ -1,15 +1,19 @@
 package de.geeksfactory.opacclient.frontend;
 
-import java.io.InterruptedIOException;
-
-import org.acra.ACRA;
-
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+
+import org.acra.ACRA;
+
+import java.io.InterruptedIOException;
+
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
@@ -109,16 +113,16 @@ public class SearchResultListActivity extends OpacActivity implements
 	 * indicating that the item with the given ID was selected.
 	 */
 	@Override
-	public void onItemSelected(int nr, String id, int pageToLoad) {
+	public void onItemSelected(int nr, String id, int pageToLoad, View coverView) {
 		if ((app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING) == 0
 				&& pageToLoad != listFragment.getLastLoadedPage()) {
-			new ReloadOldPageTask().execute(app, pageToLoad, nr, id);
+			new ReloadOldPageTask().execute(app, pageToLoad, nr, id, coverView);
 		} else {
-			showDetail(nr, id);
+			showDetail(nr, id, coverView);
 		}
 	}
 
-	public void showDetail(int nr, String id) {
+	public void showDetail(int nr, String id, View coverView) {
 		if (mTwoPane) {
 			// In two-pane mode, show the detail view in this activity by
 			// adding or replacing the detail fragment using a
@@ -143,7 +147,8 @@ public class SearchResultListActivity extends OpacActivity implements
 			if (id != null)
 				detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
 						id);
-			startActivity(detailIntent);
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, coverView, getString(R.string.transition_cover));
+			ActivityCompat.startActivity(this, detailIntent, options.toBundle());
 		}
 	}
 
@@ -163,6 +168,7 @@ public class SearchResultListActivity extends OpacActivity implements
 		String id;
 		Integer page;
 		Exception exception;
+        View coverView;
 
 		@Override
 		protected void onPreExecute() {
@@ -174,6 +180,7 @@ public class SearchResultListActivity extends OpacActivity implements
 			page = (Integer) arg0[1];
 			nr = (Integer) arg0[2];
 			id = (String) arg0[3];
+            coverView = (View) arg0[4];
 			OpacClient app = (OpacClient) arg0[0];
 
 			try {
@@ -215,7 +222,7 @@ public class SearchResultListActivity extends OpacActivity implements
 			} else {
 				// Everything ran correctly, show Detail
 				listFragment.setLastLoadedPage(page);
-				showDetail(nr, id);
+				showDetail(nr, id, coverView);
 			}
 		}
 	}

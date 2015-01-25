@@ -93,6 +93,9 @@ public class SearchResultListFragment extends CustomListFragment {
 
 	protected SearchStartTask st;
 
+    protected LinearLayout progressContainer;
+    protected FrameLayout errorView;
+
 	/**
 	 * A callback interface that all activities containing this fragment must
 	 * implement. This mechanism allows activities to be notified of item
@@ -104,7 +107,7 @@ public class SearchResultListFragment extends CustomListFragment {
 		 * 
 		 * @param nr
 		 */
-		public void onItemSelected(int nr, String id, int pageToLoad);
+		public void onItemSelected(int nr, String id, int pageToLoad, View coverView);
 
 		public boolean isTwoPane();
 	}
@@ -115,7 +118,7 @@ public class SearchResultListFragment extends CustomListFragment {
 	 */
 	private static Callbacks sDummyCallbacks = new Callbacks() {
 		@Override
-		public void onItemSelected(int nr, String id, int pageToLoad) {
+		public void onItemSelected(int nr, String id, int pageToLoad, View coverView) {
 		}
 
 		public boolean isTwoPane() {
@@ -160,6 +163,10 @@ public class SearchResultListFragment extends CustomListFragment {
 		setRetainInstance(true);
 		setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_searchresult_list, container, false);
+        progressContainer = (LinearLayout) view
+                .findViewById(R.id.progressContainer);
+        errorView = (FrameLayout) view.findViewById(
+                R.id.error_view);
         setupIds(view);
 		return view;
 	}
@@ -271,7 +278,7 @@ public class SearchResultListFragment extends CustomListFragment {
 		// fragment is attached to one) that an item has been selected.
 		mCallbacks.onItemSelected(searchresult.getResults().get(position)
 				.getNr(), searchresult.getResults().get(position).getId(),
-				searchresult.getResults().get(position).getPage());
+				searchresult.getResults().get(position).getPage(), view.findViewById(R.id.ivType));
 
 	}
 
@@ -376,10 +383,6 @@ public class SearchResultListFragment extends CustomListFragment {
 	public void showConnectivityError(String description) {
 		if (getView() == null || getActivity() == null)
 			return;
-		final LinearLayout progressContainer = (LinearLayout) getView()
-				.findViewById(R.id.progressContainer);
-		final FrameLayout errorView = (FrameLayout) getView().findViewById(
-				R.id.error_view);
 		errorView.removeAllViews();
 		View connError = getActivity().getLayoutInflater().inflate(
 				R.layout.error_connectivity, errorView);

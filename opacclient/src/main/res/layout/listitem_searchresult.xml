@@ -14,7 +14,8 @@
         android:layout_marginRight="10dip"
         android:gravity="center"
         android:contentDescription="@string/mediatype"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/ic_launcher"
+        android:transitionName="@string/transition_cover" />
 
     <ImageView
         android:id="@+id/ivStatus"
