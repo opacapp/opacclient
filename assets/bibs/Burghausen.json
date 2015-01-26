@@ -1,0 +1,50 @@
+{
+    "account_supported": true,
+    "api": "bibliotheca",
+    "city": "Burghausen",
+    "country": "Deutschland",
+    "data": {
+        "accounttable": {
+            "author": 0,
+            "barcode": 3,
+            "prolongurl": 4,
+            "returndate": 2,
+            "title": 1
+        },
+        "baseurl": "http://62.156.141.146/wwwopac",
+        "copiestable": {
+            "barcode": 0,
+            "branch": 4,
+            "department": 2,
+            "location": 1,
+            "returndate": 5,
+            "status": 3
+        },
+        "information": "http://www.burghausen.de/unsere-stadt/kulturstadt/stadtbibliothek.html",
+        "mediatypes": {
+            "Spiele.gif": "BOARDGAME",
+            "biblioload.gif": "EBOOK",
+            "cdkl.gif": "CD",
+            "mCasetteS.gif": "AUDIO_CASSETTE",
+            "mDVDS.gif": "DVD",
+            "mFilmS.gif": "MOVIE",
+            "mMusikCDS.gif": "CD",
+            "mNoten1S.gif": "SCORE_MUSIC",
+            "multimedia.gif": "UNKNOWN",
+            "weihnachten.jpg": "UNKNOWN",
+            "zeitung.gif": "NEWSPAPER"
+        },
+        "reservationtable": {
+            "author": 0,
+            "availability": 2,
+            "cancelurl": 3,
+            "title": 1
+        }
+    },
+    "geo": [
+        48.1725613,
+        12.8310753
+    ],
+    "state": "Bayern",
+    "title": "Stadtbibliothek"
+}
