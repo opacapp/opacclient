@@ -131,7 +131,7 @@ class Bibliotheca(Api):
                 continue
             key = conf.split("#")[0].lower()
 
-            if key == 'buchungsnr':
+            if key in ('exemplarnr', 'buchungsnr'):
                 data['accounttable']['barcode'] = i_acc
                 i_acc += 1
             elif key == 'verf':

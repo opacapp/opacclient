@@ -65,6 +65,12 @@ public interface StringProvider {
 	public static String PROLONGING_IMPOSSIBLE = "prolonging_impossible";
 	public static String PROLONGING_EXPIRED = "prolonging_expired";
 	public static String PROLONGING_WAITING = "prolonging_expired";
+	public static String ORDER = "order";
+	public static String ORDER_DEFAULT = "order_default";
+	public static String ORDER_YEAR_ASC = "order_year_asc";
+	public static String ORDER_CATEGORY_ASC = "order_category_asc";
+	public static String ORDER_YEAR_DESC = "order_year_desc";
+	public static String ORDER_CATEGORY_DESC = "order_category_desc";
 
 	/**
 	 * Returns the translated string identified by identifier

@@ -263,6 +263,7 @@ public class AccountEditActivity extends ActionBarActivity {
 		protected Exception doInBackground(Account... params) {
 			try {
 				OpacApi api = ((OpacClient) getApplication()).getNewApi(lib);
+				api.start();
 				api.checkAccountData(account);
 			} catch (IOException e) {
 				return e;

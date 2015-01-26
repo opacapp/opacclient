@@ -38,6 +38,8 @@ import java.net.SocketException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +48,18 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.i18n.StringProvider;
@@ -75,6 +89,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 	protected String CSId;
 	protected String identifier;
 	protected String reusehtml;
+	protected String reusehtml_reservation;
 	protected int resultcount = 10;
 
 	protected long logged_in;
@@ -663,6 +678,26 @@ public class TouchPoint extends BaseApi implements OpacApi {
 			}
 		}
 
+		// Reservation Info, only works if the code above could find a URL
+		if (!"".equals(copiesParameter)) {
+			String reservationParameter = copiesParameter.replace(
+					"showHoldings", "showDocument");
+			try {
+				String reservationHtml = httpGet(opac_url + "/"
+						+ reservationParameter, ENCODING);
+				Document reservationDoc = Jsoup.parse(reservationHtml);
+				reservationDoc.setBaseUri(opac_url);
+				if (reservationDoc.select("a").size() == 1) {
+					result.setReservable(true);
+					result.setReservation_info(reservationDoc.select("a")
+							.first().attr("abs:href"));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				// fail silently
+			}
+		}
+
 		// TODO: Volumes
 
 		try {
@@ -699,13 +734,113 @@ public class TouchPoint extends BaseApi implements OpacApi {
 	@Override
 	public ReservationResult reservation(DetailledItem item, Account acc,
 			int useraction, String selection) throws IOException {
-		return null;
+		if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
+				|| logged_in_as == null) {
+			try {
+				login(acc);
+			} catch (OpacErrorException e) {
+				return new ReservationResult(MultiStepResult.Status.ERROR,
+						e.getMessage());
+			}
+		} else if (logged_in_as.getId() != acc.getId()) {
+			try {
+				login(acc);
+			} catch (OpacErrorException e) {
+				return new ReservationResult(MultiStepResult.Status.ERROR,
+						e.getMessage());
+			}
+		}
+		String html;
+		if (reusehtml_reservation != null)
+			html = reusehtml_reservation;
+		else
+			html = httpGet(item.getReservation_info(), ENCODING);
+		Document doc = Jsoup.parse(html);
+		if (doc.select(".message-error").size() > 0) {
+			return new ReservationResult(MultiStepResult.Status.ERROR, doc
+					.select(".message-error").first().text());
+		}
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs
+				.add(new BasicNameValuePair("methodToCall", "requestItem"));
+		if (doc.select("#newNeedBeforeDate").size() > 0) {
+			nameValuePairs.add(new BasicNameValuePair("newNeedBeforeDate", doc
+					.select("#newNeedBeforeDate").val()));
+		}
+		if (doc.select("select[name=location] option").size() > 0
+				&& selection == null) {
+			Elements options = doc.select("select[name=location] option");
+			ReservationResult res = new ReservationResult(
+					MultiStepResult.Status.SELECTION_NEEDED);
+			;
+			Map<String, String> optionsMap = new HashMap<String, String>();
+			for (Element option : options) {
+				optionsMap.put(option.attr("value"), option.text());
+			}
+			res.setSelection(optionsMap);
+			res.setMessage(doc.select("label[for=location]").text());
+			reusehtml_reservation = html;
+			return res;
+		} else if (selection != null) {
+			nameValuePairs.add(new BasicNameValuePair("location", selection));
+			reusehtml_reservation = null;
+		}
+
+		html = httpPost(opac_url + "/requestItem.do", new UrlEncodedFormEntity(
+				nameValuePairs), ENCODING);
+		doc = Jsoup.parse(html);
+		if (doc.select(".message-confirm").size() > 0)
+			return new ReservationResult(MultiStepResult.Status.OK);
+		else if (doc.select(".alert").size() > 0)
+			return new ReservationResult(MultiStepResult.Status.ERROR, doc
+					.select(".alert").text());
+		else
+			return new ReservationResult(MultiStepResult.Status.ERROR);
 	}
 
 	@Override
 	public ProlongResult prolong(String a, Account account, int useraction,
 			String Selection) throws IOException {
-		return null;
+		if (!initialised)
+			start();
+		if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
+				|| logged_in_as == null) {
+			try {
+				account(account);
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return new ProlongResult(MultiStepResult.Status.ERROR);
+			} catch (OpacErrorException e) {
+				return new ProlongResult(MultiStepResult.Status.ERROR,
+						e.getMessage());
+			}
+		} else if (logged_in_as.getId() != account.getId()) {
+			try {
+				account(account);
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return new ProlongResult(MultiStepResult.Status.ERROR);
+			} catch (OpacErrorException e) {
+				return new ProlongResult(MultiStepResult.Status.ERROR,
+						e.getMessage());
+			}
+		}
+		// We have to call the page we found the link originally on first
+		httpGet(opac_url
+				+ "/userAccount.do?methodToCall=showAccount&accountTyp=loaned",
+				ENCODING);
+		// TODO: Check that the right media is prolonged (the links are
+		// index-based and the sorting could change)
+		String html = httpGet(opac_url + "/renewal.do?" + a, ENCODING);
+		Document doc = Jsoup.parse(html);
+		if (doc.select(".message-confirm").size() > 0) {
+			return new ProlongResult(MultiStepResult.Status.OK);
+		} else if (doc.select(".alert").size() > 0) {
+			return new ProlongResult(MultiStepResult.Status.ERROR, doc
+					.select(".alert").first().text());
+		} else {
+			return new ProlongResult(MultiStepResult.Status.ERROR);
+		}
 	}
 
 	@Override
@@ -718,12 +853,219 @@ public class TouchPoint extends BaseApi implements OpacApi {
 	public AccountData account(Account acc) throws IOException,
 			NotReachableException, JSONException, SocketException,
 			OpacErrorException {
-		return null;
+		start();
+		if (!login(acc))
+			return null;
+		AccountData adata = new AccountData(acc.getId());
+		// Lent media
+		String html = httpGet(opac_url + "/userAccount.do?methodToCall=start",
+				ENCODING);
+		html = httpGet(opac_url
+				+ "/userAccount.do?methodToCall=showAccount&accountTyp=loaned",
+				ENCODING);
+		List<Map<String, String>> lent = new ArrayList<Map<String, String>>();
+		Document doc = Jsoup.parse(html);
+		doc.setBaseUri(opac_url);
+		parse_medialist(lent, doc);
+		if (doc.select(".pagination").size() > 0) {
+			Element pagination = doc.select(".pagination").first();
+			Elements pages = pagination.select("a");
+			for (int i = 0; i < pages.size(); i++) {
+				html = httpGet(pages.get(i).attr("abs:href"), ENCODING);
+				doc = Jsoup.parse(html);
+				parse_medialist(lent, doc);
+			}
+		}
+		adata.setLent(lent);
+
+		// Reserved media
+		html = httpGet(
+				opac_url
+						+ "/userAccount.do?methodToCall=showAccount&accountTyp=requested",
+				ENCODING);
+		doc = Jsoup.parse(html);
+		doc.setBaseUri(opac_url);
+		List<Map<String, String>> requested = new ArrayList<Map<String, String>>();
+		parse_reslist(requested, doc);
+		if (doc.select(".pagination").size() > 0) {
+			Element pagination = doc.select(".pagination").first();
+			Elements pages = pagination.select("a");
+			for (int i = 0; i < pages.size(); i++) {
+				html = httpGet(pages.get(i).attr("abs:href"), ENCODING);
+				doc = Jsoup.parse(html);
+				parse_reslist(requested, doc);
+			}
+		}
+		adata.setReservations(requested);
+
+		// Fees
+		if (doc.select("#fees").size() > 0) {
+			String text = doc.select("#fees").first().text().trim();
+			if (text.matches("Geb.+hren[^\\(]+\\(([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr)\\)")) {
+				text = text
+						.replaceAll(
+								"Geb.+hren[^\\(]+\\(([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr)\\)",
+								"$1 $2");
+				adata.setPendingFees(text);
+			}
+		}
+
+		return adata;
+	}
+
+	private void parse_medialist(List<Map<String, String>> medien, Document doc) {
+		doc.setBaseUri(opac_url);
+		Elements copytrs = doc.select(".data tr");
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
+
+		int trs = copytrs.size();
+		if (trs == 1)
+			return;
+		assert (trs > 0);
+		for (int i = 1; i < trs; i++) {
+			Element tr = copytrs.get(i);
+			Map<String, String> e = new HashMap<String, String>();
+
+			if (tr.text().contains("keine Daten")) {
+				return;
+			}
+			e.put(AccountData.KEY_LENT_TITLE, tr.child(2).select("b, strong")
+					.text().trim());
+			try {
+				e.put(AccountData.KEY_LENT_AUTHOR,
+						tr.child(2).html().split("<br[ /]*>")[1].trim());
+
+				String[] col3split = tr.child(3).html().split("<br[ /]*>");
+				String frist = col3split[0].trim();
+				if (frist.contains("-"))
+					frist = frist.split("-")[1].trim();
+				e.put(AccountData.KEY_LENT_DEADLINE, frist);
+				if (col3split.length > 1)
+					e.put(AccountData.KEY_LENT_BRANCH, col3split[1].trim());
+
+				if (!frist.equals("")) {
+					try {
+						e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String
+								.valueOf(sdf.parse(
+										e.get(AccountData.KEY_LENT_DEADLINE))
+										.getTime()));
+					} catch (ParseException e1) {
+						e1.printStackTrace();
+					}
+				}
+
+				if (tr.select("a").size() > 0) {
+					for (Element link : tr.select("a")) {
+						String href = link.attr("abs:href");
+						Map<String, String> hrefq = getQueryParamsFirst(href);
+						if (hrefq.get("methodToCall").equals("renewal")) {
+							e.put(AccountData.KEY_LENT_LINK,
+									href.split("\\?")[1]);
+							e.put(AccountData.KEY_LENT_RENEWABLE, "Y");
+							break;
+						}
+					}
+				}
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
+			medien.add(e);
+		}
+	}
+
+	protected void parse_reslist(List<Map<String, String>> reservations,
+			Document doc) throws ClientProtocolException, IOException {
+		Elements copytrs = doc.select(".data tr");
+		doc.setBaseUri(opac_url);
+		int trs = copytrs.size();
+		if (trs == 1)
+			return;
+		assert (trs > 0);
+		for (int i = 1; i < trs; i++) {
+			Element tr = copytrs.get(i);
+			Map<String, String> e = new HashMap<String, String>();
+
+			if (tr.text().contains("keine Daten") || tr.children().size() == 1) {
+				return;
+			}
+
+			e.put(AccountData.KEY_RESERVATION_TITLE,
+					tr.child(2).select("b, strong").text().trim());
+			try {
+				String[] rowsplit2 = tr.child(2).html().split("<br[ /]*>");
+				String[] rowsplit3 = tr.child(3).html().split("<br[ /]*>");
+				if (rowsplit2.length > 1)
+					e.put(AccountData.KEY_RESERVATION_AUTHOR,
+							rowsplit2[1].trim());
+
+				if (rowsplit3.length > 2)
+					e.put(AccountData.KEY_RESERVATION_BRANCH,
+							rowsplit3[2].trim());
+
+				if (rowsplit3.length > 2)
+					e.put(AccountData.KEY_RESERVATION_READY,
+							rowsplit3[0].trim());
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
+			reservations.add(e);
+		}
+	}
+
+	protected boolean login(Account acc) throws OpacErrorException {
+		String html;
+
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+
+		try {
+			html = httpGet(opac_url + "/login.do", ENCODING);
+		} catch (ClientProtocolException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+
+			e1.printStackTrace();
+		}
+
+		nameValuePairs.add(new BasicNameValuePair("username", acc.getName()));
+		nameValuePairs
+				.add(new BasicNameValuePair("password", acc.getPassword()));
+		nameValuePairs.add(new BasicNameValuePair("CSId", CSId));
+		nameValuePairs.add(new BasicNameValuePair("methodToCall", "submit"));
+		nameValuePairs.add(new BasicNameValuePair("login_action", "Login"));
+		try {
+			html = httpPost(opac_url + "/login.do", new UrlEncodedFormEntity(
+					nameValuePairs), ENCODING);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return false;
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		Document doc = Jsoup.parse(html);
+
+		if (doc.getElementsByClass("alert").size() > 0) {
+			throw new OpacErrorException(doc.getElementsByClass("alert").get(0)
+					.text());
+		}
+
+		logged_in = System.currentTimeMillis();
+		logged_in_as = acc;
+
+		return true;
 	}
 
 	@Override
 	public boolean isAccountSupported(Library library) {
-		return false;
+		return library.isAccountSupported();
 	}
 
 	@Override
@@ -782,6 +1124,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 	@Override
 	public void checkAccountData(Account account) throws IOException,
 			JSONException, OpacErrorException {
+		login(account);
 	}
 
 	@Override

@@ -1,12 +1,11 @@
 {
     "account_supported": true,
-    "api": "sisis",
+    "api": "touchpoint",
     "city": "Chemnitz",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://opac.stadtbibliothek-chemnitz.de/webOPACClient",
-        "information": "http://www.stadtbibliothek-chemnitz.de/service-auskunft/oeffnungszeiten.html",
-        "startparams": "Login=opsb"
+        "baseurl": "https://opac2.stadtbibliothek-chemnitz.de/TouchPoint",
+        "information": "http://www.stadtbibliothek-chemnitz.de/service-auskunft/oeffnungszeiten.html"
     },
     "geo": [
         50.827845,

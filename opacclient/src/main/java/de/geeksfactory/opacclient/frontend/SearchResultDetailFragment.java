@@ -1184,6 +1184,7 @@ public class SearchResultDetailFragment extends Fragment {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
+					app.setAccount(accounts.get(position).getId());
 					bookingDo();
 					adialog.dismiss();
 				}
