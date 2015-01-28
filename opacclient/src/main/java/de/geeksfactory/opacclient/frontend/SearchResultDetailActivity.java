@@ -2,6 +2,7 @@ package de.geeksfactory.opacclient.frontend;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+
 import de.geeksfactory.opacclient.R;
 
 /**
@@ -16,8 +17,8 @@ import de.geeksfactory.opacclient.R;
 public class SearchResultDetailActivity extends OpacActivity implements SearchResultDetailFragment.Callbacks {
 
 	SearchResultDetailFragment detailFragment;
-	
-	@Override
+
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -41,14 +42,17 @@ public class SearchResultDetailActivity extends OpacActivity implements SearchRe
 					SearchResultDetailFragment.ARG_ITEM_NR,
 					getIntent().getIntExtra(
 							SearchResultDetailFragment.ARG_ITEM_NR, 0));
-			if(getIntent().getStringExtra(
-					SearchResultDetailFragment.ARG_ITEM_ID) != null)
-				arguments.putString(
-						SearchResultDetailFragment.ARG_ITEM_ID,
+            if (getIntent().hasExtra(
+                    SearchResultDetailFragment.ARG_ITEM_ID))
+                arguments.putString(
+                        SearchResultDetailFragment.ARG_ITEM_ID,
 						getIntent().getStringExtra(
 								SearchResultDetailFragment.ARG_ITEM_ID));
-			detailFragment = new SearchResultDetailFragment();
-			detailFragment.setArguments(arguments);
+            if (getIntent().hasExtra(SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP)) {
+                arguments.putParcelable(SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP, getIntent().getParcelableExtra(SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP));
+            }
+            detailFragment = new SearchResultDetailFragment();
+            detailFragment.setArguments(arguments);
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.searchresult_detail_container, detailFragment).commit();
 		}
@@ -56,7 +60,7 @@ public class SearchResultDetailActivity extends OpacActivity implements SearchRe
 
 	@Override
 	public void removeFragment() {
-		finish();
+		supportFinishAfterTransition();
 	}
 
 	@Override
@@ -67,7 +71,7 @@ public class SearchResultDetailActivity extends OpacActivity implements SearchRe
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() ==  android.R.id.home) {
-			finish();
+            supportFinishAfterTransition();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

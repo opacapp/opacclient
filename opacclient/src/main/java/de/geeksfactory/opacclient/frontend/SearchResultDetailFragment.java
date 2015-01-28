@@ -1,13 +1,5 @@
 package de.geeksfactory.opacclient.frontend;
 
-import java.io.InterruptedIOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.util.List;
-import java.util.Map;
-
-import org.acra.ACRA;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -41,6 +33,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.acra.ACRA;
+
+import java.io.InterruptedIOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
+
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
@@ -70,8 +70,9 @@ public class SearchResultDetailFragment extends Fragment {
 	public static final String ARG_ITEM_ID = "item_id";
 
 	public static final String ARG_ITEM_NR = "item_nr";
+    public static final String ARG_ITEM_COVER_BITMAP = "item_cover_bitmap";
 
-	/**
+    /**
 	 * The detailled item that this fragment represents.
 	 */
 	private DetailledItem item;
@@ -131,7 +132,6 @@ public class SearchResultDetailFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 
 		setRetainInstance(true);
-
 		if (getArguments().containsKey(ARG_ITEM_ID)
 				|| getArguments().containsKey(ARG_ITEM_NR)) {
 			// Load the dummy content specified by the fragment
@@ -148,7 +148,7 @@ public class SearchResultDetailFragment extends Fragment {
 		if (view != null) {
 			ProgressBar progress = (ProgressBar) view
 					.findViewById(R.id.progress);
-			View content = view.findViewById(R.id.rootView);
+			View content = view.findViewById(R.id.detailsLayout);
 
 			if (show) {
 				if (animate) {
@@ -264,6 +264,13 @@ public class SearchResultDetailFragment extends Fragment {
 		setHasOptionsMenu(true);
 		setRetainInstance(true);
 		setProgress();
+
+        ImageView iv = (ImageView) view.findViewById(R.id.ivCover);
+        if (getArguments().containsKey(ARG_ITEM_COVER_BITMAP)) {
+            iv.setVisibility(View.VISIBLE);
+            iv.setImageBitmap((Bitmap) getArguments().getParcelable(ARG_ITEM_COVER_BITMAP));
+        }
+
 		return rootView;
 	}
 

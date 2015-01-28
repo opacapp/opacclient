@@ -48,53 +48,58 @@
                 android:scaleType="fitCenter"
                 android:visibility="gone"
                 android:transitionName="@string/transition_cover" />
-
-            <TextView
-                android:id="@+id/tvDetails"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/ivCover"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="8dp"
-                android:drawableBottom="@drawable/section_header"
-                android:drawablePadding="4dp"
-                android:paddingLeft="4dp"
-                android:text="@string/details_head"
-                android:textAllCaps="true"
-                android:textColor="@color/emphasis"
-                android:textSize="14sp" />
-
-            <LinearLayout
-                android:id="@+id/llDetails"
+            <RelativeLayout
+                android:id="@+id/detailsLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tvDetails"
-                android:orientation="vertical" >
-            </LinearLayout>
+                android:layout_below="@id/ivCover">
+                <TextView
+                    android:id="@+id/tvDetails"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="8dp"
+                    android:drawableBottom="@drawable/section_header"
+                    android:drawablePadding="4dp"
+                    android:paddingLeft="4dp"
+                    android:text="@string/details_head"
+                    android:textAllCaps="true"
+                    android:textColor="@color/emphasis"
+                    android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/tvCopies"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/llDetails"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="8dp"
-                android:drawableBottom="@drawable/section_header"
-                android:drawablePadding="4dp"
-                android:paddingLeft="4dp"
-                android:text="@string/copies_head"
-                android:textAllCaps="true"
-                android:textColor="@color/emphasis"
-                android:textSize="14sp" />
+                <LinearLayout
+                    android:id="@+id/llDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvDetails"
+                    android:orientation="vertical" >
+                </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/llCopies"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tvCopies"
-                android:divider="@drawable/list_divider_material"
-                android:orientation="vertical" >
-            </LinearLayout>
+                <TextView
+                    android:id="@+id/tvCopies"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/llDetails"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="8dp"
+                    android:drawableBottom="@drawable/section_header"
+                    android:drawablePadding="4dp"
+                    android:paddingLeft="4dp"
+                    android:text="@string/copies_head"
+                    android:textAllCaps="true"
+                    android:textColor="@color/emphasis"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:id="@+id/llCopies"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvCopies"
+                    android:divider="@drawable/list_divider_material"
+                    android:orientation="vertical" >
+                </LinearLayout>
+            </RelativeLayout>
         </RelativeLayout>
     </ScrollView>    
 </FrameLayout>

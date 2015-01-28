@@ -104,10 +104,8 @@ public class SearchResultListFragment extends CustomListFragment {
 	public interface Callbacks {
 		/**
 		 * Callback for when an item has been selected.
-		 * 
-		 * @param nr
 		 */
-		public void onItemSelected(int nr, String id, int pageToLoad, View coverView);
+		public void onItemSelected(SearchResult result, View coverView);
 
 		public boolean isTwoPane();
 	}
@@ -118,7 +116,7 @@ public class SearchResultListFragment extends CustomListFragment {
 	 */
 	private static Callbacks sDummyCallbacks = new Callbacks() {
 		@Override
-		public void onItemSelected(int nr, String id, int pageToLoad, View coverView) {
+		public void onItemSelected(SearchResult result, View coverView) {
 		}
 
 		public boolean isTwoPane() {
@@ -276,9 +274,7 @@ public class SearchResultListFragment extends CustomListFragment {
 
 		// Notify the active callbacks interface (the activity, if the
 		// fragment is attached to one) that an item has been selected.
-		mCallbacks.onItemSelected(searchresult.getResults().get(position)
-				.getNr(), searchresult.getResults().get(position).getId(),
-				searchresult.getResults().get(position).getPage(), view.findViewById(R.id.ivType));
+		mCallbacks.onItemSelected(searchresult.getResults().get(position), view.findViewById(R.id.ivType));
 
 	}
 

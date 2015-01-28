@@ -3,6 +3,7 @@ package de.geeksfactory.opacclient.frontend;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.view.Menu;
@@ -22,6 +23,7 @@ import de.geeksfactory.opacclient.SSLSecurityException;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
+import de.geeksfactory.opacclient.objects.SearchResult;
 
 /**
  * An activity representing a list of SearchResults. This activity has different
@@ -57,6 +59,7 @@ public class SearchResultListActivity extends OpacActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		// Show the Up button in the action bar.
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -113,24 +116,24 @@ public class SearchResultListActivity extends OpacActivity implements
 	 * indicating that the item with the given ID was selected.
 	 */
 	@Override
-	public void onItemSelected(int nr, String id, int pageToLoad, View coverView) {
+	public void onItemSelected(SearchResult result, View coverView) {
 		if ((app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING) == 0
-				&& pageToLoad != listFragment.getLastLoadedPage()) {
-			new ReloadOldPageTask().execute(app, pageToLoad, nr, id, coverView);
+				&& result.getPage() != listFragment.getLastLoadedPage()) {
+			new ReloadOldPageTask().execute(app, result, coverView);
 		} else {
-			showDetail(nr, id, coverView);
+			showDetail(result, coverView);
 		}
 	}
 
-	public void showDetail(int nr, String id, View coverView) {
+	public void showDetail(SearchResult res, View coverView) {
 		if (mTwoPane) {
 			// In two-pane mode, show the detail view in this activity by
 			// adding or replacing the detail fragment using a
 			// fragment transaction.
 			Bundle arguments = new Bundle();
-			arguments.putInt(SearchResultDetailFragment.ARG_ITEM_NR, nr);
-			if (id != null)
-				arguments.putString(SearchResultDetailFragment.ARG_ITEM_ID, id);
+			arguments.putInt(SearchResultDetailFragment.ARG_ITEM_NR, res.getNr());
+			if (res.getId() != null)
+				arguments.putString(SearchResultDetailFragment.ARG_ITEM_ID, res.getId());
 			detailFragment = new SearchResultDetailFragment();
 			detailFragment.setArguments(arguments);
 			getSupportFragmentManager()
@@ -143,12 +146,17 @@ public class SearchResultListActivity extends OpacActivity implements
 			// for the selected item ID.
 			Intent detailIntent = new Intent(this,
 					SearchResultDetailActivity.class);
-			detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_NR, nr);
-			if (id != null)
+			detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_NR, res.getNr());
+			if (res.getId() != null)
 				detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
-						id);
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, coverView, getString(R.string.transition_cover));
-			ActivityCompat.startActivity(this, detailIntent, options.toBundle());
+						res.getId());
+            if (res.getCoverBitmap() != null) {
+                detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP, (Parcelable) res.getCoverBitmap());
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, coverView, getString(R.string.transition_cover));
+                ActivityCompat.startActivity(this, detailIntent, options.toBundle());
+            } else {
+                startActivity(detailIntent);
+            }
 		}
 	}
 
@@ -164,9 +172,7 @@ public class SearchResultListActivity extends OpacActivity implements
 	}
 
 	public class ReloadOldPageTask extends OpacTask<SearchRequestResult> {
-		int nr;
-		String id;
-		Integer page;
+		SearchResult searchResult;
 		Exception exception;
         View coverView;
 
@@ -177,14 +183,12 @@ public class SearchResultListActivity extends OpacActivity implements
 
 		@Override
 		protected SearchRequestResult doInBackground(Object... arg0) {
-			page = (Integer) arg0[1];
-			nr = (Integer) arg0[2];
-			id = (String) arg0[3];
-            coverView = (View) arg0[4];
+			searchResult = (SearchResult) arg0[1];
+            coverView = (View) arg0[2];
 			OpacClient app = (OpacClient) arg0[0];
 
 			try {
-				SearchRequestResult res = app.getApi().searchGetPage(page);
+				SearchRequestResult res = app.getApi().searchGetPage(searchResult.getPage());
 				return res;
 			} catch (java.net.UnknownHostException e) {
 				exception = e;
@@ -221,8 +225,8 @@ public class SearchResultListActivity extends OpacActivity implements
 				}
 			} else {
 				// Everything ran correctly, show Detail
-				listFragment.setLastLoadedPage(page);
-				showDetail(nr, id, coverView);
+				listFragment.setLastLoadedPage(searchResult.getPage());
+				showDetail(searchResult, coverView);
 			}
 		}
 	}
