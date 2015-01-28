@@ -21,11 +21,6 @@
  */
 package de.geeksfactory.opacclient.frontend;
 
-import java.io.InterruptedIOException;
-
-import org.acra.ACRA;
-
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,6 +28,11 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+
+import org.acra.ACRA;
+
+import java.io.InterruptedIOException;
+
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
