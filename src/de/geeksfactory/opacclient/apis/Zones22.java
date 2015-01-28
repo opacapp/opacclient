@@ -598,9 +598,12 @@ public class Zones22 extends BaseApi {
 		if (doc.select("#MainForm select").size() > 0) {
 			ReservationResult res = new ReservationResult(
 					ReservationResult.Status.SELECTION_NEEDED);
-			Map<String, String> sel = new HashMap<String, String>();
+			List<Map<String, String>> sel = new ArrayList<Map<String, String>>();
 			for (Element opt : doc.select("#MainForm select option")) {
-				sel.put(opt.attr("value"), opt.text().trim());
+				Map<String, String> selopt = new HashMap<String, String>();
+				selopt.put("key", opt.attr("value"));
+				selopt.put("value", opt.text().trim());
+				sel.add(selopt);
 			}
 			res.setSelection(sel);
 			res.setMessage("Bitte Zweigstelle auswählen");

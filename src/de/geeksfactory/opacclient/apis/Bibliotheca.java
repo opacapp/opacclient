@@ -663,7 +663,7 @@ public class Bibliotheca extends BaseApi {
 				}
 			}
 			if (doc.select("select[name=" + branch_inputfield + "]").size() > 0) {
-				Map<String, String> branches = new HashMap<String, String>();
+				List<Map<String, String>> branches = new ArrayList<Map<String, String>>();
 				for (Element option : doc
 						.select("select[name=" + branch_inputfield + "]")
 						.first().children()) {
@@ -674,7 +674,10 @@ public class Bibliotheca extends BaseApi {
 					} else {
 						key = value;
 					}
-					branches.put(key, value);
+					Map<String, String> selopt = new HashMap<String, String>();
+					selopt.put("key", key);
+					selopt.put("value", value);
+					branches.add(selopt);
 				}
 				ReservationResult result = new ReservationResult(
 						MultiStepResult.Status.SELECTION_NEEDED);

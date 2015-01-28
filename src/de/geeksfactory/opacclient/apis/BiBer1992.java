@@ -753,12 +753,14 @@ public class BiBer1992 extends BaseApi {
 					.val().length() > 4;
 			Elements optionsElements = doc.select("select[name=ID1] option");
 			if (optionsElements.size() > 0) {
-				Map<String, String> options = new HashMap<String, String>();
+				List<Map<String, String>> options = new ArrayList<Map<String, String>>();
 				for (Element option : optionsElements) {
 					if ("0".equals(option.attr("value")))
 						continue;
-					options.put(option.attr("value") + ":" + option.text(),
-							option.text());
+					Map<String, String> selopt = new HashMap<String, String>();
+					selopt.put("key", option.attr("value") + ":" + option.text());
+					selopt.put("value", option.text());
+					options.add(selopt);
 				}
 				if (options.size() > 1) {
 					ReservationResult res = new ReservationResult(
@@ -767,8 +769,7 @@ public class BiBer1992 extends BaseApi {
 					res.setSelection(options);
 					return res;
 				} else {
-					return reservation(item, account, useraction, options
-							.keySet().iterator().next());
+					return reservation(item, account, useraction, options.get(0).get("key"));
 				}
 			} else {
 				ReservationResult res = new ReservationResult(

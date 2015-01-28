@@ -595,10 +595,12 @@ public class Pica extends BaseApi implements OpacApi {
 					ReservationResult res = new ReservationResult(
 							MultiStepResult.Status.SELECTION_NEEDED);
 					res.setActionIdentifier(ReservationResult.ACTION_BRANCH);
-					Map<String, String> selections = new HashMap<String, String>();
+					List<Map<String, String>> selections = new ArrayList<Map<String, String>>();
 					for (int i = 0; i < json.length(); i++) {
-						selections.put(String.valueOf(i), json.getJSONObject(i)
-								.getString("desc"));
+						Map<String, String> selopt = new HashMap<String, String>();
+						selopt.put("key", String.valueOf(i));
+						selopt.put("value", json.getJSONObject(i).getString("desc"));
+						selections.add(selopt);
 					}
 					res.setSelection(selections);
 					return res;
@@ -614,7 +616,7 @@ public class Pica extends BaseApi implements OpacApi {
 							.select("table[summary=list of volumes header] tr:has(input[type=radio])");
 
 					if (trs.size() > 0) {
-						Map<String, String> selections = new HashMap<String, String>();
+						List<Map<String, String>> selections = new ArrayList<Map<String, String>>();
 						for (Element tr : trs) {
 							JSONObject values = new JSONObject();
 							for (Element input : doc1
@@ -624,7 +626,10 @@ public class Pica extends BaseApi implements OpacApi {
 							}
 							values.put(tr.select("input").attr("name"), tr
 									.select("input").attr("value"));
-							selections.put(values.toString(), tr.text());
+							Map<String, String> selopt = new HashMap<String, String>();
+							selopt.put("key", values.toString());
+							selopt.put("value", tr.text());
+							selections.add(selopt);
 						}
 
 						ReservationResult res = new ReservationResult(
