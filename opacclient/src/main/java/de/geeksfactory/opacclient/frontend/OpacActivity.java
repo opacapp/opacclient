@@ -47,6 +47,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -599,6 +600,8 @@ public abstract class OpacActivity extends ActionBarActivity {
 		if (isTablet()) {
 			findViewById(R.id.content_frame_right).setVisibility(
 					active ? View.VISIBLE : View.GONE);
+            findViewById(R.id.twopane_wrapper).getLayoutParams().width = active ? LinearLayout.LayoutParams.MATCH_PARENT :
+                    getResources().getDimensionPixelSize(R.dimen.single_pane_max_width);
 		}
 	}
 

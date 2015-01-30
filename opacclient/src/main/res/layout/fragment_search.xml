@@ -21,15 +21,12 @@
         android:id="@+id/scroll"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:orientation="vertical"
-        android:paddingLeft="@dimen/tablet_padding_or_zero"
-        android:paddingRight="@dimen/tablet_padding_or_zero" >
+        android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/rlOuter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/tablet_panel_bg"
             android:orientation="vertical" >
 
             <RelativeLayout

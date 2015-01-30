@@ -12,25 +12,32 @@
         android:orientation="vertical">
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
-            android:layout_height="wrap_content"
+            android:layout_height="168dp"
             android:layout_width="match_parent"
-            android:minHeight="?attr/actionBarSize"
+            android:gravity="top"
             android:background="?attr/colorPrimary"
             android:elevation="4dp"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
         <LinearLayout
+            android:id="@+id/twopane_wrapper"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="-96dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_gravity="center_horizontal"
             android:baselineAligned="false"
             android:divider="?dividerHorizontal"
             android:orientation="horizontal"
-            android:showDividers="middle">
+            android:showDividers="middle"
+            android:elevation="8dp"
+            android:background="@drawable/popup_bg">
             <FrameLayout
                 android:id="@+id/content_frame"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1" >
+                android:layout_weight="1">
             </FrameLayout>
             <FrameLayout
                 android:id="@+id/content_frame_right"

@@ -39,8 +39,8 @@
                 android:orientation="vertical"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:paddingLeft="@dimen/tablet_padding"
-                android:paddingRight="@dimen/tablet_padding"  >
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"  >
 
                 <TextView
                     android:id="@+id/tvAccLabel"
@@ -145,8 +145,8 @@
                 android:layout_below="@id/tvWarning"
                 android:baselineAligned="false"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/tablet_padding"
-                android:paddingRight="@dimen/tablet_padding" >
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp" >
 
                 <RelativeLayout
                     android:id="@+id/rlLent"
