@@ -16,8 +16,8 @@
     <string name="osl">Lizenzhinweise</string>
     <string name="thanks">Mitautoren und Danksagungen</string>
     <string name="developer_settings">Entwickler-Einstellungen</string>
-    <string name="details_head">DETAILS</string>
-    <string name="copies_head">EXEMPLARE</string>
+    <string name="details_head">Details</string>
+    <string name="copies_head">Exemplare</string>
     <string name="ret">Rückgabe</string>
     <string name="res">Vorbestellt</string>
     <string name="tocollection">Zum Gesamtwerk</string>
@@ -30,8 +30,8 @@
     <string name="pending_fees">Ausstehende Gebühren:</string>
     <string name="valid_until">Ausweis gültig bis:</string>
     <string name="no_warranty">Alle Angaben ohne Gewähr.</string>
-    <string name="entl_head">ENTLIEHEN</string>
-    <string name="reservations_head">VORBESTELLUNGEN</string>
+    <string name="entl_head">Entliehen</string>
+    <string name="reservations_head">Vorbestellungen</string>
     <string name="entl_none">Keine Medien entliehen</string>
     <string name="reservations_none">Keine Medien vorbestellt</string>
     <string name="cancel_confirm">Vorbestellung wirklich entfernen?</string>

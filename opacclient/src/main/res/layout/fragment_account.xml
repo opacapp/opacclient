@@ -152,13 +152,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:layout_marginTop="8dp"
-                        android:drawableBottom="@drawable/section_header"
-                        android:drawablePadding="4dp"
                         android:paddingLeft="4dp"
                         android:text="@string/entl_head"
-                        android:textAllCaps="true"
-                        android:textColor="@color/emphasis"
-                        android:textSize="14sp" />
+                        android:textColor="@color/secondary_text_default_material_light"
+                        android:textSize="14sp"
+                        android:fontFamily="@string/fontFamily_medium"/>
 
                     <LinearLayout
                         android:id="@+id/llLent"
@@ -175,13 +173,11 @@
                         android:layout_below="@id/llLent"
                         android:layout_marginBottom="10dp"
                         android:layout_marginTop="8dp"
-                        android:drawableBottom="@drawable/section_header"
-                        android:drawablePadding="4dp"
                         android:paddingLeft="4dp"
                         android:text="@string/reservations_head"
-                        android:textAllCaps="true"
-                        android:textColor="@color/emphasis"
-                        android:textSize="14sp" />
+                        android:textColor="@color/secondary_text_default_material_light"
+                        android:textSize="14sp"
+                        android:fontFamily="@string/fontFamily_medium" />
 
                     <LinearLayout
                         android:id="@+id/llReservations"
