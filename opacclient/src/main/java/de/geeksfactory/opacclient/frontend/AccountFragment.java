@@ -21,24 +21,6 @@
  */
 package de.geeksfactory.opacclient.frontend;
 
-import java.io.IOException;
-import java.io.InterruptedIOException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.acra.ACRA;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.NoHttpResponseException;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
@@ -52,11 +34,11 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -73,6 +55,25 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.acra.ACRA;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.NoHttpResponseException;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.io.InterruptedIOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.OpacTask;
@@ -122,6 +123,8 @@ public class AccountFragment extends Fragment implements
 	protected View view;
 	private boolean supported = true;
 
+    private SwipeRefreshLayout swipeRefreshLayout;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -129,6 +132,15 @@ public class AccountFragment extends Fragment implements
 		view = inflater.inflate(R.layout.fragment_account, container, false);
 		app = (OpacClient) getActivity().getApplication();
 		account = app.getAccount();
+
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        swipeRefreshLayout.setColorSchemeResources(R.color.primary_red);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+            }
+        });
 
 		if (getActivity().getIntent().getExtras() != null) {
 			if (getActivity().getIntent().getExtras()
@@ -177,28 +189,6 @@ public class AccountFragment extends Fragment implements
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.activity_account, menu);
-		if (getActivity() != null
-				&& menu.findItem(R.id.action_refresh) != null) {
-			if (refreshing) {
-				// We want it to look as good as possible everywhere
-				if (Build.VERSION.SDK_INT >= 14) {
-					menu.findItem(R.id.action_refresh).setActionView(
-							R.layout.actionbar_loading_indicator);
-                    getActivity().setProgressBarIndeterminateVisibility(false);
-                } else {
-					menu.findItem(R.id.action_refresh).setVisible(false);
-                    getActivity().setProgressBarIndeterminateVisibility(true);
-				}
-			} else {
-				if (Build.VERSION.SDK_INT >= 14) {
-					menu.findItem(R.id.action_refresh).setActionView(null);
-                    getActivity().setProgressBarIndeterminateVisibility(false);
-				} else {
-					menu.findItem(R.id.action_refresh).setVisible(true);
-                    getActivity().setProgressBarIndeterminateVisibility(false);
-				}
-			}
-		}
 		if ((app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ACCOUNT_PROLONG_ALL) != 0) {
 			menu.findItem(R.id.action_prolong_all).setVisible(true);
 		} else {
@@ -234,7 +224,7 @@ public class AccountFragment extends Fragment implements
 		((FrameLayout) view.findViewById(R.id.error_view)).removeAllViews();
 		view.findViewById(R.id.llLoading).setVisibility(View.VISIBLE);
 
-		refreshing = false;
+		setRefreshing(false);
 		supported = true;
 
 		this.account = app.getAccount();
@@ -351,31 +341,26 @@ public class AccountFragment extends Fragment implements
 			}
 			adatasource.close();
 		}
-
-		if (getActivity() != null)
-			getActivity().supportInvalidateOptionsMenu();
 	}
 
-	public void refresh() {
+    public void refresh() {
 
-		if ((!app.getApi().isAccountSupported(app.getLibrary()) && (app
-				.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ACCOUNT_EXTENDABLE) == 0)
-				|| !app.getApi().isAccountSupported(app.getLibrary())
-				|| account.getPassword() == null
-				|| account.getPassword().equals("null")
-				|| account.getPassword().equals("")
-				|| account.getName() == null
-				|| account.getName().equals("null")
-				|| account.getName().equals("")) {
-			return;
-		}
+        if ((!app.getApi().isAccountSupported(app.getLibrary()) && (app
+                .getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ACCOUNT_EXTENDABLE) == 0)
+                || !app.getApi().isAccountSupported(app.getLibrary())
+                || account.getPassword() == null
+                || account.getPassword().equals("null")
+                || account.getPassword().equals("")
+                || account.getName() == null
+                || account.getName().equals("null")
+                || account.getName().equals("")) {
+            return;
+        }
 
-		refreshing = true;
-
-		getActivity().supportInvalidateOptionsMenu();
-		lt = new LoadTask();
-		lt.execute(app);
-	}
+        setRefreshing(true);
+        lt = new LoadTask();
+        lt.execute(app);
+    }
 
 	protected void cancel(final String a) {
 		long age = System.currentTimeMillis() - refreshtime;
@@ -561,7 +546,12 @@ public class AccountFragment extends Fragment implements
 		}
 	}
 
-	public class SendTask extends AsyncTask<Object, Object, Integer> {
+    public void setRefreshing(boolean refreshing) {
+        this.refreshing = refreshing;
+        swipeRefreshLayout.setRefreshing(refreshing);
+    }
+
+    public class SendTask extends AsyncTask<Object, Object, Integer> {
 
 		@Override
 		protected Integer doInBackground(Object... arg0) {
@@ -677,9 +667,7 @@ public class AccountFragment extends Fragment implements
 			if (exception == null && result != null) {
 				loaded(result);
 			} else {
-				refreshing = false;
-				if (getActivity() != null)
-					getActivity().supportInvalidateOptionsMenu();
+				setRefreshing(false);
 
 				show_connectivity_error(exception);
 			}
@@ -756,9 +744,7 @@ public class AccountFragment extends Fragment implements
 		if (result.getAccount() == account.getId()) {
 			// The account this data is for is still visible
 
-			refreshing = false;
-			if (getActivity() != null)
-				getActivity().supportInvalidateOptionsMenu();
+			setRefreshing(false);
 
 			refreshtime = System.currentTimeMillis();
 
