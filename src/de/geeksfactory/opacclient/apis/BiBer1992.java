@@ -689,6 +689,11 @@ public class BiBer1992 extends BaseApi {
 										text = "";
 								}
 							}
+							if (copy_keys[j]
+									.equals(DetailledItem.KEY_COPY_RESERVATIONS)) {
+								text = text.replace("Vorgemerkt: ", "")
+										.replace("Vorbestellt: ", "");
+							}
 							e.put(copy_keys[j], text);
 						}
 					}
