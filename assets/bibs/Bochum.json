@@ -14,7 +14,7 @@
             "status": 8,
             "title": 7
         },
-        "baseurl": "http://www.stadtbuecherei-bochum.de",
+        "baseurl": "https://stadtbuecherei.bochum.de",
         "information": "http://www.bochum.de/stadtbuecherei",
         "mediatypes": {
             "1": "BOOK",

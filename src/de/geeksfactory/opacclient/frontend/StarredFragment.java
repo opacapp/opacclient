@@ -107,10 +107,12 @@ public class StarredFragment extends Fragment implements
 					List<SearchField> fields = new JsonSearchFieldDataSource(
 							app).getSearchFields(app.getLibrary().getIdent());
 					if (fields != null) {
+						SearchField title_field = null, free_field = null;
 						for (SearchField field : fields) {
 							if (field.getMeaning() == Meaning.TITLE) {
-								query.add(new SearchQuery(field, item
-										.getTitle()));
+								title_field = field;
+							} else if (field.getMeaning() == Meaning.FREE) {
+								free_field = field;
 							} else if (field.getMeaning() == Meaning.HOME_BRANCH) {
 								query.add(new SearchQuery(field, sp.getString(
 										OpacClient.PREF_HOME_BRANCH_PREFIX
@@ -118,6 +120,12 @@ public class StarredFragment extends Fragment implements
 										null)));
 							}
 						}
+						if (title_field != null)
+							query.add(new SearchQuery(title_field, item
+									.getTitle()));
+						else if (free_field != null)
+							query.add(new SearchQuery(free_field, item
+									.getTitle()));
 						app.startSearch(getActivity(), query);
 					} else {
 						Toast.makeText(getActivity(), R.string.no_search_cache,
