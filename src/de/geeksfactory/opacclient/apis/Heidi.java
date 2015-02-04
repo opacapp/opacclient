@@ -556,11 +556,14 @@ public class Heidi extends BaseApi implements OpacApi {
 						new UrlEncodedFormEntity(nameValuePairs), ENCODING);
 				doc = Jsoup.parse(html);
 			} else {
-				Map<String, String> options = new HashMap<String, String>();
+				List<Map<String, String>> options = new ArrayList<Map<String, String>>();
 				for (Element input : doc.select("input[name=ort]")) {
 					Element label = doc.select("label[for=" + input.id() + "]")
 							.first();
-					options.put(input.attr("value"), label.text());
+					Map<String, String> selopt = new HashMap<String, String>();
+					selopt.put("key", input.attr("value"));
+					selopt.put("value", label.text());
+					options.add(selopt);
 				}
 				ReservationResult res = new ReservationResult(
 						MultiStepResult.Status.SELECTION_NEEDED);

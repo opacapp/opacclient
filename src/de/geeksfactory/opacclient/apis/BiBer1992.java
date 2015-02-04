@@ -104,6 +104,8 @@ public class BiBer1992 extends BaseApi {
 
 	protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
 
+	protected boolean newStyleReservations = false;
+
 	static {
 	}
 
@@ -254,7 +256,7 @@ public class BiBer1992 extends BaseApi {
 		if (imagename.contains("amazon")) {
 			sr.setCover(imagename);
 		}
-		
+
 		if (m_data.has("mediatypes")) {
 			try {
 				String typeStr = m_data.getJSONObject("mediatypes").getString(
@@ -746,11 +748,19 @@ public class BiBer1992 extends BaseApi {
 					+ "/reserv.C?LANG=de&FUNC=" + func + "&" + id,
 					getDefaultEncoding());
 			Document doc = Jsoup.parse(html);
+			newStyleReservations = doc
+					.select("input[name=" + resinfo.replace("resF_", "") + "]")
+					.val().length() > 4;
 			Elements optionsElements = doc.select("select[name=ID1] option");
 			if (optionsElements.size() > 0) {
-				Map<String, String> options = new HashMap<String, String>();
+				List<Map<String, String>> options = new ArrayList<Map<String, String>>();
 				for (Element option : optionsElements) {
-					options.put(option.attr("value") + ":" + option.text(), option.text());
+					if ("0".equals(option.attr("value")))
+						continue;
+					Map<String, String> selopt = new HashMap<String, String>();
+					selopt.put("key", option.attr("value") + ":" + option.text());
+					selopt.put("value", option.text());
+					options.add(selopt);
 				}
 				if (options.size() > 1) {
 					ReservationResult res = new ReservationResult(
@@ -759,8 +769,7 @@ public class BiBer1992 extends BaseApi {
 					res.setSelection(options);
 					return res;
 				} else {
-					return reservation(item, account, useraction, options
-							.keySet().iterator().next());
+					return reservation(item, account, useraction, options.get(0).get("key"));
 				}
 			} else {
 				ReservationResult res = new ReservationResult(
@@ -779,9 +788,14 @@ public class BiBer1992 extends BaseApi {
 			nameValuePairs.add(new BasicNameValuePair("FUNC", "vors"));
 			if (m_opac_dir.equals("opax"))
 				nameValuePairs.add(new BasicNameValuePair(resinfo.replace(
-						"resF_", ""), "vors" + resinfo.replace("resF_", "")));
-			nameValuePairs.add(new BasicNameValuePair("ID11", selection.split(":")[1]));
-			nameValuePairs.add(new BasicNameValuePair("ID1", selection.split(":")[0]));
+						"resF_", ""), "vors"
+						+ (newStyleReservations ? resinfo.replace("resF_", "")
+								: "")));
+			if (newStyleReservations)
+				nameValuePairs.add(new BasicNameValuePair("ID11", selection
+						.split(":")[1]));
+			nameValuePairs.add(new BasicNameValuePair("ID1", selection
+					.split(":")[0]));
 
 			String html = httpPost(m_opac_url + "/" + m_opac_dir
 					+ "/setreserv.C", new UrlEncodedFormEntity(nameValuePairs),
@@ -1256,7 +1270,7 @@ public class BiBer1992 extends BaseApi {
 	@Override
 	public void setLanguage(String language) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

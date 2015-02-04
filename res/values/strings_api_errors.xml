@@ -26,4 +26,10 @@
   <string name="prolonging_impossible">renewal not possible</string>
   <string name="prolonging_waiting">not yet renewable</string>
   <string name="wrong_account_data">The user data you entered is wrong.</string>
+  <string name="order">Sort order</string>
+  <string name="order_default">Default order</string>
+  <string name="order_year_asc">By year (descending)</string>
+  <string name="order_category_asc">By category (ascending)</string>
+  <string name="order_year_desc">By year (descending)</string>
+  <string name="order_category_desc">By category (descending)</string>
 </resources>

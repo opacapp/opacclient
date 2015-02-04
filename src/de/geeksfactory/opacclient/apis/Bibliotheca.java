@@ -72,6 +72,7 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
+import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
 
 /**
  * OpacApi implementation for Bibliotheca Web Opacs, originally developed by
@@ -191,6 +192,39 @@ public class Bibliotheca extends BaseApi {
 				}
 			}
 		}
+		
+		List<Map<String, String>> dropdownValues = new ArrayList<Map<String, String>>();
+		Map<String, String> valueMap = new HashMap<String, String>();
+		valueMap.put("key", "1");
+		valueMap.put("value",
+				stringProvider.getString(StringProvider.ORDER_DEFAULT));
+		dropdownValues.add(valueMap);
+		valueMap = new HashMap<String, String>();
+		valueMap.put("key", "2:desc");
+		valueMap.put("value",
+				stringProvider.getString(StringProvider.ORDER_YEAR_DESC));
+		dropdownValues.add(valueMap);
+		valueMap = new HashMap<String, String>();
+		valueMap.put("key", "2:asc");
+		valueMap.put("value",
+				stringProvider.getString(StringProvider.ORDER_YEAR_ASC));
+		dropdownValues.add(valueMap);
+		valueMap = new HashMap<String, String>();
+		valueMap.put("key", "3:desc");
+		valueMap.put("value",
+				stringProvider.getString(StringProvider.ORDER_CATEGORY_DESC));
+		dropdownValues.add(valueMap);
+		valueMap = new HashMap<String, String>();
+		valueMap.put("key", "3:asc");
+		valueMap.put("value",
+				stringProvider.getString(StringProvider.ORDER_CATEGORY_ASC));
+		dropdownValues.add(valueMap);
+		DropdownSearchField orderField = new DropdownSearchField("orderselect",
+				stringProvider.getString(StringProvider.ORDER), false,
+				dropdownValues);
+		orderField.setMeaning(Meaning.ORDER);
+		fields.add(orderField);
+		
 		return fields;
 	}
 
@@ -286,7 +320,15 @@ public class Bibliotheca extends BaseApi {
 							stringProvider
 									.getString(StringProvider.COMBINATION_NOT_SUPPORTED));
 			}
-			nameValuePairs.add(new BasicNameValuePair(key, query.getValue()));
+			if (key.equals("orderselect") && query.getValue().contains(":")) {
+				nameValuePairs.add(new BasicNameValuePair("orderselect", query
+						.getValue().split(":")[0]));
+				nameValuePairs.add(new BasicNameValuePair("order", query
+						.getValue().split(":")[1]));
+			} else {
+				nameValuePairs
+						.add(new BasicNameValuePair(key, query.getValue()));
+			}
 			if (query.getSearchField().getData() != null) {
 				JSONObject data = query.getSearchField().getData();
 				if (data.has("additional_params")) {
@@ -621,7 +663,7 @@ public class Bibliotheca extends BaseApi {
 				}
 			}
 			if (doc.select("select[name=" + branch_inputfield + "]").size() > 0) {
-				Map<String, String> branches = new HashMap<String, String>();
+				List<Map<String, String>> branches = new ArrayList<Map<String, String>>();
 				for (Element option : doc
 						.select("select[name=" + branch_inputfield + "]")
 						.first().children()) {
@@ -632,7 +674,10 @@ public class Bibliotheca extends BaseApi {
 					} else {
 						key = value;
 					}
-					branches.put(key, value);
+					Map<String, String> selopt = new HashMap<String, String>();
+					selopt.put("key", key);
+					selopt.put("value", value);
+					branches.add(selopt);
 				}
 				ReservationResult result = new ReservationResult(
 						MultiStepResult.Status.SELECTION_NEEDED);
