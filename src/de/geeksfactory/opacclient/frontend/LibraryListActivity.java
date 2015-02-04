@@ -30,7 +30,6 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
@@ -71,8 +70,6 @@ public class LibraryListActivity extends Activity {
 
 	protected SearchView searchView;
 	protected MenuItem searchItem;
-
-	protected final Handler handler = new Handler();
 
 	@Override
 	protected void onPause() {
@@ -691,18 +688,36 @@ public class LibraryListActivity extends Activity {
 	}
 
 	protected class LoadLibrariesTask extends
-			AsyncTask<OpacClient, Void, List<Library>> {
+			AsyncTask<OpacClient, Double, List<Library>> {
+		private long startTime;
+		private int progressUpdateCount = 0;
+
 		@Override
-		protected void onPreExecute() {
-			// Show ProgressDialog only if loading takes longer than 500ms
-			handler.postDelayed(pdRunnable, 500);
+		protected void onProgressUpdate(Double... progress) {
+			if (progressUpdateCount == 0) {
+				startTime = System.currentTimeMillis();
+			} else if (progressUpdateCount == 1) {
+				double timeElapsed = System.currentTimeMillis() - startTime;
+				double expectedTime = timeElapsed / progress[0];
+				if (expectedTime > 300) {
+					dialog = ProgressDialog.show(LibraryListActivity.this, "",
+							getString(R.string.loading_libraries), true, false);
+					dialog.show();
+				}
+			}
+			progressUpdateCount ++;
 		}
 
 		@Override
 		protected List<Library> doInBackground(OpacClient... arg0) {
 			OpacClient app = arg0[0];
 			try {
-				return app.getLibraries();
+				return app.getLibraries(new OpacClient.ProgressCallback() {
+					@Override
+					public void publishProgress(double progress) {
+						LoadLibrariesTask.this.publishProgress(progress);
+					}
+				});
 			} catch (IOException e) {
 				ACRA.getErrorReporter().handleException(e);
 				return null;
@@ -712,7 +727,6 @@ public class LibraryListActivity extends Activity {
 		@Override
 		protected void onPostExecute(List<Library> result) {
 			libraries = result;
-			handler.removeCallbacks(pdRunnable);
 			if (dialog != null)
 				dialog.dismiss();
 
@@ -728,15 +742,6 @@ public class LibraryListActivity extends Activity {
 				showListCountries(false);
 			}
 		}
-
-		final Runnable pdRunnable = new Runnable() {
-			@Override
-			public void run() {
-				dialog = ProgressDialog.show(LibraryListActivity.this, "",
-						getString(R.string.loading_libraries), true, false);
-				dialog.show();
-			}
-		};
 	}
 
 }
