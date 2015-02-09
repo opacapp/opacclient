@@ -57,7 +57,8 @@ public class StarContentProvider extends ContentProvider {
 
 	private static Mime getTypeMime(Uri uri) {
 		if (!AUTHORITY.equals(uri.getAuthority())
-				&& !uri.getAuthority().startsWith("de.opacapp.")) {
+				&& !uri.getAuthority().startsWith("de.opacapp.")
+				&& !uri.getAuthority().startsWith("net.opacapp.")) {
 			return null;
 		}
 		List<String> segments = uri.getPathSegments();
