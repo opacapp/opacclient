@@ -698,10 +698,14 @@ public class Adis extends BaseApi implements OpacApi {
 				details.add(new String[] { doc.select("#F23").text() });
 				res.setDetails(details);
 			} else if (doc.select("#AUSGAB_1").size() > 0 && selection == null) {
-				Map<String, String> sel = new HashMap<String, String>();
+				List<Map<String, String>> sel = new ArrayList<Map<String,String>>();
 				for (Element opt : doc.select("#AUSGAB_1 option")) {
-					if (opt.text().trim().length() > 0)
-						sel.put(opt.val(), opt.text());
+					if (opt.text().trim().length() > 0) {
+						Map<String, String> selopt = new HashMap<String, String>();
+						selopt.put("key", opt.val());
+						selopt.put("value", opt.text());
+						sel.add(selopt);
+					}
 				}
 				res = new ReservationResult(
 						MultiStepResult.Status.SELECTION_NEEDED, doc.select(

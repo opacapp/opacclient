@@ -1076,7 +1076,7 @@ public class SISIS extends BaseApi implements OpacApi {
 				doc = Jsoup.parse(html);
 			}
 			if (doc.select("input[name=" + branch_inputfield + "]").size() > 0) {
-				Map<String, String> branches = new HashMap<String, String>();
+				List<Map<String, String>> branches = new ArrayList<Map<String, String>>();
 				for (Element option : doc
 						.select("input[name=" + branch_inputfield + "]")
 						.first().parent().parent().parent().select("td")) {
@@ -1084,7 +1084,10 @@ public class SISIS extends BaseApi implements OpacApi {
 						continue;
 					String value = option.text().trim();
 					String key = option.select("input").val();
-					branches.put(key, value);
+					Map<String, String> selopt = new HashMap<String, String>();
+					selopt.put("key", key);
+					selopt.put("value", value);
+					branches.add(selopt);
 				}
 				ReservationResult result = new ReservationResult(
 						MultiStepResult.Status.SELECTION_NEEDED);

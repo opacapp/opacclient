@@ -1,5 +1,6 @@
 package de.geeksfactory.opacclient.frontend;
 
+import java.util.Map;
 import java.util.Map.Entry;
 
 import android.app.Activity;
@@ -209,8 +210,7 @@ public class MultiStepResultHelper {
 		View view = inflater.inflate(R.layout.dialog_simple_list, null, false);
 
 		ListView lv = (ListView) view.findViewById(R.id.lvBibs);
-		final Object[] possibilities = result.getSelection().entrySet()
-				.toArray();
+		final Object[] possibilities = result.getSelection().toArray();
 
 		lv.setAdapter(new SelectionAdapter(context, possibilities));
 		lv.setOnItemClickListener(new OnItemClickListener() {
@@ -220,8 +220,8 @@ public class MultiStepResultHelper {
 				adialog.dismiss();
 
 				doStep(result.getActionIdentifier(),
-						((Entry<String, Object>) possibilities[position])
-								.getKey());
+						((Map<String, String>) possibilities[position])
+								.get("key"));
 			}
 		});
 
@@ -264,8 +264,8 @@ public class MultiStepResultHelper {
 				return view;
 			}
 
-			String item = ((Entry<String, Object>) objects[position])
-					.getValue().toString();
+			String item = ((Map<String, String>) objects[position])
+					.get("value").toString();
 
 			if (contentView == null) {
 				LayoutInflater layoutInflater = (LayoutInflater) getContext()

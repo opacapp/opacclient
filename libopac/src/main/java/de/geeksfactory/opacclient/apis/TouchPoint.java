@@ -772,10 +772,12 @@ public class TouchPoint extends BaseApi implements OpacApi {
 			Elements options = doc.select("select[name=location] option");
 			ReservationResult res = new ReservationResult(
 					MultiStepResult.Status.SELECTION_NEEDED);
-			;
-			Map<String, String> optionsMap = new HashMap<String, String>();
+			List<Map<String, String>> optionsMap = new ArrayList<Map<String, String>>();
 			for (Element option : options) {
-				optionsMap.put(option.attr("value"), option.text());
+				Map<String, String> selopt = new HashMap<String, String>();
+				selopt.put("key", option.attr("value"));
+				selopt.put("value", option.text());
+				optionsMap.add(selopt);
 			}
 			res.setSelection(optionsMap);
 			res.setMessage(doc.select("label[for=location]").text());
