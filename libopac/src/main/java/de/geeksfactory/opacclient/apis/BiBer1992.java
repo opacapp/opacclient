@@ -61,6 +61,7 @@ import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
 import de.geeksfactory.opacclient.objects.SearchResult.Status;
+import de.geeksfactory.opacclient.searchfields.BarcodeSearchField;
 import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
@@ -341,7 +342,8 @@ public class BiBer1992 extends BaseApi {
 		m_nameValuePairs.clear();
 		int count = 1;
 		for (SearchQuery query : queryList) {
-			if (query.getSearchField() instanceof TextSearchField
+			if ((query.getSearchField() instanceof TextSearchField || query
+					.getSearchField() instanceof BarcodeSearchField)
 					&& !query.getValue().equals("")) {
 				m_nameValuePairs.add(new BasicNameValuePair("CNN" + count,
 						"AND"));
@@ -687,6 +689,11 @@ public class BiBer1992 extends BaseApi {
 										text = "";
 								}
 							}
+							if (copy_keys[j]
+									.equals(DetailledItem.KEY_COPY_RESERVATIONS)) {
+								text = text.replace("Vorgemerkt: ", "")
+										.replace("Vorbestellt: ", "");
+							}
 							e.put(copy_keys[j], text);
 						}
 					}
@@ -753,12 +760,14 @@ public class BiBer1992 extends BaseApi {
 					.val().length() > 4;
 			Elements optionsElements = doc.select("select[name=ID1] option");
 			if (optionsElements.size() > 0) {
-				Map<String, String> options = new HashMap<String, String>();
+				List<Map<String, String>> options = new ArrayList<Map<String, String>>();
 				for (Element option : optionsElements) {
 					if ("0".equals(option.attr("value")))
 						continue;
-					options.put(option.attr("value") + ":" + option.text(),
-							option.text());
+					Map<String, String> selopt = new HashMap<String, String>();
+					selopt.put("key", option.attr("value") + ":" + option.text());
+					selopt.put("value", option.text());
+					options.add(selopt);
 				}
 				if (options.size() > 1) {
 					ReservationResult res = new ReservationResult(
@@ -767,8 +776,7 @@ public class BiBer1992 extends BaseApi {
 					res.setSelection(options);
 					return res;
 				} else {
-					return reservation(item, account, useraction, options
-							.keySet().iterator().next());
+					return reservation(item, account, useraction, options.get(0).get("key"));
 				}
 			} else {
 				ReservationResult res = new ReservationResult(

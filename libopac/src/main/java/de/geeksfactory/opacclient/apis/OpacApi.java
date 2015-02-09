@@ -330,7 +330,7 @@ public interface OpacApi {
 		};
 
 		protected Status status;
-		protected Map<String, String> selection;
+		protected List<Map<String, String>> selection;
 		protected List<String[]> details;
 		protected int actionidentifier;
 		protected String message;
@@ -411,10 +411,11 @@ public interface OpacApi {
 		 * Get values the user should select one of if {@link #getStatus()} is
 		 * <code>SELECTION_NEEDED</code>.
 		 * 
-		 * @return ContentValue tuples with key to give back and value to show
-		 *         to the users.
+		 * @return A list of maps with the keys 'key' and 'value', where 'key' is what
+		 * is to be returned back to reservation() and the value is what is to be displayed
+		 * to the user. 
 		 */
-		public Map<String, String> getSelection() {
+		public List<Map<String, String>> getSelection() {
 			return selection;
 		}
 
@@ -427,7 +428,7 @@ public interface OpacApi {
 		 *            returned back to reservation() and the value is what is to
 		 *            be displayed to the user.
 		 */
-		public void setSelection(Map<String, String> selection) {
+		public void setSelection(List<Map<String, String>> selection) {
 			this.selection = selection;
 		}
 

@@ -276,7 +276,16 @@ public class OpacClient extends Application {
 
 	public static final String ASSETS_BIBSDIR = "bibs";
 
+	public interface ProgressCallback {
+		public void publishProgress(double progress);
+	}
+
 	public List<Library> getLibraries() throws IOException {
+		return getLibraries(null);
+	}
+
+	public List<Library> getLibraries(ProgressCallback callback)
+			throws IOException {
 		AssetManager assets = getAssets();
 		String[] files = assets.list(ASSETS_BIBSDIR);
 		int num = files.length;
@@ -308,6 +317,10 @@ public class OpacClient extends Application {
 				Log.w("JSON library files", "Failed parsing library "
 						+ files[i]);
 				e.printStackTrace();
+			}
+			if (callback != null && i % 100 == 0 && i > 0) {
+				// reporting progress for every 100 loaded files should be enough
+				callback.publishProgress(((double) i)/num);
 			}
 		}
 
