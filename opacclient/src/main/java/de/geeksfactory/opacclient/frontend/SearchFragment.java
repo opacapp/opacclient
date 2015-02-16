@@ -540,8 +540,12 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		task.execute();
 	}
 
-	public void go() {
-		app.startSearch(getActivity(), saveSearchQuery());
+    public void go() {
+        go(null);
+    }
+
+	public void go(Bundle bundle) {
+		app.startSearch(getActivity(), saveSearchQuery(), bundle);
 	}
 
 	public Map<String, String> saveQuery() {

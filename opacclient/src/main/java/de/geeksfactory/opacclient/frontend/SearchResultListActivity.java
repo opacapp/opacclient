@@ -152,7 +152,8 @@ public class SearchResultListActivity extends OpacActivity implements
 						res.getId());
             if (res.getCoverBitmap() != null) {
                 detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP, (Parcelable) res.getCoverBitmap());
-                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, coverView, getString(R.string.transition_cover));
+                ActivityOptionsCompat options = ActivityOptionsCompat
+                        .makeSceneTransitionAnimation(this, coverView, getString(R.string.transition_cover));
                 ActivityCompat.startActivity(this, detailIntent, options.toBundle());
             } else {
                 startActivity(detailIntent);

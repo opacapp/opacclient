@@ -31,6 +31,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewCompat;
@@ -343,36 +344,24 @@ public abstract class OpacActivity extends ActionBarActivity {
                 setFabVisible(true, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ((SearchFragment) fragment).go();
+                        ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation
+                                (v, Math.round(v.getX()), Math.round(v.getY()), v.getWidth(),
+                                        v.getHeight());
+                        ((SearchFragment) fragment).go(options.toBundle());
                     }
                 });
 			} else if (item.tag.equals("account")) {
 				fragment = new AccountFragment();
 				setTwoPane(false);
-                setFabVisible(false, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ((SearchFragment) fragment).go();
-                    }
-                });
+                setFabVisible(false);
 			} else if (item.tag.equals("starred")) {
 				fragment = new StarredFragment();
 				setTwoPane(true);
-                setFabVisible(false, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ((SearchFragment) fragment).go();
-                    }
-                });
+                setFabVisible(false);
 			} else if (item.tag.equals("info")) {
 				fragment = new InfoFragment();
 				setTwoPane(false);
-                setFabVisible(false, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ((SearchFragment) fragment).go();
-                    }
-                });
+                setFabVisible(false);
 			} else if (item.tag.equals("settings")) {
 				Intent intent = new Intent(this, MainPreferenceActivity.class);
 				startActivity(intent);

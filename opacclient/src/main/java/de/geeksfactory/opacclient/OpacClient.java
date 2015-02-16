@@ -21,24 +21,6 @@
  */
 package de.geeksfactory.opacclient;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.acra.ACRA;
-import org.acra.ACRAConfiguration;
-import org.acra.annotation.ReportsCrashes;
-import org.apache.http.client.ClientProtocolException;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
@@ -51,7 +33,27 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+
+import org.acra.ACRA;
+import org.acra.ACRAConfiguration;
+import org.acra.annotation.ReportsCrashes;
+import org.apache.http.client.ClientProtocolException;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import de.geeksfactory.opacclient.apis.Adis;
 import de.geeksfactory.opacclient.apis.BiBer1992;
 import de.geeksfactory.opacclient.apis.Bibliotheca;
@@ -127,10 +129,14 @@ public class OpacClient extends Application {
 	// return SearchResultsActivity.class;
 	// }
 
-	public void startSearch(Activity caller, List<SearchQuery> query) {
+    public void startSearch(Activity caller, List<SearchQuery> query) {
+        startSearch(caller, query, null);
+    }
+
+	public void startSearch(Activity caller, List<SearchQuery> query, Bundle bundle) {
 		Intent myIntent = new Intent(caller, SearchResultListActivity.class);
 		myIntent.putExtra("query", queryToBundle(query));
-		caller.startActivity(myIntent);
+        ActivityCompat.startActivity(caller, myIntent, bundle);
 	}
 
 	public void startVolumeSearch(Activity caller, Map<String, String> query) {
