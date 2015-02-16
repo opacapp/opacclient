@@ -1,14 +1,5 @@
 package de.geeksfactory.opacclient.frontend;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.json.JSONException;
-
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -39,6 +30,15 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
@@ -731,6 +731,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.fragment_search, menu);
+        if (((OpacActivity) getActivity()).isTablet())
+            // We have the floating action button for that
+            menu.findItem(R.id.action_search_go).setVisible(false);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 

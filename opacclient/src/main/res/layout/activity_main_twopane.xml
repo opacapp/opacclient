@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true" >
     <!-- The main content view -->
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -19,14 +19,30 @@
             android:elevation="4dp"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+        <com.melnykov.fab.FloatingActionButton
+            android:id="@+id/search_fab"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_marginTop="-36dp"
+            android:layout_marginRight="36dp"
+            android:layout_below="@id/toolbar"
+            android:layout_alignParentRight="true"
+            android:elevation="4dp"
+            android:src="@drawable/ic_action_search"
+            app:fab_colorNormal="@color/accent_red"
+            app:fab_colorPressed="@color/primary_red"
+            />
+
         <LinearLayout
             android:id="@+id/twopane_wrapper"
-            android:layout_width="match_parent"
+            android:layout_width="720dp"
             android:layout_height="match_parent"
             android:layout_marginTop="-96dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:layout_gravity="center_horizontal"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/toolbar"
             android:baselineAligned="false"
             android:divider="?dividerHorizontal"
             android:orientation="horizontal"
@@ -46,7 +62,7 @@
                 android:layout_weight="2" >
             </FrameLayout>
         </LinearLayout>
-    </LinearLayout>
+    </RelativeLayout>
     <!-- The navigation drawer -->
     <de.geeksfactory.opacclient.ui.ScrimInsetsFrameLayout
         android:id="@+id/navdrawer"

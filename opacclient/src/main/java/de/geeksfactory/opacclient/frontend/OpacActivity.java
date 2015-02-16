@@ -33,10 +33,12 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -49,7 +51,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.melnykov.fab.FloatingActionButton;
 
 import org.json.JSONException;
 
@@ -77,6 +82,7 @@ public abstract class OpacActivity extends ActionBarActivity {
     protected View drawer;
 	protected DrawerLayout drawerLayout;
 	protected ActionBarDrawerToggle drawerToggle;
+    protected FloatingActionButton fab;
 	protected CharSequence mTitle;
 
 	protected List<Account> accounts;
@@ -85,6 +91,7 @@ public abstract class OpacActivity extends ActionBarActivity {
 	protected boolean hasDrawer = false;
 
 	private boolean twoPane;
+    private boolean fabVisible;
 
     protected Toolbar toolbar;
 
@@ -105,10 +112,12 @@ public abstract class OpacActivity extends ActionBarActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null)
             setSupportActionBar(toolbar);
+        fab = (FloatingActionButton) findViewById(R.id.search_fab);
 		setupDrawer();
 
 		if (savedInstanceState != null) {
 			setTwoPane(savedInstanceState.getBoolean("twoPane"));
+            setFabVisible(savedInstanceState.getBoolean("fabVisible"));
 			if (savedInstanceState.containsKey("title")) {
 				setTitle(savedInstanceState.getCharSequence("title"));
 			}
@@ -331,15 +340,39 @@ public abstract class OpacActivity extends ActionBarActivity {
 			if (item.tag.equals("search")) {
 				fragment = new SearchFragment();
 				setTwoPane(false);
+                setFabVisible(true, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((SearchFragment) fragment).go();
+                    }
+                });
 			} else if (item.tag.equals("account")) {
 				fragment = new AccountFragment();
 				setTwoPane(false);
+                setFabVisible(false, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((SearchFragment) fragment).go();
+                    }
+                });
 			} else if (item.tag.equals("starred")) {
 				fragment = new StarredFragment();
 				setTwoPane(true);
+                setFabVisible(false, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((SearchFragment) fragment).go();
+                    }
+                });
 			} else if (item.tag.equals("info")) {
 				fragment = new InfoFragment();
 				setTwoPane(false);
+                setFabVisible(false, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((SearchFragment) fragment).go();
+                    }
+                });
 			} else if (item.tag.equals("settings")) {
 				Intent intent = new Intent(this, MainPreferenceActivity.class);
 				startActivity(intent);
@@ -605,10 +638,47 @@ public abstract class OpacActivity extends ActionBarActivity {
 		}
 	}
 
+    protected void setFabVisible(boolean visible) {
+        setFabVisible(visible, null);
+    }
+
+    protected void setFabVisible(boolean visible, View.OnClickListener onClickListener) {
+        fabVisible = visible;
+        if (isTablet()) {
+            fab.setVisibility(visible ? View.VISIBLE : View.GONE);
+            if (visible) {
+                fab.setOnClickListener(onClickListener);
+                DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+
+                float density  = getResources().getDisplayMetrics().density;
+                float dpWidth  = displayMetrics.widthPixels / density;
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams
+                        (Math.round(72*density), Math.round(72*density));
+
+                if (dpWidth >= 864) {
+                    params.addRule(RelativeLayout.BELOW, R.id.toolbar);
+                    params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                    params.setMargins(0,Math.round(-36*density),Math.round(36 * density),0);
+                    ViewCompat.setElevation(fab, 4 * density);
+                } else {
+                    params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                    params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                    params.setMargins(0, 0, Math.round(36 * density), Math.round(36 * density));
+                    ViewCompat.setElevation(fab, 12 * density);
+                }
+                fab.setLayoutParams(params);
+            } else {
+                fab.setOnClickListener(null);
+            }
+        }
+    }
+
+
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putBoolean("twoPane", twoPane);
+        outState.putBoolean("fabVisible", fabVisible);
 		if (fragment != null)
 			getSupportFragmentManager().putFragment(outState, "fragment",
 					fragment);
