@@ -11,11 +11,12 @@
         android:layout_alignParentTop="true"
         android:paddingLeft="16dp"
         android:paddingTop="16dp"
+        android:paddingBottom="12dp"
         android:textColor="@color/nav_seperator_fg"
-        android:drawableBottom="@drawable/navigation_header"
         android:drawablePadding="4dp"
         android:textSize="14sp"
-        android:textAllCaps="true"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:fontFamily="@string/fontFamily_medium"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="bla"/>
 
 </RelativeLayout>

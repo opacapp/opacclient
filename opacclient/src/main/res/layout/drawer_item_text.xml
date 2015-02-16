@@ -18,7 +18,7 @@
     <RelativeLayout
         android:layout_width="0dip"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
+        android:layout_marginLeft="4dp"
         android:layout_weight="1"
         android:orientation="vertical"
         android:paddingBottom="8dp"

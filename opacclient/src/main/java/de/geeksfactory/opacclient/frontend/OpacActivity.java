@@ -40,6 +40,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -141,6 +142,7 @@ public abstract class OpacActivity extends ActionBarActivity {
 		if (drawerLayout != null) {
 			hasDrawer = true;
             drawerLayout.setStatusBarBackground(R.color.primary_red_dark);
+            drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, Gravity.LEFT);
 			drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close ) {
 				/**
 				 * Called when a drawer has settled in a completely closed
