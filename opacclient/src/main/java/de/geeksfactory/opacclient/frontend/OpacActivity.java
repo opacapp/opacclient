@@ -78,6 +78,7 @@ public abstract class OpacActivity extends ActionBarActivity {
 	protected AccountDataSource aData;
 
 	protected int selectedItemPos;
+    protected String selectedItemTag;
 
 	protected NavigationAdapter navAdapter;
 	protected ListView drawerList;
@@ -120,6 +121,8 @@ public abstract class OpacActivity extends ActionBarActivity {
 		if (savedInstanceState != null) {
 			setTwoPane(savedInstanceState.getBoolean("twoPane"));
             setFabVisible(savedInstanceState.getBoolean("fabVisible"));
+            selectedItemTag = savedInstanceState.getString("selectedItemTag");
+            setFabOnClickListener(selectedItemTag);
 			if (savedInstanceState.containsKey("title")) {
 				setTitle(savedInstanceState.getCharSequence("title"));
 			}
@@ -343,15 +346,7 @@ public abstract class OpacActivity extends ActionBarActivity {
 			if (item.tag.equals("search")) {
 				fragment = new SearchFragment();
 				setTwoPane(false);
-                setFabVisible(true, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation
-                                (v, Math.round(v.getX()), Math.round(v.getY()), v.getWidth(),
-                                        v.getHeight());
-                        ((SearchFragment) fragment).go(options.toBundle());
-                    }
-                });
+                setFabVisible(true);
 			} else if (item.tag.equals("account")) {
 				fragment = new AccountFragment();
 				setTwoPane(false);
@@ -375,6 +370,7 @@ public abstract class OpacActivity extends ActionBarActivity {
 				drawerList.setItemChecked(position, false);
 				return;
 			}
+            setFabOnClickListener(item.tag);
 
 			// Insert the fragment by replacing any existing fragment
 			FragmentManager fragmentManager = getSupportFragmentManager();
@@ -387,6 +383,7 @@ public abstract class OpacActivity extends ActionBarActivity {
 			drawerList.setItemChecked(selectedItemPos, false);
 			drawerList.setItemChecked(position, true);
 			selectedItemPos = position;
+            selectedItemTag = item.tag;
 			setTitle(navAdapter.getItem(position).text);
 			drawerLayout.closeDrawer(drawer);
 
@@ -398,6 +395,24 @@ public abstract class OpacActivity extends ActionBarActivity {
 			return;
 		}
 	}
+
+    protected void setFabOnClickListener(String tag) {
+        if (isTablet()) {
+            if (tag.equals("search")) {
+                fab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation
+                                (v, Math.round(v.getLeft()), Math.round(v.getTop()), v.getWidth(),
+                                        v.getHeight());
+                        ((SearchFragment) fragment).go(options.toBundle());
+                    }
+                });
+            } else {
+                fab.setOnClickListener(null);
+            }
+        }
+    }
 
 	@Override
 	public void setTitle(CharSequence title) {
@@ -630,15 +645,10 @@ public abstract class OpacActivity extends ActionBarActivity {
 	}
 
     protected void setFabVisible(boolean visible) {
-        setFabVisible(visible, null);
-    }
-
-    protected void setFabVisible(boolean visible, View.OnClickListener onClickListener) {
         fabVisible = visible;
         if (isTablet()) {
             fab.setVisibility(visible ? View.VISIBLE : View.GONE);
             if (visible) {
-                fab.setOnClickListener(onClickListener);
                 DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 
                 float density  = getResources().getDisplayMetrics().density;
@@ -658,8 +668,6 @@ public abstract class OpacActivity extends ActionBarActivity {
                     ViewCompat.setElevation(fab, 12 * density);
                 }
                 fab.setLayoutParams(params);
-            } else {
-                fab.setOnClickListener(null);
             }
         }
     }
@@ -670,6 +678,7 @@ public abstract class OpacActivity extends ActionBarActivity {
 		super.onSaveInstanceState(outState);
 		outState.putBoolean("twoPane", twoPane);
         outState.putBoolean("fabVisible", fabVisible);
+        outState.putString("selectedItemTag", selectedItemTag);
 		if (fragment != null)
 			getSupportFragmentManager().putFragment(outState, "fragment",
 					fragment);
