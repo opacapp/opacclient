@@ -586,6 +586,7 @@ public class LibraryListActivity extends ActionBarActivity {
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 					lv.setFastScrollAlwaysVisible(true);
 			}
+            lv.setSelector(R.drawable.ripple);
 			return view;
 		}
 

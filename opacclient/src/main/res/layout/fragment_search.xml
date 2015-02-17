@@ -112,7 +112,7 @@
 			        android:id="@+id/llExpand"
 			        android:layout_width="fill_parent"
 			        android:layout_height="wrap_content"
-			        android:background="@drawable/list_selector_holo_light"
+			        android:background="@drawable/ripple"
 			        android:clickable="true"
 			        android:focusable="true"
 			        android:padding="16dp" >

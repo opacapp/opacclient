@@ -43,6 +43,7 @@
             android:choiceMode="multipleChoice"
             android:divider="@android:color/transparent"
             android:dividerHeight="0dp"
-            android:background="@color/nav_bg" />
+            android:background="@color/nav_bg"
+            android:listSelector="@drawable/ripple" />
     </de.geeksfactory.opacclient.ui.ScrimInsetsFrameLayout>
 </android.support.v4.widget.DrawerLayout>

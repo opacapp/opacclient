@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@drawable/list_selector_holo_light"
+        android:background="@drawable/ripple"
         android:clickable="true"
         android:focusable="true"
         android:padding="16dp" >

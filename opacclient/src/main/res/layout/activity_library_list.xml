@@ -11,7 +11,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_alignRight="@+id/container"
-        android:background="@drawable/list_selector_holo_light"
+        android:background="@drawable/ripple"
         android:clickable="true"
         android:focusable="true"
         android:padding="16dp" >
