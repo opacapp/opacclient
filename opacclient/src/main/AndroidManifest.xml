@@ -33,7 +33,7 @@
         <activity
             android:name="de.geeksfactory.opacclient.frontend.MainActivity"
             android:label="@string/launcher_name"
-            android:theme="@style/Theme.Opacapp.NoActionBar">
+            android:theme="@style/Theme.Opacapp.NoActionBar.WithDrawer">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -89,6 +89,7 @@
         </activity>
         <activity
             android:name="de.geeksfactory.opacclient.frontend.SearchResultListActivity"
+            android:theme="@style/Theme.Opacapp.NoActionBar"
             android:label="@string/title_searchresult_list"
             android:parentActivityName="de.geeksfactory.opacclient.frontend.MainActivity" >
             <meta-data
