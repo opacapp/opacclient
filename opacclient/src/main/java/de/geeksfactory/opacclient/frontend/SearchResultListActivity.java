@@ -2,10 +2,13 @@ package de.geeksfactory.opacclient.frontend;
 
 import android.app.SearchManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
+import android.transition.Explode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -150,10 +153,17 @@ public class SearchResultListActivity extends OpacActivity implements
 			if (res.getId() != null)
 				detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
 						res.getId());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                Explode explode = new Explode();
+                explode.excludeTarget(android.R.id.statusBarBackground, true);
+                getWindow().setExitTransition(explode);
+            }
             if (res.getCoverBitmap() != null) {
                 detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP, (Parcelable) res.getCoverBitmap());
-                ActivityOptionsCompat options = ActivityOptionsCompat
-                        .makeSceneTransitionAnimation(this, coverView, getString(R.string.transition_cover));
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        this,
+                        new Pair<View, String>(coverView, getString(R.string.transition_cover)),
+                        new Pair<View, String>(toolbar, getString(R.string.transition_toolbar)));
                 ActivityCompat.startActivity(this, detailIntent, options.toBundle());
             } else {
                 startActivity(detailIntent);

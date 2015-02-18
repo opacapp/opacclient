@@ -106,11 +106,12 @@
         <activity
             android:name="de.geeksfactory.opacclient.frontend.SearchResultDetailActivity"
             android:label="@string/title_searchresult_detail"
+            android:theme="@style/Theme.Opacapp.NoActionBar"
             android:parentActivityName="de.geeksfactory.opacclient.frontend.SearchResultListActivity"
             android:uiOptions="splitActionBarWhenNarrow" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".SearchResultListActivity" />
+                android:value="de.geeksfactory.opacclient.frontend.SearchResultListActivity" />
             <meta-data
                 android:name="android.support.UI_OPTIONS"
                 android:value="splitActionBarWhenNarrow" />

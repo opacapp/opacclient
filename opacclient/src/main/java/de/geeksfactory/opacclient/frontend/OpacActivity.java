@@ -28,6 +28,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -109,6 +110,7 @@ public abstract class OpacActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(getContentView());
+
 		app = (OpacClient) getApplication();
 
 		aData = new AccountDataSource(this);
@@ -133,6 +135,11 @@ public abstract class OpacActivity extends ActionBarActivity {
 						.replace(R.id.content_frame, fragment).commit();
 			}
 		}
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // Fix status bar flashing problem during transitions
+            getWindow().getEnterTransition().excludeTarget(android.R.id.statusBarBackground, true);
+            getWindow().getExitTransition().excludeTarget(android.R.id.statusBarBackground, true);
+        }
 	}
 
 	protected abstract int getContentView();
