@@ -16,6 +16,7 @@
         <item name="colorPrimary">@color/primary_red</item>
         <item name="colorPrimaryDark">@color/primary_red_dark</item>
         <item name="colorAccent">@color/accent_red</item>
+        <item name="windowActionModeOverlay">true</item>
     </style>
 
     <!-- Changes specific to this API level go here -->
