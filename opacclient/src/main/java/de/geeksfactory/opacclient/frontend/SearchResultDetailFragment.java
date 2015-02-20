@@ -632,8 +632,6 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 
         refreshMenu(toolbar.getMenu());
         fixTitle();
-
-        onScrollChanged(0,0);
 	}
 
     private void fixTitle() {
@@ -657,6 +655,7 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
                             }
                         }
                     });
+                onScrollChanged(0,0);
             }
         });
     }
