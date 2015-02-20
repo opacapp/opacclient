@@ -1,28 +1,10 @@
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/searchresult_detail_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:minHeight="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        android:transitionName="@string/transition_toolbar"/>
-
-    <FrameLayout
-        android:id="@+id/searchresult_detail_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".SearchResultDetailActivity"
-        tools:ignore="MergeRootFrame"/>
-</LinearLayout>
+    tools:context=".SearchResultDetailActivity"
+    tools:ignore="MergeRootFrame"/>
 
 

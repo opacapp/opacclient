@@ -9,11 +9,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
+import android.support.v7.graphics.Palette;
+import android.support.v7.widget.Toolbar;
 import android.text.util.Linkify;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -32,6 +38,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.nineoldandroids.view.ViewHelper;
 
 import org.acra.ACRA;
 
@@ -56,13 +64,15 @@ import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.StarDataSource;
+import de.geeksfactory.opacclient.ui.ObservableScrollView;
+import de.geeksfactory.opacclient.ui.WhitenessUtils;
 
 /**
  * A fragment representing a single SearchResult detail screen. This fragment is
  * either contained in a {@link SearchResultListActivity} in two-pane mode (on
  * tablets) or a {@link SearchResultDetailActivity} on handsets.
  */
-public class SearchResultDetailFragment extends Fragment {
+public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMenuItemClickListener, ObservableScrollView.Callbacks {
 	/**
 	 * The fragment argument representing the item ID that this fragment
 	 * represents.
@@ -91,6 +101,15 @@ public class SearchResultDetailFragment extends Fragment {
 	private boolean account_switched = false;
 	private boolean invalidated = false;
 	private boolean progress = false;
+    protected boolean back_button_visible = false;
+
+    protected Toolbar toolbar;
+    protected ImageView ivCover;
+    protected ObservableScrollView scrollView;
+    protected View gradientBottom;
+    protected View gradientTop;
+    protected View tint;
+    protected TextView tvTitel;
 
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
@@ -105,7 +124,7 @@ public class SearchResultDetailFragment extends Fragment {
 	 */
 	private Callbacks mCallbacks = sDummyCallbacks;
 
-	/**
+    /**
 	 * A callback interface that all activities containing this fragment must
 	 * implement. This mechanism allows activities to be notified of item
 	 * selections.
@@ -261,7 +280,27 @@ public class SearchResultDetailFragment extends Fragment {
 		View rootView = inflater.inflate(R.layout.fragment_searchresult_detail,
 				container, false);
 		view = rootView;
-		setHasOptionsMenu(true);
+        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        toolbar.setVisibility(View.VISIBLE);
+        setHasOptionsMenu(false);
+
+        if (getActivity() instanceof SearchResultDetailActivity) {
+            // This applies on phones, where the Toolbar is also the
+            // main ActionBar of the Activity and needs a back button
+            toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getActivity().supportFinishAfterTransition();
+                }
+            });
+            back_button_visible = true;
+        }
+
+        toolbar.inflateMenu(R.menu.search_result_details_activity);
+        refreshMenu(toolbar.getMenu());
+        toolbar.setOnMenuItemClickListener(this);
+
 		setRetainInstance(true);
 		setProgress();
 
@@ -270,6 +309,29 @@ public class SearchResultDetailFragment extends Fragment {
             iv.setVisibility(View.VISIBLE);
             iv.setImageBitmap((Bitmap) getArguments().getParcelable(ARG_ITEM_COVER_BITMAP));
         }
+
+        scrollView = (ObservableScrollView) view.findViewById(R.id.rootView);
+        scrollView.addCallbacks(this);
+
+        ivCover = (ImageView) view.findViewById(R.id.ivCover);
+        gradientBottom = view.findViewById(R.id.gradient_bottom);
+        gradientTop = view.findViewById(R.id.gradient_top);
+        tint = view.findViewById(R.id.tint);
+        tvTitel = (TextView) view.findViewById(R.id.tvTitle);
+
+        // Workaround because the built-in ellipsize function does not work
+        // for multiline TextViews
+        tvTitel.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
+            @Override
+            public void onGlobalLayout() {
+                if (tvTitel.getLineCount() > 2) {
+                    int lineEndIndex = tvTitel.getLayout().getLineEnd(1);
+                    String text = tvTitel.getText().subSequence(0, lineEndIndex - 3) + "...";
+                    tvTitel.setText(text);
+                }
+            }
+        });
 
 		return rootView;
 	}
@@ -343,22 +405,50 @@ public class SearchResultDetailFragment extends Fragment {
 		}
 	}
 
+    /**
+     * Examine how many white pixels are in the bitmap in order to determine whether or not
+     * we need gradient overlays on top of the image.
+     */
+    private void analyzeWhitenessOfCoverAsync(final Bitmap bitmap) {
+        new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                return WhitenessUtils.isBitmapWhiteAtTopOrBottom(bitmap);
+            }
+
+            @Override
+            protected void onPostExecute(Boolean isWhite) {
+                super.onPostExecute(isWhite);
+                gradientBottom.setVisibility(isWhite ? View.VISIBLE : View.GONE);
+                gradientTop.setVisibility(isWhite ? View.VISIBLE : View.GONE);
+            }
+        }.execute();
+    }
+
 	protected void display() {
 		try {
 			Log.i("result", getItem().toString());
 		} catch (Exception e) {
 			ACRA.getErrorReporter().handleException(e);
 		}
-		ImageView iv = (ImageView) view.findViewById(R.id.ivCover);
 
 		if (getItem().getCoverBitmap() != null) {
-			iv.setVisibility(View.VISIBLE);
-			iv.setImageBitmap(getItem().getCoverBitmap());
+			ivCover.setVisibility(View.VISIBLE);
+            ivCover.setImageBitmap(getItem().getCoverBitmap());
+            Palette.generateAsync(getItem().getCoverBitmap(), new Palette.PaletteAsyncListener() {
+                @Override
+                public void onGenerated(Palette palette) {
+                    Palette.Swatch swatch = palette.getDarkVibrantSwatch();
+                    if (swatch != null) {
+                        ivCover.setBackgroundColor(swatch.getRgb());
+                        tint.setBackgroundColor(swatch.getRgb());
+                    }
+                }
+            });
+            analyzeWhitenessOfCoverAsync(getItem().getCoverBitmap());
 		} else {
-			iv.setVisibility(View.GONE);
+            //ivCover.setVisibility(View.GONE);
 		}
-
-		TextView tvTitel = (TextView) view.findViewById(R.id.tvTitle);
 		tvTitel.setText(getItem().getTitle());
 
 		LinearLayout llDetails = (LinearLayout) view
@@ -523,8 +613,58 @@ public class SearchResultDetailFragment extends Fragment {
 
 		setProgress(false, true);
 
-		getActivity().supportInvalidateOptionsMenu();
+        refreshMenu(toolbar.getMenu());
+        if (tvTitel.getLayout().getLineCount() > 1) {
+            toolbar.setMinimumHeight((int) TypedValue
+                    .applyDimension(TypedValue.COMPLEX_UNIT_SP, 84f,
+                            getResources().getDisplayMetrics()));
+        }
+
+        onScrollChanged(0,0);
 	}
+
+
+    @Override
+    public void onScrollChanged(int deltaX, int deltaY) {
+        int scrollY = scrollView.getScrollY();
+        ViewHelper.setTranslationY(ivCover, scrollY * 0.5f);
+        ViewHelper.setTranslationY(gradientBottom, scrollY * 0.5f);
+        ViewHelper.setTranslationY(gradientTop, scrollY * 0.5f);
+        ViewHelper.setTranslationY(toolbar, scrollY);
+
+        float minHeight = toolbar.getHeight();
+        float progress = Math.min(((float) scrollY) / (ivCover.getHeight() - minHeight), 1);
+        float scale = 1-progress + 20f/36f*progress;
+        ViewHelper.setPivotX(tvTitel, 0);
+        ViewHelper.setPivotY(tvTitel, tvTitel.getHeight());
+        ViewHelper.setScaleX(tvTitel, scale);
+        ViewHelper.setScaleY(tvTitel, scale);
+        if (back_button_visible) {
+            ViewHelper.setTranslationX(tvTitel, progress*TypedValue
+                    .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56f, getResources()
+                            .getDisplayMetrics()));
+        }
+
+        ViewHelper.setAlpha(tint, progress);
+
+        if (progress == 1) {
+            ViewHelper.setTranslationY(tvTitel, scrollY - ivCover.getHeight() + minHeight);
+            if (toolbar.getBackground() == null) {
+                toolbar.setBackgroundDrawable(ivCover.getBackground());
+                ViewCompat.setElevation(toolbar, TypedValue.applyDimension(TypedValue
+                        .COMPLEX_UNIT_DIP, 4f, getResources().getDisplayMetrics()));
+                ViewCompat.setElevation(tvTitel, TypedValue.applyDimension(TypedValue
+                        .COMPLEX_UNIT_DIP, 4f, getResources().getDisplayMetrics()));
+            }
+        } else {
+            ViewHelper.setTranslationY(tvTitel, 0);
+            if (ivCover.getBackground().equals(toolbar.getBackground())) {
+                toolbar.setBackgroundDrawable(null);
+                ViewCompat.setElevation(toolbar, 0);
+                ViewCompat.setElevation(tvTitel, 0);
+            }
+        }
+    }
 
 	@Override
 	public void onViewStateRestored(Bundle savedInstanceState) {
@@ -756,47 +896,55 @@ public class SearchResultDetailFragment extends Fragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.search_result_details_activity, menu);
-
-		if (item != null) {
-			if (item.isReservable()) {
-				menu.findItem(R.id.action_reservation).setVisible(true);
-			} else {
-				menu.findItem(R.id.action_reservation).setVisible(false);
-			}
-			if (item.isBookable() && app.getApi() instanceof EbookServiceApi) {
-				if (((EbookServiceApi) app.getApi()).isEbook(item))
-					menu.findItem(R.id.action_lendebook).setVisible(true);
-				else
-					menu.findItem(R.id.action_lendebook).setVisible(false);
-			} else {
-				menu.findItem(R.id.action_lendebook).setVisible(false);
-			}
-			menu.findItem(R.id.action_tocollection).setVisible(
-					item.getCollectionId() != null);
-		} else {
-			menu.findItem(R.id.action_reservation).setVisible(false);
-			menu.findItem(R.id.action_lendebook).setVisible(false);
-			menu.findItem(R.id.action_tocollection).setVisible(false);
-		}
-
-		String bib = app.getLibrary().getIdent();
-		StarDataSource data = new StarDataSource(getActivity());
-		if ((id == null || id.equals("")) && item != null) {
-			if (data.isStarredTitle(bib, title)) {
-				menu.findItem(R.id.action_star).setIcon(
-						R.drawable.ic_action_star_1);
-			}
-		} else {
-			if (data.isStarred(bib, id)) {
-				menu.findItem(R.id.action_star).setIcon(
-						R.drawable.ic_action_star_1);
-			}
-		}
-
+		refreshMenu(menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
-	@Override
+    protected void refreshMenu(Menu menu) {
+        if (item != null) {
+            if (item.isReservable()) {
+                menu.findItem(R.id.action_reservation).setVisible(true);
+            } else {
+                menu.findItem(R.id.action_reservation).setVisible(false);
+            }
+            if (item.isBookable() && app.getApi() instanceof EbookServiceApi) {
+                if (((EbookServiceApi) app.getApi()).isEbook(item))
+                    menu.findItem(R.id.action_lendebook).setVisible(true);
+                else
+                    menu.findItem(R.id.action_lendebook).setVisible(false);
+            } else {
+                menu.findItem(R.id.action_lendebook).setVisible(false);
+            }
+            menu.findItem(R.id.action_tocollection).setVisible(
+                    item.getCollectionId() != null);
+        } else {
+            menu.findItem(R.id.action_reservation).setVisible(false);
+            menu.findItem(R.id.action_lendebook).setVisible(false);
+            menu.findItem(R.id.action_tocollection).setVisible(false);
+        }
+
+        String bib = app.getLibrary().getIdent();
+        StarDataSource data = new StarDataSource(getActivity());
+        if ((id == null || id.equals("")) && item != null) {
+            if (data.isStarredTitle(bib, title)) {
+                menu.findItem(R.id.action_star).setIcon(
+                        R.drawable.ic_action_star_1);
+            }
+        } else {
+            if (data.isStarred(bib, id)) {
+                menu.findItem(R.id.action_star).setIcon(
+                        R.drawable.ic_action_star_1);
+            }
+        }
+    }
+
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        return onOptionsItemSelected(item);
+    }
+
+    @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		final String bib = app.getLibrary().getIdent();

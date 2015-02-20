@@ -1,7 +1,6 @@
 package de.geeksfactory.opacclient.frontend;
 
 import android.os.Bundle;
-import android.view.MenuItem;
 
 import de.geeksfactory.opacclient.R;
 
@@ -21,9 +20,6 @@ public class SearchResultDetailActivity extends OpacActivity implements SearchRe
     @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		// Show the Up button in the action bar.
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		// savedInstanceState is non-null when there is fragment state
 		// saved from previous configurations of this activity
@@ -66,14 +62,5 @@ public class SearchResultDetailActivity extends OpacActivity implements SearchRe
 	@Override
 	protected int getContentView() {
 		return R.layout.activity_searchresult_detail;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() ==  android.R.id.home) {
-            supportFinishAfterTransition();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 }

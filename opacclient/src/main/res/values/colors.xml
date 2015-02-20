@@ -34,6 +34,8 @@
     <color name="transparent">#00000000</color>
     <color name="primary_red">#cc0000</color>
     <color name="primary_red_dark">#8e0000</color>
+    <color name="primary_red_very_dark">#500000</color>
     <color name="accent_red">#ff4444</color>
+    <color name="cover_gradient_black">#80000000</color>
 
 </resources>
