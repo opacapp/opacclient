@@ -709,7 +709,7 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 
         if (progress == 1) {
             ViewHelper.setTranslationY(tvTitel, scrollY - ivCover.getHeight() + minHeight);
-            if (toolbar.getBackground() == null) {
+            if (getResources().getDrawable(R.color.transparent).equals(toolbar.getBackground())) {
                 toolbar.setBackgroundDrawable(ivCover.getBackground());
                 ViewCompat.setElevation(toolbar, TypedValue.applyDimension(TypedValue
                         .COMPLEX_UNIT_DIP, 4f, getResources().getDisplayMetrics()));
@@ -719,7 +719,7 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
         } else {
             ViewHelper.setTranslationY(tvTitel, 0);
             if (ivCover.getBackground().equals(toolbar.getBackground())) {
-                toolbar.setBackgroundDrawable(null);
+                toolbar.setBackgroundResource(R.color.transparent);
                 ViewCompat.setElevation(toolbar, 0);
                 ViewCompat.setElevation(tvTitel, 0);
             }
