@@ -170,6 +170,8 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 			ProgressBar progress = (ProgressBar) view
 					.findViewById(R.id.progress);
 			View content = view.findViewById(R.id.detailsLayout);
+            if (scrollView != null)
+                scrollView.setVisibility(View.VISIBLE);
 
 			if (show) {
 				if (animate) {
@@ -218,9 +220,12 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 
 		progress.startAnimation(AnimationUtils.loadAnimation(getActivity(),
                 android.R.anim.fade_out));
+        scrollView.startAnimation(AnimationUtils.loadAnimation(getActivity(),
+                android.R.anim.fade_out));
 		connError.startAnimation(AnimationUtils.loadAnimation(getActivity(),
                 android.R.anim.fade_in));
 		progress.setVisibility(View.GONE);
+        scrollView.setVisibility(View.GONE);
 		connError.setVisibility(View.VISIBLE);
 	}
 
@@ -708,7 +713,7 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 
         if (progress == 1) {
             ViewHelper.setTranslationY(tvTitel, scrollY - ivCover.getHeight() + minHeight);
-            if (getResources().getDrawable(R.color.transparent).equals(toolbar.getBackground())) {
+            if (!ivCover.getBackground().equals(toolbar.getBackground())) {
                 toolbar.setBackgroundDrawable(ivCover.getBackground());
                 ViewCompat.setElevation(toolbar, TypedValue.applyDimension(TypedValue
                         .COMPLEX_UNIT_DIP, 4f, getResources().getDisplayMetrics()));
