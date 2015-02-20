@@ -12,7 +12,7 @@
             "status": 4,
             "title": 1
         },
-        "baseurl": "http://213.252.136.241/wwwopac",
+        "baseurl": "https://katalog-stadtbibliothek.celle.de",
         "copiestable": {
             "barcode": 0,
             "branch": 4,

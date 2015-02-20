@@ -1,0 +1,17 @@
+{
+    "account_supported": true,
+    "api": "sisis",
+    "city": "Bautzen",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://80.146.210.20/webOPACClient",
+        "information": "http://www.bautzen.de/stadtbibliothek.asp",
+        "startparams": "Login=extern"
+    },
+    "geo": [
+        51.18229299999999,
+        14.4237749
+    ],
+    "state": "Sachsen",
+    "title": "Stadtbibliothek"
+}

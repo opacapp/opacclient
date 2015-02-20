@@ -61,6 +61,7 @@ import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
 import de.geeksfactory.opacclient.objects.SearchResult.Status;
+import de.geeksfactory.opacclient.searchfields.BarcodeSearchField;
 import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
@@ -341,7 +342,8 @@ public class BiBer1992 extends BaseApi {
 		m_nameValuePairs.clear();
 		int count = 1;
 		for (SearchQuery query : queryList) {
-			if (query.getSearchField() instanceof TextSearchField
+			if ((query.getSearchField() instanceof TextSearchField || query
+					.getSearchField() instanceof BarcodeSearchField)
 					&& !query.getValue().equals("")) {
 				m_nameValuePairs.add(new BasicNameValuePair("CNN" + count,
 						"AND"));
@@ -686,6 +688,11 @@ public class BiBer1992 extends BaseApi {
 									else
 										text = "";
 								}
+							}
+							if (copy_keys[j]
+									.equals(DetailledItem.KEY_COPY_RESERVATIONS)) {
+								text = text.replace("Vorgemerkt: ", "")
+										.replace("Vorbestellt: ", "");
 							}
 							e.put(copy_keys[j], text);
 						}
