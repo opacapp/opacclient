@@ -102,6 +102,7 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 	private boolean invalidated = false;
 	private boolean progress = false;
     protected boolean back_button_visible = false;
+    protected boolean image_analyzed = false;
 
     protected Toolbar toolbar;
     protected ImageView ivCover;
@@ -306,8 +307,21 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 
         ImageView iv = (ImageView) view.findViewById(R.id.ivCover);
         if (getArguments().containsKey(ARG_ITEM_COVER_BITMAP)) {
+            Bitmap bitmap = getArguments().getParcelable(ARG_ITEM_COVER_BITMAP);
             iv.setVisibility(View.VISIBLE);
-            iv.setImageBitmap((Bitmap) getArguments().getParcelable(ARG_ITEM_COVER_BITMAP));
+            iv.setImageBitmap(bitmap);
+            Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {
+                @Override
+                public void onGenerated(Palette palette) {
+                    Palette.Swatch swatch = palette.getDarkVibrantSwatch();
+                    if (swatch != null) {
+                        ivCover.setBackgroundColor(swatch.getRgb());
+                        tint.setBackgroundColor(swatch.getRgb());
+                    }
+                }
+            });
+            analyzeWhitenessOfCoverAsync(bitmap);
+            image_analyzed = true;
         }
 
         scrollView = (ObservableScrollView) view.findViewById(R.id.rootView);
@@ -435,17 +449,19 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 		if (getItem().getCoverBitmap() != null) {
 			ivCover.setVisibility(View.VISIBLE);
             ivCover.setImageBitmap(getItem().getCoverBitmap());
-            Palette.generateAsync(getItem().getCoverBitmap(), new Palette.PaletteAsyncListener() {
-                @Override
-                public void onGenerated(Palette palette) {
-                    Palette.Swatch swatch = palette.getDarkVibrantSwatch();
-                    if (swatch != null) {
-                        ivCover.setBackgroundColor(swatch.getRgb());
-                        tint.setBackgroundColor(swatch.getRgb());
+            if (!image_analyzed) {
+                Palette.generateAsync(getItem().getCoverBitmap(), new Palette.PaletteAsyncListener() {
+                    @Override
+                    public void onGenerated(Palette palette) {
+                        Palette.Swatch swatch = palette.getDarkVibrantSwatch();
+                        if (swatch != null) {
+                            ivCover.setBackgroundColor(swatch.getRgb());
+                            tint.setBackgroundColor(swatch.getRgb());
+                        }
                     }
-                }
-            });
-            analyzeWhitenessOfCoverAsync(getItem().getCoverBitmap());
+                });
+                analyzeWhitenessOfCoverAsync(getItem().getCoverBitmap());
+            }
 		} else {
             //ivCover.setVisibility(View.GONE);
 		}

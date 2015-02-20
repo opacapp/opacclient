@@ -137,6 +137,9 @@ public class SearchResultListActivity extends OpacActivity implements
 			arguments.putInt(SearchResultDetailFragment.ARG_ITEM_NR, res.getNr());
 			if (res.getId() != null)
 				arguments.putString(SearchResultDetailFragment.ARG_ITEM_ID, res.getId());
+            if (res.getCoverBitmap() != null)
+                arguments.putParcelable(SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP,
+                        (Parcelable) res.getCoverBitmap());
 			detailFragment = new SearchResultDetailFragment();
 			detailFragment.setArguments(arguments);
 			getSupportFragmentManager()
