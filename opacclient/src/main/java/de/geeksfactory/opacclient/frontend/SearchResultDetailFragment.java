@@ -15,6 +15,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
 import android.text.util.Linkify;
 import android.util.Log;
@@ -630,15 +631,58 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 		setProgress(false, true);
 
         refreshMenu(toolbar.getMenu());
-        if (tvTitel.getLayout().getLineCount() > 1) {
-            toolbar.setMinimumHeight((int) TypedValue
-                    .applyDimension(TypedValue.COMPLEX_UNIT_SP, 84f,
-                            getResources().getDisplayMetrics()));
-        }
+        fixTitle();
 
         onScrollChanged(0,0);
 	}
 
+    private void fixTitle() {
+        toolbar.getViewTreeObserver().addOnGlobalLayoutListener(new
+                ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                // We need to wait for the menu to refresh to get correct calculations
+                findActionMenuView(toolbar).getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                fixTitleWidth();
+                tvTitel.getViewTreeObserver().addOnGlobalLayoutListener(new
+                    ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            // We need to wait for tvTitel to refresh to get correct calculations
+                            tvTitel.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                            if (tvTitel.getLayout().getLineCount() > 1) {
+                                toolbar.setMinimumHeight((int) TypedValue
+                                        .applyDimension(TypedValue.COMPLEX_UNIT_SP, 84f,
+                                                getResources().getDisplayMetrics()));
+                            }
+                        }
+                    });
+            }
+        });
+    }
+
+    private void fixTitleWidth() {
+        ActionMenuView view = findActionMenuView(toolbar);
+        if (view != null) {
+            float density = getResources().getDisplayMetrics().density;
+            float availableWidth = toolbar.getWidth() - view.getWidth() - 16*density -
+                    (back_button_visible ? 56*density : 0);
+            // Toolbar width - menu width - margin - back button width
+            if (tvTitel.getWidth() > availableWidth * 36f/20f) {
+                tvTitel.getLayoutParams().width = (int) (availableWidth * 36f / 20f);
+                tvTitel.getParent().requestLayout();
+            }
+        }
+    }
+
+    private ActionMenuView findActionMenuView(Toolbar toolbar) {
+        for (int i = 0; i < toolbar.getChildCount(); i++) {
+            View view = toolbar.getChildAt(i);
+            if (view instanceof ActionMenuView)
+                return (ActionMenuView) view;
+        }
+        return null;
+    }
 
     @Override
     public void onScrollChanged(int deltaX, int deltaY) {
