@@ -112,6 +112,7 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
     protected View gradientTop;
     protected View tint;
     protected TextView tvTitel;
+    protected LinearLayout llDetails;
 
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
@@ -311,10 +312,19 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 		setRetainInstance(true);
 		setProgress();
 
+        scrollView = (ObservableScrollView) view.findViewById(R.id.rootView);
+        scrollView.addCallbacks(this);
+
+        ivCover = (ImageView) view.findViewById(R.id.ivCover);
+        gradientBottom = view.findViewById(R.id.gradient_bottom);
+        gradientTop = view.findViewById(R.id.gradient_top);
+        tint = view.findViewById(R.id.tint);
+        tvTitel = (TextView) view.findViewById(R.id.tvTitle);
+        llDetails = (LinearLayout) view.findViewById(R.id.llDetails);
+
         ImageView iv = (ImageView) view.findViewById(R.id.ivCover);
         if (getArguments().containsKey(ARG_ITEM_COVER_BITMAP)) {
             Bitmap bitmap = getArguments().getParcelable(ARG_ITEM_COVER_BITMAP);
-            iv.setVisibility(View.VISIBLE);
             iv.setImageBitmap(bitmap);
             Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {
                 @Override
@@ -328,16 +338,10 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
             });
             analyzeWhitenessOfCoverAsync(bitmap);
             image_analyzed = true;
+            showCoverView(true);
+        } else {
+            showCoverView(false);
         }
-
-        scrollView = (ObservableScrollView) view.findViewById(R.id.rootView);
-        scrollView.addCallbacks(this);
-
-        ivCover = (ImageView) view.findViewById(R.id.ivCover);
-        gradientBottom = view.findViewById(R.id.gradient_bottom);
-        gradientTop = view.findViewById(R.id.gradient_top);
-        tint = view.findViewById(R.id.tint);
-        tvTitel = (TextView) view.findViewById(R.id.tvTitle);
 
         // Workaround because the built-in ellipsize function does not work
         // for multiline TextViews
@@ -468,13 +472,12 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
                 });
                 analyzeWhitenessOfCoverAsync(getItem().getCoverBitmap());
             }
+            tvTitel.setText(getItem().getTitle());
+            showCoverView(true);
 		} else {
-            //ivCover.setVisibility(View.GONE);
+            showCoverView(false);
+            toolbar.setTitle(getItem().getTitle());
 		}
-		tvTitel.setText(getItem().getTitle());
-
-		LinearLayout llDetails = (LinearLayout) view
-				.findViewById(R.id.llDetails);
 		llDetails.removeAllViews();
 		for (Detail detail : item.getDetails()) {
 			View v = getLayoutInflater(null)
@@ -636,8 +639,37 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 		setProgress(false, true);
 
         refreshMenu(toolbar.getMenu());
-        fixTitle();
+
+        if (getItem().getCoverBitmap() != null)
+            fixTitle();
 	}
+
+    private void showCoverView(boolean b) {
+        ivCover.setVisibility(b ? View.VISIBLE : View.GONE);
+        tvTitel.setVisibility(b ? View.VISIBLE : View.GONE);
+        gradientBottom.setVisibility(b ? View.VISIBLE : View.GONE);
+        gradientTop.setVisibility(b ? View.VISIBLE : View.GONE);
+        if (b) {
+            toolbar.setBackgroundResource(R.color.transparent);
+            ViewCompat.setElevation(toolbar, 0);
+            llDetails.setPadding(
+                    llDetails.getPaddingLeft(),
+                    0,
+                    llDetails.getPaddingRight(),
+                    llDetails.getPaddingBottom()
+            );
+        } else {
+            toolbar.setBackgroundResource(R.color.primary_red_very_dark);
+            ViewCompat.setElevation(toolbar, TypedValue.applyDimension(TypedValue
+                    .COMPLEX_UNIT_DIP, 4f, getResources().getDisplayMetrics()));
+            llDetails.setPadding(
+                    llDetails.getPaddingLeft(),
+                    toolbar.getHeight(),
+                    llDetails.getPaddingRight(),
+                    llDetails.getPaddingBottom()
+            );
+        }
+    }
 
     private void fixTitle() {
         toolbar.getViewTreeObserver().addOnGlobalLayoutListener(new
@@ -691,41 +723,51 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
     @Override
     public void onScrollChanged(int deltaX, int deltaY) {
         int scrollY = scrollView.getScrollY();
-        ViewHelper.setTranslationY(ivCover, scrollY * 0.5f);
-        ViewHelper.setTranslationY(gradientBottom, scrollY * 0.5f);
-        ViewHelper.setTranslationY(gradientTop, scrollY * 0.5f);
+        if (getItem().getCoverBitmap() != null) {
+            ViewHelper.setTranslationY(ivCover, scrollY * 0.5f);
+            ViewHelper.setTranslationY(gradientBottom, scrollY * 0.5f);
+            ViewHelper.setTranslationY(gradientTop, scrollY * 0.5f);
+        }
         ViewHelper.setTranslationY(toolbar, scrollY);
 
-        float minHeight = toolbar.getHeight();
-        float progress = Math.min(((float) scrollY) / (ivCover.getHeight() - minHeight), 1);
-        float scale = 1-progress + 20f/36f*progress;
-        ViewHelper.setPivotX(tvTitel, 0);
-        ViewHelper.setPivotY(tvTitel, tvTitel.getHeight());
-        ViewHelper.setScaleX(tvTitel, scale);
-        ViewHelper.setScaleY(tvTitel, scale);
-        if (back_button_visible) {
-            ViewHelper.setTranslationX(tvTitel, progress*TypedValue
-                    .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56f, getResources()
-                            .getDisplayMetrics()));
-        }
-
-        ViewHelper.setAlpha(tint, progress);
-
-        if (progress == 1) {
-            ViewHelper.setTranslationY(tvTitel, scrollY - ivCover.getHeight() + minHeight);
-            if (!ivCover.getBackground().equals(toolbar.getBackground())) {
-                toolbar.setBackgroundDrawable(ivCover.getBackground());
-                ViewCompat.setElevation(toolbar, TypedValue.applyDimension(TypedValue
-                        .COMPLEX_UNIT_DIP, 4f, getResources().getDisplayMetrics()));
-                ViewCompat.setElevation(tvTitel, TypedValue.applyDimension(TypedValue
-                        .COMPLEX_UNIT_DIP, 4f, getResources().getDisplayMetrics()));
+        if (getItem().getCoverBitmap() != null) {
+            float minHeight = toolbar.getHeight();
+            float progress = Math.min(((float) scrollY) / (ivCover.getHeight() - minHeight), 1);
+            float scale = 1 - progress + 20f / 36f * progress;
+            ViewHelper.setPivotX(tvTitel, 0);
+            ViewHelper.setPivotY(tvTitel, tvTitel.getHeight());
+            ViewHelper.setScaleX(tvTitel, scale);
+            ViewHelper.setScaleY(tvTitel, scale);
+            if (back_button_visible) {
+                ViewHelper.setTranslationX(tvTitel, progress * TypedValue
+                        .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56f, getResources()
+                                .getDisplayMetrics()));
             }
-        } else {
-            ViewHelper.setTranslationY(tvTitel, 0);
-            if (ivCover.getBackground().equals(toolbar.getBackground())) {
-                toolbar.setBackgroundResource(R.color.transparent);
-                ViewCompat.setElevation(toolbar, 0);
-                ViewCompat.setElevation(tvTitel, 0);
+
+            ViewHelper.setAlpha(tint, progress);
+
+
+            float additionalTranslation = 0;
+            if (tvTitel.getLayout() != null && tvTitel.getLayout().getLineCount() > 1)
+                additionalTranslation = progress*TypedValue.applyDimension(TypedValue
+                        .COMPLEX_UNIT_DIP, 8f, getResources().getDisplayMetrics());
+            if (progress == 1) {
+                ViewHelper.setTranslationY(tvTitel, scrollY - ivCover.getHeight() + minHeight +
+                        additionalTranslation);
+                if (!ivCover.getBackground().equals(toolbar.getBackground())) {
+                    toolbar.setBackgroundDrawable(ivCover.getBackground());
+                    ViewCompat.setElevation(toolbar, TypedValue.applyDimension(TypedValue
+                            .COMPLEX_UNIT_DIP, 4f, getResources().getDisplayMetrics()));
+                    ViewCompat.setElevation(tvTitel, TypedValue.applyDimension(TypedValue
+                            .COMPLEX_UNIT_DIP, 4f, getResources().getDisplayMetrics()));
+                }
+            } else {
+                ViewHelper.setTranslationY(tvTitel, additionalTranslation);
+                if (ivCover.getBackground().equals(toolbar.getBackground())) {
+                    toolbar.setBackgroundResource(R.color.transparent);
+                    ViewCompat.setElevation(toolbar, 0);
+                    ViewCompat.setElevation(tvTitel, 0);
+                }
             }
         }
     }
