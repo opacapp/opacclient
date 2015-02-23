@@ -42,8 +42,7 @@
                 android:gravity="center"
                 android:scaleType="fitCenter"
                 android:transitionName="@string/transition_cover"
-                android:background="@color/primary_red_very_dark"
-                android:src="@drawable/ic_launcher_big"/>
+                android:background="@color/primary_red_very_dark"/>
 
             <View
                 android:id="@+id/gradient_top"
