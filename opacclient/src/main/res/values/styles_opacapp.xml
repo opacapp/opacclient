@@ -19,9 +19,20 @@
         <item name="windowActionModeOverlay">true</item>
     </style>
 
+    <style name="Theme.Opacapp.Base.Floating" parent="Theme.AppCompat.Light.DialogWhenLarge">
+        <item name="colorPrimary">@color/primary_red</item>
+        <item name="colorPrimaryDark">@color/primary_red_dark</item>
+        <item name="colorAccent">@color/accent_red</item>
+
+        <!-- no action bar -->
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
     <!-- Changes specific to this API level go here -->
     <style name="Theme.Opacapp" parent="Theme.Opacapp.Base"/>
     <style name="Theme.Opacapp.NoActionBar" parent="Theme.Opacapp.NoActionBar.Base"/>
     <style name="Theme.Opacapp.NoActionBar.WithDrawer" parent="Theme.Opacapp.NoActionBar.Base"/>
+    <style name="Theme.Opacapp.Floating" parent="Theme.Opacapp.Base.Floating"/>
 
 </resources>

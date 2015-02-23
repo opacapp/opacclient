@@ -21,10 +21,10 @@
  */
 package de.geeksfactory.opacclient.frontend;
 
-import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,6 +33,9 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
+
+import java.util.List;
+
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.Account;
@@ -78,7 +81,9 @@ public class AccountListActivity extends ActionBarActivity {
 				Intent i = new Intent(AccountListActivity.this,
 						AccountEditActivity.class);
 				i.putExtra("id", accounts.get(position).getId());
-				startActivity(i);
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(view,
+                        view.getLeft(), view.getTop(), view.getWidth(), view.getHeight());
+                ActivityCompat.startActivity(AccountListActivity.this, i, options.toBundle());
 			}
 		});
 		lvAccounts.setOnItemLongClickListener(new OnItemLongClickListener() {
