@@ -26,13 +26,15 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
+
+import com.melnykov.fab.FloatingActionButton;
 
 import java.util.List;
 
@@ -44,17 +46,29 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 public class AccountListActivity extends ActionBarActivity {
 
 	protected List<Account> accounts;
+    protected FloatingActionButton fab;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_account_list);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        fab = (FloatingActionButton) findViewById(R.id.add_fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                add();
+            }
+        });
 	}
 
 	public void add() {
 		Intent i = new Intent(this, LibraryListActivity.class);
-		startActivity(i);
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(fab,
+                fab.getLeft(), fab.getTop(), fab.getWidth(), fab.getHeight());
+		ActivityCompat.startActivity(this, i, options.toBundle());
 	}
 
 	public void refreshLv() {
@@ -101,17 +115,8 @@ public class AccountListActivity extends ActionBarActivity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_account_list, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.action_add) {
-			add();
-			return true;
-		} else if (item.getItemId() == android.R.id.home) {
+        if (item.getItemId() == android.R.id.home) {
 			finish();
 			return true;
 		}

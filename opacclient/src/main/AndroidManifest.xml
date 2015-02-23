@@ -79,6 +79,7 @@
         </activity>
         <activity
             android:name="de.geeksfactory.opacclient.frontend.AccountListActivity"
+            android:theme="@style/Theme.Opacapp.NoActionBar"
             android:label="@string/title_activity_account_list"
             android:uiOptions="splitActionBarWhenNarrow" >
             <meta-data
