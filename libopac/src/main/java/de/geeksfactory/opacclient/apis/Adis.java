@@ -1255,6 +1255,7 @@ public class Adis extends BaseApi implements OpacApi {
 			if (!"image".equals(input.attr("type"))
 					&& !"checkbox".equals(input.attr("type"))
 					&& !input.attr("value").contains("vergessen")
+					&& !input.attr("value").contains("egistrier")
 					&& !"".equals(input.attr("name"))) {
 				if (input.attr("id").equals("L#AUSW_1")
 						|| input.attr("id").equals("IDENT_1")
