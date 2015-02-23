@@ -11,7 +11,8 @@
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_marginTop="300dp"
+        android:layout_gravity="center_horizontal" />
 
     <FrameLayout
         android:id="@+id/error_view"
@@ -41,8 +42,7 @@
                 android:gravity="center"
                 android:scaleType="fitCenter"
                 android:transitionName="@string/transition_cover"
-                android:background="@color/primary_red_very_dark"
-                android:src="@drawable/ic_launcher_big"/>
+                android:background="@color/primary_red_very_dark"/>
 
             <View
                 android:id="@+id/gradient_top"
@@ -124,6 +124,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:minHeight="?attr/actionBarSize"
+                android:background="@color/transparent"
                 app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 

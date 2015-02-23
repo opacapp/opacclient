@@ -21,12 +21,6 @@
  */
 package de.geeksfactory.opacclient.frontend;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.acra.ACRA;
-import org.json.JSONException;
-
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
@@ -34,15 +28,26 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import org.acra.ACRA;
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.util.List;
+
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
@@ -61,16 +66,16 @@ public class AccountEditActivity extends ActionBarActivity {
 	private EditText etPassword;
 	private Library lib;
 
-	protected int getLayoutResource() {
+    protected int getLayoutResource() {
 		return R.layout.activity_account_edit;
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		supportRequestWindowFeature(android.view.Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
 		setContentView(getLayoutResource());
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
 		etLabel = (EditText) findViewById(R.id.etLabel);
 		etName = (EditText) findViewById(R.id.etName);
@@ -146,7 +151,6 @@ public class AccountEditActivity extends ActionBarActivity {
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
-		setSupportProgressBarIndeterminateVisibility(false);
 	}
 
 	private void saveAndCheck() {
@@ -256,7 +260,7 @@ public class AccountEditActivity extends ActionBarActivity {
 		
 		@Override
 		protected void onPreExecute() {
-			setProgressBarIndeterminateVisibility(true);
+			setProgress(true);
 		}
 		
 		@Override
@@ -276,7 +280,7 @@ public class AccountEditActivity extends ActionBarActivity {
 		}
 
 		protected void onPostExecute(Exception result) {
-			setProgressBarIndeterminateVisibility(false);
+			setProgress(false);
 			if (result == null) {
 				save();
 				close();
@@ -346,8 +350,43 @@ public class AccountEditActivity extends ActionBarActivity {
 			Intent i = new Intent(this, MainActivity.class);
 			startActivity(i);
 		} else {
-			finish();
-		}
+            ActivityCompat.finishAfterTransition(this);
+        }
 	}
+
+    public void setProgress(boolean show) {
+        setProgress(show, true);
+    }
+
+    public void setProgress(boolean show, boolean animate) {
+        ProgressBar progress = (ProgressBar) findViewById(R.id.progressBar);
+        View content = findViewById(R.id.svAccount);
+
+        if (show) {
+            if (animate) {
+                progress.startAnimation(AnimationUtils.loadAnimation(
+                        this, android.R.anim.fade_in));
+                content.startAnimation(AnimationUtils.loadAnimation(
+                        this, android.R.anim.fade_out));
+            } else {
+                progress.clearAnimation();
+                content.clearAnimation();
+            }
+            progress.setVisibility(View.VISIBLE);
+            content.setVisibility(View.GONE);
+        } else {
+            if (animate) {
+                progress.startAnimation(AnimationUtils.loadAnimation(
+                        this, android.R.anim.fade_out));
+                content.startAnimation(AnimationUtils.loadAnimation(
+                        this, android.R.anim.fade_in));
+            } else {
+                progress.clearAnimation();
+                content.clearAnimation();
+            }
+            progress.setVisibility(View.GONE);
+            content.setVisibility(View.VISIBLE);
+        }
+    }
 
 }
