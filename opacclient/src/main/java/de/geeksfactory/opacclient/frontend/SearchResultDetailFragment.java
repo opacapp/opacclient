@@ -350,9 +350,15 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
             @Override
             public void onGlobalLayout() {
                 if (tvTitel.getLineCount() > 2) {
-                    int lineEndIndex = tvTitel.getLayout().getLineEnd(1);
-                    String text = tvTitel.getText().subSequence(0, lineEndIndex - 3) + "...";
-                    tvTitel.setText(text);
+                    try {
+                        int lineEndIndex = tvTitel.getLayout().getLineEnd(1);
+                        String text = tvTitel.getText().subSequence(0, lineEndIndex - 3) + "...";
+                        tvTitel.setText(text);
+                    } catch (StringIndexOutOfBoundsException e) {
+                        // Happens in strange cases where the second line is less than three
+                        // characters long
+                        e.printStackTrace();
+                    }
                 }
             }
         });
