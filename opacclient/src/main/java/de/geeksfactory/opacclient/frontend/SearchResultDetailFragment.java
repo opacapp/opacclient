@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -440,19 +441,26 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
      * we need gradient overlays on top of the image.
      */
     private void analyzeWhitenessOfCoverAsync(final Bitmap bitmap) {
-        new AsyncTask<Void, Void, Boolean>() {
-            @Override
-            protected Boolean doInBackground(Void... params) {
-                return WhitenessUtils.isBitmapWhiteAtTopOrBottom(bitmap);
-            }
+        AnalyzeWhitenessTask task = new AnalyzeWhitenessTask();
+        // Execute in parallel with FetchTask
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
+        else
+            task.execute(bitmap);
+    }
 
-            @Override
-            protected void onPostExecute(Boolean isWhite) {
-                super.onPostExecute(isWhite);
-                gradientBottom.setVisibility(isWhite ? View.VISIBLE : View.GONE);
-                gradientTop.setVisibility(isWhite ? View.VISIBLE : View.GONE);
-            }
-        }.execute();
+    private class AnalyzeWhitenessTask extends AsyncTask<Bitmap, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Bitmap... params) {
+            return WhitenessUtils.isBitmapWhiteAtTopOrBottom(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean isWhite) {
+            super.onPostExecute(isWhite);
+            gradientBottom.setVisibility(isWhite ? View.VISIBLE : View.GONE);
+            gradientTop.setVisibility(isWhite ? View.VISIBLE : View.GONE);
+        }
     }
 
 	protected void display() {
