@@ -356,7 +356,7 @@ public class IOpac extends BaseApi implements OpacApi {
 			Map<String, String> params = getQueryParamsFirst(link);
 			if (params.containsKey("recno")) {
 				int recno = Integer.valueOf(params.get("recno"));
-				sr.setNr(10 * (page - 1) + recno - 1);
+				sr.setNr(recno - 1);
 			} else {
 				// the above should work, but fall back to this if it doesn't
 				sr.setNr(10 * (page - 1) + i);
@@ -419,9 +419,8 @@ public class IOpac extends BaseApi implements OpacApi {
 	public DetailledItem getResult(int position) throws IOException {
 		if (!initialised)
 			start();
-		
-		int page = Double.valueOf(Math.floor(position / 10)).intValue() + 1;
 
+		int page = Double.valueOf(Math.floor(position / 10)).intValue() + 1;
 		String html = httpGet(opac_url + "/cgi-bin/di.exe?page=" + page
 				+ "&rechnr=" + rechnr + "&Anzahl=10&recno=" + (position + 1)
 				+ "&FilNr=", getDefaultEncoding());

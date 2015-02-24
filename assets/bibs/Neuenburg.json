@@ -10,7 +10,7 @@
             "returndate": 2,
             "title": 1
         },
-        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-neuenburg",
+        "baseurl": "https://www.bibliotheken.bw-online.de/wwwopac-neuenburg",
         "copiestable": {
             "barcode": 0,
             "department": 3,

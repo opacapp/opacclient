@@ -86,6 +86,8 @@ public class Bibliotheca extends BaseApi {
 	protected Library library;
 	protected long logged_in;
 	protected Account logged_in_as;
+	protected String _res_target = "vorbesttranskonto";
+	protected String branch_inputfield = "zstauswahl";
 
 	protected final long SESSION_LIFETIME = 1000 * 60 * 3;
 
@@ -614,7 +616,6 @@ public class Bibliotheca extends BaseApi {
 	public ReservationResult reservation(DetailledItem item, Account acc,
 			int useraction, String selection) throws IOException {
 		String reservation_info = item.getReservation_info();
-		String branch_inputfield = "zstauswahl";
 
 		Document doc = null;
 
@@ -679,6 +680,7 @@ public class Bibliotheca extends BaseApi {
 					selopt.put("value", value);
 					branches.add(selopt);
 				}
+				_res_target = doc.select("input[name=target]").attr("value");
 				ReservationResult result = new ReservationResult(
 						MultiStepResult.Status.SELECTION_NEEDED);
 				result.setActionIdentifier(ReservationResult.ACTION_BRANCH);
@@ -690,8 +692,7 @@ public class Bibliotheca extends BaseApi {
 			nameValuePairs.add(new BasicNameValuePair(branch_inputfield,
 					selection));
 			nameValuePairs.add(new BasicNameValuePair("button2", "weiter"));
-			nameValuePairs.add(new BasicNameValuePair("target",
-					"vorbesttranskonto"));
+			nameValuePairs.add(new BasicNameValuePair("target", _res_target));
 			String html = httpPost(opac_url + "/index.asp",
 					new UrlEncodedFormEntity(nameValuePairs),
 					getDefaultEncoding());
