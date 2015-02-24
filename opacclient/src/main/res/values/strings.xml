@@ -225,4 +225,9 @@ We might know your library ID then, but not your password, and we will take care
   <string name="source">Source Code</string>
   <string name="loading">Loading…</string>
   <string name="loading_libraries">Loading library list...</string>
+    <string name="shelfmark">Shelfmark</string>
+    <string name="return_date">Return date</string>
+    <string name="location">Location</string>
+    <string name="department">Department</string>
+    <string name="reservations">Reservations</string>
 </resources>

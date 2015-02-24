@@ -230,5 +230,10 @@
     <string name="other">Sonstiges</string>
     <string name="source">Quellcode</string>
     <string name="loading_libraries">Lade Bibliotheksliste...</string>
+    <string name="shelfmark">Signatur</string>
+    <string name="return_date">Rückgabedatum</string>
+    <string name="location">Standort</string>
+    <string name="department">Abteilung</string>
+    <string name="reservations">Reservierungen</string>
 
 </resources>

@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -48,6 +49,7 @@ import org.acra.ACRA;
 import java.io.InterruptedIOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -114,6 +116,9 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
     protected View tint;
     protected TextView tvTitel;
     protected LinearLayout llDetails;
+    protected LinearLayout llCopies;
+
+    private Boolean[] cardAnimations;
 
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
@@ -322,6 +327,7 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
         tint = view.findViewById(R.id.tint);
         tvTitel = (TextView) view.findViewById(R.id.tvTitle);
         llDetails = (LinearLayout) view.findViewById(R.id.llDetails);
+        llCopies = (LinearLayout) view.findViewById(R.id.llCopies);
 
         ImageView iv = (ImageView) view.findViewById(R.id.ivCover);
         if (getArguments().containsKey(ARG_ITEM_COVER_BITMAP)) {
@@ -504,7 +510,6 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 			llDetails.addView(v);
 		}
 
-		LinearLayout llCopies = (LinearLayout) view.findViewById(R.id.llCopies);
 		llCopies.removeAllViews();
 		if (item.getVolumesearch() != null) {
 			TextView tvC = (TextView) view.findViewById(R.id.tvCopies);
@@ -549,18 +554,16 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 			} else {
 				for (Map<String, String> copy : item.getCopies()) {
 					View v = getLayoutInflater(null).inflate(
-							R.layout.listitem_copy, null);
+							R.layout.listitem_copy, llCopies, false);
 
 					if (v.findViewById(R.id.tvBranch) != null) {
 						if (copy.containsKey(DetailledItem.KEY_COPY_BRANCH)) {
 							((TextView) v.findViewById(R.id.tvBranch))
 									.setText(copy
 											.get(DetailledItem.KEY_COPY_BRANCH));
-							((TextView) v.findViewById(R.id.tvBranch))
-									.setVisibility(View.VISIBLE);
+							v.findViewById(R.id.llBranch).setVisibility(View.VISIBLE);
 						} else {
-							((TextView) v.findViewById(R.id.tvBranch))
-									.setVisibility(View.GONE);
+							v.findViewById(R.id.llBranch).setVisibility(View.GONE);
 						}
 					}
 					if (v.findViewById(R.id.tvDepartment) != null) {
@@ -568,11 +571,9 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 							((TextView) v.findViewById(R.id.tvDepartment))
 									.setText(copy
 											.get(DetailledItem.KEY_COPY_DEPARTMENT));
-							((TextView) v.findViewById(R.id.tvDepartment))
-									.setVisibility(View.VISIBLE);
+							v.findViewById(R.id.llDepartment).setVisibility(View.VISIBLE);
 						} else {
-							((TextView) v.findViewById(R.id.tvDepartment))
-									.setVisibility(View.GONE);
+							v.findViewById(R.id.llDepartment).setVisibility(View.GONE);
 						}
 					}
 					if (v.findViewById(R.id.tvLocation) != null) {
@@ -580,11 +581,9 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 							((TextView) v.findViewById(R.id.tvLocation))
 									.setText(copy
 											.get(DetailledItem.KEY_COPY_LOCATION));
-							((TextView) v.findViewById(R.id.tvLocation))
-									.setVisibility(View.VISIBLE);
+							v.findViewById(R.id.llLocation).setVisibility(View.VISIBLE);
 						} else {
-							((TextView) v.findViewById(R.id.tvLocation))
-									.setVisibility(View.GONE);
+							v.findViewById(R.id.llLocation).setVisibility(View.GONE);
 						}
 					}
 					if (v.findViewById(R.id.tvShelfmark) != null) {
@@ -592,11 +591,9 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 							((TextView) v.findViewById(R.id.tvShelfmark))
 									.setText(copy
 											.get(DetailledItem.KEY_COPY_SHELFMARK));
-							((TextView) v.findViewById(R.id.tvShelfmark))
-									.setVisibility(View.VISIBLE);
+							v.findViewById(R.id.llShelfmark).setVisibility(View.VISIBLE);
 						} else {
-							((TextView) v.findViewById(R.id.tvShelfmark))
-									.setVisibility(View.GONE);
+							v.findViewById(R.id.llShelfmark).setVisibility(View.GONE);
 						}
 					}
 					if (v.findViewById(R.id.tvStatus) != null) {
@@ -604,25 +601,19 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 							((TextView) v.findViewById(R.id.tvStatus))
 									.setText(copy
 											.get(DetailledItem.KEY_COPY_STATUS));
-							((TextView) v.findViewById(R.id.tvStatus))
-									.setVisibility(View.VISIBLE);
+							v.findViewById(R.id.llStatus).setVisibility(View.VISIBLE);
 						} else {
-							((TextView) v.findViewById(R.id.tvStatus))
-									.setVisibility(View.GONE);
+							v.findViewById(R.id.llStatus).setVisibility(View.GONE);
 						}
 					}
 
 					if (v.findViewById(R.id.tvReservations) != null) {
 						if (copy.containsKey(DetailledItem.KEY_COPY_RESERVATIONS)) {
 							((TextView) v.findViewById(R.id.tvReservations))
-									.setText(getString(R.string.res)
-											+ ": "
-											+ copy.get(DetailledItem.KEY_COPY_RESERVATIONS));
-							((TextView) v.findViewById(R.id.tvReservations))
-									.setVisibility(View.VISIBLE);
+									.setText(copy.get(DetailledItem.KEY_COPY_RESERVATIONS));
+							v.findViewById(R.id.llReservations).setVisibility(View.VISIBLE);
 						} else {
-							((TextView) v.findViewById(R.id.tvReservations))
-									.setVisibility(View.GONE);
+							v.findViewById(R.id.llReservations).setVisibility(View.GONE);
 						}
 					}
 					if (v.findViewById(R.id.tvReturndate) != null) {
@@ -633,11 +624,9 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 									.setText(getString(R.string.ret)
 											+ ": "
 											+ copy.get(DetailledItem.KEY_COPY_RETURN));
-							((TextView) v.findViewById(R.id.tvReturndate))
-									.setVisibility(View.VISIBLE);
+							v.findViewById(R.id.llReturndate).setVisibility(View.VISIBLE);
 						} else {
-							((TextView) v.findViewById(R.id.tvReturndate))
-									.setVisibility(View.GONE);
+							v.findViewById(R.id.llReturndate).setVisibility(View.GONE);
 						}
 					}
 
@@ -654,8 +643,16 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 
         refreshMenu(toolbar.getMenu());
 
-        if (getItem().getCoverBitmap() != null)
+        if (getItem().getCoverBitmap() != null) {
             fixTitle();
+        } else {
+            llCopies.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    onScrollChanged(0, 0);
+                }
+            });
+        }
 	}
 
     private void showCoverView(boolean b) {
@@ -738,10 +735,12 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
     public void onScrollChanged(int deltaX, int deltaY) {
         int scrollY = scrollView.getScrollY();
         if (getItem().getCoverBitmap() != null) {
+            // Parallax effect
             ViewHelper.setTranslationY(ivCover, scrollY * 0.5f);
             ViewHelper.setTranslationY(gradientBottom, scrollY * 0.5f);
             ViewHelper.setTranslationY(gradientTop, scrollY * 0.5f);
         }
+        // Toolbar stays at the top
         ViewHelper.setTranslationY(toolbar, scrollY);
 
         if (getItem().getCoverBitmap() != null) {
@@ -781,6 +780,27 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
                     toolbar.setBackgroundResource(R.color.transparent);
                     ViewCompat.setElevation(toolbar, 0);
                     ViewCompat.setElevation(tvTitel, 0);
+                }
+            }
+        }
+
+        // Card animations
+        if (cardAnimations == null) {
+            cardAnimations = new Boolean[llCopies.getChildCount()];
+            Arrays.fill(cardAnimations, false);
+        }
+        for (int i = 0; i < llCopies.getChildCount(); i++) {
+            if (cardAnimations[i] == false) {
+                View card = llCopies.getChildAt(i);
+                Rect scrollBounds = new Rect();
+                scrollView.getHitRect(scrollBounds);
+                if (card.getLocalVisibleRect(scrollBounds)) {
+                    // card is visible
+                    cardAnimations[i] = true;
+                    card.startAnimation(AnimationUtils.loadAnimation(getActivity(),
+                            R.anim.card_appear));
+                } else {
+                    // card is not visible
                 }
             }
         }
