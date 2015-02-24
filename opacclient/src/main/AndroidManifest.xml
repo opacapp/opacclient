@@ -29,7 +29,7 @@
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Opacapp" >
+        android:theme="@style/Theme.Opacapp.NoActionBar" >
         <activity
             android:name="de.geeksfactory.opacclient.frontend.MainActivity"
             android:label="@string/launcher_name"
@@ -79,7 +79,6 @@
         </activity>
         <activity
             android:name="de.geeksfactory.opacclient.frontend.AccountListActivity"
-            android:theme="@style/Theme.Opacapp.NoActionBar"
             android:label="@string/title_activity_account_list"
             android:uiOptions="splitActionBarWhenNarrow" >
             <meta-data
@@ -91,7 +90,6 @@
         </activity>
         <activity
             android:name="de.geeksfactory.opacclient.frontend.SearchResultListActivity"
-            android:theme="@style/Theme.Opacapp.NoActionBar"
             android:label="@string/title_searchresult_list"
             android:parentActivityName="de.geeksfactory.opacclient.frontend.MainActivity" >
             <meta-data
@@ -107,7 +105,6 @@
         </activity>
         <activity
             android:name="de.geeksfactory.opacclient.frontend.SearchResultDetailActivity"
-            android:theme="@style/Theme.Opacapp.NoActionBar"
             android:parentActivityName="de.geeksfactory.opacclient.frontend.SearchResultListActivity"
             android:uiOptions="splitActionBarWhenNarrow" >
             <meta-data
@@ -132,6 +129,7 @@
         </activity>
         <activity
             android:name="de.geeksfactory.opacclient.frontend.SuggestLibraryActivity"
+            android:theme="@style/Theme.Opacapp.Floating"
             android:label="@string/title_activity_suggest_library" >
         	<meta-data
                 android:name="android.support.PARENT_ACTIVITY"

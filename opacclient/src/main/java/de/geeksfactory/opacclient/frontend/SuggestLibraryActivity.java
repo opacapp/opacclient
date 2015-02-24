@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -50,6 +50,7 @@ public class SuggestLibraryActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_suggest_library);
 
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		etCity = (AutoCompleteTextView) findViewById(R.id.etCity);
@@ -114,7 +115,7 @@ public class SuggestLibraryActivity extends ActionBarActivity {
 				send.setData(uri);
 				startActivity(Intent.createChooser(send, getResources()
 						.getString(R.string.select_mail_app)));
-				finish();
+				supportFinishAfterTransition();
 			}
 
 		});
@@ -166,10 +167,7 @@ public class SuggestLibraryActivity extends ActionBarActivity {
 		switch (item.getItemId()) {
 		// Respond to the action bar's Up/Home button
 		case android.R.id.home:
-			Intent intent = NavUtils.getParentActivityIntent(this);
-			if (getIntent().hasExtra("welcome"))
-				intent.putExtra("welcome", true);
-			NavUtils.navigateUpTo(this, intent);
+			supportFinishAfterTransition();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

@@ -25,6 +25,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -50,6 +51,8 @@ public class WelcomeActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		app = (OpacClient) getApplication();
 		setContentView(getLayoutResource());
+
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
 		Button btAddAccount = (Button) findViewById(R.id.btAddAccount);
 		btAddAccount.setOnClickListener(new OnClickListener() {

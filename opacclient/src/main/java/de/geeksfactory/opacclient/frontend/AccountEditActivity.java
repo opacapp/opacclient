@@ -29,7 +29,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -76,6 +75,7 @@ public class AccountEditActivity extends ActionBarActivity {
 		setContentView(getLayoutResource());
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		etLabel = (EditText) findViewById(R.id.etLabel);
 		etName = (EditText) findViewById(R.id.etName);
@@ -209,7 +209,7 @@ public class AccountEditActivity extends ActionBarActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == android.R.id.home) {
-			NavUtils.navigateUpFromSameTask(this);
+			supportFinishAfterTransition();
 			return true;
 		} else if (item.getItemId() == R.id.action_accept) {
 			saveAndCheck();
@@ -218,7 +218,7 @@ public class AccountEditActivity extends ActionBarActivity {
 			if (getIntent().hasExtra("adding")
 					&& getIntent().getBooleanExtra("adding", false))
 				delete();
-			finish();
+			supportFinishAfterTransition();
 			return true;
 		} else if (item.getItemId() == R.id.action_delete) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);

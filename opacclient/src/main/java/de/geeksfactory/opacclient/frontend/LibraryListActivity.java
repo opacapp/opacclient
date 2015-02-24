@@ -12,11 +12,14 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -88,6 +91,7 @@ public class LibraryListActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(null);
 		setContentView(R.layout.activity_library_list);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
 		if (!getIntent().hasExtra("welcome")) {
 			getSupportActionBar().setHomeButtonEnabled(true);
@@ -125,7 +129,7 @@ public class LibraryListActivity extends ActionBarActivity {
 			}
 		});
 
-		RelativeLayout rlSuggestLibrary = (RelativeLayout) findViewById(R.id.rlSuggestLibrary);
+		final RelativeLayout rlSuggestLibrary = (RelativeLayout) findViewById(R.id.rlSuggestLibrary);
 		rlSuggestLibrary.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -134,8 +138,11 @@ public class LibraryListActivity extends ActionBarActivity {
 						SuggestLibraryActivity.class);
 				if (getIntent().hasExtra("welcome"))
 					intent.putExtra("welcome", true);
-				startActivity(intent);
-			}
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation
+                        (rlSuggestLibrary, rlSuggestLibrary.getLeft(), rlSuggestLibrary.getTop(),
+                                rlSuggestLibrary.getWidth(), rlSuggestLibrary.getHeight());
+                ActivityCompat.startActivity(LibraryListActivity.this, intent, options.toBundle());
+            }
 
 		});
 	}

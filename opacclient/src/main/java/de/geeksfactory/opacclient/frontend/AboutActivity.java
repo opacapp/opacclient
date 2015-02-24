@@ -21,27 +21,10 @@
  */
 package de.geeksfactory.opacclient.frontend;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
-import android.app.Dialog;
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
-import android.text.Html;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.TextView;
-import de.geeksfactory.opacclient.OpacClient;
+import android.support.v7.widget.Toolbar;
+
 import de.geeksfactory.opacclient.R;
 
 public class AboutActivity extends ActionBarActivity {
@@ -50,6 +33,8 @@ public class AboutActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preference);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content_frame, new AboutFragment())
                 .commit();
