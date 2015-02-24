@@ -28,6 +28,7 @@ import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -500,24 +501,48 @@ public class Pica extends BaseApi implements OpacApi {
 			result.setTitle("");
 		}
 
-		// GET OTHER INFORMATION
-		Map<String, String> e = new HashMap<String, String>();
-		String location = "";
-
-		// reservation info will be stored as JSON, because it can get
-		// complicated
-		JSONArray reservationInfo = new JSONArray();
-
-		for (Element element : doc.select("td.preslabel + td.presvalue")) {
+		// Details
+		int line = 0;
+		Elements lines = doc.select("td.preslabel + td.presvalue");
+		for (Element element : lines) {
 			Element titleElem = element.firstElementSibling();
 			String detail = element.text().trim();
 			String title = titleElem.text().replace("\u00a0", " ").trim();
+			
+			if (element.select("hr").size() > 0)
+				// after the separator we get the copies
+				break;	
+			
+			if (detail.length() == 0 && title.length() == 0) {
+				line ++;
+				continue;	
+			}
+			if (title.indexOf(":") != -1)
+				title = title.substring(0, title.indexOf(":")); // remove
+																// colon
+			if (!title.matches("(Titel|Titre|Title)"))
+				result.addDetail(new Detail(title, detail));
+			line ++;
+		}
+		line ++; // next line after separator
+		
+		// Copies		
+		Map<String, String> e = new HashMap<String, String>();
+		String location = "";
 
-			if (element.select("hr").size() == 0) { // no separator
+		// reservation info will be stored as JSON
+		JSONArray reservationInfo = new JSONArray();
+		
+		while (line < lines.size()) {
+			Element element = lines.get(line);
+			if (element.select("hr").size() == 0) {
+				Element titleElem = element.firstElementSibling();
+				String detail = element.text().trim();
+				String title = titleElem.text().replace("\u00a0", " ").trim();
 
-				if (title.indexOf(":") != -1) {
-					title = title.substring(0, title.indexOf(":")); // remove
-																	// colon
+				if (detail.length() == 0 && title.length() == 0) {
+					line ++;
+					continue;
 				}
 
 				if (title.contains("Standort")
@@ -526,6 +551,9 @@ public class Pica extends BaseApi implements OpacApi {
 					location += detail;
 				} else if (title.contains("Sonderstandort")) {
 					location += " - " + detail;
+				} else if (title.contains("Systemstelle")
+						|| title.contains("Subject")) {
+					e.put(DetailledItem.KEY_COPY_DEPARTMENT, detail);
 				} else if (title.contains("Fachnummer")
 						|| title.contains("locationnumber")) {
 					e.put(DetailledItem.KEY_COPY_LOCATION, detail);
@@ -538,11 +566,30 @@ public class Pica extends BaseApi implements OpacApi {
 						|| title.contains("Ausleihinfo")
 						|| title.contains("Ausleihstatus")
 						|| title.contains("Request info")) {
-					if (element.select("div").size() > 0)
-						detail = element.select("div").first().ownText();
-					else
-						detail = element.ownText();
-					e.put(DetailledItem.KEY_COPY_STATUS, detail);
+					// Find return date
+					Pattern pattern = Pattern
+							.compile("(till|bis) (\\d{2}-\\d{2}-\\d{4})");
+					Matcher matcher = pattern.matcher(detail);
+					if (matcher.find()) {
+						SimpleDateFormat sdf = new SimpleDateFormat(
+								"dd-MM-yyyy", Locale.GERMAN);
+						SimpleDateFormat sdf2 = new SimpleDateFormat(
+								"dd.MM.yyyy", Locale.GERMAN);
+						try {
+							Date date = sdf.parse(matcher.group(2));
+							e.put(DetailledItem.KEY_COPY_STATUS, detail
+									.substring(0, matcher.start() - 1).trim());
+							e.put(DetailledItem.KEY_COPY_RETURN,
+									sdf2.format(date));
+							e.put(DetailledItem.KEY_COPY_RETURN_TIMESTAMP,
+									String.valueOf(date.getTime()));
+						} catch (ParseException e1) {
+							e1.printStackTrace();
+							e.put(DetailledItem.KEY_COPY_STATUS, detail);
+						}
+					} else {
+						e.put(DetailledItem.KEY_COPY_STATUS, detail);
+					}
 					// Get reservation info
 					if (element.select("a:has(img[src*=inline_arrow])").size() > 0) {
 						Element a = element.select(
@@ -560,15 +607,14 @@ public class Pica extends BaseApi implements OpacApi {
 						}
 						result.setReservable(true);
 					}
-				} else if (!title.matches("(Titel|Titre|Title)")) {
-					result.addDetail(new Detail(title, detail));
 				}
-			} else if (e.size() > 0) {
+			} else {
 				e.put(DetailledItem.KEY_COPY_BRANCH, location);
 				result.addCopy(e);
 				location = "";
 				e = new HashMap<String, String>();
 			}
+			line++;
 		}
 
 		e.put(DetailledItem.KEY_COPY_BRANCH, location);
