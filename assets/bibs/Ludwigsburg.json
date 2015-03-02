@@ -5,14 +5,14 @@
     "country": "Deutschland",
     "data": {
         "accounttable": {
-            "author": 8,
-            "barcode": 4,
+            "author": 9,
+            "barcode": 5,
             "homebranch": -1,
             "lendingbranch": -1,
-            "prolongurl": 4,
-            "returndate": 3,
-            "status": 6,
-            "title": 8
+            "prolongurl": 5,
+            "returndate": 4,
+            "status": 7,
+            "title": 9
         },
         "baseurl": "https://katalog.stabi-ludwigsburg.de",
         "copiestable": {
