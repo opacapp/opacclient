@@ -1,0 +1,25 @@
+{
+    "account_supported": false,
+    "api": "bibliotheca",
+    "city": "Sankt Augustin",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://biblio.sankt-augustin.de/wopac123",
+        "copiestable": {
+            "barcode": -1,
+            "branch": -1,
+            "department": 1,
+            "location": 2,
+            "reservations": -1,
+            "returndate": 4,
+            "status": 3
+        },
+        "information": "http://www.sankt-augustin.de/cms123/kultur_sport_freizeit/stadtbuecherei/"
+    },
+    "geo": [
+        50.7694775,
+        7.187578599999999
+    ],
+    "state": "Nordrhein-Westfalen",
+    "title": "Stadtb\u00fccherei"
+}
