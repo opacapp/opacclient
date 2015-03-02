@@ -364,6 +364,10 @@ public class Adis extends BaseApi implements OpacApi {
 				&& doc.select("#right #R06").size() == 0) {
 			throw new OpacErrorException(doc.select(".message h1").text());
 		}
+		if (doc.select("#OPACLI").text().contains("nicht gefunden")) {
+			throw new OpacErrorException(
+					stringProvider.getString(StringProvider.NO_RESULTS));
+		}
 
 		int total_result_count = -1;
 		List<SearchResult> results = new ArrayList<SearchResult>();
