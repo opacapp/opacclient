@@ -25,6 +25,8 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.github.machinarius.preferencefragment.PreferenceFragment;
+
 import de.geeksfactory.opacclient.R;
 
 public class AboutActivity extends ActionBarActivity {
@@ -36,7 +38,11 @@ public class AboutActivity extends ActionBarActivity {
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content_frame, new AboutFragment())
+                .replace(R.id.content_frame, getNewAboutFragment())
                 .commit();
+    }
+
+    protected PreferenceFragment getNewAboutFragment() {
+        return new AboutFragment();
     }
 }
