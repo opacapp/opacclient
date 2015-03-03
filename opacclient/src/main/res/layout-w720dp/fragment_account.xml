@@ -170,15 +170,14 @@
                             android:layout_marginTop="8dp"
                             android:paddingLeft="4dp"
                             android:text="@string/entl_head"
-                            android:textColor="@color/secondary_text_default_material_light"
-                            android:textSize="14sp"
-                            android:fontFamily="@string/fontFamily_medium" />
+                            android:textAppearance="@style/subheader" />
 
                         <LinearLayout
                             android:id="@+id/llLent"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/tvEntlHeader"
+                            android:layout_marginLeft="16dp"
                             android:orientation="vertical" >
                         </LinearLayout>
                     </RelativeLayout>
@@ -200,15 +199,14 @@
                             android:layout_marginTop="8dp"
                             android:paddingLeft="4dp"
                             android:text="@string/reservations_head"
-                            android:textColor="@color/secondary_text_default_material_light"
-                            android:textSize="14sp"
-                            android:fontFamily="@string/fontFamily_medium" />
+                            android:textAppearance="@style/subheader" />
 
                         <LinearLayout
                             android:id="@+id/llReservations"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/tvResHeader"
+                            android:layout_marginLeft="16dp"
                             android:orientation="vertical" >
                         </LinearLayout>
                     </RelativeLayout>

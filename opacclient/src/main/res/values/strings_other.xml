@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- This file is for strings that shouln't be translated -->
 <resources>
-    <string name="fontFamily_medium">sans-serif-bold</string>
     <string name="transition_toolbar">Toolbar</string>
     <string name="transition_cover">Cover</string>
 </resources>

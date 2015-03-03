@@ -14,9 +14,7 @@
         android:paddingBottom="12dp"
         android:textColor="@color/nav_seperator_fg"
         android:drawablePadding="4dp"
-        android:textSize="14sp"
-        android:fontFamily="@string/fontFamily_medium"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="@style/subheader"
         android:text="bla"/>
 
 </RelativeLayout>

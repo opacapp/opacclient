@@ -83,9 +83,7 @@
                     android:layout_marginTop="8dp"
                     android:paddingLeft="4dp"
                     android:text="@string/details_head"
-                    android:textColor="@color/secondary_text_default_material_light"
-                    android:textSize="14sp"
-                    android:fontFamily="@string/fontFamily_medium" />
+                    android:textAppearance="@style/subheader" />
 
                 <LinearLayout
                     android:id="@+id/llDetails"
@@ -104,9 +102,7 @@
                     android:layout_marginTop="8dp"
                     android:paddingLeft="4dp"
                     android:text="@string/copies_head"
-                    android:textColor="@color/secondary_text_default_material_light"
-                    android:textSize="14sp"
-                    android:fontFamily="@string/fontFamily_medium" />
+                    android:textAppearance="@style/subheader" />
 
                 <LinearLayout
                     android:id="@+id/llCopies"
