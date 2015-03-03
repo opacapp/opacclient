@@ -70,6 +70,7 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.StarDataSource;
 import de.geeksfactory.opacclient.ui.ObservableScrollView;
 import de.geeksfactory.opacclient.ui.WhitenessUtils;
+import de.geeksfactory.opacclient.utils.ISBNTools;
 
 /**
  * A fragment representing a single SearchResult detail screen. This fragment is
@@ -393,6 +394,8 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 				URL newurl;
 				if (res.getCover() != null && res.getCoverBitmap() == null) {
 					try {
+                        int px = (int) (getResources().getDisplayMetrics().density * 260);
+                        res.setCover(ISBNTools.bestAmazonCover(res.getCover(), px, px));
 						newurl = new URL(res.getCover());
 						Bitmap mIcon_val = BitmapFactory.decodeStream(newurl
 								.openConnection().getInputStream());
@@ -718,7 +721,7 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
                     }
                 });
         }
-        onScrollChanged(0,0);
+        onScrollChanged(0, 0);
     }
 
     private void fixTitleWidth() {
@@ -896,6 +899,8 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 				}
 				URL newurl;
 				try {
+                    int px = (int) (getResources().getDisplayMetrics().density * 260);
+                    res.setCover(ISBNTools.bestAmazonCover(res.getCover(), px, px));
 					newurl = new URL(res.getCover());
 					Bitmap mIcon_val = BitmapFactory.decodeStream(newurl
 							.openConnection().getInputStream());

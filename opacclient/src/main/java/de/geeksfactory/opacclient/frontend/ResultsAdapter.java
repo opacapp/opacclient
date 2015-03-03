@@ -21,9 +21,6 @@
  */
 package de.geeksfactory.opacclient.frontend;
 
-import java.net.URL;
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -35,9 +32,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.net.URL;
+import java.util.List;
+
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
+import de.geeksfactory.opacclient.utils.ISBNTools;
 
 public class ResultsAdapter extends ArrayAdapter<SearchResult> {
 	private List<SearchResult> objects;
@@ -190,7 +192,8 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
 			URL newurl;
 			if (item.getCover() != null && item.getCoverBitmap() == null) {
 				try {
-					newurl = new URL(item.getCover());
+					newurl = new URL(ISBNTools.bestAmazonCover(item.getCover(),
+                            iv.getWidth(), iv.getHeight()));
 					Bitmap mIcon_val = BitmapFactory.decodeStream(newurl
 							.openConnection().getInputStream());
 					if (mIcon_val.getHeight() > 1 && mIcon_val.getWidth() > 1) {

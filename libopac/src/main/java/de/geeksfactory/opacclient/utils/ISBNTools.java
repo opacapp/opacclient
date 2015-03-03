@@ -1,5 +1,8 @@
 package de.geeksfactory.opacclient.utils;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class ISBNTools {
 	public static String isbn13to10(String isbn13) {		
 		isbn13 = cleanupISBN(isbn13);
@@ -48,4 +51,30 @@ public class ISBNTools {
 			return "http://images.amazon.com/images/P/" + isbn13to10(isbn) + ".01.THUMBZZZ";
 		}
 	}
+
+    /**
+     * Change Amazon Cover URLs so that the image roughly matches the given size.
+     * See also: http://aaugh.com/imageabuse.html
+     * @param coverUrl Cover URL
+     * @param width desired width, in pixels
+     * @param height desired height, in pixels
+     * @return Changed URL, or the same URL if it is no Amazon URL
+     */
+    public static String bestAmazonCover(String coverUrl, int width, int height) {
+        Pattern regex = Pattern.compile("(http://[^\\.]*\\.(?:images-)?amazon\\.com/images/P/\\w*\\.\\d\\d)\\.[^\\.]*\\.jpg");
+        Matcher matcher = regex.matcher(coverUrl);
+        if (matcher.find()) {
+            int minimum = Math.min(width, height);
+            if (minimum < 75)
+                return matcher.group(1) + ".THUMB.jpg";
+            else if (minimum < 100)
+                return matcher.group(1) + ".T.jpg";
+            else if (minimum < 150)
+                return matcher.group(1) + ".M.jpg";
+            else
+                return matcher.group(1) + ".L.jpg";
+        } else {
+            return coverUrl;
+        }
+    }
 }
