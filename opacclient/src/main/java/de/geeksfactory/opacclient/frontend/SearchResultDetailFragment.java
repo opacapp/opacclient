@@ -567,7 +567,8 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 							R.layout.listitem_copy, llCopies, false);
 
 					if (v.findViewById(R.id.tvBranch) != null) {
-						if (copy.containsKey(DetailledItem.KEY_COPY_BRANCH)) {
+						if (copy.containsKey(DetailledItem.KEY_COPY_BRANCH)
+                                && !copy.get(DetailledItem.KEY_COPY_BRANCH).equals("")) {
 							((TextView) v.findViewById(R.id.tvBranch))
 									.setText(copy
 											.get(DetailledItem.KEY_COPY_BRANCH));
@@ -577,7 +578,8 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 						}
 					}
 					if (v.findViewById(R.id.tvDepartment) != null) {
-						if (copy.containsKey(DetailledItem.KEY_COPY_DEPARTMENT)) {
+						if (copy.containsKey(DetailledItem.KEY_COPY_DEPARTMENT)
+                                && !copy.get(DetailledItem.KEY_COPY_DEPARTMENT).equals("")) {
 							((TextView) v.findViewById(R.id.tvDepartment))
 									.setText(copy
 											.get(DetailledItem.KEY_COPY_DEPARTMENT));
@@ -587,7 +589,8 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 						}
 					}
 					if (v.findViewById(R.id.tvLocation) != null) {
-						if (copy.containsKey(DetailledItem.KEY_COPY_LOCATION)) {
+						if (copy.containsKey(DetailledItem.KEY_COPY_LOCATION)
+                                && !copy.get(DetailledItem.KEY_COPY_LOCATION).equals("")) {
 							((TextView) v.findViewById(R.id.tvLocation))
 									.setText(copy
 											.get(DetailledItem.KEY_COPY_LOCATION));
@@ -597,7 +600,8 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 						}
 					}
 					if (v.findViewById(R.id.tvShelfmark) != null) {
-						if (copy.containsKey(DetailledItem.KEY_COPY_SHELFMARK)) {
+						if (copy.containsKey(DetailledItem.KEY_COPY_SHELFMARK)
+                                && !copy.get(DetailledItem.KEY_COPY_SHELFMARK).equals("")) {
 							((TextView) v.findViewById(R.id.tvShelfmark))
 									.setText(copy
 											.get(DetailledItem.KEY_COPY_SHELFMARK));
@@ -607,7 +611,8 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 						}
 					}
 					if (v.findViewById(R.id.tvStatus) != null) {
-						if (copy.containsKey(DetailledItem.KEY_COPY_STATUS)) {
+						if (copy.containsKey(DetailledItem.KEY_COPY_STATUS)
+                                && !copy.get(DetailledItem.KEY_COPY_STATUS).equals("")) {
 							((TextView) v.findViewById(R.id.tvStatus))
 									.setText(copy
 											.get(DetailledItem.KEY_COPY_STATUS));
@@ -618,7 +623,8 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 					}
 
 					if (v.findViewById(R.id.tvReservations) != null) {
-						if (copy.containsKey(DetailledItem.KEY_COPY_RESERVATIONS)) {
+						if (copy.containsKey(DetailledItem.KEY_COPY_RESERVATIONS)
+                                && !copy.get(DetailledItem.KEY_COPY_RESERVATIONS).equals("")) {
 							((TextView) v.findViewById(R.id.tvReservations))
 									.setText(copy.get(DetailledItem.KEY_COPY_RESERVATIONS));
 							v.findViewById(R.id.llReservations).setVisibility(View.VISIBLE);
@@ -628,8 +634,7 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 					}
 					if (v.findViewById(R.id.tvReturndate) != null) {
 						if (copy.containsKey(DetailledItem.KEY_COPY_RETURN)
-								&& !"".equals(copy
-										.get(DetailledItem.KEY_COPY_RETURN))) {
+                                && !copy.get(DetailledItem.KEY_COPY_RETURN).equals("")) {
 							((TextView) v.findViewById(R.id.tvReturndate))
 									.setText(getString(R.string.ret)
 											+ ": "
