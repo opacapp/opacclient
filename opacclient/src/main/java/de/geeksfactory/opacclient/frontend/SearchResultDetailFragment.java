@@ -899,7 +899,12 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 					newurl = new URL(res.getCover());
 					Bitmap mIcon_val = BitmapFactory.decodeStream(newurl
 							.openConnection().getInputStream());
-					res.setCoverBitmap(mIcon_val);
+                    if (mIcon_val.getWidth() == 1 && mIcon_val.getHeight() == 1)
+                        // When images embedded from Amazon aren't available, a
+                        // 1x1 pixel image is returned (e.g. Heidelberg and iOPAC)
+                        res.setCover(null);
+                    else
+					    res.setCoverBitmap(mIcon_val);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
