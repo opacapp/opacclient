@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import org.acra.ACRA;
 
@@ -58,16 +59,14 @@ public class SearchResultListActivity extends OpacActivity implements
 
 	protected SearchResultListFragment listFragment;
 	protected SearchResultDetailFragment detailFragment;
+    private boolean secondPaneVisible = false;
 
-	@Override
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		// Show the Up button in the action bar.
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-		if (savedInstanceState == null)
-			setup();
 
 		if (findViewById(R.id.searchresult_detail_container) != null) {
 			// The detail container view will be present only in the
@@ -76,9 +75,27 @@ public class SearchResultListActivity extends OpacActivity implements
 			// activity should be in two-pane mode.
 			mTwoPane = true;
 		}
+
+        if (savedInstanceState == null)
+            setup();
+        else {
+            showSecondPane(savedInstanceState.getBoolean("secondPaneVisible", false));
+        }
 	}
 
-	protected void setup() {
+    private void showSecondPane(boolean secondPaneVisible) {
+        this.secondPaneVisible = secondPaneVisible;
+        if (mTwoPane) {
+            findViewById(R.id.searchresult_detail_container).setVisibility(secondPaneVisible ? View
+                    .VISIBLE : View.GONE);
+            findViewById(R.id.twopane_wrapper).getLayoutParams().width = secondPaneVisible ? LinearLayout
+                    .LayoutParams.MATCH_PARENT :
+                    getResources().getDimensionPixelSize(R.dimen.searchresult_pane_max_width);
+        }
+    }
+
+    protected void setup() {
+        showSecondPane(false);
 		if ("com.google.android.gms.actions.SEARCH_ACTION".equals(getIntent()
 				.getAction())) {
 			listFragment = SearchResultListFragment
@@ -130,6 +147,7 @@ public class SearchResultListActivity extends OpacActivity implements
 
 	public void showDetail(SearchResult res, View coverView) {
 		if (mTwoPane) {
+            showSecondPane(true);
 			// In two-pane mode, show the detail view in this activity by
 			// adding or replacing the detail fragment using a
 			// fragment transaction.
@@ -144,6 +162,7 @@ public class SearchResultListActivity extends OpacActivity implements
 			detailFragment.setArguments(arguments);
 			getSupportFragmentManager()
 					.beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
 					.replace(R.id.searchresult_detail_container, detailFragment)
 					.commit();
 
@@ -249,4 +268,10 @@ public class SearchResultListActivity extends OpacActivity implements
 	public boolean isTwoPane() {
 		return mTwoPane;
 	}
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("secondPaneVisible", secondPaneVisible);
+    }
 }

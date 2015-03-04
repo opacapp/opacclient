@@ -382,7 +382,9 @@ public abstract class OpacActivity extends ActionBarActivity {
 			// Insert the fragment by replacing any existing fragment
 			FragmentManager fragmentManager = getSupportFragmentManager();
 			fragmentManager.beginTransaction()
-					.replace(R.id.content_frame, fragment).commit();
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+					.replace(R.id.content_frame, fragment)
+                    .commit();
 
 			// Highlight the selected item, update the title, and close the
 			// drawer

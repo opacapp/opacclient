@@ -30,8 +30,10 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <LinearLayout
+        android:id="@+id/twopane_wrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
         android:baselineAligned="false"
         android:divider="?dividerHorizontal"
         android:orientation="horizontal"
@@ -40,7 +42,8 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:showDividers="middle"
-        android:background="@drawable/popup_bg" >
+        android:background="@drawable/popup_bg"
+        android:animateLayoutChanges="true">
 
         <FrameLayout
             android:id="@+id/searchresult_list_container"
