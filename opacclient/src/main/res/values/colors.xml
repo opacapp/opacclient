@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="main_red">#b90000</color>
+    <color name="emphasis">#31b6e7</color>
+    <color name="go_button_text">#FFFFFF</color>
+    <color name="active_account">#CCff4444</color>
+    <color name="inactive_account">#F7F7F7</color>
+    <color name="detail_desc">#7E7E7E</color>
+    <color name="account_age">#7E7E7E</color>
+    <color name="nav_bg">#303030</color>
+    <color name="nav_fg">#E0E0E0</color>
+    <color name="nav_seperator_fg">#9F9F9F</color>
+    <color name="nav_highlight">#CCff44</color>
+    <color name="nav_active_bg">#CCff4444</color>
+    <color name="nav_highlighted_bg">#505050</color>
+    <color name="account_head_bg">#505050</color>
+    <color name="account_head_fg">#F3F3F3</color>
+    <color name="hint_fg">#ffcacaca</color>
+    <color name="error_bg">#cc0000</color>
+    <color name="error_fg">#ffffff</color>
+    <color name="liblist_group_bg">#dddddd</color>
+    <color name="liblist_group_bg_active">#aaaaaa</color>
+    <color name="status_red">#cc0000</color>
+    <color name="status_yellow">#ff8900</color>
+    <color name="status_green">#00cc00</color>
+    <color name="date_warning">#ff8900</color>
+    <color name="account_downloadable">#ffffffff</color>
+    <color name="date_overdue">#cc0000</color>
+    <color name="note_replacedby">#ffff00</color>
+    <color name="warning">#FFF582</color>
+    <color name="suggest_library">#FFF582</color>
+    <color name="warning_fg">#000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="primary_red">#cc0000</color>
+    <color name="primary_red_dark">#8e0000</color>
+    <color name="primary_red_very_dark">#500000</color>
+    <color name="accent_red">#ff4444</color>
+    <color name="cover_gradient_black">#80000000</color>
+
+</resources>

@@ -1,0 +1,59 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".SearchResultListActivity" >
+
+    <!--
+    This layout is a two-pane layout for the SearchResults
+    master/detail flow. See res/values-large/refs.xml and
+    res/values-sw600dp/refs.xml for an example of layout aliases
+    that replace the single-pane version of the layout with
+    this two-pane version.
+
+    For more on layout aliases, see:
+    http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters
+    -->
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_height="168dp"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:paddingBottom="104dp"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:animateLayoutChanges="true"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:baselineAligned="false"
+        android:divider="?dividerHorizontal"
+        android:orientation="horizontal"
+        android:elevation="8dp"
+        android:layout_marginTop="-96dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:showDividers="middle"
+        android:background="@drawable/popup_bg" >
+
+        <FrameLayout
+            android:id="@+id/searchresult_list_container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <FrameLayout
+            android:id="@+id/searchresult_detail_container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2" />
+
+    </LinearLayout>
+
+</LinearLayout>

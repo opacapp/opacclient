@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/frame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="300dp"
+        android:layout_gravity="center_horizontal" />
+
+    <FrameLayout
+        android:id="@+id/error_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </FrameLayout>
+
+    <de.geeksfactory.opacclient.ui.ObservableScrollView
+        android:id="@+id/rootView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true" >
+
+            <ImageView
+                android:id="@+id/ivCover"
+                android:layout_width="match_parent"
+                android:layout_height="260dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/cover"
+                android:gravity="center"
+                android:scaleType="fitCenter"
+                android:transitionName="@string/transition_cover"
+                android:background="@color/primary_red_very_dark"/>
+
+            <View
+                android:id="@+id/gradient_top"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_alignTop="@id/ivCover"
+                android:background="@drawable/gradient_top_bottom" />
+            <View
+                android:id="@+id/gradient_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/tvTitle"
+                android:layout_alignBottom="@id/ivCover"
+                android:background="@drawable/gradient_bottom_top" />
+            <View
+                android:id="@+id/tint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/ivCover"
+                android:layout_alignBottom="@id/ivCover"
+                android:background="@color/primary_red_very_dark"
+                android:alpha="0" />
+
+            <RelativeLayout
+                android:id="@+id/detailsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ivCover"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:background="#ffe5e5e5">
+                <TextView
+                    android:id="@+id/tvDetails"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="8dp"
+                    android:paddingLeft="4dp"
+                    android:text="@string/details_head"
+                    android:textAppearance="@style/subheader" />
+
+                <LinearLayout
+                    android:id="@+id/llDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvDetails"
+                    android:orientation="vertical" >
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvCopies"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/llDetails"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="8dp"
+                    android:paddingLeft="4dp"
+                    android:text="@string/copies_head"
+                    android:textAppearance="@style/subheader" />
+
+                <LinearLayout
+                    android:id="@+id/llCopies"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvCopies"
+                    android:divider="@drawable/list_divider_material"
+                    android:orientation="vertical" >
+                </LinearLayout>
+            </RelativeLayout>
+
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:minHeight="?attr/actionBarSize"
+                android:background="@color/transparent"
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/ivCover"
+                android:textIsSelectable="true"
+                android:textColor="@android:color/white"
+                android:textSize="36sp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
+                android:maxLines="2" />
+
+        </RelativeLayout>
+    </de.geeksfactory.opacclient.ui.ObservableScrollView>
+</FrameLayout>

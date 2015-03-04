@@ -26,9 +26,6 @@ License
 -------
 This code is released under the terms of the MIT License[1]. It contains or uses several other project:
 * [jsoup](https://github.com/jhy/jsoup/), [MIT License](http://opensource.org/licenses/mit-license.php)
-* [ActionBarSherlock](https://github.com/JakeWharton/ActionBarSherlock), [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
-* [HoloEverywhere](https://github.com/ChristopheVersieux/HoloEverywhere), [MIT License](http://opensource.org/licenses/mit-license.php)
-* [SlidingMenu](https://github.com/jfeinstein10/SlidingMenu), [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 
 Authors

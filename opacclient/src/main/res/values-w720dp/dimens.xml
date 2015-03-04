@@ -1,0 +1,6 @@
+<resources>
+
+    <dimen name="activity_horizontal_margin">128dp</dimen>
+	<dimen name="preference_fragment_padding_side">120dp</dimen>
+
+</resources>

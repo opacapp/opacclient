@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_search_go"
+        app:showAsAction="always|withText"
+        android:orderInCategory="30"
+        android:title="@string/go_search">
+    </item>
+
+</menu>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/list_selector"
+    android:padding="5dip" >
+
+    <ImageView
+        android:id="@+id/ivType"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="10dip"
+        android:gravity="center"
+        android:contentDescription="@string/mediatype"
+        android:src="@drawable/ic_launcher"
+        android:transitionName="@string/transition_cover" />
+
+    <ImageView
+        android:id="@+id/ivStatus"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        android:layout_marginLeft="10dip"
+        android:gravity="center"
+        android:contentDescription="@string/status"
+        android:src="@drawable/status_light_red" />
+    
+
+    <TextView
+        android:id="@+id/tvResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/ivStatus"
+        android:layout_toRightOf="@id/ivType" />
+</RelativeLayout>

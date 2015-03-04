@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Previous style:
+	http://jgilfelt.github.io/android-actionbarstylegenerator/#name=opacapp&compat=appcompat&theme=light_dark&actionbarstyle=solid&texture=0&hairline=0&neutralPressed=1&backColor=c00%2C100&secondaryColor=555555%2C100&tabColor=c00%2C100&tertiaryColor=303030%2C100&accentColor=f44%2C100&cabBackColor=002E3E%2C100&cabHighlightColor=f44%2C100
+ -->
+
+<resources>
+    <!-- Changes not specific to API level go here -->
+    <style name="Theme.Opacapp.Base" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/primary_red</item>
+        <item name="colorPrimaryDark">@color/primary_red_dark</item>
+        <item name="colorAccent">@color/accent_red</item>
+    </style>
+
+    <style name="Theme.Opacapp.NoActionBar.Base" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary_red</item>
+        <item name="colorPrimaryDark">@color/primary_red_dark</item>
+        <item name="colorAccent">@color/accent_red</item>
+        <item name="windowActionModeOverlay">true</item>
+    </style>
+
+    <style name="Theme.Opacapp.Base.Floating" parent="Theme.AppCompat.Light.DialogWhenLarge">
+        <item name="colorPrimary">@color/primary_red</item>
+        <item name="colorPrimaryDark">@color/primary_red_dark</item>
+        <item name="colorAccent">@color/accent_red</item>
+
+        <!-- no action bar -->
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <!-- Changes specific to this API level go here -->
+    <style name="Theme.Opacapp" parent="Theme.Opacapp.Base"/>
+    <style name="Theme.Opacapp.NoActionBar" parent="Theme.Opacapp.NoActionBar.Base"/>
+    <style name="Theme.Opacapp.NoActionBar.WithDrawer" parent="Theme.Opacapp.NoActionBar.Base"/>
+    <style name="Theme.Opacapp.Floating" parent="Theme.Opacapp.Base.Floating"/>
+
+</resources>
