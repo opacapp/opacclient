@@ -71,7 +71,7 @@ public interface StringProvider {
 	public static String ORDER_CATEGORY_ASC = "order_category_asc";
 	public static String ORDER_YEAR_DESC = "order_year_desc";
 	public static String ORDER_CATEGORY_DESC = "order_category_desc";
-	public static String NO_RESULTS = "no_results";
+	public static String NO_RESULTS = "no_results_api";
 
 	/**
 	 * Returns the translated string identified by identifier

@@ -3,7 +3,7 @@
     <!-- These strings may be shown as unused by Android Lint, but are in fact used by the AndroidStringProvider class -->
     <string name="limited_num_of_criteria">Diese Bibliothek unterstützt nur bis zu %d benutzte Suchkriterien.</string>
     <string name="no_criteria_input">Es wurden keine Suchkriterien eingegeben.</string>
-	<string name="no_results">Zu dieser Suchanfrage wurden keine Ergebnisse gefunden.</string>
+	<string name="no_results_api">Zu dieser Suchanfrage wurden keine Ergebnisse gefunden.</string>
     <string name="combination_not_supported">Sie haben eine Kombination von Suchfeldern benutzt, die von dieser Bibliothek nicht unterstützt wird. Bitte probieren Sie eine andere Suche.</string>
     <string name="unknown_error_account">Unbekannter Fehler. Bitte prüfen Sie, ob Ihre Kontodaten korrekt sind.</string>
     <string name="unknown_error_account_with_description">Unbekannter Fehler: "%s" Bitte prüfen Sie, ob Ihre Kontodaten korrekt sind.</string>
