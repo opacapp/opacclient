@@ -53,26 +53,39 @@ public class ISBNTools {
 	}
 
     /**
-     * Change Amazon Cover URLs so that the image roughly matches the given size.
-     * See also: http://aaugh.com/imageabuse.html
+     * Change Amazon Cover URLs (and some others) so that the image roughly matches the given size.
      * @param coverUrl Cover URL
      * @param width desired width, in pixels
      * @param height desired height, in pixels
-     * @return Changed URL, or the same URL if it is no Amazon URL
+     * @return Changed URL, or the same URL if it is not supported by this implementation
      */
     public static String bestAmazonCover(String coverUrl, int width, int height) {
-        Pattern regex = Pattern.compile("(http://[^\\.]*\\.(?:images-)?amazon\\.com/images/P/\\w*\\.\\d\\d)\\.[^\\.]*\\.jpg");
-        Matcher matcher = regex.matcher(coverUrl);
-        if (matcher.find()) {
+        // Amazon Covers, see http://aaugh.com/imageabuse.html
+        Pattern amazonRegex = Pattern.compile("(http://[^\\.]*\\.(?:images-)?amazon\\" +
+                ".com/images/P/\\w*\\.\\d\\d)\\.[^\\.]*\\.jpg");
+        Matcher amazonMatcher = amazonRegex.matcher(coverUrl);
+        // VLB Covers, see http://info.vlb.de/files/vlb_rest_api_anwenderspezifikation.pdf, page 43
+        Pattern vlbRegex = Pattern.compile("http://vlb\\.de/GetBlob\\.aspx\\?strIsbn=\\d*");
+        Matcher vlbMatcher = vlbRegex.matcher(coverUrl);
+        if (amazonMatcher.find()) {
             int minimum = Math.min(width, height);
             if (minimum < 75)
-                return matcher.group(1) + ".THUMB.jpg";
+                return amazonMatcher.group(1) + ".THUMB.jpg";
             else if (minimum < 100)
-                return matcher.group(1) + ".T.jpg";
+                return amazonMatcher.group(1) + ".T.jpg";
             else if (minimum < 150)
-                return matcher.group(1) + ".M.jpg";
+                return amazonMatcher.group(1) + ".M.jpg";
             else
-                return matcher.group(1) + ".L.jpg";
+                return amazonMatcher.group(1) + ".L.jpg";
+        } else if (vlbMatcher.find()) {
+            if (height < 90)
+                return vlbMatcher.group() + "&size=S";
+            else if (height < 200)
+                return vlbMatcher.group() + "&size=M";
+            else if (width < 600)
+                return vlbMatcher.group() + "&size=L";
+            else
+                return vlbMatcher.group();
         } else {
             return coverUrl;
         }
