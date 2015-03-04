@@ -120,8 +120,9 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
     protected LinearLayout llCopies;
 
     private Boolean[] cardAnimations;
+    private boolean isCoverShown;
 
-	/**
+    /**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
 	 * fragment (e.g. upon screen orientation changes).
 	 */
@@ -487,7 +488,6 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 		}
 
 		if (getItem().getCoverBitmap() != null) {
-			ivCover.setVisibility(View.VISIBLE);
             ivCover.setImageBitmap(getItem().getCoverBitmap());
             if (!image_analyzed) {
                 Palette.generateAsync(getItem().getCoverBitmap(), new Palette.PaletteAsyncListener() {
@@ -502,8 +502,10 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
                 });
                 analyzeWhitenessOfCoverAsync(getItem().getCoverBitmap());
             }
-            tvTitel.setText(getItem().getTitle());
             showCoverView(true);
+            tvTitel.setText(getItem().getTitle());
+        } else if (getArguments().containsKey(ARG_ITEM_COVER_BITMAP)) {
+            tvTitel.setText(getItem().getTitle());
 		} else {
             showCoverView(false);
             toolbar.setTitle(getItem().getTitle());
@@ -662,6 +664,7 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 	}
 
     private void showCoverView(boolean b) {
+        isCoverShown = b;
         ivCover.setVisibility(b ? View.VISIBLE : View.GONE);
         tvTitel.setVisibility(b ? View.VISIBLE : View.GONE);
         gradientBottom.setVisibility(b ? View.VISIBLE : View.GONE);
@@ -689,7 +692,7 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
     }
 
     private void fixTitle() {
-        if (getItem().getCoverBitmap() != null) {
+        if (isCoverShown) {
             // tvTitel is used for displaying title
             fixTitleWidth();
             tvTitel.getViewTreeObserver().addOnGlobalLayoutListener(new
@@ -777,7 +780,7 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
     @Override
     public void onScrollChanged(int deltaX, int deltaY) {
         int scrollY = scrollView.getScrollY();
-        if (getItem().getCoverBitmap() != null) {
+        if (isCoverShown) {
             // Parallax effect
             ViewHelper.setTranslationY(ivCover, scrollY * 0.5f);
             ViewHelper.setTranslationY(gradientBottom, scrollY * 0.5f);
@@ -786,7 +789,7 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
         // Toolbar stays at the top
         ViewHelper.setTranslationY(toolbar, scrollY);
 
-        if (getItem().getCoverBitmap() != null) {
+        if (isCoverShown) {
             float minHeight = toolbar.getHeight();
             float progress = Math.min(((float) scrollY) / (ivCover.getHeight() - minHeight), 1);
             float scale = 1 - progress + 20f / 36f * progress;
