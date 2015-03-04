@@ -364,6 +364,10 @@ public class Adis extends BaseApi implements OpacApi {
 				&& doc.select("#right #R06").size() == 0) {
 			throw new OpacErrorException(doc.select(".message h1").text());
 		}
+		if (doc.select("#OPACLI").text().contains("nicht gefunden")) {
+			throw new OpacErrorException(
+					stringProvider.getString(StringProvider.NO_RESULTS));
+		}
 
 		int total_result_count = -1;
 		List<SearchResult> results = new ArrayList<SearchResult>();
@@ -1165,7 +1169,8 @@ public class Adis extends BaseApi implements OpacApi {
 		List<Map<String, String>> res = new ArrayList<Map<String, String>>();
 		for (Element tr : doc.select(".rTable_div tr")) {
 			if (tr.select("a").size() == 1) {
-				if (tr.text().contains("Reservationen")
+				if ((tr.text().contains("Reservationen") || tr.text().contains(
+						"Vormerkungen"))
 						&& !tr.child(0).text().trim().equals("")) {
 					rlinks.add(tr.select("a").first().absUrl("href"));
 					rnum += Integer.parseInt(tr.child(0).text().trim());
@@ -1175,10 +1180,27 @@ public class Adis extends BaseApi implements OpacApi {
 		for (String rlink : rlinks) {
 			Document rdoc = htmlGet(rlink);
 			boolean error = false;
+			Map<String, Integer> colmap = new HashMap<String, Integer>();
+			colmap.put(AccountData.KEY_RESERVATION_TITLE, 2);
+			colmap.put(AccountData.KEY_RESERVATION_BRANCH, 1);
+			colmap.put(AccountData.KEY_RESERVATION_EXPIRE, 0);
+			int i = 0;
+			for (Element th : rdoc.select(".rTable_div thead tr th")) {
+				if (th.text().contains("Bis"))
+					colmap.put(AccountData.KEY_RESERVATION_EXPIRE, i);
+				if (th.text().contains("Ausgabeort"))
+					colmap.put(AccountData.KEY_RESERVATION_BRANCH, i);
+				if (th.text().contains("Titel"))
+					colmap.put(AccountData.KEY_RESERVATION_TITLE, i);
+				i++;
+					
+			}
 			for (Element tr : rdoc.select(".rTable_div tbody tr")) {
 				if (tr.children().size() >= 4) {
 					Map<String, String> line = new HashMap<String, String>();
-					String text = tr.child(2).html();
+					String text = tr.child(
+							colmap.get(AccountData.KEY_RESERVATION_TITLE))
+							.html();
 					text = Jsoup.parse(text.replaceAll("(?i)<br[^>]*>", ";"))
 							.text();
 					String[] split = text.split("[:/;\n]");
@@ -1188,19 +1210,26 @@ public class Adis extends BaseApi implements OpacApi {
 						line.put(AccountData.KEY_RESERVATION_AUTHOR, split[1]
 								.replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1")
 								.trim());
-					line.put(AccountData.KEY_RESERVATION_BRANCH, tr.child(1)
-							.text().trim());
+					line.put(
+							AccountData.KEY_RESERVATION_BRANCH,
+							tr.child(
+									colmap.get(AccountData.KEY_RESERVATION_BRANCH))
+									.text().trim());
 					if (rlink.contains("SRGLINK_2")) {
 						// Abholbereite Bestellungen
 						line.put("available", "bereit");
 						if (tr.child(0).text().trim().length() >= 10)
-							line.put(AccountData.KEY_RESERVATION_EXPIRE, tr
-									.child(0).text().trim().substring(0, 10));
+							line.put(
+									AccountData.KEY_RESERVATION_EXPIRE,
+									tr.child(
+											colmap.get(AccountData.KEY_RESERVATION_EXPIRE))
+											.text().trim().substring(0, 10));
 					} else {
 						// Nicht abholbereite
 						if (tr.select("input[type=checkbox]").size() > 0
-								&& rlink.toUpperCase(Locale.GERMAN).contains(
-										"SP=SZM"))
+								&& (rlink.toUpperCase(Locale.GERMAN).contains(
+										"SP=SZM") || rlink.toUpperCase(
+										Locale.GERMAN).contains("SP=SZW")))
 							line.put(AccountData.KEY_RESERVATION_CANCEL, tr
 									.select("input[type=checkbox]")
 									.attr("name")

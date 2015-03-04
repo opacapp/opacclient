@@ -303,7 +303,7 @@ public class IOpac extends BaseApi implements OpacApi {
 			} else {
 				title = tr.select("td").get(colmap.get("title")).text().trim()
 						.replace("\u00a0", "");
-				if (title.contains("(")) {
+				if (title.contains("(") && title.indexOf("(") > 0) {
 					additionalInfo += title.substring(title.indexOf("("));
 					title = title.substring(0, title.indexOf("(") - 1).trim();
 				}

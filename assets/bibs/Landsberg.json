@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "winbiap",
+    "city": "Landsberg",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/landsberg",
+        "information": "http://www.landsberg.de/web.nsf/id/pa_stadtbuecherei.html"
+    },
+    "geo": [
+        48.050783,
+        10.8703515
+    ],
+    "state": "Bayern",
+    "title": "Stadtb\u00fccherei"
+}
