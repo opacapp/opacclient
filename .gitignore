@@ -34,8 +34,8 @@ assets/buildnum.txt
 Thumbs.db
 
 .gradle
-/local.properties
-/.idea/workspace.xml
-/.idea/libraries
+local.properties
+/opacclient/.idea/workspace.xml
+/opacclient/.idea/libraries
 .DS_Store
-/build
+build/
