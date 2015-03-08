@@ -6,8 +6,6 @@
       <module fileurl="file://$PROJECT_DIR$/meaningdetector/meaningdetector.iml" filepath="$PROJECT_DIR$/meaningdetector/meaningdetector.iml" />
       <module fileurl="file://$PROJECT_DIR$/noandroid/noandroid.iml" filepath="$PROJECT_DIR$/noandroid/noandroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/opacclient/opacclient.iml" filepath="$PROJECT_DIR$/opacclient/opacclient.iml" />
-      <module fileurl="file://$PROJECT_DIR$/opacclient_opensource/opacclient.iml" filepath="$PROJECT_DIR$/opacclient_opensource/opacclient.iml" />
-      <module fileurl="file://$PROJECT_DIR$/opacclient_studio.iml" filepath="$PROJECT_DIR$/opacclient_studio.iml" />
       <module fileurl="file://$PROJECT_DIR$/opensource.iml" filepath="$PROJECT_DIR$/opensource.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/tests.iml" filepath="$PROJECT_DIR$/tests/tests.iml" />
     </modules>
