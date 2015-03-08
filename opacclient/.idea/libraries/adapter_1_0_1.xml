@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="adapter-1.0.1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/opacclient/libs/adapter-1.0.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

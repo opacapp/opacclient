@@ -8,7 +8,7 @@ import sys
 import json
 import os
 
-DIR = 'opacclient/src/main/assets/bibs/'
+DIR = 'opacclient/opacapp/src/main/assets/bibs/'
 
 for filename in os.listdir(DIR):
 	f = DIR + filename

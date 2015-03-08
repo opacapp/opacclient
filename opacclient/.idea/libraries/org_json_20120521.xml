@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="org.json-20120521">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/meaningdetector/libs/org.json-20120521.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

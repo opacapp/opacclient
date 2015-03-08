@@ -7,7 +7,7 @@ import urllib.request
 import urllib.parse
 import urllib.error
 
-LIBDIR = 'opacclient/src/main/assets/bibs/'
+LIBDIR = 'opacclient/opacapp/src/main/assets/bibs/'
 TYPES = [
         'NONE', 'BOOK', 'CD', 'CD_SOFTWARE', 'CD_MUSIC', 'DVD', 'MOVIE', 'AUDIOBOOK', 'PACKAGE',
         'GAME_CONSOLE', 'EBOOK', 'SCORE_MUSIC', 'PACKAGE_BOOKS', 'UNKNOWN', 'NEWSPAPER',
