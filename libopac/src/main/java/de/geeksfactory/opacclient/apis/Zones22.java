@@ -469,6 +469,11 @@ public class Zones22 extends BaseApi {
 				}
 			}
 		}
+		
+		//Cover
+		if (doc.select(".BookCover, .LargeBookCover").size() > 0) {
+			result.setCover(doc.select(".BookCover, .LargeBookCover").first().attr("src"));
+		}
 
 		Elements copydivs = doc.select(".DetailDataCell div[id^=stock_]");
 		String pop = "";
