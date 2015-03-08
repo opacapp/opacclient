@@ -79,7 +79,6 @@ import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.StarContentProvider;
 
-@ReportsCrashes(formKey = "", mailTo = "info@opacapp.de", mode = org.acra.ReportingInteractionMode.NOTIFICATION, resToastText = R.string.crash_toast_text)
 public class OpacClient extends Application {
 
 	public Exception last_exception;
