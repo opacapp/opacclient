@@ -1,1 +1,1 @@
-include ':opacclient', ':libopac', ':tests', ':meaningdetector', ':noandroid', ':'
+include ':opacapp', ':libopac', ':tests', ':meaningdetector', ':noandroid'

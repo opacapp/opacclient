@@ -3,7 +3,7 @@
   <component name="FacetManager">
     <facet type="android-gradle" name="Android-Gradle">
       <configuration>
-        <option name="GRADLE_PROJECT_PATH" value=":opacclient" />
+        <option name="GRADLE_PROJECT_PATH" value=":opacapp" />
       </configuration>
     </facet>
     <facet type="android" name="Android">
