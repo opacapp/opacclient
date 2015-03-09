@@ -67,7 +67,7 @@ public class HTTPClient {
 				try {
 					in = Files.newInputStream(Paths.get("../res/raw/ssl_trust_store.bks"));
 				} catch (NoSuchFileException e) {
-					in = Files.newInputStream(Paths.get("../opacclient/res/raw/ssl_trust_store.bks"));
+					in = Files.newInputStream(Paths.get("opacapp/src/main/res/raw/ssl_trust_store.bks"));
 				}
 				try {
 					trustStore.load(in,

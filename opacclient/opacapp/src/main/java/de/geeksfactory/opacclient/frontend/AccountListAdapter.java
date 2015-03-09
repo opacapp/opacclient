@@ -76,7 +76,7 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
 		if (((OpacClient) ((Activity) context).getApplication()).getAccount()
 				.getId() == item.getId() && highlight) {
 			view.findViewById(R.id.rlItem).setBackgroundColor(
-					context.getResources().getColor(R.color.active_account));
+					context.getResources().getColor(R.color.accent_red));
 		} else {
 			// should be replaced by setBackground which is not available before API level 16
 			view.findViewById(R.id.rlItem).setBackgroundDrawable(null);

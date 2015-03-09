@@ -4,4 +4,5 @@
     <string name="fontFamily_medium">sans-serif-bold</string>
     <string name="transition_toolbar">Toolbar</string>
     <string name="transition_cover">Cover</string>
+    <string name="transition_gray_box">Gray Box</string>
 </resources>

@@ -145,7 +145,7 @@ public class MultiStepResultHelper {
 
 		if (result.getDetails().size() == 1
 				&& result.getDetails().get(0).length == 1) {
-			((RelativeLayout) view.findViewById(R.id.rlConfirm))
+			((ViewGroup) view.findViewById(R.id.rlConfirm))
 					.removeView(table);
 			TextView tv = new TextView(context);
 			tv.setText(result.getDetails().get(0)[0]);

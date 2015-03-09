@@ -35,7 +35,8 @@
                 android:layout_height="wrap_content"
                 android:background="@color/account_head_bg"
                 android:orientation="vertical"
-                android:padding="8dp" >
+                android:padding="8dp"
+                android:transitionName="@string/transition_gray_box">
 
                 <EditText
                     android:id="@+id/etSimpleSearch"

@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="main_red">#b90000</color>
-    <color name="emphasis">#31b6e7</color>
-    <color name="go_button_text">#FFFFFF</color>
-    <color name="active_account">#CCff4444</color>
-    <color name="inactive_account">#F7F7F7</color>
     <color name="detail_desc">#7E7E7E</color>
     <color name="account_age">#7E7E7E</color>
     <color name="nav_bg">#303030</color>
@@ -34,7 +29,6 @@
     <color name="transparent">#00000000</color>
     <color name="primary_red">#cc0000</color>
     <color name="primary_red_dark">#8e0000</color>
-    <color name="primary_red_very_dark">#500000</color>
     <color name="accent_red">#ff4444</color>
     <color name="cover_gradient_black">#80000000</color>
 

@@ -24,7 +24,7 @@ public class JavaMeaningDetector implements MeaningDetector {
 	private final String assets_fieldsdir;
 
 	public JavaMeaningDetector(Library lib) {
-		this(lib, "../opacclient/assets/meanings");
+		this(lib, "opacapp/src/main/assets/meanings");
 	}
 	
 	public JavaMeaningDetector(Library lib, String assets_fieldsdir) {

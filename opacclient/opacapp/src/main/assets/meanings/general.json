@@ -50,7 +50,8 @@
         "Regal",
         "Standorte CB",
         "Standorte SFB/SD",
-        "Erscheinungsland"
+        "Erscheinungsland",
+        "Suche in Abteilung"
     ],
     "PUBLISHER": [
         "Verlag",
@@ -99,7 +100,9 @@
         "trefwoord (Stichw.)",
         "trefwoord",
         "GOO-trefwoord",
-        "Thema (Schlagwort)"
+        "Thema (Schlagwort)",
+        "Schlagwortkette",
+        "Lokales Schlagwort"
     ],
     "BARCODE": [
         "Barcode",
@@ -109,7 +112,8 @@
         "Katalog-Nr.",
         "Mediencode",
         "Identifikations-Nummer",
-        "Buchungsnr."
+        "Buchungsnr.",
+        "ID-Nummer"
     ],
     "AUTHOR": [
         "Autor",
@@ -178,7 +182,10 @@
     "ORDER": [
         "Sortierung",
         "Reihenfolge",
-        "sortiert nach"
+        "sortiert nach",
+        "  sortiert nach",
+        "  sort by",
+        "  sorteer op"
     ],
     "ISBN": [
         "ISBN",
@@ -275,7 +282,8 @@
         "titelwoorden",
         "title (keywords)",
         "title words",
-        "Mots titre"
+        "Mots titre",
+        "Titelwort/Thema"
     ],
     "DIGITAL": [
         "digital",
