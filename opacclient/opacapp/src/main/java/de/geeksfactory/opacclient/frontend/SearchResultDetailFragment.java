@@ -668,7 +668,7 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
                     llDetails.getPaddingBottom()
             );
         } else {
-            toolbar.setBackgroundResource(R.color.primary_red_very_dark);
+            toolbar.setBackgroundResource(R.color.primary_red_dark);
             ViewCompat.setElevation(toolbar, TypedValue.applyDimension(TypedValue
                     .COMPLEX_UNIT_DIP, 4f, getResources().getDisplayMetrics()));
             llDetails.setPadding(
