@@ -53,7 +53,7 @@ public class LibraryApiTestCases extends TestCase {
 	private Library library;
 	private OpacApi api;
 	private List<SearchField> fields;
-    private static final String FOLDER = "../opacclient";
+    private static final String FOLDER = "opacapp/src/main";
 
 	public LibraryApiTestCases(String library) throws JSONException,
 			IOException {
