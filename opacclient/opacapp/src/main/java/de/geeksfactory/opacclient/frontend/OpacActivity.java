@@ -35,11 +35,14 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.transition.AutoTransition;
+import android.transition.TransitionInflater;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -349,7 +352,7 @@ public abstract class OpacActivity extends ActionBarActivity {
 			// clicked on a separator
 			return;
 		} else if (item.type == Item.TYPE_TEXT) {
-
+            Fragment previousFragment = fragment;
 			if (item.tag.equals("search")) {
 				fragment = new SearchFragment();
 				setTwoPane(false);
@@ -381,8 +384,26 @@ public abstract class OpacActivity extends ActionBarActivity {
 
 			// Insert the fragment by replacing any existing fragment
 			FragmentManager fragmentManager = getSupportFragmentManager();
-			fragmentManager.beginTransaction()
-					.replace(R.id.content_frame, fragment).commit();
+			FragmentTransaction transaction = fragmentManager.beginTransaction()
+					.replace(R.id.content_frame, fragment);
+
+            fragment.setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition
+                    (android.R.transition.move));
+            fragment.setEnterTransition(TransitionInflater.from(this).inflateTransition
+                    (android.R.transition.fade));
+            try {
+                if (previousFragment instanceof SearchFragment && fragment instanceof AccountFragment) {
+                    transaction.addSharedElement(previousFragment.getView().findViewById(R.id
+                            .rlSimpleSearch), getString(R.string.transition_gray_box));
+                } else if (previousFragment instanceof AccountFragment &&
+                        fragment instanceof SearchFragment) {
+                    transaction.addSharedElement(previousFragment.getView().findViewById(R.id
+                            .rlAccHeader), getString(R.string.transition_gray_box));
+                }
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+            transaction.commit();
 
 			// Highlight the selected item, update the title, and close the
 			// drawer

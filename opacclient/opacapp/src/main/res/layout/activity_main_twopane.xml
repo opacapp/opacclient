@@ -47,7 +47,8 @@
             android:orientation="horizontal"
             android:showDividers="middle"
             android:elevation="8dp"
-            android:background="@drawable/popup_bg">
+            android:background="@drawable/popup_bg"
+            android:animateLayoutChanges="true">
             <FrameLayout
                 android:id="@+id/content_frame"
                 android:layout_width="0dp"
