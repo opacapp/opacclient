@@ -7,7 +7,6 @@
     <color name="nav_fg">#E0E0E0</color>
     <color name="nav_seperator_fg">#9F9F9F</color>
     <color name="nav_highlight">#CCff44</color>
-    <color name="nav_active_bg">#CCff4444</color>
     <color name="nav_highlighted_bg">#505050</color>
     <color name="account_head_bg">#505050</color>
     <color name="account_head_fg">#F3F3F3</color>
