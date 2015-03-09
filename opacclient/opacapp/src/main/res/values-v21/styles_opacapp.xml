@@ -11,6 +11,10 @@
         <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
         <item name="android:windowEnterTransition">@android:transition/fade</item>
         <item name="android:windowExitTransition">@android:transition/fade</item>
+        <item name="android:fragmentSharedElementEnterTransition">@android:transition/move</item>
+        <item name="android:fragmentSharedElementReturnTransition">@android:transition/move</item>
+        <item name="android:fragmentEnterTransition">@android:transition/fade</item>
+        <item name="android:fragmentReturnTransition">@android:transition/fade</item>
     </style>
 
     <style name="Theme.Opacapp.NoActionBar" parent="Theme.Opacapp.NoActionBar.Base">
@@ -21,6 +25,11 @@
         <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
         <item name="android:windowEnterTransition">@android:transition/fade</item>
         <item name="android:windowExitTransition">@android:transition/fade</item>
+
+        <item name="android:fragmentSharedElementEnterTransition">@android:transition/move</item>
+        <item name="android:fragmentSharedElementReturnTransition">@android:transition/move</item>
+        <item name="android:fragmentEnterTransition">@android:transition/fade</item>
+        <item name="android:fragmentReturnTransition">@android:transition/fade</item>
     </style>
 
     <style name="Theme.Opacapp.NoActionBar.WithDrawer" parent="Theme.Opacapp.NoActionBar.Base">
@@ -33,6 +42,11 @@
         <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
         <item name="android:windowEnterTransition">@android:transition/fade</item>
         <item name="android:windowExitTransition">@android:transition/fade</item>
+
+        <item name="android:fragmentSharedElementEnterTransition">@android:transition/move</item>
+        <item name="android:fragmentSharedElementReturnTransition">@android:transition/move</item>
+        <item name="android:fragmentEnterTransition">@android:transition/fade</item>
+        <item name="android:fragmentReturnTransition">@android:transition/fade</item>
     </style>
 
 </resources>

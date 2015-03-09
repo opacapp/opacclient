@@ -14,6 +14,7 @@
             android:layout_height="168dp"
             android:layout_width="match_parent"
             android:gravity="top"
+            android:paddingBottom="104dp"
             android:background="?attr/colorPrimary"
             android:elevation="4dp"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
@@ -47,7 +48,8 @@
             android:orientation="horizontal"
             android:showDividers="middle"
             android:elevation="8dp"
-            android:background="@drawable/popup_bg">
+            android:background="@drawable/popup_bg"
+            android:animateLayoutChanges="true">
             <FrameLayout
                 android:id="@+id/content_frame"
                 android:layout_width="0dp"
