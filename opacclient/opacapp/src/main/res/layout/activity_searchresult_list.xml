@@ -12,7 +12,7 @@
         android:minHeight="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:theme="@style/ThemeOverlay.Opacapp.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         android:transitionName="@string/transition_toolbar"/>
 

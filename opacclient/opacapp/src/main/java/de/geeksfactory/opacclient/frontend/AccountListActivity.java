@@ -45,7 +45,8 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 
 public class AccountListActivity extends ActionBarActivity {
 
-	protected List<Account> accounts;
+    private static final int ACCOUNT_EDIT_REQUEST_CODE = 0;
+    protected List<Account> accounts;
     protected FloatingActionButton fab;
 
 	@Override
@@ -68,7 +69,8 @@ public class AccountListActivity extends ActionBarActivity {
 		Intent i = new Intent(this, LibraryListActivity.class);
         ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(fab,
                 fab.getLeft(), fab.getTop(), fab.getWidth(), fab.getHeight());
-		ActivityCompat.startActivity(this, i, options.toBundle());
+		ActivityCompat.startActivityForResult(this, i, ACCOUNT_EDIT_REQUEST_CODE,
+                options.toBundle());
 	}
 
 	public void refreshLv() {
@@ -97,7 +99,8 @@ public class AccountListActivity extends ActionBarActivity {
 				i.putExtra("id", accounts.get(position).getId());
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(view,
                         view.getLeft(), view.getTop(), view.getWidth(), view.getHeight());
-                ActivityCompat.startActivity(AccountListActivity.this, i, options.toBundle());
+                ActivityCompat.startActivityForResult(AccountListActivity.this, i,
+                        ACCOUNT_EDIT_REQUEST_CODE, options.toBundle());
 			}
 		});
 		lvAccounts.setOnItemLongClickListener(new OnItemLongClickListener() {
@@ -122,5 +125,11 @@ public class AccountListActivity extends ActionBarActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ACCOUNT_EDIT_REQUEST_CODE)
+            refreshLv();
+    }
 
 }
