@@ -62,6 +62,18 @@ public class HTTPClient {
 
 	public static DefaultHttpClient getNewHttpClient(boolean customssl) {
 		DefaultHttpClient hc = null;
+
+        HttpParams params = new BasicHttpParams();
+        HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+        HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
+
+        SchemeRegistry registry = new SchemeRegistry();
+        registry.register(new Scheme("http", PlainSocketFactory
+                .getSocketFactory(), 80));
+
+        ClientConnectionManager ccm = new ThreadSafeClientConnManager(
+                params, registry);
+
 		if (customssl) {
 			try {
 				if (trustStore == null) {
@@ -79,26 +91,17 @@ public class HTTPClient {
 
 				SSLSocketFactory sf = new AdditionalKeyStoresSSLSocketFactory(
 						trustStore);
-
-				HttpParams params = new BasicHttpParams();
-				HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-				HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
-
-				SchemeRegistry registry = new SchemeRegistry();
-				registry.register(new Scheme("http", PlainSocketFactory
-						.getSocketFactory(), 80));
-				registry.register(new Scheme("https", sf, 443));
-
-				ClientConnectionManager ccm = new ThreadSafeClientConnManager(
-						params, registry);
+                registry.register(new Scheme("https", sf, 443));
 
 				hc = new DefaultHttpClient(ccm, params);
 			} catch (Exception e) {
 				e.printStackTrace();
-				hc = new DefaultHttpClient();
+                registry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
+				hc = new DefaultHttpClient(ccm, params);
 			}
 		} else {
-			hc = new DefaultHttpClient();
+            registry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
+			hc = new DefaultHttpClient(ccm, params);
 		}
 		RedirectHandler customRedirectHandler = new HTTPClient.CustomRedirectHandler();
 		hc.setRedirectHandler(customRedirectHandler);
