@@ -1,6 +1,6 @@
-opacclient
-==========
-Android client for public libraries. German only, but just for now. See [opacapp.de](http://opacapp.de) for details.
+Web Opac App
+============
+Android client for public libraries. See [opacapp.net](http://opacapp.net) for details.
 
 ![Screenshot](http://opacapp.de/wp-content/themes/opacapp/img/020_menue.png)
 
@@ -20,16 +20,30 @@ Not all of the features are availably for every library.
 
 Support
 -------
-Supports web catalogues of different library system vendors, see [website](http://opacapp.de/kompatibilitaet/) or [wiki](https://github.com/raphaelm/opacclient/wiki/Supported-library-types) for details.
+Supports web catalogues of different library system vendors, see our [website](http://de.opacapp.net/kompatibilitaet/) or [wiki](https://github.com/raphaelm/opacclient/wiki/Supported-library-types) for details.
 
 License
 -------
-This code is released under the terms of the MIT License[1]. It contains or uses several other project:
-* [jsoup](https://github.com/jhy/jsoup/), [MIT License](http://opensource.org/licenses/mit-license.php)
+This code is released under the terms of the [MIT License](http://opensource.org/licenses/mit-license.php)
+
+It contains several libraries:
+
+* jsoup, (c) Jonathan Hedley and contributors, MIT License
+* ACRA, (c) Kevin Gaudin and contributors, Apache License
+* cwac-endless and cwac-adapter, (c) CommonsWare, LLC and Google, Inc., Apache License
+* Android Support library, (c) Google Inc., Apache License
+* FloatingActionButton, (c) Oleksandr Melnykov, MIT License
+* PreferenceFragment-Compat, (c) Justin Harrison, Germán Valencia, Apache License
+* NineOldAndroids, (c) Jake Wharton, Apache License
+* android-flowlayout, (c) Artem Votincev, Apache License
 
 
 Authors
 -------
-* Raphael Michel <mail@raphaelmichel.de> www.raphaelmichel.de
-* BiBer1992 integration by Rüdiger Wurth
-* PICA integration by Johan von Fostner
+* Raphael Michel <mail@raphaelmichel.de>
+* Johan von Forstner
+
+Many thanks go to our contributors, including:
+
+* Rüdiger Wurth
+
