@@ -125,7 +125,7 @@
                 android:layout_width="match_parent"
                 android:minHeight="?attr/actionBarSize"
                 android:background="@color/transparent"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:theme="@style/ThemeOverlay.Opacapp.ActionBar"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
             <TextView
