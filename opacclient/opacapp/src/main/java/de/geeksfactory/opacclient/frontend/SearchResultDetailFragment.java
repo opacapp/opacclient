@@ -501,10 +501,13 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
             }
             tvTitel.setText(getItem().getTitle());
             showCoverView(true);
+		} else if (getArguments().containsKey(ARG_ITEM_COVER_BITMAP)) {
+            tvTitel.setText(getItem().getTitle());
+            showCoverView(true);
 		} else {
             showCoverView(false);
             toolbar.setTitle(getItem().getTitle());
-		}
+        }
 		llDetails.removeAllViews();
 		for (Detail detail : item.getDetails()) {
 			View v = getLayoutInflater(null)

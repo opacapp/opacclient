@@ -235,5 +235,6 @@
     <string name="location">Standort</string>
     <string name="department">Abteilung</string>
     <string name="reservations">Reservierungen</string>
+    <string name="clear_search">Formular leeren</string>
 
 </resources>

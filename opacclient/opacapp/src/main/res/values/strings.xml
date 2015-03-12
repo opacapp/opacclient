@@ -230,4 +230,5 @@ We might know your library ID then, but not your password, and we will take care
     <string name="location">Location</string>
     <string name="department">Department</string>
     <string name="reservations">Reservations</string>
+    <string name="clear_search">clear form</string>
 </resources>
