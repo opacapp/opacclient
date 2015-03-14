@@ -22,7 +22,9 @@
 package de.geeksfactory.opacclient.apis;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.ParseException;
@@ -599,7 +601,7 @@ public class Pica extends BaseApi implements OpacApi {
 						JSONObject reservation = new JSONObject();
 						try {
 							reservation.put("multi", multipleCopies);
-							reservation.put("link", opac_url + a.attr("href"));
+							reservation.put("link", _extract_url(a.absUrl("href")));
 							reservation.put("desc", location);
 							reservationInfo.put(reservation);
 						} catch (JSONException e1) {
@@ -617,13 +619,49 @@ public class Pica extends BaseApi implements OpacApi {
 			line++;
 		}
 
-		e.put(DetailledItem.KEY_COPY_BRANCH, location);
-		result.addCopy(e);
+        if (e.size() > 0) {
+            e.put(DetailledItem.KEY_COPY_BRANCH, location);
+            result.addCopy(e);
+        }
+
+        if (reservationInfo.length() == 0) {
+            // No reservation info found yet, because we didn't find any copies.
+            // If there is a reservation link somewhere in the rows we interpreted
+            // as details, we still want to use it.
+            if (doc.select("td a:has(img[src*=inline_arrow])").size() > 0) {
+                Element a = doc.select(
+                        "td a:has(img[src*=inline_arrow])").first();
+                boolean multipleCopies = a.text().matches(
+                        ".*(Exemplare|Volume list).*");
+                JSONObject reservation = new JSONObject();
+                try {
+                    reservation.put("multi", multipleCopies);
+                    reservation.put("link", _extract_url(a.attr("href")));
+                    reservation.put("desc", location);
+                    reservationInfo.put(reservation);
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                }
+                result.setReservable(true);
+            }
+        }
+
 
 		result.setReservation_info(reservationInfo.toString());
 
 		return result;
 	}
+
+    private String _extract_url(String javascriptUrl) {
+        if (javascriptUrl.startsWith("javascript:"))
+            javascriptUrl = javascriptUrl.replaceAll("^javascript:PU\\('(.*)',(.*)\\)(.*)", "$1");
+        try {
+            return new URL(new URL(opac_url), javascriptUrl).toString();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 	@Override
 	public ReservationResult reservation(DetailledItem item, Account account,
@@ -632,10 +670,10 @@ public class Pica extends BaseApi implements OpacApi {
 			if (selection == null || !selection.startsWith("{")) {
 				JSONArray json = new JSONArray(item.getReservation_info());
 				int selectedPos;
-				if (selection != null) {
-					selectedPos = Integer.parseInt(selection);
-				} else if (json.length() == 1) {
-					selectedPos = 0;
+                if (json.length() == 1) {
+                    selectedPos = 0;
+                } else if (selection != null) {
+                    selectedPos = Integer.parseInt(selection);
 				} else {
 					// a location must be selected
 					ReservationResult res = new ReservationResult(
@@ -698,19 +736,40 @@ public class Pica extends BaseApi implements OpacApi {
 							.getString("link"), getDefaultEncoding());
 					Document doc1 = Jsoup.parse(html1);
 
-					List<NameValuePair> params = new ArrayList<NameValuePair>();
+                    Map<String, String> params = new HashMap<String, String>();
+
+                    if (doc1.select("input[type=radio][name=CTRID]").size() > 0 && selection == null) {
+                        ReservationResult res = new ReservationResult(
+                                MultiStepResult.Status.SELECTION_NEEDED);
+                        res.setActionIdentifier(ReservationResult.ACTION_BRANCH);
+                        List<Map<String, String>> selections = new ArrayList<Map<String, String>>();
+                        for (Element input : doc1.select("input[type=radio][name=CTRID]")) {
+                            Map<String, String> selopt = new HashMap<String, String>();
+                            selopt.put("key", input.attr("value"));
+                            selopt.put("value", input.parent().parent().text().trim());
+                            selections.add(selopt);
+                        }
+                        res.setSelection(selections);
+                        return res;
+                    } else {
+                        params.put("CTRID", selection);
+                    }
 
 					for (Element input : doc1.select("input[type=hidden]")) {
-						params.add(new BasicNameValuePair(input.attr("name"),
-								input.attr("value")));
+                        if (!input.attr("name").equals("CTRID") || selection == null)
+                            params.put(input.attr("name"), input.attr("value"));
 					}
 
-					params.add(new BasicNameValuePair("BOR_U", account
-							.getName()));
-					params.add(new BasicNameValuePair("BOR_PW", account
-							.getPassword()));
+					params.put("BOR_U", account.getName());
+					params.put("BOR_PW", account.getPassword());
 
-					return reservation_result(params, false);
+                    List<NameValuePair> paramlist = new ArrayList<NameValuePair>();
+                    for (Map.Entry<String, String> param : params.entrySet()) {
+                        paramlist.add(new BasicNameValuePair(param.getKey(), param.getValue()));
+                    }
+
+					return reservation_result(paramlist,
+                            doc1.select("form").attr("action").contains("REQCONT"));
 				}
 			} else {
 				// A copy has been selected
