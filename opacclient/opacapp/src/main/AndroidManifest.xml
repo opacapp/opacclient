@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="de.geeksfactory.opacclient"
-    android:versionCode="105"
-	android:versionName="3.3.10">
-
-    <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="20" />
+    package="de.geeksfactory.opacclient">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

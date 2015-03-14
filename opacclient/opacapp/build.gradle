@@ -8,6 +8,16 @@ android {
         applicationId "de.geeksfactory.opacclient"
         minSdkVersion 8
         targetSdkVersion 21
+        versionCode 106
+        versionName "4.0.0"
+    }
+    signingConfigs {
+        release {
+            storeFile file("release.keystore")
+            storePassword System.getenv("KSTOREPWD")
+            keyAlias "opac client"
+            keyPassword System.getenv("KSTOREPWD")
+        }
     }
 
     buildTypes {
