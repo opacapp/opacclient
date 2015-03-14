@@ -14,7 +14,7 @@
             "status": -1,
             "title": 3
         },
-        "baseurl": "http://www2opac.stadtbibliothek.ulm.de/wwwopac",
+        "baseurl": "https://opac.ulm.de/wwwopac",
         "copiestable": {
             "barcode": -1,
             "branch": 0,
