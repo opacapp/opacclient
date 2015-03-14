@@ -26,9 +26,3 @@ file_filter = opacclient/opacapp/src/main/res/raw-<lang>/thanks.html
 source_file = opacclient/opacapp/src/main/res/raw/thanks.html
 source_lang = en
 type = ANDROID
-
-[opacapp.playstore]
-file_filter = playstore/<lang>.txt
-source_file = playstore/en.txt
-source_lang = en
-
