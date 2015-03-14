@@ -151,7 +151,7 @@ public class MultiStepResultHelper {
 			tv.setText(result.getDetails().get(0)[0]);
 			tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
 					LayoutParams.WRAP_CONTENT));
-			((RelativeLayout) view.findViewById(R.id.rlConfirm)).addView(tv);
+			((ViewGroup) view.findViewById(R.id.rlConfirm)).addView(tv);
 		} else {
 			for (String[] detail : result.getDetails()) {
 				TableRow tr = new TableRow(context);
