@@ -22,9 +22,9 @@
   <string name="tocollection">To collection</string>
   <string name="reserve">Reserve</string>
   <string name="lendebook">Lend e-book</string>
-  <string name="doing_res">Performing reservation...</string>
+  <string name="doing_res">Performing reservation…</string>
   <string name="opac_error_email">Please set your e-mail address in the app\'s settings.</string>
-  <string name="doing_booking">Lending...</string>
+  <string name="doing_booking">Lending…</string>
   <string name="status_nouser">You didn\'t specify any login data for this account in the settings.</string>
   <string name="pending_fees">Library fines due:</string>
   <string name="valid_until">Account valid until:</string>
@@ -95,7 +95,7 @@
   <string name="star">Save to favorites</string>
   <string name="starred">The item is now on your favorites list.</string>
   <string name="star_wait">Please wait for the details to load.</string>
-  <string name="starred_welcome">This is your favorites list. You can add items by clicking the star on a detail page. The list is saved seperately for every library you use.</string>
+  <string name="starred_welcome">This is your favorites list. You can add items by clicking the star on a detail page. The list is saved separately for every library you use.</string>
   <string name="share">Share</string>
   <string name="share_wait">Please wait for the details to load.</string>
   <string name="share_notsupported">Not supported in this library.</string>
@@ -187,7 +187,7 @@ We might know your library ID then, but not your password, and we will take care
   <string name="title_activity_suggest_library">Suggest library</string>
   <string name="city">City</string>
   <string name="library_name">Library name</string>
-  <string name="hint_library_name">e.g. \"Public library\", \"University library\", \"Harvard University\", ...</string>
+  <string name="hint_library_name">e.g. \"Public library\", \"University library\", \"Harvard University\", …</string>
   <string name="comment">Comment</string>
   <string name="send">Send</string>
   <string name="select_mail_app">Select mail app…</string>
@@ -224,7 +224,7 @@ We might know your library ID then, but not your password, and we will take care
   <string name="other">Other</string>
   <string name="source">Source Code</string>
   <string name="loading">Loading…</string>
-  <string name="loading_libraries">Loading library list...</string>
+  <string name="loading_libraries">Loading library list…</string>
     <string name="shelfmark">Shelfmark</string>
     <string name="return_date">Return date</string>
     <string name="location">Location</string>

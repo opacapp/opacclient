@@ -1,0 +1,34 @@
+[main]
+host = https://www.transifex.com
+lang_map = de_DE:de
+minimum_perc = 50
+
+[opacapp.strings]
+file_filter = opacclient/opacapp/src/main/res/values-<lang>/strings.xml
+source_file = opacclient/opacapp/src/main/res/values/strings.xml
+source_lang = en
+type = ANDROID
+
+[opacapp.strings_api_errors]
+file_filter = opacclient/opacapp/src/main/res/values-<lang>/strings_api_errors.xml
+source_file = opacclient/opacapp/src/main/res/values/strings_api_errors.xml
+source_lang = en
+type = ANDROID
+
+[opacapp.privacy]
+file_filter = opacclient/opacapp/src/main/res/raw-<lang>/privacy.html
+source_file = opacclient/opacapp/src/main/res/raw/privacy.html
+source_lang = en
+type = ANDROID
+
+[opacapp.thanks]
+file_filter = opacclient/opacapp/src/main/res/raw-<lang>/thanks.html
+source_file = opacclient/opacapp/src/main/res/raw/thanks.html
+source_lang = en
+type = ANDROID
+
+[opacapp.playstore]
+file_filter = playstore/<lang>.txt
+source_file = playstore/en.txt
+source_lang = en
+

@@ -229,7 +229,8 @@
     <string name="rate">Applikation bewerten</string>
     <string name="other">Sonstiges</string>
     <string name="source">Quellcode</string>
-    <string name="loading_libraries">Lade Bibliotheksliste...</string>
+    <string name="loading_libraries">Lade Bibliotheksliste…</string>
+    <string name="loading">Lade…</string>
     <string name="shelfmark">Signatur</string>
     <string name="return_date">Rückgabedatum</string>
     <string name="location">Standort</string>

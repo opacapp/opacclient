@@ -1,0 +1,26 @@
+Web Opac: 500+ libraries
+This app enables convenient access to 500+ public and academic libraries.
+
+This free Android app enables convenient mobile access to cataloges and user accounts of more than five hundred public libraries, most of them currently in the German-speaking countries.
+Features of the app:
+- Search in the catalogue of your library
+- Watchlist for books
+- Search for ISBN with barcode scanner
+And in some libraries:
+- View of lent media (also with multiple accounts)
+- Prolonging of lent books and cancellation of reservations
+- Reservation of books
+- Notification when books need to be returned (no warranty)
+- View of information about the library (e.g. opening hours)
+The list of libraries doesn't fit into the app description anymore. Please refer to the list at http://opacapp.de/bibliotheken/.
+Large city libraries: Berlin, Munich, Vienna, Hamburg, Cologne, Frankfurt, Mannheim, Basel, Heidelberg, Wiesbaden, Mainz, Leipzig, Dresden, Chemnitz, Salzburg ... (List incomplete!)
+Large university libraries: LMU Munich, Bochum, TU Dortmund, ULB Münster, Hamburg, ... (List incomplete!)
+For error reports please contact us at info@opacapp.de or use the "Send Report" feature of Android and the app itself, when it crashes.
+We are always open for feedback, too!
+http://opacapp.de
+This app is free software! It is licensed under the MIT license and the source code is available at https://github.com/raphaelm/opacclient
+Libraries interested in an adapted Version with own logo and design, own distribution and possibly special features can contact me directly under info@opacapp.de.
+--
+Public Library University City Libraries Books Lend Lending Book Reserve Reservation
+--
+App icon design by Raphael Pohl
