@@ -14,11 +14,12 @@ android {
 
     lintOptions {
         disable 'MissingTranslation'
+        disable 'NewApi'  // does not respect our annotations at release time :(
     }
 
     signingConfigs {
         release {
-            storeFile file("release.keystore")
+            storeFile file("../../release.keystore")
             storePassword System.getenv("KSTOREPWD")
             keyAlias "opac client"
             keyPassword System.getenv("KSTOREPWD")
@@ -28,6 +29,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }

@@ -453,6 +453,7 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
      * Examine how many white pixels are in the bitmap in order to determine whether or not
      * we need gradient overlays on top of the image.
      */
+    @SuppressLint("NewApi")
     private void analyzeWhitenessOfCoverAsync(final Bitmap bitmap) {
         AnalyzeWhitenessTask task = new AnalyzeWhitenessTask();
         // Execute in parallel with FetchTask
