@@ -11,6 +11,11 @@ android {
         versionCode 106
         versionName "4.0.0"
     }
+
+    lintOptions {
+        disable 'MissingTranslation'
+    }
+
     signingConfigs {
         release {
             storeFile file("release.keystore")
