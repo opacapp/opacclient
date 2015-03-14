@@ -17,7 +17,7 @@
             android:paddingBottom="104dp"
             android:background="?attr/colorPrimary"
             android:elevation="4dp"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:theme="@style/ThemeOverlay.Opacapp.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         <com.melnykov.fab.FloatingActionButton

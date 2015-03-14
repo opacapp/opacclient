@@ -746,7 +746,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 		if (item.getItemId() == R.id.action_search_go) {
 			go();
 			return true;
-		}
+		} else if (item.getItemId() == R.id.action_search_clear) {
+            clear();
+        }
 		return super.onOptionsItemSelected(item);
 	}
 
