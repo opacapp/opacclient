@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <resources>
   <!--These strings may be shown as unused by Android Lint, but are in fact used by the AndroidStringProvider class-->
   <string name="limited_num_of_criteria">Bu kütüphane %d arama kriterine kadar destekliyor.</string>
