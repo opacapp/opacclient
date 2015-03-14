@@ -1,16 +1,16 @@
 /**
  * Copyright (C) 2013 by Raphael Michel under the MIT license:
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), 
  * to deal in the Software without restriction, including without limitation 
  * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
  * and/or sell copies of the Software, and to permit persons to whom the Software 
  * is furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in 
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
@@ -353,44 +353,47 @@ public abstract class OpacActivity extends ActionBarActivity {
 			return;
 		} else if (item.type == Item.TYPE_TEXT) {
             Fragment previousFragment = fragment;
-			if (item.tag.equals("search")) {
-				fragment = new SearchFragment();
-				setTwoPane(false);
+            if (item.tag.equals("search")) {
+                fragment = new SearchFragment();
+                setTwoPane(false);
                 setFabVisible(true);
-			} else if (item.tag.equals("account")) {
-				fragment = new AccountFragment();
-				setTwoPane(false);
+            } else if (item.tag.equals("account")) {
+                fragment = new AccountFragment();
+                setTwoPane(false);
                 setFabVisible(false);
-			} else if (item.tag.equals("starred")) {
-				fragment = new StarredFragment();
-				setTwoPane(true);
+            } else if (item.tag.equals("starred")) {
+                fragment = new StarredFragment();
+                setTwoPane(true);
                 setFabVisible(false);
-			} else if (item.tag.equals("info")) {
-				fragment = new InfoFragment();
-				setTwoPane(false);
+            } else if (item.tag.equals("info")) {
+                fragment = new InfoFragment();
+                setTwoPane(false);
                 setFabVisible(false);
-			} else if (item.tag.equals("settings")) {
-				Intent intent = new Intent(this, MainPreferenceActivity.class);
-				startActivity(intent);
-				drawerList.setItemChecked(position, false);
-				return;
-			} else if (item.tag.equals("about")) {
-				Intent intent = new Intent(this, AboutActivity.class);
-				startActivity(intent);
-				drawerList.setItemChecked(position, false);
-				return;
-			}
+            } else if (item.tag.equals("settings")) {
+                Intent intent = new Intent(this, MainPreferenceActivity.class);
+                startActivity(intent);
+                drawerList.setItemChecked(position, false);
+                return;
+            } else if (item.tag.equals("about")) {
+                Intent intent = new Intent(this, AboutActivity.class);
+                startActivity(intent);
+                drawerList.setItemChecked(position, false);
+                return;
+            }
             setFabOnClickListener(item.tag);
 
-			// Insert the fragment by replacing any existing fragment
-			FragmentManager fragmentManager = getSupportFragmentManager();
-			FragmentTransaction transaction = fragmentManager.beginTransaction()
-					.replace(R.id.content_frame, fragment);
+            // Insert the fragment by replacing any existing fragment
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, fragment);
 
-            fragment.setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition
-                    (android.R.transition.move));
-            fragment.setEnterTransition(TransitionInflater.from(this).inflateTransition
-                    (android.R.transition.fade));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                fragment.setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition
+                        (android.R.transition.move));
+                fragment.setEnterTransition(TransitionInflater.from(this).inflateTransition
+                        (android.R.transition.fade));
+            }
+
             try {
                 if (previousFragment instanceof SearchFragment && fragment instanceof AccountFragment) {
                     transaction.addSharedElement(previousFragment.getView().findViewById(R.id
