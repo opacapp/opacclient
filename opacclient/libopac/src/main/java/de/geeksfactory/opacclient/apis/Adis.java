@@ -1187,7 +1187,7 @@ public class Adis extends BaseApi implements OpacApi {
 
 		adata.setLent(lent);
 
-		List<String> rlinks = new ArrayList<String>();
+		List<String[]> rlinks = new ArrayList<String[]>();
 		int rnum = 0;
 		List<Map<String, String>> res = new ArrayList<Map<String, String>>();
 		for (Element tr : doc.select(".rTable_div tr")) {
@@ -1198,13 +1198,16 @@ public class Adis extends BaseApi implements OpacApi {
                         || tr.text().contains("Bereitstellung")
                         || tr.text().contains("Magazin"))
                         && !tr.child(0).text().trim().equals("")) {
-					rlinks.add(tr.select("a").first().absUrl("href"));
+					rlinks.add(new String[]{
+                            tr.select("a").text(),
+                            tr.select("a").first().absUrl("href"),
+                    });
 					rnum += Integer.parseInt(tr.child(0).text().trim());
 				}
 			}
 		}
-		for (String rlink : rlinks) {
-			Document rdoc = htmlGet(rlink);
+		for (String[] rlink : rlinks) {
+			Document rdoc = htmlGet(rlink[1]);
 			boolean error = false;
             boolean interlib = rdoc.html().contains("Ihre Fernleih-Bestellung");
             boolean stacks = rdoc.html().contains("aus dem Magazin");
@@ -1255,9 +1258,9 @@ public class Adis extends BaseApi implements OpacApi {
                     }
                     line.put(AccountData.KEY_RESERVATION_BRANCH, branch);
 
-                    if (rlink.contains("SRGLINK_2") && !rdoc.html().contains("VOEBB")) {
+                    if (rlink[0].contains("Abholbereit")) {
 						// Abholbereite Bestellungen
-						line.put("available", "bereit");
+						line.put(AccountData.KEY_RESERVATION_READY, "bereit");
 						if (tr.child(0).text().trim().length() >= 10)
 							line.put(
 									AccountData.KEY_RESERVATION_EXPIRE,
@@ -1267,13 +1270,13 @@ public class Adis extends BaseApi implements OpacApi {
 					} else {
 						// Nicht abholbereite
 						if (tr.select("input[type=checkbox]").size() > 0
-								&& (rlink.toUpperCase(Locale.GERMAN).contains(
-										"SP=SZM") || rlink.toUpperCase(
+								&& (rlink[1].toUpperCase(Locale.GERMAN).contains(
+										"SP=SZM") || rlink[1].toUpperCase(
 										Locale.GERMAN).contains("SP=SZW")))
 							line.put(AccountData.KEY_RESERVATION_CANCEL, tr
 									.select("input[type=checkbox]")
 									.attr("name")
-									+ "|" + rlink);
+									+ "|" + rlink[1]);
 					}
 					res.add(line);
 				} else {
