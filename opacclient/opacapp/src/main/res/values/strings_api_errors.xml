@@ -32,4 +32,7 @@
   <string name="order_category_asc">By category (ascending)</string>
   <string name="order_year_desc">By year (descending)</string>
   <string name="order_category_desc">By category (descending)</string>
+  <string name="interlib_branch">Interlibrary: %s</string>
+  <string name="stacks_branch">Stacks: %s</string>
+  <string name="provision_branch">Provision: %s</string>
 </resources>
