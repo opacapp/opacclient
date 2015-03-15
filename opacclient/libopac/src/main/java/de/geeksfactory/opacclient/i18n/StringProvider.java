@@ -72,6 +72,9 @@ public interface StringProvider {
 	public static String ORDER_YEAR_DESC = "order_year_desc";
 	public static String ORDER_CATEGORY_DESC = "order_category_desc";
 	public static String NO_RESULTS = "no_results";
+    public static String INTERLIB_BRANCH = "interlib_branch";
+    public static String STACKS_BRANCH = "stacks_branch";
+    public static String PROVISION_BRANCH = "provision_branch";
 
 	/**
 	 * Returns the translated string identified by identifier

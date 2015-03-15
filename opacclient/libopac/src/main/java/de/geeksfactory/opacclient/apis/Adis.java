@@ -1010,16 +1010,16 @@ public class Adis extends BaseApi implements OpacApi {
 				return new CancelResult(Status.ERROR, e.getMessage());
 			}
 			for (Element tr : doc.select(".rTable_div tr")) {
-				if (tr.select("a").size() == 1) {
-					if (tr.text().contains("Reservationen")
-							&& !tr.child(0).text().trim().equals("")
-							&& tr.select("a").first().attr("href")
-									.toUpperCase(Locale.GERMAN)
-									.contains("SP=SZM")) {
-						rlink = tr.select("a").first().absUrl("href");
-					}
-				}
-			}
+                if (tr.select("a").size() == 1) {
+                    if ((tr.text().contains("Reservationen") || tr.text().contains("Vormerkungen"))
+                            && !tr.child(0).text().trim().equals("")
+                            && tr.select("a").first().attr("href")
+                            .toUpperCase(Locale.GERMAN)
+                            .contains("SP=SZM")) {
+                        rlink = tr.select("a").first().absUrl("href");
+                    }
+                }
+            }
 			if (rlink == null)
 				return new CancelResult(Status.ERROR);
 		}
@@ -1062,11 +1062,15 @@ public class Adis extends BaseApi implements OpacApi {
 	public AccountData account(Account account) throws IOException,
 			JSONException, OpacErrorException {
 		start();
-		s_accountcalled = true;
 
 		Document doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
 				+ s_service + "&sp=SBK");
 		doc = handleLoginForm(doc, account);
+
+        boolean split_title_author = true;
+        if (doc.head().html().contains("VOEBB")) {
+            split_title_author = false;
+        }
 
 		AccountData adata = new AccountData(account.getId());
 		for (Element tr : doc.select(".aDISListe tr")) {
@@ -1120,6 +1124,25 @@ public class Adis extends BaseApi implements OpacApi {
 				String text = Jsoup.parse(
 						tr.child(3).html().replaceAll("(?i)<br[^>]*>", "#"))
 						.text();
+                if (text.contains(" / ")) {
+                    // Format "Titel / Autor #Sig#Nr", z.B. normale Ausleihe in Berlin
+                    String[] split = text.split("[/#\n]");
+                    String title = split[0];
+                    if (split_title_author) {
+                        title = title.replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1");
+                    }
+                    line.put(AccountData.KEY_LENT_TITLE, title.trim());
+                    if (split.length > 1)
+                        line.put(AccountData.KEY_LENT_AUTHOR, split[1].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
+                } else {
+                    // Format "Autor: Titel - Verlag - ISBN:... #Nummer", z.B. Fernleihe in Berlin
+                    String[] split = text.split("#");
+                    String[] aut_tit = split[0].split(": ");
+                    line.put(AccountData.KEY_LENT_AUTHOR,
+                            aut_tit[0].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
+                    if (aut_tit.length > 1)
+                        line.put(AccountData.KEY_LENT_TITLE, aut_tit[1].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
+                }
 				String[] split = text.split("[/#\n]");
 				line.put(AccountData.KEY_LENT_TITLE,
 						split[0].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1")
@@ -1169,9 +1192,12 @@ public class Adis extends BaseApi implements OpacApi {
 		List<Map<String, String>> res = new ArrayList<Map<String, String>>();
 		for (Element tr : doc.select(".rTable_div tr")) {
 			if (tr.select("a").size() == 1) {
-				if ((tr.text().contains("Reservationen") || tr.text().contains(
-						"Vormerkungen"))
-						&& !tr.child(0).text().trim().equals("")) {
+				if ((tr.text().contains("Reservationen")
+                        || tr.text().contains("Vormerkungen")
+                        || tr.text().contains("Fernleihbestellung")
+                        || tr.text().contains("Bereitstellung")
+                        || tr.text().contains("Magazin"))
+                        && !tr.child(0).text().trim().equals("")) {
 					rlinks.add(tr.select("a").first().absUrl("href"));
 					rnum += Integer.parseInt(tr.child(0).text().trim());
 				}
@@ -1180,6 +1206,9 @@ public class Adis extends BaseApi implements OpacApi {
 		for (String rlink : rlinks) {
 			Document rdoc = htmlGet(rlink);
 			boolean error = false;
+            boolean interlib = rdoc.html().contains("Ihre Fernleih-Bestellung");
+            boolean stacks = rdoc.html().contains("aus dem Magazin");
+            boolean provision = rdoc.html().contains("Ihre Bereitstellung");
 			Map<String, Integer> colmap = new HashMap<String, Integer>();
 			colmap.put(AccountData.KEY_RESERVATION_TITLE, 2);
 			colmap.put(AccountData.KEY_RESERVATION_BRANCH, 1);
@@ -1203,19 +1232,30 @@ public class Adis extends BaseApi implements OpacApi {
 							.html();
 					text = Jsoup.parse(text.replaceAll("(?i)<br[^>]*>", ";"))
 							.text();
-					String[] split = text.split("[:/;\n]");
-					line.put(AccountData.KEY_RESERVATION_TITLE, split[0]
-							.replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
-					if (split.length > 1)
-						line.put(AccountData.KEY_RESERVATION_AUTHOR, split[1]
-								.replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1")
-								.trim());
-					line.put(
-							AccountData.KEY_RESERVATION_BRANCH,
-							tr.child(
-									colmap.get(AccountData.KEY_RESERVATION_BRANCH))
-									.text().trim());
-					if (rlink.contains("SRGLINK_2")) {
+                    if (split_title_author) {
+                        String[] split = text.split("[:/;\n]");
+                        line.put(AccountData.KEY_RESERVATION_TITLE, split[0]
+                                .replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
+                        if (split.length > 1)
+                            line.put(AccountData.KEY_RESERVATION_AUTHOR, split[1]
+                                    .replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1")
+                                    .trim());
+                    } else {
+                        line.put(AccountData.KEY_RESERVATION_TITLE, text);
+                    }
+
+                    String branch = tr.child(colmap.get(AccountData.KEY_RESERVATION_BRANCH))
+                            .text().trim();
+                    if (interlib) {
+                        branch = stringProvider.getFormattedString(StringProvider.INTERLIB_BRANCH, branch);
+                    } else if (stacks) {
+                        branch = stringProvider.getFormattedString(StringProvider.STACKS_BRANCH, branch);
+                    } else if (provision) {
+                        branch = stringProvider.getFormattedString(StringProvider.PROVISION_BRANCH, branch);
+                    }
+                    line.put(AccountData.KEY_RESERVATION_BRANCH, branch);
+
+                    if (rlink.contains("SRGLINK_2") && !rdoc.html().contains("VOEBB")) {
 						// Abholbereite Bestellungen
 						line.put("available", "bereit");
 						if (tr.child(0).text().trim().length() >= 10)
