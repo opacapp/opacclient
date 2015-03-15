@@ -1143,13 +1143,6 @@ public class Adis extends BaseApi implements OpacApi {
                     if (aut_tit.length > 1)
                         line.put(AccountData.KEY_LENT_TITLE, aut_tit[1].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
                 }
-				String[] split = text.split("[/#\n]");
-				line.put(AccountData.KEY_LENT_TITLE,
-						split[0].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1")
-								.trim());
-				if (split.length > 1)
-					line.put(AccountData.KEY_LENT_AUTHOR, split[1].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
-				
 				line.put(AccountData.KEY_LENT_DEADLINE, tr.child(1).text()
 						.trim());
 				try {
