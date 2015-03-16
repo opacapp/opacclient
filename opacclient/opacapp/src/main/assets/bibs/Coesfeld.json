@@ -1,7 +1,7 @@
 {
     "account_supported": true,
     "api": "bibliotheca",
-    "city": "#Coesfeld",
+    "city": "Coesfeld",
     "country": "Deutschland",
     "data": {
         "accounttable": {
