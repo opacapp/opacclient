@@ -808,6 +808,7 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
                             .COMPLEX_UNIT_DIP, 4f, getResources().getDisplayMetrics()));
                 }
             } else {
+                ViewHelper.setTranslationY(tvTitel, 0);
                 if (ivCover.getBackground().equals(toolbar.getBackground())) {
                     toolbar.setBackgroundResource(R.color.transparent);
                     ViewCompat.setElevation(toolbar, 0);
