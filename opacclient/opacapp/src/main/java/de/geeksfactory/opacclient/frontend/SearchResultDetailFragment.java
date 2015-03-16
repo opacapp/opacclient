@@ -568,7 +568,7 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 							R.layout.listitem_copy, llCopies, false);
 
 					if (v.findViewById(R.id.tvBranch) != null) {
-						if (copy.containsKey(DetailledItem.KEY_COPY_BRANCH)) {
+						if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_BRANCH)) {
 							((TextView) v.findViewById(R.id.tvBranch))
 									.setText(copy
 											.get(DetailledItem.KEY_COPY_BRANCH));
@@ -578,7 +578,7 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 						}
 					}
 					if (v.findViewById(R.id.tvDepartment) != null) {
-						if (copy.containsKey(DetailledItem.KEY_COPY_DEPARTMENT)) {
+						if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_DEPARTMENT)) {
 							((TextView) v.findViewById(R.id.tvDepartment))
 									.setText(copy
 											.get(DetailledItem.KEY_COPY_DEPARTMENT));
@@ -588,7 +588,7 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 						}
 					}
 					if (v.findViewById(R.id.tvLocation) != null) {
-						if (copy.containsKey(DetailledItem.KEY_COPY_LOCATION)) {
+						if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_LOCATION)) {
 							((TextView) v.findViewById(R.id.tvLocation))
 									.setText(copy
 											.get(DetailledItem.KEY_COPY_LOCATION));
@@ -598,7 +598,7 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 						}
 					}
 					if (v.findViewById(R.id.tvShelfmark) != null) {
-						if (copy.containsKey(DetailledItem.KEY_COPY_SHELFMARK)) {
+						if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_SHELFMARK)) {
 							((TextView) v.findViewById(R.id.tvShelfmark))
 									.setText(copy
 											.get(DetailledItem.KEY_COPY_SHELFMARK));
@@ -608,7 +608,7 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 						}
 					}
 					if (v.findViewById(R.id.tvStatus) != null) {
-						if (copy.containsKey(DetailledItem.KEY_COPY_STATUS)) {
+						if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_STATUS)) {
 							((TextView) v.findViewById(R.id.tvStatus))
 									.setText(copy
 											.get(DetailledItem.KEY_COPY_STATUS));
@@ -619,7 +619,7 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 					}
 
 					if (v.findViewById(R.id.tvReservations) != null) {
-						if (copy.containsKey(DetailledItem.KEY_COPY_RESERVATIONS)) {
+						if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_RESERVATIONS)) {
 							((TextView) v.findViewById(R.id.tvReservations))
 									.setText(copy.get(DetailledItem.KEY_COPY_RESERVATIONS));
 							v.findViewById(R.id.llReservations).setVisibility(View.VISIBLE);
@@ -628,13 +628,9 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 						}
 					}
 					if (v.findViewById(R.id.tvReturndate) != null) {
-						if (copy.containsKey(DetailledItem.KEY_COPY_RETURN)
-								&& !"".equals(copy
-										.get(DetailledItem.KEY_COPY_RETURN))) {
+						if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_RETURN)) {
 							((TextView) v.findViewById(R.id.tvReturndate))
-									.setText(getString(R.string.ret)
-											+ ": "
-											+ copy.get(DetailledItem.KEY_COPY_RETURN));
+									.setText(copy.get(DetailledItem.KEY_COPY_RETURN));
 							v.findViewById(R.id.llReturndate).setVisibility(View.VISIBLE);
 						} else {
 							v.findViewById(R.id.llReturndate).setVisibility(View.GONE);
@@ -656,6 +652,10 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 
         fixTitle();
 	}
+
+    private boolean containsAndNotEmpty(Map<String, String> map, String key) {
+        return map.containsKey(key) && !map.get(key).equals("");
+    }
 
     private void showCoverView(boolean b) {
         ivCover.setVisibility(b ? View.VISIBLE : View.GONE);
