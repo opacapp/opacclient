@@ -10,14 +10,14 @@
         <item name="colorPrimary">@color/primary_red</item>
         <item name="colorPrimaryDark">@color/primary_red_dark</item>
         <item name="colorAccent">@color/accent_red</item>
-        <item name="android:listSeparatorTextViewStyle">@style/Subhead</item>
+        <item name="android:preferenceCategoryStyle">@style/PreferenceCategory</item>
     </style>
 
     <style name="Theme.Opacapp.NoActionBar.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primary_red</item>
         <item name="colorPrimaryDark">@color/primary_red_dark</item>
         <item name="colorAccent">@color/accent_red</item>
-        <item name="android:listSeparatorTextViewStyle">@style/Subhead</item>
+        <item name="android:preferenceCategoryStyle">@style/PreferenceCategory</item>
 
         <item name="windowActionModeOverlay">true</item>
     </style>
@@ -26,7 +26,7 @@
         <item name="colorPrimary">@color/primary_red</item>
         <item name="colorPrimaryDark">@color/primary_red_dark</item>
         <item name="colorAccent">@color/accent_red</item>
-        <item name="android:listSeparatorTextViewStyle">@style/Subhead</item>
+        <item name="android:preferenceCategoryStyle">@style/PreferenceCategory</item>
 
         <!-- no action bar -->
         <item name="windowActionBar">false</item>
@@ -38,13 +38,10 @@
         <item name="android:textColor">@color/primary_red</item>
     </style>
 
-    <style name="Subhead">
-        <item name="android:textAppearance">@style/TextAppearance.Opacapp.Subhead</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:minHeight">48dp</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:paddingStart">8dp</item>
+    <style name="PreferenceCategory">
+        <item name="android:layout">@layout/preference_category</item>
+        <item name="android:shouldDisableView">false</item>
+        <item name="android:selectable">false</item>
     </style>
 
     <style name="TextAppearance.Opacapp.Subhead.Drawer" parent="TextAppearance.Opacapp.Subhead">
