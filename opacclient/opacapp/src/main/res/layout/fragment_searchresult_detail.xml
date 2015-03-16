@@ -81,11 +81,8 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginBottom="10dp"
                     android:layout_marginTop="8dp"
-                    android:paddingLeft="4dp"
                     android:text="@string/details_head"
-                    android:textColor="@color/secondary_text_default_material_light"
-                    android:textSize="14sp"
-                    android:fontFamily="@string/fontFamily_medium" />
+                    android:textAppearance="@style/TextAppearance.Opacapp.Subhead" />
 
                 <LinearLayout
                     android:id="@+id/llDetails"
@@ -102,11 +99,8 @@
                     android:layout_below="@id/llDetails"
                     android:layout_marginBottom="10dp"
                     android:layout_marginTop="8dp"
-                    android:paddingLeft="4dp"
                     android:text="@string/copies_head"
-                    android:textColor="@color/secondary_text_default_material_light"
-                    android:textSize="14sp"
-                    android:fontFamily="@string/fontFamily_medium" />
+                    android:textAppearance="@style/TextAppearance.Opacapp.Subhead" />
 
                 <LinearLayout
                     android:id="@+id/llCopies"

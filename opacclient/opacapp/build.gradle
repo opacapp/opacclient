@@ -4,6 +4,11 @@ android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
 
+    lintOptions {
+        disable 'MissingTranslation'
+        disable 'NewApi'  // does not respect our annotations at release time :(
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7

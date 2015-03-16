@@ -27,7 +27,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="noandroid" exported="" />
-    <orderEntry type="library" exported="" name="json-20141113" level="project" />
+    <orderEntry type="library" exported="" name="json-20090211" level="project" />
     <orderEntry type="library" exported="" name="jsoup-1.8.1" level="project" />
   </component>
 </module>

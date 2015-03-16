@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "winbiap",
+    "city": "K\u00f6sching",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/koesching",
+        "information": "http://www.koesching.de/Bildung/Buecherei.aspx"
+    },
+    "geo": [
+        48.8126389,
+        11.5004614
+    ],
+    "state": "Bayern",
+    "title": "Gemeindeb\u00fccherei"
+}

@@ -39,3 +39,9 @@ local.properties
 /opacclient/.idea/libraries
 .DS_Store
 build/
+.ropeproject/
+
+upload.sh
+release.sh
+
+*.keystore

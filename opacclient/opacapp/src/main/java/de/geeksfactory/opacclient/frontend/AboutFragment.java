@@ -41,28 +41,6 @@ public class AboutFragment extends PreferenceFragment {
         addPreferencesFromResource(R.xml.about);
 
         String version = OpacClient.versionName;
-
-        try {
-            String text = "";
-
-            StringBuilder builder = new StringBuilder();
-            InputStream fis;
-            fis = context.getAssets().open("buildnum.txt");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    fis, "utf-8"));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                builder.append(line);
-            }
-
-            text = builder.toString();
-            fis.close();
-            if (!text.equals(version))
-                version += " (Build: " + text + ")";
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         findPreference("version").setSummary(version);
 
         findPreference("website").setOnPreferenceClickListener(

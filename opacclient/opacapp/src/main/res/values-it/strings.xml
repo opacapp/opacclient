@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <resources>
   <string name="app_name">Web Opac</string>
   <string name="launcher_name">Web Opac</string>
@@ -221,5 +221,4 @@
   <string name="rate">Valuta questa app</string>
   <string name="other">Altro</string>
   <string name="source">Codice sorgente</string>
-
 </resources>

@@ -49,4 +49,8 @@
         <item name="android:fragmentReturnTransition">@android:transition/fade</item>
     </style>
 
+    <style name="TextAppearance.Opacapp.Subhead" parent="TextAppearance.Opacapp.Base.Subhead">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
 </resources>
