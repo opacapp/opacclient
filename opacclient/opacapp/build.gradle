@@ -1,38 +1,14 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
-
-    defaultConfig {
-        applicationId "de.geeksfactory.opacclient"
-        minSdkVersion 8
-        targetSdkVersion 21
-        versionCode 106
-        versionName "4.0.0"
-    }
 
     lintOptions {
         disable 'MissingTranslation'
         disable 'NewApi'  // does not respect our annotations at release time :(
     }
 
-    signingConfigs {
-        release {
-            storeFile file("../../release.keystore")
-            storePassword System.getenv("KSTOREPWD")
-            keyAlias "opac client"
-            keyPassword System.getenv("KSTOREPWD")
-        }
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            signingConfig signingConfigs.release
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-        }
-    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
