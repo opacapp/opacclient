@@ -96,11 +96,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
                     android:layout_marginTop="8dp"
-                    android:paddingLeft="4dp"
                     android:text="@string/search_advanced"
-                    android:textColor="@color/primary_red"
-                    android:textSize="14sp"
-                    android:fontFamily="@string/fontFamily_medium" />
+                    android:textAppearance="@style/TextAppearance.Opacapp.Subhead" />
 
                 <LinearLayout
                     android:id="@+id/llFormFields"

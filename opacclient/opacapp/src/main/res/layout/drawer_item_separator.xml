@@ -12,11 +12,7 @@
         android:paddingLeft="16dp"
         android:paddingTop="16dp"
         android:paddingBottom="12dp"
-        android:textColor="@color/nav_seperator_fg"
-        android:drawablePadding="4dp"
-        android:textSize="14sp"
-        android:fontFamily="@string/fontFamily_medium"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="@style/TextAppearance.Opacapp.Subhead.Drawer"
         android:text="bla"/>
 
 </RelativeLayout>

@@ -29,6 +29,15 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
+    <style name="TextAppearance.Opacapp.Base.Subhead" parent="android:TextAppearance">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/primary_red</item>
+    </style>
+
+    <style name="TextAppearance.Opacapp.Subhead.Drawer" parent="TextAppearance.Opacapp.Subhead">
+        <item name="android:textColor">@color/nav_seperator_fg</item>
+    </style>
+
     <style name="ThemeOverlay.Opacapp.ActionBar"
            parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
@@ -37,5 +46,9 @@
     <style name="Theme.Opacapp.NoActionBar" parent="Theme.Opacapp.NoActionBar.Base"/>
     <style name="Theme.Opacapp.NoActionBar.WithDrawer" parent="Theme.Opacapp.NoActionBar.Base"/>
     <style name="Theme.Opacapp.Floating" parent="Theme.Opacapp.Base.Floating"/>
+
+    <style name="TextAppearance.Opacapp.Subhead" parent="TextAppearance.Opacapp.Base.Subhead">
+        <item name="android:textStyle">bold</item>
+    </style>
 
 </resources>
