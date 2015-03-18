@@ -16,38 +16,41 @@ import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.tests.apitests.LibraryApiTestCases;
 
 public class GetSearchFieldsCallable implements Callable<Map<String, List<SearchField>>> {
-	private Library lib;
-	
-	public GetSearchFieldsCallable(Library lib) {
-		this.lib = lib;
-	}
+    private Library lib;
 
-	@Override
-	public Map<String, List<SearchField>> call() {
-		OpacApi api = LibraryApiTestCases.getApi(lib);
-		Set<String> langs = null;
-		try {
-			langs = api.getSupportedLanguages();
-		} catch (IOException e) {}
-		
-		if (langs == null) {
-			// Use default language
-			try {
-				Map<String, List<SearchField>> map = new HashMap<String, List<SearchField>>();
-				map.put("default", api.getSearchFields());
-				return map;
-			} catch (IOException | OpacErrorException | JSONException e) {}
-		} else {
-			Map<String, List<SearchField>> map = new HashMap<String, List<SearchField>>();
-			for (String lang:langs) {
-				api.setLanguage(lang);
-				try {
-					map.put(lang, api.getSearchFields());
-				} catch (IOException | OpacErrorException | JSONException e) {}
-			}
-			return map;
-		}
-		return null;
-	}
+    public GetSearchFieldsCallable(Library lib) {
+        this.lib = lib;
+    }
+
+    @Override
+    public Map<String, List<SearchField>> call() {
+        OpacApi api = LibraryApiTestCases.getApi(lib);
+        Set<String> langs = null;
+        try {
+            langs = api.getSupportedLanguages();
+        } catch (IOException e) {
+        }
+
+        if (langs == null) {
+            // Use default language
+            try {
+                Map<String, List<SearchField>> map = new HashMap<String, List<SearchField>>();
+                map.put("default", api.getSearchFields());
+                return map;
+            } catch (IOException | OpacErrorException | JSONException e) {
+            }
+        } else {
+            Map<String, List<SearchField>> map = new HashMap<String, List<SearchField>>();
+            for (String lang : langs) {
+                api.setLanguage(lang);
+                try {
+                    map.put(lang, api.getSearchFields());
+                } catch (IOException | OpacErrorException | JSONException e) {
+                }
+            }
+            return map;
+        }
+        return null;
+    }
 
 }

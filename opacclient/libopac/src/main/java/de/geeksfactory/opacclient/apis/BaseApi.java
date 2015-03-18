@@ -1,16 +1,16 @@
 /**
  * Copyright (C) 2013 by Raphael Michel under the MIT license:
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), 
  * to deal in the Software without restriction, including without limitation 
  * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
  * and/or sell copies of the Software, and to permit persons to whom the Software 
  * is furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in 
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
@@ -73,416 +73,404 @@ import de.geeksfactory.opacclient.searchfields.SearchQuery;
  */
 public abstract class BaseApi implements OpacApi {
 
-	protected DefaultHttpClient http_client;
-	protected Library library;
-	protected StringProvider stringProvider;
-	protected Set<String> supportedLanguages;
-	protected boolean initialised;
+    protected DefaultHttpClient http_client;
+    protected Library library;
+    protected StringProvider stringProvider;
+    protected Set<String> supportedLanguages;
+    protected boolean initialised;
 
-	/**
-	 * Initializes HTTP client and String Provider
-	 */
-	@Override
-	public void init(Library library) {
-		http_client = HTTPClient.getNewHttpClient(library.getData().has("customssl"));
-		this.library = library;
-		stringProvider = new DummyStringProvider();
-	}
-	
-	public void start() throws IOException, NotReachableException {
-		supportedLanguages = getSupportedLanguages();
-		initialised = true;
-	}
+    public static String cleanUrl(String myURL) {
+        String[] parts = myURL.split("\\?");
+        String url = parts[0];
+        try {
+            if (parts.length > 1) {
+                url += "?";
+                List<NameValuePair> params = new ArrayList<NameValuePair>();
+                String[] pairs = parts[1].split("&");
+                for (String pair : pairs) {
+                    String[] kv = pair.split("=");
+                    if (kv.length > 1)
+                        params.add(new BasicNameValuePair(URLDecoder.decode(
+                                kv[0], "UTF-8"), URLDecoder.decode(kv[1],
+                                "UTF-8")));
+                    else
+                        params.add(new BasicNameValuePair(URLDecoder.decode(
+                                kv[0], "UTF-8"), ""));
+                }
+                url += URLEncodedUtils.format(params, "UTF-8");
+            }
+            return url;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return myURL;
+        }
+    }
 
-	/**
-	 * Perform a HTTP GET request to a given URL
-	 * 
-	 * @param url
-	 *            URL to fetch
-	 * @param encoding
-	 *            Expected encoding of the response body
-	 * @param ignore_errors
-	 *            If true, status codes above 400 do not raise an exception
-	 * @param cookieStore
-	 *            If set, the given cookieStore is used instead of the built-in
-	 *            one.
-	 * @return Answer content
-	 * @throws NotReachableException
-	 *             Thrown when server returns a HTTP status code greater or
-	 *             equal than 400.
-	 */
-	public String httpGet(String url, String encoding, boolean ignore_errors,
-			CookieStore cookieStore) throws ClientProtocolException,
-			IOException {
+    /**
+     * Reads content from an InputStream into a string
+     *
+     * @param is InputStream to read from
+     * @return String content of the InputStream
+     */
+    protected static String convertStreamToString(InputStream is,
+                                                  String encoding) throws IOException {
+        BufferedReader reader;
+        try {
+            reader = new BufferedReader(new InputStreamReader(is, encoding));
+        } catch (UnsupportedEncodingException e1) {
+            reader = new BufferedReader(new InputStreamReader(is));
+        }
+        StringBuilder sb = new StringBuilder();
 
-		HttpGet httpget = new HttpGet(cleanUrl(url));
-		HttpResponse response;
-		String html;
+        String line = null;
+        try {
+            while ((line = reader.readLine()) != null) {
+                sb.append((line + "\n"));
+            }
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return sb.toString();
+    }
 
-		try {
-			if (cookieStore != null) {
-				// Create local HTTP context
-				HttpContext localContext = new BasicHttpContext();
-				// Bind custom cookie store to the local context
-				localContext.setAttribute(ClientContext.COOKIE_STORE,
-						cookieStore);
+    protected static String convertStreamToString(InputStream is)
+            throws IOException {
+        return convertStreamToString(is, "ISO-8859-1");
+    }
 
-				response = http_client.execute(httpget, localContext);
-			} else {
-				response = http_client.execute(httpget);
-			}
+    protected static Map<String, String> searchQueryListToMap(
+            List<SearchQuery> queryList) {
+        Map<String, String> queryMap = new HashMap<String, String>();
+        for (SearchQuery query : queryList) {
+            queryMap.put(query.getKey(), query.getValue());
+        }
+        return queryMap;
+    }
 
-			if (!ignore_errors && response.getStatusLine().getStatusCode() >= 400) {
-				response.getEntity().consumeContent();
-				throw new NotReachableException();
-			}
-			
-			html = convertStreamToString(response.getEntity().getContent(),
-					encoding);
-			response.getEntity().consumeContent();
-		} catch (ConnectTimeoutException e) {
-			e.printStackTrace();
-			throw new NotReachableException();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-			throw new NotReachableException();
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-			throw new NotReachableException();
-		} catch (NoHttpResponseException e) {
-			e.printStackTrace();
-			throw new NotReachableException();
-		} catch (MalformedChunkCodingException e) {
-			e.printStackTrace();
-			throw new NotReachableException();
-		} catch (javax.net.ssl.SSLPeerUnverifiedException e) {
-			throw new SSLSecurityException();
-		} catch (javax.net.ssl.SSLException e) {
-			// Can be "Not trusted server certificate" or can be a
-			// aborted/interrupted handshake/connection
-			if (e.getMessage().contains("timed out")
-					|| e.getMessage().contains("reset by")) {
-				e.printStackTrace();
-				throw new NotReachableException();
-			} else {
-				throw new SSLSecurityException();
-			}
-		} catch (InterruptedIOException e) {
-			e.printStackTrace();
-			throw new NotReachableException();
-		} catch (IOException e) {
-			if (e.getMessage() != null
-					&& e.getMessage().contains("Request aborted")) {
-				e.printStackTrace();
-				throw new NotReachableException();
-			} else {
-				throw e;
-			}
-		}
-		return html;
-	}
+    /*
+     * Gets all values of all query parameters in an URL.
+     */
+    public static Map<String, List<String>> getQueryParams(String url) {
+        try {
+            Map<String, List<String>> params = new HashMap<String, List<String>>();
+            String[] urlParts = url.split("\\?");
+            if (urlParts.length > 1) {
+                String query = urlParts[1];
+                for (String param : query.split("&")) {
+                    String[] pair = param.split("=");
+                    String key = URLDecoder.decode(pair[0], "UTF-8");
+                    String value = "";
+                    if (pair.length > 1) {
+                        value = URLDecoder.decode(pair[1], "UTF-8");
+                    }
 
-	public String httpGet(String url, String encoding, boolean ignore_errors)
-			throws ClientProtocolException, IOException {
-		return httpGet(url, encoding, ignore_errors, null);
-	}
+                    List<String> values = params.get(key);
+                    if (values == null) {
+                        values = new ArrayList<String>();
+                        params.put(key, values);
+                    }
+                    values.add(value);
+                }
+            }
 
-	public String httpGet(String url, String encoding)
-			throws ClientProtocolException, IOException {
-		return httpGet(url, encoding, false, null);
-	}
+            return params;
+        } catch (UnsupportedEncodingException ex) {
+            throw new AssertionError(ex);
+        }
+    }
 
-	@Deprecated
-	public String httpGet(String url) throws ClientProtocolException,
-			IOException {
-		return httpGet(url, getDefaultEncoding(), false, null);
-	}
+    /*
+     * Gets the value for every query parameter in the URL. If a parameter name
+     * occurs twice or more, only the first occurance is interpreted by this
+     * method
+     */
+    public static Map<String, String> getQueryParamsFirst(String url) {
+        try {
+            Map<String, String> params = new HashMap<String, String>();
+            String[] urlParts = url.split("\\?");
+            if (urlParts.length > 1) {
+                String query = urlParts[1];
+                for (String param : query.split("&")) {
+                    String[] pair = param.split("=");
+                    String key = URLDecoder.decode(pair[0], "UTF-8");
+                    String value = "";
+                    if (pair.length > 1) {
+                        value = URLDecoder.decode(pair[1], "UTF-8");
+                    }
 
-	public static String cleanUrl(String myURL) {
-		String[] parts = myURL.split("\\?");
-		String url = parts[0];
-		try {
-			if (parts.length > 1) {
-				url += "?";
-				List<NameValuePair> params = new ArrayList<NameValuePair>();
-				String[] pairs = parts[1].split("&");
-				for (String pair : pairs) {
-					String[] kv = pair.split("=");
-					if (kv.length > 1)
-						params.add(new BasicNameValuePair(URLDecoder.decode(
-								kv[0], "UTF-8"), URLDecoder.decode(kv[1],
-								"UTF-8")));
-					else
-						params.add(new BasicNameValuePair(URLDecoder.decode(
-								kv[0], "UTF-8"), ""));
-				}
-				url += URLEncodedUtils.format(params, "UTF-8");
-			}
-			return url;
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return myURL;
-		}
-	}
+                    String values = params.get(key);
+                    if (values == null) {
+                        params.put(key, value);
+                    }
+                }
+            }
 
-	public void downloadCover(CoverHolder item) {
-		if (item.getCover() == null)
-			return;
-		HttpGet httpget = new HttpGet(cleanUrl(item.getCover()));
-		HttpResponse response;
+            return params;
+        } catch (UnsupportedEncodingException ex) {
+            throw new AssertionError(ex);
+        }
+    }
 
-		try {
-			response = http_client.execute(httpget);
+    /**
+     * Initializes HTTP client and String Provider
+     */
+    @Override
+    public void init(Library library) {
+        http_client = HTTPClient.getNewHttpClient(library.getData().has("customssl"));
+        this.library = library;
+        stringProvider = new DummyStringProvider();
+    }
 
-			if (response.getStatusLine().getStatusCode() >= 400) {
-				return;
-			}
-			HttpEntity entity = response.getEntity();
-			byte[] bytes = EntityUtils.toByteArray(entity);
+    public void start() throws IOException, NotReachableException {
+        supportedLanguages = getSupportedLanguages();
+        initialised = true;
+    }
 
-			Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0,
-					bytes.length);
-			item.setCoverBitmap(bitmap);
+    /**
+     * Perform a HTTP GET request to a given URL
+     *
+     * @param url           URL to fetch
+     * @param encoding      Expected encoding of the response body
+     * @param ignore_errors If true, status codes above 400 do not raise an exception
+     * @param cookieStore   If set, the given cookieStore is used instead of the built-in
+     *                      one.
+     * @return Answer content
+     * @throws NotReachableException Thrown when server returns a HTTP status code greater or
+     *                               equal than 400.
+     */
+    public String httpGet(String url, String encoding, boolean ignore_errors,
+                          CookieStore cookieStore) throws ClientProtocolException,
+            IOException {
 
-		} catch (IOException e) {
-			e.printStackTrace();
-			return;
-		}
-	}
+        HttpGet httpget = new HttpGet(cleanUrl(url));
+        HttpResponse response;
+        String html;
 
-	/**
-	 * Perform a HTTP POST request to a given URL
-	 * 
-	 * @param url
-	 *            URL to fetch
-	 * @param data
-	 *            POST data to send
-	 * @param encoding
-	 *            Expected encoding of the response body
-	 * @param ignore_errors
-	 *            If true, status codes above 400 do not raise an exception
-	 * @param cookieStore
-	 *            If set, the given cookieStore is used instead of the built-in
-	 *            one.
-	 * @return Answer content
-	 * @throws NotReachableException
-	 *             Thrown when server returns a HTTP status code greater or
-	 *             equal than 400.
-	 */
-	public String httpPost(String url, UrlEncodedFormEntity data,
-			String encoding, boolean ignore_errors, CookieStore cookieStore)
-			throws ClientProtocolException, IOException {
-		HttpPost httppost = new HttpPost(cleanUrl(url));
-		httppost.setEntity(data);
+        try {
+            if (cookieStore != null) {
+                // Create local HTTP context
+                HttpContext localContext = new BasicHttpContext();
+                // Bind custom cookie store to the local context
+                localContext.setAttribute(ClientContext.COOKIE_STORE,
+                        cookieStore);
 
-		HttpResponse response = null;
-		String html;
-		try {
-			if (cookieStore != null) {
-				// Create local HTTP context
-				HttpContext localContext = new BasicHttpContext();
-				// Bind custom cookie store to the local context
-				localContext.setAttribute(ClientContext.COOKIE_STORE,
-						cookieStore);
+                response = http_client.execute(httpget, localContext);
+            } else {
+                response = http_client.execute(httpget);
+            }
 
-				response = http_client.execute(httppost, localContext);
-			} else {
-				response = http_client.execute(httppost);
-			}
+            if (!ignore_errors && response.getStatusLine().getStatusCode() >= 400) {
+                response.getEntity().consumeContent();
+                throw new NotReachableException();
+            }
 
-			if (!ignore_errors && response.getStatusLine().getStatusCode() >= 400) {
-				throw new NotReachableException();
-			}
-			html = convertStreamToString(response.getEntity().getContent(),
-					encoding);
-			response.getEntity().consumeContent();
-		} catch (ConnectTimeoutException e) {
-			e.printStackTrace();
-			throw new NotReachableException();
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-			throw new NotReachableException();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-			throw new NotReachableException();
-		} catch (NoHttpResponseException e) {
-			e.printStackTrace();
-			throw new NotReachableException();
-		} catch (MalformedChunkCodingException e) {
-			e.printStackTrace();
-			throw new NotReachableException();
-		} catch (javax.net.ssl.SSLPeerUnverifiedException e) {
-			throw new SSLSecurityException();
-		} catch (javax.net.ssl.SSLException e) {
-			// Can be "Not trusted server certificate" or can be a
-			// aborted/interrupted handshake/connection
-			if (e.getMessage().contains("timed out")
-					|| e.getMessage().contains("reset by")) {
-				e.printStackTrace();
-				throw new NotReachableException();
-			} else {
-				throw new SSLSecurityException();
-			}
-		} catch (InterruptedIOException e) {
-			e.printStackTrace();
-			throw new NotReachableException();
-		} catch (IOException e) {
-			if (e.getMessage() != null
-					&& e.getMessage().contains("Request aborted")) {
-				e.printStackTrace();
-				throw new NotReachableException();
-			} else {
-				throw e;
-			}
-		}
-		return html;
-	}
+            html = convertStreamToString(response.getEntity().getContent(),
+                    encoding);
+            response.getEntity().consumeContent();
+        } catch (ConnectTimeoutException e) {
+            e.printStackTrace();
+            throw new NotReachableException();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            throw new NotReachableException();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            throw new NotReachableException();
+        } catch (NoHttpResponseException e) {
+            e.printStackTrace();
+            throw new NotReachableException();
+        } catch (MalformedChunkCodingException e) {
+            e.printStackTrace();
+            throw new NotReachableException();
+        } catch (javax.net.ssl.SSLPeerUnverifiedException e) {
+            throw new SSLSecurityException();
+        } catch (javax.net.ssl.SSLException e) {
+            // Can be "Not trusted server certificate" or can be a
+            // aborted/interrupted handshake/connection
+            if (e.getMessage().contains("timed out")
+                    || e.getMessage().contains("reset by")) {
+                e.printStackTrace();
+                throw new NotReachableException();
+            } else {
+                throw new SSLSecurityException();
+            }
+        } catch (InterruptedIOException e) {
+            e.printStackTrace();
+            throw new NotReachableException();
+        } catch (IOException e) {
+            if (e.getMessage() != null
+                    && e.getMessage().contains("Request aborted")) {
+                e.printStackTrace();
+                throw new NotReachableException();
+            } else {
+                throw e;
+            }
+        }
+        return html;
+    }
 
-	public String httpPost(String url, UrlEncodedFormEntity data,
-			String encoding, boolean ignore_errors)
-			throws ClientProtocolException, IOException {
-		return httpPost(url, data, encoding, ignore_errors, null);
-	}
+    public String httpGet(String url, String encoding, boolean ignore_errors)
+            throws ClientProtocolException, IOException {
+        return httpGet(url, encoding, ignore_errors, null);
+    }
 
-	public String httpPost(String url, UrlEncodedFormEntity data,
-			String encoding) throws ClientProtocolException, IOException {
-		return httpPost(url, data, encoding, false, null);
-	}
+    public String httpGet(String url, String encoding)
+            throws ClientProtocolException, IOException {
+        return httpGet(url, encoding, false, null);
+    }
 
-	@Deprecated
-	public String httpPost(String url, UrlEncodedFormEntity data)
-			throws ClientProtocolException, IOException {
-		return httpPost(url, data, getDefaultEncoding(), false, null);
-	}
+    @Deprecated
+    public String httpGet(String url) throws ClientProtocolException,
+            IOException {
+        return httpGet(url, getDefaultEncoding(), false, null);
+    }
 
-	/**
-	 * Reads content from an InputStream into a string
-	 * 
-	 * @param is
-	 *            InputStream to read from
-	 * @return String content of the InputStream
-	 */
-	protected static String convertStreamToString(InputStream is,
-			String encoding) throws IOException {
-		BufferedReader reader;
-		try {
-			reader = new BufferedReader(new InputStreamReader(is, encoding));
-		} catch (UnsupportedEncodingException e1) {
-			reader = new BufferedReader(new InputStreamReader(is));
-		}
-		StringBuilder sb = new StringBuilder();
+    public void downloadCover(CoverHolder item) {
+        if (item.getCover() == null)
+            return;
+        HttpGet httpget = new HttpGet(cleanUrl(item.getCover()));
+        HttpResponse response;
 
-		String line = null;
-		try {
-			while ((line = reader.readLine()) != null) {
-				sb.append((line + "\n"));
-			}
-		} finally {
-			try {
-				is.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return sb.toString();
-	}
+        try {
+            response = http_client.execute(httpget);
 
-	protected static String convertStreamToString(InputStream is)
-			throws IOException {
-		return convertStreamToString(is, "ISO-8859-1");
-	}
+            if (response.getStatusLine().getStatusCode() >= 400) {
+                return;
+            }
+            HttpEntity entity = response.getEntity();
+            byte[] bytes = EntityUtils.toByteArray(entity);
 
-	protected static Map<String, String> searchQueryListToMap(
-			List<SearchQuery> queryList) {
-		Map<String, String> queryMap = new HashMap<String, String>();
-		for (SearchQuery query : queryList) {
-			queryMap.put(query.getKey(), query.getValue());
-		}
-		return queryMap;
-	}
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0,
+                    bytes.length);
+            item.setCoverBitmap(bitmap);
 
-	protected String getDefaultEncoding() {
-		return "ISO-8859-1";
-	}
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+    }
 
-	/*
-	 * Gets all values of all query parameters in an URL.
-	 */
-	public static Map<String, List<String>> getQueryParams(String url) {
-		try {
-			Map<String, List<String>> params = new HashMap<String, List<String>>();
-			String[] urlParts = url.split("\\?");
-			if (urlParts.length > 1) {
-				String query = urlParts[1];
-				for (String param : query.split("&")) {
-					String[] pair = param.split("=");
-					String key = URLDecoder.decode(pair[0], "UTF-8");
-					String value = "";
-					if (pair.length > 1) {
-						value = URLDecoder.decode(pair[1], "UTF-8");
-					}
+    /**
+     * Perform a HTTP POST request to a given URL
+     *
+     * @param url           URL to fetch
+     * @param data          POST data to send
+     * @param encoding      Expected encoding of the response body
+     * @param ignore_errors If true, status codes above 400 do not raise an exception
+     * @param cookieStore   If set, the given cookieStore is used instead of the built-in
+     *                      one.
+     * @return Answer content
+     * @throws NotReachableException Thrown when server returns a HTTP status code greater or
+     *                               equal than 400.
+     */
+    public String httpPost(String url, UrlEncodedFormEntity data,
+                           String encoding, boolean ignore_errors, CookieStore cookieStore)
+            throws ClientProtocolException, IOException {
+        HttpPost httppost = new HttpPost(cleanUrl(url));
+        httppost.setEntity(data);
 
-					List<String> values = params.get(key);
-					if (values == null) {
-						values = new ArrayList<String>();
-						params.put(key, values);
-					}
-					values.add(value);
-				}
-			}
+        HttpResponse response = null;
+        String html;
+        try {
+            if (cookieStore != null) {
+                // Create local HTTP context
+                HttpContext localContext = new BasicHttpContext();
+                // Bind custom cookie store to the local context
+                localContext.setAttribute(ClientContext.COOKIE_STORE,
+                        cookieStore);
 
-			return params;
-		} catch (UnsupportedEncodingException ex) {
-			throw new AssertionError(ex);
-		}
-	}
+                response = http_client.execute(httppost, localContext);
+            } else {
+                response = http_client.execute(httppost);
+            }
 
-	/*
-	 * Gets the value for every query parameter in the URL. If a parameter name
-	 * occurs twice or more, only the first occurance is interpreted by this
-	 * method
-	 */
-	public static Map<String, String> getQueryParamsFirst(String url) {
-		try {
-			Map<String, String> params = new HashMap<String, String>();
-			String[] urlParts = url.split("\\?");
-			if (urlParts.length > 1) {
-				String query = urlParts[1];
-				for (String param : query.split("&")) {
-					String[] pair = param.split("=");
-					String key = URLDecoder.decode(pair[0], "UTF-8");
-					String value = "";
-					if (pair.length > 1) {
-						value = URLDecoder.decode(pair[1], "UTF-8");
-					}
+            if (!ignore_errors && response.getStatusLine().getStatusCode() >= 400) {
+                throw new NotReachableException();
+            }
+            html = convertStreamToString(response.getEntity().getContent(),
+                    encoding);
+            response.getEntity().consumeContent();
+        } catch (ConnectTimeoutException e) {
+            e.printStackTrace();
+            throw new NotReachableException();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            throw new NotReachableException();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            throw new NotReachableException();
+        } catch (NoHttpResponseException e) {
+            e.printStackTrace();
+            throw new NotReachableException();
+        } catch (MalformedChunkCodingException e) {
+            e.printStackTrace();
+            throw new NotReachableException();
+        } catch (javax.net.ssl.SSLPeerUnverifiedException e) {
+            throw new SSLSecurityException();
+        } catch (javax.net.ssl.SSLException e) {
+            // Can be "Not trusted server certificate" or can be a
+            // aborted/interrupted handshake/connection
+            if (e.getMessage().contains("timed out")
+                    || e.getMessage().contains("reset by")) {
+                e.printStackTrace();
+                throw new NotReachableException();
+            } else {
+                throw new SSLSecurityException();
+            }
+        } catch (InterruptedIOException e) {
+            e.printStackTrace();
+            throw new NotReachableException();
+        } catch (IOException e) {
+            if (e.getMessage() != null
+                    && e.getMessage().contains("Request aborted")) {
+                e.printStackTrace();
+                throw new NotReachableException();
+            } else {
+                throw e;
+            }
+        }
+        return html;
+    }
 
-					String values = params.get(key);
-					if (values == null) {
-						params.put(key, value);
-					}
-				}
-			}
+    public String httpPost(String url, UrlEncodedFormEntity data,
+                           String encoding, boolean ignore_errors)
+            throws ClientProtocolException, IOException {
+        return httpPost(url, data, encoding, ignore_errors, null);
+    }
 
-			return params;
-		} catch (UnsupportedEncodingException ex) {
-			throw new AssertionError(ex);
-		}
-	}
+    public String httpPost(String url, UrlEncodedFormEntity data,
+                           String encoding) throws ClientProtocolException, IOException {
+        return httpPost(url, data, encoding, false, null);
+    }
 
-	@Override
-	public boolean shouldUseMeaningDetector() {
-		return true;
-	}
+    @Deprecated
+    public String httpPost(String url, UrlEncodedFormEntity data)
+            throws ClientProtocolException, IOException {
+        return httpPost(url, data, getDefaultEncoding(), false, null);
+    }
 
-	@Override
-	public SearchRequestResult volumeSearch(Map<String, String> query)
-			throws IOException, OpacErrorException {
-		return null;
-	}
+    protected String getDefaultEncoding() {
+        return "ISO-8859-1";
+    }
 
-	@Override
-	public void setStringProvider(StringProvider stringProvider) {
-		this.stringProvider = stringProvider;
-	}
-	
+    @Override
+    public boolean shouldUseMeaningDetector() {
+        return true;
+    }
+
+    @Override
+    public SearchRequestResult volumeSearch(Map<String, String> query)
+            throws IOException, OpacErrorException {
+        return null;
+    }
+
+    @Override
+    public void setStringProvider(StringProvider stringProvider) {
+        this.stringProvider = stringProvider;
+    }
+
 }

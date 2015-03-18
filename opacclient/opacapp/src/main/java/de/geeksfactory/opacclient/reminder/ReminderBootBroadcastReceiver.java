@@ -1,16 +1,16 @@
 /**
  * Copyright (C) 2013 by Raphael Michel under the MIT license:
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), 
  * to deal in the Software without restriction, including without limitation 
  * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
  * and/or sell copies of the Software, and to permit persons to whom the Software 
  * is furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in 
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
@@ -26,20 +26,21 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
 import de.geeksfactory.opacclient.OpacClient;
 
 public class ReminderBootBroadcastReceiver extends BroadcastReceiver {
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		Intent i = new Intent(context, ReminderAlarmReceiver.class);
-		PendingIntent sender = PendingIntent.getBroadcast(context,
-				OpacClient.BROADCAST_REMINDER, i,
-				PendingIntent.FLAG_UPDATE_CURRENT);
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        Intent i = new Intent(context, ReminderAlarmReceiver.class);
+        PendingIntent sender = PendingIntent.getBroadcast(context,
+                OpacClient.BROADCAST_REMINDER, i,
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
-		AlarmManager am = (AlarmManager) context
-				.getSystemService(Context.ALARM_SERVICE);
-		// Wait something around half an hour after system has booted
-		am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
-				+ (1000 * 1600), sender);
-	}
+        AlarmManager am = (AlarmManager) context
+                .getSystemService(Context.ALARM_SERVICE);
+        // Wait something around half an hour after system has booted
+        am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
+                + (1000 * 1600), sender);
+    }
 }

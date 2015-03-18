@@ -1,16 +1,16 @@
 /**
  * Copyright (C) 2013 by Raphael Michel under the MIT license:
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), 
  * to deal in the Software without restriction, including without limitation 
  * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
  * and/or sell copies of the Software, and to permit persons to whom the Software 
  * is furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in 
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
@@ -35,52 +35,52 @@ import de.geeksfactory.opacclient.objects.DetailledItem;
  * library can be used to download ebooks directly inside the app. This is
  * currently NOT implemented or used in the open source version and is more like
  * a bridge between the "Community Edition" and the "Plus Edition" of the App.
- * 
+ *
  * @author Raphael Michel
  */
 public interface EbookServiceApi {
 
-	/**
-	 * Proxy for the {@link OpacApi#account(Account)} feature, adding ebook
-	 * entries.
-	 */
-	public AccountData account(Account account) throws IOException,
-			JSONException, OpacErrorException;
+    /**
+     * Proxy for the {@link OpacApi#account(Account)} feature, adding ebook
+     * entries.
+     */
+    public AccountData account(Account account) throws IOException,
+            JSONException, OpacErrorException;
 
-	/**
-	 * The result of a
-	 * {@link EbookServiceApi#booking(DetailledItem, Account, int, String)}
-	 * call. The structure of the call and response is similar to
-	 * {@link OpacApi#reservation(DetailledItem, Account, int, String)}.
-	 */
-	public class BookingResult extends OpacApi.MultiStepResult {
+    /**
+     * Book an electronical item identified by booking_info to the users
+     * account. booking_info is what you returned in your DetailledItem object
+     * in your getResult hook.
+     */
+    public BookingResult booking(DetailledItem item, Account account,
+                                 int useraction, String selection) throws IOException,
+            OpacErrorException;
 
-		public BookingResult(Status status) {
-			super(status);
-		}
+    /**
+     * Is this a supported downloadable ebook? May not do network requests.
+     */
+    public boolean isEbook(DetailledItem item);
 
-		public BookingResult(Status status, String message) {
-			super(status, message);
-		}
-	}
+    /**
+     * Download the item identified by item_id. Returns an URL where the item
+     * can be downloaded from.
+     */
+    public String downloadItem(Account account, String item_id);
 
-	/**
-	 * Book an electronical item identified by booking_info to the users
-	 * account. booking_info is what you returned in your DetailledItem object
-	 * in your getResult hook.
-	 */
-	public BookingResult booking(DetailledItem item, Account account,
-			int useraction, String selection) throws IOException,
-			OpacErrorException;
+    /**
+     * The result of a
+     * {@link EbookServiceApi#booking(DetailledItem, Account, int, String)}
+     * call. The structure of the call and response is similar to
+     * {@link OpacApi#reservation(DetailledItem, Account, int, String)}.
+     */
+    public class BookingResult extends OpacApi.MultiStepResult {
 
-	/**
-	 * Is this a supported downloadable ebook? May not do network requests.
-	 */
-	public boolean isEbook(DetailledItem item);
+        public BookingResult(Status status) {
+            super(status);
+        }
 
-	/**
-	 * Download the item identified by item_id. Returns an URL where the item
-	 * can be downloaded from.
-	 */
-	public String downloadItem(Account account, String item_id);
+        public BookingResult(Status status, String message) {
+            super(status, message);
+        }
+    }
 }

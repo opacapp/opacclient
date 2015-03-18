@@ -7,23 +7,23 @@ import android.graphics.Bitmap;
  * be a {@link SearchResult} or {@link DetailledItem}.
  */
 public interface CoverHolder {
-	/**
-	 * Get the cover bitmap
-	 */
-	public Bitmap getCoverBitmap();
+    /**
+     * Get the cover bitmap
+     */
+    public Bitmap getCoverBitmap();
 
-	/**
-	 * Set the cover as a bitmap
-	 */
-	public void setCoverBitmap(Bitmap coverBitmap);
+    /**
+     * Set the cover as a bitmap
+     */
+    public void setCoverBitmap(Bitmap coverBitmap);
 
-	/**
-	 * Get the cover URL
-	 */
-	public String getCover();
+    /**
+     * Get the cover URL
+     */
+    public String getCover();
 
-	/**
-	 * Set the cover by URL
-	 */
-	public void setCover(String cover);
+    /**
+     * Set the cover by URL
+     */
+    public void setCover(String cover);
 }

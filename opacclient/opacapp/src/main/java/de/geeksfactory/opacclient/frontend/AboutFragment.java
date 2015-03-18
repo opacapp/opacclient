@@ -76,7 +76,7 @@ public class AboutFragment extends PreferenceFragment {
                                 android.content.Intent.ACTION_SEND);
                         emailIntent.putExtra(
                                 android.content.Intent.EXTRA_EMAIL,
-                                new String[] { "info@opacapp.de" });
+                                new String[]{"info@opacapp.de"});
                         emailIntent.setType("text/plain");
                         startActivity(Intent.createChooser(emailIntent,
                                 getString(R.string.write_mail)));
