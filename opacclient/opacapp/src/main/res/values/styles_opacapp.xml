@@ -53,8 +53,11 @@
 
     <!-- Changes specific to this API level go here -->
     <style name="Theme.Opacapp" parent="Theme.Opacapp.Base"/>
+
     <style name="Theme.Opacapp.NoActionBar" parent="Theme.Opacapp.NoActionBar.Base"/>
+
     <style name="Theme.Opacapp.NoActionBar.WithDrawer" parent="Theme.Opacapp.NoActionBar.Base"/>
+
     <style name="Theme.Opacapp.Floating" parent="Theme.Opacapp.Base.Floating"/>
 
     <style name="TextAppearance.Opacapp.Subhead" parent="TextAppearance.Opacapp.Base.Subhead">

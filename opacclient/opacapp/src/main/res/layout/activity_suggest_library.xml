@@ -15,22 +15,23 @@
         android:elevation="4dp"
         app:theme="@style/ThemeOverlay.Opacapp.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
     <ScrollView
         android:id="@+id/svAccount"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="8dp" >
+            android:padding="8dp">
 
             <TextView
                 android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/city" />
+                android:text="@string/city"/>
 
             <AutoCompleteTextView
                 android:id="@+id/etCity"
@@ -38,13 +39,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:ems="10"
-                android:singleLine="true" />
+                android:singleLine="true"/>
 
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/library_name" />
+                android:text="@string/library_name"/>
 
             <EditText
                 android:id="@+id/etName"
@@ -53,13 +54,13 @@
                 android:layout_marginBottom="8dp"
                 android:hint="@string/hint_library_name"
                 android:ems="10"
-                android:singleLine="true" />
+                android:singleLine="true"/>
 
             <TextView
                 android:id="@+id/textView5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/comment" />
+                android:text="@string/comment"/>
 
             <EditText
                 android:id="@+id/etComment"
@@ -68,7 +69,7 @@
                 android:layout_marginBottom="8dp"
                 android:gravity="top|left"
                 android:inputType="textMultiLine"
-                android:ems="10" />
+                android:ems="10"/>
 
             <!-- <TextView
                 android:id="@+id/textView3"
@@ -97,9 +98,9 @@
                 android:id="@+id/btnSend"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/send" />
+                android:text="@string/send"/>
 
-    </LinearLayout>
+        </LinearLayout>
 
     </ScrollView>
 </LinearLayout>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
     <LinearLayout
         android:id="@+id/llLoading"
@@ -9,13 +9,13 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="gone" >
+        android:visibility="gone">
 
         <ProgressBar
             android:id="@+id/progressBar1"
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -27,13 +27,13 @@
         <ScrollView
             android:id="@+id/svAccount"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
             <RelativeLayout
                 android:id="@+id/rlAccView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <RelativeLayout
                     android:id="@+id/rlAccHeader"
@@ -57,7 +57,7 @@
                         android:layout_alignParentTop="true"
                         android:ellipsize="end"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textColor="@color/account_head_fg" />
+                        android:textColor="@color/account_head_fg"/>
 
                     <TextView
                         android:id="@+id/tvAccCity"
@@ -66,7 +66,7 @@
                         android:layout_alignParentLeft="false"
                         android:layout_below="@id/tvAccLabel"
                         android:layout_marginBottom="4dp"
-                        android:textColor="@color/account_head_fg" />
+                        android:textColor="@color/account_head_fg"/>
 
                     <TextView
                         android:id="@+id/tvAccUser"
@@ -76,7 +76,7 @@
                         android:layout_below="@id/tvAccCity"
                         android:layout_marginBottom="4dp"
                         android:textColor="@color/account_head_fg"
-                        android:textIsSelectable="true" />
+                        android:textIsSelectable="true"/>
 
                     <TextView
                         android:id="@+id/tvPendingFeesLabel"
@@ -86,7 +86,7 @@
                         android:layout_below="@id/tvAccUser"
                         android:layout_marginBottom="4dp"
                         android:text="@string/pending_fees"
-                        android:textColor="@color/account_head_fg" />
+                        android:textColor="@color/account_head_fg"/>
 
                     <TextView
                         android:id="@+id/tvPendingFees"
@@ -97,7 +97,7 @@
                         android:layout_marginLeft="8dp"
                         android:layout_toRightOf="@id/tvPendingFeesLabel"
                         android:textColor="@color/account_head_fg"
-                        android:textIsSelectable="true" />
+                        android:textIsSelectable="true"/>
 
                     <TextView
                         android:id="@+id/tvValidUntilLabel"
@@ -107,7 +107,7 @@
                         android:layout_marginBottom="4dp"
                         android:layout_toLeftOf="@id/tvValidUntil"
                         android:text="@string/valid_until"
-                        android:textColor="@color/account_head_fg" />
+                        android:textColor="@color/account_head_fg"/>
 
                     <TextView
                         android:id="@+id/tvValidUntil"
@@ -118,7 +118,7 @@
                         android:layout_marginBottom="4dp"
                         android:layout_marginLeft="8dp"
                         android:textColor="@color/account_head_fg"
-                        android:textIsSelectable="true" />
+                        android:textIsSelectable="true"/>
                 </RelativeLayout>
 
                 <TextView
@@ -131,7 +131,7 @@
                     android:padding="5dp"
                     android:textColor="@color/error_fg"
                     android:textStyle="bold"
-                    android:visibility="gone" />
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/tvWarning"
@@ -143,7 +143,7 @@
                     android:padding="5dp"
                     android:textColor="@color/warning_fg"
                     android:textStyle="bold"
-                    android:visibility="gone" />
+                    android:visibility="gone"/>
 
                 <LinearLayout
                     android:id="@+id/llCols"
@@ -153,7 +153,7 @@
                     android:baselineAligned="false"
                     android:orientation="horizontal"
                     android:paddingLeft="16dp"
-                    android:paddingRight="16dp" >
+                    android:paddingRight="16dp">
 
                     <RelativeLayout
                         android:id="@+id/rlLent"
@@ -161,7 +161,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:padding="5dp" >
+                        android:padding="5dp">
 
                         <TextView
                             android:id="@+id/tvEntlHeader"
@@ -170,7 +170,7 @@
                             android:layout_marginBottom="10dp"
                             android:layout_marginTop="8dp"
                             android:text="@string/entl_head"
-                            android:textAppearance="@style/TextAppearance.Opacapp.Subhead" />
+                            android:textAppearance="@style/TextAppearance.Opacapp.Subhead"/>
 
                         <LinearLayout
                             android:id="@+id/llLent"
@@ -187,7 +187,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:padding="5dp" >
+                        android:padding="5dp">
 
                         <TextView
                             android:id="@+id/tvResHeader"
@@ -197,7 +197,7 @@
                             android:layout_marginBottom="10dp"
                             android:layout_marginTop="8dp"
                             android:text="@string/reservations_head"
-                            android:textAppearance="@style/TextAppearance.Opacapp.Subhead" />
+                            android:textAppearance="@style/TextAppearance.Opacapp.Subhead"/>
 
                         <LinearLayout
                             android:id="@+id/llReservations"
@@ -215,7 +215,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/llCols"
                     android:orientation="vertical"
-                    android:padding="5dp" >
+                    android:padding="5dp">
 
                     <TextView
                         android:id="@+id/tvAge"
@@ -225,7 +225,7 @@
                         android:layout_marginTop="4dp"
                         android:gravity="center|top"
                         android:textColor="@color/account_age"
-                        android:textStyle="italic" />
+                        android:textStyle="italic"/>
 
                     <TextView
                         android:id="@+id/tvNoWarranty"
@@ -236,79 +236,79 @@
                         android:gravity="center|top"
                         android:text="@string/no_warranty"
                         android:textColor="@color/account_age"
-                        android:textStyle="italic" />
+                        android:textStyle="italic"/>
                 </RelativeLayout>
             </RelativeLayout>
         </ScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>
-    
+
     <LinearLayout
         android:id="@+id/unsupported_error"
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:gravity="center"
-	    android:orientation="vertical"
-	    android:padding="16dp"
-	    android:visibility="gone" >
-	
-	    <TextView
-	        android:id="@+id/tvErrHeadU"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="@string/unsupported"
-	        android:textAppearance="?android:attr/textAppearanceLarge" />
-	
-	    <TextView
-	        android:id="@+id/tvErrBodyU"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:gravity="center"
-	        android:padding="10dp"
-	        android:text="@string/account_unsupported" />
-	
-	    <Button
-	        android:id="@+id/btSend"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="@string/report" />
-	
-	</LinearLayout>
-	
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvErrHeadU"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/unsupported"
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+        <TextView
+            android:id="@+id/tvErrBodyU"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/account_unsupported"/>
+
+        <Button
+            android:id="@+id/btSend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/report"/>
+
+    </LinearLayout>
+
     <LinearLayout
         android:id="@+id/answer_error"
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:gravity="center"
-	    android:padding="16dp"
-	    android:orientation="vertical"
-		android:visibility="gone">
-	
-	    <TextView
-	        android:id="@+id/tvErrHeadA"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="@string/opac_error"
-	        android:textAppearance="?android:attr/textAppearanceLarge" />
-	
-	    <TextView
-	        android:id="@+id/tvErrBodyA"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:gravity="center"
-	        android:padding="10dp"
-	        android:text="@string/connection_error_detail" />
-	
-	    <Button
-	        android:id="@+id/btPrefs"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="@string/accounts_edit" />
-	
-	</LinearLayout>
-	
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="16dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvErrHeadA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/opac_error"
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+        <TextView
+            android:id="@+id/tvErrBodyA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/connection_error_detail"/>
+
+        <Button
+            android:id="@+id/btPrefs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/accounts_edit"/>
+
+    </LinearLayout>
+
     <FrameLayout
         android:id="@+id/error_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
 </RelativeLayout>

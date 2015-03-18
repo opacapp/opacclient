@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_height="wrap_content"
@@ -18,11 +19,12 @@
             android:background="?attr/colorPrimary"
             android:elevation="4dp"
             app:theme="@style/ThemeOverlay.Opacapp.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
         <FrameLayout
             android:id="@+id/content_frame"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent">
 
         </FrameLayout>
     </LinearLayout>
@@ -36,7 +38,9 @@
         android:elevation="10dp"
         android:fitsSystemWindows="true"
         app:insetForeground="#4000">
-        <ListView android:id="@+id/drawer_list"
+
+        <ListView
+            android:id="@+id/drawer_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="start"
@@ -44,6 +48,6 @@
             android:divider="@android:color/transparent"
             android:dividerHeight="0dp"
             android:background="@color/nav_bg"
-            android:listSelector="@drawable/ripple" />
+            android:listSelector="@drawable/ripple"/>
     </de.geeksfactory.opacclient.ui.ScrimInsetsFrameLayout>
 </android.support.v4.widget.DrawerLayout>

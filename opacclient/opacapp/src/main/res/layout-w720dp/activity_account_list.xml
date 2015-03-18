@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:id="@+id/LinearLayout1"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/LinearLayout1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -12,7 +12,7 @@
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         app:theme="@style/ThemeOverlay.Opacapp.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
     <com.melnykov.fab.FloatingActionButton
         android:id="@+id/add_fab"
@@ -38,6 +38,7 @@
         android:layout_marginTop="-96dp"
         android:elevation="8dp"
         android:background="@drawable/popup_bg">
+
         <ListView
             android:id="@+id/lvAccounts"
             android:layout_width="match_parent"

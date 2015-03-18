@@ -4,11 +4,12 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true" >
+    android:fitsSystemWindows="true">
     <!-- The main content view -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_height="168dp"
@@ -18,7 +19,7 @@
             android:background="?attr/colorPrimary"
             android:elevation="4dp"
             app:theme="@style/ThemeOverlay.Opacapp.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
         <com.melnykov.fab.FloatingActionButton
             android:id="@+id/search_fab"
@@ -50,17 +51,19 @@
             android:elevation="8dp"
             android:background="@drawable/popup_bg"
             android:animateLayoutChanges="true">
+
             <FrameLayout
                 android:id="@+id/content_frame"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
             </FrameLayout>
+
             <FrameLayout
                 android:id="@+id/content_frame_right"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="2" >
+                android:layout_weight="2">
             </FrameLayout>
         </LinearLayout>
     </RelativeLayout>
@@ -74,7 +77,9 @@
         android:elevation="10dp"
         android:fitsSystemWindows="true"
         app:insetForeground="#4000">
-        <ListView android:id="@+id/drawer_list"
+
+        <ListView
+            android:id="@+id/drawer_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="start"
@@ -82,6 +87,6 @@
             android:divider="@android:color/transparent"
             android:dividerHeight="0dp"
             android:background="@color/nav_bg"
-            android:listSelector="@drawable/ripple" />
+            android:listSelector="@drawable/ripple"/>
     </de.geeksfactory.opacclient.ui.ScrimInsetsFrameLayout>
 </android.support.v4.widget.DrawerLayout>

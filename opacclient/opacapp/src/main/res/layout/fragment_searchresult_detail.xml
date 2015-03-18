@@ -12,24 +12,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="300dp"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"/>
 
     <FrameLayout
         android:id="@+id/error_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
     </FrameLayout>
 
     <de.geeksfactory.opacclient.ui.ObservableScrollView
         android:id="@+id/rootView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true" >
+            android:animateLayoutChanges="true">
 
             <ImageView
                 android:id="@+id/ivCover"
@@ -49,14 +49,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
                 android:layout_alignTop="@id/ivCover"
-                android:background="@drawable/gradient_top_bottom" />
+                android:background="@drawable/gradient_top_bottom"/>
+
             <View
                 android:id="@+id/gradient_bottom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/tvTitle"
                 android:layout_alignBottom="@id/ivCover"
-                android:background="@drawable/gradient_bottom_top" />
+                android:background="@drawable/gradient_bottom_top"/>
+
             <View
                 android:id="@+id/tint"
                 android:layout_width="match_parent"
@@ -64,7 +66,7 @@
                 android:layout_alignTop="@+id/ivCover"
                 android:layout_alignBottom="@id/ivCover"
                 android:background="@color/primary_red_dark"
-                android:alpha="0" />
+                android:alpha="0"/>
 
             <RelativeLayout
                 android:id="@+id/detailsLayout"
@@ -74,6 +76,7 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:background="#ffe5e5e5">
+
                 <TextView
                     android:id="@+id/tvDetails"
                     android:layout_width="fill_parent"
@@ -82,14 +85,14 @@
                     android:layout_marginBottom="10dp"
                     android:layout_marginTop="8dp"
                     android:text="@string/details_head"
-                    android:textAppearance="@style/TextAppearance.Opacapp.Subhead" />
+                    android:textAppearance="@style/TextAppearance.Opacapp.Subhead"/>
 
                 <LinearLayout
                     android:id="@+id/llDetails"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvDetails"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
                 </LinearLayout>
 
                 <TextView
@@ -100,7 +103,7 @@
                     android:layout_marginBottom="10dp"
                     android:layout_marginTop="8dp"
                     android:text="@string/copies_head"
-                    android:textAppearance="@style/TextAppearance.Opacapp.Subhead" />
+                    android:textAppearance="@style/TextAppearance.Opacapp.Subhead"/>
 
                 <LinearLayout
                     android:id="@+id/llCopies"
@@ -108,7 +111,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvCopies"
                     android:divider="@drawable/list_divider_material"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
                 </LinearLayout>
             </RelativeLayout>
 
@@ -133,7 +136,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginBottom="16dp"
-                android:maxLines="2" />
+                android:maxLines="2"/>
 
         </RelativeLayout>
     </de.geeksfactory.opacclient.ui.ObservableScrollView>

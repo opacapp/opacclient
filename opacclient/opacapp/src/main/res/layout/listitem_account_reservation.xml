@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="4dp" >
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="4dp">
 
     <View
         android:id="@+id/strut"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"/>
 
     <ImageView
         android:id="@+id/ivCancel"
@@ -18,7 +18,7 @@
         android:layout_alignParentRight="true"
         android:padding="8dp"
         android:contentDescription="@string/reservation_cancel"
-        android:src="@drawable/ic_cancel" />
+        android:src="@drawable/ic_cancel"/>
 
     <ImageView
         android:id="@+id/ivBooking"
@@ -27,7 +27,7 @@
         android:layout_alignParentRight="true"
         android:padding="8dp"
         android:contentDescription="@string/reservation_book"
-        android:src="@drawable/ic_booking" />
+        android:src="@drawable/ic_booking"/>
 
     <TextView
         android:id="@+id/tvTitel"
@@ -38,7 +38,7 @@
         android:ellipsize="end"
         android:singleLine="true"
         android:text=""
-        android:textIsSelectable="true" />
+        android:textIsSelectable="true"/>
 
     <TextView
         android:id="@+id/tvStatus"
@@ -50,7 +50,7 @@
         android:ellipsize="end"
         android:singleLine="true"
         android:text=""
-        android:textIsSelectable="true" />
+        android:textIsSelectable="true"/>
 
     <TextView
         android:id="@+id/tvVerfasser"
@@ -61,7 +61,7 @@
         android:ellipsize="end"
         android:singleLine="true"
         android:text=""
-        android:textIsSelectable="true" />
+        android:textIsSelectable="true"/>
 
     <TextView
         android:id="@+id/tvZst"
@@ -73,6 +73,6 @@
         android:ellipsize="end"
         android:singleLine="true"
         android:text=""
-        android:textIsSelectable="true" />
+        android:textIsSelectable="true"/>
 
 </RelativeLayout>
