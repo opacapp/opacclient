@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@drawable/nav_item"
+              android:gravity="center|left"
+              android:minHeight="48dp"
+              android:orientation="horizontal">
+
+    <View
+        android:id="@+id/viewRedbar"
+        android:layout_width="8dp"
+        android:layout_height="fill_parent"
+        android:background="@drawable/nav_border"
+        android:duplicateParentState="true">
+    </View>
+
+    <RelativeLayout
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/icon"
+            android:src="@drawable/ic_search"/>
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/icon"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/nav_fg"/>
+    </RelativeLayout>
+
+</LinearLayout>

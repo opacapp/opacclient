@@ -1,0 +1,217 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+    <string name="app_name">Web Opac</string>
+    <string name="launcher_name">Web Opac</string>
+    <string name="web_opac">Web-Opac</string>
+    <string name="zweigstelle">Kütüphane Şubesi</string>
+    <string name="barcodes">Barkodlar</string>
+    <string name="go_search">Bul</string>
+    <string name="prefs">Ayarlar</string>
+    <string name="account">Hesap</string>
+    <string name="about">Hakkında</string>
+    <string name="about_summary">Uygulama Hakkında</string>
+    <string name="changelog">Değişiklikler</string>
+    <string name="close">Kapat</string>
+    <string name="osl">Lisans notları</string>
+    <string name="thanks">Geliştirici ve Test Ekibi</string>
+    <string name="developer_settings">Geliştirici ayarları</string>
+    <string name="details_head">AYRINTILAR</string>
+    <string name="copies_head">KOPYALAR</string>
+    <string name="ret">Dönüş tarihi</string>
+    <string name="res">Rezerveli</string>
+    <string name="tocollection">Koleksiyon</string>
+    <string name="reserve">Rezerve et</string>
+    <string name="lendebook">E-kitap ödünç al</string>
+    <string name="doing_res">Rezervasyon yapılıyor...</string>
+    <string name="opac_error_email">Lütfen uygulama ayarlarından e-posta adresinizi ayarlayın.</string>
+    <string name="doing_booking">Ödünç alınıyor...</string>
+    <string name="status_nouser">Ayarlarda bu hesap için oturum açma bilgisi girmemişsiniz.</string>
+    <string name="pending_fees">Kütüphane Ücretleri:</string>
+    <string name="valid_until">Hesap şu tarihe kadar geçerli:</string>
+    <string name="no_warranty">Sağlanan tüm bilgiler için sorumluluk kabul edilmemektedir.</string>
+    <string name="entl_head">ÖDÜNÇ ALINANLAR</string>
+    <string name="reservations_head">REZERVASYONLAR</string>
+    <string name="entl_none">Ödünç alınmış bir şey yok</string>
+    <string name="reservations_none">Rezerve edilmiş bir şey yok</string>
+    <string name="cancel_confirm">Rezervasyon iptal edilsin mi?</string>
+    <string name="yes">Evet</string>
+    <string name="no">Hayır</string>
+    <string name="cancel">İptal</string>
+    <string name="delete">Sil</string>
+    <string name="accept">Tamam</string>
+    <string name="doing_cancel">Rezervasyon iptal ediliyor...</string>
+    <string name="doing_prolong">Uzatılıyor...</string>
+    <string name="doing_download">İndirme bilgisi alınıyor...</string>
+    <string name="reader_needed">Bir e-kitap okuyabilmek için ayrı bir uygulama kullanmalısınız. Zaten bir uygulamanız varsa \'Yoksay\' butonuna tıklayınız ve bu mesaj bir daha gösterilmeyecek. Play Store\'u açığ Bluefire Reader uygulamasını indirmek için \'İndir\' butonuna tıklayınız.</string>
+    <string name="reader_needed_ignore">Yoksay</string>
+    <string name="doing_prolong_all">Uzatılması mümkün olan tüm medyaların süresi uzatılıyor...</string>
+    <string name="prolong_all_confirm">Hesabınızdaki (uzatılabilir) tüm öğeleri uzatmak istediğinizden emin misiniz? Bu işlem bazı kütüphanelerde ücretli olabilir.</string>
+    <string name="opac_error">Web Opac hata mesajı:</string>
+    <string name="welcome">Hoşgeldiniz!</string>
+    <string name="welcome_select">Başlamak için bir kütüphane seçmelisiniz.</string>
+    <string name="welcome_account">Hesabınız anonim (sadece arama yapabilen) veya bir kütüphane kimliği ve şifresiyle ilişkilendirilmiş (daha fazla özellikli) olabilir. Daha sonra da başka hesaplar ekleyebilirsiniz.</string>
+    <string name="select_library">Kütüphane seç</string>
+    <string name="report">Rapor gönder</string>
+    <string name="report_sending">Rapor gönderiliyor...</string>
+    <string name="report_sent">Rapor gönderildi. Teşekkürler!</string>
+    <string name="report_error">Hata raporu gönderilemedi.</string>
+    <string name="notifications">Bildirimler</string>
+    <string name="notification_service">Süresi Yaklaşanlar</string>
+    <string name="notification_service_desc">Bir öğrenin geri verme zamanı gelmeden bana bildir (Bu özelliğin garantisi yoktur)</string>
+    <string name="notification_service_wifionly">Sadece WiFi üzerinden kontrol et</string>
+    <string name="notification_service_wifionly_desc">Mobil ağlar üzerinden bilgi indirilmez. WiFi olmadan bildirim de alınamaz.</string>
+    <string-array name="warning">
+        <item>Aynı gün</item>
+        <item>1 gün önce</item>
+        <item>3 gün önce</item>
+        <item>1 hafta önce</item>
+    </string-array>
+    <string-array name="warning_n">
+        <item>86400000</item>
+        <item>172800000</item>
+        <item>259200000</item>
+        <item>604800000</item>
+    </string-array>
+    <string name="startup_title">Başlangıç ekranı</string>
+    <string name="startup_summary">Başlangıçta hangi ekran gösterilsin?</string>
+    <string-array name="startup_labels">
+        <item>Arama</item>
+        <item>Hesap</item>
+        <item>Favoriler</item>
+        <item>Bilgi</item>
+    </string-array>
+    <string-array name="startup_values">
+        <item>search</item>
+        <item>account</item>
+        <item>starred</item>
+        <item>info</item>
+    </string-array>
+    <string name="notification_warning">Uyarı periyodu</string>
+    <string name="notification_warning_desc">Zaman dolmadan ne kadar önce bildirim almak istersiniz?</string>
+    <string name="notif_ticker">%s öğenin geri verme zamanı yaklaştı!</string>
+    <string name="notif_title">Öğelerin geri verme zamanı yaklaştı</string>
+    <string name="baende">KİTAPLAR</string>
+    <string name="baende_volumesearch">Kitapları göster</string>
+    <string name="star">Favorilere kaydet</string>
+    <string name="starred">Öğe favori listenize eklendi.</string>
+    <string name="star_wait">Lütfen ayrıntıların yüklenmesini bekleyin!</string>
+    <string name="starred_welcome">Bu sizin favori listenizdir. Ayrıntılar sayfasındaki yıldıza tıklayarak öğeleri bu listeye ekleyebilirsiniz. Kullandığınız her kütüphane için ayrı liste tutulmaktadır.</string>
+    <string name="share">Paylaş</string>
+    <string name="share_wait">Lütfen ayrıntıların yüklenmesini bekleyin</string>
+    <string name="share_notsupported">Bu kütüphanede desteklenmiyor</string>
+    <string name="unsupported">Desteklenmiyor</string>
+    <string name="account_unsupported_api">Bu özellik henüz kütüphanenizde desteklenmiyor. Bu özelliğin eklenmesi için okurların yardımına ihtiyacımız olabilir, ilgileniyorsanız bize e-posta atın: info@opacapp.de</string>
+  <string name="account_unsupported">Bu özellik henüz kütüphanenizde desteklenmiyor. Bunu değiştirmek için bu kütüphanenin okurlarının yardımına ihtiyacımız var. Eğer \"Rapor gönder\" butonuna tıklarsanız, gelecek güncellemede bunu düzeltebiliriz.
+Rapor gönderdiğinizde bazı verileriniz bize gelir (bu veriler kütüphane şifrenizi içermez). Sorun çözüldükten sonra bu verileri hemen sileceğiz.</string>
+    <string name="write_mail">E-posta yaz</string>
+    <string name="info_error">Bu kütüphane için ek bilgi yüklenemiyor</string>
+    <string name="info_unsupported">Bu kütüphane için gösterek bilgi bulunmuyor</string>
+    <string name="connection_error_detail">Kütüphane sunucusuna bağlantı başarısız oldu. Lütfen internet bağlantınızı kontrol edin. Eğer hata devam ederse kütüphane sunucusunda bir sorun olabilir veya uygulama kütüphane sunucusundan gelen cevabı okuyamıyor olabilir.</string>
+    <string name="connection_error_detail_nre">Kütüphane sunucusuna bağlantı başarısız oldu. Lütfen internet bağlantınızı kontrol edin. Eğer hata devam ederse kütüphane sunucusunda bir sorun olabilir.</string>
+    <string name="retry">Tekrar deneyin</string>
+    <string name="default_account_name">İsimsiz hesap</string>
+    <string name="title_activity_account_list">Hesaplar</string>
+    <string name="account_add">Hesap ekle</string>
+    <string name="accounts">Hesaplar</string>
+    <string name="accounts_edit">Hesap değiştir</string>
+    <string name="accounts_desc">Kütüphanelerinizi ve üyelik numaralarınızı yönetin</string>
+    <string name="account_label">Etiket</string>
+    <string name="account_nr">Üye Kimliği/Kullanıcı Adı (isteğe bağlı)</string>
+    <string name="account_password">Şifre (isteğe bağlı)</string>
+    <string name="account_city">Kütüphane</string>
+    <string name="account_delete_confirm">Hesabı silmek istiyor musunuz?</string>
+    <string name="account_select">Hesap seçin</string>
+    <string name="privacy">Gizlilik</string>
+    <string name="nav_hl_library">Kütüphane</string>
+    <string name="nav_search">Arama</string>
+    <string name="nav_account">Hesap</string>
+    <string name="nav_starred">Favoriler</string>
+    <string name="nav_info">Bilgi</string>
+    <string name="nav_hl_other">Diğer</string>
+    <string name="nav_settings">Ayarlar</string>
+    <string name="nav_about">Uygulama Hakkında</string>
+    <string name="nav_hl_accountlist">Hesap seçimi</string>
+    <string name="crash_toast_text">Bir hata oluştu. Lütfen bekleyin.</string>
+    <string name="crash_notif_ticker_text">Web Opac Uygulaması: Bir hata oluştu.</string>
+    <string name="crash_notif_text">Lütfen bir hata rapor göndermek için buraya tıklayın.</string>
+    <string name="crash_notif_title">Web Opac Uygulaması çöktü</string>
+    <string name="crash_dialog_text">Opac Uygulamasında bir hata oluştu! Lütfen e-posta ile bir hata raporu göndererek bu sorunu çözmemize yardımcı olun.</string>
+    <string name="refresh">Yenile</string>
+    <string name="prolong_all">Tümünü uzat</string>
+    <string name="account_no_concurrent">Lütfen görünümün yenilenmesini bekleyin.</string>
+    <string name="confirm_title">Onayla</string>
+    <string name="confirm">Onayla</string>
+    <string name="account_up_to_date">Bu veri güncel.</string>
+    <plurals name="account_age_minutes">
+        <item quantity="one">Bu veri bir dakika öncesinin.</item>
+        <item quantity="other">Bu veri %d dakika öncesinin.</item>
+    </plurals>
+    <plurals name="account_age_hours">
+        <item quantity="one">Bu veri bir saat öncesinin.</item>
+        <item quantity="other">Bu veri %d saat öncesinin.</item>
+    </plurals>
+    <plurals name="account_age_days">
+        <item quantity="one">Bu veri bir gün öncesinin.</item>
+        <item quantity="other">Bu veri %d gün öncesinin.</item>
+    </plurals>
+    <string name="search_advanced">Gelişmiş Arama</string>
+    <string name="search_free">Ücretsiz arama</string>
+    <string name="barcode_title">Barkod tarayıcı yükle?</string>
+    <string name="barcode_desc">Bu özellik bir barkod okuma uygulaması gerektiriyor. Bir tane yüklemek istiyor musunuz?</string>
+    <string name="barcode_gplay">Google Play</string>
+    <string name="barcode_amazon">Amazon</string>
+    <string name="result_number">%d arama sonucu</string>
+    <string name="export_starred">Dışa aktar</string>
+    <string name="geolocate">Yakındaki kütüphaneleri bul</string>
+    <string name="geolocate_progress">Yeriniz bulunuyor...</string>
+    <string name="alphabetic_list">Tüm listeyi göster.</string>
+    <string name="setting_nfc">NFC-Arama</string>
+    <string name="setting_nfc_desc">Deneysel özellik. Sadece bazı cihaz ve kütüphanelerde çalışır.</string>
+    <string name="notification_problems">Bildirimler bozuk olabilir.</string>
+    <string name="no_results">Aramada hiçbir sonuç bulunamadı.</string>
+    <string name="replacedby">Bu kütüphane ek özellikleri olan kendi uygulamasına sahiptir. Bu özel uygulamayı kullanmanızı tavsiye ederiz. Sağdaki Play Store ikonuna tıklayarak bu uygulamayı indirebilirsiniz.</string>
+    <string name="email_address">E-posta Adresi</string>
+    <string name="email_address_description">E-kitap rezervasyonu için gerekli</string>
+    <string name="accchange_sorry">Hesaplar arasında geçiş başarısız oldu, lütfen yeni bir arama başlatın.</string>
+    <string name="share_dialog_select">Sonucu paylaş</string>
+    <string name="share_link">Bağlantı paylaş</string>
+    <string name="share_details">Ayrıntıları dışa aktar</string>
+    <string name="no_ssl">Bu kütüphane güvenli bir HTTPS bağlantıyı desteklemiyor. Eğer bu hesap özelliklerini güvenli olmayan bir açık ağda kullanırsanız ya da bildirim özelliği yüklüyse, şifreniz ağınızdaki kötü niyetli kişilerin saldırısına karşı açık durumda olabilir.</string>
+    <string name="drawer_open">Gezinmeyi aç</string>
+    <string name="drawer_close">Gezinmeyi kapat</string>
+    <string name="title_searchresult_list">Arama sonuçları</string>
+    <string name="title_searchresult_detail">Ayrıntılar</string>
+    <string name="title_activity_library_list">Kütüphane seçimi</string>
+    <string name="suggest_library">Kütüphaneniz desteklenmiyor mu? Eklenmesi için önerin!</string>
+    <string name="title_activity_suggest_library">Kütüphane öner</string>
+    <string name="city">Şehir</string>
+    <string name="library_name">Kütüphane İsmi</string>
+    <string name="hint_library_name">örn. \"Halk Kütüphanesi\", \"Üniversite Kütüphanesi\", \"Hacettepe Üniversitesi\", ...</string>
+    <string name="comment">Yorum</string>
+    <string name="send">Gönder</string>
+    <string name="select_mail_app">E-posta uygulaması seç...</string>
+    <string name="search_libraries_hint">Kütüphane ara...</string>
+    <string name="action_search">Arama</string>
+    <string name="snooze">Yarın tekrar hatırlat</string>
+    <string name="expand">Daha fazla arama alanı göster</string>
+    <string name="collapse">Daha az arama alanı göster</string>
+    <string name="interested_to_help">Yardım etmek istiyorum</string>
+    <string name="library_suggestion">Kütüphane önerisi</string>
+    <string name="cover">Kapak</string>
+    <string name="playstore">Play Store</string>
+    <string name="icon">İkon</string>
+    <string name="prolong">Uzat</string>
+    <string name="reservation_cancel">Rezervasyonu iptal et</string>
+    <string name="reservation_book">Ödünç Alma</string>
+    <string name="mediatype">Ürün</string>
+    <string name="status">Durum</string>
+    <string name="free_search">Ücretsiz Arama</string>
+    <string name="no_fields_found">Hiç arama alanı bulunamadı.</string>
+    <string name="no_search_cache">Hata. Lütfen bu sorunu çözmek için bir arama yapmayı deneyin.</string>
+    <string name="user_data_opac_message">Kullanıcı verileri kontrol edilirken kütüphaneden şu mesaj geldi: \"%s\"\n\nBu kullanıcı verilerini kaydetmek istiyor musunuz?</string>
+    <string name="user_data_connection_error">Kullanıcı verileri kontrol edilirken kütüphane sunucusuyla bağlantı sağlanamadı. Bu kullanıcı verilerini kaydetmek istiyor musunuz?</string>
+    <string name="support_search_account">Arama ve hesap</string>
+    <string name="support_search">Sadece arama</string>
+    <string name="meta_clear_title">Önbelleği temizle</string>
+    <string name="meta_clear">Önbellekteki verileri siler</string>
+</resources>

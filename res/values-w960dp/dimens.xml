@@ -1,7 +1,0 @@
-<resources>
-
-    <dimen name="activity_horizontal_margin">128dp</dimen>
-    <dimen name="tablet_padding">120dp</dimen>
-	<dimen name="tablet_padding_or_zero">120dp</dimen>
-	
-</resources>

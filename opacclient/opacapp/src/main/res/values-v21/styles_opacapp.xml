@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Changes specific to this API level go here -->
+    <style name="Theme.Opacapp" parent="Theme.Opacapp.Base">
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="android:windowSharedElementEnterTransition">@android:transition/move</item>
+        <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
+        <item name="android:windowEnterTransition">@android:transition/fade</item>
+        <item name="android:windowExitTransition">@android:transition/fade</item>
+        <item name="android:fragmentSharedElementEnterTransition">@android:transition/move</item>
+        <item name="android:fragmentSharedElementReturnTransition">@android:transition/move</item>
+        <item name="android:fragmentEnterTransition">@android:transition/fade</item>
+        <item name="android:fragmentReturnTransition">@android:transition/fade</item>
+    </style>
+
+    <style name="Theme.Opacapp.NoActionBar" parent="Theme.Opacapp.NoActionBar.Base">
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="android:windowSharedElementEnterTransition">@android:transition/move</item>
+        <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
+        <item name="android:windowEnterTransition">@android:transition/fade</item>
+        <item name="android:windowExitTransition">@android:transition/fade</item>
+
+        <item name="android:fragmentSharedElementEnterTransition">@android:transition/move</item>
+        <item name="android:fragmentSharedElementReturnTransition">@android:transition/move</item>
+        <item name="android:fragmentEnterTransition">@android:transition/fade</item>
+        <item name="android:fragmentReturnTransition">@android:transition/fade</item>
+    </style>
+
+    <style name="Theme.Opacapp.NoActionBar.WithDrawer" parent="Theme.Opacapp.NoActionBar.Base">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="android:windowSharedElementEnterTransition">@android:transition/move</item>
+        <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
+        <item name="android:windowEnterTransition">@android:transition/fade</item>
+        <item name="android:windowExitTransition">@android:transition/fade</item>
+
+        <item name="android:fragmentSharedElementEnterTransition">@android:transition/move</item>
+        <item name="android:fragmentSharedElementReturnTransition">@android:transition/move</item>
+        <item name="android:fragmentEnterTransition">@android:transition/fade</item>
+        <item name="android:fragmentReturnTransition">@android:transition/fade</item>
+    </style>
+
+    <style name="TextAppearance.Opacapp.Subhead" parent="TextAppearance.Opacapp.Base.Subhead">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+</resources>

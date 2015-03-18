@@ -1,0 +1,9 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="drawer_width">280dp</dimen>
+    <dimen name="padding_status_bar">0dp</dimen>
+    <dimen name="single_pane_max_width">720dp</dimen>
+</resources>

@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-	<item name="tablet_panel_bg" type="drawable">@drawable/panel_bg_holo_light</item>
-</resources>

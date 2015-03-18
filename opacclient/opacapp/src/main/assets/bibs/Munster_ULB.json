@@ -1,0 +1,16 @@
+{
+    "account_supported": true,
+    "api": "sisis",
+    "city": "M\u00fcnster",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://katalogix.uni-muenster.de/Katalog",
+        "information": "http://www.ulb.uni-muenster.de/bibliothek/standorte/"
+    },
+    "geo": [
+        51.9606649,
+        7.6261347
+    ],
+    "state": "Nordrhein-Westfalen",
+    "title": "Uni- und Landesbibliothek"
+}

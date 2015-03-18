@@ -11,7 +11,7 @@ echo -n | openssl s_client -connect $HOST:443 | sed -ne '/-BEGIN CERTIFICATE-/,/
 
 BCJAR=tools/bcprov-jdk15on-146.jar
 
-TRUSTSTORE=res/raw/ssl_trust_store.bks
+TRUSTSTORE=opacclient/opacapp/src/main/res/raw/ssl_trust_store.bks
 STOREPASS=ro5eivoijeeGohsh0daequoo5Zeepaen
 
 ALIAS=$HOST"-"`openssl x509 -inform PEM -subject_hash -noout -in $CERT`

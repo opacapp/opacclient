@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/libopac/libopac.iml" filepath="$PROJECT_DIR$/libopac/libopac.iml" />
+      <module fileurl="file://$PROJECT_DIR$/meaningdetector/meaningdetector.iml" filepath="$PROJECT_DIR$/meaningdetector/meaningdetector.iml" />
+      <module fileurl="file://$PROJECT_DIR$/noandroid/noandroid.iml" filepath="$PROJECT_DIR$/noandroid/noandroid.iml" />
+      <module fileurl="file://$PROJECT_DIR$/opacapp/opacapp.iml" filepath="$PROJECT_DIR$/opacapp/opacapp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/opacclient.iml" filepath="$PROJECT_DIR$/opacclient.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/tests.iml" filepath="$PROJECT_DIR$/tests/tests.iml" />
+    </modules>
+  </component>
+</project>
+
