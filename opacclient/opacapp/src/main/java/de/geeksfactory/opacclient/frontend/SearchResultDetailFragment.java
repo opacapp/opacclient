@@ -70,6 +70,7 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.StarDataSource;
 import de.geeksfactory.opacclient.ui.ObservableScrollView;
 import de.geeksfactory.opacclient.ui.WhitenessUtils;
+import de.geeksfactory.opacclient.utils.ISBNTools;
 
 /**
  * A fragment representing a single SearchResult detail screen. This fragment is
@@ -1341,7 +1342,9 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
                 URL newurl;
                 if (res.getCover() != null && res.getCoverBitmap() == null) {
                     try {
-                        newurl = new URL(res.getCover());
+                        float density = getActivity().getResources().getDisplayMetrics().density;
+                        newurl = new URL(ISBNTools.getBestSizeCoverUrl(res.getCover(),
+                                view.getWidth(), (int) (260*density)));
                         Bitmap mIcon_val = BitmapFactory.decodeStream(newurl
                                 .openConnection().getInputStream());
                         if (mIcon_val.getHeight() > 1
@@ -1435,7 +1438,9 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
                 }
                 URL newurl;
                 try {
-                    newurl = new URL(res.getCover());
+                    float density = getActivity().getResources().getDisplayMetrics().density;
+                    newurl = new URL(ISBNTools.getBestSizeCoverUrl(res.getCover(),
+                            view.getWidth(), (int) (260*density)));
                     Bitmap mIcon_val = BitmapFactory.decodeStream(newurl
                             .openConnection().getInputStream());
                     if (mIcon_val.getHeight() > 1

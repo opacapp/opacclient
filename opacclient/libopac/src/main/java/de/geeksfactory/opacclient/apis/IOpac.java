@@ -452,8 +452,8 @@ public class IOpac extends BaseApi implements OpacApi {
 
         // GET COVER IMAGE
         String imgUrl = table.get(0)
-                .select("img[src^=http://images-eu.amazon.com]").attr("src")
-                .replace("TZZZZZZZ", "L");
+                .select("img[src~=^https?://(:?images(?:-[^\\.]*)?\\.|[^\\.]*\\.images-)amazon\\.com]")
+                .attr("src");
         result.setCover(imgUrl);
 
         // GET INFORMATION

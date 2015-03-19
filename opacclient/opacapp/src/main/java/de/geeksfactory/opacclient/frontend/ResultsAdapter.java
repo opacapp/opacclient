@@ -39,6 +39,7 @@ import java.util.List;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
+import de.geeksfactory.opacclient.utils.ISBNTools;
 
 public class ResultsAdapter extends ArrayAdapter<SearchResult> {
     private List<SearchResult> objects;
@@ -191,7 +192,9 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
             URL newurl;
             if (item.getCover() != null && item.getCoverBitmap() == null) {
                 try {
-                    newurl = new URL(item.getCover());
+                    float density = getContext().getResources().getDisplayMetrics().density;
+                    newurl = new URL(ISBNTools.getBestSizeCoverUrl(item.getCover(),
+                            (int) (56*density), (int) (56*density)));
                     Bitmap mIcon_val = BitmapFactory.decodeStream(newurl
                             .openConnection().getInputStream());
                     if (mIcon_val.getHeight() > 1 && mIcon_val.getWidth() > 1) {
