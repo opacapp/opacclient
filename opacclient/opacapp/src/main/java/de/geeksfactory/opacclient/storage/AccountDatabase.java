@@ -41,6 +41,7 @@ public class AccountDatabase extends SQLiteOpenHelper {
     // CHANGE THIS
     public static final Map<String, String> COLUMNS_LENT;
     public static final Map<String, String> COLUMNS_RESERVATIONS;
+
     static {
         Map<String, String> aMap = new HashMap<String, String>();
         aMap.put(AccountData.KEY_LENT_AUTHOR, "author");
@@ -69,6 +70,7 @@ public class AccountDatabase extends SQLiteOpenHelper {
         bMap.put(AccountData.KEY_RESERVATION_ID, "itemid");
         COLUMNS_RESERVATIONS = Collections.unmodifiableMap(bMap);
     }
+
     public static final String TABLENAME_ACCOUNTS = "accounts";
     public static final String TABLENAME_LENT = "accountdata_lent";
     public static final String TABLENAME_RESERVATION = "accountdata_reservations";

@@ -128,8 +128,9 @@ public class AccountListActivity extends ActionBarActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ACCOUNT_EDIT_REQUEST_CODE)
+        if (requestCode == ACCOUNT_EDIT_REQUEST_CODE) {
             refreshLv();
+        }
     }
 
 }

@@ -5,15 +5,15 @@ import android.os.Bundle;
 import de.geeksfactory.opacclient.R;
 
 /**
- * An activity representing a single SearchResult detail screen. This activity
- * is only used on handset devices. On tablet-size devices, item details are
- * presented side-by-side with a list of items in a
- * {@link SearchResultListActivity}.
+ * An activity representing a single SearchResult detail screen. This activity is only used on
+ * handset devices. On tablet-size devices, item details are presented side-by-side with a list of
+ * items in a {@link SearchResultListActivity}.
  * <p/>
- * This activity is mostly just a 'shell' activity containing nothing more than
- * a {@link SearchResultDetailFragment}.
+ * This activity is mostly just a 'shell' activity containing nothing more than a {@link
+ * SearchResultDetailFragment}.
  */
-public class SearchResultDetailActivity extends OpacActivity implements SearchResultDetailFragment.Callbacks {
+public class SearchResultDetailActivity extends OpacActivity
+        implements SearchResultDetailFragment.Callbacks {
 
     SearchResultDetailFragment detailFragment;
 
@@ -39,18 +39,22 @@ public class SearchResultDetailActivity extends OpacActivity implements SearchRe
                     getIntent().getIntExtra(
                             SearchResultDetailFragment.ARG_ITEM_NR, 0));
             if (getIntent().hasExtra(
-                    SearchResultDetailFragment.ARG_ITEM_ID))
+                    SearchResultDetailFragment.ARG_ITEM_ID)) {
                 arguments.putString(
                         SearchResultDetailFragment.ARG_ITEM_ID,
                         getIntent().getStringExtra(
                                 SearchResultDetailFragment.ARG_ITEM_ID));
+            }
             if (getIntent().hasExtra(SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP)) {
-                arguments.putParcelable(SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP, getIntent().getParcelableExtra(SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP));
+                arguments.putParcelable(SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP,
+                        getIntent().getParcelableExtra(
+                                SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP));
             }
             detailFragment = new SearchResultDetailFragment();
             detailFragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.searchresult_detail_container, detailFragment).commit();
+                                       .add(R.id.searchresult_detail_container, detailFragment)
+                                       .commit();
         }
     }
 

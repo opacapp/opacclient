@@ -80,7 +80,8 @@ public class HTTPClient {
                     trustStore = KeyStore.getInstance("BKS");
 
                     final InputStream in = OpacClient.context.getResources()
-                            .openRawResource(R.raw.ssl_trust_store);
+                                                             .openRawResource(
+                                                                     R.raw.ssl_trust_store);
                     try {
                         trustStore.load(in,
                                 "ro5eivoijeeGohsh0daequoo5Zeepaen".toCharArray());

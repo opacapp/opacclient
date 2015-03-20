@@ -48,10 +48,11 @@ public class AboutFragment extends PreferenceFragment {
                     @Override
                     public boolean onPreferenceClick(Preference preference) {
                         Intent i = new Intent(Intent.ACTION_VIEW);
-                        if (getString(R.string.website_url).contains("de"))
+                        if (getString(R.string.website_url).contains("de")) {
                             i.setData(Uri.parse("http://de.opacapp.net"));
-                        else
+                        } else {
                             i.setData(Uri.parse("http://en.opacapp.net"));
+                        }
                         startActivity(i);
                         return false;
                     }

@@ -79,7 +79,9 @@ import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.StarContentProvider;
 
-@ReportsCrashes(formKey = "", mailTo = "info@opacapp.de", mode = org.acra.ReportingInteractionMode.NOTIFICATION, resToastText = R.string.crash_toast_text)
+@ReportsCrashes(formKey = "", mailTo = "info@opacapp.de",
+        mode = org.acra.ReportingInteractionMode.NOTIFICATION,
+        resToastText = R.string.crash_toast_text)
 public class OpacClient extends Application {
 
     public static final String PREF_SELECTED_ACCOUNT = "selectedAccount";
@@ -110,8 +112,9 @@ public class OpacClient extends Application {
     }
 
     public static Bundle queryToBundle(List<SearchQuery> query) {
-        if (query == null)
+        if (query == null) {
             return null;
+        }
         Bundle b = new Bundle();
         for (SearchQuery q : query) {
             try {
@@ -129,8 +132,9 @@ public class OpacClient extends Application {
     // }
 
     public static List<SearchQuery> bundleToQuery(Bundle bundle) {
-        if (bundle == null)
+        if (bundle == null) {
             return null;
+        }
         List<SearchQuery> query = new ArrayList<SearchQuery>();
         for (String e : bundle.keySet()) {
             try {
@@ -144,8 +148,9 @@ public class OpacClient extends Application {
     }
 
     public static Bundle mapToBundle(Map<String, String> map) {
-        if (map == null)
+        if (map == null) {
             return null;
+        }
         Bundle b = new Bundle();
         for (Entry<String, String> e : map.entrySet()) {
             b.putString(e.getKey(), e.getValue());
@@ -154,8 +159,9 @@ public class OpacClient extends Application {
     }
 
     public static Map<String, String> bundleToMap(Bundle bundle) {
-        if (bundle == null)
+        if (bundle == null) {
             return null;
+        }
         Map<String, String> map = new HashMap<String, String>();
         for (String e : bundle.keySet()) {
             map.put(e, (String) bundle.get(e));
@@ -190,7 +196,8 @@ public class OpacClient extends Application {
     }
 
     public boolean isOnline() {
-        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connMgr =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         return (networkInfo != null && networkInfo.isConnected());
     }
@@ -199,34 +206,37 @@ public class OpacClient extends Application {
             SocketException, IOException, NotReachableException {
         OpacApi newApiInstance = null;
         if (lib.getApi().equals("bond26") || lib.getApi().equals("bibliotheca"))
-            // Backwardscompatibility
+        // Backwardscompatibility
+        {
             newApiInstance = new Bibliotheca();
-        else if (lib.getApi().equals("oclc2011")
+        } else if (lib.getApi().equals("oclc2011")
                 || lib.getApi().equals("sisis"))
-            // Backwards compatibility
+        // Backwards compatibility
+        {
             newApiInstance = new SISIS();
-        else if (lib.getApi().equals("zones22"))
+        } else if (lib.getApi().equals("zones22")) {
             newApiInstance = new Zones22();
-        else if (lib.getApi().equals("biber1992"))
+        } else if (lib.getApi().equals("biber1992")) {
             newApiInstance = new BiBer1992();
-        else if (lib.getApi().equals("pica"))
+        } else if (lib.getApi().equals("pica")) {
             newApiInstance = new Pica();
-        else if (lib.getApi().equals("iopac"))
+        } else if (lib.getApi().equals("iopac")) {
             newApiInstance = new IOpac();
-        else if (lib.getApi().equals("adis"))
+        } else if (lib.getApi().equals("adis")) {
             newApiInstance = new Adis();
-        else if (lib.getApi().equals("sru"))
+        } else if (lib.getApi().equals("sru")) {
             newApiInstance = new SRU();
-        else if (lib.getApi().equals("webopac.net"))
+        } else if (lib.getApi().equals("webopac.net")) {
             newApiInstance = new WebOpacNet();
-        else if (lib.getApi().equals("winbiap"))
+        } else if (lib.getApi().equals("winbiap")) {
             newApiInstance = new WinBiap();
-        else if (lib.getApi().equals("heidi"))
+        } else if (lib.getApi().equals("heidi")) {
             newApiInstance = new Heidi();
-        else if (lib.getApi().equals("touchpoint"))
+        } else if (lib.getApi().equals("touchpoint")) {
             newApiInstance = new TouchPoint();
-        else
+        } else {
             return null;
+        }
         newApiInstance.init(lib);
         newApiInstance.setStringProvider(new AndroidStringProvider());
         currentLang = getResources().getConfiguration().locale.getLanguage();
@@ -250,7 +260,7 @@ public class OpacClient extends Application {
         if (account != null && api != null) {
             if (sp.getLong(PREF_SELECTED_ACCOUNT, 0) == account.getId()
                     && getResources().getConfiguration().locale.getLanguage()
-                    .equals(currentLang)) {
+                                                               .equals(currentLang)) {
                 return api;
             }
         }
@@ -307,8 +317,9 @@ public class OpacClient extends Application {
     }
 
     public Library getLibrary() {
-        if (getAccount() == null)
+        if (getAccount() == null) {
             return null;
+        }
         if (account != null && library != null) {
             if (sp.getLong(PREF_SELECTED_ACCOUNT, 0) == account.getId()) {
                 return library;

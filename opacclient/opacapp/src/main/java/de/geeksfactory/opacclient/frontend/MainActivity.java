@@ -38,16 +38,15 @@ public class MainActivity extends OpacActivity implements
     private long account;
 
     /**
-     * Reads the first four blocks of an ISO 15693 NFC tag as ASCII bytes into a
-     * string.
+     * Reads the first four blocks of an ISO 15693 NFC tag as ASCII bytes into a string.
      *
-     * @return String Tag memory as a string (bytes converted as ASCII) or
-     * <code>null</code>
+     * @return String Tag memory as a string (bytes converted as ASCII) or <code>null</code>
      */
     @SuppressLint("NewApi")
     public static String readPageToString(android.nfc.Tag tag) {
-        if (tag == null)
+        if (tag == null) {
             return null;
+        }
         byte[] id = tag.getId();
         android.nfc.tech.NfcV tech = android.nfc.tech.NfcV.get(tag);
         byte[] readCmd = new byte[3 + id.length];
@@ -65,11 +64,13 @@ public class MainActivity extends OpacActivity implements
                 data = tech.transceive(readCmd);
                 for (int j = 0; j < data.length; j++) {
                     if (data[j] > 32 && data[j] < 127) // We only want printable
-                        // characters, there
-                        // might be some
-                        // nullbytes in it
-                        // otherwise.
+                    // characters, there
+                    // might be some
+                    // nullbytes in it
+                    // otherwise.
+                    {
                         stringbuilder.append((char) data[j]);
+                    }
                 }
             }
             tech.close();
@@ -150,8 +151,10 @@ public class MainActivity extends OpacActivity implements
 //		try {
 //			List<SearchField> fields = app.getApi()
 //					.getSearchFields(new SQLMetaDataSource(app), app.getLibrary());
-//			if (fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE)) //TODO: This won't work with the new implementation. But what is it for?
-//				nfc_capable = false;							   //  	   Shouldn't this be set to true if the library supports searching for barcodes?
+//			if (fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE)) //TODO: This won't work with
+// the new implementation. But what is it for?
+//				nfc_capable = false;							   //  	   Shouldn't this be set
+// to true if the library supports searching for barcodes?
 //		} catch (OpacErrorException e) {
 //			e.printStackTrace();
 //		}
@@ -222,10 +225,12 @@ public class MainActivity extends OpacActivity implements
         BarcodeScanIntegrator.ScanResult scanResult = BarcodeScanIntegrator
                 .parseActivityResult(requestCode, resultCode, idata);
         if (resultCode != RESULT_CANCELED && scanResult != null) {
-            if (scanResult.getContents() == null)
+            if (scanResult.getContents() == null) {
                 return;
-            if (scanResult.getContents().length() < 3)
+            }
+            if (scanResult.getContents().length() < 3) {
                 return;
+            }
 
             // We won't try to determine which type of barcode was
             // scanned anymore because of the new SearchField
@@ -280,7 +285,7 @@ public class MainActivity extends OpacActivity implements
     public void onNewIntent(Intent intent) {
         // TODO: Rewrite this for the new SearchField implementation
         /*if (nfc_capable && sp.getBoolean("nfc_search", false)) {
-			android.nfc.Tag tag = intent
+            android.nfc.Tag tag = intent
 					.getParcelableExtra(android.nfc.NfcAdapter.EXTRA_TAG);
 			String scanResult = readPageToString(tag);
 			if (scanResult != null) {
@@ -312,7 +317,7 @@ public class MainActivity extends OpacActivity implements
             // Insert the fragment
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
-                    .replace(R.id.content_frame_right, rightFragment).commit();
+                           .replace(R.id.content_frame_right, rightFragment).commit();
         } else {
             Intent intent = new Intent(this, SearchResultDetailActivity.class);
             intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID, mNr);
@@ -322,9 +327,10 @@ public class MainActivity extends OpacActivity implements
 
     @Override
     public void removeFragment() {
-        if (rightFragment != null)
+        if (rightFragment != null) {
             getSupportFragmentManager().beginTransaction().remove(rightFragment)
-                    .commit();
+                                       .commit();
+        }
     }
 
     @Override

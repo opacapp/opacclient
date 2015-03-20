@@ -83,19 +83,22 @@ public class MultiStepResultHelper {
                 doStep(result.getActionIdentifier(), sp.getString("email", ""));
                 break;
             case ERROR:
-                if (callback != null)
+                if (callback != null) {
                     callback.onError(result);
+                }
                 break;
             case OK:
-                if (callback != null)
+                if (callback != null) {
                     callback.onSuccess(result);
+                }
                 break;
             case UNSUPPORTED:
                 // TODO: Show dialog
                 break;
             default:
-                if (callback != null)
+                if (callback != null) {
                     callback.onUnhandledResult(result);
+                }
                 break;
         }
     }
@@ -146,24 +149,25 @@ public class MultiStepResultHelper {
         }
 
         builder.setTitle(R.string.confirm_title)
-                .setView(view)
-                .setPositiveButton(R.string.confirm,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                doStep(MultiStepResult.ACTION_CONFIRMATION,
-                                        "confirmed");
-                            }
-                        })
-                .setNegativeButton(R.string.cancel,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                adialog.cancel();
-                                if (callback != null)
-                                    callback.onUserCancel();
-                            }
-                        });
+               .setView(view)
+               .setPositiveButton(R.string.confirm,
+                       new DialogInterface.OnClickListener() {
+                           @Override
+                           public void onClick(DialogInterface dialog, int id) {
+                               doStep(MultiStepResult.ACTION_CONFIRMATION,
+                                       "confirmed");
+                           }
+                       })
+               .setNegativeButton(R.string.cancel,
+                       new DialogInterface.OnClickListener() {
+                           @Override
+                           public void onClick(DialogInterface dialog, int id) {
+                               adialog.cancel();
+                               if (callback != null) {
+                                   callback.onUserCancel();
+                               }
+                           }
+                       });
         adialog = builder.create();
         adialog.show();
     }
@@ -206,8 +210,9 @@ public class MultiStepResultHelper {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         adialog.cancel();
-                        if (callback != null)
+                        if (callback != null) {
                             callback.onUserCancel();
+                        }
                     }
                 });
         adialog = builder.create();
@@ -233,10 +238,12 @@ public class MultiStepResultHelper {
         @Override
         protected void onPostExecute(T res) {
             super.onPostExecute(res);
-            if (helper.pdialog != null)
+            if (helper.pdialog != null) {
                 helper.pdialog.dismiss();
-            if (res != null)
+            }
+            if (res != null) {
                 helper.handleResult(res);
+            }
         }
 
         @Override

@@ -136,9 +136,11 @@ public class NavigationAdapter extends BaseAdapter {
                 if (mData.get(position).iconDrawable != null) {
                     holder.icon.setVisibility(View.VISIBLE);
                     holder.icon.setImageDrawable(mContext.getResources()
-                            .getDrawable(mData.get(position).iconDrawable));
-                } else
+                                                         .getDrawable(
+                                                                 mData.get(position).iconDrawable));
+                } else {
                     holder.icon.setVisibility(View.INVISIBLE);
+                }
                 break;
             case Item.TYPE_ACCOUNT:
                 holder.text.setText(mData.get(position).text);

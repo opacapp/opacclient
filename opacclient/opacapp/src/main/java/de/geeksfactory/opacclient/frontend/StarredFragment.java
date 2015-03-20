@@ -91,7 +91,7 @@ public class StarredFragment extends Fragment implements
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 Starred item = (Starred) view.findViewById(R.id.ivDelete)
-                        .getTag();
+                                             .getTag();
                 if (item.getMNr() == null || item.getMNr().equals("null")
                         || item.getMNr().equals("")) {
 
@@ -114,12 +114,13 @@ public class StarredFragment extends Fragment implements
                                         null)));
                             }
                         }
-                        if (title_field != null)
+                        if (title_field != null) {
                             query.add(new SearchQuery(title_field, item
                                     .getTitle()));
-                        else if (free_field != null)
+                        } else if (free_field != null) {
                             query.add(new SearchQuery(free_field, item
                                     .getTitle()));
+                        }
                         app.startSearch(getActivity(), query);
                     } else {
                         Toast.makeText(getActivity(), R.string.no_search_cache,
@@ -135,7 +136,7 @@ public class StarredFragment extends Fragment implements
         listView.setTextFilterEnabled(true);
 
         getActivity().getSupportLoaderManager()
-                .initLoader(0, null, this);
+                     .initLoader(0, null, this);
         listView.setAdapter(adapter);
 
         // Restore the previously serialized activated item position.
@@ -178,22 +179,24 @@ public class StarredFragment extends Fragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
-        if (app.getLibrary() != null)
+        if (app.getLibrary() != null) {
             return new CursorLoader(getActivity(),
                     app.getStarProviderStarUri(), StarDatabase.COLUMNS,
                     StarDatabase.STAR_WHERE_LIB, new String[]{app
                     .getLibrary().getIdent()}, null);
-        else
+        } else {
             return null;
+        }
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         adapter.swapCursor(cursor);
-        if (cursor.getCount() == 0)
+        if (cursor.getCount() == 0) {
             view.findViewById(R.id.tvWelcome).setVisibility(View.VISIBLE);
-        else
+        } else {
             view.findViewById(R.id.tvWelcome).setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -245,8 +248,8 @@ public class StarredFragment extends Fragment implements
     }
 
     /**
-     * Turns on activate-on-click mode. When this mode is on, list items will be
-     * given the 'activated' state when touched.
+     * Turns on activate-on-click mode. When this mode is on, list items will be given the
+     * 'activated' state when touched.
      */
     private void setActivateOnItemClick(boolean activateOnItemClick) {
         // When setting CHOICE_MODE_SINGLE, ListView will automatically
@@ -292,10 +295,11 @@ public class StarredFragment extends Fragment implements
             Starred item = StarDataSource.cursorToItem(cursor);
 
             TextView tv = (TextView) view.findViewById(R.id.tvTitle);
-            if (item.getTitle() != null)
+            if (item.getTitle() != null) {
                 tv.setText(Html.fromHtml(item.getTitle()));
-            else
+            } else {
                 tv.setText("");
+            }
 
             ImageView iv = (ImageView) view.findViewById(R.id.ivDelete);
             iv.setFocusableInTouchMode(false);
