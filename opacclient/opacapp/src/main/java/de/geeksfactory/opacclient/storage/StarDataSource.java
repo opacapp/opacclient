@@ -55,9 +55,9 @@ public class StarDataSource {
         values.put("title", title);
         values.put("bib", bib);
         context.getContentResolver()
-                .insert(((OpacClient) context.getApplication())
-                                .getStarProviderStarUri(),
-                        values);
+               .insert(((OpacClient) context.getApplication())
+                               .getStarProviderStarUri(),
+                       values);
     }
 
     public List<Starred> getAllItems(String bib) {
@@ -142,8 +142,9 @@ public class StarDataSource {
     }
 
     public boolean isStarred(String bib, String id) {
-        if (id == null)
+        if (id == null) {
             return false;
+        }
         String[] selA = {bib, id};
         Cursor cursor = context
                 .getContentResolver()
@@ -157,8 +158,9 @@ public class StarDataSource {
     }
 
     public boolean isStarredTitle(String bib, String title) {
-        if (title == null)
+        if (title == null) {
             return false;
+        }
         String[] selA = {bib, title};
         Cursor cursor = context
                 .getContentResolver()
@@ -174,9 +176,9 @@ public class StarDataSource {
     public void remove(Starred item) {
         String[] selA = {"" + item.getId()};
         context.getContentResolver()
-                .delete(((OpacClient) context.getApplication())
-                                .getStarProviderStarUri(),
-                        StarDatabase.STAR_WHERE_ID, selA);
+               .delete(((OpacClient) context.getApplication())
+                               .getStarProviderStarUri(),
+                       StarDatabase.STAR_WHERE_ID, selA);
     }
 
     public void renameLibraries(Map<String, String> map) {
@@ -185,10 +187,10 @@ public class StarDataSource {
             cv.put("bib", entry.getValue());
 
             context.getContentResolver()
-                    .update(((OpacClient) context.getApplication())
-                                    .getStarProviderStarUri(),
-                            cv, StarDatabase.STAR_WHERE_LIB,
-                            new String[]{entry.getKey()});
+                   .update(((OpacClient) context.getApplication())
+                                   .getStarProviderStarUri(),
+                           cv, StarDatabase.STAR_WHERE_LIB,
+                           new String[]{entry.getKey()});
         }
     }
 }

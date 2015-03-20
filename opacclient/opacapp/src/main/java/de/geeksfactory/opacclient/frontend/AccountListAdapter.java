@@ -81,7 +81,8 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
         }
 
         if (((OpacClient) ((Activity) context).getApplication()).getAccount()
-                .getId() == item.getId() && highlight) {
+                                                                .getId() == item.getId() &&
+                highlight) {
             view.findViewById(R.id.rlItem).setBackgroundColor(
                     context.getResources().getColor(R.color.accent_red));
         } else {
@@ -105,11 +106,13 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
             e.printStackTrace();
         }
         TextView tvName = (TextView) view.findViewById(R.id.tvName);
-        if (item.getName() != null)
+        if (item.getName() != null) {
             tvName.setText(item.getName());
+        }
         TextView tvLabel = (TextView) view.findViewById(R.id.tvLabel);
-        if (item.getLabel() != null)
+        if (item.getLabel() != null) {
             tvLabel.setText(item.getLabel());
+        }
         return view;
     }
 }

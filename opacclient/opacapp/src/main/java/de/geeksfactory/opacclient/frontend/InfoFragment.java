@@ -59,7 +59,7 @@ public class InfoFragment extends Fragment implements AccountSelectedListener {
 
         try {
             String infoUrl = app.getLibrary().getData()
-                    .getString("information");
+                                .getString("information");
             if (infoUrl == null || infoUrl.equals("null")) {
                 wvInfo.setVisibility(View.GONE);
                 tvErr.setVisibility(View.VISIBLE);
@@ -121,11 +121,12 @@ public class InfoFragment extends Fragment implements AccountSelectedListener {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (url.contains(app.getLibrary().getData()
-                        .optString("webviewcontain", "NOPE"))) {
+                                    .optString("webviewcontain", "NOPE"))) {
                     return false;
                 }
-                if (getActivity() == null)
+                if (getActivity() == null) {
                     return false;
+                }
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(intent);
                 return true;

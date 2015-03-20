@@ -16,8 +16,8 @@ public class MainPreferenceActivity extends ActionBarActivity {
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content_frame, getNewMainPreferenceFragment())
-                .commit();
+                                   .replace(R.id.content_frame, getNewMainPreferenceFragment())
+                                   .commit();
     }
 
     protected PreferenceFragment getNewMainPreferenceFragment() {

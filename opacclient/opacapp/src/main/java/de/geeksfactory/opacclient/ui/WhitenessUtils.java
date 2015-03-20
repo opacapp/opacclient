@@ -20,8 +20,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 
 /**
- * Utility class for determining whether Bitmaps contain a lot of white pixels in locations
- * where QuickContactActivity will want to place white text or buttons.
+ * Utility class for determining whether Bitmaps contain a lot of white pixels in locations where
+ * QuickContactActivity will want to place white text or buttons.
  * <p/>
  * This class liberally considers bitmaps white. All constants are chosen with a small amount of
  * experimentation. Despite a lack of rigour, this class successfully allows QuickContactsActivity
@@ -48,8 +48,8 @@ public class WhitenessUtils {
     private static final float LUMINANCE_OF_WHITE = 0.90f;
 
     /**
-     * Returns true if 20% of the image's top right corner is white, or 20% of the bottom
-     * of the image is white.
+     * Returns true if 20% of the image's top right corner is white, or 20% of the bottom of the
+     * image is white.
      */
     public static boolean isBitmapWhiteAtTopOrBottom(Bitmap largeBitmap) {
         final Bitmap smallBitmap = scaleBitmapDown(largeBitmap);

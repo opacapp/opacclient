@@ -38,8 +38,8 @@ public class AboutActivity extends ActionBarActivity {
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content_frame, getNewAboutFragment())
-                .commit();
+                                   .replace(R.id.content_frame, getNewAboutFragment())
+                                   .commit();
     }
 
     protected PreferenceFragment getNewAboutFragment() {

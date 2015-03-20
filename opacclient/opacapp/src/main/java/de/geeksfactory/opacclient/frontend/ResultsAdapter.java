@@ -194,7 +194,7 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
                 try {
                     float density = getContext().getResources().getDisplayMetrics().density;
                     newurl = new URL(ISBNTools.getBestSizeCoverUrl(item.getCover(),
-                            (int) (56*density), (int) (56*density)));
+                            (int) (56 * density), (int) (56 * density)));
                     Bitmap mIcon_val = BitmapFactory.decodeStream(newurl
                             .openConnection().getInputStream());
                     if (mIcon_val.getHeight() > 1 && mIcon_val.getWidth() > 1) {

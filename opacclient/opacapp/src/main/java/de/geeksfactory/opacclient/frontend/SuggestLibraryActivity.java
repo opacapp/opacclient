@@ -159,8 +159,9 @@ public class SuggestLibraryActivity extends ActionBarActivity {
         outState.putCharSequence("city", etCity.getText());
         outState.putCharSequence("name", etName.getText());
         outState.putCharSequence("comment", etComment.getText());
-        if (selectedCity instanceof Serializable)
+        if (selectedCity instanceof Serializable) {
             outState.putSerializable("selectedCity", selectedCity);
+        }
     }
 
     @Override
@@ -236,9 +237,9 @@ public class SuggestLibraryActivity extends ActionBarActivity {
                         }
                     }
                     city.lat = result.getJSONObject("geometry")
-                            .getJSONObject("location").getDouble("lat");
+                                     .getJSONObject("location").getDouble("lat");
                     city.lon = result.getJSONObject("geometry")
-                            .getJSONObject("location").getDouble("lng");
+                                     .getJSONObject("location").getDouble("lng");
                     resultList.add(city);
                 }
             }
@@ -254,8 +255,9 @@ public class SuggestLibraryActivity extends ActionBarActivity {
         int i = 0;
         try {
             while (!found && i < array.length()) {
-                if (array.getString(i).equals(string))
+                if (array.getString(i).equals(string)) {
                     found = true;
+                }
                 i++;
             }
             return found;

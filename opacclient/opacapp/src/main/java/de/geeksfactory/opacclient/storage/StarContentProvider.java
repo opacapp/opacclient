@@ -118,7 +118,7 @@ public class StarContentProvider extends ContentProvider {
 
     private long insertIntoDatabase(String table, ContentValues values) {
         return database.getWritableDatabase()
-                .insertOrThrow(table, null, values);
+                       .insertOrThrow(table, null, values);
     }
 
     @Override

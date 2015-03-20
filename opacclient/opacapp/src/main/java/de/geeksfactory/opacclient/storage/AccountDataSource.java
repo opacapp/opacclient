@@ -145,8 +145,9 @@ public class AccountDataSource {
     }
 
     public long notificationSave(long account, long timestamp) {
-        if (notificationIsSent(account, timestamp))
+        if (notificationIsSent(account, timestamp)) {
             return 0;
+        }
         ContentValues values = new ContentValues();
         values.put("account", account);
         values.put("timestamp", timestamp);
@@ -239,7 +240,7 @@ public class AccountDataSource {
         List<Map<String, String>> res = new ArrayList<Map<String, String>>();
         cursor = database.query(AccountDatabase.TABLENAME_RESERVATION,
                 AccountDatabase.COLUMNS_RESERVATIONS.values()
-                        .toArray(new String[]{}), "account = ?",
+                                                    .toArray(new String[]{}), "account = ?",
                 selectionArgs, null, null, null);
         cursor.moveToFirst();
 
@@ -309,8 +310,9 @@ public class AccountDataSource {
     }
 
     public void storeCachedAccountData(Account account, AccountData adata) {
-        if (adata == null)
+        if (adata == null) {
             return;
+        }
 
         long time = System.currentTimeMillis();
         ContentValues update = new ContentValues();

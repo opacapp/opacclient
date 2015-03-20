@@ -57,7 +57,9 @@ public class StarDatabase extends SQLiteOpenHelper {
                 + oldVersion + " to " + newVersion
                 + ", which will destroy all old data");
 
-        db.execSQL("create table temp ( id integer primary key autoincrement, medianr text, bib text, title text );");
+        db.execSQL(
+                "create table temp ( id integer primary key autoincrement, medianr text, " +
+                        "bib text, title text );");
         db.execSQL("insert into temp select * from starred;");
         db.execSQL("drop table starred;");
         onCreate(db);

@@ -29,28 +29,24 @@ import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 
 /**
- * An activity representing a list of SearchResults. This activity has different
- * presentations for handset and tablet-size devices. On handsets, the activity
- * presents a list of items, which when touched, lead to a
- * {@link SearchResultDetailActivity} representing item details. On tablets, the
- * activity presents the list of items and item details side-by-side using two
- * vertical panes.
+ * An activity representing a list of SearchResults. This activity has different presentations for
+ * handset and tablet-size devices. On handsets, the activity presents a list of items, which when
+ * touched, lead to a {@link SearchResultDetailActivity} representing item details. On tablets, the
+ * activity presents the list of items and item details side-by-side using two vertical panes.
  * <p/>
- * The activity makes heavy use of fragments. The list of items is a
- * {@link SearchResultListFragment} and the item details (if present) is a
- * {@link SearchResultDetailFragment}.
+ * The activity makes heavy use of fragments. The list of items is a {@link
+ * SearchResultListFragment} and the item details (if present) is a {@link
+ * SearchResultDetailFragment}.
  * <p/>
- * This activity also implements the required
- * {@link SearchResultListFragment.Callbacks} interface to listen for item
- * selections.
+ * This activity also implements the required {@link SearchResultListFragment.Callbacks} interface
+ * to listen for item selections.
  */
 public class SearchResultListActivity extends OpacActivity implements
         SearchResultListFragment.Callbacks,
         SearchResultDetailFragment.Callbacks {
 
     /**
-     * Whether or not the activity is in two-pane mode, i.e. running on a tablet
-     * device.
+     * Whether or not the activity is in two-pane mode, i.e. running on a tablet device.
      */
     protected boolean mTwoPane;
 
@@ -66,8 +62,9 @@ public class SearchResultListActivity extends OpacActivity implements
         // Show the Up button in the action bar.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        if (savedInstanceState == null)
+        if (savedInstanceState == null) {
             setup();
+        }
 
         if (findViewById(R.id.searchresult_detail_container) != null) {
             // The detail container view will be present only in the
@@ -93,8 +90,8 @@ public class SearchResultListActivity extends OpacActivity implements
                     .getBundleExtra("query"));
         }
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.searchresult_list_container, listFragment)
-                .commit();
+                                   .replace(R.id.searchresult_list_container, listFragment)
+                                   .commit();
     }
 
     @Override
@@ -115,8 +112,8 @@ public class SearchResultListActivity extends OpacActivity implements
     }
 
     /**
-     * Callback method from {@link SearchResultListFragment.Callbacks}
-     * indicating that the item with the given ID was selected.
+     * Callback method from {@link SearchResultListFragment.Callbacks} indicating that the item with
+     * the given ID was selected.
      */
     @Override
     public void onItemSelected(SearchResult result, View coverView) {
@@ -135,11 +132,13 @@ public class SearchResultListActivity extends OpacActivity implements
             // fragment transaction.
             Bundle arguments = new Bundle();
             arguments.putInt(SearchResultDetailFragment.ARG_ITEM_NR, res.getNr());
-            if (res.getId() != null)
+            if (res.getId() != null) {
                 arguments.putString(SearchResultDetailFragment.ARG_ITEM_ID, res.getId());
-            if (res.getCoverBitmap() != null)
+            }
+            if (res.getCoverBitmap() != null) {
                 arguments.putParcelable(SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP,
                         (Parcelable) res.getCoverBitmap());
+            }
             detailFragment = new SearchResultDetailFragment();
             detailFragment.setArguments(arguments);
             getSupportFragmentManager()
@@ -153,16 +152,18 @@ public class SearchResultListActivity extends OpacActivity implements
             Intent detailIntent = new Intent(this,
                     SearchResultDetailActivity.class);
             detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_NR, res.getNr());
-            if (res.getId() != null)
+            if (res.getId() != null) {
                 detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
                         res.getId());
+            }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 Explode explode = new Explode();
                 explode.excludeTarget(android.R.id.statusBarBackground, true);
                 getWindow().setExitTransition(explode);
             }
             if (res.getCoverBitmap() != null) {
-                detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP, (Parcelable) res.getCoverBitmap());
+                detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP,
+                        (Parcelable) res.getCoverBitmap());
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         this,
                         new Pair<View, String>(coverView, getString(R.string.transition_cover)),
@@ -182,7 +183,7 @@ public class SearchResultListActivity extends OpacActivity implements
     @Override
     public void removeFragment() {
         getSupportFragmentManager().beginTransaction().remove(detailFragment)
-                .commit();
+                                   .commit();
     }
 
     @Override

@@ -32,11 +32,17 @@ public class AndroidMeaningDetector implements MeaningDetector {
         assets = context.getAssets();
         List<String> files = Arrays.asList(assets.list(ASSETS_FIELDSDIR));
         if (files.contains("general.json")) // General
+        {
             readFile("general.json");
+        }
         if (files.contains(lib.getApi() + ".json")) // Api specific
+        {
             readFile(lib.getApi() + ".json");
+        }
         if (files.contains(lib.getIdent() + ".json")) // Library specific
+        {
             readFile(lib.getIdent() + ".json");
+        }
     }
 
     private void readFile(String name) throws IOException, JSONException {
@@ -56,20 +62,23 @@ public class AndroidMeaningDetector implements MeaningDetector {
         // Detect layout of the JSON entries. Can be "field name":
         // "meaning" or "meaning": [ "field name", "field name", ... ]
         Iterator<String> iter = json.keys();
-        if (!iter.hasNext())
+        if (!iter.hasNext()) {
             return; // No entries
+        }
 
         String firstKey = iter.next();
         Object firstValue = json.get(firstKey);
         boolean arrayLayout = firstValue instanceof JSONArray;
         if (arrayLayout) {
-            for (int i = 0; i < ((JSONArray) firstValue).length(); i++)
+            for (int i = 0; i < ((JSONArray) firstValue).length(); i++) {
                 meanings.put(((JSONArray) firstValue).getString(i), firstKey);
+            }
             while (iter.hasNext()) {
                 String key = iter.next();
                 JSONArray val = json.getJSONArray(key);
-                for (int i = 0; i < val.length(); i++)
+                for (int i = 0; i < val.length(); i++) {
                     meanings.put(val.getString(i), key);
+                }
             }
         } else {
             meanings.put(firstKey, (String) firstValue);
@@ -83,21 +92,24 @@ public class AndroidMeaningDetector implements MeaningDetector {
 
     @Override
     public SearchField detectMeaning(SearchField field) {
-        if (field.getMeaning() != null)
+        if (field.getMeaning() != null) {
             return field;
+        }
         if (field.getData() != null && field.getData().has("meaning")) {
             try {
                 String meaningData = field.getData().getString("meaning");
                 String meaningName = meanings.get(meaningData);
-                if (meaningName != null)
+                if (meaningName != null) {
                     return processMeaning(field, meaningName);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         } else {
             String meaningName = meanings.get(field.getDisplayName());
-            if (meaningName != null)
+            if (meaningName != null) {
                 return processMeaning(field, meaningName);
+            }
         }
         field.setAdvanced(true);
         return field;

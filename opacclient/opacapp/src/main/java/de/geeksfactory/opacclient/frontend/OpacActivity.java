@@ -100,8 +100,9 @@ public abstract class OpacActivity extends ActionBarActivity {
     private boolean fabVisible;
 
     protected static void unbindDrawables(View view) {
-        if (view == null)
+        if (view == null) {
             return;
+        }
         if (view.getBackground() != null) {
             view.getBackground().setCallback(null);
         }
@@ -131,8 +132,9 @@ public abstract class OpacActivity extends ActionBarActivity {
 
         aData = new AccountDataSource(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null)
+        if (toolbar != null) {
             setSupportActionBar(toolbar);
+        }
         fab = (FloatingActionButton) findViewById(R.id.search_fab);
         setupDrawer();
 
@@ -148,7 +150,7 @@ public abstract class OpacActivity extends ActionBarActivity {
                 fragment = (Fragment) getSupportFragmentManager().getFragment(
                         savedInstanceState, "fragment");
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.content_frame, fragment).commit();
+                                           .replace(R.id.content_frame, fragment).commit();
             }
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -169,30 +171,33 @@ public abstract class OpacActivity extends ActionBarActivity {
             hasDrawer = true;
             drawerLayout.setStatusBarBackground(R.color.primary_red_dark);
             drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, Gravity.LEFT);
-            drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
-                /**
-                 * Called when a drawer has settled in a completely closed
-                 * state.
-                 */
-                @Override
-                public void onDrawerClosed(View view) {
-                    super.onDrawerClosed(view);
-                    getSupportActionBar().setTitle(mTitle);
-                }
+            drawerToggle =
+                    new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open,
+                            R.string.drawer_close) {
+                        /**
+                         * Called when a drawer has settled in a completely closed
+                         * state.
+                         */
+                        @Override
+                        public void onDrawerClosed(View view) {
+                            super.onDrawerClosed(view);
+                            getSupportActionBar().setTitle(mTitle);
+                        }
 
-                /** Called when a drawer has settled in a completely open state. */
-                @Override
-                public void onDrawerOpened(View drawerView) {
-                    super.onDrawerOpened(drawerView);
-                    getSupportActionBar().setTitle(
-                            app.getResources().getString(R.string.app_name));
-                    if (getCurrentFocus() != null) {
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(getCurrentFocus()
-                                .getWindowToken(), 0);
-                    }
-                }
-            };
+                        /** Called when a drawer has settled in a completely open state. */
+                        @Override
+                        public void onDrawerOpened(View drawerView) {
+                            super.onDrawerOpened(drawerView);
+                            getSupportActionBar().setTitle(
+                                    app.getResources().getString(R.string.app_name));
+                            if (getCurrentFocus() != null) {
+                                InputMethodManager imm = (InputMethodManager) getSystemService(
+                                        Context.INPUT_METHOD_SERVICE);
+                                imm.hideSoftInputFromWindow(getCurrentFocus()
+                                        .getWindowToken(), 0);
+                            }
+                        }
+                    };
 
             // Set the drawer toggle as the DrawerListener
             drawerLayout.setDrawerListener(drawerToggle);
@@ -281,7 +286,7 @@ public abstract class OpacActivity extends ActionBarActivity {
                                 .getDefaultSharedPreferences(OpacActivity.this);
                         drawerLayout.openDrawer(drawer);
                         sp.edit().putBoolean("version2.0.0-introduced", true)
-                                .commit();
+                          .commit();
                     }
                 }, 500);
 
@@ -293,21 +298,24 @@ public abstract class OpacActivity extends ActionBarActivity {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         setSupportProgressBarIndeterminateVisibility(false);
-        if (hasDrawer)
+        if (hasDrawer) {
             drawerToggle.syncState();
+        }
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if (hasDrawer)
+        if (hasDrawer) {
             drawerToggle.onConfigurationChanged(newConfig);
+        }
     }
 
     protected void selectItem(String tag) {
         int pos = navAdapter.getPositionByTag(tag);
-        if (pos >= 0)
+        if (pos >= 0) {
             selectItem(pos);
+        }
     }
 
     @Override
@@ -317,16 +325,18 @@ public abstract class OpacActivity extends ActionBarActivity {
         fragment = (Fragment) getSupportFragmentManager().findFragmentById(
                 R.id.content_frame);
 
-        if (hasDrawer)
+        if (hasDrawer) {
             drawerToggle.syncState();
+        }
         setTwoPane(twoPane);
         super.onResume();
         fixNavigationSelection();
     }
 
     protected void fixNavigationSelection() {
-        if (fragment == null)
+        if (fragment == null) {
             return;
+        }
         if (fragment instanceof SearchFragment) {
             drawerList.setItemChecked(navAdapter.getPositionByTag("search"),
                     true);
@@ -340,9 +350,10 @@ public abstract class OpacActivity extends ActionBarActivity {
             drawerList
                     .setItemChecked(navAdapter.getPositionByTag("info"), true);
         }
-        if (app.getLibrary() != null)
+        if (app.getLibrary() != null) {
             getSupportActionBar()
                     .setSubtitle(app.getLibrary().getDisplayName());
+        }
     }
 
     /**
@@ -392,17 +403,19 @@ public abstract class OpacActivity extends ActionBarActivity {
             // Insert the fragment by replacing any existing fragment
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, fragment);
+                                                             .replace(R.id.content_frame, fragment);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                fragment.setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition
-                        (android.R.transition.move));
+                fragment.setSharedElementEnterTransition(
+                        TransitionInflater.from(this).inflateTransition
+                                (android.R.transition.move));
                 fragment.setEnterTransition(TransitionInflater.from(this).inflateTransition
                         (android.R.transition.fade));
             }
 
             try {
-                if (previousFragment instanceof SearchFragment && fragment instanceof AccountFragment) {
+                if (previousFragment instanceof SearchFragment &&
+                        fragment instanceof AccountFragment) {
                     transaction.addSharedElement(previousFragment.getView().findViewById(R.id
                             .rlSimpleSearch), getString(R.string.transition_gray_box));
                 } else if (previousFragment instanceof AccountFragment &&
@@ -460,8 +473,9 @@ public abstract class OpacActivity extends ActionBarActivity {
 
     protected void deselectItemsByType(int type) {
         for (int i = 0; i < navAdapter.getCount(); i++) {
-            if (navAdapter.getItemViewType(i) == type)
+            if (navAdapter.getItemViewType(i) == type) {
                 drawerList.setItemChecked(i, false);
+            }
         }
     }
 
@@ -486,8 +500,9 @@ public abstract class OpacActivity extends ActionBarActivity {
                                 .setAccount(available_accounts.get(0).getId());
                     }
                     data.close();
-                    if (app.getLibrary() != null)
+                    if (app.getLibrary() != null) {
                         return;
+                    }
                 }
             }
             app.addFirstAccount(this);
@@ -539,24 +554,24 @@ public abstract class OpacActivity extends ActionBarActivity {
             }
         });
         builder.setTitle(R.string.account_select)
-                .setView(view)
-                .setNegativeButton(R.string.cancel,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                adialog.cancel();
-                            }
-                        })
-                .setNeutralButton(R.string.accounts_edit,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.dismiss();
-                                Intent intent = new Intent(OpacActivity.this,
-                                        AccountListActivity.class);
-                                startActivity(intent);
-                            }
-                        });
+               .setView(view)
+               .setNegativeButton(R.string.cancel,
+                       new DialogInterface.OnClickListener() {
+                           @Override
+                           public void onClick(DialogInterface dialog, int id) {
+                               adialog.cancel();
+                           }
+                       })
+               .setNeutralButton(R.string.accounts_edit,
+                       new DialogInterface.OnClickListener() {
+                           @Override
+                           public void onClick(DialogInterface dialog, int id) {
+                               dialog.dismiss();
+                               Intent intent = new Intent(OpacActivity.this,
+                                       AccountListActivity.class);
+                               startActivity(intent);
+                           }
+                       });
         adialog = builder.create();
         adialog.show();
     }
@@ -586,8 +601,9 @@ public abstract class OpacActivity extends ActionBarActivity {
         if (isTablet()) {
             findViewById(R.id.content_frame_right).setVisibility(
                     active ? View.VISIBLE : View.GONE);
-            findViewById(R.id.twopane_wrapper).getLayoutParams().width = active ? LinearLayout.LayoutParams.MATCH_PARENT :
-                    getResources().getDimensionPixelSize(R.dimen.single_pane_max_width);
+            findViewById(R.id.twopane_wrapper).getLayoutParams().width =
+                    active ? LinearLayout.LayoutParams.MATCH_PARENT :
+                            getResources().getDimensionPixelSize(R.dimen.single_pane_max_width);
         }
     }
 
@@ -625,11 +641,13 @@ public abstract class OpacActivity extends ActionBarActivity {
         outState.putBoolean("twoPane", twoPane);
         outState.putBoolean("fabVisible", fabVisible);
         outState.putString("selectedItemTag", selectedItemTag);
-        if (fragment != null)
+        if (fragment != null) {
             getSupportFragmentManager().putFragment(outState, "fragment",
                     fragment);
-        if (mTitle != null)
+        }
+        if (mTitle != null) {
             outState.putCharSequence("title", mTitle);
+        }
     }
 
     public interface AccountSelectedListener {
