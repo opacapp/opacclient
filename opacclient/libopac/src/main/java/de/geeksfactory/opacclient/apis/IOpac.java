@@ -427,19 +427,12 @@ public class IOpac extends BaseApi implements OpacApi {
 
         DetailledItem result = new DetailledItem();
 
-        String id = null;
-
+        String id;
         if (doc.select("input[name=mednr]").size() > 0)
             id = doc.select("input[name=mednr]").first().val().trim();
         else {
-            for (Element a : doc.select("table").last().select("td a")) {
-                if (a.attr("href").contains("mednr=")) {
-                    id = a.attr("href");
-                    break;
-                }
-            }
-            Integer idPosition = id.indexOf("mednr=") + 6;
-            id = id.substring(idPosition, id.indexOf("&", idPosition)).trim();
+            String href = doc.select("a[href*=mednr]").first().attr("href");
+            id = getQueryParamsFirst(href).get("mednr");
         }
 
         result.setId(id);
