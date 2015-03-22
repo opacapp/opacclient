@@ -267,7 +267,7 @@ public class SearchResultDetailFragment extends Fragment
         View rootView = inflater.inflate(R.layout.fragment_searchresult_detail,
                 container, false);
         view = rootView;
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        findViews();
         toolbar.setVisibility(View.VISIBLE);
         setHasOptionsMenu(false);
 
@@ -291,20 +291,7 @@ public class SearchResultDetailFragment extends Fragment
         setRetainInstance(true);
         setProgress();
 
-        scrollView = (ObservableScrollView) view.findViewById(R.id.rootView);
         scrollView.addCallbacks(this);
-
-        ivCover = (ImageView) view.findViewById(R.id.ivCover);
-        gradientBottom = view.findViewById(R.id.gradient_bottom);
-        gradientTop = view.findViewById(R.id.gradient_top);
-        tint = view.findViewById(R.id.tint);
-        tvTitel = (TextView) view.findViewById(R.id.tvTitle);
-        llDetails = (LinearLayout) view.findViewById(R.id.llDetails);
-        llCopies = (LinearLayout) view.findViewById(R.id.llCopies);
-        progressBar = (ProgressBar) view.findViewById(R.id.progress);
-        detailsLayout = (RelativeLayout) view.findViewById(R.id.detailsLayout);
-        errorView = (FrameLayout) view.findViewById(R.id.error_view);
-        tvCopies = (TextView) view.findViewById(R.id.tvCopies);
 
         if (getArguments().containsKey(ARG_ITEM_COVER_BITMAP)) {
             Bitmap bitmap = getArguments().getParcelable(ARG_ITEM_COVER_BITMAP);
@@ -329,6 +316,22 @@ public class SearchResultDetailFragment extends Fragment
         fixEllipsize(tvTitel);
 
         return rootView;
+    }
+
+    private void findViews() {
+        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        scrollView = (ObservableScrollView) view.findViewById(R.id.rootView);
+        ivCover = (ImageView) view.findViewById(R.id.ivCover);
+        gradientBottom = view.findViewById(R.id.gradient_bottom);
+        gradientTop = view.findViewById(R.id.gradient_top);
+        tint = view.findViewById(R.id.tint);
+        tvTitel = (TextView) view.findViewById(R.id.tvTitle);
+        llDetails = (LinearLayout) view.findViewById(R.id.llDetails);
+        llCopies = (LinearLayout) view.findViewById(R.id.llCopies);
+        progressBar = (ProgressBar) view.findViewById(R.id.progress);
+        detailsLayout = (RelativeLayout) view.findViewById(R.id.detailsLayout);
+        errorView = (FrameLayout) view.findViewById(R.id.error_view);
+        tvCopies = (TextView) view.findViewById(R.id.tvCopies);
     }
 
     /**
@@ -1393,8 +1396,6 @@ public class SearchResultDetailFragment extends Fragment
             try {
                 DetailledItem res;
                 if (id != null && !id.equals("")) {
-                    res = app.getApi().getResult(nr);
-                } else {
                     SharedPreferences sp = PreferenceManager
                             .getDefaultSharedPreferences(getActivity());
                     String homebranch = sp.getString(
@@ -1409,6 +1410,8 @@ public class SearchResultDetailFragment extends Fragment
 
                     res = app.getApi().getResultById(id, homebranch);
                     if (res.getId() == null) res.setId(id);
+                } else {
+                    res = app.getApi().getResult(nr);
                 }
                 URL newurl;
                 if (res.getCover() != null && res.getCoverBitmap() == null) {
