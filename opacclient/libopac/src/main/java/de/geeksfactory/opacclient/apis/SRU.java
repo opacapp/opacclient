@@ -37,7 +37,7 @@ import de.geeksfactory.opacclient.utils.ISBNTools;
 
 public class SRU extends BaseApi implements OpacApi {
 
-    protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
+    protected static HashMap<String, MediaType> defaulttypes = new HashMap<>();
     static {
         defaulttypes.put("print", MediaType.BOOK);
         defaulttypes.put("large print", MediaType.BOOK);
@@ -54,7 +54,7 @@ public class SRU extends BaseApi implements OpacApi {
     protected String shareUrl;
     private String currentSearchParams;
     private Document searchDoc;
-    private HashMap<String, String> searchQueries = new HashMap<String, String>();
+    private HashMap<String, String> searchQueries = new HashMap<>();
     private String idSearchQuery;
 
     @Override
@@ -109,14 +109,14 @@ public class SRU extends BaseApi implements OpacApi {
             return index;
         if (index != 0)
             params.append("%20and%20");
-        params.append(searchkey + "%3D" + query.get(key));
+        params.append(searchkey).append("%3D").append(query.get(key));
         return index + 1;
 
     }
 
     @Override
     public SearchRequestResult search(List<SearchQuery> queryList)
-            throws NotReachableException, IOException, OpacErrorException {
+            throws IOException, OpacErrorException {
         Map<String, String> query = searchQueryListToMap(queryList);
         StringBuilder params = new StringBuilder();
 
@@ -150,8 +150,8 @@ public class SRU extends BaseApi implements OpacApi {
                     .text());
         }
 
-        int resultcount = 0;
-        List<SearchResult> results = new ArrayList<SearchResult>();
+        int resultcount;
+        List<SearchResult> results = new ArrayList<>();
 
         resultcount = Integer.valueOf(searchDoc.select("zs|numberOfRecords")
                 .text());
@@ -193,13 +193,13 @@ public class SRU extends BaseApi implements OpacApi {
 
     @Override
     public SearchRequestResult filterResults(Filter filter, Option option)
-            throws IOException, NotReachableException {
+            throws IOException {
         return null;
     }
 
     @Override
     public SearchRequestResult searchGetPage(int page) throws IOException,
-            NotReachableException, OpacErrorException {
+            OpacErrorException {
         if (!initialised)
             start();
 
@@ -214,7 +214,7 @@ public class SRU extends BaseApi implements OpacApi {
 
     @Override
     public DetailledItem getResultById(String id, String homebranch)
-            throws IOException, NotReachableException, OpacErrorException {
+            throws IOException, OpacErrorException {
         if (idSearchQuery != null) {
             String xml = httpGet(opac_url
                     + "?version=1.1&operation=searchRetrieve&maximumRecords="
@@ -298,10 +298,10 @@ public class SRU extends BaseApi implements OpacApi {
     @Override
     public List<SearchField> getSearchFields() throws OpacErrorException,
             NotReachableException {
-        List<SearchField> searchFields = new ArrayList<SearchField>();
+        List<SearchField> searchFields = new ArrayList<>();
         Set<String> fieldsCompat = searchQueries.keySet();
 
-        Map<String, String> all = new HashMap<String, String>();
+        Map<String, String> all = new HashMap<>();
         all.put("key", "");
         all.put("value", "Alle");
 
@@ -430,8 +430,7 @@ public class SRU extends BaseApi implements OpacApi {
     }
 
     @Override
-    public String getAccountExtendableInfo(Account account) throws IOException,
-            NotReachableException {
+    public String getAccountExtendableInfo(Account account) throws IOException {
         return null;
     }
 

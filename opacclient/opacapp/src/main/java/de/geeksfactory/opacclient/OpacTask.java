@@ -29,8 +29,7 @@ public abstract class OpacTask<Result> extends
 
     @Override
     protected Result doInBackground(Object... arg0) {
-        @SuppressWarnings("unused")
-        OpacClient a = (OpacClient) arg0[0];
+        a = (OpacClient) arg0[0];
         return null;
     }
 }

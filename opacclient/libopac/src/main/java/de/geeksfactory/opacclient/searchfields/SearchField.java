@@ -59,32 +59,39 @@ public abstract class SearchField {
         boolean visible = json.getBoolean("visible");
 
         SearchField field = null;
-        if (type.equals("text")) {
-            String hint = json.getString("hint");
-            boolean freeSearch = json.getBoolean("freeSearch");
-            boolean number = json.getBoolean("number");
-            boolean halfWidth = json.getBoolean("halfWidth");
-            field = new TextSearchField(id, displayName, advanced, halfWidth,
-                    hint, freeSearch, number);
-        } else if (type.equals("barcode")) {
-            String hint = json.getString("hint");
-            boolean halfWidth = json.getBoolean("halfWidth");
-            field = new BarcodeSearchField(id, displayName, advanced,
-                    halfWidth, hint);
-        } else if (type.equals("checkbox")) {
-            field = new CheckboxSearchField(id, displayName, advanced);
-        } else if (type.equals("dropdown")) {
-            List<Map<String, String>> dropdownValues = new ArrayList<Map<String, String>>();
-            JSONArray array = json.getJSONArray("dropdownValues");
-            for (int i = 0; i < array.length(); i++) {
-                JSONObject value = array.getJSONObject(i);
-                Map<String, String> map = new HashMap<String, String>();
-                map.put("key", value.getString("key"));
-                map.put("value", value.getString("value"));
-                dropdownValues.add(map);
+        switch (type) {
+            case "text": {
+                String hint = json.getString("hint");
+                boolean freeSearch = json.getBoolean("freeSearch");
+                boolean number = json.getBoolean("number");
+                boolean halfWidth = json.getBoolean("halfWidth");
+                field = new TextSearchField(id, displayName, advanced, halfWidth,
+                        hint, freeSearch, number);
+                break;
             }
-            field = new DropdownSearchField(id, displayName, advanced,
-                    dropdownValues);
+            case "barcode": {
+                String hint = json.getString("hint");
+                boolean halfWidth = json.getBoolean("halfWidth");
+                field = new BarcodeSearchField(id, displayName, advanced,
+                        halfWidth, hint);
+                break;
+            }
+            case "checkbox":
+                field = new CheckboxSearchField(id, displayName, advanced);
+                break;
+            case "dropdown":
+                List<Map<String, String>> dropdownValues = new ArrayList<>();
+                JSONArray array = json.getJSONArray("dropdownValues");
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject value = array.getJSONObject(i);
+                    Map<String, String> map = new HashMap<>();
+                    map.put("key", value.getString("key"));
+                    map.put("value", value.getString("value"));
+                    dropdownValues.add(map);
+                }
+                field = new DropdownSearchField(id, displayName, advanced,
+                        dropdownValues);
+                break;
         }
         if (field != null) {
             field.setData(data);

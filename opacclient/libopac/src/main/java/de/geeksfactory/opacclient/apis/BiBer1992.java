@@ -97,7 +97,7 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
  */
 public class BiBer1992 extends BaseApi {
 
-    protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
+    protected static HashMap<String, MediaType> defaulttypes = new HashMap<>();
     // we have to limit num of results because PUSH attribute SHOW=20 does not
     // work:
     // number of results is always 50 which is too much
@@ -112,7 +112,7 @@ public class BiBer1992 extends BaseApi {
     // private int m_resultcount = 10;
     // private long logged_in;
     // private Account logged_in_as;
-    private List<NameValuePair> m_nameValuePairs = new ArrayList<NameValuePair>(
+    private List<NameValuePair> m_nameValuePairs = new ArrayList<>(
             2);
 
     public static String getStringFromBundle(Map<String, String> bundle,
@@ -153,7 +153,7 @@ public class BiBer1992 extends BaseApi {
      */
     @Override
     public List<SearchField> getSearchFields() throws IOException {
-        List<SearchField> fields = new ArrayList<SearchField>();
+        List<SearchField> fields = new ArrayList<>();
 
         HttpGet httpget;
         if (m_opac_dir.equals("opax") || m_opac_dir.equals("opax13"))
@@ -189,7 +189,7 @@ public class BiBer1992 extends BaseApi {
             DropdownSearchField mtDropdown = new DropdownSearchField();
             mtDropdown.setId(mt_opts.get(0).attr("name"));
             mtDropdown.setDisplayName("Medientyp");
-            List<Map<String, String>> mtOptions = new ArrayList<Map<String, String>>();
+            List<Map<String, String>> mtOptions = new ArrayList<>();
             for (Element opt : mt_opts) {
                 if (!opt.val().equals("")) {
                     String text = opt.text();
@@ -223,7 +223,7 @@ public class BiBer1992 extends BaseApi {
                         // text is still empty: missing end tag like Offenburg
                         text = parse_option_regex(opt);
                     }
-                    Map<String, String> value = new HashMap<String, String>();
+                    Map<String, String> value = new HashMap<>();
                     value.put("key", opt.val());
                     value.put("value", text);
                     mtOptions.add(value);
@@ -241,9 +241,9 @@ public class BiBer1992 extends BaseApi {
             brDropdown.setDisplayName(br_opts.get(0).parent().parent()
                     .previousElementSibling().text().replace("\u00a0", "")
                     .replace("?", "").trim());
-            List<Map<String, String>> brOptions = new ArrayList<Map<String, String>>();
+            List<Map<String, String>> brOptions = new ArrayList<>();
             for (Element opt : br_opts) {
-                Map<String, String> value = new HashMap<String, String>();
+                Map<String, String> value = new HashMap<>();
                 value.put("key", opt.val());
                 value.put("value", opt.text());
                 brOptions.add(value);
@@ -330,7 +330,7 @@ public class BiBer1992 extends BaseApi {
      */
     @Override
     public SearchRequestResult search(List<SearchQuery> queryList)
-            throws IOException, NotReachableException {
+            throws IOException {
 
         if (!initialised)
             start();
@@ -371,8 +371,7 @@ public class BiBer1992 extends BaseApi {
      * @see OpacApi#searchGetPage(int)
      */
     @Override
-    public SearchRequestResult searchGetPage(int page) throws IOException,
-            NotReachableException {
+    public SearchRequestResult searchGetPage(int page) throws IOException {
 
         int startNum = (page - 1) * numOfResultsPerPage + 1;
 
@@ -400,7 +399,7 @@ public class BiBer1992 extends BaseApi {
      * class="hr4"></div></td> </tr>
      */
     private SearchRequestResult parse_search(String html, int page) {
-        List<SearchResult> results = new ArrayList<SearchResult>();
+        List<SearchResult> results = new ArrayList<>();
         Document doc = Jsoup.parse(html);
 
         if (doc.select("h3").text().contains("Es wurde nichts gefunden"))
@@ -408,7 +407,7 @@ public class BiBer1992 extends BaseApi {
 
         Elements trList = doc.select("form table tr[valign]"); // <tr
         // valign="top">
-        Elements elem = null;
+        Elements elem;
         int rows_per_hit = 2;
         if (trList.size() == 1
                 || (trList.size() > 1
@@ -418,8 +417,7 @@ public class BiBer1992 extends BaseApi {
         }
 
         try {
-            int rows = m_data.getInt("rows_per_hit");
-            rows_per_hit = rows;
+            rows_per_hit = m_data.getInt("rows_per_hit");
         } catch (JSONException e) {
         }
 
@@ -515,7 +513,7 @@ public class BiBer1992 extends BaseApi {
      */
     @Override
     public DetailledItem getResultById(String id, String homebranch)
-            throws IOException, NotReachableException {
+            throws IOException {
         if (!initialised)
             start();
 
@@ -653,7 +651,7 @@ public class BiBer1992 extends BaseApi {
                 // With reverse layout: first row is headline, skipped via
                 // (copy_row > 0)
                 if (copy_row > 0) {
-                    Map<String, String> e = new HashMap<String, String>();
+                    Map<String, String> e = new HashMap<>();
                     for (int j = 0; j < copy_keys.length; j++) {
                         int col = copy_map[j];
                         if (col > -1) {
@@ -756,11 +754,11 @@ public class BiBer1992 extends BaseApi {
                     .val().length() > 4;
             Elements optionsElements = doc.select("select[name=ID1] option");
             if (optionsElements.size() > 0) {
-                List<Map<String, String>> options = new ArrayList<Map<String, String>>();
+                List<Map<String, String>> options = new ArrayList<>();
                 for (Element option : optionsElements) {
                     if ("0".equals(option.attr("value")))
                         continue;
-                    Map<String, String> selopt = new HashMap<String, String>();
+                    Map<String, String> selopt = new HashMap<>();
                     selopt.put("key", option.attr("value") + ":" + option.text());
                     selopt.put("value", option.text());
                     options.add(selopt);
@@ -782,7 +780,7 @@ public class BiBer1992 extends BaseApi {
             }
         } else {
             // STEP 2: Reserve
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+            List<NameValuePair> nameValuePairs = new ArrayList<>();
             nameValuePairs.add(new BasicNameValuePair("LANG", "de"));
             nameValuePairs.add(new BasicNameValuePair("BENUTZER", account
                     .getName()));
@@ -849,7 +847,7 @@ public class BiBer1992 extends BaseApi {
             command = "/verl.C";
         }
 
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+        List<NameValuePair> nameValuePairs = new ArrayList<>(2);
         nameValuePairs.add(new BasicNameValuePair(media, "YES"));
         nameValuePairs
                 .add(new BasicNameValuePair("BENUTZER", account.getName()));
@@ -923,7 +921,7 @@ public class BiBer1992 extends BaseApi {
     @Override
     public CancelResult cancel(String media, Account account, int useraction,
                                String selection) throws IOException, OpacErrorException {
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+        List<NameValuePair> nameValuePairs = new ArrayList<>();
         nameValuePairs.add(new BasicNameValuePair("LANG", "de"));
         nameValuePairs.add(new BasicNameValuePair("FUNC", "vorl"));
         if (m_opac_dir.equals("opax")) {
@@ -977,7 +975,7 @@ public class BiBer1992 extends BaseApi {
                                                       AccountData res) throws IOException, JSONException,
             OpacErrorException {
 
-        List<Map<String, String>> medien = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> medien = new ArrayList<>();
 
         // get media list via http POST
         Document doc = accountHttpPost(account, "medk");
@@ -1006,7 +1004,7 @@ public class BiBer1992 extends BaseApi {
             Element tr = rowElements.get(i);
             if (tr.child(0).tagName().equals("th"))
                 continue;
-            Map<String, String> e = new HashMap<String, String>();
+            Map<String, String> e = new HashMap<>();
 
             Pattern itemIdPat = Pattern
                     .compile("javascript:smAcc\\('[a-z]+','[a-z]+','([A-Za-z0-9]+)'\\)");
@@ -1090,7 +1088,7 @@ public class BiBer1992 extends BaseApi {
     private List<Map<String, String>> accountGetReservations(Account account)
             throws IOException, JSONException, OpacErrorException {
 
-        List<Map<String, String>> reservations = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> reservations = new ArrayList<>();
 
         if (!m_data.has("reservationtable")) {
             // reservations not specifically supported, let's just try it
@@ -1126,7 +1124,7 @@ public class BiBer1992 extends BaseApi {
             Element tr = rowElements.get(i);
             if (tr.child(0).tagName().equals("th"))
                 continue;
-            Map<String, String> e = new HashMap<String, String>();
+            Map<String, String> e = new HashMap<>();
 
             e.put(AccountData.KEY_RESERVATION_CANCEL,
                     tr.select("input[type=checkbox]").attr("name"));
@@ -1179,7 +1177,7 @@ public class BiBer1992 extends BaseApi {
     private Document accountHttpPost(Account account, String func)
             throws IOException, OpacErrorException {
         // get media list via http POST
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+        List<NameValuePair> nameValuePairs = new ArrayList<>(2);
         nameValuePairs.add(new BasicNameValuePair("FUNC", func));
         nameValuePairs.add(new BasicNameValuePair("LANG", "de"));
         nameValuePairs
@@ -1228,8 +1226,7 @@ public class BiBer1992 extends BaseApi {
     }
 
     @Override
-    public String getAccountExtendableInfo(Account account) throws IOException,
-            NotReachableException {
+    public String getAccountExtendableInfo(Account account) throws IOException {
         return null;
     }
 

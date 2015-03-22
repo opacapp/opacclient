@@ -116,10 +116,6 @@ public abstract class OpacActivity extends ActionBarActivity {
         }
     }
 
-    public OpacClient getOpacApplication() {
-        return app;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         supportRequestWindowFeature(android.view.Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -147,7 +143,7 @@ public abstract class OpacActivity extends ActionBarActivity {
                 setTitle(savedInstanceState.getCharSequence("title"));
             }
             if (savedInstanceState.containsKey("fragment")) {
-                fragment = (Fragment) getSupportFragmentManager().getFragment(
+                fragment = getSupportFragmentManager().getFragment(
                         savedInstanceState, "fragment");
                 getSupportFragmentManager().beginTransaction()
                                            .replace(R.id.content_frame, fragment).commit();
@@ -252,9 +248,7 @@ public abstract class OpacActivity extends ActionBarActivity {
                             selected = navAdapter.getCount() - 1;
                         }
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (JSONException e) {
+                    } catch (IOException | JSONException e) {
                         e.printStackTrace();
                     }
                 }
@@ -322,8 +316,7 @@ public abstract class OpacActivity extends ActionBarActivity {
     protected void onResume() {
         setupDrawer();
 
-        fragment = (Fragment) getSupportFragmentManager().findFragmentById(
-                R.id.content_frame);
+        fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
 
         if (hasDrawer) {
             drawerToggle.syncState();
@@ -366,37 +359,41 @@ public abstract class OpacActivity extends ActionBarActivity {
         } catch (Exception e) {
         }
         Item item = navAdapter.getItem(position);
-        if (item.type == Item.TYPE_SEPARATOR) {
-            // clicked on a separator
-            return;
-        } else if (item.type == Item.TYPE_TEXT) {
+        if (item.type == Item.TYPE_TEXT) {
             Fragment previousFragment = fragment;
-            if (item.tag.equals("search")) {
-                fragment = new SearchFragment();
-                setTwoPane(false);
-                setFabVisible(true);
-            } else if (item.tag.equals("account")) {
-                fragment = new AccountFragment();
-                setTwoPane(false);
-                setFabVisible(false);
-            } else if (item.tag.equals("starred")) {
-                fragment = new StarredFragment();
-                setTwoPane(true);
-                setFabVisible(false);
-            } else if (item.tag.equals("info")) {
-                fragment = new InfoFragment();
-                setTwoPane(false);
-                setFabVisible(false);
-            } else if (item.tag.equals("settings")) {
-                Intent intent = new Intent(this, MainPreferenceActivity.class);
-                startActivity(intent);
-                drawerList.setItemChecked(position, false);
-                return;
-            } else if (item.tag.equals("about")) {
-                Intent intent = new Intent(this, AboutActivity.class);
-                startActivity(intent);
-                drawerList.setItemChecked(position, false);
-                return;
+            switch (item.tag) {
+                case "search":
+                    fragment = new SearchFragment();
+                    setTwoPane(false);
+                    setFabVisible(true);
+                    break;
+                case "account":
+                    fragment = new AccountFragment();
+                    setTwoPane(false);
+                    setFabVisible(false);
+                    break;
+                case "starred":
+                    fragment = new StarredFragment();
+                    setTwoPane(true);
+                    setFabVisible(false);
+                    break;
+                case "info":
+                    fragment = new InfoFragment();
+                    setTwoPane(false);
+                    setFabVisible(false);
+                    break;
+                case "settings": {
+                    Intent intent = new Intent(this, MainPreferenceActivity.class);
+                    startActivity(intent);
+                    drawerList.setItemChecked(position, false);
+                    return;
+                }
+                case "about": {
+                    Intent intent = new Intent(this, AboutActivity.class);
+                    startActivity(intent);
+                    drawerList.setItemChecked(position, false);
+                    return;
+                }
             }
             setFabOnClickListener(item.tag);
 
@@ -415,11 +412,11 @@ public abstract class OpacActivity extends ActionBarActivity {
 
             try {
                 if (previousFragment instanceof SearchFragment &&
-                        fragment instanceof AccountFragment) {
+                        fragment instanceof AccountFragment && previousFragment.getView() != null) {
                     transaction.addSharedElement(previousFragment.getView().findViewById(R.id
                             .rlSimpleSearch), getString(R.string.transition_gray_box));
                 } else if (previousFragment instanceof AccountFragment &&
-                        fragment instanceof SearchFragment) {
+                        fragment instanceof SearchFragment && previousFragment.getView() != null) {
                     transaction.addSharedElement(previousFragment.getView().findViewById(R.id
                             .rlAccHeader), getString(R.string.transition_gray_box));
                 }
@@ -443,7 +440,6 @@ public abstract class OpacActivity extends ActionBarActivity {
             drawerList.setItemChecked(position, true);
             selectaccount(item.accountId);
             drawerLayout.closeDrawer(drawer);
-            return;
         }
     }
 
@@ -506,14 +502,7 @@ public abstract class OpacActivity extends ActionBarActivity {
                 }
             }
             app.addFirstAccount(this);
-            return;
         }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        // showContent();
     }
 
     @Override
@@ -585,11 +574,8 @@ public abstract class OpacActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Pass the event to ActionBarDrawerToggle, if it returns
         // true, then it has handled the app icon touch event
-        if (hasDrawer && drawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        return hasDrawer && drawerToggle.onOptionsItemSelected(item) ||
+                super.onOptionsItemSelected(item);
     }
 
     protected boolean isTablet() {
@@ -677,7 +663,7 @@ public abstract class OpacActivity extends ActionBarActivity {
         @Override
         public View getDropDownView(int position, View contentView,
                                     ViewGroup viewGroup) {
-            View view = null;
+            View view;
 
             if (objects.get(position) == null) {
                 LayoutInflater layoutInflater = (LayoutInflater) getContext()
@@ -707,7 +693,7 @@ public abstract class OpacActivity extends ActionBarActivity {
 
         @Override
         public View getView(int position, View contentView, ViewGroup viewGroup) {
-            View view = null;
+            View view;
 
             if (objects.get(position) == null) {
                 LayoutInflater layoutInflater = (LayoutInflater) getContext()

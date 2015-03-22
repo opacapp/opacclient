@@ -81,7 +81,7 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
  */
 public class Bibliotheca extends BaseApi {
 
-    protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
+    protected static HashMap<String, MediaType> defaulttypes = new HashMap<>();
     static {
         defaulttypes.put("mbuchs", MediaType.BOOK);
         defaulttypes.put("cdkl", MediaType.CD);
@@ -140,9 +140,9 @@ public class Bibliotheca extends BaseApi {
         if (!initialised)
             start();
 
-        List<SearchField> fields = new ArrayList<SearchField>();
+        List<SearchField> fields = new ArrayList<>();
         // Zweigstellen und Mediengruppen auslesen
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+        List<NameValuePair> nameValuePairs = new ArrayList<>(2);
         nameValuePairs.add(new BasicNameValuePair("link_profis.x", "0"));
         nameValuePairs.add(new BasicNameValuePair("link_profis.y", "1"));
         String html = httpPost(opac_url + "/index.asp",
@@ -204,28 +204,28 @@ public class Bibliotheca extends BaseApi {
             }
         }
 
-        List<Map<String, String>> dropdownValues = new ArrayList<Map<String, String>>();
-        Map<String, String> valueMap = new HashMap<String, String>();
+        List<Map<String, String>> dropdownValues = new ArrayList<>();
+        Map<String, String> valueMap = new HashMap<>();
         valueMap.put("key", "1");
         valueMap.put("value",
                 stringProvider.getString(StringProvider.ORDER_DEFAULT));
         dropdownValues.add(valueMap);
-        valueMap = new HashMap<String, String>();
+        valueMap = new HashMap<>();
         valueMap.put("key", "2:desc");
         valueMap.put("value",
                 stringProvider.getString(StringProvider.ORDER_YEAR_DESC));
         dropdownValues.add(valueMap);
-        valueMap = new HashMap<String, String>();
+        valueMap = new HashMap<>();
         valueMap.put("key", "2:asc");
         valueMap.put("value",
                 stringProvider.getString(StringProvider.ORDER_YEAR_ASC));
         dropdownValues.add(valueMap);
-        valueMap = new HashMap<String, String>();
+        valueMap = new HashMap<>();
         valueMap.put("key", "3:desc");
         valueMap.put("value",
                 stringProvider.getString(StringProvider.ORDER_CATEGORY_DESC));
         dropdownValues.add(valueMap);
-        valueMap = new HashMap<String, String>();
+        valueMap = new HashMap<>();
         valueMap.put("key", "3:asc");
         valueMap.put("value",
                 stringProvider.getString(StringProvider.ORDER_CATEGORY_ASC));
@@ -252,9 +252,9 @@ public class Bibliotheca extends BaseApi {
             DropdownSearchField field = new DropdownSearchField();
             field.setDisplayName(name);
             field.setId(input.attr("name"));
-            List<Map<String, String>> options = new ArrayList<Map<String, String>>();
+            List<Map<String, String>> options = new ArrayList<>();
             for (Element option : input.select("option")) {
-                Map<String, String> map = new HashMap<String, String>();
+                Map<String, String> map = new HashMap<>();
                 map.put("key", option.attr("value"));
                 map.put("value", option.text());
                 options.add(map);
@@ -267,8 +267,8 @@ public class Bibliotheca extends BaseApi {
     }
 
     @Override
-    public void start() throws ClientProtocolException, SocketException,
-            IOException, NotReachableException {
+    public void start() throws
+            IOException {
         String db = "";
         if (data.has("db")) {
             try {
@@ -297,12 +297,12 @@ public class Bibliotheca extends BaseApi {
 
     @Override
     public SearchRequestResult search(List<SearchQuery> queries)
-            throws IOException, NotReachableException, JSONException,
+            throws IOException, JSONException,
             OpacErrorException {
         if (!initialised)
             start();
 
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+        List<NameValuePair> nameValuePairs = new ArrayList<>(2);
         nameValuePairs.add(new BasicNameValuePair("stichtit", "stich"));
 
         int ifeldCount = 0;
@@ -361,8 +361,7 @@ public class Bibliotheca extends BaseApi {
     }
 
     @Override
-    public SearchRequestResult searchGetPage(int page) throws IOException,
-            NotReachableException {
+    public SearchRequestResult searchGetPage(int page) throws IOException {
         if (!initialised)
             start();
 
@@ -376,7 +375,7 @@ public class Bibliotheca extends BaseApi {
         doc.setBaseUri(opac_url);
         Elements table = doc
                 .select(".resulttab tr.result_trefferX, .resulttab tr.result_treffer");
-        List<SearchResult> results = new ArrayList<SearchResult>();
+        List<SearchResult> results = new ArrayList<>();
         for (int i = 0; i < table.size(); i++) {
             Element tr = table.get(i);
             SearchResult sr = new SearchResult();
@@ -389,11 +388,7 @@ public class Bibliotheca extends BaseApi {
                     try {
                         sr.setType(MediaType.valueOf(data.getJSONObject(
                                 "mediatypes").getString(fname)));
-                    } catch (JSONException e) {
-                        sr.setType(defaulttypes.get(fname
-                                .toLowerCase(Locale.GERMAN).replace(".jpg", "")
-                                .replace(".gif", "").replace(".png", "")));
-                    } catch (IllegalArgumentException e) {
+                    } catch (JSONException | IllegalArgumentException e) {
                         sr.setType(defaulttypes.get(fname
                                 .toLowerCase(Locale.GERMAN).replace(".jpg", "")
                                 .replace(".gif", "").replace(".png", "")));
@@ -456,7 +451,7 @@ public class Bibliotheca extends BaseApi {
 
     @Override
     public DetailledItem getResultById(String a, String homebranch)
-            throws IOException, NotReachableException {
+            throws IOException {
         if (!initialised)
             start();
         String html = httpGet(opac_url + "/index.asp?MedienNr=" + a,
@@ -566,7 +561,7 @@ public class Bibliotheca extends BaseApi {
             for (int i = 0; i < exemplartrs.size(); i++) {
                 Element tr = exemplartrs.get(i);
 
-                Map<String, String> e = new HashMap<String, String>();
+                Map<String, String> e = new HashMap<>();
 
                 Iterator<?> keys = copymap.keys();
                 while (keys.hasNext()) {
@@ -592,7 +587,7 @@ public class Bibliotheca extends BaseApi {
             for (int i = 0; i < bandtrs.size(); i++) {
                 Element tr = bandtrs.get(i);
 
-                Map<String, String> e = new HashMap<String, String>();
+                Map<String, String> e = new HashMap<>();
                 e.put(DetailledItem.KEY_CHILD_ID, tr.attr("href").split("=")[1]);
                 e.put(DetailledItem.KEY_CHILD_TITLE, tr.text());
                 result.addBand(e);
@@ -617,7 +612,7 @@ public class Bibliotheca extends BaseApi {
         Document doc = null;
 
         if (useraction == MultiStepResult.ACTION_CONFIRMATION) {
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+            List<NameValuePair> nameValuePairs = new ArrayList<>(2);
             nameValuePairs.add(new BasicNameValuePair("make_allvl",
                     "Bestaetigung"));
             nameValuePairs.add(new BasicNameValuePair("target", "makevorbest"));
@@ -631,7 +626,7 @@ public class Bibliotheca extends BaseApi {
 
             if (doc.select("input[name=AUSWEIS]").size() > 0) {
                 // Login vonnöten
-                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
+                List<NameValuePair> nameValuePairs = new ArrayList<>(
                         2);
                 nameValuePairs.add(new BasicNameValuePair("AUSWEIS", acc
                         .getName()));
@@ -661,7 +656,7 @@ public class Bibliotheca extends BaseApi {
                 }
             }
             if (doc.select("select[name=" + branch_inputfield + "]").size() > 0) {
-                List<Map<String, String>> branches = new ArrayList<Map<String, String>>();
+                List<Map<String, String>> branches = new ArrayList<>();
                 for (Element option : doc
                         .select("select[name=" + branch_inputfield + "]")
                         .first().children()) {
@@ -672,7 +667,7 @@ public class Bibliotheca extends BaseApi {
                     } else {
                         key = value;
                     }
-                    Map<String, String> selopt = new HashMap<String, String>();
+                    Map<String, String> selopt = new HashMap<>();
                     selopt.put("key", key);
                     selopt.put("value", value);
                     branches.add(selopt);
@@ -685,7 +680,7 @@ public class Bibliotheca extends BaseApi {
                 return result;
             }
         } else if (useraction == ReservationResult.ACTION_BRANCH) {
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+            List<NameValuePair> nameValuePairs = new ArrayList<>(2);
             nameValuePairs.add(new BasicNameValuePair(branch_inputfield,
                     selection));
             nameValuePairs.add(new BasicNameValuePair("button2", "weiter"));
@@ -702,7 +697,7 @@ public class Bibliotheca extends BaseApi {
         if (doc.select("input[name=target]").size() > 0) {
             if (doc.select("input[name=target]").attr("value")
                     .equals("makevorbest")) {
-                List<String[]> details = new ArrayList<String[]>();
+                List<String[]> details = new ArrayList<>();
 
                 if (doc.getElementsByClass("kontomeldung").size() == 1) {
                     details.add(new String[]{doc
@@ -748,7 +743,7 @@ public class Bibliotheca extends BaseApi {
 
     @Override
     public ProlongResult prolong(String a, Account account, int useraction,
-                                 String selection) throws IOException, NotReachableException {
+                                 String selection) throws IOException {
         if (!initialised)
             start();
         if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
@@ -781,7 +776,7 @@ public class Bibliotheca extends BaseApi {
         }
 
         if (useraction == MultiStepResult.ACTION_CONFIRMATION) {
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+            List<NameValuePair> nameValuePairs = new ArrayList<>(2);
             nameValuePairs.add(new BasicNameValuePair("target", "make_vl"));
             nameValuePairs.add(new BasicNameValuePair("verlaengern",
                     "Bestätigung"));
@@ -804,7 +799,7 @@ public class Bibliotheca extends BaseApi {
                             .first();
                     ProlongResult res = new ProlongResult(
                             MultiStepResult.Status.CONFIRMATION_NEEDED);
-                    List<String[]> details = new ArrayList<String[]>();
+                    List<String[]> details = new ArrayList<>();
 
                     for (Element row : table.select("tr")) {
                         if (row.select(".konto_feld").size() == 1
@@ -818,7 +813,7 @@ public class Bibliotheca extends BaseApi {
                     res.setDetails(details);
                     return res;
                 } else {
-                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
+                    List<NameValuePair> nameValuePairs = new ArrayList<>(
                             2);
                     nameValuePairs.add(new BasicNameValuePair("target",
                             "make_vl"));
@@ -876,8 +871,8 @@ public class Bibliotheca extends BaseApi {
         }
 
         if (doc.select(".kontozeile table").size() == 1) {
-            Map<Integer, String> colmap = new HashMap<Integer, String>();
-            List<Map<String, String>> result = new ArrayList<Map<String, String>>();
+            Map<Integer, String> colmap = new HashMap<>();
+            List<Map<String, String>> result = new ArrayList<>();
             for (Element tr : doc.select(".kontozeile table tr")) {
                 if (tr.select(".tabHeaderKonto").size() > 0) {
                     int i = 0;
@@ -903,7 +898,7 @@ public class Bibliotheca extends BaseApi {
                         i++;
                     }
                 } else {
-                    Map<String, String> line = new HashMap<String, String>();
+                    Map<String, String> line = new HashMap<>();
                     for (Entry<Integer, String> entry : colmap.entrySet()) {
                         line.put(entry.getValue(), tr.child(entry.getKey())
                                 .text().trim());
@@ -913,13 +908,13 @@ public class Bibliotheca extends BaseApi {
             }
 
             if (doc.select("input#make_allvl").size() > 0) {
-                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
+                List<NameValuePair> nameValuePairs = new ArrayList<>(
                         2);
                 nameValuePairs.add(new BasicNameValuePair("target",
                         "make_allvl_flag"));
                 nameValuePairs.add(new BasicNameValuePair("make_allvl",
                         "Bestaetigung"));
-                html = httpPost(opac_url + "/index.asp",
+                httpPost(opac_url + "/index.asp",
                         new UrlEncodedFormEntity(nameValuePairs),
                         getDefaultEncoding());
             }
@@ -958,7 +953,7 @@ public class Bibliotheca extends BaseApi {
         }
         httpGet(opac_url + "/" + media, getDefaultEncoding());
 
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+        List<NameValuePair> nameValuePairs = new ArrayList<>(2);
         nameValuePairs.add(new BasicNameValuePair("target", "delvorbest"));
         nameValuePairs
                 .add(new BasicNameValuePair("vorbdelbest", "Bestätigung"));
@@ -969,7 +964,7 @@ public class Bibliotheca extends BaseApi {
 
     @Override
     public AccountData account(Account acc) throws IOException,
-            NotReachableException, JSONException, SocketException,
+            JSONException,
             OpacErrorException {
         if (!initialised)
             start();
@@ -977,7 +972,7 @@ public class Bibliotheca extends BaseApi {
         if (acc.getName() == null || acc.getName().equals("null"))
             return null;
 
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+        List<NameValuePair> nameValuePairs;
         // nameValuePairs.add(new BasicNameValuePair("link_konto.x", "0"));
         // nameValuePairs.add(new BasicNameValuePair("link_konto.y", "0"));
         // String html = httpPost(opac_url + "/index.asp",
@@ -988,7 +983,7 @@ public class Bibliotheca extends BaseApi {
 
         if (doc.select("input[name=AUSWEIS]").size() > 0) {
             // Login vonnöten
-            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs = new ArrayList<>();
             nameValuePairs
                     .add(new BasicNameValuePair("AUSWEIS", acc.getName()));
             nameValuePairs
@@ -1026,7 +1021,7 @@ public class Bibliotheca extends BaseApi {
 
         copymap = data.getJSONObject("accounttable");
 
-        List<Map<String, String>> medien = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> medien = new ArrayList<>();
 
         if (doc.select(".kontozeile_center table").size() == 0)
             return null;
@@ -1038,7 +1033,7 @@ public class Bibliotheca extends BaseApi {
 
         for (int i = 0; i < exemplartrs.size(); i++) {
             Element tr = exemplartrs.get(i);
-            Map<String, String> e = new HashMap<String, String>();
+            Map<String, String> e = new HashMap<>();
 
             Iterator<?> keys = copymap.keys();
             while (keys.hasNext()) {
@@ -1081,12 +1076,12 @@ public class Bibliotheca extends BaseApi {
 
         copymap = data.getJSONObject("reservationtable");
 
-        List<Map<String, String>> reservations = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> reservations = new ArrayList<>();
         exemplartrs = doc.select(".kontozeile_center table").get(1)
                 .select("tr.tabKonto");
         for (int i = 0; i < exemplartrs.size(); i++) {
             Element tr = exemplartrs.get(i);
-            Map<String, String> e = new HashMap<String, String>();
+            Map<String, String> e = new HashMap<>();
 
             Iterator<?> keys = copymap.keys();
             while (keys.hasNext()) {
@@ -1151,8 +1146,7 @@ public class Bibliotheca extends BaseApi {
 
     @Override
     public String getAccountExtendableInfo(Account acc)
-            throws ClientProtocolException, SocketException, IOException,
-            NotReachableException {
+            throws IOException {
         if (!initialised)
             start();
 
@@ -1163,7 +1157,7 @@ public class Bibliotheca extends BaseApi {
 
         // Login vonnöten
         HttpPost httppost = new HttpPost(opac_url + "/index.asp");
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+        List<NameValuePair> nameValuePairs = new ArrayList<>(2);
         nameValuePairs.add(new BasicNameValuePair("link_konto.x", "0"));
         nameValuePairs.add(new BasicNameValuePair("link_konto.y", "0"));
         httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
@@ -1172,7 +1166,7 @@ public class Bibliotheca extends BaseApi {
         if (response.getStatusLine().getStatusCode() == 200) {
             // Login vonnöten
             response.getEntity().consumeContent();
-            nameValuePairs = new ArrayList<NameValuePair>(2);
+            nameValuePairs = new ArrayList<>(2);
             nameValuePairs
                     .add(new BasicNameValuePair("AUSWEIS", acc.getName()));
             nameValuePairs
@@ -1227,7 +1221,7 @@ public class Bibliotheca extends BaseApi {
     public void checkAccountData(Account acc) throws IOException,
             JSONException, OpacErrorException {
         start();
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+        List<NameValuePair> nameValuePairs = new ArrayList<>();
         nameValuePairs.add(new BasicNameValuePair("AUSWEIS", acc.getName()));
         nameValuePairs.add(new BasicNameValuePair("PWD", acc.getPassword()));
         if (data.has("db")) {
@@ -1247,7 +1241,7 @@ public class Bibliotheca extends BaseApi {
 
     private String httpPostWithRedirect(String url, UrlEncodedFormEntity data,
                                         String encoding, boolean ignore_errors)
-            throws ClientProtocolException, IOException {
+            throws IOException {
         HttpPost httppost = new HttpPost(url);
         httppost.setEntity(data);
         HttpResponse response = http_client.execute(httppost);

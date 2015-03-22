@@ -81,7 +81,7 @@ public class Heidi extends BaseApi implements OpacApi {
     protected CookieStore cookieStore = new BasicCookieStore();
 
     @Override
-    public void start() throws IOException, NotReachableException {
+    public void start() throws IOException {
         String html = httpGet(opac_url + "/search.cgi?art=f", ENCODING, false,
                 cookieStore);
         Document doc = Jsoup.parse(html);
@@ -124,11 +124,11 @@ public class Heidi extends BaseApi implements OpacApi {
 
     @Override
     public SearchRequestResult search(List<SearchQuery> queries)
-            throws IOException, NotReachableException, OpacErrorException {
+            throws IOException, OpacErrorException {
 
         last_query = queries;
 
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
 
         if (sessid == null)
             start();
@@ -201,7 +201,7 @@ public class Heidi extends BaseApi implements OpacApi {
         }
 
         Elements table = doc.select("table.treffer tr");
-        List<SearchResult> results = new ArrayList<SearchResult>();
+        List<SearchResult> results = new ArrayList<>();
         for (int i = 0; i < table.size(); i++) {
             Element tr = table.get(i);
             SearchResult sr = new SearchResult();
@@ -232,13 +232,11 @@ public class Heidi extends BaseApi implements OpacApi {
                             if (!nv.getValue().trim().equals("")) {
                                 if (nv.getName().equals("rft.btitle")
                                         && !hastitle) {
-                                    description.append("<b>" + nv.getValue()
-                                            + "</b>");
+                                    description.append("<b>").append(nv.getValue()).append("</b>");
                                     hastitle = true;
                                 } else if (nv.getName().equals("rft.atitle")
                                         && !hastitle) {
-                                    description.append("<b>" + nv.getValue()
-                                            + "</b>");
+                                    description.append("<b>").append(nv.getValue()).append("</b>");
                                     hastitle = true;
                                 } else if (nv.getName().equals("rft.au")) {
                                     author = nv.getValue();
@@ -247,8 +245,7 @@ public class Heidi extends BaseApi implements OpacApi {
                                 } else if (nv.getName().equals("rft.aulast")) {
                                     author = nv.getValue();
                                 } else if (nv.getName().equals("rft.date")) {
-                                    description
-                                            .append("<br />" + nv.getValue());
+                                    description.append("<br />").append(nv.getValue());
                                 }
                             }
                         }
@@ -308,14 +305,14 @@ public class Heidi extends BaseApi implements OpacApi {
 
     @Override
     public SearchRequestResult filterResults(Filter filter, Option option)
-            throws IOException, NotReachableException {
+            throws IOException {
         // Not implemented
         return null;
     }
 
     @Override
     public SearchRequestResult searchGetPage(int page) throws IOException,
-            NotReachableException, OpacErrorException {
+            OpacErrorException {
         TextSearchField pagefield = new TextSearchField();
         pagefield.setId("_heidi_page");
         pagefield.setVisible(false);
@@ -336,7 +333,7 @@ public class Heidi extends BaseApi implements OpacApi {
 
     @Override
     public DetailledItem getResultById(String id, final String homebranch)
-            throws IOException, NotReachableException {
+            throws IOException {
 
         if (sessid == null)
             start();
@@ -375,7 +372,7 @@ public class Heidi extends BaseApi implements OpacApi {
                         || tr.select(".exso").size() == 0
                         || tr.select(".exstatus").size() == 0)
                     continue;
-                Map<String, String> e = new HashMap<String, String>();
+                Map<String, String> e = new HashMap<>();
                 e.put(DetailledItem.KEY_COPY_SHELFMARK, tr.select(".exsig")
                         .first().text());
                 e.put(DetailledItem.KEY_COPY_BRANCH, tr.select(".exso").first()
@@ -404,7 +401,7 @@ public class Heidi extends BaseApi implements OpacApi {
         }
         for (Element a : doc.select(".titelsatz a")) {
             if (a.text().trim().matches("B.+nde")) {
-                Map<String, String> volumesearch = new HashMap<String, String>();
+                Map<String, String> volumesearch = new HashMap<>();
                 volumesearch.put("query", getQueryParamsFirst(a.attr("href"))
                         .get("query"));
                 item.setVolumesearch(volumesearch);
@@ -430,8 +427,7 @@ public class Heidi extends BaseApi implements OpacApi {
     }
 
     @Override
-    public String getAccountExtendableInfo(Account account) throws IOException,
-            NotReachableException {
+    public String getAccountExtendableInfo(Account account) throws IOException {
         throw new UnsupportedOperationException("Not implemented.");
     }
 
@@ -448,12 +444,12 @@ public class Heidi extends BaseApi implements OpacApi {
 
     @Override
     public List<SearchField> getSearchFields() throws IOException,
-            NotReachableException, OpacErrorException, JSONException {
+            OpacErrorException, JSONException {
         String html = httpGet(opac_url + "/search.cgi?art=f", ENCODING, false,
                 cookieStore);
         Document doc = Jsoup.parse(html);
         doc.setBaseUri(opac_url);
-        List<SearchField> fields = new ArrayList<SearchField>();
+        List<SearchField> fields = new ArrayList<>();
 
         Elements options = doc.select("select[name=kat1] option");
         for (Element option : options) {
@@ -465,13 +461,13 @@ public class Heidi extends BaseApi implements OpacApi {
         }
 
         DropdownSearchField field = new DropdownSearchField();
-        List<Map<String, String>> opts = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> opts = new ArrayList<>();
 
         Elements zst_opts = doc.select("#teilk2 option");
         for (int i = 0; i < zst_opts.size(); i++) {
             Element opt = zst_opts.get(i);
             if (!opt.val().equals("")) {
-                Map<String, String> option = new HashMap<String, String>();
+                Map<String, String> option = new HashMap<>();
                 option.put("key", opt.val());
                 option.put("value", opt.text());
                 opts.add(option);
@@ -486,7 +482,7 @@ public class Heidi extends BaseApi implements OpacApi {
 
         try {
             field = new DropdownSearchField();
-            opts = new ArrayList<Map<String, String>>();
+            opts = new ArrayList<>();
             Document doc2 = Jsoup.parse(httpGet(opac_url
                             + "/zweigstelle.cgi?sess=" + sessid, ENCODING, false,
                     cookieStore));
@@ -494,7 +490,7 @@ public class Heidi extends BaseApi implements OpacApi {
             for (int i = 0; i < home_opts.size(); i++) {
                 Element opt = home_opts.get(i);
                 if (!opt.val().equals("")) {
-                    Map<String, String> option = new HashMap<String, String>();
+                    Map<String, String> option = new HashMap<>();
                     option.put("key", opt.val());
                     option.put("value", opt.text());
                     opts.add(option);
@@ -527,7 +523,7 @@ public class Heidi extends BaseApi implements OpacApi {
                 + "&sess=" + sessid, ENCODING, false, cookieStore);
         Document doc = Jsoup.parse(html);
         if (doc.select("input[name=pw]").size() > 0) {
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+            List<NameValuePair> nameValuePairs = new ArrayList<>(2);
             nameValuePairs.add(new BasicNameValuePair("id", account.getName()));
             nameValuePairs.add(new BasicNameValuePair("pw", account
                     .getPassword()));
@@ -545,7 +541,7 @@ public class Heidi extends BaseApi implements OpacApi {
         }
         if (doc.select("input[name=ort]").size() > 0) {
             if (selection != null) {
-                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
+                List<NameValuePair> nameValuePairs = new ArrayList<>(
                         2);
                 nameValuePairs.add(new BasicNameValuePair("ks", item.getId()));
                 nameValuePairs.add(new BasicNameValuePair("ort", selection));
@@ -556,11 +552,11 @@ public class Heidi extends BaseApi implements OpacApi {
                         new UrlEncodedFormEntity(nameValuePairs), ENCODING);
                 doc = Jsoup.parse(html);
             } else {
-                List<Map<String, String>> options = new ArrayList<Map<String, String>>();
+                List<Map<String, String>> options = new ArrayList<>();
                 for (Element input : doc.select("input[name=ort]")) {
                     Element label = doc.select("label[for=" + input.id() + "]")
                             .first();
-                    Map<String, String> selopt = new HashMap<String, String>();
+                    Map<String, String> selopt = new HashMap<>();
                     selopt.put("key", input.attr("value"));
                     selopt.put("value", label.text());
                     options.add(selopt);
@@ -597,7 +593,7 @@ public class Heidi extends BaseApi implements OpacApi {
             return new ProlongResult(MultiStepResult.Status.ERROR, error);
         }
 
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+        List<NameValuePair> nameValuePairs = new ArrayList<>(2);
         nameValuePairs
                 .add(new BasicNameValuePair("everl", "Einzelverlängerung"));
         nameValuePairs.add(new BasicNameValuePair("mailversand", "Ok"));
@@ -642,16 +638,16 @@ public class Heidi extends BaseApi implements OpacApi {
             return prolongAll(account, useraction, selection);
         }
 
-        List<Map<String, String>> result = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> result = new ArrayList<>();
 
-        Map<String, String> line = new HashMap<String, String>();
+        Map<String, String> line = new HashMap<>();
         for (Element tr : doc.select(".kontobox table tbody tr")) {
             if (tr.children().size() < 2) {
                 if (line.size() > 0) {
                     line.put(ProlongAllResult.KEY_LINE_MESSAGE, tr.child(0)
                             .text().trim());
                     result.add(line);
-                    line = new HashMap<String, String>();
+                    line = new HashMap<>();
                 }
                 continue;
             }
@@ -674,7 +670,7 @@ public class Heidi extends BaseApi implements OpacApi {
     @Override
     public CancelResult cancel(String media, Account account, int useraction,
                                String selection) throws IOException, OpacErrorException {
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+        List<NameValuePair> nameValuePairs = new ArrayList<>(2);
         nameValuePairs.add(new BasicNameValuePair("storno",
                 "Vormerkung stornieren"));
         nameValuePairs.add(new BasicNameValuePair("mark", media));
@@ -722,9 +718,9 @@ public class Heidi extends BaseApi implements OpacApi {
             }
         }
 
-        List<Map<String, String>> lent = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> lent = new ArrayList<>();
         for (Element tr : doc.select("table.kontopos tr")) {
-            Map<String, String> row = new HashMap<String, String>();
+            Map<String, String> row = new HashMap<>();
             Element desc = tr.child(1).select("label").first();
             String dates = tr.child(2).text().trim();
             String kk = getQueryParamsFirst(
@@ -775,7 +771,7 @@ public class Heidi extends BaseApi implements OpacApi {
         }
         adata.setLent(lent);
 
-        List<Map<String, String>> reservations = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> reservations = new ArrayList<>();
         html = httpGet(opac_url + "/konto.cgi?konto=v&sess=" + sessid,
                 getDefaultEncoding());
         reservations.addAll(parse_reservations(html));
@@ -790,10 +786,10 @@ public class Heidi extends BaseApi implements OpacApi {
 
     protected List<Map<String, String>> parse_reservations(String html) {
         Document doc = Jsoup.parse(html);
-        List<Map<String, String>> reservations = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> reservations = new ArrayList<>();
 
         for (Element tr : doc.select("table.kontopos tr")) {
-            Map<String, String> row = new HashMap<String, String>();
+            Map<String, String> row = new HashMap<>();
             Element desc = tr.child(1).select("label").first();
             Element pos = tr.child(3);
             String kk = getQueryParamsFirst(
@@ -836,7 +832,7 @@ public class Heidi extends BaseApi implements OpacApi {
     protected void login(Account account) throws IOException,
             OpacErrorException {
         start();
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+        List<NameValuePair> nameValuePairs = new ArrayList<>(2);
         nameValuePairs.add(new BasicNameValuePair("id", account.getName()));
         nameValuePairs.add(new BasicNameValuePair("pw", account.getPassword()));
         nameValuePairs.add(new BasicNameValuePair("sess", sessid));

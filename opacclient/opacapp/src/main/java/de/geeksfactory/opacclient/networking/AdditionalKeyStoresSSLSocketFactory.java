@@ -22,6 +22,7 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.net.ssl.SSLContext;
@@ -78,15 +79,9 @@ public class AdditionalKeyStoresSSLSocketFactory extends SSLSocketFactory {
                 localTrustManager = new LocalStoreX509TrustManager(
                         localKeyStore);
 
-                List<X509Certificate> allIssuers = new ArrayList<X509Certificate>();
-                for (X509Certificate cert : defaultTrustManager
-                        .getAcceptedIssuers()) {
-                    allIssuers.add(cert);
-                }
-                for (X509Certificate cert : localTrustManager
-                        .getAcceptedIssuers()) {
-                    allIssuers.add(cert);
-                }
+                List<X509Certificate> allIssuers = new ArrayList<>();
+                allIssuers.addAll(Arrays.asList(defaultTrustManager.getAcceptedIssuers()));
+                allIssuers.addAll(Arrays.asList(localTrustManager.getAcceptedIssuers()));
                 acceptedIssuers = allIssuers
                         .toArray(new X509Certificate[allIssuers.size()]);
             } catch (GeneralSecurityException e) {
@@ -97,9 +92,9 @@ public class AdditionalKeyStoresSSLSocketFactory extends SSLSocketFactory {
 
         static X509TrustManager findX509TrustManager(TrustManagerFactory tmf) {
             TrustManager tms[] = tmf.getTrustManagers();
-            for (int i = 0; i < tms.length; i++) {
-                if (tms[i] instanceof X509TrustManager) {
-                    return (X509TrustManager) tms[i];
+            for (TrustManager tm : tms) {
+                if (tm instanceof X509TrustManager) {
+                    return (X509TrustManager) tm;
                 }
             }
 
@@ -120,11 +115,11 @@ public class AdditionalKeyStoresSSLSocketFactory extends SSLSocketFactory {
             char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8',
                     '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
-            StringBuffer buf = new StringBuffer(bytes.length * 2);
+            StringBuilder buf = new StringBuilder(bytes.length * 2);
 
-            for (int i = 0; i < bytes.length; ++i) {
-                buf.append(hexDigits[(bytes[i] & 0xf0) >> 4]);
-                buf.append(hexDigits[bytes[i] & 0x0f]);
+            for (byte aByte : bytes) {
+                buf.append(hexDigits[(aByte & 0xf0) >> 4]);
+                buf.append(hexDigits[aByte & 0x0f]);
             }
 
             return buf.toString();

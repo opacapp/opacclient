@@ -264,7 +264,7 @@ public class MultiStepResultHelper {
 
         @Override
         public View getView(int position, View contentView, ViewGroup viewGroup) {
-            View view = null;
+            View view;
 
             if (objects[position] == null) {
                 LayoutInflater layoutInflater = (LayoutInflater) getContext()
@@ -275,7 +275,7 @@ public class MultiStepResultHelper {
             }
 
             String item = ((Map<String, String>) objects[position])
-                    .get("value").toString();
+                    .get("value");
 
             if (contentView == null) {
                 LayoutInflater layoutInflater = (LayoutInflater) getContext()

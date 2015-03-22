@@ -28,7 +28,7 @@ public class AndroidMeaningDetector implements MeaningDetector {
 
     public AndroidMeaningDetector(Context context, Library lib)
             throws IOException, JSONException {
-        meanings = new HashMap<String, String>();
+        meanings = new HashMap<>();
         assets = context.getAssets();
         List<String> files = Arrays.asList(assets.list(ASSETS_FIELDSDIR));
         if (files.contains("general.json")) // General

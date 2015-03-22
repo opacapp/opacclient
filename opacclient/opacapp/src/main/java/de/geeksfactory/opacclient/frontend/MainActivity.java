@@ -62,14 +62,14 @@ public class MainActivity extends OpacActivity implements
                 // address
                 byte[] data;
                 data = tech.transceive(readCmd);
-                for (int j = 0; j < data.length; j++) {
-                    if (data[j] > 32 && data[j] < 127) // We only want printable
+                for (byte aData1 : data) {
+                    if (aData1 > 32 && aData1 < 127) // We only want printable
                     // characters, there
                     // might be some
                     // nullbytes in it
                     // otherwise.
                     {
-                        stringbuilder.append((char) data[j]);
+                        stringbuilder.append((char) aData1);
                     }
                 }
             }
@@ -207,7 +207,6 @@ public class MainActivity extends OpacActivity implements
                 startActivity(intent);
             }
             finish();
-            return;
         }
     }
 
@@ -236,11 +235,9 @@ public class MainActivity extends OpacActivity implements
             // scanned anymore because of the new SearchField
             // implementation
             if (fragment instanceof SearchFragment) {
+                // the fragment should be a Search Fragment, but check here just in case
                 ((SearchFragment) fragment).barcodeScanned(scanResult);
-            } else {
-                // this should not happen, but do nothing here just in case
             }
-
         }
     }
 

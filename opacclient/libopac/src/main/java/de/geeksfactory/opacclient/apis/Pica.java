@@ -84,8 +84,8 @@ import de.geeksfactory.opacclient.utils.ISBNTools;
 
 public class Pica extends BaseApi implements OpacApi {
 
-    protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
-    protected static HashMap<String, String> languageCodes = new HashMap<String, String>();
+    protected static HashMap<String, MediaType> defaulttypes = new HashMap<>();
+    protected static HashMap<String, String> languageCodes = new HashMap<>();
     static {
         defaulttypes.put("book", MediaType.BOOK);
         defaulttypes.put("article", MediaType.BOOK);
@@ -178,12 +178,12 @@ public class Pica extends BaseApi implements OpacApi {
 
     @Override
     public SearchRequestResult search(List<SearchQuery> query)
-            throws IOException, NotReachableException, OpacErrorException,
+            throws IOException, OpacErrorException,
             JSONException {
         if (!initialised)
             start();
 
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
 
         int index = 0;
         start();
@@ -241,7 +241,7 @@ public class Pica extends BaseApi implements OpacApi {
 
         reusehtml = html;
 
-        int results_total = -1;
+        int results_total;
 
         String resultnumstr = doc.select(".pages").first().text();
         Pattern p = Pattern.compile("[0-9]+$");
@@ -259,21 +259,16 @@ public class Pica extends BaseApi implements OpacApi {
             results_total = Integer.parseInt(resultnumstr);
         }
 
-        List<SearchResult> results = new ArrayList<SearchResult>();
+        List<SearchResult> results = new ArrayList<>();
 
         if (results_total == 1) {
             // Only one result
-            try {
-                DetailledItem singleResult = parse_result(html);
-                SearchResult sr = new SearchResult();
-                sr.setType(getMediaTypeInSingleResult(html));
-                sr.setInnerhtml("<b>" + singleResult.getTitle() + "</b><br>"
-                        + singleResult.getDetails().get(0).getContent());
-                results.add(sr);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            DetailledItem singleResult = parse_result(html);
+            SearchResult sr = new SearchResult();
+            sr.setType(getMediaTypeInSingleResult(html));
+            sr.setInnerhtml("<b>" + singleResult.getTitle() + "</b><br>"
+                    + singleResult.getDetails().get(0).getContent());
+            results.add(sr);
         }
 
         Elements table = doc
@@ -314,11 +309,7 @@ public class Pica extends BaseApi implements OpacApi {
                     try {
                         sr.setType(MediaType.valueOf(data.getJSONObject(
                                 "mediatypes").getString(fname)));
-                    } catch (JSONException e) {
-                        sr.setType(defaulttypes.get(fname
-                                .toLowerCase(Locale.GERMAN).replace(".jpg", "")
-                                .replace(".gif", "").replace(".png", "")));
-                    } catch (IllegalArgumentException e) {
+                    } catch (JSONException | IllegalArgumentException e) {
                         sr.setType(defaulttypes.get(fname
                                 .toLowerCase(Locale.GERMAN).replace(".jpg", "")
                                 .replace(".gif", "").replace(".png", "")));
@@ -334,7 +325,7 @@ public class Pica extends BaseApi implements OpacApi {
             List<Node> children = middlething.childNodes();
             int childrennum = children.size();
 
-            List<String[]> strings = new ArrayList<String[]>();
+            List<String[]> strings = new ArrayList<>();
             for (int ch = 0; ch < childrennum; ch++) {
                 Node node = children.get(ch);
                 if (node instanceof TextNode) {
@@ -353,7 +344,7 @@ public class Pica extends BaseApi implements OpacApi {
                                         ((Element) node).tag().getName(),
                                         "text", text,
                                         ((Element) node).className(),
-                                        ((Element) node).attr("style")});
+                                        node.attr("style")});
                         } else if (subnode instanceof Element) {
                             String text = ((Element) subnode).text().trim();
                             if (text.length() > 3)
@@ -361,7 +352,7 @@ public class Pica extends BaseApi implements OpacApi {
                                         ((Element) node).tag().getName(),
                                         ((Element) subnode).tag().getName(),
                                         text, ((Element) node).className(),
-                                        ((Element) node).attr("style")});
+                                        node.attr("style")});
                         }
                     }
                 }
@@ -372,9 +363,9 @@ public class Pica extends BaseApi implements OpacApi {
             int k = 0;
             for (String[] part : strings) {
                 if (part[0] == "a" && k == 0) {
-                    description.append("<b>" + part[2] + "</b>");
+                    description.append("<b>").append(part[2]).append("</b>");
                 } else if (k < 3) {
-                    description.append("<br />" + part[2]);
+                    description.append("<br />").append(part[2]);
                 }
                 k++;
             }
@@ -390,7 +381,7 @@ public class Pica extends BaseApi implements OpacApi {
 
     @Override
     public SearchRequestResult searchGetPage(int page) throws IOException,
-            NotReachableException, OpacErrorException {
+            OpacErrorException {
         if (!initialised)
             start();
 
@@ -403,13 +394,13 @@ public class Pica extends BaseApi implements OpacApi {
 
     @Override
     public SearchRequestResult filterResults(Filter filter, Option option)
-            throws IOException, NotReachableException {
+            throws IOException {
         return null;
     }
 
     @Override
     public DetailledItem getResultById(String id, String homebranch)
-            throws IOException, NotReachableException {
+            throws IOException {
 
         if (id == null && reusehtml != null) {
             return parse_result(reusehtml);
@@ -435,7 +426,7 @@ public class Pica extends BaseApi implements OpacApi {
         return parse_result(html);
     }
 
-    protected DetailledItem parse_result(String html) throws IOException {
+    protected DetailledItem parse_result(String html) {
         Document doc = Jsoup.parse(html);
         doc.setBaseUri(opac_url);
 
@@ -478,7 +469,7 @@ public class Pica extends BaseApi implements OpacApi {
         }
 
         // GET TITLE AND SUBTITLE
-        String titleAndSubtitle = "";
+        String titleAndSubtitle;
         String selector = "td.preslabel:matches(.*(Titel|Aufsatz|Zeitschrift"
                 + "|Title|Article|Periodical"
                 + "|Titre|Article|P.riodique).*) + td.presvalue";
@@ -486,15 +477,13 @@ public class Pica extends BaseApi implements OpacApi {
             titleAndSubtitle = doc.select(selector).first().text().trim();
             int slashPosition = titleAndSubtitle.indexOf("/");
             String title;
-            String subtitle;
             if (slashPosition > 0) {
                 title = titleAndSubtitle.substring(0, slashPosition).trim();
-                subtitle = titleAndSubtitle.substring(slashPosition + 1).trim();
+                String subtitle = titleAndSubtitle.substring(slashPosition + 1).trim();
                 result.addDetail(new Detail(stringProvider
                         .getString(StringProvider.SUBTITLE), subtitle));
             } else {
                 title = titleAndSubtitle;
-                subtitle = "";
             }
             result.setTitle(title);
         } else {
@@ -517,7 +506,7 @@ public class Pica extends BaseApi implements OpacApi {
                 line++;
                 continue;
             }
-            if (title.indexOf(":") != -1)
+            if (title.contains(":"))
                 title = title.substring(0, title.indexOf(":")); // remove
             // colon
             if (!title.matches("(Titel|Titre|Title)"))
@@ -527,7 +516,7 @@ public class Pica extends BaseApi implements OpacApi {
         line++; // next line after separator
 
         // Copies
-        Map<String, String> e = new HashMap<String, String>();
+        Map<String, String> e = new HashMap<>();
         String location = "";
 
         // reservation info will be stored as JSON
@@ -612,7 +601,7 @@ public class Pica extends BaseApi implements OpacApi {
                 e.put(DetailledItem.KEY_COPY_BRANCH, location);
                 result.addCopy(e);
                 location = "";
-                e = new HashMap<String, String>();
+                e = new HashMap<>();
             }
             line++;
         }
@@ -677,9 +666,9 @@ public class Pica extends BaseApi implements OpacApi {
                     ReservationResult res = new ReservationResult(
                             MultiStepResult.Status.SELECTION_NEEDED);
                     res.setActionIdentifier(ReservationResult.ACTION_BRANCH);
-                    List<Map<String, String>> selections = new ArrayList<Map<String, String>>();
+                    List<Map<String, String>> selections = new ArrayList<>();
                     for (int i = 0; i < json.length(); i++) {
-                        Map<String, String> selopt = new HashMap<String, String>();
+                        Map<String, String> selopt = new HashMap<>();
                         selopt.put("key", String.valueOf(i));
                         selopt.put("value", json.getJSONObject(i).getString("desc"));
                         selections.add(selopt);
@@ -698,7 +687,7 @@ public class Pica extends BaseApi implements OpacApi {
                             .select("table[summary=list of volumes header] tr:has(input[type=radio])");
 
                     if (trs.size() > 0) {
-                        List<Map<String, String>> selections = new ArrayList<Map<String, String>>();
+                        List<Map<String, String>> selections = new ArrayList<>();
                         for (Element tr : trs) {
                             JSONObject values = new JSONObject();
                             for (Element input : doc1
@@ -708,7 +697,7 @@ public class Pica extends BaseApi implements OpacApi {
                             }
                             values.put(tr.select("input").attr("name"), tr
                                     .select("input").attr("value"));
-                            Map<String, String> selopt = new HashMap<String, String>();
+                            Map<String, String> selopt = new HashMap<>();
                             selopt.put("key", values.toString());
                             selopt.put("value", tr.text());
                             selections.add(selopt);
@@ -734,15 +723,15 @@ public class Pica extends BaseApi implements OpacApi {
                             .getString("link"), getDefaultEncoding());
                     Document doc1 = Jsoup.parse(html1);
 
-                    Map<String, String> params = new HashMap<String, String>();
+                    Map<String, String> params = new HashMap<>();
 
                     if (doc1.select("input[type=radio][name=CTRID]").size() > 0 && selection == null) {
                         ReservationResult res = new ReservationResult(
                                 MultiStepResult.Status.SELECTION_NEEDED);
                         res.setActionIdentifier(ReservationResult.ACTION_BRANCH);
-                        List<Map<String, String>> selections = new ArrayList<Map<String, String>>();
+                        List<Map<String, String>> selections = new ArrayList<>();
                         for (Element input : doc1.select("input[type=radio][name=CTRID]")) {
-                            Map<String, String> selopt = new HashMap<String, String>();
+                            Map<String, String> selopt = new HashMap<>();
                             selopt.put("key", input.attr("value"));
                             selopt.put("value", input.parent().parent().text().trim());
                             selections.add(selopt);
@@ -761,7 +750,7 @@ public class Pica extends BaseApi implements OpacApi {
                     params.put("BOR_U", account.getName());
                     params.put("BOR_PW", account.getPassword());
 
-                    List<NameValuePair> paramlist = new ArrayList<NameValuePair>();
+                    List<NameValuePair> paramlist = new ArrayList<>();
                     for (Map.Entry<String, String> param : params.entrySet()) {
                         paramlist.add(new BasicNameValuePair(param.getKey(), param.getValue()));
                     }
@@ -772,11 +761,11 @@ public class Pica extends BaseApi implements OpacApi {
             } else {
                 // A copy has been selected
                 JSONObject values = new JSONObject(selection);
-                List<NameValuePair> params = new ArrayList<NameValuePair>();
+                List<NameValuePair> params = new ArrayList<>();
 
                 Iterator<String> keys = values.keys();
                 while (keys.hasNext()) {
-                    String key = (String) keys.next();
+                    String key = keys.next();
                     String value = values.getString(key);
                     params.add(new BasicNameValuePair(key, value));
                 }
@@ -830,7 +819,7 @@ public class Pica extends BaseApi implements OpacApi {
                         e1.getMessage());
             }
 
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("ACT", "UI_RENEWLOAN"));
 
         params.add(new BasicNameValuePair("BOR_U", account.getName()));
@@ -877,7 +866,7 @@ public class Pica extends BaseApi implements OpacApi {
     @Override
     public CancelResult cancel(String media, Account account, int useraction,
                                String selection) throws IOException, OpacErrorException {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("ACT", "UI_CANCELRES"));
 
         params.add(new BasicNameValuePair("BOR_U", account.getName()));
@@ -920,7 +909,7 @@ public class Pica extends BaseApi implements OpacApi {
         if (!initialised)
             start();
 
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("ACT", "UI_DATA"));
         params.add(new BasicNameValuePair("HOST_NAME", ""));
         params.add(new BasicNameValuePair("HOST_PORT", ""));
@@ -959,8 +948,8 @@ public class Pica extends BaseApi implements OpacApi {
 
         AccountData res = new AccountData(account.getId());
 
-        List<Map<String, String>> medien = new ArrayList<Map<String, String>>();
-        List<Map<String, String>> reserved = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> medien = new ArrayList<>();
+        List<Map<String, String>> reserved = new ArrayList<>();
         if (doc.select("table[summary^=list]").size() > 0) {
             parse_medialist(medien, doc, 1, account.getName());
         }
@@ -971,19 +960,13 @@ public class Pica extends BaseApi implements OpacApi {
         res.setLent(medien);
         res.setReservations(reserved);
 
-        if (medien == null || reserved == null) {
-            throw new OpacErrorException(
-                    stringProvider
-                            .getString(StringProvider.UNKNOWN_ERROR_ACCOUNT));
-            // Log.d("OPACCLIENT", html);
-        }
         return res;
 
     }
 
     protected void parse_medialist(List<Map<String, String>> medien,
                                    Document doc, int offset, String accountName)
-            throws ClientProtocolException, IOException {
+            throws OpacErrorException {
 
         Elements copytrs = doc
                 .select("table[summary^=list] > tbody > tr[valign=top]");
@@ -992,8 +975,7 @@ public class Pica extends BaseApi implements OpacApi {
 
         int trs = copytrs.size();
         if (trs < 1) {
-            medien = null;
-            return;
+            throw new OpacErrorException(stringProvider.getString(StringProvider.COULD_NOT_LOAD_ACCOUNT));
         }
         assert (trs > 0);
         for (int i = 0; i < trs; i++) {
@@ -1001,7 +983,7 @@ public class Pica extends BaseApi implements OpacApi {
             if (tr.select("table[summary=title data]").size() > 0) {
                 // According to HTML code from Bug reports (Server TU Darmstadt,
                 // Berlin Ibero-Amerikanisches Institut)
-                Map<String, String> e = new HashMap<String, String>();
+                Map<String, String> e = new HashMap<>();
                 // Check if there is a checkbox to prolong this item
                 if (tr.select("input").size() > 0)
                     e.put(AccountData.KEY_LENT_LINK,
@@ -1014,7 +996,7 @@ public class Pica extends BaseApi implements OpacApi {
 
                 List<TextNode> textNodes = datatrs.get(1).select("td").first()
                         .textNodes();
-                List<TextNode> nodes = new ArrayList<TextNode>();
+                List<TextNode> nodes = new ArrayList<>();
                 Elements titles = datatrs.get(1).select("span.label-small");
 
                 for (TextNode node : textNodes) {
@@ -1066,8 +1048,8 @@ public class Pica extends BaseApi implements OpacApi {
                     }
                 }
                 String reminderCount = tr.child(13).text().trim();
-                if (reminderCount.indexOf(" Mahn") >= 0
-                        && reminderCount.indexOf("(") >= 0
+                if (reminderCount.contains(" Mahn")
+                        && reminderCount.contains("(")
                         && reminderCount.indexOf("(") < reminderCount
                         .indexOf(" Mahn"))
                     reminderCount = reminderCount.substring(
@@ -1075,7 +1057,7 @@ public class Pica extends BaseApi implements OpacApi {
                             reminderCount.indexOf(" Mahn"));
                 else
                     reminderCount = "";
-                Map<String, String> e = new HashMap<String, String>();
+                Map<String, String> e = new HashMap<>();
 
                 if (tr.child(4).text().trim().length() < 5
                         && tr.child(5).text().trim().length() > 4) {
@@ -1118,8 +1100,8 @@ public class Pica extends BaseApi implements OpacApi {
     }
 
     protected void parse_reslist(List<Map<String, String>> medien,
-                                 Document doc, int offset) throws ClientProtocolException,
-            IOException {
+                                 Document doc, int offset) throws
+            OpacErrorException {
 
         if (doc.select("input[name=LOR_RESERVATIONS]").size() > 0) {
             lor_reservations = doc.select("input[name=LOR_RESERVATIONS]").attr(
@@ -1130,13 +1112,12 @@ public class Pica extends BaseApi implements OpacApi {
 
         int trs = copytrs.size();
         if (trs < 1) {
-            medien = null;
-            return;
+            throw new OpacErrorException(stringProvider.getString(StringProvider.COULD_NOT_LOAD_ACCOUNT));
         }
         assert (trs > 0);
         for (int i = 0; i < trs; i++) {
             Element tr = copytrs.get(i);
-            Map<String, String> e = new HashMap<String, String>();
+            Map<String, String> e = new HashMap<>();
 
             e.put(AccountData.KEY_RESERVATION_TITLE, tr.child(5).text().trim());
             e.put(AccountData.KEY_RESERVATION_READY, tr.child(17).text().trim());
@@ -1149,7 +1130,7 @@ public class Pica extends BaseApi implements OpacApi {
     }
 
     @Override
-    public List<SearchField> getSearchFields() throws ClientProtocolException,
+    public List<SearchField> getSearchFields() throws
             IOException, JSONException {
         if (!initialised)
             start();
@@ -1157,7 +1138,7 @@ public class Pica extends BaseApi implements OpacApi {
         String html = httpGet(opac_url + "/LNG=" + getLang() + "/LNG="
                 + getLang() + "/ADVANCED_SEARCHFILTER", getDefaultEncoding());
         Document doc = Jsoup.parse(html);
-        List<SearchField> fields = new ArrayList<SearchField>();
+        List<SearchField> fields = new ArrayList<>();
 
         Elements options = doc.select("select[name=IKT0] option");
         for (Element option : options) {
@@ -1185,9 +1166,9 @@ public class Pica extends BaseApi implements OpacApi {
             field.setDisplayName(sort.first().parent().parent()
                     .select(".longval").first().text());
             field.setId("SRT");
-            List<Map<String, String>> sortOptions = new ArrayList<Map<String, String>>();
+            List<Map<String, String>> sortOptions = new ArrayList<>();
             for (Element option : sort.select("option")) {
-                Map<String, String> sortOption = new HashMap<String, String>();
+                Map<String, String> sortOption = new HashMap<>();
                 sortOption.put("key", option.attr("value"));
                 sortOption.put("value", option.text());
                 sortOptions.add(sortOption);
@@ -1211,9 +1192,9 @@ public class Pica extends BaseApi implements OpacApi {
             field.setDisplayName(dropdown.parent().parent().select(".longkey")
                     .text());
             field.setId(dropdown.attr("name"));
-            List<Map<String, String>> dropdownOptions = new ArrayList<Map<String, String>>();
+            List<Map<String, String>> dropdownOptions = new ArrayList<>();
             for (Element option : dropdown.select("option")) {
-                Map<String, String> dropdownOption = new HashMap<String, String>();
+                Map<String, String> dropdownOption = new HashMap<>();
                 dropdownOption.put("key", option.attr("value"));
                 dropdownOption.put("value", option.text());
                 dropdownOptions.add(dropdownOption);
@@ -1237,13 +1218,13 @@ public class Pica extends BaseApi implements OpacApi {
             field.setDisplayName("Materialart");
             field.setId("ADI_MAT");
 
-            List<Map<String, String>> values = new ArrayList<Map<String, String>>();
-            Map<String, String> all = new HashMap<String, String>();
+            List<Map<String, String>> values = new ArrayList<>();
+            Map<String, String> all = new HashMap<>();
             all.put("key", "");
             all.put("value", "Alle");
             values.add(all);
             for (Element mt : mediatypes) {
-                Map<String, String> value = new HashMap<String, String>();
+                Map<String, String> value = new HashMap<>();
                 value.put("key", mt.attr("value"));
                 value.put("value", mt.parent().nextElementSibling().text()
                         .replace("\u00a0", ""));
@@ -1267,8 +1248,7 @@ public class Pica extends BaseApi implements OpacApi {
     }
 
     @Override
-    public String getAccountExtendableInfo(Account account) throws IOException,
-            NotReachableException {
+    public String getAccountExtendableInfo(Account account) throws IOException {
         return null;
     }
 
@@ -1338,7 +1318,7 @@ public class Pica extends BaseApi implements OpacApi {
     @Override
     public void checkAccountData(Account account) throws IOException,
             JSONException, OpacErrorException {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("ACT", "UI_DATA"));
         params.add(new BasicNameValuePair("HOST_NAME", ""));
         params.add(new BasicNameValuePair("HOST_PORT", ""));
@@ -1380,7 +1360,7 @@ public class Pica extends BaseApi implements OpacApi {
 
     @Override
     public Set<String> getSupportedLanguages() throws IOException {
-        Set<String> langs = new HashSet<String>();
+        Set<String> langs = new HashSet<>();
         for (String lang : languageCodes.keySet()) {
             String html = httpGet(opac_url + "/DB=" + db + "/LNG="
                             + languageCodes.get(lang) + "/START_WELCOME",

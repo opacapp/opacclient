@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--suppress XmlUnboundNsPrefix, XmlUnboundNsPrefix -->
 <lint>
     <issue id="NewApi">
         <ignore path="src/de/geeksfactory/opacclient/frontend/AccountActivity.java" />

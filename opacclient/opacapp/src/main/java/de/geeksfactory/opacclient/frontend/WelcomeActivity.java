@@ -91,11 +91,7 @@ public class WelcomeActivity extends ActionBarActivity {
             super.doInBackground(arg0);
             try {
                 app.getApi().start();
-            } catch (java.net.UnknownHostException e) {
-                e.printStackTrace();
-            } catch (java.net.SocketException e) {
-                e.printStackTrace();
-            } catch (InterruptedIOException e) {
+            } catch (java.net.UnknownHostException | InterruptedIOException | java.net.SocketException e) {
                 e.printStackTrace();
             } catch (Exception e) {
                 ACRA.getErrorReporter().handleException(e);

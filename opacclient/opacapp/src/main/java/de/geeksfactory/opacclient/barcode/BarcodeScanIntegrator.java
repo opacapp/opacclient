@@ -30,6 +30,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Build;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -74,6 +75,8 @@ public class BarcodeScanIntegrator {
 
     public void initiateScan() {
         PackageManager pm = ctx.getPackageManager();
+        // TODO: We should probably use PackageManager.getInstalledPackages() and iterate through
+        // all of them to avoid those try/catch-blocks
         try {
             pm.getPackageInfo("com.google.zxing.client.android", 0);
             initiate_scan_zxing();
@@ -179,7 +182,12 @@ public class BarcodeScanIntegrator {
         }
         intentScan.setPackage(targetAppPackage);
         intentScan.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intentScan.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            intentScan.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+        } else {
+            //noinspection deprecation
+            intentScan.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        }
         ctx.startActivityForResult(intentScan, REQUEST_CODE_ZXING);
     }
 

@@ -72,7 +72,7 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
  * OCLC.
  */
 public class TouchPoint extends BaseApi implements OpacApi {
-    protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
+    protected static HashMap<String, MediaType> defaulttypes = new HashMap<>();
     static {
         defaulttypes.put("g", MediaType.EBOOK);
         defaulttypes.put("d", MediaType.CD);
@@ -178,7 +178,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
                         + "/search.do?methodToCall=switchSearchPage&SearchType=2",
                 ENCODING);
         Document doc = Jsoup.parse(html);
-        List<SearchField> fields = new ArrayList<SearchField>();
+        List<SearchField> fields = new ArrayList<>();
 
         Elements options = doc
                 .select("select[name=searchCategories[0]] option");
@@ -198,10 +198,10 @@ public class TouchPoint extends BaseApi implements OpacApi {
     }
 
     private void parseDropdown(Element dropdownElement,
-                               List<SearchField> fields, Document doc) throws JSONException {
+                               List<SearchField> fields, Document doc) {
         Elements options = dropdownElement.select("option");
         DropdownSearchField dropdown = new DropdownSearchField();
-        List<Map<String, String>> values = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> values = new ArrayList<>();
         dropdown.setId(dropdownElement.attr("name"));
         // Some fields make no sense or are not supported in the app
         if (dropdown.getId().equals("numberOfHits")
@@ -209,7 +209,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
                 || dropdown.getId().equals("rememberList"))
             return;
         for (Element option : options) {
-            Map<String, String> value = new HashMap<String, String>();
+            Map<String, String> value = new HashMap<>();
             value.put("key", option.attr("value"));
             value.put("value", option.text());
             values.add(value);
@@ -220,8 +220,8 @@ public class TouchPoint extends BaseApi implements OpacApi {
     }
 
     @Override
-    public void start() throws ClientProtocolException, SocketException,
-            IOException, NotReachableException {
+    public void start() throws
+            IOException {
 
         // Some libraries require start parameters for start.do, like Login=foo
         String startparams = "";
@@ -275,9 +275,9 @@ public class TouchPoint extends BaseApi implements OpacApi {
 
     @Override
     public SearchRequestResult search(List<SearchQuery> query)
-            throws IOException, NotReachableException, OpacErrorException,
+            throws IOException, OpacErrorException,
             JSONException {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
 
         int index = 0;
         start();
@@ -327,7 +327,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 
     public SearchRequestResult volumeSearch(Map<String, String> query)
             throws IOException, OpacErrorException {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("methodToCall", "volumeSearch"));
         params.add(new BasicNameValuePair("dbIdentifier", query
                 .get("dbIdentifier")));
@@ -341,7 +341,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 
     @Override
     public SearchRequestResult searchGetPage(int page) throws IOException,
-            NotReachableException, OpacErrorException {
+            OpacErrorException {
         if (!initialised)
             start();
 
@@ -411,7 +411,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
             }
         }
 
-        List<SearchResult> results = new ArrayList<SearchResult>();
+        List<SearchResult> results = new ArrayList<>();
         for (int i = 0; i < table.size(); i++) {
             Element tr = table.get(i);
             SearchResult sr = new SearchResult();
@@ -434,9 +434,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
                     try {
                         sr.setType(MediaType.valueOf(data.getJSONObject(
                                 "mediatypes").getString(fname)));
-                    } catch (JSONException e) {
-                        sr.setType(defaulttype);
-                    } catch (IllegalArgumentException e) {
+                    } catch (JSONException | IllegalArgumentException e) {
                         sr.setType(defaulttype);
                     }
                 } else {
@@ -482,7 +480,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
                 String ajaxUrl = matchJSVariable(js, "ajaxUrl");
                 if (!"".equals(ajaxUrl)) {
                     JSONObject id = new JSONObject();
-                    List<NameValuePair> map = new ArrayList<NameValuePair>();
+                    List<NameValuePair> map = new ArrayList<>();
                     for (String variable : variables) {
                         String value = matchJSVariable(js, variable);
                         if (!"".equals(value)) {
@@ -539,10 +537,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
                 }
             }
 
-            StringBuilder description = new StringBuilder();
-            description.append("<b>" + title + "</b><br/>");
-            description.append(text);
-            sr.setInnerhtml(description.toString());
+            sr.setInnerhtml(("<b>" + title + "</b><br/>") + text);
 
             sr.setNr(10 * (page - 1) + i + 1);
             results.add(sr);
@@ -563,7 +558,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 
     @Override
     public DetailledItem getResultById(String id, String homebranch)
-            throws IOException, NotReachableException {
+            throws IOException {
 
         if (id == null && reusehtml != null) {
             DetailledItem r = parse_result(reusehtml);
@@ -640,7 +635,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
             String copiesHtml = httpGet(opac_url + "/" + copiesParameter,
                     ENCODING);
             Document copiesDoc = Jsoup.parse(copiesHtml);
-            List<String> table_keys = new ArrayList<String>();
+            List<String> table_keys = new ArrayList<>();
             for (Element th : copiesDoc.select(".data tr th")) {
                 if (th.text().contains("Zweigstelle"))
                     table_keys.add(DetailledItem.KEY_COPY_BRANCH);
@@ -652,7 +647,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
                     table_keys.add(null);
             }
             for (Element tr : copiesDoc.select(".data tr:has(td)")) {
-                Map<String, String> copy = new HashMap<String, String>();
+                Map<String, String> copy = new HashMap<>();
                 int i = 0;
                 for (Element td : tr.select("td")) {
                     if (table_keys.get(i) != null)
@@ -687,7 +682,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 
         try {
             Element isvolume = null;
-            Map<String, String> volume = new HashMap<String, String>();
+            Map<String, String> volume = new HashMap<>();
             Elements links = doc.select(".data td a");
             int elcount = links.size();
             for (int eli = 0; eli < elcount; eli++) {
@@ -745,7 +740,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
             return new ReservationResult(MultiStepResult.Status.ERROR, doc
                     .select(".message-error").first().text());
         }
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+        List<NameValuePair> nameValuePairs = new ArrayList<>();
         nameValuePairs
                 .add(new BasicNameValuePair("methodToCall", "requestItem"));
         if (doc.select("#newNeedBeforeDate").size() > 0) {
@@ -757,9 +752,9 @@ public class TouchPoint extends BaseApi implements OpacApi {
             Elements options = doc.select("select[name=location] option");
             ReservationResult res = new ReservationResult(
                     MultiStepResult.Status.SELECTION_NEEDED);
-            List<Map<String, String>> optionsMap = new ArrayList<Map<String, String>>();
+            List<Map<String, String>> optionsMap = new ArrayList<>();
             for (Element option : options) {
-                Map<String, String> selopt = new HashMap<String, String>();
+                Map<String, String> selopt = new HashMap<>();
                 selopt.put("key", option.attr("value"));
                 selopt.put("value", option.text());
                 optionsMap.add(selopt);
@@ -838,19 +833,19 @@ public class TouchPoint extends BaseApi implements OpacApi {
 
     @Override
     public AccountData account(Account acc) throws IOException,
-            NotReachableException, JSONException, SocketException,
+            JSONException,
             OpacErrorException {
         start();
         if (!login(acc))
             return null;
         AccountData adata = new AccountData(acc.getId());
         // Lent media
-        String html = httpGet(opac_url + "/userAccount.do?methodToCall=start",
+        httpGet(opac_url + "/userAccount.do?methodToCall=start",
                 ENCODING);
-        html = httpGet(opac_url
+        String html = httpGet(opac_url
                         + "/userAccount.do?methodToCall=showAccount&accountTyp=loaned",
                 ENCODING);
-        List<Map<String, String>> lent = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> lent = new ArrayList<>();
         Document doc = Jsoup.parse(html);
         doc.setBaseUri(opac_url);
         parse_medialist(lent, doc);
@@ -872,7 +867,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
                 ENCODING);
         doc = Jsoup.parse(html);
         doc.setBaseUri(opac_url);
-        List<Map<String, String>> requested = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> requested = new ArrayList<>();
         parse_reslist(requested, doc);
         if (doc.select(".pagination").size() > 0) {
             Element pagination = doc.select(".pagination").first();
@@ -912,7 +907,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
         assert (trs > 0);
         for (int i = 1; i < trs; i++) {
             Element tr = copytrs.get(i);
-            Map<String, String> e = new HashMap<String, String>();
+            Map<String, String> e = new HashMap<>();
 
             if (tr.text().contains("keine Daten")) {
                 return;
@@ -964,7 +959,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
     }
 
     protected void parse_reslist(List<Map<String, String>> reservations,
-                                 Document doc) throws ClientProtocolException, IOException {
+                                 Document doc) {
         Elements copytrs = doc.select(".data tr");
         doc.setBaseUri(opac_url);
         int trs = copytrs.size();
@@ -973,7 +968,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
         assert (trs > 0);
         for (int i = 1; i < trs; i++) {
             Element tr = copytrs.get(i);
-            Map<String, String> e = new HashMap<String, String>();
+            Map<String, String> e = new HashMap<>();
 
             if (tr.text().contains("keine Daten") || tr.children().size() == 1) {
                 return;
@@ -1006,14 +1001,11 @@ public class TouchPoint extends BaseApi implements OpacApi {
     protected boolean login(Account acc) throws OpacErrorException {
         String html;
 
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+        List<NameValuePair> nameValuePairs = new ArrayList<>();
 
         try {
-            html = httpGet(opac_url + "/login.do", ENCODING);
-        } catch (ClientProtocolException e1) {
-            e1.printStackTrace();
+            httpGet(opac_url + "/login.do", ENCODING);
         } catch (IOException e1) {
-
             e1.printStackTrace();
         }
 
@@ -1062,8 +1054,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 
     @Override
     public String getAccountExtendableInfo(Account acc)
-            throws ClientProtocolException, SocketException, IOException,
-            NotReachableException {
+            throws IOException {
         return null;
     }
 
@@ -1103,7 +1094,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 
     @Override
     public SearchRequestResult filterResults(Filter filter, Option option)
-            throws IOException, NotReachableException, OpacErrorException {
+            throws IOException, OpacErrorException {
         // TODO Auto-generated method stub
         return null;
     }

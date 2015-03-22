@@ -85,7 +85,7 @@ public abstract class BaseApi implements OpacApi {
         try {
             if (parts.length > 1) {
                 url += "?";
-                List<NameValuePair> params = new ArrayList<NameValuePair>();
+                List<NameValuePair> params = new ArrayList<>();
                 String[] pairs = parts[1].split("&");
                 for (String pair : pairs) {
                     String[] kv = pair.split("=");
@@ -122,10 +122,10 @@ public abstract class BaseApi implements OpacApi {
         }
         StringBuilder sb = new StringBuilder();
 
-        String line = null;
+        String line;
         try {
             while ((line = reader.readLine()) != null) {
-                sb.append((line + "\n"));
+                sb.append(line).append("\n");
             }
         } finally {
             try {
@@ -144,7 +144,7 @@ public abstract class BaseApi implements OpacApi {
 
     protected static Map<String, String> searchQueryListToMap(
             List<SearchQuery> queryList) {
-        Map<String, String> queryMap = new HashMap<String, String>();
+        Map<String, String> queryMap = new HashMap<>();
         for (SearchQuery query : queryList) {
             queryMap.put(query.getKey(), query.getValue());
         }
@@ -156,7 +156,7 @@ public abstract class BaseApi implements OpacApi {
      */
     public static Map<String, List<String>> getQueryParams(String url) {
         try {
-            Map<String, List<String>> params = new HashMap<String, List<String>>();
+            Map<String, List<String>> params = new HashMap<>();
             String[] urlParts = url.split("\\?");
             if (urlParts.length > 1) {
                 String query = urlParts[1];
@@ -170,7 +170,7 @@ public abstract class BaseApi implements OpacApi {
 
                     List<String> values = params.get(key);
                     if (values == null) {
-                        values = new ArrayList<String>();
+                        values = new ArrayList<>();
                         params.put(key, values);
                     }
                     values.add(value);
@@ -190,7 +190,7 @@ public abstract class BaseApi implements OpacApi {
      */
     public static Map<String, String> getQueryParamsFirst(String url) {
         try {
-            Map<String, String> params = new HashMap<String, String>();
+            Map<String, String> params = new HashMap<>();
             String[] urlParts = url.split("\\?");
             if (urlParts.length > 1) {
                 String query = urlParts[1];
@@ -225,7 +225,7 @@ public abstract class BaseApi implements OpacApi {
         stringProvider = new DummyStringProvider();
     }
 
-    public void start() throws IOException, NotReachableException {
+    public void start() throws IOException {
         supportedLanguages = getSupportedLanguages();
         initialised = true;
     }
@@ -243,7 +243,7 @@ public abstract class BaseApi implements OpacApi {
      *                               equal than 400.
      */
     public String httpGet(String url, String encoding, boolean ignore_errors,
-                          CookieStore cookieStore) throws ClientProtocolException,
+                          CookieStore cookieStore) throws
             IOException {
 
         HttpGet httpget = new HttpGet(cleanUrl(url));
@@ -271,21 +271,6 @@ public abstract class BaseApi implements OpacApi {
             html = convertStreamToString(response.getEntity().getContent(),
                     encoding);
             response.getEntity().consumeContent();
-        } catch (ConnectTimeoutException e) {
-            e.printStackTrace();
-            throw new NotReachableException();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-            throw new NotReachableException();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-            throw new NotReachableException();
-        } catch (NoHttpResponseException e) {
-            e.printStackTrace();
-            throw new NotReachableException();
-        } catch (MalformedChunkCodingException e) {
-            e.printStackTrace();
-            throw new NotReachableException();
         } catch (javax.net.ssl.SSLPeerUnverifiedException e) {
             throw new SSLSecurityException();
         } catch (javax.net.ssl.SSLException e) {
@@ -314,17 +299,17 @@ public abstract class BaseApi implements OpacApi {
     }
 
     public String httpGet(String url, String encoding, boolean ignore_errors)
-            throws ClientProtocolException, IOException {
+            throws IOException {
         return httpGet(url, encoding, ignore_errors, null);
     }
 
     public String httpGet(String url, String encoding)
-            throws ClientProtocolException, IOException {
+            throws IOException {
         return httpGet(url, encoding, false, null);
     }
 
     @Deprecated
-    public String httpGet(String url) throws ClientProtocolException,
+    public String httpGet(String url) throws
             IOException {
         return httpGet(url, getDefaultEncoding(), false, null);
     }
@@ -350,7 +335,6 @@ public abstract class BaseApi implements OpacApi {
 
         } catch (IOException e) {
             e.printStackTrace();
-            return;
         }
     }
 
@@ -369,11 +353,11 @@ public abstract class BaseApi implements OpacApi {
      */
     public String httpPost(String url, UrlEncodedFormEntity data,
                            String encoding, boolean ignore_errors, CookieStore cookieStore)
-            throws ClientProtocolException, IOException {
+            throws IOException {
         HttpPost httppost = new HttpPost(cleanUrl(url));
         httppost.setEntity(data);
 
-        HttpResponse response = null;
+        HttpResponse response;
         String html;
         try {
             if (cookieStore != null) {
@@ -394,21 +378,6 @@ public abstract class BaseApi implements OpacApi {
             html = convertStreamToString(response.getEntity().getContent(),
                     encoding);
             response.getEntity().consumeContent();
-        } catch (ConnectTimeoutException e) {
-            e.printStackTrace();
-            throw new NotReachableException();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-            throw new NotReachableException();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-            throw new NotReachableException();
-        } catch (NoHttpResponseException e) {
-            e.printStackTrace();
-            throw new NotReachableException();
-        } catch (MalformedChunkCodingException e) {
-            e.printStackTrace();
-            throw new NotReachableException();
         } catch (javax.net.ssl.SSLPeerUnverifiedException e) {
             throw new SSLSecurityException();
         } catch (javax.net.ssl.SSLException e) {
@@ -438,18 +407,18 @@ public abstract class BaseApi implements OpacApi {
 
     public String httpPost(String url, UrlEncodedFormEntity data,
                            String encoding, boolean ignore_errors)
-            throws ClientProtocolException, IOException {
+            throws IOException {
         return httpPost(url, data, encoding, ignore_errors, null);
     }
 
     public String httpPost(String url, UrlEncodedFormEntity data,
-                           String encoding) throws ClientProtocolException, IOException {
+                           String encoding) throws IOException {
         return httpPost(url, data, encoding, false, null);
     }
 
     @Deprecated
     public String httpPost(String url, UrlEncodedFormEntity data)
-            throws ClientProtocolException, IOException {
+            throws IOException {
         return httpPost(url, data, getDefaultEncoding(), false, null);
     }
 

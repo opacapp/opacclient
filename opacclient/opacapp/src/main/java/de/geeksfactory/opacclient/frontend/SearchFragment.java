@@ -21,7 +21,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -40,7 +39,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.SSLSecurityException;
@@ -86,7 +84,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
         setRetainInstance(true);
 
-        sp = PreferenceManager.getDefaultSharedPreferences((OpacActivity) getActivity());
+        sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         app = (OpacClient) getActivity().getApplication();
 
         // if (getIntent().getBooleanExtra("barcode", false)) {
@@ -290,7 +288,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
                 // Load saved home branch
                 if (field.getMeaning() == Meaning.HOME_BRANCH) {
-                    String selection = "";
+                    String selection;
                     if (sp.contains(OpacClient.PREF_HOME_BRANCH_PREFIX
                             + app.getAccount().getId())) {
                         selection = sp.getString(
@@ -443,7 +441,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
         errorView.removeAllViews();
         View connError = getActivity().getLayoutInflater().inflate(
                 R.layout.error_connectivity, errorView);
-        ((Button) connError.findViewById(R.id.btRetry))
+        connError.findViewById(R.id.btRetry)
                 .setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -488,7 +486,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
         }
 
         saveHomeBranch();
-        Map<String, String> query = new HashMap<String, String>();
+        Map<String, String> query = new HashMap<>();
 
         if (fields == null) {
             SearchFieldDataSource dataSource = new JsonSearchFieldDataSource(
@@ -552,7 +550,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
     public List<SearchQuery> saveSearchQuery() {
         saveHomeBranch();
-        List<SearchQuery> query = new ArrayList<SearchQuery>();
+        List<SearchQuery> query = new ArrayList<>();
         if (fields == null) {
             return null;
         }
@@ -717,7 +715,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
             EditText text = (EditText) v.findViewById(R.id.edittext);
             text.setText(scanResult.getContents());
             barcodeScanningField = null;
-            scanResult = null;
+            this.scanResult = null;
         }
     }
 
@@ -757,16 +755,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
                 saveFields(fields);
                 return fields;
-            } catch (OpacErrorException e) {
-                exception = e;
-                e.printStackTrace();
-            } catch (NotReachableException e) {
-                exception = e;
-                e.printStackTrace();
-            } catch (IOException e) {
-                exception = e;
-                e.printStackTrace();
-            } catch (JSONException e) {
+            } catch (OpacErrorException | IOException | JSONException e) {
                 exception = e;
                 e.printStackTrace();
             }

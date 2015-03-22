@@ -36,7 +36,7 @@ public class Main {
                 "../opacclient/assets/meanings").getIgnoredFields();
         Scanner in = new Scanner(System.in);
         final ExecutorService service = Executors.newFixedThreadPool(25);
-        List<TaskInfo> tasks = new ArrayList<TaskInfo>();
+        List<TaskInfo> tasks = new ArrayList<>();
         for (String[] libraryNameArray : libraries) {
             String libraryName = libraryNameArray[0];
             Library library;
@@ -114,11 +114,7 @@ public class Main {
                         }
                     }
                 }
-            } catch (JSONException | IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
+            } catch (JSONException | IOException | ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
         }
@@ -127,7 +123,7 @@ public class Main {
     }
 
     private static Collection<String[]> libraries() {
-        List<String[]> libraries = new ArrayList<String[]>();
+        List<String[]> libraries = new ArrayList<>();
         for (String file : new File("../opacclient/assets/bibs/").list()) {
             libraries.add(new String[]{file.replace(".json", "")});
         }

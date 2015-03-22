@@ -1,7 +1,5 @@
 package de.geeksfactory.opacclient.tests.apitests;
 
-import junit.framework.TestCase;
-
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized.Parameters;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,7 +47,7 @@ import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
 @RunWith(Parallelized.class)
-public class LibraryApiTestCases extends TestCase {
+public class LibraryApiTestCases {
 
 	private Library library;
 	private OpacApi api;
@@ -65,7 +64,7 @@ public class LibraryApiTestCases extends TestCase {
 
 	@Parameters(name = "{0}")
 	public static Collection<String[]> libraries() {
-		List<String[]> libraries = new ArrayList<String[]>();
+		List<String[]> libraries = new ArrayList<>();
 		for (String file : new File(FOLDER + "/assets/bibs/").list()) {
 			libraries.add(new String[] { file.replace(".json", "") });
 		}
@@ -73,7 +72,7 @@ public class LibraryApiTestCases extends TestCase {
 	}
 
 	@Before
-	public void setUp() throws NotReachableException, IOException,
+	public void setUp() throws IOException,
 			OpacErrorException, JSONException {
 		Security.addProvider(new BouncyCastleProvider());
 		api = getApi(library);
@@ -85,9 +84,9 @@ public class LibraryApiTestCases extends TestCase {
 	}
 
 	@Test
-	public void testEmptySearch() throws NotReachableException, IOException,
+	public void testEmptySearch() throws IOException,
 			OpacErrorException, JSONException {
-		List<SearchQuery> query = new ArrayList<SearchQuery>();
+		List<SearchQuery> query = new ArrayList<>();
 		SearchField field = findFreeSearchOrTitle(fields);
 		if (field == null)
 			throw new OpacErrorException( // TODO: prevent this
@@ -103,9 +102,9 @@ public class LibraryApiTestCases extends TestCase {
 	}
 
 	@Test
-	public void testSearchScrolling() throws NotReachableException,
-			IOException, OpacErrorException, JSONException {
-		List<SearchQuery> query = new ArrayList<SearchQuery>();
+	public void testSearchScrolling() throws
+            IOException, OpacErrorException, JSONException {
+		List<SearchQuery> query = new ArrayList<>();
 		SearchField field = findFreeSearchOrTitle(fields);
 		if (field == null)
 			throw new OpacErrorException( // TODO: prevent this

@@ -57,8 +57,8 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
 public class Adis extends BaseApi implements OpacApi {
 
-    protected static HashMap<String, MediaType> types = new HashMap<String, MediaType>();
-    protected static HashSet<String> ignoredFieldNames = new HashSet<String>();
+    protected static HashMap<String, MediaType> types = new HashMap<>();
+    protected static HashSet<String> ignoredFieldNames = new HashSet<>();
     static {
         types.put("Buch", MediaType.BOOK);
         types.put("Band", MediaType.BOOK);
@@ -100,7 +100,7 @@ public class Adis extends BaseApi implements OpacApi {
 
     public static Map<String, List<String>> getQueryParams(String url) {
         try {
-            Map<String, List<String>> params = new HashMap<String, List<String>>();
+            Map<String, List<String>> params = new HashMap<>();
             String[] urlParts = url.split("\\?");
             if (urlParts.length > 1) {
                 String query = urlParts[1];
@@ -114,7 +114,7 @@ public class Adis extends BaseApi implements OpacApi {
 
                     List<String> values = params.get(key);
                     if (values == null) {
-                        values = new ArrayList<String>();
+                        values = new ArrayList<>();
                         params.put(key, values);
                     }
                     values.add(value);
@@ -127,7 +127,7 @@ public class Adis extends BaseApi implements OpacApi {
         }
     }
 
-    public Document htmlGet(String url) throws ClientProtocolException,
+    public Document htmlGet(String url) throws
             IOException {
 
         if (!url.contains("requestCount")) {
@@ -140,24 +140,6 @@ public class Adis extends BaseApi implements OpacApi {
 
         try {
             response = http_client.execute(httpget);
-        } catch (ConnectTimeoutException e) {
-            e.printStackTrace();
-            throw new NotReachableException();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-            throw new NotReachableException();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-            throw new NotReachableException();
-        } catch (NoHttpResponseException e) {
-            e.printStackTrace();
-            throw new NotReachableException();
-        } catch (HttpHostConnectException e) {
-            e.printStackTrace();
-            throw new NotReachableException();
-        } catch (MalformedChunkCodingException e) {
-            e.printStackTrace();
-            throw new NotReachableException();
         } catch (javax.net.ssl.SSLPeerUnverifiedException e) {
             throw new SSLSecurityException();
         } catch (javax.net.ssl.SSLException e) {
@@ -201,7 +183,7 @@ public class Adis extends BaseApi implements OpacApi {
     }
 
     public Document htmlPost(String url, List<NameValuePair> data)
-            throws ClientProtocolException, IOException {
+            throws IOException {
         HttpPost httppost = new HttpPost(cleanUrl(url));
 
         boolean rcf = false;
@@ -216,29 +198,11 @@ public class Adis extends BaseApi implements OpacApi {
         }
 
         httppost.setEntity(new UrlEncodedFormEntity(data));
-        HttpResponse response = null;
+        HttpResponse response;
 
         try {
             response = http_client.execute(httppost);
 
-        } catch (ConnectTimeoutException e) {
-            e.printStackTrace();
-            throw new NotReachableException();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-            throw new NotReachableException();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-            throw new NotReachableException();
-        } catch (HttpHostConnectException e) {
-            e.printStackTrace();
-            throw new NotReachableException();
-        } catch (NoHttpResponseException e) {
-            e.printStackTrace();
-            throw new NotReachableException();
-        } catch (MalformedChunkCodingException e) {
-            e.printStackTrace();
-            throw new NotReachableException();
         } catch (javax.net.ssl.SSLPeerUnverifiedException e) {
             throw new SSLSecurityException();
         } catch (javax.net.ssl.SSLException e) {
@@ -283,7 +247,7 @@ public class Adis extends BaseApi implements OpacApi {
     }
 
     @Override
-    public void start() throws IOException, NotReachableException {
+    public void start() throws IOException {
         s_accountcalled = false;
 
         try {
@@ -322,7 +286,7 @@ public class Adis extends BaseApi implements OpacApi {
 
     @Override
     public SearchRequestResult search(List<SearchQuery> queries)
-            throws IOException, NotReachableException, OpacErrorException {
+            throws IOException, OpacErrorException {
         start();
         // TODO: There are also libraries with a different search form,
         // s_exts=SS2 instead of s_exts=SS6
@@ -331,7 +295,7 @@ public class Adis extends BaseApi implements OpacApi {
                 + s_service + "&sp=" + s_exts);
 
         int cnt = 0;
-        List<NameValuePair> nvpairs = new ArrayList<NameValuePair>();
+        List<NameValuePair> nvpairs = new ArrayList<>();
         for (SearchQuery query : queries) {
             if (!query.getValue().equals("")) {
 
@@ -396,7 +360,7 @@ public class Adis extends BaseApi implements OpacApi {
         }
 
         int total_result_count = -1;
-        List<SearchResult> results = new ArrayList<SearchResult>();
+        List<SearchResult> results = new ArrayList<>();
 
         if (doc.select("#right #R06").size() > 0) {
             Pattern patNum = Pattern
@@ -441,7 +405,7 @@ public class Adis extends BaseApi implements OpacApi {
             results.add(res);
         }
 
-        s_pageform = new ArrayList<NameValuePair>();
+        s_pageform = new ArrayList<>();
         for (Element input : doc.select("input, select")) {
             if (!"image".equals(input.attr("type"))
                     && !"submit".equals(input.attr("type"))
@@ -470,18 +434,18 @@ public class Adis extends BaseApi implements OpacApi {
 
     @Override
     public SearchRequestResult filterResults(Filter filter, Option option)
-            throws IOException, NotReachableException {
+            throws IOException {
         throw new UnsupportedOperationException();
     }
 
     @Override
     public SearchRequestResult searchGetPage(int page) throws IOException,
-            NotReachableException, OpacErrorException {
+            OpacErrorException {
         SearchRequestResult res = null;
         while (page != s_lastpage) {
             List<NameValuePair> nvpairs = s_pageform;
             int i = 0;
-            List<Integer> indexes = new ArrayList<Integer>();
+            List<Integer> indexes = new ArrayList<>();
             for (NameValuePair np : nvpairs) {
                 if (np.getName().contains("$Toolbar_")) {
                     indexes.add(i);
@@ -511,7 +475,7 @@ public class Adis extends BaseApi implements OpacApi {
 
     @Override
     public DetailledItem getResultById(String id, String homebranch)
-            throws IOException, NotReachableException, OpacErrorException {
+            throws IOException, OpacErrorException {
 
         Document doc;
         List<NameValuePair> nvpairs;
@@ -521,7 +485,7 @@ public class Adis extends BaseApi implements OpacApi {
         } else {
             nvpairs = s_pageform;
             int i = 0;
-            List<Integer> indexes = new ArrayList<Integer>();
+            List<Integer> indexes = new ArrayList<>();
             for (NameValuePair np : nvpairs) {
                 if (np.getName().contains("$Toolbar_")
                         || np.getName().contains("selected")) {
@@ -535,7 +499,7 @@ public class Adis extends BaseApi implements OpacApi {
             nvpairs.add(new BasicNameValuePair("selected", "ZTEXT       " + id));
             doc = htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs);
 
-            List<NameValuePair> form = new ArrayList<NameValuePair>();
+            List<NameValuePair> form = new ArrayList<>();
             for (Element input : doc.select("input, select")) {
                 if (!"image".equals(input.attr("type"))
                         && !"submit".equals(input.attr("type"))
@@ -579,7 +543,7 @@ public class Adis extends BaseApi implements OpacApi {
             res.setReservation_info(id);
         }
 
-        Map<Integer, String> colmap = new HashMap<Integer, String>();
+        Map<Integer, String> colmap = new HashMap<>();
         int i = 0;
         for (Element th : doc.select("#R08 table.rTable_table thead tr th")) {
             String head = th.text().trim();
@@ -597,7 +561,7 @@ public class Adis extends BaseApi implements OpacApi {
         }
 
         for (Element tr : doc.select("#R08 table.rTable_table tbody tr")) {
-            Map<String, String> line = new HashMap<String, String>();
+            Map<String, String> line = new HashMap<>();
             for (Entry<Integer, String> entry : colmap.entrySet()) {
                 if (entry.getValue().equals(DetailledItem.KEY_COPY_STATUS)) {
                     String status = tr.child(entry.getKey()).text().trim();
@@ -618,7 +582,7 @@ public class Adis extends BaseApi implements OpacApi {
         }
 
         // Reset
-        s_pageform = new ArrayList<NameValuePair>();
+        s_pageform = new ArrayList<>();
         for (Element input : doc.select("input, select")) {
             if (!"image".equals(input.attr("type"))
                     && !"submit".equals(input.attr("type"))
@@ -669,7 +633,7 @@ public class Adis extends BaseApi implements OpacApi {
         // Load details
         nvpairs = s_pageform;
         int i = 0;
-        List<Integer> indexes = new ArrayList<Integer>();
+        List<Integer> indexes = new ArrayList<>();
         for (NameValuePair np : nvpairs) {
             if (np.getName().contains("$Toolbar_")
                     || np.getName().contains("selected")) {
@@ -682,11 +646,11 @@ public class Adis extends BaseApi implements OpacApi {
         }
         nvpairs.add(new BasicNameValuePair("selected", "ZTEXT       "
                 + item.getReservation_info()));
-        doc = htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs);
+        htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs);
         doc = htmlPost(opac_url + ";jsessionid=" + s_sid, nvpairs); // Yep, two
         // times.
 
-        List<NameValuePair> form = new ArrayList<NameValuePair>();
+        List<NameValuePair> form = new ArrayList<>();
         for (Element input : doc.select("input, select")) {
             if (!"image".equals(input.attr("type"))
                     && (!"submit".equals(input.attr("type"))
@@ -702,7 +666,7 @@ public class Adis extends BaseApi implements OpacApi {
         if (doc.select(".message h1").size() > 0) {
             String msg = doc.select(".message h1").text().trim();
             res = new ReservationResult(MultiStepResult.Status.ERROR, msg);
-            form = new ArrayList<NameValuePair>();
+            form = new ArrayList<>();
             for (Element input : doc.select("input")) {
                 if (!"image".equals(input.attr("type"))
                         && !"checkbox".equals(input.attr("type"))
@@ -724,14 +688,14 @@ public class Adis extends BaseApi implements OpacApi {
                     && doc.select("#AUSGAB_1").size() == 0) {
                 res = new ReservationResult(
                         MultiStepResult.Status.CONFIRMATION_NEEDED);
-                List<String[]> details = new ArrayList<String[]>();
+                List<String[]> details = new ArrayList<>();
                 details.add(new String[]{doc.select("#F23").text()});
                 res.setDetails(details);
             } else if (doc.select("#AUSGAB_1").size() > 0 && selection == null) {
-                List<Map<String, String>> sel = new ArrayList<Map<String, String>>();
+                List<Map<String, String>> sel = new ArrayList<>();
                 for (Element opt : doc.select("#AUSGAB_1 option")) {
                     if (opt.text().trim().length() > 0) {
-                        Map<String, String> selopt = new HashMap<String, String>();
+                        Map<String, String> selopt = new HashMap<>();
                         selopt.put("key", opt.val());
                         selopt.put("value", opt.text());
                         sel.add(selopt);
@@ -747,7 +711,7 @@ public class Adis extends BaseApi implements OpacApi {
                 }
                 if (doc.select(".message h1").size() > 0) {
                     String msg = doc.select(".message h1").text().trim();
-                    form = new ArrayList<NameValuePair>();
+                    form = new ArrayList<>();
                     for (Element input : doc.select("input")) {
                         if (!"image".equals(input.attr("type"))
                                 && !"checkbox".equals(input.attr("type"))
@@ -765,7 +729,7 @@ public class Adis extends BaseApi implements OpacApi {
                                 msg);
                     }
                 } else {
-                    form = new ArrayList<NameValuePair>();
+                    form = new ArrayList<>();
                     for (Element input : doc.select("input, select")) {
                         if (!"image".equals(input.attr("type"))
                                 && !"submit".equals(input.attr("type"))
@@ -782,7 +746,7 @@ public class Adis extends BaseApi implements OpacApi {
 
                     if (doc.select(".message h1").size() > 0) {
                         String msg = doc.select(".message h1").text().trim();
-                        form = new ArrayList<NameValuePair>();
+                        form = new ArrayList<>();
                         for (Element input : doc.select("input")) {
                             if (!"image".equals(input.attr("type"))
                                     && !"checkbox".equals(input.attr("type"))
@@ -802,7 +766,7 @@ public class Adis extends BaseApi implements OpacApi {
                     } else if (doc.select("#R01").text()
                             .contains("Informationen zu Ihrer Reservation")) {
                         String msg = doc.select("#OPACLI").text().trim();
-                        form = new ArrayList<NameValuePair>();
+                        form = new ArrayList<>();
                         for (Element input : doc.select("input")) {
                             if (!"image".equals(input.attr("type"))
                                     && !"checkbox".equals(input.attr("type"))
@@ -827,7 +791,7 @@ public class Adis extends BaseApi implements OpacApi {
         if (res == null
                 || res.getStatus() == MultiStepResult.Status.SELECTION_NEEDED
                 || res.getStatus() == MultiStepResult.Status.CONFIRMATION_NEEDED) {
-            form = new ArrayList<NameValuePair>();
+            form = new ArrayList<>();
             for (Element input : doc.select("input, select")) {
                 if (!"image".equals(input.attr("type"))
                         && !"submit".equals(input.attr("type"))
@@ -842,7 +806,7 @@ public class Adis extends BaseApi implements OpacApi {
         }
 
         // Reset
-        s_pageform = new ArrayList<NameValuePair>();
+        s_pageform = new ArrayList<>();
         for (Element input : doc.select("input, select")) {
             if (!"image".equals(input.attr("type"))
                     && !"submit".equals(input.attr("type"))
@@ -901,7 +865,7 @@ public class Adis extends BaseApi implements OpacApi {
 
         doc = htmlGet(alink);
 
-        List<NameValuePair> form = new ArrayList<NameValuePair>();
+        List<NameValuePair> form = new ArrayList<>();
         for (Element input : doc.select("input, select")) {
             if (!"image".equals(input.attr("type"))
                     && !"submit".equals(input.attr("type"))
@@ -916,7 +880,7 @@ public class Adis extends BaseApi implements OpacApi {
                     && tr.select("input").hasAttr("disabled")) {
                 form.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
                 form.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
-                doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+                htmlPost(opac_url + ";jsessionid=" + s_sid, form);
                 return new ProlongResult(Status.ERROR, tr.child(4).text()
                         .trim());
             }
@@ -926,7 +890,7 @@ public class Adis extends BaseApi implements OpacApi {
                 "Markierte Titel verlängern"));
         doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
 
-        form = new ArrayList<NameValuePair>();
+        form = new ArrayList<>();
         for (Element input : doc.select("input, select")) {
             if (!"image".equals(input.attr("type"))
                     && !"submit".equals(input.attr("type"))
@@ -938,7 +902,7 @@ public class Adis extends BaseApi implements OpacApi {
         }
         form.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
         form.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
-        doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+        htmlPost(opac_url + ";jsessionid=" + s_sid, form);
 
         return new ProlongResult(Status.OK);
     }
@@ -973,7 +937,7 @@ public class Adis extends BaseApi implements OpacApi {
 
         doc = htmlGet(alink);
 
-        List<NameValuePair> form = new ArrayList<NameValuePair>();
+        List<NameValuePair> form = new ArrayList<>();
         for (Element input : doc.select("input, select")) {
             if (!"image".equals(input.attr("type"))
                     && !"submit".equals(input.attr("type"))
@@ -991,9 +955,9 @@ public class Adis extends BaseApi implements OpacApi {
                 "Markierte Titel verlängern"));
         doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
 
-        List<Map<String, String>> result = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> result = new ArrayList<>();
         for (Element tr : doc.select(".rTable_div tbody tr")) {
-            Map<String, String> line = new HashMap<String, String>();
+            Map<String, String> line = new HashMap<>();
             line.put(ProlongAllResult.KEY_LINE_TITLE,
                     tr.child(3).text().split("[:/;]")[0].trim());
             line.put(ProlongAllResult.KEY_LINE_NEW_RETURNDATE, tr.child(1)
@@ -1002,7 +966,7 @@ public class Adis extends BaseApi implements OpacApi {
             result.add(line);
         }
 
-        form = new ArrayList<NameValuePair>();
+        form = new ArrayList<>();
         for (Element input : doc.select("input, select")) {
             if (!"image".equals(input.attr("type"))
                     && !"submit".equals(input.attr("type"))
@@ -1014,7 +978,7 @@ public class Adis extends BaseApi implements OpacApi {
         }
         form.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
         form.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
-        doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+        htmlPost(opac_url + ";jsessionid=" + s_sid, form);
 
         return new ProlongAllResult(Status.OK, result);
     }
@@ -1052,7 +1016,7 @@ public class Adis extends BaseApi implements OpacApi {
 
         doc = htmlGet(rlink);
 
-        List<NameValuePair> form = new ArrayList<NameValuePair>();
+        List<NameValuePair> form = new ArrayList<>();
         for (Element input : doc.select("input, select")) {
             if (!"image".equals(input.attr("type"))
                     && !"submit".equals(input.attr("type"))
@@ -1067,7 +1031,7 @@ public class Adis extends BaseApi implements OpacApi {
                 "Markierte Titel löschen"));
         doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
 
-        form = new ArrayList<NameValuePair>();
+        form = new ArrayList<>();
         for (Element input : doc.select("input, select")) {
             if (!"image".equals(input.attr("type"))
                     && !"submit".equals(input.attr("type"))
@@ -1079,7 +1043,7 @@ public class Adis extends BaseApi implements OpacApi {
         }
         form.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
         form.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
-        doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+        htmlPost(opac_url + ";jsessionid=" + s_sid, form);
 
         return new CancelResult(Status.OK);
     }
@@ -1112,7 +1076,7 @@ public class Adis extends BaseApi implements OpacApi {
         // Ausleihen
         String alink = null;
         int anum = 0;
-        List<Map<String, String>> lent = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> lent = new ArrayList<>();
         for (Element tr : doc.select(".rTable_div tr")) {
             if (tr.select("a").size() == 1) {
                 if (tr.select("a").first().absUrl("href").contains("sp=SZA")) {
@@ -1124,7 +1088,7 @@ public class Adis extends BaseApi implements OpacApi {
         if (alink != null) {
             Document adoc = htmlGet(alink);
             s_alink = alink;
-            List<NameValuePair> form = new ArrayList<NameValuePair>();
+            List<NameValuePair> form = new ArrayList<>();
             String prolongTest = null;
             for (Element input : adoc.select("input, select")) {
                 if (!"image".equals(input.attr("type"))
@@ -1146,7 +1110,7 @@ public class Adis extends BaseApi implements OpacApi {
                 adoc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
             }
             for (Element tr : adoc.select(".rTable_div tbody tr")) {
-                Map<String, String> line = new HashMap<String, String>();
+                Map<String, String> line = new HashMap<>();
                 String text = Jsoup.parse(
                         tr.child(3).html().replaceAll("(?i)<br[^>]*>", "#"))
                         .text();
@@ -1187,7 +1151,7 @@ public class Adis extends BaseApi implements OpacApi {
                 lent.add(line);
             }
             assert (lent.size() == anum);
-            form = new ArrayList<NameValuePair>();
+            form = new ArrayList<>();
             for (Element input : adoc.select("input, select")) {
                 if (!"image".equals(input.attr("type"))
                         && !"submit".equals(input.attr("type"))
@@ -1206,9 +1170,9 @@ public class Adis extends BaseApi implements OpacApi {
 
         adata.setLent(lent);
 
-        List<String[]> rlinks = new ArrayList<String[]>();
+        List<String[]> rlinks = new ArrayList<>();
         int rnum = 0;
-        List<Map<String, String>> res = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> res = new ArrayList<>();
         for (Element tr : doc.select(".rTable_div tr")) {
             if (tr.select("a").size() == 1) {
                 if ((tr.text().contains("Reservationen")
@@ -1231,7 +1195,7 @@ public class Adis extends BaseApi implements OpacApi {
             boolean interlib = rdoc.html().contains("Ihre Fernleih-Bestellung");
             boolean stacks = rdoc.html().contains("aus dem Magazin");
             boolean provision = rdoc.html().contains("Ihre Bereitstellung");
-            Map<String, Integer> colmap = new HashMap<String, Integer>();
+            Map<String, Integer> colmap = new HashMap<>();
             colmap.put(AccountData.KEY_RESERVATION_TITLE, 2);
             colmap.put(AccountData.KEY_RESERVATION_BRANCH, 1);
             colmap.put(AccountData.KEY_RESERVATION_EXPIRE, 0);
@@ -1248,7 +1212,7 @@ public class Adis extends BaseApi implements OpacApi {
             }
             for (Element tr : rdoc.select(".rTable_div tbody tr")) {
                 if (tr.children().size() >= 4) {
-                    Map<String, String> line = new HashMap<String, String>();
+                    Map<String, String> line = new HashMap<>();
                     String text = tr.child(
                             colmap.get(AccountData.KEY_RESERVATION_TITLE))
                             .html();
@@ -1310,7 +1274,7 @@ public class Adis extends BaseApi implements OpacApi {
                 adata.setWarning("Beim Abrufen der Reservationen ist ein Problem aufgetreten");
             }
 
-            List<NameValuePair> form = new ArrayList<NameValuePair>();
+            List<NameValuePair> form = new ArrayList<>();
             for (Element input : rdoc.select("input, select")) {
                 if (!"image".equals(input.attr("type"))
                         && !"submit".equals(input.attr("type"))
@@ -1322,7 +1286,7 @@ public class Adis extends BaseApi implements OpacApi {
             }
             form.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
             form.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
-            doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
+            htmlPost(opac_url + ";jsessionid=" + s_sid, form);
         }
 
         assert (res.size() == rnum);
@@ -1341,7 +1305,7 @@ public class Adis extends BaseApi implements OpacApi {
 
         doc.select("#LPASSW_1").val(account.getPassword());
 
-        List<NameValuePair> form = new ArrayList<NameValuePair>();
+        List<NameValuePair> form = new ArrayList<>();
         for (Element input : doc.select("input, select")) {
             if (!"image".equals(input.attr("type"))
                     && !"checkbox".equals(input.attr("type"))
@@ -1361,7 +1325,7 @@ public class Adis extends BaseApi implements OpacApi {
 
         if (doc.select(".message h1").size() > 0) {
             String msg = doc.select(".message h1").text().trim();
-            form = new ArrayList<NameValuePair>();
+            form = new ArrayList<>();
             for (Element input : doc.select("input")) {
                 if (!"image".equals(input.attr("type"))
                         && !"checkbox".equals(input.attr("type"))
@@ -1389,7 +1353,7 @@ public class Adis extends BaseApi implements OpacApi {
         Document doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
                 + s_service + "&sp=" + s_exts);
 
-        List<SearchField> fields = new ArrayList<SearchField>();
+        List<SearchField> fields = new ArrayList<>();
         // dropdown to select which field you want to search in
         for (Element opt : doc.select("#SUCH01_1 option")) {
             TextSearchField field = new TextSearchField();
@@ -1423,9 +1387,9 @@ public class Adis extends BaseApi implements OpacApi {
                 DropdownSearchField field = new DropdownSearchField();
                 field.setId(select.id());
                 field.setDisplayName(row.select("label").first().text());
-                List<Map<String, String>> values = new ArrayList<Map<String, String>>();
+                List<Map<String, String>> values = new ArrayList<>();
                 for (Element opt : select.select("option")) {
-                    Map<String, String> value = new HashMap<String, String>();
+                    Map<String, String> value = new HashMap<>();
                     value.put("key", opt.attr("value"));
                     value.put("value", opt.text());
                     values.add(value);
@@ -1513,8 +1477,7 @@ public class Adis extends BaseApi implements OpacApi {
     }
 
     @Override
-    public String getAccountExtendableInfo(Account account) throws IOException,
-            NotReachableException {
+    public String getAccountExtendableInfo(Account account) throws IOException {
         throw new UnsupportedOperationException();
     }
 
@@ -1538,7 +1501,7 @@ public class Adis extends BaseApi implements OpacApi {
 
         Document doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
                 + s_service + "&sp=SBK");
-        doc = handleLoginForm(doc, account);
+        handleLoginForm(doc, account);
     }
 
     @Override

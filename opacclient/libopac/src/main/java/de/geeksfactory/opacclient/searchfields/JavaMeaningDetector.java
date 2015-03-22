@@ -28,7 +28,7 @@ public class JavaMeaningDetector implements MeaningDetector {
     }
 
     public JavaMeaningDetector(Library lib, String assets_fieldsdir) {
-        meanings = new HashMap<String, String>();
+        meanings = new HashMap<>();
         this.assets_fieldsdir = assets_fieldsdir;
         if (lib != null) {
             File file;
@@ -85,9 +85,7 @@ public class JavaMeaningDetector implements MeaningDetector {
                     meanings.put(key, val);
                 }
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (JSONException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -135,7 +133,7 @@ public class JavaMeaningDetector implements MeaningDetector {
             JSONException {
         JSONArray json = new JSONArray(readFile(new File(assets_fieldsdir,
                 "ignore.json")));
-        Set<String> ignored = new HashSet<String>();
+        Set<String> ignored = new HashSet<>();
         for (int i = 0; i < json.length(); i++) {
             ignored.add(json.getString(i));
         }

@@ -14,7 +14,7 @@ import de.geeksfactory.opacclient.R;
 
 public class NavigationAdapter extends BaseAdapter {
 
-    protected ArrayList<Item> mData = new ArrayList<Item>();
+    protected ArrayList<Item> mData = new ArrayList<>();
     protected LayoutInflater mInflater;
     protected Context mContext;
 
@@ -101,7 +101,7 @@ public class NavigationAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
+        ViewHolder holder;
         int type = getItemViewType(position);
         if (convertView == null) {
             holder = new ViewHolder();

@@ -288,7 +288,7 @@ public interface OpacApi {
      * @throws IOException           if network connection failed
      * @throws NotReachableException may throw this if the library couldn't be reached
      */
-    public void start() throws IOException, NotReachableException;
+    public void start() throws IOException;
 
     /**
      * Is called whenever a new API object is created. The difference to start
@@ -316,7 +316,7 @@ public interface OpacApi {
      * @see de.geeksfactory.opacclient.objects.SearchResult
      */
     public SearchRequestResult search(List<SearchQuery> query)
-            throws IOException, NotReachableException, OpacErrorException,
+            throws IOException, OpacErrorException,
             JSONException;
 
     /**
@@ -359,7 +359,7 @@ public interface OpacApi {
      * @since 2.0.6
      */
     public SearchRequestResult filterResults(Filter filter, Filter.Option option)
-            throws IOException, NotReachableException, OpacErrorException;
+            throws IOException, OpacErrorException;
 
     /**
      * Get result page <code>page</code> of the search performed last with
@@ -376,7 +376,7 @@ public interface OpacApi {
      * @see de.geeksfactory.opacclient.objects.SearchResult
      */
     public SearchRequestResult searchGetPage(int page) throws IOException,
-            NotReachableException, OpacErrorException, JSONException;
+            OpacErrorException, JSONException;
 
     /**
      * Get details for the item with unique ID id.
@@ -393,7 +393,7 @@ public interface OpacApi {
      * @see #KEY_SEARCH_QUERY_HOME_BRANCH
      */
     public DetailledItem getResultById(String id, String homebranch)
-            throws IOException, NotReachableException, OpacErrorException;
+            throws IOException, OpacErrorException;
 
     /**
      * Get details for the item at <code>position</code> from last
@@ -555,7 +555,7 @@ public interface OpacApi {
      * @see #search
      */
     public List<SearchField> getSearchFields() throws IOException,
-            NotReachableException, OpacErrorException, JSONException;
+            OpacErrorException, JSONException;
 
     /**
      * Returns whether – if account view is not supported in the given library –
@@ -596,8 +596,7 @@ public interface OpacApi {
      * @return Some information to be sent in a crash report
      */
     @Deprecated
-    public String getAccountExtendableInfo(Account account) throws IOException,
-            NotReachableException;
+    public String getAccountExtendableInfo(Account account) throws IOException;
 
     /**
      * Some library systems allow us to share search results. If your library
@@ -693,7 +692,6 @@ public interface OpacApi {
          */
         public static final int ACTION_CONFIRMATION = 2;
 
-        ;
         /**
          * Action number to use for custom selection type identifiers.
          */

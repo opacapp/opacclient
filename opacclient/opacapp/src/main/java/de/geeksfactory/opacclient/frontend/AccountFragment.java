@@ -100,9 +100,6 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 public class AccountFragment extends Fragment implements
         AccountSelectedListener {
 
-    public static final int STATUS_SUCCESS = 0;
-    public static final int STATUS_NOUSER = 1;
-    public static final int STATUS_FAILED = 2;
     public static final long MAX_CACHE_AGE = (1000 * 3600 * 2);
     protected ProgressDialog dialog;
     protected AlertDialog adialog;
@@ -223,7 +220,7 @@ public class AccountFragment extends Fragment implements
         supported = true;
 
         this.account = app.getAccount();
-        OpacApi api = null;
+        OpacApi api;
         try {
             api = app.getApi();
         } catch (NullPointerException e) {
@@ -242,7 +239,7 @@ public class AccountFragment extends Fragment implements
                     .setText(R.string.account_unsupported_api);
             ((Button) view.findViewById(R.id.btSend))
                     .setText(R.string.write_mail);
-            ((Button) view.findViewById(R.id.btSend))
+            view.findViewById(R.id.btSend)
                     .setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -277,7 +274,7 @@ public class AccountFragment extends Fragment implements
 
             ((TextView) view.findViewById(R.id.tvErrBodyU))
                     .setText(R.string.account_unsupported);
-            ((Button) view.findViewById(R.id.btSend))
+            view.findViewById(R.id.btSend)
                     .setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -303,7 +300,7 @@ public class AccountFragment extends Fragment implements
             // No credentials entered
             view.findViewById(R.id.llLoading).setVisibility(View.GONE);
             view.findViewById(R.id.answer_error).setVisibility(View.VISIBLE);
-            ((Button) view.findViewById(R.id.btPrefs))
+            view.findViewById(R.id.btPrefs)
                     .setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -433,7 +430,7 @@ public class AccountFragment extends Fragment implements
 
                                    @Override
                                    public StepTask<?> newTask() {
-                                       return new CancelTask();
+                                       return ct = new CancelTask();
                                    }
                                });
                                msrhCancel.start();
@@ -572,38 +569,40 @@ public class AccountFragment extends Fragment implements
             adatasource.open();
             adatasource.invalidateCachedAccountData(account);
             adatasource.close();
-            dialog_wrong_credentials(e.getMessage(), true);
+            dialog_wrong_credentials(e.getMessage());
             return;
         }
-        final FrameLayout errorView = (FrameLayout) getView().findViewById(
-                R.id.error_view);
-        errorView.removeAllViews();
-        View connError = getActivity().getLayoutInflater().inflate(
-                R.layout.error_connectivity, errorView);
+        if (getView() != null) {
+            final FrameLayout errorView = (FrameLayout) getView().findViewById(
+                    R.id.error_view);
+            errorView.removeAllViews();
+            View connError = getActivity().getLayoutInflater().inflate(
+                    R.layout.error_connectivity, errorView);
 
-        if (e != null && e instanceof SSLSecurityException) {
-            ((TextView) connError.findViewById(R.id.tvErrBody))
-                    .setText(R.string.connection_error_detail_security);
-        } else if (e != null && e instanceof NotReachableException) {
-            ((TextView) connError.findViewById(R.id.tvErrBody))
-                    .setText(R.string.connection_error_detail_nre);
+            if (e != null && e instanceof SSLSecurityException) {
+                ((TextView) connError.findViewById(R.id.tvErrBody))
+                        .setText(R.string.connection_error_detail_security);
+            } else if (e != null && e instanceof NotReachableException) {
+                ((TextView) connError.findViewById(R.id.tvErrBody))
+                        .setText(R.string.connection_error_detail_nre);
+            }
+            connError.findViewById(R.id.btRetry)
+                    .setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            refresh();
+                        }
+                    });
+            view.findViewById(R.id.llLoading).setVisibility(View.GONE);
+            view.findViewById(R.id.svAccount).setVisibility(View.GONE);
+            connError.setVisibility(View.VISIBLE);
         }
-        ((Button) connError.findViewById(R.id.btRetry))
-                .setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        refresh();
-                    }
-                });
-        view.findViewById(R.id.llLoading).setVisibility(View.GONE);
-        view.findViewById(R.id.svAccount).setVisibility(View.GONE);
-        connError.setVisibility(View.VISIBLE);
     }
 
-    protected void dialog_wrong_credentials(String s, final boolean finish) {
+    protected void dialog_wrong_credentials(String s) {
         view.findViewById(R.id.llLoading).setVisibility(View.GONE);
         view.findViewById(R.id.answer_error).setVisibility(View.VISIBLE);
-        ((Button) view.findViewById(R.id.btPrefs))
+        view.findViewById(R.id.btPrefs)
                 .setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -737,11 +736,11 @@ public class AccountFragment extends Fragment implements
                             .fromHtml(item.get(AccountData.KEY_LENT_AUTHOR)));
                 }
 
-                ((TextView) v.findViewById(R.id.tvStatus))
+                v.findViewById(R.id.tvStatus)
                         .setVisibility(View.VISIBLE);
                 if (item.containsKey(AccountData.KEY_LENT_STATUS)
                         && !"".equals(item
-                        .containsKey(AccountData.KEY_LENT_STATUS))
+                        .get(AccountData.KEY_LENT_STATUS))
                         && item.containsKey(AccountData.KEY_LENT_DEADLINE)) {
                     ((TextView) v.findViewById(R.id.tvStatus)).setText(Html
                             .fromHtml(item.get(AccountData.KEY_LENT_DEADLINE)
@@ -755,16 +754,16 @@ public class AccountFragment extends Fragment implements
                     ((TextView) v.findViewById(R.id.tvStatus)).setText(Html
                             .fromHtml(item.get(AccountData.KEY_LENT_DEADLINE)));
                 } else {
-                    ((TextView) v.findViewById(R.id.tvStatus))
+                    v.findViewById(R.id.tvStatus)
                             .setVisibility(View.GONE);
                 }
                 if (item.containsKey(AccountData.KEY_LENT_FORMAT)) {
                     ((TextView) v.findViewById(R.id.tvFmt)).setText(Html
                             .fromHtml(item.get(AccountData.KEY_LENT_FORMAT)));
-                    ((TextView) v.findViewById(R.id.tvFmt))
+                    v.findViewById(R.id.tvFmt)
                             .setVisibility(View.VISIBLE);
                 } else {
-                    ((TextView) v.findViewById(R.id.tvFmt))
+                    v.findViewById(R.id.tvFmt)
                             .setVisibility(View.GONE);
                 }
 
@@ -813,29 +812,29 @@ public class AccountFragment extends Fragment implements
                     ((TextView) v.findViewById(R.id.tvZst)).setText(Html
                             .fromHtml(item
                                     .get(AccountData.KEY_LENT_LENDING_BRANCH)));
-                    ((TextView) v.findViewById(R.id.tvZst))
+                    v.findViewById(R.id.tvZst)
                             .setVisibility(View.VISIBLE);
                 } else if (item.containsKey(AccountData.KEY_LENT_BRANCH)) {
                     ((TextView) v.findViewById(R.id.tvZst)).setText(Html
                             .fromHtml(item.get(AccountData.KEY_LENT_BRANCH)));
-                    ((TextView) v.findViewById(R.id.tvZst))
+                    v.findViewById(R.id.tvZst)
                             .setVisibility(View.VISIBLE);
                 } else {
-                    ((TextView) v.findViewById(R.id.tvZst))
+                    v.findViewById(R.id.tvZst)
                             .setVisibility(View.GONE);
                 }
 
                 if (item.containsKey(AccountData.KEY_LENT_LINK)) {
                     v.findViewById(R.id.ivProlong).setTag(
                             item.get(AccountData.KEY_LENT_LINK));
-                    ((ImageView) v.findViewById(R.id.ivProlong))
+                    v.findViewById(R.id.ivProlong)
                             .setOnClickListener(new OnClickListener() {
                                 @Override
                                 public void onClick(View arg0) {
                                     prolong((String) arg0.getTag());
                                 }
                             });
-                    ((ImageView) v.findViewById(R.id.ivProlong))
+                    v.findViewById(R.id.ivProlong)
                             .setVisibility(View.VISIBLE);
                     if (item.containsKey(AccountData.KEY_LENT_RENEWABLE)) {
                         ((ImageView) v.findViewById(R.id.ivProlong))
@@ -847,19 +846,19 @@ public class AccountFragment extends Fragment implements
                         && app.getApi() instanceof EbookServiceApi) {
                     v.findViewById(R.id.ivDownload).setTag(
                             item.get(AccountData.KEY_LENT_DOWNLOAD));
-                    ((ImageView) v.findViewById(R.id.ivDownload))
+                    v.findViewById(R.id.ivDownload)
                             .setOnClickListener(new OnClickListener() {
                                 @Override
                                 public void onClick(View arg0) {
                                     download((String) arg0.getTag());
                                 }
                             });
-                    ((ImageView) v.findViewById(R.id.ivProlong))
+                    v.findViewById(R.id.ivProlong)
                             .setVisibility(View.GONE);
-                    ((ImageView) v.findViewById(R.id.ivDownload))
+                    v.findViewById(R.id.ivDownload)
                             .setVisibility(View.VISIBLE);
                 } else {
-                    ((ImageView) v.findViewById(R.id.ivProlong))
+                    v.findViewById(R.id.ivProlong)
                             .setVisibility(View.INVISIBLE);
                 }
 
@@ -931,7 +930,7 @@ public class AccountFragment extends Fragment implements
                     ((TextView) v.findViewById(R.id.tvStatus)).setText(Html
                             .fromHtml(item
                                     .get(AccountData.KEY_RESERVATION_READY)));
-                    ((TextView) v.findViewById(R.id.tvStatus))
+                    v.findViewById(R.id.tvStatus)
                             .setVisibility(View.VISIBLE);
                 } else if (item.containsKey(AccountData.KEY_RESERVATION_EXPIRE)
                         && item.get(AccountData.KEY_RESERVATION_EXPIRE)
@@ -939,10 +938,10 @@ public class AccountFragment extends Fragment implements
                     ((TextView) v.findViewById(R.id.tvStatus))
                             .setText(Html.fromHtml("bis "
                                     + item.get(AccountData.KEY_RESERVATION_EXPIRE)));
-                    ((TextView) v.findViewById(R.id.tvStatus))
+                    v.findViewById(R.id.tvStatus)
                             .setVisibility(View.VISIBLE);
                 } else {
-                    ((TextView) v.findViewById(R.id.tvStatus))
+                    v.findViewById(R.id.tvStatus)
                             .setVisibility(View.GONE);
                 }
 
@@ -950,45 +949,45 @@ public class AccountFragment extends Fragment implements
                     ((TextView) v.findViewById(R.id.tvZst)).setText(Html
                             .fromHtml(item
                                     .get(AccountData.KEY_RESERVATION_BRANCH)));
-                    ((TextView) v.findViewById(R.id.tvZst))
+                    v.findViewById(R.id.tvZst)
                             .setVisibility(View.VISIBLE);
                 } else {
-                    ((TextView) v.findViewById(R.id.tvZst))
+                    v.findViewById(R.id.tvZst)
                             .setVisibility(View.GONE);
                 }
 
                 if (item.containsKey(AccountData.KEY_RESERVATION_BOOKING)) {
                     v.findViewById(R.id.ivBooking).setTag(
                             item.get(AccountData.KEY_RESERVATION_BOOKING));
-                    ((ImageView) v.findViewById(R.id.ivBooking))
+                    v.findViewById(R.id.ivBooking)
                             .setOnClickListener(new OnClickListener() {
                                 @Override
                                 public void onClick(View arg0) {
                                     bookingStart((String) arg0.getTag());
                                 }
                             });
-                    ((ImageView) v.findViewById(R.id.ivBooking))
+                    v.findViewById(R.id.ivBooking)
                             .setVisibility(View.VISIBLE);
-                    ((ImageView) v.findViewById(R.id.ivCancel))
+                    v.findViewById(R.id.ivCancel)
                             .setVisibility(View.GONE);
                 } else if (item.containsKey(AccountData.KEY_RESERVATION_CANCEL)) {
                     v.findViewById(R.id.ivCancel).setTag(
                             item.get(AccountData.KEY_RESERVATION_CANCEL));
-                    ((ImageView) v.findViewById(R.id.ivCancel))
+                    v.findViewById(R.id.ivCancel)
                             .setOnClickListener(new OnClickListener() {
                                 @Override
                                 public void onClick(View arg0) {
                                     cancel((String) arg0.getTag());
                                 }
                             });
-                    ((ImageView) v.findViewById(R.id.ivCancel))
+                    v.findViewById(R.id.ivCancel)
                             .setVisibility(View.VISIBLE);
-                    ((ImageView) v.findViewById(R.id.ivBooking))
+                    v.findViewById(R.id.ivBooking)
                             .setVisibility(View.GONE);
                 } else {
-                    ((ImageView) v.findViewById(R.id.ivCancel))
+                    v.findViewById(R.id.ivCancel)
                             .setVisibility(View.INVISIBLE);
-                    ((ImageView) v.findViewById(R.id.ivBooking))
+                    v.findViewById(R.id.ivBooking)
                             .setVisibility(View.GONE);
                 }
                 llRes.addView(v);
@@ -1273,7 +1272,7 @@ public class AccountFragment extends Fragment implements
             DefaultHttpClient dc = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(
                     "http://opacapp.de/crashreport.php");
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+            List<NameValuePair> nameValuePairs = new ArrayList<>(2);
             nameValuePairs.add(new BasicNameValuePair("traceback", ""));
             try {
                 nameValuePairs
@@ -1351,17 +1350,8 @@ public class AccountFragment extends Fragment implements
         protected AccountData doInBackground(Object... arg0) {
             super.doInBackground(arg0);
             try {
-                AccountData res = app.getApi().account(app.getAccount());
-                return res;
-            } catch (java.net.UnknownHostException e) {
-                exception = e;
-            } catch (java.net.SocketException e) {
-                exception = e;
-            } catch (InterruptedIOException e) {
-                exception = e;
-            } catch (NoHttpResponseException e) {
-                exception = e;
-            } catch (OpacErrorException e) {
+                return app.getApi().account(app.getAccount());
+            } catch (java.net.UnknownHostException | java.net.SocketException | InterruptedIOException | NoHttpResponseException | OpacErrorException e) {
                 exception = e;
             } catch (Exception e) {
                 ACRA.getErrorReporter().handleException(e);
@@ -1392,11 +1382,7 @@ public class AccountFragment extends Fragment implements
             String selection = (String) arg0[3];
             try {
                 return app.getApi().cancel(a, account, useraction, selection);
-            } catch (java.net.UnknownHostException e) {
-                e.printStackTrace();
-            } catch (NoHttpResponseException e) {
-                e.printStackTrace();
-            } catch (java.net.SocketException e) {
+            } catch (java.net.UnknownHostException | NoHttpResponseException | java.net.SocketException e) {
                 e.printStackTrace();
             } catch (Exception e) {
                 ACRA.getErrorReporter().handleException(e);
@@ -1437,9 +1423,8 @@ public class AccountFragment extends Fragment implements
         protected String doInBackground(Object... arg0) {
             super.doInBackground(arg0);
             String a = (String) arg0[1];
-            String url = ((EbookServiceApi) app.getApi()).downloadItem(account,
+            return ((EbookServiceApi) app.getApi()).downloadItem(account,
                     a);
-            return url;
         }
 
         @Override
@@ -1448,7 +1433,7 @@ public class AccountFragment extends Fragment implements
             if (getActivity() == null) {
                 return;
             }
-            if (result.toString().contains("acsm")) {
+            if (result.contains("acsm")) {
                 String[] download_clients = new String[]{
                         "com.android.aldiko", "com.aldiko.android",
                         "com.bluefirereader",
@@ -1539,9 +1524,7 @@ public class AccountFragment extends Fragment implements
                         useraction, selection);
                 success = true;
                 return res;
-            } catch (java.net.UnknownHostException e) {
-                publishProgress(e, "ioerror");
-            } catch (NoHttpResponseException e) {
+            } catch (java.net.UnknownHostException | NoHttpResponseException e) {
                 publishProgress(e, "ioerror");
             } catch (java.net.SocketException e) {
                 success = false;
@@ -1592,12 +1575,9 @@ public class AccountFragment extends Fragment implements
             String selection = (String) arg0[3];
 
             try {
-                ProlongAllResult res = app.getApi().prolongAll(account,
+                return app.getApi().prolongAll(account,
                         useraction, selection);
-                return res;
-            } catch (java.net.UnknownHostException e) {
-            } catch (java.net.SocketException e) {
-            } catch (NoHttpResponseException e) {
+            } catch (java.net.UnknownHostException | java.net.SocketException | NoHttpResponseException e) {
             } catch (Exception e) {
                 ACRA.getErrorReporter().handleException(e);
             }
@@ -1642,7 +1622,7 @@ public class AccountFragment extends Fragment implements
 
         @Override
         public View getView(int position, View contentView, ViewGroup viewGroup) {
-            View view = null;
+            View view;
 
             if (objects[position] == null) {
                 LayoutInflater layoutInflater = (LayoutInflater) getContext()
@@ -1694,15 +1674,12 @@ public class AccountFragment extends Fragment implements
             String selection = (String) arg0[3];
 
             try {
-                BookingResult res = ((EbookServiceApi) app.getApi()).booking(
+                return ((EbookServiceApi) app.getApi()).booking(
                         item, app.getAccount(), useraction, selection);
-                return res;
-            } catch (java.net.UnknownHostException e) {
+            } catch (java.net.UnknownHostException | NoHttpResponseException e) {
                 publishProgress(e, "ioerror");
             } catch (java.net.SocketException e) {
                 e.printStackTrace();
-            } catch (NoHttpResponseException e) {
-                publishProgress(e, "ioerror");
             } catch (Exception e) {
                 ACRA.getErrorReporter().handleException(e);
             }

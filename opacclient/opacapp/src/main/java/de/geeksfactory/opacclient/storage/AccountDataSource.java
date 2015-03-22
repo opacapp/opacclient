@@ -84,7 +84,7 @@ public class AccountDataSource {
     }
 
     public List<Account> getAllAccounts() {
-        List<Account> accs = new ArrayList<Account>();
+        List<Account> accs = new ArrayList<>();
         Cursor cursor = database.query("accounts", allColumns, null, null,
                 null, null, null);
 
@@ -100,7 +100,7 @@ public class AccountDataSource {
     }
 
     public List<Account> getAllAccounts(String bib) {
-        List<Account> accs = new ArrayList<Account>();
+        List<Account> accs = new ArrayList<>();
         String[] selA = {bib};
         Cursor cursor = database.query("accounts", allColumns, "bib = ?", selA,
                 null, null, null);
@@ -117,7 +117,7 @@ public class AccountDataSource {
     }
 
     public List<Account> getAccountsWithPassword() {
-        List<Account> accs = new ArrayList<Account>();
+        List<Account> accs = new ArrayList<>();
 
         Cursor cursor = database.query("accounts", allColumns,
                 "name is not null AND name != '' AND password is not null",
@@ -213,18 +213,17 @@ public class AccountDataSource {
     public AccountData getCachedAccountData(Account account) {
         AccountData adata = new AccountData(account.getId());
 
-        List<Map<String, String>> lent = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> lent = new ArrayList<>();
         String[] selectionArgs = {"" + account.getId()};
         Cursor cursor = database.query(AccountDatabase.TABLENAME_LENT,
-                AccountDatabase.COLUMNS_LENT.values().toArray(new String[]{}),
+                AccountDatabase.COLUMNS_LENT.values().toArray(
+                        new String[AccountDatabase.COLUMNS_LENT.values().size()]),
                 "account = ?", selectionArgs, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            Map<String, String> entry = new HashMap<String, String>();
-            for (Object o : AccountDatabase.COLUMNS_LENT.entrySet()) {
-                Map.Entry<String, String> field = (Map.Entry<String, String>) o;
-                String value = cursor.getString(cursor.getColumnIndex(field
-                        .getValue()));
+            Map<String, String> entry = new HashMap<>();
+            for (Map.Entry<String, String> field : AccountDatabase.COLUMNS_LENT.entrySet()) {
+                String value = cursor.getString(cursor.getColumnIndex(field.getValue()));
                 if (value != null) {
                     if (!value.equals("")) {
                         entry.put(field.getKey(), value);
@@ -237,17 +236,20 @@ public class AccountDataSource {
         cursor.close();
         adata.setLent(lent);
 
-        List<Map<String, String>> res = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> res = new ArrayList<>();
         cursor = database.query(AccountDatabase.TABLENAME_RESERVATION,
                 AccountDatabase.COLUMNS_RESERVATIONS.values()
-                                                    .toArray(new String[]{}), "account = ?",
+                                                    .toArray(
+                                                            new String[AccountDatabase
+                                                                    .COLUMNS_RESERVATIONS
+                                                                    .values().size()]),
+                "account = ?",
                 selectionArgs, null, null, null);
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {
-            Map<String, String> entry = new HashMap<String, String>();
-            for (Object o : AccountDatabase.COLUMNS_RESERVATIONS.entrySet()) {
-                Map.Entry<String, String> field = (Map.Entry<String, String>) o;
+            Map<String, String> entry = new HashMap<>();
+            for (Map.Entry<String, String> field : AccountDatabase.COLUMNS_RESERVATIONS.entrySet()) {
                 String value = cursor.getString(cursor.getColumnIndex(field
                         .getValue()));
                 if (value != null) {
@@ -283,10 +285,9 @@ public class AccountDataSource {
         database.delete(AccountDatabase.TABLENAME_RESERVATION, null, null);
         ContentValues update = new ContentValues();
         update.put("cached", 0);
-        String pf = null;
-        update.put("pendingFees", pf);
-        update.put("validUntil", pf);
-        update.put("warning", pf);
+        update.put("pendingFees", (String) null);
+        update.put("validUntil", (String) null);
+        update.put("warning", (String) null);
         database.update(AccountDatabase.TABLENAME_ACCOUNTS, update, null, null);
     }
 
@@ -297,10 +298,9 @@ public class AccountDataSource {
                 new String[]{"" + account.getId()});
         ContentValues update = new ContentValues();
         update.put("cached", 0);
-        String pf = null;
-        update.put("pendingFees", pf);
-        update.put("validUntil", pf);
-        update.put("warning", pf);
+        update.put("pendingFees", (String) null);
+        update.put("validUntil", (String) null);
+        update.put("warning", (String) null);
         database.update(AccountDatabase.TABLENAME_ACCOUNTS, update, "id = ?",
                 new String[]{"" + account.getId()});
     }
@@ -352,7 +352,7 @@ public class AccountDataSource {
     }
 
     public List<Account> getAccountsWithPassword(String ident) {
-        List<Account> accs = new ArrayList<Account>();
+        List<Account> accs = new ArrayList<>();
 
         Cursor cursor = database
                 .query("accounts",

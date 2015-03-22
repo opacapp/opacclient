@@ -77,7 +77,7 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
  * BibTip extension.
  */
 public class SISIS extends BaseApi implements OpacApi {
-    protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
+    protected static HashMap<String, MediaType> defaulttypes = new HashMap<>();
     static {
         defaulttypes.put("g", MediaType.EBOOK);
         defaulttypes.put("d", MediaType.CD);
@@ -180,7 +180,7 @@ public class SISIS extends BaseApi implements OpacApi {
                         + "/search.do?methodToCall=switchSearchPage&SearchType=2",
                 ENCODING);
         Document doc = Jsoup.parse(html);
-        List<SearchField> fields = new ArrayList<SearchField>();
+        List<SearchField> fields = new ArrayList<>();
 
         Elements options = doc
                 .select("select[name=searchCategories[0]] option");
@@ -203,7 +203,7 @@ public class SISIS extends BaseApi implements OpacApi {
                                List<SearchField> fields, Document doc) throws JSONException {
         Elements options = dropdownElement.select("option");
         DropdownSearchField dropdown = new DropdownSearchField();
-        List<Map<String, String>> values = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> values = new ArrayList<>();
         if (dropdownElement.parent().select("input[type=hidden]").size() > 0) {
             dropdown.setId(dropdownElement.parent()
                     .select("input[type=hidden]").attr("value"));
@@ -213,7 +213,7 @@ public class SISIS extends BaseApi implements OpacApi {
             dropdown.setData(new JSONObject("{\"restriction\": false}"));
         }
         for (Element option : options) {
-            Map<String, String> value = new HashMap<String, String>();
+            Map<String, String> value = new HashMap<>();
             value.put("key", option.attr("value"));
             value.put("value", option.text());
             values.add(value);
@@ -224,8 +224,8 @@ public class SISIS extends BaseApi implements OpacApi {
     }
 
     @Override
-    public void start() throws ClientProtocolException, SocketException,
-            IOException, NotReachableException {
+    public void start() throws
+            IOException {
 
         // Some libraries require start parameters for start.do, like Login=foo
         String startparams = "";
@@ -279,9 +279,9 @@ public class SISIS extends BaseApi implements OpacApi {
 
     @Override
     public SearchRequestResult search(List<SearchQuery> query)
-            throws IOException, NotReachableException, OpacErrorException,
+            throws IOException, OpacErrorException,
             JSONException {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
 
         int index = 0;
         int restrictionIndex = 0;
@@ -342,7 +342,7 @@ public class SISIS extends BaseApi implements OpacApi {
 
     public SearchRequestResult volumeSearch(Map<String, String> query)
             throws IOException, OpacErrorException {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("methodToCall", "volumeSearch"));
         params.add(new BasicNameValuePair("dbIdentifier", query
                 .get("dbIdentifier")));
@@ -356,7 +356,7 @@ public class SISIS extends BaseApi implements OpacApi {
 
     @Override
     public SearchRequestResult searchGetPage(int page) throws IOException,
-            NotReachableException, OpacErrorException {
+            OpacErrorException {
         if (!initialised)
             start();
 
@@ -422,7 +422,7 @@ public class SISIS extends BaseApi implements OpacApi {
             }
         }
 
-        List<SearchResult> results = new ArrayList<SearchResult>();
+        List<SearchResult> results = new ArrayList<>();
         for (int i = 0; i < table.size(); i++) {
             Element tr = table.get(i);
             SearchResult sr = new SearchResult();
@@ -441,9 +441,7 @@ public class SISIS extends BaseApi implements OpacApi {
                     try {
                         sr.setType(MediaType.valueOf(data.getJSONObject(
                                 "mediatypes").getString(fname)));
-                    } catch (JSONException e) {
-                        sr.setType(default_name);
-                    } catch (IllegalArgumentException e) {
+                    } catch (JSONException | IllegalArgumentException e) {
                         sr.setType(default_name);
                     }
                 } else {
@@ -487,7 +485,7 @@ public class SISIS extends BaseApi implements OpacApi {
             }
             int childrennum = children.size();
 
-            List<String[]> strings = new ArrayList<String[]>();
+            List<String[]> strings = new ArrayList<>();
             for (int ch = 0; ch < childrennum; ch++) {
                 Node node = children.get(ch);
                 if (node instanceof TextNode) {
@@ -506,7 +504,7 @@ public class SISIS extends BaseApi implements OpacApi {
                                         ((Element) node).tag().getName(),
                                         "text", text,
                                         ((Element) node).className(),
-                                        ((Element) node).attr("style")});
+                                        node.attr("style")});
                         } else if (subnode instanceof Element) {
                             String text = ((Element) subnode).text().trim();
                             if (text.length() > 3)
@@ -514,7 +512,7 @@ public class SISIS extends BaseApi implements OpacApi {
                                         ((Element) node).tag().getName(),
                                         ((Element) subnode).tag().getName(),
                                         text, ((Element) node).className(),
-                                        ((Element) node).attr("style")});
+                                        node.attr("style")});
                         }
                     }
                 }
@@ -535,20 +533,16 @@ public class SISIS extends BaseApi implements OpacApi {
                             if (!nv.getValue().trim().equals("")) {
                                 if (nv.getName().equals("rft.btitle")
                                         && !hastitle) {
-                                    description.append("<b>" + nv.getValue()
-                                            + "</b>");
+                                    description.append("<b>").append(nv.getValue()).append("</b>");
                                     hastitle = true;
                                 } else if (nv.getName().equals("rft.atitle")
                                         && !hastitle) {
-                                    description.append("<b>" + nv.getValue()
-                                            + "</b>");
+                                    description.append("<b>").append(nv.getValue()).append("</b>");
                                     hastitle = true;
                                 } else if (nv.getName().equals("rft.au")) {
-                                    description
-                                            .append("<br />" + nv.getValue());
+                                    description.append("<br />").append(nv.getValue());
                                 } else if (nv.getName().equals("rft.date")) {
-                                    description
-                                            .append("<br />" + nv.getValue());
+                                    description.append("<br />").append(nv.getValue());
                                 }
                             }
                         }
@@ -573,7 +567,7 @@ public class SISIS extends BaseApi implements OpacApi {
                     if (part[0] == "a" && (k == 0 || !titlefound)) {
                         if (k != 0)
                             description.append("<br />");
-                        description.append("<b>" + part[2] + "</b>");
+                        description.append("<b>").append(part[2]).append("</b>");
                         titlefound = true;
                     } else if (part[2].matches("\\D*[0-9]{4}\\D*")
                             && part[2].length() <= 10) {
@@ -657,7 +651,7 @@ public class SISIS extends BaseApi implements OpacApi {
 
     @Override
     public DetailledItem getResultById(String id, String homebranch)
-            throws IOException, NotReachableException {
+            throws IOException {
 
         if (id == null && reusehtml != null) {
             DetailledItem r = parse_result(reusehtml);
@@ -725,7 +719,7 @@ public class SISIS extends BaseApi implements OpacApi {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        List<String> reservationlinks = new ArrayList<String>();
+        List<String> reservationlinks = new ArrayList<>();
         for (Element link : doc3.select("#vormerkung a, #tab-content a")) {
             String href = link.absUrl("href");
             Map<String, String> hrefq = getQueryParamsFirst(href);
@@ -786,7 +780,7 @@ public class SISIS extends BaseApi implements OpacApi {
                             && (((Element) node).text().trim()
                             .contains("hier klicken") || title
                             .equals("Link:"))) {
-                        text = text + ((Element) node).attr("href");
+                        text = text + node.attr("href");
                         takeover = true;
                         break;
                     }
@@ -820,7 +814,7 @@ public class SISIS extends BaseApi implements OpacApi {
                                 && (((Element) node).text().trim()
                                 .contains("hier klicken") || title
                                 .equals("Link:"))) {
-                            text = text + ((Element) node).attr("href");
+                            text = text + node.attr("href");
                         } else {
                             text = text + ((Element) node).text();
                         }
@@ -874,7 +868,7 @@ public class SISIS extends BaseApi implements OpacApi {
             }
         }
 
-        Map<String, Integer> copy_columnmap = new HashMap<String, Integer>();
+        Map<String, Integer> copy_columnmap = new HashMap<>();
         // Default values
         copy_columnmap.put(DetailledItem.KEY_COPY_BARCODE, 1);
         copy_columnmap.put(DetailledItem.KEY_COPY_BRANCH, 3);
@@ -908,7 +902,7 @@ public class SISIS extends BaseApi implements OpacApi {
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
         for (Element tr : exemplartrs) {
             try {
-                Map<String, String> e = new HashMap<String, String>();
+                Map<String, String> e = new HashMap<>();
                 Element status = tr.child(copy_columnmap
                         .get(DetailledItem.KEY_COPY_STATUS));
                 Element barcode = tr.child(copy_columnmap
@@ -917,7 +911,7 @@ public class SISIS extends BaseApi implements OpacApi {
                         .replace(" Wegweiser", "");
 
                 // STATUS
-                String statustext = "";
+                String statustext;
                 if (status.getElementsByTag("b").size() > 0) {
                     statustext = status.getElementsByTag("b").text().trim();
                 } else {
@@ -980,7 +974,7 @@ public class SISIS extends BaseApi implements OpacApi {
 
         try {
             Element isvolume = null;
-            Map<String, String> volume = new HashMap<String, String>();
+            Map<String, String> volume = new HashMap<>();
             Elements links = doc.select(".data td a");
             int elcount = links.size();
             for (int eli = 0; eli < elcount; eli++) {
@@ -1023,7 +1017,7 @@ public class SISIS extends BaseApi implements OpacApi {
         }
 
         if (useraction == MultiStepResult.ACTION_CONFIRMATION) {
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+            List<NameValuePair> nameValuePairs = new ArrayList<>(2);
             nameValuePairs.add(new BasicNameValuePair("methodToCall", action));
             nameValuePairs.add(new BasicNameValuePair("CSId", CSId));
             String html = httpPost(opac_url + "/" + action + ".do",
@@ -1036,7 +1030,7 @@ public class SISIS extends BaseApi implements OpacApi {
 
             if (doc.select("input[name=username]").size() > 0) {
                 // Login vonnöten
-                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
+                List<NameValuePair> nameValuePairs = new ArrayList<>(
                         2);
                 nameValuePairs.add(new BasicNameValuePair("username", acc
                         .getName()));
@@ -1058,7 +1052,7 @@ public class SISIS extends BaseApi implements OpacApi {
                 }
             }
             if (doc.select("input[name=expressorder]").size() > 0) {
-                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
+                List<NameValuePair> nameValuePairs = new ArrayList<>(
                         2);
                 nameValuePairs.add(new BasicNameValuePair(branch_inputfield,
                         selection));
@@ -1071,7 +1065,7 @@ public class SISIS extends BaseApi implements OpacApi {
                 doc = Jsoup.parse(html);
             }
             if (doc.select("input[name=" + branch_inputfield + "]").size() > 0) {
-                List<Map<String, String>> branches = new ArrayList<Map<String, String>>();
+                List<Map<String, String>> branches = new ArrayList<>();
                 for (Element option : doc
                         .select("input[name=" + branch_inputfield + "]")
                         .first().parent().parent().parent().select("td")) {
@@ -1079,7 +1073,7 @@ public class SISIS extends BaseApi implements OpacApi {
                         continue;
                     String value = option.text().trim();
                     String key = option.select("input").val();
-                    Map<String, String> selopt = new HashMap<String, String>();
+                    Map<String, String> selopt = new HashMap<>();
                     selopt.put("key", key);
                     selopt.put("value", value);
                     branches.add(selopt);
@@ -1091,7 +1085,7 @@ public class SISIS extends BaseApi implements OpacApi {
                 return result;
             }
         } else if (useraction == ReservationResult.ACTION_BRANCH) {
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+            List<NameValuePair> nameValuePairs = new ArrayList<>(2);
             nameValuePairs.add(new BasicNameValuePair(branch_inputfield,
                     selection));
             nameValuePairs.add(new BasicNameValuePair("methodToCall", action));
@@ -1112,7 +1106,7 @@ public class SISIS extends BaseApi implements OpacApi {
 
         if (doc.select("#CirculationForm p").size() > 0
                 && doc.select("input[type=button]").size() >= 2) {
-            List<String[]> details = new ArrayList<String[]>();
+            List<String[]> details = new ArrayList<>();
             for (String row : doc.select("#CirculationForm p").first().html()
                     .split("<br />")) {
                 Document frag = Jsoup.parseBodyFragment(row);
@@ -1280,7 +1274,7 @@ public class SISIS extends BaseApi implements OpacApi {
     }
 
     protected String handleLoginMessage(String html)
-            throws ClientProtocolException, IOException {
+            throws IOException {
         if (html.contains("methodToCall=done"))
             return httpGet(opac_url + "/login.do?methodToCall=done", ENCODING);
         else
@@ -1290,7 +1284,7 @@ public class SISIS extends BaseApi implements OpacApi {
     protected boolean login(Account acc) throws OpacErrorException {
         String html;
 
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+        List<NameValuePair> nameValuePairs = new ArrayList<>(2);
 
         try {
             String loginPage;
@@ -1338,8 +1332,7 @@ public class SISIS extends BaseApi implements OpacApi {
     }
 
     protected void parse_medialist(List<Map<String, String>> medien,
-                                   Document doc, int offset) throws ClientProtocolException,
-            IOException {
+                                   Document doc, int offset) {
         Elements copytrs = doc.select(".data tr");
         doc.setBaseUri(opac_url);
 
@@ -1351,7 +1344,7 @@ public class SISIS extends BaseApi implements OpacApi {
         assert (trs > 0);
         for (int i = 1; i < trs; i++) {
             Element tr = copytrs.get(i);
-            Map<String, String> e = new HashMap<String, String>();
+            Map<String, String> e = new HashMap<>();
 
             if (tr.text().contains("keine Daten")) {
                 return;
@@ -1414,8 +1407,7 @@ public class SISIS extends BaseApi implements OpacApi {
     }
 
     protected void parse_reslist(String type,
-                                 List<Map<String, String>> reservations, Document doc, int offset)
-            throws ClientProtocolException, IOException {
+                                 List<Map<String, String>> reservations, Document doc, int offset) {
         Elements copytrs = doc.select(".data tr");
         doc.setBaseUri(opac_url);
         int trs = copytrs.size();
@@ -1424,7 +1416,7 @@ public class SISIS extends BaseApi implements OpacApi {
         assert (trs > 0);
         for (int i = 1; i < trs; i++) {
             Element tr = copytrs.get(i);
-            Map<String, String> e = new HashMap<String, String>();
+            Map<String, String> e = new HashMap<>();
 
             if (tr.text().contains("keine Daten") || tr.children().size() == 1) {
                 return;
@@ -1462,7 +1454,7 @@ public class SISIS extends BaseApi implements OpacApi {
 
     @Override
     public AccountData account(Account acc) throws IOException,
-            NotReachableException, JSONException, SocketException,
+            JSONException,
             OpacErrorException {
         start(); // TODO: Is this necessary?
 
@@ -1474,7 +1466,7 @@ public class SISIS extends BaseApi implements OpacApi {
         // Geliehene Medien
         String html = httpGet(opac_url
                 + "/userAccount.do?methodToCall=showAccount&typ=1", ENCODING);
-        List<Map<String, String>> medien = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> medien = new ArrayList<>();
         Document doc = Jsoup.parse(html);
         doc.setBaseUri(opac_url);
         parse_medialist(medien, doc, 1);
@@ -1505,7 +1497,7 @@ public class SISIS extends BaseApi implements OpacApi {
         // Bestellte Medien
         html = httpGet(opac_url
                 + "/userAccount.do?methodToCall=showAccount&typ=6", ENCODING);
-        List<Map<String, String>> reserved = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> reserved = new ArrayList<>();
         doc = Jsoup.parse(html);
         doc.setBaseUri(opac_url);
         parse_reslist("6", reserved, doc, 1);
@@ -1602,8 +1594,7 @@ public class SISIS extends BaseApi implements OpacApi {
 
     @Override
     public String getAccountExtendableInfo(Account acc)
-            throws ClientProtocolException, SocketException, IOException,
-            NotReachableException {
+            throws IOException {
         return null;
     }
 
@@ -1670,15 +1661,15 @@ public class SISIS extends BaseApi implements OpacApi {
         Document doc = Jsoup.parse(html);
 
         if (doc.select("table.data").size() > 0) {
-            List<Map<String, String>> result = new ArrayList<Map<String, String>>();
+            List<Map<String, String>> result = new ArrayList<>();
             for (Element td : doc.select("table.data tr td")) {
-                Map<String, String> line = new HashMap<String, String>();
+                Map<String, String> line = new HashMap<>();
                 if (!td.text().contains("Titel")
                         || !td.text().contains("Status"))
                     continue;
                 String nextNodeIs = "";
                 for (Node n : td.childNodes()) {
-                    String text = "";
+                    String text;
                     if (n instanceof Element) {
                         text = ((Element) n).text();
                     } else if (n instanceof TextNode) {
@@ -1714,7 +1705,7 @@ public class SISIS extends BaseApi implements OpacApi {
 
     @Override
     public SearchRequestResult filterResults(Filter filter, Option option)
-            throws IOException, NotReachableException, OpacErrorException {
+            throws IOException, OpacErrorException {
         // TODO Auto-generated method stub
         return null;
     }

@@ -39,7 +39,6 @@ import android.util.Log;
 import org.acra.ACRA;
 import org.acra.ACRAConfiguration;
 import org.acra.annotation.ReportsCrashes;
-import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -47,7 +46,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,6 +67,7 @@ import de.geeksfactory.opacclient.apis.WinBiap;
 import de.geeksfactory.opacclient.apis.Zones22;
 import de.geeksfactory.opacclient.frontend.AccountListActivity;
 import de.geeksfactory.opacclient.frontend.MainActivity;
+import de.geeksfactory.opacclient.frontend.MainPreferenceActivity;
 import de.geeksfactory.opacclient.frontend.SearchResultListActivity;
 import de.geeksfactory.opacclient.frontend.WelcomeActivity;
 import de.geeksfactory.opacclient.i18n.AndroidStringProvider;
@@ -92,10 +91,8 @@ public class OpacClient extends Application {
     public static Context context;
     public static String versionName = "unknown";
     private static OpacClient instance;
-    public final String LIMIT_TO_LIBRARY = null;
     public final boolean SLIDING_MENU = true;
     private final Uri STAR_PROVIDER_STAR_URI = StarContentProvider.STAR_URI;
-    public Exception last_exception;
     protected Account account;
     protected OpacApi api;
     protected Library library;
@@ -135,7 +132,7 @@ public class OpacClient extends Application {
         if (bundle == null) {
             return null;
         }
-        List<SearchQuery> query = new ArrayList<SearchQuery>();
+        List<SearchQuery> query = new ArrayList<>();
         for (String e : bundle.keySet()) {
             try {
                 query.add(new SearchQuery(SearchField
@@ -162,7 +159,7 @@ public class OpacClient extends Application {
         if (bundle == null) {
             return null;
         }
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         for (String e : bundle.keySet()) {
             map.put(e, (String) bundle.get(e));
         }
@@ -202,9 +199,8 @@ public class OpacClient extends Application {
         return (networkInfo != null && networkInfo.isConnected());
     }
 
-    public OpacApi getNewApi(Library lib) throws ClientProtocolException,
-            SocketException, IOException, NotReachableException {
-        OpacApi newApiInstance = null;
+    public OpacApi getNewApi(Library lib) {
+        OpacApi newApiInstance;
         if (lib.getApi().equals("bond26") || lib.getApi().equals("bibliotheca"))
         // Backwardscompatibility
         {
@@ -244,8 +240,7 @@ public class OpacClient extends Application {
         return newApiInstance;
     }
 
-    private OpacApi initApi(Library lib) throws ClientProtocolException,
-            SocketException, IOException, NotReachableException {
+    private OpacApi initApi(Library lib) throws IOException {
         api = getNewApi(lib);
         return api;
     }
@@ -266,10 +261,6 @@ public class OpacClient extends Application {
         }
         try {
             api = initApi(getLibrary());
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (SocketException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -345,13 +336,13 @@ public class OpacClient extends Application {
         String[] files = assets.list(ASSETS_BIBSDIR);
         int num = files.length;
 
-        List<Library> libs = new ArrayList<Library>();
+        List<Library> libs = new ArrayList<>();
 
-        StringBuilder builder = null;
-        BufferedReader reader = null;
-        InputStream fis = null;
-        String line = null;
-        String json = null;
+        StringBuilder builder;
+        BufferedReader reader;
+        InputStream fis;
+        String line;
+        String json;
 
         for (int i = 0; i < num; i++) {
             builder = new StringBuilder();
@@ -383,8 +374,8 @@ public class OpacClient extends Application {
     }
 
     public void toPrefs(Activity activity) {
-        // Intent intent = new Intent(activity, MainPreferenceActivity.class);
-        // activity.startActivity(intent);
+        Intent intent = new Intent(activity, MainPreferenceActivity.class);
+        activity.startActivity(intent);
     }
 
     @Override
