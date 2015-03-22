@@ -10,9 +10,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:paddingTop="16dp"
         android:paddingBottom="12dp"
-        android:textAppearance="@style/TextAppearance.Opacapp.Subhead.Drawer"
-        android:text="bla"/>
+        android:textAppearance="@style/TextAppearance.Opacapp.Subhead.Drawer"/>
 
 </RelativeLayout>

@@ -166,7 +166,7 @@ public class ReminderCheckService extends Service {
                     Library library = app.getLibrary(account.getLibrary());
                     OpacApi api = app.getNewApi(library);
 
-                    if (!api.isAccountSupported(library)) {
+                    if (!library.isAccountSupported()) {
                         continue;
                     }
 

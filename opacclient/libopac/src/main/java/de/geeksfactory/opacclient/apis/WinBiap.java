@@ -19,7 +19,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -163,17 +162,17 @@ public class WinBiap extends BaseApi implements OpacApi {
     }
 
     /**
-     * @param c "Combination" (probably And, Or, ...): Meaning unknown, seems
+     * @param combination "Combination" (probably And, Or, ...): Meaning unknown, seems
      *          to always be "1" except in some mysterious queries the website
      *          adds every time that don't change the result
-     * @param m "Mode": Meaning unknown, seems to always be "1" except in some
+     * @param mode "Mode": Meaning unknown, seems to always be "1" except in some
      *          mysterious queries the website adds every time that don't
      *          change the result
-     * @param f "Field": The key for the property that is queried, for example
+     * @param field "Field": The key for the property that is queried, for example
      *          "12" for "title"
-     * @param o "Operator": The type of search that is made (one of the
+     * @param operator "Operator": The type of search that is made (one of the
      *          QUERY_TYPE_ constants above), for example "8" for "contains"
-     * @param v "Value": The value that was input by the user
+     * @param value "Value": The value that was input by the user
      */
     protected int addParametersManual(String combination, String mode,
                                       String field, String operator, String value,

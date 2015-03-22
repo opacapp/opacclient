@@ -317,7 +317,7 @@ public class AccountData {
      * Set a warning which is shown to the user above the account data in a
      * yellow bar.
      *
-     * @param warning
+     * @param warning The warning message
      */
     public void setWarning(String warning) {
         this.warning = warning;

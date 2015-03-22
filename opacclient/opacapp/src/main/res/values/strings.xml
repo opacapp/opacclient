@@ -161,7 +161,7 @@ We might know your library ID then, but not your password, and we will take care
     <string name="barcode_desc">This feature requires the installation of a barcode scanner application. Do you want to download one?</string>
     <string name="barcode_gplay">Google Play</string>
     <string name="barcode_amazon">Amazon</string>
-    <string name="result_number">%d Search results</string>
+    <string name="result_number">%d search results</string>
     <string name="export_starred">Export</string>
     <string name="geolocate">Find nearby libraries</string>
     <string name="geolocate_progress">Locating you…</string>

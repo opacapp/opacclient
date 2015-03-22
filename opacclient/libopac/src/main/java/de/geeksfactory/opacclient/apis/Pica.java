@@ -22,7 +22,6 @@
 package de.geeksfactory.opacclient.apis;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -58,7 +57,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -362,7 +360,7 @@ public class Pica extends BaseApi implements OpacApi {
 
             int k = 0;
             for (String[] part : strings) {
-                if (part[0] == "a" && k == 0) {
+                if (part[0].equals("a") && k == 0) {
                     description.append("<b>").append(part[2]).append("</b>");
                 } else if (k < 3) {
                     description.append("<br />").append(part[2]);

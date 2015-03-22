@@ -301,10 +301,6 @@ public class SRU extends BaseApi implements OpacApi {
         List<SearchField> searchFields = new ArrayList<>();
         Set<String> fieldsCompat = searchQueries.keySet();
 
-        Map<String, String> all = new HashMap<>();
-        all.put("key", "");
-        all.put("value", "Alle");
-
         if (fieldsCompat.contains(KEY_SEARCH_QUERY_FREE)) {
             SearchField field = new TextSearchField(KEY_SEARCH_QUERY_FREE, "",
                     false, false, "Freie Suche", true, false);

@@ -310,10 +310,9 @@ public class SearchResultDetailFragment extends Fragment
         llDetails = (LinearLayout) view.findViewById(R.id.llDetails);
         llCopies = (LinearLayout) view.findViewById(R.id.llCopies);
 
-        ImageView iv = (ImageView) view.findViewById(R.id.ivCover);
         if (getArguments().containsKey(ARG_ITEM_COVER_BITMAP)) {
             Bitmap bitmap = getArguments().getParcelable(ARG_ITEM_COVER_BITMAP);
-            iv.setImageBitmap(bitmap);
+            ivCover.setImageBitmap(bitmap);
             Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {
                 @Override
                 public void onGenerated(Palette palette) {
@@ -974,8 +973,7 @@ public class SearchResultDetailFragment extends Fragment
                             } catch (UnsupportedEncodingException e) {
                             }
 
-                            String shareUrl = app.getApi().getShareUrl(id,
-                                    title);
+                            String shareUrl = app.getApi().getShareUrl(id, t);
                             if (shareUrl != null) {
                                 intent.putExtra(Intent.EXTRA_TEXT, shareUrl);
                                 startActivity(Intent.createChooser(intent,
@@ -1010,7 +1008,7 @@ public class SearchResultDetailFragment extends Fragment
                             } catch (UnsupportedEncodingException e) {
                             }
 
-                            String text = title + "\n\n";
+                            String text = t + "\n\n";
 
                             for (Detail detail : getItem().getDetails()) {
                                 String colon = "";
@@ -1021,8 +1019,7 @@ public class SearchResultDetailFragment extends Fragment
                                         + detail.getContent() + "\n\n";
                             }
 
-                            String shareUrl = app.getApi().getShareUrl(id,
-                                    title);
+                            String shareUrl = app.getApi().getShareUrl(id, t);
                             if (shareUrl != null) {
                                 text += shareUrl;
                             }

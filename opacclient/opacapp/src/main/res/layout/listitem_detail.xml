@@ -15,6 +15,7 @@
         android:minWidth="120dp"
         android:paddingBottom="0dip"
         android:paddingRight="8dp"
+        android:paddingLeft="8dp"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/detail_desc"/>

@@ -22,9 +22,9 @@
     <string name="tocollection">Alla raccolta</string>
     <string name="reserve">Prenotare</string>
     <string name="lendebook">Noleggio e-book</string>
-    <string name="doing_res">Prenotazione in corso...</string>
+    <string name="doing_res">Prenotazione in corso…</string>
     <string name="opac_error_email">Per questa funzione inserisci il tuo indirizzo e-mail nelle impostazioni.</string>
-    <string name="doing_booking">Richiesta prestito in corso...</string>
+    <string name="doing_booking">Richiesta prestito in corso…</string>
     <string name="status_nouser">Nelle Impostazioni non è stato inserito nessun dato personale relativo all\'account.</string>
     <string name="pending_fees">Importo da versare:</string>
     <string name="valid_until">Account valido fino al:</string>
@@ -39,12 +39,12 @@
     <string name="cancel">Annulla</string>
     <string name="delete">Cancella</string>
     <string name="accept">OK</string>
-    <string name="doing_cancel">Cancellazione della prenotazione...</string>
-    <string name="doing_prolong">Rinnovo del prestito in corso...</string>
+    <string name="doing_cancel">Cancellazione della prenotazione…</string>
+    <string name="doing_prolong">Rinnovo del prestito in corso…</string>
     <string name="doing_download">Le informazioni vengono scaricate</string>
     <string name="reader_needed">Per leggere l\'e-book è necessario un\'altra applicazione ad es. Bluefire Reader. Clicca su Ignora se hai già un\'app simile installata, questo avviso non apparirà nuovamente in seguito. Clicca invece su Download per installare Bluefire Reader tramite Play Store. </string>
     <string name="reader_needed_ignore">Ignora</string>
-    <string name="doing_prolong_all">Tutti i prestiti rinnovabili vengono rinnovati...</string>
+    <string name="doing_prolong_all">Tutti i prestiti rinnovabili vengono rinnovati…</string>
     <string name="prolong_all_confirm">Vuoi davvero rinnovare il prestito di tutti i materiali (rinnovabili)? Alcune biblioteche possono richiedere costi aggiuntivi per questa operazione.</string>
     <string name="opac_error">Avviso da Web Opac:</string>
     <string name="welcome">Benvenuta/o!</string>
@@ -52,7 +52,7 @@
     <string name="welcome_account">L\'applicazione può essere utilizzata nella sola modalità ricerca oppure possono essere abilitate funzioni aggiuntive riservate agli utenti registrati della biblioteca inserendo i dati personali del proprio account. È in seguito possibile aggiungere ulteriori account dal menù Impostazioni.</string>
     <string name="select_library">Scegliere biblioteca</string>
     <string name="report">Invia segnalazione</string>
-    <string name="report_sending">Invio segnalazione in corso...</string>
+    <string name="report_sending">Invio segnalazione in corso…</string>
     <string name="report_sent">Segnalazione inviata. Grazie!</string>
     <string name="report_error">Invio segnalazione non riuscito.</string>
     <string name="notifications">Promemoria</string>
@@ -162,7 +162,7 @@
     <string name="result_number">%d risultati ricerca</string>
     <string name="export_starred">Esporta</string>
     <string name="geolocate">Cerca le biblioteche nelle mie vicinanze</string>
-    <string name="geolocate_progress">Ricerca della tua posizione in corso...</string>
+    <string name="geolocate_progress">Ricerca della tua posizione in corso…</string>
     <string name="alphabetic_list">Mostra lista completa</string>
     <string name="setting_nfc">Ricerca tramite tag NFC</string>
     <string name="setting_nfc_desc">Sperimentale. Disponibile solo per alcuni dispositivi e biblioteche.</string>
@@ -188,8 +188,8 @@
     <string name="hint_library_name">es. \"Biblioteca comunale\", \"Biblioteca universitaria\", \"Ruprecht-Karls-Universität\", …</string>
     <string name="comment">Commento</string>
     <string name="send">Invia</string>
-    <string name="select_mail_app">Seleziona applicazione per e-mail...</string>
-    <string name="search_libraries_hint">Cerca biblioteca...</string>
+    <string name="select_mail_app">Seleziona applicazione per e-mail…</string>
+    <string name="search_libraries_hint">Cerca biblioteca…</string>
     <string name="action_search">Cerca</string>
     <string name="snooze">Ricordami domani</string>
     <string name="expand">Mostra ricerca avanzata</string>

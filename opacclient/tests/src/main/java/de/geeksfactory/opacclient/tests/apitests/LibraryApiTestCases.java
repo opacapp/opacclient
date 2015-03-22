@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.apis.Adis;
 import de.geeksfactory.opacclient.apis.BiBer1992;
 import de.geeksfactory.opacclient.apis.Bibliotheca;
@@ -119,7 +118,7 @@ public class LibraryApiTestCases {
 			third = res.getResults().get(2);
 		else
 			third = res.getResults().get(res.getResults().size() - 1);
-		DetailledItem detail = null;
+		DetailledItem detail;
 		if (third.getId() != null)
 			detail = api.getResultById(third.getId(), "");
 		else
@@ -130,7 +129,7 @@ public class LibraryApiTestCases {
 		if (res.getResults().size() < res.getTotal_result_count()) {
 			api.searchGetPage(2);
 			SearchResult second = res.getResults().get(1);
-			DetailledItem detail2 = null;
+			DetailledItem detail2;
 			if (second.getId() != null)
 				detail2 = api.getResultById(second.getId(), "");
 			else
@@ -145,7 +144,7 @@ public class LibraryApiTestCases {
 	 */
 	@Test
 	public void testWrongLogin() throws IOException, JSONException {
-		if (!api.isAccountSupported(library))
+		if (!library.isAccountSupported())
 			return;
 		Account account = new Account();
 		account.setId(0);
@@ -213,7 +212,7 @@ public class LibraryApiTestCases {
 	}
 
 	public static OpacApi getApi(Library library) {
-		OpacApi api = null;
+		OpacApi api;
 		if (library.getApi().equals("bond26")
 				|| library.getApi().equals("bibliotheca"))
 			// Backwardscompatibility

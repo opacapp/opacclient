@@ -23,7 +23,6 @@ package de.geeksfactory.opacclient.apis;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -40,7 +39,6 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.SocketException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
@@ -420,7 +418,6 @@ public class Bibliotheca extends BaseApi {
                             sr.setId("&detmediennr=" + nr);
                         }
                     }
-                } else {
                 }
             } catch (Exception e) {
             }
@@ -1017,9 +1014,7 @@ public class Bibliotheca extends BaseApi {
         logged_in = System.currentTimeMillis();
         logged_in_as = acc;
 
-        JSONObject copymap = null;
-
-        copymap = data.getJSONObject("accounttable");
+        JSONObject copymap = data.getJSONObject("accounttable");
 
         List<Map<String, String>> medien = new ArrayList<>();
 

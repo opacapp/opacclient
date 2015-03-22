@@ -642,7 +642,6 @@ public interface OpacApi {
      * supported languages. This function may use blocking network operations
      * and may return null if the API doesn't support different languages.
      *
-     * @throws OpacErrorException
      * @throws IOException
      */
     public Set<String> getSupportedLanguages() throws IOException;
