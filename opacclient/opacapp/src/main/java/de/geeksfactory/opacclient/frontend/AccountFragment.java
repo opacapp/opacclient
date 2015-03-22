@@ -53,6 +53,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -113,17 +114,25 @@ public class AccountFragment extends Fragment implements
     private boolean fromcache;
     private boolean supported = true;
 
-    private SwipeRefreshLayout swipeRefreshLayout;
+    protected ScrollView svAccount;
+    protected FrameLayout errorView;
+    protected View unsupportedErrorView, answerErrorView;
+    protected SwipeRefreshLayout swipeRefreshLayout;
+    protected Button btSend, btPrefs;
+    protected LinearLayout llLent, llRes, llLoading;
+    protected TextView tvError, tvResHeader, tvPendingFeesLabel, tvPendingFees, tvValidUntilLabel,
+            tvValidUntil, tvAge, tvLentHeader, tvWarning, tvAccCity, tvAccUser, tvAccLabel,
+            tvErrBodyA, tvErrHeadA, tvErrBodyU;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         view = inflater.inflate(R.layout.fragment_account, container, false);
+        findViews();
         app = (OpacClient) getActivity().getApplication();
         account = app.getAccount();
 
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         swipeRefreshLayout.setColorSchemeResources(R.color.primary_red);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -176,6 +185,34 @@ public class AccountFragment extends Fragment implements
         return view;
     }
 
+    private void findViews() {
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        svAccount = (ScrollView) view.findViewById(R.id.svAccount);
+        errorView = (FrameLayout) view.findViewById(R.id.error_view);
+        unsupportedErrorView = view.findViewById(R.id.unsupported_error);
+        answerErrorView = view.findViewById(R.id.answer_error);
+        llLoading = (LinearLayout) view.findViewById(R.id.llLoading);
+        tvErrBodyU = (TextView) view.findViewById(R.id.tvErrBodyU);
+        btSend = (Button) view.findViewById(R.id.btSend);
+        btPrefs = (Button) view.findViewById(R.id.btPrefs);
+        tvErrHeadA = (TextView) view.findViewById(R.id.tvErrHeadA);
+        tvErrBodyA = (TextView) view.findViewById(R.id.tvErrBodyA);
+        tvAccLabel = (TextView) view.findViewById(R.id.tvAccLabel);
+        tvAccUser = (TextView) view.findViewById(R.id.tvAccUser);
+        tvAccCity = (TextView) view.findViewById(R.id.tvAccCity);
+        llLent = (LinearLayout) view.findViewById(R.id.llLent);
+        tvWarning = (TextView) view.findViewById(R.id.tvWarning);
+        tvLentHeader = (TextView) view.findViewById(R.id.tvEntlHeader);
+        llRes = (LinearLayout) view.findViewById(R.id.llReservations);
+        tvError = (TextView) view.findViewById(R.id.tvError);
+        tvResHeader = (TextView) view.findViewById(R.id.tvResHeader);
+        tvPendingFeesLabel = (TextView) view.findViewById(R.id.tvPendingFeesLabel);
+        tvPendingFees = (TextView) view.findViewById(R.id.tvPendingFees);
+        tvValidUntilLabel = (TextView) view.findViewById(R.id.tvValidUntilLabel);
+        tvValidUntil = (TextView) view.findViewById(R.id.tvValidUntilLabel);
+        tvAge = (TextView) view.findViewById(R.id.tvAge);
+    }
+
     @SuppressLint("NewApi")
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -209,11 +246,11 @@ public class AccountFragment extends Fragment implements
     @Override
     public void accountSelected(Account account) {
 
-        view.findViewById(R.id.svAccount).setVisibility(View.GONE);
-        view.findViewById(R.id.unsupported_error).setVisibility(View.GONE);
-        view.findViewById(R.id.answer_error).setVisibility(View.GONE);
-        ((FrameLayout) view.findViewById(R.id.error_view)).removeAllViews();
-        view.findViewById(R.id.llLoading).setVisibility(View.VISIBLE);
+        svAccount.setVisibility(View.GONE);
+        unsupportedErrorView.setVisibility(View.GONE);
+        answerErrorView.setVisibility(View.GONE);
+        errorView.removeAllViews();
+        llLoading.setVisibility(View.VISIBLE);
 
         setRefreshing(false);
         supported = true;
@@ -231,64 +268,59 @@ public class AccountFragment extends Fragment implements
                 && (api.getSupportFlags() & OpacApi.SUPPORT_FLAG_ACCOUNT_EXTENDABLE) == 0) {
             supported = false;
             // Not supported with this api at all
-            view.findViewById(R.id.llLoading).setVisibility(View.GONE);
-            view.findViewById(R.id.unsupported_error).setVisibility(
+            llLoading.setVisibility(View.GONE);
+            unsupportedErrorView.setVisibility(
                     View.VISIBLE);
-            ((TextView) view.findViewById(R.id.tvErrBodyU))
-                    .setText(R.string.account_unsupported_api);
-            ((Button) view.findViewById(R.id.btSend))
-                    .setText(R.string.write_mail);
-            view.findViewById(R.id.btSend)
-                .setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent emailIntent = new Intent(
-                                android.content.Intent.ACTION_SEND);
-                        emailIntent.putExtra(
-                                android.content.Intent.EXTRA_EMAIL,
-                                new String[]{"info@opacapp.de"});
-                        emailIntent
-                                .putExtra(
-                                        android.content.Intent.EXTRA_SUBJECT,
-                                        "Bibliothek "
-                                                + app.getLibrary()
-                                                     .getIdent());
-                        emailIntent.putExtra(
-                                android.content.Intent.EXTRA_TEXT,
-                                getResources().getString(
-                                        R.string.interested_to_help));
-                        emailIntent.setType("text/plain");
-                        startActivity(Intent.createChooser(emailIntent,
-                                getString(R.string.write_mail)));
-                    }
-                });
+            tvErrBodyU.setText(R.string.account_unsupported_api);
+            btSend.setText(R.string.write_mail);
+            btSend.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent emailIntent = new Intent(
+                            android.content.Intent.ACTION_SEND);
+                    emailIntent.putExtra(
+                            android.content.Intent.EXTRA_EMAIL,
+                            new String[]{"info@opacapp.de"});
+                    emailIntent
+                            .putExtra(
+                                    android.content.Intent.EXTRA_SUBJECT,
+                                    "Bibliothek "
+                                            + app.getLibrary()
+                                                 .getIdent());
+                    emailIntent.putExtra(
+                            android.content.Intent.EXTRA_TEXT,
+                            getResources().getString(
+                                    R.string.interested_to_help));
+                    emailIntent.setType("text/plain");
+                    startActivity(Intent.createChooser(emailIntent,
+                            getString(R.string.write_mail)));
+                }
+            });
 
         } else if (api != null && !app.getLibrary().isAccountSupported()) {
             supported = false;
 
             // We need help
-            view.findViewById(R.id.llLoading).setVisibility(View.GONE);
-            view.findViewById(R.id.unsupported_error).setVisibility(
+            llLoading.setVisibility(View.GONE);
+            unsupportedErrorView.setVisibility(
                     View.VISIBLE);
 
-            ((TextView) view.findViewById(R.id.tvErrBodyU))
-                    .setText(R.string.account_unsupported);
-            view.findViewById(R.id.btSend)
-                .setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog = ProgressDialog.show(getActivity(), "",
-                                getString(R.string.report_sending), true,
-                                true, new OnCancelListener() {
-                                    @Override
-                                    public void onCancel(
-                                            DialogInterface arg0) {
-                                    }
-                                });
-                        dialog.show();
-                        new SendTask().execute();
-                    }
-                });
+            tvErrBodyU.setText(R.string.account_unsupported);
+            btSend.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog = ProgressDialog.show(getActivity(), "",
+                            getString(R.string.report_sending), true,
+                            true, new OnCancelListener() {
+                                @Override
+                                public void onCancel(
+                                        DialogInterface arg0) {
+                                }
+                            });
+                    dialog.show();
+                    new SendTask().execute();
+                }
+            });
 
         } else if (account.getPassword() == null
                 || account.getPassword().equals("null")
@@ -297,23 +329,21 @@ public class AccountFragment extends Fragment implements
                 || account.getName().equals("null")
                 || account.getName().equals("")) {
             // No credentials entered
-            view.findViewById(R.id.llLoading).setVisibility(View.GONE);
-            view.findViewById(R.id.answer_error).setVisibility(View.VISIBLE);
-            view.findViewById(R.id.btPrefs)
-                .setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(),
-                                AccountEditActivity.class);
-                        intent.putExtra(
-                                AccountEditActivity.EXTRA_ACCOUNT_ID, app
-                                        .getAccount().getId());
-                        startActivity(intent);
-                    }
-                });
-            ((TextView) view.findViewById(R.id.tvErrHeadA)).setText("");
-            ((TextView) view.findViewById(R.id.tvErrBodyA))
-                    .setText(R.string.status_nouser);
+            llLoading.setVisibility(View.GONE);
+            answerErrorView.setVisibility(View.VISIBLE);
+            btPrefs.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(),
+                            AccountEditActivity.class);
+                    intent.putExtra(
+                            AccountEditActivity.EXTRA_ACCOUNT_ID, app
+                                    .getAccount().getId());
+                    startActivity(intent);
+                }
+            });
+            tvErrHeadA.setText("");
+            tvErrBodyA.setText(R.string.status_nouser);
 
         } else {
             // Supported
@@ -553,7 +583,7 @@ public class AccountFragment extends Fragment implements
         adatasource.open();
         adatasource.invalidateCachedAccountData(account);
         adatasource.close();
-        view.findViewById(R.id.svAccount).setVisibility(View.GONE);
+        svAccount.setVisibility(View.GONE);
         accountSelected(account);
     }
 
@@ -593,27 +623,26 @@ public class AccountFragment extends Fragment implements
                              refresh();
                          }
                      });
-            view.findViewById(R.id.llLoading).setVisibility(View.GONE);
-            view.findViewById(R.id.svAccount).setVisibility(View.GONE);
+            llLoading.setVisibility(View.GONE);
+            svAccount.setVisibility(View.GONE);
             connError.setVisibility(View.VISIBLE);
         }
     }
 
     protected void dialog_wrong_credentials(String s) {
-        view.findViewById(R.id.llLoading).setVisibility(View.GONE);
-        view.findViewById(R.id.answer_error).setVisibility(View.VISIBLE);
-        view.findViewById(R.id.btPrefs)
-            .setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(),
-                            AccountEditActivity.class);
-                    intent.putExtra(AccountEditActivity.EXTRA_ACCOUNT_ID,
-                            account.getId());
-                    startActivity(intent);
-                }
-            });
-        ((TextView) view.findViewById(R.id.tvErrBodyA)).setText(s);
+        llLoading.setVisibility(View.GONE);
+        answerErrorView.setVisibility(View.VISIBLE);
+        btPrefs.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(),
+                        AccountEditActivity.class);
+                intent.putExtra(AccountEditActivity.EXTRA_ACCOUNT_ID,
+                        account.getId());
+                startActivity(intent);
+            }
+        });
+        tvErrBodyA.setText(s);
     }
 
     public void loaded(final AccountData result) {
@@ -647,11 +676,11 @@ public class AccountFragment extends Fragment implements
         if (getActivity() == null) {
             return;
         }
-        view.findViewById(R.id.svAccount).setVisibility(View.VISIBLE);
-        view.findViewById(R.id.llLoading).setVisibility(View.GONE);
-        view.findViewById(R.id.unsupported_error).setVisibility(View.GONE);
-        view.findViewById(R.id.answer_error).setVisibility(View.GONE);
-        ((FrameLayout) view.findViewById(R.id.error_view)).removeAllViews();
+        svAccount.setVisibility(View.VISIBLE);
+        llLoading.setVisibility(View.GONE);
+        unsupportedErrorView.setVisibility(View.GONE);
+        answerErrorView.setVisibility(View.GONE);
+        errorView.removeAllViews();
 
         this.fromcache = fromcache;
 
@@ -660,11 +689,8 @@ public class AccountFragment extends Fragment implements
         final long tolerance = Long.decode(sp.getString("notification_warning",
                 "367200000"));
 
-        ((TextView) view.findViewById(R.id.tvAccLabel)).setText(account
-                .getLabel());
-        ((TextView) view.findViewById(R.id.tvAccUser)).setText(account
-                .getName());
-        TextView tvAccCity = (TextView) view.findViewById(R.id.tvAccCity);
+        tvAccLabel.setText(account.getLabel());
+        tvAccUser.setText(account.getName());
         Library lib;
         try {
             lib = app.getLibrary(account.getLibrary());
@@ -676,13 +702,11 @@ public class AccountFragment extends Fragment implements
             ACRA.getErrorReporter().handleException(e);
         }
 
-        LinearLayout llLent = (LinearLayout) view.findViewById(R.id.llLent);
         llLent.removeAllViews();
 
         boolean notification_on = sp.getBoolean("notification_service", false);
         boolean notification_problems = false;
 
-        View tvWarning = view.findViewById(R.id.tvWarning);
         if (tvWarning != null) {
             if (result.getWarning() != null && result.getWarning().length() > 1) {
                 tvWarning.setVisibility(View.VISIBLE);
@@ -696,13 +720,11 @@ public class AccountFragment extends Fragment implements
             TextView t1 = new TextView(getActivity());
             t1.setText(R.string.entl_none);
             llLent.addView(t1);
-            ((TextView) view.findViewById(R.id.tvEntlHeader))
-                    .setText(getActivity().getString(R.string.entl_head)
-                            + " (0)");
+            tvLentHeader.setText(getActivity().getString(R.string.entl_head) + " (0)");
         } else {
-            ((TextView) view.findViewById(R.id.tvEntlHeader))
-                    .setText(getActivity().getString(R.string.entl_head) + " ("
-                            + result.getLent().size() + ")");
+            tvLentHeader.setText(
+                    getActivity().getString(R.string.entl_head) + " (" + result.getLent().size() +
+                            ")");
             for (final Map<String, String> item : result.getLent()) {
                 View v = getLayoutInflater(null).inflate(
                         R.layout.listitem_account_lent, null);
@@ -867,30 +889,24 @@ public class AccountFragment extends Fragment implements
         }
 
         if (notification_problems) {
-            View tvError = view.findViewById(R.id.tvError);
             if (tvError != null) {
                 tvError.setVisibility(View.VISIBLE);
-                ((TextView) tvError).setText(R.string.notification_problems);
+                tvError.setText(R.string.notification_problems);
             }
         }
 
-        LinearLayout llRes = (LinearLayout) view
-                .findViewById(R.id.llReservations);
         llRes.removeAllViews();
 
         if (result.getReservations().size() == 0) {
             TextView t1 = new TextView(getActivity());
             t1.setText(R.string.reservations_none);
             llRes.addView(t1);
-            ((TextView) view.findViewById(R.id.tvResHeader))
-                    .setText(getActivity()
-                            .getString(R.string.reservations_head) + " (0)");
+            tvResHeader.setText(getActivity()
+                    .getString(R.string.reservations_head) + " (0)");
         } else {
-            ((TextView) view.findViewById(R.id.tvResHeader))
-                    .setText(getActivity()
-                            .getString(R.string.reservations_head)
-                            + " ("
-                            + result.getReservations().size() + ")");
+            tvResHeader.setText(getActivity()
+                    .getString(R.string.reservations_head) + " (" +
+                    result.getReservations().size() + ")");
             for (final Map<String, String> item : result.getReservations()) {
                 View v = getLayoutInflater(null).inflate(
                         R.layout.listitem_account_reservation, null);
@@ -995,58 +1011,44 @@ public class AccountFragment extends Fragment implements
         }
 
         if (result.getPendingFees() != null) {
-            view.findViewById(R.id.tvPendingFeesLabel).setVisibility(
-                    View.VISIBLE);
-            view.findViewById(R.id.tvPendingFees).setVisibility(View.VISIBLE);
-            ((TextView) view.findViewById(R.id.tvPendingFees)).setText(result
-                    .getPendingFees());
+            tvPendingFeesLabel.setVisibility(View.VISIBLE);
+            tvPendingFees.setVisibility(View.VISIBLE);
+            tvPendingFees.setText(result.getPendingFees());
         } else {
-            view.findViewById(R.id.tvPendingFeesLabel).setVisibility(View.GONE);
-            view.findViewById(R.id.tvPendingFees).setVisibility(View.GONE);
+            tvPendingFeesLabel.setVisibility(View.GONE);
+            tvPendingFees.setVisibility(View.GONE);
         }
         if (result.getValidUntil() != null) {
-            view.findViewById(R.id.tvValidUntilLabel).setVisibility(
+            tvValidUntilLabel.setVisibility(
                     View.VISIBLE);
-            view.findViewById(R.id.tvValidUntil).setVisibility(View.VISIBLE);
-            ((TextView) view.findViewById(R.id.tvValidUntil)).setText(result
-                    .getValidUntil());
+            tvValidUntil.setVisibility(View.VISIBLE);
+            tvValidUntil.setText(result.getValidUntil());
         } else {
-            view.findViewById(R.id.tvValidUntilLabel).setVisibility(View.GONE);
-            view.findViewById(R.id.tvValidUntil).setVisibility(View.GONE);
+            tvValidUntilLabel.setVisibility(View.GONE);
+            tvValidUntil.setVisibility(View.GONE);
         }
         refreshage();
     }
 
     public void refreshage() {
         try {
-            if (view.findViewById(R.id.tvAge) == null) {
+            if (tvAge == null) {
                 return;
             }
 
             long age = System.currentTimeMillis() - refreshtime;
             if (age < 60 * 1000) {
-                ((TextView) view.findViewById(R.id.tvAge))
-                        .setText(getResources().getString(
-                                R.string.account_up_to_date));
+                tvAge.setText(getResources().getString(R.string.account_up_to_date));
             } else if (age < (3600 * 1000)) {
-                ((TextView) view.findViewById(R.id.tvAge))
-                        .setText(getResources().getQuantityString(
-                                R.plurals.account_age_minutes,
-                                (int) (age / (60 * 1000)),
-                                (int) (age / (60 * 1000))));
+                tvAge.setText(getResources().getQuantityString(R.plurals.account_age_minutes,
+                        (int) (age / (60 * 1000)), (int) (age / (60 * 1000))));
             } else if (age < 24 * 3600 * 1000) {
-                ((TextView) view.findViewById(R.id.tvAge))
-                        .setText(getResources().getQuantityString(
-                                R.plurals.account_age_hours,
-                                (int) (age / (3600 * 1000)),
-                                (int) (age / (3600 * 1000))));
+                tvAge.setText(getResources().getQuantityString(R.plurals.account_age_hours,
+                        (int) (age / (3600 * 1000)), (int) (age / (3600 * 1000))));
 
             } else {
-                ((TextView) view.findViewById(R.id.tvAge))
-                        .setText(getResources().getQuantityString(
-                                R.plurals.account_age_days,
-                                (int) (age / (24 * 3600 * 1000)),
-                                (int) (age / (24 * 3600 * 1000))));
+                tvAge.setText(getResources().getQuantityString(R.plurals.account_age_days,
+                        (int) (age / (24 * 3600 * 1000)), (int) (age / (24 * 3600 * 1000))));
             }
         } catch (java.lang.IllegalStateException e) {
             // as this is called from a handler it may be called
@@ -1329,7 +1331,6 @@ public class AccountFragment extends Fragment implements
             }
 
             dialog.dismiss();
-            Button btSend = (Button) view.findViewById(R.id.btSend);
             btSend.setEnabled(false);
             if (result == 0) {
                 Toast toast = Toast.makeText(getActivity(),
@@ -1646,17 +1647,19 @@ public class AccountFragment extends Fragment implements
             }
 
             TextView tvAuthor = (TextView) view.findViewById(R.id.tvAuthor);
+            TextView tvTitle = (TextView) view.findViewById(R.id.tvTitle);
+            TextView tvOld = (TextView) view.findViewById(R.id.tvOld);
+            TextView tvNew = (TextView) view.findViewById(R.id.tvNew);
+            TextView tvMsg = (TextView) view.findViewById(R.id.tvMsg);
+
             tvAuthor.setVisibility(item
                     .containsKey(ProlongAllResult.KEY_LINE_AUTHOR) ? View.VISIBLE
                     : View.GONE);
             tvAuthor.setText(item.get(ProlongAllResult.KEY_LINE_AUTHOR));
-            TextView tvTitle = (TextView) view.findViewById(R.id.tvTitle);
             tvTitle.setText(item.get(ProlongAllResult.KEY_LINE_TITLE));
-            TextView tvOld = (TextView) view.findViewById(R.id.tvOld);
             tvOld.setText(item.get(ProlongAllResult.KEY_LINE_OLD_RETURNDATE));
-            TextView tvNew = (TextView) view.findViewById(R.id.tvNew);
             tvNew.setText(item.get(ProlongAllResult.KEY_LINE_NEW_RETURNDATE));
-            TextView tvMsg = (TextView) view.findViewById(R.id.tvMsg);
+
             tvMsg.setText(item.get(ProlongAllResult.KEY_LINE_MESSAGE));
             return view;
         }

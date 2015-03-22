@@ -25,6 +25,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
@@ -70,6 +71,16 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
     protected ScanResult scanResult;
     private LoadSearchFieldsTask task;
 
+    protected LinearLayout llFormFields, llAdvancedFields, llExpand;
+    protected EditText etSimpleSearch;
+    protected RelativeLayout rlReplaced;
+    protected ImageView ivReplacedStore, ivExpandIcon;
+    protected ScrollView scroll;
+    protected ProgressBar progressBar;
+    protected RelativeLayout rlSimpleSearch, rlOuter;
+    protected TextView tvSearchAdvHeader, tvExpandString;
+    protected ViewGroup errorView;
+
     public SearchFragment() {
 
     }
@@ -79,6 +90,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_search, container, false);
+        findViews();
 
         setHasOptionsMenu(true);
 
@@ -102,6 +114,23 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
         // }
 
         return view;
+    }
+
+    protected void findViews() {
+        llFormFields = (LinearLayout) view.findViewById(R.id.llFormFields);
+        llAdvancedFields = (LinearLayout) view.findViewById(R.id.llAdvancedFields);
+        etSimpleSearch = (EditText) view.findViewById(R.id.etSimpleSearch);
+        rlReplaced = (RelativeLayout) view.findViewById(R.id.rlReplaced);
+        ivReplacedStore = (ImageView) view.findViewById(R.id.ivReplacedStore);
+        llExpand = (LinearLayout) view.findViewById(R.id.llExpand);
+        scroll = (ScrollView) view.findViewById(R.id.scroll);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        rlSimpleSearch = (RelativeLayout) view.findViewById(R.id.rlSimpleSearch);
+        tvSearchAdvHeader = (TextView) view.findViewById(R.id.tvSearchAdvHeader);
+        rlOuter = (RelativeLayout) view.findViewById(R.id.rlOuter);
+        ivExpandIcon = (ImageView) view.findViewById(R.id.ivExpandIcon);
+        tvExpandString = (TextView) view.findViewById(R.id.tvExpandString);
+        errorView = (ViewGroup) view.findViewById(R.id.error_view);
     }
 
     @Override
@@ -134,7 +163,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
             if (field instanceof TextSearchField) {
                 EditText text;
                 if (((TextSearchField) field).isFreeSearch()) {
-                    text = (EditText) view.findViewById(R.id.etSimpleSearch);
+                    text = etSimpleSearch;
                 } else {
                     text = (EditText) v.findViewById(R.id.edittext);
                 }
@@ -155,8 +184,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
     protected void buildSearchForm() {
         if (app.getLibrary().getReplacedBy() != null
                 && sp.getInt("annoyed", 0) < 5) {
-            view.findViewById(R.id.rlReplaced).setVisibility(View.VISIBLE);
-            view.findViewById(R.id.ivReplacedStore).setOnClickListener(
+            rlReplaced.setVisibility(View.VISIBLE);
+            ivReplacedStore.setOnClickListener(
                     new OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -173,17 +202,11 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                     });
             sp.edit().putInt("annoyed", sp.getInt("annoyed", 0) + 1).commit();
         } else {
-            view.findViewById(R.id.rlReplaced).setVisibility(View.GONE);
+            rlReplaced.setVisibility(View.GONE);
         }
 
-        LinearLayout llFormFields = (LinearLayout) view
-                .findViewById(R.id.llFormFields);
         llFormFields.removeAllViews();
-        LinearLayout llAdvancedFields = (LinearLayout) view
-                .findViewById(R.id.llAdvancedFields);
         llAdvancedFields.removeAllViews();
-
-        LinearLayout llExpand = (LinearLayout) view.findViewById(R.id.llExpand);
         llExpand.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -192,13 +215,6 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
             }
 
         });
-
-        RelativeLayout rlSimpleSearch = (RelativeLayout) view
-                .findViewById(R.id.rlSimpleSearch);
-        TextView tvSearchAdvHeader = (TextView) view
-                .findViewById(R.id.tvSearchAdvHeader);
-        EditText etSimpleSearch = (EditText) view
-                .findViewById(R.id.etSimpleSearch);
         rlSimpleSearch.setVisibility(View.GONE);
         tvSearchAdvHeader.setVisibility(View.GONE);
 
@@ -336,18 +352,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
     protected void setAdvanced(boolean advanced) {
         this.advanced = advanced;
-        final ScrollView scroll = (ScrollView) view.findViewById(R.id.scroll);
-        final RelativeLayout rlOuter = (RelativeLayout) view
-                .findViewById(R.id.rlOuter);
-        final LinearLayout llExpand = (LinearLayout) view
-                .findViewById(R.id.llExpand);
-        LinearLayout llAdvancedFields = (LinearLayout) view
-                .findViewById(R.id.llAdvancedFields);
         if (advanced) {
-            ((ImageView) view.findViewById(R.id.ivExpandIcon))
-                    .setImageResource(R.drawable.ic_action_collapse);
-            ((TextView) view.findViewById(R.id.tvExpandString))
-                    .setText(R.string.collapse);
+            ivExpandIcon.setImageResource(R.drawable.ic_action_collapse);
+            tvExpandString.setText(R.string.collapse);
             llAdvancedFields.setVisibility(View.VISIBLE);
             rlOuter.getViewTreeObserver().addOnGlobalLayoutListener(
                     new OnGlobalLayoutListener() {
@@ -359,10 +366,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                         }
                     });
         } else {
-            ((ImageView) view.findViewById(R.id.ivExpandIcon))
-                    .setImageResource(R.drawable.ic_action_expand);
-            ((TextView) view.findViewById(R.id.tvExpandString))
-                    .setText(R.string.expand);
+            ivExpandIcon.setImageResource(R.drawable.ic_action_expand);
+            tvExpandString.setText(R.string.expand);
             llAdvancedFields.setVisibility(View.GONE);
 
         }
@@ -387,7 +392,6 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
     @Override
     public void accountSelected(Account account) {
-        ViewGroup errorView = (ViewGroup) view.findViewById(R.id.error_view);
         errorView.removeAllViews();
         progress(false);
 
@@ -422,9 +426,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
     }
 
     protected void progress(boolean on) {
-        view.findViewById(R.id.progressBar).setVisibility(
+        progressBar.setVisibility(
                 on ? View.VISIBLE : View.GONE);
-        view.findViewById(R.id.scroll).setVisibility(
+        scroll.setVisibility(
                 on ? View.GONE : View.VISIBLE);
     }
 
@@ -436,8 +440,6 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
         if (getView() == null || getActivity() == null) {
             return;
         }
-        final ViewGroup errorView = (ViewGroup) view
-                .findViewById(R.id.error_view);
         errorView.removeAllViews();
         View connError = getActivity().getLayoutInflater().inflate(
                 R.layout.error_connectivity, errorView);
@@ -455,7 +457,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                     .setText(description);
         }
 
-        view.findViewById(R.id.scroll).setVisibility(View.GONE);
+        scroll.setVisibility(View.GONE);
         connError.setVisibility(View.VISIBLE);
     }
 
@@ -524,7 +526,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
             if (field instanceof TextSearchField) {
                 EditText text;
                 if (((TextSearchField) field).isFreeSearch()) {
-                    text = (EditText) view.findViewById(R.id.etSimpleSearch);
+                    text = etSimpleSearch;
                 } else {
                     text = (EditText) v.findViewById(R.id.edittext);
                 }
@@ -562,7 +564,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
             if (field instanceof TextSearchField) {
                 EditText text;
                 if (((TextSearchField) field).isFreeSearch()) {
-                    text = (EditText) view.findViewById(R.id.etSimpleSearch);
+                    text = etSimpleSearch;
                 } else {
                     text = (EditText) v.findViewById(R.id.edittext);
                 }
@@ -628,7 +630,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
             if (field instanceof TextSearchField) {
                 EditText text;
                 if (((TextSearchField) field).isFreeSearch()) {
-                    text = (EditText) view.findViewById(R.id.etSimpleSearch);
+                    text = etSimpleSearch;
                 } else {
                     text = (EditText) v.findViewById(R.id.edittext);
                 }

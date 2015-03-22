@@ -39,6 +39,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -100,15 +101,17 @@ public class SearchResultDetailFragment extends Fragment
     private Callbacks mCallbacks = sDummyCallbacks;
     protected boolean back_button_visible = false;
     protected boolean image_analyzed = false;
+
     protected Toolbar toolbar;
     protected ImageView ivCover;
     protected ObservableScrollView scrollView;
-    protected View gradientBottom;
-    protected View gradientTop;
-    protected View tint;
-    protected TextView tvTitel;
-    protected LinearLayout llDetails;
-    protected LinearLayout llCopies;
+    protected View gradientBottom, gradientTop, tint;
+    protected TextView tvTitel, tvCopies;
+    protected LinearLayout llDetails, llCopies;
+    protected ProgressBar progressBar;
+    protected RelativeLayout detailsLayout;
+    protected FrameLayout errorView;
+
     /**
      * The detailled item that this fragment represents.
      */
@@ -152,45 +155,41 @@ public class SearchResultDetailFragment extends Fragment
         progress = show;
 
         if (view != null) {
-            ProgressBar progress = (ProgressBar) view
-                    .findViewById(R.id.progress);
-            View content = view.findViewById(R.id.detailsLayout);
+            View content = detailsLayout;
+
             if (scrollView != null) {
                 scrollView.setVisibility(View.VISIBLE);
             }
 
             if (show) {
                 if (animate) {
-                    progress.startAnimation(AnimationUtils.loadAnimation(
+                    progressBar.startAnimation(AnimationUtils.loadAnimation(
                             getActivity(), android.R.anim.fade_in));
                     content.startAnimation(AnimationUtils.loadAnimation(
                             getActivity(), android.R.anim.fade_out));
                 } else {
-                    progress.clearAnimation();
+                    progressBar.clearAnimation();
                     content.clearAnimation();
                 }
-                progress.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
                 content.setVisibility(View.GONE);
             } else {
                 if (animate) {
-                    progress.startAnimation(AnimationUtils.loadAnimation(
+                    progressBar.startAnimation(AnimationUtils.loadAnimation(
                             getActivity(), android.R.anim.fade_out));
                     content.startAnimation(AnimationUtils.loadAnimation(
                             getActivity(), android.R.anim.fade_in));
                 } else {
-                    progress.clearAnimation();
+                    progressBar.clearAnimation();
                     content.clearAnimation();
                 }
-                progress.setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);
                 content.setVisibility(View.VISIBLE);
             }
         }
     }
 
     public void showConnectivityError() {
-        ProgressBar progress = (ProgressBar) view.findViewById(R.id.progress);
-        final FrameLayout errorView = (FrameLayout) view
-                .findViewById(R.id.error_view);
         errorView.removeAllViews();
         View connError = getActivity().getLayoutInflater().inflate(
                 R.layout.error_connectivity, errorView);
@@ -204,13 +203,13 @@ public class SearchResultDetailFragment extends Fragment
                      }
                  });
 
-        progress.startAnimation(AnimationUtils.loadAnimation(getActivity(),
+        progressBar.startAnimation(AnimationUtils.loadAnimation(getActivity(),
                 android.R.anim.fade_out));
         scrollView.startAnimation(AnimationUtils.loadAnimation(getActivity(),
                 android.R.anim.fade_out));
         connError.startAnimation(AnimationUtils.loadAnimation(getActivity(),
                 android.R.anim.fade_in));
-        progress.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
         scrollView.setVisibility(View.GONE);
         connError.setVisibility(View.VISIBLE);
     }
@@ -302,6 +301,10 @@ public class SearchResultDetailFragment extends Fragment
         tvTitel = (TextView) view.findViewById(R.id.tvTitle);
         llDetails = (LinearLayout) view.findViewById(R.id.llDetails);
         llCopies = (LinearLayout) view.findViewById(R.id.llCopies);
+        progressBar = (ProgressBar) view.findViewById(R.id.progress);
+        detailsLayout = (RelativeLayout) view.findViewById(R.id.detailsLayout);
+        errorView = (FrameLayout) view.findViewById(R.id.error_view);
+        tvCopies = (TextView) view.findViewById(R.id.tvCopies);
 
         if (getArguments().containsKey(ARG_ITEM_COVER_BITMAP)) {
             Bitmap bitmap = getArguments().getParcelable(ARG_ITEM_COVER_BITMAP);
@@ -417,8 +420,7 @@ public class SearchResultDetailFragment extends Fragment
 
         llCopies.removeAllViews();
         if (item.getVolumesearch() != null) {
-            TextView tvC = (TextView) view.findViewById(R.id.tvCopies);
-            tvC.setText(R.string.baende);
+            tvCopies.setText(R.string.baende);
             Button btnVolume = new Button(getActivity());
             btnVolume.setText(R.string.baende_volumesearch);
             btnVolume.setOnClickListener(new OnClickListener() {
@@ -430,8 +432,7 @@ public class SearchResultDetailFragment extends Fragment
             llCopies.addView(btnVolume);
 
         } else if (item.getBaende().size() > 0) {
-            TextView tvC = (TextView) view.findViewById(R.id.tvCopies);
-            tvC.setText(R.string.baende);
+            tvCopies.setText(R.string.baende);
 
             for (final Map<String, String> band : item.getBaende()) {
                 View v = getLayoutInflater(null).inflate(R.layout.listitem_volume,
@@ -455,7 +456,7 @@ public class SearchResultDetailFragment extends Fragment
             }
         } else {
             if (item.getCopies().size() == 0) {
-                view.findViewById(R.id.tvCopies).setVisibility(View.GONE);
+                tvCopies.setVisibility(View.GONE);
             } else {
                 for (Map<String, String> copy : item.getCopies()) {
                     View v = getLayoutInflater(null).inflate(
