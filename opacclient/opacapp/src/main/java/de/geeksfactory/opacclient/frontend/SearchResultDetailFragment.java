@@ -586,79 +586,42 @@ public class SearchResultDetailFragment extends Fragment
         if (getItem().getCoverBitmap() != null) {
             // tvTitel is used for displaying title
             fixTitleWidth();
-            tvTitel.getViewTreeObserver().addOnGlobalLayoutListener(new
-                                                                            ViewTreeObserver
-                                                                                    .OnGlobalLayoutListener() {
-                                                                                @Override
-                                                                                public void
-                                                                                onGlobalLayout() {
-                                                                                    // We need to
-                                                                                    // wait for
-                                                                                    // tvTitel to
-                                                                                    // refresh to
-                                                                                    // get
-                                                                                    // correct
-                                                                                    // calculations
-                                                                                    tvTitel.getViewTreeObserver()
-                                                                                           .removeGlobalOnLayoutListener(
-                                                                                                   this);
-                                                                                    if (tvTitel
-                                                                                            .getLayout()
-                                                                                            .getLineCount() >
-                                                                                            1) {
-                                                                                        toolbar.getLayoutParams().height =
-                                                                                                (int) TypedValue
-                                                                                                        .applyDimension(
-                                                                                                                TypedValue.COMPLEX_UNIT_SP,
-                                                                                                                84f,
-                                                                                                                getResources()
-                                                                                                                        .getDisplayMetrics());
-                                                                                        toolbar.getParent()
-                                                                                               .requestLayout();
-                                                                                    }
-                                                                                }
-                                                                            });
+            tvTitel.getViewTreeObserver()
+                   .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                       @Override
+                       public void onGlobalLayout() {
+                           // We need to wait for tvTitel to refresh to get correct calculations
+                           tvTitel.getViewTreeObserver().removeGlobalOnLayoutListener(
+                                   this);
+                           if (tvTitel.getLayout().getLineCount() > 1) {
+                               toolbar.getLayoutParams().height = (int) TypedValue.applyDimension(
+                                       TypedValue.COMPLEX_UNIT_SP, 84f,
+                                       getResources().getDisplayMetrics());
+                               toolbar.getParent().requestLayout();
+                           }
+                       }
+                   });
         } else {
             // Toolbar is used for displaying title
-            toolbar.getViewTreeObserver().addOnGlobalLayoutListener(new
-                                                                            ViewTreeObserver
-                                                                                    .OnGlobalLayoutListener() {
-                                                                                @Override
-                                                                                public void
-                                                                                onGlobalLayout() {
-                                                                                    // We need to
-                                                                                    // wait for
-                                                                                    // toolbar to
-                                                                                    // refresh to
-                                                                                    // get
-                                                                                    // correct
-                                                                                    // calculations
-                                                                                    toolbar.getViewTreeObserver()
-                                                                                           .removeGlobalOnLayoutListener(
-                                                                                                   this);
-                                                                                    if (toolbar
-                                                                                            .isTitleTruncated()) {
-                                                                                        toolbar.getLayoutParams().height =
-                                                                                                (int) TypedValue
-                                                                                                        .applyDimension(
-                                                                                                                TypedValue.COMPLEX_UNIT_SP,
-                                                                                                                84f,
-                                                                                                                getResources()
-                                                                                                                        .getDisplayMetrics());
-                                                                                        TextView
-                                                                                                titleTextView =
-                                                                                                findTitleTextView(
-                                                                                                        toolbar);
-                                                                                        titleTextView
-                                                                                                .setSingleLine(
-                                                                                                        false);
-                                                                                        fixEllipsize(
-                                                                                                titleTextView);
-                                                                                        toolbar.getParent()
-                                                                                               .requestLayout();
-                                                                                    }
-                                                                                }
-                                                                            });
+            toolbar.getViewTreeObserver()
+                   .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                       @Override
+                       public void onGlobalLayout() {
+                           // We need to wait for toolbar to refresh to get correct calculations
+                           toolbar.getViewTreeObserver().removeGlobalOnLayoutListener(
+                                   this);
+                           if (toolbar.isTitleTruncated()) {
+                               toolbar.getLayoutParams().height = (int) TypedValue.applyDimension(
+                                       TypedValue.COMPLEX_UNIT_SP, 84f,
+                                       getResources().getDisplayMetrics());
+                               TextView titleTextView = findTitleTextView(toolbar);
+                               titleTextView.setSingleLine(
+                                       false);
+                               fixEllipsize(titleTextView);
+                               toolbar.getParent().requestLayout();
+                           }
+                       }
+                   });
         }
         onScrollChanged(0, 0);
     }
