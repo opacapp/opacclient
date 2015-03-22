@@ -74,7 +74,7 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
  */
 public class Zones22 extends BaseApi {
 
-    private static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
+    private static HashMap<String, MediaType> defaulttypes = new HashMap<>();
     static {
         defaulttypes.put("Buch", MediaType.BOOK);
         defaulttypes.put("Buch/Druckschrift", MediaType.BOOK);
@@ -112,9 +112,9 @@ public class Zones22 extends BaseApi {
     }
 
     @Override
-    public List<SearchField> getSearchFields() throws ClientProtocolException,
+    public List<SearchField> getSearchFields() throws
             IOException {
-        List<SearchField> fields = new ArrayList<SearchField>();
+        List<SearchField> fields = new ArrayList<>();
         String html = httpGet(
                 opac_url
                         + "/APS_ZONES?fn=AdvancedSearch&Style=Portal3&SubStyle=&Lang=GER&ResponseEncoding=utf-8",
@@ -140,13 +140,13 @@ public class Zones22 extends BaseApi {
                     .attr("name"));
             brDropdown.setDisplayName("Zweigstelle");
 
-            List<Map<String, String>> brOptions = new ArrayList<Map<String, String>>();
-            Map<String, String> all = new HashMap<String, String>();
+            List<Map<String, String>> brOptions = new ArrayList<>();
+            Map<String, String> all = new HashMap<>();
             all.put("key", "");
             all.put("value", "Alle");
             brOptions.add(all);
             for (Element opt : zst_opts) {
-                Map<String, String> value = new HashMap<String, String>();
+                Map<String, String> value = new HashMap<>();
                 value.put("key", opt.attr("for"));
                 value.put("value", opt.text().trim());
                 brOptions.add(value);
@@ -159,8 +159,8 @@ public class Zones22 extends BaseApi {
     }
 
     @Override
-    public void start() throws ClientProtocolException, SocketException,
-            IOException, NotReachableException {
+    public void start() throws
+            IOException {
         String html = httpGet(
                 opac_url
                         + "/APS_ZONES?fn=AdvancedSearch&Style=Portal3&SubStyle=&Lang=GER&ResponseEncoding=utf-8",
@@ -208,10 +208,10 @@ public class Zones22 extends BaseApi {
 
     @Override
     public SearchRequestResult search(List<SearchQuery> queries)
-            throws IOException, NotReachableException, OpacErrorException {
+            throws IOException, OpacErrorException {
         start();
 
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
 
         params.add(new BasicNameValuePair("Style", "Portal3"));
         params.add(new BasicNameValuePair("SubStyle", ""));
@@ -246,8 +246,8 @@ public class Zones22 extends BaseApi {
 
     @Override
     public SearchRequestResult searchGetPage(int page) throws IOException,
-            NotReachableException, OpacErrorException {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+            OpacErrorException {
+        List<NameValuePair> params = new ArrayList<>();
 
         params.add(new BasicNameValuePair("Style", "Portal3"));
         params.add(new BasicNameValuePair("SubStyle", ""));
@@ -290,7 +290,7 @@ public class Zones22 extends BaseApi {
         }
 
         Elements table = doc.select("#BrowseList > tbody > tr");
-        List<SearchResult> results = new ArrayList<SearchResult>();
+        List<SearchResult> results = new ArrayList<>();
         for (int i = 0; i < table.size(); i++) {
             Element tr = table.get(i);
             SearchResult sr = new SearchResult();
@@ -301,9 +301,7 @@ public class Zones22 extends BaseApi {
                 try {
                     sr.setType(MediaType.valueOf(data.getJSONObject(
                             "mediatypes").getString(typetext)));
-                } catch (JSONException e) {
-                    sr.setType(defaulttypes.get(typetext));
-                } catch (IllegalArgumentException e) {
+                } catch (JSONException | IllegalArgumentException e) {
                     sr.setType(defaulttypes.get(typetext));
                 }
             } else {
@@ -339,7 +337,7 @@ public class Zones22 extends BaseApi {
                 }
 
                 if (node.select(".SummaryFieldData a.SummaryFieldLink").size() > 0
-                        && haslink == false) {
+                        && !haslink) {
                     String href = node.select(
                             ".SummaryFieldData a.SummaryFieldLink").attr(
                             "abs:href");
@@ -361,9 +359,9 @@ public class Zones22 extends BaseApi {
 
     @Override
     public DetailledItem getResultById(String id, String homebranch)
-            throws IOException, NotReachableException {
+            throws IOException {
 
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
 
         params.add(new BasicNameValuePair("Style", "Portal3"));
         params.add(new BasicNameValuePair("SubStyle", ""));
@@ -384,8 +382,7 @@ public class Zones22 extends BaseApi {
         return null;
     }
 
-    private DetailledItem parse_result(String id, String html)
-            throws IOException {
+    private DetailledItem parse_result(String id, String html) {
         Document doc = Jsoup.parse(html);
 
         DetailledItem result = new DetailledItem();
@@ -483,7 +480,7 @@ public class Zones22 extends BaseApi {
                 continue;
             }
 
-            Map<String, String> copy = new HashMap<String, String>();
+            Map<String, String> copy = new HashMap<>();
 
             // This is getting very ugly - check if it is valid for libraries
             // which are not
@@ -538,7 +535,7 @@ public class Zones22 extends BaseApi {
                 getDefaultEncoding());
         Document doc = Jsoup.parse(html);
         if (html.contains("Geheimnummer")) {
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            List<NameValuePair> params = new ArrayList<>();
             for (Element input : doc.select("#MainForm input")) {
                 if (!input.attr("name").equals("BRWR")
                         && !input.attr("name").equals("PIN")) {
@@ -559,7 +556,7 @@ public class Zones22 extends BaseApi {
         }
 
         if (useraction == ReservationResult.ACTION_BRANCH) {
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            List<NameValuePair> params = new ArrayList<>();
             for (Element input : doc.select("#MainForm input")) {
                 if (!input.attr("name").equals("Confirm")) {
                     params.add(new BasicNameValuePair(input.attr("name"), input
@@ -570,7 +567,7 @@ public class Zones22 extends BaseApi {
             params.add(new BasicNameValuePair(
                     "MakeResTypeDef.Reservation.RecipientLocn", selection));
             params.add(new BasicNameValuePair("Confirm", "1"));
-            html = httpGet(
+            httpGet(
                     opac_url
                             + "/"
                             + doc.select("#MainForm").attr("action")
@@ -587,7 +584,7 @@ public class Zones22 extends BaseApi {
                     if (((TextNode) n).text().contains("Entgelt")) {
                         res = new ReservationResult(
                                 ReservationResult.Status.CONFIRMATION_NEEDED);
-                        List<String[]> details = new ArrayList<String[]>();
+                        List<String[]> details = new ArrayList<>();
                         details.add(new String[]{((TextNode) n).text().trim()});
                         res.setDetails(details);
                         res.setMessage(((TextNode) n).text().trim());
@@ -601,9 +598,9 @@ public class Zones22 extends BaseApi {
         if (doc.select("#MainForm select").size() > 0) {
             ReservationResult res = new ReservationResult(
                     ReservationResult.Status.SELECTION_NEEDED);
-            List<Map<String, String>> sel = new ArrayList<Map<String, String>>();
+            List<Map<String, String>> sel = new ArrayList<>();
             for (Element opt : doc.select("#MainForm select option")) {
-                Map<String, String> selopt = new HashMap<String, String>();
+                Map<String, String> selopt = new HashMap<>();
                 selopt.put("key", opt.attr("value"));
                 selopt.put("value", opt.text().trim());
                 sel.add(selopt);
@@ -666,7 +663,7 @@ public class Zones22 extends BaseApi {
         if (doc.select("#LoginForm").size() == 0) {
             throw new NotReachableException();
         }
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
 
         for (Element input : doc.select("#LoginForm input")) {
             if (!input.attr("name").equals("BRWR")
@@ -709,7 +706,7 @@ public class Zones22 extends BaseApi {
 
     @Override
     public AccountData account(Account acc) throws IOException,
-            NotReachableException, JSONException, SocketException,
+            JSONException,
             OpacErrorException {
         Document login = login(acc);
         if (login == null)
@@ -748,7 +745,7 @@ public class Zones22 extends BaseApi {
                         + lent_link.replace("utf-8?Method", "utf-8&Method"),
                 getDefaultEncoding());
         Document lent_doc = Jsoup.parse(lent_html);
-        List<Map<String, String>> lent = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> lent = new ArrayList<>();
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.GERMAN);
         Pattern id_pat = Pattern
@@ -756,7 +753,7 @@ public class Zones22 extends BaseApi {
 
         for (Element table : lent_doc
                 .select(".LoansBrowseItemDetailsCellStripe table, .LoansBrowseItemDetailsCell table")) {
-            Map<String, String> item = new HashMap<String, String>();
+            Map<String, String> item = new HashMap<>();
 
             for (Element tr : table.select("tr")) {
                 String desc = tr.select(".LoanBrowseFieldNameCell").text()
@@ -794,14 +791,14 @@ public class Zones22 extends BaseApi {
         res.setLent(lent);
         assert (lent_cnt <= lent.size());
 
-        List<Map<String, String>> reservations = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> reservations = new ArrayList<>();
         String res_html = httpGet(opac_url + "/" + res_link,
                 getDefaultEncoding());
         Document res_doc = Jsoup.parse(res_html);
 
         for (Element table : res_doc
                 .select(".MessageBrowseItemDetailsCell table, .MessageBrowseItemDetailsCellStripe table")) {
-            Map<String, String> item = new HashMap<String, String>();
+            Map<String, String> item = new HashMap<>();
 
             for (Element tr : table.select("tr")) {
                 String desc = tr.select(".MessageBrowseFieldNameCell").text()
@@ -840,14 +837,13 @@ public class Zones22 extends BaseApi {
 
     @Override
     public String getAccountExtendableInfo(Account acc)
-            throws ClientProtocolException, SocketException, IOException,
-            NotReachableException {
+            throws IOException {
         return null;
     }
 
     @Override
     public String getShareUrl(String id, String title) {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
 
         params.add(new BasicNameValuePair("Style", "Portal3"));
         params.add(new BasicNameValuePair("SubStyle", ""));

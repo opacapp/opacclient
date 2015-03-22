@@ -59,7 +59,7 @@ import java.security.KeyStore;
 public class HTTPClient {
 
     public static DefaultHttpClient getNewHttpClient(boolean customssl) {
-        DefaultHttpClient hc = null;
+        DefaultHttpClient hc;
         if (customssl) {
             try {
                 final KeyStore trustStore = KeyStore.getInstance("BKS");

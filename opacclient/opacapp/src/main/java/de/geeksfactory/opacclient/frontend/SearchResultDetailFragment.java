@@ -197,7 +197,7 @@ public class SearchResultDetailFragment extends Fragment
         View connError = getActivity().getLayoutInflater().inflate(
                 R.layout.error_connectivity, errorView);
 
-        ((Button) connError.findViewById(R.id.btRetry))
+        connError.findViewById(R.id.btRetry)
                 .setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -746,7 +746,12 @@ public class SearchResultDetailFragment extends Fragment
             if (progress == 1) {
                 ViewHelper.setTranslationY(tvTitel, scrollY - ivCover.getHeight() + minHeight);
                 if (!ivCover.getBackground().equals(toolbar.getBackground())) {
-                    toolbar.setBackgroundDrawable(ivCover.getBackground());
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        toolbar.setBackground(ivCover.getBackground());
+                    } else {
+                        //noinspection deprecation
+                        toolbar.setBackgroundDrawable(ivCover.getBackground());
+                    }
                     ViewCompat.setElevation(toolbar, TypedValue.applyDimension(TypedValue
                             .COMPLEX_UNIT_DIP, 4f, getResources().getDisplayMetrics()));
                     ViewCompat.setElevation(tvTitel, TypedValue.applyDimension(TypedValue
@@ -768,7 +773,7 @@ public class SearchResultDetailFragment extends Fragment
             Arrays.fill(cardAnimations, false);
         }
         for (int i = 0; i < llCopies.getChildCount(); i++) {
-            if (cardAnimations[i] == false) {
+            if (!cardAnimations[i]) {
                 View card = llCopies.getChildAt(i);
                 Rect scrollBounds = new Rect();
                 scrollView.getHitRect(scrollBounds);
@@ -777,8 +782,6 @@ public class SearchResultDetailFragment extends Fragment
                     cardAnimations[i] = true;
                     card.startAnimation(AnimationUtils.loadAnimation(getActivity(),
                             R.anim.card_appear));
-                } else {
-                    // card is not visible
                 }
             }
         }
@@ -947,13 +950,18 @@ public class SearchResultDetailFragment extends Fragment
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int di) {
-                        String bib = app.getLibrary().getIdent();
                         if (di == 0) {
                             // Share link
                             Intent intent = new Intent(
                                     android.content.Intent.ACTION_SEND);
                             intent.setType("text/plain");
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+                            } else {
+                                //noinspection deprecation
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                            }
 
                             // Add data to the intent, the receiving app will
                             // decide
@@ -962,8 +970,6 @@ public class SearchResultDetailFragment extends Fragment
 
                             String t = title;
                             try {
-                                bib = java.net.URLEncoder.encode(app
-                                        .getLibrary().getIdent(), "UTF-8");
                                 t = java.net.URLEncoder.encode(t, "UTF-8");
                             } catch (UnsupportedEncodingException e) {
                             }
@@ -985,7 +991,13 @@ public class SearchResultDetailFragment extends Fragment
                             Intent intent = new Intent(
                                     android.content.Intent.ACTION_SEND);
                             intent.setType("text/plain");
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+                            } else {
+                                //noinspection deprecation
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                            }
 
                             // Add data to the intent, the receiving app will
                             // decide
@@ -994,8 +1006,6 @@ public class SearchResultDetailFragment extends Fragment
 
                             String t = title;
                             try {
-                                bib = java.net.URLEncoder.encode(app
-                                        .getLibrary().getIdent(), "UTF-8");
                                 t = t != null ? java.net.URLEncoder.encode(t, "UTF-8") : "";
                             } catch (UnsupportedEncodingException e) {
                             }
@@ -1145,7 +1155,6 @@ public class SearchResultDetailFragment extends Fragment
         data.close();
         if (accounts.size() == 0) {
             dialog_no_credentials();
-            return;
         } else if (accounts.size() > 1
                 && !getActivity().getIntent().getBooleanExtra("reservation",
                 false)
@@ -1290,7 +1299,6 @@ public class SearchResultDetailFragment extends Fragment
         data.close();
         if (accounts.size() == 0) {
             dialog_no_credentials();
-            return;
         } else if (accounts.size() > 1) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             // Get the layout inflater
@@ -1415,18 +1423,9 @@ public class SearchResultDetailFragment extends Fragment
                 }
                 success = true;
                 return res;
-            } catch (java.net.UnknownHostException e) {
-                success = false;
-                e.printStackTrace();
-            } catch (java.net.SocketException e) {
-                success = false;
-                e.printStackTrace();
-            } catch (InterruptedIOException e) {
-                success = false;
-                e.printStackTrace();
             } catch (Exception e) {
-                e.printStackTrace();
                 success = false;
+                e.printStackTrace();
             }
             return null;
         }
@@ -1515,10 +1514,7 @@ public class SearchResultDetailFragment extends Fragment
                 return res;
             } catch (java.net.UnknownHostException e) {
                 publishProgress(e, "ioerror");
-            } catch (java.io.IOException e) {
-                success = false;
-                e.printStackTrace();
-            } catch (java.lang.IllegalStateException e) {
+            } catch (java.io.IOException | IllegalStateException e) {
                 success = false;
                 e.printStackTrace();
             } catch (Exception e) {
@@ -1542,14 +1538,11 @@ public class SearchResultDetailFragment extends Fragment
             String selection = (String) arg0[3];
 
             try {
-                ReservationResult res = app.getApi().reservation(item,
+                return app.getApi().reservation(item,
                         app.getAccount(), useraction, selection);
-                return res;
             } catch (java.net.UnknownHostException e) {
                 publishProgress(e, "ioerror");
-            } catch (java.net.SocketException e) {
-                e.printStackTrace();
-            } catch (InterruptedIOException e) {
+            } catch (java.net.SocketException | InterruptedIOException e) {
                 e.printStackTrace();
             } catch (Exception e) {
                 ACRA.getErrorReporter().handleException(e);
@@ -1597,14 +1590,11 @@ public class SearchResultDetailFragment extends Fragment
             String selection = (String) arg0[3];
 
             try {
-                BookingResult res = ((EbookServiceApi) app.getApi()).booking(
+                return((EbookServiceApi) app.getApi()).booking(
                         item, app.getAccount(), useraction, selection);
-                return res;
             } catch (java.net.UnknownHostException e) {
                 publishProgress(e, "ioerror");
-            } catch (java.net.SocketException e) {
-                e.printStackTrace();
-            } catch (InterruptedIOException e) {
+            } catch (java.net.SocketException | InterruptedIOException e) {
                 e.printStackTrace();
             } catch (Exception e) {
                 ACRA.getErrorReporter().handleException(e);
@@ -1659,11 +1649,7 @@ public class SearchResultDetailFragment extends Fragment
                     ACRA.getErrorReporter().handleException(
                             new Throwable("No ID supplied"));
                 }
-            } catch (java.net.SocketException e) {
-                e.printStackTrace();
-            } catch (InterruptedIOException e) {
-                e.printStackTrace();
-            } catch (java.net.UnknownHostException e) {
+            } catch (java.net.SocketException | InterruptedIOException | java.net.UnknownHostException e) {
                 e.printStackTrace();
             } catch (Exception e) {
                 ACRA.getErrorReporter().handleException(e);

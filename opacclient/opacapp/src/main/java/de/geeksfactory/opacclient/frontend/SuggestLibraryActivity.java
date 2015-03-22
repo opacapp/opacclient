@@ -159,7 +159,7 @@ public class SuggestLibraryActivity extends ActionBarActivity {
         outState.putCharSequence("city", etCity.getText());
         outState.putCharSequence("name", etName.getText());
         outState.putCharSequence("comment", etComment.getText());
-        if (selectedCity instanceof Serializable) {
+        if (selectedCity != null) {
             outState.putSerializable("selectedCity", selectedCity);
         }
     }
@@ -181,13 +181,10 @@ public class SuggestLibraryActivity extends ActionBarActivity {
         HttpURLConnection conn = null;
         StringBuilder jsonResults = new StringBuilder();
         try {
-            StringBuilder sb = new StringBuilder(GEOCODE_API);
-            sb.append("?sensor=false");
-            sb.append("&language=de");
-            sb.append("&region=de");
-            sb.append("&address=" + URLEncoder.encode(input, "utf8"));
 
-            URL url = new URL(sb.toString());
+            URL url = new URL(
+                    GEOCODE_API + "?sensor=false" + "&language=de" + "&region=de" + "&address=" +
+                            URLEncoder.encode(input, "utf8"));
             conn = (HttpURLConnection) url.openConnection();
             InputStreamReader in = new InputStreamReader(conn.getInputStream());
 
@@ -199,10 +196,10 @@ public class SuggestLibraryActivity extends ActionBarActivity {
             }
         } catch (MalformedURLException e) {
             Log.e(LOG_TAG, "Error processing Places API URL", e);
-            return resultList;
+            return null;
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error connecting to Places API", e);
-            return resultList;
+            return null;
         } finally {
             if (conn != null) {
                 conn.disconnect();
@@ -215,7 +212,7 @@ public class SuggestLibraryActivity extends ActionBarActivity {
             JSONArray resultsJsonArray = jsonObj.getJSONArray("results");
 
             // Extract the Place descriptions from the results
-            resultList = new ArrayList<City>();
+            resultList = new ArrayList<>();
             for (int i = 0; i < resultsJsonArray.length(); i++) {
                 JSONObject result = resultsJsonArray.getJSONObject(i);
                 if (contains(result.getJSONArray("types"), "locality")) {
@@ -303,7 +300,7 @@ public class SuggestLibraryActivity extends ActionBarActivity {
 
         @Override
         public Filter getFilter() {
-            Filter filter = new Filter() {
+            return new Filter() {
                 @Override
                 protected FilterResults performFiltering(CharSequence constraint) {
                     FilterResults filterResults = new FilterResults();
@@ -328,7 +325,6 @@ public class SuggestLibraryActivity extends ActionBarActivity {
                     }
                 }
             };
-            return filter;
         }
     }
 }

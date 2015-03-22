@@ -115,7 +115,7 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
 
     @Override
     public View getView(int position, View contentView, ViewGroup viewGroup) {
-        View view = null;
+        View view;
 
         // position always 0-7
         if (objects.get(position) == null) {

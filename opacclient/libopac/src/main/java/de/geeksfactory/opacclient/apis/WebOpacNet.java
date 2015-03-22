@@ -78,7 +78,7 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
 public class WebOpacNet extends BaseApi implements OpacApi {
 
-    protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
+    protected static HashMap<String, MediaType> defaulttypes = new HashMap<>();
     static {
         defaulttypes.put("1", MediaType.BOOK);
         defaulttypes.put("2", MediaType.CD_MUSIC);
@@ -108,10 +108,10 @@ public class WebOpacNet extends BaseApi implements OpacApi {
 
     @Override
     public SearchRequestResult search(List<SearchQuery> query)
-            throws IOException, NotReachableException, OpacErrorException,
+            throws IOException, OpacErrorException,
             JSONException {
         this.query = query;
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
         start();
 
         int index = buildParams(query, params, 1);
@@ -134,7 +134,7 @@ public class WebOpacNet extends BaseApi implements OpacApi {
             return index;
         if (index > 0)
             params.append("$0");
-        params.append("|" + query.getKey() + "|" + query.getValue());
+        params.append("|").append(query.getKey()).append("|").append(query.getValue());
         return index + 1;
     }
 
@@ -142,7 +142,7 @@ public class WebOpacNet extends BaseApi implements OpacApi {
             throws OpacErrorException {
         if (!text.equals("")) {
             try {
-                List<SearchResult> results = new ArrayList<SearchResult>();
+                List<SearchResult> results = new ArrayList<>();
                 JSONObject json = new JSONObject(text);
                 int total_result_count = Integer.parseInt(json
                         .getString("totalcount"));
@@ -188,15 +188,15 @@ public class WebOpacNet extends BaseApi implements OpacApi {
 
     @Override
     public SearchRequestResult filterResults(Filter filter, Option option)
-            throws IOException, NotReachableException, OpacErrorException {
+            throws IOException, OpacErrorException {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public SearchRequestResult searchGetPage(int page) throws IOException,
-            NotReachableException, OpacErrorException, JSONException {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+            OpacErrorException, JSONException {
+        List<NameValuePair> params = new ArrayList<>();
         start();
 
         int index = buildParams(query, params, page);
@@ -227,7 +227,7 @@ public class WebOpacNet extends BaseApi implements OpacApi {
         for (SearchQuery query : queryList) {
             if (query.getSearchField().getData().getBoolean("filter")
                     && !query.getValue().equals(""))
-                queries.append("&" + query.getKey() + "=" + query.getValue());
+                queries.append("&").append(query.getKey()).append("=").append(query.getValue());
         }
 
         params.add(new BasicNameValuePair("q", queries.toString()));
@@ -239,8 +239,8 @@ public class WebOpacNet extends BaseApi implements OpacApi {
 
     @Override
     public DetailledItem getResultById(String id, String homebranch)
-            throws IOException, NotReachableException, OpacErrorException {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+            throws IOException, OpacErrorException {
+        List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("id", id));
         params.add(new BasicNameValuePair("orientation", "1"));
 
@@ -285,7 +285,7 @@ public class WebOpacNet extends BaseApi implements OpacApi {
             JSONArray copies = json.getJSONArray("exemplare");
             for (int i = 0; i < copies.length(); i++) {
                 JSONObject copyJson = copies.getJSONObject(i);
-                Map<String, String> copy = new HashMap<String, String>();
+                Map<String, String> copy = new HashMap<>();
 
                 JSONArray values = copyJson.getJSONArray("rows");
                 for (int j = 0; j < values.length(); j++) {
@@ -294,24 +294,30 @@ public class WebOpacNet extends BaseApi implements OpacApi {
                     String value = valJson.getJSONArray("values")
                             .getJSONObject(0).getString("dval");
                     if (!value.equals("")) {
-                        if (name.equals("Exemplarstatus"))
-                            copy.put(DetailledItem.KEY_COPY_STATUS, value);
-                        else if (name.equals("Signatur"))
-                            copy.put(DetailledItem.KEY_COPY_SHELFMARK, value);
-                        else if (name.equals("Standort"))
-                            copy.put(DetailledItem.KEY_COPY_LOCATION, value);
-                        else if (name.equals("Themenabteilung")) {
-                            if (copy.containsKey(DetailledItem.KEY_COPY_DEPARTMENT))
-                                value = copy
-                                        .get(DetailledItem.KEY_COPY_DEPARTMENT)
-                                        + value;
-                            copy.put(DetailledItem.KEY_COPY_DEPARTMENT, value);
-                        } else if (name.equals("Themenbereich")) {
-                            if (copy.containsKey(DetailledItem.KEY_COPY_DEPARTMENT))
-                                value = copy
-                                        .get(DetailledItem.KEY_COPY_DEPARTMENT)
-                                        + value;
-                            copy.put(DetailledItem.KEY_COPY_DEPARTMENT, value);
+                        switch (name) {
+                            case "Exemplarstatus":
+                                copy.put(DetailledItem.KEY_COPY_STATUS, value);
+                                break;
+                            case "Signatur":
+                                copy.put(DetailledItem.KEY_COPY_SHELFMARK, value);
+                                break;
+                            case "Standort":
+                                copy.put(DetailledItem.KEY_COPY_LOCATION, value);
+                                break;
+                            case "Themenabteilung":
+                                if (copy.containsKey(DetailledItem.KEY_COPY_DEPARTMENT))
+                                    value = copy
+                                            .get(DetailledItem.KEY_COPY_DEPARTMENT)
+                                            + value;
+                                copy.put(DetailledItem.KEY_COPY_DEPARTMENT, value);
+                                break;
+                            case "Themenbereich":
+                                if (copy.containsKey(DetailledItem.KEY_COPY_DEPARTMENT))
+                                    value = copy
+                                            .get(DetailledItem.KEY_COPY_DEPARTMENT)
+                                            + value;
+                                copy.put(DetailledItem.KEY_COPY_DEPARTMENT, value);
+                                break;
                         }
                     }
                 }
@@ -374,7 +380,7 @@ public class WebOpacNet extends BaseApi implements OpacApi {
     @Override
     public List<SearchField> getSearchFields() throws IOException,
             JSONException {
-        List<SearchField> fields = new ArrayList<SearchField>();
+        List<SearchField> fields = new ArrayList<>();
 
         // Text fields
         String html = httpGet(opac_url + "/de/mobile/default.aspx",
@@ -413,16 +419,16 @@ public class WebOpacNet extends BaseApi implements OpacApi {
                 field.setDisplayName(filter.getString("kopf"));
 
                 JSONArray restrictions = filter.getJSONArray("restrictions");
-                List<Map<String, String>> values = new ArrayList<Map<String, String>>();
+                List<Map<String, String>> values = new ArrayList<>();
 
-                Map<String, String> all = new HashMap<String, String>();
+                Map<String, String> all = new HashMap<>();
                 all.put("key", "");
                 all.put("value", "Alle");
                 values.add(all);
 
                 for (int j = 0; j < restrictions.length(); j++) {
                     JSONObject restriction = restrictions.getJSONObject(j);
-                    Map<String, String> value = new HashMap<String, String>();
+                    Map<String, String> value = new HashMap<>();
                     value.put("key", restriction.getString("id"));
                     value.put("value", restriction.getString("bez"));
                     values.add(value);
@@ -451,15 +457,14 @@ public class WebOpacNet extends BaseApi implements OpacApi {
     }
 
     @Override
-    public String getAccountExtendableInfo(Account account) throws IOException,
-            NotReachableException {
+    public String getAccountExtendableInfo(Account account) throws IOException {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public String getShareUrl(String id, String title) {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("id", id));
 
         String url;

@@ -34,13 +34,13 @@ public class GetSearchFieldsCallable implements Callable<Map<String, List<Search
         if (langs == null) {
             // Use default language
             try {
-                Map<String, List<SearchField>> map = new HashMap<String, List<SearchField>>();
+                Map<String, List<SearchField>> map = new HashMap<>();
                 map.put("default", api.getSearchFields());
                 return map;
             } catch (IOException | OpacErrorException | JSONException e) {
             }
         } else {
-            Map<String, List<SearchField>> map = new HashMap<String, List<SearchField>>();
+            Map<String, List<SearchField>> map = new HashMap<>();
             for (String lang : langs) {
                 api.setLanguage(lang);
                 try {

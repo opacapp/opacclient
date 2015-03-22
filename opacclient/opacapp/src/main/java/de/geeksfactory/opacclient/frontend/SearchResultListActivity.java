@@ -50,8 +50,6 @@ public class SearchResultListActivity extends OpacActivity implements
      */
     protected boolean mTwoPane;
 
-    protected SearchRequestResult searchresult;
-
     protected SearchResultListFragment listFragment;
     protected SearchResultDetailFragment detailFragment;
 
@@ -166,8 +164,8 @@ public class SearchResultListActivity extends OpacActivity implements
                         (Parcelable) res.getCoverBitmap());
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         this,
-                        new Pair<View, String>(coverView, getString(R.string.transition_cover)),
-                        new Pair<View, String>(toolbar, getString(R.string.transition_toolbar)));
+                        new Pair<>(coverView, getString(R.string.transition_cover)),
+                        new Pair<>((View) toolbar, getString(R.string.transition_toolbar)));
                 ActivityCompat.startActivity(this, detailIntent, options.toBundle());
             } else {
                 startActivity(detailIntent);
@@ -208,16 +206,11 @@ public class SearchResultListActivity extends OpacActivity implements
             OpacClient app = (OpacClient) arg0[0];
 
             try {
-                SearchRequestResult res = app.getApi().searchGetPage(searchResult.getPage());
-                return res;
+                return app.getApi().searchGetPage(searchResult.getPage());
             } catch (java.net.UnknownHostException e) {
                 exception = e;
                 e.printStackTrace();
-            } catch (java.net.SocketException e) {
-                exception = e;
-            } catch (InterruptedIOException e) {
-                exception = e;
-            } catch (OpacErrorException e) {
+            } catch (java.net.SocketException | InterruptedIOException | OpacErrorException e) {
                 exception = e;
             } catch (Exception e) {
                 exception = e;

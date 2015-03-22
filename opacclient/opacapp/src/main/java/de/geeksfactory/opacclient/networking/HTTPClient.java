@@ -61,7 +61,7 @@ public class HTTPClient {
     public static KeyStore trustStore = null;
 
     public static DefaultHttpClient getNewHttpClient(boolean customssl) {
-        DefaultHttpClient hc = null;
+        DefaultHttpClient hc;
 
         HttpParams params = new BasicHttpParams();
         HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);

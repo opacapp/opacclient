@@ -58,7 +58,7 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
     @SuppressWarnings("deprecation")
     @Override
     public View getView(int position, View contentView, ViewGroup viewGroup) {
-        View view = null;
+        View view;
 
         // position always 0-7
         if (objects.get(position) == null) {
@@ -100,9 +100,7 @@ public class AccountListAdapter extends ArrayAdapter<Account> {
             } else {
                 tvCity.setText(lib.getCity());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
         TextView tvName = (TextView) view.findViewById(R.id.tvName);

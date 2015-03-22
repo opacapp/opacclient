@@ -26,6 +26,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -97,7 +98,7 @@ public class StarredFragment extends Fragment implements
 
                     SharedPreferences sp = PreferenceManager
                             .getDefaultSharedPreferences(getActivity());
-                    List<SearchQuery> query = new ArrayList<SearchQuery>();
+                    List<SearchQuery> query = new ArrayList<>();
                     List<SearchField> fields = new JsonSearchFieldDataSource(
                             app).getSearchFields(app.getLibrary().getIdent());
                     if (fields != null) {
@@ -125,7 +126,6 @@ public class StarredFragment extends Fragment implements
                     } else {
                         Toast.makeText(getActivity(), R.string.no_search_cache,
                                 Toast.LENGTH_LONG).show();
-                        ;
                     }
                 } else {
                     mCallback.showDetail(item.getMNr());
@@ -207,7 +207,12 @@ public class StarredFragment extends Fragment implements
     protected void export() {
         Intent intent = new Intent(android.content.Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+        } else {
+            //noinspection deprecation
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        }
 
         StringBuilder text = new StringBuilder();
 

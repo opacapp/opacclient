@@ -148,11 +148,6 @@ public class AccountEditActivity extends ActionBarActivity {
         }
     }
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-    }
-
     private void saveAndCheck() {
         if (etLabel.getText().toString().equals("")) {
             account.setLabel(getString(R.string.default_account_name));

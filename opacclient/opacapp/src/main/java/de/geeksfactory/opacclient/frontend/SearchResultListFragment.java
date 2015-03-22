@@ -14,7 +14,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -366,7 +365,7 @@ public class SearchResultListFragment extends CustomListFragment {
         View connError = getActivity().getLayoutInflater().inflate(
                 R.layout.error_connectivity, errorView);
 
-        ((Button) connError.findViewById(R.id.btRetry))
+        connError.findViewById(R.id.btRetry)
                 .setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -433,19 +432,12 @@ public class SearchResultListFragment extends CustomListFragment {
             if (arg0[1] instanceof Map<?, ?>) {
                 Map<String, String> query = (Map<String, String>) arg0[1];
                 try {
-                    SearchRequestResult res = app.getApi().volumeSearch(query);
                     // Load cover images, if search worked and covers available
-                    return res;
+                    return app.getApi().volumeSearch(query);
                 } catch (java.net.UnknownHostException e) {
                     exception = e;
                     e.printStackTrace();
-                } catch (java.net.SocketException e) {
-                    exception = e;
-                } catch (NoHttpResponseException e) {
-                    exception = e;
-                } catch (OpacErrorException e) {
-                    exception = e;
-                } catch (InterruptedIOException e) {
+                } catch (java.net.SocketException | NoHttpResponseException | OpacErrorException | InterruptedIOException e) {
                     exception = e;
                 } catch (Exception e) {
                     exception = e;
@@ -455,19 +447,12 @@ public class SearchResultListFragment extends CustomListFragment {
                 List<SearchQuery> query = (List<SearchQuery>) arg0[1];
 
                 try {
-                    SearchRequestResult res = app.getApi().search(query);
                     // Load cover images, if search worked and covers available
-                    return res;
+                    return app.getApi().search(query);
                 } catch (java.net.UnknownHostException e) {
                     exception = e;
                     e.printStackTrace();
-                } catch (java.net.SocketException e) {
-                    exception = e;
-                } catch (NoHttpResponseException e) {
-                    exception = e;
-                } catch (OpacErrorException e) {
-                    exception = e;
-                } catch (InterruptedIOException e) {
+                } catch (java.net.SocketException | NoHttpResponseException | OpacErrorException | InterruptedIOException e) {
                     exception = e;
                 } catch (Exception e) {
                     exception = e;
@@ -550,13 +535,10 @@ public class SearchResultListFragment extends CustomListFragment {
                                 new SearchField.OrderComparator());
                     }
                     return fields;
-                } catch (JSONException e) {
+                } catch (JSONException | IOException e) {
                     exception = e;
                     e.printStackTrace();
                 } catch (OpacErrorException e) {
-                    exception = e;
-                    e.printStackTrace();
-                } catch (IOException e) {
                     exception = e;
                     e.printStackTrace();
                 }
@@ -585,7 +567,7 @@ public class SearchResultListFragment extends CustomListFragment {
                 showConnectivityError(getString(R.string.no_fields_found));
                 return;
             }
-            List<SearchQuery> query = new ArrayList<SearchQuery>();
+            List<SearchQuery> query = new ArrayList<>();
             query.add(new SearchQuery(fieldToUse, queryString));
             st = new SearchStartTask();
             st.execute(app, query);

@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentTransaction;
@@ -232,7 +233,7 @@ public class LibraryListActivity extends ActionBarActivity {
                             double lat = location.getLatitude();
                             double lon = location.getLongitude();
                             // Calculate distances
-                            List<Library> distancedlibs = new ArrayList<Library>();
+                            List<Library> distancedlibs = new ArrayList<>();
                             for (Library lib : libraries) {
                                 float[] result = new float[1];
                                 double[] geo = lib.getGeo();
@@ -284,19 +285,19 @@ public class LibraryListActivity extends ActionBarActivity {
         Bundle args = new Bundle();
         args.putInt("level", LEVEL_COUNTRY);
         fragment.setArguments(args);
-        Set<String> data = new HashSet<String>();
+        Set<String> data = new HashSet<>();
         for (Library lib : libraries) {
             if (!data.contains(lib.getCountry())) {
                 data.add(lib.getCountry());
             }
         }
-        List<String> list = new ArrayList<String>(data);
+        List<String> list = new ArrayList<>(data);
         Collator deCollator = Collator.getInstance(Locale.GERMAN);
         deCollator.setStrength(Collator.TERTIARY);
         Collections.sort(list, deCollator);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 R.layout.listitem_simple, R.id.text1,
-                list.toArray(new String[]{}));
+                list.toArray(new String[list.size()]));
         fragment.setListAdapter(adapter);
         if (findViewById(R.id.llFragments) != null) {
             getSupportFragmentManager().beginTransaction()
@@ -333,21 +334,21 @@ public class LibraryListActivity extends ActionBarActivity {
         args.putInt("level", LEVEL_STATE);
         args.putString("country", country);
         fragment.setArguments(args);
-        Set<String> data = new HashSet<String>();
+        Set<String> data = new HashSet<>();
         for (Library lib : libraries) {
             if (country.equals(lib.getCountry())
                     && !data.contains(lib.getState())) {
                 data.add(lib.getState());
             }
         }
-        List<String> list = new ArrayList<String>(data);
+        List<String> list = new ArrayList<>(data);
         if (data.size() == 1) {
             showListCities(country, list.get(0));
         }
         Collator deCollator = Collator.getInstance(Locale.GERMAN);
         deCollator.setStrength(Collator.TERTIARY);
         Collections.sort(list, deCollator);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 R.layout.listitem_simple, R.id.text1, list);
         fragment.setListAdapter(adapter);
         if (findViewById(R.id.llFragments) != null) {
@@ -378,7 +379,7 @@ public class LibraryListActivity extends ActionBarActivity {
         args.putString("country", country);
         args.putString("state", state);
         fragment.setArguments(args);
-        Set<String> data = new HashSet<String>();
+        Set<String> data = new HashSet<>();
         for (Library lib : libraries) {
             if (country.equals(lib.getCountry())
                     && state.equals(lib.getState())
@@ -386,7 +387,7 @@ public class LibraryListActivity extends ActionBarActivity {
                 data.add(lib.getCity());
             }
         }
-        List<String> list = new ArrayList<String>(data);
+        List<String> list = new ArrayList<>(data);
         if (data.size() == 1 && list.get(0).equals(state)) { // City states
             showListLibraries(country, state, list.get(0));
         }
@@ -421,7 +422,7 @@ public class LibraryListActivity extends ActionBarActivity {
         args.putString("state", state);
         args.putString("city", city);
         fragment.setArguments(args);
-        Set<Library> data = new HashSet<Library>();
+        Set<Library> data = new HashSet<>();
         for (Library lib : libraries) {
             if (country.equals(lib.getCountry())
                     && state.equals(lib.getState())
@@ -429,7 +430,7 @@ public class LibraryListActivity extends ActionBarActivity {
                 data.add(lib);
             }
         }
-        List<Library> list = new ArrayList<Library>(data);
+        List<Library> list = new ArrayList<>(data);
         Collections.sort(list);
         LibraryAdapter adapter = new LibraryAdapter(this,
                 R.layout.listitem_library_in_city, R.id.tvTitle, list);
@@ -452,7 +453,7 @@ public class LibraryListActivity extends ActionBarActivity {
         Bundle args = new Bundle();
         args.putInt("level", LEVEL_LIBRARY);
         fragment.setArguments(args);
-        Set<LibrarySearchResult> data = new HashSet<LibrarySearchResult>();
+        Set<LibrarySearchResult> data = new HashSet<>();
         query = query.toLowerCase(Locale.GERMAN);
         for (Library lib : libraries) {
             int rank = 0;
@@ -472,10 +473,10 @@ public class LibraryListActivity extends ActionBarActivity {
                 data.add(new LibrarySearchResult(lib, rank));
             }
         }
-        List<LibrarySearchResult> list = new ArrayList<LibrarySearchResult>(
+        List<LibrarySearchResult> list = new ArrayList<>(
                 data);
         Collections.sort(list);
-        List<Library> libraries = new ArrayList<Library>();
+        List<Library> libraries = new ArrayList<>();
         for (LibrarySearchResult sr : list) {
             libraries.add(sr.getLibrary());
         }
@@ -529,15 +530,12 @@ public class LibraryListActivity extends ActionBarActivity {
 
         @Override
         public boolean equals(Object obj) {
-            if (obj instanceof LibrarySearchResult) {
-                return library.equals(((LibrarySearchResult) obj).getLibrary());
-            } else {
-                return false;
-            }
+            return obj instanceof LibrarySearchResult &&
+                    library.equals(((LibrarySearchResult) obj).getLibrary());
         }
 
         @Override
-        public int compareTo(LibrarySearchResult another) {
+        public int compareTo(@NonNull LibrarySearchResult another) {
             if (another.rank == rank) {
                 return library.getCity().compareTo(
                         another.getLibrary().getCity());

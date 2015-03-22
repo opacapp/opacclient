@@ -23,9 +23,6 @@ import java.io.InputStreamReader;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 
-/**
- * Created by johan_000 on 25.01.2015.
- */
 public class AboutFragment extends PreferenceFragment {
 
     protected Activity context;

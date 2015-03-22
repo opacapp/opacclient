@@ -61,7 +61,7 @@ public class StarDataSource {
     }
 
     public List<Starred> getAllItems(String bib) {
-        List<Starred> items = new ArrayList<Starred>();
+        List<Starred> items = new ArrayList<>();
         String[] selA = {bib};
         Cursor cursor = context
                 .getContentResolver()

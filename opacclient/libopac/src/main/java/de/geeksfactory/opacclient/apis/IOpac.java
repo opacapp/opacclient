@@ -75,7 +75,7 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
 public class IOpac extends BaseApi implements OpacApi {
 
-    protected static HashMap<String, MediaType> defaulttypes = new HashMap<String, MediaType>();
+    protected static HashMap<String, MediaType> defaulttypes = new HashMap<>();
     static {
         defaulttypes.put("b", MediaType.BOOK);
         defaulttypes.put("o", MediaType.BOOK);
@@ -138,11 +138,11 @@ public class IOpac extends BaseApi implements OpacApi {
 
     @Override
     public SearchRequestResult search(List<SearchQuery> queries)
-            throws IOException, NotReachableException, OpacErrorException {
+            throws IOException, OpacErrorException {
         if (!initialised)
             start();
 
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
 
         int index = 0;
         start();
@@ -210,11 +210,11 @@ public class IOpac extends BaseApi implements OpacApi {
             results_total = Integer.parseInt(resultnumstr);
         }
 
-        List<SearchResult> results = new ArrayList<SearchResult>();
+        List<SearchResult> results = new ArrayList<>();
 
         Elements tables = doc.select("table").first().select("tr:has(td)");
 
-        Map<String, Integer> colmap = new HashMap<String, Integer>();
+        Map<String, Integer> colmap = new HashMap<>();
         Element thead = doc.select("table").first().select("tr:has(th)")
                 .first();
         int j = 0;
@@ -273,10 +273,7 @@ public class IOpac extends BaseApi implements OpacApi {
                         sr.setType(MediaType.valueOf(data.getJSONObject(
                                 "mediatypes").getString(
                                 mType.toLowerCase(Locale.GERMAN))));
-                    } catch (JSONException e) {
-                        sr.setType(defaulttypes.get(mType
-                                .toLowerCase(Locale.GERMAN)));
-                    } catch (IllegalArgumentException e) {
+                    } catch (JSONException | IllegalArgumentException e) {
                         sr.setType(defaulttypes.get(mType
                                 .toLowerCase(Locale.GERMAN)));
                     }
@@ -287,7 +284,7 @@ public class IOpac extends BaseApi implements OpacApi {
             }
 
             // Title and additional info
-            String title = "";
+            String title;
             String additionalInfo = "";
             if (colmap.get("info") != null) {
                 Element info = tr.select("td").get(colmap.get("info"));
@@ -380,7 +377,7 @@ public class IOpac extends BaseApi implements OpacApi {
 
     @Override
     public SearchRequestResult searchGetPage(int page) throws IOException,
-            NotReachableException, OpacErrorException {
+            OpacErrorException {
         if (!initialised)
             start();
 
@@ -392,13 +389,13 @@ public class IOpac extends BaseApi implements OpacApi {
 
     @Override
     public SearchRequestResult filterResults(Filter filter, Option option)
-            throws IOException, NotReachableException {
+            throws IOException {
         return null;
     }
 
     @Override
     public DetailledItem getResultById(String id, String homebranch)
-            throws IOException, NotReachableException {
+            throws IOException {
 
         if (!initialised)
             start();
@@ -457,7 +454,7 @@ public class IOpac extends BaseApi implements OpacApi {
         result.setCover(imgUrl);
 
         // GET INFORMATION
-        Map<String, String> e = new HashMap<String, String>();
+        Map<String, String> e = new HashMap<>();
 
         for (Element element : table) {
             String detail = element.select("td").text().trim()
@@ -518,8 +515,8 @@ public class IOpac extends BaseApi implements OpacApi {
         int i = 0;
         for (Element input : form.select("input")) {
             builder.append(i == 0 ? "?" : "&");
-            builder.append(input.attr("name") + "="
-                    + URLEncoder.encode(input.attr("value"), "UTF-8"));
+            builder.append(input.attr("name")).append("=")
+                   .append(URLEncoder.encode(input.attr("value"), "UTF-8"));
             i++;
         }
         return builder.toString();
@@ -542,7 +539,7 @@ public class IOpac extends BaseApi implements OpacApi {
             return new ReservationResult(MultiStepResult.Status.ERROR);
 
         Element form = doc.select("form[name=form1]").first();
-        List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
+        List<BasicNameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("sleKndNr", account.getName()));
         params.add(new BasicNameValuePair("slePw", account.getPassword()));
         params.add(new BasicNameValuePair("pshLogin", "Reservieren"));
@@ -636,7 +633,7 @@ public class IOpac extends BaseApi implements OpacApi {
         if (!initialised)
             start();
 
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("sleKndNr", account.getName()));
         params.add(new BasicNameValuePair("slePw", account.getPassword()));
         params.add(new BasicNameValuePair("pshLogin", "Login"));
@@ -648,8 +645,8 @@ public class IOpac extends BaseApi implements OpacApi {
 
         AccountData res = new AccountData(account.getId());
 
-        List<Map<String, String>> medien = new ArrayList<Map<String, String>>();
-        List<Map<String, String>> reserved = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> medien = new ArrayList<>();
+        List<Map<String, String>> reserved = new ArrayList<>();
         if (doc.select("a[name=AUS]").size() > 0) {
             parse_medialist(medien, doc, 1);
         }
@@ -689,7 +686,7 @@ public class IOpac extends BaseApi implements OpacApi {
 
     public void checkAccountData(Account account) throws IOException,
             OpacErrorException {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("sleKndNr", account.getName()));
         params.add(new BasicNameValuePair("slePw", account.getPassword()));
         params.add(new BasicNameValuePair("pshLogin", "Login"));
@@ -703,8 +700,7 @@ public class IOpac extends BaseApi implements OpacApi {
     }
 
     protected void parse_medialist(List<Map<String, String>> medien,
-                                   Document doc, int offset) throws ClientProtocolException,
-            IOException {
+                                   Document doc, int offset) {
 
         Elements copytrs = doc.select("a[name=AUS] ~ table").first()
                 .select("tr");
@@ -726,7 +722,7 @@ public class IOpac extends BaseApi implements OpacApi {
 
         for (int i = 1; i < trs; i++) {
             Element tr = copytrs.get(i);
-            Map<String, String> e = new HashMap<String, String>();
+            Map<String, String> e = new HashMap<>();
 
             if (copymap.optInt("title", 0) >= 0)
                 e.put(AccountData.KEY_LENT_TITLE,
@@ -785,8 +781,7 @@ public class IOpac extends BaseApi implements OpacApi {
     }
 
     protected void parse_reslist(List<Map<String, String>> medien,
-                                 Document doc, int offset) throws ClientProtocolException,
-            IOException {
+                                 Document doc, int offset) {
         Elements copytrs = doc.select("a[name=RES] ~ table:contains(Titel)")
                 .first().select("tr");
         doc.setBaseUri(opac_url);
@@ -797,7 +792,7 @@ public class IOpac extends BaseApi implements OpacApi {
         assert (trs > 0);
         for (int i = 1; i < trs; i++) {
             Element tr = copytrs.get(i);
-            Map<String, String> e = new HashMap<String, String>();
+            Map<String, String> e = new HashMap<>();
 
             e.put(AccountData.KEY_RESERVATION_TITLE, tr.child(0).text().trim()
                     .replace("\u00a0", ""));
@@ -826,9 +821,9 @@ public class IOpac extends BaseApi implements OpacApi {
             DropdownSearchField field = new DropdownSearchField();
             field.setDisplayName(name);
             field.setId(select.attr("name"));
-            List<Map<String, String>> options = new ArrayList<Map<String, String>>();
+            List<Map<String, String>> options = new ArrayList<>();
             for (Element option : select.select("option")) {
-                Map<String, String> map = new HashMap<String, String>();
+                Map<String, String> map = new HashMap<>();
                 map.put("key", option.attr("value"));
                 map.put("value", option.text());
                 options.add(map);
@@ -849,7 +844,7 @@ public class IOpac extends BaseApi implements OpacApi {
 
     @Override
     public List<SearchField> getSearchFields() throws IOException {
-        List<SearchField> fields = new ArrayList<SearchField>();
+        List<SearchField> fields = new ArrayList<>();
 
         // Extract all search fields, except media types
         String html;
@@ -900,7 +895,7 @@ public class IOpac extends BaseApi implements OpacApi {
         Pattern pattern_value = Pattern
                 .compile("mtyp\\[[0-9]+\\]\\[\"bez\"\\] = \"([^\"]+)\";");
 
-        List<Map<String, String>> mediatypes = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> mediatypes = new ArrayList<>();
         try {
             html = httpGet(opac_url + dir + "/mtyp.js", getDefaultEncoding());
 
@@ -917,7 +912,7 @@ public class IOpac extends BaseApi implements OpacApi {
                     value = matcher2.group(1);
                 }
                 if (value != "") {
-                    Map<String, String> mediatype = new HashMap<String, String>();
+                    Map<String, String> mediatype = new HashMap<>();
                     mediatype.put("key", key);
                     mediatype.put("value", value);
                     mediatypes.add(mediatype);
@@ -931,7 +926,7 @@ public class IOpac extends BaseApi implements OpacApi {
                 doc = Jsoup.parse(html);
 
                 for (Element opt : doc.select("#imtyp option")) {
-                    Map<String, String> mediatype = new HashMap<String, String>();
+                    Map<String, String> mediatype = new HashMap<>();
                     mediatype.put("key", opt.attr("value"));
                     mediatype.put("value", opt.text());
                     mediatypes.add(mediatype);
@@ -963,8 +958,7 @@ public class IOpac extends BaseApi implements OpacApi {
     }
 
     @Override
-    public String getAccountExtendableInfo(Account account) throws IOException,
-            NotReachableException {
+    public String getAccountExtendableInfo(Account account) throws IOException {
         return null;
     }
 

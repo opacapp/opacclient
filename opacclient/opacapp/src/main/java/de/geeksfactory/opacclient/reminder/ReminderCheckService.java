@@ -40,7 +40,6 @@ import android.util.Log;
 
 import org.acra.ACRA;
 
-import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.SocketException;
 import java.util.Date;
@@ -90,7 +89,7 @@ public class ReminderCheckService extends Service {
                     (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
             if (networkInfo != null) {
-                if (sp.getBoolean("notification_service_wifionly", false) == false
+                if (!sp.getBoolean("notification_service_wifionly", false)
                         || networkInfo.getType() == ConnectivityManager.TYPE_WIFI
                         || networkInfo.getType() == ConnectivityManager.TYPE_ETHERNET) {
                     executed = true;
@@ -218,13 +217,7 @@ public class ReminderCheckService extends Service {
                         }
                     }
 
-                } catch (SocketException e) {
-                    e.printStackTrace();
-                    exception = true;
-                } catch (InterruptedIOException e) {
-                    e.printStackTrace();
-                    exception = true;
-                } catch (IOException e) {
+                } catch (SocketException | InterruptedIOException e) {
                     e.printStackTrace();
                     exception = true;
                 } catch (OpacErrorException e) {

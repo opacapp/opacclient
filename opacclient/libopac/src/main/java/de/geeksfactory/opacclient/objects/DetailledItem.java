@@ -113,9 +113,9 @@ public class DetailledItem implements CoverHolder {
      * ContentValues key for {@link #addBand(Map)}:
      */
     public static final String KEY_CHILD_TITLE = "titel";
-    private List<Detail> details = new ArrayList<Detail>();
-    private List<Map<String, String>> copies = new ArrayList<Map<String, String>>();
-    private List<Map<String, String>> baende = new ArrayList<Map<String, String>>();
+    private List<Detail> details = new ArrayList<>();
+    private List<Map<String, String>> copies = new ArrayList<>();
+    private List<Map<String, String>> baende = new ArrayList<>();
     private String cover;
     private String title;
     private Bitmap coverBitmap;

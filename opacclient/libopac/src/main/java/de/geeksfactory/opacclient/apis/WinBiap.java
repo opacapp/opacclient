@@ -140,7 +140,7 @@ public class WinBiap extends BaseApi implements OpacApi {
         if (!query.containsKey(key) || query.get(key).equals(""))
             return index;
 
-        List<NameValuePair> list = new ArrayList<NameValuePair>();
+        List<NameValuePair> list = new ArrayList<>();
         if (data.optBoolean("longParameterNames")) {
             // A few libraries use longer names for the parameters
             // (e.g. Hohen Neuendorf)
@@ -178,7 +178,7 @@ public class WinBiap extends BaseApi implements OpacApi {
     protected int addParametersManual(String combination, String mode,
                                       String field, String operator, String value,
                                       List<List<NameValuePair>> params, int index) {
-        List<NameValuePair> list = new ArrayList<NameValuePair>();
+        List<NameValuePair> list = new ArrayList<>();
         if (data.optBoolean("longParameterNames")) {
             // A few libraries use longer names for the parameters
             // (e.g. Hohen Neuendorf)
@@ -200,10 +200,10 @@ public class WinBiap extends BaseApi implements OpacApi {
 
     @Override
     public SearchRequestResult search(List<SearchQuery> queries)
-            throws IOException, NotReachableException, OpacErrorException {
+            throws IOException, OpacErrorException {
         Map<String, String> query = searchQueryListToMap(queries);
 
-        List<List<NameValuePair>> queryParams = new ArrayList<List<NameValuePair>>();
+        List<List<NameValuePair>> queryParams = new ArrayList<>();
 
         int index = 0;
         index = addParameters(query, KEY_SEARCH_QUERY_FREE,
@@ -258,7 +258,7 @@ public class WinBiap extends BaseApi implements OpacApi {
         this.query = queryParams;
         String encodedQueryParams = encode(queryParams, "=", "%%", "++");
 
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
         start();
         params.add(new BasicNameValuePair("cmd", "5"));
         if (data.optBoolean("longParameterNames"))
@@ -297,7 +297,7 @@ public class WinBiap extends BaseApi implements OpacApi {
         String header = doc.select(".ResultHeader").text();
         Pattern pattern = Pattern.compile("Die Suche ergab (\\d*) Treffer");
         Matcher matcher = pattern.matcher(header);
-        int results_total = 0;
+        int results_total;
         if (matcher.find()) {
             results_total = Integer.parseInt(matcher.group(1));
         } else {
@@ -307,7 +307,7 @@ public class WinBiap extends BaseApi implements OpacApi {
 
         // Results
         Elements trs = doc.select("#listview .ResultItem");
-        List<SearchResult> results = new ArrayList<SearchResult>();
+        List<SearchResult> results = new ArrayList<>();
         for (Element tr : trs) {
             SearchResult sr = new SearchResult();
             String author = tr.select(".autor").text();
@@ -399,16 +399,16 @@ public class WinBiap extends BaseApi implements OpacApi {
 
     @Override
     public SearchRequestResult filterResults(Filter filter, Option option)
-            throws IOException, NotReachableException, OpacErrorException {
+            throws IOException, OpacErrorException {
         return null;
     }
 
     @Override
     public SearchRequestResult searchGetPage(int page) throws IOException,
-            NotReachableException, OpacErrorException {
+            OpacErrorException {
         String encodedQueryParams = encode(query, "=", "%%", "++");
 
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("cmd", "1"));
         if (data.optBoolean("longParameterNames")) {
             // A few libraries use longer names for the parameters
@@ -434,7 +434,7 @@ public class WinBiap extends BaseApi implements OpacApi {
 
     @Override
     public DetailledItem getResultById(String id, String homebranch)
-            throws IOException, NotReachableException, OpacErrorException {
+            throws IOException, OpacErrorException {
         String html = httpGet(opac_url + "/detail.aspx?Id=" + id,
                 getDefaultEncoding(), false);
         return parse_result(html);
@@ -453,18 +453,22 @@ public class WinBiap extends BaseApi implements OpacApi {
             String name = tr.select(".DetailInformationEntryName").text()
                     .replace(":", "");
             String value = tr.select(".DetailInformationEntryContent").text();
-            if (name.equals("Titel")) {
-                item.setTitle(value);
-            } else if (name.equals("Stücktitel")) {
-                item.setTitle(item.getTitle() + " " + value);
-            } else {
-                item.addDetail(new Detail(name, value));
+            switch (name) {
+                case "Titel":
+                    item.setTitle(value);
+                    break;
+                case "Stücktitel":
+                    item.setTitle(item.getTitle() + " " + value);
+                    break;
+                default:
+                    item.addDetail(new Detail(name, value));
+                    break;
             }
         }
 
         trs = doc.select(".detailCopies .tableCopies tr:not(.headerCopies)");
         for (Element tr : trs) {
-            Map<String, String> copy = new HashMap<String, String>();
+            Map<String, String> copy = new HashMap<>();
             copy.put(DetailledItem.KEY_COPY_BARCODE, tr.select(".mediaBarcode")
                     .text().replace("#", ""));
             copy.put(DetailledItem.KEY_COPY_STATUS, tr.select(".mediaStatus")
@@ -527,29 +531,29 @@ public class WinBiap extends BaseApi implements OpacApi {
         Elements branchOptions = doc
                 .select("#ctl00_ContentPlaceHolderMain_searchPanel_MultiSelectionBranch_ListBoxMultiselection option");
 
-        List<Map<String, String>> mediaGroups = new ArrayList<Map<String, String>>();
-        List<Map<String, String>> branches = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> mediaGroups = new ArrayList<>();
+        List<Map<String, String>> branches = new ArrayList<>();
 
-        Map<String, String> all = new HashMap<String, String>();
+        Map<String, String> all = new HashMap<>();
         all.put("key", "");
         all.put("value", "Alle");
         mediaGroups.add(all);
         branches.add(all);
 
         for (Element option : mediaGroupOptions) {
-            Map<String, String> map = new HashMap<String, String>();
+            Map<String, String> map = new HashMap<>();
             map.put("key", option.attr("value"));
             map.put("value", option.text());
             mediaGroups.add(map);
         }
         for (Element option : branchOptions) {
-            Map<String, String> map = new HashMap<String, String>();
+            Map<String, String> map = new HashMap<>();
             map.put("key", option.attr("value"));
             map.put("value", option.text());
             branches.add(map);
         }
 
-        List<SearchField> searchFields = new ArrayList<SearchField>();
+        List<SearchField> searchFields = new ArrayList<>();
 
         SearchField field = new TextSearchField(KEY_SEARCH_QUERY_FREE, "",
                 false, false, "Beliebig", true, false);
@@ -635,8 +639,7 @@ public class WinBiap extends BaseApi implements OpacApi {
     }
 
     @Override
-    public String getAccountExtendableInfo(Account account) throws IOException,
-            NotReachableException {
+    public String getAccountExtendableInfo(Account account) throws IOException {
         return null;
     }
 

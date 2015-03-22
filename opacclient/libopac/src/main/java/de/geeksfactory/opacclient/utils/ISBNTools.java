@@ -3,7 +3,6 @@ package de.geeksfactory.opacclient.utils;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,7 +18,7 @@ public class ISBNTools {
 
         for (int i = 0; i < isbn10.length(); i++) {
             char c = isbn10.charAt(i);
-            checksum += (int) Character.getNumericValue(c) * weight;
+            checksum += Character.getNumericValue(c) * weight;
             weight--;
         }
 
@@ -35,7 +34,7 @@ public class ISBNTools {
     }
 
     public static boolean is_valid_isbn10(char[] digits) {
-        digits = cleanupISBN(digits.toString()).toCharArray();
+        digits = cleanupISBN(new String(digits)).toCharArray();
         int a = 0;
         for (int i = 0; i < 10; i++) {
             a += i * Integer.parseInt(String.valueOf(digits[i]));

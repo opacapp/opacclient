@@ -65,15 +65,13 @@ public class JsonSearchFieldDataSource implements SearchFieldDataSource {
     public List<SearchField> getSearchFields(String libraryId) {
         try {
             JSONObject json = readJsonFile(libraryId);
-            List<SearchField> list = new ArrayList<SearchField>();
+            List<SearchField> list = new ArrayList<>();
             JSONArray fields = json.getJSONArray(KEY_FIELDS);
             for (int i = 0; i < fields.length(); i++) {
                 list.add(SearchField.fromJSON(fields.getJSONObject(i)));
             }
             return list;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
         return null;
@@ -102,9 +100,7 @@ public class JsonSearchFieldDataSource implements SearchFieldDataSource {
         try {
             JSONObject json = readJsonFile(libraryId);
             return json.getLong(KEY_TIME);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
         return 0;
@@ -115,9 +111,7 @@ public class JsonSearchFieldDataSource implements SearchFieldDataSource {
         try {
             JSONObject json = readJsonFile(libraryId);
             return json.getInt(KEY_VERSION);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
         return 0;
@@ -129,9 +123,7 @@ public class JsonSearchFieldDataSource implements SearchFieldDataSource {
         try {
             JSONObject json = readJsonFile(libraryId);
             return json.getString(KEY_LANGUAGE);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
         return null;
@@ -143,9 +135,7 @@ public class JsonSearchFieldDataSource implements SearchFieldDataSource {
             PrintWriter writer = new PrintWriter(file, "UTF-8");
             writer.print(data.toString());
             writer.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
     }
