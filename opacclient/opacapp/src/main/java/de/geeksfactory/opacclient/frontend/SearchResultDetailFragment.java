@@ -593,7 +593,8 @@ public class SearchResultDetailFragment extends Fragment
                            // We need to wait for tvTitel to refresh to get correct calculations
                            tvTitel.getViewTreeObserver().removeGlobalOnLayoutListener(
                                    this);
-                           if (tvTitel.getLayout().getLineCount() > 1) {
+                           if (tvTitel.getLayout() != null &&
+                                   tvTitel.getLayout().getLineCount() > 1) {
                                toolbar.getLayoutParams().height = (int) TypedValue.applyDimension(
                                        TypedValue.COMPLEX_UNIT_SP, 84f,
                                        getResources().getDisplayMetrics());
@@ -676,6 +677,9 @@ public class SearchResultDetailFragment extends Fragment
 
     @Override
     public void onScrollChanged(int deltaX, int deltaY) {
+        if (getItem() == null) {
+            return;
+        }
         int scrollY = scrollView.getScrollY();
         if (getItem().getCoverBitmap() != null) {
             // Parallax effect
