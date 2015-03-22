@@ -310,10 +310,9 @@ public class SearchResultDetailFragment extends Fragment
         llDetails = (LinearLayout) view.findViewById(R.id.llDetails);
         llCopies = (LinearLayout) view.findViewById(R.id.llCopies);
 
-        ImageView iv = (ImageView) view.findViewById(R.id.ivCover);
         if (getArguments().containsKey(ARG_ITEM_COVER_BITMAP)) {
             Bitmap bitmap = getArguments().getParcelable(ARG_ITEM_COVER_BITMAP);
-            iv.setImageBitmap(bitmap);
+            ivCover.setImageBitmap(bitmap);
             Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {
                 @Override
                 public void onGenerated(Palette palette) {
