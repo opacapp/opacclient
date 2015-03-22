@@ -37,7 +37,6 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.SocketException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;

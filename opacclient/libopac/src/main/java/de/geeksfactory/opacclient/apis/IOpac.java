@@ -22,7 +22,6 @@
 package de.geeksfactory.opacclient.apis;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.impl.client.BasicCookieStore;

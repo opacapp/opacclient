@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.apis.Adis;
 import de.geeksfactory.opacclient.apis.BiBer1992;
 import de.geeksfactory.opacclient.apis.Bibliotheca;

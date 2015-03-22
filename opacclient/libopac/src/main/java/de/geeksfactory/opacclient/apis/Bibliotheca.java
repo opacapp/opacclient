@@ -23,7 +23,6 @@ package de.geeksfactory.opacclient.apis;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -40,7 +39,6 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.SocketException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;

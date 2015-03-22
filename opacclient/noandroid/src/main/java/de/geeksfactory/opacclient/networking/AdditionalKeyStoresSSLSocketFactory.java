@@ -7,7 +7,6 @@ package de.geeksfactory.opacclient.networking;
 //and
 //https://github.com/nelenkov/custom-cert-https
 
-import org.apache.http.conn.scheme.HostNameResolver;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 
 import java.io.IOException;
@@ -18,7 +17,6 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;

@@ -22,7 +22,6 @@
 package de.geeksfactory.opacclient.apis;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -58,7 +57,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
