@@ -360,7 +360,7 @@ public class Pica extends BaseApi implements OpacApi {
 
             int k = 0;
             for (String[] part : strings) {
-                if (part[0] == "a" && k == 0) {
+                if (part[0].equals("a") && k == 0) {
                     description.append("<b>").append(part[2]).append("</b>");
                 } else if (k < 3) {
                     description.append("<br />").append(part[2]);

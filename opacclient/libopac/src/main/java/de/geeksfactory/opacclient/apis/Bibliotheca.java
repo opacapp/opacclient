@@ -418,7 +418,6 @@ public class Bibliotheca extends BaseApi {
                             sr.setId("&detmediennr=" + nr);
                         }
                     }
-                } else {
                 }
             } catch (Exception e) {
             }

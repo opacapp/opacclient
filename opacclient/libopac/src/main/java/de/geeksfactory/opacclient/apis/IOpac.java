@@ -766,8 +766,7 @@ public class IOpac extends BaseApi implements OpacApi {
                     // find media number with regex
                     Pattern pattern = Pattern.compile("mednr=([^&]*)&");
                     Matcher matcher = pattern.matcher(link);
-                    matcher.find();
-                    if (matcher.group() != null) {
+                    if (matcher.find() && matcher.group() != null) {
                         e.put(AccountData.KEY_LENT_ID, matcher.group(1));
                     }
                 }
@@ -910,7 +909,7 @@ public class IOpac extends BaseApi implements OpacApi {
                 if (matcher2.find()) {
                     value = matcher2.group(1);
                 }
-                if (value != "") {
+                if (!value.equals("")) {
                     Map<String, String> mediatype = new HashMap<>();
                     mediatype.put("key", key);
                     mediatype.put("value", value);
