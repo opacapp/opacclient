@@ -145,7 +145,7 @@ public class LibraryApiTestCases {
 	 */
 	@Test
 	public void testWrongLogin() throws IOException, JSONException {
-		if (!api.isAccountSupported(library))
+		if (!library.isAccountSupported())
 			return;
 		Account account = new Account();
 		account.setId(0);

@@ -228,7 +228,7 @@ public class AccountFragment extends Fragment implements
             return;
         }
         if (api != null
-                && !api.isAccountSupported(app.getLibrary())
+                && !app.getLibrary().isAccountSupported()
                 && (api.getSupportFlags() & OpacApi.SUPPORT_FLAG_ACCOUNT_EXTENDABLE) == 0) {
             supported = false;
             // Not supported with this api at all
@@ -264,7 +264,7 @@ public class AccountFragment extends Fragment implements
                         }
                     });
 
-        } else if (api != null && !api.isAccountSupported(app.getLibrary())) {
+        } else if (api != null && !app.getLibrary().isAccountSupported()) {
             supported = false;
 
             // We need help
@@ -337,9 +337,8 @@ public class AccountFragment extends Fragment implements
 
     public void refresh() {
 
-        if ((!app.getApi().isAccountSupported(app.getLibrary()) && (app
+        if ((!app.getLibrary().isAccountSupported() && (app
                 .getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ACCOUNT_EXTENDABLE) == 0)
-                || !app.getApi().isAccountSupported(app.getLibrary())
                 || account.getPassword() == null
                 || account.getPassword().equals("null")
                 || account.getPassword().equals("")
