@@ -1014,9 +1014,7 @@ public class Bibliotheca extends BaseApi {
         logged_in = System.currentTimeMillis();
         logged_in_as = acc;
 
-        JSONObject copymap = null;
-
-        copymap = data.getJSONObject("accounttable");
+        JSONObject copymap = data.getJSONObject("accounttable");
 
         List<Map<String, String>> medien = new ArrayList<>();
 

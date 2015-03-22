@@ -563,7 +563,7 @@ public class SISIS extends BaseApi implements OpacApi {
             boolean sigfound = false;
             for (String[] part : strings) {
                 if (!described) {
-                    if (part[0] == "a" && (k == 0 || !titlefound)) {
+                    if (part[0].equals("a") && (k == 0 || !titlefound)) {
                         if (k != 0)
                             description.append("<br />");
                         description.append("<b>").append(part[2]).append("</b>");
@@ -1218,7 +1218,7 @@ public class SISIS extends BaseApi implements OpacApi {
         // We have to call the page we originally found the link on first...
         httpGet(opac_url + "/userAccount.do?methodToCall=showAccount&typ=1",
                 ENCODING);
-        if (offset != "1")
+        if (!offset.equals("1"))
             httpGet(opac_url
                     + "/userAccount.do?methodToCall=pos&accountTyp=AUSLEIHEN&anzPos="
                     + offset, ENCODING);
@@ -1265,7 +1265,7 @@ public class SISIS extends BaseApi implements OpacApi {
         // We have to call the page we originally found the link on first...
         httpGet(opac_url + "/userAccount.do?methodToCall=showAccount&typ="
                 + type, ENCODING);
-        if (offset != "1")
+        if (!offset.equals("1"))
             httpGet(opac_url + "/userAccount.do?methodToCall=pos&anzPos="
                     + offset, ENCODING);
         httpGet(opac_url + "/userAccount.do?" + query, ENCODING);
@@ -1608,7 +1608,7 @@ public class SISIS extends BaseApi implements OpacApi {
             }
         }
 
-        if (id != null && id != "")
+        if (id != null && !id.equals(""))
             return opac_url + "/start.do?" + startparams
                     + "searchType=1&Query=0%3D%22" + id + "%22";
         else

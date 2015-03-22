@@ -973,8 +973,7 @@ public class SearchResultDetailFragment extends Fragment
                             } catch (UnsupportedEncodingException e) {
                             }
 
-                            String shareUrl = app.getApi().getShareUrl(id,
-                                    title);
+                            String shareUrl = app.getApi().getShareUrl(id, t);
                             if (shareUrl != null) {
                                 intent.putExtra(Intent.EXTRA_TEXT, shareUrl);
                                 startActivity(Intent.createChooser(intent,
@@ -1009,7 +1008,7 @@ public class SearchResultDetailFragment extends Fragment
                             } catch (UnsupportedEncodingException e) {
                             }
 
-                            String text = title + "\n\n";
+                            String text = t + "\n\n";
 
                             for (Detail detail : getItem().getDetails()) {
                                 String colon = "";
@@ -1020,8 +1019,7 @@ public class SearchResultDetailFragment extends Fragment
                                         + detail.getContent() + "\n\n";
                             }
 
-                            String shareUrl = app.getApi().getShareUrl(id,
-                                    title);
+                            String shareUrl = app.getApi().getShareUrl(id, t);
                             if (shareUrl != null) {
                                 text += shareUrl;
                             }
