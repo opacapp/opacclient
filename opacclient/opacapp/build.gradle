@@ -43,7 +43,9 @@ dependencies {
     compile(project(':libopac')) {
         transitive = false
     }
-    compile 'ch.acra:acra:4.5.0'
+    compile('ch.acra:acra:4.5.0') {
+        exclude group: 'org.json', module: 'json'
+    }
     compile 'org.jsoup:jsoup:1.8.1'
     compile 'com.github.machinarius:preferencefragment:0.1.1'
     compile 'com.android.support:support-v4:21.+'
