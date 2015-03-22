@@ -76,7 +76,6 @@ import java.util.Set;
 
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
-import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.SSLSecurityException;
 import de.geeksfactory.opacclient.apis.EbookServiceApi;
@@ -107,7 +106,7 @@ public class AccountFragment extends Fragment implements
     protected View view;
     private LoadTask lt;
     private CancelTask ct;
-    private OpacTask<String> dt;
+    private DownloadTask dt;
     private Account account;
     private boolean refreshing = false;
     private long refreshtime;
@@ -240,29 +239,29 @@ public class AccountFragment extends Fragment implements
             ((Button) view.findViewById(R.id.btSend))
                     .setText(R.string.write_mail);
             view.findViewById(R.id.btSend)
-                    .setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent emailIntent = new Intent(
-                                    android.content.Intent.ACTION_SEND);
-                            emailIntent.putExtra(
-                                    android.content.Intent.EXTRA_EMAIL,
-                                    new String[]{"info@opacapp.de"});
-                            emailIntent
-                                    .putExtra(
-                                            android.content.Intent.EXTRA_SUBJECT,
-                                            "Bibliothek "
-                                                    + app.getLibrary()
-                                                         .getIdent());
-                            emailIntent.putExtra(
-                                    android.content.Intent.EXTRA_TEXT,
-                                    getResources().getString(
-                                            R.string.interested_to_help));
-                            emailIntent.setType("text/plain");
-                            startActivity(Intent.createChooser(emailIntent,
-                                    getString(R.string.write_mail)));
-                        }
-                    });
+                .setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent emailIntent = new Intent(
+                                android.content.Intent.ACTION_SEND);
+                        emailIntent.putExtra(
+                                android.content.Intent.EXTRA_EMAIL,
+                                new String[]{"info@opacapp.de"});
+                        emailIntent
+                                .putExtra(
+                                        android.content.Intent.EXTRA_SUBJECT,
+                                        "Bibliothek "
+                                                + app.getLibrary()
+                                                     .getIdent());
+                        emailIntent.putExtra(
+                                android.content.Intent.EXTRA_TEXT,
+                                getResources().getString(
+                                        R.string.interested_to_help));
+                        emailIntent.setType("text/plain");
+                        startActivity(Intent.createChooser(emailIntent,
+                                getString(R.string.write_mail)));
+                    }
+                });
 
         } else if (api != null && !app.getLibrary().isAccountSupported()) {
             supported = false;
@@ -275,21 +274,21 @@ public class AccountFragment extends Fragment implements
             ((TextView) view.findViewById(R.id.tvErrBodyU))
                     .setText(R.string.account_unsupported);
             view.findViewById(R.id.btSend)
-                    .setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialog = ProgressDialog.show(getActivity(), "",
-                                    getString(R.string.report_sending), true,
-                                    true, new OnCancelListener() {
-                                        @Override
-                                        public void onCancel(
-                                                DialogInterface arg0) {
-                                        }
-                                    });
-                            dialog.show();
-                            new SendTask().execute(this);
-                        }
-                    });
+                .setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog = ProgressDialog.show(getActivity(), "",
+                                getString(R.string.report_sending), true,
+                                true, new OnCancelListener() {
+                                    @Override
+                                    public void onCancel(
+                                            DialogInterface arg0) {
+                                    }
+                                });
+                        dialog.show();
+                        new SendTask().execute();
+                    }
+                });
 
         } else if (account.getPassword() == null
                 || account.getPassword().equals("null")
@@ -301,17 +300,17 @@ public class AccountFragment extends Fragment implements
             view.findViewById(R.id.llLoading).setVisibility(View.GONE);
             view.findViewById(R.id.answer_error).setVisibility(View.VISIBLE);
             view.findViewById(R.id.btPrefs)
-                    .setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(getActivity(),
-                                    AccountEditActivity.class);
-                            intent.putExtra(
-                                    AccountEditActivity.EXTRA_ACCOUNT_ID, app
-                                            .getAccount().getId());
-                            startActivity(intent);
-                        }
-                    });
+                .setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(),
+                                AccountEditActivity.class);
+                        intent.putExtra(
+                                AccountEditActivity.EXTRA_ACCOUNT_ID, app
+                                        .getAccount().getId());
+                        startActivity(intent);
+                    }
+                });
             ((TextView) view.findViewById(R.id.tvErrHeadA)).setText("");
             ((TextView) view.findViewById(R.id.tvErrBodyA))
                     .setText(R.string.status_nouser);
@@ -350,7 +349,7 @@ public class AccountFragment extends Fragment implements
 
         setRefreshing(true);
         lt = new LoadTask();
-        lt.execute(app);
+        lt.execute();
     }
 
     protected void cancel(final String a) {
@@ -428,8 +427,9 @@ public class AccountFragment extends Fragment implements
                                    }
 
                                    @Override
-                                   public StepTask<?> newTask() {
-                                       return ct = new CancelTask();
+                                   public StepTask<?, ?> newTask(MultiStepResultHelper helper,
+                                                                 int useraction, String selection) {
+                                       return ct = new CancelTask(helper, useraction, selection);
                                    }
                                });
                                msrhCancel.start();
@@ -525,8 +525,9 @@ public class AccountFragment extends Fragment implements
             }
 
             @Override
-            public StepTask<?> newTask() {
-                return new ProlongTask();
+            public StepTask<?, ?> newTask(MultiStepResultHelper helper, int useraction,
+                                          String selection) {
+                return new ProlongTask(helper, useraction, selection);
             }
         });
         msrhProlong.start();
@@ -537,8 +538,8 @@ public class AccountFragment extends Fragment implements
             dialog = ProgressDialog.show(getActivity(), "",
                     getString(R.string.doing_download), true);
             dialog.show();
-            dt = new DownloadTask();
-            dt.execute(app, a);
+            dt = new DownloadTask(a);
+            dt.execute();
         }
     }
 
@@ -586,12 +587,12 @@ public class AccountFragment extends Fragment implements
                         .setText(R.string.connection_error_detail_nre);
             }
             connError.findViewById(R.id.btRetry)
-                    .setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            refresh();
-                        }
-                    });
+                     .setOnClickListener(new OnClickListener() {
+                         @Override
+                         public void onClick(View v) {
+                             refresh();
+                         }
+                     });
             view.findViewById(R.id.llLoading).setVisibility(View.GONE);
             view.findViewById(R.id.svAccount).setVisibility(View.GONE);
             connError.setVisibility(View.VISIBLE);
@@ -602,16 +603,16 @@ public class AccountFragment extends Fragment implements
         view.findViewById(R.id.llLoading).setVisibility(View.GONE);
         view.findViewById(R.id.answer_error).setVisibility(View.VISIBLE);
         view.findViewById(R.id.btPrefs)
-                .setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(),
-                                AccountEditActivity.class);
-                        intent.putExtra(AccountEditActivity.EXTRA_ACCOUNT_ID,
-                                account.getId());
-                        startActivity(intent);
-                    }
-                });
+            .setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(),
+                            AccountEditActivity.class);
+                    intent.putExtra(AccountEditActivity.EXTRA_ACCOUNT_ID,
+                            account.getId());
+                    startActivity(intent);
+                }
+            });
         ((TextView) view.findViewById(R.id.tvErrBodyA)).setText(s);
     }
 
@@ -736,7 +737,7 @@ public class AccountFragment extends Fragment implements
                 }
 
                 v.findViewById(R.id.tvStatus)
-                        .setVisibility(View.VISIBLE);
+                 .setVisibility(View.VISIBLE);
                 if (item.containsKey(AccountData.KEY_LENT_STATUS)
                         && !"".equals(item
                         .get(AccountData.KEY_LENT_STATUS))
@@ -754,16 +755,16 @@ public class AccountFragment extends Fragment implements
                             .fromHtml(item.get(AccountData.KEY_LENT_DEADLINE)));
                 } else {
                     v.findViewById(R.id.tvStatus)
-                            .setVisibility(View.GONE);
+                     .setVisibility(View.GONE);
                 }
                 if (item.containsKey(AccountData.KEY_LENT_FORMAT)) {
                     ((TextView) v.findViewById(R.id.tvFmt)).setText(Html
                             .fromHtml(item.get(AccountData.KEY_LENT_FORMAT)));
                     v.findViewById(R.id.tvFmt)
-                            .setVisibility(View.VISIBLE);
+                     .setVisibility(View.VISIBLE);
                 } else {
                     v.findViewById(R.id.tvFmt)
-                            .setVisibility(View.GONE);
+                     .setVisibility(View.GONE);
                 }
 
                 try {
@@ -812,29 +813,29 @@ public class AccountFragment extends Fragment implements
                             .fromHtml(item
                                     .get(AccountData.KEY_LENT_LENDING_BRANCH)));
                     v.findViewById(R.id.tvZst)
-                            .setVisibility(View.VISIBLE);
+                     .setVisibility(View.VISIBLE);
                 } else if (item.containsKey(AccountData.KEY_LENT_BRANCH)) {
                     ((TextView) v.findViewById(R.id.tvZst)).setText(Html
                             .fromHtml(item.get(AccountData.KEY_LENT_BRANCH)));
                     v.findViewById(R.id.tvZst)
-                            .setVisibility(View.VISIBLE);
+                     .setVisibility(View.VISIBLE);
                 } else {
                     v.findViewById(R.id.tvZst)
-                            .setVisibility(View.GONE);
+                     .setVisibility(View.GONE);
                 }
 
                 if (item.containsKey(AccountData.KEY_LENT_LINK)) {
                     v.findViewById(R.id.ivProlong).setTag(
                             item.get(AccountData.KEY_LENT_LINK));
                     v.findViewById(R.id.ivProlong)
-                            .setOnClickListener(new OnClickListener() {
-                                @Override
-                                public void onClick(View arg0) {
-                                    prolong((String) arg0.getTag());
-                                }
-                            });
+                     .setOnClickListener(new OnClickListener() {
+                         @Override
+                         public void onClick(View arg0) {
+                             prolong((String) arg0.getTag());
+                         }
+                     });
                     v.findViewById(R.id.ivProlong)
-                            .setVisibility(View.VISIBLE);
+                     .setVisibility(View.VISIBLE);
                     if (item.containsKey(AccountData.KEY_LENT_RENEWABLE)) {
                         ((ImageView) v.findViewById(R.id.ivProlong))
                                 .setAlpha(item.get(
@@ -846,19 +847,19 @@ public class AccountFragment extends Fragment implements
                     v.findViewById(R.id.ivDownload).setTag(
                             item.get(AccountData.KEY_LENT_DOWNLOAD));
                     v.findViewById(R.id.ivDownload)
-                            .setOnClickListener(new OnClickListener() {
-                                @Override
-                                public void onClick(View arg0) {
-                                    download((String) arg0.getTag());
-                                }
-                            });
+                     .setOnClickListener(new OnClickListener() {
+                         @Override
+                         public void onClick(View arg0) {
+                             download((String) arg0.getTag());
+                         }
+                     });
                     v.findViewById(R.id.ivProlong)
-                            .setVisibility(View.GONE);
+                     .setVisibility(View.GONE);
                     v.findViewById(R.id.ivDownload)
-                            .setVisibility(View.VISIBLE);
+                     .setVisibility(View.VISIBLE);
                 } else {
                     v.findViewById(R.id.ivProlong)
-                            .setVisibility(View.INVISIBLE);
+                     .setVisibility(View.INVISIBLE);
                 }
 
                 llLent.addView(v);
@@ -930,7 +931,7 @@ public class AccountFragment extends Fragment implements
                             .fromHtml(item
                                     .get(AccountData.KEY_RESERVATION_READY)));
                     v.findViewById(R.id.tvStatus)
-                            .setVisibility(View.VISIBLE);
+                     .setVisibility(View.VISIBLE);
                 } else if (item.containsKey(AccountData.KEY_RESERVATION_EXPIRE)
                         && item.get(AccountData.KEY_RESERVATION_EXPIRE)
                                .length() > 6) {
@@ -938,10 +939,10 @@ public class AccountFragment extends Fragment implements
                             .setText(Html.fromHtml("bis "
                                     + item.get(AccountData.KEY_RESERVATION_EXPIRE)));
                     v.findViewById(R.id.tvStatus)
-                            .setVisibility(View.VISIBLE);
+                     .setVisibility(View.VISIBLE);
                 } else {
                     v.findViewById(R.id.tvStatus)
-                            .setVisibility(View.GONE);
+                     .setVisibility(View.GONE);
                 }
 
                 if (item.containsKey(AccountData.KEY_RESERVATION_BRANCH)) {
@@ -949,45 +950,45 @@ public class AccountFragment extends Fragment implements
                             .fromHtml(item
                                     .get(AccountData.KEY_RESERVATION_BRANCH)));
                     v.findViewById(R.id.tvZst)
-                            .setVisibility(View.VISIBLE);
+                     .setVisibility(View.VISIBLE);
                 } else {
                     v.findViewById(R.id.tvZst)
-                            .setVisibility(View.GONE);
+                     .setVisibility(View.GONE);
                 }
 
                 if (item.containsKey(AccountData.KEY_RESERVATION_BOOKING)) {
                     v.findViewById(R.id.ivBooking).setTag(
                             item.get(AccountData.KEY_RESERVATION_BOOKING));
                     v.findViewById(R.id.ivBooking)
-                            .setOnClickListener(new OnClickListener() {
-                                @Override
-                                public void onClick(View arg0) {
-                                    bookingStart((String) arg0.getTag());
-                                }
-                            });
+                     .setOnClickListener(new OnClickListener() {
+                         @Override
+                         public void onClick(View arg0) {
+                             bookingStart((String) arg0.getTag());
+                         }
+                     });
                     v.findViewById(R.id.ivBooking)
-                            .setVisibility(View.VISIBLE);
+                     .setVisibility(View.VISIBLE);
                     v.findViewById(R.id.ivCancel)
-                            .setVisibility(View.GONE);
+                     .setVisibility(View.GONE);
                 } else if (item.containsKey(AccountData.KEY_RESERVATION_CANCEL)) {
                     v.findViewById(R.id.ivCancel).setTag(
                             item.get(AccountData.KEY_RESERVATION_CANCEL));
                     v.findViewById(R.id.ivCancel)
-                            .setOnClickListener(new OnClickListener() {
-                                @Override
-                                public void onClick(View arg0) {
-                                    cancel((String) arg0.getTag());
-                                }
-                            });
+                     .setOnClickListener(new OnClickListener() {
+                         @Override
+                         public void onClick(View arg0) {
+                             cancel((String) arg0.getTag());
+                         }
+                     });
                     v.findViewById(R.id.ivCancel)
-                            .setVisibility(View.VISIBLE);
+                     .setVisibility(View.VISIBLE);
                     v.findViewById(R.id.ivBooking)
-                            .setVisibility(View.GONE);
+                     .setVisibility(View.GONE);
                 } else {
                     v.findViewById(R.id.ivCancel)
-                            .setVisibility(View.INVISIBLE);
+                     .setVisibility(View.INVISIBLE);
                     v.findViewById(R.id.ivBooking)
-                            .setVisibility(View.GONE);
+                     .setVisibility(View.GONE);
                 }
                 llRes.addView(v);
             }
@@ -1111,8 +1112,9 @@ public class AccountFragment extends Fragment implements
             }
 
             @Override
-            public StepTask<?> newTask() {
-                return new BookingTask();
+            public StepTask<?, ?> newTask(MultiStepResultHelper helper, int useraction,
+                                          String selection) {
+                return new BookingTask(helper, useraction, selection);
             }
         });
         msrhBooking.start();
@@ -1227,8 +1229,9 @@ public class AccountFragment extends Fragment implements
             }
 
             @Override
-            public StepTask<?> newTask() {
-                return new ProlongAllTask();
+            public StepTask<?, ?> newTask(MultiStepResultHelper helper, int useraction,
+                                          String selection) {
+                return new ProlongAllTask(helper, useraction, selection);
             }
         });
         msrhProlong.start();
@@ -1264,10 +1267,10 @@ public class AccountFragment extends Fragment implements
         }
     }
 
-    public class SendTask extends AsyncTask<Object, Object, Integer> {
+    public class SendTask extends AsyncTask<Void, Object, Integer> {
 
         @Override
-        protected Integer doInBackground(Object... arg0) {
+        protected Integer doInBackground(Void... voids) {
             DefaultHttpClient dc = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(
                     "http://opacapp.de/crashreport.php");
@@ -1341,16 +1344,16 @@ public class AccountFragment extends Fragment implements
         }
     }
 
-    public class LoadTask extends OpacTask<AccountData> {
+    public class LoadTask extends AsyncTask<Void, Void, AccountData> {
 
         private Exception exception;
 
         @Override
-        protected AccountData doInBackground(Object... arg0) {
-            super.doInBackground(arg0);
+        protected AccountData doInBackground(Void... voids) {
             try {
                 return app.getApi().account(app.getAccount());
-            } catch (java.net.UnknownHostException | java.net.SocketException | InterruptedIOException | NoHttpResponseException | OpacErrorException e) {
+            } catch (java.net.UnknownHostException | java.net.SocketException |
+                    InterruptedIOException | NoHttpResponseException | OpacErrorException e) {
                 exception = e;
             } catch (Exception e) {
                 ACRA.getErrorReporter().handleException(e);
@@ -1371,17 +1374,18 @@ public class AccountFragment extends Fragment implements
         }
     }
 
-    public class CancelTask extends StepTask<CancelResult> {
+    public class CancelTask extends StepTask<String, CancelResult> {
+
+        public CancelTask(MultiStepResultHelper helper, int useraction, String selection) {
+            super(helper, useraction, selection);
+        }
 
         @Override
-        protected CancelResult doInBackground(Object... arg0) {
-            super.doInBackground(arg0);
-            String a = (String) arg0[1];
-            int useraction = (Integer) arg0[2];
-            String selection = (String) arg0[3];
+        protected CancelResult doInBackground(String... itemId) {
             try {
-                return app.getApi().cancel(a, account, useraction, selection);
-            } catch (java.net.UnknownHostException | NoHttpResponseException | java.net.SocketException e) {
+                return app.getApi().cancel(itemId[0], account, useraction, selection);
+            } catch (java.net.UnknownHostException | NoHttpResponseException | java.net
+                    .SocketException e) {
                 e.printStackTrace();
             } catch (Exception e) {
                 ACRA.getErrorReporter().handleException(e);
@@ -1416,14 +1420,17 @@ public class AccountFragment extends Fragment implements
         }
     }
 
-    public class DownloadTask extends OpacTask<String> {
+    public class DownloadTask extends AsyncTask<Void, Void, String> {
+
+        private String itemId;
+
+        public DownloadTask(String itemId) {
+            this.itemId = itemId;
+        }
 
         @Override
-        protected String doInBackground(Object... arg0) {
-            super.doInBackground(arg0);
-            String a = (String) arg0[1];
-            return ((EbookServiceApi) app.getApi()).downloadItem(account,
-                    a);
+        protected String doInBackground(Void... voids) {
+            return ((EbookServiceApi) app.getApi()).downloadItem(account, itemId);
         }
 
         @Override
@@ -1505,21 +1512,17 @@ public class AccountFragment extends Fragment implements
     }
 
     public class ProlongTask extends
-            MultiStepResultHelper.StepTask<ProlongResult> {
+            MultiStepResultHelper.StepTask<String, ProlongResult> {
         private boolean success = true;
-        private String media;
+
+        public ProlongTask(MultiStepResultHelper helper, int useraction, String selection) {
+            super(helper, useraction, selection);
+        }
 
         @Override
-        protected ProlongResult doInBackground(Object... arg0) {
-            super.doInBackground(arg0);
-
-            app = (OpacClient) arg0[0];
-            media = (String) arg0[1];
-            int useraction = (Integer) arg0[2];
-            String selection = (String) arg0[3];
-
+        protected ProlongResult doInBackground(String... media) {
             try {
-                ProlongResult res = app.getApi().prolong(media, account,
+                ProlongResult res = app.getApi().prolong(media[0], account,
                         useraction, selection);
                 success = true;
                 return res;
@@ -1564,19 +1567,19 @@ public class AccountFragment extends Fragment implements
     }
 
     public class ProlongAllTask extends
-            MultiStepResultHelper.StepTask<ProlongAllResult> {
+            MultiStepResultHelper.StepTask<Void, ProlongAllResult> {
+
+        public ProlongAllTask(MultiStepResultHelper helper, int useraction, String selection) {
+            super(helper, useraction, selection);
+        }
 
         @Override
-        protected ProlongAllResult doInBackground(Object... arg0) {
-            super.doInBackground(arg0);
-
-            int useraction = (Integer) arg0[2];
-            String selection = (String) arg0[3];
-
+        protected ProlongAllResult doInBackground(Void... voids) {
             try {
                 return app.getApi().prolongAll(account,
                         useraction, selection);
-            } catch (java.net.UnknownHostException | java.net.SocketException | NoHttpResponseException e) {
+            } catch (java.net.UnknownHostException | java.net.SocketException |
+                    NoHttpResponseException e) {
             } catch (Exception e) {
                 ACRA.getErrorReporter().handleException(e);
             }
@@ -1660,21 +1663,16 @@ public class AccountFragment extends Fragment implements
 
     }
 
-    public class BookingTask extends StepTask<BookingResult> {
-        private DetailledItem item;
+    public class BookingTask extends StepTask<DetailledItem, BookingResult> {
+        public BookingTask(MultiStepResultHelper helper, int useraction, String selection) {
+            super(helper, useraction, selection);
+        }
 
         @Override
-        protected BookingResult doInBackground(Object... arg0) {
-            super.doInBackground(arg0);
-
-            app = (OpacClient) arg0[0];
-            item = (DetailledItem) arg0[1];
-            int useraction = (Integer) arg0[2];
-            String selection = (String) arg0[3];
-
+        protected BookingResult doInBackground(DetailledItem... item) {
             try {
                 return ((EbookServiceApi) app.getApi()).booking(
-                        item, app.getAccount(), useraction, selection);
+                        item[0], app.getAccount(), useraction, selection);
             } catch (java.net.UnknownHostException | NoHttpResponseException e) {
                 publishProgress(e, "ioerror");
             } catch (java.net.SocketException e) {

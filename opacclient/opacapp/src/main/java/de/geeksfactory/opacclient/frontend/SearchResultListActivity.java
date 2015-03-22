@@ -2,6 +2,7 @@ package de.geeksfactory.opacclient.frontend;
 
 import android.app.SearchManager;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -19,8 +20,6 @@ import org.acra.ACRA;
 import java.io.InterruptedIOException;
 
 import de.geeksfactory.opacclient.NotReachableException;
-import de.geeksfactory.opacclient.OpacClient;
-import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.SSLSecurityException;
 import de.geeksfactory.opacclient.apis.OpacApi;
@@ -117,7 +116,7 @@ public class SearchResultListActivity extends OpacActivity implements
     public void onItemSelected(SearchResult result, View coverView) {
         if ((app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING) == 0
                 && result.getPage() != listFragment.getLastLoadedPage()) {
-            new ReloadOldPageTask().execute(app, result, coverView);
+            new ReloadOldPageTask(result, coverView).execute();
         } else {
             showDetail(result, coverView);
         }
@@ -189,10 +188,15 @@ public class SearchResultListActivity extends OpacActivity implements
         return mTwoPane;
     }
 
-    public class ReloadOldPageTask extends OpacTask<SearchRequestResult> {
-        SearchResult searchResult;
-        Exception exception;
-        View coverView;
+    public class ReloadOldPageTask extends AsyncTask<Void, Void, SearchRequestResult> {
+        private SearchResult searchResult;
+        private Exception exception;
+        private View coverView;
+
+        public ReloadOldPageTask(SearchResult searchResult, View coverView) {
+            this.searchResult = searchResult;
+            this.coverView = coverView;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -200,11 +204,7 @@ public class SearchResultListActivity extends OpacActivity implements
         }
 
         @Override
-        protected SearchRequestResult doInBackground(Object... arg0) {
-            searchResult = (SearchResult) arg0[1];
-            coverView = (View) arg0[2];
-            OpacClient app = (OpacClient) arg0[0];
-
+        protected SearchRequestResult doInBackground(Void... voids) {
             try {
                 return app.getApi().searchGetPage(searchResult.getPage());
             } catch (java.net.UnknownHostException e) {

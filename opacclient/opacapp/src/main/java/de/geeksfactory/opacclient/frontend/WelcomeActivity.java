@@ -23,6 +23,7 @@ package de.geeksfactory.opacclient.frontend;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -35,7 +36,6 @@ import org.acra.ACRA;
 import java.io.InterruptedIOException;
 
 import de.geeksfactory.opacclient.OpacClient;
-import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
 
 public class WelcomeActivity extends ActionBarActivity {
@@ -85,22 +85,22 @@ public class WelcomeActivity extends ActionBarActivity {
         }
     }
 
-    public class InitTask extends OpacTask<Integer> {
+    public class InitTask extends AsyncTask<Void, Void, Void> {
         @Override
-        protected Integer doInBackground(Object... arg0) {
-            super.doInBackground(arg0);
+        protected Void doInBackground(Void... voids) {
             try {
                 app.getApi().start();
-            } catch (java.net.UnknownHostException | InterruptedIOException | java.net.SocketException e) {
+            } catch (java.net.UnknownHostException | InterruptedIOException | java.net
+                    .SocketException e) {
                 e.printStackTrace();
             } catch (Exception e) {
                 ACRA.getErrorReporter().handleException(e);
             }
-            return 0;
+            return null;
         }
 
         @Override
-        protected void onPostExecute(Integer result) {
+        protected void onPostExecute(Void result) {
             dialog.dismiss();
             Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
             startActivity(intent);

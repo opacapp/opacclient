@@ -127,12 +127,12 @@ public class ReminderCheckService extends Service {
         return null;
     }
 
-    public class CheckTask extends AsyncTask<Object, Object, Object[]> {
+    public class CheckTask extends AsyncTask<Void, Void, Object[]> {
 
         private boolean exception = false;
 
         @Override
-        protected Object[] doInBackground(Object... params) {
+        protected Object[] doInBackground(Void... voids) {
             AccountDataSource data = new AccountDataSource(
                     ReminderCheckService.this);
             data.open();

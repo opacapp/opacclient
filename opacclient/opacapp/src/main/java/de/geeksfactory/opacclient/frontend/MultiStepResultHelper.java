@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.TextUtils.TruncateAt;
@@ -24,23 +25,22 @@ import android.widget.TextView;
 
 import java.util.Map;
 
-import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
 
-public class MultiStepResultHelper {
+public class MultiStepResultHelper<Arg> {
 
     protected Activity context;
-    protected Object argument;
-    protected StepTask<?> task;
-    protected Callback callback;
+    protected Arg argument;
+    protected StepTask<Arg, ?> task;
+    protected Callback<Arg> callback;
     protected int loadingstring;
 
     protected ProgressDialog pdialog;
     protected AlertDialog adialog;
 
-    public MultiStepResultHelper(Activity context, Object argument,
+    public MultiStepResultHelper(Activity context, Arg argument,
                                  int loadingstring) {
         super();
         this.context = context;
@@ -65,9 +65,8 @@ public class MultiStepResultHelper {
         if (callback == null) {
             throw new IllegalStateException("Callback not set!");
         }
-        task = callback.newTask();
-        task.execute((context.getApplication()), argument, useraction,
-                selection, this);
+        task = callback.newTask(this, useraction, selection);
+        task.execute(argument);
     }
 
     public void handleResult(MultiStepResult result) {
@@ -219,7 +218,7 @@ public class MultiStepResultHelper {
         adialog.show();
     }
 
-    public interface Callback {
+    public interface Callback<Arg> {
         public void onSuccess(MultiStepResult result);
 
         public void onError(MultiStepResult result);
@@ -228,15 +227,24 @@ public class MultiStepResultHelper {
 
         public void onUserCancel();
 
-        public StepTask<?> newTask();
+        public StepTask<Arg, ?> newTask(MultiStepResultHelper helper, int useraction,
+                                        String selection);
     }
 
-    public static abstract class StepTask<T extends MultiStepResult> extends
-            OpacTask<T> {
+    public static abstract class StepTask<Parameter, Result extends MultiStepResult> extends
+            AsyncTask<Parameter, Object, Result> {
         protected MultiStepResultHelper helper;
+        protected int useraction;
+        protected String selection;
+
+        public StepTask(MultiStepResultHelper helper, int useraction, String selection) {
+            this.helper = helper;
+            this.useraction = useraction;
+            this.selection = selection;
+        }
 
         @Override
-        protected void onPostExecute(T res) {
+        protected void onPostExecute(Result res) {
             super.onPostExecute(res);
             if (helper.pdialog != null) {
                 helper.pdialog.dismiss();
@@ -244,12 +252,6 @@ public class MultiStepResultHelper {
             if (res != null) {
                 helper.handleResult(res);
             }
-        }
-
-        @Override
-        protected T doInBackground(Object... arg0) {
-            helper = (MultiStepResultHelper) arg0[4];
-            return super.doInBackground(arg0);
         }
     }
 
