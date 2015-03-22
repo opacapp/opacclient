@@ -21,8 +21,6 @@
  */
 package de.geeksfactory.opacclient.objects;
 
-import com.sun.istack.internal.NotNull;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -293,7 +291,7 @@ public class Library implements Comparable<Library> {
     }
 
     @Override
-    public int compareTo(@NotNull Library arg0) {
+    public int compareTo(Library arg0) {
         Collator deCollator = Collator.getInstance(Locale.GERMAN);
         deCollator.setStrength(Collator.TERTIARY);
 
