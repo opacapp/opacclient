@@ -136,7 +136,8 @@ public class BarcodeScanIntegrator {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Uri uri = Uri
-                                .parse("http://www.amazon.com/gp/mas/dl/android?p=com.google.zxing.client.android");
+                                .parse("http://www.amazon.com/gp/mas/dl/android?p=com.google" +
+                                        ".zxing.client.android");
                         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                         ctx.startActivity(intent);
                     }
@@ -223,8 +224,8 @@ public class BarcodeScanIntegrator {
         }
 
         /**
-         * @return name of format, like "QR_CODE", "UPC_A". See
-         * {@code BarcodeFormat} for more format names.
+         * @return name of format, like "QR_CODE", "UPC_A". See {@code BarcodeFormat} for more
+         * format names.
          */
         public String getFormatName() {
             return formatName;

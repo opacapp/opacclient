@@ -30,8 +30,7 @@ import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
 /**
- * Allows you to trust certificates from additional KeyStores in addition to the
- * default KeyStore
+ * Allows you to trust certificates from additional KeyStores in addition to the default KeyStore
  */
 public class AdditionalKeyStoresSSLSocketFactory extends SSLSocketFactory {
     protected SSLContext sslContext = SSLContext.getInstance("TLS");
@@ -63,6 +62,7 @@ public class AdditionalKeyStoresSSLSocketFactory extends SSLSocketFactory {
         private X509TrustManager defaultTrustManager;
         private X509TrustManager localTrustManager;
         private X509Certificate[] acceptedIssuers;
+
         public AdditionalKeyStoresTrustManager(KeyStore localKeyStore) {
             try {
                 TrustManagerFactory tmf = TrustManagerFactory

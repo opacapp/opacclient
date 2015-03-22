@@ -73,22 +73,22 @@ import de.geeksfactory.opacclient.ui.WhitenessUtils;
 import de.geeksfactory.opacclient.utils.ISBNTools;
 
 /**
- * A fragment representing a single SearchResult detail screen. This fragment is
- * either contained in a {@link SearchResultListActivity} in two-pane mode (on
- * tablets) or a {@link SearchResultDetailActivity} on handsets.
+ * A fragment representing a single SearchResult detail screen. This fragment is either contained in
+ * a {@link SearchResultListActivity} in two-pane mode (on tablets) or a {@link
+ * SearchResultDetailActivity} on handsets.
  */
-public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMenuItemClickListener, ObservableScrollView.Callbacks {
+public class SearchResultDetailFragment extends Fragment
+        implements Toolbar.OnMenuItemClickListener, ObservableScrollView.Callbacks {
     /**
-     * The fragment argument representing the item ID that this fragment
-     * represents.
+     * The fragment argument representing the item ID that this fragment represents.
      */
     public static final String ARG_ITEM_ID = "item_id";
 
     public static final String ARG_ITEM_NR = "item_nr";
     public static final String ARG_ITEM_COVER_BITMAP = "item_cover_bitmap";
     /**
-     * A dummy implementation of the {@link Callbacks} interface that does
-     * nothing. Used only when this fragment is not attached to an activity.
+     * A dummy implementation of the {@link Callbacks} interface that does nothing. Used only when
+     * this fragment is not attached to an activity.
      */
     private static Callbacks sDummyCallbacks = new Callbacks() {
         @Override
@@ -96,8 +96,7 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
         }
     };
     /**
-     * The fragment's current callback object, which is notified of list item
-     * clicks.
+     * The fragment's current callback object, which is notified of list item clicks.
      */
     private Callbacks mCallbacks = sDummyCallbacks;
     protected boolean back_button_visible = false;
@@ -130,8 +129,8 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
     private Boolean[] cardAnimations;
 
     /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
+     * Mandatory empty constructor for the fragment manager to instantiate the fragment (e.g. upon
+     * screen orientation changes).
      */
     public SearchResultDetailFragment() {
     }
@@ -158,8 +157,9 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
             ProgressBar progress = (ProgressBar) view
                     .findViewById(R.id.progress);
             View content = view.findViewById(R.id.detailsLayout);
-            if (scrollView != null)
+            if (scrollView != null) {
                 scrollView.setVisibility(View.VISIBLE);
+            }
 
             if (show) {
                 if (animate) {
@@ -337,43 +337,45 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
     }
 
     /**
-     * Workaround because the built-in ellipsize function does not work for multiline TextViews
-     * This function is only prepared for one or two lines
+     * Workaround because the built-in ellipsize function does not work for multiline TextViews This
+     * function is only prepared for one or two lines
      *
      * @param tv The TextView to fix
      */
     private void fixEllipsize(final TextView tv) {
-        tv.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        tv.getViewTreeObserver()
+          .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 
-            @Override
-            public void onGlobalLayout() {
-                if (tv.getLineCount() > 2) {
-                    try {
-                        int lineEndIndex = tv.getLayout().getLineEnd(1);
-                        String text = tv.getText().subSequence(0, lineEndIndex - 3) + "...";
-                        tv.setText(text);
-                    } catch (StringIndexOutOfBoundsException e) {
-                        // Happens in strange cases where the second line is less than three
-                        // characters long
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
+              @Override
+              public void onGlobalLayout() {
+                  if (tv.getLineCount() > 2) {
+                      try {
+                          int lineEndIndex = tv.getLayout().getLineEnd(1);
+                          String text = tv.getText().subSequence(0, lineEndIndex - 3) + "...";
+                          tv.setText(text);
+                      } catch (StringIndexOutOfBoundsException e) {
+                          // Happens in strange cases where the second line is less than three
+                          // characters long
+                          e.printStackTrace();
+                      }
+                  }
+              }
+          });
     }
 
     /**
-     * Examine how many white pixels are in the bitmap in order to determine whether or not
-     * we need gradient overlays on top of the image.
+     * Examine how many white pixels are in the bitmap in order to determine whether or not we need
+     * gradient overlays on top of the image.
      */
     @SuppressLint("NewApi")
     private void analyzeWhitenessOfCoverAsync(final Bitmap bitmap) {
         AnalyzeWhitenessTask task = new AnalyzeWhitenessTask();
         // Execute in parallel with FetchTask
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
-        else
+        } else {
             task.execute(bitmap);
+        }
     }
 
     protected void display() {
@@ -387,16 +389,17 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
             ivCover.setVisibility(View.VISIBLE);
             ivCover.setImageBitmap(getItem().getCoverBitmap());
             if (!image_analyzed) {
-                Palette.generateAsync(getItem().getCoverBitmap(), new Palette.PaletteAsyncListener() {
-                    @Override
-                    public void onGenerated(Palette palette) {
-                        Palette.Swatch swatch = palette.getDarkVibrantSwatch();
-                        if (swatch != null) {
-                            ivCover.setBackgroundColor(swatch.getRgb());
-                            tint.setBackgroundColor(swatch.getRgb());
-                        }
-                    }
-                });
+                Palette.generateAsync(getItem().getCoverBitmap(),
+                        new Palette.PaletteAsyncListener() {
+                            @Override
+                            public void onGenerated(Palette palette) {
+                                Palette.Swatch swatch = palette.getDarkVibrantSwatch();
+                                if (swatch != null) {
+                                    ivCover.setBackgroundColor(swatch.getRgb());
+                                    tint.setBackgroundColor(swatch.getRgb());
+                                }
+                            }
+                        });
                 analyzeWhitenessOfCoverAsync(getItem().getCoverBitmap());
             }
             tvTitel.setText(getItem().getTitle());
@@ -588,35 +591,75 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
             // tvTitel is used for displaying title
             fixTitleWidth();
             tvTitel.getViewTreeObserver().addOnGlobalLayoutListener(new
-                                                                            ViewTreeObserver.OnGlobalLayoutListener() {
+                                                                            ViewTreeObserver
+                                                                                    .OnGlobalLayoutListener() {
                                                                                 @Override
-                                                                                public void onGlobalLayout() {
-                                                                                    // We need to wait for tvTitel to refresh to get correct calculations
-                                                                                    tvTitel.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                                                                                    if (tvTitel.getLayout().getLineCount() > 1) {
-                                                                                        toolbar.getLayoutParams().height = (int) TypedValue
-                                                                                                .applyDimension(TypedValue.COMPLEX_UNIT_SP, 84f,
-                                                                                                        getResources().getDisplayMetrics());
-                                                                                        toolbar.getParent().requestLayout();
+                                                                                public void
+                                                                                onGlobalLayout() {
+                                                                                    // We need to
+                                                                                    // wait for
+                                                                                    // tvTitel to
+                                                                                    // refresh to
+                                                                                    // get
+                                                                                    // correct
+                                                                                    // calculations
+                                                                                    tvTitel.getViewTreeObserver()
+                                                                                           .removeGlobalOnLayoutListener(
+                                                                                                   this);
+                                                                                    if (tvTitel
+                                                                                            .getLayout()
+                                                                                            .getLineCount() >
+                                                                                            1) {
+                                                                                        toolbar.getLayoutParams().height =
+                                                                                                (int) TypedValue
+                                                                                                        .applyDimension(
+                                                                                                                TypedValue.COMPLEX_UNIT_SP,
+                                                                                                                84f,
+                                                                                                                getResources()
+                                                                                                                        .getDisplayMetrics());
+                                                                                        toolbar.getParent()
+                                                                                               .requestLayout();
                                                                                     }
                                                                                 }
                                                                             });
         } else {
             // Toolbar is used for displaying title
             toolbar.getViewTreeObserver().addOnGlobalLayoutListener(new
-                                                                            ViewTreeObserver.OnGlobalLayoutListener() {
+                                                                            ViewTreeObserver
+                                                                                    .OnGlobalLayoutListener() {
                                                                                 @Override
-                                                                                public void onGlobalLayout() {
-                                                                                    // We need to wait for toolbar to refresh to get correct calculations
-                                                                                    toolbar.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                                                                                    if (toolbar.isTitleTruncated()) {
-                                                                                        toolbar.getLayoutParams().height = (int) TypedValue
-                                                                                                .applyDimension(TypedValue.COMPLEX_UNIT_SP, 84f,
-                                                                                                        getResources().getDisplayMetrics());
-                                                                                        TextView titleTextView = findTitleTextView(toolbar);
-                                                                                        titleTextView.setSingleLine(false);
-                                                                                        fixEllipsize(titleTextView);
-                                                                                        toolbar.getParent().requestLayout();
+                                                                                public void
+                                                                                onGlobalLayout() {
+                                                                                    // We need to
+                                                                                    // wait for
+                                                                                    // toolbar to
+                                                                                    // refresh to
+                                                                                    // get
+                                                                                    // correct
+                                                                                    // calculations
+                                                                                    toolbar.getViewTreeObserver()
+                                                                                           .removeGlobalOnLayoutListener(
+                                                                                                   this);
+                                                                                    if (toolbar
+                                                                                            .isTitleTruncated()) {
+                                                                                        toolbar.getLayoutParams().height =
+                                                                                                (int) TypedValue
+                                                                                                        .applyDimension(
+                                                                                                                TypedValue.COMPLEX_UNIT_SP,
+                                                                                                                84f,
+                                                                                                                getResources()
+                                                                                                                        .getDisplayMetrics());
+                                                                                        TextView
+                                                                                                titleTextView =
+                                                                                                findTitleTextView(
+                                                                                                        toolbar);
+                                                                                        titleTextView
+                                                                                                .setSingleLine(
+                                                                                                        false);
+                                                                                        fixEllipsize(
+                                                                                                titleTextView);
+                                                                                        toolbar.getParent()
+                                                                                               .requestLayout();
                                                                                     }
                                                                                 }
                                                                             });
@@ -648,16 +691,16 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
     private ActionMenuView findActionMenuView(Toolbar toolbar) {
         for (int i = 0; i < toolbar.getChildCount(); i++) {
             View view = toolbar.getChildAt(i);
-            if (view instanceof ActionMenuView)
+            if (view instanceof ActionMenuView) {
                 return (ActionMenuView) view;
+            }
         }
         return null;
     }
 
     /**
      * Hacky way to find the first {@link android.widget.TextView} inside a {@link android
-     * .support.v7.widget.Toolbar}, wnich is typically the title. Will return null if none
-     * is found
+     * .support.v7.widget.Toolbar}, wnich is typically the title. Will return null if none is found
      *
      * @param toolbar a Toolbar
      * @return the first TextView inside this toolbar, or null if none is found
@@ -665,8 +708,9 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
     private TextView findTitleTextView(Toolbar toolbar) {
         for (int i = 0; i < toolbar.getChildCount(); i++) {
             View view = toolbar.getChildAt(i);
-            if (view instanceof TextView)
+            if (view instanceof TextView) {
                 return (TextView) view;
+            }
         }
         return null;
     }
@@ -743,37 +787,40 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
     @Override
     public void onViewStateRestored(Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        if (item != null)
+        if (item != null) {
             display();
+        }
     }
 
     protected void dialog_wrong_credentials(String s, final boolean finish) {
-        if (getActivity() == null)
+        if (getActivity() == null) {
             return;
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(getString(R.string.opac_error) + " " + s)
-                .setCancelable(false)
-                .setNegativeButton(R.string.close,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                                if (finish)
-                                    mCallbacks.removeFragment();
-                            }
-                        })
-                .setPositiveButton(R.string.prefs,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                Intent intent = new Intent(getActivity(),
-                                        AccountEditActivity.class);
-                                intent.putExtra(
-                                        AccountEditActivity.EXTRA_ACCOUNT_ID,
-                                        app.getAccount().getId());
-                                startActivity(intent);
-                            }
-                        });
+               .setCancelable(false)
+               .setNegativeButton(R.string.close,
+                       new DialogInterface.OnClickListener() {
+                           @Override
+                           public void onClick(DialogInterface dialog, int id) {
+                               dialog.cancel();
+                               if (finish) {
+                                   mCallbacks.removeFragment();
+                               }
+                           }
+                       })
+               .setPositiveButton(R.string.prefs,
+                       new DialogInterface.OnClickListener() {
+                           @Override
+                           public void onClick(DialogInterface dialog, int id) {
+                               Intent intent = new Intent(getActivity(),
+                                       AccountEditActivity.class);
+                               intent.putExtra(
+                                       AccountEditActivity.EXTRA_ACCOUNT_ID,
+                                       app.getAccount().getId());
+                               startActivity(intent);
+                           }
+                       });
         AlertDialog alert = builder.create();
         alert.show();
     }
@@ -824,10 +871,11 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
                 menu.findItem(R.id.action_reservation).setVisible(false);
             }
             if (item.isBookable() && app.getApi() instanceof EbookServiceApi) {
-                if (((EbookServiceApi) app.getApi()).isEbook(item))
+                if (((EbookServiceApi) app.getApi()).isEbook(item)) {
                     menu.findItem(R.id.action_lendebook).setVisible(true);
-                else
+                } else {
                     menu.findItem(R.id.action_lendebook).setVisible(false);
+                }
             } else {
                 menu.findItem(R.id.action_lendebook).setVisible(false);
             }
@@ -956,16 +1004,18 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 
                             for (Detail detail : getItem().getDetails()) {
                                 String colon = "";
-                                if (!detail.getDesc().endsWith(":"))
+                                if (!detail.getDesc().endsWith(":")) {
                                     colon = ":";
+                                }
                                 text += detail.getDesc() + colon + "\n"
                                         + detail.getContent() + "\n\n";
                             }
 
                             String shareUrl = app.getApi().getShareUrl(id,
                                     title);
-                            if (shareUrl != null)
+                            if (shareUrl != null) {
                                 text += shareUrl;
+                            }
 
                             intent.putExtra(Intent.EXTRA_TEXT, text);
                             startActivity(Intent.createChooser(intent,
@@ -1023,30 +1073,31 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
     }
 
     protected void dialog_no_credentials() {
-        if (getActivity() == null)
+        if (getActivity() == null) {
             return;
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(R.string.status_nouser)
-                .setCancelable(false)
-                .setNegativeButton(R.string.close,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        })
-                .setPositiveButton(R.string.accounts_edit,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                Intent intent = new Intent(getActivity(),
-                                        AccountEditActivity.class);
-                                intent.putExtra(
-                                        AccountEditActivity.EXTRA_ACCOUNT_ID,
-                                        app.getAccount().getId());
-                                startActivity(intent);
-                            }
-                        });
+               .setCancelable(false)
+               .setNegativeButton(R.string.close,
+                       new DialogInterface.OnClickListener() {
+                           @Override
+                           public void onClick(DialogInterface dialog, int id) {
+                               dialog.cancel();
+                           }
+                       })
+               .setPositiveButton(R.string.accounts_edit,
+                       new DialogInterface.OnClickListener() {
+                           @Override
+                           public void onClick(DialogInterface dialog, int id) {
+                               Intent intent = new Intent(getActivity(),
+                                       AccountEditActivity.class);
+                               intent.putExtra(
+                                       AccountEditActivity.EXTRA_ACCOUNT_ID,
+                                       app.getAccount().getId());
+                               startActivity(intent);
+                           }
+                       });
         AlertDialog alert = builder.create();
         alert.show();
     }
@@ -1063,24 +1114,24 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
                 AlertDialog.Builder builder = new AlertDialog.Builder(
                         getActivity());
                 builder.setMessage(getString(R.string.opac_error_email))
-                        .setCancelable(false)
-                        .setNegativeButton(R.string.close,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int id) {
-                                        dialog.cancel();
-                                    }
-                                })
-                        .setPositiveButton(R.string.prefs,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int id) {
-                                        dialog.dismiss();
-                                        app.toPrefs(getActivity());
-                                    }
-                                });
+                       .setCancelable(false)
+                       .setNegativeButton(R.string.close,
+                               new DialogInterface.OnClickListener() {
+                                   @Override
+                                   public void onClick(DialogInterface dialog,
+                                                       int id) {
+                                       dialog.cancel();
+                                   }
+                               })
+                       .setPositiveButton(R.string.prefs,
+                               new DialogInterface.OnClickListener() {
+                                   @Override
+                                   public void onClick(DialogInterface dialog,
+                                                       int id) {
+                                       dialog.dismiss();
+                                       app.toPrefs(getActivity());
+                                   }
+                               });
                 AlertDialog alert = builder.create();
                 alert.show();
                 return;
@@ -1100,8 +1151,9 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
                 false)
                 && (app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_CHANGE_ACCOUNT) != 0
                 && !(SearchResultDetailFragment.this.id == null
-                || SearchResultDetailFragment.this.id.equals("null") || SearchResultDetailFragment.this.id
-                .equals(""))) {
+                || SearchResultDetailFragment.this.id.equals("null") ||
+                SearchResultDetailFragment.this.id
+                        .equals(""))) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             // Get the layout inflater
             LayoutInflater inflater = getLayoutInflater(null);
@@ -1117,7 +1169,7 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
                     if (accounts.get(position).getId() != app.getAccount()
-                            .getId() || account_switched) {
+                                                             .getId() || account_switched) {
 
                         if (SearchResultDetailFragment.this.id == null
                                 || SearchResultDetailFragment.this.id
@@ -1126,7 +1178,7 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
                                 .equals("")) {
                             Toast.makeText(getActivity(),
                                     R.string.accchange_sorry, Toast.LENGTH_LONG)
-                                    .show();
+                                 .show();
                         } else {
                             app.setAccount(accounts.get(position).getId());
                             Intent intent = new Intent(getActivity(),
@@ -1145,15 +1197,15 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
                 }
             });
             builder.setTitle(R.string.account_select)
-                    .setView(view)
-                    .setNegativeButton(R.string.cancel,
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int id) {
-                                    adialog.cancel();
-                                }
-                            });
+                   .setView(view)
+                   .setNegativeButton(R.string.cancel,
+                           new DialogInterface.OnClickListener() {
+                               @Override
+                               public void onClick(DialogInterface dialog,
+                                                   int id) {
+                                   adialog.cancel();
+                               }
+                           });
             adialog = builder.create();
             adialog.show();
         } else {
@@ -1175,29 +1227,29 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
                     AlertDialog.Builder builder = new AlertDialog.Builder(
                             getActivity());
                     builder.setMessage(result.getMessage())
-                            .setCancelable(false)
-                            .setNegativeButton(R.string.close,
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(
-                                                DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                        }
-                                    })
-                            .setPositiveButton(R.string.account,
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(
-                                                DialogInterface dialog, int id) {
-                                            Intent intent = new Intent(
-                                                    getActivity(), app
-                                                    .getMainActivity());
-                                            intent.putExtra("fragment",
-                                                    "account");
-                                            getActivity().startActivity(intent);
-                                            getActivity().finish();
-                                        }
-                                    });
+                           .setCancelable(false)
+                           .setNegativeButton(R.string.close,
+                                   new DialogInterface.OnClickListener() {
+                                       @Override
+                                       public void onClick(
+                                               DialogInterface dialog, int id) {
+                                           dialog.cancel();
+                                       }
+                                   })
+                           .setPositiveButton(R.string.account,
+                                   new DialogInterface.OnClickListener() {
+                                       @Override
+                                       public void onClick(
+                                               DialogInterface dialog, int id) {
+                                           Intent intent = new Intent(
+                                                   getActivity(), app
+                                                   .getMainActivity());
+                                           intent.putExtra("fragment",
+                                                   "account");
+                                           getActivity().startActivity(intent);
+                                           getActivity().finish();
+                                       }
+                                   });
                     AlertDialog alert = builder.create();
                     alert.show();
                 } else {
@@ -1260,15 +1312,15 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
                 }
             });
             builder.setTitle(R.string.account_select)
-                    .setView(view)
-                    .setNegativeButton(R.string.cancel,
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int id) {
-                                    adialog.cancel();
-                                }
-                            });
+                   .setView(view)
+                   .setNegativeButton(R.string.cancel,
+                           new DialogInterface.OnClickListener() {
+                               @Override
+                               public void onClick(DialogInterface dialog,
+                                                   int id) {
+                                   adialog.cancel();
+                               }
+                           });
             adialog = builder.create();
             adialog.show();
         } else {
@@ -1282,8 +1334,9 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
         msrhBooking.setCallback(new Callback() {
             @Override
             public void onSuccess(MultiStepResult result) {
-                if (getActivity() == null)
+                if (getActivity() == null) {
                     return;
+                }
                 AccountDataSource adata = new AccountDataSource(getActivity());
                 adata.open();
                 adata.invalidateCachedAccountData(app.getAccount());
@@ -1296,8 +1349,9 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 
             @Override
             public void onError(MultiStepResult result) {
-                if (getActivity() == null)
+                if (getActivity() == null) {
                     return;
+                }
                 dialog_wrong_credentials(result.getMessage(), false);
             }
 
@@ -1318,9 +1372,8 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
     }
 
     /**
-     * A callback interface that all activities containing this fragment must
-     * implement. This mechanism allows activities to be notified of item
-     * selections.
+     * A callback interface that all activities containing this fragment must implement. This
+     * mechanism allows activities to be notified of item selections.
      */
     public interface Callbacks {
         /**
@@ -1344,7 +1397,7 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
                     try {
                         float density = getActivity().getResources().getDisplayMetrics().density;
                         newurl = new URL(ISBNTools.getBestSizeCoverUrl(res.getCover(),
-                                view.getWidth(), (int) (260*density)));
+                                view.getWidth(), (int) (260 * density)));
                         Bitmap mIcon_val = BitmapFactory.decodeStream(newurl
                                 .openConnection().getInputStream());
                         if (mIcon_val.getHeight() > 1
@@ -1381,8 +1434,9 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
         @Override
         @SuppressLint("NewApi")
         protected void onPostExecute(DetailledItem result) {
-            if (getActivity() == null)
+            if (getActivity() == null) {
                 return;
+            }
 
             if (!success || result == null) {
                 showConnectivityError();
@@ -1395,8 +1449,9 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 
             if (getActivity().getIntent().hasExtra("reservation")
                     && getActivity().getIntent().getBooleanExtra("reservation",
-                    false))
+                    false)) {
                 reservationStart();
+            }
         }
     }
 
@@ -1429,8 +1484,9 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 
                 if (getActivity().getIntent().hasExtra("reservation")
                         && getActivity().getIntent().getBooleanExtra(
-                        "reservation", false))
+                        "reservation", false)) {
                     app.getApi().start();
+                }
 
                 DetailledItem res = app.getApi().getResultById(a, homebranch);
                 if (res.getId() == null) {
@@ -1440,7 +1496,7 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
                 try {
                     float density = getActivity().getResources().getDisplayMetrics().density;
                     newurl = new URL(ISBNTools.getBestSizeCoverUrl(res.getCover(),
-                            view.getWidth(), (int) (260*density)));
+                            view.getWidth(), (int) (260 * density)));
                     Bitmap mIcon_val = BitmapFactory.decodeStream(newurl
                             .openConnection().getInputStream());
                     if (mIcon_val.getHeight() > 1
@@ -1503,22 +1559,23 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 
         @Override
         protected void onPostExecute(ReservationResult res) {
-            if (getActivity() == null)
+            if (getActivity() == null) {
                 return;
+            }
 
             if (res == null) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(
                         getActivity());
                 builder.setMessage(R.string.error)
-                        .setCancelable(true)
-                        .setNegativeButton(R.string.close,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int id) {
-                                        dialog.cancel();
-                                    }
-                                });
+                       .setCancelable(true)
+                       .setNegativeButton(R.string.close,
+                               new DialogInterface.OnClickListener() {
+                                   @Override
+                                   public void onClick(DialogInterface dialog,
+                                                       int id) {
+                                       dialog.cancel();
+                                   }
+                               });
                 AlertDialog alert = builder.create();
                 alert.show();
                 return;
@@ -1557,22 +1614,23 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 
         @Override
         protected void onPostExecute(BookingResult res) {
-            if (getActivity() == null)
+            if (getActivity() == null) {
                 return;
+            }
 
             if (res == null) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(
                         getActivity());
                 builder.setMessage(R.string.error)
-                        .setCancelable(true)
-                        .setNegativeButton(R.string.close,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int id) {
-                                        dialog.cancel();
-                                    }
-                                });
+                       .setCancelable(true)
+                       .setNegativeButton(R.string.close,
+                               new DialogInterface.OnClickListener() {
+                                   @Override
+                                   public void onClick(DialogInterface dialog,
+                                                       int id) {
+                                       dialog.cancel();
+                                   }
+                               });
                 AlertDialog alert = builder.create();
                 alert.show();
                 return;
@@ -1597,9 +1655,10 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
                                     + app.getAccount().getId(), null);
                     app.getApi().getResultById(id, homebranch);
                     return 0;
-                } else
+                } else {
                     ACRA.getErrorReporter().handleException(
                             new Throwable("No ID supplied"));
+                }
             } catch (java.net.SocketException e) {
                 e.printStackTrace();
             } catch (InterruptedIOException e) {
@@ -1614,8 +1673,9 @@ public class SearchResultDetailFragment extends Fragment implements Toolbar.OnMe
 
         @Override
         protected void onPostExecute(Integer result) {
-            if (getActivity() == null)
+            if (getActivity() == null) {
                 return;
+            }
             if (reservation) {
                 reservationDo();
             }

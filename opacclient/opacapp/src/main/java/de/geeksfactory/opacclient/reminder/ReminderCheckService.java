@@ -76,7 +76,8 @@ public class ReminderCheckService extends Service {
             am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
                     + (1000 * 3600 * 24), sender);
 
-            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager mNotificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             mNotificationManager.cancel(OpacClient.NOTIF_ID);
         } else {
             SharedPreferences sp = PreferenceManager
@@ -85,7 +86,8 @@ public class ReminderCheckService extends Service {
             long waittime = (1000 * 3600 * 5);
             boolean executed = false;
 
-            ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            ConnectivityManager connMgr =
+                    (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
             if (networkInfo != null) {
                 if (sp.getBoolean("notification_service_wifionly", false) == false
@@ -113,8 +115,9 @@ public class ReminderCheckService extends Service {
             am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + waittime,
                     sender);
 
-            if (!executed)
+            if (!executed) {
                 stopSelf();
+            }
         }
 
         return START_NOT_STICKY;
@@ -135,8 +138,9 @@ public class ReminderCheckService extends Service {
                     ReminderCheckService.this);
             data.open();
             List<Account> accounts = data.getAccountsWithPassword();
-            if (accounts.size() == 0)
+            if (accounts.size() == 0) {
                 return null;
+            }
 
             Log.i("ReminderCheckService",
                     "Opac App Service: ReminderCheckService started");
@@ -163,13 +167,15 @@ public class ReminderCheckService extends Service {
                     Library library = app.getLibrary(account.getLibrary());
                     OpacApi api = app.getNewApi(library);
 
-                    if (!api.isAccountSupported(library))
+                    if (!api.isAccountSupported(library)) {
                         continue;
+                    }
 
                     AccountData res = api.account(account);
 
-                    if (res == null)
+                    if (res == null) {
                         continue;
+                    }
 
                     data.storeCachedAccountData(account, res);
 
@@ -180,8 +186,9 @@ public class ReminderCheckService extends Service {
                             // Don't remember people of bringing back ebooks,
                             // because ... uhm...
                             if (item.get(AccountData.KEY_LENT_DOWNLOAD)
-                                    .startsWith("http"))
+                                    .startsWith("http")) {
                                 continue;
+                            }
                         }
                         if (item.containsKey(AccountData.KEY_LENT_DEADLINE_TIMESTAMP)) {
                             long expiring = Long
@@ -206,8 +213,9 @@ public class ReminderCheckService extends Service {
 
                     if (this_account > 0) {
                         affected_accounts++;
-                        if (first_affected_account == 0)
+                        if (first_affected_account == 0) {
                             first_affected_account = account.getId();
+                        }
                     }
 
                 } catch (SocketException e) {
@@ -244,8 +252,9 @@ public class ReminderCheckService extends Service {
                 // Try again in one hour
                 am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
                         + (1000 * 3600), sender);
-                if (result == null)
+                if (result == null) {
                     return;
+                }
             }
 
             long expired_new = (Long) result[0];
@@ -255,15 +264,17 @@ public class ReminderCheckService extends Service {
             long affected_accounts = (Long) result[4];
             long first_affected_account = (Long) result[5];
 
-            if (expired_new == 0)
+            if (expired_new == 0) {
                 return;
+            }
 
             SharedPreferences sp = PreferenceManager
                     .getDefaultSharedPreferences(ReminderCheckService.this);
             notification_on = sp.getBoolean("notification_service", false);
 
             if (notification_on) {
-                NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                NotificationManager mNotificationManager =
+                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
                 NotificationCompat.Builder nb = new NotificationCompat.Builder(
                         ReminderCheckService.this);
@@ -278,10 +289,13 @@ public class ReminderCheckService extends Service {
                 nb.setNumber((int) expired_new);
                 nb.setSound(null);
 
-                Intent snoozeIntent = new Intent(ReminderCheckService.this, ReminderCheckService.class);
+                Intent snoozeIntent =
+                        new Intent(ReminderCheckService.this, ReminderCheckService.class);
                 snoozeIntent.setAction(ACTION_SNOOZE);
-                PendingIntent piSnooze = PendingIntent.getService(ReminderCheckService.this, 0, snoozeIntent, 0);
-                nb.addAction(R.drawable.ic_action_alarms, getResources().getText(R.string.snooze), piSnooze);
+                PendingIntent piSnooze =
+                        PendingIntent.getService(ReminderCheckService.this, 0, snoozeIntent, 0);
+                nb.addAction(R.drawable.ic_action_alarms, getResources().getText(R.string.snooze),
+                        piSnooze);
 
                 Intent notificationIntent = new Intent(
                         ReminderCheckService.this,

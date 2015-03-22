@@ -40,7 +40,8 @@ public class ResultsAdapterEndless extends EndlessAdapter {
     private int resultCount;
     private List<SearchResult> itemsToAppend;
 
-    public ResultsAdapterEndless(Context context, SearchRequestResult result, OnLoadMoreListener listener) {
+    public ResultsAdapterEndless(Context context, SearchRequestResult result,
+                                 OnLoadMoreListener listener) {
         super(context, new ResultsAdapter(context,
                 result.getResults()), R.layout.listitem_searchresult_loading);
         this.objects = result.getResults();
@@ -73,7 +74,7 @@ public class ResultsAdapterEndless extends EndlessAdapter {
             itemsToAppend = result.getResults();
 
 			/* When IOpac finds more than 200 results, the real result count is
-			not known until the second page is loaded */
+            not known until the second page is loaded */
             maxPage = result.getPage_count();
             resultCount = result.getTotal_result_count();
 

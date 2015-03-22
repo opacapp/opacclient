@@ -52,19 +52,17 @@ import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
 import de.geeksfactory.opacclient.storage.SearchFieldDataSource;
 
 /**
- * A list fragment representing a list of SearchResults. This fragment also
- * supports tablet devices by allowing list items to be given an 'activated'
- * state upon selection. This helps indicate which item is currently being
- * viewed in a {@link SearchResultDetailFragment}.
+ * A list fragment representing a list of SearchResults. This fragment also supports tablet devices
+ * by allowing list items to be given an 'activated' state upon selection. This helps indicate which
+ * item is currently being viewed in a {@link SearchResultDetailFragment}.
  * <p/>
- * Activities containing this fragment MUST implement the {@link Callbacks}
- * interface.
+ * Activities containing this fragment MUST implement the {@link Callbacks} interface.
  */
 public class SearchResultListFragment extends CustomListFragment {
 
     /**
-     * The serialization (saved instance state) Bundle key representing the
-     * activated item position. Only used on tablets.
+     * The serialization (saved instance state) Bundle key representing the activated item position.
+     * Only used on tablets.
      */
     protected static final String STATE_ACTIVATED_POSITION = "activated_position";
 
@@ -72,8 +70,8 @@ public class SearchResultListFragment extends CustomListFragment {
     protected static final String ARG_VOLUME_QUERY = "volumeQuery";
     protected static final String ARG_GOOGLE_QUERY = "googleQuery";
     /**
-     * A dummy implementation of the {@link Callbacks} interface that does
-     * nothing. Used only when this fragment is not attached to an activity.
+     * A dummy implementation of the {@link Callbacks} interface that does nothing. Used only when
+     * this fragment is not attached to an activity.
      */
     private static Callbacks sDummyCallbacks = new Callbacks() {
         @Override
@@ -85,8 +83,7 @@ public class SearchResultListFragment extends CustomListFragment {
         }
     };
     /**
-     * The fragment's current callback object, which is notified of list item
-     * clicks.
+     * The fragment's current callback object, which is notified of list item clicks.
      */
     protected Callbacks mCallbacks = sDummyCallbacks;
     public ResultsAdapterEndless adapter;
@@ -102,8 +99,8 @@ public class SearchResultListFragment extends CustomListFragment {
     protected FrameLayout errorView;
 
     /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
+     * Mandatory empty constructor for the fragment manager to instantiate the fragment (e.g. upon
+     * screen orientation changes).
      */
     public SearchResultListFragment() {
     }
@@ -172,12 +169,12 @@ public class SearchResultListFragment extends CustomListFragment {
         final List<Account> accounts = data.getAllAccounts();
         data.close();
 
-        if (accounts.size() == 0)
+        if (accounts.size() == 0) {
             Toast.makeText(getActivity(), R.string.welcome_select,
                     Toast.LENGTH_LONG).show();
-        else if (accounts.size() == 1)
+        } else if (accounts.size() == 1) {
             startGoogleSearch(accounts.get(0), query);
-        else
+        } else {
             new AlertDialog.Builder(getActivity())
                     .setTitle(R.string.account_select)
                     .setAdapter(
@@ -192,6 +189,7 @@ public class SearchResultListFragment extends CustomListFragment {
                                             query);
                                 }
                             }).create().show();
+        }
     }
 
     private void startGoogleSearch(Account account, String query) {
@@ -215,10 +213,11 @@ public class SearchResultListFragment extends CustomListFragment {
         if (savedInstanceState == null && searchresult == null) {
             performsearch();
         } else if (searchresult != null) {
-            if (searchresult.getTotal_result_count() >= 0)
+            if (searchresult.getTotal_result_count() >= 0) {
                 ((ActionBarActivity) getActivity()).getSupportActionBar().setSubtitle(
                         getString(R.string.result_number,
                                 searchresult.getTotal_result_count()));
+            }
         }
     }
 
@@ -253,7 +252,8 @@ public class SearchResultListFragment extends CustomListFragment {
 
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
-        mCallbacks.onItemSelected(searchresult.getResults().get(position), view.findViewById(R.id.ivType));
+        mCallbacks.onItemSelected(searchresult.getResults().get(position),
+                view.findViewById(R.id.ivType));
 
     }
 
@@ -267,8 +267,8 @@ public class SearchResultListFragment extends CustomListFragment {
     }
 
     /**
-     * Turns on activate-on-click mode. When this mode is on, list items will be
-     * given the 'activated' state when touched.
+     * Turns on activate-on-click mode. When this mode is on, list items will be given the
+     * 'activated' state when touched.
      */
     public void setActivateOnItemClick(boolean activateOnItemClick) {
         // When setting CHOICE_MODE_SINGLE, ListView will automatically
@@ -292,10 +292,11 @@ public class SearchResultListFragment extends CustomListFragment {
         for (SearchResult result : searchresult.getResults()) {
             result.setPage(searchresult.getPage_index());
         }
-        if (searchresult.getTotal_result_count() >= 0)
+        if (searchresult.getTotal_result_count() >= 0) {
             ((ActionBarActivity) getActivity()).getSupportActionBar().setSubtitle(
                     getString(R.string.result_number,
                             searchresult.getTotal_result_count()));
+        }
 
         if (searchresult.getResults().size() == 0
                 && searchresult.getTotal_result_count() == 0) {
@@ -335,15 +336,17 @@ public class SearchResultListFragment extends CustomListFragment {
                     @Override
                     public void updateResultCount(int resultCount) {
                         /*
-						 * When IOpac finds more than 200 results, the real
+                         * When IOpac finds more than 200 results, the real
 						 * result count is not known until the second page is
 						 * loaded
 						 */
                         if (resultCount >= 0 && getActivity() != null)
 
+                        {
                             ((ActionBarActivity) getActivity()).getSupportActionBar().setSubtitle(
                                     getString(R.string.result_number,
                                             resultCount));
+                        }
                     }
                 });
         setListAdapter(adapter);
@@ -356,8 +359,9 @@ public class SearchResultListFragment extends CustomListFragment {
     }
 
     public void showConnectivityError(String description) {
-        if (getView() == null || getActivity() == null)
+        if (getView() == null || getActivity() == null) {
             return;
+        }
         errorView.removeAllViews();
         View connError = getActivity().getLayoutInflater().inflate(
                 R.layout.error_connectivity, errorView);
@@ -405,9 +409,8 @@ public class SearchResultListFragment extends CustomListFragment {
     }
 
     /**
-     * A callback interface that all activities containing this fragment must
-     * implement. This mechanism allows activities to be notified of item
-     * selections.
+     * A callback interface that all activities containing this fragment must implement. This
+     * mechanism allows activities to be notified of item selections.
      */
     public interface Callbacks {
         /**
@@ -424,8 +427,9 @@ public class SearchResultListFragment extends CustomListFragment {
         @Override
         protected SearchRequestResult doInBackground(Object... arg0) {
             super.doInBackground(arg0);
-            if (arg0[1] == null)
+            if (arg0[1] == null) {
                 return null;
+            }
             if (arg0[1] instanceof Map<?, ?>) {
                 Map<String, String> query = (Map<String, String>) arg0[1];
                 try {
@@ -496,15 +500,18 @@ public class SearchResultListFragment extends CustomListFragment {
 
                     showConnectivityError(exception.getMessage());
                 } else if (exception instanceof SSLSecurityException) {
-                    if (getActivity() != null)
+                    if (getActivity() != null) {
                         showConnectivityError(getResources().getString(
                                 R.string.connection_error_detail_security));
+                    }
                 } else if (exception instanceof NotReachableException) {
-                    if (getActivity() != null)
+                    if (getActivity() != null) {
                         showConnectivityError(getResources().getString(
                                 R.string.connection_error_detail_nre));
-                } else
+                    }
+                } else {
                     showConnectivityError();
+                }
             } else {
                 loaded(result);
             }
@@ -526,11 +533,13 @@ public class SearchResultListFragment extends CustomListFragment {
             } else {
                 try {
                     List<SearchField> fields = app.getApi().getSearchFields();
-                    if (getActivity() == null)
+                    if (getActivity() == null) {
                         return null;
-                    if (fields.size() == 0)
+                    }
+                    if (fields.size() == 0) {
                         throw new OpacErrorException(
                                 getString(R.string.no_fields_found));
+                    }
                     if (app.getApi().shouldUseMeaningDetector()) {
                         MeaningDetector md = new AndroidMeaningDetector(
                                 getActivity(), app.getLibrary());
@@ -556,19 +565,22 @@ public class SearchResultListFragment extends CustomListFragment {
         }
 
         protected void onPostExecute(List<SearchField> result) {
-            if (getActivity() == null)
+            if (getActivity() == null) {
                 return;
+            }
             if (exception != null) {
-                if (exception instanceof OpacErrorException)
+                if (exception instanceof OpacErrorException) {
                     showConnectivityError(exception.getMessage());
-                else
+                } else {
                     showConnectivityError();
+                }
                 return;
             }
             SearchField fieldToUse = findSearchFieldByMeaning(result,
                     Meaning.FREE);
-            if (fieldToUse == null)
+            if (fieldToUse == null) {
                 fieldToUse = findSearchFieldByMeaning(result, Meaning.TITLE);
+            }
             if (fieldToUse == null) {
                 showConnectivityError(getString(R.string.no_fields_found));
                 return;
@@ -582,8 +594,9 @@ public class SearchResultListFragment extends CustomListFragment {
         private SearchField findSearchFieldByMeaning(List<SearchField> fields,
                                                      Meaning meaning) {
             for (SearchField field : fields) {
-                if (field.getMeaning() == meaning)
+                if (field.getMeaning() == meaning) {
                     return field;
+                }
             }
             return null;
         }

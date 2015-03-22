@@ -216,38 +216,40 @@ public class AccountEditActivity extends ActionBarActivity {
             return true;
         } else if (item.getItemId() == R.id.action_cancel) {
             if (getIntent().hasExtra("adding")
-                    && getIntent().getBooleanExtra("adding", false))
+                    && getIntent().getBooleanExtra("adding", false)) {
                 delete();
+            }
             supportFinishAfterTransition();
             return true;
         } else if (item.getItemId() == R.id.action_delete) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage(R.string.account_delete_confirm)
-                    .setCancelable(true)
-                    .setNegativeButton(R.string.no,
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface d, int id) {
-                                    d.cancel();
-                                }
-                            })
-                    .setPositiveButton(R.string.delete,
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface d, int id) {
-                                    d.dismiss();
-                                    delete();
-                                    finish();
-                                }
-                            })
-                    .setOnCancelListener(
-                            new DialogInterface.OnCancelListener() {
-                                @Override
-                                public void onCancel(DialogInterface d) {
-                                    if (d != null)
-                                        d.cancel();
-                                }
-                            });
+                   .setCancelable(true)
+                   .setNegativeButton(R.string.no,
+                           new DialogInterface.OnClickListener() {
+                               @Override
+                               public void onClick(DialogInterface d, int id) {
+                                   d.cancel();
+                               }
+                           })
+                   .setPositiveButton(R.string.delete,
+                           new DialogInterface.OnClickListener() {
+                               @Override
+                               public void onClick(DialogInterface d, int id) {
+                                   d.dismiss();
+                                   delete();
+                                   finish();
+                               }
+                           })
+                   .setOnCancelListener(
+                           new DialogInterface.OnCancelListener() {
+                               @Override
+                               public void onCancel(DialogInterface d) {
+                                   if (d != null) {
+                                       d.cancel();
+                                   }
+                               }
+                           });
             AlertDialog alert = builder.create();
             alert.show();
             return true;
@@ -349,42 +351,42 @@ public class AccountEditActivity extends ActionBarActivity {
                                 getResources().getString(
                                         R.string.user_data_opac_message),
                                 e.getMessage()))
-                        .setPositiveButton(R.string.yes,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        save();
-                                        close();
-                                    }
-                                })
-                        .setNegativeButton(R.string.no,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                    }
-                                }).create().show();
+                       .setPositiveButton(R.string.yes,
+                               new DialogInterface.OnClickListener() {
+                                   @Override
+                                   public void onClick(DialogInterface dialog,
+                                                       int which) {
+                                       save();
+                                       close();
+                                   }
+                               })
+                       .setNegativeButton(R.string.no,
+                               new DialogInterface.OnClickListener() {
+                                   @Override
+                                   public void onClick(DialogInterface dialog,
+                                                       int which) {
+                                   }
+                               }).create().show();
             } else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(
                         AccountEditActivity.this);
                 builder.setMessage(R.string.user_data_connection_error)
-                        .setPositiveButton(R.string.yes,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                        save();
-                                        close();
-                                    }
-                                })
-                        .setNegativeButton(R.string.no,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
-                                    }
-                                }).create().show();
+                       .setPositiveButton(R.string.yes,
+                               new DialogInterface.OnClickListener() {
+                                   @Override
+                                   public void onClick(DialogInterface dialog,
+                                                       int which) {
+                                       save();
+                                       close();
+                                   }
+                               })
+                       .setNegativeButton(R.string.no,
+                               new DialogInterface.OnClickListener() {
+                                   @Override
+                                   public void onClick(DialogInterface dialog,
+                                                       int which) {
+                                   }
+                               }).create().show();
             }
         }
     }

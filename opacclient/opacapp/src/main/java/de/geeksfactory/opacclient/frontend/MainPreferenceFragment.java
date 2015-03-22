@@ -54,7 +54,7 @@ public class MainPreferenceFragment extends PreferenceFragment {
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH
                 || !context.getPackageManager()
-                .hasSystemFeature("android.hardware.nfc")) {
+                           .hasSystemFeature("android.hardware.nfc")) {
             findPreference("nfc_search").setEnabled(false);
         }
 

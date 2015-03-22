@@ -105,12 +105,15 @@ public class LibraryListActivity extends ActionBarActivity {
         final ImageView ivLocationIcon = (ImageView) findViewById(R.id.ivLocationIcon);
         final LinearLayout llLocate = (LinearLayout) findViewById(R.id.llLocate);
 
-        final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        final LocationManager locationManager =
+                (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_COARSE); // no GPS
         final String provider = locationManager.getBestProvider(criteria, true);
         if (provider == null) // no geolocation available
+        {
             llLocate.setVisibility(View.GONE);
+        }
 
         llLocate.setOnClickListener(new OnClickListener() {
 
@@ -129,15 +132,17 @@ public class LibraryListActivity extends ActionBarActivity {
             }
         });
 
-        final RelativeLayout rlSuggestLibrary = (RelativeLayout) findViewById(R.id.rlSuggestLibrary);
+        final RelativeLayout rlSuggestLibrary =
+                (RelativeLayout) findViewById(R.id.rlSuggestLibrary);
         rlSuggestLibrary.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LibraryListActivity.this,
                         SuggestLibraryActivity.class);
-                if (getIntent().hasExtra("welcome"))
+                if (getIntent().hasExtra("welcome")) {
                     intent.putExtra("welcome", true);
+                }
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation
                         (rlSuggestLibrary, rlSuggestLibrary.getLeft(), rlSuggestLibrary.getTop(),
                                 rlSuggestLibrary.getWidth(), rlSuggestLibrary.getHeight());
@@ -189,13 +194,15 @@ public class LibraryListActivity extends ActionBarActivity {
         final TextView tvLocateString = (TextView) findViewById(R.id.tvLocateString);
         final ImageView ivLocationIcon = (ImageView) findViewById(R.id.ivLocationIcon);
 
-        final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        final LocationManager locationManager =
+                (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_COARSE); // no GPS
         final String provider = locationManager.getBestProvider(criteria, true);
 
-        if (provider == null)
+        if (provider == null) {
             return;
+        }
         locationManager.requestLocationUpdates(provider, 0, 0,
                 new LocationListener() {
                     @Override
@@ -213,8 +220,9 @@ public class LibraryListActivity extends ActionBarActivity {
 
                     @Override
                     public void onLocationChanged(Location location) {
-                        if (!visible)
+                        if (!visible) {
                             return;
+                        }
                         fragment = new LocatedLibraryListFragment();
                         Bundle args = new Bundle();
                         args.putInt("level", LEVEL_LIBRARY);
@@ -228,8 +236,9 @@ public class LibraryListActivity extends ActionBarActivity {
                             for (Library lib : libraries) {
                                 float[] result = new float[1];
                                 double[] geo = lib.getGeo();
-                                if (geo == null)
+                                if (geo == null) {
                                     continue;
+                                }
                                 Location.distanceBetween(lat, lon, geo[0],
                                         geo[1], result);
                                 lib.setGeo_distance(result[0]);
@@ -250,15 +259,18 @@ public class LibraryListActivity extends ActionBarActivity {
                                     .setTransition(
                                             FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                                     .replace(R.id.container, fragment).commit();
-                            if (fragment2 != null)
+                            if (fragment2 != null) {
                                 getSupportFragmentManager().beginTransaction()
-                                        .detach(fragment2).commit();
-                            if (fragment3 != null)
+                                                           .detach(fragment2).commit();
+                            }
+                            if (fragment3 != null) {
                                 getSupportFragmentManager().beginTransaction()
-                                        .detach(fragment3).commit();
-                            if (fragment4 != null)
+                                                           .detach(fragment3).commit();
+                            }
+                            if (fragment4 != null) {
                                 getSupportFragmentManager().beginTransaction()
-                                        .detach(fragment4).commit();
+                                                           .detach(fragment4).commit();
+                            }
 
                             tvLocateString.setText(R.string.alphabetic_list);
                             ivLocationIcon.setImageResource(R.drawable.ic_list);
@@ -288,26 +300,30 @@ public class LibraryListActivity extends ActionBarActivity {
         fragment.setListAdapter(adapter);
         if (findViewById(R.id.llFragments) != null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, fragment).commit();
-            if (fragment2 != null)
+                                       .replace(R.id.container, fragment).commit();
+            if (fragment2 != null) {
                 getSupportFragmentManager().beginTransaction()
-                        .detach(fragment2).commit();
-            if (fragment3 != null)
+                                           .detach(fragment2).commit();
+            }
+            if (fragment3 != null) {
                 getSupportFragmentManager().beginTransaction()
-                        .detach(fragment3).commit();
-            if (fragment4 != null)
+                                           .detach(fragment3).commit();
+            }
+            if (fragment4 != null) {
                 getSupportFragmentManager().beginTransaction()
-                        .detach(fragment4).commit();
+                                           .detach(fragment4).commit();
+            }
         } else {
-            if (fade)
+            if (fade) {
                 getSupportFragmentManager()
                         .beginTransaction()
                         .setTransition(
                                 FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                         .replace(R.id.container, fragment).commit();
-            else
+            } else {
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, fragment).commit();
+                                           .replace(R.id.container, fragment).commit();
+            }
         }
     }
 
@@ -337,19 +353,21 @@ public class LibraryListActivity extends ActionBarActivity {
         if (findViewById(R.id.llFragments) != null) {
             fragment2 = fragment;
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container2, fragment2).commit();
-            if (fragment3 != null)
+                                       .replace(R.id.container2, fragment2).commit();
+            if (fragment3 != null) {
                 getSupportFragmentManager().beginTransaction()
-                        .detach(fragment3).commit();
-            if (fragment4 != null)
+                                           .detach(fragment3).commit();
+            }
+            if (fragment4 != null) {
                 getSupportFragmentManager().beginTransaction()
-                        .detach(fragment4).commit();
+                                           .detach(fragment4).commit();
+            }
         } else if (data.size() > 1) {
             this.fragment = fragment;
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, fragment).addToBackStack(null)
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .commit();
+                                       .replace(R.id.container, fragment).addToBackStack(null)
+                                       .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                                       .commit();
         }
     }
 
@@ -381,16 +399,17 @@ public class LibraryListActivity extends ActionBarActivity {
         if (findViewById(R.id.llFragments) != null) {
             fragment3 = fragment;
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container3, fragment3).commit();
-            if (fragment4 != null)
+                                       .replace(R.id.container3, fragment3).commit();
+            if (fragment4 != null) {
                 getSupportFragmentManager().beginTransaction()
-                        .detach(fragment4).commit();
+                                           .detach(fragment4).commit();
+            }
         } else if (data.size() > 1 || !list.get(0).equals(state)) {
             this.fragment = fragment;
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, fragment).addToBackStack(null)
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .commit();
+                                       .replace(R.id.container, fragment).addToBackStack(null)
+                                       .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                                       .commit();
         }
     }
 
@@ -418,13 +437,13 @@ public class LibraryListActivity extends ActionBarActivity {
         if (findViewById(R.id.llFragments) != null) {
             fragment4 = fragment;
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container4, fragment4).commit();
+                                       .replace(R.id.container4, fragment4).commit();
         } else {
             this.fragment = fragment;
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, fragment).addToBackStack(null)
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .commit();
+                                       .replace(R.id.container, fragment).addToBackStack(null)
+                                       .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                                       .commit();
         }
     }
 
@@ -437,14 +456,18 @@ public class LibraryListActivity extends ActionBarActivity {
         query = query.toLowerCase(Locale.GERMAN);
         for (Library lib : libraries) {
             int rank = 0;
-            if (lib.getCity().toLowerCase(Locale.GERMAN).contains(query))
+            if (lib.getCity().toLowerCase(Locale.GERMAN).contains(query)) {
                 rank += 3;
-            if (lib.getTitle().toLowerCase(Locale.GERMAN).contains(query))
+            }
+            if (lib.getTitle().toLowerCase(Locale.GERMAN).contains(query)) {
                 rank += 3;
-            if (lib.getState().toLowerCase(Locale.GERMAN).contains(query))
+            }
+            if (lib.getState().toLowerCase(Locale.GERMAN).contains(query)) {
                 rank += 2;
-            if (lib.getCountry().toLowerCase(Locale.GERMAN).contains(query))
+            }
+            if (lib.getCountry().toLowerCase(Locale.GERMAN).contains(query)) {
                 rank += 1;
+            }
             if (rank > 0) {
                 data.add(new LibrarySearchResult(lib, rank));
             }
@@ -460,17 +483,20 @@ public class LibraryListActivity extends ActionBarActivity {
                 R.layout.listitem_library, R.id.tvTitle, libraries);
         fragment.setListAdapter(adapter);
         getSupportFragmentManager().beginTransaction().addToBackStack(null)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .replace(R.id.container, fragment).commit();
-        if (fragment2 != null)
+                                   .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                                   .replace(R.id.container, fragment).commit();
+        if (fragment2 != null) {
             getSupportFragmentManager().beginTransaction().detach(fragment2)
-                    .commit();
-        if (fragment3 != null)
+                                       .commit();
+        }
+        if (fragment3 != null) {
             getSupportFragmentManager().beginTransaction().detach(fragment3)
-                    .commit();
-        if (fragment4 != null)
+                                       .commit();
+        }
+        if (fragment4 != null) {
             getSupportFragmentManager().beginTransaction().detach(fragment4)
-                    .commit();
+                                       .commit();
+        }
 
         TextView tvLocateString = (TextView) findViewById(R.id.tvLocateString);
         ImageView ivLocationIcon = (ImageView) findViewById(R.id.ivLocationIcon);
@@ -503,21 +529,23 @@ public class LibraryListActivity extends ActionBarActivity {
 
         @Override
         public boolean equals(Object obj) {
-            if (obj instanceof LibrarySearchResult)
+            if (obj instanceof LibrarySearchResult) {
                 return library.equals(((LibrarySearchResult) obj).getLibrary());
-            else
+            } else {
                 return false;
+            }
         }
 
         @Override
         public int compareTo(LibrarySearchResult another) {
-            if (another.rank == rank)
+            if (another.rank == rank) {
                 return library.getCity().compareTo(
                         another.getLibrary().getCity());
-            else if (another.rank < rank)
+            } else if (another.rank < rank) {
                 return -1;
-            else
+            } else {
                 return 1;
+            }
         }
 
     }
@@ -570,8 +598,9 @@ public class LibraryListActivity extends ActionBarActivity {
                     Intent i = new Intent(getActivity(), AccountEditActivity.class);
                     i.putExtra("id", insertedid);
                     i.putExtra("adding", true);
-                    if (getActivity().getIntent().hasExtra("welcome"))
+                    if (getActivity().getIntent().hasExtra("welcome")) {
                         i.putExtra("welcome", true);
+                    }
                     getActivity().startActivity(i);
                     getActivity().finish();
                     break;
@@ -586,12 +615,14 @@ public class LibraryListActivity extends ActionBarActivity {
             setRetainInstance(true);
             view = super.onCreateView(inflater, container, savedInstanceState);
             ListView lv = ((ListView) view.findViewById(android.R.id.list));
-            lv.setChoiceMode(((LibraryListActivity) getActivity()).isTablet() ? AbsListView.CHOICE_MODE_SINGLE
+            lv.setChoiceMode(((LibraryListActivity) getActivity()).isTablet() ?
+                    AbsListView.CHOICE_MODE_SINGLE
                     : AbsListView.CHOICE_MODE_NONE);
             if (level == LEVEL_CITY) {
                 lv.setFastScrollEnabled(true);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                     lv.setFastScrollAlwaysVisible(true);
+                }
             }
             lv.setSelector(R.drawable.ripple);
             return view;
@@ -629,10 +660,11 @@ public class LibraryListActivity extends ActionBarActivity {
             while (i < getCount() && !found) {
                 String city = getItem(i);
                 String letter = city.substring(0, 1).toUpperCase(Locale.GERMAN);
-                if (Arrays.asList(letters).indexOf(letter) >= sectionIndex)
+                if (Arrays.asList(letters).indexOf(letter) >= sectionIndex) {
                     found = true;
-                else
+                } else {
                     i++;
+                }
             }
             return i;
         }
@@ -736,11 +768,13 @@ public class LibraryListActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(List<Library> result) {
             libraries = result;
-            if (dialog != null)
+            if (dialog != null) {
                 dialog.dismiss();
+            }
 
-            if (libraries == null)
+            if (libraries == null) {
                 return;
+            }
 
             // Get the intent, verify the action and get the query
             Intent intent = getIntent();

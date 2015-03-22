@@ -138,11 +138,11 @@ public class AccountFragment extends Fragment implements
 
         if (getActivity().getIntent().getExtras() != null) {
             if (getActivity().getIntent().getExtras()
-                    .containsKey("notifications")) {
+                             .containsKey("notifications")) {
                 AccountDataSource adata = new AccountDataSource(getActivity());
                 adata.open();
                 Bundle notif = getActivity().getIntent().getExtras()
-                        .getBundle("notifications");
+                                            .getBundle("notifications");
                 Set<String> keys = notif.keySet();
                 for (String key : keys) {
                     long[] val = notif.getLongArray(key);
@@ -153,11 +153,12 @@ public class AccountFragment extends Fragment implements
                 if (getActivity().getIntent().getExtras().getLong("account") != app
                         .getAccount().getId()) {
                     app.setAccount(getActivity().getIntent().getExtras()
-                            .getLong("account"));
+                                                .getLong("account"));
                     ((OpacActivity) getActivity()).accountSelected(app
                             .getAccount());
                 }
-                NotificationManager nMgr = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+                NotificationManager nMgr = (NotificationManager) getActivity()
+                        .getSystemService(Context.NOTIFICATION_SERVICE);
                 nMgr.cancel(OpacClient.NOTIF_ID);
             }
         }
@@ -255,7 +256,7 @@ public class AccountFragment extends Fragment implements
                                             android.content.Intent.EXTRA_SUBJECT,
                                             "Bibliothek "
                                                     + app.getLibrary()
-                                                    .getIdent());
+                                                         .getIdent());
                             emailIntent.putExtra(
                                     android.content.Intent.EXTRA_TEXT,
                                     getResources().getString(
@@ -368,82 +369,84 @@ public class AccountFragment extends Fragment implements
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(R.string.cancel_confirm)
-                .setCancelable(true)
-                .setNegativeButton(R.string.no,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface d, int id) {
-                                d.cancel();
-                            }
-                        })
-                .setPositiveButton(R.string.yes,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface d, int id) {
-                                d.dismiss();
+               .setCancelable(true)
+               .setNegativeButton(R.string.no,
+                       new DialogInterface.OnClickListener() {
+                           @Override
+                           public void onClick(DialogInterface d, int id) {
+                               d.cancel();
+                           }
+                       })
+               .setPositiveButton(R.string.yes,
+                       new DialogInterface.OnClickListener() {
+                           @Override
+                           public void onClick(DialogInterface d, int id) {
+                               d.dismiss();
 
-                                MultiStepResultHelper msrhCancel = new MultiStepResultHelper(
-                                        getActivity(), a,
-                                        R.string.doing_cancel);
-                                msrhCancel.setCallback(new Callback() {
-                                    @Override
-                                    public void onSuccess(MultiStepResult result) {
-                                        invalidateData();
-                                    }
+                               MultiStepResultHelper msrhCancel = new MultiStepResultHelper(
+                                       getActivity(), a,
+                                       R.string.doing_cancel);
+                               msrhCancel.setCallback(new Callback() {
+                                   @Override
+                                   public void onSuccess(MultiStepResult result) {
+                                       invalidateData();
+                                   }
 
-                                    @Override
-                                    public void onError(MultiStepResult result) {
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(
-                                                getActivity());
-                                        builder.setMessage(result.getMessage())
-                                                .setCancelable(true)
-                                                .setNegativeButton(
-                                                        R.string.close,
-                                                        new DialogInterface.OnClickListener() {
-                                                            @Override
-                                                            public void onClick(
-                                                                    DialogInterface d,
-                                                                    int id) {
-                                                                d.cancel();
-                                                            }
-                                                        })
-                                                .setOnCancelListener(
-                                                        new DialogInterface.OnCancelListener() {
-                                                            @Override
-                                                            public void onCancel(
-                                                                    DialogInterface d) {
-                                                                if (d != null)
-                                                                    d.cancel();
-                                                            }
-                                                        });
-                                        AlertDialog alert = builder.create();
-                                        alert.show();
-                                    }
+                                   @Override
+                                   public void onError(MultiStepResult result) {
+                                       AlertDialog.Builder builder = new AlertDialog.Builder(
+                                               getActivity());
+                                       builder.setMessage(result.getMessage())
+                                              .setCancelable(true)
+                                              .setNegativeButton(
+                                                      R.string.close,
+                                                      new DialogInterface.OnClickListener() {
+                                                          @Override
+                                                          public void onClick(
+                                                                  DialogInterface d,
+                                                                  int id) {
+                                                              d.cancel();
+                                                          }
+                                                      })
+                                              .setOnCancelListener(
+                                                      new DialogInterface.OnCancelListener() {
+                                                          @Override
+                                                          public void onCancel(
+                                                                  DialogInterface d) {
+                                                              if (d != null) {
+                                                                  d.cancel();
+                                                              }
+                                                          }
+                                                      });
+                                       AlertDialog alert = builder.create();
+                                       alert.show();
+                                   }
 
-                                    @Override
-                                    public void onUnhandledResult(
-                                            MultiStepResult result) {
-                                    }
+                                   @Override
+                                   public void onUnhandledResult(
+                                           MultiStepResult result) {
+                                   }
 
-                                    @Override
-                                    public void onUserCancel() {
-                                    }
+                                   @Override
+                                   public void onUserCancel() {
+                                   }
 
-                                    @Override
-                                    public StepTask<?> newTask() {
-                                        return new CancelTask();
-                                    }
-                                });
-                                msrhCancel.start();
-                            }
-                        })
-                .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface d) {
-                        if (d != null)
-                            d.cancel();
-                    }
-                });
+                                   @Override
+                                   public StepTask<?> newTask() {
+                                       return new CancelTask();
+                                   }
+                               });
+                               msrhCancel.start();
+                           }
+                       })
+               .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                   @Override
+                   public void onCancel(DialogInterface d) {
+                       if (d != null) {
+                           d.cancel();
+                       }
+                   }
+               });
         AlertDialog alert = builder.create();
         alert.show();
     }
@@ -464,23 +467,24 @@ public class AccountFragment extends Fragment implements
         msrhProlong.setCallback(new Callback() {
             @Override
             public void onSuccess(MultiStepResult result) {
-                if (getActivity() == null)
+                if (getActivity() == null) {
                     return;
+                }
                 invalidateData();
 
                 if (result.getMessage() != null) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(
                             getActivity());
                     builder.setMessage(result.getMessage())
-                            .setCancelable(false)
-                            .setNegativeButton(R.string.close,
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(
-                                                DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                        }
-                                    });
+                           .setCancelable(false)
+                           .setNegativeButton(R.string.close,
+                                   new DialogInterface.OnClickListener() {
+                                       @Override
+                                       public void onClick(
+                                               DialogInterface dialog, int id) {
+                                           dialog.cancel();
+                                       }
+                                   });
                     AlertDialog alert = builder.create();
                     alert.show();
                 }
@@ -488,28 +492,30 @@ public class AccountFragment extends Fragment implements
 
             @Override
             public void onError(MultiStepResult result) {
-                if (getActivity() == null)
+                if (getActivity() == null) {
                     return;
+                }
                 AlertDialog.Builder builder = new AlertDialog.Builder(
                         getActivity());
                 builder.setMessage(result.getMessage())
-                        .setCancelable(true)
-                        .setNegativeButton(R.string.close,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface d,
-                                                        int id) {
-                                        d.cancel();
-                                    }
-                                })
-                        .setOnCancelListener(
-                                new DialogInterface.OnCancelListener() {
-                                    @Override
-                                    public void onCancel(DialogInterface d) {
-                                        if (d != null)
-                                            d.cancel();
-                                    }
-                                });
+                       .setCancelable(true)
+                       .setNegativeButton(R.string.close,
+                               new DialogInterface.OnClickListener() {
+                                   @Override
+                                   public void onClick(DialogInterface d,
+                                                       int id) {
+                                       d.cancel();
+                                   }
+                               })
+                       .setOnCancelListener(
+                               new DialogInterface.OnCancelListener() {
+                                   @Override
+                                   public void onCancel(DialogInterface d) {
+                                       if (d != null) {
+                                           d.cancel();
+                                       }
+                                   }
+                               });
                 AlertDialog alert = builder.create();
                 alert.show();
             }
@@ -555,10 +561,12 @@ public class AccountFragment extends Fragment implements
     }
 
     public void show_connectivity_error(Exception e) {
-        if (e != null)
+        if (e != null) {
             e.printStackTrace();
-        if (getActivity() == null)
+        }
+        if (getActivity() == null) {
             return;
+        }
         if (e instanceof OpacErrorException) {
             AccountDataSource adatasource = new AccountDataSource(getActivity());
             adatasource.open();
@@ -573,12 +581,13 @@ public class AccountFragment extends Fragment implements
         View connError = getActivity().getLayoutInflater().inflate(
                 R.layout.error_connectivity, errorView);
 
-        if (e != null && e instanceof SSLSecurityException)
+        if (e != null && e instanceof SSLSecurityException) {
             ((TextView) connError.findViewById(R.id.tvErrBody))
                     .setText(R.string.connection_error_detail_security);
-        else if (e != null && e instanceof NotReachableException)
+        } else if (e != null && e instanceof NotReachableException) {
             ((TextView) connError.findViewById(R.id.tvErrBody))
                     .setText(R.string.connection_error_detail_nre);
+        }
         ((Button) connError.findViewById(R.id.btRetry))
                 .setOnClickListener(new OnClickListener() {
                     @Override
@@ -613,8 +622,9 @@ public class AccountFragment extends Fragment implements
         if (getActivity() == null && OpacClient.getEmergencyContext() != null) {
             adatasource = new AccountDataSource(
                     OpacClient.getEmergencyContext());
-        } else
+        } else {
             adatasource = new AccountDataSource(getActivity());
+        }
 
         adatasource.open();
         adatasource.storeCachedAccountData(
@@ -635,8 +645,9 @@ public class AccountFragment extends Fragment implements
 
     @SuppressWarnings("deprecation")
     public void displaydata(AccountData result, boolean fromcache) {
-        if (getActivity() == null)
+        if (getActivity() == null) {
             return;
+        }
         view.findViewById(R.id.svAccount).setVisibility(View.VISIBLE);
         view.findViewById(R.id.llLoading).setVisibility(View.GONE);
         view.findViewById(R.id.unsupported_error).setVisibility(View.GONE);
@@ -710,7 +721,7 @@ public class AccountFragment extends Fragment implements
                         }
                     };
                     v.findViewById(R.id.tvTitel)
-                            .setOnClickListener(gotoDetails);
+                     .setOnClickListener(gotoDetails);
                     v.findViewById(R.id.tvVerfasser).setOnClickListener(
                             gotoDetails);
                     v.findViewById(R.id.tvStatus).setOnClickListener(
@@ -898,7 +909,7 @@ public class AccountFragment extends Fragment implements
                         }
                     };
                     v.findViewById(R.id.tvTitel)
-                            .setOnClickListener(gotoDetails);
+                     .setOnClickListener(gotoDetails);
                     v.findViewById(R.id.tvVerfasser).setOnClickListener(
                             gotoDetails);
                     v.findViewById(R.id.tvStatus).setOnClickListener(
@@ -924,7 +935,7 @@ public class AccountFragment extends Fragment implements
                             .setVisibility(View.VISIBLE);
                 } else if (item.containsKey(AccountData.KEY_RESERVATION_EXPIRE)
                         && item.get(AccountData.KEY_RESERVATION_EXPIRE)
-                        .length() > 6) {
+                               .length() > 6) {
                     ((TextView) v.findViewById(R.id.tvStatus))
                             .setText(Html.fromHtml("bis "
                                     + item.get(AccountData.KEY_RESERVATION_EXPIRE)));
@@ -1009,8 +1020,9 @@ public class AccountFragment extends Fragment implements
 
     public void refreshage() {
         try {
-            if (view.findViewById(R.id.tvAge) == null)
+            if (view.findViewById(R.id.tvAge) == null) {
                 return;
+            }
 
             long age = System.currentTimeMillis() - refreshtime;
             if (age < 60 * 1000) {
@@ -1070,23 +1082,24 @@ public class AccountFragment extends Fragment implements
                 AlertDialog.Builder builder = new AlertDialog.Builder(
                         getActivity());
                 builder.setMessage(result.getMessage())
-                        .setCancelable(true)
-                        .setNegativeButton(R.string.close,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface d,
-                                                        int id) {
-                                        d.cancel();
-                                    }
-                                })
-                        .setOnCancelListener(
-                                new DialogInterface.OnCancelListener() {
-                                    @Override
-                                    public void onCancel(DialogInterface d) {
-                                        if (d != null)
-                                            d.cancel();
-                                    }
-                                });
+                       .setCancelable(true)
+                       .setNegativeButton(R.string.close,
+                               new DialogInterface.OnClickListener() {
+                                   @Override
+                                   public void onClick(DialogInterface d,
+                                                       int id) {
+                                       d.cancel();
+                                   }
+                               })
+                       .setOnCancelListener(
+                               new DialogInterface.OnCancelListener() {
+                                   @Override
+                                   public void onCancel(DialogInterface d) {
+                                       if (d != null) {
+                                           d.cancel();
+                                       }
+                                   }
+                               });
                 AlertDialog alert = builder.create();
                 alert.show();
             }
@@ -1119,21 +1132,21 @@ public class AccountFragment extends Fragment implements
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(R.string.prolong_all_confirm)
-                .setCancelable(true)
-                .setNegativeButton(R.string.no,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface d, int id) {
-                                d.cancel();
-                            }
-                        })
-                .setPositiveButton(R.string.yes,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface d, int id) {
-                                prolongAllDo();
-                            }
-                        });
+               .setCancelable(true)
+               .setNegativeButton(R.string.no,
+                       new DialogInterface.OnClickListener() {
+                           @Override
+                           public void onClick(DialogInterface d, int id) {
+                               d.cancel();
+                           }
+                       })
+               .setPositiveButton(R.string.yes,
+                       new DialogInterface.OnClickListener() {
+                           @Override
+                           public void onClick(DialogInterface d, int id) {
+                               prolongAllDo();
+                           }
+                       });
         AlertDialog alert = builder.create();
         alert.show();
 
@@ -1146,8 +1159,9 @@ public class AccountFragment extends Fragment implements
         msrhProlong.setCallback(new Callback() {
             @Override
             public void onSuccess(MultiStepResult result) {
-                if (getActivity() == null)
+                if (getActivity() == null) {
                     return;
+                }
                 ProlongAllResult res = (ProlongAllResult) result;
                 AlertDialog.Builder builder = new AlertDialog.Builder(
                         getActivity());
@@ -1178,28 +1192,30 @@ public class AccountFragment extends Fragment implements
 
             @Override
             public void onError(MultiStepResult result) {
-                if (getActivity() == null)
+                if (getActivity() == null) {
                     return;
+                }
                 AlertDialog.Builder builder = new AlertDialog.Builder(
                         getActivity());
                 builder.setMessage(result.getMessage())
-                        .setCancelable(true)
-                        .setNegativeButton(R.string.close,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface d,
-                                                        int id) {
-                                        d.cancel();
-                                    }
-                                })
-                        .setOnCancelListener(
-                                new DialogInterface.OnCancelListener() {
-                                    @Override
-                                    public void onCancel(DialogInterface d) {
-                                        if (d != null)
-                                            d.cancel();
-                                    }
-                                });
+                       .setCancelable(true)
+                       .setNegativeButton(R.string.close,
+                               new DialogInterface.OnClickListener() {
+                                   @Override
+                                   public void onClick(DialogInterface d,
+                                                       int id) {
+                                       d.cancel();
+                                   }
+                               })
+                       .setOnCancelListener(
+                               new DialogInterface.OnCancelListener() {
+                                   @Override
+                                   public void onCancel(DialogInterface d) {
+                                       if (d != null) {
+                                           d.cancel();
+                                       }
+                                   }
+                               });
                 AlertDialog alert = builder.create();
                 alert.show();
             }
@@ -1263,9 +1279,9 @@ public class AccountFragment extends Fragment implements
                 nameValuePairs
                         .add(new BasicNameValuePair("version",
                                 getActivity().getPackageManager()
-                                        .getPackageInfo(
-                                                getActivity().getPackageName(),
-                                                0).versionName));
+                                             .getPackageInfo(
+                                                     getActivity().getPackageName(),
+                                                     0).versionName));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1278,11 +1294,12 @@ public class AccountFragment extends Fragment implements
                     android.os.Build.MANUFACTURER + " "
                             + android.os.Build.MODEL));
             nameValuePairs.add(new BasicNameValuePair("bib", app.getLibrary()
-                    .getIdent()));
+                                                                .getIdent()));
 
             try {
                 nameValuePairs.add(new BasicNameValuePair("html", app.getApi()
-                        .getAccountExtendableInfo(app.getAccount())));
+                                                                     .getAccountExtendableInfo(
+                                                                             app.getAccount())));
             } catch (Exception e1) {
                 e1.printStackTrace();
                 return 1;
@@ -1306,8 +1323,9 @@ public class AccountFragment extends Fragment implements
 
         @Override
         protected void onPostExecute(Integer result) {
-            if (getActivity() == null)
+            if (getActivity() == null) {
                 return;
+            }
 
             dialog.dismiss();
             Button btSend = (Button) view.findViewById(R.id.btSend);
@@ -1388,22 +1406,23 @@ public class AccountFragment extends Fragment implements
 
         @Override
         protected void onPostExecute(CancelResult result) {
-            if (getActivity() == null)
+            if (getActivity() == null) {
                 return;
+            }
 
             if (result == null) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(
                         getActivity());
                 builder.setMessage(R.string.error)
-                        .setCancelable(true)
-                        .setNegativeButton(R.string.close,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int id) {
-                                        dialog.cancel();
-                                    }
-                                });
+                       .setCancelable(true)
+                       .setNegativeButton(R.string.close,
+                               new DialogInterface.OnClickListener() {
+                                   @Override
+                                   public void onClick(DialogInterface dialog,
+                                                       int id) {
+                                       dialog.cancel();
+                                   }
+                               });
                 AlertDialog alert = builder.create();
                 alert.show();
             }
@@ -1426,8 +1445,9 @@ public class AccountFragment extends Fragment implements
         @Override
         protected void onPostExecute(final String result) {
             dialog.dismiss();
-            if (getActivity() == null)
+            if (getActivity() == null) {
                 return;
+            }
             if (result.toString().contains("acsm")) {
                 String[] download_clients = new String[]{
                         "com.android.aldiko", "com.aldiko.android",
@@ -1451,42 +1471,44 @@ public class AccountFragment extends Fragment implements
                     AlertDialog.Builder builder = new AlertDialog.Builder(
                             getActivity());
                     builder.setMessage(R.string.reader_needed)
-                            .setCancelable(true)
-                            .setNegativeButton(R.string.cancel,
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(
-                                                DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                        }
-                                    })
-                            .setNeutralButton(R.string.reader_needed_ignore,
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(
-                                                DialogInterface dialog, int id) {
-                                            Intent i = new Intent(
-                                                    Intent.ACTION_VIEW);
-                                            i.setData(Uri.parse(result));
-                                            sp.edit()
-                                                    .putBoolean(
-                                                            "reader_needed_ignore",
-                                                            true).commit();
-                                            startActivity(i);
-                                        }
-                                    })
-                            .setPositiveButton(R.string.download,
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(
-                                                DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                            Intent i = new Intent(
-                                                    Intent.ACTION_VIEW,
-                                                    Uri.parse("market://details?id=de.bluefirereader"));
-                                            startActivity(i);
-                                        }
-                                    });
+                           .setCancelable(true)
+                           .setNegativeButton(R.string.cancel,
+                                   new DialogInterface.OnClickListener() {
+                                       @Override
+                                       public void onClick(
+                                               DialogInterface dialog, int id) {
+                                           dialog.cancel();
+                                       }
+                                   })
+                           .setNeutralButton(R.string.reader_needed_ignore,
+                                   new DialogInterface.OnClickListener() {
+                                       @Override
+                                       public void onClick(
+                                               DialogInterface dialog, int id) {
+                                           Intent i = new Intent(
+                                                   Intent.ACTION_VIEW);
+                                           i.setData(Uri.parse(result));
+                                           sp.edit()
+                                             .putBoolean(
+                                                     "reader_needed_ignore",
+                                                     true).commit();
+                                           startActivity(i);
+                                       }
+                                   })
+                           .setPositiveButton(R.string.download,
+                                   new DialogInterface.OnClickListener() {
+                                       @Override
+                                       public void onClick(
+                                               DialogInterface dialog, int id) {
+                                           dialog.cancel();
+                                           Intent i = new Intent(
+                                                   Intent.ACTION_VIEW,
+                                                   Uri.parse(
+                                                           "market://details?id=de" +
+                                                                   ".bluefirereader"));
+                                           startActivity(i);
+                                       }
+                                   });
                     AlertDialog alert = builder.create();
                     alert.show();
                     return;
@@ -1533,22 +1555,23 @@ public class AccountFragment extends Fragment implements
 
         @Override
         protected void onPostExecute(ProlongResult res) {
-            if (getActivity() == null)
+            if (getActivity() == null) {
                 return;
+            }
 
             if (!success || res == null) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(
                         getActivity());
                 builder.setMessage(R.string.error)
-                        .setCancelable(true)
-                        .setNegativeButton(R.string.close,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int id) {
-                                        dialog.cancel();
-                                    }
-                                });
+                       .setCancelable(true)
+                       .setNegativeButton(R.string.close,
+                               new DialogInterface.OnClickListener() {
+                                   @Override
+                                   public void onClick(DialogInterface dialog,
+                                                       int id) {
+                                       dialog.cancel();
+                                   }
+                               });
                 AlertDialog alert = builder.create();
                 alert.show();
                 return;
@@ -1583,22 +1606,23 @@ public class AccountFragment extends Fragment implements
 
         @Override
         protected void onPostExecute(ProlongAllResult result) {
-            if (getActivity() == null)
+            if (getActivity() == null) {
                 return;
+            }
 
             if (result == null) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(
                         getActivity());
                 builder.setMessage(R.string.error)
-                        .setCancelable(true)
-                        .setNegativeButton(R.string.close,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int id) {
-                                        dialog.cancel();
-                                    }
-                                });
+                       .setCancelable(true)
+                       .setNegativeButton(R.string.close,
+                               new DialogInterface.OnClickListener() {
+                                   @Override
+                                   public void onClick(DialogInterface dialog,
+                                                       int id) {
+                                       dialog.cancel();
+                                   }
+                               });
                 AlertDialog alert = builder.create();
                 alert.show();
             }
@@ -1687,22 +1711,23 @@ public class AccountFragment extends Fragment implements
 
         @Override
         protected void onPostExecute(BookingResult res) {
-            if (getActivity() == null)
+            if (getActivity() == null) {
                 return;
+            }
 
             if (res == null) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(
                         getActivity());
                 builder.setMessage(R.string.error)
-                        .setCancelable(true)
-                        .setNegativeButton(R.string.close,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int id) {
-                                        dialog.cancel();
-                                    }
-                                });
+                       .setCancelable(true)
+                       .setNegativeButton(R.string.close,
+                               new DialogInterface.OnClickListener() {
+                                   @Override
+                                   public void onClick(DialogInterface dialog,
+                                                       int id) {
+                                       dialog.cancel();
+                                   }
+                               });
                 AlertDialog alert = builder.create();
                 alert.show();
                 return;
