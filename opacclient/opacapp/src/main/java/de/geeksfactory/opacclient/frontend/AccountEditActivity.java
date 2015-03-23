@@ -333,6 +333,8 @@ public class AccountEditActivity extends ActionBarActivity {
         }
 
         protected void onPostExecute(Exception result) {
+            if (AccountEditActivity.this.isFinishing()) return;
+
             setProgress(false);
             if (result == null) {
                 save();
@@ -350,7 +352,7 @@ public class AccountEditActivity extends ActionBarActivity {
                                new DialogInterface.OnClickListener() {
                                    @Override
                                    public void onClick(DialogInterface dialog,
-                                                       int which) {
+                                           int which) {
                                        save();
                                        close();
                                    }
@@ -359,7 +361,7 @@ public class AccountEditActivity extends ActionBarActivity {
                                new DialogInterface.OnClickListener() {
                                    @Override
                                    public void onClick(DialogInterface dialog,
-                                                       int which) {
+                                           int which) {
                                    }
                                }).create().show();
             } else {
@@ -370,7 +372,7 @@ public class AccountEditActivity extends ActionBarActivity {
                                new DialogInterface.OnClickListener() {
                                    @Override
                                    public void onClick(DialogInterface dialog,
-                                                       int which) {
+                                           int which) {
                                        save();
                                        close();
                                    }
@@ -379,7 +381,7 @@ public class AccountEditActivity extends ActionBarActivity {
                                new DialogInterface.OnClickListener() {
                                    @Override
                                    public void onClick(DialogInterface dialog,
-                                                       int which) {
+                                           int which) {
                                    }
                                }).create().show();
             }

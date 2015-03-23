@@ -87,7 +87,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_search, container, false);
         findViews();
@@ -155,6 +155,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
     }
 
     public void clear() {
+        if (fields == null) return;
+
         for (SearchField field : fields) {
             if (!field.isVisible()) {
                 continue;
@@ -444,13 +446,13 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
         View connError = getActivity().getLayoutInflater().inflate(
                 R.layout.error_connectivity, errorView);
         connError.findViewById(R.id.btRetry)
-                .setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        errorView.removeAllViews();
-                        executeNewLoadSearchFieldsTask();
-                    }
-                });
+                 .setOnClickListener(new OnClickListener() {
+                     @Override
+                     public void onClick(View v) {
+                         errorView.removeAllViews();
+                         executeNewLoadSearchFieldsTask();
+                     }
+                 });
 
         if (description != null) {
             ((TextView) connError.findViewById(R.id.tvErrBody))
