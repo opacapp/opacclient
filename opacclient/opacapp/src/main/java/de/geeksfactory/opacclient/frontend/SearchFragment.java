@@ -682,9 +682,8 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.fragment_search, menu);
-        if (((OpacActivity) getActivity()).isTablet())
+        if (getActivity() != null && ((OpacActivity) getActivity()).isTablet()) {
         // We have the floating action button for that
-        {
             menu.findItem(R.id.action_search_go).setVisible(false);
         }
         super.onCreateOptionsMenu(menu, inflater);
