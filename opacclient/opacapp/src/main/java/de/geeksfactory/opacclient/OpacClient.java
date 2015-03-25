@@ -61,6 +61,7 @@ import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.Pica;
 import de.geeksfactory.opacclient.apis.SISIS;
 import de.geeksfactory.opacclient.apis.SRU;
+import de.geeksfactory.opacclient.apis.TestApi;
 import de.geeksfactory.opacclient.apis.TouchPoint;
 import de.geeksfactory.opacclient.apis.WebOpacNet;
 import de.geeksfactory.opacclient.apis.WinBiap;
@@ -230,6 +231,12 @@ public class OpacClient extends Application {
             newApiInstance = new Heidi();
         } else if (lib.getApi().equals("touchpoint")) {
             newApiInstance = new TouchPoint();
+        } else if (lib.getApi().equals("test")) {
+            if (BuildConfig.DEBUG) {
+                newApiInstance = new TestApi();
+            } else {
+                return null;
+            }
         } else {
             return null;
         }
@@ -358,7 +365,7 @@ public class OpacClient extends Application {
             try {
                 Library lib = Library.fromJSON(files[i].replace(".json", ""),
                         new JSONObject(json));
-                libs.add(lib);
+                if (!lib.getApi().equals("test") || BuildConfig.DEBUG) libs.add(lib);
             } catch (JSONException e) {
                 Log.w("JSON library files", "Failed parsing library "
                         + files[i]);

@@ -1,0 +1,15 @@
+{
+    "account_supported": false,
+    "api": "test",
+    "city": "Test",
+    "country": "Test",
+    "data": {
+        "information": "http://opacapp.de/"
+    },
+    "geo": [
+        0.0,
+        0.0
+    ],
+    "state": "Test",
+    "title": "Testbibliothek"
+}
