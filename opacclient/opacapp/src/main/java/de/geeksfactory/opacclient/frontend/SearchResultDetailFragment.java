@@ -141,14 +141,6 @@ public class SearchResultDetailFragment extends Fragment
         super.onCreate(savedInstanceState);
 
         setRetainInstance(true);
-        if (getArguments().containsKey(ARG_ITEM_ID)
-                || getArguments().containsKey(ARG_ITEM_NR)) {
-            // Load the dummy content specified by the fragment
-            // arguments. In a real-world scenario, use a Loader
-            // to load content from a content provider.
-            load(getArguments().getInt(ARG_ITEM_NR),
-                    getArguments().getString(ARG_ITEM_ID));
-        }
     }
 
     public void setProgress(boolean show, boolean animate) {
@@ -247,9 +239,12 @@ public class SearchResultDetailFragment extends Fragment
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         if (item != null) {
             display();
+        } else if (getArguments().containsKey(ARG_ITEM_ID)
+                || getArguments().containsKey(ARG_ITEM_NR)) {
+            load(getArguments().getInt(ARG_ITEM_NR),
+                    getArguments().getString(ARG_ITEM_ID));
         }
     }
 
@@ -293,7 +288,8 @@ public class SearchResultDetailFragment extends Fragment
 
         scrollView.addCallbacks(this);
 
-        if (getArguments().containsKey(ARG_ITEM_COVER_BITMAP)) {
+        if (getArguments().containsKey(ARG_ITEM_COVER_BITMAP) && !ft.getStatus().equals(
+                AsyncTask.Status.FINISHED)) {
             Bitmap bitmap = getArguments().getParcelable(ARG_ITEM_COVER_BITMAP);
             ivCover.setImageBitmap(bitmap);
             Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {
@@ -547,8 +543,15 @@ public class SearchResultDetailFragment extends Fragment
         setProgress(false, true);
 
         refreshMenu(toolbar.getMenu());
-
-        fixTitle();
+        toolbar.getViewTreeObserver()
+               .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                   @Override
+                   public void onGlobalLayout() {
+                       toolbar.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                       fixTitle();
+                   }
+               });
+        toolbar.requestLayout();
     }
 
     private boolean containsAndNotEmpty(Map<String, String> map, String key) {
@@ -583,7 +586,8 @@ public class SearchResultDetailFragment extends Fragment
     }
 
     private void fixTitle() {
-        if (getItem().getCoverBitmap() != null) {
+        if (getItem().getCoverBitmap() != null ||
+                getArguments().containsKey(ARG_ITEM_COVER_BITMAP)) {
             // tvTitel is used for displaying title
             fixTitleWidth();
             tvTitel.getViewTreeObserver()
@@ -681,7 +685,9 @@ public class SearchResultDetailFragment extends Fragment
             return;
         }
         int scrollY = scrollView.getScrollY();
-        if (getItem().getCoverBitmap() != null) {
+        boolean hasCover = getItem().getCoverBitmap() != null
+                || getArguments().containsKey(ARG_ITEM_COVER_BITMAP);
+        if (hasCover) {
             // Parallax effect
             ViewHelper.setTranslationY(ivCover, scrollY * 0.5f);
             ViewHelper.setTranslationY(gradientBottom, scrollY * 0.5f);
@@ -690,7 +696,7 @@ public class SearchResultDetailFragment extends Fragment
         // Toolbar stays at the top
         ViewHelper.setTranslationY(toolbar, scrollY);
 
-        if (getItem().getCoverBitmap() != null) {
+        if (hasCover) {
             float minHeight = toolbar.getHeight();
             float progress = Math.min(((float) scrollY) / (ivCover.getHeight() - minHeight), 1);
             float scale = 1 - progress + 20f / 36f * progress;
