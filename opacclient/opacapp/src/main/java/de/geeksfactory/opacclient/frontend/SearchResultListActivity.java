@@ -2,6 +2,7 @@ package de.geeksfactory.opacclient.frontend;
 
 import android.app.SearchManager;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -123,6 +124,18 @@ public class SearchResultListActivity extends OpacActivity implements
     }
 
     public void showDetail(SearchResult res, View coverView) {
+        Bitmap cover = res.getCoverBitmap();
+        Bitmap smallCover;
+        if (cover != null && cover.getWidth() * cover.getHeight() > 400 * 400) {
+            // Android's Parcelable implementation doesn't like huge images
+            int max = Math.max(cover.getWidth(), cover.getHeight());
+            int width = (int) ((400f / max) * cover.getWidth());
+            int height = (int) ((400f / max) * cover.getHeight());
+            smallCover = Bitmap.createScaledBitmap(cover, width, height, false);
+        } else {
+            smallCover = cover;
+        }
+
         if (mTwoPane) {
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
@@ -134,7 +147,7 @@ public class SearchResultListActivity extends OpacActivity implements
             }
             if (res.getCoverBitmap() != null) {
                 arguments.putParcelable(SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP,
-                        (Parcelable) res.getCoverBitmap());
+                        (Parcelable) smallCover);
             }
             detailFragment = new SearchResultDetailFragment();
             detailFragment.setArguments(arguments);
@@ -160,7 +173,7 @@ public class SearchResultListActivity extends OpacActivity implements
             }
             if (res.getCoverBitmap() != null) {
                 detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP,
-                        (Parcelable) res.getCoverBitmap());
+                        (Parcelable) smallCover);
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         this,
                         new Pair<>(coverView, getString(R.string.transition_cover)),
