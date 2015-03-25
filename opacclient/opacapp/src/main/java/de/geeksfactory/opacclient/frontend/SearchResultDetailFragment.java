@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.ActionMenuView;
@@ -258,7 +259,7 @@ public class SearchResultDetailFragment extends Fragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_searchresult_detail,
                 container, false);
         view = rootView;
@@ -288,8 +289,7 @@ public class SearchResultDetailFragment extends Fragment
 
         scrollView.addCallbacks(this);
 
-        if (getArguments().containsKey(ARG_ITEM_COVER_BITMAP) && !ft.getStatus().equals(
-                AsyncTask.Status.FINISHED)) {
+        if (getArguments().containsKey(ARG_ITEM_COVER_BITMAP)) {
             Bitmap bitmap = getArguments().getParcelable(ARG_ITEM_COVER_BITMAP);
             ivCover.setImageBitmap(bitmap);
             Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {
@@ -635,13 +635,52 @@ public class SearchResultDetailFragment extends Fragment
         ActionMenuView view = findActionMenuView(toolbar);
         if (view != null) {
             float density = getResources().getDisplayMetrics().density;
-            float availableWidth = toolbar.getWidth() - view.getWidth() - 16 * density -
-                    (back_button_visible ? 56 * density : 0);
-            // Toolbar width - menu width - margin - back button width
-            if (tvTitel.getWidth() > availableWidth * 36f / 20f) {
-                tvTitel.getLayoutParams().width = (int) (availableWidth * 36f / 20f);
-                tvTitel.getParent().requestLayout();
+            Menu menu = view.getMenu();
+            float availableWidth = calculateAvailableWidthInToolbar();
+            if (availableWidth / density < 150 &&
+                    (menu.findItem(R.id.action_lendebook).isVisible() ||
+                            menu.findItem(R.id.action_reservation).isVisible())
+                    && tvTitel.getWidth() > availableWidth * 36f / 20f) {
+                // We have so little space for the title that we should move the
+                // "Lend eBook" and "Reserve" menu items to the overflow menu
+                MenuItemCompat.setShowAsAction(menu.findItem(R.id.action_lendebook),
+                        MenuItemCompat.SHOW_AS_ACTION_NEVER);
+                MenuItemCompat.setShowAsAction(menu.findItem(R.id.action_reservation),
+                        MenuItemCompat.SHOW_AS_ACTION_NEVER);
+                toolbar.requestLayout();
+                toolbar.getViewTreeObserver()
+                       .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                           @Override
+                           public void onGlobalLayout() {
+                               toolbar.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                               float availableWidth = calculateAvailableWidthInToolbar();
+                               changeTitleWidth(availableWidth);
+                           }
+                       });
+            } else {
+                changeTitleWidth(availableWidth);
             }
+        }
+    }
+
+    /**
+     * Calculates the width available for a title in the toolbar in pixels.
+     * Follows the following formula:
+     * Toolbar width - menu width - margin - back button width
+     *
+     * @return Available width in pixels
+     */
+    private float calculateAvailableWidthInToolbar() {
+        float density = getResources().getDisplayMetrics().density;
+        ActionMenuView view = findActionMenuView(toolbar);
+        return toolbar.getWidth() - view.getWidth() - 16 * density -
+                (back_button_visible ? 56 * density : 0);
+    }
+
+    private void changeTitleWidth(float availableWidth) {
+        if (tvTitel.getWidth() > availableWidth * 36f / 20f) {
+            tvTitel.getLayoutParams().width = (int) (availableWidth * 36f / 20f);
+            tvTitel.getParent().requestLayout();
         }
     }
 
@@ -1091,7 +1130,7 @@ public class SearchResultDetailFragment extends Fragment
                                new DialogInterface.OnClickListener() {
                                    @Override
                                    public void onClick(DialogInterface dialog,
-                                                       int id) {
+                                           int id) {
                                        dialog.cancel();
                                    }
                                })
@@ -1099,7 +1138,7 @@ public class SearchResultDetailFragment extends Fragment
                                new DialogInterface.OnClickListener() {
                                    @Override
                                    public void onClick(DialogInterface dialog,
-                                                       int id) {
+                                           int id) {
                                        dialog.dismiss();
                                        app.toPrefs(getActivity());
                                    }
@@ -1138,7 +1177,7 @@ public class SearchResultDetailFragment extends Fragment
             lv.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
-                                        int position, long id) {
+                        int position, long id) {
                     if (accounts.get(position).getId() != app.getAccount()
                                                              .getId() || account_switched) {
 
@@ -1173,7 +1212,7 @@ public class SearchResultDetailFragment extends Fragment
                            new DialogInterface.OnClickListener() {
                                @Override
                                public void onClick(DialogInterface dialog,
-                                                   int id) {
+                                       int id) {
                                    adialog.cancel();
                                }
                            });
@@ -1247,7 +1286,7 @@ public class SearchResultDetailFragment extends Fragment
 
             @Override
             public StepTask<?, ?> newTask(MultiStepResultHelper helper, int useraction,
-                                          String selection) {
+                    String selection) {
                 return new ResTask(helper, useraction, selection);
             }
         });
@@ -1276,7 +1315,7 @@ public class SearchResultDetailFragment extends Fragment
             lv.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
-                                        int position, long id) {
+                        int position, long id) {
                     app.setAccount(accounts.get(position).getId());
                     bookingDo();
                     adialog.dismiss();
@@ -1288,7 +1327,7 @@ public class SearchResultDetailFragment extends Fragment
                            new DialogInterface.OnClickListener() {
                                @Override
                                public void onClick(DialogInterface dialog,
-                                                   int id) {
+                                       int id) {
                                    adialog.cancel();
                                }
                            });
@@ -1336,7 +1375,7 @@ public class SearchResultDetailFragment extends Fragment
 
             @Override
             public StepTask<?, ?> newTask(MultiStepResultHelper helper, int useraction,
-                                          String selection) {
+                    String selection) {
                 return new BookingTask(helper, useraction, selection);
             }
         });
@@ -1490,7 +1529,7 @@ public class SearchResultDetailFragment extends Fragment
                                new DialogInterface.OnClickListener() {
                                    @Override
                                    public void onClick(DialogInterface dialog,
-                                                       int id) {
+                                           int id) {
                                        dialog.cancel();
                                    }
                                });
@@ -1539,7 +1578,7 @@ public class SearchResultDetailFragment extends Fragment
                                new DialogInterface.OnClickListener() {
                                    @Override
                                    public void onClick(DialogInterface dialog,
-                                                       int id) {
+                                           int id) {
                                        dialog.cancel();
                                    }
                                });
