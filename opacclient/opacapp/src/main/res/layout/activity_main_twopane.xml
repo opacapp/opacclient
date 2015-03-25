@@ -21,6 +21,12 @@
             app:theme="@style/ThemeOverlay.Opacapp.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toolbar"
+            android:background="@drawable/toolbar_shadow"/>
+
         <LinearLayout
             android:id="@+id/twopane_wrapper"
             android:layout_width="720dp"

@@ -15,11 +15,18 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         android:layout_alignParentTop="true"/>
 
-    <ListView
-        android:id="@+id/lvAccounts"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"/>
+        android:layout_below="@+id/toolbar"
+        android:foreground="@drawable/toolbar_shadow">
+
+        <ListView
+            android:id="@+id/lvAccounts"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </FrameLayout>
+
 
     <com.melnykov.fab.FloatingActionButton
         android:id="@+id/add_fab"
