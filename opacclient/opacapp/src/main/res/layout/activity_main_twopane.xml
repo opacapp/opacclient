@@ -21,20 +21,6 @@
             app:theme="@style/ThemeOverlay.Opacapp.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-        <com.melnykov.fab.FloatingActionButton
-            android:id="@+id/search_fab"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:layout_marginTop="-36dp"
-            android:layout_marginRight="36dp"
-            android:layout_below="@id/toolbar"
-            android:layout_alignParentRight="true"
-            android:elevation="4dp"
-            android:src="@drawable/ic_action_search"
-            app:fab_colorNormal="@color/accent_red"
-            app:fab_colorPressed="@color/primary_red"
-            />
-
         <LinearLayout
             android:id="@+id/twopane_wrapper"
             android:layout_width="720dp"
@@ -66,6 +52,20 @@
                 android:layout_weight="2">
             </FrameLayout>
         </LinearLayout>
+
+        <com.melnykov.fab.FloatingActionButton
+            android:id="@+id/search_fab"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_marginTop="-36dp"
+            android:layout_marginRight="36dp"
+            android:layout_below="@id/toolbar"
+            android:layout_alignParentRight="true"
+            android:elevation="4dp"
+            android:src="@drawable/ic_action_search"
+            app:fab_colorNormal="@color/accent_red"
+            app:fab_colorPressed="@color/primary_red"
+            />
     </RelativeLayout>
     <!-- The navigation drawer -->
     <de.geeksfactory.opacclient.ui.ScrimInsetsFrameLayout
