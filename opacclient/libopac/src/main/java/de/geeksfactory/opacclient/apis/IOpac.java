@@ -648,6 +648,18 @@ public class IOpac extends BaseApi implements OpacApi {
 
         res.setLent(medien);
         res.setReservations(reserved);
+        if (doc.select("h4:contains(Kontostand)").size() > 0) {
+            Element h4 = doc.select("h4:contains(Kontostand)").first();
+            Pattern regex = Pattern.compile("Kontostand (\\d+\\.\\d\\d EUR)");
+            Matcher matcher = regex.matcher(h4.text());
+            if (matcher.find()) res.setPendingFees(matcher.group(1));
+        }
+        if (doc.select("h4:contains(Ausweis g)").size() > 0) {
+            Element h4 = doc.select("h4:contains(Ausweis g)").first();
+            Pattern regex = Pattern.compile("Ausweis g.+ltig bis (\\d\\d.\\d\\d.\\d\\d\\d\\d)");
+            Matcher matcher = regex.matcher(h4.text());
+            if (matcher.find()) res.setValidUntil(matcher.group(1));
+        }
 
         if (medien.isEmpty() && reserved.isEmpty()) {
             if (doc.select("h1").size() > 0) {
