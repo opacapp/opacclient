@@ -42,6 +42,7 @@ public class WelcomeActivity extends ActionBarActivity {
     protected OpacClient app;
     protected AlertDialog dialog;
 
+    @SuppressWarnings("SameReturnValue") // Plus Edition compatibility
     public static int getLayoutResource() {
         return R.layout.activity_welcome;
     }

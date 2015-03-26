@@ -209,7 +209,7 @@ public class AccountFragment extends Fragment implements
         tvPendingFeesLabel = (TextView) view.findViewById(R.id.tvPendingFeesLabel);
         tvPendingFees = (TextView) view.findViewById(R.id.tvPendingFees);
         tvValidUntilLabel = (TextView) view.findViewById(R.id.tvValidUntilLabel);
-        tvValidUntil = (TextView) view.findViewById(R.id.tvValidUntilLabel);
+        tvValidUntil = (TextView) view.findViewById(R.id.tvValidUntil);
         tvAge = (TextView) view.findViewById(R.id.tvAge);
     }
 
@@ -710,7 +710,7 @@ public class AccountFragment extends Fragment implements
         if (tvWarning != null) {
             if (result.getWarning() != null && result.getWarning().length() > 1) {
                 tvWarning.setVisibility(View.VISIBLE);
-                ((TextView) tvWarning).setText(result.getWarning());
+                tvWarning.setText(result.getWarning());
             } else {
                 tvWarning.setVisibility(View.GONE);
             }

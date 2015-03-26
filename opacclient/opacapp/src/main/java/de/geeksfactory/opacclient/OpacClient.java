@@ -247,7 +247,7 @@ public class OpacClient extends Application {
         return newApiInstance;
     }
 
-    private OpacApi initApi(Library lib) throws IOException {
+    private OpacApi initApi(Library lib) {
         api = getNewApi(lib);
         return api;
     }
@@ -266,11 +266,7 @@ public class OpacClient extends Application {
                 return api;
             }
         }
-        try {
-            api = initApi(getLibrary());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        api = initApi(getLibrary());
         return api;
     }
 
@@ -333,6 +329,7 @@ public class OpacClient extends Application {
         return library;
     }
 
+    @SuppressWarnings("UnusedDeclaration") // ProgressCallback should not be required
     public List<Library> getLibraries() throws IOException {
         return getLibraries(null);
     }

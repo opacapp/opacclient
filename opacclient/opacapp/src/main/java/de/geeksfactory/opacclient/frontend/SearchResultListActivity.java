@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
@@ -147,7 +146,7 @@ public class SearchResultListActivity extends OpacActivity implements
             }
             if (res.getCoverBitmap() != null) {
                 arguments.putParcelable(SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP,
-                        (Parcelable) smallCover);
+                        smallCover);
             }
             detailFragment = new SearchResultDetailFragment();
             detailFragment.setArguments(arguments);
@@ -173,7 +172,7 @@ public class SearchResultListActivity extends OpacActivity implements
             }
             if (res.getCoverBitmap() != null) {
                 detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP,
-                        (Parcelable) smallCover);
+                        smallCover);
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         this,
                         new Pair<>(coverView, getString(R.string.transition_cover)),

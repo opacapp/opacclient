@@ -129,7 +129,7 @@ public class SearchResultListFragment extends CustomListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceSate) {
+            Bundle savedInstanceSate) {
         setRetainInstance(true);
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_searchresult_list, container, false);
@@ -178,7 +178,7 @@ public class SearchResultListFragment extends CustomListFragment {
 
                                 @Override
                                 public void onClick(DialogInterface dialog,
-                                                    int which) {
+                                        int which) {
                                     startGoogleSearch(accounts.get(which),
                                             query);
                                 }
@@ -209,7 +209,8 @@ public class SearchResultListFragment extends CustomListFragment {
         } else if (searchresult != null) {
             if (searchresult.getTotal_result_count() >= 0) {
                 ((ActionBarActivity) getActivity()).getSupportActionBar().setSubtitle(
-                        getString(R.string.result_number,
+                        getResources().getQuantityString(R.plurals.result_number,
+                                searchresult.getTotal_result_count(),
                                 searchresult.getTotal_result_count()));
             }
         }
@@ -239,7 +240,7 @@ public class SearchResultListFragment extends CustomListFragment {
 
     @Override
     public void onListItemClick(ListView listView, View view, int position,
-                                long id) {
+            long id) {
         super.onListItemClick(listView, view, position, id);
 
         setActivatedPosition(position);
@@ -288,7 +289,8 @@ public class SearchResultListFragment extends CustomListFragment {
         }
         if (searchresult.getTotal_result_count() >= 0) {
             ((ActionBarActivity) getActivity()).getSupportActionBar().setSubtitle(
-                    getString(R.string.result_number,
+                    getResources().getQuantityString(R.plurals.result_number,
+                            searchresult.getTotal_result_count(),
                             searchresult.getTotal_result_count()));
         }
 
@@ -338,8 +340,8 @@ public class SearchResultListFragment extends CustomListFragment {
 
                         {
                             ((ActionBarActivity) getActivity()).getSupportActionBar().setSubtitle(
-                                    getString(R.string.result_number,
-                                            resultCount));
+                                    getResources().getQuantityString(R.plurals.result_number,
+                                            resultCount, resultCount));
                         }
                     }
                 });
@@ -572,7 +574,7 @@ public class SearchResultListFragment extends CustomListFragment {
         }
 
         private SearchField findSearchFieldByMeaning(List<SearchField> fields,
-                                                     Meaning meaning) {
+                Meaning meaning) {
             for (SearchField field : fields) {
                 if (field.getMeaning() == meaning) {
                     return field;

@@ -47,58 +47,32 @@ import de.geeksfactory.opacclient.utils.Base64;
  *         <p/>
  *         Unterstützt bisher nur Katalogsuche
  *         <p/>
- *         Example for a search query (parameter "data" in the URL, everything
- *         before the hyphen, base64 decoded, added formatting) as seen in
- *         Unterföhring:
+ *         Example for a search query (parameter "data" in the URL, everything before the hyphen,
+ *         base64 decoded, added formatting) as seen in Unterföhring:
  *         <p/>
- *         cmd=5&amp;				perform a search
- *         sC=
- *         c_0=1%%				unknown
- *         m_0=1%%				unknown
- *         f_0=2%%				free search
- *         o_0=8%%				contains
- *         v_0=schule			"schule"
- *         ++
- *         c_1=1%%				unknown
- *         m_1=1%%				unknown
- *         f_1=3%%				author
- *         o_1=8%%				contains
- *         v_1=rowling			"rowling"
- *         ++
- *         c_2=1%%				unknown
- *         m_2=1%%				unknown
- *         f_2=12%%			title
- *         o_2=8%%				contains
- *         v_2=potter			"potter"
- *         ++
- *         c_3=1%%				unknown
- *         m_3=1%%				unknown
- *         f_3=34%%			year
+ *         cmd=5&amp;				perform a search sC= c_0=1%%				unknown m_0=1%%
+ *         unknown f_0=2%%				free
+ *         search o_0=8%%				contains v_0=schule			"schule" ++ c_1=1%%
+ *         unknown m_1=1%%				unknown
+ *         f_1=3%%				author o_1=8%%				contains v_1=rowling
+ *         "rowling" ++ c_2=1%%				unknown
+ *         m_2=1%%				unknown f_2=12%%			title o_2=8%%				contains
+ *         v_2=potter			"potter" ++
+ *         c_3=1%%				unknown m_3=1%%				unknown f_3=34%%			year
  *         o_3=6%%				newer or equal to
- *         v_3=2000			"2000"
- *         ++
- *         c_4=1%%				unknown
- *         m_4=1%%				unknown
+ *         v_3=2000			"2000" ++ c_4=1%%				unknown m_4=1%%				unknown
  *         f_4=34%%			year
- *         o_4=4%%				older or equal to
- *         v_4=2014			"2014"
- *         ++
- *         c_5=1%%				unknown
- *         m_5=1%%				unknown
- *         f_5=42%%			media category
- *         o_5=1%%				is equal to
- *         v_5=3				"Kinder- und Jugendbücher"
- *         ++
- *         c_6=1%%				unknown
- *         m_6=1%%				unknown
- *         f_6=48%%			location
+ *         o_4=4%%				older or equal to v_4=2014			"2014" ++ c_5=1%%
+ *         unknown m_5=1%%				unknown
+ *         f_5=42%%			media category o_5=1%%				is equal to v_5=3
+ *         "Kinder- und Jugendbücher" ++
+ *         c_6=1%%				unknown m_6=1%%				unknown f_6=48%%			location
  *         o_6=1%%				is equal to
- *         v_6=1				"Bibliothek Unterföhring"
- *         ++
- *         c_7=3%%				unknown (now changed to 3)	-
- *         m_7=1%%				unknown						|	  This group has no
- *         f_7=45%%			unknown						|---  effect on the result
- *         o_7=1%%				unknown						|	  and can be left out
+ *         v_6=1				"Bibliothek Unterföhring" ++ c_7=3%%				unknown (now
+ *         changed to 3)	-
+ *         m_7=1%%				unknown						|	  This group has no f_7=45%%
+ *         unknown						|---  effect on the
+ *         result o_7=1%%				unknown						|	  and can be left out
  *         v_7=5|4|101|102		unknown						-
  *         <p/>
  *         &amp;Sort=Autor				Sort by Author (default)
@@ -130,53 +104,34 @@ public class WinBiap extends BaseApi implements OpacApi {
     }
 
     /**
-     * For documentation of the parameters, @see
-     * {@link #addParametersManual(String, String, String, String, String, List, int)}
+     * For documentation of the parameters, @see {@link #addParametersManual(String, String, String,
+     * String, String, List, int)}
      */
     protected int addParameters(Map<String, String> query, String key,
-                                String searchkey, String type, List<List<NameValuePair>> params,
-                                int index) {
-        if (!query.containsKey(key) || query.get(key).equals(""))
+            String searchkey, String type, List<List<NameValuePair>> params,
+            int index) {
+        if (!query.containsKey(key) || query.get(key).equals("")) {
             return index;
-
-        List<NameValuePair> list = new ArrayList<>();
-        if (data.optBoolean("longParameterNames")) {
-            // A few libraries use longer names for the parameters
-            // (e.g. Hohen Neuendorf)
-            list.add(new BasicNameValuePair("Combination_" + index, "1"));
-            list.add(new BasicNameValuePair("Mode_" + index, "1"));
-            list.add(new BasicNameValuePair("Searchfield_" + index, searchkey));
-            list.add(new BasicNameValuePair("Searchoperator_" + index, type));
-            list.add(new BasicNameValuePair("Searchvalue_" + index, query
-                    .get(key)));
-        } else {
-            list.add(new BasicNameValuePair("c_" + index, "1"));
-            list.add(new BasicNameValuePair("m_" + index, "1"));
-            list.add(new BasicNameValuePair("f_" + index, searchkey));
-            list.add(new BasicNameValuePair("o_" + index, type));
-            list.add(new BasicNameValuePair("v_" + index, query.get(key)));
         }
-        params.add(list);
-        return index + 1;
 
+        return addParametersManual("1", "1", searchkey, type, query.get(key), params, index);
     }
 
     /**
-     * @param combination "Combination" (probably And, Or, ...): Meaning unknown, seems
-     *          to always be "1" except in some mysterious queries the website
-     *          adds every time that don't change the result
-     * @param mode "Mode": Meaning unknown, seems to always be "1" except in some
-     *          mysterious queries the website adds every time that don't
-     *          change the result
-     * @param field "Field": The key for the property that is queried, for example
-     *          "12" for "title"
-     * @param operator "Operator": The type of search that is made (one of the
-     *          QUERY_TYPE_ constants above), for example "8" for "contains"
-     * @param value "Value": The value that was input by the user
+     * @param combination "Combination" (probably And, Or, ...): Meaning unknown, seems to always be
+     *                    "1" except in some mysterious queries the website adds every time that
+     *                    don't change the result
+     * @param mode        "Mode": Meaning unknown, seems to always be "1" except in some mysterious
+     *                    queries the website adds every time that don't change the result
+     * @param field       "Field": The key for the property that is queried, for example "12" for
+     *                    "title"
+     * @param operator    "Operator": The type of search that is made (one of the QUERY_TYPE_
+     *                    constants above), for example "8" for "contains"
+     * @param value       "Value": The value that was input by the user
      */
     protected int addParametersManual(String combination, String mode,
-                                      String field, String operator, String value,
-                                      List<List<NameValuePair>> params, int index) {
+            String field, String operator, String value,
+            List<List<NameValuePair>> params, int index) {
         List<NameValuePair> list = new ArrayList<>();
         if (data.optBoolean("longParameterNames")) {
             // A few libraries use longer names for the parameters
@@ -261,12 +216,14 @@ public class WinBiap extends BaseApi implements OpacApi {
         start();
         params.add(new BasicNameValuePair("cmd", "5"));
         if (data.optBoolean("longParameterNames"))
-            // A few libraries use longer names for the parameters
-            // (e.g. Hohen Neuendorf)
+        // A few libraries use longer names for the parameters
+        // (e.g. Hohen Neuendorf)
+        {
             params.add(new BasicNameValuePair("searchConditions",
                     encodedQueryParams));
-        else
+        } else {
             params.add(new BasicNameValuePair("sC", encodedQueryParams));
+        }
         params.add(new BasicNameValuePair("Sort", "Autor"));
 
         String text = encode(params, "=", "&amp;");
@@ -320,16 +277,19 @@ public class WinBiap extends BaseApi implements OpacApi {
                     + "</i>") + "</b><br /><small>" + desc + "</small>");
 
             String coverUrl = tr.select(".coverWrapper input").attr("src");
-            if (!coverUrl.contains("leer.gif"))
+            if (!coverUrl.contains("leer.gif")) {
                 sr.setCover(coverUrl);
+            }
 
             String link = tr.select("a[href^=detail.aspx]").attr("href");
             String base64 = getQueryParamsFirst(link).get("data");
             if (base64.contains("-")) // Most of the time, the base64 string is
-                // followed by a hyphen and some
-                // mysterious
-                // letters that we don't want
+            // followed by a hyphen and some
+            // mysterious
+            // letters that we don't want
+            {
                 base64 = base64.substring(0, base64.indexOf("-") - 1);
+            }
             String decoded = new String(Base64.decode(base64), "UTF-8");
             pattern = Pattern.compile("CatalogueId=(\\d*)");
             matcher = pattern.matcher(decoded);
@@ -351,10 +311,10 @@ public class WinBiap extends BaseApi implements OpacApi {
                 }
             } else if (tr.select(".showCopies").size() > 0) { // Multiple copies
                 if (tr.nextElementSibling().select(".StatusNotAvailable")
-                        .size() == 0) {
+                      .size() == 0) {
                     sr.setStatus(Status.GREEN);
                 } else if (tr.nextElementSibling().select(".StatusAvailable")
-                        .size() == 0) {
+                             .size() == 0) {
                     sr.setStatus(Status.RED);
                 } else {
                     sr.setStatus(Status.YELLOW);
@@ -367,7 +327,7 @@ public class WinBiap extends BaseApi implements OpacApi {
     }
 
     private String encode(List<List<NameValuePair>> list, String equals,
-                          String separator, String separator2) {
+            String separator, String separator2) {
         if (list.size() > 0) {
             String encoded = encode(list.get(0), equals, separator);
             for (int i = 1; i < list.size(); i++) {
@@ -381,7 +341,7 @@ public class WinBiap extends BaseApi implements OpacApi {
     }
 
     private String encode(List<NameValuePair> list, String equals,
-                          String separator) {
+            String separator) {
         if (list.size() > 0) {
             String encoded = list.get(0).getName() + equals
                     + list.get(0).getValue();
@@ -450,7 +410,7 @@ public class WinBiap extends BaseApi implements OpacApi {
         Elements trs = doc.select(".DetailInformation").first().select("tr");
         for (Element tr : trs) {
             String name = tr.select(".DetailInformationEntryName").text()
-                    .replace(":", "");
+                            .replace(":", "");
             String value = tr.select(".DetailInformationEntryContent").text();
             switch (name) {
                 case "Titel":
@@ -469,12 +429,13 @@ public class WinBiap extends BaseApi implements OpacApi {
         for (Element tr : trs) {
             Map<String, String> copy = new HashMap<>();
             copy.put(DetailledItem.KEY_COPY_BARCODE, tr.select(".mediaBarcode")
-                    .text().replace("#", ""));
+                                                       .text().replace("#", ""));
             copy.put(DetailledItem.KEY_COPY_STATUS, tr.select(".mediaStatus")
-                    .text());
-            if (tr.select(".mediaBranch").size() > 0)
+                                                      .text());
+            if (tr.select(".mediaBranch").size() > 0) {
                 copy.put(DetailledItem.KEY_COPY_BRANCH,
                         tr.select(".mediaBranch").text());
+            }
             copy.put(DetailledItem.KEY_COPY_LOCATION,
                     tr.select(".cellMediaItemLocation span").text());
             item.addCopy(copy);
@@ -492,25 +453,25 @@ public class WinBiap extends BaseApi implements OpacApi {
 
     @Override
     public ReservationResult reservation(DetailledItem item, Account account,
-                                         int useraction, String selection) throws IOException {
+            int useraction, String selection) throws IOException {
         return null;
     }
 
     @Override
     public ProlongResult prolong(String media, Account account, int useraction,
-                                 String selection) throws IOException {
+            String selection) throws IOException {
         return null;
     }
 
     @Override
     public ProlongAllResult prolongAll(Account account, int useraction,
-                                       String selection) throws IOException {
+            String selection) throws IOException {
         return null;
     }
 
     @Override
     public CancelResult cancel(String media, Account account, int useraction,
-                               String selection) throws IOException, OpacErrorException {
+            String selection) throws IOException, OpacErrorException {
         return null;
     }
 

@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -58,7 +59,8 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@id/llLocate"
             android:baselineAligned="true"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            tools:ignore="InconsistentLayout">
 
             <FrameLayout
                 android:id="@+id/container"
@@ -71,21 +73,24 @@
                 android:id="@+id/container2"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                tools:ignore="InconsistentLayout">
             </FrameLayout>
 
             <FrameLayout
                 android:id="@+id/container3"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                tools:ignore="InconsistentLayout">
             </FrameLayout>
 
             <FrameLayout
                 android:id="@+id/container4"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                tools:ignore="InconsistentLayout">
             </FrameLayout>
         </LinearLayout>
 

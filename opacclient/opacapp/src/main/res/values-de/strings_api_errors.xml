@@ -1,7 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
     <!--These strings may be shown as unused by Android Lint, but are in fact used by the AndroidStringProvider class-->
-    <string name="limited_num_of_criteria">Diese Bibliothek unterstützt nur bis zu %d benutzte Suchkriterien.</string>
+    <plurals name="limited_num_of_criteria">
+        <item quantity="one">Diese Bibliothek unterstützt nur ein benutztes Suchkriterium.</item>
+        <item quantity="other">Diese Bibliothek unterstützt nur bis zu %d benutzte Suchkriterien.</item>
+    </plurals>
     <string name="no_criteria_input">Es wurden keine Suchkriterien eingegeben.</string>
     <string name="combination_not_supported">Sie haben eine Kombination von Suchfeldern benutzt, die von dieser Bibliothek nicht unterstützt wird. Bitte probieren Sie eine andere Suche.</string>
     <string name="unknown_error_account">Unbekannter Fehler. Bitte prüfen Sie, ob Ihre Kontodaten korrekt sind.</string>

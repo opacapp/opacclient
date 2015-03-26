@@ -161,7 +161,11 @@ We might know your library ID then, but not your password, and we will take care
     <string name="barcode_desc">This feature requires the installation of a barcode scanner application. Do you want to download one?</string>
     <string name="barcode_gplay">Google Play</string>
     <string name="barcode_amazon">Amazon</string>
-    <string name="result_number">%d search results</string>
+    <plurals name="result_number">
+        <item quantity="zero">No search results</item>
+        <item quantity="one">One search result</item>
+        <item quantity="other">%d search results</item>
+    </plurals>
     <string name="export_starred">Export</string>
     <string name="geolocate">Find nearby libraries</string>
     <string name="geolocate_progress">Locating you…</string>
@@ -181,7 +185,6 @@ We might know your library ID then, but not your password, and we will take care
     <string name="drawer_open">Open navigation</string>
     <string name="drawer_close">Close navigation</string>
     <string name="title_searchresult_list">Search results</string>
-    <string name="title_searchresult_detail">Details</string>
     <string name="title_activity_library_list">Library selection</string>
     <string name="suggest_library">Your library is not supported yet? Suggest to include it!</string>
     <string name="title_activity_suggest_library">Suggest library</string>

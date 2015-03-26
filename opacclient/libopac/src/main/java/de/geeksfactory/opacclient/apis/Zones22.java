@@ -65,14 +65,15 @@ import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
 /**
- * API für Web-Opacs von Zones mit dem Hinweis "Zones.2.2.45.04" im Footer.
- * Einziger bekannter Einsatzort ist Hamburg.
+ * API für Web-Opacs von Zones mit dem Hinweis "Zones.2.2.45.04" im Footer. Einziger bekannter
+ * Einsatzort ist Hamburg.
  * <p/>
  * TODO: Suche nach Medientypen, alles mit Konten + Vorbestellen
  */
 public class Zones22 extends BaseApi {
 
     private static HashMap<String, MediaType> defaulttypes = new HashMap<>();
+
     static {
         defaulttypes.put("Buch", MediaType.BOOK);
         defaulttypes.put("Buch/Druckschrift", MediaType.BOOK);
@@ -93,21 +94,12 @@ public class Zones22 extends BaseApi {
         defaulttypes.put("E-Audio", MediaType.MP3);
         defaulttypes.put("CD", MediaType.CD);
     }
+
     private String opac_url = "";
     private JSONObject data;
     private int page;
     private String searchobj;
     private String accountobj;
-
-    public static String getStringFromBundle(Map<String, String> bundle,
-                                             String key) {
-        // Workaround for Bundle.getString(key, default) being available not
-        // before API 12
-        String res = bundle.get(key);
-        if (res == null)
-            res = "";
-        return res;
-    }
 
     @Override
     public List<SearchField> getSearchFields() throws
@@ -115,7 +107,9 @@ public class Zones22 extends BaseApi {
         List<SearchField> fields = new ArrayList<>();
         String html = httpGet(
                 opac_url
-                        + "/APS_ZONES?fn=AdvancedSearch&Style=Portal3&SubStyle=&Lang=GER&ResponseEncoding=utf-8",
+                        +
+                        "/APS_ZONES?fn=AdvancedSearch&Style=Portal3&SubStyle=&Lang=GER" +
+                        "&ResponseEncoding=utf-8",
                 getDefaultEncoding());
 
         Document doc = Jsoup.parse(html);
@@ -135,7 +129,7 @@ public class Zones22 extends BaseApi {
         if (zst_opts.size() > 0) {
             DropdownSearchField brDropdown = new DropdownSearchField();
             brDropdown.setId(zst_opts.get(0).parent().select("input")
-                    .attr("name"));
+                                     .attr("name"));
             brDropdown.setDisplayName("Zweigstelle");
 
             List<Map<String, String>> brOptions = new ArrayList<>();
@@ -161,7 +155,9 @@ public class Zones22 extends BaseApi {
             IOException {
         String html = httpGet(
                 opac_url
-                        + "/APS_ZONES?fn=AdvancedSearch&Style=Portal3&SubStyle=&Lang=GER&ResponseEncoding=utf-8",
+                        +
+                        "/APS_ZONES?fn=AdvancedSearch&Style=Portal3&SubStyle=&Lang=GER" +
+                        "&ResponseEncoding=utf-8",
                 getDefaultEncoding());
 
         Document doc = Jsoup.parse(html);
@@ -185,14 +181,16 @@ public class Zones22 extends BaseApi {
     }
 
     private int addParameters(SearchQuery query, List<NameValuePair> params,
-                              int index) {
-        if (query.getValue().equals(""))
+            int index) {
+        if (query.getValue().equals("")) {
             return index;
+        }
 
         if (query.getSearchField() instanceof TextSearchField) {
-            if (index != 1)
+            if (index != 1) {
                 params.add(new BasicNameValuePair(".form.t" + index + ".logic",
                         "and"));
+            }
             params.add(new BasicNameValuePair("q.form.t" + index + ".term",
                     query.getKey()));
             params.add(new BasicNameValuePair("q.form.t" + index + ".expr",
@@ -227,8 +225,8 @@ public class Zones22 extends BaseApi {
         }
 
         if (index > 3) {
-            throw new OpacErrorException(stringProvider.getFormattedString(
-                    StringProvider.LIMITED_NUM_OF_CRITERIA, 3));
+            throw new OpacErrorException(stringProvider.getQuantityString(
+                    StringProvider.LIMITED_NUM_OF_CRITERIA, 3, 3));
         } else if (index == 1) {
             throw new OpacErrorException(
                     stringProvider.getString(StringProvider.NO_CRITERIA_INPUT));
@@ -272,19 +270,20 @@ public class Zones22 extends BaseApi {
 
         if (doc.select("#ErrorAdviceRow").size() > 0) {
             throw new OpacErrorException(doc.select("#ErrorAdviceRow").text()
-                    .trim());
+                                            .trim());
         }
 
         int results_total = -1;
 
         if (doc.select(".searchHits").size() > 0) {
             results_total = Integer.parseInt(doc.select(".searchHits").first()
-                    .text().trim().replaceAll(".*\\(([0-9]+)\\).*", "$1"));
+                                                .text().trim()
+                                                .replaceAll(".*\\(([0-9]+)\\).*", "$1"));
         }
 
         if (doc.select(".pageNavLink").size() > 0) {
             searchobj = doc.select(".pageNavLink").first().attr("href")
-                    .split("\\?")[0];
+                           .split("\\?")[0];
         }
 
         Elements table = doc.select("#BrowseList > tbody > tr");
@@ -294,7 +293,7 @@ public class Zones22 extends BaseApi {
             SearchResult sr = new SearchResult();
 
             String typetext = tr.select(".SummaryMaterialTypeField").text()
-                    .replace("\n", " ").trim();
+                                .replace("\n", " ").trim();
             if (data.has("mediatypes")) {
                 try {
                     sr.setType(MediaType.valueOf(data.getJSONObject(
@@ -327,9 +326,9 @@ public class Zones22 extends BaseApi {
                             + "</b><br />";
 
                 } else if (node.select(".SummaryFieldLegend").text()
-                        .equals("Verfasser")
+                               .equals("Verfasser")
                         || node.select(".SummaryFieldLegend").text()
-                        .equals("Jahr")) {
+                               .equals("Jahr")) {
                     desc += node.select(".SummaryFieldData").text().trim()
                             + "<br />";
                 }
@@ -344,8 +343,9 @@ public class Zones22 extends BaseApi {
                     haslink = true;
                 }
             }
-            if (desc.endsWith("<br />"))
+            if (desc.endsWith("<br />")) {
                 desc = desc.substring(0, desc.length() - 6);
+            }
             sr.setInnerhtml(desc);
             sr.setNr(i);
 
@@ -403,9 +403,10 @@ public class Zones22 extends BaseApi {
                 Element valchild = tr.child(s - 1);
                 if (valchild.select("table").isEmpty()) {
                     String val = valchild.text().trim();
-                    if (val.length() > 0)
+                    if (val.length() > 0) {
                         result.addDetail(new Detail(tr.child(0).text().trim(),
                                 val));
+                    }
                 }
             }
         }
@@ -424,15 +425,17 @@ public class Zones22 extends BaseApi {
                 for (Node node : dd.childNodes()) {
                     if (node instanceof TextNode) {
                         String snip = ((TextNode) node).text();
-                        if (snip.length() > 0)
+                        if (snip.length() > 0) {
                             text += snip;
+                        }
                     } else if (node instanceof Element) {
-                        if (((Element) node).tagName().equals("br"))
+                        if (((Element) node).tagName().equals("br")) {
                             text += "\n";
-                        else {
+                        } else {
                             String snip = ((Element) node).text().trim();
-                            if (snip.length() > 0)
+                            if (snip.length() > 0) {
                                 text += snip;
+                            }
                         }
                     }
                 }
@@ -444,7 +447,7 @@ public class Zones22 extends BaseApi {
             // Sometimes there is a <span class="Z3988"> item which provides
             // data in a standardized format.
             String z3988data = doc.select("span.z3988").first().attr("title")
-                    .trim();
+                                  .trim();
             for (String pair : z3988data.split("\\&")) {
                 String[] nv = pair.split("=", 2);
                 if (nv.length == 2) {
@@ -502,13 +505,15 @@ public class Zones22 extends BaseApi {
                         }
                         j++;
                     } else if (node instanceof TextNode) {
-                        if (j == 0)
+                        if (j == 0) {
                             copy.put(DetailledItem.KEY_COPY_DEPARTMENT,
                                     ((TextNode) node).text());
-                        if (j == 2)
+                        }
+                        if (j == 2) {
                             copy.put(DetailledItem.KEY_COPY_BARCODE,
                                     ((TextNode) node).getWholeText().trim()
-                                            .split("\n")[0].trim());
+                                                     .split("\n")[0].trim());
+                        }
                         if (j == 6) {
                             String text = ((TextNode) node).text().trim();
                             copy.put(DetailledItem.KEY_COPY_RETURN,
@@ -527,7 +532,7 @@ public class Zones22 extends BaseApi {
 
     @Override
     public ReservationResult reservation(DetailledItem item, Account acc,
-                                         int useraction, String selection) throws IOException {
+            int useraction, String selection) throws IOException {
         String reservation_info = item.getReservation_info();
         String html = httpGet(opac_url + "/" + reservation_info,
                 getDefaultEncoding());
@@ -590,8 +595,9 @@ public class Zones22 extends BaseApi {
                     }
                 }
             }
-            if (res != null)
+            if (res != null) {
                 return res;
+            }
         }
         if (doc.select("#MainForm select").size() > 0) {
             ReservationResult res = new ReservationResult(
@@ -614,7 +620,7 @@ public class Zones22 extends BaseApi {
 
     @Override
     public ProlongResult prolong(String media, Account account, int useraction,
-                                 String Selection) throws IOException {
+            String Selection) throws IOException {
         if (accountobj == null) {
             try {
                 login(account);
@@ -636,22 +642,25 @@ public class Zones22 extends BaseApi {
             prolong(media, account, 1, null);
         }
         String dialog = doc.select("#SSRenewDlgContent").text();
-        if (dialog.contains("erfolgreich"))
+        if (dialog.contains("erfolgreich")) {
             return new ProlongResult(MultiStepResult.Status.OK, dialog);
-        else
+        } else {
             return new ProlongResult(MultiStepResult.Status.ERROR, dialog);
+        }
     }
 
     @Override
     public CancelResult cancel(String media, Account account, int useraction,
-                               String selection) throws IOException, OpacErrorException {
+            String selection) throws IOException, OpacErrorException {
         throw new UnsupportedOperationException();
     }
 
     private Document login(Account acc) throws IOException, OpacErrorException {
         String html = httpGet(
                 opac_url
-                        + "/APS_ZONES?fn=MyZone&Style=Portal3&SubStyle=&Lang=GER&ResponseEncoding=utf-8",
+                        +
+                        "/APS_ZONES?fn=MyZone&Style=Portal3&SubStyle=&Lang=GER&ResponseEncoding" +
+                        "=utf-8",
                 getDefaultEncoding());
         Document doc = Jsoup.parse(html);
         doc.setBaseUri(opac_url + "/APS_ZONES");
@@ -665,9 +674,10 @@ public class Zones22 extends BaseApi {
 
         for (Element input : doc.select("#LoginForm input")) {
             if (!input.attr("name").equals("BRWR")
-                    && !input.attr("name").equals("PIN"))
+                    && !input.attr("name").equals("PIN")) {
                 params.add(new BasicNameValuePair(input.attr("name"), input
                         .attr("value")));
+            }
         }
         params.add(new BasicNameValuePair("BRWR", acc.getName()));
         params.add(new BasicNameValuePair("PIN", acc.getPassword()));
@@ -707,8 +717,9 @@ public class Zones22 extends BaseApi {
             JSONException,
             OpacErrorException {
         Document login = login(acc);
-        if (login == null)
+        if (login == null) {
             return null;
+        }
 
         AccountData res = new AccountData(acc.getId());
 
@@ -717,16 +728,17 @@ public class Zones22 extends BaseApi {
         int lent_cnt = -1;
         int res_cnt = -1;
         for (Element td : login
-                .select(".AccountSummaryCounterNameCell, .AccountSummaryCounterNameCellStripe, .CAccountDetailFieldNameCellStripe, .CAccountDetailFieldNameCell")) {
+                .select(".AccountSummaryCounterNameCell, .AccountSummaryCounterNameCellStripe, " +
+                        ".CAccountDetailFieldNameCellStripe, .CAccountDetailFieldNameCell")) {
             String section = td.text().trim();
             if (section.contains("Entliehene Medien")) {
                 lent_link = td.select("a").attr("href");
                 lent_cnt = Integer.parseInt(td.nextElementSibling().text()
-                        .trim());
+                                              .trim());
             } else if (section.contains("Vormerkungen")) {
                 res_link = td.select("a").attr("href");
                 res_cnt = Integer.parseInt(td.nextElementSibling().text()
-                        .trim());
+                                             .trim());
             } else if (section.contains("Kontostand")) {
                 res.setPendingFees(td.nextElementSibling().text().trim());
             } else if (section.matches("Ausweis g.ltig bis")) {
@@ -735,8 +747,9 @@ public class Zones22 extends BaseApi {
         }
         assert (lent_cnt >= 0);
         assert (res_cnt >= 0);
-        if (lent_link == null)
+        if (lent_link == null) {
             return null;
+        }
 
         String lent_html = httpGet(
                 opac_url + "/"
@@ -750,22 +763,27 @@ public class Zones22 extends BaseApi {
                 .compile("javascript:renewItem\\('[0-9]+','(.*)'\\)");
 
         for (Element table : lent_doc
-                .select(".LoansBrowseItemDetailsCellStripe table, .LoansBrowseItemDetailsCell table")) {
+                .select(".LoansBrowseItemDetailsCellStripe table, .LoansBrowseItemDetailsCell " +
+                        "table")) {
             Map<String, String> item = new HashMap<>();
 
             for (Element tr : table.select("tr")) {
                 String desc = tr.select(".LoanBrowseFieldNameCell").text()
-                        .trim();
+                                .trim();
                 String value = tr.select(".LoanBrowseFieldDataCell").text()
-                        .trim();
-                if (desc.equals("Titel"))
+                                 .trim();
+                if (desc.equals("Titel")) {
                     item.put(AccountData.KEY_LENT_TITLE, value);
-                if (desc.equals("Verfasser"))
+                }
+                if (desc.equals("Verfasser")) {
                     item.put(AccountData.KEY_LENT_AUTHOR, value);
-                if (desc.equals("Mediennummer"))
+                }
+                if (desc.equals("Mediennummer")) {
                     item.put(AccountData.KEY_LENT_BARCODE, value);
-                if (desc.equals("ausgeliehen in"))
+                }
+                if (desc.equals("ausgeliehen in")) {
                     item.put(AccountData.KEY_LENT_BRANCH, value);
+                }
                 if (desc.matches("F.+lligkeits.*datum")) {
                     value = value.split(" ")[0];
                     item.put(AccountData.KEY_LENT_DEADLINE, value);
@@ -795,22 +813,27 @@ public class Zones22 extends BaseApi {
         Document res_doc = Jsoup.parse(res_html);
 
         for (Element table : res_doc
-                .select(".MessageBrowseItemDetailsCell table, .MessageBrowseItemDetailsCellStripe table")) {
+                .select(".MessageBrowseItemDetailsCell table, .MessageBrowseItemDetailsCellStripe" +
+                        " table")) {
             Map<String, String> item = new HashMap<>();
 
             for (Element tr : table.select("tr")) {
                 String desc = tr.select(".MessageBrowseFieldNameCell").text()
-                        .trim();
+                                .trim();
                 String value = tr.select(".MessageBrowseFieldDataCell").text()
-                        .trim();
-                if (desc.equals("Titel"))
+                                 .trim();
+                if (desc.equals("Titel")) {
                     item.put(AccountData.KEY_RESERVATION_TITLE, value);
-                if (desc.equals("Publikationsform"))
+                }
+                if (desc.equals("Publikationsform")) {
                     item.put(AccountData.KEY_RESERVATION_FORMAT, value);
-                if (desc.equals("Liefern an"))
+                }
+                if (desc.equals("Liefern an")) {
                     item.put(AccountData.KEY_RESERVATION_BRANCH, value);
-                if (desc.equals("Status"))
+                }
+                if (desc.equals("Status")) {
                     item.put(AccountData.KEY_RESERVATION_READY, value);
+                }
             }
             if ("Gelöscht".equals(item.get(AccountData.KEY_RESERVATION_READY))) {
                 continue;
@@ -860,7 +883,7 @@ public class Zones22 extends BaseApi {
 
     @Override
     public ProlongAllResult prolongAll(Account account, int useraction,
-                                       String selection) throws IOException {
+            String selection) throws IOException {
         return null;
     }
 
@@ -879,8 +902,9 @@ public class Zones22 extends BaseApi {
     public void checkAccountData(Account account) throws IOException,
             JSONException, OpacErrorException {
         Document login = login(account);
-        if (login == null)
+        if (login == null) {
             throw new NotReachableException();
+        }
     }
 
     @Override

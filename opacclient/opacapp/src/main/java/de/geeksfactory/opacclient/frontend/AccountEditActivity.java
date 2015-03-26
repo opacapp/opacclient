@@ -65,6 +65,7 @@ public class AccountEditActivity extends ActionBarActivity {
     private EditText etPassword;
     private Library lib;
 
+    @SuppressWarnings("SameReturnValue") // Plus Edition compatibility
     protected int getLayoutResource() {
         return R.layout.activity_account_edit;
     }

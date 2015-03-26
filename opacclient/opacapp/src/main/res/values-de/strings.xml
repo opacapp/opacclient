@@ -160,7 +160,10 @@
     <string name="barcode_desc">Diese Funktion erfordert einen Barcode-Scanner. Soll er installiert werden?</string>
     <string name="barcode_gplay">Google Play</string>
     <string name="barcode_amazon">Amazon</string>
-    <string name="result_number">%d Suchergebnisse</string>
+    <plurals name="result_number">
+        <item quantity="one">Ein Suchergebnis</item>
+        <item quantity="other">%d Suchergebnisse</item>
+    </plurals>
     <string name="export_starred">Exportieren</string>
     <string name="geolocate">Finde Bibliotheken in meiner Nähe</string>
     <string name="geolocate_progress">Standort wird ermittelt…</string>
@@ -180,7 +183,6 @@
     <string name="drawer_open">Navigation öffnen</string>
     <string name="drawer_close">Navigation schließen</string>
     <string name="title_searchresult_list">Suchergebnisse</string>
-    <string name="title_searchresult_detail">Details</string>
     <string name="title_activity_library_list">Bibliotheksauswahl</string>
     <string name="suggest_library">Deine Bibliothek wird nicht unterstützt? Schlage sie vor!</string>
     <string name="title_activity_suggest_library">Bibliothek vorschlagen</string>

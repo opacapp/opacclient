@@ -97,7 +97,7 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
             case URL:
                 return R.drawable.type_url;
             case MP3:
-                return R.drawable.type_eaudio;
+                return R.drawable.type_mp3;
             case EDOC:
                 return R.drawable.type_edoc;
             case EVIDEO:

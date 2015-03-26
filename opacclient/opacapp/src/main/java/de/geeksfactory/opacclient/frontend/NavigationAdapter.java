@@ -42,7 +42,7 @@ public class NavigationAdapter extends BaseAdapter {
     }
 
     public void addTextItemWithIcon(final String text, final int iconDrawable,
-                                    String tag) {
+            String tag) {
         Item item = new Item();
         item.type = Item.TYPE_TEXT;
         item.text = text;
@@ -53,7 +53,7 @@ public class NavigationAdapter extends BaseAdapter {
     }
 
     public void addLibraryItem(final String text, final String smallText,
-                               final String number, final long accountId) {
+            final String number, final long accountId) {
         Item item = new Item();
         item.type = Item.TYPE_ACCOUNT;
         item.text = text;
@@ -151,7 +151,7 @@ public class NavigationAdapter extends BaseAdapter {
                 holder.text.setText(mData.get(position).text);
                 break;
         }
-        convertView.setTag(holder);
+        if (convertView != null) convertView.setTag(holder);
         return convertView;
     }
 

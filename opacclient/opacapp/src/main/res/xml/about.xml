@@ -38,7 +38,7 @@
         <Preference
             android:key="source"
             android:summary="github.com/raphaelm/opacclient"
-            android:title="Source Code"/>
+            android:title="@string/source"/>
         <Preference
             android:key="osl"
             android:title="@string/osl"/>

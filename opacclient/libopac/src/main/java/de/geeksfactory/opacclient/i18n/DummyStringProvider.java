@@ -22,13 +22,28 @@
 package de.geeksfactory.opacclient.i18n;
 
 public class DummyStringProvider implements StringProvider {
+    @Override
     public String getString(String identifier) {
         return identifier;
     }
 
+    @Override
     public String getFormattedString(String identifier, Object... args) {
         StringBuilder builder = new StringBuilder();
         builder.append(identifier);
+        for (Object arg : args) {
+            builder.append(" ");
+            builder.append(arg.toString());
+        }
+        return builder.toString();
+    }
+
+    @Override
+    public String getQuantityString(String identifier, int count, Object... args) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(identifier)
+               .append(" ")
+               .append(count);
         for (Object arg : args) {
             builder.append(" ");
             builder.append(arg.toString());

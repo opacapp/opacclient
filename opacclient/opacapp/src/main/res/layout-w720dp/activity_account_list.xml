@@ -48,6 +48,7 @@
         android:layout_alignParentRight="true"
         android:elevation="4dp"
         android:src="@drawable/ic_action_accounts_add"
+        android:contentDescription="@string/account_add"
         app:fab_colorNormal="@color/accent_red"
         app:fab_colorPressed="@color/primary_red"
         />
