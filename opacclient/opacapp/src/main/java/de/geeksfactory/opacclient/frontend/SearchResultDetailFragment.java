@@ -563,6 +563,9 @@ public class SearchResultDetailFragment extends Fragment
         tvTitel.setVisibility(b ? View.VISIBLE : View.GONE);
         gradientBottom.setVisibility(b ? View.VISIBLE : View.GONE);
         gradientTop.setVisibility(b ? View.VISIBLE : View.GONE);
+        RelativeLayout.LayoutParams params =
+                ((RelativeLayout.LayoutParams) detailsLayout.getLayoutParams());
+        params.removeRule(RelativeLayout.BELOW);
         if (b) {
             toolbar.setBackgroundResource(R.color.transparent);
             ViewCompat.setElevation(toolbar, 0);
@@ -572,16 +575,24 @@ public class SearchResultDetailFragment extends Fragment
                     llDetails.getPaddingRight(),
                     llDetails.getPaddingBottom()
             );
+            params.addRule(RelativeLayout.BELOW, R.id.ivCover);
         } else {
-            toolbar.setBackgroundResource(R.color.primary_red_dark);
+            toolbar.setBackgroundResource(getToolbarBackgroundColor());
             ViewCompat.setElevation(toolbar, TypedValue.applyDimension(TypedValue
                     .COMPLEX_UNIT_DIP, 4f, getResources().getDisplayMetrics()));
-            llDetails.setPadding(
-                    llDetails.getPaddingLeft(),
-                    toolbar.getHeight(),
-                    llDetails.getPaddingRight(),
-                    llDetails.getPaddingBottom()
-            );
+            params.addRule(RelativeLayout.BELOW, R.id.toolbar);
+        }
+    }
+
+    private int getToolbarBackgroundColor() {
+        if (getActivity() != null) {
+            if (getActivity() instanceof SearchResultListActivity) {
+                return R.color.primary_red_dark;
+            } else {
+                return R.color.primary_red;
+            }
+        } else {
+            return R.color.primary_red;
         }
     }
 
@@ -664,9 +675,8 @@ public class SearchResultDetailFragment extends Fragment
     }
 
     /**
-     * Calculates the width available for a title in the toolbar in pixels.
-     * Follows the following formula:
-     * Toolbar width - menu width - margin - back button width
+     * Calculates the width available for a title in the toolbar in pixels. Follows the following
+     * formula: Toolbar width - menu width - margin - back button width
      *
      * @return Available width in pixels
      */
