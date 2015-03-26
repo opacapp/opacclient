@@ -76,7 +76,7 @@ public abstract class BaseApi implements OpacApi {
 
     /**
      * Cleans the parameters of a URL by parsing it manually and reformatting it using {@link
-     * URLEncodedUtils#format(List<NameValuePair>, String)}
+     * URLEncodedUtils#format(java.util.List, String)}
      *
      * @param myURL the URL to clean
      * @return cleaned URL
