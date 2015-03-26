@@ -430,10 +430,10 @@ public class SearchResultDetailFragment extends Fragment
             });
             llCopies.addView(btnVolume);
 
-        } else if (item.getBaende().size() > 0) {
+        } else if (item.getVolumes().size() > 0) {
             tvCopies.setText(R.string.baende);
 
-            for (final Map<String, String> band : item.getBaende()) {
+            for (final Map<String, String> band : item.getVolumes()) {
                 View v = getLayoutInflater(null).inflate(R.layout.listitem_volume,
                         null);
                 ((TextView) v.findViewById(R.id.tvTitel)).setText(band

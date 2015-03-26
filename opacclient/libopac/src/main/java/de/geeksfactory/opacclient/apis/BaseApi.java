@@ -74,6 +74,13 @@ public abstract class BaseApi implements OpacApi {
     protected Set<String> supportedLanguages;
     protected boolean initialised;
 
+    /**
+     * Cleans the parameters of a URL by parsing it manually and reformatting it using {@link
+     * URLEncodedUtils#format(List<NameValuePair>, String)}
+     *
+     * @param myURL the URL to clean
+     * @return cleaned URL
+     */
     public static String cleanUrl(String myURL) {
         String[] parts = myURL.split("\\?");
         String url = parts[0];
@@ -104,7 +111,8 @@ public abstract class BaseApi implements OpacApi {
     /**
      * Reads content from an InputStream into a string
      *
-     * @param is InputStream to read from
+     * @param is         InputStream to read from
+     * @Param encoding   the encoding to use
      * @return String content of the InputStream
      */
     protected static String convertStreamToString(InputStream is,
@@ -132,11 +140,25 @@ public abstract class BaseApi implements OpacApi {
         return sb.toString();
     }
 
+    /**
+     * Reads content from an InputStream into a string, using the default ISO-8859-1 encoding
+     *
+     * @param is InputStream to read from
+     * @return String content of the InputStream
+     */
     protected static String convertStreamToString(InputStream is)
             throws IOException {
         return convertStreamToString(is, "ISO-8859-1");
     }
 
+    /**
+     * Converts a {@link List} of {@link SearchQuery}s to {@link Map} of their keys and values. Can
+     * be used to convert old implementations using search(Map<String, String>) to the new
+     * SearchField API
+     *
+     * @param queryList List of search queries
+     * @return Map of their keys and values
+     */
     protected static Map<String, String> searchQueryListToMap(
             List<SearchQuery> queryList) {
         Map<String, String> queryMap = new HashMap<>();
@@ -309,6 +331,13 @@ public abstract class BaseApi implements OpacApi {
         return httpGet(url, getDefaultEncoding(), false, null);
     }
 
+    /**
+     * Downloads a cover to a CoverHolder. You only need to use this if the covers are only
+     * available with e.g. Session cookies. Otherwise, it is sufficient to specify the URL of the
+     * cover.
+     *
+     * @param item CoverHolder to download the cover for
+     */
     public void downloadCover(CoverHolder item) {
         if (item.getCover() == null)
             return;

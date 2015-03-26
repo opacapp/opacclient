@@ -587,7 +587,7 @@ public class Bibliotheca extends BaseApi {
                 Map<String, String> e = new HashMap<>();
                 e.put(DetailledItem.KEY_CHILD_ID, tr.attr("href").split("=")[1]);
                 e.put(DetailledItem.KEY_CHILD_TITLE, tr.text());
-                result.addBand(e);
+                result.addVolume(e);
             }
         } catch (Exception e) {
             e.printStackTrace();

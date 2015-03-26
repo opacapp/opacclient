@@ -104,18 +104,18 @@ public class DetailledItem implements CoverHolder {
      * Unique media identifier of a child item for
      * {@link OpacApi#getResultById(String, String)}. Required.
      * <p/>
-     * ContentValues key for {@link #addBand(Map)}:
+     * ContentValues key for {@link #addVolume(Map)}:
      */
     public static final String KEY_CHILD_ID = "id";
     /**
      * Title of a child item. Required.
      * <p/>
-     * ContentValues key for {@link #addBand(Map)}:
+     * ContentValues key for {@link #addVolume(Map)}:
      */
     public static final String KEY_CHILD_TITLE = "titel";
     private List<Detail> details = new ArrayList<>();
     private List<Map<String, String>> copies = new ArrayList<>();
-    private List<Map<String, String>> baende = new ArrayList<>();
+    private List<Map<String, String>> volumes = new ArrayList<>();
     private String cover;
     private String title;
     private Bitmap coverBitmap;
@@ -198,7 +198,7 @@ public class DetailledItem implements CoverHolder {
     @Override
     public String toString() {
         return "DetailledItem [details=" + details + ", copies=" + copies
-                + ", baende=" + baende + ", cover=" + cover + ", title="
+                + ", volumes=" + volumes + ", cover=" + cover + ", title="
                 + title + ", coverBitmap=" + coverBitmap + ", reservable="
                 + reservable + ", reservation_info=" + reservation_info
                 + ", id=" + id + ", volumesearch=" + volumesearch + "]";
@@ -235,13 +235,13 @@ public class DetailledItem implements CoverHolder {
     }
 
     /**
-     * List of child items available
+     * List of child items (e.g. volumes of a series) available
      *
      * @return List of child items available
-     * @see #addBand(Map)
+     * @see #addVolume(Map)
      */
-    public List<Map<String, String>> getBaende() {
-        return baende;
+    public List<Map<String, String>> getVolumes() {
+        return volumes;
     }
 
     /**
@@ -273,8 +273,8 @@ public class DetailledItem implements CoverHolder {
      *
      * @see Detail
      */
-    public void addBand(Map<String, String> child) {
-        baende.add(child);
+    public void addVolume(Map<String, String> child) {
+        volumes.add(child);
     }
 
     /**
@@ -346,7 +346,7 @@ public class DetailledItem implements CoverHolder {
     }
 
     /**
-     * @param bookable the bookable to set
+     * @param bookable Some custom information.
      */
     public void setBookable(boolean bookable) {
         this.bookable = bookable;
@@ -360,7 +360,7 @@ public class DetailledItem implements CoverHolder {
     }
 
     /**
-     * @param booking_info the booking_info to set
+     * @param booking_info Some custom information.
      */
     public void setBooking_info(String booking_info) {
         this.booking_info = booking_info;
