@@ -768,13 +768,9 @@ public class LibraryListActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(List<Library> result) {
             libraries = result;
-            if (dialog != null) {
-                dialog.dismiss();
-            }
-
-            if (libraries == null) {
-                return;
-            }
+            if (dialog != null) dialog.dismiss();
+            if (libraries == null) return;
+            if (LibraryListActivity.this.isDestroyed()) return;
 
             // Get the intent, verify the action and get the query
             Intent intent = getIntent();
