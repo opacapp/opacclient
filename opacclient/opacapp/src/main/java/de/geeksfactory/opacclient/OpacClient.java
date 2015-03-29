@@ -61,6 +61,7 @@ import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.PicaLBS;
 import de.geeksfactory.opacclient.apis.PicaOld;
 import de.geeksfactory.opacclient.apis.Primo;
+import de.geeksfactory.opacclient.apis.Open;
 import de.geeksfactory.opacclient.apis.SISIS;
 import de.geeksfactory.opacclient.apis.SRU;
 import de.geeksfactory.opacclient.apis.TestApi;
@@ -253,6 +254,8 @@ public class OpacClient extends Application {
             newApiInstance = new Heidi();
         } else if (lib.getApi().equals("touchpoint")) {
             newApiInstance = new TouchPoint();
+        } else if (lib.getApi().equals("open")) {
+            newApiInstance = new Open();
         } else if (lib.getApi().equals("test")) {
             if (BuildConfig.DEBUG) {
                 newApiInstance = new TestApi();

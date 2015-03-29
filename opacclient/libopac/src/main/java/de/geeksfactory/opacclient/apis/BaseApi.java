@@ -29,7 +29,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.ClientContext;
@@ -380,8 +379,8 @@ public abstract class BaseApi implements OpacApi {
      * @throws NotReachableException Thrown when server returns a HTTP status code greater or equal
      *                               than 400.
      */
-    public String httpPost(String url, UrlEncodedFormEntity data,
-            String encoding, boolean ignore_errors, CookieStore cookieStore)
+    public String httpPost(String url, HttpEntity data,
+                           String encoding, boolean ignore_errors, CookieStore cookieStore)
             throws IOException {
         HttpPost httppost = new HttpPost(cleanUrl(url));
         httppost.setEntity(data);
@@ -436,19 +435,19 @@ public abstract class BaseApi implements OpacApi {
         return html;
     }
 
-    public String httpPost(String url, UrlEncodedFormEntity data,
-            String encoding, boolean ignore_errors)
+    public String httpPost(String url, HttpEntity data,
+                           String encoding, boolean ignore_errors)
             throws IOException {
         return httpPost(url, data, encoding, ignore_errors, null);
     }
 
-    public String httpPost(String url, UrlEncodedFormEntity data,
-            String encoding) throws IOException {
+    public String httpPost(String url, HttpEntity data,
+                           String encoding) throws IOException {
         return httpPost(url, data, encoding, false, null);
     }
 
     @Deprecated
-    public String httpPost(String url, UrlEncodedFormEntity data)
+    public String httpPost(String url, HttpEntity data)
             throws IOException {
         return httpPost(url, data, getDefaultEncoding(), false, null);
     }

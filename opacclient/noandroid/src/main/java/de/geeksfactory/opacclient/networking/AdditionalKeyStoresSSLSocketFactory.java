@@ -27,8 +27,7 @@ import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
 /**
- * Allows you to trust certificates from additional KeyStores in addition to the
- * default KeyStore
+ * Allows you to trust certificates from additional KeyStores in addition to the default KeyStore
  */
 public class AdditionalKeyStoresSSLSocketFactory {
 
@@ -46,6 +45,7 @@ public class AdditionalKeyStoresSSLSocketFactory {
         private X509TrustManager defaultTrustManager;
         private X509TrustManager localTrustManager;
         private X509Certificate[] acceptedIssuers;
+
         public AdditionalKeyStoresTrustManager(KeyStore localKeyStore) {
             try {
                 TrustManagerFactory tmf = TrustManagerFactory
@@ -160,13 +160,13 @@ public class AdditionalKeyStoresSSLSocketFactory {
 
             @Override
             public void checkClientTrusted(X509Certificate[] chain,
-                                           String authType) throws CertificateException {
+                    String authType) throws CertificateException {
                 trustManager.checkClientTrusted(chain, authType);
             }
 
             @Override
             public void checkServerTrusted(X509Certificate[] chain,
-                                           String authType) throws CertificateException {
+                    String authType) throws CertificateException {
                 trustManager.checkServerTrusted(chain, authType);
             }
 

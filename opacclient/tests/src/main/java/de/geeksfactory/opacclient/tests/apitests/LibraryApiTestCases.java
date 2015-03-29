@@ -30,6 +30,7 @@ import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.apis.PicaLBS;
 import de.geeksfactory.opacclient.apis.PicaOld;
 import de.geeksfactory.opacclient.apis.Primo;
+import de.geeksfactory.opacclient.apis.Open;
 import de.geeksfactory.opacclient.apis.SISIS;
 import de.geeksfactory.opacclient.apis.SRU;
 import de.geeksfactory.opacclient.apis.TouchPoint;
@@ -292,6 +293,8 @@ public class LibraryApiTestCases {
             api = new VuFind();
         } else if (library.getApi().equals("primo")) {
             api = new Primo();
+        } else if (library.getApi().equals("open")) {
+            api = new Open();
         } else {
             api = null;
         }

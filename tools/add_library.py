@@ -6,6 +6,7 @@ import configparser
 import urllib.request
 import urllib.parse
 import urllib.error
+from bs4 import BeautifulSoup
 
 LIBDIR = 'opacclient/opacapp/src/main/assets/bibs/'
 TYPES = [
@@ -314,6 +315,35 @@ class IOpac(Api):
     def accountSupported(self):
         return True
 
+class Open(Api):
+
+    def accountSupported(self):
+        return False
+
+    def prompt(self, data):
+        data['data']['urls'] = {}
+        baseurl = data['data']['baseurl'] + '/'
+        html = urllib.request.urlopen(baseurl).read().decode('utf-8')
+        doc = BeautifulSoup(html, 'html.parser')
+        elems = doc.select('#dnn_dnnNAV_ctldnnNAV li a')
+        for elem in elems:
+            name = elem.get_text()
+            if name in ('Einfache Suche'):
+                data['data']['urls']['simple_search'] = elem['href'].replace(baseurl, '')
+            elif name in ('Erweiterte Suche', 'Profisuche'):
+                data['data']['urls']['advanced_search'] = elem['href'].replace(baseurl, '')
+        
+        if not 'simple_search' in data['data']['urls']:
+            print("URL für Einfache Suche?")
+            data['data']['urls']['simple_search'] = getInput(required=True)
+        
+        if not 'advanced_search' in data['data']['urls']:
+            print("URL für Erweiterte Suche?")
+            data['data']['urls']['advanced_search'] = getInput(required=True)
+        
+        return data
+            
+        
 APIS = {
     'bibliotheca' : Bibliotheca,
     'sisis'       : Sisis,
@@ -327,6 +357,7 @@ APIS = {
 	'winbiap'	  : WinBiap,
     'vufind'      : VuFind,
     'primo'       : Primo,
+    'open'        : Open
 }
 
 data = {}
