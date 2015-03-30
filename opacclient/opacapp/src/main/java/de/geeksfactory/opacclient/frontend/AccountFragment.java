@@ -412,7 +412,7 @@ public class AccountFragment extends Fragment implements
                                        new MultiStepResultHelper<>(
                                        getActivity(), a,
                                        R.string.doing_cancel);
-                               msrhCancel.setCallback(new Callback() {
+                               msrhCancel.setCallback(new Callback<String>() {
                                    @Override
                                    public void onSuccess(MultiStepResult result) {
                                        invalidateData();
@@ -458,9 +458,10 @@ public class AccountFragment extends Fragment implements
                                    }
 
                                    @Override
-                                   public StepTask<String, ?> newTask(MultiStepResultHelper helper,
-                                                                 int useraction, String selection) {
-                                       return ct = new CancelTask(helper, useraction, selection);
+                                   public StepTask<?> newTask(MultiStepResultHelper helper,
+                                           int useraction, String selection, String argument) {
+                                       return ct = new CancelTask(helper, useraction, selection,
+                                               argument);
                                    }
                                });
                                msrhCancel.start();
@@ -491,7 +492,7 @@ public class AccountFragment extends Fragment implements
 
         MultiStepResultHelper<String> msrhProlong = new MultiStepResultHelper<>(
                 getActivity(), a, R.string.doing_prolong);
-        msrhProlong.setCallback(new Callback() {
+        msrhProlong.setCallback(new Callback<String>() {
             @Override
             public void onSuccess(MultiStepResult result) {
                 if (getActivity() == null) {
@@ -556,9 +557,9 @@ public class AccountFragment extends Fragment implements
             }
 
             @Override
-            public StepTask<String, ?> newTask(MultiStepResultHelper helper, int useraction,
-                                          String selection) {
-                return new ProlongTask(helper, useraction, selection);
+            public StepTask<?> newTask(MultiStepResultHelper helper, int useraction,
+                    String selection, String argument) {
+                return new ProlongTask(helper, useraction, selection, argument);
             }
         });
         msrhProlong.start();
@@ -1073,7 +1074,7 @@ public class AccountFragment extends Fragment implements
         item.setBooking_info(booking_info);
         MultiStepResultHelper<DetailledItem> msrhBooking = new MultiStepResultHelper<>(
                 getActivity(), item, R.string.doing_booking);
-        msrhBooking.setCallback(new Callback() {
+        msrhBooking.setCallback(new Callback<DetailledItem>() {
             @Override
             public void onSuccess(MultiStepResult result) {
                 invalidateData();
@@ -1115,9 +1116,9 @@ public class AccountFragment extends Fragment implements
             }
 
             @Override
-            public StepTask<DetailledItem, ?> newTask(MultiStepResultHelper helper, int useraction,
-                                          String selection) {
-                return new BookingTask(helper, useraction, selection);
+            public StepTask<?> newTask(MultiStepResultHelper helper, int useraction,
+                    String selection, DetailledItem argument) {
+                return new BookingTask(helper, useraction, selection, argument);
             }
         });
         msrhBooking.start();
@@ -1159,7 +1160,7 @@ public class AccountFragment extends Fragment implements
 
         MultiStepResultHelper<Void> msrhProlong = new MultiStepResultHelper<>(
                 getActivity(), null, R.string.doing_prolong_all);
-        msrhProlong.setCallback(new Callback() {
+        msrhProlong.setCallback(new Callback<Void>() {
             @Override
             public void onSuccess(MultiStepResult result) {
                 if (getActivity() == null) {
@@ -1232,8 +1233,8 @@ public class AccountFragment extends Fragment implements
             }
 
             @Override
-            public StepTask<Void, ?> newTask(MultiStepResultHelper helper, int useraction,
-                                          String selection) {
+            public StepTask<?> newTask(MultiStepResultHelper helper, int useraction,
+                    String selection, Void argument) {
                 return new ProlongAllTask(helper, useraction, selection);
             }
         });
@@ -1376,16 +1377,19 @@ public class AccountFragment extends Fragment implements
         }
     }
 
-    public class CancelTask extends StepTask<String, CancelResult> {
+    public class CancelTask extends StepTask<CancelResult> {
+        private String itemId;
 
-        public CancelTask(MultiStepResultHelper helper, int useraction, String selection) {
+        public CancelTask(MultiStepResultHelper helper, int useraction, String selection,
+                String itemId) {
             super(helper, useraction, selection);
+            this.itemId = itemId;
         }
 
         @Override
-        protected CancelResult doInBackground(String... itemId) {
+        protected CancelResult doInBackground(Void... voids) {
             try {
-                return app.getApi().cancel(itemId[0], account, useraction, selection);
+                return app.getApi().cancel(itemId, account, useraction, selection);
             } catch (java.net.UnknownHostException | NoHttpResponseException | java.net
                     .SocketException e) {
                 e.printStackTrace();
@@ -1514,17 +1518,20 @@ public class AccountFragment extends Fragment implements
     }
 
     public class ProlongTask extends
-            MultiStepResultHelper.StepTask<String, ProlongResult> {
+            MultiStepResultHelper.StepTask<ProlongResult> {
         private boolean success = true;
+        private String itemId;
 
-        public ProlongTask(MultiStepResultHelper helper, int useraction, String selection) {
+        public ProlongTask(MultiStepResultHelper helper, int useraction, String selection,
+                String itemId) {
             super(helper, useraction, selection);
+            this.itemId = itemId;
         }
 
         @Override
-        protected ProlongResult doInBackground(String... media) {
+        protected ProlongResult doInBackground(Void... voids) {
             try {
-                ProlongResult res = app.getApi().prolong(media[0], account,
+                ProlongResult res = app.getApi().prolong(itemId, account,
                         useraction, selection);
                 success = true;
                 return res;
@@ -1569,7 +1576,7 @@ public class AccountFragment extends Fragment implements
     }
 
     public class ProlongAllTask extends
-            MultiStepResultHelper.StepTask<Void, ProlongAllResult> {
+            MultiStepResultHelper.StepTask<ProlongAllResult> {
 
         public ProlongAllTask(MultiStepResultHelper helper, int useraction, String selection) {
             super(helper, useraction, selection);
@@ -1667,16 +1674,20 @@ public class AccountFragment extends Fragment implements
 
     }
 
-    public class BookingTask extends StepTask<DetailledItem, BookingResult> {
-        public BookingTask(MultiStepResultHelper helper, int useraction, String selection) {
+    public class BookingTask extends StepTask<BookingResult> {
+        private DetailledItem item;
+
+        public BookingTask(MultiStepResultHelper helper, int useraction, String selection,
+                DetailledItem item) {
             super(helper, useraction, selection);
+            this.item = item;
         }
 
         @Override
-        protected BookingResult doInBackground(DetailledItem... item) {
+        protected BookingResult doInBackground(Void... voids) {
             try {
                 return ((EbookServiceApi) app.getApi()).booking(
-                        item[0], app.getAccount(), useraction, selection);
+                        item, app.getAccount(), useraction, selection);
             } catch (java.net.UnknownHostException | NoHttpResponseException e) {
                 publishProgress(e, "ioerror");
             } catch (java.net.SocketException e) {

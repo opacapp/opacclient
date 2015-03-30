@@ -33,7 +33,7 @@ public class MultiStepResultHelper<Arg> {
 
     protected Activity context;
     protected Arg argument;
-    protected StepTask<Arg, ?> task;
+    protected StepTask<?> task;
     protected Callback<Arg> callback;
     protected int loadingstring;
 
@@ -48,7 +48,7 @@ public class MultiStepResultHelper<Arg> {
         this.loadingstring = loadingstring;
     }
 
-    public void setCallback(Callback callback) {
+    public void setCallback(Callback<Arg> callback) {
         this.callback = callback;
     }
 
@@ -65,8 +65,8 @@ public class MultiStepResultHelper<Arg> {
         if (callback == null) {
             throw new IllegalStateException("Callback not set!");
         }
-        task = callback.newTask(this, useraction, selection);
-        task.execute(argument);
+        task = callback.newTask(this, useraction, selection, argument);
+        task.execute();
     }
 
     public void handleResult(MultiStepResult result) {
@@ -227,12 +227,12 @@ public class MultiStepResultHelper<Arg> {
 
         public void onUserCancel();
 
-        public StepTask<Arg, ?> newTask(MultiStepResultHelper helper, int useraction,
-                                        String selection);
+        public StepTask<?> newTask(MultiStepResultHelper helper, int useraction,
+                String selection, Arg argument);
     }
 
-    public static abstract class StepTask<Parameter, Result extends MultiStepResult> extends
-            AsyncTask<Parameter, Object, Result> {
+    public static abstract class StepTask<Result extends MultiStepResult> extends
+            AsyncTask<Void, Object, Result> {
         protected MultiStepResultHelper helper;
         protected int useraction;
         protected String selection;
