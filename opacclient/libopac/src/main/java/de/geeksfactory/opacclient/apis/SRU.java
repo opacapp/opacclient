@@ -38,6 +38,7 @@ import de.geeksfactory.opacclient.utils.ISBNTools;
 public class SRU extends BaseApi implements OpacApi {
 
     protected static HashMap<String, MediaType> defaulttypes = new HashMap<>();
+
     static {
         defaulttypes.put("print", MediaType.BOOK);
         defaulttypes.put("large print", MediaType.BOOK);
@@ -47,6 +48,7 @@ public class SRU extends BaseApi implements OpacApi {
         defaulttypes.put("microfilm", MediaType.UNKNOWN);
         defaulttypes.put("Tontraeger", MediaType.AUDIOBOOK);
     }
+
     protected String opac_url = "";
     protected JSONObject data;
     protected Library library;
@@ -68,8 +70,9 @@ public class SRU extends BaseApi implements OpacApi {
             this.opac_url = data.getString("baseurl");
             JSONObject searchQueriesJson = data.getJSONObject("searchqueries");
             addSearchQueries(searchQueriesJson);
-            if (data.has("sharelink"))
+            if (data.has("sharelink")) {
                 shareUrl = data.getString("sharelink");
+            }
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
@@ -86,13 +89,14 @@ public class SRU extends BaseApi implements OpacApi {
                 KEY_SEARCH_QUERY_CATEGORY, KEY_SEARCH_QUERY_BARCODE,
                 KEY_SEARCH_QUERY_LOCATION, KEY_SEARCH_QUERY_DIGITAL};
         for (String query : queries) {
-            if (searchQueriesJson.has(query))
+            if (searchQueriesJson.has(query)) {
                 try {
                     searchQueries
                             .put(query, searchQueriesJson.getString(query));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            }
         }
         try {
             if (searchQueriesJson.has("id")) {
@@ -104,11 +108,13 @@ public class SRU extends BaseApi implements OpacApi {
     }
 
     protected int addParameters(Map<String, String> query, String key,
-                                String searchkey, StringBuilder params, int index) {
-        if (!query.containsKey(key) || query.get(key).equals(""))
+            String searchkey, StringBuilder params, int index) {
+        if (!query.containsKey(key) || query.get(key).equals("")) {
             return index;
-        if (index != 0)
+        }
+        if (index != 0) {
             params.append("%20and%20");
+        }
         params.append(searchkey).append("%3D").append(query.get(key));
         return index + 1;
 
@@ -147,14 +153,14 @@ public class SRU extends BaseApi implements OpacApi {
         searchDoc = Jsoup.parse(xml, "", Parser.xmlParser());
         if (searchDoc.select("diag|diagnostic").size() > 0) {
             throw new OpacErrorException(searchDoc.select("diag|message")
-                    .text());
+                                                  .text());
         }
 
         int resultcount;
         List<SearchResult> results = new ArrayList<>();
 
         resultcount = Integer.valueOf(searchDoc.select("zs|numberOfRecords")
-                .text());
+                                               .text());
 
         Elements records = searchDoc.select("zs|records > zs|record");
         int i = 0;
@@ -172,10 +178,11 @@ public class SRU extends BaseApi implements OpacApi {
             sr.setType(defaulttypes.get(mType));
             sr.setNr(i);
             sr.setId(getDetail(record, "recordIdentifier"));
-            if (coverUrl.equals(""))
+            if (coverUrl.equals("")) {
                 sr.setCover(ISBNTools.getAmazonCoverURL(isbn, false));
-            else
+            } else {
                 sr.setCover(coverUrl);
+            }
             results.add(sr);
             i++;
         }
@@ -200,8 +207,9 @@ public class SRU extends BaseApi implements OpacApi {
     @Override
     public SearchRequestResult searchGetPage(int page) throws IOException,
             OpacErrorException {
-        if (!initialised)
+        if (!initialised) {
             start();
+        }
 
         String xml = httpGet(opac_url
                 + "?version=1.1&operation=searchRetrieve&maximumRecords="
@@ -224,7 +232,7 @@ public class SRU extends BaseApi implements OpacApi {
             searchDoc = Jsoup.parse(xml, "", Parser.xmlParser());
             if (searchDoc.select("diag|diagnostic").size() > 0) {
                 throw new OpacErrorException(searchDoc.select("diag|message")
-                        .text());
+                                                      .text());
             }
             if (searchDoc.select("zs|record").size() != 1) { // should not
                 // happen
@@ -273,19 +281,19 @@ public class SRU extends BaseApi implements OpacApi {
 
     @Override
     public ReservationResult reservation(DetailledItem item, Account account,
-                                         int useraction, String selection) throws IOException {
+            int useraction, String selection) throws IOException {
         return null;
     }
 
     @Override
     public ProlongResult prolong(String media, Account account, int useraction,
-                                 String selection) throws IOException {
+            String selection) throws IOException {
         return null;
     }
 
     @Override
     public ProlongAllResult prolongAll(Account account, int useraction,
-                                       String selection) throws IOException {
+            String selection) throws IOException {
         return null;
     }
 
@@ -408,6 +416,7 @@ public class SRU extends BaseApi implements OpacApi {
             field.setMeaning(Meaning.LOCATION);
             searchFields.add(field);
         }
+        //noinspection StatementWithEmptyBody
         if (fieldsCompat.contains(KEY_SEARCH_QUERY_ORDER)) {
             // TODO: Implement this (was this even usable before?)
         }
@@ -432,10 +441,11 @@ public class SRU extends BaseApi implements OpacApi {
 
     @Override
     public String getShareUrl(String id, String title) {
-        if (shareUrl != null)
+        if (shareUrl != null) {
             return String.format(shareUrl, id);
-        else
+        } else {
             return null;
+        }
     }
 
     @Override
@@ -445,7 +455,7 @@ public class SRU extends BaseApi implements OpacApi {
 
     @Override
     public CancelResult cancel(String media, Account account, int useraction,
-                               String selection) throws IOException, OpacErrorException {
+            String selection) throws IOException, OpacErrorException {
         return null;
     }
 

@@ -53,7 +53,7 @@ public class Detail {
         super();
         this.desc = desc;
         this.content = content;
-        this.html = true;
+        this.html = html;
     }
 
     /**
@@ -66,8 +66,8 @@ public class Detail {
     }
 
     /**
-     * Set this detail's description. Description in this context means
-     * something like "Title", "Summary".
+     * Set this detail's description. Description in this context means something like "Title",
+     * "Summary".
      *
      * @param desc the description
      */
@@ -85,8 +85,8 @@ public class Detail {
     }
 
     /**
-     * Set this detail's content. If the description is "Title", this should
-     * contain the actual title, like "Harry Potter"
+     * Set this detail's content. If the description is "Title", this should contain the actual
+     * title, like "Harry Potter"
      *
      * @param content the content
      */

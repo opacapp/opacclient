@@ -532,7 +532,7 @@ public abstract class OpacActivity extends ActionBarActivity {
         lv.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
+                    int position, long id) {
 
                 app.setAccount(accounts.get(position).getId());
 
@@ -643,7 +643,7 @@ public abstract class OpacActivity extends ActionBarActivity {
     public class DrawerItemClickListener implements OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position,
-                                long id) {
+                long id) {
             selectItem(position);
         }
     }
@@ -654,7 +654,7 @@ public abstract class OpacActivity extends ActionBarActivity {
         private int spinneritem;
 
         public MetaAdapter(Context context, List<Map<String, String>> objects,
-                           int spinneritem) {
+                int spinneritem) {
             super(context, R.layout.simple_spinner_item, objects);
             this.objects = objects;
             this.spinneritem = spinneritem;
@@ -662,7 +662,7 @@ public abstract class OpacActivity extends ActionBarActivity {
 
         @Override
         public View getDropDownView(int position, View contentView,
-                                    ViewGroup viewGroup) {
+                ViewGroup viewGroup) {
             View view;
 
             if (objects.get(position) == null) {

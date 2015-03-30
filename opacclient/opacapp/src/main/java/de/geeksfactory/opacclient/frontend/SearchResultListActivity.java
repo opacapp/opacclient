@@ -2,9 +2,10 @@ package de.geeksfactory.opacclient.frontend;
 
 import android.app.SearchManager;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
@@ -19,8 +20,6 @@ import org.acra.ACRA;
 import java.io.InterruptedIOException;
 
 import de.geeksfactory.opacclient.NotReachableException;
-import de.geeksfactory.opacclient.OpacClient;
-import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.SSLSecurityException;
 import de.geeksfactory.opacclient.apis.OpacApi;
@@ -117,13 +116,25 @@ public class SearchResultListActivity extends OpacActivity implements
     public void onItemSelected(SearchResult result, View coverView) {
         if ((app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING) == 0
                 && result.getPage() != listFragment.getLastLoadedPage()) {
-            new ReloadOldPageTask().execute(app, result, coverView);
+            new ReloadOldPageTask(result, coverView).execute();
         } else {
             showDetail(result, coverView);
         }
     }
 
     public void showDetail(SearchResult res, View coverView) {
+        Bitmap cover = res.getCoverBitmap();
+        Bitmap smallCover;
+        if (cover != null && cover.getWidth() * cover.getHeight() > 400 * 400) {
+            // Android's Parcelable implementation doesn't like huge images
+            int max = Math.max(cover.getWidth(), cover.getHeight());
+            int width = (int) ((400f / max) * cover.getWidth());
+            int height = (int) ((400f / max) * cover.getHeight());
+            smallCover = Bitmap.createScaledBitmap(cover, width, height, false);
+        } else {
+            smallCover = cover;
+        }
+
         if (mTwoPane) {
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
@@ -135,7 +146,7 @@ public class SearchResultListActivity extends OpacActivity implements
             }
             if (res.getCoverBitmap() != null) {
                 arguments.putParcelable(SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP,
-                        (Parcelable) res.getCoverBitmap());
+                        smallCover);
             }
             detailFragment = new SearchResultDetailFragment();
             detailFragment.setArguments(arguments);
@@ -161,7 +172,7 @@ public class SearchResultListActivity extends OpacActivity implements
             }
             if (res.getCoverBitmap() != null) {
                 detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP,
-                        (Parcelable) res.getCoverBitmap());
+                        smallCover);
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         this,
                         new Pair<>(coverView, getString(R.string.transition_cover)),
@@ -189,10 +200,15 @@ public class SearchResultListActivity extends OpacActivity implements
         return mTwoPane;
     }
 
-    public class ReloadOldPageTask extends OpacTask<SearchRequestResult> {
-        SearchResult searchResult;
-        Exception exception;
-        View coverView;
+    public class ReloadOldPageTask extends AsyncTask<Void, Void, SearchRequestResult> {
+        private SearchResult searchResult;
+        private Exception exception;
+        private View coverView;
+
+        public ReloadOldPageTask(SearchResult searchResult, View coverView) {
+            this.searchResult = searchResult;
+            this.coverView = coverView;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -200,11 +216,7 @@ public class SearchResultListActivity extends OpacActivity implements
         }
 
         @Override
-        protected SearchRequestResult doInBackground(Object... arg0) {
-            searchResult = (SearchResult) arg0[1];
-            coverView = (View) arg0[2];
-            OpacClient app = (OpacClient) arg0[0];
-
+        protected SearchRequestResult doInBackground(Void... voids) {
             try {
                 return app.getApi().searchGetPage(searchResult.getPage());
             } catch (java.net.UnknownHostException e) {

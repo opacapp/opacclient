@@ -110,11 +110,12 @@ public class Heidi extends BaseApi implements OpacApi {
     }
 
     protected int addParameters(String key, String value,
-                                List<NameValuePair> params, int index) {
+            List<NameValuePair> params, int index) {
         index++;
 
-        if (index != 3)
+        if (index != 3) {
             params.add(new BasicNameValuePair("op" + index, "AND"));
+        }
         params.add(new BasicNameValuePair("kat" + index, key));
         params.add(new BasicNameValuePair("var" + index, value));
         return index;
@@ -129,8 +130,9 @@ public class Heidi extends BaseApi implements OpacApi {
 
         List<NameValuePair> params = new ArrayList<>();
 
-        if (sessid == null)
+        if (sessid == null) {
             start();
+        }
         int index = 0;
         int page = 1;
         String homebranch = "";
@@ -151,9 +153,10 @@ public class Heidi extends BaseApi implements OpacApi {
                 params.add(new BasicNameValuePair(query.getKey(), query
                         .getValue()));
             } else {
-                if (!query.getValue().equals(""))
+                if (!query.getValue().equals("")) {
                     index = addParameters(query.getKey(), query.getValue(),
                             params, index);
+                }
             }
         }
 
@@ -164,14 +167,15 @@ public class Heidi extends BaseApi implements OpacApi {
                     stringProvider.getString(StringProvider.NO_CRITERIA_INPUT));
         }
         if (index > 3) {
-            throw new OpacErrorException(stringProvider.getFormattedString(
-                    StringProvider.LIMITED_NUM_OF_CRITERIA, 3));
+            throw new OpacErrorException(stringProvider.getQuantityString(
+                    StringProvider.LIMITED_NUM_OF_CRITERIA, 3, 3));
         }
 
         while (index < 3) {
             index++;
-            if (index != 3)
+            if (index != 3) {
                 params.add(new BasicNameValuePair("op" + index, "AND"));
+            }
             params.add(new BasicNameValuePair("kat" + index, "freitext"));
             params.add(new BasicNameValuePair("var" + index, ""));
         }
@@ -195,7 +199,7 @@ public class Heidi extends BaseApi implements OpacApi {
         if (doc.select("#heiditreffer").size() > 0) {
             String resstr = doc.select("#heiditreffer").text();
             String resnum = resstr.replaceAll("\\(([0-9.]+)([^0-9]*)\\)", "$1")
-                    .replace(".", "");
+                                  .replace(".", "");
             results_total = Integer.parseInt(resnum);
         }
 
@@ -253,47 +257,50 @@ public class Heidi extends BaseApi implements OpacApi {
                     description = null;
                 }
             }
-            if (!"".equals(author))
+            if (!"".equals(author)) {
                 author = author + "<br />";
+            }
             sr.setInnerhtml(author + description.toString());
 
             if (tr.select(".kurzstat").size() > 0) {
                 String stattext = tr.select(".kurzstat").first().text();
-                if (stattext.contains("ausleihbar"))
+                if (stattext.contains("ausleihbar")) {
                     sr.setStatus(Status.GREEN);
-                else if (stattext.contains("online"))
+                } else if (stattext.contains("online")) {
                     sr.setStatus(Status.GREEN);
-                else if (stattext.contains("entliehen"))
+                } else if (stattext.contains("entliehen")) {
                     sr.setStatus(Status.RED);
-                else if (stattext.contains("Präsenznutzung"))
+                } else if (stattext.contains("Präsenznutzung")) {
                     sr.setStatus(Status.YELLOW);
-                else if (stattext.contains("bestellen"))
+                } else if (stattext.contains("bestellen")) {
                     sr.setStatus(Status.YELLOW);
+                }
             }
             if (tr.select(".typbild").size() > 0) {
                 String typtext = tr.select(".typbild").first().text();
-                if (typtext.contains("Buch"))
+                if (typtext.contains("Buch")) {
                     sr.setType(MediaType.BOOK);
-                else if (typtext.contains("DVD-ROM"))
+                } else if (typtext.contains("DVD-ROM")) {
                     sr.setType(MediaType.CD_SOFTWARE);
-                else if (typtext.contains("Online-Ressource"))
+                } else if (typtext.contains("Online-Ressource")) {
                     sr.setType(MediaType.EDOC);
-                else if (typtext.contains("DVD"))
+                } else if (typtext.contains("DVD")) {
                     sr.setType(MediaType.DVD);
-                else if (typtext.contains("Film"))
+                } else if (typtext.contains("Film")) {
                     sr.setType(MediaType.MOVIE);
-                else if (typtext.contains("Zeitschrift"))
+                } else if (typtext.contains("Zeitschrift")) {
                     sr.setType(MediaType.MAGAZINE);
-                else if (typtext.contains("Musiknoten"))
+                } else if (typtext.contains("Musiknoten")) {
                     sr.setType(MediaType.SCORE_MUSIC);
-                else if (typtext.contains("Bildliche Darstellung"))
+                } else if (typtext.contains("Bildliche Darstellung")) {
                     sr.setType(MediaType.ART);
-                else if (typtext.contains("Zeitung"))
+                } else if (typtext.contains("Zeitung")) {
                     sr.setType(MediaType.NEWSPAPER);
-                else if (typtext.contains("Karte"))
+                } else if (typtext.contains("Karte")) {
                     sr.setType(MediaType.MAP);
-                else if (typtext.contains("Mehrteilig"))
+                } else if (typtext.contains("Mehrteilig")) {
                     sr.setType(MediaType.PACKAGE_BOOKS);
+                }
             }
 
             results.add(sr);
@@ -334,12 +341,14 @@ public class Heidi extends BaseApi implements OpacApi {
     public DetailledItem getResultById(String id, final String homebranch)
             throws IOException {
 
-        if (sessid == null)
+        if (sessid == null) {
             start();
+        }
 
         // Homebranch
-        if (homebranch != null && !"".equals(homebranch))
+        if (homebranch != null && !"".equals(homebranch)) {
             cookieStore.addCookie(new BasicClientCookie("zweig", homebranch));
+        }
 
         String html = httpGet(opac_url + "/titel.cgi?katkey=" + id + "&sess="
                 + sessid, ENCODING, false, cookieStore);
@@ -350,15 +359,16 @@ public class Heidi extends BaseApi implements OpacApi {
 
         Elements table = doc.select(".titelsatz tr");
         for (Element tr : table) {
-            if (tr.select("th").size() == 0 || tr.select("td").size() == 0)
+            if (tr.select("th").size() == 0 || tr.select("td").size() == 0) {
                 continue;
+            }
             String d = tr.select("th").first().text();
             String c = tr.select("td").first().text();
             if (d.equals("Titel:")) {
                 item.setTitle(c);
             } else if (d.contains("URL") || d.contains("Link")) {
                 item.addDetail(new Detail(d, tr.select("td").first()
-                        .select("a").first().attr("href")));
+                                               .select("a").first().attr("href")));
             } else {
                 item.addDetail(new Detail(d, c));
             }
@@ -369,13 +379,14 @@ public class Heidi extends BaseApi implements OpacApi {
             for (Element tr : table) {
                 if (tr.hasClass("exueber") || tr.select(".exsig").size() == 0
                         || tr.select(".exso").size() == 0
-                        || tr.select(".exstatus").size() == 0)
+                        || tr.select(".exstatus").size() == 0) {
                     continue;
+                }
                 Map<String, String> e = new HashMap<>();
                 e.put(DetailledItem.KEY_COPY_SHELFMARK, tr.select(".exsig")
-                        .first().text());
+                                                          .first().text());
                 e.put(DetailledItem.KEY_COPY_BRANCH, tr.select(".exso").first()
-                        .text());
+                                                       .text());
                 String status = tr.select(".exstatus").first().text();
                 if (status.contains("entliehen bis")) {
                     e.put(DetailledItem.KEY_COPY_RETURN, status.replaceAll(
@@ -517,7 +528,7 @@ public class Heidi extends BaseApi implements OpacApi {
 
     @Override
     public ReservationResult reservation(DetailledItem item, Account account,
-                                         int useraction, String selection) throws IOException {
+            int useraction, String selection) throws IOException {
         String html = httpGet(opac_url + "/bestellung.cgi?ks=" + item.getId()
                 + "&sess=" + sessid, ENCODING, false, cookieStore);
         Document doc = Jsoup.parse(html);
@@ -554,7 +565,7 @@ public class Heidi extends BaseApi implements OpacApi {
                 List<Map<String, String>> options = new ArrayList<>();
                 for (Element input : doc.select("input[name=ort]")) {
                     Element label = doc.select("label[for=" + input.id() + "]")
-                            .first();
+                                       .first();
                     Map<String, String> selopt = new HashMap<>();
                     selopt.put("key", input.attr("value"));
                     selopt.put("value", label.text());
@@ -571,24 +582,26 @@ public class Heidi extends BaseApi implements OpacApi {
             return new ReservationResult(MultiStepResult.Status.ERROR, text);
         }
         String text = doc.select(".meld2").text();
-        if (text.contains("Das Medium wurde"))
+        if (text.contains("Das Medium wurde")) {
             return new ReservationResult(MultiStepResult.Status.OK, text);
-        else
+        } else {
             return new ReservationResult(MultiStepResult.Status.ERROR, text);
+        }
     }
 
     @Override
     public ProlongResult prolong(String media, Account account, int useraction,
-                                 String selection) throws IOException {
+            String selection) throws IOException {
         // Internal convention: a is either a § followed by an error message or
         // the URI of the page this item was found on and the query string the
         // prolonging link links to, seperated by a $.
         if (media.startsWith("§")) {
             String error = stringProvider.getString(StringProvider.PROLONGING_IMPOSSIBLE);
-            if (media.substring(1).equals("rot"))
+            if (media.substring(1).equals("rot")) {
                 error = stringProvider.getString(StringProvider.PROLONGING_EXPIRED);
-            else if (media.substring(1).equals("gruen"))
+            } else if (media.substring(1).equals("gruen")) {
                 error = stringProvider.getString(StringProvider.PROLONGING_WAITING);
+            }
             return new ProlongResult(MultiStepResult.Status.ERROR, error);
         }
 
@@ -612,17 +625,18 @@ public class Heidi extends BaseApi implements OpacApi {
         }
         if (doc.select(".meld2").size() > 0) {
             String text = doc.select(".meld2").text();
-            if (text.matches(".*Neues Leihfristende.*"))
+            if (text.matches(".*Neues Leihfristende.*")) {
                 return new ProlongResult(MultiStepResult.Status.OK, text);
-            else
+            } else {
                 return new ProlongResult(MultiStepResult.Status.ERROR, text);
+            }
         }
         return new ProlongResult(MultiStepResult.Status.OK);
     }
 
     @Override
     public ProlongAllResult prolongAll(Account account, int useraction,
-                                       String selection) throws IOException {
+            String selection) throws IOException {
         String html = httpGet(opac_url + "/konto.cgi?sess=" + sessid
                 + "&email=&verl=Gesamtkontoverlängerung", ENCODING);
         Document doc = Jsoup.parse(html);
@@ -644,7 +658,7 @@ public class Heidi extends BaseApi implements OpacApi {
             if (tr.children().size() < 2) {
                 if (line.size() > 0) {
                     line.put(ProlongAllResult.KEY_LINE_MESSAGE, tr.child(0)
-                            .text().trim());
+                                                                  .text().trim());
                     result.add(line);
                     line = new HashMap<>();
                 }
@@ -668,7 +682,7 @@ public class Heidi extends BaseApi implements OpacApi {
 
     @Override
     public CancelResult cancel(String media, Account account, int useraction,
-                               String selection) throws IOException, OpacErrorException {
+            String selection) throws IOException, OpacErrorException {
         List<NameValuePair> nameValuePairs = new ArrayList<>(2);
         nameValuePairs.add(new BasicNameValuePair("storno",
                 "Vormerkung stornieren"));
@@ -683,10 +697,11 @@ public class Heidi extends BaseApi implements OpacApi {
         }
         if (doc.select(".meld2").size() > 0) {
             String text = doc.select(".meld2").text();
-            if (text.matches(".*durchgef.+hrt.*"))
+            if (text.matches(".*durchgef.+hrt.*")) {
                 return new CancelResult(MultiStepResult.Status.OK, text);
-            else
+            } else {
                 return new CancelResult(MultiStepResult.Status.ERROR, text);
+            }
         }
         return new CancelResult(MultiStepResult.Status.OK);
     }
@@ -711,7 +726,8 @@ public class Heidi extends BaseApi implements OpacApi {
                         .text()
                         .trim()
                         .replaceAll(
-                                "Offene[^0-9]+Geb.+hren:[^0-9]+([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr.)",
+                                "Offene[^0-9]+Geb.+hren:[^0-9]+([0-9.," +
+                                        "]+)[^0-9€A-Z]*(€|EUR|CHF|Fr.)",
                                 "$1 $2");
                 adata.setPendingFees(text);
             }
@@ -745,7 +761,7 @@ public class Heidi extends BaseApi implements OpacApi {
 
             if (tr.child(0).select("input").size() == 1) {
                 row.put(AccountData.KEY_LENT_LINK, tr.child(0).select("input")
-                        .first().val());
+                                                     .first().val());
                 row.put(AccountData.KEY_LENT_RENEWABLE, "Y");
             } else {
                 row.put(AccountData.KEY_LENT_LINK,
@@ -795,9 +811,10 @@ public class Heidi extends BaseApi implements OpacApi {
                     tr.child(1).select("a").first().absUrl("href")).get(
                     "katkey");
             row.put(AccountData.KEY_RESERVATION_ID, kk);
-            if (tr.child(0).select("input").size() > 0)
+            if (tr.child(0).select("input").size() > 0) {
                 row.put(AccountData.KEY_RESERVATION_CANCEL,
                         tr.child(0).select("input").first().val());
+            }
 
             int i = 0;
             for (Node node : desc.childNodes()) {

@@ -66,8 +66,8 @@ import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
 /**
- * Implementation of Fleischmann iOpac, including account support Seems to work
- * in all the libraries currently supported without any modifications.
+ * Implementation of Fleischmann iOpac, including account support Seems to work in all the libraries
+ * currently supported without any modifications.
  *
  * @author Johan von Forstner, 17.09.2013
  */
@@ -75,6 +75,7 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
 public class IOpac extends BaseApi implements OpacApi {
 
     protected static HashMap<String, MediaType> defaulttypes = new HashMap<>();
+
     static {
         defaulttypes.put("b", MediaType.BOOK);
         defaulttypes.put("o", MediaType.BOOK);
@@ -96,6 +97,7 @@ public class IOpac extends BaseApi implements OpacApi {
         defaulttypes.put("z", MediaType.MAGAZINE);
         defaulttypes.put("x", MediaType.MAGAZINE);
     }
+
     protected String opac_url = "";
     protected String dir = "/iopac";
     protected JSONObject data;
@@ -116,19 +118,22 @@ public class IOpac extends BaseApi implements OpacApi {
 
         try {
             this.opac_url = data.getString("baseurl");
-            if (data.has("maxprolongcount"))
+            if (data.has("maxprolongcount")) {
                 this.maxProlongCount = data.getInt("maxprolongcount");
-            if (data.has("dir"))
+            }
+            if (data.has("dir")) {
                 this.dir = data.getString("dir");
+            }
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
     }
 
     protected int addParameters(SearchQuery query, List<NameValuePair> params,
-                                int index) {
-        if (query.getValue().equals(""))
+            int index) {
+        if (query.getValue().equals("")) {
             return index;
+        }
 
         params.add(new BasicNameValuePair(query.getKey(), query.getValue()));
         return index + 1;
@@ -138,8 +143,9 @@ public class IOpac extends BaseApi implements OpacApi {
     @Override
     public SearchRequestResult search(List<SearchQuery> queries)
             throws IOException, OpacErrorException {
-        if (!initialised)
+        if (!initialised) {
             start();
+        }
 
         List<NameValuePair> params = new ArrayList<>();
 
@@ -175,9 +181,9 @@ public class IOpac extends BaseApi implements OpacApi {
                 return new SearchRequestResult(new ArrayList<SearchResult>(),
                         0, 1, 1);
             } else if (!doc.select("h4").text().trim()
-                    .contains("gefundene Medien")
+                           .contains("gefundene Medien")
                     && !doc.select("h4").text().trim()
-                    .contains("Es wurden mehr als")) {
+                           .contains("Es wurden mehr als")) {
                 // error
                 throw new OpacErrorException(doc.select("h4").text().trim());
             }
@@ -205,7 +211,7 @@ public class IOpac extends BaseApi implements OpacApi {
         } else {
             String resultnumstr = doc.select("h4").first().text();
             resultnumstr = resultnumstr.substring(0, resultnumstr.indexOf(" "))
-                    .trim();
+                                       .trim();
             results_total = Integer.parseInt(resultnumstr);
         }
 
@@ -215,30 +221,31 @@ public class IOpac extends BaseApi implements OpacApi {
 
         Map<String, Integer> colmap = new HashMap<>();
         Element thead = doc.select("table").first().select("tr:has(th)")
-                .first();
+                           .first();
         int j = 0;
         for (Element th : thead.select("th")) {
             String text = th.text().trim().toLowerCase(Locale.GERMAN);
-            if (text.contains("cover"))
+            if (text.contains("cover")) {
                 colmap.put("cover", j);
-            else if (text.contains("titel"))
+            } else if (text.contains("titel")) {
                 colmap.put("title", j);
-            else if (text.contains("verfasser"))
+            } else if (text.contains("verfasser")) {
                 colmap.put("author", j);
-            else if (text.contains("mtyp"))
+            } else if (text.contains("mtyp")) {
                 colmap.put("category", j);
-            else if (text.contains("jahr"))
+            } else if (text.contains("jahr")) {
                 colmap.put("year", j);
-            else if (text.contains("signatur"))
+            } else if (text.contains("signatur")) {
                 colmap.put("shelfmark", j);
-            else if (text.contains("info"))
+            } else if (text.contains("info")) {
                 colmap.put("info", j);
-            else if (text.contains("abteilung"))
+            } else if (text.contains("abteilung")) {
                 colmap.put("department", j);
-            else if (text.contains("verliehen") || text.contains("verl."))
+            } else if (text.contains("verliehen") || text.contains("verl.")) {
                 colmap.put("returndate", j);
-            else if (text.contains("anz.res"))
+            } else if (text.contains("anz.res")) {
                 colmap.put("reservations", j);
+            }
             j++;
         }
         if (colmap.size() == 0) {
@@ -259,14 +266,14 @@ public class IOpac extends BaseApi implements OpacApi {
 
             if (tr.select("td").get(colmap.get("cover")).select("img").size() > 0) {
                 String imgUrl = tr.select("td").get(colmap.get("cover"))
-                        .select("img").first().attr("src");
+                                  .select("img").first().attr("src");
                 sr.setCover(imgUrl);
             }
 
             // Media Type
             if (colmap.get("category") != null) {
                 String mType = tr.select("td").get(colmap.get("category"))
-                        .text().trim().replace("\u00a0", "");
+                                 .text().trim().replace("\u00a0", "");
                 if (data.has("mediatypes")) {
                     try {
                         sr.setType(MediaType.valueOf(data.getJSONObject(
@@ -296,7 +303,7 @@ public class IOpac extends BaseApi implements OpacApi {
                 }
             } else {
                 title = tr.select("td").get(colmap.get("title")).text().trim()
-                        .replace("\u00a0", "");
+                          .replace("\u00a0", "");
                 if (title.contains("(") && title.indexOf("(") > 0) {
                     additionalInfo += title.substring(title.indexOf("("));
                     title = title.substring(0, title.indexOf("(") - 1).trim();
@@ -305,7 +312,7 @@ public class IOpac extends BaseApi implements OpacApi {
                 // Author
                 if (colmap.containsKey("author")) {
                     String author = tr.select("td").get(colmap.get("author"))
-                            .text().trim().replace("\u00a0", "");
+                                      .text().trim().replace("\u00a0", "");
                     additionalInfo += " - " + author;
                 }
             }
@@ -313,14 +320,14 @@ public class IOpac extends BaseApi implements OpacApi {
             // Publisher
             if (colmap.containsKey("publisher")) {
                 String publisher = tr.select("td").get(colmap.get("publisher"))
-                        .text().trim().replace("\u00a0", "");
+                                     .text().trim().replace("\u00a0", "");
                 additionalInfo += " (" + publisher;
             }
 
             // Year
             if (colmap.containsKey("year")) {
                 String year = tr.select("td").get(colmap.get("year")).text()
-                        .trim().replace("\u00a0", "");
+                                .trim().replace("\u00a0", "");
                 additionalInfo += ", " + year + ")";
             }
 
@@ -328,7 +335,7 @@ public class IOpac extends BaseApi implements OpacApi {
 
             // Status
             String status = tr.select("td").get(colmap.get("returndate"))
-                    .text().trim().replace("\u00a0", "");
+                              .text().trim().replace("\u00a0", "");
             if (status.equals("")
                     || status.toLowerCase(Locale.GERMAN).contains("onleihe")
                     || status.contains("verleihbar")
@@ -377,8 +384,9 @@ public class IOpac extends BaseApi implements OpacApi {
     @Override
     public SearchRequestResult searchGetPage(int page) throws IOException,
             OpacErrorException {
-        if (!initialised)
+        if (!initialised) {
             start();
+        }
 
         String html = httpGet(opac_url + "/cgi-bin/di.exe?page=" + page
                         + "&rechnr=" + rechnr + "&Anzahl=10&FilNr=",
@@ -396,8 +404,9 @@ public class IOpac extends BaseApi implements OpacApi {
     public DetailledItem getResultById(String id, String homebranch)
             throws IOException {
 
-        if (!initialised)
+        if (!initialised) {
             start();
+        }
 
         if (id == null && reusehtml != null) {
             return parse_result(reusehtml);
@@ -411,8 +420,9 @@ public class IOpac extends BaseApi implements OpacApi {
 
     @Override
     public DetailledItem getResult(int position) throws IOException {
-        if (!initialised)
+        if (!initialised) {
             start();
+        }
 
         int page = Double.valueOf(Math.floor(position / 10)).intValue() + 1;
         String html = httpGet(opac_url + "/cgi-bin/di.exe?page=" + page
@@ -427,19 +437,12 @@ public class IOpac extends BaseApi implements OpacApi {
 
         DetailledItem result = new DetailledItem();
 
-        String id = null;
-
-        if (doc.select("input[name=mednr]").size() > 0)
+        String id;
+        if (doc.select("input[name=mednr]").size() > 0) {
             id = doc.select("input[name=mednr]").first().val().trim();
-        else {
-            for (Element a : doc.select("table").last().select("td a")) {
-                if (a.attr("href").contains("mednr=")) {
-                    id = a.attr("href");
-                    break;
-                }
-            }
-            Integer idPosition = id.indexOf("mednr=") + 6;
-            id = id.substring(idPosition, id.indexOf("&", idPosition)).trim();
+        } else {
+            String href = doc.select("a[href*=mednr]").first().attr("href");
+            id = getQueryParamsFirst(href).get("mednr");
         }
 
         result.setId(id);
@@ -448,8 +451,9 @@ public class IOpac extends BaseApi implements OpacApi {
 
         // GET COVER IMAGE
         String imgUrl = table.get(0)
-                .select("img[src~=^https?://(:?images(?:-[^\\.]*)?\\.|[^\\.]*\\.images-)amazon\\.com]")
-                .attr("src");
+                             .select("img[src~=^https?://(:?images(?:-[^\\.]*)?\\.|[^\\.]*\\" +
+                                     ".images-)amazon\\.com]")
+                             .attr("src");
         result.setCover(imgUrl);
 
         // GET INFORMATION
@@ -457,9 +461,9 @@ public class IOpac extends BaseApi implements OpacApi {
 
         for (Element element : table) {
             String detail = element.select("td").text().trim()
-                    .replace("\u00a0", "");
+                                   .replace("\u00a0", "");
             String title = element.select("th").text().trim()
-                    .replace("\u00a0", "");
+                                  .replace("\u00a0", "");
 
             if (!title.equals("")) {
 
@@ -486,7 +490,7 @@ public class IOpac extends BaseApi implements OpacApi {
         if ("verfügbar".equals(e.get(DetailledItem.KEY_COPY_STATUS))
                 || doc.select(
                 "a[href^=/cgi-bin/di.exe?mode=10], input.resbutton")
-                .size() == 0) {
+                      .size() == 0) {
             result.setReservable(false);
         } else {
             result.setReservable(true);
@@ -523,7 +527,7 @@ public class IOpac extends BaseApi implements OpacApi {
 
     @Override
     public ReservationResult reservation(DetailledItem item, Account account,
-                                         int useraction, String selection) throws IOException {
+            int useraction, String selection) throws IOException {
         String reservation_info = item.getReservation_info();
         // STEP 1: Login page
         String html = httpGet(opac_url + "/" + reservation_info,
@@ -534,8 +538,9 @@ public class IOpac extends BaseApi implements OpacApi {
                     .select("table").first().text().trim());
         }
 
-        if (doc.select("form[name=form1]").size() == 0)
+        if (doc.select("form[name=form1]").size() == 0) {
             return new ReservationResult(MultiStepResult.Status.ERROR);
+        }
 
         Element form = doc.select("form[name=form1]").first();
         List<BasicNameValuePair> params = new ArrayList<>();
@@ -572,7 +577,7 @@ public class IOpac extends BaseApi implements OpacApi {
 
     @Override
     public ProlongResult prolong(String media, Account account, int useraction,
-                                 String Selection) throws IOException {
+            String Selection) throws IOException {
         String html = httpGet(opac_url + "/" + media, getDefaultEncoding());
         Document doc = Jsoup.parse(html);
         if (doc.select("table th").size() > 0) {
@@ -602,13 +607,13 @@ public class IOpac extends BaseApi implements OpacApi {
 
     @Override
     public ProlongAllResult prolongAll(Account account, int useraction,
-                                       String selection) throws IOException {
+            String selection) throws IOException {
         return null;
     }
 
     @Override
     public CancelResult cancel(String media, Account account, int useraction,
-                               String selection) throws IOException, OpacErrorException {
+            String selection) throws IOException, OpacErrorException {
         String html = httpGet(opac_url + "/" + media, getDefaultEncoding());
         Document doc = Jsoup.parse(html);
         try {
@@ -629,8 +634,9 @@ public class IOpac extends BaseApi implements OpacApi {
     @Override
     public AccountData account(Account account) throws IOException,
             JSONException, OpacErrorException {
-        if (!initialised)
+        if (!initialised) {
             start();
+        }
 
         List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("sleKndNr", account.getName()));
@@ -647,23 +653,36 @@ public class IOpac extends BaseApi implements OpacApi {
         List<Map<String, String>> medien = new ArrayList<>();
         List<Map<String, String>> reserved = new ArrayList<>();
         if (doc.select("a[name=AUS]").size() > 0) {
-            parse_medialist(medien, doc, 1);
+            parse_medialist(medien, doc);
         }
         if (doc.select("a[name=RES]").size() > 0) {
-            parse_reslist(reserved, doc, 1);
+            parse_reslist(reserved, doc);
         }
 
         res.setLent(medien);
         res.setReservations(reserved);
+        if (doc.select("h4:contains(Kontostand)").size() > 0) {
+            Element h4 = doc.select("h4:contains(Kontostand)").first();
+            Pattern regex = Pattern.compile("Kontostand (\\d+\\.\\d\\d EUR)");
+            Matcher matcher = regex.matcher(h4.text());
+            if (matcher.find()) res.setPendingFees(matcher.group(1));
+        }
+        if (doc.select("h4:contains(Ausweis g)").size() > 0) {
+            Element h4 = doc.select("h4:contains(Ausweis g)").first();
+            Pattern regex = Pattern.compile("Ausweis g.+ltig bis (\\d\\d.\\d\\d.\\d\\d\\d\\d)");
+            Matcher matcher = regex.matcher(h4.text());
+            if (matcher.find()) res.setValidUntil(matcher.group(1));
+        }
 
         if (medien.isEmpty() && reserved.isEmpty()) {
             if (doc.select("h1").size() > 0) {
+                //noinspection StatementWithEmptyBody
                 if (doc.select("h4").text().trim()
-                        .contains("keine ausgeliehenen Medien")) {
+                       .contains("keine ausgeliehenen Medien")) {
                     // There is no lent media, but the server is working
                     // correctly
                 } else if (doc.select("h1").text().trim()
-                        .contains("RUNTIME ERROR")) {
+                              .contains("RUNTIME ERROR")) {
                     // Server Error
                     throw new NotReachableException();
                 } else {
@@ -694,28 +713,31 @@ public class IOpac extends BaseApi implements OpacApi {
                 new UrlEncodedFormEntity(params, "iso-8859-1"),
                 getDefaultEncoding());
         Document doc = Jsoup.parse(html);
-        if (doc.select("h1").text().contains("fehlgeschlagen"))
+        if (doc.select("h1").text().contains("fehlgeschlagen")) {
             throw new OpacErrorException(doc.select("h1, th").text());
+        }
     }
 
     protected void parse_medialist(List<Map<String, String>> medien,
-                                   Document doc, int offset) {
+            Document doc) {
 
         Elements copytrs = doc.select("a[name=AUS] ~ table").first()
-                .select("tr");
+                              .select("tr");
         doc.setBaseUri(opac_url);
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
 
         int trs = copytrs.size();
-        if (trs < 2)
+        if (trs < 2) {
             return;
+        }
         assert (trs > 0);
 
         JSONObject copymap = new JSONObject();
         try {
-            if (data.has("accounttable"))
+            if (data.has("accounttable")) {
                 copymap = data.getJSONObject("accounttable");
+            }
         } catch (JSONException e) {
         }
 
@@ -723,21 +745,24 @@ public class IOpac extends BaseApi implements OpacApi {
             Element tr = copytrs.get(i);
             Map<String, String> e = new HashMap<>();
 
-            if (copymap.optInt("title", 0) >= 0)
+            if (copymap.optInt("title", 0) >= 0) {
                 e.put(AccountData.KEY_LENT_TITLE,
                         tr.child(copymap.optInt("title", 0)).text().trim()
-                                .replace("\u00a0", ""));
-            if (copymap.optInt("author", 0) >= 1)
+                          .replace("\u00a0", ""));
+            }
+            if (copymap.optInt("author", 0) >= 1) {
                 e.put(AccountData.KEY_LENT_AUTHOR,
                         tr.child(copymap.optInt("author", 1)).text().trim()
-                                .replace("\u00a0", ""));
+                          .replace("\u00a0", ""));
+            }
             int prolongCount = 0;
-            if (copymap.optInt("prolongcount", 3) >= 0)
+            if (copymap.optInt("prolongcount", 3) >= 0) {
                 prolongCount = Integer.parseInt(tr
                         .child(copymap.optInt("prolongcount", 3)).text().trim()
                         .replace("\u00a0", ""));
+            }
             /*
-			 * not needed currently, because in Schleswig books can only be pro-
+             * not needed currently, because in Schleswig books can only be pro-
 			 * longed once, so the prolong count is visible from the renewable
 			 * status e.put(AccountData.KEY_LENT_STATUS,
 			 * String.valueOf(prolongCount) + "x verl.");
@@ -746,10 +771,11 @@ public class IOpac extends BaseApi implements OpacApi {
                 e.put(AccountData.KEY_LENT_RENEWABLE,
                         prolongCount < maxProlongCount ? "Y" : "N");
             }
-            if (copymap.optInt("deadline", 4) >= 0)
+            if (copymap.optInt("deadline", 4) >= 0) {
                 e.put(AccountData.KEY_LENT_DEADLINE,
                         tr.child(copymap.optInt("deadline", 4)).text().trim()
-                                .replace("\u00a0", ""));
+                          .replace("\u00a0", ""));
+            }
             try {
                 e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String
                         .valueOf(sdf
@@ -761,7 +787,7 @@ public class IOpac extends BaseApi implements OpacApi {
             if (copymap.optInt("prolongurl", 5) >= 0) {
                 if (tr.children().size() > copymap.optInt("prolongurl", 5)) {
                     String link = tr.child(copymap.optInt("prolongurl", 5))
-                            .select("a").attr("href");
+                                    .select("a").attr("href");
                     e.put(AccountData.KEY_LENT_LINK, link);
                     // find media number with regex
                     Pattern pattern = Pattern.compile("mednr=([^&]*)&");
@@ -779,28 +805,30 @@ public class IOpac extends BaseApi implements OpacApi {
     }
 
     protected void parse_reslist(List<Map<String, String>> medien,
-                                 Document doc, int offset) {
+            Document doc) {
         Elements copytrs = doc.select("a[name=RES] ~ table:contains(Titel)")
-                .first().select("tr");
+                              .first().select("tr");
         doc.setBaseUri(opac_url);
 
         int trs = copytrs.size();
-        if (trs < 2)
+        if (trs < 2) {
             return;
+        }
         assert (trs > 0);
         for (int i = 1; i < trs; i++) {
             Element tr = copytrs.get(i);
             Map<String, String> e = new HashMap<>();
 
             e.put(AccountData.KEY_RESERVATION_TITLE, tr.child(0).text().trim()
-                    .replace("\u00a0", ""));
+                                                       .replace("\u00a0", ""));
             e.put(AccountData.KEY_RESERVATION_AUTHOR, tr.child(1).text().trim()
-                    .replace("\u00a0", ""));
+                                                        .replace("\u00a0", ""));
             e.put(AccountData.KEY_RESERVATION_READY, tr.child(4).text().trim()
-                    .replace("\u00a0", ""));
-            if (tr.select("a").size() > 0)
+                                                       .replace("\u00a0", ""));
+            if (tr.select("a").size() > 0) {
                 e.put(AccountData.KEY_RESERVATION_CANCEL, tr.select("a").last()
-                        .attr("href"));
+                                                            .attr("href"));
+            }
 
             medien.add(e);
         }
@@ -810,7 +838,7 @@ public class IOpac extends BaseApi implements OpacApi {
 
     private SearchField createSearchField(Element descTd, Element inputTd) {
         String name = descTd.select("span, blockquote").text().replace(":", "")
-                .trim().replace("\u00a0", "");
+                            .trim().replace("\u00a0", "");
         if (inputTd.select("select").size() > 0
                 && !name.equals("Treffer/Seite") && !name.equals("Medientypen")
                 && !name.equals("Medientyp")
@@ -862,15 +890,18 @@ public class IOpac extends BaseApi implements OpacApi {
                 // Two search fields next to each other in one row
                 SearchField field1 = createSearchField(tds.get(0), tds.get(1));
                 SearchField field2 = createSearchField(tds.get(2), tds.get(3));
-                if (field1 != null)
+                if (field1 != null) {
                     fields.add(field1);
-                if (field2 != null)
+                }
+                if (field2 != null) {
                     fields.add(field2);
+                }
             } else if (tds.size() == 2
                     || (tds.size() == 3 && tds.get(2).children().size() == 0)) {
                 SearchField field = createSearchField(tds.get(0), tds.get(1));
-                if (field != null)
+                if (field != null) {
                     fields.add(field);
+                }
             }
         }
 
@@ -979,8 +1010,9 @@ public class IOpac extends BaseApi implements OpacApi {
                 break;
             }
         }
-        if (url == null)
+        if (url == null) {
             return;
+        }
 
         Integer rechnrPosition = url.indexOf("rechnr=") + 7;
         rechnr = url

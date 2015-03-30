@@ -33,7 +33,6 @@ import java.util.Map;
 
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.OpacClient;
-import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.SSLSecurityException;
 import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
@@ -130,7 +129,7 @@ public class SearchResultListFragment extends CustomListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceSate) {
+            Bundle savedInstanceSate) {
         setRetainInstance(true);
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_searchresult_list, container, false);
@@ -147,18 +146,14 @@ public class SearchResultListFragment extends CustomListFragment {
             String query = getArguments().getString(ARG_GOOGLE_QUERY);
             performGoogleSearch(query);
         } else {
-            st = new SearchStartTask();
             if (getArguments().containsKey(ARG_VOLUME_QUERY)) {
-                st.execute(
-                        app,
-                        OpacClient.bundleToMap(getArguments().getBundle(
-                                ARG_VOLUME_QUERY)));
+                st = new SearchStartTask(OpacClient.bundleToMap(getArguments().getBundle(
+                        ARG_VOLUME_QUERY)));
             } else {
-                st.execute(
-                        app,
-                        OpacClient.bundleToQuery(getArguments().getBundle(
-                                ARG_QUERY)));
+                st = new SearchStartTask(OpacClient.bundleToQuery(getArguments().getBundle(
+                        ARG_QUERY)));
             }
+            st.execute();
         }
     }
 
@@ -183,7 +178,7 @@ public class SearchResultListFragment extends CustomListFragment {
 
                                 @Override
                                 public void onClick(DialogInterface dialog,
-                                                    int which) {
+                                        int which) {
                                     startGoogleSearch(accounts.get(which),
                                             query);
                                 }
@@ -214,7 +209,8 @@ public class SearchResultListFragment extends CustomListFragment {
         } else if (searchresult != null) {
             if (searchresult.getTotal_result_count() >= 0) {
                 ((ActionBarActivity) getActivity()).getSupportActionBar().setSubtitle(
-                        getString(R.string.result_number,
+                        getResources().getQuantityString(R.plurals.result_number,
+                                searchresult.getTotal_result_count(),
                                 searchresult.getTotal_result_count()));
             }
         }
@@ -244,7 +240,7 @@ public class SearchResultListFragment extends CustomListFragment {
 
     @Override
     public void onListItemClick(ListView listView, View view, int position,
-                                long id) {
+            long id) {
         super.onListItemClick(listView, view, position, id);
 
         setActivatedPosition(position);
@@ -293,7 +289,8 @@ public class SearchResultListFragment extends CustomListFragment {
         }
         if (searchresult.getTotal_result_count() >= 0) {
             ((ActionBarActivity) getActivity()).getSupportActionBar().setSubtitle(
-                    getString(R.string.result_number,
+                    getResources().getQuantityString(R.plurals.result_number,
+                            searchresult.getTotal_result_count(),
                             searchresult.getTotal_result_count()));
         }
 
@@ -343,8 +340,8 @@ public class SearchResultListFragment extends CustomListFragment {
 
                         {
                             ((ActionBarActivity) getActivity()).getSupportActionBar().setSubtitle(
-                                    getString(R.string.result_number,
-                                            resultCount));
+                                    getResources().getQuantityString(R.plurals.result_number,
+                                            resultCount, resultCount));
                         }
                     }
                 });
@@ -366,15 +363,15 @@ public class SearchResultListFragment extends CustomListFragment {
                 R.layout.error_connectivity, errorView);
 
         connError.findViewById(R.id.btRetry)
-                .setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        errorView.removeAllViews();
-                        setListShown(false);
-                        progressContainer.setVisibility(View.VISIBLE);
-                        performsearch();
-                    }
-                });
+                 .setOnClickListener(new OnClickListener() {
+                     @Override
+                     public void onClick(View v) {
+                         errorView.removeAllViews();
+                         setListShown(false);
+                         progressContainer.setVisibility(View.VISIBLE);
+                         performsearch();
+                     }
+                 });
 
         if (description != null) {
             ((TextView) connError.findViewById(R.id.tvErrBody))
@@ -420,46 +417,49 @@ public class SearchResultListFragment extends CustomListFragment {
         public boolean isTwoPane();
     }
 
-    public class SearchStartTask extends OpacTask<SearchRequestResult> {
+    public class SearchStartTask extends AsyncTask<Void, Void, SearchRequestResult> {
         protected Exception exception;
+        protected Map<String, String> volumeQuery = null;
+        protected List<SearchQuery> query = null;
+
+        public SearchStartTask(Map<String, String> volumeQuery) {
+            this.volumeQuery = volumeQuery;
+        }
+
+        public SearchStartTask(List<SearchQuery> query) {
+            this.query = query;
+        }
 
         @Override
-        protected SearchRequestResult doInBackground(Object... arg0) {
-            super.doInBackground(arg0);
-            if (arg0[1] == null) {
-                return null;
-            }
-            if (arg0[1] instanceof Map<?, ?>) {
-                Map<String, String> query = (Map<String, String>) arg0[1];
+        protected SearchRequestResult doInBackground(Void... voids) {
+            if (volumeQuery != null) {
                 try {
-                    // Load cover images, if search worked and covers available
-                    return app.getApi().volumeSearch(query);
+                    return app.getApi().volumeSearch(volumeQuery);
                 } catch (java.net.UnknownHostException e) {
                     exception = e;
                     e.printStackTrace();
-                } catch (java.net.SocketException | NoHttpResponseException | OpacErrorException | InterruptedIOException e) {
+                } catch (java.net.SocketException | NoHttpResponseException | OpacErrorException
+                        | InterruptedIOException e) {
                     exception = e;
                 } catch (Exception e) {
                     exception = e;
                     ACRA.getErrorReporter().handleException(e);
                 }
-            } else {
-                List<SearchQuery> query = (List<SearchQuery>) arg0[1];
-
+            } else if (query != null) {
                 try {
                     // Load cover images, if search worked and covers available
                     return app.getApi().search(query);
                 } catch (java.net.UnknownHostException e) {
                     exception = e;
                     e.printStackTrace();
-                } catch (java.net.SocketException | NoHttpResponseException | OpacErrorException | InterruptedIOException e) {
+                } catch (java.net.SocketException | NoHttpResponseException | OpacErrorException
+                        | InterruptedIOException e) {
                     exception = e;
                 } catch (Exception e) {
                     exception = e;
                     ACRA.getErrorReporter().handleException(e);
                 }
             }
-
             return null;
         }
 
@@ -569,12 +569,12 @@ public class SearchResultListFragment extends CustomListFragment {
             }
             List<SearchQuery> query = new ArrayList<>();
             query.add(new SearchQuery(fieldToUse, queryString));
-            st = new SearchStartTask();
-            st.execute(app, query);
+            st = new SearchStartTask(query);
+            st.execute();
         }
 
         private SearchField findSearchFieldByMeaning(List<SearchField> fields,
-                                                     Meaning meaning) {
+                Meaning meaning) {
             for (SearchField field : fields) {
                 if (field.getMeaning() == meaning) {
                     return field;

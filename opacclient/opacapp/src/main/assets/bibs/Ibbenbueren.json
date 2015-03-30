@@ -1,10 +1,19 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "biber1992",
     "city": "Ibbenb\u00fcren",
     "country": "Deutschland",
     "data": {
-        "accounttable": null,
+        "accounttable": {
+            "author": 6,
+            "barcode": 3,
+            "homebranch": -1,
+            "lendingbranch": -1,
+            "prolongurl": 1,
+            "returndate": 2,
+            "status": 4,
+            "title": 6
+        },
         "baseurl": "http://opac.stadtbuecherei-ibbenbueren.de",
         "information": "http://www.stadtbuecherei-ibbenbueren.de/",
         "mediatypes": {

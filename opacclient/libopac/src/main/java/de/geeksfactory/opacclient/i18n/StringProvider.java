@@ -22,16 +22,15 @@
 package de.geeksfactory.opacclient.i18n;
 
 /**
- * The StringProvider interface exposes an abstract method of translating
- * strings from the OpacApi classes. Since version 3.2.1, it is highly
- * discouraged to hardcode any string into the OpacApi implementations which
- * might be displayed to the user, as this makes internationalization very hard.
+ * The StringProvider interface exposes an abstract method of translating strings from the OpacApi
+ * classes. Since version 3.2.1, it is highly discouraged to hardcode any string into the OpacApi
+ * implementations which might be displayed to the user, as this makes internationalization very
+ * hard.
  * <p/>
- * While Android has a powerful i18n library using the 'string resources'
- * concept, our apis.* subpackage should not depend on Android, to make it
- * seperable from the app, e.g. for running our test suite on a PC. Therefore,
- * this abstract interface provides access to Android's i18n API on Android
- * devices. It currently performs a no-op on other devices.
+ * While Android has a powerful i18n library using the 'string resources' concept, our apis.*
+ * subpackage should not depend on Android, to make it seperable from the app, e.g. for running our
+ * test suite on a PC. Therefore, this abstract interface provides access to Android's i18n API on
+ * Android devices. It currently performs a no-op on other devices.
  *
  * @author Johan v. Forstner
  * @since 3.2.1
@@ -43,7 +42,8 @@ public interface StringProvider {
     public static String UNKNOWN_ERROR = "unknown_error";
     public static String UNKNOWN_ERROR_WITH_DESCRIPTION = "unknown_error_with_description";
     public static String UNKNOWN_ERROR_ACCOUNT = "unknown_error_account";
-    public static String UNKNOWN_ERROR_ACCOUNT_WITH_DESCRIPTION = "unknown_error_account_with_description";
+    public static String UNKNOWN_ERROR_ACCOUNT_WITH_DESCRIPTION =
+            "unknown_error_account_with_description";
     public static String INTERNAL_ERROR = "internal_error";
     public static String INTERNAL_ERROR_WITH_DESCRIPTION = "internal_error_with_description";
     public static String LOGIN_FAILED = "login_failed";
@@ -90,4 +90,14 @@ public interface StringProvider {
      * @return the translated and formatted string
      */
     public abstract String getFormattedString(String identifier, Object... args);
+
+    /**
+     * Returns a translated quantity string
+     *
+     * @param identifier The ID of the string
+     * @param count      Number for determining the plural to use
+     * @param args       Formatting arguments
+     * @return the translated and formatted string
+     */
+    public abstract String getQuantityString(String identifier, int count, Object... args);
 }

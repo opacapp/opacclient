@@ -68,32 +68,28 @@ import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
 /**
- * @author Ruediger Wurth, 16.02.2013 Web identification:
- *         "copyright 1992-2011 by BiBer GmbH"
+ * @author Ruediger Wurth, 16.02.2013 Web identification: "copyright 1992-2011 by BiBer GmbH"
  *         <p/>
- *         BiBer gestartet mit Stadtbibliothek Offenburg start URL:
- *         http://217.86.216.47/opac/de/qsim_frm.html.S
+ *         BiBer gestartet mit Stadtbibliothek Offenburg start URL: http://217.86.216
+ *         .47/opac/de/qsim_frm.html.S
  *         <p/>
- *         open: issue #23: Basic support for library system "Biber" -> Essen
- *         issue #32: Integration of "BiBer" (copyright 2006) -> Karlsruhe
- *         https://opac.karlsruhe.de/ issue #33: Integration of "BiBer"
- *         (copyright 1992) -> Essen
+ *         open: issue #23: Basic support for library system "Biber" -> Essen issue #32: Integration
+ *         of "BiBer" (copyright 2006) -> Karlsruhe https://opac.karlsruhe.de/ issue #33:
+ *         Integration of "BiBer" (copyright 1992) -> Essen
  *         <p/>
- *         Features: In getResult(), mixed table layout is supported:
- *         column-wise and row-wise In getResult(), amazon bitmaps are supported
+ *         Features: In getResult(), mixed table layout is supported: column-wise and row-wise In
+ *         getResult(), amazon bitmaps are supported
  *         <p/>
  *         Katalogsuche tested with
  *         <p/>
- *         Name Media amazon copy Media Branch Account type Bitmaps table types
- *         support images avail search
- *         --------------------------------------------------------------------
- *         BaWu/Friedrichshafen ok yes yes yes yes - BaWu/Lahr ok yes yes yes no
- *         - BaWu/Offenburg ok n/a no yes n/a yes Bay/Aschaffenburg ok n/a no
- *         yes n/a - Bay/Wuerzburg ok yes yes yes yes - NRW/Duisburg ok yes yes
- *         yes n/a - NRW/Erkrath n/a yes no yes not sup.yes NRW/Essen n/a n/a no
- *         yes not sup.- NRW/Gelsenkirchen ok yes yes yes yes - NRW/Hagen ok yes
- *         yes yes yes yes NRW/Herford n/a yes yes yes n/a - NRW/Luenen ok yes
- *         no yes n/a - NRW/MuelheimRuhr ok yes yes yes yes yes
+ *         Name Media amazon copy Media Branch Account type Bitmaps table types support images avail
+ *         search --------------------------------------------------------------------
+ *         BaWu/Friedrichshafen ok yes yes yes yes - BaWu/Lahr ok yes yes yes no - BaWu/Offenburg ok
+ *         n/a no yes n/a yes Bay/Aschaffenburg ok n/a no yes n/a - Bay/Wuerzburg ok yes yes yes yes
+ *         - NRW/Duisburg ok yes yes yes n/a - NRW/Erkrath n/a yes no yes not sup.yes NRW/Essen n/a
+ *         n/a no yes not sup.- NRW/Gelsenkirchen ok yes yes yes yes - NRW/Hagen ok yes yes yes yes
+ *         yes NRW/Herford n/a yes yes yes n/a - NRW/Luenen ok yes no yes n/a - NRW/MuelheimRuhr ok
+ *         yes yes yes yes yes
  */
 public class BiBer1992 extends BaseApi {
 
@@ -103,8 +99,10 @@ public class BiBer1992 extends BaseApi {
     // number of results is always 50 which is too much
     final private int numOfResultsPerPage = 20;
     protected boolean newStyleReservations = false;
+
     static {
     }
+
     private String m_opac_url = "";
     private String m_opac_dir = "opac"; // sometimes also "opax"
     private JSONObject m_data;
@@ -114,16 +112,6 @@ public class BiBer1992 extends BaseApi {
     // private Account logged_in_as;
     private List<NameValuePair> m_nameValuePairs = new ArrayList<>(
             2);
-
-    public static String getStringFromBundle(Map<String, String> bundle,
-                                             String key) {
-        // Workaround for Bundle.getString(key, default) being available not
-        // before API 12
-        String res = bundle.get(key);
-        if (res == null)
-            res = "";
-        return res;
-    }
 
     /*
      * ----- media types ----- Example Wuerzburg: <td ...><input type="checkbox"
@@ -156,12 +144,13 @@ public class BiBer1992 extends BaseApi {
         List<SearchField> fields = new ArrayList<>();
 
         HttpGet httpget;
-        if (m_opac_dir.equals("opax") || m_opac_dir.equals("opax13"))
+        if (m_opac_dir.equals("opax") || m_opac_dir.equals("opax13")) {
             httpget = new HttpGet(m_opac_url + "/" + m_opac_dir
                     + "/de/qsel.html.S");
-        else
+        } else {
             httpget = new HttpGet(m_opac_url + "/" + m_opac_dir
                     + "/de/qsel_main.S");
+        }
 
         HttpResponse response = http_client.execute(httpget);
 
@@ -239,8 +228,8 @@ public class BiBer1992 extends BaseApi {
             DropdownSearchField brDropdown = new DropdownSearchField();
             brDropdown.setId(br_opts.get(0).parent().attr("name"));
             brDropdown.setDisplayName(br_opts.get(0).parent().parent()
-                    .previousElementSibling().text().replace("\u00a0", "")
-                    .replace("?", "").trim());
+                                             .previousElementSibling().text().replace("\u00a0", "")
+                                             .replace("?", "").trim());
             List<Map<String, String>> brOptions = new ArrayList<>();
             for (Element opt : br_opts) {
                 Map<String, String> value = new HashMap<>();
@@ -332,8 +321,9 @@ public class BiBer1992 extends BaseApi {
     public SearchRequestResult search(List<SearchQuery> queryList)
             throws IOException {
 
-        if (!initialised)
+        if (!initialised) {
             start();
+        }
 
         m_nameValuePairs.clear();
         int count = 1;
@@ -402,8 +392,9 @@ public class BiBer1992 extends BaseApi {
         List<SearchResult> results = new ArrayList<>();
         Document doc = Jsoup.parse(html);
 
-        if (doc.select("h3").text().contains("Es wurde nichts gefunden"))
+        if (doc.select("h3").text().contains("Es wurde nichts gefunden")) {
             return new SearchRequestResult(results, 0, page);
+        }
 
         Elements trList = doc.select("form table tr[valign]"); // <tr
         // valign="top">
@@ -435,8 +426,9 @@ public class BiBer1992 extends BaseApi {
 
         // limit to 20 entries
         int numOfEntries = trList.size() / rows_per_hit; // two rows per entry
-        if (numOfEntries > numOfResultsPerPage)
+        if (numOfEntries > numOfResultsPerPage) {
             numOfEntries = numOfResultsPerPage;
+        }
 
         for (int i = 0; i < numOfEntries; i++) {
             Element tr = trList.get(i * rows_per_hit);
@@ -472,8 +464,9 @@ public class BiBer1992 extends BaseApi {
                 JSONArray searchtable = m_data.getJSONArray("searchtable");
                 for (int j = 0; j < searchtable.length(); j++) {
                     int colNum = searchtable.getInt(j);
-                    if (j > 0)
+                    if (j > 0) {
                         desc = desc + "<br />";
+                    }
                     desc = desc + tr.child(colNum).html();
                 }
             } catch (Exception e) {
@@ -514,8 +507,9 @@ public class BiBer1992 extends BaseApi {
     @Override
     public DetailledItem getResultById(String id, String homebranch)
             throws IOException {
-        if (!initialised)
+        if (!initialised) {
             start();
+        }
 
         if (!id.contains("ftitle")) {
             id = "ftitle.C?LANG=de&FUNC=full&" + id + "=YES";
@@ -594,8 +588,9 @@ public class BiBer1992 extends BaseApi {
         try {
             JSONObject map = m_data.getJSONObject("copiestable");
             for (int i = 0; i < copy_keys.length; i++) {
-                if (map.has(copy_keys[i]))
+                if (map.has(copy_keys[i])) {
                     copy_map[i] = map.getInt(copy_keys[i]);
+                }
             }
         } catch (Exception e) {
             // "copiestable" is optional
@@ -608,9 +603,9 @@ public class BiBer1992 extends BaseApi {
             if (columns.size() == 2) {
                 // HTML tag "&nbsp;" is encoded as 0xA0
                 String firstColumn = columns.get(0).text()
-                        .replace("\u00a0", " ").trim();
+                                            .replace("\u00a0", " ").trim();
                 String secondColumn = columns.get(1).text()
-                        .replace("\u00a0", " ").trim();
+                                             .replace("\u00a0", " ").trim();
 
                 if (firstColumn.length() > 0) {
                     // 1st column is category
@@ -623,7 +618,7 @@ public class BiBer1992 extends BaseApi {
                                 && columns.get(1).select("a").size() > 0) {
                             secondColumn += " "
                                     + columns.get(1).select("a").first()
-                                    .attr("href");
+                                             .attr("href");
                         }
 
                         detail = new Detail(firstColumn, secondColumn);
@@ -641,7 +636,7 @@ public class BiBer1992 extends BaseApi {
                         // check if there is an amazon image
                         if (columns.get(0).select("a img[src]").size() > 0) {
                             item.setCover(columns.get(0).select("a img")
-                                    .first().attr("src"));
+                                                 .first().attr("src"));
                         }
 
                     }
@@ -661,12 +656,12 @@ public class BiBer1992 extends BaseApi {
                                 // for "Standort" only use ownText() to suppress
                                 // Link "Wegweiser"
                                 text = columns.get(col).ownText()
-                                        .replace("\u00a0", " ").trim();
+                                              .replace("\u00a0", " ").trim();
                             }
                             if (text.length() == 0) {
                                 // text of children
                                 text = columns.get(col).text()
-                                        .replace("\u00a0", " ").trim();
+                                              .replace("\u00a0", " ").trim();
                             }
                             if (text.length() == 0) {
                                 // empty table cell, take the one above
@@ -676,17 +671,18 @@ public class BiBer1992 extends BaseApi {
                                     // but do it not for Status
                                     text = " ";
                                 } else {
-                                    if (copy_last_content != null)
+                                    if (copy_last_content != null) {
                                         text = copy_last_content
                                                 .get(copy_keys[j]);
-                                    else
+                                    } else {
                                         text = "";
+                                    }
                                 }
                             }
                             if (copy_keys[j]
                                     .equals(DetailledItem.KEY_COPY_RESERVATIONS)) {
                                 text = text.replace("Vorgemerkt: ", "")
-                                        .replace("Vorbestellt: ", "");
+                                           .replace("Vorbestellt: ", "");
                             }
                             e.put(copy_keys[j], text);
                         }
@@ -694,8 +690,9 @@ public class BiBer1992 extends BaseApi {
                     if (e.containsKey(DetailledItem.KEY_COPY_BRANCH)
                             && e.containsKey(DetailledItem.KEY_COPY_LOCATION)
                             && e.get(DetailledItem.KEY_COPY_LOCATION).equals(
-                            e.get(DetailledItem.KEY_COPY_BRANCH)))
+                            e.get(DetailledItem.KEY_COPY_BRANCH))) {
                         e.remove(DetailledItem.KEY_COPY_LOCATION);
+                    }
                     item.addCopy(e);
                     copy_last_content = e;
                 }// ignore 1st row
@@ -712,7 +709,7 @@ public class BiBer1992 extends BaseApi {
                         .select("input[type=checkbox]").first().attr("name"));
             } else if (document.select("a[href^=reserv.C]").size() > 0) {
                 String href = document.select("a[href^=reserv.C]").first()
-                        .attr("href");
+                                      .attr("href");
                 item.setReservation_info(href.substring(href.indexOf("resF_")));
             } else {
                 item.setReservable(false);
@@ -733,7 +730,7 @@ public class BiBer1992 extends BaseApi {
      */
     @Override
     public ReservationResult reservation(DetailledItem item, Account account,
-                                         int useraction, String selection) throws IOException {
+            int useraction, String selection) throws IOException {
         String resinfo = item.getReservation_info();
         if (selection == null) {
             // STEP 1: Check if reservable and select branch ("ID1")
@@ -756,8 +753,9 @@ public class BiBer1992 extends BaseApi {
             if (optionsElements.size() > 0) {
                 List<Map<String, String>> options = new ArrayList<>();
                 for (Element option : optionsElements) {
-                    if ("0".equals(option.attr("value")))
+                    if ("0".equals(option.attr("value"))) {
                         continue;
+                    }
                     Map<String, String> selopt = new HashMap<>();
                     selopt.put("key", option.attr("value") + ":" + option.text());
                     selopt.put("value", option.text());
@@ -787,14 +785,16 @@ public class BiBer1992 extends BaseApi {
             nameValuePairs.add(new BasicNameValuePair("PASSWORD", account
                     .getPassword()));
             nameValuePairs.add(new BasicNameValuePair("FUNC", "vors"));
-            if (m_opac_dir.equals("opax"))
+            if (m_opac_dir.equals("opax")) {
                 nameValuePairs.add(new BasicNameValuePair(resinfo.replace(
                         "resF_", ""), "vors"
                         + (newStyleReservations ? resinfo.replace("resF_", "")
                         : "")));
-            if (newStyleReservations)
+            }
+            if (newStyleReservations) {
                 nameValuePairs.add(new BasicNameValuePair("ID11", selection
                         .split(":")[1]));
+            }
             nameValuePairs.add(new BasicNameValuePair("ID1", selection
                     .split(":")[0]));
 
@@ -808,8 +808,9 @@ public class BiBer1992 extends BaseApi {
             } else {
                 ReservationResult res = new ReservationResult(
                         MultiStepResult.Status.ERROR);
-                if (doc.select(".p1, .p22b").size() > 0)
+                if (doc.select(".p1, .p22b").size() > 0) {
                     res.setMessage(doc.select(".p1, .p22b").text());
+                }
                 return res;
             }
         }
@@ -834,7 +835,7 @@ public class BiBer1992 extends BaseApi {
      */
     @Override
     public ProlongResult prolong(String media, Account account, int useraction,
-                                 String Selection) throws IOException {
+            String Selection) throws IOException {
 
         String command;
 
@@ -920,7 +921,7 @@ public class BiBer1992 extends BaseApi {
      */
     @Override
     public CancelResult cancel(String media, Account account, int useraction,
-                               String selection) throws IOException, OpacErrorException {
+            String selection) throws IOException, OpacErrorException {
         List<NameValuePair> nameValuePairs = new ArrayList<>();
         nameValuePairs.add(new BasicNameValuePair("LANG", "de"));
         nameValuePairs.add(new BasicNameValuePair("FUNC", "vorl"));
@@ -972,7 +973,7 @@ public class BiBer1992 extends BaseApi {
     }
 
     private List<Map<String, String>> accountGetMedia(Account account,
-                                                      AccountData res) throws IOException, JSONException,
+            AccountData res) throws IOException, JSONException,
             OpacErrorException {
 
         List<Map<String, String>> medien = new ArrayList<>();
@@ -1002,8 +1003,9 @@ public class BiBer1992 extends BaseApi {
         // rows: skip 1st row -> title row
         for (int i = 1; i < rowElements.size(); i++) {
             Element tr = rowElements.get(i);
-            if (tr.child(0).tagName().equals("th"))
+            if (tr.child(0).tagName().equals("th")) {
                 continue;
+            }
             Map<String, String> e = new HashMap<>();
 
             Pattern itemIdPat = Pattern
@@ -1038,19 +1040,19 @@ public class BiBer1992 extends BaseApi {
                             // Title: remove everything up to ":"
                             value = value.replaceFirst(".*\\:", "").trim();
                             value = value.replaceFirst("^(.*)/[^/]*$", "$1")
-                                    .trim();
+                                         .trim();
                         } else {
                             // Remove everything except the signature
                             value = value.replaceFirst("^[^/]*/([^/]*)/[^/]*$",
                                     "$1").trim();
                             value = value.replaceFirst("^[^/]*/([^/]*)$", "$1")
-                                    .trim();
+                                         .trim();
                         }
                     }
 
                     if (tr.child(index).select("a").size() == 1) {
                         Matcher matcher = itemIdPat.matcher(tr.child(index)
-                                .select("a").attr("href"));
+                                                              .select("a").attr("href"));
                         if (matcher.find()) {
                             e.put(AccountData.KEY_LENT_ID, matcher.group(1));
                         }
@@ -1062,10 +1064,11 @@ public class BiBer1992 extends BaseApi {
                 }
             }
 
-            if (tr.select("input[type=checkbox][value=YES]").size() > 0)
+            if (tr.select("input[type=checkbox][value=YES]").size() > 0) {
                 e.put(AccountData.KEY_LENT_LINK,
                         tr.select("input[type=checkbox][value=YES]").attr(
                                 "name"));
+            }
 
             // calculate lent timestamp for notification purpose
             if (e.containsKey(AccountData.KEY_LENT_DEADLINE)) {
@@ -1073,7 +1076,7 @@ public class BiBer1992 extends BaseApi {
                     e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String
                             .valueOf(sdf.parse(
                                     e.get(AccountData.KEY_LENT_DEADLINE))
-                                    .getTime()));
+                                        .getTime()));
                 } catch (ParseException e1) {
                     e1.printStackTrace();
                 }
@@ -1122,8 +1125,9 @@ public class BiBer1992 extends BaseApi {
         // rows: skip 1st row -> title row
         for (int i = 1; i < rowElements.size(); i++) {
             Element tr = rowElements.get(i);
-            if (tr.child(0).tagName().equals("th"))
+            if (tr.child(0).tagName().equals("th")) {
                 continue;
+            }
             Map<String, String> e = new HashMap<>();
 
             e.put(AccountData.KEY_RESERVATION_CANCEL,
@@ -1153,13 +1157,13 @@ public class BiBer1992 extends BaseApi {
                             // Title: remove everything up to ":"
                             value = value.replaceFirst(".*\\:", "").trim();
                             value = value.replaceFirst("^(.*)/[^/]*$", "$1")
-                                    .trim();
+                                         .trim();
                         } else {
                             // Remove everything except the signature
                             value = value.replaceFirst("^[^/]*/([^/]*)/[^/]*$",
                                     "$1").trim();
                             value = value.replaceFirst("^[^/]*/([^/]*)$", "$1")
-                                    .trim();
+                                         .trim();
                         }
                     }
 
@@ -1194,7 +1198,7 @@ public class BiBer1992 extends BaseApi {
         // <title>OPAC Fehler</title>
         if (doc.title().contains("Fehler")
                 || (doc.select("h2").size() > 0 && doc.select("h2").text()
-                .contains("Fehler"))) {
+                                                      .contains("Fehler"))) {
             String errText = "unknown error";
             Elements elTable = doc.select("table");
             if (elTable.size() > 0) {
@@ -1249,7 +1253,7 @@ public class BiBer1992 extends BaseApi {
 
     @Override
     public ProlongAllResult prolongAll(Account account, int useraction,
-                                       String selection) throws IOException {
+            String selection) throws IOException {
         return null;
     }
 
@@ -1263,8 +1267,9 @@ public class BiBer1992 extends BaseApi {
     public void checkAccountData(Account account) throws IOException,
             JSONException, OpacErrorException {
         Document doc = accountHttpPost(account, "medk");
-        if (doc == null)
+        if (doc == null) {
             throw new NotReachableException();
+        }
     }
 
     @Override

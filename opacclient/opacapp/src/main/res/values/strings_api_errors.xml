@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
     <!--These strings may be shown as unused by Android Lint, but are in fact used by the AndroidStringProvider class-->
-    <string name="limited_num_of_criteria">This library only supports up to %d search criteria.</string>
+    <plurals name="limited_num_of_criteria">
+        <item quantity="one">This library only supports one search criterion.</item>
+        <item quantity="other">This library only supports up to %d search criteria.</item>
+    </plurals>
     <string name="no_criteria_input">You haven\'t input any search criteria.</string>
     <string name="combination_not_supported">You used a combination of search criteria that is not supported by this library. Please try another search query.</string>
     <string name="unknown_error_account">Unknown Error. Please check if your login data is correct.</string>

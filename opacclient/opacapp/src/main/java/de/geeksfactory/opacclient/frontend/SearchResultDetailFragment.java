@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.ActionMenuView;
@@ -39,6 +40,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,7 +56,6 @@ import java.util.List;
 import java.util.Map;
 
 import de.geeksfactory.opacclient.OpacClient;
-import de.geeksfactory.opacclient.OpacTask;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.EbookServiceApi;
 import de.geeksfactory.opacclient.apis.EbookServiceApi.BookingResult;
@@ -101,15 +102,17 @@ public class SearchResultDetailFragment extends Fragment
     private Callbacks mCallbacks = sDummyCallbacks;
     protected boolean back_button_visible = false;
     protected boolean image_analyzed = false;
+
     protected Toolbar toolbar;
     protected ImageView ivCover;
     protected ObservableScrollView scrollView;
-    protected View gradientBottom;
-    protected View gradientTop;
-    protected View tint;
-    protected TextView tvTitel;
-    protected LinearLayout llDetails;
-    protected LinearLayout llCopies;
+    protected View gradientBottom, gradientTop, tint;
+    protected TextView tvTitel, tvCopies;
+    protected LinearLayout llDetails, llCopies;
+    protected ProgressBar progressBar;
+    protected RelativeLayout detailsLayout;
+    protected FrameLayout errorView;
+
     /**
      * The detailled item that this fragment represents.
      */
@@ -120,7 +123,6 @@ public class SearchResultDetailFragment extends Fragment
     private OpacClient app;
     private View view;
     private FetchTask ft;
-    private FetchSubTask fst;
     private ProgressDialog dialog;
     private AlertDialog adialog;
     private boolean account_switched = false;
@@ -140,79 +142,67 @@ public class SearchResultDetailFragment extends Fragment
         super.onCreate(savedInstanceState);
 
         setRetainInstance(true);
-        if (getArguments().containsKey(ARG_ITEM_ID)
-                || getArguments().containsKey(ARG_ITEM_NR)) {
-            // Load the dummy content specified by the fragment
-            // arguments. In a real-world scenario, use a Loader
-            // to load content from a content provider.
-            load(getArguments().getInt(ARG_ITEM_NR),
-                    getArguments().getString(ARG_ITEM_ID));
-        }
     }
 
     public void setProgress(boolean show, boolean animate) {
         progress = show;
 
         if (view != null) {
-            ProgressBar progress = (ProgressBar) view
-                    .findViewById(R.id.progress);
-            View content = view.findViewById(R.id.detailsLayout);
+            View content = detailsLayout;
+
             if (scrollView != null) {
                 scrollView.setVisibility(View.VISIBLE);
             }
 
             if (show) {
                 if (animate) {
-                    progress.startAnimation(AnimationUtils.loadAnimation(
+                    progressBar.startAnimation(AnimationUtils.loadAnimation(
                             getActivity(), android.R.anim.fade_in));
                     content.startAnimation(AnimationUtils.loadAnimation(
                             getActivity(), android.R.anim.fade_out));
                 } else {
-                    progress.clearAnimation();
+                    progressBar.clearAnimation();
                     content.clearAnimation();
                 }
-                progress.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
                 content.setVisibility(View.GONE);
             } else {
                 if (animate) {
-                    progress.startAnimation(AnimationUtils.loadAnimation(
+                    progressBar.startAnimation(AnimationUtils.loadAnimation(
                             getActivity(), android.R.anim.fade_out));
                     content.startAnimation(AnimationUtils.loadAnimation(
                             getActivity(), android.R.anim.fade_in));
                 } else {
-                    progress.clearAnimation();
+                    progressBar.clearAnimation();
                     content.clearAnimation();
                 }
-                progress.setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);
                 content.setVisibility(View.VISIBLE);
             }
         }
     }
 
     public void showConnectivityError() {
-        ProgressBar progress = (ProgressBar) view.findViewById(R.id.progress);
-        final FrameLayout errorView = (FrameLayout) view
-                .findViewById(R.id.error_view);
         errorView.removeAllViews();
         View connError = getActivity().getLayoutInflater().inflate(
                 R.layout.error_connectivity, errorView);
 
         connError.findViewById(R.id.btRetry)
-                .setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        errorView.removeAllViews();
-                        reload();
-                    }
-                });
+                 .setOnClickListener(new OnClickListener() {
+                     @Override
+                     public void onClick(View v) {
+                         errorView.removeAllViews();
+                         reload();
+                     }
+                 });
 
-        progress.startAnimation(AnimationUtils.loadAnimation(getActivity(),
+        progressBar.startAnimation(AnimationUtils.loadAnimation(getActivity(),
                 android.R.anim.fade_out));
         scrollView.startAnimation(AnimationUtils.loadAnimation(getActivity(),
                 android.R.anim.fade_out));
         connError.startAnimation(AnimationUtils.loadAnimation(getActivity(),
                 android.R.anim.fade_in));
-        progress.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
         scrollView.setVisibility(View.GONE);
         connError.setVisibility(View.VISIBLE);
     }
@@ -225,13 +215,8 @@ public class SearchResultDetailFragment extends Fragment
         setProgress(true, true);
         this.id = id;
         this.nr = nr;
-        if (id != null && !id.equals("")) {
-            fst = new FetchSubTask();
-            fst.execute(app, id);
-        } else {
-            ft = new FetchTask();
-            ft.execute(app, nr);
-        }
+        ft = new FetchTask(nr, id);
+        ft.execute();
     }
 
     private void reload() {
@@ -255,9 +240,12 @@ public class SearchResultDetailFragment extends Fragment
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         if (item != null) {
             display();
+        } else if (getArguments().containsKey(ARG_ITEM_ID)
+                || getArguments().containsKey(ARG_ITEM_NR)) {
+            load(getArguments().getInt(ARG_ITEM_NR),
+                    getArguments().getString(ARG_ITEM_ID));
         }
     }
 
@@ -271,11 +259,11 @@ public class SearchResultDetailFragment extends Fragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_searchresult_detail,
                 container, false);
         view = rootView;
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        findViews();
         toolbar.setVisibility(View.VISIBLE);
         setHasOptionsMenu(false);
 
@@ -299,16 +287,7 @@ public class SearchResultDetailFragment extends Fragment
         setRetainInstance(true);
         setProgress();
 
-        scrollView = (ObservableScrollView) view.findViewById(R.id.rootView);
         scrollView.addCallbacks(this);
-
-        ivCover = (ImageView) view.findViewById(R.id.ivCover);
-        gradientBottom = view.findViewById(R.id.gradient_bottom);
-        gradientTop = view.findViewById(R.id.gradient_top);
-        tint = view.findViewById(R.id.tint);
-        tvTitel = (TextView) view.findViewById(R.id.tvTitle);
-        llDetails = (LinearLayout) view.findViewById(R.id.llDetails);
-        llCopies = (LinearLayout) view.findViewById(R.id.llCopies);
 
         if (getArguments().containsKey(ARG_ITEM_COVER_BITMAP)) {
             Bitmap bitmap = getArguments().getParcelable(ARG_ITEM_COVER_BITMAP);
@@ -333,6 +312,22 @@ public class SearchResultDetailFragment extends Fragment
         fixEllipsize(tvTitel);
 
         return rootView;
+    }
+
+    private void findViews() {
+        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        scrollView = (ObservableScrollView) view.findViewById(R.id.rootView);
+        ivCover = (ImageView) view.findViewById(R.id.ivCover);
+        gradientBottom = view.findViewById(R.id.gradient_bottom);
+        gradientTop = view.findViewById(R.id.gradient_top);
+        tint = view.findViewById(R.id.tint);
+        tvTitel = (TextView) view.findViewById(R.id.tvTitle);
+        llDetails = (LinearLayout) view.findViewById(R.id.llDetails);
+        llCopies = (LinearLayout) view.findViewById(R.id.llCopies);
+        progressBar = (ProgressBar) view.findViewById(R.id.progress);
+        detailsLayout = (RelativeLayout) view.findViewById(R.id.detailsLayout);
+        errorView = (FrameLayout) view.findViewById(R.id.error_view);
+        tvCopies = (TextView) view.findViewById(R.id.tvCopies);
     }
 
     /**
@@ -424,8 +419,7 @@ public class SearchResultDetailFragment extends Fragment
 
         llCopies.removeAllViews();
         if (item.getVolumesearch() != null) {
-            TextView tvC = (TextView) view.findViewById(R.id.tvCopies);
-            tvC.setText(R.string.baende);
+            tvCopies.setText(R.string.baende);
             Button btnVolume = new Button(getActivity());
             btnVolume.setText(R.string.baende_volumesearch);
             btnVolume.setOnClickListener(new OnClickListener() {
@@ -436,11 +430,10 @@ public class SearchResultDetailFragment extends Fragment
             });
             llCopies.addView(btnVolume);
 
-        } else if (item.getBaende().size() > 0) {
-            TextView tvC = (TextView) view.findViewById(R.id.tvCopies);
-            tvC.setText(R.string.baende);
+        } else if (item.getVolumes().size() > 0) {
+            tvCopies.setText(R.string.baende);
 
-            for (final Map<String, String> band : item.getBaende()) {
+            for (final Map<String, String> band : item.getVolumes()) {
                 View v = getLayoutInflater(null).inflate(R.layout.listitem_volume,
                         null);
                 ((TextView) v.findViewById(R.id.tvTitel)).setText(band
@@ -462,7 +455,7 @@ public class SearchResultDetailFragment extends Fragment
             }
         } else {
             if (item.getCopies().size() == 0) {
-                view.findViewById(R.id.tvCopies).setVisibility(View.GONE);
+                tvCopies.setVisibility(View.GONE);
             } else {
                 for (Map<String, String> copy : item.getCopies()) {
                     View v = getLayoutInflater(null).inflate(
@@ -550,8 +543,15 @@ public class SearchResultDetailFragment extends Fragment
         setProgress(false, true);
 
         refreshMenu(toolbar.getMenu());
-
-        fixTitle();
+        toolbar.getViewTreeObserver()
+               .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                   @Override
+                   public void onGlobalLayout() {
+                       toolbar.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                       fixTitle();
+                   }
+               });
+        toolbar.requestLayout();
     }
 
     private boolean containsAndNotEmpty(Map<String, String> map, String key) {
@@ -563,6 +563,9 @@ public class SearchResultDetailFragment extends Fragment
         tvTitel.setVisibility(b ? View.VISIBLE : View.GONE);
         gradientBottom.setVisibility(b ? View.VISIBLE : View.GONE);
         gradientTop.setVisibility(b ? View.VISIBLE : View.GONE);
+        RelativeLayout.LayoutParams params =
+                ((RelativeLayout.LayoutParams) detailsLayout.getLayoutParams());
+        params.removeRule(RelativeLayout.BELOW);
         if (b) {
             toolbar.setBackgroundResource(R.color.transparent);
             ViewCompat.setElevation(toolbar, 0);
@@ -572,96 +575,69 @@ public class SearchResultDetailFragment extends Fragment
                     llDetails.getPaddingRight(),
                     llDetails.getPaddingBottom()
             );
+            params.addRule(RelativeLayout.BELOW, R.id.ivCover);
         } else {
-            toolbar.setBackgroundResource(R.color.primary_red_dark);
+            toolbar.setBackgroundResource(getToolbarBackgroundColor());
             ViewCompat.setElevation(toolbar, TypedValue.applyDimension(TypedValue
                     .COMPLEX_UNIT_DIP, 4f, getResources().getDisplayMetrics()));
-            llDetails.setPadding(
-                    llDetails.getPaddingLeft(),
-                    toolbar.getHeight(),
-                    llDetails.getPaddingRight(),
-                    llDetails.getPaddingBottom()
-            );
+            params.addRule(RelativeLayout.BELOW, R.id.toolbar);
+        }
+    }
+
+    private int getToolbarBackgroundColor() {
+        if (getActivity() != null) {
+            if (getActivity() instanceof SearchResultListActivity) {
+                return R.color.primary_red_dark;
+            } else {
+                return R.color.primary_red;
+            }
+        } else {
+            return R.color.primary_red;
         }
     }
 
     private void fixTitle() {
-        if (getItem().getCoverBitmap() != null) {
+        if (getItem().getCoverBitmap() != null ||
+                getArguments().containsKey(ARG_ITEM_COVER_BITMAP)) {
             // tvTitel is used for displaying title
             fixTitleWidth();
-            tvTitel.getViewTreeObserver().addOnGlobalLayoutListener(new
-                                                                            ViewTreeObserver
-                                                                                    .OnGlobalLayoutListener() {
-                                                                                @Override
-                                                                                public void
-                                                                                onGlobalLayout() {
-                                                                                    // We need to
-                                                                                    // wait for
-                                                                                    // tvTitel to
-                                                                                    // refresh to
-                                                                                    // get
-                                                                                    // correct
-                                                                                    // calculations
-                                                                                    tvTitel.getViewTreeObserver()
-                                                                                           .removeGlobalOnLayoutListener(
-                                                                                                   this);
-                                                                                    if (tvTitel
-                                                                                            .getLayout()
-                                                                                            .getLineCount() >
-                                                                                            1) {
-                                                                                        toolbar.getLayoutParams().height =
-                                                                                                (int) TypedValue
-                                                                                                        .applyDimension(
-                                                                                                                TypedValue.COMPLEX_UNIT_SP,
-                                                                                                                84f,
-                                                                                                                getResources()
-                                                                                                                        .getDisplayMetrics());
-                                                                                        toolbar.getParent()
-                                                                                               .requestLayout();
-                                                                                    }
-                                                                                }
-                                                                            });
+            tvTitel.getViewTreeObserver()
+                   .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                       @Override
+                       public void onGlobalLayout() {
+                           // We need to wait for tvTitel to refresh to get correct calculations
+                           tvTitel.getViewTreeObserver().removeGlobalOnLayoutListener(
+                                   this);
+                           if (tvTitel.getLayout() != null &&
+                                   tvTitel.getLayout().getLineCount() > 1) {
+                               toolbar.getLayoutParams().height = (int) TypedValue.applyDimension(
+                                       TypedValue.COMPLEX_UNIT_SP, 84f,
+                                       getResources().getDisplayMetrics());
+                               toolbar.getParent().requestLayout();
+                           }
+                       }
+                   });
         } else {
             // Toolbar is used for displaying title
-            toolbar.getViewTreeObserver().addOnGlobalLayoutListener(new
-                                                                            ViewTreeObserver
-                                                                                    .OnGlobalLayoutListener() {
-                                                                                @Override
-                                                                                public void
-                                                                                onGlobalLayout() {
-                                                                                    // We need to
-                                                                                    // wait for
-                                                                                    // toolbar to
-                                                                                    // refresh to
-                                                                                    // get
-                                                                                    // correct
-                                                                                    // calculations
-                                                                                    toolbar.getViewTreeObserver()
-                                                                                           .removeGlobalOnLayoutListener(
-                                                                                                   this);
-                                                                                    if (toolbar
-                                                                                            .isTitleTruncated()) {
-                                                                                        toolbar.getLayoutParams().height =
-                                                                                                (int) TypedValue
-                                                                                                        .applyDimension(
-                                                                                                                TypedValue.COMPLEX_UNIT_SP,
-                                                                                                                84f,
-                                                                                                                getResources()
-                                                                                                                        .getDisplayMetrics());
-                                                                                        TextView
-                                                                                                titleTextView =
-                                                                                                findTitleTextView(
-                                                                                                        toolbar);
-                                                                                        titleTextView
-                                                                                                .setSingleLine(
-                                                                                                        false);
-                                                                                        fixEllipsize(
-                                                                                                titleTextView);
-                                                                                        toolbar.getParent()
-                                                                                               .requestLayout();
-                                                                                    }
-                                                                                }
-                                                                            });
+            toolbar.getViewTreeObserver()
+                   .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                       @Override
+                       public void onGlobalLayout() {
+                           // We need to wait for toolbar to refresh to get correct calculations
+                           toolbar.getViewTreeObserver().removeGlobalOnLayoutListener(
+                                   this);
+                           if (toolbar.isTitleTruncated()) {
+                               toolbar.getLayoutParams().height = (int) TypedValue.applyDimension(
+                                       TypedValue.COMPLEX_UNIT_SP, 84f,
+                                       getResources().getDisplayMetrics());
+                               TextView titleTextView = findTitleTextView(toolbar);
+                               titleTextView.setSingleLine(
+                                       false);
+                               fixEllipsize(titleTextView);
+                               toolbar.getParent().requestLayout();
+                           }
+                       }
+                   });
         }
         onScrollChanged(0, 0);
     }
@@ -670,13 +646,51 @@ public class SearchResultDetailFragment extends Fragment
         ActionMenuView view = findActionMenuView(toolbar);
         if (view != null) {
             float density = getResources().getDisplayMetrics().density;
-            float availableWidth = toolbar.getWidth() - view.getWidth() - 16 * density -
-                    (back_button_visible ? 56 * density : 0);
-            // Toolbar width - menu width - margin - back button width
-            if (tvTitel.getWidth() > availableWidth * 36f / 20f) {
-                tvTitel.getLayoutParams().width = (int) (availableWidth * 36f / 20f);
-                tvTitel.getParent().requestLayout();
+            Menu menu = view.getMenu();
+            float availableWidth = calculateAvailableWidthInToolbar();
+            if (availableWidth / density < 150 &&
+                    (menu.findItem(R.id.action_lendebook).isVisible() ||
+                            menu.findItem(R.id.action_reservation).isVisible())
+                    && tvTitel.getWidth() > availableWidth * 36f / 20f) {
+                // We have so little space for the title that we should move the
+                // "Lend eBook" and "Reserve" menu items to the overflow menu
+                MenuItemCompat.setShowAsAction(menu.findItem(R.id.action_lendebook),
+                        MenuItemCompat.SHOW_AS_ACTION_NEVER);
+                MenuItemCompat.setShowAsAction(menu.findItem(R.id.action_reservation),
+                        MenuItemCompat.SHOW_AS_ACTION_NEVER);
+                toolbar.requestLayout();
+                toolbar.getViewTreeObserver()
+                       .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                           @Override
+                           public void onGlobalLayout() {
+                               toolbar.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                               float availableWidth = calculateAvailableWidthInToolbar();
+                               changeTitleWidth(availableWidth);
+                           }
+                       });
+            } else {
+                changeTitleWidth(availableWidth);
             }
+        }
+    }
+
+    /**
+     * Calculates the width available for a title in the toolbar in pixels. Follows the following
+     * formula: Toolbar width - menu width - margin - back button width
+     *
+     * @return Available width in pixels
+     */
+    private float calculateAvailableWidthInToolbar() {
+        float density = getResources().getDisplayMetrics().density;
+        ActionMenuView view = findActionMenuView(toolbar);
+        return toolbar.getWidth() - view.getWidth() - 16 * density -
+                (back_button_visible ? 56 * density : 0);
+    }
+
+    private void changeTitleWidth(float availableWidth) {
+        if (tvTitel.getWidth() > availableWidth * 36f / 20f) {
+            tvTitel.getLayoutParams().width = (int) (availableWidth * 36f / 20f);
+            tvTitel.getParent().requestLayout();
         }
     }
 
@@ -716,8 +730,13 @@ public class SearchResultDetailFragment extends Fragment
 
     @Override
     public void onScrollChanged(int deltaX, int deltaY) {
+        if (getItem() == null) {
+            return;
+        }
         int scrollY = scrollView.getScrollY();
-        if (getItem().getCoverBitmap() != null) {
+        boolean hasCover = getItem().getCoverBitmap() != null
+                || getArguments().containsKey(ARG_ITEM_COVER_BITMAP);
+        if (hasCover) {
             // Parallax effect
             ViewHelper.setTranslationY(ivCover, scrollY * 0.5f);
             ViewHelper.setTranslationY(gradientBottom, scrollY * 0.5f);
@@ -726,7 +745,7 @@ public class SearchResultDetailFragment extends Fragment
         // Toolbar stays at the top
         ViewHelper.setTranslationY(toolbar, scrollY);
 
-        if (getItem().getCoverBitmap() != null) {
+        if (hasCover) {
             float minHeight = toolbar.getHeight();
             float progress = Math.min(((float) scrollY) / (ivCover.getHeight() - minHeight), 1);
             float scale = 1 - progress + 20f / 36f * progress;
@@ -839,11 +858,6 @@ public class SearchResultDetailFragment extends Fragment
             if (ft != null) {
                 if (!ft.isCancelled()) {
                     ft.cancel(true);
-                }
-            }
-            if (fst != null) {
-                if (!fst.isCancelled()) {
-                    fst.cancel(true);
                 }
             }
         } catch (Exception e) {
@@ -1111,7 +1125,7 @@ public class SearchResultDetailFragment extends Fragment
 
     protected void reservationStart() {
         if (invalidated) {
-            new RestoreSessionTask().execute(false);
+            new RestoreSessionTask(false).execute();
         }
         if (app.getApi() instanceof EbookServiceApi) {
             SharedPreferences sp = PreferenceManager
@@ -1126,7 +1140,7 @@ public class SearchResultDetailFragment extends Fragment
                                new DialogInterface.OnClickListener() {
                                    @Override
                                    public void onClick(DialogInterface dialog,
-                                                       int id) {
+                                           int id) {
                                        dialog.cancel();
                                    }
                                })
@@ -1134,7 +1148,7 @@ public class SearchResultDetailFragment extends Fragment
                                new DialogInterface.OnClickListener() {
                                    @Override
                                    public void onClick(DialogInterface dialog,
-                                                       int id) {
+                                           int id) {
                                        dialog.dismiss();
                                        app.toPrefs(getActivity());
                                    }
@@ -1173,7 +1187,7 @@ public class SearchResultDetailFragment extends Fragment
             lv.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
-                                        int position, long id) {
+                        int position, long id) {
                     if (accounts.get(position).getId() != app.getAccount()
                                                              .getId() || account_switched) {
 
@@ -1208,7 +1222,7 @@ public class SearchResultDetailFragment extends Fragment
                            new DialogInterface.OnClickListener() {
                                @Override
                                public void onClick(DialogInterface dialog,
-                                                   int id) {
+                                       int id) {
                                    adialog.cancel();
                                }
                            });
@@ -1281,8 +1295,9 @@ public class SearchResultDetailFragment extends Fragment
             }
 
             @Override
-            public StepTask<?> newTask() {
-                return new ResTask();
+            public StepTask<?, ?> newTask(MultiStepResultHelper helper, int useraction,
+                    String selection) {
+                return new ResTask(helper, useraction, selection);
             }
         });
         msrhReservation.start();
@@ -1310,7 +1325,7 @@ public class SearchResultDetailFragment extends Fragment
             lv.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
-                                        int position, long id) {
+                        int position, long id) {
                     app.setAccount(accounts.get(position).getId());
                     bookingDo();
                     adialog.dismiss();
@@ -1322,7 +1337,7 @@ public class SearchResultDetailFragment extends Fragment
                            new DialogInterface.OnClickListener() {
                                @Override
                                public void onClick(DialogInterface dialog,
-                                                   int id) {
+                                       int id) {
                                    adialog.cancel();
                                }
                            });
@@ -1369,8 +1384,9 @@ public class SearchResultDetailFragment extends Fragment
             }
 
             @Override
-            public StepTask<?> newTask() {
-                return new BookingTask();
+            public StepTask<?, ?> newTask(MultiStepResultHelper helper, int useraction,
+                    String selection) {
+                return new BookingTask(helper, useraction, selection);
             }
         });
         msrhBooking.start();
@@ -1387,16 +1403,38 @@ public class SearchResultDetailFragment extends Fragment
         public void removeFragment();
     }
 
-    public class FetchTask extends OpacTask<DetailledItem> {
+    public class FetchTask extends AsyncTask<Void, Void, DetailledItem> {
         protected boolean success = true;
+        protected Integer nr;
+        protected String id;
+
+        public FetchTask(Integer nr, String id) {
+            this.nr = nr;
+            this.id = id;
+        }
 
         @Override
-        protected DetailledItem doInBackground(Object... arg0) {
-            super.doInBackground(arg0);
-            Integer nr = (Integer) arg0[1];
-
+        protected DetailledItem doInBackground(Void... voids) {
             try {
-                DetailledItem res = app.getApi().getResult(nr);
+                DetailledItem res;
+                if (id != null && !id.equals("")) {
+                    SharedPreferences sp = PreferenceManager
+                            .getDefaultSharedPreferences(getActivity());
+                    String homebranch = sp.getString(
+                            OpacClient.PREF_HOME_BRANCH_PREFIX
+                                    + app.getAccount().getId(), null);
+
+                    if (getActivity().getIntent().hasExtra("reservation")
+                            && getActivity().getIntent().getBooleanExtra(
+                            "reservation", false)) {
+                        app.getApi().start();
+                    }
+
+                    res = app.getApi().getResultById(id, homebranch);
+                    if (res.getId() == null) res.setId(id);
+                } else {
+                    res = app.getApi().getResult(nr);
+                }
                 URL newurl;
                 if (res.getCover() != null && res.getCoverBitmap() == null) {
                     try {
@@ -1465,77 +1503,16 @@ public class SearchResultDetailFragment extends Fragment
         }
     }
 
-    public class FetchSubTask extends FetchTask {
-        @Override
-        protected DetailledItem doInBackground(Object... arg0) {
-            this.a = (OpacClient) arg0[0];
-            String a = (String) arg0[1];
+    public class ResTask extends StepTask<DetailledItem, ReservationResult> {
 
-            try {
-                SharedPreferences sp = PreferenceManager
-                        .getDefaultSharedPreferences(getActivity());
-                String homebranch = sp.getString(
-                        OpacClient.PREF_HOME_BRANCH_PREFIX
-                                + app.getAccount().getId(), null);
-
-                if (getActivity().getIntent().hasExtra("reservation")
-                        && getActivity().getIntent().getBooleanExtra(
-                        "reservation", false)) {
-                    app.getApi().start();
-                }
-
-                DetailledItem res = app.getApi().getResultById(a, homebranch);
-                if (res.getId() == null) {
-                    res.setId(a);
-                }
-                URL newurl;
-                try {
-                    float density = getActivity().getResources().getDisplayMetrics().density;
-                    newurl = new URL(ISBNTools.getBestSizeCoverUrl(res.getCover(),
-                            view.getWidth(), (int) (260 * density)));
-                    Bitmap mIcon_val = BitmapFactory.decodeStream(newurl
-                            .openConnection().getInputStream());
-                    if (mIcon_val.getHeight() > 1
-                            && mIcon_val.getWidth() > 1) {
-                        res.setCoverBitmap(mIcon_val);
-                    } else {
-                        // When images embedded from Amazon aren't
-                        // available, a 1x1
-                        // pixel image is returned (iOPAC)
-                        res.setCover(null);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                success = true;
-                return res;
-            } catch (java.net.UnknownHostException e) {
-                publishProgress(e, "ioerror");
-            } catch (java.io.IOException | IllegalStateException e) {
-                success = false;
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-                publishProgress(e, "ioerror");
-            }
-
-            return null;
+        public ResTask(MultiStepResultHelper helper, int useraction, String selection) {
+            super(helper, useraction, selection);
         }
-    }
-
-    public class ResTask extends StepTask<ReservationResult> {
 
         @Override
-        protected ReservationResult doInBackground(Object... arg0) {
-            super.doInBackground(arg0);
-
-            app = (OpacClient) arg0[0];
-            DetailledItem item = (DetailledItem) arg0[1];
-            int useraction = (Integer) arg0[2];
-            String selection = (String) arg0[3];
-
+        protected ReservationResult doInBackground(DetailledItem... item) {
             try {
-                return app.getApi().reservation(item,
+                return app.getApi().reservation(item[0],
                         app.getAccount(), useraction, selection);
             } catch (java.net.UnknownHostException e) {
                 publishProgress(e, "ioerror");
@@ -1562,7 +1539,7 @@ public class SearchResultDetailFragment extends Fragment
                                new DialogInterface.OnClickListener() {
                                    @Override
                                    public void onClick(DialogInterface dialog,
-                                                       int id) {
+                                           int id) {
                                        dialog.cancel();
                                    }
                                });
@@ -1575,20 +1552,17 @@ public class SearchResultDetailFragment extends Fragment
         }
     }
 
-    public class BookingTask extends StepTask<BookingResult> {
+    public class BookingTask extends StepTask<DetailledItem, BookingResult> {
+
+        public BookingTask(MultiStepResultHelper helper, int useraction, String selection) {
+            super(helper, useraction, selection);
+        }
 
         @Override
-        protected BookingResult doInBackground(Object... arg0) {
-            super.doInBackground(arg0);
-
-            app = (OpacClient) arg0[0];
-            DetailledItem item = (DetailledItem) arg0[1];
-            int useraction = (Integer) arg0[2];
-            String selection = (String) arg0[3];
-
+        protected BookingResult doInBackground(DetailledItem... item) {
             try {
-                return((EbookServiceApi) app.getApi()).booking(
-                        item, app.getAccount(), useraction, selection);
+                return ((EbookServiceApi) app.getApi()).booking(
+                        item[0], app.getAccount(), useraction, selection);
             } catch (java.net.UnknownHostException e) {
                 publishProgress(e, "ioerror");
             } catch (java.net.SocketException | InterruptedIOException e) {
@@ -1614,7 +1588,7 @@ public class SearchResultDetailFragment extends Fragment
                                new DialogInterface.OnClickListener() {
                                    @Override
                                    public void onClick(DialogInterface dialog,
-                                                       int id) {
+                                           int id) {
                                        dialog.cancel();
                                    }
                                });
@@ -1627,12 +1601,15 @@ public class SearchResultDetailFragment extends Fragment
         }
     }
 
-    public class RestoreSessionTask extends OpacTask<Integer> {
-        private boolean reservation = true;
+    public class RestoreSessionTask extends AsyncTask<Void, Void, Integer> {
+        private boolean reservation;
+
+        public RestoreSessionTask(boolean reservation) {
+            this.reservation = reservation;
+        }
 
         @Override
-        protected Integer doInBackground(Object... arg0) {
-            reservation = (Boolean) arg0[0];
+        protected Integer doInBackground(Void... voids) {
             try {
                 if (id != null) {
                     SharedPreferences sp = PreferenceManager
@@ -1646,7 +1623,8 @@ public class SearchResultDetailFragment extends Fragment
                     ACRA.getErrorReporter().handleException(
                             new Throwable("No ID supplied"));
                 }
-            } catch (java.net.SocketException | InterruptedIOException | java.net.UnknownHostException e) {
+            } catch (java.net.SocketException | InterruptedIOException | java.net
+                    .UnknownHostException e) {
                 e.printStackTrace();
             } catch (Exception e) {
                 ACRA.getErrorReporter().handleException(e);

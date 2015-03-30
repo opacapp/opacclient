@@ -159,7 +159,10 @@
     <string name="barcode_desc">Questa funzionalità richiede uno scanner di codici a barre. Vuoi installarne uno?</string>
     <string name="barcode_gplay">Google Play</string>
     <string name="barcode_amazon">Amazon</string>
-    <string name="result_number">%d risultati ricerca</string>
+    <plurals name="result_number">
+        <item quantity="one">Un risultato ricerca</item>
+        <item quantity="other">%d risultati ricerca</item>
+    </plurals>
     <string name="export_starred">Esporta</string>
     <string name="geolocate">Cerca le biblioteche nelle mie vicinanze</string>
     <string name="geolocate_progress">Ricerca della tua posizione in corso…</string>
@@ -179,7 +182,6 @@
     <string name="drawer_open">Apri navigazione</string>
     <string name="drawer_close">Chiudi navigazione</string>
     <string name="title_searchresult_list">Risultati della ricerca</string>
-    <string name="title_searchresult_detail">Dettagli</string>
     <string name="title_activity_library_list">Scelta biblioteca</string>
     <string name="suggest_library">La tua biblioteca non è disponibile? Suggeriscici di inserirla!</string>
     <string name="title_activity_suggest_library">Suggerisci biblioteca</string>

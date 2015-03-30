@@ -73,13 +73,13 @@ import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
 /**
- * OpacApi implementation for Bibliotheca Web Opacs, originally developed by
- * BOND, now owned by OCLC. Known to work well with Web Opac versions from 2.6,
- * maybe older, to 2.8
+ * OpacApi implementation for Bibliotheca Web Opacs, originally developed by BOND, now owned by
+ * OCLC. Known to work well with Web Opac versions from 2.6, maybe older, to 2.8
  */
 public class Bibliotheca extends BaseApi {
 
     protected static HashMap<String, MediaType> defaulttypes = new HashMap<>();
+
     static {
         defaulttypes.put("mbuchs", MediaType.BOOK);
         defaulttypes.put("cdkl", MediaType.CD);
@@ -111,6 +111,7 @@ public class Bibliotheca extends BaseApi {
         defaulttypes.put("spiel_konsol", MediaType.GAME_CONSOLE);
         defaulttypes.put("wii", MediaType.GAME_CONSOLE);
     }
+
     protected final long SESSION_LIFETIME = 1000 * 60 * 3;
     protected String opac_url = "";
     protected JSONObject data;
@@ -120,23 +121,12 @@ public class Bibliotheca extends BaseApi {
     protected String _res_target = "vorbesttranskonto";
     protected String branch_inputfield = "zstauswahl";
 
-    public static String getStringFromBundle(Map<String, String> bundle,
-                                             String key) {
-        // Workaround for Bundle.getString(key, default) being available not
-        // before API 12
-        String res = bundle.get(key);
-        if (res == null)
-            res = "";
-        else
-            res = res.trim();
-        return res;
-    }
-
     @Override
     public List<SearchField> getSearchFields() throws IOException,
             JSONException {
-        if (!initialised)
+        if (!initialised) {
             start();
+        }
 
         List<SearchField> fields = new ArrayList<>();
         // Zweigstellen und Mediengruppen auslesen
@@ -150,7 +140,7 @@ public class Bibliotheca extends BaseApi {
         Elements fieldElems = doc.select(".suchfeldinhalt");
         for (Element fieldElem : fieldElems) {
             String name = fieldElem.select(".suchfeld_inhalt_titel label")
-                    .text();
+                                   .text();
             String hint = "";
             if (fieldElem.select(".suchfeld_inhalt_input").size() > 0) {
                 List<TextNode> textNodes = fieldElem
@@ -167,7 +157,8 @@ public class Bibliotheca extends BaseApi {
             }
 
             Elements inputs = fieldElem
-                    .select(".suchfeld_inhalt_input input[type=text], .suchfeld_inhalt_input select");
+                    .select(".suchfeld_inhalt_input input[type=text], " +
+                            ".suchfeld_inhalt_input select");
             if (inputs.size() == 1) {
                 fields.add(createSearchField(name, hint, inputs.get(0)));
             } else if (inputs.size() == 2
@@ -238,7 +229,7 @@ public class Bibliotheca extends BaseApi {
     }
 
     private SearchField createSearchField(String name, String hint,
-                                          Element input) {
+            Element input) {
         if (input.tagName().equals("input")
                 && input.attr("type").equals("text")) {
             TextSearchField field = new TextSearchField();
@@ -297,25 +288,29 @@ public class Bibliotheca extends BaseApi {
     public SearchRequestResult search(List<SearchQuery> queries)
             throws IOException, JSONException,
             OpacErrorException {
-        if (!initialised)
+        if (!initialised) {
             start();
+        }
 
         List<NameValuePair> nameValuePairs = new ArrayList<>(2);
         nameValuePairs.add(new BasicNameValuePair("stichtit", "stich"));
 
         int ifeldCount = 0;
         for (SearchQuery query : queries) {
-            if (query.getValue().equals(""))
+            if (query.getValue().equals("")) {
                 continue;
+            }
             String key = query.getKey();
-            if (key.contains("$"))
+            if (key.contains("$")) {
                 key = key.substring(0, key.indexOf("$"));
+            }
             if (key.contains("ifeld")) {
                 ifeldCount++;
-                if (ifeldCount > 1)
+                if (ifeldCount > 1) {
                     throw new OpacErrorException(
                             stringProvider
                                     .getString(StringProvider.COMBINATION_NOT_SUPPORTED));
+                }
             }
             if (key.equals("orderselect") && query.getValue().contains(":")) {
                 nameValuePairs.add(new BasicNameValuePair("orderselect", query
@@ -360,8 +355,9 @@ public class Bibliotheca extends BaseApi {
 
     @Override
     public SearchRequestResult searchGetPage(int page) throws IOException {
-        if (!initialised)
+        if (!initialised) {
             start();
+        }
 
         String html = httpGet(opac_url + "/index.asp?scrollAction=" + page,
                 getDefaultEncoding());
@@ -380,7 +376,7 @@ public class Bibliotheca extends BaseApi {
             int contentindex = 1;
             if (tr.select("td a img").size() > 0) {
                 String[] fparts = tr.select("td a img").get(0).attr("src")
-                        .split("/");
+                                    .split("/");
                 String fname = fparts[fparts.length - 1];
                 if (data.has("mediatypes")) {
                     try {
@@ -397,8 +393,9 @@ public class Bibliotheca extends BaseApi {
                             .replace(".gif", "").replace(".png", "")));
                 }
             } else {
-                if (tr.children().size() == 3)
+                if (tr.children().size() == 3) {
                     contentindex = 2;
+                }
             }
             sr.setInnerhtml(tr.child(contentindex).child(0).html());
 
@@ -437,7 +434,8 @@ public class Bibliotheca extends BaseApi {
         if (doc.select(".result_gefunden").size() > 0) {
             try {
                 results_total = Integer.parseInt(doc.select(".result_gefunden")
-                        .text().trim().replaceAll(".*[^0-9]+([0-9]+).*", "$1"));
+                                                    .text().trim()
+                                                    .replaceAll(".*[^0-9]+([0-9]+).*", "$1"));
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 results_total = -1;
@@ -449,8 +447,9 @@ public class Bibliotheca extends BaseApi {
     @Override
     public DetailledItem getResultById(String a, String homebranch)
             throws IOException {
-        if (!initialised)
+        if (!initialised) {
             start();
+        }
         String html = httpGet(opac_url + "/index.asp?MedienNr=" + a,
                 getDefaultEncoding());
         DetailledItem result = parse_result(html);
@@ -569,8 +568,9 @@ public class Bibliotheca extends BaseApi {
                     } catch (JSONException e1) {
                         index = -1;
                     }
-                    if (index >= 0)
+                    if (index >= 0) {
                         e.put(key, tr.child(index).text());
+                    }
                 }
 
                 result.addCopy(e);
@@ -587,7 +587,7 @@ public class Bibliotheca extends BaseApi {
                 Map<String, String> e = new HashMap<>();
                 e.put(DetailledItem.KEY_CHILD_ID, tr.attr("href").split("=")[1]);
                 e.put(DetailledItem.KEY_CHILD_TITLE, tr.text());
-                result.addBand(e);
+                result.addVolume(e);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -603,7 +603,7 @@ public class Bibliotheca extends BaseApi {
 
     @Override
     public ReservationResult reservation(DetailledItem item, Account acc,
-                                         int useraction, String selection) throws IOException {
+            int useraction, String selection) throws IOException {
         String reservation_info = item.getReservation_info();
 
         Document doc = null;
@@ -688,12 +688,13 @@ public class Bibliotheca extends BaseApi {
             doc = Jsoup.parse(html);
         }
 
-        if (doc == null)
+        if (doc == null) {
             return new ReservationResult(MultiStepResult.Status.ERROR);
+        }
 
         if (doc.select("input[name=target]").size() > 0) {
             if (doc.select("input[name=target]").attr("value")
-                    .equals("makevorbest")) {
+                   .equals("makevorbest")) {
                 List<String[]> details = new ArrayList<>();
 
                 if (doc.getElementsByClass("kontomeldung").size() == 1) {
@@ -740,9 +741,10 @@ public class Bibliotheca extends BaseApi {
 
     @Override
     public ProlongResult prolong(String a, Account account, int useraction,
-                                 String selection) throws IOException {
-        if (!initialised)
+            String selection) throws IOException {
+        if (!initialised) {
             start();
+        }
         if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
                 || logged_in_as == null) {
             try {
@@ -793,7 +795,7 @@ public class Bibliotheca extends BaseApi {
             if (doc.select("#verlaengern").size() == 1) {
                 if (doc.select(".kontozeile_center table").size() == 1) {
                     Element table = doc.select(".kontozeile_center table")
-                            .first();
+                                       .first();
                     ProlongResult res = new ProlongResult(
                             MultiStepResult.Status.CONFIRMATION_NEEDED);
                     List<String[]> details = new ArrayList<>();
@@ -804,7 +806,7 @@ public class Bibliotheca extends BaseApi {
                             details.add(new String[]{
                                     row.select(".konto_feld").text().trim(),
                                     row.select(".konto_feldinhalt").text()
-                                            .trim()});
+                                       .trim()});
                         }
                     }
                     res.setDetails(details);
@@ -828,10 +830,11 @@ public class Bibliotheca extends BaseApi {
 
     @Override
     public ProlongAllResult prolongAll(Account account, int useraction,
-                                       String selection) throws IOException {
+            String selection) throws IOException {
 
-        if (!initialised)
+        if (!initialised) {
             start();
+        }
         if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
                 || logged_in_as == null) {
             try {
@@ -898,7 +901,7 @@ public class Bibliotheca extends BaseApi {
                     Map<String, String> line = new HashMap<>();
                     for (Entry<Integer, String> entry : colmap.entrySet()) {
                         line.put(entry.getValue(), tr.child(entry.getKey())
-                                .text().trim());
+                                                     .text().trim());
                     }
                     result.add(line);
                 }
@@ -925,9 +928,10 @@ public class Bibliotheca extends BaseApi {
 
     @Override
     public CancelResult cancel(String media, Account account, int useraction,
-                               String selection) throws IOException, OpacErrorException {
-        if (!initialised)
+            String selection) throws IOException, OpacErrorException {
+        if (!initialised) {
             start();
+        }
         if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
                 || logged_in_as == null) {
             try {
@@ -963,11 +967,13 @@ public class Bibliotheca extends BaseApi {
     public AccountData account(Account acc) throws IOException,
             JSONException,
             OpacErrorException {
-        if (!initialised)
+        if (!initialised) {
             start();
+        }
 
-        if (acc.getName() == null || acc.getName().equals("null"))
+        if (acc.getName() == null || acc.getName().equals("null")) {
             return null;
+        }
 
         List<NameValuePair> nameValuePairs;
         // nameValuePairs.add(new BasicNameValuePair("link_konto.x", "0"));
@@ -1008,7 +1014,7 @@ public class Bibliotheca extends BaseApi {
 
         if (doc.getElementsByClass("kontomeldung").size() == 1) {
             throw new OpacErrorException(doc.getElementsByClass("kontomeldung")
-                    .get(0).text());
+                                            .get(0).text());
         }
 
         logged_in = System.currentTimeMillis();
@@ -1018,11 +1024,12 @@ public class Bibliotheca extends BaseApi {
 
         List<Map<String, String>> medien = new ArrayList<>();
 
-        if (doc.select(".kontozeile_center table").size() == 0)
+        if (doc.select(".kontozeile_center table").size() == 0) {
             return null;
+        }
 
         Elements exemplartrs = doc.select(".kontozeile_center table").get(0)
-                .select("tr.tabKonto");
+                                  .select("tr.tabKonto");
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
 
@@ -1045,7 +1052,7 @@ public class Bibliotheca extends BaseApi {
                             e.put(key, tr.child(index).child(0).attr("href"));
                             e.put(AccountData.KEY_LENT_RENEWABLE,
                                     tr.child(index).child(0).attr("href")
-                                            .contains("vermsg") ? "N" : "Y");
+                                      .contains("vermsg") ? "N" : "Y");
                         }
                     } else {
                         e.put(key, tr.child(index).text());
@@ -1058,7 +1065,7 @@ public class Bibliotheca extends BaseApi {
                     e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String
                             .valueOf(sdf.parse(
                                     e.get(AccountData.KEY_LENT_DEADLINE))
-                                    .getTime()));
+                                        .getTime()));
                 } catch (ParseException e1) {
                     e1.printStackTrace();
                 }
@@ -1066,14 +1073,14 @@ public class Bibliotheca extends BaseApi {
             medien.add(e);
         }
         assert (doc.select(".kontozeile_center table").get(0).select("tr")
-                .size() > 0);
+                   .size() > 0);
         assert (exemplartrs.size() == medien.size());
 
         copymap = data.getJSONObject("reservationtable");
 
         List<Map<String, String>> reservations = new ArrayList<>();
         exemplartrs = doc.select(".kontozeile_center table").get(1)
-                .select("tr.tabKonto");
+                         .select("tr.tabKonto");
         for (int i = 0; i < exemplartrs.size(); i++) {
             Element tr = exemplartrs.get(i);
             Map<String, String> e = new HashMap<>();
@@ -1089,8 +1096,9 @@ public class Bibliotheca extends BaseApi {
                 }
                 if (index >= 0) {
                     if (key.equals(AccountData.KEY_RESERVATION_CANCEL)) {
-                        if (tr.child(index).children().size() > 0)
+                        if (tr.child(index).children().size() > 0) {
                             e.put(key, tr.child(index).child(0).attr("href"));
+                        }
                     } else {
                         e.put(key, tr.child(index).text());
                     }
@@ -1100,17 +1108,19 @@ public class Bibliotheca extends BaseApi {
             reservations.add(e);
         }
         assert (doc.select(".kontozeile_center table").get(1).select("tr")
-                .size() > 0);
+                   .size() > 0);
         assert (exemplartrs.size() == reservations.size());
 
         AccountData res = new AccountData(acc.getId());
 
         for (Element row : doc.select(".kontozeile_center, div[align=center]")) {
             String text = row.text().trim();
-            if (text.matches(".*Ausstehende Geb.+hren:[^0-9]+([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr.).*")) {
+            if (text.matches(
+                    ".*Ausstehende Geb.+hren:[^0-9]+([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr.).*")) {
                 text = text
                         .replaceAll(
-                                ".*Ausstehende Geb.+hren:[^0-9]+([0-9.,]+)[^0-9€A-Z]*(€|EUR|CHF|Fr.).*",
+                                ".*Ausstehende Geb.+hren:[^0-9]+([0-9.," +
+                                        "]+)[^0-9€A-Z]*(€|EUR|CHF|Fr.).*",
                                 "$1 $2");
                 res.setPendingFees(text);
             }
@@ -1142,13 +1152,15 @@ public class Bibliotheca extends BaseApi {
     @Override
     public String getAccountExtendableInfo(Account acc)
             throws IOException {
-        if (!initialised)
+        if (!initialised) {
             start();
+        }
 
         String html = "";
 
-        if (acc.getName() == null || acc.getName().equals("null"))
+        if (acc.getName() == null || acc.getName().equals("null")) {
             return null;
+        }
 
         // Login vonnöten
         HttpPost httppost = new HttpPost(opac_url + "/index.asp");
@@ -1227,7 +1239,7 @@ public class Bibliotheca extends BaseApi {
         nameValuePairs.add(new BasicNameValuePair("target", "konto"));
         nameValuePairs.add(new BasicNameValuePair("type", "K"));
         String html = httpPostWithRedirect(opac_url + "/index.asp",
-                new UrlEncodedFormEntity(nameValuePairs), "ISO-8859-1", true);
+                new UrlEncodedFormEntity(nameValuePairs), "ISO-8859-1");
         Document doc = Jsoup.parse(html);
         if (doc.select(".kontomeldung").size() > 0) {
             throw new OpacErrorException(doc.select(".kontomeldung").text());
@@ -1235,7 +1247,7 @@ public class Bibliotheca extends BaseApi {
     }
 
     private String httpPostWithRedirect(String url, UrlEncodedFormEntity data,
-                                        String encoding, boolean ignore_errors)
+            String encoding)
             throws IOException {
         HttpPost httppost = new HttpPost(url);
         httppost.setEntity(data);

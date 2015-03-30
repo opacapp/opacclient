@@ -208,7 +208,7 @@ public class LibraryListActivity extends ActionBarActivity {
                 new LocationListener() {
                     @Override
                     public void onStatusChanged(String provider, int status,
-                                                Bundle extras) {
+                            Bundle extras) {
                     }
 
                     @Override
@@ -449,6 +449,8 @@ public class LibraryListActivity extends ActionBarActivity {
     }
 
     public void search(String query) {
+        if (libraries == null) return;
+
         fragment = new LocatedLibraryListFragment();
         Bundle args = new Bundle();
         args.putInt("level", LEVEL_LIBRARY);
@@ -608,7 +610,7 @@ public class LibraryListActivity extends ActionBarActivity {
         @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         @Override
         public View onCreateView(LayoutInflater inflater,
-                                 ViewGroup container, Bundle savedInstanceState) {
+                ViewGroup container, Bundle savedInstanceState) {
             level = getArguments().getInt("level", LEVEL_COUNTRY);
             setRetainInstance(true);
             view = super.onCreateView(inflater, container, savedInstanceState);
@@ -647,7 +649,7 @@ public class LibraryListActivity extends ActionBarActivity {
                 "S", "T", "U", "V", "W", "X", "Y", "Z", "Ä", "Ö", "Ü"};
 
         public CityAdapter(Context context, int resource,
-                           int textViewResourceId, List<String> objects) {
+                int textViewResourceId, List<String> objects) {
             super(context, resource, textViewResourceId, objects);
         }
 
@@ -694,7 +696,7 @@ public class LibraryListActivity extends ActionBarActivity {
         private int resource;
 
         public LibraryAdapter(Context context, int resource,
-                              int textViewResourceId, List<Library> objects) {
+                int textViewResourceId, List<Library> objects) {
             super(context, resource, textViewResourceId, objects);
             this.context = context;
             this.resource = resource;
@@ -766,13 +768,9 @@ public class LibraryListActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(List<Library> result) {
             libraries = result;
-            if (dialog != null) {
-                dialog.dismiss();
-            }
-
-            if (libraries == null) {
-                return;
-            }
+            if (dialog != null) dialog.dismiss();
+            if (libraries == null) return;
+            if (LibraryListActivity.this.isDestroyed()) return;
 
             // Get the intent, verify the action and get the query
             Intent intent = getIntent();

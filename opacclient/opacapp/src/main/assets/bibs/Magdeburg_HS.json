@@ -4,7 +4,7 @@
     "city": "Magdeburg",
     "country": "Deutschland",
     "data": {
-        "baseurl": "https://opac.uni-magdeburg.de",
+        "baseurl": "https://opac.lbs-magdeburg.gbv.de",
         "db": "3",
         "information": "https://www.hs-magdeburg.de/hochschule/einrichtung/hochschulbibliothek/kontakt"
     },

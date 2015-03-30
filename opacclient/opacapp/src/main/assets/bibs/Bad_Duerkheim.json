@@ -1,0 +1,41 @@
+{
+    "account_supported": true,
+    "api": "bibliotheca",
+    "city": "Bad D\u00fcrkheim",
+    "country": "Deutschland",
+    "data": {
+        "accounttable": {
+            "author": 0,
+            "prolongurl": 3,
+            "returndate": 2,
+            "title": 1
+        },
+        "baseurl": "http://188.111.102.13/webopac",
+        "copiestable": {
+            "barcode": 0,
+            "department": 1,
+            "location": 4,
+            "returndate": 5,
+            "status": 3
+        },
+        "information": "http://www.stadtbuecherei-bad-duerkheim.de/startseite/oeffnungszeiten.html",
+        "mediatypes": {
+            "OPACEBook.gif": "EBOOK",
+            "mCasetteS.gif": "AUDIO_CASSETTE",
+            "mDVDS.gif": "DVD",
+            "mFilmS.gif": "MOVIE"
+        },
+        "reservationtable": {
+            "author": 0,
+            "availability": 2,
+            "cancelurl": 3,
+            "title": 1
+        }
+    },
+    "geo": [
+        49.4598369,
+        8.1654232
+    ],
+    "state": "Rheinland-Pfalz",
+    "title": "Stadtb\u00fccherei"
+}

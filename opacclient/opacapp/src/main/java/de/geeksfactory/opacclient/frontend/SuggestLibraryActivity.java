@@ -43,7 +43,6 @@ public class SuggestLibraryActivity extends ActionBarActivity {
     private AutoCompleteTextView etCity;
     private EditText etName;
     private EditText etComment;
-    private Button btnSend;
     private City selectedCity = null;
 
     @Override
@@ -57,7 +56,7 @@ public class SuggestLibraryActivity extends ActionBarActivity {
         etCity = (AutoCompleteTextView) findViewById(R.id.etCity);
         etName = (EditText) findViewById(R.id.etName);
         etComment = (EditText) findViewById(R.id.etComment);
-        btnSend = (Button) findViewById(R.id.btnSend);
+        Button btnSend = (Button) findViewById(R.id.btnSend);
 
         if (savedInstanceState != null) {
             etCity.setText(savedInstanceState.getCharSequence("city"));
@@ -73,7 +72,7 @@ public class SuggestLibraryActivity extends ActionBarActivity {
         etCity.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1,
-                                    int position, long arg3) {
+                    int position, long arg3) {
                 selectedCity = adapter.getCity(position);
             }
         });
@@ -85,13 +84,13 @@ public class SuggestLibraryActivity extends ActionBarActivity {
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {
+                    int after) {
                 selectedCity = null;
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before,
-                                      int count) {
+                    int count) {
             }
 
         });
@@ -317,7 +316,7 @@ public class SuggestLibraryActivity extends ActionBarActivity {
 
                 @Override
                 protected void publishResults(CharSequence constraint,
-                                              FilterResults results) {
+                        FilterResults results) {
                     if (results != null && results.count > 0) {
                         notifyDataSetChanged();
                     } else {

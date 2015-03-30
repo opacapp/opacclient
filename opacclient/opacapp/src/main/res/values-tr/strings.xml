@@ -160,7 +160,10 @@ Rapor gönderdiğinizde bazı verileriniz bize gelir (bu veriler kütüphane şi
     <string name="barcode_desc">Bu özellik bir barkod okuma uygulaması gerektiriyor. Bir tane yüklemek istiyor musunuz?</string>
     <string name="barcode_gplay">Google Play</string>
     <string name="barcode_amazon">Amazon</string>
-    <string name="result_number">%d arama sonucu</string>
+    <plurals name="result_number">
+        <item quantity="one">Bir arama sonucu</item>
+        <item quantity="other">%d arama sonucu</item>
+    </plurals>
     <string name="export_starred">Dışa aktar</string>
     <string name="geolocate">Yakındaki kütüphaneleri bul</string>
     <string name="geolocate_progress">Yeriniz bulunuyor…</string>
@@ -180,7 +183,6 @@ Rapor gönderdiğinizde bazı verileriniz bize gelir (bu veriler kütüphane şi
     <string name="drawer_open">Gezinmeyi aç</string>
     <string name="drawer_close">Gezinmeyi kapat</string>
     <string name="title_searchresult_list">Arama sonuçları</string>
-    <string name="title_searchresult_detail">Ayrıntılar</string>
     <string name="title_activity_library_list">Kütüphane seçimi</string>
     <string name="suggest_library">Kütüphaneniz desteklenmiyor mu? Eklenmesi için önerin!</string>
     <string name="title_activity_suggest_library">Kütüphane öner</string>

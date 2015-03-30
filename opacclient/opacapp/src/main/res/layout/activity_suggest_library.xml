@@ -19,7 +19,8 @@
     <ScrollView
         android:id="@+id/svAccount"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:foreground="@drawable/toolbar_shadow">
 
         <LinearLayout
             android:layout_width="match_parent"

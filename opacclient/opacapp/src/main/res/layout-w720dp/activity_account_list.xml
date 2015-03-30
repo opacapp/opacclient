@@ -14,19 +14,11 @@
         app:theme="@style/ThemeOverlay.Opacapp.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-    <com.melnykov.fab.FloatingActionButton
-        android:id="@+id/add_fab"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:layout_marginTop="-36dp"
-        android:layout_marginRight="36dp"
-        android:layout_below="@id/toolbar"
-        android:layout_alignParentRight="true"
-        android:elevation="4dp"
-        android:src="@drawable/ic_action_accounts_add"
-        app:fab_colorNormal="@color/accent_red"
-        app:fab_colorPressed="@color/primary_red"
-        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:background="@drawable/toolbar_shadow"/>
 
     <FrameLayout
         android:layout_width="720dp"
@@ -44,5 +36,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </FrameLayout>
+
+
+    <com.melnykov.fab.FloatingActionButton
+        android:id="@+id/add_fab"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_marginTop="-36dp"
+        android:layout_marginRight="36dp"
+        android:layout_below="@id/toolbar"
+        android:layout_alignParentRight="true"
+        android:elevation="4dp"
+        android:src="@drawable/ic_action_accounts_add"
+        android:contentDescription="@string/account_add"
+        app:fab_colorNormal="@color/accent_red"
+        app:fab_colorPressed="@color/primary_red"
+        />
 
 </RelativeLayout>

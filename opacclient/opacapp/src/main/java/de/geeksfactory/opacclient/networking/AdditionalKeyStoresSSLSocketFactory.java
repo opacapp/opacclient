@@ -7,22 +7,18 @@ package de.geeksfactory.opacclient.networking;
 //and
 //https://github.com/nelenkov/custom-cert-https
 
-import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 
-import java.io.IOException;
-import java.net.Socket;
 import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.net.ssl.SSLContext;
@@ -31,30 +27,17 @@ import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
 /**
- * Allows you to trust certificates from additional KeyStores in addition to the default KeyStore
+ * Allows you to trust certificates from additional KeyStores in addition to the
+ * default KeyStore
  */
-public class AdditionalKeyStoresSSLSocketFactory extends SSLSocketFactory {
-    protected SSLContext sslContext = SSLContext.getInstance("TLS");
+public class AdditionalKeyStoresSSLSocketFactory {
 
-    public AdditionalKeyStoresSSLSocketFactory(KeyStore keyStore)
-            throws NoSuchAlgorithmException, KeyManagementException,
-            KeyStoreException, UnrecoverableKeyException {
-        super(null, null, null, null, null, null);
-        sslContext.init(null,
-                new TrustManager[]{new AdditionalKeyStoresTrustManager(
-                        keyStore)}, null);
-    }
-
-    @Override
-    public Socket createSocket(Socket socket, String host, int port,
-                               boolean autoClose) throws IOException {
-        return sslContext.getSocketFactory().createSocket(socket, host, port,
-                autoClose);
-    }
-
-    @Override
-    public Socket createSocket() throws IOException {
-        return sslContext.getSocketFactory().createSocket();
+    public static SSLConnectionSocketFactory create(KeyStore keyStore)
+            throws NoSuchAlgorithmException, KeyManagementException {
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(null, new TrustManager[]{new AdditionalKeyStoresTrustManager(keyStore)},
+                null);
+        return new SSLConnectionSocketFactory(sslContext);
     }
 
     public static class AdditionalKeyStoresTrustManager implements
@@ -63,7 +46,6 @@ public class AdditionalKeyStoresSSLSocketFactory extends SSLSocketFactory {
         private X509TrustManager defaultTrustManager;
         private X509TrustManager localTrustManager;
         private X509Certificate[] acceptedIssuers;
-
         public AdditionalKeyStoresTrustManager(KeyStore localKeyStore) {
             try {
                 TrustManagerFactory tmf = TrustManagerFactory
@@ -80,8 +62,10 @@ public class AdditionalKeyStoresSSLSocketFactory extends SSLSocketFactory {
                         localKeyStore);
 
                 List<X509Certificate> allIssuers = new ArrayList<>();
-                allIssuers.addAll(Arrays.asList(defaultTrustManager.getAcceptedIssuers()));
-                allIssuers.addAll(Arrays.asList(localTrustManager.getAcceptedIssuers()));
+                Collections.addAll(allIssuers, defaultTrustManager
+                        .getAcceptedIssuers());
+                Collections.addAll(allIssuers, localTrustManager
+                        .getAcceptedIssuers());
                 acceptedIssuers = allIssuers
                         .toArray(new X509Certificate[allIssuers.size()]);
             } catch (GeneralSecurityException e) {

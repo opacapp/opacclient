@@ -97,7 +97,7 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
             case URL:
                 return R.drawable.type_url;
             case MP3:
-                return R.drawable.type_eaudio;
+                return R.drawable.type_mp3;
             case EDOC:
                 return R.drawable.type_edoc;
             case EVIDEO:
@@ -146,8 +146,8 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
             ivType.setImageBitmap(item.getCoverBitmap());
             ivType.setVisibility(View.VISIBLE);
         } else if (item.getCover() != null) {
-            LoadCoverTask lct = new LoadCoverTask();
-            lct.execute(ivType, item);
+            LoadCoverTask lct = new LoadCoverTask(ivType, item);
+            lct.execute();
             ivType.setImageResource(R.drawable.cover_loading);
             ivType.setVisibility(View.VISIBLE);
         } else if (item.getType() != null && item.getType() != MediaType.NONE) {
@@ -181,14 +181,17 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
         return view;
     }
 
-    public class LoadCoverTask extends AsyncTask<Object, Integer, SearchResult> {
+    public class LoadCoverTask extends AsyncTask<Void, Integer, SearchResult> {
         protected SearchResult item;
         protected ImageView iv;
 
+        public LoadCoverTask(ImageView iv, SearchResult item) {
+            this.iv = iv;
+            this.item = item;
+        }
+
         @Override
-        protected SearchResult doInBackground(Object... arg0) {
-            iv = (ImageView) arg0[0];
-            item = (SearchResult) arg0[1];
+        protected SearchResult doInBackground(Void... voids) {
             URL newurl;
             if (item.getCover() != null && item.getCoverBitmap() == null) {
                 try {

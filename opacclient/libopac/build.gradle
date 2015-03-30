@@ -8,5 +8,6 @@ dependencies {
     // Use older org.json version to have an environment equivalent to the android platform
     compile 'org.json:json:20090211'
     compile 'org.jsoup:jsoup:1.8.1'
+    compile 'org.apache.httpcomponents:httpmime:4.3.6'
     compile project(':noandroid')
 }

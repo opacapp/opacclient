@@ -65,6 +65,7 @@ public class AccountEditActivity extends ActionBarActivity {
     private EditText etPassword;
     private Library lib;
 
+    @SuppressWarnings("SameReturnValue") // Plus Edition compatibility
     protected int getLayoutResource() {
         return R.layout.activity_account_edit;
     }
@@ -333,6 +334,8 @@ public class AccountEditActivity extends ActionBarActivity {
         }
 
         protected void onPostExecute(Exception result) {
+            if (AccountEditActivity.this.isFinishing()) return;
+
             setProgress(false);
             if (result == null) {
                 save();
@@ -350,7 +353,7 @@ public class AccountEditActivity extends ActionBarActivity {
                                new DialogInterface.OnClickListener() {
                                    @Override
                                    public void onClick(DialogInterface dialog,
-                                                       int which) {
+                                           int which) {
                                        save();
                                        close();
                                    }
@@ -359,7 +362,7 @@ public class AccountEditActivity extends ActionBarActivity {
                                new DialogInterface.OnClickListener() {
                                    @Override
                                    public void onClick(DialogInterface dialog,
-                                                       int which) {
+                                           int which) {
                                    }
                                }).create().show();
             } else {
@@ -370,7 +373,7 @@ public class AccountEditActivity extends ActionBarActivity {
                                new DialogInterface.OnClickListener() {
                                    @Override
                                    public void onClick(DialogInterface dialog,
-                                                       int which) {
+                                           int which) {
                                        save();
                                        close();
                                    }
@@ -379,7 +382,7 @@ public class AccountEditActivity extends ActionBarActivity {
                                new DialogInterface.OnClickListener() {
                                    @Override
                                    public void onClick(DialogInterface dialog,
-                                                       int which) {
+                                           int which) {
                                    }
                                }).create().show();
             }

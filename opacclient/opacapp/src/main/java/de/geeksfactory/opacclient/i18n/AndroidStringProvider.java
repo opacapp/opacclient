@@ -24,16 +24,25 @@ package de.geeksfactory.opacclient.i18n;
 import de.geeksfactory.opacclient.OpacClient;
 
 public class AndroidStringProvider implements StringProvider {
+    @Override
     public String getString(String identifier) {
         int id = OpacClient.context.getResources().getIdentifier(identifier,
                 "string", OpacClient.context.getPackageName());
         return OpacClient.context.getResources().getString(id);
     }
 
+    @Override
     public String getFormattedString(String identifier, Object... args) {
         int id = OpacClient.context.getResources().getIdentifier(identifier,
                 "string", OpacClient.context.getPackageName());
         String format = OpacClient.context.getResources().getString(id);
         return String.format(format, args);
+    }
+
+    @Override
+    public String getQuantityString(String identifier, int count, Object... args) {
+        int id = OpacClient.context.getResources().getIdentifier(identifier,
+                "plurals", OpacClient.context.getPackageName());
+        return OpacClient.context.getResources().getQuantityString(id, count, args);
     }
 }

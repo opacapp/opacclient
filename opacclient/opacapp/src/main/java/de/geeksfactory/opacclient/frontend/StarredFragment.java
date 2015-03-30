@@ -73,6 +73,7 @@ public class StarredFragment extends Fragment implements
     private Callback mCallback;
     private ListView listView;
     private int mActivatedPosition = ListView.INVALID_POSITION;
+    private TextView tvWelcome;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -86,6 +87,7 @@ public class StarredFragment extends Fragment implements
         adapter = new ItemListAdapter();
 
         listView = (ListView) view.findViewById(R.id.lvStarred);
+        tvWelcome = (TextView) view.findViewById(R.id.tvWelcome);
 
         listView.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -193,9 +195,9 @@ public class StarredFragment extends Fragment implements
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         adapter.swapCursor(cursor);
         if (cursor.getCount() == 0) {
-            view.findViewById(R.id.tvWelcome).setVisibility(View.VISIBLE);
+            tvWelcome.setVisibility(View.VISIBLE);
         } else {
-            view.findViewById(R.id.tvWelcome).setVisibility(View.GONE);
+            tvWelcome.setVisibility(View.GONE);
         }
     }
 

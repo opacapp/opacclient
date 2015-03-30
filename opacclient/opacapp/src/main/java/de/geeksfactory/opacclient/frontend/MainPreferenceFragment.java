@@ -41,6 +41,7 @@ public class MainPreferenceFragment extends PreferenceFragment {
 
     protected Activity context;
 
+    @SuppressWarnings("SameReturnValue") // Plus Edition compatibility
     protected boolean ebooksSupported() {
         return false;
     }

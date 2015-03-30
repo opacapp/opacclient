@@ -66,11 +66,11 @@ import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
 /**
- * OpacApi implementation for Web Opacs of the TouchPoint product, developed by
- * OCLC.
+ * OpacApi implementation for Web Opacs of the TouchPoint product, developed by OCLC.
  */
 public class TouchPoint extends BaseApi implements OpacApi {
     protected static HashMap<String, MediaType> defaulttypes = new HashMap<>();
+
     static {
         defaulttypes.put("g", MediaType.EBOOK);
         defaulttypes.put("d", MediaType.CD);
@@ -144,6 +144,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
         defaulttypes.put("ejournal", MediaType.EDOC);
         defaulttypes.put("karte", MediaType.MAP);
     }
+
     protected final long SESSION_LIFETIME = 1000 * 60 * 3;
     protected String opac_url = "";
     protected JSONObject data;
@@ -157,20 +158,11 @@ public class TouchPoint extends BaseApi implements OpacApi {
     protected Account logged_in_as;
     protected String ENCODING = "UTF-8";
 
-    public static String getStringFromBundle(Map<String, String> bundle,
-                                             String key) {
-        // Workaround for Bundle.getString(key, default) being available not
-        // before API 12
-        String res = bundle.get(key);
-        if (res == null)
-            res = "";
-        return res;
-    }
-
     public List<SearchField> getSearchFields() throws IOException,
             JSONException {
-        if (!initialised)
+        if (!initialised) {
             start();
+        }
 
         String html = httpGet(opac_url
                         + "/search.do?methodToCall=switchSearchPage&SearchType=2",
@@ -189,14 +181,14 @@ public class TouchPoint extends BaseApi implements OpacApi {
         }
 
         for (Element dropdown : doc.select(".accordion-body select")) {
-            parseDropdown(dropdown, fields, doc);
+            parseDropdown(dropdown, fields);
         }
 
         return fields;
     }
 
     private void parseDropdown(Element dropdownElement,
-                               List<SearchField> fields, Document doc) {
+            List<SearchField> fields) {
         Elements options = dropdownElement.select("option");
         DropdownSearchField dropdown = new DropdownSearchField();
         List<Map<String, String>> values = new ArrayList<>();
@@ -204,8 +196,9 @@ public class TouchPoint extends BaseApi implements OpacApi {
         // Some fields make no sense or are not supported in the app
         if (dropdown.getId().equals("numberOfHits")
                 || dropdown.getId().equals("timeOut")
-                || dropdown.getId().equals("rememberList"))
+                || dropdown.getId().equals("rememberList")) {
             return;
+        }
         for (Element option : options) {
             Map<String, String> value = new HashMap<>();
             value.put("key", option.attr("value"));
@@ -255,22 +248,6 @@ public class TouchPoint extends BaseApi implements OpacApi {
         }
     }
 
-    protected int addParameters(Map<String, String> query, String key,
-                                String searchkey, List<NameValuePair> params, int index) {
-        if (!query.containsKey(key) || query.get(key).equals(""))
-            return index;
-
-        if (index != 0)
-            params.add(new BasicNameValuePair("combinationOperator[" + index
-                    + "]", "AND"));
-        params.add(new BasicNameValuePair("searchCategories[" + index + "]",
-                searchkey));
-        params.add(new BasicNameValuePair("searchString[" + index + "]", query
-                .get(key)));
-        return index + 1;
-
-    }
-
     @Override
     public SearchRequestResult search(List<SearchQuery> query)
             throws IOException, OpacErrorException,
@@ -287,15 +264,17 @@ public class TouchPoint extends BaseApi implements OpacApi {
         params.add(new BasicNameValuePair("refine", "false"));
 
         for (SearchQuery entry : query) {
-            if (entry.getValue().equals(""))
+            if (entry.getValue().equals("")) {
                 continue;
+            }
             if (entry.getSearchField() instanceof DropdownSearchField) {
                 params.add(new BasicNameValuePair(entry.getKey(), entry
                         .getValue()));
             } else {
-                if (index != 0)
+                if (index != 0) {
                     params.add(new BasicNameValuePair("combinationOperator["
                             + index + "]", "AND"));
+                }
                 params.add(new BasicNameValuePair("searchCategories[" + index
                         + "]", entry.getKey()));
                 params.add(new BasicNameValuePair(
@@ -309,8 +288,8 @@ public class TouchPoint extends BaseApi implements OpacApi {
                     stringProvider.getString(StringProvider.NO_CRITERIA_INPUT));
         }
         if (index > 4) {
-            throw new OpacErrorException(stringProvider.getFormattedString(
-                    StringProvider.LIMITED_NUM_OF_CRITERIA, 4));
+            throw new OpacErrorException(stringProvider.getQuantityString(
+                    StringProvider.LIMITED_NUM_OF_CRITERIA, 4, 4));
         }
 
         params.add(new BasicNameValuePair("submitButtonCall_submitSearch",
@@ -340,8 +319,9 @@ public class TouchPoint extends BaseApi implements OpacApi {
     @Override
     public SearchRequestResult searchGetPage(int page) throws IOException,
             OpacErrorException {
-        if (!initialised)
+        if (!initialised) {
             start();
+        }
 
         String html = httpGet(opac_url
                 + "/hitList.do?methodToCall=pos&identifier=" + identifier
@@ -395,7 +375,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
                 try {
                     List<NameValuePair> anyurl = URLEncodedUtils.parse(
                             new URI(node.attr("href").replace(" ", "%20")
-                                    .replace("&amp;", "&")), ENCODING);
+                                        .replace("&amp;", "&")), ENCODING);
                     for (NameValuePair nv : anyurl) {
                         if (nv.getName().equals("identifier")) {
                             identifier = nv.getValue();
@@ -415,17 +395,18 @@ public class TouchPoint extends BaseApi implements OpacApi {
             SearchResult sr = new SearchResult();
             if (tr.select(".icn, img[width=32]").size() > 0) {
                 String[] fparts = tr.select(".icn, img[width=32]").first()
-                        .attr("src").split("/");
+                                    .attr("src").split("/");
                 String fname = fparts[fparts.length - 1];
                 String changedFname = fname.toLowerCase(Locale.GERMAN)
-                        .replace(".jpg", "").replace(".gif", "")
-                        .replace(".png", "");
+                                           .replace(".jpg", "").replace(".gif", "")
+                                           .replace(".png", "");
 
                 // File names can look like this: "20_DVD_Video.gif"
                 Pattern pattern = Pattern.compile("(\\d+)_.*");
                 Matcher matcher = pattern.matcher(changedFname);
-                if (matcher.find())
+                if (matcher.find()) {
                     changedFname = matcher.group(1);
+                }
 
                 MediaType defaulttype = defaulttypes.get(changedFname);
                 if (data.has("mediatypes")) {
@@ -447,7 +428,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
             } else { // e.g. Schaffhausen, BSB München
                 title = tr.select(".title, .hitlistTitle").text();
                 text = tr.select(".results, .hitlistMetadata").first()
-                        .ownText();
+                         .ownText();
             }
 
             // we need to do some evil javascript parsing here to get the cover
@@ -463,14 +444,15 @@ public class TouchPoint extends BaseApi implements OpacApi {
                             .toString();
                     String coverUrl = httpGet(url + "?isbn=" + isbn
                             + "&size=small", ENCODING);
-                    if (!"".equals(coverUrl))
+                    if (!"".equals(coverUrl)) {
                         sr.setCover(coverUrl.replace("\r\n", "").trim());
+                    }
                 }
             }
             // get loan status and media ID
             if (tr.select("div[id^=loanstatus] + script").size() > 0) {
                 String js = tr.select("div[id^=loanstatus] + script").first()
-                        .html();
+                              .html();
                 String[] variables = new String[]{"loanstateDBId",
                         "itemIdentifier", "hitlistIdentifier",
                         "hitlistPosition", "duplicateHitlistIdentifier",
@@ -502,7 +484,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
                             ENCODING).replace("\r\n", "").trim();
                     Document loanStatusDoc = Jsoup.parse(loanStatusHtml);
                     String loanstatus = loanStatusDoc.text()
-                            .replace("\u00bb", "").trim();
+                                                     .replace("\u00bb", "").trim();
 
                     if ((loanstatus.startsWith("entliehen")
                             && loanstatus.contains("keine Vormerkung möglich") || loanstatus
@@ -528,9 +510,11 @@ public class TouchPoint extends BaseApi implements OpacApi {
                         if (sr.getType().equals(MediaType.EBOOK)
                                 || sr.getType().equals(MediaType.EVIDEO)
                                 || sr.getType().equals(MediaType.MP3))
-                            // Especially Onleihe.de ebooks are often marked
-                            // green though they are not available.
+                        // Especially Onleihe.de ebooks are often marked
+                        // green though they are not available.
+                        {
                             sr.setStatus(SearchResult.Status.UNKNOWN);
+                        }
                     }
                 }
             }
@@ -548,10 +532,11 @@ public class TouchPoint extends BaseApi implements OpacApi {
         Pattern pattern = Pattern.compile("var \\s*" + varName
                 + "\\s*=\\s*\"([^\"]*)\"\\s*;");
         Matcher matcher = pattern.matcher(js);
-        if (matcher.find())
+        if (matcher.find()) {
             return matcher.group(1);
-        else
+        } else {
             return null;
+        }
     }
 
     @Override
@@ -610,8 +595,9 @@ public class TouchPoint extends BaseApi implements OpacApi {
                         .toString();
                 String coverUrl = httpGet(url + "?isbn=" + isbn
                         + "&size=medium", ENCODING);
-                if (!"".equals(coverUrl))
+                if (!"".equals(coverUrl)) {
                     result.setCover(coverUrl.replace("\r\n", "").trim());
+                }
             }
         }
 
@@ -628,28 +614,30 @@ public class TouchPoint extends BaseApi implements OpacApi {
 
         // Copies
         String copiesParameter = doc.select("div[id^=ajax_holdings_url")
-                .attr("ajaxParameter").replace("&amp;", "");
+                                    .attr("ajaxParameter").replace("&amp;", "");
         if (!"".equals(copiesParameter)) {
             String copiesHtml = httpGet(opac_url + "/" + copiesParameter,
                     ENCODING);
             Document copiesDoc = Jsoup.parse(copiesHtml);
             List<String> table_keys = new ArrayList<>();
             for (Element th : copiesDoc.select(".data tr th")) {
-                if (th.text().contains("Zweigstelle"))
+                if (th.text().contains("Zweigstelle")) {
                     table_keys.add(DetailledItem.KEY_COPY_BRANCH);
-                else if (th.text().contains("Status"))
+                } else if (th.text().contains("Status")) {
                     table_keys.add(DetailledItem.KEY_COPY_STATUS);
-                else if (th.text().contains("Signatur"))
+                } else if (th.text().contains("Signatur")) {
                     table_keys.add(DetailledItem.KEY_COPY_SHELFMARK);
-                else
+                } else {
                     table_keys.add(null);
+                }
             }
             for (Element tr : copiesDoc.select(".data tr:has(td)")) {
                 Map<String, String> copy = new HashMap<>();
                 int i = 0;
                 for (Element td : tr.select("td")) {
-                    if (table_keys.get(i) != null)
+                    if (table_keys.get(i) != null) {
                         copy.put(table_keys.get(i), td.text().trim());
+                    }
                     i++;
                 }
                 result.addCopy(copy);
@@ -668,7 +656,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
                 if (reservationDoc.select("a").size() == 1) {
                     result.setReservable(true);
                     result.setReservation_info(reservationDoc.select("a")
-                            .first().attr("abs:href"));
+                                                             .first().attr("abs:href"));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -711,7 +699,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 
     @Override
     public ReservationResult reservation(DetailledItem item, Account acc,
-                                         int useraction, String selection) throws IOException {
+            int useraction, String selection) throws IOException {
         if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
                 || logged_in_as == null) {
             try {
@@ -729,10 +717,11 @@ public class TouchPoint extends BaseApi implements OpacApi {
             }
         }
         String html;
-        if (reusehtml_reservation != null)
+        if (reusehtml_reservation != null) {
             html = reusehtml_reservation;
-        else
+        } else {
             html = httpGet(item.getReservation_info(), ENCODING);
+        }
         Document doc = Jsoup.parse(html);
         if (doc.select(".message-error").size() > 0) {
             return new ReservationResult(MultiStepResult.Status.ERROR, doc
@@ -769,20 +758,22 @@ public class TouchPoint extends BaseApi implements OpacApi {
         html = httpPost(opac_url + "/requestItem.do", new UrlEncodedFormEntity(
                 nameValuePairs), ENCODING);
         doc = Jsoup.parse(html);
-        if (doc.select(".message-confirm").size() > 0)
+        if (doc.select(".message-confirm").size() > 0) {
             return new ReservationResult(MultiStepResult.Status.OK);
-        else if (doc.select(".alert").size() > 0)
+        } else if (doc.select(".alert").size() > 0) {
             return new ReservationResult(MultiStepResult.Status.ERROR, doc
                     .select(".alert").text());
-        else
+        } else {
             return new ReservationResult(MultiStepResult.Status.ERROR);
+        }
     }
 
     @Override
     public ProlongResult prolong(String a, Account account, int useraction,
-                                 String Selection) throws IOException {
-        if (!initialised)
+            String Selection) throws IOException {
+        if (!initialised) {
             start();
+        }
         if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
                 || logged_in_as == null) {
             try {
@@ -825,7 +816,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 
     @Override
     public CancelResult cancel(String media, Account account, int useraction,
-                               String selection) throws IOException, OpacErrorException {
+            String selection) throws IOException, OpacErrorException {
         return null;
     }
 
@@ -834,8 +825,9 @@ public class TouchPoint extends BaseApi implements OpacApi {
             JSONException,
             OpacErrorException {
         start();
-        if (!login(acc))
+        if (!login(acc)) {
             return null;
+        }
         AccountData adata = new AccountData(acc.getId());
         // Lent media
         httpGet(opac_url + "/userAccount.do?methodToCall=start",
@@ -900,8 +892,9 @@ public class TouchPoint extends BaseApi implements OpacApi {
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
 
         int trs = copytrs.size();
-        if (trs == 1)
+        if (trs == 1) {
             return;
+        }
         assert (trs > 0);
         for (int i = 1; i < trs; i++) {
             Element tr = copytrs.get(i);
@@ -911,25 +904,27 @@ public class TouchPoint extends BaseApi implements OpacApi {
                 return;
             }
             e.put(AccountData.KEY_LENT_TITLE, tr.child(2).select("b, strong")
-                    .text().trim());
+                                                .text().trim());
             try {
                 e.put(AccountData.KEY_LENT_AUTHOR,
                         tr.child(2).html().split("<br[ /]*>")[1].trim());
 
                 String[] col3split = tr.child(3).html().split("<br[ /]*>");
                 String frist = col3split[0].trim();
-                if (frist.contains("-"))
+                if (frist.contains("-")) {
                     frist = frist.split("-")[1].trim();
+                }
                 e.put(AccountData.KEY_LENT_DEADLINE, frist);
-                if (col3split.length > 1)
+                if (col3split.length > 1) {
                     e.put(AccountData.KEY_LENT_BRANCH, col3split[1].trim());
+                }
 
                 if (!frist.equals("")) {
                     try {
                         e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String
                                 .valueOf(sdf.parse(
                                         e.get(AccountData.KEY_LENT_DEADLINE))
-                                        .getTime()));
+                                            .getTime()));
                     } catch (ParseException e1) {
                         e1.printStackTrace();
                     }
@@ -957,12 +952,13 @@ public class TouchPoint extends BaseApi implements OpacApi {
     }
 
     protected void parse_reslist(List<Map<String, String>> reservations,
-                                 Document doc) {
+            Document doc) {
         Elements copytrs = doc.select(".data tr");
         doc.setBaseUri(opac_url);
         int trs = copytrs.size();
-        if (trs == 1)
+        if (trs == 1) {
             return;
+        }
         assert (trs > 0);
         for (int i = 1; i < trs; i++) {
             Element tr = copytrs.get(i);
@@ -977,17 +973,20 @@ public class TouchPoint extends BaseApi implements OpacApi {
             try {
                 String[] rowsplit2 = tr.child(2).html().split("<br[ /]*>");
                 String[] rowsplit3 = tr.child(3).html().split("<br[ /]*>");
-                if (rowsplit2.length > 1)
+                if (rowsplit2.length > 1) {
                     e.put(AccountData.KEY_RESERVATION_AUTHOR,
                             rowsplit2[1].trim());
+                }
 
-                if (rowsplit3.length > 2)
+                if (rowsplit3.length > 2) {
                     e.put(AccountData.KEY_RESERVATION_BRANCH,
                             rowsplit3[2].trim());
+                }
 
-                if (rowsplit3.length > 2)
+                if (rowsplit3.length > 2) {
                     e.put(AccountData.KEY_RESERVATION_READY,
                             rowsplit3[0].trim());
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -1031,7 +1030,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 
         if (doc.getElementsByClass("alert").size() > 0) {
             throw new OpacErrorException(doc.getElementsByClass("alert").get(0)
-                    .text());
+                                            .text());
         }
 
         logged_in = System.currentTimeMillis();
@@ -1086,7 +1085,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 
     @Override
     public ProlongAllResult prolongAll(Account account, int useraction,
-                                       String selection) throws IOException {
+            String selection) throws IOException {
         return null;
     }
 

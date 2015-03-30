@@ -25,14 +25,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.melnykov.fab.FloatingActionButton;
 
@@ -63,6 +66,25 @@ public class AccountListActivity extends ActionBarActivity {
                 add();
             }
         });
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+
+        float density = getResources().getDisplayMetrics().density;
+        float dpWidth = displayMetrics.widthPixels / density;
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams
+                (Math.round(72 * density), Math.round(72 * density));
+
+        if (dpWidth >= 864) {
+            params.addRule(RelativeLayout.BELOW, R.id.toolbar);
+            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            params.setMargins(0, Math.round(-36 * density), Math.round(36 * density), 0);
+            ViewCompat.setElevation(fab, 4 * density);
+        } else {
+            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            params.setMargins(0, 0, Math.round(36 * density), Math.round(36 * density));
+            ViewCompat.setElevation(fab, 12 * density);
+        }
+        fab.setLayoutParams(params);
     }
 
     public void add() {
