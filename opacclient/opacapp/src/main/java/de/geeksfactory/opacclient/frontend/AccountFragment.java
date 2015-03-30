@@ -408,7 +408,8 @@ public class AccountFragment extends Fragment implements
                            public void onClick(DialogInterface d, int id) {
                                d.dismiss();
 
-                               MultiStepResultHelper msrhCancel = new MultiStepResultHelper(
+                               MultiStepResultHelper<String> msrhCancel =
+                                       new MultiStepResultHelper<>(
                                        getActivity(), a,
                                        R.string.doing_cancel);
                                msrhCancel.setCallback(new Callback() {
@@ -457,7 +458,7 @@ public class AccountFragment extends Fragment implements
                                    }
 
                                    @Override
-                                   public StepTask<?, ?> newTask(MultiStepResultHelper helper,
+                                   public StepTask<String, ?> newTask(MultiStepResultHelper helper,
                                                                  int useraction, String selection) {
                                        return ct = new CancelTask(helper, useraction, selection);
                                    }
@@ -488,7 +489,7 @@ public class AccountFragment extends Fragment implements
             return;
         }
 
-        MultiStepResultHelper msrhProlong = new MultiStepResultHelper(
+        MultiStepResultHelper<String> msrhProlong = new MultiStepResultHelper<>(
                 getActivity(), a, R.string.doing_prolong);
         msrhProlong.setCallback(new Callback() {
             @Override
@@ -555,7 +556,7 @@ public class AccountFragment extends Fragment implements
             }
 
             @Override
-            public StepTask<?, ?> newTask(MultiStepResultHelper helper, int useraction,
+            public StepTask<String, ?> newTask(MultiStepResultHelper helper, int useraction,
                                           String selection) {
                 return new ProlongTask(helper, useraction, selection);
             }
@@ -1070,7 +1071,7 @@ public class AccountFragment extends Fragment implements
         DetailledItem item = new DetailledItem();
         item.setBookable(true);
         item.setBooking_info(booking_info);
-        MultiStepResultHelper msrhBooking = new MultiStepResultHelper(
+        MultiStepResultHelper<DetailledItem> msrhBooking = new MultiStepResultHelper<>(
                 getActivity(), item, R.string.doing_booking);
         msrhBooking.setCallback(new Callback() {
             @Override
@@ -1114,7 +1115,7 @@ public class AccountFragment extends Fragment implements
             }
 
             @Override
-            public StepTask<?, ?> newTask(MultiStepResultHelper helper, int useraction,
+            public StepTask<DetailledItem, ?> newTask(MultiStepResultHelper helper, int useraction,
                                           String selection) {
                 return new BookingTask(helper, useraction, selection);
             }
@@ -1156,7 +1157,7 @@ public class AccountFragment extends Fragment implements
 
     public void prolongAllDo() {
 
-        MultiStepResultHelper msrhProlong = new MultiStepResultHelper(
+        MultiStepResultHelper<Void> msrhProlong = new MultiStepResultHelper<>(
                 getActivity(), null, R.string.doing_prolong_all);
         msrhProlong.setCallback(new Callback() {
             @Override
@@ -1231,7 +1232,7 @@ public class AccountFragment extends Fragment implements
             }
 
             @Override
-            public StepTask<?, ?> newTask(MultiStepResultHelper helper, int useraction,
+            public StepTask<Void, ?> newTask(MultiStepResultHelper helper, int useraction,
                                           String selection) {
                 return new ProlongAllTask(helper, useraction, selection);
             }
