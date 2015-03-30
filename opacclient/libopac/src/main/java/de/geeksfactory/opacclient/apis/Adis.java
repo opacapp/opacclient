@@ -1005,7 +1005,7 @@ public class Adis extends BaseApi implements OpacApi {
             }
             for (Element tr : doc.select(".rTable_div tr")) {
                 if (tr.select("a").size() == 1) {
-                    if ((tr.text().contains("Reservationen") || tr.text().contains("Vormerkungen"))
+                    if ((tr.text().contains("Reservationen") || tr.text().contains("Vormerkung"))
                             && !tr.child(0).text().trim().equals("")
                             && tr.select("a").first().attr("href")
                                  .toUpperCase(Locale.GERMAN)
@@ -1185,7 +1185,7 @@ public class Adis extends BaseApi implements OpacApi {
         for (Element tr : doc.select(".rTable_div tr")) {
             if (tr.select("a").size() == 1) {
                 if ((tr.text().contains("Reservationen")
-                        || tr.text().contains("Vormerkungen")
+                        || tr.text().contains("Vormerkung")
                         || tr.text().contains("Fernleihbestellung")
                         || tr.text().contains("Bereitstellung")
                         || tr.text().contains("Magazin"))
