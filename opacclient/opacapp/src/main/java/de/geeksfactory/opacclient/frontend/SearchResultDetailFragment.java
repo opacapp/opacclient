@@ -564,8 +564,8 @@ public class SearchResultDetailFragment extends Fragment
         gradientBottom.setVisibility(b ? View.VISIBLE : View.GONE);
         gradientTop.setVisibility(b ? View.VISIBLE : View.GONE);
         RelativeLayout.LayoutParams params =
-                ((RelativeLayout.LayoutParams) detailsLayout.getLayoutParams());
-        params.removeRule(RelativeLayout.BELOW);
+                new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT);
         if (b) {
             toolbar.setBackgroundResource(R.color.transparent);
             ViewCompat.setElevation(toolbar, 0);
@@ -582,6 +582,7 @@ public class SearchResultDetailFragment extends Fragment
                     .COMPLEX_UNIT_DIP, 4f, getResources().getDisplayMetrics()));
             params.addRule(RelativeLayout.BELOW, R.id.toolbar);
         }
+        detailsLayout.setLayoutParams(params);
     }
 
     private int getToolbarBackgroundColor() {
