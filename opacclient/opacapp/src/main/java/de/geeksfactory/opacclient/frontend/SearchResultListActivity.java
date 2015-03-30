@@ -125,11 +125,11 @@ public class SearchResultListActivity extends OpacActivity implements
     public void showDetail(SearchResult res, View coverView) {
         Bitmap cover = res.getCoverBitmap();
         Bitmap smallCover;
-        if (cover != null && cover.getWidth() * cover.getHeight() > 400 * 400) {
+        if (cover != null && cover.getWidth() * cover.getHeight() > 300 * 300) {
             // Android's Parcelable implementation doesn't like huge images
             int max = Math.max(cover.getWidth(), cover.getHeight());
-            int width = (int) ((400f / max) * cover.getWidth());
-            int height = (int) ((400f / max) * cover.getHeight());
+            int width = (int) ((300f / max) * cover.getWidth());
+            int height = (int) ((300f / max) * cover.getHeight());
             smallCover = Bitmap.createScaledBitmap(cover, width, height, false);
         } else {
             smallCover = cover;
