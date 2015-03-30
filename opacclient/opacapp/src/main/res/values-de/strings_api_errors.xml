@@ -37,5 +37,5 @@
     <string name="order_category_desc">Nach Mediengruppe (absteigend)</string>
     <string name="interlib_branch">Fernleihe: %s</string>
     <string name="stacks_branch">Magazin: %s</string>
-    <string name="provision_branch">Bereitstellung: %s</string>
+    <string name="provision_branch">Bereit: %s</string>
 </resources>
