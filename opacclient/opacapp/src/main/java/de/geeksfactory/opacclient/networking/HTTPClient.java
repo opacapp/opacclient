@@ -38,8 +38,8 @@ import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.impl.client.RedirectLocations;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.HttpContext;
@@ -96,9 +96,7 @@ public class HTTPClient {
         }
     }
 
-    public static class CustomRedirectStrategy extends DefaultRedirectStrategy {
-
-        private static final String REDIRECT_LOCATIONS = "http.protocol.redirect-locations";
+    public static class CustomRedirectStrategy extends LaxRedirectStrategy {
 
         public CustomRedirectStrategy() {
             super();
