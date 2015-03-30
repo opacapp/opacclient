@@ -1235,9 +1235,9 @@ public class SearchResultDetailFragment extends Fragment
     }
 
     public void reservationDo() {
-        MultiStepResultHelper msrhReservation = new MultiStepResultHelper(
+        MultiStepResultHelper<DetailledItem> msrhReservation = new MultiStepResultHelper<>(
                 getActivity(), item, R.string.doing_res);
-        msrhReservation.setCallback(new Callback() {
+        msrhReservation.setCallback(new Callback<DetailledItem>() {
             @Override
             public void onSuccess(MultiStepResult result) {
                 AccountDataSource adata = new AccountDataSource(getActivity());
@@ -1296,9 +1296,9 @@ public class SearchResultDetailFragment extends Fragment
             }
 
             @Override
-            public StepTask<?, ?> newTask(MultiStepResultHelper helper, int useraction,
-                    String selection) {
-                return new ResTask(helper, useraction, selection);
+            public StepTask<?> newTask(MultiStepResultHelper helper, int useraction,
+                    String selection, DetailledItem item) {
+                return new ResTask(helper, useraction, selection, item);
             }
         });
         msrhReservation.start();
@@ -1350,9 +1350,9 @@ public class SearchResultDetailFragment extends Fragment
     }
 
     public void bookingDo() {
-        MultiStepResultHelper msrhBooking = new MultiStepResultHelper(
+        MultiStepResultHelper<DetailledItem> msrhBooking = new MultiStepResultHelper<>(
                 getActivity(), item, R.string.doing_res);
-        msrhBooking.setCallback(new Callback() {
+        msrhBooking.setCallback(new Callback<DetailledItem>() {
             @Override
             public void onSuccess(MultiStepResult result) {
                 if (getActivity() == null) {
@@ -1385,9 +1385,9 @@ public class SearchResultDetailFragment extends Fragment
             }
 
             @Override
-            public StepTask<?, ?> newTask(MultiStepResultHelper helper, int useraction,
-                    String selection) {
-                return new BookingTask(helper, useraction, selection);
+            public StepTask<?> newTask(MultiStepResultHelper helper, int useraction,
+                    String selection, DetailledItem item) {
+                return new BookingTask(helper, useraction, selection, item);
             }
         });
         msrhBooking.start();
@@ -1504,16 +1504,19 @@ public class SearchResultDetailFragment extends Fragment
         }
     }
 
-    public class ResTask extends StepTask<DetailledItem, ReservationResult> {
+    public class ResTask extends StepTask<ReservationResult> {
+        private DetailledItem item;
 
-        public ResTask(MultiStepResultHelper helper, int useraction, String selection) {
+        public ResTask(MultiStepResultHelper helper, int useraction, String selection,
+                DetailledItem item) {
             super(helper, useraction, selection);
+            this.item = item;
         }
 
         @Override
-        protected ReservationResult doInBackground(DetailledItem... item) {
+        protected ReservationResult doInBackground(Void... voids) {
             try {
-                return app.getApi().reservation(item[0],
+                return app.getApi().reservation(item,
                         app.getAccount(), useraction, selection);
             } catch (java.net.UnknownHostException e) {
                 publishProgress(e, "ioerror");
@@ -1553,17 +1556,21 @@ public class SearchResultDetailFragment extends Fragment
         }
     }
 
-    public class BookingTask extends StepTask<DetailledItem, BookingResult> {
+    public class BookingTask extends StepTask<BookingResult> {
 
-        public BookingTask(MultiStepResultHelper helper, int useraction, String selection) {
+        private DetailledItem item;
+
+        public BookingTask(MultiStepResultHelper helper, int useraction, String selection,
+                DetailledItem item) {
             super(helper, useraction, selection);
+            this.item = item;
         }
 
         @Override
-        protected BookingResult doInBackground(DetailledItem... item) {
+        protected BookingResult doInBackground(Void... voids) {
             try {
                 return ((EbookServiceApi) app.getApi()).booking(
-                        item[0], app.getAccount(), useraction, selection);
+                        item, app.getAccount(), useraction, selection);
             } catch (java.net.UnknownHostException e) {
                 publishProgress(e, "ioerror");
             } catch (java.net.SocketException | InterruptedIOException e) {
