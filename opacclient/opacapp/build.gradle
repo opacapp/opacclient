@@ -2,18 +2,18 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 22
-    buildToolsVersion "22.0.0"
+    buildToolsVersion "22.0.1"
 
     defaultConfig {
         applicationId "de.geeksfactory.opacclient"
         minSdkVersion 8
         targetSdkVersion 22
-        versionCode 106
-        versionName "4.0.0"
+        versionCode 109
+        versionName "4.0.3"
     }
 
     lintOptions {
-        disable 'AndroidLintRtlHardcoded'
+        // disable 'AndroidLintRtlHardcoded' // Throws an "Unknown issue id" for me
         disable 'MissingTranslation'
         disable 'NewApi'  // does not respect our annotations at release time :(
     }

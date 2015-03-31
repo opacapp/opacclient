@@ -152,7 +152,7 @@ public class Adis extends BaseApi implements OpacApi {
             e.printStackTrace();
             throw new NotReachableException();
         } catch (IOException e) {
-            if (e.getMessage().contains("Request aborted")) {
+            if (e.getMessage() != null && e.getMessage().contains("Request aborted")) {
                 e.printStackTrace();
                 throw new NotReachableException();
             } else {
@@ -215,7 +215,7 @@ public class Adis extends BaseApi implements OpacApi {
             e.printStackTrace();
             throw new NotReachableException();
         } catch (IOException e) {
-            if (e.getMessage().contains("Request aborted")) {
+            if (e.getMessage() != null && e.getMessage().contains("Request aborted")) {
                 e.printStackTrace();
                 throw new NotReachableException();
             } else {
@@ -538,7 +538,7 @@ public class Adis extends BaseApi implements OpacApi {
         }
 
         if (doc.select("input[value*=Reservieren], input[value*=Vormerken]")
-               .size() > 0) {
+               .size() > 0 && id != null) {
             res.setReservable(true);
             res.setReservation_info(id);
         }
@@ -1005,7 +1005,7 @@ public class Adis extends BaseApi implements OpacApi {
             }
             for (Element tr : doc.select(".rTable_div tr")) {
                 if (tr.select("a").size() == 1) {
-                    if ((tr.text().contains("Reservationen") || tr.text().contains("Vormerkungen"))
+                    if ((tr.text().contains("Reservationen") || tr.text().contains("Vormerkung"))
                             && !tr.child(0).text().trim().equals("")
                             && tr.select("a").first().attr("href")
                                  .toUpperCase(Locale.GERMAN)
@@ -1185,7 +1185,7 @@ public class Adis extends BaseApi implements OpacApi {
         for (Element tr : doc.select(".rTable_div tr")) {
             if (tr.select("a").size() == 1) {
                 if ((tr.text().contains("Reservationen")
-                        || tr.text().contains("Vormerkungen")
+                        || tr.text().contains("Vormerkung")
                         || tr.text().contains("Fernleihbestellung")
                         || tr.text().contains("Bereitstellung")
                         || tr.text().contains("Magazin"))
