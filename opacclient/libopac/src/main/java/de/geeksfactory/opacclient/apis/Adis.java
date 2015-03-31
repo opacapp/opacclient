@@ -152,7 +152,7 @@ public class Adis extends BaseApi implements OpacApi {
             e.printStackTrace();
             throw new NotReachableException();
         } catch (IOException e) {
-            if (e.getMessage().contains("Request aborted")) {
+            if (e.getMessage() != null && e.getMessage().contains("Request aborted")) {
                 e.printStackTrace();
                 throw new NotReachableException();
             } else {
@@ -215,7 +215,7 @@ public class Adis extends BaseApi implements OpacApi {
             e.printStackTrace();
             throw new NotReachableException();
         } catch (IOException e) {
-            if (e.getMessage().contains("Request aborted")) {
+            if (e.getMessage() != null && e.getMessage().contains("Request aborted")) {
                 e.printStackTrace();
                 throw new NotReachableException();
             } else {
@@ -538,7 +538,7 @@ public class Adis extends BaseApi implements OpacApi {
         }
 
         if (doc.select("input[value*=Reservieren], input[value*=Vormerken]")
-               .size() > 0) {
+               .size() > 0 && id != null) {
             res.setReservable(true);
             res.setReservation_info(id);
         }
