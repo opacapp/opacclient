@@ -1,0 +1,36 @@
+{
+    "account_supported": false,
+    "api": "biber1992",
+    "city": "Flensburg",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "https://db.flensburg.de",
+        "information": "http://stadtbibliothek.flensburg.de/",
+        "mediatypes": {
+            "1": "BOOK",
+            "2": "NEWSPAPER",
+            "3": "CD_SOFTWARE",
+            "4": "MOVIE",
+            "5": "AUDIO_CASSETTE",
+            "6": "AUDIOBOOK",
+            "9": "BOARDGAME",
+            "10": "MAP",
+            "11": "DVD",
+            "19": "CD_MUSIC",
+			"18": "PACKAGE",
+            "20": "BLURAY"
+		},
+        "opacdir": "opac",
+        "searchtable": [
+            2,
+            3,
+            4
+        ]
+    },
+    "geo": [
+        54.7937431,
+        9.4469964
+    ],
+    "state": "Schleswig-Holstein",
+    "title": "Stadtb\u00fccherei"
+}
