@@ -366,9 +366,8 @@ public class Heidi extends BaseApi implements OpacApi {
             String c = tr.select("td").first().text();
             if (d.equals("Titel:")) {
                 item.setTitle(c);
-            } else if (d.contains("URL") || d.contains("Link")) {
-                item.addDetail(new Detail(d, tr.select("td").first()
-                                               .select("a").first().attr("href")));
+            } else if ((d.contains("URL") || d.contains("Link")) && tr.select("td a").size() > 0) {
+                item.addDetail(new Detail(d, tr.select("td a").first().attr("href")));
             } else {
                 item.addDetail(new Detail(d, c));
             }
