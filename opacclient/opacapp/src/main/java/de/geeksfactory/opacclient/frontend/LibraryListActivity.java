@@ -770,7 +770,7 @@ public class LibraryListActivity extends ActionBarActivity {
             libraries = result;
             if (dialog != null) dialog.dismiss();
             if (libraries == null) return;
-            if (LibraryListActivity.this.isDestroyed()) return;
+            if (!visible) return;
 
             // Get the intent, verify the action and get the query
             Intent intent = getIntent();
