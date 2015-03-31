@@ -8,4 +8,6 @@ android:
 script:
     - cd opacclient
     - ./gradlew check lint
-
+cache:
+    directories:
+        - $HOME/.gradle
