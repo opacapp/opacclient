@@ -10,7 +10,7 @@
             "returndate": 2,
             "title": 1
         },
-        "baseurl": "http://213.23.223.82/webopac",
+        "baseurl": "https://webopac.stadtbuecherei-asperg.de/webopac",
         "copiestable": {
             "branch": 4,
             "department": 3,
