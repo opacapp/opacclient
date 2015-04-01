@@ -17,7 +17,7 @@ import android.view.View;
 
 import org.acra.ACRA;
 
-import java.io.InterruptedIOException;
+import java.io.IOException;
 
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.R;
@@ -222,7 +222,7 @@ public class SearchResultListActivity extends OpacActivity implements
             } catch (java.net.UnknownHostException e) {
                 exception = e;
                 e.printStackTrace();
-            } catch (java.net.SocketException | InterruptedIOException | OpacErrorException e) {
+            } catch (IOException e) {
                 exception = e;
             } catch (Exception e) {
                 exception = e;

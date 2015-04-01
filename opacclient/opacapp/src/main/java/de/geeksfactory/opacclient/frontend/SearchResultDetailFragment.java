@@ -48,7 +48,7 @@ import com.nineoldandroids.view.ViewHelper;
 
 import org.acra.ACRA;
 
-import java.io.InterruptedIOException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.Arrays;
@@ -1518,10 +1518,8 @@ public class SearchResultDetailFragment extends Fragment
             try {
                 return app.getApi().reservation(item,
                         app.getAccount(), useraction, selection);
-            } catch (java.net.UnknownHostException e) {
+            } catch (IOException e) {
                 publishProgress(e, "ioerror");
-            } catch (java.net.SocketException | InterruptedIOException e) {
-                e.printStackTrace();
             } catch (Exception e) {
                 ACRA.getErrorReporter().handleException(e);
             }
@@ -1571,10 +1569,8 @@ public class SearchResultDetailFragment extends Fragment
             try {
                 return ((EbookServiceApi) app.getApi()).booking(
                         item, app.getAccount(), useraction, selection);
-            } catch (java.net.UnknownHostException e) {
+            } catch (IOException e) {
                 publishProgress(e, "ioerror");
-            } catch (java.net.SocketException | InterruptedIOException e) {
-                e.printStackTrace();
             } catch (Exception e) {
                 ACRA.getErrorReporter().handleException(e);
             }
@@ -1631,8 +1627,7 @@ public class SearchResultDetailFragment extends Fragment
                     ACRA.getErrorReporter().handleException(
                             new Throwable("No ID supplied"));
                 }
-            } catch (java.net.SocketException | InterruptedIOException | java.net
-                    .UnknownHostException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             } catch (Exception e) {
                 ACRA.getErrorReporter().handleException(e);
