@@ -152,7 +152,7 @@ public class AboutFragment extends PreferenceFragment {
         final Dialog dialog = new Dialog(context);
         dialog.setContentView(R.layout.dialog_about);
         dialog.setTitle(title);
-        TextView textview1 = (TextView) dialog.findViewById(R.id.textView1);
+        TextView tvText = (TextView) dialog.findViewById(R.id.tvText);
 
         String text = "";
 
@@ -173,11 +173,11 @@ public class AboutFragment extends PreferenceFragment {
             e.printStackTrace();
         }
 
-        textview1.setText(Html.fromHtml(text));
+        tvText.setText(Html.fromHtml(text));
 
-        Button dialogButton = (Button) dialog.findViewById(R.id.button1);
+        Button closeButton = (Button) dialog.findViewById(R.id.btnClose);
         // if button is clicked, close the custom dialog
-        dialogButton.setOnClickListener(new View.OnClickListener() {
+        closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
