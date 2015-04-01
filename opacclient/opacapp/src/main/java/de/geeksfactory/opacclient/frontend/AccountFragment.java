@@ -125,7 +125,7 @@ public class AccountFragment extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         view = inflater.inflate(R.layout.fragment_account, container, false);
         findViews();
@@ -201,7 +201,7 @@ public class AccountFragment extends Fragment implements
         tvAccCity = (TextView) view.findViewById(R.id.tvAccCity);
         llLent = (LinearLayout) view.findViewById(R.id.llLent);
         tvWarning = (TextView) view.findViewById(R.id.tvWarning);
-        tvLentHeader = (TextView) view.findViewById(R.id.tvEntlHeader);
+        tvLentHeader = (TextView) view.findViewById(R.id.tvLentHeader);
         llRes = (LinearLayout) view.findViewById(R.id.llReservations);
         tvError = (TextView) view.findViewById(R.id.tvError);
         tvResHeader = (TextView) view.findViewById(R.id.tvResHeader);
@@ -409,8 +409,8 @@ public class AccountFragment extends Fragment implements
 
                                MultiStepResultHelper<String> msrhCancel =
                                        new MultiStepResultHelper<>(
-                                       getActivity(), a,
-                                       R.string.doing_cancel);
+                                               getActivity(), a,
+                                               R.string.doing_cancel);
                                msrhCancel.setCallback(new Callback<String>() {
                                    @Override
                                    public void onSuccess(MultiStepResult result) {
@@ -530,7 +530,7 @@ public class AccountFragment extends Fragment implements
                                new DialogInterface.OnClickListener() {
                                    @Override
                                    public void onClick(DialogInterface d,
-                                                       int id) {
+                                           int id) {
                                        d.cancel();
                                    }
                                })
@@ -721,10 +721,10 @@ public class AccountFragment extends Fragment implements
             TextView t1 = new TextView(getActivity());
             t1.setText(R.string.entl_none);
             llLent.addView(t1);
-            tvLentHeader.setText(getActivity().getString(R.string.entl_head) + " (0)");
+            tvLentHeader.setText(getActivity().getString(R.string.lent_head) + " (0)");
         } else {
             tvLentHeader.setText(
-                    getActivity().getString(R.string.entl_head) + " (" + result.getLent().size() +
+                    getActivity().getString(R.string.lent_head) + " (" + result.getLent().size() +
                             ")");
             for (final Map<String, String> item : result.getLent()) {
                 View v = getLayoutInflater(null).inflate(
@@ -1089,7 +1089,7 @@ public class AccountFragment extends Fragment implements
                                new DialogInterface.OnClickListener() {
                                    @Override
                                    public void onClick(DialogInterface d,
-                                                       int id) {
+                                           int id) {
                                        d.cancel();
                                    }
                                })
@@ -1206,7 +1206,7 @@ public class AccountFragment extends Fragment implements
                                new DialogInterface.OnClickListener() {
                                    @Override
                                    public void onClick(DialogInterface d,
-                                                       int id) {
+                                           int id) {
                                        d.cancel();
                                    }
                                })
@@ -1412,7 +1412,7 @@ public class AccountFragment extends Fragment implements
                                new DialogInterface.OnClickListener() {
                                    @Override
                                    public void onClick(DialogInterface dialog,
-                                                       int id) {
+                                           int id) {
                                        dialog.cancel();
                                    }
                                });
@@ -1560,7 +1560,7 @@ public class AccountFragment extends Fragment implements
                                new DialogInterface.OnClickListener() {
                                    @Override
                                    public void onClick(DialogInterface dialog,
-                                                       int id) {
+                                           int id) {
                                        dialog.cancel();
                                    }
                                });
@@ -1608,7 +1608,7 @@ public class AccountFragment extends Fragment implements
                                new DialogInterface.OnClickListener() {
                                    @Override
                                    public void onClick(DialogInterface dialog,
-                                                       int id) {
+                                           int id) {
                                        dialog.cancel();
                                    }
                                });
@@ -1709,7 +1709,7 @@ public class AccountFragment extends Fragment implements
                                new DialogInterface.OnClickListener() {
                                    @Override
                                    public void onClick(DialogInterface dialog,
-                                                       int id) {
+                                           int id) {
                                        dialog.cancel();
                                    }
                                });

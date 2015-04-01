@@ -419,9 +419,9 @@ public class SearchResultDetailFragment extends Fragment
 
         llCopies.removeAllViews();
         if (item.getVolumesearch() != null) {
-            tvCopies.setText(R.string.baende);
+            tvCopies.setText(R.string.volumes);
             Button btnVolume = new Button(getActivity());
-            btnVolume.setText(R.string.baende_volumesearch);
+            btnVolume.setText(R.string.volumesearch);
             btnVolume.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -431,7 +431,7 @@ public class SearchResultDetailFragment extends Fragment
             llCopies.addView(btnVolume);
 
         } else if (item.getVolumes().size() > 0) {
-            tvCopies.setText(R.string.baende);
+            tvCopies.setText(R.string.volumes);
 
             for (final Map<String, String> band : item.getVolumes()) {
                 View v = getLayoutInflater(null).inflate(R.layout.listitem_volume,

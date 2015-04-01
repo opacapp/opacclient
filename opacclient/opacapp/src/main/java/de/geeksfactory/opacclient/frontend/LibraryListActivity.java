@@ -296,7 +296,7 @@ public class LibraryListActivity extends ActionBarActivity {
         deCollator.setStrength(Collator.TERTIARY);
         Collections.sort(list, deCollator);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                R.layout.listitem_simple, R.id.text1,
+                R.layout.listitem_simple, R.id.txtText,
                 list.toArray(new String[list.size()]));
         fragment.setListAdapter(adapter);
         if (findViewById(R.id.llFragments) != null) {
@@ -349,7 +349,7 @@ public class LibraryListActivity extends ActionBarActivity {
         deCollator.setStrength(Collator.TERTIARY);
         Collections.sort(list, deCollator);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                R.layout.listitem_simple, R.id.text1, list);
+                R.layout.listitem_simple, R.id.txtText, list);
         fragment.setListAdapter(adapter);
         if (findViewById(R.id.llFragments) != null) {
             fragment2 = fragment;
@@ -395,7 +395,7 @@ public class LibraryListActivity extends ActionBarActivity {
         deCollator.setStrength(Collator.TERTIARY);
         Collections.sort(list, deCollator);
         ArrayAdapter<String> adapter = new CityAdapter(this,
-                R.layout.listitem_simple, R.id.text1, list);
+                R.layout.listitem_simple, R.id.txtText, list);
         fragment.setListAdapter(adapter);
         if (findViewById(R.id.llFragments) != null) {
             fragment3 = fragment;

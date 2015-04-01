@@ -29,7 +29,7 @@
     <string name="pending_fees">Importo da versare:</string>
     <string name="valid_until">Account valido fino al:</string>
     <string name="no_warranty">Non ci assumiamo nessuna responsabilità sulle informazioni riportate.</string>
-    <string name="entl_head">NOLEGGIATI</string>
+    <string name="lent_head">NOLEGGIATI</string>
     <string name="reservations_head">PRENOTAZIONI</string>
     <string name="entl_none">Nessun materiale preso in prestito</string>
     <string name="reservations_none">Nessun materiale prenotato</string>
@@ -90,8 +90,8 @@
     <string name="notification_warning_desc">Quanto tempo prima vuoi ricevere il promemoria?</string>
     <string name="notif_ticker">%s libri sono in scadenza!</string>
     <string name="notif_title">Libri in scadenza</string>
-    <string name="baende">VOLUMI</string>
-    <string name="baende_volumesearch">Mostra volumi</string>
+    <string name="volumes">VOLUMI</string>
+    <string name="volumesearch">Mostra volumi</string>
     <string name="star">Aggiungi ai preferiti</string>
     <string name="starred">È stato aggiunto ai preferiti</string>
     <string name="star_wait">Attendere il caricamento dei dettagli!</string>

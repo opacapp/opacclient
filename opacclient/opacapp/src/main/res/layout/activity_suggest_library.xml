@@ -29,7 +29,7 @@
             android:padding="8dp">
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/tvCityLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/city"/>
@@ -43,7 +43,7 @@
                 android:singleLine="true"/>
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/tvNameLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/library_name"/>
@@ -58,7 +58,7 @@
                 android:singleLine="true"/>
 
             <TextView
-                android:id="@+id/textView5"
+                android:id="@+id/tvCommentLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/comment"/>
@@ -73,7 +73,7 @@
                 android:ems="10"/>
 
             <!-- <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/tvUrlLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/opac_url" />
@@ -87,7 +87,7 @@
                 android:singleLine="true" />
 
             <TextView
-                android:id="@+id/textView1"
+                android:id="@+id/tvStatus"
                 android:layout_marginTop="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

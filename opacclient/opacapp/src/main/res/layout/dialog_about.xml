@@ -7,20 +7,20 @@
               android:orientation="vertical">
 
     <ScrollView
-        android:id="@+id/ScrollView1"
+        android:id="@+id/svScroll"
         android:layout_width="match_parent"
         android:layout_height="0dip"
         android:layout_weight="1"
         android:padding="5dp">
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/tvText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </ScrollView>
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/btnClose"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/close"/>

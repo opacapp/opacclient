@@ -12,7 +12,7 @@
         android:visibility="gone">
 
         <ProgressBar
-            android:id="@+id/progressBar1"
+            android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -148,19 +148,19 @@
                     android:padding="5dp">
 
                     <TextView
-                        android:id="@+id/tvEntlHeader"
+                        android:id="@+id/tvLentHeader"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:layout_marginTop="8dp"
-                        android:text="@string/entl_head"
+                        android:text="@string/lent_head"
                         android:textAppearance="@style/TextAppearance.Opacapp.Subhead"/>
 
                     <LinearLayout
                         android:id="@+id/llLent"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/tvEntlHeader"
+                        android:layout_below="@id/tvLentHeader"
                         android:orientation="vertical">
                     </LinearLayout>
 

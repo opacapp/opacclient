@@ -180,10 +180,10 @@ public class Heidi extends BaseApi implements OpacApi {
             params.add(new BasicNameValuePair("var" + index, ""));
         }
 
-        // Homebranch auswahl
+        // Homebranch selection
         httpGet(opac_url + "/zweigstelle.cgi?sess=" + sessid + "&zweig="
                 + homebranch, ENCODING, false, cookieStore);
-        // Die eigentliche Suche
+        // The actual search
         String html = httpGet(
                 opac_url + "/search.cgi?"
                         + URLEncodedUtils.format(params, "UTF-8"), ENCODING,

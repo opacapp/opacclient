@@ -7,7 +7,7 @@
               android:background="@drawable/list_selector">
 
     <TextView
-        android:id="@+id/text1"
+        android:id="@+id/txtText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"/>
