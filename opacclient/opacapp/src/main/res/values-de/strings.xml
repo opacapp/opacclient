@@ -29,7 +29,7 @@
     <string name="pending_fees">Ausstehende Gebühren:</string>
     <string name="valid_until">Ausweis gültig bis:</string>
     <string name="no_warranty">Alle Angaben ohne Gewähr.</string>
-    <string name="entl_head">Entliehen</string>
+    <string name="lent_head">Entliehen</string>
     <string name="reservations_head">Vorbestellungen</string>
     <string name="entl_none">Keine Medien entliehen</string>
     <string name="reservations_none">Keine Medien vorbestellt</string>
@@ -90,8 +90,8 @@
     <string name="notification_warning_desc">Wie lange vorher soll benachrichtigt werden?</string>
     <string name="notif_ticker">%s Bücher müssen abgegeben oder verlängert werden!</string>
     <string name="notif_title">Bücher laufen ab</string>
-    <string name="baende">BÄNDE</string>
-    <string name="baende_volumesearch">Einzelbände zeigen</string>
+    <string name="volumes">BÄNDE</string>
+    <string name="volumesearch">Einzelbände zeigen</string>
     <string name="star">Merken</string>
     <string name="starred">Das Medium ist jetzt auf deiner Merkliste</string>
     <string name="star_wait">Bitte warten, bis die Details geladen wurden!</string>

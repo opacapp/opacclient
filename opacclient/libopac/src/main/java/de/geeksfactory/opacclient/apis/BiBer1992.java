@@ -314,9 +314,6 @@ public class BiBer1992 extends BaseApi {
 
     }
 
-    /*
-     * HTTP Push
-     */
     @Override
     public SearchRequestResult search(List<SearchQuery> queryList)
             throws IOException {
@@ -348,7 +345,7 @@ public class BiBer1992 extends BaseApi {
         m_nameValuePairs.add(new BasicNameValuePair("LANG", "de"));
         m_nameValuePairs.add(new BasicNameValuePair("SHOW", "20")); // but
         // result
-        // brings 50
+        // gives 50
         m_nameValuePairs.add(new BasicNameValuePair("SHOWSTAT", "N"));
         m_nameValuePairs.add(new BasicNameValuePair("FROMPOS", "1"));
 
@@ -962,8 +959,8 @@ public class BiBer1992 extends BaseApi {
         AccountData res = new AccountData(account.getId());
 
         // get media
-        List<Map<String, String>> medien = accountGetMedia(account, res);
-        res.setLent(medien);
+        List<Map<String, String>> media = accountGetMedia(account, res);
+        res.setLent(media);
 
         // get reservations
         List<Map<String, String>> reservations = accountGetReservations(account);
@@ -976,12 +973,12 @@ public class BiBer1992 extends BaseApi {
             AccountData res) throws IOException, JSONException,
             OpacErrorException {
 
-        List<Map<String, String>> medien = new ArrayList<>();
+        List<Map<String, String>> media = new ArrayList<>();
 
         // get media list via http POST
         Document doc = accountHttpPost(account, "medk");
         if (doc == null) {
-            return medien;
+            return media;
         }
 
         // parse result list
@@ -1082,10 +1079,10 @@ public class BiBer1992 extends BaseApi {
                 }
             }
 
-            medien.add(e);
+            media.add(e);
         }
 
-        return medien;
+        return media;
     }
 
     private List<Map<String, String>> accountGetReservations(Account account)

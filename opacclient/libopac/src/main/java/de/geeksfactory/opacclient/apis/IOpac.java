@@ -650,16 +650,16 @@ public class IOpac extends BaseApi implements OpacApi {
 
         AccountData res = new AccountData(account.getId());
 
-        List<Map<String, String>> medien = new ArrayList<>();
+        List<Map<String, String>> media = new ArrayList<>();
         List<Map<String, String>> reserved = new ArrayList<>();
         if (doc.select("a[name=AUS]").size() > 0) {
-            parse_medialist(medien, doc);
+            parse_medialist(media, doc);
         }
         if (doc.select("a[name=RES]").size() > 0) {
             parse_reslist(reserved, doc);
         }
 
-        res.setLent(medien);
+        res.setLent(media);
         res.setReservations(reserved);
         if (doc.select("h4:contains(Kontostand)").size() > 0) {
             Element h4 = doc.select("h4:contains(Kontostand)").first();
@@ -674,7 +674,7 @@ public class IOpac extends BaseApi implements OpacApi {
             if (matcher.find()) res.setValidUntil(matcher.group(1));
         }
 
-        if (medien.isEmpty() && reserved.isEmpty()) {
+        if (media.isEmpty() && reserved.isEmpty()) {
             if (doc.select("h1").size() > 0) {
                 //noinspection StatementWithEmptyBody
                 if (doc.select("h4").text().trim()
@@ -718,7 +718,7 @@ public class IOpac extends BaseApi implements OpacApi {
         }
     }
 
-    protected void parse_medialist(List<Map<String, String>> medien,
+    protected void parse_medialist(List<Map<String, String>> media,
             Document doc) {
 
         Elements copytrs = doc.select("a[name=AUS] ~ table").first()
@@ -798,13 +798,13 @@ public class IOpac extends BaseApi implements OpacApi {
                 }
             }
 
-            medien.add(e);
+            media.add(e);
         }
-        assert (medien.size() == trs - 1);
+        assert (media.size() == trs - 1);
 
     }
 
-    protected void parse_reslist(List<Map<String, String>> medien,
+    protected void parse_reslist(List<Map<String, String>> media,
             Document doc) {
         Elements copytrs = doc.select("a[name=RES] ~ table:contains(Titel)")
                               .first().select("tr");
@@ -830,9 +830,9 @@ public class IOpac extends BaseApi implements OpacApi {
                                                             .attr("href"));
             }
 
-            medien.add(e);
+            media.add(e);
         }
-        assert (medien.size() == trs - 1);
+        assert (media.size() == trs - 1);
 
     }
 

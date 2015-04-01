@@ -885,7 +885,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
         return adata;
     }
 
-    private void parse_medialist(List<Map<String, String>> medien, Document doc) {
+    private void parse_medialist(List<Map<String, String>> media, Document doc) {
         doc.setBaseUri(opac_url);
         Elements copytrs = doc.select(".data tr");
 
@@ -947,7 +947,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
                 ex.printStackTrace();
             }
 
-            medien.add(e);
+            media.add(e);
         }
     }
 

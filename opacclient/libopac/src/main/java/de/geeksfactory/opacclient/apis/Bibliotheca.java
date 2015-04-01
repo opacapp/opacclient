@@ -129,7 +129,7 @@ public class Bibliotheca extends BaseApi {
         }
 
         List<SearchField> fields = new ArrayList<>();
-        // Zweigstellen und Mediengruppen auslesen
+        // Read branches and media types
         List<NameValuePair> nameValuePairs = new ArrayList<>(2);
         nameValuePairs.add(new BasicNameValuePair("link_profis.x", "0"));
         nameValuePairs.add(new BasicNameValuePair("link_profis.y", "1"));
@@ -407,7 +407,7 @@ public class Bibliotheca extends BaseApi {
                             .attr("abs:href"));
                     String nr = params.get("detmediennr");
                     if (Integer.parseInt(nr) > i + 1) {
-                        // Scheint eine ID zu sein…
+                        // Seems to be an ID…
                         if (params.get("detDB") != null) {
                             sr.setId("&detmediennr=" + nr + "&detDB="
                                     + params.get("detDB"));
@@ -622,7 +622,7 @@ public class Bibliotheca extends BaseApi {
             doc = Jsoup.parse(html);
 
             if (doc.select("input[name=AUSWEIS]").size() > 0) {
-                // Login vonnöten
+                // Needs login
                 List<NameValuePair> nameValuePairs = new ArrayList<>(
                         2);
                 nameValuePairs.add(new BasicNameValuePair("AUSWEIS", acc
@@ -1004,7 +1004,7 @@ public class Bibliotheca extends BaseApi {
             doc = Jsoup.parse(html);
         }
         // } else if (response.getStatusLine().getStatusCode() == 302) {
-        // Bereits eingeloggt
+        // Already logged in
         // html = httpGet(opac_url + "/index.asp?target=konto",
         // "ISO-8859-1",
         // true);
@@ -1022,7 +1022,7 @@ public class Bibliotheca extends BaseApi {
 
         JSONObject copymap = data.getJSONObject("accounttable");
 
-        List<Map<String, String>> medien = new ArrayList<>();
+        List<Map<String, String>> media = new ArrayList<>();
 
         if (doc.select(".kontozeile_center table").size() == 0) {
             return null;
@@ -1070,11 +1070,11 @@ public class Bibliotheca extends BaseApi {
                     e1.printStackTrace();
                 }
             }
-            medien.add(e);
+            media.add(e);
         }
         assert (doc.select(".kontozeile_center table").get(0).select("tr")
                    .size() > 0);
-        assert (exemplartrs.size() == medien.size());
+        assert (exemplartrs.size() == media.size());
 
         copymap = data.getJSONObject("reservationtable");
 
@@ -1134,7 +1134,7 @@ public class Bibliotheca extends BaseApi {
             }
         }
 
-        res.setLent(medien);
+        res.setLent(media);
         res.setReservations(reservations);
         return res;
     }
@@ -1162,7 +1162,7 @@ public class Bibliotheca extends BaseApi {
             return null;
         }
 
-        // Login vonnöten
+        // Needs login
         HttpPost httppost = new HttpPost(opac_url + "/index.asp");
         List<NameValuePair> nameValuePairs = new ArrayList<>(2);
         nameValuePairs.add(new BasicNameValuePair("link_konto.x", "0"));
@@ -1171,7 +1171,7 @@ public class Bibliotheca extends BaseApi {
         HttpResponse response = http_client.execute(httppost);
 
         if (response.getStatusLine().getStatusCode() == 200) {
-            // Login vonnöten
+            // Needs login
             response.getEntity().consumeContent();
             nameValuePairs = new ArrayList<>(2);
             nameValuePairs
@@ -1184,7 +1184,7 @@ public class Bibliotheca extends BaseApi {
             html = httpPost(opac_url + "/index.asp", new UrlEncodedFormEntity(
                     nameValuePairs), getDefaultEncoding());
         } else if (response.getStatusLine().getStatusCode() == 302) {
-            // Bereits eingeloggt
+            // Already logged in
             response.getEntity().consumeContent();
             html = httpGet(opac_url + "/index.asp?target=konto",
                     getDefaultEncoding());

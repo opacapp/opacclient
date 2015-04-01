@@ -968,24 +968,23 @@ public class Pica extends BaseApi implements OpacApi {
 
         AccountData res = new AccountData(account.getId());
 
-        List<Map<String, String>> medien = new ArrayList<>();
+        List<Map<String, String>> media = new ArrayList<>();
         List<Map<String, String>> reserved = new ArrayList<>();
         if (doc.select("table[summary^=list]").size() > 0) {
-            parse_medialist(medien, doc, 1, account.getName());
+            parse_medialist(media, doc);
         }
         if (doc2.select("table[summary^=list]").size() > 0) {
-            parse_reslist(reserved, doc2, 1);
+            parse_reslist(reserved, doc2);
         }
 
-        res.setLent(medien);
+        res.setLent(media);
         res.setReservations(reserved);
 
         return res;
 
     }
 
-    protected void parse_medialist(List<Map<String, String>> medien,
-            Document doc, int offset, String accountName)
+    protected void parse_medialist(List<Map<String, String>> media, Document doc)
             throws OpacErrorException {
 
         Elements copytrs = doc
@@ -1058,7 +1057,7 @@ public class Pica extends BaseApi implements OpacApi {
                             // not supported
                         }
                 }
-                medien.add(e);
+                media.add(e);
             } else { // like in Kiel
                 String prolongCount = "";
                 if (tr.select("iframe[name=nr_renewals_in_a_box]").size() > 0) {
@@ -1120,14 +1119,13 @@ public class Pica extends BaseApi implements OpacApi {
                                                        .select("input").attr("value"));
                 }
 
-                medien.add(e);
+                media.add(e);
             }
         }
-        assert (medien.size() == trs - 1);
+        assert (media.size() == trs - 1);
     }
 
-    protected void parse_reslist(List<Map<String, String>> medien,
-            Document doc, int offset) throws
+    protected void parse_reslist(List<Map<String, String>> media, Document doc) throws
             OpacErrorException {
 
         if (doc.select("input[name=LOR_RESERVATIONS]").size() > 0) {
@@ -1152,14 +1150,13 @@ public class Pica extends BaseApi implements OpacApi {
             e.put(AccountData.KEY_RESERVATION_CANCEL,
                     tr.child(1).select("input").attr("value"));
 
-            medien.add(e);
+            media.add(e);
         }
-        assert (medien.size() == trs - 1);
+        assert (media.size() == trs - 1);
     }
 
     @Override
-    public List<SearchField> getSearchFields() throws
-            IOException, JSONException {
+    public List<SearchField> getSearchFields() throws IOException, JSONException {
         if (!initialised) {
             start();
         }

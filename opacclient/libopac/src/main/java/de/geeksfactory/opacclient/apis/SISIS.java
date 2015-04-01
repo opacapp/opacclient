@@ -1336,7 +1336,7 @@ public class SISIS extends BaseApi implements OpacApi {
         return true;
     }
 
-    protected void parse_medialist(List<Map<String, String>> medien,
+    protected void parse_medialist(List<Map<String, String>> media,
             Document doc, int offset) {
         Elements copytrs = doc.select(".data tr");
         doc.setBaseUri(opac_url);
@@ -1363,16 +1363,16 @@ public class SISIS extends BaseApi implements OpacApi {
                         tr.child(1).html().split("<br[ /]*>")[1].trim());
 
                 String[] col2split = tr.child(2).html().split("<br[ /]*>");
-                String frist = col2split[0].trim();
-                if (frist.contains("-")) {
-                    frist = frist.split("-")[1].trim();
+                String deadline = col2split[0].trim();
+                if (deadline.contains("-")) {
+                    deadline = deadline.split("-")[1].trim();
                 }
-                e.put(AccountData.KEY_LENT_DEADLINE, frist);
+                e.put(AccountData.KEY_LENT_DEADLINE, deadline);
                 if (col2split.length > 1) {
                     e.put(AccountData.KEY_LENT_BRANCH, col2split[1].trim());
                 }
 
-                if (!frist.equals("")) {
+                if (!deadline.equals("")) {
                     try {
                         e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String
                                 .valueOf(sdf.parse(
@@ -1408,9 +1408,9 @@ public class SISIS extends BaseApi implements OpacApi {
                 ex.printStackTrace();
             }
 
-            medien.add(e);
+            media.add(e);
         }
-        assert (medien.size() == trs - 1);
+        assert (media.size() == trs - 1);
 
     }
 
@@ -1510,7 +1510,7 @@ public class SISIS extends BaseApi implements OpacApi {
             assert (resultNum == medien.size());
         }
 
-        // Bestellte Medien
+        // Ordered media ("Bestellungen")
         html = httpGet(opac_url
                 + "/userAccount.do?methodToCall=showAccount&typ=6", ENCODING);
         List<Map<String, String>> reserved = new ArrayList<>();
@@ -1534,7 +1534,7 @@ public class SISIS extends BaseApi implements OpacApi {
             }
         }
 
-        // Vorgemerkte Medien
+        // Prebooked media ("Vormerkungen")
         html = httpGet(opac_url
                 + "/userAccount.do?methodToCall=showAccount&typ=7", ENCODING);
         doc = Jsoup.parse(html);

@@ -114,7 +114,7 @@ public class Zones22 extends BaseApi {
 
         Document doc = Jsoup.parse(html);
 
-        // Textfelder auslesen
+        // find text fields
         Elements txt_opts = doc.select("#formSelectTerm_1 option");
         for (Element opt : txt_opts) {
             TextSearchField field = new TextSearchField();
@@ -124,7 +124,7 @@ public class Zones22 extends BaseApi {
             fields.add(field);
         }
 
-        // Zweigstellen auslesen
+        // find branches
         Elements zst_opts = doc.select(".TabRechAv .limitChoice label");
         if (zst_opts.size() > 0) {
             DropdownSearchField brDropdown = new DropdownSearchField();
@@ -466,7 +466,7 @@ public class Zones22 extends BaseApi {
             }
         }
 
-        //Cover
+        // Cover
         if (doc.select(".BookCover, .LargeBookCover").size() > 0) {
             result.setCover(doc.select(".BookCover, .LargeBookCover").first().attr("src"));
         }

@@ -29,7 +29,7 @@
     <string name="pending_fees">Library fines due:</string>
     <string name="valid_until">Account valid until:</string>
     <string name="no_warranty">All information is supplied without liability.</string>
-    <string name="entl_head">Lent</string>
+    <string name="lent_head">Lent</string>
     <string name="reservations_head">Reservations</string>
     <string name="entl_none">Nothing lent</string>
     <string name="reservations_none">Nothing reserved</string>
@@ -90,8 +90,8 @@
     <string name="notification_warning_desc">How long before the due date should a notification be shown?</string>
     <string name="notif_ticker">%s items are about to expire!</string>
     <string name="notif_title">Items are about to expire</string>
-    <string name="baende">Volumes</string>
-    <string name="baende_volumesearch">Show volumes</string>
+    <string name="volumes">Volumes</string>
+    <string name="volumesearch">Show volumes</string>
     <string name="star">Save to favorites</string>
     <string name="starred">The item is now on your favorites list.</string>
     <string name="star_wait">Please wait for the details to load.</string>
