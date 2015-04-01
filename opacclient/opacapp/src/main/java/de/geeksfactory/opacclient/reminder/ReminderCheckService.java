@@ -40,8 +40,11 @@ import android.util.Log;
 
 import org.acra.ACRA;
 
+import java.io.IOError;
+import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -217,7 +220,7 @@ public class ReminderCheckService extends Service {
                         }
                     }
 
-                } catch (SocketException | InterruptedIOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                     exception = true;
                 } catch (OpacErrorException e) {

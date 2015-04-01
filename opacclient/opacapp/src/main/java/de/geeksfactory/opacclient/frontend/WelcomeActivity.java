@@ -33,7 +33,7 @@ import android.widget.Button;
 
 import org.acra.ACRA;
 
-import java.io.InterruptedIOException;
+import java.io.IOException;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
@@ -91,8 +91,7 @@ public class WelcomeActivity extends ActionBarActivity {
         protected Void doInBackground(Void... voids) {
             try {
                 app.getApi().start();
-            } catch (java.net.UnknownHostException | InterruptedIOException | java.net
-                    .SocketException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             } catch (Exception e) {
                 ACRA.getErrorReporter().handleException(e);

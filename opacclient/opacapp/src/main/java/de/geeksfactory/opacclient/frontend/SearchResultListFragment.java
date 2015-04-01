@@ -21,11 +21,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.acra.ACRA;
-import org.apache.http.NoHttpResponseException;
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -438,8 +436,7 @@ public class SearchResultListFragment extends CustomListFragment {
                 } catch (java.net.UnknownHostException e) {
                     exception = e;
                     e.printStackTrace();
-                } catch (java.net.SocketException | NoHttpResponseException | OpacErrorException
-                        | InterruptedIOException e) {
+                } catch (IOException e) {
                     exception = e;
                 } catch (Exception e) {
                     exception = e;
@@ -452,8 +449,7 @@ public class SearchResultListFragment extends CustomListFragment {
                 } catch (java.net.UnknownHostException e) {
                     exception = e;
                     e.printStackTrace();
-                } catch (java.net.SocketException | NoHttpResponseException | OpacErrorException
-                        | InterruptedIOException e) {
+                } catch (IOException e) {
                     exception = e;
                 } catch (Exception e) {
                     exception = e;

@@ -68,7 +68,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -1355,8 +1354,7 @@ public class AccountFragment extends Fragment implements
         protected AccountData doInBackground(Void... voids) {
             try {
                 return app.getApi().account(app.getAccount());
-            } catch (java.net.UnknownHostException | java.net.SocketException |
-                    InterruptedIOException | NoHttpResponseException | OpacErrorException e) {
+            } catch (IOException | OpacErrorException e) {
                 exception = e;
             } catch (Exception e) {
                 ACRA.getErrorReporter().handleException(e);
@@ -1537,7 +1535,7 @@ public class AccountFragment extends Fragment implements
                 return res;
             } catch (java.net.UnknownHostException | NoHttpResponseException e) {
                 publishProgress(e, "ioerror");
-            } catch (java.net.SocketException e) {
+            } catch (IOException e) {
                 success = false;
                 e.printStackTrace();
             } catch (Exception e) {
@@ -1587,8 +1585,8 @@ public class AccountFragment extends Fragment implements
             try {
                 return app.getApi().prolongAll(account,
                         useraction, selection);
-            } catch (java.net.UnknownHostException | java.net.SocketException |
-                    NoHttpResponseException e) {
+            } catch (IOException e) {
+                e.printStackTrace();
             } catch (Exception e) {
                 ACRA.getErrorReporter().handleException(e);
             }
@@ -1688,10 +1686,8 @@ public class AccountFragment extends Fragment implements
             try {
                 return ((EbookServiceApi) app.getApi()).booking(
                         item, app.getAccount(), useraction, selection);
-            } catch (java.net.UnknownHostException | NoHttpResponseException e) {
+            } catch (IOException e) {
                 publishProgress(e, "ioerror");
-            } catch (java.net.SocketException e) {
-                e.printStackTrace();
             } catch (Exception e) {
                 ACRA.getErrorReporter().handleException(e);
             }
