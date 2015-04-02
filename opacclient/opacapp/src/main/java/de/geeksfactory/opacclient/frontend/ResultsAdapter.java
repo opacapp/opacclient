@@ -61,11 +61,11 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
                 return R.drawable.type_cd_software;
             case CD_MUSIC:
                 return R.drawable.type_cd_music;
+            case BLURAY:
+                return R.drawable.type_bluray;
             case DVD:
                 return R.drawable.type_dvd;
             case MOVIE:
-                return R.drawable.type_movie;
-            case BLURAY:
                 return R.drawable.type_movie;
             case AUDIOBOOK:
                 return R.drawable.type_audiobook;
@@ -102,11 +102,14 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
                 return R.drawable.type_edoc;
             case EVIDEO:
                 return R.drawable.type_evideo;
+            case EAUDIO:
+                return R.drawable.type_eaudio;
             case ART:
                 return R.drawable.type_art;
             case MAP:
+                return R.drawable.type_map;
             case LP_RECORD:
-                return R.drawable.type_unknown;
+                return R.drawable.type_lp_record;
         }
 
         return R.drawable.type_unknown;

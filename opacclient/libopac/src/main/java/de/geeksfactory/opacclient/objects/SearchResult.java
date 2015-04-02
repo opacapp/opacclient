@@ -124,8 +124,8 @@ public class SearchResult implements CoverHolder {
     }
 
     /**
-     * Set HTML describing the item to the user in a result list. Only "simple"
-     * HTML like <b>, <i>, etc. can be used.
+     * Set HTML describing the item to the user in a result list. Only "simple" HTML like <b>, <i>,
+     * etc. can be used.
      *
      * @param innerhtml simple HTML code
      */
@@ -214,13 +214,12 @@ public class SearchResult implements CoverHolder {
         GAME_CONSOLE, EBOOK, SCORE_MUSIC, PACKAGE_BOOKS, UNKNOWN, NEWSPAPER,
         BOARDGAME, SCHOOL_VERSION, MAP, BLURAY, AUDIO_CASSETTE, ART, MAGAZINE,
         GAME_CONSOLE_WII, GAME_CONSOLE_NINTENDO, GAME_CONSOLE_PLAYSTATION,
-        GAME_CONSOLE_XBOX, LP_RECORD, MP3, URL, EVIDEO, EDOC
+        GAME_CONSOLE_XBOX, LP_RECORD, MP3, URL, EVIDEO, EDOC, EAUDIO
     }
 
     /**
-     * Media status, simplified like a traffic light, e.g. red for
-     * "lent out, no reservation possible", yellow for "reservation needed" or
-     * green for "available".
+     * Media status, simplified like a traffic light, e.g. red for "lent out, no reservation
+     * possible", yellow for "reservation needed" or green for "available".
      *
      * @since 2.0.7
      */
