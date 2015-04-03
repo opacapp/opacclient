@@ -201,7 +201,7 @@ public class LibraryListActivity extends ActionBarActivity {
         criteria.setAccuracy(Criteria.ACCURACY_COARSE); // no GPS
         final String provider = locationManager.getBestProvider(criteria, true);
 
-        if (provider == null) {
+        if (provider == null || libraries == null) {
             return;
         }
         locationManager.requestLocationUpdates(provider, 0, 0,
@@ -229,7 +229,7 @@ public class LibraryListActivity extends ActionBarActivity {
                         args.putInt("level", LEVEL_LIBRARY);
                         fragment.setArguments(args);
 
-                        if (location != null) {
+                        if (location != null && libraries != null) {
                             double lat = location.getLatitude();
                             double lon = location.getLongitude();
                             // Calculate distances
