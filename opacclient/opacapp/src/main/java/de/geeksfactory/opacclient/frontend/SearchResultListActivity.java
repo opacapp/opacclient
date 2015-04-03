@@ -219,11 +219,9 @@ public class SearchResultListActivity extends OpacActivity implements
         protected SearchRequestResult doInBackground(Void... voids) {
             try {
                 return app.getApi().searchGetPage(searchResult.getPage());
-            } catch (java.net.UnknownHostException e) {
+            } catch (IOException | OpacErrorException e) {
                 exception = e;
                 e.printStackTrace();
-            } catch (IOException e) {
-                exception = e;
             } catch (Exception e) {
                 exception = e;
                 ACRA.getErrorReporter().handleException(e);
