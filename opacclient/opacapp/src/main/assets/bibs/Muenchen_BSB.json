@@ -1,14 +1,15 @@
 {
     "account_supported": true,
     "api": "touchpoint",
-    "city": "München",
+    "city": "M\u00fcnchen",
     "country": "Deutschland",
     "data": {
         "baseurl": "https://opacplus.bsb-muenchen.de/metaopac",
         "information": "http://www.bsb-muenchen.de/oeffnungszeiten/"
     },
     "geo": [
-        48.1549107,11.5418357
+        48.1549107,
+        11.5418357
     ],
     "state": "Bayern",
     "title": "Bayerische Staatsbibliothek"

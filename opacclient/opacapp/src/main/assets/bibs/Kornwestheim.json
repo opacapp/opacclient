@@ -27,18 +27,18 @@
         "information": "http://www.das-k.info/stadtbuecherei.html",
         "mediatypes": {
             "1": "BOOK",
-            "2": "MAGAZINE",
-            "3": "CD_SOFTWARE",
-            "19": "BOOK",
-            "25": "GAME_CONSOLE_WII",
-            "24": "GAME_CONSOLE_PLAYSTATION",
-            "26": "GAME_CONSOLE_NINTENDO",
+            "10": "MAP",
             "11": "DVD",
+            "19": "BOOK",
+            "2": "MAGAZINE",
+            "24": "GAME_CONSOLE_PLAYSTATION",
+            "25": "GAME_CONSOLE_WII",
+            "26": "GAME_CONSOLE_NINTENDO",
+            "3": "CD_SOFTWARE",
             "40": "EBOOK",
-            "6": "CD",
-            "9": "BOARDGAME",
             "5": "AUDIO_CASSETTE",
-            "10": "MAP"
+            "6": "CD",
+            "9": "BOARDGAME"
         },
         "opacdir": "opax",
         "searchtable": [

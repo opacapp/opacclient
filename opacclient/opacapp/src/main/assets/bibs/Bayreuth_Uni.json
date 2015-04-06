@@ -5,7 +5,7 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://katalog.uni-bayreuth.de/TouchPoint_touchpoint",
-		"customssl": true,
+        "customssl": true,
         "information": "http://www.ub.uni-bayreuth.de/de/index.html"
     },
     "geo": [

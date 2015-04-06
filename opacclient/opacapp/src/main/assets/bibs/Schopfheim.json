@@ -4,9 +4,15 @@
     "city": "Schopfheim",
     "country": "Deutschland",
     "data": {
+        "accounttable": {
+            "author": 0,
+            "prolongurl": 5,
+            "returndate": 2,
+            "status": 4,
+            "title": 1
+        },
         "baseurl": "https://wwwopac.rz-kiru.de/schopfheim",
-        "information": "http://www.schopfheim.de/de/Kultur+Bildung/Stadtbibliothek",
-		"copiestable": {
+        "copiestable": {
             "barcode": -1,
             "branch": -1,
             "department": -1,
@@ -15,28 +21,22 @@
             "returndate": 2,
             "status": 1
         },
-		"accounttable": {
-            "author": 0,
-			"title": 1,
-			"returndate": 2,
-			"status": 4,
-            "prolongurl": 5          
-        },
-		"mediatypes": {
+        "customssl": true,
+        "information": "http://www.schopfheim.de/de/Kultur+Bildung/Stadtbibliothek",
+        "mediatypes": {
             "cdkl.gif": "AUDIOBOOK",
             "mCasetteS.gif": "AUDIO_CASSETTE",
             "mDVDS.gif": "DVD",
             "mFilmS.gif": "MOVIE",
             "munzkl.gif": "EDOC",
             "onleihe.jpg": "EBOOK",
-			"pulpo.jpg": "EBOOK"
+            "pulpo.jpg": "EBOOK"
         },
-		"reservationtable": {
+        "reservationtable": {
             "author": 0,
             "cancelurl": 4,
             "title": 1
-        },
-        "customssl": true
+        }
     },
     "geo": [
         47.6518603,

@@ -5,7 +5,7 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://www.lib.bonn.de/webOPACClient",
-		"customssl": true,
+        "customssl": true,
         "information": "http://www.bonn.de/familie_gesellschaft_bildung_soziales/stadtbibliothek/zweigstellen/index.html?lang=de"
     },
     "geo": [

@@ -5,7 +5,7 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://lbsopac.rz.uni-frankfurt.de",
-		"charset": "ISO-8859-1",
+        "charset": "ISO-8859-1",
         "db": "30",
         "information": "http://www.ub.uni-frankfurt.de/"
     },

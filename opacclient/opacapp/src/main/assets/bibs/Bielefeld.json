@@ -24,7 +24,7 @@
             "returndate": 4,
             "status": 3
         },
-		"customssl": true,
+        "customssl": true,
         "information": "http://www.stadtbibliothek-bielefeld.de/",
         "mediatypes": {
             "mBlurayS.gif": "BLURAY",

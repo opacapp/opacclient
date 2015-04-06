@@ -29,15 +29,15 @@
             "101": "BOOK",
             "102": "BOOK",
             "103": "BOOK",
-            "2": "MAGAZINE",
-            "6": "CD",
-            "3": "CD_SOFTWARE",
             "11": "MOVIE",
-            "20": "AUDIOBOOK",
-            "32": "CD",
             "13": "CD",
+            "2": "MAGAZINE",
+            "20": "AUDIOBOOK",
             "26": "GAME_CONSOLE",
-            "30": "EBOOK"
+            "3": "CD_SOFTWARE",
+            "30": "EBOOK",
+            "32": "CD",
+            "6": "CD"
         },
         "opacdir": "opax",
         "searchtable": [
