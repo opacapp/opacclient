@@ -357,7 +357,7 @@ if __name__ == '__main__':
     print("URL zu einer Informationsseite")
     print("Sollte Öffnungszeiten u.ä. enthalten")
 
-    data['data']['information'] = getInput(required=True)
+    data['information'] = getInput(required=True)
 
     api = APIS[data['api']]()
     data = api.prompt(data)

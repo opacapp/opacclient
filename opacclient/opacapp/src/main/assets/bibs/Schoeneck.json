@@ -4,13 +4,13 @@
     "city": "Sch\u00f6neck",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/schoeneck",
-        "information": "http://www.schoeneck.de/?action=freizeit&sub=buechereien"
+        "baseurl": "http://webopac.winbiap.de/schoeneck"
     },
     "geo": [
         50.201389,
         8.854167
     ],
+    "information": "http://www.schoeneck.de/?action=freizeit&sub=buechereien",
     "state": "Hessen",
     "title": "Gemeindeb\u00fcchereien"
 }

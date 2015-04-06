@@ -11,13 +11,13 @@
             "prolongurl": 5,
             "title": 0
         },
-        "baseurl": "http://bad-schwartau.iopac.de",
-        "information": "http://www.bad-schwartau.de/stadtb%C3%BCcherei/"
+        "baseurl": "http://bad-schwartau.iopac.de"
     },
     "geo": [
         53.9163386,
         10.6854143
     ],
+    "information": "http://www.bad-schwartau.de/stadtb%C3%BCcherei/",
     "state": "Schleswig-Holstein",
     "title": "Stadtb\u00fccherei"
 }

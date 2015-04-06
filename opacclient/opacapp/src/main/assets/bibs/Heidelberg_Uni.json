@@ -4,13 +4,13 @@
     "city": "Heidelberg",
     "country": "Deutschland",
     "data": {
-        "baseurl": "https://katalog.ub.uni-heidelberg.de/cgi-bin",
-        "information": "http://www.ub.uni-heidelberg.de/kontakt/"
+        "baseurl": "https://katalog.ub.uni-heidelberg.de/cgi-bin"
     },
     "geo": [
         49.3987524,
         8.6724335
     ],
+    "information": "http://www.ub.uni-heidelberg.de/kontakt/",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Unibibliothek"
 }

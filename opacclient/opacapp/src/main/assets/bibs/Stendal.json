@@ -21,7 +21,6 @@
             "returndate": 6,
             "status": 5
         },
-        "information": "http://bibliothek.stendal.de/de/startseite.html",
         "mediatypes": {
             "B.gif": "BOOK",
             "BK.gif": "BOOK",
@@ -55,6 +54,7 @@
         52.6041444,
         11.8517729
     ],
+    "information": "http://bibliothek.stendal.de/de/startseite.html",
     "state": "Sachsen-Anhalt",
     "title": "Stadtbibliothek"
 }

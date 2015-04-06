@@ -19,7 +19,6 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "http://www.remigius-buecherei.de/",
         "mediatypes": {
             "Buchklein.GIF": "UNKNOWN",
             "CD-ROMklein.GIF": "CD_SOFTWARE",
@@ -70,6 +69,7 @@
         51.84827139999999,
         6.8594477
     ],
+    "information": "http://www.remigius-buecherei.de/",
     "state": "Nordrhein-Westfalen",
     "title": "Remigius-B\u00fccherei"
 }

@@ -24,7 +24,6 @@
             "returndate": 4,
             "status": 0
         },
-        "information": "https://opac.trier.de/read_freshblue/info.html",
         "reservationtable": {
             "author": 0,
             "availability": 2,
@@ -38,6 +37,7 @@
         49.7468826,
         6.6347507
     ],
+    "information": "https://opac.trier.de/read_freshblue/info.html",
     "state": "Rheinland-Pfalz",
     "title": "Palais Walderdorff"
 }

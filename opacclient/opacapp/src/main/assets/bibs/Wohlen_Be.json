@@ -4,13 +4,13 @@
     "city": "Wohlen",
     "country": "Schweiz",
     "data": {
-        "baseurl": "http://www.winmedio.net/wohlenbe",
-        "information": "http://www.wohlen-be.ch/de/inhalte/freizeitKultur/bibliothek.php"
+        "baseurl": "http://www.winmedio.net/wohlenbe"
     },
     "geo": [
         46.973849,
         7.358383599999999
     ],
+    "information": "http://www.wohlen-be.ch/de/inhalte/freizeitKultur/bibliothek.php",
     "state": "Bern",
     "title": "Gemeindebibliothek"
 }

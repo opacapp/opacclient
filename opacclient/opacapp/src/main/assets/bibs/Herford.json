@@ -24,7 +24,6 @@
             "returndate": -1,
             "status": 4
         },
-        "information": "http://www.bibliothek.herford.de",
         "opacdir": "opax",
         "searchtable": [
             2,
@@ -36,6 +35,7 @@
         52.1178305,
         8.679399799999999
     ],
+    "information": "http://www.bibliothek.herford.de",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtbibliothek"
 }

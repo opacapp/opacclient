@@ -25,7 +25,6 @@
             "status": 2
         },
         "db": "BIBLIO-090",
-        "information": "http://go-libri.kdz-ws.net/standard/page.sys/455.htm",
         "mediatypes": {
             "cdkl.gif": "CD",
             "dvdkl.gif": "DVD",
@@ -52,6 +51,7 @@
         50.8838492,
         8.020959099999999
     ],
+    "information": "http://go-libri.kdz-ws.net/standard/page.sys/455.htm",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtbibliothek"
 }

@@ -24,7 +24,6 @@
             "returndate": -1,
             "status": 4
         },
-        "information": "http://www.bottrop.de/stadtleben/bildung/bibliothek/index.php",
         "mediatypes": {
             "1": "BOOK",
             "10": "MAP",
@@ -47,6 +46,7 @@
         51.529086,
         6.9446888
     ],
+    "information": "http://www.bottrop.de/stadtleben/bildung/bibliothek/index.php",
     "state": "Nordrhein-Westfalen",
     "title": "Lebendige Bibliothek"
 }

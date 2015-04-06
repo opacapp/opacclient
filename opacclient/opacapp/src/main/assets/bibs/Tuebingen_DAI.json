@@ -14,13 +14,13 @@
             "returndate": 4,
             "status": 3
         },
-        "customssl": true,
-        "information": "http://www.dai-tuebingen.de/bibliothek.html"
+        "customssl": true
     },
     "geo": [
         48.5216364,
         9.0576448
     ],
+    "information": "http://www.dai-tuebingen.de/bibliothek.html",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Deutsch-Amerikanisches Institut"
 }

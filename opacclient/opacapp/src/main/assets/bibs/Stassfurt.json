@@ -4,13 +4,13 @@
     "city": "Sta\u00dffurt",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://80.153.11.44",
-        "information": "http://www.bibliothek-stassfurt.de/"
+        "baseurl": "http://80.153.11.44"
     },
     "geo": [
         51.8608995,
         11.5790389
     ],
+    "information": "http://www.bibliothek-stassfurt.de/",
     "state": "Sachsen-Anhalt",
     "title": "Stadtbibliothek"
 }

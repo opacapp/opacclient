@@ -4,13 +4,13 @@
     "city": "M\u00fchldorf a. Inn",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/muehldorf",
-        "information": "http://buecherei.muehldorf.org/"
+        "baseurl": "http://webopac.winbiap.de/muehldorf"
     },
     "geo": [
         48.2457722,
         12.5219895
     ],
+    "information": "http://buecherei.muehldorf.org/",
     "state": "Bayern",
     "title": "Stadtb\u00fccherei"
 }

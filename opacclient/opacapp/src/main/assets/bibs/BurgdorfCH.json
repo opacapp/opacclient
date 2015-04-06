@@ -4,13 +4,13 @@
     "city": "Burgdorf",
     "country": "Schweiz",
     "data": {
-        "baseurl": "http://www.winmedio.net/burgdorf",
-        "information": "http://www.burgdorf.ch/bibliothek.html"
+        "baseurl": "http://www.winmedio.net/burgdorf"
     },
     "geo": [
         47.0578381,
         7.620387
     ],
+    "information": "http://www.burgdorf.ch/bibliothek.html",
     "state": "Bern",
     "title": "Stadtbibliothek"
 }

@@ -4,13 +4,13 @@
     "city": "Preetz",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://stabue-preetz.dyndns.org",
-        "information": "http://www.stadtbuecherei-preetz.de/"
+        "baseurl": "http://stabue-preetz.dyndns.org"
     },
     "geo": [
         54.232759,
         10.2782723
     ],
+    "information": "http://www.stadtbuecherei-preetz.de/",
     "state": "Schleswig-Holstein",
     "title": "Stadtb\u00fccherei"
 }

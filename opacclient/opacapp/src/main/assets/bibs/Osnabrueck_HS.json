@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://opac.ub.uni-osnabrueck.de",
-        "db": "2",
-        "information": "http://www.bib.hs-osnabrueck.de/1030.html"
+        "db": "2"
     },
     "geo": [
         52.2729596,
         8.0453083
     ],
+    "information": "http://www.bib.hs-osnabrueck.de/1030.html",
     "state": "Niedersachsen",
     "title": "Bibliothek der Hochschule"
 }

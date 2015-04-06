@@ -25,7 +25,6 @@
             "status": 1
         },
         "customssl": true,
-        "information": "http://bibliothek.loerrach.de/index.php?module=cGFnZXM=&load=MTI1NQ==&subCategs=&catid=",
         "reservationtable": {
             "author": 0,
             "availability": 3,
@@ -39,6 +38,7 @@
         47.6169191,
         7.670924799999999
     ],
+    "information": "http://bibliothek.loerrach.de/index.php?module=cGFnZXM=&load=MTI1NQ==&subCategs=&catid=",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtbibliothek"
 }

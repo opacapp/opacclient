@@ -20,7 +20,6 @@
             "status": 3
         },
         "db": "werther",
-        "information": "https://www.stadt-werther.de/index.php?id=285",
         "mediatypes": {
             "cdkl.gif": "CD",
             "dvdkl.gif": "DVD",
@@ -39,6 +38,7 @@
         52.0738784,
         8.4147863
     ],
+    "information": "https://www.stadt-werther.de/index.php?id=285",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtbibliothek"
 }

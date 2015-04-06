@@ -19,7 +19,6 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "http://www.buecherei-lh.de/",
         "mediatypes": {
             "Buchklein.GIF": "BOOK",
             "CD-ROMklein.GIF": "CD_SOFTWARE",
@@ -70,6 +69,7 @@
         51.768214,
         7.446561699999999
     ],
+    "information": "http://www.buecherei-lh.de/",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei St. Felizitas"
 }

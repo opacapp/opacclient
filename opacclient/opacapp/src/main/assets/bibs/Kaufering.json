@@ -4,13 +4,13 @@
     "city": "Kaufering",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.net/kaufering",
-        "information": "http://www.kaufering.de/?language=DE&kat=Buecherei"
+        "baseurl": "http://webopac.winbiap.net/kaufering"
     },
     "geo": [
         48.08805599999999,
         10.8567673
     ],
+    "information": "http://www.kaufering.de/?language=DE&kat=Buecherei",
     "state": "Bayern",
     "title": "B\u00fccherei Markt"
 }

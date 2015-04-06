@@ -24,7 +24,6 @@
             "returndate": -1,
             "status": 3
         },
-        "information": "http://www.bibliothek-ph.de/",
         "mediatypes": {
             "1": "BOOK",
             "11": "DVD",
@@ -47,6 +46,7 @@
         49.2352532,
         8.458036
     ],
+    "information": "http://www.bibliothek-ph.de/",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtbibliothek"
 }

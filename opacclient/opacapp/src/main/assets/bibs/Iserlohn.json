@@ -24,7 +24,6 @@
             "returndate": 2,
             "status": 1
         },
-        "information": "/../read/info.html",
         "mediatypes": {
             "cdkl.gif": "DVD",
             "cdrom.gif": "CD_SOFTWARE",
@@ -49,6 +48,7 @@
         51.3731684,
         7.674391099999998
     ],
+    "information": "/../read/info.html",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }

@@ -17,7 +17,6 @@
             "returndate": 4,
             "status": 3
         },
-        "information": "http://www.badrappenau.de/220024.php?seitenid=332&first=j",
         "mediatypes": {
             "CD_30px.jpg": "CD",
             "DVD_30px.jpg": "DVD",
@@ -40,6 +39,7 @@
         49.24016899999999,
         9.1020153
     ],
+    "information": "http://www.badrappenau.de/220024.php?seitenid=332&first=j",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtb\u00fccherei"
 }

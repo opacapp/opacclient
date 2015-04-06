@@ -20,7 +20,6 @@
             "returndate": 5,
             "status": 4
         },
-        "information": "http://www.bibliotheksverband.de/landesverbaende/hessen/mitglieder.html?tx_3pcdbvmemberdb_pi1%5Bview%5D=details&tx_3pcdbvmemberdb_pi1%5Bid%5D=1531036&cHash=14b9dba8c8",
         "mediatypes": {
             "BlurayS.gif": "BLURAY",
             "CdS.gif": "AUDIOBOOK",
@@ -43,6 +42,7 @@
         50.5589802,
         8.508164599999999
     ],
+    "information": "http://www.bibliotheksverband.de/landesverbaende/hessen/mitglieder.html?tx_3pcdbvmemberdb_pi1%5Bview%5D=details&tx_3pcdbvmemberdb_pi1%5Bid%5D=1531036&cHash=14b9dba8c8",
     "state": "Hessen",
     "title": "Stadtbibliothek"
 }

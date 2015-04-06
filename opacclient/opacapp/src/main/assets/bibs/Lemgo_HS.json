@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "http://www.hs-owl.de/webOPACClient",
-        "information": "http://www.hs-owl.de/skim/",
         "startparams": "Login=lemgo"
     },
     "geo": [
         52.0266732,
         8.9018625
     ],
+    "information": "http://www.hs-owl.de/skim/",
     "state": "Nordrhein-Westfalen",
     "title": "S(kim) \u2013 Hochschulbibliothek"
 }

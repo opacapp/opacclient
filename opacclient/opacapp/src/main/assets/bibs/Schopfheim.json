@@ -22,7 +22,6 @@
             "status": 1
         },
         "customssl": true,
-        "information": "http://www.schopfheim.de/de/Kultur+Bildung/Stadtbibliothek",
         "mediatypes": {
             "cdkl.gif": "AUDIOBOOK",
             "mCasetteS.gif": "AUDIO_CASSETTE",
@@ -42,6 +41,7 @@
         47.6518603,
         7.8235713
     ],
+    "information": "http://www.schopfheim.de/de/Kultur+Bildung/Stadtbibliothek",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtbibliothek"
 }

@@ -20,7 +20,6 @@
             "status": 3
         },
         "db": "w_ekvw_iserlohn",
-        "information": "http://www.kirchenkreis-iserlohn.de/Mediothek.216.0.html",
         "mediatypes": {
             "Bild_PI.gif": "ART",
             "Buch_PI.gif": "BOOK",
@@ -44,6 +43,7 @@
         51.3731684,
         7.674391099999998
     ],
+    "information": "http://www.kirchenkreis-iserlohn.de/Mediothek.216.0.html",
     "state": "Nordrhein-Westfalen",
     "title": "Mediothek Kirchenkreis"
 }

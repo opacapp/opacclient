@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "http://80.153.71.50",
-        "dir": "",
-        "information": "http://www.heide.de/kultur-vhs/stadtbuecherei.html"
+        "dir": ""
     },
     "geo": [
         54.19517639999999,
         9.1019015
     ],
+    "information": "http://www.heide.de/kultur-vhs/stadtbuecherei.html",
     "state": "Schleswig-Holstein",
     "title": "B\u00fccherei"
 }

@@ -5,7 +5,6 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://db.flensburg.de",
-        "information": "http://stadtbibliothek.flensburg.de/",
         "mediatypes": {
             "1": "BOOK",
             "10": "MAP",
@@ -31,6 +30,7 @@
         54.7937431,
         9.4469964
     ],
+    "information": "http://stadtbibliothek.flensburg.de/",
     "state": "Schleswig-Holstein",
     "title": "Stadtb\u00fccherei"
 }

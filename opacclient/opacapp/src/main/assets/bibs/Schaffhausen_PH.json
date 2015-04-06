@@ -4,13 +4,13 @@
     "city": "Schaffhausen",
     "country": "Schweiz",
     "data": {
-        "baseurl": "http://sisis.phsh.ch:8080/webOPACClient",
-        "information": "http://phsh.ch/de/Didaktisches-Zentrum/"
+        "baseurl": "http://sisis.phsh.ch:8080/webOPACClient"
     },
     "geo": [
         47.7077664,
         8.641442399999999
     ],
+    "information": "http://phsh.ch/de/Didaktisches-Zentrum/",
     "state": "Schaffhausen",
     "title": "Didaktisches Zentrum"
 }

@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://opac.erfurt.de/webOPACClient",
-        "information": "http://www.erfurt.de/ef/de/leben/bildung/sturb/index.html",
         "startparams": "Login=sisis"
     },
     "geo": [
         50.98476789999999,
         11.0298799
     ],
+    "information": "http://www.erfurt.de/ef/de/leben/bildung/sturb/index.html",
     "state": "Th\u00fcringen",
     "title": "Stadtbibliothek"
 }

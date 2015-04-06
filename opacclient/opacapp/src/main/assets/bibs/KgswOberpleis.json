@@ -17,7 +17,6 @@
             "returndate": 3,
             "status": 2
         },
-        "information": "http://www.bibliothek-oberpleis.de/bibliothek/page_oeffnungszeiten/infobereich.html",
         "mediatypes": {
             "Mono.gif": "UNKNOWN",
             "Spiele.gif": "BOARDGAME",
@@ -42,6 +41,7 @@
         50.705619,
         7.269544
     ],
+    "information": "http://www.bibliothek-oberpleis.de/bibliothek/page_oeffnungszeiten/infobereich.html",
     "state": "Nordrhein-Westfalen",
     "title": "\u00d6ffentliche Bibliothek"
 }

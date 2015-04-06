@@ -25,7 +25,6 @@
             "status": 5
         },
         "customssl": true,
-        "information": "http://www.radolfzell.de/stadtbibliothek",
         "reservationtable": {
             "author": 0,
             "availability": 3,
@@ -39,6 +38,7 @@
         47.745237,
         8.9669098
     ],
+    "information": "http://www.radolfzell.de/stadtbibliothek",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtbibliothek"
 }

@@ -25,7 +25,6 @@
             "status": 4
         },
         "db": "verb",
-        "information": "http://www.recklinghausen.de/Inhalte/Startseite/Familie_Bildung/Stadtbuecherei/index.asp?highmain=11&highsub=0&highsubsub=0",
         "mediatypes": {
             "EAusakl.gif": "MP3",
             "EAusbkl.gif": "EBOOK",
@@ -68,6 +67,7 @@
         51.6140649,
         7.1979453
     ],
+    "information": "http://www.recklinghausen.de/Inhalte/Startseite/Familie_Bildung/Stadtbuecherei/index.asp?highmain=11&highsub=0&highsubsub=0",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }

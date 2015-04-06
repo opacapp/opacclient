@@ -25,7 +25,6 @@
             "status": 2
         },
         "customssl": true,
-        "information": "http://www.stabue-holzgerlingen.de/index.html",
         "reservationtable": {
             "author": 0,
             "availability": 3,
@@ -39,6 +38,7 @@
         48.63942549999999,
         9.018112799999999
     ],
+    "information": "http://www.stabue-holzgerlingen.de/index.html",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtb\u00fccherei"
 }

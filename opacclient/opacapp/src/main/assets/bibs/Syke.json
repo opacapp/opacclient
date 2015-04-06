@@ -24,7 +24,6 @@
             "returndate": 4,
             "status": 3
         },
-        "information": "http://www.syke.de/internet/page.php?naviID=6000146&site=6000041&brotID=6000146&typ=2&rubrik=6000008",
         "mediatypes": {
             "cdkl.gif": "CD",
             "mCasetteS.gif": "AUDIO_CASSETTE",
@@ -46,6 +45,7 @@
         52.912679,
         8.8181348
     ],
+    "information": "http://www.syke.de/internet/page.php?naviID=6000146&site=6000041&brotID=6000146&typ=2&rubrik=6000008",
     "state": "Niedersachsen",
     "title": "Stadtbibliothek"
 }

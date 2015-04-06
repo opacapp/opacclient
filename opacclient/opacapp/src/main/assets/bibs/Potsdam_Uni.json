@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "http://opac.ub.uni-potsdam.de/",
-        "db": "1",
-        "information": "http://info.ub.uni-potsdam.de/"
+        "db": "1"
     },
     "geo": [
         52.3941887,
         13.072691
     ],
+    "information": "http://info.ub.uni-potsdam.de/",
     "state": "Brandenburg",
     "title": "Unibibliothek"
 }

@@ -18,7 +18,6 @@
             "returndate": 5,
             "status": 4
         },
-        "information": "http://www.stockach.de/2342_DEU_WWW.php",
         "mediatypes": {
             "E-Audio.gif": "MP3",
             "E-Book.gif": "EBOOK",
@@ -42,6 +41,7 @@
         47.8531635,
         9.009152799999999
     ],
+    "information": "http://www.stockach.de/2342_DEU_WWW.php",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtb\u00fccherei"
 }

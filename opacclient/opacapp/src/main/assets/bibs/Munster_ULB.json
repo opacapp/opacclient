@@ -4,13 +4,13 @@
     "city": "M\u00fcnster",
     "country": "Deutschland",
     "data": {
-        "baseurl": "https://katalogix.uni-muenster.de/Katalog",
-        "information": "http://www.ulb.uni-muenster.de/bibliothek/standorte/"
+        "baseurl": "https://katalogix.uni-muenster.de/Katalog"
     },
     "geo": [
         51.9606649,
         7.6261347
     ],
+    "information": "http://www.ulb.uni-muenster.de/bibliothek/standorte/",
     "state": "Nordrhein-Westfalen",
     "title": "Uni- und Landesbibliothek"
 }

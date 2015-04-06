@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://kataloge.uni-hamburg.de/",
-        "db": "2",
-        "information": "http://www.haw-hamburg.de/hibs.html"
+        "db": "2"
     },
     "geo": [
         53.5651789,
         10.0223076
     ],
+    "information": "http://www.haw-hamburg.de/hibs.html",
     "state": "Hamburg",
     "title": "Hochschulinformations- und Bibliotheksservice (HIBS) der HAW"
 }

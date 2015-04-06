@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://ssl.muenchen.de/aDISWeb/app",
-        "information": "http://www.muenchner-stadtbibliothek.de/info-service/",
         "startparams": "service=direct/0/Home/$DirectLink&sp=SOPAC"
     },
     "geo": [
         48.1351253,
         11.5819806
     ],
+    "information": "http://www.muenchner-stadtbibliothek.de/info-service/",
     "state": "Bayern",
     "title": "Stadtbibliothek"
 }

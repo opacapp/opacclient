@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "http://webopac.stadt-witten.de:8080/webOPACClient",
-        "information": "http://www.kulturforum-witten.de/bibliothek",
         "startparams": "Login=internet"
     },
     "geo": [
         51.4438926,
         7.353197000000001
     ],
+    "information": "http://www.kulturforum-witten.de/bibliothek",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtbibliothek Kulturforum"
 }

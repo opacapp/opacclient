@@ -21,7 +21,6 @@
             "status": 4
         },
         "db": "verb",
-        "information": "http://www.marl.de/marl-nach-themen/bildung-schule-und-erziehung/zentralbibliothek.html",
         "mediatypes": {
             "Bluraykl.gif": "BLURAY",
             "EAusakl.gif": "MP3",
@@ -64,6 +63,7 @@
         51.65912340000001,
         7.1060218
     ],
+    "information": "http://www.marl.de/marl-nach-themen/bildung-schule-und-erziehung/zentralbibliothek.html",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtbibliothek"
 }

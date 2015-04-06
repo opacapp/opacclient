@@ -24,7 +24,6 @@
             "returndate": -1,
             "status": 4
         },
-        "information": "http://www.wuerzburg.de/de/buerger/stadtbuecherei/index.html",
         "mediatypes": {
             "1": "BOOK",
             "10": "MAP",
@@ -50,6 +49,7 @@
         49.7915953,
         9.953571499999999
     ],
+    "information": "http://www.wuerzburg.de/de/buerger/stadtbuecherei/index.html",
     "state": "Bayern",
     "title": "Stadtb\u00fccherei"
 }

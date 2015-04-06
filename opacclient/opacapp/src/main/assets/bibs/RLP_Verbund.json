@@ -16,7 +16,6 @@
             "department": 3,
             "location": 1
         },
-        "information": "http://lbz.rlp.de/",
         "mediatypes": {
             "mCasetteS.gif": "AUDIO_CASSETTE",
             "mDVDS.gif": "DVD",
@@ -29,6 +28,7 @@
             "title": 1
         }
     },
+    "information": "http://lbz.rlp.de/",
     "state": "Rheinland-Pfalz",
     "title": "Verbundskatalog RLP"
 }

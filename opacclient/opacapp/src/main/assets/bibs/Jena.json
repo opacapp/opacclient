@@ -24,7 +24,6 @@
             "returndate": -1,
             "status": 4
         },
-        "information": "http://www.stadtbibliothek.jena.de/de/startseite/359025",
         "mediatypes": {
             "1": "BOOK",
             "10": "MAP",
@@ -56,6 +55,7 @@
         50.927054,
         11.5892372
     ],
+    "information": "http://www.stadtbibliothek.jena.de/de/startseite/359025",
     "state": "Th\u00fcringen",
     "title": "Ernst-Abbe-B\u00fccherei (Stadtbibliothek)"
 }

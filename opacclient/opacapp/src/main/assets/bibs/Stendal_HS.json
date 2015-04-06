@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://opac.lbs-magdeburg.gbv.de",
-        "db": "5",
-        "information": "https://www.hs-magdeburg.de/hochschule/einrichtung/hochschulbibliothek/kontakt"
+        "db": "5"
     },
     "geo": [
         52.6040587,
         11.8538356
     ],
+    "information": "https://www.hs-magdeburg.de/hochschule/einrichtung/hochschulbibliothek/kontakt",
     "state": "Sachsen-Anhalt",
     "title": "Hochschulbibliothek"
 }

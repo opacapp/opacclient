@@ -25,7 +25,6 @@
             "status": 0
         },
         "customssl": true,
-        "information": "http://www.balingen.de/,Lde/Startseite/Familie+_+Bildung/Mediothek.html",
         "reservationtable": {
             "author": 0,
             "availability": -1,
@@ -39,6 +38,7 @@
         48.2748206,
         8.8495298
     ],
+    "information": "http://www.balingen.de/,Lde/Startseite/Familie+_+Bildung/Mediothek.html",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Mediothek"
 }

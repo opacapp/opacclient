@@ -24,7 +24,6 @@
             "returndate": -1,
             "status": 3
         },
-        "information": "http://www.stabi-ludwigsburg.de/start",
         "mediatypes": {
             "101": "BOOK",
             "102": "BOOK",
@@ -50,6 +49,7 @@
         48.8940624,
         9.195464
     ],
+    "information": "http://www.stabi-ludwigsburg.de/start",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtbibliothek"
 }

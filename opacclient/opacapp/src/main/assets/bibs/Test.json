@@ -3,13 +3,12 @@
     "api": "test",
     "city": "Test",
     "country": "Test",
-    "data": {
-        "information": "http://opacapp.de/"
-    },
+    "data": {},
     "geo": [
         0.0,
         0.0
     ],
+    "information": "http://opacapp.de/",
     "state": "Test",
     "title": "Testbibliothek"
 }

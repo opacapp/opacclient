@@ -16,7 +16,6 @@
             "status": 1
         },
         "db": "webb_kle",
-        "information": "http://www.klosterlehnin.de/verzeichnis/visitenkarte.php?mandat=3872",
         "mediatypes": {
             "mCasetteS.gif": "AUDIO_CASSETTE",
             "mDVDS.gif": "DVD",
@@ -33,6 +32,7 @@
         52.3082956,
         12.7444476
     ],
+    "information": "http://www.klosterlehnin.de/verzeichnis/visitenkarte.php?mandat=3872",
     "state": "Brandenburg",
     "title": "Bibliothek Bettina von Arnim"
 }

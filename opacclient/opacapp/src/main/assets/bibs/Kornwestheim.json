@@ -24,7 +24,6 @@
             "returndate": -1,
             "status": 3
         },
-        "information": "http://www.das-k.info/stadtbuecherei.html",
         "mediatypes": {
             "1": "BOOK",
             "10": "MAP",
@@ -51,6 +50,7 @@
         48.86510879999999,
         9.1857957
     ],
+    "information": "http://www.das-k.info/stadtbuecherei.html",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtb\u00fccherei"
 }

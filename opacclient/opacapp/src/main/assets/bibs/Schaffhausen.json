@@ -4,13 +4,13 @@
     "city": "Schaffhausen",
     "country": "Schweiz",
     "data": {
-        "baseurl": "https://webopac.bibliotheken-schaffhausen.ch/TouchPoint_touchpoint",
-        "information": "http://bibliotheken-schaffhausen.ch/"
+        "baseurl": "https://webopac.bibliotheken-schaffhausen.ch/TouchPoint_touchpoint"
     },
     "geo": [
         47.6969,
         8.63569
     ],
+    "information": "http://bibliotheken-schaffhausen.ch/",
     "state": "Schaffhausen",
     "title": "Stadtbibliothek"
 }

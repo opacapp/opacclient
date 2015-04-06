@@ -4,13 +4,13 @@
     "city": "Niedernhausen",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.net/niedernhausen",
-        "information": "http://www.niedernhausen.de/w3a/cms/Bildung/Gemeindebuecherei/index.143248.html"
+        "baseurl": "http://webopac.winbiap.net/niedernhausen"
     },
     "geo": [
         50.1632247,
         8.3142131
     ],
+    "information": "http://www.niedernhausen.de/w3a/cms/Bildung/Gemeindebuecherei/index.143248.html",
     "state": "Hessen",
     "title": "Gemeindeb\u00fccherei"
 }

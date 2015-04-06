@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://opac.hof-university.de/InfoGuideClient.fhosis",
-        "information": "http://www.hof-university.de/studierende/info-service/bibliothek.html",
         "startparams": "Login=wofhofh"
     },
     "geo": [
         50.3135391,
         11.9127814
     ],
+    "information": "http://www.hof-university.de/studierende/info-service/bibliothek.html",
     "state": "Bayern",
     "title": "Hochschulbibliothek"
 }

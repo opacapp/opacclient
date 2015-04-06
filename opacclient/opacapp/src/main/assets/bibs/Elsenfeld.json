@@ -4,13 +4,13 @@
     "city": "Elsenfeld",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.net/elsenfeld",
-        "information": "http://www.elsenfeld.de/kuturfreizeit/bibliothek/"
+        "baseurl": "http://webopac.winbiap.net/elsenfeld"
     },
     "geo": [
         49.84371729999999,
         9.1613228
     ],
+    "information": "http://www.elsenfeld.de/kuturfreizeit/bibliothek/",
     "state": "Bayern",
     "title": "Gemeindebibliothek"
 }

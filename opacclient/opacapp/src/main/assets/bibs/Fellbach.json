@@ -24,7 +24,6 @@
             "returndate": -1,
             "status": 4
         },
-        "information": "http://www.stadtbuecherei.fellbach.de/startseite/416/de/startseite-stadtbuecherei.html",
         "mediatypes": {
             "1": "BOOK",
             "11": "DVD",
@@ -49,6 +48,7 @@
         48.8215653,
         9.2702944
     ],
+    "information": "http://www.stadtbuecherei.fellbach.de/startseite/416/de/startseite-stadtbuecherei.html",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtb\u00fccherei"
 }

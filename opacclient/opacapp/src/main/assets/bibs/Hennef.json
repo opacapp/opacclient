@@ -18,7 +18,6 @@
             "returndate": 4,
             "status": 3
         },
-        "information": "http://www.hennef.de/index.php?id=430",
         "mediatypes": {
             "mCasetteS.gif": "AUDIO_CASSETTE",
             "mDVDS.gif": "DVD",
@@ -36,6 +35,7 @@
         50.783333,
         7.283333000000001
     ],
+    "information": "http://www.hennef.de/index.php?id=430",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtbibliothek"
 }

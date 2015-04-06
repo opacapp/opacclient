@@ -20,7 +20,6 @@
             "status": 3
         },
         "db": "OPAC_Friesoythe",
-        "information": "http://www.stmarienfriesoythe.de/",
         "mediatypes": {
             "Buchklein.GIF": "BOOK",
             "CD-ROMklein.GIF": "CD_SOFTWARE",
@@ -71,6 +70,7 @@
         53.0244916,
         7.8589508
     ],
+    "information": "http://www.stmarienfriesoythe.de/",
     "state": "Niedersachsen",
     "title": "\u00d6ffentliche B\u00fccherei"
 }

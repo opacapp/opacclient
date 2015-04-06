@@ -4,13 +4,13 @@
     "city": "Maisach",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/maisach",
-        "information": "http://www.maisach.de/index.php?id=0,51"
+        "baseurl": "http://webopac.winbiap.de/maisach"
     },
     "geo": [
         48.2165127,
         11.2572401
     ],
+    "information": "http://www.maisach.de/index.php?id=0,51",
     "state": "Bayern",
     "title": "Gemeindeb\u00fccherei"
 }

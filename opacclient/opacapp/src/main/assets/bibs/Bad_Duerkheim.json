@@ -18,7 +18,6 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "http://www.stadtbuecherei-bad-duerkheim.de/startseite/oeffnungszeiten.html",
         "mediatypes": {
             "OPACEBook.gif": "EBOOK",
             "mCasetteS.gif": "AUDIO_CASSETTE",
@@ -36,6 +35,7 @@
         49.4598369,
         8.1654232
     ],
+    "information": "http://www.stadtbuecherei-bad-duerkheim.de/startseite/oeffnungszeiten.html",
     "state": "Rheinland-Pfalz",
     "title": "Stadtb\u00fccherei"
 }

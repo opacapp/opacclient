@@ -25,7 +25,6 @@
             "status": 4
         },
         "customssl": true,
-        "information": "https://wwwopac.rz-kiru.de/readalbstadt/startseite.html",
         "reservationtable": {
             "author": 1,
             "availability": 4,
@@ -39,6 +38,7 @@
         48.2356473,
         9.0014225
     ],
+    "information": "https://wwwopac.rz-kiru.de/readalbstadt/startseite.html",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtb\u00fccherei"
 }

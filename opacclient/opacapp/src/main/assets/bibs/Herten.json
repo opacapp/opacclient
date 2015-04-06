@@ -24,7 +24,6 @@
             "returndate": 4,
             "status": 3
         },
-        "information": "/../read/info.html",
         "mediatypes": {
             "CDS.gif": "CD",
             "E-Ausleihe1.gif": "EBOOK",
@@ -57,6 +56,7 @@
         51.6020534,
         7.1389575
     ],
+    "information": "/../read/info.html",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtbibliothek"
 }

@@ -4,13 +4,13 @@
     "city": "K\u00fcnzell",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/kuenzell",
-        "information": "http://www.kuenzell.de/gemeindebuecherei-kuenzell-im-gemeindezentrum-kuenzell_4472.html"
+        "baseurl": "http://webopac.winbiap.de/kuenzell"
     },
     "geo": [
         50.5356779,
         9.7200616
     ],
+    "information": "http://www.kuenzell.de/gemeindebuecherei-kuenzell-im-gemeindezentrum-kuenzell_4472.html",
     "state": "Hessen",
     "title": "Gemeindeb\u00fccherei"
 }

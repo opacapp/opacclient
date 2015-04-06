@@ -4,13 +4,13 @@
     "city": "Raubling",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/raubling",
-        "information": "http://www.raubling.de/leben-und-freizeit/gemeindebuecherei.html"
+        "baseurl": "http://webopac.winbiap.de/raubling"
     },
     "geo": [
         47.7908741,
         12.1115921
     ],
+    "information": "http://www.raubling.de/leben-und-freizeit/gemeindebuecherei.html",
     "state": "Bayern",
     "title": "Gemeindeb\u00fccherei"
 }

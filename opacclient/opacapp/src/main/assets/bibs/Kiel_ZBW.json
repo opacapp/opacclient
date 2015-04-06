@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "http://www.econis.eu",
-        "db": "1",
-        "information": "http://www.zbw.eu/de/"
+        "db": "1"
     },
     "geo": [
         54.3232927,
         10.1227652
     ],
+    "information": "http://www.zbw.eu/de/",
     "state": "Schleswig-Holstein",
     "title": "Zentralbibliothek f\u00fcr Wirtschaftswissenschaften"
 }

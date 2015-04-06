@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "http://kiopc4.ub.uni-kiel.de:8080",
-        "db": "8",
-        "information": "http://www.mh-luebeck.de/hochschule/bibliothek/"
+        "db": "8"
     },
     "geo": [
         53.8810006,
         10.7613749
     ],
+    "information": "http://www.mh-luebeck.de/hochschule/bibliothek/",
     "state": "Schleswig-Holstein",
     "title": "Bibliothek der Musikhochschule"
 }

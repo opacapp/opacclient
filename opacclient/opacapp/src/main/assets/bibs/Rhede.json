@@ -19,7 +19,6 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "http://www.st-gudula.de/ein_buch_g.php",
         "mediatypes": {
             "Buchklein.GIF": "BOOK",
             "CD-ROMklein.GIF": "CD_SOFTWARE",
@@ -70,6 +69,7 @@
         51.8374545,
         6.6989532
     ],
+    "information": "http://www.st-gudula.de/ein_buch_g.php",
     "state": "Nordrhein-Westfalen",
     "title": "\u00d6ffentliche B\u00fccherei St. Gudula"
 }

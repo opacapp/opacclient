@@ -4,13 +4,13 @@
     "city": "Leipzig",
     "country": "Deutschland",
     "data": {
-        "baseurl": "https://webopac.stadtbibliothek-leipzig.de/webOPACClient",
-        "information": "http://www.leipzig.de/stadtbib/"
+        "baseurl": "https://webopac.stadtbibliothek-leipzig.de/webOPACClient"
     },
     "geo": [
         51.3396955,
         12.3730747
     ],
+    "information": "http://www.leipzig.de/stadtbib/",
     "state": "Sachsen",
     "title": "Stadtbibliothek"
 }

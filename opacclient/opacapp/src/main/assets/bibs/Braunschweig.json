@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://webopac.braunschweig.de/webOPACClient",
-        "customssl": true,
-        "information": "https://www.braunschweig.de/kultur_tourismus/bibliotheken_archive/stadtbibliothek/kontaktdaten.html"
+        "customssl": true
     },
     "geo": [
         52.2688736,
         10.5267696
     ],
+    "information": "https://www.braunschweig.de/kultur_tourismus/bibliotheken_archive/stadtbibliothek/kontaktdaten.html",
     "state": "Niedersachsen",
     "title": "Stadtbibliothek"
 }

@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://opac.ohm-hochschule.de/InfoGuideClient.fhnsis",
-        "information": "http://www.th-nuernberg.de/institutionen/bibliothek/bibinfo/oeffnungszeiten_semester/page.html",
         "startparams": "Login=wofhn00"
     },
     "geo": [
         49.452374,
         11.092383
     ],
+    "information": "http://www.th-nuernberg.de/institutionen/bibliothek/bibinfo/oeffnungszeiten_semester/page.html",
     "state": "Bayern",
     "title": "Technische Hochschule"
 }

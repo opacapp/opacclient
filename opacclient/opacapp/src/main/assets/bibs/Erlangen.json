@@ -25,7 +25,6 @@
             "status": 2
         },
         "disableProlongAll": true,
-        "information": "http://www.erlangen.de/bibliothek/",
         "mediatypes": {
             "blurayS.gif": "BLURAY",
             "cdkl.gif": "CD",
@@ -56,6 +55,7 @@
         49.5907169,
         11.0142675
     ],
+    "information": "http://www.erlangen.de/bibliothek/",
     "replacedby": "de.opacapp.erlangen",
     "state": "Bayern",
     "title": "Stadtbibliothek"

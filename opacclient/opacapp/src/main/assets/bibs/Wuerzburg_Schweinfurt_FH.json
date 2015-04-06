@@ -6,13 +6,13 @@
     "data": {
         "baseurl": "https://recherche.bibkatalog.de/InfoGuideClient.fwssis",
         "homebranch": "0",
-        "information": "http://bibliothek.fhws.de/zeiten.html",
         "startparams": "Login=wofwsw"
     },
     "geo": [
         49.7915953,
         9.953571499999999
     ],
+    "information": "http://bibliothek.fhws.de/zeiten.html",
     "state": "Bayern",
     "title": "Hochschulbibliothek"
 }

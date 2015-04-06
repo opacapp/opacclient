@@ -19,7 +19,6 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "http://koeb.annakirche.de/",
         "mediatypes": {
             "Buchklein.GIF": "BOOK",
             "CD-ROMklein.GIF": "CD_SOFTWARE",
@@ -70,6 +69,7 @@
         51.9606649,
         7.6261347
     ],
+    "information": "http://koeb.annakirche.de/",
     "state": "Nordrhein-Westfalen",
     "title": "K\u00d6B St. Anna Mecklenbeck"
 }

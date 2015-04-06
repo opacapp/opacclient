@@ -23,7 +23,6 @@
         },
         "db": "webbiblio",
         "disableProlongAll": true,
-        "information": "http://www.celle.de/Leben/Kultur/Stadtbibliothek",
         "mediatypes": {
             "e_22S.gif": "EBOOK",
             "e_23S.gif": "EBOOK",
@@ -51,6 +50,7 @@
         52.61681069999999,
         10.0631936
     ],
+    "information": "http://www.celle.de/Leben/Kultur/Stadtbibliothek",
     "state": "Niedersachsen",
     "title": "Stadtbibliothek"
 }

@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://kataloge.thulb.uni-jena.de/",
-        "db": "1",
-        "information": "http://www.thulb.uni-jena.de/"
+        "db": "1"
     },
     "geo": [
         50.9306975,
         11.5880013
     ],
+    "information": "http://www.thulb.uni-jena.de/",
     "state": "Th\u00fcringen",
     "title": "Universit\u00e4ts- und Landesbibliothek"
 }

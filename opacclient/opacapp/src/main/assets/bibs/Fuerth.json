@@ -4,13 +4,13 @@
     "city": "F\u00fcrth",
     "country": "Deutschland",
     "data": {
-        "baseurl": "https://serviceweb.fuerth.de/webOPACClient",
-        "information": "http://fuerth.de/Home/Leben-in-Fuerth/schulen-bildung/volksbuecherei.aspx#ctl00_ctl16_cdvBigView_ctl00"
+        "baseurl": "https://serviceweb.fuerth.de/webOPACClient"
     },
     "geo": [
         49.4771169,
         10.988667
     ],
+    "information": "http://fuerth.de/Home/Leben-in-Fuerth/schulen-bildung/volksbuecherei.aspx#ctl00_ctl16_cdvBigView_ctl00",
     "state": "Bayern",
     "title": "Volksb\u00fccherei"
 }

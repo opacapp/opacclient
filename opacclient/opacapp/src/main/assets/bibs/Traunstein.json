@@ -19,7 +19,6 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "http://www.stadtbuecherei-traunstein.de/Buecherei.aspx",
         "mediatypes": {
             "cdkl.gif": "CD",
             "mBuchS.gif": "BOOK",
@@ -45,6 +44,7 @@
         47.8677574,
         12.6384037
     ],
+    "information": "http://www.stadtbuecherei-traunstein.de/Buecherei.aspx",
     "state": "Bayern",
     "title": "Stadtb\u00fccherei"
 }

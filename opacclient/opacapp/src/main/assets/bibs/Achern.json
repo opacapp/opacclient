@@ -18,7 +18,6 @@
             "returndate": 4,
             "status": 3
         },
-        "information": "http://achern.de/index.php?id=513",
         "mediatypes": {
             "cdkl.gif": "AUDIOBOOK",
             "mCasetteS.gif": "AUDIO_CASSETTE",
@@ -38,6 +37,7 @@
         48.6266194,
         8.0749207
     ],
+    "information": "http://achern.de/index.php?id=513",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtbibliothek"
 }

@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://opac.hwr-berlin.de/InfoGuideClient.hwrsis",
-        "information": "http://www.hwr-berlin.de/index.php?id=333",
         "startparams": "Login=wohwrcs"
     },
     "geo": [
         52.52000659999999,
         13.404954
     ],
+    "information": "http://www.hwr-berlin.de/index.php?id=333",
     "state": "Berlin",
     "title": "Hochschulbibliothek HWR"
 }

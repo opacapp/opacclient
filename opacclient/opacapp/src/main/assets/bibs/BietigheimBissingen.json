@@ -25,7 +25,6 @@
             "status": 0
         },
         "customssl": true,
-        "information": "http://www.bietigheim-bissingen.de/Infos_Bestand_OEffnungszeiten.172.0.html",
         "reservationtable": {
             "author": 1,
             "availability": 4,
@@ -39,6 +38,7 @@
         48.9471605,
         9.1305037
     ],
+    "information": "http://www.bietigheim-bissingen.de/Infos_Bestand_OEffnungszeiten.172.0.html",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Otto-Rombach-B\u00fccherei"
 }

@@ -20,7 +20,6 @@
             "status": 3
         },
         "db": "w_ekvw_hamm",
-        "information": "http://www.kirchenkreis-hamm.de/arbeitsbereiche/bildung-und-erziehung/mediothek.html",
         "mediatypes": {
             "Bild_PI.gif": "ART",
             "Buch_PI.gif": "BOOK",
@@ -44,6 +43,7 @@
         51.6738583,
         7.815981600000001
     ],
+    "information": "http://www.kirchenkreis-hamm.de/arbeitsbereiche/bildung-und-erziehung/mediothek.html",
     "state": "Nordrhein-Westfalen",
     "title": "Mediothek Kirchenkreis"
 }

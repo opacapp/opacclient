@@ -19,7 +19,6 @@
             "returndate": 4,
             "status": 3
         },
-        "information": "http://www.reichenbach-vogtland.de/Deutsch/Kultur/Juergen-Fuchs-Bibliothek/",
         "mediatypes": {
             "mCasetteS.gif": "AUDIO_CASSETTE",
             "mDVDS.gif": "DVD",
@@ -35,6 +34,7 @@
         50.62083330000001,
         12.3030556
     ],
+    "information": "http://www.reichenbach-vogtland.de/Deutsch/Kultur/Juergen-Fuchs-Bibliothek/",
     "state": "Sachsen",
     "title": "J\u00fcrgen-Fuchs-Bibliothek"
 }

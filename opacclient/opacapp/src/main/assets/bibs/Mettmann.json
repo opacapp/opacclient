@@ -25,7 +25,6 @@
             "status": 2
         },
         "db": "me",
-        "information": "http://www.mettmann.de/bibliothek/",
         "reservationtable": {
             "author": 0,
             "availability": 2,
@@ -39,6 +38,7 @@
         51.2506663,
         6.9740265
     ],
+    "information": "http://www.mettmann.de/bibliothek/",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtbibliothek"
 }

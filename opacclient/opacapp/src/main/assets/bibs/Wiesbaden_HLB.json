@@ -6,13 +6,13 @@
     "data": {
         "baseurl": "https://pica1l.lhb.tu-darmstadt.de",
         "charset": "ISO-8859-1",
-        "db": "HLBWI",
-        "information": "http://www.hs-rm.de/bibliothek"
+        "db": "HLBWI"
     },
     "geo": [
         50.0782184,
         8.239760799999999
     ],
+    "information": "http://www.hs-rm.de/bibliothek",
     "state": "Hessen",
     "title": "HLB RheinMain"
 }

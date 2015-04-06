@@ -4,13 +4,13 @@
     "city": "Wuppertal",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.wuppertal.de/webOPACClient.sisis",
-        "information": "http://www.wuppertal.de/kultur-bildung/stadtbibliothek/index.php"
+        "baseurl": "http://webopac.wuppertal.de/webOPACClient.sisis"
     },
     "geo": [
         51.2562128,
         7.150763599999999
     ],
+    "information": "http://www.wuppertal.de/kultur-bildung/stadtbibliothek/index.php",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtbibliothek"
 }

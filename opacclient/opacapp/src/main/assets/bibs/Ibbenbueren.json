@@ -15,7 +15,6 @@
             "title": 7
         },
         "baseurl": "http://opac.stadtbuecherei-ibbenbueren.de",
-        "information": "http://www.stadtbuecherei-ibbenbueren.de/",
         "mediatypes": {
             "1": "BOOK",
             "11": "DVD",
@@ -37,6 +36,7 @@
         52.2796291,
         7.720426300000001
     ],
+    "information": "http://www.stadtbuecherei-ibbenbueren.de/",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }

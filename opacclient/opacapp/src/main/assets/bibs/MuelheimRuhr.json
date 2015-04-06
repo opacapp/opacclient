@@ -24,7 +24,6 @@
             "returndate": -1,
             "status": 4
         },
-        "information": "http://www.muelheim-ruhr.de/cms/oeffnungszeiten__anschriften.html",
         "mediatypes": {
             "1": "BOOK",
             "10": "MAP",
@@ -52,6 +51,7 @@
         51.4185682,
         6.884522599999999
     ],
+    "information": "http://www.muelheim-ruhr.de/cms/oeffnungszeiten__anschriften.html",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtbibliothek"
 }

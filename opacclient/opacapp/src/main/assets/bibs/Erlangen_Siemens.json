@@ -24,7 +24,6 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "https://w9.siemens.com/cms/regionalreferat-erlnbg/de/sb/Seiten/home.aspx",
         "reservationtable": {
             "author": 0,
             "availability": 2,
@@ -38,6 +37,7 @@
         49.5896744,
         11.0119611
     ],
+    "information": "https://w9.siemens.com/cms/regionalreferat-erlnbg/de/sb/Seiten/home.aspx",
     "state": "Bayern",
     "title": "Siemens Werksbibliothek"
 }

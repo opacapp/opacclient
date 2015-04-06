@@ -24,7 +24,6 @@
             "returndate": -1,
             "status": 4
         },
-        "information": "http://www.stadtbibliothek-alzenau.de/",
         "mediatypes": {
             "1": "BOOK",
             "11": "DVD",
@@ -43,6 +42,7 @@
         50.0894084,
         9.058741399999999
     ],
+    "information": "http://www.stadtbibliothek-alzenau.de/",
     "state": "Bayern",
     "title": "Stadtbibliothek"
 }

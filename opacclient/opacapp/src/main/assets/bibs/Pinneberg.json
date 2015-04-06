@@ -24,7 +24,6 @@
             "returndate": 3,
             "status": 2
         },
-        "information": "http://www.pinneberg.de/index.php?id=38#c31",
         "reservationtable": {
             "author": 0,
             "availability": 2,
@@ -38,6 +37,7 @@
         53.6545225,
         9.7938212
     ],
+    "information": "http://www.pinneberg.de/index.php?id=38#c31",
     "state": "Schleswig-Holstein",
     "title": "Stadtb\u00fccherei"
 }

@@ -24,7 +24,6 @@
             "returndate": 5,
             "status": 4
         },
-        "information": "http://steinfurt.active-city.net/city_info/display/bs/amt/details.cfm?region_id=125&id=772&design_id=968&keyword=0",
         "reservationtable": {
             "author": 0,
             "availability": 2,
@@ -38,6 +37,7 @@
         52.1475,
         7.344167
     ],
+    "information": "http://steinfurt.active-city.net/city_info/display/bs/amt/details.cfm?region_id=125&id=772&design_id=968&keyword=0",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }

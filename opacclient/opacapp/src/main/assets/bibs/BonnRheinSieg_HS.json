@@ -4,13 +4,13 @@
     "city": "Sankt Augustin",
     "country": "Deutschland",
     "data": {
-        "baseurl": "https://bib-sisis.bib.hochschule-bonn-rhein-sieg.de/webOPACClient",
-        "information": "http://www.bib.hochschule-bonn-rhein-sieg.de/"
+        "baseurl": "https://bib-sisis.bib.hochschule-bonn-rhein-sieg.de/webOPACClient"
     },
     "geo": [
         50.7694775,
         7.187578599999999
     ],
+    "information": "http://www.bib.hochschule-bonn-rhein-sieg.de/",
     "state": "Nordrhein-Westfalen",
     "title": "FH Bonn-Rhein-Sieg"
 }
