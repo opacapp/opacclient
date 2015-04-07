@@ -26,6 +26,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -158,7 +159,7 @@ public class BiBer1992 extends BaseApi {
             throw new NotReachableException();
         }
         String html = convertStreamToString(response.getEntity().getContent());
-        response.getEntity().consumeContent();
+        EntityUtils.consume(response.getEntity());
 
         Document doc = Jsoup.parse(html);
 
@@ -523,7 +524,7 @@ public class BiBer1992 extends BaseApi {
         HttpResponse response = http_client.execute(httpget);
 
         String html = convertStreamToString(response.getEntity().getContent());
-        response.getEntity().consumeContent();
+        EntityUtils.consume(response.getEntity());
 
         return parse_result(html);
     }
@@ -1027,7 +1028,7 @@ public class BiBer1992 extends BaseApi {
                         if (value.contains(":")) {
                             // Autor: remove everything starting at ":"
                             value = value.replaceFirst("^[^:]*/", "").trim();
-                            value = value.replaceFirst("\\:.*", "").trim();
+                            value = value.replaceFirst(":.*", "").trim();
                         } else {
                             // no Autor given<
                             value = "";
@@ -1035,7 +1036,7 @@ public class BiBer1992 extends BaseApi {
                     } else if (key.equals(AccountData.KEY_LENT_TITLE)) {
                         if (value.contains(":")) {
                             // Title: remove everything up to ":"
-                            value = value.replaceFirst(".*\\:", "").trim();
+                            value = value.replaceFirst(".*:", "").trim();
                             value = value.replaceFirst("^(.*)/[^/]*$", "$1")
                                          .trim();
                         } else {
@@ -1144,7 +1145,7 @@ public class BiBer1992 extends BaseApi {
                         if (value.contains(":")) {
                             // Autor: remove everything starting at ":"
                             value = value.replaceFirst("^[^:]*/", "").trim();
-                            value = value.replaceFirst("\\:.*", "").trim();
+                            value = value.replaceFirst(":.*", "").trim();
                         } else {
                             // no Autor given<
                             value = "";
@@ -1152,7 +1153,7 @@ public class BiBer1992 extends BaseApi {
                     } else if (key.equals(AccountData.KEY_LENT_TITLE)) {
                         if (value.contains(":")) {
                             // Title: remove everything up to ":"
-                            value = value.replaceFirst(".*\\:", "").trim();
+                            value = value.replaceFirst(".*:", "").trim();
                             value = value.replaceFirst("^(.*)/[^/]*$", "$1")
                                          .trim();
                         } else {

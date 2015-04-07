@@ -88,7 +88,7 @@ public class StarContentProvider extends ContentProvider {
     }
 
     private int deleteInDatabase(String table, String whereClause,
-                                 String[] whereArgs) {
+            String[] whereArgs) {
         return database.getWritableDatabase().delete(table, whereClause,
                 whereArgs);
     }
@@ -131,6 +131,7 @@ public class StarContentProvider extends ContentProvider {
                 itemUri = ContentUris.withAppendedId(STAR_URI, id);
                 notifyUri(STAR_URI);
                 break;
+            case STAR_ITEM:
             default:
                 itemUri = null;
                 break;
@@ -142,15 +143,15 @@ public class StarContentProvider extends ContentProvider {
     }
 
     private Cursor queryDatabase(String table, String[] projection,
-                                 String selection, String[] selectionArgs, String groupBy,
-                                 String having, String orderBy) {
+            String selection, String[] selectionArgs, String groupBy,
+            String having, String orderBy) {
         return database.getReadableDatabase().query(table, projection,
                 selection, selectionArgs, groupBy, having, orderBy);
     }
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
-                        String[] selectionArgs, String sortOrder) {
+            String[] selectionArgs, String sortOrder) {
         Cursor cursor;
         switch (getTypeMime(uri)) {
             case STAR_DIR:
@@ -170,14 +171,14 @@ public class StarContentProvider extends ContentProvider {
     }
 
     private int updateInDatabase(String table, ContentValues values,
-                                 String selection, String[] selectionArgs) {
+            String selection, String[] selectionArgs) {
         return database.getWritableDatabase().update(table, values, selection,
                 selectionArgs);
     }
 
     @Override
     public int update(Uri uri, ContentValues values, String selection,
-                      String[] selectionArgs) {
+            String[] selectionArgs) {
         int rowsAffected;
         switch (getTypeMime(uri)) {
             case STAR_DIR:

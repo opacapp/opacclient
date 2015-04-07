@@ -52,20 +52,20 @@ import de.geeksfactory.opacclient.utils.Base64;
  *         <p/>
  *         cmd=5&amp;				perform a search sC= c_0=1%%				unknown m_0=1%%
  *         unknown f_0=2%%				free
- *         search o_0=8%%				contains v_0=schule			"schule" ++ c_1=1%%
- *         unknown m_1=1%%				unknown
- *         f_1=3%%				author o_1=8%%				contains v_1=rowling
- *         "rowling" ++ c_2=1%%				unknown
+ *         search o_0=8%%				contains v_0=schule			"schule" ++ c_1=1%% unknown
+ *         m_1=1%%				unknown
+ *         f_1=3%%				author o_1=8%%				contains v_1=rowling "rowling" ++
+ *         c_2=1%%				unknown
  *         m_2=1%%				unknown f_2=12%%			title o_2=8%%				contains
  *         v_2=potter			"potter" ++
  *         c_3=1%%				unknown m_3=1%%				unknown f_3=34%%			year
  *         o_3=6%%				newer or equal to
  *         v_3=2000			"2000" ++ c_4=1%%				unknown m_4=1%%				unknown
  *         f_4=34%%			year
- *         o_4=4%%				older or equal to v_4=2014			"2014" ++ c_5=1%%
- *         unknown m_5=1%%				unknown
- *         f_5=42%%			media category o_5=1%%				is equal to v_5=3
- *         "Kinder- und Jugendbücher" ++
+ *         o_4=4%%				older or equal to v_4=2014			"2014" ++ c_5=1%% unknown
+ *         m_5=1%%				unknown
+ *         f_5=42%%			media category o_5=1%%				is equal to v_5=3 "Kinder- und
+ *         Jugendbücher" ++
  *         c_6=1%%				unknown m_6=1%%				unknown f_6=48%%			location
  *         o_6=1%%				is equal to
  *         v_6=1				"Bibliothek Unterföhring" ++ c_7=3%%				unknown (now
@@ -129,13 +129,13 @@ public class WinBiap extends BaseApi implements OpacApi {
      *                    constants above), for example "8" for "contains"
      * @param value       "Value": The value that was input by the user
      */
+    @SuppressWarnings("SameParameterValue")
     protected int addParametersManual(String combination, String mode,
             String field, String operator, String value,
             List<List<NameValuePair>> params, int index) {
         List<NameValuePair> list = new ArrayList<>();
         if (data.optBoolean("longParameterNames")) {
-            // A few libraries use longer names for the parameters
-            // (e.g. Hohen Neuendorf)
+            // A few libraries use longer names for the parameters (e.g. Hohen Neuendorf)
             list.add(new BasicNameValuePair("Combination_" + index, combination));
             list.add(new BasicNameValuePair("Mode_" + index, mode));
             list.add(new BasicNameValuePair("Searchfield_" + index, field));

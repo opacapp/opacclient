@@ -1405,9 +1405,7 @@ public class SearchResultDetailFragment extends Fragment
                 float density = getActivity().getResources().getDisplayMetrics().density;
                 URL newurl = new URL(ISBNTools.getBestSizeCoverUrl(item.getCover(),
                         view.getWidth(), (int) (260 * density)));
-                Bitmap cover = BitmapFactory.decodeStream(newurl
-                        .openConnection().getInputStream());
-                return cover;
+                return BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
             } catch (Exception e) {
                 // We don't want an unavailable Cover to cause any error message
                 e.printStackTrace();
@@ -1458,8 +1456,6 @@ public class SearchResultDetailFragment extends Fragment
                 } else {
                     res = app.getApi().getResult(nr);
                 }
-                URL newurl;
-
                 success = true;
                 return res;
             } catch (Exception e) {

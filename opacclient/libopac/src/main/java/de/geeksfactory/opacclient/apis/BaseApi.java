@@ -112,7 +112,7 @@ public abstract class BaseApi implements OpacApi {
      * Reads content from an InputStream into a string
      *
      * @param is         InputStream to read from
-     * @Param encoding   the encoding to use
+     * @param encoding   the encoding to use
      * @return String content of the InputStream
      */
     protected static String convertStreamToString(InputStream is,
@@ -281,13 +281,13 @@ public abstract class BaseApi implements OpacApi {
             }
 
             if (!ignore_errors && response.getStatusLine().getStatusCode() >= 400) {
-                response.getEntity().consumeContent();
+                EntityUtils.consume(response.getEntity());
                 throw new NotReachableException();
             }
 
             html = convertStreamToString(response.getEntity().getContent(),
                     encoding);
-            response.getEntity().consumeContent();
+            EntityUtils.consume(response.getEntity());
         } catch (javax.net.ssl.SSLPeerUnverifiedException e) {
             throw new SSLSecurityException();
         } catch (javax.net.ssl.SSLException e) {
@@ -402,7 +402,7 @@ public abstract class BaseApi implements OpacApi {
             }
             html = convertStreamToString(response.getEntity().getContent(),
                     encoding);
-            response.getEntity().consumeContent();
+            EntityUtils.consume(response.getEntity());
         } catch (javax.net.ssl.SSLPeerUnverifiedException e) {
             throw new SSLSecurityException();
         } catch (javax.net.ssl.SSLException e) {

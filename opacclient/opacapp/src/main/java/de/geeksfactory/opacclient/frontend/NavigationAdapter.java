@@ -1,6 +1,7 @@
 package de.geeksfactory.opacclient.frontend;
 
 import android.content.Context;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -135,9 +136,9 @@ public class NavigationAdapter extends BaseAdapter {
                 holder.text.setText(data.get(position).text);
                 if (data.get(position).iconDrawable != null) {
                     holder.icon.setVisibility(View.VISIBLE);
-                    holder.icon.setImageDrawable(context.getResources()
-                                                         .getDrawable(
-                                                                 data.get(position).iconDrawable));
+                    holder.icon.setImageDrawable(ResourcesCompat
+                            .getDrawable(context.getResources(), data.get(position).iconDrawable,
+                                    context.getTheme()));
                 } else {
                     holder.icon.setVisibility(View.INVISIBLE);
                 }

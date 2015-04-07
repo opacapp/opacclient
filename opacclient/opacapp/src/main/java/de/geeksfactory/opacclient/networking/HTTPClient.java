@@ -60,7 +60,7 @@ public class HTTPClient {
 
     public static HttpClient getNewHttpClient(boolean customssl) {
         HttpClientBuilder builder = HttpClientBuilder.create();
-        builder.setRedirectStrategy(new HTTPClient.CustomRedirectStrategy());
+        builder.setRedirectStrategy(new CustomRedirectStrategy());
         builder.setUserAgent("OpacApp/" + OpacClient.versionName);
         if (customssl) {
             try {

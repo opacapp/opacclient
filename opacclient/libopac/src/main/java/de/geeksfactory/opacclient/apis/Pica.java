@@ -779,6 +779,7 @@ public class Pica extends BaseApi implements OpacApi {
                 JSONObject values = new JSONObject(selection);
                 List<NameValuePair> params = new ArrayList<>();
 
+                //noinspection unchecked
                 Iterator<String> keys = values.keys();
                 while (keys.hasNext()) {
                     String key = keys.next();

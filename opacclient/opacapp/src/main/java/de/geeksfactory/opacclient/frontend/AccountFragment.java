@@ -61,9 +61,10 @@ import org.acra.ACRA;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.NoHttpResponseException;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 
@@ -1274,7 +1275,7 @@ public class AccountFragment extends Fragment implements
 
         @Override
         protected Integer doInBackground(Void... voids) {
-            DefaultHttpClient dc = new DefaultHttpClient();
+            HttpClient dc = HttpClientBuilder.create().build();
             HttpPost httppost = new HttpPost(
                     "http://opacapp.de/crashreport.php");
             List<NameValuePair> nameValuePairs = new ArrayList<>(2);
@@ -1290,15 +1291,12 @@ public class AccountFragment extends Fragment implements
                 e.printStackTrace();
             }
 
-            nameValuePairs.add(new BasicNameValuePair("android",
-                    android.os.Build.VERSION.RELEASE));
-            nameValuePairs.add(new BasicNameValuePair("sdk", ""
-                    + android.os.Build.VERSION.SDK_INT));
-            nameValuePairs.add(new BasicNameValuePair("device",
-                    android.os.Build.MANUFACTURER + " "
-                            + android.os.Build.MODEL));
-            nameValuePairs.add(new BasicNameValuePair("bib", app.getLibrary()
-                                                                .getIdent()));
+            nameValuePairs.add(new BasicNameValuePair("android", android.os.Build.VERSION.RELEASE));
+            nameValuePairs
+                    .add(new BasicNameValuePair("sdk", "" + android.os.Build.VERSION.SDK_INT));
+            nameValuePairs.add(new BasicNameValuePair("device", android.os.Build.MANUFACTURER + " "
+                    + android.os.Build.MODEL));
+            nameValuePairs.add(new BasicNameValuePair("bib", app.getLibrary().getIdent()));
 
             try {
                 nameValuePairs.add(new BasicNameValuePair("html", app.getApi()

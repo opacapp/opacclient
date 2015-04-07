@@ -11,8 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A SearchField is the abstract representation of a criteria input available in
- * the search form.
+ * A SearchField is the abstract representation of a criteria input available in the search form.
  */
 public abstract class SearchField {
     protected String id;
@@ -20,15 +19,14 @@ public abstract class SearchField {
     protected boolean advanced;
     protected boolean visible = true;
     /**
-     * Optional attribute, describes the meaning of the search field. Used for
-     * sorting the search fields in the form. Will be assigned automatically by
-     * the MeaningDetector if you use it.
+     * Optional attribute, describes the meaning of the search field. Used for sorting the search
+     * fields in the form. Will be assigned automatically by the MeaningDetector if you use it.
      */
     protected Meaning meaning;
     /**
-     * A JSONObject where you can save arbitrary data about this Search field.
-     * If you add a "meaning" attribute, MeaningDetector will search for that
-     * string in the meanings list instead of the displayName.
+     * A JSONObject where you can save arbitrary data about this Search field. If you add a
+     * "meaning" attribute, MeaningDetector will search for that string in the meanings list instead
+     * of the displayName.
      */
     protected JSONObject data;
 
@@ -50,11 +48,13 @@ public abstract class SearchField {
         String type = json.getString("type");
         String displayName = json.getString("displayName");
         JSONObject data = null;
-        if (json.has("data"))
+        if (json.has("data")) {
             data = json.getJSONObject("data");
+        }
         Meaning meaning = null;
-        if (json.has("meaning"))
+        if (json.has("meaning")) {
             meaning = Meaning.valueOf(json.getString("meaning"));
+        }
         boolean advanced = json.getBoolean("advanced");
         boolean visible = json.getBoolean("visible");
 
@@ -146,6 +146,7 @@ public abstract class SearchField {
     /**
      * Get whether this field is visible on the UI
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isVisible() {
         return visible;
     }
@@ -166,10 +167,12 @@ public abstract class SearchField {
         json.put("displayName", displayName);
         json.put("advanced", advanced);
         json.put("visible", visible);
-        if (data != null)
+        if (data != null) {
             json.put("data", data);
-        if (meaning != null)
+        }
+        if (meaning != null) {
             json.put("meaning", meaning.toString());
+        }
         return json;
     }
 
@@ -207,11 +210,12 @@ public abstract class SearchField {
     }
 
     /**
-     * A SearchField can have one of the following meanings. They are used for
-     * field ordering and providing additional UI features.
+     * A SearchField can have one of the following meanings. They are used for field ordering and
+     * providing additional UI features.
      */
     public enum Meaning {
-        FREE, TITLE, AUTHOR, DIGITAL, AVAILABLE, ISBN, BARCODE, YEAR, BRANCH, HOME_BRANCH, CATEGORY, PUBLISHER, KEYWORD, SYSTEM, AUDIENCE, LOCATION, ORDER
+        FREE, TITLE, AUTHOR, DIGITAL, AVAILABLE, ISBN, BARCODE, YEAR, BRANCH, HOME_BRANCH, CATEGORY,
+        PUBLISHER, KEYWORD, SYSTEM, AUDIENCE, LOCATION, ORDER
     }
 
     /**

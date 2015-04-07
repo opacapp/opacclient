@@ -6,6 +6,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -165,7 +166,7 @@ public class Adis extends BaseApi implements OpacApi {
         }
         String html = convertStreamToString(response.getEntity().getContent(),
                 getDefaultEncoding());
-        response.getEntity().consumeContent();
+        EntityUtils.consume(response.getEntity());
         Document doc = Jsoup.parse(html);
         Pattern patRequestCount = Pattern.compile("requestCount=([0-9]+)");
         for (Element a : doc.select("a")) {
@@ -228,7 +229,7 @@ public class Adis extends BaseApi implements OpacApi {
         }
         String html = convertStreamToString(response.getEntity().getContent(),
                 getDefaultEncoding());
-        response.getEntity().consumeContent();
+        EntityUtils.consume(response.getEntity());
         Document doc = Jsoup.parse(html);
         Pattern patRequestCount = Pattern
                 .compile(".*requestCount=([0-9]+)[^0-9].*");

@@ -521,10 +521,6 @@ public class LibraryListActivity extends ActionBarActivity {
             return library;
         }
 
-        public int getRank() {
-            return rank;
-        }
-
         @Override
         public int hashCode() {
             return library.hashCode();

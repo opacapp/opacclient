@@ -173,6 +173,7 @@ public class SearchResultListActivity extends OpacActivity implements
             if (res.getCoverBitmap() != null) {
                 detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP,
                         smallCover);
+                @SuppressWarnings("unchecked")
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         this,
                         new Pair<>(coverView, getString(R.string.transition_cover)),
