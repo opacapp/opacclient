@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This project won't be run on android, so Android Lint shouldn't be run here-->
+<lint>
+    <issue id="all">
+        <ignore path="*"/>
+    </issue>
+</lint>
