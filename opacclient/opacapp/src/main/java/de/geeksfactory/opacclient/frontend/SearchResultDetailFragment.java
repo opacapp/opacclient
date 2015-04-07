@@ -117,7 +117,6 @@ public class SearchResultDetailFragment extends Fragment
      * The detailled item that this fragment represents.
      */
     private DetailledItem item;
-    private String title;
     private String id;
     private Integer nr;
     private OpacClient app;
@@ -292,18 +291,7 @@ public class SearchResultDetailFragment extends Fragment
         if (getArguments().containsKey(ARG_ITEM_COVER_BITMAP)) {
             Bitmap bitmap = getArguments().getParcelable(ARG_ITEM_COVER_BITMAP);
             ivCover.setImageBitmap(bitmap);
-            Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {
-                @Override
-                public void onGenerated(Palette palette) {
-                    Palette.Swatch swatch = palette.getDarkVibrantSwatch();
-                    if (swatch != null) {
-                        ivCover.setBackgroundColor(swatch.getRgb());
-                        tint.setBackgroundColor(swatch.getRgb());
-                    }
-                }
-            });
-            analyzeWhitenessOfCoverAsync(bitmap);
-            image_analyzed = true;
+            analyzeCover(bitmap);
             showCoverView(true);
         } else {
             showCoverView(false);
@@ -312,6 +300,21 @@ public class SearchResultDetailFragment extends Fragment
         fixEllipsize(tvTitel);
 
         return rootView;
+    }
+
+    private void analyzeCover(Bitmap bitmap) {
+        Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {
+            @Override
+            public void onGenerated(Palette palette) {
+                Palette.Swatch swatch = palette.getDarkVibrantSwatch();
+                if (swatch != null) {
+                    ivCover.setBackgroundColor(swatch.getRgb());
+                    tint.setBackgroundColor(swatch.getRgb());
+                }
+            }
+        });
+        analyzeWhitenessOfCoverAsync(bitmap);
+        image_analyzed = true;
     }
 
     private void findViews() {
@@ -378,33 +381,7 @@ public class SearchResultDetailFragment extends Fragment
         } catch (Exception e) {
             ACRA.getErrorReporter().handleException(e);
         }
-
-        if (getItem().getCoverBitmap() != null) {
-            ivCover.setVisibility(View.VISIBLE);
-            ivCover.setImageBitmap(getItem().getCoverBitmap());
-            if (!image_analyzed) {
-                Palette.generateAsync(getItem().getCoverBitmap(),
-                        new Palette.PaletteAsyncListener() {
-                            @Override
-                            public void onGenerated(Palette palette) {
-                                Palette.Swatch swatch = palette.getDarkVibrantSwatch();
-                                if (swatch != null) {
-                                    ivCover.setBackgroundColor(swatch.getRgb());
-                                    tint.setBackgroundColor(swatch.getRgb());
-                                }
-                            }
-                        });
-                analyzeWhitenessOfCoverAsync(getItem().getCoverBitmap());
-            }
-            tvTitel.setText(getItem().getTitle());
-            showCoverView(true);
-        } else if (getArguments().containsKey(ARG_ITEM_COVER_BITMAP)) {
-            tvTitel.setText(getItem().getTitle());
-            showCoverView(true);
-        } else {
-            showCoverView(false);
-            toolbar.setTitle(getItem().getTitle());
-        }
+        tvTitel.setText(getItem().getTitle());
         llDetails.removeAllViews();
         for (Detail detail : item.getDetails()) {
             View v = getLayoutInflater(null)
@@ -552,6 +529,22 @@ public class SearchResultDetailFragment extends Fragment
                    }
                });
         toolbar.requestLayout();
+    }
+
+    private void displayCover() {
+        if (getItem().getCoverBitmap() != null) {
+            ivCover.setVisibility(View.VISIBLE);
+            ivCover.setImageBitmap(getItem().getCoverBitmap());
+            if (!image_analyzed) {
+                analyzeCover(getItem().getCoverBitmap());
+            }
+            showCoverView(true);
+        } else if (getArguments().containsKey(ARG_ITEM_COVER_BITMAP)) {
+            showCoverView(true);
+        } else {
+            showCoverView(false);
+            toolbar.setTitle(getItem().getTitle());
+        }
     }
 
     private boolean containsAndNotEmpty(Map<String, String> map, String key) {
@@ -907,7 +900,7 @@ public class SearchResultDetailFragment extends Fragment
         String bib = app.getLibrary().getIdent();
         StarDataSource data = new StarDataSource(getActivity());
         if ((id == null || id.equals("")) && item != null) {
-            if (data.isStarredTitle(bib, title)) {
+            if (data.isStarredTitle(bib, item.getTitle())) {
                 menu.findItem(R.id.action_star).setIcon(
                         R.drawable.ic_action_star_1);
             }
@@ -1404,6 +1397,35 @@ public class SearchResultDetailFragment extends Fragment
         public void removeFragment();
     }
 
+    public class LoadCoverTask extends AsyncTask<Void, Void, Bitmap> {
+
+        @Override
+        protected Bitmap doInBackground(Void... params) {
+            try {
+                float density = getActivity().getResources().getDisplayMetrics().density;
+                URL newurl = new URL(ISBNTools.getBestSizeCoverUrl(item.getCover(),
+                        view.getWidth(), (int) (260 * density)));
+                Bitmap cover = BitmapFactory.decodeStream(newurl
+                        .openConnection().getInputStream());
+                return cover;
+            } catch (Exception e) {
+                // We don't want an unavailable Cover to cause any error message
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        protected void onPostExecute(Bitmap cover) {
+            if (cover != null && cover.getHeight() > 1 && cover.getWidth() > 1) {
+                // When images embedded from Amazon aren't available, a 1x1 pixel image is returned
+                item.setCoverBitmap(cover);
+            } else {
+                item.setCover(null);
+            }
+            displayCover();
+        }
+    }
+
     public class FetchTask extends AsyncTask<Void, Void, DetailledItem> {
         protected boolean success = true;
         protected Integer nr;
@@ -1437,26 +1459,7 @@ public class SearchResultDetailFragment extends Fragment
                     res = app.getApi().getResult(nr);
                 }
                 URL newurl;
-                if (res.getCover() != null && res.getCoverBitmap() == null) {
-                    try {
-                        float density = getActivity().getResources().getDisplayMetrics().density;
-                        newurl = new URL(ISBNTools.getBestSizeCoverUrl(res.getCover(),
-                                view.getWidth(), (int) (260 * density)));
-                        Bitmap mIcon_val = BitmapFactory.decodeStream(newurl
-                                .openConnection().getInputStream());
-                        if (mIcon_val.getHeight() > 1
-                                && mIcon_val.getWidth() > 1) {
-                            res.setCoverBitmap(mIcon_val);
-                        } else {
-                            // When images embedded from Amazon aren't
-                            // available, a 1x1
-                            // pixel image is returned (iOPAC)
-                            res.setCover(null);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+
                 success = true;
                 return res;
             } catch (Exception e) {
@@ -1479,6 +1482,12 @@ public class SearchResultDetailFragment extends Fragment
             }
 
             item = result;
+
+            if (item.getCover() != null && item.getCoverBitmap() == null) {
+                new LoadCoverTask().execute();
+            } else {
+                displayCover();
+            }
 
             display();
 
