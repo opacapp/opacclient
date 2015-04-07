@@ -91,7 +91,7 @@ public class SearchResultDetailFragment extends Fragment
      * A dummy implementation of the {@link Callbacks} interface that does nothing. Used only when
      * this fragment is not attached to an activity.
      */
-    private static Callbacks sDummyCallbacks = new Callbacks() {
+    private static Callbacks dummyCallbacks = new Callbacks() {
         @Override
         public void removeFragment() {
         }
@@ -99,7 +99,7 @@ public class SearchResultDetailFragment extends Fragment
     /**
      * The fragment's current callback object, which is notified of list item clicks.
      */
-    private Callbacks mCallbacks = sDummyCallbacks;
+    private Callbacks callbacks = dummyCallbacks;
     protected boolean back_button_visible = false;
     protected boolean image_analyzed = false;
 
@@ -233,7 +233,7 @@ public class SearchResultDetailFragment extends Fragment
                     "Activity must implement fragment's callbacks.");
         }
 
-        mCallbacks = (Callbacks) activity;
+        callbacks = (Callbacks) activity;
     }
 
     @Override
@@ -253,7 +253,7 @@ public class SearchResultDetailFragment extends Fragment
         super.onDetach();
 
         // Reset the active callbacks interface to the dummy implementation.
-        mCallbacks = sDummyCallbacks;
+        callbacks = dummyCallbacks;
     }
 
     @Override
@@ -820,7 +820,7 @@ public class SearchResultDetailFragment extends Fragment
                            public void onClick(DialogInterface dialog, int id) {
                                dialog.cancel();
                                if (finish) {
-                                   mCallbacks.removeFragment();
+                                   callbacks.removeFragment();
                                }
                            }
                        })

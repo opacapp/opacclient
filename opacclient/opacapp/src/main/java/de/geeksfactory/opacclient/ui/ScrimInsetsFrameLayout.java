@@ -1,5 +1,6 @@
 /*
  * Copyright 2014 Google Inc.
+ * Modified by Johan von Forstner
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,11 +35,11 @@ import de.geeksfactory.opacclient.R;
  * area above UI chrome (status and navigation bars, overlay action bars).
  */
 public class ScrimInsetsFrameLayout extends FrameLayout {
-    private Drawable mInsetForeground;
+    private Drawable insetForeground;
 
-    private Rect mInsets;
-    private Rect mTempRect = new Rect();
-    private OnInsetsCallback mOnInsetsCallback;
+    private Rect insets;
+    private Rect tempRect = new Rect();
+    private OnInsetsCallback onInsetsCallback;
 
     public ScrimInsetsFrameLayout(Context context) {
         super(context);
@@ -61,7 +62,7 @@ public class ScrimInsetsFrameLayout extends FrameLayout {
         if (a == null) {
             return;
         }
-        mInsetForeground = a.getDrawable(R.styleable.ScrimInsetsView_insetForeground);
+        insetForeground = a.getDrawable(R.styleable.ScrimInsetsView_insetForeground);
         a.recycle();
 
         setWillNotDraw(true);
@@ -70,11 +71,11 @@ public class ScrimInsetsFrameLayout extends FrameLayout {
     @SuppressWarnings("deprecation")
     @Override
     protected boolean fitSystemWindows(@NonNull Rect insets) {
-        mInsets = new Rect(insets);
-        setWillNotDraw(mInsetForeground == null);
+        this.insets = new Rect(insets);
+        setWillNotDraw(insetForeground == null);
         ViewCompat.postInvalidateOnAnimation(this);
-        if (mOnInsetsCallback != null) {
-            mOnInsetsCallback.onInsetsChanged(insets);
+        if (onInsetsCallback != null) {
+            onInsetsCallback.onInsetsChanged(insets);
         }
         return true; // consume insets
     }
@@ -85,29 +86,29 @@ public class ScrimInsetsFrameLayout extends FrameLayout {
 
         int width = getWidth();
         int height = getHeight();
-        if (mInsets != null && mInsetForeground != null) {
+        if (insets != null && insetForeground != null) {
             int sc = canvas.save();
             canvas.translate(getScrollX(), getScrollY());
 
             // Top
-            mTempRect.set(0, 0, width, mInsets.top);
-            mInsetForeground.setBounds(mTempRect);
-            mInsetForeground.draw(canvas);
+            tempRect.set(0, 0, width, insets.top);
+            insetForeground.setBounds(tempRect);
+            insetForeground.draw(canvas);
 
             // Bottom
-            mTempRect.set(0, height - mInsets.bottom, width, height);
-            mInsetForeground.setBounds(mTempRect);
-            mInsetForeground.draw(canvas);
+            tempRect.set(0, height - insets.bottom, width, height);
+            insetForeground.setBounds(tempRect);
+            insetForeground.draw(canvas);
 
             // Left
-            mTempRect.set(0, mInsets.top, mInsets.left, height - mInsets.bottom);
-            mInsetForeground.setBounds(mTempRect);
-            mInsetForeground.draw(canvas);
+            tempRect.set(0, insets.top, insets.left, height - insets.bottom);
+            insetForeground.setBounds(tempRect);
+            insetForeground.draw(canvas);
 
             // Right
-            mTempRect.set(width - mInsets.right, mInsets.top, width, height - mInsets.bottom);
-            mInsetForeground.setBounds(mTempRect);
-            mInsetForeground.draw(canvas);
+            tempRect.set(width - insets.right, insets.top, width, height - insets.bottom);
+            insetForeground.setBounds(tempRect);
+            insetForeground.draw(canvas);
 
             canvas.restoreToCount(sc);
         }
@@ -116,27 +117,17 @@ public class ScrimInsetsFrameLayout extends FrameLayout {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        if (mInsetForeground != null) {
-            mInsetForeground.setCallback(this);
+        if (insetForeground != null) {
+            insetForeground.setCallback(this);
         }
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if (mInsetForeground != null) {
-            mInsetForeground.setCallback(null);
+        if (insetForeground != null) {
+            insetForeground.setCallback(null);
         }
-    }
-
-    /**
-     * Allows the calling container to specify a callback for custom processing when insets change
-     * (i.e. when {@link #fitSystemWindows(Rect)} is called. This is useful for setting padding on
-     * UI elements based on UI chrome insets (e.g. a Google Map or a ListView). When using with
-     * ListView or GridView, remember to set clipToPadding to false.
-     */
-    public void setOnInsetsCallback(OnInsetsCallback onInsetsCallback) {
-        mOnInsetsCallback = onInsetsCallback;
     }
 
     public static interface OnInsetsCallback {

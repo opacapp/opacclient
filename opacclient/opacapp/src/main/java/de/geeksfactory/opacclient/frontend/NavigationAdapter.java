@@ -14,13 +14,13 @@ import de.geeksfactory.opacclient.R;
 
 public class NavigationAdapter extends BaseAdapter {
 
-    protected ArrayList<Item> mData = new ArrayList<>();
-    protected LayoutInflater mInflater;
-    protected Context mContext;
+    protected ArrayList<Item> data = new ArrayList<>();
+    protected LayoutInflater inflater;
+    protected Context context;
 
     public NavigationAdapter(Context context) {
-        mContext = context;
-        mInflater = (LayoutInflater) context
+        this.context = context;
+        inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -28,7 +28,7 @@ public class NavigationAdapter extends BaseAdapter {
         Item item = new Item();
         item.type = Item.TYPE_SEPARATOR;
         item.text = text;
-        mData.add(item);
+        data.add(item);
         notifyDataSetChanged();
     }
 
@@ -37,7 +37,7 @@ public class NavigationAdapter extends BaseAdapter {
         item.type = Item.TYPE_TEXT;
         item.text = text;
         item.tag = tag;
-        mData.add(item);
+        data.add(item);
         notifyDataSetChanged();
     }
 
@@ -48,7 +48,7 @@ public class NavigationAdapter extends BaseAdapter {
         item.text = text;
         item.tag = tag;
         item.iconDrawable = iconDrawable;
-        mData.add(item);
+        data.add(item);
         notifyDataSetChanged();
     }
 
@@ -60,13 +60,13 @@ public class NavigationAdapter extends BaseAdapter {
         item.smallText = smallText;
         item.number = number;
         item.accountId = accountId;
-        mData.add(item);
+        data.add(item);
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemViewType(int position) {
-        return mData.get(position).type;
+        return data.get(position).type;
     }
 
     @Override
@@ -76,18 +76,18 @@ public class NavigationAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return mData.size();
+        return data.size();
     }
 
     @Override
     public Item getItem(int position) {
-        return mData.get(position);
+        return data.get(position);
     }
 
     public int getPositionByTag(String tag) {
-        for (int i = 0; i < mData.size(); i++) {
-            if (mData != null && mData.get(i) != null
-                    && tag.equals(mData.get(i).tag)) {
+        for (int i = 0; i < data.size(); i++) {
+            if (data != null && data.get(i) != null
+                    && tag.equals(data.get(i).tag)) {
                 return i;
             }
         }
@@ -107,13 +107,13 @@ public class NavigationAdapter extends BaseAdapter {
             holder = new ViewHolder();
             switch (type) {
                 case Item.TYPE_TEXT:
-                    convertView = mInflater
+                    convertView = inflater
                             .inflate(R.layout.drawer_item_text, null);
                     holder.text = (TextView) convertView.findViewById(R.id.text);
                     holder.icon = (ImageView) convertView.findViewById(R.id.icon);
                     break;
                 case Item.TYPE_ACCOUNT:
-                    convertView = mInflater.inflate(R.layout.drawer_item_library,
+                    convertView = inflater.inflate(R.layout.drawer_item_library,
                             null);
                     holder.text = (TextView) convertView.findViewById(R.id.text);
                     holder.smallText = (TextView) convertView
@@ -122,7 +122,7 @@ public class NavigationAdapter extends BaseAdapter {
                             .findViewById(R.id.number);
                     break;
                 case Item.TYPE_SEPARATOR:
-                    convertView = mInflater.inflate(R.layout.drawer_item_separator,
+                    convertView = inflater.inflate(R.layout.drawer_item_separator,
                             null);
                     holder.text = (TextView) convertView.findViewById(R.id.text);
                     break;
@@ -132,23 +132,23 @@ public class NavigationAdapter extends BaseAdapter {
         }
         switch (type) {
             case Item.TYPE_TEXT:
-                holder.text.setText(mData.get(position).text);
-                if (mData.get(position).iconDrawable != null) {
+                holder.text.setText(data.get(position).text);
+                if (data.get(position).iconDrawable != null) {
                     holder.icon.setVisibility(View.VISIBLE);
-                    holder.icon.setImageDrawable(mContext.getResources()
+                    holder.icon.setImageDrawable(context.getResources()
                                                          .getDrawable(
-                                                                 mData.get(position).iconDrawable));
+                                                                 data.get(position).iconDrawable));
                 } else {
                     holder.icon.setVisibility(View.INVISIBLE);
                 }
                 break;
             case Item.TYPE_ACCOUNT:
-                holder.text.setText(mData.get(position).text);
-                holder.smallText.setText(mData.get(position).smallText);
-                holder.number.setText(mData.get(position).number);
+                holder.text.setText(data.get(position).text);
+                holder.smallText.setText(data.get(position).smallText);
+                holder.number.setText(data.get(position).number);
                 break;
             case Item.TYPE_SEPARATOR:
-                holder.text.setText(mData.get(position).text);
+                holder.text.setText(data.get(position).text);
                 break;
         }
         if (convertView != null) convertView.setTag(holder);
@@ -156,7 +156,7 @@ public class NavigationAdapter extends BaseAdapter {
     }
 
     public void clear() {
-        mData.clear();
+        data.clear();
         notifyDataSetChanged();
     }
 

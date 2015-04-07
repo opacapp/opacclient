@@ -70,9 +70,9 @@ public class StarredFragment extends Fragment implements
     protected View view;
     protected OpacClient app;
     private ItemListAdapter adapter;
-    private Callback mCallback;
+    private Callback callback;
     private ListView listView;
-    private int mActivatedPosition = ListView.INVALID_POSITION;
+    private int activatedPosition = ListView.INVALID_POSITION;
     private TextView tvWelcome;
 
     @Override
@@ -130,7 +130,7 @@ public class StarredFragment extends Fragment implements
                                 Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    mCallback.showDetail(item.getMNr());
+                    callback.showDetail(item.getMNr());
                 }
             }
         });
@@ -241,7 +241,7 @@ public class StarredFragment extends Fragment implements
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mCallback = (Callback) activity;
+            callback = (Callback) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement SearchFragment.Callback");
@@ -267,20 +267,20 @@ public class StarredFragment extends Fragment implements
 
     private void setActivatedPosition(int position) {
         if (position == AdapterView.INVALID_POSITION) {
-            listView.setItemChecked(mActivatedPosition, false);
+            listView.setItemChecked(activatedPosition, false);
         } else {
             listView.setItemChecked(position, true);
         }
 
-        mActivatedPosition = position;
+        activatedPosition = position;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (mActivatedPosition != AdapterView.INVALID_POSITION) {
+        if (activatedPosition != AdapterView.INVALID_POSITION) {
             // Serialize and persist the activated item position.
-            outState.putInt(STATE_ACTIVATED_POSITION, mActivatedPosition);
+            outState.putInt(STATE_ACTIVATED_POSITION, activatedPosition);
         }
     }
 
@@ -317,7 +317,7 @@ public class StarredFragment extends Fragment implements
                 public void onClick(View arg0) {
                     Starred item = (Starred) arg0.getTag();
                     remove(item);
-                    mCallback.removeFragment();
+                    callback.removeFragment();
                 }
             });
         }
