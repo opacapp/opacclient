@@ -24,7 +24,6 @@
             "returndate": 5,
             "status": 4
         },
-        "information": "http://www.plochingen.de/,Lde/start/Sport+_+Kultur+_+Freizeit/stadtbibliothek.html",
         "reservationtable": {
             "author": 1,
             "availability": 3,
@@ -38,6 +37,7 @@
         48.7131896,
         9.4197264
     ],
+    "information": "http://www.plochingen.de/,Lde/start/Sport+_+Kultur+_+Freizeit/stadtbibliothek.html",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtbibliothek"
 }

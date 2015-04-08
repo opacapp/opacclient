@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://opac.fh-deggendorf.de/InfoGuideClient.fhdsis",
-        "information": "https://www.th-deg.de/studium/bibliothek",
         "startparams": "Login=wofhdext"
     },
     "geo": [
         48.8408515,
         12.9574787
     ],
+    "information": "https://www.th-deg.de/studium/bibliothek",
     "state": "Bayern",
     "title": "Technische Hochschule"
 }

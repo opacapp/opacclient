@@ -4,13 +4,13 @@
     "city": "Neuheim",
     "country": "Schweiz",
     "data": {
-        "baseurl": "http://www.winmedio.net/neuheim",
-        "information": "http://www.neuheim.ch/verwaltung/abteilungen/bibliothek/"
+        "baseurl": "http://www.winmedio.net/neuheim"
     },
     "geo": [
         47.2048365,
         8.5757774
     ],
+    "information": "http://www.neuheim.ch/verwaltung/abteilungen/bibliothek/",
     "state": "Zug",
     "title": "Bibliothek"
 }

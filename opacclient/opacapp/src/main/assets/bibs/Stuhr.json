@@ -24,7 +24,6 @@
             "returndate": 5,
             "status": 4
         },
-        "information": "/read/info.html",
         "mediatypes": {
             "NintendoDS.gif": "GAME_CONSOLE_NINTENDO",
             "Wii.gif": "GAME_CONSOLE_WII",
@@ -52,6 +51,7 @@
         53.0289775,
         8.7361402
     ],
+    "information": "/read/info.html",
     "state": "Niedersachsen",
     "title": "Bibliothek"
 }

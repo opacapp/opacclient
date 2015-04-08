@@ -24,7 +24,6 @@
             "returndate": 4,
             "status": 3
         },
-        "information": "http://www.frankfurt.de/sixcms/detail.php?id=2962&_ffmpar[_id_inhalt]=2147168",
         "mediatypes": {
             "LP.gif": "LP_RECORD",
             "cd.gif": "CD",
@@ -56,6 +55,7 @@
         50.1109221,
         8.6821267
     ],
+    "information": "http://www.frankfurt.de/sixcms/detail.php?id=2962&_ffmpar[_id_inhalt]=2147168",
     "state": "Hessen",
     "title": "Stadtbibliothek"
 }

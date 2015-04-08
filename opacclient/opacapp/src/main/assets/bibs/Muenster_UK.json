@@ -20,7 +20,6 @@
             "status": 3
         },
         "db": "OPAC_UniklinikMS",
-        "information": "http://www.ukm-klinikbuecherei.de",
         "mediatypes": {
             "Buchklein.GIF": "BOOK",
             "CD-ROMklein.GIF": "CD_SOFTWARE",
@@ -71,6 +70,7 @@
         51.9606649,
         7.6261347
     ],
+    "information": "http://www.ukm-klinikbuecherei.de",
     "state": "Nordrhein-Westfalen",
     "title": "Klinikb\u00fccherei am UKM"
 }

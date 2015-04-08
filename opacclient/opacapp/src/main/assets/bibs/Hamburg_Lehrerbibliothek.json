@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://kataloge.uni-hamburg.de/",
-        "db": "4",
-        "information": "http://li.hamburg.de/lehrerbibliothek/"
+        "db": "4"
     },
     "geo": [
         53.5712303,
         9.9682266
     ],
+    "information": "http://li.hamburg.de/lehrerbibliothek/",
     "state": "Hamburg",
     "title": "Lehrerbibliothek"
 }

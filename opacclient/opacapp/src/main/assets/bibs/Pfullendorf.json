@@ -24,7 +24,6 @@
             "returndate": 1,
             "status": 0
         },
-        "information": "http://www.pfullendorf.de/stadtbuecherei.html",
         "mediatypes": {
             "cdkl.gif": "CD_SOFTWARE",
             "mCasetteS.gif": "AUDIO_CASSETTE",
@@ -50,6 +49,7 @@
         47.925227,
         9.2486506
     ],
+    "information": "http://www.pfullendorf.de/stadtbuecherei.html",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtb\u00fccherei"
 }

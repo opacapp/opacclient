@@ -11,13 +11,13 @@
             "prolongurl": 4,
             "title": 0
         },
-        "baseurl": "https://iopac.glueckstadt.de",
-        "information": "http://www.glueckstadt.de/Leben-Wohnen/Bildung/Stadtb%C3%BCcherei"
+        "baseurl": "https://iopac.glueckstadt.de"
     },
     "geo": [
         53.7911914,
         9.4260898
     ],
+    "information": "http://www.glueckstadt.de/Leben-Wohnen/Bildung/Stadtb%C3%BCcherei",
     "state": "Schleswig-Holstein",
     "title": "Stadtb\u00fccherei"
 }

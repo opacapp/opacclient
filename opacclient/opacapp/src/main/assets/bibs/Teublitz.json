@@ -4,13 +4,13 @@
     "city": "Teublitz",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.net/teublitz",
-        "information": "http://www.teublitz.de/index.php?id=0,57"
+        "baseurl": "http://webopac.winbiap.net/teublitz"
     },
     "geo": [
         49.2206446,
         12.0854957
     ],
+    "information": "http://www.teublitz.de/index.php?id=0,57",
     "state": "Bayern",
     "title": "Stadtb\u00fccherei"
 }

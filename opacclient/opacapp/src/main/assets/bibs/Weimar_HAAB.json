@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "http://opac.ub.uni-weimar.de",
-        "db": "2",
-        "information": "http://www.klassik-stiftung.de/einrichtungen/herzogin-anna-amalia-bibliothek"
+        "db": "2"
     },
     "geo": [
         50.9794934,
         11.3235439
     ],
+    "information": "http://www.klassik-stiftung.de/einrichtungen/herzogin-anna-amalia-bibliothek",
     "state": "Th\u00fcringen",
     "title": "HAAB"
 }

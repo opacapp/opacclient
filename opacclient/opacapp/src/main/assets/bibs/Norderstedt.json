@@ -15,7 +15,6 @@
             "title": 7
         },
         "baseurl": "https://opac.buecherei.norderstedt.de",
-        "information": "http://www.norderstedt.de/Bildung-Kultur/Bildung/Stadtb%C3%BCcherei",
         "mediatypes": {
             "1": "BOOK",
             "10": "BOARDGAME",
@@ -41,6 +40,7 @@
         53.6993066,
         10.0008798
     ],
+    "information": "http://www.norderstedt.de/Bildung-Kultur/Bildung/Stadtb%C3%BCcherei",
     "state": "Schleswig-Holstein",
     "title": "Stadtb\u00fccherei"
 }

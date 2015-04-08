@@ -20,7 +20,6 @@
             "status": 3
         },
         "db": "lage",
-        "information": "http://www.lage.de/stadtbuecherei/",
         "mediatypes": {
             "cdkl.gif": "CD_SOFTWARE",
             "dvdkl.gif": "DVD",
@@ -39,6 +38,7 @@
         51.9944229,
         8.7995372
     ],
+    "information": "http://www.lage.de/stadtbuecherei/",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtbibliothek"
 }

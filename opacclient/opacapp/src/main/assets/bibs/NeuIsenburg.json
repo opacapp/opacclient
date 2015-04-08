@@ -15,7 +15,6 @@
             "title": 7
         },
         "baseurl": "http://217.91.45.155",
-        "information": "http://www.neu-isenburg.de/erlebniswelt/stadtbibliothek",
         "mediatypes": {
             "1": "BOOK",
             "10": "MAP",
@@ -44,6 +43,7 @@
         50.0522076,
         8.6952638
     ],
+    "information": "http://www.neu-isenburg.de/erlebniswelt/stadtbibliothek",
     "state": "Hessen",
     "title": "Stadtbibliothek"
 }

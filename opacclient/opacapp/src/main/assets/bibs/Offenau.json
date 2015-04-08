@@ -24,7 +24,6 @@
             "returndate": 4,
             "status": 3
         },
-        "information": "http://www.bibliotheken.bw-online.de/read-offenau/info.html",
         "mediatypes": {
             "MDVD.gif": "DVD",
             "b\u00fccher.gif": "BOOK",
@@ -56,6 +55,7 @@
         49.2450112,
         9.164699299999999
     ],
+    "information": "http://www.bibliotheken.bw-online.de/read-offenau/info.html",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Gemeindeb\u00fccherei"
 }

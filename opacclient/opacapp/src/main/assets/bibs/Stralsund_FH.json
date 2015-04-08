@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://lhgrw.gbv.de",
-        "db": "2",
-        "information": "http://www.fh-stralsund.de/fh_stralsund/powerslave,id,765,nodeid,.html"
+        "db": "2"
     },
     "geo": [
         54.2994048,
         13.0877143
     ],
+    "information": "http://www.fh-stralsund.de/fh_stralsund/powerslave,id,765,nodeid,.html",
     "state": "Mecklenburg-Vorpommern",
     "title": "Hochschulbibliothek"
 }

@@ -19,7 +19,6 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "http://www.buecherei-raesfeld.de/",
         "mediatypes": {
             "Buchklein.GIF": "UNKNOWN",
             "CD-ROMklein.GIF": "CD_SOFTWARE",
@@ -70,6 +69,7 @@
         51.7702593,
         6.8392979
     ],
+    "information": "http://www.buecherei-raesfeld.de/",
     "state": "Nordrhein-Westfalen",
     "title": "\u00d6ffentliche B\u00fccherei"
 }

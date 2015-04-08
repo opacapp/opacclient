@@ -24,7 +24,6 @@
             "returndate": 4,
             "status": 3
         },
-        "information": "http://www.stadtbuecherei-heidelberg.bib-bw.de/seiten/seite301.htm",
         "reservationtable": {
             "author": -1,
             "availability": 1,
@@ -38,6 +37,7 @@
         49.3987524,
         8.6724335
     ],
+    "information": "http://www.stadtbuecherei-heidelberg.bib-bw.de/seiten/seite301.htm",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtb\u00fccherei"
 }

@@ -24,7 +24,6 @@
             "returndate": 3,
             "status": 2
         },
-        "information": "/read/info.html",
         "mediatypes": {
             "mCasetteS.gif": "AUDIO_CASSETTE",
             "mDVDS.gif": "DVD",
@@ -43,6 +42,7 @@
         51.419285,
         9.6557588
     ],
+    "information": "/read/info.html",
     "state": "Niedersachsen",
     "title": "Stadtb\u00fccherei"
 }

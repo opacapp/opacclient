@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://kataloge.uni-hamburg.de/",
-        "db": "9",
-        "information": "http://www.sub.uni-hamburg.de/home.html"
+        "db": "9"
     },
     "geo": [
         53.5573698,
         10.0213141
     ],
+    "information": "http://www.sub.uni-hamburg.de/home.html",
     "state": "Hamburg",
     "title": "Gerichtsbibliotheken"
 }

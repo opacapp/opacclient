@@ -24,7 +24,6 @@
             "returndate": 2,
             "status": 1
         },
-        "information": "http://bond-wend.kdrs.de/ReadWE/info.html",
         "mediatypes": {
             "CDkl.gif": "AUDIOBOOK",
             "MonoS.gif": "BOOK",
@@ -53,6 +52,7 @@
         48.671757,
         9.3827676
     ],
+    "information": "http://bond-wend.kdrs.de/ReadWE/info.html",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtb\u00fccherei"
 }

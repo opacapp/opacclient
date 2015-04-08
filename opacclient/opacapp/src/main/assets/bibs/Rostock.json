@@ -24,7 +24,6 @@
             "returndate": 3,
             "status": 1
         },
-        "information": "http://www.stadtbibliothek-rostock.de/wOnline/Standorte/index.php",
         "mediatypes": {
             "HBE_HSE_HBK_HSK_s.gif": "AUDIOBOOK",
             "bbe_bse_s.gif": "BOOK",
@@ -56,6 +55,7 @@
         54.0834186,
         12.1004289
     ],
+    "information": "http://www.stadtbibliothek-rostock.de/wOnline/Standorte/index.php",
     "state": "Mecklenburg-Vorpommern",
     "title": "Stadtbibliothek"
 }

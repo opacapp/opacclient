@@ -18,7 +18,6 @@
             "returndate": 5,
             "status": 6
         },
-        "information": "http://www.bibliothek-hy.de/",
         "mediatypes": {
             "Icon_eAudio.gif": "MP3",
             "Icon_eBook.gif": "EBOOK",
@@ -40,6 +39,7 @@
         51.4388605,
         14.2536419
     ],
+    "information": "http://www.bibliothek-hy.de/",
     "state": "Sachsen",
     "title": "Brigitte-Reimann Stadtbibliothek"
 }

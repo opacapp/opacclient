@@ -24,7 +24,6 @@
             "returndate": -1,
             "status": 4
         },
-        "information": "http://www.minden.de/internet/page.php?naviID=7000128&brotID=7000128&site=7000378&typ=2&rubrik=7000028",
         "mediatypes": {
             "1": "BOOK",
             "11": "DVD",
@@ -47,6 +46,7 @@
         52.2964919,
         8.894920599999999
     ],
+    "information": "http://www.minden.de/internet/page.php?naviID=7000128&brotID=7000128&site=7000378&typ=2&rubrik=7000028",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtbibliothek"
 }

@@ -20,7 +20,6 @@
             "returndate": 5,
             "status": 4
         },
-        "information": "http://www2.stadtbibliothek-reutlingen.de/Plone/-1/oeffnungszeiten",
         "mediatypes": {
             "eAudioS.gif": "MP3",
             "eBookS.gif": "EBOOK",
@@ -58,6 +57,7 @@
         48.50693889999999,
         9.2038043
     ],
+    "information": "http://www2.stadtbibliothek-reutlingen.de/Plone/-1/oeffnungszeiten",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtbibliothek"
 }

@@ -24,7 +24,6 @@
             "returndate": -1,
             "status": 4
         },
-        "information": "http://www.nuertingen.de/?id=260",
         "mediatypes": {
             "1": "BOOK",
             "10": "MAGAZINE",
@@ -57,6 +56,7 @@
         48.624421,
         9.3469069
     ],
+    "information": "http://www.nuertingen.de/?id=260",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtb\u00fccherei"
 }

@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://kataloge.uni-hamburg.de/",
-        "db": "7",
-        "information": "http://www.hamburg.de/staatsarchiv/"
+        "db": "7"
     },
     "geo": [
         53.574907,
         10.0688597
     ],
+    "information": "http://www.hamburg.de/staatsarchiv/",
     "state": "Hamburg",
     "title": "Staatsarchiv"
 }

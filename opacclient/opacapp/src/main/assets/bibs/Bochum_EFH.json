@@ -15,7 +15,6 @@
             "returndate": 3,
             "status": 2
         },
-        "information": "http://www.efh-bochum.de/bibliothek/bibliothek.html",
         "mediatypes": {
             "mCasetteS.gif": "AUDIO_CASSETTE",
             "mCompuS.gif": "EDOC",
@@ -34,6 +33,7 @@
         51.4818445,
         7.216236299999999
     ],
+    "information": "http://www.efh-bochum.de/bibliothek/bibliothek.html",
     "state": "Nordrhein-Westfalen",
     "title": "Evangelische Fachhochschule"
 }

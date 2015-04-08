@@ -18,7 +18,6 @@
             "returndate": 4,
             "status": 2
         },
-        "information": "http://www.mediathek-neckarsulm.de/",
         "mediatypes": {
             "Picto-klein.jpg": "EBOOK",
             "mCasetteS.gif": "AUDIO_CASSETTE",
@@ -41,6 +40,7 @@
         49.1922581,
         9.228708899999999
     ],
+    "information": "http://www.mediathek-neckarsulm.de/",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Mediathek"
 }

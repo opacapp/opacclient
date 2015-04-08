@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "http://80.147.28.227:8080/webOPACClient",
-        "information": "http://www.germering.de/bibliothek/",
         "startparams": "Login=opacext"
     },
     "geo": [
         48.13518089999999,
         11.3690889
     ],
+    "information": "http://www.germering.de/bibliothek/",
     "state": "Bayern",
     "title": "Stadtbibliothek"
 }

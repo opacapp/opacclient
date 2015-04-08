@@ -58,8 +58,7 @@ public class InfoFragment extends Fragment implements AccountSelectedListener {
         wvInfo.loadData(getString(R.string.loading), "text/html", null);
 
         try {
-            String infoUrl = app.getLibrary().getData()
-                                .getString("information");
+            String infoUrl = app.getLibrary().getInformation();
             if (infoUrl == null || infoUrl.equals("null")) {
                 wvInfo.setVisibility(View.GONE);
                 tvErr.setVisibility(View.VISIBLE);

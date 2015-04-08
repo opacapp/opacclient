@@ -4,13 +4,13 @@
     "city": "Niestetal",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.net/niestetal",
-        "information": "http://www.niestetal.de/Buecherei.110.0.html"
+        "baseurl": "http://webopac.winbiap.net/niestetal"
     },
     "geo": [
         51.316667,
         9.566666999999999
     ],
+    "information": "http://www.niestetal.de/Buecherei.110.0.html",
     "state": "Hessen",
     "title": "Gemeindeb\u00fccherei"
 }

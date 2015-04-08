@@ -15,7 +15,6 @@
             "title": 6
         },
         "baseurl": "http://opac.erkrath.de",
-        "information": "http://www.erkrath.de/stadtbuecherei",
         "mediatypes": {
             "1": "BOOK",
             "10": "MAP",
@@ -41,6 +40,7 @@
         51.2213125,
         6.9073473
     ],
+    "information": "http://www.erkrath.de/stadtbuecherei",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }

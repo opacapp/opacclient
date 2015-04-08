@@ -4,13 +4,13 @@
     "city": "Bonn",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://opac.ulb.uni-bonn.de:8080/webOPACClient",
-        "information": "http://www.ulb.uni-bonn.de/"
+        "baseurl": "http://opac.ulb.uni-bonn.de:8080/webOPACClient"
     },
     "geo": [
         50.73743,
         7.0982068
     ],
+    "information": "http://www.ulb.uni-bonn.de/",
     "state": "Nordrhein-Westfalen",
     "title": "Uni- und Landesbibliothek"
 }

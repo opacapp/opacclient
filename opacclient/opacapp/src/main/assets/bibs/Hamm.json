@@ -24,7 +24,6 @@
             "returndate": 2,
             "status": 1
         },
-        "information": "/../read/info.html",
         "reservationtable": {
             "author": 0,
             "availability": -1,
@@ -38,6 +37,7 @@
         51.6738583,
         7.815981600000001
     ],
+    "information": "/../read/info.html",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }

@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://hb063.fh-muenster.de/webOPACClient",
-        "information": "https://www.fh-muenster.de/BIBL/index.php",
         "startparams": "Login=jopacf"
     },
     "geo": [
         51.9606649,
         7.6261347
     ],
+    "information": "https://www.fh-muenster.de/BIBL/index.php",
     "state": "Nordrhein-Westfalen",
     "title": "Fachhochschule"
 }

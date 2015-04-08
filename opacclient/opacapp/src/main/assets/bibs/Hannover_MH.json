@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://opac.tib.uni-hannover.de",
-        "db": "2",
-        "information": "http://www.mh-hannover.de/bibliothek_kontakt.html#c97088"
+        "db": "2"
     },
     "geo": [
         52.3758916,
         9.732010400000002
     ],
+    "information": "http://www.mh-hannover.de/bibliothek_kontakt.html#c97088",
     "state": "Niedersachsen",
     "title": "Medizinische Hochschule"
 }

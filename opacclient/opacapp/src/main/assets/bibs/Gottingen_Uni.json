@@ -6,13 +6,13 @@
     "data": {
         "baseurl": "http://opac.sub.uni-goettingen.de/",
         "db": "1",
-        "httpsbaseurl": "https://opac.sub.uni-goettingen.de/",
-        "information": "http://www.sub.uni-goettingen.de/sub-aktuell/"
+        "httpsbaseurl": "https://opac.sub.uni-goettingen.de/"
     },
     "geo": [
         51.538352,
         9.9296899
     ],
+    "information": "http://www.sub.uni-goettingen.de/sub-aktuell/",
     "state": "Niedersachsen",
     "title": "Unibibliothek"
 }

@@ -24,7 +24,6 @@
             "returndate": 3,
             "status": 2
         },
-        "information": "http://www.hechingen.de/de/Stadtleben/B%C3%BCchereien/Stadtb%C3%BCcherei",
         "reservationtable": {
             "author": 1,
             "availability": 3,
@@ -38,6 +37,7 @@
         48.3538888,
         8.9613627
     ],
+    "information": "http://www.hechingen.de/de/Stadtleben/B%C3%BCchereien/Stadtb%C3%BCcherei",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtb\u00fccherei"
 }

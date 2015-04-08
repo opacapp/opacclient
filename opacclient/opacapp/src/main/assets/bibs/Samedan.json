@@ -4,13 +4,13 @@
     "city": "Samedan",
     "country": "Schweiz",
     "data": {
-        "baseurl": "http://www.winmedio.net/samedan-bever",
-        "information": "http://www.biblioteca-samedan.ch/"
+        "baseurl": "http://www.winmedio.net/samedan-bever"
     },
     "geo": [
         46.4189818,
         9.8607328
     ],
+    "information": "http://www.biblioteca-samedan.ch/",
     "state": "Graub\u00fcnden",
     "title": "Gemeindebibliothek"
 }

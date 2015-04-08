@@ -19,7 +19,6 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "http://www.prenzlau.eu/cms/detail.php/land_bb_boa_01.c.164613.de",
         "mediatypes": {
             "mCasetteS.gif": "AUDIO_CASSETTE",
             "mDVDS.gif": "DVD",
@@ -36,6 +35,7 @@
         53.3173433,
         13.8633409
     ],
+    "information": "http://www.prenzlau.eu/cms/detail.php/land_bb_boa_01.c.164613.de",
     "state": "Brandenburg",
     "title": "Stadtbibliothek"
 }

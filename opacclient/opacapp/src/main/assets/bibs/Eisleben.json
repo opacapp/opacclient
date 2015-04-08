@@ -4,13 +4,13 @@
     "city": "Eisleben",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://medien.mansfeldportal.de",
-        "information": "http://www.mansfeldportal.de/"
+        "baseurl": "http://medien.mansfeldportal.de"
     },
     "geo": [
         51.52742,
         11.5498999
     ],
+    "information": "http://www.mansfeldportal.de/",
     "state": "Sachsen-Anhalt",
     "title": "Regionales Medienzentrum Eisleben"
 }

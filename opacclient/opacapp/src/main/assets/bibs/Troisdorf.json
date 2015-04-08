@@ -24,7 +24,6 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "http://web.troisdorf.de/bibliothek/kontakt.asp?menue=1",
         "reservationtable": {
             "author": -1,
             "availability": 1,
@@ -38,6 +37,7 @@
         50.8177471,
         7.1430246
     ],
+    "information": "http://web.troisdorf.de/bibliothek/kontakt.asp?menue=1",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtbibliothek"
 }

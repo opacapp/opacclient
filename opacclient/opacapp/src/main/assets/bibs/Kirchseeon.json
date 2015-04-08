@@ -4,13 +4,13 @@
     "city": "Kirchseeon",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/kirchseeon",
-        "information": "http://www.kirchseeon.de/index.php?id=0,53"
+        "baseurl": "http://webopac.winbiap.de/kirchseeon"
     },
     "geo": [
         48.0719266,
         11.8881543
     ],
+    "information": "http://www.kirchseeon.de/index.php?id=0,53",
     "state": "Bayern",
     "title": "Gemeindeb\u00fccherei"
 }

@@ -17,7 +17,6 @@
             "returndate": 4,
             "status": 3
         },
-        "information": "http://www.doebeln.de/main.php?seitenid=246",
         "mediatypes": {
             "cdkl.gif": "CD",
             "dvdkl.gif": "DVD",
@@ -37,6 +36,7 @@
         51.1229322,
         13.1167196
     ],
+    "information": "http://www.doebeln.de/main.php?seitenid=246",
     "state": "Sachsen",
     "title": "Stadtbibliothek"
 }

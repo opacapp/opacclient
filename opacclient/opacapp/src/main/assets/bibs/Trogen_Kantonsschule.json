@@ -4,9 +4,9 @@
     "city": "Trogen",
     "country": "Schweiz",
     "data": {
-        "baseurl": "http://www.winmedio.net/kstrogen",
-        "information": "http://www.kst.ch/index.php?medio-aktuell"
+        "baseurl": "http://www.winmedio.net/kstrogen"
     },
+    "information": "http://www.kst.ch/index.php?medio-aktuell",
     "state": "Appenzell Ausserrhoden",
     "title": "Mediothek Kantonsschule"
 }

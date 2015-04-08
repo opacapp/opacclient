@@ -4,13 +4,13 @@
     "city": "K\u00f6sching",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/koesching",
-        "information": "http://www.koesching.de/Bildung/Buecherei.aspx"
+        "baseurl": "http://webopac.winbiap.de/koesching"
     },
     "geo": [
         48.8126389,
         11.5004614
     ],
+    "information": "http://www.koesching.de/Bildung/Buecherei.aspx",
     "state": "Bayern",
     "title": "Gemeindeb\u00fccherei"
 }

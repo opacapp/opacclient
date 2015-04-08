@@ -4,13 +4,13 @@
     "city": "Senden (Bayern)",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/senden",
-        "information": "http://www.josef-senden.de/index.php?g=einrichtungen-stadtbuecherei"
+        "baseurl": "http://webopac.winbiap.de/senden"
     },
     "geo": [
         48.3255759,
         10.04927
     ],
+    "information": "http://www.josef-senden.de/index.php?g=einrichtungen-stadtbuecherei",
     "state": "Bayern",
     "title": "Stadtb\u00fccherei"
 }

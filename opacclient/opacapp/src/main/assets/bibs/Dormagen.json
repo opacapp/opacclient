@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://webopac.itk-rheinland.de/aDISWeb/app",
-        "information": "http://www.dormagen.de/879.html",
         "startparams": "service=direct/0/Home/%24DirectLink&sp=S127.0.0.1:23032"
     },
     "geo": [
         51.09368509999999,
         6.828911199999999
     ],
+    "information": "http://www.dormagen.de/879.html",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtbibliothek"
 }

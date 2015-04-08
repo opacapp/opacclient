@@ -19,7 +19,6 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "http://www.bibliothek.niesky.de/",
         "mediatypes": {
             "mCasetteS.gif": "AUDIO_CASSETTE",
             "mDVDS.gif": "DVD",
@@ -36,6 +35,7 @@
         51.2931501,
         14.8311719
     ],
+    "information": "http://www.bibliothek.niesky.de/",
     "state": "Sachsen",
     "title": "Stadtbibliothek"
 }

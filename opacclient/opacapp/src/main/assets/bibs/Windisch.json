@@ -4,13 +4,13 @@
     "city": "Windisch",
     "country": "Schweiz",
     "data": {
-        "baseurl": "http://www.winmedio.net/windisch",
-        "information": "http://www.windisch.ch/de/tourismus/bibliothek/"
+        "baseurl": "http://www.winmedio.net/windisch"
     },
     "geo": [
         47.4779,
         8.21669
     ],
+    "information": "http://www.windisch.ch/de/tourismus/bibliothek/",
     "state": "Aargau",
     "title": "Gemeinde- und Schulbibliothek"
 }

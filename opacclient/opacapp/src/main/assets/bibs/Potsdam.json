@@ -24,7 +24,6 @@
             "returndate": -1,
             "status": 4
         },
-        "information": "http://www.bibliothek.potsdam.de/oeffnungszeiten",
         "mediatypes": {
             "1": "BOOK",
             "10": "MAP",
@@ -54,6 +53,7 @@
         52.3905689,
         13.0644729
     ],
+    "information": "http://www.bibliothek.potsdam.de/oeffnungszeiten",
     "state": "Brandenburg",
     "title": "Stadt- und Landesbibliothek"
 }

@@ -20,7 +20,6 @@
             "status": 3
         },
         "db": "buende",
-        "information": "http://www.buende.de/index.phtml?sNavID=608.139&mNavID=608.9&La=1",
         "mediatypes": {
             "cdkl.gif": "CD_SOFTWARE",
             "dvdkl.gif": "DVD",
@@ -39,6 +38,7 @@
         52.1982222,
         8.5832333
     ],
+    "information": "http://www.buende.de/index.phtml?sNavID=608.139&mNavID=608.9&La=1",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }

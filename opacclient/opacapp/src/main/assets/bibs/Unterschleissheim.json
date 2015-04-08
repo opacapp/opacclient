@@ -4,13 +4,13 @@
     "city": "Unterschlei\u00dfheim",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.net/unterschleissheim",
-        "information": "http://www.forum-unterschleissheim.de/bibliothek/"
+        "baseurl": "http://webopac.winbiap.net/unterschleissheim"
     },
     "geo": [
         48.28411999999999,
         11.5672
     ],
+    "information": "http://www.forum-unterschleissheim.de/bibliothek/",
     "state": "Bayern",
     "title": "Stadtbibliothek"
 }

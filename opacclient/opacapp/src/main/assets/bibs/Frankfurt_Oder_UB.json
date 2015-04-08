@@ -4,13 +4,13 @@
     "city": "Frankfurt (Oder)",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://saturn2.euv-frankfurt-o.de:8080/webOPACClient",
-        "information": "http://www.ub.europa-uni.de/de/index.html"
+        "baseurl": "http://saturn2.euv-frankfurt-o.de:8080/webOPACClient"
     },
     "geo": [
         52.342491,
         14.53813
     ],
+    "information": "http://www.ub.europa-uni.de/de/index.html",
     "state": "Brandenburg",
     "title": "Europa-Universit\u00e4t"
 }

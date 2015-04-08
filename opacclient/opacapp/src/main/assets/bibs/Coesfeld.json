@@ -24,7 +24,6 @@
             "returndate": 1,
             "status": 0
         },
-        "information": "http://stadtbuecherei.coesfeld.de/",
         "reservationtable": {
             "author": 0,
             "availability": -1,
@@ -38,6 +37,7 @@
         51.9382944,
         7.1675831
     ],
+    "information": "http://stadtbuecherei.coesfeld.de/",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }

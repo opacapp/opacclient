@@ -24,7 +24,6 @@
             "returndate": 6,
             "status": 5
         },
-        "information": "http://www.bibliothek.hattingen.de/oeffnungszeiten.php",
         "mediatypes": {
             "Film30.gif": "DVD",
             "Hoerbuch30.gif": "AUDIOBOOK",
@@ -55,6 +54,7 @@
         51.4018117,
         7.1911567
     ],
+    "information": "http://www.bibliothek.hattingen.de/oeffnungszeiten.php",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtbibliothek"
 }

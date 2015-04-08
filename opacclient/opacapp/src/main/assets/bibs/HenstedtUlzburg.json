@@ -4,13 +4,13 @@
     "city": "Henstedt-Ulzburg",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://iopac-hu.dyndns.org",
-        "information": "http://iopac-hu.dyndns.org/"
+        "baseurl": "http://iopac-hu.dyndns.org"
     },
     "geo": [
         53.7905005,
         9.9804997
     ],
+    "information": "http://iopac-hu.dyndns.org/",
     "state": "Schleswig-Holstein",
     "title": "Gemeindeb\u00fccherei und -mediothek"
 }

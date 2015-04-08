@@ -25,7 +25,6 @@
             "status": 3
         },
         "db": "cast",
-        "information": "http://www.castrop-rauxel.de/Stadtinformation_Kultur_Freizeit_und_Sport/Kultur/Stadtbibliothek/autostart.asp?B_highmain=2&B_highsub=3&B_highsubsub=0",
         "mediatypes": {
             "EAusakl.gif": "MP3",
             "EAusbkl.gif": "EBOOK",
@@ -68,6 +67,7 @@
         51.5632625,
         7.3150145
     ],
+    "information": "http://www.castrop-rauxel.de/Stadtinformation_Kultur_Freizeit_und_Sport/Kultur/Stadtbibliothek/autostart.asp?B_highmain=2&B_highsub=3&B_highsubsub=0",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }

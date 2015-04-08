@@ -5,13 +5,13 @@
     "country": "\u00d6sterreich",
     "data": {
         "baseurl": "http://buechersuche.akktn.at/webOPACClient",
-        "information": "http://www.klagenfurt.at/klagenfurt-am-woerthersee/bibliotheken-3251.asp",
         "startparams": "Login=klagenfur"
     },
     "geo": [
         46.62794,
         14.30899
     ],
+    "information": "http://www.klagenfurt.at/klagenfurt-am-woerthersee/bibliotheken-3251.asp",
     "state": "K\u00e4rnten",
     "title": "AK Bibliothek"
 }

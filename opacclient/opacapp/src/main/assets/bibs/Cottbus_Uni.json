@@ -4,13 +4,13 @@
     "city": "Cottbus",
     "country": "Deutschland",
     "data": {
-        "baseurl": "https://katalog.ub.b-tu.de/InfoGuideClient.btusis",
-        "information": "http://www.tu-cottbus.de/einrichtungen/de/ikmz/servicebereiche/bibliothek/"
+        "baseurl": "https://katalog.ub.b-tu.de/InfoGuideClient.btusis"
     },
     "geo": [
         51.75631079999999,
         14.3328679
     ],
+    "information": "http://www.tu-cottbus.de/einrichtungen/de/ikmz/servicebereiche/bibliothek/",
     "state": "Brandenburg",
     "title": "Unibibliothek"
 }

@@ -19,7 +19,6 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "http://www.buecherei-stadtlohn.de/",
         "mediatypes": {
             "Buchklein.GIF": "BOOK",
             "CD-ROMklein.GIF": "CD_SOFTWARE",
@@ -70,6 +69,7 @@
         51.99209090000001,
         6.913797199999999
     ],
+    "information": "http://www.buecherei-stadtlohn.de/",
     "state": "Nordrhein-Westfalen",
     "title": "\u00d6ffentliche B\u00fccherei St. Otger"
 }

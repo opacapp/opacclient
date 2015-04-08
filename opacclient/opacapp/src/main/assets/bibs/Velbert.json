@@ -25,7 +25,6 @@
             "status": 3
         },
         "db": "ve",
-        "information": "http://www.stadtbuecherei.velbert.de/default.asp",
         "reservationtable": {
             "author": 0,
             "availability": 2,
@@ -39,6 +38,7 @@
         51.33707030000001,
         7.0426775
     ],
+    "information": "http://www.stadtbuecherei.velbert.de/default.asp",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }

@@ -24,7 +24,6 @@
             "returndate": 4,
             "status": 3
         },
-        "information": "http://www.mainz.de/WGAPublisher/online/html/default/bibliotheken",
         "mediatypes": {
             "mp.gif": "PACKAGE"
         },
@@ -41,6 +40,7 @@
         49.9928617,
         8.2472526
     ],
+    "information": "http://www.mainz.de/WGAPublisher/online/html/default/bibliotheken",
     "state": "Rheinland-Pfalz",
     "title": "Anna Seghers"
 }

@@ -4,13 +4,13 @@
     "city": "Gerbrunn",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/gerbrunn",
-        "information": "http://www.gerbrunn.de/Buecherei.44.0.html"
+        "baseurl": "http://webopac.winbiap.de/gerbrunn"
     },
     "geo": [
         49.7811081,
         9.9861364
     ],
+    "information": "http://www.gerbrunn.de/Buecherei.44.0.html",
     "state": "Bayern",
     "title": "Gemeindeb\u00fccherei"
 }

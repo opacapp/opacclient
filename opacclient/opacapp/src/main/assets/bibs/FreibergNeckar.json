@@ -4,13 +4,13 @@
     "city": "Freiberg am Neckar",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/freiberg",
-        "information": "http://stadtbibliothek-freiberg.de/"
+        "baseurl": "http://webopac.winbiap.de/freiberg"
     },
     "geo": [
         48.9334303,
         9.1992433
     ],
+    "information": "http://stadtbibliothek-freiberg.de/",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtbibliothek"
 }

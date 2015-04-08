@@ -25,7 +25,6 @@
             "status": 2
         },
         "db": "Papenburg",
-        "information": "http://www.medienstelle-osnabrueck.de/txt.3/index.html",
         "reservationtable": {
             "author": 1,
             "availability": -1,
@@ -39,6 +38,7 @@
         53.0726142,
         7.4232678
     ],
+    "information": "http://www.medienstelle-osnabrueck.de/txt.3/index.html",
     "state": "Niedersachsen",
     "title": "Medienstelle RPA"
 }
