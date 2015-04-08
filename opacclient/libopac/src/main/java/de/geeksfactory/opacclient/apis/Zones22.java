@@ -448,7 +448,7 @@ public class Zones22 extends BaseApi {
             // data in a standardized format.
             String z3988data = doc.select("span.z3988").first().attr("title")
                                   .trim();
-            for (String pair : z3988data.split("\\&")) {
+            for (String pair : z3988data.split("&")) {
                 String[] nv = pair.split("=", 2);
                 if (nv.length == 2) {
                     if (!nv[1].trim().equals("")) {

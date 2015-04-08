@@ -850,14 +850,28 @@ public class TouchPoint extends BaseApi implements OpacApi {
         }
         adata.setLent(lent);
 
-        // Reserved media
-        html = httpGet(
-                opac_url
-                        + "/userAccount.do?methodToCall=showAccount&accountTyp=requested",
+        // Requested media ("Vormerkungen")
+        html = httpGet(opac_url + "/userAccount.do?methodToCall=showAccount&accountTyp=requested",
                 ENCODING);
         doc = Jsoup.parse(html);
         doc.setBaseUri(opac_url);
         List<Map<String, String>> requested = new ArrayList<>();
+        parse_reslist(requested, doc);
+        if (doc.select(".pagination").size() > 0) {
+            Element pagination = doc.select(".pagination").first();
+            Elements pages = pagination.select("a");
+            for (int i = 0; i < pages.size(); i++) {
+                html = httpGet(pages.get(i).attr("abs:href"), ENCODING);
+                doc = Jsoup.parse(html);
+                parse_reslist(requested, doc);
+            }
+        }
+
+        // Ordered media ("Bestellungen")
+        html = httpGet(opac_url + "/userAccount.do?methodToCall=showAccount&accountTyp=ordered",
+                ENCODING);
+        doc = Jsoup.parse(html);
+        doc.setBaseUri(opac_url);
         parse_reslist(requested, doc);
         if (doc.select(".pagination").size() > 0) {
             Element pagination = doc.select(".pagination").first();
@@ -985,7 +999,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 
                 if (rowsplit3.length > 2) {
                     e.put(AccountData.KEY_RESERVATION_READY,
-                            rowsplit3[0].trim());
+                            rowsplit3[0].trim() + " (" + rowsplit3[1].trim() + ")");
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();

@@ -61,7 +61,7 @@ import de.geeksfactory.opacclient.storage.SearchFieldDataSource;
 
 public class SearchFragment extends Fragment implements AccountSelectedListener {
     protected SharedPreferences sp;
-    protected Callback mCallback;
+    protected Callback callback;
     protected View view;
     protected OpacClient app;
     protected Bundle savedState;
@@ -279,7 +279,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                     @Override
                     public void onClick(View arg0) {
                         barcodeScanningField = field.getId();
-                        mCallback.scanBarcode();
+                        callback.scanBarcode();
                     }
                 });
                 if (((BarcodeSearchField) field).isHalfWidth()
@@ -672,7 +672,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mCallback = (Callback) activity;
+            callback = (Callback) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement SearchFragment.Callback");

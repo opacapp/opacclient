@@ -47,7 +47,7 @@ public class SearchResultListActivity extends OpacActivity implements
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet device.
      */
-    protected boolean mTwoPane;
+    protected boolean twoPane;
 
     protected SearchResultListFragment listFragment;
     protected SearchResultDetailFragment detailFragment;
@@ -68,7 +68,7 @@ public class SearchResultListActivity extends OpacActivity implements
             // large-screen layouts (res/values-large and
             // res/values-sw600dp). If this view is present, then the
             // activity should be in two-pane mode.
-            mTwoPane = true;
+            twoPane = true;
         }
     }
 
@@ -135,7 +135,7 @@ public class SearchResultListActivity extends OpacActivity implements
             smallCover = cover;
         }
 
-        if (mTwoPane) {
+        if (twoPane) {
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
             // fragment transaction.
@@ -173,6 +173,7 @@ public class SearchResultListActivity extends OpacActivity implements
             if (res.getCoverBitmap() != null) {
                 detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP,
                         smallCover);
+                @SuppressWarnings("unchecked")
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         this,
                         new Pair<>(coverView, getString(R.string.transition_cover)),
@@ -197,7 +198,7 @@ public class SearchResultListActivity extends OpacActivity implements
 
     @Override
     public boolean isTwoPane() {
-        return mTwoPane;
+        return twoPane;
     }
 
     public class ReloadOldPageTask extends AsyncTask<Void, Void, SearchRequestResult> {

@@ -34,6 +34,7 @@ import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.SSLSecurityException;
 import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult.Status;
 import de.geeksfactory.opacclient.i18n.StringProvider;
+import de.geeksfactory.opacclient.networking.HttpUtils;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -165,7 +166,7 @@ public class Adis extends BaseApi implements OpacApi {
         }
         String html = convertStreamToString(response.getEntity().getContent(),
                 getDefaultEncoding());
-        response.getEntity().consumeContent();
+        HttpUtils.consume(response.getEntity());
         Document doc = Jsoup.parse(html);
         Pattern patRequestCount = Pattern.compile("requestCount=([0-9]+)");
         for (Element a : doc.select("a")) {
@@ -228,7 +229,7 @@ public class Adis extends BaseApi implements OpacApi {
         }
         String html = convertStreamToString(response.getEntity().getContent(),
                 getDefaultEncoding());
-        response.getEntity().consumeContent();
+        HttpUtils.consume(response.getEntity());
         Document doc = Jsoup.parse(html);
         Pattern patRequestCount = Pattern
                 .compile(".*requestCount=([0-9]+)[^0-9].*");

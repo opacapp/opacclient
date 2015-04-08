@@ -56,6 +56,7 @@ import java.util.regex.Pattern;
 
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.i18n.StringProvider;
+import de.geeksfactory.opacclient.networking.HttpUtils;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -1172,7 +1173,7 @@ public class Bibliotheca extends BaseApi {
 
         if (response.getStatusLine().getStatusCode() == 200) {
             // Needs login
-            response.getEntity().consumeContent();
+            HttpUtils.consume(response.getEntity());
             nameValuePairs = new ArrayList<>(2);
             nameValuePairs
                     .add(new BasicNameValuePair("AUSWEIS", acc.getName()));
@@ -1185,7 +1186,7 @@ public class Bibliotheca extends BaseApi {
                     nameValuePairs), getDefaultEncoding());
         } else if (response.getStatusLine().getStatusCode() == 302) {
             // Already logged in
-            response.getEntity().consumeContent();
+            HttpUtils.consume(response.getEntity());
             html = httpGet(opac_url + "/index.asp?target=konto",
                     getDefaultEncoding());
         } else if (response.getStatusLine().getStatusCode() == 500) {
@@ -1256,7 +1257,7 @@ public class Bibliotheca extends BaseApi {
             HttpGet httpget = new HttpGet(url.substring(0,
                     url.lastIndexOf("/") + 1)
                     + response.getFirstHeader("Location").getValue());
-            response.getEntity().consumeContent();
+            HttpUtils.consume(response.getEntity());
             response = http_client.execute(httpget);
         }
         return convertStreamToString(response.getEntity().getContent(),

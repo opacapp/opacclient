@@ -913,8 +913,8 @@ public class SISIS extends BaseApi implements OpacApi {
                 } else {
                     statustext = status.text().trim();
                 }
-                if (copy_columnmap.get(DetailledItem.KEY_COPY_STATUS) == copy_columnmap
-                        .get(DetailledItem.KEY_COPY_BARCODE)) {
+                if (copy_columnmap.get(DetailledItem.KEY_COPY_STATUS).equals(copy_columnmap
+                        .get(DetailledItem.KEY_COPY_BARCODE))) {
                     Matcher matcher1 = status_and_barcode.matcher(statustext);
                     if (matcher1.matches()) {
                         statustext = matcher1.group(1);

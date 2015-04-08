@@ -31,29 +31,28 @@ import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 
 /**
- * If an {@link OpacApi} implementation also implements this interface, the
- * library can be used to download ebooks directly inside the app. This is
- * currently NOT implemented or used in the open source version and is more like
- * a bridge between the "Community Edition" and the "Plus Edition" of the App.
+ * If an {@link OpacApi} implementation also implements this interface, the library can be used to
+ * download ebooks directly inside the app. This is currently NOT implemented or used in the open
+ * source version and is more like a bridge between the "Community Edition" and the "Plus Edition"
+ * of the App.
  *
  * @author Raphael Michel
  */
+@SuppressWarnings("RedundantThrows")
 public interface EbookServiceApi {
 
     /**
-     * Proxy for the {@link OpacApi#account(Account)} feature, adding ebook
-     * entries.
+     * Proxy for the {@link OpacApi#account(Account)} feature, adding ebook entries.
      */
     public AccountData account(Account account) throws IOException,
             JSONException, OpacErrorException;
 
     /**
-     * Book an electronical item identified by booking_info to the users
-     * account. booking_info is what you returned in your DetailledItem object
-     * in your getResult hook.
+     * Book an electronical item identified by booking_info to the users account. booking_info is
+     * what you returned in your DetailledItem object in your getResult hook.
      */
     public BookingResult booking(DetailledItem item, Account account,
-                                 int useraction, String selection) throws IOException,
+            int useraction, String selection) throws IOException,
             OpacErrorException;
 
     /**
@@ -62,16 +61,16 @@ public interface EbookServiceApi {
     public boolean isEbook(DetailledItem item);
 
     /**
-     * Download the item identified by item_id. Returns an URL where the item
-     * can be downloaded from.
+     * Download the item identified by item_id. Returns an URL where the item can be downloaded
+     * from.
      */
     public String downloadItem(Account account, String item_id);
 
     /**
-     * The result of a
-     * {@link EbookServiceApi#booking(DetailledItem, Account, int, String)}
-     * call. The structure of the call and response is similar to
-     * {@link OpacApi#reservation(DetailledItem, Account, int, String)}.
+     * The result of a {@link EbookServiceApi#booking(DetailledItem, Account, int, String)} call.
+     * The structure of the call and response is similar to {@link OpacApi#reservation
+     * (DetailledItem,
+     * Account, int, String)}.
      */
     public class BookingResult extends OpacApi.MultiStepResult {
 

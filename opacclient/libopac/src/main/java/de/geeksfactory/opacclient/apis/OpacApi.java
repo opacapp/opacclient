@@ -324,7 +324,7 @@ public interface OpacApi {
      * @see de.geeksfactory.opacclient.objects.Filter
      * @since 2.0.6
      */
-    @SuppressWarnings("SameReturnValue") // Plus Edition compatibility
+    @SuppressWarnings({"SameReturnValue", "RedundantThrows"}) // Plus Edition compatibility
     public SearchRequestResult filterResults(Filter filter, Filter.Option option)
             throws IOException, OpacErrorException;
 
@@ -498,7 +498,7 @@ public interface OpacApi {
             JSONException, OpacErrorException;
 
     /**
-     * Returns a list of search criterias which are supported by this OPAC and should be visible in
+     * Returns a list of search criteria which are supported by this OPAC and should be visible in
      * the search activity. Values should be instances of subclasses of the abstract SearchField
      * class. This is called asynchronously, so you can load webpages to get the search fields, but
      * you should save them to the metadata afterwards to make it faster.
@@ -508,6 +508,7 @@ public interface OpacApi {
      * @throws JSONException
      * @see #search
      */
+    @SuppressWarnings("RedundantThrows")
     public List<SearchField> getSearchFields() throws IOException,
             OpacErrorException, JSONException;
 
@@ -584,11 +585,11 @@ public interface OpacApi {
     /**
      * Get all languages supported by this library. This will be a Set of language codes defined in
      * ISO-639-1 (two-letter codes in lower case, see <a href="http://en.wikipedia
-     * .org/wiki/List_of_ISO_639-1_codes">this
-     * list</a>). We don't need to use this function in the app because the API will automatically
-     * fall back if the language set is not supported, but it is used in the MeaningDetector tool to
-     * get search fields for all supported languages. This function may use blocking network
-     * operations and may return null if the API doesn't support different languages.
+     * .org/wiki/List_of_ISO_639-1_codes">this list</a>). We don't need to use this function in the
+     * app because the API will automatically fall back if the language set is not supported, but it
+     * is used in the MeaningDetector tool to get search fields for all supported languages. This
+     * function may use blocking network operations and may return null if the API doesn't support
+     * different languages.
      *
      * @throws IOException
      */
@@ -597,10 +598,9 @@ public interface OpacApi {
     /**
      * Set the language to use. This should be one of the language codes defined in ISO-639-1
      * (two-letter codes in lower case, see <a href="http://en.wikipedia
-     * .org/wiki/List_of_ISO_639-1_codes">this
-     * list</a>). The API should use the default language of the library if this is not called and
-     * should fall back first to English and then to the library's default language if the requested
-     * language is not available.
+     * .org/wiki/List_of_ISO_639-1_codes">this list</a>). The API should use the default language of
+     * the library if this is not called and should fall back first to English and then to the
+     * library's default language if the requested language is not available.
      *
      * @param language the language to use
      */

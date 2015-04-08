@@ -5,4 +5,7 @@
         <ignore path="src/de/geeksfactory/opacclient/frontend/AccountActivity.java" />
         <ignore path="src/de/geeksfactory/opacclient/frontend/SearchActivity.java" />
     </issue>
+    <issue id="all">
+        <ignore path="*/Thumbs.db"/>
+    </issue>
 </lint>

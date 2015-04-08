@@ -23,6 +23,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import java.util.List;
 import java.util.Map;
 
 import de.geeksfactory.opacclient.R;
@@ -41,7 +42,7 @@ public class MultiStepResultHelper<Arg> {
     protected AlertDialog adialog;
 
     public MultiStepResultHelper(Activity context, Arg argument,
-                                 int loadingstring) {
+            int loadingstring) {
         super();
         this.context = context;
         this.argument = argument;
@@ -179,18 +180,15 @@ public class MultiStepResultHelper<Arg> {
         View view = inflater.inflate(R.layout.dialog_simple_list, null, false);
 
         ListView lv = (ListView) view.findViewById(R.id.lvBibs);
-        final Object[] possibilities = result.getSelection().toArray();
 
-        lv.setAdapter(new SelectionAdapter(context, possibilities));
+        lv.setAdapter(new SelectionAdapter(context, result.getSelection()));
         lv.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
+                    int position, long id) {
                 adialog.dismiss();
-
                 doStep(result.getActionIdentifier(),
-                        ((Map<String, String>) possibilities[position])
-                                .get("key"));
+                        result.getSelection().get(position).get("key"));
             }
         });
 
@@ -255,11 +253,11 @@ public class MultiStepResultHelper<Arg> {
         }
     }
 
-    public static class SelectionAdapter extends ArrayAdapter<Object> {
+    public static class SelectionAdapter extends ArrayAdapter<Map<String, String>> {
 
-        private Object[] objects;
+        private List<Map<String, String>> objects;
 
-        public SelectionAdapter(Context context, Object[] objects) {
+        public SelectionAdapter(Context context, List<Map<String, String>> objects) {
             super(context, R.layout.simple_spinner_item, objects);
             this.objects = objects;
         }
@@ -268,22 +266,19 @@ public class MultiStepResultHelper<Arg> {
         public View getView(int position, View contentView, ViewGroup viewGroup) {
             View view;
 
-            if (objects[position] == null) {
+            if (objects.get(position) == null) {
                 LayoutInflater layoutInflater = (LayoutInflater) getContext()
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                view = layoutInflater.inflate(R.layout.listitem_branch,
-                        viewGroup, false);
+                view = layoutInflater.inflate(R.layout.listitem_branch, viewGroup, false);
                 return view;
             }
 
-            String item = ((Map<String, String>) objects[position])
-                    .get("value");
+            String item = objects.get(position).get("value");
 
             if (contentView == null) {
                 LayoutInflater layoutInflater = (LayoutInflater) getContext()
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                view = layoutInflater.inflate(R.layout.listitem_branch,
-                        viewGroup, false);
+                view = layoutInflater.inflate(R.layout.listitem_branch, viewGroup, false);
             } else {
                 view = contentView;
             }

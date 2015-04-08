@@ -57,6 +57,7 @@ import de.geeksfactory.opacclient.SSLSecurityException;
 import de.geeksfactory.opacclient.i18n.DummyStringProvider;
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.networking.HTTPClient;
+import de.geeksfactory.opacclient.networking.HttpUtils;
 import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
@@ -112,7 +113,7 @@ public abstract class BaseApi implements OpacApi {
      * Reads content from an InputStream into a string
      *
      * @param is         InputStream to read from
-     * @Param encoding   the encoding to use
+     * @param encoding   the encoding to use
      * @return String content of the InputStream
      */
     protected static String convertStreamToString(InputStream is,
@@ -281,13 +282,13 @@ public abstract class BaseApi implements OpacApi {
             }
 
             if (!ignore_errors && response.getStatusLine().getStatusCode() >= 400) {
-                response.getEntity().consumeContent();
+                HttpUtils.consume(response.getEntity());
                 throw new NotReachableException();
             }
 
             html = convertStreamToString(response.getEntity().getContent(),
                     encoding);
-            response.getEntity().consumeContent();
+            HttpUtils.consume(response.getEntity());
         } catch (javax.net.ssl.SSLPeerUnverifiedException e) {
             throw new SSLSecurityException();
         } catch (javax.net.ssl.SSLException e) {
@@ -402,7 +403,7 @@ public abstract class BaseApi implements OpacApi {
             }
             html = convertStreamToString(response.getEntity().getContent(),
                     encoding);
-            response.getEntity().consumeContent();
+            HttpUtils.consume(response.getEntity());
         } catch (javax.net.ssl.SSLPeerUnverifiedException e) {
             throw new SSLSecurityException();
         } catch (javax.net.ssl.SSLException e) {

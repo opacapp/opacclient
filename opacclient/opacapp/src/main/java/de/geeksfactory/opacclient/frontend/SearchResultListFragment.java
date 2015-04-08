@@ -69,7 +69,7 @@ public class SearchResultListFragment extends CustomListFragment {
      * A dummy implementation of the {@link Callbacks} interface that does nothing. Used only when
      * this fragment is not attached to an activity.
      */
-    private static Callbacks sDummyCallbacks = new Callbacks() {
+    private static Callbacks dummyCallbacks = new Callbacks() {
         @Override
         public void onItemSelected(SearchResult result, View coverView) {
         }
@@ -81,12 +81,12 @@ public class SearchResultListFragment extends CustomListFragment {
     /**
      * The fragment's current callback object, which is notified of list item clicks.
      */
-    protected Callbacks mCallbacks = sDummyCallbacks;
+    protected Callbacks callbacks = dummyCallbacks;
     public ResultsAdapterEndless adapter;
     /**
      * The current activated item position. Only used on tablets.
      */
-    protected int mActivatedPosition = ListView.INVALID_POSITION;
+    protected int activatedPosition = ListView.INVALID_POSITION;
     protected SearchRequestResult searchresult;
     protected OpacClient app;
     protected int lastLoadedPage;
@@ -193,7 +193,7 @@ public class SearchResultListFragment extends CustomListFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        setActivateOnItemClick(mCallbacks.isTwoPane());
+        setActivateOnItemClick(callbacks.isTwoPane());
 
         // Restore the previously serialized activated item position.
         if (savedInstanceState != null
@@ -224,7 +224,7 @@ public class SearchResultListFragment extends CustomListFragment {
                     "Activity must implement fragment's callbacks.");
         }
 
-        mCallbacks = (Callbacks) activity;
+        callbacks = (Callbacks) activity;
         app = (OpacClient) activity.getApplication();
     }
 
@@ -233,7 +233,7 @@ public class SearchResultListFragment extends CustomListFragment {
         super.onDetach();
 
         // Reset the active callbacks interface to the dummy implementation.
-        mCallbacks = sDummyCallbacks;
+        callbacks = dummyCallbacks;
     }
 
     @Override
@@ -245,7 +245,7 @@ public class SearchResultListFragment extends CustomListFragment {
 
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
-        mCallbacks.onItemSelected(searchresult.getResults().get(position),
+        callbacks.onItemSelected(searchresult.getResults().get(position),
                 view.findViewById(R.id.ivType));
 
     }
@@ -253,9 +253,9 @@ public class SearchResultListFragment extends CustomListFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (mActivatedPosition != AdapterView.INVALID_POSITION) {
+        if (activatedPosition != AdapterView.INVALID_POSITION) {
             // Serialize and persist the activated item position.
-            outState.putInt(STATE_ACTIVATED_POSITION, mActivatedPosition);
+            outState.putInt(STATE_ACTIVATED_POSITION, activatedPosition);
         }
     }
 
@@ -273,12 +273,12 @@ public class SearchResultListFragment extends CustomListFragment {
 
     private void setActivatedPosition(int position) {
         if (position == AdapterView.INVALID_POSITION) {
-            getListView().setItemChecked(mActivatedPosition, false);
+            getListView().setItemChecked(activatedPosition, false);
         } else {
             getListView().setItemChecked(position, true);
         }
 
-        mActivatedPosition = position;
+        activatedPosition = position;
     }
 
     public void setSearchResult(SearchRequestResult searchresult) {

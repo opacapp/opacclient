@@ -89,7 +89,7 @@ public abstract class OpacActivity extends ActionBarActivity {
     protected DrawerLayout drawerLayout;
     protected ActionBarDrawerToggle drawerToggle;
     protected FloatingActionButton fab;
-    protected CharSequence mTitle;
+    protected CharSequence title;
 
     protected List<Account> accounts;
 
@@ -177,7 +177,7 @@ public abstract class OpacActivity extends ActionBarActivity {
                         @Override
                         public void onDrawerClosed(View view) {
                             super.onDrawerClosed(view);
-                            getSupportActionBar().setTitle(mTitle);
+                            getSupportActionBar().setTitle(title);
                         }
 
                         /** Called when a drawer has settled in a completely open state. */
@@ -464,7 +464,7 @@ public abstract class OpacActivity extends ActionBarActivity {
     @Override
     public void setTitle(CharSequence title) {
         super.setTitle(title);
-        mTitle = title;
+        this.title = title;
     }
 
     protected void deselectItemsByType(int type) {
@@ -631,8 +631,8 @@ public abstract class OpacActivity extends ActionBarActivity {
             getSupportFragmentManager().putFragment(outState, "fragment",
                     fragment);
         }
-        if (mTitle != null) {
-            outState.putCharSequence("title", mTitle);
+        if (title != null) {
+            outState.putCharSequence("title", title);
         }
     }
 

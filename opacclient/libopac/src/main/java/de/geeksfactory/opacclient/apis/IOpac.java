@@ -22,9 +22,7 @@
 package de.geeksfactory.opacclient.apis;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -101,19 +99,15 @@ public class IOpac extends BaseApi implements OpacApi {
     protected String opac_url = "";
     protected String dir = "/iopac";
     protected JSONObject data;
-    protected Library library;
-    protected int resultcount = 10;
     protected String reusehtml;
     protected String rechnr;
     protected int results_total;
     protected int maxProlongCount = -1;
-    CookieStore cookieStore = new BasicCookieStore();
 
     @Override
     public void init(Library lib) {
         super.init(lib);
 
-        this.library = lib;
         this.data = lib.getData();
 
         try {
@@ -377,7 +371,6 @@ public class IOpac extends BaseApi implements OpacApi {
 
             results.add(sr);
         }
-        resultcount = results.size();
         return new SearchRequestResult(results, results_total, page);
     }
 
