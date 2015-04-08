@@ -2,8 +2,6 @@ apply plugin: 'java'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    // Use older httpclient version to have an environment equivalent to the android platform
-    //noinspection GradleDependency
     compile 'org.apache.httpcomponents:httpclient:4.3.6'
     compile 'org.bouncycastle:bcprov-jdk16:1.46'
 }

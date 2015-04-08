@@ -26,7 +26,6 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,6 +50,7 @@ import java.util.regex.Pattern;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.networking.HTTPClient;
+import de.geeksfactory.opacclient.networking.HttpUtils;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -159,7 +159,7 @@ public class BiBer1992 extends BaseApi {
             throw new NotReachableException();
         }
         String html = convertStreamToString(response.getEntity().getContent());
-        EntityUtils.consume(response.getEntity());
+        HttpUtils.consume(response.getEntity());
 
         Document doc = Jsoup.parse(html);
 
@@ -524,7 +524,7 @@ public class BiBer1992 extends BaseApi {
         HttpResponse response = http_client.execute(httpget);
 
         String html = convertStreamToString(response.getEntity().getContent());
-        EntityUtils.consume(response.getEntity());
+        HttpUtils.consume(response.getEntity());
 
         return parse_result(html);
     }
