@@ -443,9 +443,9 @@ public class SearchResultDetailFragment extends Fragment
                             ((TextView) v.findViewById(R.id.tvBranch))
                                     .setText(copy
                                             .get(DetailledItem.KEY_COPY_BRANCH));
-                            v.findViewById(R.id.llBranch).setVisibility(View.VISIBLE);
+                            v.findViewById(R.id.tvBranch).setVisibility(View.VISIBLE);
                         } else {
-                            v.findViewById(R.id.llBranch).setVisibility(View.GONE);
+                            v.findViewById(R.id.tvBranch).setVisibility(View.GONE);
                         }
                     }
                     if (v.findViewById(R.id.tvDepartment) != null) {
@@ -453,9 +453,9 @@ public class SearchResultDetailFragment extends Fragment
                             ((TextView) v.findViewById(R.id.tvDepartment))
                                     .setText(copy
                                             .get(DetailledItem.KEY_COPY_DEPARTMENT));
-                            v.findViewById(R.id.llDepartment).setVisibility(View.VISIBLE);
+                            v.findViewById(R.id.tvDepartment).setVisibility(View.VISIBLE);
                         } else {
-                            v.findViewById(R.id.llDepartment).setVisibility(View.GONE);
+                            v.findViewById(R.id.tvDepartment).setVisibility(View.GONE);
                         }
                     }
                     if (v.findViewById(R.id.tvLocation) != null) {
@@ -463,9 +463,9 @@ public class SearchResultDetailFragment extends Fragment
                             ((TextView) v.findViewById(R.id.tvLocation))
                                     .setText(copy
                                             .get(DetailledItem.KEY_COPY_LOCATION));
-                            v.findViewById(R.id.llLocation).setVisibility(View.VISIBLE);
+                            v.findViewById(R.id.tvLocation).setVisibility(View.VISIBLE);
                         } else {
-                            v.findViewById(R.id.llLocation).setVisibility(View.GONE);
+                            v.findViewById(R.id.tvLocation).setVisibility(View.GONE);
                         }
                     }
                     if (v.findViewById(R.id.tvShelfmark) != null) {
@@ -473,9 +473,9 @@ public class SearchResultDetailFragment extends Fragment
                             ((TextView) v.findViewById(R.id.tvShelfmark))
                                     .setText(copy
                                             .get(DetailledItem.KEY_COPY_SHELFMARK));
-                            v.findViewById(R.id.llShelfmark).setVisibility(View.VISIBLE);
+                            v.findViewById(R.id.tvShelfmark).setVisibility(View.VISIBLE);
                         } else {
-                            v.findViewById(R.id.llShelfmark).setVisibility(View.GONE);
+                            v.findViewById(R.id.tvShelfmark).setVisibility(View.GONE);
                         }
                     }
                     if (v.findViewById(R.id.tvStatus) != null) {
@@ -483,9 +483,9 @@ public class SearchResultDetailFragment extends Fragment
                             ((TextView) v.findViewById(R.id.tvStatus))
                                     .setText(copy
                                             .get(DetailledItem.KEY_COPY_STATUS));
-                            v.findViewById(R.id.llStatus).setVisibility(View.VISIBLE);
+                            v.findViewById(R.id.tvStatus).setVisibility(View.VISIBLE);
                         } else {
-                            v.findViewById(R.id.llStatus).setVisibility(View.GONE);
+                            v.findViewById(R.id.tvStatus).setVisibility(View.GONE);
                         }
                     }
 
@@ -493,18 +493,18 @@ public class SearchResultDetailFragment extends Fragment
                         if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_RESERVATIONS)) {
                             ((TextView) v.findViewById(R.id.tvReservations))
                                     .setText(copy.get(DetailledItem.KEY_COPY_RESERVATIONS));
-                            v.findViewById(R.id.llReservations).setVisibility(View.VISIBLE);
+                            v.findViewById(R.id.tvReservations).setVisibility(View.VISIBLE);
                         } else {
-                            v.findViewById(R.id.llReservations).setVisibility(View.GONE);
+                            v.findViewById(R.id.tvReservations).setVisibility(View.GONE);
                         }
                     }
                     if (v.findViewById(R.id.tvReturndate) != null) {
                         if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_RETURN)) {
                             ((TextView) v.findViewById(R.id.tvReturndate))
                                     .setText(copy.get(DetailledItem.KEY_COPY_RETURN));
-                            v.findViewById(R.id.llReturndate).setVisibility(View.VISIBLE);
+                            v.findViewById(R.id.tvReturndate).setVisibility(View.VISIBLE);
                         } else {
-                            v.findViewById(R.id.llReturndate).setVisibility(View.GONE);
+                            v.findViewById(R.id.tvReturndate).setVisibility(View.GONE);
                         }
                     }
 
