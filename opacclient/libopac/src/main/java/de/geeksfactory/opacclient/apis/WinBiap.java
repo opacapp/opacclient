@@ -88,12 +88,10 @@ public class WinBiap extends BaseApi implements OpacApi {
     protected static final String QUERY_TYPE_EQUALS = "1";
     protected String opac_url = "";
     protected JSONObject data;
-    protected Library library;
     protected List<List<NameValuePair>> query;
 
     public void init(Library lib) {
         super.init(lib);
-        this.library = lib;
         this.data = lib.getData();
 
         try {

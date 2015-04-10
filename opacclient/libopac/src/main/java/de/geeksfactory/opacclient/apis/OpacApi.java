@@ -230,6 +230,7 @@ public interface OpacApi {
      * <p/>
      * Flag to be present in the result of {@link #getSupportFlags()}.
      */
+    @SuppressWarnings("UnusedDeclaration") // Plus Edition compatibility
     public static final int SUPPORT_FLAG_QUICKLINKS = 0x0000004;
 
     /**
@@ -324,7 +325,8 @@ public interface OpacApi {
      * @see de.geeksfactory.opacclient.objects.Filter
      * @since 2.0.6
      */
-    @SuppressWarnings({"SameReturnValue", "RedundantThrows"}) // Plus Edition compatibility
+    @SuppressWarnings({"SameReturnValue", "RedundantThrows", "UnusedDeclaration"})
+    // Plus Edition compatibility
     public SearchRequestResult filterResults(Filter filter, Filter.Option option)
             throws IOException, OpacErrorException;
 

@@ -51,7 +51,6 @@ public class SRU extends BaseApi implements OpacApi {
 
     protected String opac_url = "";
     protected JSONObject data;
-    protected Library library;
     protected int resultcount = 10;
     protected String shareUrl;
     private String currentSearchParams;
@@ -62,8 +61,6 @@ public class SRU extends BaseApi implements OpacApi {
     @Override
     public void init(Library lib) {
         super.init(lib);
-
-        this.library = lib;
         this.data = lib.getData();
 
         try {

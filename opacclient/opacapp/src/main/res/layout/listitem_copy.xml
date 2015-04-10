@@ -14,124 +14,65 @@
         android:orientation="vertical"
         android:padding="4dp">
 
-        <LinearLayout
-            android:id="@+id/llBranch"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tvBranch"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textIsSelectable="true"
+            android:drawableLeft="@drawable/ic_branch"
+            android:drawablePadding="4dp"
+            android:gravity="center_vertical"
+            android:contentDescription="@string/branch"/>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_branch"
-                android:contentDescription="@string/zweigstelle"
-                android:layout_marginRight="4dp"/>
-
-            <TextView
-                android:id="@+id/tvBranch"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:textIsSelectable="true"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/llDepartment"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/tvDepartment"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="fill_horizontal"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textIsSelectable="true"
+            android:drawableLeft="@drawable/ic_department"
+            android:drawablePadding="4dp"
+            android:gravity="center_vertical"
+            android:contentDescription="@string/department"/>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_department"
-                android:contentDescription="@string/department"
-                android:layout_marginRight="4dp"/>
-
-            <TextView
-                android:id="@+id/tvDepartment"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:textIsSelectable="true"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/llLocation"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/tvLocation"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="fill_horizontal"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textIsSelectable="true"
+            android:drawableLeft="@drawable/ic_location"
+            android:drawablePadding="4dp"
+            android:gravity="center_vertical"
+            android:contentDescription="@string/location"/>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_location"
-                android:contentDescription="@string/location"
-                android:layout_marginRight="4dp"/>
-
-            <TextView
-                android:id="@+id/tvLocation"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:textIsSelectable="true"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/llShelfmark"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/tvShelfmark"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="fill_horizontal"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textIsSelectable="true"
+            android:drawableLeft="@drawable/ic_shelfmark"
+            android:drawablePadding="4dp"
+            android:gravity="center_vertical"
+            android:contentDescription="@string/shelfmark"/>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_shelfmark"
-                android:contentDescription="@string/shelfmark"
-                android:layout_marginRight="4dp"/>
-
-            <TextView
-                android:id="@+id/tvShelfmark"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:textIsSelectable="true"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/llStatus"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="fill_horizontal"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_status"
-                android:contentDescription="@string/status"
-                android:layout_marginRight="4dp"/>
-
-            <TextView
-                android:id="@+id/tvStatus"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:textIsSelectable="true"/>
-        </LinearLayout>
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textIsSelectable="true"
+            android:drawableLeft="@drawable/ic_status"
+            android:drawablePadding="4dp"
+            android:gravity="center_vertical"
+            android:contentDescription="@string/status"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -140,53 +81,31 @@
             android:orientation="horizontal"
             android:baselineAligned="false">
 
-            <LinearLayout
-                android:id="@+id/llReturndate"
+            <TextView
+                android:id="@+id/tvReturndate"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textIsSelectable="true"
+                android:drawableLeft="@drawable/ic_return_date"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:contentDescription="@string/return_date"/>
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_return_date"
-                    android:contentDescription="@string/return_date"
-                    android:layout_marginRight="4dp"/>
-
-                <TextView
-                    android:id="@+id/tvReturndate"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:textIsSelectable="true"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/llReservations"
+            <TextView
+                android:id="@+id/tvReservations"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_reservations"
-                    android:contentDescription="@string/reservations"
-                    android:layout_marginRight="4dp"/>
-
-                <TextView
-                    android:id="@+id/tvReservations"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:textIsSelectable="true"/>
-            </LinearLayout>
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textIsSelectable="true"
+                android:drawableLeft="@drawable/ic_reservations"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:contentDescription="@string/reservations"/>
         </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

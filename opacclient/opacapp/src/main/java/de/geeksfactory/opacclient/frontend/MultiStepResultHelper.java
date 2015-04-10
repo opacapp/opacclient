@@ -200,7 +200,7 @@ public class MultiStepResultHelper<Arg> {
 
         switch (result.getActionIdentifier()) {
             case ReservationResult.ACTION_BRANCH:
-                builder.setTitle(R.string.zweigstelle);
+                builder.setTitle(R.string.branch);
         }
         builder.setView(view).setNegativeButton(R.string.cancel,
                 new DialogInterface.OnClickListener() {

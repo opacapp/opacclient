@@ -21,7 +21,6 @@
  */
 package de.geeksfactory.opacclient.frontend;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -40,7 +39,6 @@ import de.geeksfactory.opacclient.R;
 
 public class WelcomeActivity extends ActionBarActivity {
     protected OpacClient app;
-    protected AlertDialog dialog;
 
     @SuppressWarnings("SameReturnValue") // Plus Edition compatibility
     public static int getLayoutResource() {
@@ -79,11 +77,6 @@ public class WelcomeActivity extends ActionBarActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        if (dialog != null) {
-            if (dialog.isShowing()) {
-                dialog.cancel();
-            }
-        }
     }
 
     public class InitTask extends AsyncTask<Void, Void, Void> {
@@ -101,7 +94,6 @@ public class WelcomeActivity extends ActionBarActivity {
 
         @Override
         protected void onPostExecute(Void result) {
-            dialog.dismiss();
             Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
             startActivity(intent);
         }
