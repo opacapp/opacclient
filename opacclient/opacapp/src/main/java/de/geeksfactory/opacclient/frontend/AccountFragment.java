@@ -728,72 +728,126 @@ public class AccountFragment extends Fragment implements
                     getActivity().getString(R.string.lent_head) + " (" + result.getLent().size() +
                             ")");
             for (final Map<String, String> item : result.getLent()) {
-                View v = getLayoutInflater(null).inflate(
-                        R.layout.listitem_account_lent, null);
+                View v = getLayoutInflater(null)
+                        .inflate(R.layout.listitem_account_lent, llLent, false);
 
                 if (item.containsKey(AccountData.KEY_LENT_ID)) {
                     View.OnClickListener gotoDetails = new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(getActivity(),
-                                    SearchResultDetailActivity.class);
-                            intent.putExtra(
-                                    SearchResultDetailFragment.ARG_ITEM_ID,
+                            Intent intent =
+                                    new Intent(getActivity(), SearchResultDetailActivity.class);
+                            intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
                                     item.get(AccountData.KEY_LENT_ID));
                             startActivity(intent);
                         }
                     };
-                    v.findViewById(R.id.tvTitel)
-                     .setOnClickListener(gotoDetails);
-                    v.findViewById(R.id.tvVerfasser).setOnClickListener(
-                            gotoDetails);
-                    v.findViewById(R.id.tvStatus).setOnClickListener(
-                            gotoDetails);
+                    v.setOnClickListener(gotoDetails);
                 }
 
+                TextView tvTitleAndAuthor = (TextView) v.findViewById(R.id.tvTitleAndAuthor);
+                TextView tvStatus = (TextView) v.findViewById(R.id.tvStatus);
+                TextView tvTitleDetail = (TextView) v.findViewById(R.id.tvTitleDetail);
+                TextView tvAuthorDetail = (TextView) v.findViewById(R.id.tvAuthorDetail);
+                TextView tvBranchDetail = (TextView) v.findViewById(R.id.tvBranchDetail);
+                TextView tvFormatDetail = (TextView) v.findViewById(R.id.tvFormatDetail);
+                TextView tvStatusDetail = (TextView) v.findViewById(R.id.tvStatusDetail);
+                ImageView ivProlong = (ImageView) v.findViewById(R.id.ivProlong);
+                ImageView ivDownload = (ImageView) v.findViewById(R.id.ivDownload);
+                final ImageView ivDetails = (ImageView) v.findViewById(R.id.ivDetails);
+                final ImageView ivClose = (ImageView) v.findViewById(R.id.ivClose);
+                View vStatusColor = v.findViewById(R.id.vStatusColor);
+                final LinearLayout llOverview = (LinearLayout) v.findViewById(R.id.llOverview);
+                final LinearLayout llDetails = (LinearLayout) v.findViewById(R.id.llDetails);
+
+                ivDetails.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Wait so that touch feedback is visible before the button is hidden
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                llOverview.setVisibility(View.GONE);
+                                llDetails.setVisibility(View.VISIBLE);
+                                ivDetails.setVisibility(View.GONE);
+                                ivClose.setVisibility(View.VISIBLE);
+                            }
+                        }, 200);
+                    }
+                });
+                ivClose.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Wait so that touch feedback is visible before the button is hidden
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                llOverview.setVisibility(View.VISIBLE);
+                                llDetails.setVisibility(View.GONE);
+                                ivDetails.setVisibility(View.VISIBLE);
+                                ivClose.setVisibility(View.GONE);
+                            }
+                        }, 200);
+                    }
+                });
+
+                // Overview
+                if (item.containsKey(AccountData.KEY_LENT_TITLE) &&
+                        item.containsKey(AccountData.KEY_LENT_AUTHOR)) {
+                    tvTitleAndAuthor.setText(
+                            Html.fromHtml(item.get(AccountData.KEY_LENT_TITLE)) + ", " +
+                                    Html.fromHtml(item.get(AccountData.KEY_LENT_AUTHOR)));
+                } else if (item.containsKey(AccountData.KEY_LENT_TITLE)) {
+                    tvTitleAndAuthor.setText(Html.fromHtml(item.get(AccountData.KEY_LENT_TITLE)));
+                } else if (item.containsKey(AccountData.KEY_LENT_AUTHOR)) {
+                    tvTitleAndAuthor.setText(Html.fromHtml(item.get(AccountData.KEY_LENT_AUTHOR)));
+                } else {
+                    tvTitleAndAuthor.setVisibility(View.GONE);
+                }
+
+                CharSequence status = "";
+                if (item.containsKey(AccountData.KEY_LENT_DEADLINE) &&
+                        item.containsKey(AccountData.KEY_LENT_STATUS)) {
+                    status = Html.fromHtml(item.get(AccountData.KEY_LENT_DEADLINE)) + " (" +
+                            Html.fromHtml(item.get(AccountData.KEY_LENT_STATUS)) + ")";
+                } else if (item.containsKey(AccountData.KEY_LENT_DEADLINE)) {
+                    status = Html.fromHtml(item.get(AccountData.KEY_LENT_DEADLINE));
+                } else if (item.containsKey(AccountData.KEY_LENT_STATUS)) {
+                    status = Html.fromHtml(item.get(AccountData.KEY_LENT_STATUS));
+                } else {
+                    tvStatus.setVisibility(View.GONE);
+                    tvStatusDetail.setVisibility(View.GONE);
+                }
+                tvStatus.setText(status);
+                tvStatusDetail.setText(status);
+
+                // Detail
                 if (item.containsKey(AccountData.KEY_LENT_TITLE)) {
-                    ((TextView) v.findViewById(R.id.tvTitel)).setText(Html
-                            .fromHtml(item.get(AccountData.KEY_LENT_TITLE)));
+                    tvTitleDetail.setText(Html.fromHtml(item.get(AccountData.KEY_LENT_TITLE)));
+                } else {
+                    tvTitleDetail.setVisibility(View.GONE);
                 }
                 if (item.containsKey(AccountData.KEY_LENT_AUTHOR)) {
-                    ((TextView) v.findViewById(R.id.tvVerfasser)).setText(Html
-                            .fromHtml(item.get(AccountData.KEY_LENT_AUTHOR)));
-                }
-
-                v.findViewById(R.id.tvStatus)
-                 .setVisibility(View.VISIBLE);
-                if (item.containsKey(AccountData.KEY_LENT_STATUS)
-                        && !"".equals(item
-                        .get(AccountData.KEY_LENT_STATUS))
-                        && item.containsKey(AccountData.KEY_LENT_DEADLINE)) {
-                    ((TextView) v.findViewById(R.id.tvStatus)).setText(Html
-                            .fromHtml(item.get(AccountData.KEY_LENT_DEADLINE)
-                                    + " ("
-                                    + item.get(AccountData.KEY_LENT_STATUS)
-                                    + ")"));
-                } else if (item.containsKey(AccountData.KEY_LENT_STATUS)) {
-                    ((TextView) v.findViewById(R.id.tvStatus)).setText(Html
-                            .fromHtml(item.get(AccountData.KEY_LENT_STATUS)));
-                } else if (item.containsKey(AccountData.KEY_LENT_DEADLINE)) {
-                    ((TextView) v.findViewById(R.id.tvStatus)).setText(Html
-                            .fromHtml(item.get(AccountData.KEY_LENT_DEADLINE)));
+                    tvAuthorDetail.setText(Html.fromHtml(item.get(AccountData.KEY_LENT_AUTHOR)));
                 } else {
-                    v.findViewById(R.id.tvStatus)
-                     .setVisibility(View.GONE);
+                    tvAuthorDetail.setVisibility(View.GONE);
                 }
                 if (item.containsKey(AccountData.KEY_LENT_FORMAT)) {
-                    ((TextView) v.findViewById(R.id.tvFmt)).setText(Html
-                            .fromHtml(item.get(AccountData.KEY_LENT_FORMAT)));
-                    v.findViewById(R.id.tvFmt)
-                     .setVisibility(View.VISIBLE);
+                    tvFormatDetail.setText(Html.fromHtml(item.get(AccountData.KEY_LENT_FORMAT)));
                 } else {
-                    v.findViewById(R.id.tvFmt)
-                     .setVisibility(View.GONE);
+                    tvFormatDetail.setVisibility(View.GONE);
+                }
+                if (item.containsKey(AccountData.KEY_LENT_LENDING_BRANCH)) {
+                    tvBranchDetail
+                            .setText(Html.fromHtml(item.get(AccountData.KEY_LENT_LENDING_BRANCH)));
+                } else if (item.containsKey(AccountData.KEY_LENT_BRANCH)) {
+                    tvBranchDetail.setText(Html.fromHtml(item.get(AccountData.KEY_LENT_BRANCH)));
+                } else {
+                    tvBranchDetail.setVisibility(View.GONE);
                 }
 
                 try {
-                    if (notification_on
-                            && item.containsKey(AccountData.KEY_LENT_DEADLINE)) {
+                    if (notification_on && item.containsKey(AccountData.KEY_LENT_DEADLINE)) {
                         if (!item.get(AccountData.KEY_LENT_DEADLINE).equals("")) {
                             if ((!item
                                     .containsKey(AccountData.KEY_LENT_DEADLINE_TIMESTAMP) || Long
@@ -814,76 +868,48 @@ public class AccountFragment extends Fragment implements
                     if (Long.parseLong(item
                             .get(AccountData.KEY_LENT_DEADLINE_TIMESTAMP)) < System
                             .currentTimeMillis()) {
-                        v.findViewById(R.id.vStatusColor).setBackgroundColor(
-                                getResources().getColor(R.color.date_overdue));
+                        vStatusColor
+                                .setBackgroundColor(getResources().getColor(R.color.date_overdue));
                     } else if ((Long.parseLong(item
                             .get(AccountData.KEY_LENT_DEADLINE_TIMESTAMP)) - System
                             .currentTimeMillis()) <= tolerance) {
-                        v.findViewById(R.id.vStatusColor).setBackgroundColor(
-                                getResources().getColor(R.color.date_warning));
+                        vStatusColor
+                                .setBackgroundColor(getResources().getColor(R.color.date_warning));
                     } else if (item.containsKey(AccountData.KEY_LENT_DOWNLOAD)) {
-                        v.findViewById(R.id.vStatusColor).setBackgroundColor(
-                                getResources().getColor(
-                                        R.color.account_downloadable));
+                        vStatusColor.setBackgroundColor(
+                                getResources().getColor(R.color.account_downloadable));
                     }
                 } else if (item.containsKey(AccountData.KEY_LENT_DOWNLOAD)) {
-                    v.findViewById(R.id.vStatusColor).setBackgroundColor(
-                            getResources().getColor(
-                                    R.color.account_downloadable));
-                }
-
-                if (item.containsKey(AccountData.KEY_LENT_LENDING_BRANCH)) {
-                    ((TextView) v.findViewById(R.id.tvZst)).setText(Html
-                            .fromHtml(item
-                                    .get(AccountData.KEY_LENT_LENDING_BRANCH)));
-                    v.findViewById(R.id.tvZst)
-                     .setVisibility(View.VISIBLE);
-                } else if (item.containsKey(AccountData.KEY_LENT_BRANCH)) {
-                    ((TextView) v.findViewById(R.id.tvZst)).setText(Html
-                            .fromHtml(item.get(AccountData.KEY_LENT_BRANCH)));
-                    v.findViewById(R.id.tvZst)
-                     .setVisibility(View.VISIBLE);
-                } else {
-                    v.findViewById(R.id.tvZst)
-                     .setVisibility(View.GONE);
+                    vStatusColor.setBackgroundColor(
+                            getResources().getColor(R.color.account_downloadable));
                 }
 
                 if (item.containsKey(AccountData.KEY_LENT_LINK)) {
-                    v.findViewById(R.id.ivProlong).setTag(
-                            item.get(AccountData.KEY_LENT_LINK));
-                    v.findViewById(R.id.ivProlong)
-                     .setOnClickListener(new OnClickListener() {
-                         @Override
-                         public void onClick(View arg0) {
-                             prolong((String) arg0.getTag());
-                         }
-                     });
-                    v.findViewById(R.id.ivProlong)
-                     .setVisibility(View.VISIBLE);
+                    ivProlong.setTag(item.get(AccountData.KEY_LENT_LINK));
+                    ivProlong.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View arg0) {
+                            prolong((String) arg0.getTag());
+                        }
+                    });
+                    ivProlong.setVisibility(View.VISIBLE);
                     if (item.containsKey(AccountData.KEY_LENT_RENEWABLE)) {
-                        ((ImageView) v.findViewById(R.id.ivProlong))
-                                .setAlpha(item.get(
-                                        AccountData.KEY_LENT_RENEWABLE).equals(
-                                        "Y") ? 255 : 100);
+                        ivProlong.setAlpha(
+                                item.get(AccountData.KEY_LENT_RENEWABLE).equals("Y") ? 255 : 100);
                     }
                 } else if (item.containsKey(AccountData.KEY_LENT_DOWNLOAD)
                         && app.getApi() instanceof EbookServiceApi) {
-                    v.findViewById(R.id.ivDownload).setTag(
-                            item.get(AccountData.KEY_LENT_DOWNLOAD));
-                    v.findViewById(R.id.ivDownload)
-                     .setOnClickListener(new OnClickListener() {
-                         @Override
-                         public void onClick(View arg0) {
-                             download((String) arg0.getTag());
-                         }
-                     });
-                    v.findViewById(R.id.ivProlong)
-                     .setVisibility(View.GONE);
-                    v.findViewById(R.id.ivDownload)
-                     .setVisibility(View.VISIBLE);
+                    ivDownload.setTag(item.get(AccountData.KEY_LENT_DOWNLOAD));
+                    ivDownload.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View arg0) {
+                            download((String) arg0.getTag());
+                        }
+                    });
+                    ivProlong.setVisibility(View.GONE);
+                    ivDownload.setVisibility(View.VISIBLE);
                 } else {
-                    v.findViewById(R.id.ivProlong)
-                     .setVisibility(View.INVISIBLE);
+                    ivProlong.setVisibility(View.INVISIBLE);
                 }
 
                 llLent.addView(v);

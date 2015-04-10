@@ -1,96 +1,189 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:padding="4dp"
+    android:animateLayoutChanges="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true">
+
+        <View
+            android:id="@+id/vStatusColor"
+            android:layout_width="8dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"/>
+
+        <LinearLayout
+            android:id="@+id/llButtons"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:animateLayoutChanges="true">
+
+            <ImageView
+                android:id="@+id/ivClose"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:contentDescription="@string/close"
+                android:src="@drawable/ic_close"
+                android:visibility="gone"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/ripple_unmasked"/>
+
+            <ImageView
+                android:id="@+id/ivProlong"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:contentDescription="@string/prolong"
+                android:src="@drawable/ic_prolong"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/ripple_unmasked"/>
+
+            <ImageView
+                android:id="@+id/ivDownload"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="4dp"
+                android:contentDescription="@string/download"
+                android:src="@drawable/ic_download"
+                android:visibility="gone"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/ripple_unmasked"/>
+
+            <ImageView
+                android:id="@+id/ivDetails"
+                android:layout_width="48dp"
+                android:layout_height="24dp"
+                android:contentDescription="@string/prolong"
+                android:src="@drawable/ic_more_details"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/ripple_unmasked"/>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/separator"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@id/llButtons"
+            android:background="#1E000000"/>
+
+        <LinearLayout
+            android:id="@+id/llOverview"
+            android:layout_toRightOf="@id/vStatusColor"
+            android:layout_toLeftOf="@id/separator"
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvTitleAndAuthor"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="4dp">
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textIsSelectable="true"
+                android:drawableLeft="@drawable/ic_title"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:contentDescription="@string/title_and_author"/>
 
-<View
-        android:id="@+id/strut"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_centerHorizontal="true"/>
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textIsSelectable="true"
+                android:drawableLeft="@drawable/ic_status"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:contentDescription="@string/status"/>
 
-    <View
-        android:id="@+id/vStatusColor"
-        android:layout_width="8dp"
-        android:layout_height="48dp"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="8dp"/>
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvTitel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/strut"
-        android:layout_toRightOf="@id/vStatusColor"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:textIsSelectable="true"/>
+        <LinearLayout
+            android:id="@+id/llDetails"
+            android:layout_toRightOf="@id/vStatusColor"
+            android:layout_toLeftOf="@id/separator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tvStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tvTitel"
-        android:layout_toLeftOf="@id/strut"
-        android:layout_toRightOf="@id/vStatusColor"
-        android:textIsSelectable="true"/>
+            <TextView
+                android:id="@+id/tvTitleDetail"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textIsSelectable="true"
+                android:drawableLeft="@drawable/ic_title"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:contentDescription="@string/title"/>
 
-    <ImageView
-        android:id="@+id/ivProlong"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:padding="8dp"
-        android:contentDescription="@string/prolong"
-        android:src="@drawable/ic_prolong"/>
+            <TextView
+                android:id="@+id/tvAuthorDetail"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textIsSelectable="true"
+                android:drawableLeft="@drawable/ic_author"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:contentDescription="@string/author"/>
 
-    <ImageView
-        android:id="@+id/ivDownload"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:padding="8dp"
-        android:contentDescription="@string/download"
-        android:src="@drawable/ic_download"
-        android:visibility="gone"/>
+            <TextView
+                android:id="@+id/tvBranchDetail"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textIsSelectable="true"
+                android:drawableLeft="@drawable/ic_branch"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:contentDescription="@string/branch"/>
 
-    <TextView
-        android:id="@+id/tvVerfasser"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/ivProlong"
-        android:layout_toRightOf="@id/strut"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:textIsSelectable="true"/>
+            <TextView
+                android:id="@+id/tvFormatDetail"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textIsSelectable="true"
+                android:drawableLeft="@drawable/ic_media_type"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:contentDescription="@string/mediatype"/>
 
-    <TextView
-        android:id="@+id/tvZst"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tvVerfasser"
-        android:layout_toLeftOf="@id/ivProlong"
-        android:layout_toRightOf="@id/strut"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:textIsSelectable="true"/>
+            <TextView
+                android:id="@+id/tvStatusDetail"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textIsSelectable="true"
+                android:drawableLeft="@drawable/ic_status"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:contentDescription="@string/status"/>
 
-    <TextView
-        android:id="@+id/tvFmt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/tvZst"
-        android:layout_toLeftOf="@id/ivProlong"
-        android:visibility="gone"
-        android:ellipsize="end"
-        android:layout_marginLeft="16dp"
-        android:singleLine="true"
-        android:textIsSelectable="true"/>
-
-</RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>
