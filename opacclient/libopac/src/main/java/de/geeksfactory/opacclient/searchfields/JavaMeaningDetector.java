@@ -17,6 +17,7 @@ import java.util.Set;
 
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
+import de.geeksfactory.opacclient.utils.JsonKeyIterator;
 
 public class JavaMeaningDetector implements MeaningDetector {
 
@@ -33,20 +34,26 @@ public class JavaMeaningDetector implements MeaningDetector {
         if (lib != null) {
             File file;
             if ((file = new File(assets_fieldsdir, "general.json")).exists()) // General
+            {
                 loadFile(file);
+            }
             if ((file = new File(assets_fieldsdir, lib.getApi() + ".json")).exists()) // Api
-                // specific
+            // specific
+            {
                 loadFile(file);
+            }
             if ((file = new File(assets_fieldsdir, lib.getIdent() + ".json")).exists()) // Library
-                // specific
+            // specific
+            {
                 loadFile(file);
+            }
         }
     }
 
     private static String readFile(File file) throws IOException {
         byte[] encoded = Files.readAllBytes(file.toPath());
         return Charset.forName("UTF-8").decode(ByteBuffer.wrap(encoded))
-                .toString();
+                      .toString();
     }
 
     private static void writeFile(File file, String data) throws IOException {
@@ -60,22 +67,25 @@ public class JavaMeaningDetector implements MeaningDetector {
 
             // Detect layout of the JSON entries. Can be "field name":
             // "meaning" or "meaning": [ "field name", "field name", ... ]
-            Iterator<String> iter = json.keys();
-            if (!iter.hasNext())
+            Iterator<String> iter = new JsonKeyIterator(json);
+            if (!iter.hasNext()) {
                 return; // No entries
+            }
 
             String firstKey = iter.next();
             Object firstValue = json.get(firstKey);
             boolean arrayLayout = firstValue instanceof JSONArray;
             if (arrayLayout) {
-                for (int i = 0; i < ((JSONArray) firstValue).length(); i++)
+                for (int i = 0; i < ((JSONArray) firstValue).length(); i++) {
                     meanings.put(((JSONArray) firstValue).getString(i),
                             firstKey);
+                }
                 while (iter.hasNext()) {
                     String key = iter.next();
                     JSONArray val = json.getJSONArray(key);
-                    for (int i = 0; i < val.length(); i++)
+                    for (int i = 0; i < val.length(); i++) {
                         meanings.put(val.getString(i), key);
+                    }
                 }
             } else {
                 meanings.put(firstKey, (String) firstValue);
@@ -96,15 +106,17 @@ public class JavaMeaningDetector implements MeaningDetector {
             try {
                 String meaningData = field.getData().getString("meaning");
                 String meaningName = meanings.get(meaningData);
-                if (meaningName != null)
+                if (meaningName != null) {
                     return processMeaning(field, meaningName);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         } else {
             String meaningName = meanings.get(field.getDisplayName());
-            if (meaningName != null)
+            if (meaningName != null) {
                 return processMeaning(field, meaningName);
+            }
         }
         field.setAdvanced(true);
         return field;
@@ -148,9 +160,10 @@ public class JavaMeaningDetector implements MeaningDetector {
 
         // Detect layout of the JSON entries. Can be "field name":
         // "meaning" or "meaning": [ "field name", "field name", ... ]
-        Iterator<String> iter = json.keys();
-        if (!iter.hasNext())
+        Iterator<String> iter = new JsonKeyIterator(json);
+        if (!iter.hasNext()) {
             return; // No entries
+        }
 
         String firstKey = iter.next();
         Object firstValue = json.get(firstKey);

@@ -72,6 +72,7 @@ import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
+import de.geeksfactory.opacclient.utils.JsonKeyIterator;
 
 /**
  * OpacApi implementation for Bibliotheca Web Opacs, originally developed by BOND, now owned by
@@ -326,7 +327,7 @@ public class Bibliotheca extends BaseApi {
                 JSONObject data = query.getSearchField().getData();
                 if (data.has("additional_params")) {
                     JSONObject params = data.getJSONObject("additional_params");
-                    Iterator<String> keys = params.keys();
+                    Iterator<String> keys = new JsonKeyIterator(params);
                     while (keys.hasNext()) {
                         String additionalKey = keys.next();
                         nameValuePairs

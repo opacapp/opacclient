@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -159,8 +160,8 @@ public class AccountDataSource {
         if (all) {
             database.delete(AccountDatabase.TABLENAME_NOTIFIED, null, null);
         } else {
-            String[] selA = {""
-                    + (System.currentTimeMillis() - (1000 * 3600 * 24 * 30))};
+            String[] selA =
+                    {Long.toString(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(30))};
             database.delete(AccountDatabase.TABLENAME_NOTIFIED,
                     "timestamp < ?", selA);
         }
