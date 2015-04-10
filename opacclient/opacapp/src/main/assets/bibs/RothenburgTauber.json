@@ -24,7 +24,6 @@
             "returndate": -1,
             "status": 1
         },
-        "information": "http://rothenburg.internetopac.de/suchanz.asp",
         "reservationtable": {
             "author": 0,
             "availability": -1,
@@ -38,6 +37,7 @@
         49.3794462,
         10.1858862
     ],
+    "information": "http://rothenburg.internetopac.de/suchanz.asp",
     "state": "Bayern",
     "title": "Stadtb\u00fccherei"
 }

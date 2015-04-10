@@ -42,6 +42,8 @@ public class Library implements Comparable<Library> {
     private String country;
     private String state;
     private String replacedby;
+
+    private String information;
     private double[] geo;
     private float geo_distance;
     private boolean account_supported;
@@ -66,6 +68,12 @@ public class Library implements Comparable<Library> {
         lib.setState(input.getString("state"));
         lib.setData(input.getJSONObject("data"));
         lib.setAccountSupported(input.getBoolean("account_supported"));
+
+        lib.setInformation(input.getString("information"));
+        if (lib.getInformation() == null && lib.getData().has("information")) {
+            // Backwards compatibility
+            lib.setInformation(lib.getData().getString("information"));
+        }
 
         if (input.has("displayname"))
             lib.setDisplayName(input.getString("displayname"));
@@ -274,6 +282,20 @@ public class Library implements Comparable<Library> {
      */
     public void setAccountSupported(boolean account_supported) {
         this.account_supported = account_supported;
+    }
+
+    /**
+     * Gets the URL of this library's information webpage
+     */
+    public String getInformation() {
+        return information;
+    }
+
+    /**
+     * Sets the URL of this library's information webpage
+     */
+    public void setInformation(String information) {
+        this.information = information;
     }
 
     /**

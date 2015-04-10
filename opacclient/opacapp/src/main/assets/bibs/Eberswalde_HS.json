@@ -4,13 +4,13 @@
     "city": "Eberswalde",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://opac.hnee.de/webOPACClient",
-        "information": "http://www.hnee.de/de/Hochschule/Einrichtungen/Hochschulbibliothek/Oeffnungszeiten/Oeffnungszeiten-K1068.htm"
+        "baseurl": "http://opac.hnee.de/webOPACClient"
     },
     "geo": [
         52.83713299999999,
         13.7875871
     ],
+    "information": "http://www.hnee.de/de/Hochschule/Einrichtungen/Hochschulbibliothek/Oeffnungszeiten/Oeffnungszeiten-K1068.htm",
     "state": "Brandenburg",
     "title": "Hochschulbibliothek"
 }

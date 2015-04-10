@@ -15,13 +15,13 @@
             "returndate": 3,
             "status": 2
         },
-        "information": "/../read-boxberg/info.html",
         "reservationtable": null
     },
     "geo": [
         49.48181779999999,
         9.6375251
     ],
+    "information": "/../read-boxberg/info.html",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Mediothek"
 }

@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://opac.tib.uni-hannover.de/",
-        "db": "8",
-        "information": "http://www.tib.uni-hannover.de/"
+        "db": "8"
     },
     "geo": [
         52.38142,
         9.72007
     ],
+    "information": "http://www.tib.uni-hannover.de/",
     "state": "Niedersachsen",
     "title": "Bibliothek Hochschule f\u00fcr Musik, Theater und Medien (Bereich Musik)"
 }

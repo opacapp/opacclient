@@ -4,13 +4,13 @@
     "city": "Nidda",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://time.nidda.de/webopac",
-        "information": "http://www.stadtbibliothek-nidda.de/"
+        "baseurl": "http://time.nidda.de/webopac"
     },
     "geo": [
         50.4127451,
         9.007875799999999
     ],
+    "information": "http://www.stadtbibliothek-nidda.de/",
     "state": "Hessen",
     "title": "Stadtbibliothek"
 }

@@ -4,13 +4,13 @@
     "city": "Amberg",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://www.amberg.de/wwwopac",
-        "information": "http://www.amberg.de/index.php?id=190"
+        "baseurl": "http://www.amberg.de/wwwopac"
     },
     "geo": [
         49.4403198,
         11.8633445
     ],
+    "information": "http://www.amberg.de/index.php?id=190",
     "state": "Bayern",
     "title": "Stadtbibliothek"
 }

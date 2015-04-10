@@ -25,7 +25,6 @@
             "status": 3
         },
         "db": "datt",
-        "information": "http://www.datteln.de/4_Kultur_Bildung/Stadtbuecherei.htm",
         "mediatypes": {
             "EAusakl.gif": "MP3",
             "EAusbkl.gif": "EBOOK",
@@ -68,6 +67,7 @@
         51.6461362,
         7.3348301
     ],
+    "information": "http://www.datteln.de/4_Kultur_Bildung/Stadtbuecherei.htm",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }

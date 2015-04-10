@@ -25,7 +25,6 @@
             "status": 2
         },
         "db": "glad",
-        "information": "http://www.stadtbuecherei-gladbeck.de/#home",
         "mediatypes": {
             "EAusakl.gif": "MP3",
             "EAusbkl.gif": "EBOOK",
@@ -68,6 +67,7 @@
         51.5706624,
         6.985392099999999
     ],
+    "information": "http://www.stadtbuecherei-gladbeck.de/#home",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }

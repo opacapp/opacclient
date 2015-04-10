@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://opac.tib.uni-hannover.de/",
-        "db": "4",
-        "information": "http://www.hs-hannover.de/bibl/"
+        "db": "4"
     },
     "geo": [
         52.38142,
         9.72007
     ],
+    "information": "http://www.hs-hannover.de/bibl/",
     "state": "Niedersachsen",
     "title": "Bibliothek der Hochschule"
 }

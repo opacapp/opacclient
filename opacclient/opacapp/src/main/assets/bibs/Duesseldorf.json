@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://webopac.itk-rheinland.de/aDISWeb/app",
-        "information": "http://www.duesseldorf.de/stadtbuechereien/",
         "startparams": "service=direct/0/Home/$DirectLink&sp=S127.0.0.1:23072"
     },
     "geo": [
         51.2277411,
         6.7734556
     ],
+    "information": "http://www.duesseldorf.de/stadtbuechereien/",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fcchereien"
 }

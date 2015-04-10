@@ -19,7 +19,6 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "http://www.stadtbuecherei-harsewinkel.de/#",
         "mediatypes": {
             "Buchklein.GIF": "BOOK",
             "CD-ROMklein.GIF": "CD_SOFTWARE",
@@ -70,6 +69,7 @@
         51.96428179999999,
         8.2333679
     ],
+    "information": "http://www.stadtbuecherei-harsewinkel.de/#",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei St. Lucia"
 }

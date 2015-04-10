@@ -4,13 +4,13 @@
     "city": "Lohfelden",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.net/lohfelden",
-        "information": "http://www.lohfelden.de/w3a/cms/Lohfelden_Erleben/Oeffentliche_Einrichtungen/Buechereien/index.11713.html"
+        "baseurl": "http://webopac.winbiap.net/lohfelden"
     },
     "geo": [
         51.2761574,
         9.546302299999999
     ],
+    "information": "http://www.lohfelden.de/w3a/cms/Lohfelden_Erleben/Oeffentliche_Einrichtungen/Buechereien/index.11713.html",
     "state": "Hessen",
     "title": "Gemeinde- und Schulb\u00fccherei"
 }

@@ -24,7 +24,6 @@
             "returndate": -1,
             "status": 4
         },
-        "information": "http://www.stadtbuecherei-frechen.de/",
         "mediatypes": {
             "1": "BOOK",
             "2": "MAGAZINE",
@@ -48,6 +47,7 @@
         50.9122488,
         6.815995699999999
     ],
+    "information": "http://www.stadtbuecherei-frechen.de/",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }

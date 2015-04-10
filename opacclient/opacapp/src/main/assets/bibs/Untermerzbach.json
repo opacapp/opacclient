@@ -4,13 +4,13 @@
     "city": "Untermerzbach",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.net/untermerzbach",
-        "information": "http://www.untermerzbach.de/Startseite/Kultur-Bildung-Freizeit/KOMM/Buecherei/Oeffnungszeiten/E1029.htm"
+        "baseurl": "http://webopac.winbiap.net/untermerzbach"
     },
     "geo": [
         50.1271283,
         10.8557936
     ],
+    "information": "http://www.untermerzbach.de/Startseite/Kultur-Bildung-Freizeit/KOMM/Buecherei/Oeffnungszeiten/E1029.htm",
     "state": "Bayern",
     "title": "Gemeindebibliothek"
 }

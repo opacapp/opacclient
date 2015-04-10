@@ -4,13 +4,13 @@
     "city": "Jork",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://jork.iopac.de",
-        "information": "http://www.jork.de/portal/seiten/buecherei-904000084-20380.html"
+        "baseurl": "http://jork.iopac.de"
     },
     "geo": [
         53.53219319999999,
         9.6838518
     ],
+    "information": "http://www.jork.de/portal/seiten/buecherei-904000084-20380.html",
     "state": "Niedersachsen",
     "title": "B\u00fccherei"
 }

@@ -4,13 +4,13 @@
     "city": "Dillenburg",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/dillenburg",
-        "information": "http://www.stadtbuecherei-dillenburg.de/"
+        "baseurl": "http://webopac.winbiap.de/dillenburg"
     },
     "geo": [
         50.7452841,
         8.2807631
     ],
+    "information": "http://www.stadtbuecherei-dillenburg.de/",
     "state": "Hessen",
     "title": "Stadtb\u00fccherei"
 }

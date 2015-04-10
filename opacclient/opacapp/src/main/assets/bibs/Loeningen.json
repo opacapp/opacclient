@@ -19,7 +19,6 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "http://www.buechereiloeningen.de/",
         "mediatypes": {
             "Buchklein.GIF": "UNKNOWN",
             "CD-ROMklein.GIF": "CD_SOFTWARE",
@@ -70,6 +69,7 @@
         52.736526,
         7.7587838
     ],
+    "information": "http://www.buechereiloeningen.de/",
     "state": "Niedersachsen",
     "title": "B\u00fccherei St. Vitus"
 }

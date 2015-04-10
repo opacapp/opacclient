@@ -25,7 +25,6 @@
             "status": 3
         },
         "db": "oere",
-        "information": "http://www.oer-erkenschwick.de/buergerservice/start.asp?seite=oe&id=326&suchtext=",
         "mediatypes": {
             "EAusakl.gif": "MP3",
             "EAusbkl.gif": "EBOOK",
@@ -68,6 +67,7 @@
         51.6429599,
         7.2594914
     ],
+    "information": "http://www.oer-erkenschwick.de/buergerservice/start.asp?seite=oe&id=326&suchtext=",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }

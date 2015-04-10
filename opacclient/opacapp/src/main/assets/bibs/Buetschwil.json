@@ -4,13 +4,13 @@
     "city": "B\u00fctschwil",
     "country": "Schweiz",
     "data": {
-        "baseurl": "http://www.bvsga.ch/Buetschwil",
-        "information": "http://www.buetschwil.ch/xml_1/internet/de/application/d450/d491/f497.cfm"
+        "baseurl": "http://www.bvsga.ch/Buetschwil"
     },
     "geo": [
         47.3563,
         9.07364
     ],
+    "information": "http://www.buetschwil.ch/xml_1/internet/de/application/d450/d491/f497.cfm",
     "state": "St. Gallen",
     "title": "Bibliothek"
 }

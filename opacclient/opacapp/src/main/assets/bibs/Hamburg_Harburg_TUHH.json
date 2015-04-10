@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://katalog.b.tu-harburg.de",
-        "db": "1",
-        "information": "https://www.tub.tu-harburg.de/home/oeffnungszeiten/"
+        "db": "1"
     },
     "geo": [
         53.4607681,
         9.9835844
     ],
+    "information": "https://www.tub.tu-harburg.de/home/oeffnungszeiten/",
     "state": "Hamburg",
     "title": "Unibibliothek TUHH"
 }

@@ -15,7 +15,6 @@
             "title": 7
         },
         "baseurl": "http://www.stadtbuecherei.hameln.de",
-        "information": "http://www.hameln.de/kultur/kultur/buecherei/index.htm",
         "opacdir": "opax",
         "searchtable": [
             2,
@@ -26,6 +25,7 @@
         52.1086866,
         9.365762799999999
     ],
+    "information": "http://www.hameln.de/kultur/kultur/buecherei/index.htm",
     "state": "Niedersachsen",
     "title": "Stadtbibliothek"
 }

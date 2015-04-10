@@ -24,7 +24,6 @@
             "returndate": -1,
             "status": 4
         },
-        "information": "http://www.stadtdetmold.de/1990.0.html",
         "mediatypes": {
             "1": "BOOK",
             "10": "MAP",
@@ -51,6 +50,7 @@
         51.9384783,
         8.868637999999999
     ],
+    "information": "http://www.stadtdetmold.de/1990.0.html",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }

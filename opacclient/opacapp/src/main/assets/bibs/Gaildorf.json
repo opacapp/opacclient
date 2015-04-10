@@ -15,13 +15,13 @@
             "returndate": 4,
             "status": 3
         },
-        "information": "/../read-gaildorf/info.html",
         "reservationtable": null
     },
     "geo": [
         48.9998717,
         9.7655136
     ],
+    "information": "/../read-gaildorf/info.html",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtb\u00fccherei"
 }

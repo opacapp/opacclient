@@ -4,13 +4,13 @@
     "city": "Donauw\u00f6rth",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/donauwoerth",
-        "information": "http://www.donauwoerth.de/html/user_de_Stadtbibliothek+Startseite.html"
+        "baseurl": "http://webopac.winbiap.de/donauwoerth"
     },
     "geo": [
         48.7185826,
         10.7778041
     ],
+    "information": "http://www.donauwoerth.de/html/user_de_Stadtbibliothek+Startseite.html",
     "state": "Bayern",
     "title": "Stadtbibliothek"
 }

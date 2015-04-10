@@ -4,13 +4,13 @@
     "city": "Langenthal",
     "country": "Schweiz",
     "data": {
-        "baseurl": "http://www.winmedio.net/langenthal",
-        "information": "http://www.bibliothek-langenthal.ch/de/"
+        "baseurl": "http://www.winmedio.net/langenthal"
     },
     "geo": [
         47.2139734,
         7.7847334
     ],
+    "information": "http://www.bibliothek-langenthal.ch/de/",
     "state": "Bern",
     "title": "Bibliothek"
 }

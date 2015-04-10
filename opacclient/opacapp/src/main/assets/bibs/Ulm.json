@@ -24,7 +24,6 @@
             "returndate": 5,
             "status": 4
         },
-        "information": "http://www.ulm.de/kultur_tourismus/bibliotheken_und_literatur/oeffnungszeiten.33574.3076,3963,3669,30713,33574.htm#artikel",
         "mediatypes": {
             "DVDkl.gif": "DVD",
             "EDokukl.gif": "URL",
@@ -51,6 +50,7 @@
         48.4042981,
         9.979349000000001
     ],
+    "information": "http://www.ulm.de/kultur_tourismus/bibliotheken_und_literatur/oeffnungszeiten.33574.3076,3963,3669,30713,33574.htm#artikel",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtbibliothek"
 }

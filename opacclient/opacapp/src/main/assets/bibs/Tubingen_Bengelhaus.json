@@ -13,13 +13,13 @@
             "reservations": -1,
             "returndate": -1,
             "status": -1
-        },
-        "information": "http://www.bengelhaus.de/index.htm"
+        }
     },
     "geo": [
         48.5216364,
         9.0576448
     ],
+    "information": "http://www.bengelhaus.de/index.htm",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Albrecht-Bengel-Haus"
 }

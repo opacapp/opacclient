@@ -18,7 +18,6 @@
             "returndate": 4,
             "status": 3
         },
-        "information": "http://www.viernheim.de/unsere-stadt/bildungundkultur/stadtbuecherei/bibliothekonline.html",
         "mediatypes": {
             "MonoB.gif": "UNKNOWN",
             "Spiele.gif": "BOARDGAME",
@@ -44,6 +43,7 @@
         49.5412437,
         8.5784877
     ],
+    "information": "http://www.viernheim.de/unsere-stadt/bildungundkultur/stadtbuecherei/bibliothekonline.html",
     "state": "Hessen",
     "title": "Stadtbibliothek"
 }

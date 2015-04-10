@@ -15,7 +15,6 @@
             "title": 6
         },
         "baseurl": "http://wiedenest.bibdia-hosts.de",
-        "information": "http://www.wiedenest.de/biblisch-theologische-akademie/bibliothek.html",
         "mediatypes": {
             "1": "BOOK",
             "2": "NEWSPAPER",
@@ -34,6 +33,7 @@
         51.02685409999999,
         7.667207299999999
     ],
+    "information": "http://www.wiedenest.de/biblisch-theologische-akademie/bibliothek.html",
     "state": "Nordrhein-Westfalen",
     "title": "Bibelschule"
 }

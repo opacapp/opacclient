@@ -4,13 +4,13 @@
     "city": "Kitzingen",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.net/kitzingen",
-        "information": "http://www.kitzingen.info/stadtbuecherei.0.html"
+        "baseurl": "http://webopac.winbiap.net/kitzingen"
     },
     "geo": [
         49.7340805,
         10.1473777
     ],
+    "information": "http://www.kitzingen.info/stadtbuecherei.0.html",
     "state": "Bayern",
     "title": "Stadtb\u00fccherei im Luitpoldbau"
 }

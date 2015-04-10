@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://sisis.rz.htw-berlin.de/InfoGuideClient",
-        "customssl": true,
-        "information": "http://bibliothek.htw-berlin.de/oeffnungszeiten/"
+        "customssl": true
     },
     "geo": [
         52.519171,
         13.4060912
     ],
+    "information": "http://bibliothek.htw-berlin.de/oeffnungszeiten/",
     "state": "Berlin",
     "title": "Hochschulbibliothek HTW"
 }

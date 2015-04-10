@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "http://katalog.stadtbibo-weimar.de:8080/webOPACClient",
-        "information": "http://www.stadtbibo-weimar.de/opac.html",
         "startparams": "Login=opextern&BaseURL=this"
     },
     "geo": [
         50.9794934,
         11.3235439
     ],
+    "information": "http://www.stadtbibo-weimar.de/opac.html",
     "state": "Th\u00fcringen",
     "title": "Stadtbibliothek"
 }

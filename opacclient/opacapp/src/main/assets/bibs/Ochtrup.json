@@ -19,7 +19,6 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "http://www.buecherei-lamberti-ochtrup.de/",
         "mediatypes": {
             "Buchklein.GIF": "UNKNOWN",
             "CD-ROMklein.GIF": "CD_SOFTWARE",
@@ -70,6 +69,7 @@
         52.2056952,
         7.1876491
     ],
+    "information": "http://www.buecherei-lamberti-ochtrup.de/",
     "state": "Nordrhein-Westfalen",
     "title": "B\u00fccherei St. Lamberti"
 }

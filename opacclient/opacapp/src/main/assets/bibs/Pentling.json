@@ -4,13 +4,13 @@
     "city": "Pentling",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/pentling",
-        "information": "http://www.pentling.de/buecherei.html"
+        "baseurl": "http://webopac.winbiap.de/pentling"
     },
     "geo": [
         48.9833268,
         12.0572285
     ],
+    "information": "http://www.pentling.de/buecherei.html",
     "state": "Bayern",
     "title": "Gemeindeb\u00fccherei"
 }

@@ -24,7 +24,6 @@
             "returndate": -1,
             "status": 4
         },
-        "information": "http://www.duisburg.de/stadtbib/vorort/index.php",
         "mediatypes": {
             "1": "BOOK",
             "11": "DVD",
@@ -49,6 +48,7 @@
         51.4344079,
         6.762329299999999
     ],
+    "information": "http://www.duisburg.de/stadtbib/vorort/index.php",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtbibliothek"
 }

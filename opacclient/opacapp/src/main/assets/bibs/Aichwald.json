@@ -25,7 +25,6 @@
             "status": 3
         },
         "customssl": true,
-        "information": "http://www.aichwald.de/servlet/PB/menu/1135848_l1/index.html",
         "reservationtable": {
             "author": 0,
             "availability": 2,
@@ -39,6 +38,7 @@
         48.7617612,
         9.388987499999999
     ],
+    "information": "http://www.aichwald.de/servlet/PB/menu/1135848_l1/index.html",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Ortsb\u00fccherei"
 }

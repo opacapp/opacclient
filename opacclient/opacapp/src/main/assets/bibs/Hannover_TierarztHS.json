@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://opac.tib.uni-hannover.de",
-        "db": "5",
-        "information": "http://www.tiho-hannover.de/de/kliniken-institute/bibliothek/"
+        "db": "5"
     },
     "geo": [
         52.3758916,
         9.732010400000002
     ],
+    "information": "http://www.tiho-hannover.de/de/kliniken-institute/bibliothek/",
     "state": "Niedersachsen",
     "title": "Tier\u00e4rztliche Hochschule"
 }

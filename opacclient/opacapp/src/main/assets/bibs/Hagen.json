@@ -24,7 +24,6 @@
             "returndate": -1,
             "status": 4
         },
-        "information": "https://www.hagen.de/web/de/fachbereiche/fb_48sb/fb_48sb_01/informationen.html",
         "mediatypes": {
             "1": "BOOK",
             "11": "DVD",
@@ -61,6 +60,7 @@
         51.3670777,
         7.4632841
     ],
+    "information": "https://www.hagen.de/web/de/fachbereiche/fb_48sb/fb_48sb_01/informationen.html",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }

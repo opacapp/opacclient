@@ -19,7 +19,6 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "http://www.weissenhorn.de/staticsite/staticsite.php?menuid=169&topmenu=7",
         "mediatypes": {
             "mBuecherS.gif": "PACKAGE",
             "mCDROMS.gif": "CD_SOFTWARE",
@@ -40,6 +39,7 @@
         48.3037462,
         10.15612
     ],
+    "information": "http://www.weissenhorn.de/staticsite/staticsite.php?menuid=169&topmenu=7",
     "state": "Bayern",
     "title": "Stadtb\u00fccherei"
 }

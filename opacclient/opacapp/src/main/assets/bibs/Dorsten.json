@@ -25,7 +25,6 @@
             "status": 3
         },
         "db": "dors",
-        "information": "http://www.vhsundkultur-dorsten.de/stadtbibliothek/index.php",
         "mediatypes": {
             "EAusakl.gif": "MP3",
             "EAusbkl.gif": "EBOOK",
@@ -68,6 +67,7 @@
         51.7166667,
         7.0166667
     ],
+    "information": "http://www.vhsundkultur-dorsten.de/stadtbibliothek/index.php",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtbibliothek"
 }

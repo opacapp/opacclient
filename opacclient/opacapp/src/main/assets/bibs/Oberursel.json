@@ -21,7 +21,6 @@
             "returndate": 4,
             "status": 3
         },
-        "information": "http://www.oberursel.de/tourismus/bildung-kultur/stadtbuecherei/",
         "mediatypes": {
             "CD.gif": "CD",
             "EI1.gif": "UNKNOWN",
@@ -56,6 +55,7 @@
         50.2025478,
         8.5770309
     ],
+    "information": "http://www.oberursel.de/tourismus/bildung-kultur/stadtbuecherei/",
     "state": "Hessen",
     "title": "Stadtb\u00fccherei"
 }

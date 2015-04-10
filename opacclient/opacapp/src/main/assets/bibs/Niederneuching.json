@@ -4,13 +4,13 @@
     "city": "Niederneuching",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/neuching",
-        "information": "http://www.vg-oberneuching.de/index.php?option=com_content&view=article&id=641:eroeffnung-der-neuen-gemeindebuecherei-2&catid=102:neuching-bereich&Itemid=243"
+        "baseurl": "http://webopac.winbiap.de/neuching"
     },
     "geo": [
         48.2536757,
         11.8269561
     ],
+    "information": "http://www.vg-oberneuching.de/index.php?option=com_content&view=article&id=641:eroeffnung-der-neuen-gemeindebuecherei-2&catid=102:neuching-bereich&Itemid=243",
     "state": "Bayern",
     "title": "Gemeindeb\u00fccherei Neuching"
 }

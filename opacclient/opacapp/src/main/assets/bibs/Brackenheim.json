@@ -16,7 +16,6 @@
             "returndate": 5,
             "status": 4
         },
-        "information": "http://www.stadtbuecherei-brackenheim.de/",
         "mediatypes": {
             "ComicS.gif": "BOOK",
             "HALkl.gif": "BOOK",
@@ -44,6 +43,7 @@
             "title": 1
         }
     },
+    "information": "http://www.stadtbuecherei-brackenheim.de/",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtb\u00fccherei"
 }

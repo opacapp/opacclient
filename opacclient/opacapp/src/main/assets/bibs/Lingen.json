@@ -15,7 +15,6 @@
             "title": 6
         },
         "baseurl": "http://stadtbibliothek.lingen.de/",
-        "information": "http://www.lingen.de/tourismus_freizeit_und_kultur/stadtbibliothek/stadtbibliothek.html",
         "mediatypes": {
             "11": "DVD",
             "12": "AUDIBOOK",
@@ -37,6 +36,7 @@
         52.523056,
         7.323056
     ],
+    "information": "http://www.lingen.de/tourismus_freizeit_und_kultur/stadtbibliothek/stadtbibliothek.html",
     "state": "Niedersachsen",
     "title": "Stadtbibliothek"
 }

@@ -24,7 +24,6 @@
             "returndate": 2,
             "status": 1
         },
-        "information": "/../read/info.html",
         "reservationtable": {
             "author": 0,
             "availability": 3,
@@ -38,6 +37,7 @@
         51.9606649,
         7.6261347
     ],
+    "information": "/../read/info.html",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtbibliothek"
 }

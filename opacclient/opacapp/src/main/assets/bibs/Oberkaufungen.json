@@ -4,13 +4,13 @@
     "city": "Kaufungen",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.net/kaufungen",
-        "information": "http://www.kaufungen.eu/Startseite/B%C3%BCchereien/"
+        "baseurl": "http://webopac.winbiap.net/kaufungen"
     },
     "geo": [
         51.2831485,
         9.621238499999999
     ],
+    "information": "http://www.kaufungen.eu/Startseite/B%C3%BCchereien/",
     "state": "Hessen",
     "title": "Gemeindeb\u00fccherei Oberkaufungen"
 }

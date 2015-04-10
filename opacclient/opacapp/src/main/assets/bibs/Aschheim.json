@@ -4,13 +4,13 @@
     "city": "Aschheim",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.net/aschheim",
-        "information": "http://www.kultibuch.de/"
+        "baseurl": "http://webopac.winbiap.net/aschheim"
     },
     "geo": [
         48.1723102,
         11.7159097
     ],
+    "information": "http://www.kultibuch.de/",
     "state": "Bayern",
     "title": "Gemeindeb\u00fccherei"
 }

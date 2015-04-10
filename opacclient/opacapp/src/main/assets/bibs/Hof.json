@@ -24,7 +24,6 @@
             "returndate": 4,
             "status": 2
         },
-        "information": "http://www.hof.de/hof/stadtbuecherei/deu/index.php",
         "mediatypes": {
             "buch_blau.jpg": "BOOK",
             "buch_gelb.jpg": "BOOK",
@@ -54,6 +53,7 @@
         50.3135391,
         11.9127814
     ],
+    "information": "http://www.hof.de/hof/stadtbuecherei/deu/index.php",
     "state": "Bayern",
     "title": "Stadtb\u00fccherei"
 }

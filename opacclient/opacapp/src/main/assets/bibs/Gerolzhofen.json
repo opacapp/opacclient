@@ -4,13 +4,13 @@
     "city": "Gerolzhofen",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.net/gerolzhofen",
-        "information": "http://www.gerolzhofen.de/Stadtbibliothek.html"
+        "baseurl": "http://webopac.winbiap.net/gerolzhofen"
     },
     "geo": [
         49.9005963,
         10.3495174
     ],
+    "information": "http://www.gerolzhofen.de/Stadtbibliothek.html",
     "state": "Bayern",
     "title": "Stadtbibliothek"
 }

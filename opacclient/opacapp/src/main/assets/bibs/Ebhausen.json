@@ -17,7 +17,6 @@
             "returndate": 1,
             "status": 0
         },
-        "information": "http://www.bibliotheken.bw-online.de/read-ebhausen/info.html",
         "mediatypes": {
             "DVDkl.gif": "DVD",
             "cdkl.gif": "AUDIOBOOK",
@@ -38,6 +37,7 @@
         48.5833057,
         8.6814596
     ],
+    "information": "http://www.bibliotheken.bw-online.de/read-ebhausen/info.html",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Mediathek"
 }

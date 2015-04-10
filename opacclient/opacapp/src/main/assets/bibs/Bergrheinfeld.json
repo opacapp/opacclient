@@ -4,13 +4,13 @@
     "city": "Bergrheinfeld",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/bergrheinfeld",
-        "information": "http://www.bergrheinfeld.de/Gemeindebibliothek_Gemeindebibliothek_91_kkmenue.html"
+        "baseurl": "http://webopac.winbiap.de/bergrheinfeld"
     },
     "geo": [
         50.0100455,
         10.1808934
     ],
+    "information": "http://www.bergrheinfeld.de/Gemeindebibliothek_Gemeindebibliothek_91_kkmenue.html",
     "state": "Bayern",
     "title": "Gemeindebibliothek"
 }

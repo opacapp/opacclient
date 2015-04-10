@@ -4,13 +4,13 @@
     "city": "Wiernsheim",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/wiernsheim",
-        "information": "http://wiernsheim.de/?id=124"
+        "baseurl": "http://webopac.winbiap.de/wiernsheim"
     },
     "geo": [
         48.88933890000001,
         8.8505105
     ],
+    "information": "http://wiernsheim.de/?id=124",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Gemeindeb\u00fccherei"
 }

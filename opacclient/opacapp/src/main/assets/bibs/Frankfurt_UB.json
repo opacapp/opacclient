@@ -5,14 +5,14 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://lbsopac.rz.uni-frankfurt.de",
-		"charset": "ISO-8859-1",
-        "db": "30",
-        "information": "http://www.ub.uni-frankfurt.de/"
+        "charset": "ISO-8859-1",
+        "db": "30"
     },
     "geo": [
         50.1109221,
         8.6821267
     ],
+    "information": "http://www.ub.uni-frankfurt.de/",
     "state": "Hessen",
     "title": "UB Goethe-Universit\u00e4t"
 }

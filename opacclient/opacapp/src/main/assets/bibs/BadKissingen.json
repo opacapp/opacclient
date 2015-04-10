@@ -4,13 +4,13 @@
     "city": "Bad Kissingen",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.net/badkissingen",
-        "information": "http://www.badkissingen.de/de/stadt/bildung/stadtbuecherei/4942.Stadtbuecherei.html"
+        "baseurl": "http://webopac.winbiap.net/badkissingen"
     },
     "geo": [
         50.2007337,
         10.080392
     ],
+    "information": "http://www.badkissingen.de/de/stadt/bildung/stadtbuecherei/4942.Stadtbuecherei.html",
     "state": "Bayern",
     "title": "Stadtb\u00fccherei"
 }

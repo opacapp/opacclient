@@ -15,7 +15,6 @@
             "title": 7
         },
         "baseurl": "https://stadtbuecherei.bochum.de",
-        "information": "http://www.bochum.de/stadtbuecherei",
         "mediatypes": {
             "1": "BOOK",
             "11": "DVD",
@@ -35,6 +34,7 @@
         51.4818445,
         7.216236299999999
     ],
+    "information": "http://www.bochum.de/stadtbuecherei",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }

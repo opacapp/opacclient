@@ -4,13 +4,13 @@
     "city": "Berlin",
     "country": "Deutschland",
     "data": {
-        "baseurl": "https://webopac.beuth-hochschule.de/webOPACClient.bhssis",
-        "information": "http://www.beuth-hochschule.de/782/"
+        "baseurl": "https://webopac.beuth-hochschule.de/webOPACClient.bhssis"
     },
     "geo": [
         52.519171,
         13.4060912
     ],
+    "information": "http://www.beuth-hochschule.de/782/",
     "state": "Berlin",
     "title": "Beuth-Hochschule"
 }

@@ -25,7 +25,6 @@
             "status": 2
         },
         "db": "Lingen",
-        "information": "http://www.medienstelle-osnabrueck.de/txt.2/index.html",
         "reservationtable": {
             "author": 1,
             "availability": -1,
@@ -39,6 +38,7 @@
         52.52306,
         7.323278999999999
     ],
+    "information": "http://www.medienstelle-osnabrueck.de/txt.2/index.html",
     "state": "Niedersachsen",
     "title": "Medienstelle RPA"
 }

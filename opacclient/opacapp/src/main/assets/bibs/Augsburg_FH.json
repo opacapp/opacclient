@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://infoguide.hs-augsburg.de/InfoGuideClient.fhasis",
-        "information": "http://www.hs-augsburg.de/einrichtung/bib/",
         "startparams": "Login=wofha"
     },
     "geo": [
         48.3705449,
         10.89779
     ],
+    "information": "http://www.hs-augsburg.de/einrichtung/bib/",
     "state": "Bayern",
     "title": "Hochschulbibliothek"
 }

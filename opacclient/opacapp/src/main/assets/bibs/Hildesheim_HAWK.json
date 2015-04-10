@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "http://opac.lbs-hildesheim.gbv.de/",
-        "db": "2",
-        "information": "http://www.hawk-hhg.de/bibliothek/"
+        "db": "2"
     },
     "geo": [
         52.15,
         9.95
     ],
+    "information": "http://www.hawk-hhg.de/bibliothek/",
     "state": "Niedersachsen",
     "title": "Bibliothek der HAWK Hildesheim-Holzminden-G\u00f6ttingen"
 }

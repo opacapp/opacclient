@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "http://vzlbs2.gbv.de",
-        "db": "57",
-        "information": "http://www.leibniz-fh.de/kontakt.html"
+        "db": "57"
     },
     "geo": [
         52.3758916,
         9.732010400000002
     ],
+    "information": "http://www.leibniz-fh.de/kontakt.html",
     "state": "Niedersachsen",
     "title": "Leibniz-FH"
 }

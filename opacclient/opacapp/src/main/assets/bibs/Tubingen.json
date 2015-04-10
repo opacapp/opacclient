@@ -25,7 +25,6 @@
             "status": 4
         },
         "customssl": true,
-        "information": "/../readTuebingen/info.html",
         "reservationtable": {
             "author": 0,
             "availability": -1,
@@ -39,6 +38,7 @@
         48.5216364,
         9.0576448
     ],
+    "information": "/../readTuebingen/info.html",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtbibliothek"
 }

@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://bsz.ibs-bw.de/aDISWeb/app",
-        "information": "http://www.hs-pforzheim.de/De-de/Hochschule/Einrichtungen/Bibliothek/Kataloge_Datenbanken/Seiten/Inhaltseite.aspx",
         "startparams": "service=direct/0/Home/$DirectLink&sp=S127.0.0.1:23252"
     },
     "geo": [
         48.8926378,
         8.693292699999999
     ],
+    "information": "http://www.hs-pforzheim.de/De-de/Hochschule/Einrichtungen/Bibliothek/Kataloge_Datenbanken/Seiten/Inhaltseite.aspx",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Hochschulbibliothek"
 }

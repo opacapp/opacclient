@@ -4,13 +4,13 @@
     "city": "Haar",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.net/haar",
-        "information": "http://www.gemeinde-haar.de/Freizeit_in_Haar/Gemeindeb%C3%BCcherei_/"
+        "baseurl": "http://webopac.winbiap.net/haar"
     },
     "geo": [
         48.1103758,
         11.7321151
     ],
+    "information": "http://www.gemeinde-haar.de/Freizeit_in_Haar/Gemeindeb%C3%BCcherei_/",
     "state": "Bayern",
     "title": "Gemeindeb\u00fccherei"
 }

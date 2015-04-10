@@ -19,7 +19,6 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "http://www.bistum-muenster.de/index.php?cat_id=17784&myELEMENT=214372&id=384&title=Petrus%20Canisius",
         "mediatypes": {
             "Buchklein.GIF": "BOOK",
             "CD-ROMklein.GIF": "CD_SOFTWARE",
@@ -70,6 +69,7 @@
         51.581349,
         6.245757999999999
     ],
+    "information": "http://www.bistum-muenster.de/index.php?cat_id=17784&myELEMENT=214372&id=384&title=Petrus%20Canisius",
     "state": "Nordrhein-Westfalen",
     "title": "Petrus-Canisius-B\u00fccherei"
 }

@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://kataloge.uni-hamburg.de/",
-        "db": "8",
-        "information": "http://hdp.hamburg.de/bibliothek/"
+        "db": "8"
     },
     "geo": [
         53.60248,
         10.00075
     ],
+    "information": "http://hdp.hamburg.de/bibliothek/",
     "state": "Hamburg",
     "title": "Polizei/Hochschule der Polizei"
 }

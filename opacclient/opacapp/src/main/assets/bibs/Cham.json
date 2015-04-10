@@ -18,7 +18,6 @@
             "returndate": 4,
             "status": 2
         },
-        "information": "http://www.cham.de/deCham/kulturbildung/bibliothek/stadtbibliothek/stadtbibliothek.php?navid=179",
         "mediatypes": {
             "CDkl.gif": "CD",
             "film.gif": "MOVIE",
@@ -39,6 +38,7 @@
         49.2238643,
         12.6620845
     ],
+    "information": "http://www.cham.de/deCham/kulturbildung/bibliothek/stadtbibliothek/stadtbibliothek.php?navid=179",
     "state": "Bayern",
     "title": "Stadtb\u00fccherei"
 }

@@ -4,13 +4,13 @@
     "city": "Bochum",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://opac.ub.rub.de:8080/webOPACClient",
-        "information": "http://www.ub.rub.de/informationen/oeffnungszeiten.html"
+        "baseurl": "http://opac.ub.rub.de:8080/webOPACClient"
     },
     "geo": [
         51.4818445,
         7.216236299999999
     ],
+    "information": "http://www.ub.rub.de/informationen/oeffnungszeiten.html",
     "state": "Nordrhein-Westfalen",
     "title": "Unibibliothek RUB"
 }

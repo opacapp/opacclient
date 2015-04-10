@@ -24,7 +24,6 @@
             "returndate": -1,
             "status": 4
         },
-        "information": "http://www.stadtbibliothek-ladenburg.de/",
         "mediatypes": {
             "1": "BOOK",
             "11": "DVD",
@@ -48,6 +47,7 @@
         49.4739759,
         8.6077464
     ],
+    "information": "http://www.stadtbibliothek-ladenburg.de/",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtbibliothek"
 }

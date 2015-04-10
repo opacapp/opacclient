@@ -21,7 +21,6 @@
             "location": 1,
             "status": 3
         },
-        "information": "http://www.stadtbibliothek-essen.de/de/oeffnungszeiten/oeffnungszeiten.html",
         "opacdir": "opax",
         "searchtable": [
             1,
@@ -34,6 +33,7 @@
         51.4556432,
         7.0115552
     ],
+    "information": "http://www.stadtbibliothek-essen.de/de/oeffnungszeiten/oeffnungszeiten.html",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtbibliothek"
 }

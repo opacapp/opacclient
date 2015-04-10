@@ -24,7 +24,6 @@
             "returndate": 4,
             "status": 3
         },
-        "information": "http://www.stadtbibliothek-sindelfingen.de/",
         "reservationtable": {
             "author": 0,
             "availability": 3,
@@ -38,6 +37,7 @@
         48.7074558,
         9.0044053
     ],
+    "information": "http://www.stadtbibliothek-sindelfingen.de/",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtbibliothek"
 }
