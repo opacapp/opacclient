@@ -24,7 +24,7 @@
             android:drawableLeft="@drawable/ic_branch"
             android:drawablePadding="4dp"
             android:gravity="center_vertical"
-            android:contentDescription="@string/zweigstelle"/>
+            android:contentDescription="@string/branch"/>
 
         <TextView
             android:id="@+id/tvDepartment"
