@@ -30,4 +30,8 @@ public class JsonKeyIterator implements Iterator<String> {
             throw new IllegalArgumentException("A non-String key was found inside the JSONObject");
         }
     }
+
+    public void remove() {
+        jsonIter.remove();
+    }
 }
