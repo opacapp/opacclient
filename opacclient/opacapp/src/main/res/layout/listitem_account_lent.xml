@@ -94,9 +94,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:clickable="false">
+            android:clickable="false"
+            android:animateLayoutChanges="true">
 
-            <TextView
+        <TextView
                 android:id="@+id/tvTitleAndAuthor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
