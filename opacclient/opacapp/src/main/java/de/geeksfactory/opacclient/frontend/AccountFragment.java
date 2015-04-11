@@ -37,8 +37,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.CardView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -704,6 +707,10 @@ public class AccountFragment extends Fragment implements
             ACRA.getErrorReporter().handleException(e);
         }
 
+        /*
+            Lent items
+         */
+
         llLent.removeAllViews();
 
         boolean notification_on = sp.getBoolean("notification_service", false);
@@ -728,10 +735,24 @@ public class AccountFragment extends Fragment implements
                     getActivity().getString(R.string.lent_head) + " (" + result.getLent().size() +
                             ")");
             for (final Map<String, String> item : result.getLent()) {
-                View v = getLayoutInflater(null)
+                final View v = getLayoutInflater(null)
                         .inflate(R.layout.listitem_account_lent, llLent, false);
 
+                final TextView tvTitleAndAuthor = (TextView) v.findViewById(R.id.tvTitleAndAuthor);
+                TextView tvStatus = (TextView) v.findViewById(R.id.tvStatus);
+                TextView tvAuthorDetail = (TextView) v.findViewById(R.id.tvAuthorDetail);
+                TextView tvBranchDetail = (TextView) v.findViewById(R.id.tvBranchDetail);
+                TextView tvFormatDetail = (TextView) v.findViewById(R.id.tvFormatDetail);
+                ImageView ivProlong = (ImageView) v.findViewById(R.id.ivProlong);
+                ImageView ivDownload = (ImageView) v.findViewById(R.id.ivDownload);
+                final ImageView ivDetails = (ImageView) v.findViewById(R.id.ivDetails);
+                final ImageView ivClose = (ImageView) v.findViewById(R.id.ivClose);
+                View vStatusColor = v.findViewById(R.id.vStatusColor);
+                final LinearLayout llDetails = (LinearLayout) v.findViewById(R.id.llDetails);
+                final CardView card = (CardView) v;
+
                 if (item.containsKey(AccountData.KEY_LENT_ID)) {
+                    // Connection to detail view
                     View.OnClickListener gotoDetails = new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -739,111 +760,72 @@ public class AccountFragment extends Fragment implements
                                     new Intent(getActivity(), SearchResultDetailActivity.class);
                             intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
                                     item.get(AccountData.KEY_LENT_ID));
-                            startActivity(intent);
+                            ActivityOptionsCompat options = ActivityOptionsCompat
+                                    .makeScaleUpAnimation(v, v.getLeft(), v.getTop(), v.getWidth(),
+                                            v.getHeight());
+                            ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
                         }
                     };
+                    v.setClickable(true);
+                    v.setFocusable(true);
                     v.setOnClickListener(gotoDetails);
                 }
 
-                TextView tvTitleAndAuthor = (TextView) v.findViewById(R.id.tvTitleAndAuthor);
-                TextView tvStatus = (TextView) v.findViewById(R.id.tvStatus);
-                TextView tvTitleDetail = (TextView) v.findViewById(R.id.tvTitleDetail);
-                TextView tvAuthorDetail = (TextView) v.findViewById(R.id.tvAuthorDetail);
-                TextView tvBranchDetail = (TextView) v.findViewById(R.id.tvBranchDetail);
-                TextView tvFormatDetail = (TextView) v.findViewById(R.id.tvFormatDetail);
-                TextView tvStatusDetail = (TextView) v.findViewById(R.id.tvStatusDetail);
-                ImageView ivProlong = (ImageView) v.findViewById(R.id.ivProlong);
-                ImageView ivDownload = (ImageView) v.findViewById(R.id.ivDownload);
-                final ImageView ivDetails = (ImageView) v.findViewById(R.id.ivDetails);
-                final ImageView ivClose = (ImageView) v.findViewById(R.id.ivClose);
-                View vStatusColor = v.findViewById(R.id.vStatusColor);
-                final LinearLayout llOverview = (LinearLayout) v.findViewById(R.id.llOverview);
-                final LinearLayout llDetails = (LinearLayout) v.findViewById(R.id.llDetails);
-
-                ivDetails.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // Wait so that touch feedback is visible before the button is hidden
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                llOverview.setVisibility(View.GONE);
-                                llDetails.setVisibility(View.VISIBLE);
-                                ivDetails.setVisibility(View.GONE);
-                                ivClose.setVisibility(View.VISIBLE);
-                            }
-                        }, 200);
-                    }
-                });
-                ivClose.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // Wait so that touch feedback is visible before the button is hidden
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                llOverview.setVisibility(View.VISIBLE);
-                                llDetails.setVisibility(View.GONE);
-                                ivDetails.setVisibility(View.VISIBLE);
-                                ivClose.setVisibility(View.GONE);
-                            }
-                        }, 200);
-                    }
-                });
-
-                // Overview
-                if (item.containsKey(AccountData.KEY_LENT_TITLE) &&
-                        item.containsKey(AccountData.KEY_LENT_AUTHOR)) {
-                    tvTitleAndAuthor.setText(
-                            Html.fromHtml(item.get(AccountData.KEY_LENT_TITLE)) + ", " +
-                                    Html.fromHtml(item.get(AccountData.KEY_LENT_AUTHOR)));
-                } else if (item.containsKey(AccountData.KEY_LENT_TITLE)) {
-                    tvTitleAndAuthor.setText(Html.fromHtml(item.get(AccountData.KEY_LENT_TITLE)));
-                } else if (item.containsKey(AccountData.KEY_LENT_AUTHOR)) {
-                    tvTitleAndAuthor.setText(Html.fromHtml(item.get(AccountData.KEY_LENT_AUTHOR)));
+                // Overview (Title/Author, Status/Deadline)
+                final CharSequence title = item.containsKey(AccountData.KEY_LENT_TITLE) ?
+                        Html.fromHtml(item.get(AccountData.KEY_LENT_TITLE)) : null;
+                final CharSequence author = item.containsKey(AccountData.KEY_LENT_AUTHOR) ?
+                        Html.fromHtml(item.get(AccountData.KEY_LENT_AUTHOR)) : null;
+                if (title != null && author != null) {
+                    tvTitleAndAuthor.setText(title + ", " + author);
+                } else if (title != null) {
+                    tvTitleAndAuthor.setText(title);
+                } else if (author != null) {
+                    tvTitleAndAuthor.setText(author);
                 } else {
                     tvTitleAndAuthor.setVisibility(View.GONE);
                 }
 
-                CharSequence status = "";
                 if (item.containsKey(AccountData.KEY_LENT_DEADLINE) &&
                         item.containsKey(AccountData.KEY_LENT_STATUS)) {
-                    status = Html.fromHtml(item.get(AccountData.KEY_LENT_DEADLINE)) + " (" +
-                            Html.fromHtml(item.get(AccountData.KEY_LENT_STATUS)) + ")";
+                    tvStatus.setText(Html.fromHtml(item.get(AccountData.KEY_LENT_DEADLINE)) + " (" +
+                            Html.fromHtml(item.get(AccountData.KEY_LENT_STATUS)) + ")");
                 } else if (item.containsKey(AccountData.KEY_LENT_DEADLINE)) {
-                    status = Html.fromHtml(item.get(AccountData.KEY_LENT_DEADLINE));
+                    tvStatus.setText(Html.fromHtml(item.get(AccountData.KEY_LENT_DEADLINE)));
                 } else if (item.containsKey(AccountData.KEY_LENT_STATUS)) {
-                    status = Html.fromHtml(item.get(AccountData.KEY_LENT_STATUS));
+                    tvStatus.setText(Html.fromHtml(item.get(AccountData.KEY_LENT_STATUS)));
                 } else {
                     tvStatus.setVisibility(View.GONE);
-                    tvStatusDetail.setVisibility(View.GONE);
                 }
-                tvStatus.setText(status);
-                tvStatusDetail.setText(status);
 
                 // Detail
-                if (item.containsKey(AccountData.KEY_LENT_TITLE)) {
-                    tvTitleDetail.setText(Html.fromHtml(item.get(AccountData.KEY_LENT_TITLE)));
-                } else {
-                    tvTitleDetail.setVisibility(View.GONE);
-                }
-                if (item.containsKey(AccountData.KEY_LENT_AUTHOR)) {
-                    tvAuthorDetail.setText(Html.fromHtml(item.get(AccountData.KEY_LENT_AUTHOR)));
+                boolean hasDetails = false;
+                if (author != null) {
+                    tvAuthorDetail.setText(author);
+                    hasDetails = true;
                 } else {
                     tvAuthorDetail.setVisibility(View.GONE);
                 }
                 if (item.containsKey(AccountData.KEY_LENT_FORMAT)) {
                     tvFormatDetail.setText(Html.fromHtml(item.get(AccountData.KEY_LENT_FORMAT)));
+                    hasDetails = true;
                 } else {
                     tvFormatDetail.setVisibility(View.GONE);
                 }
                 if (item.containsKey(AccountData.KEY_LENT_LENDING_BRANCH)) {
                     tvBranchDetail
                             .setText(Html.fromHtml(item.get(AccountData.KEY_LENT_LENDING_BRANCH)));
+                    hasDetails = true;
                 } else if (item.containsKey(AccountData.KEY_LENT_BRANCH)) {
                     tvBranchDetail.setText(Html.fromHtml(item.get(AccountData.KEY_LENT_BRANCH)));
+                    hasDetails = true;
                 } else {
                     tvBranchDetail.setVisibility(View.GONE);
+                }
+
+                // If there are no more details, we don't need the button for them
+                if (!hasDetails) {
+                    ivDetails.setVisibility(View.GONE);
                 }
 
                 try {
@@ -912,6 +894,65 @@ public class AccountFragment extends Fragment implements
                     ivProlong.setVisibility(View.INVISIBLE);
                 }
 
+                // Expanding and closing details
+                ivDetails.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View clicked) {
+                        // Wait so that touch feedback is visible before the button is hidden
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                llDetails.setVisibility(View.VISIBLE);
+                                if (title != null) {
+                                    tvTitleAndAuthor.setText(title);
+                                } else {
+                                    tvTitleAndAuthor.setVisibility(View.GONE);
+                                }
+                                ivDetails.setVisibility(View.GONE);
+                                ivClose.setVisibility(View.VISIBLE);
+                                card.setCardElevation(getResources()
+                                        .getDimension(R.dimen.card_elevation_selected));
+                                int sideMargin = getResources().getDimensionPixelSize(
+                                        R.dimen.card_side_margin_selected);
+                                int topbottomMargin = getResources().getDimensionPixelSize(
+                                        R.dimen.card_topbottom_margin_selected);
+                                ((LinearLayout.LayoutParams) v.getLayoutParams())
+                                        .setMargins(sideMargin, topbottomMargin, sideMargin,
+                                                topbottomMargin);
+                            }
+                        }, 200);
+                    }
+                });
+                ivClose.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(final View clicked) {
+                        // Wait so that touch feedback is visible before the button is hidden
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                llDetails.setVisibility(View.GONE);
+                                if (title != null && author != null) {
+                                    tvTitleAndAuthor.setText(title + ", " + author);
+                                } else if (author != null) {
+                                    tvTitleAndAuthor.setText(author);
+                                    tvTitleAndAuthor.setVisibility(View.VISIBLE);
+                                }
+                                ivDetails.setVisibility(View.VISIBLE);
+                                ivClose.setVisibility(View.GONE);
+                                card.setCardElevation(getResources().getDimension(
+                                        R.dimen.card_elevation_default));
+                                int sideMargin = getResources()
+                                        .getDimensionPixelSize(R.dimen.card_side_margin_default);
+                                int topbottomMargin = getResources().getDimensionPixelSize(
+                                        R.dimen.card_topbottom_margin_default);
+                                ((LinearLayout.LayoutParams) v.getLayoutParams())
+                                        .setMargins(sideMargin, topbottomMargin, sideMargin,
+                                                topbottomMargin);
+                            }
+                        }, 200);
+                    }
+                });
+
                 llLent.addView(v);
             }
         }
@@ -922,6 +963,10 @@ public class AccountFragment extends Fragment implements
                 tvError.setText(R.string.notification_problems);
             }
         }
+
+        /*
+            Reservations
+         */
 
         llRes.removeAllViews();
 
@@ -936,68 +981,93 @@ public class AccountFragment extends Fragment implements
                     .getString(R.string.reservations_head) + " (" +
                     result.getReservations().size() + ")");
             for (final Map<String, String> item : result.getReservations()) {
-                View v = getLayoutInflater(null).inflate(
-                        R.layout.listitem_account_reservation, null);
+                final View v = getLayoutInflater(null).inflate(
+                        R.layout.listitem_account_reservation, llRes, false);
+
+                final TextView tvTitleAndAuthor = (TextView) v.findViewById(R.id.tvTitleAndAuthor);
+                TextView tvStatus = (TextView) v.findViewById(R.id.tvStatus);
+                TextView tvAuthorDetail = (TextView) v.findViewById(R.id.tvAuthorDetail);
+                TextView tvBranchDetail = (TextView) v.findViewById(R.id.tvBranchDetail);
+                TextView tvFormatDetail = (TextView) v.findViewById(R.id.tvFormatDetail);
+                ImageView ivCancel = (ImageView) v.findViewById(R.id.ivCancel);
+                ImageView ivBooking = (ImageView) v.findViewById(R.id.ivBooking);
+                final ImageView ivDetails = (ImageView) v.findViewById(R.id.ivDetails);
+                final ImageView ivClose = (ImageView) v.findViewById(R.id.ivClose);
+                final LinearLayout llDetails = (LinearLayout) v.findViewById(R.id.llDetails);
+                final CardView card = (CardView) v;
 
                 if (item.containsKey(AccountData.KEY_RESERVATION_ID)) {
+                    // Connection to detail view
                     View.OnClickListener gotoDetails = new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(getActivity(),
-                                    SearchResultDetailActivity.class);
-                            intent.putExtra(
-                                    SearchResultDetailFragment.ARG_ITEM_ID,
+                            Intent intent =
+                                    new Intent(getActivity(), SearchResultDetailActivity.class);
+                            intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
                                     item.get(AccountData.KEY_RESERVATION_ID));
-                            startActivity(intent);
+                            ActivityOptionsCompat options = ActivityOptionsCompat
+                                    .makeScaleUpAnimation(v, v.getLeft(), v.getTop(), v.getWidth(),
+                                            v.getHeight());
+                            ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
                         }
                     };
-                    v.findViewById(R.id.tvTitel)
-                     .setOnClickListener(gotoDetails);
-                    v.findViewById(R.id.tvVerfasser).setOnClickListener(
-                            gotoDetails);
-                    v.findViewById(R.id.tvStatus).setOnClickListener(
-                            gotoDetails);
+                    v.setClickable(true);
+                    v.setFocusable(true);
+                    v.setOnClickListener(gotoDetails);
                 }
 
-                if (item.containsKey(AccountData.KEY_RESERVATION_TITLE)) {
-                    ((TextView) v.findViewById(R.id.tvTitel)).setText(Html
-                            .fromHtml(item
-                                    .get(AccountData.KEY_RESERVATION_TITLE)));
-                }
-                if (item.containsKey(AccountData.KEY_RESERVATION_AUTHOR)) {
-                    ((TextView) v.findViewById(R.id.tvVerfasser)).setText(Html
-                            .fromHtml(item
-                                    .get(AccountData.KEY_RESERVATION_AUTHOR)));
+                // Overview (Title/Author, Ready/Expire)
+                final CharSequence title = item.containsKey(AccountData.KEY_RESERVATION_TITLE) ?
+                        Html.fromHtml(item.get(AccountData.KEY_RESERVATION_TITLE)) : null;
+                final CharSequence author = item.containsKey(AccountData.KEY_RESERVATION_AUTHOR) ?
+                        Html.fromHtml(item.get(AccountData.KEY_RESERVATION_AUTHOR)) : null;
+                if (title != null && author != null) {
+                    tvTitleAndAuthor.setText(title + ", " + author);
+                } else if (title != null) {
+                    tvTitleAndAuthor.setText(title);
+                } else if (author != null) {
+                    tvTitleAndAuthor.setText(author);
+                } else {
+                    tvTitleAndAuthor.setVisibility(View.GONE);
                 }
 
                 if (item.containsKey(AccountData.KEY_RESERVATION_READY)) {
-                    ((TextView) v.findViewById(R.id.tvStatus)).setText(Html
-                            .fromHtml(item
-                                    .get(AccountData.KEY_RESERVATION_READY)));
-                    v.findViewById(R.id.tvStatus)
-                     .setVisibility(View.VISIBLE);
-                } else if (item.containsKey(AccountData.KEY_RESERVATION_EXPIRE)
-                        && item.get(AccountData.KEY_RESERVATION_EXPIRE)
-                               .length() > 6) {
-                    ((TextView) v.findViewById(R.id.tvStatus))
-                            .setText(Html.fromHtml("bis "
+                    tvStatus.setText(Html.fromHtml(item.get(AccountData.KEY_RESERVATION_READY)));
+                } else if (item.containsKey(AccountData.KEY_RESERVATION_EXPIRE) &&
+                        item.get(AccountData.KEY_RESERVATION_EXPIRE).length() > 6) {
+                    tvStatus.setText(
+                            Html.fromHtml(getString(R.string.reservation_expire_until) + " "
                                     + item.get(AccountData.KEY_RESERVATION_EXPIRE)));
-                    v.findViewById(R.id.tvStatus)
-                     .setVisibility(View.VISIBLE);
                 } else {
-                    v.findViewById(R.id.tvStatus)
-                     .setVisibility(View.GONE);
+                    tvStatus.setVisibility(View.GONE);
                 }
 
-                if (item.containsKey(AccountData.KEY_RESERVATION_BRANCH)) {
-                    ((TextView) v.findViewById(R.id.tvZst)).setText(Html
-                            .fromHtml(item
-                                    .get(AccountData.KEY_RESERVATION_BRANCH)));
-                    v.findViewById(R.id.tvZst)
-                     .setVisibility(View.VISIBLE);
+                // Detail
+                boolean hasDetails = false;
+                if (author != null) {
+                    tvAuthorDetail.setText(author);
+                    hasDetails = true;
                 } else {
-                    v.findViewById(R.id.tvZst)
-                     .setVisibility(View.GONE);
+                    tvAuthorDetail.setVisibility(View.GONE);
+                }
+                if (item.containsKey(AccountData.KEY_RESERVATION_FORMAT)) {
+                    tvFormatDetail
+                            .setText(Html.fromHtml(item.get(AccountData.KEY_RESERVATION_FORMAT)));
+                    hasDetails = true;
+                } else {
+                    tvFormatDetail.setVisibility(View.GONE);
+                }
+                if (item.containsKey(AccountData.KEY_RESERVATION_BRANCH)) {
+                    tvBranchDetail
+                            .setText(Html.fromHtml(item.get(AccountData.KEY_RESERVATION_BRANCH)));
+                    hasDetails = true;
+                } else {
+                    tvBranchDetail.setVisibility(View.GONE);
+                }
+
+                // If there are no more details, we don't need the button for them
+                if (!hasDetails) {
+                    ivDetails.setVisibility(View.GONE);
                 }
 
                 if (item.containsKey(AccountData.KEY_RESERVATION_BOOKING)) {
@@ -1034,6 +1104,66 @@ public class AccountFragment extends Fragment implements
                     v.findViewById(R.id.ivBooking)
                      .setVisibility(View.GONE);
                 }
+
+                // Expanding and closing details
+                ivDetails.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View clicked) {
+                        // Wait so that touch feedback is visible before the button is hidden
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                llDetails.setVisibility(View.VISIBLE);
+                                if (title != null) {
+                                    tvTitleAndAuthor.setText(title);
+                                } else {
+                                    tvTitleAndAuthor.setVisibility(View.GONE);
+                                }
+                                ivDetails.setVisibility(View.GONE);
+                                ivClose.setVisibility(View.VISIBLE);
+                                card.setCardElevation(getResources()
+                                        .getDimension(R.dimen.card_elevation_selected));
+                                int sideMargin = getResources().getDimensionPixelSize(
+                                        R.dimen.card_side_margin_selected);
+                                int topbottomMargin = getResources().getDimensionPixelSize(
+                                        R.dimen.card_topbottom_margin_selected);
+                                ((LinearLayout.LayoutParams) v.getLayoutParams())
+                                        .setMargins(sideMargin, topbottomMargin, sideMargin,
+                                                topbottomMargin);
+                            }
+                        }, 200);
+                    }
+                });
+                ivClose.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(final View clicked) {
+                        // Wait so that touch feedback is visible before the button is hidden
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                llDetails.setVisibility(View.GONE);
+                                if (title != null && author != null) {
+                                    tvTitleAndAuthor.setText(title + ", " + author);
+                                } else if (author != null) {
+                                    tvTitleAndAuthor.setText(author);
+                                    tvTitleAndAuthor.setVisibility(View.VISIBLE);
+                                }
+                                ivDetails.setVisibility(View.VISIBLE);
+                                ivClose.setVisibility(View.GONE);
+                                card.setCardElevation(getResources().getDimension(
+                                        R.dimen.card_elevation_default));
+                                int sideMargin = getResources()
+                                        .getDimensionPixelSize(R.dimen.card_side_margin_default);
+                                int topbottomMargin = getResources().getDimensionPixelSize(
+                                        R.dimen.card_topbottom_margin_default);
+                                ((LinearLayout.LayoutParams) v.getLayoutParams())
+                                        .setMargins(sideMargin, topbottomMargin, sideMargin,
+                                                topbottomMargin);
+                            }
+                        }, 200);
+                    }
+                });
+
                 llRes.addView(v);
             }
         }
