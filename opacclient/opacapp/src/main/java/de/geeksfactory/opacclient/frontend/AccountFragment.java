@@ -1071,38 +1071,28 @@ public class AccountFragment extends Fragment implements
                 }
 
                 if (item.containsKey(AccountData.KEY_RESERVATION_BOOKING)) {
-                    v.findViewById(R.id.ivBooking).setTag(
-                            item.get(AccountData.KEY_RESERVATION_BOOKING));
-                    v.findViewById(R.id.ivBooking)
-                     .setOnClickListener(new OnClickListener() {
-                         @Override
-                         public void onClick(View arg0) {
-                             bookingStart((String) arg0.getTag());
-                         }
-                     });
-                    v.findViewById(R.id.ivBooking)
-                     .setVisibility(View.VISIBLE);
-                    v.findViewById(R.id.ivCancel)
-                     .setVisibility(View.GONE);
+                    ivBooking.setTag(item.get(AccountData.KEY_RESERVATION_BOOKING));
+                    ivBooking.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View arg0) {
+                            bookingStart((String) arg0.getTag());
+                        }
+                    });
+                    ivBooking.setVisibility(View.VISIBLE);
+                    ivCancel.setVisibility(View.GONE);
                 } else if (item.containsKey(AccountData.KEY_RESERVATION_CANCEL)) {
-                    v.findViewById(R.id.ivCancel).setTag(
-                            item.get(AccountData.KEY_RESERVATION_CANCEL));
-                    v.findViewById(R.id.ivCancel)
-                     .setOnClickListener(new OnClickListener() {
-                         @Override
-                         public void onClick(View arg0) {
-                             cancel((String) arg0.getTag());
-                         }
-                     });
-                    v.findViewById(R.id.ivCancel)
-                     .setVisibility(View.VISIBLE);
-                    v.findViewById(R.id.ivBooking)
-                     .setVisibility(View.GONE);
+                    ivCancel.setTag(item.get(AccountData.KEY_RESERVATION_CANCEL));
+                    ivCancel.setOnClickListener(new OnClickListener() {
+                       @Override
+                       public void onClick(View arg0) {
+                           cancel((String) arg0.getTag());
+                       }
+                   });
+                    ivCancel.setVisibility(View.VISIBLE);
+                    ivBooking.setVisibility(View.GONE);
                 } else {
-                    v.findViewById(R.id.ivCancel)
-                     .setVisibility(View.INVISIBLE);
-                    v.findViewById(R.id.ivBooking)
-                     .setVisibility(View.GONE);
+                    ivCancel.setVisibility(View.INVISIBLE);
+                    ivBooking.setVisibility(View.GONE);
                 }
 
                 // Expanding and closing details
