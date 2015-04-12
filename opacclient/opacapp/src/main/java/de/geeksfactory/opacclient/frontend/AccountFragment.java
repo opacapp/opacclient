@@ -1180,7 +1180,7 @@ public class AccountFragment extends Fragment implements
                         .getResults().toArray()));
                 switch (result.getActionIdentifier()) {
                     case ReservationResult.ACTION_BRANCH:
-                        builder.setTitle(R.string.zweigstelle);
+                        builder.setTitle(R.string.branch);
                 }
                 builder.setView(view).setNeutralButton(R.string.close,
                         new DialogInterface.OnClickListener() {

@@ -59,25 +59,23 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
 /**
  * @author Johan von Forstner, 06.04.2014
  *         <p/>
- *         WebOPAC.net, Version 2.2.70 gestartet mit Gemeindebibliothek
- *         Nürensdorf (erstes Google-Suchergebnis)
+ *         WebOPAC.net, Version 2.2.70 gestartet mit Gemeindebibliothek Nürensdorf (erstes
+ *         Google-Suchergebnis)
  *         <p/>
- *         weitere kompatible Bibliotheken:
- *         https://www.google.de/search?q=webOpac
- *         .net%202.1.30%20powered%20by%20winMedio
- *         .net&qscrl=1#q=%22webOpac.net+2.2
+ *         weitere kompatible Bibliotheken: https://www.google.de/search?q=webOpac
+ *         .net%202.1.30%20powered%20by%20winMedio .net&qscrl=1#q=%22webOpac.net+2.2
  *         .70+powered+by+winMedio.net%22+inurl%3Awinmedio&qscrl=1&start=0
  *         <p/>
- *         Unterstützt bisher nur Katalogsuche, Accountunterstüzung könnte (wenn
- *         keine Kontodaten verfügbar sind) über den Javascript-Code
- *         reverse-engineered werden:
- *         http://www.winmedio.net/nuerensdorf/de/mobile
- *         /GetScript.ashx?id=mobile.de.min.js&v=20140122
+ *         Unterstützt bisher nur Katalogsuche, Accountunterstüzung könnte (wenn keine Kontodaten
+ *         verfügbar sind) über den Javascript-Code reverse-engineered werden:
+ *         http://www.winmedio.net/nuerensdorf/de/mobile /GetScript.ashx?id=mobile.de.min
+ *         .js&v=20140122
  */
 
 public class WebOpacNet extends BaseApi implements OpacApi {
 
     protected static HashMap<String, MediaType> defaulttypes = new HashMap<>();
+
     static {
         defaulttypes.put("1", MediaType.BOOK);
         defaulttypes.put("2", MediaType.CD_MUSIC);
@@ -86,16 +84,14 @@ public class WebOpacNet extends BaseApi implements OpacApi {
         defaulttypes.put("5", MediaType.CD_SOFTWARE);
         defaulttypes.put("8", MediaType.MAGAZINE);
     }
+
     protected String opac_url = "";
     protected JSONObject data;
-    protected Library library;
     protected List<SearchQuery> query;
 
     @Override
     public void init(Library lib) {
         super.init(lib);
-
-        this.library = lib;
         this.data = lib.getData();
 
         try {
@@ -128,11 +124,13 @@ public class WebOpacNet extends BaseApi implements OpacApi {
     }
 
     protected int addParameters(SearchQuery query, StringBuilder params,
-                                int index) {
-        if (query.getValue().equals(""))
+            int index) {
+        if (query.getValue().equals("")) {
             return index;
-        if (index > 0)
+        }
+        if (index > 0) {
             params.append("$0");
+        }
         params.append("|").append(query.getKey()).append("|").append(query.getValue());
         return index + 1;
     }
@@ -164,8 +162,9 @@ public class WebOpacNet extends BaseApi implements OpacApi {
 
                     result.setInnerhtml(html);
 
-                    if (resultJson.getString("imageurl").length() > 0)
+                    if (resultJson.getString("imageurl").length() > 0) {
                         result.setCover(resultJson.getString("imageurl"));
+                    }
 
                     results.add(result);
                 }
@@ -213,20 +212,22 @@ public class WebOpacNet extends BaseApi implements OpacApi {
     }
 
     private int buildParams(List<SearchQuery> queryList,
-                            List<NameValuePair> params, int page) throws JSONException {
+            List<NameValuePair> params, int page) throws JSONException {
         int index = 0;
 
         StringBuilder queries = new StringBuilder();
         queries.append("erw:0");
         for (SearchQuery query : queryList) {
-            if (!query.getSearchField().getData().getBoolean("filter"))
+            if (!query.getSearchField().getData().getBoolean("filter")) {
                 index = addParameters(query, queries, index);
+            }
         }
 
         for (SearchQuery query : queryList) {
             if (query.getSearchField().getData().getBoolean("filter")
-                    && !query.getValue().equals(""))
+                    && !query.getValue().equals("")) {
                 queries.append("&").append(query.getKey()).append("=").append(query.getValue());
+            }
         }
 
         params.add(new BasicNameValuePair("q", queries.toString()));
@@ -269,8 +270,9 @@ public class WebOpacNet extends BaseApi implements OpacApi {
                 JSONArray values = detailJson.getJSONArray("values");
                 for (int j = 0; j < values.length(); j++) {
                     JSONObject valJson = values.getJSONObject(j);
-                    if (j != 0)
+                    if (j != 0) {
                         value += ", ";
+                    }
                     String content = valJson.getString("dval");
                     content = content.replaceAll("<span[^>]*>", "");
                     content = content.replaceAll("</span>", "");
@@ -291,7 +293,7 @@ public class WebOpacNet extends BaseApi implements OpacApi {
                     JSONObject valJson = values.getJSONObject(j);
                     String name = valJson.getString("bez");
                     String value = valJson.getJSONArray("values")
-                            .getJSONObject(0).getString("dval");
+                                          .getJSONObject(0).getString("dval");
                     if (!value.equals("")) {
                         switch (name) {
                             case "Exemplarstatus":
@@ -304,17 +306,19 @@ public class WebOpacNet extends BaseApi implements OpacApi {
                                 copy.put(DetailledItem.KEY_COPY_LOCATION, value);
                                 break;
                             case "Themenabteilung":
-                                if (copy.containsKey(DetailledItem.KEY_COPY_DEPARTMENT))
+                                if (copy.containsKey(DetailledItem.KEY_COPY_DEPARTMENT)) {
                                     value = copy
                                             .get(DetailledItem.KEY_COPY_DEPARTMENT)
                                             + value;
+                                }
                                 copy.put(DetailledItem.KEY_COPY_DEPARTMENT, value);
                                 break;
                             case "Themenbereich":
-                                if (copy.containsKey(DetailledItem.KEY_COPY_DEPARTMENT))
+                                if (copy.containsKey(DetailledItem.KEY_COPY_DEPARTMENT)) {
                                     value = copy
                                             .get(DetailledItem.KEY_COPY_DEPARTMENT)
                                             + value;
+                                }
                                 copy.put(DetailledItem.KEY_COPY_DEPARTMENT, value);
                                 break;
                         }
@@ -343,28 +347,28 @@ public class WebOpacNet extends BaseApi implements OpacApi {
 
     @Override
     public ReservationResult reservation(DetailledItem item, Account account,
-                                         int useraction, String selection) throws IOException {
+            int useraction, String selection) throws IOException {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public ProlongResult prolong(String media, Account account, int useraction,
-                                 String selection) throws IOException {
+            String selection) throws IOException {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public ProlongAllResult prolongAll(Account account, int useraction,
-                                       String selection) throws IOException {
+            String selection) throws IOException {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public CancelResult cancel(String media, Account account, int useraction,
-                               String selection) throws IOException, OpacErrorException {
+            String selection) throws IOException, OpacErrorException {
         // TODO Auto-generated method stub
         return null;
     }
@@ -484,7 +488,7 @@ public class WebOpacNet extends BaseApi implements OpacApi {
     }
 
     private String buildHttpGetParams(List<NameValuePair> params,
-                                      String encoding) throws UnsupportedEncodingException {
+            String encoding) throws UnsupportedEncodingException {
         String string = "?";
         for (NameValuePair pair : params) {
             String name = URLEncoder.encode(pair.getName(), encoding);

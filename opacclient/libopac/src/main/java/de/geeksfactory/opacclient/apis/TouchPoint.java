@@ -148,7 +148,6 @@ public class TouchPoint extends BaseApi implements OpacApi {
     protected final long SESSION_LIFETIME = 1000 * 60 * 3;
     protected String opac_url = "";
     protected JSONObject data;
-    protected Library library;
     protected String CSId;
     protected String identifier;
     protected String reusehtml;
@@ -237,8 +236,6 @@ public class TouchPoint extends BaseApi implements OpacApi {
     @Override
     public void init(Library lib) {
         super.init(lib);
-
-        this.library = lib;
         this.data = lib.getData();
 
         try {

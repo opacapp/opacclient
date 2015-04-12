@@ -3,7 +3,7 @@
     <string name="app_name">Web Opac</string>
     <string name="launcher_name">Web Opac</string>
     <string name="web_opac">Web-Opac</string>
-    <string name="zweigstelle">Zweigstelle</string>
+    <string name="branch">Zweigstelle</string>
     <string name="barcodes">Strichcodes</string>
     <string name="go_search">Suche starten</string>
     <string name="prefs">Einstellungen</string>
