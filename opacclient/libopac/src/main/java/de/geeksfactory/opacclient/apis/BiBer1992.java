@@ -210,6 +210,19 @@ public class BiBer1992 extends BaseApi {
                         }
                     }
                     if (text.length() == 0) {
+                        // text is still empty, check images in label layout, Example
+                        // Wiedenst
+                        // <input type="radio" name="MT" id="MTYP1" value="MTYP1">
+                        // <label for="MTYP1"><img src="http://www.wiedenest.de/bib/image/books.png" alt="Bücher" title="Bücher"></label>
+                        Element label = opt.nextElementSibling();
+                        if (label != null) {
+                            Elements td2Children = label.select("img[title]");
+                            if (td2Children.size() > 0) {
+                                text = td2Children.get(0).attr("title");
+                            }
+                        }
+                    }
+                    if (text.length() == 0) {
                         // text is still empty: missing end tag like Offenburg
                         text = parse_option_regex(opt);
                     }
