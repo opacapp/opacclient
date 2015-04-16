@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.animation.ValueAnimator;
@@ -36,6 +38,10 @@ public abstract class ExpandingCardListManager {
     private CardView expandedCard;
     private TintManager tint;
     private List<View> views = new ArrayList<>();
+
+    private int unexpandedHeight;
+    private float expandedTranslationY;
+    private float lowerTranslationY;
 
     public ExpandingCardListManager (Context context, LinearLayout layout) {
         this.context = context;
@@ -142,7 +148,7 @@ public abstract class ExpandingCardListManager {
         else lowerPos = -1;
 
         final float mainPos = ViewHelper.getY(views.get(position));
-        final int unexpandedHeight = views.get(position).getHeight();
+        unexpandedHeight = views.get(position).getHeight();
 
         upperCard.setVisibility(View.VISIBLE);
         lowerCard.setVisibility(View.VISIBLE);
@@ -153,8 +159,11 @@ public abstract class ExpandingCardListManager {
             @Override
             public boolean onPreDraw() {
                 layout.getViewTreeObserver().removeOnPreDrawListener(this);
-                if (lowerPos > 0) ViewHelper.setY(lowerCard, lowerPos - lowerCard.getPaddingTop());
-                ViewHelper.setY(expandedCard, mainPos - expandedCard.getPaddingTop());
+                if (lowerPos > 0) ViewHelper.setY(lowerCard, lowerPos);
+                ViewHelper.setY(expandedCard, mainPos);
+
+                lowerTranslationY = lowerCard.getTranslationY();
+                expandedTranslationY = expandedCard.getTranslationY();
 
                 AnimatorSet set = new AnimatorSet();
                 int defaultMargin = context.getResources().getDimensionPixelSize(
@@ -188,14 +197,48 @@ public abstract class ExpandingCardListManager {
     }
 
     public void collapse() {
-        mainCard.setVisibility(View.VISIBLE);
-        upperCard.setVisibility(View.GONE);
-        lowerCard.setVisibility(View.GONE);
-        expandedCard.setVisibility(View.GONE);
-        llUpper.removeAllViews();
-        llLower.removeAllViews();
-        expandedCard.removeAllViews();
-        expandedPosition = -1;
+        AnimatorSet set = new AnimatorSet();
+        View expandedView = expandedCard.getChildAt(0);
+        int defaultMargin = context.getResources().getDimensionPixelSize(
+                R.dimen.card_side_margin_default);
+        int expandedMargin = context.getResources().getDimensionPixelSize(
+                R.dimen.card_side_margin_selected);
+        int marginDifference = expandedMargin - defaultMargin;
+        set.playTogether(
+                ObjectAnimator
+                        .ofFloat(lowerCard, "translationY", 0, lowerTranslationY),
+                ObjectAnimator.ofFloat(expandedCard, "translationY",
+                        0, expandedTranslationY),
+                ObjectAnimator.ofFloat(expandedCard, "cardElevation",
+                        context.getResources()
+                               .getDimension(R.dimen.card_elevation_selected),
+                        context.getResources().getDimension(R.dimen.card_elevation_default)),
+                ObjectAnimator.ofInt(expandedCard, "bottom",
+                        expandedCard.getBottom(), expandedCard.getBottom() + unexpandedHeight -
+                                expandedView.getHeight()),
+                ObjectAnimator.ofInt(expandedCard, "left",
+                        expandedCard.getLeft(), expandedCard.getLeft() - marginDifference),
+                ObjectAnimator.ofInt(expandedCard, "right",
+                        expandedCard.getRight(), expandedCard.getRight() + marginDifference)
+        );
+        set.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                mainCard.setVisibility(View.VISIBLE);
+                upperCard.setVisibility(View.GONE);
+                lowerCard.setVisibility(View.GONE);
+                expandedCard.setVisibility(View.GONE);
+                llUpper.removeAllViews();
+                llLower.removeAllViews();
+                expandedCard.removeAllViews();
+                expandedPosition = -1;
+                unexpandedHeight = 0;
+                expandedTranslationY = 0;
+                lowerTranslationY = 0;
+            }
+        });
+        set.setDuration(ANIMATION_DURATION).start();
     }
 
     public void notifyDataSetChanged() {

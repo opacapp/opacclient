@@ -17,22 +17,10 @@
     <LinearLayout
         android:id="@+id/llButtons"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:animateLayoutChanges="true">
-
-        <ImageView
-            android:id="@+id/ivClose"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:contentDescription="@string/close"
-            android:src="@drawable/ic_close"
-            android:visibility="gone"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="@drawable/ripple_unmasked"/>
 
         <ImageView
             android:id="@+id/ivProlong"
@@ -55,12 +43,28 @@
             android:focusable="true"
             android:background="@drawable/ripple_unmasked"/>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
         <ImageView
             android:id="@+id/ivDetails"
             android:layout_width="48dp"
             android:layout_height="24dp"
             android:contentDescription="@string/expand"
             android:src="@drawable/ic_more_details"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/ripple_unmasked"/>
+
+        <ImageView
+            android:id="@+id/ivClose"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/close"
+            android:src="@drawable/ic_close"
+            android:visibility="gone"
             android:clickable="true"
             android:focusable="true"
             android:background="@drawable/ripple_unmasked"/>
