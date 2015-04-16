@@ -23,6 +23,7 @@ import de.geeksfactory.opacclient.R;
  * Mananges a list of cards that can be expanded and collapsed
  */
 public abstract class ExpandingCardListManager {
+    private static final int ANIMATION_DURATION = 500;
     private Context context;
     private LinearLayout layout;
     private int expandedPosition = -1;
@@ -162,15 +163,23 @@ public abstract class ExpandingCardListManager {
                         R.dimen.card_side_margin_selected);
                 int marginDifference = expandedMargin - defaultMargin;
                 set.playTogether(
-                        ObjectAnimator.ofFloat(lowerCard, "translationY", lowerCard.getTranslationY(), 0),
-                        ObjectAnimator.ofFloat(expandedCard, "translationY", expandedCard.getTranslationY(), 0),
-                        ObjectAnimator.ofFloat(expandedCard, "cardElevation", context.getResources().getDimension(R.dimen.card_elevation_default),
-                                context.getResources().getDimension(R.dimen.card_elevation_selected)),
-                        ObjectAnimator.ofInt(expandedCard, "bottom", expandedCard.getBottom() + unexpandedHeight - expandedView.getHeight(), expandedCard.getBottom()),
-                        ObjectAnimator.ofInt(expandedCard, "left", expandedCard.getLeft() - marginDifference, expandedCard.getLeft()),
-                        ObjectAnimator.ofInt(expandedCard, "right", expandedCard.getRight() + marginDifference, expandedCard.getRight())
+                        ObjectAnimator
+                                .ofFloat(lowerCard, "translationY", lowerCard.getTranslationY(), 0),
+                        ObjectAnimator.ofFloat(expandedCard, "translationY",
+                                expandedCard.getTranslationY(), 0),
+                        ObjectAnimator.ofFloat(expandedCard, "cardElevation",
+                                context.getResources().getDimension(R.dimen.card_elevation_default),
+                                context.getResources()
+                                       .getDimension(R.dimen.card_elevation_selected)),
+                        ObjectAnimator.ofInt(expandedCard, "bottom",
+                                expandedCard.getBottom() + unexpandedHeight -
+                                        expandedView.getHeight(), expandedCard.getBottom()),
+                        ObjectAnimator.ofInt(expandedCard, "left",
+                                expandedCard.getLeft() - marginDifference, expandedCard.getLeft()),
+                        ObjectAnimator.ofInt(expandedCard, "right",
+                                expandedCard.getRight() + marginDifference, expandedCard.getRight())
                 );
-                set.setDuration(500).start();
+                set.setDuration(ANIMATION_DURATION).start();
                 return false;
             }
         });

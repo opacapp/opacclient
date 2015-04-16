@@ -177,8 +177,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/tvLentHeader"
-                            android:orientation="vertical"
-                            android:animateLayoutChanges="true">
+                            android:orientation="vertical">
                         </LinearLayout>
                     </RelativeLayout>
 
@@ -205,8 +204,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/tvResHeader"
-                            android:orientation="vertical"
-                            android:animateLayoutChanges="true">
+                            android:orientation="vertical">
                         </LinearLayout>
                     </RelativeLayout>
                 </LinearLayout>

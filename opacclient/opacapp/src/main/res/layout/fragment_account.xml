@@ -145,7 +145,6 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvWarning"
                     android:orientation="vertical"
-                    android:animateLayoutChanges="true"
                     android:padding="5dp">
 
                     <TextView
@@ -162,8 +161,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tvLentHeader"
-                        android:orientation="vertical"
-                        android:animateLayoutChanges="true">
+                        android:orientation="vertical">
                     </LinearLayout>
 
                     <TextView
@@ -181,8 +179,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tvResHeader"
-                        android:orientation="vertical"
-                        android:animateLayoutChanges="true">
+                        android:orientation="vertical">
                     </LinearLayout>
 
                     <TextView
