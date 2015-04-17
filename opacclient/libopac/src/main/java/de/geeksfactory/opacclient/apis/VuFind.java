@@ -2,6 +2,7 @@ package de.geeksfactory.opacclient.apis;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,6 +12,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,12 +23,15 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.lang.model.element.Name;
+
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
+import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
@@ -47,6 +53,7 @@ public class VuFind extends BaseApi {
     protected String languageCode = "en";
     protected String opac_url = "";
     protected JSONObject data;
+    protected List<SearchQuery> last_query;
 
     @Override
     public void init(Library lib) {
@@ -62,10 +69,97 @@ public class VuFind extends BaseApi {
         }
     }
 
+    protected List<NameValuePair> buildSearchParams(List<SearchQuery> query) {
+        List<NameValuePair> params = new ArrayList<>();
+
+        params.add(new BasicNameValuePair("sort", "relevancee"));
+        params.add(new BasicNameValuePair("join", "AND"));
+
+        for (SearchQuery singleQuery : query) {
+            if (singleQuery.getValue().equals("")) continue;
+            if (singleQuery.getKey().contains("filter[]")) {
+                params.add(new BasicNameValuePair("filter[]", singleQuery.getValue()));
+            } else {
+                params.add(new BasicNameValuePair("type0[]", singleQuery.getKey()));
+                params.add(new BasicNameValuePair("lookfor0[]", singleQuery.getValue()));
+            }
+        }
+        return params;
+    }
+
     @Override
     public SearchRequestResult search(List<SearchQuery> query)
             throws IOException, OpacErrorException, JSONException {
-        return null;
+        if (!initialised) start();
+        last_query = query;
+        String html = httpGet(opac_url + "/Search/Results" +
+                buildHttpGetParams(buildSearchParams(query), getDefaultEncoding()),
+                getDefaultEncoding());
+        Document doc = Jsoup.parse(html);
+        return parse_search(doc, 1);
+    }
+
+    protected SearchRequestResult parse_search(Document doc, int page) throws OpacErrorException {
+        doc.setBaseUri(opac_url + "/Search/Results");
+
+        if (doc.select("p.error").size() > 0) {
+            throw new OpacErrorException(doc.select("p.error").text());
+        } else if (doc.select("div.result").size() == 0 && doc.select(".main p").size() > 0) {
+            throw new OpacErrorException(doc.select(".main p").first().text());
+        }
+
+        int rescount = -1;
+        if (doc.select(".resulthead").size() == 1)
+            rescount = Integer.parseInt(
+                    doc.select(".resulthead strong").get(2).text());
+        List<SearchResult> reslist = new ArrayList<>();
+
+        for (Element row : doc.select("div.result")) {
+            SearchResult res = new SearchResult();
+            Element z3988el = null;
+            if (row.select("span.Z3988").size() == 1) {
+                z3988el = row.select("span.3988").first();
+            } else if (row.parent().tagName().equals("li") && row.parent().select("span.Z3988").size() > 0) {
+                z3988el = row.parent().select("span.3988").first();
+            }
+            if (z3988el != null) {
+                List<NameValuePair> z3988data;
+                boolean hastitle = false;
+                try {
+                    StringBuilder description = new StringBuilder();
+                    z3988data = URLEncodedUtils.parse(new URI("http://dummy/?"
+                            + z3988el.select("span.Z3988").attr("title")), "UTF-8");
+                    for (NameValuePair nv : z3988data) {
+                        if (nv.getValue() != null) {
+                            if (!nv.getValue().trim().equals("")) {
+                                if (nv.getName().equals("rft.btitle")) {
+                                    description.append("<b>").append(nv.getValue()).append("</b>");
+                                    hastitle = true;
+                                } else if (nv.getName().equals("rft.atitle")) {
+                                    description.append("<b>").append(nv.getValue()).append("</b>");
+                                    hastitle = true;
+                                } else if (nv.getName().equals("rft.au")) {
+                                    description.append("<br />").append(nv.getValue());
+                                } else if (nv.getName().equals("rft.date")) {
+                                    description.append("<br />").append(nv.getValue());
+                                }
+                            }
+                        }
+                    }
+                    res.setInnerhtml(description.toString());
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                res.setInnerhtml(row.select("a.title").text());
+            }
+
+            res.setPage(page);
+            res.setId(row.select("a.title").first().attr("href").replace("/Record/", ""));
+            reslist.add(res);
+        }
+
+        return new SearchRequestResult(reslist, rescount, page);
     }
 
     @Override
@@ -77,7 +171,13 @@ public class VuFind extends BaseApi {
     @Override
     public SearchRequestResult searchGetPage(int page)
             throws IOException, OpacErrorException, JSONException {
-        return null;
+        List<NameValuePair> params = buildSearchParams(last_query);
+        params.add(new BasicNameValuePair("page", String.valueOf(page)));
+        String html = httpGet(opac_url + "/Search/Results" +
+                        buildHttpGetParams(params, getDefaultEncoding()),
+                getDefaultEncoding());
+        Document doc = Jsoup.parse(html);
+        return parse_search(doc, page);
     }
 
     @Override
@@ -151,6 +251,10 @@ public class VuFind extends BaseApi {
             field.setId(select.attr("name") + select.attr("id"));
             List<Map<String, String>> dropdownOptions = new ArrayList<>();
             String meaning = select.attr("id");
+            Map<String, String> emptyDropdownOption = new HashMap<>();
+            emptyDropdownOption.put("key", "");
+            emptyDropdownOption.put("value", "");
+            dropdownOptions.add(emptyDropdownOption);
             for (Element option : select.select("option")) {
                 if (option.val().contains(":")) {
                     meaning = option.val().split(":")[0];

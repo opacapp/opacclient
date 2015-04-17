@@ -487,18 +487,6 @@ public class WebOpacNet extends BaseApi implements OpacApi {
         return SUPPORT_FLAG_ENDLESS_SCROLLING | SUPPORT_FLAG_CHANGE_ACCOUNT;
     }
 
-    private String buildHttpGetParams(List<NameValuePair> params,
-            String encoding) throws UnsupportedEncodingException {
-        String string = "?";
-        for (NameValuePair pair : params) {
-            String name = URLEncoder.encode(pair.getName(), encoding);
-            String value = URLEncoder.encode(pair.getValue(), encoding);
-            string += name + "=" + value + "&";
-        }
-        string = string.substring(0, string.length() - 1);
-        return string;
-    }
-
     @Override
     protected String getDefaultEncoding() {
         return "UTF-8";
