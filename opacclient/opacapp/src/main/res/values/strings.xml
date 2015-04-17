@@ -162,7 +162,6 @@ We might know your library ID then, but not your password, and we will take care
     <string name="barcode_gplay">Google Play</string>
     <string name="barcode_amazon">Amazon</string>
     <plurals name="result_number">
-        <item quantity="zero">No search results</item>
         <item quantity="one">One search result</item>
         <item quantity="other">%d search results</item>
     </plurals>
