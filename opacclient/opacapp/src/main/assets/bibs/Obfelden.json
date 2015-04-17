@@ -1,16 +1,16 @@
 {
     "account_supported": false,
     "api": "webopac.net",
-    "city": "Otelfingen",
+    "city": "Obfelden",
     "country": "Schweiz",
     "data": {
-        "baseurl": "http://www.bibliotheken-zh.ch/Otelfingen"
+        "baseurl": "http://www.bibliotheken-zh.ch/Obfelden"
     },
     "geo": [
-        47.4613,
-        8.388570000000001
+        47.26289999999999,
+        8.4223199
     ],
-    "information": "http://www.sekuf.ch/?article_id=8",
+    "information": "http://www.bibliothek-obfelden.ch/",
     "state": "Z\u00fcrich",
     "title": "Gemeindebibliothek"
 }

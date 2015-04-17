@@ -1,16 +1,16 @@
 {
     "account_supported": false,
     "api": "webopac.net",
-    "city": "Otelfingen",
+    "city": "Weisslingen",
     "country": "Schweiz",
     "data": {
-        "baseurl": "http://www.bibliotheken-zh.ch/Otelfingen"
+        "baseurl": "http://www.bibliotheken-zh.ch/Weisslingen"
     },
     "geo": [
-        47.4613,
-        8.388570000000001
+        47.43235,
+        8.76459
     ],
-    "information": "http://www.sekuf.ch/?article_id=8",
+    "information": "http://bibliothek-weisslingen.ch/",
     "state": "Z\u00fcrich",
     "title": "Gemeindebibliothek"
 }

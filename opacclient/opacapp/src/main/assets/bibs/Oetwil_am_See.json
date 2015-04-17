@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "webopac.net",
+    "city": "Oetwil am See",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.bibliotheken-zh.ch/Oetwil-am-See"
+    },
+    "geo": [
+        47.2730292,
+        8.7223965
+    ],
+    "information": "http://www.schule-oetwil.ch/index.php?page_request=112&id=23/",
+    "state": "Z\u00fcrich",
+    "title": "Gemeindebibliothek"
+}

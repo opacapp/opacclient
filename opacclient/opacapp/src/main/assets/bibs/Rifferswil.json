@@ -1,16 +1,16 @@
 {
     "account_supported": false,
     "api": "webopac.net",
-    "city": "Otelfingen",
+    "city": "Rifferswil",
     "country": "Schweiz",
     "data": {
-        "baseurl": "http://www.bibliotheken-zh.ch/Otelfingen"
+        "baseurl": "http://www.bibliotheken-zh.ch/Rifferswil"
     },
     "geo": [
-        47.4613,
-        8.388570000000001
+        47.2419,
+        8.49602
     ],
-    "information": "http://www.sekuf.ch/?article_id=8",
+    "information": "http://www.bibliothek-rifferswil.ch/",
     "state": "Z\u00fcrich",
     "title": "Gemeindebibliothek"
 }

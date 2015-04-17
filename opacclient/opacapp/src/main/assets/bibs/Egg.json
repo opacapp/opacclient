@@ -1,16 +1,16 @@
 {
     "account_supported": false,
     "api": "webopac.net",
-    "city": "Otelfingen",
+    "city": "Egg",
     "country": "Schweiz",
     "data": {
-        "baseurl": "http://www.bibliotheken-zh.ch/Otelfingen"
+        "baseurl": "http://www.bibliotheken-zh.ch/Egg"
     },
     "geo": [
-        47.4613,
-        8.388570000000001
+        47.3005301,
+        8.6885824
     ],
-    "information": "http://www.sekuf.ch/?article_id=8",
+    "information": "http://www.schuleegg.ch/bibliothek-.html",
     "state": "Z\u00fcrich",
     "title": "Gemeindebibliothek"
 }

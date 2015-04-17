@@ -1,16 +1,16 @@
 {
     "account_supported": false,
     "api": "webopac.net",
-    "city": "Otelfingen",
+    "city": "Meilen",
     "country": "Schweiz",
     "data": {
-        "baseurl": "http://www.bibliotheken-zh.ch/Otelfingen"
+        "baseurl": "http://www.bibliotheken-zh.ch/Meilen"
     },
     "geo": [
-        47.4613,
-        8.388570000000001
+        47.269389,
+        8.6437363
     ],
-    "information": "http://www.sekuf.ch/?article_id=8",
+    "information": "http://www.meilen.ch/de/freizeit/bibliothek/",
     "state": "Z\u00fcrich",
     "title": "Gemeindebibliothek"
 }

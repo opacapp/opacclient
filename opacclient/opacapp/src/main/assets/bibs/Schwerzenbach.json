@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "webopac.net",
+    "city": "Schwerzenbach",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.bibliotheken-zh.ch/Schwerzenbach"
+    },
+    "geo": [
+        47.3823416,
+        8.6566903
+    ],
+    "information": "http://www.bibliothek-schwerzenbach.ch/de/",
+    "state": "Z\u00fcrich",
+    "title": "Gemeindebibliothek"
+}

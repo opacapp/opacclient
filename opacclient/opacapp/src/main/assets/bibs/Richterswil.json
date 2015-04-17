@@ -1,16 +1,16 @@
 {
     "account_supported": false,
     "api": "webopac.net",
-    "city": "Otelfingen",
+    "city": "Richterswil",
     "country": "Schweiz",
     "data": {
-        "baseurl": "http://www.bibliotheken-zh.ch/Otelfingen"
+        "baseurl": "http://www.bibliotheken-zh.ch/Richterswil"
     },
     "geo": [
-        47.4613,
-        8.388570000000001
+        47.2089492,
+        8.7018527
     ],
-    "information": "http://www.sekuf.ch/?article_id=8",
+    "information": "http://www.bibliothek-richterswil.ch/",
     "state": "Z\u00fcrich",
     "title": "Gemeindebibliothek"
 }

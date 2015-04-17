@@ -1,16 +1,16 @@
 {
     "account_supported": false,
     "api": "webopac.net",
-    "city": "Otelfingen",
+    "city": "Pfaeffikon",
     "country": "Schweiz",
     "data": {
-        "baseurl": "http://www.bibliotheken-zh.ch/Otelfingen"
+        "baseurl": "http://www.bibliotheken-zh.ch/Pfaeffikon"
     },
     "geo": [
-        47.4613,
-        8.388570000000001
+        47.3667993,
+        8.784757599999999
     ],
-    "information": "http://www.sekuf.ch/?article_id=8",
+    "information": "http://www.bibli-pfaeffikon.ch/",
     "state": "Z\u00fcrich",
     "title": "Gemeindebibliothek"
 }

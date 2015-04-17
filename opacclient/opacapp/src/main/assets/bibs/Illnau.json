@@ -1,16 +1,16 @@
 {
     "account_supported": false,
     "api": "webopac.net",
-    "city": "Otelfingen",
+    "city": "Illnau",
     "country": "Schweiz",
     "data": {
-        "baseurl": "http://www.bibliotheken-zh.ch/Otelfingen"
+        "baseurl": "http://www.bibliotheken-zh.ch/Illnau"
     },
     "geo": [
-        47.4613,
-        8.388570000000001
+        47.4086221,
+        8.722936
     ],
-    "information": "http://www.sekuf.ch/?article_id=8",
+    "information": "http://www.bibliotheksverein.ch/illnau/",
     "state": "Z\u00fcrich",
     "title": "Gemeindebibliothek"
 }

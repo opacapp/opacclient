@@ -1,16 +1,16 @@
 {
     "account_supported": false,
     "api": "webopac.net",
-    "city": "Otelfingen",
+    "city": "Hedingen",
     "country": "Schweiz",
     "data": {
-        "baseurl": "http://www.bibliotheken-zh.ch/Otelfingen"
+        "baseurl": "http://www.bibliotheken-zh.ch/Hedingen"
     },
     "geo": [
-        47.4613,
-        8.388570000000001
+        47.29779,
+        8.44669
     ],
-    "information": "http://www.sekuf.ch/?article_id=8",
+    "information": "http://www.bibliothek-hedingen.ch/page/bib.php",
     "state": "Z\u00fcrich",
     "title": "Gemeindebibliothek"
 }

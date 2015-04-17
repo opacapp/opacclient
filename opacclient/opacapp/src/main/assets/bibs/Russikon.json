@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "webopac.net",
+    "city": "Russikon",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.bibliotheken-zh.ch/Russikon"
+    },
+    "geo": [
+        47.397138,
+        8.7757483
+    ],
+    "information": "http://www.russikon.ch/de/bildung/bibliotheken/",
+    "state": "Z\u00fcrich",
+    "title": "Gemeindebibliothek"
+}

@@ -1,16 +1,16 @@
 {
     "account_supported": false,
     "api": "webopac.net",
-    "city": "Otelfingen",
+    "city": "Erlenbach",
     "country": "Schweiz",
     "data": {
-        "baseurl": "http://www.bibliotheken-zh.ch/Otelfingen"
+        "baseurl": "http://www.bibliotheken-zh.ch/Erlenbach"
     },
     "geo": [
-        47.4613,
-        8.388570000000001
+        49.806545,
+        9.1580076
     ],
-    "information": "http://www.sekuf.ch/?article_id=8",
+    "information": "http://www.schule-erlenbach.ch/bibliothek",
     "state": "Z\u00fcrich",
     "title": "Gemeindebibliothek"
 }

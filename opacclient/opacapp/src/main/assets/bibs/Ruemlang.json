@@ -1,16 +1,16 @@
 {
     "account_supported": false,
     "api": "webopac.net",
-    "city": "Otelfingen",
+    "city": "R\u00fcmlang",
     "country": "Schweiz",
     "data": {
-        "baseurl": "http://www.bibliotheken-zh.ch/Otelfingen"
+        "baseurl": "http://www.bibliotheken-zh.ch/Ruemlang"
     },
     "geo": [
-        47.4613,
-        8.388570000000001
+        47.4499022,
+        8.5311569
     ],
-    "information": "http://www.sekuf.ch/?article_id=8",
+    "information": "http://www.bibliothek-ruemlang.ch/",
     "state": "Z\u00fcrich",
     "title": "Gemeindebibliothek"
 }
