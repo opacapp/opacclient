@@ -45,7 +45,9 @@ import java.util.HashSet;
 import java.util.List;
 
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.networking.CoverDownloadTask;
 import de.geeksfactory.opacclient.networking.HTTPClient;
+import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
 import de.geeksfactory.opacclient.utils.Base64;
@@ -53,20 +55,6 @@ import de.geeksfactory.opacclient.utils.ISBNTools;
 
 public class ResultsAdapter extends ArrayAdapter<SearchResult> {
     private List<SearchResult> objects;
-
-    protected static HashSet<String> rejectImages = new HashSet<>();
-
-    static {
-        rejectImages.add(
-                "R0lGODlhOwBLAIAAALy8vf///yH5BAEAAAEALAAAAAA7AEsAAAL/jI+py+0Po5y0" +
-                        "2ouz3rz7D2rASJbmiYYGyralGrhyqrbTW4+rGeEhmeA5fCCg4sQgfowLFkLpYTaE" +
-                        "O10OIJFCO9KhtYq9Zr+xbpTsDYNh5iR5y2k33/JNPUhHn9UP7T3zd+Cnx0U4xwdn" +
-                        "Z3iUx7e0iIcYeDFZJgkJiCnYyKZZ9VRZUTnouDd2WVqYegjqaTHKebUa6SSLKdOJ" +
-                        "5GYDY0nVWtvrqxSa61PciytMwbss+uvMjBxNXW19jZ29bHVJu/MNvqmTCK4WhvbF" +
-                        "bS65EnPqXiaIJ26Eg/6HVW8+327fHg9kVpBw5xylc6eu3jeBTwh28bewIJh807RZ" +
-                        "vIgxo8aNRxw7ZlNXbt04RvT+lXQjL57KciT/nRuY5iW8YzJPQjx5xKVCeCoNurTE" +
-                        "0+QukBNZAsu3ECbKnhIBBnwaMWFBVx6rWr2KdUIBADs=");
-    }
 
     public ResultsAdapter(Context context, List<SearchResult> objects) {
         super(context, R.layout.listitem_searchresult, objects);
@@ -208,73 +196,22 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
         return view;
     }
 
-    public class LoadCoverTask extends AsyncTask<Void, Integer, SearchResult> {
-        protected SearchResult item;
+    public class LoadCoverTask extends CoverDownloadTask {
         protected ImageView iv;
 
         public LoadCoverTask(ImageView iv, SearchResult item) {
+            super(getContext(), item);
             this.iv = iv;
-            this.item = item;
         }
 
         @Override
-        protected SearchResult doInBackground(Void... voids) {
-            URL newurl;
-            if (item.getCover() != null && item.getCoverBitmap() == null) {
-                try {
-                    float density = getContext().getResources().getDisplayMetrics().density;
-
-                    HttpClient http_client = HTTPClient.getNewHttpClient(false);
-                    HttpGet httpget = new HttpGet(ISBNTools.getBestSizeCoverUrl(item.getCover(),
-                            (int) (56 * density), (int) (56 * density)));
-                    HttpResponse response;
-
-                    try {
-                        response = http_client.execute(httpget);
-
-                        if (response.getStatusLine().getStatusCode() >= 400) {
-                            item.setCover(null);
-                        }
-                        HttpEntity entity = response.getEntity();
-                        byte[] bytes = EntityUtils.toByteArray(entity);
-                        if (rejectImages.contains(Base64.encodeBytes(bytes))) {
-                            // OPACs like VuFind have a 'cover proxy' that returns a simple GIF with
-                            // the text 'no image available' if no cover was found. We don't want to
-                            // display this image but the media type,
-                            // so we detect it. We do this here
-                            // instead of in the API implementation because only this way it can be
-                            // done asynchronously.
-                            item.setCover(null);
-                        } else {
-                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0,
-                                    bytes.length);
-                            if (bitmap.getHeight() > 1 && bitmap.getWidth() > 1) {
-                                item.setCoverBitmap(bitmap);
-                            } else {
-                                // When images embedded from Amazon aren't available, a
-                                // 1x1
-                                // pixel image is returned (iOPAC)
-                                item.setCover(null);
-                            }
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            return item;
-        }
-
-        @Override
-        protected void onPostExecute(SearchResult result) {
+        protected void onPostExecute(CoverHolder result) {
             if (item.getCover() != null && item.getCoverBitmap() != null) {
                 iv.setImageBitmap(item.getCoverBitmap());
                 iv.setVisibility(View.VISIBLE);
-            } else if (item.getType() != null
-                    && item.getType() != MediaType.NONE) {
-                iv.setImageResource(getResourceByMediaType(item.getType()));
+            } else if (item instanceof SearchResult && ((SearchResult) item).getType() != null
+                    && ((SearchResult) item).getType() != MediaType.NONE) {
+                iv.setImageResource(getResourceByMediaType(((SearchResult) item).getType()));
                 iv.setVisibility(View.VISIBLE);
             } else {
                 iv.setVisibility(View.INVISIBLE);
