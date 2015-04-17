@@ -3,7 +3,7 @@
   <string name="app_name">OPAC web</string>
   <string name="launcher_name">OPAC web</string>
   <string name="web_opac">OPAC web</string>
-  <string name="zweigstelle">Biblioteca sucursal</string>
+  <string name="branch">Biblioteca sucursal</string>
   <string name="barcodes">Códigos de barras</string>
   <string name="go_search">Encontrar</string>
   <string name="prefs">Configuración</string>
@@ -27,7 +27,7 @@
   <string name="pending_fees">Multas pendientes:</string>
   <string name="valid_until">Cuenta válida hasta: </string>
   <string name="no_warranty">Toda la información se facilita sin responsabilidad. </string>
-  <string name="entl_head">Préstamo</string>
+  <string name="lent_head">Préstamo</string>
   <string name="reservations_head">Reservas</string>
   <string name="entl_none">No préstamo</string>
   <string name="reservations_none">No reservas</string>
@@ -80,8 +80,8 @@
   <string name="notification_warning_desc">¿Cuánto tiempo antes del vencimiento quiere recibir un aviso?</string>
   <string name="notif_ticker">¡%s artículos están a punto de expirar!</string>
   <string name="notif_title">Artículos están a punto de expirar</string>
-  <string name="baende">Volúmenes</string>
-  <string name="baende_volumesearch">Muestra volúmenes</string>
+  <string name="volumes">Volúmenes</string>
+  <string name="volumesearch">Muestra volúmenes</string>
   <string name="star">Añadir a favoritos</string>
   <string name="starred">El artículo ya está en su lista de favoritos.</string>
   <string name="star_wait">Por favor, espera la carga de los detalles.</string>
@@ -138,7 +138,10 @@
   <string name="barcode_desc">Esta propiedad requiere la instalación de un escáner de código de barras. ¿Desea descargar uno?</string>
   <string name="barcode_gplay">Google Play</string>
   <string name="barcode_amazon">Amazon</string>
-  <string name="result_number">%d resultados de búsqueda</string>
+  <plurals name="result_number">
+     <item quantity="one">%d resultados de búsqueda</item>
+     <item quantity="other">%d resultados de búsqueda</item>
+  </plurals>
   <string name="export_starred">Exportar</string>
   <string name="geolocate">Encontrar bibliotecas cercanas</string>
   <string name="geolocate_progress">Localizando...</string>
@@ -156,7 +159,6 @@
   <string name="drawer_open">Abrir navigación</string>
   <string name="drawer_close">Cerrar navigación</string>
   <string name="title_searchresult_list">Resultados de búsqueda</string>
-  <string name="title_searchresult_detail">Detalles</string>
   <string name="title_activity_library_list">Selección de bibliotecas</string>
   <string name="title_activity_suggest_library">Sugerir biblioteca</string>
   <string name="city">Ciudad</string>

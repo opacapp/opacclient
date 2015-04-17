@@ -3,7 +3,7 @@
   <string name="app_name">Web Opac</string>
   <string name="launcher_name">Web Opac</string>
   <string name="web_opac">Web Opac</string>
-  <string name="zweigstelle">Υποκατάστημα βιβλιοθήκης</string>
+  <string name="branch">Υποκατάστημα βιβλιοθήκης</string>
   <string name="barcodes">Γραμμοκώδικες</string>
   <string name="go_search">Εύρεση</string>
   <string name="prefs">Ρυθμίσεις</string>
@@ -29,7 +29,7 @@
   <string name="pending_fees">Πρόστιμα βιβλιοθήκης λόγω:</string>
   <string name="valid_until">Ο λογαριασμός ισχύει μέχρι:</string>
   <string name="no_warranty">Όλες οι πληροφορίες παρέχονται χωρίς ευθύνη.</string>
-  <string name="entl_head">Δανεισμός</string>
+  <string name="lent_head">Δανεισμός</string>
   <string name="reservations_head">Κρατήσεις</string>
   <string name="entl_none">Καμμια κρατηση</string>
   <string name="reservations_none">Καμμια κρατηση</string>
@@ -72,8 +72,8 @@
   <string name="notification_warning_desc">Πόσο διάστημα πριν από την καταληκτική ημερομηνία θα πρέπει να παρουσιάζεται μια κοινοποίηση;</string>
   <string name="notif_ticker">%s στοιχεία που πρόκειται να λήξουν!</string>
   <string name="notif_title">Στοιχεία που πρόκειται να λήξουν</string>
-  <string name="baende">Τόμοι</string>
-  <string name="baende_volumesearch">Εμφάνιση τόμων</string>
+  <string name="volumes">Τόμοι</string>
+  <string name="volumesearch">Εμφάνιση τόμων</string>
   <string name="star">Αποθήκευση στα αγαπημένα</string>
   <string name="starred">Το στοιχείο είναι τώρα στην λίστα των αγαπημένων σας.</string>
   <string name="star_wait">Παρακαλούμε περιμένετε για να φορτωθουν οι λεπτομέρειες</string>
@@ -143,7 +143,10 @@
   <string name="barcode_desc">Αυτή η λειτουργία απαιτεί την εγκατάσταση μιας εφαρμογής του σαρωτή γραμμωτού κώδικα. Θέλετε να κατεβάσετε μια;</string>
   <string name="barcode_gplay">Google Play</string>
   <string name="barcode_amazon">Amazon</string>
-  <string name="result_number">%d αποτελέσματα αναζήτησης</string>
+  <plurals name="result_number">
+    <item quantity="one">%d αποτελέσματα αναζήτησης</item>
+    <item quantity="other">%d αποτελέσματα αναζήτησης</item>
+  </plurals>
   <string name="export_starred">Εξαγωγή</string>
   <string name="geolocate">Εντοπισμός κοντινών βιβλιοθηκών</string>
   <string name="geolocate_progress">Ο εντοπισμός σας...</string>
@@ -163,7 +166,6 @@
   <string name="drawer_open">Άνοιγμα πλοήγησης</string>
   <string name="drawer_close">Κλείσιμο πλοήγησης</string>
   <string name="title_searchresult_list">Αποτελέσματα αναζήτησης</string>
-  <string name="title_searchresult_detail">Λεπτομέρειες</string>
   <string name="title_activity_library_list">Συλλογή της Βιβλιοθήκης</string>
   <string name="suggest_library">Η βιβλιοθήκη σας δεν υποστηρίζεται ακόμα; Προτείνετε για να συμπεριληφθεί!</string>
   <string name="title_activity_suggest_library">Προτείνετε βιβλιοθήκη</string>

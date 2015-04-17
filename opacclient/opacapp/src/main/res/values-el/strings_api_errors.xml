@@ -1,7 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
   <!--These strings may be shown as unused by Android Lint, but are in fact used by the AndroidStringProvider class-->
-  <string name="limited_num_of_criteria">Αυτή η βιβλιοθήκη υποστηρίζει μόνο έως κριτήρια %d.</string>
+  <plurals name="limited_num_of_criteria">
+    <item quantity="one">Αυτή η βιβλιοθήκη υποστηρίζει μόνο έως κριτήρια %d.</item>
+    <item quantity="other">Αυτή η βιβλιοθήκη υποστηρίζει μόνο έως κριτήρια %d.</item>
+  </plurals>
   <string name="no_criteria_input">Δεν έχετε Κριτήρια αναζήτησης.</string>
   <string name="combination_not_supported">Θα χρησιμοποιηθεί ένας συνδυασμός κριτηρίων αναζήτησης που δεν υποστηρίζεται από αυτήν τη βιβλιοθήκη. Παρακαλούμε δοκιμάστε ένα άλλο ερώτημα αναζήτησης.</string>
   <string name="unknown_error_account">Άγνωστο σφάλμα. Παρακαλούμε ελέγξτε αν τα στοιχεία σύνδεσής είναι σωστα.</string>
