@@ -1,16 +1,9 @@
 package de.geeksfactory.opacclient.apis;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -42,7 +35,6 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
-import de.geeksfactory.opacclient.utils.Base64;
 
 public class VuFind extends BaseApi {
     protected static HashMap<String, String> languageCodes = new HashMap<>();
@@ -151,8 +143,8 @@ public class VuFind extends BaseApi {
     protected SearchRequestResult parse_search(Document doc, int page) throws OpacErrorException {
         doc.setBaseUri(opac_url + "/Search/Results");
 
-        if (doc.select("p.error").size() > 0) {
-            throw new OpacErrorException(doc.select("p.error").text());
+        if (doc.select("p.error, p.errorMsg, .alert-error").size() > 0) {
+            throw new OpacErrorException(doc.select("p.error, p.errorMsg, .alert-error").text());
         } else if (doc.select("div.result").size() == 0 && doc.select(".main p").size() > 0) {
             throw new OpacErrorException(doc.select(".main p").first().text());
         }
@@ -267,7 +259,47 @@ public class VuFind extends BaseApi {
     @Override
     public DetailledItem getResultById(String id, String homebranch)
             throws IOException, OpacErrorException {
-        return null;
+        if (!initialised) start();
+        String url = opac_url + "/Record/" + id;
+        String html = httpGet(url, getDefaultEncoding());
+        Document doc = Jsoup.parse(html);
+        doc.setBaseUri(url);
+        return parse_detail(id, doc);
+    }
+
+    protected DetailledItem parse_detail(String id, Document doc) throws OpacErrorException {
+        if (doc.select("p.error, p.errorMsg, .alert-error").size() > 0) {
+            throw new OpacErrorException(doc.select("p.error, p.errorMsg, .alert-error").text());
+        }
+
+        DetailledItem res = new DetailledItem();
+        res.setId(id);
+
+        Elements title = doc.select(".record h1, .record [itemprop=name], .record [property=name]");
+        if (title.size() > 0) {
+            res.setTitle(title.text());
+        }
+        for (Element img : doc.select(".record img")) {
+            String src = img.absUrl("src");
+            if (src.contains("Cover") || src.contains("bookcover")) {
+                if (!src.contains("Unavailable")) {
+                    res.setCover(src);
+                }
+                break;
+            }
+        }
+        for (Element tr : doc.select(".record table").first().select("tr")) {
+            String text = tr.child(1).text();
+            if (tr.child(1).select("a").size() > 0) {
+                String href = tr.child(1).select("a").attr("href");
+                if (!href.startsWith("/")) {
+                    text += " " + href;
+                }
+            }
+            res.addDetail(new Detail(tr.child(0).text(), text));
+        }
+
+        return res;
     }
 
     @Override
@@ -359,7 +391,7 @@ public class VuFind extends BaseApi {
 
     @Override
     public String getShareUrl(String id, String title) {
-        return null;
+        return opac_url + "/Record/" + id;
     }
 
     @Override
@@ -447,6 +479,5 @@ public class VuFind extends BaseApi {
     @Override
     public void checkAccountData(Account account)
             throws IOException, JSONException, OpacErrorException {
-
     }
 }
