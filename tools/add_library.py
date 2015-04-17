@@ -266,6 +266,11 @@ class Biber1992(Api):
         print("WARNUNG! Konfiguration kann nicht ausgelesen werden. HANDARBEIT NÖTIG!")
         return data
 
+class VuFind(Api):
+
+    def accountSupported(self):
+        return False
+
 class Zones22(Api):
 
     def accountSupported(self):
@@ -299,6 +304,7 @@ APIS = {
     'adis'        : Adis,
     'webopac.net' : WebOpacNet,
 	'winbiap'	  : WinBiap,
+    'vufind'      : VuFind,
 }
 
 data = {}

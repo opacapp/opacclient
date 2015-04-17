@@ -63,6 +63,7 @@ import de.geeksfactory.opacclient.apis.SISIS;
 import de.geeksfactory.opacclient.apis.SRU;
 import de.geeksfactory.opacclient.apis.TestApi;
 import de.geeksfactory.opacclient.apis.TouchPoint;
+import de.geeksfactory.opacclient.apis.VuFind;
 import de.geeksfactory.opacclient.apis.WebOpacNet;
 import de.geeksfactory.opacclient.apis.WinBiap;
 import de.geeksfactory.opacclient.apis.Zones22;
@@ -223,6 +224,8 @@ public class OpacClient extends Application {
             newApiInstance = new Adis();
         } else if (lib.getApi().equals("sru")) {
             newApiInstance = new SRU();
+        } else if (lib.getApi().equals("vufind")) {
+            newApiInstance = new VuFind();
         } else if (lib.getApi().equals("webopac.net")) {
             newApiInstance = new WebOpacNet();
         } else if (lib.getApi().equals("winbiap")) {

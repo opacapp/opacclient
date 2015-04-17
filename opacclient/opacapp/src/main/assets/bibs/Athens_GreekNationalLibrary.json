@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "vufind",
+    "city": "\u0391\u03b8\u03ae\u03bd\u03b1",
+    "country": "\u0395\u03bb\u03bb\u03ac\u03b4\u03b1",
+    "data": {
+        "baseurl": "http://vopac.nlg.gr"
+    },
+    "geo": [
+        37.983917,
+        23.7293599
+    ],
+    "information": "http://www.nlg.gr/",
+    "state": "\u0391\u03c4\u03c4\u03b9\u03ba\u03ae",
+    "title": "\u0395\u03b8\u03bd\u03b9\u03ba\u03ae \u0392\u03b9\u03b2\u03bb\u03b9\u03bf\u03b8\u03ae\u03ba\u03b7 \u03c4\u03b7\u03c2 \u0395\u03bb\u03bb\u03ac\u03b4\u03bf\u03c2"
+}
