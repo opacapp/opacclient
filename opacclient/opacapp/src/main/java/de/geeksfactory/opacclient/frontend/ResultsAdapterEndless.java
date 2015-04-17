@@ -37,6 +37,7 @@ public class ResultsAdapterEndless extends EndlessAdapter {
     private OnLoadMoreListener listener;
     private int page = 1;
     private int maxPage;
+    private boolean endReached = false;
     private int resultCount;
     private List<SearchResult> itemsToAppend;
 
@@ -56,6 +57,12 @@ public class ResultsAdapterEndless extends EndlessAdapter {
         if (itemsToAppend != null) {
             objects.addAll(itemsToAppend);
             notifyDataSetChanged();
+            if (itemsToAppend.size() == 0) {
+                // We received zero results, so we suspect that we reached past the last
+                // page. This is needed for OPACs where the number of total search results is
+                // unknown (e.g. some VuFind installations with unusual templates).
+                endReached = true;
+            }
             itemsToAppend = null;
         }
     }
@@ -68,7 +75,7 @@ public class ResultsAdapterEndless extends EndlessAdapter {
 
     @Override
     protected boolean cacheInBackground() throws Exception {
-        if (page < maxPage || getWrappedAdapter().getCount() < resultCount) {
+        if (page < maxPage || getWrappedAdapter().getCount() < resultCount || (resultCount == -1 && !endReached)) {
             page++;
             SearchRequestResult result = listener.onLoadMore(page);
             itemsToAppend = result.getResults();
@@ -83,6 +90,7 @@ public class ResultsAdapterEndless extends EndlessAdapter {
             }
             return itemsToAppend != null;
         } else {
+            endReached = true;
             return false;
         }
     }

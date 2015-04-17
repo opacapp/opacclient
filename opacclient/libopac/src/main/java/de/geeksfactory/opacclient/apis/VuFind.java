@@ -1,9 +1,16 @@
 package de.geeksfactory.opacclient.apis;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -23,10 +30,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.lang.model.element.Name;
-
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Library;
@@ -36,9 +42,11 @@ import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
+import de.geeksfactory.opacclient.utils.Base64;
 
 public class VuFind extends BaseApi {
     protected static HashMap<String, String> languageCodes = new HashMap<>();
+    protected static HashMap<String, SearchResult.MediaType> mediaTypeSelectors = new HashMap<>();
 
     static {
         languageCodes.put("de", "de");
@@ -48,6 +56,46 @@ public class VuFind extends BaseApi {
         languageCodes.put("it", "it");
         languageCodes.put("fr", "fr");
         languageCodes.put("da", "da");
+
+        mediaTypeSelectors
+                .put(".cd, .audio, .musicrecording, .record, .soundrecordingmedium, " +
+                                ".soundrecording",
+                        SearchResult.MediaType.CD_MUSIC);
+        mediaTypeSelectors.put(".audiotape, .cassette, .soundcassette",
+                SearchResult.MediaType.AUDIO_CASSETTE);
+        mediaTypeSelectors.put(".dvdaudio, .sounddisc", SearchResult.MediaType.CD_MUSIC);
+        mediaTypeSelectors.put(".dvd, .dvdvideo", SearchResult.MediaType.DVD);
+        mediaTypeSelectors.put(".blueraydisc, .bluraydisc", SearchResult.MediaType.BLURAY);
+        mediaTypeSelectors.put(".ebook", SearchResult.MediaType.EBOOK);
+        mediaTypeSelectors.put(".map, .globe, .atlas", SearchResult.MediaType.MAP);
+        mediaTypeSelectors
+                .put(".slide, .photo, .artprint, .collage, .drawing, .flashcard, .painting, " +
+                                ".photonegative, .placard, .print, .sensorimage, .transparency",
+                        SearchResult.MediaType.ART);
+        mediaTypeSelectors.put(
+                ".microfilm, .video, .videodisc, .vhs, .video, .videotape, .videocassette, " +
+                        ".videocartridge, .audiovisualmedia, .filmstrip, .motionpicture, " +
+                        ".videoreel",
+                SearchResult.MediaType.MOVIE);
+        mediaTypeSelectors.put(".kit, .sets", SearchResult.MediaType.PACKAGE);
+        mediaTypeSelectors.put(".musicalscore, .notatedmusic, .electronicmusicalscore",
+                SearchResult.MediaType.SCORE_MUSIC);
+        mediaTypeSelectors.put(".manuscript, .book, .articles", SearchResult.MediaType.BOOK);
+        mediaTypeSelectors
+                .put(".journal, .journalnewspaper, .serial", SearchResult.MediaType.MAGAZINE);
+        mediaTypeSelectors.put(".newspaper, .newspaperarticle", SearchResult.MediaType.NEWSPAPER);
+        mediaTypeSelectors.put(".software, .cdrom, .chipcartridge, .disccartridge, .dvdrom",
+                SearchResult.MediaType.CD_SOFTWARE);
+        mediaTypeSelectors.put(".newspaper", SearchResult.MediaType.NEWSPAPER);
+        mediaTypeSelectors
+                .put(".electronicnewspaper, .electronic, .electronicarticle, " +
+                                "electronicresourcedatacarrier, .electronicresourceremoteaccess, " +
+                                ".electronicserial, .electronicjournal, .electronicthesis",
+                        SearchResult.MediaType.EDOC);
+        mediaTypeSelectors.put(".newspaper", SearchResult.MediaType.NEWSPAPER);
+        mediaTypeSelectors.put(".newspaper", SearchResult.MediaType.NEWSPAPER);
+        mediaTypeSelectors.put(".unknown", SearchResult.MediaType.UNKNOWN);
+
     }
 
     protected String languageCode = "en";
@@ -72,7 +120,7 @@ public class VuFind extends BaseApi {
     protected List<NameValuePair> buildSearchParams(List<SearchQuery> query) {
         List<NameValuePair> params = new ArrayList<>();
 
-        params.add(new BasicNameValuePair("sort", "relevancee"));
+        params.add(new BasicNameValuePair("sort", "relevance"));
         params.add(new BasicNameValuePair("join", "AND"));
 
         for (SearchQuery singleQuery : query) {
@@ -81,6 +129,7 @@ public class VuFind extends BaseApi {
                 params.add(new BasicNameValuePair("filter[]", singleQuery.getValue()));
             } else {
                 params.add(new BasicNameValuePair("type0[]", singleQuery.getKey()));
+                params.add(new BasicNameValuePair("bool0[]", "AND"));
                 params.add(new BasicNameValuePair("lookfor0[]", singleQuery.getValue()));
             }
         }
@@ -93,7 +142,7 @@ public class VuFind extends BaseApi {
         if (!initialised) start();
         last_query = query;
         String html = httpGet(opac_url + "/Search/Results" +
-                buildHttpGetParams(buildSearchParams(query), getDefaultEncoding()),
+                        buildHttpGetParams(buildSearchParams(query), getDefaultEncoding()),
                 getDefaultEncoding());
         Document doc = Jsoup.parse(html);
         return parse_search(doc, 1);
@@ -109,9 +158,10 @@ public class VuFind extends BaseApi {
         }
 
         int rescount = -1;
-        if (doc.select(".resulthead").size() == 1)
+        if (doc.select(".resulthead").size() == 1) {
             rescount = Integer.parseInt(
                     doc.select(".resulthead strong").get(2).text());
+        }
         List<SearchResult> reslist = new ArrayList<>();
 
         for (Element row : doc.select("div.result")) {
@@ -119,7 +169,8 @@ public class VuFind extends BaseApi {
             Element z3988el = null;
             if (row.select("span.Z3988").size() == 1) {
                 z3988el = row.select("span.3988").first();
-            } else if (row.parent().tagName().equals("li") && row.parent().select("span.Z3988").size() > 0) {
+            } else if (row.parent().tagName().equals("li") &&
+                    row.parent().select("span.Z3988").size() > 0) {
                 z3988el = row.parent().select("span.3988").first();
             }
             if (z3988el != null) {
@@ -152,6 +203,39 @@ public class VuFind extends BaseApi {
                 }
             } else {
                 res.setInnerhtml(row.select("a.title").text());
+            }
+
+            if (row.hasClass("available") || row.hasClass("internet")) {
+                res.setStatus(SearchResult.Status.GREEN);
+            } else if (row.hasClass("reservable")) {
+                res.setStatus(SearchResult.Status.YELLOW);
+            } else if (row.hasClass("not-available")) {
+                res.setStatus(SearchResult.Status.RED);
+            } else if (row.select(".status.available").size() > 0) {
+                res.setStatus(SearchResult.Status.GREEN);
+            } else if (row.select(".status .label-success").size() > 0) {
+                res.setStatus(SearchResult.Status.GREEN);
+            } else if (row.select(".status .label-important").size() > 0) {
+                res.setStatus(SearchResult.Status.RED);
+            } else if (row.select(".status.checkedout").size() > 0) {
+                res.setStatus(SearchResult.Status.RED);
+            }
+
+            for (Map.Entry<String, SearchResult.MediaType> entry : mediaTypeSelectors.entrySet()) {
+                if (row.select(entry.getKey()).size() > 0) {
+                    res.setType(entry.getValue());
+                    break;
+                }
+            }
+
+            for (Element img : row.select("img")) {
+                String src = img.absUrl("src");
+                if (src.contains("Cover")) {
+                    if (!src.contains("Unavailable")) {
+                        res.setCover(src);
+                    }
+                    break;
+                }
             }
 
             res.setPage(page);
