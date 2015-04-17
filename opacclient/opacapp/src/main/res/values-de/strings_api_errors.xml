@@ -1,41 +1,38 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
-    <!--These strings may be shown as unused by Android Lint, but are in fact used by the AndroidStringProvider class-->
-    <plurals name="limited_num_of_criteria">
-        <item quantity="one">Diese Bibliothek unterstützt nur ein benutztes Suchkriterium.</item>
-        <item quantity="other">Diese Bibliothek unterstützt nur bis zu %d benutzte Suchkriterien.</item>
-    </plurals>
-    <string name="no_criteria_input">Es wurden keine Suchkriterien eingegeben.</string>
-    <string name="combination_not_supported">Sie haben eine Kombination von Suchfeldern benutzt, die von dieser Bibliothek nicht unterstützt wird. Bitte probieren Sie eine andere Suche.</string>
-    <string name="unknown_error_account">Unbekannter Fehler. Bitte prüfen Sie, ob Ihre Kontodaten korrekt sind.</string>
-    <string name="unknown_error_account_with_description">Unbekannter Fehler: \"%s\" Bitte prüfen Sie, ob Ihre Kontodaten korrekt sind.</string>
-    <string name="unknown_error">Unbekannter Fehler.</string>
-    <string name="unknown_error_with_description">Unbekannter Fehler: \"%s\"</string>
-    <string name="internal_error">Interner Fehler.</string>
-    <string name="internal_error_with_description">Interner Fehler: \"%s\"</string>
-    <string name="login_failed">Login fehlgeschlagen.</string>
-    <string name="could_not_load_account">Konto konnte nicht geladen werden.</string>
-    <string name="api_connection_error">Verbindungsfehler.</string>
-    <string name="lent_until">verliehen bis</string>
-    <string name="subtitle">Titelzusatz</string>
-    <string name="pica_which_copy">Welches Exemplar soll reserviert/bestellt werden? (verfügbare Exemplare werden bestellt)</string>
-    <string name="no_copy_reservable">Es ist kein Exemplar reservierbar.</string>
-    <string name="could_not_load_detail">Details konnten nicht abgerufen werden, bitte erneut probieren!</string>
-    <string name="error">Fehler</string>
-    <string name="download">Download</string>
-    <string name="reminders">Mahnungen</string>
-    <string name="prolonged_abbr">verl.</string>
-    <string name="prolonging_expired">nicht mehr verlängerbar</string>
-    <string name="prolonging_impossible">nicht verlängerbar</string>
-    <string name="prolonging_waiting">noch nicht verlängerbar</string>
-    <string name="wrong_account_data">Die eingegebenen Benutzerdaten sind falsch.</string>
-    <string name="order">Sortierung</string>
-    <string name="order_default">Standardsortierung</string>
-    <string name="order_year_asc">Nach Erscheinungsjahr (aufsteigend)</string>
-    <string name="order_category_asc">Nach Mediengruppe (aufsteigend)</string>
-    <string name="order_year_desc">Nach Erscheinungsjahr (absteigend)</string>
-    <string name="order_category_desc">Nach Mediengruppe (absteigend)</string>
-    <string name="interlib_branch">Fernleihe: %s</string>
-    <string name="stacks_branch">Magazin: %s</string>
-    <string name="provision_branch">Bereit: %s</string>
+<resources>
+  <!--These strings may be shown as unused by Android Lint, but are in fact used by the AndroidStringProvider class-->
+  <string name="limited_num_of_criteria">Diese Bibliothek unterstützt nur bis zu %d benutzte Suchkriterien.</string>
+  <string name="no_criteria_input">Es wurden keine Suchkriterien eingegeben.</string>
+  <string name="combination_not_supported">Sie haben eine Kombination von Suchfeldern benutzt, die von dieser Bibliothek nicht unterstützt wird. Bitte probieren Sie eine andere Suche.</string>
+  <string name="unknown_error_account">Unbekannter Fehler. Bitte prüfen Sie, ob Ihre Kontodaten korrekt sind.</string>
+  <string name="unknown_error_account_with_description">Unbekannter Fehler: \"%s\" Bitte prüfen Sie, ob Ihre Kontodaten korrekt sind.</string>
+  <string name="unknown_error">Unbekannter Fehler.</string>
+  <string name="unknown_error_with_description">Unbekannter Fehler: \"%s\"</string>
+  <string name="internal_error">Interner Fehler.</string>
+  <string name="internal_error_with_description">Interner Fehler: \"%s\"</string>
+  <string name="login_failed">Login fehlgeschlagen.</string>
+  <string name="could_not_load_account">Konto konnte nicht geladen werden.</string>
+  <string name="api_connection_error">Verbindungsfehler.</string>
+  <string name="lent_until">verliehen bis</string>
+  <string name="subtitle">Titelzusatz</string>
+  <string name="pica_which_copy">Welches Exemplar soll reserviert/bestellt werden? (verfügbare Exemplare werden bestellt)</string>
+  <string name="no_copy_reservable">Es ist kein Exemplar reservierbar.</string>
+  <string name="could_not_load_detail">Details konnten nicht abgerufen werden, bitte erneut probieren!</string>
+  <string name="error">Fehler</string>
+  <string name="download">Download</string>
+  <string name="reminders">Mahnungen</string>
+  <string name="prolonged_abbr">verl.</string>
+  <string name="prolonging_expired">nicht mehr verlängerbar</string>
+  <string name="prolonging_impossible">nicht verlängerbar</string>
+  <string name="prolonging_waiting">noch nicht verlängerbar</string>
+  <string name="wrong_account_data">Die eingegebenen Benutzerdaten sind falsch.</string>
+  <string name="order">Sortierung</string>
+  <string name="order_default">Standardsortierung</string>
+  <string name="order_year_asc">Nach Erscheinungsjahr (aufsteigend)</string>
+  <string name="order_category_asc">Nach Mediengruppe (aufsteigend)</string>
+  <string name="order_year_desc">Nach Erscheinungsjahr (absteigend)</string>
+  <string name="order_category_desc">Nach Mediengruppe (absteigend)</string>
+  <string name="interlib_branch">Fernleihe: %s</string>
+  <string name="stacks_branch">Magazin: %s</string>
+  <string name="provision_branch">Bereit: %s</string>
 </resources>
