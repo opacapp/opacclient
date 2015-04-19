@@ -38,7 +38,9 @@ if __name__ == '__main__':
         data = {};
 
         try:
-            webbrowser.get().open('https://www.google.de/search?hl=de&q=%s' % library['title'])
+            webbrowser.get().open('https://www.google.de/search?hl=de&q=%s+%s' % (
+                library['title'], library['city'])
+            )
         except:
             pass
 
@@ -66,9 +68,7 @@ if __name__ == '__main__':
         if geokey == 0:
             continue
 
-        print("In welchem Land liegt die Bibliothek?")
-        data['country'] = getInput(required=True, default="Deutschland")
-
+        data['state'] = library['country'];
         data['state'] = library['state'];
         print("Bundesland: " + data['state']);
 
@@ -80,10 +80,8 @@ if __name__ == '__main__':
         print("URL zu einer Informationsseite")
         print("Sollte Öffnungszeiten u.ä. enthalten")
 
-        data['data']['information'] = getInput(required=True)
-
-        print("Grad der Unterstützung")
-        data['support'] = APIS[api]().getDefaultSupportString();
+        data['information'] = getInput(required=True)
+        data['account_supported'] = APIS[api]().accountSupported();
 
         data = APIS[api]().prompt(data)
 
@@ -92,7 +90,7 @@ if __name__ == '__main__':
             print("Dateiname")
             print("Sowas wie 'Mannheim' oder 'Heidelberg_Uni'. Möglichst keine Leerzeichen und Umlaute.")
 
-            if data['title'] in ("Stadtbibliothek", "Stadtbücherei", "Gemeindebücherei"):
+            if data['title'] in ("Stadtbibliothek", "Stadtbücherei", "Gemeindebücherei", "Gemeindebibliothek"):
                 name = data['city'];
             else:
                 name = data['city'] + " " + data['title'];
