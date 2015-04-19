@@ -4,7 +4,15 @@
     "city": "\u0398\u03b5\u03c3\u03c3\u03b1\u03bb\u03bf\u03bd\u03af\u03ba\u03b7",
     "country": "\u0395\u03bb\u03bb\u03ac\u03b4\u03b1",
     "data": {
-        "baseurl": "http://search.lib.auth.gr"
+        "baseurl": "http://search.lib.auth.gr",
+        "copystyle": "stackedtable",
+        "copytable": {
+            "_offset": 2,
+            "barcode": 1,
+            "location": 5,
+            "signature": "headrow",
+            "status": 0
+        }
     },
     "geo": [
         40.6400629,

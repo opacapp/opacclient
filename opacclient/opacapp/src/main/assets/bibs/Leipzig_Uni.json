@@ -4,7 +4,14 @@
     "city": "Leipzig",
     "country": "Deutschland",
     "data": {
-        "baseurl": "https://katalog.ub.uni-leipzig.de/vufind"
+        "baseurl": "https://katalog.ub.uni-leipzig.de/vufind",
+        "copystyle": "stackedtable",
+        "copytable": {
+            "location": 2,
+            "returndate": "1/1",
+            "signature": 3,
+            "status": "1/0"
+        }
     },
     "geo": [
         51.3396955,

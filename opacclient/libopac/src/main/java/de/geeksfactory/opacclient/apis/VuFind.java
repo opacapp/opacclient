@@ -9,14 +9,19 @@ import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -167,7 +172,6 @@ public class VuFind extends BaseApi {
             }
             if (z3988el != null) {
                 List<NameValuePair> z3988data;
-                boolean hastitle = false;
                 try {
                     StringBuilder description = new StringBuilder();
                     z3988data = URLEncodedUtils.parse(new URI("http://dummy/?"
@@ -177,10 +181,8 @@ public class VuFind extends BaseApi {
                             if (!nv.getValue().trim().equals("")) {
                                 if (nv.getName().equals("rft.btitle")) {
                                     description.append("<b>").append(nv.getValue()).append("</b>");
-                                    hastitle = true;
                                 } else if (nv.getName().equals("rft.atitle")) {
                                     description.append("<b>").append(nv.getValue()).append("</b>");
-                                    hastitle = true;
                                 } else if (nv.getName().equals("rft.au")) {
                                     description.append("<br />").append(nv.getValue());
                                 } else if (nv.getName().equals("rft.date")) {
@@ -231,7 +233,13 @@ public class VuFind extends BaseApi {
             }
 
             res.setPage(page);
-            res.setId(row.select("a.title").first().attr("href").replace("/Record/", ""));
+            String href = row.select("a.title").first().absUrl("href");
+            try {
+                URL idurl = new URL(href);
+                res.setId(idurl.getPath().replace("/Record/", ""));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
             reslist.add(res);
         }
 
@@ -292,14 +300,117 @@ public class VuFind extends BaseApi {
             String text = tr.child(1).text();
             if (tr.child(1).select("a").size() > 0) {
                 String href = tr.child(1).select("a").attr("href");
-                if (!href.startsWith("/")) {
+                if (!href.startsWith("/") || !text.contains(opac_url)) {
                     text += " " + href;
                 }
             }
             res.addDetail(new Detail(tr.child(0).text(), text));
         }
 
+        try {
+            parse_copies(res, doc);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         return res;
+    }
+
+    protected void parse_copies(DetailledItem res, Document doc) throws JSONException {
+        if ("doublestacked".equals(data.optString("copystyle"))) {
+            // e.g. http://vopac.nlg.gr/Record/393668/Holdings#tabnav
+            // for Athens_GreekNationalLibrary
+            Element container = doc.select(".tab-container").first();
+            String branch = "";
+            for (Element child : container.children()) {
+                if (child.tagName().equals("h5")) {
+                    branch = child.text();
+                } else if (child.tagName().equals("table")) {
+                    int i = 0;
+                    String callNumber = "";
+                    for (Element row : child.select("tr")) {
+                        if (i == 0) {
+                            callNumber = row.child(1).text();
+                        } else {
+                            Map<String, String> copy = new HashMap<>();
+                            copy.put(DetailledItem.KEY_COPY_BRANCH, branch);
+                            copy.put(DetailledItem.KEY_COPY_SHELFMARK, callNumber);
+                            copy.put(DetailledItem.KEY_COPY_BARCODE, row.child(0).text());
+                            copy.put(DetailledItem.KEY_COPY_STATUS, row.child(1).text());
+                            res.addCopy(copy);
+                        }
+                        i++;
+                    }
+                }
+            }
+
+        } else if ("stackedtable".equals(data.optString("copystyle"))) {
+            // e.g. http://search.lib.auth.gr/Record/376356
+            // or https://katalog.ub.uni-leipzig.de/Record/0000196115
+            Element container = doc.select(".recordsubcontent").first();
+            String branch = "";
+            JSONObject copytable = data.getJSONObject("copytable");
+            for (Element child : container.children()) {
+                if (child.tagName().equals("div")) {
+                    child = child.child(0);
+                }
+                if (child.tagName().equals("h3")) {
+                    branch = child.text();
+                } else if (child.tagName().equals("table")) {
+                    if (child.select("caption").size() > 0) {
+                        // Leipzig_Uni
+                        branch = child.select("caption").first().ownText();
+                    }
+                    int i = 0;
+                    String callNumber = null;
+                    if ("headrow".equals(copytable.optString("signature"))) {
+                        callNumber = child.select("tr").get(0).child(1).text();
+                    }
+                    for (Element row : child.select("tr")) {
+                        if (i < copytable.optInt("_offset", 0)) {
+                            i++;
+                            continue;
+                        }
+                        Map<String, String> copy = new HashMap<>();
+                        if (callNumber != null) {
+                            copy.put(DetailledItem.KEY_COPY_SHELFMARK, callNumber);
+                        }
+                        copy.put(DetailledItem.KEY_COPY_BRANCH, branch);
+                        Iterator<?> keys = copytable.keys();
+                        while (keys.hasNext()) {
+                            String key = (String) keys.next();
+                            if (key.startsWith("_")) continue;
+                            if (copytable.optString(key, "").contains("/")) {
+                                // Leipzig_Uni
+                                String[] splitted = copytable.getString(key).split("/");
+                                int col = Integer.parseInt(splitted[0]);
+                                int line = Integer.parseInt(splitted[1]);
+                                int j = 0;
+                                for (Node node : row.child(col).childNodes()) {
+                                    if (node instanceof Element) {
+                                        if (((Element) node).tagName().equals("br")) {
+                                            j++;
+                                        } else if (j == line) {
+                                            copy.put(key, ((Element) node).text());
+                                        }
+                                    } else if (node instanceof TextNode && j == line &&
+                                            !((TextNode) node).text().trim().equals("")) {
+                                        copy.put(key, ((TextNode) node).text());
+                                    }
+                                }
+                            } else {
+                                // Thessaloniki_University
+                                if (copytable.optInt(key, -1) == -1) continue;
+                                String value = row.child(copytable.getInt(key)).text();
+                                copy.put(key, value);
+                            }
+                        }
+                        res.addCopy(copy);
+                        i++;
+                    }
+                }
+            }
+        }
     }
 
     @Override
