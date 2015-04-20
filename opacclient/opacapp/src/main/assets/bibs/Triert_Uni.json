@@ -1,0 +1,17 @@
+{
+    "account_supported": false,
+    "api": "primo",
+    "city": "Trier",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://primo.kobv.de/primo_library/libweb",
+        "db": "TRI_UB_I"
+    },
+    "geo": [
+        49.749992,
+        6.6371433
+    ],
+    "information": "http://www.ub.uni-trier.de/",
+    "state": "Rheinland-Pfalz",
+    "title": "Unibibliothek"
+}

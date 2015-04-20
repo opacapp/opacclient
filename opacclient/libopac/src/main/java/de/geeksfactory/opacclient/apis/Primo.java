@@ -165,7 +165,8 @@ public class Primo extends BaseApi {
             }
             if (resrow.select(".EXLResultAvailability").size() > 0) {
                 description.append(
-                        "<br />" + resrow.select(".EXLResultAvailability").first().text());
+                        "<br />" + resrow.select(".EXLResultAvailability").first().text().replace(
+                                "(GetIt)", ""));
             }
             res.setInnerhtml(description.toString());
             if (resrow.select(".EXLResultStatusAvailable").size() > 0) {
@@ -176,7 +177,8 @@ public class Primo extends BaseApi {
             res.setPage(page);
 
             Map<String, String> q = getQueryParamsFirst(
-                    resrow.select(".EXLResultTitle a").first().absUrl("href"));
+                    resrow.select(".EXLResultTitle a, a.EXLThumbnailLinkMarker").first()
+                          .absUrl("href"));
             res.setId(q.get("doc"));
 
 
@@ -304,10 +306,10 @@ public class Primo extends BaseApi {
                 } else if (title.contains("call number") || title.contains("signatur")) {
                     copymap.put(i, DetailledItem.KEY_COPY_SHELFMARK);
                 } else if (title.contains("loan to") || title.contains("bezugsmodalit") ||
-                        title.contains("ausleihm")) {
+                        title.contains("ausleihm") || title.contains("status")) {
                     copymap.put(i, DetailledItem.KEY_COPY_STATUS);
                 } else if (title.contains("due date") || title.contains("llig am") ||
-                        title.contains("ausgeliehen bis")) {
+                        title.contains("ausgeliehen bis") || title.contains("lligkeit")) {
                     copymap.put(i, DetailledItem.KEY_COPY_RETURN);
                 } else if (title.contains("queue") || title.contains("vormerker")) {
                     copymap.put(i, DetailledItem.KEY_COPY_RESERVATIONS);
@@ -315,7 +317,9 @@ public class Primo extends BaseApi {
                 i++;
             }
 
-            for (Element tr : doc2.select(".EXLLocationTable tr:not(.EXLLocationTitlesRow):not(.EXLAdditionalFieldsRow)")) {
+            for (Element tr : doc2
+                    .select(".EXLLocationTable tr:not(.EXLLocationTitlesRow):not(" +
+                            ".EXLAdditionalFieldsRow)")) {
                 int j = 0;
                 Map<String, String> copy = new HashMap<>();
                 for (Element td : tr.children()) {
@@ -337,7 +341,7 @@ public class Primo extends BaseApi {
                             getDefaultEncoding());
             Document doc3 = Jsoup.parse(html2);
             doc3.setBaseUri(opac_url + "/action/display.do");
-            if (doc3.select(".EXLTabHeaderContent a").size() > 0){
+            if (doc3.select(".EXLTabHeaderContent a").size() > 0) {
                 Element link = doc3.select(".EXLTabHeaderContent a").first();
                 res.addDetail(new Detail(link.text().trim(), link.absUrl("href")));
             }
@@ -419,7 +423,11 @@ public class Primo extends BaseApi {
                 Map<String, String> dropdownOption = new HashMap<>();
                 dropdownOption.put("key", option.val());
                 dropdownOption.put("value", option.text());
-                dropdownOptions.add(dropdownOption);
+                if (option.val().equals("all_items")) {
+                    dropdownOptions.add(0, dropdownOption);
+                } else {
+                    dropdownOptions.add(dropdownOption);
+                }
             }
             field.setDropdownValues(dropdownOptions);
             field.setData(new JSONObject());

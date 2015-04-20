@@ -2,7 +2,7 @@
     "account_supported": false,
     "api": "vufind",
     "city": "\u0398\u03b5\u03c3\u03c3\u03b1\u03bb\u03bf\u03bd\u03af\u03ba\u03b7",
-    "country": "\u0395\u03bb\u03bb\u03ac\u03b4\u03b1",
+    "country": "\u0395\u03bb\u03bb\u03ac\u03c2",
     "data": {
         "baseurl": "http://search.lib.auth.gr",
         "copystyle": "stackedtable",
