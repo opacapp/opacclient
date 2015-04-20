@@ -11,38 +11,40 @@ import os
 DIR = 'opacclient/opacapp/src/main/assets/bibs/'
 
 for filename in os.listdir(DIR):
-	f = DIR + filename
-	data = json.load(open(f))
-	if 'geo' in data:
-		continue
+    f = DIR + filename
+    data = json.load(open(f))
+    if 'geo' in data:
+        if len(data['geo']) != 2 or data['geo'][0] == 0 or data['geo'][1] == 0:
+            print("Invalid: %s" %filename)
+        continue
 
-	print("Suche Position für: %s, %s\n" % (data['city'], data['group']))
+    print("Suche Position für: %s, %s\n" % (data['city'], data['state']))
 
-	uri = 'https://maps.googleapis.com/maps/api/geocode/json?'+urllib.parse.urlencode({'address':data['city'],'sensor':'false'})
-	jsoncontent = urllib.request.urlopen(uri).read().decode()
-	geocode = json.loads(jsoncontent)
+    uri = 'https://maps.googleapis.com/maps/api/geocode/json?'+urllib.parse.urlencode({'address':data['city'] + ', ' + data['country'],'sensor':'false'})
+    jsoncontent = urllib.request.urlopen(uri).read().decode()
+    geocode = json.loads(jsoncontent)
 
-	if geocode['status'] != 'OK':
-		print("ERROR! %s" %filename)
-		continue
+    if geocode['status'] != 'OK':
+        print("ERROR! %s" %filename)
+        continue
 
-	key = 1
-	for res in geocode['results']:
-		print("["+str(key)+"]", ", ".join([a["long_name"] for a in res['address_components']]))
-		key += 1
+    key = 1
+    for res in geocode['results']:
+        print("["+str(key)+"]", ", ".join([a["long_name"] for a in res['address_components']]))
+        key += 1
 
-	print("\nWelches? [Enter für ablehnen]")
+    print("\nWelches? [Enter für ablehnen]")
 
-	inp = input()
+    inp = input()
 
-	os.system('clear')
+    os.system('clear')
 
-	if inp.strip() == '':
-		continue
+    if inp.strip() == '':
+        continue
 
-	if int(inp.strip()) > 0:
-		res = geocode['results'][int(inp.strip())-1]
-		data['geo'] = [float(res['geometry']['location']['lat']), float(res['geometry']['location']['lng'])]
+    if int(inp.strip()) > 0:
+        res = geocode['results'][int(inp.strip())-1]
+        data['geo'] = [float(res['geometry']['location']['lat']), float(res['geometry']['location']['lng'])]
 
 
-	json.dump(data, open(f, 'w'), indent=4, sort_keys=True)
+    json.dump(data, open(f, 'w'), indent=4, sort_keys=True)
