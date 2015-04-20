@@ -276,8 +276,20 @@ class Zones22(Api):
     def accountSupported(self):
         return False
 
+
+class Primo(Api):
+    def accountSupported(self):
+        return False
+
+    def prompt(self, data):
+        print("VID?")
+        inp = getInput(required=True)
+        data['data']['db'] = inp
+        return data
+
+
 class Pica(Api):
-    account = False
+    account = True
 
     def accountSupported(self):
         return True
@@ -305,6 +317,7 @@ APIS = {
     'webopac.net' : WebOpacNet,
 	'winbiap'	  : WinBiap,
     'vufind'      : VuFind,
+    'primo'       : Primo,
 }
 
 data = {}

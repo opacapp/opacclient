@@ -59,6 +59,7 @@ import de.geeksfactory.opacclient.apis.Heidi;
 import de.geeksfactory.opacclient.apis.IOpac;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.Pica;
+import de.geeksfactory.opacclient.apis.Primo;
 import de.geeksfactory.opacclient.apis.SISIS;
 import de.geeksfactory.opacclient.apis.SRU;
 import de.geeksfactory.opacclient.apis.TestApi;
@@ -224,6 +225,8 @@ public class OpacClient extends Application {
             newApiInstance = new Adis();
         } else if (lib.getApi().equals("sru")) {
             newApiInstance = new SRU();
+        } else if (lib.getApi().equals("primo")) {
+            newApiInstance = new Primo();
         } else if (lib.getApi().equals("vufind")) {
             newApiInstance = new VuFind();
         } else if (lib.getApi().equals("webopac.net")) {
