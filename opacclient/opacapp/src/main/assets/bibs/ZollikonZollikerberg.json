@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "webopac.net",
+    "city": "Zollikon/Zollikerberg",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.bibliotheken-zh.ch/Zollikon_Zollikerberg"
+    },
+    "geo": [
+        47.3460699,
+        8.6034123
+    ],
+    "information": "http://www.zollikon.ch/de/tourismus/bibliotheken/welcome.php",
+    "state": "Z\u00fcrich",
+    "title": "Gemeindebibliothek"
+}

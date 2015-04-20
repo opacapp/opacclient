@@ -4,13 +4,13 @@
     "city": "Otelfingen",
     "country": "Schweiz",
     "data": {
-        "baseurl": "http://www.winmedio.net/otelfingen"
+        "baseurl": "http://www.bibliotheken-zh.ch/Otelfingen"
     },
     "geo": [
         47.4613,
         8.388570000000001
     ],
-    "information": "http://www.sekuf.ch/index.php?article_id=8",
+    "information": "http://www.sekuf.ch/?article_id=8",
     "state": "Z\u00fcrich",
-    "title": "Schul- und Regionalbibliothek"
+    "title": "Gemeindebibliothek"
 }

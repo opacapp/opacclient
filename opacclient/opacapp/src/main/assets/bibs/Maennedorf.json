@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "webopac.net",
+    "city": "M\u00e4nnedorf",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.bibliotheken-zh.ch/Maennedorf"
+    },
+    "geo": [
+        47.255493,
+        8.6969751
+    ],
+    "information": "http://www.maennedorf.ch/schule/de/bibliothek/",
+    "state": "Z\u00fcrich",
+    "title": "Gemeindebibliothek"
+}

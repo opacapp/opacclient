@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "webopac.net",
+    "city": "Seuzach",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.bibliotheken-zh.ch/Seuzach"
+    },
+    "geo": [
+        47.535709,
+        8.7340363
+    ],
+    "information": "http://www.bibliothek-seuzach.ch/anzeige/mainbiblio.php",
+    "state": "Z\u00fcrich",
+    "title": "Gemeindebibliothek"
+}

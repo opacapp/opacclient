@@ -1,5 +1,9 @@
 -dontoptimize
 -dontobfuscate
+-keepclassmembers,allowoptimization enum * {
+	public static **[] values();
+	public static ** valueOf(java.lang.String);
+}
 # Rename android.support.v7 classes to fix bug on Samsung (and other) devices running Android 4.2
 # See also: https://code.google.com/p/android/issues/detail?id=78377
 -repackageclasses "android.support.v7"

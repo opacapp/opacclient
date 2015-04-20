@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1630,6 +1631,12 @@ public class SISIS extends BaseApi implements OpacApi {
             return opac_url + "/start.do?" + startparams
                     + "searchType=1&Query=0%3D%22" + id + "%22";
         } else {
+            try {
+                title = URLEncoder.encode(title, getDefaultEncoding());
+            } catch (UnsupportedEncodingException e) {
+                //noinspection deprecation
+                title = URLEncoder.encode(title);
+            }
             return opac_url + "/start.do?" + startparams
                     + "searchType=1&Query=-1%3D%22" + title + "%22";
         }

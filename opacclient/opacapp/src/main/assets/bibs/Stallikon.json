@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "webopac.net",
+    "city": "Stallikon",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.bibliotheken-zh.ch/Stallikon"
+    },
+    "geo": [
+        47.3258662,
+        8.4900464
+    ],
+    "information": "http://www.bibliothek-stallikon.ch/",
+    "state": "Z\u00fcrich",
+    "title": "Gemeindebibliothek"
+}

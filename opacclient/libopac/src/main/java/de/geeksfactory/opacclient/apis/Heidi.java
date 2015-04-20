@@ -806,10 +806,12 @@ public class Heidi extends BaseApi implements OpacApi {
             Map<String, String> row = new HashMap<>();
             Element desc = tr.child(1).select("label").first();
             Element pos = tr.child(3);
-            String kk = getQueryParamsFirst(
-                    tr.child(1).select("a").first().absUrl("href")).get(
-                    "katkey");
-            row.put(AccountData.KEY_RESERVATION_ID, kk);
+            if (tr.child(1).select("a").size() > 0) {
+                String kk = getQueryParamsFirst(
+                        tr.child(1).select("a").first().absUrl("href")).get(
+                        "katkey");
+                row.put(AccountData.KEY_RESERVATION_ID, kk);
+            }
             if (tr.child(0).select("input").size() > 0) {
                 row.put(AccountData.KEY_RESERVATION_CANCEL,
                         tr.child(0).select("input").first().val());

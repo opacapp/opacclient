@@ -33,12 +33,24 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.util.EntityUtils;
+
+import java.io.IOException;
 import java.net.URL;
+import java.util.HashSet;
 import java.util.List;
 
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.networking.CoverDownloadTask;
+import de.geeksfactory.opacclient.networking.HTTPClient;
+import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
+import de.geeksfactory.opacclient.utils.Base64;
 import de.geeksfactory.opacclient.utils.ISBNTools;
 
 public class ResultsAdapter extends ArrayAdapter<SearchResult> {
@@ -184,48 +196,22 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
         return view;
     }
 
-    public class LoadCoverTask extends AsyncTask<Void, Integer, SearchResult> {
-        protected SearchResult item;
+    public class LoadCoverTask extends CoverDownloadTask {
         protected ImageView iv;
 
         public LoadCoverTask(ImageView iv, SearchResult item) {
+            super(getContext(), item);
             this.iv = iv;
-            this.item = item;
         }
 
         @Override
-        protected SearchResult doInBackground(Void... voids) {
-            URL newurl;
-            if (item.getCover() != null && item.getCoverBitmap() == null) {
-                try {
-                    float density = getContext().getResources().getDisplayMetrics().density;
-                    newurl = new URL(ISBNTools.getBestSizeCoverUrl(item.getCover(),
-                            (int) (56 * density), (int) (56 * density)));
-                    Bitmap mIcon_val = BitmapFactory.decodeStream(newurl
-                            .openConnection().getInputStream());
-                    if (mIcon_val.getHeight() > 1 && mIcon_val.getWidth() > 1) {
-                        item.setCoverBitmap(mIcon_val);
-                    } else {
-                        // When images embedded from Amazon aren't available, a
-                        // 1x1
-                        // pixel image is returned (iOPAC)
-                        item.setCover(null);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            return item;
-        }
-
-        @Override
-        protected void onPostExecute(SearchResult result) {
+        protected void onPostExecute(CoverHolder result) {
             if (item.getCover() != null && item.getCoverBitmap() != null) {
                 iv.setImageBitmap(item.getCoverBitmap());
                 iv.setVisibility(View.VISIBLE);
-            } else if (item.getType() != null
-                    && item.getType() != MediaType.NONE) {
-                iv.setImageResource(getResourceByMediaType(item.getType()));
+            } else if (item instanceof SearchResult && ((SearchResult) item).getType() != null
+                    && ((SearchResult) item).getType() != MediaType.NONE) {
+                iv.setImageResource(getResourceByMediaType(((SearchResult) item).getType()));
                 iv.setVisibility(View.VISIBLE);
             } else {
                 iv.setVisibility(View.INVISIBLE);

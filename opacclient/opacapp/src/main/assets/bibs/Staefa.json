@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "webopac.net",
+    "city": "St\u00e4fa",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.bibliotheken-zh.ch/Staefa"
+    },
+    "geo": [
+        47.2428694,
+        8.7254092
+    ],
+    "information": "http://www.lesegesellschaft.ch/bibliothek/",
+    "state": "Z\u00fcrich",
+    "title": "Gemeindebibliothek"
+}

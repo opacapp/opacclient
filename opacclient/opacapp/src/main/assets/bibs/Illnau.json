@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "webopac.net",
+    "city": "Illnau",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.bibliotheken-zh.ch/Illnau"
+    },
+    "geo": [
+        47.4086221,
+        8.722936
+    ],
+    "information": "http://www.bibliotheksverein.ch/illnau/",
+    "state": "Z\u00fcrich",
+    "title": "Gemeindebibliothek"
+}

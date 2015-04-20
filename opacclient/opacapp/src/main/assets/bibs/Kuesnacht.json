@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "webopac.net",
+    "city": "K\u00fcsnacht",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.bibliotheken-zh.ch/Kuesnacht"
+    },
+    "geo": [
+        47.3196525,
+        8.585596899999999
+    ],
+    "information": "http://cms3-kuesnacht.backslash.ch/xml_1/internet/de/application/d286/f2261.cfm",
+    "state": "Z\u00fcrich",
+    "title": "Gemeindebibliothek"
+}

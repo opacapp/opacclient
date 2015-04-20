@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "webopac.net",
+    "city": "Obfelden",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.bibliotheken-zh.ch/Obfelden"
+    },
+    "geo": [
+        47.26289999999999,
+        8.4223199
+    ],
+    "information": "http://www.bibliothek-obfelden.ch/",
+    "state": "Z\u00fcrich",
+    "title": "Gemeindebibliothek"
+}

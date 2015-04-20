@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "webopac.net",
+    "city": "Pfaeffikon",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.bibliotheken-zh.ch/Pfaeffikon"
+    },
+    "geo": [
+        47.3667993,
+        8.784757599999999
+    ],
+    "information": "http://www.bibli-pfaeffikon.ch/",
+    "state": "Z\u00fcrich",
+    "title": "Gemeindebibliothek"
+}

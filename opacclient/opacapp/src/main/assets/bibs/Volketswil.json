@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "webopac.net",
+    "city": "Volketswil",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.bibliotheken-zh.ch/Volketswil"
+    },
+    "geo": [
+        47.3907562,
+        8.6853378
+    ],
+    "information": "http://www.bibliothekvolketswil.ch/site/index.cfm",
+    "state": "Z\u00fcrich",
+    "title": "Gemeindebibliothek"
+}

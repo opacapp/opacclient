@@ -1,0 +1,17 @@
+{
+    "account_supported": true,
+    "api": "pica",
+    "city": "Bremen",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "https://vhweb.suub.uni-bremen.de",
+        "db": "1"
+    },
+    "geo": [
+        53.07929619999999,
+        8.8016937
+    ],
+    "information": "http://www.suub.uni-bremen.de/",
+    "state": "Bremen",
+    "title": "Staats- und Unibibliothek"
+}

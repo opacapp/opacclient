@@ -46,6 +46,7 @@ import java.io.InputStreamReader;
 import java.io.InterruptedIOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,8 +65,7 @@ import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 
 /**
- * Abstract Base class for OpacApi implementations providing some helper methods
- * for HTTP
+ * Abstract Base class for OpacApi implementations providing some helper methods for HTTP
  */
 public abstract class BaseApi implements OpacApi {
 
@@ -92,13 +92,14 @@ public abstract class BaseApi implements OpacApi {
                 String[] pairs = parts[1].split("&");
                 for (String pair : pairs) {
                     String[] kv = pair.split("=");
-                    if (kv.length > 1)
+                    if (kv.length > 1) {
                         params.add(new BasicNameValuePair(URLDecoder.decode(
                                 kv[0], "UTF-8"), URLDecoder.decode(kv[1],
                                 "UTF-8")));
-                    else
+                    } else {
                         params.add(new BasicNameValuePair(URLDecoder.decode(
                                 kv[0], "UTF-8"), ""));
+                    }
                 }
                 url += URLEncodedUtils.format(params, "UTF-8");
             }
@@ -112,12 +113,12 @@ public abstract class BaseApi implements OpacApi {
     /**
      * Reads content from an InputStream into a string
      *
-     * @param is         InputStream to read from
-     * @param encoding   the encoding to use
+     * @param is       InputStream to read from
+     * @param encoding the encoding to use
      * @return String content of the InputStream
      */
     protected static String convertStreamToString(InputStream is,
-                                                  String encoding) throws IOException {
+            String encoding) throws IOException {
         BufferedReader reader;
         try {
             reader = new BufferedReader(new InputStreamReader(is, encoding));
@@ -254,14 +255,13 @@ public abstract class BaseApi implements OpacApi {
      * @param url           URL to fetch
      * @param encoding      Expected encoding of the response body
      * @param ignore_errors If true, status codes above 400 do not raise an exception
-     * @param cookieStore   If set, the given cookieStore is used instead of the built-in
-     *                      one.
+     * @param cookieStore   If set, the given cookieStore is used instead of the built-in one.
      * @return Answer content
-     * @throws NotReachableException Thrown when server returns a HTTP status code greater or
-     *                               equal than 400.
+     * @throws NotReachableException Thrown when server returns a HTTP status code greater or equal
+     *                               than 400.
      */
     public String httpGet(String url, String encoding, boolean ignore_errors,
-                          CookieStore cookieStore) throws
+            CookieStore cookieStore) throws
             IOException {
 
         HttpGet httpget = new HttpGet(cleanUrl(url));
@@ -341,8 +341,9 @@ public abstract class BaseApi implements OpacApi {
      * @param item CoverHolder to download the cover for
      */
     public void downloadCover(CoverHolder item) {
-        if (item.getCover() == null)
+        if (item.getCover() == null) {
             return;
+        }
         HttpGet httpget = new HttpGet(cleanUrl(item.getCover()));
         HttpResponse response;
 
@@ -371,14 +372,13 @@ public abstract class BaseApi implements OpacApi {
      * @param data          POST data to send
      * @param encoding      Expected encoding of the response body
      * @param ignore_errors If true, status codes above 400 do not raise an exception
-     * @param cookieStore   If set, the given cookieStore is used instead of the built-in
-     *                      one.
+     * @param cookieStore   If set, the given cookieStore is used instead of the built-in one.
      * @return Answer content
-     * @throws NotReachableException Thrown when server returns a HTTP status code greater or
-     *                               equal than 400.
+     * @throws NotReachableException Thrown when server returns a HTTP status code greater or equal
+     *                               than 400.
      */
     public String httpPost(String url, UrlEncodedFormEntity data,
-                           String encoding, boolean ignore_errors, CookieStore cookieStore)
+            String encoding, boolean ignore_errors, CookieStore cookieStore)
             throws IOException {
         HttpPost httppost = new HttpPost(cleanUrl(url));
         httppost.setEntity(data);
@@ -432,13 +432,13 @@ public abstract class BaseApi implements OpacApi {
     }
 
     public String httpPost(String url, UrlEncodedFormEntity data,
-                           String encoding, boolean ignore_errors)
+            String encoding, boolean ignore_errors)
             throws IOException {
         return httpPost(url, data, encoding, ignore_errors, null);
     }
 
     public String httpPost(String url, UrlEncodedFormEntity data,
-                           String encoding) throws IOException {
+            String encoding) throws IOException {
         return httpPost(url, data, encoding, false, null);
     }
 
@@ -468,4 +468,16 @@ public abstract class BaseApi implements OpacApi {
         this.stringProvider = stringProvider;
     }
 
+
+    protected String buildHttpGetParams(List<NameValuePair> params,
+            String encoding) throws UnsupportedEncodingException {
+        String string = "?";
+        for (NameValuePair pair : params) {
+            String name = URLEncoder.encode(pair.getName(), encoding);
+            String value = URLEncoder.encode(pair.getValue(), encoding);
+            string += name + "=" + value + "&";
+        }
+        string = string.substring(0, string.length() - 1);
+        return string;
+    }
 }

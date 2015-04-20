@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -50,7 +49,6 @@ import org.acra.ACRA;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -64,14 +62,15 @@ import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
 import de.geeksfactory.opacclient.frontend.MultiStepResultHelper.Callback;
 import de.geeksfactory.opacclient.frontend.MultiStepResultHelper.StepTask;
+import de.geeksfactory.opacclient.networking.CoverDownloadTask;
 import de.geeksfactory.opacclient.objects.Account;
+import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.StarDataSource;
 import de.geeksfactory.opacclient.ui.ObservableScrollView;
 import de.geeksfactory.opacclient.ui.WhitenessUtils;
-import de.geeksfactory.opacclient.utils.ISBNTools;
 
 /**
  * A fragment representing a single SearchResult detail screen. This fragment is either contained in
@@ -1397,29 +1396,13 @@ public class SearchResultDetailFragment extends Fragment
         public void removeFragment();
     }
 
-    public class LoadCoverTask extends AsyncTask<Void, Void, Bitmap> {
+    public class LoadCoverTask extends CoverDownloadTask {
 
-        @Override
-        protected Bitmap doInBackground(Void... params) {
-            try {
-                float density = getActivity().getResources().getDisplayMetrics().density;
-                URL newurl = new URL(ISBNTools.getBestSizeCoverUrl(item.getCover(),
-                        view.getWidth(), (int) (260 * density)));
-                return BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
-            } catch (Exception e) {
-                // We don't want an unavailable Cover to cause any error message
-                e.printStackTrace();
-                return null;
-            }
+        public LoadCoverTask(CoverHolder item) {
+            super(getActivity(), item);
         }
 
-        protected void onPostExecute(Bitmap cover) {
-            if (cover != null && cover.getHeight() > 1 && cover.getWidth() > 1) {
-                // When images embedded from Amazon aren't available, a 1x1 pixel image is returned
-                item.setCoverBitmap(cover);
-            } else {
-                item.setCover(null);
-            }
+        protected void onPostExecute(CoverHolder item) {
             displayCover();
         }
     }
@@ -1480,7 +1463,7 @@ public class SearchResultDetailFragment extends Fragment
             item = result;
 
             if (item.getCover() != null && item.getCoverBitmap() == null) {
-                new LoadCoverTask().execute();
+                new LoadCoverTask(item).execute();
             } else {
                 displayCover();
             }

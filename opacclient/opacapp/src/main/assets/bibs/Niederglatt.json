@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "webopac.net",
+    "city": "Niederglatt",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://www.bibliotheken-zh.ch/Niederglatt"
+    },
+    "geo": [
+        47.4941,
+        8.500729999999999
+    ],
+    "information": "http://www.bibliothek-niederglatt.ch/",
+    "state": "Z\u00fcrich",
+    "title": "Gemeindebibliothek"
+}
