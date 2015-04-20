@@ -1090,13 +1090,15 @@ public class Pica extends BaseApi implements OpacApi {
                 } else {
                     e.put(AccountData.KEY_LENT_TITLE, tr.child(4).text().trim());
                 }
-                String status = "";
+                String status = tr.child(13).text().trim();
                 if (!reminderCount.equals("0") && !reminderCount.equals("")) {
+                    if (!status.equals("")) status += ", ";
                     status += reminderCount
                             + " "
                             + stringProvider
                             .getString(StringProvider.REMINDERS) + ", ";
                 }
+                if (!status.equals("")) status += ", ";
                 status += prolongCount
                         + "x "
                         + stringProvider
