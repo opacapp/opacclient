@@ -1,0 +1,17 @@
+{
+    "account_supported": false,
+    "api": "primo",
+    "city": "Guelph",
+    "country": "Canada",
+    "data": {
+        "baseurl": "http://primo.tug-libraries.on.ca/primo_library/libweb",
+        "db": "GUELPH"
+    },
+    "geo": [
+        43.5448048,
+        -80.24816659999999
+    ],
+    "information": "http://www.lib.uoguelph.ca/",
+    "state": "Ontario",
+    "title": "University library"
+}

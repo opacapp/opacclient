@@ -1,0 +1,17 @@
+{
+    "account_supported": false,
+    "api": "primo",
+    "city": "Aberdeen",
+    "country": "United Kingdom",
+    "data": {
+        "baseurl": "http://primo.abdn.ac.uk:1701/primo_library/libweb",
+        "db": "ABN_VU1"
+    },
+    "geo": [
+        57.149717,
+        -2.094278
+    ],
+    "information": "http://www.abdn.ac.uk/library",
+    "state": "Scotland",
+    "title": "University"
+}

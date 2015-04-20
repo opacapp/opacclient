@@ -1,0 +1,17 @@
+{
+    "account_supported": false,
+    "api": "primo",
+    "city": "Melbourne",
+    "country": "Australia",
+    "data": {
+        "baseurl": "http://search.slv.vic.gov.au/primo_library/libweb",
+        "db": "MAIN"
+    },
+    "geo": [
+        -37.814107,
+        144.96328
+    ],
+    "information": "http://www.slv.vic.gov.au/",
+    "state": "Victoria",
+    "title": "State Library"
+}

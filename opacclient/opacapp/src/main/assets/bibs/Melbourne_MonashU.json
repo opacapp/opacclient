@@ -1,0 +1,17 @@
+{
+    "account_supported": false,
+    "api": "primo",
+    "city": "Melbourne",
+    "country": "Australia",
+    "data": {
+        "baseurl": "http://search.lib.monash.edu/primo_library/libweb",
+        "db": "MUL"
+    },
+    "geo": [
+        -37.814107,
+        144.96328
+    ],
+    "information": "http://monash.edu/library/",
+    "state": "Victoria",
+    "title": "Monash University"
+}
