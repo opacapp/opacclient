@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -252,8 +253,10 @@ public class Primo extends BaseApi {
     public DetailledItem getResultById(String id, String homebranch)
             throws IOException, OpacErrorException {
         if (!initialised) start();
-        String html = httpGet(opac_url + "/action/display.do?ct=display&fn=search&vid=" + vid + "&doc=" + id + "&tabs=detailsTab",
-                getDefaultEncoding());
+        String html =
+                httpGet(opac_url + "/action/display.do?ct=display&fn=search&vid=" + vid + "&doc=" +
+                                id + "&tabs=detailsTab",
+                        getDefaultEncoding());
         Document doc = Jsoup.parse(html);
         return parse_detail(id, doc);
     }
@@ -282,9 +285,66 @@ public class Primo extends BaseApi {
             }
         }
 
-        String html2 = httpGet(opac_url + "/action/display.do?ct=display&fn=search&vid=" + vid + "&doc=" + id + "&tabs=locationsTab",
-                getDefaultEncoding());
+        String html2 =
+                httpGet(opac_url + "/action/display.do?ct=display&fn=search&vid=" + vid + "&doc=" +
+                                id + "&tabs=locationsTab",
+                        getDefaultEncoding());
         Document doc2 = Jsoup.parse(html2);
+
+        if (doc2.select(".EXLLocationTitlesRow").size() > 0) {
+            Map<Integer, String> copymap = new HashMap<>();
+            int i = 0;
+            for (Element th : doc2.select(".EXLLocationTitlesRow th")) {
+                String title = th.text().toLowerCase(Locale.GERMAN).trim();
+                if (title.contains("library") || title.contains("bibliothek") ||
+                        title.contains("branch")) {
+                    copymap.put(i, DetailledItem.KEY_COPY_BRANCH);
+                } else if (title.contains("location") || title.contains("standort")) {
+                    copymap.put(i, DetailledItem.KEY_COPY_LOCATION);
+                } else if (title.contains("call number") || title.contains("signatur")) {
+                    copymap.put(i, DetailledItem.KEY_COPY_SHELFMARK);
+                } else if (title.contains("loan to") || title.contains("bezugsmodalit") ||
+                        title.contains("ausleihm")) {
+                    copymap.put(i, DetailledItem.KEY_COPY_STATUS);
+                } else if (title.contains("due date") || title.contains("llig am") ||
+                        title.contains("ausgeliehen bis")) {
+                    copymap.put(i, DetailledItem.KEY_COPY_RETURN);
+                } else if (title.contains("queue") || title.contains("vormerker")) {
+                    copymap.put(i, DetailledItem.KEY_COPY_RESERVATIONS);
+                }
+                i++;
+            }
+
+            for (Element tr : doc2.select(".EXLLocationTable tr:not(.EXLLocationTitlesRow):not(.EXLAdditionalFieldsRow)")) {
+                int j = 0;
+                Map<String, String> copy = new HashMap<>();
+                for (Element td : tr.children()) {
+                    if (copymap.containsKey(j)) {
+                        copy.put(copymap.get(j), td.text().trim());
+                    }
+                    j++;
+                }
+                res.addCopy(copy);
+            }
+        }
+
+        if (res.getCopies().size() == 0) {
+            // Online-Medium?
+            String html3 =
+                    httpGet(opac_url + "/action/display.do?ct=display&fn=search&vid=" + vid +
+                                    "&doc=" +
+                                    id + "&tabs=viewOnlineTab",
+                            getDefaultEncoding());
+            Document doc3 = Jsoup.parse(html2);
+            doc3.setBaseUri(opac_url + "/action/display.do");
+            if (doc3.select(".EXLTabHeaderContent a").size() > 0){
+                Element link = doc3.select(".EXLTabHeaderContent a").first();
+                res.addDetail(new Detail(link.text().trim(), link.absUrl("href")));
+            }
+            for (Element link : doc3.select(".EXLViewOnlineLinksTitle a")) {
+                res.addDetail(new Detail(link.text().trim(), link.absUrl("href")));
+            }
+        }
 
         return res;
     }
@@ -350,6 +410,8 @@ public class Primo extends BaseApi {
             if (select.parent().select("label").size() > 0) {
                 field.setDisplayName(select.parent().select("label").first()
                                            .text());
+            } else {
+                continue;
             }
             field.setId("#" + select.attr("id"));
             List<Map<String, String>> dropdownOptions = new ArrayList<>();
@@ -370,7 +432,8 @@ public class Primo extends BaseApi {
 
     @Override
     public String getShareUrl(String id, String title) {
-        return opac_url + "/Record/" + id;
+        return opac_url + "/action/display.do?ct=display&fn=search&vid=" + vid + "&doc=" +
+                id + "&tabs=detailsTab";
     }
 
     @Override
