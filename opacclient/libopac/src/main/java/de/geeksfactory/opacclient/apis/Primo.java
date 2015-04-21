@@ -1,6 +1,7 @@
 package de.geeksfactory.opacclient.apis;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,6 +47,7 @@ public class Primo extends BaseApi {
     static {
         languageCodes.put("en", "en_US");
         languageCodes.put("de", "de_DE");
+        languageCodes.put("fr", "fr_FR");
 
         mediaTypeClasses.put("EXLResultMediaTYPEbook", SearchResult.MediaType.BOOK);
         mediaTypeClasses.put("EXLResultMediaTYPEarticle", SearchResult.MediaType.BOOK);
@@ -56,6 +58,9 @@ public class Primo extends BaseApi {
         mediaTypeClasses.put("EXLResultMediaTYPEimage", SearchResult.MediaType.ART);
         mediaTypeClasses.put("EXLResultMediaTYPEscore", SearchResult.MediaType.SCORE_MUSIC);
         mediaTypeClasses.put("EXLResultMediaTYPEmap", SearchResult.MediaType.MAP);
+        mediaTypeClasses.put("EXLResultMediaTYPEwebsite", SearchResult.MediaType.URL);
+        mediaTypeClasses.put("EXLResultMediaTYPEarchived_website", SearchResult.MediaType.URL);
+        mediaTypeClasses.put("EXLResultMediaTYPEwork", SearchResult.MediaType.BOOK);
         mediaTypeClasses.put("EXLResultMediaTYPEwebsite", SearchResult.MediaType.URL);
         mediaTypeClasses.put("EXLResultMediaTYPEreference_entry", SearchResult.MediaType.EDOC);
     }
@@ -91,8 +96,11 @@ public class Primo extends BaseApi {
         Document doc = Jsoup.parse(html);
 
         for (Element input : doc.select("form[name=searchForm] input[type=hidden]")) {
-            params.add(new BasicNameValuePair(input.attr("name"), input.val()));
+            if (!input.attr("name").trim().equals("")) {
+                params.add(new BasicNameValuePair(input.attr("name"), input.val()));
+            }
         }
+        params.add(new BasicNameValuePair("fn", "search"));
 
         int i = 1;
         for (SearchQuery q : query) {
@@ -156,17 +164,17 @@ public class Primo extends BaseApi {
         for (Element resrow : doc.select(".EXLResult")) {
             SearchResult res = new SearchResult();
             StringBuilder description = new StringBuilder();
-            description.append("<b>" + resrow.select(".EXLResultTitle").text() + "</b>");
+            description.append("<b>").append(resrow.select(".EXLResultTitle").text())
+                       .append("</b>");
             if (resrow.select(".EXLResultAuthor").size() > 0) {
-                description.append("<br />" + resrow.select(".EXLResultAuthor").text());
+                description.append("<br />").append(resrow.select(".EXLResultAuthor").text());
             }
             if (resrow.select(".EXLResultDetails").size() > 0) {
-                description.append("<br />" + resrow.select(".EXLResultDetails").text());
+                description.append("<br />").append(resrow.select(".EXLResultDetails").text());
             }
-            if (resrow.select(".EXLResultAvailability").size() > 0) {
-                description.append(
-                        "<br />" + resrow.select(".EXLResultAvailability").first().text().replace(
-                                "(GetIt)", ""));
+            String availSelect = ".EXLResultAvailability span, .EXLResultAvailability em";
+            if (resrow.select(availSelect).size() > 0) {
+                description.append("<br />").append(resrow.select(availSelect).first().ownText());
             }
             res.setInnerhtml(description.toString());
             if (resrow.select(".EXLResultStatusAvailable").size() > 0) {
@@ -176,10 +184,17 @@ public class Primo extends BaseApi {
             }
             res.setPage(page);
 
-            Map<String, String> q = getQueryParamsFirst(
-                    resrow.select(".EXLResultTitle a, a.EXLThumbnailLinkMarker").first()
-                          .absUrl("href"));
-            res.setId(q.get("doc"));
+            for (Element a : resrow
+                    .select(".EXLResultTitle a, a.EXLThumbnailLinkMarker, .EXLDetailsTab a")) {
+                Map<String, String> q = getQueryParamsFirst(a.absUrl("href"));
+                if (q.containsKey("doc")) {
+                    res.setId(q.get("doc"));
+                    break;
+                }
+            }
+            if (res.getId() == null) {
+                continue;
+            }
 
 
             if (resrow.select("img.EXLBriefResultsCover").size() > 0) {
@@ -274,7 +289,8 @@ public class Primo extends BaseApi {
             String title = null;
             String value = "";
             for (Node node : detrow.childNodes()) {
-                if (node instanceof Element && ((Element) node).tagName().equals("strong")) {
+                if (node instanceof Element && (((Element) node).tagName().equals("strong") ||
+                        ((Element) node).hasClass("bib-EXLDetailsContent-item-title"))) {
                     title = ((Element) node).text();
                 } else if (node instanceof Element && title != null) {
                     value += ((Element) node).text();
@@ -301,16 +317,17 @@ public class Primo extends BaseApi {
                 if (title.contains("library") || title.contains("bibliothek") ||
                         title.contains("branch")) {
                     copymap.put(i, DetailledItem.KEY_COPY_BRANCH);
-                } else if (title.contains("location") || title.contains("standort")) {
+                } else if (title.contains("location") || title.contains("ort")) {
                     copymap.put(i, DetailledItem.KEY_COPY_LOCATION);
                 } else if (title.contains("call number") || title.contains("signatur")) {
                     copymap.put(i, DetailledItem.KEY_COPY_SHELFMARK);
+                } else if (title.contains("due date") || title.contains("llig am") ||
+                        title.contains("ausgeliehen bis") || title.contains("lligkeit")
+                        || title.contains("ausleihstatus")) {
+                    copymap.put(i, DetailledItem.KEY_COPY_RETURN);
                 } else if (title.contains("loan to") || title.contains("bezugsmodalit") ||
                         title.contains("ausleihm") || title.contains("status")) {
                     copymap.put(i, DetailledItem.KEY_COPY_STATUS);
-                } else if (title.contains("due date") || title.contains("llig am") ||
-                        title.contains("ausgeliehen bis") || title.contains("lligkeit")) {
-                    copymap.put(i, DetailledItem.KEY_COPY_RETURN);
                 } else if (title.contains("queue") || title.contains("vormerker")) {
                     copymap.put(i, DetailledItem.KEY_COPY_RESERVATIONS);
                 }
@@ -408,7 +425,7 @@ public class Primo extends BaseApi {
         }
 
         Elements selects = doc.select("#exlidInput_mediaType_, #exlidInput_publicationDate_, " +
-                "#exlidInput_language_");
+                "#exlidInput_language_, #exlidSearchIn");
         for (Element select : selects) {
             DropdownSearchField field = new DropdownSearchField();
             if (select.parent().select("label").size() > 0) {
@@ -452,13 +469,25 @@ public class Primo extends BaseApi {
     @Override
     public Set<String> getSupportedLanguages() throws IOException {
         Set<String> langs = new HashSet<>();
-        // TODO: Implement. Not that easy, as some libaries do and some don't include the
-        // default language in their language chooser
+        // Not that easy, as some libaries do and some don't include the
+        // default language in their language chooser. We go for configuration flags in the
+        // meantime.
         // With full chooser: http://primo.kobv.de/primo_library/libweb/action/search.do?vid=FUB
         // With toggle only: http://primo.kobv.de/primo_library/libweb/action/search.do?vid=hub_ub
         // Without any chooser: http://explore.bl.uk/primo_library/libweb/action/search.do?vid=BLVU1
-        langs.add("de");
-        langs.add("en");
+        if (data.has("languages")) {
+            try {
+                for (int i = 0; i < data.getJSONArray("languages").length(); i++) {
+                    langs.add(data.getJSONArray("languages").getString(i));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            langs.add("de");
+            langs.add("en");
+            langs.add("fr");
+        }
         return langs;
     }
 
@@ -468,7 +497,23 @@ public class Primo extends BaseApi {
 
     @Override
     public void setLanguage(String language) {
-        languageCode = languageCodes.containsKey(language) ? languageCodes.get(language) : language;
+        if (data.has("languages")) {
+            try {
+                for (int i = 0; i < data.getJSONArray("languages").length(); i++) {
+                    if (data.getJSONArray("languages").getString(i).equals(language)) {
+                        languageCode =
+                                languageCodes.containsKey(language) ? languageCodes.get(language) :
+                                        language;
+                        break;
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            languageCode =
+                    languageCodes.containsKey(language) ? languageCodes.get(language) : language;
+        }
     }
 
     @Override
@@ -519,5 +564,19 @@ public class Primo extends BaseApi {
     @Override
     public void checkAccountData(Account account)
             throws IOException, JSONException, OpacErrorException {
+    }
+
+    public String httpGet(String url, String encoding, boolean ignore_errors,
+            CookieStore cookieStore) throws
+            IOException {
+        String html = super.httpGet(url, encoding, ignore_errors, cookieStore);
+        if (html.contains("id=\"connect\"")) {
+            // British Library and Uni Duesburg-Essen do weird JavaScript redirects
+            Document doc = Jsoup.parse(html);
+            doc.setBaseUri(url);
+            return httpGet(doc.select("#connect a").first().attr("href").substring(6), encoding,
+                    ignore_errors, cookieStore);
+        }
+        return html;
     }
 }

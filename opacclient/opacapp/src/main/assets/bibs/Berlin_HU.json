@@ -5,7 +5,11 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "http://primo.kobv.de/primo_library/libweb",
-        "db": "hub_ub"
+        "db": "hub_ub",
+        "languages": [
+            "en",
+            "de"
+        ]
     },
     "geo": [
         52.52000659999999,

@@ -5,7 +5,10 @@
     "country": "United Kingdom",
     "data": {
         "baseurl": "http://yorsearch.york.ac.uk/primo_library/libweb",
-        "db": "44YORK"
+        "db": "44YORK",
+        "languages": [
+            "en"
+        ]
     },
     "geo": [
         53.95996510000001,

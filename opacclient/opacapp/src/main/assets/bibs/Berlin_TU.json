@@ -5,7 +5,10 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "http://portal.ub.tu-berlin.de/primo_library/libweb",
-        "db": "TUB"
+        "db": "TUB",
+        "languages": [
+            "de"
+        ]
     },
     "geo": [
         52.52000659999999,

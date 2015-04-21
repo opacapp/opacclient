@@ -5,7 +5,10 @@
     "country": "Australia",
     "data": {
         "baseurl": "http://search.slv.vic.gov.au/primo_library/libweb",
-        "db": "MAIN"
+        "db": "MAIN",
+        "languages": [
+            "en"
+        ]
     },
     "geo": [
         -37.814107,

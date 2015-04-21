@@ -5,7 +5,8 @@
     "country": "United States",
     "data": {
         "baseurl": "http://smartsearch.uiowa.edu/primo_library/libweb",
-        "db": "uiowa"
+        "db": "uiowa",
+        "languages": "en"
     },
     "geo": [
         41.8780025,

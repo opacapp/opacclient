@@ -5,7 +5,11 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "http://katalog.ulb.hhu.de/primo_library/libweb",
-        "db": "DUE_ULB"
+        "db": "DUE_ULB",
+        "languages": [
+            "en",
+            "de"
+        ]
     },
     "geo": [
         51.2277411,

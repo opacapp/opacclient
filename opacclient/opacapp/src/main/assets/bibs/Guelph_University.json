@@ -5,7 +5,12 @@
     "country": "Canada",
     "data": {
         "baseurl": "http://primo.tug-libraries.on.ca/primo_library/libweb",
-        "db": "GUELPH"
+        "db": "GUELPH",
+        "languages": [
+            "en",
+            "de",
+            "fr"
+        ]
     },
     "geo": [
         43.5448048,

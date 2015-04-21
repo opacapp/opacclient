@@ -5,7 +5,10 @@
     "country": "Australia",
     "data": {
         "baseurl": "http://search.lib.monash.edu/primo_library/libweb",
-        "db": "MUL"
+        "db": "MUL",
+        "languages": [
+            "en"
+        ]
     },
     "geo": [
         -37.814107,

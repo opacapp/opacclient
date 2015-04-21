@@ -5,7 +5,10 @@
     "country": "United Kingdom",
     "data": {
         "baseurl": "http://primo.abdn.ac.uk:1701/primo_library/libweb",
-        "db": "ABN_VU1"
+        "db": "ABN_VU1",
+        "languages": [
+            "en"
+        ]
     },
     "geo": [
         57.149717,

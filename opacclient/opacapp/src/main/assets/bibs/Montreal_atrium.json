@@ -5,7 +5,11 @@
     "country": "Canada",
     "data": {
         "baseurl": "http://atrium.umontreal.ca/primo_library/libweb",
-        "db": "UM"
+        "db": "UM",
+        "languages": [
+            "en",
+            "fr"
+        ]
     },
     "geo": [
         45.5016889,
