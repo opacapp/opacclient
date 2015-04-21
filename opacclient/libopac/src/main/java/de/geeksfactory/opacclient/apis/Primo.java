@@ -356,14 +356,14 @@ public class Primo extends BaseApi {
                                     "&doc=" +
                                     id + "&tabs=viewOnlineTab",
                             getDefaultEncoding());
-            Document doc3 = Jsoup.parse(html2);
+            Document doc3 = Jsoup.parse(html3);
             doc3.setBaseUri(opac_url + "/action/display.do");
             if (doc3.select(".EXLTabHeaderContent a").size() > 0) {
                 Element link = doc3.select(".EXLTabHeaderContent a").first();
-                res.addDetail(new Detail(link.text().trim(), link.absUrl("href")));
+                res.addDetail(new Detail(link.text().trim(), cleanUrl(link.absUrl("href"))));
             }
             for (Element link : doc3.select(".EXLViewOnlineLinksTitle a")) {
-                res.addDetail(new Detail(link.text().trim(), link.absUrl("href")));
+                res.addDetail(new Detail(link.text().trim(), cleanUrl(link.absUrl("href"))));
             }
         }
 
