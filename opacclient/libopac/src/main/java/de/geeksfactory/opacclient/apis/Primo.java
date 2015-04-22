@@ -47,7 +47,13 @@ public class Primo extends BaseApi {
     static {
         languageCodes.put("en", "en_US");
         languageCodes.put("de", "de_DE");
+        languageCodes.put("es", "es_ES");
+        languageCodes.put("ru", "ru_RU");
         languageCodes.put("fr", "fr_FR");
+        languageCodes.put("nl", "nl_NL");
+        languageCodes.put("cz", "cz_CZ");
+        languageCodes.put("zh", "zh_ZH");
+        languageCodes.put("it", "it_IT");
 
         mediaTypeClasses.put("EXLResultMediaTYPEbook", SearchResult.MediaType.BOOK);
         mediaTypeClasses.put("EXLResultMediaTYPEarticle", SearchResult.MediaType.BOOK);
@@ -486,6 +492,12 @@ public class Primo extends BaseApi {
         } else {
             langs.add("de");
             langs.add("en");
+            langs.add("it");
+            langs.add("zh");
+            langs.add("cz");
+            langs.add("ru");
+            langs.add("nl");
+            langs.add("es");
             langs.add("fr");
         }
         return langs;

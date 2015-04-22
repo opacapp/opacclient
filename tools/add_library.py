@@ -285,6 +285,9 @@ class Primo(Api):
         print("VID?")
         inp = getInput(required=True)
         data['data']['db'] = inp
+        print("Sprachen (short codes, kommagetrennt)?")
+        inp = getInput(required=True)
+        data['data']['languages'] = inp.split(",")
         return data
 
 

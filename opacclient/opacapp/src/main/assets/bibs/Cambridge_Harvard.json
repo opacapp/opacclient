@@ -1,0 +1,20 @@
+{
+    "account_supported": false,
+    "api": "primo",
+    "city": "Cambridge",
+    "country": "United States",
+    "data": {
+        "baseurl": "http://beta.hollis.harvard.edu/primo_library/libweb",
+        "db": "HVD",
+        "languages": [
+            "en"
+        ]
+    },
+    "geo": [
+        42.3736158,
+        -71.10973349999999
+    ],
+    "information": "http://library.harvard.edu/",
+    "state": "Massachusetts",
+    "title": "Harvard University"
+}

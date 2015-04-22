@@ -1,0 +1,20 @@
+{
+    "account_supported": false,
+    "api": "primo",
+    "city": "Nottingham",
+    "country": "United Kingdom",
+    "data": {
+        "baseurl": "http://nusearch.nottingham.ac.uk/primo_library/libweb",
+        "db": "UNNC",
+        "languages": [
+            "en"
+        ]
+    },
+    "geo": [
+        52.95478319999999,
+        -1.1581086
+    ],
+    "information": "https://nottingham.ac.uk/library/index.aspx",
+    "state": "England",
+    "title": "University library"
+}
