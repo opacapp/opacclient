@@ -3,7 +3,6 @@ package de.geeksfactory.opacclient.ui;
 import android.content.Context;
 import android.support.v7.internal.widget.TintManager;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -13,16 +12,17 @@ import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
-import com.nineoldandroids.animation.ValueAnimator;
 import com.nineoldandroids.view.ViewHelper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import de.geeksfactory.opacclient.R;
 
 /**
- * Mananges a list of cards that can be expanded and collapsed
+ * Mananges a list of cards that can be expanded and collapsed with an animation
  */
 public abstract class ExpandingCardListManager {
     private static final int ANIMATION_DURATION = 500;
@@ -38,10 +38,22 @@ public abstract class ExpandingCardListManager {
     private CardView expandedCard;
     private TintManager tint;
     private List<View> views = new ArrayList<>();
+    private AnimationInterceptor interceptor;
 
     private int unexpandedHeight;
     private float expandedTranslationY;
     private float lowerTranslationY;
+    private int heightDifference;
+
+    /**
+     * An interface to influence the animation created by ExpandingCardListManager  by adding additional animations.
+     */
+    public interface AnimationInterceptor {
+        public Collection<Animator> getExpandAnimations(int heightDifference);
+        public Collection<Animator> getCollapseAnimations(int i);
+
+        public void onCollapseAnimationEnd();
+    }
 
     public ExpandingCardListManager (Context context, LinearLayout layout) {
         this.context = context;
@@ -155,9 +167,14 @@ public abstract class ExpandingCardListManager {
         expandedCard.setVisibility(View.VISIBLE);
         mainCard.setVisibility(View.GONE);
 
+        final int previousHeight = layout.getHeight();
+
         layout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
+                int newHeight = layout.getHeight();
+                heightDifference = newHeight - previousHeight;
+
                 layout.getViewTreeObserver().removeOnPreDrawListener(this);
                 if (lowerPos > 0) ViewHelper.setY(lowerCard, lowerPos);
                 ViewHelper.setY(expandedCard, mainPos);
@@ -171,7 +188,8 @@ public abstract class ExpandingCardListManager {
                 int expandedMargin = context.getResources().getDimensionPixelSize(
                         R.dimen.card_side_margin_selected);
                 int marginDifference = expandedMargin - defaultMargin;
-                set.playTogether(
+                List<Animator> animators = new ArrayList<>();
+                addAll(animators,
                         ObjectAnimator
                                 .ofFloat(lowerCard, "translationY", lowerCard.getTranslationY(), 0),
                         ObjectAnimator.ofFloat(expandedCard, "translationY",
@@ -188,6 +206,8 @@ public abstract class ExpandingCardListManager {
                         ObjectAnimator.ofInt(expandedCard, "right",
                                 expandedCard.getRight() + marginDifference, expandedCard.getRight())
                 );
+                if (interceptor != null) animators.addAll(interceptor.getExpandAnimations(heightDifference));
+                set.playTogether(animators);
                 set.setDuration(ANIMATION_DURATION).start();
                 return false;
             }
@@ -204,7 +224,8 @@ public abstract class ExpandingCardListManager {
         int expandedMargin = context.getResources().getDimensionPixelSize(
                 R.dimen.card_side_margin_selected);
         int marginDifference = expandedMargin - defaultMargin;
-        set.playTogether(
+        List<Animator> animators = new ArrayList<>();
+        addAll(animators,
                 ObjectAnimator
                         .ofFloat(lowerCard, "translationY", 0, lowerTranslationY),
                 ObjectAnimator.ofFloat(expandedCard, "translationY",
@@ -221,10 +242,14 @@ public abstract class ExpandingCardListManager {
                 ObjectAnimator.ofInt(expandedCard, "right",
                         expandedCard.getRight(), expandedCard.getRight() + marginDifference)
         );
+        if (interceptor != null) animators.addAll(interceptor.getCollapseAnimations(
+                -heightDifference));
+        set.playTogether(animators);
         set.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
+                if (interceptor != null) interceptor.onCollapseAnimationEnd();
                 mainCard.setVisibility(View.VISIBLE);
                 upperCard.setVisibility(View.GONE);
                 lowerCard.setVisibility(View.GONE);
@@ -236,6 +261,7 @@ public abstract class ExpandingCardListManager {
                 unexpandedHeight = 0;
                 expandedTranslationY = 0;
                 lowerTranslationY = 0;
+                heightDifference = 0;
             }
         });
         set.setDuration(ANIMATION_DURATION).start();
@@ -253,8 +279,16 @@ public abstract class ExpandingCardListManager {
         return expandedPosition != -1;
     }
 
+    public void setAnimationInterceptor(AnimationInterceptor interceptor) {
+        this.interceptor = interceptor;
+    }
+
     public abstract View getView(int position, ViewGroup container);
     public abstract void expandView(int position, View view);
     public abstract void collapseView(int position, View view);
     public abstract int getCount();
+
+    private void addAll(Collection collection, Object... items) {
+        collection.addAll(Arrays.asList(items));
+    }
 }
