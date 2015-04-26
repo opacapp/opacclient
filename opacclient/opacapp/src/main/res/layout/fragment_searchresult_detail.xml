@@ -125,19 +125,6 @@
                 app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-            <!--<TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/ivCover"
-                android:textIsSelectable="true"
-                android:textColor="@android:color/white"
-                android:textSize="36sp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp"
-                android:maxLines="2"/>-->
-
         </RelativeLayout>
     </de.geeksfactory.opacclient.ui.ObservableScrollView>
 </FrameLayout>
