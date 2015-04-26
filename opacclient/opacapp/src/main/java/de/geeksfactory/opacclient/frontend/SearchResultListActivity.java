@@ -61,6 +61,17 @@ public class SearchResultListActivity extends OpacActivity implements
 
         if (savedInstanceState == null) {
             setup();
+        } else {
+            if (savedInstanceState.containsKey("listFragment")) {
+                listFragment =
+                        (SearchResultListFragment) getSupportFragmentManager()
+                                .getFragment(savedInstanceState, "listFragment");
+            }
+            if (savedInstanceState.containsKey("detailFragment")) {
+                listFragment =
+                        (SearchResultListFragment) getSupportFragmentManager()
+                                .getFragment(savedInstanceState, "detailFragment");
+            }
         }
 
         if (findViewById(R.id.searchresult_detail_container) != null) {
@@ -252,6 +263,17 @@ public class SearchResultListActivity extends OpacActivity implements
                 listFragment.setLastLoadedPage(searchResult.getPage());
                 showDetail(searchResult, coverView);
             }
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (listFragment != null) {
+            getSupportFragmentManager().putFragment(outState, "listFragment", listFragment);
+        }
+        if (detailFragment != null) {
+            getSupportFragmentManager().putFragment(outState, "detailFragment", detailFragment);
         }
     }
 }
