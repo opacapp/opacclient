@@ -32,34 +32,26 @@ def getInput(required=False, default=None):
 
 
 def loadGeoPossibilities(data):
-    # Try to find the library
-    uri = 'https://maps.googleapis.com/maps/api/geocode/json?' + \
-        urllib.parse.urlencode({'address': ', '.join((data['title'], data['city'], data['state'])), 'sensor': 'false'})
-    jsoncontent = urllib.request.urlopen(uri).read().decode()
-    geocode = json.loads(jsoncontent)
+    possibilities = []
 
-    if geocode['status'] != 'OK':
-        # That didn't work, so let's try to only find the city
+    for address in (', '.join((data['title'], data['city'], data['state'])), data['city']):
         uri = 'https://maps.googleapis.com/maps/api/geocode/json?' + \
-            urllib.parse.urlencode({'address': data['city'], 'sensor': 'false'})
+            urllib.parse.urlencode({'address': ', '.join((data['title'], data['city'], data['state'])), 'sensor': 'false'})
         jsoncontent = urllib.request.urlopen(uri).read().decode()
         geocode = json.loads(jsoncontent)
         
         if geocode['status'] != 'OK':
-            # Nothing works, mimimimi
             print("ERROR! %s" % filename)
-            return False
-
-    possibilities = []
-
-    for res in geocode['results']:
-        possibilities.append(
-                (
-                    ", ".join([a["long_name"] for a in res['address_components']]),
-                    [float(res['geometry']['location']['lat']), float(
-                        res['geometry']['location']['lng'])]
+            
+        for res in geocode['results']:
+            possibilities.append(
+                    (
+                        ", ".join([a["long_name"] for a in res['address_components']]),
+                        [float(res['geometry']['location']['lat']), float(
+                            res['geometry']['location']['lng'])]
+                    )
                 )
-            )
+
     return possibilities
 
 
