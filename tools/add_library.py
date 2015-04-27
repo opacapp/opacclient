@@ -31,15 +31,24 @@ def getInput(required=False, default=None):
     return inp
 
 
-def loadGeoPossibilities(city):
+def loadGeoPossibilities(data):
+    # Try to find the library
     uri = 'https://maps.googleapis.com/maps/api/geocode/json?' + \
-        urllib.parse.urlencode({'address': city, 'sensor': 'false'})
+        urllib.parse.urlencode({'address': ', '.join((data['title'], data['city'], data['state'])), 'sensor': 'false'})
     jsoncontent = urllib.request.urlopen(uri).read().decode()
     geocode = json.loads(jsoncontent)
 
     if geocode['status'] != 'OK':
-        print("ERROR! %s" % filename)
-        return False
+        # That didn't work, so let's try to only find the city
+        uri = 'https://maps.googleapis.com/maps/api/geocode/json?' + \
+            urllib.parse.urlencode({'address': data['city'], 'sensor': 'false'})
+        jsoncontent = urllib.request.urlopen(uri).read().decode()
+        geocode = json.loads(jsoncontent)
+        
+        if geocode['status'] != 'OK':
+            # Nothing works, mimimimi
+            print("ERROR! %s" % filename)
+            return False
 
     possibilities = []
 
@@ -343,7 +352,7 @@ if __name__ == '__main__':
 
     print("Lade Geodaten...")
 
-    geo = loadGeoPossibilities(data['city'])
+    geo = loadGeoPossibilities(data)
     for k, g in enumerate(geo):
         print("[%d]    %s" % (k + 1, g[0]))
 
