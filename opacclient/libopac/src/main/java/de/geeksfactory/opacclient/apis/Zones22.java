@@ -745,8 +745,13 @@ public class Zones22 extends BaseApi {
                 res.setValidUntil(td.nextElementSibling().text().trim());
             }
         }
-        assert (lent_cnt >= 0);
-        assert (res_cnt >= 0);
+        for (Element a : login.select("a.AccountMenuLink")) {
+            if (a.text().contains("Ausleihen")) {
+                lent_link = a.attr("href");
+            } else if (a.text().contains("Vormerkungen")) {
+                res_link = a.attr("href");
+            }
+        }
         if (lent_link == null) {
             return null;
         }
@@ -763,7 +768,8 @@ public class Zones22 extends BaseApi {
                 .compile("javascript:renewItem\\('[0-9]+','(.*)'\\)");
 
         for (Element table : lent_doc
-                .select(".LoansBrowseItemDetailsCellStripe table, .LoansBrowseItemDetailsCell " +
+                .select(".LoansBrowseItemDetailsCellStripe table, " +
+                        ".LoansBrowseItemDetailsCell " +
                         "table")) {
             Map<String, String> item = new HashMap<>();
 
@@ -805,7 +811,6 @@ public class Zones22 extends BaseApi {
             lent.add(item);
         }
         res.setLent(lent);
-        assert (lent_cnt <= lent.size());
 
         List<Map<String, String>> reservations = new ArrayList<>();
         String res_html = httpGet(opac_url + "/" + res_link,
@@ -813,7 +818,8 @@ public class Zones22 extends BaseApi {
         Document res_doc = Jsoup.parse(res_html);
 
         for (Element table : res_doc
-                .select(".MessageBrowseItemDetailsCell table, .MessageBrowseItemDetailsCellStripe" +
+                .select(".MessageBrowseItemDetailsCell table, " +
+                        ".MessageBrowseItemDetailsCellStripe" +
                         " table")) {
             Map<String, String> item = new HashMap<>();
 
@@ -841,7 +847,6 @@ public class Zones22 extends BaseApi {
             reservations.add(item);
         }
         res.setReservations(reservations);
-        assert (reservations.size() >= res_cnt);
 
         return res;
     }
