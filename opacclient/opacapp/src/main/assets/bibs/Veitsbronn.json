@@ -7,8 +7,8 @@
         "baseurl": "http://webopac.winbiap.de/veitsbronn"
     },
     "geo": [
-        49.51201409999999,
-        10.8845724
+        49.511782,
+        10.8827111
     ],
     "information": "http://www.veitsbronn.de/Buecherei/m2l1/Buecherei.html",
     "state": "Bayern",

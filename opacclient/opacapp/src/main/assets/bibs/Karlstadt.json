@@ -7,8 +7,8 @@
         "baseurl": "http://webopac.winbiap.de/karlstadt"
     },
     "geo": [
-        49.9604785,
-        9.7734603
+        49.96026,
+        9.76447
     ],
     "information": "http://www.karlstadt.de/Sites/gensite.asp?SID=cms190820141716084232293&Art=0379",
     "state": "Bayern",

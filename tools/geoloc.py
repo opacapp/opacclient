@@ -17,19 +17,21 @@ for filename in os.listdir(DIR):
     if 'geo' in data:
         if len(data['geo']) != 2 or data['geo'][0] == 0 or data['geo'][1] == 0:
             print("Invalid: %s" %filename)
-        continue
+            
+        #continue
 
     print("Suche Position für: %s, %s, %s\n" % (data['title'], data['city'], data['state']))
 
     geo = loadGeoPossibilities(data)
-    for k, g in enumerate(geo):
-        print("[%d]    %s" % (k + 1, g[0]))
+    if len([g for g in geo if g[1] != data['geo']]):
+        for k, g in enumerate(geo):
+            print("[%d]    %s" % (k + 1, g[0]))
 
-    print("Welche dieser Positionen trifft am besten zu? 0 für keine.")
-    print("Nummer", end=" ")
-    geokey = int(getInput(default="0"))
-    if geokey > 0:
-        data['geo'] = geo[geokey - 1][1]
+        print("Welche dieser Positionen trifft am besten zu? 0 für keine.")
+        print("Nummer", end=" ")
+        geokey = int(getInput(default="0"))
+        if geokey > 0:
+            data['geo'] = geo[geokey - 1][1]
 
     os.system('clear')
 
