@@ -36,7 +36,7 @@ def loadGeoPossibilities(data):
 
     for address in (', '.join((data['title'], data['city'], data['state'])), data['city']):
         uri = 'https://maps.googleapis.com/maps/api/geocode/json?' + \
-            urllib.parse.urlencode({'address': ', '.join((data['title'], data['city'], data['state'])), 'sensor': 'false'})
+            urllib.parse.urlencode({'address': address, 'sensor': 'false'})
         jsoncontent = urllib.request.urlopen(uri).read().decode()
         geocode = json.loads(jsoncontent)
         
