@@ -2,4 +2,5 @@
 <resources>
     <item name="popup_bg" type="drawable">@drawable/popup_background_lollipop</item>
     <item name="toolbar_shadow" type="drawable">@null</item>
+    <item name="ripple_unmasked" type="drawable">@drawable/ripple_unmasked_lollipop</item>
 </resources>
