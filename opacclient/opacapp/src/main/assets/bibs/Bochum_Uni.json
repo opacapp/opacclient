@@ -7,8 +7,8 @@
         "baseurl": "http://opac.ub.rub.de:8080/webOPACClient"
     },
     "geo": [
-        51.4818445,
-        7.216236299999999
+        51.4450318,
+        7.260726399999999
     ],
     "information": "http://www.ub.rub.de/informationen/oeffnungszeiten.html",
     "state": "Nordrhein-Westfalen",

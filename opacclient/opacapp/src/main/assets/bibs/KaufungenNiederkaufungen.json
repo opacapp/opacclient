@@ -7,8 +7,8 @@
         "baseurl": "http://webopac.winbiap.net/kaufungen"
     },
     "geo": [
-        51.2831485,
-        9.621238499999999
+        51.28375,
+        9.6031
     ],
     "information": "http://www.kaufungen.eu/Startseite/B%C3%BCchereien/",
     "state": "Hessen",

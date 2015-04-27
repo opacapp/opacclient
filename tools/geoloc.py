@@ -7,6 +7,7 @@ import urllib.parse
 import sys
 import json
 import os
+from add_library import loadGeoPossibilities, getInput
 
 DIR = 'opacclient/opacapp/src/main/assets/bibs/'
 
@@ -15,36 +16,22 @@ for filename in os.listdir(DIR):
     data = json.load(open(f))
     if 'geo' in data:
         if len(data['geo']) != 2 or data['geo'][0] == 0 or data['geo'][1] == 0:
-            print("Invalid: %s" %filename)
+            print("Invalid: %s" %filename)    
         continue
 
-    print("Suche Position für: %s, %s\n" % (data['city'], data['state']))
+    print("Suche Position für: %s, %s, %s\n" % (data['title'], data['city'], data['state']))
 
-    uri = 'https://maps.googleapis.com/maps/api/geocode/json?'+urllib.parse.urlencode({'address':data['city'] + ', ' + data['country'],'sensor':'false'})
-    jsoncontent = urllib.request.urlopen(uri).read().decode()
-    geocode = json.loads(jsoncontent)
+    geo = loadGeoPossibilities(data)
+    if len([g for g in geo if g[1] != data['geo']]):
+        for k, g in enumerate(geo):
+            print("[%d]    %s" % (k + 1, g[0]))
 
-    if geocode['status'] != 'OK':
-        print("ERROR! %s" %filename)
-        continue
-
-    key = 1
-    for res in geocode['results']:
-        print("["+str(key)+"]", ", ".join([a["long_name"] for a in res['address_components']]))
-        key += 1
-
-    print("\nWelches? [Enter für ablehnen]")
-
-    inp = input()
+        print("Welche dieser Positionen trifft am besten zu? 0 für keine.")
+        print("Nummer", end=" ")
+        geokey = int(getInput(default="0"))
+        if geokey > 0:
+            data['geo'] = geo[geokey - 1][1]
 
     os.system('clear')
-
-    if inp.strip() == '':
-        continue
-
-    if int(inp.strip()) > 0:
-        res = geocode['results'][int(inp.strip())-1]
-        data['geo'] = [float(res['geometry']['location']['lat']), float(res['geometry']['location']['lng'])]
-
 
     json.dump(data, open(f, 'w'), indent=4, sort_keys=True)

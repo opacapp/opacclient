@@ -7,8 +7,8 @@
         "baseurl": "http://www.stadtbibliothekbasel.ch:8080/InfoGuideClient.sisis"
     },
     "geo": [
-        47.557421,
-        7.592572699999999
+        47.5674422,
+        7.597550699999999
     ],
     "information": "http://www.stadtbibliothekbasel.ch/index.php?id=bibliotheken#c477",
     "replacedby": "de.opacapp.basel",
