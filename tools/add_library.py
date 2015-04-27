@@ -31,26 +31,27 @@ def getInput(required=False, default=None):
     return inp
 
 
-def loadGeoPossibilities(city):
-    uri = 'https://maps.googleapis.com/maps/api/geocode/json?' + \
-        urllib.parse.urlencode({'address': city, 'sensor': 'false'})
-    jsoncontent = urllib.request.urlopen(uri).read().decode()
-    geocode = json.loads(jsoncontent)
-
-    if geocode['status'] != 'OK':
-        print("ERROR! %s" % filename)
-        return False
-
+def loadGeoPossibilities(data):
     possibilities = []
 
-    for res in geocode['results']:
-        possibilities.append(
-                (
-                    ", ".join([a["long_name"] for a in res['address_components']]),
-                    [float(res['geometry']['location']['lat']), float(
-                        res['geometry']['location']['lng'])]
+    for address in (', '.join((data['title'], data['city'], data['state'])), data['city']):
+        uri = 'https://maps.googleapis.com/maps/api/geocode/json?' + \
+            urllib.parse.urlencode({'address': address, 'sensor': 'false'})
+        jsoncontent = urllib.request.urlopen(uri).read().decode()
+        geocode = json.loads(jsoncontent)
+        
+        if geocode['status'] != 'OK':
+            print("ERROR! %s" % filename)
+            
+        for res in geocode['results']:
+            possibilities.append(
+                    (
+                        ", ".join([a["long_name"] for a in res['address_components']]),
+                        [float(res['geometry']['location']['lat']), float(
+                            res['geometry']['location']['lng'])]
+                    )
                 )
-            )
+
     return possibilities
 
 
@@ -341,18 +342,6 @@ if __name__ == '__main__':
 
     data['city'] = getInput(required=True)
 
-    print("Lade Geodaten...")
-
-    geo = loadGeoPossibilities(data['city'])
-    for k, g in enumerate(geo):
-        print("[%d]    %s" % (k + 1, g[0]))
-
-    print("Welche dieser Positionen trifft am besten zu? 0 für keine.")
-    print("Nummer", end=" ")
-    geokey = int(getInput(default="0"))
-    if geokey > 0:
-        data['geo'] = geo[geokey - 1][1]
-
     print("In welchem Land liegt die Bibliothek?")
     data['country'] = getInput(required=True, default="Deutschland")
 
@@ -365,6 +354,18 @@ if __name__ == '__main__':
     print("Dies sollte etwas in dieser Stadt eindeutiges sein wie 'Stadtbibliothek', 'Unibibliothek' oder 'Ruprecht-Karls-Universität'. Der Name der Stadt soll nicht erneut vorkommen!")
 
     data['title'] = getInput(default="Stadtbibliothek")
+    
+    print("Lade Geodaten...")
+
+    geo = loadGeoPossibilities(data)
+    for k, g in enumerate(geo):
+        print("[%d]    %s" % (k + 1, g[0]))
+
+    print("Welche dieser Positionen trifft am besten zu? 0 für keine.")
+    print("Nummer", end=" ")
+    geokey = int(getInput(default="0"))
+    if geokey > 0:
+        data['geo'] = geo[geokey - 1][1]
 
     print("Welche API-Implementierung wird genutzt?")
     print("Verfügbar sind: " + " ".join(sorted(APIS.keys())))
