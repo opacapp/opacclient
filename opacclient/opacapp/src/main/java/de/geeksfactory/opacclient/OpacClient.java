@@ -83,6 +83,7 @@ import de.geeksfactory.opacclient.storage.StarContentProvider;
 
 @ReportsCrashes(formKey = "", mailTo = "info@opacapp.de",
         mode = org.acra.ReportingInteractionMode.NOTIFICATION,
+        sendReportsInDevMode = false,
         resToastText = R.string.crash_toast_text)
 public class OpacClient extends Application {
 
