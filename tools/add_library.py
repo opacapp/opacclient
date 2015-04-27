@@ -41,7 +41,7 @@ def loadGeoPossibilities(data):
         geocode = json.loads(jsoncontent)
         
         if geocode['status'] != 'OK':
-            print("ERROR! %s" % filename)
+            print("ERROR!")
             
         for res in geocode['results']:
             possibilities.append(
