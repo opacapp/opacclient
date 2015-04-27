@@ -16,9 +16,8 @@ for filename in os.listdir(DIR):
     data = json.load(open(f))
     if 'geo' in data:
         if len(data['geo']) != 2 or data['geo'][0] == 0 or data['geo'][1] == 0:
-            print("Invalid: %s" %filename)
-            
-        #continue
+            print("Invalid: %s" %filename)    
+        continue
 
     print("Suche Position für: %s, %s, %s\n" % (data['title'], data['city'], data['state']))
 
