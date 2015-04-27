@@ -14,10 +14,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.graphics.Palette;
-import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
 import android.text.util.Linkify;
 import android.util.Log;
@@ -106,7 +104,7 @@ public class SearchResultDetailFragment extends Fragment
     protected ImageView ivCover;
     protected ObservableScrollView scrollView;
     protected View gradientBottom, gradientTop, tint;
-    protected TextView tvTitel, tvCopies;
+    protected TextView tvCopies;
     protected LinearLayout llDetails, llCopies;
     protected ProgressBar progressBar;
     protected RelativeLayout detailsLayout;
@@ -296,7 +294,7 @@ public class SearchResultDetailFragment extends Fragment
             showCoverView(false);
         }
 
-        fixEllipsize(tvTitel);
+        //fixEllipsize(tvTitel);
 
         return rootView;
     }
@@ -323,7 +321,7 @@ public class SearchResultDetailFragment extends Fragment
         gradientBottom = view.findViewById(R.id.gradient_bottom);
         gradientTop = view.findViewById(R.id.gradient_top);
         tint = view.findViewById(R.id.tint);
-        tvTitel = (TextView) view.findViewById(R.id.tvTitle);
+        //tvTitel = (TextView) view.findViewById(R.id.tvTitle);
         llDetails = (LinearLayout) view.findViewById(R.id.llDetails);
         llCopies = (LinearLayout) view.findViewById(R.id.llCopies);
         progressBar = (ProgressBar) view.findViewById(R.id.progress);
@@ -380,7 +378,7 @@ public class SearchResultDetailFragment extends Fragment
         } catch (Exception e) {
             ACRA.getErrorReporter().handleException(e);
         }
-        tvTitel.setText(getItem().getTitle());
+        toolbar.setTitle(getItem().getTitle());
         llDetails.removeAllViews();
         for (Detail detail : item.getDetails()) {
             View v = getLayoutInflater(null)
@@ -552,7 +550,7 @@ public class SearchResultDetailFragment extends Fragment
 
     private void showCoverView(boolean b) {
         ivCover.setVisibility(b ? View.VISIBLE : View.GONE);
-        tvTitel.setVisibility(b ? View.VISIBLE : View.GONE);
+        //tvTitel.setVisibility(b ? View.VISIBLE : View.GONE);
         gradientBottom.setVisibility(b ? View.VISIBLE : View.GONE);
         gradientTop.setVisibility(b ? View.VISIBLE : View.GONE);
         RelativeLayout.LayoutParams params =
@@ -590,118 +588,35 @@ public class SearchResultDetailFragment extends Fragment
     }
 
     private void fixTitle() {
-        if (getItem().getCoverBitmap() != null ||
-                getArguments().containsKey(ARG_ITEM_COVER_BITMAP)) {
-            // tvTitel is used for displaying title
-            fixTitleWidth();
-            tvTitel.getViewTreeObserver()
-                   .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                       @Override
-                       public void onGlobalLayout() {
-                           // We need to wait for tvTitel to refresh to get correct calculations
-                           tvTitel.getViewTreeObserver().removeGlobalOnLayoutListener(
-                                   this);
-                           if (tvTitel.getLayout() != null &&
-                                   tvTitel.getLayout().getLineCount() > 1) {
-                               toolbar.getLayoutParams().height = (int) TypedValue.applyDimension(
-                                       TypedValue.COMPLEX_UNIT_SP, 84f,
-                                       getResources().getDisplayMetrics());
-                               toolbar.getParent().requestLayout();
-                           }
+        // Toolbar is used for displaying title
+        toolbar.getViewTreeObserver()
+               .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                   @Override
+                   public void onGlobalLayout() {
+                       // We need to wait for toolbar to refresh to get correct calculations
+                       toolbar.getViewTreeObserver().removeGlobalOnLayoutListener(
+                               this);
+                       if (toolbar.isTitleTruncated()) {
+                           toolbar.getLayoutParams().height = (int) TypedValue.applyDimension(
+                                   TypedValue.COMPLEX_UNIT_SP, 84f,
+                                   getResources().getDisplayMetrics());
+                           TextView titleTextView = findTitleTextView(toolbar);
+                           titleTextView.setSingleLine(
+                                   false);
+                           fixEllipsize(titleTextView);
+                           toolbar.getParent().requestLayout();
                        }
-                   });
-        } else {
-            // Toolbar is used for displaying title
-            toolbar.getViewTreeObserver()
-                   .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                       @Override
-                       public void onGlobalLayout() {
-                           // We need to wait for toolbar to refresh to get correct calculations
-                           toolbar.getViewTreeObserver().removeGlobalOnLayoutListener(
-                                   this);
-                           if (toolbar.isTitleTruncated()) {
-                               toolbar.getLayoutParams().height = (int) TypedValue.applyDimension(
-                                       TypedValue.COMPLEX_UNIT_SP, 84f,
-                                       getResources().getDisplayMetrics());
-                               TextView titleTextView = findTitleTextView(toolbar);
-                               titleTextView.setSingleLine(
-                                       false);
-                               fixEllipsize(titleTextView);
-                               toolbar.getParent().requestLayout();
-                           }
-                       }
-                   });
-        }
+                   }
+               });
         onScrollChanged(0, 0);
-    }
 
-    private void fixTitleWidth() {
-        ActionMenuView view = findActionMenuView(toolbar);
-        if (view != null) {
-            float density = getResources().getDisplayMetrics().density;
-            Menu menu = view.getMenu();
-            float availableWidth = calculateAvailableWidthInToolbar();
-            if (availableWidth / density < 150 &&
-                    (menu.findItem(R.id.action_lendebook).isVisible() ||
-                            menu.findItem(R.id.action_reservation).isVisible())
-                    && tvTitel.getWidth() > availableWidth * 36f / 20f) {
-                // We have so little space for the title that we should move the
-                // "Lend eBook" and "Reserve" menu items to the overflow menu
-                MenuItemCompat.setShowAsAction(menu.findItem(R.id.action_lendebook),
-                        MenuItemCompat.SHOW_AS_ACTION_NEVER);
-                MenuItemCompat.setShowAsAction(menu.findItem(R.id.action_reservation),
-                        MenuItemCompat.SHOW_AS_ACTION_NEVER);
-                toolbar.requestLayout();
-                toolbar.getViewTreeObserver()
-                       .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                           @Override
-                           public void onGlobalLayout() {
-                               toolbar.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                               float availableWidth = calculateAvailableWidthInToolbar();
-                               changeTitleWidth(availableWidth);
-                           }
-                       });
-            } else {
-                changeTitleWidth(availableWidth);
+        ((ViewGroup) toolbar.getParent()).getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        onScrollChanged(0, 0);
             }
-        }
-    }
-
-    /**
-     * Calculates the width available for a title in the toolbar in pixels. Follows the following
-     * formula: Toolbar width - menu width - margin - back button width
-     *
-     * @return Available width in pixels
-     */
-    private float calculateAvailableWidthInToolbar() {
-        float density = getResources().getDisplayMetrics().density;
-        ActionMenuView view = findActionMenuView(toolbar);
-        return toolbar.getWidth() - view.getWidth() - 16 * density -
-                (back_button_visible ? 56 * density : 0);
-    }
-
-    private void changeTitleWidth(float availableWidth) {
-        if (tvTitel.getWidth() > availableWidth * 36f / 20f) {
-            tvTitel.getLayoutParams().width = (int) (availableWidth * 36f / 20f);
-            tvTitel.getParent().requestLayout();
-        }
-    }
-
-    /**
-     * Hacky way to find the {@link android.support.v7.widget.ActionMenuView} inside a {@link
-     * android.support.v7.widget.Toolbar}. Will return null if none is found
-     *
-     * @param toolbar a Toolbar
-     * @return the ActionMenuView inside this toolbar, or null if none is found
-     */
-    private ActionMenuView findActionMenuView(Toolbar toolbar) {
-        for (int i = 0; i < toolbar.getChildCount(); i++) {
-            View view = toolbar.getChildAt(i);
-            if (view instanceof ActionMenuView) {
-                return (ActionMenuView) view;
-            }
-        }
-        return null;
+                });
     }
 
     /**
@@ -738,24 +653,25 @@ public class SearchResultDetailFragment extends Fragment
         // Toolbar stays at the top
         ViewHelper.setTranslationY(toolbar, scrollY);
 
+        TextView toolbarTitle = findTitleTextView(toolbar);
         if (hasCover) {
             float minHeight = toolbar.getHeight();
             float progress = Math.min(((float) scrollY) / (ivCover.getHeight() - minHeight), 1);
-            float scale = 1 - progress + 20f / 36f * progress;
-            ViewHelper.setPivotX(tvTitel, 0);
-            ViewHelper.setPivotY(tvTitel, tvTitel.getHeight());
-            ViewHelper.setScaleX(tvTitel, scale);
-            ViewHelper.setScaleY(tvTitel, scale);
+            float scale = 36f / 20f * (1 - progress) + progress;
+            ViewHelper.setPivotX(toolbarTitle, 0);
+            ViewHelper.setPivotY(toolbarTitle, toolbarTitle.getHeight());
+            ViewHelper.setScaleX(toolbarTitle, scale);
+            ViewHelper.setScaleY(toolbarTitle, scale);
             if (back_button_visible) {
-                ViewHelper.setTranslationX(tvTitel, progress * TypedValue
-                        .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56f, getResources()
+                ViewHelper.setTranslationX(toolbarTitle, (progress - 1) * TypedValue
+                        .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50f, getResources()
                                 .getDisplayMetrics()));
             }
 
             ViewHelper.setAlpha(tint, progress);
 
             if (progress == 1) {
-                ViewHelper.setTranslationY(tvTitel, scrollY - ivCover.getHeight() + minHeight);
+                ViewHelper.setTranslationY(toolbarTitle, 0);
                 if (!ivCover.getBackground().equals(toolbar.getBackground())) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                         toolbar.setBackground(ivCover.getBackground());
@@ -765,15 +681,13 @@ public class SearchResultDetailFragment extends Fragment
                     }
                     ViewCompat.setElevation(toolbar, TypedValue.applyDimension(TypedValue
                             .COMPLEX_UNIT_DIP, 4f, getResources().getDisplayMetrics()));
-                    ViewCompat.setElevation(tvTitel, TypedValue.applyDimension(TypedValue
-                            .COMPLEX_UNIT_DIP, 4f, getResources().getDisplayMetrics()));
                 }
             } else {
-                ViewHelper.setTranslationY(tvTitel, 0);
+                ViewHelper
+                        .setTranslationY(toolbarTitle, -scrollY + ivCover.getHeight() - minHeight);
                 if (ivCover.getBackground().equals(toolbar.getBackground())) {
                     toolbar.setBackgroundResource(R.color.transparent);
                     ViewCompat.setElevation(toolbar, 0);
-                    ViewCompat.setElevation(tvTitel, 0);
                 }
             }
         }
