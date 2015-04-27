@@ -117,7 +117,10 @@ class Bibliotheca(Api):
 
     def _fetchData(self, url, suff=''):
         config = configparser.RawConfigParser(allow_no_value=True, strict=False)
-        config.read_string(urllib.request.urlopen(url + '/w3oini.txt').read().decode('iso-8859-1'))
+        if os.path.exists('w3oini.txt'):
+            config.read_string(open('w3oini.txt', 'rb').read().decode('iso-8859-1'))
+        else:
+            config.read_string(urllib.request.urlopen(url + '/w3oini.txt').read().decode('iso-8859-1'))
         data = {
             'accounttable': {},
             'reservationtable': {},
