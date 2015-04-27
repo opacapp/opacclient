@@ -34,6 +34,11 @@ android {
             signingConfig signingConfigs.release
             proguardFiles 'proguard-rules.txt'
         }
+        debug {
+            debuggable true
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
