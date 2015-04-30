@@ -1,5 +1,6 @@
 package de.geeksfactory.opacclient.frontend;
 
+import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -176,11 +177,7 @@ public class SearchResultListActivity extends OpacActivity implements
                 detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
                         res.getId());
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                Explode explode = new Explode();
-                explode.excludeTarget(android.R.id.statusBarBackground, true);
-                getWindow().setExitTransition(explode);
-            }
+            setExitTransition();
             if (res.getCoverBitmap() != null) {
                 detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP,
                         smallCover);
@@ -193,6 +190,15 @@ public class SearchResultListActivity extends OpacActivity implements
             } else {
                 startActivity(detailIntent);
             }
+        }
+    }
+
+    @TargetApi(21)
+    private void setExitTransition() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Explode explode = new Explode();
+            explode.excludeTarget(android.R.id.statusBarBackground, true);
+            getWindow().setExitTransition(explode);
         }
     }
 

@@ -22,6 +22,7 @@
 package de.geeksfactory.opacclient.frontend;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -149,8 +150,15 @@ public abstract class OpacActivity extends ActionBarActivity {
                                            .replace(R.id.content_frame, fragment).commit();
             }
         }
+        fixStatusBarFlashing();
+    }
+
+    /**
+     * Fix status bar flashing problem during transitions by excluding the status bar background from transitions
+     */
+    @TargetApi(21)
+    private void fixStatusBarFlashing() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            // Fix status bar flashing problem during transitions
             getWindow().getEnterTransition().excludeTarget(android.R.id.statusBarBackground, true);
             getWindow().getExitTransition().excludeTarget(android.R.id.statusBarBackground, true);
         }
