@@ -38,6 +38,7 @@ import java.util.Collections;
 import java.util.List;
 
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.utils.CompatibilityUtils;
 
 public class BarcodeScanIntegrator {
     public static final int REQUEST_CODE_QRDROID = 0x0000094c;
@@ -182,12 +183,7 @@ public class BarcodeScanIntegrator {
         }
         intentScan.setPackage(targetAppPackage);
         intentScan.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            intentScan.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-        } else {
-            //noinspection deprecation
-            intentScan.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-        }
+        intentScan.addFlags(CompatibilityUtils.getNewDocumentIntentFlag());
         ctx.startActivityForResult(intentScan, REQUEST_CODE_ZXING);
     }
 

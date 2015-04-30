@@ -69,6 +69,7 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.StarDataSource;
 import de.geeksfactory.opacclient.ui.ObservableScrollView;
 import de.geeksfactory.opacclient.ui.WhitenessUtils;
+import de.geeksfactory.opacclient.utils.CompatibilityUtils;
 
 /**
  * A fragment representing a single SearchResult detail screen. This fragment is either contained in
@@ -875,13 +876,7 @@ public class SearchResultDetailFragment extends Fragment
                             Intent intent = new Intent(
                                     android.content.Intent.ACTION_SEND);
                             intent.setType("text/plain");
-
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-                            } else {
-                                //noinspection deprecation
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-                            }
+                            intent.addFlags(CompatibilityUtils.getNewDocumentIntentFlag());
 
                             // Add data to the intent, the receiving app will
                             // decide
@@ -910,13 +905,7 @@ public class SearchResultDetailFragment extends Fragment
                             Intent intent = new Intent(
                                     android.content.Intent.ACTION_SEND);
                             intent.setType("text/plain");
-
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-                            } else {
-                                //noinspection deprecation
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-                            }
+                            intent.addFlags(CompatibilityUtils.getNewDocumentIntentFlag());
 
                             // Add data to the intent, the receiving app will
                             // decide
