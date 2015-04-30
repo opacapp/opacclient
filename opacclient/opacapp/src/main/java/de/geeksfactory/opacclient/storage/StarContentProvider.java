@@ -29,11 +29,13 @@ import android.net.Uri;
 
 import java.util.List;
 
+import de.geeksfactory.opacclient.BuildConfig;
+
 public class StarContentProvider extends ContentProvider {
     public static final String STAR_TYPE = "star";
     private static final String STAR_MIME_POSTFIX = "/vnd.de.opacapp.type"
             + STAR_TYPE;
-    public static final String AUTHORITY = "de.geeksfactory.opacclient.starprovider";
+    public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".starprovider";
     public static final String BASE_URI = "content://" + AUTHORITY + "/";
     public static final Uri STAR_URI = Uri.parse(BASE_URI + STAR_TYPE);
     private static final String MIME_PREFIX = "vnd.android.cursor.";

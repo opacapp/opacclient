@@ -8,8 +8,8 @@ android {
         applicationId "de.geeksfactory.opacclient"
         minSdkVersion 8
         targetSdkVersion 22
-        versionCode 112
-        versionName "4.0.6"
+        versionCode 114
+        versionName "4.1.1"
     }
 
     lintOptions {
@@ -33,6 +33,11 @@ android {
             minifyEnabled true
             signingConfig signingConfigs.release
             proguardFiles 'proguard-rules.txt'
+        }
+        debug {
+            debuggable true
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
         }
     }
     compileOptions {

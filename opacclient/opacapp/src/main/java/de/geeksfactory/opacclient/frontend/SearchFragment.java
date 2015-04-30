@@ -624,6 +624,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
     }
 
     public void loadQuery(Bundle query) {
+        if (query == null) {
+            return;
+        }
         for (SearchField field : fields) {
             if (!field.isVisible()) {
                 continue;
@@ -683,7 +686,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.fragment_search, menu);
         if (getActivity() != null && ((OpacActivity) getActivity()).isTablet()) {
-        // We have the floating action button for that
+            // We have the floating action button for that
             menu.findItem(R.id.action_search_go).setVisible(false);
         }
         super.onCreateOptionsMenu(menu, inflater);

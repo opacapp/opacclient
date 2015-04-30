@@ -7,8 +7,8 @@
         "baseurl": "http://webopac.winbiap.de/allershausen"
     },
     "geo": [
-        48.43118459999999,
-        11.5970726
+        48.4305842,
+        11.5950372
     ],
     "information": "http://www.allershausen.de/dynasite.cfm?dsmid=49700",
     "state": "Bayern",

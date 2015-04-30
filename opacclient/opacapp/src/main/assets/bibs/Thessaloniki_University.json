@@ -2,7 +2,7 @@
     "account_supported": false,
     "api": "vufind",
     "city": "\u0398\u03b5\u03c3\u03c3\u03b1\u03bb\u03bf\u03bd\u03af\u03ba\u03b7",
-    "country": "\u0395\u03bb\u03bb\u03ac\u03b4\u03b1",
+    "country": "\u0395\u03bb\u03bb\u03ac\u03c2",
     "data": {
         "baseurl": "http://search.lib.auth.gr",
         "copystyle": "stackedtable",
@@ -15,8 +15,8 @@
         }
     },
     "geo": [
-        40.6400629,
-        22.9444191
+        40.6296672,
+        22.9579604
     ],
     "information": "http://www.lib.auth.gr/",
     "state": "\u039a\u03b5\u03bd\u03c4\u03c1\u03b9\u03ba\u03ae \u039c\u03b1\u03ba\u03b5\u03b4\u03bf\u03bd\u03af\u03b1",

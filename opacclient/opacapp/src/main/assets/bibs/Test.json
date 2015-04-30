@@ -4,10 +4,6 @@
     "city": "Test",
     "country": "Test",
     "data": {},
-    "geo": [
-        0.0,
-        0.0
-    ],
     "information": "http://opacapp.de/",
     "state": "Test",
     "title": "Testbibliothek"

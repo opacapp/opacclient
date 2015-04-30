@@ -66,6 +66,10 @@
             "title": 1
         }
     },
+    "geo": [
+        51.9606649,
+        7.6261347
+    ],
     "information": "http://www.stadtteilbuecherei-hiltrup.de/",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtteilb\u00fccherei Hiltrup St. Clemens"

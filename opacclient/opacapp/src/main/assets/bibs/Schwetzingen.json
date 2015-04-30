@@ -1,9 +1,19 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "bibliotheca",
     "city": "Schwetzingen",
     "country": "Deutschland",
     "data": {
+        "accounttable": {
+            "author": 0,
+            "barcode": -1,
+            "homebranch": -1,
+            "lendingbranch": -1,
+            "prolongurl": 3,
+            "returndate": 2,
+            "status": -1,
+            "title": 1
+        },
         "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-schwetzingen",
         "copiestable": {
             "barcode": -1,
@@ -13,11 +23,19 @@
             "reservations": -1,
             "returndate": 3,
             "status": 2
+        },
+        "reservationtable": {
+            "author": 0,
+            "availability": -1,
+            "branch": -1,
+            "cancelurl": 2,
+            "expirationdate": -1,
+            "title": 1
         }
     },
     "geo": [
-        49.3852193,
-        8.5722445
+        49.38606,
+        8.56944
     ],
     "information": "http://www.schwetzingen.de/pb/,Lde/120127.html",
     "state": "Baden-W\u00fcrttemberg",

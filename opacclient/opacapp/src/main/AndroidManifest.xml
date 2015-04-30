@@ -150,7 +150,7 @@
 
         <provider
             android:name="de.geeksfactory.opacclient.storage.StarContentProvider"
-            android:authorities="de.geeksfactory.opacclient.starprovider"
+            android:authorities="${applicationId}.starprovider"
             android:exported="false" />
     </application>
 
