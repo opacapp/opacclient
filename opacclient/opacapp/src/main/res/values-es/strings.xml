@@ -20,9 +20,9 @@
   <string name="tocollection">A colección</string>
   <string name="reserve">Reservar</string>
   <string name="lendebook">Prestar e-book</string>
-  <string name="doing_res">Realizando reservación...</string>
+  <string name="doing_res">Realizando reservación…</string>
   <string name="opac_error_email">Por favor introduzca tu correo electrónico en las configuraciones de la aplicación. </string>
-  <string name="doing_booking">Prestando...</string>
+  <string name="doing_booking">Prestando…</string>
   <string name="status_nouser">No se ha especificado </string>
   <string name="pending_fees">Multas pendientes:</string>
   <string name="valid_until">Cuenta válida hasta: </string>
@@ -37,11 +37,11 @@
   <string name="cancel">Cancelar</string>
   <string name="delete">Borrar</string>
   <string name="accept">Aceptar</string>
-  <string name="doing_cancel">Cancelando reservación...</string>
-  <string name="doing_prolong">Realizando renovación...</string>
-  <string name="doing_download">Recuperando información de descarga...</string>
+  <string name="doing_cancel">Cancelando reservación…</string>
+  <string name="doing_prolong">Realizando renovación…</string>
+  <string name="doing_download">Recuperando información de descarga…</string>
   <string name="reader_needed_ignore">Ignorar</string>
-  <string name="doing_prolong_all">Todos los medios renovables se han renovado...</string>
+  <string name="doing_prolong_all">Todos los medios renovables se han renovado…</string>
   <string name="prolong_all_confirm">¿Está seguro de renovar todos artículos en su cuenta? Esto puede provocar tasas en algunas bibliotecas.  </string>
   <string name="opac_error">Mensaje de error del OPAC web</string>
   <string name="welcome">¡Bienvenido!</string>
@@ -49,7 +49,7 @@
   <string name="welcome_account">La cuenta puede ser anónima (sólo para buscar) o incluir un número de lector y contraseña (activar propiedades relacionadas con la cuenta). Puede añadir más cuentas después. </string>
   <string name="select_library">Seleccionar biblioteca</string>
   <string name="report">Enviar informe</string>
-  <string name="report_sending">Enviando informe...</string>
+  <string name="report_sending">Enviando informe…</string>
   <string name="report_sent">Informe ha sido enviado. ¡Gracias!</string>
   <string name="report_error">Error al enviar informe.</string>
   <string name="notifications">Notificaciones</string>
@@ -144,7 +144,7 @@
   </plurals>
   <string name="export_starred">Exportar</string>
   <string name="geolocate">Encontrar bibliotecas cercanas</string>
-  <string name="geolocate_progress">Localizando...</string>
+  <string name="geolocate_progress">Localizando…</string>
   <string name="alphabetic_list">Mostrar lista entera</string>
   <string name="setting_nfc">Buscar a través de etiquetas NFC</string>
   <string name="setting_nfc_desc">Fase experimental. Sólo compatible con algunos dispositivos y algunas bibliotecas.</string>
@@ -164,8 +164,8 @@
   <string name="city">Ciudad</string>
   <string name="library_name">Nombre de biblioteca</string>
   <string name="status">Estado</string>
-  <string name="loading">Cargando...</string>
-  <string name="loading_libraries">Cargando lista de bibliotecas...</string>
+  <string name="loading">Cargando…</string>
+  <string name="loading_libraries">Cargando lista de bibliotecas…</string>
   <string name="return_date">Fecha de devolución</string>
   <string name="location">Posición</string>
   <string name="reservations">Reservas</string>
