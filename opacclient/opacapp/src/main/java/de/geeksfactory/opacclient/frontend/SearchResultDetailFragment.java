@@ -2,7 +2,6 @@ package de.geeksfactory.opacclient.frontend;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -65,6 +64,7 @@ import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.StarDataSource;
+import de.geeksfactory.opacclient.ui.AppCompatProgressDialog;
 import de.geeksfactory.opacclient.ui.ObservableScrollView;
 import de.geeksfactory.opacclient.ui.WhitenessUtils;
 import de.geeksfactory.opacclient.utils.CompatibilityUtils;
@@ -119,7 +119,7 @@ public class SearchResultDetailFragment extends Fragment
     private OpacClient app;
     private View view;
     private FetchTask ft;
-    private ProgressDialog dialog;
+    private AppCompatProgressDialog dialog;
     private AlertDialog adialog;
     private boolean account_switched = false;
     private boolean invalidated = false;

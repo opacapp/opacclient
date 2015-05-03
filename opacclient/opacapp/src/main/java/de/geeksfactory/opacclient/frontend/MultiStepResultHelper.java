@@ -1,14 +1,13 @@
 package de.geeksfactory.opacclient.frontend;
 
 import android.app.Activity;
-import android.support.v7.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.text.TextUtils.TruncateAt;
 import android.view.LayoutInflater;
@@ -29,6 +28,7 @@ import java.util.Map;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult;
 import de.geeksfactory.opacclient.apis.OpacApi.ReservationResult;
+import de.geeksfactory.opacclient.ui.AppCompatProgressDialog;
 
 public class MultiStepResultHelper<Arg> {
 
@@ -38,7 +38,7 @@ public class MultiStepResultHelper<Arg> {
     protected Callback<Arg> callback;
     protected int loadingstring;
 
-    protected ProgressDialog pdialog;
+    protected AppCompatProgressDialog pdialog;
     protected AlertDialog adialog;
 
     public MultiStepResultHelper(Activity context, Arg argument,
@@ -59,7 +59,7 @@ public class MultiStepResultHelper<Arg> {
 
     public void doStep(int useraction, String selection) {
         if (pdialog == null || !pdialog.isShowing()) {
-            pdialog = ProgressDialog.show(context, "",
+            pdialog = AppCompatProgressDialog.show(context, "",
                     context.getString(loadingstring), true);
             pdialog.show();
         }

@@ -1,7 +1,6 @@
 package de.geeksfactory.opacclient.frontend;
 
 import android.annotation.TargetApi;
-import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -54,6 +53,7 @@ import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.ui.AppCompatProgressDialog;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
 
 public class LibraryListActivity extends AppCompatActivity {
@@ -70,7 +70,7 @@ public class LibraryListActivity extends AppCompatActivity {
     protected LibraryListFragment fragment4;
     protected boolean visible;
 
-    protected ProgressDialog dialog;
+    protected AppCompatProgressDialog dialog;
 
     protected SearchView searchView;
     protected MenuItem searchItem;
@@ -736,7 +736,7 @@ public class LibraryListActivity extends AppCompatActivity {
                 double timeElapsed = System.currentTimeMillis() - startTime;
                 double expectedTime = timeElapsed / progress[0];
                 if (expectedTime > 300) {
-                    dialog = ProgressDialog.show(LibraryListActivity.this, "",
+                    dialog = AppCompatProgressDialog.show(LibraryListActivity.this, "",
                             getString(R.string.loading_libraries), true, false);
                     dialog.show();
                 }

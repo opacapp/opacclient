@@ -23,7 +23,6 @@ package de.geeksfactory.opacclient.frontend;
 
 import android.annotation.SuppressLint;
 import android.app.NotificationManager;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -102,6 +101,7 @@ import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.ui.AppCompatProgressDialog;
 import de.geeksfactory.opacclient.ui.ExpandingCardListManager;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
 
@@ -109,7 +109,7 @@ public class AccountFragment extends Fragment implements
         AccountSelectedListener {
 
     public static final long MAX_CACHE_AGE = (1000 * 3600 * 2);
-    protected ProgressDialog dialog;
+    protected AppCompatProgressDialog dialog;
     protected AlertDialog adialog;
     protected OpacClient app;
     protected View view;
@@ -319,7 +319,7 @@ public class AccountFragment extends Fragment implements
             btSend.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    dialog = ProgressDialog.show(getActivity(), "",
+                    dialog = AppCompatProgressDialog.show(getActivity(), "",
                             getString(R.string.report_sending), true,
                             true, new OnCancelListener() {
                                 @Override
@@ -577,7 +577,7 @@ public class AccountFragment extends Fragment implements
 
     protected void download(final String a) {
         if (app.getApi() instanceof EbookServiceApi) {
-            dialog = ProgressDialog.show(getActivity(), "",
+            dialog = AppCompatProgressDialog.show(getActivity(), "",
                     getString(R.string.doing_download), true);
             dialog.show();
             dt = new DownloadTask(a);
