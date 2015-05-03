@@ -70,6 +70,7 @@ import de.geeksfactory.opacclient.storage.StarDataSource;
 import de.geeksfactory.opacclient.ui.ObservableScrollView;
 import de.geeksfactory.opacclient.ui.WhitenessUtils;
 import de.geeksfactory.opacclient.utils.CompatibilityUtils;
+import de.geeksfactory.opacclient.utils.ErrorReporter;
 
 /**
  * A fragment representing a single SearchResult detail screen. This fragment is either contained in
@@ -377,7 +378,7 @@ public class SearchResultDetailFragment extends Fragment
         try {
             Log.i("result", getItem().toString());
         } catch (Exception e) {
-            ACRA.getErrorReporter().handleException(e);
+            ErrorReporter.handleException(e);
         }
         toolbar.setTitle(getItem().getTitle());
         llDetails.removeAllViews();
@@ -1418,7 +1419,7 @@ public class SearchResultDetailFragment extends Fragment
             } catch (IOException e) {
                 publishProgress(e, "ioerror");
             } catch (Exception e) {
-                ACRA.getErrorReporter().handleException(e);
+                ErrorReporter.handleException(e);
             }
             return null;
         }
@@ -1469,7 +1470,7 @@ public class SearchResultDetailFragment extends Fragment
             } catch (IOException e) {
                 publishProgress(e, "ioerror");
             } catch (Exception e) {
-                ACRA.getErrorReporter().handleException(e);
+                ErrorReporter.handleException(e);
             }
             return null;
         }
@@ -1521,13 +1522,13 @@ public class SearchResultDetailFragment extends Fragment
                     app.getApi().getResultById(id, homebranch);
                     return 0;
                 } else {
-                    ACRA.getErrorReporter().handleException(
+                    ErrorReporter.handleException(
                             new Throwable("No ID supplied"));
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (Exception e) {
-                ACRA.getErrorReporter().handleException(e);
+                ErrorReporter.handleException(e);
             }
             return 1;
         }

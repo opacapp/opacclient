@@ -55,6 +55,7 @@ import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.utils.ErrorReporter;
 
 public class AccountEditActivity extends AppCompatActivity {
 
@@ -145,7 +146,7 @@ public class AccountEditActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
-            ACRA.getErrorReporter().handleException(e);
+            ErrorReporter.handleException(e);
             e.printStackTrace();
         }
     }

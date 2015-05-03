@@ -20,6 +20,7 @@ import org.acra.ACRA;
 
 import java.io.IOException;
 
+import de.geeksfactory.opacclient.BuildConfig;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.SSLSecurityException;
@@ -27,6 +28,7 @@ import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
+import de.geeksfactory.opacclient.utils.ErrorReporter;
 
 /**
  * An activity representing a list of SearchResults. This activity has different presentations for
@@ -242,7 +244,7 @@ public class SearchResultListActivity extends OpacActivity implements
                 e.printStackTrace();
             } catch (Exception e) {
                 exception = e;
-                ACRA.getErrorReporter().handleException(e);
+                ErrorReporter.handleException(e);
             }
 
             return null;

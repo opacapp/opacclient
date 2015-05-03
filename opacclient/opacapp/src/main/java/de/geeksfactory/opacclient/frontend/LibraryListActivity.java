@@ -57,6 +57,7 @@ import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.utils.ErrorReporter;
 
 public class LibraryListActivity extends AppCompatActivity {
 
@@ -757,7 +758,7 @@ public class LibraryListActivity extends AppCompatActivity {
                     }
                 });
             } catch (IOException e) {
-                ACRA.getErrorReporter().handleException(e);
+                ErrorReporter.handleException(e);
                 return null;
             }
         }

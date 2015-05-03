@@ -37,6 +37,7 @@ import java.io.IOException;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.utils.ErrorReporter;
 
 public class WelcomeActivity extends AppCompatActivity {
     protected OpacClient app;
@@ -88,7 +89,7 @@ public class WelcomeActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (Exception e) {
-                ACRA.getErrorReporter().handleException(e);
+                ErrorReporter.handleException(e);
             }
             return null;
         }

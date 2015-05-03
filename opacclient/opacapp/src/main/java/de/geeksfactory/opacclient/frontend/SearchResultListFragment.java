@@ -47,6 +47,7 @@ import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
 import de.geeksfactory.opacclient.storage.SearchFieldDataSource;
+import de.geeksfactory.opacclient.utils.ErrorReporter;
 
 /**
  * A list fragment representing a list of SearchResults. This fragment also supports tablet devices
@@ -439,7 +440,7 @@ public class SearchResultListFragment extends CustomListFragment {
                     e.printStackTrace();
                 } catch (Exception e) {
                     exception = e;
-                    ACRA.getErrorReporter().handleException(e);
+                    ErrorReporter.handleException(e);
                 }
             } else if (query != null) {
                 try {
@@ -450,7 +451,7 @@ public class SearchResultListFragment extends CustomListFragment {
                     e.printStackTrace();
                 } catch (Exception e) {
                     exception = e;
-                    ACRA.getErrorReporter().handleException(e);
+                    ErrorReporter.handleException(e);
                 }
             }
             return null;

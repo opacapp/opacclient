@@ -104,6 +104,7 @@ import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.ui.ExpandingCardListManager;
+import de.geeksfactory.opacclient.utils.ErrorReporter;
 
 public class AccountFragment extends Fragment implements
         AccountSelectedListener {
@@ -762,10 +763,10 @@ public class AccountFragment extends Fragment implements
             lib = app.getLibrary(account.getLibrary());
             tvAccCity.setText(lib.getDisplayName());
         } catch (IOException e) {
-            ACRA.getErrorReporter().handleException(e);
+            ErrorReporter.handleException(e);
             e.printStackTrace();
         } catch (JSONException e) {
-            ACRA.getErrorReporter().handleException(e);
+            ErrorReporter.handleException(e);
         }
 
         /*
@@ -1625,7 +1626,7 @@ public class AccountFragment extends Fragment implements
             } catch (IOException | OpacErrorException e) {
                 exception = e;
             } catch (Exception e) {
-                ACRA.getErrorReporter().handleException(e);
+                ErrorReporter.handleException(e);
                 exception = e;
             }
             return null;
@@ -1660,7 +1661,7 @@ public class AccountFragment extends Fragment implements
                     .SocketException e) {
                 e.printStackTrace();
             } catch (Exception e) {
-                ACRA.getErrorReporter().handleException(e);
+                ErrorReporter.handleException(e);
             }
             return null;
         }
@@ -1807,7 +1808,7 @@ public class AccountFragment extends Fragment implements
                 success = false;
                 e.printStackTrace();
             } catch (Exception e) {
-                ACRA.getErrorReporter().handleException(e);
+                ErrorReporter.handleException(e);
                 success = false;
             }
             return null;
@@ -1856,7 +1857,7 @@ public class AccountFragment extends Fragment implements
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (Exception e) {
-                ACRA.getErrorReporter().handleException(e);
+                ErrorReporter.handleException(e);
             }
             return null;
         }
@@ -1957,7 +1958,7 @@ public class AccountFragment extends Fragment implements
             } catch (IOException e) {
                 publishProgress(e, "ioerror");
             } catch (Exception e) {
-                ACRA.getErrorReporter().handleException(e);
+                ErrorReporter.handleException(e);
             }
             return null;
         }
