@@ -2,7 +2,6 @@ package de.geeksfactory.opacclient.frontend;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.support.v7.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +14,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.text.util.Linkify;
@@ -42,8 +42,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nineoldandroids.view.ViewHelper;
-
-import org.acra.ACRA;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

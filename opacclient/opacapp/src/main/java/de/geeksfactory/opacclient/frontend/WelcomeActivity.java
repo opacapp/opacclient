@@ -24,14 +24,11 @@ package de.geeksfactory.opacclient.frontend;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-
-import org.acra.ACRA;
 
 import java.io.IOException;
 
@@ -74,11 +71,6 @@ public class WelcomeActivity extends AppCompatActivity {
         Intent i = new Intent(this, LibraryListActivity.class);
         i.putExtra("welcome", true);
         startActivity(i);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
     }
 
     public class InitTask extends AsyncTask<Void, Void, Void> {

@@ -16,11 +16,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import org.acra.ACRA;
-
 import java.io.IOException;
 
-import de.geeksfactory.opacclient.BuildConfig;
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.SSLSecurityException;

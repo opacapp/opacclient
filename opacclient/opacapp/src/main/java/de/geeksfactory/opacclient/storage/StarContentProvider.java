@@ -210,7 +210,7 @@ public class StarContentProvider extends ContentProvider {
         return new String[]{String.valueOf(ContentUris.parseId(uri))};
     }
 
-    private static enum Mime {
+    private enum Mime {
         STAR_ITEM, STAR_DIR
     }
 }

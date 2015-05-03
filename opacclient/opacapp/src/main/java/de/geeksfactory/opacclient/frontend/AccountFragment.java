@@ -22,7 +22,6 @@
 package de.geeksfactory.opacclient.frontend;
 
 import android.annotation.SuppressLint;
-import android.support.v7.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -41,6 +40,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -63,7 +63,6 @@ import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
 
-import org.acra.ACRA;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.NoHttpResponseException;
@@ -1448,7 +1447,7 @@ public class AccountFragment extends Fragment implements
                 ListView lv = (ListView) view.findViewById(R.id.lvBibs);
 
                 lv.setAdapter(new ProlongAllResultAdapter(getActivity(), res
-                        .getResults().toArray()));
+                        .getResults()));
                 switch (result.getActionIdentifier()) {
                     case ReservationResult.ACTION_BRANCH:
                         builder.setTitle(R.string.branch);
@@ -1889,11 +1888,11 @@ public class AccountFragment extends Fragment implements
         }
     }
 
-    public class ProlongAllResultAdapter extends ArrayAdapter<Object> {
+    public class ProlongAllResultAdapter extends ArrayAdapter<Map<String, String>> {
 
-        private Object[] objects;
+        private List<Map<String, String>> objects;
 
-        public ProlongAllResultAdapter(Context context, Object[] objects) {
+        public ProlongAllResultAdapter(Context context, List<Map<String, String>> objects) {
             super(context, R.layout.simple_spinner_item, objects);
             this.objects = objects;
         }
@@ -1902,7 +1901,7 @@ public class AccountFragment extends Fragment implements
         public View getView(int position, View contentView, ViewGroup viewGroup) {
             View view;
 
-            if (objects[position] == null) {
+            if (objects.get(position) == null) {
                 LayoutInflater layoutInflater = (LayoutInflater) getContext()
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 view = layoutInflater.inflate(
@@ -1910,7 +1909,7 @@ public class AccountFragment extends Fragment implements
                 return view;
             }
 
-            Map<String, String> item = ((Map<String, String>) objects[position]);
+            Map<String, String> item = objects.get(position);
 
             if (contentView == null) {
                 LayoutInflater layoutInflater = (LayoutInflater) getContext()

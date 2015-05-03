@@ -49,10 +49,11 @@ public abstract class ExpandingCardListManager {
      * An interface to influence the animation created by ExpandingCardListManager  by adding additional animations.
      */
     public interface AnimationInterceptor {
-        public Collection<Animator> getExpandAnimations(int heightDifference);
-        public Collection<Animator> getCollapseAnimations(int i);
+        Collection<Animator> getExpandAnimations(int heightDifference);
 
-        public void onCollapseAnimationEnd();
+        Collection<Animator> getCollapseAnimations(int i);
+
+        void onCollapseAnimationEnd();
     }
 
     public ExpandingCardListManager (Context context, LinearLayout layout) {

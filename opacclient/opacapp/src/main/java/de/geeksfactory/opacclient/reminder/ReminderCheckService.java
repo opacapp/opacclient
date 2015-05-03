@@ -38,14 +38,11 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import org.acra.ACRA;
-
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import de.geeksfactory.opacclient.BuildConfig;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
