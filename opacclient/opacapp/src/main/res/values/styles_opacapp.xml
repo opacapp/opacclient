@@ -30,7 +30,7 @@
 
         <!-- no action bar -->
         <item name="windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="TextAppearance.Opacapp.Base.Subhead" parent="android:TextAppearance">

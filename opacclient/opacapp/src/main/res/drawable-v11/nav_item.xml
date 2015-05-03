@@ -4,6 +4,7 @@
           android:exitFadeDuration="100">
 
     <item android:state_checked="true" android:drawable="@color/ripple_material_dark"/>
+    <item android:state_activated="true" android:drawable="@color/ripple_material_dark"/>
     <item android:drawable="@color/transparent"/>
 
 </selector>

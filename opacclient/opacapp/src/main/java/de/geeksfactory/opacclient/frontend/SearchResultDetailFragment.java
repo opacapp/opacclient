@@ -2,7 +2,7 @@ package de.geeksfactory.opacclient.frontend;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.support.v7.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -301,7 +301,7 @@ public class SearchResultDetailFragment extends Fragment
     }
 
     private void analyzeCover(Bitmap bitmap) {
-        Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {
+        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
             @Override
             public void onGenerated(Palette palette) {
                 Palette.Swatch swatch = palette.getDarkVibrantSwatch();
@@ -602,9 +602,10 @@ public class SearchResultDetailFragment extends Fragment
                                    TypedValue.COMPLEX_UNIT_SP, 84f,
                                    getResources().getDisplayMetrics());
                            TextView titleTextView = findTitleTextView(toolbar);
-                           titleTextView.setSingleLine(
-                                   false);
-                           fixEllipsize(titleTextView);
+                           if (titleTextView != null) {
+                               titleTextView.setSingleLine(false);
+                               fixEllipsize(titleTextView);
+                           }
                            toolbar.getParent().requestLayout();
                        }
                    }
@@ -659,20 +660,22 @@ public class SearchResultDetailFragment extends Fragment
             float minHeight = toolbar.getHeight();
             float progress = Math.min(((float) scrollY) / (ivCover.getHeight() - minHeight), 1);
             float scale = 36f / 20f * (1 - progress) + progress;
-            ViewHelper.setPivotX(toolbarTitle, 0);
-            ViewHelper.setPivotY(toolbarTitle, toolbarTitle.getHeight());
-            ViewHelper.setScaleX(toolbarTitle, scale);
-            ViewHelper.setScaleY(toolbarTitle, scale);
-            if (back_button_visible) {
-                ViewHelper.setTranslationX(toolbarTitle, (progress - 1) * TypedValue
-                        .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50f, getResources()
-                                .getDisplayMetrics()));
+            if (toolbarTitle != null) {
+                ViewHelper.setPivotX(toolbarTitle, 0);
+                ViewHelper.setPivotY(toolbarTitle, toolbarTitle.getHeight());
+                ViewHelper.setScaleX(toolbarTitle, scale);
+                ViewHelper.setScaleY(toolbarTitle, scale);
+                if (back_button_visible) {
+                    ViewHelper.setTranslationX(toolbarTitle, (progress - 1) * TypedValue
+                            .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50f, getResources()
+                                    .getDisplayMetrics()));
+                }
             }
 
             ViewHelper.setAlpha(tint, progress);
 
             if (progress == 1) {
-                ViewHelper.setTranslationY(toolbarTitle, 0);
+                if (toolbarTitle != null) ViewHelper.setTranslationY(toolbarTitle, 0);
                 if (!ivCover.getBackground().equals(toolbar.getBackground())) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                         toolbar.setBackground(ivCover.getBackground());
@@ -684,8 +687,11 @@ public class SearchResultDetailFragment extends Fragment
                             .COMPLEX_UNIT_DIP, 4f, getResources().getDisplayMetrics()));
                 }
             } else {
-                ViewHelper
-                        .setTranslationY(toolbarTitle, -scrollY + ivCover.getHeight() - minHeight);
+                if (toolbarTitle != null) {
+                    ViewHelper
+                            .setTranslationY(toolbarTitle,
+                                    -scrollY + ivCover.getHeight() - minHeight);
+                }
                 if (ivCover.getBackground().equals(toolbar.getBackground())) {
                     toolbar.setBackgroundResource(R.color.transparent);
                     ViewCompat.setElevation(toolbar, 0);

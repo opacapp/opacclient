@@ -1,13 +1,14 @@
 package de.geeksfactory.opacclient.frontend;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.support.v7.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.CustomListFragment;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -206,7 +207,7 @@ public class SearchResultListFragment extends CustomListFragment {
             performsearch();
         } else if (searchresult != null) {
             if (searchresult.getTotal_result_count() >= 0) {
-                ((ActionBarActivity) getActivity()).getSupportActionBar().setSubtitle(
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(
                         getResources().getQuantityString(R.plurals.result_number,
                                 searchresult.getTotal_result_count(),
                                 searchresult.getTotal_result_count()));
@@ -286,7 +287,7 @@ public class SearchResultListFragment extends CustomListFragment {
             result.setPage(searchresult.getPage_index());
         }
         if (searchresult.getTotal_result_count() >= 0) {
-            ((ActionBarActivity) getActivity()).getSupportActionBar().setSubtitle(
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(
                     getResources().getQuantityString(R.plurals.result_number,
                             searchresult.getTotal_result_count(),
                             searchresult.getTotal_result_count()));
@@ -337,7 +338,7 @@ public class SearchResultListFragment extends CustomListFragment {
                         if (resultCount >= 0 && getActivity() != null)
 
                         {
-                            ((ActionBarActivity) getActivity()).getSupportActionBar().setSubtitle(
+                            ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(
                                     getResources().getQuantityString(R.plurals.result_number,
                                             resultCount, resultCount));
                         }

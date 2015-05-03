@@ -1,7 +1,8 @@
 package de.geeksfactory.opacclient.ui;
 
 import android.content.Context;
-import android.support.v7.internal.widget.TintManager;
+import android.graphics.drawable.Drawable;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +37,6 @@ public abstract class ExpandingCardListManager {
     private CardView lowerCard;
     private LinearLayout llLower;
     private CardView expandedCard;
-    private TintManager tint;
     private List<View> views = new ArrayList<>();
     private AnimationInterceptor interceptor;
 
@@ -58,7 +58,6 @@ public abstract class ExpandingCardListManager {
     public ExpandingCardListManager (Context context, LinearLayout layout) {
         this.context = context;
         this.layout = layout;
-        tint = new TintManager(context);
         initViews();
         addViews();
     }
@@ -132,8 +131,13 @@ public abstract class ExpandingCardListManager {
 
     private View createDivider() {
         View divider = new View(context);
-        divider.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) context.getResources().getDisplayMetrics().density));
-        divider.setBackground(tint.getDrawable(R.drawable.abc_list_divider_mtrl_alpha));
+        divider.setLayoutParams(
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                        (int) context.getResources().getDisplayMetrics().density));
+        Drawable drawable = DrawableCompat.wrap(
+                context.getDrawable(R.drawable.abc_list_divider_mtrl_alpha));
+        DrawableCompat.setTint(drawable, android.R.attr.colorForeground);
+        divider.setBackground(drawable);
         return divider;
     }
 

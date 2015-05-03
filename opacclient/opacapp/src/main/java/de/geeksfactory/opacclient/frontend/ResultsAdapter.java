@@ -22,9 +22,6 @@
 package de.geeksfactory.opacclient.frontend;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,25 +30,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.util.EntityUtils;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.HashSet;
 import java.util.List;
 
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.networking.CoverDownloadTask;
-import de.geeksfactory.opacclient.networking.HTTPClient;
 import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
-import de.geeksfactory.opacclient.utils.Base64;
-import de.geeksfactory.opacclient.utils.ISBNTools;
 
 public class ResultsAdapter extends ArrayAdapter<SearchResult> {
     private List<SearchResult> objects;
