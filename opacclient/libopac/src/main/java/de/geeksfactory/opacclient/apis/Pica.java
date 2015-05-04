@@ -480,12 +480,14 @@ public class Pica extends BaseApi implements OpacApi {
 
         // GET TITLE AND SUBTITLE
         String titleAndSubtitle;
+        Element titleAndSubtitleElem = null;
         String titleRegex = ".*(Titel|Aufsatz|Zeitschrift|Gesamttitel"
                 + "|Title|Article|Periodical|Collective\\stitle"
                 + "|Titre|Article|P.riodique|Titre\\sg.n.ral).*";
         String selector = "td.preslabel:matches(" + titleRegex + ") + td.presvalue";
         if (doc.select(selector).size() > 0) {
-            titleAndSubtitle = doc.select(selector).first().text().trim();
+            titleAndSubtitleElem = doc.select(selector).first();
+            titleAndSubtitle = titleAndSubtitleElem.text().trim();
             int slashPosition =
                     Math.min(titleAndSubtitle.indexOf("/"), titleAndSubtitle.indexOf(":"));
             String title;
@@ -504,11 +506,29 @@ public class Pica extends BaseApi implements OpacApi {
 
         // Details
         int line = 0;
-        Elements lines = doc.select("td.preslabel:not(:matches(" + titleRegex + ")) + td.presvalue")
-                            .not(selector);
+        Elements lines = doc.select("td.preslabel + td.presvalue");
+        if (titleAndSubtitleElem != null) {
+            lines.remove(titleAndSubtitleElem);
+        }
         for (Element element : lines) {
             Element titleElem = element.firstElementSibling();
-            String detail = element.text().trim();
+            String detail = "";
+            if (element.select("div").size() > 1 &&
+                    element.select("div").text().equals(element.text())) {
+                boolean first = true;
+                for (Element div : element.select("div")) {
+                    if (!div.text().trim().equals("")) {
+                        if (!first) {
+                            detail += "\n" + div.text().trim();
+                        } else {
+                            detail += div.text().trim();
+                            first = false;
+                        }
+                    }
+                }
+            } else {
+                detail = element.text().trim();
+            }
             String title = titleElem.text().replace("\u00a0", " ").trim();
 
             if (element.select("hr").size() > 0)
@@ -565,6 +585,8 @@ public class Pica extends BaseApi implements OpacApi {
                     e.put(DetailledItem.KEY_COPY_SHELFMARK, detail);
                 } else if (title.contains("Anmerkung")) {
                     location += " (" + detail + ")";
+                } else if (title.contains("Link")) {
+                    result.addDetail(new Detail(title.replace(":", "").trim(), detail));
                 } else if (title.contains("Status")
                         || title.contains("Ausleihinfo")
                         || title.contains("Ausleihstatus")
