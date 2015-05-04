@@ -517,17 +517,17 @@ public class Pica extends BaseApi implements OpacApi {
                     element.select("div").text().equals(element.text())) {
                 boolean first = true;
                 for (Element div : element.select("div")) {
-                    if (!div.text().trim().equals("")) {
+                    if (!div.text().replace("\u00a0", " ").trim().equals("")) {
                         if (!first) {
-                            detail += "\n" + div.text().trim();
+                            detail += "\n" + div.text().replace("\u00a0", " ").trim();
                         } else {
-                            detail += div.text().trim();
+                            detail += div.text().replace("\u00a0", " ").trim();
                             first = false;
                         }
                     }
                 }
             } else {
-                detail = element.text().trim();
+                detail = element.text().replace("\u00a0", " ").trim();
             }
             String title = titleElem.text().replace("\u00a0", " ").trim();
 
