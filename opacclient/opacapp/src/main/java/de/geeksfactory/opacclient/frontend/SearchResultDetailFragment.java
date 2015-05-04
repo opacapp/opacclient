@@ -577,10 +577,10 @@ public class SearchResultDetailFragment extends Fragment
 
     private int getToolbarBackgroundColor() {
         if (getActivity() != null) {
-            if (getActivity() instanceof SearchResultListActivity) {
-                return R.color.primary_red_dark;
-            } else {
+            if (getActivity() instanceof SearchResultDetailActivity) {
                 return R.color.primary_red;
+            } else {
+                return R.color.primary_red_dark;
             }
         } else {
             return R.color.primary_red;
