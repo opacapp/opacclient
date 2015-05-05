@@ -1,16 +1,13 @@
 package de.geeksfactory.opacclient.frontend;
 
-import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
-import android.transition.Explode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -124,16 +121,16 @@ public class SearchResultListActivity extends OpacActivity implements
      * the given ID was selected.
      */
     @Override
-    public void onItemSelected(SearchResult result, View coverView) {
+    public void onItemSelected(SearchResult result, View coverView, int touchX, int touchY) {
         if ((app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING) == 0
                 && result.getPage() != listFragment.getLastLoadedPage()) {
             new ReloadOldPageTask(result, coverView).execute();
         } else {
-            showDetail(result, coverView);
+            showDetail(result, coverView, touchX, touchY);
         }
     }
 
-    public void showDetail(SearchResult res, View coverView) {
+    public void showDetail(SearchResult res, View coverView, int touchX, int touchY) {
         Bitmap cover = res.getCoverBitmap();
         Bitmap smallCover;
         if (cover != null && cover.getWidth() * cover.getHeight() > 300 * 300) {
@@ -176,10 +173,11 @@ public class SearchResultListActivity extends OpacActivity implements
                 detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
                         res.getId());
             }
-            setExitTransition();
             if (res.getCoverBitmap() != null) {
                 detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP,
                         smallCover);
+                detailIntent.putExtra(SearchResultDetailActivity.ARG_TOUCH_POSITION_X, touchX);
+                detailIntent.putExtra(SearchResultDetailActivity.ARG_TOUCH_POSITION_Y, touchY);
                 @SuppressWarnings("unchecked")
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         this,
@@ -189,15 +187,6 @@ public class SearchResultListActivity extends OpacActivity implements
             } else {
                 startActivity(detailIntent);
             }
-        }
-    }
-
-    @TargetApi(21)
-    private void setExitTransition() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Explode explode = new Explode();
-            explode.excludeTarget(android.R.id.statusBarBackground, true);
-            getWindow().setExitTransition(explode);
         }
     }
 
@@ -221,6 +210,16 @@ public class SearchResultListActivity extends OpacActivity implements
         private SearchResult searchResult;
         private Exception exception;
         private View coverView;
+        private int touchX = 0;
+        private int touchY = 0;
+
+        public ReloadOldPageTask(SearchResult searchResult, View coverView, int touchX,
+                int touchY) {
+            this.searchResult = searchResult;
+            this.coverView = coverView;
+            this.touchX = touchX;
+            this.touchY = touchY;
+        }
 
         public ReloadOldPageTask(SearchResult searchResult, View coverView) {
             this.searchResult = searchResult;
@@ -266,7 +265,7 @@ public class SearchResultListActivity extends OpacActivity implements
             } else {
                 // Everything ran correctly, show Detail
                 listFragment.setLastLoadedPage(searchResult.getPage());
-                showDetail(searchResult, coverView);
+                showDetail(searchResult, coverView, touchX, touchY);
             }
         }
     }

@@ -33,39 +33,51 @@
             android:clipChildren="false"
             android:clipToPadding="false">
 
-            <ImageView
-                android:id="@+id/ivCover"
+            <FrameLayout
+                android:id="@+id/coverWrapper"
                 android:layout_width="match_parent"
                 android:layout_height="260dp"
                 android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:adjustViewBounds="true"
-                android:contentDescription="@string/cover"
-                android:gravity="center"
-                android:scaleType="fitCenter"
-                android:transitionName="@string/transition_cover"
-                android:background="@color/primary_red_dark"/>
+                android:layout_centerHorizontal="true">
+
+                <View
+                    android:id="@+id/coverBackground"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/primary_red_dark"/>
+
+                <ImageView
+                    android:id="@+id/ivCover"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/cover"
+                    android:gravity="center"
+                    android:scaleType="fitCenter"
+                    android:transitionName="@string/transition_cover"/>
+            </FrameLayout>
 
             <View
                 android:id="@+id/gradient_top"
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
-                android:layout_alignTop="@id/ivCover"
+                android:layout_alignTop="@id/coverWrapper"
                 android:background="@drawable/gradient_top_bottom"/>
 
             <View
                 android:id="@+id/gradient_bottom"
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
-                android:layout_alignBottom="@id/ivCover"
+                android:layout_alignBottom="@id/coverWrapper"
                 android:background="@drawable/gradient_bottom_top"/>
 
             <View
                 android:id="@+id/tint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/ivCover"
-                android:layout_alignBottom="@id/ivCover"
+                android:layout_alignTop="@+id/coverWrapper"
+                android:layout_alignBottom="@id/coverWrapper"
                 android:background="@color/primary_red_dark"
                 android:alpha="0"/>
 
@@ -73,7 +85,7 @@
                 android:id="@+id/detailsLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/ivCover"
+                android:layout_below="@id/coverWrapper"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:background="#ffe5e5e5">

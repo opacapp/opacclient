@@ -9,6 +9,7 @@ import android.support.v4.app.CustomListFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -71,7 +72,7 @@ public class SearchResultListFragment extends CustomListFragment {
      */
     private static Callbacks dummyCallbacks = new Callbacks() {
         @Override
-        public void onItemSelected(SearchResult result, View coverView) {
+        public void onItemSelected(SearchResult result, View coverView, int touchX, int touchY) {
         }
 
         public boolean isTwoPane() {
@@ -93,6 +94,8 @@ public class SearchResultListFragment extends CustomListFragment {
     protected SearchStartTask st;
     protected LinearLayout progressContainer;
     protected FrameLayout errorView;
+    private int touchPositionX = 0;
+    private int touchPositionY = 0;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the fragment (e.g. upon
@@ -212,6 +215,14 @@ public class SearchResultListFragment extends CustomListFragment {
                                 searchresult.getTotal_result_count()));
             }
         }
+
+        getListView().setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View view, MotionEvent event) {
+                touchPositionX = (int) event.getX();
+                touchPositionY = (int) event.getY();
+                return false;
+            }
+        });
     }
 
     @Override
@@ -246,7 +257,7 @@ public class SearchResultListFragment extends CustomListFragment {
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
         callbacks.onItemSelected(searchresult.getResults().get(position),
-                view.findViewById(R.id.ivType));
+                view.findViewById(R.id.ivType), touchPositionX, touchPositionY);
 
     }
 
@@ -410,7 +421,7 @@ public class SearchResultListFragment extends CustomListFragment {
         /**
          * Callback for when an item has been selected.
          */
-        public void onItemSelected(SearchResult result, View coverView);
+        public void onItemSelected(SearchResult result, View coverView, int touchX, int touchY);
 
         public boolean isTwoPane();
     }

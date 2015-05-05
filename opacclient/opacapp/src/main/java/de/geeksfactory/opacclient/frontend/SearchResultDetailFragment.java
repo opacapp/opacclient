@@ -102,6 +102,8 @@ public class SearchResultDetailFragment extends Fragment
 
     protected Toolbar toolbar;
     protected ImageView ivCover;
+    protected FrameLayout coverWrapper;
+    protected View coverBackground;
     protected ObservableScrollView scrollView;
     protected View gradientBottom, gradientTop, tint;
     protected TextView tvCopies;
@@ -305,7 +307,7 @@ public class SearchResultDetailFragment extends Fragment
             public void onGenerated(Palette palette) {
                 Palette.Swatch swatch = palette.getDarkVibrantSwatch();
                 if (swatch != null) {
-                    ivCover.setBackgroundColor(swatch.getRgb());
+                    coverBackground.setBackgroundColor(swatch.getRgb());
                     tint.setBackgroundColor(swatch.getRgb());
                 }
             }
@@ -318,6 +320,8 @@ public class SearchResultDetailFragment extends Fragment
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         scrollView = (ObservableScrollView) view.findViewById(R.id.rootView);
         ivCover = (ImageView) view.findViewById(R.id.ivCover);
+        coverBackground = view.findViewById(R.id.coverBackground);
+        coverWrapper = (FrameLayout) view.findViewById(R.id.coverWrapper);
         gradientBottom = view.findViewById(R.id.gradient_bottom);
         gradientTop = view.findViewById(R.id.gradient_top);
         tint = view.findViewById(R.id.tint);
@@ -530,7 +534,7 @@ public class SearchResultDetailFragment extends Fragment
 
     private void displayCover() {
         if (getItem().getCoverBitmap() != null) {
-            ivCover.setVisibility(View.VISIBLE);
+            coverWrapper.setVisibility(View.VISIBLE);
             ivCover.setImageBitmap(getItem().getCoverBitmap());
             if (!image_analyzed) {
                 analyzeCover(getItem().getCoverBitmap());
@@ -549,8 +553,7 @@ public class SearchResultDetailFragment extends Fragment
     }
 
     private void showCoverView(boolean b) {
-        ivCover.setVisibility(b ? View.VISIBLE : View.GONE);
-        //tvTitel.setVisibility(b ? View.VISIBLE : View.GONE);
+        coverWrapper.setVisibility(b ? View.VISIBLE : View.GONE);
         gradientBottom.setVisibility(b ? View.VISIBLE : View.GONE);
         gradientTop.setVisibility(b ? View.VISIBLE : View.GONE);
         RelativeLayout.LayoutParams params =
@@ -565,7 +568,7 @@ public class SearchResultDetailFragment extends Fragment
                     llDetails.getPaddingRight(),
                     llDetails.getPaddingBottom()
             );
-            params.addRule(RelativeLayout.BELOW, R.id.ivCover);
+            params.addRule(RelativeLayout.BELOW, R.id.coverWrapper);
         } else {
             toolbar.setBackgroundResource(getToolbarBackgroundColor());
             ViewCompat.setElevation(toolbar, TypedValue.applyDimension(TypedValue
@@ -647,7 +650,7 @@ public class SearchResultDetailFragment extends Fragment
                 || getArguments().containsKey(ARG_ITEM_COVER_BITMAP);
         if (hasCover) {
             // Parallax effect
-            ViewHelper.setTranslationY(ivCover, scrollY * 0.5f);
+            ViewHelper.setTranslationY(coverWrapper, scrollY * 0.5f);
             ViewHelper.setTranslationY(gradientBottom, scrollY * 0.5f);
             ViewHelper.setTranslationY(gradientTop, scrollY * 0.5f);
         }
@@ -657,7 +660,8 @@ public class SearchResultDetailFragment extends Fragment
         TextView toolbarTitle = findTitleTextView(toolbar);
         if (hasCover) {
             float minHeight = toolbar.getHeight();
-            float progress = Math.min(((float) scrollY) / (ivCover.getHeight() - minHeight), 1);
+            float progress =
+                    Math.min(((float) scrollY) / (coverWrapper.getHeight() - minHeight), 1);
             float scale = 36f / 20f * (1 - progress) + progress;
             if (toolbarTitle != null) {
                 ViewHelper.setPivotX(toolbarTitle, 0);
@@ -675,12 +679,12 @@ public class SearchResultDetailFragment extends Fragment
 
             if (progress == 1) {
                 if (toolbarTitle != null) ViewHelper.setTranslationY(toolbarTitle, 0);
-                if (!ivCover.getBackground().equals(toolbar.getBackground())) {
+                if (!coverBackground.getBackground().equals(toolbar.getBackground())) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                        toolbar.setBackground(ivCover.getBackground());
+                        toolbar.setBackground(coverBackground.getBackground());
                     } else {
                         //noinspection deprecation
-                        toolbar.setBackgroundDrawable(ivCover.getBackground());
+                        toolbar.setBackgroundDrawable(coverBackground.getBackground());
                     }
                     ViewCompat.setElevation(toolbar, TypedValue.applyDimension(TypedValue
                             .COMPLEX_UNIT_DIP, 4f, getResources().getDisplayMetrics()));
@@ -689,9 +693,9 @@ public class SearchResultDetailFragment extends Fragment
                 if (toolbarTitle != null) {
                     ViewHelper
                             .setTranslationY(toolbarTitle,
-                                    -scrollY + ivCover.getHeight() - minHeight);
+                                    -scrollY + coverWrapper.getHeight() - minHeight);
                 }
-                if (ivCover.getBackground().equals(toolbar.getBackground())) {
+                if (coverBackground.getBackground().equals(toolbar.getBackground())) {
                     toolbar.setBackgroundResource(R.color.transparent);
                     ViewCompat.setElevation(toolbar, 0);
                 }
