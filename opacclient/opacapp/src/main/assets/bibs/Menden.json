@@ -7,8 +7,8 @@
         "baseurl": "http://webopac.kdvz.de/menden"
     },
     "geo": [
-        51.433333,
-        7.8
+        51.43805,
+        7.795120000000001
     ],
     "information": "http://www.menden.de/lim/bi/bc/index.php",
     "state": "Nordrhein-Westfalen",

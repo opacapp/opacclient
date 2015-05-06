@@ -7,8 +7,8 @@
         "baseurl": "https://opac-stadtbuecherei.augsburg.de/webOPACClient.stasis"
     },
     "geo": [
-        48.37144070000001,
-        10.8982552
+        48.3705449,
+        10.89779
     ],
     "information": "http://www.stadtbuecherei.augsburg.de/index.php?id=sb_standorte",
     "state": "Bayern",

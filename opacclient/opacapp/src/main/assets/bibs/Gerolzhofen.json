@@ -7,8 +7,8 @@
         "baseurl": "http://webopac.winbiap.net/gerolzhofen"
     },
     "geo": [
-        49.9005963,
-        10.3495174
+        49.9002,
+        10.35001
     ],
     "information": "http://www.gerolzhofen.de/Stadtbibliothek.html",
     "state": "Bayern",

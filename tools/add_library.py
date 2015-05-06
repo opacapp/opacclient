@@ -34,14 +34,16 @@ def getInput(required=False, default=None):
 def loadGeoPossibilities(data):
     possibilities = []
 
-    for address in (', '.join((data['title'], data['city'], data['state'])), data['city']):
+    for address in ('%s, %s, %s' % (data['title'], data['city'], data['state']),
+                    '%s, %s, %s' % ('Bibliothek', data['city'], data['state']),
+                    data['city']):
         uri = 'https://maps.googleapis.com/maps/api/geocode/json?' + \
-            urllib.parse.urlencode({'address': address, 'sensor': 'false'})
+            urllib.parse.urlencode({'address': address, 'sensor': 'true'})
         jsoncontent = urllib.request.urlopen(uri).read().decode()
         geocode = json.loads(jsoncontent)
         
         if geocode['status'] != 'OK':
-            print("ERROR! %s" % filename)
+            print("ERROR!")
             
         for res in geocode['results']:
             possibilities.append(

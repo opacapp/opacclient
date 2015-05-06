@@ -7,8 +7,8 @@
         "baseurl": "http://webopac.winbiap.de/usingen"
     },
     "geo": [
-        50.3353122,
-        8.5320064
+        50.33589,
+        8.533769999999999
     ],
     "information": "http://www.usingen.de/jugend.php?aktion=buecherei&linkid=12",
     "state": "Hessen",
