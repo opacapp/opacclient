@@ -83,7 +83,7 @@
         android:clickable="false"
         android:animateLayoutChanges="true">
 
-    <TextView
+        <TextView
             android:id="@+id/tvTitleAndAuthor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -93,6 +93,17 @@
             android:drawablePadding="4dp"
             android:gravity="center_vertical"
             android:contentDescription="@string/title_and_author"/>
+
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:drawableLeft="@drawable/ic_status"
+            android:drawablePadding="4dp"
+            android:gravity="center_vertical"
+            android:contentDescription="@string/status"/>
 
         <LinearLayout
             android:id="@+id/llDetails"
@@ -134,16 +145,5 @@
                 android:gravity="center_vertical"
                 android:contentDescription="@string/mediatype"/>
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/tvStatus"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:drawableLeft="@drawable/ic_status"
-            android:drawablePadding="4dp"
-            android:gravity="center_vertical"
-            android:contentDescription="@string/status"/>
     </LinearLayout>
 </RelativeLayout>
