@@ -1,82 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
-    android:foreground="@drawable/ripple">
-
-    <LinearLayout
-        android:id="@+id/llButtons"
-        android:layout_alignParentRight="true"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:animateLayoutChanges="true">
-
-        <ImageView
-            android:id="@+id/ivCancel"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:contentDescription="@string/reservation_cancel"
-            android:src="@drawable/ic_cancel"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="@drawable/ripple_unmasked"/>
-
-        <ImageView
-            android:id="@+id/ivBooking"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:contentDescription="@string/reservation_book"
-            android:src="@drawable/ic_booking"
-            android:visibility="gone"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="@drawable/ripple_unmasked"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
-
-        <ImageView
-            android:id="@+id/ivDetails"
-            android:layout_width="48dp"
-            android:layout_height="24dp"
-            android:contentDescription="@string/expand"
-            android:src="@drawable/ic_more_details"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="@drawable/ripple_unmasked"/>
-
-        <ImageView
-            android:id="@+id/ivClose"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:contentDescription="@string/close"
-            android:src="@drawable/ic_close"
-            android:visibility="gone"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="@drawable/ripple_unmasked"/>
-    </LinearLayout>
-
-    <View
-        android:id="@+id/separator"
-        android:layout_width="1dp"
-        android:layout_height="match_parent"
-        android:layout_toLeftOf="@id/llButtons"
-        android:background="#1E000000"/>
+    android:foreground="@drawable/ripple"
+    android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/llData"
-        android:layout_toRightOf="@id/vStatusColor"
-        android:layout_toLeftOf="@id/separator"
-        android:layout_centerVertical="true"
-        android:layout_width="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
+        android:layout_weight="1"
+        android:layout_marginLeft="12dp"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
         android:orientation="vertical"
@@ -146,4 +83,65 @@
                 android:contentDescription="@string/mediatype"/>
         </LinearLayout>
     </LinearLayout>
-</RelativeLayout>
+
+    <View
+        android:id="@+id/separator"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="#1E000000"/>
+
+    <LinearLayout
+        android:id="@+id/llButtons"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:animateLayoutChanges="true">
+
+        <ImageView
+            android:id="@+id/ivCancel"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/reservation_cancel"
+            android:src="@drawable/ic_cancel"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/ripple_unmasked"/>
+
+        <ImageView
+            android:id="@+id/ivBooking"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/reservation_book"
+            android:src="@drawable/ic_booking"
+            android:visibility="gone"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/ripple_unmasked"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <ImageView
+            android:id="@+id/ivDetails"
+            android:layout_width="48dp"
+            android:layout_height="24dp"
+            android:contentDescription="@string/expand"
+            android:src="@drawable/ic_more_details"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/ripple_unmasked"/>
+
+        <ImageView
+            android:id="@+id/ivClose"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/close"
+            android:src="@drawable/ic_close"
+            android:visibility="gone"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/ripple_unmasked"/>
+    </LinearLayout>
+</LinearLayout>
