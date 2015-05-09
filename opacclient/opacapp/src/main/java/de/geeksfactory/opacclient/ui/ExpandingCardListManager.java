@@ -2,6 +2,7 @@ package de.geeksfactory.opacclient.ui;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.CardView;
 import android.view.View;
@@ -142,7 +143,7 @@ public abstract class ExpandingCardListManager {
         return divider;
     }
 
-    public void expand(int position) {
+    public void expand(final int position) {
         if (isExpanded()) {
             if (expandedPosition == position) return;
             else collapse();
@@ -171,62 +172,76 @@ public abstract class ExpandingCardListManager {
                 context.getResources().getDimensionPixelSize(R.dimen.card_topbottom_margin_default);
         unexpandedHeight = views.get(position).getHeight();
 
-        upperCard.setVisibility(View.VISIBLE);
-        lowerCard.setVisibility(View.VISIBLE);
-        expandedCard.setVisibility(View.VISIBLE);
-        mainCard.setVisibility(View.GONE);
-
-        final int previousHeight = layout.getHeight();
-
-        layout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+        // Wait a little so that touch feedback is visible before hiding buttons
+        new Handler().postDelayed(new Runnable() {
             @Override
-            public boolean onPreDraw() {
-                int newHeight = layout.getHeight();
-                heightDifference = newHeight - previousHeight;
+            public void run() {
+                upperCard.setVisibility(View.VISIBLE);
+                lowerCard.setVisibility(View.VISIBLE);
+                expandedCard.setVisibility(View.VISIBLE);
+                mainCard.setVisibility(View.GONE);
 
-                layout.getViewTreeObserver().removeOnPreDrawListener(this);
-                if (lowerPos > 0) ViewHelper.setY(lowerCard, lowerPos);
-                ViewHelper.setY(expandedCard, mainPos);
+                final int previousHeight = layout.getHeight();
 
-                lowerTranslationY = lowerCard.getTranslationY();
-                expandedTranslationY = expandedCard.getTranslationY();
+                layout.getViewTreeObserver()
+                      .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                          @Override
+                          public boolean onPreDraw() {
+                              int newHeight = layout.getHeight();
+                              heightDifference = newHeight - previousHeight;
 
-                AnimatorSet set = new AnimatorSet();
-                int defaultMargin = context.getResources().getDimensionPixelSize(
-                        R.dimen.card_side_margin_default);
-                int expandedMargin = context.getResources().getDimensionPixelSize(
-                        R.dimen.card_side_margin_selected);
-                int marginDifference = expandedMargin - defaultMargin;
-                List<Animator> animators = new ArrayList<>();
-                addAll(animators,
-                        ObjectAnimator
-                                .ofFloat(lowerCard, "translationY", lowerCard.getTranslationY(), 0),
-                        ObjectAnimator.ofFloat(expandedCard, "translationY",
-                                expandedCard.getTranslationY(), 0),
-                        ObjectAnimator.ofFloat(expandedCard, "cardElevation",
-                                context.getResources().getDimension(R.dimen.card_elevation_default),
-                                context.getResources()
-                                       .getDimension(R.dimen.card_elevation_selected)),
-                        ObjectAnimator.ofInt(expandedCard, "bottom",
-                                expandedCard.getBottom() + unexpandedHeight -
-                                        expandedView.getHeight(), expandedCard.getBottom()),
-                        ObjectAnimator.ofInt(expandedCard, "left",
-                                expandedCard.getLeft() - marginDifference, expandedCard.getLeft()),
-                        ObjectAnimator.ofInt(expandedCard, "right",
-                                expandedCard.getRight() + marginDifference, expandedCard.getRight())
-                );
-                if (interceptor != null) {
-                    animators
-                            .addAll(interceptor
-                                    .getExpandAnimations(heightDifference, expandedView));
+                              layout.getViewTreeObserver().removeOnPreDrawListener(this);
+                              if (lowerPos > 0) ViewHelper.setY(lowerCard, lowerPos);
+                              ViewHelper.setY(expandedCard, mainPos);
+
+                              lowerTranslationY = lowerCard.getTranslationY();
+                              expandedTranslationY = expandedCard.getTranslationY();
+
+                              AnimatorSet set = new AnimatorSet();
+                              int defaultMargin = context.getResources().getDimensionPixelSize(
+                                      R.dimen.card_side_margin_default);
+                              int expandedMargin = context.getResources().getDimensionPixelSize(
+                                      R.dimen.card_side_margin_selected);
+                              int marginDifference = expandedMargin - defaultMargin;
+                              List<Animator> animators = new ArrayList<>();
+                              addAll(animators,
+                                      ObjectAnimator
+                                              .ofFloat(lowerCard, "translationY",
+                                                      lowerCard.getTranslationY(), 0),
+                                      ObjectAnimator.ofFloat(expandedCard, "translationY",
+                                              expandedCard.getTranslationY(), 0),
+                                      ObjectAnimator.ofFloat(expandedCard, "cardElevation",
+                                              context.getResources()
+                                                     .getDimension(R.dimen.card_elevation_default),
+                                              context.getResources()
+                                                     .getDimension(
+                                                             R.dimen.card_elevation_selected)),
+                                      ObjectAnimator.ofInt(expandedCard, "bottom",
+                                              expandedCard.getBottom() + unexpandedHeight -
+                                                      expandedView.getHeight(),
+                                              expandedCard.getBottom()),
+                                      ObjectAnimator.ofInt(expandedCard, "left",
+                                              expandedCard.getLeft() - marginDifference,
+                                              expandedCard.getLeft()),
+                                      ObjectAnimator.ofInt(expandedCard, "right",
+                                              expandedCard.getRight() + marginDifference,
+                                              expandedCard.getRight())
+                              );
+                              if (interceptor != null) {
+                                  animators
+                                          .addAll(interceptor
+                                                  .getExpandAnimations(heightDifference,
+                                                          expandedView));
+                              }
+                              set.playTogether(animators);
+                              set.setDuration(ANIMATION_DURATION).start();
+                              return false;
+                          }
+                      });
+
+                expandedPosition = position;
                 }
-                set.playTogether(animators);
-                set.setDuration(ANIMATION_DURATION).start();
-                return false;
-            }
-        });
-
-        expandedPosition = position;
+        }, 50);
     }
 
     public void collapse() {
