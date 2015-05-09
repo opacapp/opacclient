@@ -49,9 +49,9 @@ public abstract class ExpandingCardListManager {
      * An interface to influence the animation created by ExpandingCardListManager  by adding additional animations.
      */
     public interface AnimationInterceptor {
-        Collection<Animator> getExpandAnimations(int heightDifference);
+        Collection<Animator> getExpandAnimations(int heightDifference, View expandedView);
 
-        Collection<Animator> getCollapseAnimations(int i);
+        Collection<Animator> getCollapseAnimations(int heightDifference, View expandedView);
 
         void onCollapseAnimationEnd();
     }
@@ -161,10 +161,14 @@ public abstract class ExpandingCardListManager {
         }
 
         final float lowerPos;
-        if (position + 1 < getCount()) lowerPos = ViewHelper.getY(views.get(position + 1));
-        else lowerPos = -1;
+        if (position + 1 < getCount()) {
+            lowerPos = ViewHelper.getY(views.get(position + 1)) +
+                    context.getResources()
+                           .getDimensionPixelSize(R.dimen.card_topbottom_margin_default);
+        } else lowerPos = -1;
 
-        final float mainPos = ViewHelper.getY(views.get(position));
+        final float mainPos = ViewHelper.getY(views.get(position)) +
+                context.getResources().getDimensionPixelSize(R.dimen.card_topbottom_margin_default);
         unexpandedHeight = views.get(position).getHeight();
 
         upperCard.setVisibility(View.VISIBLE);
@@ -211,7 +215,11 @@ public abstract class ExpandingCardListManager {
                         ObjectAnimator.ofInt(expandedCard, "right",
                                 expandedCard.getRight() + marginDifference, expandedCard.getRight())
                 );
-                if (interceptor != null) animators.addAll(interceptor.getExpandAnimations(heightDifference));
+                if (interceptor != null) {
+                    animators
+                            .addAll(interceptor
+                                    .getExpandAnimations(heightDifference, expandedView));
+                }
                 set.playTogether(animators);
                 set.setDuration(ANIMATION_DURATION).start();
                 return false;
@@ -248,7 +256,7 @@ public abstract class ExpandingCardListManager {
                         expandedCard.getRight(), expandedCard.getRight() + marginDifference)
         );
         if (interceptor != null) animators.addAll(interceptor.getCollapseAnimations(
-                -heightDifference));
+                -heightDifference, expandedView));
         set.playTogether(animators);
         set.addListener(new AnimatorListenerAdapter() {
             @Override

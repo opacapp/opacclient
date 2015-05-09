@@ -2,21 +2,21 @@
  * Copyright (C) 2013 by Raphael Michel under the MIT license:
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), 
- * to deal in the Software without restriction, including without limitation 
- * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the Software 
+ * of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the Software
  * is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in 
+ * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
 package de.geeksfactory.opacclient.frontend;
@@ -695,6 +695,8 @@ public class AccountFragment extends Fragment implements
         public ImageView ivClose;
         public View vStatusColor;
         public LinearLayout llDetails;
+        public LinearLayout llButtons;
+        public View separator;
 
         public void findViews(View v) {
             tvTitleAndAuthor = (TextView) v.findViewById(R.id.tvTitleAndAuthor);
@@ -708,6 +710,8 @@ public class AccountFragment extends Fragment implements
             ivClose = (ImageView) v.findViewById(R.id.ivClose);
             vStatusColor = v.findViewById(R.id.vStatusColor);
             llDetails = (LinearLayout) v.findViewById(R.id.llDetails);
+            llButtons = (LinearLayout) v.findViewById(R.id.llButtons);
+            separator = v.findViewById(R.id.separator);
         }
     }
 
@@ -722,6 +726,8 @@ public class AccountFragment extends Fragment implements
         public ImageView ivDetails;
         public ImageView ivClose;
         public LinearLayout llDetails;
+        public LinearLayout llButtons;
+        public View separator;
 
         public void findViews(View v) {
             tvTitleAndAuthor = (TextView) v.findViewById(R.id.tvTitleAndAuthor);
@@ -734,6 +740,8 @@ public class AccountFragment extends Fragment implements
             ivDetails = (ImageView) v.findViewById(R.id.ivDetails);
             ivClose = (ImageView) v.findViewById(R.id.ivClose);
             llDetails = (LinearLayout) v.findViewById(R.id.llDetails);
+            llButtons = (LinearLayout) v.findViewById(R.id.llButtons);
+            separator = v.findViewById(R.id.separator);
         }
     }
 
@@ -992,13 +1000,33 @@ public class AccountFragment extends Fragment implements
             lentManager.setAnimationInterceptor(new ExpandingCardListManager.AnimationInterceptor() {
 
                 @Override
-                public Collection<Animator> getExpandAnimations(int heightDifference) {
-                    return getAnimations(-heightDifference, 0);
+                public Collection<Animator> getExpandAnimations(int heightDifference,
+                        View expandedView) {
+                    LentViewHolder holder = (LentViewHolder) expandedView.getTag();
+                    Collection<Animator> anims = getAnimations(-heightDifference, 0);
+                    int difference = 2 * (getResources()
+                            .getDimensionPixelSize(R.dimen.card_side_margin_selected) -
+                            getResources().getDimensionPixelSize(R.dimen.card_side_margin_default));
+                    anims.add(ObjectAnimator
+                            .ofFloat(holder.llButtons, "translationX", difference, 0));
+                    anims.add(ObjectAnimator
+                            .ofFloat(holder.separator, "translationX", difference, 0));
+                    return anims;
                 }
 
                 @Override
-                public Collection<Animator> getCollapseAnimations(int heightDifference) {
-                    return getAnimations(0, heightDifference);
+                public Collection<Animator> getCollapseAnimations(int heightDifference,
+                        View expandedView) {
+                    LentViewHolder holder = (LentViewHolder) expandedView.getTag();
+                    Collection<Animator> anims = getAnimations(0, heightDifference);
+                    int difference = 2 * (getResources()
+                            .getDimensionPixelSize(R.dimen.card_side_margin_selected) -
+                            getResources().getDimensionPixelSize(R.dimen.card_side_margin_default));
+                    anims.add(ObjectAnimator
+                            .ofFloat(holder.llButtons, "translationX", 0, difference));
+                    anims.add(ObjectAnimator
+                            .ofFloat(holder.separator, "translationX", 0, difference));
+                    return anims;
                 }
 
                 @Override
@@ -1242,13 +1270,33 @@ public class AccountFragment extends Fragment implements
             };
             resManager.setAnimationInterceptor(new ExpandingCardListManager.AnimationInterceptor() {
                 @Override
-                public Collection<Animator> getExpandAnimations(int heightDifference) {
-                    return getAnimations(-heightDifference, 0);
+                public Collection<Animator> getExpandAnimations(int heightDifference,
+                        View expandedView) {
+                    ReservationViewHolder holder = (ReservationViewHolder) expandedView.getTag();
+                    Collection<Animator> anims = getAnimations(-heightDifference, 0);
+                    int difference = 2 * (getResources()
+                            .getDimensionPixelSize(R.dimen.card_side_margin_selected) -
+                            getResources().getDimensionPixelSize(R.dimen.card_side_margin_default));
+                    anims.add(ObjectAnimator
+                            .ofFloat(holder.llButtons, "translationX", difference, 0));
+                    anims.add(ObjectAnimator
+                            .ofFloat(holder.separator, "translationX", difference, 0));
+                    return anims;
                 }
 
                 @Override
-                public Collection<Animator> getCollapseAnimations(int heightDifference) {
-                    return getAnimations(0, heightDifference);
+                public Collection<Animator> getCollapseAnimations(int heightDifference,
+                        View expandedView) {
+                    ReservationViewHolder holder = (ReservationViewHolder) expandedView.getTag();
+                    Collection<Animator> anims = getAnimations(0, heightDifference);
+                    int difference = 2 * (getResources()
+                            .getDimensionPixelSize(R.dimen.card_side_margin_selected) -
+                            getResources().getDimensionPixelSize(R.dimen.card_side_margin_default));
+                    anims.add(ObjectAnimator
+                            .ofFloat(holder.llButtons, "translationX", 0, difference));
+                    anims.add(ObjectAnimator
+                            .ofFloat(holder.separator, "translationX", 0, difference));
+                    return anims;
                 }
 
                 @Override
