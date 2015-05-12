@@ -237,4 +237,5 @@ We might know your library ID then, but not your password, and we will take care
     <string name="author">Author</string>
     <string name="title_and_author">Title and Author</string>
     <string name="reservation_expire_until">until</string>
+    <string name="go_to_details">Go to details</string>
 </resources>

@@ -815,14 +815,7 @@ public class AccountFragment extends Fragment implements
                         View.OnClickListener gotoDetails = new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent intent =
-                                        new Intent(getActivity(), SearchResultDetailActivity.class);
-                                intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
-                                        item.get(AccountData.KEY_LENT_ID));
-                                ActivityOptionsCompat options = ActivityOptionsCompat
-                                        .makeScaleUpAnimation(v, v.getLeft(), v.getTop(), v.getWidth(),
-                                                v.getHeight());
-                                ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+
                             }
                         };
                         v.setClickable(true);
@@ -833,7 +826,14 @@ public class AccountFragment extends Fragment implements
                     holder.ivDetails.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View clicked) {
-                            expand(position);
+                            Intent intent =
+                                    new Intent(getActivity(), SearchResultDetailActivity.class);
+                            intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
+                                    item.get(AccountData.KEY_LENT_ID));
+                            ActivityOptionsCompat options = ActivityOptionsCompat
+                                    .makeScaleUpAnimation(v, v.getLeft(), v.getTop(), v.getWidth(),
+                                            v.getHeight());
+                            ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
                         }
                     });
                     holder.ivClose.setOnClickListener(new OnClickListener() {
@@ -1251,7 +1251,7 @@ public class AccountFragment extends Fragment implements
                         holder.tvTitleAndAuthor.setText(item.get(AccountData.KEY_RESERVATION_AUTHOR));
                         holder.tvTitleAndAuthor.setVisibility(View.VISIBLE);
                     }
-                    holder.ivDetails.setVisibility(View.VISIBLE);
+                    holder.ivDetails.setVisibility(View.GONE);
                     holder.ivClose.setVisibility(View.GONE);
                 }
 

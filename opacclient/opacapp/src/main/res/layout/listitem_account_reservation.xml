@@ -112,20 +112,21 @@
             android:focusable="true"
             android:background="@drawable/ripple_unmasked"/>
 
+        <ImageView
+            android:id="@+id/ivDetails"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:visibility="gone"
+            android:contentDescription="@string/go_to_details"
+            android:src="@drawable/ic_detail"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/ripple_unmasked"/>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"/>
-
-        <ImageView
-            android:id="@+id/ivDetails"
-            android:layout_width="48dp"
-            android:layout_height="24dp"
-            android:contentDescription="@string/expand"
-            android:src="@drawable/ic_more_details"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="@drawable/ripple_unmasked"/>
 
         <ImageView
             android:id="@+id/ivClose"
