@@ -692,10 +692,10 @@ public class AccountFragment extends Fragment implements
         public ImageView ivProlong;
         public ImageView ivDownload;
         public ImageView ivDetails;
-        public ImageView ivClose;
         public View vStatusColor;
         public LinearLayout llDetails;
         public LinearLayout llButtons;
+        public boolean hasDetailLink;
 
         public void findViews(View v) {
             tvTitleAndAuthor = (TextView) v.findViewById(R.id.tvTitleAndAuthor);
@@ -706,7 +706,6 @@ public class AccountFragment extends Fragment implements
             ivProlong = (ImageView) v.findViewById(R.id.ivProlong);
             ivDownload = (ImageView) v.findViewById(R.id.ivDownload);
             ivDetails = (ImageView) v.findViewById(R.id.ivDetails);
-            ivClose = (ImageView) v.findViewById(R.id.ivClose);
             vStatusColor = v.findViewById(R.id.vStatusColor);
             llDetails = (LinearLayout) v.findViewById(R.id.llDetails);
             llButtons = (LinearLayout) v.findViewById(R.id.llButtons);
@@ -722,9 +721,9 @@ public class AccountFragment extends Fragment implements
         public ImageView ivCancel;
         public ImageView ivBooking;
         public ImageView ivDetails;
-        public ImageView ivClose;
         public LinearLayout llDetails;
         public LinearLayout llButtons;
+        public boolean hasDetailLink;
 
         public void findViews(View v) {
             tvTitleAndAuthor = (TextView) v.findViewById(R.id.tvTitleAndAuthor);
@@ -735,7 +734,6 @@ public class AccountFragment extends Fragment implements
             ivCancel = (ImageView) v.findViewById(R.id.ivCancel);
             ivBooking = (ImageView) v.findViewById(R.id.ivBooking);
             ivDetails = (ImageView) v.findViewById(R.id.ivDetails);
-            ivClose = (ImageView) v.findViewById(R.id.ivClose);
             llDetails = (LinearLayout) v.findViewById(R.id.llDetails);
             llButtons = (LinearLayout) v.findViewById(R.id.llButtons);
         }
@@ -803,45 +801,45 @@ public class AccountFragment extends Fragment implements
             lentManager = new ExpandingCardListManager(getActivity(), llLent) {
                 @Override
                 public View getView(final int position, ViewGroup container) {
-                    View v = getLayoutInflater(null)
+                    final View v = getLayoutInflater(null)
                             .inflate(R.layout.listitem_account_lent, container, false);
                     LentViewHolder holder = new LentViewHolder();
                     holder.findViews(v);
 
                     final Map<String, String> item = result.getLent().get(position);
 
+                    // Expanding and closing details
+                    v.setClickable(true);
+                    v.setFocusable(true);
+                    v.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (getExpandedPosition() != position) {
+                                expand(position);
+                            } else {
+                                collapse();
+                            }
+                        }
+                    });
+
                     if (item.containsKey(AccountData.KEY_LENT_ID)) {
                         // Connection to detail view
-                        View.OnClickListener gotoDetails = new View.OnClickListener() {
+                        holder.ivDetails.setOnClickListener(new OnClickListener() {
                             @Override
-                            public void onClick(View v) {
-
+                            public void onClick(View clicked) {
+                                Intent intent =
+                                        new Intent(getActivity(), SearchResultDetailActivity.class);
+                                intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
+                                        item.get(AccountData.KEY_LENT_ID));
+                                ActivityOptionsCompat options = ActivityOptionsCompat
+                                        .makeScaleUpAnimation(v, v.getLeft(), v.getTop(),
+                                                v.getWidth(), v.getHeight());
+                                ActivityCompat
+                                        .startActivity(getActivity(), intent, options.toBundle());
                             }
-                        };
-                        v.setClickable(true);
-                        v.setFocusable(true);
-                        v.setOnClickListener(gotoDetails);
+                        });
+                        holder.hasDetailLink = true;
                     }
-                    // Expanding and closing details
-                    holder.ivDetails.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View clicked) {
-                            Intent intent =
-                                    new Intent(getActivity(), SearchResultDetailActivity.class);
-                            intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
-                                    item.get(AccountData.KEY_LENT_ID));
-                            ActivityOptionsCompat options = ActivityOptionsCompat
-                                    .makeScaleUpAnimation(v, v.getLeft(), v.getTop(), v.getWidth(),
-                                            v.getHeight());
-                            ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
-                        }
-                    });
-                    holder.ivClose.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View clicked) {
-                            collapse();
-                        }
-                    });
 
                     // Overview (Title/Author, Status/Deadline)
                     CharSequence title = item.containsKey(AccountData.KEY_LENT_TITLE) ?
@@ -871,33 +869,24 @@ public class AccountFragment extends Fragment implements
                     }
 
                     // Detail
-                    boolean hasDetails = false;
                     if (author != null) {
                         holder.tvAuthorDetail.setText(author);
-                        hasDetails = true;
                     } else {
                         holder.tvAuthorDetail.setVisibility(View.GONE);
                     }
                     if (item.containsKey(AccountData.KEY_LENT_FORMAT)) {
-                        holder.tvFormatDetail.setText(Html.fromHtml(item.get(AccountData.KEY_LENT_FORMAT)));
-                        hasDetails = true;
+                        holder.tvFormatDetail.setText(
+                                Html.fromHtml(item.get(AccountData.KEY_LENT_FORMAT)));
                     } else {
                         holder.tvFormatDetail.setVisibility(View.GONE);
                     }
                     if (item.containsKey(AccountData.KEY_LENT_LENDING_BRANCH)) {
                         holder.tvBranchDetail
                                 .setText(Html.fromHtml(item.get(AccountData.KEY_LENT_LENDING_BRANCH)));
-                        hasDetails = true;
                     } else if (item.containsKey(AccountData.KEY_LENT_BRANCH)) {
                         holder.tvBranchDetail.setText(Html.fromHtml(item.get(AccountData.KEY_LENT_BRANCH)));
-                        hasDetails = true;
                     } else {
                         holder.tvBranchDetail.setVisibility(View.GONE);
-                    }
-
-                    // If there are no more details, we don't need the button for them
-                    if (!hasDetails) {
-                        holder.ivDetails.setVisibility(View.GONE);
                     }
 
                     // Color codes for return dates
@@ -963,8 +952,7 @@ public class AccountFragment extends Fragment implements
                     } else {
                         holder.tvTitleAndAuthor.setVisibility(View.GONE);
                     }
-                    holder.ivDetails.setVisibility(View.GONE);
-                    holder.ivClose.setVisibility(View.VISIBLE);
+                    if (holder.hasDetailLink) holder.ivDetails.setVisibility(View.VISIBLE);
                 }
 
                 @Override
@@ -984,8 +972,7 @@ public class AccountFragment extends Fragment implements
                         holder.tvTitleAndAuthor.setText(author);
                         holder.tvTitleAndAuthor.setVisibility(View.VISIBLE);
                     }
-                    holder.ivDetails.setVisibility(View.VISIBLE);
-                    holder.ivClose.setVisibility(View.GONE);
+                    holder.ivDetails.setVisibility(View.GONE);
                 }
 
                 @Override
@@ -993,67 +980,76 @@ public class AccountFragment extends Fragment implements
                     return result.getLent().size();
                 }
             };
-            lentManager.setAnimationInterceptor(new ExpandingCardListManager.AnimationInterceptor() {
+            lentManager.setAnimationInterceptor(
+                    new ExpandingCardListManager.AnimationInterceptor() {
 
-                @Override
-                public Collection<Animator> getExpandAnimations(int heightDifference,
-                        View expandedView) {
-                    LentViewHolder holder = (LentViewHolder) expandedView.getTag();
-                    Collection<Animator> anims = getAnimations(-heightDifference, 0);
-                    int difference = 2 * (getResources()
-                            .getDimensionPixelSize(R.dimen.card_side_margin_selected) -
-                            getResources().getDimensionPixelSize(R.dimen.card_side_margin_default));
-                    anims.add(ObjectAnimator
-                            .ofFloat(holder.llButtons, "translationX", difference, 0));
-                    return anims;
-                }
-
-                @Override
-                public Collection<Animator> getCollapseAnimations(int heightDifference,
-                        View expandedView) {
-                    LentViewHolder holder = (LentViewHolder) expandedView.getTag();
-                    Collection<Animator> anims = getAnimations(0, heightDifference);
-                    int difference = 2 * (getResources()
-                            .getDimensionPixelSize(R.dimen.card_side_margin_selected) -
-                            getResources().getDimensionPixelSize(R.dimen.card_side_margin_default));
-                    anims.add(ObjectAnimator
-                            .ofFloat(holder.llButtons, "translationX", 0, difference));
-                    return anims;
-                }
-
-                @Override
-                public void onCollapseAnimationEnd() {
-                    if (view.findViewById(R.id.rlMeta) != null) {
-                        // tablet
-                        ViewHelper.setTranslationY(view.findViewById(R.id.rlMeta), 0);
-                    } else {
-                        // phone
-                        ViewHelper.setTranslationY(tvResHeader, 0);
-                        ViewHelper.setTranslationY(llRes, 0);
-                        ViewHelper.setTranslationY(tvAge, 0);
-                        ViewHelper.setTranslationY(view.findViewById(R.id.tvNoWarranty), 0);
-                    }
-                }
-
-                private Collection<Animator> getAnimations(float from, float to) {
-                    List<Animator> animators = new ArrayList<>();
-                    if (view.findViewById(R.id.rlMeta) != null) {
-                        // tablet
-                        if (result.getLent().size() >= result.getReservations().size()) {
-                            animators.add(ObjectAnimator
-                                    .ofFloat(view.findViewById(R.id.rlMeta), "translationY", from,
-                                            to));
+                        @Override
+                        public Collection<Animator> getExpandAnimations(int heightDifference,
+                                View expandedView) {
+                            LentViewHolder holder = (LentViewHolder) expandedView.getTag();
+                            Collection<Animator> anims = getAnimations(-heightDifference, 0);
+                            int difference = 2 * (getResources()
+                                    .getDimensionPixelSize(R.dimen.card_side_margin_selected) -
+                                    getResources().getDimensionPixelSize(
+                                            R.dimen.card_side_margin_default));
+                            anims.add(ObjectAnimator
+                                    .ofFloat(holder.llButtons, "translationX", difference, 0));
+                            return anims;
                         }
-                    } else {
-                        // phone
-                        animators.add(ObjectAnimator.ofFloat(tvResHeader, "translationY", from, to));
-                        animators.add(ObjectAnimator.ofFloat(llRes, "translationY", from, to));
-                        animators.add(ObjectAnimator.ofFloat(tvAge, "translationY", from, to));
-                        animators.add(ObjectAnimator.ofFloat(view.findViewById(R.id.tvNoWarranty), "translationY", from, to));
-                    }
-                    return animators;
-                }
-            });
+
+                        @Override
+                        public Collection<Animator> getCollapseAnimations(int heightDifference,
+                                View expandedView) {
+                            LentViewHolder holder = (LentViewHolder) expandedView.getTag();
+                            Collection<Animator> anims = getAnimations(0, heightDifference);
+                            int difference = 2 * (getResources()
+                                    .getDimensionPixelSize(R.dimen.card_side_margin_selected) -
+                                    getResources().getDimensionPixelSize(
+                                            R.dimen.card_side_margin_default));
+                            anims.add(ObjectAnimator
+                                    .ofFloat(holder.llButtons, "translationX", 0, difference));
+                            return anims;
+                        }
+
+                        @Override
+                        public void onCollapseAnimationEnd() {
+                            if (view.findViewById(R.id.rlMeta) != null) {
+                                // tablet
+                                ViewHelper.setTranslationY(view.findViewById(R.id.rlMeta), 0);
+                            } else {
+                                // phone
+                                ViewHelper.setTranslationY(tvResHeader, 0);
+                                ViewHelper.setTranslationY(llRes, 0);
+                                ViewHelper.setTranslationY(tvAge, 0);
+                                ViewHelper.setTranslationY(view.findViewById(R.id.tvNoWarranty), 0);
+                            }
+                        }
+
+                        private Collection<Animator> getAnimations(float from, float to) {
+                            List<Animator> animators = new ArrayList<>();
+                            if (view.findViewById(R.id.rlMeta) != null) {
+                                // tablet
+                                if (result.getLent().size() >= result.getReservations().size()) {
+                                    animators.add(ObjectAnimator
+                                            .ofFloat(view.findViewById(R.id.rlMeta), "translationY",
+                                                    from,
+                                                    to));
+                                }
+                            } else {
+                                // phone
+                                animators.add(ObjectAnimator
+                                        .ofFloat(tvResHeader, "translationY", from, to));
+                                animators.add(ObjectAnimator
+                                        .ofFloat(llRes, "translationY", from, to));
+                                animators.add(ObjectAnimator
+                                        .ofFloat(tvAge, "translationY", from, to));
+                                animators.add(ObjectAnimator
+                                        .ofFloat(view.findViewById(R.id.tvNoWarranty),
+                                                "translationY", from, to));
+                            }
+                            return animators;
+                        }
+                    });
 
             for (final Map<String, String> item : result.getLent()) {
                 try {
@@ -1106,38 +1102,38 @@ public class AccountFragment extends Fragment implements
 
                     final Map<String, String> item = result.getReservations().get(position);
 
+                    // Expanding and closing details
+                    v.setClickable(true);
+                    v.setFocusable(true);
+                    v.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (getExpandedPosition() != position) {
+                                expand(position);
+                            } else {
+                                collapse();
+                            }
+                        }
+                    });
+
                     if (item.containsKey(AccountData.KEY_RESERVATION_ID)) {
                         // Connection to detail view
-                        View.OnClickListener gotoDetails = new View.OnClickListener() {
+                        holder.ivDetails.setOnClickListener(new OnClickListener() {
                             @Override
-                            public void onClick(View v) {
+                            public void onClick(View clicked) {
                                 Intent intent =
                                         new Intent(getActivity(), SearchResultDetailActivity.class);
                                 intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
                                         item.get(AccountData.KEY_RESERVATION_ID));
                                 ActivityOptionsCompat options = ActivityOptionsCompat
-                                        .makeScaleUpAnimation(v, v.getLeft(), v.getTop(), v.getWidth(),
-                                                v.getHeight());
-                                ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+                                        .makeScaleUpAnimation(v, v.getLeft(), v.getTop(),
+                                                v.getWidth(), v.getHeight());
+                                ActivityCompat
+                                        .startActivity(getActivity(), intent, options.toBundle());
                             }
-                        };
-                        v.setClickable(true);
-                        v.setFocusable(true);
-                        v.setOnClickListener(gotoDetails);
+                        });
+                        holder.hasDetailLink = true;
                     }
-                    // Expanding and closing details
-                    holder.ivDetails.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View clicked) {
-                            expand(position);
-                        }
-                    });
-                    holder.ivClose.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View clicked) {
-                            collapse();
-                        }
-                    });
 
                     // Overview (Title/Author, Ready/Expire)
                     final CharSequence title = item.containsKey(AccountData.KEY_RESERVATION_TITLE) ?
@@ -1166,31 +1162,22 @@ public class AccountFragment extends Fragment implements
                     }
 
                     // Detail
-                    boolean hasDetails = false;
                     if (author != null) {
                         holder.tvAuthorDetail.setText(author);
-                        hasDetails = true;
                     } else {
                         holder.tvAuthorDetail.setVisibility(View.GONE);
                     }
                     if (item.containsKey(AccountData.KEY_RESERVATION_FORMAT)) {
                         holder.tvFormatDetail
                                 .setText(Html.fromHtml(item.get(AccountData.KEY_RESERVATION_FORMAT)));
-                        hasDetails = true;
                     } else {
                         holder.tvFormatDetail.setVisibility(View.GONE);
                     }
                     if (item.containsKey(AccountData.KEY_RESERVATION_BRANCH)) {
                         holder.tvBranchDetail
                                 .setText(Html.fromHtml(item.get(AccountData.KEY_RESERVATION_BRANCH)));
-                        hasDetails = true;
                     } else {
                         holder.tvBranchDetail.setVisibility(View.GONE);
-                    }
-
-                    // If there are no more details, we don't need the button for them
-                    if (!hasDetails) {
-                        holder.ivDetails.setVisibility(View.GONE);
                     }
 
                     if (item.containsKey(AccountData.KEY_RESERVATION_BOOKING)) {
@@ -1233,8 +1220,7 @@ public class AccountFragment extends Fragment implements
                     } else {
                         holder.tvTitleAndAuthor.setVisibility(View.GONE);
                     }
-                    holder.ivDetails.setVisibility(View.GONE);
-                    holder.ivClose.setVisibility(View.VISIBLE);
+                    if (holder.hasDetailLink) holder.ivDetails.setVisibility(View.VISIBLE);
                 }
 
                 @Override
@@ -1252,7 +1238,6 @@ public class AccountFragment extends Fragment implements
                         holder.tvTitleAndAuthor.setVisibility(View.VISIBLE);
                     }
                     holder.ivDetails.setVisibility(View.GONE);
-                    holder.ivClose.setVisibility(View.GONE);
                 }
 
                 @Override

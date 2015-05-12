@@ -242,7 +242,7 @@ public abstract class ExpandingCardListManager {
 
                 expandedPosition = position;
             }
-        }, 50);
+        }, 100);
     }
 
     public void collapse() {
@@ -328,5 +328,9 @@ public abstract class ExpandingCardListManager {
 
     private interface CompleteListener {
         public void onComplete();
+    }
+
+    public int getExpandedPosition() {
+        return expandedPosition;
     }
 }
