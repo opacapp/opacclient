@@ -139,8 +139,15 @@ public abstract class ExpandingCardListManager {
 
     public void expand(final int position) {
         if (isExpanded()) {
-            if (expandedPosition == position) return;
-            else collapse();
+            if (expandedPosition != position) {
+                collapse(new CompleteListener() {
+                    @Override
+                    public void onComplete() {
+                        expand(position);
+                    }
+                });
+            }
+            return;
         }
 
         for (int i = 0; i < position; i++) {
@@ -234,11 +241,15 @@ public abstract class ExpandingCardListManager {
                       });
 
                 expandedPosition = position;
-                }
+            }
         }, 50);
     }
 
     public void collapse() {
+        collapse(null);
+    }
+
+    private void collapse(final CompleteListener listener) {
         AnimatorSet set = new AnimatorSet();
         View expandedView = expandedCard.getChildAt(0);
         int defaultMargin = context.getResources().getDimensionPixelSize(
@@ -284,6 +295,7 @@ public abstract class ExpandingCardListManager {
                 expandedTranslationY = 0;
                 lowerTranslationY = 0;
                 heightDifference = 0;
+                if (listener != null) listener.onComplete();
             }
         });
         set.setDuration(ANIMATION_DURATION).start();
@@ -312,5 +324,9 @@ public abstract class ExpandingCardListManager {
 
     private void addAll(Collection collection, Object... items) {
         collection.addAll(Arrays.asList(items));
+    }
+
+    private interface CompleteListener {
+        public void onComplete();
     }
 }
