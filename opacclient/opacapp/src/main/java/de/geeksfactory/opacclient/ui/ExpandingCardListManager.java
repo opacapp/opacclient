@@ -68,40 +68,55 @@ public abstract class ExpandingCardListManager {
     private void initViews() {
         layout.removeAllViews();
 
-        LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        int sideMargin = context.getResources().getDimensionPixelSize(
-                R.dimen.card_side_margin_default);
-        int topbottomMargin = context.getResources().getDimensionPixelSize(R.dimen.card_topbottom_margin_default);
-        cardParams.setMargins(sideMargin, topbottomMargin, sideMargin, topbottomMargin);
-
         LinearLayout.LayoutParams expandedCardParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         int sideMargin2 = context.getResources().getDimensionPixelSize(R.dimen.card_side_margin_selected);
         int topbottomMargin2 = context.getResources().getDimensionPixelSize(R.dimen.card_topbottom_margin_selected);
         expandedCardParams.setMargins(sideMargin2, topbottomMargin2, sideMargin2, topbottomMargin2);
+
+        float maxElevation = context.getResources().getDimension(R.dimen.card_elevation_default);
+        float maxElevationSelected =
+                context.getResources().getDimension(R.dimen.card_elevation_selected);
 
         CardView.LayoutParams listParams = new CardView.LayoutParams(CardView.LayoutParams.MATCH_PARENT, CardView.LayoutParams.WRAP_CONTENT);
 
         // Upper card
         upperCard = new CardView(context);
         upperCard.setVisibility(View.GONE);
-        upperCard.setLayoutParams(cardParams);
+        upperCard.setMaxCardElevation(maxElevation);
+        upperCard.setUseCompatPadding(true);
 
         llUpper = new LinearLayout(context);
         llUpper.setLayoutParams(listParams);
         llUpper.setOrientation(LinearLayout.VERTICAL);
 
         upperCard.addView(llUpper);
-        layout.addView(upperCard);
 
         // Expanded card
         expandedCard = new CardView(context);
         expandedCard.setVisibility(View.GONE);
+        expandedCard.setMaxCardElevation(maxElevationSelected);
+        expandedCard.setUseCompatPadding(true);
+
+        LinearLayout.LayoutParams cardParams =
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+        int sideMargin =
+                context.getResources().getDimensionPixelSize(R.dimen.card_side_margin_default) +
+                        expandedCard.getPaddingLeft() - upperCard.getPaddingLeft();
+        int topbottomMargin =
+                context.getResources().getDimensionPixelSize(R.dimen.card_topbottom_margin_default);
+        cardParams.setMargins(sideMargin, topbottomMargin, sideMargin, topbottomMargin);
+
+        upperCard.setLayoutParams(cardParams);
         expandedCard.setLayoutParams(expandedCardParams);
+        layout.addView(upperCard);
         layout.addView(expandedCard);
 
         // Lower card
         lowerCard = new CardView(context);
         lowerCard.setVisibility(View.GONE);
+        lowerCard.setMaxCardElevation(maxElevation);
+        lowerCard.setUseCompatPadding(true);
         lowerCard.setLayoutParams(cardParams);
 
         llLower = new LinearLayout(context);
@@ -113,6 +128,8 @@ public abstract class ExpandingCardListManager {
 
         // Main card
         mainCard = new CardView(context);
+        mainCard.setMaxCardElevation(maxElevation);
+        mainCard.setUseCompatPadding(true);
         mainCard.setLayoutParams(cardParams);
 
         llMain = new LinearLayout(context);
@@ -169,15 +186,14 @@ public abstract class ExpandingCardListManager {
                            .getDimensionPixelSize(R.dimen.card_topbottom_margin_default);
         } else lowerPos = -1;
 
-        final float mainPos = ViewHelper.getY(views.get(position)) +
-                context.getResources().getDimensionPixelSize(R.dimen.card_topbottom_margin_default);
+        final float mainPos = ViewHelper.getY(views.get(position)) - mainCard.getPaddingTop();
         unexpandedHeight = views.get(position).getHeight();
 
         // Wait a little so that touch feedback is visible before hiding buttons
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                upperCard.setVisibility(View.VISIBLE);
+                if (position != 0) upperCard.setVisibility(View.VISIBLE);
                 lowerCard.setVisibility(View.VISIBLE);
                 expandedCard.setVisibility(View.VISIBLE);
                 mainCard.setVisibility(View.GONE);
@@ -195,8 +211,8 @@ public abstract class ExpandingCardListManager {
                               if (lowerPos > 0) ViewHelper.setY(lowerCard, lowerPos);
                               ViewHelper.setY(expandedCard, mainPos);
 
-                              lowerTranslationY = lowerCard.getTranslationY();
-                              expandedTranslationY = expandedCard.getTranslationY();
+                              lowerTranslationY = ViewHelper.getTranslationY(lowerCard);
+                              expandedTranslationY = ViewHelper.getTranslationY(expandedCard);
 
                               AnimatorSet set = new AnimatorSet();
                               int defaultMargin = context.getResources().getDimensionPixelSize(
@@ -208,9 +224,9 @@ public abstract class ExpandingCardListManager {
                               addAll(animators,
                                       ObjectAnimator
                                               .ofFloat(lowerCard, "translationY",
-                                                      lowerCard.getTranslationY(), 0),
+                                                      ViewHelper.getTranslationY(lowerCard), 0),
                                       ObjectAnimator.ofFloat(expandedCard, "translationY",
-                                              expandedCard.getTranslationY(), 0),
+                                              ViewHelper.getTranslationY(expandedCard), 0),
                                       ObjectAnimator.ofFloat(expandedCard, "cardElevation",
                                               context.getResources()
                                                      .getDimension(R.dimen.card_elevation_default),
