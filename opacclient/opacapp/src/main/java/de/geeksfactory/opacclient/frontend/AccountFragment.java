@@ -696,7 +696,6 @@ public class AccountFragment extends Fragment implements
         public View vStatusColor;
         public LinearLayout llDetails;
         public LinearLayout llButtons;
-        public View separator;
 
         public void findViews(View v) {
             tvTitleAndAuthor = (TextView) v.findViewById(R.id.tvTitleAndAuthor);
@@ -711,7 +710,6 @@ public class AccountFragment extends Fragment implements
             vStatusColor = v.findViewById(R.id.vStatusColor);
             llDetails = (LinearLayout) v.findViewById(R.id.llDetails);
             llButtons = (LinearLayout) v.findViewById(R.id.llButtons);
-            separator = v.findViewById(R.id.separator);
         }
     }
 
@@ -727,7 +725,6 @@ public class AccountFragment extends Fragment implements
         public ImageView ivClose;
         public LinearLayout llDetails;
         public LinearLayout llButtons;
-        public View separator;
 
         public void findViews(View v) {
             tvTitleAndAuthor = (TextView) v.findViewById(R.id.tvTitleAndAuthor);
@@ -741,7 +738,6 @@ public class AccountFragment extends Fragment implements
             ivClose = (ImageView) v.findViewById(R.id.ivClose);
             llDetails = (LinearLayout) v.findViewById(R.id.llDetails);
             llButtons = (LinearLayout) v.findViewById(R.id.llButtons);
-            separator = v.findViewById(R.id.separator);
         }
     }
 
@@ -1009,8 +1005,6 @@ public class AccountFragment extends Fragment implements
                             getResources().getDimensionPixelSize(R.dimen.card_side_margin_default));
                     anims.add(ObjectAnimator
                             .ofFloat(holder.llButtons, "translationX", difference, 0));
-                    anims.add(ObjectAnimator
-                            .ofFloat(holder.separator, "translationX", difference, 0));
                     return anims;
                 }
 
@@ -1024,8 +1018,6 @@ public class AccountFragment extends Fragment implements
                             getResources().getDimensionPixelSize(R.dimen.card_side_margin_default));
                     anims.add(ObjectAnimator
                             .ofFloat(holder.llButtons, "translationX", 0, difference));
-                    anims.add(ObjectAnimator
-                            .ofFloat(holder.separator, "translationX", 0, difference));
                     return anims;
                 }
 
@@ -1279,8 +1271,6 @@ public class AccountFragment extends Fragment implements
                             getResources().getDimensionPixelSize(R.dimen.card_side_margin_default));
                     anims.add(ObjectAnimator
                             .ofFloat(holder.llButtons, "translationX", difference, 0));
-                    anims.add(ObjectAnimator
-                            .ofFloat(holder.separator, "translationX", difference, 0));
                     return anims;
                 }
 
@@ -1294,8 +1284,6 @@ public class AccountFragment extends Fragment implements
                             getResources().getDimensionPixelSize(R.dimen.card_side_margin_default));
                     anims.add(ObjectAnimator
                             .ofFloat(holder.llButtons, "translationX", 0, difference));
-                    anims.add(ObjectAnimator
-                            .ofFloat(holder.separator, "translationX", 0, difference));
                     return anims;
                 }
 

@@ -1,10 +1,9 @@
 package de.geeksfactory.opacclient.ui;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.CardView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -29,6 +28,7 @@ import de.geeksfactory.opacclient.R;
 public abstract class ExpandingCardListManager {
     private static final int ANIMATION_DURATION = 500;
     private Context context;
+    private LayoutInflater inflater;
     private LinearLayout layout;
     private int expandedPosition = -1;
     private CardView mainCard;
@@ -59,6 +59,7 @@ public abstract class ExpandingCardListManager {
 
     public ExpandingCardListManager (Context context, LinearLayout layout) {
         this.context = context;
+        this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.layout = layout;
         initViews();
         addViews();
@@ -127,20 +128,13 @@ public abstract class ExpandingCardListManager {
             View view = getView(i, llMain);
             views.add(view);
             llMain.addView(view);
-            if (i < getCount() - 1) llMain.addView(createDivider());
+            if (i < getCount() - 1) addSeparator(llMain);
         }
     }
 
-    private View createDivider() {
-        View divider = new View(context);
-        divider.setLayoutParams(
-                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                        (int) context.getResources().getDisplayMetrics().density));
-        Drawable drawable = DrawableCompat.wrap(
-                context.getDrawable(R.drawable.abc_list_divider_mtrl_alpha));
-        DrawableCompat.setTint(drawable, android.R.attr.colorForeground);
-        divider.setBackground(drawable);
-        return divider;
+    private void addSeparator(ViewGroup parent) {
+        View separator = inflater.inflate(R.layout.card_list_separator, parent, false);
+        parent.addView(separator);
     }
 
     public void expand(final int position) {
@@ -151,14 +145,14 @@ public abstract class ExpandingCardListManager {
 
         for (int i = 0; i < position; i++) {
             llUpper.addView(getView(i, llUpper));
-            if (i < position - 1) llUpper.addView(createDivider());
+            if (i < position - 1) addSeparator(llUpper);
         }
         final View expandedView = getView(position, expandedCard);
         expandView(position, expandedView);
         expandedCard.addView(expandedView);
         for (int i = position + 1; i < getCount(); i++) {
             llLower.addView(getView(i, llLower));
-            if (i < getCount() - 1) llLower.addView(createDivider());
+            if (i < getCount() - 1) addSeparator(llLower);
         }
 
         final float lowerPos;
