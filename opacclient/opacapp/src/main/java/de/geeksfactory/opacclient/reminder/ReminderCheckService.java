@@ -38,8 +38,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import org.acra.ACRA;
-
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -53,6 +51,7 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.utils.ErrorReporter;
 
 public class ReminderCheckService extends Service {
 
@@ -222,7 +221,7 @@ public class ReminderCheckService extends Service {
                 } catch (OpacErrorException e) {
                     e.printStackTrace();
                 } catch (Exception e) {
-                    ACRA.getErrorReporter().handleException(e);
+                    ErrorReporter.handleException(e);
                 }
             }
             data.close();

@@ -1,12 +1,12 @@
 package de.geeksfactory.opacclient.frontend;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.support.v7.app.AppCompatDialog;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -149,7 +149,7 @@ public class AboutFragment extends PreferenceFragment {
 
     private void res_dialog(int file, int title) {
 
-        final Dialog dialog = new Dialog(context);
+        final AppCompatDialog dialog = new AppCompatDialog(context);
         dialog.setContentView(R.layout.dialog_about);
         dialog.setTitle(title);
         TextView tvText = (TextView) dialog.findViewById(R.id.tvText);

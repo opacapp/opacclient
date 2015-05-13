@@ -22,9 +22,9 @@
   <string name="tocollection">Για τη συλλογή</string>
   <string name="reserve">Απόθεμα</string>
   <string name="lendebook">Δανείστε ενα ebook</string>
-  <string name="doing_res">Εκτέλεση κράτησης...</string>
+  <string name="doing_res">Εκτέλεση κράτησης…</string>
   <string name="opac_error_email">Παρακαλούμε να ορίσετε την διεύθυνση του e-mail σας στις ρυθμίσεις της εφαρμογής.</string>
-  <string name="doing_booking">Δανεισμός...</string>
+  <string name="doing_booking">Δανεισμός…</string>
   <string name="status_nouser">Δεν έχετε προσδιορίσει δεδομένα σύνδεσης για αυτόν το λογαριασμό στις ρυθμίσεις.</string>
   <string name="pending_fees">Πρόστιμα βιβλιοθήκης λόγω:</string>
   <string name="valid_until">Ο λογαριασμός ισχύει μέχρι:</string>
@@ -39,12 +39,12 @@
   <string name="cancel">Ακύρωση</string>
   <string name="delete">Διαγραφή</string>
   <string name="accept">OK</string>
-  <string name="doing_cancel">Η κράτηση ακυρώνεται...</string>
-  <string name="doing_prolong">Εκτέλεση ανανέωσης...</string>
-  <string name="doing_download">Λήψη πληροφοριών που ανακτώνται...</string>
+  <string name="doing_cancel">Η κράτηση ακυρώνεται…</string>
+  <string name="doing_prolong">Εκτέλεση ανανέωσης…</string>
+  <string name="doing_download">Λήψη πληροφοριών που ανακτώνται…</string>
   <string name="reader_needed">Για να διαβάσετε το e-book, θα πρέπει να έχετε μια ξεχωριστή εφαρμογή, για παράδειγμα το «Bluefire Reader». Κάντε κλικ στο «Παράβλεψη», αν έχετε ήδη μια τέτοια εφαρμογή και αυτό το μήνυμα δεν θα εμφανιστεί ξανά. Κάντε κλικ στο \"Ληψη\" για να ανοίχθει το Play Store και να κατεβάσετε το Bluefire Reader.</string>
   <string name="reader_needed_ignore">Παράβλεψη</string>
-  <string name="doing_prolong_all">Όλες οι ανανεώσιμες πηγές πολυμεσων ανανεώνονται...</string>
+  <string name="doing_prolong_all">Όλες οι ανανεώσιμες πηγές πολυμεσων ανανεώνονται…</string>
   <string name="prolong_all_confirm">Θελετε πραγματικά να ανανεώσετε όλα τα στοιχεία του λογαριασμού σας; Σε ορισμένες βιβλιοθήκες αυτό θα μπορούσε να προκαλέσει τέλη.</string>
   <string name="opac_error">Web Opac μήνυμα σφάλματος:</string>
   <string name="welcome">Καλώς ήλθατε!</string>
@@ -52,7 +52,7 @@
   <string name="welcome_account">Ο λογαριασμός μπορεί να είναι ανώνυμος (αναζήτηση μόνο) ή να περιλαμβάνη εναν αριθμό αναγνώρισης και τον κωδικό πρόσβασης (που επιτρέπει στον λογαριασμό να σχετίζεται με τα χαρακτηριστικά). Μπορείτε να προσθέσετε επιπλέον λογαριασμούς αργότερα.</string>
   <string name="select_library">Επιλέξτε βιβλιοθήκη</string>
   <string name="report">Αποστολή αναφοράς</string>
-  <string name="report_sending">Αποστολή αναφοράς...</string>
+  <string name="report_sending">Αποστολή αναφοράς…</string>
   <string name="report_sent">Η αναφορά εστάλη. Ευχαριστώ!</string>
   <string name="report_error">Η αναφορά σφάλματος δεν θα μπορούσε να σταλεί.</string>
   <string name="notifications">Ειδοποιήσεις</string>
@@ -149,7 +149,7 @@
   </plurals>
   <string name="export_starred">Εξαγωγή</string>
   <string name="geolocate">Εντοπισμός κοντινών βιβλιοθηκών</string>
-  <string name="geolocate_progress">Ο εντοπισμός σας...</string>
+  <string name="geolocate_progress">Ο εντοπισμός σας…</string>
   <string name="alphabetic_list">Εμφάνιση πλήρους λίστας</string>
   <string name="setting_nfc">Αναζήτηση με ετικέτες NFC</string>
   <string name="setting_nfc_desc">Πειραματικά. Μόνο σε ορισμένες συσκευές και σε ορισμένες βιβλιοθήκες.</string>
@@ -171,11 +171,11 @@
   <string name="title_activity_suggest_library">Προτείνετε βιβλιοθήκη</string>
   <string name="city">Πόλη</string>
   <string name="library_name">Ονομα βιβλιοθήκης</string>
-  <string name="hint_library_name">π.χ. «Δημοτική Βιβλιοθήκη», «βιβλιοθήκη Πανεπιστημίου\", \"Πανεπιστήμιο του Χάρβαρντ», ...</string>
+  <string name="hint_library_name">π.χ. «Δημοτική Βιβλιοθήκη», «βιβλιοθήκη Πανεπιστημίου\", \"Πανεπιστήμιο του Χάρβαρντ», …</string>
   <string name="comment">Σχόλιο</string>
   <string name="send">Αποστολή</string>
-  <string name="select_mail_app">Επιλογή εφαρμογής mail...</string>
-  <string name="search_libraries_hint">Αναζήτηση βιβλιοθήκης...</string>
+  <string name="select_mail_app">Επιλογή εφαρμογής mail…</string>
+  <string name="search_libraries_hint">Αναζήτηση βιβλιοθήκης…</string>
   <string name="action_search">Αναζήτηση</string>
   <string name="snooze">Υπενθύμιση πάλι αύριο</string>
   <string name="expand">Εμφάνιση περισσότερων πεδίων αναζήτησης</string>
@@ -207,8 +207,8 @@
   <string name="rate">Βαθμολογία εφαρμογής</string>
   <string name="other">Άλλα</string>
   <string name="source">Πηγαίος Κώδικας</string>
-  <string name="loading">Φόρτωση...</string>
-  <string name="loading_libraries">Φόρτωση λίστας βιβλιοθήκης...</string>
+  <string name="loading">Φόρτωση…</string>
+  <string name="loading_libraries">Φόρτωση λίστας βιβλιοθήκης…</string>
   <string name="shelfmark">Shelfmark</string>
   <string name="return_date">Ημερομηνία επιστροφής</string>
   <string name="location">Τοποθεσία</string>

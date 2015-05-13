@@ -26,7 +26,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -62,6 +61,7 @@ import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
 import de.geeksfactory.opacclient.storage.StarDataSource;
 import de.geeksfactory.opacclient.storage.StarDatabase;
+import de.geeksfactory.opacclient.utils.CompatibilityUtils;
 
 public class StarredFragment extends Fragment implements
         LoaderCallbacks<Cursor>, AccountSelectedListener {
@@ -209,12 +209,7 @@ public class StarredFragment extends Fragment implements
     protected void export() {
         Intent intent = new Intent(android.content.Intent.ACTION_SEND);
         intent.setType("text/plain");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-        } else {
-            //noinspection deprecation
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-        }
+        intent.addFlags(CompatibilityUtils.getNewDocumentIntentFlag());
 
         StringBuilder text = new StringBuilder();
 

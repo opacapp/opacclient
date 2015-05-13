@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -36,7 +36,7 @@ import java.util.ArrayList;
 
 import de.geeksfactory.opacclient.R;
 
-public class SuggestLibraryActivity extends ActionBarActivity {
+public class SuggestLibraryActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = "Opac";
     private static final String GEOCODE_API = "https://maps.googleapis.com/maps/api/geocode/json";

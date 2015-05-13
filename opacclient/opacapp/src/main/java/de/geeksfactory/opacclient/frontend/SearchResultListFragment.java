@@ -1,14 +1,15 @@
 package de.geeksfactory.opacclient.frontend;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.CustomListFragment;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -20,7 +21,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.acra.ACRA;
 import org.json.JSONException;
 
 import java.io.IOException;
@@ -46,6 +46,7 @@ import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
 import de.geeksfactory.opacclient.storage.SearchFieldDataSource;
+import de.geeksfactory.opacclient.utils.ErrorReporter;
 
 /**
  * A list fragment representing a list of SearchResults. This fragment also supports tablet devices
@@ -71,7 +72,7 @@ public class SearchResultListFragment extends CustomListFragment {
      */
     private static Callbacks dummyCallbacks = new Callbacks() {
         @Override
-        public void onItemSelected(SearchResult result, View coverView) {
+        public void onItemSelected(SearchResult result, View coverView, int touchX, int touchY) {
         }
 
         public boolean isTwoPane() {
@@ -93,6 +94,8 @@ public class SearchResultListFragment extends CustomListFragment {
     protected SearchStartTask st;
     protected LinearLayout progressContainer;
     protected FrameLayout errorView;
+    private int touchPositionX = 0;
+    private int touchPositionY = 0;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the fragment (e.g. upon
@@ -206,12 +209,20 @@ public class SearchResultListFragment extends CustomListFragment {
             performsearch();
         } else if (searchresult != null) {
             if (searchresult.getTotal_result_count() >= 0) {
-                ((ActionBarActivity) getActivity()).getSupportActionBar().setSubtitle(
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(
                         getResources().getQuantityString(R.plurals.result_number,
                                 searchresult.getTotal_result_count(),
                                 searchresult.getTotal_result_count()));
             }
         }
+
+        getListView().setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View view, MotionEvent event) {
+                touchPositionX = (int) event.getX();
+                touchPositionY = (int) event.getY();
+                return false;
+            }
+        });
     }
 
     @Override
@@ -246,7 +257,7 @@ public class SearchResultListFragment extends CustomListFragment {
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
         callbacks.onItemSelected(searchresult.getResults().get(position),
-                view.findViewById(R.id.ivType));
+                view.findViewById(R.id.ivType), touchPositionX, touchPositionY);
 
     }
 
@@ -286,7 +297,7 @@ public class SearchResultListFragment extends CustomListFragment {
             result.setPage(searchresult.getPage_index());
         }
         if (searchresult.getTotal_result_count() >= 0) {
-            ((ActionBarActivity) getActivity()).getSupportActionBar().setSubtitle(
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(
                     getResources().getQuantityString(R.plurals.result_number,
                             searchresult.getTotal_result_count(),
                             searchresult.getTotal_result_count()));
@@ -337,7 +348,7 @@ public class SearchResultListFragment extends CustomListFragment {
                         if (resultCount >= 0 && getActivity() != null)
 
                         {
-                            ((ActionBarActivity) getActivity()).getSupportActionBar().setSubtitle(
+                            ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(
                                     getResources().getQuantityString(R.plurals.result_number,
                                             resultCount, resultCount));
                         }
@@ -410,7 +421,7 @@ public class SearchResultListFragment extends CustomListFragment {
         /**
          * Callback for when an item has been selected.
          */
-        public void onItemSelected(SearchResult result, View coverView);
+        public void onItemSelected(SearchResult result, View coverView, int touchX, int touchY);
 
         public boolean isTwoPane();
     }
@@ -438,7 +449,7 @@ public class SearchResultListFragment extends CustomListFragment {
                     e.printStackTrace();
                 } catch (Exception e) {
                     exception = e;
-                    ACRA.getErrorReporter().handleException(e);
+                    ErrorReporter.handleException(e);
                 }
             } else if (query != null) {
                 try {
@@ -449,7 +460,7 @@ public class SearchResultListFragment extends CustomListFragment {
                     e.printStackTrace();
                 } catch (Exception e) {
                     exception = e;
-                    ACRA.getErrorReporter().handleException(e);
+                    ErrorReporter.handleException(e);
                 }
             }
             return null;

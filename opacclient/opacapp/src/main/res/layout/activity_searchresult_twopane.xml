@@ -25,7 +25,7 @@
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:animateLayoutChanges="true"
-        app:theme="@style/ThemeOverlay.Opacapp.ActionBar"
+        android:theme="@style/ThemeOverlay.Opacapp.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
     <View

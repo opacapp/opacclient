@@ -24,20 +24,19 @@ package de.geeksfactory.opacclient.frontend;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-import org.acra.ACRA;
-
 import java.io.IOException;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.utils.ErrorReporter;
 
-public class WelcomeActivity extends ActionBarActivity {
+public class WelcomeActivity extends AppCompatActivity {
     protected OpacClient app;
 
     @SuppressWarnings("SameReturnValue") // Plus Edition compatibility
@@ -74,11 +73,6 @@ public class WelcomeActivity extends ActionBarActivity {
         startActivity(i);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
     public class InitTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
@@ -87,7 +81,7 @@ public class WelcomeActivity extends ActionBarActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (Exception e) {
-                ACRA.getErrorReporter().handleException(e);
+                ErrorReporter.handleException(e);
             }
             return null;
         }

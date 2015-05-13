@@ -80,6 +80,7 @@ import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.StarContentProvider;
+import de.geeksfactory.opacclient.utils.ErrorReporter;
 
 @ReportsCrashes(formKey = "", mailTo = "info@opacapp.de",
         mode = org.acra.ReportingInteractionMode.NOTIFICATION,
@@ -293,7 +294,7 @@ public class OpacClient extends Application {
     public void setAccount(long id) {
         sp.edit().putLong(OpacClient.PREF_SELECTED_ACCOUNT, id).commit();
         resetCache();
-        if (getLibrary() != null) {
+        if (getLibrary() != null && !BuildConfig.DEBUG) {
             ACRA.getErrorReporter().putCustomData("library",
                     getLibrary().getIdent());
         }
@@ -331,7 +332,7 @@ public class OpacClient extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
-            ACRA.getErrorReporter().handleException(e);
+            ErrorReporter.handleException(e);
         }
         return library;
     }
@@ -394,21 +395,23 @@ public class OpacClient extends Application {
         super.onCreate();
         sp = PreferenceManager.getDefaultSharedPreferences(this);
 
-        ACRAConfiguration config = ACRA.getNewDefaultConfig(this);
-        config.setResToastText(R.string.crash_toast_text);
-        config.setResDialogText(R.string.crash_dialog_text);
-        config.setResToastText(R.string.crash_toast_text);
-        config.setResNotifTickerText(R.string.crash_notif_ticker_text);
-        config.setResNotifTitle(R.string.crash_notif_title);
-        config.setResNotifText(R.string.crash_notif_text);
-        config.setResNotifIcon(android.R.drawable.stat_notify_error);
-        config.setResDialogText(R.string.crash_dialog_text);
-        ACRA.setConfig(config);
-        ACRA.init(this);
+        if (!BuildConfig.DEBUG) {
+            ACRAConfiguration config = ACRA.getNewDefaultConfig(this);
+            config.setResToastText(R.string.crash_toast_text);
+            config.setResDialogText(R.string.crash_dialog_text);
+            config.setResToastText(R.string.crash_toast_text);
+            config.setResNotifTickerText(R.string.crash_notif_ticker_text);
+            config.setResNotifTitle(R.string.crash_notif_title);
+            config.setResNotifText(R.string.crash_notif_text);
+            config.setResNotifIcon(android.R.drawable.stat_notify_error);
+            config.setResDialogText(R.string.crash_dialog_text);
+            ACRA.setConfig(config);
+            ACRA.init(this);
 
-        if (getLibrary() != null) {
-            ACRA.getErrorReporter().putCustomData("library",
-                    getLibrary().getIdent());
+            if (getLibrary() != null) {
+                ACRA.getErrorReporter().putCustomData("library",
+                        getLibrary().getIdent());
+            }
         }
 
         OpacClient.context = getApplicationContext();
