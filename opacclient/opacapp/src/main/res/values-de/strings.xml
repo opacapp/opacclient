@@ -232,4 +232,9 @@
     <string name="department">Abteilung</string>
     <string name="reservations">Reservierungen</string>
     <string name="clear_search">Formular leeren</string>
+    <string name="title">Titel</string>
+    <string name="author">Autor</string>
+    <string name="title_and_author">Titel und Autor</string>
+    <string name="reservation_expire_until">bis</string>
+    <string name="go_to_details">Zu den Details</string>
 </resources>

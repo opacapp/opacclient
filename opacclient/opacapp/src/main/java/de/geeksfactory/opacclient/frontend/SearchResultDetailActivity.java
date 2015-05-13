@@ -1,8 +1,13 @@
 package de.geeksfactory.opacclient.frontend;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.transition.Fade;
+import android.transition.TransitionSet;
 
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.ui.CircularRevealTransition;
+import de.geeksfactory.opacclient.ui.VerticalExplodeTransition;
 
 /**
  * An activity representing a single SearchResult detail screen. This activity is only used on
@@ -15,6 +20,8 @@ import de.geeksfactory.opacclient.R;
 public class SearchResultDetailActivity extends OpacActivity
         implements SearchResultDetailFragment.Callbacks {
 
+    public static final String ARG_TOUCH_POSITION_X = "touchX";
+    public static final String ARG_TOUCH_POSITION_Y = "touchY";
     SearchResultDetailFragment detailFragment;
 
     @Override
@@ -55,6 +62,34 @@ public class SearchResultDetailActivity extends OpacActivity
             getSupportFragmentManager().beginTransaction()
                                        .add(R.id.searchresult_detail_container, detailFragment)
                                        .commit();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                int touchX = getIntent().getIntExtra(ARG_TOUCH_POSITION_X, 0);
+                int touchY = getIntent().getIntExtra(ARG_TOUCH_POSITION_Y, 0);
+
+                TransitionSet enterTransition = new TransitionSet();
+                enterTransition.addTransition(new CircularRevealTransition()
+                        .setStartPosition(this, touchX, touchY)
+                        .addTarget(R.id.coverBackground)
+                        .addTarget(R.id.gradient_top)
+                        .addTarget(R.id.gradient_bottom));
+                enterTransition.addTransition(
+                        new VerticalExplodeTransition()
+                                .excludeTarget(R.id.coverBackground, true)
+                                .excludeTarget(R.id.gradient_bottom, true)
+                                .excludeTarget(R.id.gradient_top, true));
+                enterTransition.excludeTarget(android.R.id.statusBarBackground, true);
+                getWindow().setEnterTransition(enterTransition);
+
+                TransitionSet exitTransition = new TransitionSet();
+                exitTransition.addTransition(
+                        new Fade().addTarget(R.id.gradient_bottom).addTarget(R.id.gradient_top));
+                exitTransition.addTransition(new VerticalExplodeTransition()
+                        .excludeTarget(R.id.gradient_bottom, true)
+                        .excludeTarget(R.id.gradient_top, true));
+                exitTransition.excludeTarget(android.R.id.statusBarBackground, true);
+                getWindow().setReturnTransition(exitTransition);
+                getWindow().setSharedElementsUseOverlay(false);
+            }
         }
     }
 

@@ -1,81 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
+    android:background="@drawable/ripple"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/llData"
+        android:layout_gravity="center_vertical"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginLeft="12dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:orientation="vertical"
+        android:clickable="false"
+        android:animateLayoutChanges="true">
+
+        <TextView
+            android:id="@+id/tvTitleAndAuthor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:drawableLeft="@drawable/ic_title"
+            android:drawablePadding="4dp"
+            android:gravity="center_vertical"
+            android:contentDescription="@string/title_and_author"/>
+
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:drawableLeft="@drawable/ic_status"
+            android:drawablePadding="4dp"
+            android:gravity="center_vertical"
+            android:contentDescription="@string/status"/>
+
+        <LinearLayout
+            android:id="@+id/llDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvAuthorDetail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:paddingRight="4dp"
-                android:paddingLeft="20dp">
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:drawableLeft="@drawable/ic_author"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:contentDescription="@string/author"/>
 
-    <View
-        android:id="@+id/strut"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_centerHorizontal="true"/>
+            <TextView
+                android:id="@+id/tvBranchDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:drawableLeft="@drawable/ic_branch"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:contentDescription="@string/branch"/>
 
-    <ImageView
-        android:id="@+id/ivCancel"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignParentRight="true"
-        android:padding="8dp"
-        android:contentDescription="@string/reservation_cancel"
-        android:src="@drawable/ic_cancel"/>
+            <TextView
+                android:id="@+id/tvFormatDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:drawableLeft="@drawable/ic_media_type"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:contentDescription="@string/mediatype"/>
+        </LinearLayout>
+    </LinearLayout>
 
-    <ImageView
-        android:id="@+id/ivBooking"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignParentRight="true"
-        android:padding="8dp"
-        android:contentDescription="@string/reservation_book"
-        android:src="@drawable/ic_booking"/>
-
-    <TextView
-        android:id="@+id/tvTitel"
+    <LinearLayout
+        android:id="@+id/llButtons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@id/strut"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:text=""
-        android:textIsSelectable="true"/>
+        android:orientation="vertical"
+        android:animateLayoutChanges="true">
 
-    <TextView
-        android:id="@+id/tvStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/tvTitel"
-        android:layout_toLeftOf="@id/strut"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:text=""
-        android:textIsSelectable="true"/>
+        <ImageView
+            android:id="@+id/ivCancel"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/reservation_cancel"
+            android:src="@drawable/ic_cancel"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/ripple_unmasked"/>
 
-    <TextView
-        android:id="@+id/tvVerfasser"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/ivCancel"
-        android:layout_toRightOf="@id/strut"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:text=""
-        android:textIsSelectable="true"/>
+        <ImageView
+            android:id="@+id/ivBooking"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/reservation_book"
+            android:src="@drawable/ic_booking"
+            android:visibility="gone"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/ripple_unmasked"/>
 
-    <TextView
-        android:id="@+id/tvZst"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tvVerfasser"
-        android:layout_toLeftOf="@id/ivCancel"
-        android:layout_toRightOf="@id/strut"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:text=""
-        android:textIsSelectable="true"/>
-
-</RelativeLayout>
+        <ImageView
+            android:id="@+id/ivDetails"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:visibility="gone"
+            android:contentDescription="@string/go_to_details"
+            android:src="@drawable/ic_detail"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/ripple_unmasked"/>
+    </LinearLayout>
+</LinearLayout>

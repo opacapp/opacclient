@@ -22,7 +22,6 @@
 package de.geeksfactory.opacclient.apis;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
@@ -822,10 +821,15 @@ public class TouchPoint extends BaseApi implements OpacApi {
             JSONException,
             OpacErrorException {
         start();
-        if (!login(acc)) {
+        LoginResponse login = login(acc);
+        if (!login.success) {
             return null;
         }
         AccountData adata = new AccountData(acc.getId());
+        if (login.warning != null) {
+            adata.setWarning(login.warning);
+        }
+
         // Lent media
         httpGet(opac_url + "/userAccount.do?methodToCall=start",
                 ENCODING);
@@ -1006,7 +1010,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
         }
     }
 
-    protected boolean login(Account acc) throws OpacErrorException {
+    protected LoginResponse login(Account acc) throws OpacErrorException, IOException {
         String html;
 
         List<NameValuePair> nameValuePairs = new ArrayList<>();
@@ -1023,31 +1027,43 @@ public class TouchPoint extends BaseApi implements OpacApi {
         nameValuePairs.add(new BasicNameValuePair("CSId", CSId));
         nameValuePairs.add(new BasicNameValuePair("methodToCall", "submit"));
         nameValuePairs.add(new BasicNameValuePair("login_action", "Login"));
-        try {
-            html = httpPost(opac_url + "/login.do", new UrlEncodedFormEntity(
-                    nameValuePairs), ENCODING);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return false;
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-            return false;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
+        html = httpPost(opac_url + "/login.do", new UrlEncodedFormEntity(
+                nameValuePairs), ENCODING);
 
         Document doc = Jsoup.parse(html);
 
         if (doc.getElementsByClass("alert").size() > 0) {
-            throw new OpacErrorException(doc.getElementsByClass("alert").get(0)
-                                            .text());
+            if (doc.select(".alert").text().contains("Nutzungseinschr") &&
+                    doc.select("a[href*=methodToCall=done]").size() > 0) {
+                // This is a warning that we need to acknowledge, it will be shown in the account
+                // view
+                httpGet(opac_url + "/login.do?methodToCall=done", ENCODING);
+                logged_in = System.currentTimeMillis();
+                logged_in_as = acc;
+                return new LoginResponse(true, doc.getElementsByClass("alert").get(0).text());
+            } else {
+                throw new OpacErrorException(doc.getElementsByClass("alert").get(0).text());
+            }
         }
 
         logged_in = System.currentTimeMillis();
         logged_in_as = acc;
 
-        return true;
+        return new LoginResponse(true);
+    }
+
+    private class LoginResponse {
+        public LoginResponse(boolean success) {
+            this.success = success;
+        }
+
+        public LoginResponse(boolean success, String warning) {
+            this.success = success;
+            this.warning = warning;
+        }
+
+        public boolean success;
+        public String warning;
     }
 
     @Override
@@ -1110,7 +1126,9 @@ public class TouchPoint extends BaseApi implements OpacApi {
     @Override
     public void checkAccountData(Account account) throws IOException,
             JSONException, OpacErrorException {
-        login(account);
+        if (!login(account).success) {
+            throw new OpacErrorException(stringProvider.getString(StringProvider.LOGIN_FAILED));
+        }
     }
 
     @Override

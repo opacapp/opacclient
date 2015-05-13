@@ -220,6 +220,15 @@ public class Pica extends BaseApi implements OpacApi {
         return parse_search(html, 1);
     }
 
+    public SearchRequestResult volumeSearch(Map<String, String> query)
+            throws IOException, OpacErrorException {
+        String html = httpGet(
+                opac_url + "/LNG=" + getLang() + "/DB=" + db + "/SET=1/TTL=1"
+                        + "/FAM?PPN=" + query.get("ppn"),
+                getDefaultEncoding(), false, cookieStore);
+        return parse_search(html, 1);
+    }
+
     protected SearchRequestResult parse_search(String html, int page)
             throws OpacErrorException {
         Document doc = Jsoup.parse(html);
@@ -416,9 +425,17 @@ public class Pica extends BaseApi implements OpacApi {
             start();
         }
 
-        String html = httpGet(id, getDefaultEncoding());
-
-        return parse_result(html);
+        if (id.startsWith("http")) {
+            return parse_result(httpGet(id, getDefaultEncoding()));
+        } else {
+            try {
+                return parse_result(httpGet(opac_url + "/LNG=" + getLang() + "/DB="
+                        + data.getString("db") + "/PPNSET?PPN=" + id, getDefaultEncoding()));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
     @Override
@@ -439,27 +456,12 @@ public class Pica extends BaseApi implements OpacApi {
         doc.setBaseUri(opac_url);
 
         DetailledItem result = new DetailledItem();
-
-        if (doc.select("img[src*=permalink], img[src*=zitierlink]").size() > 0) {
-            String id = doc.select("img[src*=permalink], img[src*=zitierlink]")
-                           .get(0).parent().absUrl("href");
-            result.setId(id);
-        } else {
-            for (Element a : doc.select("a")) {
-                if (a.attr("href").contains("PPN=")) {
-                    Map<String, String> hrefq = getQueryParamsFirst(a
-                            .absUrl("href"));
-                    String ppn = hrefq.get("PPN");
-                    try {
-                        result.setId(opac_url + "/LNG=" + getLang() + "/DB="
-                                + data.getString("db") + "/PPNSET?PPN=" + ppn);
-                    } catch (JSONException e1) {
-                        e1.printStackTrace();
-                    }
-                    break;
-                }
-            }
-
+        for (Element a : doc.select("a[href*=PPN")) {
+            Map<String, String> hrefq = getQueryParamsFirst(a
+                    .absUrl("href"));
+            String ppn = hrefq.get("PPN");
+            result.setId(ppn);
+            break;
         }
 
         // GET COVER
@@ -478,12 +480,16 @@ public class Pica extends BaseApi implements OpacApi {
 
         // GET TITLE AND SUBTITLE
         String titleAndSubtitle;
-        String selector = "td.preslabel:matches(.*(Titel|Aufsatz|Zeitschrift"
-                + "|Title|Article|Periodical"
-                + "|Titre|Article|P.riodique).*) + td.presvalue";
+        Element titleAndSubtitleElem = null;
+        String titleRegex = ".*(Titel|Aufsatz|Zeitschrift|Gesamttitel"
+                + "|Title|Article|Periodical|Collective\\stitle"
+                + "|Titre|Article|P.riodique|Titre\\sg.n.ral).*";
+        String selector = "td.preslabel:matches(" + titleRegex + ") + td.presvalue";
         if (doc.select(selector).size() > 0) {
-            titleAndSubtitle = doc.select(selector).first().text().trim();
-            int slashPosition = titleAndSubtitle.indexOf("/");
+            titleAndSubtitleElem = doc.select(selector).first();
+            titleAndSubtitle = titleAndSubtitleElem.text().trim();
+            int slashPosition =
+                    Math.min(titleAndSubtitle.indexOf("/"), titleAndSubtitle.indexOf(":"));
             String title;
             if (slashPosition > 0) {
                 title = titleAndSubtitle.substring(0, slashPosition).trim();
@@ -501,9 +507,28 @@ public class Pica extends BaseApi implements OpacApi {
         // Details
         int line = 0;
         Elements lines = doc.select("td.preslabel + td.presvalue");
+        if (titleAndSubtitleElem != null) {
+            lines.remove(titleAndSubtitleElem);
+        }
         for (Element element : lines) {
             Element titleElem = element.firstElementSibling();
-            String detail = element.text().trim();
+            String detail = "";
+            if (element.select("div").size() > 1 &&
+                    element.select("div").text().equals(element.text())) {
+                boolean first = true;
+                for (Element div : element.select("div")) {
+                    if (!div.text().replace("\u00a0", " ").trim().equals("")) {
+                        if (!first) {
+                            detail += "\n" + div.text().replace("\u00a0", " ").trim();
+                        } else {
+                            detail += div.text().replace("\u00a0", " ").trim();
+                            first = false;
+                        }
+                    }
+                }
+            } else {
+                detail = element.text().replace("\u00a0", " ").trim();
+            }
             String title = titleElem.text().replace("\u00a0", " ").trim();
 
             if (element.select("hr").size() > 0)
@@ -517,12 +542,9 @@ public class Pica extends BaseApi implements OpacApi {
                 continue;
             }
             if (title.contains(":")) {
-                title = title.substring(0, title.indexOf(":")); // remove
+                title = title.substring(0, title.indexOf(":")); // remove colon
             }
-            // colon
-            if (!title.matches("(Titel|Titre|Title)")) {
-                result.addDetail(new Detail(title, detail));
-            }
+            result.addDetail(new Detail(title, detail));
             line++;
         }
         line++; // next line after separator
@@ -563,6 +585,8 @@ public class Pica extends BaseApi implements OpacApi {
                     e.put(DetailledItem.KEY_COPY_SHELFMARK, detail);
                 } else if (title.contains("Anmerkung")) {
                     location += " (" + detail + ")";
+                } else if (title.contains("Link")) {
+                    result.addDetail(new Detail(title.replace(":", "").trim(), detail));
                 } else if (title.contains("Status")
                         || title.contains("Ausleihinfo")
                         || title.contains("Ausleihstatus")
@@ -644,9 +668,16 @@ public class Pica extends BaseApi implements OpacApi {
                 result.setReservable(true);
             }
         }
-
-
         result.setReservation_info(reservationInfo.toString());
+
+        // Volumes
+        if (doc.select("a[href^=FAM?PPN=]").size() > 0) {
+            String href = doc.select("a[href^=FAM?PPN=]").attr("href");
+            String ppn = getQueryParamsFirst(href).get("PPN");
+            Map<String, String> data = new HashMap<>();
+            data.put("ppn", ppn);
+            result.setVolumesearch(data);
+        }
 
         return result;
     }
@@ -1090,13 +1121,15 @@ public class Pica extends BaseApi implements OpacApi {
                 } else {
                     e.put(AccountData.KEY_LENT_TITLE, tr.child(4).text().trim());
                 }
-                String status = "";
+                String status = tr.child(13).text().trim();
                 if (!reminderCount.equals("0") && !reminderCount.equals("")) {
+                    if (!status.equals("")) status += ", ";
                     status += reminderCount
                             + " "
                             + stringProvider
                             .getString(StringProvider.REMINDERS) + ", ";
                 }
+                if (!status.equals("")) status += ", ";
                 status += prolongCount
                         + "x "
                         + stringProvider

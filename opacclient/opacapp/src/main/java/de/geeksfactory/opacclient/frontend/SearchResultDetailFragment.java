@@ -2,8 +2,6 @@ package de.geeksfactory.opacclient.frontend;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,10 +12,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.graphics.Palette;
-import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
 import android.text.util.Linkify;
 import android.util.Log;
@@ -45,8 +42,6 @@ import android.widget.Toast;
 
 import com.nineoldandroids.view.ViewHelper;
 
-import org.acra.ACRA;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
@@ -69,8 +64,11 @@ import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.StarDataSource;
+import de.geeksfactory.opacclient.ui.AppCompatProgressDialog;
 import de.geeksfactory.opacclient.ui.ObservableScrollView;
 import de.geeksfactory.opacclient.ui.WhitenessUtils;
+import de.geeksfactory.opacclient.utils.CompatibilityUtils;
+import de.geeksfactory.opacclient.utils.ErrorReporter;
 
 /**
  * A fragment representing a single SearchResult detail screen. This fragment is either contained in
@@ -104,9 +102,11 @@ public class SearchResultDetailFragment extends Fragment
 
     protected Toolbar toolbar;
     protected ImageView ivCover;
+    protected FrameLayout coverWrapper;
+    protected View coverBackground;
     protected ObservableScrollView scrollView;
     protected View gradientBottom, gradientTop, tint;
-    protected TextView tvTitel, tvCopies;
+    protected TextView tvCopies;
     protected LinearLayout llDetails, llCopies;
     protected ProgressBar progressBar;
     protected RelativeLayout detailsLayout;
@@ -121,7 +121,7 @@ public class SearchResultDetailFragment extends Fragment
     private OpacClient app;
     private View view;
     private FetchTask ft;
-    private ProgressDialog dialog;
+    private AppCompatProgressDialog dialog;
     private AlertDialog adialog;
     private boolean account_switched = false;
     private boolean invalidated = false;
@@ -296,18 +296,18 @@ public class SearchResultDetailFragment extends Fragment
             showCoverView(false);
         }
 
-        fixEllipsize(tvTitel);
+        //fixEllipsize(tvTitel);
 
         return rootView;
     }
 
     private void analyzeCover(Bitmap bitmap) {
-        Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {
+        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
             @Override
             public void onGenerated(Palette palette) {
                 Palette.Swatch swatch = palette.getDarkVibrantSwatch();
                 if (swatch != null) {
-                    ivCover.setBackgroundColor(swatch.getRgb());
+                    coverBackground.setBackgroundColor(swatch.getRgb());
                     tint.setBackgroundColor(swatch.getRgb());
                 }
             }
@@ -320,10 +320,12 @@ public class SearchResultDetailFragment extends Fragment
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         scrollView = (ObservableScrollView) view.findViewById(R.id.rootView);
         ivCover = (ImageView) view.findViewById(R.id.ivCover);
+        coverBackground = view.findViewById(R.id.coverBackground);
+        coverWrapper = (FrameLayout) view.findViewById(R.id.coverWrapper);
         gradientBottom = view.findViewById(R.id.gradient_bottom);
         gradientTop = view.findViewById(R.id.gradient_top);
         tint = view.findViewById(R.id.tint);
-        tvTitel = (TextView) view.findViewById(R.id.tvTitle);
+        //tvTitel = (TextView) view.findViewById(R.id.tvTitle);
         llDetails = (LinearLayout) view.findViewById(R.id.llDetails);
         llCopies = (LinearLayout) view.findViewById(R.id.llCopies);
         progressBar = (ProgressBar) view.findViewById(R.id.progress);
@@ -378,9 +380,9 @@ public class SearchResultDetailFragment extends Fragment
         try {
             Log.i("result", getItem().toString());
         } catch (Exception e) {
-            ACRA.getErrorReporter().handleException(e);
+            ErrorReporter.handleException(e);
         }
-        tvTitel.setText(getItem().getTitle());
+        toolbar.setTitle(getItem().getTitle());
         llDetails.removeAllViews();
         for (Detail detail : item.getDetails()) {
             View v = getLayoutInflater(null)
@@ -532,7 +534,7 @@ public class SearchResultDetailFragment extends Fragment
 
     private void displayCover() {
         if (getItem().getCoverBitmap() != null) {
-            ivCover.setVisibility(View.VISIBLE);
+            coverWrapper.setVisibility(View.VISIBLE);
             ivCover.setImageBitmap(getItem().getCoverBitmap());
             if (!image_analyzed) {
                 analyzeCover(getItem().getCoverBitmap());
@@ -551,8 +553,7 @@ public class SearchResultDetailFragment extends Fragment
     }
 
     private void showCoverView(boolean b) {
-        ivCover.setVisibility(b ? View.VISIBLE : View.GONE);
-        tvTitel.setVisibility(b ? View.VISIBLE : View.GONE);
+        coverWrapper.setVisibility(b ? View.VISIBLE : View.GONE);
         gradientBottom.setVisibility(b ? View.VISIBLE : View.GONE);
         gradientTop.setVisibility(b ? View.VISIBLE : View.GONE);
         RelativeLayout.LayoutParams params =
@@ -567,7 +568,7 @@ public class SearchResultDetailFragment extends Fragment
                     llDetails.getPaddingRight(),
                     llDetails.getPaddingBottom()
             );
-            params.addRule(RelativeLayout.BELOW, R.id.ivCover);
+            params.addRule(RelativeLayout.BELOW, R.id.coverWrapper);
         } else {
             toolbar.setBackgroundResource(getToolbarBackgroundColor());
             ViewCompat.setElevation(toolbar, TypedValue.applyDimension(TypedValue
@@ -579,10 +580,10 @@ public class SearchResultDetailFragment extends Fragment
 
     private int getToolbarBackgroundColor() {
         if (getActivity() != null) {
-            if (getActivity() instanceof SearchResultListActivity) {
-                return R.color.primary_red_dark;
-            } else {
+            if (getActivity() instanceof SearchResultDetailActivity) {
                 return R.color.primary_red;
+            } else {
+                return R.color.primary_red_dark;
             }
         } else {
             return R.color.primary_red;
@@ -590,118 +591,36 @@ public class SearchResultDetailFragment extends Fragment
     }
 
     private void fixTitle() {
-        if (getItem().getCoverBitmap() != null ||
-                getArguments().containsKey(ARG_ITEM_COVER_BITMAP)) {
-            // tvTitel is used for displaying title
-            fixTitleWidth();
-            tvTitel.getViewTreeObserver()
-                   .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                       @Override
-                       public void onGlobalLayout() {
-                           // We need to wait for tvTitel to refresh to get correct calculations
-                           tvTitel.getViewTreeObserver().removeGlobalOnLayoutListener(
-                                   this);
-                           if (tvTitel.getLayout() != null &&
-                                   tvTitel.getLayout().getLineCount() > 1) {
-                               toolbar.getLayoutParams().height = (int) TypedValue.applyDimension(
-                                       TypedValue.COMPLEX_UNIT_SP, 84f,
-                                       getResources().getDisplayMetrics());
-                               toolbar.getParent().requestLayout();
-                           }
-                       }
-                   });
-        } else {
-            // Toolbar is used for displaying title
-            toolbar.getViewTreeObserver()
-                   .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                       @Override
-                       public void onGlobalLayout() {
-                           // We need to wait for toolbar to refresh to get correct calculations
-                           toolbar.getViewTreeObserver().removeGlobalOnLayoutListener(
-                                   this);
-                           if (toolbar.isTitleTruncated()) {
-                               toolbar.getLayoutParams().height = (int) TypedValue.applyDimension(
-                                       TypedValue.COMPLEX_UNIT_SP, 84f,
-                                       getResources().getDisplayMetrics());
-                               TextView titleTextView = findTitleTextView(toolbar);
-                               titleTextView.setSingleLine(
-                                       false);
+        // Toolbar is used for displaying title
+        toolbar.getViewTreeObserver()
+               .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                   @Override
+                   public void onGlobalLayout() {
+                       // We need to wait for toolbar to refresh to get correct calculations
+                       toolbar.getViewTreeObserver().removeGlobalOnLayoutListener(
+                               this);
+                       if (toolbar.isTitleTruncated()) {
+                           toolbar.getLayoutParams().height = (int) TypedValue.applyDimension(
+                                   TypedValue.COMPLEX_UNIT_SP, 84f,
+                                   getResources().getDisplayMetrics());
+                           TextView titleTextView = findTitleTextView(toolbar);
+                           if (titleTextView != null) {
+                               titleTextView.setSingleLine(false);
                                fixEllipsize(titleTextView);
-                               toolbar.getParent().requestLayout();
                            }
+                           toolbar.getParent().requestLayout();
                        }
-                   });
-        }
+                   }
+               });
         onScrollChanged(0, 0);
-    }
 
-    private void fixTitleWidth() {
-        ActionMenuView view = findActionMenuView(toolbar);
-        if (view != null) {
-            float density = getResources().getDisplayMetrics().density;
-            Menu menu = view.getMenu();
-            float availableWidth = calculateAvailableWidthInToolbar();
-            if (availableWidth / density < 150 &&
-                    (menu.findItem(R.id.action_lendebook).isVisible() ||
-                            menu.findItem(R.id.action_reservation).isVisible())
-                    && tvTitel.getWidth() > availableWidth * 36f / 20f) {
-                // We have so little space for the title that we should move the
-                // "Lend eBook" and "Reserve" menu items to the overflow menu
-                MenuItemCompat.setShowAsAction(menu.findItem(R.id.action_lendebook),
-                        MenuItemCompat.SHOW_AS_ACTION_NEVER);
-                MenuItemCompat.setShowAsAction(menu.findItem(R.id.action_reservation),
-                        MenuItemCompat.SHOW_AS_ACTION_NEVER);
-                toolbar.requestLayout();
-                toolbar.getViewTreeObserver()
-                       .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                           @Override
-                           public void onGlobalLayout() {
-                               toolbar.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                               float availableWidth = calculateAvailableWidthInToolbar();
-                               changeTitleWidth(availableWidth);
-                           }
-                       });
-            } else {
-                changeTitleWidth(availableWidth);
+        ((ViewGroup) toolbar.getParent()).getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        onScrollChanged(0, 0);
             }
-        }
-    }
-
-    /**
-     * Calculates the width available for a title in the toolbar in pixels. Follows the following
-     * formula: Toolbar width - menu width - margin - back button width
-     *
-     * @return Available width in pixels
-     */
-    private float calculateAvailableWidthInToolbar() {
-        float density = getResources().getDisplayMetrics().density;
-        ActionMenuView view = findActionMenuView(toolbar);
-        return toolbar.getWidth() - view.getWidth() - 16 * density -
-                (back_button_visible ? 56 * density : 0);
-    }
-
-    private void changeTitleWidth(float availableWidth) {
-        if (tvTitel.getWidth() > availableWidth * 36f / 20f) {
-            tvTitel.getLayoutParams().width = (int) (availableWidth * 36f / 20f);
-            tvTitel.getParent().requestLayout();
-        }
-    }
-
-    /**
-     * Hacky way to find the {@link android.support.v7.widget.ActionMenuView} inside a {@link
-     * android.support.v7.widget.Toolbar}. Will return null if none is found
-     *
-     * @param toolbar a Toolbar
-     * @return the ActionMenuView inside this toolbar, or null if none is found
-     */
-    private ActionMenuView findActionMenuView(Toolbar toolbar) {
-        for (int i = 0; i < toolbar.getChildCount(); i++) {
-            View view = toolbar.getChildAt(i);
-            if (view instanceof ActionMenuView) {
-                return (ActionMenuView) view;
-            }
-        }
-        return null;
+                });
     }
 
     /**
@@ -731,49 +650,54 @@ public class SearchResultDetailFragment extends Fragment
                 || getArguments().containsKey(ARG_ITEM_COVER_BITMAP);
         if (hasCover) {
             // Parallax effect
-            ViewHelper.setTranslationY(ivCover, scrollY * 0.5f);
+            ViewHelper.setTranslationY(coverWrapper, scrollY * 0.5f);
             ViewHelper.setTranslationY(gradientBottom, scrollY * 0.5f);
             ViewHelper.setTranslationY(gradientTop, scrollY * 0.5f);
         }
         // Toolbar stays at the top
         ViewHelper.setTranslationY(toolbar, scrollY);
 
+        TextView toolbarTitle = findTitleTextView(toolbar);
         if (hasCover) {
             float minHeight = toolbar.getHeight();
-            float progress = Math.min(((float) scrollY) / (ivCover.getHeight() - minHeight), 1);
-            float scale = 1 - progress + 20f / 36f * progress;
-            ViewHelper.setPivotX(tvTitel, 0);
-            ViewHelper.setPivotY(tvTitel, tvTitel.getHeight());
-            ViewHelper.setScaleX(tvTitel, scale);
-            ViewHelper.setScaleY(tvTitel, scale);
-            if (back_button_visible) {
-                ViewHelper.setTranslationX(tvTitel, progress * TypedValue
-                        .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56f, getResources()
-                                .getDisplayMetrics()));
+            float progress =
+                    Math.min(((float) scrollY) / (coverWrapper.getHeight() - minHeight), 1);
+            float scale = 36f / 20f * (1 - progress) + progress;
+            if (toolbarTitle != null) {
+                ViewHelper.setPivotX(toolbarTitle, 0);
+                ViewHelper.setPivotY(toolbarTitle, toolbarTitle.getHeight());
+                ViewHelper.setScaleX(toolbarTitle, scale);
+                ViewHelper.setScaleY(toolbarTitle, scale);
+                if (back_button_visible) {
+                    ViewHelper.setTranslationX(toolbarTitle, (progress - 1) * TypedValue
+                            .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50f, getResources()
+                                    .getDisplayMetrics()));
+                }
             }
 
             ViewHelper.setAlpha(tint, progress);
 
             if (progress == 1) {
-                ViewHelper.setTranslationY(tvTitel, scrollY - ivCover.getHeight() + minHeight);
-                if (!ivCover.getBackground().equals(toolbar.getBackground())) {
+                if (toolbarTitle != null) ViewHelper.setTranslationY(toolbarTitle, 0);
+                if (!coverBackground.getBackground().equals(toolbar.getBackground())) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                        toolbar.setBackground(ivCover.getBackground());
+                        toolbar.setBackground(coverBackground.getBackground());
                     } else {
                         //noinspection deprecation
-                        toolbar.setBackgroundDrawable(ivCover.getBackground());
+                        toolbar.setBackgroundDrawable(coverBackground.getBackground());
                     }
                     ViewCompat.setElevation(toolbar, TypedValue.applyDimension(TypedValue
                             .COMPLEX_UNIT_DIP, 4f, getResources().getDisplayMetrics()));
-                    ViewCompat.setElevation(tvTitel, TypedValue.applyDimension(TypedValue
-                            .COMPLEX_UNIT_DIP, 4f, getResources().getDisplayMetrics()));
                 }
             } else {
-                ViewHelper.setTranslationY(tvTitel, 0);
-                if (ivCover.getBackground().equals(toolbar.getBackground())) {
+                if (toolbarTitle != null) {
+                    ViewHelper
+                            .setTranslationY(toolbarTitle,
+                                    -scrollY + coverWrapper.getHeight() - minHeight);
+                }
+                if (coverBackground.getBackground().equals(toolbar.getBackground())) {
                     toolbar.setBackgroundResource(R.color.transparent);
                     ViewCompat.setElevation(toolbar, 0);
-                    ViewCompat.setElevation(tvTitel, 0);
                 }
             }
         }
@@ -961,13 +885,7 @@ public class SearchResultDetailFragment extends Fragment
                             Intent intent = new Intent(
                                     android.content.Intent.ACTION_SEND);
                             intent.setType("text/plain");
-
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-                            } else {
-                                //noinspection deprecation
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-                            }
+                            intent.addFlags(CompatibilityUtils.getNewDocumentIntentFlag());
 
                             // Add data to the intent, the receiving app will
                             // decide
@@ -996,13 +914,7 @@ public class SearchResultDetailFragment extends Fragment
                             Intent intent = new Intent(
                                     android.content.Intent.ACTION_SEND);
                             intent.setType("text/plain");
-
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-                            } else {
-                                //noinspection deprecation
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-                            }
+                            intent.addFlags(CompatibilityUtils.getNewDocumentIntentFlag());
 
                             // Add data to the intent, the receiving app will
                             // decide
@@ -1509,7 +1421,7 @@ public class SearchResultDetailFragment extends Fragment
             } catch (IOException e) {
                 publishProgress(e, "ioerror");
             } catch (Exception e) {
-                ACRA.getErrorReporter().handleException(e);
+                ErrorReporter.handleException(e);
             }
             return null;
         }
@@ -1560,7 +1472,7 @@ public class SearchResultDetailFragment extends Fragment
             } catch (IOException e) {
                 publishProgress(e, "ioerror");
             } catch (Exception e) {
-                ACRA.getErrorReporter().handleException(e);
+                ErrorReporter.handleException(e);
             }
             return null;
         }
@@ -1612,13 +1524,13 @@ public class SearchResultDetailFragment extends Fragment
                     app.getApi().getResultById(id, homebranch);
                     return 0;
                 } else {
-                    ACRA.getErrorReporter().handleException(
+                    ErrorReporter.handleException(
                             new Throwable("No ID supplied"));
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (Exception e) {
-                ACRA.getErrorReporter().handleException(e);
+                ErrorReporter.handleException(e);
             }
             return 1;
         }

@@ -1,6 +1,10 @@
 <resources>
-
-    <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="padding_status_bar">0dp</dimen>
     <dimen name="single_pane_max_width">720dp</dimen>
+    <dimen name="card_elevation_default">2dp</dimen>
+    <dimen name="card_elevation_selected">8dp</dimen>
+    <dimen name="card_side_margin_default">4dp</dimen>
+    <dimen name="card_side_margin_selected">0dp</dimen>
+    <dimen name="card_topbottom_margin_default">4dp</dimen>
+    <dimen name="card_topbottom_margin_selected">2dp</dimen>
 </resources>

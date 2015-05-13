@@ -145,7 +145,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvWarning"
                     android:orientation="vertical"
-                    android:padding="5dp">
+                    android:padding="5dp"
+                    android:animateLayoutChanges="true">
 
                     <TextView
                         android:id="@+id/tvLentHeader"

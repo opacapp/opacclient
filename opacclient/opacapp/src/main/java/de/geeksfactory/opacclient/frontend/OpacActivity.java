@@ -22,7 +22,7 @@
 package de.geeksfactory.opacclient.frontend;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -38,8 +38,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.TransitionInflater;
 import android.util.DisplayMetrics;
@@ -75,7 +76,7 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 
-public abstract class OpacActivity extends ActionBarActivity {
+public abstract class OpacActivity extends AppCompatActivity {
     protected OpacClient app;
     protected AlertDialog adialog;
     protected AccountDataSource aData;
@@ -149,9 +150,18 @@ public abstract class OpacActivity extends ActionBarActivity {
                                            .replace(R.id.content_frame, fragment).commit();
             }
         }
+        fixStatusBarFlashing();
+    }
+
+    /**
+     * Fix status bar flashing problem during transitions by excluding the status bar background from transitions
+     */
+    @TargetApi(21)
+    private void fixStatusBarFlashing() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            // Fix status bar flashing problem during transitions
             getWindow().getEnterTransition().excludeTarget(android.R.id.statusBarBackground, true);
+            getWindow().getReenterTransition().excludeTarget(android.R.id.statusBarBackground, true);
+            getWindow().getReturnTransition().excludeTarget(android.R.id.statusBarBackground, true);
             getWindow().getExitTransition().excludeTarget(android.R.id.statusBarBackground, true);
         }
     }

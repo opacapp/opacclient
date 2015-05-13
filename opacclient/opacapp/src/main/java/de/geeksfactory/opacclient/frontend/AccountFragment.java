@@ -2,29 +2,27 @@
  * Copyright (C) 2013 by Raphael Michel under the MIT license:
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), 
- * to deal in the Software without restriction, including without limitation 
- * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the Software 
+ * of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the Software
  * is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in 
+ * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
 package de.geeksfactory.opacclient.frontend;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.NotificationManager;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -37,8 +35,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -57,7 +58,10 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.acra.ACRA;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.ObjectAnimator;
+import com.nineoldandroids.view.ViewHelper;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.NoHttpResponseException;
@@ -71,6 +75,7 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -96,12 +101,15 @@ import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.ui.AppCompatProgressDialog;
+import de.geeksfactory.opacclient.ui.ExpandingCardListManager;
+import de.geeksfactory.opacclient.utils.ErrorReporter;
 
 public class AccountFragment extends Fragment implements
         AccountSelectedListener {
 
     public static final long MAX_CACHE_AGE = (1000 * 3600 * 2);
-    protected ProgressDialog dialog;
+    protected AppCompatProgressDialog dialog;
     protected AlertDialog adialog;
     protected OpacClient app;
     protected View view;
@@ -123,6 +131,8 @@ public class AccountFragment extends Fragment implements
     protected TextView tvError, tvResHeader, tvPendingFeesLabel, tvPendingFees, tvValidUntilLabel,
             tvValidUntil, tvAge, tvLentHeader, tvWarning, tvAccCity, tvAccUser, tvAccLabel,
             tvErrBodyA, tvErrHeadA, tvErrBodyU;
+    protected ExpandingCardListManager lentManager;
+    protected ExpandingCardListManager resManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -309,7 +319,7 @@ public class AccountFragment extends Fragment implements
             btSend.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    dialog = ProgressDialog.show(getActivity(), "",
+                    dialog = AppCompatProgressDialog.show(getActivity(), "",
                             getString(R.string.report_sending), true,
                             true, new OnCancelListener() {
                                 @Override
@@ -567,7 +577,7 @@ public class AccountFragment extends Fragment implements
 
     protected void download(final String a) {
         if (app.getApi() instanceof EbookServiceApi) {
-            dialog = ProgressDialog.show(getActivity(), "",
+            dialog = AppCompatProgressDialog.show(getActivity(), "",
                     getString(R.string.doing_download), true);
             dialog.show();
             dt = new DownloadTask(a);
@@ -673,8 +683,68 @@ public class AccountFragment extends Fragment implements
 
     }
 
+    private class LentViewHolder {
+        public TextView tvTitleAndAuthor;
+        public TextView tvStatus;
+        public TextView tvAuthorDetail;
+        public TextView tvBranchDetail;
+        public TextView tvFormatDetail;
+        public ImageView ivProlong;
+        public ImageView ivDownload;
+        public ImageView ivDetails;
+        public View vStatusColor;
+        public LinearLayout llData;
+        public LinearLayout llDetails;
+        public LinearLayout llButtons;
+        public boolean hasDetailLink;
+
+        public void findViews(View v) {
+            tvTitleAndAuthor = (TextView) v.findViewById(R.id.tvTitleAndAuthor);
+            tvStatus = (TextView) v.findViewById(R.id.tvStatus);
+            tvAuthorDetail = (TextView) v.findViewById(R.id.tvAuthorDetail);
+            tvBranchDetail = (TextView) v.findViewById(R.id.tvBranchDetail);
+            tvFormatDetail = (TextView) v.findViewById(R.id.tvFormatDetail);
+            ivProlong = (ImageView) v.findViewById(R.id.ivProlong);
+            ivDownload = (ImageView) v.findViewById(R.id.ivDownload);
+            ivDetails = (ImageView) v.findViewById(R.id.ivDetails);
+            vStatusColor = v.findViewById(R.id.vStatusColor);
+            llData = (LinearLayout) v.findViewById(R.id.llData);
+            llDetails = (LinearLayout) v.findViewById(R.id.llDetails);
+            llButtons = (LinearLayout) v.findViewById(R.id.llButtons);
+        }
+    }
+
+    private class ReservationViewHolder {
+        public TextView tvTitleAndAuthor;
+        public TextView tvStatus;
+        public TextView tvAuthorDetail;
+        public TextView tvBranchDetail;
+        public TextView tvFormatDetail;
+        public ImageView ivCancel;
+        public ImageView ivBooking;
+        public ImageView ivDetails;
+        public LinearLayout llData;
+        public LinearLayout llDetails;
+        public LinearLayout llButtons;
+        public boolean hasDetailLink;
+
+        public void findViews(View v) {
+            tvTitleAndAuthor = (TextView) v.findViewById(R.id.tvTitleAndAuthor);
+            tvStatus = (TextView) v.findViewById(R.id.tvStatus);
+            tvAuthorDetail = (TextView) v.findViewById(R.id.tvAuthorDetail);
+            tvBranchDetail = (TextView) v.findViewById(R.id.tvBranchDetail);
+            tvFormatDetail = (TextView) v.findViewById(R.id.tvFormatDetail);
+            ivCancel = (ImageView) v.findViewById(R.id.ivCancel);
+            ivBooking = (ImageView) v.findViewById(R.id.ivBooking);
+            ivDetails = (ImageView) v.findViewById(R.id.ivDetails);
+            llData = (LinearLayout) v.findViewById(R.id.llData);
+            llDetails = (LinearLayout) v.findViewById(R.id.llDetails);
+            llButtons = (LinearLayout) v.findViewById(R.id.llButtons);
+        }
+    }
+
     @SuppressWarnings("deprecation")
-    public void displaydata(AccountData result, boolean fromcache) {
+    public void displaydata(final AccountData result, boolean fromcache) {
         if (getActivity() == null) {
             return;
         }
@@ -698,15 +768,19 @@ public class AccountFragment extends Fragment implements
             lib = app.getLibrary(account.getLibrary());
             tvAccCity.setText(lib.getDisplayName());
         } catch (IOException e) {
-            ACRA.getErrorReporter().handleException(e);
+            ErrorReporter.handleException(e);
             e.printStackTrace();
         } catch (JSONException e) {
-            ACRA.getErrorReporter().handleException(e);
+            ErrorReporter.handleException(e);
         }
+
+        /*
+            Lent items
+         */
 
         llLent.removeAllViews();
 
-        boolean notification_on = sp.getBoolean("notification_service", false);
+        final boolean notification_on = sp.getBoolean("notification_service", false);
         boolean notification_problems = false;
 
         if (tvWarning != null) {
@@ -727,73 +801,284 @@ public class AccountFragment extends Fragment implements
             tvLentHeader.setText(
                     getActivity().getString(R.string.lent_head) + " (" + result.getLent().size() +
                             ")");
-            for (final Map<String, String> item : result.getLent()) {
-                View v = getLayoutInflater(null).inflate(
-                        R.layout.listitem_account_lent, null);
 
-                if (item.containsKey(AccountData.KEY_LENT_ID)) {
-                    View.OnClickListener gotoDetails = new View.OnClickListener() {
+            lentManager = new ExpandingCardListManager(getActivity(), llLent) {
+                @Override
+                public View getView(final int position, ViewGroup container) {
+                    final View v = getLayoutInflater(null)
+                            .inflate(R.layout.listitem_account_lent, container, false);
+                    LentViewHolder holder = new LentViewHolder();
+                    holder.findViews(v);
+
+                    final Map<String, String> item = result.getLent().get(position);
+
+                    // Expanding and closing details
+                    v.setClickable(true);
+                    v.setFocusable(true);
+                    v.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(getActivity(),
-                                    SearchResultDetailActivity.class);
-                            intent.putExtra(
-                                    SearchResultDetailFragment.ARG_ITEM_ID,
-                                    item.get(AccountData.KEY_LENT_ID));
-                            startActivity(intent);
+                            if (getExpandedPosition() != position) {
+                                expand(position);
+                            } else {
+                                collapse();
+                            }
                         }
-                    };
-                    v.findViewById(R.id.tvTitel)
-                     .setOnClickListener(gotoDetails);
-                    v.findViewById(R.id.tvVerfasser).setOnClickListener(
-                            gotoDetails);
-                    v.findViewById(R.id.tvStatus).setOnClickListener(
-                            gotoDetails);
+                    });
+
+                    if (item.containsKey(AccountData.KEY_LENT_ID)) {
+                        // Connection to detail view
+                        holder.ivDetails.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View clicked) {
+                                Intent intent =
+                                        new Intent(getActivity(), SearchResultDetailActivity.class);
+                                intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
+                                        item.get(AccountData.KEY_LENT_ID));
+                                ActivityOptionsCompat options = ActivityOptionsCompat
+                                        .makeScaleUpAnimation(v, v.getLeft(), v.getTop(),
+                                                v.getWidth(), v.getHeight());
+                                ActivityCompat
+                                        .startActivity(getActivity(), intent, options.toBundle());
+                            }
+                        });
+                        holder.hasDetailLink = true;
+                    }
+
+                    // Overview (Title/Author, Status/Deadline)
+                    CharSequence title = item.containsKey(AccountData.KEY_LENT_TITLE) ?
+                            Html.fromHtml(item.get(AccountData.KEY_LENT_TITLE)) : null;
+                    CharSequence author = item.containsKey(AccountData.KEY_LENT_AUTHOR) ?
+                            Html.fromHtml(item.get(AccountData.KEY_LENT_AUTHOR)) : null;
+                    if (title != null && author != null) {
+                        holder.tvTitleAndAuthor.setText(title + ", " + author);
+                    } else if (title != null) {
+                        holder.tvTitleAndAuthor.setText(title);
+                    } else if (author != null) {
+                        holder.tvTitleAndAuthor.setText(author);
+                    } else {
+                        holder.tvTitleAndAuthor.setVisibility(View.GONE);
+                    }
+
+                    if (item.containsKey(AccountData.KEY_LENT_DEADLINE) &&
+                            item.containsKey(AccountData.KEY_LENT_STATUS)) {
+                        holder.tvStatus.setText(Html.fromHtml(item.get(AccountData.KEY_LENT_DEADLINE)) + " (" +
+                                Html.fromHtml(item.get(AccountData.KEY_LENT_STATUS)) + ")");
+                    } else if (item.containsKey(AccountData.KEY_LENT_DEADLINE)) {
+                        holder.tvStatus.setText(Html.fromHtml(item.get(AccountData.KEY_LENT_DEADLINE)));
+                    } else if (item.containsKey(AccountData.KEY_LENT_STATUS)) {
+                        holder.tvStatus.setText(Html.fromHtml(item.get(AccountData.KEY_LENT_STATUS)));
+                    } else {
+                        holder.tvStatus.setVisibility(View.GONE);
+                    }
+
+                    // Detail
+                    if (author != null) {
+                        holder.tvAuthorDetail.setText(author);
+                    } else {
+                        holder.tvAuthorDetail.setVisibility(View.GONE);
+                    }
+                    if (item.containsKey(AccountData.KEY_LENT_FORMAT)) {
+                        holder.tvFormatDetail.setText(
+                                Html.fromHtml(item.get(AccountData.KEY_LENT_FORMAT)));
+                    } else {
+                        holder.tvFormatDetail.setVisibility(View.GONE);
+                    }
+                    if (item.containsKey(AccountData.KEY_LENT_LENDING_BRANCH)) {
+                        holder.tvBranchDetail
+                                .setText(Html.fromHtml(item.get(AccountData.KEY_LENT_LENDING_BRANCH)));
+                    } else if (item.containsKey(AccountData.KEY_LENT_BRANCH)) {
+                        holder.tvBranchDetail.setText(Html.fromHtml(item.get(AccountData.KEY_LENT_BRANCH)));
+                    } else {
+                        holder.tvBranchDetail.setVisibility(View.GONE);
+                    }
+
+                    // Color codes for return dates
+                    if (item.containsKey(AccountData.KEY_LENT_DEADLINE_TIMESTAMP)) {
+                        if (Long.parseLong(item
+                                .get(AccountData.KEY_LENT_DEADLINE_TIMESTAMP)) < System
+                                .currentTimeMillis()) {
+                            holder.vStatusColor
+                                    .setBackgroundColor(getResources().getColor(R.color.date_overdue));
+                        } else if ((Long.parseLong(item
+                                .get(AccountData.KEY_LENT_DEADLINE_TIMESTAMP)) - System
+                                .currentTimeMillis()) <= tolerance) {
+                            holder.vStatusColor
+                                    .setBackgroundColor(getResources().getColor(R.color.date_warning));
+                        } else if (item.containsKey(AccountData.KEY_LENT_DOWNLOAD)) {
+                            holder.vStatusColor.setBackgroundColor(
+                                    getResources().getColor(R.color.account_downloadable));
+                        }
+                    } else if (item.containsKey(AccountData.KEY_LENT_DOWNLOAD)) {
+                        holder.vStatusColor.setBackgroundColor(
+                                getResources().getColor(R.color.account_downloadable));
+                    }
+
+                    if (item.containsKey(AccountData.KEY_LENT_LINK)) {
+                        holder.ivProlong.setTag(item.get(AccountData.KEY_LENT_LINK));
+                        holder.ivProlong.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View arg0) {
+                                prolong((String) arg0.getTag());
+                            }
+                        });
+                        holder.ivProlong.setVisibility(View.VISIBLE);
+                        if (item.containsKey(AccountData.KEY_LENT_RENEWABLE)) {
+                            holder.ivProlong.setAlpha(
+                                    item.get(AccountData.KEY_LENT_RENEWABLE).equals("Y") ? 255 : 100);
+                        }
+                    } else if (item.containsKey(AccountData.KEY_LENT_DOWNLOAD)
+                            && app.getApi() instanceof EbookServiceApi) {
+                        holder.ivDownload.setTag(item.get(AccountData.KEY_LENT_DOWNLOAD));
+                        holder.ivDownload.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View arg0) {
+                                download((String) arg0.getTag());
+                            }
+                        });
+                        holder.ivProlong.setVisibility(View.GONE);
+                        holder.ivDownload.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.ivProlong.setVisibility(View.INVISIBLE);
+                    }
+                    v.setTag(holder);
+                    return v;
                 }
 
-                if (item.containsKey(AccountData.KEY_LENT_TITLE)) {
-                    ((TextView) v.findViewById(R.id.tvTitel)).setText(Html
-                            .fromHtml(item.get(AccountData.KEY_LENT_TITLE)));
-                }
-                if (item.containsKey(AccountData.KEY_LENT_AUTHOR)) {
-                    ((TextView) v.findViewById(R.id.tvVerfasser)).setText(Html
-                            .fromHtml(item.get(AccountData.KEY_LENT_AUTHOR)));
+                @Override
+                public void expandView(int position, View view) {
+                    LentViewHolder holder = (LentViewHolder) view.getTag();
+                    Map<String, String> item = result.getLent().get(position);
+
+                    holder.llDetails.setVisibility(View.VISIBLE);
+                    if (item.containsKey(AccountData.KEY_LENT_TITLE)) {
+                        holder.tvTitleAndAuthor.setText(Html.fromHtml(item.get(AccountData.KEY_LENT_TITLE)));
+                    } else {
+                        holder.tvTitleAndAuthor.setVisibility(View.GONE);
+                    }
+                    if (holder.hasDetailLink) holder.ivDetails.setVisibility(View.VISIBLE);
                 }
 
-                v.findViewById(R.id.tvStatus)
-                 .setVisibility(View.VISIBLE);
-                if (item.containsKey(AccountData.KEY_LENT_STATUS)
-                        && !"".equals(item
-                        .get(AccountData.KEY_LENT_STATUS))
-                        && item.containsKey(AccountData.KEY_LENT_DEADLINE)) {
-                    ((TextView) v.findViewById(R.id.tvStatus)).setText(Html
-                            .fromHtml(item.get(AccountData.KEY_LENT_DEADLINE)
-                                    + " ("
-                                    + item.get(AccountData.KEY_LENT_STATUS)
-                                    + ")"));
-                } else if (item.containsKey(AccountData.KEY_LENT_STATUS)) {
-                    ((TextView) v.findViewById(R.id.tvStatus)).setText(Html
-                            .fromHtml(item.get(AccountData.KEY_LENT_STATUS)));
-                } else if (item.containsKey(AccountData.KEY_LENT_DEADLINE)) {
-                    ((TextView) v.findViewById(R.id.tvStatus)).setText(Html
-                            .fromHtml(item.get(AccountData.KEY_LENT_DEADLINE)));
-                } else {
-                    v.findViewById(R.id.tvStatus)
-                     .setVisibility(View.GONE);
-                }
-                if (item.containsKey(AccountData.KEY_LENT_FORMAT)) {
-                    ((TextView) v.findViewById(R.id.tvFmt)).setText(Html
-                            .fromHtml(item.get(AccountData.KEY_LENT_FORMAT)));
-                    v.findViewById(R.id.tvFmt)
-                     .setVisibility(View.VISIBLE);
-                } else {
-                    v.findViewById(R.id.tvFmt)
-                     .setVisibility(View.GONE);
+                @Override
+                public void collapseView(int position, View view) {
+                    LentViewHolder holder = (LentViewHolder) view.getTag();
+                    Map<String, String> item = result.getLent().get(position);
+
+                    CharSequence title = item.containsKey(AccountData.KEY_LENT_TITLE) ?
+                            Html.fromHtml(item.get(AccountData.KEY_LENT_TITLE)) : null;
+                    CharSequence author = item.containsKey(AccountData.KEY_LENT_AUTHOR) ?
+                            Html.fromHtml(item.get(AccountData.KEY_LENT_AUTHOR)) : null;
+
+                    holder.llDetails.setVisibility(View.GONE);
+                    if (title != null && author != null) {
+                        holder.tvTitleAndAuthor.setText(title + ", " + author);
+                    } else if (author != null) {
+                        holder.tvTitleAndAuthor.setText(author);
+                        holder.tvTitleAndAuthor.setVisibility(View.VISIBLE);
+                    }
+                    holder.ivDetails.setVisibility(View.GONE);
                 }
 
+                @Override
+                public int getCount() {
+                    return result.getLent().size();
+                }
+            };
+            lentManager.setAnimationInterceptor(
+                    new ExpandingCardListManager.AnimationInterceptor() {
+                        private float llDataY;
+                        private float llDataTranslationY = 0;
+
+                        @Override
+                        public void beforeExpand(View unexpandedView) {
+                            LentViewHolder holder = (LentViewHolder) unexpandedView.getTag();
+                            llDataY = ViewHelper.getY(holder.llData);
+                        }
+
+                        @Override
+                        public Collection<Animator> getExpandAnimations(int heightDifference,
+                                View expandedView) {
+                            LentViewHolder holder = (LentViewHolder) expandedView.getTag();
+                            Collection<Animator> anims = getAnimations(-heightDifference, 0);
+                            // Animate buttons to the side
+                            int difference = 2 * (getResources()
+                                    .getDimensionPixelSize(R.dimen.card_side_margin_selected) -
+                                    getResources().getDimensionPixelSize(
+                                            R.dimen.card_side_margin_default));
+                            anims.add(ObjectAnimator
+                                    .ofFloat(holder.llButtons, "translationX", difference, 0));
+                            // Animate llData to the bottom if required
+                            if (ViewHelper.getY(holder.llData) != llDataY) {
+                                ViewHelper.setY(holder.llData, llDataY);
+                                llDataTranslationY = ViewHelper.getTranslationY(holder.llData);
+                                anims.add(ObjectAnimator.ofFloat(holder.llData, "translationY", 0));
+                            } else {
+                                llDataTranslationY = 0;
+                            }
+                            return anims;
+                        }
+
+                        @Override
+                        public Collection<Animator> getCollapseAnimations(int heightDifference,
+                                View expandedView) {
+                            LentViewHolder holder = (LentViewHolder) expandedView.getTag();
+                            Collection<Animator> anims = getAnimations(0, heightDifference);
+                            // Animate buttons back
+                            int difference = 2 * (getResources()
+                                    .getDimensionPixelSize(R.dimen.card_side_margin_selected) -
+                                    getResources().getDimensionPixelSize(
+                                            R.dimen.card_side_margin_default));
+                            anims.add(ObjectAnimator
+                                    .ofFloat(holder.llButtons, "translationX", 0, difference));
+                            // Animate llData back
+                            anims.add(ObjectAnimator
+                                    .ofFloat(holder.llData, "translationY", llDataTranslationY));
+                            return anims;
+                        }
+
+                        @Override
+                        public void onCollapseAnimationEnd() {
+                            if (view.findViewById(R.id.rlMeta) != null) {
+                                // tablet
+                                ViewHelper.setTranslationY(view.findViewById(R.id.rlMeta), 0);
+                            } else {
+                                // phone
+                                ViewHelper.setTranslationY(tvResHeader, 0);
+                                ViewHelper.setTranslationY(llRes, 0);
+                                ViewHelper.setTranslationY(tvAge, 0);
+                                ViewHelper.setTranslationY(view.findViewById(R.id.tvNoWarranty), 0);
+                            }
+                        }
+
+                        private Collection<Animator> getAnimations(float from, float to) {
+                            List<Animator> animators = new ArrayList<>();
+                            if (view.findViewById(R.id.rlMeta) != null) {
+                                // tablet
+                                if (result.getLent().size() >= result.getReservations().size()) {
+                                    animators.add(ObjectAnimator
+                                            .ofFloat(view.findViewById(R.id.rlMeta), "translationY",
+                                                    from,
+                                                    to));
+                                }
+                            } else {
+                                // phone
+                                animators.add(ObjectAnimator
+                                        .ofFloat(tvResHeader, "translationY", from, to));
+                                animators.add(ObjectAnimator
+                                        .ofFloat(llRes, "translationY", from, to));
+                                animators.add(ObjectAnimator
+                                        .ofFloat(tvAge, "translationY", from, to));
+                                animators.add(ObjectAnimator
+                                        .ofFloat(view.findViewById(R.id.tvNoWarranty),
+                                                "translationY", from, to));
+                            }
+                            return animators;
+                        }
+                    });
+
+            for (final Map<String, String> item : result.getLent()) {
                 try {
-                    if (notification_on
-                            && item.containsKey(AccountData.KEY_LENT_DEADLINE)) {
+                    if (notification_on && item.containsKey(AccountData.KEY_LENT_DEADLINE)) {
                         if (!item.get(AccountData.KEY_LENT_DEADLINE).equals("")) {
                             if ((!item
                                     .containsKey(AccountData.KEY_LENT_DEADLINE_TIMESTAMP) || Long
@@ -808,85 +1093,6 @@ public class AccountFragment extends Fragment implements
                 } catch (Exception e) {
                     notification_problems = true;
                 }
-
-                // Color codes for return dates
-                if (item.containsKey(AccountData.KEY_LENT_DEADLINE_TIMESTAMP)) {
-                    if (Long.parseLong(item
-                            .get(AccountData.KEY_LENT_DEADLINE_TIMESTAMP)) < System
-                            .currentTimeMillis()) {
-                        v.findViewById(R.id.vStatusColor).setBackgroundColor(
-                                getResources().getColor(R.color.date_overdue));
-                    } else if ((Long.parseLong(item
-                            .get(AccountData.KEY_LENT_DEADLINE_TIMESTAMP)) - System
-                            .currentTimeMillis()) <= tolerance) {
-                        v.findViewById(R.id.vStatusColor).setBackgroundColor(
-                                getResources().getColor(R.color.date_warning));
-                    } else if (item.containsKey(AccountData.KEY_LENT_DOWNLOAD)) {
-                        v.findViewById(R.id.vStatusColor).setBackgroundColor(
-                                getResources().getColor(
-                                        R.color.account_downloadable));
-                    }
-                } else if (item.containsKey(AccountData.KEY_LENT_DOWNLOAD)) {
-                    v.findViewById(R.id.vStatusColor).setBackgroundColor(
-                            getResources().getColor(
-                                    R.color.account_downloadable));
-                }
-
-                if (item.containsKey(AccountData.KEY_LENT_LENDING_BRANCH)) {
-                    ((TextView) v.findViewById(R.id.tvZst)).setText(Html
-                            .fromHtml(item
-                                    .get(AccountData.KEY_LENT_LENDING_BRANCH)));
-                    v.findViewById(R.id.tvZst)
-                     .setVisibility(View.VISIBLE);
-                } else if (item.containsKey(AccountData.KEY_LENT_BRANCH)) {
-                    ((TextView) v.findViewById(R.id.tvZst)).setText(Html
-                            .fromHtml(item.get(AccountData.KEY_LENT_BRANCH)));
-                    v.findViewById(R.id.tvZst)
-                     .setVisibility(View.VISIBLE);
-                } else {
-                    v.findViewById(R.id.tvZst)
-                     .setVisibility(View.GONE);
-                }
-
-                if (item.containsKey(AccountData.KEY_LENT_LINK)) {
-                    v.findViewById(R.id.ivProlong).setTag(
-                            item.get(AccountData.KEY_LENT_LINK));
-                    v.findViewById(R.id.ivProlong)
-                     .setOnClickListener(new OnClickListener() {
-                         @Override
-                         public void onClick(View arg0) {
-                             prolong((String) arg0.getTag());
-                         }
-                     });
-                    v.findViewById(R.id.ivProlong)
-                     .setVisibility(View.VISIBLE);
-                    if (item.containsKey(AccountData.KEY_LENT_RENEWABLE)) {
-                        ((ImageView) v.findViewById(R.id.ivProlong))
-                                .setAlpha(item.get(
-                                        AccountData.KEY_LENT_RENEWABLE).equals(
-                                        "Y") ? 255 : 100);
-                    }
-                } else if (item.containsKey(AccountData.KEY_LENT_DOWNLOAD)
-                        && app.getApi() instanceof EbookServiceApi) {
-                    v.findViewById(R.id.ivDownload).setTag(
-                            item.get(AccountData.KEY_LENT_DOWNLOAD));
-                    v.findViewById(R.id.ivDownload)
-                     .setOnClickListener(new OnClickListener() {
-                         @Override
-                         public void onClick(View arg0) {
-                             download((String) arg0.getTag());
-                         }
-                     });
-                    v.findViewById(R.id.ivProlong)
-                     .setVisibility(View.GONE);
-                    v.findViewById(R.id.ivDownload)
-                     .setVisibility(View.VISIBLE);
-                } else {
-                    v.findViewById(R.id.ivProlong)
-                     .setVisibility(View.INVISIBLE);
-                }
-
-                llLent.addView(v);
             }
         }
 
@@ -897,8 +1103,10 @@ public class AccountFragment extends Fragment implements
             }
         }
 
+        /*
+            Reservations
+         */
         llRes.removeAllViews();
-
         if (result.getReservations().size() == 0) {
             TextView t1 = new TextView(getActivity());
             t1.setText(R.string.reservations_none);
@@ -909,107 +1117,241 @@ public class AccountFragment extends Fragment implements
             tvResHeader.setText(getActivity()
                     .getString(R.string.reservations_head) + " (" +
                     result.getReservations().size() + ")");
-            for (final Map<String, String> item : result.getReservations()) {
-                View v = getLayoutInflater(null).inflate(
-                        R.layout.listitem_account_reservation, null);
+            resManager = new ExpandingCardListManager(getActivity(), llRes) {
+                @Override
+                public View getView(final int position, ViewGroup container) {
+                    final View v = getLayoutInflater(null).inflate(
+                            R.layout.listitem_account_reservation, llRes, false);
+                    ReservationViewHolder holder = new ReservationViewHolder();
+                    holder.findViews(v);
 
-                if (item.containsKey(AccountData.KEY_RESERVATION_ID)) {
-                    View.OnClickListener gotoDetails = new View.OnClickListener() {
+                    final Map<String, String> item = result.getReservations().get(position);
+
+                    // Expanding and closing details
+                    v.setClickable(true);
+                    v.setFocusable(true);
+                    v.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(getActivity(),
-                                    SearchResultDetailActivity.class);
-                            intent.putExtra(
-                                    SearchResultDetailFragment.ARG_ITEM_ID,
-                                    item.get(AccountData.KEY_RESERVATION_ID));
-                            startActivity(intent);
+                            if (getExpandedPosition() != position) {
+                                expand(position);
+                            } else {
+                                collapse();
+                            }
                         }
-                    };
-                    v.findViewById(R.id.tvTitel)
-                     .setOnClickListener(gotoDetails);
-                    v.findViewById(R.id.tvVerfasser).setOnClickListener(
-                            gotoDetails);
-                    v.findViewById(R.id.tvStatus).setOnClickListener(
-                            gotoDetails);
+                    });
+
+                    if (item.containsKey(AccountData.KEY_RESERVATION_ID)) {
+                        // Connection to detail view
+                        holder.ivDetails.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View clicked) {
+                                Intent intent =
+                                        new Intent(getActivity(), SearchResultDetailActivity.class);
+                                intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
+                                        item.get(AccountData.KEY_RESERVATION_ID));
+                                ActivityOptionsCompat options = ActivityOptionsCompat
+                                        .makeScaleUpAnimation(v, v.getLeft(), v.getTop(),
+                                                v.getWidth(), v.getHeight());
+                                ActivityCompat
+                                        .startActivity(getActivity(), intent, options.toBundle());
+                            }
+                        });
+                        holder.hasDetailLink = true;
+                    }
+
+                    // Overview (Title/Author, Ready/Expire)
+                    final CharSequence title = item.containsKey(AccountData.KEY_RESERVATION_TITLE) ?
+                            Html.fromHtml(item.get(AccountData.KEY_RESERVATION_TITLE)) : null;
+                    final CharSequence author = item.containsKey(AccountData.KEY_RESERVATION_AUTHOR) ?
+                            Html.fromHtml(item.get(AccountData.KEY_RESERVATION_AUTHOR)) : null;
+                    if (title != null && author != null) {
+                        holder.tvTitleAndAuthor.setText(title + ", " + author);
+                    } else if (title != null) {
+                        holder.tvTitleAndAuthor.setText(title);
+                    } else if (author != null) {
+                        holder.tvTitleAndAuthor.setText(author);
+                    } else {
+                        holder.tvTitleAndAuthor.setVisibility(View.GONE);
+                    }
+
+                    if (item.containsKey(AccountData.KEY_RESERVATION_READY)) {
+                        holder.tvStatus.setText(Html.fromHtml(item.get(AccountData.KEY_RESERVATION_READY)));
+                    } else if (item.containsKey(AccountData.KEY_RESERVATION_EXPIRE) &&
+                            item.get(AccountData.KEY_RESERVATION_EXPIRE).length() > 6) {
+                        holder.tvStatus.setText(
+                                Html.fromHtml(getString(R.string.reservation_expire_until) + " "
+                                        + item.get(AccountData.KEY_RESERVATION_EXPIRE)));
+                    } else {
+                        holder.tvStatus.setVisibility(View.GONE);
+                    }
+
+                    // Detail
+                    if (author != null) {
+                        holder.tvAuthorDetail.setText(author);
+                    } else {
+                        holder.tvAuthorDetail.setVisibility(View.GONE);
+                    }
+                    if (item.containsKey(AccountData.KEY_RESERVATION_FORMAT)) {
+                        holder.tvFormatDetail
+                                .setText(Html.fromHtml(item.get(AccountData.KEY_RESERVATION_FORMAT)));
+                    } else {
+                        holder.tvFormatDetail.setVisibility(View.GONE);
+                    }
+                    if (item.containsKey(AccountData.KEY_RESERVATION_BRANCH)) {
+                        holder.tvBranchDetail
+                                .setText(Html.fromHtml(item.get(AccountData.KEY_RESERVATION_BRANCH)));
+                    } else {
+                        holder.tvBranchDetail.setVisibility(View.GONE);
+                    }
+
+                    if (item.containsKey(AccountData.KEY_RESERVATION_BOOKING)) {
+                        holder.ivBooking.setTag(item.get(AccountData.KEY_RESERVATION_BOOKING));
+                        holder.ivBooking.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View arg0) {
+                                bookingStart((String) arg0.getTag());
+                            }
+                        });
+                        holder.ivBooking.setVisibility(View.VISIBLE);
+                        holder.ivCancel.setVisibility(View.GONE);
+                    } else if (item.containsKey(AccountData.KEY_RESERVATION_CANCEL)) {
+                        holder.ivCancel.setTag(item.get(AccountData.KEY_RESERVATION_CANCEL));
+                        holder.ivCancel.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View arg0) {
+                                cancel((String) arg0.getTag());
+                            }
+                        });
+                        holder.ivCancel.setVisibility(View.VISIBLE);
+                        holder.ivBooking.setVisibility(View.GONE);
+                    } else {
+                        holder.ivCancel.setVisibility(View.INVISIBLE);
+                        holder.ivBooking.setVisibility(View.GONE);
+                    }
+                    v.setTag(holder);
+                    return v;
                 }
 
-                if (item.containsKey(AccountData.KEY_RESERVATION_TITLE)) {
-                    ((TextView) v.findViewById(R.id.tvTitel)).setText(Html
-                            .fromHtml(item
-                                    .get(AccountData.KEY_RESERVATION_TITLE)));
-                }
-                if (item.containsKey(AccountData.KEY_RESERVATION_AUTHOR)) {
-                    ((TextView) v.findViewById(R.id.tvVerfasser)).setText(Html
-                            .fromHtml(item
-                                    .get(AccountData.KEY_RESERVATION_AUTHOR)));
+                @Override
+                public void expandView(int position, View view) {
+                    ReservationViewHolder holder = (ReservationViewHolder) view.getTag();
+                    Map<String, String> item = result.getReservations().get(position);
+
+                    holder.llDetails.setVisibility(View.VISIBLE);
+                    if (item.containsKey(AccountData.KEY_RESERVATION_TITLE)) {
+                        holder.tvTitleAndAuthor.setText(item.get(
+                                AccountData.KEY_RESERVATION_TITLE));
+                    } else {
+                        holder.tvTitleAndAuthor.setVisibility(View.GONE);
+                    }
+                    if (holder.hasDetailLink) holder.ivDetails.setVisibility(View.VISIBLE);
                 }
 
-                if (item.containsKey(AccountData.KEY_RESERVATION_READY)) {
-                    ((TextView) v.findViewById(R.id.tvStatus)).setText(Html
-                            .fromHtml(item
-                                    .get(AccountData.KEY_RESERVATION_READY)));
-                    v.findViewById(R.id.tvStatus)
-                     .setVisibility(View.VISIBLE);
-                } else if (item.containsKey(AccountData.KEY_RESERVATION_EXPIRE)
-                        && item.get(AccountData.KEY_RESERVATION_EXPIRE)
-                               .length() > 6) {
-                    ((TextView) v.findViewById(R.id.tvStatus))
-                            .setText(Html.fromHtml("bis "
-                                    + item.get(AccountData.KEY_RESERVATION_EXPIRE)));
-                    v.findViewById(R.id.tvStatus)
-                     .setVisibility(View.VISIBLE);
-                } else {
-                    v.findViewById(R.id.tvStatus)
-                     .setVisibility(View.GONE);
+                @Override
+                public void collapseView(int position, View view) {
+                    ReservationViewHolder holder = (ReservationViewHolder) view.getTag();
+                    Map<String, String> item = result.getReservations().get(position);
+
+                    holder.llDetails.setVisibility(View.GONE);
+                    if (item.containsKey(AccountData.KEY_RESERVATION_TITLE) && item.containsKey(AccountData.KEY_RESERVATION_AUTHOR)) {
+                        holder.tvTitleAndAuthor.setText(item.get(
+                                AccountData.KEY_RESERVATION_TITLE) + ", " + item.get(
+                                AccountData.KEY_RESERVATION_AUTHOR));
+                    } else if (item.containsKey(AccountData.KEY_RESERVATION_AUTHOR)) {
+                        holder.tvTitleAndAuthor.setText(item.get(AccountData.KEY_RESERVATION_AUTHOR));
+                        holder.tvTitleAndAuthor.setVisibility(View.VISIBLE);
+                    }
+                    holder.ivDetails.setVisibility(View.GONE);
                 }
 
-                if (item.containsKey(AccountData.KEY_RESERVATION_BRANCH)) {
-                    ((TextView) v.findViewById(R.id.tvZst)).setText(Html
-                            .fromHtml(item
-                                    .get(AccountData.KEY_RESERVATION_BRANCH)));
-                    v.findViewById(R.id.tvZst)
-                     .setVisibility(View.VISIBLE);
-                } else {
-                    v.findViewById(R.id.tvZst)
-                     .setVisibility(View.GONE);
+                @Override
+                public int getCount() {
+                    return result.getReservations().size();
+                }
+            };
+            resManager.setAnimationInterceptor(new ExpandingCardListManager.AnimationInterceptor() {
+                private float llDataY;
+                private float llDataTranslationY = 0;
+
+                @Override
+                public void beforeExpand(View unexpandedView) {
+                    ReservationViewHolder holder = (ReservationViewHolder) unexpandedView.getTag();
+                    llDataY = ViewHelper.getY(holder.llData);
                 }
 
-                if (item.containsKey(AccountData.KEY_RESERVATION_BOOKING)) {
-                    v.findViewById(R.id.ivBooking).setTag(
-                            item.get(AccountData.KEY_RESERVATION_BOOKING));
-                    v.findViewById(R.id.ivBooking)
-                     .setOnClickListener(new OnClickListener() {
-                         @Override
-                         public void onClick(View arg0) {
-                             bookingStart((String) arg0.getTag());
-                         }
-                     });
-                    v.findViewById(R.id.ivBooking)
-                     .setVisibility(View.VISIBLE);
-                    v.findViewById(R.id.ivCancel)
-                     .setVisibility(View.GONE);
-                } else if (item.containsKey(AccountData.KEY_RESERVATION_CANCEL)) {
-                    v.findViewById(R.id.ivCancel).setTag(
-                            item.get(AccountData.KEY_RESERVATION_CANCEL));
-                    v.findViewById(R.id.ivCancel)
-                     .setOnClickListener(new OnClickListener() {
-                         @Override
-                         public void onClick(View arg0) {
-                             cancel((String) arg0.getTag());
-                         }
-                     });
-                    v.findViewById(R.id.ivCancel)
-                     .setVisibility(View.VISIBLE);
-                    v.findViewById(R.id.ivBooking)
-                     .setVisibility(View.GONE);
-                } else {
-                    v.findViewById(R.id.ivCancel)
-                     .setVisibility(View.INVISIBLE);
-                    v.findViewById(R.id.ivBooking)
-                     .setVisibility(View.GONE);
+                @Override
+                public Collection<Animator> getExpandAnimations(int heightDifference,
+                        View expandedView) {
+                    ReservationViewHolder holder = (ReservationViewHolder) expandedView.getTag();
+                    Collection<Animator> anims = getAnimations(-heightDifference, 0);
+                    // Animate buttons to the side
+                    int difference = 2 * (getResources()
+                            .getDimensionPixelSize(R.dimen.card_side_margin_selected) -
+                            getResources().getDimensionPixelSize(
+                                    R.dimen.card_side_margin_default));
+                    anims.add(ObjectAnimator
+                            .ofFloat(holder.llButtons, "translationX", difference, 0));
+                    // Animate llData to the bottom if required
+                    if (ViewHelper.getY(holder.llData) != llDataY) {
+                        ViewHelper.setY(holder.llData, llDataY);
+                        llDataTranslationY = ViewHelper.getTranslationY(holder.llData);
+                        anims.add(ObjectAnimator.ofFloat(holder.llData, "translationY", 0));
+                    } else {
+                        llDataTranslationY = 0;
+                    }
+                    return anims;
                 }
-                llRes.addView(v);
-            }
+
+                @Override
+                public Collection<Animator> getCollapseAnimations(int heightDifference,
+                        View expandedView) {
+                    ReservationViewHolder holder = (ReservationViewHolder) expandedView.getTag();
+                    Collection<Animator> anims = getAnimations(0, heightDifference);
+                    // Animate buttons back
+                    int difference = 2 * (getResources()
+                            .getDimensionPixelSize(R.dimen.card_side_margin_selected) -
+                            getResources().getDimensionPixelSize(
+                                    R.dimen.card_side_margin_default));
+                    anims.add(ObjectAnimator
+                            .ofFloat(holder.llButtons, "translationX", 0, difference));
+                    // Animate llData back
+                    anims.add(ObjectAnimator.ofFloat(holder.llData, "translationY",
+                            llDataTranslationY));
+                    return anims;
+                }
+
+                @Override
+                public void onCollapseAnimationEnd() {
+                    if (view.findViewById(R.id.rlMeta) != null) {
+                        // tablet
+                        ViewHelper.setTranslationY(view.findViewById(R.id.rlMeta), 0);
+                    } else {
+                        // phone
+                        ViewHelper.setTranslationY(tvAge, 0);
+                        ViewHelper.setTranslationY(view.findViewById(R.id.tvNoWarranty), 0);
+                    }
+                }
+
+                private Collection<Animator> getAnimations(float from, float to) {
+                    List<Animator> animators = new ArrayList<>();
+                    if (view.findViewById(R.id.rlMeta) != null) {
+                        // tablet
+                        if (result.getReservations().size() >= result.getLent().size()) {
+                            animators.add(ObjectAnimator
+                                    .ofFloat(view.findViewById(R.id.rlMeta), "translationY", from,
+                                            to));
+                        }
+                    } else {
+                        // phone
+                        animators.add(ObjectAnimator.ofFloat(tvAge, "translationY", from, to));
+                        animators.add(ObjectAnimator
+                                .ofFloat(view.findViewById(R.id.tvNoWarranty), "translationY", from,
+                                        to));
+                    }
+                    return animators;
+                }
+            });
         }
 
         if (result.getPendingFees() != null) {
@@ -1177,7 +1519,7 @@ public class AccountFragment extends Fragment implements
                 ListView lv = (ListView) view.findViewById(R.id.lvBibs);
 
                 lv.setAdapter(new ProlongAllResultAdapter(getActivity(), res
-                        .getResults().toArray()));
+                        .getResults()));
                 switch (result.getActionIdentifier()) {
                     case ReservationResult.ACTION_BRANCH:
                         builder.setTitle(R.string.branch);
@@ -1355,7 +1697,7 @@ public class AccountFragment extends Fragment implements
             } catch (IOException | OpacErrorException e) {
                 exception = e;
             } catch (Exception e) {
-                ACRA.getErrorReporter().handleException(e);
+                ErrorReporter.handleException(e);
                 exception = e;
             }
             return null;
@@ -1390,7 +1732,7 @@ public class AccountFragment extends Fragment implements
                     .SocketException e) {
                 e.printStackTrace();
             } catch (Exception e) {
-                ACRA.getErrorReporter().handleException(e);
+                ErrorReporter.handleException(e);
             }
             return null;
         }
@@ -1537,7 +1879,7 @@ public class AccountFragment extends Fragment implements
                 success = false;
                 e.printStackTrace();
             } catch (Exception e) {
-                ACRA.getErrorReporter().handleException(e);
+                ErrorReporter.handleException(e);
                 success = false;
             }
             return null;
@@ -1586,7 +1928,7 @@ public class AccountFragment extends Fragment implements
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (Exception e) {
-                ACRA.getErrorReporter().handleException(e);
+                ErrorReporter.handleException(e);
             }
             return null;
         }
@@ -1618,11 +1960,11 @@ public class AccountFragment extends Fragment implements
         }
     }
 
-    public class ProlongAllResultAdapter extends ArrayAdapter<Object> {
+    public class ProlongAllResultAdapter extends ArrayAdapter<Map<String, String>> {
 
-        private Object[] objects;
+        private List<Map<String, String>> objects;
 
-        public ProlongAllResultAdapter(Context context, Object[] objects) {
+        public ProlongAllResultAdapter(Context context, List<Map<String, String>> objects) {
             super(context, R.layout.simple_spinner_item, objects);
             this.objects = objects;
         }
@@ -1631,7 +1973,7 @@ public class AccountFragment extends Fragment implements
         public View getView(int position, View contentView, ViewGroup viewGroup) {
             View view;
 
-            if (objects[position] == null) {
+            if (objects.get(position) == null) {
                 LayoutInflater layoutInflater = (LayoutInflater) getContext()
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 view = layoutInflater.inflate(
@@ -1639,7 +1981,7 @@ public class AccountFragment extends Fragment implements
                 return view;
             }
 
-            Map<String, String> item = ((Map<String, String>) objects[position]);
+            Map<String, String> item = objects.get(position);
 
             if (contentView == null) {
                 LayoutInflater layoutInflater = (LayoutInflater) getContext()
@@ -1687,7 +2029,7 @@ public class AccountFragment extends Fragment implements
             } catch (IOException e) {
                 publishProgress(e, "ioerror");
             } catch (Exception e) {
-                ACRA.getErrorReporter().handleException(e);
+                ErrorReporter.handleException(e);
             }
             return null;
         }

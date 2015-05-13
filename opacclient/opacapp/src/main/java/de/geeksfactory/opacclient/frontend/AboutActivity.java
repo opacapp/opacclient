@@ -22,14 +22,14 @@
 package de.geeksfactory.opacclient.frontend;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.github.machinarius.preferencefragment.PreferenceFragment;
 
 import de.geeksfactory.opacclient.R;
 
-public class AboutActivity extends ActionBarActivity {
+public class AboutActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

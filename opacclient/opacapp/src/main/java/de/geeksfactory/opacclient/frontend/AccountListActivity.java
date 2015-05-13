@@ -26,7 +26,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.MenuItem;
@@ -46,7 +46,7 @@ import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 
-public class AccountListActivity extends ActionBarActivity {
+public class AccountListActivity extends AppCompatActivity {
 
     private static final int ACCOUNT_EDIT_REQUEST_CODE = 0;
     protected List<Account> accounts;
