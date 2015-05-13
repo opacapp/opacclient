@@ -306,6 +306,7 @@ public abstract class ExpandingCardListManager {
                 mainCard.setVisibility(View.VISIBLE);
                 upperCard.setVisibility(View.GONE);
                 lowerCard.setVisibility(View.GONE);
+                expandedCard.clearAnimation();
                 expandedCard.setVisibility(View.GONE);
                 llUpper.removeAllViews();
                 llLower.removeAllViews();
