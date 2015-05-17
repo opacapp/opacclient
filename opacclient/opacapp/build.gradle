@@ -1,16 +1,8 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
-
-    defaultConfig {
-        applicationId "de.geeksfactory.opacclient"
-        minSdkVersion 8
-        targetSdkVersion 22
-        versionCode 115
-        versionName "4.1.2"
-    }
 
     lintOptions {
         // disable 'AndroidLintRtlHardcoded' // Throws an "Unknown issue id" for me
@@ -19,27 +11,6 @@ android {
         disable 'UnusedAttribute'
     }
 
-    signingConfigs {
-        release {
-            storeFile file("../../release.keystore")
-            storePassword System.getenv("KSTOREPWD")
-            keyAlias "opac client"
-            keyPassword System.getenv("KSTOREPWD")
-        }
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled true
-            signingConfig signingConfigs.release
-            proguardFiles 'proguard-rules.txt'
-        }
-        debug {
-            debuggable true
-            applicationIdSuffix ".debug"
-            versionNameSuffix "-debug"
-        }
-    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
