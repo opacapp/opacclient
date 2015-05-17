@@ -20,7 +20,6 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "http://www.burghausen.de/unsere-stadt/kulturstadt/stadtbibliothek.html",
         "mediatypes": {
             "Spiele.gif": "BOARDGAME",
             "biblioload.gif": "EBOOK",
@@ -45,6 +44,7 @@
         48.1725613,
         12.8310753
     ],
+    "information": "http://www.burghausen.de/unsere-stadt/kulturstadt/stadtbibliothek.html",
     "state": "Bayern",
     "title": "Stadtbibliothek"
 }

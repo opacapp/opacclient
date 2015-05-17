@@ -24,7 +24,6 @@
             "returndate": 3,
             "status": 2
         },
-        "information": "http://opac.stadtbibliothek.goettingen.de/read_blue/info.html",
         "mediatypes": {
             "bests.gif": "BOOK",
             "box.gif": "PACKAGE",
@@ -61,9 +60,10 @@
         }
     },
     "geo": [
-        51.538352,
-        9.9296899
+        51.54128040000001,
+        9.915803499999999
     ],
+    "information": "http://opac.stadtbibliothek.goettingen.de/read_blue/info.html",
     "state": "Niedersachsen",
     "title": "Stadtbibliothek"
 }

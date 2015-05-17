@@ -5,7 +5,6 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "http://sru.gbv.de/gvk",
-        "information": "http://gso.gbv.de/",
         "searchqueries": {
             "free": "pica.ALL",
             "id": "pica.PPN",
@@ -17,6 +16,7 @@
         },
         "sharelink": "http://gso.gbv.de/DB=2.1/PPNSET?PPN=%s"
     },
+    "information": "http://gso.gbv.de/",
     "state": "Bibliothekenverbunde",
     "title": "Gemeinsamer Verbundkatalog"
 }

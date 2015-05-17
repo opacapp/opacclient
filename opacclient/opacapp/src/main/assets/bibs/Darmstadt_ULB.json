@@ -6,13 +6,13 @@
     "data": {
         "baseurl": "https://pica1l.ulb.tu-darmstadt.de",
         "charset": "ISO-8859-1",
-        "db": "LHBDA",
-        "information": "http://www.ulb.tu-darmstadt.de/service/start/index.de.jsp"
+        "db": "LHBDA"
     },
     "geo": [
-        49.8776483,
-        8.6517617
+        49.8765006,
+        8.6576668
     ],
+    "information": "http://www.ulb.tu-darmstadt.de/service/start/index.de.jsp",
     "state": "Hessen",
     "title": "Universit\u00e4ts- und Landesbibliothek"
 }

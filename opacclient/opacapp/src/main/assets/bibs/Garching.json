@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://stgoz2.bib-bvb.de/webOPACClient.stgsis",
-        "information": "http://stadtbuechereigarching.de/",
         "startparams": "Login=wostg"
     },
     "geo": [
         48.2488721,
         11.6532477
     ],
+    "information": "http://stadtbuechereigarching.de/",
     "state": "Bayern",
     "title": "Stadtb\u00fccherei"
 }

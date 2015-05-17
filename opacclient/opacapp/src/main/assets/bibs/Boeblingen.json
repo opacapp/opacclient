@@ -24,7 +24,6 @@
             "shelfmark": 1,
             "status": 3
         },
-        "information": "http://www.boeblingen.de/,Lde/start/FreizeitKultur/Stadtbibliothek.html",
         "mediatypes": {
             "1": "BOOK",
             "10": "MAP",
@@ -47,6 +46,7 @@
         48.6813312,
         9.0088299
     ],
+    "information": "http://www.boeblingen.de/,Lde/start/FreizeitKultur/Stadtbibliothek.html",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtbibliothek"
 }

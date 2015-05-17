@@ -24,7 +24,6 @@
             "returndate": -1,
             "status": 3
         },
-        "information": "http://buechereien.wien.at/de/standorteoeffnungszeiten",
         "mediatypes": {
             "Sprachkurs_32_32.gif": "UNKNOWN",
             "bild_32_32.gif": "ART",
@@ -68,6 +67,7 @@
         48.2081743,
         16.3738189
     ],
+    "information": "http://buechereien.wien.at/de/standorteoeffnungszeiten",
     "replacedby": "de.opacapp.wien",
     "state": "Wien",
     "title": "B\u00fcchereien"

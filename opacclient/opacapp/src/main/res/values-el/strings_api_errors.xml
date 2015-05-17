@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--These strings may be shown as unused by Android Lint, but are in fact used by the AndroidStringProvider class-->
+  <plurals name="limited_num_of_criteria">
+    <item quantity="one">Αυτή η βιβλιοθήκη υποστηρίζει μόνο έως κριτήρια %d.</item>
+    <item quantity="other">Αυτή η βιβλιοθήκη υποστηρίζει μόνο έως κριτήρια %d.</item>
+  </plurals>
+  <string name="no_criteria_input">Δεν έχετε Κριτήρια αναζήτησης.</string>
+  <string name="combination_not_supported">Θα χρησιμοποιηθεί ένας συνδυασμός κριτηρίων αναζήτησης που δεν υποστηρίζεται από αυτήν τη βιβλιοθήκη. Παρακαλούμε δοκιμάστε ένα άλλο ερώτημα αναζήτησης.</string>
+  <string name="unknown_error_account">Άγνωστο σφάλμα. Παρακαλούμε ελέγξτε αν τα στοιχεία σύνδεσής είναι σωστα.</string>
+  <string name="unknown_error_account_with_description">Άγνωστο σφάλμα: \"%s\" Παρακαλούμε ελέγξτε αν τα στοιχεία σύνδεσής είναι σωστα.</string>
+  <string name="unknown_error">Άγνωστο σφάλμα.</string>
+  <string name="unknown_error_with_description">Άγνωστο σφάλμα: \"%s\"</string>
+  <string name="internal_error">Εσωτερικό σφάλμα.</string>
+  <string name="internal_error_with_description">Εσωτερικό σφάλμα: \"%s\"</string>
+  <string name="login_failed">Αποτυχία σύνδεσης.</string>
+  <string name="could_not_load_account">Ο λογαριασμός δεν μπορεί να φορτωθεί.</string>
+  <string name="api_connection_error">Σφάλμα σύνδεσης.</string>
+  <string name="lent_until">δάνεισμος μέχρι</string>
+  <string name="subtitle">Υπότιτλος</string>
+  <string name="pica_which_copy">Ποια αντιγραφα θέλετε να κάνετε κράτηση/παραγγελία; (ήδη διαθέσιμα αντίγραφα θα παραγγελθουν)</string>
+  <string name="no_copy_reservable">Δεν υπάρχουν δυνητικά αποκλειστικα αντίγραφα.</string>
+  <string name="could_not_load_detail">Δεν μπορούν να φορτωθούν λεπτομέρειες. Παρακαλουμε προσπάθηστε ξανά.</string>
+  <string name="error">Σφάλμα</string>
+  <string name="download">Λήψη</string>
+  <string name="reminders">προειδοποίηση</string>
+  <string name="prolonged_abbr">Ανανέωση.</string>
+  <string name="prolonging_expired">ανανέωση δεν είναι πλέον δυνατή</string>
+  <string name="prolonging_impossible">ανανέωση δεν είναι δυνατή</string>
+  <string name="prolonging_waiting">δεν είναι πλέον δυνατή</string>
+  <string name="wrong_account_data">Τα δεδομένα χρήστη που έχετε εισάγει είναι λάθος.</string>
+  <string name="order">Ταξινόμηση</string>
+  <string name="order_default">Προεπιλεγμένη σειρά</string>
+  <string name="order_year_asc">Κατά έτος (φθίνουσα)</string>
+  <string name="order_category_asc">Κατά κατηγορία (αύξουσα)</string>
+  <string name="order_year_desc">Κατά έτος (φθίνουσα)</string>
+  <string name="order_category_desc">Κατά κατηγορία (φθίνουσα)</string>
+  <string name="interlib_branch">Διαδανεισμός: %s</string>
+  <string name="stacks_branch">Στοίβες: %s</string>
+  <string name="provision_branch">Παροχή: %s</string>
+</resources>

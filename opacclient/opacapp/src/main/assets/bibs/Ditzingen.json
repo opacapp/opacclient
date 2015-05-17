@@ -24,7 +24,6 @@
             "returndate": 2,
             "status": 1
         },
-        "information": "http://ditzingen.de/index.php?id=506",
         "reservationtable": {
             "author": 1,
             "availability": 4,
@@ -38,6 +37,7 @@
         48.8264662,
         9.067556399999999
     ],
+    "information": "http://ditzingen.de/index.php?id=506",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtbibliothek"
 }

@@ -6,13 +6,13 @@
     "data": {
         "baseurl": "https://lbsopac.rz.uni-frankfurt.de",
         "charset": "ISO-8859-1",
-        "db": "69",
-        "information": "http://www.eh-darmstadt.de/hochschule/bibliothek/"
+        "db": "69"
     },
     "geo": [
-        49.8776483,
-        8.6517617
+        49.8728253,
+        8.6511929
     ],
+    "information": "http://www.eh-darmstadt.de/hochschule/bibliothek/",
     "state": "Hessen",
     "title": "Evangelische Hochschule"
 }

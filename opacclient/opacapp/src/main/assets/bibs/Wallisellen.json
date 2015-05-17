@@ -4,13 +4,13 @@
     "city": "Wallisellen",
     "country": "Schweiz",
     "data": {
-        "baseurl": "http://www.winmedio.net/wallisellen",
-        "information": "http://www.schule.wallisellen.ch/de/dienste/bibliotheken/"
+        "baseurl": "http://www.winmedio.net/wallisellen"
     },
     "geo": [
         47.4156626,
         8.595200799999999
     ],
+    "information": "http://www.schule.wallisellen.ch/de/dienste/bibliotheken/",
     "state": "Z\u00fcrich",
     "title": "Bibliotheken"
 }

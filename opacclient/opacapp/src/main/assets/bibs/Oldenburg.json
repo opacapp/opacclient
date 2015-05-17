@@ -14,7 +14,6 @@
             "returndate": -1,
             "status": 4
         },
-        "information": "http://www.oldenburg.de/microsites/bibliothek/standorte-oeffnungszeiten.html",
         "mediatypes": {
             "1": "BOOK",
             "10": "BOARDGAME",
@@ -40,6 +39,7 @@
         53.1434501,
         8.214552099999999
     ],
+    "information": "http://www.oldenburg.de/microsites/bibliothek/standorte-oeffnungszeiten.html",
     "state": "Niedersachsen",
     "title": "Stadtbibliothek"
 }

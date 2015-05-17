@@ -24,7 +24,6 @@
             "returndate": -1,
             "status": 3
         },
-        "information": "http://www.bad-kreuznach.de/sv_bad_kreuznach/Tourismus,%20Kultur,%20Sport/Stadtbibliothek/",
         "mediatypes": {
             "1": "BOOK",
             "11": "DVD",
@@ -50,6 +49,7 @@
         49.8440162,
         7.873134599999999
     ],
+    "information": "http://www.bad-kreuznach.de/sv_bad_kreuznach/Tourismus,%20Kultur,%20Sport/Stadtbibliothek/",
     "state": "Rheinland-Pfalz",
     "title": "Stadtbibliothek"
 }

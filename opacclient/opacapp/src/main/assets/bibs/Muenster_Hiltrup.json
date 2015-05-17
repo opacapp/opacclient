@@ -20,7 +20,6 @@
             "status": 3
         },
         "db": "OPAC_Hiltrup",
-        "information": "http://www.stadtteilbuecherei-hiltrup.de/",
         "mediatypes": {
             "Buchklein.GIF": "BOOK",
             "CD-ROMklein.GIF": "CD_SOFTWARE",
@@ -67,6 +66,11 @@
             "title": 1
         }
     },
+    "geo": [
+        51.9606649,
+        7.6261347
+    ],
+    "information": "http://www.stadtteilbuecherei-hiltrup.de/",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtteilb\u00fccherei Hiltrup St. Clemens"
 }

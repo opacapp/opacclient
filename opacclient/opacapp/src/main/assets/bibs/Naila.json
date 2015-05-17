@@ -4,13 +4,13 @@
     "city": "Naila",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.net/naila",
-        "information": "http://www.naila.de/cgi-bin/show.pl?action=einrichtungen"
+        "baseurl": "http://webopac.winbiap.net/naila"
     },
     "geo": [
         50.3294246,
         11.7021823
     ],
+    "information": "http://www.naila.de/cgi-bin/show.pl?action=einrichtungen",
     "state": "Bayern",
     "title": "Stadtbibliothek"
 }

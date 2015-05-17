@@ -20,7 +20,6 @@
             "status": 3
         },
         "db": "Oelde",
-        "information": "http://web.pregocms.de/oelde/page.php?p=1477&n=1236%7C1459%7C1465%7C1477",
         "mediatypes": {
             "Munzinger_32x32.jpg": "EDOC",
             "bibload.gif": "EBOOK",
@@ -40,9 +39,10 @@
         }
     },
     "geo": [
-        51.8297412,
-        8.1463962
+        51.82384649999999,
+        8.1431978
     ],
+    "information": "http://web.pregocms.de/oelde/page.php?p=1477&n=1236%7C1459%7C1465%7C1477",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }

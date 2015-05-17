@@ -4,13 +4,13 @@
     "city": "H\u00f6sbach",
     "country": "Deutschland",
     "data": {
-        "baseurl": "https://bibliothekszentrum-mediensuche.lra-ab.de",
-        "information": "http://www.landkreis-aschaffenburg.de/wer-macht-was/bildungsportkul/bibliothek/"
+        "baseurl": "https://bibliothekszentrum-mediensuche.lra-ab.de"
     },
     "geo": [
         50.0059288,
         9.207744199999999
     ],
+    "information": "http://www.landkreis-aschaffenburg.de/wer-macht-was/bildungsportkul/bibliothek/",
     "state": "Bayern",
     "title": "Bibliothekszentrum"
 }

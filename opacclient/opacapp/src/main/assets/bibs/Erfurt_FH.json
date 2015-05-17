@@ -6,13 +6,13 @@
     "data": {
         "baseurl": "http://opac.uni-erfurt.de/",
         "db": "4",
-        "httpsbaseurl": "https://opac.uni-erfurt.de/",
-        "information": "http://www.fh-erfurt.de/bibo/"
+        "httpsbaseurl": "https://opac.uni-erfurt.de/"
     },
     "geo": [
-        50.979444,
-        11.329722
+        50.98476789999999,
+        11.0298799
     ],
+    "information": "http://www.fh-erfurt.de/bibo/",
     "state": "Th\u00fcringen",
     "title": "Bibliothek der Fachhochschule"
 }

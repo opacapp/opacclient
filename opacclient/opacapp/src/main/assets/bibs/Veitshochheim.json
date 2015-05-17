@@ -24,7 +24,6 @@
             "returndate": 4,
             "status": 3
         },
-        "information": "http://www.bib.veitshoechheim.de/",
         "mediatypes": {
             "mCasetteS.gif": "AUDIO_CASSETTE",
             "mDVDS.gif": "DVD",
@@ -43,6 +42,7 @@
         49.831826,
         9.8850835
     ],
+    "information": "http://www.bib.veitshoechheim.de/",
     "state": "Bayern",
     "title": "B\u00fccherei im Bahnhof"
 }

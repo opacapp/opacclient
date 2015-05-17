@@ -13,11 +13,13 @@
         android:minHeight="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
-        app:theme="@style/ThemeOverlay.Opacapp.ActionBar"
+        android:theme="@style/ThemeOverlay.Opacapp.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
     <FrameLayout
         android:id="@+id/content_frame"
-        android:layout_width="match_parent" android:layout_height="match_parent"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:foreground="@drawable/toolbar_shadow"/>
 
 </LinearLayout>

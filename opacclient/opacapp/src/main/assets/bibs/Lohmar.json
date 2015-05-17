@@ -19,7 +19,6 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "http://www.lohmar.de/schule-bibliotheken-musikkunstschule/bibliotheken/stadtbibliothek/standorte/",
         "mediatypes": {
             "mCasetteS.gif": "AUDIO_CASSETTE",
             "mDVDS.gif": "DVD",
@@ -33,9 +32,10 @@
         }
     },
     "geo": [
-        50.8378015,
-        7.212664900000001
+        50.8388303,
+        7.209391699999999
     ],
+    "information": "http://www.lohmar.de/schule-bibliotheken-musikkunstschule/bibliotheken/stadtbibliothek/standorte/",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }

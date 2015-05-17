@@ -13,12 +13,13 @@
         android:minHeight="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
-        app:theme="@style/ThemeOverlay.Opacapp.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        android:theme="@style/ThemeOverlay.Opacapp.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:foreground="@drawable/toolbar_shadow">
 
         <ProgressBar
             android:layout_width="wrap_content"
@@ -39,10 +40,10 @@
                 android:padding="8dp">
 
                 <TextView
-                    android:id="@+id/textView1"
+                    android:id="@+id/tvLibraryLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/account_city" />
+                    android:text="@string/account_city"/>
 
                 <TextView
                     android:id="@+id/tvCity"
@@ -50,7 +51,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:layout_marginLeft="16dp"
-                    android:ems="10" />
+                    android:ems="10"/>
 
                 <RelativeLayout
                     android:id="@+id/rlReplaced"
@@ -60,7 +61,7 @@
                     android:layout_marginTop="8dp"
                     android:background="@color/note_replacedby"
                     android:padding="4dp"
-                    android:visibility="gone" >
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/ivReplacedStore"
@@ -69,7 +70,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:contentDescription="@string/playstore"
-                        android:src="@drawable/playstore" />
+                        android:src="@drawable/playstore"/>
 
                     <TextView
                         android:id="@+id/tvReplacedNote"
@@ -78,14 +79,14 @@
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/ivReplacedStore"
-                        android:text="@string/replacedby" />
+                        android:text="@string/replacedby"/>
                 </RelativeLayout>
 
                 <TextView
-                    android:id="@+id/textView4"
+                    android:id="@+id/tvLabelLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/account_label" />
+                    android:text="@string/account_label"/>
 
                 <EditText
                     android:id="@+id/etLabel"
@@ -94,16 +95,16 @@
                     android:layout_marginBottom="8dp"
                     android:ems="10"
                     android:hint="@string/default_account_name"
-                    android:singleLine="true" >
+                    android:singleLine="true">
 
-                    <requestFocus />
+                    <requestFocus/>
                 </EditText>
 
                 <TextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/tvNameLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/account_nr" />
+                    android:text="@string/account_nr"/>
 
                 <EditText
                     android:id="@+id/etName"
@@ -112,13 +113,13 @@
                     android:layout_marginBottom="8dp"
                     android:ems="10"
                     android:inputType="textNoSuggestions"
-                    android:singleLine="true" />
+                    android:singleLine="true"/>
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/tvPasswordLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/account_password" />
+                    android:text="@string/account_password"/>
 
                 <EditText
                     android:id="@+id/etPassword"
@@ -126,7 +127,7 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:inputType="textPassword"
-                    android:singleLine="true" />
+                    android:singleLine="true"/>
 
                 <TextView
                     android:id="@+id/no_ssl"
@@ -136,7 +137,7 @@
                     android:background="@color/warning"
                     android:padding="16dp"
                     android:text="@string/no_ssl"
-                    android:visibility="gone" />
+                    android:visibility="gone"/>
             </LinearLayout>
 
         </ScrollView>

@@ -4,13 +4,13 @@
     "city": "Bad Salzuflen",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.bad-salzuflen.de",
-        "information": "http://www.stadt-bad-salzuflen.de/kinder-jugend-bildung/stadtbuecherei.html"
+        "baseurl": "http://webopac.bad-salzuflen.de"
     },
     "geo": [
-        52.0765185,
-        8.755621999999999
+        52.08248829999999,
+        8.7487481
     ],
+    "information": "http://www.stadt-bad-salzuflen.de/kinder-jugend-bildung/stadtbuecherei.html",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }

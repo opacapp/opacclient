@@ -4,13 +4,13 @@
     "city": "Buchs",
     "country": "Schweiz",
     "data": {
-        "baseurl": "http://www.winmedio.net/buchs",
-        "information": "http://www.bibliothek-buchs.ch/"
+        "baseurl": "http://www.winmedio.net/buchs"
     },
     "geo": [
-        47.1655641,
-        9.4699878
+        47.1656,
+        9.46865
     ],
+    "information": "http://www.bibliothek-buchs.ch/",
     "state": "St. Gallen",
     "title": "Gemeindebibliothek"
 }

@@ -6,13 +6,13 @@
     "data": {
         "baseurl": "https://opac.lbs-braunschweig.gbv.de",
         "customssl": true,
-        "db": "1",
-        "information": "http://www.biblio.tu-bs.de/"
+        "db": "1"
     },
     "geo": [
-        52.27387,
+        52.2739521,
         10.52911
     ],
+    "information": "http://www.biblio.tu-bs.de/",
     "state": "Niedersachsen",
     "title": "Universit\u00e4tsbibliothek"
 }

@@ -6,13 +6,13 @@
     "data": {
         "baseurl": "https://recherche.bibkatalog.de/InfoGuideClient.fwssis",
         "homebranch": "3",
-        "information": "http://www.h-ab.de/ueber-die-hochschule/organisation/einrichtungen/bibliothek/kontakt/oeffnungszeiten/",
         "startparams": "Login=wofwsa"
     },
     "geo": [
-        49.97354740000001,
-        9.1525973
+        49.971918,
+        9.160499999999999
     ],
+    "information": "http://www.h-ab.de/ueber-die-hochschule/organisation/einrichtungen/bibliothek/kontakt/oeffnungszeiten/",
     "state": "Bayern",
     "title": "Hochschulbibliothek"
 }

@@ -18,7 +18,6 @@
             "returndate": 5,
             "status": 4
         },
-        "information": "http://www.neuenburg.de/servlet/PB/menu/1282963_l1/index.html",
         "mediatypes": {
             "Munzingerk.png": "EDOC",
             "mCasetteS.gif": "AUDIO_CASSETTE",
@@ -43,6 +42,7 @@
         47.81336959999999,
         7.561897200000001
     ],
+    "information": "http://www.neuenburg.de/servlet/PB/menu/1282963_l1/index.html",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtbibliothek"
 }

@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://www.opac.uni-erlangen.de/InfoGuideClient.uersis",
-        "information": "http://www.ub.uni-erlangen.de/ub/oeffnungszeiten/",
         "startparams": "Login=wouer00"
     },
     "geo": [
-        49.596689,
-        11.006667
+        49.5978804,
+        11.0045507
     ],
+    "information": "http://www.ub.uni-erlangen.de/ub/oeffnungszeiten/",
     "state": "Bayern",
     "title": "Universit\u00e4tsbibliothek"
 }

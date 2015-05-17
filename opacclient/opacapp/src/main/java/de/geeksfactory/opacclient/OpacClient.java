@@ -1,16 +1,16 @@
 /**
  * Copyright (C) 2013 by Raphael Michel under the MIT license:
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), 
  * to deal in the Software without restriction, including without limitation 
  * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
  * and/or sell copies of the Software, and to permit persons to whom the Software 
  * is furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in 
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
@@ -39,7 +39,6 @@ import android.util.Log;
 import org.acra.ACRA;
 import org.acra.ACRAConfiguration;
 import org.acra.annotation.ReportsCrashes;
-import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -47,7 +46,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,14 +59,18 @@ import de.geeksfactory.opacclient.apis.Heidi;
 import de.geeksfactory.opacclient.apis.IOpac;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.Pica;
+import de.geeksfactory.opacclient.apis.Primo;
 import de.geeksfactory.opacclient.apis.SISIS;
 import de.geeksfactory.opacclient.apis.SRU;
+import de.geeksfactory.opacclient.apis.TestApi;
 import de.geeksfactory.opacclient.apis.TouchPoint;
+import de.geeksfactory.opacclient.apis.VuFind;
 import de.geeksfactory.opacclient.apis.WebOpacNet;
 import de.geeksfactory.opacclient.apis.WinBiap;
 import de.geeksfactory.opacclient.apis.Zones22;
 import de.geeksfactory.opacclient.frontend.AccountListActivity;
 import de.geeksfactory.opacclient.frontend.MainActivity;
+import de.geeksfactory.opacclient.frontend.MainPreferenceActivity;
 import de.geeksfactory.opacclient.frontend.SearchResultListActivity;
 import de.geeksfactory.opacclient.frontend.WelcomeActivity;
 import de.geeksfactory.opacclient.i18n.AndroidStringProvider;
@@ -78,358 +80,361 @@ import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.StarContentProvider;
+import de.geeksfactory.opacclient.utils.ErrorReporter;
 
 public class OpacClient extends Application {
 
-	public Exception last_exception;
+    public static final String PREF_SELECTED_ACCOUNT = "selectedAccount";
+    public static final String PREF_HOME_BRANCH_PREFIX = "homeBranch_";
+    public static final String ASSETS_BIBSDIR = "bibs";
+    public static int NOTIF_ID = 1;
+    public static int BROADCAST_REMINDER = 2;
+    public static Context context;
+    public static String versionName = "unknown";
+    private static OpacClient instance;
+    public final boolean SLIDING_MENU = true;
+    private final Uri STAR_PROVIDER_STAR_URI = StarContentProvider.STAR_URI;
+    protected Account account;
+    protected OpacApi api;
+    protected Library library;
+    protected String currentLang;
+    private SharedPreferences sp;
 
-	public static int NOTIF_ID = 1;
-	public static int BROADCAST_REMINDER = 2;
-	public static final String PREF_SELECTED_ACCOUNT = "selectedAccount";
-	public static final String PREF_HOME_BRANCH_PREFIX = "homeBranch_";
+    public OpacClient() {
+        super();
+        instance = this;
+    }
 
-	public final String LIMIT_TO_LIBRARY = null;
-	public final boolean SLIDING_MENU = true;
+    public static Context getEmergencyContext() {
+        return instance.getApplicationContext();
+    }
 
-	private SharedPreferences sp;
+    public static Bundle queryToBundle(List<SearchQuery> query) {
+        if (query == null) {
+            return null;
+        }
+        Bundle b = new Bundle();
+        for (SearchQuery q : query) {
+            try {
+                b.putString(q.getSearchField().toJSON().toString(),
+                        q.getValue());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return b;
+    }
 
-	protected Account account;
-	protected OpacApi api;
-	protected Library library;
+    // public Class getSearchResultsActivityClass() {
+    // return SearchResultsActivity.class;
+    // }
 
-	public static Context context;
-	public static String versionName = "unknown";
+    public static List<SearchQuery> bundleToQuery(Bundle bundle) {
+        if (bundle == null) {
+            return null;
+        }
+        List<SearchQuery> query = new ArrayList<>();
+        for (String e : bundle.keySet()) {
+            try {
+                query.add(new SearchQuery(SearchField
+                        .fromJSON(new JSONObject(e)), bundle.getString(e)));
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+            }
+        }
+        return query;
+    }
 
-	private final Uri STAR_PROVIDER_STAR_URI = StarContentProvider.STAR_URI;
+    public static Bundle mapToBundle(Map<String, String> map) {
+        if (map == null) {
+            return null;
+        }
+        Bundle b = new Bundle();
+        for (Entry<String, String> e : map.entrySet()) {
+            b.putString(e.getKey(), e.getValue());
+        }
+        return b;
+    }
 
-	private static OpacClient instance;
-	protected String currentLang;
+    public static Map<String, String> bundleToMap(Bundle bundle) {
+        if (bundle == null) {
+            return null;
+        }
+        Map<String, String> map = new HashMap<>();
+        for (String e : bundle.keySet()) {
+            map.put(e, (String) bundle.get(e));
+        }
+        return map;
+    }
 
-	public OpacClient() {
-		super();
-		instance = this;
-	}
+    public Uri getStarProviderStarUri() {
+        return STAR_PROVIDER_STAR_URI;
+    }
 
-	public static Context getEmergencyContext() {
-		return instance.getApplicationContext();
-	}
-
-	public Uri getStarProviderStarUri() {
-		return STAR_PROVIDER_STAR_URI;
-	}
-
-	public void addFirstAccount(Activity activity) {
-		Intent intent = new Intent(activity, WelcomeActivity.class);
-		activity.startActivity(intent);
-		activity.finish();
-	}
-
-	// public Class getSearchResultsActivityClass() {
-	// return SearchResultsActivity.class;
-	// }
+    public void addFirstAccount(Activity activity) {
+        Intent intent = new Intent(activity, WelcomeActivity.class);
+        activity.startActivity(intent);
+        activity.finish();
+    }
 
     public void startSearch(Activity caller, List<SearchQuery> query) {
         startSearch(caller, query, null);
     }
 
-	public void startSearch(Activity caller, List<SearchQuery> query, Bundle bundle) {
-		Intent myIntent = new Intent(caller, SearchResultListActivity.class);
-		myIntent.putExtra("query", queryToBundle(query));
+    public void startSearch(Activity caller, List<SearchQuery> query, Bundle bundle) {
+        Intent myIntent = new Intent(caller, SearchResultListActivity.class);
+        myIntent.putExtra("query", queryToBundle(query));
         ActivityCompat.startActivity(caller, myIntent, bundle);
-	}
+    }
 
-	public void startVolumeSearch(Activity caller, Map<String, String> query) {
-		Intent myIntent = new Intent(caller, SearchResultListActivity.class);
-		myIntent.putExtra("volumeQuery", mapToBundle(query));
-		caller.startActivity(myIntent);
-	}
+    public void startVolumeSearch(Activity caller, Map<String, String> query) {
+        Intent myIntent = new Intent(caller, SearchResultListActivity.class);
+        myIntent.putExtra("volumeQuery", mapToBundle(query));
+        caller.startActivity(myIntent);
+    }
 
-	public boolean isOnline() {
-		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-		return (networkInfo != null && networkInfo.isConnected());
-	}
+    public boolean isOnline() {
+        ConnectivityManager connMgr =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
+    }
 
-	public OpacApi getNewApi(Library lib) throws ClientProtocolException,
-			SocketException, IOException, NotReachableException {
-		OpacApi newApiInstance = null;
-		if (lib.getApi().equals("bond26") || lib.getApi().equals("bibliotheca"))
-			// Backwardscompatibility
-			newApiInstance = new Bibliotheca();
-		else if (lib.getApi().equals("oclc2011")
-				|| lib.getApi().equals("sisis"))
-			// Backwards compatibility
-			newApiInstance = new SISIS();
-		else if (lib.getApi().equals("zones22"))
-			newApiInstance = new Zones22();
-		else if (lib.getApi().equals("biber1992"))
-			newApiInstance = new BiBer1992();
-		else if (lib.getApi().equals("pica"))
-			newApiInstance = new Pica();
-		else if (lib.getApi().equals("iopac"))
-			newApiInstance = new IOpac();
-		else if (lib.getApi().equals("adis"))
-			newApiInstance = new Adis();
-		else if (lib.getApi().equals("sru"))
-			newApiInstance = new SRU();
-		else if (lib.getApi().equals("webopac.net"))
-			newApiInstance = new WebOpacNet();
-		else if (lib.getApi().equals("winbiap"))
-			newApiInstance = new WinBiap();
-		else if (lib.getApi().equals("heidi"))
-			newApiInstance = new Heidi();
-		else if (lib.getApi().equals("touchpoint"))
-			newApiInstance = new TouchPoint();
-		else
-			return null;
-		newApiInstance.init(lib);
-		newApiInstance.setStringProvider(new AndroidStringProvider());
-		currentLang = getResources().getConfiguration().locale.getLanguage();
-		newApiInstance.setLanguage(currentLang);
-		return newApiInstance;
-	}
+    public OpacApi getNewApi(Library lib) {
+        OpacApi newApiInstance;
+        if (lib.getApi().equals("bond26") || lib.getApi().equals("bibliotheca"))
+        // Backwardscompatibility
+        {
+            newApiInstance = new Bibliotheca();
+        } else if (lib.getApi().equals("oclc2011")
+                || lib.getApi().equals("sisis"))
+        // Backwards compatibility
+        {
+            newApiInstance = new SISIS();
+        } else if (lib.getApi().equals("zones22")) {
+            newApiInstance = new Zones22();
+        } else if (lib.getApi().equals("biber1992")) {
+            newApiInstance = new BiBer1992();
+        } else if (lib.getApi().equals("pica")) {
+            newApiInstance = new Pica();
+        } else if (lib.getApi().equals("iopac")) {
+            newApiInstance = new IOpac();
+        } else if (lib.getApi().equals("adis")) {
+            newApiInstance = new Adis();
+        } else if (lib.getApi().equals("sru")) {
+            newApiInstance = new SRU();
+        } else if (lib.getApi().equals("primo")) {
+            newApiInstance = new Primo();
+        } else if (lib.getApi().equals("vufind")) {
+            newApiInstance = new VuFind();
+        } else if (lib.getApi().equals("webopac.net")) {
+            newApiInstance = new WebOpacNet();
+        } else if (lib.getApi().equals("winbiap")) {
+            newApiInstance = new WinBiap();
+        } else if (lib.getApi().equals("heidi")) {
+            newApiInstance = new Heidi();
+        } else if (lib.getApi().equals("touchpoint")) {
+            newApiInstance = new TouchPoint();
+        } else if (lib.getApi().equals("test")) {
+            if (BuildConfig.DEBUG) {
+                newApiInstance = new TestApi();
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+        newApiInstance.init(lib);
+        newApiInstance.setStringProvider(new AndroidStringProvider());
+        currentLang = getResources().getConfiguration().locale.getLanguage();
+        newApiInstance.setLanguage(currentLang);
+        return newApiInstance;
+    }
 
-	private OpacApi initApi(Library lib) throws ClientProtocolException,
-			SocketException, IOException, NotReachableException {
-		api = getNewApi(lib);
-		return api;
-	}
+    private OpacApi initApi(Library lib) {
+        api = getNewApi(lib);
+        return api;
+    }
 
-	public void resetCache() {
-		account = null;
-		api = null;
-		library = null;
-	}
+    public void resetCache() {
+        account = null;
+        api = null;
+        library = null;
+    }
 
-	public OpacApi getApi() {
-		if (account != null && api != null) {
-			if (sp.getLong(PREF_SELECTED_ACCOUNT, 0) == account.getId()
-					&& getResources().getConfiguration().locale.getLanguage()
-							.equals(currentLang)) {
-				return api;
-			}
-		}
-		try {
-			api = initApi(getLibrary());
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (SocketException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return api;
-	}
+    public OpacApi getApi() {
+        if (account != null && api != null) {
+            if (sp.getLong(PREF_SELECTED_ACCOUNT, 0) == account.getId()
+                    && getResources().getConfiguration().locale.getLanguage()
+                                                               .equals(currentLang)) {
+                return api;
+            }
+        }
+        api = initApi(getLibrary());
+        return api;
+    }
 
-	public Account getAccount() {
-		if (account != null) {
-			if (sp.getLong(PREF_SELECTED_ACCOUNT, 0) == account.getId()) {
-				return account;
-			}
-		}
-		AccountDataSource data = new AccountDataSource(this);
-		data.open();
-		account = data.getAccount(sp.getLong(PREF_SELECTED_ACCOUNT, 0));
-		data.close();
-		return account;
-	}
+    public Account getAccount() {
+        if (account != null) {
+            if (sp.getLong(PREF_SELECTED_ACCOUNT, 0) == account.getId()) {
+                return account;
+            }
+        }
+        AccountDataSource data = new AccountDataSource(this);
+        data.open();
+        account = data.getAccount(sp.getLong(PREF_SELECTED_ACCOUNT, 0));
+        data.close();
+        return account;
+    }
 
-	public void setAccount(long id) {
-		sp.edit().putLong(OpacClient.PREF_SELECTED_ACCOUNT, id).commit();
-		resetCache();
-		if (getLibrary() != null) {
-			ACRA.getErrorReporter().putCustomData("library",
-					getLibrary().getIdent());
-		}
-	}
+    public void setAccount(long id) {
+        sp.edit().putLong(OpacClient.PREF_SELECTED_ACCOUNT, id).commit();
+        resetCache();
+        if (getLibrary() != null && !BuildConfig.DEBUG) {
+            ACRA.getErrorReporter().putCustomData("library",
+                    getLibrary().getIdent());
+        }
+    }
 
-	public Library getLibrary(String ident) throws IOException, JSONException {
-		String line;
+    public Library getLibrary(String ident) throws IOException, JSONException {
+        String line;
 
-		StringBuilder builder = new StringBuilder();
-		InputStream fis = getAssets().open(
-				ASSETS_BIBSDIR + "/" + ident + ".json");
+        StringBuilder builder = new StringBuilder();
+        InputStream fis = getAssets().open(
+                ASSETS_BIBSDIR + "/" + ident + ".json");
 
-		BufferedReader reader = new BufferedReader(new InputStreamReader(fis,
-				"utf-8"));
-		while ((line = reader.readLine()) != null) {
-			builder.append(line);
-		}
+        BufferedReader reader = new BufferedReader(new InputStreamReader(fis,
+                "utf-8"));
+        while ((line = reader.readLine()) != null) {
+            builder.append(line);
+        }
 
-		fis.close();
-		String json = builder.toString();
-		return Library.fromJSON(ident, new JSONObject(json));
-	}
+        fis.close();
+        String json = builder.toString();
+        return Library.fromJSON(ident, new JSONObject(json));
+    }
 
-	public Library getLibrary() {
-		if (getAccount() == null)
-			return null;
-		if (account != null && library != null) {
-			if (sp.getLong(PREF_SELECTED_ACCOUNT, 0) == account.getId()) {
-				return library;
-			}
-		}
-		try {
-			library = getLibrary(getAccount().getLibrary());
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (JSONException e) {
-			ACRA.getErrorReporter().handleException(e);
-		}
-		return library;
-	}
+    public Library getLibrary() {
+        if (getAccount() == null) {
+            return null;
+        }
+        if (account != null && library != null) {
+            if (sp.getLong(PREF_SELECTED_ACCOUNT, 0) == account.getId()) {
+                return library;
+            }
+        }
+        try {
+            library = getLibrary(getAccount().getLibrary());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            ErrorReporter.handleException(e);
+        }
+        return library;
+    }
 
-	public static final String ASSETS_BIBSDIR = "bibs";
+    @SuppressWarnings("UnusedDeclaration") // ProgressCallback should not be required
+    public List<Library> getLibraries() throws IOException {
+        return getLibraries(null);
+    }
 
-	public interface ProgressCallback {
-		public void publishProgress(double progress);
-	}
+    public List<Library> getLibraries(ProgressCallback callback)
+            throws IOException {
+        AssetManager assets = getAssets();
+        String[] files = assets.list(ASSETS_BIBSDIR);
+        int num = files.length;
 
-	public List<Library> getLibraries() throws IOException {
-		return getLibraries(null);
-	}
+        List<Library> libs = new ArrayList<>();
 
-	public List<Library> getLibraries(ProgressCallback callback)
-			throws IOException {
-		AssetManager assets = getAssets();
-		String[] files = assets.list(ASSETS_BIBSDIR);
-		int num = files.length;
+        StringBuilder builder;
+        BufferedReader reader;
+        InputStream fis;
+        String line;
+        String json;
 
-		List<Library> libs = new ArrayList<Library>();
+        for (int i = 0; i < num; i++) {
+            builder = new StringBuilder();
+            fis = assets.open(ASSETS_BIBSDIR + "/" + files[i]);
 
-		StringBuilder builder = null;
-		BufferedReader reader = null;
-		InputStream fis = null;
-		String line = null;
-		String json = null;
+            reader = new BufferedReader(new InputStreamReader(fis, "utf-8"));
+            while ((line = reader.readLine()) != null) {
+                builder.append(line);
+            }
 
-		for (int i = 0; i < num; i++) {
-			builder = new StringBuilder();
-			fis = assets.open(ASSETS_BIBSDIR + "/" + files[i]);
+            fis.close();
+            json = builder.toString();
+            try {
+                Library lib = Library.fromJSON(files[i].replace(".json", ""),
+                        new JSONObject(json));
+                if (!lib.getApi().equals("test") || BuildConfig.DEBUG) libs.add(lib);
+            } catch (JSONException e) {
+                Log.w("JSON library files", "Failed parsing library "
+                        + files[i]);
+                e.printStackTrace();
+            }
+            if (callback != null && i % 100 == 0 && i > 0) {
+                // reporting progress for every 100 loaded files should be enough
+                callback.publishProgress(((double) i) / num);
+            }
+        }
 
-			reader = new BufferedReader(new InputStreamReader(fis, "utf-8"));
-			while ((line = reader.readLine()) != null) {
-				builder.append(line);
-			}
+        return libs;
+    }
 
-			fis.close();
-			json = builder.toString();
-			try {
-				Library lib = Library.fromJSON(files[i].replace(".json", ""),
-						new JSONObject(json));
-				libs.add(lib);
-			} catch (JSONException e) {
-				Log.w("JSON library files", "Failed parsing library "
-						+ files[i]);
-				e.printStackTrace();
-			}
-			if (callback != null && i % 100 == 0 && i > 0) {
-				// reporting progress for every 100 loaded files should be enough
-				callback.publishProgress(((double) i)/num);
-			}
-		}
+    public void toPrefs(Activity activity) {
+        Intent intent = new Intent(activity, MainPreferenceActivity.class);
+        activity.startActivity(intent);
+    }
 
-		return libs;
-	}
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
 
-	public void toPrefs(Activity activity) {
-		// Intent intent = new Intent(activity, MainPreferenceActivity.class);
-		// activity.startActivity(intent);
-	}
+        if (!BuildConfig.DEBUG) {
+            ACRAConfiguration config = ACRA.getNewDefaultConfig(this);
+            config.setResToastText(R.string.crash_toast_text);
+            config.setResDialogText(R.string.crash_dialog_text);
+            config.setResToastText(R.string.crash_toast_text);
+            config.setResNotifTickerText(R.string.crash_notif_ticker_text);
+            config.setResNotifTitle(R.string.crash_notif_title);
+            config.setResNotifText(R.string.crash_notif_text);
+            config.setResNotifIcon(android.R.drawable.stat_notify_error);
+            config.setResDialogText(R.string.crash_dialog_text);
+            ACRA.setConfig(config);
+            ACRA.init(this);
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		sp = PreferenceManager.getDefaultSharedPreferences(this);
+            if (getLibrary() != null) {
+                ACRA.getErrorReporter().putCustomData("library",
+                        getLibrary().getIdent());
+            }
+        }
 
-		ACRAConfiguration config = ACRA.getNewDefaultConfig(this);
-		config.setResToastText(R.string.crash_toast_text);
-		config.setResDialogText(R.string.crash_dialog_text);
-		config.setResToastText(R.string.crash_toast_text);
-		config.setResNotifTickerText(R.string.crash_notif_ticker_text);
-		config.setResNotifTitle(R.string.crash_notif_title);
-		config.setResNotifText(R.string.crash_notif_text);
-		config.setResNotifIcon(android.R.drawable.stat_notify_error);
-		config.setResDialogText(R.string.crash_dialog_text);
-		ACRA.setConfig(config);
-		ACRA.init(this);
+        OpacClient.context = getApplicationContext();
 
-		if (getLibrary() != null) {
-			ACRA.getErrorReporter().putCustomData("library",
-					getLibrary().getIdent());
-		}
+        try {
+            OpacClient.versionName = getPackageManager().getPackageInfo(
+                    getPackageName(), 0).versionName;
+        } catch (NameNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
-		OpacClient.context = getApplicationContext();
+    public boolean getSlidingMenuEnabled() {
+        return SLIDING_MENU;
+    }
 
-		try {
-			OpacClient.versionName = getPackageManager().getPackageInfo(
-					getPackageName(), 0).versionName;
-		} catch (NameNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
+    public Class<?> getMainActivity() {
+        return MainActivity.class;
+    }
 
-	public boolean getSlidingMenuEnabled() {
-		return SLIDING_MENU;
-	}
+    public void openAccountList(Activity ctx) {
+        Intent intent = new Intent(ctx, AccountListActivity.class);
+        ctx.startActivity(intent);
+    }
 
-	public Class<?> getMainActivity() {
-		return MainActivity.class;
-	}
-
-	public void openAccountList(Activity ctx) {
-		Intent intent = new Intent(ctx, AccountListActivity.class);
-		ctx.startActivity(intent);
-	}
-
-	public static Bundle queryToBundle(List<SearchQuery> query) {
-		if (query == null)
-			return null;
-		Bundle b = new Bundle();
-		for (SearchQuery q : query) {
-			try {
-				b.putString(q.getSearchField().toJSON().toString(),
-						q.getValue());
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
-		return b;
-	}
-
-	public static List<SearchQuery> bundleToQuery(Bundle bundle) {
-		if (bundle == null)
-			return null;
-		List<SearchQuery> query = new ArrayList<SearchQuery>();
-		for (String e : bundle.keySet()) {
-			try {
-				query.add(new SearchQuery(SearchField
-						.fromJSON(new JSONObject(e)), bundle.getString(e)));
-			} catch (JSONException e1) {
-				e1.printStackTrace();
-			}
-		}
-		return query;
-	}
-
-	public static Bundle mapToBundle(Map<String, String> map) {
-		if (map == null)
-			return null;
-		Bundle b = new Bundle();
-		for (Entry<String, String> e : map.entrySet()) {
-			b.putString(e.getKey(), e.getValue());
-		}
-		return b;
-	}
-
-	public static Map<String, String> bundleToMap(Bundle bundle) {
-		if (bundle == null)
-			return null;
-		Map<String, String> map = new HashMap<String, String>();
-		for (String e : bundle.keySet()) {
-			map.put(e, (String) bundle.get(e));
-		}
-		return map;
-	}
+    public interface ProgressCallback {
+        public void publishProgress(double progress);
+    }
 
 }

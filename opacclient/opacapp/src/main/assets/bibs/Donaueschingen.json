@@ -24,7 +24,6 @@
             "returndate": 4,
             "status": 3
         },
-        "information": "https://wwwopac.rz-kiru.de/readdonaueschingen/startseite.html",
         "reservationtable": {
             "author": 0,
             "availability": -2,
@@ -35,9 +34,10 @@
         }
     },
     "geo": [
-        47.95215229999999,
-        8.4979461
+        47.9523236,
+        8.501342800000002
     ],
+    "information": "https://wwwopac.rz-kiru.de/readdonaueschingen/startseite.html",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtbibliothek"
 }

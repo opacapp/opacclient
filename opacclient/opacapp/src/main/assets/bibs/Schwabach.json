@@ -24,7 +24,6 @@
             "returndate": 5,
             "status": 2
         },
-        "information": "http://schwabach.de/bibliothek/index.html",
         "mediatypes": {
             "CD.gif": "AUDIOBOOK",
             "mBuchS.gif": "BOOK",
@@ -45,9 +44,10 @@
         }
     },
     "geo": [
-        49.3284557,
-        11.0247098
+        49.3284872,
+        11.0203569
     ],
+    "information": "http://schwabach.de/bibliothek/index.html",
     "state": "Bayern",
     "title": "Stadtbibliothek"
 }

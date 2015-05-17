@@ -24,7 +24,6 @@
             "returndate": -1,
             "status": 4
         },
-        "information": "http://www.landshut.de/portal/bildung/stadtbuecherei.html",
         "mediatypes": {
             "1": "BOOK",
             "11": "DVD",
@@ -47,6 +46,7 @@
         48.5392247,
         12.1459218
     ],
+    "information": "http://www.landshut.de/portal/bildung/stadtbuecherei.html",
     "state": "Bayern",
     "title": "Stadtbibliothek"
 }

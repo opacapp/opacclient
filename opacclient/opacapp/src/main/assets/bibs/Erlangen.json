@@ -9,7 +9,7 @@
             "barcode": -1,
             "homebranch": -1,
             "lendingbranch": -1,
-            "prolongurl": 3,
+            "prolongurl": 4,
             "returndate": 2,
             "status": -1,
             "title": 1
@@ -25,7 +25,6 @@
             "status": 2
         },
         "disableProlongAll": true,
-        "information": "http://www.erlangen.de/bibliothek/",
         "mediatypes": {
             "blurayS.gif": "BLURAY",
             "cdkl.gif": "CD",
@@ -53,9 +52,10 @@
         }
     },
     "geo": [
-        49.5907169,
-        11.0142675
+        49.59727239999999,
+        11.0036991
     ],
+    "information": "http://www.erlangen.de/bibliothek/",
     "replacedby": "de.opacapp.erlangen",
     "state": "Bayern",
     "title": "Stadtbibliothek"

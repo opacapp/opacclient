@@ -4,13 +4,13 @@
     "city": "Aachen",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://index.bth.rwth-aachen.de:8080/TouchPointClient_touchpoint",
-        "information": "http://www.bth.rwth-aachen.de/"
+        "baseurl": "http://index.bth.rwth-aachen.de:8080/TouchPointClient_touchpoint"
     },
     "geo": [
         50.75968,
-		6.0965247
+        6.0965247
     ],
+    "information": "http://www.bth.rwth-aachen.de/",
     "state": "Nordrhein-Westfalen",
     "title": "Unibibliothek RWTH"
 }

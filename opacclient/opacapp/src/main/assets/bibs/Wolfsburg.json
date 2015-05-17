@@ -24,7 +24,6 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "http://www.wolfsburg.de/irj/portal/anonymous?NavigationTarget=navurl://7e0aa67ee960003ee71c83f4a1d1ee70",
         "reservationtable": {
             "author": 0,
             "availability": 2,
@@ -38,6 +37,7 @@
         52.4226503,
         10.7865461
     ],
+    "information": "http://www.wolfsburg.de/irj/portal/anonymous?NavigationTarget=navurl://7e0aa67ee960003ee71c83f4a1d1ee70",
     "replacedby": "de.opacapp.wolfsburg",
     "state": "Niedersachsen",
     "title": "Stadtbibliothek"

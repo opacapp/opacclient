@@ -24,7 +24,6 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "http://www.bibliothek.luckenwalde.de/",
         "mediatypes": {
             "mCasetteS.gif": "AUDIO_CASSETTE",
             "mDVDS.gif": "DVD",
@@ -43,6 +42,7 @@
         52.0903895,
         13.1636906
     ],
+    "information": "http://www.bibliothek.luckenwalde.de/",
     "state": "Brandenburg",
     "title": "Bibliothek im Bahnhof"
 }

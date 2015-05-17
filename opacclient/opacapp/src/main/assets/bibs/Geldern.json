@@ -19,7 +19,6 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "http://www.st-mariamagdalena-geldern.de/html/gruppen-und-verbaende/katholische-oeffentliche-buechereien.html",
         "mediatypes": {
             "Buchklein.GIF": "BOOK",
             "CD-ROMklein.GIF": "CD_SOFTWARE",
@@ -67,9 +66,10 @@
         }
     },
     "geo": [
-        51.5204439,
-        6.3257902
+        51.5175043,
+        6.320647
     ],
+    "information": "http://www.st-mariamagdalena-geldern.de/html/gruppen-und-verbaende/katholische-oeffentliche-buechereien.html",
     "state": "Nordrhein-Westfalen",
     "title": "B\u00fccherei St. Maria Magdalena"
 }

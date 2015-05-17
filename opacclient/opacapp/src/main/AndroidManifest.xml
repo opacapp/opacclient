@@ -23,8 +23,9 @@
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Opacapp.NoActionBar" >
-        <activity
+        android:theme="@style/Theme.Opacapp.NoActionBar"
+        android:supportsRtl="false">
+    <activity
             android:name="de.geeksfactory.opacclient.frontend.MainActivity"
             android:label="@string/launcher_name"
             android:theme="@style/Theme.Opacapp.NoActionBar.WithDrawer">
@@ -149,7 +150,7 @@
 
         <provider
             android:name="de.geeksfactory.opacclient.storage.StarContentProvider"
-            android:authorities="de.geeksfactory.opacclient.starprovider"
+            android:authorities="${applicationId}.starprovider"
             android:exported="false" />
     </application>
 

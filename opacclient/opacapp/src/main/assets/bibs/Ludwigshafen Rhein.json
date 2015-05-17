@@ -24,7 +24,6 @@
             "returndate": 4,
             "status": 3
         },
-        "information": "http://www.ludwigshafen.de/lebenswert/stadtbibliothek/adressen-und-oeffnungszeiten/ ",
         "mediatypes": {
             "Zeitung.gif": "NEWSPAPER",
             "cdkl.gif": "AUDIOBOOK",
@@ -48,9 +47,10 @@
         }
     },
     "geo": [
-        49.4908113,
-        8.4147976
+        49.47741,
+        8.445179999999999
     ],
+    "information": "http://www.ludwigshafen.de/lebenswert/stadtbibliothek/adressen-und-oeffnungszeiten/ ",
     "state": "Rheinland-Pfalz",
     "title": "Stadtbibliothek"
 }

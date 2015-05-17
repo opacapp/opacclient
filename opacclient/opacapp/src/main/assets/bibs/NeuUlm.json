@@ -24,7 +24,6 @@
             "returndate": -1,
             "status": 3
         },
-        "information": "/../read/info.html",
         "mediatypes": {
             "EGR.BMP": "EBOOK",
             "mBUCHs.gif": "BOOK",
@@ -48,6 +47,7 @@
         48.3906042,
         10.0060398
     ],
+    "information": "/../read/info.html",
     "state": "Bayern",
     "title": "Stadtb\u00fccherei"
 }

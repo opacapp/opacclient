@@ -25,7 +25,6 @@
             "status": 4
         },
         "db": "verb",
-        "information": "http://www.haltern.de/rathaus/kultur_bildung/buergerservice.asp?seite=oe&id=361",
         "mediatypes": {
             "EAusakl.gif": "MP3",
             "EAusbkl.gif": "EBOOK",
@@ -65,9 +64,10 @@
         }
     },
     "geo": [
-        51.744641,
-        7.182979
+        51.7446414,
+        7.1829794
     ],
+    "information": "http://www.haltern.de/rathaus/kultur_bildung/buergerservice.asp?seite=oe&id=361",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }

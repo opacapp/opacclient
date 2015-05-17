@@ -13,31 +13,32 @@
         android:minHeight="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
-        app:theme="@style/ThemeOverlay.Opacapp.ActionBar"
+        android:theme="@style/ThemeOverlay.Opacapp.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="16dp" >
+        android:padding="16dp"
+        android:foreground="@drawable/toolbar_shadow">
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/tvWelcome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="8dp"
             android:text="@string/welcome"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/primary_red" />
+            android:textColor="@color/primary_red"/>
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/tvGetStarted"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/textView2"
-            android:text="@string/welcome_select" />
+            android:layout_below="@id/tvWelcome"
+            android:text="@string/welcome_select"/>
 
         <Button
             android:id="@+id/btAddAccount"
@@ -45,15 +46,15 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:text="@string/select_library" />
+            android:text="@string/select_library"/>
 
         <TextView
             android:id="@+id/tvNotice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textView1"
+            android:layout_below="@+id/tvGetStarted"
             android:layout_marginTop="8dp"
-            android:text="@string/welcome_account" />
+            android:text="@string/welcome_account"/>
 
     </RelativeLayout>
- </LinearLayout>
+</LinearLayout>

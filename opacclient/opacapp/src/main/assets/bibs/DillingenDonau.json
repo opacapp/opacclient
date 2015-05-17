@@ -16,7 +16,6 @@
         },
         "baseurl": "http://dillingen.bibdia-hosts.de",
         "customssl": true,
-        "information": "http://stadtbuecherei-dlg.de/",
         "mediatypes": {
             "1": "BOOK",
             "11": "DVD",
@@ -41,6 +40,7 @@
         48.5790918,
         10.4940239
     ],
+    "information": "http://stadtbuecherei-dlg.de/",
     "state": "Bayern",
     "title": "Stadtb\u00fccherei"
 }

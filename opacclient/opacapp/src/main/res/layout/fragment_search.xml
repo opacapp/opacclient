@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+             android:layout_width="fill_parent"
+             android:layout_height="fill_parent">
 
     <FrameLayout
         android:id="@+id/error_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
     </FrameLayout>
 
     <ProgressBar
@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
     <ScrollView
         android:id="@+id/scroll"
@@ -27,7 +27,7 @@
             android:id="@+id/rlOuter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:id="@+id/rlSimpleSearch"
@@ -47,9 +47,9 @@
                     android:hint="@string/search_free"
                     android:inputType="text"
                     android:textColorHint="@color/hint_fg"
-                    android:textColor="@color/account_head_fg" >
+                    android:textColor="@color/account_head_fg">
 
-                    <requestFocus />
+                    <requestFocus/>
                 </EditText>
             </RelativeLayout>
 
@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rlSimpleSearch"
                 android:orientation="vertical"
-                android:padding="8dp" >
+                android:padding="8dp">
 
                 <RelativeLayout
                     android:id="@+id/rlReplaced"
@@ -69,7 +69,7 @@
                     android:layout_marginTop="8dp"
                     android:background="@color/note_replacedby"
                     android:padding="4dp"
-                    android:visibility="gone" >
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/ivReplacedStore"
@@ -78,7 +78,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:contentDescription="@string/replacedby"
-                        android:src="@drawable/playstore" />
+                        android:src="@drawable/playstore"/>
 
                     <TextView
                         android:id="@+id/tvReplacedNote"
@@ -87,7 +87,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/ivReplacedStore"
-                        android:text="@string/replacedby" />
+                        android:text="@string/replacedby"/>
                 </RelativeLayout>
 
                 <TextView
@@ -97,47 +97,47 @@
                     android:layout_marginBottom="10dp"
                     android:layout_marginTop="8dp"
                     android:text="@string/search_advanced"
-                    android:textAppearance="@style/TextAppearance.Opacapp.Subhead" />
+                    android:textAppearance="@style/TextAppearance.Opacapp.Subhead"/>
 
                 <LinearLayout
                     android:id="@+id/llFormFields"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
                 </LinearLayout>
-                
+
                 <LinearLayout
-			        android:id="@+id/llExpand"
-			        android:layout_width="fill_parent"
-			        android:layout_height="wrap_content"
-			        android:background="@drawable/ripple"
-			        android:clickable="true"
-			        android:focusable="true"
-			        android:padding="16dp" >
-			
-			        <ImageView
-			            android:id="@+id/ivExpandIcon"
-			            android:layout_width="wrap_content"
-			            android:contentDescription="@string/expand"
-			            android:layout_height="wrap_content"
-			            android:src="@drawable/ic_action_expand" />
-			
-			        <TextView
-			            android:id="@+id/tvExpandString"
-			            android:layout_width="0dp"
-			            android:layout_height="wrap_content"
-			            android:layout_gravity="center"
-			            android:layout_marginLeft="8dp"
-			            android:layout_weight="1"
-			            android:text="@string/expand" />
-			    </LinearLayout>
-                
+                    android:id="@+id/llExpand"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ripple"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:id="@+id/ivExpandIcon"
+                        android:layout_width="wrap_content"
+                        android:contentDescription="@string/expand"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_action_expand"/>
+
+                    <TextView
+                        android:id="@+id/tvExpandString"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        android:layout_weight="1"
+                        android:text="@string/expand"/>
+                </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/llAdvancedFields"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="gone" >
+                    android:visibility="gone">
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>

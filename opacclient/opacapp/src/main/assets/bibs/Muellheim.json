@@ -17,7 +17,6 @@
             "returndate": 4,
             "status": 3
         },
-        "information": "http://www.muellheim.de/index.php?article_id=50",
         "mediatypes": {
             "Kinderbuchklein.gif": "BOOK",
             "MCOMIC1.jpg": "BOOK",
@@ -39,9 +38,10 @@
         }
     },
     "geo": [
-        47.8091623,
-        7.618035300000001
+        47.8110931,
+        7.628161500000001
     ],
+    "information": "http://www.muellheim.de/index.php?article_id=50",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Mediathek"
 }

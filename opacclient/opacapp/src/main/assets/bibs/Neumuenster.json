@@ -5,7 +5,6 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "http://www.opac.neumuenster.de",
-        "information": "http://www.neumuenster.de/stabue/",
         "mediatypes": {
             "1": "BOOK",
             "10": "MAP",
@@ -26,9 +25,10 @@
         ]
     },
     "geo": [
-        54.0729431,
-        9.9840158
+        54.07217679999999,
+        9.9794251
     ],
+    "information": "http://www.neumuenster.de/stabue/",
     "state": "Schleswig-Holstein",
     "title": "Stadtbibliothek"
 }

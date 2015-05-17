@@ -1,0 +1,172 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="app_name">OPAC web</string>
+  <string name="launcher_name">OPAC web</string>
+  <string name="web_opac">OPAC web</string>
+  <string name="branch">Biblioteca sucursal</string>
+  <string name="barcodes">Códigos de barras</string>
+  <string name="go_search">Encontrar</string>
+  <string name="prefs">Configuración</string>
+  <string name="account">Cuenta</string>
+  <string name="about">Acerca de</string>
+  <string name="about_summary">Acerca de esta aplicación</string>
+  <string name="close">Cerrar</string>
+  <string name="osl">Información legal</string>
+  <string name="thanks">Méritos</string>
+  <string name="details_head">Detalles</string>
+  <string name="copies_head">Ejemplares</string>
+  <string name="ret">Fecha de devolución</string>
+  <string name="res">Reservado</string>
+  <string name="tocollection">A colección</string>
+  <string name="reserve">Reservar</string>
+  <string name="lendebook">Prestar e-book</string>
+  <string name="doing_res">Realizando reservación…</string>
+  <string name="opac_error_email">Por favor introduzca tu correo electrónico en las configuraciones de la aplicación. </string>
+  <string name="doing_booking">Prestando…</string>
+  <string name="status_nouser">No se ha especificado </string>
+  <string name="pending_fees">Multas pendientes:</string>
+  <string name="valid_until">Cuenta válida hasta: </string>
+  <string name="no_warranty">Toda la información se facilita sin responsabilidad. </string>
+  <string name="lent_head">Préstamo</string>
+  <string name="reservations_head">Reservas</string>
+  <string name="entl_none">No préstamo</string>
+  <string name="reservations_none">No reservas</string>
+  <string name="cancel_confirm">¿Desea cancelar reservación?</string>
+  <string name="yes">Sí</string>
+  <string name="no">No</string>
+  <string name="cancel">Cancelar</string>
+  <string name="delete">Borrar</string>
+  <string name="accept">Aceptar</string>
+  <string name="doing_cancel">Cancelando reservación…</string>
+  <string name="doing_prolong">Realizando renovación…</string>
+  <string name="doing_download">Recuperando información de descarga…</string>
+  <string name="reader_needed_ignore">Ignorar</string>
+  <string name="doing_prolong_all">Todos los medios renovables se han renovado…</string>
+  <string name="prolong_all_confirm">¿Está seguro de renovar todos artículos en su cuenta? Esto puede provocar tasas en algunas bibliotecas.  </string>
+  <string name="opac_error">Mensaje de error del OPAC web</string>
+  <string name="welcome">¡Bienvenido!</string>
+  <string name="welcome_select">Para empezar, tiene que seleccionar una biblioteca. </string>
+  <string name="welcome_account">La cuenta puede ser anónima (sólo para buscar) o incluir un número de lector y contraseña (activar propiedades relacionadas con la cuenta). Puede añadir más cuentas después. </string>
+  <string name="select_library">Seleccionar biblioteca</string>
+  <string name="report">Enviar informe</string>
+  <string name="report_sending">Enviando informe…</string>
+  <string name="report_sent">Informe ha sido enviado. ¡Gracias!</string>
+  <string name="report_error">Error al enviar informe.</string>
+  <string name="notifications">Notificaciones</string>
+  <string name="notification_service">Artículos expirados</string>
+  <string name="notification_service_desc">Aviso cuando un artículo esté a punto de expirar (no garantía)</string>
+  <string name="notification_service_wifionly">Consulta sólo con Wifi</string>
+  <string-array name="warning">
+    <item>El día mismo</item>
+    <item>1 día antes</item>
+    <item>3 días antes</item>
+    <item>1 semana antes</item>
+  </string-array>
+  <string name="startup_title">Pantalla de inicio</string>
+  <string name="startup_summary">¿Qué pantalla prefiere ver al principio?</string>
+  <string-array name="startup_labels">
+    <item>Buscar</item>
+    <item>Cuenta</item>
+    <item>Favoritos</item>
+    <item>Información</item>
+  </string-array>
+  <string-array name="startup_values">
+    <item>buscar</item>
+    <item>cuenta</item>
+    <item>indicado</item>
+    <item>información</item>
+  </string-array>
+  <string name="notification_warning">Plazo de aviso</string>
+  <string name="notification_warning_desc">¿Cuánto tiempo antes del vencimiento quiere recibir un aviso?</string>
+  <string name="notif_ticker">¡%s artículos están a punto de expirar!</string>
+  <string name="notif_title">Artículos están a punto de expirar</string>
+  <string name="volumes">Volúmenes</string>
+  <string name="volumesearch">Muestra volúmenes</string>
+  <string name="star">Añadir a favoritos</string>
+  <string name="starred">El artículo ya está en su lista de favoritos.</string>
+  <string name="star_wait">Por favor, espera la carga de los detalles.</string>
+  <string name="starred_welcome">Eso es su lista de favortios. Puede añadir artículos al pinchar el asterisco en una página detallada. Se guarda una lista separada para cada biblioteca que utilizas. </string>
+  <string name="share">Compartir</string>
+  <string name="share_wait">Por favor, espera la carga de los detalles.</string>
+  <string name="share_notsupported">No compatible con esta biblioteca.</string>
+  <string name="unsupported">No compatible</string>
+  <string name="account_unsupported_api">Está propiedad todavía no está compatible con su biblioteca. Podríamos recurrir a lectores locales para instalarlo. Si está interesado, escribe un correo a info@opacapp.de</string>
+  <string name="account_unsupported">Está propiedad todavía no está compatible con su biblioteca. Necesitamos el apoyo de los lectores de esta biblioteca para cambiarlo. Si pinchas en \"Enviar informe\", podemos intentar un cambio con la actualización siguiente. </string>
+  <string name="write_mail">Escribir correo</string>
+  <string name="info_error">No podía cargar más información para esta biblioteca.</string>
+  <string name="info_unsupported">No tenemos ninguna información sobre esta biblioteca.</string>
+  <string name="connection_error_detail">La conexión con el servidor de la biblioteca falló. Por favor, compruebe su conexión de Internet. Si el problema continúa, probablemente había un problema en el servidor de la biblioteca o la aplicación no podía analizar la respuesta del servidor.</string>
+  <string name="connection_error_detail_nre">La conexión con el servidor de la biblioteca falló. Por favor, compruebe su conexión de Internet. Si el problema continúa, probablemente había un problema en el servidor de la biblioteca.</string>
+  <string name="retry">Intenta de nuevo</string>
+  <string name="connection_error_detail_security">La conexión segura con el servidor de la biblioteca falló. Por favor, inténtelo de nuevo. Si el problema continúa, puede que alguien corte su conexión. Por favor, avisa a info@opacapp.de si el problema continúa en redes wifi multiples.</string>
+  <string name="default_account_name">Cuenta no denominada</string>
+  <string name="title_activity_account_list">Cuentas</string>
+  <string name="account_add">Añadir cuenta</string>
+  <string name="accounts">Cuentas</string>
+  <string name="accounts_edit">Cambiar cuenta</string>
+  <string name="accounts_desc">Administrar sus bibliotecas y números de lector</string>
+  <string name="account_label">Etiqueta</string>
+  <string name="account_nr">Número de lector/nombre de usuario (opcional)</string>
+  <string name="account_password">Contraseña (opcional)</string>
+  <string name="account_city">Biblioteca</string>
+  <string name="account_delete_confirm">¿Desea borrar cuenta?</string>
+  <string name="account_select">Seleccionar cuenta</string>
+  <string name="privacy">Privacidad</string>
+  <string name="nav_hl_library">Biblioteca</string>
+  <string name="nav_search">Búsqueda</string>
+  <string name="nav_account">Cuenta</string>
+  <string name="nav_starred">Favoritos</string>
+  <string name="nav_info">Información</string>
+  <string name="nav_hl_other">Varios</string>
+  <string name="nav_settings">Configuración</string>
+  <string name="nav_about">Acerca de esta aplicación</string>
+  <string name="nav_hl_accountlist">Selección de cuenta</string>
+  <string name="crash_toast_text">Se produzó un error. Por favor, espere un momento.</string>
+  <string name="crash_notif_ticker_text">Web Opac App: se produzó un error.</string>
+  <string name="crash_notif_text">Por favor, pincha aquí para enviar un informe de error.</string>
+  <string name="crash_notif_title">Web Opac App se colgió</string>
+  <string name="crash_dialog_text">¡Se produzó un error en la aplicación OPAC! Por favor, envíe el informe de error para que lo resolvamos.</string>
+  <string name="refresh">Refrescar</string>
+  <string name="prolong_all">Renovar todo</string>
+  <string name="account_no_concurrent">Por favor, espera la vista de renovar.</string>
+  <string name="confirm_title">Confirmar</string>
+  <string name="confirm">Confirmar</string>
+  <string name="account_up_to_date">Los datos están actualizados.</string>
+  <string name="search_advanced">Búsqueda avanzada</string>
+  <string name="search_free">Búsqueda sencilla</string>
+  <string name="barcode_title">¿Desea instalar el escáner de código de barras?</string>
+  <string name="barcode_desc">Esta propiedad requiere la instalación de un escáner de código de barras. ¿Desea descargar uno?</string>
+  <string name="barcode_gplay">Google Play</string>
+  <string name="barcode_amazon">Amazon</string>
+  <plurals name="result_number">
+     <item quantity="one">%d resultados de búsqueda</item>
+     <item quantity="other">%d resultados de búsqueda</item>
+  </plurals>
+  <string name="export_starred">Exportar</string>
+  <string name="geolocate">Encontrar bibliotecas cercanas</string>
+  <string name="geolocate_progress">Localizando…</string>
+  <string name="alphabetic_list">Mostrar lista entera</string>
+  <string name="setting_nfc">Buscar a través de etiquetas NFC</string>
+  <string name="setting_nfc_desc">Fase experimental. Sólo compatible con algunos dispositivos y algunas bibliotecas.</string>
+  <string name="notification_problems">Puede que las notificaciones se hayan interrumpido. </string>
+  <string name="no_results">No hay resultados que respondan a su búsqueda.</string>
+  <string name="email_address">Correo electrónico</string>
+  <string name="email_address_description">Necesario para reservas de e-books</string>
+  <string name="accchange_sorry">Cambio de cuentas falló. Por favor, vuelve a buscar.</string>
+  <string name="share_dialog_select">Compartir resultado</string>
+  <string name="share_link">Compartir enlace</string>
+  <string name="share_details">Exportar detalles</string>
+  <string name="drawer_open">Abrir navigación</string>
+  <string name="drawer_close">Cerrar navigación</string>
+  <string name="title_searchresult_list">Resultados de búsqueda</string>
+  <string name="title_activity_library_list">Selección de bibliotecas</string>
+  <string name="title_activity_suggest_library">Sugerir biblioteca</string>
+  <string name="city">Ciudad</string>
+  <string name="library_name">Nombre de biblioteca</string>
+  <string name="status">Estado</string>
+  <string name="loading">Cargando…</string>
+  <string name="loading_libraries">Cargando lista de bibliotecas…</string>
+  <string name="return_date">Fecha de devolución</string>
+  <string name="location">Posición</string>
+  <string name="reservations">Reservas</string>
+</resources>

@@ -4,13 +4,13 @@
     "city": "Bielefeld",
     "country": "Deutschland",
     "data": {
-        "baseurl": "https://biblio.fh-bielefeld.de/webOPACClient",
-        "information": "http://www.fh-bielefeld.de/bib"
+        "baseurl": "https://biblio.fh-bielefeld.de/webOPACClient"
     },
     "geo": [
         52.0302285,
         8.532470800000002
     ],
+    "information": "http://www.fh-bielefeld.de/bib",
     "state": "Nordrhein-Westfalen",
     "title": "Fachhochschule"
 }

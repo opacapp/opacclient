@@ -18,7 +18,6 @@
             "returndate": 4,
             "status": 3
         },
-        "information": "http://www.bad-honnef.de/service/buecherei/",
         "mediatypes": {
             "mCasetteS.gif": "AUDIO_CASSETTE",
             "mDVDS.gif": "DVD",
@@ -35,6 +34,7 @@
         50.6426173,
         7.226244599999999
     ],
+    "information": "http://www.bad-honnef.de/service/buecherei/",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }

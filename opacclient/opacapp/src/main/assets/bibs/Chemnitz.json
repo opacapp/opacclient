@@ -4,13 +4,13 @@
     "city": "Chemnitz",
     "country": "Deutschland",
     "data": {
-        "baseurl": "https://opac2.stadtbibliothek-chemnitz.de/TouchPoint",
-        "information": "http://www.stadtbibliothek-chemnitz.de/service-auskunft/oeffnungszeiten.html"
+        "baseurl": "https://opac2.stadtbibliothek-chemnitz.de/TouchPoint"
     },
     "geo": [
         50.827845,
         12.9213697
     ],
+    "information": "http://www.stadtbibliothek-chemnitz.de/service-auskunft/oeffnungszeiten.html",
     "state": "Sachsen",
     "title": "Stadtbibliothek"
 }

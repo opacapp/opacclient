@@ -13,7 +13,6 @@
         },
         "baseurl": "https://wwwopac.rz-kiru.de/schramberg",
         "db": "ja",
-        "information": "http://www.schramberg.de/de/B%C3%BCrger/Kultur,-Sport,-Freizeit/Mediathek/%C3%96ffnungszeiten-der-Mediathek-Schramberg",
         "reservationtable": {
             "author": 1,
             "branch": 0,
@@ -26,6 +25,7 @@
         48.228146,
         8.3844681
     ],
+    "information": "http://www.schramberg.de/de/B%C3%BCrger/Kultur,-Sport,-Freizeit/Mediathek/%C3%96ffnungszeiten-der-Mediathek-Schramberg",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Mediathek"
 }

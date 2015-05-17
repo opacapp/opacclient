@@ -19,7 +19,6 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "http://www.buecherei-gescher.de/index.php?id=2",
         "mediatypes": {
             "Buchklein.GIF": "BOOK",
             "CD-ROMklein.GIF": "CD_SOFTWARE",
@@ -67,9 +66,10 @@
         }
     },
     "geo": [
-        51.9529389,
-        7.0031738
+        51.957027,
+        7.001665
     ],
+    "information": "http://www.buecherei-gescher.de/index.php?id=2",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei St. Pankratius"
 }

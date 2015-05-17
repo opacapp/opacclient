@@ -1,12 +1,12 @@
 package de.geeksfactory.opacclient.frontend;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.support.v7.app.AppCompatDialog;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -23,9 +23,6 @@ import java.io.InputStreamReader;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 
-/**
- * Created by johan_000 on 25.01.2015.
- */
 public class AboutFragment extends PreferenceFragment {
 
     protected Activity context;
@@ -48,10 +45,11 @@ public class AboutFragment extends PreferenceFragment {
                     @Override
                     public boolean onPreferenceClick(Preference preference) {
                         Intent i = new Intent(Intent.ACTION_VIEW);
-                        if (getString(R.string.website_url).contains("de"))
+                        if (getString(R.string.website_url).contains("de")) {
                             i.setData(Uri.parse("http://de.opacapp.net"));
-                        else
+                        } else {
                             i.setData(Uri.parse("http://en.opacapp.net"));
+                        }
                         startActivity(i);
                         return false;
                     }
@@ -76,7 +74,7 @@ public class AboutFragment extends PreferenceFragment {
                                 android.content.Intent.ACTION_SEND);
                         emailIntent.putExtra(
                                 android.content.Intent.EXTRA_EMAIL,
-                                new String[] { "info@opacapp.de" });
+                                new String[]{"info@opacapp.de"});
                         emailIntent.setType("text/plain");
                         startActivity(Intent.createChooser(emailIntent,
                                 getString(R.string.write_mail)));
@@ -151,10 +149,10 @@ public class AboutFragment extends PreferenceFragment {
 
     private void res_dialog(int file, int title) {
 
-        final Dialog dialog = new Dialog(context);
+        final AppCompatDialog dialog = new AppCompatDialog(context);
         dialog.setContentView(R.layout.dialog_about);
         dialog.setTitle(title);
-        TextView textview1 = (TextView) dialog.findViewById(R.id.textView1);
+        TextView tvText = (TextView) dialog.findViewById(R.id.tvText);
 
         String text = "";
 
@@ -175,11 +173,11 @@ public class AboutFragment extends PreferenceFragment {
             e.printStackTrace();
         }
 
-        textview1.setText(Html.fromHtml(text));
+        tvText.setText(Html.fromHtml(text));
 
-        Button dialogButton = (Button) dialog.findViewById(R.id.button1);
+        Button closeButton = (Button) dialog.findViewById(R.id.btnClose);
         // if button is clicked, close the custom dialog
-        dialogButton.setOnClickListener(new View.OnClickListener() {
+        closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();

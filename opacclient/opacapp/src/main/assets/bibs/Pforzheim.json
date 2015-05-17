@@ -24,7 +24,6 @@
             "returndate": 4,
             "status": 3
         },
-        "information": "/read/info.html",
         "mediatypes": {
             "Bluray1S.jpg": "BLURAY",
             "DMedienS.jpg": "EBOOK",
@@ -57,9 +56,10 @@
         }
     },
     "geo": [
-        48.8926378,
-        8.693292699999999
+        48.8921862,
+        8.6946286
     ],
+    "information": "/read/info.html",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtbibliothek"
 }

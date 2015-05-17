@@ -24,7 +24,6 @@
             "returndate": 5,
             "status": 4
         },
-        "information": "http://www.magdeburg-stadtbibliothek.de/texte/seite.php?id=98014",
         "mediatypes": {
             "B.gif": "BOOK",
             "BK.gif": "BOOK",
@@ -62,6 +61,7 @@
         52.130807,
         11.628878
     ],
+    "information": "http://www.magdeburg-stadtbibliothek.de/texte/seite.php?id=98014",
     "state": "Sachsen-Anhalt",
     "title": "Stadtbibliothek"
 }

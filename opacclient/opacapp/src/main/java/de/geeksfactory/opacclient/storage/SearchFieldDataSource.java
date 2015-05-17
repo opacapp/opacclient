@@ -6,70 +6,60 @@ import de.geeksfactory.opacclient.searchfields.SearchField;
 
 /**
  * Interface for providing access to cached SearchField data
- * 
+ *
  * @author Johan von Forstner
  */
 public interface SearchFieldDataSource {
-	/**
-	 * Save search fields for a specific library.
-	 * 
-	 * @param libraryId
-	 *            The ID of the library (Library.getIdent())
-	 * @param fields
-	 *            the list of search fields to save
-	 */
-	public void saveSearchFields(String libraryId, List<SearchField> fields);
+    /**
+     * Save search fields for a specific library.
+     *
+     * @param libraryId The ID of the library (Library.getIdent())
+     * @param fields    the list of search fields to save
+     */
+    void saveSearchFields(String libraryId, List<SearchField> fields);
 
-	/**
-	 * Get the saved search fields of a library.
-	 * 
-	 * @param libraryId
-	 *            The ID of the library (Library.getIdent())
-	 * @return List of search fields or null if the library has no cached data
-	 */
-	public List<SearchField> getSearchFields(String libraryId);
+    /**
+     * Get the saved search fields of a library.
+     *
+     * @param libraryId The ID of the library (Library.getIdent())
+     * @return List of search fields or null if the library has no cached data
+     */
+    List<SearchField> getSearchFields(String libraryId);
 
-	/**
-	 * @param libraryId
-	 *            The ID of the library (Library.getIdent())
-	 * @return whether the library has cached data
-	 */
-	public boolean hasSearchFields(String libraryId);
+    /**
+     * @param libraryId The ID of the library (Library.getIdent())
+     * @return whether the library has cached data
+     */
+    boolean hasSearchFields(String libraryId);
 
-	/**
-	 * Clear the cached data for a specific library
-	 * 
-	 * @param libraryId
-	 *            The ID of the library (Library.getIdent())
-	 */
-	public void clearSearchFields(String libraryId);
+    /**
+     * Clear the cached data for a specific library
+     *
+     * @param libraryId The ID of the library (Library.getIdent())
+     */
+    void clearSearchFields(String libraryId);
 
-	/**
-	 * Clear the cached data for all libraries
-	 */
-	public void clearAll();
+    /**
+     * Clear the cached data for all libraries
+     */
+    void clearAll();
 
-	/**
-	 * @param libraryId
-	 *            The ID of the library (Library.getIdent())
-	 * @return Timecode (like System.currentTimeMillis()) for when the data of
-	 *         this library was last updated
-	 */
-	public long getLastSearchFieldUpdateTime(String libraryId);
+    /**
+     * @param libraryId The ID of the library (Library.getIdent())
+     * @return Timecode (like System.currentTimeMillis()) for when the data of this library was last
+     * updated
+     */
+    long getLastSearchFieldUpdateTime(String libraryId);
 
-	/**
-	 * @param libraryId
-	 *            The ID of the library (Library.getIdent())
-	 * @return Version code of the last app version that updated the search
-	 *         field for this library
-	 */
-	public int getLastSearchFieldUpdateVersion(String libraryId);
+    /**
+     * @param libraryId The ID of the library (Library.getIdent())
+     * @return Version code of the last app version that updated the search field for this library
+     */
+    int getLastSearchFieldUpdateVersion(String libraryId);
 
-	/**
-	 * @param libraryId
-	 *            The ID of the library (Library.getIdent())
-	 * @return System language with which the search fields were saved
-	 *         (ISO-639-1 code)
-	 */
-	public String getSearchFieldLanguage(String libraryId);
+    /**
+     * @param libraryId The ID of the library (Library.getIdent())
+     * @return System language with which the search fields were saved (ISO-639-1 code)
+     */
+    String getSearchFieldLanguage(String libraryId);
 }

@@ -24,7 +24,6 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "http://www.neusalza-spremberg.de/index.php/bibliothek",
         "reservationtable": {
             "author": 0,
             "availability": 2,
@@ -38,6 +37,7 @@
         51.0380155,
         14.5276012
     ],
+    "information": "http://www.neusalza-spremberg.de/index.php/bibliothek",
     "state": "Sachsen",
     "title": "Stadtbibliothek"
 }

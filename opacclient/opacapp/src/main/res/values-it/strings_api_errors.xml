@@ -1,29 +1,32 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources>
-  <!--These strings may be shown as unused by Android Lint, but are in fact used by the AndroidStringProvider class-->
-  <string name="limited_num_of_criteria">Questa biblioteca supporta al massimo %d criteri di ricerca.</string>
-  <string name="no_criteria_input">I campi di ricerca non contengono alcun contenuto.</string>
-  <string name="combination_not_supported">Hai utilizzato una combinazione di criteri di ricerca che non è supportata da questa biblioteca. Riprova modificando i campi di ricerca.</string>
-  <string name="unknown_error_account">Errore sconosciuto. Verifica che i dati dell\'account inseriti siano corretti.</string>
-  <string name="unknown_error_account_with_description">Errore sconosciuto: \"%s\" Verifica che i dati dell\'account inseriti siano corretti.</string>
-  <string name="unknown_error">Errore sconosciuto.</string>
-  <string name="unknown_error_with_description">Errore sconosciuto: \"%s\"</string>
-  <string name="internal_error">Errore interno.</string>
-  <string name="internal_error_with_description">Errore interno: \"%s\"</string>
-  <string name="login_failed">Login non riuscito.</string>
-  <string name="could_not_load_account">Non è stato possibile caricare l\'account.</string>
-  <string name="api_connection_error">Errore di connessione.</string>
-  <string name="lent_until">Preso in prestito fino al</string>
-  <string name="subtitle">Sottotitolo</string>
-  <string name="pica_which_copy">Quale copia devo prenotare/ordinare? (copie attualmente disponibili vengono ordinate)</string>
-  <string name="no_copy_reservable">Non sono disponibili copie prenotabili.</string>
-  <string name="could_not_load_detail">I dettagli non sono stati scaricati, prova di nuovo! </string>
-  <string name="error">Errore</string>
-  <string name="download">Scarica</string>
-  <string name="reminders">Promemoria</string>
-  <string name="prolonged_abbr">rinnova</string>
-  <string name="prolonging_expired">non più rinnovabile</string>
-  <string name="prolonging_impossible">non rinnovabile</string>
-  <string name="prolonging_waiting">non ancora rinnovabile</string>
-  <string name="wrong_account_data">I dati utente inseriti sono errati.</string>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
+    <!--These strings may be shown as unused by Android Lint, but are in fact used by the AndroidStringProvider class-->
+    <plurals name="limited_num_of_criteria">
+        <item quantity="one">Questa biblioteca supporta al massimo un criterio di ricerca.</item>
+        <item quantity="other">Questa biblioteca supporta al massimo %d criteri di ricerca.</item>
+    </plurals>
+    <string name="no_criteria_input">I campi di ricerca non contengono alcun contenuto.</string>
+    <string name="combination_not_supported">Hai utilizzato una combinazione di criteri di ricerca che non è supportata da questa biblioteca. Riprova modificando i campi di ricerca.</string>
+    <string name="unknown_error_account">Errore sconosciuto. Verifica che i dati dell\'account inseriti siano corretti.</string>
+    <string name="unknown_error_account_with_description">Errore sconosciuto: \"%s\" Verifica che i dati dell\'account inseriti siano corretti.</string>
+    <string name="unknown_error">Errore sconosciuto.</string>
+    <string name="unknown_error_with_description">Errore sconosciuto: \"%s\"</string>
+    <string name="internal_error">Errore interno.</string>
+    <string name="internal_error_with_description">Errore interno: \"%s\"</string>
+    <string name="login_failed">Login non riuscito.</string>
+    <string name="could_not_load_account">Non è stato possibile caricare l\'account.</string>
+    <string name="api_connection_error">Errore di connessione.</string>
+    <string name="lent_until">Preso in prestito fino al</string>
+    <string name="subtitle">Sottotitolo</string>
+    <string name="pica_which_copy">Quale copia devo prenotare/ordinare? (copie attualmente disponibili vengono ordinate)</string>
+    <string name="no_copy_reservable">Non sono disponibili copie prenotabili.</string>
+    <string name="could_not_load_detail">I dettagli non sono stati scaricati, prova di nuovo! </string>
+    <string name="error">Errore</string>
+    <string name="download">Scarica</string>
+    <string name="reminders">Promemoria</string>
+    <string name="prolonged_abbr">rinnova</string>
+    <string name="prolonging_expired">non più rinnovabile</string>
+    <string name="prolonging_impossible">non rinnovabile</string>
+    <string name="prolonging_waiting">non ancora rinnovabile</string>
+    <string name="wrong_account_data">I dati utente inseriti sono errati.</string>
 </resources>

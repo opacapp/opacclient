@@ -1,8 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:id="@+id/LinearLayout1"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -11,22 +10,14 @@
         android:paddingBottom="110dp"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
-        app:theme="@style/ThemeOverlay.Opacapp.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        android:theme="@style/ThemeOverlay.Opacapp.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-    <com.melnykov.fab.FloatingActionButton
-        android:id="@+id/add_fab"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:layout_marginTop="-36dp"
-        android:layout_marginRight="36dp"
-        android:layout_below="@id/toolbar"
-        android:layout_alignParentRight="true"
-        android:elevation="4dp"
-        android:src="@drawable/ic_action_accounts_add"
-        app:fab_colorNormal="@color/accent_red"
-        app:fab_colorPressed="@color/primary_red"
-        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:background="@drawable/toolbar_shadow"/>
 
     <FrameLayout
         android:layout_width="720dp"
@@ -38,10 +29,27 @@
         android:layout_marginTop="-96dp"
         android:elevation="8dp"
         android:background="@drawable/popup_bg">
+
         <ListView
             android:id="@+id/lvAccounts"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </FrameLayout>
+
+
+    <com.melnykov.fab.FloatingActionButton
+        android:id="@+id/add_fab"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_marginTop="-36dp"
+        android:layout_marginRight="36dp"
+        android:layout_below="@id/toolbar"
+        android:layout_alignParentRight="true"
+        android:elevation="4dp"
+        android:src="@drawable/ic_action_accounts_add"
+        android:contentDescription="@string/account_add"
+        app:fab_colorNormal="@color/accent_red"
+        app:fab_colorPressed="@color/primary_red"
+        />
 
 </RelativeLayout>

@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "http://kiopc4.ub.uni-kiel.de:8080",
-        "db": "5",
-        "information": "http://www.zhb-flensburg.de/"
+        "db": "5"
     },
     "geo": [
-        54.788101,
-        9.4320813
+        54.7757066,
+        9.4550131
     ],
+    "information": "http://www.zhb-flensburg.de/",
     "state": "Schleswig-Holstein",
     "title": "Zentrale Hochschulbibliothek"
 }

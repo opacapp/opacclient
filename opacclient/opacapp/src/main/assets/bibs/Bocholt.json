@@ -24,7 +24,6 @@
             "returndate": -1,
             "status": 3
         },
-        "information": "http://www.bocholt.de/seiten/bocholt/bildung_und_kultur/stadtbibliothek.cfm",
         "mediatypes": {
             "Cdgr.gif": "CD",
             "Spiele.gif": "BOARDGAME",
@@ -49,9 +48,10 @@
         }
     },
     "geo": [
-        51.8384277,
-        6.6150917
+        51.83330710000001,
+        6.6193272
     ],
+    "information": "http://www.bocholt.de/seiten/bocholt/bildung_und_kultur/stadtbibliothek.cfm",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtbibliothek"
 }

@@ -19,7 +19,6 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "http://www.buecherei-vreden.de/",
         "mediatypes": {
             "Buchklein.GIF": "UNKNOWN",
             "CD-ROMklein.GIF": "CD_SOFTWARE",
@@ -67,9 +66,10 @@
         }
     },
     "geo": [
-        52.03539439999999,
-        6.824548699999999
+        52.0366967,
+        6.825707899999999
     ],
+    "information": "http://www.buecherei-vreden.de/",
     "state": "Nordrhein-Westfalen",
     "title": "\u00d6ffentliche B\u00fccherei St. Georg"
 }

@@ -4,13 +4,13 @@
     "city": "Neuburg a. d. Donau",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.net/neuburg",
-        "information": "http://www.neuburg-donau.de/kultur/bildung/buecherturm"
+        "baseurl": "http://webopac.winbiap.net/neuburg"
     },
     "geo": [
-        48.7302674,
-        11.1887693
+        48.734458,
+        11.180675
     ],
+    "information": "http://www.neuburg-donau.de/kultur/bildung/buecherturm",
     "state": "Bayern",
     "title": "Stadtb\u00fccherei"
 }

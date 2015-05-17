@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://bsz.ibs-bw.de/aDISWeb/app",
-        "information": "http://www.mh-trossingen.de/hochschule/bibliothek.html",
         "startparams": "service=direct/0/Home/%24DirectLink&sp=S127.0.0.1:23342"
     },
     "geo": [
-        48.0756997,
-        8.6338475
+        48.07519,
+        8.638209999999999
     ],
+    "information": "http://www.mh-trossingen.de/hochschule/bibliothek.html",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Musikhochschule"
 }

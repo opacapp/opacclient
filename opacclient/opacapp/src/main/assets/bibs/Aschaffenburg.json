@@ -5,7 +5,6 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "http://www.stadtbibliothek-aschaffenburg.de",
-        "information": "http://www.stadtbibliothek-aschaffenburg.de/relaunch/content/start/anschrift_oeffnungszeit.html",
         "mediatypes": {
             "1": "BOOK",
             "10": "MAP",
@@ -26,9 +25,10 @@
         ]
     },
     "geo": [
-        49.97354740000001,
-        9.1525973
+        49.97643129999999,
+        9.1432428
     ],
+    "information": "http://www.stadtbibliothek-aschaffenburg.de/relaunch/content/start/anschrift_oeffnungszeit.html",
     "state": "Bayern",
     "title": "Stadtbibliothek"
 }

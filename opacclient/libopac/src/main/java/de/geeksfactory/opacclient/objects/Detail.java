@@ -1,16 +1,16 @@
 /**
  * Copyright (C) 2013 by Raphael Michel under the MIT license:
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), 
  * to deal in the Software without restriction, including without limitation 
  * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
  * and/or sell copies of the Software, and to permit persons to whom the Software 
  * is furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in 
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
@@ -23,96 +23,93 @@ package de.geeksfactory.opacclient.objects;
 
 /**
  * Object representing a detail of a media item
- * 
+ *
  * @author Raphael Michel
  */
 public class Detail {
-	private String desc;
-	private String content;
-	private boolean html;
+    private String desc;
+    private String content;
+    private boolean html;
 
-	/**
-	 * Create a new detail
-	 * 
-	 * @param desc
-	 *            Description
-	 * @param content
-	 *            Content
-	 */
-	public Detail(String desc, String content) {
-		super();
-		this.desc = desc;
-		this.content = content;
-	}
-	/**
-	 * Create a new detail
-	 * 
-	 * @param desc
-	 *            Description
-	 * @param content
-	 *            Content
-	 */
-	public Detail(String desc, String content, boolean html) {
-		super();
-		this.desc = desc;
-		this.content = content;
-		this.html = true;
-	}
+    /**
+     * Create a new detail
+     *
+     * @param desc    Description
+     * @param content Content
+     */
+    public Detail(String desc, String content) {
+        super();
+        this.desc = desc;
+        this.content = content;
+    }
 
-	/**
-	 * Get this detail's description
-	 * 
-	 * @return the description
-	 */
-	public String getDesc() {
-		return desc;
-	}
+    /**
+     * Create a new detail
+     *
+     * @param desc    Description
+     * @param content Content
+     */
+    public Detail(String desc, String content, boolean html) {
+        super();
+        this.desc = desc;
+        this.content = content;
+        this.html = html;
+    }
 
-	/**
-	 * Set this detail's description. Description in this context means
-	 * something like "Title", "Summary".
-	 * 
-	 * @param desc
-	 *            the description
-	 */
-	public void setDesc(String desc) {
-		this.desc = desc;
-	}
+    /**
+     * Get this detail's description
+     *
+     * @return the description
+     */
+    public String getDesc() {
+        return desc;
+    }
 
-	/**
-	 * Get this detail's content.
-	 * 
-	 * @return the content
-	 */
-	public String getContent() {
-		return content;
-	}
+    /**
+     * Set this detail's description. Description in this context means something like "Title",
+     * "Summary".
+     *
+     * @param desc the description
+     */
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
 
-	/**
-	 * Set this detail's content. If the description is "Title", this should
-	 * contain the actual title, like "Harry Potter"
-	 * 
-	 * @param content
-	 *            the content
-	 */
-	public void setContent(String content) {
-		this.content = content;
-	}
+    /**
+     * Get this detail's content.
+     *
+     * @return the content
+     */
+    public String getContent() {
+        return content;
+    }
 
-	/**
-	 * @return the html
-	 */
-	public boolean isHtml() {
-		return html;
-	}
-	/**
-	 * @param html the html to set
-	 */
-	public void setHtml(boolean html) {
-		this.html = html;
-	}
-	@Override
-	public String toString() {
-		return "Detail [desc=" + desc + ", content=" + content + "]";
-	}
+    /**
+     * Set this detail's content. If the description is "Title", this should contain the actual
+     * title, like "Harry Potter"
+     *
+     * @param content the content
+     */
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    /**
+     * @return the html
+     */
+    public boolean isHtml() {
+        return html;
+    }
+
+    /**
+     * @param html the html to set
+     */
+    public void setHtml(boolean html) {
+        this.html = html;
+    }
+
+    @Override
+    public String toString() {
+        return "Detail [desc=" + desc + ", content=" + content + "]";
+    }
 }

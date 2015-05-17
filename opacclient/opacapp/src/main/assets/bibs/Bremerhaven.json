@@ -24,7 +24,6 @@
             "returndate": 4,
             "status": 3
         },
-        "information": "http://www.stadtbibliothek-bremerhaven.de/oeffnungszeiten.html",
         "reservationtable": {
             "author": 0,
             "availability": 2,
@@ -38,6 +37,7 @@
         53.548243,
         8.582657
     ],
+    "information": "http://www.stadtbibliothek-bremerhaven.de/oeffnungszeiten.html",
     "state": "Bremen",
     "title": "Stadtbibliothek"
 }

@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://webopac.itk-rheinland.de/aDISWeb/app",
-        "information": "http://www.stadtbibliothek-neuss.de/",
         "startparams": "service=direct/0/Home/%24DirectLink&sp=S127.0.0.1:23022&sp=SS100000000"
     },
     "geo": [
-        51.2041968,
-        6.6879511
+        51.2012066,
+        6.6912863
     ],
+    "information": "http://www.stadtbibliothek-neuss.de/",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtbibliothek"
 }

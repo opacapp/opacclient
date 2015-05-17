@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -13,13 +14,14 @@
         android:minHeight="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
-        app:theme="@style/ThemeOverlay.Opacapp.ActionBar"
+        android:theme="@style/ThemeOverlay.Opacapp.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="8dp" >
+        android:padding="8dp"
+        android:foreground="@drawable/toolbar_shadow">
 
         <LinearLayout
             android:id="@+id/llLocate"
@@ -30,14 +32,14 @@
             android:background="@drawable/ripple"
             android:clickable="true"
             android:focusable="true"
-            android:padding="16dp" >
+            android:padding="16dp">
 
             <ImageView
                 android:id="@+id/ivLocationIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/geolocate"
-                android:src="@drawable/ic_locate" />
+                android:src="@drawable/ic_locate"/>
 
             <TextView
                 android:id="@+id/tvLocateString"
@@ -46,7 +48,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="8dp"
                 android:layout_weight="1"
-                android:text="@string/geolocate" />
+                android:text="@string/geolocate"/>
         </LinearLayout>
 
         <LinearLayout
@@ -57,44 +59,48 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@id/llLocate"
             android:baselineAligned="true"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            tools:ignore="InconsistentLayout">
 
             <FrameLayout
                 android:id="@+id/container"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
-                android:layout_weight="1" >
+                android:layout_weight="1">
             </FrameLayout>
 
             <FrameLayout
                 android:id="@+id/container2"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
-                android:layout_weight="1" >
+                android:layout_weight="1"
+                tools:ignore="InconsistentLayout">
             </FrameLayout>
 
             <FrameLayout
                 android:id="@+id/container3"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
-                android:layout_weight="1" >
+                android:layout_weight="1"
+                tools:ignore="InconsistentLayout">
             </FrameLayout>
 
             <FrameLayout
                 android:id="@+id/container4"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
-                android:layout_weight="1" >
+                android:layout_weight="1"
+                tools:ignore="InconsistentLayout">
             </FrameLayout>
         </LinearLayout>
 
-         <RelativeLayout
+        <RelativeLayout
             android:id="@+id/rlSuggestLibrary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginTop="8dp" >
+            android:layout_marginTop="8dp">
 
             <TextView
                 android:id="@+id/tvSuggestLibrary"
@@ -102,7 +108,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/suggest_library"
                 android:background="@drawable/suggest_library_background"
-                android:padding="8dp" />
+                android:padding="8dp"/>
 
         </RelativeLayout>
 

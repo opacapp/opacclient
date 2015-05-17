@@ -15,7 +15,6 @@
             "title": 6
         },
         "baseurl": "http://217.86.216.47",
-        "information": "http://www.stadtbibliothek.offenburg.de/",
         "mediatypes": {
             "01": "BOOK",
             "10": "BOOK",
@@ -41,9 +40,10 @@
         ]
     },
     "geo": [
-        48.4769251,
-        7.9492875
+        48.4684679,
+        7.954930399999999
     ],
+    "information": "http://www.stadtbibliothek.offenburg.de/",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtbibliothek"
 }

@@ -1,98 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:paddingBottom="4dp"
-    android:paddingRight="4dp"
-    android:paddingTop="4dp" >
-
-    <View
-        android:id="@+id/strut"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_centerHorizontal="true" />
+    android:animateLayoutChanges="true"
+    android:background="@drawable/ripple"
+    android:orientation="horizontal">
 
     <View
         android:id="@+id/vStatusColor"
-        android:layout_width="8dp"
-        android:layout_height="48dp"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="8dp" />
+        android:layout_width="4dp"
+        android:layout_height="match_parent"
+        android:layout_marginRight="8dp"/>
 
-    <TextView
-        android:id="@+id/tvTitel"
+    <LinearLayout
+        android:id="@+id/llData"
+        android:layout_gravity="center_vertical"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:orientation="vertical"
+        android:clickable="false"
+        android:animateLayoutChanges="true">
+
+        <TextView
+            android:id="@+id/tvTitleAndAuthor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:drawableLeft="@drawable/ic_title"
+            android:drawablePadding="4dp"
+            android:gravity="center_vertical"
+            android:contentDescription="@string/title_and_author"/>
+
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:drawableLeft="@drawable/ic_status"
+            android:drawablePadding="4dp"
+            android:gravity="center_vertical"
+            android:contentDescription="@string/status"/>
+
+        <LinearLayout
+            android:id="@+id/llDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvAuthorDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:drawableLeft="@drawable/ic_author"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:contentDescription="@string/author"/>
+
+            <TextView
+                android:id="@+id/tvBranchDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:drawableLeft="@drawable/ic_branch"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:contentDescription="@string/branch"/>
+
+            <TextView
+                android:id="@+id/tvFormatDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:drawableLeft="@drawable/ic_media_type"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:contentDescription="@string/mediatype"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llButtons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/strut"
-        android:layout_toRightOf="@id/vStatusColor"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:textIsSelectable="true" />
+        android:orientation="vertical"
+        android:animateLayoutChanges="true">
 
-    <TextView
-        android:id="@+id/tvStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tvTitel"
-        android:layout_toLeftOf="@id/strut"
-        android:layout_toRightOf="@id/vStatusColor"
-        android:textIsSelectable="true" />
+        <ImageView
+            android:id="@+id/ivProlong"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/prolong"
+            android:src="@drawable/ic_prolong"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/ripple_unmasked"/>
 
-    <ImageView
-        android:id="@+id/ivProlong"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:padding="8dp"
-        android:contentDescription="@string/prolong"
-        android:src="@drawable/ic_prolong" />
+        <ImageView
+            android:id="@+id/ivDownload"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/download"
+            android:src="@drawable/ic_download"
+            android:visibility="gone"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/ripple_unmasked"/>
 
-    <ImageView
-        android:id="@+id/ivDownload"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:padding="8dp"
-        android:contentDescription="@string/download"
-        android:src="@drawable/ic_download"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/tvVerfasser"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/ivProlong"
-        android:layout_toRightOf="@id/strut"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:textIsSelectable="true" />
-
-    <TextView
-        android:id="@+id/tvZst"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tvVerfasser"
-        android:layout_toLeftOf="@id/ivProlong"
-        android:layout_toRightOf="@id/strut"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:textIsSelectable="true" />
-
-    <TextView
-        android:id="@+id/tvFmt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/tvZst"
-        android:layout_toLeftOf="@id/ivProlong"
-        android:visibility="gone"
-        android:ellipsize="end"
-		android:layout_marginLeft="16dp"
-        android:singleLine="true"
-        android:textIsSelectable="true" />
-
-</RelativeLayout>
+        <ImageView
+            android:id="@+id/ivDetails"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/go_to_details"
+            android:src="@drawable/ic_detail"
+            android:visibility="gone"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/ripple_unmasked"/>
+    </LinearLayout>
+</LinearLayout>

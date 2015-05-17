@@ -4,13 +4,13 @@
     "city": "Zwingenberg",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/zwingenberg",
-        "information": "http://www.zwingenberg.de/d1/bildung-kultur/buecherei.php?navid=27"
+        "baseurl": "http://webopac.winbiap.de/zwingenberg"
     },
     "geo": [
-        49.7250007,
-        8.6109755
+        49.7228393,
+        8.613857699999999
     ],
+    "information": "http://www.zwingenberg.de/d1/bildung-kultur/buecherei.php?navid=27",
     "state": "Hessen",
     "title": "Stadtb\u00fccherei"
 }

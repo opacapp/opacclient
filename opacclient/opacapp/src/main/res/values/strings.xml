@@ -1,234 +1,241 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">Web Opac</string>
-  <string name="launcher_name">Web Opac</string>
-  <string name="web_opac">Web Opac</string>
-  <string name="zweigstelle">Branch library</string>
-  <string name="barcodes">Barcodes</string>
-  <string name="go_search">Find</string>
-  <string name="prefs">Settings</string>
-  <string name="account">Account</string>
-  <string name="about">About</string>
-  <string name="about_summary">About this app</string>
-  <string name="changelog">Changelog</string>
-  <string name="close">Close</string>
-  <string name="osl">License notes</string>
-  <string name="thanks">Credits</string>
-  <string name="developer_settings">Developer settings</string>
-  <string name="details_head">Details</string>
-  <string name="copies_head">Copies</string>
-  <string name="ret">Return date</string>
-  <string name="res">Reserved</string>
-  <string name="tocollection">To collection</string>
-  <string name="reserve">Reserve</string>
-  <string name="lendebook">Lend e-book</string>
-  <string name="doing_res">Performing reservation…</string>
-  <string name="opac_error_email">Please set your e-mail address in the app\'s settings.</string>
-  <string name="doing_booking">Lending…</string>
-  <string name="status_nouser">You didn\'t specify any login data for this account in the settings.</string>
-  <string name="pending_fees">Library fines due:</string>
-  <string name="valid_until">Account valid until:</string>
-  <string name="no_warranty">All information is supplied without liability.</string>
-  <string name="entl_head">Lent</string>
-  <string name="reservations_head">Reservations</string>
-  <string name="entl_none">Nothing lent</string>
-  <string name="reservations_none">Nothing reserved</string>
-  <string name="cancel_confirm">Really cancel reservation?</string>
-  <string name="yes">Yes</string>
-  <string name="no">No</string>
-  <string name="cancel">Cancel</string>
-  <string name="delete">Delete</string>
-  <string name="accept">OK</string>
-  <string name="doing_cancel">Reservation is being cancelled…</string>
-  <string name="doing_prolong">Performing renewal…</string>
-  <string name="doing_download">Download information is being retrieved…</string>
-  <string name="reader_needed">To read the e-book, you need a separate app, for example \'Bluefire Reader\'. Click \'Ignore\' if you already have such an app, this message won\'t show up again in this case. Click \'Download\' to open up the Play Store to download Bluefire Reader.</string>
-  <string name="reader_needed_ignore">Ignore</string>
-  <string name="doing_prolong_all">All renewable media is being renewed…</string>
-  <string name="prolong_all_confirm">Really renew all items in your account? In some libraries this might cause fees.</string>
-  <string name="opac_error">Web Opac error message:</string>
-  <string name="welcome">Welcome!</string>
-  <string name="welcome_select">To get started, you have to select a library.</string>
-  <string name="welcome_account">The account can be anonymous (search only) or include a library ID number and password (enabling account-related features). You can add additional accounts later.</string>
-  <string name="select_library">Select library</string>
-  <string name="report">Send report</string>
-  <string name="report_sending">Sending report…</string>
-  <string name="report_sent">Report sent. Thank you!</string>
-  <string name="report_error">Error report could not be sent.</string>
-  <string name="notifications">Notifications</string>
-  <string name="notification_service">Expiring items</string>
-  <string name="notification_service_desc">Notify, if an item is about to expire (no warranties given)</string>
-  <string name="notification_service_wifionly">Check on WiFi only</string>
-  <string name="notification_service_wifionly_desc">Does not download information over mobile networks. (Therefore, no warnings without WiFi!)</string>
-  <string-array name="warning">
-    <item>Same day</item>
-    <item>1 day before</item>
-    <item>3 days before</item>
-    <item>1 week before</item>
-  </string-array>
-  <string-array name="warning_n">
-    <item>86400000</item>
-    <item>172800000</item>
-    <item>259200000</item>
-    <item>604800000</item>
-  </string-array>
-  <string name="startup_title">Start screen</string>
-  <string name="startup_summary">Which screen should be shown on startup?</string>
-  <string-array name="startup_labels">
-    <item>Search</item>
-    <item>Account</item>
-    <item>Favorites</item>
-    <item>Information</item>
-  </string-array>
-  <string-array name="startup_values">
-    <item>search</item>
-    <item>account</item>
-    <item>starred</item>
-    <item>info</item>
-  </string-array>
-  <string name="notification_warning">Warning period</string>
-  <string name="notification_warning_desc">How long before the due date should a notification be shown?</string>
-  <string name="notif_ticker">%s items are about to expire!</string>
-  <string name="notif_title">Items are about to expire</string>
-  <string name="baende">Volumes</string>
-  <string name="baende_volumesearch">Show volumes</string>
-  <string name="star">Save to favorites</string>
-  <string name="starred">The item is now on your favorites list.</string>
-  <string name="star_wait">Please wait for the details to load.</string>
-  <string name="starred_welcome">This is your favorites list. You can add items by clicking the star on a detail page. The list is saved separately for every library you use.</string>
-  <string name="share">Share</string>
-  <string name="share_wait">Please wait for the details to load.</string>
-  <string name="share_notsupported">Not supported in this library.</string>
-  <string name="unsupported">Not supported</string>
-  <string name="account_unsupported_api">This feature is not yet supported in your library. We might use some help from readers here to implement it. If you\'re interested, mail us at info@opacapp.de</string>
+    <string name="app_name">Web Opac</string>
+    <string name="launcher_name">Web Opac</string>
+    <string name="web_opac">Web Opac</string>
+    <string name="branch">Branch library</string>
+    <string name="barcodes">Barcodes</string>
+    <string name="go_search">Find</string>
+    <string name="prefs">Settings</string>
+    <string name="account">Account</string>
+    <string name="about">About</string>
+    <string name="about_summary">About this app</string>
+    <string name="changelog">Changelog</string>
+    <string name="close">Close</string>
+    <string name="osl">License notes</string>
+    <string name="thanks">Credits</string>
+    <string name="developer_settings">Developer settings</string>
+    <string name="details_head">Details</string>
+    <string name="copies_head">Copies</string>
+    <string name="ret">Return date</string>
+    <string name="res">Reserved</string>
+    <string name="tocollection">To collection</string>
+    <string name="reserve">Reserve</string>
+    <string name="lendebook">Lend e-book</string>
+    <string name="doing_res">Performing reservation…</string>
+    <string name="opac_error_email">Please set your e-mail address in the app\'s settings.</string>
+    <string name="doing_booking">Lending…</string>
+    <string name="status_nouser">You didn\'t specify any login data for this account in the settings.</string>
+    <string name="pending_fees">Library fines due:</string>
+    <string name="valid_until">Account valid until:</string>
+    <string name="no_warranty">All information is supplied without liability.</string>
+    <string name="lent_head">Lent</string>
+    <string name="reservations_head">Reservations</string>
+    <string name="entl_none">Nothing lent</string>
+    <string name="reservations_none">Nothing reserved</string>
+    <string name="cancel_confirm">Really cancel reservation?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="accept">OK</string>
+    <string name="doing_cancel">Reservation is being cancelled…</string>
+    <string name="doing_prolong">Performing renewal…</string>
+    <string name="doing_download">Download information is being retrieved…</string>
+    <string name="reader_needed">To read the e-book, you need a separate app, for example \'Bluefire Reader\'. Click \'Ignore\' if you already have such an app, this message won\'t show up again in this case. Click \'Download\' to open up the Play Store to download Bluefire Reader.</string>
+    <string name="reader_needed_ignore">Ignore</string>
+    <string name="doing_prolong_all">All renewable media is being renewed…</string>
+    <string name="prolong_all_confirm">Really renew all items in your account? In some libraries this might cause fees.</string>
+    <string name="opac_error">Web Opac error message:</string>
+    <string name="welcome">Welcome!</string>
+    <string name="welcome_select">To get started, you have to select a library.</string>
+    <string name="welcome_account">The account can be anonymous (search only) or include a library ID number and password (enabling account-related features). You can add additional accounts later.</string>
+    <string name="select_library">Select library</string>
+    <string name="report">Send report</string>
+    <string name="report_sending">Sending report…</string>
+    <string name="report_sent">Report sent. Thank you!</string>
+    <string name="report_error">Error report could not be sent.</string>
+    <string name="notifications">Notifications</string>
+    <string name="notification_service">Expiring items</string>
+    <string name="notification_service_desc">Notify, if an item is about to expire (no warranties given)</string>
+    <string name="notification_service_wifionly">Check on WiFi only</string>
+    <string name="notification_service_wifionly_desc">Does not download information over mobile networks. (Therefore, no warnings without WiFi!)</string>
+    <string-array name="warning">
+        <item>Same day</item>
+        <item>1 day before</item>
+        <item>3 days before</item>
+        <item>1 week before</item>
+    </string-array>
+    <string-array name="warning_n">
+        <item>86400000</item>
+        <item>172800000</item>
+        <item>259200000</item>
+        <item>604800000</item>
+    </string-array>
+    <string name="startup_title">Start screen</string>
+    <string name="startup_summary">Which screen should be shown on startup?</string>
+    <string-array name="startup_labels">
+        <item>Search</item>
+        <item>Account</item>
+        <item>Favorites</item>
+        <item>Information</item>
+    </string-array>
+    <string-array name="startup_values">
+        <item>search</item>
+        <item>account</item>
+        <item>starred</item>
+        <item>info</item>
+    </string-array>
+    <string name="notification_warning">Warning period</string>
+    <string name="notification_warning_desc">How long before the due date should a notification be shown?</string>
+    <string name="notif_ticker">%s items are about to expire!</string>
+    <string name="notif_title">Items are about to expire</string>
+    <string name="volumes">Volumes</string>
+    <string name="volumesearch">Show volumes</string>
+    <string name="star">Save to favorites</string>
+    <string name="starred">The item is now on your favorites list.</string>
+    <string name="star_wait">Please wait for the details to load.</string>
+    <string name="starred_welcome">This is your favorites list. You can add items by clicking the star on a detail page. The list is saved separately for every library you use.</string>
+    <string name="share">Share</string>
+    <string name="share_wait">Please wait for the details to load.</string>
+    <string name="share_notsupported">Not supported in this library.</string>
+    <string name="unsupported">Not supported</string>
+    <string name="account_unsupported_api">This feature is not yet supported in your library. We might use some help from readers here to implement it. If you\'re interested, mail us at info@opacapp.de</string>
   <string name="account_unsupported">This feature is not yet supported in your library. To change this, we need help by readers from this library. If you click \"Send report\", we can try to change this with the next update.
 We might know your library ID then, but not your password, and we will take care of your data and delete it after use.</string>
-  <string name="write_mail">Write e-mail</string>
-  <string name="info_error">Could not load additional information for this library.</string>
-  <string name="info_unsupported">We don\'t have any information about this library to show.</string>
-  <string name="connection_error_detail">The connection to the library server failed. Please check your internet connection. If the problem persits, there may have been a problem on the library server or the app was unable to parse the server\'s response.</string>
-  <string name="connection_error_detail_nre">The connection to the library server failed. Please check your internet connection. If the problem persits, there may have been a problem on the library server.</string>
-  <string name="retry">Try again</string>
-  <string name="connection_error_detail_security">The secure connection to the library server failed. Please try again. If the problem persits, there may be someone intercepting your connection. Please contact info@opacapp.de if the problem persists in multiple WiFi networks.</string>
-  <string name="default_account_name">Unnamed account</string>
-  <string name="title_activity_account_list">Accounts</string>
-  <string name="account_add">Add account</string>
-  <string name="accounts">Accounts</string>
-  <string name="accounts_edit">Change account</string>
-  <string name="accounts_desc">Manage your libraries and membership numbers</string>
-  <string name="account_label">Label</string>
-  <string name="account_nr">Membership ID/user name (optional)</string>
-  <string name="account_password">Password (optional)</string>
-  <string name="account_city">Library</string>
-  <string name="account_delete_confirm">Really delete account?</string>
-  <string name="account_select">Select Account</string>
-  <string name="privacy">Privacy</string>
-  <string name="nav_hl_library">Library</string>
-  <string name="nav_search">Search</string>
-  <string name="nav_account">Account</string>
-  <string name="nav_starred">Favorites</string>
-  <string name="nav_info">Information</string>
-  <string name="nav_hl_other">Miscellaneous</string>
-  <string name="nav_settings">Settings</string>
-  <string name="nav_about">About this app</string>
-  <string name="nav_hl_accountlist">Account selection</string>
-  <string name="crash_toast_text">An error occurred. Please wait a moment.</string>
-  <string name="crash_notif_ticker_text">Web Opac App: An error occurred.</string>
-  <string name="crash_notif_text">Please tap here to send an error report.</string>
-  <string name="crash_notif_title">Web Opac App has crashed</string>
-  <string name="crash_dialog_text">An error occurred in the Opac App! Please send the error report via email so that we can resolve this.</string>
-  <string name="refresh">Refresh</string>
-  <string name="prolong_all">Renew all items</string>
-  <string name="account_no_concurrent">Please wait for the view to refresh.</string>
-  <string name="confirm_title">Confirm</string>
-  <string name="confirm">Confirm</string>
-  <string name="account_up_to_date">This data is up-to-date.</string>
-  <plurals name="account_age_minutes">
-    <item quantity="one">This data is one minute old.</item>
-    <item quantity="other">This data is %d minutes old.</item>
-  </plurals>
-  <plurals name="account_age_hours">
-    <item quantity="one">This data is one hour old.</item>
-    <item quantity="other">This data is %d hours old.</item>
-  </plurals>
-  <plurals name="account_age_days">
-    <item quantity="one">This data is one day old.</item>
-    <item quantity="other">This data is %d days old.</item>
-  </plurals>
-  <string name="search_advanced">Advanced search</string>
-  <string name="search_free">Free search</string>
-  <string name="barcode_title">Install barcode scanner?</string>
-  <string name="barcode_desc">This feature requires the installation of a barcode scanner application. Do you want to download one?</string>
-  <string name="barcode_gplay">Google Play</string>
-  <string name="barcode_amazon">Amazon</string>
-  <string name="result_number">%d Search results</string>
-  <string name="export_starred">Export</string>
-  <string name="geolocate">Find nearby libraries</string>
-  <string name="geolocate_progress">Locating you…</string>
-  <string name="alphabetic_list">Show full list</string>
-  <string name="setting_nfc">Search by NFC tags</string>
-  <string name="setting_nfc_desc">Experimental. Only on some devices and in some libraries.</string>
-  <string name="notification_problems">Notifications might be broken.</string>
-  <string name="no_results">The search returned no results.</string>
-  <string name="replacedby">This library now has an own app with extended features. We recommend using this special app. Click on the Play Store Icon on the right to download it</string>
-  <string name="email_address">Email address</string>
-  <string name="email_address_description">Required for e-book reservations</string>
-  <string name="accchange_sorry">Switching accounts failed, please start a new search.</string>
-  <string name="share_dialog_select">Share result</string>
-  <string name="share_link">Share link</string>
-  <string name="share_details">Export details</string>
-  <string name="no_ssl">This library does not support a secure HTTPS connection. If you use the account features in an insecure public network or have the notification feature installed, your password might be exposed to attackers in your network.</string>
-  <string name="drawer_open">Open navigation</string>
-  <string name="drawer_close">Close navigation</string>
-  <string name="title_searchresult_list">Search results</string>
-  <string name="title_searchresult_detail">Details</string>
-  <string name="title_activity_library_list">Library selection</string>
-  <string name="suggest_library">Your library is not supported yet? Suggest to include it!</string>
-  <string name="title_activity_suggest_library">Suggest library</string>
-  <string name="city">City</string>
-  <string name="library_name">Library name</string>
-  <string name="hint_library_name">e.g. \"Public library\", \"University library\", \"Harvard University\", …</string>
-  <string name="comment">Comment</string>
-  <string name="send">Send</string>
-  <string name="select_mail_app">Select mail app…</string>
-  <string name="search_libraries_hint">Search library…</string>
-  <string name="action_search">Search</string>
-  <string name="snooze">Remind me again tomorrow</string>
-  <string name="expand">Show more search fields</string>
-  <string name="collapse">Show less search fields</string>
-  <string name="interested_to_help">I\'m interested in helping</string>
-  <string name="library_suggestion">Library suggestion</string>
-  <string name="cover">Cover</string>
-  <string name="playstore">Play Store</string>
-  <string name="icon">Icon</string>
-  <string name="prolong">Renew</string>
-  <string name="reservation_cancel">Cancel reservation</string>
-  <string name="reservation_book">Lend</string>
-  <string name="mediatype">Material type</string>
-  <string name="status">Status</string>
-  <string name="free_search">Free Search</string>
-  <string name="no_fields_found">No search fields found</string>
-  <string name="no_search_cache">Error. Please try performing a search to solve this problem.</string>
-  <string name="user_data_opac_message">When checking your account data, the library returned the following message: \"%s\"\n\nDo you want to save the account data anyway?</string>
-  <string name="user_data_connection_error">A connection to the library server could not be established to check your account data. Do you want to save the account data anyway?</string>
-  <string name="support_search_account">Search and account</string>
-  <string name="support_search">Search only</string>
-  <string name="meta_clear_title">Clear cache</string>
-  <string name="meta_clear">Deletes cached metadata</string>
-  <string name="version">Version</string>
-  <string name="website">Website</string>
-  <string name="website_url">www.opacapp.net</string>
-  <string name="developer">Developer</string>
-  <string name="feedback">Feedback</string>
-  <string name="rate">Rate application</string>
-  <string name="other">Other</string>
-  <string name="source">Source Code</string>
-  <string name="loading">Loading…</string>
-  <string name="loading_libraries">Loading library list…</string>
+    <string name="write_mail">Write e-mail</string>
+    <string name="info_error">Could not load additional information for this library.</string>
+    <string name="info_unsupported">We don\'t have any information about this library to show.</string>
+    <string name="connection_error_detail">The connection to the library server failed. Please check your internet connection. If the problem persits, there may have been a problem on the library server or the app was unable to parse the server\'s response.</string>
+    <string name="connection_error_detail_nre">The connection to the library server failed. Please check your internet connection. If the problem persits, there may have been a problem on the library server.</string>
+    <string name="retry">Try again</string>
+    <string name="connection_error_detail_security">The secure connection to the library server failed. Please try again. If the problem persits, there may be someone intercepting your connection. Please contact info@opacapp.de if the problem persists in multiple WiFi networks.</string>
+    <string name="default_account_name">Unnamed account</string>
+    <string name="title_activity_account_list">Accounts</string>
+    <string name="account_add">Add account</string>
+    <string name="accounts">Accounts</string>
+    <string name="accounts_edit">Change account</string>
+    <string name="accounts_desc">Manage your libraries and membership numbers</string>
+    <string name="account_label">Label</string>
+    <string name="account_nr">Membership ID/user name (optional)</string>
+    <string name="account_password">Password (optional)</string>
+    <string name="account_city">Library</string>
+    <string name="account_delete_confirm">Really delete account?</string>
+    <string name="account_select">Select Account</string>
+    <string name="privacy">Privacy</string>
+    <string name="nav_hl_library">Library</string>
+    <string name="nav_search">Search</string>
+    <string name="nav_account">Account</string>
+    <string name="nav_starred">Favorites</string>
+    <string name="nav_info">Information</string>
+    <string name="nav_hl_other">Miscellaneous</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_about">About this app</string>
+    <string name="nav_hl_accountlist">Account selection</string>
+    <string name="crash_toast_text">An error occurred. Please wait a moment.</string>
+    <string name="crash_notif_ticker_text">Web Opac App: An error occurred.</string>
+    <string name="crash_notif_text">Please tap here to send an error report.</string>
+    <string name="crash_notif_title">Web Opac App has crashed</string>
+    <string name="crash_dialog_text">An error occurred in the Opac App! Please send the error report via email so that we can resolve this.</string>
+    <string name="refresh">Refresh</string>
+    <string name="prolong_all">Renew all items</string>
+    <string name="account_no_concurrent">Please wait for the view to refresh.</string>
+    <string name="confirm_title">Confirm</string>
+    <string name="confirm">Confirm</string>
+    <string name="account_up_to_date">This data is up-to-date.</string>
+    <plurals name="account_age_minutes">
+        <item quantity="one">This data is one minute old.</item>
+        <item quantity="other">This data is %d minutes old.</item>
+    </plurals>
+    <plurals name="account_age_hours">
+        <item quantity="one">This data is one hour old.</item>
+        <item quantity="other">This data is %d hours old.</item>
+    </plurals>
+    <plurals name="account_age_days">
+        <item quantity="one">This data is one day old.</item>
+        <item quantity="other">This data is %d days old.</item>
+    </plurals>
+    <string name="search_advanced">Advanced search</string>
+    <string name="search_free">Free search</string>
+    <string name="barcode_title">Install barcode scanner?</string>
+    <string name="barcode_desc">This feature requires the installation of a barcode scanner application. Do you want to download one?</string>
+    <string name="barcode_gplay">Google Play</string>
+    <string name="barcode_amazon">Amazon</string>
+    <plurals name="result_number">
+        <item quantity="one">One search result</item>
+        <item quantity="other">%d search results</item>
+    </plurals>
+    <string name="export_starred">Export</string>
+    <string name="geolocate">Find nearby libraries</string>
+    <string name="geolocate_progress">Locating you…</string>
+    <string name="alphabetic_list">Show full list</string>
+    <string name="setting_nfc">Search by NFC tags</string>
+    <string name="setting_nfc_desc">Experimental. Only on some devices and in some libraries.</string>
+    <string name="notification_problems">Notifications might be broken.</string>
+    <string name="no_results">The search returned no results.</string>
+    <string name="replacedby">This library now has an own app with extended features. We recommend using this special app. Click on the Play Store Icon on the right to download it</string>
+    <string name="email_address">Email address</string>
+    <string name="email_address_description">Required for e-book reservations</string>
+    <string name="accchange_sorry">Switching accounts failed, please start a new search.</string>
+    <string name="share_dialog_select">Share result</string>
+    <string name="share_link">Share link</string>
+    <string name="share_details">Export details</string>
+    <string name="no_ssl">This library does not support a secure HTTPS connection. If you use the account features in an insecure public network or have the notification feature installed, your password might be exposed to attackers in your network.</string>
+    <string name="drawer_open">Open navigation</string>
+    <string name="drawer_close">Close navigation</string>
+    <string name="title_searchresult_list">Search results</string>
+    <string name="title_activity_library_list">Library selection</string>
+    <string name="suggest_library">Your library is not supported yet? Suggest to include it!</string>
+    <string name="title_activity_suggest_library">Suggest library</string>
+    <string name="city">City</string>
+    <string name="library_name">Library name</string>
+    <string name="hint_library_name">e.g. \"Public library\", \"University library\", \"Harvard University\", …</string>
+    <string name="comment">Comment</string>
+    <string name="send">Send</string>
+    <string name="select_mail_app">Select mail app…</string>
+    <string name="search_libraries_hint">Search library…</string>
+    <string name="action_search">Search</string>
+    <string name="snooze">Remind me again tomorrow</string>
+    <string name="expand">Show more search fields</string>
+    <string name="collapse">Show less search fields</string>
+    <string name="interested_to_help">I\'m interested in helping</string>
+    <string name="library_suggestion">Library suggestion</string>
+    <string name="cover">Cover</string>
+    <string name="playstore">Play Store</string>
+    <string name="icon">Icon</string>
+    <string name="prolong">Renew</string>
+    <string name="reservation_cancel">Cancel reservation</string>
+    <string name="reservation_book">Lend</string>
+    <string name="mediatype">Material type</string>
+    <string name="status">Status</string>
+    <string name="free_search">Free Search</string>
+    <string name="no_fields_found">No search fields found</string>
+    <string name="no_search_cache">Error. Please try performing a search to solve this problem.</string>
+    <string name="user_data_opac_message">When checking your account data, the library returned the following message: \"%s\"\n\nDo you want to save the account data anyway?</string>
+    <string name="user_data_connection_error">A connection to the library server could not be established to check your account data. Do you want to save the account data anyway?</string>
+    <string name="support_search_account">Search and account</string>
+    <string name="support_search">Search only</string>
+    <string name="meta_clear_title">Clear cache</string>
+    <string name="meta_clear">Deletes cached metadata</string>
+    <string name="version">Version</string>
+    <string name="website">Website</string>
+    <string name="website_url">www.opacapp.net</string>
+    <string name="developer">Developer</string>
+    <string name="feedback">Feedback</string>
+    <string name="rate">Rate application</string>
+    <string name="other">Other</string>
+    <string name="source">Source Code</string>
+    <string name="loading">Loading…</string>
+    <string name="loading_libraries">Loading library list…</string>
     <string name="shelfmark">Shelfmark</string>
     <string name="return_date">Return date</string>
     <string name="location">Location</string>
     <string name="department">Department</string>
     <string name="reservations">Reservations</string>
     <string name="clear_search">clear form</string>
+    <string name="title">Title</string>
+    <string name="author">Author</string>
+    <string name="title_and_author">Title and Author</string>
+    <string name="reservation_expire_until">until</string>
+    <string name="go_to_details">Go to details</string>
 </resources>

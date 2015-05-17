@@ -4,13 +4,13 @@
     "city": "Knetzgau",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/knetzgau",
-        "information": "http://www.knetzgau.de/index.php?id=5050"
+        "baseurl": "http://webopac.winbiap.de/knetzgau"
     },
     "geo": [
         49.9925629,
         10.5463718
     ],
+    "information": "http://www.knetzgau.de/index.php?id=5050",
     "state": "Bayern",
     "title": "Gemeindeb\u00fccherei"
 }

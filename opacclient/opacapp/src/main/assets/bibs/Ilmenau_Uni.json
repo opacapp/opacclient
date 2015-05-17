@@ -6,13 +6,13 @@
     "data": {
         "baseurl": "http://opac.lbs-ilmenau.gbv.de/",
         "db": "1",
-        "httpsbaseurl": "https://opac.lbs-ilmenau.gbv.de/",
-        "information": "http://www.tu-ilmenau.de/ub/"
+        "httpsbaseurl": "https://opac.lbs-ilmenau.gbv.de/"
     },
     "geo": [
-        50.687222,
-        10.914167
+        50.6843502,
+        10.9254728
     ],
+    "information": "http://www.tu-ilmenau.de/ub/",
     "state": "Th\u00fcringen",
     "title": "Unibibliothek"
 }

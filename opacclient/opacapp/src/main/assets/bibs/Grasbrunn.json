@@ -4,13 +4,13 @@
     "city": "Grasbrunn",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.net/grasbrunn",
-        "information": "http://www.grasbrunn.de/index.php?id=0,53"
+        "baseurl": "http://webopac.winbiap.net/grasbrunn"
     },
     "geo": [
-        48.0783377,
-        11.7445658
+        48.0944,
+        11.75844
     ],
+    "information": "http://www.grasbrunn.de/index.php?id=0,53",
     "state": "Bayern",
     "title": "Gemeindeb\u00fccherei"
 }

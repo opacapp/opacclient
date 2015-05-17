@@ -6,9 +6,9 @@
     "data": {
         "accounttable": {
             "author": 0,
-			"barcode": 4,
-			"homebranch": 5,
-			"lendingbranch": 5,
+            "barcode": 4,
+            "homebranch": 5,
+            "lendingbranch": 5,
             "prolongurl": 7,
             "returndate": 2,
             "title": 1
@@ -22,7 +22,6 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "/../read/info.html",
         "mediatypes": {
             "mCasetteS.gif": "AUDIO_CASSETTE",
             "mDVDS.gif": "DVD",
@@ -36,9 +35,10 @@
         }
     },
     "geo": [
-        50.0630804,
-        8.2433437
+        50.0782184,
+        8.239760799999999
     ],
+    "information": "/../read/info.html",
     "state": "Hessen",
     "title": "Stadtbibliothek"
 }

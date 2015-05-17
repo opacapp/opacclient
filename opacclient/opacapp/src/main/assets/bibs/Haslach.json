@@ -15,13 +15,13 @@
             "returndate": 2,
             "status": 1
         },
-        "information": "http://www.bibliotheken.bw-online.de/read-haslach/info.html",
         "reservationtable": null
     },
     "geo": [
-        48.2770795,
-        8.088809900000001
+        48.2757845,
+        8.0891082
     ],
+    "information": "http://www.bibliotheken.bw-online.de/read-haslach/info.html",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtb\u00fccherei"
 }

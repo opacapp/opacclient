@@ -4,13 +4,13 @@
     "city": "Herzogenaurach",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/herzogenaurach",
-        "information": "http://www.herzogenaurach.de/de/bildung-familie-und-soziales/stadtbuecherei.html"
+        "baseurl": "http://webopac.winbiap.de/herzogenaurach"
     },
     "geo": [
         49.5682987,
         10.8828577
     ],
+    "information": "http://www.herzogenaurach.de/de/bildung-familie-und-soziales/stadtbuecherei.html",
     "state": "Bayern",
     "title": "Stadtb\u00fccherei"
 }

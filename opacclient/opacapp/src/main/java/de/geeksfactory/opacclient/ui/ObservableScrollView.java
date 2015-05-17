@@ -26,7 +26,7 @@ import java.util.ArrayList;
  * A custom ScrollView that can accept a scroll listener.
  */
 public class ObservableScrollView extends ScrollView {
-    private ArrayList<Callbacks> mCallbacks = new ArrayList<Callbacks>();
+    private ArrayList<Callbacks> callbacks = new ArrayList<>();
 
     public ObservableScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -35,7 +35,7 @@ public class ObservableScrollView extends ScrollView {
     @Override
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
-        for (Callbacks c : mCallbacks) {
+        for (Callbacks c : callbacks) {
             c.onScrollChanged(l - oldl, t - oldt);
         }
     }
@@ -46,12 +46,12 @@ public class ObservableScrollView extends ScrollView {
     }
 
     public void addCallbacks(Callbacks listener) {
-        if (!mCallbacks.contains(listener)) {
-            mCallbacks.add(listener);
+        if (!callbacks.contains(listener)) {
+            callbacks.add(listener);
         }
     }
 
-    public static interface Callbacks {
-        public void onScrollChanged(int deltaX, int deltaY);
+    public interface Callbacks {
+        void onScrollChanged(int deltaX, int deltaY);
     }
 }

@@ -24,7 +24,6 @@
             "returndate": -1,
             "status": 4
         },
-        "information": "http://www.eschborn.de/de/leben-in-eschborn/schulen-und-bildung/stadtbuechereien",
         "reservationtable": {
             "author": 0,
             "availability": 2,
@@ -38,6 +37,7 @@
         50.1467469,
         8.561455500000001
     ],
+    "information": "http://www.eschborn.de/de/leben-in-eschborn/schulen-und-bildung/stadtbuechereien",
     "state": "Hessen",
     "title": "Stadtb\u00fccherei"
 }

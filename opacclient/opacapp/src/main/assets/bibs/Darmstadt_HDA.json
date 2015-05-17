@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://pica1l.ulb.tu-darmstadt.de",
-        "db": "FHBDA",
-        "information": "http://bib.h-da.de/"
+        "db": "FHBDA"
     },
     "geo": [
-        49.8776483,
-        8.6517617
+        49.8134336,
+        8.652618799999999
     ],
+    "information": "http://bib.h-da.de/",
     "state": "Hessen",
     "title": "Hochschulbibliothek h_da"
 }

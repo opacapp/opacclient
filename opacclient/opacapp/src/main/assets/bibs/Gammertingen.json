@@ -24,7 +24,6 @@
             "returndate": 4,
             "status": 3
         },
-        "information": "http://www.gammertingen.de/de/menschlich/freizeit-und-kultur/stadtbuecherei.html",
         "reservationtable": {
             "author": 1,
             "availability": 3,
@@ -35,9 +34,10 @@
         }
     },
     "geo": [
-        48.2471359,
-        9.2152623
+        48.24919,
+        9.21508
     ],
+    "information": "http://www.gammertingen.de/de/menschlich/freizeit-und-kultur/stadtbuecherei.html",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtb\u00fccherei"
 }

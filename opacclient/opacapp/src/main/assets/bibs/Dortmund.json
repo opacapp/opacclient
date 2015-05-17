@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://katalog.dortmund.de/aDISWeb/app",
-        "information": "http://www.dortmund.de/de/leben_in_dortmund/bildungwissenschaft/bibliothek/start_bibliothek/",
         "startparams": "service=direct/0/Home/$DirectLink&sp=S127.0.0.1%3A24022"
     },
     "geo": [
-        51.5135872,
-        7.465298100000001
+        51.51643439999999,
+        7.4609077
     ],
+    "information": "http://www.dortmund.de/de/leben_in_dortmund/bildungwissenschaft/bibliothek/start_bibliothek/",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtbibliothek"
 }

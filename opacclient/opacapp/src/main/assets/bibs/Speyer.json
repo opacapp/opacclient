@@ -24,7 +24,6 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "http://www.speyer.de/de/bildung/bibliotheken/stadtbuecherei",
         "mediatypes": {
             "ekl.gif": "EBOOK",
             "mCasetteS.gif": "AUDIO_CASSETTE",
@@ -41,9 +40,10 @@
         }
     },
     "geo": [
-        49.3204789,
-        8.436217
+        49.3172765,
+        8.441217199999999
     ],
+    "information": "http://www.speyer.de/de/bildung/bibliotheken/stadtbuecherei",
     "state": "Rheinland-Pfalz",
     "title": "Stadtb\u00fccherei"
 }

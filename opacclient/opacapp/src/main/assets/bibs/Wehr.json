@@ -17,7 +17,6 @@
             "returndate": 1,
             "status": 0
         },
-        "information": "http://www.mediathek-wehr.de/",
         "mediatypes": {
             "mCDS.gif": "CD",
             "mCasetteS.gif": "AUDIO_CASSETTE",
@@ -43,6 +42,7 @@
         47.6300987,
         7.905753199999999
     ],
+    "information": "http://www.mediathek-wehr.de/",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Mediathek"
 }

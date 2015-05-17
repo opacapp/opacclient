@@ -2,6 +2,6 @@ apply plugin: 'java'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'org.apache.httpcomponents:httpclient:4.0-beta2'
+    compile 'org.apache.httpcomponents:httpclient:4.3.6'
     compile 'org.bouncycastle:bcprov-jdk16:1.46'
 }

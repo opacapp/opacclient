@@ -4,13 +4,13 @@
     "city": "Bad T\u00f6lz",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/badtoelz",
-        "information": "http://www.bad-toelz.de/buerger/kultur/kunst-und-literatur/stadtbibliothek.html"
+        "baseurl": "http://webopac.winbiap.de/badtoelz"
     },
     "geo": [
         47.7614737,
         11.5651524
     ],
+    "information": "http://www.bad-toelz.de/buerger/kultur/kunst-und-literatur/stadtbibliothek.html",
     "state": "Bayern",
     "title": "Stadtbibliothek"
 }

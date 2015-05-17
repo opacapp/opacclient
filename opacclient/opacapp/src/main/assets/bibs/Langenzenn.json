@@ -4,13 +4,13 @@
     "city": "Langenzenn",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/langenzenn",
-        "information": "http://www.langenzenn.de/freizeit-tourismus/freizeitmoeglichkeiten/buecherei/"
+        "baseurl": "http://webopac.winbiap.de/langenzenn"
     },
     "geo": [
-        49.49217180000001,
-        10.7970823
+        49.4946712,
+        10.796038
     ],
+    "information": "http://www.langenzenn.de/freizeit-tourismus/freizeitmoeglichkeiten/buecherei/",
     "state": "Bayern",
     "title": "Stadtb\u00fccherei"
 }

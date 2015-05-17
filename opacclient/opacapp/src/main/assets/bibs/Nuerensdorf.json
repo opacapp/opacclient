@@ -4,13 +4,13 @@
     "city": "N\u00fcrensdorf",
     "country": "Schweiz",
     "data": {
-        "baseurl": "http://www.winmedio.net/nuerensdorf",
-        "information": "http://www.nuerensdorf.ch/de/freizeit_kultur/bibliothek.html"
+        "baseurl": "http://www.winmedio.net/nuerensdorf"
     },
     "geo": [
-        47.446943,
-        8.648886
+        47.447,
+        8.64935
     ],
+    "information": "http://www.nuerensdorf.ch/de/freizeit_kultur/bibliothek.html",
     "state": "Z\u00fcrich",
     "title": "Gemeindebibliothek"
 }

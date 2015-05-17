@@ -24,7 +24,6 @@
             "returndate": 5,
             "status": 4
         },
-        "information": "/../read/info.html",
         "mediatypes": {
             "CDs.gif": "CD",
             "blu-ray_32.gif": "BLURAY",
@@ -55,9 +54,10 @@
         }
     },
     "geo": [
-        51.47971,
-        11.96864
+        51.4969802,
+        11.9688029
     ],
+    "information": "/../read/info.html",
     "state": "Sachsen-Anhalt",
     "title": "Stadtbibliothek"
 }

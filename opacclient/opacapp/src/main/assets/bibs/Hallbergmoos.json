@@ -4,13 +4,13 @@
     "city": "Hallbergmoos",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/hallbergmoos",
-        "information": "http://www.hallbergmoos.de/index.php?id=0,52"
+        "baseurl": "http://webopac.winbiap.de/hallbergmoos"
     },
     "geo": [
         48.3250947,
         11.7432155
     ],
+    "information": "http://www.hallbergmoos.de/index.php?id=0,52",
     "state": "Bayern",
     "title": "Gemeindeb\u00fccherei"
 }

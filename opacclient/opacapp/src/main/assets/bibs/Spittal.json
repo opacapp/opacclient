@@ -19,7 +19,6 @@
             "returndate": 5,
             "status": 3
         },
-        "information": "http://www.stadtbuecherei-spittal.at/",
         "mediatypes": {
             "mCasetteS.gif": "AUDIO_CASSETTE",
             "mDVDS.gif": "DVD",
@@ -33,9 +32,10 @@
         }
     },
     "geo": [
-        46.79968,
-        13.4928
+        46.7983351,
+        13.4966003
     ],
+    "information": "http://www.stadtbuecherei-spittal.at/",
     "state": "K\u00e4rnten",
     "title": "Stadtb\u00fccherei"
 }

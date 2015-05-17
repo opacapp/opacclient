@@ -4,13 +4,13 @@
     "city": "Vohburg",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/vohburg",
-        "information": "http://www.vohburg.de/documente/stadtverwaltung/kommunale_einrichtungen.php"
+        "baseurl": "http://webopac.winbiap.de/vohburg"
     },
     "geo": [
         48.7659737,
         11.6227267
     ],
+    "information": "http://www.vohburg.de/documente/stadtverwaltung/kommunale_einrichtungen.php",
     "state": "Bayern",
     "title": "Stadtbibliothek"
 }

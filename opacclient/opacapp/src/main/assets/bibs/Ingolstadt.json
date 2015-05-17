@@ -24,7 +24,6 @@
             "returndate": -1,
             "status": 4
         },
-        "information": "http://www2.ingolstadt.de/Leben_in_Ingolstadt/Bildung/Stadtb%C3%BCcherei/",
         "mediatypes": {
             "1": "BOOK",
             "10": "MAGAZINE",
@@ -49,6 +48,7 @@
         48.7665351,
         11.4257541
     ],
+    "information": "http://www2.ingolstadt.de/Leben_in_Ingolstadt/Bildung/Stadtb%C3%BCcherei/",
     "state": "Bayern",
     "title": "Stadtbibliothek"
 }

@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://opac.fh-potsdam.de/InfoGuideClient.bfpsis",
-        "information": "http://bibliothek.fh-potsdam.de/bibliothek/obere-navigation/oeffnungszeiten/",
         "startparams": "Login=wobfp01"
     },
     "geo": [
-        52.3941887,
-        13.072691
+        52.39593,
+        13.05973
     ],
+    "information": "http://bibliothek.fh-potsdam.de/bibliothek/obere-navigation/oeffnungszeiten/",
     "state": "Brandenburg",
     "title": "Fachhochschule"
 }

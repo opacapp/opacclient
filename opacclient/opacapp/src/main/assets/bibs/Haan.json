@@ -25,7 +25,6 @@
             "status": 2
         },
         "db": "ha",
-        "information": "http://www.haan.de/index.phtml?mNavID=1581.1&sNavID=1581.74&La=1",
         "reservationtable": {
             "author": 0,
             "availability": 2,
@@ -35,6 +34,11 @@
             "title": 1
         }
     },
+    "geo": [
+        51.1923262,
+        7.0065575
+    ],
+    "information": "http://www.haan.de/index.phtml?mNavID=1581.1&sNavID=1581.74&La=1",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }

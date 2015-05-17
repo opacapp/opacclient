@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "http://kiopc4.ub.uni-kiel.de:8080",
-        "db": "4",
-        "information": "http://www.zhb.uni-luebeck.de/welcome.htm"
+        "db": "4"
     },
     "geo": [
-        53.8810006,
-        10.7613749
+        53.8654673,
+        10.6865593
     ],
+    "information": "http://www.zhb.uni-luebeck.de/welcome.htm",
     "state": "Schleswig-Holstein",
     "title": "Zentrale Hochschulbibliothek"
 }

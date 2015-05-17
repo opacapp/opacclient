@@ -24,7 +24,6 @@
             "returndate": 4,
             "status": 3
         },
-        "information": "http://www.leutenbach.de/2287_DEU_WWW.php#contentbereich",
         "reservationtable": {
             "author": 0,
             "availability": 2,
@@ -38,6 +37,7 @@
         48.88809209999999,
         9.390455
     ],
+    "information": "http://www.leutenbach.de/2287_DEU_WWW.php#contentbereich",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Ortsb\u00fccherei"
 }

@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://opac.ub.tum.de/InfoGuideClient.tumsis",
-        "information": "http://www.ub.tum.de/so-erreichen-sie-uns/oeffnungszeiten",
         "startparams": "Login=wotum"
     },
     "geo": [
-        48.1366069,
-        11.5770851
+        48.1351253,
+        11.5819806
     ],
+    "information": "http://www.ub.tum.de/so-erreichen-sie-uns/oeffnungszeiten",
     "state": "Bayern",
     "title": "Unibibliothek TUM"
 }

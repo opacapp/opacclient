@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "http://bibliothek.hohen-neuendorf.de",
-        "information": "http://www.hohen-neuendorf.de/hnd/admin/bibliotheken.htm",
         "longParameterNames": true
     },
     "geo": [
-        52.6720645,
-        13.2786739
+        52.66326,
+        13.28427
     ],
+    "information": "http://www.hohen-neuendorf.de/hnd/admin/bibliotheken.htm",
     "state": "Brandenburg",
     "title": "Stadtbibliothek"
 }

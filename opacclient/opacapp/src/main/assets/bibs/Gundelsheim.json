@@ -24,7 +24,6 @@
             "returndate": 3,
             "status": 2
         },
-        "information": "http://www.bibliotheken.bw-online.de/read-gundelsheim/info.html",
         "reservationtable": {
             "author": 0,
             "availability": -2,
@@ -35,9 +34,10 @@
         }
     },
     "geo": [
-        49.28155659999999,
-        9.1621124
+        49.2854977,
+        9.160578
     ],
+    "information": "http://www.bibliotheken.bw-online.de/read-gundelsheim/info.html",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtb\u00fccherei"
 }

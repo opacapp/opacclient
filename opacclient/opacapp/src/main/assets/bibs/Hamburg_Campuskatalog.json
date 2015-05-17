@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://kataloge.uni-hamburg.de/",
-        "db": "1",
-        "information": "http://www.sub.uni-hamburg.de/home.html"
+        "db": "1"
     },
     "geo": [
-        53.56448,
-        9.98553
+        53.5510846,
+        9.9936818
     ],
+    "information": "http://www.sub.uni-hamburg.de/home.html",
     "state": "Hamburg",
     "title": "Campus-Katalog (Staatsbibliothek und Fachbibliotheken)"
 }

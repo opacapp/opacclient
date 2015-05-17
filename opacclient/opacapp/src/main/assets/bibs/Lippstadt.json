@@ -4,13 +4,13 @@
     "city": "Lippstadt",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.kdvz.de/lippstadt",
-        "information": "http://www.lippstadt.de/kultur/buecherei/117260100000012474.php"
+        "baseurl": "http://webopac.kdvz.de/lippstadt"
     },
     "geo": [
-        51.6712278,
-        8.3406481
+        51.6736297,
+        8.3459294
     ],
+    "information": "http://www.lippstadt.de/kultur/buecherei/117260100000012474.php",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }

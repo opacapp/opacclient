@@ -4,13 +4,13 @@
     "city": "Bad Abbach",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.net/badabbach",
-        "information": "http://www.bad-abbach.de/de/markt-bad-abbach/marktbuecherei.html"
+        "baseurl": "http://webopac.winbiap.net/badabbach"
     },
     "geo": [
         48.9373377,
         12.0462593
     ],
+    "information": "http://www.bad-abbach.de/de/markt-bad-abbach/marktbuecherei.html",
     "state": "Bayern",
     "title": "Marktb\u00fccherei"
 }

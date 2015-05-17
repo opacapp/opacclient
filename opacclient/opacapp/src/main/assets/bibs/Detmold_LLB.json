@@ -4,13 +4,13 @@
     "city": "Detmold",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://www.llb-detmold.de/webOPACClient_sisis",
-        "information": "http://www.llb-detmold.de/"
+        "baseurl": "http://www.llb-detmold.de/webOPACClient_sisis"
     },
     "geo": [
         51.9384783,
         8.868637999999999
     ],
+    "information": "http://www.llb-detmold.de/",
     "state": "Nordrhein-Westfalen",
     "title": "Lippische Landesbibliothek"
 }

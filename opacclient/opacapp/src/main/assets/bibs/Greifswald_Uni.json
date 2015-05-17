@@ -5,13 +5,13 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://lhgrw.gbv.de",
-        "db": "1",
-        "information": "http://www.uni-greifswald.de/bibliothek.html"
+        "db": "1"
     },
     "geo": [
-        54.095833,
-        13.381111
+        54.0915636,
+        13.4019551
     ],
+    "information": "http://www.uni-greifswald.de/bibliothek.html",
     "state": "Mecklenburg-Vorpommern",
     "title": "Unibibliothek"
 }

@@ -15,7 +15,6 @@
             "title": 6
         },
         "baseurl": "http://opac.luenen.de",
-        "information": "https://www.luenen.de/kultur/buch/index.php",
         "mediatypes": {
             "1": "BOOK",
             "2": "MAGAZINE",
@@ -39,6 +38,7 @@
         51.6104829,
         7.5285074
     ],
+    "information": "https://www.luenen.de/kultur/buch/index.php",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }

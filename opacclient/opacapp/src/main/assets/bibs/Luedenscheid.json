@@ -24,7 +24,6 @@
             "returndate": 5,
             "status": 4
         },
-        "information": "http://www.luedenscheid.de/luedenscheid_erleben/stadtbuecherei/sp_auto_398.php",
         "mediatypes": {
             "bestsellkl2.gif": "BOOK",
             "mBlu-RayselbstS.gif": "BLURAY",
@@ -56,9 +55,10 @@
         }
     },
     "geo": [
-        51.2191038,
-        7.631259999999999
+        51.2164256,
+        7.634604899999999
     ],
+    "information": "http://www.luedenscheid.de/luedenscheid_erleben/stadtbuecherei/sp_auto_398.php",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }

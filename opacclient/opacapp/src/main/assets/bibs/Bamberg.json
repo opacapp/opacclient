@@ -24,7 +24,6 @@
             "returndate": 4,
             "status": 3
         },
-        "information": "http://www.stadtbuecherei-bamberg.de/index.php?id=Oeffnungszeiten",
         "mediatypes": {
             "MBuecherS.gif": "PACKAGE_BOOKS",
             "MOnleihe2S.gif": "EBOOK",
@@ -56,9 +55,10 @@
         }
     },
     "geo": [
-        49.8988135,
-        10.9027636
+        49.89696259999999,
+        10.8920954
     ],
+    "information": "http://www.stadtbuecherei-bamberg.de/index.php?id=Oeffnungszeiten",
     "state": "Bayern",
     "title": "Stadtbibliothek"
 }
