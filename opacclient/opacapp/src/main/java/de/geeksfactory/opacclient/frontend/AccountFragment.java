@@ -693,6 +693,7 @@ public class AccountFragment extends Fragment implements
         public ImageView ivDownload;
         public ImageView ivDetails;
         public View vStatusColor;
+        public LinearLayout llData;
         public LinearLayout llDetails;
         public LinearLayout llButtons;
         public boolean hasDetailLink;
@@ -707,6 +708,7 @@ public class AccountFragment extends Fragment implements
             ivDownload = (ImageView) v.findViewById(R.id.ivDownload);
             ivDetails = (ImageView) v.findViewById(R.id.ivDetails);
             vStatusColor = v.findViewById(R.id.vStatusColor);
+            llData = (LinearLayout) v.findViewById(R.id.llData);
             llDetails = (LinearLayout) v.findViewById(R.id.llDetails);
             llButtons = (LinearLayout) v.findViewById(R.id.llButtons);
         }
@@ -721,6 +723,7 @@ public class AccountFragment extends Fragment implements
         public ImageView ivCancel;
         public ImageView ivBooking;
         public ImageView ivDetails;
+        public LinearLayout llData;
         public LinearLayout llDetails;
         public LinearLayout llButtons;
         public boolean hasDetailLink;
@@ -734,6 +737,7 @@ public class AccountFragment extends Fragment implements
             ivCancel = (ImageView) v.findViewById(R.id.ivCancel);
             ivBooking = (ImageView) v.findViewById(R.id.ivBooking);
             ivDetails = (ImageView) v.findViewById(R.id.ivDetails);
+            llData = (LinearLayout) v.findViewById(R.id.llData);
             llDetails = (LinearLayout) v.findViewById(R.id.llDetails);
             llButtons = (LinearLayout) v.findViewById(R.id.llButtons);
         }
@@ -982,18 +986,35 @@ public class AccountFragment extends Fragment implements
             };
             lentManager.setAnimationInterceptor(
                     new ExpandingCardListManager.AnimationInterceptor() {
+                        private float llDataY;
+                        private float llDataTranslationY = 0;
+
+                        @Override
+                        public void beforeExpand(View unexpandedView) {
+                            LentViewHolder holder = (LentViewHolder) unexpandedView.getTag();
+                            llDataY = ViewHelper.getY(holder.llData);
+                        }
 
                         @Override
                         public Collection<Animator> getExpandAnimations(int heightDifference,
                                 View expandedView) {
                             LentViewHolder holder = (LentViewHolder) expandedView.getTag();
                             Collection<Animator> anims = getAnimations(-heightDifference, 0);
+                            // Animate buttons to the side
                             int difference = 2 * (getResources()
                                     .getDimensionPixelSize(R.dimen.card_side_margin_selected) -
                                     getResources().getDimensionPixelSize(
                                             R.dimen.card_side_margin_default));
                             anims.add(ObjectAnimator
                                     .ofFloat(holder.llButtons, "translationX", difference, 0));
+                            // Animate llData to the bottom if required
+                            if (ViewHelper.getY(holder.llData) != llDataY) {
+                                ViewHelper.setY(holder.llData, llDataY);
+                                llDataTranslationY = ViewHelper.getTranslationY(holder.llData);
+                                anims.add(ObjectAnimator.ofFloat(holder.llData, "translationY", 0));
+                            } else {
+                                llDataTranslationY = 0;
+                            }
                             return anims;
                         }
 
@@ -1002,12 +1023,16 @@ public class AccountFragment extends Fragment implements
                                 View expandedView) {
                             LentViewHolder holder = (LentViewHolder) expandedView.getTag();
                             Collection<Animator> anims = getAnimations(0, heightDifference);
+                            // Animate buttons back
                             int difference = 2 * (getResources()
                                     .getDimensionPixelSize(R.dimen.card_side_margin_selected) -
                                     getResources().getDimensionPixelSize(
                                             R.dimen.card_side_margin_default));
                             anims.add(ObjectAnimator
                                     .ofFloat(holder.llButtons, "translationX", 0, difference));
+                            // Animate llData back
+                            anims.add(ObjectAnimator
+                                    .ofFloat(holder.llData, "translationY", llDataTranslationY));
                             return anims;
                         }
 
@@ -1246,16 +1271,35 @@ public class AccountFragment extends Fragment implements
                 }
             };
             resManager.setAnimationInterceptor(new ExpandingCardListManager.AnimationInterceptor() {
+                private float llDataY;
+                private float llDataTranslationY = 0;
+
+                @Override
+                public void beforeExpand(View unexpandedView) {
+                    ReservationViewHolder holder = (ReservationViewHolder) unexpandedView.getTag();
+                    llDataY = ViewHelper.getY(holder.llData);
+                }
+
                 @Override
                 public Collection<Animator> getExpandAnimations(int heightDifference,
                         View expandedView) {
                     ReservationViewHolder holder = (ReservationViewHolder) expandedView.getTag();
                     Collection<Animator> anims = getAnimations(-heightDifference, 0);
+                    // Animate buttons to the side
                     int difference = 2 * (getResources()
                             .getDimensionPixelSize(R.dimen.card_side_margin_selected) -
-                            getResources().getDimensionPixelSize(R.dimen.card_side_margin_default));
+                            getResources().getDimensionPixelSize(
+                                    R.dimen.card_side_margin_default));
                     anims.add(ObjectAnimator
                             .ofFloat(holder.llButtons, "translationX", difference, 0));
+                    // Animate llData to the bottom if required
+                    if (ViewHelper.getY(holder.llData) != llDataY) {
+                        ViewHelper.setY(holder.llData, llDataY);
+                        llDataTranslationY = ViewHelper.getTranslationY(holder.llData);
+                        anims.add(ObjectAnimator.ofFloat(holder.llData, "translationY", 0));
+                    } else {
+                        llDataTranslationY = 0;
+                    }
                     return anims;
                 }
 
@@ -1264,11 +1308,16 @@ public class AccountFragment extends Fragment implements
                         View expandedView) {
                     ReservationViewHolder holder = (ReservationViewHolder) expandedView.getTag();
                     Collection<Animator> anims = getAnimations(0, heightDifference);
+                    // Animate buttons back
                     int difference = 2 * (getResources()
                             .getDimensionPixelSize(R.dimen.card_side_margin_selected) -
-                            getResources().getDimensionPixelSize(R.dimen.card_side_margin_default));
+                            getResources().getDimensionPixelSize(
+                                    R.dimen.card_side_margin_default));
                     anims.add(ObjectAnimator
                             .ofFloat(holder.llButtons, "translationX", 0, difference));
+                    // Animate llData back
+                    anims.add(ObjectAnimator.ofFloat(holder.llData, "translationY",
+                            llDataTranslationY));
                     return anims;
                 }
 
@@ -1296,7 +1345,9 @@ public class AccountFragment extends Fragment implements
                     } else {
                         // phone
                         animators.add(ObjectAnimator.ofFloat(tvAge, "translationY", from, to));
-                        animators.add(ObjectAnimator.ofFloat(view.findViewById(R.id.tvNoWarranty), "translationY", from, to));
+                        animators.add(ObjectAnimator
+                                .ofFloat(view.findViewById(R.id.tvNoWarranty), "translationY", from,
+                                        to));
                     }
                     return animators;
                 }

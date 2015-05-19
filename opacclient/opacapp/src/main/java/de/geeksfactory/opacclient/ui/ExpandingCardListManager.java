@@ -50,6 +50,8 @@ public abstract class ExpandingCardListManager {
      * An interface to influence the animation created by ExpandingCardListManager  by adding additional animations.
      */
     public interface AnimationInterceptor {
+        void beforeExpand(View unexpandedView);
+
         Collection<Animator> getExpandAnimations(int heightDifference, View expandedView);
 
         Collection<Animator> getCollapseAnimations(int heightDifference, View expandedView);
@@ -189,6 +191,8 @@ public abstract class ExpandingCardListManager {
         final float mainPos = ViewHelper.getY(views.get(position)) - mainCard.getPaddingTop();
         unexpandedHeight = views.get(position).getHeight();
 
+        if (interceptor != null) interceptor.beforeExpand(views.get(position));
+
         // Wait a little so that touch feedback is visible before hiding buttons
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -302,6 +306,7 @@ public abstract class ExpandingCardListManager {
                 mainCard.setVisibility(View.VISIBLE);
                 upperCard.setVisibility(View.GONE);
                 lowerCard.setVisibility(View.GONE);
+                expandedCard.clearAnimation();
                 expandedCard.setVisibility(View.GONE);
                 llUpper.removeAllViews();
                 llLower.removeAllViews();
