@@ -1,9 +1,19 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "biber1992",
     "city": "Osnabr\u00fcck",
     "country": "Deutschland",
     "data": {
+        "accounttable": {
+            "author": 6,
+            "barcode": 3,
+            "homebranch": -1,
+            "lendingbranch": -1,
+            "prolongurl": 4,
+            "returndate": 2,
+            "status": 4,
+            "title": 6
+        },
         "baseurl": "https://katalog.stadtbibliothek.osnabrueck.de",
         "copiestable": {
             "barcode": 3,
