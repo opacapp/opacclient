@@ -737,10 +737,12 @@ public class Heidi extends BaseApi implements OpacApi {
             Map<String, String> row = new HashMap<>();
             Element desc = tr.child(1).select("label").first();
             String dates = tr.child(2).text().trim();
-            String kk = getQueryParamsFirst(
-                    tr.child(1).select("a").first().absUrl("href")).get(
-                    "katkey");
-            row.put(AccountData.KEY_LENT_ID, kk);
+            if (tr.child(1).select("a").size() > 0) {
+                String kk = getQueryParamsFirst(
+                        tr.child(1).select("a").first().absUrl("href")).get(
+                        "katkey");
+                row.put(AccountData.KEY_LENT_ID, kk);
+            }
 
             int i = 0;
             for (Node node : desc.childNodes()) {
