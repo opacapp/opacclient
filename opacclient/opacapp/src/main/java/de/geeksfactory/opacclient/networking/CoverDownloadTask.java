@@ -3,7 +3,7 @@ package de.geeksfactory.opacclient.networking;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
+import android.os.AsyncTask;import android.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -83,6 +83,11 @@ public class CoverDownloadTask extends AsyncTask<Void, Integer, CoverHolder> {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            } catch (OutOfMemoryError e) {
+                item.setCoverBitmap(null);
+                item.setCover(null);
+                Log.i("CoverDownloadTask", "OutOfMemoryError");
+                return item;
             } catch (Exception e) {
                 e.printStackTrace();
             }
