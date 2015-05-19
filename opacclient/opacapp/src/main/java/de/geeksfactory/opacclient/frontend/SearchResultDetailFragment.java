@@ -553,6 +553,9 @@ public class SearchResultDetailFragment extends Fragment
     }
 
     private void showCoverView(boolean b) {
+        if (getActivity() == null) {
+            return;
+        }
         coverWrapper.setVisibility(b ? View.VISIBLE : View.GONE);
         gradientBottom.setVisibility(b ? View.VISIBLE : View.GONE);
         gradientTop.setVisibility(b ? View.VISIBLE : View.GONE);
@@ -619,7 +622,7 @@ public class SearchResultDetailFragment extends Fragment
                     @Override
                     public void onGlobalLayout() {
                         onScrollChanged(0, 0);
-            }
+                    }
                 });
     }
 
