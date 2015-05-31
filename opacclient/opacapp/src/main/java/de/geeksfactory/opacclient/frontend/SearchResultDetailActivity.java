@@ -74,12 +74,12 @@ public class SearchResultDetailActivity extends OpacActivity
                 TransitionSet enterTransition = new TransitionSet();
                 enterTransition.addTransition(new CircularRevealTransition()
                         .setStartPosition(this, touchX, touchY)
-                        .addTarget(R.id.coverBackground)
+                                //.addTarget(R.id.coverBackground)
                         .addTarget(R.id.gradient_top)
                         .addTarget(R.id.gradient_bottom));
                 enterTransition.addTransition(
                         new VerticalExplodeTransition()
-                                .excludeTarget(R.id.coverBackground, true)
+                                //.excludeTarget(R.id.coverBackground, true)
                                 .excludeTarget(R.id.gradient_bottom, true)
                                 .excludeTarget(R.id.gradient_top, true));
                 enterTransition.excludeTarget(android.R.id.statusBarBackground, true);
