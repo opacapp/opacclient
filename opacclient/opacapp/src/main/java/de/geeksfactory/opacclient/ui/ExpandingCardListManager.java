@@ -198,7 +198,7 @@ public abstract class ExpandingCardListManager {
             @Override
             public void run() {
                 if (position != 0) upperCard.setVisibility(View.VISIBLE);
-                lowerCard.setVisibility(View.VISIBLE);
+                if (lowerPos > 0) lowerCard.setVisibility(View.VISIBLE);
                 expandedCard.setVisibility(View.VISIBLE);
                 mainCard.setVisibility(View.GONE);
 
