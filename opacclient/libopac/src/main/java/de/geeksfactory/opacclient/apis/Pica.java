@@ -1175,14 +1175,52 @@ public class Pica extends BaseApi implements OpacApi {
                     stringProvider.getString(StringProvider.COULD_NOT_LOAD_ACCOUNT));
         }
         assert (trs > 0);
-        for (int i = 0; i < trs; i++) {
-            Element tr = copytrs.get(i);
+        for (Element tr : copytrs) {
             Map<String, String> e = new HashMap<>();
+            if (tr.select("table[summary=title data]").size() > 0) {
+                // According to HTML code from Bug report (UB Frankfurt)
 
-            e.put(AccountData.KEY_RESERVATION_TITLE, tr.child(5).text().trim());
-            e.put(AccountData.KEY_RESERVATION_READY, tr.child(17).text().trim());
-            e.put(AccountData.KEY_RESERVATION_CANCEL,
-                    tr.child(1).select("input").attr("value"));
+                // Check if there is a checkbox to cancel this item
+                if (tr.select("input").size() > 0) {
+                    e.put(AccountData.KEY_RESERVATION_CANCEL,
+                            tr.select("input").attr("value"));
+                }
+
+                Elements datatrs = tr.select("table[summary=title data] tr");
+                e.put(AccountData.KEY_RESERVATION_TITLE, datatrs.get(0).text());
+
+                List<TextNode> textNodes = datatrs.get(1).select("td").first()
+                                                  .textNodes();
+                List<TextNode> nodes = new ArrayList<>();
+                Elements titles = datatrs.get(1).select("span.label-small");
+
+                for (TextNode node : textNodes) {
+                    if (!node.text().equals(" ")) {
+                        nodes.add(node);
+                    }
+                }
+
+                assert (nodes.size() == titles.size());
+                for (int j = 0; j < nodes.size(); j++) {
+                    String title = titles.get(j).text();
+                    String value = nodes.get(j).text().trim().replace(";", "");
+                    //noinspection StatementWithEmptyBody
+                    if (title.contains("Signatur")
+                            || title.contains("shelf mark")
+                            || title.contains("signatuur")) {
+                        // not supported
+                    } else //noinspection StatementWithEmptyBody
+                        if (title.contains("Vormerkdatum")) {
+                            // not supported
+                        }
+                }
+            } else {
+                // like in Kiel
+                e.put(AccountData.KEY_RESERVATION_TITLE, tr.child(5).text().trim());
+                e.put(AccountData.KEY_RESERVATION_READY, tr.child(17).text().trim());
+                e.put(AccountData.KEY_RESERVATION_CANCEL,
+                        tr.child(1).select("input").attr("value"));
+            }
 
             media.add(e);
         }
