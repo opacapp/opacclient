@@ -73,6 +73,7 @@ public interface StringProvider {
     public static String INTERLIB_BRANCH = "interlib_branch";
     public static String STACKS_BRANCH = "stacks_branch";
     public static String PROVISION_BRANCH = "provision_branch";
+    public static String UNSUPPORTED_IN_LIBRARY = "unsupported_in_library";
 
     /**
      * Returns the translated string identified by identifier
