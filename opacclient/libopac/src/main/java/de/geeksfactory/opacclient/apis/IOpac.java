@@ -665,9 +665,10 @@ public class IOpac extends BaseApi implements OpacApi {
             Element form = doc.select("form[name=form1]").first();
             String sessionid = form.select("input[name=sessionid]").attr(
                     "value");
+            String kndnr = form.select("input[name=kndnr]").attr("value");
             String mednr = form.select("input[name=mednr]").attr("value");
             httpGet(opac_url + "/cgi-bin/di.exe?mode=9&kndnr="
-                    + account.getName() + "&mednr=" + mednr + "&sessionid="
+                    + kndnr + "&mednr=" + mednr + "&sessionid="
                     + sessionid + "&psh100=Stornieren", getDefaultEncoding());
             return new CancelResult(MultiStepResult.Status.OK);
         } catch (Throwable e) {
@@ -836,6 +837,9 @@ public class IOpac extends BaseApi implements OpacApi {
                         String value = cell.select("input.VerlAllCheckboxOK").first().val();
                         e.put(AccountData.KEY_LENT_LINK, "NEW" + value);
                         e.put(AccountData.KEY_LENT_ID, value.split(";")[0]);
+                        if (cell.select("input.VerlAllCheckboxOK").hasAttr("disabled")) {
+                            e.put(AccountData.KEY_LENT_RENEWABLE, "N");
+                        }
                     } else {
                         // previous versions - link for prolonging on every medium
                         String link = cell.select("a").attr("href");
