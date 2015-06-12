@@ -105,6 +105,8 @@ public class IOpac extends BaseApi implements OpacApi {
     protected int results_total;
     protected int maxProlongCount = -1;
 
+    protected boolean newShareLinks;
+
     @Override
     public void init(Library lib) {
         super.init(lib);
@@ -436,10 +438,14 @@ public class IOpac extends BaseApi implements OpacApi {
             id = doc.select("input[name=mednr]").first().val().trim();
         } else {
             String href = doc.select("a[href*=mednr]").first().attr("href");
-            id = getQueryParamsFirst(href).get("mednr");
+            id = getQueryParamsFirst(href).get("mednr").trim();
         }
 
         result.setId(id);
+
+        // check if new share button is available (allows to share a link to the standard
+        // frameset of the OPAC instead of only the detail frame)
+        newShareLinks = doc.select("#sharebutton").size() > 0;
 
         Elements table = doc.select("table").get(1).select("tr");
 
@@ -500,7 +506,7 @@ public class IOpac extends BaseApi implements OpacApi {
             }
         }
 
-        result.addCopy(e);
+        if (e.size() > 0) result.addCopy(e);
 
         return result;
     }
@@ -559,8 +565,8 @@ public class IOpac extends BaseApi implements OpacApi {
             doc = Jsoup.parse(html);
         }
 
-        if (doc.select("h1").text().contains("fehlgeschlagen")
-                || doc.select("h1").text().contains("Achtung")) {
+        if (doc.text().contains("fehlgeschlagen")
+                || doc.text().contains("Achtung") || doc.text().contains("nicht m")) {
             return new ReservationResult(MultiStepResult.Status.ERROR, doc
                     .select("table").first().text().trim());
         } else {
@@ -1049,7 +1055,11 @@ public class IOpac extends BaseApi implements OpacApi {
 
     @Override
     public String getShareUrl(String id, String title) {
-        return opac_url + "/cgi-bin/di.exe?cMedNr=" + id + "&mode=23";
+        if (newShareLinks) {
+            return opac_url + dir + "/?mednr=" + id;
+        } else {
+            return opac_url + "/cgi-bin/di.exe?cMedNr=" + id + "&mode=23";
+        }
     }
 
     @Override
