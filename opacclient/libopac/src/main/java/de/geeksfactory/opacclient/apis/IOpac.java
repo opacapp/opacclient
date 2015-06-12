@@ -333,17 +333,26 @@ public class IOpac extends BaseApi implements OpacApi {
             // Status
             String status = tr.select("td").get(colmap.get("returndate"))
                               .text().trim().replace("\u00a0", "");
-            if (status.equals("")
-                    || status.toLowerCase(Locale.GERMAN).contains("onleihe")
-                    || status.contains("verleihbar")
-                    || status.contains("entleihbar")
-                    || status.contains("ausleihbar")) {
-                sr.setStatus(Status.GREEN);
-            } else {
+            SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
+            try {
+                df.parse(status);
+                // this is a return date
                 sr.setStatus(Status.RED);
                 sr.setInnerhtml(sr.getInnerhtml() + "<br><i>"
                         + stringProvider.getString(StringProvider.LENT_UNTIL)
                         + " " + status + "</i>");
+            } catch (ParseException e) {
+                // this is a different status text
+                String lc = status.toLowerCase(Locale.GERMAN);
+                if ((lc.equals("")
+                        || lc.toLowerCase(Locale.GERMAN).contains("onleihe")
+                        || lc.contains("verleihbar") || lc.contains("entleihbar")
+                        || lc.contains("ausleihbar")) && !lc.contains("nicht")) {
+                    sr.setStatus(Status.GREEN);
+                } else {
+                    sr.setStatus(Status.YELLOW);
+                    sr.setInnerhtml(sr.getInnerhtml() + "<br><i>" + status + "</i>");
+                }
             }
 
             // In some libraries (for example search for "atelier" in Preetz)
