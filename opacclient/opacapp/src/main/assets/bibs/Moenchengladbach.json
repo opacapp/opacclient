@@ -37,6 +37,7 @@
             "30": "EBOOK"
         },
         "opacdir": "opax",
+		"opacsuffix": ".S",
         "searchtable": [
             2,
             4
