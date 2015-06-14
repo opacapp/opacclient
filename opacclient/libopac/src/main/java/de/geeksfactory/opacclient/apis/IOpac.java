@@ -105,6 +105,8 @@ public class IOpac extends BaseApi implements OpacApi {
     protected int results_total;
     protected int maxProlongCount = -1;
 
+    protected boolean newShareLinks;
+
     @Override
     public void init(Library lib) {
         super.init(lib);
@@ -331,17 +333,26 @@ public class IOpac extends BaseApi implements OpacApi {
             // Status
             String status = tr.select("td").get(colmap.get("returndate"))
                               .text().trim().replace("\u00a0", "");
-            if (status.equals("")
-                    || status.toLowerCase(Locale.GERMAN).contains("onleihe")
-                    || status.contains("verleihbar")
-                    || status.contains("entleihbar")
-                    || status.contains("ausleihbar")) {
-                sr.setStatus(Status.GREEN);
-            } else {
+            SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
+            try {
+                df.parse(status);
+                // this is a return date
                 sr.setStatus(Status.RED);
                 sr.setInnerhtml(sr.getInnerhtml() + "<br><i>"
                         + stringProvider.getString(StringProvider.LENT_UNTIL)
                         + " " + status + "</i>");
+            } catch (ParseException e) {
+                // this is a different status text
+                String lc = status.toLowerCase(Locale.GERMAN);
+                if ((lc.equals("")
+                        || lc.toLowerCase(Locale.GERMAN).contains("onleihe")
+                        || lc.contains("verleihbar") || lc.contains("entleihbar")
+                        || lc.contains("ausleihbar")) && !lc.contains("nicht")) {
+                    sr.setStatus(Status.GREEN);
+                } else {
+                    sr.setStatus(Status.YELLOW);
+                    sr.setInnerhtml(sr.getInnerhtml() + "<br><i>" + status + "</i>");
+                }
             }
 
             // In some libraries (for example search for "atelier" in Preetz)
@@ -436,10 +447,14 @@ public class IOpac extends BaseApi implements OpacApi {
             id = doc.select("input[name=mednr]").first().val().trim();
         } else {
             String href = doc.select("a[href*=mednr]").first().attr("href");
-            id = getQueryParamsFirst(href).get("mednr");
+            id = getQueryParamsFirst(href).get("mednr").trim();
         }
 
         result.setId(id);
+
+        // check if new share button is available (allows to share a link to the standard
+        // frameset of the OPAC instead of only the detail frame)
+        newShareLinks = doc.select("#sharebutton").size() > 0;
 
         Elements table = doc.select("table").get(1).select("tr");
 
@@ -500,7 +515,7 @@ public class IOpac extends BaseApi implements OpacApi {
             }
         }
 
-        result.addCopy(e);
+        if (e.size() > 0) result.addCopy(e);
 
         return result;
     }
@@ -559,8 +574,8 @@ public class IOpac extends BaseApi implements OpacApi {
             doc = Jsoup.parse(html);
         }
 
-        if (doc.select("h1").text().contains("fehlgeschlagen")
-                || doc.select("h1").text().contains("Achtung")) {
+        if (doc.text().contains("fehlgeschlagen")
+                || doc.text().contains("Achtung") || doc.text().contains("nicht m")) {
             return new ReservationResult(MultiStepResult.Status.ERROR, doc
                     .select("table").first().text().trim());
         } else {
@@ -665,9 +680,10 @@ public class IOpac extends BaseApi implements OpacApi {
             Element form = doc.select("form[name=form1]").first();
             String sessionid = form.select("input[name=sessionid]").attr(
                     "value");
+            String kndnr = form.select("input[name=kndnr]").attr("value");
             String mednr = form.select("input[name=mednr]").attr("value");
             httpGet(opac_url + "/cgi-bin/di.exe?mode=9&kndnr="
-                    + account.getName() + "&mednr=" + mednr + "&sessionid="
+                    + kndnr + "&mednr=" + mednr + "&sessionid="
                     + sessionid + "&psh100=Stornieren", getDefaultEncoding());
             return new CancelResult(MultiStepResult.Status.OK);
         } catch (Throwable e) {
@@ -836,6 +852,9 @@ public class IOpac extends BaseApi implements OpacApi {
                         String value = cell.select("input.VerlAllCheckboxOK").first().val();
                         e.put(AccountData.KEY_LENT_LINK, "NEW" + value);
                         e.put(AccountData.KEY_LENT_ID, value.split(";")[0]);
+                        if (cell.select("input.VerlAllCheckboxOK").hasAttr("disabled")) {
+                            e.put(AccountData.KEY_LENT_RENEWABLE, "N");
+                        }
                     } else {
                         // previous versions - link for prolonging on every medium
                         String link = cell.select("a").attr("href");
@@ -1045,7 +1064,11 @@ public class IOpac extends BaseApi implements OpacApi {
 
     @Override
     public String getShareUrl(String id, String title) {
-        return opac_url + "/cgi-bin/di.exe?cMedNr=" + id + "&mode=23";
+        if (newShareLinks) {
+            return opac_url + dir + "/?mednr=" + id;
+        } else {
+            return opac_url + "/cgi-bin/di.exe?cMedNr=" + id + "&mode=23";
+        }
     }
 
     @Override
