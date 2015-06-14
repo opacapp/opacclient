@@ -4,11 +4,11 @@
     "city": "Kamp-Lintfort",
     "country": "Deutschland",
     "data": {
-        "baseurl": "https://opac.hochschule-rhein-waal.de/webOPACClient.nrwsis"
+        "baseurl": "https://nrwoz2.bib-bvb.de/webOPACClient.nrwsis"
     },
     "geo": [
-        51.4957751,
-        6.532127699999999
+        51.500196,
+        6.546012
     ],
     "information": "http://www.hochschule-rhein-waal.de/hochschulbibliothek/oeffnungszeiten.html",
     "state": "Nordrhein-Westfalen",
