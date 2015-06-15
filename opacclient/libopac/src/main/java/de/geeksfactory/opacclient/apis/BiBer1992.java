@@ -323,7 +323,7 @@ public class BiBer1992 extends BaseApi {
         try {
             m_opac_url = m_data.getString("baseurl");
             m_opac_dir = m_data.getString("opacdir");
-            m_opac_suffix = m_data.getString("opacsuffix");
+            m_opac_suffix = m_data.optString("opacsuffix", ".C");
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }

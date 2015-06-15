@@ -8,8 +8,8 @@ android {
         applicationId "de.geeksfactory.opacclient"
         minSdkVersion 8
         targetSdkVersion 22
-        versionCode 118
-        versionName "4.1.5"
+        versionCode 119
+        versionName "4.1.6"
     }
 
     lintOptions {
