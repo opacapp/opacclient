@@ -487,7 +487,7 @@ public class Bibliotheca extends BaseApi {
             if (tr.child(0).hasClass("detail_feld")) {
                 String title = tr.child(0).text();
                 String content = tr.child(1).text();
-                if (title.equals("Gesamtwerk:")) {
+                if (title.equals("Gesamtwerk:") || title.equals("Erschienen in:")) {
                     try {
                         if (tr.child(1).select("a").size() > 0) {
                             Element link = tr.child(1).select("a").first();

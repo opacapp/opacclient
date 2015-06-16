@@ -322,6 +322,9 @@ public class Library implements Comparable<Library> {
             g = deCollator.compare(state, arg0.getState());
             if (g == 0) {
                 g = deCollator.compare(city, arg0.getCity());
+                if (g == 0) {
+                    g = deCollator.compare(title, arg0.getTitle());
+                }
             }
         }
         return g;

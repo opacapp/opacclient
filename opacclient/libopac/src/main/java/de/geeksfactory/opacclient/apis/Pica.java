@@ -976,9 +976,15 @@ public class Pica extends BaseApi implements OpacApi {
                 getDefaultEncoding()), getDefaultEncoding());
         Document doc = Jsoup.parse(html);
 
+        AccountData res = new AccountData(account.getId());
+
         if (doc.select(".cnt .alert, .cnt .error").size() > 0) {
-            throw new OpacErrorException(doc.select(".cnt .alert, .cnt .error")
-                                            .text());
+            String text = doc.select(".cnt .alert, .cnt .error").text();
+            if (doc.select("table[summary^=User data]").size() > 0) {
+                res.setWarning(text);
+            } else {
+                throw new OpacErrorException(text);
+            }
         }
         //noinspection StatementWithEmptyBody
         if (doc.select("input[name=BOR_PW_ENC]").size() > 0) {
@@ -997,8 +1003,6 @@ public class Pica extends BaseApi implements OpacApi {
                 + "/USERINFO?ACT=UI_LOR&BOR_U=" + account.getName()
                 + "&BOR_PW_ENC=" + pwEncoded, getDefaultEncoding());
         Document doc2 = Jsoup.parse(html);
-
-        AccountData res = new AccountData(account.getId());
 
         List<Map<String, String>> media = new ArrayList<>();
         List<Map<String, String>> reserved = new ArrayList<>();
