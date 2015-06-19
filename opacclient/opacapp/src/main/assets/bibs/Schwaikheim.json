@@ -14,7 +14,7 @@
             "status": -1,
             "title": 1
         },
-        "baseurl": "http://buecherei.schwaikheim.de/webopac",
+        "baseurl": "http://buecherei.schwaikheim.de",
         "copiestable": {
             "barcode": -1,
             "branch": -1,
