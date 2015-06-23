@@ -772,6 +772,10 @@ public interface OpacApi {
              */
             UNSUPPORTED,
             /**
+             * The user's web browser should be opened
+             */
+            EXTERNAL,
+            /**
              * An error occured
              */
             ERROR,

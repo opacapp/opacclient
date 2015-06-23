@@ -3,8 +3,10 @@ package de.geeksfactory.opacclient.frontend;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
@@ -81,6 +83,11 @@ public class MultiStepResultHelper<Arg> {
             case EMAIL_NEEDED:
                 SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
                 doStep(result.getActionIdentifier(), sp.getString("email", ""));
+                break;
+            case EXTERNAL:
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(result.getMessage()));
+                context.startActivity(i);
                 break;
             case ERROR:
                 if (callback != null) {

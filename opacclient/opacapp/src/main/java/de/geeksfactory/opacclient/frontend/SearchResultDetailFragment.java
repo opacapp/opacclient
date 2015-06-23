@@ -1076,8 +1076,7 @@ public class SearchResultDetailFragment extends Fragment
         if (accounts.size() == 0) {
             dialog_no_credentials();
         } else if (accounts.size() > 1
-                && !getActivity().getIntent().getBooleanExtra("reservation",
-                false)
+                && !getActivity().getIntent().getBooleanExtra("reservation", false)
                 && (app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_CHANGE_ACCOUNT) != 0
                 && !(SearchResultDetailFragment.this.id == null
                 || SearchResultDetailFragment.this.id.equals("null") ||

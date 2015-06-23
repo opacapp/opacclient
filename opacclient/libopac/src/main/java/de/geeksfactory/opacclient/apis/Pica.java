@@ -721,6 +721,18 @@ public class Pica extends BaseApi implements OpacApi {
                     return res;
                 }
 
+                try {
+                    URL link = new URL(json.getJSONObject(selectedPos).getString("link"));
+                    if (!opac_url.contains(link.getHost())) {
+                        ReservationResult res = new ReservationResult(
+                                MultiStepResult.Status.EXTERNAL);
+                        res.setMessage(link.toString());
+                        return res;
+                    }
+                } catch(MalformedURLException e) {
+                    // empty on purpose
+                }
+
                 if (json.getJSONObject(selectedPos).getBoolean("multi")) {
                     // A copy must be selected
                     String html1 = httpGet(json.getJSONObject(selectedPos)
