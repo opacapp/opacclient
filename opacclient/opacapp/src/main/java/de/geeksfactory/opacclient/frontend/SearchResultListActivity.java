@@ -65,8 +65,8 @@ public class SearchResultListActivity extends OpacActivity implements
                                 .getFragment(savedInstanceState, "listFragment");
             }
             if (savedInstanceState.containsKey("detailFragment")) {
-                listFragment =
-                        (SearchResultListFragment) getSupportFragmentManager()
+                detailFragment =
+                        (SearchResultDetailFragment) getSupportFragmentManager()
                                 .getFragment(savedInstanceState, "detailFragment");
             }
         }

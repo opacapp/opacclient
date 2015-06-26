@@ -168,6 +168,7 @@ public abstract class ExpandingCardListManager {
             }
             return;
         }
+        resetViews();
 
         for (int i = 0; i < position; i++) {
             llUpper.addView(getView(i, llUpper));
@@ -272,6 +273,9 @@ public abstract class ExpandingCardListManager {
     private void collapse(final CompleteListener listener) {
         AnimatorSet set = new AnimatorSet();
         View expandedView = expandedCard.getChildAt(0);
+        if (expandedView == null) {
+            return;
+        }
         int defaultMargin = context.getResources().getDimensionPixelSize(
                 R.dimen.card_side_margin_default);
         int expandedMargin = context.getResources().getDimensionPixelSize(
@@ -302,24 +306,28 @@ public abstract class ExpandingCardListManager {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                if (interceptor != null) interceptor.onCollapseAnimationEnd();
-                mainCard.setVisibility(View.VISIBLE);
-                upperCard.setVisibility(View.GONE);
-                lowerCard.setVisibility(View.GONE);
-                expandedCard.clearAnimation();
-                expandedCard.setVisibility(View.GONE);
-                llUpper.removeAllViews();
-                llLower.removeAllViews();
-                expandedCard.removeAllViews();
-                expandedPosition = -1;
-                unexpandedHeight = 0;
-                expandedTranslationY = 0;
-                lowerTranslationY = 0;
-                heightDifference = 0;
+                resetViews();
                 if (listener != null) listener.onComplete();
             }
         });
         set.setDuration(ANIMATION_DURATION).start();
+    }
+
+    public void resetViews() {
+        if (interceptor != null) interceptor.onCollapseAnimationEnd();
+        mainCard.setVisibility(View.VISIBLE);
+        upperCard.setVisibility(View.GONE);
+        lowerCard.setVisibility(View.GONE);
+        expandedCard.clearAnimation();
+        expandedCard.setVisibility(View.GONE);
+        llUpper.removeAllViews();
+        llLower.removeAllViews();
+        expandedCard.removeAllViews();
+        expandedPosition = -1;
+        unexpandedHeight = 0;
+        expandedTranslationY = 0;
+        lowerTranslationY = 0;
+        heightDifference = 0;
     }
 
     public void notifyDataSetChanged() {
