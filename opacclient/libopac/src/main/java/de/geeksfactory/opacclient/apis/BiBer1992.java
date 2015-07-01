@@ -106,6 +106,7 @@ public class BiBer1992 extends BaseApi {
 
     private String m_opac_url = "";
     private String m_opac_dir = "opac"; // sometimes also "opax"
+    private String m_opac_suffix = ".C"; // sometimes also ".S"
     private JSONObject m_data;
 
     // private int m_resultcount = 10;
@@ -322,6 +323,7 @@ public class BiBer1992 extends BaseApi {
         try {
             m_opac_url = m_data.getString("baseurl");
             m_opac_dir = m_data.getString("opacdir");
+            m_opac_suffix = m_data.optString("opacsuffix", ".C");
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
@@ -381,7 +383,7 @@ public class BiBer1992 extends BaseApi {
         m_nameValuePairs.add(new BasicNameValuePair("FROMPOS", String
                 .valueOf(startNum)));
 
-        String html = httpPost(m_opac_url + "/" + m_opac_dir + "/query.C",
+        String html = httpPost(m_opac_url + "/" + m_opac_dir + "/query" + m_opac_suffix,
                 new UrlEncodedFormEntity(m_nameValuePairs),
                 getDefaultEncoding());
         return parse_search(html, page);
@@ -456,7 +458,7 @@ public class BiBer1992 extends BaseApi {
                 if (elem.size() > 0) {
                     String nameID = elem.get(0).attr("name").trim();
                     String hrefID = "/" + m_opac_dir
-                            + "/ftitle.C?LANG=de&FUNC=full&" + nameID + "=YES";
+                            + "/ftitle" + m_opac_suffix + "?LANG=de&FUNC=full&" + nameID + "=YES";
                     sr.setId(hrefID);
                 }
             }
@@ -523,7 +525,7 @@ public class BiBer1992 extends BaseApi {
         }
 
         if (!id.contains("ftitle")) {
-            id = "ftitle.C?LANG=de&FUNC=full&" + id + "=YES";
+            id = "ftitle" + m_opac_suffix + "?LANG=de&FUNC=full&" + id + "=YES";
         }
         // normally full path like
         // "/opac/ftitle.C?LANG=de&FUNC=full&331313252=YES"
@@ -718,8 +720,8 @@ public class BiBer1992 extends BaseApi {
             if (document.select("input[type=checkbox]").size() > 0) {
                 item.setReservation_info(document
                         .select("input[type=checkbox]").first().attr("name"));
-            } else if (document.select("a[href^=reserv.C]").size() > 0) {
-                String href = document.select("a[href^=reserv.C]").first()
+            } else if (document.select("a[href^=reserv" + m_opac_suffix + "]").size() > 0) {
+                String href = document.select("a[href^=reserv" + m_opac_suffix + "]").first()
                                       .attr("href");
                 item.setReservation_info(href.substring(href.indexOf("resF_")));
             } else {
@@ -754,7 +756,7 @@ public class BiBer1992 extends BaseApi {
                     : "ID=" + resinfo;
 
             String html = httpGet(m_opac_url + "/" + m_opac_dir
-                            + "/reserv.C?LANG=de&FUNC=" + func + "&" + id,
+                            + "/reserv" + m_opac_suffix + "?LANG=de&FUNC=" + func + "&" + id,
                     getDefaultEncoding());
             Document doc = Jsoup.parse(html);
             newStyleReservations = doc
@@ -810,7 +812,7 @@ public class BiBer1992 extends BaseApi {
                     .split(":")[0]));
 
             String html = httpPost(m_opac_url + "/" + m_opac_dir
-                            + "/setreserv.C", new UrlEncodedFormEntity(nameValuePairs),
+                            + "/setreserv" + m_opac_suffix, new UrlEncodedFormEntity(nameValuePairs),
                     getDefaultEncoding());
 
             Document doc = Jsoup.parse(html);
@@ -854,9 +856,9 @@ public class BiBer1992 extends BaseApi {
         // Offenburg: URL is .../opac/verl.C
         // Hagen: URL is .../opax/renewmedia.C
         if (m_opac_dir.equals("opax")) {
-            command = "/renewmedia.C";
+            command = "/renewmedia" + m_opac_suffix;
         } else {
-            command = "/verl.C";
+            command = "/verl" + m_opac_suffix;
         }
 
         List<NameValuePair> nameValuePairs = new ArrayList<>(2);
@@ -944,7 +946,7 @@ public class BiBer1992 extends BaseApi {
         }
         nameValuePairs.add(new BasicNameValuePair(media, "YES"));
 
-        String action = m_opac_dir.equals("opax") ? "/delreserv.C" : "/vorml.C";
+        String action = m_opac_dir.equals("opax") ? "/delreserv" + m_opac_suffix : "/vorml" + m_opac_suffix;
 
         String html = httpPost(m_opac_url + "/" + m_opac_dir + action,
                 new UrlEncodedFormEntity(nameValuePairs), getDefaultEncoding());

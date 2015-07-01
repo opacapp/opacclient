@@ -14,7 +14,7 @@
             "status": -1,
             "title": 1
         },
-        "baseurl": "http://opac.stadt-hof.org",
+        "baseurl": "http://opac.stadt-hof.org/webopac",
         "copiestable": {
             "barcode": -1,
             "branch": 3,

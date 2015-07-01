@@ -109,10 +109,28 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/tvCopies"
+                    android:id="@+id/tvVolumes"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/llDetails"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/volumes"
+                    android:textAppearance="@style/TextAppearance.Opacapp.Subhead"/>
+
+                <LinearLayout
+                    android:id="@+id/llVolumes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvVolumes"
+                    android:orientation="vertical">
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvCopies"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/llVolumes"
                     android:layout_marginBottom="10dp"
                     android:layout_marginTop="8dp"
                     android:text="@string/copies_head"

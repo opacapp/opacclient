@@ -4,7 +4,7 @@
     "city": "Bochum",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://opac.ub.rub.de:8080/webOPACClient"
+        "baseurl": "https://opac.ub.ruhr-uni-bochum.de/webOPACClient"
     },
     "geo": [
         51.4450318,

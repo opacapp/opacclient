@@ -1,6 +1,6 @@
 {
     "account_supported": true,
-    "api": "bibermopax",
+    "api": "biber1992",
     "city": "Waiblingen",
     "country": "Deutschland",
     "data": {
@@ -15,8 +15,6 @@
             "title": 7
         },
         "baseurl": "http://www.stabue-online.waiblingen.de",
-        "onleihe": "http://www4.onleihe.de/rems-murr",
-        "onleihe_libraryId": "468",
         "copiestable": {
             "barcode": 3,
             "branch": 1,
@@ -26,7 +24,6 @@
             "returndate": -1,
             "status": 4
         },
-        "information": "https://info.opacapp.de/waiblingen.html",
         "mediatypes": {
             "1": "BOOK",
             "2": "MAGAZINE",
@@ -61,6 +58,7 @@
         48.624421,
         9.3469069
     ],
+    "information": "https://info.opacapp.de/waiblingen.html",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtb\u00fccherei"
 }

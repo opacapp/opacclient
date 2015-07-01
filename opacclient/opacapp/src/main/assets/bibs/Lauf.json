@@ -1,7 +1,7 @@
 {
     "account_supported": true,
     "api": "bibliotheca",
-    "city": "Bochum",
+    "city": "Lauf",
     "country": "Deutschland",
     "data": {
         "accounttable": {
@@ -10,16 +10,20 @@
             "returndate": 2,
             "title": 1
         },
-        "baseurl": "http://opac.efh-bochum.de/webopac",
+        "baseurl": "http://212.204.71.154/webopac",
         "copiestable": {
-            "returndate": 3,
-            "status": 2
+            "barcode": 0,
+            "branch": 4,
+            "department": 2,
+            "location": 1,
+            "returndate": 5,
+            "status": 3
         },
         "mediatypes": {
+            "blu-ray.gif": "BLURAY",
+            "emedien.gif": "EDOC",
             "mCasetteS.gif": "AUDIO_CASSETTE",
-            "mCompuS.gif": "EDOC",
             "mDVDS.gif": "DVD",
-            "mEbookS.gif": "EBOOK",
             "mFilmS.gif": "MOVIE"
         },
         "reservationtable": {
@@ -30,10 +34,10 @@
         }
     },
     "geo": [
-        51.4818445,
-        7.216236299999999
+        49.5105534,
+        11.2773854
     ],
-    "information": "http://bibliothek.efh-bochum.de/",
-    "state": "Nordrhein-Westfalen",
-    "title": "Evangelische Fachhochschule"
+    "information": "http://www.stadtbuecherei-lauf.de/",
+    "state": "Bayern",
+    "title": "Stadtb\u00fccherei"
 }

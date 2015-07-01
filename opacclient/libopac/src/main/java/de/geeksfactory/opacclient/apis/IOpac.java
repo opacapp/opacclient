@@ -23,6 +23,7 @@ package de.geeksfactory.opacclient.apis;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -103,6 +104,8 @@ public class IOpac extends BaseApi implements OpacApi {
     protected String rechnr;
     protected int results_total;
     protected int maxProlongCount = -1;
+
+    protected boolean newShareLinks;
 
     @Override
     public void init(Library lib) {
@@ -330,17 +333,26 @@ public class IOpac extends BaseApi implements OpacApi {
             // Status
             String status = tr.select("td").get(colmap.get("returndate"))
                               .text().trim().replace("\u00a0", "");
-            if (status.equals("")
-                    || status.toLowerCase(Locale.GERMAN).contains("onleihe")
-                    || status.contains("verleihbar")
-                    || status.contains("entleihbar")
-                    || status.contains("ausleihbar")) {
-                sr.setStatus(Status.GREEN);
-            } else {
+            SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
+            try {
+                df.parse(status);
+                // this is a return date
                 sr.setStatus(Status.RED);
                 sr.setInnerhtml(sr.getInnerhtml() + "<br><i>"
                         + stringProvider.getString(StringProvider.LENT_UNTIL)
                         + " " + status + "</i>");
+            } catch (ParseException e) {
+                // this is a different status text
+                String lc = status.toLowerCase(Locale.GERMAN);
+                if ((lc.equals("")
+                        || lc.toLowerCase(Locale.GERMAN).contains("onleihe")
+                        || lc.contains("verleihbar") || lc.contains("entleihbar")
+                        || lc.contains("ausleihbar")) && !lc.contains("nicht")) {
+                    sr.setStatus(Status.GREEN);
+                } else {
+                    sr.setStatus(Status.YELLOW);
+                    sr.setInnerhtml(sr.getInnerhtml() + "<br><i>" + status + "</i>");
+                }
             }
 
             // In some libraries (for example search for "atelier" in Preetz)
@@ -435,10 +447,14 @@ public class IOpac extends BaseApi implements OpacApi {
             id = doc.select("input[name=mednr]").first().val().trim();
         } else {
             String href = doc.select("a[href*=mednr]").first().attr("href");
-            id = getQueryParamsFirst(href).get("mednr");
+            id = getQueryParamsFirst(href).get("mednr").trim();
         }
 
         result.setId(id);
+
+        // check if new share button is available (allows to share a link to the standard
+        // frameset of the OPAC instead of only the detail frame)
+        newShareLinks = doc.select("#sharebutton").size() > 0;
 
         Elements table = doc.select("table").get(1).select("tr");
 
@@ -499,7 +515,7 @@ public class IOpac extends BaseApi implements OpacApi {
             }
         }
 
-        result.addCopy(e);
+        if (e.size() > 0) result.addCopy(e);
 
         return result;
     }
@@ -558,8 +574,8 @@ public class IOpac extends BaseApi implements OpacApi {
             doc = Jsoup.parse(html);
         }
 
-        if (doc.select("h1").text().contains("fehlgeschlagen")
-                || doc.select("h1").text().contains("Achtung")) {
+        if (doc.text().contains("fehlgeschlagen")
+                || doc.text().contains("Achtung") || doc.text().contains("nicht m")) {
             return new ReservationResult(MultiStepResult.Status.ERROR, doc
                     .select("table").first().text().trim());
         } else {
@@ -571,37 +587,88 @@ public class IOpac extends BaseApi implements OpacApi {
     @Override
     public ProlongResult prolong(String media, Account account, int useraction,
             String Selection) throws IOException {
-        String html = httpGet(opac_url + "/" + media, getDefaultEncoding());
-        Document doc = Jsoup.parse(html);
-        if (doc.select("table th").size() > 0) {
-            if (doc.select("h1").size() > 0) {
-                if (doc.select("h1").first().text().contains("Hinweis")) {
-                    return new ProlongResult(MultiStepResult.Status.ERROR, doc
-                            .select("table th").first().text());
+        // internal convention: We add "NEW" to the media ID to show that we have the new iOPAC
+        // version
+        if (media.startsWith("NEW")) {
+            String mediaNr = media.substring(3);
+            String html = httpGet(opac_url + "/cgi-bin/di.exe?mode=42&MedNrVerlAll=" +
+                    URLEncoder.encode(mediaNr, "UTF-8"), getDefaultEncoding());
+
+            Document doc = Jsoup.parse(html);
+            if (doc.text().contains("1 Medium wurde verl")) {
+                return new ProlongResult(MultiStepResult.Status.OK);
+            } else {
+                return new ProlongResult(MultiStepResult.Status.ERROR, doc.text());
+            }
+        } else {
+            String html = httpGet(opac_url + "/" + media, getDefaultEncoding());
+            Document doc = Jsoup.parse(html);
+            if (doc.select("table th").size() > 0) {
+                if (doc.select("h1").size() > 0) {
+                    if (doc.select("h1").first().text().contains("Hinweis")) {
+                        return new ProlongResult(MultiStepResult.Status.ERROR, doc
+                                .select("table th").first().text());
+                    }
+                }
+                try {
+                    Element form = doc.select("form[name=form1]").first();
+                    String sessionid = form.select("input[name=sessionid]").attr(
+                            "value");
+                    String mednr = form.select("input[name=mednr]").attr("value");
+                    httpGet(opac_url + "/cgi-bin/di.exe?mode=8&kndnr="
+                                    + account.getName() + "&mednr=" + mednr + "&sessionid="
+                                    + sessionid + "&psh100=Verl%C3%A4ngern",
+                            getDefaultEncoding());
+                    return new ProlongResult(MultiStepResult.Status.OK);
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                    return new ProlongResult(MultiStepResult.Status.ERROR);
                 }
             }
-            try {
-                Element form = doc.select("form[name=form1]").first();
-                String sessionid = form.select("input[name=sessionid]").attr(
-                        "value");
-                String mednr = form.select("input[name=mednr]").attr("value");
-                httpGet(opac_url + "/cgi-bin/di.exe?mode=8&kndnr="
-                                + account.getName() + "&mednr=" + mednr + "&sessionid="
-                                + sessionid + "&psh100=Verl%C3%A4ngern",
-                        getDefaultEncoding());
-                return new ProlongResult(MultiStepResult.Status.OK);
-            } catch (Throwable e) {
-                e.printStackTrace();
-                return new ProlongResult(MultiStepResult.Status.ERROR);
-            }
+            return new ProlongResult(MultiStepResult.Status.ERROR);
         }
-        return new ProlongResult(MultiStepResult.Status.ERROR);
     }
 
     @Override
     public ProlongAllResult prolongAll(Account account, int useraction,
             String selection) throws IOException {
-        return null;
+        Document doc = getAccountPage(account);
+        // Check if the iOPAC verion supports this feature
+        if (doc.select("button.verlallbutton").size() > 0) {
+            List<NameValuePair> params = new ArrayList<>();
+            params.add(new BasicNameValuePair("mode", "42"));
+            for (Element checkbox : doc.select("input.VerlAllCheckboxOK")) {
+                params.add(new BasicNameValuePair("MedNrVerlAll", checkbox.val()));
+            }
+            String html = httpGet(
+                    opac_url + "/cgi-bin/di.exe?" + URLEncodedUtils.format(params, "UTF-8"),
+                    getDefaultEncoding());
+            Document doc2 = Jsoup.parse(html);
+            Pattern pattern = Pattern.compile("(\\d+ Medi(?:en|um) wurden? verl.ngert)\\s*(\\d+ " +
+                    "Medi(?:en|um) wurden? nicht verl.ngert)?");
+            Matcher matcher = pattern.matcher(doc2.text());
+            if (matcher.find()) {
+                String text1 = matcher.group(1);
+                String text2 = matcher.group(2);
+                List<Map<String, String>> list = new ArrayList<>();
+                Map<String, String> map1 = new HashMap<>();
+                // TODO: We are abusing the ProlongAllResult.KEY_LINE_ ... keys here because we
+                // do not get information about all the media
+                map1.put(ProlongAllResult.KEY_LINE_TITLE, text1);
+                list.add(map1);
+                if (!text2.equals("")) {
+                    Map<String, String> map2 = new HashMap<>();
+                    map2.put(ProlongAllResult.KEY_LINE_TITLE, text2);
+                    list.add(map2);
+                }
+                return new ProlongAllResult(MultiStepResult.Status.OK, list);
+            } else {
+                return new ProlongAllResult(MultiStepResult.Status.ERROR, doc2.text());
+            }
+        } else {
+            return new ProlongAllResult(MultiStepResult.Status.ERROR,
+                    stringProvider.getString(StringProvider.UNSUPPORTED_IN_LIBRARY));
+        }
     }
 
     @Override
@@ -613,9 +680,10 @@ public class IOpac extends BaseApi implements OpacApi {
             Element form = doc.select("form[name=form1]").first();
             String sessionid = form.select("input[name=sessionid]").attr(
                     "value");
+            String kndnr = form.select("input[name=kndnr]").attr("value");
             String mednr = form.select("input[name=mednr]").attr("value");
             httpGet(opac_url + "/cgi-bin/di.exe?mode=9&kndnr="
-                    + account.getName() + "&mednr=" + mednr + "&sessionid="
+                    + kndnr + "&mednr=" + mednr + "&sessionid="
                     + sessionid + "&psh100=Stornieren", getDefaultEncoding());
             return new CancelResult(MultiStepResult.Status.OK);
         } catch (Throwable e) {
@@ -631,15 +699,7 @@ public class IOpac extends BaseApi implements OpacApi {
             start();
         }
 
-        List<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("sleKndNr", account.getName()));
-        params.add(new BasicNameValuePair("slePw", account.getPassword()));
-        params.add(new BasicNameValuePair("pshLogin", "Login"));
-
-        String html = httpPost(opac_url + "/cgi-bin/di.exe",
-                new UrlEncodedFormEntity(params, "iso-8859-1"),
-                getDefaultEncoding());
-        Document doc = Jsoup.parse(html);
+        Document doc = getAccountPage(account);
 
         AccountData res = new AccountData(account.getId());
 
@@ -656,13 +716,14 @@ public class IOpac extends BaseApi implements OpacApi {
         res.setReservations(reserved);
         if (doc.select("h4:contains(Kontostand)").size() > 0) {
             Element h4 = doc.select("h4:contains(Kontostand)").first();
-            Pattern regex = Pattern.compile("Kontostand (\\d+\\.\\d\\d EUR)");
+            Pattern regex = Pattern.compile("Kontostand (-?\\d+\\.\\d\\d EUR)");
             Matcher matcher = regex.matcher(h4.text());
             if (matcher.find()) res.setPendingFees(matcher.group(1));
         }
         if (doc.select("h4:contains(Ausweis g)").size() > 0) {
             Element h4 = doc.select("h4:contains(Ausweis g)").first();
-            Pattern regex = Pattern.compile("Ausweis g.+ltig bis (\\d\\d.\\d\\d.\\d\\d\\d\\d)");
+            Pattern regex =
+                    Pattern.compile("Ausweis g.+ltig bis\\s*.\\s*(\\d\\d.\\d\\d.\\d\\d\\d\\d)");
             Matcher matcher = regex.matcher(h4.text());
             if (matcher.find()) res.setValidUntil(matcher.group(1));
         }
@@ -695,8 +756,7 @@ public class IOpac extends BaseApi implements OpacApi {
 
     }
 
-    public void checkAccountData(Account account) throws IOException,
-            OpacErrorException {
+    private Document getAccountPage(Account account) throws IOException {
         List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("sleKndNr", account.getName()));
         params.add(new BasicNameValuePair("slePw", account.getPassword()));
@@ -705,7 +765,12 @@ public class IOpac extends BaseApi implements OpacApi {
         String html = httpPost(opac_url + "/cgi-bin/di.exe",
                 new UrlEncodedFormEntity(params, "iso-8859-1"),
                 getDefaultEncoding());
-        Document doc = Jsoup.parse(html);
+        return Jsoup.parse(html);
+    }
+
+    public void checkAccountData(Account account) throws IOException,
+            OpacErrorException {
+        Document doc = getAccountPage(account);
         if (doc.select("h1").text().contains("fehlgeschlagen")) {
             throw new OpacErrorException(doc.select("h1, th").text());
         }
@@ -714,7 +779,7 @@ public class IOpac extends BaseApi implements OpacApi {
     protected void parse_medialist(List<Map<String, String>> media,
             Document doc) {
 
-        Elements copytrs = doc.select("a[name=AUS] ~ table").first()
+        Elements copytrs = doc.select("a[name=AUS] ~ table, a[name=AUS] ~ form table").first()
                               .select("tr");
         doc.setBaseUri(opac_url);
 
@@ -748,18 +813,18 @@ public class IOpac extends BaseApi implements OpacApi {
                         tr.child(copymap.optInt("author", 1)).text().trim()
                           .replace("\u00a0", ""));
             }
+            if (copymap.optInt("format", -1) >= 0) {
+                e.put(AccountData.KEY_LENT_FORMAT,
+                        tr.child(copymap.optInt("format", -1)).text().trim()
+                          .replace("\u00a0", ""));
+            }
             int prolongCount = 0;
             if (copymap.optInt("prolongcount", 3) >= 0) {
                 prolongCount = Integer.parseInt(tr
                         .child(copymap.optInt("prolongcount", 3)).text().trim()
                         .replace("\u00a0", ""));
+                e.put(AccountData.KEY_LENT_STATUS, String.valueOf(prolongCount) + "x verl.");
             }
-            /*
-             * not needed currently, because in Schleswig books can only be pro-
-			 * longed once, so the prolong count is visible from the renewable
-			 * status e.put(AccountData.KEY_LENT_STATUS,
-			 * String.valueOf(prolongCount) + "x verl.");
-			 */
             if (maxProlongCount != -1) {
                 e.put(AccountData.KEY_LENT_RENEWABLE,
                         prolongCount < maxProlongCount ? "Y" : "N");
@@ -779,14 +844,27 @@ public class IOpac extends BaseApi implements OpacApi {
             }
             if (copymap.optInt("prolongurl", 5) >= 0) {
                 if (tr.children().size() > copymap.optInt("prolongurl", 5)) {
-                    String link = tr.child(copymap.optInt("prolongurl", 5))
-                                    .select("a").attr("href");
-                    e.put(AccountData.KEY_LENT_LINK, link);
-                    // find media number with regex
-                    Pattern pattern = Pattern.compile("mednr=([^&]*)&");
-                    Matcher matcher = pattern.matcher(link);
-                    if (matcher.find() && matcher.group() != null) {
-                        e.put(AccountData.KEY_LENT_ID, matcher.group(1));
+                    Element cell = tr.child(copymap.optInt("prolongurl", 5));
+                    if (cell.select("input.VerlAllCheckboxOK").size() > 0) {
+                        // new iOPAC Version 1.45 - checkboxes to prolong multiple items
+                        // internal convention: We add "NEW" to the media ID to show that we have
+                        // the new iOPAC version
+                        String value = cell.select("input.VerlAllCheckboxOK").first().val();
+                        e.put(AccountData.KEY_LENT_LINK, "NEW" + value);
+                        e.put(AccountData.KEY_LENT_ID, value.split(";")[0]);
+                        if (cell.select("input.VerlAllCheckboxOK").hasAttr("disabled")) {
+                            e.put(AccountData.KEY_LENT_RENEWABLE, "N");
+                        }
+                    } else {
+                        // previous versions - link for prolonging on every medium
+                        String link = cell.select("a").attr("href");
+                        e.put(AccountData.KEY_LENT_LINK, link);
+                        // find media number with regex
+                        Pattern pattern = Pattern.compile("mednr=([^&]*)&");
+                        Matcher matcher = pattern.matcher(link);
+                        if (matcher.find() && matcher.group() != null) {
+                            e.put(AccountData.KEY_LENT_ID, matcher.group(1));
+                        }
                     }
                 }
             }
@@ -986,13 +1064,17 @@ public class IOpac extends BaseApi implements OpacApi {
 
     @Override
     public String getShareUrl(String id, String title) {
-        return opac_url + "/cgi-bin/di.exe?cMedNr=" + id + "&mode=23";
+        if (newShareLinks) {
+            return opac_url + dir + "/?mednr=" + id;
+        } else {
+            return opac_url + "/cgi-bin/di.exe?cMedNr=" + id + "&mode=23";
+        }
     }
 
     @Override
     public int getSupportFlags() {
-        return SUPPORT_FLAG_ENDLESS_SCROLLING | SUPPORT_FLAG_CHANGE_ACCOUNT;
-
+        return SUPPORT_FLAG_ENDLESS_SCROLLING | SUPPORT_FLAG_CHANGE_ACCOUNT |
+                SUPPORT_FLAG_ACCOUNT_PROLONG_ALL;
     }
 
     public void updateRechnr(Document doc) {

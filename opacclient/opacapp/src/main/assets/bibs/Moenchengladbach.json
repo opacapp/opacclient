@@ -1,20 +1,20 @@
 {
     "account_supported": true,
     "api": "biber1992",
-    "city": "Osnabr\u00fcck",
+    "city": "M\u00f6nchengladbach",
     "country": "Deutschland",
     "data": {
         "accounttable": {
-            "author": 7,
-            "barcode": 4,
+            "author": 9,
+            "barcode": 5,
             "homebranch": -1,
             "lendingbranch": -1,
             "prolongurl": 5,
-            "returndate": 3,
-            "status": 5,
-            "title": 7
+            "returndate": 4,
+            "status": 7,
+            "title": 9
         },
-        "baseurl": "https://katalog.stadtbibliothek.osnabrueck.de",
+        "baseurl": "http://bibliothek.moenchengladbach.de",
         "copiestable": {
             "barcode": 3,
             "branch": 1,
@@ -26,29 +26,28 @@
         },
         "mediatypes": {
             "1": "BOOK",
-            "10": "MAP",
-            "11": "DVD",
             "2": "MAGAZINE",
-            "23": "CD_SOFTWARE",
-            "30": "EDOC",
-            "35": "EBOOK",
-            "4": "MOVIE",
-            "6": "CD",
+            "10": "MAP",
             "8": "SCORE_MUSIC",
-            "9": "BOARDGAME"
+            "21": "CD",
+            "6": "CD_MUSIC",
+            "11": "MOVIE",
+            "20": "AUDIOBOOK",
+            "23": "CD_SOFTWARE",
+            "30": "EBOOK"
         },
         "opacdir": "opax",
+		"opacsuffix": ".S",
         "searchtable": [
             2,
-            3,
             4
         ]
     },
     "geo": [
-        52.2799112,
-        8.0471788
+        51.1967849,
+        6.4369091
     ],
-    "information": "https://katalog.stadtbibliothek.osnabrueck.de/opax/de/RBK/pA_B.html.S",
-    "state": "Niedersachsen",
+    "information": "http://www.moenchengladbach.de/index.php?id=stadtbibliothek",
+    "state": "Nordrhein-Westfalen",
     "title": "Stadtbibliothek"
 }

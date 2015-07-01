@@ -28,7 +28,8 @@
         <ScrollView
             android:id="@+id/svAccount"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:transitionGroup="true">
 
             <RelativeLayout
                 android:id="@+id/rlAccView"

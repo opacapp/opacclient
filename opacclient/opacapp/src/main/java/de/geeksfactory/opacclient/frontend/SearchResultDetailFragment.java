@@ -106,8 +106,8 @@ public class SearchResultDetailFragment extends Fragment
     protected View coverBackground;
     protected ObservableScrollView scrollView;
     protected View gradientBottom, gradientTop, tint;
-    protected TextView tvCopies;
-    protected LinearLayout llDetails, llCopies;
+    protected TextView tvCopies, tvVolumes;
+    protected LinearLayout llDetails, llCopies, llVolumes;
     protected ProgressBar progressBar;
     protected RelativeLayout detailsLayout;
     protected FrameLayout errorView;
@@ -328,10 +328,12 @@ public class SearchResultDetailFragment extends Fragment
         //tvTitel = (TextView) view.findViewById(R.id.tvTitle);
         llDetails = (LinearLayout) view.findViewById(R.id.llDetails);
         llCopies = (LinearLayout) view.findViewById(R.id.llCopies);
+        llVolumes = (LinearLayout) view.findViewById(R.id.llVolumes);
         progressBar = (ProgressBar) view.findViewById(R.id.progress);
         detailsLayout = (RelativeLayout) view.findViewById(R.id.detailsLayout);
         errorView = (FrameLayout) view.findViewById(R.id.error_view);
         tvCopies = (TextView) view.findViewById(R.id.tvCopies);
+        tvVolumes = (TextView) view.findViewById(R.id.tvVolumes);
     }
 
     /**
@@ -395,9 +397,9 @@ public class SearchResultDetailFragment extends Fragment
             llDetails.addView(v);
         }
 
+        llVolumes.removeAllViews();
         llCopies.removeAllViews();
         if (item.getVolumesearch() != null) {
-            tvCopies.setText(R.string.volumes);
             Button btnVolume = new Button(getActivity());
             btnVolume.setText(R.string.volumesearch);
             btnVolume.setOnClickListener(new OnClickListener() {
@@ -406,11 +408,8 @@ public class SearchResultDetailFragment extends Fragment
                     app.startVolumeSearch(getActivity(), getItem().getVolumesearch());
                 }
             });
-            llCopies.addView(btnVolume);
-
+            llVolumes.addView(btnVolume);
         } else if (item.getVolumes().size() > 0) {
-            tvCopies.setText(R.string.volumes);
-
             for (final Map<String, String> band : item.getVolumes()) {
                 View v = getLayoutInflater(null).inflate(R.layout.listitem_volume,
                         null);
@@ -429,88 +428,90 @@ public class SearchResultDetailFragment extends Fragment
                                 startActivity(intent);
                             }
                         });
-                llCopies.addView(v);
+                llVolumes.addView(v);
             }
         } else {
-            if (item.getCopies().size() == 0) {
-                tvCopies.setVisibility(View.GONE);
-            } else {
-                for (Map<String, String> copy : item.getCopies()) {
-                    View v = getLayoutInflater(null).inflate(
-                            R.layout.listitem_copy, llCopies, false);
+            tvVolumes.setVisibility(View.GONE);
+        }
 
-                    if (v.findViewById(R.id.tvBranch) != null) {
-                        if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_BRANCH)) {
-                            ((TextView) v.findViewById(R.id.tvBranch))
-                                    .setText(copy
-                                            .get(DetailledItem.KEY_COPY_BRANCH));
-                            v.findViewById(R.id.tvBranch).setVisibility(View.VISIBLE);
-                        } else {
-                            v.findViewById(R.id.tvBranch).setVisibility(View.GONE);
-                        }
-                    }
-                    if (v.findViewById(R.id.tvDepartment) != null) {
-                        if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_DEPARTMENT)) {
-                            ((TextView) v.findViewById(R.id.tvDepartment))
-                                    .setText(copy
-                                            .get(DetailledItem.KEY_COPY_DEPARTMENT));
-                            v.findViewById(R.id.tvDepartment).setVisibility(View.VISIBLE);
-                        } else {
-                            v.findViewById(R.id.tvDepartment).setVisibility(View.GONE);
-                        }
-                    }
-                    if (v.findViewById(R.id.tvLocation) != null) {
-                        if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_LOCATION)) {
-                            ((TextView) v.findViewById(R.id.tvLocation))
-                                    .setText(copy
-                                            .get(DetailledItem.KEY_COPY_LOCATION));
-                            v.findViewById(R.id.tvLocation).setVisibility(View.VISIBLE);
-                        } else {
-                            v.findViewById(R.id.tvLocation).setVisibility(View.GONE);
-                        }
-                    }
-                    if (v.findViewById(R.id.tvShelfmark) != null) {
-                        if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_SHELFMARK)) {
-                            ((TextView) v.findViewById(R.id.tvShelfmark))
-                                    .setText(copy
-                                            .get(DetailledItem.KEY_COPY_SHELFMARK));
-                            v.findViewById(R.id.tvShelfmark).setVisibility(View.VISIBLE);
-                        } else {
-                            v.findViewById(R.id.tvShelfmark).setVisibility(View.GONE);
-                        }
-                    }
-                    if (v.findViewById(R.id.tvStatus) != null) {
-                        if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_STATUS)) {
-                            ((TextView) v.findViewById(R.id.tvStatus))
-                                    .setText(copy
-                                            .get(DetailledItem.KEY_COPY_STATUS));
-                            v.findViewById(R.id.tvStatus).setVisibility(View.VISIBLE);
-                        } else {
-                            v.findViewById(R.id.tvStatus).setVisibility(View.GONE);
-                        }
-                    }
+        if (item.getCopies().size() == 0) {
+            tvCopies.setVisibility(View.GONE);
+        } else {
+            for (Map<String, String> copy : item.getCopies()) {
+                View v = getLayoutInflater(null).inflate(
+                        R.layout.listitem_copy, llCopies, false);
 
-                    if (v.findViewById(R.id.tvReservations) != null) {
-                        if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_RESERVATIONS)) {
-                            ((TextView) v.findViewById(R.id.tvReservations))
-                                    .setText(copy.get(DetailledItem.KEY_COPY_RESERVATIONS));
-                            v.findViewById(R.id.tvReservations).setVisibility(View.VISIBLE);
-                        } else {
-                            v.findViewById(R.id.tvReservations).setVisibility(View.GONE);
-                        }
+                if (v.findViewById(R.id.tvBranch) != null) {
+                    if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_BRANCH)) {
+                        ((TextView) v.findViewById(R.id.tvBranch))
+                                .setText(copy
+                                        .get(DetailledItem.KEY_COPY_BRANCH));
+                        v.findViewById(R.id.tvBranch).setVisibility(View.VISIBLE);
+                    } else {
+                        v.findViewById(R.id.tvBranch).setVisibility(View.GONE);
                     }
-                    if (v.findViewById(R.id.tvReturndate) != null) {
-                        if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_RETURN)) {
-                            ((TextView) v.findViewById(R.id.tvReturndate))
-                                    .setText(copy.get(DetailledItem.KEY_COPY_RETURN));
-                            v.findViewById(R.id.tvReturndate).setVisibility(View.VISIBLE);
-                        } else {
-                            v.findViewById(R.id.tvReturndate).setVisibility(View.GONE);
-                        }
-                    }
-
-                    llCopies.addView(v);
                 }
+                if (v.findViewById(R.id.tvDepartment) != null) {
+                    if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_DEPARTMENT)) {
+                        ((TextView) v.findViewById(R.id.tvDepartment))
+                                .setText(copy
+                                        .get(DetailledItem.KEY_COPY_DEPARTMENT));
+                        v.findViewById(R.id.tvDepartment).setVisibility(View.VISIBLE);
+                    } else {
+                        v.findViewById(R.id.tvDepartment).setVisibility(View.GONE);
+                    }
+                }
+                if (v.findViewById(R.id.tvLocation) != null) {
+                    if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_LOCATION)) {
+                        ((TextView) v.findViewById(R.id.tvLocation))
+                                .setText(copy
+                                        .get(DetailledItem.KEY_COPY_LOCATION));
+                        v.findViewById(R.id.tvLocation).setVisibility(View.VISIBLE);
+                    } else {
+                        v.findViewById(R.id.tvLocation).setVisibility(View.GONE);
+                    }
+                }
+                if (v.findViewById(R.id.tvShelfmark) != null) {
+                    if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_SHELFMARK)) {
+                        ((TextView) v.findViewById(R.id.tvShelfmark))
+                                .setText(copy
+                                        .get(DetailledItem.KEY_COPY_SHELFMARK));
+                        v.findViewById(R.id.tvShelfmark).setVisibility(View.VISIBLE);
+                    } else {
+                        v.findViewById(R.id.tvShelfmark).setVisibility(View.GONE);
+                    }
+                }
+                if (v.findViewById(R.id.tvStatus) != null) {
+                    if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_STATUS)) {
+                        ((TextView) v.findViewById(R.id.tvStatus))
+                                .setText(copy
+                                        .get(DetailledItem.KEY_COPY_STATUS));
+                        v.findViewById(R.id.tvStatus).setVisibility(View.VISIBLE);
+                    } else {
+                        v.findViewById(R.id.tvStatus).setVisibility(View.GONE);
+                    }
+                }
+
+                if (v.findViewById(R.id.tvReservations) != null) {
+                    if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_RESERVATIONS)) {
+                        ((TextView) v.findViewById(R.id.tvReservations))
+                                .setText(copy.get(DetailledItem.KEY_COPY_RESERVATIONS));
+                        v.findViewById(R.id.tvReservations).setVisibility(View.VISIBLE);
+                    } else {
+                        v.findViewById(R.id.tvReservations).setVisibility(View.GONE);
+                    }
+                }
+                if (v.findViewById(R.id.tvReturndate) != null) {
+                    if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_RETURN)) {
+                        ((TextView) v.findViewById(R.id.tvReturndate))
+                                .setText(copy.get(DetailledItem.KEY_COPY_RETURN));
+                        v.findViewById(R.id.tvReturndate).setVisibility(View.VISIBLE);
+                    } else {
+                        v.findViewById(R.id.tvReturndate).setVisibility(View.GONE);
+                    }
+                }
+
+                llCopies.addView(v);
             }
         }
 
@@ -553,6 +554,9 @@ public class SearchResultDetailFragment extends Fragment
     }
 
     private void showCoverView(boolean b) {
+        if (getActivity() == null) {
+            return;
+        }
         coverWrapper.setVisibility(b ? View.VISIBLE : View.GONE);
         gradientBottom.setVisibility(b ? View.VISIBLE : View.GONE);
         gradientTop.setVisibility(b ? View.VISIBLE : View.GONE);
@@ -619,7 +623,7 @@ public class SearchResultDetailFragment extends Fragment
                     @Override
                     public void onGlobalLayout() {
                         onScrollChanged(0, 0);
-            }
+                    }
                 });
     }
 
@@ -1072,8 +1076,7 @@ public class SearchResultDetailFragment extends Fragment
         if (accounts.size() == 0) {
             dialog_no_credentials();
         } else if (accounts.size() > 1
-                && !getActivity().getIntent().getBooleanExtra("reservation",
-                false)
+                && !getActivity().getIntent().getBooleanExtra("reservation", false)
                 && (app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_CHANGE_ACCOUNT) != 0
                 && !(SearchResultDetailFragment.this.id == null
                 || SearchResultDetailFragment.this.id.equals("null") ||

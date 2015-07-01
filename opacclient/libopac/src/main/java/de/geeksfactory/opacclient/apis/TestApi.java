@@ -4,6 +4,7 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -155,7 +156,25 @@ public class TestApi implements OpacApi {
     @Override
     public AccountData account(Account account)
             throws IOException, JSONException, OpacErrorException {
-        return null;
+        AccountData data = new AccountData(account.getId());
+        List<Map<String, String>> lent = new ArrayList<>();
+        List<Map<String, String>> reservations = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            Map<String, String> lentItem = new HashMap<>();
+            lentItem.put(AccountData.KEY_LENT_AUTHOR, "Max Mustermann");
+            lentItem.put(AccountData.KEY_LENT_TITLE, "Lorem Ipsum");
+            lentItem.put(AccountData.KEY_LENT_STATUS, "hier ist der Status");
+            lent.add(lentItem);
+
+            Map<String, String> reservationItem = new HashMap<>();
+            reservationItem.put(AccountData.KEY_RESERVATION_AUTHOR, "Max Mustermann");
+            reservationItem.put(AccountData.KEY_RESERVATION_TITLE, "Lorem Ipsum");
+            reservationItem.put(AccountData.KEY_RESERVATION_READY, "heute");
+            reservations.add(reservationItem);
+        }
+        data.setLent(lent);
+        data.setReservations(reservations);
+        return data;
     }
 
     @Override
@@ -175,7 +194,7 @@ public class TestApi implements OpacApi {
 
     @Override
     public boolean isAccountSupported(Library library) {
-        return false;
+        return true;
     }
 
     @Override

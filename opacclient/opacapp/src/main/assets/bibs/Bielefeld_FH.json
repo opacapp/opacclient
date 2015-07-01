@@ -4,7 +4,7 @@
     "city": "Bielefeld",
     "country": "Deutschland",
     "data": {
-        "baseurl": "https://biblio.fh-bielefeld.de/webOPACClient"
+        "baseurl": "https://netbz05.fh-bielefeld.de/webOPACClient"
     },
     "geo": [
         52.0302285,
