@@ -82,10 +82,6 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.StarContentProvider;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
 
-@ReportsCrashes(formKey = "", mailTo = "info@opacapp.de",
-        mode = org.acra.ReportingInteractionMode.NOTIFICATION,
-        sendReportsInDevMode = false,
-        resToastText = R.string.crash_toast_text)
 public class OpacClient extends Application {
 
     public static final String PREF_SELECTED_ACCOUNT = "selectedAccount";

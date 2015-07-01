@@ -1,11 +1,10 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
 
     defaultConfig {
-        applicationId "de.geeksfactory.opacclient"
         minSdkVersion 8
         targetSdkVersion 22
         versionCode 120
@@ -33,11 +32,6 @@ android {
             minifyEnabled true
             signingConfig signingConfigs.release
             proguardFiles 'proguard-rules.txt'
-        }
-        debug {
-            debuggable true
-            applicationIdSuffix ".debug"
-            versionNameSuffix "-debug"
         }
     }
     compileOptions {
