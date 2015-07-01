@@ -845,14 +845,15 @@ public class IOpac extends BaseApi implements OpacApi {
             if (copymap.optInt("prolongurl", 5) >= 0) {
                 if (tr.children().size() > copymap.optInt("prolongurl", 5)) {
                     Element cell = tr.child(copymap.optInt("prolongurl", 5));
-                    if (cell.select("input.VerlAllCheckboxOK").size() > 0) {
+                    if (cell.select("input[name=MedNrVerlAll]").size() > 0) {
                         // new iOPAC Version 1.45 - checkboxes to prolong multiple items
                         // internal convention: We add "NEW" to the media ID to show that we have
                         // the new iOPAC version
-                        String value = cell.select("input.VerlAllCheckboxOK").first().val();
+                        Element input = cell.select("input[name=MedNrVerlAll]").first();
+                        String value = input.val();
                         e.put(AccountData.KEY_LENT_LINK, "NEW" + value);
                         e.put(AccountData.KEY_LENT_ID, value.split(";")[0]);
-                        if (cell.select("input.VerlAllCheckboxOK").hasAttr("disabled")) {
+                        if (input.hasAttr("disabled")) {
                             e.put(AccountData.KEY_LENT_RENEWABLE, "N");
                         }
                     } else {

@@ -523,18 +523,17 @@ public class Adis extends BaseApi implements OpacApi {
             if (tr.children().size() < 2) {
                 continue;
             }
-            if (tr.child(1).text().contains("hier klicken")) {
-                res.addDetail(new Detail(tr.child(0).text().trim(), tr.child(1)
-                                                                      .select("a").first()
-                                                                      .absUrl("href")));
+            String title = tr.child(0).text().trim();
+            String value = tr.child(1).text().trim();
+            if (value.contains("hier klicken") || value.startsWith("zur ") ||
+                    title.contains("URL")) {
+                res.addDetail(new Detail(title, tr.child(1).select("a").first().absUrl("href")));
             } else {
-                res.addDetail(new Detail(tr.child(0).text().trim(), tr.child(1)
-                                                                      .text().trim()));
+                res.addDetail(new Detail(title, value));
             }
 
-            if (tr.child(0).text().trim().contains("Titel")
-                    && res.getTitle() == null) {
-                res.setTitle(tr.child(1).text().split("[:/;]")[0].trim());
+            if (title.contains("Titel") && res.getTitle() == null) {
+                res.setTitle(value.split("[:/;]")[0].trim());
             }
         }
 
