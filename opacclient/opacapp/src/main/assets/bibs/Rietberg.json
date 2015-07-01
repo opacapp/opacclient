@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "winbiap",
+    "city": "Rietberg",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/rietberg"
+    },
+    "geo": [
+        51.8089877,
+        8.429070399999999
+    ],
+    "information": "http://www.rietberg.de/leben-in-rietberg/stadtbibliothek.html",
+    "state": "Nordrhein-Westfalen",
+    "title": "Stadtbibliothek"
+}

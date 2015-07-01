@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/about">
+        <Preference
+            android:key="version"
+            android:summary="@string/about_summary"
+            android:title="@string/version"/>
+        <Preference
+            android:key="changelog"
+            android:title="@string/changelog"/>
+        <Preference
+            android:key="website"
+            android:summary="@string/website_url"
+            android:title="@string/website"/>
+        <Preference
+            android:key="developer"
+            android:summary="Raphael Michel · www.raphaelmichel.de"
+            android:title="@string/developer"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/feedback">
+        <Preference
+            android:key="feedback"
+            android:summary="info@opacapp.de"
+            android:title="@string/feedback"/>
+        <Preference
+            android:key="rate_play"
+            android:summary="Google Play"
+            android:title="@string/rate"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/other">
+        <Preference
+            android:key="thanks"
+            android:title="@string/thanks"/>
+        <Preference
+            android:key="privacy"
+            android:title="@string/privacy"/>
+        <Preference
+            android:key="source"
+            android:summary="github.com/raphaelm/opacclient"
+            android:title="@string/source"/>
+        <Preference
+            android:key="osl"
+            android:title="@string/osl"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

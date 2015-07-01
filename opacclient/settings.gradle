@@ -1,0 +1,1 @@
+include ':opacapp', ':libopac', ':tests', ':meaningdetector', ':noandroid'

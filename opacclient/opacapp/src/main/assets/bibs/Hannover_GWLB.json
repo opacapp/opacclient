@@ -1,0 +1,17 @@
+{
+    "account_supported": true,
+    "api": "pica",
+    "city": "Hannover",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://opac.tib.uni-hannover.de",
+        "db": "3"
+    },
+    "geo": [
+        52.3652968,
+        9.7308807
+    ],
+    "information": "http://www.gwlb.de/",
+    "state": "Niedersachsen",
+    "title": "Nieders\u00e4chsische Landesbibliothek"
+}

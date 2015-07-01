@@ -1,0 +1,66 @@
+{
+    "account_supported": true,
+    "api": "biber1992",
+    "city": "Hagen",
+    "country": "Deutschland",
+    "data": {
+        "accounttable": {
+            "author": 7,
+            "barcode": 4,
+            "homebranch": -1,
+            "lendingbranch": -1,
+            "prolongurl": 4,
+            "returndate": 3,
+            "status": 5,
+            "title": 7
+        },
+        "baseurl": "https://www.hagen.de",
+        "copiestable": {
+            "barcode": 2,
+            "branch": 1,
+            "department": 3,
+            "location": -1,
+            "reservations": -1,
+            "returndate": -1,
+            "status": 4
+        },
+        "mediatypes": {
+            "1": "BOOK",
+            "11": "DVD",
+            "16": "BOOK",
+            "18": "AUDIO_CASSETTE",
+            "2": "MAGAZINE",
+            "20": "AUDIOBOOK",
+            "24": "BOOK",
+            "25": "GAME_CONSOLE_WII",
+            "26": "EBOOK",
+            "3": "CD_SOFTWARE",
+            "6": "CD_MUSIC",
+            "7": "LP_RECORD",
+            "8": "SCORE_MUSIC",
+            "9": "BOARDGAME"
+        },
+        "opacdir": "opax",
+        "reservationtable": {
+            "author": -1,
+            "availability": 6,
+            "branch": -1,
+            "cancelurl": -1,
+            "expirationdate": 5,
+            "title": 3
+        },
+        "searchtable": [
+            2,
+            3,
+            4,
+            5
+        ]
+    },
+    "geo": [
+        51.3546334,
+        7.4798291
+    ],
+    "information": "https://www.hagen.de/web/de/fachbereiche/fb_48sb/fb_48sb_01/informationen.html",
+    "state": "Nordrhein-Westfalen",
+    "title": "Stadtb\u00fccherei"
+}

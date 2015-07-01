@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "winbiap",
+    "city": "Bad Birnbach",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/badbirnbach"
+    },
+    "geo": [
+        48.4432078,
+        13.0898068
+    ],
+    "information": "http://www.badbirnbach.de/start.php",
+    "state": "Bayern",
+    "title": "Bibliothek Mamertus"
+}

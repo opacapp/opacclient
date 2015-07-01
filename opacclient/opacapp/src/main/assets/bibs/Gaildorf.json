@@ -1,0 +1,27 @@
+{
+    "account_supported": false,
+    "api": "bibliotheca",
+    "city": "Gaildorf",
+    "country": "Deutschland",
+    "data": {
+        "accounttable": null,
+        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-gaildorf",
+        "copiestable": {
+            "barcode": -1,
+            "branch": -1,
+            "department": -1,
+            "location": 1,
+            "reservations": -1,
+            "returndate": 4,
+            "status": 3
+        },
+        "reservationtable": null
+    },
+    "geo": [
+        48.9998717,
+        9.7655136
+    ],
+    "information": "/../read-gaildorf/info.html",
+    "state": "Baden-W\u00fcrttemberg",
+    "title": "Stadtb\u00fccherei"
+}

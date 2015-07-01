@@ -1,0 +1,48 @@
+{
+    "account_supported": true,
+    "api": "bibliotheca",
+    "city": "Bernau bei Berlin",
+    "country": "Deutschland",
+    "data": {
+        "accounttable": {
+            "author": 0,
+            "prolongurl": 4,
+            "returndate": 2,
+            "title": 1
+        },
+        "baseurl": "http://stadtbibliothekbernau-bei-berlin.internetopac.de",
+        "copiestable": {
+            "branch": 0,
+            "department": 2,
+            "location": 1,
+            "status": 3
+        },
+        "mediatypes": {
+            "MGBbk.BMP": "BOOK",
+            "MGBel1.jpg": "BOOK",
+            "MGCD.BMP": "CD",
+            "MGCDM.bmp": "CD_MUSIC",
+            "MGDVD2.BMP": "DVD",
+            "MGKIN.bmp": "BOOK",
+            "MGNintendo.gif": "GAME_CONSOLE",
+            "MGRegioBest01.jpg": "UNKNOWN",
+            "MGSL.bmp": "BOOK",
+            "MGSPIELE.BMP": "BOARDGAME",
+            "MGWiigamepad.gif": "GAME_CONSOLE_WII",
+            "MGZEIT.BMP": "MAGAZINE"
+        },
+        "reservationtable": {
+            "author": 0,
+            "availability": 2,
+            "cancelurl": 3,
+            "title": 1
+        }
+    },
+    "geo": [
+        52.6666667,
+        13.5830556
+    ],
+    "information": "http://www.bernau-bei-berlin.de/de/buergerportal/bildung/bibliotheken/stadtbibliothek-bernau.html",
+    "state": "Brandenburg",
+    "title": "Stadtbibliothek"
+}

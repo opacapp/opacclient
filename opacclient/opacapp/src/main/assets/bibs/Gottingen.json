@@ -1,0 +1,69 @@
+{
+    "account_supported": true,
+    "api": "bibliotheca",
+    "city": "G\u00f6ttingen",
+    "country": "Deutschland",
+    "data": {
+        "accounttable": {
+            "author": 3,
+            "barcode": 0,
+            "homebranch": 1,
+            "lendingbranch": 1,
+            "prolongurl": 7,
+            "returndate": 6,
+            "status": 5,
+            "title": 4
+        },
+        "baseurl": "http://opac.stadtbibliothek.goettingen.de/wopac",
+        "copiestable": {
+            "barcode": -1,
+            "branch": 0,
+            "department": -1,
+            "location": 1,
+            "reservations": -1,
+            "returndate": 3,
+            "status": 2
+        },
+        "mediatypes": {
+            "bests.gif": "BOOK",
+            "box.gif": "PACKAGE",
+            "bueki.gif": "PACKAGE_BOOKS",
+            "cd.gif": "CD",
+            "dvd.gif": "DVD",
+            "eaudio.gif": "MP3",
+            "ebook.gif": "EBOOK",
+            "emusik.gif": "MP3",
+            "epaper.gif": "EBOOK",
+            "evideo.gif": "MOVIE",
+            "gamepad.gif": "GAME_CONSOLE",
+            "hase.gif": "UNKNOWN",
+            "hoerb_cd.gif": "AUDIOBOOK",
+            "hoerb_ks.gif": "AUDIO_CASSETTE",
+            "karte.gif": "MAP",
+            "kass.gif": "AUDIO_CASSETTE",
+            "mbuchs.gif": "UNKNOWN",
+            "mspiels.gif": "BOARDGAME",
+            "munz.gif": "EBOOK",
+            "musikcd.gif": "CD",
+            "mvideos.gif": "AUDIO_CASSETTE",
+            "mztgs.gif": "MAGAZINE",
+            "noten.gif": "SCORE_MUSIC",
+            "zt.gif": "NEWSPAPER"
+        },
+        "reservationtable": {
+            "author": 1,
+            "availability": 3,
+            "branch": 0,
+            "cancelurl": 4,
+            "expirationdate": null,
+            "title": 2
+        }
+    },
+    "geo": [
+        51.54128040000001,
+        9.915803499999999
+    ],
+    "information": "http://opac.stadtbibliothek.goettingen.de/read_blue/info.html",
+    "state": "Niedersachsen",
+    "title": "Stadtbibliothek"
+}

@@ -1,0 +1,17 @@
+{
+    "account_supported": true,
+    "api": "pica",
+    "city": "Hildesheim",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://opac.lbs-hildesheim.gbv.de/",
+        "db": "2"
+    },
+    "geo": [
+        52.154778,
+        9.9579652
+    ],
+    "information": "http://www.hawk-hhg.de/bibliothek/",
+    "state": "Niedersachsen",
+    "title": "Bibliothek der HAWK Hildesheim-Holzminden-G\u00f6ttingen"
+}

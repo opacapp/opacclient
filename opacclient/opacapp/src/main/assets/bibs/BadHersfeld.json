@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "winbiap",
+    "city": "Bad Hersfeld",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://bib.bad-hersfeld.de/webopac"
+    },
+    "geo": [
+        50.8701345,
+        9.7019675
+    ],
+    "information": "http://www.badhersfeld-tourismus.de/freizeit-und-hobby/stadtbibliothek.html",
+    "state": "Hessen",
+    "title": "Konrad-Duden-Stadtbibliothek"
+}

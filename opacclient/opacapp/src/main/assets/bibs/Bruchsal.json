@@ -1,0 +1,61 @@
+{
+    "account_supported": true,
+    "api": "bibliotheca",
+    "city": "Bruchsal",
+    "country": "Deutschland",
+    "data": {
+        "accounttable": {
+            "author": 0,
+            "barcode": -1,
+            "homebranch": -1,
+            "lendingbranch": -1,
+            "prolongurl": 4,
+            "returndate": 3,
+            "status": -1,
+            "title": 1
+        },
+        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-bruchsal",
+        "copiestable": {
+            "barcode": -1,
+            "branch": -1,
+            "department": -1,
+            "location": 0,
+            "reservations": -1,
+            "returndate": 2,
+            "status": 1
+        },
+        "mediatypes": {
+            "CDkl.gif": "CD_SOFTWARE",
+            "MFilmS.gif": "MOVIE",
+            "MZtgS.gif": "NEWSPAPER",
+            "MbuecherS.gif": "PACKAGE",
+            "MonooS.gif": "BOOK",
+            "Munzinger3k.png": "UNKNOWN",
+            "mBuchS.gif": "BOOK",
+            "mDVDS.gif": "DVD",
+            "mMUsik2S.gif": "CD",
+            "mMusik2S.gif": "AUDIO_CASSETTE",
+            "mReise2S.gif": "CD",
+            "mUnselbS.gif": "UNKNOWN",
+            "mcasetteS.gif": "AUDIO_CASSETTE",
+            "mcomicS.gif": "BOOK",
+            "mmusikcdS.gif": "CD",
+            "monooS.gif": "BOOK"
+        },
+        "reservationtable": {
+            "author": 0,
+            "availability": 2,
+            "branch": -1,
+            "cancelurl": 3,
+            "expirationdate": -1,
+            "title": 1
+        }
+    },
+    "geo": [
+        49.1249712,
+        8.584410799999999
+    ],
+    "information": "http://www.bruchsal.de/servlet/PB/menu/1339276_l1/index.html",
+    "state": "Baden-W\u00fcrttemberg",
+    "title": "Stadtbibliothek"
+}

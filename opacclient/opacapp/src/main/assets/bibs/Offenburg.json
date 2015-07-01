@@ -1,0 +1,49 @@
+{
+    "account_supported": true,
+    "api": "biber1992",
+    "city": "Offenburg",
+    "country": "Deutschland",
+    "data": {
+        "accounttable": {
+            "author": 6,
+            "barcode": 3,
+            "homebranch": -1,
+            "lendingbranch": -1,
+            "prolongurl": 3,
+            "returndate": 2,
+            "status": 4,
+            "title": 6
+        },
+        "baseurl": "http://217.86.216.47",
+        "mediatypes": {
+            "01": "BOOK",
+            "10": "BOOK",
+            "11": "BOOK",
+            "13": "BOOK",
+            "14": "BOOK",
+            "20": "CD",
+            "22": "CD",
+            "23": "CD_MUSIC",
+            "26": "GAME_CONSOLE_NINTENDO",
+            "31": "DVD",
+            "32": "BOARDGAME",
+            "33": "MAP",
+            "35": "BLURAY",
+            "40": "EBOOK"
+        },
+        "opacdir": "opac",
+        "searchtable": [
+            2,
+            3,
+            4,
+            5
+        ]
+    },
+    "geo": [
+        48.4684679,
+        7.954930399999999
+    ],
+    "information": "http://www.stadtbibliothek.offenburg.de/",
+    "state": "Baden-W\u00fcrttemberg",
+    "title": "Stadtbibliothek"
+}

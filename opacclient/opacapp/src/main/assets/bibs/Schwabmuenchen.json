@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "winbiap",
+    "city": "Schwabm\u00fcnchen",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/schwabmuenchen"
+    },
+    "geo": [
+        48.1800343,
+        10.7557069
+    ],
+    "information": "http://www.schwabmuenchen.de/index.php?id=0,56",
+    "state": "Bayern",
+    "title": "Stadtb\u00fccherei"
+}

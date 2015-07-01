@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "winbiap",
+    "city": "Sonthofen",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/sonthofen"
+    },
+    "geo": [
+        47.5161161,
+        10.2808617
+    ],
+    "information": "http://www.sonthofen.de/Bildung-Soziales/Stadtbuecherei.aspx",
+    "state": "Bayern",
+    "title": "Stadtb\u00fccherei"
+}

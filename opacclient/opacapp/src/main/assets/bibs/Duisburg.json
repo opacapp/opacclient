@@ -1,0 +1,54 @@
+{
+    "account_supported": true,
+    "api": "biber1992",
+    "city": "Duisburg",
+    "country": "Deutschland",
+    "data": {
+        "accounttable": {
+            "author": 7,
+            "barcode": 4,
+            "homebranch": -1,
+            "lendingbranch": -1,
+            "prolongurl": 4,
+            "returndate": 3,
+            "status": 5,
+            "title": 7
+        },
+        "baseurl": "http://opac.stadtbibliothek.duisburg.de",
+        "copiestable": {
+            "barcode": 3,
+            "branch": 1,
+            "department": 2,
+            "location": -1,
+            "reservations": -1,
+            "returndate": -1,
+            "status": 4
+        },
+        "mediatypes": {
+            "1": "BOOK",
+            "11": "DVD",
+            "18": "EBOOK",
+            "2": "MAGAZINE",
+            "27": "BLURAY",
+            "3": "CD",
+            "4": "MOVIE",
+            "5": "AUDIO_CASSETTE",
+            "6": "CD_MUSIC",
+            "8": "SCORE_MUSIC"
+        },
+        "opacdir": "opax",
+        "searchtable": [
+            2,
+            3,
+            4,
+            5
+        ]
+    },
+    "geo": [
+        51.4344079,
+        6.762329299999999
+    ],
+    "information": "http://www.duisburg.de/stadtbib/vorort/index.php",
+    "state": "Nordrhein-Westfalen",
+    "title": "Stadtbibliothek"
+}

@@ -1,0 +1,27 @@
+{
+    "account_supported": false,
+    "api": "bibliotheca",
+    "city": "Langenfeld",
+    "country": "Deutschland",
+    "data": {
+        "accounttable": null,
+        "baseurl": "http://www1.langenfeld.de/OPAC",
+        "copiestable": {
+            "barcode": 5,
+            "branch": -1,
+            "department": -1,
+            "location": 1,
+            "reservations": -1,
+            "returndate": 3,
+            "status": 0
+        },
+        "reservationtable": null
+    },
+    "geo": [
+        51.10927479999999,
+        6.9498557
+    ],
+    "information": "/../read/info.html",
+    "state": "Nordrhein-Westfalen",
+    "title": "Stadtbibliothek"
+}

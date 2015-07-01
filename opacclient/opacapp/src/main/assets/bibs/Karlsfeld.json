@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "winbiap",
+    "city": "Karlsfeld",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/karlsfeld"
+    },
+    "geo": [
+        48.2290733,
+        11.4744386
+    ],
+    "information": "http://www.karlsfeld.de/index.php?id=222,110",
+    "state": "Bayern",
+    "title": "Gemeindeb\u00fccherei"
+}

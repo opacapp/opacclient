@@ -1,0 +1,50 @@
+{
+    "account_supported": true,
+    "api": "bibliotheca",
+    "city": "Traunstein",
+    "country": "Deutschland",
+    "data": {
+        "accounttable": {
+            "author": 0,
+            "prolongurl": 3,
+            "returndate": 2,
+            "title": 1
+        },
+        "baseurl": "http://80.153.2.146/webopac",
+        "copiestable": {
+            "barcode": 0,
+            "branch": 4,
+            "department": 2,
+            "location": 1,
+            "returndate": 5,
+            "status": 3
+        },
+        "mediatypes": {
+            "cdkl.gif": "CD",
+            "mBuchS.gif": "BOOK",
+            "mCDROMS.gif": "CD_SOFTWARE",
+            "mCasetteS.gif": "AUDIO_CASSETTE",
+            "mDVDS.gif": "DVD",
+            "mFilmS.gif": "MOVIE",
+            "mKombiS.gif": "PACKAGE",
+            "mMusikCDS.gif": "CD",
+            "mReise2S.gif": "MAP",
+            "monooS.gif": "BOOK",
+            "notenkl.gif": "SCORE_MUSIC",
+            "zeit.gif": "MAGAZINE"
+        },
+        "reservationtable": {
+            "author": 0,
+            "availability": 2,
+            "cancelurl": 3,
+            "title": 1
+        }
+    },
+    "geo": [
+        47.8677574,
+        12.6384037
+    ],
+    "information": "http://www.stadtbuecherei-traunstein.de/Buecherei.aspx",
+    "state": "Bayern",
+    "title": "Stadtb\u00fccherei"
+}

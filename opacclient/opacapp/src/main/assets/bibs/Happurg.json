@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "winbiap",
+    "city": "Happurg",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/happurg"
+    },
+    "geo": [
+        49.4937364,
+        11.4719457
+    ],
+    "information": "http://www.happurg.de/Gemeinde/Buecherei/Buecherei.html",
+    "state": "Bayern",
+    "title": "Gemeindeb\u00fccherei"
+}

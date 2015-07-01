@@ -1,0 +1,16 @@
+{
+    "account_supported": true,
+    "api": "sisis",
+    "city": "W\u00fcrzburg",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://katalog.bibliothek.uni-wuerzburg.de/InfoGuideClient.ubwsis"
+    },
+    "geo": [
+        49.782573,
+        9.968698
+    ],
+    "information": "http://www.bibliothek.uni-wuerzburg.de/ub_infos/oeffnungszeiten/",
+    "state": "Bayern",
+    "title": "Unibibliothek"
+}

@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "winbiap",
+    "city": "Dettingen unter Teck",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/dettingen"
+    },
+    "geo": [
+        48.62015,
+        9.4516305
+    ],
+    "information": "http://www.dettingen-teck.de/kulturelle_einrichtungen.html",
+    "state": "Baden-W\u00fcrttemberg",
+    "title": "Ortsb\u00fccherei Dettingen"
+}

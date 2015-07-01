@@ -7,13 +7,13 @@ import urllib.request
 import urllib.parse
 import urllib.error
 
-LIBDIR = 'assets/bibs/'
+LIBDIR = 'opacclient/opacapp/src/main/assets/bibs/'
 TYPES = [
-    'NONE', 'BOOK', 'CD', 'CD_SOFTWARE', 'CD_MUSIC', 'DVD', 'MOVIE', 'AUDIOBOOK', 'PACKAGE',
+        'NONE', 'BOOK', 'CD', 'CD_SOFTWARE', 'CD_MUSIC', 'DVD', 'MOVIE', 'AUDIOBOOK', 'PACKAGE',
         'GAME_CONSOLE', 'EBOOK', 'SCORE_MUSIC', 'PACKAGE_BOOKS', 'UNKNOWN', 'NEWSPAPER',
         'BOARDGAME', 'SCHOOL_VERSION', 'MAP', 'BLURAY', 'AUDIO_CASSETTE', 'ART', 'MAGAZINE',
         'GAME_CONSOLE_WII', 'GAME_CONSOLE_NINTENDO', 'GAME_CONSOLE_PLAYSTATION',
-        'GAME_CONSOLE_XBOX', 'LP_RECORD', 'MP3', 'URL', 'EVIDEO','EDOC']
+        'GAME_CONSOLE_XBOX', 'LP_RECORD', 'MP3', 'URL', 'EVIDEO','EDOC','EAUDIO']
 
 
 def getInput(required=False, default=None):
@@ -31,42 +31,46 @@ def getInput(required=False, default=None):
     return inp
 
 
-def loadGeoPossibilities(city):
-    uri = 'https://maps.googleapis.com/maps/api/geocode/json?' + \
-        urllib.parse.urlencode({'address': city, 'sensor': 'false'})
-    jsoncontent = urllib.request.urlopen(uri).read().decode()
-    geocode = json.loads(jsoncontent)
-
-    if geocode['status'] != 'OK':
-        print("ERROR! %s" % filename)
-        return False
-
+def loadGeoPossibilities(data):
     possibilities = []
 
-    for res in geocode['results']:
-        possibilities.append(
-                (
-                    ", ".join([a["long_name"] for a in res['address_components']]),
-                    [float(res['geometry']['location']['lat']), float(
-                        res['geometry']['location']['lng'])]
+    for address in ('%s, %s, %s' % (data['title'], data['city'], data['state']),
+                    '%s, %s, %s' % ('Bibliothek', data['city'], data['state']),
+                    data['city']):
+        uri = 'https://maps.googleapis.com/maps/api/geocode/json?' + \
+            urllib.parse.urlencode({'address': address, 'sensor': 'true'})
+        jsoncontent = urllib.request.urlopen(uri).read().decode()
+        geocode = json.loads(jsoncontent)
+        
+        if geocode['status'] != 'OK':
+            print("ERROR!")
+            
+        for res in geocode['results']:
+            possibilities.append(
+                    (
+                        ", ".join([a["long_name"] for a in res['address_components']]),
+                        [float(res['geometry']['location']['lat']), float(
+                            res['geometry']['location']['lng'])]
+                    )
                 )
-            )
+
     return possibilities
 
 
 class Api:
 
-    def getDefaultSupportString(self):
-        return 'Katalogsuche und Konto'
+    def accountSupported(self):
+        return True
 
     def prompt(self, data):
         return data
 
 
+
 class Bibliotheca(Api):
 
-    def getDefaultSupportString(self):
-        return 'Katalogsuche und Konto'
+    def accountSupported(self):
+        return True
 
     def prompt(self, data):
         datadata = data['data']
@@ -101,7 +105,7 @@ class Bibliotheca(Api):
             if len(fetched['mediatypes']) > 0:
                 print("Bitte weise die Medientypen ihren Entsprechungen in der App zu.")
                 print("Verfügbar sind:")
-                print(" ".join(TYPES))
+                print(" ".join(sorted(TYPES)))
                 print("")
                 datadata['mediatypes'] = {}
                 for k, v in fetched['mediatypes'].items():
@@ -114,22 +118,26 @@ class Bibliotheca(Api):
         data['data'] = datadata
         return data
 
-    def _fetchData(self, url, suff = ''):
+    def _fetchData(self, url, suff=''):
         config = configparser.RawConfigParser(allow_no_value=True, strict=False)
-        config.read_string(urllib.request.urlopen(url+'/w3oini.txt').read().decode('iso-8859-1'))
+        if os.path.exists('w3oini.txt'):
+            config.read_string(open('w3oini.txt', 'rb').read().decode('iso-8859-1'))
+        else:
+            config.read_string(urllib.request.urlopen(url + '/w3oini.txt').read().decode('iso-8859-1'))
         data = {
             'accounttable': {},
             'reservationtable': {},
-            'copiestable':{},
+            'copiestable': {},
         }
         i_acc = 0
         i_res = 0
-        for i in range(1,21):
-            conf = config.get("ANZEIGEKONTOFELDER", "konto"+str(i))
-            if conf == '': continue
-            key = conf.split("#")[0]
+        for i in range(1, 21):
+            conf = config.get("ANZEIGEKONTOFELDER", "konto" + str(i))
+            if conf == '':
+                continue
+            key = conf.split("#")[0].lower()
 
-            if key == 'buchungsnr':
+            if key in ('exemplarnr', 'buchungsnr'):
                 data['accounttable']['barcode'] = i_acc
                 i_acc += 1
             elif key == 'verf':
@@ -161,6 +169,8 @@ class Bibliotheca(Api):
                 i_acc += 1
             elif key == 'mediengrp':
                 i_acc += 1
+            elif key == 'reserviert':
+                i_acc += 1
             elif key == 'bereit bis':
                 data['reservationtable']['expirationdate'] = i_res
                 i_res += 1
@@ -175,9 +185,10 @@ class Bibliotheca(Api):
             data['accounttable']['lendingbranch'] = data['accounttable']['homebranch']
 
         i_copy = 0
-        for i in range(1,11):
-            conf = config.get("ANZEIGE_EXEMPLAR"+suff, "AE"+str(i))
-            if conf == '': continue
+        for i in range(1, 11):
+            conf = config.get("ANZEIGE_EXEMPLAR" +  suff, "AE" + str(i))
+            if conf == '':
+                continue
             key = conf.split("#")[1]
             if key == 'buchungsnr':
                 data['copiestable']['barcode'] = i_copy
@@ -196,17 +207,19 @@ class Bibliotheca(Api):
             i_copy += 1
 
         data['mediatypes'] = {}
-        for i in range(1,100):
-            conf = config.get("ANZEIGE_MEDIGRPPIC", "MEDIGRPPIC"+str(i))
-            if conf == '': continue
+        for i in range(1, 100):
+            conf = config.get("ANZEIGE_MEDIGRPPIC", "MEDIGRPPIC" + str(i))
+            if conf == '':
+                continue
             split = conf.split("#")
             data['mediatypes'][split[1]] = split[2]
         return data
 
+
 class Sisis(Api):
 
-    def getDefaultSupportString(self):
-        return 'Katalogsuche und Konto'
+    def accountSupported(self):
+        return True
 
     def prompt(self, data):
         print("Sind zusätzliche Parameter nötig?")
@@ -216,10 +229,39 @@ class Sisis(Api):
             data['data']['startparams'] = inp
         return data
 
+class TouchPoint(Api):
+
+    def accountSupported(self):
+        return False
+
+class WebOpacNet(Api):
+
+    def accountSupported(self):
+        return False
+
+class WinBiap(Api):
+
+    def accountSupported(self):
+        return False
+
+class Adis(Api):
+
+    def accountSupported(self):
+        return True
+
+    def prompt(self, data):
+        print("Sind zusätzliche Parameter nötig?")
+        print("Ein häufiges Beispiel wäre sowas wie 'service=direct/0/Home/$DirectLink&sp=S127.0.0.1%3A23002&sp=SS10000000'")
+        inp = getInput(required=False)
+        if inp is not None:
+            data['data']['startparams'] = inp
+        return data
+
+
 class Biber1992(Api):
 
-    def getDefaultSupportString(self):
-        return 'Katalogsuche'
+    def accountSupported(self):
+        return True
 
     def prompt(self, data):
         print("Opac-Ordner?")
@@ -230,41 +272,61 @@ class Biber1992(Api):
         print("WARNUNG! Konfiguration kann nicht ausgelesen werden. HANDARBEIT NÖTIG!")
         return data
 
+class VuFind(Api):
+
+    def accountSupported(self):
+        return False
+
 class Zones22(Api):
 
-    def getDefaultSupportString(self):
-        return 'Katalogsuche'
+    def accountSupported(self):
+        return False
 
-class Pica(Api):
-    account = False
 
-    def getDefaultSupportString(self):
-        return 'Katalogsuche und Konto' if self.account else 'Katalogsuche'
+class Primo(Api):
+    def accountSupported(self):
+        return False
 
     def prompt(self, data):
-        print("Konto unterstützt?")
-        inp = getInput(required=False, default='nein')
-        if inp.lower() in ("ja", "yes", "y", "j", "true", "1"):
-            data['data']['accountSupported'] = True
-            self.account = True
+        print("VID?")
+        inp = getInput(required=True)
+        data['data']['db'] = inp
+        print("Sprachen (short codes, kommagetrennt)?")
+        inp = getInput(required=True)
+        data['data']['languages'] = inp.split(",")
+        return data
+
+
+class Pica(Api):
+    account = True
+
+    def accountSupported(self):
+        return True
+
+    def prompt(self, data):
         print("DB-Nummer?")
         inp = getInput(required=True)
         data['data']['db'] = inp
         return data
 
-
 class IOpac(Api):
 
-    def getDefaultSupportString(self):
-        return 'Katalogsuche und Konto'
+    def accountSupported(self):
+        return True
 
 APIS = {
     'bibliotheca' : Bibliotheca,
     'sisis'       : Sisis,
+    'touchpoint'  : TouchPoint,
     'biber1992'   : Biber1992,
     'zones22'     : Zones22,
     'iopac'       : IOpac,
     'pica'        : Pica,
+    'adis'        : Adis,
+    'webopac.net' : WebOpacNet,
+	'winbiap'	  : WinBiap,
+    'vufind'      : VuFind,
+    'primo'       : Primo,
 }
 
 data = {}
@@ -282,30 +344,33 @@ if __name__ == '__main__':
 
     data['city'] = getInput(required=True)
 
-    print("Lade Geodaten...")
+    print("In welchem Land liegt die Bibliothek?")
+    data['country'] = getInput(required=True, default="Deutschland")
 
-    geo = loadGeoPossibilities(data['city'])
-    for k, g in enumerate(geo):
-        print("[%d]    %s" % (k+1, g[0]))
+    print("In welchem Bundesland ist die Bibliothek?")
+    print("In Deutschland und Österreich werden Bundesländer benutzt, in der Schweiz Kantone.")
 
-    print("Welche dieser Positionen trifft am besten zu? 0 für keine.")
-    print("Nummer", end=" ")
-    geokey = int(getInput(default="0"))
-    if geokey > 0:
-        data['geo'] = geo[geokey-1][1]
-
-    print("Zu welcher Gruppe soll die Bibliothek gehören?")
-    print("Aktuell benutzen wir für die Gruppennamen die deutschen Bundesländer sowie 'Österreich' und 'Schweiz'")
-
-    data['group'] = getInput(required=True)
+    data['state'] = getInput(required=True)
 
     print("Wie heißt die Bibliothek?")
     print("Dies sollte etwas in dieser Stadt eindeutiges sein wie 'Stadtbibliothek', 'Unibibliothek' oder 'Ruprecht-Karls-Universität'. Der Name der Stadt soll nicht erneut vorkommen!")
 
     data['title'] = getInput(default="Stadtbibliothek")
+    
+    print("Lade Geodaten...")
+
+    geo = loadGeoPossibilities(data)
+    for k, g in enumerate(geo):
+        print("[%d]    %s" % (k + 1, g[0]))
+
+    print("Welche dieser Positionen trifft am besten zu? 0 für keine.")
+    print("Nummer", end=" ")
+    geokey = int(getInput(default="0"))
+    if geokey > 0:
+        data['geo'] = geo[geokey - 1][1]
 
     print("Welche API-Implementierung wird genutzt?")
-    print("Verfügbar sind: " + " ".join(APIS.keys()))
+    print("Verfügbar sind: " + " ".join(sorted(APIS.keys())))
 
     data['api'] = ''
     while data['api'] not in APIS.keys():
@@ -320,20 +385,33 @@ if __name__ == '__main__':
     print("URL zu einer Informationsseite")
     print("Sollte Öffnungszeiten u.ä. enthalten")
 
-    data['data']['information'] = getInput(required=True)
+    data['information'] = getInput(required=True)
 
     api = APIS[data['api']]()
     data = api.prompt(data)
 
-    print("Grad der Unterstützung")
+    print("Konto unterstützt?")
+    inp = getInput(required=False, default='nein' if not api.accountSupported() else 'ja')
+    if inp.lower() in ("ja", "yes", "y", "j", "true", "1"):
+        data['account_supported'] = True
+    else:
+        data['account_supported'] = False
 
-    data['support'] = getInput(required=False, default=api.getDefaultSupportString())
+    ok = False;
+    while not ok:
+        print("Dateiname")
+        print("Sowas wie 'Mannheim' oder 'Heidelberg_Uni'. Möglichst keine Leerzeichen und Umlaute.")
 
-    print("Dateiname")
-    print("Sowas wie 'Mannheim' oder 'Heidelberg_Uni'. Möglichst keine Leerzeichen und Umlaute.")
+        ident = getInput(required=True)
 
-    ident = getInput(required=True)
+        if os.path.isfile(LIBDIR + ident + '.json'):
+            print("ACHTUNG: Datei existiert bereits. Überschreiben? (j/n)");
+            value = getInput(required=True, default="n")
+            if value == "j":
+                ok = True;
+        else:
+            ok = True;
 
     print(json.dumps(data, indent=4, sort_keys=True), end="\n\n")
-    json.dump(data, open(LIBDIR+ident+'.json', 'w'), sort_keys=True, indent=4)
-    print("In Datei %s geschrieben." % (LIBDIR+ident+'.json'))
+    json.dump(data, open(LIBDIR + ident + '.json', 'w'), sort_keys=True, indent=4)
+    print("In Datei %s geschrieben." % (LIBDIR + ident + '.json'))

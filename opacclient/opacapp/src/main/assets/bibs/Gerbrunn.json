@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "winbiap",
+    "city": "Gerbrunn",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/gerbrunn"
+    },
+    "geo": [
+        49.77988999999999,
+        9.98421
+    ],
+    "information": "http://www.gerbrunn.de/Buecherei.44.0.html",
+    "state": "Bayern",
+    "title": "Gemeindeb\u00fccherei"
+}

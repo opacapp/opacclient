@@ -1,0 +1,17 @@
+{
+    "account_supported": true,
+    "api": "pica",
+    "city": "Hildesheim",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://opac.lbs-hildesheim.gbv.de/",
+        "db": "1"
+    },
+    "geo": [
+        52.15,
+        9.95
+    ],
+    "information": "https://www.uni-hildesheim.de/bibliothek/",
+    "state": "Niedersachsen",
+    "title": "Unibibliothek"
+}

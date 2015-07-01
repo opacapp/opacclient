@@ -1,0 +1,73 @@
+{
+    "account_supported": true,
+    "api": "bibliotheca",
+    "city": "Gladbeck",
+    "country": "Deutschland",
+    "data": {
+        "accounttable": {
+            "author": 0,
+            "barcode": -1,
+            "homebranch": 3,
+            "lendingbranch": 3,
+            "prolongurl": 4,
+            "returndate": 2,
+            "status": -1,
+            "title": 1
+        },
+        "baseurl": "https://www.bibliotheken-im-kreisre.de/webopac",
+        "copiestable": {
+            "barcode": 5,
+            "branch": 4,
+            "department": 0,
+            "location": 1,
+            "reservations": -1,
+            "returndate": 3,
+            "status": 2
+        },
+        "db": "glad",
+        "mediatypes": {
+            "EAusakl.gif": "MP3",
+            "EAusbkl.gif": "EBOOK",
+            "EAuskl.gif": "EBOOK",
+            "EAusmkl.gif": "MP3",
+            "EAuspkl.gif": "EBOOK",
+            "EAusvkl.gif": "URL",
+            "EDokukl.gif": "UNKNOWN",
+            "Zeitunkl.gif": "MAGAZINE",
+            "cdkl.gif": "GAME_CONSOLE",
+            "diakl.gif": "UNKNOWN",
+            "klassekl.gif": "SCHOOL_VERSION",
+            "konsole.bmp": "GAME_CONSOLE",
+            "mBmonoS.gif": "UNKNOWN",
+            "mBuchS.gif": "BOOK",
+            "mCasetteS.gif": "AUDIO_CASSETTE",
+            "mComic2S.gif": "BOOK",
+            "mComput1S.gif": "CD_SOFTWARE",
+            "mComput2S.gif": "PACKAGE",
+            "mDVDS.gif": "DVD",
+            "mMalenS.gif": "ART",
+            "mMusikCDS.gif": "CD",
+            "mSpielS.gif": "BOARDGAME",
+            "mTip_S.gif": "BOOK",
+            "mono1kl.gif": "BOOK",
+            "monogkl.gif": "BOOK",
+            "vhskl.jpg": "UNKNOWN",
+            "videokl.gif": "MOVIE"
+        },
+        "reservationtable": {
+            "author": 0,
+            "availability": 2,
+            "branch": -1,
+            "cancelurl": 3,
+            "expirationdate": -1,
+            "title": 1
+        }
+    },
+    "geo": [
+        51.5713297,
+        6.9896315
+    ],
+    "information": "http://www.stadtbuecherei-gladbeck.de/#home",
+    "state": "Nordrhein-Westfalen",
+    "title": "Stadtb\u00fccherei"
+}

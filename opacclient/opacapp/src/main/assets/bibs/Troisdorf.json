@@ -1,0 +1,43 @@
+{
+    "account_supported": true,
+    "api": "bibliotheca",
+    "city": "Troisdorf",
+    "country": "Deutschland",
+    "data": {
+        "accounttable": {
+            "author": -1,
+            "barcode": -1,
+            "homebranch": -1,
+            "lendingbranch": -1,
+            "prolongurl": 2,
+            "returndate": 1,
+            "status": -1,
+            "title": 0
+        },
+        "baseurl": "http://troisdorf.internetopac.de",
+        "copiestable": {
+            "barcode": 0,
+            "branch": 4,
+            "department": 2,
+            "location": 1,
+            "reservations": -1,
+            "returndate": 5,
+            "status": 3
+        },
+        "reservationtable": {
+            "author": -1,
+            "availability": 1,
+            "branch": -1,
+            "cancelurl": 2,
+            "expirationdate": null,
+            "title": 0
+        }
+    },
+    "geo": [
+        50.81387,
+        7.16236
+    ],
+    "information": "http://web.troisdorf.de/bibliothek/kontakt.asp?menue=1",
+    "state": "Nordrhein-Westfalen",
+    "title": "Stadtbibliothek"
+}

@@ -1,0 +1,51 @@
+{
+    "account_supported": true,
+    "api": "bibliotheca",
+    "city": "Syke",
+    "country": "Deutschland",
+    "data": {
+        "accounttable": {
+            "author": 0,
+            "barcode": -1,
+            "homebranch": -1,
+            "lendingbranch": -1,
+            "prolongurl": 3,
+            "returndate": 2,
+            "status": -1,
+            "title": 1
+        },
+        "baseurl": "http://www.stadt-syke.de/webopac",
+        "copiestable": {
+            "barcode": 0,
+            "branch": 5,
+            "department": 2,
+            "location": 1,
+            "reservations": -1,
+            "returndate": 4,
+            "status": 3
+        },
+        "mediatypes": {
+            "cdkl.gif": "CD",
+            "mCasetteS.gif": "AUDIO_CASSETTE",
+            "mDVDS.gif": "DVD",
+            "mFilmS.gif": "MOVIE",
+            "mMusikCDs.gif": "CD_MUSIC",
+            "mZtgS.gif": "MAGAZINE"
+        },
+        "reservationtable": {
+            "author": 0,
+            "availability": 2,
+            "branch": -1,
+            "cancelurl": 3,
+            "expirationdate": null,
+            "title": 1
+        }
+    },
+    "geo": [
+        52.912679,
+        8.8181348
+    ],
+    "information": "http://www.syke.de/internet/page.php?naviID=6000146&site=6000041&brotID=6000146&typ=2&rubrik=6000008",
+    "state": "Niedersachsen",
+    "title": "Stadtbibliothek"
+}

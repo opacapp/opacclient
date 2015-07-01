@@ -1,0 +1,17 @@
+{
+    "account_supported": true,
+    "api": "sisis",
+    "city": "Winterthur",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "https://katalog.winterthur.ch/webOPACClient.sisis"
+    },
+    "geo": [
+        47.49995,
+        8.737564599999999
+    ],
+    "information": "http://bibliotheken.winterthur.ch/stadtbibliothek/oeffnungszeiten-kontakt/",
+    "replacedby": "de.opacapp.winterthur",
+    "state": "Z\u00fcrich",
+    "title": "Bibliotheksverbund"
+}

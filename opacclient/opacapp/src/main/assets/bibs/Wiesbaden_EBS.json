@@ -1,0 +1,18 @@
+{
+    "account_supported": true,
+    "api": "pica",
+    "city": "Wiesbaden",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://vzlbs2.gbv.de/",
+        "db": "65",
+        "httpsbaseurl": "https://opac.vzlbs2.gbv.de/"
+    },
+    "geo": [
+        50.0630804,
+        8.2433437
+    ],
+    "information": "http://www.ebs.edu/bibliothek.html",
+    "state": "Hessen",
+    "title": "Bibliothek EBS Universit\u00e4t f\u00fcr Wirtschaft und Recht"
+}

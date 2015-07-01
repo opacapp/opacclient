@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "winbiap",
+    "city": "Scheidegg",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/scheidegg"
+    },
+    "geo": [
+        47.582299,
+        9.8511586
+    ],
+    "information": "http://www.scheidegg.de/urlaub-ferien-scheidegg-allgaeu/scheidegg-entdecken/mein-scheidegg/gemeindebuecherei.html",
+    "state": "Bayern",
+    "title": "Gemeindeb\u00fccherei"
+}

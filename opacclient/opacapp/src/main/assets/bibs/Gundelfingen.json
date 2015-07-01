@@ -1,0 +1,27 @@
+{
+    "account_supported": false,
+    "api": "bibliotheca",
+    "city": "Gundelfingen",
+    "country": "Deutschland",
+    "data": {
+        "accounttable": null,
+        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-gundelfingen",
+        "copiestable": {
+            "barcode": -1,
+            "branch": -1,
+            "department": -1,
+            "location": 3,
+            "reservations": -1,
+            "returndate": 1,
+            "status": 0
+        },
+        "reservationtable": null
+    },
+    "geo": [
+        48.04296919999999,
+        7.8655198
+    ],
+    "information": "http://www.bibliotheken.bw-online.de/read-gundelfingen/startseite.html",
+    "state": "Baden-W\u00fcrttemberg",
+    "title": "Mediathek"
+}

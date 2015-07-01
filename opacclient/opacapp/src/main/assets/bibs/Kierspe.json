@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "winbiap",
+    "city": "Kierspe",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.kdvz.de/kierspe"
+    },
+    "geo": [
+        51.1287174,
+        7.593006499999999
+    ],
+    "information": "http://www.stadtbibliothek-kierspe.de/",
+    "state": "Nordrhein-Westfalen",
+    "title": "Stadtbibliothek"
+}
