@@ -1,0 +1,8 @@
+lint:
+    script:
+        - cd opacclient
+        - sed -i "s/.*versionName .*/        versionName \"git-${CI_BUILD_REF}\"/g" opacapp/build.gradle
+        - ANDROID_HOME=/android-sdk-linux ./gradlew check lint assembleDebug
+        - cat opacapp/build/outputs/lint-results.html | curl -sSF "apikey=$FILEBIN_APIKEY" -F "file=@-;filename=lint-results-$CI_BUILD_ID.html" https://drop.rami.io/file/do_upload
+        - cat opacapp/build/outputs/apk/opacapp-debug.apk | curl -sSF "apikey=$FILEBIN_APIKEY" -F "file=@-;filename=opacapp-debug-$CI_BUILD_ID.apk" https://drop.rami.io/file/do_upload
+
