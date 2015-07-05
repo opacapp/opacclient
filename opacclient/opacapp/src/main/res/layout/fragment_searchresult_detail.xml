@@ -9,12 +9,15 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="260dp">
+        android:layout_height="260dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsingToolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <FrameLayout
@@ -51,98 +54,98 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
-                android:layout_height="wrap_content"
+                android:layout_height="?attr/actionBarSize"
                 android:layout_width="match_parent"
-                android:minHeight="?attr/actionBarSize"
-                android:background="@color/transparent"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 app:layout_collapseMode="pin"/>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <!--<ProgressBar
-        android:id="@+id/progress"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="300dp"
-        android:layout_gravity="center_horizontal"/>
-
-    <FrameLayout
-        android:id="@+id/error_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </FrameLayout>-->
-
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/rootView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:background="#ffe5e5e5">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <RelativeLayout
-            android:id="@+id/detailsLayout"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/tvDetails"
-                android:layout_width="fill_parent"
+            <ProgressBar
+                android:id="@+id/progress"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/details_head"
-                android:textAppearance="@style/TextAppearance.Opacapp.Subhead"/>
+                android:layout_gravity="center_horizontal"/>
 
-            <LinearLayout
-                android:id="@+id/llDetails"
+            <FrameLayout
+                android:id="@+id/error_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tvDetails"
-                android:orientation="vertical">
-            </LinearLayout>
+                android:layout_height="match_parent">
+            </FrameLayout>
 
-            <TextView
-                android:id="@+id/tvCopies"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/llDetails"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/copies_head"
-                android:textAppearance="@style/TextAppearance.Opacapp.Subhead"/>
-
-            <LinearLayout
-                android:id="@+id/llCopies"
+            <RelativeLayout
+                android:id="@+id/detailsLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tvCopies"
-                android:orientation="vertical">
-            </LinearLayout>
+                android:layout_height="match_parent"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
 
-            <TextView
-                android:id="@+id/tvVolumes"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/llDetails"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/volumes"
-                android:textAppearance="@style/TextAppearance.Opacapp.Subhead"/>
+                <TextView
+                    android:id="@+id/tvDetails"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/details_head"
+                    android:textAppearance="@style/TextAppearance.Opacapp.Subhead"/>
 
-            <LinearLayout
-                android:id="@+id/llVolumes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tvVolumes"
-                android:orientation="vertical">
-            </LinearLayout>
-        </RelativeLayout>
+                <LinearLayout
+                    android:id="@+id/llDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvDetails"
+                    android:orientation="vertical">
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvCopies"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/llDetails"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/copies_head"
+                    android:textAppearance="@style/TextAppearance.Opacapp.Subhead"/>
+
+                <LinearLayout
+                    android:id="@+id/llCopies"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvCopies"
+                    android:orientation="vertical">
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvVolumes"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/llDetails"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/volumes"
+                    android:textAppearance="@style/TextAppearance.Opacapp.Subhead"/>
+
+                <LinearLayout
+                    android:id="@+id/llVolumes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvVolumes"
+                    android:orientation="vertical">
+                </LinearLayout>
+            </RelativeLayout>
+        </FrameLayout>
     </android.support.v4.widget.NestedScrollView>
 
 </android.support.design.widget.CoordinatorLayout>

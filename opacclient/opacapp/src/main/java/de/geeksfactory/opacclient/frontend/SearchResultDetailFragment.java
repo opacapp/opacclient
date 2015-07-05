@@ -26,7 +26,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -35,6 +34,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -105,9 +105,9 @@ public class SearchResultDetailFragment extends Fragment
     protected View gradientBottom, gradientTop;
     protected TextView tvCopies, tvVolumes;
     protected LinearLayout llDetails, llCopies, llVolumes;
-    //protected ProgressBar progressBar;
+    protected ProgressBar progressBar;
     protected RelativeLayout detailsLayout;
-    //protected FrameLayout errorView;
+    protected FrameLayout errorView;
     protected CollapsingToolbarLayout collapsingToolbar;
     protected AppBarLayout appBarLayout;
 
@@ -153,55 +153,55 @@ public class SearchResultDetailFragment extends Fragment
 
             if (show) {
                 if (animate) {
-                    /*progressBar.startAnimation(AnimationUtils.loadAnimation(
-                            getActivity(), android.R.anim.fade_in));*/
+                    progressBar.startAnimation(AnimationUtils.loadAnimation(
+                            getActivity(), android.R.anim.fade_in));
                     content.startAnimation(AnimationUtils.loadAnimation(
                             getActivity(), android.R.anim.fade_out));
                 } else {
-//                    progressBar.clearAnimation();
+                    progressBar.clearAnimation();
                     content.clearAnimation();
                 }
-//                progressBar.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
                 content.setVisibility(View.GONE);
             } else {
                 if (animate) {
-                   /* progressBar.startAnimation(AnimationUtils.loadAnimation(
-                            getActivity(), android.R.anim.fade_out));*/
+                    progressBar.startAnimation(AnimationUtils.loadAnimation(
+                            getActivity(), android.R.anim.fade_out));
                     content.startAnimation(AnimationUtils.loadAnimation(
                             getActivity(), android.R.anim.fade_in));
                 } else {
-//                    progressBar.clearAnimation();
+                    progressBar.clearAnimation();
                     content.clearAnimation();
                 }
-//                progressBar.setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);
                 content.setVisibility(View.VISIBLE);
             }
         }
     }
 
     public void showConnectivityError() {
-//        errorView.removeAllViews();
-        /*View connError = getActivity().getLayoutInflater().inflate(
-                R.layout.error_connectivity, errorView);*/
+        errorView.removeAllViews();
+        View connError = getActivity().getLayoutInflater().inflate(
+                R.layout.error_connectivity, errorView);
 
-        /*connError.findViewById(R.id.btRetry)
+        connError.findViewById(R.id.btRetry)
                  .setOnClickListener(new OnClickListener() {
                      @Override
                      public void onClick(View v) {
                          errorView.removeAllViews();
                          reload();
                      }
-                 });*/
+                 });
 
-       /* progressBar.startAnimation(AnimationUtils.loadAnimation(getActivity(),
-                android.R.anim.fade_out));*/
+        progressBar.startAnimation(AnimationUtils.loadAnimation(getActivity(),
+                android.R.anim.fade_out));
         scrollView.startAnimation(AnimationUtils.loadAnimation(getActivity(),
                 android.R.anim.fade_out));
-        /*connError.startAnimation(AnimationUtils.loadAnimation(getActivity(),
-                android.R.anim.fade_in));*/
-//        progressBar.setVisibility(View.GONE);
+        connError.startAnimation(AnimationUtils.loadAnimation(getActivity(),
+                android.R.anim.fade_in));
+        progressBar.setVisibility(View.GONE);
         scrollView.setVisibility(View.GONE);
-//        connError.setVisibility(View.VISIBLE);
+        connError.setVisibility(View.VISIBLE);
     }
 
     public void setProgress() {
@@ -283,8 +283,6 @@ public class SearchResultDetailFragment extends Fragment
         setRetainInstance(true);
         setProgress();
 
-        //scrollView.addCallbacks(this);
-
         if (getArguments().containsKey(ARG_ITEM_COVER_BITMAP)) {
             Bitmap bitmap = getArguments().getParcelable(ARG_ITEM_COVER_BITMAP);
             ivCover.setImageBitmap(bitmap);
@@ -293,8 +291,6 @@ public class SearchResultDetailFragment extends Fragment
         } else {
             showCoverView(false);
         }
-
-        //fixEllipsize(tvTitel);
 
         return rootView;
     }
@@ -305,7 +301,7 @@ public class SearchResultDetailFragment extends Fragment
             public void onGenerated(Palette palette) {
                 Palette.Swatch swatch = palette.getDarkVibrantSwatch();
                 if (swatch != null) {
-                    collapsingToolbar.setBackgroundColor(swatch.getRgb());
+                    appBarLayout.setBackgroundColor(swatch.getRgb());
                     collapsingToolbar.setContentScrimColor(swatch.getRgb());
                 }
             }
@@ -326,38 +322,11 @@ public class SearchResultDetailFragment extends Fragment
         llDetails = (LinearLayout) view.findViewById(R.id.llDetails);
         llCopies = (LinearLayout) view.findViewById(R.id.llCopies);
         llVolumes = (LinearLayout) view.findViewById(R.id.llVolumes);
-//        progressBar = (ProgressBar) view.findViewById(R.id.progress);
+        progressBar = (ProgressBar) view.findViewById(R.id.progress);
         detailsLayout = (RelativeLayout) view.findViewById(R.id.detailsLayout);
-//        errorView = (FrameLayout) view.findViewById(R.id.error_view);
+        errorView = (FrameLayout) view.findViewById(R.id.error_view);
         tvCopies = (TextView) view.findViewById(R.id.tvCopies);
         tvVolumes = (TextView) view.findViewById(R.id.tvVolumes);
-    }
-
-    /**
-     * Workaround because the built-in ellipsize function does not work for multiline TextViews This
-     * function is only prepared for one or two lines
-     *
-     * @param tv The TextView to fix
-     */
-    private void fixEllipsize(final TextView tv) {
-        tv.getViewTreeObserver()
-          .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-
-              @Override
-              public void onGlobalLayout() {
-                  if (tv.getLineCount() > 2) {
-                      try {
-                          int lineEndIndex = tv.getLayout().getLineEnd(1);
-                          String text = tv.getText().subSequence(0, lineEndIndex - 3) + "...";
-                          tv.setText(text);
-                      } catch (StringIndexOutOfBoundsException e) {
-                          // Happens in strange cases where the second line is less than three
-                          // characters long
-                          e.printStackTrace();
-                      }
-                  }
-              }
-          });
     }
 
     /**
@@ -516,10 +485,9 @@ public class SearchResultDetailFragment extends Fragment
             id = getItem().getId();
         }
 
-        setProgress(false, true);
-
         refreshMenu(toolbar.getMenu());
-        toolbar.requestLayout();
+
+        setProgress(false, true);
     }
 
     private void displayCover() {
@@ -547,14 +515,8 @@ public class SearchResultDetailFragment extends Fragment
             return;
         }
         coverWrapper.setVisibility(b ? View.VISIBLE : View.GONE);
-        if (b) {
-            collapsingToolbar.setBackgroundResource(R.color.transparent);
-            appBarLayout.getLayoutParams().height =
-                    (int) (getResources().getDisplayMetrics().density * 260);
-        } else {
-            collapsingToolbar.setBackgroundResource(getToolbarBackgroundColor());
-            appBarLayout.getLayoutParams().height = getResources()
-                    .getDimensionPixelSize(R.dimen.abc_action_bar_default_height_material);
+        if (!b) {
+            appBarLayout.setBackgroundResource(getToolbarBackgroundColor());
         }
     }
 
