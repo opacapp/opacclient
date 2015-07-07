@@ -1188,6 +1188,7 @@ public class Adis extends BaseApi implements OpacApi {
                         || tr.text().contains("Vormerkung")
                         || tr.text().contains("Fernleihbestellung")
                         || tr.text().contains("Bereitstellung")
+                        || tr.text().contains("Bestellw")
                         || tr.text().contains("Magazin"))
                         && !tr.child(0).text().trim().equals("")) {
                     rlinks.add(new String[]{
