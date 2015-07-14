@@ -279,7 +279,7 @@ public class WinBiap extends BaseApi implements OpacApi {
                 sr.setCover(coverUrl);
             }
 
-            String link = tr.select("a[href^=detail.aspx]").attr("href");
+            String link = tr.select("a[href*=detail.aspx]").attr("href");
             String base64 = getQueryParamsFirst(link).get("data");
             if (base64.contains("-")) // Most of the time, the base64 string is
             // followed by a hyphen and some
