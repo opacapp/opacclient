@@ -23,13 +23,16 @@ import java.util.List;
 import de.geeksfactory.opacclient.apis.Adis;
 import de.geeksfactory.opacclient.apis.BiBer1992;
 import de.geeksfactory.opacclient.apis.Bibliotheca;
+import de.geeksfactory.opacclient.apis.Heidi;
 import de.geeksfactory.opacclient.apis.IOpac;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.apis.Pica;
+import de.geeksfactory.opacclient.apis.Primo;
 import de.geeksfactory.opacclient.apis.SISIS;
 import de.geeksfactory.opacclient.apis.SRU;
 import de.geeksfactory.opacclient.apis.TouchPoint;
+import de.geeksfactory.opacclient.apis.VuFind;
 import de.geeksfactory.opacclient.apis.WebOpacNet;
 import de.geeksfactory.opacclient.apis.WinBiap;
 import de.geeksfactory.opacclient.apis.Zones22;
@@ -252,6 +255,12 @@ public class LibraryApiTestCases {
             api = new WebOpacNet();
         } else if (library.getApi().equals("touchpoint")) {
             api = new TouchPoint();
+        } else if (library.getApi().equals("heidi")) {
+            api = new Heidi();
+        } else if (library.getApi().equals("vufind")) {
+            api = new VuFind();
+        } else if (library.getApi().equals("primo")) {
+            api = new Primo();
         } else {
             api = null;
         }
