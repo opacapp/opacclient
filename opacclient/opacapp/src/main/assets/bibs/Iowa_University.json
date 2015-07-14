@@ -6,7 +6,7 @@
     "data": {
         "baseurl": "http://smartsearch.uiowa.edu/primo_library/libweb",
         "db": "uiowa",
-        "languages": "en"
+        "languages": ["en"]
     },
     "geo": [
         41.6626963,
