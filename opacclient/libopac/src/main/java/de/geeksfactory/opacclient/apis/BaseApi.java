@@ -290,6 +290,7 @@ public abstract class BaseApi implements OpacApi {
                     encoding);
             HttpUtils.consume(response.getEntity());
         } catch (javax.net.ssl.SSLPeerUnverifiedException e) {
+            e.printStackTrace();
             throw new SSLSecurityException();
         } catch (javax.net.ssl.SSLException e) {
             // Can be "Not trusted server certificate" or can be a
@@ -405,6 +406,7 @@ public abstract class BaseApi implements OpacApi {
                     encoding);
             HttpUtils.consume(response.getEntity());
         } catch (javax.net.ssl.SSLPeerUnverifiedException e) {
+            e.printStackTrace();
             throw new SSLSecurityException();
         } catch (javax.net.ssl.SSLException e) {
             // Can be "Not trusted server certificate" or can be a
@@ -414,6 +416,7 @@ public abstract class BaseApi implements OpacApi {
                 e.printStackTrace();
                 throw new NotReachableException();
             } else {
+                e.printStackTrace();
                 throw new SSLSecurityException();
             }
         } catch (InterruptedIOException e) {
