@@ -59,7 +59,7 @@
             </FrameLayout>
         </LinearLayout>
 
-        <com.melnykov.fab.FloatingActionButton
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/search_fab"
             android:layout_width="72dp"
             android:layout_height="72dp"
@@ -68,10 +68,7 @@
             android:layout_below="@id/toolbar"
             android:layout_alignParentRight="true"
             android:elevation="4dp"
-            android:src="@drawable/ic_action_search"
-            app:fab_colorNormal="@color/accent_red"
-            app:fab_colorPressed="@color/primary_red"
-            />
+            android:src="@drawable/ic_action_search"/>
     </RelativeLayout>
     <!-- The navigation drawer -->
     <de.geeksfactory.opacclient.ui.ScrimInsetsFrameLayout
