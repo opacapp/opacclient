@@ -31,10 +31,12 @@ public class Starred {
     private int id;
     private String mnr;
     private String title;
+    private SearchResult.MediaType mediaType;
 
     @Override
     public String toString() {
-        return "Starred [id=" + id + ", mnr=" + mnr + ", title=" + title + "]";
+        return "Starred [id=" + id + ", mnr=" + mnr + ", title=" + title + ", mediaType=" +
+                mediaType.toString() + "]";
     }
 
     /**
@@ -77,5 +79,19 @@ public class Starred {
      */
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    /**
+     * Get this item's media type
+     */
+    public SearchResult.MediaType getMediaType() {
+        return mediaType;
+    }
+
+    /**
+     * Set this item's media type
+     */
+    public void setMediaType(SearchResult.MediaType mediaType) {
+        this.mediaType = mediaType;
     }
 }

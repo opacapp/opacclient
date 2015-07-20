@@ -62,6 +62,7 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.StarDataSource;
 import de.geeksfactory.opacclient.ui.AppCompatProgressDialog;
@@ -84,6 +85,8 @@ public class SearchResultDetailFragment extends Fragment
 
     public static final String ARG_ITEM_NR = "item_nr";
     public static final String ARG_ITEM_COVER_BITMAP = "item_cover_bitmap";
+    public static final String ARG_ITEM_MEDIATYPE = "item_mediatype";
+
     /**
      * A dummy implementation of the {@link Callbacks} interface that does nothing. Used only when
      * this fragment is not attached to an activity.
@@ -971,7 +974,7 @@ public class SearchResultDetailFragment extends Fragment
                     star.remove(star.getItemByTitle(bib, title));
                     item.setIcon(R.drawable.ic_action_star_0);
                 } else {
-                    star.star(null, title, bib);
+                    star.star(null, title, bib, getItem().getMediaType());
                     Toast toast = Toast.makeText(getActivity(),
                             getString(R.string.starred), Toast.LENGTH_SHORT);
                     toast.show();
@@ -984,7 +987,7 @@ public class SearchResultDetailFragment extends Fragment
                     star.remove(star.getItem(bib, id));
                     item.setIcon(R.drawable.ic_action_star_0);
                 } else {
-                    star.star(id, title, bib);
+                    star.star(id, title, bib, getItem().getMediaType());
                     Toast toast = Toast.makeText(getActivity(),
                             getString(R.string.starred), Toast.LENGTH_SHORT);
                     toast.show();
@@ -1353,6 +1356,10 @@ public class SearchResultDetailFragment extends Fragment
                     if (res.getId() == null) res.setId(id);
                 } else {
                     res = app.getApi().getResult(nr);
+                }
+                if (res.getMediaType() == null && getArguments().containsKey(ARG_ITEM_MEDIATYPE)) {
+                    res.setMediaType(SearchResult.MediaType
+                            .valueOf(getArguments().getString(ARG_ITEM_MEDIATYPE)));
                 }
                 success = true;
                 return res;
