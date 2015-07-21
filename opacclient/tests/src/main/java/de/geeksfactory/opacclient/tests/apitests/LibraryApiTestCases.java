@@ -112,13 +112,26 @@ public class LibraryApiTestCases {
     @Test
     public void testSearchScrolling() throws
             IOException, OpacErrorException, JSONException {
+        try {
+            scrollTestHelper("harry");
+        } catch (OpacErrorException e) {
+            if (e.getMessage().contains("viele Treffer")) {
+                scrollTestHelper("harry potter");
+            } else {
+                throw e;
+            }
+        }
+    }
+
+    public void scrollTestHelper(String q) throws OpacErrorException, IOException,
+            JSONException {
         List<SearchQuery> query = new ArrayList<>();
         SearchField field = findFreeSearchOrTitle(fields);
         if (field == null) {
             throw new OpacErrorException( // TODO: prevent this
                     "There is no free or title search field");
         }
-        query.add(new SearchQuery(field, "harry"));
+        query.add(new SearchQuery(field, q));
         SearchRequestResult res = api.search(query);
         assertTrue(res.getResults().size() <= res.getTotal_result_count());
         assertTrue(res.getResults().size() > 0);
