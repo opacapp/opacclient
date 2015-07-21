@@ -707,6 +707,7 @@ public class BiBer1992 extends BaseApi {
                     }
                     if (e.containsKey(DetailledItem.KEY_COPY_BRANCH)
                             && e.containsKey(DetailledItem.KEY_COPY_LOCATION)
+                            && e.get(DetailledItem.KEY_COPY_LOCATION) != null
                             && e.get(DetailledItem.KEY_COPY_LOCATION).equals(
                             e.get(DetailledItem.KEY_COPY_BRANCH))) {
                         e.remove(DetailledItem.KEY_COPY_LOCATION);
