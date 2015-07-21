@@ -480,7 +480,12 @@ public class BiBer1992 extends BaseApi {
                     if (j > 0) {
                         desc = desc + "<br />";
                     }
-                    desc = desc + tr.child(colNum).html();
+                    String c = tr.child(colNum).html();
+                    if (tr.child(colNum).childNodes().size() == 1 &&
+                            tr.child(colNum).select("a[href*=ftitle.]").size() > 0) {
+                        c = tr.select("a[href*=ftitle.]").text();
+                    }
+                    desc = desc + c;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
