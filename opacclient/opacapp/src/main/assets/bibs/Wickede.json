@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "winbiap",
+    "city": "Wickede",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.kdvz.de/wickede"
+    },
+    "geo": [
+        51.496389,
+        7.865832999999999
+    ],
+    "information": "http://www.wickede.de/freizeit/buecherei/",
+    "state": "Nordrhein-Westfalen",
+    "title": "B\u00fccherei im Bahnhof"
+}
