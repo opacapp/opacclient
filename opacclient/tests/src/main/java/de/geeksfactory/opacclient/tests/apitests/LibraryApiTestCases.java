@@ -133,7 +133,8 @@ public class LibraryApiTestCases {
         }
         query.add(new SearchQuery(field, q));
         SearchRequestResult res = api.search(query);
-        assertTrue(res.getResults().size() <= res.getTotal_result_count());
+        assertTrue(res.getTotal_result_count() == -1 ||
+                res.getResults().size() <= res.getTotal_result_count());
         assertTrue(res.getResults().size() > 0);
 
         SearchResult third;
