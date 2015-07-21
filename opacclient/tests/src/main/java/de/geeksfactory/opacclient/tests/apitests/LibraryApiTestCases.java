@@ -70,6 +70,9 @@ public class LibraryApiTestCases {
     public static Collection<String[]> libraries() {
         List<String[]> libraries = new ArrayList<>();
         for (String file : new File(FOLDER + "/assets/bibs/").list()) {
+            if (file.equals("Test.json")) {
+                continue;
+            }
             libraries.add(new String[]{file.replace(".json", "")});
         }
         return libraries;
