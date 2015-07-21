@@ -10,7 +10,7 @@
             "returndate": 2,
             "title": 1
         },
-        "baseurl": "http://188.111.102.13/webopac",
+        "baseurl": "http://opac.desvdue2.de/webopac",
         "copiestable": {
             "barcode": 0,
             "department": 1,
