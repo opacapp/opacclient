@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import de.geeksfactory.opacclient.OpacClient;
+import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.Starred;
 
 public class StarDataSource {
@@ -46,18 +47,20 @@ public class StarDataSource {
         item.setId(cursor.getInt(0));
         item.setMNr(cursor.getString(1));
         item.setTitle(cursor.getString(3));
+        item.setMediaType(
+                cursor.getString(4) != null ? SearchResult.MediaType.valueOf(cursor.getString(4)) :
+                        null);
         return item;
     }
 
-    public void star(String nr, String title, String bib) {
+    public void star(String nr, String title, String bib, SearchResult.MediaType mediaType) {
         ContentValues values = new ContentValues();
         values.put("medianr", nr);
         values.put("title", title);
         values.put("bib", bib);
+        values.put("mediatype", mediaType != null ? mediaType.toString() : null);
         context.getContentResolver()
-               .insert(((OpacClient) context.getApplication())
-                               .getStarProviderStarUri(),
-                       values);
+               .insert(((OpacClient) context.getApplication()).getStarProviderStarUri(), values);
     }
 
     public List<Starred> getAllItems(String bib) {

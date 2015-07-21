@@ -57,6 +57,11 @@ public class SearchResultDetailActivity extends OpacActivity
                         getIntent().getParcelableExtra(
                                 SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP));
             }
+            if (getIntent().hasExtra(SearchResultDetailFragment.ARG_ITEM_MEDIATYPE)) {
+                arguments.putString(SearchResultDetailFragment.ARG_ITEM_MEDIATYPE,
+                        getIntent().getStringExtra(
+                                SearchResultDetailFragment.ARG_ITEM_MEDIATYPE));
+            }
             detailFragment = new SearchResultDetailFragment();
             detailFragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()

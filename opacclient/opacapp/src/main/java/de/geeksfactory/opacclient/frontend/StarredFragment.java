@@ -303,11 +303,18 @@ public class StarredFragment extends Fragment implements
                 tv.setText("");
             }
 
-            ImageView iv = (ImageView) view.findViewById(R.id.ivDelete);
-            iv.setFocusableInTouchMode(false);
-            iv.setFocusable(false);
-            iv.setTag(item);
-            iv.setOnClickListener(new OnClickListener() {
+            ImageView ivType = (ImageView) view.findViewById(R.id.ivMediaType);
+            if (item.getMediaType() != null) {
+                ivType.setImageResource(ResultsAdapter.getResourceByMediaType(item.getMediaType()));
+            } else {
+                ivType.setImageBitmap(null);
+            }
+
+            ImageView ivDelete = (ImageView) view.findViewById(R.id.ivDelete);
+            ivDelete.setFocusableInTouchMode(false);
+            ivDelete.setFocusable(false);
+            ivDelete.setTag(item);
+            ivDelete.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View arg0) {
                     Starred item = (Starred) arg0.getTag();
