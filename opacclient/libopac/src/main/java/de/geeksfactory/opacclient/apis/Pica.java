@@ -1249,8 +1249,9 @@ public class Pica extends BaseApi implements OpacApi {
             start();
         }
 
-        String html = httpGet(opac_url + "/LNG=" + getLang() + "/LNG="
-                + getLang() + "/ADVANCED_SEARCHFILTER", getDefaultEncoding());
+        String html =
+                httpGet(opac_url + "/LNG=" + getLang() + "/DB=" + db + "/ADVANCED_SEARCHFILTER",
+                        getDefaultEncoding());
         Document doc = Jsoup.parse(html);
         List<SearchField> fields = new ArrayList<>();
 
@@ -1483,7 +1484,7 @@ public class Pica extends BaseApi implements OpacApi {
             String html = httpGet(opac_url + "/DB=" + db + "/LNG="
                             + languageCodes.get(lang) + "/START_WELCOME",
                     getDefaultEncoding());
-            if (!html.contains("MODE_START")) {
+            if (!html.contains("MODE_START") && !html.contains("LABEL_")) {
                 langs.add(lang);
             }
         }
