@@ -6,19 +6,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.text.util.Linkify;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,7 +26,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -40,11 +39,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.nineoldandroids.view.ViewHelper;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -66,7 +62,6 @@ import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.StarDataSource;
 import de.geeksfactory.opacclient.ui.AppCompatProgressDialog;
-import de.geeksfactory.opacclient.ui.ObservableScrollView;
 import de.geeksfactory.opacclient.ui.WhitenessUtils;
 import de.geeksfactory.opacclient.utils.CompatibilityUtils;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
@@ -77,7 +72,7 @@ import de.geeksfactory.opacclient.utils.ErrorReporter;
  * SearchResultDetailActivity} on handsets.
  */
 public class SearchResultDetailFragment extends Fragment
-        implements Toolbar.OnMenuItemClickListener, ObservableScrollView.Callbacks {
+        implements Toolbar.OnMenuItemClickListener {
     /**
      * The fragment argument representing the item ID that this fragment represents.
      */
@@ -106,14 +101,15 @@ public class SearchResultDetailFragment extends Fragment
     protected Toolbar toolbar;
     protected ImageView ivCover;
     protected FrameLayout coverWrapper;
-    protected View coverBackground;
-    protected ObservableScrollView scrollView;
-    protected View gradientBottom, gradientTop, tint;
+    protected NestedScrollView scrollView;
+    protected View gradientBottom, gradientTop;
     protected TextView tvCopies, tvVolumes;
     protected LinearLayout llDetails, llCopies, llVolumes;
     protected ProgressBar progressBar;
     protected RelativeLayout detailsLayout;
     protected FrameLayout errorView;
+    protected CollapsingToolbarLayout collapsingToolbar;
+    protected AppBarLayout appBarLayout;
 
     /**
      * The detailled item that this fragment represents.
@@ -265,7 +261,6 @@ public class SearchResultDetailFragment extends Fragment
                 container, false);
         view = rootView;
         findViews();
-        toolbar.setVisibility(View.VISIBLE);
         setHasOptionsMenu(false);
 
         if (getActivity() instanceof SearchResultDetailActivity) {
@@ -288,8 +283,6 @@ public class SearchResultDetailFragment extends Fragment
         setRetainInstance(true);
         setProgress();
 
-        scrollView.addCallbacks(this);
-
         if (getArguments().containsKey(ARG_ITEM_COVER_BITMAP)) {
             Bitmap bitmap = getArguments().getParcelable(ARG_ITEM_COVER_BITMAP);
             ivCover.setImageBitmap(bitmap);
@@ -298,8 +291,6 @@ public class SearchResultDetailFragment extends Fragment
         } else {
             showCoverView(false);
         }
-
-        //fixEllipsize(tvTitel);
 
         return rootView;
     }
@@ -310,8 +301,8 @@ public class SearchResultDetailFragment extends Fragment
             public void onGenerated(Palette palette) {
                 Palette.Swatch swatch = palette.getDarkVibrantSwatch();
                 if (swatch != null) {
-                    coverBackground.setBackgroundColor(swatch.getRgb());
-                    tint.setBackgroundColor(swatch.getRgb());
+                    appBarLayout.setBackgroundColor(swatch.getRgb());
+                    collapsingToolbar.setContentScrimColor(swatch.getRgb());
                 }
             }
         });
@@ -321,14 +312,13 @@ public class SearchResultDetailFragment extends Fragment
 
     private void findViews() {
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        scrollView = (ObservableScrollView) view.findViewById(R.id.rootView);
+        scrollView = (NestedScrollView) view.findViewById(R.id.rootView);
         ivCover = (ImageView) view.findViewById(R.id.ivCover);
-        coverBackground = view.findViewById(R.id.coverBackground);
         coverWrapper = (FrameLayout) view.findViewById(R.id.coverWrapper);
         gradientBottom = view.findViewById(R.id.gradient_bottom);
         gradientTop = view.findViewById(R.id.gradient_top);
-        tint = view.findViewById(R.id.tint);
-        //tvTitel = (TextView) view.findViewById(R.id.tvTitle);
+        collapsingToolbar = (CollapsingToolbarLayout) view.findViewById(R.id.collapsingToolbar);
+        appBarLayout = (AppBarLayout) view.findViewById(R.id.appBarLayout);
         llDetails = (LinearLayout) view.findViewById(R.id.llDetails);
         llCopies = (LinearLayout) view.findViewById(R.id.llCopies);
         llVolumes = (LinearLayout) view.findViewById(R.id.llVolumes);
@@ -337,33 +327,6 @@ public class SearchResultDetailFragment extends Fragment
         errorView = (FrameLayout) view.findViewById(R.id.error_view);
         tvCopies = (TextView) view.findViewById(R.id.tvCopies);
         tvVolumes = (TextView) view.findViewById(R.id.tvVolumes);
-    }
-
-    /**
-     * Workaround because the built-in ellipsize function does not work for multiline TextViews This
-     * function is only prepared for one or two lines
-     *
-     * @param tv The TextView to fix
-     */
-    private void fixEllipsize(final TextView tv) {
-        tv.getViewTreeObserver()
-          .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-
-              @Override
-              public void onGlobalLayout() {
-                  if (tv.getLineCount() > 2) {
-                      try {
-                          int lineEndIndex = tv.getLayout().getLineEnd(1);
-                          String text = tv.getText().subSequence(0, lineEndIndex - 3) + "...";
-                          tv.setText(text);
-                      } catch (StringIndexOutOfBoundsException e) {
-                          // Happens in strange cases where the second line is less than three
-                          // characters long
-                          e.printStackTrace();
-                      }
-                  }
-              }
-          });
     }
 
     /**
@@ -387,7 +350,7 @@ public class SearchResultDetailFragment extends Fragment
         } catch (Exception e) {
             ErrorReporter.handleException(e);
         }
-        toolbar.setTitle(getItem().getTitle());
+        collapsingToolbar.setTitle(getItem().getTitle());
         llDetails.removeAllViews();
         for (Detail detail : item.getDetails()) {
             View v = getLayoutInflater(null)
@@ -522,18 +485,9 @@ public class SearchResultDetailFragment extends Fragment
             id = getItem().getId();
         }
 
-        setProgress(false, true);
-
         refreshMenu(toolbar.getMenu());
-        toolbar.getViewTreeObserver()
-               .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                   @Override
-                   public void onGlobalLayout() {
-                       toolbar.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                       fixTitle();
-                   }
-               });
-        toolbar.requestLayout();
+
+        setProgress(false, true);
     }
 
     private void displayCover() {
@@ -548,7 +502,7 @@ public class SearchResultDetailFragment extends Fragment
             showCoverView(true);
         } else {
             showCoverView(false);
-            toolbar.setTitle(getItem().getTitle());
+            collapsingToolbar.setTitle(getItem().getTitle());
         }
     }
 
@@ -561,28 +515,9 @@ public class SearchResultDetailFragment extends Fragment
             return;
         }
         coverWrapper.setVisibility(b ? View.VISIBLE : View.GONE);
-        gradientBottom.setVisibility(b ? View.VISIBLE : View.GONE);
-        gradientTop.setVisibility(b ? View.VISIBLE : View.GONE);
-        RelativeLayout.LayoutParams params =
-                new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT);
-        if (b) {
-            toolbar.setBackgroundResource(R.color.transparent);
-            ViewCompat.setElevation(toolbar, 0);
-            llDetails.setPadding(
-                    llDetails.getPaddingLeft(),
-                    0,
-                    llDetails.getPaddingRight(),
-                    llDetails.getPaddingBottom()
-            );
-            params.addRule(RelativeLayout.BELOW, R.id.coverWrapper);
-        } else {
-            toolbar.setBackgroundResource(getToolbarBackgroundColor());
-            ViewCompat.setElevation(toolbar, TypedValue.applyDimension(TypedValue
-                    .COMPLEX_UNIT_DIP, 4f, getResources().getDisplayMetrics()));
-            params.addRule(RelativeLayout.BELOW, R.id.toolbar);
+        if (!b) {
+            appBarLayout.setBackgroundResource(getToolbarBackgroundColor());
         }
-        detailsLayout.setLayoutParams(params);
     }
 
     private int getToolbarBackgroundColor() {
@@ -594,138 +529,6 @@ public class SearchResultDetailFragment extends Fragment
             }
         } else {
             return R.color.primary_red;
-        }
-    }
-
-    private void fixTitle() {
-        // Toolbar is used for displaying title
-        toolbar.getViewTreeObserver()
-               .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                   @Override
-                   public void onGlobalLayout() {
-                       // We need to wait for toolbar to refresh to get correct calculations
-                       toolbar.getViewTreeObserver().removeGlobalOnLayoutListener(
-                               this);
-                       if (toolbar.isTitleTruncated()) {
-                           toolbar.getLayoutParams().height = (int) TypedValue.applyDimension(
-                                   TypedValue.COMPLEX_UNIT_SP, 84f,
-                                   getResources().getDisplayMetrics());
-                           TextView titleTextView = findTitleTextView(toolbar);
-                           if (titleTextView != null) {
-                               titleTextView.setSingleLine(false);
-                               fixEllipsize(titleTextView);
-                           }
-                           toolbar.getParent().requestLayout();
-                       }
-                   }
-               });
-        onScrollChanged(0, 0);
-
-        ((ViewGroup) toolbar.getParent()).getViewTreeObserver().addOnGlobalLayoutListener(
-                new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        onScrollChanged(0, 0);
-                    }
-                });
-    }
-
-    /**
-     * Hacky way to find the first {@link android.widget.TextView} inside a {@link android
-     * .support.v7.widget.Toolbar}, wnich is typically the title. Will return null if none is found
-     *
-     * @param toolbar a Toolbar
-     * @return the first TextView inside this toolbar, or null if none is found
-     */
-    private TextView findTitleTextView(Toolbar toolbar) {
-        for (int i = 0; i < toolbar.getChildCount(); i++) {
-            View view = toolbar.getChildAt(i);
-            if (view instanceof TextView) {
-                return (TextView) view;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public void onScrollChanged(int deltaX, int deltaY) {
-        if (getItem() == null) {
-            return;
-        }
-        int scrollY = scrollView.getScrollY();
-        boolean hasCover = getItem().getCoverBitmap() != null
-                || getArguments().containsKey(ARG_ITEM_COVER_BITMAP);
-        if (hasCover) {
-            // Parallax effect
-            ViewHelper.setTranslationY(coverWrapper, scrollY * 0.5f);
-            ViewHelper.setTranslationY(gradientBottom, scrollY * 0.5f);
-            ViewHelper.setTranslationY(gradientTop, scrollY * 0.5f);
-        }
-        // Toolbar stays at the top
-        ViewHelper.setTranslationY(toolbar, scrollY);
-
-        TextView toolbarTitle = findTitleTextView(toolbar);
-        if (hasCover) {
-            float minHeight = toolbar.getHeight();
-            float progress =
-                    Math.min(((float) scrollY) / (coverWrapper.getHeight() - minHeight), 1);
-            float scale = 36f / 20f * (1 - progress) + progress;
-            if (toolbarTitle != null) {
-                ViewHelper.setPivotX(toolbarTitle, 0);
-                ViewHelper.setPivotY(toolbarTitle, toolbarTitle.getHeight());
-                ViewHelper.setScaleX(toolbarTitle, scale);
-                ViewHelper.setScaleY(toolbarTitle, scale);
-                if (back_button_visible) {
-                    ViewHelper.setTranslationX(toolbarTitle, (progress - 1) * TypedValue
-                            .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50f, getResources()
-                                    .getDisplayMetrics()));
-                }
-            }
-
-            ViewHelper.setAlpha(tint, progress);
-
-            if (progress == 1) {
-                if (toolbarTitle != null) ViewHelper.setTranslationY(toolbarTitle, 0);
-                if (!coverBackground.getBackground().equals(toolbar.getBackground())) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                        toolbar.setBackground(coverBackground.getBackground());
-                    } else {
-                        //noinspection deprecation
-                        toolbar.setBackgroundDrawable(coverBackground.getBackground());
-                    }
-                    ViewCompat.setElevation(toolbar, TypedValue.applyDimension(TypedValue
-                            .COMPLEX_UNIT_DIP, 4f, getResources().getDisplayMetrics()));
-                }
-            } else {
-                if (toolbarTitle != null) {
-                    ViewHelper
-                            .setTranslationY(toolbarTitle,
-                                    -scrollY + coverWrapper.getHeight() - minHeight);
-                }
-                if (coverBackground.getBackground().equals(toolbar.getBackground())) {
-                    toolbar.setBackgroundResource(R.color.transparent);
-                    ViewCompat.setElevation(toolbar, 0);
-                }
-            }
-        }
-
-        // Card animations
-        if (cardAnimations == null) {
-            cardAnimations = new Boolean[llCopies.getChildCount()];
-            Arrays.fill(cardAnimations, false);
-        }
-        for (int i = 0; i < llCopies.getChildCount(); i++) {
-            if (!cardAnimations[i]) {
-                View card = llCopies.getChildAt(i);
-                Rect scrollBounds = new Rect();
-                scrollView.getHitRect(scrollBounds);
-                if (card.getLocalVisibleRect(scrollBounds)) {
-                    // card is visible
-                    cardAnimations[i] = true;
-                    card.startAnimation(AnimationUtils.loadAnimation(getActivity(),
-                            R.anim.card_appear));
-                }
-            }
         }
     }
 
