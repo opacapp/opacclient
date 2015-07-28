@@ -48,6 +48,10 @@
         <item name="android:textColor">@color/nav_seperator_fg</item>
     </style>
 
+    <style name="TextAppearance.Opacapp.ExpandedMediaTitle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textSize">26sp</item>
+    </style>
+
     <style name="ThemeOverlay.Opacapp.ActionBar"
            parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 

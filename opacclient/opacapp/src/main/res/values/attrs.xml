@@ -16,7 +16,7 @@
         <attr name="layout_verticalSpacing" format="dimension"/>
     </declare-styleable>
     <declare-styleable name="ScrimInsetsView">
-        <attr name="insetForeground" format="reference|color"/>
+        <attr name="scrimInsetsView_insetForeground" format="reference|color"/>
     </declare-styleable>
 
 </resources>

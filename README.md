@@ -32,7 +32,6 @@ It contains several libraries:
 * ACRA, (c) Kevin Gaudin and contributors, Apache License
 * cwac-endless and cwac-adapter, (c) CommonsWare, LLC and Google, Inc., Apache License
 * Android Support library, (c) Google Inc., Apache License
-* FloatingActionButton, (c) Oleksandr Melnykov, MIT License
 * PreferenceFragment-Compat, (c) Justin Harrison, Germán Valencia, Apache License
 * NineOldAndroids, (c) Jake Wharton, Apache License
 * android-flowlayout, (c) Artem Votincev, Apache License
