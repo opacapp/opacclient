@@ -7,9 +7,9 @@
         "accounttable": {
             "author": 0,
             "barcode": -1,
-            "homebranch": -1,
-            "lendingbranch": -1,
-            "prolongurl": 4,
+            "homebranch": 4,
+            "lendingbranch": 4,
+            "prolongurl": 5,
             "returndate": 2,
             "status": -1,
             "title": 1
