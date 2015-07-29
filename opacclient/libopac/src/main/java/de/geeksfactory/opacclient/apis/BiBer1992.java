@@ -316,7 +316,8 @@ public class BiBer1992 extends BaseApi {
     @Override
     public void init(Library lib) {
         super.init(lib);
-        http_client = HTTPClient.getNewHttpClient(lib.getData().has("customssl"));
+        http_client = HTTPClient.getNewHttpClient(lib.getData().optBoolean("customssl", false),
+                lib.getData().optBoolean("disguise", false));
 
         m_data = lib.getData();
 

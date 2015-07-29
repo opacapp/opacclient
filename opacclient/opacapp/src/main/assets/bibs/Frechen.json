@@ -24,6 +24,7 @@
             "returndate": -1,
             "status": 4
         },
+		"disguise": true,
         "mediatypes": {
             "1": "BOOK",
             "2": "MAGAZINE",

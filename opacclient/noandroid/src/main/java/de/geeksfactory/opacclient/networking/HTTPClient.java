@@ -56,10 +56,16 @@ import java.security.KeyStore;
 
 public class HTTPClient {
 
-    public static HttpClient getNewHttpClient(boolean customssl) {
+    public static HttpClient getNewHttpClient(boolean customssl, boolean disguise_app) {
         HttpClientBuilder builder = HttpClientBuilder.create();
         builder.setRedirectStrategy(new HTTPClient.CustomRedirectStrategy());
-        builder.setUserAgent("OpacApp/Test");
+        if (disguise_app) {
+            builder.setUserAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, " +
+                    "like Gecko) Chrome/43.0.2357.130 Safari/537.36\t");
+        } else {
+            builder.setUserAgent("OpacApp/Test");
+        }
+
         if (customssl) {
             try {
                 final KeyStore trustStore = KeyStore.getInstance("BKS");

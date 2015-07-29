@@ -58,10 +58,15 @@ public class HTTPClient {
 
     public static KeyStore trustStore = null;
 
-    public static HttpClient getNewHttpClient(boolean customssl) {
+    public static HttpClient getNewHttpClient(boolean customssl, boolean disguise_app) {
         HttpClientBuilder builder = HttpClientBuilder.create();
         builder.setRedirectStrategy(new CustomRedirectStrategy());
-        builder.setUserAgent("OpacApp/" + OpacClient.versionName);
+        if (disguise_app) {
+            builder.setUserAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, " +
+                    "like Gecko) Chrome/43.0.2357.130 Safari/537.36\t");
+        } else {
+            builder.setUserAgent("OpacApp/" + OpacClient.versionName);
+        }
         if (customssl) {
             try {
                 if (trustStore == null) {

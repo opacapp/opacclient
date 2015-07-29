@@ -47,7 +47,7 @@ public class CoverDownloadTask extends AsyncTask<Void, Integer, CoverHolder> {
             try {
                 float density = context.getResources().getDisplayMetrics().density;
 
-                HttpClient http_client = HTTPClient.getNewHttpClient(false);
+                HttpClient http_client = HTTPClient.getNewHttpClient(false, false);
                 HttpGet httpget = new HttpGet(ISBNTools.getBestSizeCoverUrl(item.getCover(),
                         (int) (56 * density), (int) (56 * density)));
                 HttpResponse response;
