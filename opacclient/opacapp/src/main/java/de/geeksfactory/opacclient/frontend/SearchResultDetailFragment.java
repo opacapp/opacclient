@@ -507,7 +507,7 @@ public class SearchResultDetailFragment extends Fragment
     }
 
     private boolean containsAndNotEmpty(Map<String, String> map, String key) {
-        return map.containsKey(key) && !map.get(key).equals("");
+        return map != null && map.containsKey(key) && !map.get(key).equals("");
     }
 
     private void showCoverView(boolean b) {
