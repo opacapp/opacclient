@@ -57,6 +57,11 @@ public class SearchResultDetailActivity extends OpacActivity
                         getIntent().getParcelableExtra(
                                 SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP));
             }
+            if (getIntent().hasExtra(SearchResultDetailFragment.ARG_ITEM_MEDIATYPE)) {
+                arguments.putString(SearchResultDetailFragment.ARG_ITEM_MEDIATYPE,
+                        getIntent().getStringExtra(
+                                SearchResultDetailFragment.ARG_ITEM_MEDIATYPE));
+            }
             detailFragment = new SearchResultDetailFragment();
             detailFragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
@@ -69,12 +74,10 @@ public class SearchResultDetailActivity extends OpacActivity
                 TransitionSet enterTransition = new TransitionSet();
                 enterTransition.addTransition(new CircularRevealTransition()
                         .setStartPosition(this, touchX, touchY)
-                        .addTarget(R.id.coverBackground)
                         .addTarget(R.id.gradient_top)
                         .addTarget(R.id.gradient_bottom));
                 enterTransition.addTransition(
                         new VerticalExplodeTransition()
-                                .excludeTarget(R.id.coverBackground, true)
                                 .excludeTarget(R.id.gradient_bottom, true)
                                 .excludeTarget(R.id.gradient_top, true));
                 enterTransition.excludeTarget(android.R.id.statusBarBackground, true);

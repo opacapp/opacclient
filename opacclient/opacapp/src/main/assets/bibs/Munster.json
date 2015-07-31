@@ -14,7 +14,7 @@
             "status": 5,
             "title": 1
         },
-        "baseurl": "http://www2.stadt-muenster.de/opac10",
+        "baseurl": "http://opac.stadt-muenster.de/",
         "copiestable": {
             "barcode": -1,
             "branch": 0,

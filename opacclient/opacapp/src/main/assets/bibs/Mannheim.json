@@ -14,7 +14,8 @@
             "status": 4,
             "title": 2
         },
-        "baseurl": "http://katalog.mannheim.de/wopac",
+        "baseurl": "https://katalog.mannheim.de/wopac",
+		"customssl": true,
         "copiestable": {
             "barcode": 0,
             "branch": 1,

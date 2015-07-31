@@ -91,8 +91,7 @@ public class StarContentProvider extends ContentProvider {
 
     private int deleteInDatabase(String table, String whereClause,
             String[] whereArgs) {
-        return database.getWritableDatabase().delete(table, whereClause,
-                whereArgs);
+        return database.getWritableDatabase().delete(table, whereClause, whereArgs);
     }
 
     @Override
@@ -100,8 +99,7 @@ public class StarContentProvider extends ContentProvider {
         int rowsAffected;
         switch (getTypeMime(uri)) {
             case STAR_DIR:
-                rowsAffected = deleteInDatabase(StarDatabase.STAR_TABLE, selection,
-                        selectionArgs);
+                rowsAffected = deleteInDatabase(StarDatabase.STAR_TABLE, selection, selectionArgs);
                 break;
             case STAR_ITEM:
                 rowsAffected = deleteInDatabase(StarDatabase.STAR_TABLE,

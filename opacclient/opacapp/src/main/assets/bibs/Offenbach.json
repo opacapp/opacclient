@@ -4,7 +4,7 @@
     "city": "Offenbach",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.offenbach.winbiap.net"
+        "baseurl": "http://opac.winbiap.net/offenbach"
     },
     "geo": [
         50.09563620000001,

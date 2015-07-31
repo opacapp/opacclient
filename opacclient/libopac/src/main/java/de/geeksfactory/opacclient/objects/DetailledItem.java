@@ -118,6 +118,7 @@ public class DetailledItem implements CoverHolder {
     private List<Map<String, String>> volumes = new ArrayList<>();
     private String cover;
     private String title;
+    private SearchResult.MediaType mediaType;
     private Bitmap coverBitmap;
     private boolean reservable;
     private String reservation_info;
@@ -201,7 +202,8 @@ public class DetailledItem implements CoverHolder {
                 + ", volumes=" + volumes + ", cover=" + cover + ", title="
                 + title + ", coverBitmap=" + coverBitmap + ", reservable="
                 + reservable + ", reservation_info=" + reservation_info
-                + ", id=" + id + ", volumesearch=" + volumesearch + "]";
+                + ", id=" + id + ", volumesearch=" + volumesearch + ", mediatype=" + mediaType +
+                "]";
     }
 
     /**
@@ -385,5 +387,19 @@ public class DetailledItem implements CoverHolder {
      */
     public void setCollectionId(String collectionid) {
         this.collectionid = collectionid;
+    }
+
+    /**
+     * @return this item's media type
+     */
+    public SearchResult.MediaType getMediaType() {
+        return mediaType;
+    }
+
+    /**
+     * @param mediaType the media type to set
+     */
+    public void setMediaType(SearchResult.MediaType mediaType) {
+        this.mediaType = mediaType;
     }
 }

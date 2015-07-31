@@ -1,41 +1,43 @@
 {
     "account_supported": true,
     "api": "bibliotheca",
-    "city": "Sankt Wendel",
+    "city": "Schkeuditz",
     "country": "Deutschland",
     "data": {
         "accounttable": {
             "author": 0,
+            "barcode": -1,
+            "homebranch": -1,
+            "lendingbranch": -1,
             "prolongurl": 3,
             "returndate": 2,
+            "status": -1,
             "title": 1
         },
-        "baseurl": "http://sankt-wendel.internetopac.de",
+        "baseurl": "http://schkeuditz.internetopac.de/",
         "copiestable": {
             "barcode": 0,
             "branch": 4,
             "department": 2,
             "location": 1,
+            "reservations": -1,
             "returndate": 5,
             "status": 3
-        },
-        "mediatypes": {
-            "mCasetteS.gif": "AUDIO_CASSETTE",
-            "mDVDS.gif": "DVD",
-            "mFilmS.gif": "MOVIE"
         },
         "reservationtable": {
             "author": 0,
             "availability": 2,
+            "branch": -1,
             "cancelurl": 3,
+            "expirationdate": -1,
             "title": 1
         }
     },
     "geo": [
-        49.4677707,
-        7.169062499999999
+        51.39800529999999,
+        12.2215675
     ],
-    "information": "https://bibliothek.sankt-wendel.de/",
-    "state": "Saarland",
+    "information": "http://www.schkeuditz.de/schkeuditz/content/51/20081113133709.asp",
+    "state": "Sachsen",
     "title": "Stadtbibliothek"
 }

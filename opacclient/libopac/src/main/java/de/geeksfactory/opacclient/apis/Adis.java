@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InterruptedIOException;
@@ -303,6 +304,13 @@ public class Adis extends BaseApi implements OpacApi {
                     continue;
                 }
 
+                if (query.getSearchField() instanceof TextSearchField &&
+                        doc.select("#" + query.getKey()).size() > 0) {
+                    doc.select("#" + query.getKey())
+                       .val(query.getValue());
+                    continue;
+                }
+
                 cnt++;
 
                 if (s_exts.equals("SS2")
@@ -311,8 +319,14 @@ public class Adis extends BaseApi implements OpacApi {
                         .optBoolean("selectable", true))) {
                     doc.select("input#" + query.getKey()).val(query.getValue());
                 } else {
-                    doc.select("select#SUCH01_" + cnt).val(query.getKey());
-                    doc.select("input#FELD01_" + cnt).val(query.getValue());
+                    if (doc.select("select#SUCH01_1").size() == 0) {
+                        // Hack needed for Nürnberg
+                        doc.select("input[fld=FELD01_" + cnt + "]").first().previousElementSibling().val(query.getKey());
+                        doc.select("input[fld=FELD01_" + cnt + "]").val(query.getValue());
+                    } else {
+                        doc.select("select#SUCH01_" + cnt).val(query.getKey());
+                        doc.select("input#FELD01_" + cnt).val(query.getValue());
+                    }
                 }
 
                 if (cnt > 4) {
@@ -1188,6 +1202,7 @@ public class Adis extends BaseApi implements OpacApi {
                         || tr.text().contains("Vormerkung")
                         || tr.text().contains("Fernleihbestellung")
                         || tr.text().contains("Bereitstellung")
+                        || tr.text().contains("Bestellw")
                         || tr.text().contains("Magazin"))
                         && !tr.child(0).text().trim().equals("")) {
                     rlinks.add(new String[]{
@@ -1374,7 +1389,12 @@ public class Adis extends BaseApi implements OpacApi {
 
         List<SearchField> fields = new ArrayList<>();
         // dropdown to select which field you want to search in
-        for (Element opt : doc.select("#SUCH01_1 option")) {
+        Elements searchoptions = doc.select("#SUCH01_1 option");
+        if (searchoptions.size() == 0) {
+            // Hack is needed in Nuernberg
+            searchoptions = doc.select("input[fld=FELD01_1]").first().previousElementSibling().select("option");
+        }
+        for (Element opt : searchoptions) {
             TextSearchField field = new TextSearchField();
             field.setId(opt.attr("value"));
             field.setDisplayName(opt.text());

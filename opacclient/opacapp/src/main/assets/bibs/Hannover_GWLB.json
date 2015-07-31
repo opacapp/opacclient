@@ -4,7 +4,7 @@
     "city": "Hannover",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://opac.tib.uni-hannover.de",
+        "baseurl": "https://opac.tib.uni-hannover.de",
         "db": "3"
     },
     "geo": [

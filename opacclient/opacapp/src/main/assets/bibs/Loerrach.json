@@ -24,6 +24,9 @@
             "returndate": 2,
             "status": 1
         },
+		"mediatypes": {
+			"mouse.jpg": "EBOOK"
+		},
         "customssl": true,
         "reservationtable": {
             "author": 0,

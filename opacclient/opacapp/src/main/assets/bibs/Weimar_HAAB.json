@@ -4,7 +4,7 @@
     "city": "Weimar",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://opac.ub.uni-weimar.de",
+        "baseurl": "https://opac.lbs-weimar.gbv.de",
         "db": "2"
     },
     "geo": [

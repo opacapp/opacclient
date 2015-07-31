@@ -14,7 +14,7 @@
             "status": -1,
             "title": 1
         },
-        "baseurl": "http://topac30.citeq.de/opac80",
+        "baseurl": "http://opac84.citeq.de",
         "copiestable": {
             "barcode": 0,
             "branch": 3,

@@ -30,6 +30,8 @@ import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
@@ -606,6 +608,41 @@ public class TouchPoint extends BaseApi implements OpacApi {
             if (detailName.contains("ID in diesem Katalog")) {
                 result.setId(detailValue);
             }
+        }
+        if (result.getDetails().size() == 0 && doc.select("#details").size() > 0) {
+            // e.g. Bayreuth_Uni
+            String dname = "";
+            String dval = "";
+            boolean in_value = true;
+            for (Node n : doc.select("#details").first().childNodes()) {
+                if (n instanceof Element && ((Element) n).tagName().equals("strong")) {
+                    if (in_value) {
+                        if (dname.length() > 0 && dval.length() > 0) {
+                            result.addDetail(new Detail(dname, dval));
+                        }
+                        dname = ((Element) n).text();
+                        in_value = false;
+                    } else {
+                        dname += ((Element) n).text();
+                    }
+                } else {
+                    String t = null;
+                    if (n instanceof TextNode) {
+                        t = ((TextNode) n).text();
+                    } else if (n instanceof Element) {
+                        t = ((Element) n).text();
+                    }
+                    if (t != null) {
+                        if (in_value) {
+                            dval += t;
+                        } else {
+                            in_value = true;
+                            dval = t;
+                        }
+                    }
+                }
+            }
+
         }
 
         // Copies

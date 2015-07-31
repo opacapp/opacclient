@@ -1,5 +1,5 @@
 {
-    "account_supported": true,
+    "account_supported": false,
     "api": "adis",
     "city": "Karlsruhe",
     "country": "Deutschland",

@@ -36,7 +36,12 @@
             "8": "SCORE_MUSIC",
             "9": "BOARDGAME"
         },
-        "opacdir": "opax"
+        "opacdir": "opax",
+		"searchtable": [
+			2,
+			3,
+			4
+		]
     },
     "geo": [
         50.0862953,

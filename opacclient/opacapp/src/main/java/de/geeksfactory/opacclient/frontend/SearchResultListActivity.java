@@ -156,6 +156,10 @@ public class SearchResultListActivity extends OpacActivity implements
                 arguments.putParcelable(SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP,
                         smallCover);
             }
+            if (res.getType() != null) {
+                arguments.putString(SearchResultDetailFragment.ARG_ITEM_MEDIATYPE,
+                        res.getType().toString());
+            }
             detailFragment = new SearchResultDetailFragment();
             detailFragment.setArguments(arguments);
             getSupportFragmentManager()
@@ -172,6 +176,10 @@ public class SearchResultListActivity extends OpacActivity implements
             if (res.getId() != null) {
                 detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
                         res.getId());
+            }
+            if (res.getType() != null) {
+                detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_MEDIATYPE,
+                        res.getType().toString());
             }
             if (res.getCoverBitmap() != null) {
                 detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_COVER_BITMAP,

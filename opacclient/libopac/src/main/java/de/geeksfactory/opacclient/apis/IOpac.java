@@ -771,8 +771,8 @@ public class IOpac extends BaseApi implements OpacApi {
     public void checkAccountData(Account account) throws IOException,
             OpacErrorException {
         Document doc = getAccountPage(account);
-        if (doc.select("h1").text().contains("fehlgeschlagen")) {
-            throw new OpacErrorException(doc.select("h1, th").text());
+        if (doc.select("h1, .HTMLInfo_Head").text().contains("fehlgeschlagen")) {
+            throw new OpacErrorException(doc.select("h1, th, .HTMLInfo_Text").text());
         }
     }
 

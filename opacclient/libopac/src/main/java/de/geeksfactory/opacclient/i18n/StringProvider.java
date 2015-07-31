@@ -74,6 +74,7 @@ public interface StringProvider {
     public static String STACKS_BRANCH = "stacks_branch";
     public static String PROVISION_BRANCH = "provision_branch";
     public static String UNSUPPORTED_IN_LIBRARY = "unsupported_in_library";
+    public static String RESERVATION_WARNING = "reservation_warning";
 
     /**
      * Returns the translated string identified by identifier

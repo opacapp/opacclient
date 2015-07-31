@@ -14,12 +14,21 @@
         android:contentDescription="@string/delete"
         android:src="@drawable/ic_delete"/>
 
+    <ImageView
+        android:id="@+id/ivMediaType"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:contentDescription="@string/mediatype"/>
+
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/ivDelete"
+        android:layout_toRightOf="@id/ivMediaType"
         android:padding="5dp"
         android:textAppearance="?android:attr/textAppearanceMedium"/>
 

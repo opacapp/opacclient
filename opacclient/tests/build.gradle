@@ -1,7 +1,26 @@
 apply plugin: 'java'
 
+sourceSets {
+    unitTest {
+        java.srcDir file('src/main/java')
+    }
+}
+
+configurations {
+    unitTestCompile.extendsFrom runtime
+    unitTestRuntime.extendsFrom unitTestCompile
+}
+
 dependencies {
     compile project(':libopac')
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'junit:junit:4.12'
+    unitTestCompile "junit:junit:4.+"
+}
+
+task unitTest(type:Test, dependsOn: assemble) {
+    description = "run unit tests"
+    testClassesDir = project.sourceSets.unitTest.output.classesDir
+    classpath = project.sourceSets.unitTest.runtimeClasspath
+    workingDir = file('../')
 }

@@ -978,14 +978,9 @@ public class Bibliotheca extends BaseApi {
         }
 
         List<NameValuePair> nameValuePairs;
-        // nameValuePairs.add(new BasicNameValuePair("link_konto.x", "0"));
-        // nameValuePairs.add(new BasicNameValuePair("link_konto.y", "0"));
-        // String html = httpPost(opac_url + "/index.asp",
-        // new UrlEncodedFormEntity(nameValuePairs), "ISO-8859-1");
         String html = httpGet(opac_url + "/index.asp?kontofenster=start",
                 "ISO-8859-1");
         Document doc = Jsoup.parse(html);
-
         if (doc.select("input[name=AUSWEIS]").size() > 0) {
             // Login vonnöten
             nameValuePairs = new ArrayList<>();
@@ -1005,22 +1000,16 @@ public class Bibliotheca extends BaseApi {
                     nameValuePairs), "ISO-8859-1", true);
             doc = Jsoup.parse(html);
         }
-        // } else if (response.getStatusLine().getStatusCode() == 302) {
-        // Already logged in
-        // html = httpGet(opac_url + "/index.asp?target=konto",
-        // "ISO-8859-1",
-        // true);
-        // } else if (response.getStatusLine().getStatusCode() >= 400) {
-        // throw new NotReachableException();
-        // }
-
         if (doc.getElementsByClass("kontomeldung").size() == 1) {
             throw new OpacErrorException(doc.getElementsByClass("kontomeldung")
                                             .get(0).text());
         }
-
-        logged_in = System.currentTimeMillis();
         logged_in_as = acc;
+        return parse_account(acc, doc);
+    }
+
+    public AccountData parse_account(Account acc, Document doc) throws JSONException {
+        logged_in = System.currentTimeMillis();
 
         JSONObject copymap = data.getJSONObject("accounttable");
 

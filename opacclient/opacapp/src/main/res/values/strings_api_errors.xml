@@ -39,4 +39,5 @@
     <string name="stacks_branch">Stacks: %s</string>
     <string name="provision_branch">Provision: %s</string>
     <string name="unsupported_in_library">This feature is not supported in this library.</string>
+    <string name="reservation_warning">This reservation might cost you a fee.</string>
 </resources>

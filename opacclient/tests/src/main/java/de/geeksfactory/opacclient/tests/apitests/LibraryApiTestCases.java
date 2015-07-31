@@ -23,13 +23,16 @@ import java.util.List;
 import de.geeksfactory.opacclient.apis.Adis;
 import de.geeksfactory.opacclient.apis.BiBer1992;
 import de.geeksfactory.opacclient.apis.Bibliotheca;
+import de.geeksfactory.opacclient.apis.Heidi;
 import de.geeksfactory.opacclient.apis.IOpac;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.apis.Pica;
+import de.geeksfactory.opacclient.apis.Primo;
 import de.geeksfactory.opacclient.apis.SISIS;
 import de.geeksfactory.opacclient.apis.SRU;
 import de.geeksfactory.opacclient.apis.TouchPoint;
+import de.geeksfactory.opacclient.apis.VuFind;
 import de.geeksfactory.opacclient.apis.WebOpacNet;
 import de.geeksfactory.opacclient.apis.WinBiap;
 import de.geeksfactory.opacclient.apis.Zones22;
@@ -67,6 +70,9 @@ public class LibraryApiTestCases {
     public static Collection<String[]> libraries() {
         List<String[]> libraries = new ArrayList<>();
         for (String file : new File(FOLDER + "/assets/bibs/").list()) {
+            if (file.equals("Test.json")) {
+                continue;
+            }
             libraries.add(new String[]{file.replace(".json", "")});
         }
         return libraries;
@@ -106,15 +112,29 @@ public class LibraryApiTestCases {
     @Test
     public void testSearchScrolling() throws
             IOException, OpacErrorException, JSONException {
+        try {
+            scrollTestHelper("harry");
+        } catch (OpacErrorException e) {
+            if (e.getMessage().contains("viele Treffer")) {
+                scrollTestHelper("harry potter");
+            } else {
+                throw e;
+            }
+        }
+    }
+
+    public void scrollTestHelper(String q) throws OpacErrorException, IOException,
+            JSONException {
         List<SearchQuery> query = new ArrayList<>();
         SearchField field = findFreeSearchOrTitle(fields);
         if (field == null) {
             throw new OpacErrorException( // TODO: prevent this
                     "There is no free or title search field");
         }
-        query.add(new SearchQuery(field, "harry"));
+        query.add(new SearchQuery(field, q));
         SearchRequestResult res = api.search(query);
-        assertTrue(res.getResults().size() <= res.getTotal_result_count());
+        assertTrue(res.getTotal_result_count() == -1 ||
+                res.getResults().size() <= res.getTotal_result_count());
         assertTrue(res.getResults().size() > 0);
 
         SearchResult third;
@@ -252,6 +272,12 @@ public class LibraryApiTestCases {
             api = new WebOpacNet();
         } else if (library.getApi().equals("touchpoint")) {
             api = new TouchPoint();
+        } else if (library.getApi().equals("heidi")) {
+            api = new Heidi();
+        } else if (library.getApi().equals("vufind")) {
+            api = new VuFind();
+        } else if (library.getApi().equals("primo")) {
+            api = new Primo();
         } else {
             api = null;
         }

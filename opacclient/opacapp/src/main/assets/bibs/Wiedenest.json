@@ -15,6 +15,7 @@
             "title": 6
         },
         "baseurl": "http://wiedenest.bibdia-hosts.de",
+		"disguise": true,
         "mediatypes": {
             "1": "BOOK",
             "2": "NEWSPAPER",

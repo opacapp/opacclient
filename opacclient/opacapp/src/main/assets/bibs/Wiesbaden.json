@@ -13,7 +13,7 @@
             "returndate": 2,
             "title": 1
         },
-        "baseurl": "https://bond.wiesbaden.de/webopac",
+        "baseurl": "https://bond.wiesbaden.de",
         "copiestable": {
             "barcode": 0,
             "branch": 4,
@@ -38,7 +38,7 @@
         50.0782184,
         8.239760799999999
     ],
-    "information": "/../read/info.html",
+    "information": "http://www.wiesbaden.de/kultur/bibliotheken/stadtbibliotheken/index.php",
     "state": "Hessen",
     "title": "Stadtbibliothek"
 }

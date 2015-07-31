@@ -316,7 +316,8 @@ public class BiBer1992 extends BaseApi {
     @Override
     public void init(Library lib) {
         super.init(lib);
-        http_client = HTTPClient.getNewHttpClient(lib.getData().has("customssl"));
+        http_client = HTTPClient.getNewHttpClient(lib.getData().optBoolean("customssl", false),
+                lib.getData().optBoolean("disguise", false));
 
         m_data = lib.getData();
 
@@ -480,7 +481,12 @@ public class BiBer1992 extends BaseApi {
                     if (j > 0) {
                         desc = desc + "<br />";
                     }
-                    desc = desc + tr.child(colNum).html();
+                    String c = tr.child(colNum).html();
+                    if (tr.child(colNum).childNodes().size() == 1 &&
+                            tr.child(colNum).select("a[href*=ftitle.]").size() > 0) {
+                        c = tr.select("a[href*=ftitle.]").text();
+                    }
+                    desc = desc + c;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -702,6 +708,7 @@ public class BiBer1992 extends BaseApi {
                     }
                     if (e.containsKey(DetailledItem.KEY_COPY_BRANCH)
                             && e.containsKey(DetailledItem.KEY_COPY_LOCATION)
+                            && e.get(DetailledItem.KEY_COPY_LOCATION) != null
                             && e.get(DetailledItem.KEY_COPY_LOCATION).equals(
                             e.get(DetailledItem.KEY_COPY_BRANCH))) {
                         e.remove(DetailledItem.KEY_COPY_LOCATION);
@@ -745,7 +752,17 @@ public class BiBer1992 extends BaseApi {
     public ReservationResult reservation(DetailledItem item, Account account,
             int useraction, String selection) throws IOException {
         String resinfo = item.getReservation_info();
-        if (selection == null) {
+        if (selection == null || selection.equals("confirmed")) {
+            if (m_data.optBoolean("reservation_warning", false) &&
+                    useraction != MultiStepResult.ACTION_CONFIRMATION) {
+                ReservationResult res = new ReservationResult(
+                        MultiStepResult.Status.CONFIRMATION_NEEDED);
+                List<String[]> details = new ArrayList<>();
+                details.add(
+                        new String[]{stringProvider.getString(StringProvider.RESERVATION_WARNING)});
+                res.setDetails(details);
+                return res;
+            }
             // STEP 1: Check if reservable and select branch ("ID1")
 
             // Differences between opax and opac

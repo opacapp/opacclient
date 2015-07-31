@@ -49,6 +49,7 @@
             "expirationdate": 5,
             "title": 3
         },
+		"reservation_warning": true,
         "searchtable": [
             2,
             3,
@@ -60,7 +61,7 @@
         51.3546334,
         7.4798291
     ],
-    "information": "https://www.hagen.de/web/de/fachbereiche/fb_48sb/fb_48sb_01/informationen.html",
+    "information": "https://www.hagen.de/web/de/hagen_de/03/0301/030104/030104.html",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }

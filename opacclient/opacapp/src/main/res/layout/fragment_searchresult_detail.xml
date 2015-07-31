@@ -1,50 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ProgressBar
-        android:id="@+id/progress"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="300dp"
-        android:layout_gravity="center_horizontal"/>
-
-    <FrameLayout
-        android:id="@+id/error_view"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </FrameLayout>
+        android:layout_height="260dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-    <de.geeksfactory.opacclient.ui.ObservableScrollView
-        android:id="@+id/rootView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <RelativeLayout
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsingToolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
-            android:clipChildren="false"
-            android:clipToPadding="false">
+            android:layout_height="match_parent"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:expandedTitleTextAppearance="@style/TextAppearance.Opacapp.ExpandedMediaTitle">
 
             <FrameLayout
                 android:id="@+id/coverWrapper"
                 android:layout_width="match_parent"
-                android:layout_height="260dp"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true">
-
-                <View
-                    android:id="@+id/coverBackground"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/primary_red_dark"/>
+                android:layout_height="match_parent"
+                app:layout_collapseMode="parallax">
 
                 <ImageView
                     android:id="@+id/ivCover"
@@ -56,39 +35,60 @@
                     android:gravity="center"
                     android:scaleType="fitCenter"
                     android:transitionName="@string/transition_cover"/>
+
+                <View
+                    android:id="@+id/gradient_top"
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:layout_gravity="top"
+                    android:background="@drawable/gradient_top_bottom"/>
+
+                <View
+                    android:id="@+id/gradient_bottom"
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/gradient_bottom_top"/>
             </FrameLayout>
 
-            <View
-                android:id="@+id/gradient_top"
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_height="?attr/actionBarSize"
                 android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:layout_alignTop="@id/coverWrapper"
-                android:background="@drawable/gradient_top_bottom"/>
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:layout_collapseMode="pin"/>
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
 
-            <View
-                android:id="@+id/gradient_bottom"
-                android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:layout_alignBottom="@id/coverWrapper"
-                android:background="@drawable/gradient_bottom_top"/>
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/rootView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <View
-                android:id="@+id/tint"
-                android:layout_width="match_parent"
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ProgressBar
+                android:id="@+id/progress"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/coverWrapper"
-                android:layout_alignBottom="@id/coverWrapper"
-                android:background="@color/primary_red_dark"
-                android:alpha="0"/>
+                android:layout_gravity="center_horizontal"/>
+
+            <FrameLayout
+                android:id="@+id/error_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </FrameLayout>
 
             <RelativeLayout
                 android:id="@+id/detailsLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/coverWrapper"
+                android:layout_height="match_parent"
                 android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:background="#ffe5e5e5">
+                android:paddingRight="16dp">
 
                 <TextView
                     android:id="@+id/tvDetails"
@@ -109,6 +109,24 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/tvCopies"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/llDetails"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/copies_head"
+                    android:textAppearance="@style/TextAppearance.Opacapp.Subhead"/>
+
+                <LinearLayout
+                    android:id="@+id/llCopies"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvCopies"
+                    android:orientation="vertical">
+                </LinearLayout>
+
+                <TextView
                     android:id="@+id/tvVolumes"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -125,36 +143,8 @@
                     android:layout_below="@id/tvVolumes"
                     android:orientation="vertical">
                 </LinearLayout>
-
-                <TextView
-                    android:id="@+id/tvCopies"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/llVolumes"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/copies_head"
-                    android:textAppearance="@style/TextAppearance.Opacapp.Subhead"/>
-
-                <LinearLayout
-                    android:id="@+id/llCopies"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/tvCopies"
-                    android:orientation="vertical">
-                </LinearLayout>
             </RelativeLayout>
+        </FrameLayout>
+    </android.support.v4.widget.NestedScrollView>
 
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:minHeight="?attr/actionBarSize"
-                android:background="@color/transparent"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
-
-        </RelativeLayout>
-    </de.geeksfactory.opacclient.ui.ObservableScrollView>
-</FrameLayout>
+</android.support.design.widget.CoordinatorLayout>

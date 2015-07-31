@@ -37,7 +37,7 @@
         android:paddingTop="@dimen/padding_status_bar"
         android:elevation="10dp"
         android:fitsSystemWindows="true"
-        app:insetForeground="#4000">
+        app:scrimInsetsView_insetForeground="#4000">
 
         <ListView
             android:id="@+id/drawer_list"
