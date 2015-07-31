@@ -10,6 +10,11 @@
 -keep class android.support.v7.widget.** { *; }
 -keep interface android.support.v7.widget.** { *; }
 
+# See: https://stackoverflow.com/questions/30562330/using-appcompat-layout-behavior-with-string-appbar-scrolling-view-behavior
+-keep class android.support.design.widget.** { *; }
+-keep interface android.support.design.widget.** { *; }
+-dontwarn android.support.design.**
+
 # JavaMeaningDetector uses these Java 7 classes for accessing files which are not included in
 # Android, so we need to ignore warnings related to them
 -dontwarn java.nio.file.**
