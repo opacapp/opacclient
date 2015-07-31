@@ -14,7 +14,7 @@
             "status": -1,
             "title": 1
         },
-        "baseurl": "http://buecherei.schwaikheim.de",
+        "baseurl": "http://217.92.48.200",
         "copiestable": {
             "barcode": -1,
             "branch": -1,
