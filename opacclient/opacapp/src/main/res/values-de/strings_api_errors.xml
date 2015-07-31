@@ -39,4 +39,5 @@
   <string name="stacks_branch">Magazin: %s</string>
   <string name="provision_branch">Bereit: %s</string>
   <string name="unsupported_in_library">Diese Funktion wird in dieser Bibliothek nicht unterstützt.</string>
+  <string name="reservation_warning">Für diese Vorbestellung fallen möglicherweise Gebühren an.</string>
 </resources>
