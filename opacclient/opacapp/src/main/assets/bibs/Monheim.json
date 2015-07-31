@@ -1,7 +1,7 @@
 {
     "account_supported": true,
     "api": "bibliotheca",
-    "city": "Haan",
+    "city": "Monheim",
     "country": "Deutschland",
     "data": {
         "accounttable": {
@@ -19,12 +19,12 @@
             "barcode": 0,
             "branch": 4,
             "department": -1,
-            "location": 1,
+            "location": 2,
             "reservations": -1,
             "returndate": 3,
             "status": 2
         },
-        "db": "ha",
+        "db": "mo",
         "reservationtable": {
             "author": 0,
             "availability": 2,
@@ -35,10 +35,10 @@
         }
     },
     "geo": [
-        51.1923262,
-        7.0065575
+        51.0891756,
+        6.894575300000001
     ],
-    "information": "http://www.haan.de/index.phtml?mNavID=1581.1&sNavID=1581.74&La=1",
+    "information": "http://www.bibnet.de/webopac/kme_information.asp?db=mo",
     "state": "Nordrhein-Westfalen",
-    "title": "Stadtb\u00fccherei"
+    "title": "Bibliothek"
 }
