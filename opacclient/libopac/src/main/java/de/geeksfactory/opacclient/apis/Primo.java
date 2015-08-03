@@ -54,6 +54,7 @@ public class Primo extends BaseApi {
         languageCodes.put("cz", "cz_CZ");
         languageCodes.put("zh", "zh_ZH");
         languageCodes.put("it", "it_IT");
+        languageCodes.put("pl", "pl_PL");
 
         mediaTypeClasses.put("EXLResultMediaTYPEbook", SearchResult.MediaType.BOOK);
         mediaTypeClasses.put("EXLResultMediaTYPEarticle", SearchResult.MediaType.BOOK);
