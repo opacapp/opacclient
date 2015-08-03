@@ -1075,8 +1075,11 @@ public class BiBer1992 extends BaseApi {
                             // Remove everything except the signature
                             value = value.replaceFirst("^[^/]*/([^/]*)/[^/]*$",
                                     "$1").trim();
-                            value = value.replaceFirst("^[^/]*/([^/]*)$", "$1")
-                                         .trim();
+                            // Explanation for the following regex: slash can be a separator between
+                            // title and signature, but is also used in magazine titles
+                            // (e.g. "2/15" for second issue in year 2015).
+                            value = value.replaceFirst(
+                                    "(?!^[^/]*\\d\\d?/\\d\\d([^/]*)$)^[^/]*/([^/]*)$", "$1").trim();
                         }
                     }
 
