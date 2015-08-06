@@ -14,6 +14,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -80,6 +81,19 @@ import de.geeksfactory.opacclient.utils.Base64;
 //@formatter:on
 
 public class WinBiap extends BaseApi implements OpacApi {
+
+    protected static HashMap<String, SearchResult.MediaType> defaulttypes = new HashMap<>();
+
+    static {
+        defaulttypes.put("sb_buch", SearchResult.MediaType.BOOK);
+        defaulttypes.put("sl_buch", SearchResult.MediaType.BOOK);
+        defaulttypes.put("kj_buch", SearchResult.MediaType.BOOK);
+        defaulttypes.put("hoerbuch", SearchResult.MediaType.AUDIOBOOK);
+        defaulttypes.put("musik", SearchResult.MediaType.CD_MUSIC);
+        defaulttypes.put("cdrom", SearchResult.MediaType.CD_SOFTWARE);
+        defaulttypes.put("dvd", SearchResult.MediaType.DVD);
+        defaulttypes.put("online", SearchResult.MediaType.EBOOK);
+    }
 
     protected static final String QUERY_TYPE_CONTAINS = "8";
     protected static final String QUERY_TYPE_FROM = "6";
@@ -274,9 +288,15 @@ public class WinBiap extends BaseApi implements OpacApi {
                     + (titleAddition.equals("") ? "" : " - <i>" + titleAddition
                     + "</i>") + "</b><br /><small>" + desc + "</small>");
 
-            String coverUrl = tr.select(".coverWrapper input").attr("src");
-            if (!coverUrl.contains("leer.gif")) {
-                sr.setCover(coverUrl);
+            if (tr.select(".coverWrapper input, .coverWrapper img").size() > 0) {
+                Element cover = tr.select(".coverWrapper input, .coverWrapper img").first();
+                if (cover.hasAttr("data-src")) {
+                    sr.setCover(cover.attr("data-src"));
+                } else if (cover.hasAttr("src") && !cover.attr("src").contains("empty.gif")
+                        && !cover.attr("src").contains("leer.gif")) {
+                    sr.setCover(cover.attr("src"));
+                }
+                sr.setType(getMediaType(cover));
             }
 
             String link = tr.select("a[href*=detail.aspx]").attr("href");
@@ -401,7 +421,16 @@ public class WinBiap extends BaseApi implements OpacApi {
         Document doc = Jsoup.parse(html);
         DetailledItem item = new DetailledItem();
 
-        item.setCover(doc.select(".cover").attr("src"));
+        if (doc.select(".cover").size() > 0) {
+            Element cover = doc.select(".cover").first();
+            if (cover.hasAttr("data-src")) {
+                item.setCover(cover.attr("data-src"));
+            } else if (cover.hasAttr("src") && !cover.attr("src").equals("images/empty.gif")) {
+                item.setCover(cover.attr("src"));
+            }
+            item.setMediaType(getMediaType(cover));
+        }
+
         String permalink = doc.select(".PermalinkTextarea").text();
         item.setId(getQueryParamsFirst(permalink).get("Id"));
 
@@ -440,6 +469,28 @@ public class WinBiap extends BaseApi implements OpacApi {
         }
 
         return item;
+    }
+
+    private SearchResult.MediaType getMediaType(Element cover) {
+        if (cover.hasAttr("grp")) {
+            String[] parts = cover.attr("grp").split("/");
+            String fname = parts[parts.length - 1];
+            if (data.has("mediatypes")) {
+                try {
+                    return SearchResult.MediaType.valueOf(data.getJSONObject(
+                            "mediatypes").getString(fname));
+                } catch (JSONException | IllegalArgumentException e) {
+                    return defaulttypes.get(fname
+                            .toLowerCase(Locale.GERMAN).replace(".jpg", "")
+                            .replace(".gif", "").replace(".png", ""));
+                }
+            } else {
+                return defaulttypes.get(fname
+                        .toLowerCase(Locale.GERMAN).replace(".jpg", "")
+                        .replace(".gif", "").replace(".png", ""));
+            }
+        }
+        return null;
     }
 
     @Override
