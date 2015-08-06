@@ -4,7 +4,7 @@
     "city": "Wimsheim",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/wimsheim"
+        "baseurl": "https://webopac.winbiap.de/wimsheim"
     },
     "geo": [
         48.8505427,

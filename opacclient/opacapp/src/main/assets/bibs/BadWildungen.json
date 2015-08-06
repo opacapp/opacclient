@@ -4,7 +4,7 @@
     "city": "Bad Wildungen",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/badwildungen"
+        "baseurl": "https://webopac.winbiap.de/badwildungen"
     },
     "geo": [
         51.1178991,

@@ -4,7 +4,7 @@
     "city": "Sonthofen",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/sonthofen"
+        "baseurl": "https://webopac.winbiap.de/sonthofen"
     },
     "geo": [
         47.5161161,

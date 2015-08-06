@@ -4,7 +4,7 @@
     "city": "Hallbergmoos",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/hallbergmoos"
+        "baseurl": "https://webopac.winbiap.de/hallbergmoos"
     },
     "geo": [
         48.3250947,

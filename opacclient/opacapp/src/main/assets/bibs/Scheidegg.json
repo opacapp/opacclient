@@ -4,7 +4,7 @@
     "city": "Scheidegg",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/scheidegg"
+        "baseurl": "https://webopac.winbiap.de/scheidegg"
     },
     "geo": [
         47.582299,

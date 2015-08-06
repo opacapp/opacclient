@@ -4,7 +4,7 @@
     "city": "Pl\u00fcderhausen",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/pluederhausen"
+        "baseurl": "https://webopac.winbiap.de/pluederhausen"
     },
     "geo": [
         48.7951781,

@@ -4,7 +4,7 @@
     "city": "Sch\u00f6neck",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/schoeneck"
+        "baseurl": "https://webopac.winbiap.de/schoeneck"
     },
     "geo": [
         50.1978978,

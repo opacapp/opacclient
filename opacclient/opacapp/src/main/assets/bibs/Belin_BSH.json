@@ -4,7 +4,7 @@
     "city": "Berlin",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/best-sabel"
+        "baseurl": "https://webopac.winbiap.de/best-sabel"
     },
     "geo": [
         52.51535,

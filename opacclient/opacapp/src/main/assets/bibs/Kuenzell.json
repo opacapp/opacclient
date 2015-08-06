@@ -4,7 +4,7 @@
     "city": "K\u00fcnzell",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/kuenzell"
+        "baseurl": "https://webopac.winbiap.de/kuenzell"
     },
     "geo": [
         50.5356779,

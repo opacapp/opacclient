@@ -4,7 +4,7 @@
     "city": "Thannhausen",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/thannhausen"
+        "baseurl": "https://webopac.winbiap.de/thannhausen"
     },
     "geo": [
         48.2824858,

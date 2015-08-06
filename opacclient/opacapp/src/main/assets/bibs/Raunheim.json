@@ -4,7 +4,7 @@
     "city": "Raunheim",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/raunheim"
+        "baseurl": "https://webopac.winbiap.de/raunheim"
     },
     "geo": [
         50.0104109,
