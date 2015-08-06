@@ -536,9 +536,13 @@ public class BiBer1992 extends BaseApi {
         // normally full path like
         // "/opac/ftitle.C?LANG=de&FUNC=full&331313252=YES"
         // but sometimes (Wuerzburg) "ftitle.C?LANG=de&FUNC=full&331313252=YES"
-        if (!id.startsWith("/")) {
+        // and sometimes (Hagen) absolute URL including opac_url
+        if (id.startsWith(m_opac_url)) {
+            id = id.substring(m_opac_url.length());
+        } else if (!id.startsWith("/")) {
             id = "/" + m_opac_dir + "/" + id;
         }
+
 
         HttpGet httpget = new HttpGet(m_opac_url + id);
 
