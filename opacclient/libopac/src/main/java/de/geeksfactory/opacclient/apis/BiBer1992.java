@@ -95,8 +95,7 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
 public class BiBer1992 extends BaseApi {
 
     protected static HashMap<String, MediaType> defaulttypes = new HashMap<>();
-    // we have to limit num of results because PUSH attribute SHOW=20 does not
-    // work:
+    // we have to limit num of results because PUSH attribute SHOW=20 does not work:
     // number of results is always 50 which is too much
     final private int numOfResultsPerPage = 20;
     protected boolean newStyleReservations = false;
@@ -104,16 +103,15 @@ public class BiBer1992 extends BaseApi {
     static {
     }
 
-    private String m_opac_url = "";
-    private String m_opac_dir = "opac"; // sometimes also "opax"
-    private String m_opac_suffix = ".C"; // sometimes also ".S"
-    private JSONObject m_data;
+    private String opacUrl = "";
+    private String opacDir = "opac"; // sometimes also "opax"
+    private String opacSuffix = ".C"; // sometimes also ".S"
+    private JSONObject data;
 
     // private int m_resultcount = 10;
     // private long logged_in;
     // private Account logged_in_as;
-    private List<NameValuePair> m_nameValuePairs = new ArrayList<>(
-            2);
+    private List<NameValuePair> nameValuePairs = new ArrayList<>(2);
 
     /*
      * ----- media types ----- Example Wuerzburg: <td ...><input type="checkbox"
@@ -146,11 +144,11 @@ public class BiBer1992 extends BaseApi {
         List<SearchField> fields = new ArrayList<>();
 
         HttpGet httpget;
-        if (m_opac_dir.equals("opax") || m_opac_dir.equals("opax13")) {
-            httpget = new HttpGet(m_opac_url + "/" + m_opac_dir
+        if (opacDir.equals("opax") || opacDir.equals("opax13")) {
+            httpget = new HttpGet(opacUrl + "/" + opacDir
                     + "/de/qsel.html.S");
         } else {
-            httpget = new HttpGet(m_opac_url + "/" + m_opac_dir
+            httpget = new HttpGet(opacUrl + "/" + opacDir
                     + "/de/qsel_main.S");
         }
 
@@ -268,9 +266,9 @@ public class BiBer1992 extends BaseApi {
             sr.setCover(imagename);
         }
 
-        if (m_data.has("mediatypes")) {
+        if (data.has("mediatypes")) {
             try {
-                String typeStr = m_data.getJSONObject("mediatypes").getString(
+                String typeStr = data.getJSONObject("mediatypes").getString(
                         lookup);
                 sr.setType(MediaType.valueOf(typeStr));
             } catch (Exception e) {
@@ -319,12 +317,12 @@ public class BiBer1992 extends BaseApi {
         http_client = HTTPClient.getNewHttpClient(lib.getData().optBoolean("customssl", false),
                 lib.getData().optBoolean("disguise", false));
 
-        m_data = lib.getData();
+        data = lib.getData();
 
         try {
-            m_opac_url = m_data.getString("baseurl");
-            m_opac_dir = m_data.getString("opacdir");
-            m_opac_suffix = m_data.optString("opacsuffix", ".C");
+            opacUrl = data.getString("baseurl");
+            opacDir = data.getString("opacdir");
+            opacSuffix = data.optString("opacsuffix", ".C");
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
@@ -339,32 +337,32 @@ public class BiBer1992 extends BaseApi {
             start();
         }
 
-        m_nameValuePairs.clear();
+        nameValuePairs.clear();
         int count = 1;
         for (SearchQuery query : queryList) {
             if ((query.getSearchField() instanceof TextSearchField || query
                     .getSearchField() instanceof BarcodeSearchField)
                     && !query.getValue().equals("")) {
-                m_nameValuePairs.add(new BasicNameValuePair("CNN" + count,
+                nameValuePairs.add(new BasicNameValuePair("CNN" + count,
                         "AND"));
-                m_nameValuePairs.add(new BasicNameValuePair("FLD" + count,
+                nameValuePairs.add(new BasicNameValuePair("FLD" + count,
                         query.getValue()));
-                m_nameValuePairs.add(new BasicNameValuePair("REG" + count,
+                nameValuePairs.add(new BasicNameValuePair("REG" + count,
                         query.getKey()));
                 count++;
             } else if (query.getSearchField() instanceof DropdownSearchField) {
-                m_nameValuePairs.add(new BasicNameValuePair(query.getKey(),
+                nameValuePairs.add(new BasicNameValuePair(query.getKey(),
                         query.getValue()));
             }
         }
 
-        m_nameValuePairs.add(new BasicNameValuePair("FUNC", "qsel"));
-        m_nameValuePairs.add(new BasicNameValuePair("LANG", "de"));
-        m_nameValuePairs.add(new BasicNameValuePair("SHOW", "20")); // but
+        nameValuePairs.add(new BasicNameValuePair("FUNC", "qsel"));
+        nameValuePairs.add(new BasicNameValuePair("LANG", "de"));
+        nameValuePairs.add(new BasicNameValuePair("SHOW", "20")); // but
         // result
         // gives 50
-        m_nameValuePairs.add(new BasicNameValuePair("SHOWSTAT", "N"));
-        m_nameValuePairs.add(new BasicNameValuePair("FROMPOS", "1"));
+        nameValuePairs.add(new BasicNameValuePair("SHOWSTAT", "N"));
+        nameValuePairs.add(new BasicNameValuePair("FROMPOS", "1"));
 
         return searchGetPage(1);
     }
@@ -380,12 +378,12 @@ public class BiBer1992 extends BaseApi {
         int startNum = (page - 1) * numOfResultsPerPage + 1;
 
         // remove last element = "FROMPOS", and add a new one
-        m_nameValuePairs.remove(m_nameValuePairs.size() - 1);
-        m_nameValuePairs.add(new BasicNameValuePair("FROMPOS", String
+        nameValuePairs.remove(nameValuePairs.size() - 1);
+        nameValuePairs.add(new BasicNameValuePair("FROMPOS", String
                 .valueOf(startNum)));
 
-        String html = httpPost(m_opac_url + "/" + m_opac_dir + "/query" + m_opac_suffix,
-                new UrlEncodedFormEntity(m_nameValuePairs),
+        String html = httpPost(opacUrl + "/" + opacDir + "/query" + opacSuffix,
+                new UrlEncodedFormEntity(nameValuePairs),
                 getDefaultEncoding());
         return parse_search(html, page);
     }
@@ -422,7 +420,7 @@ public class BiBer1992 extends BaseApi {
         }
 
         try {
-            rows_per_hit = m_data.getInt("rows_per_hit");
+            rows_per_hit = data.getInt("rows_per_hit");
         } catch (JSONException e) {
         }
 
@@ -458,8 +456,8 @@ public class BiBer1992 extends BaseApi {
                 elem = tr.select("td input");
                 if (elem.size() > 0) {
                     String nameID = elem.get(0).attr("name").trim();
-                    String hrefID = "/" + m_opac_dir
-                            + "/ftitle" + m_opac_suffix + "?LANG=de&FUNC=full&" + nameID + "=YES";
+                    String hrefID = "/" + opacDir
+                            + "/ftitle" + opacSuffix + "?LANG=de&FUNC=full&" + nameID + "=YES";
                     sr.setId(hrefID);
                 }
             }
@@ -475,7 +473,7 @@ public class BiBer1992 extends BaseApi {
             try {
                 // array "searchtable" list the column numbers of the
                 // description
-                JSONArray searchtable = m_data.getJSONArray("searchtable");
+                JSONArray searchtable = data.getJSONArray("searchtable");
                 for (int j = 0; j < searchtable.length(); j++) {
                     int colNum = searchtable.getInt(j);
                     if (j > 0) {
@@ -531,20 +529,20 @@ public class BiBer1992 extends BaseApi {
         }
 
         if (!id.contains("ftitle")) {
-            id = "ftitle" + m_opac_suffix + "?LANG=de&FUNC=full&" + id + "=YES";
+            id = "ftitle" + opacSuffix + "?LANG=de&FUNC=full&" + id + "=YES";
         }
         // normally full path like
         // "/opac/ftitle.C?LANG=de&FUNC=full&331313252=YES"
         // but sometimes (Wuerzburg) "ftitle.C?LANG=de&FUNC=full&331313252=YES"
         // and sometimes (Hagen) absolute URL including opac_url
-        if (id.startsWith(m_opac_url)) {
-            id = id.substring(m_opac_url.length());
+        if (id.startsWith(opacUrl)) {
+            id = id.substring(opacUrl.length());
         } else if (!id.startsWith("/")) {
-            id = "/" + m_opac_dir + "/" + id;
+            id = "/" + opacDir + "/" + id;
         }
 
 
-        HttpGet httpget = new HttpGet(m_opac_url + id);
+        HttpGet httpget = new HttpGet(opacUrl + id);
 
         HttpResponse response = http_client.execute(httpget);
 
@@ -609,7 +607,7 @@ public class BiBer1992 extends BaseApi {
         int[] copy_map = new int[]{3, 1, -1, 1, 4, -1, -1};
 
         try {
-            JSONObject map = m_data.getJSONObject("copiestable");
+            JSONObject map = data.getJSONObject("copiestable");
             for (int i = 0; i < copy_keys.length; i++) {
                 if (map.has(copy_keys[i])) {
                     copy_map[i] = map.getInt(copy_keys[i]);
@@ -727,12 +725,12 @@ public class BiBer1992 extends BaseApi {
 
         item.setReservable(true); // We cannot check if media is reservable
 
-        if (m_opac_dir.equals("opax")) {
+        if (opacDir.equals("opax")) {
             if (document.select("input[type=checkbox]").size() > 0) {
                 item.setReservation_info(document
                         .select("input[type=checkbox]").first().attr("name"));
-            } else if (document.select("a[href^=reserv" + m_opac_suffix + "]").size() > 0) {
-                String href = document.select("a[href^=reserv" + m_opac_suffix + "]").first()
+            } else if (document.select("a[href^=reserv" + opacSuffix + "]").size() > 0) {
+                String href = document.select("a[href^=reserv" + opacSuffix + "]").first()
                                       .attr("href");
                 item.setReservation_info(href.substring(href.indexOf("resF_")));
             } else {
@@ -757,7 +755,7 @@ public class BiBer1992 extends BaseApi {
             int useraction, String selection) throws IOException {
         String resinfo = item.getReservation_info();
         if (selection == null || selection.equals("confirmed")) {
-            if (m_data.optBoolean("reservation_warning", false) &&
+            if (data.optBoolean("reservation_warning", false) &&
                     useraction != MultiStepResult.ACTION_CONFIRMATION) {
                 ReservationResult res = new ReservationResult(
                         MultiStepResult.Status.CONFIRMATION_NEEDED);
@@ -770,14 +768,14 @@ public class BiBer1992 extends BaseApi {
             // STEP 1: Check if reservable and select branch ("ID1")
 
             // Differences between opax and opac
-            String func = m_opac_dir.equals("opax") ? "sigl" : "resF";
-            String id = m_opac_dir.equals("opax") ? (resinfo.contains("resF") ? resinfo
+            String func = opacDir.equals("opax") ? "sigl" : "resF";
+            String id = opacDir.equals("opax") ? (resinfo.contains("resF") ? resinfo
                     .substring(5) + "=" + resinfo
                     : resinfo + "=resF_" + resinfo)
                     : "ID=" + resinfo;
 
-            String html = httpGet(m_opac_url + "/" + m_opac_dir
-                            + "/reserv" + m_opac_suffix + "?LANG=de&FUNC=" + func + "&" + id,
+            String html = httpGet(opacUrl + "/" + opacDir
+                            + "/reserv" + opacSuffix + "?LANG=de&FUNC=" + func + "&" + id,
                     getDefaultEncoding());
             Document doc = Jsoup.parse(html);
             newStyleReservations = doc
@@ -819,7 +817,7 @@ public class BiBer1992 extends BaseApi {
             nameValuePairs.add(new BasicNameValuePair("PASSWORD", account
                     .getPassword()));
             nameValuePairs.add(new BasicNameValuePair("FUNC", "vors"));
-            if (m_opac_dir.equals("opax")) {
+            if (opacDir.equals("opax")) {
                 nameValuePairs.add(new BasicNameValuePair(resinfo.replace(
                         "resF_", ""), "vors"
                         + (newStyleReservations ? resinfo.replace("resF_", "")
@@ -832,8 +830,8 @@ public class BiBer1992 extends BaseApi {
             nameValuePairs.add(new BasicNameValuePair("ID1", selection
                     .split(":")[0]));
 
-            String html = httpPost(m_opac_url + "/" + m_opac_dir
-                            + "/setreserv" + m_opac_suffix, new UrlEncodedFormEntity(nameValuePairs),
+            String html = httpPost(opacUrl + "/" + opacDir
+                            + "/setreserv" + opacSuffix, new UrlEncodedFormEntity(nameValuePairs),
                     getDefaultEncoding());
 
             Document doc = Jsoup.parse(html);
@@ -876,10 +874,10 @@ public class BiBer1992 extends BaseApi {
         // prolong media via http POST
         // Offenburg: URL is .../opac/verl.C
         // Hagen: URL is .../opax/renewmedia.C
-        if (m_opac_dir.equals("opax")) {
-            command = "/renewmedia" + m_opac_suffix;
+        if (opacDir.equals("opax")) {
+            command = "/renewmedia" + opacSuffix;
         } else {
-            command = "/verl" + m_opac_suffix;
+            command = "/verl" + opacSuffix;
         }
 
         List<NameValuePair> nameValuePairs = new ArrayList<>(2);
@@ -891,11 +889,11 @@ public class BiBer1992 extends BaseApi {
         nameValuePairs.add(new BasicNameValuePair("PASSWORD", account
                 .getPassword()));
 
-        String html = httpPost(m_opac_url + "/" + m_opac_dir + command,
+        String html = httpPost(opacUrl + "/" + opacDir + command,
                 new UrlEncodedFormEntity(nameValuePairs), getDefaultEncoding());
         if (html.contains("no such key")) {
             html = httpPost(
-                    m_opac_url + "/" + m_opac_dir + command.replace(".C", ".S"),
+                    opacUrl + "/" + opacDir + command.replace(".C", ".S"),
                     new UrlEncodedFormEntity(nameValuePairs),
                     getDefaultEncoding());
         }
@@ -959,7 +957,7 @@ public class BiBer1992 extends BaseApi {
         List<NameValuePair> nameValuePairs = new ArrayList<>();
         nameValuePairs.add(new BasicNameValuePair("LANG", "de"));
         nameValuePairs.add(new BasicNameValuePair("FUNC", "vorl"));
-        if (m_opac_dir.equals("opax")) {
+        if (opacDir.equals("opax")) {
             nameValuePairs.add(new BasicNameValuePair("BENUTZER", account
                     .getName()));
             nameValuePairs.add(new BasicNameValuePair("PASSWORD", account
@@ -967,9 +965,9 @@ public class BiBer1992 extends BaseApi {
         }
         nameValuePairs.add(new BasicNameValuePair(media, "YES"));
 
-        String action = m_opac_dir.equals("opax") ? "/delreserv" + m_opac_suffix : "/vorml" + m_opac_suffix;
+        String action = opacDir.equals("opax") ? "/delreserv" + opacSuffix : "/vorml" + opacSuffix;
 
-        String html = httpPost(m_opac_url + "/" + m_opac_dir + action,
+        String html = httpPost(opacUrl + "/" + opacDir + action,
                 new UrlEncodedFormEntity(nameValuePairs), getDefaultEncoding());
 
         Document doc = Jsoup.parse(html);
@@ -1019,7 +1017,7 @@ public class BiBer1992 extends BaseApi {
         }
 
         // parse result list
-        JSONObject copymap = m_data.getJSONObject("accounttable");
+        JSONObject copymap = data.getJSONObject("accounttable");
 
         Pattern expire = Pattern.compile("Ausweisg.ltigkeit: ([0-9.]+)");
         Pattern fees = Pattern.compile("([0-9,.]+) .");
@@ -1130,7 +1128,7 @@ public class BiBer1992 extends BaseApi {
 
         List<Map<String, String>> reservations = new ArrayList<>();
 
-        if (!m_data.has("reservationtable")) {
+        if (!data.has("reservationtable")) {
             // reservations not specifically supported, let's just try it
             // with default values but fail silently
             JSONObject restblobj = new JSONObject();
@@ -1140,7 +1138,7 @@ public class BiBer1992 extends BaseApi {
             restblobj.put("cancelurl", -1);
             restblobj.put("expirationdate", 5);
             restblobj.put("title", 3);
-            m_data.put("reservationtable", restblobj);
+            data.put("reservationtable", restblobj);
             try {
                 return accountGetReservations(account);
             } catch (Exception e) {
@@ -1156,7 +1154,7 @@ public class BiBer1992 extends BaseApi {
         }
 
         // parse result list
-        JSONObject copymap = m_data.getJSONObject("reservationtable");
+        JSONObject copymap = data.getJSONObject("reservationtable");
         Elements rowElements = doc.select("form[name=vorml] table tr");
 
         // rows: skip 1st row -> title row
@@ -1226,7 +1224,7 @@ public class BiBer1992 extends BaseApi {
         nameValuePairs.add(new BasicNameValuePair("PASSWORD", account
                 .getPassword()));
 
-        String html = httpPost(m_opac_url + "/" + m_opac_dir + "/user.C",
+        String html = httpPost(opacUrl + "/" + opacDir + "/user.C",
                 new UrlEncodedFormEntity(nameValuePairs), getDefaultEncoding());
 
         Document doc = Jsoup.parse(html);
@@ -1277,10 +1275,10 @@ public class BiBer1992 extends BaseApi {
         // "/opac/ftitle.C?LANG=de&FUNC=full&331313252=YES"
         // but sometimes (Wuerzburg) "ftitle.C?LANG=de&FUNC=full&331313252=YES"
         if (!id.startsWith("/")) {
-            id = "/" + m_opac_dir + "/" + id;
+            id = "/" + opacDir + "/" + id;
         }
 
-        return m_opac_url + id;
+        return opacUrl + id;
     }
 
     @Override
