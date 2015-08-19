@@ -184,7 +184,7 @@
     <string name="drawer_close">Navigation schließen</string>
     <string name="title_searchresult_list">Suchergebnisse</string>
     <string name="title_activity_library_list">Bibliotheksauswahl</string>
-    <string name="suggest_library">Deine Bibliothek wird nicht unterstützt? Schlage sie vor!</string>
+    <string name="suggest_library">Deine Bibliothek taucht nicht in der Liste auf? Schlage sie vor!</string>
     <string name="title_activity_suggest_library">Bibliothek vorschlagen</string>
     <string name="city">Stadt</string>
     <string name="library_name">Name der Bibliothek</string>
