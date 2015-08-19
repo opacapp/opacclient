@@ -293,10 +293,12 @@ public class Adis extends BaseApi implements OpacApi {
         Document doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
                 + s_service + "&sp=" + s_exts);
 
-        int cnt = 0;
+        int dropdownTextCount = 0;
+        int totalCount = 0;
         List<NameValuePair> nvpairs = new ArrayList<>();
         for (SearchQuery query : queries) {
             if (!query.getValue().equals("")) {
+                totalCount++;
 
                 if (query.getSearchField() instanceof DropdownSearchField) {
                     doc.select("select#" + query.getKey())
@@ -311,7 +313,7 @@ public class Adis extends BaseApi implements OpacApi {
                     continue;
                 }
 
-                cnt++;
+                dropdownTextCount++;
 
                 if (s_exts.equals("SS2")
                         || (query.getSearchField().getData() != null && !query
@@ -321,18 +323,19 @@ public class Adis extends BaseApi implements OpacApi {
                 } else {
                     if (doc.select("select#SUCH01_1").size() == 0) {
                         // Hack needed for Nürnberg
-                        doc.select("input[fld=FELD01_" + cnt + "]").first().previousElementSibling().val(query.getKey());
-                        doc.select("input[fld=FELD01_" + cnt + "]").val(query.getValue());
+                        doc.select("input[fld=FELD01_" + dropdownTextCount + "]").first()
+                           .previousElementSibling().val(query.getKey());
+                        doc.select("input[fld=FELD01_" + dropdownTextCount + "]")
+                           .val(query.getValue());
                     } else {
-                        doc.select("select#SUCH01_" + cnt).val(query.getKey());
-                        doc.select("input#FELD01_" + cnt).val(query.getValue());
+                        doc.select("select#SUCH01_" + dropdownTextCount).val(query.getKey());
+                        doc.select("input#FELD01_" + dropdownTextCount).val(query.getValue());
                     }
                 }
 
-                if (cnt > 4) {
-                    throw new OpacErrorException(
-                            stringProvider.getQuantityString(
-                                    StringProvider.LIMITED_NUM_OF_CRITERIA, 4, 4));
+                if (dropdownTextCount > 4) {
+                    throw new OpacErrorException(stringProvider.getQuantityString(
+                            StringProvider.LIMITED_NUM_OF_CRITERIA, 4, 4));
                 }
             }
         }
@@ -348,7 +351,7 @@ public class Adis extends BaseApi implements OpacApi {
         nvpairs.add(new BasicNameValuePair("$Toolbar_0.x", "1"));
         nvpairs.add(new BasicNameValuePair("$Toolbar_0.y", "1"));
 
-        if (cnt == 0) {
+        if (totalCount == 0) {
             throw new OpacErrorException(
                     stringProvider.getString(StringProvider.NO_CRITERIA_INPUT));
         }
@@ -394,11 +397,16 @@ public class Adis extends BaseApi implements OpacApi {
         Pattern patId = Pattern
                 .compile("javascript:.*htmlOnLink\\('([0-9A-Za-z]+)'\\)");
 
+        int nr = 1;
         for (Element tr : doc.select("table.rTable_table tbody tr")) {
             SearchResult res = new SearchResult();
 
             res.setInnerhtml(tr.select(".rTable_td_text a").first().html());
-            res.setNr(Integer.parseInt(tr.child(0).text().trim()));
+            try {
+                res.setNr(Integer.parseInt(tr.child(0).text().trim()));
+            } catch (NumberFormatException e) {
+                res.setNr(nr);
+            }
 
             Matcher matcher = patId.matcher(tr.select(".rTable_td_text a")
                                               .first().attr("href"));
@@ -416,6 +424,7 @@ public class Adis extends BaseApi implements OpacApi {
             }
 
             results.add(res);
+            nr++;
         }
 
         s_pageform = new ArrayList<>();

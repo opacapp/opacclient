@@ -4,7 +4,7 @@
     "city": "Lauingen (Donau)",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/lauingen"
+        "baseurl": "https://webopac.winbiap.de/lauingen"
     },
     "geo": [
         48.570324,

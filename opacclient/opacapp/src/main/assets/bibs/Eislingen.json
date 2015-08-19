@@ -4,7 +4,7 @@
     "city": "Eislingen",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/eislingen"
+        "baseurl": "https://webopac.winbiap.de/eislingen"
     },
     "geo": [
         48.693333,

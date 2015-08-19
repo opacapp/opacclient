@@ -4,7 +4,7 @@
     "city": "Kirchheim b. M\u00fcnchen",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/kirchheim"
+        "baseurl": "https://webopac.winbiap.de/kirchheim"
     },
     "geo": [
         48.175708,

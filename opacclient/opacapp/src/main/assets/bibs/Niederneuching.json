@@ -4,7 +4,7 @@
     "city": "Niederneuching",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/neuching"
+        "baseurl": "https://webopac.winbiap.de/neuching"
     },
     "geo": [
         48.2536757,

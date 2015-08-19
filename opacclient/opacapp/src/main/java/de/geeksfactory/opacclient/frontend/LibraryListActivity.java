@@ -735,7 +735,7 @@ public class LibraryListActivity extends AppCompatActivity {
             } else if (progressUpdateCount == 1) {
                 double timeElapsed = System.currentTimeMillis() - startTime;
                 double expectedTime = timeElapsed / progress[0];
-                if (expectedTime > 300) {
+                if (expectedTime > 300 && !LibraryListActivity.this.isFinishing()) {
                     dialog = AppCompatProgressDialog.show(LibraryListActivity.this, "",
                             getString(R.string.loading_libraries), true, false);
                     dialog.show();

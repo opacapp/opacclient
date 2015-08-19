@@ -4,7 +4,7 @@
     "city": "Donauw\u00f6rth",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/donauwoerth"
+        "baseurl": "https://webopac.winbiap.de/donauwoerth"
     },
     "geo": [
         48.71924,

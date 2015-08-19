@@ -4,7 +4,7 @@
     "city": "Bruck i.d. Opf.",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/bruck"
+        "baseurl": "https://webopac.winbiap.de/bruck"
     },
     "geo": [
         49.2463308,
