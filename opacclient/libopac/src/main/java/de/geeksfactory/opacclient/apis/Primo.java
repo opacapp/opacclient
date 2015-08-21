@@ -144,9 +144,14 @@ public class Primo extends BaseApi {
             throws IOException, OpacErrorException, JSONException {
         if (!initialised) start();
         last_query = query;
-        String html = httpGet(opac_url + "/action/search.do" +
-                        buildHttpGetParams(buildSearchParams(query), getDefaultEncoding()),
-                getDefaultEncoding());
+        String html;
+        if (query.size() == 1 && query.get(0).getKey().equals("url")) {
+            html = httpGet(query.get(0).getValue(), getDefaultEncoding());
+        } else {
+            html = httpGet(opac_url + "/action/search.do" +
+                            buildHttpGetParams(buildSearchParams(query), getDefaultEncoding()),
+                    getDefaultEncoding());
+        }
         Document doc = Jsoup.parse(html);
 
         return parse_search(doc, 1);
@@ -216,6 +221,17 @@ public class Primo extends BaseApi {
                     res.setType(cls.getValue());
                     break;
                 }
+            }
+
+            if (resrow.select("a.EXLBriefResultsDisplayMultipleLink").size() > 0) {
+                String url = resrow.select("a.EXLBriefResultsDisplayMultipleLink").first()
+                                   .absUrl("href");
+                List<SearchQuery> query = new ArrayList<>();
+                TextSearchField field =
+                        new TextSearchField("url", "url", false, false, "url", false, false);
+                field.setVisible(false);
+                query.add(new SearchQuery(field, url));
+                res.setChildQuery(query);
             }
 
 

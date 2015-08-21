@@ -23,6 +23,10 @@ package de.geeksfactory.opacclient.objects;
 
 import android.graphics.Bitmap;
 
+import java.util.List;
+
+import de.geeksfactory.opacclient.searchfields.SearchQuery;
+
 /**
  * Object representing a search result
  *
@@ -37,6 +41,7 @@ public class SearchResult implements CoverHolder {
     private Bitmap coverBitmap;
     private String cover;
     private int page;
+    private List<SearchQuery> childQuery;
 
     /**
      * Create a new SearchResult object
@@ -196,6 +201,22 @@ public class SearchResult implements CoverHolder {
     @Override
     public void setCover(String cover) {
         this.cover = cover;
+    }
+
+    /**
+     * Get the child query (see setChildQuery for details)
+     */
+    public List<SearchQuery> getChildQuery() {
+        return childQuery;
+    }
+
+    /**
+     * Set the child query. If this is set, clicking the item in the UI will not
+     * open a detail page, but start another search.
+     */
+    public void setChildQuery(
+            List<SearchQuery> childQuery) {
+        this.childQuery = childQuery;
     }
 
     @Override
