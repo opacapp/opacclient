@@ -4,7 +4,7 @@
     "city": "Stockelsdorf",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://katalog.buecherei-stockelsdorf.de/iopac"
+        "baseurl": "http://katalog.buecherei-stockelsdorf.de"
     },
     "geo": [
         53.8949953,
