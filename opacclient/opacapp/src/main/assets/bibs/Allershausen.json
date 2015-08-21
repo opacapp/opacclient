@@ -4,7 +4,7 @@
     "city": "Allershausen",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/allershausen"
+        "baseurl": "https://webopac.winbiap.de/allershausen"
     },
     "geo": [
         48.4305842,

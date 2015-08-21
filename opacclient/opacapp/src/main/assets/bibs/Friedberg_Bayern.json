@@ -4,7 +4,7 @@
     "city": "Friedberg",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/friedberg"
+        "baseurl": "https://webopac.winbiap.de/friedberg"
     },
     "geo": [
         48.3559766,

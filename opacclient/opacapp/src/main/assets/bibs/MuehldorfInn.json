@@ -4,7 +4,7 @@
     "city": "M\u00fchldorf a. Inn",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/muehldorf"
+        "baseurl": "https://webopac.winbiap.de/muehldorf"
     },
     "geo": [
         48.2457722,

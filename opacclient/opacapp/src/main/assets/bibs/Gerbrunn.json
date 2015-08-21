@@ -4,7 +4,7 @@
     "city": "Gerbrunn",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/gerbrunn"
+        "baseurl": "https://webopac.winbiap.de/gerbrunn"
     },
     "geo": [
         49.77988999999999,

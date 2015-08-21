@@ -4,7 +4,7 @@
     "city": "Wehringen",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/wehringen"
+        "baseurl": "https://webopac.winbiap.de/wehringen"
     },
     "geo": [
         48.2464008,

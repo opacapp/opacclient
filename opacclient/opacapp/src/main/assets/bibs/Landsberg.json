@@ -4,7 +4,7 @@
     "city": "Landsberg",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/landsberg"
+        "baseurl": "https://webopac.winbiap.de/landsberg"
     },
     "geo": [
         48.0513036,

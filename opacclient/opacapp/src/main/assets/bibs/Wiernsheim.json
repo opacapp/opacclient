@@ -4,7 +4,7 @@
     "city": "Wiernsheim",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/wiernsheim"
+        "baseurl": "https://webopac.winbiap.de/wiernsheim"
     },
     "geo": [
         48.88933890000001,

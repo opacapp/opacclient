@@ -4,7 +4,7 @@
     "city": "Herzogenaurach",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/herzogenaurach"
+        "baseurl": "https://webopac.winbiap.de/herzogenaurach"
     },
     "geo": [
         49.5682987,

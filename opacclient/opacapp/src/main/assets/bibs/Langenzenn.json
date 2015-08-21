@@ -4,7 +4,7 @@
     "city": "Langenzenn",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/langenzenn"
+        "baseurl": "https://webopac.winbiap.de/langenzenn"
     },
     "geo": [
         49.4946712,

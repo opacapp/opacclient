@@ -4,7 +4,7 @@
     "city": "H\u00f6chberg",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/hoechberg"
+        "baseurl": "https://webopac.winbiap.de/hoechberg"
     },
     "geo": [
         49.7802703,

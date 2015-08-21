@@ -4,7 +4,7 @@
     "city": "Usingen",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/usingen"
+        "baseurl": "https://webopac.winbiap.de/usingen"
     },
     "geo": [
         50.33589,

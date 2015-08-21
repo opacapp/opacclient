@@ -4,7 +4,7 @@
     "city": "Happurg",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/happurg"
+        "baseurl": "https://webopac.winbiap.de/happurg"
     },
     "geo": [
         49.4937364,

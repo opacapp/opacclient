@@ -4,7 +4,7 @@
     "city": "Karlstadt",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/karlstadt"
+        "baseurl": "https://webopac.winbiap.de/karlstadt"
     },
     "geo": [
         49.96026,

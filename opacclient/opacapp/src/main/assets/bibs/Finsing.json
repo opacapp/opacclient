@@ -4,7 +4,7 @@
     "city": "Finsing",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/finsing"
+        "baseurl": "https://webopac.winbiap.de/finsing"
     },
     "geo": [
         48.2177335,
