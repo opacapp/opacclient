@@ -668,7 +668,7 @@ public class Zones22 extends BaseApi {
             return doc;
         }
         if (doc.select("#LoginForm").size() == 0) {
-            throw new NotReachableException();
+            throw new NotReachableException("Login form not found");
         }
         List<NameValuePair> params = new ArrayList<>();
 
@@ -908,7 +908,7 @@ public class Zones22 extends BaseApi {
             JSONException, OpacErrorException {
         Document login = login(account);
         if (login == null) {
-            throw new NotReachableException();
+            throw new NotReachableException("Login unsuccessful");
         }
     }
 

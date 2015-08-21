@@ -1180,7 +1180,7 @@ public class Bibliotheca extends BaseApi {
             html = httpGet(opac_url + "/index.asp?target=konto",
                     getDefaultEncoding());
         } else if (response.getStatusLine().getStatusCode() == 500) {
-            throw new NotReachableException();
+            throw new NotReachableException(response.getStatusLine().getReasonPhrase());
         }
 
         return html;

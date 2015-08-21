@@ -155,7 +155,7 @@ public class BiBer1992 extends BaseApi {
         HttpResponse response = http_client.execute(httpget);
 
         if (response.getStatusLine().getStatusCode() == 500) {
-            throw new NotReachableException();
+            throw new NotReachableException(response.getStatusLine().getReasonPhrase());
         }
         String html = convertStreamToString(response.getEntity().getContent());
         HttpUtils.consume(response.getEntity());
@@ -1303,7 +1303,7 @@ public class BiBer1992 extends BaseApi {
             JSONException, OpacErrorException {
         Document doc = accountHttpPost(account, "medk");
         if (doc == null) {
-            throw new NotReachableException();
+            throw new NotReachableException("Account document was null");
         }
     }
 

@@ -284,7 +284,7 @@ public abstract class BaseApi implements OpacApi {
 
             if (!ignore_errors && response.getStatusLine().getStatusCode() >= 400) {
                 HttpUtils.consume(response.getEntity());
-                throw new NotReachableException();
+                throw new NotReachableException(response.getStatusLine().getReasonPhrase());
             }
 
             html = convertStreamToString(response.getEntity().getContent(),
@@ -292,26 +292,26 @@ public abstract class BaseApi implements OpacApi {
             HttpUtils.consume(response.getEntity());
         } catch (javax.net.ssl.SSLPeerUnverifiedException e) {
             e.printStackTrace();
-            throw new SSLSecurityException();
+            throw new SSLSecurityException(e.getMessage());
         } catch (javax.net.ssl.SSLException e) {
             // Can be "Not trusted server certificate" or can be a
             // aborted/interrupted handshake/connection
             if (e.getMessage().contains("timed out")
                     || e.getMessage().contains("reset by")) {
                 e.printStackTrace();
-                throw new NotReachableException();
+                throw new NotReachableException(e.getMessage());
             } else {
                 e.printStackTrace();
-                throw new SSLSecurityException();
+                throw new SSLSecurityException(e.getMessage());
             }
         } catch (InterruptedIOException e) {
             e.printStackTrace();
-            throw new NotReachableException();
+            throw new NotReachableException(e.getMessage());
         } catch (IOException e) {
             if (e.getMessage() != null
                     && e.getMessage().contains("Request aborted")) {
                 e.printStackTrace();
-                throw new NotReachableException();
+                throw new NotReachableException(e.getMessage());
             } else {
                 throw e;
             }
@@ -401,33 +401,33 @@ public abstract class BaseApi implements OpacApi {
             }
 
             if (!ignore_errors && response.getStatusLine().getStatusCode() >= 400) {
-                throw new NotReachableException();
+                throw new NotReachableException(response.getStatusLine().getReasonPhrase());
             }
             html = convertStreamToString(response.getEntity().getContent(),
                     encoding);
             HttpUtils.consume(response.getEntity());
         } catch (javax.net.ssl.SSLPeerUnverifiedException e) {
             e.printStackTrace();
-            throw new SSLSecurityException();
+            throw new SSLSecurityException(e.getMessage());
         } catch (javax.net.ssl.SSLException e) {
             // Can be "Not trusted server certificate" or can be a
             // aborted/interrupted handshake/connection
             if (e.getMessage().contains("timed out")
                     || e.getMessage().contains("reset by")) {
                 e.printStackTrace();
-                throw new NotReachableException();
+                throw new NotReachableException(e.getMessage());
             } else {
                 e.printStackTrace();
-                throw new SSLSecurityException();
+                throw new SSLSecurityException(e.getMessage());
             }
         } catch (InterruptedIOException e) {
             e.printStackTrace();
-            throw new NotReachableException();
+            throw new NotReachableException(e.getMessage());
         } catch (IOException e) {
             if (e.getMessage() != null
                     && e.getMessage().contains("Request aborted")) {
                 e.printStackTrace();
-                throw new NotReachableException();
+                throw new NotReachableException(e.getMessage());
             } else {
                 throw e;
             }

@@ -1745,7 +1745,7 @@ public class SISIS extends BaseApi implements OpacApi {
         start(); // TODO: Is this necessary?
         boolean success = login(account);
         if (!success) {
-            throw new NotReachableException();
+            throw new NotReachableException("Login unsuccessful");
         }
     }
 

@@ -187,7 +187,7 @@ public class IOpac extends BaseApi implements OpacApi {
         } else if (doc.select("h1").size() > 0) {
             if (doc.select("h1").text().trim().contains("RUNTIME ERROR")) {
                 // Server Error
-                throw new NotReachableException();
+                throw new NotReachableException("IOPAC RUNTIME ERROR");
             } else {
                 throw new OpacErrorException(stringProvider.getFormattedString(
                         StringProvider.UNKNOWN_ERROR_WITH_DESCRIPTION, doc
@@ -688,7 +688,7 @@ public class IOpac extends BaseApi implements OpacApi {
             return new CancelResult(MultiStepResult.Status.OK);
         } catch (Throwable e) {
             e.printStackTrace();
-            throw new NotReachableException();
+            throw new NotReachableException(e.getMessage());
         }
     }
 
@@ -738,7 +738,7 @@ public class IOpac extends BaseApi implements OpacApi {
                 } else if (doc.select("h1").text().trim()
                               .contains("RUNTIME ERROR")) {
                     // Server Error
-                    throw new NotReachableException();
+                    throw new NotReachableException("IOPAC RUNTIME ERROR");
                 } else {
                     throw new OpacErrorException(
                             stringProvider

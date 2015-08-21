@@ -139,31 +139,31 @@ public class Adis extends BaseApi implements OpacApi {
         try {
             response = http_client.execute(httpget);
         } catch (javax.net.ssl.SSLPeerUnverifiedException e) {
-            throw new SSLSecurityException();
+            throw new SSLSecurityException(e.getMessage());
         } catch (javax.net.ssl.SSLException e) {
             // Can be "Not trusted server certificate" or can be a
             // aborted/interrupted handshake/connection
             if (e.getMessage().contains("timed out")
                     || e.getMessage().contains("reset by")) {
                 e.printStackTrace();
-                throw new NotReachableException();
+                throw new NotReachableException(e.getMessage());
             } else {
-                throw new SSLSecurityException();
+                throw new SSLSecurityException(e.getMessage());
             }
         } catch (InterruptedIOException e) {
             e.printStackTrace();
-            throw new NotReachableException();
+            throw new NotReachableException(e.getMessage());
         } catch (IOException e) {
             if (e.getMessage() != null && e.getMessage().contains("Request aborted")) {
                 e.printStackTrace();
-                throw new NotReachableException();
+                throw new NotReachableException(e.getMessage());
             } else {
                 throw e;
             }
         }
 
         if (response.getStatusLine().getStatusCode() >= 400) {
-            throw new NotReachableException();
+            throw new NotReachableException(response.getStatusLine().getReasonPhrase());
         }
         String html = convertStreamToString(response.getEntity().getContent(),
                 getDefaultEncoding());
@@ -202,31 +202,31 @@ public class Adis extends BaseApi implements OpacApi {
             response = http_client.execute(httppost);
 
         } catch (javax.net.ssl.SSLPeerUnverifiedException e) {
-            throw new SSLSecurityException();
+            throw new SSLSecurityException(e.getMessage());
         } catch (javax.net.ssl.SSLException e) {
             // Can be "Not trusted server certificate" or can be a
             // aborted/interrupted handshake/connection
             if (e.getMessage().contains("timed out")
                     || e.getMessage().contains("reset by")) {
                 e.printStackTrace();
-                throw new NotReachableException();
+                throw new NotReachableException(e.getMessage());
             } else {
-                throw new SSLSecurityException();
+                throw new SSLSecurityException(e.getMessage());
             }
         } catch (InterruptedIOException e) {
             e.printStackTrace();
-            throw new NotReachableException();
+            throw new NotReachableException(e.getMessage());
         } catch (IOException e) {
             if (e.getMessage() != null && e.getMessage().contains("Request aborted")) {
                 e.printStackTrace();
-                throw new NotReachableException();
+                throw new NotReachableException(e.getMessage());
             } else {
                 throw e;
             }
         }
 
         if (response.getStatusLine().getStatusCode() >= 400) {
-            throw new NotReachableException();
+            throw new NotReachableException(response.getStatusLine().getReasonPhrase());
         }
         String html = convertStreamToString(response.getEntity().getContent(),
                 getDefaultEncoding());
