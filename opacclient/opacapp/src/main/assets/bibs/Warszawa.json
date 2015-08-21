@@ -9,7 +9,8 @@
     "languages": [
       "en",
       "pl"
-    ]
+    ],
+	"searchtab": "central_catalogue_tab"
   },
   "geo": [
     52.2296756,

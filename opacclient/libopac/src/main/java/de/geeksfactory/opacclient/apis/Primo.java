@@ -97,8 +97,11 @@ public class Primo extends BaseApi {
             throws IOException, OpacErrorException {
         List<NameValuePair> params = new ArrayList<>();
 
+        String tab = "";
+        if (data.has("searchtab"))
+            tab = "&tab=" + data.optString("searchtab", "default_tab");
         String html =
-                httpGet(opac_url + "/action/search.do?mode=Advanced&ct=AdvancedSearch&vid=" + vid,
+                httpGet(opac_url + "/action/search.do?mode=Advanced&ct=AdvancedSearch&vid=" + vid + tab,
                         getDefaultEncoding());
         Document doc = Jsoup.parse(html);
 
