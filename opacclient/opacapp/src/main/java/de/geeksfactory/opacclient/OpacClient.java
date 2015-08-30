@@ -58,7 +58,8 @@ import de.geeksfactory.opacclient.apis.Bibliotheca;
 import de.geeksfactory.opacclient.apis.Heidi;
 import de.geeksfactory.opacclient.apis.IOpac;
 import de.geeksfactory.opacclient.apis.OpacApi;
-import de.geeksfactory.opacclient.apis.Pica;
+import de.geeksfactory.opacclient.apis.PicaLBS;
+import de.geeksfactory.opacclient.apis.PicaOld;
 import de.geeksfactory.opacclient.apis.Primo;
 import de.geeksfactory.opacclient.apis.SISIS;
 import de.geeksfactory.opacclient.apis.SRU;
@@ -220,7 +221,9 @@ public class OpacClient extends Application {
         } else if (lib.getApi().equals("biber1992")) {
             newApiInstance = new BiBer1992();
         } else if (lib.getApi().equals("pica")) {
-            newApiInstance = new Pica();
+            newApiInstance = new PicaOld();
+        } else if (lib.getApi().equals("picalbs")) {
+            newApiInstance = new PicaLBS();
         } else if (lib.getApi().equals("iopac")) {
             newApiInstance = new IOpac();
         } else if (lib.getApi().equals("adis")) {
