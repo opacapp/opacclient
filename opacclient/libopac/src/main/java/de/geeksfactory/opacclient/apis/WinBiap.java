@@ -1,6 +1,7 @@
 package de.geeksfactory.opacclient.apis;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -639,7 +640,7 @@ public class WinBiap extends BaseApi implements OpacApi {
 
     @Override
     public boolean isAccountSupported(Library library) {
-        return false;
+        return true;
     }
 
     @Override
@@ -665,8 +666,37 @@ public class WinBiap extends BaseApi implements OpacApi {
     @Override
     public void checkAccountData(Account account) throws IOException,
             JSONException, OpacErrorException {
-        // TODO Auto-generated method stub
+        login(account);
+    }
 
+    protected void login(Account account) throws IOException, OpacErrorException {
+        Document loginPage = Jsoup.parse(
+                httpGet(opac_url + "/user/login.aspx", getDefaultEncoding()));
+        List<NameValuePair> data = new ArrayList<>();
+
+        data.add(new BasicNameValuePair("__LASTFOCUS", ""));
+        data.add(new BasicNameValuePair("__EVENTTARGET", ""));
+        data.add(new BasicNameValuePair("__EVENTARGUMENT", ""));
+        data.add(new BasicNameValuePair("__VIEWSTATE", loginPage.select("#__VIEWSTATE").val()));
+        data.add(new BasicNameValuePair("__VIEWSTATEGENERATOR",
+                loginPage.select("#__VIEWSTATEGENERATOR").val()));
+        data.add(new BasicNameValuePair("__EVENTVALIDATION",
+                loginPage.select("#__EVENTVALIDATION").val()));
+
+        data.add(new BasicNameValuePair("ctl00$ContentPlaceHolderMain$TextBoxLoginName",
+                account.getName()));
+        data.add(new BasicNameValuePair("ctl00$ContentPlaceHolderMain$TextBoxLoginPassword",
+                account.getPassword()));
+        data.add(new BasicNameValuePair("ctl00$ContentPlaceHolderMain$ButtonLogin", "Anmelden"));
+
+        String html = httpPost(opac_url + "/user/login.aspx", new UrlEncodedFormEntity(data),
+                "UTF-8");
+        Document doc = Jsoup.parse(html);
+        System.out.println(doc.text());
+        if (doc.select("#ctl00_ContentPlaceHolderMain_LabelLoginMessage").size() > 0) {
+            throw new OpacErrorException(
+                    doc.select("#ctl00_ContentPlaceHolderMain_LabelLoginMessage").text());
+        }
     }
 
     @Override
