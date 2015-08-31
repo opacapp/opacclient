@@ -183,10 +183,8 @@ public class PicaOld extends Pica {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            ReservationResult res = new ReservationResult(
-                    MultiStepResult.Status.ERROR);
-            res.setMessage(stringProvider
-                    .getString(StringProvider.INTERNAL_ERROR));
+            ReservationResult res = new ReservationResult(MultiStepResult.Status.ERROR);
+            res.setMessage(stringProvider.getString(StringProvider.INTERNAL_ERROR));
             return res;
         }
     }
