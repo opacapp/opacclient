@@ -1,11 +1,12 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "pica",
     "city": "Greifswald",
     "country": "Deutschland",
     "data": {
         "baseurl": "https://lhgrw.gbv.de",
-        "db": "1"
+        "db": "1",
+        "account_system": "lbs"
     },
     "geo": [
         54.0915636,

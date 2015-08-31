@@ -1,11 +1,12 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "pica",
     "city": "Weimar",
     "country": "Deutschland",
     "data": {
         "baseurl": "https://opac.lbs-weimar.gbv.de",
-        "db": "1"
+        "db": "1",
+        "account_system": "lbs"
     },
     "geo": [
         50.979444,
