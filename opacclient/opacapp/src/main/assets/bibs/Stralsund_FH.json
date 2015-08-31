@@ -1,11 +1,12 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "pica",
     "city": "Stralsund",
     "country": "Deutschland",
     "data": {
         "baseurl": "https://lhgrw.gbv.de",
-        "db": "2"
+        "db": "2",
+        "account_system": "lbs"
     },
     "geo": [
         54.2994048,
