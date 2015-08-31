@@ -221,9 +221,17 @@ public class OpacClient extends Application {
         } else if (lib.getApi().equals("biber1992")) {
             newApiInstance = new BiBer1992();
         } else if (lib.getApi().equals("pica")) {
-            newApiInstance = new PicaOld();
-        } else if (lib.getApi().equals("picalbs")) {
-            newApiInstance = new PicaLBS();
+            switch (lib.getData().optString("account_system", "")) {
+                case "lbs":
+                    newApiInstance = new PicaLBS();
+                    break;
+                case "default":
+                    newApiInstance = new PicaOld();
+                    break;
+                default:
+                    newApiInstance = new PicaOld();
+                    break;
+            }
         } else if (lib.getApi().equals("iopac")) {
             newApiInstance = new IOpac();
         } else if (lib.getApi().equals("adis")) {
