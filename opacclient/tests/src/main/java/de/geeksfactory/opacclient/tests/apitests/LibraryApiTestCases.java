@@ -27,7 +27,8 @@ import de.geeksfactory.opacclient.apis.Heidi;
 import de.geeksfactory.opacclient.apis.IOpac;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
-import de.geeksfactory.opacclient.apis.Pica;
+import de.geeksfactory.opacclient.apis.PicaLBS;
+import de.geeksfactory.opacclient.apis.PicaOld;
 import de.geeksfactory.opacclient.apis.Primo;
 import de.geeksfactory.opacclient.apis.SISIS;
 import de.geeksfactory.opacclient.apis.SRU;
@@ -259,7 +260,17 @@ public class LibraryApiTestCases {
         } else if (library.getApi().equals("biber1992")) {
             api = new BiBer1992();
         } else if (library.getApi().equals("pica")) {
-            api = new Pica();
+            switch (library.getData().optString("account_system", "")) {
+                case "lbs":
+                    api = new PicaLBS();
+                    break;
+                case "default":
+                    api = new PicaOld();
+                    break;
+                default:
+                    api = new PicaOld();
+                    break;
+            }
         } else if (library.getApi().equals("iopac")) {
             api = new IOpac();
         } else if (library.getApi().equals("adis")) {
