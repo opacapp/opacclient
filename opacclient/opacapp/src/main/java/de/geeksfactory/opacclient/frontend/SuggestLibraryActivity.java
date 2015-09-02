@@ -283,7 +283,7 @@ public class SuggestLibraryActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return resultList.size();
+            return resultList == null ? 0 : resultList.size();
         }
 
         @Override
