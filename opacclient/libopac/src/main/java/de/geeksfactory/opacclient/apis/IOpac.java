@@ -442,10 +442,10 @@ public class IOpac extends BaseApi implements OpacApi {
 
         DetailledItem result = new DetailledItem();
 
-        String id;
+        String id = null;
         if (doc.select("input[name=mednr]").size() > 0) {
             id = doc.select("input[name=mednr]").first().val().trim();
-        } else {
+        } else if(doc.select("a[href*=mednr]").size() > 0) {
             String href = doc.select("a[href*=mednr]").first().attr("href");
             id = getQueryParamsFirst(href).get("mednr").trim();
         }
