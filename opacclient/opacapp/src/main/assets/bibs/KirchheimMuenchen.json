@@ -1,5 +1,5 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Kirchheim b. M\u00fcnchen",
     "country": "Deutschland",

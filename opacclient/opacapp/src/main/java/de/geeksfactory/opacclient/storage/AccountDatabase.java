@@ -41,6 +41,12 @@ public class AccountDatabase extends SQLiteOpenHelper {
     // CHANGE THIS
     public static final Map<String, String> COLUMNS_LENT;
     public static final Map<String, String> COLUMNS_RESERVATIONS;
+    public static final String TABLENAME_ACCOUNTS = "accounts";
+    public static final String TABLENAME_LENT = "accountdata_lent";
+    public static final String TABLENAME_RESERVATION = "accountdata_reservations";
+    public static final String TABLENAME_NOTIFIED = "notified";
+    private static final String DATABASE_NAME = "accounts.db";
+    private static final int DATABASE_VERSION = 21; // REPLACE ONUPGRADE IF YOU
 
     static {
         Map<String, String> aMap = new HashMap<>();
@@ -68,15 +74,9 @@ public class AccountDatabase extends SQLiteOpenHelper {
         bMap.put(AccountData.KEY_RESERVATION_TITLE, "title");
         bMap.put(AccountData.KEY_RESERVATION_BOOKING, "bookingurl");
         bMap.put(AccountData.KEY_RESERVATION_ID, "itemid");
+        bMap.put(AccountData.KEY_RESERVATION_FORMAT, "format");
         COLUMNS_RESERVATIONS = Collections.unmodifiableMap(bMap);
     }
-
-    public static final String TABLENAME_ACCOUNTS = "accounts";
-    public static final String TABLENAME_LENT = "accountdata_lent";
-    public static final String TABLENAME_RESERVATION = "accountdata_reservations";
-    public static final String TABLENAME_NOTIFIED = "notified";
-    private static final String DATABASE_NAME = "accounts.db";
-    private static final int DATABASE_VERSION = 20; // REPLACE ONUPGRADE IF YOU
 
     public AccountDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -180,6 +180,11 @@ public class AccountDatabase extends SQLiteOpenHelper {
         if (oldVersion < 20) {
             // App version 3.0.1 to 3.0.2
             db.execSQL("alter table accounts add column warning text");
+        }
+        if (oldVersion < 21) {
+            // App version 4.1.11 to 4.1.12
+            // KEY_RESERVATION_FORMAT existed before but was missing in the DB
+            db.execSQL("alter table accountdata_reservations add column format text");
         }
 
 
