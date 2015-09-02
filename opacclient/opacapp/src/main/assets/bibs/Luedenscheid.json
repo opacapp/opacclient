@@ -14,7 +14,7 @@
             "status": -1,
             "title": 1
         },
-        "baseurl": "http://opac.luedenscheid.de/wwwopac",
+        "baseurl": "https://opac.luedenscheid.de",
         "copiestable": {
             "barcode": 6,
             "branch": 0,
@@ -24,6 +24,7 @@
             "returndate": 5,
             "status": 4
         },
+		"customssl": true,
         "mediatypes": {
             "bestsellkl2.gif": "BOOK",
             "mBlu-RayselbstS.gif": "BLURAY",
