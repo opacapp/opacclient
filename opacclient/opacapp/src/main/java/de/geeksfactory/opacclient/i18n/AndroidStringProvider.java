@@ -22,6 +22,7 @@
 package de.geeksfactory.opacclient.i18n;
 
 import de.geeksfactory.opacclient.OpacClient;
+import de.geeksfactory.opacclient.objects.SearchResult;
 
 public class AndroidStringProvider implements StringProvider {
     @Override
@@ -44,5 +45,13 @@ public class AndroidStringProvider implements StringProvider {
         int id = OpacClient.context.getResources().getIdentifier(identifier,
                 "plurals", OpacClient.context.getPackageName());
         return OpacClient.context.getResources().getQuantityString(id, count, args);
+    }
+
+    @Override
+    public String getMediaTypeName(SearchResult.MediaType mediaType) {
+        int id = OpacClient.context.getResources().getIdentifier("mediatype_"
+                        + mediaType.toString().toLowerCase(), "string",
+                OpacClient.context.getPackageName());
+        return OpacClient.context.getResources().getString(id);
     }
 }

@@ -21,6 +21,8 @@
  */
 package de.geeksfactory.opacclient.i18n;
 
+import de.geeksfactory.opacclient.objects.SearchResult;
+
 public class DummyStringProvider implements StringProvider {
     @Override
     public String getString(String identifier) {
@@ -49,5 +51,10 @@ public class DummyStringProvider implements StringProvider {
             builder.append(arg.toString());
         }
         return builder.toString();
+    }
+
+    @Override
+    public String getMediaTypeName(SearchResult.MediaType mediaType) {
+        return mediaType.toString();
     }
 }

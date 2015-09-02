@@ -21,6 +21,8 @@
  */
 package de.geeksfactory.opacclient.i18n;
 
+import de.geeksfactory.opacclient.objects.SearchResult;
+
 /**
  * The StringProvider interface exposes an abstract method of translating strings from the OpacApi
  * classes. Since version 3.2.1, it is highly discouraged to hardcode any string into the OpacApi
@@ -103,5 +105,12 @@ public interface StringProvider {
      */
     String getQuantityString(String identifier, int count, Object... args);
 
+    /**
+     * Returns the localized name of a media type
+     *
+     * @param mediaType the MediaType
+     * @return the translated string
+     */
+    String getMediaTypeName(SearchResult.MediaType mediaType);
 
 }
