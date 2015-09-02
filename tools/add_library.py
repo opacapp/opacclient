@@ -242,7 +242,7 @@ class WebOpacNet(Api):
 class WinBiap(Api):
 
     def accountSupported(self):
-        return False
+        return True
 
 class Adis(Api):
 
