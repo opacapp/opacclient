@@ -1,5 +1,5 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Ostheim v.d.Rh\u00f6n",
     "country": "Deutschland",

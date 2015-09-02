@@ -1,5 +1,5 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "S\u00fc\u00dfen",
     "country": "Deutschland",

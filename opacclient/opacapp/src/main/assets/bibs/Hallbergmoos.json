@@ -1,5 +1,5 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Hallbergmoos",
     "country": "Deutschland",

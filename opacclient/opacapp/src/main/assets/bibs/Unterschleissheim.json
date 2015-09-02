@@ -1,5 +1,5 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Unterschlei\u00dfheim",
     "country": "Deutschland",
