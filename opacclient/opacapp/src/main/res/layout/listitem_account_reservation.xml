@@ -9,78 +9,76 @@
 
     <LinearLayout
         android:id="@+id/llData"
-        android:layout_gravity="center_vertical"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_gravity="center_vertical"
         android:layout_marginLeft="12dp"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
-        android:orientation="vertical"
+        android:layout_weight="1"
+        android:animateLayoutChanges="true"
         android:clickable="false"
-        android:animateLayoutChanges="true">
+        android:orientation="vertical"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp">
 
         <TextView
             android:id="@+id/tvTitleAndAuthor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:singleLine="true"
+            android:contentDescription="@string/title_and_author"
             android:drawableLeft="@drawable/ic_title"
             android:drawablePadding="4dp"
+            android:ellipsize="end"
             android:gravity="center_vertical"
-            android:contentDescription="@string/title_and_author"/>
+            android:singleLine="true"/>
 
         <TextView
             android:id="@+id/tvStatus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:singleLine="true"
+            android:contentDescription="@string/status"
             android:drawableLeft="@drawable/ic_status"
             android:drawablePadding="4dp"
-            android:gravity="center_vertical"
-            android:contentDescription="@string/status"/>
+            android:gravity="center_vertical"/>
 
         <LinearLayout
             android:id="@+id/llDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/tvAuthorDetail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:singleLine="true"
+                android:contentDescription="@string/author"
                 android:drawableLeft="@drawable/ic_author"
                 android:drawablePadding="4dp"
+                android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:contentDescription="@string/author"/>
+                android:singleLine="true"/>
 
             <TextView
                 android:id="@+id/tvBranchDetail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:singleLine="true"
+                android:contentDescription="@string/branch"
                 android:drawableLeft="@drawable/ic_branch"
                 android:drawablePadding="4dp"
+                android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:contentDescription="@string/branch"/>
+                android:singleLine="true"/>
 
             <TextView
                 android:id="@+id/tvFormatDetail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:singleLine="true"
+                android:contentDescription="@string/mediatype"
                 android:drawableLeft="@drawable/ic_media_type"
                 android:drawablePadding="4dp"
+                android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:contentDescription="@string/mediatype"/>
+                android:singleLine="true"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -88,39 +86,39 @@
         android:id="@+id/llButtons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:animateLayoutChanges="true">
+        android:animateLayoutChanges="true"
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/ivCancel"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:contentDescription="@string/reservation_cancel"
-            android:src="@drawable/ic_cancel"
+            android:background="@drawable/ripple_unmasked"
             android:clickable="true"
+            android:contentDescription="@string/reservation_cancel"
             android:focusable="true"
-            android:background="@drawable/ripple_unmasked"/>
+            android:src="@drawable/ic_cancel"/>
 
         <ImageView
             android:id="@+id/ivBooking"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:contentDescription="@string/reservation_book"
-            android:src="@drawable/ic_booking"
-            android:visibility="gone"
+            android:background="@drawable/ripple_unmasked"
             android:clickable="true"
+            android:contentDescription="@string/reservation_book"
             android:focusable="true"
-            android:background="@drawable/ripple_unmasked"/>
+            android:src="@drawable/ic_booking"
+            android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/ivDetails"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:visibility="gone"
-            android:contentDescription="@string/go_to_details"
-            android:src="@drawable/ic_detail"
+            android:background="@drawable/ripple_unmasked"
             android:clickable="true"
+            android:contentDescription="@string/go_to_details"
             android:focusable="true"
-            android:background="@drawable/ripple_unmasked"/>
+            android:src="@drawable/ic_detail"
+            android:visibility="gone"/>
     </LinearLayout>
 </LinearLayout>
