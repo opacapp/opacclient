@@ -167,7 +167,7 @@ public class PicaLBS extends Pica {
     private List<Map<String, String>> parse_medialist(Document doc) {
         List<Map<String, String>> lent = new ArrayList<>();
 
-        for (Element tr : doc.select(".resultset > tbody > tr")) {
+        for (Element tr : doc.select(".resultset > tbody > tr:has(.rec_title)")) {
             Map<String, String> item = new HashMap<>();
             if (tr.select("input[name=volumeNumbersToRenew]").size() > 0) {
                 item.put(AccountData.KEY_LENT_LINK,
@@ -175,13 +175,13 @@ public class PicaLBS extends Pica {
             } else {
                 item.put(AccountData.KEY_LENT_RENEWABLE, "N");
             }
-            String titleAuthor = extractAccountInfo(doc, "Title / Author", "Titel");
+            String titleAuthor = extractAccountInfo(tr, "Title / Author", "Titel");
             if (titleAuthor != null) {
                 String[] parts = titleAuthor.split(" / ");
                 item.put(AccountData.KEY_LENT_TITLE, parts[0]);
                 if (parts.length == 2) item.put(AccountData.KEY_LENT_AUTHOR, parts[1]);
             }
-            String returndate = extractAccountInfo(doc, "Returndate", "ausgeliehen bis");
+            String returndate = extractAccountInfo(tr, "Returndate", "ausgeliehen bis");
             Date date = parseDate(returndate);
             item.put(AccountData.KEY_LENT_DEADLINE, returndate);
             if (date != null) {
@@ -190,27 +190,32 @@ public class PicaLBS extends Pica {
 
             StringBuilder status = new StringBuilder();
 
-            String statusData = extractAccountInfo(doc, "Status");
+            String statusData = extractAccountInfo(tr, "Status");
             if (statusData != null) status.append(statusData);
 
-            String prolong = extractAccountInfo(doc, "No of Renewals", "Anzahl Verlängerungen");
+            String prolong = extractAccountInfo(tr, "No of Renewals", "Anzahl Verlängerungen");
             if (prolong != null && !prolong.equals("0")) {
                 if (status.length() > 0) status.append(", ");
                 status.append(prolong).append("x ").append(stringProvider
                         .getString(StringProvider.PROLONGED_ABBR));
             }
 
-            String reminder = extractAccountInfo(doc, "Remind.", "Mahnungen");
+            String reminder = extractAccountInfo(tr, "Remind.", "Mahnungen");
             if (reminder != null && !reminder.equals("0")) {
                 if (status.length() > 0) status.append(", ");
                 status.append(reminder).append(" ").append(stringProvider
                         .getString(StringProvider.REMINDERS));
             }
 
+            String error = tr.select(".error").text();
+            if (!error.equals("")) {
+                if (status.length() > 0) status.append(", ");
+                status.append(error);
+            }
+
             item.put(AccountData.KEY_LENT_STATUS, status.toString());
-            item.put(AccountData.KEY_LENT_BRANCH, extractAccountInfo(doc, "Counter", "Theke"));
-            item.put(AccountData.KEY_LENT_BARCODE,
-                    extractAccountInfo(doc, "Shelf mark", "Signatur"));
+            extractAccountInfo(item, AccountData.KEY_LENT_BRANCH, tr, "Counter", "Theke");
+            extractAccountInfo(item, AccountData.KEY_LENT_BARCODE, tr, "Shelf mark", "Signatur");
             lent.add(item);
         }
 
@@ -234,24 +239,42 @@ public class PicaLBS extends Pica {
     private List<Map<String, String>> parse_reslist(Document doc) {
         List<Map<String, String>> reservations = new ArrayList<>();
 
-        for (Element tr : doc.select(".resultset > tbody > tr")) {
+        for (Element tr : doc.select(".resultset > tbody > tr:has(.rec_title)")) {
             Map<String, String> item = new HashMap<>();
             if (tr.select("input[name=volumeReservationsToCancel]").size() > 0) {
                 item.put(AccountData.KEY_RESERVATION_CANCEL,
                         tr.select("input[name=volumeReservationsToCancel]").val());
             }
-            String titleAuthor = extractAccountInfo(doc, "Title / Author", "Titel");
+            String titleAuthor = extractAccountInfo(tr, "Title / Author", "Titel");
             if (titleAuthor != null) {
                 String[] parts = titleAuthor.split(" / ");
                 item.put(AccountData.KEY_RESERVATION_TITLE, parts[0]);
                 if (parts.length == 2) item.put(AccountData.KEY_RESERVATION_AUTHOR, parts[1]);
             }
 
-            item.put(AccountData.KEY_RESERVATION_BRANCH,
-                    extractAccountInfo(doc, "Destination", "Theke"));
-            // not supported: extractAccountInfo(doc, "Shelf mark", "Signatur")
-            item.put(AccountData.KEY_RESERVATION_READY,
-                    extractAccountInfo(doc, "Reservationdate", "Vormerkungsdatum"));
+            extractAccountInfo(item, AccountData.KEY_RESERVATION_BRANCH, tr, "Destination",
+                    "Theke");
+            // not supported: extractAccountInfo(tr, "Shelf mark", "Signatur")
+
+            StringBuilder status = new StringBuilder();
+            String numberOfReservations =
+                    extractAccountInfo(tr, "Vormerkung", "Number of reservations");
+            if (numberOfReservations != null) {
+                status.append(stringProvider.getFormattedString(
+                        StringProvider.RESERVATIONS_NUMBER, numberOfReservations));
+            }
+
+            String reservationDate = extractAccountInfo(tr, "Reservationdate", "Vormerkungsdatum");
+            if (reservationDate != null) {
+                if (status.length() > 0) {
+                    status.append(", ");
+                }
+                status.append(stringProvider.getFormattedString(
+                        StringProvider.RESERVED_AT_DATE, reservationDate));
+            }
+
+            if (status.length() > 0) item.put(AccountData.KEY_RESERVATION_READY, status.toString());
+
             // TODO: I don't know how reservations are marked that are already available
             reservations.add(item);
         }
@@ -259,7 +282,13 @@ public class PicaLBS extends Pica {
         return reservations;
     }
 
-    private String extractAccountInfo(Document doc, String... dataNames) {
+    private void extractAccountInfo(Map<String, String> map, String key, Element doc,
+            String... dataNames) {
+        String data = extractAccountInfo(doc, dataNames);
+        if (data != null && !data.equals("")) map.put(key, data);
+    }
+
+    private String extractAccountInfo(Element doc, String... dataNames) {
         StringBuilder labelSelector = new StringBuilder();
         boolean first = true;
         for (String dataName : dataNames) {
