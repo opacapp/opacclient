@@ -46,7 +46,7 @@ public class AccountDatabase extends SQLiteOpenHelper {
     public static final String TABLENAME_RESERVATION = "accountdata_reservations";
     public static final String TABLENAME_NOTIFIED = "notified";
     private static final String DATABASE_NAME = "accounts.db";
-    private static final int DATABASE_VERSION = 21; // REPLACE ONUPGRADE IF YOU
+    private static final int DATABASE_VERSION = 22; // REPLACE ONUPGRADE IF YOU
 
     static {
         Map<String, String> aMap = new HashMap<>();
@@ -99,7 +99,7 @@ public class AccountDatabase extends SQLiteOpenHelper {
                 + "accountdata_reservations ( account integer, "
                 + "title text," + "author text," + "ready text,"
                 + "branch text," + "cancel text," + "expire text,"
-                + "itemid text," + "bookingurl text);");
+                + "itemid text," + "bookingurl text," + "format text" + ");");
         db.execSQL("create table "
                 + "notified ( id integer primary key autoincrement, "
                 + "account integer, " + "timestamp integer);");
@@ -182,9 +182,19 @@ public class AccountDatabase extends SQLiteOpenHelper {
             db.execSQL("alter table accounts add column warning text");
         }
         if (oldVersion < 21) {
-            // App version 4.1.11 to 4.1.12
+            // App version 4.1.11 to 4.2.0
             // KEY_RESERVATION_FORMAT existed before but was missing in the DB
             db.execSQL("alter table accountdata_reservations add column format text");
+        }
+        if (oldVersion < 22) {
+            // App version 4.2.0 to 4.2.1
+            // We added KEY_RESERVATION_FORMAT to onUpgrade but didn't in onCreate,
+            // so we need to fix this by adding it again if it does not exist
+            try {
+                db.execSQL("alter table accountdata_reservations add column format text");
+            } catch (Exception e) {
+                // it already exists, do nothing
+            }
         }
 
 
