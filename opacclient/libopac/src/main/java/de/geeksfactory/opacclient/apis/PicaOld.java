@@ -361,10 +361,18 @@ public class PicaOld extends Pica {
 
         List<Map<String, String>> media = new ArrayList<>();
         List<Map<String, String>> reserved = new ArrayList<>();
-        if (doc.select("table[summary^=list]").size() > 0) {
+        if (doc.select("table[summary^=list]").size() > 0
+                && !doc.select(".alert").text().contains("Keine Entleihungen")
+                && !doc.select(".alert").text().contains("No outstanding loans")
+                && !doc.select(".alert").text().contains("Geen uitlening")
+                && !doc.select(".alert").text().contains("Aucun emprunt")) {
             parse_medialist(media, doc);
         }
-        if (doc2.select("table[summary^=list]").size() > 0) {
+        if (doc2.select("table[summary^=list]").size() > 0
+                && !doc2.select(".alert").text().contains("Keine Vormerkungen")
+                && !doc2.select(".alert").text().contains("No outstanding reservations")
+                && !doc2.select(".alert").text().contains("Geen reservering")
+                && !doc2.select(".alert").text().contains("Aucune réservation")) {
             parse_reslist(reserved, doc2);
         }
 
