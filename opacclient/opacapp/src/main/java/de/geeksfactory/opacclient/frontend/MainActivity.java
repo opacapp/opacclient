@@ -16,13 +16,18 @@ import android.support.v4.app.FragmentManager;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.barcode.BarcodeScanIntegrator;
 import de.geeksfactory.opacclient.objects.Account;
+import de.geeksfactory.opacclient.searchfields.SearchField;
+import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
+import de.geeksfactory.opacclient.storage.SearchFieldDataSource;
 
 public class MainActivity extends OpacActivity implements
         SearchFragment.Callback, StarredFragment.Callback,
@@ -50,24 +55,19 @@ public class MainActivity extends OpacActivity implements
         byte[] id = tag.getId();
         android.nfc.tech.NfcV tech = android.nfc.tech.NfcV.get(tag);
         byte[] readCmd = new byte[3 + id.length];
-        readCmd[0] = 0x20; // set "address" flag (only send command to this
-        // tag)
+        readCmd[0] = 0x20; // set "address" flag (only send command to this tag)
         readCmd[1] = 0x20; // ISO 15693 Single Block Read command byte
         System.arraycopy(id, 0, readCmd, 2, id.length); // copy ID
         StringBuilder stringbuilder = new StringBuilder();
         try {
             tech.connect();
             for (int i = 0; i < 4; i++) {
-                readCmd[2 + id.length] = (byte) i; // 1 byte payload: block
-                // address
+                readCmd[2 + id.length] = (byte) i; // 1 byte payload: block address
                 byte[] data;
                 data = tech.transceive(readCmd);
                 for (byte aData1 : data) {
-                    if (aData1 > 32 && aData1 < 127) // We only want printable
-                    // characters, there
-                    // might be some
-                    // nullbytes in it
-                    // otherwise.
+                    if (aData1 > 32 && aData1 < 127) // We only want printable characters, there
+                    // might be some nullbytes in it otherwise.
                     {
                         stringbuilder.append((char) aData1);
                     }
@@ -280,27 +280,30 @@ public class MainActivity extends OpacActivity implements
     @SuppressLint("NewApi")
     @Override
     public void onNewIntent(Intent intent) {
-        // TODO: Rewrite this for the new SearchField implementation
-        /*if (nfc_capable && sp.getBoolean("nfc_search", false)) {
-            android.nfc.Tag tag = intent
-					.getParcelableExtra(android.nfc.NfcAdapter.EXTRA_TAG);
-			String scanResult = readPageToString(tag);
+        if (nfc_capable && sp.getBoolean("nfc_search", false)) {
+            android.nfc.Tag tag = intent.getParcelableExtra(android.nfc.NfcAdapter.EXTRA_TAG);
+            String scanResult = readPageToString(tag);
 			if (scanResult != null) {
 				if (scanResult.length() > 5) {
-					Set<String> fields = new HashSet<String>(Arrays.asList(app
-							.getApi().getSearchFields()));
-					if (fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE)) {
-						Map<String, String> query = new HashMap<String, String>();
-						query.put(OpacApi.KEY_SEARCH_QUERY_BARCODE, scanResult);
-						app.startSearch(this, query);
-					} else {
-						Toast.makeText(this,
-								R.string.barcode_internal_not_supported,
-								Toast.LENGTH_LONG).show();
-					}
-				}
+                    SearchFieldDataSource source = new JsonSearchFieldDataSource(this);
+                    if (source.hasSearchFields(app.getLibrary().getIdent())) {
+                        List<SearchField> fields =
+                                source.getSearchFields(app.getLibrary().getIdent());
+                        for (SearchField field : fields) {
+                            if (field.getMeaning() == SearchField.Meaning.BARCODE) {
+                                List<SearchQuery> queries = new ArrayList<>();
+                                queries.add(new SearchQuery(field, scanResult));
+                                app.startSearch(this, queries);
+                                return;
+                            }
+                        }
+                    }
+                    Intent detailIntent = new Intent(this, SearchResultDetailActivity.class);
+                    detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID, scanResult);
+                    startActivity(detailIntent);
+                }
 			}
-		} */
+        }
     }
 
     @Override
