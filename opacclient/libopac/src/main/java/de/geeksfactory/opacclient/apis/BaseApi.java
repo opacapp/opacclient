@@ -472,6 +472,17 @@ public abstract class BaseApi implements OpacApi {
         this.stringProvider = stringProvider;
     }
 
+    protected String buildHttpGetParams(Map<String, String> params,
+                                        String encoding) throws UnsupportedEncodingException {
+        String string = "?";
+        for (Map.Entry<String, String> pair : params.entrySet()) {
+            String name = URLEncoder.encode(pair.getKey(), encoding);
+            String value = URLEncoder.encode(pair.getValue(), encoding);
+            string += name + "=" + value + "&";
+        }
+        string = string.substring(0, string.length() - 1);
+        return string;
+    }
 
     protected String buildHttpGetParams(List<NameValuePair> params,
             String encoding) throws UnsupportedEncodingException {
