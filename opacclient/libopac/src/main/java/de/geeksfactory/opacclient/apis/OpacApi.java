@@ -106,7 +106,7 @@ public interface OpacApi {
 
     /**
      * An ISBN / EAN code to search for. We cannot promise whether it comes with spaces or hyphens
-     * in between but it most likely won't. If it makes a difference to you, eliminate everythin
+     * in between but it most likely won't. If it makes a difference to you, eliminate everything
      * except numbers and X. We also cannot say whether a ISBN10 or a ISBN13 is supplied - if
      * relevant, check in your {@link #search(List)} implementation.
      * <p/>
@@ -249,7 +249,7 @@ public interface OpacApi {
     public static final int SUPPORT_FLAG_CHANGE_ACCOUNT = 0x0000010;
 
     /**
-     * May be called on application startup and you are free to call it in <our {@link #search}
+     * May be called on application startup and you are free to call it in our {@link #search}
      * implementation or similar positions. It is commonly used to initialize a session. You MUST
      * NOT rely on it being called and should check by yourself, whether it was already called (if
      * your following calls require it to be called before). You SHOULD use this function to
