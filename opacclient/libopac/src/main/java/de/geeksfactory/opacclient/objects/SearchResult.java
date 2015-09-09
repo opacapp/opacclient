@@ -129,8 +129,8 @@ public class SearchResult implements CoverHolder {
     }
 
     /**
-     * Set HTML describing the item to the user in a result list. Only "simple" HTML like <b>, <i>,
-     * etc. can be used.
+     * Set HTML describing the item to the user in a result list. Only "simple" HTML like
+     * {@code <b>}, {@code <i>}, etc. can be used.
      *
      * @param innerhtml simple HTML code
      */

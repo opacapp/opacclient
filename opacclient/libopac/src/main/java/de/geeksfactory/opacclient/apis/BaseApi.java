@@ -143,7 +143,7 @@ public abstract class BaseApi implements OpacApi {
     }
 
     /**
-     * Reads content from an InputStream into a string, using the default ISO-8859-1 encoding
+     * Reads content from an InputStream into a string, using the default {@code ISO-8859-1} encoding
      *
      * @param is InputStream to read from
      * @return String content of the InputStream
@@ -155,7 +155,7 @@ public abstract class BaseApi implements OpacApi {
 
     /**
      * Converts a {@link List} of {@link SearchQuery}s to {@link Map} of their keys and values. Can
-     * be used to convert old implementations using search(Map<String, String>) to the new
+     * be used to convert old implementations using {@code search(Map<String, String>)} to the new
      * SearchField API
      *
      * @param queryList List of search queries
@@ -204,7 +204,7 @@ public abstract class BaseApi implements OpacApi {
 
     /*
      * Gets the value for every query parameter in the URL. If a parameter name
-     * occurs twice or more, only the first occurance is interpreted by this
+     * occurs twice or more, only the first occurrence is interpreted by this
      * method
      */
     public static Map<String, String> getQueryParamsFirst(String url) {

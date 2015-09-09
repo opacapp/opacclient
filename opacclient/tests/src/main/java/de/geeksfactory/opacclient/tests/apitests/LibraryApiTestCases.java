@@ -168,7 +168,7 @@ public class LibraryApiTestCases {
 
     /**
      * Create an account with credentials that probably nobody has and try to login. This should
-     * normally give an OpacErrorException.
+     * normally give an {@link OpacErrorException}.
      */
     @Test
     public void testWrongLogin() throws IOException, JSONException {
@@ -247,7 +247,7 @@ public class LibraryApiTestCases {
         OpacApi api;
         if (library.getApi().equals("bond26")
                 || library.getApi().equals("bibliotheca"))
-        // Backwardscompatibility
+        // Backwards compatibility
         {
             api = new Bibliotheca();
         } else if (library.getApi().equals("oclc2011")
