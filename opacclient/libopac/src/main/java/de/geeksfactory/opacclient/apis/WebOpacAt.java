@@ -21,6 +21,7 @@
  */
 package de.geeksfactory.opacclient.apis;
 
+import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import org.apache.http.client.utils.URIBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -246,6 +247,7 @@ public class WebOpacAt extends SearchOnlyApi {
         final List<SearchField> fields = new ArrayList<>();
         addSimpleSearchField(fields);
         addAdvancedSearchFields(fields);
+        addSortingSearchFields(fields);
         return fields;
     }
 
@@ -276,6 +278,28 @@ public class WebOpacAt extends SearchOnlyApi {
             field.setHint("");
             field.setData(new JSONObject());
             field.getData().put("meaning", field.getId());
+            fields.add(field);
+        }
+    }
+
+    protected void addSortingSearchFields(List<SearchField> fields)
+            throws IOException, JSONException {
+        final String html = httpGet(getApiUrl() + "&mode=a", getDefaultEncoding());
+        final Document doc = Jsoup.parse(html);
+        for (int i = 0; i < 3; i++) {
+            final Element tr = doc.select("#sort_editor tr.sort_" + i).first();
+            final DropdownSearchField field = new DropdownSearchField();
+            field.setId("sort_" + i);
+            field.setDisplayName(tr.select("td").first().text());
+            field.setAdvanced(true);
+            final List<Map<String, String>> values = new ArrayList<>();
+            for (final Element option : tr.select("option")) {
+                final HashMap<String, String> map = new HashMap<String, String>();
+                map.put("key", option.attr("value"));
+                map.put("value", option.text());
+                values.add(map);
+            }
+            field.setDropdownValues(values);
             fields.add(field);
         }
     }
