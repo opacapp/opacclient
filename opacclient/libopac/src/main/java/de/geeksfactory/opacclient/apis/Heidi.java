@@ -470,28 +470,22 @@ public class Heidi extends BaseApi implements OpacApi {
         }
 
         DropdownSearchField field = new DropdownSearchField();
-        List<Map<String, String>> opts = new ArrayList<>();
 
         Elements zst_opts = doc.select("#teilk2 option");
         for (int i = 0; i < zst_opts.size(); i++) {
             Element opt = zst_opts.get(i);
             if (!opt.val().equals("")) {
-                Map<String, String> option = new HashMap<>();
-                option.put("key", opt.val());
-                option.put("value", opt.text());
-                opts.add(option);
+                field.addDropdownValue(opt.val(), opt.text());
             }
         }
         field.setDisplayName("Einrichtung");
         field.setId("f[teil2]");
         field.setVisible(true);
         field.setMeaning(SearchField.Meaning.BRANCH);
-        field.setDropdownValues(opts);
         fields.add(field);
 
         try {
             field = new DropdownSearchField();
-            opts = new ArrayList<>();
             Document doc2 = Jsoup.parse(httpGet(opac_url
                             + "/zweigstelle.cgi?sess=" + sessid, ENCODING, false,
                     cookieStore));
@@ -502,14 +496,13 @@ public class Heidi extends BaseApi implements OpacApi {
                     Map<String, String> option = new HashMap<>();
                     option.put("key", opt.val());
                     option.put("value", opt.text());
-                    opts.add(option);
+                    field.addDropdownValue(opt.val(), opt.text());
                 }
             }
             field.setDisplayName("Leihstelle");
             field.setId("_heidi_branch");
             field.setVisible(true);
             field.setMeaning(SearchField.Meaning.HOME_BRANCH);
-            field.setDropdownValues(opts);
             fields.add(field);
         } catch (IOException e) {
             e.printStackTrace();

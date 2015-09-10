@@ -178,7 +178,6 @@ public class BiBer1992 extends BaseApi {
             DropdownSearchField mtDropdown = new DropdownSearchField();
             mtDropdown.setId(mt_opts.get(0).attr("name"));
             mtDropdown.setDisplayName("Medientyp");
-            List<Map<String, String>> mtOptions = new ArrayList<>();
             for (Element opt : mt_opts) {
                 if (!opt.val().equals("")) {
                     String text = opt.text();
@@ -225,13 +224,9 @@ public class BiBer1992 extends BaseApi {
                         // text is still empty: missing end tag like Offenburg
                         text = parse_option_regex(opt);
                     }
-                    Map<String, String> value = new HashMap<>();
-                    value.put("key", opt.val());
-                    value.put("value", text);
-                    mtOptions.add(value);
+                    mtDropdown.addDropdownValue(opt.val(), text);
                 }
             }
-            mtDropdown.setDropdownValues(mtOptions);
             fields.add(mtDropdown);
         }
 
@@ -243,14 +238,9 @@ public class BiBer1992 extends BaseApi {
             brDropdown.setDisplayName(br_opts.get(0).parent().parent()
                                              .previousElementSibling().text().replace("\u00a0", "")
                                              .replace("?", "").trim());
-            List<Map<String, String>> brOptions = new ArrayList<>();
             for (Element opt : br_opts) {
-                Map<String, String> value = new HashMap<>();
-                value.put("key", opt.val());
-                value.put("value", opt.text());
-                brOptions.add(value);
+                brDropdown.addDropdownValue(opt.val(), opt.text());
             }
-            brDropdown.setDropdownValues(brOptions);
             fields.add(brDropdown);
         }
 

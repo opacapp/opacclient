@@ -726,14 +726,9 @@ public abstract class Pica extends BaseApi implements OpacApi {
             field.setDisplayName(sort.first().parent().parent()
                                      .select(".longval").first().text());
             field.setId("SRT");
-            List<Map<String, String>> sortOptions = new ArrayList<>();
             for (Element option : sort.select("option")) {
-                Map<String, String> sortOption = new HashMap<>();
-                sortOption.put("key", option.attr("value"));
-                sortOption.put("value", option.text());
-                sortOptions.add(sortOption);
+                field.addDropdownValue(option.attr("value"), option.text());
             }
-            field.setDropdownValues(sortOptions);
             fields.add(field);
         }
 
@@ -750,16 +745,11 @@ public abstract class Pica extends BaseApi implements OpacApi {
         for (Element dropdown : doc.select("select[name^=ADI]")) {
             DropdownSearchField field = new DropdownSearchField();
             field.setDisplayName(dropdown.parent().parent().select(".longkey")
-                                         .text());
+                    .text());
             field.setId(dropdown.attr("name"));
-            List<Map<String, String>> dropdownOptions = new ArrayList<>();
             for (Element option : dropdown.select("option")) {
-                Map<String, String> dropdownOption = new HashMap<>();
-                dropdownOption.put("key", option.attr("value"));
-                dropdownOption.put("value", option.text());
-                dropdownOptions.add(dropdownOption);
+                field.addDropdownValue(option.attr("value"), option.text());
             }
-            field.setDropdownValues(dropdownOptions);
             fields.add(field);
         }
 
@@ -778,19 +768,11 @@ public abstract class Pica extends BaseApi implements OpacApi {
             field.setDisplayName("Materialart");
             field.setId("ADI_MAT");
 
-            List<Map<String, String>> values = new ArrayList<>();
-            Map<String, String> all = new HashMap<>();
-            all.put("key", "");
-            all.put("value", "Alle");
-            values.add(all);
+            field.addDropdownValue("", "Alle");
             for (Element mt : mediatypes) {
-                Map<String, String> value = new HashMap<>();
-                value.put("key", mt.attr("value"));
-                value.put("value", mt.parent().nextElementSibling().text()
-                                     .replace("\u00a0", ""));
-                values.add(value);
+                field.addDropdownValue(mt.attr("value"),
+                        mt.parent().nextElementSibling().text().replace("\u00a0", ""));
             }
-            field.setDropdownValues(values);
             fields.add(field);
         }
 

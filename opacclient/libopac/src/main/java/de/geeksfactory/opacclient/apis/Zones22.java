@@ -129,21 +129,13 @@ public class Zones22 extends BaseApi {
         if (zst_opts.size() > 0) {
             DropdownSearchField brDropdown = new DropdownSearchField();
             brDropdown.setId(zst_opts.get(0).parent().select("input")
-                                     .attr("name"));
+                    .attr("name"));
             brDropdown.setDisplayName("Zweigstelle");
 
-            List<Map<String, String>> brOptions = new ArrayList<>();
-            Map<String, String> all = new HashMap<>();
-            all.put("key", "");
-            all.put("value", "Alle");
-            brOptions.add(all);
+            brDropdown.addDropdownValue("", "Alle");
             for (Element opt : zst_opts) {
-                Map<String, String> value = new HashMap<>();
-                value.put("key", opt.attr("for"));
-                value.put("value", opt.text().trim());
-                brOptions.add(value);
+                brDropdown.addDropdownValue(opt.attr("for"), opt.text().trim());
             }
-            brDropdown.setDropdownValues(brOptions);
             fields.add(brDropdown);
         }
 

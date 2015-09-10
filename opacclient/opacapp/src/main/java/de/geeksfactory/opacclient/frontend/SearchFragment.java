@@ -300,7 +300,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                 TextView title = (TextView) v.findViewById(R.id.title);
                 title.setText(ddSearchField.getDisplayName());
                 Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
-                spinner.setAdapter(((OpacActivity) getActivity()).new MetaAdapter(
+                spinner.setAdapter(((OpacActivity) getActivity()).new MetaAdapter<DropdownSearchField.Option>(
                         getActivity(), ddSearchField.getDropdownValues(),
                         R.layout.simple_spinner_item));
 
@@ -322,9 +322,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                     }
                     if (!selection.equals("")) {
                         int j = 0;
-                        for (Map<String, String> row : ddSearchField
+                        for (DropdownSearchField.Option row : ddSearchField
                                 .getDropdownValues()) {
-                            if (row.get("key").equals(selection)) {
+                            if (row.getKey().equals(selection)) {
                                 spinner.setSelection(j);
                             }
                             j++;
@@ -542,7 +542,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                     query.put(field.getId(),
                             ((DropdownSearchField) field).getDropdownValues()
                                                          .get(spinner.getSelectedItemPosition())
-                                                         .get("key"));
+                                                         .getKey());
                 }
             } else if (field instanceof CheckboxSearchField) {
                 CheckBox checkbox = (CheckBox) v.findViewById(R.id.checkbox);
@@ -581,7 +581,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                 if (spinner.getSelectedItemPosition() != -1) {
                     String key = ((DropdownSearchField) field)
                             .getDropdownValues()
-                            .get(spinner.getSelectedItemPosition()).get("key");
+                            .get(spinner.getSelectedItemPosition()).getKey();
                     if (!key.equals("")) {
                         query.add(new SearchQuery(field, key));
                     }
@@ -610,7 +610,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                 Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
                 String homeBranch = ((DropdownSearchField) field)
                         .getDropdownValues()
-                        .get(spinner.getSelectedItemPosition()).get("key");
+                        .get(spinner.getSelectedItemPosition()).getKey();
                 if (!homeBranch.equals("")) {
                     sp.edit()
                       .putString(
@@ -646,9 +646,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
             } else if (field instanceof DropdownSearchField) {
                 Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
                 int i = 0;
-                for (Map<String, String> map : ((DropdownSearchField) field)
+                for (DropdownSearchField.Option map : ((DropdownSearchField) field)
                         .getDropdownValues()) {
-                    if (map.get("key").equals(query.getString(field.getId()))) {
+                    if (map.getKey().equals(query.getString(field.getId()))) {
                         spinner.setSelection(i);
                         break;
                     }

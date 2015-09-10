@@ -461,18 +461,13 @@ public class Primo extends BaseApi {
                 continue;
             }
             field.setId("#" + select.attr("id"));
-            List<Map<String, String>> dropdownOptions = new ArrayList<>();
             for (Element option : select.select("option")) {
-                Map<String, String> dropdownOption = new HashMap<>();
-                dropdownOption.put("key", option.val());
-                dropdownOption.put("value", option.text());
                 if (option.val().equals("all_items")) {
-                    dropdownOptions.add(0, dropdownOption);
+                    field.addDropdownValue(0, option.val(), option.text());
                 } else {
-                    dropdownOptions.add(dropdownOption);
+                    field.addDropdownValue(option.val(), option.text());
                 }
             }
-            field.setDropdownValues(dropdownOptions);
             field.setData(new JSONObject());
             field.getData().put("meaning", field.getId());
             fields.add(field);

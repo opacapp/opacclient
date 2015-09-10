@@ -4,11 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * A SearchField is the abstract representation of a criteria input available in the search form.
@@ -80,17 +76,13 @@ public abstract class SearchField {
                 field = new CheckboxSearchField(id, displayName, advanced);
                 break;
             case "dropdown":
-                List<Map<String, String>> dropdownValues = new ArrayList<>();
                 JSONArray array = json.getJSONArray("dropdownValues");
+                field = new DropdownSearchField(id, displayName, advanced, null);
                 for (int i = 0; i < array.length(); i++) {
                     JSONObject value = array.getJSONObject(i);
-                    Map<String, String> map = new HashMap<>();
-                    map.put("key", value.getString("key"));
-                    map.put("value", value.getString("value"));
-                    dropdownValues.add(map);
+                    ((DropdownSearchField) field).addDropdownValue(
+                            value.getString("key"), value.getString("value"));
                 }
-                field = new DropdownSearchField(id, displayName, advanced,
-                        dropdownValues);
                 break;
         }
         if (field != null) {

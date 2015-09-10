@@ -1437,12 +1437,8 @@ public class Adis extends BaseApi implements OpacApi {
                 field.setDisplayName(row.select("label").first().text());
                 List<Map<String, String>> values = new ArrayList<>();
                 for (Element opt : select.select("option")) {
-                    Map<String, String> value = new HashMap<>();
-                    value.put("key", opt.attr("value"));
-                    value.put("value", opt.text());
-                    values.add(value);
+                    field.addDropdownValue(opt.attr("value"), opt.text());
                 }
-                field.setDropdownValues(values);
                 fields.add(field);
             } else if (row.select("select").size() == 0
                     && row.select("input[type=text]").size() == 3

@@ -657,12 +657,12 @@ public abstract class OpacActivity extends AppCompatActivity {
         }
     }
 
-    public class MetaAdapter extends ArrayAdapter<Map<String, String>> {
+    public class MetaAdapter<T extends Map.Entry<?, String>> extends ArrayAdapter<T> {
 
-        private List<Map<String, String>> objects;
+        private List<T> objects;
         private int spinneritem;
 
-        public MetaAdapter(Context context, List<Map<String, String>> objects,
+        public MetaAdapter(Context context, List<T> objects,
                 int spinneritem) {
             super(context, R.layout.simple_spinner_item, objects);
             this.objects = objects;
@@ -683,7 +683,7 @@ public abstract class OpacActivity extends AppCompatActivity {
                 return view;
             }
 
-            Map<String, String> item = objects.get(position);
+            T item = objects.get(position);
 
             if (contentView == null) {
                 LayoutInflater layoutInflater = (LayoutInflater) getContext()
@@ -696,7 +696,7 @@ public abstract class OpacActivity extends AppCompatActivity {
             }
 
             TextView tvText = (TextView) view.findViewById(android.R.id.text1);
-            tvText.setText(item.get("value"));
+            tvText.setText(item.getValue());
             return view;
         }
 
@@ -711,7 +711,7 @@ public abstract class OpacActivity extends AppCompatActivity {
                 return view;
             }
 
-            Map<String, String> item = objects.get(position);
+            T item = objects.get(position);
 
             if (contentView == null) {
                 LayoutInflater layoutInflater = (LayoutInflater) getContext()
@@ -722,7 +722,7 @@ public abstract class OpacActivity extends AppCompatActivity {
             }
 
             TextView tvText = (TextView) view.findViewById(android.R.id.text1);
-            tvText.setText(item.get("value"));
+            tvText.setText(item.getValue());
             return view;
         }
 
