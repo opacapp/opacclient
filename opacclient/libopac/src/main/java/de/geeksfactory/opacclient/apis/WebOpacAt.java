@@ -23,6 +23,7 @@ package de.geeksfactory.opacclient.apis;
 
 import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import org.apache.http.client.utils.URIBuilder;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -33,6 +34,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -78,6 +80,8 @@ public class WebOpacAt extends SearchOnlyApi {
         put("Audiobook", SearchResult.MediaType.AUDIOBOOK);
         put("eMedium", SearchResult.MediaType.EBOOK);
     }};
+    protected static final List<String> SEARCH_FIELDS_FOR_DROPDOWN =
+            Arrays.asList("ma", "sy", "og");
     protected String opac_url = "";
     protected String languageCode;
     protected List<SearchQuery> lastQuery;
@@ -272,13 +276,29 @@ public class WebOpacAt extends SearchOnlyApi {
         final Document doc = Jsoup.parse(html);
         final Elements options = doc.select("select#adv_search_crit_0").first().select("option");
         for (final Element option : options) {
-            final TextSearchField field = new TextSearchField();
+            final SearchField field;
+            if (SEARCH_FIELDS_FOR_DROPDOWN.contains(option.val())) {
+                field = new DropdownSearchField();
+                addDropdownValuesForField(((DropdownSearchField) field), option.val());
+            } else {
+                field = new TextSearchField();
+            }
             field.setDisplayName(option.text());
             field.setId(option.val());
-            field.setHint("");
             field.setData(new JSONObject());
-            field.getData().put("meaning", field.getId());
+            field.getData().put("meaning", field.getDisplayName());
             fields.add(field);
+        }
+    }
+
+    protected void addDropdownValuesForField(DropdownSearchField field, String id)
+            throws IOException, JSONException {
+        final String url = opac_url + "/search/adv_ac?crit=" + id;
+        final String json = httpGet(url, getDefaultEncoding());
+        final JSONArray array = new JSONArray(json);
+        for (int i = 0; i < array.length(); i++) {
+            final JSONObject obj = array.getJSONObject(i);
+            field.addDropdownValue(obj.getString("value"), obj.getString("label"));
         }
     }
 
