@@ -127,8 +127,8 @@ public class WebOpacAt extends SearchOnlyApi {
         final String html = httpGet(searchUrl, getDefaultEncoding());
         final Document doc = Jsoup.parse(html);
 
-        final String navigation = doc.select(".result_view .navigation").first().text();
-        final int totalResults = parseTotalResults(navigation);
+        final Element navigation = doc.select(".result_view .navigation").first();
+        final int totalResults = navigation != null ? parseTotalResults(navigation.text()) : 0;
 
         final Element ul = doc.select(".result_view ul.list").first();
         final List<SearchResult> results = new ArrayList<>();
@@ -139,7 +139,7 @@ public class WebOpacAt extends SearchOnlyApi {
             result.setInnerhtml(title.text() + "<br>" + title.parent().nextElementSibling().text());
             result.setNr(results.size());
             result.setPage(pageIndex);
-            result.setType(MEDIA_TYPES.get(li.select(".statusinfo .ma").first().text()));
+            result.setType(MEDIA_TYPES.get(li.select(".statusinfo .ma").text()));
             result.setCover(getCover(li));
             final String statusImg = li.select(".status img").attr("src");
             result.setStatus(statusImg.contains("-yes")
@@ -153,11 +153,11 @@ public class WebOpacAt extends SearchOnlyApi {
     }
 
     static int parseTotalResults(final String navigation) {
-        final Matcher matcher = Pattern.compile("(von|of) (?<num1>\\d+)|(?<num2>\\d+) sonuçtan")
+        final Matcher matcher = Pattern.compile("(von|of) (\\d+)|(\\d+) sonu\\u00e7tan")
                 .matcher(navigation);
         if (matcher.find()) {
-            final String num1 = matcher.group("num1");
-            return Integer.parseInt(num1 != null ? num1 : matcher.group("num2"));
+            final String num1 = matcher.group(2);
+            return Integer.parseInt(num1 != null ? num1 : matcher.group(3));
         } else {
             return 0;
         }
@@ -166,15 +166,28 @@ public class WebOpacAt extends SearchOnlyApi {
     protected String buildSearchUrl(final List<SearchQuery> query, final int page)
             throws IOException, JSONException, URISyntaxException {
         final URIBuilder builder = new URIBuilder(getApiUrl());
-        if (query.size() == 1 && "q".equals(query.get(0).getSearchField().getId())) {
+        final List<SearchQuery> nonEmptyQuery = new ArrayList<>();
+        for (SearchQuery q : query) {
+            if (!q.getValue().isEmpty()) {
+                nonEmptyQuery.add(q);
+            }
+        }
+        if (nonEmptyQuery.size() == 1 && "q".equals(nonEmptyQuery.get(0).getSearchField().getId())) {
             builder.setParameter("mode", "s");
-            builder.setParameter(query.get(0).getKey(), query.get(0).getValue());
+            builder.setParameter(nonEmptyQuery.get(0).getKey(), nonEmptyQuery.get(0).getValue());
         } else {
             int i = 0;
-            for (SearchQuery q : query) {
+            for (SearchQuery q : nonEmptyQuery) {
                 // crit_, value_, op_ are 0-indexed
-                builder.setParameter("crit_" + i, q.getKey());
-                builder.setParameter("value_" + i, q.getValue());
+                String key = q.getKey();
+                String value = q.getValue();
+                if ("q".equals(key)) {
+                    // fall back to title since free search cannot be combined with other criteria
+                    key = "ht";
+                    value = "*" + value + "*";
+                }
+                builder.setParameter("crit_" + i, key);
+                builder.setParameter("value_" + i, value);
                 if (i > 0) {
                     builder.setParameter("op_" + i, "AND");
                 }
@@ -217,7 +230,7 @@ public class WebOpacAt extends SearchOnlyApi {
             } else if (!result.getDetails().isEmpty()) {
                 final Detail lastDetail = result.getDetails().get(result.getDetails().size() - 1);
                 lastDetail.setHtml(true);
-                lastDetail.setContent(lastDetail.getContent() + "<br>" + content);
+                lastDetail.setContent(lastDetail.getContent() + "\n" + content);
             }
         }
         return result;
@@ -282,17 +295,19 @@ public class WebOpacAt extends SearchOnlyApi {
                 addDropdownValuesForField(((DropdownSearchField) field), option.val());
             } else {
                 field = new TextSearchField();
+                ((TextSearchField) field).setHint("");
             }
             field.setDisplayName(option.text());
             field.setId(option.val());
             field.setData(new JSONObject());
-            field.getData().put("meaning", field.getDisplayName());
+            field.getData().put("meaning", field.getId());
             fields.add(field);
         }
     }
 
     protected void addDropdownValuesForField(DropdownSearchField field, String id)
             throws IOException, JSONException {
+        field.addDropdownValue("", "");
         final String url = opac_url + "/search/adv_ac?crit=" + id;
         final String json = httpGet(url, getDefaultEncoding());
         final JSONArray array = new JSONArray(json);
@@ -309,11 +324,16 @@ public class WebOpacAt extends SearchOnlyApi {
         for (int i = 0; i < 3; i++) {
             final Element tr = doc.select("#sort_editor tr.sort_" + i).first();
             final DropdownSearchField field = new DropdownSearchField();
+            field.setMeaning(SearchField.Meaning.ORDER);
             field.setId("sort_" + i);
             field.setDisplayName(tr.select("td").first().text());
-            field.setAdvanced(true);
+            field.addDropdownValue("", "");
             for (final Element option : tr.select("option")) {
-                field.addDropdownValue(option.attr("value"), option.text());
+                if (option.hasAttr("selected")) {
+                    field.addDropdownValue(0, option.attr("value"), option.text());
+                } else {
+                    field.addDropdownValue(option.attr("value"), option.text());
+                }
             }
             fields.add(field);
         }
