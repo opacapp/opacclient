@@ -292,14 +292,9 @@ public class WebOpacAt extends SearchOnlyApi {
             field.setId("sort_" + i);
             field.setDisplayName(tr.select("td").first().text());
             field.setAdvanced(true);
-            final List<Map<String, String>> values = new ArrayList<>();
             for (final Element option : tr.select("option")) {
-                final HashMap<String, String> map = new HashMap<String, String>();
-                map.put("key", option.attr("value"));
-                map.put("value", option.text());
-                values.add(map);
+                field.addDropdownValue(option.attr("value"), option.text());
             }
-            field.setDropdownValues(values);
             fields.add(field);
         }
     }
