@@ -21,6 +21,7 @@
  */
 package de.geeksfactory.opacclient.apis;
 
+import org.apache.http.client.utils.URIBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -29,12 +30,12 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -76,7 +77,7 @@ public class WebOpacAt extends SearchOnlyApi {
         put("eMedium", SearchResult.MediaType.EBOOK);
     }};
     protected String opac_url = "";
-    protected Map<String, String> lastQueryParam;
+    protected List<SearchQuery> lastQuery;
 
     @Override
     public void init(Library library) {
@@ -91,27 +92,29 @@ public class WebOpacAt extends SearchOnlyApi {
     @Override
     public SearchRequestResult search(List<SearchQuery> query)
             throws IOException, OpacErrorException, JSONException {
-        lastQueryParam = buildSearchParams(query);
-        return executeSearch(lastQueryParam);
+        lastQuery = query;
+        return executeSearch(query, 1);
     }
 
     @Override
     public SearchRequestResult searchGetPage(int page)
             throws IOException, OpacErrorException, JSONException {
-        lastQueryParam.put("page", String.valueOf(page));
-        return executeSearch(lastQueryParam);
+        return executeSearch(lastQuery, page);
     }
 
-    protected SearchRequestResult executeSearch(Map<String, String> lastQuery)
+    protected SearchRequestResult executeSearch(List<SearchQuery> query, int pageIndex)
             throws IOException, OpacErrorException, JSONException {
-        final String html = httpGet(
-                opac_url + "/search" + buildHttpGetParams(lastQuery, getDefaultEncoding()),
-                getDefaultEncoding());
+        final String searchUrl;
+        try {
+            searchUrl = buildSearchUrl(query, pageIndex);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        final String html = httpGet(searchUrl, getDefaultEncoding());
         final Document doc = Jsoup.parse(html);
 
         final String navigation = doc.select(".result_view .navigation").first().text();
         final int totalResults = parseTotalResults(navigation);
-        final int pageIndex = Integer.parseInt(lastQuery.get("page"));
 
         final Element ul = doc.select(".result_view ul.list").first();
         final List<SearchResult> results = new ArrayList<>();
@@ -146,29 +149,29 @@ public class WebOpacAt extends SearchOnlyApi {
         }
     }
 
-    protected Map<String, String> buildSearchParams(List<SearchQuery> query)
-            throws IOException, JSONException {
-        final Map<String, String> params = new TreeMap<>();
+    protected String buildSearchUrl(final List<SearchQuery> query, final int page)
+            throws IOException, JSONException, URISyntaxException {
+        final URIBuilder builder = new URIBuilder(opac_url + "/search");
         if (query.size() == 1 && "q".equals(query.get(0).getSearchField().getId())) {
-            params.put("mode", "s");
-            params.put(query.get(0).getKey(), query.get(0).getValue());
+            builder.setParameter("mode", "s");
+            builder.setParameter(query.get(0).getKey(), query.get(0).getValue());
         } else {
             int i = 0;
             for (SearchQuery q : query) {
                 // crit_, value_, op_ are 0-indexed
-                params.put("crit_" + i, q.getKey());
-                params.put("value_" + i, q.getValue());
+                builder.setParameter("crit_" + i, q.getKey());
+                builder.setParameter("value_" + i, q.getValue());
                 if (i > 0) {
-                    params.put("op_" + i, "AND");
+                    builder.setParameter("op_" + i, "AND");
                 }
                 i++;
             }
-            params.put("mode", "a");
-            params.put("critCount", String.valueOf(params.size())); // 1-index
+            builder.setParameter("mode", "a");
+            builder.setParameter("critCount", String.valueOf(i)); // 1-index
         }
-        params.put("page", "1"); // 1-indexed
-        params.put("page_size", "30");
-        return params;
+        builder.setParameter("page", String.valueOf(page)); // 1-indexed
+        builder.setParameter("page_size", "30");
+        return builder.build().toString();
     }
 
     @Override
@@ -220,6 +223,7 @@ public class WebOpacAt extends SearchOnlyApi {
 
     @Override
     public DetailledItem getResult(int position) throws IOException, OpacErrorException {
+        // Not necessary since getResultById returns an ID with every result
         return null;
     }
 
@@ -228,12 +232,12 @@ public class WebOpacAt extends SearchOnlyApi {
             throws IOException, OpacErrorException, JSONException {
         start();
         final List<SearchField> fields = new ArrayList<>();
-        getSimpleSearchField(fields);
-        getAdvancedSearchFields(fields);
+        addSimpleSearchField(fields);
+        addAdvancedSearchFields(fields);
         return fields;
     }
 
-    protected void getSimpleSearchField(List<SearchField> fields)
+    protected void addSimpleSearchField(List<SearchField> fields)
             throws IOException, JSONException {
         final String html = httpGet(opac_url + "/search?mode=s", getDefaultEncoding());
         final Document doc = Jsoup.parse(html);
@@ -248,7 +252,7 @@ public class WebOpacAt extends SearchOnlyApi {
         fields.add(field);
     }
 
-    protected void getAdvancedSearchFields(List<SearchField> fields)
+    protected void addAdvancedSearchFields(List<SearchField> fields)
             throws IOException, JSONException {
         final String html = httpGet(opac_url + "/search?mode=a", getDefaultEncoding());
         final Document doc = Jsoup.parse(html);
@@ -271,12 +275,12 @@ public class WebOpacAt extends SearchOnlyApi {
 
     @Override
     public String getShareUrl(String id, String title) {
-        return null;
+        return opac_url + "/search?view=detail&id=" + id;
     }
 
     @Override
     public int getSupportFlags() {
-        return 0;
+        return SUPPORT_FLAG_ENDLESS_SCROLLING;
     }
 
     @Override
