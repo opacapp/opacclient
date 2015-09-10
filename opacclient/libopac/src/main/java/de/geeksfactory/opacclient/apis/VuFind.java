@@ -139,7 +139,7 @@ public class VuFind extends BaseApi {
         if (!initialised) start();
         last_query = query;
         String html = httpGet(opac_url + "/Search/Results" +
-                        buildHttpGetParams(buildSearchParams(query), getDefaultEncoding()),
+                        buildHttpGetParams(buildSearchParams(query)),
                 getDefaultEncoding());
         Document doc = Jsoup.parse(html);
         return parse_search(doc, 1);
@@ -258,7 +258,7 @@ public class VuFind extends BaseApi {
         List<NameValuePair> params = buildSearchParams(last_query);
         params.add(new BasicNameValuePair("page", String.valueOf(page)));
         String html = httpGet(opac_url + "/Search/Results" +
-                        buildHttpGetParams(params, getDefaultEncoding()),
+                        buildHttpGetParams(params),
                 getDefaultEncoding());
         Document doc = Jsoup.parse(html);
         return parse_search(doc, page);

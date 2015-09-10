@@ -33,6 +33,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.ClientContext;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
@@ -45,8 +46,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.InterruptedIOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -472,27 +473,12 @@ public abstract class BaseApi implements OpacApi {
         this.stringProvider = stringProvider;
     }
 
-    protected String buildHttpGetParams(Map<String, String> params,
-                                        String encoding) throws UnsupportedEncodingException {
-        String string = "?";
-        for (Map.Entry<String, String> pair : params.entrySet()) {
-            String name = URLEncoder.encode(pair.getKey(), encoding);
-            String value = URLEncoder.encode(pair.getValue(), encoding);
-            string += name + "=" + value + "&";
+    public static String buildHttpGetParams(List<NameValuePair> params)
+            throws UnsupportedEncodingException {
+        try {
+            return new URIBuilder().addParameters(params).build().toString();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
         }
-        string = string.substring(0, string.length() - 1);
-        return string;
-    }
-
-    protected String buildHttpGetParams(List<NameValuePair> params,
-            String encoding) throws UnsupportedEncodingException {
-        String string = "?";
-        for (NameValuePair pair : params) {
-            String name = URLEncoder.encode(pair.getName(), encoding);
-            String value = URLEncoder.encode(pair.getValue(), encoding);
-            string += name + "=" + value + "&";
-        }
-        string = string.substring(0, string.length() - 1);
-        return string;
     }
 }
