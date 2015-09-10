@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -57,7 +58,7 @@ public class WebOpacAt extends SearchOnlyApi {
     protected static final Map<String, String> LANGUAGE_CODES = new HashMap<String, String>() {{
         put("en", "eng");
         put("de", "deu");
-        //put("tr", "tur");
+        put("tr", "tur");
     }};
     protected static final Map<String, SearchResult.MediaType> MEDIA_TYPES =
             new HashMap<String, SearchResult.MediaType>() {{
@@ -77,6 +78,7 @@ public class WebOpacAt extends SearchOnlyApi {
         put("eMedium", SearchResult.MediaType.EBOOK);
     }};
     protected String opac_url = "";
+    protected String languageCode;
     protected List<SearchQuery> lastQuery;
 
     @Override
@@ -87,6 +89,10 @@ public class WebOpacAt extends SearchOnlyApi {
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    protected String getApiUrl() {
+        return opac_url + "/search?lang=" + getLanguage();
     }
 
     @Override
@@ -105,6 +111,9 @@ public class WebOpacAt extends SearchOnlyApi {
     protected SearchRequestResult executeSearch(List<SearchQuery> query, int pageIndex)
             throws IOException, OpacErrorException, JSONException {
         final String searchUrl;
+        if (!initialised) {
+            start();
+        }
         try {
             searchUrl = buildSearchUrl(query, pageIndex);
         } catch (URISyntaxException e) {
@@ -151,7 +160,7 @@ public class WebOpacAt extends SearchOnlyApi {
 
     protected String buildSearchUrl(final List<SearchQuery> query, final int page)
             throws IOException, JSONException, URISyntaxException {
-        final URIBuilder builder = new URIBuilder(opac_url + "/search");
+        final URIBuilder builder = new URIBuilder(getApiUrl());
         if (query.size() == 1 && "q".equals(query.get(0).getSearchField().getId())) {
             builder.setParameter("mode", "s");
             builder.setParameter(query.get(0).getKey(), query.get(0).getValue());
@@ -177,7 +186,10 @@ public class WebOpacAt extends SearchOnlyApi {
     @Override
     public DetailledItem getResultById(String id, String homebranch)
             throws IOException, OpacErrorException {
-        final String html = httpGet(opac_url + "/search?view=detail&id=" + id, getDefaultEncoding());
+        if (!initialised) {
+            start();
+        }
+        final String html = httpGet(getApiUrl() + "&view=detail&id=" + id, getDefaultEncoding());
         final Document doc = Jsoup.parse(html);
         final Element detailData = doc.select(".detailData").first();
         final Element detailTable = detailData.select("table.titel").first();
@@ -239,7 +251,7 @@ public class WebOpacAt extends SearchOnlyApi {
 
     protected void addSimpleSearchField(List<SearchField> fields)
             throws IOException, JSONException {
-        final String html = httpGet(opac_url + "/search?mode=s", getDefaultEncoding());
+        final String html = httpGet(getApiUrl() + "&mode=s", getDefaultEncoding());
         final Document doc = Jsoup.parse(html);
         final Element simple = doc.select(".simple_search").first();
         final TextSearchField field = new TextSearchField();
@@ -254,7 +266,7 @@ public class WebOpacAt extends SearchOnlyApi {
 
     protected void addAdvancedSearchFields(List<SearchField> fields)
             throws IOException, JSONException {
-        final String html = httpGet(opac_url + "/search?mode=a", getDefaultEncoding());
+        final String html = httpGet(getApiUrl() + "&mode=a", getDefaultEncoding());
         final Document doc = Jsoup.parse(html);
         final Elements options = doc.select("select#adv_search_crit_0").first().select("option");
         for (final Element option : options) {
@@ -275,7 +287,7 @@ public class WebOpacAt extends SearchOnlyApi {
 
     @Override
     public String getShareUrl(String id, String title) {
-        return opac_url + "/search?view=detail&id=" + id;
+        return getApiUrl() + "&view=detail&id=" + id;
     }
 
     @Override
@@ -285,10 +297,27 @@ public class WebOpacAt extends SearchOnlyApi {
 
     @Override
     public Set<String> getSupportedLanguages() throws IOException {
-        return null;
+        final String html = httpGet(getApiUrl() + "&mode=a", getDefaultEncoding());
+        final Document doc = Jsoup.parse(html);
+        final String menuHtml = doc.select(".mainmenu").first().html();
+        final Set<String> languages = new HashSet<>();
+        for (final Map.Entry<String, String> i : LANGUAGE_CODES.entrySet()) {
+            if (menuHtml.contains("lang=" + i.getValue()) /* language switch link */
+                    || menuHtml.contains("/" + i.getValue() + "/") /* help link */) {
+                languages.add(i.getKey());
+            }
+        }
+        return languages;
     }
 
     @Override
     public void setLanguage(String language) {
+        if (initialised && supportedLanguages.contains(language)) {
+            this.languageCode = LANGUAGE_CODES.get(language);
+        }
+    }
+
+    protected String getLanguage() {
+        return languageCode != null ? languageCode : "eng";
     }
 }
