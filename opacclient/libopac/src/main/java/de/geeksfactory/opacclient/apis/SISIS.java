@@ -194,7 +194,6 @@ public class SISIS extends BaseApi implements OpacApi {
             List<SearchField> fields) throws JSONException {
         Elements options = dropdownElement.select("option");
         DropdownSearchField dropdown = new DropdownSearchField();
-        List<Map<String, String>> values = new ArrayList<>();
         if (dropdownElement.parent().select("input[type=hidden]").size() > 0) {
             dropdown.setId(dropdownElement.parent()
                                           .select("input[type=hidden]").attr("value"));
@@ -204,12 +203,8 @@ public class SISIS extends BaseApi implements OpacApi {
             dropdown.setData(new JSONObject("{\"restriction\": false}"));
         }
         for (Element option : options) {
-            Map<String, String> value = new HashMap<>();
-            value.put("key", option.attr("value"));
-            value.put("value", option.text());
-            values.add(value);
+            dropdown.addDropdownValue(option.attr("value"), option.text());
         }
-        dropdown.setDropdownValues(values);
         dropdown.setDisplayName(dropdownElement.parent().select("label").text());
         fields.add(dropdown);
     }

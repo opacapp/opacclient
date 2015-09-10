@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,35 @@ import java.util.Map;
  */
 public class DropdownSearchField extends SearchField {
 
-    protected List<Map<String, String>> dropdownValues;
+    /**
+     * Represents a dropdown option.
+     */
+    public static class Option implements Map.Entry<String, String> {
+        private final String key;
+        private final String value;
+
+        public Option(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        @Override
+        public String getKey() {
+            return key;
+        }
+
+        @Override
+        public String getValue() {
+            return value;
+        }
+
+        @Override
+        public String setValue(String value) {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    protected List<Option> dropdownValues;
 
     public DropdownSearchField() {
 
@@ -31,7 +60,7 @@ public class DropdownSearchField extends SearchField {
      *                       value and will not be given to the search() function
      */
     public DropdownSearchField(String id, String displayName, boolean advanced,
-                               List<Map<String, String>> dropdownValues) {
+                               List<Option> dropdownValues) {
         super(id, displayName, advanced);
         this.dropdownValues = dropdownValues;
     }
@@ -39,16 +68,29 @@ public class DropdownSearchField extends SearchField {
     /**
      * Get the list of selectable values.
      */
-    public List<Map<String, String>> getDropdownValues() {
+    public List<Option> getDropdownValues() {
         return dropdownValues;
     }
 
     /**
-     * Set a list of values for the dropdown list. Each value is a Map and
-     * should contain the keys 'key' and 'value'.
+     * Set a list of values for the dropdown list.
      */
-    public void setDropdownValues(List<Map<String, String>> dropdownValues) {
+    public void setDropdownValues(List<Option> dropdownValues) {
         this.dropdownValues = dropdownValues;
+    }
+
+    public void addDropdownValue(String key, String value) {
+        if (dropdownValues == null) {
+            dropdownValues = new ArrayList<>();
+        }
+        dropdownValues.add(new Option(key, value));
+    }
+
+    public void addDropdownValue(int index, String key, String value) {
+        if (dropdownValues == null) {
+            dropdownValues = new ArrayList<>();
+        }
+        dropdownValues.add(index, new Option(key, value));
     }
 
     @Override
@@ -56,10 +98,10 @@ public class DropdownSearchField extends SearchField {
         JSONObject json = super.toJSON();
         json.put("type", "dropdown");
         JSONArray values = new JSONArray();
-        for (Map<String, String> map : dropdownValues) {
+        for (Option map : dropdownValues) {
             JSONObject value = new JSONObject();
-            value.put("key", map.get("key"));
-            value.put("value", map.get("value"));
+            value.put("key", map.getKey());
+            value.put("value", map.getValue());
             values.put(value);
         }
         json.put("dropdownValues", values);

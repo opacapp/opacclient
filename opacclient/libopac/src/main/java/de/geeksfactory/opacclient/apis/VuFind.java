@@ -478,20 +478,13 @@ public class VuFind extends BaseApi {
             field.setId(select.attr("name") + select.attr("id"));
             List<Map<String, String>> dropdownOptions = new ArrayList<>();
             String meaning = select.attr("id");
-            Map<String, String> emptyDropdownOption = new HashMap<>();
-            emptyDropdownOption.put("key", "");
-            emptyDropdownOption.put("value", "");
-            dropdownOptions.add(emptyDropdownOption);
+            field.addDropdownValue("", "");
             for (Element option : select.select("option")) {
                 if (option.val().contains(":")) {
                     meaning = option.val().split(":")[0];
                 }
-                Map<String, String> dropdownOption = new HashMap<>();
-                dropdownOption.put("key", option.val());
-                dropdownOption.put("value", option.text());
-                dropdownOptions.add(dropdownOption);
+                field.addDropdownValue(option.val(), option.text());
             }
-            field.setDropdownValues(dropdownOptions);
             field.setData(new JSONObject());
             field.getData().put("meaning", meaning);
             fields.add(field);

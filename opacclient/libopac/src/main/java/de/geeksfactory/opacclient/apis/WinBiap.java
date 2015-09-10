@@ -801,26 +801,22 @@ public class WinBiap extends BaseApi implements OpacApi {
         Elements branchOptions = doc
                 .select("#ctl00_ContentPlaceHolderMain_searchPanel_MultiSelectionBranch_ListBoxMultiselection option");
 
-        List<Map<String, String>> mediaGroups = new ArrayList<>();
-        List<Map<String, String>> branches = new ArrayList<>();
+        final DropdownSearchField mediaGroups =
+                new DropdownSearchField(KEY_SEARCH_QUERY_CATEGORY, "Mediengruppe", false, null);
+        mediaGroups.setMeaning(Meaning.CATEGORY);
 
-        Map<String, String> all = new HashMap<>();
-        all.put("key", "");
-        all.put("value", "Alle");
-        mediaGroups.add(all);
-        branches.add(all);
+        final DropdownSearchField branches =
+                new DropdownSearchField(KEY_SEARCH_QUERY_BRANCH, "Zweigstelle", false, null);
+        branches.setMeaning(Meaning.BRANCH);
+
+        mediaGroups.addDropdownValue("", "Alle");
+        branches.addDropdownValue("", "Alle");
 
         for (Element option : mediaGroupOptions) {
-            Map<String, String> map = new HashMap<>();
-            map.put("key", option.attr("value"));
-            map.put("value", option.text());
-            mediaGroups.add(map);
+            mediaGroups.addDropdownValue(option.attr("value"), option.text());
         }
         for (Element option : branchOptions) {
-            Map<String, String> map = new HashMap<>();
-            map.put("key", option.attr("value"));
-            map.put("value", option.text());
-            branches.add(map);
+            branches.addDropdownValue(option.attr("value"), option.text());
         }
 
         List<SearchField> searchFields = new ArrayList<>();
@@ -880,15 +876,8 @@ public class WinBiap extends BaseApi implements OpacApi {
         field.setMeaning(Meaning.YEAR);
         searchFields.add(field);
 
-        field = new DropdownSearchField(KEY_SEARCH_QUERY_BRANCH, "Zweigstelle",
-                false, branches);
-        field.setMeaning(Meaning.BRANCH);
-        searchFields.add(field);
-
-        field = new DropdownSearchField(KEY_SEARCH_QUERY_CATEGORY,
-                "Mediengruppe", false, mediaGroups);
-        field.setMeaning(Meaning.CATEGORY);
-        searchFields.add(field);
+        searchFields.add(branches);
+        searchFields.add(mediaGroups);
 
         return searchFields;
     }

@@ -195,35 +195,14 @@ public class Bibliotheca extends BaseApi {
             }
         }
 
-        List<Map<String, String>> dropdownValues = new ArrayList<>();
-        Map<String, String> valueMap = new HashMap<>();
-        valueMap.put("key", "1");
-        valueMap.put("value",
-                stringProvider.getString(StringProvider.ORDER_DEFAULT));
-        dropdownValues.add(valueMap);
-        valueMap = new HashMap<>();
-        valueMap.put("key", "2:desc");
-        valueMap.put("value",
-                stringProvider.getString(StringProvider.ORDER_YEAR_DESC));
-        dropdownValues.add(valueMap);
-        valueMap = new HashMap<>();
-        valueMap.put("key", "2:asc");
-        valueMap.put("value",
-                stringProvider.getString(StringProvider.ORDER_YEAR_ASC));
-        dropdownValues.add(valueMap);
-        valueMap = new HashMap<>();
-        valueMap.put("key", "3:desc");
-        valueMap.put("value",
-                stringProvider.getString(StringProvider.ORDER_CATEGORY_DESC));
-        dropdownValues.add(valueMap);
-        valueMap = new HashMap<>();
-        valueMap.put("key", "3:asc");
-        valueMap.put("value",
-                stringProvider.getString(StringProvider.ORDER_CATEGORY_ASC));
-        dropdownValues.add(valueMap);
         DropdownSearchField orderField = new DropdownSearchField("orderselect",
                 stringProvider.getString(StringProvider.ORDER), false,
-                dropdownValues);
+                null);
+        orderField.addDropdownValue("1", stringProvider.getString(StringProvider.ORDER_DEFAULT));
+        orderField.addDropdownValue("2:desc", stringProvider.getString(StringProvider.ORDER_YEAR_DESC));
+        orderField.addDropdownValue("2:asc", stringProvider.getString(StringProvider.ORDER_YEAR_ASC));
+        orderField.addDropdownValue("3:desc", stringProvider.getString(StringProvider.ORDER_CATEGORY_DESC));
+        orderField.addDropdownValue("3:asc", stringProvider.getString(StringProvider.ORDER_CATEGORY_ASC));
         orderField.setMeaning(Meaning.ORDER);
         fields.add(orderField);
 
@@ -243,14 +222,9 @@ public class Bibliotheca extends BaseApi {
             DropdownSearchField field = new DropdownSearchField();
             field.setDisplayName(name);
             field.setId(input.attr("name"));
-            List<Map<String, String>> options = new ArrayList<>();
             for (Element option : input.select("option")) {
-                Map<String, String> map = new HashMap<>();
-                map.put("key", option.attr("value"));
-                map.put("value", option.text());
-                options.add(map);
+                field.addDropdownValue(option.attr("value"), option.text());
             }
-            field.setDropdownValues(options);
             return field;
         } else {
             return null;

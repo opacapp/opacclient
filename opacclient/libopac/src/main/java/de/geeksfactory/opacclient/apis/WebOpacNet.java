@@ -422,22 +422,15 @@ public class WebOpacNet extends BaseApi implements OpacApi {
                 field.setDisplayName(filter.getString("kopf"));
 
                 JSONArray restrictions = filter.getJSONArray("restrictions");
-                List<Map<String, String>> values = new ArrayList<>();
 
-                Map<String, String> all = new HashMap<>();
-                all.put("key", "");
-                all.put("value", "Alle");
-                values.add(all);
+                field.addDropdownValue("", "Alle");
 
                 for (int j = 0; j < restrictions.length(); j++) {
                     JSONObject restriction = restrictions.getJSONObject(j);
-                    Map<String, String> value = new HashMap<>();
-                    value.put("key", restriction.getString("id"));
-                    value.put("value", restriction.getString("bez"));
-                    values.add(value);
+                    field.addDropdownValue(restriction.getString("id"),
+                            restriction.getString("bez"));
                 }
 
-                field.setDropdownValues(values);
                 field.setData(new JSONObject("{\"filter\":true}"));
                 fields.add(field);
             }
