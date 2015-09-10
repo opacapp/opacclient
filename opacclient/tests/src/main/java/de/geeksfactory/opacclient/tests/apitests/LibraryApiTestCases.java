@@ -34,6 +34,7 @@ import de.geeksfactory.opacclient.apis.SISIS;
 import de.geeksfactory.opacclient.apis.SRU;
 import de.geeksfactory.opacclient.apis.TouchPoint;
 import de.geeksfactory.opacclient.apis.VuFind;
+import de.geeksfactory.opacclient.apis.WebOpacAt;
 import de.geeksfactory.opacclient.apis.WebOpacNet;
 import de.geeksfactory.opacclient.apis.WinBiap;
 import de.geeksfactory.opacclient.apis.Zones22;
@@ -281,6 +282,8 @@ public class LibraryApiTestCases {
             api = new WinBiap();
         } else if (library.getApi().equals("webopac.net")) {
             api = new WebOpacNet();
+        } else if (library.getApi().equals("web-opac.at")) {
+            api = new WebOpacAt();
         } else if (library.getApi().equals("touchpoint")) {
             api = new TouchPoint();
         } else if (library.getApi().equals("heidi")) {

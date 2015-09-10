@@ -152,7 +152,7 @@ public class Primo extends BaseApi {
             html = httpGet(query.get(0).getValue(), getDefaultEncoding());
         } else {
             html = httpGet(opac_url + "/action/search.do" +
-                            buildHttpGetParams(buildSearchParams(query), getDefaultEncoding()),
+                            buildHttpGetParams(buildSearchParams(query)),
                     getDefaultEncoding());
         }
         Document doc = Jsoup.parse(html);
@@ -285,7 +285,7 @@ public class Primo extends BaseApi {
         params.add(new BasicNameValuePair("pag", "cur"));
 
         String html = httpGet(opac_url + "/action/search.do" +
-                        buildHttpGetParams(params, getDefaultEncoding()),
+                        buildHttpGetParams(params),
                 getDefaultEncoding());
         Document doc = Jsoup.parse(html);
 
