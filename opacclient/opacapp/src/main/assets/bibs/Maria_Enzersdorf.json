@@ -1,0 +1,13 @@
+{
+    "state": "Nieder\u00f6sterreich",
+    "account_supported": false,
+    "title": "Gemeindebibliothek Maria Enzersdorf",
+    "city": "Maria",
+    "country": "\u00d6sterreich",
+    "information": "http://www.mariaenzersdorf.bvoe.at",
+    "api": "web-opac.at",
+    "geo": [48.0950444, 16.3039643],
+    "data": {
+        "baseurl": "http://www.suedstadt.web-opac.at"
+    }
+}

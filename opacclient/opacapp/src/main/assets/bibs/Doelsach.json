@@ -1,0 +1,13 @@
+{
+    "state": "Tirol",
+    "account_supported": false,
+    "title": "\u00d6ffentliche B\u00fccherei D\u00f6lsach",
+    "city": "D\u00f6lsach",
+    "country": "\u00d6sterreich",
+    "information": "http://www.doelsach.bvoe.at",
+    "api": "web-opac.at",
+    "geo": [46.8243081, 12.8370301],
+    "data": {
+        "baseurl": "http://www.bib-doelsach.web-opac.at"
+    }
+}

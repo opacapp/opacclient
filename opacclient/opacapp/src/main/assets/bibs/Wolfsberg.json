@@ -1,0 +1,13 @@
+{
+    "state": "K\u00e4rnten",
+    "account_supported": false,
+    "title": "Stadtb\u00fccherei Wolfsberg",
+    "city": "Wolfsberg",
+    "country": "\u00d6sterreich",
+    "information": "http://www.wolfsberg.at",
+    "api": "web-opac.at",
+    "geo": [46.8381813, 14.8461718],
+    "data": {
+        "baseurl": "http://www.wolfsberg.web-opac.at"
+    }
+}

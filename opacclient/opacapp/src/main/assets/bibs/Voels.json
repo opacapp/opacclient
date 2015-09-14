@@ -1,0 +1,13 @@
+{
+    "state": "Tirol",
+    "account_supported": false,
+    "title": "\u00d6ffentliche B\u00fccherei und Schulb\u00fccherei V\u00f6ls",
+    "city": "V\u00f6ls",
+    "country": "\u00d6sterreich",
+    "information": "http://buecherei.voels.at",
+    "api": "web-opac.at",
+    "geo": [47.2538482, 11.3191375],
+    "data": {
+        "baseurl": "http://www.voels.web-opac.at"
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "state": "Tirol",
+    "account_supported": false,
+    "title": "Stadtb\u00fccherei Imst (\u00d6ffentliche B\u00fccherei der Stadt und Pfarre Imst)",
+    "city": "Imst",
+    "country": "\u00d6sterreich",
+    "information": "http://www.imst.bvoe.at",
+    "api": "web-opac.at",
+    "geo": [47.2387997, 10.7420248],
+    "data": {
+        "baseurl": "http://imst.webopac.at"
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "state": "Nieder\u00f6sterreich",
+    "account_supported": false,
+    "title": "BIK B\u00fccherei Internetcafe Korneuburg",
+    "city": "Korneuburg",
+    "country": "\u00d6sterreich",
+    "information": "http://www.korneuburg.gv.at/bik/",
+    "api": "web-opac.at",
+    "geo": [48.3450806, 16.3347235],
+    "data": {
+        "baseurl": "http://www.bib-korneuburg.webopac.at"
+    }
+}

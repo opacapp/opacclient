@@ -1,0 +1,13 @@
+{
+    "state": "Tirol",
+    "account_supported": false,
+    "title": "\u00d6ffentliche B\u00fccherei Mutters",
+    "city": "Mutters",
+    "country": "\u00d6sterreich",
+    "information": "http://www.mutters.bvoe.at",
+    "api": "web-opac.at",
+    "geo": [47.2277311, 11.3769728],
+    "data": {
+        "baseurl": "http://www.oebmutters.web-opac.at"
+    }
+}

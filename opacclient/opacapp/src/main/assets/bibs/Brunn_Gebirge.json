@@ -1,0 +1,13 @@
+{
+    "state": "Nieder\u00f6sterreich",
+    "account_supported": false,
+    "title": "\u00d6ffentliche Bibliothek Brunn / Gebirge",
+    "city": "Brunn",
+    "country": "\u00d6sterreich",
+    "information": "http://www.brunnamgebirge.bvoe.at",
+    "api": "web-opac.at",
+    "geo": [48.108677, 16.2829165],
+    "data": {
+        "baseurl": "http://www.brunn-am-gebirge.webopac.at"
+    }
+}

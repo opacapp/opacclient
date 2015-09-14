@@ -1,0 +1,13 @@
+{
+    "state": "Vorarlberg",
+    "account_supported": false,
+    "title": "Walserbibliothek Raggal",
+    "city": "Raggal",
+    "country": "\u00d6sterreich",
+    "information": "http://www.walserbibliothek.at",
+    "api": "web-opac.at",
+    "geo": [47.2107503, 9.8362493],
+    "data": {
+        "baseurl": "http://www.oebraggal.web-opac.at"
+    }
+}
