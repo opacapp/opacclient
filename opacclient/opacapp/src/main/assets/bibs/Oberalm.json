@@ -1,0 +1,13 @@
+{
+    "state": "Salzburg",
+    "account_supported": false,
+    "title": "B\u00fccherei Oberalm",
+    "city": "Oberalm",
+    "country": "\u00d6sterreich",
+    "information": "http://www.oberalm.bvoe.at",
+    "api": "web-opac.at",
+    "geo": [47.7009473, 13.0990746],
+    "data": {
+        "baseurl": "http://buecherei-oberalm.webopac.at"
+    }
+}

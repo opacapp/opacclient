@@ -1,0 +1,13 @@
+{
+    "state": "Salzburg",
+    "account_supported": false,
+    "title": "Bibliothek Henndorf",
+    "city": "Henndorf",
+    "country": "\u00d6sterreich",
+    "information": "http://www.henndorf.bvoe.at",
+    "api": "web-opac.at",
+    "geo": [47.9015307, 13.1898478],
+    "data": {
+        "baseurl": "http://henndorf.web-opac.at"
+    }
+}

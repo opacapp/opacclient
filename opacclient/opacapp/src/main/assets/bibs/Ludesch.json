@@ -1,0 +1,13 @@
+{
+    "state": "Vorarlberg",
+    "account_supported": false,
+    "title": "B\u00fccherei Ludesch",
+    "city": "Ludesch",
+    "country": "\u00d6sterreich",
+    "information": "http://www.buecherei.ludesch.at",
+    "api": "web-opac.at",
+    "geo": [47.1928348, 9.7831256],
+    "data": {
+        "baseurl": "http://www.ludesch.web-opac.at"
+    }
+}

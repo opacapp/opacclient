@@ -1,0 +1,13 @@
+{
+    "state": "Nieder\u00f6sterreich",
+    "account_supported": false,
+    "title": "Bibliothek St. Martin",
+    "city": "Klosterneuburg",
+    "country": "\u00d6sterreich",
+    "information": "http://www.bibliothek-stmartin.at/",
+    "api": "web-opac.at",
+    "geo": [48.3139282, 16.3192095],
+    "data": {
+        "baseurl": "http://bibliothek-stmartin.web-opac.at"
+    }
+}

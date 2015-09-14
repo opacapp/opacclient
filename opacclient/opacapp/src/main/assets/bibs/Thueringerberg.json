@@ -1,0 +1,13 @@
+{
+    "state": "Vorarlberg",
+    "account_supported": false,
+    "title": "Walserbibliothek Th\u00fcringerberg",
+    "city": "Th\u00fcringerberg",
+    "country": "\u00d6sterreich",
+    "information": "http://www.thueringerberg.bvoe.at",
+    "api": "web-opac.at",
+    "geo": [47.2154525, 9.7836496],
+    "data": {
+        "baseurl": "http://www.oebthueringerberg.web-opac.at"
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "state": "Tirol",
+    "account_supported": false,
+    "title": "Stadtb\u00fccherei Hall in Tirol",
+    "city": "Hall",
+    "country": "\u00d6sterreich",
+    "information": "http://www.hall-in-tirol.at",
+    "api": "web-opac.at",
+    "geo": [47.2811987, 11.5065928],
+    "data": {
+        "baseurl": "http://www.hall.web-opac.at"
+    }
+}

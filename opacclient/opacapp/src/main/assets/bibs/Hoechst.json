@@ -1,0 +1,13 @@
+{
+    "state": "Vorarlberg",
+    "account_supported": false,
+    "title": "B\u00fccherei Spielothek H\u00f6chst",
+    "city": "H\u00f6chst",
+    "country": "\u00d6sterreich",
+    "information": "http://www.hoechst.bvoe.at",
+    "api": "web-opac.at",
+    "geo": [47.4610692, 9.6347067],
+    "data": {
+        "baseurl": "http://www.buecherei-hoechst.web-opac.at"
+    }
+}

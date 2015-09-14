@@ -1,0 +1,13 @@
+{
+    "state": "Tirol",
+    "account_supported": false,
+    "title": "\u00d6ffentliche B\u00fccherei Pfaffenhofen",
+    "city": "Pfaffenhofen",
+    "country": "\u00d6sterreich",
+    "information": null,
+    "api": "web-opac.at",
+    "geo": [47.29937, 11.0800019],
+    "data": {
+        "baseurl": "http://www.bib-pfaffenhofen.webopac.at"
+    }
+}

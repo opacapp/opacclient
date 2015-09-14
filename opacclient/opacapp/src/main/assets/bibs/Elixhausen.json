@@ -1,0 +1,13 @@
+{
+    "state": "Salzburg",
+    "account_supported": false,
+    "title": "Die Bibliothek Elixhausen",
+    "city": "Elixhausen",
+    "country": "\u00d6sterreich",
+    "information": "http://www.elixhausen.bvoe.at",
+    "api": "web-opac.at",
+    "geo": [47.8661513, 13.0650524],
+    "data": {
+        "baseurl": "http://www.elixhausen.webopac.at"
+    }
+}

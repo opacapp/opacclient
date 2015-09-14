@@ -1,0 +1,13 @@
+{
+    "state": "Burgenland",
+    "account_supported": false,
+    "title": "Gemeindeb\u00fccherei Wimpassing",
+    "city": "Wimpassing",
+    "country": "\u00d6sterreich",
+    "information": "http://www.wimpassing.bvoe.at/",
+    "api": "web-opac.at",
+    "geo": [47.9173159, 16.4308698],
+    "data": {
+        "baseurl": "http://www.wimpassing.web-opac.at"
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "state": "Tirol",
+    "account_supported": false,
+    "title": "Bibliothek Zirl",
+    "city": "Zirl",
+    "country": "\u00d6sterreich",
+    "information": "http://zirl.bvoe.at/",
+    "api": "web-opac.at",
+    "geo": [47.2685335, 11.2394737],
+    "data": {
+        "baseurl": "http://www.bib-zirl.webopac.at"
+    }
+}

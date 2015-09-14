@@ -1,0 +1,13 @@
+{
+    "state": "Vorarlberg",
+    "account_supported": false,
+    "title": "AK-Bibliothek Feldkirch",
+    "city": "Feldkirch",
+    "country": "\u00d6sterreich",
+    "information": "http://www.ak-vorarlberg.at",
+    "api": "web-opac.at",
+    "geo": [47.2392935, 9.5976395],
+    "data": {
+        "baseurl": "http://www.ak-feldkirch.webopac.at"
+    }
+}
