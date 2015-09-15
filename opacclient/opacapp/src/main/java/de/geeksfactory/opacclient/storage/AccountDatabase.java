@@ -36,17 +36,17 @@ public class AccountDatabase extends SQLiteOpenHelper {
 
     public static final String[] COLUMNS = {"id", "bib", "label", "name",
             "password", "cached", "pendingFees", "validUntil", "warning"};
-    public static final String[] COLUMNS_NOTIFIED = {"id", "account",
-            "timestamp"};
+    public static final String[] COLUMNS_ALARMS = {"id", "deadline_ts", "media", "alarm_ts",
+            "notified", "finished"};
     // CHANGE THIS
     public static final Map<String, String> COLUMNS_LENT;
     public static final Map<String, String> COLUMNS_RESERVATIONS;
     public static final String TABLENAME_ACCOUNTS = "accounts";
     public static final String TABLENAME_LENT = "accountdata_lent";
     public static final String TABLENAME_RESERVATION = "accountdata_reservations";
-    public static final String TABLENAME_NOTIFIED = "notified";
+    public static final String TABLENAME_ALARMS = "alarms";
     private static final String DATABASE_NAME = "accounts.db";
-    private static final int DATABASE_VERSION = 22; // REPLACE ONUPGRADE IF YOU
+    private static final int DATABASE_VERSION = 23; // REPLACE ONUPGRADE IF YOU
 
     static {
         Map<String, String> aMap = new HashMap<>();
@@ -100,9 +100,10 @@ public class AccountDatabase extends SQLiteOpenHelper {
                 + "title text," + "author text," + "ready text,"
                 + "branch text," + "cancel text," + "expire text,"
                 + "itemid text," + "bookingurl text," + "format text" + ");");
-        db.execSQL("create table "
-                + "notified ( id integer primary key autoincrement, "
-                + "account integer, " + "timestamp integer);");
+        db.execSQL("create table " + "alarms (" + " id integer primary key autoincrement," +
+                " deadline_ts integer," +
+                " media text," + " alarm_ts integer," + " notified integer," + " finished " +
+                "integer" + ");");
     }
 
     @Override
@@ -196,7 +197,14 @@ public class AccountDatabase extends SQLiteOpenHelper {
                 // it already exists, do nothing
             }
         }
-
+        if (oldVersion < 23) {
+            // Upgrade to new Notifications implementation using the "alarms" table
+            db.execSQL("drop table notified");
+            db.execSQL("create table " + "alarms (" + " id integer primary key autoincrement," +
+                    " deadline_ts integer," +
+                    " media text," + " alarm_ts integer," + " notified integer," + " finished " +
+                    "integer" + ");");
+        }
 
     }
 

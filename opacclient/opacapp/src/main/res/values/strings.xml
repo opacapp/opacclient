@@ -90,6 +90,11 @@
     <string name="notification_warning_desc">How long before the due date should a notification be shown?</string>
     <string name="notif_ticker">%s items are about to expire!</string>
     <string name="notif_title">Items are about to expire</string>
+    <string name="notif_ticker_expired">%s items have expired!</string>
+    <string name="notif_title_expired">Items have expired</string>
+    <string name="notif_plus_more">+%d more</string>
+    <string name="notif_snooze">Remind me again</string>
+    <string name="notif_dont_remind_again">Don\'t remind me again</string>
     <string name="volumes">Volumes</string>
     <string name="volumesearch">Show volumes</string>
     <string name="star">Save to favorites</string>
@@ -194,7 +199,6 @@
     <string name="select_mail_app">Select mail app…</string>
     <string name="search_libraries_hint">Search library…</string>
     <string name="action_search">Search</string>
-    <string name="snooze">Remind me again tomorrow</string>
     <string name="expand">Show more search fields</string>
     <string name="collapse">Show less search fields</string>
     <string name="interested_to_help">I\'m interested in helping</string>
@@ -258,4 +262,5 @@
         fees.</string>
     <string name="do_not_ask_again">Do not show again</string>
     <string name="reservation_fee_continue">Continue</string>
+    <string name="notification_repeat">Repeat notifications</string>
 </resources>

@@ -10,12 +10,12 @@
             android:title="@string/accounts"/>
 
         <ListPreference
-            android:entries="@array/startup_labels"
-            android:key="startup_fragment"
-            android:title="@string/startup_title"
-            android:summary="@string/startup_summary"
             android:defaultValue="search"
-            android:entryValues="@array/startup_values"/>
+            android:entries="@array/startup_labels"
+            android:entryValues="@array/startup_values"
+            android:key="startup_fragment"
+            android:summary="@string/startup_summary"
+            android:title="@string/startup_title" />
 
         <EditTextPreference
             android:key="email"
@@ -41,6 +41,12 @@
             android:key="notification_warning"
             android:summary="@string/notification_warning_desc"
             android:title="@string/notification_warning"/>
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:dependency="notification_service"
+            android:key="notification_repeat"
+            android:title="@string/notification_repeat" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/developer_settings">
         <CheckBoxPreference

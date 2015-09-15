@@ -69,7 +69,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
@@ -104,15 +103,6 @@ public class AccountFragment extends Fragment implements
     protected AlertDialog adialog;
     protected OpacClient app;
     protected View view;
-    private LoadTask lt;
-    private CancelTask ct;
-    private DownloadTask dt;
-    private Account account;
-    private boolean refreshing = false;
-    private long refreshtime;
-    private boolean fromcache;
-    private boolean supported = true;
-
     protected ScrollView svAccount;
     protected FrameLayout errorView;
     protected View unsupportedErrorView, answerErrorView;
@@ -124,6 +114,14 @@ public class AccountFragment extends Fragment implements
             tvErrBodyA, tvErrHeadA, tvErrBodyU;
     protected ExpandingCardListManager lentManager;
     protected ExpandingCardListManager resManager;
+    private LoadTask lt;
+    private CancelTask ct;
+    private DownloadTask dt;
+    private Account account;
+    private boolean refreshing = false;
+    private long refreshtime;
+    private boolean fromcache;
+    private boolean supported = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -149,11 +147,12 @@ public class AccountFragment extends Fragment implements
                 adata.open();
                 Bundle notif = getActivity().getIntent().getExtras()
                                             .getBundle("notifications");
-                Set<String> keys = notif.keySet();
+                // TODO: update
+               /* Set<String> keys = notif.keySet();
                 for (String key : keys) {
                     long[] val = notif.getLongArray(key);
                     adata.notificationSave(val[0], val[1]);
-                }
+                }*/
                 adata.close();
 
                 if (getActivity().getIntent().getExtras().getLong("account") != app
@@ -647,66 +646,6 @@ public class AccountFragment extends Fragment implements
 
     }
 
-    private class LentViewHolder {
-        public TextView tvTitleAndAuthor;
-        public TextView tvStatus;
-        public TextView tvAuthorDetail;
-        public TextView tvBranchDetail;
-        public TextView tvFormatDetail;
-        public ImageView ivProlong;
-        public ImageView ivDownload;
-        public ImageView ivDetails;
-        public View vStatusColor;
-        public LinearLayout llData;
-        public LinearLayout llDetails;
-        public LinearLayout llButtons;
-        public boolean hasDetailLink;
-
-        public void findViews(View v) {
-            tvTitleAndAuthor = (TextView) v.findViewById(R.id.tvTitleAndAuthor);
-            tvStatus = (TextView) v.findViewById(R.id.tvStatus);
-            tvAuthorDetail = (TextView) v.findViewById(R.id.tvAuthorDetail);
-            tvBranchDetail = (TextView) v.findViewById(R.id.tvBranchDetail);
-            tvFormatDetail = (TextView) v.findViewById(R.id.tvFormatDetail);
-            ivProlong = (ImageView) v.findViewById(R.id.ivProlong);
-            ivDownload = (ImageView) v.findViewById(R.id.ivDownload);
-            ivDetails = (ImageView) v.findViewById(R.id.ivDetails);
-            vStatusColor = v.findViewById(R.id.vStatusColor);
-            llData = (LinearLayout) v.findViewById(R.id.llData);
-            llDetails = (LinearLayout) v.findViewById(R.id.llDetails);
-            llButtons = (LinearLayout) v.findViewById(R.id.llButtons);
-        }
-    }
-
-    private class ReservationViewHolder {
-        public TextView tvTitleAndAuthor;
-        public TextView tvStatus;
-        public TextView tvAuthorDetail;
-        public TextView tvBranchDetail;
-        public TextView tvFormatDetail;
-        public ImageView ivCancel;
-        public ImageView ivBooking;
-        public ImageView ivDetails;
-        public LinearLayout llData;
-        public LinearLayout llDetails;
-        public LinearLayout llButtons;
-        public boolean hasDetailLink;
-
-        public void findViews(View v) {
-            tvTitleAndAuthor = (TextView) v.findViewById(R.id.tvTitleAndAuthor);
-            tvStatus = (TextView) v.findViewById(R.id.tvStatus);
-            tvAuthorDetail = (TextView) v.findViewById(R.id.tvAuthorDetail);
-            tvBranchDetail = (TextView) v.findViewById(R.id.tvBranchDetail);
-            tvFormatDetail = (TextView) v.findViewById(R.id.tvFormatDetail);
-            ivCancel = (ImageView) v.findViewById(R.id.ivCancel);
-            ivBooking = (ImageView) v.findViewById(R.id.ivBooking);
-            ivDetails = (ImageView) v.findViewById(R.id.ivDetails);
-            llData = (LinearLayout) v.findViewById(R.id.llData);
-            llDetails = (LinearLayout) v.findViewById(R.id.llDetails);
-            llButtons = (LinearLayout) v.findViewById(R.id.llButtons);
-        }
-    }
-
     @SuppressWarnings("deprecation")
     public void displaydata(final AccountData result, boolean fromcache) {
         if (getActivity() == null) {
@@ -722,8 +661,7 @@ public class AccountFragment extends Fragment implements
 
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(app.getApplicationContext());
-        final long tolerance = Long.decode(sp.getString("notification_warning",
-                "367200000"));
+        final long tolerance = Long.decode(sp.getString("notification_warning", "367200000"));
 
         tvAccLabel.setText(account.getLabel());
         tvAccUser.setText(account.getName());
@@ -795,8 +733,8 @@ public class AccountFragment extends Fragment implements
                         holder.ivDetails.setOnClickListener(new OnClickListener() {
                             @Override
                             public void onClick(View clicked) {
-                                Intent intent =
-                                        new Intent(getActivity(), SearchResultDetailActivity.class);
+                                Intent intent = new Intent(getActivity(),
+                                        SearchResultDetailActivity.class);
                                 intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
                                         item.get(AccountData.KEY_LENT_ID));
                                 ActivityOptionsCompat options = ActivityOptionsCompat
@@ -826,12 +764,15 @@ public class AccountFragment extends Fragment implements
 
                     if (item.containsKey(AccountData.KEY_LENT_DEADLINE) &&
                             item.containsKey(AccountData.KEY_LENT_STATUS)) {
-                        holder.tvStatus.setText(Html.fromHtml(item.get(AccountData.KEY_LENT_DEADLINE)) + " (" +
-                                Html.fromHtml(item.get(AccountData.KEY_LENT_STATUS)) + ")");
+                        holder.tvStatus.setText(
+                                Html.fromHtml(item.get(AccountData.KEY_LENT_DEADLINE)) + " (" +
+                                        Html.fromHtml(item.get(AccountData.KEY_LENT_STATUS)) + ")");
                     } else if (item.containsKey(AccountData.KEY_LENT_DEADLINE)) {
-                        holder.tvStatus.setText(Html.fromHtml(item.get(AccountData.KEY_LENT_DEADLINE)));
+                        holder.tvStatus
+                                .setText(Html.fromHtml(item.get(AccountData.KEY_LENT_DEADLINE)));
                     } else if (item.containsKey(AccountData.KEY_LENT_STATUS)) {
-                        holder.tvStatus.setText(Html.fromHtml(item.get(AccountData.KEY_LENT_STATUS)));
+                        holder.tvStatus
+                                .setText(Html.fromHtml(item.get(AccountData.KEY_LENT_STATUS)));
                     } else {
                         holder.tvStatus.setVisibility(View.GONE);
                     }
@@ -843,32 +784,32 @@ public class AccountFragment extends Fragment implements
                         holder.tvAuthorDetail.setVisibility(View.GONE);
                     }
                     if (item.containsKey(AccountData.KEY_LENT_FORMAT)) {
-                        holder.tvFormatDetail.setText(
-                                Html.fromHtml(item.get(AccountData.KEY_LENT_FORMAT)));
+                        holder.tvFormatDetail
+                                .setText(Html.fromHtml(item.get(AccountData.KEY_LENT_FORMAT)));
                     } else {
                         holder.tvFormatDetail.setVisibility(View.GONE);
                     }
                     if (item.containsKey(AccountData.KEY_LENT_LENDING_BRANCH)) {
-                        holder.tvBranchDetail
-                                .setText(Html.fromHtml(item.get(AccountData.KEY_LENT_LENDING_BRANCH)));
+                        holder.tvBranchDetail.setText(
+                                Html.fromHtml(item.get(AccountData.KEY_LENT_LENDING_BRANCH)));
                     } else if (item.containsKey(AccountData.KEY_LENT_BRANCH)) {
-                        holder.tvBranchDetail.setText(Html.fromHtml(item.get(AccountData.KEY_LENT_BRANCH)));
+                        holder.tvBranchDetail
+                                .setText(Html.fromHtml(item.get(AccountData.KEY_LENT_BRANCH)));
                     } else {
                         holder.tvBranchDetail.setVisibility(View.GONE);
                     }
 
                     // Color codes for return dates
                     if (item.containsKey(AccountData.KEY_LENT_DEADLINE_TIMESTAMP)) {
-                        if (Long.parseLong(item
-                                .get(AccountData.KEY_LENT_DEADLINE_TIMESTAMP)) < System
-                                .currentTimeMillis()) {
-                            holder.vStatusColor
-                                    .setBackgroundColor(getResources().getColor(R.color.date_overdue));
-                        } else if ((Long.parseLong(item
-                                .get(AccountData.KEY_LENT_DEADLINE_TIMESTAMP)) - System
-                                .currentTimeMillis()) <= tolerance) {
-                            holder.vStatusColor
-                                    .setBackgroundColor(getResources().getColor(R.color.date_warning));
+                        if (Long.parseLong(item.get(AccountData.KEY_LENT_DEADLINE_TIMESTAMP)) <
+                                System.currentTimeMillis()) {
+                            holder.vStatusColor.setBackgroundColor(
+                                    getResources().getColor(R.color.date_overdue));
+                        } else if (
+                                (Long.parseLong(item.get(AccountData.KEY_LENT_DEADLINE_TIMESTAMP)) -
+                                        System.currentTimeMillis()) <= tolerance) {
+                            holder.vStatusColor.setBackgroundColor(
+                                    getResources().getColor(R.color.date_warning));
                         } else if (item.containsKey(AccountData.KEY_LENT_DOWNLOAD)) {
                             holder.vStatusColor.setBackgroundColor(
                                     getResources().getColor(R.color.account_downloadable));
@@ -889,10 +830,11 @@ public class AccountFragment extends Fragment implements
                         holder.ivProlong.setVisibility(View.VISIBLE);
                         if (item.containsKey(AccountData.KEY_LENT_RENEWABLE)) {
                             holder.ivProlong.setAlpha(
-                                    item.get(AccountData.KEY_LENT_RENEWABLE).equals("Y") ? 255 : 100);
+                                    item.get(AccountData.KEY_LENT_RENEWABLE).equals("Y") ? 255 :
+                                            100);
                         }
-                    } else if (item.containsKey(AccountData.KEY_LENT_DOWNLOAD)
-                            && app.getApi() instanceof EbookServiceApi) {
+                    } else if (item.containsKey(AccountData.KEY_LENT_DOWNLOAD) &&
+                            app.getApi() instanceof EbookServiceApi) {
                         holder.ivDownload.setTag(item.get(AccountData.KEY_LENT_DOWNLOAD));
                         holder.ivDownload.setOnClickListener(new OnClickListener() {
                             @Override
@@ -916,7 +858,8 @@ public class AccountFragment extends Fragment implements
 
                     holder.llDetails.setVisibility(View.VISIBLE);
                     if (item.containsKey(AccountData.KEY_LENT_TITLE)) {
-                        holder.tvTitleAndAuthor.setText(Html.fromHtml(item.get(AccountData.KEY_LENT_TITLE)));
+                        holder.tvTitleAndAuthor
+                                .setText(Html.fromHtml(item.get(AccountData.KEY_LENT_TITLE)));
                     } else {
                         holder.tvTitleAndAuthor.setVisibility(View.GONE);
                     }
@@ -948,108 +891,115 @@ public class AccountFragment extends Fragment implements
                     return result.getLent().size();
                 }
             };
-            lentManager.setAnimationInterceptor(
-                    new ExpandingCardListManager.AnimationInterceptor() {
-                        private float llDataY;
-                        private float llDataTranslationY = 0;
+            lentManager
+                    .setAnimationInterceptor(new ExpandingCardListManager.AnimationInterceptor() {
+                                private float llDataY;
+                                private float llDataTranslationY = 0;
 
-                        @Override
-                        public void beforeExpand(View unexpandedView) {
-                            LentViewHolder holder = (LentViewHolder) unexpandedView.getTag();
-                            llDataY = ViewHelper.getY(holder.llData);
-                        }
-
-                        @Override
-                        public Collection<Animator> getExpandAnimations(int heightDifference,
-                                View expandedView) {
-                            LentViewHolder holder = (LentViewHolder) expandedView.getTag();
-                            Collection<Animator> anims = getAnimations(-heightDifference, 0);
-                            // Animate buttons to the side
-                            int difference = 2 * (getResources()
-                                    .getDimensionPixelSize(R.dimen.card_side_margin_selected) -
-                                    getResources().getDimensionPixelSize(
-                                            R.dimen.card_side_margin_default));
-                            anims.add(ObjectAnimator
-                                    .ofFloat(holder.llButtons, "translationX", difference, 0));
-                            // Animate llData to the bottom if required
-                            if (ViewHelper.getY(holder.llData) != llDataY) {
-                                ViewHelper.setY(holder.llData, llDataY);
-                                llDataTranslationY = ViewHelper.getTranslationY(holder.llData);
-                                anims.add(ObjectAnimator.ofFloat(holder.llData, "translationY", 0));
-                            } else {
-                                llDataTranslationY = 0;
-                            }
-                            return anims;
-                        }
-
-                        @Override
-                        public Collection<Animator> getCollapseAnimations(int heightDifference,
-                                View expandedView) {
-                            LentViewHolder holder = (LentViewHolder) expandedView.getTag();
-                            Collection<Animator> anims = getAnimations(0, heightDifference);
-                            // Animate buttons back
-                            int difference = 2 * (getResources()
-                                    .getDimensionPixelSize(R.dimen.card_side_margin_selected) -
-                                    getResources().getDimensionPixelSize(
-                                            R.dimen.card_side_margin_default));
-                            anims.add(ObjectAnimator
-                                    .ofFloat(holder.llButtons, "translationX", 0, difference));
-                            // Animate llData back
-                            anims.add(ObjectAnimator
-                                    .ofFloat(holder.llData, "translationY", llDataTranslationY));
-                            return anims;
-                        }
-
-                        @Override
-                        public void onCollapseAnimationEnd() {
-                            if (view.findViewById(R.id.rlMeta) != null) {
-                                // tablet
-                                ViewHelper.setTranslationY(view.findViewById(R.id.rlMeta), 0);
-                            } else {
-                                // phone
-                                ViewHelper.setTranslationY(tvResHeader, 0);
-                                ViewHelper.setTranslationY(llRes, 0);
-                                ViewHelper.setTranslationY(tvAge, 0);
-                                ViewHelper.setTranslationY(view.findViewById(R.id.tvNoWarranty), 0);
-                            }
-                        }
-
-                        private Collection<Animator> getAnimations(float from, float to) {
-                            List<Animator> animators = new ArrayList<>();
-                            if (view.findViewById(R.id.rlMeta) != null) {
-                                // tablet
-                                if (result.getLent().size() >= result.getReservations().size()) {
-                                    animators.add(ObjectAnimator
-                                            .ofFloat(view.findViewById(R.id.rlMeta), "translationY",
-                                                    from,
-                                                    to));
+                                @Override
+                                public void beforeExpand(View unexpandedView) {
+                                    LentViewHolder holder = (LentViewHolder) unexpandedView
+                                            .getTag();
+                                    llDataY = ViewHelper.getY(holder.llData);
                                 }
-                            } else {
-                                // phone
-                                animators.add(ObjectAnimator
-                                        .ofFloat(tvResHeader, "translationY", from, to));
-                                animators.add(ObjectAnimator
-                                        .ofFloat(llRes, "translationY", from, to));
-                                animators.add(ObjectAnimator
-                                        .ofFloat(tvAge, "translationY", from, to));
-                                animators.add(ObjectAnimator
-                                        .ofFloat(view.findViewById(R.id.tvNoWarranty),
-                                                "translationY", from, to));
-                            }
-                            return animators;
-                        }
-                    });
+
+                                @Override
+                                public Collection<Animator> getExpandAnimations(
+                                        int heightDifference, View expandedView) {
+                                    LentViewHolder holder = (LentViewHolder) expandedView.getTag();
+                                    Collection<Animator> anims = getAnimations(-heightDifference,
+                                            0);
+                                    // Animate buttons to the side
+                                    int difference = 2 * (getResources().getDimensionPixelSize(
+                                            R.dimen.card_side_margin_selected) - getResources()
+                                            .getDimensionPixelSize(
+                                                    R.dimen.card_side_margin_default));
+                                    anims.add(ObjectAnimator
+                                            .ofFloat(holder.llButtons, "translationX", difference,
+                                                    0));
+                                    // Animate llData to the bottom if required
+                                    if (ViewHelper.getY(holder.llData) != llDataY) {
+                                        ViewHelper.setY(holder.llData, llDataY);
+                                        llDataTranslationY = ViewHelper
+                                                .getTranslationY(holder.llData);
+                                        anims.add(ObjectAnimator
+                                                .ofFloat(holder.llData, "translationY", 0));
+                                    } else {
+                                        llDataTranslationY = 0;
+                                    }
+                                    return anims;
+                                }
+
+                                @Override
+                                public Collection<Animator> getCollapseAnimations(
+                                        int heightDifference, View expandedView) {
+                                    LentViewHolder holder = (LentViewHolder) expandedView.getTag();
+                                    Collection<Animator> anims = getAnimations(0, heightDifference);
+                                    // Animate buttons back
+                                    int difference = 2 * (getResources().getDimensionPixelSize(
+                                            R.dimen.card_side_margin_selected) - getResources()
+                                            .getDimensionPixelSize(
+                                                    R.dimen.card_side_margin_default));
+                                    anims.add(ObjectAnimator
+                                            .ofFloat(holder.llButtons, "translationX", 0,
+                                                    difference));
+                                    // Animate llData back
+                                    anims.add(ObjectAnimator.ofFloat(holder.llData, "translationY",
+                                            llDataTranslationY));
+                                    return anims;
+                                }
+
+                                @Override
+                                public void onCollapseAnimationEnd() {
+                                    if (view.findViewById(R.id.rlMeta) != null) {
+                                        // tablet
+                                        ViewHelper
+                                                .setTranslationY(view.findViewById(R.id.rlMeta), 0);
+                                    } else {
+                                        // phone
+                                        ViewHelper.setTranslationY(tvResHeader, 0);
+                                        ViewHelper.setTranslationY(llRes, 0);
+                                        ViewHelper.setTranslationY(tvAge, 0);
+                                        ViewHelper.setTranslationY(
+                                                view.findViewById(R.id.tvNoWarranty), 0);
+                                    }
+                                }
+
+                                private Collection<Animator> getAnimations(float from, float to) {
+                                    List<Animator> animators = new ArrayList<>();
+                                    if (view.findViewById(R.id.rlMeta) != null) {
+                                        // tablet
+                                        if (result.getLent().size() >=
+                                                result.getReservations().size()) {
+                                            animators.add(ObjectAnimator
+                                                    .ofFloat(view.findViewById(R.id.rlMeta),
+                                                            "translationY", from, to));
+                                        }
+                                    } else {
+                                        // phone
+                                        animators.add(ObjectAnimator
+                                                .ofFloat(tvResHeader, "translationY", from, to));
+                                        animators.add(ObjectAnimator
+                                                .ofFloat(llRes, "translationY", from, to));
+                                        animators.add(ObjectAnimator
+                                                .ofFloat(tvAge, "translationY", from, to));
+                                        animators.add(ObjectAnimator
+                                                .ofFloat(view.findViewById(R.id.tvNoWarranty),
+                                                        "translationY", from, to));
+                                    }
+                                    return animators;
+                                }
+                            });
 
             for (final Map<String, String> item : result.getLent()) {
                 try {
                     if (notification_on && item.containsKey(AccountData.KEY_LENT_DEADLINE)) {
                         if (!item.get(AccountData.KEY_LENT_DEADLINE).equals("")) {
-                            if ((!item
-                                    .containsKey(AccountData.KEY_LENT_DEADLINE_TIMESTAMP) || Long
-                                    .parseLong(item
-                                            .get(AccountData.KEY_LENT_DEADLINE_TIMESTAMP)) < 1)
-                                    && !"Onleihe".equals(item
-                                    .get(AccountData.KEY_LENT_BRANCH))) {
+                            if ((!item.containsKey(AccountData.KEY_LENT_DEADLINE_TIMESTAMP) ||
+                                    Long.parseLong(
+                                            item.get(AccountData.KEY_LENT_DEADLINE_TIMESTAMP)) <
+                                            1) &&
+                                    !"Onleihe".equals(item.get(AccountData.KEY_LENT_BRANCH))) {
                                 notification_problems = true;
                             }
                         }
@@ -1075,17 +1025,15 @@ public class AccountFragment extends Fragment implements
             TextView t1 = new TextView(getActivity());
             t1.setText(R.string.reservations_none);
             llRes.addView(t1);
-            tvResHeader.setText(getActivity()
-                    .getString(R.string.reservations_head) + " (0)");
+            tvResHeader.setText(getActivity().getString(R.string.reservations_head) + " (0)");
         } else {
-            tvResHeader.setText(getActivity()
-                    .getString(R.string.reservations_head) + " (" +
+            tvResHeader.setText(getActivity().getString(R.string.reservations_head) + " (" +
                     result.getReservations().size() + ")");
             resManager = new ExpandingCardListManager(getActivity(), llRes) {
                 @Override
                 public View getView(final int position, ViewGroup container) {
-                    final View v = getLayoutInflater(null).inflate(
-                            R.layout.listitem_account_reservation, llRes, false);
+                    final View v = getLayoutInflater(null)
+                            .inflate(R.layout.listitem_account_reservation, llRes, false);
                     ReservationViewHolder holder = new ReservationViewHolder();
                     holder.findViews(v);
 
@@ -1110,8 +1058,8 @@ public class AccountFragment extends Fragment implements
                         holder.ivDetails.setOnClickListener(new OnClickListener() {
                             @Override
                             public void onClick(View clicked) {
-                                Intent intent =
-                                        new Intent(getActivity(), SearchResultDetailActivity.class);
+                                Intent intent = new Intent(getActivity(),
+                                        SearchResultDetailActivity.class);
                                 intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID,
                                         item.get(AccountData.KEY_RESERVATION_ID));
                                 ActivityOptionsCompat options = ActivityOptionsCompat
@@ -1127,8 +1075,10 @@ public class AccountFragment extends Fragment implements
                     // Overview (Title/Author, Ready/Expire)
                     final CharSequence title = item.containsKey(AccountData.KEY_RESERVATION_TITLE) ?
                             Html.fromHtml(item.get(AccountData.KEY_RESERVATION_TITLE)) : null;
-                    final CharSequence author = item.containsKey(AccountData.KEY_RESERVATION_AUTHOR) ?
-                            Html.fromHtml(item.get(AccountData.KEY_RESERVATION_AUTHOR)) : null;
+                    final CharSequence author =
+                            item.containsKey(AccountData.KEY_RESERVATION_AUTHOR) ?
+                                    Html.fromHtml(item.get(AccountData.KEY_RESERVATION_AUTHOR)) :
+                                    null;
                     if (title != null && author != null) {
                         holder.tvTitleAndAuthor.setText(title + ", " + author);
                     } else if (title != null) {
@@ -1140,12 +1090,13 @@ public class AccountFragment extends Fragment implements
                     }
 
                     if (item.containsKey(AccountData.KEY_RESERVATION_READY)) {
-                        holder.tvStatus.setText(Html.fromHtml(item.get(AccountData.KEY_RESERVATION_READY)));
+                        holder.tvStatus.setText(
+                                Html.fromHtml(item.get(AccountData.KEY_RESERVATION_READY)));
                     } else if (item.containsKey(AccountData.KEY_RESERVATION_EXPIRE) &&
                             item.get(AccountData.KEY_RESERVATION_EXPIRE).length() > 6) {
-                        holder.tvStatus.setText(
-                                Html.fromHtml(getString(R.string.reservation_expire_until) + " "
-                                        + item.get(AccountData.KEY_RESERVATION_EXPIRE)));
+                        holder.tvStatus.setText(Html.fromHtml(
+                                        getString(R.string.reservation_expire_until) + " " +
+                                                item.get(AccountData.KEY_RESERVATION_EXPIRE)));
                     } else {
                         holder.tvStatus.setVisibility(View.GONE);
                     }
@@ -1157,14 +1108,14 @@ public class AccountFragment extends Fragment implements
                         holder.tvAuthorDetail.setVisibility(View.GONE);
                     }
                     if (item.containsKey(AccountData.KEY_RESERVATION_FORMAT)) {
-                        holder.tvFormatDetail
-                                .setText(Html.fromHtml(item.get(AccountData.KEY_RESERVATION_FORMAT)));
+                        holder.tvFormatDetail.setText(
+                                Html.fromHtml(item.get(AccountData.KEY_RESERVATION_FORMAT)));
                     } else {
                         holder.tvFormatDetail.setVisibility(View.GONE);
                     }
                     if (item.containsKey(AccountData.KEY_RESERVATION_BRANCH)) {
-                        holder.tvBranchDetail
-                                .setText(Html.fromHtml(item.get(AccountData.KEY_RESERVATION_BRANCH)));
+                        holder.tvBranchDetail.setText(
+                                Html.fromHtml(item.get(AccountData.KEY_RESERVATION_BRANCH)));
                     } else {
                         holder.tvBranchDetail.setVisibility(View.GONE);
                     }
@@ -1204,8 +1155,8 @@ public class AccountFragment extends Fragment implements
 
                     holder.llDetails.setVisibility(View.VISIBLE);
                     if (item.containsKey(AccountData.KEY_RESERVATION_TITLE)) {
-                        holder.tvTitleAndAuthor.setText(item.get(
-                                AccountData.KEY_RESERVATION_TITLE));
+                        holder.tvTitleAndAuthor
+                                .setText(item.get(AccountData.KEY_RESERVATION_TITLE));
                     } else {
                         holder.tvTitleAndAuthor.setVisibility(View.GONE);
                     }
@@ -1218,12 +1169,14 @@ public class AccountFragment extends Fragment implements
                     Map<String, String> item = result.getReservations().get(position);
 
                     holder.llDetails.setVisibility(View.GONE);
-                    if (item.containsKey(AccountData.KEY_RESERVATION_TITLE) && item.containsKey(AccountData.KEY_RESERVATION_AUTHOR)) {
-                        holder.tvTitleAndAuthor.setText(item.get(
-                                AccountData.KEY_RESERVATION_TITLE) + ", " + item.get(
-                                AccountData.KEY_RESERVATION_AUTHOR));
+                    if (item.containsKey(AccountData.KEY_RESERVATION_TITLE) &&
+                            item.containsKey(AccountData.KEY_RESERVATION_AUTHOR)) {
+                        holder.tvTitleAndAuthor.setText(
+                                item.get(AccountData.KEY_RESERVATION_TITLE) + ", " +
+                                        item.get(AccountData.KEY_RESERVATION_AUTHOR));
                     } else if (item.containsKey(AccountData.KEY_RESERVATION_AUTHOR)) {
-                        holder.tvTitleAndAuthor.setText(item.get(AccountData.KEY_RESERVATION_AUTHOR));
+                        holder.tvTitleAndAuthor
+                                .setText(item.get(AccountData.KEY_RESERVATION_AUTHOR));
                         holder.tvTitleAndAuthor.setVisibility(View.VISIBLE);
                     }
                     holder.ivDetails.setVisibility(View.GONE);
@@ -1246,14 +1199,13 @@ public class AccountFragment extends Fragment implements
 
                 @Override
                 public Collection<Animator> getExpandAnimations(int heightDifference,
-                        View expandedView) {
+                                                                View expandedView) {
                     ReservationViewHolder holder = (ReservationViewHolder) expandedView.getTag();
                     Collection<Animator> anims = getAnimations(-heightDifference, 0);
                     // Animate buttons to the side
                     int difference = 2 * (getResources()
                             .getDimensionPixelSize(R.dimen.card_side_margin_selected) -
-                            getResources().getDimensionPixelSize(
-                                    R.dimen.card_side_margin_default));
+                            getResources().getDimensionPixelSize(R.dimen.card_side_margin_default));
                     anims.add(ObjectAnimator
                             .ofFloat(holder.llButtons, "translationX", difference, 0));
                     // Animate llData to the bottom if required
@@ -1269,19 +1221,18 @@ public class AccountFragment extends Fragment implements
 
                 @Override
                 public Collection<Animator> getCollapseAnimations(int heightDifference,
-                        View expandedView) {
+                                                                  View expandedView) {
                     ReservationViewHolder holder = (ReservationViewHolder) expandedView.getTag();
                     Collection<Animator> anims = getAnimations(0, heightDifference);
                     // Animate buttons back
                     int difference = 2 * (getResources()
                             .getDimensionPixelSize(R.dimen.card_side_margin_selected) -
-                            getResources().getDimensionPixelSize(
-                                    R.dimen.card_side_margin_default));
+                            getResources().getDimensionPixelSize(R.dimen.card_side_margin_default));
                     anims.add(ObjectAnimator
                             .ofFloat(holder.llButtons, "translationX", 0, difference));
                     // Animate llData back
-                    anims.add(ObjectAnimator.ofFloat(holder.llData, "translationY",
-                            llDataTranslationY));
+                    anims.add(ObjectAnimator
+                            .ofFloat(holder.llData, "translationY", llDataTranslationY));
                     return anims;
                 }
 
@@ -1327,8 +1278,7 @@ public class AccountFragment extends Fragment implements
             tvPendingFees.setVisibility(View.GONE);
         }
         if (result.getValidUntil() != null) {
-            tvValidUntilLabel.setVisibility(
-                    View.VISIBLE);
+            tvValidUntilLabel.setVisibility(View.VISIBLE);
             tvValidUntil.setVisibility(View.VISIBLE);
             tvValidUntil.setText(result.getValidUntil());
         } else {
@@ -1348,11 +1298,13 @@ public class AccountFragment extends Fragment implements
             if (age < 60 * 1000) {
                 tvAge.setText(getResources().getString(R.string.account_up_to_date));
             } else if (age < (3600 * 1000)) {
-                tvAge.setText(getResources().getQuantityString(R.plurals.account_age_minutes,
-                        (int) (age / (60 * 1000)), (int) (age / (60 * 1000))));
+                tvAge.setText(getResources()
+                        .getQuantityString(R.plurals.account_age_minutes, (int) (age / (60 * 1000)),
+                                (int) (age / (60 * 1000))));
             } else if (age < 24 * 3600 * 1000) {
-                tvAge.setText(getResources().getQuantityString(R.plurals.account_age_hours,
-                        (int) (age / (3600 * 1000)), (int) (age / (3600 * 1000))));
+                tvAge.setText(getResources()
+                        .getQuantityString(R.plurals.account_age_hours, (int) (age / (3600 * 1000)),
+                                (int) (age / (3600 * 1000))));
 
             } else {
                 tvAge.setText(getResources().getQuantityString(R.plurals.account_age_days,
@@ -1368,8 +1320,7 @@ public class AccountFragment extends Fragment implements
     public void bookingStart(String booking_info) {
         long age = System.currentTimeMillis() - refreshtime;
         if (refreshing || fromcache || age > MAX_CACHE_AGE) {
-            Toast.makeText(getActivity(), R.string.account_no_concurrent,
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), R.string.account_no_concurrent, Toast.LENGTH_LONG).show();
             if (!refreshing) {
                 refresh();
             }
@@ -1388,27 +1339,21 @@ public class AccountFragment extends Fragment implements
 
             @Override
             public void onError(MultiStepResult result) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(
-                        getActivity());
-                builder.setMessage(result.getMessage())
-                       .setCancelable(true)
-                       .setNegativeButton(R.string.close,
-                               new DialogInterface.OnClickListener() {
-                                   @Override
-                                   public void onClick(DialogInterface d,
-                                           int id) {
-                                       d.cancel();
-                                   }
-                               })
-                       .setOnCancelListener(
-                               new DialogInterface.OnCancelListener() {
-                                   @Override
-                                   public void onCancel(DialogInterface d) {
-                                       if (d != null) {
-                                           d.cancel();
-                                       }
-                                   }
-                               });
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage(result.getMessage()).setCancelable(true)
+                        .setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface d, int id) {
+                                        d.cancel();
+                                    }
+                                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface d) {
+                                if (d != null) {
+                                    d.cancel();
+                                }
+                            }
+                        });
                 AlertDialog alert = builder.create();
                 alert.show();
             }
@@ -1423,7 +1368,7 @@ public class AccountFragment extends Fragment implements
 
             @Override
             public StepTask<?> newTask(MultiStepResultHelper helper, int useraction,
-                    String selection, DetailledItem argument) {
+                                       String selection, DetailledItem argument) {
                 return new BookingTask(helper, useraction, selection, argument);
             }
         });
@@ -1441,22 +1386,18 @@ public class AccountFragment extends Fragment implements
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(R.string.prolong_all_confirm)
-               .setCancelable(true)
-               .setNegativeButton(R.string.no,
-                       new DialogInterface.OnClickListener() {
-                           @Override
-                           public void onClick(DialogInterface d, int id) {
-                               d.cancel();
-                           }
-                       })
-               .setPositiveButton(R.string.yes,
-                       new DialogInterface.OnClickListener() {
-                           @Override
-                           public void onClick(DialogInterface d, int id) {
-                               prolongAllDo();
-                           }
-                       });
+        builder.setMessage(R.string.prolong_all_confirm).setCancelable(true)
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface d, int id) {
+                                d.cancel();
+                            }
+                        }).setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface d, int id) {
+                prolongAllDo();
+            }
+        });
         AlertDialog alert = builder.create();
         alert.show();
 
@@ -1464,8 +1405,8 @@ public class AccountFragment extends Fragment implements
 
     public void prolongAllDo() {
 
-        MultiStepResultHelper<Void> msrhProlong = new MultiStepResultHelper<>(
-                getActivity(), null, R.string.doing_prolong_all);
+        MultiStepResultHelper<Void> msrhProlong = new MultiStepResultHelper<>(getActivity(), null,
+                R.string.doing_prolong_all);
         msrhProlong.setCallback(new Callback<Void>() {
             @Override
             public void onSuccess(MultiStepResult result) {
@@ -1473,8 +1414,7 @@ public class AccountFragment extends Fragment implements
                     return;
                 }
                 ProlongAllResult res = (ProlongAllResult) result;
-                AlertDialog.Builder builder = new AlertDialog.Builder(
-                        getActivity());
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
                 LayoutInflater inflater = getLayoutInflater(null);
 
@@ -1482,20 +1422,19 @@ public class AccountFragment extends Fragment implements
 
                 ListView lv = (ListView) view.findViewById(R.id.lvBibs);
 
-                lv.setAdapter(new ProlongAllResultAdapter(getActivity(), res
-                        .getResults()));
+                lv.setAdapter(new ProlongAllResultAdapter(getActivity(), res.getResults()));
                 switch (result.getActionIdentifier()) {
                     case ReservationResult.ACTION_BRANCH:
                         builder.setTitle(R.string.branch);
                 }
-                builder.setView(view).setNeutralButton(R.string.close,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                adialog.cancel();
-                                invalidateData();
-                            }
-                        });
+                builder.setView(view)
+                        .setNeutralButton(R.string.close, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        adialog.cancel();
+                                        invalidateData();
+                                    }
+                                });
                 adialog = builder.create();
                 adialog.show();
             }
@@ -1540,7 +1479,7 @@ public class AccountFragment extends Fragment implements
 
             @Override
             public StepTask<?> newTask(MultiStepResultHelper helper, int useraction,
-                    String selection, Void argument) {
+                                       String selection, Void argument) {
                 return new ProlongAllTask(helper, useraction, selection);
             }
         });
@@ -1574,6 +1513,66 @@ public class AccountFragment extends Fragment implements
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private class LentViewHolder {
+        public TextView tvTitleAndAuthor;
+        public TextView tvStatus;
+        public TextView tvAuthorDetail;
+        public TextView tvBranchDetail;
+        public TextView tvFormatDetail;
+        public ImageView ivProlong;
+        public ImageView ivDownload;
+        public ImageView ivDetails;
+        public View vStatusColor;
+        public LinearLayout llData;
+        public LinearLayout llDetails;
+        public LinearLayout llButtons;
+        public boolean hasDetailLink;
+
+        public void findViews(View v) {
+            tvTitleAndAuthor = (TextView) v.findViewById(R.id.tvTitleAndAuthor);
+            tvStatus = (TextView) v.findViewById(R.id.tvStatus);
+            tvAuthorDetail = (TextView) v.findViewById(R.id.tvAuthorDetail);
+            tvBranchDetail = (TextView) v.findViewById(R.id.tvBranchDetail);
+            tvFormatDetail = (TextView) v.findViewById(R.id.tvFormatDetail);
+            ivProlong = (ImageView) v.findViewById(R.id.ivProlong);
+            ivDownload = (ImageView) v.findViewById(R.id.ivDownload);
+            ivDetails = (ImageView) v.findViewById(R.id.ivDetails);
+            vStatusColor = v.findViewById(R.id.vStatusColor);
+            llData = (LinearLayout) v.findViewById(R.id.llData);
+            llDetails = (LinearLayout) v.findViewById(R.id.llDetails);
+            llButtons = (LinearLayout) v.findViewById(R.id.llButtons);
+        }
+    }
+
+    private class ReservationViewHolder {
+        public TextView tvTitleAndAuthor;
+        public TextView tvStatus;
+        public TextView tvAuthorDetail;
+        public TextView tvBranchDetail;
+        public TextView tvFormatDetail;
+        public ImageView ivCancel;
+        public ImageView ivBooking;
+        public ImageView ivDetails;
+        public LinearLayout llData;
+        public LinearLayout llDetails;
+        public LinearLayout llButtons;
+        public boolean hasDetailLink;
+
+        public void findViews(View v) {
+            tvTitleAndAuthor = (TextView) v.findViewById(R.id.tvTitleAndAuthor);
+            tvStatus = (TextView) v.findViewById(R.id.tvStatus);
+            tvAuthorDetail = (TextView) v.findViewById(R.id.tvAuthorDetail);
+            tvBranchDetail = (TextView) v.findViewById(R.id.tvBranchDetail);
+            tvFormatDetail = (TextView) v.findViewById(R.id.tvFormatDetail);
+            ivCancel = (ImageView) v.findViewById(R.id.ivCancel);
+            ivBooking = (ImageView) v.findViewById(R.id.ivBooking);
+            ivDetails = (ImageView) v.findViewById(R.id.ivDetails);
+            llData = (LinearLayout) v.findViewById(R.id.llData);
+            llDetails = (LinearLayout) v.findViewById(R.id.llDetails);
+            llButtons = (LinearLayout) v.findViewById(R.id.llButtons);
         }
     }
 

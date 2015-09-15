@@ -1,23 +1,20 @@
 /**
  * Copyright (C) 2013 by Raphael Michel under the MIT license:
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), 
- * to deal in the Software without restriction, including without limitation 
- * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the Software 
- * is furnished to do so, subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in 
- * all copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
- * DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package de.geeksfactory.opacclient.storage;
 
@@ -28,14 +25,15 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.TimeUnit;
 
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.reminder.Alarm;
 
 public class AccountDataSource {
     // Database fields
@@ -70,12 +68,10 @@ public class AccountDataSource {
         values.put("label", acc.getLabel());
         values.put("name", acc.getName());
         values.put("password", acc.getPassword());
-        database.update("accounts", values, "id = ?",
-                new String[]{acc.getId() + ""});
+        database.update("accounts", values, "id = ?", new String[]{acc.getId() + ""});
     }
 
-    public long addAccount(String bib, String label, String name,
-                           String password) {
+    public long addAccount(String bib, String label, String name, String password) {
         ContentValues values = new ContentValues();
         values.put("bib", bib);
         values.put("label", label);
@@ -86,8 +82,7 @@ public class AccountDataSource {
 
     public List<Account> getAllAccounts() {
         List<Account> accs = new ArrayList<>();
-        Cursor cursor = database.query("accounts", allColumns, null, null,
-                null, null, null);
+        Cursor cursor = database.query("accounts", allColumns, null, null, null, null, null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -103,8 +98,7 @@ public class AccountDataSource {
     public List<Account> getAllAccounts(String bib) {
         List<Account> accs = new ArrayList<>();
         String[] selA = {bib};
-        Cursor cursor = database.query("accounts", allColumns, "bib = ?", selA,
-                null, null, null);
+        Cursor cursor = database.query("accounts", allColumns, "bib = ?", selA, null, null, null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -121,8 +115,7 @@ public class AccountDataSource {
         List<Account> accs = new ArrayList<>();
 
         Cursor cursor = database.query("accounts", allColumns,
-                "name is not null AND name != '' AND password is not null",
-                null, null, null, null);
+                "name is not null AND name != '' AND password is not null", null, null, null, null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -135,42 +128,9 @@ public class AccountDataSource {
         return accs;
     }
 
-    public boolean notificationIsSent(long account, long timestamp) {
-        String[] selA = {"" + account, "" + timestamp};
-        Cursor cursor = database.query(AccountDatabase.TABLENAME_NOTIFIED,
-                AccountDatabase.COLUMNS_NOTIFIED,
-                "account = ? AND timestamp = ?", selA, null, null, null);
-        boolean found = cursor.getCount() > 0;
-        cursor.close();
-        return found;
-    }
-
-    public long notificationSave(long account, long timestamp) {
-        if (notificationIsSent(account, timestamp)) {
-            return 0;
-        }
-        ContentValues values = new ContentValues();
-        values.put("account", account);
-        values.put("timestamp", timestamp);
-        return database
-                .insert(AccountDatabase.TABLENAME_NOTIFIED, null, values);
-    }
-
-    public void notificationClearCache(boolean all) {
-        if (all) {
-            database.delete(AccountDatabase.TABLENAME_NOTIFIED, null, null);
-        } else {
-            String[] selA =
-                    {Long.toString(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(30))};
-            database.delete(AccountDatabase.TABLENAME_NOTIFIED,
-                    "timestamp < ?", selA);
-        }
-    }
-
     public Account getAccount(long id) {
         String[] selA = {"" + id};
-        Cursor cursor = database.query("accounts", allColumns, "id = ?", selA,
-                null, null, null);
+        Cursor cursor = database.query("accounts", allColumns, "id = ?", selA, null, null, null);
         Account acc = null;
 
         cursor.moveToFirst();
@@ -201,9 +161,8 @@ public class AccountDataSource {
 
     public int getExpiring(Account account, long tolerance) {
         String[] selA = {"" + account.getId()};
-        Cursor cursor = database.query(AccountDatabase.TABLENAME_LENT,
-                new String[]{"COUNT(*)"}, "account = ? AND deadline_ts - "
-                        + System.currentTimeMillis() + " <= " + tolerance,
+        Cursor cursor = database.query(AccountDatabase.TABLENAME_LENT, new String[]{"COUNT(*)"},
+                "account = ? AND deadline_ts - " + System.currentTimeMillis() + " <= " + tolerance,
                 selA, null, null, null);
         cursor.moveToFirst();
         int result = cursor.getInt(0);
@@ -217,20 +176,13 @@ public class AccountDataSource {
         List<Map<String, String>> lent = new ArrayList<>();
         String[] selectionArgs = {"" + account.getId()};
         Cursor cursor = database.query(AccountDatabase.TABLENAME_LENT,
-                AccountDatabase.COLUMNS_LENT.values().toArray(
-                        new String[AccountDatabase.COLUMNS_LENT.values().size()]),
+                AccountDatabase.COLUMNS_LENT.values()
+                        .toArray(new String[AccountDatabase.COLUMNS_LENT.values().size()]),
                 "account = ?", selectionArgs, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             Map<String, String> entry = new HashMap<>();
-            for (Map.Entry<String, String> field : AccountDatabase.COLUMNS_LENT.entrySet()) {
-                String value = cursor.getString(cursor.getColumnIndex(field.getValue()));
-                if (value != null) {
-                    if (!value.equals("")) {
-                        entry.put(field.getKey(), value);
-                    }
-                }
-            }
+            loadLentItem(cursor, entry);
             lent.add(entry);
             cursor.moveToNext();
         }
@@ -240,19 +192,15 @@ public class AccountDataSource {
         List<Map<String, String>> res = new ArrayList<>();
         cursor = database.query(AccountDatabase.TABLENAME_RESERVATION,
                 AccountDatabase.COLUMNS_RESERVATIONS.values()
-                                                    .toArray(
-                                                            new String[AccountDatabase
-                                                                    .COLUMNS_RESERVATIONS
-                                                                    .values().size()]),
-                "account = ?",
-                selectionArgs, null, null, null);
+                        .toArray(new String[AccountDatabase.COLUMNS_RESERVATIONS.values().size()]),
+                "account = ?", selectionArgs, null, null, null);
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {
             Map<String, String> entry = new HashMap<>();
-            for (Map.Entry<String, String> field : AccountDatabase.COLUMNS_RESERVATIONS.entrySet()) {
-                String value = cursor.getString(cursor.getColumnIndex(field
-                        .getValue()));
+            for (Map.Entry<String, String> field : AccountDatabase.COLUMNS_RESERVATIONS
+                    .entrySet()) {
+                String value = cursor.getString(cursor.getColumnIndex(field.getValue()));
                 if (value != null) {
                     if (!value.equals("")) {
                         entry.put(field.getKey(), value);
@@ -266,8 +214,9 @@ public class AccountDataSource {
         adata.setReservations(res);
 
         String[] selA = {"" + account.getId()};
-        cursor = database.query("accounts", new String[]{"pendingFees",
-                "validUntil", "warning"}, "id = ?", selA, null, null, null);
+        cursor = database
+                .query("accounts", new String[]{"pendingFees", "validUntil", "warning"}, "id = ?",
+                        selA, null, null, null);
         cursor.moveToFirst();
         if (!cursor.isAfterLast()) {
             adata.setPendingFees(cursor.getString(0));
@@ -329,9 +278,8 @@ public class AccountDataSource {
         for (Map<String, String> entry : adata.getLent()) {
             ContentValues insertmapping = new ContentValues();
             for (Entry<String, String> inner : entry.entrySet()) {
-                insertmapping.put(
-                        AccountDatabase.COLUMNS_LENT.get(inner.getKey()),
-                        inner.getValue());
+                insertmapping
+                        .put(AccountDatabase.COLUMNS_LENT.get(inner.getKey()), inner.getValue());
             }
             insertmapping.put("account", account.getId());
             database.insert(AccountDatabase.TABLENAME_LENT, null, insertmapping);
@@ -342,24 +290,68 @@ public class AccountDataSource {
         for (Map<String, String> entry : adata.getReservations()) {
             ContentValues insertmapping = new ContentValues();
             for (Entry<String, String> inner : entry.entrySet()) {
-                insertmapping.put(
-                        AccountDatabase.COLUMNS_RESERVATIONS.get(inner.getKey()),
+                insertmapping.put(AccountDatabase.COLUMNS_RESERVATIONS.get(inner.getKey()),
                         inner.getValue());
             }
             insertmapping.put("account", account.getId());
-            database.insert(AccountDatabase.TABLENAME_RESERVATION, null,
-                    insertmapping);
+            database.insert(AccountDatabase.TABLENAME_RESERVATION, null, insertmapping);
+        }
+    }
+
+    public List<Map<String, String>> getAllLentItems() {
+        List<Map<String, String>> items = new ArrayList<>();
+        List<String> columns = new ArrayList<>(AccountDatabase.COLUMNS_LENT.values());
+        columns.add("rowid");
+        Cursor cursor = database
+                .query(AccountDatabase.TABLENAME_LENT, columns.toArray(new String[columns.size()]),
+                        null, null, null, null, null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Map<String, String> item = new HashMap<>();
+            loadLentItem(cursor, item);
+            item.put("id", String.valueOf(cursor.getLong(cursor.getColumnIndex("rowid"))));
+            items.add(item);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return items;
+    }
+
+    public Map<String, String> getLentItem(long id) {
+        String[] selA = {"" + id};
+        Collection<String> columns = AccountDatabase.COLUMNS_LENT.values();
+        Cursor cursor = database
+                .query(AccountDatabase.TABLENAME_LENT, columns.toArray(new String[columns.size()]),
+                        "rowid = ?", selA, null, null, null);
+        Map<String, String> item = null;
+        cursor.moveToFirst();
+        if (!cursor.isAfterLast()) {
+            item = new HashMap<>();
+            loadLentItem(cursor, item);
+            cursor.moveToNext();
+        }
+        // Make sure to close the cursor
+        cursor.close();
+        return item;
+    }
+
+    private void loadLentItem(Cursor cursor, Map<String, String> item) {
+        for (Entry<String, String> field : AccountDatabase.COLUMNS_LENT.entrySet()) {
+            String value = cursor.getString(cursor.getColumnIndex(field.getValue()));
+            if (value != null) {
+                if (!value.equals("")) {
+                    item.put(field.getKey(), value);
+                }
+            }
         }
     }
 
     public List<Account> getAccountsWithPassword(String ident) {
         List<Account> accs = new ArrayList<>();
 
-        Cursor cursor = database
-                .query("accounts",
-                        allColumns,
-                        "name is not null AND name != '' AND password is not null AND bib = ?",
-                        new String[]{ident}, null, null, null);
+        Cursor cursor = database.query("accounts", allColumns,
+                "name is not null AND name != '' AND password is not null AND bib = ?",
+                new String[]{ident}, null, null, null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -370,5 +362,114 @@ public class AccountDataSource {
         // Make sure to close the cursor
         cursor.close();
         return accs;
+    }
+
+    public long addAlarm(long deadline, long[] media, long alarmTime) {
+        ContentValues values = new ContentValues();
+        values.put("deadline_ts", deadline);
+        values.put("media", joinLongs(media, ","));
+        values.put("alarm_ts", alarmTime);
+        values.put("notified", 0);
+        values.put("finished", 0);
+        return database.insert(AccountDatabase.TABLENAME_ALARMS, null, values);
+    }
+
+    public void updateAlarm(Alarm alarm) {
+        ContentValues values = new ContentValues();
+        values.put("deadline_ts", alarm.deadlineTimestamp);
+        values.put("media", joinLongs(alarm.media, ","));
+        values.put("alarm_ts", alarm.notificationTimestamp);
+        values.put("notified", alarm.notified ? 1 : 0);
+        values.put("finished", alarm.finished ? 1 : 0);
+        database.update(AccountDatabase.TABLENAME_ALARMS, values, "id = ?",
+                new String[]{alarm.id + ""});
+    }
+
+    public Alarm getAlarmByDeadline(long deadline) {
+        String[] selA = {"" + deadline};
+        Cursor cursor = database
+                .query(AccountDatabase.TABLENAME_ALARMS, AccountDatabase.COLUMNS_ALARMS,
+                        "deadline_ts = ?", selA, null, null, null);
+        Alarm item = null;
+        cursor.moveToFirst();
+        if (!cursor.isAfterLast()) {
+            item = cursorToAlarm(cursor);
+            cursor.moveToNext();
+        }
+        // Make sure to close the cursor
+        cursor.close();
+        return item;
+    }
+
+    public Alarm getAlarm(long id) {
+        String[] selA = {"" + id};
+        Cursor cursor = database
+                .query(AccountDatabase.TABLENAME_ALARMS, AccountDatabase.COLUMNS_ALARMS, "id = ?",
+                        selA, null, null, null);
+        Alarm item = null;
+        cursor.moveToFirst();
+        if (!cursor.isAfterLast()) {
+            item = cursorToAlarm(cursor);
+            cursor.moveToNext();
+        }
+        // Make sure to close the cursor
+        cursor.close();
+        return item;
+    }
+
+    public List<Alarm> getAllAlarms() {
+        List<Alarm> alarms = new ArrayList<>();
+        Cursor cursor = database
+                .query(AccountDatabase.TABLENAME_ALARMS, AccountDatabase.COLUMNS_ALARMS, null, null,
+                        null, null, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Alarm alarm = cursorToAlarm(cursor);
+            alarms.add(alarm);
+            cursor.moveToNext();
+        }
+        // Make sure to close the cursor
+        cursor.close();
+        return alarms;
+    }
+
+    private Alarm cursorToAlarm(Cursor cursor) {
+        Alarm alarm = new Alarm();
+        alarm.id = cursor.getLong(0);
+        alarm.deadlineTimestamp = cursor.getLong(1);
+        alarm.media = splitLongs(cursor.getString(2), ",");
+        alarm.notificationTimestamp = cursor.getLong(3);
+        alarm.notified = cursor.getInt(4) == 1;
+        alarm.finished = cursor.getInt(5) == 1;
+        return alarm;
+    }
+
+    public void removeAlarm(Alarm alarm) {
+        String[] selA = {"" + alarm.id};
+        database.delete(AccountDatabase.TABLENAME_ALARMS, "id=?", selA);
+    }
+
+    private String joinLongs(long[] longs, String separator) {
+        StringBuilder sb = new StringBuilder();
+        boolean first = true;
+        for (long l : longs) {
+            if (first) {
+                first = false;
+            } else {
+                sb.append(separator);
+            }
+            sb.append(l);
+        }
+        return sb.toString();
+    }
+
+    private long[] splitLongs(String string, String separator) {
+        String[] strings = string.split(separator);
+        long[] longs = new long[strings.length];
+        for (int i = 0; i < strings.length; i++) {
+            longs[i] = Long.valueOf(strings[i]);
+        }
+        return longs;
     }
 }
