@@ -1,13 +1,16 @@
 {
-    "state": "Vorarlberg",
     "account_supported": false,
-    "title": "\u00d6ffentliche B\u00fccherei Bludesch",
+    "api": "web-opac.at",
     "city": "Bludesch",
     "country": "\u00d6sterreich",
-    "information": "http://www.bludesch.bvoe.at",
-    "api": "web-opac.at",
-    "geo": [47.1974876, 9.7452881],
     "data": {
         "baseurl": "http://www.buechereibludesch.webopac.at"
-    }
+    },
+    "geo": [
+        47.1974876,
+        9.7452881
+    ],
+    "information": "http://www.bludesch.bvoe.at",
+    "state": "Vorarlberg",
+    "title": "\u00d6ffentliche B\u00fccherei"
 }

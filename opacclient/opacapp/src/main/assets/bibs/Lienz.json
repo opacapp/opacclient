@@ -1,13 +1,16 @@
 {
-    "state": "Tirol",
     "account_supported": false,
-    "title": "Stadtb\u00fccherei Lienz",
+    "api": "web-opac.at",
     "city": "Lienz",
     "country": "\u00d6sterreich",
-    "information": "http://www.stadtbuecherei-lienz.at",
-    "api": "web-opac.at",
-    "geo": [46.8308203, 12.7648213],
     "data": {
         "baseurl": "http://www.stadtbuecherei-lienz.webopac.at"
-    }
+    },
+    "geo": [
+        46.8308203,
+        12.7648213
+    ],
+    "information": "http://www.stadtbuecherei-lienz.at",
+    "state": "Tirol",
+    "title": "Stadtb\u00fccherei"
 }

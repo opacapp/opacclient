@@ -1,13 +1,16 @@
 {
     "account_supported": false,
+    "api": "web-opac.at",
+    "city": "Stadtschlaining",
+    "country": "\u00d6sterreich",
     "data": {
         "baseurl": "http://www.peacelibrary.opac.at"
     },
-    "geo": [47.3237284, 16.2788408],
-    "api": "web-opac.at",
-    "city": "Stadtschlaining",
+    "geo": [
+        47.3237284,
+        16.2788408
+    ],
+    "information": "http://www.aspr.ac.at",
     "state": "Burgenland",
-    "country": "\u00d6sterreich",
-    "title": "ASPR Friedensbibliothek Stadtschlaining",
-    "information": "http://www.aspr.ac.at"
+    "title": "ASPR Friedensbibliothek"
 }

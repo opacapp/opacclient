@@ -1,13 +1,16 @@
 {
-    "state": "Ober\u00f6sterreich",
     "account_supported": false,
-    "title": "Stadtb\u00fccherei Leonding",
+    "api": "web-opac.at",
     "city": "Leonding",
     "country": "\u00d6sterreich",
-    "information": "http://www.leonding.at",
-    "api": "web-opac.at",
-    "geo": [48.2792546, 14.2483066],
     "data": {
         "baseurl": "http://www.stadtbuecherei-leonding.webopac.at"
-    }
+    },
+    "geo": [
+        48.2792546,
+        14.2483066
+    ],
+    "information": "http://www.leonding.at",
+    "state": "Ober\u00f6sterreich",
+    "title": "Stadtb\u00fccherei"
 }

@@ -1,13 +1,16 @@
 {
-    "information": "http://www.bibliothek-wals.opac.at",
-    "country": "\u00d6sterreich",
-    "city": "Wals-Siezenheim",
-    "state": "Salzburg",
+    "account_supported": false,
     "api": "web-opac.at",
-    "geo": [47.7924383, 12.9802958],
+    "city": "Wals-Siezenheim",
+    "country": "\u00d6sterreich",
     "data": {
         "baseurl": "http://www.bibliothek-wals.opac.at"
     },
-    "account_supported": false,
-    "title": "Bibliothek Wals-Siezenheim"
+    "geo": [
+        47.7924383,
+        12.9802958
+    ],
+    "information": "http://www.bibliothek-wals.opac.at",
+    "state": "Salzburg",
+    "title": "Bibliothek"
 }

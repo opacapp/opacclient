@@ -1,13 +1,16 @@
 {
-    "state": "Tirol",
     "account_supported": false,
-    "title": "BIM - Bibliothek Integration Migration - ZeMiT - Innsbruck",
+    "api": "web-opac.at",
     "city": "Innsbruck",
     "country": "\u00d6sterreich",
-    "information": "http://www.imz-tirol.at",
-    "api": "web-opac.at",
-    "geo": [47.2721414, 11.3883117],
     "data": {
         "baseurl": "http://www.imz-tirol.webopac.at"
-    }
+    },
+    "geo": [
+        47.2721414,
+        11.3883117
+    ],
+    "information": "http://www.imz-tirol.at",
+    "state": "Tirol",
+    "title": "BIM - Bibliothek Integration Migration - ZeMiT"
 }

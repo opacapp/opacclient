@@ -1,13 +1,16 @@
 {
-    "state": "Burgenland",
     "account_supported": false,
-    "title": "\u00d6ffentliche B\u00fccherei M\u00f6nchhof",
+    "api": "web-opac.at",
     "city": "M\u00f6nchhof",
     "country": "\u00d6sterreich",
-    "information": "http://www.moenchhof.bvoe.at",
-    "api": "web-opac.at",
-    "geo": [47.8820615, 16.939894],
     "data": {
         "baseurl": "http://www.moenchhof.web-opac.at"
-    }
+    },
+    "geo": [
+        47.8820615,
+        16.939894
+    ],
+    "information": "http://www.moenchhof.bvoe.at",
+    "state": "Burgenland",
+    "title": "\u00d6ffentliche B\u00fccherei"
 }

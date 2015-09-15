@@ -1,12 +1,15 @@
 {
-    "state": "Tirol",
     "account_supported": false,
-    "title": "Bibliothek Mils",
+    "api": "web-opac.at",
     "city": "Mils",
     "country": "\u00d6sterreich",
-    "api": "web-opac.at",
-    "geo": [47.2883084, 11.5314953],
     "data": {
         "baseurl": "http://www.buecherei-mils.webopac.at"
-    }
+    },
+    "geo": [
+        47.2883084,
+        11.5314953
+    ],
+    "state": "Tirol",
+    "title": "Bibliothek"
 }

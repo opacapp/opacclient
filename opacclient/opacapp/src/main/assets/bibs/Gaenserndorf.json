@@ -1,13 +1,16 @@
 {
-    "state": "Nieder\u00f6sterreich",
     "account_supported": false,
-    "title": "Stadtb\u00fccherei G\u00e4nserndorf",
+    "api": "web-opac.at",
     "city": "G\u00e4nserndorf",
     "country": "\u00d6sterreich",
-    "information": "http://gaenserndorf.bvoe.at/",
-    "api": "web-opac.at",
-    "geo": [48.3403159, 16.7241521],
     "data": {
         "baseurl": "http://buecherei-gaenserndorf.web-opac.at"
-    }
+    },
+    "geo": [
+        48.3403159,
+        16.7241521
+    ],
+    "information": "http://gaenserndorf.bvoe.at/",
+    "state": "Nieder\u00f6sterreich",
+    "title": "Stadtb\u00fccherei"
 }

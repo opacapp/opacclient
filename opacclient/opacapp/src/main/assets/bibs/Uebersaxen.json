@@ -1,13 +1,16 @@
 {
-    "state": "Vorarlberg",
     "account_supported": false,
-    "title": "Dorfb\u00fccherei \u00dcbersaxen",
+    "api": "web-opac.at",
     "city": "\u00dcbersaxen",
     "country": "\u00d6sterreich",
-    "information": "http://www.uebersaxen.bvoe.at",
-    "api": "web-opac.at",
-    "geo": [47.2524023, 9.6707364],
     "data": {
         "baseurl": "http://www.dorfbuecherei-uebersaxen.web-opac.at"
-    }
+    },
+    "geo": [
+        47.2524023,
+        9.6707364
+    ],
+    "information": "http://www.uebersaxen.bvoe.at",
+    "state": "Vorarlberg",
+    "title": "Dorfb\u00fccherei"
 }

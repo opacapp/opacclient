@@ -1,13 +1,16 @@
 {
-    "state": "Ober\u00f6sterreich",
     "account_supported": false,
-    "title": "\u00d6ffentliche B\u00fccherei der Pfarre Rainbach",
+    "api": "web-opac.at",
     "city": "Rainbach",
     "country": "\u00d6sterreich",
-    "information": "http://www.oeb-rainbach.webopac.at",
-    "api": "web-opac.at",
-    "geo": [48.559361, 14.476966],
     "data": {
         "baseurl": "http://www.oeb-rainbach.webopac.at"
-    }
+    },
+    "geo": [
+        48.559361,
+        14.476966
+    ],
+    "information": "http://www.oeb-rainbach.webopac.at",
+    "state": "Ober\u00f6sterreich",
+    "title": "\u00d6ffentliche B\u00fccherei der Pfarre"
 }
