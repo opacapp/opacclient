@@ -413,5 +413,7 @@ if __name__ == '__main__':
             ok = True;
 
     print(json.dumps(data, indent=4, sort_keys=True), end="\n\n")
-    json.dump(data, open(LIBDIR + ident + '.json', 'w'), sort_keys=True, indent=4)
+    with open(LIBDIR + ident + '.json', 'w') as fp:
+       json.dump(data, fp, sort_keys=True, indent=4)
+       fp.write("\n")
     print("In Datei %s geschrieben." % (LIBDIR + ident + '.json'))

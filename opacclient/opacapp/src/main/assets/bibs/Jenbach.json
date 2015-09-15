@@ -1,13 +1,16 @@
 {
-    "state": "Tirol",
     "account_supported": false,
-    "title": "Markt- und Schulb\u00fccherei jen.buch",
+    "api": "web-opac.at",
     "city": "Jenbach",
     "country": "\u00d6sterreich",
-    "information": "http://www.facebook.com/buecherei.jen.buch",
-    "api": "web-opac.at",
-    "geo": [47.3911103, 11.7729904],
     "data": {
         "baseurl": "http://www.jenbuch.web-opac.at"
-    }
+    },
+    "geo": [
+        47.3911103,
+        11.7729904
+    ],
+    "information": "http://www.facebook.com/buecherei.jen.buch",
+    "state": "Tirol",
+    "title": "Markt- und Schulb\u00fccherei jen.buch"
 }

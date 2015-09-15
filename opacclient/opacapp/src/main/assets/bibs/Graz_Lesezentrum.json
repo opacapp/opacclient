@@ -1,13 +1,16 @@
 {
-    "state": "Steiermark",
     "account_supported": false,
-    "title": "Fremdsprachige Bibliothek Lesezentrum Steiermark",
+    "api": "web-opac.at",
     "city": "Graz",
     "country": "\u00d6sterreich",
-    "information": "http://www.lesezentrum.at",
-    "api": "web-opac.at",
-    "geo": [47.0699327, 15.4061884],
     "data": {
         "baseurl": "http://www.lesezentrum-steiermark.webopac.at"
-    }
+    },
+    "geo": [
+        47.0699327,
+        15.4061884
+    ],
+    "information": "http://www.lesezentrum.at",
+    "state": "Steiermark",
+    "title": "Fremdsprachige Bibliothek Lesezentrum Steiermark"
 }

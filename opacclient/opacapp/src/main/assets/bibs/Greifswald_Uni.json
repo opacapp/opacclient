@@ -4,9 +4,9 @@
     "city": "Greifswald",
     "country": "Deutschland",
     "data": {
+        "account_system": "lbs",
         "baseurl": "https://lhgrw.gbv.de",
-        "db": "1",
-        "account_system": "lbs"
+        "db": "1"
     },
     "geo": [
         54.0915636,

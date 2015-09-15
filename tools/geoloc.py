@@ -34,4 +34,6 @@ for filename in os.listdir(DIR):
 
     os.system('clear')
 
-    json.dump(data, open(f, 'w'), indent=4, sort_keys=True)
+    with open(f, 'w') as fp:
+        json.dump(data, fp, indent=4, sort_keys=True)
+        fp.write("\n")

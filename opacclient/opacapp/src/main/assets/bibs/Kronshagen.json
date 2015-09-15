@@ -24,16 +24,16 @@
             "returndate": -1,
             "status": 3
         },
-		"disguise": true,
+        "disguise": true,
         "mediatypes": {
             "1": "BOOK",
+            "11": "DVD",
             "2": "MAGAZINE",
             "20": "AUDIOBOOK",
-            "6": "CD_MUSIC",
-            "3": "CD_SOFTWARE",
-            "11": "DVD",
             "26": "GAME_CONSOLE",
-            "30": "EBOOK"
+            "3": "CD_SOFTWARE",
+            "30": "EBOOK",
+            "6": "CD_MUSIC"
         },
         "opacdir": "opax",
         "searchtable": [

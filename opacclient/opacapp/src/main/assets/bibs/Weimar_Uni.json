@@ -4,9 +4,9 @@
     "city": "Weimar",
     "country": "Deutschland",
     "data": {
+        "account_system": "lbs",
         "baseurl": "https://opac.lbs-weimar.gbv.de",
-        "db": "1",
-        "account_system": "lbs"
+        "db": "1"
     },
     "geo": [
         50.979444,

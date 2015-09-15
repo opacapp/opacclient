@@ -4,9 +4,9 @@
     "city": "Stralsund",
     "country": "Deutschland",
     "data": {
+        "account_system": "lbs",
         "baseurl": "https://lhgrw.gbv.de",
-        "db": "2",
-        "account_system": "lbs"
+        "db": "2"
     },
     "geo": [
         54.2994048,

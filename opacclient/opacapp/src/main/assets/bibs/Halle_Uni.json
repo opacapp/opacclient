@@ -5,8 +5,8 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://opac.bibliothek.uni-halle.de/",
-        "db": "1",
-        "customssl": "true"
+        "customssl": "true",
+        "db": "1"
     },
     "geo": [
         51.4969802,

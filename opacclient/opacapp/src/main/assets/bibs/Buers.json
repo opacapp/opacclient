@@ -1,13 +1,16 @@
 {
     "account_supported": false,
+    "api": "web-opac.at",
+    "city": "B\u00fcrs",
+    "country": "\u00d6sterreich",
     "data": {
         "baseurl": "http://www.landesbuechereistelle.opac.at"
     },
-    "geo": [47.50084, 9.74581],
-    "api": "web-opac.at",
-    "city": "B\u00fcrs",
-    "state": "Vorarlberg",
-    "country": "\u00d6sterreich",
+    "geo": [
+        47.50084,
+        9.74581
+    ],
     "information": "http://www.vorarlberg.gv.at/vorarlberg/bildung_schule/bildung/landesbuechereistelle/kontakt/landesbuechereistelle.htm",
+    "state": "Vorarlberg",
     "title": "Landesb\u00fcchereistelle Vorarlberg"
 }

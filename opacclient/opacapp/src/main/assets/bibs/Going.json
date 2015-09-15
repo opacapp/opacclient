@@ -1,13 +1,16 @@
 {
-    "state": "Tirol",
     "account_supported": false,
-    "title": "\u00d6ffentliche und Schulbibliothek Going a. W. K.",
+    "api": "web-opac.at",
     "city": "Going",
     "country": "\u00d6sterreich",
-    "information": "http://www.bibliothek-going.bvoe.at/",
-    "api": "web-opac.at",
-    "geo": [47.5156105, 12.3304381],
     "data": {
         "baseurl": "http://www.going.webopac.at"
-    }
+    },
+    "geo": [
+        47.5156105,
+        12.3304381
+    ],
+    "information": "http://www.bibliothek-going.bvoe.at/",
+    "state": "Tirol",
+    "title": "\u00d6ffentliche und Schulbibliothek Going a. W. K."
 }

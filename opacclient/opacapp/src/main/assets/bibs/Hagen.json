@@ -41,6 +41,7 @@
             "9": "BOARDGAME"
         },
         "opacdir": "opax",
+        "reservation_warning": true,
         "reservationtable": {
             "author": -1,
             "availability": 6,
@@ -49,7 +50,6 @@
             "expirationdate": 5,
             "title": 3
         },
-		"reservation_warning": true,
         "searchtable": [
             2,
             3,

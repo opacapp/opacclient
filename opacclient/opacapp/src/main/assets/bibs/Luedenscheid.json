@@ -24,7 +24,7 @@
             "returndate": 5,
             "status": 4
         },
-		"customssl": true,
+        "customssl": true,
         "mediatypes": {
             "bestsellkl2.gif": "BOOK",
             "mBlu-RayselbstS.gif": "BLURAY",

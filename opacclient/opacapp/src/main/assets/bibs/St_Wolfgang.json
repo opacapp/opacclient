@@ -1,13 +1,16 @@
 {
-    "state": "Salzburg",
     "account_supported": false,
-    "title": "\u00d6ffentliche Bibliothek der Pfarre St. Wolfgang",
+    "api": "web-opac.at",
     "city": "St.",
     "country": "\u00d6sterreich",
-    "information": "http://www.bibliothek-stwolfgang.at",
-    "api": "web-opac.at",
-    "geo": [47.7400836, 13.446381],
     "data": {
         "baseurl": "http://www.stwolfgang.webopac.at"
-    }
+    },
+    "geo": [
+        47.7400836,
+        13.446381
+    ],
+    "information": "http://www.bibliothek-stwolfgang.at",
+    "state": "Salzburg",
+    "title": "\u00d6ffentliche Bibliothek der Pfarre St. Wolfgang"
 }

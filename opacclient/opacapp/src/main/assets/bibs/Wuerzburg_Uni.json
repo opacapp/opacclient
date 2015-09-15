@@ -5,8 +5,8 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://katalog.bibliothek.uni-wuerzburg.de/TouchPoint",
-		"customssl": true,
-		"startparams": "View=sunrise&Language=de"
+        "customssl": true,
+        "startparams": "View=sunrise&Language=de"
     },
     "geo": [
         49.782573,

@@ -16,7 +16,7 @@
         },
         "baseurl": "http://dillingen.bibdia-hosts.de",
         "customssl": true,
-		"disguise": true,
+        "disguise": true,
         "mediatypes": {
             "1": "BOOK",
             "11": "DVD",

@@ -1,13 +1,16 @@
 {
-    "state": "Tirol",
     "account_supported": false,
-    "title": "\u00d6ffentliche Bibliothek der Pfarre Innsbruck-Saggen",
+    "api": "web-opac.at",
     "city": "Innsbruck",
     "country": "\u00d6sterreich",
-    "information": null,
-    "api": "web-opac.at",
-    "geo": [47.2783139, 11.404871],
     "data": {
         "baseurl": "http://www.buecherei-saggen.web-opac.at"
-    }
+    },
+    "geo": [
+        47.2783139,
+        11.404871
+    ],
+    "information": null,
+    "state": "Tirol",
+    "title": "\u00d6ffentliche Bibliothek der Pfarre Innsbruck-Saggen"
 }

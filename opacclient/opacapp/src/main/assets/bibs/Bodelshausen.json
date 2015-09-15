@@ -4,8 +4,6 @@
     "city": "Bodelshausen",
     "country": "Deutschland",
     "data": {
-        "baseurl": "https://wwwopac.rz-kiru.de/bodelshausen",
-        "customssl": "true",
         "accounttable": {
             "author": 0,
             "barcode": -1,
@@ -16,6 +14,7 @@
             "status": -1,
             "title": 1
         },
+        "baseurl": "https://wwwopac.rz-kiru.de/bodelshausen",
         "copiestable": {
             "barcode": 0,
             "branch": -1,
@@ -25,6 +24,7 @@
             "returndate": 4,
             "status": 3
         },
+        "customssl": "true",
         "reservationtable": {
             "author": 0,
             "availability": 2,

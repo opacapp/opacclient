@@ -14,7 +14,7 @@
             "returndate": -1,
             "status": 4
         },
-		"disguise": true,
+        "disguise": true,
         "mediatypes": {
             "1": "BOOK",
             "11": "MOVIE",

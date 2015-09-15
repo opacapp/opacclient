@@ -4,9 +4,9 @@
     "city": "Hamburg-Harburg",
     "country": "Deutschland",
     "data": {
+        "account_system": "lbs",
         "baseurl": "https://katalog.b.tu-harburg.de",
-        "db": "1",
-        "account_system": "lbs"
+        "db": "1"
     },
     "geo": [
         53.46097700000001,
