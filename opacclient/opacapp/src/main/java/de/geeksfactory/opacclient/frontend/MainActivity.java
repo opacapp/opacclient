@@ -283,8 +283,8 @@ public class MainActivity extends OpacActivity implements
         if (nfc_capable && sp.getBoolean("nfc_search", false)) {
             android.nfc.Tag tag = intent.getParcelableExtra(android.nfc.NfcAdapter.EXTRA_TAG);
             String scanResult = readPageToString(tag);
-			if (scanResult != null) {
-				if (scanResult.length() > 5) {
+            if (scanResult != null) {
+                if (scanResult.length() > 5) {
                     SearchFieldDataSource source = new JsonSearchFieldDataSource(this);
                     if (source.hasSearchFields(app.getLibrary().getIdent())) {
                         List<SearchField> fields =
@@ -302,7 +302,7 @@ public class MainActivity extends OpacActivity implements
                     detailIntent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID, scanResult);
                     startActivity(detailIntent);
                 }
-			}
+            }
         }
     }
 
