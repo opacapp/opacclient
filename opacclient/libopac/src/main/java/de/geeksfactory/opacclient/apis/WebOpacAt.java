@@ -133,6 +133,9 @@ public class WebOpacAt extends SearchOnlyApi {
         final Element ul = doc.select(".result_view ul.list").first();
         final List<SearchResult> results = new ArrayList<>();
         for (final Element li : ul.children()) {
+            if (li.hasClass("zugangsmonat")) {
+                continue;
+            }
             final SearchResult result = new SearchResult();
             final Element title = li.select(".titelinfo a").first();
             result.setId(getQueryParamsFirst(title.attr("href")).get("id"));
@@ -172,7 +175,9 @@ public class WebOpacAt extends SearchOnlyApi {
                 nonEmptyQuery.add(q);
             }
         }
-        if (nonEmptyQuery.size() == 1 && "q".equals(nonEmptyQuery.get(0).getSearchField().getId())) {
+        if (nonEmptyQuery.isEmpty()) {
+            builder.setParameter("mode", "n");
+        } else if (nonEmptyQuery.size() == 1 && "q".equals(nonEmptyQuery.get(0).getSearchField().getId())) {
             builder.setParameter("mode", "s");
             builder.setParameter(nonEmptyQuery.get(0).getKey(), nonEmptyQuery.get(0).getValue());
         } else {
