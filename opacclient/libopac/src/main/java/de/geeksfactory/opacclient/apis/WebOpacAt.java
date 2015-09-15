@@ -171,7 +171,10 @@ public class WebOpacAt extends SearchOnlyApi {
         final URIBuilder builder = new URIBuilder(getApiUrl());
         final List<SearchQuery> nonEmptyQuery = new ArrayList<>();
         for (SearchQuery q : query) {
-            if (!q.getValue().isEmpty()) {
+            if (q.getValue().isEmpty()) {
+            } else if (q.getKey().startsWith("sort")) {
+                builder.addParameter(q.getKey(), q.getValue());
+            } else {
                 nonEmptyQuery.add(q);
             }
         }
@@ -333,7 +336,7 @@ public class WebOpacAt extends SearchOnlyApi {
             field.setId("sort_" + i);
             field.setDisplayName(tr.select("td").first().text());
             field.addDropdownValue("", "");
-            for (final Element option : tr.select("option")) {
+            for (final Element option : tr.select(".crit option")) {
                 if (option.hasAttr("selected")) {
                     field.addDropdownValue(0, option.attr("value"), option.text());
                 } else {
