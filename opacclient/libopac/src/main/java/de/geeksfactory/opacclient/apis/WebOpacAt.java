@@ -229,6 +229,7 @@ public class WebOpacAt extends SearchOnlyApi {
         result.setTitle(detailData.select("h3").first().text());
         result.setMediaType(MEDIA_TYPES.get(getCellContent(detailTable, "Medienart|Type of media")));
         copy.put(DetailledItem.KEY_COPY_STATUS, getCellContent(availabilityTable, "Verfügbar|Available"));
+        copy.put(DetailledItem.KEY_COPY_RETURN, parseCopyReturn(getCellContent(availabilityTable, "Exemplare verliehen|Copies lent")));
         copy.put(DetailledItem.KEY_COPY_RESERVATIONS, getCellContent(availabilityTable, "Reservierungen|Reservations"));
         for (final Element tr : detailTable.select("tr")) {
             final String desc = tr.child(0).text();
@@ -251,6 +252,15 @@ public class WebOpacAt extends SearchOnlyApi {
 
     private static String getCover(Element doc) {
         return doc.select(".coverimage img").first().attr("src").replaceFirst("&width=\\d+", "");
+    }
+
+    static String parseCopyReturn(String str) {
+        final Matcher matcher = Pattern.compile("[0-9.-]{4,}").matcher(str);
+        if (matcher.find()) {
+            return matcher.group();
+        } else {
+            return null;
+        }
     }
 
     @Override
