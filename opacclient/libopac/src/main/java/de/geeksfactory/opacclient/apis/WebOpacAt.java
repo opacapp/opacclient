@@ -133,6 +133,9 @@ public class WebOpacAt extends SearchOnlyApi {
         final Element ul = doc.select(".result_view ul.list").first();
         final List<SearchResult> results = new ArrayList<>();
         for (final Element li : ul.children()) {
+            if (li.hasClass("zugangsmonat")) {
+                continue;
+            }
             final SearchResult result = new SearchResult();
             final Element title = li.select(".titelinfo a").first();
             result.setId(getQueryParamsFirst(title.attr("href")).get("id"));
@@ -168,11 +171,16 @@ public class WebOpacAt extends SearchOnlyApi {
         final URIBuilder builder = new URIBuilder(getApiUrl());
         final List<SearchQuery> nonEmptyQuery = new ArrayList<>();
         for (SearchQuery q : query) {
-            if (!q.getValue().isEmpty()) {
+            if (q.getValue().isEmpty()) {
+            } else if (q.getKey().startsWith("sort")) {
+                builder.addParameter(q.getKey(), q.getValue());
+            } else {
                 nonEmptyQuery.add(q);
             }
         }
-        if (nonEmptyQuery.size() == 1 && "q".equals(nonEmptyQuery.get(0).getSearchField().getId())) {
+        if (nonEmptyQuery.isEmpty()) {
+            builder.setParameter("mode", "n");
+        } else if (nonEmptyQuery.size() == 1 && "q".equals(nonEmptyQuery.get(0).getSearchField().getId())) {
             builder.setParameter("mode", "s");
             builder.setParameter(nonEmptyQuery.get(0).getKey(), nonEmptyQuery.get(0).getValue());
         } else {
@@ -221,6 +229,7 @@ public class WebOpacAt extends SearchOnlyApi {
         result.setTitle(detailData.select("h3").first().text());
         result.setMediaType(MEDIA_TYPES.get(getCellContent(detailTable, "Medienart|Type of media")));
         copy.put(DetailledItem.KEY_COPY_STATUS, getCellContent(availabilityTable, "Verfügbar|Available"));
+        copy.put(DetailledItem.KEY_COPY_RETURN, parseCopyReturn(getCellContent(availabilityTable, "Exemplare verliehen|Copies lent")));
         copy.put(DetailledItem.KEY_COPY_RESERVATIONS, getCellContent(availabilityTable, "Reservierungen|Reservations"));
         for (final Element tr : detailTable.select("tr")) {
             final String desc = tr.child(0).text();
@@ -243,6 +252,15 @@ public class WebOpacAt extends SearchOnlyApi {
 
     private static String getCover(Element doc) {
         return doc.select(".coverimage img").first().attr("src").replaceFirst("&width=\\d+", "");
+    }
+
+    static String parseCopyReturn(String str) {
+        final Matcher matcher = Pattern.compile("[0-9.-]{4,}").matcher(str);
+        if (matcher.find()) {
+            return matcher.group();
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -328,7 +346,7 @@ public class WebOpacAt extends SearchOnlyApi {
             field.setId("sort_" + i);
             field.setDisplayName(tr.select("td").first().text());
             field.addDropdownValue("", "");
-            for (final Element option : tr.select("option")) {
+            for (final Element option : tr.select(".crit option")) {
                 if (option.hasAttr("selected")) {
                     field.addDropdownValue(0, option.attr("value"), option.text());
                 } else {
