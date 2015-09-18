@@ -1,5 +1,13 @@
 package de.geeksfactory.opacclient.reminder;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Duration;
+import org.joda.time.Hours;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
+import org.joda.time.ReadablePeriod;
+
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -11,12 +19,10 @@ import android.support.v4.app.NotificationCompat;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.frontend.MainActivity;
-import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 
 public class ReminderBroadcastReceiver extends BroadcastReceiver {
@@ -67,15 +73,15 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
         alarm.notified = true;
         adata.updateAlarm(alarm);
 
-        List<Map<String, String>> expiringItems = new ArrayList<>();
+        List<LentItem> expiringItems = new ArrayList<>();
         for (long mediaId : alarm.media) {
             expiringItems.add(adata.getLentItem(mediaId));
         }
 
         String notificationText;
-        // The deadline timestamp is typically on midnight, so we assume items have expired when
-        // it's 24 hours after the deadline
-        if (alarm.deadlineTimestamp + TimeUnit.DAYS.toMillis(1) < System.currentTimeMillis()) {
+        // You can still return the item on the day it expires on, so don't consider it to have
+        // expired before the next day
+        if (alarm.deadline.isBefore(LocalDate.now())) {
             notificationText = context
                     .getString(R.string.notif_ticker_expired, expiringItems.size());
         } else {
@@ -90,7 +96,7 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
         // Display list of items in notification
         NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle();
         for (int i = 0; i < 5 && i < expiringItems.size(); i++) {
-            style.addLine(expiringItems.get(i).get(AccountData.KEY_LENT_TITLE));
+            style.addLine(expiringItems.get(i).getTitle());
         }
         if (expiringItems.size() > 5) {
             style.setSummaryText(
@@ -100,7 +106,8 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
 
 
         builder.setStyle(style).setSmallIcon(R.drawable.ic_stat_notification)
-                .setWhen(alarm.deadlineTimestamp).setNumber(expiringItems.size())
+                .setWhen(alarm.deadline.toDateTimeAtStartOfDay().getMillis())
+                .setNumber(expiringItems.size())
                 .setColor(context.getResources().getColor(R.color.primary_red)).setSound(null);
 
         // Intent for when notification is deleted
@@ -160,19 +167,18 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
         adata.updateAlarm(alarm);
     }
 
-    private long calculateSnoozeDuration() {
-        long timeLeft = alarm.deadlineTimestamp - System.currentTimeMillis();
-        // the deadline timestamp is typically on midnight, so we assume that the average library
-        // closes at 6 PM
-        timeLeft += TimeUnit.HOURS.toMillis(18);
+    private ReadablePeriod calculateSnoozeDuration() {
+        // we assume that the average library closes at 6 PM on the day the item expires
+        Duration timeLeft = new Duration(alarm.deadline.toDateTime(new LocalTime(18, 0)),
+                DateTime.now());
 
-        if (timeLeft > TimeUnit.DAYS.toMillis(1)) {
-            return TimeUnit.HOURS.toMillis(12);
-        } else if (timeLeft < 0) {
+        if (timeLeft.isLongerThan(Days.ONE.toStandardDuration())) {
+            return Hours.hours(12);
+        } else if (timeLeft.isShorterThan(new Duration(0))) {
             // Don't annoy the user every 2 hours when it's already too late
-            return TimeUnit.HOURS.toMillis(12);
+            return Hours.hours(12);
         } else {
-            return TimeUnit.HOURS.toMillis(2);
+            return Hours.hours(2);
         }
     }
 
@@ -180,9 +186,9 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
         // TODO: implement
     }
 
-    private void snooze(long duration) {
+    private void snooze(ReadablePeriod duration) {
         alarm.notified = false;
-        alarm.notificationTimestamp += duration;
+        alarm.notificationTime.plus(duration);
         adata.updateAlarm(alarm);
     }
 

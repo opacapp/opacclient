@@ -3,6 +3,8 @@ package de.geeksfactory.opacclient.apis;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,8 +19,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -30,7 +30,9 @@ import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.objects.ReservedItem;
 
 /**
  * API for the PICA OPAC by OCLC with the old default PICA account functions
@@ -358,8 +360,8 @@ public class PicaOld extends Pica {
                 + "&BOR_PW_ENC=" + pwEncoded, getDefaultEncoding());
         Document doc2 = Jsoup.parse(html);
 
-        List<Map<String, String>> media = new ArrayList<>();
-        List<Map<String, String>> reserved = new ArrayList<>();
+        List<LentItem> media = new ArrayList<>();
+        List<ReservedItem> reserved = new ArrayList<>();
         if (doc.select("table[summary^=list]").size() > 0
                 && !doc.select(".alert").text().contains("Keine Entleihungen")
                 && !doc.select(".alert").text().contains("No outstanding loans")
@@ -397,13 +399,12 @@ public class PicaOld extends Pica {
         return renewalCounts;
     }
 
-    static void parseMediaList(List<Map<String, String>> media, Document doc,
+    static void parseMediaList(List<LentItem> media, Document doc,
             StringProvider stringProvider, List<String> renewalCounts) throws OpacErrorException {
 
-        Elements copytrs = doc
-                .select("table[summary^=list] > tbody > tr[valign=top]");
+        Elements copytrs = doc.select("table[summary^=list] > tbody > tr[valign=top]");
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.GERMAN);
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
 
         int trs = copytrs.size();
         if (trs < 1) {
@@ -416,17 +417,16 @@ public class PicaOld extends Pica {
             if (tr.select("table[summary=title data]").size() > 0) {
                 // According to HTML code from Bug reports (Server TU Darmstadt,
                 // Berlin Ibero-Amerikanisches Institut)
-                Map<String, String> e = new HashMap<>();
+                LentItem item = new LentItem();
                 // Check if there is a checkbox to prolong this item
                 if (tr.select("input").size() > 0) {
-                    e.put(AccountData.KEY_LENT_LINK,
-                            tr.select("input").attr("value"));
+                    item.setProlongData(tr.select("input").attr("value"));
                 } else {
-                    e.put(AccountData.KEY_LENT_RENEWABLE, "N");
+                    item.setRenewable(false);
                 }
 
                 Elements datatrs = tr.select("table[summary=title data] tr");
-                e.put(AccountData.KEY_LENT_TITLE, datatrs.get(0).text());
+                item.setTitle(datatrs.get(0).text());
 
                 for (Element td : datatrs.get(1).select("td")) {
                     List<TextNode> textNodes = td.textNodes();
@@ -457,16 +457,14 @@ public class PicaOld extends Pica {
                         } else if (title.contains("Status")
                                 || title.contains("status")
                                 || title.contains("statut")) {
-                            e.put(AccountData.KEY_LENT_STATUS, value);
+                            item.setStatus(value);
                         } else if (title.contains("Leihfristende")
                                 || title.contains("expiry date")
                                 || title.contains("vervaldatum")
                                 || title.contains("date d'expiration")) {
-                            e.put(AccountData.KEY_LENT_DEADLINE, value);
                             try {
-                                e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
-                                        String.valueOf(sdf.parse(value).getTime()));
-                            } catch (ParseException e1) {
+                                item.setDeadline(fmt.parseLocalDate(value));
+                            } catch (IllegalArgumentException e1) {
                                 e1.printStackTrace();
                             }
                         } else //noinspection StatementWithEmptyBody
@@ -478,7 +476,7 @@ public class PicaOld extends Pica {
                             }
                     }
                 }
-                media.add(e);
+            media.add(item);
             } else { // like in Kiel
                 String prolongCount = "";
                 if (renewalCounts.size() == trs && renewalCounts.get(i) != null) {
@@ -495,55 +493,43 @@ public class PicaOld extends Pica {
                 } else {
                     reminderCount = "";
                 }
-                Map<String, String> e = new HashMap<>();
+                LentItem item = new LentItem();
 
                 if (tr.child(4).text().trim().length() < 5
                         && tr.child(5).text().trim().length() > 4) {
-                    e.put(AccountData.KEY_LENT_TITLE, tr.child(5).text().trim());
+                    item.setTitle(tr.child(5).text().trim());
                 } else {
-                    e.put(AccountData.KEY_LENT_TITLE, tr.child(4).text().trim());
+                    item.setTitle(tr.child(4).text().trim());
                 }
                 String status = tr.child(13).text().trim();
                 if (!reminderCount.equals("0") && !reminderCount.equals("")) {
                     if (!status.equals("")) status += ", ";
-                    status += reminderCount
-                            + " "
-                            + stringProvider
+                    status += reminderCount + " " + stringProvider
                             .getString(StringProvider.REMINDERS) + ", ";
                 }
                 if (!status.equals("")) status += ", ";
-                status += prolongCount
-                        + "x "
-                        + stringProvider
-                        .getString(StringProvider.PROLONGED_ABBR); // +
-                // tr.child(25).text().trim()
-                // + " Vormerkungen");
-                e.put(AccountData.KEY_LENT_STATUS, status);
-                e.put(AccountData.KEY_LENT_DEADLINE, tr.child(21).text().trim());
+                status += prolongCount + "x " + stringProvider
+                        .getString(StringProvider.PROLONGED_ABBR);
+                // + tr.child(25).text().trim() + " Vormerkungen");
+                item.setStatus(status);
                 try {
-                    e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String
-                            .valueOf(sdf.parse(
-                                    e.get(AccountData.KEY_LENT_DEADLINE))
-                                        .getTime()));
-                } catch (ParseException e1) {
-                    e1.printStackTrace();
+                    item.setDeadline(fmt.parseLocalDate(tr.child(21).text().trim()));
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
                 }
-                if (tr.child(1).select("input").size() > 0)
-                // If there is no checkbox, the medium is not prolongable
-                {
-                    e.put(AccountData.KEY_LENT_LINK, tr.child(1)
-                                                       .select("input").attr("value"));
+                if (tr.child(1).select("input").size() > 0) {
+                    // If there is no checkbox, the medium is not renewable
+                    item.setProlongData(tr.child(1).select("input").attr("value"));
                 }
 
-                media.add(e);
+                media.add(item);
             }
         }
         assert (media.size() == trs);
     }
 
-    static void parseResList(List<Map<String, String>> media, Document doc,
-            StringProvider stringProvider) throws
-            OpacErrorException {
+    static void parseResList(List<ReservedItem> media, Document doc,
+            StringProvider stringProvider) throws OpacErrorException {
 
         Elements copytrs = doc.select("table[summary^=list] > tbody >  tr[valign=top]");
 
@@ -554,18 +540,17 @@ public class PicaOld extends Pica {
         }
         assert (trs > 0);
         for (Element tr : copytrs) {
-            Map<String, String> e = new HashMap<>();
+            ReservedItem item = new ReservedItem();
             if (tr.select("table[summary=title data]").size() > 0) {
                 // According to HTML code from Bug report (UB Frankfurt)
 
                 // Check if there is a checkbox to cancel this item
                 if (tr.select("input").size() > 0) {
-                    e.put(AccountData.KEY_RESERVATION_CANCEL,
-                            tr.select("input").attr("value"));
+                    item.setCancelData(tr.select("input").attr("value"));
                 }
 
                 Elements datatrs = tr.select("table[summary=title data] tr");
-                e.put(AccountData.KEY_RESERVATION_TITLE, datatrs.get(0).text());
+                item.setTitle(datatrs.get(0).text());
 
                 List<TextNode> textNodes = datatrs.get(1).select("td").first()
                                                   .textNodes();
@@ -594,13 +579,12 @@ public class PicaOld extends Pica {
                 }
             } else {
                 // like in Kiel
-                e.put(AccountData.KEY_RESERVATION_TITLE, tr.child(5).text().trim());
-                e.put(AccountData.KEY_RESERVATION_READY, tr.child(17).text().trim());
-                e.put(AccountData.KEY_RESERVATION_CANCEL,
-                        tr.child(1).select("input").attr("value"));
+                item.setTitle(tr.child(5).text().trim());
+                item.setStatus(tr.child(17).text().trim());
+                item.setCancelData(tr.child(1).select("input").attr("value"));
             }
 
-            media.add(e);
+            media.add(item);
         }
         assert (media.size() == trs);
     }

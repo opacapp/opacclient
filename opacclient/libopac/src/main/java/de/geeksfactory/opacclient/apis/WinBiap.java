@@ -38,7 +38,9 @@ import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Filter.Option;
+import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.objects.ReservedItem;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.Status;
@@ -415,16 +417,15 @@ public class WinBiap extends BaseApi implements OpacApi {
         String base64 = URLEncoder.encode(
                 Base64.encodeBytes(text.getBytes("UTF-8")), "UTF-8");
 
-        String html = httpGet(opac_url + "/search.aspx?data=" + base64,
-                getDefaultEncoding(), false);
+        String html = httpGet(opac_url + "/search.aspx?data=" + base64, getDefaultEncoding(),
+                false);
         return parse_search(html, page);
     }
 
     @Override
     public DetailledItem getResultById(String id, String homebranch)
             throws IOException, OpacErrorException {
-        String html = httpGet(opac_url + "/detail.aspx?Id=" + id,
-                getDefaultEncoding(), false);
+        String html = httpGet(opac_url + "/detail.aspx?Id=" + id, getDefaultEncoding(), false);
         return parse_result(html);
     }
 
@@ -698,10 +699,10 @@ public class WinBiap extends BaseApi implements OpacApi {
         return adata;
     }
 
-    static List<Map<String, String>> parseMediaList(Document doc) {
-        List<Map<String, String>> lent = new ArrayList<>();
+    static List<LentItem> parseMediaList(Document doc) {
+        List<LentItem> lent = new ArrayList<>();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
 
         // the account page differs between WinBiap versions 4.2 and >= 4.3
         boolean winBiap43;
@@ -716,56 +717,39 @@ public class WinBiap extends BaseApi implements OpacApi {
         // 4.4: id=...DetailItemMain_0_rowBorrow_0
         for (Element tr : doc.select(winBiap43 ? ".detailTable tr[id*=_rowBorrow]" :
                 ".GridView_RowStyle")) {
-            Map<String, String> item = new HashMap<>();
+            LentItem item = new LentItem();
             Element detailsTr = winBiap43 ? tr.nextElementSibling() : tr;
 
             // the second column contains an img tag with the cover
             if (tr.select(".cover, img[id*=ImageCover]").size() > 0) {
                 // find media ID using cover URL
-                Element img = tr.select(".cover, img[id*=ImageCover]").first();
-                String url = img.hasAttr("data-src") ? img.attr("data-src") : img.attr("src");
-                Map<String, String> params = getQueryParamsFirst(url);
-                if (params.containsKey("catid")) {
-                    item.put(AccountData.KEY_LENT_ID, params.get("catid"));
-                }
+                Map<String, String> params = getQueryParamsFirst(tr.select(".cover").attr("src"));
+                if (params.containsKey("catid")) item.setId(params.get("catid"));
             }
 
-            // The IDs and classes of the detail fields slightly differ between WinBiap versions.
-            // 4.2  uses German names like, some with underscores and some without
-            // 4.3  changes most of them to English and without underscore
-            // 4.4  adds numbers to the end of the id, separated by an underscore,
-            //      and has simpler classes like ".author" for some of the fields
-            putIfNotEmpty(item, AccountData.KEY_LENT_AUTHOR,
-                    tr.select("[id$=LabelAutor], .autor").text());
-            putIfNotEmpty(item, AccountData.KEY_LENT_TITLE,
-                    tr.select("[id$=LabelTitel], [id$=LabelTitle], .title").text());
-            putIfNotEmpty(item, AccountData.KEY_LENT_BARCODE,
-                    detailsTr
-                            .select("[id$=Label_Mediennr], [id$=labelMediennr], [id*=labelMediennr_]")
-                            .text());
-            putIfNotEmpty(item, AccountData.KEY_LENT_FORMAT,
-                    detailsTr
-                            .select("[id$=Label_Mediengruppe], [id$=labelMediagroup], [id*=labelMediagroup_]")
-                            .text());
-            putIfNotEmpty(item, AccountData.KEY_LENT_BRANCH,
-                    detailsTr
-                            .select("[id$=Label_Zweigstelle], [id$=labelBranch], [id*=labelBranch_]")
-                            .text());
-            // Label_Entliehen/LabelStartDate/.startDate contains the date when the medium was lent
-            putIfNotEmpty(item, AccountData.KEY_LENT_DEADLINE,
-                    tr.select("[id$=LabelFaellig], [id$=LabelMatureDate], .matureDate").text());
+            item.setAuthor(nullIfEmpty(tr.select("[id$=LabelAutor]").text()));
+            item.setTitle(
+                    nullIfEmpty(tr.select("[id$=LabelTitel], [id$=LabelTitle], .title").text()));
+            item.setBarcode(nullIfEmpty(detailsTr
+                    .select("[id$=Label_Mediennr], [id$=labelMediennr], [id*=labelMediennr_]")
+                    .text()));
+            item.setFormat(nullIfEmpty(detailsTr
+                    .select("[id$=Label_Mediengruppe], [id$=labelMediagroup], " +
+                            "[id*=labelMediagroup_]")
+                    .text()));
+            item.setHomeBranch(nullIfEmpty(detailsTr
+                    .select("[id$=Label_Zweigstelle], [id$=labelBranch], [id*=labelBranch_]")
+                    .text()));
+            // Label_Entliehen contains the date when the medium was lent
             try {
-                item.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String.valueOf(sdf.parse(
-                        tr.select("[id$=LabelFaellig], [id$=LabelMatureDate], .matureDate").text())
-                                                                                    .getTime()));
-            } catch (ParseException e) {
+                item.setDeadline(fmt.parseLocalDate(tr.select("[id$=LabelFaellig], [id$=LabelMatureDate], .matureDate").text()));
+            } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             }
             if (tr.select("input[id*=_chkSelect]").size() > 0) {
-                item.put(AccountData.KEY_LENT_LINK,
-                        tr.select("input[id*=_chkSelect]").attr("name"));
+                item.setProlongData(tr.select("input[id*=_chkSelect]").attr("name"));
             } else {
-                item.put(AccountData.KEY_LENT_RENEWABLE, "N");
+                item.setRenewable(false);
             }
             lent.add(item);
         }
@@ -773,15 +757,17 @@ public class WinBiap extends BaseApi implements OpacApi {
         return lent;
     }
 
-    private static void putIfNotEmpty(Map<String, String> map, String key, String value) {
-        if (value != null && !value.equals("")) {
-            map.put(key, value);
+    private static String nullIfEmpty(String text) {
+        if (text == null || text.equals("")) {
+            return null;
+        } else {
+            return text;
         }
     }
 
-    static List<Map<String, String>> parseResList(Document doc, StringProvider stringProvider,
+    static List<ReservedItem> parseResList(Document doc, StringProvider stringProvider,
             JSONObject data) {
-        List<Map<String, String>> reservations = new ArrayList<>();
+        List<ReservedItem> reservations = new ArrayList<>();
 
         // the account page differs between WinBiap versions 4.2 and 4.3
         boolean winBiap43;
@@ -797,7 +783,7 @@ public class WinBiap extends BaseApi implements OpacApi {
         for (Element tr : doc
                 .select(winBiap43 ? ".detailTable tr[id*=_rowBorrow]" :
                         "tr[id*=GridViewReservation]")) {
-            Map<String, String> item = new HashMap<>();
+            ReservedItem item = new ReservedItem();
 
             Element detailsTr = winBiap43 ? tr.nextElementSibling() : tr;
 
@@ -805,31 +791,24 @@ public class WinBiap extends BaseApi implements OpacApi {
             if (tr.select(".cover").size() > 0) {
                 // find media ID using cover URL
                 Map<String, String> params = getQueryParamsFirst(tr.select(".cover").attr("src"));
-                if (params.containsKey("catid")) {
-                    item.put(AccountData.KEY_RESERVATION_ID, params.get("catid"));
-                }
+                if (params.containsKey("catid")) item.setId(params.get("catid"));
                 // find media type
                 SearchResult.MediaType mt = getMediaType(tr.select(".cover").first(), data);
                 if (mt != null) {
-                    item.put(AccountData.KEY_RESERVATION_FORMAT,
-                            stringProvider.getMediaTypeName(mt));
+                    item.setFormat(stringProvider.getMediaTypeName(mt));
                 }
             }
 
-            putIfNotEmpty(item, AccountData.KEY_RESERVATION_READY,
-                    winBiap43 ? detailsTr.select("[id$=labelStatus], [id*=labelStatus_]").text() :
-                            tr.select("[id$=ImageBorrow]").attr("title"));
-            putIfNotEmpty(item, AccountData.KEY_RESERVATION_AUTHOR,
-                    tr.select("[id$=LabelAutor], .autor").text());
-            putIfNotEmpty(item, AccountData.KEY_RESERVATION_TITLE,
-                    tr.select("[id$=LabelTitle], .title").text());
-            putIfNotEmpty(item, AccountData.KEY_RESERVATION_BRANCH,
+            item.setStatus(nullIfEmpty(winBiap43 ? detailsTr.select("[id$=labelStatus], [id*=labelStatus_]").text() :
+                    tr.select("[id$=ImageBorrow]").attr("title")));
+            item.setAuthor(nullIfEmpty(tr.select("[id$=LabelAutor], .autor").text()));
+            item.setTitle(nullIfEmpty(tr.select("[id$=LabelTitle], .title").text()));
+            item.setBranch(nullIfEmpty(
                     detailsTr.select("[id$=LabelBranch], [id$=labelBranch], [id*=labelBranch_]")
-                             .text());
-            putIfNotEmpty(item, AccountData.KEY_RESERVATION_FORMAT,
-                    detailsTr
-                            .select("[id$=Label_Mediengruppe], [id$=labelMediagroup], [id*=labelMediagroup_]")
-                            .text());
+                             .text()));
+            item.setFormat(nullIfEmpty(detailsTr
+                    .select("[id$=Label_Mediengruppe], [id$=labelMediagroup], [id*=labelMediagroup_]")
+                    .text()));
             // Label_Vorbestelltam contains the date when the medium was reserved
 
             if (tr.select("a[id$=ImageReservationDelete]").size() > 0) {
@@ -859,7 +838,7 @@ public class WinBiap extends BaseApi implements OpacApi {
                 Matcher matcher = regex.matcher(javascript);
                 if (matcher.find()) {
                     String base64 = matcher.group(1);
-                    item.put(AccountData.KEY_RESERVATION_CANCEL, base64);
+                    item.setCancelData(base64);
                 }
             } else if (detailsTr.select("input[id*=_hiddenValueDetail][value]").size() > 0) {
                 item.put(AccountData.KEY_RESERVATION_CANCEL,

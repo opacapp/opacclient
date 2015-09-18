@@ -18,6 +18,9 @@
  */
 package de.geeksfactory.opacclient.storage;
 
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -25,14 +28,13 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.AccountItem;
+import de.geeksfactory.opacclient.objects.LentItem;
+import de.geeksfactory.opacclient.objects.ReservedItem;
 import de.geeksfactory.opacclient.reminder.Alarm;
 
 public class AccountDataSource {
@@ -173,40 +175,27 @@ public class AccountDataSource {
     public AccountData getCachedAccountData(Account account) {
         AccountData adata = new AccountData(account.getId());
 
-        List<Map<String, String>> lent = new ArrayList<>();
+        List<LentItem> lent = new ArrayList<>();
         String[] selectionArgs = {"" + account.getId()};
-        Cursor cursor = database.query(AccountDatabase.TABLENAME_LENT,
-                AccountDatabase.COLUMNS_LENT.values()
-                        .toArray(new String[AccountDatabase.COLUMNS_LENT.values().size()]),
+        Cursor cursor = database.query(AccountDatabase.TABLENAME_LENT, AccountDatabase.COLUMNS_LENT,
                 "account = ?", selectionArgs, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            Map<String, String> entry = new HashMap<>();
-            loadLentItem(cursor, entry);
+            LentItem entry = cursorToLentItem(cursor);
             lent.add(entry);
             cursor.moveToNext();
         }
         cursor.close();
         adata.setLent(lent);
 
-        List<Map<String, String>> res = new ArrayList<>();
+        List<ReservedItem> res = new ArrayList<>();
         cursor = database.query(AccountDatabase.TABLENAME_RESERVATION,
-                AccountDatabase.COLUMNS_RESERVATIONS.values()
-                        .toArray(new String[AccountDatabase.COLUMNS_RESERVATIONS.values().size()]),
-                "account = ?", selectionArgs, null, null, null);
+                AccountDatabase.COLUMNS_RESERVATIONS, "account = ?", selectionArgs, null, null,
+                null);
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {
-            Map<String, String> entry = new HashMap<>();
-            for (Map.Entry<String, String> field : AccountDatabase.COLUMNS_RESERVATIONS
-                    .entrySet()) {
-                String value = cursor.getString(cursor.getColumnIndex(field.getValue()));
-                if (value != null) {
-                    if (!value.equals("")) {
-                        entry.put(field.getKey(), value);
-                    }
-                }
-            }
+            ReservedItem entry = cursorToReservedItem(cursor);
             res.add(entry);
             cursor.moveToNext();
         }
@@ -228,6 +217,92 @@ public class AccountDataSource {
         cursor.close();
 
         return adata;
+    }
+
+    private LentItem cursorToLentItem(Cursor cursor) {
+        LentItem item = new LentItem();
+        setAccountItemAttributes(cursor, item);
+        item.setBarcode(cursor.getString(7));
+        item.setDeadline(cursor.getString(8));
+        item.setHomeBranch(cursor.getString(9));
+        item.setLendingBranch(cursor.getString(10));
+        item.setProlongData(cursor.getString(11));
+        item.setRenewable(cursor.getInt(12) == 1);
+        item.setDownloadData(cursor.getString(13));
+        item.setEbook(cursor.getInt(14) == 1);
+        return item;
+    }
+
+    private ReservedItem cursorToReservedItem(Cursor cursor) {
+        ReservedItem item = new ReservedItem();
+        setAccountItemAttributes(cursor, item);
+        item.setReadyDate(cursor.getString(7));
+        item.setExpirationDate(cursor.getString(8));
+        item.setBranch(cursor.getString(9));
+        item.setCancelData(cursor.getString(10));
+        item.setBookingData(cursor.getString(11));
+        return item;
+    }
+
+    private void setAccountItemAttributes(Cursor cursor, AccountItem item) {
+        item.setDbId(cursor.getLong(0));
+        item.setAccount(cursor.getLong(1));
+        item.setTitle(cursor.getString(2));
+        item.setAuthor(cursor.getString(3));
+        item.setFormat(cursor.getString(4));
+        item.setId(cursor.getString(5));
+        item.setStatus(cursor.getString(6));
+    }
+
+    private ContentValues lentItemToContentValues(LentItem item, long accountId) {
+        ContentValues cv = new ContentValues();
+        setAccountItemAttributes(item, cv, accountId);
+        putOrNull(cv, "barcode", item.getBarcode());
+        putOrNull(cv, "deadline", item.getDeadline());
+        putOrNull(cv, "homebranch", item.getHomeBranch());
+        putOrNull(cv, "lending_branch", item.getLendingBranch());
+        putOrNull(cv, "prolong_data", item.getProlongData());
+        cv.put("renewable", item.isRenewable() ? 1 : 0);
+        putOrNull(cv, "download_data", item.getDownloadData());
+        cv.put("ebook", item.isEbook() ? 1 : 0);
+        return cv;
+    }
+
+    private ContentValues reservedItemToContentValues(ReservedItem item, long accountId) {
+        ContentValues cv = new ContentValues();
+        setAccountItemAttributes(item, cv, accountId);
+        putOrNull(cv, "ready", item.getReadyDate());
+        putOrNull(cv, "expiration", item.getExpirationDate());
+        putOrNull(cv, "branch", item.getBranch());
+        putOrNull(cv, "cancel_data", item.getCancelData());
+        putOrNull(cv, "booking_data", item.getBookingData());
+        return cv;
+    }
+
+    private void setAccountItemAttributes(AccountItem item, ContentValues cv, long accountId) {
+        if (item.getDbId() != null) cv.put("id", item.getDbId());
+        cv.put("account", accountId);
+        putOrNull(cv, "title", item.getTitle());
+        putOrNull(cv, "author", item.getAuthor());
+        putOrNull(cv, "format", item.getFormat());
+        putOrNull(cv, "itemid", item.getId());
+        putOrNull(cv, "status", item.getStatus());
+    }
+
+    private void putOrNull(ContentValues cv, String key, LocalDate value) {
+        if (value != null) {
+            cv.put(key, value.toString());
+        } else {
+            cv.putNull(key);
+        }
+    }
+
+    private void putOrNull(ContentValues cv, String key, String value) {
+        if (value != null) {
+            cv.put(key, value);
+        } else {
+            cv.putNull(key);
+        }
     }
 
     public void invalidateCachedData() {
@@ -275,41 +350,27 @@ public class AccountDataSource {
 
         database.delete(AccountDatabase.TABLENAME_LENT, "account = ?",
                 new String[]{"" + account.getId()});
-        for (Map<String, String> entry : adata.getLent()) {
-            ContentValues insertmapping = new ContentValues();
-            for (Entry<String, String> inner : entry.entrySet()) {
-                insertmapping
-                        .put(AccountDatabase.COLUMNS_LENT.get(inner.getKey()), inner.getValue());
-            }
-            insertmapping.put("account", account.getId());
+        for (LentItem entry : adata.getLent()) {
+            ContentValues insertmapping = lentItemToContentValues(entry, account.getId());
             database.insert(AccountDatabase.TABLENAME_LENT, null, insertmapping);
         }
 
         database.delete(AccountDatabase.TABLENAME_RESERVATION, "account = ?",
                 new String[]{"" + account.getId()});
-        for (Map<String, String> entry : adata.getReservations()) {
-            ContentValues insertmapping = new ContentValues();
-            for (Entry<String, String> inner : entry.entrySet()) {
-                insertmapping.put(AccountDatabase.COLUMNS_RESERVATIONS.get(inner.getKey()),
-                        inner.getValue());
-            }
-            insertmapping.put("account", account.getId());
+        for (ReservedItem entry : adata.getReservations()) {
+            ContentValues insertmapping = reservedItemToContentValues(entry, account.getId());
             database.insert(AccountDatabase.TABLENAME_RESERVATION, null, insertmapping);
         }
     }
 
-    public List<Map<String, String>> getAllLentItems() {
-        List<Map<String, String>> items = new ArrayList<>();
-        List<String> columns = new ArrayList<>(AccountDatabase.COLUMNS_LENT.values());
-        columns.add("rowid");
+    public List<LentItem> getAllLentItems() {
+        List<LentItem> items = new ArrayList<>();
         Cursor cursor = database
-                .query(AccountDatabase.TABLENAME_LENT, columns.toArray(new String[columns.size()]),
-                        null, null, null, null, null);
+                .query(AccountDatabase.TABLENAME_LENT, AccountDatabase.COLUMNS_LENT, null, null,
+                        null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            Map<String, String> item = new HashMap<>();
-            loadLentItem(cursor, item);
-            item.put("id", String.valueOf(cursor.getLong(cursor.getColumnIndex("rowid"))));
+            LentItem item = cursorToLentItem(cursor);
             items.add(item);
             cursor.moveToNext();
         }
@@ -317,33 +378,19 @@ public class AccountDataSource {
         return items;
     }
 
-    public Map<String, String> getLentItem(long id) {
+    public LentItem getLentItem(long id) {
         String[] selA = {"" + id};
-        Collection<String> columns = AccountDatabase.COLUMNS_LENT.values();
         Cursor cursor = database
-                .query(AccountDatabase.TABLENAME_LENT, columns.toArray(new String[columns.size()]),
-                        "rowid = ?", selA, null, null, null);
-        Map<String, String> item = null;
+                .query(AccountDatabase.TABLENAME_LENT, AccountDatabase.COLUMNS_LENT, "id = ?", selA,
+                        null, null, null);
+        LentItem item = null;
         cursor.moveToFirst();
         if (!cursor.isAfterLast()) {
-            item = new HashMap<>();
-            loadLentItem(cursor, item);
-            cursor.moveToNext();
+            item = cursorToLentItem(cursor);
         }
         // Make sure to close the cursor
         cursor.close();
         return item;
-    }
-
-    private void loadLentItem(Cursor cursor, Map<String, String> item) {
-        for (Entry<String, String> field : AccountDatabase.COLUMNS_LENT.entrySet()) {
-            String value = cursor.getString(cursor.getColumnIndex(field.getValue()));
-            if (value != null) {
-                if (!value.equals("")) {
-                    item.put(field.getKey(), value);
-                }
-            }
-        }
     }
 
     public List<Account> getAccountsWithPassword(String ident) {
@@ -364,11 +411,11 @@ public class AccountDataSource {
         return accs;
     }
 
-    public long addAlarm(long deadline, long[] media, long alarmTime) {
+    public long addAlarm(LocalDate deadline, long[] media, DateTime alarmTime) {
         ContentValues values = new ContentValues();
-        values.put("deadline_ts", deadline);
+        values.put("deadline", deadline.toString());
         values.put("media", joinLongs(media, ","));
-        values.put("alarm_ts", alarmTime);
+        values.put("alarm", alarmTime.toString());
         values.put("notified", 0);
         values.put("finished", 0);
         return database.insert(AccountDatabase.TABLENAME_ALARMS, null, values);
@@ -376,20 +423,20 @@ public class AccountDataSource {
 
     public void updateAlarm(Alarm alarm) {
         ContentValues values = new ContentValues();
-        values.put("deadline_ts", alarm.deadlineTimestamp);
+        values.put("deadline", alarm.deadline.toString());
         values.put("media", joinLongs(alarm.media, ","));
-        values.put("alarm_ts", alarm.notificationTimestamp);
+        values.put("alarm", alarm.notificationTime.toString());
         values.put("notified", alarm.notified ? 1 : 0);
         values.put("finished", alarm.finished ? 1 : 0);
         database.update(AccountDatabase.TABLENAME_ALARMS, values, "id = ?",
                 new String[]{alarm.id + ""});
     }
 
-    public Alarm getAlarmByDeadline(long deadline) {
-        String[] selA = {"" + deadline};
+    public Alarm getAlarmByDeadline(LocalDate deadline) {
+        String[] selA = {deadline.toString()};
         Cursor cursor = database
                 .query(AccountDatabase.TABLENAME_ALARMS, AccountDatabase.COLUMNS_ALARMS,
-                        "deadline_ts = ?", selA, null, null, null);
+                        "deadline = ?", selA, null, null, null);
         Alarm item = null;
         cursor.moveToFirst();
         if (!cursor.isAfterLast()) {
@@ -437,9 +484,9 @@ public class AccountDataSource {
     private Alarm cursorToAlarm(Cursor cursor) {
         Alarm alarm = new Alarm();
         alarm.id = cursor.getLong(0);
-        alarm.deadlineTimestamp = cursor.getLong(1);
+        alarm.deadline = new LocalDate(cursor.getString(1));
         alarm.media = splitLongs(cursor.getString(2), ",");
-        alarm.notificationTimestamp = cursor.getLong(3);
+        alarm.notificationTime = new DateTime(cursor.getString(3));
         alarm.notified = cursor.getInt(4) == 1;
         alarm.finished = cursor.getInt(5) == 1;
         return alarm;

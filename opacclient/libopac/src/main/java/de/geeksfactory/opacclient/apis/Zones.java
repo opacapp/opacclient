@@ -35,8 +35,6 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,7 +54,9 @@ import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Filter.Option;
+import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.objects.ReservedItem;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
@@ -836,7 +836,7 @@ public class Zones extends BaseApi {
             return null;
         }
 
-        List<Map<String, String>> lentItems = new ArrayList<>();
+        List<LentItem> lentItems = new ArrayList<>();
         String lentUrl = opac_url + "/" + lentLink.replace("utf-8?Method", "utf-8&Method");
         String lentHtml = httpGet(lentUrl, getDefaultEncoding());
         Document lentDoc = Jsoup.parse(lentHtml);
@@ -853,7 +853,7 @@ public class Zones extends BaseApi {
             }
         }
 
-        List<Map<String, String>> reservedItems = new ArrayList<>();
+        List<ReservedItem> reservedItems = new ArrayList<>();
         String resHtml = httpGet(opac_url + "/" + resLink,
                 getDefaultEncoding());
         Document resDoc = Jsoup.parse(resHtml);
@@ -863,7 +863,7 @@ public class Zones extends BaseApi {
         return res;
     }
 
-    private void loadMediaList(Document lentDoc, List<Map<String, String>> items)
+    private void loadMediaList(Document lentDoc, List<LentItem> items)
             throws IOException {
         items.addAll(parseMediaList(lentDoc));
         String nextPageUrl = findNextPageUrl(lentDoc);
@@ -874,7 +874,7 @@ public class Zones extends BaseApi {
         }
     }
 
-    private void loadResList(Document lentDoc, List<Map<String, String>> items) throws IOException {
+    private void loadResList(Document lentDoc, List<ReservedItem> items) throws IOException {
         items.addAll(parseResList(lentDoc));
         String nextPageUrl = findNextPageUrl(lentDoc);
         if (nextPageUrl != null) {
@@ -893,44 +893,34 @@ public class Zones extends BaseApi {
         }
     }
 
-    static List<Map<String, String>> parseResList(Document doc) {
-        List<Map<String, String>> reservations = new ArrayList<>();
+    static List<ReservedItem> parseResList(Document doc) {
+        List<ReservedItem> reservations = new ArrayList<>();
         for (Element table : doc
                 .select(".MessageBrowseItemDetailsCell table, " +
                         ".MessageBrowseItemDetailsCellStripe" +
                         " table")) {
-            Map<String, String> item = new HashMap<>();
+            ReservedItem item = new ReservedItem();
 
             for (Element tr : table.select("tr")) {
                 String desc = tr.select(".MessageBrowseFieldNameCell").text()
                                 .trim();
                 String value = tr.select(".MessageBrowseFieldDataCell").text()
                                  .trim();
-                if (desc.equals("Titel")) {
-                    item.put(AccountData.KEY_RESERVATION_TITLE, value);
-                }
-                if (desc.equals("Publikationsform")) {
-                    item.put(AccountData.KEY_RESERVATION_FORMAT, value);
-                }
-                if (desc.equals("Liefern an")) {
-                    item.put(AccountData.KEY_RESERVATION_BRANCH, value);
-                }
-                if (desc.equals("Status")) {
-                    item.put(AccountData.KEY_RESERVATION_READY, value);
-                }
+                if (desc.equals("Titel")) item.setTitle(value);
+                if (desc.equals("Publikationsform")) item.setFormat(value);
+                if (desc.equals("Liefern an")) item.setBranch(value);
+                if (desc.equals("Status")) item.setStatus(value);
             }
-            if ("Gelöscht".equals(item.get(AccountData.KEY_RESERVATION_READY))) {
-                continue;
-            }
+            if ("Gelöscht".equals(item.getStatus())) continue;
             reservations.add(item);
         }
         return reservations;
     }
 
-    static List<Map<String, String>> parseMediaList(Document doc) {
-        List<Map<String, String>> lent = new ArrayList<>();
+    static List<LentItem> parseMediaList(Document doc) {
+        List<LentItem> lent = new ArrayList<>();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.GERMAN);
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yyyy").withLocale(Locale.GERMAN);
         Pattern id_pat = Pattern.compile("javascript:renewItem\\('[0-9]+','(.*)'\\)");
         Pattern cannotrenew_pat =
                 Pattern.compile("javascript:CannotRenewLoan\\('[0-9]+','(.*)','[0-9]+'\\)");
@@ -939,52 +929,44 @@ public class Zones extends BaseApi {
                 .select(".LoansBrowseItemDetailsCellStripe table, " +
                         ".LoansBrowseItemDetailsCell " +
                         "table")) {
-            Map<String, String> item = new HashMap<>();
+            LentItem item = new LentItem();
 
             for (Element tr : table.select("tr")) {
-                String desc = tr.select(".LoanBrowseFieldNameCell").text().trim();
-                String value = tr.select(".LoanBrowseFieldDataCell").text().trim();
+                String desc = tr.select(".LoanBrowseFieldNameCell").text()
+                                .trim();
+                String value = tr.select(".LoanBrowseFieldDataCell").text()
+                                 .trim();
                 if (desc.equals("Titel")) {
-                    item.put(AccountData.KEY_LENT_TITLE, value);
+                    item.setTitle(value);
                     if (tr.select(".LoanBrowseFieldDataCell a[href]").size() > 0) {
                         String href = tr.select(".LoanBrowseFieldDataCell a[href]").attr("href");
                         Map<String, String> params = getQueryParamsFirst(href);
                         if (params.containsKey("BACNO")) {
-                            item.put(AccountData.KEY_LENT_ID, params.get("BACNO"));
+                            item.setId(params.get("BACNO"));
                         }
                     }
                 }
-                if (desc.equals("Verfasser")) {
-                    item.put(AccountData.KEY_LENT_AUTHOR, value);
-                }
-                if (desc.equals("Mediennummer")) {
-                    item.put(AccountData.KEY_LENT_BARCODE, value);
-                }
-                if (desc.equals("ausgeliehen in")) {
-                    item.put(AccountData.KEY_LENT_BRANCH, value);
-                }
+                if (desc.equals("Verfasser")) item.setAuthor(value);
+                if (desc.equals("Mediennummer")) item.setBarcode(value);
+                if (desc.equals("ausgeliehen in")) item.setHomeBranch(value);
                 if (desc.matches("F.+lligkeits.*datum")) {
                     value = value.split(" ")[0];
-                    item.put(AccountData.KEY_LENT_DEADLINE, value);
                     try {
-                        item.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
-                                String.valueOf(sdf.parse(value).getTime()));
-                    } catch (ParseException e) {
+                        item.setDeadline(fmt.parseLocalDate(value));
+                    } catch (IllegalArgumentException e) {
                         e.printStackTrace();
                     }
                 }
             }
             if (table.select(".button[Title~=Zum]").size() == 1) {
                 Matcher matcher1 = id_pat.matcher(table.select(".button[Title~=Zum]").attr("href"));
-                if (matcher1.matches()) {
-                    item.put(AccountData.KEY_LENT_LINK, matcher1.group(1));
-                }
+                if (matcher1.matches()) item.setProlongData(matcher1.group(1));
             } else if (table.select(".CannotRenewLink").size() == 1){
                 Matcher matcher = cannotrenew_pat.matcher(table.select(".CannotRenewLink").attr("href").trim());
                 if (matcher.matches()) {
-                    item.put(AccountData.KEY_LENT_LINK, "cannotrenew|" + matcher.group(1));
+                    item.setProlongData("cannotrenew|" + matcher.group(1));
                 }
-                item.put(AccountData.KEY_LENT_RENEWABLE, "N");
+                item.setRenewable(false);
             }
             lent.add(item);
         }

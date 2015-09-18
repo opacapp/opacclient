@@ -67,10 +67,10 @@
         <item>1 week before</item>
     </string-array>
     <string-array name="warning_n">
-        <item>86400000</item>
-        <item>172800000</item>
-        <item>259200000</item>
-        <item>604800000</item>
+        <item>0</item>
+        <item>1</item>
+        <item>3</item>
+        <item>7</item>
     </string-array>
     <string name="startup_title">Start screen</string>
     <string name="startup_summary">Which screen should be shown on startup?</string>

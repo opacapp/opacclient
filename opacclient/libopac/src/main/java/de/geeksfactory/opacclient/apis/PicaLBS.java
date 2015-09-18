@@ -3,6 +3,8 @@ package de.geeksfactory.opacclient.apis;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.jsoup.Connection;
@@ -12,21 +14,18 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.FormElement;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.DetailledItem;
+import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.objects.ReservedItem;
 
 /**
  * API for the PICA OPAC by OCLC combined with LBS account functions Tested with LBS 4 in TU
@@ -172,28 +171,22 @@ public class PicaLBS extends Pica {
         return adata;
     }
 
-    static List<Map<String, String>> parseMediaList(Document doc, StringProvider stringProvider) {
-        List<Map<String, String>> lent = new ArrayList<>();
+    static List<LentItem> parseMediaList(Document doc, StringProvider stringProvider) {
+        List<LentItem> lent = new ArrayList<>();
 
         for (Element tr : doc.select(".resultset > tbody > tr:has(.rec_title)")) {
-            Map<String, String> item = new HashMap<>();
+            LentItem item = new LentItem();
             if (tr.select("input[name=volumeNumbersToRenew]").size() > 0) {
-                item.put(AccountData.KEY_LENT_LINK,
-                        tr.select("input[name=volumeNumbersToRenew]").val());
+                item.setProlongData(tr.select("input[name=volumeNumbersToRenew]").val());
             } else {
-                item.put(AccountData.KEY_LENT_RENEWABLE, "N");
+                item.setRenewable(false);
             }
-            String[] titleAndAuthor = extractTitleAndAuthor(tr);
-            item.put(AccountData.KEY_LENT_TITLE, titleAndAuthor[0]);
-            if (titleAndAuthor[1] != null) item.put(AccountData.KEY_LENT_AUTHOR, titleAndAuthor[1]);
 
-            String returndate = extractAccountInfo(tr, "Returndate", "ausgeliehen bis",
-                    "Ausleihfrist");
-            Date date = parseDate(returndate);
-            item.put(AccountData.KEY_LENT_DEADLINE, returndate);
-            if (date != null) {
-                item.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String.valueOf(date.getTime()));
-            }
+            String[] titleAndAuthor = extractTitleAndAuthor(tr);
+            item.setTitle(titleAndAuthor[0]);
+            if (titleAndAuthor[1] != null)  item.setAuthor(titleAndAuthor[1]);
+            String returndate = extractAccountInfo(tr, "Returndate", "ausgeliehen bis");
+            item.setDeadline(parseDate(returndate));
 
             StringBuilder status = new StringBuilder();
 
@@ -221,9 +214,9 @@ public class PicaLBS extends Pica {
                 status.append(error);
             }
 
-            item.put(AccountData.KEY_LENT_STATUS, status.toString());
-            extractAccountInfo(item, AccountData.KEY_LENT_BRANCH, tr, "Counter", "Theke");
-            extractAccountInfo(item, AccountData.KEY_LENT_BARCODE, tr, "Shelf mark", "Signatur");
+            item.setStatus(status.toString());
+            item.setHomeBranch(extractAccountInfo(tr, "Counter", "Theke"));
+            item.setBarcode(extractAccountInfo(tr, "Shelf mark", "Signatur"));
             lent.add(item);
         }
 
@@ -252,37 +245,35 @@ public class PicaLBS extends Pica {
         return titleAndAuthor;
     }
 
-    private static Date parseDate(String date) {
+    private static LocalDate parseDate(String date) {
         try {
-            if (date != null && date.matches("\\d\\d.\\d\\d.\\d\\d\\d\\d")) {
-                return new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN).parse(date);
-            } else if (date != null && date.matches("\\d\\d/\\d\\d/\\d\\d\\d\\d")) {
-                return new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).parse(date);
+            if (date.matches("\\d\\d.\\d\\d.\\d\\d\\d\\d")) {
+                return DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN)
+                        .parseLocalDate(date);
+            } else if (date.matches("\\d\\d/\\d\\d/\\d\\d\\d\\d")) {
+                return DateTimeFormat.forPattern("dd/MM/yyyy").withLocale(Locale.ENGLISH)
+                        .parseLocalDate(date);
             } else {
                 return null;
             }
-        } catch (ParseException e) {
+        } catch (IllegalArgumentException e) {
             return null;
         }
     }
 
-    static List<Map<String, String>> parseResList(Document doc, StringProvider stringProvider) {
-        List<Map<String, String>> reservations = new ArrayList<>();
+    static List<ReservedItem> parseResList(Document doc, StringProvider stringProvider) {
+        List<ReservedItem> reservations = new ArrayList<>();
 
         for (Element tr : doc.select(".resultset > tbody > tr:has(.rec_title)")) {
-            Map<String, String> item = new HashMap<>();
+            ReservedItem item = new ReservedItem();
             if (tr.select("input[name=volumeReservationsToCancel]").size() > 0) {
-                item.put(AccountData.KEY_RESERVATION_CANCEL,
-                        tr.select("input[name=volumeReservationsToCancel]").val());
+                item.setCancelData(tr.select("input[name=volumeReservationsToCancel]").val());
             }
             String[] titleAndAuthor = extractTitleAndAuthor(tr);
-            item.put(AccountData.KEY_RESERVATION_TITLE, titleAndAuthor[0]);
-            if (titleAndAuthor[1] != null) {
-                item.put(AccountData.KEY_RESERVATION_AUTHOR, titleAndAuthor[1]);
-            }
+            item.setTitle(titleAndAuthor[0]);
+            if (titleAndAuthor[1] != null) item.setAuthor(titleAndAuthor[1]);
 
-            extractAccountInfo(item, AccountData.KEY_RESERVATION_BRANCH, tr, "Destination",
-                    "Theke");
+            item.setBranch(extractAccountInfo(tr, "Destination", "Theke"));
             // not supported: extractAccountInfo(tr, "Shelf mark", "Signatur")
 
             StringBuilder status = new StringBuilder();
@@ -302,19 +293,13 @@ public class PicaLBS extends Pica {
                         StringProvider.RESERVED_AT_DATE, reservationDate));
             }
 
-            if (status.length() > 0) item.put(AccountData.KEY_RESERVATION_READY, status.toString());
+            if (status.length() > 0) item.setStatus(status.toString());
 
             // TODO: I don't know how reservations are marked that are already available
             reservations.add(item);
         }
 
         return reservations;
-    }
-
-    private static void extractAccountInfo(Map<String, String> map, String key, Element doc,
-            String... dataNames) {
-        String data = extractAccountInfo(doc, dataNames);
-        if (data != null && !data.equals("")) map.put(key, data);
     }
 
     private static String extractAccountInfo(Element doc, String... dataNames) {
@@ -329,11 +314,12 @@ public class PicaLBS extends Pica {
             labelSelector.append(".rec_data > .label:contains(").append(dataName).append(")");
         }
         if (doc.select(labelSelector.toString()).size() > 0) {
-            return doc.select(labelSelector.toString()).first()
+            String data = doc.select(labelSelector.toString()).first()
                     .parent() // td
                     .parent() // tr
                     .select("td").get(1) // second column
                     .text();
+            if (data.equals("")) return null; else return data;
         } else {
             return null;
         }

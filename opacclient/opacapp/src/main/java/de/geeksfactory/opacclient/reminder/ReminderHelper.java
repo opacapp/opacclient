@@ -1,5 +1,8 @@
 package de.geeksfactory.opacclient.reminder;
 
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -8,18 +11,15 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import de.geeksfactory.opacclient.BuildConfig;
 import de.geeksfactory.opacclient.OpacClient;
-import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 
 public class ReminderHelper {
@@ -36,32 +36,32 @@ public class ReminderHelper {
      * android.app.AlarmManager}
      */
     public void generateAlarms() {
-        long warning = Long.parseLong(sp.getString("notification_warning", "367200000"));
+        int warning = Integer.parseInt(sp.getString("notification_warning", "3"));
 
         AccountDataSource data = new AccountDataSource(app);
         data.open();
-        List<Map<String, String>> items = data.getAllLentItems();
+        List<LentItem> items = data.getAllLentItems();
 
         // Sort lent items by deadline
-        Map<Long, List<Long>> arrangedIds = new HashMap<>();
-        for (Map<String, String> item : items) {
-            long deadline = Long.parseLong(item.get(AccountData.KEY_LENT_DEADLINE_TIMESTAMP));
+        Map<LocalDate, List<Long>> arrangedIds = new HashMap<>();
+        for (LentItem item : items) {
+            LocalDate deadline = item.getDeadline();
             if (!arrangedIds.containsKey(deadline)) {
                 arrangedIds.put(deadline, new ArrayList<Long>());
             }
-            arrangedIds.get(deadline).add(Long.parseLong(item.get("id")));
+            arrangedIds.get(deadline).add(item.getDbId());
         }
 
         // Remove alarms with no corresponding media
         for (Alarm alarm : data.getAllAlarms()) {
-            if (!arrangedIds.containsKey(alarm.deadlineTimestamp)) {
+            if (!arrangedIds.containsKey(alarm.deadline)) {
                 data.removeAlarm(alarm);
             }
         }
 
         // Find and add/update corresponding alarms for current lent media
-        for (Map.Entry<Long, List<Long>> entry : arrangedIds.entrySet()) {
-            long deadline = entry.getKey();
+        for (Map.Entry<LocalDate, List<Long>> entry : arrangedIds.entrySet()) {
+            LocalDate deadline = entry.getKey();
             long[] media = toArray(entry.getValue());
             Alarm alarm = data.getAlarmByDeadline(deadline);
             if (alarm != null) {
@@ -73,10 +73,11 @@ public class ReminderHelper {
                 if (BuildConfig.DEBUG) {
                     Log.i("OpacClient",
                             "scheduling alarm for " + media.length + " items with deadline on " +
-                                    new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN)
-                                            .format(new Date(deadline)));
+                                    DateTimeFormat.shortDate().print(deadline) + " on " +
+                                    DateTimeFormat.shortDate().print(deadline.minusDays(warning)));
                 }
-                data.addAlarm(deadline, media, deadline - warning);
+                data.addAlarm(deadline, media,
+                        deadline.minusDays(warning).toDateTimeAtStartOfDay());
             }
         }
 
@@ -113,7 +114,7 @@ public class ReminderHelper {
                         .getBroadcast(app, (int) alarm.id, i, PendingIntent.FLAG_UPDATE_CURRENT);
                 // If the alarm's timestamp is in the past, AlarmManager will trigger it
                 // immediately.
-                alarmManager.set(AlarmManager.RTC_WAKEUP, alarm.notificationTimestamp, pi);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, alarm.notificationTime.getMillis(), pi);
             }
         }
 
