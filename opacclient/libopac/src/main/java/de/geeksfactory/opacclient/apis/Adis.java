@@ -734,6 +734,11 @@ public class Adis extends BaseApi implements OpacApi {
                 if (doc.select("#AUSGAB_1").size() > 0) {
                     doc.select("#AUSGAB_1").attr("value", selection);
                 }
+                if (doc.select("#BENJN_1").size() > 0) {
+                    // Notification not requested because some libraries notify by snail mail
+                    // and take a fee for it (Example: Stuttgart_Uni)
+                    doc.select("#BENJN_1").attr("value", "Nein");
+                }
                 if (doc.select(".message h1").size() > 0) {
                     String msg = doc.select(".message h1").text().trim();
                     form = new ArrayList<>();
@@ -1377,7 +1382,7 @@ public class Adis extends BaseApi implements OpacApi {
                 }
             }
             doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
-            if (!msg.contains("Sie sind angemeldet")) {
+            if (!msg.contains("Sie sind angemeldet") && !msg.contains("jetzt angemeldet")) {
                 throw new OpacErrorException(msg);
             }
             return doc;
