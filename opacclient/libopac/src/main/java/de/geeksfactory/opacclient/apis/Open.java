@@ -9,7 +9,7 @@
  *
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
  * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -339,16 +339,7 @@ public class Open extends BaseApi implements OpacApi {
             }
 
             // Availability
-            if (element.select(".avail").size() > 0) {
-                String availhtml = element.select(".avail a img").html();
-                if (availhtml.contains("MediumAvailable") || availhtml.contains("ImageAvailable")) {
-                    result.setStatus(SearchResult.Status.GREEN);
-                } else if (availhtml.contains("MediumUnAvailable") || availhtml.contains("ImageUnAvailable")) {
-                    result.setStatus(SearchResult.Status.RED);
-                } else {
-                    result.setStatus(SearchResult.Status.UNKNOWN);
-                }
-            } else if (result.getId() != null) {
+            if (result.getId() != null) {
                 String url = opac_url +
                         "/DesktopModules/OCLC.OPEN.PL.DNN.SearchModule/SearchService" +
                         ".asmx/GetAvailability";
