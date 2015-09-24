@@ -1,23 +1,20 @@
-/**
+/*
  * Copyright (C) 2015 by Johan von Forstner under the MIT license:
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the Software
- * is furnished to do so, subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
- * DEALINGS IN THE SOFTWARE.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package de.geeksfactory.opacclient.apis;
 
@@ -217,7 +214,8 @@ public class Open extends BaseApi implements OpacApi {
     public SearchRequestResult search(List<SearchQuery> queries)
             throws IOException, OpacErrorException, JSONException {
         String url =
-                opac_url + "/" + data.getJSONObject("urls").getString("advanced_search") + NO_MOBILE;
+                opac_url + "/" + data.getJSONObject("urls").getString("advanced_search") +
+                        NO_MOBILE;
         Document doc = Jsoup.parse(httpGet(url, getDefaultEncoding()));
         doc.setBaseUri(url);
 
@@ -598,7 +596,8 @@ public class Open extends BaseApi implements OpacApi {
     public List<SearchField> getSearchFields()
             throws IOException, OpacErrorException, JSONException {
         String url =
-                opac_url + "/" + data.getJSONObject("urls").getString("advanced_search") + NO_MOBILE;
+                opac_url + "/" + data.getJSONObject("urls").getString("advanced_search") +
+                        NO_MOBILE;
         Document doc = Jsoup.parse(httpGet(url, getDefaultEncoding()));
 
         Element table = doc.select(".ModOPENExtendedSearchModuleC table").first();
@@ -734,7 +733,8 @@ public class Open extends BaseApi implements OpacApi {
      * org.jsoup.nodes.FormElement#formData()}).
      *
      * @param form       The form to submit
-     * @param submitName The name attribute of the button which is clicked to submit the form, or null
+     * @param submitName The name attribute of the button which is clicked to submit the form, or
+     *                   null
      * @return A MultipartEntityBuilder containing the data of the form
      */
     public MultipartEntityBuilder formData(FormElement form, String submitName) {
