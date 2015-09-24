@@ -1,0 +1,16 @@
+{
+    "account_supported": true,
+    "api": "winbiap",
+    "city": "Weilburg",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://opac.winbiap.net/weilburg"
+    },
+    "geo": [
+        50.48527,
+        8.25896
+    ],
+    "information": "http://www.buecherei-weilburg.de/",
+    "state": "Hessen",
+    "title": "Kreis- und Stadtb\u00fccherei"
+}
