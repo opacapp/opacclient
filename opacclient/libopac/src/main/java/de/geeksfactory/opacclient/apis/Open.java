@@ -662,12 +662,11 @@ public class Open extends BaseApi implements OpacApi {
                     DropdownSearchField dropdown = new DropdownSearchField();
                     dropdown.setId(select.attr("name"));
                     dropdown.setDisplayName(tr.select("span[id*=Lbl]").first().text());
-                    List<Map<String, String>> values = new ArrayList<>();
+                    List<DropdownSearchField.Option> values = new ArrayList<>();
                     for (Element option : select.select("option")) {
-                        Map<String, String> map = new HashMap<>();
-                        map.put("key", option.val());
-                        map.put("value", option.text());
-                        values.add(map);
+                        DropdownSearchField.Option opt =
+                                new DropdownSearchField.Option(option.val(), option.text());
+                        values.add(opt);
                     }
                     dropdown.setDropdownValues(values);
                     fields.add(dropdown);
