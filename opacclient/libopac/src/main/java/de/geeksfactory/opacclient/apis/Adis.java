@@ -414,13 +414,15 @@ public class Adis extends BaseApi implements OpacApi {
                 res.setId(matcher.group(1));
             }
 
-            String typetext = tr.select(".rTable_td_img img").first()
-                                .attr("title");
-            if (types.containsKey(typetext)) {
-                res.setType(types.get(typetext));
-            } else if (typetext.contains("+")
-                    && types.containsKey(typetext.split("\\+")[0].trim())) {
-                res.setType(types.get(typetext.split("\\+")[0].trim()));
+            if (tr.select(".rTable_td_img img").size() > 0) {
+                String typetext = tr.select(".rTable_td_img img").first()
+                                    .attr("title");
+                if (types.containsKey(typetext)) {
+                    res.setType(types.get(typetext));
+                } else if (typetext.contains("+")
+                        && types.containsKey(typetext.split("\\+")[0].trim())) {
+                    res.setType(types.get(typetext.split("\\+")[0].trim()));
+                }
             }
 
             results.add(res);
@@ -1301,7 +1303,8 @@ public class Adis extends BaseApi implements OpacApi {
                         if (tr.select("input[type=checkbox]").size() > 0
                                 && (rlink[1].toUpperCase(Locale.GERMAN).contains(
                                 "SP=SZM") || rlink[1].toUpperCase(
-                                Locale.GERMAN).contains("SP=SZW"))) {
+                                Locale.GERMAN).contains("SP=SZW") || rlink[1].toUpperCase(
+                                Locale.GERMAN).contains("SP=SZB"))) {
                             line.put(AccountData.KEY_RESERVATION_CANCEL, tr
                                     .select("input[type=checkbox]")
                                     .attr("name")
@@ -1406,7 +1409,8 @@ public class Adis extends BaseApi implements OpacApi {
         Elements searchoptions = doc.select("#SUCH01_1 option");
         if (searchoptions.size() == 0) {
             // Hack is needed in Nuernberg
-            searchoptions = doc.select("input[fld=FELD01_1]").first().previousElementSibling().select("option");
+            searchoptions = doc.select("input[fld=FELD01_1]").first().previousElementSibling()
+                               .select("option");
         }
         for (Element opt : searchoptions) {
             TextSearchField field = new TextSearchField();
