@@ -346,8 +346,24 @@ public class Open extends BaseApi implements OpacApi {
                 String culture = element.select("input[name$=culture]").val();
                 JSONObject data = new JSONObject();
                 try {
-                    data.put("portalId", 1).put("mednr", result.getId()).put("culture", culture)
-                        .put("requestCopyData", false).put("branchFilter", "");
+                    // Determine portalID value
+                    int portalId = 1;
+                    for (Element scripttag : doc.select("script")) {
+                        String scr = scripttag.html();
+                        if (scr.contains("LoadSharedCatalogueViewAvailabilityAsync")) {
+                            Pattern portalIdPattern = Pattern.compile(
+                                    ".*LoadSharedCatalogueViewAvailabilityAsync\\([^,]*,[^,]*," +
+                                            "[^0-9,]*([0-9]+)[^0-9,]*,.*\\).*");
+                            Matcher portalIdMatcher = portalIdPattern.matcher(scr);
+                            if (portalIdMatcher.find()) {
+                                portalId = Integer.parseInt(portalIdMatcher.group(1));
+                            }
+                        }
+                    }
+
+                    data.put("portalId", portalId).put("mednr", result.getId())
+                        .put("culture", culture).put("requestCopyData", false)
+                        .put("branchFilter", "");
                     StringEntity entity = new StringEntity(data.toString());
                     entity.setContentType(ContentType.APPLICATION_JSON.getMimeType());
                     String json = httpPost(url, entity, getDefaultEncoding());
