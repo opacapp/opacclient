@@ -4,4 +4,10 @@
     <string name="transition_toolbar">Toolbar</string>
     <string name="transition_cover">Cover</string>
     <string name="transition_gray_box">Gray Box</string>
+    <string-array name="warning_n">
+        <item>0</item>
+        <item>1</item>
+        <item>3</item>
+        <item>7</item>
+    </string-array>
 </resources>

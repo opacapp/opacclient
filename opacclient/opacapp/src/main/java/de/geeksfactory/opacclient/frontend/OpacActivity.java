@@ -21,6 +21,9 @@
  */
 package de.geeksfactory.opacclient.frontend;
 
+import org.json.JSONException;
+
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -541,7 +544,7 @@ public abstract class OpacActivity extends AppCompatActivity
     protected void updateAccountSwitcher(Account account) {
         if (account == null) return;
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        long tolerance = Long.decode(sp.getString("notification_warning", "367200000"));
+        int tolerance = Integer.parseInt(sp.getString("notification_warning", "3"));
 
         aData.open();
         int expiring = aData.getExpiring(account, tolerance);

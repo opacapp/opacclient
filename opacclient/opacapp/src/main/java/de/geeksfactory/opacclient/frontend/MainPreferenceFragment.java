@@ -84,12 +84,10 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 SharedPreferences prefs = PreferenceManager
                         .getDefaultSharedPreferences(getActivity());
-                long oldWarning = Long
-                        .parseLong(prefs.getString("notification_warning", "259200000"));
-                long newWarning = Long.parseLong((String) newValue);
-                new ReminderHelper((OpacClient) getActivity().getApplication())
-                        .updateAlarms(oldWarning, newWarning);
-                return false;
+                /*int oldWarning = Integer.parseInt(prefs.getString("notification_warning", "3"));
+                int newWarning = Integer.parseInt((String) newValue);*/
+                new ReminderHelper((OpacClient) getActivity().getApplication()).updateAlarms();
+                return true;
             }
         });
 

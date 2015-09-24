@@ -161,11 +161,11 @@ public class AccountDataSource {
         database.delete("accounts", "id=?", selA);
     }
 
-    public int getExpiring(Account account, long tolerance) {
-        String[] selA = {"" + account.getId()};
+    public int getExpiring(Account account, int tolerance) {
+        String[] selA = {String.valueOf(account.getId())};
         Cursor cursor = database.query(AccountDatabase.TABLENAME_LENT, new String[]{"COUNT(*)"},
-                "account = ? AND deadline_ts - " + System.currentTimeMillis() + " <= " + tolerance,
-                selA, null, null, null);
+                "account = ? AND date(deadline) < date('now','-" + tolerance + " days')", selA,
+                null, null, null);
         cursor.moveToFirst();
         int result = cursor.getInt(0);
         cursor.close();
@@ -308,6 +308,7 @@ public class AccountDataSource {
     public void invalidateCachedData() {
         database.delete(AccountDatabase.TABLENAME_LENT, null, null);
         database.delete(AccountDatabase.TABLENAME_RESERVATION, null, null);
+        database.delete(AccountDatabase.TABLENAME_ALARMS, null, null);
         ContentValues update = new ContentValues();
         update.put("cached", 0);
         update.put("pendingFees", (String) null);
@@ -391,6 +392,21 @@ public class AccountDataSource {
         // Make sure to close the cursor
         cursor.close();
         return item;
+    }
+
+    public List<LentItem> getLentItems(long[] ids) {
+        List<LentItem> items = new ArrayList<>();
+        Cursor cursor = database
+                .query(AccountDatabase.TABLENAME_LENT, AccountDatabase.COLUMNS_LENT, "id IN(" +
+                        joinLongs(ids, ",") + ")", null, null, null, null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            LentItem item = cursorToLentItem(cursor);
+            items.add(item);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return items;
     }
 
     public List<Account> getAccountsWithPassword(String ident) {
@@ -479,6 +495,10 @@ public class AccountDataSource {
         // Make sure to close the cursor
         cursor.close();
         return alarms;
+    }
+
+    public void clearAlarms() {
+        database.delete(AccountDatabase.TABLENAME_ALARMS, null, null);
     }
 
     private Alarm cursorToAlarm(Cursor cursor) {

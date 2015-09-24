@@ -59,18 +59,12 @@
     <string name="notification_service">Süresi Yaklaşanlar</string>
     <string name="notification_service_desc">Bir öğrenin geri verme zamanı gelmeden bana bildir (Bu özelliğin garantisi yoktur)</string>
     <string name="notification_service_wifionly">Sadece WiFi üzerinden kontrol et</string>
-    <string name="notification_service_wifionly_desc">Mobil ağlar üzerinden bilgi indirilmez. WiFi olmadan bildirim de alınamaz.</string>
+    <string name="notification_service_wifionly_desc">Mobil ağlar üzerinden bilgi indirilmez.</string>
     <string-array name="warning">
         <item>Aynı gün</item>
         <item>1 gün önce</item>
         <item>3 gün önce</item>
         <item>1 hafta önce</item>
-    </string-array>
-    <string-array name="warning_n">
-        <item>86400000</item>
-        <item>172800000</item>
-        <item>259200000</item>
-        <item>604800000</item>
     </string-array>
     <string name="startup_title">Başlangıç ekranı</string>
     <string name="startup_summary">Başlangıçta hangi ekran gösterilsin?</string>

@@ -59,18 +59,12 @@
     <string name="notification_service">Expiring items</string>
     <string name="notification_service_desc">Notify, if an item is about to expire (no warranties given)</string>
     <string name="notification_service_wifionly">Check on WiFi only</string>
-    <string name="notification_service_wifionly_desc">Does not download information over mobile networks. (Therefore, no warnings without WiFi!)</string>
+    <string name="notification_service_wifionly_desc">Does not download information over mobile networks.</string>
     <string-array name="warning">
         <item>Same day</item>
         <item>1 day before</item>
         <item>3 days before</item>
         <item>1 week before</item>
-    </string-array>
-    <string-array name="warning_n">
-        <item>0</item>
-        <item>1</item>
-        <item>3</item>
-        <item>7</item>
     </string-array>
     <string name="startup_title">Start screen</string>
     <string name="startup_summary">Which screen should be shown on startup?</string>
@@ -93,8 +87,8 @@
     <string name="notif_ticker_expired">%s items have expired!</string>
     <string name="notif_title_expired">Items have expired</string>
     <string name="notif_plus_more">+%d more</string>
-    <string name="notif_snooze">Remind me again</string>
-    <string name="notif_dont_remind_again">Don\'t remind me again</string>
+    <string name="notif_snooze">Later</string>
+    <string name="notif_dont_remind_again">Discard</string>
     <string name="volumes">Volumes</string>
     <string name="volumesearch">Show volumes</string>
     <string name="star">Save to favorites</string>

@@ -34,7 +34,7 @@
             android:title="@string/notification_service_wifionly"/>
 
         <ListPreference
-            android:defaultValue="259200000"
+            android:defaultValue="3"
             android:dependency="notification_service"
             android:entries="@array/warning"
             android:entryValues="@array/warning_n"

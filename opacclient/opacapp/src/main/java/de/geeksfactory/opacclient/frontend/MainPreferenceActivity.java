@@ -1,5 +1,7 @@
 package de.geeksfactory.opacclient.frontend;
 
+import com.github.machinarius.preferencefragment.PreferenceFragment;
+
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceFragmentCompat;

@@ -139,8 +139,11 @@
             android:finishOnTaskLaunch="true"
             android:launchMode="singleInstance"
             android:theme="@style/Theme.AppCompat.Light.Dialog" />
+        <activity
+            android:name="de.geeksfactory.opacclient.frontend.SnoozeDatePickerActivity"
+            android:theme="@style/Theme.Opacapp.Transparent" />
 
-        <service android:name=".reminder.SyncAccountService">
+        <service android:name="de.geeksfactory.opacclient.reminder.SyncAccountService">
         </service>
 
         <receiver android:name="de.geeksfactory.opacclient.reminder.ReminderBootBroadcastReceiver" >

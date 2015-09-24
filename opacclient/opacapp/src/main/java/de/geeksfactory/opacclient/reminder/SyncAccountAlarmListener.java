@@ -7,21 +7,17 @@ import android.app.PendingIntent;
 import android.content.Context;
 
 public class SyncAccountAlarmListener implements WakefulIntentService.AlarmListener {
-    // We could use a longer interval like 3 hours, but on API < 19, only these constants
-    // make the AlarmManager use inexact alarm delivery for better battery efficiency. The
-    // next larger constant available would be AlarmManager.INTERVAL_HALF_DAY.
-    private static final long INTERVAL = AlarmManager.INTERVAL_FIFTEEN_MINUTES; // TODO: This is
-    // for debugging
-    // private static final long INTERVAL = AlarmManager.INTERVAL_HOUR;
+    // We could use a longer interval like 3 hours, but on API < 19, only the AlarmManager
+    // .INTERVAL_... constants make the AlarmManager use inexact alarm delivery for better
+    // battery efficiency. The next larger constant available would be AlarmManager
+    // .INTERVAL_HALF_DAY.
+    private static final long INTERVAL = AlarmManager.INTERVAL_HOUR;
 
 
     @Override
     public void scheduleAlarms(AlarmManager am, PendingIntent pi, Context context) {
         // Wait something around half an hour after system has booted
-        long firstStart = System.currentTimeMillis() + 5000; // TODO: This is for debugging
-        //long firstStart = System.currentTimeMillis() + (1000 * 1800);
-
-
+        long firstStart = System.currentTimeMillis() + (1000 * 1800);
         am.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstStart, INTERVAL, pi);
     }
 

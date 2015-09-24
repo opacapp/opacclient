@@ -74,6 +74,7 @@ public class SyncAccountService extends WakefulIntentService {
         AccountDataSource data = new AccountDataSource(this);
         data.open();
         List<Account> accounts = data.getAccountsWithPassword();
+        data.close();
 
         for (Account account : accounts) {
             if (BuildConfig.DEBUG) Log.i(NAME, "Loading data for Account " + account.toString());
@@ -84,6 +85,8 @@ public class SyncAccountService extends WakefulIntentService {
                 OpacApi api = app.getNewApi(library);
                 AccountData res = api.account(account);
                 if (res == null) continue;
+
+                data.open();
                 data.storeCachedAccountData(account, res);
                 data.close();
 

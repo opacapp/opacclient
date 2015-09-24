@@ -88,12 +88,15 @@ public class ReminderHelper {
 
     /**
      * Update alarms when the warning period setting is changed
-     *
-     * @param oldWarning previous warning period
-     * @param newWarning new warning period
      */
-    public void updateAlarms(long oldWarning, long newWarning) {
-        // TODO: implement
+    public void updateAlarms() {
+        // We could do this better, but for now, let's simply recreate all alarms. This can
+        // result in some notifications being shown immediately.
+        AccountDataSource data = new AccountDataSource(app);
+        data.open();
+        data.clearAlarms();
+        data.close();
+        generateAlarms();
     }
 
     /**
@@ -102,9 +105,11 @@ public class ReminderHelper {
     public void scheduleAlarms() {
         AccountDataSource data = new AccountDataSource(app);
         AlarmManager alarmManager = (AlarmManager) app.getSystemService(Context.ALARM_SERVICE);
-        data.open();
 
+        data.open();
         List<Alarm> alarms = data.getAllAlarms();
+        data.close();
+
         for (Alarm alarm : alarms) {
             if (!alarm.notified) {
                 Intent i = new Intent(app, ReminderBroadcastReceiver.class);
@@ -114,11 +119,10 @@ public class ReminderHelper {
                         .getBroadcast(app, (int) alarm.id, i, PendingIntent.FLAG_UPDATE_CURRENT);
                 // If the alarm's timestamp is in the past, AlarmManager will trigger it
                 // immediately.
-                alarmManager.set(AlarmManager.RTC_WAKEUP, alarm.notificationTime.getMillis(), pi);
+                alarmManager
+                        .setExact(AlarmManager.RTC_WAKEUP, alarm.notificationTime.getMillis(), pi);
             }
         }
-
-        data.close();
     }
 
     private long[] toArray(List<Long> list) {

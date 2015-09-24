@@ -25,9 +25,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import de.geeksfactory.opacclient.OpacClient;
+
 public class ReminderBootBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-
+        // reschedule alarms
+        new ReminderHelper((OpacClient) context.getApplicationContext()).scheduleAlarms();
     }
 }

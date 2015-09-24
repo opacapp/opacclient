@@ -22,7 +22,6 @@
 package de.geeksfactory.opacclient.frontend;
 
 import android.annotation.SuppressLint;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -145,34 +144,6 @@ public class AccountFragment extends Fragment implements
                 refresh();
             }
         });
-
-        if (getActivity().getIntent().getExtras() != null) {
-            if (getActivity().getIntent().getExtras()
-                             .containsKey("notifications")) {
-                AccountDataSource adata = new AccountDataSource(getActivity());
-                adata.open();
-                Bundle notif = getActivity().getIntent().getExtras()
-                                            .getBundle("notifications");
-                // TODO: update
-               /* Set<String> keys = notif.keySet();
-                for (String key : keys) {
-                    long[] val = notif.getLongArray(key);
-                    adata.notificationSave(val[0], val[1]);
-                }*/
-                adata.close();
-
-                if (getActivity().getIntent().getExtras().getLong("account") != app
-                        .getAccount().getId()) {
-                    app.setAccount(getActivity().getIntent().getExtras()
-                                                .getLong("account"));
-                    ((OpacActivity) getActivity()).accountSelected(app
-                            .getAccount());
-                }
-                NotificationManager nMgr = (NotificationManager) getActivity()
-                        .getSystemService(Context.NOTIFICATION_SERVICE);
-                nMgr.cancel(OpacClient.NOTIF_ID);
-            }
-        }
 
         setHasOptionsMenu(true);
 

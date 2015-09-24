@@ -59,18 +59,12 @@
     <string name="notification_service">Ablaufende Medien</string>
     <string name="notification_service_desc">Benachrichtigung, wenn ein Medium abgegeben werden muss (keine Garantie)</string>
     <string name="notification_service_wifionly">Nur über WLAN</string>
-    <string name="notification_service_wifionly_desc">Ruft keine Infos ab, wenn das Gerät mobiles Datennetz benutzt. Dadurch gibt es in diesem Zeitraum auch keine Warnungen!</string>
+    <string name="notification_service_wifionly_desc">Ruft keine Infos ab, wenn das Gerät mobiles Datennetz benutzt. </string>
     <string-array name="warning">
         <item>Am selben Tag</item>
         <item>1 Tag vorher</item>
         <item>3 Tage vorher</item>
         <item>1 Woche vorher</item>
-    </string-array>
-    <string-array name="warning_n">
-        <item>86400000</item>
-        <item>172800000</item>
-        <item>259200000</item>
-        <item>604800000</item>
     </string-array>
     <string name="startup_title">Startbildschirm</string>
     <string name="startup_summary">Welcher Bildschirm soll beim Start der App angezeigt werden?</string>
@@ -93,8 +87,8 @@
     <string name="notif_ticker_expired">%s Bücher sind bereits abgelaufen!</string>
     <string name="notif_title_expired">Bücher sind abgelaufen</string>
     <string name="notif_plus_more">+%d weitere</string>
-    <string name="notif_snooze">Erinnere mich wieder</string>
-    <string name="notif_dont_remind_again">Nicht mehr erinnern</string>
+    <string name="notif_snooze">Später</string>
+    <string name="notif_dont_remind_again">Verwerfen</string>
     <string name="volumes">Enthaltene Werke</string>
     <string name="volumesearch">Enthaltene Werke zeigen</string>
     <string name="star">Merken</string>
