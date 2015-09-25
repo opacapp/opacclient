@@ -1124,7 +1124,7 @@ public class BiBer1992 extends BaseApi {
                     } else if (key.equals(AccountData.KEY_LENT_TITLE)) {
                         value = findTitleAndAuthor(value)[0];
                     }
-                    if (value.length() != 0) {
+                    if (value != null && value.length() != 0) {
                         e.put(key, value);
                     }
 
