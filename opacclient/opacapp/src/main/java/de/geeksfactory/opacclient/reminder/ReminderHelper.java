@@ -37,6 +37,11 @@ public class ReminderHelper {
      */
     public void generateAlarms() {
         int warning = Integer.parseInt(sp.getString("notification_warning", "3"));
+        if (warning > 10) {
+            // updated from the old app version -> change value to get days instead of milliseconds
+            warning = warning / (24 * 60 * 60 * 1000);
+            sp.edit().putString("notification_warning", String.valueOf(warning)).apply();
+        }
 
         AccountDataSource data = new AccountDataSource(app);
         data.open();
