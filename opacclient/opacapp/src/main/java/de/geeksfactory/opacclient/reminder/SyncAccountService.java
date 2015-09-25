@@ -22,6 +22,7 @@ import com.commonsware.cwac.wakeful.WakefulIntentService;
 
 import org.json.JSONException;
 
+import android.app.AlarmManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -44,6 +45,7 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 public class SyncAccountService extends WakefulIntentService {
 
     private static final String NAME = "SyncAccountService";
+    private boolean failed = false;
 
     public SyncAccountService() {
         super(NAME);
@@ -63,10 +65,26 @@ public class SyncAccountService extends WakefulIntentService {
                     networkInfo.getType() == ConnectivityManager.TYPE_WIFI ||
                     networkInfo.getType() == ConnectivityManager.TYPE_ETHERNET) {
                 syncAccounts();
+            } else {
+                failed = true;
             }
+        } else {
+            failed = true;
         }
 
-        if (BuildConfig.DEBUG) Log.i(NAME, "SyncAccountService finished");
+        if (BuildConfig.DEBUG) {
+            Log.i(NAME, "SyncAccountService finished " +
+                    (failed ? " with errors" : " " + "successfully"));
+        }
+
+        long previousPeriod = sp.getLong(SyncAccountAlarmListener.PREF_SYNC_INTERVAL, 0);
+        long newPeriod = failed ? AlarmManager.INTERVAL_HOUR : AlarmManager.INTERVAL_HALF_DAY;
+        if (previousPeriod != newPeriod) {
+            sp.edit().putLong(SyncAccountAlarmListener.PREF_SYNC_INTERVAL, newPeriod).apply();
+            WakefulIntentService.cancelAlarms(this);
+            WakefulIntentService
+                    .scheduleAlarms(SyncAccountAlarmListener.withOnePeriodBeforeStart(), this);
+        }
     }
 
     private void syncAccounts() {
@@ -94,6 +112,7 @@ public class SyncAccountService extends WakefulIntentService {
             } catch (JSONException | IOException | OpacApi.OpacErrorException e) {
                 data.close();
                 e.printStackTrace();
+                failed = true;
             }
         }
 

@@ -2,23 +2,43 @@ package de.geeksfactory.opacclient.reminder;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 
+import org.joda.time.Minutes;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 public class SyncAccountAlarmListener implements WakefulIntentService.AlarmListener {
-    // We could use a longer interval like 3 hours, but on API < 19, only the AlarmManager
-    // .INTERVAL_... constants make the AlarmManager use inexact alarm delivery for better
-    // battery efficiency. The next larger constant available would be AlarmManager
-    // .INTERVAL_HALF_DAY.
-    private static final long INTERVAL = AlarmManager.INTERVAL_HOUR;
 
+    public static final String PREF_SYNC_INTERVAL = "sync_interval";
+    private boolean onePeriodBeforeStart = false;
+
+    /**
+     * @return a SyncAccountAlarmListener that will wait for one period before the first scheduled
+     * alarm. Used for re-scheduling alarms from {@link SyncAccountService}.
+     */
+    public static SyncAccountAlarmListener withOnePeriodBeforeStart() {
+        SyncAccountAlarmListener listener = new SyncAccountAlarmListener();
+        listener.onePeriodBeforeStart = true;
+        return listener;
+    }
 
     @Override
     public void scheduleAlarms(AlarmManager am, PendingIntent pi, Context context) {
-        // Wait something around half an hour after system has booted
-        long firstStart = System.currentTimeMillis() + (1000 * 1800);
-        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstStart, INTERVAL, pi);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        long interval = prefs.getLong(PREF_SYNC_INTERVAL, AlarmManager.INTERVAL_HALF_DAY);
+        long firstStart;
+        if (onePeriodBeforeStart) {
+            // Re-scheduled from SyncAccountService: Wait one period before the first alarm.
+            firstStart = System.currentTimeMillis() + interval;
+        } else {
+            // After reboot/app install/force close: Wait only 10 minutes before the first alarm
+            firstStart = System.currentTimeMillis() +
+                    Minutes.minutes(10).toStandardDuration().getMillis();
+        }
+        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstStart, interval, pi);
     }
 
     @Override
@@ -28,6 +48,6 @@ public class SyncAccountAlarmListener implements WakefulIntentService.AlarmListe
 
     @Override
     public long getMaxAge() {
-        return INTERVAL * 2;
+        return (long) (AlarmManager.INTERVAL_HALF_DAY * 1.25);
     }
 }
