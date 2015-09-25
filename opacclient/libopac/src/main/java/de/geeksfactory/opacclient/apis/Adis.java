@@ -94,7 +94,6 @@ public class Adis extends BaseApi implements OpacApi {
     protected List<NameValuePair> s_pageform;
     protected int s_lastpage;
     protected Document s_reusedoc;
-    protected boolean s_accountcalled;
 
     public static Map<String, List<String>> getQueryParams(String url) {
         try {
@@ -246,7 +245,6 @@ public class Adis extends BaseApi implements OpacApi {
 
     @Override
     public void start() throws IOException {
-        s_accountcalled = false;
 
         try {
             Document doc = htmlGet(opac_url + "?"
@@ -872,28 +870,25 @@ public class Adis extends BaseApi implements OpacApi {
             String selection) throws IOException {
         String alink = null;
         Document doc;
-        if (s_accountcalled) {
-            alink = media.split("\\|")[1].replace("requestCount=", "fooo=");
-        } else {
-            start();
-            doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
-                    + s_service + "&sp=SBK");
-            try {
-                doc = handleLoginForm(doc, account);
-            } catch (OpacErrorException e) {
-                return new ProlongResult(Status.ERROR, e.getMessage());
-            }
-            for (Element tr : doc.select(".rTable_div tr")) {
-                if (tr.select("a").size() == 1) {
-                    if (tr.select("a").first().absUrl("href")
-                          .contains("sp=SZA")) {
-                        alink = tr.select("a").first().absUrl("href");
-                    }
+
+        start();
+        doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
+                + s_service + "&sp=SBK");
+        try {
+            doc = handleLoginForm(doc, account);
+        } catch (OpacErrorException e) {
+            return new ProlongResult(Status.ERROR, e.getMessage());
+        }
+        for (Element tr : doc.select(".rTable_div tr")) {
+            if (tr.select("a").size() == 1) {
+                if (tr.select("a").first().absUrl("href")
+                      .contains("sp=SZA")) {
+                    alink = tr.select("a").first().absUrl("href");
                 }
             }
-            if (alink == null) {
-                return new ProlongResult(Status.ERROR);
-            }
+        }
+        if (alink == null) {
+            return new ProlongResult(Status.ERROR);
         }
 
         doc = htmlGet(alink);
@@ -945,28 +940,24 @@ public class Adis extends BaseApi implements OpacApi {
             String selection) throws IOException {
         String alink = null;
         Document doc;
-        if (s_accountcalled) {
-            alink = s_alink.replace("requestCount=", "fooo=");
-        } else {
-            start();
-            doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
-                    + s_service + "&sp=SBK");
-            try {
-                doc = handleLoginForm(doc, account);
-            } catch (OpacErrorException e) {
-                return new ProlongAllResult(Status.ERROR, e.getMessage());
-            }
-            for (Element tr : doc.select(".rTable_div tr")) {
-                if (tr.select("a").size() == 1) {
-                    if (tr.select("a").first().absUrl("href")
-                          .contains("sp=SZA")) {
-                        alink = tr.select("a").first().absUrl("href");
-                    }
+        start();
+        doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
+                + s_service + "&sp=SBK");
+        try {
+            doc = handleLoginForm(doc, account);
+        } catch (OpacErrorException e) {
+            return new ProlongAllResult(Status.ERROR, e.getMessage());
+        }
+        for (Element tr : doc.select(".rTable_div tr")) {
+            if (tr.select("a").size() == 1) {
+                if (tr.select("a").first().absUrl("href")
+                      .contains("sp=SZA")) {
+                    alink = tr.select("a").first().absUrl("href");
                 }
             }
-            if (alink == null) {
-                return new ProlongAllResult(Status.ERROR);
-            }
+        }
+        if (alink == null) {
+            return new ProlongAllResult(Status.ERROR);
         }
 
         doc = htmlGet(alink);
@@ -1022,31 +1013,37 @@ public class Adis extends BaseApi implements OpacApi {
             String selection) throws IOException, OpacErrorException {
         String rlink = null;
         Document doc;
-        if (s_accountcalled) {
-            rlink = media.split("\\|")[1].replace("requestCount=", "fooo=");
-        } else {
-            start();
-            doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
-                    + s_service + "&sp=SBK");
-            try {
-                doc = handleLoginForm(doc, account);
-            } catch (OpacErrorException e) {
-                return new CancelResult(Status.ERROR, e.getMessage());
-            }
-            for (Element tr : doc.select(".rTable_div tr")) {
-                if (tr.select("a").size() == 1) {
-                    if ((tr.text().contains("Reservationen") || tr.text().contains("Vormerkung"))
-                            && !tr.child(0).text().trim().equals("")
-                            && tr.select("a").first().attr("href")
-                                 .toUpperCase(Locale.GERMAN)
-                                 .contains("SP=SZM")) {
-                        rlink = tr.select("a").first().absUrl("href");
-                    }
+        rlink = media.split("\\|")[1].replace("requestCount=", "fooo=");
+        start();
+        doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
+                + s_service + "&sp=SBK");
+        try {
+            doc = handleLoginForm(doc, account);
+        } catch (OpacErrorException e) {
+            return new CancelResult(Status.ERROR, e.getMessage());
+        }
+        for (Element tr : doc.select(".rTable_div tr")) {
+            String url = media.split("\\|")[1].toUpperCase(Locale.GERMAN);
+            String sp = "SZM";
+            if (url.contains("SP=")) {
+                Map<String, String> qp = getQueryParamsFirst(url);
+                if (qp.containsKey("SP")) {
+                    sp = qp.get("SP");
                 }
             }
-            if (rlink == null) {
-                return new CancelResult(Status.ERROR);
+            if (tr.select("a").size() == 1) {
+                if ((tr.text().contains("Reservationen") || tr.text().contains("Vormerkung") ||
+                        tr.text().contains("Bestellung"))
+                        && !tr.child(0).text().trim().equals("")
+                        && tr.select("a").first().attr("href")
+                             .toUpperCase(Locale.GERMAN)
+                             .contains("SP=" + sp)) {
+                    rlink = tr.select("a").first().absUrl("href");
+                }
             }
+        }
+        if (rlink == null) {
+            return new CancelResult(Status.ERROR);
         }
 
         doc = htmlGet(rlink);
@@ -1550,7 +1547,6 @@ public class Adis extends BaseApi implements OpacApi {
     public void checkAccountData(Account account) throws IOException,
             JSONException, OpacErrorException {
         start();
-        s_accountcalled = true;
 
         Document doc = htmlGet(opac_url + ";jsessionid=" + s_sid + "?service="
                 + s_service + "&sp=SBK");
