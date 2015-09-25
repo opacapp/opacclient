@@ -1,23 +1,20 @@
-/**
- * Copyright (C) 2013 by Rüdiger Wurth under the MIT license:
+/*
+ * Copyright (C) 2015 by Rüdiger Wurth, Raphael Michel and contributors under the MIT license:
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), 
- * to deal in the Software without restriction, including without limitation 
- * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the Software 
- * is furnished to do so, subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in 
- * all copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
- * DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package de.geeksfactory.opacclient.apis;
 
@@ -69,28 +66,7 @@ import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
 /**
- * @author Ruediger Wurth, 16.02.2013 Web identification: "copyright 1992-2011 by BiBer GmbH"
- *         <p/>
- *         BiBer gestartet mit Stadtbibliothek Offenburg start URL: http://217.86.216
- *         .47/opac/de/qsim_frm.html.S
- *         <p/>
- *         open: issue #23: Basic support for library system "Biber" -> Essen issue #32: Integration
- *         of "BiBer" (copyright 2006) -> Karlsruhe https://opac.karlsruhe.de/ issue #33:
- *         Integration of "BiBer" (copyright 1992) -> Essen
- *         <p/>
- *         Features: In getResult(), mixed table layout is supported: column-wise and row-wise In
- *         getResult(), amazon bitmaps are supported
- *         <p/>
- *         Katalogsuche tested with
- *         <p/>
- *         Name Media amazon copy Media Branch Account type Bitmaps table types support images avail
- *         search --------------------------------------------------------------------
- *         BaWu/Friedrichshafen ok yes yes yes yes - BaWu/Lahr ok yes yes yes no - BaWu/Offenburg ok
- *         n/a no yes n/a yes Bay/Aschaffenburg ok n/a no yes n/a - Bay/Wuerzburg ok yes yes yes yes
- *         - NRW/Duisburg ok yes yes yes n/a - NRW/Erkrath n/a yes no yes not sup.yes NRW/Essen n/a
- *         n/a no yes not sup.- NRW/Gelsenkirchen ok yes yes yes yes - NRW/Hagen ok yes yes yes yes
- *         yes NRW/Herford n/a yes yes yes n/a - NRW/Luenen ok yes no yes n/a - NRW/MuelheimRuhr ok
- *         yes yes yes yes yes
+ * @author Ruediger Wurth
  */
 public class BiBer1992 extends BaseApi {
 
@@ -211,7 +187,8 @@ public class BiBer1992 extends BaseApi {
                         // text is still empty, check images in label layout, Example
                         // Wiedenst
                         // <input type="radio" name="MT" id="MTYP1" value="MTYP1">
-                        // <label for="MTYP1"><img src="http://www.wiedenest.de/bib/image/books.png" alt="Bücher" title="Bücher"></label>
+                        // <label for="MTYP1"><img src="http://www.wiedenest.de/bib/image/books
+                        // .png" alt="Bücher" title="Bücher"></label>
                         Element label = opt.nextElementSibling();
                         if (label != null) {
                             Elements td2Children = label.select("img[title]");
@@ -1169,22 +1146,21 @@ public class BiBer1992 extends BaseApi {
      * Callnumber / Title
      * Callnumber / Author: Title
      *
-     * Not that magazine titles might contain slashes as well, e.g. "Android Welt 3/15 Mai-Juni"
+     * Note that magazine titles might contain slashes as well, e.g. "Android Welt 3/15 Mai-Juni"
      */
     private static Pattern PATTERN_TITLE_AUTHOR =
-            Pattern.compile(
-                    "(?:" +                     // Start matching the call number
-                    "[^/]+" +                // The call number itself
-                    // A slash is only considered a separator between call number if it isn't
-                    // surrounded by digits (e.g. 2/12 in a magazine title)
+            Pattern.compile("(?:" +                     // Start matching the call number
+                    "[^/]+" +                           // The call number itself
+                    // A slash is only considered a separator between call number if it
+                    // isn't surrounded by digits (e.g. 2/12 in a magazine title)
                     "(?<![0-9])/(?![0-9]{2})" +
-                    ")?" +                      // Signature is optional
+                    ")?" +                              // Signature is optional
 
-                    "(?:" +                     // Start matching the author
-                    "([^:]+)" +        // The author itself
+                    "(?:" +                             // Start matching the author
+                    "([^:]+)" +                         // The author itself
                     // The author is separated form the title by a colon
                     ":" +
-                    ")?" +                      // Author is optional
+                    ")?" +                              // Author is optional
 
                     // Everything else is considered to be part of the title
                     "(.*)");
