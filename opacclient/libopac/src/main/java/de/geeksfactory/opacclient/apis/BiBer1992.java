@@ -1045,34 +1045,10 @@ public class BiBer1992 extends BaseApi {
                 if (index >= 0) {
                     String value = tr.child(index).text().trim();
 
-                    // Signature, Author and Title is the same field:
-                    // "autor: title"
-                    // sometimes there is no ":" then only the title is given
                     if (key.equals(AccountData.KEY_LENT_AUTHOR)) {
-                        if (value.contains(":")) {
-                            // Autor: remove everything starting at ":"
-                            value = value.replaceFirst("^[^:]*/", "").trim();
-                            value = value.replaceFirst(":.*", "").trim();
-                        } else {
-                            // no Autor given<
-                            value = "";
-                        }
+                        value = findTitleAndAuthor(value)[1];
                     } else if (key.equals(AccountData.KEY_LENT_TITLE)) {
-                        if (value.contains(":")) {
-                            // Title: remove everything up to ":"
-                            value = value.replaceFirst(".*:", "").trim();
-                            value = value.replaceFirst("^(.*)/[^/]*$", "$1")
-                                         .trim();
-                        } else {
-                            // Remove everything except the signature
-                            value = value.replaceFirst("^[^/]*/([^/]*)/[^/]*$",
-                                    "$1").trim();
-                            // Explanation for the following regex: slash can be a separator between
-                            // title and signature, but is also used in magazine titles
-                            // (e.g. "2/15" for second issue in year 2015).
-                            value = value.replaceFirst(
-                                    "(?!^[^/]*\\d\\d?/\\d\\d([^/]*)$)^[^/]*/([^/]*)$", "$1").trim();
-                        }
+                        value = findTitleAndAuthor(value)[0];
                     }
 
                     if (tr.child(index).select("a").size() == 1) {
@@ -1083,7 +1059,7 @@ public class BiBer1992 extends BaseApi {
                         }
                     }
 
-                    if (value.length() != 0) {
+                    if (value != null && value.length() != 0) {
                         e.put(key, value);
                     }
                 }
@@ -1164,43 +1140,63 @@ public class BiBer1992 extends BaseApi {
                 String key = (String) keys.next();
                 int index = copymap.getInt(key);
                 if (index >= 0) {
-                    String value = tr.child(index).text();
+                    String value = tr.child(index).text().trim();
 
-                    // Author and Title is the same field: "autor: title"
-                    // sometimes there is no ":" then only the title is given
                     if (key.equals(AccountData.KEY_LENT_AUTHOR)) {
-                        if (value.contains(":")) {
-                            // Autor: remove everything starting at ":"
-                            value = value.replaceFirst("^[^:]*/", "").trim();
-                            value = value.replaceFirst(":.*", "").trim();
-                        } else {
-                            // no Autor given<
-                            value = "";
-                        }
+                        value = findTitleAndAuthor(value)[1];
                     } else if (key.equals(AccountData.KEY_LENT_TITLE)) {
-                        if (value.contains(":")) {
-                            // Title: remove everything up to ":"
-                            value = value.replaceFirst(".*:", "").trim();
-                            value = value.replaceFirst("^(.*)/[^/]*$", "$1")
-                                         .trim();
-                        } else {
-                            // Remove everything except the signature
-                            value = value.replaceFirst("^[^/]*/([^/]*)/[^/]*$",
-                                    "$1").trim();
-                            value = value.replaceFirst("^[^/]*/([^/]*)$", "$1")
-                                         .trim();
-                        }
+                        value = findTitleAndAuthor(value)[0];
                     }
-
                     if (value.length() != 0) {
                         e.put(key, value);
                     }
+
                 }
             }
             reservations.add(e);
         }
 
         return reservations;
+    }
+
+    /*
+     * BiBer returns titles, authors and call numbers all in one field and cuts them of after a
+     * fixed length. The exact formats differ greatly.
+     *
+     * Examples:
+     *
+     * Author: Title
+     * Callnumber / Title
+     * Callnumber / Author: Title
+     *
+     * Not that magazine titles might contain slashes as well, e.g. "Android Welt 3/15 Mai-Juni"
+     */
+    private static Pattern PATTERN_TITLE_AUTHOR =
+            Pattern.compile(
+                    "(?:" +                     // Start matching the call number
+                    "[^/]+" +                // The call number itself
+                    // A slash is only considered a separator between call number if it isn't
+                    // surrounded by digits (e.g. 2/12 in a magazine title)
+                    "(?<![0-9])/(?![0-9]{2})" +
+                    ")?" +                      // Signature is optional
+
+                    "(?:" +                     // Start matching the author
+                    "([^:]+)" +        // The author itself
+                    // The author is separated form the title by a colon
+                    ":" +
+                    ")?" +                      // Author is optional
+
+                    // Everything else is considered to be part of the title
+                    "(.*)");
+
+    public static String[] findTitleAndAuthor(String value) {
+        Matcher m = PATTERN_TITLE_AUTHOR.matcher(value);
+        if (m.matches()) {
+            return new String[]{m.group(2) != null ? m.group(2).trim() : null,
+                    m.group(1) != null ? m.group(1).trim() : null};
+        } else {
+            return new String[]{null, null};
+        }
     }
 
     private Document accountHttpPost(Account account, String func)
