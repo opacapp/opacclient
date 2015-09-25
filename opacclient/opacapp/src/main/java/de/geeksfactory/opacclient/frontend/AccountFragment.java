@@ -95,6 +95,7 @@ import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.ReservedItem;
+import de.geeksfactory.opacclient.reminder.ReminderHelper;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.ui.AppCompatProgressDialog;
 import de.geeksfactory.opacclient.ui.ExpandingCardListManager;
@@ -596,18 +597,6 @@ public class AccountFragment extends Fragment implements
     }
 
     public void loaded(final AccountData result) {
-        AccountDataSource adatasource;
-        if (getActivity() == null && OpacClient.getEmergencyContext() != null) {
-            adatasource = new AccountDataSource(
-                    OpacClient.getEmergencyContext());
-        } else {
-            adatasource = new AccountDataSource(getActivity());
-        }
-
-        adatasource.open();
-        adatasource.storeCachedAccountData(adatasource.getAccount(result.getAccount()), result);
-        adatasource.close();
-
         if (result.getAccount() == account.getId()) {
             // The account this data is for is still visible
 
@@ -1501,7 +1490,23 @@ public class AccountFragment extends Fragment implements
         @Override
         protected AccountData doInBackground(Void... voids) {
             try {
-                return app.getApi().account(app.getAccount());
+                AccountData data = app.getApi().account(app.getAccount());
+
+                // save data
+                AccountDataSource adatasource;
+                if (getActivity() == null && OpacClient.getEmergencyContext() != null) {
+                    adatasource = new AccountDataSource(OpacClient.getEmergencyContext());
+                } else {
+                    adatasource = new AccountDataSource(getActivity());
+                }
+
+                adatasource.open();
+                adatasource.storeCachedAccountData(adatasource.getAccount(data.getAccount()), data);
+                adatasource.close();
+
+                new ReminderHelper(app).generateAlarms();
+
+                return data;
             } catch (IOException | OpacErrorException e) {
                 exception = e;
             } catch (Exception e) {
