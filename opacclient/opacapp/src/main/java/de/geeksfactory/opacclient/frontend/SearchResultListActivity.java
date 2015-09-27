@@ -122,7 +122,9 @@ public class SearchResultListActivity extends OpacActivity implements
      */
     @Override
     public void onItemSelected(SearchResult result, View coverView, int touchX, int touchY) {
-        if ((app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING) == 0
+        if (result.getChildQuery() != null) {
+            app.startSearch(this, result.getChildQuery());
+        } else if ((app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ENDLESS_SCROLLING) == 0
                 && result.getPage() != listFragment.getLastLoadedPage()) {
             new ReloadOldPageTask(result, coverView).execute();
         } else {

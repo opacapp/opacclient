@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Karlsfeld",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/karlsfeld"
+        "baseurl": "https://webopac.winbiap.de/karlsfeld"
     },
     "geo": [
         48.2290733,

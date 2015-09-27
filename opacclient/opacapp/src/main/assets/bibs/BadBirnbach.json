@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Bad Birnbach",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/badbirnbach"
+        "baseurl": "https://webopac.winbiap.de/badbirnbach"
     },
     "geo": [
         48.4432078,

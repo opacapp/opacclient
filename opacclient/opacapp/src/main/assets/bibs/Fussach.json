@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "web-opac.at",
+    "city": "Fu\u00dfach",
+    "country": "\u00d6sterreich",
+    "data": {
+        "baseurl": "http://www.buecherei-fussach.webopac.at"
+    },
+    "geo": [
+        47.4795734,
+        9.6595139
+    ],
+    "information": "http://www.fussach.bvoe.at",
+    "state": "Vorarlberg",
+    "title": "B\u00fccherei und Spielothek"
+}

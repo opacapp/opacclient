@@ -10,7 +10,7 @@
             "returndate": 2,
             "title": 1
         },
-        "baseurl": "http://www.stadtbibliothek-verden.de",
+        "baseurl": "http://opac.verden.de",
         "copiestable": {
             "location": 0,
             "returndate": 3,

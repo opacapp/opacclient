@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "H\u00f6chstadt a. d. Aisch",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/hoechstadt"
+        "baseurl": "https://webopac.winbiap.de/hoechstadt"
     },
     "geo": [
         49.7095692,

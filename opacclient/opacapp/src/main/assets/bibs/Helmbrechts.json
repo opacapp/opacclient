@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Helmbrechts",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/helmbrechts"
+        "baseurl": "https://webopac.winbiap.de/helmbrechts"
     },
     "geo": [
         50.2358872,

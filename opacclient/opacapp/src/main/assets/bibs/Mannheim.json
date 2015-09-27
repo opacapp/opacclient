@@ -15,7 +15,6 @@
             "title": 2
         },
         "baseurl": "https://katalog.mannheim.de/wopac",
-		"customssl": true,
         "copiestable": {
             "barcode": 0,
             "branch": 1,
@@ -25,6 +24,7 @@
             "returndate": 5,
             "status": 4
         },
+        "customssl": true,
         "mediatypes": {
             "MDVD.gif": "DVD",
             "cdkl.gif": "LP_RECORD",

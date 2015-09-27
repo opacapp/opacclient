@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Eislingen",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/eislingen"
+        "baseurl": "https://webopac.winbiap.de/eislingen"
     },
     "geo": [
         48.693333,

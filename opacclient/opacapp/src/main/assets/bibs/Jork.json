@@ -4,10 +4,10 @@
     "city": "Jork",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://jork.iopac.de",
-		"accounttable": {
-			"author": "1"
-		}
+        "accounttable": {
+            "author": "1"
+        },
+        "baseurl": "http://jork.iopac.de"
     },
     "geo": [
         53.53249,

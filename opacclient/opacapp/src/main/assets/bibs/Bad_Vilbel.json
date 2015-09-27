@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Bad Vilbel",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/badvilbel"
+        "baseurl": "https://webopac.winbiap.de/badvilbel"
     },
     "geo": [
         50.1827055,

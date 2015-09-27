@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "web-opac.at",
+    "city": "St.",
+    "country": "\u00d6sterreich",
+    "data": {
+        "baseurl": "http://www.gemeindebuecherei-oswald.web-opac.at"
+    },
+    "geo": [
+        48.5007058,
+        14.5869181
+    ],
+    "information": null,
+    "state": "Ober\u00f6sterreich",
+    "title": "\u00d6ffentliche B\u00fccherei der Marktgemeinde St.Oswald bei Freistadt"
+}

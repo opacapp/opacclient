@@ -4,7 +4,7 @@
     "city": "Ludwigsburg",
     "country": "Deutschland",
     "data": {
-	    "baseurl": "https://bsz.ibs-bw.de/aDISWeb/app",
+        "baseurl": "https://bsz.ibs-bw.de/aDISWeb/app",
         "startparams": "service=direct/0/Home/$DirectLink&sp=S127.0.0.1:23032"
     },
     "geo": [

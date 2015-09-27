@@ -27,4 +27,11 @@ public class NotReachableException extends SocketException {
 
     private static final long serialVersionUID = 9209411947611368678L;
 
+    public NotReachableException(String msg) {
+        super(msg);
+    }
+
+    public NotReachableException() {
+
+    }
 }

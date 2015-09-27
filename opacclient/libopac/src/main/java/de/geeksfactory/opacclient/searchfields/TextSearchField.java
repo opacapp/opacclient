@@ -7,7 +7,7 @@ import org.json.JSONObject;
  * A TextSearchField is a SearchField allowing free text input.
  */
 public class TextSearchField extends SearchField {
-    protected String hint;
+    protected String hint = "";
     protected boolean freeSearch;
     protected boolean number;
     protected boolean halfWidth;
@@ -19,18 +19,17 @@ public class TextSearchField extends SearchField {
     /**
      * @param id          ID of the search field, later given to your search() function
      * @param displayName The name to display for the search field
-     * @param advanced    Set if this field should only be shown when showing the
-     *                    advanced search form
-     * @param halfWidth   Set to true to make the field appear next to the one before
-     *                    (only needed on the second field). The displayName will not be
-     *                    shown.
+     * @param advanced    Set if this field should only be shown when showing the advanced search
+     *                    form
+     * @param halfWidth   Set to true to make the field appear next to the one before (only needed
+     *                    on the second field). The displayName will not be shown.
      * @param hint        The hint to display inside the search field
-     * @param freeSearch  Set to true if this is the "free search" field. There may only
-     *                    be one or none of those in one library
+     * @param freeSearch  Set to true if this is the "free search" field. There may only be one or
+     *                    none of those in one library
      * @param number      Set to true if only numbers are allowed in this field
      */
     public TextSearchField(String id, String displayName, boolean advanced,
-                           boolean halfWidth, String hint, boolean freeSearch, boolean number) {
+            boolean halfWidth, String hint, boolean freeSearch, boolean number) {
         super(id, displayName, advanced);
         this.halfWidth = halfWidth;
         this.hint = hint;
@@ -53,16 +52,16 @@ public class TextSearchField extends SearchField {
     }
 
     /**
-     * Returns true if this is the "free search" field. There may only be one or
-     * none of those in one library
+     * Returns true if this is the "free search" field. There may only be one or none of those in
+     * one library
      */
     public boolean isFreeSearch() {
         return freeSearch;
     }
 
     /**
-     * Set to true if this is the "free search" field. There may only be one or
-     * none of those in one library
+     * Set to true if this is the "free search" field. There may only be one or none of those in one
+     * library
      */
     public void setFreeSearch(boolean freeSearch) {
         this.freeSearch = freeSearch;
@@ -83,16 +82,16 @@ public class TextSearchField extends SearchField {
     }
 
     /**
-     * Set to true to make the field appear next to the one before (only needed
-     * on the second field). The displayName will not be shown.
+     * Set to true to make the field appear next to the one before (only needed on the second
+     * field). The displayName will not be shown.
      */
     public boolean isHalfWidth() {
         return halfWidth;
     }
 
     /**
-     * Set to true to make the field appear next to the one before (only needed
-     * on the second field). The displayName will not be shown.
+     * Set to true to make the field appear next to the one before (only needed on the second
+     * field). The displayName will not be shown.
      */
     public void setHalfWidth(boolean halfWidth) {
         this.halfWidth = halfWidth;

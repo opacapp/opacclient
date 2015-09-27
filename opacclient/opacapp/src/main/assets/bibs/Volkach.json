@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Volkach",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/volkach"
+        "baseurl": "https://webopac.winbiap.de/volkach"
     },
     "geo": [
         49.8639895,

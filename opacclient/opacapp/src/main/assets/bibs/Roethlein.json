@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "R\u00f6thlein",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/roethlein"
+        "baseurl": "https://webopac.winbiap.de/roethlein"
     },
     "geo": [
         49.9850727,

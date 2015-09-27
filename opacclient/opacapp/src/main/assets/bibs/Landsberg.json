@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Landsberg",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/landsberg"
+        "baseurl": "https://webopac.winbiap.de/landsberg"
     },
     "geo": [
         48.0513036,

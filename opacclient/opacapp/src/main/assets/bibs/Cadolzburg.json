@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Cadolzburg",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/cadolzburg"
+        "baseurl": "https://webopac.winbiap.de/cadolzburg"
     },
     "geo": [
         49.4594708,

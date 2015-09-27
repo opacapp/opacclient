@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Randersacker",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/randersacker"
+        "baseurl": "https://webopac.winbiap.de/randersacker"
     },
     "geo": [
         49.7584752,

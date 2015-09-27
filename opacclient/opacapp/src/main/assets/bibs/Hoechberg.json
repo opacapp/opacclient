@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "H\u00f6chberg",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/hoechberg"
+        "baseurl": "https://webopac.winbiap.de/hoechberg"
     },
     "geo": [
         49.7802703,

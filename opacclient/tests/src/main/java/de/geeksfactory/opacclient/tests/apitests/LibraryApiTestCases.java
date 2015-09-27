@@ -27,12 +27,15 @@ import de.geeksfactory.opacclient.apis.Heidi;
 import de.geeksfactory.opacclient.apis.IOpac;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
-import de.geeksfactory.opacclient.apis.Pica;
+import de.geeksfactory.opacclient.apis.PicaLBS;
+import de.geeksfactory.opacclient.apis.PicaOld;
 import de.geeksfactory.opacclient.apis.Primo;
+import de.geeksfactory.opacclient.apis.Open;
 import de.geeksfactory.opacclient.apis.SISIS;
 import de.geeksfactory.opacclient.apis.SRU;
 import de.geeksfactory.opacclient.apis.TouchPoint;
 import de.geeksfactory.opacclient.apis.VuFind;
+import de.geeksfactory.opacclient.apis.WebOpacAt;
 import de.geeksfactory.opacclient.apis.WebOpacNet;
 import de.geeksfactory.opacclient.apis.WinBiap;
 import de.geeksfactory.opacclient.apis.Zones22;
@@ -167,7 +170,7 @@ public class LibraryApiTestCases {
 
     /**
      * Create an account with credentials that probably nobody has and try to login. This should
-     * normally give an OpacErrorException.
+     * normally give an {@link OpacErrorException}.
      */
     @Test
     public void testWrongLogin() throws IOException, JSONException {
@@ -246,7 +249,7 @@ public class LibraryApiTestCases {
         OpacApi api;
         if (library.getApi().equals("bond26")
                 || library.getApi().equals("bibliotheca"))
-        // Backwardscompatibility
+        // Backwards compatibility
         {
             api = new Bibliotheca();
         } else if (library.getApi().equals("oclc2011")
@@ -259,7 +262,17 @@ public class LibraryApiTestCases {
         } else if (library.getApi().equals("biber1992")) {
             api = new BiBer1992();
         } else if (library.getApi().equals("pica")) {
-            api = new Pica();
+            switch (library.getData().optString("account_system", "")) {
+                case "lbs":
+                    api = new PicaLBS();
+                    break;
+                case "default":
+                    api = new PicaOld();
+                    break;
+                default:
+                    api = new PicaOld();
+                    break;
+            }
         } else if (library.getApi().equals("iopac")) {
             api = new IOpac();
         } else if (library.getApi().equals("adis")) {
@@ -270,6 +283,8 @@ public class LibraryApiTestCases {
             api = new WinBiap();
         } else if (library.getApi().equals("webopac.net")) {
             api = new WebOpacNet();
+        } else if (library.getApi().equals("web-opac.at")) {
+            api = new WebOpacAt();
         } else if (library.getApi().equals("touchpoint")) {
             api = new TouchPoint();
         } else if (library.getApi().equals("heidi")) {
@@ -278,6 +293,8 @@ public class LibraryApiTestCases {
             api = new VuFind();
         } else if (library.getApi().equals("primo")) {
             api = new Primo();
+        } else if (library.getApi().equals("open")) {
+            api = new Open();
         } else {
             api = null;
         }

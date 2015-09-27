@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "web-opac.at",
+    "city": "Thaur",
+    "country": "\u00d6sterreich",
+    "data": {
+        "baseurl": "http://www.buecherei-thaur.web-opac.at"
+    },
+    "geo": [
+        47.2933422,
+        11.4725398
+    ],
+    "information": "http://www.thaur.bvoe.at",
+    "state": "Tirol",
+    "title": "\u00d6ffentliche B\u00fccherei"
+}

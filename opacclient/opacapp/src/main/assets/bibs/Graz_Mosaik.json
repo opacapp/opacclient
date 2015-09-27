@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "web-opac.at",
+    "city": "Graz",
+    "country": "\u00d6sterreich",
+    "data": {
+        "baseurl": "http://www.oebh.graz.web-opac.at"
+    },
+    "geo": [
+        47.0841789,
+        15.416378
+    ],
+    "information": "http://www.mosaik-gmbh.org/bibliothek",
+    "state": "Steiermark",
+    "title": "Mosaik Bibliothek: Fachbibliothek f\u00fcr Heilp\u00e4dagogik"
+}

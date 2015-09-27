@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Niederneuching",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/neuching"
+        "baseurl": "https://webopac.winbiap.de/neuching"
     },
     "geo": [
         48.2536757,

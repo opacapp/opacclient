@@ -37,11 +37,11 @@
             "9": "BOARDGAME"
         },
         "opacdir": "opax",
-		"searchtable": [
-			2,
-			3,
-			4
-		]
+        "searchtable": [
+            2,
+            3,
+            4
+        ]
     },
     "geo": [
         50.0862953,

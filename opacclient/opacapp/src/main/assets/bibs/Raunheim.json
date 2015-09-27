@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Raunheim",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/raunheim"
+        "baseurl": "https://webopac.winbiap.de/raunheim"
     },
     "geo": [
         50.0104109,

@@ -29,10 +29,10 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.ClientContext;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
@@ -45,8 +45,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.InterruptedIOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -143,7 +143,7 @@ public abstract class BaseApi implements OpacApi {
     }
 
     /**
-     * Reads content from an InputStream into a string, using the default ISO-8859-1 encoding
+     * Reads content from an InputStream into a string, using the default {@code ISO-8859-1} encoding
      *
      * @param is InputStream to read from
      * @return String content of the InputStream
@@ -155,7 +155,7 @@ public abstract class BaseApi implements OpacApi {
 
     /**
      * Converts a {@link List} of {@link SearchQuery}s to {@link Map} of their keys and values. Can
-     * be used to convert old implementations using search(Map<String, String>) to the new
+     * be used to convert old implementations using {@code search(Map<String, String>)} to the new
      * SearchField API
      *
      * @param queryList List of search queries
@@ -204,7 +204,7 @@ public abstract class BaseApi implements OpacApi {
 
     /*
      * Gets the value for every query parameter in the URL. If a parameter name
-     * occurs twice or more, only the first occurance is interpreted by this
+     * occurs twice or more, only the first occurrence is interpreted by this
      * method
      */
     public static Map<String, String> getQueryParamsFirst(String url) {
@@ -284,7 +284,7 @@ public abstract class BaseApi implements OpacApi {
 
             if (!ignore_errors && response.getStatusLine().getStatusCode() >= 400) {
                 HttpUtils.consume(response.getEntity());
-                throw new NotReachableException();
+                throw new NotReachableException(response.getStatusLine().getReasonPhrase());
             }
 
             html = convertStreamToString(response.getEntity().getContent(),
@@ -292,26 +292,26 @@ public abstract class BaseApi implements OpacApi {
             HttpUtils.consume(response.getEntity());
         } catch (javax.net.ssl.SSLPeerUnverifiedException e) {
             e.printStackTrace();
-            throw new SSLSecurityException();
+            throw new SSLSecurityException(e.getMessage());
         } catch (javax.net.ssl.SSLException e) {
             // Can be "Not trusted server certificate" or can be a
             // aborted/interrupted handshake/connection
             if (e.getMessage().contains("timed out")
                     || e.getMessage().contains("reset by")) {
                 e.printStackTrace();
-                throw new NotReachableException();
+                throw new NotReachableException(e.getMessage());
             } else {
                 e.printStackTrace();
-                throw new SSLSecurityException();
+                throw new SSLSecurityException(e.getMessage());
             }
         } catch (InterruptedIOException e) {
             e.printStackTrace();
-            throw new NotReachableException();
+            throw new NotReachableException(e.getMessage());
         } catch (IOException e) {
             if (e.getMessage() != null
                     && e.getMessage().contains("Request aborted")) {
                 e.printStackTrace();
-                throw new NotReachableException();
+                throw new NotReachableException(e.getMessage());
             } else {
                 throw e;
             }
@@ -379,8 +379,8 @@ public abstract class BaseApi implements OpacApi {
      * @throws NotReachableException Thrown when server returns a HTTP status code greater or equal
      *                               than 400.
      */
-    public String httpPost(String url, UrlEncodedFormEntity data,
-            String encoding, boolean ignore_errors, CookieStore cookieStore)
+    public String httpPost(String url, HttpEntity data,
+                           String encoding, boolean ignore_errors, CookieStore cookieStore)
             throws IOException {
         HttpPost httppost = new HttpPost(cleanUrl(url));
         httppost.setEntity(data);
@@ -401,33 +401,33 @@ public abstract class BaseApi implements OpacApi {
             }
 
             if (!ignore_errors && response.getStatusLine().getStatusCode() >= 400) {
-                throw new NotReachableException();
+                throw new NotReachableException(response.getStatusLine().getReasonPhrase());
             }
             html = convertStreamToString(response.getEntity().getContent(),
                     encoding);
             HttpUtils.consume(response.getEntity());
         } catch (javax.net.ssl.SSLPeerUnverifiedException e) {
             e.printStackTrace();
-            throw new SSLSecurityException();
+            throw new SSLSecurityException(e.getMessage());
         } catch (javax.net.ssl.SSLException e) {
             // Can be "Not trusted server certificate" or can be a
             // aborted/interrupted handshake/connection
             if (e.getMessage().contains("timed out")
                     || e.getMessage().contains("reset by")) {
                 e.printStackTrace();
-                throw new NotReachableException();
+                throw new NotReachableException(e.getMessage());
             } else {
                 e.printStackTrace();
-                throw new SSLSecurityException();
+                throw new SSLSecurityException(e.getMessage());
             }
         } catch (InterruptedIOException e) {
             e.printStackTrace();
-            throw new NotReachableException();
+            throw new NotReachableException(e.getMessage());
         } catch (IOException e) {
             if (e.getMessage() != null
                     && e.getMessage().contains("Request aborted")) {
                 e.printStackTrace();
-                throw new NotReachableException();
+                throw new NotReachableException(e.getMessage());
             } else {
                 throw e;
             }
@@ -435,19 +435,19 @@ public abstract class BaseApi implements OpacApi {
         return html;
     }
 
-    public String httpPost(String url, UrlEncodedFormEntity data,
-            String encoding, boolean ignore_errors)
+    public String httpPost(String url, HttpEntity data,
+                           String encoding, boolean ignore_errors)
             throws IOException {
         return httpPost(url, data, encoding, ignore_errors, null);
     }
 
-    public String httpPost(String url, UrlEncodedFormEntity data,
-            String encoding) throws IOException {
+    public String httpPost(String url, HttpEntity data,
+                           String encoding) throws IOException {
         return httpPost(url, data, encoding, false, null);
     }
 
     @Deprecated
-    public String httpPost(String url, UrlEncodedFormEntity data)
+    public String httpPost(String url, HttpEntity data)
             throws IOException {
         return httpPost(url, data, getDefaultEncoding(), false, null);
     }
@@ -472,16 +472,12 @@ public abstract class BaseApi implements OpacApi {
         this.stringProvider = stringProvider;
     }
 
-
-    protected String buildHttpGetParams(List<NameValuePair> params,
-            String encoding) throws UnsupportedEncodingException {
-        String string = "?";
-        for (NameValuePair pair : params) {
-            String name = URLEncoder.encode(pair.getName(), encoding);
-            String value = URLEncoder.encode(pair.getValue(), encoding);
-            string += name + "=" + value + "&";
+    public static String buildHttpGetParams(List<NameValuePair> params)
+            throws UnsupportedEncodingException {
+        try {
+            return new URIBuilder().addParameters(params).build().toString();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
         }
-        string = string.substring(0, string.length() - 1);
-        return string;
     }
 }

@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "K\u00f6sching",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/koesching"
+        "baseurl": "https://webopac.winbiap.de/koesching"
     },
     "geo": [
         48.8126389,

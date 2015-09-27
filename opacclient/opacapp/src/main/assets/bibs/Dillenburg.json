@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Dillenburg",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/dillenburg"
+        "baseurl": "https://webopac.winbiap.de/dillenburg"
     },
     "geo": [
         50.7452841,

@@ -1,0 +1,17 @@
+{
+    "account_supported": false,
+    "api": "web-opac.at",
+    "city": "Innsbruck",
+    "country": "\u00d6sterreich",
+    "data": {
+        "baseurl": "http://www.aktirol.web-opac.at"
+    },
+    "geo": [
+        47.2622403,
+        11,
+        3934947
+    ],
+    "information": "http://www.aktirol.web-opac.at",
+    "state": "Tirol",
+    "title": "AK-Bibliothek"
+}

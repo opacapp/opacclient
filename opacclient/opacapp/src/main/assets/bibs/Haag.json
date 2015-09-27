@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "web-opac.at",
+    "city": "Haag",
+    "country": "\u00d6sterreich",
+    "data": {
+        "baseurl": "http://haag.webopac.at"
+    },
+    "geo": [
+        48.1122617,
+        14.5677178
+    ],
+    "information": "http://haag.bvoe.at/",
+    "state": "Nieder\u00f6sterreich",
+    "title": "Stadtb\u00fccherei Haag - Multimediathek"
+}

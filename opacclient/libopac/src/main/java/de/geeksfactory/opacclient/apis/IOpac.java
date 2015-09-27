@@ -187,7 +187,7 @@ public class IOpac extends BaseApi implements OpacApi {
         } else if (doc.select("h1").size() > 0) {
             if (doc.select("h1").text().trim().contains("RUNTIME ERROR")) {
                 // Server Error
-                throw new NotReachableException();
+                throw new NotReachableException("IOPAC RUNTIME ERROR");
             } else {
                 throw new OpacErrorException(stringProvider.getFormattedString(
                         StringProvider.UNKNOWN_ERROR_WITH_DESCRIPTION, doc
@@ -442,10 +442,10 @@ public class IOpac extends BaseApi implements OpacApi {
 
         DetailledItem result = new DetailledItem();
 
-        String id;
+        String id = null;
         if (doc.select("input[name=mednr]").size() > 0) {
             id = doc.select("input[name=mednr]").first().val().trim();
-        } else {
+        } else if(doc.select("a[href*=mednr]").size() > 0) {
             String href = doc.select("a[href*=mednr]").first().attr("href");
             id = getQueryParamsFirst(href).get("mednr").trim();
         }
@@ -688,7 +688,7 @@ public class IOpac extends BaseApi implements OpacApi {
             return new CancelResult(MultiStepResult.Status.OK);
         } catch (Throwable e) {
             e.printStackTrace();
-            throw new NotReachableException();
+            throw new NotReachableException(e.getMessage());
         }
     }
 
@@ -738,7 +738,7 @@ public class IOpac extends BaseApi implements OpacApi {
                 } else if (doc.select("h1").text().trim()
                               .contains("RUNTIME ERROR")) {
                     // Server Error
-                    throw new NotReachableException();
+                    throw new NotReachableException("IOPAC RUNTIME ERROR");
                 } else {
                     throw new OpacErrorException(
                             stringProvider
@@ -919,14 +919,9 @@ public class IOpac extends BaseApi implements OpacApi {
             DropdownSearchField field = new DropdownSearchField();
             field.setDisplayName(name);
             field.setId(select.attr("name"));
-            List<Map<String, String>> options = new ArrayList<>();
             for (Element option : select.select("option")) {
-                Map<String, String> map = new HashMap<>();
-                map.put("key", option.attr("value"));
-                map.put("value", option.text());
-                options.add(map);
+                field.addDropdownValue(option.attr("value"), option.text());
             }
-            field.setDropdownValues(options);
             return field;
         } else if (inputTd.select("input").size() > 0) {
             TextSearchField field = new TextSearchField();
@@ -996,7 +991,7 @@ public class IOpac extends BaseApi implements OpacApi {
         Pattern pattern_value = Pattern
                 .compile("mtyp\\[[0-9]+\\]\\[\"bez\"\\] = \"([^\"]+)\";");
 
-        List<Map<String, String>> mediatypes = new ArrayList<>();
+        DropdownSearchField mtyp = new DropdownSearchField();
         try {
             html = httpGet(opac_url + dir + "/mtyp.js", getDefaultEncoding());
 
@@ -1013,10 +1008,7 @@ public class IOpac extends BaseApi implements OpacApi {
                     value = matcher2.group(1);
                 }
                 if (!value.equals("")) {
-                    Map<String, String> mediatype = new HashMap<>();
-                    mediatype.put("key", key);
-                    mediatype.put("value", value);
-                    mediatypes.add(mediatype);
+                    mtyp.addDropdownValue(key, value);
                 }
             }
         } catch (IOException e) {
@@ -1027,10 +1019,7 @@ public class IOpac extends BaseApi implements OpacApi {
                 doc = Jsoup.parse(html);
 
                 for (Element opt : doc.select("#imtyp option")) {
-                    Map<String, String> mediatype = new HashMap<>();
-                    mediatype.put("key", opt.attr("value"));
-                    mediatype.put("value", opt.text());
-                    mediatypes.add(mediatype);
+                    mtyp.addDropdownValue(opt.attr("value"), opt.text());
                 }
 
             } catch (IOException e1) {
@@ -1038,11 +1027,9 @@ public class IOpac extends BaseApi implements OpacApi {
             }
 
         }
-        if (mediatypes.size() > 0) {
-            DropdownSearchField mtyp = new DropdownSearchField();
+        if (!mtyp.getDropdownValues().isEmpty()) {
             mtyp.setDisplayName("Medientypen");
             mtyp.setId("Medientyp");
-            mtyp.setDropdownValues(mediatypes);
             fields.add(mtyp);
         }
         return fields;

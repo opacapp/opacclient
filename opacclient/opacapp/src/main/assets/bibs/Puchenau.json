@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "web-opac.at",
+    "city": "Puchenau",
+    "country": "\u00d6sterreich",
+    "data": {
+        "baseurl": "http://www.bibliothek-puchenau.web-opac.at"
+    },
+    "geo": [
+        48.3112609,
+        14.2411781
+    ],
+    "information": "http://puchenau.bvoe.at/",
+    "state": "Ober\u00f6sterreich",
+    "title": "\u00d6ffentliche Bibliothek"
+}

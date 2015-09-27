@@ -5,14 +5,14 @@
     "country": "Deutschland",
     "data": {
         "accounttable": {
-            "author": 6,
-            "barcode": 3,
+            "author": 8,
+            "barcode": 4,
             "homebranch": -1,
             "lendingbranch": -1,
-            "prolongurl": 3,
-            "returndate": 2,
-            "status": 4,
-            "title": 6
+            "prolongurl": 4,
+            "returndate": 3,
+            "status": 6,
+            "title": 8
         },
         "baseurl": "http://217.86.216.47",
         "mediatypes": {
@@ -31,12 +31,11 @@
             "35": "BLURAY",
             "40": "EBOOK"
         },
-        "opacdir": "opac",
+        "opacdir": "opax",
         "searchtable": [
             2,
             3,
-            4,
-            5
+            4
         ]
     },
     "geo": [

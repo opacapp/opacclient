@@ -58,13 +58,16 @@ import de.geeksfactory.opacclient.apis.Bibliotheca;
 import de.geeksfactory.opacclient.apis.Heidi;
 import de.geeksfactory.opacclient.apis.IOpac;
 import de.geeksfactory.opacclient.apis.OpacApi;
-import de.geeksfactory.opacclient.apis.Pica;
+import de.geeksfactory.opacclient.apis.PicaLBS;
+import de.geeksfactory.opacclient.apis.PicaOld;
 import de.geeksfactory.opacclient.apis.Primo;
+import de.geeksfactory.opacclient.apis.Open;
 import de.geeksfactory.opacclient.apis.SISIS;
 import de.geeksfactory.opacclient.apis.SRU;
 import de.geeksfactory.opacclient.apis.TestApi;
 import de.geeksfactory.opacclient.apis.TouchPoint;
 import de.geeksfactory.opacclient.apis.VuFind;
+import de.geeksfactory.opacclient.apis.WebOpacAt;
 import de.geeksfactory.opacclient.apis.WebOpacNet;
 import de.geeksfactory.opacclient.apis.WinBiap;
 import de.geeksfactory.opacclient.apis.Zones22;
@@ -216,7 +219,17 @@ public class OpacClient extends Application {
         } else if (lib.getApi().equals("biber1992")) {
             newApiInstance = new BiBer1992();
         } else if (lib.getApi().equals("pica")) {
-            newApiInstance = new Pica();
+            switch (lib.getData().optString("account_system", "")) {
+                case "lbs":
+                    newApiInstance = new PicaLBS();
+                    break;
+                case "default":
+                    newApiInstance = new PicaOld();
+                    break;
+                default:
+                    newApiInstance = new PicaOld();
+                    break;
+            }
         } else if (lib.getApi().equals("iopac")) {
             newApiInstance = new IOpac();
         } else if (lib.getApi().equals("adis")) {
@@ -229,12 +242,16 @@ public class OpacClient extends Application {
             newApiInstance = new VuFind();
         } else if (lib.getApi().equals("webopac.net")) {
             newApiInstance = new WebOpacNet();
+        } else if (lib.getApi().equals("web-opac.at")) {
+            newApiInstance = new WebOpacAt();
         } else if (lib.getApi().equals("winbiap")) {
             newApiInstance = new WinBiap();
         } else if (lib.getApi().equals("heidi")) {
             newApiInstance = new Heidi();
         } else if (lib.getApi().equals("touchpoint")) {
             newApiInstance = new TouchPoint();
+        } else if (lib.getApi().equals("open")) {
+            newApiInstance = new Open();
         } else if (lib.getApi().equals("test")) {
             if (BuildConfig.DEBUG) {
                 newApiInstance = new TestApi();

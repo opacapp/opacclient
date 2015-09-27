@@ -507,7 +507,7 @@ public class SearchResultDetailFragment extends Fragment
     }
 
     private boolean containsAndNotEmpty(Map<String, String> map, String key) {
-        return map != null && map.containsKey(key) && !map.get(key).equals("");
+        return map != null && map.containsKey(key) && !"".equals(map.get(key));
     }
 
     private void showCoverView(boolean b) {
@@ -1119,8 +1119,10 @@ public class SearchResultDetailFragment extends Fragment
 
     public class LoadCoverTask extends CoverDownloadTask {
 
-        public LoadCoverTask(CoverHolder item) {
+        public LoadCoverTask(CoverHolder item, int width, int height) {
             super(getActivity(), item);
+            this.width = width;
+            this.height = height;
         }
 
         protected void onPostExecute(CoverHolder item) {
@@ -1188,7 +1190,7 @@ public class SearchResultDetailFragment extends Fragment
             item = result;
 
             if (item.getCover() != null && item.getCoverBitmap() == null) {
-                new LoadCoverTask(item).execute();
+                new LoadCoverTask(item, coverWrapper.getWidth(), coverWrapper.getHeight()).execute();
             } else {
                 displayCover();
             }

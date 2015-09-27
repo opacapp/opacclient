@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Frammersbach",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/frammersbach"
+        "baseurl": "https://webopac.winbiap.de/frammersbach"
     },
     "geo": [
         50.0621954,

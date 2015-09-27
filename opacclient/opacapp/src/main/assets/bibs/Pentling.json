@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Pentling",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/pentling"
+        "baseurl": "https://webopac.winbiap.de/pentling"
     },
     "geo": [
         48.9833268,

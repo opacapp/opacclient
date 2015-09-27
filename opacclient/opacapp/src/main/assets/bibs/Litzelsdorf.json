@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "web-opac.at",
+    "city": "Litzelsdorf",
+    "country": "\u00d6sterreich",
+    "data": {
+        "baseurl": "http://buecherei-litzelsdorf.web-opac.at"
+    },
+    "geo": [
+        47.2126623,
+        16.1645525
+    ],
+    "information": "http://www.litzelsdorf.bvoe.at",
+    "state": "Burgenland",
+    "title": "\u00d6ffentliche B\u00fccherei"
+}

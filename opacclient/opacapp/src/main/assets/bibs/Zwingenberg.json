@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Zwingenberg",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/zwingenberg"
+        "baseurl": "https://webopac.winbiap.de/zwingenberg"
     },
     "geo": [
         49.7228393,

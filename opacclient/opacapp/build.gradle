@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion 8
         targetSdkVersion 22
-        versionCode 123
-        versionName "4.1.10"
+        versionCode 128
+        versionName "4.3.0"
     }
 
     lintOptions {
@@ -37,7 +37,7 @@ dependencies {
     compile('ch.acra:acra:4.5.0') {
         exclude group: 'org.json', module: 'json'
     }
-    compile 'org.jsoup:jsoup:1.8.1'
+    compile 'org.jsoup:jsoup:1.8.3'
     compile 'com.github.machinarius:preferencefragment:0.1.1'
     compile 'com.android.support:design:22.2.1'
     compile 'com.android.support:support-v4:22.2.1'

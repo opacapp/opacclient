@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Bergrheinfeld",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/bergrheinfeld"
+        "baseurl": "https://webopac.winbiap.de/bergrheinfeld"
     },
     "geo": [
         50.0051421,

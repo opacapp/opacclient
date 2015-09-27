@@ -95,6 +95,7 @@ public class SISIS extends BaseApi implements OpacApi {
         defaulttypes.put("3", MediaType.BOOK);
         defaulttypes.put("4", MediaType.BOOK);
         defaulttypes.put("5", MediaType.BOOK);
+        defaulttypes.put("Buch-Kinderbuch", MediaType.BOOK);
         defaulttypes.put("6", MediaType.SCORE_MUSIC);
         defaulttypes.put("7", MediaType.CD_MUSIC);
         defaulttypes.put("8", MediaType.CD_MUSIC);
@@ -193,7 +194,6 @@ public class SISIS extends BaseApi implements OpacApi {
             List<SearchField> fields) throws JSONException {
         Elements options = dropdownElement.select("option");
         DropdownSearchField dropdown = new DropdownSearchField();
-        List<Map<String, String>> values = new ArrayList<>();
         if (dropdownElement.parent().select("input[type=hidden]").size() > 0) {
             dropdown.setId(dropdownElement.parent()
                                           .select("input[type=hidden]").attr("value"));
@@ -203,12 +203,8 @@ public class SISIS extends BaseApi implements OpacApi {
             dropdown.setData(new JSONObject("{\"restriction\": false}"));
         }
         for (Element option : options) {
-            Map<String, String> value = new HashMap<>();
-            value.put("key", option.attr("value"));
-            value.put("value", option.text());
-            values.add(value);
+            dropdown.addDropdownValue(option.attr("value"), option.text());
         }
-        dropdown.setDropdownValues(values);
         dropdown.setDisplayName(dropdownElement.parent().select("label").text());
         fields.add(dropdown);
     }
@@ -1745,7 +1741,7 @@ public class SISIS extends BaseApi implements OpacApi {
         start(); // TODO: Is this necessary?
         boolean success = login(account);
         if (!success) {
-            throw new NotReachableException();
+            throw new NotReachableException("Login unsuccessful");
         }
     }
 

@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Finsing",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/finsing"
+        "baseurl": "https://webopac.winbiap.de/finsing"
     },
     "geo": [
         48.2177335,

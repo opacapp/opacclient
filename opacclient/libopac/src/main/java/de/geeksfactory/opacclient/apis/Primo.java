@@ -54,6 +54,7 @@ public class Primo extends BaseApi {
         languageCodes.put("cz", "cz_CZ");
         languageCodes.put("zh", "zh_ZH");
         languageCodes.put("it", "it_IT");
+        languageCodes.put("pl", "pl_PL");
 
         mediaTypeClasses.put("EXLResultMediaTYPEbook", SearchResult.MediaType.BOOK);
         mediaTypeClasses.put("EXLResultMediaTYPEarticle", SearchResult.MediaType.BOOK);
@@ -96,8 +97,11 @@ public class Primo extends BaseApi {
             throws IOException, OpacErrorException {
         List<NameValuePair> params = new ArrayList<>();
 
+        String tab = "";
+        if (data.has("searchtab"))
+            tab = "&tab=" + data.optString("searchtab", "default_tab");
         String html =
-                httpGet(opac_url + "/action/search.do?mode=Advanced&ct=AdvancedSearch&vid=" + vid,
+                httpGet(opac_url + "/action/search.do?mode=Advanced&ct=AdvancedSearch&vid=" + vid + tab,
                         getDefaultEncoding());
         Document doc = Jsoup.parse(html);
 
@@ -143,9 +147,14 @@ public class Primo extends BaseApi {
             throws IOException, OpacErrorException, JSONException {
         if (!initialised) start();
         last_query = query;
-        String html = httpGet(opac_url + "/action/search.do" +
-                        buildHttpGetParams(buildSearchParams(query), getDefaultEncoding()),
-                getDefaultEncoding());
+        String html;
+        if (query.size() == 1 && query.get(0).getKey().equals("url")) {
+            html = httpGet(query.get(0).getValue(), getDefaultEncoding());
+        } else {
+            html = httpGet(opac_url + "/action/search.do" +
+                            buildHttpGetParams(buildSearchParams(query)),
+                    getDefaultEncoding());
+        }
         Document doc = Jsoup.parse(html);
 
         return parse_search(doc, 1);
@@ -217,6 +226,17 @@ public class Primo extends BaseApi {
                 }
             }
 
+            if (resrow.select("a.EXLBriefResultsDisplayMultipleLink").size() > 0) {
+                String url = resrow.select("a.EXLBriefResultsDisplayMultipleLink").first()
+                                   .absUrl("href");
+                List<SearchQuery> query = new ArrayList<>();
+                TextSearchField field =
+                        new TextSearchField("url", "url", false, false, "url", false, false);
+                field.setVisible(false);
+                query.add(new SearchQuery(field, url));
+                res.setChildQuery(query);
+            }
+
 
             reslist.add(res);
         }
@@ -265,7 +285,7 @@ public class Primo extends BaseApi {
         params.add(new BasicNameValuePair("pag", "cur"));
 
         String html = httpGet(opac_url + "/action/search.do" +
-                        buildHttpGetParams(params, getDefaultEncoding()),
+                        buildHttpGetParams(params),
                 getDefaultEncoding());
         Document doc = Jsoup.parse(html);
 
@@ -441,18 +461,13 @@ public class Primo extends BaseApi {
                 continue;
             }
             field.setId("#" + select.attr("id"));
-            List<Map<String, String>> dropdownOptions = new ArrayList<>();
             for (Element option : select.select("option")) {
-                Map<String, String> dropdownOption = new HashMap<>();
-                dropdownOption.put("key", option.val());
-                dropdownOption.put("value", option.text());
                 if (option.val().equals("all_items")) {
-                    dropdownOptions.add(0, dropdownOption);
+                    field.addDropdownValue(0, option.val(), option.text());
                 } else {
-                    dropdownOptions.add(dropdownOption);
+                    field.addDropdownValue(option.val(), option.text());
                 }
             }
-            field.setDropdownValues(dropdownOptions);
             field.setData(new JSONObject());
             field.getData().put("meaning", field.getId());
             fields.add(field);

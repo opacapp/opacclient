@@ -24,10 +24,10 @@
             "returndate": 2,
             "status": 1
         },
-		"mediatypes": {
-			"mouse.jpg": "EBOOK"
-		},
         "customssl": true,
+        "mediatypes": {
+            "mouse.jpg": "EBOOK"
+        },
         "reservationtable": {
             "author": 0,
             "availability": 3,

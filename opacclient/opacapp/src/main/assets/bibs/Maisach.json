@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Maisach",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/maisach"
+        "baseurl": "https://webopac.winbiap.de/maisach"
     },
     "geo": [
         48.2165127,

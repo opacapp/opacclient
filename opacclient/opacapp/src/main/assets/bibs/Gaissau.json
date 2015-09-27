@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "web-opac.at",
+    "city": "Gai\u00dfau",
+    "country": "\u00d6sterreich",
+    "data": {
+        "baseurl": "http://bib-gaissau@web-opac.at"
+    },
+    "geo": [
+        47.4656016,
+        9.5976887
+    ],
+    "information": "http://www-gaissau.bvoe.at",
+    "state": "Vorarlberg",
+    "title": "B\u00fccherei"
+}

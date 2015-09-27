@@ -33,7 +33,6 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -117,7 +116,7 @@ public class WebOpacNet extends BaseApi implements OpacApi {
         }
 
         String json = httpGet(opac_url + "/de/mobile/GetMedien.ashx"
-                        + buildHttpGetParams(params, getDefaultEncoding()),
+                        + buildHttpGetParams(params),
                 getDefaultEncoding());
 
         return parse_search(json, 1);
@@ -205,7 +204,7 @@ public class WebOpacNet extends BaseApi implements OpacApi {
         }
 
         String json = httpGet(opac_url + "/de/mobile/GetMedien.ashx"
-                        + buildHttpGetParams(params, getDefaultEncoding()),
+                        + buildHttpGetParams(params),
                 getDefaultEncoding());
 
         return parse_search(json, page);
@@ -245,7 +244,7 @@ public class WebOpacNet extends BaseApi implements OpacApi {
         params.add(new BasicNameValuePair("orientation", "1"));
 
         String json = httpGet(opac_url + "/de/mobile/GetDetail.ashx"
-                        + buildHttpGetParams(params, getDefaultEncoding()),
+                        + buildHttpGetParams(params),
                 getDefaultEncoding());
 
         return parse_detail(json);
@@ -422,22 +421,15 @@ public class WebOpacNet extends BaseApi implements OpacApi {
                 field.setDisplayName(filter.getString("kopf"));
 
                 JSONArray restrictions = filter.getJSONArray("restrictions");
-                List<Map<String, String>> values = new ArrayList<>();
 
-                Map<String, String> all = new HashMap<>();
-                all.put("key", "");
-                all.put("value", "Alle");
-                values.add(all);
+                field.addDropdownValue("", "Alle");
 
                 for (int j = 0; j < restrictions.length(); j++) {
                     JSONObject restriction = restrictions.getJSONObject(j);
-                    Map<String, String> value = new HashMap<>();
-                    value.put("key", restriction.getString("id"));
-                    value.put("value", restriction.getString("bez"));
-                    values.add(value);
+                    field.addDropdownValue(restriction.getString("id"),
+                            restriction.getString("bez"));
                 }
 
-                field.setDropdownValues(values);
                 field.setData(new JSONObject("{\"filter\":true}"));
                 fields.add(field);
             }
@@ -473,7 +465,7 @@ public class WebOpacNet extends BaseApi implements OpacApi {
         String url;
         try {
             url = opac_url + "/default.aspx"
-                    + buildHttpGetParams(params, getDefaultEncoding());
+                    + buildHttpGetParams(params);
             return url;
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "S\u00fc\u00dfen",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/suessen"
+        "baseurl": "https://webopac.winbiap.de/suessen"
     },
     "geo": [
         48.67984509999999,

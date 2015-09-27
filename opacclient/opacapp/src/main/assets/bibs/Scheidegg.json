@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Scheidegg",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/scheidegg"
+        "baseurl": "https://webopac.winbiap.de/scheidegg"
     },
     "geo": [
         47.582299,

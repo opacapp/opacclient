@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Hallbergmoos",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/hallbergmoos"
+        "baseurl": "https://webopac.winbiap.de/hallbergmoos"
     },
     "geo": [
         48.3250947,

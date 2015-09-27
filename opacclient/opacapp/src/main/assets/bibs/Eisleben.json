@@ -1,5 +1,5 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Eisleben",
     "country": "Deutschland",
@@ -12,5 +12,5 @@
     ],
     "information": "http://www.mansfeldportal.de/",
     "state": "Sachsen-Anhalt",
-    "title": "Regionales Medienzentrum Eisleben"
+    "title": "Regionales Medienzentrum"
 }

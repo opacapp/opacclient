@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Knetzgau",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/knetzgau"
+        "baseurl": "https://webopac.winbiap.de/knetzgau"
     },
     "geo": [
         49.9925629,

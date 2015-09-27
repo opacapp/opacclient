@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "web-opac.at",
+    "city": "Innsbruck",
+    "country": "\u00d6sterreich",
+    "data": {
+        "baseurl": "http://www.stbinnsbruck.web-opac.at"
+    },
+    "geo": [
+        47.2649372,
+        11.3911971
+    ],
+    "information": "https://stadtbuecherei.innsbruck.gv.at/",
+    "state": "Tirol",
+    "title": "Stadtb\u00fccherei"
+}

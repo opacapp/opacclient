@@ -191,7 +191,6 @@ public class TouchPoint extends BaseApi implements OpacApi {
             List<SearchField> fields) {
         Elements options = dropdownElement.select("option");
         DropdownSearchField dropdown = new DropdownSearchField();
-        List<Map<String, String>> values = new ArrayList<>();
         dropdown.setId(dropdownElement.attr("name"));
         // Some fields make no sense or are not supported in the app
         if (dropdown.getId().equals("numberOfHits")
@@ -200,12 +199,8 @@ public class TouchPoint extends BaseApi implements OpacApi {
             return;
         }
         for (Element option : options) {
-            Map<String, String> value = new HashMap<>();
-            value.put("key", option.attr("value"));
-            value.put("value", option.text());
-            values.add(value);
+            dropdown.addDropdownValue(option.attr("value"), option.text());
         }
-        dropdown.setDropdownValues(values);
         dropdown.setDisplayName(dropdownElement.parent().select("label").text());
         fields.add(dropdown);
     }

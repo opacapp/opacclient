@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Unterf\u00f6hring",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/unterfoehring"
+        "baseurl": "https://webopac.winbiap.de/unterfoehring"
     },
     "geo": [
         48.1916623,

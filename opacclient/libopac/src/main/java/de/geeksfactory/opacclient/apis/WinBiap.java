@@ -1,19 +1,26 @@
 package de.geeksfactory.opacclient.apis;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.FormElement;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -86,6 +93,19 @@ public class WinBiap extends BaseApi implements OpacApi {
     protected static final String QUERY_TYPE_TO = "4";
     protected static final String QUERY_TYPE_STARTS_WITH = "7";
     protected static final String QUERY_TYPE_EQUALS = "1";
+    protected static HashMap<String, SearchResult.MediaType> defaulttypes = new HashMap<>();
+
+    static {
+        defaulttypes.put("sb_buch", SearchResult.MediaType.BOOK);
+        defaulttypes.put("sl_buch", SearchResult.MediaType.BOOK);
+        defaulttypes.put("kj_buch", SearchResult.MediaType.BOOK);
+        defaulttypes.put("hoerbuch", SearchResult.MediaType.AUDIOBOOK);
+        defaulttypes.put("musik", SearchResult.MediaType.CD_MUSIC);
+        defaulttypes.put("cdrom", SearchResult.MediaType.CD_SOFTWARE);
+        defaulttypes.put("dvd", SearchResult.MediaType.DVD);
+        defaulttypes.put("online", SearchResult.MediaType.EBOOK);
+    }
+
     protected String opac_url = "";
     protected JSONObject data;
     protected List<List<NameValuePair>> query;
@@ -274,9 +294,15 @@ public class WinBiap extends BaseApi implements OpacApi {
                     + (titleAddition.equals("") ? "" : " - <i>" + titleAddition
                     + "</i>") + "</b><br /><small>" + desc + "</small>");
 
-            String coverUrl = tr.select(".coverWrapper input").attr("src");
-            if (!coverUrl.contains("leer.gif")) {
-                sr.setCover(coverUrl);
+            if (tr.select(".coverWrapper input, .coverWrapper img").size() > 0) {
+                Element cover = tr.select(".coverWrapper input, .coverWrapper img").first();
+                if (cover.hasAttr("data-src")) {
+                    sr.setCover(cover.attr("data-src"));
+                } else if (cover.hasAttr("src") && !cover.attr("src").contains("empty.gif")
+                        && !cover.attr("src").contains("leer.gif")) {
+                    sr.setCover(cover.attr("src"));
+                }
+                sr.setType(getMediaType(cover));
             }
 
             String link = tr.select("a[href*=detail.aspx]").attr("href");
@@ -401,7 +427,16 @@ public class WinBiap extends BaseApi implements OpacApi {
         Document doc = Jsoup.parse(html);
         DetailledItem item = new DetailledItem();
 
-        item.setCover(doc.select(".cover").attr("src"));
+        if (doc.select(".cover").size() > 0) {
+            Element cover = doc.select(".cover").first();
+            if (cover.hasAttr("data-src")) {
+                item.setCover(cover.attr("data-src"));
+            } else if (cover.hasAttr("src") && !cover.attr("src").equals("images/empty.gif")) {
+                item.setCover(cover.attr("src"));
+            }
+            item.setMediaType(getMediaType(cover));
+        }
+
         String permalink = doc.select(".PermalinkTextarea").text();
         item.setId(getQueryParamsFirst(permalink).get("Id"));
 
@@ -423,7 +458,7 @@ public class WinBiap extends BaseApi implements OpacApi {
             }
         }
 
-        trs = doc.select(".detailCopies .tableCopies tr:not(.headerCopies)");
+        trs = doc.select(".detailCopies .tableCopies > tbody > tr:not(.headerCopies)");
         for (Element tr : trs) {
             Map<String, String> copy = new HashMap<>();
             copy.put(DetailledItem.KEY_COPY_BARCODE, tr.select(".mediaBarcode")
@@ -436,10 +471,39 @@ public class WinBiap extends BaseApi implements OpacApi {
             }
             copy.put(DetailledItem.KEY_COPY_LOCATION,
                     tr.select(".cellMediaItemLocation span").text());
+            if (tr.select("#HyperLinkReservation").size() > 0) {
+                copy.put(DetailledItem.KEY_COPY_RESINFO, tr.select("#HyperLinkReservation")
+                                                           .attr("href"));
+                item.setReservable(true);
+                item.setReservation_info("reservable");
+
+            }
             item.addCopy(copy);
         }
 
         return item;
+    }
+
+    private SearchResult.MediaType getMediaType(Element cover) {
+        if (cover.hasAttr("grp")) {
+            String[] parts = cover.attr("grp").split("/");
+            String fname = parts[parts.length - 1];
+            if (data.has("mediatypes")) {
+                try {
+                    return SearchResult.MediaType.valueOf(data.getJSONObject(
+                            "mediatypes").getString(fname));
+                } catch (JSONException | IllegalArgumentException e) {
+                    return defaulttypes.get(fname
+                            .toLowerCase(Locale.GERMAN).replace(".jpg", "")
+                            .replace(".gif", "").replace(".png", ""));
+                }
+            } else {
+                return defaulttypes.get(fname
+                        .toLowerCase(Locale.GERMAN).replace(".jpg", "")
+                        .replace(".gif", "").replace(".png", ""));
+            }
+        }
+        return null;
     }
 
     @Override
@@ -452,13 +516,106 @@ public class WinBiap extends BaseApi implements OpacApi {
     @Override
     public ReservationResult reservation(DetailledItem item, Account account,
             int useraction, String selection) throws IOException {
-        return null;
+        if (selection == null) {
+            // Which copy?
+            List<Map<String, String>> options = new ArrayList<>();
+            for (Map<String, String> copy : item.getCopies()) {
+                if (!copy.containsKey(DetailledItem.KEY_COPY_RESINFO)) continue;
+
+                Map<String, String> option = new HashMap<>();
+                option.put("key", copy.get(DetailledItem.KEY_COPY_RESINFO));
+                option.put("value", copy.get(DetailledItem.KEY_COPY_BARCODE) + " - "
+                        + copy.get(DetailledItem.KEY_COPY_BRANCH) + " - "
+                        + copy.get(DetailledItem.KEY_COPY_RETURN));
+                options.add(option);
+            }
+            if (options.size() == 0) {
+                return new ReservationResult(MultiStepResult.Status.ERROR,
+                        stringProvider.getString(StringProvider.NO_COPY_RESERVABLE));
+            } else if (options.size() == 1) {
+                return reservation(item, account, useraction, options.get(0).get("key"));
+            } else {
+                ReservationResult res = new ReservationResult(
+                        MultiStepResult.Status.SELECTION_NEEDED);
+                res.setSelection(options);
+                return res;
+            }
+        } else {
+            // Reservation
+
+            // the URL stored in selection contains "=" and other things inside params
+            // and will be messed up by our cleanUrl function
+            Document doc = Jsoup.parse(convertStreamToString(
+                    http_client.execute(new HttpGet(opac_url + "/" + selection))
+                               .getEntity().getContent()));
+            if (doc.select("[id$=LabelLoginMessage]").size() > 0) {
+                doc.select("[id$=TextBoxLoginName]").val(account.getName());
+                doc.select("[id$=TextBoxLoginPassword]").val(account.getPassword());
+                FormElement form = (FormElement) doc.select("form").first();
+
+                List<Connection.KeyVal> formData = form.formData();
+                List<NameValuePair> params = new ArrayList<>();
+                for (Connection.KeyVal kv : formData) {
+                    if (!kv.key().contains("Button") || kv.key().endsWith("ButtonLogin")) {
+                        params.add(new BasicNameValuePair(kv.key(), kv.value()));
+                    }
+                }
+                doc = Jsoup.parse(httpPost(opac_url + "/user/" + form.attr("action"),
+                        new UrlEncodedFormEntity(params), getDefaultEncoding()));
+            }
+            FormElement confirmationForm = (FormElement) doc.select("form").first();
+            List<Connection.KeyVal> formData = confirmationForm.formData();
+            List<NameValuePair> params = new ArrayList<>();
+            for (Connection.KeyVal kv : formData) {
+                if (!kv.key().contains("Button") || kv.key().endsWith("ButtonVorbestOk")) {
+                    params.add(new BasicNameValuePair(kv.key(), kv.value()));
+                }
+            }
+            httpPost(opac_url + "/user/" + confirmationForm.attr("action"),
+                    new UrlEncodedFormEntity(params), getDefaultEncoding());
+
+            // TODO: handle errors (I did not encounter any)
+
+            return new ReservationResult(MultiStepResult.Status.OK);
+        }
     }
 
     @Override
     public ProlongResult prolong(String media, Account account, int useraction,
             String selection) throws IOException {
-        return null;
+        try {
+            login(account);
+        } catch (OpacErrorException e) {
+            return new ProlongResult(MultiStepResult.Status.ERROR, e.getMessage());
+        }
+        Document lentPage = Jsoup.parse(
+                httpGet(opac_url + "/user/borrow.aspx", getDefaultEncoding()));
+        lentPage.select("input[name=" + media + "]").first().attr("checked", true);
+        List<Connection.KeyVal> formData =
+                ((FormElement) lentPage.select("form").first()).formData();
+        List<NameValuePair> params = new ArrayList<>();
+        for (Connection.KeyVal kv : formData) {
+            params.add(new BasicNameValuePair(kv.key(), kv.value()));
+        }
+
+        String html = httpPost(opac_url + "/user/borrow.aspx", new UrlEncodedFormEntity
+                (params), getDefaultEncoding());
+        Document confirmationPage = Jsoup.parse(html);
+
+        FormElement confirmationForm = (FormElement) confirmationPage.select("form").first();
+        List<Connection.KeyVal> formData2 = confirmationForm.formData();
+        List<NameValuePair> params2 = new ArrayList<>();
+        for (Connection.KeyVal kv : formData2) {
+            if (!kv.key().contains("Button") || kv.key().endsWith("ButtonProlongationOk")) {
+                params2.add(new BasicNameValuePair(kv.key(), kv.value()));
+            }
+        }
+        httpPost(opac_url + "/user/" + confirmationForm.attr("action"),
+                new UrlEncodedFormEntity(params2), getDefaultEncoding());
+
+        // TODO: handle errors (I did not encounter any)
+
+        return new ProlongResult(MultiStepResult.Status.OK);
     }
 
     @Override
@@ -470,13 +627,168 @@ public class WinBiap extends BaseApi implements OpacApi {
     @Override
     public CancelResult cancel(String media, Account account, int useraction,
             String selection) throws IOException, OpacErrorException {
-        return null;
+        try {
+            login(account);
+        } catch (OpacErrorException e) {
+            return new CancelResult(MultiStepResult.Status.ERROR, e.getMessage());
+        }
+        List<NameValuePair> params = new ArrayList<>();
+        params.add(new BasicNameValuePair("action", "reservationdelete"));
+        params.add(new BasicNameValuePair("data", media));
+        String response = httpPost(opac_url + "/service/UserService.ashx",
+                new UrlEncodedFormEntity(params), getDefaultEncoding());
+        System.out.println("Antwort: " + response);
+        // Response: [number of reservations deleted];[number of remaining reservations]
+        String[] parts = response.split(";");
+        if (parts[0].equals("1")) {
+            return new CancelResult(MultiStepResult.Status.OK);
+        } else {
+            return new CancelResult(MultiStepResult.Status.ERROR,
+                    stringProvider.getString(StringProvider.UNKNOWN_ERROR));
+        }
     }
 
     @Override
     public AccountData account(Account account) throws IOException,
             JSONException, OpacErrorException {
-        return null;
+        Document startPage = login(account);
+        AccountData adata = new AccountData(account.getId());
+
+        if (startPage.select("#ctl00_ContentPlaceHolderMain_LabelCharges").size() > 0) {
+            String fees = startPage.select("#ctl00_ContentPlaceHolderMain_LabelCharges").text()
+                                   .replace("Kontostand:", "").trim();
+            if (!fees.equals("ausgeglichen")) adata.setPendingFees(fees);
+        }
+
+        Document lentPage = Jsoup.parse(
+                httpGet(opac_url + "/user/borrow.aspx", getDefaultEncoding()));
+        adata.setLent(parse_medialist(lentPage));
+
+        Document reservationsPage = Jsoup.parse(
+                httpGet(opac_url + "/user/reservations.aspx", getDefaultEncoding()));
+        adata.setReservations(parse_reslist(reservationsPage));
+
+
+        return adata;
+    }
+
+    private List<Map<String, String>> parse_medialist(Document doc) {
+        List<Map<String, String>> lent = new ArrayList<>();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
+
+        for (Element tr : doc.select(".GridView_RowStyle")) {
+            Map<String, String> item = new HashMap<>();
+
+            // the second column contains an img tag with the cover
+            if (tr.select(".cover").size() > 0) {
+                // find media ID using cover URL
+                Map<String, String> params = getQueryParamsFirst(tr.select(".cover").attr("src"));
+                if (params.containsKey("catid")) {
+                    item.put(AccountData.KEY_LENT_ID, params.get("catid"));
+                }
+            }
+
+            putIfNotEmpty(item, AccountData.KEY_LENT_AUTHOR, tr.select("[id$=LabelAutor]").text());
+            putIfNotEmpty(item, AccountData.KEY_LENT_TITLE, tr.select("[id$=LabelTitel]").text());
+            putIfNotEmpty(item, AccountData.KEY_LENT_BARCODE,
+                    tr.select("[id$=Label_Mediennr]").text());
+            putIfNotEmpty(item, AccountData.KEY_LENT_FORMAT,
+                    tr.select("[id$=Label_Mediengruppe]").text());
+            putIfNotEmpty(item, AccountData.KEY_LENT_BRANCH,
+                    tr.select("[id$=Label_Zweigstelle]").text());
+            // Label_Entliehen contains the date when the medium was lent
+            putIfNotEmpty(item, AccountData.KEY_LENT_DEADLINE,
+                    tr.select("[id$=LabelFaellig]").text());
+            try {
+                item.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
+                        String.valueOf(sdf.parse(tr.select("[id$=LabelFaellig]").text())
+                                          .getTime()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            if (tr.select("input[id$=chkSelect]").size() > 0) {
+                item.put(AccountData.KEY_LENT_LINK, tr.select("input[id$=chkSelect]").attr("name"));
+            } else {
+                item.put(AccountData.KEY_LENT_RENEWABLE, "N");
+            }
+            lent.add(item);
+        }
+
+        return lent;
+    }
+
+    private void putIfNotEmpty(Map<String, String> map, String key, String value) {
+        if (value != null && !value.equals("")) {
+            map.put(key, value);
+        }
+    }
+
+    private List<Map<String, String>> parse_reslist(Document doc) {
+        List<Map<String, String>> reservations = new ArrayList<>();
+
+        for (Element tr : doc.select("tr[id*=GridViewReservation]")) {
+            Map<String, String> item = new HashMap<>();
+
+            // the second column contains an img tag with the cover
+            if (tr.select(".cover").size() > 0) {
+                // find media ID using cover URL
+                Map<String, String> params = getQueryParamsFirst(tr.select(".cover").attr("src"));
+                if (params.containsKey("catid")) {
+                    item.put(AccountData.KEY_RESERVATION_ID, params.get("catid"));
+                }
+                // find media type
+                SearchResult.MediaType mt = getMediaType(tr.select(".cover").first());
+                if (mt != null) {
+                    item.put(AccountData.KEY_RESERVATION_FORMAT,
+                            stringProvider.getMediaTypeName(mt));
+                }
+            }
+
+            item.put(AccountData.KEY_RESERVATION_READY,
+                    tr.select("[id$=ImageBorrow]").attr("title"));
+            putIfNotEmpty(item, AccountData.KEY_RESERVATION_AUTHOR,
+                    tr.select("[id$=LabelAutor]").text());
+            putIfNotEmpty(item, AccountData.KEY_RESERVATION_TITLE,
+                    tr.select("[id$=LabelTitle]").text());
+            putIfNotEmpty(item, AccountData.KEY_RESERVATION_BRANCH,
+                    tr.select("[id$=LabelBranch]").text());
+            // Label_Vorbestelltam contains the date when the medium was reserved
+
+            if (tr.select("a[id$=ImageReservationDelete]").size() > 0) {
+                String javascript = tr.select("a[id$=ImageReservationDelete]").attr("onclick");
+                /*
+                    Javascript example:
+
+                    javascript:DeleteReservation(
+                    '#ctl00_ContentPlaceHolderMain_GridViewReservation_ctl02',
+                    '#ctl00_ContentPlaceHolderMain_GridViewReservation_ctl02_ImageReservationDelete',
+                    'cmVzZXJ2YXRpb25JZD00MDk1JmFtcDtyZWFkZXJJZD05MzIwJmFtcDttb2RlPTE=-f2yu2300+t4=',
+                    '../service/UserService.ashx',
+                    'Vorbestellung: \'Beck, Rufus - Harry Potter Folge 4. Harry Potter und der
+                    Feuerkelch\' wirklich löschen?',
+                    '#ctl00_ContentPlaceHolderMain_LabelAccountTableResult',
+                    'Sie haben derzeit $ Medien vorbestellt!');
+                    return false;
+
+                    We need the 3rd parameter (Base64 string) and will find it
+                    using the following massive RegEx.
+                 */
+                Pattern regex = Pattern.compile("javascript:DeleteReservation\\('" +
+                        "(?:\\\\[\\\\']|[^\\\\'])*'\\s*,\\s*'(?:\\\\[\\\\']|[^\\\\'])*'\\s*,\\s*'" +
+                        "((?:\\\\[\\\\']|[^\\\\'])*)'\\s*,\\s*'(?:\\\\[\\\\']|[^\\\\'])*'\\s*," +
+                        "\\s*'(?:\\\\[\\\\']|[^\\\\'])*'\\s*,\\s*'(?:\\\\[\\\\']|[^\\\\'])*'\\s*," +
+                        "\\s*'(?:\\\\[\\\\']|[^\\\\'])*'\\s*\\);");
+                Matcher matcher = regex.matcher(javascript);
+                if (matcher.find()) {
+                    String base64 = matcher.group(1);
+                    item.put(AccountData.KEY_RESERVATION_CANCEL, base64);
+                }
+            }
+            reservations.add(item);
+        }
+
+        return reservations;
     }
 
     @Override
@@ -489,26 +801,22 @@ public class WinBiap extends BaseApi implements OpacApi {
         Elements branchOptions = doc
                 .select("#ctl00_ContentPlaceHolderMain_searchPanel_MultiSelectionBranch_ListBoxMultiselection option");
 
-        List<Map<String, String>> mediaGroups = new ArrayList<>();
-        List<Map<String, String>> branches = new ArrayList<>();
+        final DropdownSearchField mediaGroups =
+                new DropdownSearchField(KEY_SEARCH_QUERY_CATEGORY, "Mediengruppe", false, null);
+        mediaGroups.setMeaning(Meaning.CATEGORY);
 
-        Map<String, String> all = new HashMap<>();
-        all.put("key", "");
-        all.put("value", "Alle");
-        mediaGroups.add(all);
-        branches.add(all);
+        final DropdownSearchField branches =
+                new DropdownSearchField(KEY_SEARCH_QUERY_BRANCH, "Zweigstelle", false, null);
+        branches.setMeaning(Meaning.BRANCH);
+
+        mediaGroups.addDropdownValue("", "Alle");
+        branches.addDropdownValue("", "Alle");
 
         for (Element option : mediaGroupOptions) {
-            Map<String, String> map = new HashMap<>();
-            map.put("key", option.attr("value"));
-            map.put("value", option.text());
-            mediaGroups.add(map);
+            mediaGroups.addDropdownValue(option.attr("value"), option.text());
         }
         for (Element option : branchOptions) {
-            Map<String, String> map = new HashMap<>();
-            map.put("key", option.attr("value"));
-            map.put("value", option.text());
-            branches.add(map);
+            branches.addDropdownValue(option.attr("value"), option.text());
         }
 
         List<SearchField> searchFields = new ArrayList<>();
@@ -568,15 +876,8 @@ public class WinBiap extends BaseApi implements OpacApi {
         field.setMeaning(Meaning.YEAR);
         searchFields.add(field);
 
-        field = new DropdownSearchField(KEY_SEARCH_QUERY_BRANCH, "Zweigstelle",
-                false, branches);
-        field.setMeaning(Meaning.BRANCH);
-        searchFields.add(field);
-
-        field = new DropdownSearchField(KEY_SEARCH_QUERY_CATEGORY,
-                "Mediengruppe", false, mediaGroups);
-        field.setMeaning(Meaning.CATEGORY);
-        searchFields.add(field);
+        searchFields.add(branches);
+        searchFields.add(mediaGroups);
 
         return searchFields;
     }
@@ -588,7 +889,7 @@ public class WinBiap extends BaseApi implements OpacApi {
 
     @Override
     public boolean isAccountSupported(Library library) {
-        return false;
+        return library.isAccountSupported();
     }
 
     @Override
@@ -614,8 +915,37 @@ public class WinBiap extends BaseApi implements OpacApi {
     @Override
     public void checkAccountData(Account account) throws IOException,
             JSONException, OpacErrorException {
-        // TODO Auto-generated method stub
+        login(account);
+    }
 
+    protected Document login(Account account) throws IOException, OpacErrorException {
+        Document loginPage = Jsoup.parse(
+                httpGet(opac_url + "/user/login.aspx", getDefaultEncoding()));
+        List<NameValuePair> data = new ArrayList<>();
+
+        data.add(new BasicNameValuePair("__LASTFOCUS", ""));
+        data.add(new BasicNameValuePair("__EVENTTARGET", ""));
+        data.add(new BasicNameValuePair("__EVENTARGUMENT", ""));
+        data.add(new BasicNameValuePair("__VIEWSTATE", loginPage.select("#__VIEWSTATE").val()));
+        data.add(new BasicNameValuePair("__VIEWSTATEGENERATOR",
+                loginPage.select("#__VIEWSTATEGENERATOR").val()));
+        data.add(new BasicNameValuePair("__EVENTVALIDATION",
+                loginPage.select("#__EVENTVALIDATION").val()));
+
+        data.add(new BasicNameValuePair("ctl00$ContentPlaceHolderMain$TextBoxLoginName",
+                account.getName()));
+        data.add(new BasicNameValuePair("ctl00$ContentPlaceHolderMain$TextBoxLoginPassword",
+                account.getPassword()));
+        data.add(new BasicNameValuePair("ctl00$ContentPlaceHolderMain$ButtonLogin", "Anmelden"));
+
+        String html = httpPost(opac_url + "/user/login.aspx", new UrlEncodedFormEntity(data),
+                "UTF-8");
+        Document doc = Jsoup.parse(html);
+        if (doc.select("#ctl00_ContentPlaceHolderMain_LabelLoginMessage").size() > 0) {
+            throw new OpacErrorException(
+                    doc.select("#ctl00_ContentPlaceHolderMain_LabelLoginMessage").text());
+        }
+        return doc;
     }
 
     @Override

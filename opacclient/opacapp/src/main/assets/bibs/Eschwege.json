@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Eschwege",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/eschwege"
+        "baseurl": "https://webopac.winbiap.de/eschwege"
     },
     "geo": [
         51.1876662,

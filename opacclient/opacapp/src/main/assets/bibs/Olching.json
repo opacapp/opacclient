@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Olching",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/olching"
+        "baseurl": "https://webopac.winbiap.de/olching"
     },
     "geo": [
         48.20706999999999,

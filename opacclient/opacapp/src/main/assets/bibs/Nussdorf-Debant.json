@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "web-opac.at",
+    "city": "Nu\u00dfdorf-Debant",
+    "country": "\u00d6sterreich",
+    "data": {
+        "baseurl": "http://www.buecherei-nussdorf.web-opac.at"
+    },
+    "geo": [
+        46.8360536,
+        12.8029433
+    ],
+    "information": "http://www.buecherei-nussdorf.web-opac.at/",
+    "state": "Tirol",
+    "title": "\u00d6ffentliche B\u00fccherei Nu\u00dfdorf"
+}

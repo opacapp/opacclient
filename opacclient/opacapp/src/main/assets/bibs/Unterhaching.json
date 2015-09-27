@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Unterhaching",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/unterhaching"
+        "baseurl": "https://webopac.winbiap.de/unterhaching"
     },
     "geo": [
         48.0689177,

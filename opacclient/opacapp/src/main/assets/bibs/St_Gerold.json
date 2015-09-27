@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "web-opac.at",
+    "city": "St.",
+    "country": "\u00d6sterreich",
+    "data": {
+        "baseurl": "http://www.oebst.gerold.web-opac.at"
+    },
+    "geo": [
+        47.220902,
+        9.8148405
+    ],
+    "information": "http://www.st-gerold.net/walserbibliothek/",
+    "state": "Vorarlberg",
+    "title": "Walserbibliothek St. Gerold"
+}

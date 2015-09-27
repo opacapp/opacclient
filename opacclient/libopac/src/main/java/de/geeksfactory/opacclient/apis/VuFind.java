@@ -139,7 +139,7 @@ public class VuFind extends BaseApi {
         if (!initialised) start();
         last_query = query;
         String html = httpGet(opac_url + "/Search/Results" +
-                        buildHttpGetParams(buildSearchParams(query), getDefaultEncoding()),
+                        buildHttpGetParams(buildSearchParams(query)),
                 getDefaultEncoding());
         Document doc = Jsoup.parse(html);
         return parse_search(doc, 1);
@@ -258,7 +258,7 @@ public class VuFind extends BaseApi {
         List<NameValuePair> params = buildSearchParams(last_query);
         params.add(new BasicNameValuePair("page", String.valueOf(page)));
         String html = httpGet(opac_url + "/Search/Results" +
-                        buildHttpGetParams(params, getDefaultEncoding()),
+                        buildHttpGetParams(params),
                 getDefaultEncoding());
         Document doc = Jsoup.parse(html);
         return parse_search(doc, page);
@@ -478,20 +478,13 @@ public class VuFind extends BaseApi {
             field.setId(select.attr("name") + select.attr("id"));
             List<Map<String, String>> dropdownOptions = new ArrayList<>();
             String meaning = select.attr("id");
-            Map<String, String> emptyDropdownOption = new HashMap<>();
-            emptyDropdownOption.put("key", "");
-            emptyDropdownOption.put("value", "");
-            dropdownOptions.add(emptyDropdownOption);
+            field.addDropdownValue("", "");
             for (Element option : select.select("option")) {
                 if (option.val().contains(":")) {
                     meaning = option.val().split(":")[0];
                 }
-                Map<String, String> dropdownOption = new HashMap<>();
-                dropdownOption.put("key", option.val());
-                dropdownOption.put("value", option.text());
-                dropdownOptions.add(dropdownOption);
+                field.addDropdownValue(option.val(), option.text());
             }
-            field.setDropdownValues(dropdownOptions);
             field.setData(new JSONObject());
             field.getData().put("meaning", meaning);
             fields.add(field);

@@ -1,10 +1,10 @@
 {
-    "account_supported": false,
+    "account_supported": true,
     "api": "winbiap",
     "city": "Bad T\u00f6lz",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.winbiap.de/badtoelz"
+        "baseurl": "https://webopac.winbiap.de/badtoelz"
     },
     "geo": [
         47.7614737,

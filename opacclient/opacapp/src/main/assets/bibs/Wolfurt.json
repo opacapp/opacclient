@@ -1,0 +1,16 @@
+{
+    "account_supported": false,
+    "api": "web-opac.at",
+    "city": "Wolfurt",
+    "country": "\u00d6sterreich",
+    "data": {
+        "baseurl": "http://www.buechereiwolfurt.webopac.at"
+    },
+    "geo": [
+        47.4672875,
+        9.7497216
+    ],
+    "information": "http://www.wolfurt.bvoe.at",
+    "state": "Vorarlberg",
+    "title": "\u00d6ffentliche B\u00fccherei"
+}
