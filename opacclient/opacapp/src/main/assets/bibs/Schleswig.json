@@ -12,6 +12,7 @@
         9.55839
     ],
     "information": "http://buecherei-schleswig.de/",
+    "nfc_supported": true,
     "state": "Schleswig-Holstein",
     "title": "Stadtb\u00fccherei"
 }
