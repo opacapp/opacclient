@@ -237,4 +237,22 @@
     <string name="title_and_author">Titel und Autor</string>
     <string name="reservation_expire_until">bis</string>
     <string name="go_to_details">Zu den Details</string>
+    <string name="nfc_title">NFC-Suche verfügbar</string>
+    <string name="nfc_intro">Von dieser Bibliothek ist bekannt, dass sie NFC-Suche unterstützt.
+        Das bedeutet, dass Sie, während Sie im Hauptbildschirm der App sind, die Rückseite Ihres
+        Geräts auf eines der Bücher (oder anderen Medien) aus der Bibliothek legen können, um die
+        Details zu diesem Buch anzuzeigen. Diese Funktion wird durch kleine Aufkleber mit
+        NFC-Technologie ermöglicht, die auf der Rückseite oder hinter dem vorderen oder hinteren
+        Buchdeckel angebracht sind. Sie kann dadurch beeinflusst werden, wie sie ihr Gerät auf
+        dem Buch platzieren und könnte bei Nutzung von Zubehör wie Smartphone-Hüllen nicht
+        funktionieren. Möglicherweise ist die Funktion nicht für alle Medien in der Bibliothek
+        verfügbar.
+    </string>
+    <string name="nfc_question">Wollen Sie die NFC-Suche aktivieren?</string>
+    <string name="no_thanks">Nein danke</string>
+    <string name="nfc_activated">NFC-Suche aktiviert. Sie können dies jederzeit in den
+        Einstellungen ändern.</string>
+    <string name="nfc_not_activated">Sie können die NFC-Suche jederzeit in den
+        Einstellungen aktivieren.</string>
+    <string name="content_description_nfc_logo">NFC-Logo</string>
 </resources>
