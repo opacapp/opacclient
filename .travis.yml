@@ -7,7 +7,7 @@ android:
         - extra-android-m2repository
 script:
     - cd opacclient
-    - ./gradlew check lint
+    - ./gradlew check lint test
 cache:
     directories:
         - $HOME/.gradle
