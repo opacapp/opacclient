@@ -238,4 +238,19 @@ We might know your library ID then, but not your password, and we will take care
     <string name="title_and_author">Title and Author</string>
     <string name="reservation_expire_until">until</string>
     <string name="go_to_details">Go to details</string>
+    <string name="nfc_title">NFC search available</string>
+    <string name="nfc_intro">This library is known to support NFC search. This means that while
+        you are on the app\'s main page, you can physically tap the back of your device on one of
+        the library\'s books (or other media) and the app will directly show its details. This
+        feature works using small stickers with NFC technology on the rear side of the book or
+        beneath the front or back cover. The feature can be affected by the way you place your
+        device on the book or accessories like smartphone cases and might not be available for all
+        media in the library.
+    </string>
+    <string name="nfc_question">Do you want to activate NFC search?</string>
+    <string name="no_thanks">No thanks</string>
+    <string name="nfc_activated">NFC search enabled. You can change this in the settings
+        at any time.</string>
+    <string name="nfc_not_activated">You can enable NFC search in the settings at any time.</string>
+    <string name="content_description_nfc_logo">NFC logo</string>
 </resources>

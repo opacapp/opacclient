@@ -45,4 +45,5 @@ Authors
 Many thanks go to our contributors, including:
 
 * Rüdiger Wurth
+* Simon Legner
 
