@@ -23,12 +23,13 @@ public class ISBNTools {
         }
 
         checksum = 11 - (checksum % 11);
-        if (checksum == 10)
+        if (checksum == 10) {
             isbn10 += "X";
-        else if (checksum == 11)
+        } else if (checksum == 11) {
             isbn10 += "0";
-        else
+        } else {
             isbn10 += checksum;
+        }
 
         return isbn10;
     }
@@ -55,18 +56,21 @@ public class ISBNTools {
     }
 
     /**
-     * If possible, changes a cover URL to represent the best sized image for the given display size.
-     * If the URL is not supported, the original URL will be returned.
-     * This function may execute HTTP reqests to check if the requested size is available,
-     * so use it asynchronously!
-     * @param url Original cover URL
-     * @param width Desired width
+     * If possible, changes a cover URL to represent the best sized image for the given display
+     * size. If the URL is not supported, the original URL will be returned. This function may
+     * execute HTTP reqests to check if the requested size is available, so use it asynchronously!
+     *
+     * @param url    Original cover URL
+     * @param width  Desired width
      * @param height Desired height
      * @return Improved URL
      */
     public static String getBestSizeCoverUrl(String url, int width, int height) {
-        Pattern vlbRegex = Pattern.compile("^https?://vlb\\.de/GetBlob\\.aspx\\?strIsbn=([0-9X]*)");
-        Pattern amazonRegex = Pattern.compile("^(https?://(:?images(?:-[^\\.]*)?\\.|[^\\.]*\\.images-)amazon\\.com/images/[PI]/[^\\.]*\\.(?:\\d\\d\\.)?)[^.]*\\.jpg");
+        Pattern vlbRegex = Pattern.compile("^https?://(?:www.)?vlb\\.de/GetBlob\\.aspx\\?" +
+                ".*strIsbn=([0-9X]*)");
+        Pattern amazonRegex = Pattern.compile(
+                "^(https?://(:?images(?:-[^\\.]*)?\\.|[^\\.]*\\.images-)amazon\\" +
+                        ".com/images/[PI]/[^\\.]*\\.(?:\\d\\d\\.)?)[^.]*\\.jpg");
 
         Matcher vlbMatcher = vlbRegex.matcher(url);
         Matcher amazonMatcher = amazonRegex.matcher(url);
@@ -87,11 +91,15 @@ public class ISBNTools {
             }
         } else if (amazonMatcher.find()) {
             // Amazon Covers, according to http://aaugh.com/imageabuse.html
-            if (max <= 75) return amazonMatcher.group(1) + "THUMB.jpg";
-            else if (max <= 110) return amazonMatcher.group(1) + "T.jpg";
-            else if (max <= 160) return amazonMatcher.group(1) + "jpg";
-            else if (max <= 500) return amazonMatcher.group(1) + "L.jpg";
-            else {
+            if (max <= 75) {
+                return amazonMatcher.group(1) + "THUMB.jpg";
+            } else if (max <= 110) {
+                return amazonMatcher.group(1) + "T.jpg";
+            } else if (max <= 160) {
+                return amazonMatcher.group(1) + "jpg";
+            } else if (max <= 500) {
+                return amazonMatcher.group(1) + "L.jpg";
+            } else {
                 // Huge URL may not be available, so check first
                 String largeUrl = amazonMatcher.group(1) + "L.jpg";
                 String hugeUrl = amazonMatcher.group(1) + "_SCRM_.jpg";
