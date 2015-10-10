@@ -65,12 +65,11 @@ import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
 /**
- * API für Web-Opacs von Zones mit dem Hinweis "Zones.2.2.45.04" im Footer. Einziger bekannter
- * Einsatzort ist Hamburg.
+ * API für Web-Opacs von Zones mit dem Hinweis "Zones.2.2.45.xx" oder "ZONES v1.8.1" im Footer.
  * <p/>
- * TODO: Suche nach Medientypen, alles mit Konten + Vorbestellen
+ * TODO: Kontofunktionen für Zones 1.8.1
  */
-public class Zones22 extends BaseApi {
+public class Zones extends BaseApi {
 
     private static HashMap<String, MediaType> defaulttypes = new HashMap<>();
 
