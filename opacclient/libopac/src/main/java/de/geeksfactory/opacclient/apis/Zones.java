@@ -95,6 +95,7 @@ public class Zones extends BaseApi {
         defaulttypes.put("book", MediaType.BOOK);
         defaulttypes.put("cd", MediaType.CD);
         defaulttypes.put("video", MediaType.MOVIE);
+        defaulttypes.put("serial", MediaType.MAGAZINE);
     }
 
     // Indicates whether the OPAC uses ZONES 1.8.1 (instead of 2.2)
@@ -351,6 +352,9 @@ public class Zones extends BaseApi {
             if (version18) {
                 if (tr.select("a[title=Titelbild]").size() > 0) {
                     imgUrl = tr.select("a[title=Titelbild]").attr("href");
+                } else if (tr.select("img[width=50]").size() > 0) {
+                    // TODO: better way to select these cover images? (found in Hannover)
+                    imgUrl = tr.select("img[width=50]").attr("src");
                 }
             } else {
                 if (tr.select(".SummaryImageCell img[id^=Bookcover]").size() > 0) {
@@ -358,6 +362,16 @@ public class Zones extends BaseApi {
                 }
             }
             sr.setCover(imgUrl);
+
+            if (version18) {
+                if (tr.select("img[src$=oci_1.gif]").size() > 0) {
+                    // probably can only appear when searching the catalog on a terminal in
+                    // the library.
+                    sr.setStatus(SearchResult.Status.GREEN);
+                } else if (tr.select("img[src$=blob_amber.gif]").size() > 0) {
+                    sr.setStatus(SearchResult.Status.YELLOW);
+                }
+            }
 
             String desc = "";
             String childrenQuery = version18 ? "table[cellpadding=1] tr" :
