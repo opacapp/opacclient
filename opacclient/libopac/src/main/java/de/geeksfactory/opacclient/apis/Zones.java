@@ -71,6 +71,7 @@ public class Zones extends BaseApi {
     private static HashMap<String, MediaType> defaulttypes = new HashMap<>();
 
     static {
+        // Zones 2.2
         defaulttypes.put("Buch", MediaType.BOOK);
         defaulttypes.put("Buch/Druckschrift", MediaType.BOOK);
         defaulttypes.put("Buch Erwachsene", MediaType.BOOK);
@@ -89,6 +90,11 @@ public class Zones extends BaseApi {
         defaulttypes.put("CDROM", MediaType.CD_SOFTWARE);
         defaulttypes.put("E-Audio", MediaType.MP3);
         defaulttypes.put("CD", MediaType.CD);
+
+        // Zones 1.8.1 (.gif file names)
+        defaulttypes.put("book", MediaType.BOOK);
+        defaulttypes.put("cd", MediaType.CD);
+        defaulttypes.put("video", MediaType.MOVIE);
     }
 
     // Indicates whether the OPAC uses ZONES 1.8.1 (instead of 2.2)
