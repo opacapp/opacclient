@@ -307,7 +307,6 @@ public class Zones extends BaseApi {
         } else if (doc.select("div[targetObject]").size() > 0) {
             // Zones 1.8 - search
             searchobj = doc.select("div[targetObject]").attr("targetObject").split("\\?")[0];
-            ;
         } else {
             // Zones 1.8 - searchGetPage
 
