@@ -278,7 +278,7 @@ class VuFind(Api):
     def accountSupported(self):
         return False
 
-class Zones22(Api):
+class Zones(Api):
 
     def accountSupported(self):
         return False
@@ -349,7 +349,7 @@ APIS = {
     'sisis'       : Sisis,
     'touchpoint'  : TouchPoint,
     'biber1992'   : Biber1992,
-    'zones22'     : Zones22,
+    'zones'     : Zones,
     'iopac'       : IOpac,
     'pica'        : Pica,
     'adis'        : Adis,
