@@ -14,7 +14,7 @@
             "status": -1,
             "title": 1
         },
-        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-moeckmuehl",
+        "baseurl": "https://web-opac.kivbf.de/moeckmuehl",
         "copiestable": {
             "barcode": -1,
             "branch": -1,

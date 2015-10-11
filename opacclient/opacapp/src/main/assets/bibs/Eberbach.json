@@ -14,7 +14,7 @@
             "status": -1,
             "title": 1
         },
-        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-eberbach",
+        "baseurl": "https://web-opac.kivbf.de/eberbach",
         "copiestable": {
             "barcode": -1,
             "branch": -1,

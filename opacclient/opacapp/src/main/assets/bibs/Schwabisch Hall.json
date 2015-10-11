@@ -14,7 +14,7 @@
             "status": -1,
             "title": 1
         },
-        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-sha",
+        "baseurl": "https://web-opac.kivbf.de/schwaebisch-hall",
         "copiestable": {
             "barcode": -1,
             "branch": 0,

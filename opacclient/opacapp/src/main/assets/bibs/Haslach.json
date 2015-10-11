@@ -5,7 +5,7 @@
     "country": "Deutschland",
     "data": {
         "accounttable": null,
-        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-haslach",
+        "baseurl": "https://web-opac.kivbf.de/haslach",
         "copiestable": {
             "barcode": -1,
             "branch": -1,
@@ -21,7 +21,7 @@
         48.2757845,
         8.0891082
     ],
-    "information": "http://www.bibliotheken.bw-online.de/read-haslach/info.html",
+    "information": "https://web-opac.kivbf.de/read-haslach/info.html",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtb\u00fccherei"
 }

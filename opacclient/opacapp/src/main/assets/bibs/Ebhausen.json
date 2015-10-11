@@ -10,7 +10,7 @@
             "returndate": 2,
             "title": 1
         },
-        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-ebhausen",
+        "baseurl": "https://web-opac.kivbf.de/ebhausen",
         "copiestable": {
             "branch": 4,
             "location": 2,
@@ -37,7 +37,7 @@
         48.5833057,
         8.6814596
     ],
-    "information": "http://www.bibliotheken.bw-online.de/read-ebhausen/info.html",
+    "information": "https://web-opac.kivbf.de/read-ebhausen/info.html",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Mediathek"
 }
