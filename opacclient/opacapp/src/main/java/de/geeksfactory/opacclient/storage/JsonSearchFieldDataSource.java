@@ -40,7 +40,8 @@ public class JsonSearchFieldDataSource implements SearchFieldDataSource {
         JSONArray array = new JSONArray();
         try {
             for (SearchField field : fields) {
-                array.put(field.toJSON());
+                if (field.getId().length() > 0)
+                    array.put(field.toJSON());
             }
             object.put(KEY_FIELDS, array);
             object.put(KEY_TIME, System.currentTimeMillis());
