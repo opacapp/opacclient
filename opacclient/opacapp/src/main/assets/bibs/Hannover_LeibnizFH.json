@@ -4,7 +4,7 @@
     "city": "Hannover",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://vzlbs2.gbv.de",
+        "baseurl": "https://vzlbs2.gbv.de",
         "db": "57"
     },
     "geo": [
