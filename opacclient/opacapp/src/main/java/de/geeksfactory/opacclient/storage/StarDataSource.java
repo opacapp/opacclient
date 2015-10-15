@@ -33,6 +33,7 @@ import java.util.Map.Entry;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.Starred;
+import de.geeksfactory.opacclient.searchfields.SearchField;
 
 public class StarDataSource {
 
@@ -47,9 +48,14 @@ public class StarDataSource {
         item.setId(cursor.getInt(0));
         item.setMNr(cursor.getString(1));
         item.setTitle(cursor.getString(3));
-        item.setMediaType(
-                cursor.getString(4) != null ? SearchResult.MediaType.valueOf(cursor.getString(4)) :
-                        null);
+        try {
+            item.setMediaType(
+                    cursor.getString(4) != null ?
+                            SearchResult.MediaType.valueOf(cursor.getString(4)) :
+                            null);
+        } catch (IllegalArgumentException e) {
+            // Do not crash on invalid media types stored in the database
+        }
         return item;
     }
 
