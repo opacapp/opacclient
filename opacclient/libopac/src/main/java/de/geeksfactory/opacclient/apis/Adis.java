@@ -12,6 +12,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.jsoup.select.Selector;
 
 import java.io.IOException;
 import java.io.InterruptedIOException;
@@ -304,11 +305,15 @@ public class Adis extends BaseApi implements OpacApi {
                     continue;
                 }
 
-                if (query.getSearchField() instanceof TextSearchField &&
-                        doc.select("#" + query.getKey()).size() > 0) {
-                    doc.select("#" + query.getKey())
-                       .val(query.getValue());
-                    continue;
+                try {
+                    if (query.getSearchField() instanceof TextSearchField &&
+                            doc.select("#" + query.getKey()).size() > 0) {
+                        doc.select("#" + query.getKey())
+                           .val(query.getValue());
+                        continue;
+                    }
+                } catch (Selector.SelectorParseException e) {
+                    // query.getKey() might be an invalid element id. That's okay for us.
                 }
 
                 dropdownTextCount++;
