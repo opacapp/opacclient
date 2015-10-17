@@ -140,12 +140,17 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                 && savedInstanceState.containsKey("query")) {
             savedState = savedInstanceState.getBundle("query");
         }
-        buildSearchForm(OpacClient.bundleToMap(savedState));
         if (savedInstanceState != null
                 && savedInstanceState.containsKey("barcodeScanningField")) {
             barcodeScanningField = savedInstanceState
                     .getString("barcodeScanningField");
         }
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        buildSearchForm(OpacClient.bundleToMap(savedState));
     }
 
     public void clear() {
