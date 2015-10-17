@@ -585,6 +585,8 @@ public class Adis extends BaseApi implements OpacApi {
                 colmap.put(i, DetailledItem.KEY_COPY_LOCATION);
             } else if (head.contains("Signatur") || head.contains("Call number")) {
                 colmap.put(i, DetailledItem.KEY_COPY_SHELFMARK);
+            } else if (head.contains("URL")) {
+                colmap.put(i, DetailledItem.KEY_COPY_URL);
             } else if (head.contains("Status") || head.contains("Hinweis")
                     || head.matches(".*Verf.+gbarkeit.*") || head.contains("Status")) {
                 colmap.put(i, DetailledItem.KEY_COPY_STATUS);
@@ -607,8 +609,7 @@ public class Adis extends BaseApi implements OpacApi {
                         line.put(DetailledItem.KEY_COPY_STATUS, status);
                     }
                 } else {
-                    line.put(entry.getValue(), tr.child(entry.getKey()).text()
-                                                 .trim());
+                    line.put(entry.getValue(), tr.child(entry.getKey()).text().trim());
                 }
             }
             res.addCopy(line);

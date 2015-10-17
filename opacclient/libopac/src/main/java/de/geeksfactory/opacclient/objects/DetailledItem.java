@@ -101,6 +101,14 @@ public class DetailledItem implements CoverHolder {
      */
     public static final String KEY_COPY_RESINFO = "resinfo";
     /**
+     * URL to an online copy
+     * <p/>
+     * ContentValues key for {@link #addCopy(Map)}.
+     *
+     * @since 4.3.1
+     */
+    public static final String KEY_COPY_URL = "url";
+    /**
      * Unique media identifier of a child item for
      * {@link OpacApi#getResultById(String, String)}. Required.
      * <p/>

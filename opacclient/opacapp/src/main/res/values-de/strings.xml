@@ -227,6 +227,7 @@
     <string name="loading">Lade…</string>
     <string name="loading_libraries">Lade Bibliotheksliste…</string>
     <string name="shelfmark">Signatur</string>
+    <string name="url">Link</string>
     <string name="return_date">Rückgabedatum</string>
     <string name="location">Standort</string>
     <string name="department">Abteilung</string>
