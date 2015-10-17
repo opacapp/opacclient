@@ -127,7 +127,7 @@ public class Adis extends BaseApi implements OpacApi {
     public Document htmlGet(String url) throws
             IOException {
 
-        if (!url.contains("requestCount")) {
+        if (!url.contains("requestCount") && s_requestCount >= 0) {
             url = url + (url.contains("?") ? "&" : "?") + "requestCount="
                     + s_requestCount;
         }
@@ -247,6 +247,7 @@ public class Adis extends BaseApi implements OpacApi {
     public void start() throws IOException {
 
         try {
+            s_requestCount = -1;
             Document doc = htmlGet(opac_url + "?"
                     + data.getString("startparams"));
 
