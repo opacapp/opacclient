@@ -150,7 +150,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        buildSearchForm(OpacClient.bundleToMap(savedState));
+        if (!(app.getLibrary() == null)) {
+            accountSelected(app.getAccount());
+        }
     }
 
     public void clear() {
@@ -559,7 +561,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
     public List<SearchQuery> saveSearchQuery() {
         saveHomeBranch();
         List<SearchQuery> query = new ArrayList<>();
-        if (fields == null) {
+        if (fields == null || view == null) {
             return null;
         }
         for (SearchField field : fields) {
@@ -600,7 +602,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
     }
 
     private void saveHomeBranch() {
-        if (fields == null) {
+        if (fields == null || view == null) {
             return;
         }
 
@@ -611,15 +613,16 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
             if (field instanceof DropdownSearchField
                     && field.getMeaning() == Meaning.HOME_BRANCH) {
                 ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
+                if (v == null) {
+                    continue;
+                }
                 Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
                 String homeBranch = ((DropdownSearchField) field)
                         .getDropdownValues()
                         .get(spinner.getSelectedItemPosition()).getKey();
                 if (!homeBranch.equals("")) {
                     sp.edit()
-                      .putString(
-                              OpacClient.PREF_HOME_BRANCH_PREFIX
-                                      + app.getAccount().getId(),
+                      .putString(OpacClient.PREF_HOME_BRANCH_PREFIX + app.getAccount().getId(),
                               homeBranch).commit();
                 }
                 return;
@@ -776,7 +779,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
             progress(false);
             if (fields != null) {
                 SearchFragment.this.fields = fields;
-                buildSearchForm(savedState != null ? OpacClient.bundleToMap(savedState) : saveQuery());
+                buildSearchForm(savedState != null ? OpacClient.bundleToMap(savedState) : null);
                 savedState = null;
             } else {
                 if (exception != null
