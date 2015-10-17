@@ -160,17 +160,15 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
             if (!field.isVisible()) {
                 continue;
             }
+            if (field instanceof TextSearchField && ((TextSearchField) field).isFreeSearch()) {
+                etSimpleSearch.setText("");
+            }
             ViewGroup v = (ViewGroup) view.findViewWithTag(field.getId());
             if (v == null) {
                 continue;
             }
             if (field instanceof TextSearchField) {
-                EditText text;
-                if (((TextSearchField) field).isFreeSearch()) {
-                    text = etSimpleSearch;
-                } else {
-                    text = (EditText) v.findViewById(R.id.edittext);
-                }
+                EditText text = (EditText) v.findViewById(R.id.edittext);
                 text.setText("");
             } else if (field instanceof BarcodeSearchField) {
                 EditText text = (EditText) v.findViewById(R.id.edittext);
