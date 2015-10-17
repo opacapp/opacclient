@@ -575,22 +575,25 @@ public class Adis extends BaseApi implements OpacApi {
 
         Map<Integer, String> colmap = new HashMap<>();
         int i = 0;
-        for (Element th : doc.select("#R08 table.rTable_table thead tr th")) {
+        for (Element th : doc
+                .select("#R08 table.rTable_table thead tr th, " +
+                        "#R09 table.rTable_table thead tr th")) {
             String head = th.text().trim();
-            if (head.contains("Bibliothek")) {
+            if (head.contains("Bibliothek") || head.contains("Library")) {
                 colmap.put(i, DetailledItem.KEY_COPY_BRANCH);
-            } else if (head.contains("Standort")) {
+            } else if (head.contains("Standort") || head.contains("Location")) {
                 colmap.put(i, DetailledItem.KEY_COPY_LOCATION);
-            } else if (head.contains("Signatur")) {
+            } else if (head.contains("Signatur") || head.contains("Call number")) {
                 colmap.put(i, DetailledItem.KEY_COPY_SHELFMARK);
             } else if (head.contains("Status") || head.contains("Hinweis")
-                    || head.matches(".*Verf.+gbarkeit.*")) {
+                    || head.matches(".*Verf.+gbarkeit.*") || head.contains("Status")) {
                 colmap.put(i, DetailledItem.KEY_COPY_STATUS);
             }
             i++;
         }
 
-        for (Element tr : doc.select("#R08 table.rTable_table tbody tr")) {
+        for (Element tr : doc.select("#R08 table.rTable_table tbody tr," +
+                "#R09 table.rTable_table tbody tr")) {
             Map<String, String> line = new HashMap<>();
             for (Entry<Integer, String> entry : colmap.entrySet()) {
                 if (entry.getValue().equals(DetailledItem.KEY_COPY_STATUS)) {
