@@ -414,14 +414,19 @@ public class Adis extends BaseApi implements OpacApi {
                 res.setId(matcher.group(1));
             }
 
-            if (tr.select(".rTable_td_img img").size() > 0) {
-                String typetext = tr.select(".rTable_td_img img").first()
-                                    .attr("title");
-                if (types.containsKey(typetext)) {
-                    res.setType(types.get(typetext));
-                } else if (typetext.contains("+")
-                        && types.containsKey(typetext.split("\\+")[0].trim())) {
-                    res.setType(types.get(typetext.split("\\+")[0].trim()));
+            for (Element img : tr.select(".rTable_td_img img, .rTable_td_text img")) {
+                String ttext = img.attr("title");
+                if (types.containsKey(ttext)) {
+                    res.setType(types.get(ttext));
+                } else if (ttext.contains("+")
+                        && types.containsKey(ttext.split("\\+")[0].trim())) {
+                    res.setType(types.get(ttext.split("\\+")[0].trim()));
+                } else if (ttext.matches(".*ist verf.+gbar") || ttext.contains("is available") ||
+                        img.attr("href").contains("verfu_ja")) {
+                    res.setStatus(SearchResult.Status.GREEN);
+                } else if (ttext.matches(".*nicht verf.+gbar") || ttext.contains("not available") ||
+                        img.attr("href").contains("verfu_nein")) {
+                    res.setStatus(SearchResult.Status.RED);
                 }
             }
 
