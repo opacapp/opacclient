@@ -17,6 +17,7 @@
             "returndate": 1,
             "status": 0
         },
+        "customssl": true,
         "mediatypes": {
             "DVDkl.gif": "DVD",
             "cdkl.gif": "AUDIOBOOK",

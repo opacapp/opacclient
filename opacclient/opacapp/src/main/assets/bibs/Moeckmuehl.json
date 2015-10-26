@@ -24,6 +24,7 @@
             "returndate": -1,
             "status": 3
         },
+        "customssl": true,
         "reservationtable": {
             "author": 0,
             "availability": 2,

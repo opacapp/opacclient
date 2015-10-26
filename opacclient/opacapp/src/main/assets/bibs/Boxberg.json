@@ -15,6 +15,7 @@
             "returndate": 3,
             "status": 2
         },
+        "customssl": true,
         "reservationtable": null
     },
     "geo": [

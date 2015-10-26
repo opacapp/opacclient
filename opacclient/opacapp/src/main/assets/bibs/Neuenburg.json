@@ -18,6 +18,7 @@
             "returndate": 5,
             "status": 4
         },
+        "customssl": true,
         "mediatypes": {
             "Munzingerk.png": "EDOC",
             "mCasetteS.gif": "AUDIO_CASSETTE",

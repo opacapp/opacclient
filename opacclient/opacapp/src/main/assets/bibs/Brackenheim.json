@@ -16,6 +16,7 @@
             "returndate": 5,
             "status": 4
         },
+        "customssl": true,
         "mediatypes": {
             "ComicS.gif": "BOOK",
             "HALkl.gif": "BOOK",
