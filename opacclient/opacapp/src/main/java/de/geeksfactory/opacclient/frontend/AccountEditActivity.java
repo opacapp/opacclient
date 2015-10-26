@@ -153,10 +153,10 @@ public class AccountEditActivity extends AppCompatActivity {
         if (etLabel.getText().toString().equals("")) {
             account.setLabel(getString(R.string.default_account_name));
         } else {
-            account.setLabel(etLabel.getText().toString());
+            account.setLabel(etLabel.getText().toString().trim());
         }
-        account.setName(etName.getText().toString());
-        account.setPassword(etPassword.getText().toString());
+        account.setName(etName.getText().toString().trim());
+        account.setPassword(etPassword.getText().toString().trim());
         if (etPassword.getText().toString().trim().equals("")) {
             // Don't check user credentials if there are no credentials
             save();
