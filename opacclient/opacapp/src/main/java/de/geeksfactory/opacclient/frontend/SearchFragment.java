@@ -298,6 +298,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                 }
             } else if (field instanceof DropdownSearchField) {
                 DropdownSearchField ddSearchField = (DropdownSearchField) field;
+                if (ddSearchField.getDropdownValues() == null) {
+                    continue;
+                }
                 v = (ViewGroup) getLayoutInflater(null).inflate(
                         R.layout.searchfield_dropdown, llFormFields, false);
                 TextView title = (TextView) v.findViewById(R.id.title);
