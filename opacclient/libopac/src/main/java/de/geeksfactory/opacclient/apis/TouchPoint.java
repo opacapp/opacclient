@@ -522,11 +522,33 @@ public class TouchPoint extends BaseApi implements OpacApi {
     }
 
     private String matchJSVariable(String js, String varName) {
-        Pattern pattern = Pattern.compile("var \\s*" + varName
+        Pattern patternVar = Pattern.compile("var \\s*" + varName
                 + "\\s*=\\s*\"([^\"]*)\"\\s*;");
-        Matcher matcher = pattern.matcher(js);
+        Matcher matcher = patternVar.matcher(js);
         if (matcher.find()) {
             return matcher.group(1);
+        } else {
+            return null;
+        }
+    }
+
+    private String matchJSParameter(String js, String varName) {
+        Pattern patternParam = Pattern.compile(".*\\s*" + varName
+                + "\\s*:\\s*('|\")([^\"']*)('|\")\\s*,?.*");
+        Matcher matcher = patternParam.matcher(js);
+        if (matcher.find()) {
+            return matcher.group(2);
+        } else {
+            return null;
+        }
+    }
+
+    private String matchHTMLAttr(String js, String varName) {
+        Pattern patternParam = Pattern.compile(".*" + varName
+                + "=('|\")([^\"']*)('|\")\\s*,?.*");
+        Matcher matcher = patternParam.matcher(js);
+        if (matcher.find()) {
+            return matcher.group(2);
         } else {
             return null;
         }
@@ -583,13 +605,23 @@ public class TouchPoint extends BaseApi implements OpacApi {
             String js = doc.select("#cover script").first().html();
             String isbn = matchJSVariable(js, "isbn");
             String ajaxUrl = matchJSVariable(js, "ajaxUrl");
-            if (!"".equals(isbn) && !"".equals(ajaxUrl)) {
-                String url = new URL(new URL(opac_url + "/"), ajaxUrl)
-                        .toString();
-                String coverUrl = httpGet(url + "?isbn=" + isbn
-                        + "&size=medium", ENCODING);
-                if (!"".equals(coverUrl)) {
-                    result.setCover(coverUrl.replace("\r\n", "").trim());
+            if (ajaxUrl == null) {
+                ajaxUrl = matchJSParameter(js, "url");
+            }
+            if (ajaxUrl != null && !"".equals(ajaxUrl)) {
+                if (!"".equals(isbn) && isbn != null) {
+                    String url = new URL(new URL(opac_url + "/"), ajaxUrl)
+                            .toString();
+                    String coverUrl = httpGet(url + "?isbn=" + isbn
+                            + "&size=medium", ENCODING);
+                    if (!"".equals(coverUrl)) {
+                        result.setCover(coverUrl.replace("\r\n", "").trim());
+                    }
+                } else {
+                    String url = new URL(new URL(opac_url + "/"), ajaxUrl)
+                            .toString();
+                    String coverJs = httpGet(url, ENCODING);
+                    result.setCover(matchHTMLAttr(coverJs, "src"));
                 }
             }
         }

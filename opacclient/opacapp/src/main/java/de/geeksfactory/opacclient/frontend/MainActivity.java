@@ -2,6 +2,7 @@ package de.geeksfactory.opacclient.frontend;
 
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentFilter.MalformedMimeTypeException;
@@ -12,6 +13,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -29,8 +33,8 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
 import de.geeksfactory.opacclient.storage.SearchFieldDataSource;
 
-public class MainActivity extends OpacActivity implements
-        SearchFragment.Callback, StarredFragment.Callback,
+public class MainActivity extends OpacActivity
+        implements SearchFragment.Callback, StarredFragment.Callback,
         SearchResultDetailFragment.Callbacks {
 
     private String[][] techListsArray;
@@ -108,34 +112,30 @@ public class MainActivity extends OpacActivity implements
         }
         try {
             if (nfc_capable) {
-                if (!getPackageManager().hasSystemFeature(
-                        "android.hardware.nfc")) {
+                if (!getPackageManager().hasSystemFeature("android.hardware.nfc")) {
                     nfc_capable = false;
                 }
             }
             if (nfc_capable) {
                 mAdapter = android.nfc.NfcAdapter.getDefaultAdapter(this);
-                nfcIntent = PendingIntent.getActivity(this, 0, new Intent(this,
-                                getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
-                        0);
-                IntentFilter ndef = new IntentFilter(
-                        android.nfc.NfcAdapter.ACTION_TECH_DISCOVERED);
+                nfcIntent = PendingIntent.getActivity(this, 0,
+                        new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+                IntentFilter ndef = new IntentFilter(android.nfc.NfcAdapter.ACTION_TECH_DISCOVERED);
                 try {
                     ndef.addDataType("*/*");
                 } catch (MalformedMimeTypeException e) {
                     throw new RuntimeException("fail", e);
                 }
                 intentFiltersArray = new IntentFilter[]{ndef,};
-                techListsArray = new String[][]{new String[]{android.nfc.tech.NfcV.class
-                        .getName()}};
+                techListsArray = new String[][]{
+                        new String[]{android.nfc.tech.NfcV.class.getName()}};
             }
         } catch (SecurityException e) {
             e.printStackTrace();
         }
 
         if (app.getLibrary() != null) {
-            getSupportActionBar()
-                    .setSubtitle(app.getLibrary().getDisplayName());
+            getSupportActionBar().setSubtitle(app.getLibrary().getDisplayName());
         }
     }
 
@@ -144,20 +144,23 @@ public class MainActivity extends OpacActivity implements
         this.account = account.getId();
         getSupportActionBar().setSubtitle(app.getLibrary().getDisplayName());
         if (fragment instanceof OpacActivity.AccountSelectedListener) {
-            ((OpacActivity.AccountSelectedListener) fragment)
-                    .accountSelected(account);
+            ((OpacActivity.AccountSelectedListener) fragment).accountSelected(account);
         }
 
-//		try {
-//			List<SearchField> fields = app.getApi()
-//					.getSearchFields(new SQLMetaDataSource(app), app.getLibrary());
-//			if (fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE)) //TODO: This won't work with
-// the new implementation. But what is it for?
-//				nfc_capable = false;							   //  	   Shouldn't this be set
-// to true if the library supports searching for barcodes?
-//		} catch (OpacErrorException e) {
-//			e.printStackTrace();
-//		}
+        nfcHint();
+
+        //		try {
+        //			List<SearchField> fields = app.getApi()
+        //					.getSearchFields(new SQLMetaDataSource(app), app.getLibrary());
+        //			if (fields.contains(OpacApi.KEY_SEARCH_QUERY_BARCODE)) //TODO: This won't work
+        // with
+        // the new implementation. But what is it for?
+        //				nfc_capable = false;							   //  	   Shouldn't this
+        // be set
+        // to true if the library supports searching for barcodes?
+        //		} catch (OpacErrorException e) {
+        //			e.printStackTrace();
+        //		}
     }
 
     public void urlintent() {
@@ -188,8 +191,7 @@ public class MainActivity extends OpacActivity implements
             }
             String medianr = split[2];
             if (medianr.length() > 1) {
-                Intent intent = new Intent(MainActivity.this,
-                        SearchResultDetailActivity.class);
+                Intent intent = new Intent(MainActivity.this, SearchResultDetailActivity.class);
                 intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID, medianr);
                 startActivity(intent);
             } else {
@@ -201,8 +203,7 @@ public class MainActivity extends OpacActivity implements
                 }
                 Bundle query = new Bundle();
                 query.putString(OpacApi.KEY_SEARCH_QUERY_TITLE, title);
-                Intent intent = new Intent(MainActivity.this,
-                        SearchResultListActivity.class);
+                Intent intent = new Intent(MainActivity.this, SearchResultListActivity.class);
                 intent.putExtra("query", query);
                 startActivity(intent);
             }
@@ -267,13 +268,42 @@ public class MainActivity extends OpacActivity implements
         if (app.getAccount().getId() != account) {
             accountSelected(app.getAccount());
         }
+
+        nfcHint();
+
         if (nfc_capable && sp.getBoolean("nfc_search", false)) {
             try {
-                mAdapter.enableForegroundDispatch(this, nfcIntent,
-                        intentFiltersArray, techListsArray);
+                mAdapter.enableForegroundDispatch(this, nfcIntent, intentFiltersArray,
+                        techListsArray);
             } catch (SecurityException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void nfcHint() {
+        if (nfc_capable && !sp.getBoolean("nfc_search", false) &&
+                !sp.getBoolean("nfc_hint_shown", false) && app.getLibrary().isNfcSupported()) {
+            new AlertDialog.Builder(this)
+                    .setView(LayoutInflater.from(this).inflate(R.layout.dialog_nfc_hint, null))
+                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            sp.edit().putBoolean("nfc_search", true)
+                                    .putBoolean("nfc_hint_shown", true).apply();
+                            Toast.makeText(MainActivity.this, R.string.nfc_activated,
+                                    Toast.LENGTH_LONG).show();
+                            mAdapter.enableForegroundDispatch(MainActivity.this, nfcIntent,
+                                    intentFiltersArray, techListsArray);
+                        }
+                    }).setNegativeButton(R.string.no_thanks, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    sp.edit().putBoolean("nfc_hint_shown", true).apply();
+                    Toast.makeText(MainActivity.this, R.string.nfc_not_activated, Toast.LENGTH_LONG)
+                            .show();
+                }
+            }).show();
         }
     }
 
@@ -287,8 +317,8 @@ public class MainActivity extends OpacActivity implements
                 if (scanResult.length() > 5) {
                     SearchFieldDataSource source = new JsonSearchFieldDataSource(this);
                     if (source.hasSearchFields(app.getLibrary().getIdent())) {
-                        List<SearchField> fields =
-                                source.getSearchFields(app.getLibrary().getIdent());
+                        List<SearchField> fields = source
+                                .getSearchFields(app.getLibrary().getIdent());
                         for (SearchField field : fields) {
                             if (field.getMeaning() == SearchField.Meaning.BARCODE) {
                                 List<SearchQuery> queries = new ArrayList<>();
@@ -316,8 +346,8 @@ public class MainActivity extends OpacActivity implements
 
             // Insert the fragment
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                           .replace(R.id.content_frame_right, rightFragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_frame_right, rightFragment)
+                    .commit();
         } else {
             Intent intent = new Intent(this, SearchResultDetailActivity.class);
             intent.putExtra(SearchResultDetailFragment.ARG_ITEM_ID, mNr);
@@ -328,8 +358,7 @@ public class MainActivity extends OpacActivity implements
     @Override
     public void removeFragment() {
         if (rightFragment != null) {
-            getSupportFragmentManager().beginTransaction().remove(rightFragment)
-                                       .commit();
+            getSupportFragmentManager().beginTransaction().remove(rightFragment).commit();
         }
     }
 

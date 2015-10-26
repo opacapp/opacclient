@@ -678,7 +678,7 @@ public class Bibliotheca extends BaseApi {
                             .getElementsByClass("kontomeldung").get(0).text()
                             .trim()});
                 }
-                Pattern p = Pattern.compile("geb.hr", Pattern.MULTILINE);
+                Pattern p = Pattern.compile("geb.hr", Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
                 for (Element div : doc.select(".kontozeile_center")) {
                     for (String text : Jsoup
                             .parse(div.html().replaceAll("(?i)<br[^>]*>",

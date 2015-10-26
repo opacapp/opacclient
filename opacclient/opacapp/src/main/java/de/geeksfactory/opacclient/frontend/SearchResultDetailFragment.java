@@ -476,6 +476,15 @@ public class SearchResultDetailFragment extends Fragment
                         v.findViewById(R.id.tvReturndate).setVisibility(View.GONE);
                     }
                 }
+                if (v.findViewById(R.id.tvUrl) != null) {
+                    if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_URL)) {
+                        ((TextView) v.findViewById(R.id.tvUrl))
+                                .setText(copy.get(DetailledItem.KEY_COPY_URL));
+                        v.findViewById(R.id.tvUrl).setVisibility(View.VISIBLE);
+                    } else {
+                        v.findViewById(R.id.tvUrl).setVisibility(View.GONE);
+                    }
+                }
 
                 llCopies.addView(v);
             }

@@ -227,7 +227,8 @@ public class AccountFragment extends Fragment implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.activity_account, menu);
-        if ((app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ACCOUNT_PROLONG_ALL) != 0) {
+        if (app.getAccount() != null && (
+                app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ACCOUNT_PROLONG_ALL) != 0) {
             menu.findItem(R.id.action_prolong_all).setVisible(true);
         } else {
             menu.findItem(R.id.action_prolong_all).setVisible(false);

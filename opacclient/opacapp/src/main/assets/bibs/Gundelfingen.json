@@ -5,7 +5,7 @@
     "country": "Deutschland",
     "data": {
         "accounttable": null,
-        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-gundelfingen",
+        "baseurl": "https://web-opac.kivbf.de/gundelfingen",
         "copiestable": {
             "barcode": -1,
             "branch": -1,
@@ -15,13 +15,14 @@
             "returndate": 1,
             "status": 0
         },
+        "customssl": true,
         "reservationtable": null
     },
     "geo": [
         48.04296919999999,
         7.8655198
     ],
-    "information": "http://www.bibliotheken.bw-online.de/read-gundelfingen/startseite.html",
+    "information": "https://web-opac.kivbf.de/read-gundelfingen/startseite.html",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Mediathek"
 }

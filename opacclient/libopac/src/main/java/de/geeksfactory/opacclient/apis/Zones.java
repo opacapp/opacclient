@@ -1,23 +1,20 @@
 /**
  * Copyright (C) 2013 by Raphael Michel under the MIT license:
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), 
- * to deal in the Software without restriction, including without limitation 
- * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the Software 
- * is furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in 
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
- * DEALINGS IN THE SOFTWARE.
+ * <p/>
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * <p/>
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ * <p/>
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package de.geeksfactory.opacclient.apis;
 
@@ -65,16 +62,16 @@ import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
 /**
- * API für Web-Opacs von Zones mit dem Hinweis "Zones.2.2.45.04" im Footer. Einziger bekannter
- * Einsatzort ist Hamburg.
+ * API für Web-Opacs von Zones mit dem Hinweis "Zones.2.2.45.xx" oder "ZONES v1.8.1" im Footer.
  * <p/>
- * TODO: Suche nach Medientypen, alles mit Konten + Vorbestellen
+ * TODO: Kontofunktionen für Zones 1.8.1
  */
-public class Zones22 extends BaseApi {
+public class Zones extends BaseApi {
 
     private static HashMap<String, MediaType> defaulttypes = new HashMap<>();
 
     static {
+        // Zones 2.2
         defaulttypes.put("Buch", MediaType.BOOK);
         defaulttypes.put("Buch/Druckschrift", MediaType.BOOK);
         defaulttypes.put("Buch Erwachsene", MediaType.BOOK);
@@ -93,8 +90,16 @@ public class Zones22 extends BaseApi {
         defaulttypes.put("CDROM", MediaType.CD_SOFTWARE);
         defaulttypes.put("E-Audio", MediaType.MP3);
         defaulttypes.put("CD", MediaType.CD);
+
+        // Zones 1.8.1 (.gif file names)
+        defaulttypes.put("book", MediaType.BOOK);
+        defaulttypes.put("cd", MediaType.CD);
+        defaulttypes.put("video", MediaType.MOVIE);
+        defaulttypes.put("serial", MediaType.MAGAZINE);
     }
 
+    // Indicates whether the OPAC uses ZONES 1.8.1 (instead of 2.2)
+    private boolean version18;
     private String opac_url = "";
     private JSONObject data;
     private int page;
@@ -104,6 +109,7 @@ public class Zones22 extends BaseApi {
     @Override
     public List<SearchField> getSearchFields() throws
             IOException {
+        if (!initialised) start();
         List<SearchField> fields = new ArrayList<>();
         String html = httpGet(
                 opac_url
@@ -124,19 +130,31 @@ public class Zones22 extends BaseApi {
             fields.add(field);
         }
 
-        // find branches
-        Elements zst_opts = doc.select(".TabRechAv .limitChoice label");
-        if (zst_opts.size() > 0) {
-            DropdownSearchField brDropdown = new DropdownSearchField();
-            brDropdown.setId(zst_opts.get(0).parent().select("input")
-                    .attr("name"));
-            brDropdown.setDisplayName("Zweigstelle");
+        // find filters
+        String filtersQuery = version18 ? ".inSearchLimits .floatingBox" : ".TabRechAv .limitBlock";
+        Elements filters = doc.select(filtersQuery);
+        int i = 0;
+        for (Element filter : filters) {
+            DropdownSearchField dropdown = new DropdownSearchField();
+            dropdown.addDropdownValue("", "Alle");
+            // All dropdowns use "q.limits.limit" as URL param, but they must not have the same ID
+            dropdown.setId("dropdown_" + i);
 
-            brDropdown.addDropdownValue("", "Alle");
-            for (Element opt : zst_opts) {
-                brDropdown.addDropdownValue(opt.attr("for"), opt.text().trim());
+            if (version18) {
+                dropdown.setDisplayName(filter.select("tr").get(0).text().trim());
+                Elements opts = filter.select("tr").get(1).select("table td:has(input)");
+                for (Element opt : opts) {
+                    dropdown.addDropdownValue(opt.select("input").attr("value"), opt.text().trim());
+                }
+            } else {
+                dropdown.setDisplayName(filter.parent().previousElementSibling().text().trim());
+                Elements opts = filter.select(".limitChoice label");
+                for (Element opt : opts) {
+                    dropdown.addDropdownValue(opt.attr("for"), opt.text().trim());
+                }
             }
-            fields.add(brDropdown);
+            fields.add(dropdown);
+            i++;
         }
 
         return fields;
@@ -155,6 +173,7 @@ public class Zones22 extends BaseApi {
         Document doc = Jsoup.parse(html);
 
         searchobj = doc.select("#ExpertSearch").attr("action");
+        version18 = doc.select(".poweredBy").text().contains("v1.8");
         super.start();
     }
 
@@ -189,7 +208,7 @@ public class Zones22 extends BaseApi {
                     query.getValue()));
             return index + 1;
         } else if (query.getSearchField() instanceof DropdownSearchField) {
-            params.add(new BasicNameValuePair(query.getKey(), query.getValue()));
+            params.add(new BasicNameValuePair("q.limits.limit", query.getValue()));
         }
         return index;
     }
@@ -201,7 +220,7 @@ public class Zones22 extends BaseApi {
 
         List<NameValuePair> params = new ArrayList<>();
 
-        params.add(new BasicNameValuePair("Style", "Portal3"));
+        params.add(new BasicNameValuePair("Style", version18 ? "Portal2" : "Portal3"));
         params.add(new BasicNameValuePair("SubStyle", ""));
         params.add(new BasicNameValuePair("Lang", "GER"));
         params.add(new BasicNameValuePair("ResponseEncoding", "utf-8"));
@@ -237,14 +256,16 @@ public class Zones22 extends BaseApi {
             OpacErrorException {
         List<NameValuePair> params = new ArrayList<>();
 
-        params.add(new BasicNameValuePair("Style", "Portal3"));
+        params.add(new BasicNameValuePair("Style", version18 ? "Portal2" : "Portal3"));
         params.add(new BasicNameValuePair("SubStyle", ""));
         params.add(new BasicNameValuePair("Lang", "GER"));
         params.add(new BasicNameValuePair("ResponseEncoding", "utf-8"));
         if (page > this.page) {
-            params.add(new BasicNameValuePair("Method", "PageDown"));
+            params.add(new BasicNameValuePair("Method",
+                    version18 ? "FetchIncrementalBrowseDown" : "PageDown"));
         } else {
-            params.add(new BasicNameValuePair("Method", "PageUp"));
+            params.add(new BasicNameValuePair("Method",
+                    version18 ? "FetchIncrementalBrowseUp" : "PageUp"));
         }
         params.add(new BasicNameValuePair("PageSize", "10"));
 
@@ -267,25 +288,55 @@ public class Zones22 extends BaseApi {
 
         int results_total = -1;
 
-        if (doc.select(".searchHits").size() > 0) {
-            results_total = Integer.parseInt(doc.select(".searchHits").first()
-                                                .text().trim()
+        String searchHitsQuery = version18 ? "td:containsOwn(Total)" : ".searchHits";
+        if (doc.select(searchHitsQuery).size() > 0) {
+            results_total = Integer.parseInt(doc.select(searchHitsQuery).first().text().trim()
                                                 .replaceAll(".*\\(([0-9]+)\\).*", "$1"));
+        } else if (doc.select("span:matches(\\[\\d+/\\d+\\])").size() > 0) {
+            // Zones 1.8 - searchGetPage
+            String text = doc.select("span:matches(\\[\\d+/\\d+\\])").text();
+            Pattern pattern = Pattern.compile("\\[\\d+/(\\d+)\\]");
+            Matcher matcher = pattern.matcher(text);
+            if (matcher.find()) {
+                results_total = Integer.parseInt(matcher.group(1));
+            }
         }
 
         if (doc.select(".pageNavLink").size() > 0) {
-            searchobj = doc.select(".pageNavLink").first().attr("href")
-                           .split("\\?")[0];
+            // Zones 2.2
+            searchobj = doc.select(".pageNavLink").first().attr("href").split("\\?")[0];
+        } else if (doc.select("div[targetObject]").size() > 0) {
+            // Zones 1.8 - search
+            searchobj = doc.select("div[targetObject]").attr("targetObject").split("\\?")[0];
+        } else {
+            // Zones 1.8 - searchGetPage
+
+            // The page contains a data structure that at first glance seems to be JSON, but uses
+            // "=" instead of ":". So we parse it using regex...
+            Pattern pattern = Pattern.compile("targetObject = \"([^\\?]+)[^\"]+\"");
+            Matcher matcher = pattern.matcher(doc.html());
+            if (matcher.find()) {
+                searchobj = matcher.group(1);
+            }
         }
 
-        Elements table = doc.select("#BrowseList > tbody > tr");
+        Elements table = doc.select(
+                "#BrowseList > tbody > tr," // Zones 2.2
+                        + " .inRoundBox1" // Zones 1.8
+        );
         List<SearchResult> results = new ArrayList<>();
         for (int i = 0; i < table.size(); i++) {
             Element tr = table.get(i);
             SearchResult sr = new SearchResult();
 
-            String typetext = tr.select(".SummaryMaterialTypeField").text()
-                                .replace("\n", " ").trim();
+            String typetext;
+            if (version18) {
+                String[] parts = tr.select("img[src^=IMG/MAT]").attr("src").split("/");
+                typetext = parts[parts.length - 1].replace(".gif", "");
+            } else {
+                typetext = tr.select(".SummaryMaterialTypeField").text().replace("\n", " ").trim();
+            }
+
             if (data.has("mediatypes")) {
                 try {
                     sr.setType(MediaType.valueOf(data.getJSONObject(
@@ -297,41 +348,56 @@ public class Zones22 extends BaseApi {
                 sr.setType(defaulttypes.get(typetext));
             }
 
-            if (tr.select(".SummaryImageCell img[id^=Bookcover]").size() > 0) {
-                String imgUrl = tr
-                        .select(".SummaryImageCell img[id^=Bookcover]").first()
-                        .attr("src");
-                sr.setCover(imgUrl);
+            String imgUrl = null;
+            if (version18) {
+                if (tr.select("a[title=Titelbild]").size() > 0) {
+                    imgUrl = tr.select("a[title=Titelbild]").attr("href");
+                } else if (tr.select("img[width=50]").size() > 0) {
+                    // TODO: better way to select these cover images? (found in Hannover)
+                    imgUrl = tr.select("img[width=50]").attr("src");
+                }
+            } else {
+                if (tr.select(".SummaryImageCell img[id^=Bookcover]").size() > 0) {
+                    imgUrl = tr.select(".SummaryImageCell img[id^=Bookcover]").first().attr("src");
+                }
+            }
+            sr.setCover(imgUrl);
+
+            if (version18) {
+                if (tr.select("img[src$=oci_1.gif]").size() > 0) {
+                    // probably can only appear when searching the catalog on a terminal in
+                    // the library.
+                    sr.setStatus(SearchResult.Status.GREEN);
+                } else if (tr.select("img[src$=blob_amber.gif]").size() > 0) {
+                    sr.setStatus(SearchResult.Status.YELLOW);
+                }
             }
 
             String desc = "";
-            Elements children = tr
-                    .select(".SummaryDataCell tr, .SummaryDataCellStripe tr");
+            String childrenQuery = version18 ? "table[cellpadding=1] tr" :
+                    ".SummaryDataCell tr, .SummaryDataCellStripe tr";
+            Elements children = tr.select(childrenQuery);
             int childrennum = children.size();
             boolean haslink = false;
 
             for (int ch = 0; ch < childrennum; ch++) {
                 Element node = children.get(ch);
-                if (node.select(".SummaryFieldLegend").text().equals("Titel")) {
-                    desc += "<b>"
-                            + node.select(".SummaryFieldData").text().trim()
-                            + "</b><br />";
-
-                } else if (node.select(".SummaryFieldLegend").text()
-                               .equals("Verfasser")
-                        || node.select(".SummaryFieldLegend").text()
-                               .equals("Jahr")) {
-                    desc += node.select(".SummaryFieldData").text().trim()
-                            + "<br />";
+                if (getName(node).equals("Titel")) {
+                    desc += "<b>" + getValue(node).trim() + "</b><br />";
+                } else if (getName(node).equals("Verfasser") || getName(node).equals("Jahr")) {
+                    desc += getValue(node).trim() + "<br />";
                 }
 
-                if (node.select(".SummaryFieldData a.SummaryFieldLink").size() > 0
-                        && !haslink) {
-                    String href = node.select(
-                            ".SummaryFieldData a.SummaryFieldLink").attr(
-                            "abs:href");
+                String linkSelector = version18 ? "a[href*=ShowStock], a[href*=APS_CAT_IDENTIFY]" :
+                        ".SummaryFieldData a.SummaryFieldLink";
+                if (node.select(linkSelector).size() > 0 && !haslink) {
+                    String href = node.select(linkSelector).attr("abs:href");
                     Map<String, String> hrefq = getQueryParamsFirst(href);
-                    sr.setId(hrefq.get("no"));
+                    if (hrefq.containsKey("no")) {
+                        sr.setId(hrefq.get("no"));
+                    } else if (hrefq.containsKey("Key")) {
+                        sr.setId(hrefq.get("Key"));
+                    }
                     haslink = true;
                 }
             }
@@ -347,13 +413,29 @@ public class Zones22 extends BaseApi {
         return new SearchRequestResult(results, results_total, page);
     }
 
+    private String getValue(Element node) {
+        if (version18) {
+            return node.child(4).text().trim();
+        } else {
+            return node.select(".SummaryFieldData").text();
+        }
+    }
+
+    private String getName(Element node) {
+        if (version18) {
+            return node.child(0).text().trim();
+        } else {
+            return node.select(".SummaryFieldLegend").text();
+        }
+    }
+
     @Override
     public DetailledItem getResultById(String id, String homebranch)
             throws IOException {
 
         List<NameValuePair> params = new ArrayList<>();
 
-        params.add(new BasicNameValuePair("Style", "Portal3"));
+        params.add(new BasicNameValuePair("Style", version18 ? "Portal2" : "Portal3"));
         params.add(new BasicNameValuePair("SubStyle", ""));
         params.add(new BasicNameValuePair("Lang", "GER"));
         params.add(new BasicNameValuePair("ResponseEncoding", "utf-8"));
@@ -381,10 +463,9 @@ public class Zones22 extends BaseApi {
 
         result.setId(id);
 
-        Elements detaildiv = doc.select("div.record-item-new");
-
-        Elements detailtrs1 = doc
-                .select(".DetailDataCell table table:not(.inRecordHeader) tr");
+        String detailTrsQuery = version18 ? ".inRoundBox1 table table tr" :
+                ".DetailDataCell table table:not(.inRecordHeader) tr";
+        Elements detailtrs1 = doc.select(detailTrsQuery);
         for (int i = 0; i < detailtrs1.size(); i++) {
             Element tr = detailtrs1.get(i);
             int s = tr.children().size();
@@ -396,8 +477,7 @@ public class Zones22 extends BaseApi {
                 if (valchild.select("table").isEmpty()) {
                     String val = valchild.text().trim();
                     if (val.length() > 0) {
-                        result.addDetail(new Detail(tr.child(0).text().trim(),
-                                val));
+                        result.addDetail(new Detail(tr.child(0).text().trim(), val));
                     }
                 }
             }
@@ -410,6 +490,7 @@ public class Zones22 extends BaseApi {
             }
         }
 
+        Elements detaildiv = doc.select("div.record-item-new");
         if (!detaildiv.isEmpty()) {
             for (int i = 0; i < detaildiv.size(); i++) {
                 Element dd = detaildiv.get(i);
@@ -463,7 +544,7 @@ public class Zones22 extends BaseApi {
             result.setCover(doc.select(".BookCover, .LargeBookCover").first().attr("src"));
         }
 
-        Elements copydivs = doc.select(".DetailDataCell div[id^=stock_]");
+        Elements copydivs = doc.select("div[id^=stock_]");
         String pop = "";
         for (int i = 0; i < copydivs.size(); i++) {
             Element div = copydivs.get(i);
@@ -475,9 +556,8 @@ public class Zones22 extends BaseApi {
 
             Map<String, String> copy = new HashMap<>();
 
-            // This is getting very ugly - check if it is valid for libraries
-            // which are not
-            // Hamburg.
+            // This is getting very ugly - check if it is valid for libraries which are not Hamburg.
+            // Seems to also work in Kiel (Zones 1.8, checked 10.10.2015)
             int j = 0;
             for (Node node : div.childNodes()) {
                 try {

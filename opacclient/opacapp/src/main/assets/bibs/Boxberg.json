@@ -5,7 +5,7 @@
     "country": "Deutschland",
     "data": {
         "accounttable": null,
-        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-Boxberg",
+        "baseurl": "https://web-opac.kivbf.de/boxberg",
         "copiestable": {
             "barcode": -1,
             "branch": -1,
@@ -15,6 +15,7 @@
             "returndate": 3,
             "status": 2
         },
+        "customssl": true,
         "reservationtable": null
     },
     "geo": [

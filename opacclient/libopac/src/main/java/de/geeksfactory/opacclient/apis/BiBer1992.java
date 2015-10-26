@@ -120,7 +120,7 @@ public class BiBer1992 extends BaseApi {
         List<SearchField> fields = new ArrayList<>();
 
         HttpGet httpget;
-        if (opacDir.equals("opax") || opacDir.equals("opax13")) {
+        if (opacDir.contains("opax")) {
             httpget = new HttpGet(opacUrl + "/" + opacDir
                     + "/de/qsel.html.S");
         } else {
@@ -692,7 +692,7 @@ public class BiBer1992 extends BaseApi {
 
         item.setReservable(true); // We cannot check if media is reservable
 
-        if (opacDir.equals("opax")) {
+        if (opacDir.contains("opax")) {
             if (document.select("input[type=checkbox]").size() > 0) {
                 item.setReservation_info(document
                         .select("input[type=checkbox]").first().attr("name"));
@@ -735,8 +735,8 @@ public class BiBer1992 extends BaseApi {
             // STEP 1: Check if reservable and select branch ("ID1")
 
             // Differences between opax and opac
-            String func = opacDir.equals("opax") ? "sigl" : "resF";
-            String id = opacDir.equals("opax") ? (resinfo.contains("resF") ? resinfo
+            String func = opacDir.contains("opax") ? "sigl" : "resF";
+            String id = opacDir.contains("opax") ? (resinfo.contains("resF") ? resinfo
                     .substring(5) + "=" + resinfo
                     : resinfo + "=resF_" + resinfo)
                     : "ID=" + resinfo;
@@ -784,7 +784,7 @@ public class BiBer1992 extends BaseApi {
             nameValuePairs.add(new BasicNameValuePair("PASSWORD", account
                     .getPassword()));
             nameValuePairs.add(new BasicNameValuePair("FUNC", "vors"));
-            if (opacDir.equals("opax")) {
+            if (opacDir.contains("opax")) {
                 nameValuePairs.add(new BasicNameValuePair(resinfo.replace(
                         "resF_", ""), "vors"
                         + (newStyleReservations ? resinfo.replace("resF_", "")
@@ -841,7 +841,7 @@ public class BiBer1992 extends BaseApi {
         // prolong media via http POST
         // Offenburg: URL is .../opac/verl.C
         // Hagen: URL is .../opax/renewmedia.C
-        if (opacDir.equals("opax")) {
+        if (opacDir.contains("opax")) {
             command = "/renewmedia" + opacSuffix;
         } else {
             command = "/verl" + opacSuffix;
@@ -924,7 +924,7 @@ public class BiBer1992 extends BaseApi {
         List<NameValuePair> nameValuePairs = new ArrayList<>();
         nameValuePairs.add(new BasicNameValuePair("LANG", "de"));
         nameValuePairs.add(new BasicNameValuePair("FUNC", "vorl"));
-        if (opacDir.equals("opax")) {
+        if (opacDir.contains("opax")) {
             nameValuePairs.add(new BasicNameValuePair("BENUTZER", account
                     .getName()));
             nameValuePairs.add(new BasicNameValuePair("PASSWORD", account
@@ -932,7 +932,7 @@ public class BiBer1992 extends BaseApi {
         }
         nameValuePairs.add(new BasicNameValuePair(media, "YES"));
 
-        String action = opacDir.equals("opax") ? "/delreserv" + opacSuffix : "/vorml" + opacSuffix;
+        String action = opacDir.contains("opax") ? "/delreserv" + opacSuffix : "/vorml" + opacSuffix;
 
         String html = httpPost(opacUrl + "/" + opacDir + action,
                 new UrlEncodedFormEntity(nameValuePairs), getDefaultEncoding());

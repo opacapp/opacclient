@@ -1,0 +1,50 @@
+{
+    "account_supported": true,
+    "api": "bibliotheca",
+    "city": "Halberstadt",
+    "country": "Deutschland",
+    "data": {
+        "accounttable": {
+            "author": 0,
+            "prolongurl": 3,
+            "returndate": 2,
+            "title": 1
+        },
+        "baseurl": "http://bibliothek.kdz-ws.net/VerbundHarzPlus",
+        "copiestable": {
+            "barcode": 0,
+            "branch": 4,
+            "department": 2,
+            "location": 1,
+            "returndate": 5,
+            "status": 3
+        },
+        "db": "BIBLIO-750",
+        "mediatypes": {
+            "cdkl.gif": "CD_SOFTWARE",
+            "dvdkl.gif": "DVD",
+            "kassettekl.gif": "AUDIO_CASSETTE",
+            "mAboS.gif": "MAGAZINE",
+            "mBmonoS.gif": "BOOK",
+            "mComicS.gif": "BOOK",
+            "mEBookS.gif": "EBOOK",
+            "mMusikCDS.gif": "CD",
+            "mZeitS.gif": "NEWSPAPER",
+            "musersS.gif": "CD",
+            "videokl.gif": "MOVIE"
+        },
+        "reservationtable": {
+            "author": 0,
+            "availability": 2,
+            "cancelurl": 3,
+            "title": 1
+        }
+    },
+    "geo": [
+        51.89487090000001,
+        11.0496159
+    ],
+    "information": "http://www.halberstadt.de/de/stadtbibliothek-heinrich-heine.html",
+    "state": "Sachsen-Anhalt",
+    "title": "Stadtbibliothek"
+}

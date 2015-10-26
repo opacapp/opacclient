@@ -58,10 +58,10 @@ import de.geeksfactory.opacclient.apis.Bibliotheca;
 import de.geeksfactory.opacclient.apis.Heidi;
 import de.geeksfactory.opacclient.apis.IOpac;
 import de.geeksfactory.opacclient.apis.OpacApi;
+import de.geeksfactory.opacclient.apis.Open;
 import de.geeksfactory.opacclient.apis.PicaLBS;
 import de.geeksfactory.opacclient.apis.PicaOld;
 import de.geeksfactory.opacclient.apis.Primo;
-import de.geeksfactory.opacclient.apis.Open;
 import de.geeksfactory.opacclient.apis.SISIS;
 import de.geeksfactory.opacclient.apis.SRU;
 import de.geeksfactory.opacclient.apis.TestApi;
@@ -70,7 +70,7 @@ import de.geeksfactory.opacclient.apis.VuFind;
 import de.geeksfactory.opacclient.apis.WebOpacAt;
 import de.geeksfactory.opacclient.apis.WebOpacNet;
 import de.geeksfactory.opacclient.apis.WinBiap;
-import de.geeksfactory.opacclient.apis.Zones22;
+import de.geeksfactory.opacclient.apis.Zones;
 import de.geeksfactory.opacclient.frontend.AccountListActivity;
 import de.geeksfactory.opacclient.frontend.MainActivity;
 import de.geeksfactory.opacclient.frontend.MainPreferenceActivity;
@@ -214,8 +214,9 @@ public class OpacClient extends Application {
         // Backwards compatibility
         {
             newApiInstance = new SISIS();
-        } else if (lib.getApi().equals("zones22")) {
-            newApiInstance = new Zones22();
+        } else if (lib.getApi().equals("zones22") // Backwards compatibility
+                || lib.getApi().equals("zones")) {
+            newApiInstance = new Zones();
         } else if (lib.getApi().equals("biber1992")) {
             newApiInstance = new BiBer1992();
         } else if (lib.getApi().equals("pica")) {

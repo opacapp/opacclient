@@ -4,9 +4,9 @@
     "city": "Berlin",
     "country": "Deutschland",
     "data": {
-        "baseurl": "https://opac.vzlbs2.gbv.de",
+        "baseurl": "https://vzlbs2.gbv.de",
         "db": "51",
-        "httpsbaseurl": "https://opac.vzlbs2.gbv.de"
+        "httpsbaseurl": "https://vzlbs2.gbv.de"
     },
     "geo": [
         52.423481,

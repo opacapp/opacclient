@@ -5,7 +5,7 @@
     "country": "Deutschland",
     "data": {
         "accounttable": null,
-        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-engen",
+        "baseurl": "https://web-opac.kivbf.de/engen",
         "copiestable": {
             "barcode": -1,
             "branch": 0,
@@ -15,6 +15,7 @@
             "returndate": 4,
             "status": 3
         },
+        "customssl": true,
         "reservationtable": null
     },
     "geo": [

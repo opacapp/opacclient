@@ -14,7 +14,7 @@
             "status": -1,
             "title": 1
         },
-        "baseurl": "http://www.stadtbuecherei-frankfurt.de/opac",
+        "baseurl": "https://www.stadtbuecherei-frankfurt.de/opac",
         "copiestable": {
             "barcode": -1,
             "branch": 0,

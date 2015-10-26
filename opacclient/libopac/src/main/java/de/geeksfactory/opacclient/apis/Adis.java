@@ -127,7 +127,7 @@ public class Adis extends BaseApi implements OpacApi {
     public Document htmlGet(String url) throws
             IOException {
 
-        if (!url.contains("requestCount")) {
+        if (!url.contains("requestCount") && s_requestCount >= 0) {
             url = url + (url.contains("?") ? "&" : "?") + "requestCount="
                     + s_requestCount;
         }
@@ -247,6 +247,7 @@ public class Adis extends BaseApi implements OpacApi {
     public void start() throws IOException {
 
         try {
+            s_requestCount = -1;
             Document doc = htmlGet(opac_url + "?"
                     + data.getString("startparams"));
 
@@ -305,6 +306,8 @@ public class Adis extends BaseApi implements OpacApi {
                 }
 
                 if (query.getSearchField() instanceof TextSearchField &&
+                        query.getSearchField().getData() != null &&
+                        !query.getSearchField().getData().optBoolean("selectable", true) &&
                         doc.select("#" + query.getKey()).size() > 0) {
                     doc.select("#" + query.getKey())
                        .val(query.getValue());
@@ -412,14 +415,19 @@ public class Adis extends BaseApi implements OpacApi {
                 res.setId(matcher.group(1));
             }
 
-            if (tr.select(".rTable_td_img img").size() > 0) {
-                String typetext = tr.select(".rTable_td_img img").first()
-                                    .attr("title");
-                if (types.containsKey(typetext)) {
-                    res.setType(types.get(typetext));
-                } else if (typetext.contains("+")
-                        && types.containsKey(typetext.split("\\+")[0].trim())) {
-                    res.setType(types.get(typetext.split("\\+")[0].trim()));
+            for (Element img : tr.select(".rTable_td_img img, .rTable_td_text img")) {
+                String ttext = img.attr("title");
+                if (types.containsKey(ttext)) {
+                    res.setType(types.get(ttext));
+                } else if (ttext.contains("+")
+                        && types.containsKey(ttext.split("\\+")[0].trim())) {
+                    res.setType(types.get(ttext.split("\\+")[0].trim()));
+                } else if (ttext.matches(".*ist verf.+gbar") || ttext.contains("is available") ||
+                        img.attr("href").contains("verfu_ja")) {
+                    res.setStatus(SearchResult.Status.GREEN);
+                } else if (ttext.matches(".*nicht verf.+gbar") || ttext.contains("not available") ||
+                        img.attr("href").contains("verfu_nein")) {
+                    res.setStatus(SearchResult.Status.RED);
                 }
             }
 
@@ -568,22 +576,27 @@ public class Adis extends BaseApi implements OpacApi {
 
         Map<Integer, String> colmap = new HashMap<>();
         int i = 0;
-        for (Element th : doc.select("#R08 table.rTable_table thead tr th")) {
+        for (Element th : doc
+                .select("#R08 table.rTable_table thead tr th, " +
+                        "#R09 table.rTable_table thead tr th")) {
             String head = th.text().trim();
-            if (head.contains("Bibliothek")) {
+            if (head.contains("Bibliothek") || head.contains("Library")) {
                 colmap.put(i, DetailledItem.KEY_COPY_BRANCH);
-            } else if (head.contains("Standort")) {
+            } else if (head.contains("Standort") || head.contains("Location")) {
                 colmap.put(i, DetailledItem.KEY_COPY_LOCATION);
-            } else if (head.contains("Signatur")) {
+            } else if (head.contains("Signatur") || head.contains("Call number")) {
                 colmap.put(i, DetailledItem.KEY_COPY_SHELFMARK);
+            } else if (head.contains("URL")) {
+                colmap.put(i, DetailledItem.KEY_COPY_URL);
             } else if (head.contains("Status") || head.contains("Hinweis")
-                    || head.matches(".*Verf.+gbarkeit.*")) {
+                    || head.matches(".*Verf.+gbarkeit.*") || head.contains("Status")) {
                 colmap.put(i, DetailledItem.KEY_COPY_STATUS);
             }
             i++;
         }
 
-        for (Element tr : doc.select("#R08 table.rTable_table tbody tr")) {
+        for (Element tr : doc.select("#R08 table.rTable_table tbody tr," +
+                "#R09 table.rTable_table tbody tr")) {
             Map<String, String> line = new HashMap<>();
             for (Entry<Integer, String> entry : colmap.entrySet()) {
                 if (entry.getValue().equals(DetailledItem.KEY_COPY_STATUS)) {
@@ -597,8 +610,7 @@ public class Adis extends BaseApi implements OpacApi {
                         line.put(DetailledItem.KEY_COPY_STATUS, status);
                     }
                 } else {
-                    line.put(entry.getValue(), tr.child(entry.getKey()).text()
-                                                 .trim());
+                    line.put(entry.getValue(), tr.child(entry.getKey()).text().trim());
                 }
             }
             res.addCopy(line);

@@ -14,7 +14,7 @@
             "status": -1,
             "title": 1
         },
-        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-hirschberg",
+        "baseurl": "https://web-opac.kivbf.de/hirschberg",
         "copiestable": {
             "barcode": -1,
             "branch": 0,
@@ -24,6 +24,7 @@
             "returndate": 3,
             "status": 2
         },
+        "customssl": true,
         "reservationtable": {
             "author": 0,
             "availability": 2,

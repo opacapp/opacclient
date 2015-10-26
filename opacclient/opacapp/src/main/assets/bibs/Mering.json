@@ -1,0 +1,16 @@
+{
+    "account_supported": true,
+    "api": "winbiap",
+    "city": "Mering",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://opac.winbiap.net/mering"
+    },
+    "geo": [
+        48.267719,
+        10.984637
+    ],
+    "information": "http://vg-mering.de/staticsite/staticsite.php?menuid=202&topmenu=49&keepmenu=inactive",
+    "state": "Bayern",
+    "title": "B\u00fccherei"
+}

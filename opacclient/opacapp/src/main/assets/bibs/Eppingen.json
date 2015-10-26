@@ -14,7 +14,7 @@
             "status": -1,
             "title": 1
         },
-        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-eppingen",
+        "baseurl": "https://web-opac.kivbf.de/eppingen",
         "copiestable": {
             "barcode": -1,
             "branch": -1,
@@ -24,6 +24,7 @@
             "returndate": 4,
             "status": 0
         },
+        "customssl": true,
         "reservationtable": {
             "author": 0,
             "availability": 2,

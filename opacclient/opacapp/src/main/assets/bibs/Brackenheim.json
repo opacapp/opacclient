@@ -10,12 +10,13 @@
             "returndate": 3,
             "title": 1
         },
-        "baseurl": "http://www.bibliotheken.bw-online.de/wwwopac-brackenheim",
+        "baseurl": "https://web-opac.kivbf.de/brackenheim",
         "copiestable": {
             "location": 2,
             "returndate": 5,
             "status": 4
         },
+        "customssl": true,
         "mediatypes": {
             "ComicS.gif": "BOOK",
             "HALkl.gif": "BOOK",

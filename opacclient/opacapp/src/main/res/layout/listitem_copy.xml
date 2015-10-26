@@ -63,6 +63,19 @@
             android:contentDescription="@string/shelfmark"/>
 
         <TextView
+            android:id="@+id/tvUrl"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:contentDescription="@string/url"
+            android:drawableLeft="@drawable/ic_url"
+            android:drawablePadding="4dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:textIsSelectable="true"/>
+
+        <TextView
             android:id="@+id/tvStatus"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

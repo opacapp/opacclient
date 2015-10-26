@@ -4,9 +4,9 @@
     "city": "Wiesbaden",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://vzlbs2.gbv.de/",
+        "baseurl": "https://vzlbs2.gbv.de/",
         "db": "65",
-        "httpsbaseurl": "https://opac.vzlbs2.gbv.de/"
+        "httpsbaseurl": "https://vzlbs2.gbv.de/"
     },
     "geo": [
         50.0630804,
