@@ -224,7 +224,7 @@ public class VuFind extends BaseApi {
 
             for (Element img : row.select("img")) {
                 String src = img.absUrl("src");
-                if (src.contains("Cover")) {
+                if (src.contains("over")) {
                     if (!src.contains("Unavailable")) {
                         res.setCover(src);
                     }
@@ -287,9 +287,9 @@ public class VuFind extends BaseApi {
         if (title.size() > 0) {
             res.setTitle(title.text());
         }
-        for (Element img : doc.select(".record img")) {
+        for (Element img : doc.select(".record img, #cover img")) {
             String src = img.absUrl("src");
-            if (src.contains("Cover") || src.contains("bookcover")) {
+            if (src.contains("over")) {
                 if (!src.contains("Unavailable")) {
                     res.setCover(src);
                 }
