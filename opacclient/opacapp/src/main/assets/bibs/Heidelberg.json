@@ -14,7 +14,7 @@
             "status": 0,
             "title": 1
         },
-        "baseurl": "http://ww3.heidelberg.de/wwwopac",
+        "baseurl": "https://ww2.heidelberg.de/wwwopac",
         "copiestable": {
             "barcode": 5,
             "branch": 0,
