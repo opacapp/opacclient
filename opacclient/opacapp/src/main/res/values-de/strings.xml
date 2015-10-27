@@ -167,6 +167,7 @@
     <string name="export_starred">Exportieren</string>
     <string name="geolocate">Finde Bibliotheken in meiner Nähe</string>
     <string name="geolocate_progress">Standort wird ermittelt…</string>
+    <string name="geolocate_not_available">Standortbestimmung ist auf diesem Gerät nicht verfügbar. Vielleicht muss sie in den Einstellungen aktiviert werden.</string>
     <string name="alphabetic_list">Vollständige Liste anzeigen</string>
     <string name="setting_nfc">NFC-Suche</string>
     <string name="setting_nfc_desc">Experimentell. Nur mit wenigen Geräten und Bibliotheken.</string>

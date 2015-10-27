@@ -168,6 +168,7 @@ We might know your library ID then, but not your password, and we will take care
     <string name="export_starred">Export</string>
     <string name="geolocate">Find nearby libraries</string>
     <string name="geolocate_progress">Locating you…</string>
+    <string name="geolocate_not_available">Location is not available on this device. You might need to enable it in the settings.</string>
     <string name="alphabetic_list">Show full list</string>
     <string name="setting_nfc">Search by NFC tags</string>
     <string name="setting_nfc_desc">Experimental. Only on some devices and in some libraries.</string>

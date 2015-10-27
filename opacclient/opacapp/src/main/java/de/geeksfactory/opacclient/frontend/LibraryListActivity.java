@@ -1,9 +1,11 @@
 package de.geeksfactory.opacclient.frontend;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -36,6 +38,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.text.Collator;
@@ -56,12 +59,14 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.ui.AppCompatProgressDialog;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
 
-public class LibraryListActivity extends AppCompatActivity {
+public class LibraryListActivity extends AppCompatActivity
+        implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     public static final int LEVEL_COUNTRY = 0;
     public static final int LEVEL_STATE = 1;
     public static final int LEVEL_CITY = 2;
     public static final int LEVEL_LIBRARY = 3;
+    private static final int REQUEST_LOCATION_PERMISSION = 0;
 
     protected List<Library> libraries;
     protected LibraryListFragment fragment;
@@ -74,6 +79,9 @@ public class LibraryListActivity extends AppCompatActivity {
 
     protected SearchView searchView;
     protected MenuItem searchItem;
+
+    protected TextView tvLocateString;
+    protected ImageView ivLocationIcon;
 
     @Override
     protected void onPause() {
@@ -101,18 +109,21 @@ public class LibraryListActivity extends AppCompatActivity {
         }
 
         new LoadLibrariesTask().execute((OpacClient) getApplication());
-        final TextView tvLocateString = (TextView) findViewById(R.id.tvLocateString);
-        final ImageView ivLocationIcon = (ImageView) findViewById(R.id.ivLocationIcon);
         final LinearLayout llLocate = (LinearLayout) findViewById(R.id.llLocate);
+        tvLocateString = (TextView) findViewById(R.id.tvLocateString);
+        ivLocationIcon = (ImageView) findViewById(R.id.ivLocationIcon);
 
-        final LocationManager locationManager =
-                (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_COARSE); // no GPS
-        final String provider = locationManager.getBestProvider(criteria, true);
-        if (provider == null) // no geolocation available
-        {
-            llLocate.setVisibility(View.GONE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED) {
+            final LocationManager locationManager =
+                    (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            Criteria criteria = new Criteria();
+            criteria.setAccuracy(Criteria.ACCURACY_COARSE); // no GPS
+            final String provider = locationManager.getBestProvider(criteria, true);
+            if (provider == null) {
+                // no geolocation available
+                llLocate.setVisibility(View.GONE);
+            }
         }
 
         llLocate.setOnClickListener(new OnClickListener() {
@@ -191,8 +202,13 @@ public class LibraryListActivity extends AppCompatActivity {
     }
 
     public void showListGeo() {
-        final TextView tvLocateString = (TextView) findViewById(R.id.tvLocateString);
-        final ImageView ivLocationIcon = (ImageView) findViewById(R.id.ivLocationIcon);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    REQUEST_LOCATION_PERMISSION);
+            return;
+        }
 
         final LocationManager locationManager =
                 (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -200,9 +216,16 @@ public class LibraryListActivity extends AppCompatActivity {
         criteria.setAccuracy(Criteria.ACCURACY_COARSE); // no GPS
         final String provider = locationManager.getBestProvider(criteria, true);
 
-        if (provider == null || libraries == null) {
+        if (provider == null) {
+            Toast.makeText(this, R.string.geolocate_not_available, Toast.LENGTH_LONG).show();
+            tvLocateString.setText(R.string.geolocate);
+            ivLocationIcon.setImageResource(R.drawable.ic_locate);
             return;
         }
+        if (libraries == null) {
+            return;
+        }
+
         locationManager.requestLocationUpdates(provider, 0, 0,
                 new LocationListener() {
                     @Override
@@ -277,6 +300,22 @@ public class LibraryListActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+            @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_LOCATION_PERMISSION) {
+            // Check if the permission has been granted
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                showListGeo();
+            } else {
+                tvLocateString.setText(R.string.geolocate);
+                ivLocationIcon.setImageResource(R.drawable.ic_locate);
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
     public void showListCountries(boolean fade) {
@@ -500,8 +539,6 @@ public class LibraryListActivity extends AppCompatActivity {
                                        .commit();
         }
 
-        TextView tvLocateString = (TextView) findViewById(R.id.tvLocateString);
-        ImageView ivLocationIcon = (ImageView) findViewById(R.id.ivLocationIcon);
         tvLocateString.setText(R.string.alphabetic_list);
         ivLocationIcon.setImageResource(R.drawable.ic_list);
     }
