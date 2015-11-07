@@ -121,7 +121,10 @@ public class HTTPClient {
                         "Received redirect response " + response.getStatusLine()
                                 + " but no location header");
             }
-            final String location = locationHeader.getValue().replaceAll(" ", "%20");
+            String location = locationHeader.getValue().replaceAll(" ", "%20");
+
+            // PICA LBS sometimes sends URLs ending with a " character, for whatever reason.
+            if (location.endsWith("\"")) location = location.substring(0, location.length() - 2);
 
             final RequestConfig config = clientContext.getRequestConfig();
 
