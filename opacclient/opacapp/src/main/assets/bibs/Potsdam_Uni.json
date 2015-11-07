@@ -4,8 +4,10 @@
     "city": "Potsdam",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://opac.ub.uni-potsdam.de/",
-        "db": "1"
+        "baseurl": "http://opac.ub.uni-potsdam.de",
+        "db": "1",
+        "account_system":"lbs",
+        "lbs_url":"http://loan.ub.uni-potsdam.de"
     },
     "geo": [
         52.4003952,

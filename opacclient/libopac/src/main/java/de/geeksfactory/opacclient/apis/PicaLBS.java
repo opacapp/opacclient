@@ -34,6 +34,13 @@ import de.geeksfactory.opacclient.objects.Library;
  * @author Johan von Forstner, 30.08.2015
  */
 public class PicaLBS extends Pica {
+    private String lbsUrl;
+
+    public void init(Library lib) {
+        super.init(lib);
+        this.lbsUrl = data.optString("lbs_url", this.opac_url);
+    }
+
     @Override
     public ReservationResult reservation(DetailledItem item, Account account,
             int useraction, String selection) throws IOException {
@@ -101,7 +108,7 @@ public class PicaLBS extends Pica {
         params.add(new BasicNameValuePair("_volumeNumbersToRenew", ""));
         params.add(new BasicNameValuePair("volumeNumbersToRenew", media));
 
-        String html = httpPost(opac_url + "/LBS_WEB/borrower/loans.htm",
+        String html = httpPost(lbsUrl + "/LBS_WEB/borrower/loans.htm",
                 new UrlEncodedFormEntity(params), getDefaultLBSEncoding());
         Document doc = Jsoup.parse(html);
         String message = doc.select(".alertmessage").text();
@@ -127,7 +134,7 @@ public class PicaLBS extends Pica {
         params.add(new BasicNameValuePair("_volumeReservationsToCancel", ""));
         params.add(new BasicNameValuePair("volumeReservationsToCancel", media));
 
-        String html = httpPost(opac_url + "/LBS_WEB/borrower/reservations.htm",
+        String html = httpPost(lbsUrl + "/LBS_WEB/borrower/reservations.htm",
                 new UrlEncodedFormEntity(params), getDefaultLBSEncoding());
         Document doc = Jsoup.parse(html);
         String message = doc.select(".alertmessage").text();
@@ -149,16 +156,16 @@ public class PicaLBS extends Pica {
         AccountData adata = new AccountData(account.getId());
 
         Document dataDoc = Jsoup.parse(
-                httpGet(opac_url + "/LBS_WEB/borrower/borrower.htm", getDefaultLBSEncoding()));
+                httpGet(lbsUrl + "/LBS_WEB/borrower/borrower.htm", getDefaultLBSEncoding()));
         adata.setPendingFees(extractAccountInfo(dataDoc, "Total Costs", "Gesamtbetrag Kosten"));
         adata.setValidUntil(extractAccountInfo(dataDoc, "Expires at", "endet am"));
 
         Document lentDoc = Jsoup.parse(
-                httpGet(opac_url + "/LBS_WEB/borrower/loans.htm", getDefaultLBSEncoding()));
+                httpGet(lbsUrl + "/LBS_WEB/borrower/loans.htm", getDefaultLBSEncoding()));
         adata.setLent(parse_medialist(lentDoc));
 
         Document reservationsDoc = Jsoup.parse(
-                httpGet(opac_url + "/LBS_WEB/borrower/reservations.htm", getDefaultLBSEncoding()));
+                httpGet(lbsUrl + "/LBS_WEB/borrower/reservations.htm", getDefaultLBSEncoding()));
         adata.setReservations(parse_reslist(reservationsDoc));
 
         return adata;
@@ -318,17 +325,17 @@ public class PicaLBS extends Pica {
 
     private void login(Account account) throws IOException, OpacErrorException {
         // check if already logged in
-        String html = httpGet(opac_url + "/LBS_WEB/borrower/borrower.htm",
+        String html = httpGet(lbsUrl + "/LBS_WEB/borrower/borrower.htm",
                 getDefaultLBSEncoding(), true);
         if (!html.contains("Login") && !html.equals("")) return;
 
         // Get JSESSIONID cookie
-        httpGet(opac_url + "/LBS_WEB/borrower/borrower.htm?USR=1000&BES=1&LAN=" + getLang(),
+        httpGet(lbsUrl + "/LBS_WEB/borrower/borrower.htm?USR=1000&BES=1&LAN=" + getLang(),
                 getDefaultLBSEncoding());
         List<NameValuePair> data = new ArrayList<>();
         data.add(new BasicNameValuePair("j_username", account.getName()));
         data.add(new BasicNameValuePair("j_password", account.getPassword()));
-        Document doc = Jsoup.parse(httpPost(opac_url + "/LBS_WEB/j_spring_security_check",
+        Document doc = Jsoup.parse(httpPost(lbsUrl + "/LBS_WEB/j_spring_security_check",
                 new UrlEncodedFormEntity(data), getDefaultLBSEncoding()));
 
         if (doc.select("font[color=red]").size() > 0) {
