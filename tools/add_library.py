@@ -209,8 +209,10 @@ class Bibliotheca(Api):
 
         data['mediatypes'] = {}
         for i in range(1, 100):
+            if not config.has_option("ANZEIGE_MEDIGRPPIC", "MEDIGRPPIC" + str(i)):
+                continue
             conf = config.get("ANZEIGE_MEDIGRPPIC", "MEDIGRPPIC" + str(i))
-            if conf == '':
+            if conf == '' or conf is None:
                 continue
             split = conf.split("#")
             data['mediatypes'][split[1]] = split[2]
