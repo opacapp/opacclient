@@ -5,7 +5,8 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://www.lib.bonn.de/webOPACClient",
-        "customssl": true
+        "customssl": true,
+        "startparams": "Login=web00"
     },
     "geo": [
         50.73743,
