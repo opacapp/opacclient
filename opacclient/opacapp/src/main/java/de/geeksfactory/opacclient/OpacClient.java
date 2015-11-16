@@ -85,7 +85,7 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.StarContentProvider;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
 
-@ReportsCrashes(formKey = "", mailTo = "info@opacapp.de",
+@ReportsCrashes(mailTo = "info@opacapp.de",
         mode = org.acra.ReportingInteractionMode.NOTIFICATION,
         sendReportsInDevMode = false,
         resToastText = R.string.crash_toast_text)
@@ -423,8 +423,7 @@ public class OpacClient extends Application {
             config.setResNotifText(R.string.crash_notif_text);
             config.setResNotifIcon(android.R.drawable.stat_notify_error);
             config.setResDialogText(R.string.crash_dialog_text);
-            ACRA.setConfig(config);
-            ACRA.init(this);
+            ACRA.init(this, config);
 
             if (getLibrary() != null) {
                 ACRA.getErrorReporter().putCustomData("library",
