@@ -1416,7 +1416,7 @@ public class Adis extends BaseApi implements OpacApi {
         List<SearchField> fields = new ArrayList<>();
         // dropdown to select which field you want to search in
         Elements searchoptions = doc.select("#SUCH01_1 option");
-        if (searchoptions.size() == 0) {
+        if (searchoptions.size() == 0 && doc.select("input[fld=FELD01_1]").size() > 0) {
             // Hack is needed in Nuernberg
             searchoptions = doc.select("input[fld=FELD01_1]").first().previousElementSibling()
                                .select("option");

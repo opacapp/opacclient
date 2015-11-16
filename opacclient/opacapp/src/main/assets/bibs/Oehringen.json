@@ -25,6 +25,17 @@
             "status": 2
         },
         "customssl": true,
+        "mediatypes": {
+            "Picto-klein.gif": "EBOOK",
+            "Buch_30px.jpg": "BOOK",
+            "Comic_30x.jpg": "BOOK",
+            "Munzinger3k.png": "EDOC",
+            "DVD_30px.jpg": "DVD",
+            "HBUCH_30px.jpg": "AUDIOBOOK",
+            "Musik_CD_30px.jpg": "CD_MUSIC",
+            "BLURAY_30px.jpg": "BLURAY",
+            "Picto-klein.gif": "MP3"
+		},
         "reservationtable": {
             "author": 0,
             "availability": 2,
