@@ -4,8 +4,7 @@
     "city": "Eichst\u00e4tt-Ingolstadt",
     "country": "Deutschland",
     "data": {
-        "baseurl": "https://opac.ku.de/InfoGuideClient",
-        "startparams": "Login=opacw0"
+        "baseurl": "https://opac.ku.de/TouchPoint"
     },
     "geo": [
         48.7665351,
