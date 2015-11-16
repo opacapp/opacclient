@@ -23,10 +23,12 @@ package de.geeksfactory.opacclient.frontend;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
+import android.preference.PreferenceManager;
 
 import com.github.machinarius.preferencefragment.PreferenceFragment;
 
@@ -90,6 +92,9 @@ public class MainPreferenceFragment extends PreferenceFragment {
                 SearchFieldDataSource sfdata = new JsonSearchFieldDataSource(
                         context);
                 sfdata.clearAll();
+
+                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                sp.edit().remove("reservation_fee_warning_ignore").apply();
 
                 Intent i = new Intent(context,
                         ReminderCheckService.class);

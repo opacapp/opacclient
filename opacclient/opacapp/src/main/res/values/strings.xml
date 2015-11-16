@@ -255,4 +255,9 @@ We might know your library ID then, but not your password, and we will take care
         at any time.</string>
     <string name="nfc_not_activated">You can enable NFC search in the settings at any time.</string>
     <string name="content_description_nfc_logo">NFC logo</string>
+    <string name="reservation_fee_warning">Please note that, depending on your library\'s rules,
+        fees might apply for reservations. If in doubt, please check your library\'s scale of
+        fees.</string>
+    <string name="do_not_ask_again">Do not show again</string>
+    <string name="reservation_fee_continue">Continue</string>
 </resources>

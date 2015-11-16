@@ -722,16 +722,6 @@ public class BiBer1992 extends BaseApi {
             int useraction, String selection) throws IOException {
         String resinfo = item.getReservation_info();
         if (selection == null || selection.equals("confirmed")) {
-            if (data.optBoolean("reservation_warning", false) &&
-                    useraction != MultiStepResult.ACTION_CONFIRMATION) {
-                ReservationResult res = new ReservationResult(
-                        MultiStepResult.Status.CONFIRMATION_NEEDED);
-                List<String[]> details = new ArrayList<>();
-                details.add(
-                        new String[]{stringProvider.getString(StringProvider.RESERVATION_WARNING)});
-                res.setDetails(details);
-                return res;
-            }
             // STEP 1: Check if reservable and select branch ("ID1")
 
             // Differences between opax and opac

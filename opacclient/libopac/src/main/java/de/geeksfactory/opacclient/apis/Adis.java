@@ -1552,7 +1552,7 @@ public class Adis extends BaseApi implements OpacApi {
     @Override
     public int getSupportFlags() {
         return SUPPORT_FLAG_ACCOUNT_PROLONG_ALL
-                | SUPPORT_FLAG_ENDLESS_SCROLLING;
+                | SUPPORT_FLAG_ENDLESS_SCROLLING | SUPPORT_FLAG_WARN_RESERVATION_FEES;
     }
 
     @Override

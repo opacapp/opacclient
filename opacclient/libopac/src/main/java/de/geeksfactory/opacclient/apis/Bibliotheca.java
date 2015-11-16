@@ -1175,7 +1175,7 @@ public class Bibliotheca extends BaseApi {
     @Override
     public int getSupportFlags() {
         int flags = SUPPORT_FLAG_ACCOUNT_EXTENDABLE
-                | SUPPORT_FLAG_CHANGE_ACCOUNT;
+                | SUPPORT_FLAG_CHANGE_ACCOUNT | SUPPORT_FLAG_WARN_RESERVATION_FEES;
         flags |= SUPPORT_FLAG_ENDLESS_SCROLLING;
         if (!data.has("disableProlongAll")) {
             flags |= SUPPORT_FLAG_ACCOUNT_PROLONG_ALL;

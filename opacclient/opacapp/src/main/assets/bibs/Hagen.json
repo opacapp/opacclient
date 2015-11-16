@@ -41,7 +41,6 @@
             "9": "BOARDGAME"
         },
         "opacdir": "opax",
-        "reservation_warning": true,
         "reservationtable": {
             "author": -1,
             "availability": 6,
