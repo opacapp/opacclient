@@ -530,14 +530,14 @@ public class PicaOld extends Pica {
                 media.add(e);
             }
         }
-        assert (media.size() == trs - 1);
+        assert (media.size() == trs);
     }
 
     static void parseResList(List<Map<String, String>> media, Document doc,
             StringProvider stringProvider) throws
             OpacErrorException {
 
-        Elements copytrs = doc.select("table[summary^=list] tr[valign=top]");
+        Elements copytrs = doc.select("table[summary^=list] > tbody >  tr[valign=top]");
 
         int trs = copytrs.size();
         if (trs < 1) {
@@ -594,7 +594,7 @@ public class PicaOld extends Pica {
 
             media.add(e);
         }
-        assert (media.size() == trs - 1);
+        assert (media.size() == trs);
     }
 
     private void updateLorReservations(Document doc) {
