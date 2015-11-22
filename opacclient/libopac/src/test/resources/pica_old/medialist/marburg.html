@@ -1,0 +1,710 @@
+<HTML>
+<HEAD>
+    <TITLE>OPC4 - borrower/listofloans</TITLE>
+
+
+    <SCRIPT language=JavaScript>
+<!--
+b=navigator.appName;
+v=parseInt(navigator.appVersion);
+function f(url, names){
+    if ((b="Netscape"&&v=="3")||(v>="4")) document[names].src=url;
+}
+function __keydown() {
+    k=event.keyCode;
+    if(k==113) { x=document.all["TRM"]; if(x) x.focus(); }
+}
+// -->
+
+    </SCRIPT>
+
+    <SCRIPT LANGUAGE="JavaScript">
+<!--
+pu="";
+popup="";
+function PU(URL,w,h) {
+    if (v>="3") {
+        WINDOW='width='+w+',height='+h+',scrollbars=1,resizable=1,status=0'; popup=window.open(URL,"_blank",WINDOW);
+        if (pu!=popup) {
+            pu=popup;
+        }
+    } else {
+        window.location.href=URL;
+    }
+}// Copyright Pica 1999 (RonH)
+//-->
+
+    </SCRIPT>
+
+
+    <BASE HREF="https://opac.ub.uni-marburg.de/DB=1/">
+    <LINK REL=STYLESHEET href="https://opac.ub.uni-marburg.de/STYLESHEET">
+    <META http-equiv="Refresh"
+          content="1500;
+	  URL=TIMEOUT?CWIN=Y&REFERER=&REFRTIME=-1&REFRURL=EXIT%3FREFRTIME%3D-1%26DEST%3D%252F">
+</HEAD>
+<BODY marginwidth="0" marginheight="0"
+
+      style="background-image:url(); background-repeat:repeat-x;"
+        >
+
+<table summary="Main layout" width="100%"
+       cellpadding="0" cellspacing="0" border="0">
+    <tr>
+
+
+        <td class="lng" height="20" width="120">
+            <center>
+                <table summary="Language switch"
+                       cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td width="4"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="4"
+                                height="1"
+                                border="0"></td>
+
+                    </tr>
+                </table>
+            </center>
+        </td>
+        <td bgcolor="#EEEBDD" width="1"><img
+                alt=""
+                src="/img_psi/2.0/gui/white.gif"
+                width="1"
+                height="20"
+                border="0"></td>
+        <td class="nav" width="100%">
+            <table summary="Navigation bar" width="100%"
+                   border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td width="35"><img
+                            alt=""
+                            src="/img_psi/2.0/gui/empty.gif"
+                            width="35"
+                            height="20"
+                            border="0"></td>
+
+                    <td class="copy" align="right" width="100%" nowrap><a
+                            target="_blank"
+                            href="http://oclcpica.org/?id=2&ln=de"
+                            title="opc4 v2.8.3.8"
+                            class="copy">OPC4 v2.8.3.8&nbsp;&copy;&nbsp;1998-2015&nbsp;OCLC&nbsp;PICA</a>
+                    </td>
+                    <td width="10"
+                        bgcolor="#EEEBDD"><img
+                            alt=""
+                            src="/img_psi/2.0/gui/empty.gif"
+                            width="10"
+                            height="1"
+                            border="0"></td>
+                </tr>
+            </table>
+        </td>
+
+    </tr>
+
+    <tr>
+        <td height="1"><img
+                alt=""
+                src="/img_psi/2.0/gui/white.gif"
+                width="120"
+                height="1"
+                border="0"></td>
+    </tr>
+
+    <tr>
+
+        <td height="90" align="center" bgcolor="white"><img
+
+                src="/img_psi/2.0/logos/mar_philip.svg"
+                alt=""
+                height="90" width="160" border="0">
+            <!-- JS height="90" width="120" --></td>
+        <td bgcolor="white"><img
+                alt=""
+                src="/img_psi/2.0/gui/white.gif"
+                width="1"
+                height="90"
+                border="0"></td>
+        <td class="cmd">
+            <table summary="safety warning"
+                   cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td><img
+                            alt=""
+                            src="/img_psi/2.0/gui/empty.gif"
+                            width="35"
+                            height="90"
+                            border="0"></td>
+                    <td width="100%" align="left"><strong
+                            class="alert">Zum Schutz Ihrer Daten sollten Sie dieses Fenster nach Benutzung schlie&szlig;en!</strong>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <!-- /td moved one line up [MM] -->
+    </tr>
+
+    <tr>
+        <td height="1"><img
+                alt=""
+                src="/img_psi/2.0/gui/white.gif"
+                width="120"
+                height="1"
+                border="0"></td>
+    </tr>
+
+    <tr>
+
+        <td height="20" bgcolor="#134063"><img
+                alt=""
+                src="/img_psi/2.0/gui/empty.gif"
+                width="1"
+                height="1"
+                border="0"></td>
+        <td bgcolor="#134063"><img
+                src="/img_psi/2.0/gui/white.gif" alt="" width="1" height="20"></td>
+        <td colspan="1"
+            bgcolor="#134063" align="center" nowrap>
+            <center>
+                <table summary="Tab bar"
+                       cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td bgcolor="#134063"
+                            height="1" colspan="5"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td bgcolor="#134063"
+                            height="1" colspan="5"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td bgcolor="#134063"
+                            height="1" colspan="5"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td bgcolor="#134063"
+                            height="1" colspan="5"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td bgcolor="#134063"
+                            height="1" colspan="5"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                    </tr>
+                    <tr>
+                        <td width="1"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td class="tabbar" nowrap><img
+                                alt=""
+                                src="/img_psi/2.0/gui/mar_tableft.gif"
+                                width="11" height="18"></td>
+
+                        <td class="tab0" height="18"><a class="tab0"
+                                                        href="/loan/DB=1/USERINFO?ACT=UI_DATA&BOR_U=********&BOR_PW_ENC=********">Benutzerdaten</a>
+                        </td>
+
+                        <td class="tabbar" nowrap><img
+                                alt=""
+                                src="/img_psi/2.0/gui/mar_tabright.gif"
+                                width="11" height="18"></td>
+                        <td width="1"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td width="1"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td class="tabbar" nowrap><img
+                                alt=""
+                                src="/img_psi/2.0/gui/mar_tableft.gif"
+                                width="11" height="18"></td>
+
+                        <td class="tab1" height="18">Entleihungen</td>
+
+                        <td class="tabbar" nowrap><img
+                                alt=""
+                                src="/img_psi/2.0/gui/mar_tabright.gif"
+                                width="11" height="18"></td>
+                        <td width="1"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td width="1"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td class="tabbar" nowrap><img
+                                alt=""
+                                src="/img_psi/2.0/gui/mar_tableft.gif"
+                                width="11" height="18"></td>
+
+                        <td class="tab0" height="18"><a class="tab0"
+                                                        href="/loan/DB=1/USERINFO?ACT=UI_LOR&BOR_U=********&BOR_PW_ENC=********">Vormerkungen</a>
+                        </td>
+
+                        <td class="tabbar" nowrap><img
+                                alt=""
+                                src="/img_psi/2.0/gui/mar_tabright.gif"
+                                width="11" height="18"></td>
+                        <td width="1"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td width="1"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td class="tabbar" nowrap><img
+                                alt=""
+                                src="/img_psi/2.0/gui/mar_tableft.gif"
+                                width="11" height="18"></td>
+
+                        <td class="tab0" height="18"><a class="tab0"
+                                                        href="/loan/DB=1/USERINFO?ACT=UI_LOC&BOR_U=********&BOR_PW_ENC=********">Kosten</a>
+                        </td>
+
+                        <td class="tabbar" nowrap><img
+                                alt=""
+                                src="/img_psi/2.0/gui/mar_tabright.gif"
+                                width="11" height="18"></td>
+                        <td width="1"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td width="1"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td class="tabbar" nowrap><img
+                                alt=""
+                                src="/img_psi/2.0/gui/mar_tableft.gif"
+                                width="11" height="18"></td>
+
+                        <td class="tab0" height="18"><a class="tab0"
+                                                        href="/loan/DB=1/USERINFO?ACT=UI_CHUPW&BOR_U=********&BOR_PW_ENC=********">Passwort</a>
+                        </td>
+
+                        <td class="tabbar" nowrap><img
+                                alt=""
+                                src="/img_psi/2.0/gui/mar_tabright.gif"
+                                width="11" height="18"></td>
+                        <td width="1"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="#134063"
+                            height="1" colspan="5"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+
+                        <td width="1"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td bgcolor="white"
+                            height="1" colspan="3"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td width="1"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+
+                        <td bgcolor="#134063"
+                            height="1" colspan="5"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+
+                        <td bgcolor="#134063"
+                            height="1" colspan="5"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+
+                        <td bgcolor="#134063"
+                            height="1" colspan="5"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+
+                        <td><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                    </tr>
+                </table>
+            </center>
+        </td>
+    </tr>
+
+    <tr>
+        <td height="1"><img
+                alt=""
+                src="/img_psi/2.0/gui/white.gif"
+                width="120"
+                height="1"
+                border="0"></td>
+    </tr>
+
+    <tr>
+
+        <td class="mnu" valign="top">
+            <table summary="Menu layout" width="100%"
+                   border="0" cellpadding="0" cellspacing="0">
+
+
+                <SCRIPT type="text/javascript" language="javascript">
+document.write('<TR><TD class="mnu"><p class="mnu"><a class="mnu" href="javascript:window.close()"><IMG name=closewindow src="/img_psi/2.0/logos/b_closewindow_on_du.gif" alt="" width=130 height=120 hspace=0 vspace=0 border=1></A><br><hr></TD></TR>');
+
+                </SCRIPT>
+                <NOSCRIPT>
+
+                </NOSCRIPT>
+
+
+                <tr>
+                    <td><img
+                            alt=""
+                            src="/img_psi/2.0/gui/empty.gif"
+                            width="1"
+                            height="300"
+                            border="0"></td>
+                </tr>
+            </table>
+        </td>
+        <td><img
+                alt=""
+                src="/img_psi/2.0/gui/empty.gif"
+                width="1"
+                height="1"
+                border="0"></td>
+        <td colspan="1"
+            class="cnt" valign="top">
+            <form method="post" action="https://opac.ub.uni-marburg.de/loan/DB=1/USERINFO"
+                  name="LoanRenewalForm">
+                <input type="hidden" name="ACT" value="UI_RENEWLOAN">
+                <input type="hidden" name="BOR_U" value="********">
+                <input type="hidden" name="BOR_PW_ENC" value="********">
+                <table summary="User data header" width="100%" cellpadding="0" cellspacing="0"
+                       border="0">
+                    <tr>
+                        <td class="h2" valign="top"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="16"
+                                border="0"></td>
+                    </tr>
+                    <tr>
+                        <td valign="top"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="12"
+                                height="1"
+                                border="0"><img alt="*" src="/img_psi/2.0/gui/h2.gif" width="19"
+                                                height="12" border="0"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="4"
+                                height="1"
+                                border="0"></td>
+                        <td valign="top" width="100%"><strong class="h2">Entleihungen</strong><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="10"
+                                height="1"
+                                border="0"><span class="subtitle"></span></td>
+                        <td><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="10"
+                                height="1"
+                                border="0"></td>
+                    </tr>
+                    <tr>
+                        <td class="h2" valign="top"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="7"
+                                border="0"></td>
+                    </tr>
+                </table>
+
+                <table summary="body separator" width="100%" cellpadding="0" cellspacing="0"
+                       border="0">
+
+                    <TR>
+                        <TD><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="10"
+                                border="0"></TD>
+                    </TR>
+                    <TR>
+                        <TD class="bodysep" colspan="2"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></TD>
+                    </TR>
+                    <TR>
+                        <TD><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="10"
+                                border="0"></TD>
+                    </TR>
+                </table>
+                <table summary="loans renewal - text block" width="100%" cellpadding="0"
+                       cellspacing="0" border="0">
+                    <tr>
+                        <td><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="35"
+                                height="1"
+                                border="0"></td>
+                        <td>
+                            <table summary="Identification - no authorization" width="100%"
+                                   cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                    <td><input class="button" type="submit" value="verl&auml;ngern">
+                                    </td>
+                                    <td><img
+                                            alt=""
+                                            src="/img_psi/2.0/gui/empty.gif"
+                                            width="15"
+                                            height="1"
+                                            border="0"></td>
+                                    <td width="100%" class="regular-text"
+                                        nowrap>Bitte klicken Sie auf
+                                        <strong>verl&auml;ngern</strong>, um die ausgew&auml;hlten Ausleihen zu verl&auml;ngern.
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td width="100%"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="10"
+                                height="1"
+                                border="0"></td>
+                    </tr>
+                    <tr>
+                        <td valign="top"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="14"
+                                border="0"></td>
+                    </tr>
+                </table>
+                <table summary="list of loans - data" width="100%" cellpadding="0" cellspacing="0"
+                       border="0">
+                    <tr>
+                        <td class="infotab"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="35"
+                                height="20"
+                                border="0"></td>
+                        <td><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td class="infotab"><img
+                                src="/img_psi/2.0/gui/checkon.gif"
+                                alt=""
+                                height="20"
+                                width="20"
+                                border="0">
+                        <td>
+                        <td><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td class="infotab"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="3"
+                                height="20"
+                                border="0"></td>
+                        <td class="infotab" width="100%" colspan="2">Titel
+                        <td>
+                    </tr>
+                    <tr>
+                        <td class="h2" valign="top"><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="12"
+                                border="0"></td>
+                    </tr>
+
+
+                    <tr valign="top">
+                        <td><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="35"
+                                height="1"
+                                border="0"></td>
+                        <td></td>
+                        <td align="middle"><input type="checkbox"
+                                                  name="VB" value="12345678"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="plain" align="right">1.<img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="5"
+                                height="1"
+                                border="0"></td>
+                        <td width="100%">
+                            <table summary="title data" width="100%" cellpadding="0" cellspacing="0"
+                                   border="0">
+                                <tr valign="top">
+                                    <td class="plain">Titel des ersten Buches</td>
+                                </tr>
+                                <tr valign="top" style="padding-bottom:4px;" nowrap>
+                                    <td class="value-small"><span
+                                            class="label-small">Signatur:</span> asdf; <span
+                                            class="label-small">Status:</span> beim Nutzer (0 Mahnung(en));
+                                        <span class="label-small">Leihfristende:</span> 04-12-2015;
+                                        <span class="label-small">Vormerkungen:</span> 0
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <td><img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="35"
+                                height="1"
+                                border="0"></td>
+                        <td></td>
+                        <td align="middle"><input type="checkbox"
+                                                  name="VB" value="12345678"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="plain" align="right">2.<img
+                                alt=""
+                                src="/img_psi/2.0/gui/empty.gif"
+                                width="5"
+                                height="1"
+                                border="0"></td>
+                        <td width="100%">
+                            <table summary="title data" width="100%" cellpadding="0" cellspacing="0"
+                                   border="0">
+                                <tr valign="top">
+                                    <td class="plain">Titel des zweiten Buches</td>
+                                </tr>
+                                <tr valign="top" style="padding-bottom:4px;" nowrap>
+                                    <td class="value-small"><span
+                                            class="label-small">Signatur:</span> hjkl; <span
+                                            class="label-small">Status:</span> beim Nutzer (0 Mahnung(en));
+                                        <span class="label-small">Leihfristende:</span> 04-12-2015;
+                                        <span class="label-small">Vormerkungen:</span> 0
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                </table>
+            </form>
+        </td>
+    </tr>
+    <TR>
+        <TD><img
+                alt=""
+                src="/img_psi/2.0/gui/empty.gif"
+                width="1"
+                height="20"
+                border="0"></TD>
+    </TR>
+</table>
+
+
+<script type="text/javascript"
+        src="https://recommender.bibtip.de/js/bibtip_ub_mr.js"></script>
+
+
+<img src="https://dbspixel.hbz-nrw.de/count?id=AH004&amp;page=2" width="1" heigh
+     t="1">
+
+</BODY>
+</HTML>
