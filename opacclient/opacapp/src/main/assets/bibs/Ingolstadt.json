@@ -14,7 +14,7 @@
             "status": 6,
             "title": 8
         },
-        "baseurl": "http://opac.ingolstadt.de",
+        "baseurl": "https://opac.ingolstadt.de",
         "copiestable": {
             "barcode": 3,
             "branch": -1,
