@@ -1,0 +1,16 @@
+{
+    "account_supported": true,
+    "api": "winbiap",
+    "city": "Roth",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "https://opac.winbiap.net/roth"
+    },
+    "geo": [
+        49.2456337,
+        11.0911607
+    ],
+    "information": "http://www.stadt-roth.de/lwwcm-rh/rh-publish.nsf/Content/GE-1-SL-BildungKultur-Stadtbuecherei/",
+    "state": "Bayern",
+    "title": "Stadtb\u00fccherei"
+}
