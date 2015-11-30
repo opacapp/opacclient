@@ -194,7 +194,7 @@ public class Adis extends BaseApi implements OpacApi {
             data.add(new BasicNameValuePair("requestCount", s_requestCount + ""));
         }
 
-        httppost.setEntity(new UrlEncodedFormEntity(data));
+        httppost.setEntity(new UrlEncodedFormEntity(data, getDefaultEncoding()));
         HttpResponse response;
 
         try {
