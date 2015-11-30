@@ -12,7 +12,7 @@
             "status": -1,
             "title": 1
         },
-        "baseurl": "http://wwwopac.rz-as.de/weilimschoenbuch",
+        "baseurl": "https://wwwopac.rz-kiru.de/weilimschoenbuch",
         "copiestable": {
             "branch": -1,
             "department": 2,
