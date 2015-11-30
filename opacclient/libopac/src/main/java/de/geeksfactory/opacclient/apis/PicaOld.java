@@ -428,47 +428,55 @@ public class PicaOld extends Pica {
                 Elements datatrs = tr.select("table[summary=title data] tr");
                 e.put(AccountData.KEY_LENT_TITLE, datatrs.get(0).text());
 
-                List<TextNode> textNodes = datatrs.get(1).select("td").first()
-                                                  .textNodes();
-                List<TextNode> nodes = new ArrayList<>();
-                Elements titles = datatrs.get(1).select("span.label-small");
+                for (Element td : datatrs.get(1).select("td")) {
+                    List<TextNode> textNodes = td.textNodes();
+                    Elements titles = td.select("span.label-small");
 
-                for (TextNode node : textNodes) {
-                    if (!node.text().equals(" ")) {
-                        nodes.add(node);
+                    List<String> values = new ArrayList<>();
+                    if (td.select("span[name=xxxxx]").size() > 0) {
+                        for (Element span : td.select("span[name=xxxxx]")) {
+                            values.add(span.text());
+                        }
+                    } else {
+                        for (TextNode node : textNodes) {
+                            if (!node.text().equals(" ")) {
+                                values.add(node.text());
+                            }
+                        }
                     }
-                }
 
-                assert (nodes.size() == titles.size());
-                for (int j = 0; j < nodes.size(); j++) {
-                    String title = titles.get(j).text();
-                    String value = nodes.get(j).text().trim().replace(";", "");
-                    if (title.contains("Signatur")
-                            || title.contains("shelf mark")
-                            || title.contains("signatuur")) {
-                        // not supported
-                    } else if (title.contains("Status")
-                            || title.contains("status")
-                            || title.contains("statut")) {
-                        e.put(AccountData.KEY_LENT_STATUS, value);
-                    } else if (title.contains("Leihfristende")
-                            || title.contains("expiry date")
-                            || title.contains("vervaldatum")
-                            || title.contains("date d'expiration")) {
-                        e.put(AccountData.KEY_LENT_DEADLINE, value);
-                        try {
-                            e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
-                                    String.valueOf(sdf.parse(value).getTime()));
-                        } catch (ParseException e1) {
-                            e1.printStackTrace();
-                        }
-                    } else //noinspection StatementWithEmptyBody
-                        if (title.contains("Vormerkungen")
-                                || title.contains("reservations")
-                                || title.contains("reserveringen")
-                                || title.contains("réservations")) {
+                    assert (values.size() == titles.size());
+                    for (int j = 0; j < values.size(); j++) {
+                        String title = titles.get(j).text();
+                        String value = values.get(j).trim().replace(";", "");
+                        //noinspection StatementWithEmptyBody
+                        if (title.contains("Signatur")
+                                || title.contains("shelf mark")
+                                || title.contains("signatuur")) {
                             // not supported
-                        }
+                        } else if (title.contains("Status")
+                                || title.contains("status")
+                                || title.contains("statut")) {
+                            e.put(AccountData.KEY_LENT_STATUS, value);
+                        } else if (title.contains("Leihfristende")
+                                || title.contains("expiry date")
+                                || title.contains("vervaldatum")
+                                || title.contains("date d'expiration")) {
+                            e.put(AccountData.KEY_LENT_DEADLINE, value);
+                            try {
+                                e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
+                                        String.valueOf(sdf.parse(value).getTime()));
+                            } catch (ParseException e1) {
+                                e1.printStackTrace();
+                            }
+                        } else //noinspection StatementWithEmptyBody
+                            if (title.contains("Vormerkungen")
+                                    || title.contains("reservations")
+                                    || title.contains("reserveringen")
+                                    || title.contains("réservations")) {
+                                // not supported
+                            }
+                    }
                 }
                 media.add(e);
             } else { // like in Kiel
