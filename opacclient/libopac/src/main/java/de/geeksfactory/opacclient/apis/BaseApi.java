@@ -47,6 +47,7 @@ import java.io.InterruptedIOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -307,6 +308,8 @@ public abstract class BaseApi implements OpacApi {
         } catch (InterruptedIOException e) {
             e.printStackTrace();
             throw new NotReachableException(e.getMessage());
+        } catch (UnknownHostException e) {
+            throw new NotReachableException(e.getMessage());
         } catch (IOException e) {
             if (e.getMessage() != null
                     && e.getMessage().contains("Request aborted")) {
@@ -422,6 +425,8 @@ public abstract class BaseApi implements OpacApi {
             }
         } catch (InterruptedIOException e) {
             e.printStackTrace();
+            throw new NotReachableException(e.getMessage());
+        } catch (UnknownHostException e) {
             throw new NotReachableException(e.getMessage());
         } catch (IOException e) {
             if (e.getMessage() != null
