@@ -39,6 +39,7 @@ public class BaseTest {
 
     protected String readResource(String filename) {
         InputStream is = getClass().getResourceAsStream(filename);
+        if (is == null) return null;
         try {
             return convertStreamToString(is);
         } catch (IOException e) {
