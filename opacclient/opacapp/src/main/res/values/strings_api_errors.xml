@@ -42,6 +42,7 @@
     <string name="reservation_warning">This reservation might cost you a fee.</string>
     <string name="reservations_number">%s reservations</string>
     <string name="reserved_at_date">res. at %s</string>
+    <string name="link">Link</string>
 
     <string name="mediatype_none">none</string>
     <string name="mediatype_book">book</string>
