@@ -6,12 +6,12 @@
     "data": {
         "accounttable": {
             "author": 0,
-            "barcode": -1,
-            "homebranch": 3,
-            "lendingbranch": 3,
-            "prolongurl": 5,
-            "returndate": 2,
-            "status": 4,
+            "barcode": 2,
+            "homebranch": 4,
+            "lendingbranch": 4,
+            "prolongurl": 6,
+            "returndate": 3,
+            "status": 5,
             "title": 1
         },
         "baseurl": "https://www1.stadtbibliothek-bielefeld.de/webopac",
