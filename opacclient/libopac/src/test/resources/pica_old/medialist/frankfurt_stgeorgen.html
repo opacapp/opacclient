@@ -1,0 +1,917 @@
+<HTML>
+<HEAD>
+    <TITLE>Katalog - borrower/listofloans</TITLE>
+
+    <link rel="search" type="application/opensearchdescription+xml" title="OPAC Sankt Georgen"
+          href="https://lbsweb.rz.uni-frankfurt.de/opensearch_60.xml">
+
+    <BASE HREF="https://lbsopac.rz.uni-frankfurt.de/DB=60/">
+    <link rel="shortcut icon" href="https://lbsweb.rz.uni-frankfurt.de/favicon.ico"
+          title="Logo fuer die URL-Leiste">
+    <meta name="robots" content="noindex">
+    <meta name="robots" content="nofollow">
+    <meta name="robots" content="noarchive">
+    <LINK REL=STYLESHEET href="https://lbsweb.rz.uni-frankfurt.de/STYLESHEET_CONTENT_FFM.css">
+    <LINK REL=STYLESHEET href="https://lbsopac.rz.uni-frankfurt.de/STYLESHEET">
+</HEAD>
+<!--
+<BODY marginwidth="0" marginheight="0" background="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/bg.gif">
+-->
+<BODY marginwidth="0" marginheight="0" bgcolor="#cccccc">
+<script language="JavaScript">
+<!--
+b=navigator.appName;
+v=parseInt(navigator.appVersion);
+function f(url, names){
+    if ((b="Netscape"&&v=="3")||(v>="4")) document[names].src=url;
+}
+function __keydown() {
+    k=event.keyCode;
+    if(k==113) { x=document.all["TRM"]; if(x) x.focus(); }
+}
+// -->
+
+
+</script>
+<script language="JavaScript">
+<!-- 
+pu="";
+popup=""; 
+function PU(URL,w,h) {
+    if (v>="3") {
+        WINDOW='width='+w+',height='+h+',scrollbars=1,resizable=1,status=0'; popup=window.open(URL,"_blank",WINDOW);
+        if (pu!=popup) {
+            pu=popup;
+        }
+    } else {
+        window.location.href=URL;
+    }
+}// Copyright Pica 1999 (RonH)
+//-->
+
+
+</script>
+<script type="text/javascript" src=https://lbsweb.rz.uni-frankfurt.de/jquery.js></script>
+<script type="text/javascript" src=https://lbsweb.rz.uni-frankfurt.de/schlagwort.js></script>
+<script type="text/javascript" src=https://lbsweb.rz.uni-frankfurt.de/wz_tooltip.js></script>
+
+<table summary="Main layout" width="100%"
+       cellpadding="0" cellspacing="0" border="0">
+    <tr>
+
+
+        <td class="lng" height="20" width="120">
+            <center>
+                <table summary="Language switch"
+                       cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td width="4"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="4"
+                                height="1"
+                                border="0"></td>
+
+                        <td><img
+                                alt="Deutsch"
+                                title="Deutsch"
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/flags/du-.gif"
+                                width="16" height="10" border="0"></td>
+                        <td width="4"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="4"
+                                height="1"
+                                border="0"></td>
+                        <td><img
+                                alt="Englisch"
+                                title="Englisch"
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/flags/en.gif"
+                                width="16" height="10" border="0"></td>
+                        <td width="4"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="4"
+                                height="1"
+                                border="0"></td>
+                    </tr>
+                </table>
+            </center>
+        </td>
+        <td bgcolor="#cccccc" width="1"><img
+                alt=""
+                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/white.gif"
+                width="1"
+                height="20"
+                border="0"></td>
+        <td class="nav" width="100%">
+            <table summary="Navigation bar" width="100%"
+                   border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td width="35"><img
+                            alt=""
+                            src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                            width="35"
+                            height="20"
+                            border="0"></td>
+
+                    <td class="copy" align="right" width="100%" nowrap><a
+                            target="_blank"
+                            href="http://oclcpica.org/?id=2&ln=de"
+                            title="opc4 v2.2.2"
+                            class="copy">&copy;&nbsp;1998-2015&nbsp;OCLC&nbsp;PICA</a></td>
+                    <td width="10"
+                        bgcolor="#cccccc"><img
+                            alt=""
+                            src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                            width="10"
+                            height="1"
+                            border="0"></td>
+                </tr>
+            </table>
+        </td>
+
+    </tr>
+
+    <tr>
+        <td height="1"><img
+                alt=""
+                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/white.gif"
+                width="120"
+                height="1"
+                border="0"></td>
+    </tr>
+
+    <tr>
+
+        <td height="90" align="center" bgcolor="#eeeeee"><img
+
+                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/logos/iln6.gif.opc4-2.0"
+                alt=""
+                height="90" width="120" border="0"></td>
+        <td bgcolor="#eeeeee"><img
+                alt=""
+                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/white.gif"
+                width="1"
+                height="90"
+                border="0"></td>
+        <td class="cmd">
+            <table summary="safety warning"
+                   cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                    <td><img
+                            alt=""
+                            src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                            width="35"
+                            height="90"
+                            border="0"></td>
+                    <td width="100%" align="left"><strong
+                            class="alert">Zum Schutz Ihrer Daten sollten Sie dieses Fenster nach Benutzung schlie&szlig;en!</strong>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <!-- /td moved one line up [MM] -->
+    </tr>
+
+    <tr>
+        <td height="1"><img
+                alt=""
+                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/white.gif"
+                width="120"
+                height="1"
+                border="0"></td>
+    </tr>
+
+    <tr>
+
+        <td height="20" bgcolor="#339999"><img
+                alt=""
+                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                width="1"
+                height="1"
+                border="0"></td>
+        <td bgcolor="#339999"><img
+                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/white.gif" alt=""
+                width="1" height="20"></td>
+        <td colspan="1"
+            bgcolor="#339999" align="center" nowrap>
+            <center>
+                <table summary="tab bar - loan server - default tab bar"
+                       cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td bgcolor="#339999"
+                            height="1" colspan="5"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td bgcolor="#339999"
+                            height="1" colspan="5"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td bgcolor="#339999"
+                            height="1" colspan="5"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td bgcolor="#339999"
+                            height="1" colspan="5"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td bgcolor="#339999"
+                            height="1" colspan="5"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                    </tr>
+                    <tr>
+                        <td width="1"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td class="tabbar" nowrap><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/tableft.gif"
+                                width="11" height="18"></td>
+
+                        <td class="tab1" height="18">Entleihungen</td>
+
+                        <td class="tabbar" nowrap><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/tabright.gif"
+                                width="11" height="18"></td>
+                        <td width="1"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td width="1"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td class="tabbar" nowrap><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/tableft.gif"
+                                width="11" height="18"></td>
+
+                        <td class="tab0" height="18"><a class="tab0"
+                                                        href="/loan/DB=60/USERINFO?ACT=UI_LOR&BOR_U=XXXXXXXX&BOR_PW_ENC=XXXXXXXX">Vormerkungen</a>
+                        </td>
+
+                        <td class="tabbar" nowrap><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/tabright.gif"
+                                width="11" height="18"></td>
+                        <td width="1"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td width="1"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td class="tabbar" nowrap><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/tableft.gif"
+                                width="11" height="18"></td>
+
+                        <td class="tab0" height="18"><a class="tab0"
+                                                        href="/loan/DB=60/USERINFO?ACT=UI_DATA&BOR_U=XXXXXXXX&BOR_PW_ENC=XXXXXXXX">Fernleih- und Benutzerdaten</a>
+                        </td>
+
+                        <td class="tabbar" nowrap><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/tabright.gif"
+                                width="11" height="18"></td>
+                        <td width="1"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td width="1"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td class="tabbar" nowrap><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/tableft.gif"
+                                width="11" height="18"></td>
+
+                        <td class="tab0" height="18"><a class="tab0"
+                                                        href="/loan/DB=60/USERINFO?ACT=UI_LOC&BOR_U=XXXXXXXX&BOR_PW_ENC=XXXXXXXX">Kosten</a>
+                        </td>
+
+                        <td class="tabbar" nowrap><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/tabright.gif"
+                                width="11" height="18"></td>
+                        <td width="1"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td width="1"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td class="tabbar" nowrap><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/tableft.gif"
+                                width="11" height="18"></td>
+
+                        <td class="tab0" height="18"><a class="tab0"
+                                                        href="/loan/DB=60/USERINFO?ACT=UI_CHUPW&BOR_U=XXXXXXXX&BOR_PW_ENC=XXXXXXXX">Passwort</a>
+                        </td>
+
+                        <td class="tabbar" nowrap><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/tabright.gif"
+                                width="11" height="18"></td>
+                        <td width="1"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                    </tr>
+                    <tr>
+                        <td width="1"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td bgcolor="white"
+                            height="1" colspan="3"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td width="1"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+
+                        <td bgcolor="#339999"
+                            height="1" colspan="5"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+
+                        <td bgcolor="#339999"
+                            height="1" colspan="5"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+
+                        <td bgcolor="#339999"
+                            height="1" colspan="5"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+
+                        <td bgcolor="#339999"
+                            height="1" colspan="5"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+
+                        <td><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                    </tr>
+                </table>
+            </center>
+        </td>
+    </tr>
+
+    <tr>
+        <td height="1"><img
+                alt=""
+                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/white.gif"
+                width="120"
+                height="1"
+                border="0"></td>
+    </tr>
+
+    <tr>
+
+        <td class="mnu" valign="top">
+            <table summary="Menu layout" width="100%"
+                   border="0" cellpadding="0" cellspacing="0">
+                <TR>
+                    <TD class="mnu"><p class="mnu">
+
+                        <div id="schliessknopf">
+                            <a class="mnu" HREF="javascript:parent.close();"
+                               OnMouseOver="f('https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/icons/b_closewindow_neu_off_du.gif', 'closewindow'); self.status='CLOSEWINDOW'; return true"
+                               OnMouseOut="f('https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/icons/b_closewindow_neu_on_du.gif', 'closewindow')">
+                                <img name=closewindow
+                                     src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/icons/b_closewindow_neu_on_du.gif"
+                                     alt="Schliesse Fenster" title="Schliesse Fenster" align="right"
+                                     width=100 height=200 hspace=0 vspace=0 border=0>
+                            </a>
+                        </div>
+                        <script type="text/javascript">
+// Ausblenden des Schliessen-Knopfes in Frame-Umgebung fuer HeBIS-Portal
+if (top != self) {
+    if (document.getElementById) {
+    document.getElementById("schliessknopf").style.visibility = "hidden";
+   }
+  }
+
+
+                        </script>
+                    </TD>
+                </TR>
+                <TR>
+                    <TD class="mnu"><p class="mnu"><a
+                            class="mnu"
+                            href="http://www2.uni-frankfurt.de/impressum">Impressum</A></TD>
+                </TR>
+                <tr>
+                    <td><img
+                            alt=""
+                            src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                            width="1"
+                            height="300"
+                            border="0"></td>
+                </tr>
+            </table>
+        </td>
+        <td><img
+                alt=""
+                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                width="1"
+                height="1"
+                border="0"></td>
+        <td colspan="1"
+            class="cnt" valign="top">
+            <form method="post" action="https://lbsopac.rz.uni-frankfurt.de/loan/DB=60/USERINFO"
+                  name="LoanRenewalForm">
+                <input type="hidden" name="ACT" value="UI_RENEWLOAN">
+                <input type="hidden" name="BOR_U" value="XXXXXXXX">
+                <input type="hidden" name="BOR_PW_ENC" value="XXXXXXXX">
+                <table summary="User data header" width="100%" cellpadding="0" cellspacing="0"
+                       border="0">
+                    <tr>
+                        <td class="h2" valign="top"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="16"
+                                border="0"></td>
+                    </tr>
+                    <tr>
+                        <td valign="top"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="12"
+                                height="1"
+                                border="0"><img alt="*"
+                                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/h2.gif"
+                                                width="19" height="12" border="0"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="4"
+                                height="1"
+                                border="0"></td>
+                        <td valign="top" width="100%"><strong class="h2">Entleihungen</strong><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="10"
+                                height="1"
+                                border="0"><span class="subtitle"></span></td>
+                        <td><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="10"
+                                height="1"
+                                border="0"></td>
+                    </tr>
+                    <tr>
+                        <td class="h2" valign="top"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="7"
+                                border="0"></td>
+                    </tr>
+                </table>
+                <SCRIPT language=JavaScript>
+<!--
+function SelectAll( state ) {
+   var NrOfElements = document.LoanRenewalForm.elements.length;
+   if ( NrOfElements != null ) {
+      var j = 0;
+      while ( j < NrOfElements ) {
+         var e = document.LoanRenewalForm.elements[j];
+         e.checked = !state;
+         j++;
+      }
+   }
+}
+// -->
+
+
+                </SCRIPT>
+
+                <SCRIPT language=JavaScript>
+<!--
+function openNumberRenewals() {
+  var cgiurl='https://lbsweb.rz.uni-frankfurt.de/cgi-bin/suche_verlaengerung?LNG=DU&DB=60&BOR=XXXXXXXX&BOR_PW=XXXXXXXX&SYB_SERVER=LBSDB';
+  window.open(cgiurl,'_brank','scrollbars=yes,height=500,width=680,resizable=no,toolbar=no,location=no,status=no,menubar=no');
+}
+// -->
+
+
+                </SCRIPT>
+                <table summary="body separator" width="100%" cellpadding="0" cellspacing="0"
+                       border="0">
+
+                    <TR>
+                        <TD><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="10"
+                                border="0"></TD>
+                    </TR>
+                    <TR>
+                        <TD class="bodysep" colspan="2"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></TD>
+                    </TR>
+                    <TR>
+                        <TD><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="10"
+                                border="0"></TD>
+                    </TR>
+                </table>
+                <table summary="loans renewal - text block" width="100%" cellpadding="0"
+                       cellspacing="0" border="0">
+                    <tr>
+                        <td><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="35"
+                                height="1"
+                                border="0"></td>
+                        <td>
+                            <table summary="Identification - no authorization" width="100%"
+                                   cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                    <td><input class="button" type="submit" value="Verl&auml;ngern">
+                                    </td>
+                                    <td><img
+                                            alt=""
+                                            src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                            width="15"
+                                            height="1"
+                                            border="0"></td>
+                                    <td width="100%" class="regular-text"
+                                        nowrap>W&auml;hlen Sie einzelne oder alle Entleihungen aus und klicken dann auf
+                                        <strong>Verl&auml;ngern</strong>.<br>Die Verl&auml;ngerung ist nur innerhalb der Leihfrist m&ouml;glich und beginnt ab dem Zeitpunkt der Verl&auml;ngerung.<br>Lehrb&uuml;cher, Zeitschriften und vorgemerkte Titel k&ouml;nnen nicht verl&auml;ngert werden.<br>Verl&auml;ngerungen f&uuml;r Fernleihen m&uuml;ssen vor Ort in der Bibliothek beantragt werden.<br><font
+                                                color="red">Kontrollieren Sie anschlie&szlig;end unbedingt Ihre neuen R&uuml;ckgabedaten.</font>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td width="100%"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="10"
+                                height="1"
+                                border="0"></td>
+                    </tr>
+                </table>
+                <table summary="select all" width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="35"
+                                height="1"
+                                border="0"></td>
+                        <td width="100%" class="regular-text" nowrap>
+                            <INPUT name=ALL type=checkbox
+                                   onClick="SelectAll(!this.checked);">Alle ausw&auml;hlen
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="14"
+                                border="0"></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="35"
+                                height="1"
+                                border="0"></td>
+                        <td width="100%" class="regular-text" nowrap><INPUT type="button"
+                                                                            class="button"
+                                                                            value="Anzahl Verl�ngerungen"
+                                                                            onClick="javascript:openNumberRenewals();"><span
+                                class="regular-text"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="5"
+                                height="1"
+                                border="0">Bitte klicken Sie auf <strong>Anzahl Verl&auml;ngerungen</strong>, um zu sehen, ob die Titel bereits verl&auml;ngert wurden.</span><br>
+                        </td>
+                    </tr>
+                </table>
+                <table summary="body separator" width="100%" cellpadding="0" cellspacing="0"
+                       border="0">
+
+                    <TR>
+                        <TD><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="10"
+                                border="0"></TD>
+                    </TR>
+                    <TR>
+                        <TD class="bodysep" colspan="2"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></TD>
+                    </TR>
+                    <TR>
+                        <TD><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="10"
+                                border="0"></TD>
+                    </TR>
+                </table>
+                <table>
+                    <tr>
+                        <td><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="25"
+                                height="14"
+                                border="0"></td>
+                        <td>
+                            <script language="JavaScript">
+<!--
+function receipt4loans(action)  
+ {
+  Check = confirm("Hinweis zum Datenschutz: Wenn Sie best�tigen, erkl�ren Sie sich damit einverstanden, dass Ihr Kontoauszug im Bibliothekssystem zum Nachweis gesichert wird. Der Auszug wird nach 3 Monaten automatisch gel�scht.");
+  if (Check == true) 
+  {
+  var cgiurl ="https://lbsweb.rz.uni-frankfurt.de/cgi-bin/quittung?BOR_U%3DXXXXXXXX%26DB%3D60%26BOR_PW_ENC%3DXXXXXXXX&SYB_SERVER=LBSDB&ACTION=" + action;
+  window.open(cgiurl, '_blank', 'scrollbars=yes, toolbar=0, resizable=1, status=0, location=0, menubar=0,\
+            top=30, screenX=100, screenY=100, width=700, height=800');
+  }
+ } 
+// -->
+
+
+                            </script>
+                            <INPUT type="button" class="button"
+                                   value="Kontoauszug anzeigen und ggfs. Ausdrucken"
+                                   onClick="javascript:receipt4loans('show');">
+                        </td>
+                        <td><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="25"
+                                height="1"
+                                border="0"></td>
+                        <td>
+                            <INPUT type="button" class="button"
+                                   value="Kontoauszug per Email zusenden"
+                                   onClick="javascript:receipt4loans('mail');">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="25"
+                                height="14"
+                                border="0"></td>
+                </table>
+                <table summary="list of loans - data" width="100%" cellpadding="0" cellspacing="0"
+                       border="0" name="list" ID="list">
+                    <tr>
+                        <td class="infotab"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="35"
+                                height="20"
+                                border="0"></td>
+                        <td><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td class="infotab"><img
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/checkon.gif"
+                                alt=""
+                                height="20"
+                                width="20"
+                                border="0">
+                        <td>
+                        <td><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="1"
+                                border="0"></td>
+                        <td class="infotab"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="3"
+                                height="20"
+                                border="0"></td>
+                        <td class="infotab" width="100%" colspan="2">Titel
+                        <td>
+                    </tr>
+                    <tr>
+                        <td class="h2" valign="top"><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="1"
+                                height="12"
+                                border="0"></td>
+                    </tr>
+
+
+                    <tr valign="top">
+                        <td><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="35"
+                                height="1"
+                                border="0"></td>
+                        <td></td>
+                        <td align="middle"><input type="checkbox"
+                                                  name="VB" value="01155032"></td>
+
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="plain" align="right">1.<img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="5"
+                                height="1"
+                                border="0"></td>
+                        <td width="100%">
+                            <table summary="title data" width="100%" cellpadding="0" cellspacing="0"
+                                   border="0">
+                                <tr valign="top">
+                                    <td colspan=4 class="plain">Bibliothek 2007: Strategiekonzept
+                                    </td>
+                                </tr>
+                                <tr valign="top" style="padding-bottom:4px;" nowrap>
+                                    <td class="value-small" width="100">
+                                        <span class="label-small">Signatur:</span><span
+                                            name="xxxxx"> Fo III 531, A2</span>
+                                    </td>
+                                    <td width="18%" align="left" class="value-small"><span
+                                            class="label-small">
+   Leihfristende:</span> 13-01-2016
+                                    </td>
+                                    <td width="18%" align="left" class="value-small"
+                                        style="padding-bottom:4px;padding-right:4px;"><span
+                                            class="label-small">
+   Status:</span> ausgeliehen
+                                    </td>
+                                    <td width="18%" align="left" class="value-small"
+                                        style="padding-bottom:4px;"><span class="label-small">
+   Vormerkungen:</span> 0
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <td><img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="35"
+                                height="1"
+                                border="0"></td>
+                        <td></td>
+                        <td align="middle"><input type="checkbox"
+                                                  name="VB" value="01396706"></td>
+
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="plain" align="right">2.<img
+                                alt=""
+                                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                                width="5"
+                                height="1"
+                                border="0"></td>
+                        <td width="100%">
+                            <table summary="title data" width="100%" cellpadding="0" cellspacing="0"
+                                   border="0">
+                                <tr valign="top">
+                                    <td colspan=4
+                                        class="plain">Terminologie der Information und Dokumentation, [Hauptbd.]
+                                    </td>
+                                </tr>
+                                <tr valign="top" style="padding-bottom:4px;" nowrap>
+                                    <td class="value-small" width="100">
+                                        <span class="label-small">Signatur:</span><span
+                                            name="xxxxx"> Fo III 573, B9, A2</span>
+                                    </td>
+                                    <td width="18%" align="left" class="value-small"><span
+                                            class="label-small">
+   Leihfristende:</span> 13-01-2016
+                                    </td>
+                                    <td width="18%" align="left" class="value-small"
+                                        style="padding-bottom:4px;padding-right:4px;"><span
+                                            class="label-small">
+   Status:</span> ausgeliehen
+                                    </td>
+                                    <td width="18%" align="left" class="value-small"
+                                        style="padding-bottom:4px;"><span class="label-small">
+   Vormerkungen:</span> 0
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+
+            </form>
+        </td>
+    </tr>
+    <TR>
+        <TD><img
+                alt=""
+                src="https://lbsweb.rz.uni-frankfurt.de/OPC-IMAGES/img_psi/2.0/gui/empty.gif"
+                width="1"
+                height="20"
+                border="0"></TD>
+    </TR>
+</table>
+
+
+</BODY>
+</HTML>

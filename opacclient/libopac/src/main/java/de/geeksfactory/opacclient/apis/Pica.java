@@ -539,6 +539,16 @@ public abstract class Pica extends BaseApi implements OpacApi {
                 title = title.substring(0, title.indexOf(":")); // remove colon
             }
             result.addDetail(new Detail(title, detail));
+
+            if (element.select("a").size() == 1 &&
+                    !element.select("a").get(0).text().trim().equals("")) {
+                String url = element.select("a").first().absUrl("href");
+                if (!url.startsWith(opac_url)) {
+                    result.addDetail(
+                            new Detail(stringProvider.getString(StringProvider.LINK), url));
+                }
+            }
+
             line++;
         }
         line++; // next line after separator
