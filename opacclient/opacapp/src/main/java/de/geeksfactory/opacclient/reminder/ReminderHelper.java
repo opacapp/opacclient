@@ -1,8 +1,5 @@
 package de.geeksfactory.opacclient.reminder;
 
-import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -10,6 +7,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -108,6 +108,8 @@ public class ReminderHelper {
      * (re-)schedule alarms using {@link android.app.AlarmManager}
      */
     public void scheduleAlarms() {
+        if (!sp.getBoolean("notification_service", false)) return;
+
         AccountDataSource data = new AccountDataSource(app);
         AlarmManager alarmManager = (AlarmManager) app.getSystemService(Context.ALARM_SERVICE);
 

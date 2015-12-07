@@ -1,14 +1,5 @@
 package de.geeksfactory.opacclient.reminder;
 
-import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.joda.time.Duration;
-import org.joda.time.Hours;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
-import org.joda.time.ReadablePeriod;
-import org.joda.time.format.PeriodFormat;
-
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -18,6 +9,15 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Duration;
+import org.joda.time.Hours;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
+import org.joda.time.ReadablePeriod;
+import org.joda.time.format.PeriodFormat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
     public static final String ACTION_NOTIFICATION_SNOOZE = "snooze";
     public static final String ACTION_NOTIFICATION_CLICK = "click";
     public static final String ACTION_NOTIFICATION_DONT_REMIND_AGAIN = "dontremindagain";
-    private static final String LOG_TAG = "notification";
+    private static final String LOG_TAG = "ReminderBroadcastRcvr";
 
     private AccountDataSource adata;
     private Alarm alarm;
@@ -82,7 +82,17 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
     }
 
     private void showNotification() {
-        if (!prefs.getBoolean("notification_service", false)) return;
+        if (!prefs.getBoolean("notification_service", false)) {
+            if (BuildConfig.DEBUG) Log.i(LOG_TAG, "not showing notification because disabled");
+            return;
+        }
+        if (alarm.notified) {
+            if (BuildConfig.DEBUG) {
+                Log.i(LOG_TAG, "not showing notification because already notified");
+            }
+            return;
+        }
+        if (BuildConfig.DEBUG) Log.i(LOG_TAG, "showing notification");
 
         alarm.notified = true;
         adata.updateAlarm(alarm);

@@ -39,6 +39,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -749,7 +750,7 @@ public class AccountFragment extends Fragment implements
                             holder.vStatusColor.setBackgroundColor(
                                     getResources().getColor(R.color.date_overdue));
                         } else if (
-                                Days.daysBetween(item.getDeadline(), LocalDate.now()).getDays() <=
+                                Days.daysBetween(LocalDate.now(), item.getDeadline()).getDays() <=
                                         tolerance) {
                             holder.vStatusColor.setBackgroundColor(
                                     getResources().getColor(R.color.date_warning));
@@ -1180,7 +1181,7 @@ public class AccountFragment extends Fragment implements
     }
 
     private void setHtmlTextOrHide(String value, TextView tv) {
-        if (value != null) {
+        if (!TextUtils.isEmpty(value)) {
             tv.setText(Html.fromHtml(value));
         } else {
             tv.setVisibility(View.GONE);
@@ -1188,7 +1189,7 @@ public class AccountFragment extends Fragment implements
     }
 
     private void setTextOrHide(String value, TextView tv) {
-        if (value != null) {
+        if (!TextUtils.isEmpty(value)) {
             tv.setText(value);
         } else {
             tv.setVisibility(View.GONE);
