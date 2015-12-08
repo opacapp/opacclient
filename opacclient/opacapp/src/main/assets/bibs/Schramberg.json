@@ -5,12 +5,12 @@
     "country": "Deutschland",
     "data": {
         "accounttable": {
-            "author": 3,
-            "format": 2,
+            "author": 2,
+            "format": 1,
             "lendingbranch": 0,
-            "prolongurl": 6,
-            "returndate": 5,
-            "title": 4
+            "prolongurl": 5,
+            "returndate": 4,
+            "title": 3
         },
         "baseurl": "https://wwwopac.rz-kiru.de/schramberg",
         "db": "ja",
