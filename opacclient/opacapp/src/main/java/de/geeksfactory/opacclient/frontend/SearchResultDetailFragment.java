@@ -11,8 +11,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.graphics.Palette;
@@ -39,6 +39,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -245,6 +247,8 @@ public class SearchResultDetailFragment extends Fragment
             load(getArguments().getInt(ARG_ITEM_NR),
                     getArguments().getString(ARG_ITEM_ID));
         }
+        ViewCompat.requestApplyInsets(view);
+        ViewCompat.requestApplyInsets(collapsingToolbar);
     }
 
     @Override
@@ -301,9 +305,11 @@ public class SearchResultDetailFragment extends Fragment
             @Override
             public void onGenerated(Palette palette) {
                 Palette.Swatch swatch = palette.getDarkVibrantSwatch();
+                if (swatch == null) swatch = palette.getDarkMutedSwatch();
                 if (swatch != null) {
                     appBarLayout.setBackgroundColor(swatch.getRgb());
                     collapsingToolbar.setContentScrimColor(swatch.getRgb());
+                    collapsingToolbar.setStatusBarScrimColor(swatch.getRgb());
                 }
             }
         });

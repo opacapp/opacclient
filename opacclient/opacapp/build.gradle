@@ -74,4 +74,5 @@ dependencies {
     compile 'org.apache.httpcomponents:httpmime:4.3.6'
     compile files('libs/adapter-1.0.1.jar')
     compile files('libs/endless-1.2.3.jar')
+    compile project(':multilinecollapsingtoolbar')
 }
