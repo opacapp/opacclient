@@ -58,7 +58,7 @@ dependencies {
     compile(project(':libopac')) {
         transitive = false
     }
-    compile('ch.acra:acra:4.6.2') {
+    compile('ch.acra:acra:4.7.0') {
         exclude group: 'org.json', module: 'json'
     }
     compile 'org.jsoup:jsoup:1.8.3'
