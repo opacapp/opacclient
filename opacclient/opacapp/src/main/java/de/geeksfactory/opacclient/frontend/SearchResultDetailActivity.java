@@ -1,6 +1,5 @@
 package de.geeksfactory.opacclient.frontend;
 
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.transition.Fade;
@@ -28,10 +27,6 @@ public class SearchResultDetailActivity extends OpacActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(Color.argb((int) (0.2 * 255), 0, 0, 0));
-        }
 
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity

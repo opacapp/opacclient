@@ -6,13 +6,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.graphics.Palette;
@@ -247,8 +247,6 @@ public class SearchResultDetailFragment extends Fragment
             load(getArguments().getInt(ARG_ITEM_NR),
                     getArguments().getString(ARG_ITEM_ID));
         }
-        ViewCompat.requestApplyInsets(view);
-        ViewCompat.requestApplyInsets(collapsingToolbar);
     }
 
     @Override
@@ -309,7 +307,14 @@ public class SearchResultDetailFragment extends Fragment
                 if (swatch != null) {
                     appBarLayout.setBackgroundColor(swatch.getRgb());
                     collapsingToolbar.setContentScrimColor(swatch.getRgb());
-                    collapsingToolbar.setStatusBarScrimColor(swatch.getRgb());
+                    if (getActivity() != null &&
+                            getActivity() instanceof SearchResultDetailActivity &&
+                            Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        // show darkened color in status bar
+                        float[] hsv = swatch.getHsl();
+                        hsv[2] *= 0.95f;
+                        getActivity().getWindow().setStatusBarColor(Color.HSVToColor(hsv));
+                    }
                 }
             }
         });
