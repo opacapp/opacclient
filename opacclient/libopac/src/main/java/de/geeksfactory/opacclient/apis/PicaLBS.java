@@ -188,7 +188,8 @@ public class PicaLBS extends Pica {
                 item.put(AccountData.KEY_LENT_TITLE, parts[0]);
                 if (parts.length == 2) item.put(AccountData.KEY_LENT_AUTHOR, parts[1]);
             }
-            String returndate = extractAccountInfo(tr, "Returndate", "ausgeliehen bis");
+            String returndate = extractAccountInfo(tr, "Returndate", "ausgeliehen bis",
+                    "Ausleihfrist");
             Date date = parseDate(returndate);
             item.put(AccountData.KEY_LENT_DEADLINE, returndate);
             if (date != null) {
@@ -197,10 +198,11 @@ public class PicaLBS extends Pica {
 
             StringBuilder status = new StringBuilder();
 
-            String statusData = extractAccountInfo(tr, "Status");
+            String statusData = extractAccountInfo(tr, "Status", "Derzeit");
             if (statusData != null) status.append(statusData);
 
-            String prolong = extractAccountInfo(tr, "No of Renewals", "Anzahl Verlängerungen");
+            String prolong = extractAccountInfo(tr, "No of Renewals", "Anzahl Verlängerungen",
+                    "Verlängerungen");
             if (prolong != null && !prolong.equals("0")) {
                 if (status.length() > 0) status.append(", ");
                 status.append(prolong).append("x ").append(stringProvider
@@ -231,9 +233,9 @@ public class PicaLBS extends Pica {
 
     private Date parseDate(String date) {
         try {
-            if (date.matches("\\d\\d.\\d\\d.\\d\\d\\d\\d")) {
+            if (date != null && date.matches("\\d\\d.\\d\\d.\\d\\d\\d\\d")) {
                 return new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN).parse(date);
-            } else if (date.matches("\\d\\d/\\d\\d/\\d\\d\\d\\d")) {
+            } else if (date != null && date.matches("\\d\\d/\\d\\d/\\d\\d\\d\\d")) {
                 return new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).parse(date);
             } else {
                 return null;
