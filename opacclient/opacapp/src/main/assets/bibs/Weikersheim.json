@@ -27,9 +27,9 @@
         "customssl": true,
         "reservationtable": {
             "author": 0,
-            "availability": -1,
+            "availability": 2,
             "branch": -1,
-            "cancelurl": -1,
+            "cancelurl": 3,
             "expirationdate": -1,
             "title": 1
         }
