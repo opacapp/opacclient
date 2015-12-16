@@ -1,14 +1,14 @@
+-dontpreverify
 -dontoptimize
--dontobfuscate
+-dontshrink
 -keepclassmembers,allowoptimization enum * {
 	public static **[] values();
 	public static ** valueOf(java.lang.String);
 }
-# Rename android.support.v7 classes to fix bug on Samsung (and other) devices running Android 4.2
+# Fix bug on Samsung, Wiko (and other) devices running Android 4.2
 # See also: https://code.google.com/p/android/issues/detail?id=78377
--repackageclasses "android.support.v7"
--keep class android.support.v7.widget.** { *; }
--keep interface android.support.v7.widget.** { *; }
+-keepattributes **
+-keep class !android.support.v7.view.menu.**,!android.support.design.internal.NavigationMenu,!android.support.design.internal.NavigationMenuPresenter,!android.support.design.internal.NavigationSubMenu,** {*;}
 
 # See: https://stackoverflow.com/questions/30562330/using-appcompat-layout-behavior-with-string-appbar-scrolling-view-behavior
 -keep class android.support.design.widget.** { *; }
@@ -19,3 +19,12 @@
 # Android, so we need to ignore warnings related to them
 -dontwarn java.nio.file.**
 -dontwarn java.io.File
+
+# ignore warnings from NotificationCompat classes
+-dontwarn android.support.v4.app.NotificationCompat$*
+-dontwarn android.support.v4.app.NotificationCompatGingerbread
+
+# ACRA specifics, See also: https://github.com/ACRA/acra/wiki/ProGuard
+-keepattributes SourceFile,LineNumberTable
+-keepattributes *Annotation*
+-keep class org.acra.** { *; }
