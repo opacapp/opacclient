@@ -1,1 +1,1 @@
-include ':opacapp', ':libopac', ':tests', ':meaningdetector', ':noandroid', ':multilinecollapsingtoolbar'
+include ':opacapp', ':libopac', ':tests', ':meaningdetector', ':noandroid'
