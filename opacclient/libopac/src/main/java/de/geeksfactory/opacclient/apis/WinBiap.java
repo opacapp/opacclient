@@ -302,7 +302,7 @@ public class WinBiap extends BaseApi implements OpacApi {
                         && !cover.attr("src").contains("leer.gif")) {
                     sr.setCover(cover.attr("src"));
                 }
-                sr.setType(getMediaType(cover));
+                sr.setType(getMediaType(cover, data));
             }
 
             String link = tr.select("a[href*=detail.aspx]").attr("href");
@@ -434,7 +434,7 @@ public class WinBiap extends BaseApi implements OpacApi {
             } else if (cover.hasAttr("src") && !cover.attr("src").equals("images/empty.gif")) {
                 item.setCover(cover.attr("src"));
             }
-            item.setMediaType(getMediaType(cover));
+            item.setMediaType(getMediaType(cover, data));
         }
 
         String permalink = doc.select(".PermalinkTextarea").text();
@@ -484,7 +484,7 @@ public class WinBiap extends BaseApi implements OpacApi {
         return item;
     }
 
-    private SearchResult.MediaType getMediaType(Element cover) {
+    private static SearchResult.MediaType getMediaType(Element cover, JSONObject data) {
         if (cover.hasAttr("grp")) {
             String[] parts = cover.attr("grp").split("/");
             String fname = parts[parts.length - 1];
@@ -662,17 +662,17 @@ public class WinBiap extends BaseApi implements OpacApi {
 
         Document lentPage = Jsoup.parse(
                 httpGet(opac_url + "/user/borrow.aspx", getDefaultEncoding()));
-        adata.setLent(parse_medialist(lentPage));
+        adata.setLent(parseMediaList(lentPage));
 
         Document reservationsPage = Jsoup.parse(
                 httpGet(opac_url + "/user/reservations.aspx", getDefaultEncoding()));
-        adata.setReservations(parse_reslist(reservationsPage));
+        adata.setReservations(parseResList(reservationsPage, stringProvider, data));
 
 
         return adata;
     }
 
-    private List<Map<String, String>> parse_medialist(Document doc) {
+    static List<Map<String, String>> parseMediaList(Document doc) {
         List<Map<String, String>> lent = new ArrayList<>();
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
@@ -718,13 +718,14 @@ public class WinBiap extends BaseApi implements OpacApi {
         return lent;
     }
 
-    private void putIfNotEmpty(Map<String, String> map, String key, String value) {
+    private static void putIfNotEmpty(Map<String, String> map, String key, String value) {
         if (value != null && !value.equals("")) {
             map.put(key, value);
         }
     }
 
-    private List<Map<String, String>> parse_reslist(Document doc) {
+    static List<Map<String, String>> parseResList(Document doc, StringProvider stringProvider,
+            JSONObject data) {
         List<Map<String, String>> reservations = new ArrayList<>();
 
         for (Element tr : doc.select("tr[id*=GridViewReservation]")) {
@@ -738,7 +739,7 @@ public class WinBiap extends BaseApi implements OpacApi {
                     item.put(AccountData.KEY_RESERVATION_ID, params.get("catid"));
                 }
                 // find media type
-                SearchResult.MediaType mt = getMediaType(tr.select(".cover").first());
+                SearchResult.MediaType mt = getMediaType(tr.select(".cover").first(), data);
                 if (mt != null) {
                     item.put(AccountData.KEY_RESERVATION_FORMAT,
                             stringProvider.getMediaTypeName(mt));
