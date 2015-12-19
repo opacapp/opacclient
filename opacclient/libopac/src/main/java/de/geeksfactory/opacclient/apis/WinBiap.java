@@ -302,7 +302,7 @@ public class WinBiap extends BaseApi implements OpacApi {
                         && !cover.attr("src").contains("leer.gif")) {
                     sr.setCover(cover.attr("src"));
                 }
-                sr.setType(getMediaType(cover));
+                sr.setType(getMediaType(cover, data));
             }
 
             String link = tr.select("a[href*=detail.aspx]").attr("href");
@@ -434,7 +434,7 @@ public class WinBiap extends BaseApi implements OpacApi {
             } else if (cover.hasAttr("src") && !cover.attr("src").equals("images/empty.gif")) {
                 item.setCover(cover.attr("src"));
             }
-            item.setMediaType(getMediaType(cover));
+            item.setMediaType(getMediaType(cover, data));
         }
 
         String permalink = doc.select(".PermalinkTextarea").text();
@@ -484,7 +484,7 @@ public class WinBiap extends BaseApi implements OpacApi {
         return item;
     }
 
-    private SearchResult.MediaType getMediaType(Element cover) {
+    private static SearchResult.MediaType getMediaType(Element cover, JSONObject data) {
         if (cover.hasAttr("grp")) {
             String[] parts = cover.attr("grp").split("/");
             String fname = parts[parts.length - 1];
@@ -662,23 +662,33 @@ public class WinBiap extends BaseApi implements OpacApi {
 
         Document lentPage = Jsoup.parse(
                 httpGet(opac_url + "/user/borrow.aspx", getDefaultEncoding()));
-        adata.setLent(parse_medialist(lentPage));
+        adata.setLent(parseMediaList(lentPage));
 
         Document reservationsPage = Jsoup.parse(
                 httpGet(opac_url + "/user/reservations.aspx", getDefaultEncoding()));
-        adata.setReservations(parse_reslist(reservationsPage));
+        adata.setReservations(parseResList(reservationsPage, stringProvider, data));
 
 
         return adata;
     }
 
-    private List<Map<String, String>> parse_medialist(Document doc) {
+    static List<Map<String, String>> parseMediaList(Document doc) {
         List<Map<String, String>> lent = new ArrayList<>();
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
 
-        for (Element tr : doc.select(".GridView_RowStyle")) {
+        // the account page differs between WinBiap versions 4.2 and 4.3
+        boolean winBiap43;
+        if (doc.select(".GridView_RowStyle").size() > 0) {
+            winBiap43 = false;
+        } else {
+            winBiap43 = true;
+        }
+
+        for (Element tr : doc.select(winBiap43 ? ".detailTable tr[id$=DetailItemMain_rowBorrow]" :
+                ".GridView_RowStyle")) {
             Map<String, String> item = new HashMap<>();
+            Element detailsTr = winBiap43 ? tr.nextElementSibling() : tr;
 
             // the second column contains an img tag with the cover
             if (tr.select(".cover").size() > 0) {
@@ -689,21 +699,23 @@ public class WinBiap extends BaseApi implements OpacApi {
                 }
             }
 
-            putIfNotEmpty(item, AccountData.KEY_LENT_AUTHOR, tr.select("[id$=LabelAutor]").text());
-            putIfNotEmpty(item, AccountData.KEY_LENT_TITLE, tr.select("[id$=LabelTitel]").text());
+            putIfNotEmpty(item, AccountData.KEY_LENT_AUTHOR,
+                    tr.select("[id$=LabelAutor]").text());
+            putIfNotEmpty(item, AccountData.KEY_LENT_TITLE,
+                    tr.select("[id$=LabelTitel], [id$=LabelTitle]").text());
             putIfNotEmpty(item, AccountData.KEY_LENT_BARCODE,
-                    tr.select("[id$=Label_Mediennr]").text());
+                    detailsTr.select("[id$=Label_Mediennr], [id$=labelMediennr]").text());
             putIfNotEmpty(item, AccountData.KEY_LENT_FORMAT,
-                    tr.select("[id$=Label_Mediengruppe]").text());
+                    detailsTr.select("[id$=Label_Mediengruppe], [id$=labelMediagroup]").text());
             putIfNotEmpty(item, AccountData.KEY_LENT_BRANCH,
-                    tr.select("[id$=Label_Zweigstelle]").text());
+                    detailsTr.select("[id$=Label_Zweigstelle], [id$=labelBranch]").text());
             // Label_Entliehen contains the date when the medium was lent
             putIfNotEmpty(item, AccountData.KEY_LENT_DEADLINE,
-                    tr.select("[id$=LabelFaellig]").text());
+                    tr.select("[id$=LabelFaellig], [id$=LabelMatureDate]").text());
             try {
-                item.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
-                        String.valueOf(sdf.parse(tr.select("[id$=LabelFaellig]").text())
-                                          .getTime()));
+                item.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String.valueOf(
+                        sdf.parse(tr.select("[id$=LabelFaellig], [id$=LabelMatureDate]").text())
+                           .getTime()));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -718,13 +730,14 @@ public class WinBiap extends BaseApi implements OpacApi {
         return lent;
     }
 
-    private void putIfNotEmpty(Map<String, String> map, String key, String value) {
+    private static void putIfNotEmpty(Map<String, String> map, String key, String value) {
         if (value != null && !value.equals("")) {
             map.put(key, value);
         }
     }
 
-    private List<Map<String, String>> parse_reslist(Document doc) {
+    static List<Map<String, String>> parseResList(Document doc, StringProvider stringProvider,
+            JSONObject data) {
         List<Map<String, String>> reservations = new ArrayList<>();
 
         for (Element tr : doc.select("tr[id*=GridViewReservation]")) {
@@ -738,7 +751,7 @@ public class WinBiap extends BaseApi implements OpacApi {
                     item.put(AccountData.KEY_RESERVATION_ID, params.get("catid"));
                 }
                 // find media type
-                SearchResult.MediaType mt = getMediaType(tr.select(".cover").first());
+                SearchResult.MediaType mt = getMediaType(tr.select(".cover").first(), data);
                 if (mt != null) {
                     item.put(AccountData.KEY_RESERVATION_FORMAT,
                             stringProvider.getMediaTypeName(mt));
