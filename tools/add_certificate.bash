@@ -7,7 +7,7 @@ fi
 
 HOST=$1
 CERT=/tmp/cert.pem
-echo -n | openssl s_client -connect $HOST:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > $CERT
+echo -n | openssl s_client -servername $HOST -connect $HOST:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > $CERT
 
 BCJAR=tools/bcprov-jdk15on-146.jar
 

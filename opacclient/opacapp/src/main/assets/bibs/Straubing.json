@@ -4,7 +4,7 @@
     "city": "Straubing",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://webopac.stadtbibliothek-straubing.de"
+        "baseurl": "http://opacweb.straubing.de"
     },
     "geo": [
         48.8777333,

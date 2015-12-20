@@ -25,6 +25,7 @@
             "status": 4
         },
         "customssl": true,
+        "customssl_tls_only": false,
         "mediatypes": {
             "MDVD.gif": "DVD",
             "cdkl.gif": "LP_RECORD",

@@ -56,7 +56,7 @@ import java.security.KeyStore;
 
 public class HTTPClient {
 
-    public static HttpClient getNewHttpClient(boolean customssl, boolean disguise_app) {
+    public static HttpClient getNewHttpClient(boolean customssl, boolean tls_only, boolean disguise_app) {
         HttpClientBuilder builder = HttpClientBuilder.create();
         builder.setRedirectStrategy(new HTTPClient.CustomRedirectStrategy());
         if (disguise_app) {
@@ -84,7 +84,7 @@ public class HTTPClient {
                 }
 
                 SSLConnectionSocketFactory sf =
-                        AdditionalKeyStoresSSLSocketFactory.create(trustStore);
+                        AdditionalKeyStoresSSLSocketFactory.create(trustStore, tls_only);
 
                 Registry<ConnectionSocketFactory> registry =
                         RegistryBuilder.<ConnectionSocketFactory>create().register("http",

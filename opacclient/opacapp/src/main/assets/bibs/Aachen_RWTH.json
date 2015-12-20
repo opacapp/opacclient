@@ -4,7 +4,7 @@
     "city": "Aachen",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://index.bth.rwth-aachen.de:8080/TouchPointClient_touchpoint"
+        "baseurl": "https://index.ub.rwth-aachen.de/TouchPointClient_touchpoint"
     },
     "geo": [
         50.75968,
