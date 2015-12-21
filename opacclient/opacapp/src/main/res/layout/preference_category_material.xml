@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Source: https://gist.github.com/lapism/f75501edd8d32edf3eed -->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+          android:id="@+android:id/title"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+          android:textColor="?attr/colorAccent"
+          android:paddingStart="@dimen/key_line"
+          android:paddingEnd="@dimen/key_line"
+          android:paddingLeft="@dimen/key_line"
+          android:paddingRight="@dimen/key_line"
+          android:paddingTop="16dp"/>
