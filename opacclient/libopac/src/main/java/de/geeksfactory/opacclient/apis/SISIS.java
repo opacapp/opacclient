@@ -1100,7 +1100,7 @@ public class SISIS extends BaseApi implements OpacApi {
                 && doc.select("input[type=button]").size() >= 2) {
             List<String[]> details = new ArrayList<>();
             for (String row : doc.select("#CirculationForm p").first().html()
-                                 .split("<br />")) {
+                                 .split("<br>")) {
                 Document frag = Jsoup.parseBodyFragment(row);
                 if (frag.text().contains(":")) {
                     String[] split = frag.text().split(":");
