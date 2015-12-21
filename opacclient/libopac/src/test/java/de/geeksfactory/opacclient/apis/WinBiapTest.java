@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.geeksfactory.opacclient.i18n.DummyStringProvider;
+import de.geeksfactory.opacclient.objects.AccountData;
 
 import static org.junit.Assert.assertTrue;
 
@@ -40,6 +41,11 @@ public class WinBiapTest extends BaseTest {
         if (html == null) return; // we may not have all files for all libraries
         List<Map<String, String>> media = WinBiap.parseMediaList(Jsoup.parse(html));
         assertTrue(media.size() > 0);
+        for (Map<String, String> item : media) {
+            assertContainsData(item, AccountData.KEY_LENT_TITLE);
+            assertContainsData(item, AccountData.KEY_LENT_DEADLINE);
+            assertContainsData(item, AccountData.KEY_LENT_DEADLINE_TIMESTAMP);
+        }
     }
 
     @Test
