@@ -1,0 +1,17 @@
+{
+    "account_supported": true,
+    "api": "sisis",
+    "city": "Wettingen",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://62.2.168.69/webOPACClient.wettingen",
+        "startparams": "Login=opextern"
+    },
+    "geo": [
+        47.4659503,
+        8.3265988
+    ],
+    "information": "http://www.wettingen.ch/de/verwaltung/aemter/?amt_id=2563",
+    "state": "Aargau",
+    "title": "Gemeindebibliothek"
+}
