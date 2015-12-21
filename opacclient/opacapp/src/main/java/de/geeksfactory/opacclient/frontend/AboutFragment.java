@@ -5,15 +5,14 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.support.v7.app.AppCompatDialog;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceFragmentCompat;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
-import com.github.machinarius.preferencefragment.PreferenceFragment;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,13 +22,12 @@ import java.io.InputStreamReader;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 
-public class AboutFragment extends PreferenceFragment {
+public class AboutFragment extends PreferenceFragmentCompat {
 
     protected Activity context;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         this.context = getActivity();
         populate();
     }
