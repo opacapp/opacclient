@@ -182,20 +182,10 @@ public class PicaLBS extends Pica {
             } else {
                 item.put(AccountData.KEY_LENT_RENEWABLE, "N");
             }
-            String titleAuthor;
-            if (tr.select(".titleLine").size() > 0) {
-                titleAuthor = tr.select(".titleLine").text();
-            } else {
-                titleAuthor = extractAccountInfo(tr, "Title / Author", "Titel");
-            }
-            if (titleAuthor != null) {
-                String[] parts = titleAuthor.split(" / ");
-                item.put(AccountData.KEY_LENT_TITLE, parts[0]);
-                if (parts[1].endsWith(":")) {
-                    parts[1] = parts[1].substring(0, parts[1].length() - 1).trim();
-                }
-                if (parts.length == 2) item.put(AccountData.KEY_LENT_AUTHOR, parts[1]);
-            }
+            String[] titleAndAuthor = extractTitleAndAuthor(tr);
+            item.put(AccountData.KEY_LENT_TITLE, titleAndAuthor[0]);
+            if (titleAndAuthor[1] != null) item.put(AccountData.KEY_LENT_AUTHOR, titleAndAuthor[1]);
+
             String returndate = extractAccountInfo(tr, "Returndate", "ausgeliehen bis",
                     "Ausleihfrist");
             Date date = parseDate(returndate);
@@ -239,6 +229,28 @@ public class PicaLBS extends Pica {
         return lent;
     }
 
+    private static String[] extractTitleAndAuthor(Element tr) {
+        String[] titleAndAuthor = new String[2];
+
+        String titleAuthor;
+        if (tr.select(".titleLine").size() > 0) {
+            titleAuthor = tr.select(".titleLine").text();
+        } else {
+            titleAuthor = extractAccountInfo(tr, "Title / Author", "Titel");
+        }
+        if (titleAuthor != null) {
+            String[] parts = titleAuthor.split(" / ");
+            titleAndAuthor[0] = parts[0];
+            if (parts.length == 2) {
+                if (parts[1].endsWith(":")) {
+                    parts[1] = parts[1].substring(0, parts[1].length() - 1).trim();
+                }
+                titleAndAuthor[1] = parts[1];
+            }
+        }
+        return titleAndAuthor;
+    }
+
     private static Date parseDate(String date) {
         try {
             if (date != null && date.matches("\\d\\d.\\d\\d.\\d\\d\\d\\d")) {
@@ -262,11 +274,10 @@ public class PicaLBS extends Pica {
                 item.put(AccountData.KEY_RESERVATION_CANCEL,
                         tr.select("input[name=volumeReservationsToCancel]").val());
             }
-            String titleAuthor = extractAccountInfo(tr, "Title / Author", "Titel");
-            if (titleAuthor != null) {
-                String[] parts = titleAuthor.split(" / ");
-                item.put(AccountData.KEY_RESERVATION_TITLE, parts[0]);
-                if (parts.length == 2) item.put(AccountData.KEY_RESERVATION_AUTHOR, parts[1]);
+            String[] titleAndAuthor = extractTitleAndAuthor(tr);
+            item.put(AccountData.KEY_RESERVATION_TITLE, titleAndAuthor[0]);
+            if (titleAndAuthor[1] != null) {
+                item.put(AccountData.KEY_RESERVATION_AUTHOR, titleAndAuthor[1]);
             }
 
             extractAccountInfo(item, AccountData.KEY_RESERVATION_BRANCH, tr, "Destination",
