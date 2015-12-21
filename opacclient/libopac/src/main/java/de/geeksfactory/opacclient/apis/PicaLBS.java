@@ -162,16 +162,16 @@ public class PicaLBS extends Pica {
 
         Document lentDoc = Jsoup.parse(
                 httpGet(lbsUrl + "/LBS_WEB/borrower/loans.htm", getDefaultLBSEncoding()));
-        adata.setLent(parse_medialist(lentDoc));
+        adata.setLent(parseMediaList(lentDoc, stringProvider));
 
         Document reservationsDoc = Jsoup.parse(
                 httpGet(lbsUrl + "/LBS_WEB/borrower/reservations.htm", getDefaultLBSEncoding()));
-        adata.setReservations(parse_reslist(reservationsDoc));
+        adata.setReservations(parseResList(reservationsDoc, stringProvider));
 
         return adata;
     }
 
-    private List<Map<String, String>> parse_medialist(Document doc) {
+    static List<Map<String, String>> parseMediaList(Document doc, StringProvider stringProvider) {
         List<Map<String, String>> lent = new ArrayList<>();
 
         for (Element tr : doc.select(".resultset > tbody > tr:has(.rec_title)")) {
@@ -231,7 +231,7 @@ public class PicaLBS extends Pica {
         return lent;
     }
 
-    private Date parseDate(String date) {
+    private static Date parseDate(String date) {
         try {
             if (date != null && date.matches("\\d\\d.\\d\\d.\\d\\d\\d\\d")) {
                 return new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN).parse(date);
@@ -245,7 +245,7 @@ public class PicaLBS extends Pica {
         }
     }
 
-    private List<Map<String, String>> parse_reslist(Document doc) {
+    static List<Map<String, String>> parseResList(Document doc, StringProvider stringProvider) {
         List<Map<String, String>> reservations = new ArrayList<>();
 
         for (Element tr : doc.select(".resultset > tbody > tr:has(.rec_title)")) {
@@ -291,13 +291,13 @@ public class PicaLBS extends Pica {
         return reservations;
     }
 
-    private void extractAccountInfo(Map<String, String> map, String key, Element doc,
+    private static void extractAccountInfo(Map<String, String> map, String key, Element doc,
             String... dataNames) {
         String data = extractAccountInfo(doc, dataNames);
         if (data != null && !data.equals("")) map.put(key, data);
     }
 
-    private String extractAccountInfo(Element doc, String... dataNames) {
+    private static String extractAccountInfo(Element doc, String... dataNames) {
         StringBuilder labelSelector = new StringBuilder();
         boolean first = true;
         for (String dataName : dataNames) {
