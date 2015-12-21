@@ -182,10 +182,18 @@ public class PicaLBS extends Pica {
             } else {
                 item.put(AccountData.KEY_LENT_RENEWABLE, "N");
             }
-            String titleAuthor = extractAccountInfo(tr, "Title / Author", "Titel");
+            String titleAuthor;
+            if (tr.select(".titleLine").size() > 0) {
+                titleAuthor = tr.select(".titleLine").text();
+            } else {
+                titleAuthor = extractAccountInfo(tr, "Title / Author", "Titel");
+            }
             if (titleAuthor != null) {
                 String[] parts = titleAuthor.split(" / ");
                 item.put(AccountData.KEY_LENT_TITLE, parts[0]);
+                if (parts[1].endsWith(":")) {
+                    parts[1] = parts[1].substring(0, parts[1].length() - 1).trim();
+                }
                 if (parts.length == 2) item.put(AccountData.KEY_LENT_AUTHOR, parts[1]);
             }
             String returndate = extractAccountInfo(tr, "Returndate", "ausgeliehen bis",
