@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 import de.geeksfactory.opacclient.i18n.DummyStringProvider;
+import de.geeksfactory.opacclient.objects.AccountData;
+
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
 public class PicaOldTest extends BaseTest {
@@ -38,6 +41,12 @@ public class PicaOldTest extends BaseTest {
         List<Map<String, String>> media = new ArrayList<>();
         PicaOld.parseMediaList(media, Jsoup.parse(html), new DummyStringProvider(),
                 new ArrayList<String>());
+        assertTrue(media.size() > 0);
+        for (Map<String, String> item : media) {
+            assertContainsData(item, AccountData.KEY_LENT_TITLE);
+            assertContainsData(item, AccountData.KEY_LENT_DEADLINE);
+            assertContainsData(item, AccountData.KEY_LENT_DEADLINE_TIMESTAMP);
+        }
     }
 
     @Test
@@ -46,5 +55,6 @@ public class PicaOldTest extends BaseTest {
         if (html == null) return; // we may not have all files for all libraries
         List<Map<String, String>> media = new ArrayList<>();
         PicaOld.parseResList(media, Jsoup.parse(html), new DummyStringProvider());
+        assertTrue(media.size() > 0);
     }
 }
