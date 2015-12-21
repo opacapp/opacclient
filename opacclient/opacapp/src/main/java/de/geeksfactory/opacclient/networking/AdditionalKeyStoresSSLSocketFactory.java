@@ -61,20 +61,22 @@ public class AdditionalKeyStoresSSLSocketFactory {
 
     final static String TAG = "opacclient.tls";
 
-    public static ConnectionSocketFactory create(KeyStore keyStore)
+    public static ConnectionSocketFactory create(KeyStore keyStore, boolean tls_only)
             throws NoSuchAlgorithmException, KeyManagementException {
         SSLContext sslContext = SSLContext.getInstance("TLS");
         sslContext.init(null, new TrustManager[]{new AdditionalKeyStoresTrustManager(keyStore)},
                 null);
-        return new TlsSniSocketFactory(sslContext);
+        return new TlsSniSocketFactory(sslContext, tls_only);
     }
 
     public static class TlsSniSocketFactory extends SSLConnectionSocketFactory {
         private javax.net.ssl.SSLSocketFactory socketfactory;
         private final X509HostnameVerifier hostnameVerifier;
+        private final boolean tls_only;
 
-        public TlsSniSocketFactory(final SSLContext sslContext) {
+        public TlsSniSocketFactory(final SSLContext sslContext, boolean tls_only) {
             super(sslContext, BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
+            this.tls_only = tls_only;
             socketfactory = sslContext.getSocketFactory();
             hostnameVerifier = BROWSER_COMPATIBLE_HOSTNAME_VERIFIER;
         }
@@ -94,7 +96,7 @@ public class AdditionalKeyStoresSSLSocketFactory {
             final String[] allProtocols = sslsock.getEnabledProtocols();
             final List<String> enabledProtocols = new ArrayList<String>(allProtocols.length);
             for (String protocol: allProtocols) {
-                if (!protocol.startsWith("SSL")) {
+                if (!protocol.startsWith("SSL") || !tls_only) {
                     enabledProtocols.add(protocol);
                 }
             }

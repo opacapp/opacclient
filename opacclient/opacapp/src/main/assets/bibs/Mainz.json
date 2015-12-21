@@ -5,14 +5,14 @@
     "country": "Deutschland",
     "data": {
         "accounttable": {
-            "author": 1,
+            "author": 2,
             "barcode": 0,
-            "homebranch": 4,
-            "lendingbranch": 4,
-            "prolongurl": 5,
-            "returndate": 3,
+            "homebranch": 5,
+            "lendingbranch": 5,
+            "prolongurl": 6,
+            "returndate": 4,
             "status": -1,
-            "title": 2
+            "title": 3
         },
         "baseurl": "https://webopac.mainz.de/webopac/",
         "copiestable": {
@@ -28,12 +28,12 @@
             "mp.gif": "PACKAGE"
         },
         "reservationtable": {
-            "author": 0,
-            "availability": 2,
+            "author": 1,
+            "availability": 3,
             "branch": -1,
-            "cancelurl": 3,
+            "cancelurl": 4,
             "expirationdate": -1,
-            "title": 1
+            "title": 2
         }
     },
     "geo": [

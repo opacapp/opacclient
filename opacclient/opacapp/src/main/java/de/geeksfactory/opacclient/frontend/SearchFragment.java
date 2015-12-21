@@ -577,15 +577,18 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                 if (((TextSearchField) field).isFreeSearch()) {
                     text = etSimpleSearch;
                 } else {
+                    if (v == null) continue;
                     text = (EditText) v.findViewById(R.id.edittext);
                 }
                 query.add(new SearchQuery(field, text.getEditableText()
                                                      .toString()));
             } else if (field instanceof BarcodeSearchField) {
+                if (v == null) continue;
                 EditText text = (EditText) v.findViewById(R.id.edittext);
                 query.add(new SearchQuery(field, text.getEditableText()
                                                      .toString()));
             } else if (field instanceof DropdownSearchField) {
+                if (v == null) continue;
                 Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
                 if (spinner.getSelectedItemPosition() != -1) {
                     String key = ((DropdownSearchField) field)
@@ -596,6 +599,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                     }
                 }
             } else if (field instanceof CheckboxSearchField) {
+                if (v == null) continue;
                 CheckBox checkbox = (CheckBox) v.findViewById(R.id.checkbox);
                 query.add(new SearchQuery(field, String.valueOf(checkbox
                         .isChecked())));

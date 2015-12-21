@@ -162,16 +162,16 @@ public class PicaLBS extends Pica {
 
         Document lentDoc = Jsoup.parse(
                 httpGet(lbsUrl + "/LBS_WEB/borrower/loans.htm", getDefaultLBSEncoding()));
-        adata.setLent(parse_medialist(lentDoc));
+        adata.setLent(parseMediaList(lentDoc, stringProvider));
 
         Document reservationsDoc = Jsoup.parse(
                 httpGet(lbsUrl + "/LBS_WEB/borrower/reservations.htm", getDefaultLBSEncoding()));
-        adata.setReservations(parse_reslist(reservationsDoc));
+        adata.setReservations(parseResList(reservationsDoc, stringProvider));
 
         return adata;
     }
 
-    private List<Map<String, String>> parse_medialist(Document doc) {
+    static List<Map<String, String>> parseMediaList(Document doc, StringProvider stringProvider) {
         List<Map<String, String>> lent = new ArrayList<>();
 
         for (Element tr : doc.select(".resultset > tbody > tr:has(.rec_title)")) {
@@ -182,13 +182,12 @@ public class PicaLBS extends Pica {
             } else {
                 item.put(AccountData.KEY_LENT_RENEWABLE, "N");
             }
-            String titleAuthor = extractAccountInfo(tr, "Title / Author", "Titel");
-            if (titleAuthor != null) {
-                String[] parts = titleAuthor.split(" / ");
-                item.put(AccountData.KEY_LENT_TITLE, parts[0]);
-                if (parts.length == 2) item.put(AccountData.KEY_LENT_AUTHOR, parts[1]);
-            }
-            String returndate = extractAccountInfo(tr, "Returndate", "ausgeliehen bis");
+            String[] titleAndAuthor = extractTitleAndAuthor(tr);
+            item.put(AccountData.KEY_LENT_TITLE, titleAndAuthor[0]);
+            if (titleAndAuthor[1] != null) item.put(AccountData.KEY_LENT_AUTHOR, titleAndAuthor[1]);
+
+            String returndate = extractAccountInfo(tr, "Returndate", "ausgeliehen bis",
+                    "Ausleihfrist");
             Date date = parseDate(returndate);
             item.put(AccountData.KEY_LENT_DEADLINE, returndate);
             if (date != null) {
@@ -197,10 +196,11 @@ public class PicaLBS extends Pica {
 
             StringBuilder status = new StringBuilder();
 
-            String statusData = extractAccountInfo(tr, "Status");
+            String statusData = extractAccountInfo(tr, "Status", "Derzeit");
             if (statusData != null) status.append(statusData);
 
-            String prolong = extractAccountInfo(tr, "No of Renewals", "Anzahl Verlängerungen");
+            String prolong = extractAccountInfo(tr, "No of Renewals", "Anzahl Verlängerungen",
+                    "Verlängerungen");
             if (prolong != null && !prolong.equals("0")) {
                 if (status.length() > 0) status.append(", ");
                 status.append(prolong).append("x ").append(stringProvider
@@ -229,11 +229,33 @@ public class PicaLBS extends Pica {
         return lent;
     }
 
-    private Date parseDate(String date) {
+    private static String[] extractTitleAndAuthor(Element tr) {
+        String[] titleAndAuthor = new String[2];
+
+        String titleAuthor;
+        if (tr.select(".titleLine").size() > 0) {
+            titleAuthor = tr.select(".titleLine").text();
+        } else {
+            titleAuthor = extractAccountInfo(tr, "Title / Author", "Titel");
+        }
+        if (titleAuthor != null) {
+            String[] parts = titleAuthor.split(" / ");
+            titleAndAuthor[0] = parts[0];
+            if (parts.length == 2) {
+                if (parts[1].endsWith(":")) {
+                    parts[1] = parts[1].substring(0, parts[1].length() - 1).trim();
+                }
+                titleAndAuthor[1] = parts[1];
+            }
+        }
+        return titleAndAuthor;
+    }
+
+    private static Date parseDate(String date) {
         try {
-            if (date.matches("\\d\\d.\\d\\d.\\d\\d\\d\\d")) {
+            if (date != null && date.matches("\\d\\d.\\d\\d.\\d\\d\\d\\d")) {
                 return new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN).parse(date);
-            } else if (date.matches("\\d\\d/\\d\\d/\\d\\d\\d\\d")) {
+            } else if (date != null && date.matches("\\d\\d/\\d\\d/\\d\\d\\d\\d")) {
                 return new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).parse(date);
             } else {
                 return null;
@@ -243,7 +265,7 @@ public class PicaLBS extends Pica {
         }
     }
 
-    private List<Map<String, String>> parse_reslist(Document doc) {
+    static List<Map<String, String>> parseResList(Document doc, StringProvider stringProvider) {
         List<Map<String, String>> reservations = new ArrayList<>();
 
         for (Element tr : doc.select(".resultset > tbody > tr:has(.rec_title)")) {
@@ -252,11 +274,10 @@ public class PicaLBS extends Pica {
                 item.put(AccountData.KEY_RESERVATION_CANCEL,
                         tr.select("input[name=volumeReservationsToCancel]").val());
             }
-            String titleAuthor = extractAccountInfo(tr, "Title / Author", "Titel");
-            if (titleAuthor != null) {
-                String[] parts = titleAuthor.split(" / ");
-                item.put(AccountData.KEY_RESERVATION_TITLE, parts[0]);
-                if (parts.length == 2) item.put(AccountData.KEY_RESERVATION_AUTHOR, parts[1]);
+            String[] titleAndAuthor = extractTitleAndAuthor(tr);
+            item.put(AccountData.KEY_RESERVATION_TITLE, titleAndAuthor[0]);
+            if (titleAndAuthor[1] != null) {
+                item.put(AccountData.KEY_RESERVATION_AUTHOR, titleAndAuthor[1]);
             }
 
             extractAccountInfo(item, AccountData.KEY_RESERVATION_BRANCH, tr, "Destination",
@@ -289,13 +310,13 @@ public class PicaLBS extends Pica {
         return reservations;
     }
 
-    private void extractAccountInfo(Map<String, String> map, String key, Element doc,
+    private static void extractAccountInfo(Map<String, String> map, String key, Element doc,
             String... dataNames) {
         String data = extractAccountInfo(doc, dataNames);
         if (data != null && !data.equals("")) map.put(key, data);
     }
 
-    private String extractAccountInfo(Element doc, String... dataNames) {
+    private static String extractAccountInfo(Element doc, String... dataNames) {
         StringBuilder labelSelector = new StringBuilder();
         boolean first = true;
         for (String dataName : dataNames) {

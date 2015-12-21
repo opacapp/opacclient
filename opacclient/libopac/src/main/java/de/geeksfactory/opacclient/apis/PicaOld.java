@@ -277,8 +277,7 @@ public class PicaOld extends Pica {
         params.add(new BasicNameValuePair("BOR_PW_ENC", URLDecoder.decode(
                 pwEncoded, "UTF-8")));
         if (lor_reservations != null) {
-            params.add(new BasicNameValuePair("LOR_RESERVATIONS",
-                    lor_reservations));
+            params.add(new BasicNameValuePair("LOR_RESERVATIONS", lor_reservations));
         }
 
         params.add(new BasicNameValuePair("VB", media));
@@ -366,14 +365,16 @@ public class PicaOld extends Pica {
                 && !doc.select(".alert").text().contains("No outstanding loans")
                 && !doc.select(".alert").text().contains("Geen uitlening")
                 && !doc.select(".alert").text().contains("Aucun emprunt")) {
-            parse_medialist(media, doc);
+            List<String> renewalCounts = loadRenewalCounts(doc);
+            parseMediaList(media, doc, stringProvider, renewalCounts);
         }
         if (doc2.select("table[summary^=list]").size() > 0
                 && !doc2.select(".alert").text().contains("Keine Vormerkungen")
                 && !doc2.select(".alert").text().contains("No outstanding reservations")
                 && !doc2.select(".alert").text().contains("Geen reservering")
                 && !doc2.select(".alert").text().contains("Aucune réservation")) {
-            parse_reslist(reserved, doc2);
+            updateLorReservations(doc);
+            parseResList(reserved, doc2, stringProvider);
         }
 
         res.setLent(media);
@@ -383,8 +384,21 @@ public class PicaOld extends Pica {
 
     }
 
-    protected void parse_medialist(List<Map<String, String>> media, Document doc)
-            throws OpacErrorException {
+    private List<String> loadRenewalCounts(Document doc) {
+        List<String> renewalCounts = new ArrayList<>();
+        for (Element iframe : doc.select("iframe[name=nr_renewals_in_a_box]")) {
+            try {
+                String html = httpGet(iframe.attr("src"), getDefaultEncoding());
+                renewalCounts.add(Jsoup.parse(html).text());
+            } catch (IOException e) {
+                renewalCounts.add(null);
+            }
+        }
+        return renewalCounts;
+    }
+
+    static void parseMediaList(List<Map<String, String>> media, Document doc,
+            StringProvider stringProvider, List<String> renewalCounts) throws OpacErrorException {
 
         Elements copytrs = doc
                 .select("table[summary^=list] > tbody > tr[valign=top]");
@@ -414,60 +428,61 @@ public class PicaOld extends Pica {
                 Elements datatrs = tr.select("table[summary=title data] tr");
                 e.put(AccountData.KEY_LENT_TITLE, datatrs.get(0).text());
 
-                List<TextNode> textNodes = datatrs.get(1).select("td").first()
-                                                  .textNodes();
-                List<TextNode> nodes = new ArrayList<>();
-                Elements titles = datatrs.get(1).select("span.label-small");
+                for (Element td : datatrs.get(1).select("td")) {
+                    List<TextNode> textNodes = td.textNodes();
+                    Elements titles = td.select("span.label-small");
 
-                for (TextNode node : textNodes) {
-                    if (!node.text().equals(" ")) {
-                        nodes.add(node);
+                    List<String> values = new ArrayList<>();
+                    if (td.select("span[name=xxxxx]").size() > 0) {
+                        for (Element span : td.select("span[name=xxxxx]")) {
+                            values.add(span.text());
+                        }
+                    } else {
+                        for (TextNode node : textNodes) {
+                            if (!node.text().equals(" ")) {
+                                values.add(node.text());
+                            }
+                        }
                     }
-                }
 
-                assert (nodes.size() == titles.size());
-                for (int j = 0; j < nodes.size(); j++) {
-                    String title = titles.get(j).text();
-                    String value = nodes.get(j).text().trim().replace(";", "");
-                    if (title.contains("Signatur")
-                            || title.contains("shelf mark")
-                            || title.contains("signatuur")) {
-                        // not supported
-                    } else if (title.contains("Status")
-                            || title.contains("status")
-                            || title.contains("statut")) {
-                        e.put(AccountData.KEY_LENT_STATUS, value);
-                    } else if (title.contains("Leihfristende")
-                            || title.contains("expiry date")
-                            || title.contains("vervaldatum")
-                            || title.contains("date d'expiration")) {
-                        e.put(AccountData.KEY_LENT_DEADLINE, value);
-                        try {
-                            e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
-                                    String.valueOf(sdf.parse(value).getTime()));
-                        } catch (ParseException e1) {
-                            e1.printStackTrace();
-                        }
-                    } else //noinspection StatementWithEmptyBody
-                        if (title.contains("Vormerkungen")
-                                || title.contains("reservations")
-                                || title.contains("reserveringen")
-                                || title.contains("réservations")) {
+                    assert (values.size() == titles.size());
+                    for (int j = 0; j < values.size(); j++) {
+                        String title = titles.get(j).text();
+                        String value = values.get(j).trim().replace(";", "");
+                        //noinspection StatementWithEmptyBody
+                        if (title.contains("Signatur")
+                                || title.contains("shelf mark")
+                                || title.contains("signatuur")) {
                             // not supported
-                        }
+                        } else if (title.contains("Status")
+                                || title.contains("status")
+                                || title.contains("statut")) {
+                            e.put(AccountData.KEY_LENT_STATUS, value);
+                        } else if (title.contains("Leihfristende")
+                                || title.contains("expiry date")
+                                || title.contains("vervaldatum")
+                                || title.contains("date d'expiration")) {
+                            e.put(AccountData.KEY_LENT_DEADLINE, value);
+                            try {
+                                e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
+                                        String.valueOf(sdf.parse(value).getTime()));
+                            } catch (ParseException e1) {
+                                e1.printStackTrace();
+                            }
+                        } else //noinspection StatementWithEmptyBody
+                            if (title.contains("Vormerkungen")
+                                    || title.contains("reservations")
+                                    || title.contains("reserveringen")
+                                    || title.contains("réservations")) {
+                                // not supported
+                            }
+                    }
                 }
                 media.add(e);
             } else { // like in Kiel
                 String prolongCount = "";
-                if (tr.select("iframe[name=nr_renewals_in_a_box]").size() > 0) {
-                    try {
-                        String html = httpGet(
-                                tr.select("iframe[name=nr_renewals_in_a_box]")
-                                  .attr("src"), getDefaultEncoding());
-                        prolongCount = Jsoup.parse(html).text();
-                    } catch (IOException e) {
-
-                    }
+                if (renewalCounts.size() == trs && renewalCounts.get(i) != null) {
+                    prolongCount = renewalCounts.get(i);
                 }
                 String reminderCount = tr.child(13).text().trim();
                 if (reminderCount.contains(" Mahn")
@@ -523,18 +538,14 @@ public class PicaOld extends Pica {
                 media.add(e);
             }
         }
-        assert (media.size() == trs - 1);
+        assert (media.size() == trs);
     }
 
-    protected void parse_reslist(List<Map<String, String>> media, Document doc) throws
+    static void parseResList(List<Map<String, String>> media, Document doc,
+            StringProvider stringProvider) throws
             OpacErrorException {
 
-        if (doc.select("input[name=LOR_RESERVATIONS]").size() > 0) {
-            lor_reservations = doc.select("input[name=LOR_RESERVATIONS]").attr(
-                    "value");
-        }
-
-        Elements copytrs = doc.select("table[summary^=list] tr[valign=top]");
+        Elements copytrs = doc.select("table[summary^=list] > tbody >  tr[valign=top]");
 
         int trs = copytrs.size();
         if (trs < 1) {
@@ -591,7 +602,13 @@ public class PicaOld extends Pica {
 
             media.add(e);
         }
-        assert (media.size() == trs - 1);
+        assert (media.size() == trs);
+    }
+
+    private void updateLorReservations(Document doc) {
+        if (doc.select("input[name=LOR_RESERVATIONS]").size() > 0) {
+            lor_reservations = doc.select("input[name=LOR_RESERVATIONS]").attr("value");
+        }
     }
 
 

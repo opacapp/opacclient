@@ -47,6 +47,7 @@ import java.io.InterruptedIOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -240,6 +241,7 @@ public abstract class BaseApi implements OpacApi {
     @Override
     public void init(Library library) {
         http_client = HTTPClient.getNewHttpClient(library.getData().optBoolean("customssl", false),
+                library.getData().optBoolean("customssl_tls_only", true),
                 library.getData().optBoolean("disguise", false));
         this.library = library;
         stringProvider = new DummyStringProvider();
@@ -306,6 +308,8 @@ public abstract class BaseApi implements OpacApi {
             }
         } catch (InterruptedIOException e) {
             e.printStackTrace();
+            throw new NotReachableException(e.getMessage());
+        } catch (UnknownHostException e) {
             throw new NotReachableException(e.getMessage());
         } catch (IOException e) {
             if (e.getMessage() != null
@@ -422,6 +426,8 @@ public abstract class BaseApi implements OpacApi {
             }
         } catch (InterruptedIOException e) {
             e.printStackTrace();
+            throw new NotReachableException(e.getMessage());
+        } catch (UnknownHostException e) {
             throw new NotReachableException(e.getMessage());
         } catch (IOException e) {
             if (e.getMessage() != null

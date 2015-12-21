@@ -1,0 +1,303 @@
+﻿<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <link href="https://lhgrw.gbv.de/LBS_WEB/css/worldcat-gui-new.css" type="text/css"
+          rel="STYLESHEET">
+    <title>
+        LBS Loan Function
+    </title>
+</head>
+<body>
+
+
+<div class="topbox">
+
+
+    <form method="post" class="topbox">
+        <div class="navbar">
+            <span class="copyright">Copyright &copy; 2011 OCLC</span>
+        
+			<span class="navflags">
+				
+                    <a href="?LAN=en" style="text-decoration: none;">
+                        <img src="https://lhgrw.gbv.de/LBS_WEB/gfx/en.gif" alt="opac_language_en"
+                             border="0" height="10" width="16"/>
+                    </a>
+				
+                    <a href="?LAN=de" style="text-decoration: none;">
+                        <img src="https://lhgrw.gbv.de/LBS_WEB/gfx/de-.gif" alt="opac_language_de"
+                             border="0" height="10" width="16"/>
+                    </a>
+				
+				<img src="https://lhgrw.gbv.de/LBS_WEB/gfx/empty.gif" width="1" height="1">
+			</span>
+
+            &nbsp;
+        </div>
+
+        <div class="sepline"><img src="https://lhgrw.gbv.de/LBS_WEB/gfx/empty.gif" width="1"
+                                  height="1"></div>
+
+
+        <div class="msgbox_margin">
+            <div class="msgbox msgbox_bg_small">
+                <div class="logo">
+                    <img src="https://lhgrw.gbv.de/LBS_WEB/gfx/logo_xml_lbs4.gif"/>
+                </div>
+
+
+                <div class="protectmessage">
+                    Zum Schutz Ihrer Daten muss das Fenster nach Benutzung durch Klick auf "Abmelden und schließen" geschlossen werden.
+                </div>
+
+                <p/>
+
+
+            </div>
+        </div>
+
+        <div class="tabline"><img src="https://lhgrw.gbv.de/LBS_WEB/gfx/empty.gif" width="1"
+                                  height="1"></div>
+
+
+        <div class="tabbar">
+            <!-- LOANS -->
+            <div class="navlink">
+
+
+                <a href="https://lhgrw.gbv.de/LBS_WEB/borrower/loans.htm"
+                   class="tab1">Entleihungen</a>
+
+
+            </div>
+
+            <!-- RESERVATIONS -->
+            <div class="navlink">
+
+
+                <a href="#" class="tab2" title="Keine Vormerkungen vorhanden.">Vormerkungen</a>
+
+
+            </div>
+
+            <!-- COSTS -->
+            <div class="navlink">
+
+
+                <a href="#" class="tab2" title="Sie haben keine Kosten zu zahlen.">Kosten</a>
+
+
+            </div>
+
+            <!-- CHANGE PASSWORD -->
+            <div class="navlink">
+
+
+                <a href="/LBS_WEB/borrower/changePassword.htm" class="tab0">Passwort</a>
+
+
+            </div>
+
+            <!-- BORROWER INFORMATION -->
+            <div class="navlink">
+                <a href="/LBS_WEB/borrower/borrower.htm" class="tab0">Ihre Daten</a>
+            </div>
+        </div>
+        <div class="tabline"><img src="https://lhgrw.gbv.de/LBS_WEB/gfx/empty.gif" width="1"
+                                  height="1"></div>
+
+
+    </form>
+
+</div>
+
+<div class="lrmargin">
+    <div class="result_title">
+        <table cellspacing="0" cellpadding="0" border="0">
+            <tbody>
+            <tr>
+                <td class="title">
+								
+								<span>
+									Entleihungen
+								</span>
+                </td>
+                <td class="result">
+                    <span class="de-emph_sep"> | </span>
+                    <span> Mustermann, Max</span>
+                </td>
+                <td class="left10">
+
+
+                    <a href="/LBS_WEB/j_spring_security_logout" class="submitAnchor"
+                       title="Klicken Sie auf Abmelden und schließen um dieses Fenster zu schließen.">Abmelden und schließen</a>
+
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <form id="loansForm" name="loansForm" action="https://lhgrw.gbv.de/LBS_WEB/borrower/loans.htm"
+          method="post">
+
+
+        <div class="actionbox">
+
+
+            <div class="group_header">
+
+
+                <input class="button" name="renew" type="submit"
+                       title=" Klicken Sie auf Verlängern der ausgewählten Titel Verlängern der ausgewählten Titel"
+                       value="Verlängern"/>
+
+
+            </div>
+
+
+            <div class="extra_bottom_padding">
+
+
+                <div class="divider"></div>
+                <div class="group_header">
+                    <input class="button" type="submit"
+                           title="Wählen Sie die gewünschten Entleihungen aus und klicken Sie hier."
+                           value="Zeige:"/>
+                </div>
+                <div class="extra_top_padding">
+
+
+                    <div class="group_input">
+                        <input type="radio" name="selection" value="ALL" checked/>
+                        Alle Entleihungen
+                    </div>
+                    <div class="group_input">
+                        <input type="radio" name="selection" value="RENEWABLE"/>
+                        verlängerbare Entl.
+                    </div>
+                    <div class="group_input">
+                        <input type="radio" name="selection" value="NOT_RENEWABLE"/>
+                        nicht verlängerbar
+                    </div>
+
+                </div>
+
+
+                <div class="divider"></div>
+                <div class="group_header">
+                    <input class="button" type="submit"
+                           title="Wählen Sie die Sortierung aus und klicken Sie hier."
+                           value="Sortieren"/>
+                </div>
+                <div class="extra_top_padding">
+
+
+                    <div class="group_input">
+                        <input type="radio" value="NONE" name="sorting" checked/>
+                        Keine Sortierung
+                    </div>
+                    <div class="group_input">
+                        <input type="radio" value="RETURN_DATE_ASC" name="sorting"/>
+                        Fristende aufsteig.
+                    </div>
+                    <div class="group_input">
+                        <input type="radio" value="RETURN_DATE_DESC" name="sorting"/>
+                        Fristende absteig.
+                    </div>
+                    <div class="group_input">
+                        <input type="radio" value="TITLE_ASC" name="sorting"/>
+                        Titel A-Z
+                    </div>
+                    <div class="group_input">
+                        <input type="radio" value="TITLE_DESC" name="sorting"/>
+                        Titel Z-A
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+
+
+        <div class="bodydiv">
+
+
+            <script type="text/javascript" src="https://lhgrw.gbv.de/LBS_WEB/js/script.js"></script>
+
+
+            <table class="resultset">
+
+
+                <tbody>
+                <tr>
+                    <td class="rec_checkbox">
+
+
+                        <!-- input type="hidden" name="_volumeNumbersToRenew" /-->
+                        <input type="checkbox" name="volumeNumbersToRenew" value="962059" disabled/>
+
+
+                    </td>
+                    <td class="rec_nr">
+                        <div>1.</div>
+                    </td>
+                    <td class="rec_title">
+                        <div>
+                            <table class='titlelist'>
+                                <table class='titlelist'>
+                                    <tr>
+                                        <td class="rec_data "><span
+                                                class="titleLine ">Microsoft SQL Server 2008 für Administratoren : [mit Checklisten zur Systemabsicherung und für wiederkehrende Arbeiten] / Bauder, Irene (2008) : </span>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table class='titlelist'>
+                                    <tr>
+                                        <td class="rec_data "><span class="label ">Derzeit : </span>
+                                        </td>
+                                        <td class="rec_data "><span>Ausgeliehen</span></td>
+                                    <tr>
+                                        <td class="rec_data "><span
+                                                class="label ">Ausleihfrist : </span></td>
+                                        <td class="rec_data "><span>22.01.2016</span></td>
+                                    <tr>
+                                        <td class="rec_data "><span class="label ">Theke : </span>
+                                        </td>
+                                        <td class="rec_data "><span>Service - Ausleihe</span></td>
+                                    <tr>
+                                        <td class="rec_data "><span
+                                                class="label ">Signatur : </span></td>
+                                        <td class="rec_data ">
+                                            <span>UB 660:660/ST 271 S70 B338 M6</span></td>
+                                    <tr>
+                                        <td class="rec_data "><span
+                                                class="label ">Verlängerungen : </span></td>
+                                        <td class="rec_data "><span>10</span></td>
+                                    <tr>
+                                        <td class="rec_data "><span
+                                                class="label ">Mahnungen : </span></td>
+                                        <td class="rec_data "><span>0</span></td>
+                                    <tr>
+                                        <td class="rec_data "><span
+                                                class="label ">Ausleihtyp : </span></td>
+                                        <td class="rec_data ">
+                                            <span>Standardausleihe (30 Tage)</span></td>
+                                </table>
+                                <span class="error"> Keine Verlängerung möglich</span><br>
+
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+    </form>
+</div>
+</body>
+</html>

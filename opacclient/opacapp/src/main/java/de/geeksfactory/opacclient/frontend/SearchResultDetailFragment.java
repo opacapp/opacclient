@@ -6,12 +6,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
@@ -30,6 +30,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,6 +39,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -300,9 +303,18 @@ public class SearchResultDetailFragment extends Fragment
             @Override
             public void onGenerated(Palette palette) {
                 Palette.Swatch swatch = palette.getDarkVibrantSwatch();
+                if (swatch == null) swatch = palette.getDarkMutedSwatch();
                 if (swatch != null) {
                     appBarLayout.setBackgroundColor(swatch.getRgb());
                     collapsingToolbar.setContentScrimColor(swatch.getRgb());
+                    if (getActivity() != null &&
+                            getActivity() instanceof SearchResultDetailActivity &&
+                            Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        // show darkened color in status bar
+                        float[] hsv = swatch.getHsl();
+                        hsv[2] *= 0.95f;
+                        getActivity().getWindow().setStatusBarColor(Color.HSVToColor(hsv));
+                    }
                 }
             }
         });
@@ -957,6 +969,42 @@ public class SearchResultDetailFragment extends Fragment
     }
 
     public void reservationDo() {
+        final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        if (sp.getBoolean("reservation_fee_warning_ignore", false) ||
+                (app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_WARN_RESERVATION_FEES) > 0) {
+            reservationPerform();
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(
+                    getActivity());
+            View content = getLayoutInflater(null).inflate(R.layout.dialog_reservation_fees, null);
+            final CheckBox check = (CheckBox) content.findViewById(R.id.check_box1);
+            builder.setView(content)
+                   .setCancelable(false)
+                   .setNegativeButton(R.string.cancel,
+                           new DialogInterface.OnClickListener() {
+                               @Override
+                               public void onClick(
+                                       DialogInterface dialog, int id) {
+                                   dialog.cancel();
+                               }
+                           })
+                   .setPositiveButton(R.string.reservation_fee_continue,
+                           new DialogInterface.OnClickListener() {
+                               @Override
+                               public void onClick(
+                                       DialogInterface dialog, int id) {
+                                   if (check.isChecked()) {
+                                       sp.edit().putBoolean("reservation_fee_warning_ignore", true).apply();
+                                   }
+                                   reservationPerform();
+                               }
+                           });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+    }
+
+    public void reservationPerform() {
         MultiStepResultHelper<DetailledItem> msrhReservation = new MultiStepResultHelper<>(
                 getActivity(), item, R.string.doing_res);
         msrhReservation.setCallback(new Callback<DetailledItem>() {

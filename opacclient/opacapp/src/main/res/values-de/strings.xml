@@ -257,4 +257,9 @@
     <string name="nfc_not_activated">Sie können die NFC-Suche jederzeit in den
         Einstellungen aktivieren.</string>
     <string name="content_description_nfc_logo">NFC-Logo</string>
+    <string name="reservation_fee_warning">Bitte beachten Sie, dass in manchen Bibliotheken Gebühren
+        für Reservierungen anfallen können. Bitte überprüfen Sie im Zweifel die Gebührenordnung Ihrer
+        Bibliothek.</string>
+    <string name="do_not_ask_again">Nicht noch einmal anzeigen</string>
+    <string name="reservation_fee_continue">Weiter</string>
 </resources>

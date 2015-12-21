@@ -76,9 +76,9 @@ public interface StringProvider {
     String STACKS_BRANCH = "stacks_branch";
     String PROVISION_BRANCH = "provision_branch";
     String UNSUPPORTED_IN_LIBRARY = "unsupported_in_library";
-    String RESERVATION_WARNING = "reservation_warning";
     String RESERVATIONS_NUMBER = "reservations_number";
     String RESERVED_AT_DATE = "reserved_at_date";
+    String LINK = "link";
 
     /**
      * Returns the translated string identified by identifier

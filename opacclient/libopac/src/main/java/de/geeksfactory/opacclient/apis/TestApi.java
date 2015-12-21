@@ -43,6 +43,10 @@ public class TestApi implements OpacApi {
                         ".jpg/800px-Old_book_bindings.jpg";
         makeSearchResult("Kurz", image, false);
         makeSearchResult("Weit hinten, hinter den Wortbergen, fern der Länder", image, false);
+        makeSearchResult(
+                "Weit hinten, hinter den Wortbergen, fern der Länder Vokalien und Konsonantien " +
+                        "leben die Blindtexte.",
+                image, false);
         makeSearchResult("Kurz", image, true);
         makeSearchResult("Weit hinten, hinter den Wortbergen, fern der Länder", image, true);
     }

@@ -10,7 +10,7 @@
             "returndate": 2,
             "title": 1
         },
-        "baseurl": "http://212.204.71.154/webopac",
+        "baseurl": "http://88.217.155.35/webopac",
         "copiestable": {
             "barcode": 0,
             "branch": 4,

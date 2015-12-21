@@ -98,6 +98,9 @@ public class DropdownSearchField extends SearchField {
         JSONObject json = super.toJSON();
         json.put("type", "dropdown");
         JSONArray values = new JSONArray();
+        if (dropdownValues == null) {
+            dropdownValues = new ArrayList<>();
+        }
         for (Option map : dropdownValues) {
             JSONObject value = new JSONObject();
             value.put("key", map.getKey());

@@ -32,7 +32,6 @@ import org.apache.http.client.utils.URIUtils;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.HttpClientConnectionManager;
-import org.apache.http.conn.scheme.SocketFactory;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -55,7 +54,8 @@ public class HTTPClient {
 
     public static KeyStore trustStore = null;
 
-    public static HttpClient getNewHttpClient(boolean customssl, boolean disguise_app) {
+    public static HttpClient getNewHttpClient(boolean customssl, boolean tls_only,
+            boolean disguise_app) {
         HttpClientBuilder builder = HttpClientBuilder.create();
         builder.setRedirectStrategy(new CustomRedirectStrategy());
         if (disguise_app) {
@@ -78,7 +78,7 @@ public class HTTPClient {
                 }
 
                 ConnectionSocketFactory sf =
-                        AdditionalKeyStoresSSLSocketFactory.create(trustStore);
+                        AdditionalKeyStoresSSLSocketFactory.create(trustStore, tls_only);
 
                 Registry<ConnectionSocketFactory> registry =
                         RegistryBuilder.<ConnectionSocketFactory>create().register("http",
