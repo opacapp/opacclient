@@ -740,8 +740,20 @@ public class WinBiap extends BaseApi implements OpacApi {
             JSONObject data) {
         List<Map<String, String>> reservations = new ArrayList<>();
 
-        for (Element tr : doc.select("tr[id*=GridViewReservation]")) {
+        // the account page differs between WinBiap versions 4.2 and 4.3
+        boolean winBiap43;
+        if (doc.select("tr[id*=GridViewReservation]").size() > 0) {
+            winBiap43 = false;
+        } else {
+            winBiap43 = true;
+        }
+
+        for (Element tr : doc
+                .select(winBiap43 ? ".detailTable tr[id$=ReservationDetailItemMain_rowBorrow]" :
+                        "tr[id*=GridViewReservation]")) {
             Map<String, String> item = new HashMap<>();
+
+            Element detailsTr = winBiap43 ? tr.nextElementSibling() : tr;
 
             // the second column contains an img tag with the cover
             if (tr.select(".cover").size() > 0) {
@@ -758,14 +770,17 @@ public class WinBiap extends BaseApi implements OpacApi {
                 }
             }
 
-            item.put(AccountData.KEY_RESERVATION_READY,
-                    tr.select("[id$=ImageBorrow]").attr("title"));
+            putIfNotEmpty(item, AccountData.KEY_RESERVATION_READY,
+                    winBiap43 ? detailsTr.select("[id$=labelStatus]").text() :
+                            tr.select("[id$=ImageBorrow]").attr("title"));
             putIfNotEmpty(item, AccountData.KEY_RESERVATION_AUTHOR,
                     tr.select("[id$=LabelAutor]").text());
             putIfNotEmpty(item, AccountData.KEY_RESERVATION_TITLE,
                     tr.select("[id$=LabelTitle]").text());
             putIfNotEmpty(item, AccountData.KEY_RESERVATION_BRANCH,
-                    tr.select("[id$=LabelBranch]").text());
+                    detailsTr.select("[id$=LabelBranch], [id$=labelBranch]").text());
+            putIfNotEmpty(item, AccountData.KEY_RESERVATION_FORMAT,
+                    detailsTr.select("[id$=labelMediagroup]").text());
             // Label_Vorbestelltam contains the date when the medium was reserved
 
             if (tr.select("a[id$=ImageReservationDelete]").size() > 0) {
