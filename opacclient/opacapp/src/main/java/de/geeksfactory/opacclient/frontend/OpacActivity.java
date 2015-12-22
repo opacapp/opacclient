@@ -56,10 +56,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -69,6 +72,7 @@ import java.util.Map;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.Account;
+import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 
 public abstract class OpacActivity extends AppCompatActivity {
@@ -84,13 +88,19 @@ public abstract class OpacActivity extends AppCompatActivity {
     protected FloatingActionButton fab;
     protected CharSequence title;
 
-    protected List<Account> accounts;
-
     protected Fragment fragment;
     protected boolean hasDrawer = false;
     protected Toolbar toolbar;
     private boolean twoPane;
     private boolean fabVisible;
+
+    protected List<Account> accounts;
+    protected ImageView accountExpand;
+    protected TextView accountTitle;
+    protected TextView accountSubtitle;
+    protected TextView accountWarning;
+    protected LinearLayout accountData;
+    protected boolean accountSwitcherVisible = false;
 
     protected static void unbindDrawables(View view) {
         if (view == null) {
@@ -126,6 +136,7 @@ public abstract class OpacActivity extends AppCompatActivity {
         }
         fab = (FloatingActionButton) findViewById(R.id.search_fab);
         setupDrawer();
+        setupAccountSwitcher();
 
         if (savedInstanceState != null) {
             setTwoPane(savedInstanceState.getBoolean("twoPane"));
@@ -143,6 +154,115 @@ public abstract class OpacActivity extends AppCompatActivity {
             }
         }
         fixStatusBarFlashing();
+    }
+
+    private void setupAccountSwitcher() {
+        aData.open();
+        accounts = aData.getAllAccounts();
+        aData.close();
+
+        Account selectedAccount = app.getAccount();
+
+        View header = drawer.getHeaderView(0);
+        accountExpand = (ImageView) header.findViewById(R.id.account_expand);
+        accountTitle = (TextView) header.findViewById(R.id.account_title);
+        accountSubtitle = (TextView) header.findViewById(R.id.account_subtitle);
+        accountWarning = (TextView) header.findViewById(R.id.account_warning);
+        accountData = (LinearLayout) header.findViewById(R.id.account_data);
+
+        accountData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleAccountSwitcher();
+            }
+        });
+
+        updateAccountSwitcher(selectedAccount);
+    }
+
+    private void toggleAccountSwitcher() {
+        setAccountSwitcherVisible(!accountSwitcherVisible);
+    }
+
+    private void setAccountSwitcherVisible(boolean accountSwitcherVisible) {
+        if (accountSwitcherVisible == this.accountSwitcherVisible) return;
+
+        this.accountSwitcherVisible = accountSwitcherVisible;
+        drawer.getMenu().clear();
+        if (accountSwitcherVisible) {
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+            long tolerance = Long.decode(sp.getString("notification_warning", "367200000"));
+
+            aData.open();
+            for (Account account : OpacActivity.this.accounts) {
+                // don't show the currently selected account in the list
+                if (account.getId() == app.getAccount().getId()) continue;
+
+                int id = calculateAccountMenuItemId(account);
+                drawer.getMenu().add(R.id.nav_group_accounts, id, 0, "");
+                drawer.getMenu().findItem(id).setActionView(
+                        R.layout.navigation_drawer_item_account);
+                View view = drawer.getMenu().findItem(id).getActionView();
+                String title = getAccountTitle(account);
+                String subtitle = getAccountSubtitle(account);
+                int expiring = aData.getExpiring(account, tolerance);
+                ((TextView) view.findViewById(R.id.account_title)).setText(title);
+                ((TextView) view.findViewById(R.id.account_subtitle)).setText(subtitle);
+                TextView tvWarning = (TextView) view.findViewById(R.id.account_warning);
+                if (expiring > 0) {
+                    tvWarning.setText(String.valueOf(expiring));
+                    tvWarning.setVisibility(View.VISIBLE);
+                } else {
+                    tvWarning.setVisibility(View.INVISIBLE);
+                }
+            }
+            drawer.inflateMenu(R.menu.navigation_drawer_accounts);
+            accountExpand.setImageResource(R.drawable.ic_arrow_drop_up_24dp);
+        } else {
+            drawer.inflateMenu(R.menu.navigation_drawer);
+            accountExpand.setImageResource(R.drawable.ic_arrow_drop_down_24dp);
+            fixNavigationSelection();
+        }
+    }
+
+    /**
+     * Generates menu item IDs for accounts. They won't collide with statically generated IDs
+     * because they are <= 0x00FFFFFF.
+     *
+     * @param account The account to generate an ID for
+     * @return The unique menu item ID for this account
+     */
+    private int calculateAccountMenuItemId(Account account) {
+        return (int) (account.getId() % 0x00FFFFFF);
+    }
+
+    private String getAccountTitle(Account account) {
+        if (getString(R.string.default_account_name).equals(
+                account.getLabel())) {
+            try {
+                return app.getLibrary(account.getLibrary()).getCity();
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
+        } else {
+            return account.getLabel();
+        }
+    }
+
+    private String getAccountSubtitle(Account account) {
+        try {
+            Library library = app.getLibrary(account.getLibrary());
+            if (getString(R.string.default_account_name).equals(
+                    account.getLabel())) {
+                return library.getTitle();
+            } else {
+                return library.getCity() + " · " + library.getTitle();
+            }
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
@@ -203,71 +323,12 @@ public abstract class OpacActivity extends AppCompatActivity {
             getSupportActionBar().setHomeButtonEnabled(true);
             drawer = (NavigationView) findViewById(R.id.navdrawer);
 
-           /* navAdapter.addSeperatorItem(getString(R.string.nav_hl_library));
-            navAdapter.addTextItemWithIcon(getString(R.string.nav_search),
-                    R.drawable.ic_action_search, "search");
-            navAdapter.addTextItemWithIcon(getString(R.string.nav_account),
-                    R.drawable.ic_action_account, "account");
-            navAdapter.addTextItemWithIcon(getString(R.string.nav_starred),
-                    R.drawable.ic_action_star_1, "starred");
-            navAdapter.addTextItemWithIcon(getString(R.string.nav_info),
-                    R.drawable.ic_action_info, "info");
-
-            aData.open();
-            accounts = aData.getAllAccounts();
-            if (accounts.size() > 1) {
-                navAdapter
-                        .addSeperatorItem(getString(R.string.nav_hl_accountlist));
-
-                long tolerance = Long.decode(sp.getString(
-                        "notification_warning", "367200000"));
-                int selected = -1;
-                for (final Account account : accounts) {
-                    Library library;
-                    try {
-                        library = ((OpacClient) getApplication())
-                                .getLibrary(account.getLibrary());
-                        int expiring = aData.getExpiring(account, tolerance);
-                        String expiringText = "";
-                        if (expiring > 0) {
-                            expiringText = String.valueOf(expiring);
-                        }
-                        if (getString(R.string.default_account_name).equals(
-                                account.getLabel())) {
-                            navAdapter.addLibraryItem(library.getCity(),
-                                    library.getTitle(), expiringText,
-                                    account.getId());
-                        } else {
-                            navAdapter.addLibraryItem(
-                                    account.getLabel(),
-                                    library.getCity() + " · "
-                                            + library.getTitle(), expiringText,
-                                    account.getId());
-                        }
-                        if (account.getId() == app.getAccount().getId()) {
-                            selected = navAdapter.getCount() - 1;
-                        }
-
-                    } catch (IOException | JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (selected > 0) {
-                    drawerList.setItemChecked(selected, true);
-                }
-            }
-
-            navAdapter.addSeperatorItem(getString(R.string.nav_hl_other));
-            navAdapter.addTextItemWithIcon(getString(R.string.nav_settings),
-                    R.drawable.ic_action_settings, "settings");
-            navAdapter.addTextItemWithIcon(getString(R.string.nav_about),
-                    R.drawable.ic_action_help, "about");*/
-
             drawer.setNavigationItemSelectedListener(
                     new NavigationView.OnNavigationItemSelectedListener() {
                         @Override
                         public boolean onNavigationItemSelected(MenuItem item) {
-                            return selectItem(item);
+                            selectItem(item);
+                            return true;
                         }
                     });
 
@@ -346,7 +407,7 @@ public abstract class OpacActivity extends AppCompatActivity {
     /**
      * Swaps fragments in the main content view
      */
-    protected boolean selectItem(MenuItem item) {
+    protected void selectItem(MenuItem item) {
         try {
             setSupportProgressBarIndeterminateVisibility(false);
         } catch (Exception e) {
@@ -376,15 +437,28 @@ public abstract class OpacActivity extends AppCompatActivity {
             case R.id.nav_settings: {
                 Intent intent = new Intent(this, MainPreferenceActivity.class);
                 startActivity(intent);
-                return true;
+                return;
             }
             case R.id.nav_about: {
                 Intent intent = new Intent(this, AboutActivity.class);
                 startActivity(intent);
-                return true;
+                return;
+            }
+            case R.id.nav_manage_accounts: {
+                Intent intent = new Intent(this, AccountListActivity.class);
+                startActivity(intent);
+                return;
+            }
+            case R.id.nav_add_account: {
+                Intent intent = new Intent(this, LibraryListActivity.class);
+                startActivity(intent);
+                return;
             }
             default:
-                return false;
+                selectaccount(item.getItemId());
+                drawerLayout.closeDrawer(drawer);
+                setAccountSwitcherVisible(false);
+                return;
         }
         setFabOnClickListener(item.getItemId());
 
@@ -416,13 +490,13 @@ public abstract class OpacActivity extends AppCompatActivity {
         }
         transaction.commit();
 
-        // Highlight the selected item, update the title, and close the
-        // drawer
+        // Highlight the selected item, update the title, and close the drawer
         drawer.setCheckedItem(item.getItemId());
         selectedItemId = item.getItemId();
         setTitle(item.getTitle());
         drawerLayout.closeDrawer(drawer);
-        return true;
+        setAccountSwitcherVisible(false);
+        return;
     }
 
 
@@ -513,6 +587,25 @@ public abstract class OpacActivity extends AppCompatActivity {
     }
 
     public void accountSelected(Account account) {
+        updateAccountSwitcher(account);
+    }
+
+    private void updateAccountSwitcher(Account account) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        long tolerance = Long.decode(sp.getString("notification_warning", "367200000"));
+
+        aData.open();
+        int expiring = aData.getExpiring(account, tolerance);
+        aData.close();
+
+        accountTitle.setText(getAccountTitle(account));
+        accountSubtitle.setText(getAccountSubtitle(account));
+        if (expiring > 0) {
+            accountWarning.setText(String.valueOf(expiring));
+            accountWarning.setVisibility(View.VISIBLE);
+        } else {
+            accountWarning.setVisibility(View.GONE);
+        }
     }
 
     public void selectaccount() {

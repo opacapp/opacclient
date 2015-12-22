@@ -1,8 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="200dp"
-              android:background="?attr/colorPrimaryDark">
+             android:paddingLeft="16dp"
+             android:paddingRight="16dp"
+             android:paddingTop="8dp"
+             android:paddingBottom="8dp"
+             android:background="?attr/colorPrimaryDark"
+             android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/account_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="bottom"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_gravity="bottom"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+            <TextView
+                android:id="@+id/account_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="2dp"
+                android:ellipsize="end"
+                android:text="Blah"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
+
+            <TextView
+                android:id="@+id/account_subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="8dp"
+                android:ellipsize="end"
+                android:text="Blah"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/warning_badge"
+            android:padding="4dp"
+            android:layout_gravity="center_vertical"
+            android:textColor="#000000"
+            android:id="@+id/account_warning"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/account_expand"
+            android:src="@drawable/ic_arrow_drop_down_24dp"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tint="#FFF"/>
+    </LinearLayout>
+</FrameLayout>
