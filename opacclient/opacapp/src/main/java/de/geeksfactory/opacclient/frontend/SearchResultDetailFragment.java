@@ -1033,10 +1033,8 @@ public class SearchResultDetailFragment extends Fragment
                                        public void onClick(
                                                DialogInterface dialog, int id) {
                                            Intent intent = new Intent(
-                                                   getActivity(), app
-                                                   .getMainActivity());
-                                           intent.putExtra("fragment",
-                                                   "account");
+                                                   getActivity(), app.getMainActivity());
+                                           intent.putExtra(MainActivity.EXTRA_FRAGMENT, "account");
                                            getActivity().startActivity(intent);
                                            getActivity().finish();
                                        }
@@ -1046,7 +1044,7 @@ public class SearchResultDetailFragment extends Fragment
                 } else {
                     Intent intent = new Intent(getActivity(), app
                             .getMainActivity());
-                    intent.putExtra("fragment", "account");
+                    intent.putExtra(MainActivity.EXTRA_FRAGMENT, "account");
                     getActivity().startActivity(intent);
                     getActivity().finish();
                 }
@@ -1133,7 +1131,7 @@ public class SearchResultDetailFragment extends Fragment
                 adata.invalidateCachedAccountData(app.getAccount());
                 adata.close();
                 Intent intent = new Intent(getActivity(), app.getMainActivity());
-                intent.putExtra("fragment", "account");
+                intent.putExtra(MainActivity.EXTRA_FRAGMENT, "account");
                 getActivity().startActivity(intent);
                 getActivity().finish();
             }

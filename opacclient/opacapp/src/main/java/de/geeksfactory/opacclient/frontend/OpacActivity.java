@@ -21,7 +21,6 @@
  */
 package de.geeksfactory.opacclient.frontend;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -33,6 +32,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -61,8 +61,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.json.JSONException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -70,9 +68,7 @@ import java.util.Map;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
-import de.geeksfactory.opacclient.frontend.NavigationAdapter.Item;
 import de.geeksfactory.opacclient.objects.Account;
-import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 
 public abstract class OpacActivity extends AppCompatActivity {
@@ -80,12 +76,9 @@ public abstract class OpacActivity extends AppCompatActivity {
     protected AlertDialog adialog;
     protected AccountDataSource aData;
 
-    protected int selectedItemPos;
-    protected String selectedItemTag;
+    protected int selectedItemId;
 
-    protected NavigationAdapter navAdapter;
-    protected ListView drawerList;
-    protected View drawer;
+    protected NavigationView drawer;
     protected DrawerLayout drawerLayout;
     protected ActionBarDrawerToggle drawerToggle;
     protected FloatingActionButton fab;
@@ -137,8 +130,8 @@ public abstract class OpacActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             setTwoPane(savedInstanceState.getBoolean("twoPane"));
             setFabVisible(savedInstanceState.getBoolean("fabVisible"));
-            selectedItemTag = savedInstanceState.getString("selectedItemTag");
-            setFabOnClickListener(selectedItemTag);
+            selectedItemId = savedInstanceState.getInt("selectedItemId");
+            setFabOnClickListener(selectedItemId);
             if (savedInstanceState.containsKey("title")) {
                 setTitle(savedInstanceState.getCharSequence("title"));
             }
@@ -208,11 +201,9 @@ public abstract class OpacActivity extends AppCompatActivity {
             drawerLayout.setDrawerListener(drawerToggle);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
-            drawer = findViewById(R.id.navdrawer);
-            drawerList = (ListView) findViewById(R.id.drawer_list);
-            navAdapter = new NavigationAdapter(this);
-            drawerList.setAdapter(navAdapter);
-            navAdapter.addSeperatorItem(getString(R.string.nav_hl_library));
+            drawer = (NavigationView) findViewById(R.id.navdrawer);
+
+           /* navAdapter.addSeperatorItem(getString(R.string.nav_hl_library));
             navAdapter.addTextItemWithIcon(getString(R.string.nav_search),
                     R.drawable.ic_action_search, "search");
             navAdapter.addTextItemWithIcon(getString(R.string.nav_account),
@@ -270,9 +261,15 @@ public abstract class OpacActivity extends AppCompatActivity {
             navAdapter.addTextItemWithIcon(getString(R.string.nav_settings),
                     R.drawable.ic_action_settings, "settings");
             navAdapter.addTextItemWithIcon(getString(R.string.nav_about),
-                    R.drawable.ic_action_help, "about");
+                    R.drawable.ic_action_help, "about");*/
 
-            drawerList.setOnItemClickListener(new DrawerItemClickListener());
+            drawer.setNavigationItemSelectedListener(
+                    new NavigationView.OnNavigationItemSelectedListener() {
+                        @Override
+                        public boolean onNavigationItemSelected(MenuItem item) {
+                            return selectItem(item);
+                        }
+                    });
 
             if (!sp.getBoolean("version2.0.0-introduced", false)
                     && app.getSlidingMenuEnabled()) {
@@ -314,13 +311,6 @@ public abstract class OpacActivity extends AppCompatActivity {
         }
     }
 
-    protected void selectItem(String tag) {
-        int pos = navAdapter.getPositionByTag(tag);
-        if (pos >= 0) {
-            selectItem(pos);
-        }
-    }
-
     @Override
     protected void onResume() {
         setupDrawer();
@@ -340,121 +330,130 @@ public abstract class OpacActivity extends AppCompatActivity {
             return;
         }
         if (fragment instanceof SearchFragment) {
-            drawerList.setItemChecked(navAdapter.getPositionByTag("search"),
-                    true);
+            drawer.setCheckedItem(R.id.nav_search);
         } else if (fragment instanceof AccountFragment) {
-            drawerList.setItemChecked(navAdapter.getPositionByTag("account"),
-                    true);
+            drawer.setCheckedItem(R.id.nav_account);
         } else if (fragment instanceof StarredFragment) {
-            drawerList.setItemChecked(navAdapter.getPositionByTag("starred"),
-                    true);
+            drawer.setCheckedItem(R.id.nav_starred);
         } else if (fragment instanceof InfoFragment) {
-            drawerList
-                    .setItemChecked(navAdapter.getPositionByTag("info"), true);
+            drawer.setCheckedItem(R.id.nav_info);
         }
         if (app.getLibrary() != null) {
-            getSupportActionBar()
-                    .setSubtitle(app.getLibrary().getDisplayName());
+            getSupportActionBar().setSubtitle(app.getLibrary().getDisplayName());
         }
     }
 
     /**
      * Swaps fragments in the main content view
      */
-    @SuppressLint("NewApi")
-    protected void selectItem(int position) {
+    protected boolean selectItem(MenuItem item) {
         try {
             setSupportProgressBarIndeterminateVisibility(false);
         } catch (Exception e) {
         }
-        Item item = navAdapter.getItem(position);
-        if (item.type == Item.TYPE_TEXT) {
-            Fragment previousFragment = fragment;
-            switch (item.tag) {
-                case "search":
-                    fragment = new SearchFragment();
-                    setTwoPane(false);
-                    setFabVisible(true);
-                    break;
-                case "account":
-                    fragment = new AccountFragment();
-                    setTwoPane(false);
-                    setFabVisible(false);
-                    break;
-                case "starred":
-                    fragment = new StarredFragment();
-                    setTwoPane(true);
-                    setFabVisible(false);
-                    break;
-                case "info":
-                    fragment = new InfoFragment();
-                    setTwoPane(false);
-                    setFabVisible(false);
-                    break;
-                case "settings": {
-                    Intent intent = new Intent(this, MainPreferenceActivity.class);
-                    startActivity(intent);
-                    drawerList.setItemChecked(position, false);
-                    return;
-                }
-                case "about": {
-                    Intent intent = new Intent(this, AboutActivity.class);
-                    startActivity(intent);
-                    drawerList.setItemChecked(position, false);
-                    return;
-                }
+        Fragment previousFragment = fragment;
+        switch (item.getItemId()) {
+            case R.id.nav_search:
+                fragment = new SearchFragment();
+                setTwoPane(false);
+                setFabVisible(true);
+                break;
+            case R.id.nav_account:
+                fragment = new AccountFragment();
+                setTwoPane(false);
+                setFabVisible(false);
+                break;
+            case R.id.nav_starred:
+                fragment = new StarredFragment();
+                setTwoPane(true);
+                setFabVisible(false);
+                break;
+            case R.id.nav_info:
+                fragment = new InfoFragment();
+                setTwoPane(false);
+                setFabVisible(false);
+                break;
+            case R.id.nav_settings: {
+                Intent intent = new Intent(this, MainPreferenceActivity.class);
+                startActivity(intent);
+                return true;
             }
-            setFabOnClickListener(item.tag);
-
-            // Insert the fragment by replacing any existing fragment
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction transaction = fragmentManager.beginTransaction()
-                                                             .replace(R.id.content_frame, fragment);
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                fragment.setSharedElementEnterTransition(
-                        TransitionInflater.from(this).inflateTransition
-                                (android.R.transition.move));
-                fragment.setEnterTransition(TransitionInflater.from(this).inflateTransition
-                        (android.R.transition.fade));
+            case R.id.nav_about: {
+                Intent intent = new Intent(this, AboutActivity.class);
+                startActivity(intent);
+                return true;
             }
-
-            try {
-                if (previousFragment instanceof SearchFragment &&
-                        fragment instanceof AccountFragment && previousFragment.getView() != null) {
-                    transaction.addSharedElement(previousFragment.getView().findViewById(R.id
-                            .rlSimpleSearch), getString(R.string.transition_gray_box));
-                } else if (previousFragment instanceof AccountFragment &&
-                        fragment instanceof SearchFragment && previousFragment.getView() != null) {
-                    transaction.addSharedElement(previousFragment.getView().findViewById(R.id
-                            .rlAccHeader), getString(R.string.transition_gray_box));
-                }
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
-            transaction.commit();
-
-            // Highlight the selected item, update the title, and close the
-            // drawer
-            deselectItemsByType(Item.TYPE_TEXT);
-            drawerList.setItemChecked(selectedItemPos, false);
-            drawerList.setItemChecked(position, true);
-            selectedItemPos = position;
-            selectedItemTag = item.tag;
-            setTitle(navAdapter.getItem(position).text);
-            drawerLayout.closeDrawer(drawer);
-
-        } else if (item.type == Item.TYPE_ACCOUNT) {
-            deselectItemsByType(Item.TYPE_ACCOUNT);
-            drawerList.setItemChecked(position, true);
-            selectaccount(item.accountId);
-            drawerLayout.closeDrawer(drawer);
+            default:
+                return false;
         }
+        setFabOnClickListener(item.getItemId());
+
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction()
+                                                         .replace(R.id.content_frame, fragment);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            fragment.setSharedElementEnterTransition(
+                    TransitionInflater.from(this).inflateTransition
+                            (android.R.transition.move));
+            fragment.setEnterTransition(TransitionInflater.from(this).inflateTransition
+                    (android.R.transition.fade));
+        }
+
+        try {
+            if (previousFragment instanceof SearchFragment &&
+                    fragment instanceof AccountFragment && previousFragment.getView() != null) {
+                transaction.addSharedElement(previousFragment.getView().findViewById(R.id
+                        .rlSimpleSearch), getString(R.string.transition_gray_box));
+            } else if (previousFragment instanceof AccountFragment &&
+                    fragment instanceof SearchFragment && previousFragment.getView() != null) {
+                transaction.addSharedElement(previousFragment.getView().findViewById(R.id
+                        .rlAccHeader), getString(R.string.transition_gray_box));
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        transaction.commit();
+
+        // Highlight the selected item, update the title, and close the
+        // drawer
+        drawer.setCheckedItem(item.getItemId());
+        selectedItemId = item.getItemId();
+        setTitle(item.getTitle());
+        drawerLayout.closeDrawer(drawer);
+        return true;
     }
 
-    protected void setFabOnClickListener(String tag) {
+
+    protected void selectItem(String tag) {
+        int id;
+        switch (tag) {
+            case "search":
+                id = R.id.nav_search;
+                break;
+            case "account":
+                id = R.id.nav_account;
+                break;
+            case "starred":
+                id = R.id.nav_starred;
+                break;
+            case "info":
+                id = R.id.nav_info;
+                break;
+            default:
+                return;
+        }
+        selectItem(drawer.getMenu().findItem(id));
+    }
+
+    protected void selectItem(int pos) {
+        selectItem(drawer.getMenu().getItem(pos));
+    }
+
+    protected void setFabOnClickListener(int id) {
         if (isTablet()) {
-            if (tag.equals("search")) {
+            if (id == R.id.nav_search) {
                 fab.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -474,14 +473,6 @@ public abstract class OpacActivity extends AppCompatActivity {
     public void setTitle(CharSequence title) {
         super.setTitle(title);
         this.title = title;
-    }
-
-    protected void deselectItemsByType(int type) {
-        for (int i = 0; i < navAdapter.getCount(); i++) {
-            if (navAdapter.getItemViewType(i) == type) {
-                drawerList.setItemChecked(i, false);
-            }
-        }
     }
 
     @Override
@@ -635,7 +626,7 @@ public abstract class OpacActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putBoolean("twoPane", twoPane);
         outState.putBoolean("fabVisible", fabVisible);
-        outState.putString("selectedItemTag", selectedItemTag);
+        outState.putInt("selectedItemId", selectedItemId);
         if (fragment != null) {
             getSupportFragmentManager().putFragment(outState, "fragment",
                     fragment);
@@ -647,14 +638,6 @@ public abstract class OpacActivity extends AppCompatActivity {
 
     public interface AccountSelectedListener {
         void accountSelected(Account account);
-    }
-
-    public class DrawerItemClickListener implements OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position,
-                long id) {
-            selectItem(position);
-        }
     }
 
     public class MetaAdapter<T extends Map.Entry<?, String>> extends ArrayAdapter<T> {

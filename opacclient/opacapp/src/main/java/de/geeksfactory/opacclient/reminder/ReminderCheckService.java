@@ -47,6 +47,7 @@ import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
+import de.geeksfactory.opacclient.frontend.MainActivity;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Library;
@@ -291,7 +292,7 @@ public class ReminderCheckService extends Service {
                 Intent notificationIntent = new Intent(
                         ReminderCheckService.this,
                         ((OpacClient) getApplication()).getMainActivity());
-                notificationIntent.putExtra("fragment", "account");
+                notificationIntent.putExtra(MainActivity.EXTRA_FRAGMENT, "account");
                 notificationIntent.putExtra("notifications", notified);
                 if (affected_accounts > 1) {
                     // If there are notifications for more than one account,
