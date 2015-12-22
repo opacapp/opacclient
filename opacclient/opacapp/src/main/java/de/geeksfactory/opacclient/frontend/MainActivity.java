@@ -40,6 +40,7 @@ public class MainActivity extends OpacActivity
         implements SearchFragment.Callback, StarredFragment.Callback,
         SearchResultDetailFragment.Callbacks {
 
+    public static final String EXTRA_FRAGMENT = "fragment";
     private String[][] techListsArray;
     private IntentFilter[] intentFiltersArray;
     private PendingIntent nfcIntent;
@@ -105,12 +106,12 @@ public class MainActivity extends OpacActivity
         sp = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (savedInstanceState == null) {
-            if (getIntent().hasExtra("fragment")) {
-                selectItem(getIntent().getStringExtra("fragment"));
+            if (getIntent().hasExtra(EXTRA_FRAGMENT)) {
+                selectItem(getIntent().getStringExtra(EXTRA_FRAGMENT));
             } else if (sp.contains("startup_fragment")) {
                 selectItem(sp.getString("startup_fragment", "search"));
             } else {
-                selectItem(1);
+                selectItem(0);
             }
         }
         try {
