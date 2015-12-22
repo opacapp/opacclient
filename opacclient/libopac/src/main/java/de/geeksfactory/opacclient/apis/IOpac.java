@@ -800,7 +800,7 @@ public class IOpac extends BaseApi implements OpacApi {
                         tr.child(copymap.optInt("title", 0)).text().trim()
                           .replace("\u00a0", ""));
             }
-            if (copymap.optInt("author", 0) >= 1) {
+            if (copymap.optInt("author", 1) >= 0) {
                 e.put(AccountData.KEY_LENT_AUTHOR,
                         tr.child(copymap.optInt("author", 1)).text().trim()
                           .replace("\u00a0", ""));
