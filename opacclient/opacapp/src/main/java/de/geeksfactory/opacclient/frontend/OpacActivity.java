@@ -56,7 +56,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -74,6 +73,7 @@ import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.ui.CheckableImageButton;
 
 public abstract class OpacActivity extends AppCompatActivity {
     protected OpacClient app;
@@ -95,7 +95,7 @@ public abstract class OpacActivity extends AppCompatActivity {
     private boolean fabVisible;
 
     protected List<Account> accounts;
-    protected ImageView accountExpand;
+    protected CheckableImageButton accountExpand;
     protected TextView accountTitle;
     protected TextView accountSubtitle;
     protected TextView accountWarning;
@@ -164,18 +164,20 @@ public abstract class OpacActivity extends AppCompatActivity {
         Account selectedAccount = app.getAccount();
 
         View header = drawer.getHeaderView(0);
-        accountExpand = (ImageView) header.findViewById(R.id.account_expand);
+        accountExpand = (CheckableImageButton) header.findViewById(R.id.account_expand);
         accountTitle = (TextView) header.findViewById(R.id.account_title);
         accountSubtitle = (TextView) header.findViewById(R.id.account_subtitle);
         accountWarning = (TextView) header.findViewById(R.id.account_warning);
         accountData = (LinearLayout) header.findViewById(R.id.account_data);
 
-        accountData.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener l = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 toggleAccountSwitcher();
             }
-        });
+        };
+        accountData.setOnClickListener(l);
+        accountExpand.setOnClickListener(l);
 
         updateAccountSwitcher(selectedAccount);
     }
@@ -217,10 +219,10 @@ public abstract class OpacActivity extends AppCompatActivity {
                 }
             }
             drawer.inflateMenu(R.menu.navigation_drawer_accounts);
-            accountExpand.setImageResource(R.drawable.ic_arrow_drop_up_24dp);
+            accountExpand.setChecked(true);
         } else {
             drawer.inflateMenu(R.menu.navigation_drawer);
-            accountExpand.setImageResource(R.drawable.ic_arrow_drop_down_24dp);
+            accountExpand.setChecked(false);
             fixNavigationSelection();
         }
     }

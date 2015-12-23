@@ -57,12 +57,13 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:visibility="gone"/>
 
-        <ImageView
+        <de.geeksfactory.opacclient.ui.CheckableImageButton
             android:id="@+id/account_expand"
-            android:src="@drawable/ic_arrow_drop_down_24dp"
+            android:src="@drawable/ic_arrow_drop_selector"
             android:layout_gravity="center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:tint="#FFF"/>
+            android:tint="#FFF"
+            android:background="?selectableItemBackgroundBorderless"/>
     </LinearLayout>
 </FrameLayout>
