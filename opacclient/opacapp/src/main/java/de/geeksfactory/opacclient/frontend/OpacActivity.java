@@ -591,6 +591,7 @@ public abstract class OpacActivity extends AppCompatActivity {
     }
 
     private void updateAccountSwitcher(Account account) {
+        if (account == null) return;
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         long tolerance = Long.decode(sp.getString("notification_warning", "367200000"));
 
