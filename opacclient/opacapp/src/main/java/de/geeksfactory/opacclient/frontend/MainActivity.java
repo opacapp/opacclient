@@ -147,6 +147,7 @@ public class MainActivity extends OpacActivity
 
     @Override
     public void accountSelected(Account account) {
+        super.accountSelected(account);
         this.account = account.getId();
         getSupportActionBar().setSubtitle(app.getLibrary().getDisplayName());
         if (fragment instanceof OpacActivity.AccountSelectedListener) {
