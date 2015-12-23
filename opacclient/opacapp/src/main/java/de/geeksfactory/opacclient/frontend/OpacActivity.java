@@ -318,7 +318,28 @@ public abstract class OpacActivity extends AppCompatActivity {
                     };
 
             // Set the drawer toggle as the DrawerListener
-            drawerLayout.setDrawerListener(drawerToggle);
+            drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
+                @Override
+                public void onDrawerSlide(View drawerView, float slideOffset) {
+                    drawerToggle.onDrawerSlide(drawerView, slideOffset);
+                }
+
+                @Override
+                public void onDrawerOpened(View drawerView) {
+                    drawerToggle.onDrawerOpened(drawerView);
+                }
+
+                @Override
+                public void onDrawerClosed(View drawerView) {
+                    drawerToggle.onDrawerClosed(drawerView);
+                    setAccountSwitcherVisible(false);
+                }
+
+                @Override
+                public void onDrawerStateChanged(int newState) {
+                    drawerToggle.onDrawerStateChanged(newState);
+                }
+            });
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
             drawer = (NavigationView) findViewById(R.id.navdrawer);
