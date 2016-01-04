@@ -103,7 +103,6 @@ public class IOpac extends BaseApi implements OpacApi {
     protected String reusehtml;
     protected String rechnr;
     protected int results_total;
-    protected int maxProlongCount = -1;
 
     protected boolean newShareLinks;
 
@@ -115,9 +114,6 @@ public class IOpac extends BaseApi implements OpacApi {
 
         try {
             this.opac_url = data.getString("baseurl");
-            if (data.has("maxprolongcount")) {
-                this.maxProlongCount = data.getInt("maxprolongcount");
-            }
             if (data.has("dir")) {
                 this.dir = data.getString("dir");
             }
@@ -705,12 +701,8 @@ public class IOpac extends BaseApi implements OpacApi {
 
         List<Map<String, String>> media = new ArrayList<>();
         List<Map<String, String>> reserved = new ArrayList<>();
-        if (doc.select("a[name=AUS]").size() > 0) {
-            parse_medialist(media, doc);
-        }
-        if (doc.select("a[name=RES]").size() > 0) {
-            parse_reslist(reserved, doc);
-        }
+        parseMediaList(media, doc, data);
+        parseResList(reserved, doc, data);
 
         res.setLent(media);
         res.setReservations(reserved);
@@ -776,12 +768,12 @@ public class IOpac extends BaseApi implements OpacApi {
         }
     }
 
-    protected void parse_medialist(List<Map<String, String>> media,
-            Document doc) {
+    static void parseMediaList(List<Map<String, String>> media, Document doc, JSONObject data) {
+        if (doc.select("a[name=AUS]").size() == 0) return;
 
         Elements copytrs = doc.select("a[name=AUS] ~ table, a[name=AUS] ~ form table").first()
                               .select("tr");
-        doc.setBaseUri(opac_url);
+        doc.setBaseUri(data.optString("baseurl"));
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
 
@@ -808,14 +800,14 @@ public class IOpac extends BaseApi implements OpacApi {
                         tr.child(copymap.optInt("title", 0)).text().trim()
                           .replace("\u00a0", ""));
             }
-            if (copymap.optInt("author", 0) >= 1) {
+            if (copymap.optInt("author", 1) >= 0) {
                 e.put(AccountData.KEY_LENT_AUTHOR,
                         tr.child(copymap.optInt("author", 1)).text().trim()
                           .replace("\u00a0", ""));
             }
-            if (copymap.optInt("format", -1) >= 0) {
+            if (copymap.optInt("format", 2) >= 0) {
                 e.put(AccountData.KEY_LENT_FORMAT,
-                        tr.child(copymap.optInt("format", -1)).text().trim()
+                        tr.child(copymap.optInt("format", 2)).text().trim()
                           .replace("\u00a0", ""));
             }
             int prolongCount = 0;
@@ -825,9 +817,9 @@ public class IOpac extends BaseApi implements OpacApi {
                         .replace("\u00a0", ""));
                 e.put(AccountData.KEY_LENT_STATUS, String.valueOf(prolongCount) + "x verl.");
             }
-            if (maxProlongCount != -1) {
+            if (data.optInt("maxprolongcount", -1) != -1) {
                 e.put(AccountData.KEY_LENT_RENEWABLE,
-                        prolongCount < maxProlongCount ? "Y" : "N");
+                        prolongCount < data.optInt("maxprolongcount", -1) ? "Y" : "N");
             }
             if (copymap.optInt("deadline", 4) >= 0) {
                 e.put(AccountData.KEY_LENT_DEADLINE,
@@ -876,11 +868,11 @@ public class IOpac extends BaseApi implements OpacApi {
 
     }
 
-    protected void parse_reslist(List<Map<String, String>> media,
-            Document doc) {
+    static void parseResList(List<Map<String, String>> media, Document doc, JSONObject data) {
+        if (doc.select("a[name=RES]").size() == 0) return;
         Elements copytrs = doc.select("a[name=RES] ~ table:contains(Titel)")
                               .first().select("tr");
-        doc.setBaseUri(opac_url);
+        doc.setBaseUri(data.optString("baseurl"));
 
         int trs = copytrs.size();
         if (trs < 2) {

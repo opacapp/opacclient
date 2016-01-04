@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="no-cache">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="-1">
+    <meta http-equiv="expires" content="Sun, 21 Feb 2010 00:00:01 GMT">
+    <!--[if lt IE 9]>
+    <script src="/iopac/IE9.js"></script><![endif]--><TITLE>Leserkonto</TITLE>
+    <link rel="stylesheet" type="TEXT/css" href="/style_iopac.css">
+</head>
+<body background="/iopac/images/logo.png">
+<H1 align='center'> Leserkonto</h1>
+<table width=80% border='0' align='center'>
+    <tr>
+        <td align='left' width=50%>
+            <form action="/cgi-bin/di.exe" method="get" name="form">
+                <input name="pshRech" type="submit" value=neues&nbsp;Passwort&nbsp;hinterlegen>
+                <input name="mode" type="hidden" value="36">
+                <input name="kndnr" type="hidden" value="XXXXXXXXX">
+                <input name="sessionid" type="hidden" value="XXXXXXXXXXXXX">
+            </form>
+        </td>
+        <td align='right' width=50%>
+            <form action="/cgi-bin/di.exe" method="get" name="form">
+                <input name="pshRech" type="submit" value=Abmelden (Logout)>
+                <input name="mode" type="hidden" value="35">
+                <input name="kndnr" type="hidden" value="XXXXXXXXX">
+                <input name="sessionid" type="hidden" value="XXXXXXXXXXXXX">
+            </form>
+        </td>
+    </tr>
+</table>
+<H4 align=center>Leser-Nr. : XXXXXXXXX<br><br>akt. Kontostand 0.00 EUR<br><br>Ausweis gültig bis : 30.05.2099
+    <br><br> <A HREF="#AUS">3 ausgeliehene Medien</A> und keine reservierten Medien</H4>
+<br>
+<A NAME="AUS"></A>
+
+<H3 ALIGN=center>Ausleihungen</H3>
+
+<form action='/cgi-bin/di.exe' METHOD='get' name='VerlAll'>
+    <input name='mode' value='42' type='HIDDEN'>
+    <table CLASS='SEARCH_LESER' width=90% border=0 cellspacing=2 cellpadding=3 ALIGN='center'>
+        <tr bgcolor=transparent>
+            <th align=left>Titel&nbsp;</th>
+            <th align=left>Autor&nbsp;</th>
+            <th align=left>TYP&nbsp;</th>
+            <th align=center>Verlängerungen&nbsp;</th>
+            <th align=center>zurück bis&nbsp;</th>
+            <th align=center>
+                <button class="verlallbutton" type="submit">Auswahl&nbsp;&nbsp;<br>verl&auml;ngern
+                </button>
+                &nbsp;</th>
+        </tr>
+        <script type="text/javascript" language="JavaScript" src="//scripts.js"></script>
+        </head>
+        <tr bgcolor=transparent>
+            <td align=left>21
+            </td>
+            <td align=left><a href='/cgi-bin/di.exe?sleAutor=Adele&FilNr=&Anzahl=10'>Adele</a>&nbsp;
+            </td>
+            <td align=left>Musik CD
+            </td>
+            <td align=center> 0
+            </td>
+            <td align=center title=>05.01.2016
+            </td>
+            <td align=center><input CLASS="VerlAllCheckboxError" name="MedNrVerlAll"
+                                    value="XXXXXXXXXXX;" id="MedNrVerlAllXXXXXXXXXXX"
+                                    type="checkbox" disabled='disabled'> <label
+                    for="MedNrVerlAllXXXXXXXXXXX" class="VerlAllCheckboxLabelError"
+                    title="Verlängerung sinnlos: (neuer Rückgabetermin 05.01.2016 liegt vor Rückgabe 05.01.2016 --> Medium kann nicht verlängert werden"></label>
+            </td>
+            </td>
+        </tr>
+        <script type="text/javascript" language="JavaScript" src="//scripts.js"></script>
+        </head>
+        <tr bgcolor=transparent>
+            <td align=left>Im Land der Samurai
+            </td>
+            <td align=left><a
+                    href='/cgi-bin/di.exe?sleAutor=Osborne, Mary P&FilNr=&Anzahl=10'>Osborne, Mary Pope</a>&nbsp;
+            </td>
+            <td align=left>Kinderbuch
+            </td>
+            <td align=center> 0
+            </td>
+            <td align=center title=>19.01.2016</br>          1 x reserv.
+            </td>
+            <td align=center><input CLASS="VerlAllCheckboxError" name="MedNrVerlAll"
+                                    value="XXXXXXXXXXX;" id="MedNrVerlAllXXXXXXXXXXX"
+                                    type="checkbox" disabled='disabled'> <label
+                    for="MedNrVerlAllXXXXXXXXXXX" class="VerlAllCheckboxLabelError"
+                    title="Medium ist für einen anderen Leser reserviert --> Medium kann nicht verlängert werden"></label>
+            </td>
+            </td>
+        </tr>
+        <script type="text/javascript" language="JavaScript" src="//scripts.js"></script>
+        </head>
+        <tr bgcolor=transparent>
+            <td align=left>Shelties größter Sieg
+            </td>
+            <td align=left><a
+                    href='/cgi-bin/di.exe?sleAutor=Clover, Peter&FilNr=&Anzahl=10'>Clover, Peter</a>&nbsp;
+            </td>
+            <td align=left>Kinderbuch
+            </td>
+            <td align=center> 0
+            </td>
+            <td align=center title=>19.01.2016
+            </td>
+            <td align=center><input CLASS="VerlAllCheckboxError" name="MedNrVerlAll"
+                                    value="XXXXXXXXXXX;" id="MedNrVerlAllXXXXXXXXXXX"
+                                    type="checkbox" disabled='disabled'> <label
+                    for="MedNrVerlAllXXXXXXXXXXX" class="VerlAllCheckboxLabelError"
+                    title="Verlängerung sinnlos: (neuer Rückgabetermin 19.01.2016 liegt vor Rückgabe 19.01.2016 --> Medium kann nicht verlängert werden"></label>
+            </td>
+            </td>
+        </tr>
+    </table>
+</form>
+<br>
+</body>
+</html>
