@@ -24,7 +24,7 @@ public class WinBiapTest extends BaseTest {
         this.file = file;
     }
 
-    private static final String[] FILES = new String[]{"guetersloh.html"};
+    private static final String[] FILES = new String[]{"guetersloh.html", "geltendorf.html"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {
