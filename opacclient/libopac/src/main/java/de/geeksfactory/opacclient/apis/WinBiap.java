@@ -677,7 +677,7 @@ public class WinBiap extends BaseApi implements OpacApi {
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
 
-        // the account page differs between WinBiap versions 4.2 and 4.3
+        // the account page differs between WinBiap versions 4.2 and >= 4.3
         boolean winBiap43;
         if (doc.select(".GridView_RowStyle").size() > 0) {
             winBiap43 = false;
@@ -685,37 +685,53 @@ public class WinBiap extends BaseApi implements OpacApi {
             winBiap43 = true;
         }
 
-        for (Element tr : doc.select(winBiap43 ? ".detailTable tr[id$=DetailItemMain_rowBorrow]" :
+        // 4.2: .GridView_RowStyle
+        // 4.3: id=...DetailItemMain_rowBorrow
+        // 4.4: id=...DetailItemMain_0_rowBorrow_0
+        for (Element tr : doc.select(winBiap43 ? ".detailTable tr[id*=_rowBorrow]" :
                 ".GridView_RowStyle")) {
             Map<String, String> item = new HashMap<>();
             Element detailsTr = winBiap43 ? tr.nextElementSibling() : tr;
 
             // the second column contains an img tag with the cover
-            if (tr.select(".cover").size() > 0) {
+            if (tr.select(".cover, img[id*=ImageCover]").size() > 0) {
                 // find media ID using cover URL
-                Map<String, String> params = getQueryParamsFirst(tr.select(".cover").attr("src"));
+                Element img = tr.select(".cover, img[id*=ImageCover]").first();
+                String url = img.hasAttr("data-src") ? img.attr("data-src") : img.attr("src");
+                Map<String, String> params = getQueryParamsFirst(url);
                 if (params.containsKey("catid")) {
                     item.put(AccountData.KEY_LENT_ID, params.get("catid"));
                 }
             }
 
+            // The IDs and classes of the detail fields slightly differ between WinBiap versions.
+            // 4.2  uses German names like, some with underscores and some without
+            // 4.3  changes most of them to English and without underscore
+            // 4.4  adds numbers to the end of the id, separated by an underscore,
+            //      and has simpler classes like ".author" for some of the fields
             putIfNotEmpty(item, AccountData.KEY_LENT_AUTHOR,
-                    tr.select("[id$=LabelAutor]").text());
+                    tr.select("[id$=LabelAutor], .autor").text());
             putIfNotEmpty(item, AccountData.KEY_LENT_TITLE,
-                    tr.select("[id$=LabelTitel], [id$=LabelTitle]").text());
+                    tr.select("[id$=LabelTitel], [id$=LabelTitle], .title").text());
             putIfNotEmpty(item, AccountData.KEY_LENT_BARCODE,
-                    detailsTr.select("[id$=Label_Mediennr], [id$=labelMediennr]").text());
+                    detailsTr
+                            .select("[id$=Label_Mediennr], [id$=labelMediennr], [id*=labelMediennr_]")
+                            .text());
             putIfNotEmpty(item, AccountData.KEY_LENT_FORMAT,
-                    detailsTr.select("[id$=Label_Mediengruppe], [id$=labelMediagroup]").text());
+                    detailsTr
+                            .select("[id$=Label_Mediengruppe], [id$=labelMediagroup], [id*=labelMediagroup_]")
+                            .text());
             putIfNotEmpty(item, AccountData.KEY_LENT_BRANCH,
-                    detailsTr.select("[id$=Label_Zweigstelle], [id$=labelBranch]").text());
-            // Label_Entliehen contains the date when the medium was lent
+                    detailsTr
+                            .select("[id$=Label_Zweigstelle], [id$=labelBranch], [id*=labelBranch_]")
+                            .text());
+            // Label_Entliehen/LabelStartDate/.startDate contains the date when the medium was lent
             putIfNotEmpty(item, AccountData.KEY_LENT_DEADLINE,
-                    tr.select("[id$=LabelFaellig], [id$=LabelMatureDate]").text());
+                    tr.select("[id$=LabelFaellig], [id$=LabelMatureDate], .matureDate").text());
             try {
-                item.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String.valueOf(
-                        sdf.parse(tr.select("[id$=LabelFaellig], [id$=LabelMatureDate]").text())
-                           .getTime()));
+                item.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String.valueOf(sdf.parse(
+                        tr.select("[id$=LabelFaellig], [id$=LabelMatureDate], .matureDate").text())
+                                                                                    .getTime()));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -774,13 +790,16 @@ public class WinBiap extends BaseApi implements OpacApi {
                     winBiap43 ? detailsTr.select("[id$=labelStatus]").text() :
                             tr.select("[id$=ImageBorrow]").attr("title"));
             putIfNotEmpty(item, AccountData.KEY_RESERVATION_AUTHOR,
-                    tr.select("[id$=LabelAutor]").text());
+                    tr.select("[id$=LabelAutor], .autor").text());
             putIfNotEmpty(item, AccountData.KEY_RESERVATION_TITLE,
-                    tr.select("[id$=LabelTitle]").text());
+                    tr.select("[id$=LabelTitle], .title").text());
             putIfNotEmpty(item, AccountData.KEY_RESERVATION_BRANCH,
-                    detailsTr.select("[id$=LabelBranch], [id$=labelBranch]").text());
+                    detailsTr.select("[id$=LabelBranch], [id$=labelBranch], [id*=labelBranch_]")
+                             .text());
             putIfNotEmpty(item, AccountData.KEY_RESERVATION_FORMAT,
-                    detailsTr.select("[id$=labelMediagroup]").text());
+                    detailsTr
+                            .select("[id$=Label_Mediengruppe], [id$=labelMediagroup], [id*=labelMediagroup_]")
+                            .text());
             // Label_Vorbestelltam contains the date when the medium was reserved
 
             if (tr.select("a[id$=ImageReservationDelete]").size() > 0) {
