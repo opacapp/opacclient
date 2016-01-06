@@ -184,6 +184,7 @@ public class Copy {
     }
 
     /**
+<<<<<<< HEAD
      * Set property using the following keys: barcode, location, department, branch, status,
      * returndate, reservations, signature, resinfo, url
      * <p/>
@@ -191,6 +192,9 @@ public class Copy {
      * <p/>
      * This method is used to simplify refactoring of old APIs from the Map<String, String> data
      * structure to this class. If you are creating a new API, you probably don't need to use it.
+=======
+     * Set property using the following keys: barcode, location, department, branch
+>>>>>>> 9b77d70... Add Copy and Volume classes to use instead of Map<String, String>
      *
      * @param key   one of the keys mentioned above
      * @param value the value to set. Dates must be in ISO-8601 format (yyyy-MM-dd).
