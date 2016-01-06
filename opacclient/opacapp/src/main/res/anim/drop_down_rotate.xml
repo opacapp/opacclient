@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<set xmlns:android="http://schemas.android.com/apk/res/android">
-    <objectAnimator
-        android:duration="30000"
-        android:propertyName="rotation"
-        android:valueFrom="0"
-        android:valueTo="180"
-        android:valueType="floatType"/>
-</set>
+<objectAnimator
+    android:duration="200"
+    android:propertyName="rotation"
+    android:valueFrom="0"
+    android:valueTo="180"
+    xmlns:android="http://schemas.android.com/apk/res/android"/>

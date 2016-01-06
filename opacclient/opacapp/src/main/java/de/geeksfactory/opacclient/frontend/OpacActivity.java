@@ -56,6 +56,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -73,7 +74,6 @@ import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
-import de.geeksfactory.opacclient.ui.CheckableImageButton;
 
 public abstract class OpacActivity extends AppCompatActivity {
     protected OpacClient app;
@@ -95,7 +95,7 @@ public abstract class OpacActivity extends AppCompatActivity {
     private boolean fabVisible;
 
     protected List<Account> accounts;
-    protected CheckableImageButton accountExpand;
+    protected ImageView accountExpand;
     protected TextView accountTitle;
     protected TextView accountSubtitle;
     protected TextView accountWarning;
@@ -164,7 +164,7 @@ public abstract class OpacActivity extends AppCompatActivity {
         Account selectedAccount = app.getAccount();
 
         View header = drawer.getHeaderView(0);
-        accountExpand = (CheckableImageButton) header.findViewById(R.id.account_expand);
+        accountExpand = (ImageView) header.findViewById(R.id.account_expand);
         accountTitle = (TextView) header.findViewById(R.id.account_title);
         accountSubtitle = (TextView) header.findViewById(R.id.account_subtitle);
         accountWarning = (TextView) header.findViewById(R.id.account_warning);
@@ -177,7 +177,7 @@ public abstract class OpacActivity extends AppCompatActivity {
             }
         };
         accountData.setOnClickListener(l);
-        accountExpand.setOnClickListener(l);
+        //accountExpand.setOnClickListener(l);
 
         updateAccountSwitcher(selectedAccount);
     }
@@ -190,40 +190,55 @@ public abstract class OpacActivity extends AppCompatActivity {
         if (accountSwitcherVisible == this.accountSwitcherVisible) return;
 
         this.accountSwitcherVisible = accountSwitcherVisible;
-        drawer.getMenu().clear();
+
         if (accountSwitcherVisible) {
-            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-            long tolerance = Long.decode(sp.getString("notification_warning", "367200000"));
+            accountExpand.setActivated(true);
+            // touch feedback and animation only work when drawer update is delayed
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    drawer.getMenu().clear();
+                    SharedPreferences sp =
+                            PreferenceManager.getDefaultSharedPreferences(OpacActivity.this);
+                    long tolerance = Long.decode(sp.getString("notification_warning", "367200000"));
 
-            aData.open();
-            for (Account account : OpacActivity.this.accounts) {
-                // don't show the currently selected account in the list
-                if (account.getId() == app.getAccount().getId()) continue;
+                    aData.open();
+                    for (Account account : OpacActivity.this.accounts) {
+                        // don't show the currently selected account in the list
+                        if (account.getId() == app.getAccount().getId()) continue;
 
-                int id = calculateAccountMenuItemId(account);
-                drawer.getMenu().add(R.id.nav_group_accounts, id, 0, "");
-                drawer.getMenu().findItem(id).setActionView(
-                        R.layout.navigation_drawer_item_account);
-                View view = drawer.getMenu().findItem(id).getActionView();
-                String title = getAccountTitle(account);
-                String subtitle = getAccountSubtitle(account);
-                int expiring = aData.getExpiring(account, tolerance);
-                ((TextView) view.findViewById(R.id.account_title)).setText(title);
-                ((TextView) view.findViewById(R.id.account_subtitle)).setText(subtitle);
-                TextView tvWarning = (TextView) view.findViewById(R.id.account_warning);
-                if (expiring > 0) {
-                    tvWarning.setText(String.valueOf(expiring));
-                    tvWarning.setVisibility(View.VISIBLE);
-                } else {
-                    tvWarning.setVisibility(View.INVISIBLE);
+                        int id = calculateAccountMenuItemId(account);
+                        drawer.getMenu().add(R.id.nav_group_accounts, id, 0, "");
+                        drawer.getMenu().findItem(id).setActionView(
+                                R.layout.navigation_drawer_item_account);
+                        View view = drawer.getMenu().findItem(id).getActionView();
+                        String title = getAccountTitle(account);
+                        String subtitle = getAccountSubtitle(account);
+                        int expiring = aData.getExpiring(account, tolerance);
+                        ((TextView) view.findViewById(R.id.account_title)).setText(title);
+                        ((TextView) view.findViewById(R.id.account_subtitle)).setText(subtitle);
+                        TextView tvWarning = (TextView) view.findViewById(R.id.account_warning);
+                        if (expiring > 0) {
+                            tvWarning.setText(String.valueOf(expiring));
+                            tvWarning.setVisibility(View.VISIBLE);
+                        } else {
+                            tvWarning.setVisibility(View.INVISIBLE);
+                        }
+                    }
+                    drawer.inflateMenu(R.menu.navigation_drawer_accounts);
                 }
-            }
-            drawer.inflateMenu(R.menu.navigation_drawer_accounts);
-            accountExpand.setChecked(true);
+            }, 200);
         } else {
-            drawer.inflateMenu(R.menu.navigation_drawer);
-            accountExpand.setChecked(false);
-            fixNavigationSelection();
+            accountExpand.setActivated(false);
+            // touch feedback and animation only work when drawer update is delayed
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    drawer.getMenu().clear();
+                    drawer.inflateMenu(R.menu.navigation_drawer);
+                    fixNavigationSelection();
+                }
+            }, 200);
         }
     }
 
