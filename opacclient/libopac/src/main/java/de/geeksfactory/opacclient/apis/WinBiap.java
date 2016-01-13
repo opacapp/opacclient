@@ -458,6 +458,8 @@ public class WinBiap extends BaseApi implements OpacApi {
             }
         }
 
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
+
         trs = doc.select(".detailCopies .tableCopies > tbody > tr:not(.headerCopies)");
         for (Element tr : trs) {
             Map<String, String> copy = new HashMap<>();
@@ -465,6 +467,17 @@ public class WinBiap extends BaseApi implements OpacApi {
                                                        .text().replace("#", ""));
             copy.put(DetailledItem.KEY_COPY_STATUS, tr.select(".mediaStatus")
                                                       .text());
+            if (tr.select(".DateofReturn .borrowUntil").size() > 0) {
+                String returntime = tr.select(".DateofReturn .borrowUntil").text();
+                copy.put(DetailledItem.KEY_COPY_RETURN, returntime);
+                try {
+                    copy.put(DetailledItem.KEY_COPY_RETURN_TIMESTAMP,
+                            String.valueOf(sdf.parse(returntime).getTime()));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+            }
             if (tr.select(".mediaBranch").size() > 0) {
                 copy.put(DetailledItem.KEY_COPY_BRANCH,
                         tr.select(".mediaBranch").text());
