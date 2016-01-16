@@ -859,6 +859,9 @@ public abstract class Pica extends BaseApi implements OpacApi {
     }
 
     protected String getLang() {
+        if (!initialised) {
+            return null;
+        }
         if (supportedLanguages.contains(languageCode)) {
             return languageCodes.get(languageCode);
         } else if (supportedLanguages.contains("en"))
