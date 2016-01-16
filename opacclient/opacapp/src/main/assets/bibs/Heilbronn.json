@@ -9,7 +9,7 @@
             "barcode": 6,
             "homebranch": 5,
             "lendingbranch": 5,
-            "prolongurl": 7,
+            "prolongurl": 8,
             "returndate": 2,
             "status": 3,
             "title": 1
@@ -35,9 +35,9 @@
         },
         "reservationtable": {
             "author": 0,
-            "availability": 3,
-            "branch": 2,
-            "cancelurl": 4,
+            "availability": 4,
+            "branch": 3,
+            "cancelurl": 5,
             "expirationdate": null,
             "title": 1
         }

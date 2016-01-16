@@ -1,0 +1,943 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0067)http://webopac.stadtbibliothek-guetersloh.de/user/reservations.aspx -->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    <title>
+        WebOPAC Vorbestellungen - Stadtbibliothek
+    </title>
+    <meta name="language" content="deutsch">
+    <meta name="robots" content="all">
+    <meta name="author" content="Jürgen Mödl, Oliver Janssen">
+    <meta name="abstract" content="Mediensuche online">
+    <meta name="copyright" content="Copyright by datronic IT-Systeme GmbH &amp; Co. KG.">
+    <meta name="publisher" content="datronic IT-Systeme GmbH &amp; Co. KG.">
+    <meta name="distribution" content="global">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Style-Type" content="text/css">
+    <link href="http://webopac.stadtbibliothek-guetersloh.de/favicon.ico" rel="shortcut icon">
+    <link href="http://webopac.stadtbibliothek-guetersloh.de/favicon.ico" rel="icon"
+          type="image/ico">
+    <link rel="apple-touch-icon"
+          href="http://webopac.stadtbibliothek-guetersloh.de/apple-touch-icon-57x57.png"
+          sizes="57x57">
+    <link rel="apple-touch-icon"
+          href="http://webopac.stadtbibliothek-guetersloh.de/apple-touch-icon-60x60.png"
+          sizes="60x60">
+    <link rel="apple-touch-icon"
+          href="http://webopac.stadtbibliothek-guetersloh.de/apple-touch-icon-72x72.png"
+          sizes="72x72">
+    <link rel="apple-touch-icon"
+          href="http://webopac.stadtbibliothek-guetersloh.de/apple-touch-icon-76x76.png"
+          sizes="76x76">
+    <link rel="apple-touch-icon"
+          href="http://webopac.stadtbibliothek-guetersloh.de/apple-touch-icon-114x114.png"
+          sizes="114x114">
+    <link rel="apple-touch-icon"
+          href="http://webopac.stadtbibliothek-guetersloh.de/apple-touch-icon-120x120.png"
+          sizes="120x120">
+    <link rel="apple-touch-icon"
+          href="http://webopac.stadtbibliothek-guetersloh.de/apple-touch-icon-144x144.png"
+          sizes="144x144">
+    <link rel="apple-touch-icon"
+          href="http://webopac.stadtbibliothek-guetersloh.de/apple-touch-icon-precomposed.png"
+          sizes="152x152">
+    <link rel="shortcut icon"
+          href="http://webopac.stadtbibliothek-guetersloh.de/apple-touch-icon-precomposed.png"
+          sizes="152x152">
+    <link rel="shortcut icon"
+          href="http://webopac.stadtbibliothek-guetersloh.de/apple-touch-icon-precomposed.png"
+          sizes="152x152">
+    <link href="http://webopac.stadtbibliothek-guetersloh.de/css/styles.min.css" type="text/css"
+          rel="stylesheet" media="all">
+    <link href="http://webopac.stadtbibliothek-guetersloh.de/css/print.min.css" type="text/css"
+          rel="stylesheet" media="print">
+    <link class="design" href="http://webopac.stadtbibliothek-guetersloh.de/css/additional.css"
+          type="text/css" rel="stylesheet" media="screen">
+    <script src="http://webopac.stadtbibliothek-guetersloh.de/js/scripts.js" type="text/javascript"
+            charset="UTF-8"></script>
+    <style type="text/css"></style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#ctl00_ContentPlaceHolderMain_HyperLinkCovers').click(function () {
+                $('#ctl00_ContentPlaceHolderMain_HyperLinkCovers').next("label:first").text('...wird geladen');
+                $('div.cover').slideToggle(600, function () {
+                    $('#ctl00_ContentPlaceHolderMain_HyperLinkCovers').next("label:first").text('Details einblenden');
+                });
+            });
+        });
+
+    </script>
+    <script src="./WebOPAC Vorbestellungen - Stadtbibliothek_files/urchin.js"
+            type="text/javascript">
+    </script>
+    <style type="text/css"></style>
+    <script type="text/javascript">
+_uacct = "UA-263669-2";
+urchinTracker();
+
+    </script>
+</head>
+<body id="ctl00_body">
+<form name="aspnetForm" method="post"
+      action="./WebOPAC Vorbestellungen - Stadtbibliothek_files/WebOPAC Vorbestellungen - Stadtbibliothek.html"
+      id="aspnetForm">
+    <div>
+        <input type="hidden" name="__VIEWSTATEFIELDCOUNT" id="__VIEWSTATEFIELDCOUNT" value="5">
+        <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE"
+               value="/wEPDwULLTE1MDA5NzU1MTAPZBYCZg9kFgICAw9kFgJmD2QWDAIBDw8WAh4HVmlzaWJsZWhkZAIFD2QWBGYPFgIeC18hSXRlbUNvdW50AgYWDGYPZBYEAgEPZBYCZg8PFgQeC05hdmlnYXRlVXJsBTdodHRwOi8vd2Vib3BhYy5zdGFkdGJpYmxpb3RoZWstZ3VldGVyc2xvaC5kZS9pbmRleC5hc3B4HgRUZXh0BTs8aSBjbGFzcz0iZmEgZmEtaG9tZSIgc3R5bGU9ImNvbG9yOiAjZmZmZmZmIj48L2k+U3RhcnRzZWl0ZWRkAgMPDxYCHwBoZBYCZg9kFgICAQ9kFgICBQ9kFgRmDw8WAh4PQ29tbWFuZEFyZ3VtZW50BQEwZBYCZg8VAgAAZAIBDxYCHwEC/////w9kAgEPZBYEAgEPZBYCZg8PFgQfAgU4aHR0cDovL3dlYm9wYWMuc3RhZHRiaWJsaW90aGVrLWd1ZXRlcnNsb2guZGUvc2VhcmNoLmFzcHgfAwUGU3VjaGVuZGQCAw8PFgIfAGhkFgJmD2QWAgIBD2QWAgIFD2QWBGYPDxYCHwQFATBkFgJmDxUCAABkAgEPFgIfAQL/////D2QCAg9kFgQCAQ9kFgJmDw8WBB8CBT5odHRwOi8vd2Vib3BhYy5zdGFkdGJpYmxpb3RoZWstZ3VldGVyc2xvaC5kZS9hY3F1aXNpdGlvbnMuYXNweB8DBQ5OZXVlcndlcmJ1bmdlbmRkAgMPDxYCHwBoZBYCZg9kFgICAQ9kFgICBQ9kFgRmDw8WAh8EBQEwZBYCZg8VAgAAZAIBDxYCHwEC/////w9kAgMPZBYEAgEPZBYCZg8PFgQfAgU5aHR0cDovL3dlYm9wYWMuc3RhZHRiaWJsaW90aGVrLWd1ZXRlcnNsb2guZGUvdG9wbGlzdC5hc3B4HwMFCFRvcGxpc3RlZGQCAw8PFgIfAGhkFgJmD2QWAgIBD2QWAgIFD2QWBGYPDxYCHwQFATBkFgJm">
+        <input type="hidden" name="__VIEWSTATE1" id="__VIEWSTATE1"
+               value="DxUCAABkAgEPFgIfAQL/////D2QCBA9kFgQCAQ9kFgJmDw8WBB8CBTpodHRwOi8vd2Vib3BhYy5zdGFkdGJpYmxpb3RoZWstZ3VldGVyc2xvaC5kZS9yZWdpc3Rlci5hc3B4HwMFCFJlZ2lzdGVyZGQCAw8PFgIfAGhkFgJmD2QWAgIBD2QWAgIFD2QWBGYPDxYCHwQFATBkFgJmDxUCAABkAgEPFgIfAQL/////D2QCBQ9kFgQCAQ8PFgIfAGhkZAIDD2QWAmYPZBYEZg9kFgJmDw8WBB8DBTI8c3BhbiBpZD0nMTInIGNsYXNzPSdhY3RpdmVtZW51Jz5MZXNlcmtvbnRvPC9zcGFuPh8CBTxodHRwOi8vd2Vib3BhYy5zdGFkdGJpYmxpb3RoZWstZ3VldGVyc2xvaC5kZS91c2VyL2xvZ2luLmFzcHhkZAIBD2QWBmYPDxYIHwIFP2h0dHA6Ly93ZWJvcGFjLnN0YWR0YmlibGlvdGhlay1ndWV0ZXJzbG9oLmRlL3VzZXIvb3ZlcnZpZXcuYXNweB8DBTI8c3BhbiBpZD0nMTInIGNsYXNzPSdhY3RpdmVtZW51Jz5MZXNlcmtvbnRvPC9zcGFuPh4IQ3NzQ2xhc3MFHE1lbnVJdGVtTGluayBkcm9wZG93bi10b2dnbGUeBF8hU0ICAmRkAgMPFgIfAGdkAgUPZBYEZg8PFgIfBAUBMGQWAmYPFQIAAGQCAQ8WAh8BAv////8PZAIBD2QWAmYPFgIfAQIIFhBmD2QWAgIBD2QWAmYPDxYEHwIFVmh0dHA6Ly93ZWJvcGFjLnN0YWR0YmlibGlvdGhlay1ndWV0ZXJzbG9oLmRlL2luZGV4LmFzcHg/ZGF0YT1jR0ZuWlVsa1BURTMtT2FBRGtONEl0ZUE9HwMFDUluZm9ybWF0aW9uZW5kZAIBD2QWAgIBD2QWAmYPDxYEHwIFEn4vdXNlci9ib3Jyb3cuYXNweB8DBQxFbnRsZWlodW5nZW5kZAICD2QW">
+        <input type="hidden" name="__VIEWSTATE2" id="__VIEWSTATE2"
+               value="AgIBD2QWAmYPDxYEHwIFGH4vdXNlci9yZXNlcnZhdGlvbnMuYXNweB8DBQ9Wb3JiZXN0ZWxsdW5nZW5kZAIDD2QWAgIBD2QWAmYPDxYEHwIFE34vdXNlci9kaXZpYmliLmFzcHgfAwUHT25sZWloZWRkAgQPZBYCAgEPZBYCZg8PFgQfAgUTfi91c2VyL2NoYXJnZXMuYXNweB8DBQlHZWLDvGhyZW5kZAIFD2QWAgIBD2QWAmYPDxYEHwIFFX4vdXNlci9mYXZvcml0ZXMuYXNweB8DBQlNZXJrbGlzdGVkZAIGD2QWAgIBD2QWAmYPDxYEHwIFFH4vdXNlci9zZXR0aW5ncy5hc3B4HwMFDUVpbnN0ZWxsdW5nZW5kZAIHD2QWAgIBD2QWAmYPDxYEHwIFEn4vdXNlci9sb2dvdXQuYXNweB8DBQhBYm1lbGRlbmRkAgYPDxYCHwBoZBYEZg8PFgIfAGhkZAIBD2QWAmYPFgIfAQIGFgxmD2QWAmYPFQMBMQpTdGFydHNlaXRlClN0YXJ0c2VpdGVkAgEPZBYCZg8VAwEyBlN1Y2hlbgZTdWNoZW5kAgIPZBYCZg8VAwEzDk5ldWVyd2VyYnVuZ2VuDk5ldWVyd2VyYnVuZ2VuZAIDD2QWAmYPFQMBNAhUb3BsaXN0ZQhUb3BsaXN0ZWQCBA9kFgJmDxUDATYIUmVnaXN0ZXIIUmVnaXN0ZXJkAgUPZBYCZg8VAwIxMgpMZXNlcmtvbnRvCkxlc2Vya29udG9kAgoPDxYCHwBoZGQCCw9kFgZmDw8WAh8DBURTaWUgaGFiZW4gZGVyemVpdCA8c3BhbiBpZD0nbWVkaWFDb3VudCc+MTwvc3Bhbj4gTWVkaXVtIHZvcmJlc3RlbGx0IWRkAgIPDxYCHwIFhAFodHRwOi8vd2Vib3BhYy5zdGFkdGJpYmxpb3RoZWstZ3VldGVyc2xvaC5kZS9zZXJ2aWNlL3Jzcy5hc3B4P2RhdGE9U205aVBWVnpaWEpTWlhO">
+        <input type="hidden" name="__VIEWSTATE3" id="__VIEWSTATE3"
+               value="bGNuWmhkR2x2Ym5NbVlXMXdPMUpsWVdSbGNtbGtQVE16TkRNNS15eWIzN2ZDSENqTT1kZAIED2QWAgIBDxYCHwECARYCAgEPZBYEAgEPFgIfAGcWAmYPZBYCAgEPDxYCHwMFLjxzcGFuIGNsYXNzPSd0ZXh0LWVycm9yJz5Ob2NoIG5pY2h0IHZlcmbDvGdiYXJkZAIDD2QWGGYPZBYIZg9kFgICAQ8PFgIfAwUMSG9semVyLCBTZXBwZGQCAQ9kFgICAQ8PFgIfAwUYU2VwcCBIb2x6ZXJzIFBlcm1ha3VsdHVyZGQCAg9kFgICAQ8PFgIfAwUKMjEuMTIuMjAxNWRkAgMPZBYCAgEPDxYCHwMFD1N0YWR0YmlibGlvdGhla2RkAgIPDxYCHwIFkwFodHRwOi8vd2Vib3BhYy5zdGFkdGJpYmxpb3RoZWstZ3VldGVyc2xvaC5kZS9kZXRhaWwuYXNweD9kYXRhPVEyRjBZV3h2WjNWbFNXUTlPRFF4TlRrMU5EUW1ZVzF3TzFOeVl6MHlOaVpoYlhBN1UzSmpTV1E5TVRJbVlXMXdPMk50WkQweC10WlhoY094MEFCaz1kFgJmD2QWAmYPD2QWBB4IZGF0YS1zcmMFVGh0dHBzOi8vd2Vib3BhYy5zdGFkdGJpYmxpb3RoZWstZ3VldGVyc2xvaC5kZS9jb3ZlcnMvSVNCTi8zNy8wMi8wMS85NzgzNzAyMDEwMzc5LmpwZx4DZ3JwBVBodHRwOi8vd2Vib3BhYy5zdGFkdGJpYmxpb3RoZWstZ3VldGVyc2xvaC5kZS9jdXN0b21lcnMvL2ltYWdlcy9tZWRpYWdycC9idWNoLmdpZmQCAw8PFgIfAwU1PHNwYW4gY2xhc3M9J3RleHQtZXJyb3InPk5vY2ggbmljaHQgdmVyZsO8Z2Jhcjwvc3Bhbj5kZAIEDw8WAh8DBQ1ad2VpZ3N0ZWxsZTogZGQCBQ8PFgIfAwUfU3RhZHRiaWJsaW90aGVrIEfDvHRl">
+        <input type="hidden" name="__VIEWSTATE4" id="__VIEWSTATE4"
+               value="cnNsb2ggR21iSGRkAgYPDxYCHwMFDk1lZGllbm51bW1lcjogZGQCBw8PFgIfAwUrPGkgY2xhc3M9J2ZhIGZhLWJhcmNvZGUgZmEtZncnPjwvaT45MDU0ODc5NGRkAggPDxYCHwMFBEJ1Y2hkZAIJDw8WAh8DZWRkAgoPFgIfAGhkAgsPFgIfAGgWAgIFDw8WAh8DBQ9TdGFkdGJpYmxpb3RoZWtkZAIMDw8WAh8AaGRkAgwPDxYCHwBoZGQYAQVOY3RsMDAkbWFpbk1lbnVOYXZpZ2F0aW9uJHJlcGVhdGVyTWFpbk1lbnUkY3RsMDUkbWVudUl0ZW1BY2NvdW50JG11bHRpVmlld1N0YXRlDw9kAgFkS4sFZAp8zDjQ6Exz38rkloGPUYEqMqI7wPJNPOacYP0=">
+    </div>
+
+    <div>
+
+        <input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="BFAFD0CC">
+        <input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION"
+               value="/wEdAAKTYtbZq2kk47SEjiJBf3+9aueN/bTBvaIv6aE6g0TEHvAZGkimcLq2lQJzXWg/m+8ffd13zdhjODrka+RIsQ0n">
+    </div>
+
+    <a id="top" name="top" style="position: absolute; top: -20px; left: -20px;"></a>
+
+    <div id="PageMain" class="PageMain container">
+        <div id="PageMainContent" class="PageMainContent">
+            <div style="left: 0px; width: 96px; position: absolute; top: 0px; height: 19px"
+                 id="DivScrollTop">
+
+            </div>
+            <div id="header" class="hidden-print">
+
+
+                <div id="LogoCustomer">
+                    <a href="http://webopac.stadtbibliothek-guetersloh.de/index.aspx">
+                        <img alt="Stadtbibliothek"
+                             src="./WebOPAC Vorbestellungen - Stadtbibliothek_files/customer.gif"></a>
+                </div>
+
+            </div>
+
+
+            <div id="menu-wrapper" class="hidden-print">
+                <div id="menu-toolbar">
+                    <ul id="mainmenu">
+
+
+                        <li id="page-1" class="MenuItem ">
+    <span id="1" class="">
+    <a id="ctl00_mainMenuNavigation_repeaterMainMenu_ctl00_menuItem_HyperLinkMenuItem"
+       class="MenuItemLink" href="http://webopac.stadtbibliothek-guetersloh.de/index.aspx"><i
+            class="fa fa-home" style="color: #ffffff"></i>Startseite</a>
+    </span>
+
+
+                        </li>
+
+
+                        <li id="page-2" class="MenuItem ">
+    <span id="2" class="">
+    <a id="ctl00_mainMenuNavigation_repeaterMainMenu_ctl01_menuItem_HyperLinkMenuItem"
+       class="MenuItemLink"
+       href="http://webopac.stadtbibliothek-guetersloh.de/search.aspx">Suchen</a>
+    </span>
+
+
+                        </li>
+
+
+                        <li id="page-3" class="MenuItem ">
+    <span id="3" class="">
+    <a id="ctl00_mainMenuNavigation_repeaterMainMenu_ctl02_menuItem_HyperLinkMenuItem"
+       class="MenuItemLink"
+       href="http://webopac.stadtbibliothek-guetersloh.de/acquisitions.aspx">Neuerwerbungen</a>
+    </span>
+
+
+                        </li>
+
+
+                        <li id="page-4" class="MenuItem ">
+    <span id="4" class="">
+    <a id="ctl00_mainMenuNavigation_repeaterMainMenu_ctl03_menuItem_HyperLinkMenuItem"
+       class="MenuItemLink"
+       href="http://webopac.stadtbibliothek-guetersloh.de/toplist.aspx">Topliste</a>
+    </span>
+
+
+                        </li>
+
+
+                        <li id="page-6" class="MenuItem ">
+    <span id="6" class="">
+    <a id="ctl00_mainMenuNavigation_repeaterMainMenu_ctl04_menuItem_HyperLinkMenuItem"
+       class="MenuItemLink"
+       href="http://webopac.stadtbibliothek-guetersloh.de/register.aspx">Register</a>
+    </span>
+
+
+                        </li>
+
+
+                        <li id="page-12" class="MenuItem menu-account dropdown active ">
+
+
+                            <a id="ctl00_mainMenuNavigation_repeaterMainMenu_ctl05_menuItemAccount_HyperLinkMenuItem"
+                               class="MenuItemLink dropdown-toggle"
+                               href="http://webopac.stadtbibliothek-guetersloh.de/user/overview.aspx"><span
+                                    id="12" class="activemenu">Leserkonto</span></a>
+                            <ul id="menuUserAccount" class="dropdown-menu" role="menu">
+                                <li><a tabindex="-1"
+                                       href="http://webopac.stadtbibliothek-guetersloh.de/user/overview.aspx"><i
+                                        class="fa fa-fw fa-home fa-fix-space"></i>Ins Leserkonto (xxxxxxxx)</a>
+                                </li>
+                                <li id="ctl00_mainMenuNavigation_repeaterMainMenu_ctl05_menuItemAccount_menuBorrows">
+                                    <a tabindex="-1"
+                                       href="http://webopac.stadtbibliothek-guetersloh.de/user/borrow.aspx"><i
+                                            class="fa fa-fw fa-book fa-fix-space"></i>Entleihungen (12)</a>
+                                </li>
+                                <li id="ctl00_mainMenuNavigation_repeaterMainMenu_ctl05_menuItemAccount_menuReservations">
+                                    <a tabindex="-1"
+                                       href="./WebOPAC Vorbestellungen - Stadtbibliothek_files/WebOPAC Vorbestellungen - Stadtbibliothek.html"><i
+                                            class="fa fa-fw fa-calendar fa-fix-space"></i>Vorbestellungen (1)</a>
+                                </li>
+                                <li id="ctl00_mainMenuNavigation_repeaterMainMenu_ctl05_menuItemAccount_menuDiviBib">
+                                    <a tabindex="-1"
+                                       href="http://webopac.stadtbibliothek-guetersloh.de/user/divibib.aspx"><i
+                                            class="fa fa-fw fa-at fa-fix-space"></i>Onleihe</a></li>
+
+
+                                <li class="divider"></li>
+                                <li><a tabindex="-1"
+                                       href="http://webopac.stadtbibliothek-guetersloh.de/user/logout.aspx"><i
+                                        class="fa fa-fw fa-sign-out fa-fix-space"></i>Abmelden</a>
+                                </li>
+                            </ul>
+
+
+                        </li>
+
+
+                    </ul>
+                </div>
+                <div id="SubMenu" class="submenu">
+                    <ul id="ctl00_mainMenuNavigation_MainSubMenu" class="submenu-toolbar ">
+
+
+                        <li id="page-17" class="MenuItem ">
+    <span id="17" class="">
+    <a id="ctl00_mainMenuNavigation_repeaterSubMenu_ctl00_menuItem_HyperLinkMenuItem"
+       class="MenuItemLink"
+       href="http://webopac.stadtbibliothek-guetersloh.de/index.aspx?data=cGFnZUlkPTE3-OaADkN4IteA=">Informationen</a>
+    </span>
+
+                            <span class="submenuseperator">|</span>
+                        </li>
+
+
+                        <li id="page-0" class="MenuItem ">
+    <span id="0" class="">
+    <a id="ctl00_mainMenuNavigation_repeaterSubMenu_ctl01_menuItem_HyperLinkMenuItem"
+       class="MenuItemLink"
+       href="http://webopac.stadtbibliothek-guetersloh.de/user/borrow.aspx">Entleihungen</a>
+    </span>
+
+                            <span class="submenuseperator">|</span>
+                        </li>
+
+
+                        <li id="page-0" class="MenuItem active ">
+    <span id="0" class="activemenu">
+    <a id="ctl00_mainMenuNavigation_repeaterSubMenu_ctl02_menuItem_HyperLinkMenuItem"
+       class="MenuItemLink"
+       href="./WebOPAC Vorbestellungen - Stadtbibliothek_files/WebOPAC Vorbestellungen - Stadtbibliothek.html">Vorbestellungen</a>
+    </span>
+
+                            <span class="submenuseperator">|</span>
+                        </li>
+
+
+                        <li id="page-0" class="MenuItem ">
+    <span id="0" class="">
+    <a id="ctl00_mainMenuNavigation_repeaterSubMenu_ctl03_menuItem_HyperLinkMenuItem"
+       class="MenuItemLink"
+       href="http://webopac.stadtbibliothek-guetersloh.de/user/divibib.aspx">Onleihe</a>
+    </span>
+
+                            <span class="submenuseperator">|</span>
+                        </li>
+
+
+                        <li id="page-0" class="MenuItem ">
+    <span id="0" class="">
+    <a id="ctl00_mainMenuNavigation_repeaterSubMenu_ctl04_menuItem_HyperLinkMenuItem"
+       class="MenuItemLink"
+       href="http://webopac.stadtbibliothek-guetersloh.de/user/charges.aspx">Gebühren</a>
+    </span>
+
+                            <span class="submenuseperator">|</span>
+                        </li>
+
+
+                        <li id="page-0" class="MenuItem ">
+    <span id="0" class="">
+    <a id="ctl00_mainMenuNavigation_repeaterSubMenu_ctl05_menuItem_HyperLinkMenuItem"
+       class="MenuItemLink"
+       href="http://webopac.stadtbibliothek-guetersloh.de/user/favorites.aspx">Merkliste</a>
+    </span>
+
+                            <span class="submenuseperator">|</span>
+                        </li>
+
+
+                        <li id="page-0" class="MenuItem ">
+    <span id="0" class="">
+    <a id="ctl00_mainMenuNavigation_repeaterSubMenu_ctl06_menuItem_HyperLinkMenuItem"
+       class="MenuItemLink"
+       href="http://webopac.stadtbibliothek-guetersloh.de/user/settings.aspx">Einstellungen</a>
+    </span>
+
+                            <span class="submenuseperator">|</span>
+                        </li>
+
+
+                        <li id="page-0" class="MenuItem ">
+    <span id="0" class="">
+    <a id="ctl00_mainMenuNavigation_repeaterSubMenu_ctl07_menuItem_HyperLinkMenuItem"
+       class="MenuItemLink"
+       href="http://webopac.stadtbibliothek-guetersloh.de/user/logout.aspx">Abmelden</a>
+    </span>
+
+                            <span class="submenuseperator" style="display:none">|</span>
+                        </li>
+
+
+                    </ul>
+                </div>
+
+            </div>
+
+
+            <!--[if IE 8]>
+            <br/>
+            <div class="alert alert-danger">Für die korrekte Anzeige dieser Webseite wird ein aktueller Internet-Browser benötigt.
+                Bitte aktualisieren Sie Ihren Internet Explorer auf die aktuelle Version.
+            </div>
+            <![endif]-->
+            <div id="ContentMain">
+                <div id="ContentTitleWrapper">
+
+                    <h2>
+                        Leserkonto -
+                        Vorbestellung</h2>
+
+                </div>
+                <div style="clear: both">
+
+
+                </div>
+                <div id="Content">
+
+
+                    <div class="well-plain toolbar-with-btn-group">
+                        <div class="row-fluid">
+                            <div class="span6">
+                                <span id="ctl00_ContentPlaceHolderMain_LabelAccountTableResult"
+                                      class="reservationCount">Sie haben derzeit <span
+                                        id="mediaCount">1</span> Medium vorbestellt!</span>
+                            </div>
+                            <div class="span6">
+                                <div class="btn-toolbar" style="margin: 0px 0px">
+                                    <div class="btn-group" style="float: right;">
+                                        <a id="ctl00_ContentPlaceHolderMain_PrintButton"
+                                           title="Diese Seite drucken" class="btn"
+                                           onclick="window.print(); return false;"
+                                           href="javascript:void(0);">
+                                            <i class="fa fa-print"></i>
+                                        </a>
+                                        <a id="ctl00_ContentPlaceHolderMain_HyperLinkRss"
+                                           title="RSS-Feed: Alle vorbestellten Medien die für Sie bereit liegen."
+                                           class="btn"
+                                           href="http://webopac.stadtbibliothek-guetersloh.de/service/rss.aspx?data=Sm9iPVVzZXJSZXNlcnZhdGlvbnMmYW1wO1JlYWRlcmlkPTMzNDM5-yyb37fCHCjM="
+                                           target="_blank">
+                                            <i class="fa fa-rss-square"></i>
+                                        </a>
+                                        <a id="ctl00_ContentPlaceHolderMain_HyperLinkCovers"
+                                           title="Details anzeigen" class="btn coverToggle"
+                                           data-toggle="button" href="javascript:void(0);"><i
+                                                id="IconCovers" class="fa fa-bars"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="removeStatus" class="alert alert-success " style="display:none">
+                        <strong>1 Vorbestellung</strong> wurde erfolgreich gelöscht.
+                    </div>
+                    <br>
+
+
+                    <table id="ctl00_ContentPlaceHolderMain_reservationDetailList"
+                           class="table detailTable">
+                        <thead id="ctl00_ContentPlaceHolderMain_reservationDetailList_theader">
+                        <tr>
+
+                            <th>Autor</th>
+                            <th>Titel</th>
+                            <th>vorbestellt</th>
+                            <th id="ctl00_ContentPlaceHolderMain_reservationDetailList_thPickup">Abholort</th>
+
+                        </tr>
+                        </thead>
+
+
+                        <tbody>
+                        <tr id="ctl00_ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ctl01_rowGroup"
+                            class="group-header">
+                            <td colspan="6">
+                    <span id="ctl00_ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ctl01_labelGroup"><span
+                            class="text-error">Noch nicht verfügbar</span>
+                </span></td>
+                        </tr>
+
+                        <tr id="ctl00_ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ctl01_ReservationDetailItemMain_rowBorrow"
+                            class="toggleDetails">
+                            <td>
+                                <span id="ctl00_ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ctl01_ReservationDetailItemMain_LabelAutor"
+                                      class="autor">Holzer, Sepp</span>
+                            </td>
+                            <td>
+                                <span id="ctl00_ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ctl01_ReservationDetailItemMain_LabelTitle"
+                                      class="title">Sepp Holzers Permakultur</span>
+                            </td>
+                            <td>
+                                <span id="ctl00_ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ctl01_ReservationDetailItemMain_LabelReservateDate"
+                                      class="reservateDate">21.12.2015</span>
+                            </td>
+                            <td>
+                                <span id="ctl00_ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ctl01_ReservationDetailItemMain_LabelPickupPlace"
+                                      class="pickupPlace">Stadtbibliothek</span>
+                            </td>
+                            <td style="text-align: right" class="noprint">
+                                <small><a>Details <i class="fa fa-chevron-right"
+                                                     style="font-size: 85%;"></i></a></small>
+                            </td>
+                        </tr>
+
+                        <tr id="bookDetails-264622" class="rowDetails">
+                            <td colspan="5">
+                                <input type="hidden"
+                                       name="ctl00$ContentPlaceHolderMain$reservationDetailList$RepeaterListView$ctl01$ReservationDetailItemMain$hiddenValueDetail"
+                                       id="ctl00_ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ctl01_ReservationDetailItemMain_hiddenValueDetail">
+
+                                <div class="media-wrapper">
+                                    <div class="mediaDetails">
+                                        <div class="row-fluid">
+                                            <div class="span2">
+                                                <a id="ctl00_ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ctl01_ReservationDetailItemMain_linkDetail"
+                                                   href="http://webopac.stadtbibliothek-guetersloh.de/detail.aspx?data=Q2F0YWxvZ3VlSWQ9ODQxNTk1NDQmYW1wO1NyYz0yNiZhbXA7U3JjSWQ9MTImYW1wO2NtZD0x-tZXhcOx0ABk="><img
+                                                        id="ctl00_ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ctl01_ReservationDetailItemMain_CoverImage_ImageCover"
+                                                        title="Für mehr Infomationen bitte klicken!"
+                                                        class="cover"
+                                                        data-src="https://webopac.stadtbibliothek-guetersloh.de/covers/ISBN/37/02/01/9783702010379.jpg"
+                                                        grp="http://webopac.stadtbibliothek-guetersloh.de/customers//images/mediagrp/buch.gif"
+                                                        src="./WebOPAC Vorbestellungen - Stadtbibliothek_files/9783702010379.jpg"
+                                                        align="middle"
+                                                        style="width:80px;border-width:0px;"></a>
+                                            </div>
+                                            <div class="span10">
+                                                <div class="row-fluid">
+                                                    <div class="span6">
+                                                        <strong>Status:</strong>
+                                                        <span id="ctl00_ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ctl01_ReservationDetailItemMain_labelStatus"
+                                                              class="media-status"><span
+                                                                class="text-error">Noch nicht verfügbar</span></span><br>
+                                                        <br>
+                                                        <strong>
+                                                            <span id="ctl00_ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ctl01_ReservationDetailItemMain_labelBranchHeader">Zweigstelle: </span></strong>
+                                                        <span id="ctl00_ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ctl01_ReservationDetailItemMain_labelBranch">Stadtbibliothek Gütersloh GmbH</span><br>
+                                                        <strong>
+                                                            <span id="ctl00_ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ctl01_ReservationDetailItemMain_labelMediennrHeader">Mediennummer: </span></strong>
+                                                        <span id="ctl00_ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ctl01_ReservationDetailItemMain_labelMediennr"><i
+                                                                class="fa fa-barcode fa-fw"></i>90548794</span><br>
+                                                        <strong>Mediengruppe: </strong>
+                                                        <span id="ctl00_ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ctl01_ReservationDetailItemMain_labelMediagroup">Buch</span><br>
+                                                    </div>
+                                                    <div class="span6">
+                                                        <span id="ctl00_ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ctl01_ReservationDetailItemMain_labelPosition"
+                                                              title="Ihre Position in der Liste der Vorbesteller"></span>
+
+                                                        <br>
+                                                        <br>
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+
+                        </tbody>
+                    </table>
+
+                    <div id="removeReservationModal" class="modal hide fade" tabindex="-1"
+                         role="dialog" aria-hidden="true">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-hidden="true">
+                                ×
+                            </button>
+                            <h3 id="myModalLabel">
+                                Vorbestellung
+                                wirklich löschen?</h3>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                Wollen Sie diese
+                                Vorbestellung
+                                wirklich löschen?</p>
+
+                            <div class="row-fluid">
+                                <div class="span2">
+                                    <img id="modalImageCover" class="cover" width="80px" alt="cover"
+                                         src="./WebOPAC Vorbestellungen - Stadtbibliothek_files/leer.gif">
+                                </div>
+                                <div class="span10">
+                                    <p>
+                                        <strong>Autor: </strong><span id="modalAutor"></span>
+                                        <br>
+                                        <strong>Titel: </strong><span id="modalTitle"></span>
+                                    </p>
+
+                                    <p>
+                                        <strong>Status: </strong><span
+                                            id="modalReservationStatus"></span>
+                                        <br>
+                                        <strong>Vorbestellt am: </strong><span
+                                            id="modalReservationDate"></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="modalReservationButtonOk" class="btn btn-danger"
+                                    style="color: #fff">
+                                Ja,
+                                Vorbestellung
+                                löschen
+                            </button>
+                            <button class="btn" data-dismiss="modal" aria-hidden="true">
+                                Abbrechen
+                            </button>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+
+
+        $(document).on('click', '.toggleDetails', function () {
+            var $thisRow = $(this).closest('tr');
+            var $detailRow = $thisRow.next('tr');
+
+            $thisRow.add($detailRow).toggleClass('show');
+        });
+        
+        $('#modalReservationButtonOk').bind('click', function () {
+            DeleteReservation($(this));
+            return false;
+        });
+        
+        $(document).on('click', '.coverToggle', function () {
+            show = $(this).hasClass('active');
+            $('.toggleDetails, .rowDetails').toggleClass('show', show);
+            $('.detailTable').toggleClass('showAll', show);
+        });
+
+    
+
+                    </script>
+
+
+                </div>
+
+
+            </div>
+            <br style="clear: both">
+            <br>
+
+            <div id="Navi" style="text-align: center;">
+
+                <a id="gototop"
+                   href="http://webopac.stadtbibliothek-guetersloh.de/user/reservations.aspx#top"
+                   class="GoTop">
+                    <small>Nach oben</small>
+                </a>
+
+            </div>
+            <div style="clear: both">
+
+            </div>
+            <br>
+
+            <div id="Footer" class="hidden-print">
+                <div id="FooterSeperator">
+                </div>
+                ©&nbsp;<a href="http://www.datronic.de/" target="_blank"><span
+                    style="color: #008000">datronic</span></a> IT-Systeme · <a id="impressum"
+                                                                               href="http://webopac.stadtbibliothek-guetersloh.de/impressum.aspx">Impressum</a> ·
+                <a id="privacy"
+                   href="http://webopac.stadtbibliothek-guetersloh.de/privacy.aspx">Datenschutzerklärung</a> · <span
+                    style="color: #008000"><i>WinBIAP WebOPAC 4.3.3</i>
+                        
+                    </span>
+
+                <div id="Textsize" class="Textsize">
+                    <a id="linkFontSizeBig" class="fontsize" data-value="1" title="Text größer"
+                       href="http://webopac.stadtbibliothek-guetersloh.de/user/reservations.aspx#">A+</a>
+                    <a id="linkFontSizeDefault" class="fontsize" data-value="-1"
+                       title="Text Normalgröße"
+                       href="http://webopac.stadtbibliothek-guetersloh.de/user/reservations.aspx#">A</a>
+                    <a id="linkFontSizeSmall" class="fontsize" data-value="2" title="Text kleiner"
+                       href="http://webopac.stadtbibliothek-guetersloh.de/user/reservations.aspx#">A-</a>
+                    <script type="text/javascript">
+        $(document).on('click', '.fontsize', function (e) {
+            e.preventDefault();
+            
+            var value = $(this).data('value');
+            //Check for int
+            if (value % 1 === 0) {
+                SearchService.SetFontSizeState(value);
+                var size = '';
+
+                switch (value) {
+                    case 1:
+                        size = '1.2em';
+                        break;
+                    case 2:
+                        size = '0.8em';
+                        break;
+                }
+
+                $('form').css('font-size', size);
+            }
+        });
+
+                    </script>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="loginBox" class="loginBox">
+        <div class="loginForm">
+            <div class="loginFormWrapper">
+                <p class="lead text-center" style="margin-bottom: 0">Im Leserkonto anmelden.</p>
+                <hr>
+                <div class="loginBody">
+                    <fieldset class="loginFieldset">
+                        <fieldset class="text-center">
+                            <label for="username" class="text-left">
+                                Lesernummer:</label>
+                            <input type="text" name="username" id="username">
+                        </fieldset>
+                        <fieldset class="text-center">
+                            <label for="password" class="text-left">
+                                Passwort:</label>
+                            <input type="password" name="password" id="password">
+                        </fieldset>
+                        <fieldset class="text-center">
+                            <br>
+                            <input id="buttonLogon" class="btn btn-primary" type="button"
+                                   value="Anmelden" style="width:10em">
+                        </fieldset>
+                    </fieldset>
+                    <div id="errorMessage" class="alert alert-error" style="display: none">
+                    </div>
+                    <div class="loginLoading" style="display: none">
+                        <div class="spinner-container"></div>
+                        Anmeldung wird überprüft...
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" id="returnUrl"
+               value="http://webopac.stadtbibliothek-guetersloh.de/user/overview.aspx">
+    </div>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        loginButtonPlugin = $('#buttonLogon').loginAsync({
+            serviceUserUrl: 'http://webopac.stadtbibliothek-guetersloh.de/service/UserService.ashx',
+            usernameField: '#username',
+            passwordField: '#password',
+            errorObject: '#errorMessage',
+            loginFormId: '#loginBox',
+            redirectTo: 'http://webopac.stadtbibliothek-guetersloh.de/user/overview.aspx'
+        });
+    });
+
+    </script>
+
+
+    <div id="loginBoxDiviBib" class="loginBox">
+        <div class="loginForm">
+            <div class="loginFormWrapper">
+                <p class="lead text-center" style="margin-bottom: 0">Im Leserkonto anmelden.</p>
+
+                <p id="loginSuccessful" class="text-center"
+                   style="display: none; margin-bottom: 0">Bitte klicken Sie unten auf den Link.</p>
+                <hr>
+                <div class="loginBody">
+                    <fieldset class="loginFieldset">
+                        <fieldset class="text-center">
+                            <label for="username" class="text-left">
+                                Lesernummer:</label>
+                            <input type="text" name="username" id="usernameDiviBib">
+                        </fieldset>
+                        <fieldset class="text-center">
+                            <label for="password" class="text-left">
+                                Passwort:</label>
+                            <input type="password" name="password" id="passwordDiviBib">
+                        </fieldset>
+                        <fieldset class="text-center">
+                            <br>
+                            <input id="buttonLogonDiviBib" class="btn btn-primary" type="button"
+                                   value="Anmelden" style="width: 10em">
+                        </fieldset>
+                    </fieldset>
+                    <div id="errorMessageDiviBib" class="alert alert-error" style="display: none">
+                    </div>
+                    <div class="loginLoading" style="display: none">
+                        <div class="spinner-container"></div>
+                        Anmeldung wird überprüft...
+                    </div>
+                    <div id="redirectToDiviBib" class="text-center" style="display: none">
+                        <br>
+                        <a id="buttonRedirect" class="btn btn-primary" style="width: 10em"
+                           target="_blank">Onleihe öffnen</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" id="returnUrl"
+               value="http://webopac.stadtbibliothek-guetersloh.de/user/overview.aspx">
+    </div>
+    <script type="text/javascript">
+    
+    var userLoggedIn = true;
+    var checkStatus = function() {
+        $('.divibib-async').each(function () {
+            var $elem = $(this);
+            var id = $elem.data('id');
+
+            $.ajax({
+                type: "POST",
+                async: true,
+                url: 'http://webopac.stadtbibliothek-guetersloh.de/service/ncipservice.ashx',
+                data: 'action=lookup&itemId=' + id,
+                dataType: "json",
+                success: function (data) {
+                    
+                    if (data.MediaItem.Available) {
+                        $elem.parent().find('.mediaStatus').html('verfügbar');
+                        $elem.html('<i class="fa fa-at fa-fw"></i>&nbsp;Ausleihen');
+                        
+                        if (userLoggedIn) {
+                            $elem.attr('href', 'http://webopac.stadtbibliothek-guetersloh.de/user/divibib.aspx?data=cmVkaXJlY3RUb0RpdmlCaWI9MQ==-PAQ+C/JJy6k=&itemId=' + id);
+                        }
+                    }
+                    else {
+                        $elem.parent().find('.mediaStatus').html('entliehen');
+                        if (data.MediaItem.Reservable) {
+                            $elem.html('<i class="fa fa-at fa-fw"></i>&nbsp;Vorbestellen');
+                            
+                            if (userLoggedIn) {
+                                $elem.attr('href', 'http://webopac.stadtbibliothek-guetersloh.de/user/divibib.aspx?data=cmVkaXJlY3RUb0RpdmlCaWI9MSZhbXA7cHJlYm9vaz0x-LvKRWpHtgBQ=&itemId=' + id);
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    }
+
+    var loginSuccessful = function (sender) {
+        var id = sender.options.sender.data('id');
+
+        $.ajax({
+            type: "POST",
+            async: true,
+            url: 'http://webopac.stadtbibliothek-guetersloh.de/service/ncipservice.ashx',
+            data: 'action=geturl&itemId=' + id,
+            dataType: "text",
+            success: function (data) {
+                if (data.length > 0) {
+                    
+                    $('#buttonRedirect').html(sender.options.sender.html());
+
+                    if (data !== 'MediumNotAvailable') {
+                        $('#buttonRedirect').attr('href', data);
+                    } else {
+                        var url = $('.btn-divibib[data-id="' + id + '"]').attr('href');
+
+                        $('#buttonRedirect').attr('href', url);
+                        
+                    }
+                    
+                    $('#loginBoxDiviBib .loginLoading').hide();
+                    $('#loginBoxDiviBib .lead').hide();
+                    $('#loginBoxDiviBib .lead').hide();
+                    $('#loginSuccessful').show();
+                    $('#redirectToDiviBib').show();
+                    $('.divibib-login').removeClass('divibib-login');
+                    $('.loginButton').removeClass('loginButton');
+                    userLoggedIn = true;
+                    checkStatus();
+                }
+                else {
+                    $(sender.options.errorObject).html('Bei der Anmeldung ist ein Fehler aufgetreten bitte versuchen Sie es noch einmal.');
+                    sender.showResult();
+                }
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        loginButtonDiviBibPlugin = $('#buttonLogonDiviBib').loginAsync({
+            serviceUserUrl: 'http://webopac.stadtbibliothek-guetersloh.de/service/UserService.ashx',
+            usernameField: '#usernameDiviBib',
+            passwordField: '#passwordDiviBib',
+            errorObject: '#errorMessageDiviBib',
+            loginFormId: '#loginBoxDiviBib',
+            redirectTo: '',
+            loginSuccessful: loginSuccessful
+        });
+
+        checkStatus();
+    });
+    
+        $(document).on('click', '.divibib-login', function (e) {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+            loginButtonDiviBibPlugin.data('loginAsync').options.redirectTo = $(this).data('id');
+            loginButtonDiviBibPlugin.data('loginAsync').options.sender = $(this);
+
+            $('#loginBoxDiviBib').show().css('opacity', '0');
+            $("#loginBoxDiviBib").css("left", ($(this).offset().left + $(this).outerWidth()) - $("#loginBoxDiviBib").outerWidth());
+            $("#loginBoxDiviBib").css("top", $(this).offset().top + $(this).outerHeight());
+            $('#loginBoxDiviBib').css('opacity', '1');
+
+            setTimeout(function () {
+                $('#usernameDiviBib').focus();
+            }, 100);
+
+            if (lastSelector != undefined && $(this).attr('id') != lastSelector && $(this).hasClass('active'))
+                return;
+
+            $(this).toggleClass('active');
+            lastSelector = $(this).attr('id');
+
+            return false
+        });
+
+    </script>
+
+
+</form>
+
+
+<script type="text/javascript">
+
+        SearchService.Init('http://webopac.stadtbibliothek-guetersloh.de/service/SearchService.ashx');
+
+        
+        
+        
+
+        $('.selectpicker').selectpicker();
+
+        $(document).on('click', '#gototop', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.scrollTo(0, 0);
+        });
+
+        window.onload = function () {
+            unveilCovers();
+        };
+
+        $(window).bind("beforeunload", function () {
+            showLoadingMessage();
+        });
+
+
+        $(document).on('click', '.morebutton', function () {
+            var $link = $(this);
+            var $more = $(this).prev(".more");
+
+            $more.slideToggle('fast', function () {
+                if ($(this).is(":hidden")) {
+                    $link.text('mehr...');
+                    $link.attr('title', 'Mehr Informationen anzeigen');
+                }
+                else {
+                    $link.attr('title', 'Informationen ausblenden');
+                    $link.html('...weniger');
+                }
+            });
+        });
+        $(document).ready(function () {
+            $('input, a').attr('disabled', false);
+        });
+
+        var loadingMessage = 'Bitte warten.';
+        var showLoadingMessage = function () {
+            setTimeout(function () {
+                $('input, a').attr('disabled', 'disabled');
+            }, 200);
+            setTimeout(function () {
+                if ($('.searchtext').length > 0) {
+                    var autocomplete = $('.searchtext').autocomplete();
+                    if (autocomplete)
+                        autocomplete.clear();
+                }
+
+                $('body').backdrop({
+                    cssClass: 'submitLoader',
+                    spinner: true,
+                    text: loadingMessage
+                });
+
+                setTimeout(function () {
+                    $('.backdrop-wrapper p').html('Es wird auf eine Rückantwort gewartet.');
+                }, 5000);
+                setTimeout(function () {
+                    $('.backdrop-wrapper p').html('Die Anfrage dauert ungewöhnlich lange.<br/>Es geht gleich weiter.');
+                }, 10000);
+                setTimeout(function () {
+                    $('.backdrop-wrapper p').html('Houston? We have a problem.');
+                }, 20000);
+                setTimeout(function () {
+                    location.href = 'http://webopac.stadtbibliothek-guetersloh.de/index.aspx';
+                    $('.backdrop-wrapper p').html('Weiterleitung...');
+                }, 30000);
+
+            }, 4000);
+        }
+
+
+
+</script>
+
+
+</body>
+</html>

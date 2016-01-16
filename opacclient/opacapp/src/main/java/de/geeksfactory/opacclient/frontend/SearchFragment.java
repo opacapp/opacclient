@@ -733,6 +733,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
 
     public void barcodeScanned(ScanResult scanResult) {
         this.scanResult = scanResult;
+        loadQuery(new Bundle());
     }
 
     public interface Callback {

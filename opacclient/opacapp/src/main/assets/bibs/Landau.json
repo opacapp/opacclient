@@ -1,37 +1,13 @@
 {
     "account_supported": true,
-    "api": "bibliotheca",
+    "api": "open",
     "city": "Landau",
     "country": "Deutschland",
     "data": {
-        "accounttable": {
-            "author": 0,
-            "prolongurl": 3,
-            "returndate": 2,
-            "title": 1
-        },
-        "baseurl": "https://opac.landau.de",
-        "copiestable": {
-            "barcode": 0,
-            "location": 1,
-            "returndate": 3,
-            "status": 2
-        },
-        "mediatypes": {
-            "eaudio.gif": "MP3",
-            "ebook.gif": "EBOOK",
-            "emusic.gif": "MP3",
-            "epaper.gif": "EBOOK",
-            "evideo.gif": "MOVIE",
-            "mCasetteS.gif": "AUDIO_CASSETTE",
-            "mDVDS.gif": "DVD",
-            "mFilmS.gif": "MOVIE"
-        },
-        "reservationtable": {
-            "author": 0,
-            "availability": 2,
-            "cancelurl": 3,
-            "title": 1
+        "baseurl": "http://opac.landau.de",
+        "urls": {
+            "advanced_search": "Mediensuche/Erweiterte-Suche",
+            "simple_search": "Mediensuche/Einfache-Suche"
         }
     },
     "geo": [
