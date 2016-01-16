@@ -209,17 +209,11 @@ public class OpacClient extends Application {
 
     public OpacApi getNewApi(Library lib) {
         OpacApi newApiInstance;
-        if (lib.getApi().equals("bond26") || lib.getApi().equals("bibliotheca"))
-        // Backwardscompatibility
-        {
+        if (lib.getApi().equals("bibliotheca")) {
             newApiInstance = new Bibliotheca();
-        } else if (lib.getApi().equals("oclc2011")
-                || lib.getApi().equals("sisis"))
-        // Backwards compatibility
-        {
+        } else if (lib.getApi().equals("sisis")) {
             newApiInstance = new SISIS();
-        } else if (lib.getApi().equals("zones22") // Backwards compatibility
-                || lib.getApi().equals("zones")) {
+        } else if (lib.getApi().equals("zones")) {
             newApiInstance = new Zones();
         } else if (lib.getApi().equals("biber1992")) {
             newApiInstance = new BiBer1992();
