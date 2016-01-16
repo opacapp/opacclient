@@ -691,6 +691,13 @@ public class Bibliotheca extends BaseApi {
                     }
                 }
 
+                if (doc.select("#vorbest").size() > 0 &&
+                        doc.select("#vorbest").val().contains("(")) {
+                    // Erlangen uses "Kostenpflichtige Vorbestellung (1 Euro)"
+                    // as the label of its reservation button
+                    details.add(new String[]{doc.select("#vorbest").val().trim()});
+                }
+
                 for (Element row : doc.select(".kontozeile_center table tr")) {
                     if (row.select(".konto_feld").size() == 1
                             && row.select(".konto_feldinhalt").size() == 1) {
