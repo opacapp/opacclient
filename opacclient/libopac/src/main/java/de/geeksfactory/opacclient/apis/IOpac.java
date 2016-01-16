@@ -723,8 +723,7 @@ public class IOpac extends BaseApi implements OpacApi {
         if (media.isEmpty() && reserved.isEmpty()) {
             if (doc.select("h1").size() > 0) {
                 //noinspection StatementWithEmptyBody
-                if (doc.select("h4").size() > 0 && doc.select("h4").text().trim()
-                                                      .contains("keine ausgeliehenen Medien")) {
+                if (doc.select("h4").text().trim().contains("keine ausgeliehenen Medien")) {
                     // There is no lent media, but the server is working
                     // correctly
                 } else if (doc.select("h1").text().trim()
