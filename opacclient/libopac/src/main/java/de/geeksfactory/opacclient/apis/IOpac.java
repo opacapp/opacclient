@@ -652,7 +652,7 @@ public class IOpac extends BaseApi implements OpacApi {
                 // do not get information about all the media
                 map1.put(ProlongAllResult.KEY_LINE_TITLE, text1);
                 list.add(map1);
-                if (!text2.equals("")) {
+                if (text2 != null && !text2.equals("")) {
                     Map<String, String> map2 = new HashMap<>();
                     map2.put(ProlongAllResult.KEY_LINE_TITLE, text2);
                     list.add(map2);
