@@ -19,6 +19,8 @@
 package de.geeksfactory.opacclient.objects;
 
 import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 
 /**
  * Represents a copy of a medium ({@link DetailledItem}) available in a library.
@@ -182,7 +184,13 @@ public class Copy {
     }
 
     /**
-     * Set property using the following keys: barcode, location, department, branch
+     * Set property using the following keys: barcode, location, department, branch, status,
+     * returndate, reservations, signature, resinfo, url
+     * <p/>
+     * If you supply an invalid key, an {@link IllegalArgumentException} will be thrown.
+     * <p/>
+     * This method is used to simplify refactoring of old APIs from the Map<String, String> data
+     * structure to this class. If you are creating a new API, you probably don't need to use it.
      *
      * @param key   one of the keys mentioned above
      * @param value the value to set. Dates must be in ISO-8601 format (yyyy-MM-dd).
@@ -218,6 +226,88 @@ public class Copy {
                 break;
             case "url":
                 setUrl(value);
+            default:
+                throw new IllegalArgumentException("key unknown");
         }
+    }
+
+    /**
+     * Set property using the following keys: barcode, location, department, branch, status,
+     * returndate, reservations, signature, resinfo, url
+     * <p/>
+     * For "returndate", the given {@link DateTimeFormatter} will be used to parse the date.
+     * <p/>
+     * If you supply an invalid key, an {@link IllegalArgumentException} will be thrown.
+     * <p/>
+     * This method is used to simplify refactoring of old APIs from the Map<String, String> data
+     * structure to this class. If you are creating a new API, you probably don't need to use it.
+     *
+     * @param key   one of the keys mentioned above
+     * @param value the value to set. Dates must be in a format parseable by the given {@link
+     *              DateTimeFormatter}, otherwise an {@link IllegalArgumentException} will be
+     *              thrown.
+     * @param fmt   the {@link DateTimeFormatter} to use for parsing dates
+     */
+    public void set(String key, String value, DateTimeFormatter fmt) {
+        if (key.equals("returndate")) {
+            setReturnDate(fmt.parseLocalDate(value));
+        } else {
+            set(key, value);
+        }
+    }
+
+    /**
+     * Get property using the following keys: barcode, location, department, branch, status,
+     * returndate, reservations, signature, resinfo, url
+     * <p/>
+     * Dates will be returned in ISO-8601 format (yyyy-MM-dd). If you supply an invalid key, an
+     * {@link IllegalArgumentException} will be thrown.
+     * <p/>
+     * This method is used to simplify refactoring of old APIs from the Map<String, String> data
+     * structure to this class. If you are creating a new API, you probably don't need to use it.
+     *
+     * @param key one of the keys mentioned above
+     */
+    public String get(String key) {
+        switch (key) {
+            case "barcode":
+                return getBarcode();
+            case "location":
+                return getLocation();
+            case "department":
+                return getDepartment();
+            case "branch":
+                return getBranch();
+            case "status":
+                return getStatus();
+            case "returndate":
+                return ISODateTimeFormat.date().print(getReturnDate());
+            case "reservations":
+                return getReservations();
+            case "signature":
+                return getShelfmark();
+            case "resinfo":
+                return getResInfo();
+            case "url":
+                return getUrl();
+            default:
+                throw new IllegalArgumentException("key unknown");
+        }
+    }
+
+    /**
+     * @return boolean value indicating if this copy contains any data or not.
+     */
+    public boolean notEmpty() {
+        return getBarcode() != null
+                || getLocation() != null
+                || getDepartment() != null
+                || getBranch() != null
+                || getStatus() != null
+                || getReturnDate() != null
+                || getReservations() != null
+                || getShelfmark() != null
+                || getResInfo() != null
+                || getUrl() != null;
     }
 }

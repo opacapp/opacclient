@@ -21,8 +21,10 @@
  */
 package de.geeksfactory.opacclient.apis;
 
-import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import org.apache.http.client.utils.URIBuilder;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,17 +40,20 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
+import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
@@ -222,15 +227,16 @@ public class WebOpacAt extends SearchOnlyApi {
         final Element availabilityTable = doc.select(".bibliothek table").first();
 
         final DetailledItem result = new DetailledItem();
-        final HashMap<String, String> copy = new HashMap<>();
+        final Copy copy = new Copy();
         result.addCopy(copy);
         result.setId(id);
         result.setCover(getCover(doc));
         result.setTitle(detailData.select("h3").first().text());
         result.setMediaType(MEDIA_TYPES.get(getCellContent(detailTable, "Medienart|Type of media")));
-        copy.put(DetailledItem.KEY_COPY_STATUS, getCellContent(availabilityTable, "Verfügbar|Available"));
-        copy.put(DetailledItem.KEY_COPY_RETURN, parseCopyReturn(getCellContent(availabilityTable, "Exemplare verliehen|Copies lent")));
-        copy.put(DetailledItem.KEY_COPY_RESERVATIONS, getCellContent(availabilityTable, "Reservierungen|Reservations"));
+        copy.setStatus(getCellContent(availabilityTable, "Verfügbar|Available"));
+        copy.setReturnDate(parseCopyReturn(
+                getCellContent(availabilityTable, "Exemplare verliehen|Copies lent")));
+        copy.setReservations(getCellContent(availabilityTable, "Reservierungen|Reservations"));
         for (final Element tr : detailTable.select("tr")) {
             final String desc = tr.child(0).text();
             final String content = tr.child(1).text();
@@ -254,10 +260,12 @@ public class WebOpacAt extends SearchOnlyApi {
         return doc.select(".coverimage img").first().attr("src").replaceFirst("&width=\\d+", "");
     }
 
-    static String parseCopyReturn(String str) {
+    static LocalDate parseCopyReturn(String str) {
+        DateTimeFormatter fmt =
+                DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
         final Matcher matcher = Pattern.compile("[0-9.-]{4,}").matcher(str);
         if (matcher.find()) {
-            return matcher.group();
+            return fmt.parseLocalDate(matcher.group());
         } else {
             return null;
         }

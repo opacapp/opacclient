@@ -26,6 +26,8 @@ import org.apache.http.client.CookieStore;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.message.BasicNameValuePair;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,10 +42,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -54,6 +53,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.geeksfactory.opacclient.i18n.StringProvider;
+import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
@@ -553,7 +553,7 @@ public abstract class Pica extends BaseApi implements OpacApi {
         line++; // next line after separator
 
         // Copies
-        Map<String, String> e = new HashMap<>();
+        Copy copy = new Copy();
         String location = "";
 
         // reservation info will be stored as JSON
@@ -579,13 +579,13 @@ public abstract class Pica extends BaseApi implements OpacApi {
                     location += " - " + detail;
                 } else if (title.contains("Systemstelle")
                         || title.contains("Subject")) {
-                    e.put(DetailledItem.KEY_COPY_DEPARTMENT, detail);
+                    copy.setDepartment(detail);
                 } else if (title.contains("Fachnummer")
                         || title.contains("locationnumber")) {
-                    e.put(DetailledItem.KEY_COPY_LOCATION, detail);
+                    copy.setLocation(detail);
                 } else if (title.contains("Signatur")
                         || title.contains("Shelf mark")) {
-                    e.put(DetailledItem.KEY_COPY_SHELFMARK, detail);
+                    copy.setShelfmark(detail);
                 } else if (title.contains("Anmerkung")) {
                     location += " (" + detail + ")";
                 } else if (title.contains("Link")) {
@@ -599,24 +599,17 @@ public abstract class Pica extends BaseApi implements OpacApi {
                             .compile("(till|bis) (\\d{2}-\\d{2}-\\d{4})");
                     Matcher matcher = pattern.matcher(detail);
                     if (matcher.find()) {
-                        SimpleDateFormat sdf = new SimpleDateFormat(
-                                "dd-MM-yyyy", Locale.GERMAN);
-                        SimpleDateFormat sdf2 = new SimpleDateFormat(
-                                "dd.MM.yyyy", Locale.GERMAN);
+                        DateTimeFormatter fmt =
+                                DateTimeFormat.forPattern("dd-MM-yyyy").withLocale(Locale.GERMAN);
                         try {
-                            Date date = sdf.parse(matcher.group(2));
-                            e.put(DetailledItem.KEY_COPY_STATUS, detail
-                                    .substring(0, matcher.start() - 1).trim());
-                            e.put(DetailledItem.KEY_COPY_RETURN,
-                                    sdf2.format(date));
-                            e.put(DetailledItem.KEY_COPY_RETURN_TIMESTAMP,
-                                    String.valueOf(date.getTime()));
-                        } catch (ParseException e1) {
-                            e1.printStackTrace();
-                            e.put(DetailledItem.KEY_COPY_STATUS, detail);
+                            copy.setStatus(detail.substring(0, matcher.start() - 1).trim());
+                            copy.setReturnDate(fmt.parseLocalDate(matcher.group(2)));
+                        } catch (IllegalArgumentException e) {
+                            e.printStackTrace();
+                            copy.setStatus(detail);
                         }
                     } else {
-                        e.put(DetailledItem.KEY_COPY_STATUS, detail);
+                        copy.setStatus(detail);
                     }
                     // Get reservation info
                     if (element.select("a:has(img[src*=inline_arrow])").size() > 0) {
@@ -637,17 +630,17 @@ public abstract class Pica extends BaseApi implements OpacApi {
                     }
                 }
             } else {
-                e.put(DetailledItem.KEY_COPY_BRANCH, location);
-                result.addCopy(e);
+                copy.setBranch(location);
+                result.addCopy(copy);
                 location = "";
-                e = new HashMap<>();
+                copy = new Copy();
             }
             line++;
         }
 
-        if (e.size() > 0) {
-            e.put(DetailledItem.KEY_COPY_BRANCH, location);
-            result.addCopy(e);
+        if (copy.notEmpty()) {
+            copy.setBranch(location);
+            result.addCopy(copy);
         }
 
         if (reservationInfo.length() == 0) {

@@ -53,6 +53,7 @@ import java.util.regex.Pattern;
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
@@ -682,21 +683,21 @@ public class TouchPoint extends BaseApi implements OpacApi {
             List<String> table_keys = new ArrayList<>();
             for (Element th : copiesDoc.select(".data tr th")) {
                 if (th.text().contains("Zweigstelle")) {
-                    table_keys.add(DetailledItem.KEY_COPY_BRANCH);
+                    table_keys.add("branch");
                 } else if (th.text().contains("Status")) {
-                    table_keys.add(DetailledItem.KEY_COPY_STATUS);
+                    table_keys.add("status");
                 } else if (th.text().contains("Signatur")) {
-                    table_keys.add(DetailledItem.KEY_COPY_SHELFMARK);
+                    table_keys.add("signature");
                 } else {
                     table_keys.add(null);
                 }
             }
             for (Element tr : copiesDoc.select(".data tr:has(td)")) {
-                Map<String, String> copy = new HashMap<>();
+                Copy copy = new Copy();
                 int i = 0;
                 for (Element td : tr.select("td")) {
                     if (table_keys.get(i) != null) {
-                        copy.put(table_keys.get(i), td.text().trim());
+                        copy.set(table_keys.get(i), td.text().trim());
                     }
                     i++;
                 }

@@ -28,6 +28,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -59,6 +61,7 @@ import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.networking.HttpUtils;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
@@ -67,6 +70,7 @@ import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
+import de.geeksfactory.opacclient.objects.Volume;
 import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
@@ -505,35 +509,36 @@ public class Bibliotheca extends BaseApi {
                     Element th = ths.get(i);
                     String head = th.text().trim();
                     if (head.equals("Zweigstelle")) {
-                        copymap.put(DetailledItem.KEY_COPY_BRANCH, i);
+                        copymap.put("branch", i);
                     } else if (head.equals("Abteilung")) {
-                        copymap.put(DetailledItem.KEY_COPY_DEPARTMENT, i);
-                    } else if (head.equals("Bereich")) {
-                        copymap.put(DetailledItem.KEY_COPY_LOCATION, i);
-                    } else if (head.equals("Standort")) {
-                        copymap.put(DetailledItem.KEY_COPY_LOCATION, i);
+                        copymap.put("department", i);
+                    } else if (head.equals("Bereich")
+                            || head.equals("Standort")) {
+                        copymap.put("location", i);
                     } else if (head.equals("Signatur")) {
-                        copymap.put(DetailledItem.KEY_COPY_SHELFMARK, i);
+                        copymap.put("signature", i);
                     } else if (head.equals("Barcode")
                             || head.equals("Medien-Nummer")) {
-                        copymap.put(DetailledItem.KEY_COPY_BARCODE, i);
+                        copymap.put("barcode", i);
                     } else if (head.equals("Status")) {
-                        copymap.put(DetailledItem.KEY_COPY_STATUS, i);
+                        copymap.put("status", i);
                     } else if (head.equals("Frist")
                             || head.matches("Verf.+gbar")) {
-                        copymap.put(DetailledItem.KEY_COPY_RETURN, i);
+                        copymap.put("returndate", i);
                     } else if (head.equals("Vorbestellungen")
                             || head.equals("Reservierungen")) {
-                        copymap.put(DetailledItem.KEY_COPY_RESERVATIONS, i);
+                        copymap.put("reservations", i);
                     }
                 }
             }
             Elements exemplartrs = doc
                     .select(".exemplartab .tabExemplar, .exemplartab .tabExemplar_");
+            DateTimeFormatter
+                    fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
             for (int i = 0; i < exemplartrs.size(); i++) {
                 Element tr = exemplartrs.get(i);
 
-                Map<String, String> e = new HashMap<>();
+                Copy copy = new Copy();
 
                 Iterator<?> keys = copymap.keys();
                 while (keys.hasNext()) {
@@ -545,11 +550,15 @@ public class Bibliotheca extends BaseApi {
                         index = -1;
                     }
                     if (index >= 0) {
-                        e.put(key, tr.child(index).text());
+                        try {
+                            copy.set(key, tr.child(index).text(), fmt);
+                        } catch (IllegalArgumentException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
 
-                result.addCopy(e);
+                result.addCopy(copy);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -560,10 +569,10 @@ public class Bibliotheca extends BaseApi {
             for (int i = 0; i < bandtrs.size(); i++) {
                 Element tr = bandtrs.get(i);
 
-                Map<String, String> e = new HashMap<>();
-                e.put(DetailledItem.KEY_CHILD_ID, tr.attr("href").split("=")[1]);
-                e.put(DetailledItem.KEY_CHILD_TITLE, tr.text());
-                result.addVolume(e);
+                Volume volume = new Volume();
+                volume.setId(tr.attr("href").split("=")[1]);
+                volume.setTitle(tr.text());
+                result.addVolume(volume);
             }
         } catch (Exception e) {
             e.printStackTrace();

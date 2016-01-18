@@ -23,6 +23,8 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.message.BasicNameValuePair;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,6 +52,7 @@ import de.geeksfactory.opacclient.networking.HTTPClient;
 import de.geeksfactory.opacclient.networking.HttpUtils;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
@@ -561,16 +564,16 @@ public class BiBer1992 extends BaseApi {
         Detail detail = null;
 
         // prepare copiestable
-        Map<String, String> copy_last_content = null;
+        Copy copy_last_content = null;
         int copy_row = 0;
 
-        String[] copy_keys = new String[]{DetailledItem.KEY_COPY_BARCODE, // "barcode";
-                DetailledItem.KEY_COPY_BRANCH, // "zst";
-                DetailledItem.KEY_COPY_DEPARTMENT, // "abt";
-                DetailledItem.KEY_COPY_LOCATION, // "ort";
-                DetailledItem.KEY_COPY_STATUS, // "status";
-                DetailledItem.KEY_COPY_RETURN, // "rueckgabe";
-                DetailledItem.KEY_COPY_RESERVATIONS // "vorbestellt";
+        String[] copy_keys = new String[]{"barcode",
+                "branch",
+                "department",
+                "location",
+                "status",
+                "returndate",
+                "reservations"
         };
         int[] copy_map = new int[]{3, 1, -1, 1, 4, -1, -1};
 
@@ -584,6 +587,8 @@ public class BiBer1992 extends BaseApi {
         } catch (Exception e) {
             // "copiestable" is optional
         }
+
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
 
         // go through all rows
         for (Element row : rows) {
@@ -635,13 +640,12 @@ public class BiBer1992 extends BaseApi {
                 // With reverse layout: first row is headline, skipped via
                 // (copy_row > 0)
                 if (copy_row > 0) {
-                    Map<String, String> e = new HashMap<>();
+                    Copy copy = new Copy();
                     for (int j = 0; j < copy_keys.length; j++) {
                         int col = copy_map[j];
                         if (col > -1) {
                             String text = "";
-                            if (copy_keys[j]
-                                    .equals(DetailledItem.KEY_COPY_BRANCH)) {
+                            if (copy_keys[j].equals("branch")) {
                                 // for "Standort" only use ownText() to suppress
                                 // Link "Wegweiser"
                                 text = columns.get(col).ownText()
@@ -655,8 +659,7 @@ public class BiBer1992 extends BaseApi {
                             if (text.length() == 0) {
                                 // empty table cell, take the one above
                                 // this is sometimes the case for "Standort"
-                                if (copy_keys[j]
-                                        .equals(DetailledItem.KEY_COPY_STATUS)) {
+                                if (copy_keys[j].equals("status")) {
                                     // but do it not for Status
                                     text = " ";
                                 } else {
@@ -668,23 +671,24 @@ public class BiBer1992 extends BaseApi {
                                     }
                                 }
                             }
-                            if (copy_keys[j]
-                                    .equals(DetailledItem.KEY_COPY_RESERVATIONS)) {
+                            if (copy_keys[j].equals("reservations")) {
                                 text = text.replace("Vorgemerkt: ", "")
                                            .replace("Vorbestellt: ", "");
                             }
-                            e.put(copy_keys[j], text);
+                            try {
+                                copy.set(copy_keys[j], text, fmt);
+                            } catch (IllegalArgumentException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
-                    if (e.containsKey(DetailledItem.KEY_COPY_BRANCH)
-                            && e.containsKey(DetailledItem.KEY_COPY_LOCATION)
-                            && e.get(DetailledItem.KEY_COPY_LOCATION) != null
-                            && e.get(DetailledItem.KEY_COPY_LOCATION).equals(
-                            e.get(DetailledItem.KEY_COPY_BRANCH))) {
-                        e.remove(DetailledItem.KEY_COPY_LOCATION);
+                    if (copy.getBranch() != null
+                            && copy.getLocation() != null
+                            && copy.getLocation().equals(copy.getBranch())) {
+                        copy.setLocation(null);
                     }
-                    item.addCopy(e);
-                    copy_last_content = e;
+                    item.addCopy(copy);
+                    copy_last_content = copy;
                 }// ignore 1st row
                 copy_row++;
 
@@ -923,7 +927,8 @@ public class BiBer1992 extends BaseApi {
         }
         nameValuePairs.add(new BasicNameValuePair(media, "YES"));
 
-        String action = opacDir.contains("opax") ? "/delreserv" + opacSuffix : "/vorml" + opacSuffix;
+        String action =
+                opacDir.contains("opax") ? "/delreserv" + opacSuffix : "/vorml" + opacSuffix;
 
         String html = httpPost(opacUrl + "/" + opacDir + action,
                 new UrlEncodedFormEntity(nameValuePairs), getDefaultEncoding());
