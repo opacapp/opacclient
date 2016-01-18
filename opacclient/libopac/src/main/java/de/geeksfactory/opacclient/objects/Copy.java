@@ -208,10 +208,10 @@ public class Copy {
                 setReturnDate(new LocalDate(value));
                 break;
             case "reservations":
-                setBranch(value);
+                setReservations(value);
                 break;
             case "signature":
-                setBranch(value);
+                setShelfmark(value);
                 break;
             case "resinfo":
                 setResInfo(value);
