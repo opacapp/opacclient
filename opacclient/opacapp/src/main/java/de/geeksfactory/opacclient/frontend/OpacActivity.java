@@ -157,6 +157,7 @@ public abstract class OpacActivity extends AppCompatActivity {
     }
 
     private void setupAccountSwitcher() {
+        if (drawer == null) return;
         aData.open();
         accounts = aData.getAllAccounts();
         aData.close();
