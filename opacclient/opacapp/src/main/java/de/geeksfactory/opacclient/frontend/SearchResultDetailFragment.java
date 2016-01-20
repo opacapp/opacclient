@@ -42,10 +42,11 @@ import android.widget.Toast;
 
 import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout;
 
+import org.joda.time.format.DateTimeFormat;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
-import java.util.Map;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
@@ -58,10 +59,12 @@ import de.geeksfactory.opacclient.frontend.MultiStepResultHelper.Callback;
 import de.geeksfactory.opacclient.frontend.MultiStepResultHelper.StepTask;
 import de.geeksfactory.opacclient.networking.CoverDownloadTask;
 import de.geeksfactory.opacclient.objects.Account;
+import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.SearchResult;
+import de.geeksfactory.opacclient.objects.Volume;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.StarDataSource;
 import de.geeksfactory.opacclient.ui.AppCompatProgressDialog;
@@ -388,11 +391,10 @@ public class SearchResultDetailFragment extends Fragment
             });
             llVolumes.addView(btnVolume);
         } else if (item.getVolumes().size() > 0) {
-            for (final Map<String, String> band : item.getVolumes()) {
+            for (final Volume volume : item.getVolumes()) {
                 View v = getLayoutInflater(null).inflate(R.layout.listitem_volume,
                         null);
-                ((TextView) v.findViewById(R.id.tvTitel)).setText(band
-                        .get(DetailledItem.KEY_CHILD_TITLE));
+                ((TextView) v.findViewById(R.id.tvTitel)).setText(volume.getTitle());
 
                 v.findViewById(R.id.llItem).setOnClickListener(
                         new OnClickListener() {
@@ -400,8 +402,7 @@ public class SearchResultDetailFragment extends Fragment
                             public void onClick(View v) {
                                 Intent intent = new Intent(getActivity(),
                                         SearchResultDetailActivity.class);
-                                intent.putExtra(ARG_ITEM_ID,
-                                        band.get(DetailledItem.KEY_CHILD_ID));
+                                intent.putExtra(ARG_ITEM_ID, volume.getId());
                                 intent.putExtra("from_collection", true);
                                 startActivity(intent);
                             }
@@ -415,55 +416,48 @@ public class SearchResultDetailFragment extends Fragment
         if (item.getCopies().size() == 0) {
             tvCopies.setVisibility(View.GONE);
         } else {
-            for (Map<String, String> copy : item.getCopies()) {
+            for (Copy copy : item.getCopies()) {
                 View v = getLayoutInflater(null).inflate(
                         R.layout.listitem_copy, llCopies, false);
 
                 if (v.findViewById(R.id.tvBranch) != null) {
-                    if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_BRANCH)) {
-                        ((TextView) v.findViewById(R.id.tvBranch))
-                                .setText(copy
-                                        .get(DetailledItem.KEY_COPY_BRANCH));
+                    if (notEmpty(copy.getBranch())) {
+                        ((TextView) v.findViewById(R.id.tvBranch)).setText(copy.getBranch());
                         v.findViewById(R.id.tvBranch).setVisibility(View.VISIBLE);
                     } else {
                         v.findViewById(R.id.tvBranch).setVisibility(View.GONE);
                     }
                 }
                 if (v.findViewById(R.id.tvDepartment) != null) {
-                    if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_DEPARTMENT)) {
+                    if (notEmpty(copy.getDepartment())) {
                         ((TextView) v.findViewById(R.id.tvDepartment))
-                                .setText(copy
-                                        .get(DetailledItem.KEY_COPY_DEPARTMENT));
+                                .setText(copy.getDepartment());
                         v.findViewById(R.id.tvDepartment).setVisibility(View.VISIBLE);
                     } else {
                         v.findViewById(R.id.tvDepartment).setVisibility(View.GONE);
                     }
                 }
                 if (v.findViewById(R.id.tvLocation) != null) {
-                    if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_LOCATION)) {
-                        ((TextView) v.findViewById(R.id.tvLocation))
-                                .setText(copy
-                                        .get(DetailledItem.KEY_COPY_LOCATION));
+                    if (notEmpty(copy.getLocation())) {
+                        ((TextView) v.findViewById(R.id.tvLocation)).setText(copy.getLocation());
                         v.findViewById(R.id.tvLocation).setVisibility(View.VISIBLE);
                     } else {
                         v.findViewById(R.id.tvLocation).setVisibility(View.GONE);
                     }
                 }
                 if (v.findViewById(R.id.tvShelfmark) != null) {
-                    if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_SHELFMARK)) {
+                    if (notEmpty(copy.getShelfmark())) {
                         ((TextView) v.findViewById(R.id.tvShelfmark))
-                                .setText(copy
-                                        .get(DetailledItem.KEY_COPY_SHELFMARK));
+                                .setText(copy.getShelfmark());
                         v.findViewById(R.id.tvShelfmark).setVisibility(View.VISIBLE);
                     } else {
                         v.findViewById(R.id.tvShelfmark).setVisibility(View.GONE);
                     }
                 }
                 if (v.findViewById(R.id.tvStatus) != null) {
-                    if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_STATUS)) {
+                    if (notEmpty(copy.getStatus())) {
                         ((TextView) v.findViewById(R.id.tvStatus))
-                                .setText(copy
-                                        .get(DetailledItem.KEY_COPY_STATUS));
+                                .setText(copy.getStatus());
                         v.findViewById(R.id.tvStatus).setVisibility(View.VISIBLE);
                     } else {
                         v.findViewById(R.id.tvStatus).setVisibility(View.GONE);
@@ -471,27 +465,26 @@ public class SearchResultDetailFragment extends Fragment
                 }
 
                 if (v.findViewById(R.id.tvReservations) != null) {
-                    if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_RESERVATIONS)) {
+                    if (notEmpty(copy.getReservations())) {
                         ((TextView) v.findViewById(R.id.tvReservations))
-                                .setText(copy.get(DetailledItem.KEY_COPY_RESERVATIONS));
+                                .setText(copy.getReservations());
                         v.findViewById(R.id.tvReservations).setVisibility(View.VISIBLE);
                     } else {
                         v.findViewById(R.id.tvReservations).setVisibility(View.GONE);
                     }
                 }
                 if (v.findViewById(R.id.tvReturndate) != null) {
-                    if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_RETURN)) {
+                    if (copy.getReturnDate() != null) {
                         ((TextView) v.findViewById(R.id.tvReturndate))
-                                .setText(copy.get(DetailledItem.KEY_COPY_RETURN));
+                                .setText(DateTimeFormat.shortDate().print(copy.getReturnDate()));
                         v.findViewById(R.id.tvReturndate).setVisibility(View.VISIBLE);
                     } else {
                         v.findViewById(R.id.tvReturndate).setVisibility(View.GONE);
                     }
                 }
                 if (v.findViewById(R.id.tvUrl) != null) {
-                    if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_URL)) {
-                        ((TextView) v.findViewById(R.id.tvUrl))
-                                .setText(copy.get(DetailledItem.KEY_COPY_URL));
+                    if (notEmpty(copy.getUrl())) {
+                        ((TextView) v.findViewById(R.id.tvUrl)).setText(copy.getUrl());
                         v.findViewById(R.id.tvUrl).setVisibility(View.VISIBLE);
                     } else {
                         v.findViewById(R.id.tvUrl).setVisibility(View.GONE);
@@ -527,8 +520,8 @@ public class SearchResultDetailFragment extends Fragment
         }
     }
 
-    private boolean containsAndNotEmpty(Map<String, String> map, String key) {
-        return map != null && map.containsKey(key) && !"".equals(map.get(key));
+    private boolean notEmpty(String text) {
+        return !"".equals(text);
     }
 
     private void showCoverView(boolean b) {
