@@ -105,7 +105,6 @@ public abstract class Pica extends BaseApi implements OpacApi {
     protected String opac_url = "";
     protected String https_url = "";
     protected JSONObject data;
-    protected boolean initialised = false;
     protected Library library;
     protected int resultcount = 10;
     protected String reusehtml;
