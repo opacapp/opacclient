@@ -63,91 +63,27 @@
         </net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.widget.NestedScrollView
-        android:id="@+id/rootView"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/progress"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"/>
 
         <FrameLayout
+            android:id="@+id/error_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <ProgressBar
-                android:id="@+id/progress"
-                style="?android:attr/progressBarStyleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"/>
-
-            <FrameLayout
-                android:id="@+id/error_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-            </FrameLayout>
-
-            <RelativeLayout
-                android:id="@+id/detailsLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
-
-                <TextView
-                    android:id="@+id/tvDetails"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/details_head"
-                    android:textAppearance="@style/TextAppearance.Opacapp.Subhead"/>
-
-                <LinearLayout
-                    android:id="@+id/llDetails"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/tvDetails"
-                    android:orientation="vertical">
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/tvCopies"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/llDetails"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/copies_head"
-                    android:textAppearance="@style/TextAppearance.Opacapp.Subhead"/>
-
-                <LinearLayout
-                    android:id="@+id/llCopies"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/tvCopies"
-                    android:orientation="vertical">
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/tvVolumes"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/llDetails"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/volumes"
-                    android:textAppearance="@style/TextAppearance.Opacapp.Subhead"/>
-
-                <LinearLayout
-                    android:id="@+id/llVolumes"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/tvVolumes"
-                    android:orientation="vertical">
-                </LinearLayout>
-            </RelativeLayout>
         </FrameLayout>
-    </android.support.v4.widget.NestedScrollView>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>

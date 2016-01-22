@@ -16,6 +16,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.util.Linkify;
 import android.util.Log;
@@ -33,7 +35,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -71,6 +72,7 @@ import de.geeksfactory.opacclient.ui.AppCompatProgressDialog;
 import de.geeksfactory.opacclient.ui.WhitenessUtils;
 import de.geeksfactory.opacclient.utils.CompatibilityUtils;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
+import su.j2e.rvjoiner.RvJoiner;
 
 /**
  * A fragment representing a single SearchResult detail screen. This fragment is either contained in
@@ -110,7 +112,7 @@ public class SearchResultDetailFragment extends Fragment
     protected NestedScrollView scrollView;
     protected View gradientBottom, gradientTop;
     protected TextView tvCopies, tvVolumes;
-    protected LinearLayout llDetails, llCopies, llVolumes;
+    protected RecyclerView rvDetails;
     protected ProgressBar progressBar;
     protected RelativeLayout detailsLayout;
     protected FrameLayout errorView;
@@ -334,9 +336,7 @@ public class SearchResultDetailFragment extends Fragment
         gradientTop = view.findViewById(R.id.gradient_top);
         collapsingToolbar = (CollapsingToolbarLayout) view.findViewById(R.id.collapsingToolbar);
         appBarLayout = (AppBarLayout) view.findViewById(R.id.appBarLayout);
-        llDetails = (LinearLayout) view.findViewById(R.id.llDetails);
-        llCopies = (LinearLayout) view.findViewById(R.id.llCopies);
-        llVolumes = (LinearLayout) view.findViewById(R.id.llVolumes);
+        rvDetails = (RecyclerView) view.findViewById(R.id.rvDetails);
         progressBar = (ProgressBar) view.findViewById(R.id.progress);
         detailsLayout = (RelativeLayout) view.findViewById(R.id.detailsLayout);
         errorView = (FrameLayout) view.findViewById(R.id.error_view);
@@ -366,7 +366,12 @@ public class SearchResultDetailFragment extends Fragment
             ErrorReporter.handleException(e);
         }
         collapsingToolbar.setTitle(getItem().getTitle());
-        llDetails.removeAllViews();
+
+        rvDetails.setLayoutManager(new LinearLayoutManager(getActivity()));
+        RvJoiner joiner = new RvJoiner();
+
+        rvDetails.setAdapter(new CopiesAdapter(item.getCopies(), getActivity()));
+
         for (Detail detail : item.getDetails()) {
             View v = getLayoutInflater(null)
                     .inflate(R.layout.listitem_detail, null);
@@ -521,7 +526,7 @@ public class SearchResultDetailFragment extends Fragment
     }
 
     private boolean notEmpty(String text) {
-        return !"".equals(text);
+        return text != null && !text.isEmpty();
     }
 
     private void showCoverView(boolean b) {
