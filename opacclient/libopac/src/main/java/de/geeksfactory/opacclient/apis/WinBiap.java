@@ -983,14 +983,13 @@ public class WinBiap extends BaseApi implements OpacApi {
                 httpGet(opac_url + "/user/login.aspx", getDefaultEncoding()));
         List<NameValuePair> data = new ArrayList<>();
 
-        data.add(new BasicNameValuePair("__LASTFOCUS", ""));
-        data.add(new BasicNameValuePair("__EVENTTARGET", ""));
-        data.add(new BasicNameValuePair("__EVENTARGUMENT", ""));
-        data.add(new BasicNameValuePair("__VIEWSTATE", loginPage.select("#__VIEWSTATE").val()));
-        data.add(new BasicNameValuePair("__VIEWSTATEGENERATOR",
-                loginPage.select("#__VIEWSTATEGENERATOR").val()));
-        data.add(new BasicNameValuePair("__EVENTVALIDATION",
-                loginPage.select("#__EVENTVALIDATION").val()));
+        /* pass all input fields beginning with two underscores to login url */
+        Elements inputFields = loginPage.select("input[id^=__]");
+        java.util.Iterator<Element> inputFieldList = inputFields.iterator();
+        while(inputFieldList.hasNext()) {
+            Element inputField = inputFieldList.next();
+            data.add(new BasicNameValuePair(inputField.attr("name"), inputField.val()));
+        }
 
         data.add(new BasicNameValuePair("ctl00$ContentPlaceHolderMain$TextBoxLoginName",
                 account.getName()));
