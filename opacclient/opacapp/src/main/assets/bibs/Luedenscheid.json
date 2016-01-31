@@ -9,7 +9,7 @@
             "barcode": 3,
             "homebranch": -1,
             "lendingbranch": -1,
-            "prolongurl": 4,
+            "prolongurl": 5,
             "returndate": 2,
             "status": -1,
             "title": 1
@@ -50,7 +50,7 @@
             "author": 0,
             "availability": 2,
             "branch": -1,
-            "cancelurl": 3,
+            "cancelurl": 4,
             "expirationdate": -1,
             "title": 1
         }
