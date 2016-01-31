@@ -1368,8 +1368,7 @@ public class Adis extends BaseApi implements OpacApi {
         for (Element input : doc.select("input, select")) {
             if (!"image".equals(input.attr("type"))
                     && !"checkbox".equals(input.attr("type"))
-                    && !input.attr("value").contains("vergessen")
-                    && !input.attr("value").contains("egistrier")
+                    && !"submit".equals(input.attr("type"))
                     && !"".equals(input.attr("name"))) {
                 if (input.attr("id").equals("L#AUSW_1")
                         || input.attr("id").equals("IDENT_1")
@@ -1380,6 +1379,10 @@ public class Adis extends BaseApi implements OpacApi {
                         .attr("value")));
             }
         }
+        Element inputSend = doc.select("input[type=submit]").first();
+        form.add(new BasicNameValuePair(inputSend.attr("name"), inputSend
+                .attr("value")));
+
         doc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
 
         if (doc.select(".message h1").size() > 0) {
