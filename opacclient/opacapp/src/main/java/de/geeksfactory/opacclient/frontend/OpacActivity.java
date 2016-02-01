@@ -62,8 +62,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.json.JSONException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -72,17 +70,19 @@ import java.util.Map;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.Account;
-import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.ui.AccountSwitcherNavigationView;
+import de.geeksfactory.opacclient.utils.Utils;
 
-public abstract class OpacActivity extends AppCompatActivity {
+public abstract class OpacActivity extends AppCompatActivity
+        implements DrawerAccountsAdapter.Listener {
     protected OpacClient app;
     protected AlertDialog adialog;
     protected AccountDataSource aData;
 
     protected int selectedItemId;
 
-    protected NavigationView drawer;
+    protected AccountSwitcherNavigationView drawer;
     protected DrawerLayout drawerLayout;
     protected ActionBarDrawerToggle drawerToggle;
     protected FloatingActionButton fab;
@@ -101,6 +101,7 @@ public abstract class OpacActivity extends AppCompatActivity {
     protected TextView accountWarning;
     protected LinearLayout accountData;
     protected boolean accountSwitcherVisible = false;
+    private DrawerAccountsAdapter accountsAdapter;
 
     protected static void unbindDrawables(View view) {
         if (view == null) {
@@ -180,6 +181,10 @@ public abstract class OpacActivity extends AppCompatActivity {
         accountData.setOnClickListener(l);
         //accountExpand.setOnClickListener(l);
 
+        accountsAdapter = new DrawerAccountsAdapter(this, accounts, app.getAccount());
+        drawer.setAccountsAdapter(accountsAdapter);
+        accountsAdapter.setListener(this);
+
         updateAccountSwitcher(selectedAccount);
     }
 
@@ -191,95 +196,10 @@ public abstract class OpacActivity extends AppCompatActivity {
         if (accountSwitcherVisible == this.accountSwitcherVisible) return;
 
         this.accountSwitcherVisible = accountSwitcherVisible;
-
-        if (accountSwitcherVisible) {
-            accountExpand.setActivated(true);
-            // touch feedback and animation only work when drawer update is delayed
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    drawer.getMenu().clear();
-                    SharedPreferences sp =
-                            PreferenceManager.getDefaultSharedPreferences(OpacActivity.this);
-                    long tolerance = Long.decode(sp.getString("notification_warning", "367200000"));
-
-                    aData.open();
-                    for (Account account : OpacActivity.this.accounts) {
-                        // don't show the currently selected account in the list
-                        if (account.getId() == app.getAccount().getId()) continue;
-
-                        int id = calculateAccountMenuItemId(account);
-                        drawer.getMenu().add(R.id.nav_group_accounts, id, 0, "");
-                        drawer.getMenu().findItem(id).setActionView(
-                                R.layout.navigation_drawer_item_account);
-                        View view = drawer.getMenu().findItem(id).getActionView();
-                        String title = getAccountTitle(account);
-                        String subtitle = getAccountSubtitle(account);
-                        int expiring = aData.getExpiring(account, tolerance);
-                        ((TextView) view.findViewById(R.id.account_title)).setText(title);
-                        ((TextView) view.findViewById(R.id.account_subtitle)).setText(subtitle);
-                        TextView tvWarning = (TextView) view.findViewById(R.id.account_warning);
-                        if (expiring > 0) {
-                            tvWarning.setText(String.valueOf(expiring));
-                            tvWarning.setVisibility(View.VISIBLE);
-                        } else {
-                            tvWarning.setVisibility(View.INVISIBLE);
-                        }
-                    }
-                    drawer.inflateMenu(R.menu.navigation_drawer_accounts);
-                }
-            }, 200);
-        } else {
-            accountExpand.setActivated(false);
-            // touch feedback and animation only work when drawer update is delayed
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    drawer.getMenu().clear();
-                    drawer.inflateMenu(R.menu.navigation_drawer);
-                    fixNavigationSelection();
-                }
-            }, 200);
-        }
-    }
-
-    /**
-     * Generates menu item IDs for accounts. They won't collide with statically generated IDs
-     * because they are <= 0x00FFFFFF.
-     *
-     * @param account The account to generate an ID for
-     * @return The unique menu item ID for this account
-     */
-    private int calculateAccountMenuItemId(Account account) {
-        return (int) (account.getId() % 0x00FFFFFF);
-    }
-
-    private String getAccountTitle(Account account) {
-        if (getString(R.string.default_account_name).equals(
-                account.getLabel())) {
-            try {
-                return app.getLibrary(account.getLibrary()).getCity();
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
-                return null;
-            }
-        } else {
-            return account.getLabel();
-        }
-    }
-
-    private String getAccountSubtitle(Account account) {
-        try {
-            Library library = app.getLibrary(account.getLibrary());
-            if (getString(R.string.default_account_name).equals(
-                    account.getLabel())) {
-                return library.getTitle();
-            } else {
-                return library.getCity() + " · " + library.getTitle();
-            }
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-            return null;
+        drawer.setAccountsVisible(accountSwitcherVisible);
+        accountExpand.setActivated(accountSwitcherVisible);
+        if (!accountSwitcherVisible) {
+            fixNavigationSelection();
         }
     }
 
@@ -360,7 +280,7 @@ public abstract class OpacActivity extends AppCompatActivity {
             });
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
-            drawer = (NavigationView) findViewById(R.id.navdrawer);
+            drawer = (AccountSwitcherNavigationView) findViewById(R.id.navdrawer);
 
             drawer.setNavigationItemSelectedListener(
                     new NavigationView.OnNavigationItemSelectedListener() {
@@ -493,11 +413,6 @@ public abstract class OpacActivity extends AppCompatActivity {
                 startActivity(intent);
                 return;
             }
-            default:
-                selectaccount(item.getItemId());
-                drawerLayout.closeDrawer(drawer);
-                setAccountSwitcherVisible(false);
-                return;
         }
         setFabOnClickListener(item.getItemId());
 
@@ -638,14 +553,15 @@ public abstract class OpacActivity extends AppCompatActivity {
         int expiring = aData.getExpiring(account, tolerance);
         aData.close();
 
-        accountTitle.setText(getAccountTitle(account));
-        accountSubtitle.setText(getAccountSubtitle(account));
+        accountTitle.setText(Utils.getAccountTitle(account, this));
+        accountSubtitle.setText(Utils.getAccountSubtitle(account, this));
         if (expiring > 0) {
             accountWarning.setText(String.valueOf(expiring));
             accountWarning.setVisibility(View.VISIBLE);
         } else {
             accountWarning.setVisibility(View.GONE);
         }
+        accountsAdapter.setCurrentAccount(account);
     }
 
     public void selectaccount() {
@@ -699,8 +615,8 @@ public abstract class OpacActivity extends AppCompatActivity {
     }
 
     public void selectaccount(long id) {
-        ((OpacClient) getApplication()).setAccount(id);
-        accountSelected(((OpacClient) getApplication()).getAccount());
+        app.setAccount(id);
+        accountSelected(app.getAccount());
     }
 
     @Override
@@ -767,6 +683,13 @@ public abstract class OpacActivity extends AppCompatActivity {
         if (title != null) {
             outState.putCharSequence("title", title);
         }
+    }
+
+    @Override
+    public void onAccountClicked(Account account) {
+        selectaccount(account.getId());
+        drawerLayout.closeDrawer(drawer);
+        setAccountSwitcherVisible(false);
     }
 
     public interface AccountSelectedListener {

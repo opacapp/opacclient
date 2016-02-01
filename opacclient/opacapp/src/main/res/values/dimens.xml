@@ -8,6 +8,8 @@
     <dimen name="card_topbottom_margin_default">4dp</dimen>
     <dimen name="card_topbottom_margin_selected">2dp</dimen>
     <dimen name="celeb_icon_size">64dp</dimen>
+    <dimen name="navigation_drawer_header_height">200dp</dimen>
+
     <!-- Source: https://gist.github.com/lapism/f75501edd8d32edf3eed -->
     <dimen name="key_line">16dp</dimen>
 </resources>
