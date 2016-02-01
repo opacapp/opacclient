@@ -260,4 +260,7 @@ We might know your library ID then, but not your password, and we will take care
         fees.</string>
     <string name="do_not_ask_again">Do not show again</string>
     <string name="reservation_fee_continue">Continue</string>
+    <string name="celeb_title">1,000+ libraries</string>
+    <string name="celeb_text">With this update, the Web Opac App supports more than one thousand libraries across the world. We\'d like to take a moment to thank you for all your support and feedback over the last 3½ years.</string>
+    <string name="celeb_rate">Rate App on Google Play</string>
 </resources>
