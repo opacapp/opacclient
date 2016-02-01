@@ -740,10 +740,10 @@ public class Adis extends BaseApi implements OpacApi {
                 }
                 res = new ReservationResult(
                         MultiStepResult.Status.SELECTION_NEEDED, doc.select(
-                        "#F23").text());
+                        "#AUSGAB_1").first().parent().select("span").text());
                 res.setSelection(sel);
             } else if (doc.select("#FSET01 select[name=select$0]").size() > 0 &&
-                    (selection == null || !selection.contains("#"))) {
+                    (selection == null || !selection.contains("_SEP_"))) {
                 // Munich: "Benachrichtigung mit E-Mail"
                 List<Map<String, String>> sel = new ArrayList<>();
                 for (Element opt : doc.select("select[name=select$0] option")) {
