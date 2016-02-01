@@ -742,9 +742,40 @@ public class Adis extends BaseApi implements OpacApi {
                         MultiStepResult.Status.SELECTION_NEEDED, doc.select(
                         "#F23").text());
                 res.setSelection(sel);
+            } else if (doc.select("#FSET01 select[name=select$0]").size() > 0 &&
+                    (selection == null || !selection.contains("#"))) {
+                // Munich: "Benachrichtigung mit E-Mail"
+                List<Map<String, String>> sel = new ArrayList<>();
+                for (Element opt : doc.select("select[name=select$0] option")) {
+                    if (opt.text().trim().length() > 0) {
+                        Map<String, String> selopt = new HashMap<>();
+                        selopt.put("key", opt.val());
+                        if (selection != null) {
+                            selopt.put("value", opt.text() + "_SEP_" + selection);
+                        } else {
+                            selopt.put("value", opt.text());
+                        }
+                        sel.add(selopt);
+                    }
+                }
+                res = new ReservationResult(
+                        MultiStepResult.Status.SELECTION_NEEDED, doc.select(
+                        "#FSET01 select[name=select$0]").first().parent().select("span").text());
+                res.setSelection(sel);
             } else if (selection != null || doc.select("#AUSGAB_1").size() == 0) {
-                if (doc.select("#AUSGAB_1").size() > 0) {
-                    doc.select("#AUSGAB_1").attr("value", selection);
+                if (doc.select("#AUSGAB_1").size() > 0 && selection != null) {
+                    if (selection.contains("_SEP_")) {
+                        doc.select("#AUSGAB_1").attr("value", selection.split("_SEP_")[1]);
+                    } else {
+                        doc.select("#AUSGAB_1").attr("value", selection);
+                    }
+                }
+                if (doc.select("#FSET01 select[name=select$0]").size() > 0 && selection != null) {
+                    if (selection.contains("_SEP_")) {
+                        doc.select("#AUSGAB_1").attr("value", selection.split("_SEP_")[0]);
+                    } else {
+                        doc.select("#AUSGAB_1").attr("value", selection);
+                    }
                 }
                 if (doc.select("#BENJN_1").size() > 0) {
                     // Notification not requested because some libraries notify by snail mail
