@@ -71,7 +71,7 @@
             android:src="@drawable/ic_action_search"/>
     </RelativeLayout>
     <!-- The navigation drawer -->
-    <android.support.design.widget.NavigationView
+    <de.geeksfactory.opacclient.ui.AccountSwitcherNavigationView
         android:id="@+id/navdrawer"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

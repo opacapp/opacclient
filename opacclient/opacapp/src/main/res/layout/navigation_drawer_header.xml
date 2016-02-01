@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="200dp"
+             android:layout_width="match_parent"
+             android:layout_height="@dimen/navigation_drawer_header_height"
+             android:background="?attr/colorPrimaryDark"
+             android:orientation="vertical"
+             android:paddingBottom="8dp"
              android:paddingLeft="16dp"
              android:paddingRight="16dp"
              android:paddingTop="8dp"
-             android:paddingBottom="8dp"
-             android:background="?attr/colorPrimaryDark"
              android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <LinearLayout
         android:id="@+id/account_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_gravity="bottom"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
-        android:background="?attr/selectableItemBackgroundBorderless">
+        android:orientation="horizontal"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_gravity="bottom"
             android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
             <TextView
                 android:id="@+id/account_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_marginBottom="2dp"
+                android:layout_marginTop="8dp"
                 android:ellipsize="end"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
 
@@ -41,32 +41,32 @@
                 android:id="@+id/account_subtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
                 android:layout_marginBottom="4dp"
+                android:layout_marginTop="2dp"
                 android:ellipsize="end"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 
         </LinearLayout>
 
         <TextView
+            android:id="@+id/account_warning"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginRight="16dp"
             android:background="@drawable/warning_badge"
             android:padding="4dp"
-            android:layout_gravity="center_vertical"
-            android:textColor="#000000"
-            android:id="@+id/account_warning"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="#000000"
             android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/account_expand"
-            android:src="@drawable/ic_arrow_drop_selector"
-            android:layout_gravity="center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:tint="#FFF"
-            android:contentDescription="@string/account_select"/>
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/account_select"
+            android:src="@drawable/ic_arrow_drop_selector"
+            android:tint="#FFF"/>
     </LinearLayout>
 </FrameLayout>
