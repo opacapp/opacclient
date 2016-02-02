@@ -197,7 +197,7 @@ public abstract class OpacActivity extends AppCompatActivity
 
         this.accountSwitcherVisible = accountSwitcherVisible;
         drawer.setAccountsVisible(accountSwitcherVisible);
-        accountExpand.setActivated(accountSwitcherVisible);
+        if (Build.VERSION.SDK_INT >= 11) accountExpand.setActivated(accountSwitcherVisible);
         if (!accountSwitcherVisible) {
             fixNavigationSelection();
         }
