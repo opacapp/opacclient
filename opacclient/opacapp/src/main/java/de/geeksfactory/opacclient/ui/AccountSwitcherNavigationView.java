@@ -26,24 +26,20 @@
 
         package de.geeksfactory.opacclient.ui;
 
-        import android.content.Context;
-        import android.support.design.widget.NavigationView;
-        import android.support.v7.widget.LinearLayoutManager;
-        import android.support.v7.widget.RecyclerView;
-        import android.util.AttributeSet;
-        import android.util.TypedValue;
-        import android.view.View;
-        import android.widget.FrameLayout;
+import android.content.Context;
+import android.support.design.widget.NavigationView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.AttributeSet;
+import android.view.View;
+import android.widget.FrameLayout;
 
-        import com.nineoldandroids.animation.Animator;
-        import com.nineoldandroids.animation.AnimatorListenerAdapter;
-        import com.nineoldandroids.view.ViewPropertyAnimator;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorListenerAdapter;
+import com.nineoldandroids.view.ViewPropertyAnimator;
 
-        import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.R;
 
-/**
- * Created by Johan on 01.02.2016.
- */
 public class AccountSwitcherNavigationView extends NavigationView {
     private RecyclerView accountsList;
     private RecyclerView.Adapter accountsAdapter;
@@ -72,9 +68,6 @@ public class AccountSwitcherNavigationView extends NavigationView {
         params.setMargins(0,
                 getResources().getDimensionPixelSize(R.dimen.navigation_drawer_header_height), 0,
                 0);
-        int padding = (int) TypedValue
-                .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics());
-        accountsList.setPadding(padding, padding, padding, padding);
         accountsList.setBackgroundResource(R.color.background_material_light);
         accountsList.setVisibility(View.GONE);
     }

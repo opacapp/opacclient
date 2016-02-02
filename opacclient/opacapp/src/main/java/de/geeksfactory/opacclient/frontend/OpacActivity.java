@@ -403,16 +403,6 @@ public abstract class OpacActivity extends AppCompatActivity
                 startActivity(intent);
                 return;
             }
-            case R.id.nav_manage_accounts: {
-                Intent intent = new Intent(this, AccountListActivity.class);
-                startActivity(intent);
-                return;
-            }
-            case R.id.nav_add_account: {
-                Intent intent = new Intent(this, LibraryListActivity.class);
-                startActivity(intent);
-                return;
-            }
         }
         setFabOnClickListener(item.getItemId());
 
@@ -690,6 +680,18 @@ public abstract class OpacActivity extends AppCompatActivity
         selectaccount(account.getId());
         drawerLayout.closeDrawer(drawer);
         setAccountSwitcherVisible(false);
+    }
+
+    @Override
+    public void onAddAccountClicked() {
+        Intent intent = new Intent(this, LibraryListActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onManageAccountsClicked() {
+        Intent intent = new Intent(this, AccountListActivity.class);
+        startActivity(intent);
     }
 
     public interface AccountSelectedListener {
