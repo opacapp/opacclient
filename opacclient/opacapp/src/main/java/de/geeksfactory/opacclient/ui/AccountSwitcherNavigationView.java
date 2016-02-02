@@ -29,6 +29,7 @@
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.os.Build;
 import android.support.design.widget.NavigationView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -69,7 +70,10 @@ public class AccountSwitcherNavigationView extends NavigationView {
                 getResources().getDimensionPixelSize(R.dimen.navigation_drawer_header_height), 0,
                 0);
         params.gravity = Gravity.BOTTOM; // https://code.google.com/p/android/issues/detail?id=28057
-        accountsList.setBackgroundResource(R.color.background_material_light);
+        TypedArray a = getContext().obtainStyledAttributes(
+                new int[]{android.R.attr.windowBackground});
+        accountsList.setBackgroundResource(a.getResourceId(0, 0));
+        a.recycle();
         accountsList.setVisibility(View.GONE);
     }
 
