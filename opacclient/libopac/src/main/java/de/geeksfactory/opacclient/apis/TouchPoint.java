@@ -1007,15 +1007,20 @@ public class TouchPoint extends BaseApi implements OpacApi {
             if (tr.text().contains("keine Daten")) {
                 return null;
             }
-            e.put(AccountData.KEY_LENT_TITLE, tr.child(2).select("b, strong")
+            e.put(AccountData.KEY_LENT_TITLE, tr.select(".account-display-title").select("b, strong")
                                                 .text().trim());
             try {
                 e.put(AccountData.KEY_LENT_AUTHOR,
-                        tr.child(2).html().split("<br[ /]*>")[1].trim());
+                        tr.select(".account-display-title").html().split("<br[ /]*>")[1].trim());
 
-                String[] col3split = tr.child(3).html().split("<br[ /]*>");
-                String frist = col3split[0].trim();
+                String[] col3split = tr.select(".account-display-state").html().split("<br[ /]*>");
+                String frist = Jsoup.parse(col3split[0].trim()).text().trim();
+                if (frist.contains(":")) {
+                    // BSB Munich: <span class="hidden-sm hidden-md hidden-lg">Fälligkeitsdatum : </span>26.02.2016<br>
+                    frist = frist.split(":")[1].trim();
+                }
                 if (frist.contains("-")) {
+                    // Chemnitz: 22.07.2015 - 20.10.2015<br>
                     frist = frist.split("-")[1].trim();
                 }
                 e.put(AccountData.KEY_LENT_DEADLINE, frist);
