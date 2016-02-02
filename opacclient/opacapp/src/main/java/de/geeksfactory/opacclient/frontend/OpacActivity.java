@@ -334,6 +334,7 @@ public abstract class OpacActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         setupDrawer();
+        setupAccountSwitcher();
 
         fragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
 
