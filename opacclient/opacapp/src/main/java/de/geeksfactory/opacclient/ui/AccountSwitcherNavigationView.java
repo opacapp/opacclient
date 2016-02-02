@@ -26,18 +26,17 @@
 
         package de.geeksfactory.opacclient.ui;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.os.Build;
 import android.support.design.widget.NavigationView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
-
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.AnimatorListenerAdapter;
-import com.nineoldandroids.view.ViewHelper;
-import com.nineoldandroids.view.ViewPropertyAnimator;
 
 import de.geeksfactory.opacclient.R;
 
@@ -69,6 +68,7 @@ public class AccountSwitcherNavigationView extends NavigationView {
         params.setMargins(0,
                 getResources().getDimensionPixelSize(R.dimen.navigation_drawer_header_height), 0,
                 0);
+        params.gravity = Gravity.BOTTOM; // https://code.google.com/p/android/issues/detail?id=28057
         accountsList.setBackgroundResource(R.color.background_material_light);
         accountsList.setVisibility(View.GONE);
     }
@@ -83,21 +83,30 @@ public class AccountSwitcherNavigationView extends NavigationView {
 
         accountsVisible = visible;
 
+        // We don't use Animations on API < 12 because they don't seem to work correctly
+        // using NineOldAndroids
         if (accountsVisible) {
             accountsList.setVisibility(View.VISIBLE);
-            ViewHelper.setAlpha(accountsList, 0.0f);
-            ViewPropertyAnimator.animate(accountsList).alpha(1.0f).setListener(null);
-            // setListener(null) is needed for removing the listener added below
+            if (Build.VERSION.SDK_INT >= 12) {
+                accountsList.setAlpha(0);
+                accountsList.animate().alpha(1.0f).setListener(null);
+                // setListener(null) is needed for removing the listener added below
+            }
         } else {
-            ViewPropertyAnimator.animate(accountsList).alpha(0.0f).setListener(
-                    new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            if (accountsList != null) {
-                                accountsList.setVisibility(View.GONE);
+            if (Build.VERSION.SDK_INT >= 12) {
+                accountsList.animate().alpha(0.0f).setListener(
+                        new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                if (accountsList != null) {
+                                    accountsList.clearAnimation();
+                                    accountsList.setVisibility(View.GONE);
+                                }
                             }
-                        }
-                    });
+                        });
+            } else {
+                accountsList.setVisibility(View.GONE);
+            }
         }
     }
 }
