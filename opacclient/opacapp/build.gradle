@@ -9,7 +9,7 @@ android {
         minSdkVersion 8
         targetSdkVersion 23
         versionCode 135
-        versionName "4.3.6"
+        versionName "4.4.0"
     }
 
     lintOptions {
