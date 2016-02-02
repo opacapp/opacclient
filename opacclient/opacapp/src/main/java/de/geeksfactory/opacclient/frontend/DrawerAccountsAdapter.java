@@ -87,7 +87,8 @@ public class DrawerAccountsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             ((AccountViewHolder) holder).setData(account, expiring.get(account));
         } else if (holder instanceof FooterViewHolder) {
             FooterViewHolder footer = (FooterViewHolder) holder;
-            if (position == accountsWithoutCurrent.size() + 1) {
+            if (position ==
+                    accountsWithoutCurrent.size() + (accountsWithoutCurrent.size() > 0 ? 1 : 0)) {
                 footer.setTitle(R.string.account_add);
                 footer.setIcon(R.drawable.ic_add_24dp);
                 footer.setOnClickListener(new View.OnClickListener() {
@@ -96,7 +97,8 @@ public class DrawerAccountsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         if (listener != null) listener.onAddAccountClicked();
                     }
                 });
-            } else if (position == accountsWithoutCurrent.size() + 2) {
+            } else if (position ==
+                    accountsWithoutCurrent.size() + (accountsWithoutCurrent.size() > 0 ? 2 : 1)) {
                 footer.setTitle(R.string.accounts);
                 footer.setIcon(R.drawable.ic_settings_24dp);
                 footer.setOnClickListener(new View.OnClickListener() {
@@ -111,14 +113,15 @@ public class DrawerAccountsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public int getItemCount() {
-        return accountsWithoutCurrent.size() + 1 + FOOTER_COUNT;
+        return accountsWithoutCurrent.size() + (accountsWithoutCurrent.size() > 0 ? 1 : 0) +
+                FOOTER_COUNT;
     }
 
     @Override
     public int getItemViewType(int position) {
         if (position < accountsWithoutCurrent.size()) {
             return TYPE_ACCOUNT;
-        } else if (position == accountsWithoutCurrent.size()) {
+        } else if (position == accountsWithoutCurrent.size() && accountsWithoutCurrent.size() > 0) {
             return TYPE_SEPARATOR;
         } else {
             return TYPE_FOOTER;

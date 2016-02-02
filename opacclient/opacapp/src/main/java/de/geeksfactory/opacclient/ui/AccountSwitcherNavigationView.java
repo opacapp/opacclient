@@ -74,6 +74,9 @@ public class AccountSwitcherNavigationView extends NavigationView {
                 new int[]{android.R.attr.windowBackground});
         accountsList.setBackgroundResource(a.getResourceId(0, 0));
         a.recycle();
+        accountsList.setPadding(0,
+                getResources().getDimensionPixelSize(R.dimen.list_top_padding), 0, 0);
+        accountsList.setClipToPadding(false);
         accountsList.setVisibility(View.GONE);
     }
 
