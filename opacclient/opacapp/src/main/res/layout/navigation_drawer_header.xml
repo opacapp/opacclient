@@ -2,71 +2,89 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="@dimen/navigation_drawer_header_height"
-             android:background="?attr/colorPrimaryDark"
              android:orientation="vertical"
-             android:paddingBottom="8dp"
-             android:paddingLeft="16dp"
-             android:paddingRight="16dp"
-             android:paddingTop="8dp"
              android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <LinearLayout
-        android:id="@+id/account_data"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:orientation="horizontal"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark">
-
-            <TextView
-                android:id="@+id/account_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:layout_marginTop="8dp"
-                android:ellipsize="end"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
-
-            <TextView
-                android:id="@+id/account_subtitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:layout_marginTop="2dp"
-                android:ellipsize="end"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/account_warning"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="16dp"
-            android:background="@drawable/warning_badge"
-            android:padding="4dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="#000000"
-            android:visibility="gone"/>
+        android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/account_expand"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/imageView3"
+            android:src="@drawable/drawer_bg"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:scaleType="centerCrop"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
+
+        <LinearLayout
+            android:paddingBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp"
+            android:id="@+id/account_data"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:contentDescription="@string/account_select"
-            android:src="@drawable/ic_arrow_drop_selector"
-            android:tint="#FFF"/>
-    </LinearLayout>
+            android:layout_alignParentBottom="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:orientation="horizontal"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+                <TextView
+                    android:id="@+id/account_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginTop="8dp"
+                    android:ellipsize="end"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
+
+                <TextView
+                    android:id="@+id/account_subtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginTop="2dp"
+                    android:ellipsize="end"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/account_warning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/warning_badge"
+                android:padding="4dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="#000000"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/account_expand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="@string/account_select"
+                android:src="@drawable/ic_arrow_drop_selector"
+                android:tint="#FFF"/>
+        </LinearLayout>
+
+    </RelativeLayout>
 </FrameLayout>
