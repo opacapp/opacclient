@@ -126,15 +126,18 @@ public class DrawerAccountsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
 
-    public void setCurrentAccount(Account account) {
-        if (currentAccount == null || account == currentAccount) return;
+    public void setCurrentAccount(Account currentAccount) {
+        if (this.currentAccount == null || currentAccount == this.currentAccount) return;
 
-        this.accountsWithoutCurrent.add(accounts.indexOf(currentAccount), currentAccount);
-        notifyItemInserted(accounts.indexOf(currentAccount));
+        this.currentAccount = currentAccount;
+        accountsWithoutCurrent.clear();
+        for (Account account : accounts) {
+            if (account.getId() != this.currentAccount.getId()) {
+                accountsWithoutCurrent.add(account);
+            }
+        }
 
-        this.currentAccount = account;
-        this.accountsWithoutCurrent.remove(currentAccount);
-        notifyItemRemoved(accounts.indexOf(currentAccount));
+        notifyDataSetChanged();
     }
 
     public void setListener(Listener listener) {
