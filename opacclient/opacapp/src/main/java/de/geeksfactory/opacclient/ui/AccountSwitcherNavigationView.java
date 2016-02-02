@@ -36,6 +36,7 @@ import android.widget.FrameLayout;
 
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
+import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 
 import de.geeksfactory.opacclient.R;
@@ -84,7 +85,7 @@ public class AccountSwitcherNavigationView extends NavigationView {
 
         if (accountsVisible) {
             accountsList.setVisibility(View.VISIBLE);
-            accountsList.setAlpha(0.0f);
+            ViewHelper.setAlpha(accountsList, 0.0f);
             ViewPropertyAnimator.animate(accountsList).alpha(1.0f).setListener(null);
             // setListener(null) is needed for removing the listener added below
         } else {
