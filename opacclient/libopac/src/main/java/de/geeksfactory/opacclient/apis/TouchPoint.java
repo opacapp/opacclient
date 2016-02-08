@@ -902,7 +902,11 @@ public class TouchPoint extends BaseApi implements OpacApi {
                 ENCODING);
         Document doc = Jsoup.parse(html);
         doc.setBaseUri(opac_url);
-        List<Map<String, String>> lent = parse_medialist(doc);
+        List<Map<String, String>> lent = new ArrayList<>();
+        List<Map<String, String>> nextpage = parse_medialist(doc);
+        if (nextpage != null) {
+            lent.addAll(nextpage);
+        }
         if (doc.select(".pagination").size() > 0 && lent != null) {
             Element pagination = doc.select(".pagination").first();
             Elements pages = pagination.select("a");
@@ -913,7 +917,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
                 html = httpGet(page.attr("abs:href"), ENCODING);
                 doc = Jsoup.parse(html);
                 doc.setBaseUri(opac_url);
-                List<Map<String, String>> nextpage = parse_medialist(doc);
+                nextpage = parse_medialist(doc);
                 if (nextpage != null) {
                     lent.addAll(nextpage);
                 }
@@ -926,7 +930,11 @@ public class TouchPoint extends BaseApi implements OpacApi {
                 ENCODING);
         doc = Jsoup.parse(html);
         doc.setBaseUri(opac_url);
-        List<Map<String, String>> requested = parse_reslist(doc);
+        List<Map<String, String>> requested = new ArrayList<>();
+        nextpage = parse_reslist(doc);
+        if (nextpage != null) {
+            requested.addAll(nextpage);
+        }
         if (doc.select(".pagination").size() > 0 && requested != null) {
             Element pagination = doc.select(".pagination").first();
             Elements pages = pagination.select("a");
@@ -937,7 +945,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
                 html = httpGet(page.attr("abs:href"), ENCODING);
                 doc = Jsoup.parse(html);
                 doc.setBaseUri(opac_url);
-                List<Map<String, String>> nextpage = parse_reslist(doc);
+                nextpage = parse_reslist(doc);
                 if (nextpage != null) {
                     requested.addAll(nextpage);
                 }
@@ -949,12 +957,9 @@ public class TouchPoint extends BaseApi implements OpacApi {
                 ENCODING);
         doc = Jsoup.parse(html);
         doc.setBaseUri(opac_url);
-        if (requested == null) {
-            requested = parse_reslist(doc);
-        } else {
-            List<Map<String, String>> firstpage = parse_reslist(doc);
-            if (firstpage != null)
-                requested.addAll(firstpage);
+        nextpage = parse_reslist(doc);
+        if (nextpage != null) {
+            requested.addAll(nextpage);
         }
         if (doc.select(".pagination").size() > 0 && requested != null) {
             Element pagination = doc.select(".pagination").first();
@@ -966,7 +971,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
                 html = httpGet(page.attr("abs:href"), ENCODING);
                 doc = Jsoup.parse(html);
                 doc.setBaseUri(opac_url);
-                List<Map<String, String>> nextpage = parse_reslist(doc);
+                nextpage = parse_reslist(doc);
                 if (nextpage != null) {
                     requested.addAll(nextpage);
                 }
@@ -1065,10 +1070,9 @@ public class TouchPoint extends BaseApi implements OpacApi {
         List<Map<String, String>> reservations = new ArrayList<Map<String, String>>();
         Elements copytrs = doc.select(".data tr");
         int trs = copytrs.size();
-        if (trs == 1) {
+        if (trs <= 1) {
             return null;
         }
-        assert (trs > 0);
         for (int i = 1; i < trs; i++) {
             Element tr = copytrs.get(i);
             Map<String, String> e = new HashMap<>();
