@@ -286,6 +286,8 @@ public class Open extends BaseApi implements OpacApi {
             // Cover
             if (element.select("input[id$=mediumImage]").size() > 0) {
                 result.setCover(element.select("input[id$=mediumImage]").first().attr("src"));
+            } else if (element.select("img[id$=CoverView_Image]").size() > 0) {
+                result.setCover(getCoverUrl(element.select("img[id$=CoverView_Image]").first()));
             }
 
             Element catalogueContent = element.select(".catalogueContent").first();
@@ -392,6 +394,20 @@ public class Open extends BaseApi implements OpacApi {
         return new SearchRequestResult(results, totalCount, page);
     }
 
+    private String getCoverUrl(Element img) {
+        String[] parts = img.attr("sources").split("\\|");
+        // Example: SetSimpleCover|a|https://vlb.de/GetBlob.aspx?strIsbn=9783868511291&amp;
+        // size=S|a|http://www.buchhandel.de/default.aspx?strframe=titelsuche&amp;
+        // caller=vlbPublic&amp;func=DirectIsbnSearch&amp;isbn=9783868511291&amp;
+        // nSiteId=11|c|SetNoCover|a|/DesktopModules/OCLC.OPEN.PL.DNN
+        // .BaseLibrary/StyleSheets/Images/Fallbacks/emptyURL.gif?4.2.0.0|a|
+        String url = null;
+        if (parts.length >= 2 && parts[0].equals("SetSimpleCover")) {
+            url = parts[2].replace("&amp;", "&");
+        }
+        return url;
+    }
+
     private String numberToText(int number) {
         switch (number) {
             case 1:
@@ -453,12 +469,10 @@ public class Open extends BaseApi implements OpacApi {
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         data.writeTo(stream);
-        System.out.println(stream.toString());
 
         String postUrl = form.attr("abs:action");
 
         String html = httpPost(postUrl, data, "UTF-8");
-        System.out.println(html);
         if (willBeCorrectPage) {
             // We clicked on the correct link
             Document doc2 = Jsoup.parse(html);
@@ -499,6 +513,8 @@ public class Open extends BaseApi implements OpacApi {
         // Cover
         if (doc.select("input[id$=mediumImage]").size() > 0) {
             item.setCover(doc.select("input[id$=mediumImage]").attr("src"));
+        } else if (doc.select("img[id$=CoverView_Image]").size() > 0) {
+            item.setCover(getCoverUrl(doc.select("img[id$=CoverView_Image]").first()));
         }
 
         // ID

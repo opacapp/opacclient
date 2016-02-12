@@ -14,3 +14,8 @@ dependencies {
     compile project(':noandroid')
     testCompile "junit:junit:4.12"
 }
+task copyTestResources(type: Copy) {
+    from "${projectDir}/src/test/resources"
+    into "${buildDir}/classes/test"
+}
+processTestResources.dependsOn copyTestResources

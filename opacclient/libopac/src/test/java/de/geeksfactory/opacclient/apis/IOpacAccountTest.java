@@ -1,5 +1,6 @@
 package de.geeksfactory.opacclient.apis;
 
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,20 +11,17 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import de.geeksfactory.opacclient.i18n.DummyStringProvider;
 import de.geeksfactory.opacclient.objects.AccountData;
 
-import static org.junit.Assert.assertTrue;
-
 @RunWith(Parameterized.class)
-public class TouchPointTest extends BaseTest {
+public class IOpacAccountTest extends BaseAccountTest {
     private String file;
 
-    public TouchPointTest(String file) {
+    public IOpacAccountTest(String file) {
         this.file = file;
     }
 
-    private static final String[] FILES = new String[]{"chemnitz.html", "munchenbsb.html"};
+    private static final String[] FILES = new String[]{"heide.html"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {
@@ -36,11 +34,9 @@ public class TouchPointTest extends BaseTest {
 
     @Test
     public void testParseMediaList() throws OpacApi.OpacErrorException {
-        String html = readResource("/touchpoint/medialist/" + file);
-        if (html == null) return; // we may not have all files for all libraries
-        List<Map<String, String>> media =
-                TouchPoint.parse_medialist(Jsoup.parse(html));
-        assertTrue(media.size() > 0);
+        String html = readResource("/iopac/" + file);
+        List<Map<String, String>> media = new ArrayList<>();
+        IOpac.parseMediaList(media, Jsoup.parse(html), new JSONObject());
         for (Map<String, String> item : media) {
             assertContainsData(item, AccountData.KEY_LENT_TITLE);
             assertContainsData(item, AccountData.KEY_LENT_DEADLINE);
@@ -50,10 +46,8 @@ public class TouchPointTest extends BaseTest {
 
     @Test
     public void testParseResList() throws OpacApi.OpacErrorException {
-        String html = readResource("/pica_lbs/reslist/" + file);
-        if (html == null) return; // we may not have all files for all libraries
-        List<Map<String, String>> media =
-                TouchPoint.parse_reslist(Jsoup.parse(html));
-        assertTrue(media.size() > 0);
+        String html = readResource("/iopac/" + file);
+        List<Map<String, String>> media = new ArrayList<>();
+        IOpac.parseResList(media, Jsoup.parse(html), new JSONObject());
     }
 }

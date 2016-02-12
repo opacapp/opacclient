@@ -16,14 +16,14 @@ import de.geeksfactory.opacclient.objects.AccountData;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
-public class PicaOldTest extends BaseTest {
+public class PicaLBSAccountTest extends BaseAccountTest {
     private String file;
 
-    public PicaOldTest(String file) {
+    public PicaLBSAccountTest(String file) {
         this.file = file;
     }
 
-    private static final String[] FILES = new String[]{"marburg.html", "frankfurt_stgeorgen.html"};
+    private static final String[] FILES = new String[]{"greifswald.html"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {
@@ -36,11 +36,10 @@ public class PicaOldTest extends BaseTest {
 
     @Test
     public void testParseMediaList() throws OpacApi.OpacErrorException {
-        String html = readResource("/pica_old/medialist/" + file);
+        String html = readResource("/pica_lbs/medialist/" + file);
         if (html == null) return; // we may not have all files for all libraries
-        List<Map<String, String>> media = new ArrayList<>();
-        PicaOld.parseMediaList(media, Jsoup.parse(html), new DummyStringProvider(),
-                new ArrayList<String>());
+        List<Map<String, String>> media =
+                PicaLBS.parseMediaList(Jsoup.parse(html), new DummyStringProvider());
         assertTrue(media.size() > 0);
         for (Map<String, String> item : media) {
             assertContainsData(item, AccountData.KEY_LENT_TITLE);
@@ -51,10 +50,10 @@ public class PicaOldTest extends BaseTest {
 
     @Test
     public void testParseResList() throws OpacApi.OpacErrorException {
-        String html = readResource("/pica_old/reslist/" + file);
+        String html = readResource("/pica_lbs/reslist/" + file);
         if (html == null) return; // we may not have all files for all libraries
-        List<Map<String, String>> media = new ArrayList<>();
-        PicaOld.parseResList(media, Jsoup.parse(html), new DummyStringProvider());
+        List<Map<String, String>> media =
+                PicaLBS.parseResList(Jsoup.parse(html), new DummyStringProvider());
         assertTrue(media.size() > 0);
     }
 }
