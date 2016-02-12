@@ -966,10 +966,15 @@ public class BiBer1992 extends BaseApi {
             AccountData res) throws IOException, JSONException,
             OpacErrorException {
 
-        List<Map<String, String>> media = new ArrayList<>();
-
         // get media list via http POST
         Document doc = accountHttpPost(account, "medk");
+
+        return parseMediaList(res, doc, data);
+    }
+
+    static List<Map<String, String>> parseMediaList(AccountData res, Document doc,
+            JSONObject data) throws JSONException {
+        List<Map<String, String>> media = new ArrayList<>();
         if (doc == null) {
             return media;
         }
@@ -1053,42 +1058,41 @@ public class BiBer1992 extends BaseApi {
 
             media.add(e);
         }
-
         return media;
     }
 
     private List<Map<String, String>> accountGetReservations(Account account)
             throws IOException, JSONException, OpacErrorException {
 
-        List<Map<String, String>> reservations = new ArrayList<>();
-
-        if (!data.has("reservationtable")) {
-            // reservations not specifically supported, let's just try it
-            // with default values but fail silently
-            JSONObject restblobj = new JSONObject();
-            restblobj.put("author", 3);
-            restblobj.put("availability", 6);
-            restblobj.put("branch", -1);
-            restblobj.put("cancelurl", -1);
-            restblobj.put("expirationdate", 5);
-            restblobj.put("title", 3);
-            data.put("reservationtable", restblobj);
-            try {
-                return accountGetReservations(account);
-            } catch (Exception e) {
-                return reservations;
-            }
-        }
-
         // get reservations list via http POST
         Document doc = accountHttpPost(account, "vorm");
+
+        return parseResList(doc, data);
+    }
+
+    static List<Map<String, String>> parseResList(Document doc, JSONObject data)
+            throws JSONException {
+        List<Map<String, String>> reservations = new ArrayList<>();
         if (doc == null) {
             // error message as html result
             return reservations;
         }
 
         // parse result list
-        JSONObject copymap = data.getJSONObject("reservationtable");
+        JSONObject copymap;
+        if (!data.has("reservationtable")) {
+            // reservations not specifically supported, let's just try it
+            // with default values but fail silently
+            copymap = new JSONObject();
+            copymap.put("author", 3);
+            copymap.put("availability", 6);
+            copymap.put("branch", -1);
+            copymap.put("cancelurl", -1);
+            copymap.put("expirationdate", 5);
+            copymap.put("title", 3);
+        } else {
+            copymap = data.getJSONObject("reservationtable");
+        }
         Elements rowElements = doc.select("form[name=vorml] table tr");
 
         // rows: skip 1st row -> title row
@@ -1123,7 +1127,6 @@ public class BiBer1992 extends BaseApi {
             }
             reservations.add(e);
         }
-
         return reservations;
     }
 

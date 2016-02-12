@@ -11,7 +11,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class BaseTest {
+public class BaseAccountTest {
     /**
      * Reads content from an InputStream into a string
      *
