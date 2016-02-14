@@ -984,7 +984,11 @@ public class IOpac extends BaseApi implements OpacApi {
 
         DropdownSearchField mtyp = new DropdownSearchField();
         try {
-            html = httpGet(opac_url + dir + "/mtyp.js", getDefaultEncoding());
+            try {
+                html = httpGet(opac_url + dir + "/mtyp.js", getDefaultEncoding());
+            } catch (NotReachableException e) {
+                html = httpGet(opac_url + "/mtyp.js", getDefaultEncoding());
+            }
 
             String[] parts = html.split("new Array\\(\\);");
             for (String part : parts) {
@@ -1018,7 +1022,7 @@ public class IOpac extends BaseApi implements OpacApi {
             }
 
         }
-        if (!mtyp.getDropdownValues().isEmpty()) {
+        if (mtyp.getDropdownValues() != null && !mtyp.getDropdownValues().isEmpty()) {
             mtyp.setDisplayName("Medientypen");
             mtyp.setId("Medientyp");
             fields.add(mtyp);
