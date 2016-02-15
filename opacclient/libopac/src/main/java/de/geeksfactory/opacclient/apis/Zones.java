@@ -693,6 +693,10 @@ public class Zones extends BaseApi {
     @Override
     public ProlongResult prolong(String media, Account account, int useraction,
             String Selection) throws IOException {
+        if (media.startsWith("cannotrenew|")) {
+            String message = media.split("\\|")[1];
+            return new ProlongResult(MultiStepResult.Status.ERROR, message);
+        }
         if (accountobj == null) {
             try {
                 login(account);
@@ -795,8 +799,8 @@ public class Zones extends BaseApi {
 
         AccountData res = new AccountData(acc.getId());
 
-        String lent_link = null;
-        String res_link = null;
+        String lentLink = null;
+        String resLink = null;
         int lent_cnt = -1;
         int res_cnt = -1;
         for (Element td : login
@@ -804,13 +808,11 @@ public class Zones extends BaseApi {
                         ".CAccountDetailFieldNameCellStripe, .CAccountDetailFieldNameCell")) {
             String section = td.text().trim();
             if (section.contains("Entliehene Medien")) {
-                lent_link = td.select("a").attr("href");
-                lent_cnt = Integer.parseInt(td.nextElementSibling().text()
-                                              .trim());
+                lentLink = td.select("a").attr("href");
+                lent_cnt = Integer.parseInt(td.nextElementSibling().text().trim());
             } else if (section.contains("Vormerkungen")) {
-                res_link = td.select("a").attr("href");
-                res_cnt = Integer.parseInt(td.nextElementSibling().text()
-                                             .trim());
+                resLink = td.select("a").attr("href");
+                res_cnt = Integer.parseInt(td.nextElementSibling().text().trim());
             } else if (section.contains("Kontostand")) {
                 res.setPendingFees(td.nextElementSibling().text().trim());
             } else if (section.matches("Ausweis g.ltig bis")) {
@@ -819,77 +821,40 @@ public class Zones extends BaseApi {
         }
         for (Element a : login.select("a.AccountMenuLink")) {
             if (a.text().contains("Ausleihen")) {
-                lent_link = a.attr("href");
+                lentLink = a.attr("href");
             } else if (a.text().contains("Vormerkungen")) {
-                res_link = a.attr("href");
+                resLink = a.attr("href");
             }
         }
-        if (lent_link == null) {
+        if (lentLink == null) {
             return null;
         }
 
-        String lent_html = httpGet(
-                opac_url + "/"
-                        + lent_link.replace("utf-8?Method", "utf-8&Method"),
+        String lentHtml = httpGet(opac_url + "/" + lentLink.replace("utf-8?Method", "utf-8&Method"),
                 getDefaultEncoding());
-        Document lent_doc = Jsoup.parse(lent_html);
-        List<Map<String, String>> lent = new ArrayList<>();
+        Document lentDoc = Jsoup.parse(lentHtml);
+        res.setLent(parseMediaList(lentDoc));
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.GERMAN);
-        Pattern id_pat = Pattern
-                .compile("javascript:renewItem\\('[0-9]+','(.*)'\\)");
-
-        for (Element table : lent_doc
-                .select(".LoansBrowseItemDetailsCellStripe table, " +
-                        ".LoansBrowseItemDetailsCell " +
-                        "table")) {
-            Map<String, String> item = new HashMap<>();
-
-            for (Element tr : table.select("tr")) {
-                String desc = tr.select(".LoanBrowseFieldNameCell").text()
-                                .trim();
-                String value = tr.select(".LoanBrowseFieldDataCell").text()
-                                 .trim();
-                if (desc.equals("Titel")) {
-                    item.put(AccountData.KEY_LENT_TITLE, value);
-                }
-                if (desc.equals("Verfasser")) {
-                    item.put(AccountData.KEY_LENT_AUTHOR, value);
-                }
-                if (desc.equals("Mediennummer")) {
-                    item.put(AccountData.KEY_LENT_BARCODE, value);
-                }
-                if (desc.equals("ausgeliehen in")) {
-                    item.put(AccountData.KEY_LENT_BRANCH, value);
-                }
-                if (desc.matches("F.+lligkeits.*datum")) {
-                    value = value.split(" ")[0];
-                    item.put(AccountData.KEY_LENT_DEADLINE, value);
-                    try {
-                        item.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
-                                String.valueOf(sdf.parse(value).getTime()));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
+        // In Koeln, the reservations link only doesn't show on the overview page
+        if (resLink == null) {
+            for (Element a : lentDoc.select("a.AccountMenuLink")) {
+                if (a.text().contains("Vormerkungen")) {
+                    resLink = a.attr("href");
                 }
             }
-            if (table.select(".button[Title~=Zum]").size() == 1) {
-                Matcher matcher1 = id_pat.matcher(table.select(
-                        ".button[Title~=Zum]").attr("href"));
-                if (matcher1.matches()) {
-                    item.put(AccountData.KEY_LENT_LINK, matcher1.group(1));
-                }
-            }
-            lent.add(item);
         }
-        res.setLent(lent);
 
-        List<Map<String, String>> reservations = new ArrayList<>();
-        String res_html = httpGet(opac_url + "/" + res_link,
+        String resHtml = httpGet(opac_url + "/" + resLink,
                 getDefaultEncoding());
-        Document res_doc = Jsoup.parse(res_html);
+        Document resDoc = Jsoup.parse(resHtml);
+        res.setReservations(parseResList(resDoc));
 
-        for (Element table : res_doc
+        return res;
+    }
+
+    static List<Map<String, String>> parseResList(Document doc) {
+        List<Map<String, String>> reservations = new ArrayList<>();
+        for (Element table : doc
                 .select(".MessageBrowseItemDetailsCell table, " +
                         ".MessageBrowseItemDetailsCellStripe" +
                         " table")) {
@@ -918,9 +883,64 @@ public class Zones extends BaseApi {
             }
             reservations.add(item);
         }
-        res.setReservations(reservations);
+        return reservations;
+    }
 
-        return res;
+    static List<Map<String, String>> parseMediaList(Document doc) {
+        List<Map<String, String>> lent = new ArrayList<>();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.GERMAN);
+        Pattern id_pat = Pattern.compile("javascript:renewItem\\('[0-9]+','(.*)'\\)");
+        Pattern cannotrenew_pat =
+                Pattern.compile("javascript:CannotRenewLoan\\('[0-9]+','(.*)','[0-9]+'\\)");
+
+        for (Element table : doc
+                .select(".LoansBrowseItemDetailsCellStripe table, " +
+                        ".LoansBrowseItemDetailsCell " +
+                        "table")) {
+            Map<String, String> item = new HashMap<>();
+
+            for (Element tr : table.select("tr")) {
+                String desc = tr.select(".LoanBrowseFieldNameCell").text().trim();
+                String value = tr.select(".LoanBrowseFieldDataCell").text().trim();
+                if (desc.equals("Titel")) {
+                    item.put(AccountData.KEY_LENT_TITLE, value);
+                }
+                if (desc.equals("Verfasser")) {
+                    item.put(AccountData.KEY_LENT_AUTHOR, value);
+                }
+                if (desc.equals("Mediennummer")) {
+                    item.put(AccountData.KEY_LENT_BARCODE, value);
+                }
+                if (desc.equals("ausgeliehen in")) {
+                    item.put(AccountData.KEY_LENT_BRANCH, value);
+                }
+                if (desc.matches("F.+lligkeits.*datum")) {
+                    value = value.split(" ")[0];
+                    item.put(AccountData.KEY_LENT_DEADLINE, value);
+                    try {
+                        item.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
+                                String.valueOf(sdf.parse(value).getTime()));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            if (table.select(".button[Title~=Zum]").size() == 1) {
+                Matcher matcher1 = id_pat.matcher(table.select(".button[Title~=Zum]").attr("href"));
+                if (matcher1.matches()) {
+                    item.put(AccountData.KEY_LENT_LINK, matcher1.group(1));
+                }
+            } else if (table.select(".CannotRenewLink").size() == 1){
+                Matcher matcher = cannotrenew_pat.matcher(table.select(".CannotRenewLink").attr("href").trim());
+                if (matcher.matches()) {
+                    item.put(AccountData.KEY_LENT_LINK, "cannotrenew|" + matcher.group(1));
+                }
+                item.put(AccountData.KEY_LENT_RENEWABLE, "N");
+            }
+            lent.add(item);
+        }
+        return lent;
     }
 
     @Override
