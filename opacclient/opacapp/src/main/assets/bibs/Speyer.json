@@ -14,7 +14,7 @@
             "status": -1,
             "title": 1
         },
-        "baseurl": "http://www.stadtbibliothek.speyer.de",
+        "baseurl": "https://buecherei.speyer.de/webopac",
         "copiestable": {
             "barcode": 0,
             "branch": 4,

@@ -723,8 +723,7 @@ public class IOpac extends BaseApi implements OpacApi {
         if (media.isEmpty() && reserved.isEmpty()) {
             if (doc.select("h1").size() > 0) {
                 //noinspection StatementWithEmptyBody
-                if (doc.select("h4").size() > 0 && doc.select("h4").text().trim()
-                                                      .contains("keine ausgeliehenen Medien")) {
+                if (doc.select("h4").text().trim().contains("keine ausgeliehenen Medien")) {
                     // There is no lent media, but the server is working
                     // correctly
                 } else if (doc.select("h1").text().trim()
@@ -985,7 +984,11 @@ public class IOpac extends BaseApi implements OpacApi {
 
         DropdownSearchField mtyp = new DropdownSearchField();
         try {
-            html = httpGet(opac_url + dir + "/mtyp.js", getDefaultEncoding());
+            try {
+                html = httpGet(opac_url + dir + "/mtyp.js", getDefaultEncoding());
+            } catch (NotReachableException e) {
+                html = httpGet(opac_url + "/mtyp.js", getDefaultEncoding());
+            }
 
             String[] parts = html.split("new Array\\(\\);");
             for (String part : parts) {
@@ -1019,7 +1022,7 @@ public class IOpac extends BaseApi implements OpacApi {
             }
 
         }
-        if (!mtyp.getDropdownValues().isEmpty()) {
+        if (mtyp.getDropdownValues() != null && !mtyp.getDropdownValues().isEmpty()) {
             mtyp.setDisplayName("Medientypen");
             mtyp.setId("Medientyp");
             fields.add(mtyp);

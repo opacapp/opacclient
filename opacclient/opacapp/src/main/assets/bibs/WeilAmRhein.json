@@ -1,0 +1,44 @@
+{
+    "account_supported": true,
+    "api": "bibliotheca",
+    "city": "Weil am Rhein",
+    "country": "Deutschland",
+    "data": {
+        "accounttable": {
+            "author": 0,
+            "barcode": -1,
+            "homebranch": -1,
+            "lendingbranch": -1,
+            "prolongurl": 4,
+            "returndate": 2,
+            "status": 3,
+            "title": 1
+        },
+        "baseurl": "https://web-opac.kivbf.de/weil-am-rhein",
+        "copiestable": {
+            "barcode": -1,
+            "branch": -1,
+            "department": 1,
+            "location": 0,
+            "reservations": -1,
+            "returndate": 3,
+            "status": 2
+        },
+        "customssl": true,
+        "reservationtable": {
+            "author": 0,
+            "availability": 2,
+            "branch": -1,
+            "cancelurl": 3,
+            "expirationdate": -1,
+            "title": 1
+        }
+    },
+    "geo": [
+        47.5934368,
+        7.6198121
+    ],
+    "information": "http://www.weil-am-rhein.de/pb/stadt,Lde/Home/Kultur+_+Freizeit/Stadtbibliothek.html",
+    "state": "Baden-W\u00fcrttemberg",
+    "title": "Stadtbibliothek"
+}

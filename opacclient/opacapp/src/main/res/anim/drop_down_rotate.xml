@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<objectAnimator
+    android:duration="200"
+    android:propertyName="rotation"
+    android:valueFrom="0"
+    android:valueTo="180"
+    xmlns:android="http://schemas.android.com/apk/res/android"/>

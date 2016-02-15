@@ -900,17 +900,27 @@ public class TouchPoint extends BaseApi implements OpacApi {
         String html = httpGet(opac_url
                         + "/userAccount.do?methodToCall=showAccount&accountTyp=loaned",
                 ENCODING);
-        List<Map<String, String>> lent = new ArrayList<>();
         Document doc = Jsoup.parse(html);
         doc.setBaseUri(opac_url);
-        parse_medialist(lent, doc);
-        if (doc.select(".pagination").size() > 0) {
+        List<Map<String, String>> lent = new ArrayList<>();
+        List<Map<String, String>> nextpage = parse_medialist(doc);
+        if (nextpage != null) {
+            lent.addAll(nextpage);
+        }
+        if (doc.select(".pagination").size() > 0 && lent != null) {
             Element pagination = doc.select(".pagination").first();
             Elements pages = pagination.select("a");
-            for (int i = 0; i < pages.size(); i++) {
-                html = httpGet(pages.get(i).attr("abs:href"), ENCODING);
+            for (Element page : pages) {
+                if (!page.hasAttr("href")) {
+                    continue;
+                }
+                html = httpGet(page.attr("abs:href"), ENCODING);
                 doc = Jsoup.parse(html);
-                parse_medialist(lent, doc);
+                doc.setBaseUri(opac_url);
+                nextpage = parse_medialist(doc);
+                if (nextpage != null) {
+                    lent.addAll(nextpage);
+                }
             }
         }
         adata.setLent(lent);
@@ -921,14 +931,24 @@ public class TouchPoint extends BaseApi implements OpacApi {
         doc = Jsoup.parse(html);
         doc.setBaseUri(opac_url);
         List<Map<String, String>> requested = new ArrayList<>();
-        parse_reslist(requested, doc);
-        if (doc.select(".pagination").size() > 0) {
+        nextpage = parse_reslist(doc);
+        if (nextpage != null) {
+            requested.addAll(nextpage);
+        }
+        if (doc.select(".pagination").size() > 0 && requested != null) {
             Element pagination = doc.select(".pagination").first();
             Elements pages = pagination.select("a");
-            for (int i = 0; i < pages.size(); i++) {
-                html = httpGet(pages.get(i).attr("abs:href"), ENCODING);
+            for (Element page : pages) {
+                if (!page.hasAttr("href")) {
+                    continue;
+                }
+                html = httpGet(page.attr("abs:href"), ENCODING);
                 doc = Jsoup.parse(html);
-                parse_reslist(requested, doc);
+                doc.setBaseUri(opac_url);
+                nextpage = parse_reslist(doc);
+                if (nextpage != null) {
+                    requested.addAll(nextpage);
+                }
             }
         }
 
@@ -937,14 +957,24 @@ public class TouchPoint extends BaseApi implements OpacApi {
                 ENCODING);
         doc = Jsoup.parse(html);
         doc.setBaseUri(opac_url);
-        parse_reslist(requested, doc);
-        if (doc.select(".pagination").size() > 0) {
+        nextpage = parse_reslist(doc);
+        if (nextpage != null) {
+            requested.addAll(nextpage);
+        }
+        if (doc.select(".pagination").size() > 0 && requested != null) {
             Element pagination = doc.select(".pagination").first();
             Elements pages = pagination.select("a");
-            for (int i = 0; i < pages.size(); i++) {
-                html = httpGet(pages.get(i).attr("abs:href"), ENCODING);
+            for (Element page : pages) {
+                if (!page.hasAttr("href")) {
+                    continue;
+                }
+                html = httpGet(page.attr("abs:href"), ENCODING);
                 doc = Jsoup.parse(html);
-                parse_reslist(requested, doc);
+                doc.setBaseUri(opac_url);
+                nextpage = parse_reslist(doc);
+                if (nextpage != null) {
+                    requested.addAll(nextpage);
+                }
             }
         }
         adata.setReservations(requested);
@@ -964,15 +994,15 @@ public class TouchPoint extends BaseApi implements OpacApi {
         return adata;
     }
 
-    private void parse_medialist(List<Map<String, String>> media, Document doc) {
-        doc.setBaseUri(opac_url);
+    static List<Map<String, String>> parse_medialist(Document doc) {
+        List<Map<String, String>> media = new ArrayList<Map<String, String>>();
         Elements copytrs = doc.select(".data tr");
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
 
         int trs = copytrs.size();
         if (trs == 1) {
-            return;
+            return null;
         }
         assert (trs > 0);
         for (int i = 1; i < trs; i++) {
@@ -980,17 +1010,22 @@ public class TouchPoint extends BaseApi implements OpacApi {
             Map<String, String> e = new HashMap<>();
 
             if (tr.text().contains("keine Daten")) {
-                return;
+                return null;
             }
-            e.put(AccountData.KEY_LENT_TITLE, tr.child(2).select("b, strong")
+            e.put(AccountData.KEY_LENT_TITLE, tr.select(".account-display-title").select("b, strong")
                                                 .text().trim());
             try {
                 e.put(AccountData.KEY_LENT_AUTHOR,
-                        tr.child(2).html().split("<br[ /]*>")[1].trim());
+                        tr.select(".account-display-title").html().split("<br[ /]*>")[1].trim());
 
-                String[] col3split = tr.child(3).html().split("<br[ /]*>");
-                String frist = col3split[0].trim();
+                String[] col3split = tr.select(".account-display-state").html().split("<br[ /]*>");
+                String frist = Jsoup.parse(col3split[0].trim()).text().trim();
+                if (frist.contains(":")) {
+                    // BSB Munich: <span class="hidden-sm hidden-md hidden-lg">Fälligkeitsdatum : </span>26.02.2016<br>
+                    frist = frist.split(":")[1].trim();
+                }
                 if (frist.contains("-")) {
+                    // Chemnitz: 22.07.2015 - 20.10.2015<br>
                     frist = frist.split("-")[1].trim();
                 }
                 e.put(AccountData.KEY_LENT_DEADLINE, frist);
@@ -1028,23 +1063,22 @@ public class TouchPoint extends BaseApi implements OpacApi {
 
             media.add(e);
         }
+        return media;
     }
 
-    protected void parse_reslist(List<Map<String, String>> reservations,
-            Document doc) {
+    static List<Map<String, String>> parse_reslist(Document doc) {
+        List<Map<String, String>> reservations = new ArrayList<Map<String, String>>();
         Elements copytrs = doc.select(".data tr");
-        doc.setBaseUri(opac_url);
         int trs = copytrs.size();
-        if (trs == 1) {
-            return;
+        if (trs <= 1) {
+            return null;
         }
-        assert (trs > 0);
         for (int i = 1; i < trs; i++) {
             Element tr = copytrs.get(i);
             Map<String, String> e = new HashMap<>();
 
             if (tr.text().contains("keine Daten") || tr.children().size() == 1) {
-                return;
+                return null;
             }
 
             e.put(AccountData.KEY_RESERVATION_TITLE,
@@ -1072,6 +1106,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 
             reservations.add(e);
         }
+        return reservations;
     }
 
     protected LoginResponse login(Account acc) throws OpacErrorException, IOException {

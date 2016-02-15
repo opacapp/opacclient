@@ -520,6 +520,9 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                 }
                 fields = dataSource
                         .getSearchFields(app.getLibrary().getIdent());
+                if (fields == null) {
+                    return null;
+                }
             } else {
                 return null;
             }

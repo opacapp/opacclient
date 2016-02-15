@@ -1,0 +1,16 @@
+{
+    "account_supported": true,
+    "api": "winbiap",
+    "city": "Neufahrn",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://opac.winbiap.net/neufahrn"
+    },
+    "geo": [
+        48.3149823,
+        11.6617978
+    ],
+    "information": "http://www.neufahrn.de/einrichtungen-behoerden/gemeindliche-einrichtungen/gemeindebibliothek.html",
+    "state": "Bayern",
+    "title": "Gemeindebibliothek"
+}

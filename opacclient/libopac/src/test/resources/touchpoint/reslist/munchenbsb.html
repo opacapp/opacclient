@@ -1,0 +1,741 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<!-- saved from url=(0028)file:///tmp/BSB-Katalog.html -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="de" xml:lang="de" pmbx_context="6F8B253D-915A-46AE-8FCE-7898A089119C"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+<!--START of /BSB/commonHeader_ViewWeiche.jsp-->
+
+
+
+
+
+<!--START of /fachsicht/common/commonHeader.jsp-->
+
+
+<meta content="IE=Edge" http-equiv="X-UA-Compatible"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><link href="https://opacplus.bsb-muenchen.de/metaopac/default_bsb/images/bsb_logo_192.jpg" sizes="192x192" rel="shortcut icon apple-touch-icon">
+
+
+<!--START of /BSB/bsbHeader.jsp-->
+
+
+<!-- Include newest jQuery -->
+    <script src="./munchenbsb2_files/jQuery.bsbJQuery.min.1453270061000.js" type="text/javascript" style="color: rgb(0, 0, 0);">/**/</script>
+
+    <script language="javascript" type="text/javascript">/* <![CDATA[ */
+var $new = jQuery.noConflict();
+window.language = "de";
+window.typo3Lang = "???de.t3langForTPLang.default???";
+var view = "default";
+var hostViewKey = "opacplus.bsb-muenchen.de" + "_tpView";
+if (typeof (Storage) !== "undefined" && view.length > 0) {
+    sessionStorage.setItem(hostViewKey, view);
+}
+window.contextPath = "/metaopac/";
+/* ]]> */</script>
+    <script type="text/javascript" src="./munchenbsb2_files/bsb.tp.utils.min.1453977653000.js">/**/</script>
+    
+
+
+<!--END of /BSB/bsbHeader.jsp-->
+
+
+<link href="./munchenbsb2_files/opac.1453978815000.css" type="text/css" rel="stylesheet">
+
+
+<!--START of /BSB/commonHeaderOclcScripts.jsp-->
+
+
+<script src="./munchenbsb2_files/jquery.min.1453270062000.js" type="text/javascript">/**/</script>
+    <script src="./munchenbsb2_files/oclcScripts.min.1453270061000.js" type="text/javascript">/**/</script>
+  
+    
+
+
+<!--END of /BSB/commonHeaderOclcScripts.jsp-->
+
+
+<script type="text/javascript">/* <![CDATA[ */
+if (!(typeof globalSettings == "object" && globalSettings instanceof Map)) globalSettings = new Map();
+globalSettings.add({
+"imagePath": "/metaopac/default/images"
+});
+if (!(typeof i18n == "object" && i18n instanceof Map)) i18n = new Map();
+i18n.add({
+"common.header.loading.icon.alt": "Laden",
+"search.searchfield.suggestion.hits": "Treffer"
+});
+/* ]]> */</script><script type="text/javascript" src="./munchenbsb2_files/opacScripts.min.1453270061000.js">/**/</script>
+
+
+<!--START of /BSB/titleTag.jsp-->
+
+
+<title>
+        BSB-Katalog</title>
+
+
+
+<!--END of /BSB/titleTag.jsp-->
+
+
+
+
+
+<!--END of /fachsicht/common/commonHeader.jsp-->
+
+
+
+
+
+<!--END of /BSB/commonHeader_ViewWeiche.jsp-->
+
+
+<link type="text/css" rel="stylesheet" href="./munchenbsb2_files/jquery-ui-1.10.4.bsbJQuery.min.css"></head><body>
+
+
+
+
+<!--START of /default_bsb/useraccount/Layout.jsp-->
+
+
+   
+
+
+
+
+<div id="dic_bubble" class="selection_bubble" style="z-index:9999;" fetching="false"></div><div id="pageContainer" class="container">
+  
+  <div id="branding" class="row">
+    
+
+
+<!--START of /default_bsb/common/header.jsp-->
+
+
+<a href="https://opacplus.bsb-muenchen.de/metaopac/userAccount.do?methodToCall=showAccount&amp;accountTyp=ordered#main" class="skiplink">Springe zum Inhalt... (mit Enter-Taste)</a><a href="https://opacplus.bsb-muenchen.de/metaopac/userAccount.do?methodToCall=showAccount&amp;accountTyp=ordered#nav" class="skiplink">Springe zur Navigation... (mit Enter-Taste)</a><div class="col-sm-6 hidden-xs">
+            <a title="opacPlus" href="https://opacplus.bsb-muenchen.de/metaopac/start.do">
+            <img src="./munchenbsb2_files/opacPlus.gif" alt="OpacPlus" class="img-responsive">
+        </a>
+    </div>
+    <div class="col-sm-6 hidden-xs">
+        <a title="Bayerische Staatsbibliothek" href="http://www.bsb-muenchen.de/">
+            <!-- STARTLOGO -->
+            <img src="./munchenbsb2_files/bsb_logo.gif" alt="BSB-Homepage" class="img-responsive pull-right">
+            <!-- ENDLOGO -->
+        </a>
+    </div>
+    <div id="ajaxUrlSolrAutoCompletion">SolrQueryCompletionProxy</div>
+    <div id="ajaxUrlFastAutoCompletion">QueryCompletionProxy</div>
+    <div id="ajaxAutoCompletionDatabases" style="display:none">
+            100,153,255</div>
+    
+
+
+<!--START of /BSB/translitTool/translitTool.jsp-->
+
+
+<script type="text/javascript">/* <![CDATA[ */
+        var userInput = "";
+        var inputOutputFieldId = "";
+        var idCount = undefined;
+
+        function transliterateInput(inputFieldId, count){
+            inputOutputFieldId = '#'+inputFieldId;
+            if (count != undefined){
+                idCount = count;
+            }
+            hideErrorMessage();
+            //get the input value and strip tags etc. & remove boolean operators
+            userInput = $(inputOutputFieldId).val().replace(/(<([^>]+)>)/ig,"").replace("AND","").replace("OR","").replace("NOT","");
+            getTransliterationsFor(userInput);     
+        }
+
+        function addTransliterationsToSearchInput(transliterations){
+            if (transliterations.contains("#NO MATCH#")){
+                showNoMatchesMessage();
+                return false;
+            }
+            transliterations = transliterations.replace(/\|/g, " OR ").trim();
+            var output = userInput + " OR " + transliterations;
+            $(inputOutputFieldId).val(output);
+            inputOutputFieldId = "";
+            idCount = undefined;
+        }
+
+        function getTransliterationsFor(inputText){
+            var url = "/BsbTranslit/TranslitTool?q="+encodeURI(inputText);
+            $.get(url,function (data){
+                addTransliterationsToSearchInput(data);
+            });
+        }
+
+        function showNoMatchesMessage(){
+            showErrorMessage();
+            idCount = undefined;
+        }
+
+        function hideErrorMessage(){
+            var errorId = ".translitNohitsTextClass";
+            $(errorId).hide();
+        }
+        
+        function showErrorMessage(){
+            var errorId = "#translitNohitsText";
+            if (idCount != undefined){
+                errorId += "_"+idCount;
+            }
+            $(errorId).fadeIn();
+        }
+    /* ]]> */</script>
+
+
+
+<!--END of /BSB/translitTool/translitTool.jsp-->
+
+
+<span id="bsbAsyncScripts">
+        <span class="asyncScript" data-url="/metaopac/urf//BSB/js/opacAvailability.min.1453270061000.js" data-function="loadOpacAvailability"></span>
+        <span class="asyncScript" data-url="/metaopac/urf//BSB/js/sfx.min.1453270061000.js" data-function="loadSfx"></span>
+        <span class="asyncScript" data-url="/metaopac/urf//BSB/js/translitTools.min.1453270061000.js" data-function="loadTranslitTools"></span>
+        <span class="asyncScript" data-url="/metaopac/urf//BSB/js/weblinks/externalContentFetcher.min.1453270061000.js" data-function="loadExternalContentFetcher"></span>
+        <span class="asyncScript" data-url="/metaopac/urf//BSB/js/responsiveFeatures.min.1453270061000.js" data-function="loadResponsiveFeatures" data-options="{&quot;facetContainerId&quot;: &quot;availableFacets&quot;}"></span>
+        <span class="asyncScript" data-url="/metaopac/urf//BSB/js/virtualKeyboard/vk_loader.1453270061000.js" data-function="loadVirtualKeyboard" data-options="{&quot;vk_layout&quot;: &quot;RU Russian_Qwerty&quot;, &quot;vk_skin&quot;: &quot;flat_gray&quot;}"></span>
+    </span>
+
+    <script type="text/javascript">/* <![CDATA[ */
+        $new(document).on("translitToolsReady", function () {
+            translitTools.setVkButtonLabels("Virtuelle Tastatur einblenden",
+                    "Virtuelle Tastatur ausblenden");
+            translitTools.setVkFilters(['RU','AM','SP','KG','BG','TK','HU','BY','GE','KZ','LT','LV','UA','PL','CZ','AL','HR','IQ','IR','CN','GR','IL','JP','HU','UA','UZ','SK','SL','RO','MN','MK','FI','EE','BA']);
+        });
+        /* ]]> */</script>        
+    
+
+
+<!--END of /default_bsb/common/header.jsp-->
+
+
+
+    
+
+
+<!--START of /fachsicht/navigation/headNavi.jsp-->
+
+
+
+
+
+<!--END of /fachsicht/navigation/headNavi.jsp-->
+
+
+
+  </div>
+
+  
+
+
+<!--START of /default_bsb/navigation/mainNavi.jsp-->
+
+
+<!-- Actual Tiles Context 756 -->
+    <!-- Actual View Context default -->
+
+    
+
+
+<!--START of /BSB/whichOPAC.jsp-->
+
+
+<!-- bsb-touch03 -->
+        
+
+
+<!--END of /BSB/whichOPAC.jsp-->
+
+
+<script type="text/javascript">
+        $(document).ready(function () {
+            //Funktion starten, wenn DOM-ready  (warte 250ms bevor sich das menu schließt, wenn maus weg ist)
+            var samp = new DickerFisch('#nav', {NavTimeout: 250, Fit2ViewportClass: 'leftover', LimitLinks: 0, FitIfViewportSmaller: 1111, FirstLevelLayoutHorizontal: true});
+        });
+    </script>
+
+    <nav class="navbar navbar-default">
+
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#mainnavigation-collapse" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="visible-xs navbar-brand" href="https://opacplus.bsb-muenchen.de/">
+                <img alt="OPACplus-Logo" src="./munchenbsb2_files/opacPlus.gif">
+            </a>
+        </div>
+
+        <div class="row collapse navbar-collapse" id="mainnavigation-collapse">
+            <div id="tpMainNavi" class="col-sm-7 col-md-8">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a id="main-nav-dropdown" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" href="https://opacplus.bsb-muenchen.de/metaopac/userAccount.do?methodToCall=showAccount&amp;accountTyp=ordered#">
+                            <strong>Suche</strong><span class="caret"></span>
+                        </a>
+                        <ul id="mainnavigation_searchoptions" class="dropdown-menu" role="menu" aria-labelledby="main-nav-dropdown"><!-- 2nd level search -->
+                            <li><span class="sbh">. </span>
+                                    <a href="https://opacplus.bsb-muenchen.de/metaopac/search.do?methodToCall=switchSearchPage&amp;SearchType=1&amp;emptyFields=true">Einfache Suche</a></li>
+                            <li role="presentation"><span class="sbh">. </span>
+                                    <a href="https://opacplus.bsb-muenchen.de/metaopac/search.do?methodToCall=switchSearchPage&amp;SearchType=2&amp;emptyFields=true">Erweiterte Suche</a></li>
+                            <li class="hidden-xs" role="presentation"><span class="sbh">. </span>
+                                    <a href="https://opacplus.bsb-muenchen.de/metaopac/searchHistory.do?methodToCall=showHistory">Suchhistorie</a></li>
+                            </ul><!-- End 2nd level search-->
+                        <div class="clearfix">
+                    </div></li>
+                    <li class="hidden-xs"><span class="sbh">. </span>
+                        <a href="https://opacplus.bsb-muenchen.de/metaopac/memorizelist.do?methodToCall=show" class="empty"><strong>Merkliste</strong></a></li>
+                        <li class="dropdown"><span class="sbh">. </span>
+                        <a id="main-nav-account-dropdown" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" href="https://opacplus.bsb-muenchen.de/userAccount.do?methodToCall=start">
+                                <strong>Meine Daten</strong><span class="caret"></span>
+                            </a>
+                        <ul id="mainnavigation_searchoptions" class="dropdown-menu" role="menu" aria-labelledby="main-nav-account-dropdown"><!-- 2nd level  myaccount-->
+                            <li><span class="sbh">. </span><a href="https://opacplus.bsb-muenchen.de/metaopac/userAccount.do?methodToCall=start">Konto</a></li>
+                                        <li><span class="sbh">. </span><a href="https://opacplus.bsb-muenchen.de/metaopac/userData.do?methodToCall=show">Benutzerdaten</a></li>
+                                        <li class="hidden-xs"><span class="sbh">. </span><a href="https://opacplus.bsb-muenchen.de/metaopac/account.do?methodToCall=show">Sucheinstellungen</a></li>
+                                </ul><!-- End 2nd level myaccount-->
+                        <div class="clearfix">
+                    </div></li>
+                    <li class="hidden-xs hidden-sm hidden-md">
+                            <span class="sbh">. </span><a href="https://opacplus.bsb-muenchen.de/metaopac/stackOrder.do?methodToCall=start" class="daddy"><strong>Magazin-Bestellung</strong></a></li>
+                    <li class="hidden-xs hidden-sm hidden-md">
+                            <span class="sbh">. </span><a href="https://opacplus.bsb-muenchen.de/metaopac/additional.do?methodToCall=show" class="empty"><strong>Weitere Angebote</strong></a></li>
+                    </ul>
+            </div>
+            <div id="tpServiceNavi" class="col-xs-12 col-sm-5 col-md-4">
+                <ul class="nav navbar-nav">
+                    <li id="languageSelector">
+                        <span>de</span>
+                                    <span id="langSeparator">&nbsp;|&nbsp;</span>
+                                <a rel="alternate" hreflang="en" href="https://opacplus.bsb-muenchen.de/metaopac/search.do?methodToCall=selectLanguage&amp;Language=en">en</a>
+                                    </li>
+
+                    <!-- Login / Logout -->
+
+                    <!-- End Login / Logout -->
+                    <li>
+                            <a href="https://opacplus.bsb-muenchen.de/metaopac/asklibrary.do?methodToCall=show" title="Anfragen">Anfragen</a></li>
+                    <li class="hidden-xs">
+                        <a href="https://opacplus.bsb-muenchen.de/metaopac/help.do?helpContext=account&amp;helpSubContext=&amp;helpApplicationContext=\#" target="tphelpwindow" title="help">Hilfe</a></li>
+                    </ul>
+                </div>
+                <div id="userAccountFunctions" class="col-xs-12 col-sm-7">
+                <ul class="nav navbar-nav">
+                        <li id="loginInfo">
+                                    <span>
+                                        Benutzernummer:&nbsp; 
+                                        12345</span>
+                                </li>
+                                <li id="logoutLink" class="pull-right">
+                                    <a href="https://opacplus.bsb-muenchen.de/metaopac/login.do?methodToCall=logout">Abmelden</a></li>
+                            </ul>
+                </div>
+        </div>
+    </nav>
+
+
+
+<!--END of /default_bsb/navigation/mainNavi.jsp-->
+
+
+
+  
+
+
+<!--START of /default_bsb/result/searchfield.jsp-->
+
+
+<!-- refine search -->
+    <div id="div-search" class="row resultpage">
+        <form id="AdvancedSearchForm" method="get" action="https://opacplus.bsb-muenchen.de/metaopac/search.do" pmbx_context="F9917D19-A183-4D6E-8BE8-4A961BF8806F"><div class="col-xs-12 col-sm-12 col-md-8 col-centered">
+                <input type="hidden" name="methodToCall" value="submitButtonCall" pmbx_context="0B26D242-7F16-401D-87AD-F4B83E3B7363"><input type="hidden" name="methodToCallParameter" value="submitSearch" pmbx_context="00F2E931-D852-487A-96DF-8D13211DB02A"><input type="hidden" name="searchCategories[0]" value="-1" pmbx_context="900BEB6F-984F-4442-A4C0-8FF9DBA8645D"><input type="hidden" name="searchHistory" value="" pmbx_context="370089C2-BE56-4FE7-896E-35B2DCCB88A1"><input type="hidden" name="CSId" value="152547N409S3c3d16b13ca1c5e77ba18c729aac7ec353abe8ba" pmbx_context="DEC87C66-656A-4E1F-B238-9B07F3020B73"><input type="hidden" name="refine" value="false" pmbx_context="3C62F824-25CD-4376-B553-592A7FD76BEB"><input type="hidden" name="tab" value="tab1" pmbx_context="4DD73126-FD32-4673-8CC4-AEE39A29A9F8"><input type="hidden" name="View" value="default" pmbx_context="D1291AB9-7ABD-4CB0-86BA-6FBD89AFC308"><input type="hidden" name="authenticated" value="true" pmbx_context="9E2A5D4B-82E5-4DAE-99A2-E305D38AC343"><div class="input-group">
+                        <span class="hidden-xs input-group-addon">
+                            <label for="searchString_0">Suche nach:</label>
+                        </span>
+                        <span class="search-query">
+                            <input type="text" name="searchString[0]" value="" id="searchString_0" class="form-control query addQueryCompletion" pmbx_context="2D027CD8-7B20-44B1-8C98-6B1BC96551D0"></span>
+                        <span class="input-group-btn">
+                            <input name="submitSearch" type="submit" value="Suchen" class="btn btn-default dbutton" id="submitSearch" pmbx_context="0D597617-0F36-44AA-80BA-F5A20D23FF7B"></span>
+                    </div>
+                </div>
+            <div class="hidden text-center">
+                <span class="search-advanced">
+                        <a href="https://opacplus.bsb-muenchen.de/metaopac/search.do?emptyFields=false&amp;SearchType=2&amp;methodToCall=switchSearchPage" style="white-space: normal" class="col-xs-offset-1 col-xs-10 btn btn-default" title="Erweiterte Suche ändern">Erweiterte Suche ändern:</a></span>
+                </div>
+        </form></div>
+        <div class="row text-center">
+            <div class="hidden col-md-offset-3 col-md-5">
+                <span class="hidden-xs search-within alignleft hide-mobile">
+                    <input type="radio" name="refineType" value="new" checked="checked">Neue Suche
+                    &nbsp;<input type="radio" name="refineType" value="narrow">Weitere Suchbegriffe</span>
+            </div>
+            <div class="hidden-xs col-md-offset-4 col-md-3">
+                <span class="search-advanced">
+                        <a href="https://opacplus.bsb-muenchen.de/metaopac/search.do?emptyFields=false&amp;SearchType=2&amp;methodToCall=switchSearchPage" title="Erweiterte Suche ändern">Erweiterte Suche ändern</a></span>
+                </div>
+        </div>
+    
+
+
+<!--END of /default_bsb/result/searchfield.jsp-->
+
+
+
+  <div class="row">
+    <!-- filler /default/common/empty.jsp -->
+  </div>
+  <div class="row">
+    
+
+
+
+
+
+
+
+
+
+
+
+<!--START of /default_bsb/useraccount/accountdata/accountInfo2.jsp-->
+
+
+
+
+	
+
+        <div id="info2" class="col-sm-9 hidden-xs hide-mobile">
+            <script type="text/javascript">/* <![CDATA[ */
+if (!(typeof i18n == "object" && i18n instanceof Map)) i18n = new Map();
+i18n.add({
+"result.output.output.servererror": "Der Server liefert einen Fehler für Ihre Anfrage \u2014 bitte versuchen Sie es später noch einmal oder kontaktieren Sie Ihren Systemadministrator, falls dieses Problem andauert"
+});
+/* ]]> */</script>
+
+		
+		
+		
+		<strong class="hide-content">Test</strong>
+
+		<ul id="outputActions" class="list-inline">
+
+			
+
+				<li><a href="https://opacplus.bsb-muenchen.de/metaopac/userAccount.do?methodToCall=submit&amp;outputMode=print" target="_blank" id="print_userAccount" title="Einträge drucken"><img height="16" width="16" alt="drucken" src="./munchenbsb2_files/print.gif">
+          Drucken</a></li>
+			
+
+			
+
+				<li><a href="https://opacplus.bsb-muenchen.de/metaopac/userAccount.do?methodToCall=showAccount&amp;outputMode=mail" id="mail_userAccount" title="Einträge versenden"><img height="16" width="16" alt="E-Mail" src="./munchenbsb2_files/email.gif">
+					Versenden</a></li>
+			
+
+			
+				<li><a href="https://opacplus.bsb-muenchen.de/metaopac/userAccount.do?methodToCall=submit&amp;outputMode=save" target="_blank" id="save_userAccount" title="Einträge lokal speichern"><img height="16" width="16" alt="lokal speichern" src="./munchenbsb2_files/save.gif">
+					Speichern</a></li>
+			
+
+		</ul>
+
+		<script async="" src="./munchenbsb2_files/exportdialogs.min.js" type="text/javascript"></script>
+	</div>
+
+
+
+
+<!--END of /default_bsb/useraccount/accountdata/accountInfo2.jsp-->
+
+
+
+
+  </div>
+
+  <div id="main" class="row mainnosides">
+    <div id="SOWrap" class="col-xs-12">
+      <div id="middle"> 
+        
+
+
+<!--START of /default_bsb/useraccount/accountdata/accountLayout.jsp-->
+
+
+<form id="UserAccountForm" method="post" action="https://opacplus.bsb-muenchen.de/metaopac/userAccount.do" pmbx_context="89D8B3F9-5402-43A0-9B8C-E9B4F5699BBF"><input type="hidden" name="methodToCall" value="showaccount" pmbx_context="4C306937-2539-4A9C-89C4-97E82B6175AA"><input type="hidden" name="CSId" value="152547N409S3c3d16b13ca1c5e77ba18c729aac7ec353abe8ba" pmbx_context="CAB59F2C-A2A0-4858-8252-638AF0F6F4C8"><div id="accountContainer" class="box floatcon">
+                <div class="col-xs-12">
+                    <div class="row box-header floatcon">
+                        <div class="col-xs-6 col-sm-4 pull-right hidden-xs">
+                            <ul class="pagination pagination-sm">
+                    <li><a>«</a></li><li><a>1</a></li><li><a>»</a></li></ul></div>
+                        <h2 class="col-xs-8">Konto Übersicht</h2>
+                    </div>
+                    <div class="row">
+                        <div id="account-nav-wrapper" class="col-xs-12 col-sm-4 col-md-3 pull-left">
+                            
+
+
+<!--START of /default_bsb/useraccount/accountdata/accountNavi.jsp-->
+
+
+<ul id="account-nav" class="list-unstyled">
+            <li id="loaned">
+                <a href="https://opacplus.bsb-muenchen.de/metaopac/userAccount.do?methodToCall=showAccount&amp;accountTyp=loaned">Ausleihen&nbsp;(1)</a></li>  
+            <li id="ordered">Bestellungen (2)</li>
+            <li id="requested">
+                <a href="https://opacplus.bsb-muenchen.de/metaopac/userAccount.do?methodToCall=showAccount&amp;accountTyp=requested">Vormerkungen&nbsp;(0)</a></li>
+            <li id="fees">
+                <a href="https://opacplus.bsb-muenchen.de/metaopac/userAccount.do?methodToCall=showAccount&amp;accountTyp=fees">Gebühren&nbsp;(<span class="errortext">0&nbsp;</span>)</a></li>
+        </ul>
+
+    <script language="javascript" type="text/javascript">
+        /* <![CDATA[ */
+        var typ = "ordered";
+
+        var m_id;
+        var m_TypLabels = new Array();
+
+        m_TypLabels['loaned'] = 'Ausleihen (1)';
+        m_TypLabels['overdues'] = 'Gemahnte Medien';
+        m_TypLabels['recalled'] = 'Rückgeforderte Medien';
+        m_TypLabels['renewed'] = 'Verlängerte Medien';
+        m_TypLabels['ills'] = 'Fernleihen';
+        m_TypLabels['ordered'] = 'Bestellungen (2)';
+        m_TypLabels['requested'] = 'Vormerkungen (0)';
+        m_TypLabels['fees'] = 'Gebühren (0)';
+
+        m_id = document.getElementById(typ);
+        if (m_id != null)
+        {
+            m_id.innerHTML = m_TypLabels[typ];
+        }
+
+        /* ]]> */
+    </script>
+
+
+
+
+<!--END of /default_bsb/useraccount/accountdata/accountNavi.jsp-->
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+<!--START of /default/useraccount/accountInfo.jsp-->
+
+
+
+
+
+
+
+
+
+<!--END of /default/useraccount/accountInfo.jsp-->
+
+
+
+</div>
+                        <div class="col-xs-6 col-md-2 hidden-sm hidden-md hidden-lg">
+                            <ul class="pagination pagination-sm">
+                    <li><a>«</a></li><li><a>1</a></li><li><a>»</a></li></ul></div>
+                        <div id="account-data" class="col-xs-12 col-sm-8 col-md-9">
+                            
+
+
+<!--START of /default_bsb/useraccount/accountdata/orderedItems.jsp-->
+
+
+<div id="account-data">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width:5%" colspan="2">
+                            <abbr title="Nummer">
+                                Nr.</abbr>
+                        </th>
+                        <th>
+                            Titel/Verfasser</th>
+                        <th>
+                            </th>
+                    </tr> 
+                </thead>
+                <tbody>
+                    <tr>
+                                <td class="accountDisplayNo">
+                                    1.
+                                </td>
+                                <td class="mediaTypeIcon">
+                                    <img src="./munchenbsb2_files/buch01.gif" width="16" height="16" alt="" title="buch01">
+                                </td>
+                                <td class="account-display-title">
+                                    <b>Briefe an Wolfgang Menzel</b><br>
+                                    Meisner, Heinrich ¬[Hrsg.]<br>
+                                    36601407080011&nbsp;/&nbsp;Epist. 114 r</td>
+                                <td class="account-display-state">
+                                    26.01.2016<br>
+                                    bestellt<br>
+                                    BSB / Leihe nur in den Allgemeinen Lesesaal</td>
+                            </tr>
+                        <tr>
+                                <td class="accountDisplayNo">
+                                    2.
+                                </td>
+                                <td class="mediaTypeIcon">
+                                    <img src="./munchenbsb2_files/buch01.gif" width="16" height="16" alt="" title="buch01">
+                                </td>
+                                <td class="account-display-title">
+                                    <b>Denkwürdigkeiten</b><br>
+                                    Menzel, Wolfgang<br>
+                                    36607874870012&nbsp;/&nbsp;Biogr. 772 h</td>
+                                <td class="account-display-state">
+                                    26.01.2016<br>
+                                    bestellt<br>
+                                    BSB / Leihe nur in den Allgemeinen Lesesaal</td>
+                            </tr>
+                        </tbody>
+            </table>
+            </div>  
+    
+
+
+<!--END of /default_bsb/useraccount/accountdata/orderedItems.jsp-->
+
+
+</div>
+                    </div>
+                    <div class="row box-header floatcon">
+                        <div class="col-xs-6 col-md-2 hidden-sm hidden-md hidden-lg">
+                            <ul class="pagination pagination-sm">
+                    <li><a>«</a></li><li><a>1</a></li><li><a>»</a></li></ul></div>
+                        <div class="col-xs-6 col-md-2 hidden-xs pull-right">
+                            <ul class="pagination pagination-sm">
+                    <li><a>«</a></li><li><a>1</a></li><li><a>»</a></li></ul></div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+
+<!--END of /default_bsb/useraccount/accountdata/accountLayout.jsp-->
+
+
+
+      </div>
+    </div>
+    
+      
+    
+  </div>
+
+  
+
+
+<!--START of /default_bsb/common/footer.jsp-->
+
+
+<div id="footer" class="row">
+
+        <div class="row col-xs-12 text-center">
+                Bitte verwenden Sie die Funktion&nbsp;
+                <a href="https://opacplus.bsb-muenchen.de/metaopac/login.do?methodToCall=logout" title="Abmelden">Abmelden</a> , um den versehentlichen Zugriff auf Ihre persönlichen Daten zu vermeiden. </div>
+        <div id="mobileSwitch" class="row hidden-lg col-xs-12 text-center">
+                    <a id="desktopSwitchLink" title="Zur Desktop-Ansicht wechseln" href="https://opacplus.bsb-muenchen.de/metaopac/userAccount.do?methodToCall=showAccount&amp;accountTyp=ordered#">
+                        Zur Desktop-Ansicht wechseln</a>
+                </div>
+            <div class="row col-xs-12 text-center">
+            <span>© 2016. Alle Rechte vorbehalten. <a href="https://www.bsb-muenchen.de/impressum-datenschutzerklaerung/" target="_blank">Bayerische Staatsbibliothek</a></span>
+        </div>
+    </div>
+    <script type="text/javascript">/*  */
+        $(document).ready(function() {
+            try {
+                if (typeof piwikTracker === 'undefined') {
+                    $.ajax({
+                        url: "/piwik/piwik.js",
+                        dataType: "script",
+                        cache: true,
+                        success: function() {
+                            runPiwik(8, "opacplus.bsb-muenchen.de", "extern", "de", "true", "");
+                        }
+                    });
+                } else {
+                    runPiwik(8, "opacplus.bsb-muenchen.de", "extern", "de", "true", "");
+                }
+            } catch (ex) {
+                ieSafeLog("Error running Piwik: " + ex);
+            }
+        });
+        /*  */</script><noscript>&amp;lt;p&amp;gt;&amp;lt;img alt="" style="border:0" src="/piwik/piwik.php?idsite=8"/&amp;gt;&amp;lt;/p&amp;gt;</noscript>
+
+
+<!--END of /default_bsb/common/footer.jsp-->
+
+
+ 
+</div> 
+
+
+
+
+<!--END of /default_bsb/useraccount/Layout.jsp-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--START of /default/common/commonActions.jsp-->
+
+
+
+  
+  
+  
+  
+    
+      
+    
+  
+  
+  
+     
+
+
+
+
+<!--END of /default/common/commonActions.jsp-->
+
+
+
+
+
+
+<!--END of /WEB-INF/tags/metaHeader.tag-->
+
+
+</body></html>

@@ -71,25 +71,11 @@
             android:src="@drawable/ic_action_search"/>
     </RelativeLayout>
     <!-- The navigation drawer -->
-    <de.geeksfactory.opacclient.ui.ScrimInsetsFrameLayout
+    <de.geeksfactory.opacclient.ui.AccountSwitcherNavigationView
         android:id="@+id/navdrawer"
-        android:layout_width="320dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:paddingTop="@dimen/padding_status_bar"
-        android:elevation="10dp"
-        android:fitsSystemWindows="true"
-        app:scrimInsetsView_insetForeground="#4000">
-
-        <ListView
-            android:id="@+id/drawer_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:choiceMode="multipleChoice"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="0dp"
-            android:background="@color/nav_bg"
-            android:listSelector="@drawable/ripple"/>
-    </de.geeksfactory.opacclient.ui.ScrimInsetsFrameLayout>
+        app:menu="@menu/navigation_drawer"
+        app:headerLayout="@layout/navigation_drawer_header"/>
 </android.support.v4.widget.DrawerLayout>

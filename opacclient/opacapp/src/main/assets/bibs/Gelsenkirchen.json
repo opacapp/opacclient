@@ -15,6 +15,7 @@
             "title": 7
         },
         "baseurl": "https://katalog.stadtbibliothek-ge.de",
+        "customssl": true,
         "copiestable": {
             "barcode": 3,
             "branch": 1,
