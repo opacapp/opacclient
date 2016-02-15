@@ -905,6 +905,13 @@ public class Zones extends BaseApi {
                 String value = tr.select(".LoanBrowseFieldDataCell").text().trim();
                 if (desc.equals("Titel")) {
                     item.put(AccountData.KEY_LENT_TITLE, value);
+                    if (tr.select(".LoanBrowseFieldDataCell a[href]").size() > 0) {
+                        String href = tr.select(".LoanBrowseFieldDataCell a[href]").attr("href");
+                        Map<String, String> params = getQueryParamsFirst(href);
+                        if (params.containsKey("BACNO")) {
+                            item.put(AccountData.KEY_LENT_ID, params.get("BACNO"));
+                        }
+                    }
                 }
                 if (desc.equals("Verfasser")) {
                     item.put(AccountData.KEY_LENT_AUTHOR, value);
