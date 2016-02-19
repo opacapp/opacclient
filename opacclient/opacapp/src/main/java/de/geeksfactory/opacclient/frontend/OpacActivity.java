@@ -373,37 +373,32 @@ public abstract class OpacActivity extends AppCompatActivity
         } catch (Exception e) {
         }
         Fragment previousFragment = fragment;
-        switch (item.getItemId()) {
-            case R.id.nav_search:
-                fragment = new SearchFragment();
-                setTwoPane(false);
-                setFabVisible(true);
-                break;
-            case R.id.nav_account:
-                fragment = new AccountFragment();
-                setTwoPane(false);
-                setFabVisible(false);
-                break;
-            case R.id.nav_starred:
-                fragment = new StarredFragment();
-                setTwoPane(true);
-                setFabVisible(false);
-                break;
-            case R.id.nav_info:
-                fragment = new InfoFragment();
-                setTwoPane(false);
-                setFabVisible(false);
-                break;
-            case R.id.nav_settings: {
-                Intent intent = new Intent(this, MainPreferenceActivity.class);
-                startActivity(intent);
-                return;
-            }
-            case R.id.nav_about: {
-                Intent intent = new Intent(this, AboutActivity.class);
-                startActivity(intent);
-                return;
-            }
+        // we cannot use a switch statement here because it breaks compatibility to the Plus Edition
+        int itemId = item.getItemId();
+        if (itemId == R.id.nav_search) {
+            fragment = new SearchFragment();
+            setTwoPane(false);
+            setFabVisible(true);
+        } else if (itemId == R.id.nav_account) {
+            fragment = new AccountFragment();
+            setTwoPane(false);
+            setFabVisible(false);
+        } else if (itemId == R.id.nav_starred) {
+            fragment = new StarredFragment();
+            setTwoPane(true);
+            setFabVisible(false);
+        } else if (itemId == R.id.nav_info) {
+            fragment = new InfoFragment();
+            setTwoPane(false);
+            setFabVisible(false);
+        } else if (itemId == R.id.nav_settings) {
+            Intent intent = new Intent(this, MainPreferenceActivity.class);
+            startActivity(intent);
+            return;
+        } else if (itemId == R.id.nav_about) {
+            Intent intent = new Intent(this, AboutActivity.class);
+            startActivity(intent);
+            return;
         }
         setFabOnClickListener(item.getItemId());
 

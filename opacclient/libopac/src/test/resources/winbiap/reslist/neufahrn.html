@@ -1,0 +1,464 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+    <meta http-equiv="Content-Style-Type" content="text/css"/>
+    <meta name="language" content="deutsch"/>
+    <meta name="robots" content="all"/>
+    <meta name="author" content="Jürgen Mödl, Oliver Janssen"/>
+    <meta name="abstract" content="Mediensuche online"/>
+    <meta name="copyright" content="Copyright by datronic IT-Systeme GmbH &amp; Co. KG."/>
+    <meta name="publisher" content="datronic IT-Systeme GmbH &amp; Co. KG."/>
+    <meta name="distribution" content="global"/>
+    <title>
+        Gemeindebibliothek Neufahrn - Leserkonto - Vorbestellungen
+    </title>
+    <link href='http://opac.winbiap.net/neufahrn/favicon.ico' rel='shortcut icon'/>
+    <link href='http://opac.winbiap.net/neufahrn/favicon.ico' rel='icon' type='image/ico'/>
+    <link rel='apple-touch-icon' href='http://opac.winbiap.net/neufahrn/apple-touch-icon-57x57.png'
+          sizes='57x57'/>
+    <link rel='apple-touch-icon' href='http://opac.winbiap.net/neufahrn/apple-touch-icon-60x60.png'
+          sizes='60x60'/>
+    <link rel='apple-touch-icon' href='http://opac.winbiap.net/neufahrn/apple-touch-icon-72x72.png'
+          sizes='72x72'/>
+    <link rel='apple-touch-icon' href='http://opac.winbiap.net/neufahrn/apple-touch-icon-76x76.png'
+          sizes='76x76'/>
+    <link rel='apple-touch-icon'
+          href='http://opac.winbiap.net/neufahrn/apple-touch-icon-114x114.png' sizes='114x114'/>
+    <link rel='apple-touch-icon'
+          href='http://opac.winbiap.net/neufahrn/apple-touch-icon-120x120.png' sizes='120x120'/>
+    <link rel='apple-touch-icon'
+          href='http://opac.winbiap.net/neufahrn/apple-touch-icon-144x144.png' sizes='144x144'/>
+    <link rel='apple-touch-icon'
+          href='http://opac.winbiap.net/neufahrn/apple-touch-icon-precomposed.png' sizes='152x152'/>
+    <link href='http://opac.winbiap.net/neufahrn/css/bootstrap.css' type='text/css' rel='stylesheet'
+          media='screen'/>
+    <link href='http://opac.winbiap.net/neufahrn/css/menu/menu.css' type='text/css' rel='stylesheet'
+          media='screen'/>
+    <link href='http://opac.winbiap.net/neufahrn/css/menu/menu-icons.css' type='text/css'
+          rel='stylesheet' media='screen'/>
+    <link href='http://opac.winbiap.net/neufahrn/css/search.css' type='text/css' rel='stylesheet'
+          media='screen'/>
+    <link href='http://opac.winbiap.net/neufahrn/css/forms.css' type='text/css' rel='stylesheet'
+          media='screen'/>
+    <link href='http://opac.winbiap.net/neufahrn/css/images.css' type='text/css' rel='stylesheet'
+          media='screen'/>
+    <link href='http://opac.winbiap.net/neufahrn/css/useraccount.css' type='text/css'
+          rel='stylesheet' media='screen'/>
+    <link href='http://opac.winbiap.net/neufahrn/css/base_firefox.css' type='text/css'
+          rel='stylesheet' media='screen'/>
+    <link href='http://opac.winbiap.net/neufahrn/css/print.css' type='text/css' rel='stylesheet'
+          media='print'/>
+    <link id='design' href='http://opac.winbiap.net/neufahrn/css/styles/portal_defaultv2.css'
+          type='text/css' rel='stylesheet' media='screen'/>
+    <link class='design'
+          href='http://opac.winbiap.net/neufahrn/customers/neufahrn/css/additional.css'
+          type='text/css' rel='stylesheet' media='screen'/>
+    <script src='http://opac.winbiap.net/neufahrn/js/jquery.js' type='text/javascript'></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#ctl00_ContentPlaceHolderMain_HyperLinkCovers').click(function () {
+                $('#ctl00_ContentPlaceHolderMain_HyperLinkCovers').next("label:first").text('...wird geladen');
+                $('div.coverWrapper').slideToggle(600, function () {
+                    $('#ctl00_ContentPlaceHolderMain_HyperLinkCovers').next("label:first").text('Details einblenden');
+                });
+            });
+        });
+
+    </script>
+</head>
+<body id="ctl00_body" style="font-size:0.8em;">
+<form name="aspnetForm" method="post" action="reservations.aspx" id="aspnetForm">
+    <div>
+        <input type="hidden" name="__VIEWSTATEFIELDCOUNT" id="__VIEWSTATEFIELDCOUNT" value="3"/>
+        <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE"
+               value="/wEPDwUKMTE5MjcxMzUxMQ9kFgJmD2QWAgIDDxYCHgVzdHlsZQUQZm9udC1zaXplOjAuOGVtOxYCZg9kFgQCAg9kFgJmDxYCHgdWaXNpYmxlaGQCCA9kFgYCAQ8PFgIeBFRleHQFJ1NpZSBoYWJlbiBkZXJ6ZWl0IDEgTWVkaWVuIHZvcmJlc3RlbGx0IWRkAgUPDxYCHgtOYXZpZ2F0ZVVybAV4aHR0cDovL29wYWMud2luYmlhcC5uZXQvbmV1ZmFocm4vc2VydmljZS9yc3MuYXNweD9kYXRhPVNtOWlQVlZ6WlhKU1pYTmxjblpoZEdsdmJuTW1ZVzF3TzFKbFlXUmxjbWxrUFRrM016RT0tUXNEU05sdzByNTQ9ZGQCCQ88KwANAQAPFgQeC18hRGF0YUJvdW5kZx4LXyFJdGVtQ291bnQCAWQWAmYPZBYEAgIPZBYcZg8PFgQeCENzc0NsYXNzBQtudmVyZnVlZ2Jhch4EXyFTQgICZBYCAgEPDxYCHwIFBTIyNzczZGQCAQ8PFgQfBgULbnZlcmZ1ZWdiYXIfBwICZBYCAgEPDxYEHghJbWFnZVVybAUbfi9pbWFnZXMvYWN0aW9ucy9kZW5pZWQucG5nHgdUb29sVGlwBRVub2NoIG5pY2h0IHZlcmbDvGdiYXJkZAICDw8WBB8GBQtudmVyZnVlZ2Jhch8HAgJkFgICAQ8PFgIfCAVkaHR0cDovL2NvdmVyLndpbmJpYXAubmV0L2NvdmVyc2VydmljZXMvZ2V0Y292ZXIuYXNoeD94MTM9NTA1MTg5MDAxMjk2OCZjYXRpZD00NzYwMiZsaWJpZD0mY291bnRyeT1ERRYCHgNncnAFUGh0dHA6Ly9vcGFjLndpbmJpYXAubmV0L25ldWZhaHJuL2N1c3RvbWVycy9uZXVmYWhybi8vaW1hZ2VzL21lZGlhZ3JwL2tvbnNvbGUuZ2lmZAIDDw8WBB8GBQtudmVyZnVlZ2Jhch8HAgJkFgICAQ8PFgIf"/>
+        <input type="hidden" name="__VIEWSTATE1" id="__VIEWSTATE1"
+               value="AmVkZAIEDw8WBB8GBQtudmVyZnVlZ2Jhch8HAgJkFgICAQ8PFgQfAmUfCWVkZAIFDw8WBB8GBQtudmVyZnVlZ2Jhch8HAgJkFgICAQ8PFgQfAgURTEVHTyBIYXJyeSBQb3R0ZXIfCQURTEVHTyBIYXJyeSBQb3R0ZXJkZAIGDw8WBB8GBQtudmVyZnVlZ2Jhch8HAgJkFgICAQ8PFgIfAgUKMDEuMDEuMDAwMWRkAgcPDxYEHwYFC252ZXJmdWVnYmFyHwcCAmQWAgIBDw8WAh8CBQowMS4wMS4wMDAxZGQCCA8PFgQfBgULbnZlcmZ1ZWdiYXIfBwICZBYCAgEPDxYCHwIFCjE3LjAyLjIwMTZkZAIJDw8WBB8GBQtudmVyZnVlZ2Jhch8HAgJkFgICAQ8PFgIfAgUbR2VtZWluZGViaWJsaW90aGVrIE5ldWZhaHJuZGQCCg8PFgQfBgULbnZlcmZ1ZWdiYXIfBwICZBYCAgEPDxYCHwJlZGQCCw8PFgQfBgULbnZlcmZ1ZWdiYXIfBwICZBYCAgEPDxYCHwgFGS4uL2ltYWdlcy9hY3Rpb25zL2RlbC5naWYWAh4Hb25jbGljawXGA2phdmFzY3JpcHQ6RGVsZXRlUmVzZXJ2YXRpb24oJyNjdGwwMF9Db250ZW50UGxhY2VIb2xkZXJNYWluX0dyaWRWaWV3UmVzZXJ2YXRpb25fY3RsMDInLCAnI2N0bDAwX0NvbnRlbnRQbGFjZUhvbGRlck1haW5fR3JpZFZpZXdSZXNlcnZhdGlvbl9jdGwwMl9JbWFnZVJlc2VydmF0aW9uRGVsZXRlJywgJ2NtVnpaWEoyWVhScGIyNUpaRDAwTURJMU1pWmhiWEE3Y21WaFpHVnlTV1E5T1Rjek1TWmhiWEE3Ylc5a1pUMHgtTmZmRTY1Tk9IWUk9JywnLi4vc2VydmljZS9Vc2VyU2VydmljZS5hc2h4JywnVm9yYmVzdGVsbHVuZzogXCcgLSBMRUdPIEhhcnJ5"/>
+        <input type="hidden" name="__VIEWSTATE2" id="__VIEWSTATE2"
+               value="IFBvdHRlclwnIHdpcmtsaWNoIGzDtnNjaGVuPycsJyNjdGwwMF9Db250ZW50UGxhY2VIb2xkZXJNYWluX0xhYmVsQWNjb3VudFRhYmxlUmVzdWx0JywnU2llIGhhYmVuIGRlcnplaXQgJCBNZWRpZW4gdm9yYmVzdGVsbHQhJyk7IHJldHVybiBmYWxzZTtkAgwPDxYEHwYFC252ZXJmdWVnYmFyHwcCAmQWAgIBDw8WAh8CBQU0MDI1MmRkAg0PDxYEHwYFC252ZXJmdWVnYmFyHwcCAmQWAgIBDw8WBh8JBRJEZXRhaWxzIHp1bSBNZWRpdW0fAgUKRGV0YWlscy4uLh8DBaMBaHR0cDovL29wYWMud2luYmlhcC5uZXQvbmV1ZmFocm4vZGV0YWlsLmFzcHg/ZGF0YT1VM0pqUFhWelpYSnlaWE5sY25aaGRHbHZibk1tWVcxd08wTmhkR0ZzYjJkMVpVbGtQVFEzTmpBeUptRnRjRHROWldScFlVbGtQVEl5TnpjekptRnRjRHRqYldROVNXNXBkQT09LWdEWE9DOFRnMnVBPWRkAgMPDxYCHwFoZGQYAQUwY3RsMDAkQ29udGVudFBsYWNlSG9sZGVyTWFpbiRHcmlkVmlld1Jlc2VydmF0aW9uDzwrAAoBCAIBZBHX4KlvheWRHrP+okxIsjju20Tq"/>
+    </div>
+
+    <div>
+
+        <input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR"
+               value="234920E3"/>
+    </div>
+    <a id="top" name="top" style="position: absolute; top: -20px; left: -20px;"></a>
+
+    <div id="PageMain" class="PageMain container">
+        <div id="PageMainContent" class="PageMainContent">
+            <div style="left: 0px; width: 96px; position: absolute; top: 0px; height: 19px"
+                 id="DivScrollTop">
+
+            </div>
+            <div class="DivHead" id="Header">
+
+
+                <div id="LogoCustomer">
+                    <a href="http://opac.winbiap.net/neufahrn/index.aspx">
+                        <img alt="Gemeindebibliothek Neufahrn"
+                             src="http://opac.winbiap.net/neufahrn/customers/neufahrn/images/customer.jpg"
+                             border="0" style="border-width: 0px"/></a>
+                </div>
+
+            </div>
+            <div id="DivBorderTop">
+
+                <div id="ToolbarTabs" style="width: 100%">
+
+                    <div id="menu-toolbar">
+                        <ul id="ctl00_uc_toolbar_TabToolbarMain_MainMenu">
+                            <li class='MenuItem '><span id='index' class=''>
+    <a id="ctl00_uc_toolbar_TabToolbarMain_ctl00_HyperLinkMenuItem" title="Hauptseite"
+       class="CtrlToolbarHyperlinks" href="../index.aspx" target="_self">Hauptseite</a>
+</span></li>
+
+                            <li class='MenuItem '><span id='search' class=''>
+    <a id="ctl00_uc_toolbar_TabToolbarMain_ctl01_HyperLinkMenuItem" title="Suchen"
+       class="CtrlToolbarHyperlinks" href="../search.aspx" target="_self">Suchen</a>
+</span></li>
+
+                            <li class='MenuItem '><span id='acquisitions' class=''>
+    <a id="ctl00_uc_toolbar_TabToolbarMain_ctl02_HyperLinkMenuItem" title="Neuerwerbungen"
+       class="CtrlToolbarHyperlinks" href="../acquisitions.aspx" target="_self">Neuerwerbungen</a>
+</span></li>
+
+                            <li class='MenuItem '><span id='toplist' class=''>
+    <a id="ctl00_uc_toolbar_TabToolbarMain_ctl03_HyperLinkMenuItem" title="Topliste"
+       class="CtrlToolbarHyperlinks" href="../toplist.aspx" target="_self">Topliste</a>
+</span></li>
+
+                            <li class='MenuItem '><span id='antolin' class=''>
+    <a id="ctl00_uc_toolbar_TabToolbarMain_ctl04_HyperLinkMenuItem" title="Antolin"
+       class="CtrlToolbarHyperlinks" href="../antolin.aspx" target="_self">Antolin</a>
+</span></li>
+
+                            <li class='MenuItem '><span id='register' class=''>
+    <a id="ctl00_uc_toolbar_TabToolbarMain_ctl05_HyperLinkMenuItem" title="Register"
+       class="CtrlToolbarHyperlinks" href="../register.aspx" target="_self">Register</a>
+</span></li>
+
+                            <li class='MenuItem active'><span id='useroverview' class='activemenu'>
+    <a id="ctl00_uc_toolbar_TabToolbarMain_ctl06_HyperLinkMenuItem" title="Leserkonto"
+       class="CtrlToolbarHyperlinks" href="overview.aspx" target="_self">Leserkonto</a>
+</span></li>
+                        </ul>
+                    </div>
+                    <div id="SubMenu" class="submenu">
+                        <ul id="ctl00_uc_toolbar_TabToolbarMain_MainSubMenu" class="submenu-toolbar"
+                            style="display:none">
+
+                            <li class='MenuItem '><span id='useroverview' class=''>
+    <a id="ctl00_uc_toolbar_TabToolbarMain_ctl07_HyperLinkMenuItem" title="Übersicht"
+       class="CtrlToolbarHyperlinks" href="overview.aspx" target="_self">Übersicht</a>
+</span></li>
+                            <li class='submenuseperator'> |</li>
+                            <li class='MenuItem '><span id='userborrow' class=''>
+    <a id="ctl00_uc_toolbar_TabToolbarMain_ctl08_HyperLinkMenuItem" title="Entleihungen"
+       class="CtrlToolbarHyperlinks" href="borrow.aspx" target="_self">Entleihungen</a>
+</span></li>
+                            <li class='submenuseperator'> |</li>
+                            <li class='MenuItem active'><span id='userreservations'
+                                                              class='activemenu'>
+    <a id="ctl00_uc_toolbar_TabToolbarMain_ctl09_HyperLinkMenuItem" title="Vorbestellungen"
+       class="CtrlToolbarHyperlinks" href="reservations.aspx" target="_self">Vorbestellungen</a>
+</span></li>
+                            <li class='submenuseperator'> |</li>
+                            <li class='MenuItem '><span id='usercharges' class=''>
+    <a id="ctl00_uc_toolbar_TabToolbarMain_ctl10_HyperLinkMenuItem" title="Gebühren"
+       class="CtrlToolbarHyperlinks" href="charges.aspx" target="_self">Gebühren</a>
+</span></li>
+                            <li class='submenuseperator'> |</li>
+                            <li class='MenuItem '><span id='userfavorites' class=''>
+    <a id="ctl00_uc_toolbar_TabToolbarMain_ctl11_HyperLinkMenuItem" title="Merkliste"
+       class="CtrlToolbarHyperlinks" href="favorites.aspx" target="_self">Merkliste</a>
+</span></li>
+                            <li class='submenuseperator'> |</li>
+                            <li class='MenuItem '><span id='usersettings' class=''>
+    <a id="ctl00_uc_toolbar_TabToolbarMain_ctl12_HyperLinkMenuItem" title="Einstellungen"
+       class="CtrlToolbarHyperlinks" href="settings.aspx" target="_self">Einstellungen</a>
+</span></li>
+                            <li class='submenuseperator'> |</li>
+                            <li class='MenuItem '><span id='userlogout' class=''>
+    <a id="ctl00_uc_toolbar_TabToolbarMain_ctl13_HyperLinkMenuItem" title="Abmelden"
+       class="CtrlToolbarHyperlinks" href="logout.aspx" target="_self">Abmelden</a>
+</span></li>
+                        </ul>
+                    </div>
+                    <div class="clear">
+                    </div>
+
+                    <script type="text/javascript">
+    $(document).ready(function() {
+        var leftmain = $('span#useroverview').position().left;
+        leftmain = leftmain + ($('span#useroverview').width() / 2);
+        
+        var subMenuWidth = $('#ctl00_uc_toolbar_TabToolbarMain_MainSubMenu').width();
+        var newposition = leftmain - (subMenuWidth / 2);
+        var totalMenuWidth = $('#SubMenu').width();
+        var completeWidth = (newposition + subMenuWidth);
+        
+        
+        if (completeWidth > totalMenuWidth)
+            newposition = newposition - (completeWidth - totalMenuWidth) - 10;
+        
+        if (newposition < 0)
+            newposition = 0;
+        
+        $('#ctl00_uc_toolbar_TabToolbarMain_MainSubMenu').css("position", "relative");
+        $('#ctl00_uc_toolbar_TabToolbarMain_MainSubMenu').css("margin-left", newposition);
+
+        $('#ctl00_uc_toolbar_TabToolbarMain_MainSubMenu').show();
+    });
+
+                    </script>
+
+                </div>
+            </div>
+            <!--[if IE 6]>
+            <br/>
+            <div class="infobox_warning">Für die korrekte Anzeige dieser Webseite wird ein aktueller Internet-Browser benötigt.
+                Bitte aktualisieren Sie Ihren Internet Explorer auf die aktuelle Version.
+            </div>
+            <![endif]-->
+
+            <div id="ContentMain">
+                <div id="ContentTitleWrapper">
+
+                    <h2>Leserkonto -
+                        Vorbestellung</h2>
+
+                </div>
+                <div style="clear: both">
+
+
+                </div>
+
+                <div id="Content">
+                    <div class="infobox" style="padding: 10px">
+                        <div class="row-fluid">
+                            <div class="span6">
+                                <span id="ctl00_ContentPlaceHolderMain_LabelAccountTableResult">Sie haben derzeit 1 Medien vorbestellt!</span>
+                            </div>
+                            <div class="span6">
+                                <div class="btn-toolbar" style="margin: 0px 0px">
+                                    <div class="btn-group" style="float: right;">
+                                        <a id="ctl00_ContentPlaceHolderMain_PrintButton"
+                                           title="Diese Seite drucken" class="btn"
+                                           onclick="window.print(); return false;"
+                                           href="javascript:void(0);">
+                                            <i class="sprite sprite-print"></i>
+                                        </a>
+                                        <a id="ctl00_ContentPlaceHolderMain_HyperLinkRss"
+                                           title="RSS-Feed: Alle vorbestellten Medien die für Sie bereit liegen."
+                                           class="btn"
+                                           href="http://opac.winbiap.net/neufahrn/service/rss.aspx?data=Sm9iPVVzZXJSZXNlcnZhdGlvbnMmYW1wO1JlYWRlcmlkPTk3MzE=-QsDSNlw0r54="
+                                           target="_blank">
+                                            <i class="sprite sprite-Rss"></i>
+                                        </a>
+                                        <a id="ctl00_ContentPlaceHolderMain_HyperLinkCovers"
+                                           title="Covers anzeigen" class="btn"
+                                           href="javascript:void(0);">
+                                            <i id="IconCovers"
+                                               class="sprite sprite-cover_visible"></i>Details einblenden
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+
+                    <div>
+                        <table class="GridViewReservation" cellspacing="0" border="0"
+                               id="ctl00_ContentPlaceHolderMain_GridViewReservation"
+                               style="border-collapse:collapse;border-collapse: inherit">
+                            <tr style="border-style:None;">
+                                <th scope="col">&nbsp;</th>
+                                <th class="text_center" scope="col">
+                                    <span id="ctl00_ContentPlaceHolderMain_GridViewReservation_ctl01_LabelHead_Bild"
+                                          class="cover" style="display: none;">Bild</span>
+                                </th>
+                                <th scope="col">Autor</th>
+                                <th scope="col">Titel</th>
+                                <th scope="col">vorbestellt</th>
+                                <th scope="col">Abholort</th>
+                                <th scope="col">
+                                    <img id="ctl00_ContentPlaceHolderMain_GridViewReservation_ctl01_ReservationsUsers"
+                                         title="Ihre Position in der Liste der Vorbesteller"
+                                         src="../images/actions/users.png" align="absmiddle"
+                                         style="border-width:0px;"/>
+                                </th>
+                                <th scope="col">&nbsp;</th>
+                                <th scope="col">&nbsp;</th>
+                            </tr>
+                            <tr>
+                                <td class="Borrowline" colspan="14">Noch nicht Verfügbar</td>
+                            </tr>
+                            <tr id="ctl00_ContentPlaceHolderMain_GridViewReservation_ctl02">
+                                <td class="nverfuegbar" align="center">
+                                    <img id="ctl00_ContentPlaceHolderMain_GridViewReservation_ctl02_ImageBorrow"
+                                         title="noch nicht verfügbar"
+                                         src="../images/actions/denied.png"
+                                         style="border-width:0px;"/>
+                                </td>
+                                <td class="nverfuegbar">
+                                    <div class="coverWrapper" style="display: none;">
+                                        <img id="ctl00_ContentPlaceHolderMain_GridViewReservation_ctl02_Image_Bild"
+                                             class="cover"
+                                             grp="http://opac.winbiap.net/neufahrn/customers/neufahrn//images/mediagrp/konsole.gif"
+                                             src="http://cover.winbiap.net/coverservices/getcover.ashx?x13=5051890012968&amp;catid=47602&amp;libid=&amp;country=DE"
+                                             style="width:80px;border-width:0px;"/>
+                                    </div>
+                                </td>
+                                <td class="nverfuegbar">
+                                    <span id="ctl00_ContentPlaceHolderMain_GridViewReservation_ctl02_LabelAutor"></span>
+                                </td>
+                                <td class="nverfuegbar">
+                                    <span id="ctl00_ContentPlaceHolderMain_GridViewReservation_ctl02_LabelTitle"
+                                          title="LEGO Harry Potter">LEGO Harry Potter</span>
+                                </td>
+                                <td class="nverfuegbar">
+                                    <span id="ctl00_ContentPlaceHolderMain_GridViewReservation_ctl02_LabelVorbestelltam">17.02.2016</span>
+                                </td>
+                                <td class="nverfuegbar">
+                                    <span id="ctl00_ContentPlaceHolderMain_GridViewReservation_ctl02_LabelBranch">Gemeindebibliothek Neufahrn</span>
+                                </td>
+                                <td class="nverfuegbar">
+                                    <span id="ctl00_ContentPlaceHolderMain_GridViewReservation_ctl02_LabelReservationIndex"
+                                          title="Ihre Position in der Liste der Vorbesteller"></span>
+                                </td>
+                                <td class="nverfuegbar" align="center">
+                                    <a id="ctl00_ContentPlaceHolderMain_GridViewReservation_ctl02_ImageReservationDelete"
+                                       title="Vorbestellung löschen"
+                                       onclick="javascript:DeleteReservation('#ctl00_ContentPlaceHolderMain_GridViewReservation_ctl02', '#ctl00_ContentPlaceHolderMain_GridViewReservation_ctl02_ImageReservationDelete', 'cmVzZXJ2YXRpb25JZD00MDI1MiZhbXA7cmVhZGVySWQ9OTczMSZhbXA7bW9kZT0x-NffE65NOHYI=','../service/UserService.ashx','Vorbestellung: \' - LEGO Harry Potter\' wirklich löschen?','#ctl00_ContentPlaceHolderMain_LabelAccountTableResult','Sie haben derzeit $ Medien vorbestellt!'); return false;"
+                                       href="javascript:void(0);"><img title="Vorbestellung löschen"
+                                                                       src="../images/actions/del.gif"
+                                                                       style="border-width:0px;"/></a>
+                                </td>
+                                <td class="nverfuegbar">
+                                    <a id="ctl00_ContentPlaceHolderMain_GridViewReservation_ctl02_HyperLinkAcountDetail"
+                                       title="Details zum Medium"
+                                       href="http://opac.winbiap.net/neufahrn/detail.aspx?data=U3JjPXVzZXJyZXNlcnZhdGlvbnMmYW1wO0NhdGFsb2d1ZUlkPTQ3NjAyJmFtcDtNZWRpYUlkPTIyNzczJmFtcDtjbWQ9SW5pdA==-gDXOC8Tg2uA=">Details...</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <br/>
+                </div>
+
+
+            </div>
+            <br style="clear: both"/>
+            <br/>
+
+            <div id="Navi" style="text-align: center;">
+
+                <a id="gototop" href="#top" class="GoTop">
+                    <small>Nach oben</small>
+                </a>
+
+            </div>
+            <div style="clear: both">
+
+            </div>
+            <br/>
+
+            <div id="Footer" style="width: 100%; color: #888888; text-align: center;">
+                <div id="DivLineBottom" class="Border" style="width: 100%; height: 3px;">
+                </div>
+                ©&nbsp;<a href="http://www.datronic.de/" target="_blank"><span
+                    style="color: #008000">datronic</span></a> IT-Systeme · <a
+                    id="ctl00_HyperLinkImpressum" href="../Impressum.aspx">Impressum</a> · <a
+                    id="privacy"
+                    href="http://opac.winbiap.net/neufahrn/privacy.aspx">Datenschutzerklärung</a> · <span
+                    style="color: #008000"><i>WinBIAP WebOPAC 4.3.3</i>
+                        
+                    </span>
+
+                <div id="Textsize" class="Textsize">
+                    <a id="linkFontSizeBig" class="fontsize" data-value="1" title="Text größer"
+                       href="#">A+</a>
+                    <a id="linkFontSizeDefault" class="fontsize" data-value="-1"
+                       title="Text Normalgröße" href="#">A</a>
+                    <a id="linkFontSizeSmall" class="fontsize" data-value="2" title="Text kleiner"
+                       href="#">A-</a>
+                    <script type="text/javascript">
+        $(document).on('click', '.fontsize', function (e) {
+            e.preventDefault();
+
+            var value = $(this).data('value');
+            //Check for int
+            if (value % 1 === 0) {
+                $.post("http://opac.winbiap.net/neufahrn/service/SearchService.ashx", { SetFontSize: value });
+                var size = '';
+
+                switch (value) {
+                    case 1:
+                        size = '1.0em';
+                        break;
+                    case 2:
+                        size = '0.7em';
+                        break;
+                    default:
+                        size = '0.8em';
+                        break;
+                }
+
+                $('body').css('font-size', size);
+            }
+        });
+
+                    </script>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+</form>
+
+<script src='http://opac.winbiap.net/neufahrn/js/functions.js' type="text/javascript"></script>
+<script src='http://opac.winbiap.net/neufahrn/js/jquery.multiSelect.js'
+        type="text/javascript"></script>
+<script src='http://opac.winbiap.net/neufahrn/js/jquery.pinify.js' type="text/javascript"></script>
+<script src='http://opac.winbiap.net/neufahrn/js/bootstrap.min.js' type="text/javascript"></script>
+
+<script type="text/javascript">
+        
+        
+        
+        
+        $('.cover').one('load',function(){
+            if (getOriginalWidthOfImg(this) <= 1) {
+                $(this).attr('src', getBackupCover(this));
+            }
+        }).each(function(){
+            if(this.complete){ $(this).load(); }
+        });
+        
+        function getOriginalWidthOfImg(imgElement) {
+            var t = new Image();
+            t.src = (imgElement.getAttribute ? imgElement.getAttribute("src") : false) || imgElement.src;
+            return t.width;
+        }
+
+        function getBackupCover(img) {
+            var t = new Image();
+            t.src = (img.getAttribute ? img.getAttribute("grp") : false) || img.grp;
+
+            if (t.src === undefined || !t.src ) {
+                return 'http://opac.winbiap.net/neufahrn/images/mediagrp/leer.gif';
+            }
+            else {
+                return t.src;
+            }
+        }
+
+</script>
+</body>
+</html>

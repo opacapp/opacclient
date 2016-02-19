@@ -14,6 +14,7 @@ import org.jsoup.nodes.FormElement;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -555,11 +556,13 @@ public class WinBiap extends BaseApi implements OpacApi {
             }
         } else {
             // Reservation
-
+            // the URL stored in selection might be absolute (WinBiap 4.3) or relative (4.2)
+            String reservationUrl = new URL(new URL(opac_url), selection).toString();
             // the URL stored in selection contains "=" and other things inside params
-            // and will be messed up by our cleanUrl function
+            // and will be messed up by our cleanUrl function, therefore we use a direct HttpGet
             Document doc = Jsoup.parse(convertStreamToString(
-                    http_client.execute(new HttpGet(opac_url + "/" + selection))
+                    http_client.execute(new HttpGet(
+                            reservationUrl))
                                .getEntity().getContent()));
             if (doc.select("[id$=LabelLoginMessage]").size() > 0) {
                 doc.select("[id$=TextBoxLoginName]").val(account.getName());
@@ -985,17 +988,18 @@ public class WinBiap extends BaseApi implements OpacApi {
 
         /* pass all input fields beginning with two underscores to login url */
         Elements inputFields = loginPage.select("input[id^=__]");
-        java.util.Iterator<Element> inputFieldList = inputFields.iterator();
-        while(inputFieldList.hasNext()) {
-            Element inputField = inputFieldList.next();
+        for (Element inputField : inputFields) {
             data.add(new BasicNameValuePair(inputField.attr("name"), inputField.val()));
         }
 
-        data.add(new BasicNameValuePair("ctl00$ContentPlaceHolderMain$TextBoxLoginName",
-                account.getName()));
-        data.add(new BasicNameValuePair("ctl00$ContentPlaceHolderMain$TextBoxLoginPassword",
+        data.add(
+                new BasicNameValuePair(loginPage.select("input[id$=TextBoxLoginName]").attr("name"),
+                        account.getName()));
+        data.add(new BasicNameValuePair(
+                loginPage.select("input[id$=TextBoxLoginPassword]").attr("name"),
                 account.getPassword()));
-        data.add(new BasicNameValuePair("ctl00$ContentPlaceHolderMain$ButtonLogin", "Anmelden"));
+        data.add(new BasicNameValuePair(loginPage.select("input[id$=ButtonLogin]").attr("name"),
+                "Anmelden"));
 
         String html = httpPost(opac_url + "/user/login.aspx", new UrlEncodedFormEntity(data),
                 "UTF-8");

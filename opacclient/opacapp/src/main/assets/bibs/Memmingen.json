@@ -1,0 +1,16 @@
+{
+    "account_supported": true,
+    "api": "winbiap",
+    "city": "Memmingen",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "https://bibliothek.memmingen.de"
+    },
+    "geo": [
+        47.9837999,
+        10.1801883
+    ],
+    "information": "https://www.memmingen.de/stadtbibliothek.html",
+    "state": "Bayern",
+    "title": "Stadtbibliothek"
+}
