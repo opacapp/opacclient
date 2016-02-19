@@ -157,7 +157,7 @@ public abstract class OpacActivity extends AppCompatActivity
         fixStatusBarFlashing();
     }
 
-    private void setupAccountSwitcher() {
+    protected void setupAccountSwitcher() {
         if (drawer == null) return;
         aData.open();
         accounts = aData.getAllAccounts();
@@ -188,11 +188,11 @@ public abstract class OpacActivity extends AppCompatActivity
         updateAccountSwitcher(selectedAccount);
     }
 
-    private void toggleAccountSwitcher() {
+    protected void toggleAccountSwitcher() {
         setAccountSwitcherVisible(!accountSwitcherVisible);
     }
 
-    private void setAccountSwitcherVisible(boolean accountSwitcherVisible) {
+    protected void setAccountSwitcherVisible(boolean accountSwitcherVisible) {
         if (accountSwitcherVisible == this.accountSwitcherVisible) return;
 
         this.accountSwitcherVisible = accountSwitcherVisible;
@@ -530,7 +530,7 @@ public abstract class OpacActivity extends AppCompatActivity
         updateAccountSwitcher(account);
     }
 
-    private void updateAccountSwitcher(Account account) {
+    protected void updateAccountSwitcher(Account account) {
         if (account == null) return;
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         long tolerance = Long.decode(sp.getString("notification_warning", "367200000"));
