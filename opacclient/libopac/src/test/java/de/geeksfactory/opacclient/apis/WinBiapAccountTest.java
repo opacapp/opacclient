@@ -9,11 +9,12 @@ import org.junit.runners.Parameterized;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import de.geeksfactory.opacclient.i18n.DummyStringProvider;
-import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.LentItem;
+import de.geeksfactory.opacclient.objects.ReservedItem;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
@@ -40,12 +41,11 @@ public class WinBiapAccountTest extends BaseAccountTest {
     public void testParseMediaList() throws OpacApi.OpacErrorException {
         String html = readResource("/winbiap/medialist/" + file);
         if (html == null) return; // we may not have all files for all libraries
-        List<Map<String, String>> media = WinBiap.parseMediaList(Jsoup.parse(html));
+        List<LentItem> media = WinBiap.parseMediaList(Jsoup.parse(html));
         assertTrue(media.size() > 0);
-        for (Map<String, String> item : media) {
-            assertContainsData(item, AccountData.KEY_LENT_TITLE);
-            assertContainsData(item, AccountData.KEY_LENT_DEADLINE);
-            assertContainsData(item, AccountData.KEY_LENT_DEADLINE_TIMESTAMP);
+        for (LentItem item : media) {
+            assertNotNull(item.getTitle());
+            assertNotNull(item.getDeadline());
         }
     }
 
@@ -53,7 +53,9 @@ public class WinBiapAccountTest extends BaseAccountTest {
     public void testParseResList() throws OpacApi.OpacErrorException {
         String html = readResource("/winbiap/reslist/" + file);
         if (html == null) return; // we may not have all files for all libraries
-        List<Map<String, String>> media = WinBiap.parseResList(Jsoup.parse(html), new DummyStringProvider(), new JSONObject());
+        List<ReservedItem> media =
+                WinBiap.parseResList(Jsoup.parse(html), new DummyStringProvider(),
+                        new JSONObject());
         assertTrue(media.size() > 0);
     }
 }
