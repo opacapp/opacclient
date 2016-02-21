@@ -21,9 +21,6 @@
  */
 package de.geeksfactory.opacclient.frontend;
 
-import org.json.JSONException;
-
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;

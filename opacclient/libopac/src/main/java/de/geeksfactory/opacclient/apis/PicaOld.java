@@ -404,7 +404,7 @@ public class PicaOld extends Pica {
 
         Elements copytrs = doc.select("table[summary^=list] > tbody > tr[valign=top]");
 
-        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd-MM-yyyy").withLocale(Locale.GERMAN);
 
         int trs = copytrs.size();
         if (trs < 1) {

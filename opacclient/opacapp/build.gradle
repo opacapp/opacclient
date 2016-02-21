@@ -77,6 +77,7 @@ dependencies {
     compile 'joda-time:joda-time:2.8.2'
     compile 'org.joda:joda-convert:1.8'
     compile 'su.j2e:rv-joiner:1.0.6'
+    compile 'joda-time:joda-time:2.8.2'
 
     // We don't want to rely on the CommonsWare Maven repo, so we include these libraries as JARs
     compile files('libs/adapter-1.0.1.jar')

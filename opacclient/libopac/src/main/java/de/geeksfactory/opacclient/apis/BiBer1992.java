@@ -1025,7 +1025,7 @@ public class BiBer1992 extends BaseApi {
                         case "title":
                             value = findTitleAndAuthor(value)[0];
                             break;
-                        case "deadline":
+                        case "returndate":
                             try {
                                 value = fmt.parseLocalDate(value).toString();
                             } catch (IllegalArgumentException e1) {

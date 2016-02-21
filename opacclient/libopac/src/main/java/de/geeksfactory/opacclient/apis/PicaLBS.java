@@ -185,7 +185,8 @@ public class PicaLBS extends Pica {
             String[] titleAndAuthor = extractTitleAndAuthor(tr);
             item.setTitle(titleAndAuthor[0]);
             if (titleAndAuthor[1] != null)  item.setAuthor(titleAndAuthor[1]);
-            String returndate = extractAccountInfo(tr, "Returndate", "ausgeliehen bis");
+            String returndate =
+                    extractAccountInfo(tr, "Returndate", "ausgeliehen bis", "Ausleihfrist");
             item.setDeadline(parseDate(returndate));
 
             StringBuilder status = new StringBuilder();

@@ -47,7 +47,7 @@ public class DrawerAccountsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         SharedPreferences sp =
                 PreferenceManager.getDefaultSharedPreferences(context);
-        long tolerance = Long.decode(sp.getString("notification_warning", "367200000"));
+        int tolerance = Integer.parseInt(sp.getString("notification_warning", "3"));
 
         AccountDataSource adata = new AccountDataSource(context);
         adata.open();

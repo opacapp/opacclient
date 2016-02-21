@@ -793,6 +793,7 @@ public class IOpac extends BaseApi implements OpacApi {
         } catch (JSONException e) {
         }
 
+        Pattern datePattern = Pattern.compile("\\d{2}\\.\\d{2}\\.\\d{4}");
         for (int i = 1; i < trs; i++) {
             Element tr = copytrs.get(i);
             LentItem item = new LentItem();
@@ -820,12 +821,15 @@ public class IOpac extends BaseApi implements OpacApi {
                 item.setRenewable(prolongCount < data.optInt("maxprolongcount", -1));
             }
             if (copymap.optInt("deadline", 4) >= 0) {
-                try {
-                    item.setDeadline(fmt.parseLocalDate(
-                            tr.child(copymap.optInt("deadline", 4)).text().trim()
-                                    .replace("\u00a0", "")));
-                } catch (IllegalArgumentException e1) {
-                    e1.printStackTrace();
+                String value = tr.child(copymap.optInt("deadline", 4)).text().trim()
+                                 .replace("\u00a0", "");
+                Matcher matcher = datePattern.matcher(value);
+                if (matcher.find()) {
+                    try {
+                        item.setDeadline(fmt.parseLocalDate(matcher.group()));
+                    } catch (IllegalArgumentException e1) {
+                        e1.printStackTrace();
+                    }
                 }
             }
             if (copymap.optInt("prolongurl", 5) >= 0) {
