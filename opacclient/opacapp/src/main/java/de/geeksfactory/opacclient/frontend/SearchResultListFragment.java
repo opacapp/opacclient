@@ -406,6 +406,10 @@ public class SearchResultListFragment extends CustomListFragment {
 
     public void loaded(SearchRequestResult searchresult) {
         try {
+            if (searchresult.getPage_index() == 0 && searchresult.getTotal_result_count() > 0
+                    && searchresult.getResults().size() < 0) {
+                showConnectivityError(getResources().getString(R.string.connection_error_detail));
+            }
             setListShown(true);
             setSearchResult(searchresult);
         } catch (IllegalStateException e) {
