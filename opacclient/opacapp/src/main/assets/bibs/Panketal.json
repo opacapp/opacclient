@@ -1,0 +1,44 @@
+{
+    "account_supported": true,
+    "api": "bibliotheca",
+    "city": "Panketal",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://bibliothek-panketal.internetopac.de",
+        "accounttable": {
+            "author": 0,
+            "barcode": -1,
+            "homebranch": -1,
+            "lendingbranch": -1,
+            "prolongurl": 4,
+            "returndate": 3,
+            "status": -1,
+            "title": 2,
+            "format": 1
+        },
+        "copiestable": {
+            "barcode": 0,
+            "branch": 4,
+            "department": 1,
+            "location": 2,
+            "reservations": -1,
+            "returndate": 5,
+            "status": 3
+        },
+        "reservationtable": {
+            "author": 0,
+            "format": 1,
+            "availability": 3,
+            "cancelurl": 4,
+            "expirationdate": null,
+            "title": 2
+        }
+    },
+    "geo": [
+        52.6509175,
+        13.5407777
+    ],
+    "information": "http://www.panketal.de/web/index.php?option=com_content&view=article&id=156&Itemid=109",
+    "state": "Brandenburg",
+    "title": "Gemeindebibliothek"
+}
