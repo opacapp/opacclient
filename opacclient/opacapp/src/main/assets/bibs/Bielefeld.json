@@ -14,7 +14,7 @@
             "status": 5,
             "title": 1
         },
-        "baseurl": "https://www1.stadtbibliothek-bielefeld.de/webopac",
+        "baseurl": "http://91.194.108.183/webopac",
         "copiestable": {
             "barcode": -1,
             "branch": 0,
