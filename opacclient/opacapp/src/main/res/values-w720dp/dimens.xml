@@ -1,4 +1,3 @@
 <resources>
     <dimen name="preference_fragment_padding_side">96dp</dimen>
-    <dimen name="celeb_icon_size">96dp</dimen>
 </resources>

@@ -1,6 +1,5 @@
-package de.geeksfactory.opacclient.tests;
+package de.geeksfactory.opacclient.apis;
 
-import de.geeksfactory.opacclient.apis.BaseApi;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.junit.Test;

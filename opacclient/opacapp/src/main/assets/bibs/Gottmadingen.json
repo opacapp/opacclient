@@ -1,0 +1,34 @@
+{
+  "account_supported": true,
+  "api": "bibliotheca",
+  "city": "Gottmadingen",
+  "country": "Deutschland",
+  "data": {
+    "baseurl": "https://web-opac.kivbf.de/gottmadingen",
+    "accounttable": {
+      "author": 0,
+      "prolongurl": 4,
+      "returndate": 2,
+      "title": 1
+    },
+    "reservationtable": {
+      "author": 0,
+      "cancelurl": 3,
+      "title": 1,
+      "availability": 2
+    },
+    "copiestable": {
+      "department": 1,
+      "location": 0,
+      "returndate": 3,
+      "status": 2
+    }
+  },
+  "geo": [
+    47.7357318,
+    8.781531600000001
+  ],
+  "information": "http://www.gottmadingen.de/,Lde/startseite/Leben+in+Gottmadingen/Buecherei.html",
+  "state": "Baden-W\u00fcrttemberg",
+  "title": "Gemeindeb\u00fccherei"
+}

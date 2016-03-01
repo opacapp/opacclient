@@ -397,7 +397,7 @@ public class SISIS extends BaseApi implements OpacApi {
         for (int i = 0; i < table.size(); i++) {
             Element tr = table.get(i);
             SearchResult sr = new SearchResult();
-            if (tr.select("td img").size() > 0) {
+            if (tr.select("td img[title]").size() > 0) {
                 String title = tr.select("td img").get(0).attr("title");
                 String[] fparts = tr.select("td img").get(0).attr("src")
                                     .split("/");
@@ -440,7 +440,7 @@ public class SISIS extends BaseApi implements OpacApi {
             }
 
             Element middlething;
-            if (tr.children().size() > 2) {
+            if (tr.children().size() > 2 && tr.child(2).select("a").size() > 0) {
                 middlething = tr.child(2);
             } else {
                 middlething = tr.child(1);
@@ -738,7 +738,11 @@ public class SISIS extends BaseApi implements OpacApi {
 
         if (doc.select(".data td img").size() == 1) {
             result.setCover(doc.select(".data td img").first().attr("abs:src"));
-            downloadCover(result);
+            try {
+                downloadCover(result);
+            } catch (Exception e) {
+
+            }
         }
 
         if (doc.select(".aw_teaser_title").size() == 1) {
