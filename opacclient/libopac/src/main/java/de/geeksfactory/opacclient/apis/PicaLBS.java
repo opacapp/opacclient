@@ -373,13 +373,4 @@ public class PicaLBS extends Pica {
         return library.isAccountSupported();
     }
 
-    @Override
-    public boolean isAccountExtendable() {
-        return false;
-    }
-
-    @Override
-    public String getAccountExtendableInfo(Account account) throws IOException {
-        return null;
-    }
 }

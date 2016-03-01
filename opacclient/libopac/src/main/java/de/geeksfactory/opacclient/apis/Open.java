@@ -719,16 +719,6 @@ public class Open extends BaseApi implements OpacApi {
     }
 
     @Override
-    public boolean isAccountExtendable() {
-        return false;
-    }
-
-    @Override
-    public String getAccountExtendableInfo(Account account) throws IOException {
-        return null;
-    }
-
-    @Override
     public String getShareUrl(String id, String title) {
         return opac_url + "/Permalink.aspx" + "?id" + "=" + id;
     }

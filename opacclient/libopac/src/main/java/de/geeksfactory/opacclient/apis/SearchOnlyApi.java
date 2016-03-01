@@ -21,16 +21,6 @@ public abstract class SearchOnlyApi extends BaseApi {
     }
 
     @Override
-    public final boolean isAccountExtendable() {
-        return false;
-    }
-
-    @Override
-    public final String getAccountExtendableInfo(Account account) throws IOException {
-        return null;
-    }
-
-    @Override
     public final ReservationResult reservation(DetailledItem item, Account account,
                                          int useraction, String selection) throws IOException {
         return null;

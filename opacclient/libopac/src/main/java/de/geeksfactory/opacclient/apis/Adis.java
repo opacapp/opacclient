@@ -1586,16 +1586,6 @@ public class Adis extends BaseApi implements OpacApi {
     }
 
     @Override
-    public boolean isAccountExtendable() {
-        return false;
-    }
-
-    @Override
-    public String getAccountExtendableInfo(Account account) throws IOException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public String getShareUrl(String id, String title) {
         // TODO Auto-generated method stub
         return null;

@@ -1216,16 +1216,6 @@ public class BiBer1992 extends BaseApi {
     }
 
     @Override
-    public boolean isAccountExtendable() {
-        return false;
-    }
-
-    @Override
-    public String getAccountExtendableInfo(Account account) throws IOException {
-        return null;
-    }
-
-    @Override
     public String getShareUrl(String id, String title) {
         // id is normally full path like
         // "/opac/ftitle.C?LANG=de&FUNC=full&331313252=YES"

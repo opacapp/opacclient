@@ -1117,58 +1117,6 @@ public class Bibliotheca extends BaseApi {
     }
 
     @Override
-    public boolean isAccountExtendable() {
-        return true;
-    }
-
-    @Override
-    public String getAccountExtendableInfo(Account acc)
-            throws IOException {
-        if (!initialised) {
-            start();
-        }
-
-        String html = "";
-
-        if (acc.getName() == null || acc.getName().equals("null")) {
-            return null;
-        }
-
-        // Needs login
-        HttpPost httppost = new HttpPost(opac_url + "/index.asp");
-        List<NameValuePair> nameValuePairs = new ArrayList<>(2);
-        nameValuePairs.add(new BasicNameValuePair("link_konto.x", "0"));
-        nameValuePairs.add(new BasicNameValuePair("link_konto.y", "0"));
-        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-        HttpResponse response = http_client.execute(httppost);
-
-        if (response.getStatusLine().getStatusCode() == 200) {
-            // Needs login
-            HttpUtils.consume(response.getEntity());
-            nameValuePairs = new ArrayList<>(2);
-            nameValuePairs
-                    .add(new BasicNameValuePair("AUSWEIS", acc.getName()));
-            nameValuePairs
-                    .add(new BasicNameValuePair("PWD", acc.getPassword()));
-            nameValuePairs.add(new BasicNameValuePair("B1", "weiter"));
-            nameValuePairs.add(new BasicNameValuePair("target", "konto"));
-            nameValuePairs.add(new BasicNameValuePair("type", "K"));
-            html = httpPost(opac_url + "/index.asp", new UrlEncodedFormEntity(
-                    nameValuePairs), getDefaultEncoding());
-        } else if (response.getStatusLine().getStatusCode() == 302) {
-            // Already logged in
-            HttpUtils.consume(response.getEntity());
-            html = httpGet(opac_url + "/index.asp?target=konto",
-                    getDefaultEncoding());
-        } else if (response.getStatusLine().getStatusCode() == 500) {
-            throw new NotReachableException(response.getStatusLine().getReasonPhrase());
-        }
-
-        return html;
-
-    }
-
-    @Override
     public String getShareUrl(String id, String title) {
         try {
             return "http://opacapp.de/:" + library.getIdent() + ":" + id + ":"
@@ -1181,8 +1129,7 @@ public class Bibliotheca extends BaseApi {
 
     @Override
     public int getSupportFlags() {
-        int flags = SUPPORT_FLAG_ACCOUNT_EXTENDABLE
-                | SUPPORT_FLAG_CHANGE_ACCOUNT | SUPPORT_FLAG_WARN_RESERVATION_FEES;
+        int flags = SUPPORT_FLAG_CHANGE_ACCOUNT | SUPPORT_FLAG_WARN_RESERVATION_FEES;
         flags |= SUPPORT_FLAG_ENDLESS_SCROLLING;
         if (!data.has("disableProlongAll")) {
             flags |= SUPPORT_FLAG_ACCOUNT_PROLONG_ALL;

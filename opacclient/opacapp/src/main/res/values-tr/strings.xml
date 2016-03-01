@@ -101,8 +101,6 @@
     <string name="share_notsupported">Bu kütüphanede desteklenmiyor</string>
     <string name="unsupported">Desteklenmiyor</string>
     <string name="account_unsupported_api">Bu özellik henüz kütüphanenizde desteklenmiyor. Bu özelliğin eklenmesi için okurların yardımına ihtiyacımız olabilir, ilgileniyorsanız bize e-posta atın: info@opacapp.de</string>
-  <string name="account_unsupported">Bu özellik henüz kütüphanenizde desteklenmiyor. Bunu değiştirmek için bu kütüphanenin okurlarının yardımına ihtiyacımız var. Eğer \"Rapor gönder\" butonuna tıklarsanız, gelecek güncellemede bunu düzeltebiliriz.
-Rapor gönderdiğinizde bazı verileriniz bize gelir (bu veriler kütüphane şifrenizi içermez). Sorun çözüldükten sonra bu verileri hemen sileceğiz.</string>
     <string name="write_mail">E-posta yaz</string>
     <string name="info_error">Bu kütüphane için ek bilgi yüklenemiyor</string>
     <string name="info_unsupported">Bu kütüphane için gösterek bilgi bulunmuyor</string>

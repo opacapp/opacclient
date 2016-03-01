@@ -101,7 +101,6 @@
     <string name="share_notsupported">Condivisione non consentita per questa biblioteca</string>
     <string name="unsupported">Funzione non supportata</string>
     <string name="account_unsupported_api">Questa funzione non è ancora supportata per la tua biblioteca. Per renderla disponibile abbiamo bisogno dell\'aiuto degli utenti di questa biblioteca. Se hai voglia di aiutarci invia una e-mail all\'indirizzo info@opacapp.de</string>
-    <string name="account_unsupported">Questa funzione non è ancora supportata per la tua biblioteca. Clicca su Invia segnalazione, cercheremo così di inserirla nel prossimo aggiornamento. In questo modo invierai anche il tuo account e la lista del materiale che hai preso in prestito (non la tua password o i tuoi dati personali!) cancelleremo comunque i tuoi dati il più presto possibile e mai verranno ceduti a terzi.</string>
     <string name="write_mail">Scrivere una e-mail</string>
     <string name="info_error">Non sono disponibili informazioni aggiuntive sulla biblioteca.</string>
     <string name="info_unsupported">Per questa biblioteca non sono disponibili informazioni aggiuntive.</string>

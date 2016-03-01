@@ -1606,17 +1606,6 @@ public class SISIS extends BaseApi implements OpacApi {
     }
 
     @Override
-    public boolean isAccountExtendable() {
-        return false;
-    }
-
-    @Override
-    public String getAccountExtendableInfo(Account acc)
-            throws IOException {
-        return null;
-    }
-
-    @Override
     public String getShareUrl(String id, String title) {
         String startparams = "";
         if (data.has("startparams")) {

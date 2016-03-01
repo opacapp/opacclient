@@ -274,9 +274,7 @@ public class AccountFragment extends Fragment implements
             e.printStackTrace();
             return;
         }
-        if (api != null
-                && !app.getLibrary().isAccountSupported()
-                && (api.getSupportFlags() & OpacApi.SUPPORT_FLAG_ACCOUNT_EXTENDABLE) == 0) {
+        if (api != null && !app.getLibrary().isAccountSupported()) {
             supported = false;
             // Not supported with this api at all
             llLoading.setVisibility(View.GONE);
@@ -305,31 +303,6 @@ public class AccountFragment extends Fragment implements
                     emailIntent.setType("text/plain");
                     startActivity(Intent.createChooser(emailIntent,
                             getString(R.string.write_mail)));
-                }
-            });
-
-        } else if (api != null && !app.getLibrary().isAccountSupported()) {
-            supported = false;
-
-            // We need help
-            llLoading.setVisibility(View.GONE);
-            unsupportedErrorView.setVisibility(
-                    View.VISIBLE);
-
-            tvErrBodyU.setText(R.string.account_unsupported);
-            btSend.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog = AppCompatProgressDialog.show(getActivity(), "",
-                            getString(R.string.report_sending), true,
-                            true, new OnCancelListener() {
-                                @Override
-                                public void onCancel(
-                                        DialogInterface arg0) {
-                                }
-                            });
-                    dialog.show();
-                    new SendTask().execute();
                 }
             });
 
@@ -377,8 +350,7 @@ public class AccountFragment extends Fragment implements
 
     public void refresh() {
 
-        if ((!app.getLibrary().isAccountSupported() && (app
-                .getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_ACCOUNT_EXTENDABLE) == 0)
+        if ((!app.getLibrary().isAccountSupported())
                 || account.getPassword() == null
                 || account.getPassword().equals("null")
                 || account.getPassword().equals("")
@@ -1611,79 +1583,6 @@ public class AccountFragment extends Fragment implements
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    public class SendTask extends AsyncTask<Void, Object, Integer> {
-
-        @Override
-        protected Integer doInBackground(Void... voids) {
-            HttpClient dc = HttpClientBuilder.create().build();
-            HttpPost httppost = new HttpPost(
-                    "http://opacapp.de/crashreport.php");
-            List<NameValuePair> nameValuePairs = new ArrayList<>(2);
-            nameValuePairs.add(new BasicNameValuePair("traceback", ""));
-            try {
-                nameValuePairs
-                        .add(new BasicNameValuePair("version",
-                                getActivity().getPackageManager()
-                                             .getPackageInfo(
-                                                     getActivity().getPackageName(),
-                                                     0).versionName));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            nameValuePairs.add(new BasicNameValuePair("android", android.os.Build.VERSION.RELEASE));
-            nameValuePairs
-                    .add(new BasicNameValuePair("sdk", "" + android.os.Build.VERSION.SDK_INT));
-            nameValuePairs.add(new BasicNameValuePair("device", android.os.Build.MANUFACTURER + " "
-                    + android.os.Build.MODEL));
-            nameValuePairs.add(new BasicNameValuePair("bib", app.getLibrary().getIdent()));
-
-            try {
-                nameValuePairs.add(new BasicNameValuePair("html", app.getApi()
-                                                                     .getAccountExtendableInfo(
-                                                                             app.getAccount())));
-            } catch (Exception e1) {
-                e1.printStackTrace();
-                return 1;
-            }
-
-            try {
-                httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            HttpResponse response;
-            try {
-                response = dc.execute(httppost);
-                response.getEntity().consumeContent();
-            } catch (Exception e) {
-                e.printStackTrace();
-                return 1;
-            }
-            return 0;
-        }
-
-        @Override
-        protected void onPostExecute(Integer result) {
-            if (getActivity() == null) {
-                return;
-            }
-
-            dialog.dismiss();
-            btSend.setEnabled(false);
-            if (result == 0) {
-                Toast toast = Toast.makeText(getActivity(),
-                        getString(R.string.report_sent), Toast.LENGTH_SHORT);
-                toast.show();
-            } else {
-                Toast toast = Toast.makeText(getActivity(),
-                        getString(R.string.report_error), Toast.LENGTH_SHORT);
-                toast.show();
-            }
-
         }
     }
 

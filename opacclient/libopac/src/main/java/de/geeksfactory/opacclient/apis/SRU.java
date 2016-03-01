@@ -427,16 +427,6 @@ public class SRU extends BaseApi implements OpacApi {
     }
 
     @Override
-    public boolean isAccountExtendable() {
-        return false;
-    }
-
-    @Override
-    public String getAccountExtendableInfo(Account account) throws IOException {
-        return null;
-    }
-
-    @Override
     public String getShareUrl(String id, String title) {
         if (shareUrl != null) {
             return String.format(shareUrl, id);

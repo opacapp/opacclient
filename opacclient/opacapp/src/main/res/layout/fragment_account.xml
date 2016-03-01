@@ -231,7 +231,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="10dp"
-            android:text="@string/account_unsupported"/>
+            android:text="@string/account_unsupported_api"/>
 
         <Button
             android:id="@+id/btSend"

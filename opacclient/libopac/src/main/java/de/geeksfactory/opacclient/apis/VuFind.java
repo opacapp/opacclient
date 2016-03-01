@@ -541,16 +541,6 @@ public class VuFind extends BaseApi {
     }
 
     @Override
-    public boolean isAccountExtendable() {
-        return false;
-    }
-
-    @Override
-    public String getAccountExtendableInfo(Account account) throws IOException {
-        return null;
-    }
-
-    @Override
     public ReservationResult reservation(DetailledItem item, Account account,
             int useraction, String selection) throws IOException {
         return null;

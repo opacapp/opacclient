@@ -91,7 +91,6 @@
   <string name="share_notsupported">No compatible con esta biblioteca.</string>
   <string name="unsupported">No compatible</string>
   <string name="account_unsupported_api">Está propiedad todavía no está compatible con su biblioteca. Podríamos recurrir a lectores locales para instalarlo. Si está interesado, escribe un correo a info@opacapp.de</string>
-  <string name="account_unsupported">Está propiedad todavía no está compatible con su biblioteca. Necesitamos el apoyo de los lectores de esta biblioteca para cambiarlo. Si pinchas en \"Enviar informe\", podemos intentar un cambio con la actualización siguiente. </string>
   <string name="write_mail">Escribir correo</string>
   <string name="info_error">No podía cargar más información para esta biblioteca.</string>
   <string name="info_unsupported">No tenemos ninguna información sobre esta biblioteca.</string>
