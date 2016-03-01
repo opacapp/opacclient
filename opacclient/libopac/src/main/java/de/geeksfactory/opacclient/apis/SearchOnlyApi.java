@@ -16,11 +16,6 @@ import de.geeksfactory.opacclient.objects.Library;
 public abstract class SearchOnlyApi extends BaseApi {
 
     @Override
-    public final boolean isAccountSupported(Library library) {
-        return false;
-    }
-
-    @Override
     public final ReservationResult reservation(DetailledItem item, Account account,
                                          int useraction, String selection) throws IOException {
         return null;

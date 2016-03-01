@@ -1031,11 +1031,6 @@ public class IOpac extends BaseApi implements OpacApi {
     }
 
     @Override
-    public boolean isAccountSupported(Library library) {
-        return library.isAccountSupported();
-    }
-
-    @Override
     public String getShareUrl(String id, String title) {
         if (newShareLinks) {
             return opac_url + dir + "/?mednr=" + id;

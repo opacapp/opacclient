@@ -714,11 +714,6 @@ public class Open extends BaseApi implements OpacApi {
     }
 
     @Override
-    public boolean isAccountSupported(Library library) {
-        return false;
-    }
-
-    @Override
     public String getShareUrl(String id, String title) {
         return opac_url + "/Permalink.aspx" + "?id" + "=" + id;
     }

@@ -512,18 +512,6 @@ public interface OpacApi {
             OpacErrorException, JSONException;
 
     /**
-     * Returns whether – if account view is not supported in the given library – there is an
-     * automatic mechanism to help implementing account support in this city.
-     * <p/>
-     * Should be replaced by {@link Library#isAccountSupported()}
-     *
-     * @param library Library to check compatibility
-     * @return <code>true</code> if account view is supported or <code>false</code> if it isn't.
-     */
-    @Deprecated
-    public boolean isAccountSupported(Library library);
-
-    /**
      * Some library systems allow us to share search results. If your library system allows this
      * natively (to link directly on search results), you can return the corresponding URL with this
      * function. If your library does not support this at all, return <code>null</code>. If you

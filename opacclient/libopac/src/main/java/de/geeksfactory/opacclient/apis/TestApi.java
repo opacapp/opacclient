@@ -197,11 +197,6 @@ public class TestApi implements OpacApi {
     }
 
     @Override
-    public boolean isAccountSupported(Library library) {
-        return true;
-    }
-
-    @Override
     public String getShareUrl(String id, String title) {
         return null;
     }

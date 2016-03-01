@@ -368,9 +368,4 @@ public class PicaLBS extends Pica {
         return "ISO-8859-1";
     }
 
-    @Override
-    public boolean isAccountSupported(Library library) {
-        return library.isAccountSupported();
-    }
-
 }

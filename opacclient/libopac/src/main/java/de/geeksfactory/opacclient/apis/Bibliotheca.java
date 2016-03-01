@@ -1112,11 +1112,6 @@ public class Bibliotheca extends BaseApi {
     }
 
     @Override
-    public boolean isAccountSupported(Library library) {
-        return !library.getData().isNull("accounttable");
-    }
-
-    @Override
     public String getShareUrl(String id, String title) {
         try {
             return "http://opacapp.de/:" + library.getIdent() + ":" + id + ":"

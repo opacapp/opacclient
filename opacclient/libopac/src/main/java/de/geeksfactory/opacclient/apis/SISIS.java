@@ -1601,11 +1601,6 @@ public class SISIS extends BaseApi implements OpacApi {
     }
 
     @Override
-    public boolean isAccountSupported(Library library) {
-        return true;
-    }
-
-    @Override
     public String getShareUrl(String id, String title) {
         String startparams = "";
         if (data.has("startparams")) {

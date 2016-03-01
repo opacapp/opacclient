@@ -1211,11 +1211,6 @@ public class BiBer1992 extends BaseApi {
     }
 
     @Override
-    public boolean isAccountSupported(Library library) {
-        return !library.getData().isNull("accounttable");
-    }
-
-    @Override
     public String getShareUrl(String id, String title) {
         // id is normally full path like
         // "/opac/ftitle.C?LANG=de&FUNC=full&331313252=YES"

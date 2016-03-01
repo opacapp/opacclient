@@ -125,7 +125,7 @@ public abstract class Pica extends BaseApi implements OpacApi {
         try {
             this.opac_url = data.getString("baseurl");
             this.db = data.getString("db");
-            if (isAccountSupported(library)) {
+            if (library.isAccountSupported()) {
                 if (data.has("httpsbaseurl")) {
                     this.https_url = data.getString("httpsbaseurl");
                 } else {

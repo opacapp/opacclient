@@ -439,12 +439,6 @@ public class WebOpacNet extends BaseApi implements OpacApi {
     }
 
     @Override
-    public boolean isAccountSupported(Library library) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
     public String getShareUrl(String id, String title) {
         List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("id", id));

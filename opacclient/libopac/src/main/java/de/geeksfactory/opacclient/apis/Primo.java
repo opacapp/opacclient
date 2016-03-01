@@ -544,11 +544,6 @@ public class Primo extends BaseApi {
     }
 
     @Override
-    public boolean isAccountSupported(Library library) {
-        return false;
-    }
-
-    @Override
     public ReservationResult reservation(DetailledItem item, Account account,
             int useraction, String selection) throws IOException {
         return null;
