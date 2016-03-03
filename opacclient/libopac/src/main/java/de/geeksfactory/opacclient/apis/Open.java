@@ -264,7 +264,7 @@ public class Open extends BaseApi implements OpacApi {
         return parse_search(doc2, 0);
     }
 
-    private SearchRequestResult parse_search(Document doc, int page) throws OpacErrorException {
+    protected SearchRequestResult parse_search(Document doc, int page) throws OpacErrorException {
         searchResultDoc = doc;
 
         if (doc.select("#Label1, span[id$=LblInfoMessage]").size() > 0) {
@@ -783,7 +783,7 @@ public class Open extends BaseApi implements OpacApi {
             } else if ("checkbox".equalsIgnoreCase(type) || "radio".equalsIgnoreCase(type)) {
                 // only add checkbox or radio if they have the checked attribute
                 if (el.hasAttr("checked")) {
-                    data.addTextBody(name, el.val());
+                    data.addTextBody(name, el.val().length() > 0 ? el.val() : "on");
                 }
             } else if ("submit".equalsIgnoreCase(type) || "image".equalsIgnoreCase(type)) {
                 if (submitName != null && el.attr("name").contains(submitName)) {
