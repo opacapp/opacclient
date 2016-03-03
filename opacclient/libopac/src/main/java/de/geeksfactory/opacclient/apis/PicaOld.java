@@ -637,20 +637,4 @@ public class PicaOld extends Pica {
         }
     }
 
-
-    @Override
-    public boolean isAccountSupported(Library library) {
-        return library.isAccountSupported();
-    }
-
-    @Override
-    public boolean isAccountExtendable() {
-        return false;
-    }
-
-    @Override
-    public String getAccountExtendableInfo(Account account) throws IOException {
-        return null;
-    }
-
 }

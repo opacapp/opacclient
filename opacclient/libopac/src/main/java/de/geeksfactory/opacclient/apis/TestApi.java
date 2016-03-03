@@ -197,21 +197,6 @@ public class TestApi implements OpacApi {
     }
 
     @Override
-    public boolean isAccountSupported(Library library) {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountExtendable() {
-        return false;
-    }
-
-    @Override
-    public String getAccountExtendableInfo(Account account) throws IOException {
-        return null;
-    }
-
-    @Override
     public String getShareUrl(String id, String title) {
         return null;
     }

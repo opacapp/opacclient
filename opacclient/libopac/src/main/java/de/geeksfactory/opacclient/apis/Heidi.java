@@ -426,21 +426,6 @@ public class Heidi extends BaseApi implements OpacApi {
     }
 
     @Override
-    public boolean isAccountSupported(Library library) {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountExtendable() {
-        return false;
-    }
-
-    @Override
-    public String getAccountExtendableInfo(Account account) throws IOException {
-        throw new UnsupportedOperationException("Not implemented.");
-    }
-
-    @Override
     public String getShareUrl(String id, String title) {
         return opac_url + "/titel.cgi?katkey=" + id;
     }

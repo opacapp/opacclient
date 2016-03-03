@@ -209,16 +209,6 @@ public interface OpacApi {
     public static final String KEY_SEARCH_QUERY_ORDER = "order";
 
     /**
-     * Returns whether – if account view is not supported in the given library – there is an
-     * automatic mechanism to help implementing account support in this city. Only makes sense when
-     * {@link #isAccountSupported(Library)} can return true and {@link
-     * #getAccountExtendableInfo(Account)} returns something useful.
-     * <p/>
-     * Flag to be present in the result of {@link #getSupportFlags()}.
-     */
-    public static final int SUPPORT_FLAG_ACCOUNT_EXTENDABLE = 0x0000001;
-
-    /**
      * Availability of the "prolong all lent items" feature
      * <p/>
      * Flag to be present in the result of {@link #getSupportFlags()}.
@@ -520,43 +510,6 @@ public interface OpacApi {
     @SuppressWarnings("RedundantThrows")
     public List<SearchField> getSearchFields() throws IOException,
             OpacErrorException, JSONException;
-
-    /**
-     * Returns whether – if account view is not supported in the given library – there is an
-     * automatic mechanism to help implementing account support in this city.
-     * <p/>
-     * Should be replaced by {@link Library#isAccountSupported()}
-     *
-     * @param library Library to check compatibility
-     * @return <code>true</code> if account view is supported or <code>false</code> if it isn't.
-     */
-    @Deprecated
-    public boolean isAccountSupported(Library library);
-
-    /**
-     * Returns whether – if account view is not supported in the given library – there is an
-     * automatic mechanism to help implementing account support in this city.
-     *
-     * @return <code>true</code> if account support can easily be implemented with some extra
-     * information or <code>false</code> if it can't.
-     * @deprecated Functionality is provided by {@link #getSupportFlags()}, please return
-     * <code>SUPPORT_FLAG_ACCOUNT_EXTENDABLE</code> from <code>getSupportFlags</code>.
-     */
-    @Deprecated
-    public boolean isAccountExtendable();
-
-    /**
-     * Is called if <code>isAccountSupported</code> returns false but
-     * <code>isAccountExtendable</code>
-     * returns <code>true</code>. The return value is sent in a crash report which can be submitted
-     * by the user. It is currently implemented in BOND26 and just returns the HTML of the OPAC's
-     * account page (with the user logged in).
-     *
-     * @param account Account data the user entered
-     * @return Some information to be sent in a crash report
-     */
-    @Deprecated
-    public String getAccountExtendableInfo(Account account) throws IOException;
 
     /**
      * Some library systems allow us to share search results. If your library system allows this

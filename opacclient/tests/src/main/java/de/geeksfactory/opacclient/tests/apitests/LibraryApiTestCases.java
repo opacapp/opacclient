@@ -71,8 +71,12 @@ public class LibraryApiTestCases {
 
     @Parameters(name = "{0}")
     public static Collection<String[]> libraries() {
+        return getLibraries(FOLDER);
+    }
+
+    public static Collection<String[]> getLibraries(String folder) {
         List<String[]> libraries = new ArrayList<>();
-        for (String file : new File(FOLDER + "/assets/bibs/").list()) {
+        for (String file : new File(folder + "/assets/bibs/").list()) {
             if (file.equals("Test.json")) {
                 continue;
             }
@@ -81,7 +85,7 @@ public class LibraryApiTestCases {
         return libraries;
     }
 
-    static String readFile(String path, Charset encoding) throws IOException {
+    public static String readFile(String path, Charset encoding) throws IOException {
         byte[] encoded = Files.readAllBytes(Paths.get(path));
         return encoding.decode(ByteBuffer.wrap(encoded)).toString();
     }

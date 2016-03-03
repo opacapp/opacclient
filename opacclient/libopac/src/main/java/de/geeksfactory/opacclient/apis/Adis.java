@@ -73,6 +73,7 @@ public class Adis extends BaseApi implements OpacApi {
         types.put("Elektronische Ressource", MediaType.EBOOK);
         types.put("E-Book", MediaType.EBOOK);
         types.put("Karte", MediaType.MAP);
+        types.put("E-Ressource", MediaType.EBOOK);
 
         // TODO: The following fields from Berlin make no sense and don't work
         // when they are displayed alone.
@@ -399,33 +400,50 @@ public class Adis extends BaseApi implements OpacApi {
                 .compile("javascript:.*htmlOnLink\\('([0-9A-Za-z]+)'\\)");
 
         int nr = 1;
-        for (Element tr : doc.select("table.rTable_table tbody tr")) {
+
+        String selector_row, selector_link, selector_img, selector_num;
+        if (doc.select("table.rTable_table tbody").size() > 0) {
+            selector_row = "table.rTable_table tbody tr";
+            selector_link = ".rTable_td_text a";
+            selector_img = ".rTable_td_img img, .rTable_td_text img";
+            selector_num = "tr td:first-child";
+        } else {
+            // Berlin
+            selector_row = ".rList li.rList_li_even, .rList li.rList_li_odd";
+            selector_link = ".rList_titel a";
+            selector_img = ".rlist_icon img, .rList_titel img";
+            selector_num = ".rList_num";
+        }
+        for (Element tr : doc.select(selector_row)) {
             SearchResult res = new SearchResult();
 
-            res.setInnerhtml(tr.select(".rTable_td_text a").first().html());
+            Element innerele = tr.select(selector_link).first();
+            innerele.select("img").remove();
+            res.setInnerhtml(innerele.html());
             try {
-                res.setNr(Integer.parseInt(tr.child(0).text().trim()));
+                res.setNr(Integer.parseInt(tr.select(selector_num).text().trim()));
             } catch (NumberFormatException e) {
                 res.setNr(nr);
             }
 
-            Matcher matcher = patId.matcher(tr.select(".rTable_td_text a")
-                                              .first().attr("href"));
+            Matcher matcher = patId.matcher(tr.select(selector_link).first().attr("href"));
             if (matcher.matches()) {
                 res.setId(matcher.group(1));
             }
 
-            for (Element img : tr.select(".rTable_td_img img, .rTable_td_text img")) {
+            for (Element img : tr.select(selector_img)) {
                 String ttext = img.attr("title");
                 if (types.containsKey(ttext)) {
                     res.setType(types.get(ttext));
                 } else if (ttext.contains("+")
                         && types.containsKey(ttext.split("\\+")[0].trim())) {
                     res.setType(types.get(ttext.split("\\+")[0].trim()));
-                } else if (ttext.matches(".*ist verf.+gbar") || ttext.contains("is available") ||
+                } else if (ttext.matches(".*ist verf.+gbar") ||
+                        ttext.contains("is available") ||
                         img.attr("href").contains("verfu_ja")) {
                     res.setStatus(SearchResult.Status.GREEN);
-                } else if (ttext.matches(".*nicht verf.+gbar") || ttext.contains("not available") ||
+                } else if (ttext.matches(".*nicht verf.+gbar") ||
+                        ttext.contains("not available") ||
                         img.attr("href").contains("verfu_nein")) {
                     res.setStatus(SearchResult.Status.RED);
                 }
@@ -1560,21 +1578,6 @@ public class Adis extends BaseApi implements OpacApi {
         }
 
         return fields;
-    }
-
-    @Override
-    public boolean isAccountSupported(Library library) {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountExtendable() {
-        return false;
-    }
-
-    @Override
-    public String getAccountExtendableInfo(Account account) throws IOException {
-        throw new UnsupportedOperationException();
     }
 
     @Override

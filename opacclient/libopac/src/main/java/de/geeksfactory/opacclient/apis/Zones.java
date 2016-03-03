@@ -951,22 +951,6 @@ public class Zones extends BaseApi {
     }
 
     @Override
-    public boolean isAccountSupported(Library library) {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountExtendable() {
-        return false;
-    }
-
-    @Override
-    public String getAccountExtendableInfo(Account acc)
-            throws IOException {
-        return null;
-    }
-
-    @Override
     public String getShareUrl(String id, String title) {
         List<NameValuePair> params = new ArrayList<>();
 

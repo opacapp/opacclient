@@ -101,8 +101,6 @@
     <string name="share_notsupported">Not supported in this library.</string>
     <string name="unsupported">Not supported</string>
     <string name="account_unsupported_api">This feature is not yet supported in your library. We might use some help from readers here to implement it. If you\'re interested, mail us at info@opacapp.de</string>
-  <string name="account_unsupported">This feature is not yet supported in your library. To change this, we need help by readers from this library. If you click \"Send report\", we can try to change this with the next update.
-We might know your library ID then, but not your password, and we will take care of your data and delete it after use.</string>
     <string name="write_mail">Write e-mail</string>
     <string name="info_error">Could not load additional information for this library.</string>
     <string name="info_unsupported">We don\'t have any information about this library to show.</string>
@@ -260,7 +258,4 @@ We might know your library ID then, but not your password, and we will take care
         fees.</string>
     <string name="do_not_ask_again">Do not show again</string>
     <string name="reservation_fee_continue">Continue</string>
-    <string name="celeb_title">1,000+ libraries</string>
-    <string name="celeb_text">With this update, the Web Opac App supports more than one thousand libraries across the world. We\'d like to take a moment to thank you for all your support and feedback over the last 3½ years.</string>
-    <string name="celeb_rate">Rate App on Google Play</string>
 </resources>

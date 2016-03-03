@@ -1166,22 +1166,6 @@ public class TouchPoint extends BaseApi implements OpacApi {
     }
 
     @Override
-    public boolean isAccountSupported(Library library) {
-        return library.isAccountSupported();
-    }
-
-    @Override
-    public boolean isAccountExtendable() {
-        return false;
-    }
-
-    @Override
-    public String getAccountExtendableInfo(Account acc)
-            throws IOException {
-        return null;
-    }
-
-    @Override
     public String getShareUrl(String id, String title) {
         try {
             try {

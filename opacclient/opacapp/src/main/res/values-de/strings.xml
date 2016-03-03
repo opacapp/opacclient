@@ -101,7 +101,6 @@
     <string name="share_notsupported">In dieser Bibliothek nicht unterstützt</string>
     <string name="unsupported">Funktion nicht unterstützt</string>
     <string name="account_unsupported_api">Diese Funktion wird in deiner Bibliothek noch nicht unterstützt. Um das zu ändern brauchen wir Hilfe von Lesern dieser Bibliothek. Wenn du helfen möchtest, melde dich unter info@opacapp.de</string>
-    <string name="account_unsupported">Diese Funktion wird in deiner Bibliothek noch nicht unterstützt. Um das zu ändern brauchen wir Hilfe von Lesern dieser Bibliothek: Wenn du auf „Bericht senden“ klickst, können wir versuchen, das im nächsten Update zu ändern. Wir kennen dann eventuell deine Ausweisnummer und was du für Bücher ausgeliehen hast (nicht dein Passwort, nicht deinen Namen und auch sonst nichts zu deiner Person!) aber wir gehen mit den Daten verantwortungsbewusst um und löschen sie, sobald wir sie ausgewertet haben.</string>
     <string name="write_mail">E-Mail schreiben</string>
     <string name="info_error">Die zusätzlichen Informationen der Bibliothek konnten nicht abgerufen werden.</string>
     <string name="info_unsupported">Deine Bücherei stellt keine zusätzlichen Informationen bereit, die wir dir anzeigen könnten.</string>
@@ -262,7 +261,4 @@
         Bibliothek.</string>
     <string name="do_not_ask_again">Nicht noch einmal anzeigen</string>
     <string name="reservation_fee_continue">Weiter</string>
-    <string name="celeb_title">1000+ Bibliotheken</string>
-    <string name="celeb_text">Mit diesem Update unterstützt die Web Opac App mehr als eintausend Bibliotheken auf der ganzen Welt. Wir möchten uns bei ganz herzlich bei euch für die Unterstützung und das Feedback über die letzten 3½ Jahre bedanken.</string>
-    <string name="celeb_rate">App auf Google Play bewerten</string>
 </resources>

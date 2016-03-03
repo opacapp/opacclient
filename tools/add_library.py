@@ -42,10 +42,10 @@ def loadGeoPossibilities(data):
             urllib.parse.urlencode({'address': address, 'sensor': 'true'})
         jsoncontent = urllib.request.urlopen(uri).read().decode()
         geocode = json.loads(jsoncontent)
-        
+
         if geocode['status'] != 'OK':
             print("ERROR!")
-            
+
         for res in geocode['results']:
             possibilities.append(
                     (
@@ -168,9 +168,7 @@ class Bibliotheca(Api):
             elif key == 'ausleihstelle':
                 data['accounttable']['lendingbranch'] = i_acc
                 i_acc += 1
-            elif key == 'mediengrp':
-                i_acc += 1
-            elif key == 'reserviert':
+            elif key == 'mediengrp' or key == 'reserviert' or key == 'saeumnisgebuehr':
                 i_acc += 1
             elif key == 'bereit bis':
                 data['reservationtable']['expirationdate'] = i_res
@@ -334,18 +332,18 @@ class Open(Api):
                 data['data']['urls']['simple_search'] = elem['href'].replace(baseurl, '')
             elif name in ('Erweiterte Suche', 'Profisuche'):
                 data['data']['urls']['advanced_search'] = elem['href'].replace(baseurl, '')
-        
+
         if not 'simple_search' in data['data']['urls']:
             print("URL für Einfache Suche?")
             data['data']['urls']['simple_search'] = getInput(required=True)
-        
+
         if not 'advanced_search' in data['data']['urls']:
             print("URL für Erweiterte Suche?")
             data['data']['urls']['advanced_search'] = getInput(required=True)
-        
+
         return data
-            
-        
+
+
 APIS = {
     'bibliotheca' : Bibliotheca,
     'sisis'       : Sisis,
@@ -389,7 +387,7 @@ if __name__ == '__main__':
     print("Dies sollte etwas in dieser Stadt eindeutiges sein wie 'Stadtbibliothek', 'Unibibliothek' oder 'Ruprecht-Karls-Universität'. Der Name der Stadt soll nicht erneut vorkommen!")
 
     data['title'] = getInput(default="Stadtbibliothek")
-    
+
     print("Lade Geodaten...")
 
     geo = loadGeoPossibilities(data)

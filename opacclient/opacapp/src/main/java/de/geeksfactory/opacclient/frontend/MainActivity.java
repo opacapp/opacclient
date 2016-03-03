@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
@@ -22,8 +21,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import de.geeksfactory.opacclient.R;
@@ -141,8 +138,6 @@ public class MainActivity extends OpacActivity
         if (app.getLibrary() != null) {
             getSupportActionBar().setSubtitle(app.getLibrary().getDisplayName());
         }
-
-        showCelebDialog();
     }
 
     @Override
@@ -378,23 +373,6 @@ public class MainActivity extends OpacActivity
             } catch (Exception e) {
 
             }
-        }
-    }
-
-    public void showCelebDialog() {
-        if (!getApplicationContext().getPackageName().startsWith("de.geeksfactory.opacclient")) {
-            return;  // Never show e.g. in plus edition
-        }
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        Calendar cal = Calendar.getInstance();
-        cal.set(2016, 3, 1, 0, 0, 0);
-        if ((new Date()).after(cal.getTime())) {
-            return;
-        }
-        if (!sp.contains("seen_celeb_dialog_20160201")) {
-            DialogFragment newFragment = new CelebrationDialogFragment();
-            newFragment.show(getSupportFragmentManager(), "celeb");
-            sp.edit().putBoolean("seen_celeb_dialog_20160201", true).commit();
         }
     }
 

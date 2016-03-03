@@ -270,6 +270,7 @@ public abstract class BaseApi implements OpacApi {
         HttpGet httpget = new HttpGet(cleanUrl(url));
         HttpResponse response;
         String html;
+        httpget.setHeader("Accept", "*/*");
 
         try {
             if (cookieStore != null) {
@@ -388,6 +389,7 @@ public abstract class BaseApi implements OpacApi {
             throws IOException {
         HttpPost httppost = new HttpPost(cleanUrl(url));
         httppost.setEntity(data);
+        httppost.setHeader("Accept", "*/*");
 
         HttpResponse response;
         String html;

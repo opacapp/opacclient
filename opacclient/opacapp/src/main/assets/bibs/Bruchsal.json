@@ -6,38 +6,30 @@
     "data": {
         "accounttable": {
             "author": 0,
-            "barcode": -1,
-            "homebranch": -1,
-            "lendingbranch": -1,
-            "prolongurl": 4,
+            "prolongurl": 5,
             "returndate": 3,
-            "status": -1,
             "title": 1
         },
         "baseurl": "https://web-opac.kivbf.de/bruchsal",
         "copiestable": {
-            "barcode": -1,
-            "branch": -1,
-            "department": -1,
             "location": 0,
-            "reservations": -1,
-            "returndate": 2,
-            "status": 1
+            "returndate": 3,
+            "status": 2
         },
-        "customssl": true,
         "mediatypes": {
             "CDkl.gif": "CD_SOFTWARE",
+            "Icon_eMedium_k.jpg": "EBOOK",
             "MFilmS.gif": "MOVIE",
-            "MZtgS.gif": "NEWSPAPER",
-            "MbuecherS.gif": "PACKAGE",
+            "MZtgS.gif": "MAGAZINE",
+            "MbuecherS.gif": "UNKNOWN",
             "MonooS.gif": "BOOK",
-            "Munzinger3k.png": "UNKNOWN",
+            "Munzinger3k.png": "EDOC",
             "mBuchS.gif": "BOOK",
             "mDVDS.gif": "DVD",
             "mMUsik2S.gif": "CD",
             "mMusik2S.gif": "AUDIO_CASSETTE",
-            "mReise2S.gif": "CD",
-            "mUnselbS.gif": "UNKNOWN",
+            "mReise2S.gif": "CD_SOFTWARE",
+            "mUnselbS.gif": "BOOK",
             "mcasetteS.gif": "AUDIO_CASSETTE",
             "mcomicS.gif": "BOOK",
             "mmusikcdS.gif": "CD",
@@ -46,9 +38,7 @@
         "reservationtable": {
             "author": 0,
             "availability": 2,
-            "branch": -1,
             "cancelurl": 3,
-            "expirationdate": -1,
             "title": 1
         }
     },
@@ -56,7 +46,7 @@
         49.1249712,
         8.584410799999999
     ],
-    "information": "http://www.bruchsal.de/servlet/PB/menu/1339276_l1/index.html",
+    "information": "http://www.bruchsal.de/,Lde/Home/Leben+in+Bruchsal/Stadtbibliothek.html",
     "state": "Baden-W\u00fcrttemberg",
     "title": "Stadtbibliothek"
 }

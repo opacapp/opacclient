@@ -1,11 +1,11 @@
 {
     "account_supported": true,
-    "api": "sisis",
+    "api": "touchpoint",
     "city": "M\u00fcnchen",
     "country": "Deutschland",
     "data": {
-        "baseurl": "https://opacplus.ub.uni-muenchen.de/InfoGuideClient.ubmsis",
-        "startparams": "Login=igubm"
+        "baseurl": "https://opac.ub.uni-muenchen.de/TouchPoint",
+        "startparams": "View=sunrise"
     },
     "geo": [
         48.15038999999999,
