@@ -372,35 +372,45 @@ public abstract class OpacActivity extends AppCompatActivity
             setSupportProgressBarIndeterminateVisibility(false);
         } catch (Exception e) {
         }
+        int itemId = item.getItemId();
+        if (selectItemById(itemId)) return;
+
+        // Highlight the selected item, update the title, and close the drawer
+        drawer.setCheckedItem(itemId);
+        drawerLayout.closeDrawer(drawer);
+        setAccountSwitcherVisible(false);
+        return;
+    }
+
+    protected boolean selectItemById(int id) {
         Fragment previousFragment = fragment;
         // we cannot use a switch statement here because it breaks compatibility to the Plus Edition
-        int itemId = item.getItemId();
-        if (itemId == R.id.nav_search) {
+        if (id == R.id.nav_search) {
             fragment = new SearchFragment();
             setTwoPane(false);
             setFabVisible(true);
-        } else if (itemId == R.id.nav_account) {
+        } else if (id == R.id.nav_account) {
             fragment = new AccountFragment();
             setTwoPane(false);
             setFabVisible(false);
-        } else if (itemId == R.id.nav_starred) {
+        } else if (id == R.id.nav_starred) {
             fragment = new StarredFragment();
             setTwoPane(true);
             setFabVisible(false);
-        } else if (itemId == R.id.nav_info) {
+        } else if (id == R.id.nav_info) {
             fragment = new InfoFragment();
             setTwoPane(false);
             setFabVisible(false);
-        } else if (itemId == R.id.nav_settings) {
+        } else if (id == R.id.nav_settings) {
             Intent intent = new Intent(this, MainPreferenceActivity.class);
             startActivity(intent);
-            return;
-        } else if (itemId == R.id.nav_about) {
+            return true;
+        } else if (id == R.id.nav_about) {
             Intent intent = new Intent(this, AboutActivity.class);
             startActivity(intent);
-            return;
+            return true;
         }
-        setFabOnClickListener(item.getItemId());
+        setFabOnClickListener(id);
 
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -429,16 +439,14 @@ public abstract class OpacActivity extends AppCompatActivity
             e.printStackTrace();
         }
         transaction.commit();
-
-        // Highlight the selected item, update the title, and close the drawer
-        drawer.setCheckedItem(item.getItemId());
-        selectedItemId = item.getItemId();
-        setTitle(item.getTitle());
-        drawerLayout.closeDrawer(drawer);
-        setAccountSwitcherVisible(false);
-        return;
+        selectedItemId = id;
+        setTitle(getTitleForItem(id));
+        return false;
     }
 
+    protected CharSequence getTitleForItem(int id) {
+        return drawer.getMenu().findItem(id).getTitle();
+    }
 
     protected void selectItem(String tag) {
         int id;
@@ -458,7 +466,7 @@ public abstract class OpacActivity extends AppCompatActivity
             default:
                 return;
         }
-        selectItem(drawer.getMenu().findItem(id));
+        selectItemById(id);
     }
 
     protected void selectItem(int pos) {
