@@ -25,7 +25,7 @@ public class WinBiapAccountTest extends BaseAccountTest {
     }
 
     private static final String[] FILES =
-            new String[]{"guetersloh.html", "geltendorf.html", "neufahrn.html"};
+            new String[]{"guetersloh.html", "geltendorf.html", "neufahrn.html", "memmingen.html"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {
