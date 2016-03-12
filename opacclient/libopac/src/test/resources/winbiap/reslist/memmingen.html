@@ -1,0 +1,1202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>
+    WebOPAC Vorbestellungen - Stadtbibliothek
+</title>
+    <meta name="language" content="deutsch"/>
+    <meta name="robots" content="all"/>
+    <meta name="author" content="Jürgen Mödl, Oliver Janssen"/>
+    <meta name="abstract" content="Mediensuche online"/>
+    <meta name="copyright" content="Copyright by datronic IT-Systeme GmbH &amp; Co. KG."/>
+    <meta name="publisher" content="datronic IT-Systeme GmbH &amp; Co. KG."/>
+    <meta name="distribution" content="global"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+    <meta http-equiv="Content-Style-Type" content="text/css"/>
+    <link href='https://bibliothek.memmingen.de/favicon.ico' rel='shortcut icon'/>
+    <link href='https://bibliothek.memmingen.de/favicon.ico' rel='icon' type='image/ico'/>
+    <link rel='apple-touch-icon' href='https://bibliothek.memmingen.de/apple-touch-icon-57x57.png'
+          sizes='57x57'/>
+    <link rel='apple-touch-icon' href='https://bibliothek.memmingen.de/apple-touch-icon-60x60.png'
+          sizes='60x60'/>
+    <link rel='apple-touch-icon' href='https://bibliothek.memmingen.de/apple-touch-icon-72x72.png'
+          sizes='72x72'/>
+    <link rel='apple-touch-icon' href='https://bibliothek.memmingen.de/apple-touch-icon-76x76.png'
+          sizes='76x76'/>
+    <link rel='apple-touch-icon' href='https://bibliothek.memmingen.de/apple-touch-icon-114x114.png'
+          sizes='114x114'/>
+    <link rel='apple-touch-icon' href='https://bibliothek.memmingen.de/apple-touch-icon-120x120.png'
+          sizes='120x120'/>
+    <link rel='apple-touch-icon' href='https://bibliothek.memmingen.de/apple-touch-icon-144x144.png'
+          sizes='144x144'/>
+    <link rel='apple-touch-icon'
+          href='https://bibliothek.memmingen.de/apple-touch-icon-precomposed.png' sizes='152x152'/>
+    <link rel='shortcut icon'
+          href='https://bibliothek.memmingen.de/apple-touch-icon-precomposed.png' sizes='152x152'/>
+    <link rel='shortcut icon'
+          href='https://bibliothek.memmingen.de/apple-touch-icon-precomposed.png' sizes='152x152'/>
+    <link href='https://bibliothek.memmingen.de/css/styles.min.css' type='text/css' rel='stylesheet'
+          media='all'/>
+    <link href='https://bibliothek.memmingen.de/css/print.min.css' type='text/css' rel='stylesheet'
+          media='print'/>
+    <link class='design' href='https://bibliothek.memmingen.de/customers//css/additional.css'
+          type='text/css' rel='stylesheet' media='screen'/>
+    <script src='https://bibliothek.memmingen.de/js/scripts.js' type='text/javascript'
+            charset='UTF-8'></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#ContentPlaceHolderMain_HyperLinkCovers').click(function () {
+                $('#ContentPlaceHolderMain_HyperLinkCovers').next("label:first").text('...wird geladen');
+                $('div.cover').slideToggle(600, function () {
+                    $('#ContentPlaceHolderMain_HyperLinkCovers').next("label:first").text('Details einblenden');
+                });
+            });
+        });
+
+    </script>
+</head>
+<body id="body">
+<form method="post"
+      action="./reservations.aspx?data=U3JjPVVzZXJPdmVydmlldyZhbXA7Y21kPUluaXQ%3d-Qgmvv9IISNg%3d"
+      id="formMain">
+    <div class="aspNetHidden">
+        <input type="hidden" name="__VIEWSTATEFIELDCOUNT" id="__VIEWSTATEFIELDCOUNT" value="10"/>
+        <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE"
+               value="/wEPDwULLTE1MDA5NzU1MTAPZBYCZg9kFgICAw9kFgJmD2QWDAIBDw8WAh4HVmlzaWJsZWhkZAIFD2QWBGYPFgIeC18hSXRlbUNvdW50AgcWDmYPZBYEAgEPZBYCZg8PFgQeC05hdmlnYXRlVXJsBSpodHRwczovL2JpYmxpb3RoZWsubWVtbWluZ2VuLmRlL2luZGV4LmFzcHgeBFRleHQFOzxpIGNsYXNzPSJmYSBmYS1ob21lIiBzdHlsZT0iY29sb3I6ICNDRjAwMEYiPjwvaT5TdGFydHNlaXRlZGQCAw8PFgIfAGhkFgJmD2QWAgIBD2QWAgIFD2QWBGYPDxYCHg9Db21tYW5kQXJndW1lbnQFATBkFgJmDxUCAABkAgEPFgIfAQL/////D2QCAQ9kFgQCAQ9kFgJmDw8WBB8CBStodHRwczovL2JpYmxpb3RoZWsubWVtbWluZ2VuLmRlL3NlYXJjaC5hc3B4HwMFOTxpIGNsYXNzPSJmYSBmYS1zZWFyY2giIHN0eWxlPSJjb2xvcjogI0NGMDAwRiI+PC9pPlN1Y2hlbmRkAgMPDxYCHwBoZBYCZg9kFgICAQ9kFgICBQ9kFgRmDw8WAh8EBQEwZBYCZg8VAgAAZAIBDxYCHwEC/////w9kAgIPZBYEAgEPZBYCZg8PFgQfAgUxaHR0cHM6Ly9iaWJsaW90aGVrLm1lbW1pbmdlbi5kZS9hY3F1aXNpdGlvbnMuYXNweB8DBUM8aSBjbGFzcz0iZmEgZmEtY2FsZW5kYXIiIHN0eWxlPSJjb2xvcjogI0NGMDAwRiI+PC9pPk5ldWVyd2VyYnVuZ2VuZGQCAw8PFgIfAGhkFgJmD2QWAgIBD2QWAgIFD2QWBGYPDxYCHwQFATBkFgJmDxUCAABkAgEPFgIfAQL/////D2QCAw9kFgQCAQ9kFgJmDw8WBB8CBSxodHRwczovL2JpYmxpb3RoZWsubWVtbWluZ2VuLmRlL3RvcGxpc3QuYXNweB8DBTk8"/>
+        <input type="hidden" name="__VIEWSTATE1" id="__VIEWSTATE1"
+               value="aSBjbGFzcz0iZmEgZmEtc3RhciIgc3R5bGU9ImNvbG9yOiAjQ0YwMDBGIj48L2k+VG9wbGlzdGVkZAIDDw8WAh8AaGQWAmYPZBYCAgEPZBYCAgUPZBYEZg8PFgIfBAUBMGQWAmYPFQIAAGQCAQ8WAh8BAv////8PZAIED2QWBAIBD2QWAmYPDxYEHwIFLGh0dHBzOi8vYmlibGlvdGhlay5tZW1taW5nZW4uZGUvYW50b2xpbi5hc3B4HwMFQTxpIGNsYXNzPSJmYSBmYS1zb2NjZXItYmFsbC1vIiBzdHlsZT0iY29sb3I6ICNDRjAwMEYiPjwvaT5BbnRvbGluZGQCAw8PFgIfAGhkFgJmD2QWAgIBD2QWAgIFD2QWBGYPDxYCHwQFATBkFgJmDxUCAABkAgEPFgIfAQL/////D2QCBQ9kFgQCAQ9kFgJmDw8WBB8CBS1odHRwczovL2JpYmxpb3RoZWsubWVtbWluZ2VuLmRlL3JlZ2lzdGVyLmFzcHgfAwU5PGkgY2xhc3M9ImZhIGZhLWxpc3QiIHN0eWxlPSJjb2xvcjogI0NGMDAwRiI+PC9pPlJlZ2lzdGVyZGQCAw8PFgIfAGhkFgJmD2QWAgIBD2QWAgIFD2QWBGYPDxYCHwQFATBkFgJmDxUCAABkAgEPFgIfAQL/////D2QCBg9kFgQCAQ8PFgIfAGhkZAIDD2QWAmYPZBYEZg9kFgJmDw8WBB8DBTI8c3BhbiBpZD0nMTInIGNsYXNzPSdhY3RpdmVtZW51Jz5MZXNlcmtvbnRvPC9zcGFuPh8CBS9odHRwczovL2JpYmxpb3RoZWsubWVtbWluZ2VuLmRlL3VzZXIvbG9naW4uYXNweGRkAgEPZBYGZg8PFggfAgUyaHR0cHM6Ly9iaWJsaW90aGVrLm1lbW1pbmdlbi5kZS91c2VyL292ZXJ2aWV3LmFzcHgfAwUyPHNwYW4gaWQ9JzEyJyBjbGFzcz0nYWN0aXZlbWVudSc+TGVzZXJrb250"/>
+        <input type="hidden" name="__VIEWSTATE2" id="__VIEWSTATE2"
+               value="bzwvc3Bhbj4eCENzc0NsYXNzBRxNZW51SXRlbUxpbmsgZHJvcGRvd24tdG9nZ2xlHgRfIVNCAgJkZAIDDxYCHwBnZAIFD2QWBGYPDxYCHwQFATBkFgJmDxUCAABkAgEPFgIfAQL/////D2QCAQ9kFgJmDxYCHwECBxYOZg9kFgICAQ9kFgJmDw8WBB8CBRJ+L3VzZXIvYm9ycm93LmFzcHgfAwUMRW50bGVpaHVuZ2VuZGQCAQ9kFgICAQ9kFgJmDw8WBB8CBRh+L3VzZXIvcmVzZXJ2YXRpb25zLmFzcHgfAwUPVm9yYmVzdGVsbHVuZ2VuZGQCAg9kFgICAQ9kFgJmDw8WBB8CBRN+L3VzZXIvZGl2aWJpYi5hc3B4HwMFB09ubGVpaGVkZAIDD2QWAgIBD2QWAmYPDxYEHwIFE34vdXNlci9jaGFyZ2VzLmFzcHgfAwUJR2Viw7xocmVuZGQCBA9kFgICAQ9kFgJmDw8WBB8CBRV+L3VzZXIvZmF2b3JpdGVzLmFzcHgfAwUJTWVya2xpc3RlZGQCBQ9kFgICAQ9kFgJmDw8WBB8CBRR+L3VzZXIvc2V0dGluZ3MuYXNweB8DBQ1FaW5zdGVsbHVuZ2VuZGQCBg9kFgICAQ9kFgJmDw8WBB8CBRJ+L3VzZXIvbG9nb3V0LmFzcHgfAwUIQWJtZWxkZW5kZAIGDw8WAh8AaGQWBmYPDxYCHwBoZGQCAQ8PFgIfAGhkZAILDxYCHwBoZAIKDw8WAh8AaGRkAgsPZBYGZg8PFgIfAwVEU2llIGhhYmVuIGRlcnplaXQgPHNwYW4gaWQ9J21lZGlhQ291bnQnPjU8L3NwYW4+IE1lZGllbiB2b3JiZXN0ZWxsdCFkZAICDw8WAh8CBXdodHRwczovL2JpYmxpb3RoZWsubWVtbWluZ2VuLmRlL3NlcnZpY2UvcnNzLmFzcHg/ZGF0YT1TbTlpUFZWelpYSlNaWE5sY25aaGRHbHZibk1tWVcxd08xSmxZV1JsY21s"/>
+        <input type="hidden" name="__VIEWSTATE3" id="__VIEWSTATE3"
+               value="a1BUUTFPVFE9LXAwZU9TY3lMalVBPWRkAgQPZBYCAgEPFgIfAQIFFgoCAQ9kFgQCAQ8WAh8AZxYCZg9kFgICAQ8PFgIfAwUuPHNwYW4gY2xhc3M9J3RleHQtZXJyb3InPk5vY2ggbmljaHQgdmVyZsO8Z2JhcmRkAgMPZBYYZg9kFghmD2QWAgIBDw8WAh8DZWRkAgEPZBYCAgEPDxYCHwMFE0hldXRlIGJpbiBpY2ggU2FtYmFkZAICD2QWAgIBDw8WAh8DBQoyNy4xMC4yMDE1ZGQCAw9kFgICAQ8PFgIfAwUPU3RhZHRiaWJsaW90aGVrZGQCAg8PFgIfAgWGAWh0dHBzOi8vYmlibGlvdGhlay5tZW1taW5nZW4uZGUvZGV0YWlsLmFzcHg/ZGF0YT1ZMjFrUFRFbVlXMXdPMU55WXoweU5pWmhiWEE3UTJGMFlXeHZaM1ZsU1dROU1UYzFNRGs1Sm1GdGNEdFRjbU5KWkQweE1nPT0taCtIUWFxMXAvem89ZBYCZg9kFgJmDw9kFgQeCGRhdGEtc3JjBWNodHRwOi8vd3d3Mi53aW5iaWFwLmRlL2NvdmVyc2VydmljZXMvZ2V0Y292ZXIuYXNoeD94MTM9MDg4ODc1MDI2NTI5NiZjYXRpZD0xNzUwOTkmbGliaWQ9JmNvdW50cnk9REUeA2dycAVDaHR0cHM6Ly9iaWJsaW90aGVrLm1lbW1pbmdlbi5kZS9jdXN0b21lcnMvLy9pbWFnZXMvbWVkaWFncnAvZHZkLmdpZmQCAw8PFgIfAwU1PHNwYW4gY2xhc3M9J3RleHQtZXJyb3InPk5vY2ggbmljaHQgdmVyZsO8Z2Jhcjwvc3Bhbj5kZAIEDxYCHwBoZAIFDw8WAh8DBQ1ad2VpZ3N0ZWxsZTogZGQCBg8PFgIfAwUZU3RhZHRiaWJsaW90aGVrIE1lbW1pbmdlbmRkAgcPDxYCHwMFDk1lZGllbm51bW1lcjogZGQCCA8PFgIfAwUrPGkgY2xh"/>
+        <input type="hidden" name="__VIEWSTATE4" id="__VIEWSTATE4"
+               value="c3M9J2ZhIGZhLWJhcmNvZGUgZmEtZncnPjwvaT41MDE2MDgwMWRkAgkPDxYCHwMFHkRWRCAtIFNwaWVsZmlsbWUgKEVyZGdlc2Nob8OfKWRkAgoPDxYCHwMFAjUuZGQCDA8WAh8AaBYCAgUPDxYCHwMFD1N0YWR0YmlibGlvdGhla2RkAg0PD2QWAh4Hb25jbGljawXGAWphdmFzY3JpcHQ6U2hvd0RlbGV0ZVJlc2VydmF0aW9uTW9kYWwoJyNDb250ZW50UGxhY2VIb2xkZXJNYWluX3Jlc2VydmF0aW9uRGV0YWlsTGlzdF9SZXBlYXRlckxpc3RWaWV3X1Jlc2VydmF0aW9uRGV0YWlsSXRlbU1haW5fMF9yb3dCb3Jyb3dfMCcsICcjYm9va0RldGFpbHMtMTM1MDcyJywgJy4uL3NlcnZpY2UvVXNlclNlcnZpY2UuYXNoeCcpO2QCAg9kFgICAw9kFhhmD2QWCGYPZBYCAgEPDxYCHwNlZGQCAQ9kFgICAQ8PFgIfAwUOQSBXb3JsZCBCZXlvbmRkZAICD2QWAgIBDw8WAh8DBQowOC4xMS4yMDE1ZGQCAw9kFgICAQ8PFgIfAwUPU3RhZHRiaWJsaW90aGVrZGQCAg8PFgIfAgWGAWh0dHBzOi8vYmlibGlvdGhlay5tZW1taW5nZW4uZGUvZGV0YWlsLmFzcHg/ZGF0YT1ZMjFrUFRFbVlXMXdPMU55WXoweU5pWmhiWEE3UTJGMFlXeHZaM1ZsU1dROU1UYzFPRFkwSm1GdGNEdFRjbU5KWkQweE1nPT0tc2xaaUJKTGd4N2s9ZBYCZg9kFgJmDw9kFgQfBwVjaHR0cDovL3d3dzIud2luYmlhcC5kZS9jb3ZlcnNlcnZpY2VzL2dldGNvdmVyLmFzaHg/eDEzPTg3MTc0MTg0NjY5ODUmY2F0aWQ9MTc1ODY0JmxpYmlkPSZjb3VudHJ5PURFHwgFQ2h0dHBzOi8vYmlibGlvdGhlay5tZW1taW5n"/>
+        <input type="hidden" name="__VIEWSTATE5" id="__VIEWSTATE5"
+               value="ZW4uZGUvY3VzdG9tZXJzLy8vaW1hZ2VzL21lZGlhZ3JwL2R2ZC5naWZkAgMPDxYCHwMFNTxzcGFuIGNsYXNzPSd0ZXh0LWVycm9yJz5Ob2NoIG5pY2h0IHZlcmbDvGdiYXI8L3NwYW4+ZGQCBA8WAh8AaGQCBQ8PFgIfAwUNWndlaWdzdGVsbGU6IGRkAgYPDxYCHwMFGVN0YWR0YmlibGlvdGhlayBNZW1taW5nZW5kZAIHDw8WAh8DBQ5NZWRpZW5udW1tZXI6IGRkAggPDxYCHwMFKzxpIGNsYXNzPSdmYSBmYS1iYXJjb2RlIGZhLWZ3Jz48L2k+NTAxNjI5OTRkZAIJDw8WAh8DBR5EVkQgLSBTcGllbGZpbG1lIChFcmRnZXNjaG/DnylkZAIKDw8WAh8DBQI1LmRkAgwPFgIfAGgWAgIFDw8WAh8DBQ9TdGFkdGJpYmxpb3RoZWtkZAINDw9kFgIfCQXGAWphdmFzY3JpcHQ6U2hvd0RlbGV0ZVJlc2VydmF0aW9uTW9kYWwoJyNDb250ZW50UGxhY2VIb2xkZXJNYWluX3Jlc2VydmF0aW9uRGV0YWlsTGlzdF9SZXBlYXRlckxpc3RWaWV3X1Jlc2VydmF0aW9uRGV0YWlsSXRlbU1haW5fMV9yb3dCb3Jyb3dfMScsICcjYm9va0RldGFpbHMtMTM1ODM3JywgJy4uL3NlcnZpY2UvVXNlclNlcnZpY2UuYXNoeCcpO2QCAw9kFgICAw9kFhpmD2QWCGYPZBYCAgEPDxYCHwNlZGQCAQ9kFgICAQ8PFgIfAwUdRGllIEfDpHJ0bmVyaW4gdm9uIFZlcnNhaWxsZXNkZAICD2QWAgIBDw8WAh8DBQowOS4xMi4yMDE1ZGQCAw9kFgICAQ8PFgIfAwUPU3RhZHRiaWJsaW90aGVrZGQCAg8PFgIfAgWGAWh0dHBzOi8vYmlibGlvdGhlay5tZW1taW5nZW4uZGUvZGV0YWlsLmFzcHg/ZGF0YT1ZMjFr"/>
+        <input type="hidden" name="__VIEWSTATE6" id="__VIEWSTATE6"
+               value="UFRFbVlXMXdPMU55WXoweU5pWmhiWEE3UTJGMFlXeHZaM1ZsU1dROU1UYzFNakV4Sm1GdGNEdFRjbU5KWkQweE1nPT0tMnBwQmpuSXlnd3M9ZBYCZg9kFgJmDw9kFgQfBwVjaHR0cDovL3d3dzIud2luYmlhcC5kZS9jb3ZlcnNlcnZpY2VzL2dldGNvdmVyLmFzaHg/eDEzPTUwNTMwODMwNDQ4NTUmY2F0aWQ9MTc1MjExJmxpYmlkPSZjb3VudHJ5PURFHwgFQ2h0dHBzOi8vYmlibGlvdGhlay5tZW1taW5nZW4uZGUvY3VzdG9tZXJzLy8vaW1hZ2VzL21lZGlhZ3JwL2R2ZC5naWZkAgMPDxYCHwMFNTxzcGFuIGNsYXNzPSd0ZXh0LWVycm9yJz5Ob2NoIG5pY2h0IHZlcmbDvGdiYXI8L3NwYW4+ZGQCBA8WAh8AaGQCBQ8PFgIfAwUNWndlaWdzdGVsbGU6IGRkAgYPDxYCHwMFGVN0YWR0YmlibGlvdGhlayBNZW1taW5nZW5kZAIHDw8WAh8DBQ5NZWRpZW5udW1tZXI6IGRkAggPDxYCHwMFKzxpIGNsYXNzPSdmYSBmYS1iYXJjb2RlIGZhLWZ3Jz48L2k+NTAxNjA4NzJkZAIJDw8WAh8DBR5EVkQgLSBTcGllbGZpbG1lIChFcmRnZXNjaG/DnylkZAIKDw8WAh8DZWRkAgsPFgIfAGhkAgwPFgIfAGgWAgIFDw8WAh8DBQ9TdGFkdGJpYmxpb3RoZWtkZAINDw9kFgIfCQXGAWphdmFzY3JpcHQ6U2hvd0RlbGV0ZVJlc2VydmF0aW9uTW9kYWwoJyNDb250ZW50UGxhY2VIb2xkZXJNYWluX3Jlc2VydmF0aW9uRGV0YWlsTGlzdF9SZXBlYXRlckxpc3RWaWV3X1Jlc2VydmF0aW9uRGV0YWlsSXRlbU1haW5fMl9yb3dCb3Jyb3dfMicsICcjYm9va0RldGFpbHMtMTM1MTg0JywgJy4u"/>
+        <input type="hidden" name="__VIEWSTATE7" id="__VIEWSTATE7"
+               value="L3NlcnZpY2UvVXNlclNlcnZpY2UuYXNoeCcpO2QCBA9kFgICAw9kFhpmD2QWCGYPZBYCAgEPDxYCHwNlZGQCAQ9kFgICAQ8PFgIfAwULU2FuIEFuZHJlYXNkZAICD2QWAgIBDw8WAh8DBQoyNS4wMS4yMDE2ZGQCAw9kFgICAQ8PFgIfAwUPU3RhZHRiaWJsaW90aGVrZGQCAg8PFgIfAgWGAWh0dHBzOi8vYmlibGlvdGhlay5tZW1taW5nZW4uZGUvZGV0YWlsLmFzcHg/ZGF0YT1ZMjFrUFRFbVlXMXdPMU55WXoweU5pWmhiWEE3UTJGMFlXeHZaM1ZsU1dROU1UYzFOak0wSm1GdGNEdFRjbU5KWkQweE1nPT0tMUQ3bzZwMEFZVms9ZBYCZg9kFgJmDw9kFgQfBwVjaHR0cDovL3d3dzIud2luYmlhcC5kZS9jb3ZlcnNlcnZpY2VzL2dldGNvdmVyLmFzaHg/eDEzPTUwNTE4OTAyOTI5MjYmY2F0aWQ9MTc1NjM0JmxpYmlkPSZjb3VudHJ5PURFHwgFQ2h0dHBzOi8vYmlibGlvdGhlay5tZW1taW5nZW4uZGUvY3VzdG9tZXJzLy8vaW1hZ2VzL21lZGlhZ3JwL2R2ZC5naWZkAgMPDxYCHwMFNTxzcGFuIGNsYXNzPSd0ZXh0LWVycm9yJz5Ob2NoIG5pY2h0IHZlcmbDvGdiYXI8L3NwYW4+ZGQCBA8WAh8AaGQCBQ8PFgIfAwUNWndlaWdzdGVsbGU6IGRkAgYPDxYCHwMFGVN0YWR0YmlibGlvdGhlayBNZW1taW5nZW5kZAIHDw8WAh8DBQ5NZWRpZW5udW1tZXI6IGRkAggPDxYCHwMFKzxpIGNsYXNzPSdmYSBmYS1iYXJjb2RlIGZhLWZ3Jz48L2k+NTAxNjIzMThkZAIJDw8WAh8DBR5EVkQgLSBTcGllbGZpbG1lIChFcmRnZXNjaG/DnylkZAIKDw8WAh8DZWRkAgsPFgIfAGhkAgwP"/>
+        <input type="hidden" name="__VIEWSTATE8" id="__VIEWSTATE8"
+               value="FgIfAGgWAgIFDw8WAh8DBQ9TdGFkdGJpYmxpb3RoZWtkZAINDw9kFgIfCQXGAWphdmFzY3JpcHQ6U2hvd0RlbGV0ZVJlc2VydmF0aW9uTW9kYWwoJyNDb250ZW50UGxhY2VIb2xkZXJNYWluX3Jlc2VydmF0aW9uRGV0YWlsTGlzdF9SZXBlYXRlckxpc3RWaWV3X1Jlc2VydmF0aW9uRGV0YWlsSXRlbU1haW5fM19yb3dCb3Jyb3dfMycsICcjYm9va0RldGFpbHMtMTM1NjA3JywgJy4uL3NlcnZpY2UvVXNlclNlcnZpY2UuYXNoeCcpO2QCBQ9kFgICAw9kFhhmD2QWCGYPZBYCAgEPDxYCHwNlZGQCAQ9kFgICAQ8PFgIfAwUNV2ludGVyJ3MgVGFsZWRkAgIPZBYCAgEPDxYCHwMFCjE4LjAyLjIwMTZkZAIDD2QWAgIBDw8WAh8DBQ9TdGFkdGJpYmxpb3RoZWtkZAICDw8WAh8CBYYBaHR0cHM6Ly9iaWJsaW90aGVrLm1lbW1pbmdlbi5kZS9kZXRhaWwuYXNweD9kYXRhPVkyMWtQVEVtWVcxd08xTnlZejB5TmlaaGJYQTdRMkYwWVd4dlozVmxTV1E5TVRjMU9USTJKbUZ0Y0R0VGNtTkpaRDB4TWc9PS1WZEEwYjBQVStXQT1kFgJmD2QWAmYPD2QWBB8HBWNodHRwOi8vd3d3Mi53aW5iaWFwLmRlL2NvdmVyc2VydmljZXMvZ2V0Y292ZXIuYXNoeD94MTM9NTA1MTg5MDIyMzI3MiZjYXRpZD0xNzU5MjYmbGliaWQ9JmNvdW50cnk9REUfCAVDaHR0cHM6Ly9iaWJsaW90aGVrLm1lbW1pbmdlbi5kZS9jdXN0b21lcnMvLy9pbWFnZXMvbWVkaWFncnAvZHZkLmdpZmQCAw8PFgIfAwU1PHNwYW4gY2xhc3M9J3RleHQtZXJyb3InPk5vY2ggbmljaHQgdmVyZsO8Z2Jhcjwvc3Bhbj5k"/>
+        <input type="hidden" name="__VIEWSTATE9" id="__VIEWSTATE9"
+               value="ZAIEDxYCHwBoZAIFDw8WAh8DBQ1ad2VpZ3N0ZWxsZTogZGQCBg8PFgIfAwUZU3RhZHRiaWJsaW90aGVrIE1lbW1pbmdlbmRkAgcPDxYCHwMFDk1lZGllbm51bW1lcjogZGQCCA8PFgIfAwUrPGkgY2xhc3M9J2ZhIGZhLWJhcmNvZGUgZmEtZncnPjwvaT41MDE2MzE5OWRkAgkPDxYCHwMFHkRWRCAtIFNwaWVsZmlsbWUgKEVyZGdlc2Nob8OfKWRkAgoPDxYCHwMFAjMuZGQCDA8WAh8AaBYCAgUPDxYCHwMFD1N0YWR0YmlibGlvdGhla2RkAg0PD2QWAh8JBcYBamF2YXNjcmlwdDpTaG93RGVsZXRlUmVzZXJ2YXRpb25Nb2RhbCgnI0NvbnRlbnRQbGFjZUhvbGRlck1haW5fcmVzZXJ2YXRpb25EZXRhaWxMaXN0X1JlcGVhdGVyTGlzdFZpZXdfUmVzZXJ2YXRpb25EZXRhaWxJdGVtTWFpbl80X3Jvd0JvcnJvd180JywgJyNib29rRGV0YWlscy0xMzU4OTknLCAnLi4vc2VydmljZS9Vc2VyU2VydmljZS5hc2h4Jyk7ZAIMDw8WAh8AaGRkGAEFTmN0bDAwJG1haW5NZW51TmF2aWdhdGlvbiRyZXBlYXRlck1haW5NZW51JGN0bDA2JG1lbnVJdGVtQWNjb3VudCRtdWx0aVZpZXdTdGF0ZQ8PZAIBZEcR3RwUc1mkdxCk51o/gT3KdiQrq7ZF44+5nnN3UInG"/>
+    </div>
+
+    <div class="aspNetHidden">
+
+        <input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR"
+               value="BFAFD0CC"/>
+        <input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION"
+               value="/wEdAAaxagl5bQvQ+gB+BJN/cQAraueN/bTBvaIv6aE6g0TEHiEzG3NxYg66EgP9o9ZNj5D1+V+bEDLd+vATLGQKg+fXN96tbaDpIynh/VFBj0AsyFgbjfS51dqSEAuU8xmgPKXew/0qQST0Pvzve9HVqHtUR8AvXaCA4CtuzGB8FMfFlg=="/>
+    </div>
+
+    <a id="top" name="top" style="position: absolute; top: -20px; left: -20px;"></a>
+
+    <div id="PageMain" class="PageMain container">
+        <div id="PageMainContent" class="PageMainContent">
+            <div style="left: 0px; width: 96px; position: absolute; top: 0px; height: 19px"
+                 id="DivScrollTop">
+
+            </div>
+            <div id="header" class="hidden-print">
+
+
+                <div id="LogoCustomer">
+                    <a href="https://bibliothek.memmingen.de/index.aspx">
+                        <img alt="Stadtbibliothek"
+                             src="https://bibliothek.memmingen.de/customers/images/customer.jpg"/></a>
+                </div>
+
+            </div>
+
+
+            <div id="menu-wrapper" class="hidden-print">
+                <div id="menu-toolbar">
+                    <ul id="mainmenu">
+
+
+                        <li id='page-1' class='MenuItem '>
+    <span id='1' class=''>
+    <a id="mainMenuNavigation_repeaterMainMenu_menuItem_0_HyperLinkMenuItem_0" class="MenuItemLink"
+       href="https://bibliothek.memmingen.de/index.aspx"><i class="fa fa-home"
+                                                            style="color: #CF000F"></i>Startseite</a>
+    </span>
+
+
+                        </li>
+
+
+                        <li id='page-2' class='MenuItem '>
+    <span id='2' class=''>
+    <a id="mainMenuNavigation_repeaterMainMenu_menuItem_1_HyperLinkMenuItem_1" class="MenuItemLink"
+       href="https://bibliothek.memmingen.de/search.aspx"><i class="fa fa-search"
+                                                             style="color: #CF000F"></i>Suchen</a>
+    </span>
+
+
+                        </li>
+
+
+                        <li id='page-3' class='MenuItem '>
+    <span id='3' class=''>
+    <a id="mainMenuNavigation_repeaterMainMenu_menuItem_2_HyperLinkMenuItem_2" class="MenuItemLink"
+       href="https://bibliothek.memmingen.de/acquisitions.aspx"><i class="fa fa-calendar"
+                                                                   style="color: #CF000F"></i>Neuerwerbungen</a>
+    </span>
+
+
+                        </li>
+
+
+                        <li id='page-4' class='MenuItem '>
+    <span id='4' class=''>
+    <a id="mainMenuNavigation_repeaterMainMenu_menuItem_3_HyperLinkMenuItem_3" class="MenuItemLink"
+       href="https://bibliothek.memmingen.de/toplist.aspx"><i class="fa fa-star"
+                                                              style="color: #CF000F"></i>Topliste</a>
+    </span>
+
+
+                        </li>
+
+
+                        <li id='page-5' class='MenuItem '>
+    <span id='5' class=''>
+    <a id="mainMenuNavigation_repeaterMainMenu_menuItem_4_HyperLinkMenuItem_4" class="MenuItemLink"
+       href="https://bibliothek.memmingen.de/antolin.aspx"><i class="fa fa-soccer-ball-o"
+                                                              style="color: #CF000F"></i>Antolin</a>
+    </span>
+
+
+                        </li>
+
+
+                        <li id='page-6' class='MenuItem '>
+    <span id='6' class=''>
+    <a id="mainMenuNavigation_repeaterMainMenu_menuItem_5_HyperLinkMenuItem_5" class="MenuItemLink"
+       href="https://bibliothek.memmingen.de/register.aspx"><i class="fa fa-list"
+                                                               style="color: #CF000F"></i>Register</a>
+    </span>
+
+
+                        </li>
+
+
+                        <li id='page-12' class='MenuItem menu-account dropdown active '>
+
+
+                            <a id="mainMenuNavigation_repeaterMainMenu_menuItemAccount_6_HyperLinkMenuItem_6"
+                               class="MenuItemLink dropdown-toggle"
+                               href="https://bibliothek.memmingen.de/user/overview.aspx"><span
+                                    id='12' class='activemenu'>Leserkonto</span></a>
+                            <ul id="menuUserAccount" class="dropdown-menu" role="menu">
+                                <li><a tabindex="-1"
+                                       href="https://bibliothek.memmingen.de/user/overview.aspx"><i
+                                        class="fa fa-fw fa-home fa-fix-space"></i>Ins Leserkonto (20058664)</a>
+                                </li>
+                                <li id="mainMenuNavigation_repeaterMainMenu_menuItemAccount_6_menuBorrows_6">
+                                    <a tabindex="-1"
+                                       href="https://bibliothek.memmingen.de/user/borrow.aspx"><i
+                                            class="fa fa-fw fa-book fa-fix-space"></i>Entleihungen (1)</a>
+                                </li>
+                                <li id="mainMenuNavigation_repeaterMainMenu_menuItemAccount_6_menuReservations_6">
+                                    <a tabindex="-1"
+                                       href="https://bibliothek.memmingen.de/user/reservations.aspx"><i
+                                            class="fa fa-fw fa-calendar fa-fix-space"></i>Vorbestellungen (5)</a>
+                                </li>
+                                <li id="mainMenuNavigation_repeaterMainMenu_menuItemAccount_6_menuDiviBib_6">
+                                    <a tabindex="-1"
+                                       href="https://bibliothek.memmingen.de/user/divibib.aspx"><i
+                                            class="fa fa-fw fa-at fa-fix-space"></i>Onleihe</a></li>
+
+
+                                <li class="divider"></li>
+                                <li><a tabindex="-1"
+                                       href="https://bibliothek.memmingen.de/user/logout.aspx"><i
+                                        class="fa fa-fw fa-sign-out fa-fix-space"></i>Abmelden</a>
+                                </li>
+                            </ul>
+
+
+                        </li>
+
+
+                    </ul>
+                </div>
+                <div id="SubMenu" class="submenu">
+                    <ul id="mainMenuNavigation_MainSubMenu" class="submenu-toolbar ">
+
+
+                        <li id='page-0' class='MenuItem '>
+    <span id='0' class=''>
+    <a id="mainMenuNavigation_repeaterSubMenu_menuItem_0_HyperLinkMenuItem_0" class="MenuItemLink"
+       href="borrow.aspx">Entleihungen</a>
+    </span>
+
+                            <span class='submenuseperator'>|</span>
+                        </li>
+
+
+                        <li id='page-0' class='MenuItem active '>
+    <span id='0' class='activemenu'>
+    <a id="mainMenuNavigation_repeaterSubMenu_menuItem_1_HyperLinkMenuItem_1" class="MenuItemLink"
+       href="reservations.aspx">Vorbestellungen</a>
+    </span>
+
+                            <span class='submenuseperator'>|</span>
+                        </li>
+
+
+                        <li id='page-0' class='MenuItem '>
+    <span id='0' class=''>
+    <a id="mainMenuNavigation_repeaterSubMenu_menuItem_2_HyperLinkMenuItem_2" class="MenuItemLink"
+       href="divibib.aspx">Onleihe</a>
+    </span>
+
+                            <span class='submenuseperator'>|</span>
+                        </li>
+
+
+                        <li id='page-0' class='MenuItem '>
+    <span id='0' class=''>
+    <a id="mainMenuNavigation_repeaterSubMenu_menuItem_3_HyperLinkMenuItem_3" class="MenuItemLink"
+       href="charges.aspx">Gebühren</a>
+    </span>
+
+                            <span class='submenuseperator'>|</span>
+                        </li>
+
+
+                        <li id='page-0' class='MenuItem '>
+    <span id='0' class=''>
+    <a id="mainMenuNavigation_repeaterSubMenu_menuItem_4_HyperLinkMenuItem_4" class="MenuItemLink"
+       href="favorites.aspx">Merkliste</a>
+    </span>
+
+                            <span class='submenuseperator'>|</span>
+                        </li>
+
+
+                        <li id='page-0' class='MenuItem '>
+    <span id='0' class=''>
+    <a id="mainMenuNavigation_repeaterSubMenu_menuItem_5_HyperLinkMenuItem_5" class="MenuItemLink"
+       href="settings.aspx">Einstellungen</a>
+    </span>
+
+                            <span class='submenuseperator'>|</span>
+                        </li>
+
+
+                        <li id='page-0' class='MenuItem '>
+    <span id='0' class=''>
+    <a id="mainMenuNavigation_repeaterSubMenu_menuItem_6_HyperLinkMenuItem_6" class="MenuItemLink"
+       href="logout.aspx">Abmelden</a>
+    </span>
+
+                            <span class='submenuseperator' style='display:none'>|</span>
+                        </li>
+
+
+                    </ul>
+                </div>
+
+            </div>
+
+
+            <!--[if IE 8]>
+            <br/>
+            <div class="alert alert-danger">Für die korrekte Anzeige dieser Webseite wird ein aktueller Internet-Browser benötigt.
+                Bitte aktualisieren Sie Ihren Internet Explorer auf die aktuelle Version.
+            </div>
+            <![endif]-->
+            <div id="ContentMain">
+                <div id="ContentTitleWrapper">
+
+                    <h2>
+                        Leserkonto -
+                        Vorbestellung</h2>
+
+                </div>
+                <div style="clear: both">
+
+
+                </div>
+                <div id="Content">
+
+
+                    <div class="well-plain toolbar-with-btn-group">
+                        <div class="row-fluid">
+                            <div class="span6">
+                                <span id="ContentPlaceHolderMain_LabelAccountTableResult"
+                                      class="reservationCount">Sie haben derzeit <span
+                                        id='mediaCount'>5</span> Medien vorbestellt!</span>
+                            </div>
+                            <div class="span6">
+                                <div class="btn-toolbar" style="margin: 0px 0px">
+                                    <div class="btn-group" style="float: right;">
+                                        <a id="ContentPlaceHolderMain_PrintButton"
+                                           title="Diese Seite drucken" class="btn"
+                                           onclick="window.print(); return false;"
+                                           href="javascript:void(0);">
+                                            <i class="fa fa-print"></i>
+                                        </a>
+                                        <a id="ContentPlaceHolderMain_HyperLinkRss"
+                                           title="RSS-Feed: Alle vorbestellten Medien die für Sie bereit liegen."
+                                           class="btn"
+                                           href="https://bibliothek.memmingen.de/service/rss.aspx?data=Sm9iPVVzZXJSZXNlcnZhdGlvbnMmYW1wO1JlYWRlcmlkPTQ1OTQ=-p0eOScyLjUA="
+                                           target="_blank">
+                                            <i class="fa fa-rss-square"></i>
+                                        </a>
+                                        <a id="ContentPlaceHolderMain_HyperLinkCovers"
+                                           title="Details anzeigen" class="btn coverToggle"
+                                           data-toggle="button" href="javascript:void(0);"><i
+                                                id="IconCovers" class="fa fa-bars"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="removeStatus" class="alert alert-success " style="display:none">
+                        <strong>1 Vorbestellung</strong> wurde erfolgreich gelöscht.
+                    </div>
+                    <br/>
+
+
+                    <table id="ContentPlaceHolderMain_reservationDetailList"
+                           class="table detailTable">
+                        <thead id="ContentPlaceHolderMain_reservationDetailList_theader">
+                        <tr>
+
+                            <th>Autor</th>
+                            <th>Titel</th>
+                            <th>vorbestellt</th>
+                            <th id="ContentPlaceHolderMain_reservationDetailList_thPickup">Abholort</th>
+
+                        </tr>
+                        </thead>
+
+
+                        <tr id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_rowGroup_0"
+                            class="group-header">
+                            <td colspan="6">
+                    <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_labelGroup_0"><span
+                            class='text-error'>Noch nicht verfügbar</span>
+                            </td>
+                        </tr>
+
+                        <tr id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_0_rowBorrow_0"
+                            class="toggleDetails">
+                            <td>
+                                <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_0_LabelAutor_0"
+                                      class="autor"></span>
+                            </td>
+                            <td>
+                                <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_0_LabelTitle_0"
+                                      class="title">Heute bin ich Samba</span>
+                            </td>
+                            <td>
+                                <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_0_LabelReservateDate_0"
+                                      class="reservateDate">27.10.2015</span>
+                            </td>
+                            <td>
+                                <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_0_LabelPickupPlace_0"
+                                      class="pickupPlace">Stadtbibliothek</span>
+                            </td>
+                            <td style="text-align: right" class="noprint">
+                                <small><a>Details <i class="fa fa-chevron-right"
+                                                     style="font-size: 85%;"></i></a></small>
+                            </td>
+                        </tr>
+
+                        <tr id="bookDetails-135072" class="rowDetails">
+                            <td colspan="5">
+                                <input type="hidden"
+                                       name="ctl00$ContentPlaceHolderMain$reservationDetailList$RepeaterListView$ctl01$ReservationDetailItemMain$hiddenValueDetail"
+                                       id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_0_hiddenValueDetail_0"
+                                       value="cmVzZXJ2YXRpb25JZD0xNzk5OTYmYW1wO3JlYWRlcklkPTQ1OTQmYW1wO21vZGU9MQ==-ZWSc9TliyEM="/>
+                                <div class="media-wrapper">
+                                    <div class="mediaDetails">
+                                        <div class="row-fluid">
+                                            <div class="span2">
+                                                <a id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_0_linkDetail_0"
+                                                   href="https://bibliothek.memmingen.de/detail.aspx?data=Y21kPTEmYW1wO1NyYz0yNiZhbXA7Q2F0YWxvZ3VlSWQ9MTc1MDk5JmFtcDtTcmNJZD0xMg==-h+HQaq1p/zo="><img
+                                                        id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_0_CoverImage_0_ImageCover_0"
+                                                        title="Für mehr Infomationen bitte klicken!"
+                                                        class="cover"
+                                                        data-src="http://www2.winbiap.de/coverservices/getcover.ashx?x13=0888750265296&amp;catid=175099&amp;libid=&amp;country=DE"
+                                                        grp="https://bibliothek.memmingen.de/customers///images/mediagrp/dvd.gif"
+                                                        src="../images/empty.gif" align="middle"
+                                                        style="width:80px;"/></a>
+                                            </div>
+                                            <div class="span10">
+                                                <div class="row-fluid">
+                                                    <div class="span6">
+                                                        <strong>Status:</strong>
+                                                        <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_0_labelStatus_0"
+                                                              class="media-status"><span
+                                                                class='text-error'>Noch nicht verfügbar</span></span><br/>
+
+                                                        <br/>
+                                                        <strong>
+                                                            <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_0_labelBranchHeader_0">Zweigstelle: </span></strong>
+                                                        <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_0_labelBranch_0">Stadtbibliothek Memmingen</span><br/>
+                                                        <strong>
+                                                            <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_0_labelMediennrHeader_0">Mediennummer: </span></strong>
+                                                        <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_0_labelMediennr_0"><i
+                                                                class='fa fa-barcode fa-fw'></i>50160801</span><br/>
+                                                        <strong>Mediengruppe: </strong>
+                                                        <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_0_labelMediagroup_0">DVD - Spielfilme (Erdgeschoß)</span><br/>
+                                                    </div>
+                                                    <div class="span6">
+                                                        <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_0_labelPosition_0"
+                                                              title="Ihre Position in der Liste der Vorbesteller">5.</span>
+                                <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_0_labelPositionHeader_0"
+                                      title="Ihre Position in der Liste der Vorbesteller">Position
+                                <br/>
+                                    <small class="muted">
+                                        <i class="fa fa-info-circle fa-fix-space"></i>Ihre Position in der Liste der Vorbesteller
+                                    </small>
+                                </span>
+                                                        <br/>
+                                                        <br/>
+
+
+                                                        <a id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_0_linkRemove_0"
+                                                           class="btn btn-danger noprint"
+                                                           onclick="javascript:ShowDeleteReservationModal(&#39;#ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_0_rowBorrow_0&#39;, &#39;#bookDetails-135072&#39;, &#39;../service/UserService.ashx&#39;);">Vorbestellung löschen</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+
+                        <tr id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_1_rowBorrow_1"
+                            class="toggleDetails">
+                            <td>
+                                <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_1_LabelAutor_1"
+                                      class="autor"></span>
+                            </td>
+                            <td>
+                                <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_1_LabelTitle_1"
+                                      class="title">A World Beyond</span>
+                            </td>
+                            <td>
+                                <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_1_LabelReservateDate_1"
+                                      class="reservateDate">08.11.2015</span>
+                            </td>
+                            <td>
+                                <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_1_LabelPickupPlace_1"
+                                      class="pickupPlace">Stadtbibliothek</span>
+                            </td>
+                            <td style="text-align: right" class="noprint">
+                                <small><a>Details <i class="fa fa-chevron-right"
+                                                     style="font-size: 85%;"></i></a></small>
+                            </td>
+                        </tr>
+
+                        <tr id="bookDetails-135837" class="rowDetails">
+                            <td colspan="5">
+                                <input type="hidden"
+                                       name="ctl00$ContentPlaceHolderMain$reservationDetailList$RepeaterListView$ctl02$ReservationDetailItemMain$hiddenValueDetail"
+                                       id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_1_hiddenValueDetail_1"
+                                       value="cmVzZXJ2YXRpb25JZD0xODEyMjMmYW1wO3JlYWRlcklkPTQ1OTQmYW1wO21vZGU9MQ==-NUWP5jfPGjg="/>
+                                <div class="media-wrapper">
+                                    <div class="mediaDetails">
+                                        <div class="row-fluid">
+                                            <div class="span2">
+                                                <a id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_1_linkDetail_1"
+                                                   href="https://bibliothek.memmingen.de/detail.aspx?data=Y21kPTEmYW1wO1NyYz0yNiZhbXA7Q2F0YWxvZ3VlSWQ9MTc1ODY0JmFtcDtTcmNJZD0xMg==-slZiBJLgx7k="><img
+                                                        id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_1_CoverImage_1_ImageCover_1"
+                                                        title="Für mehr Infomationen bitte klicken!"
+                                                        class="cover"
+                                                        data-src="http://www2.winbiap.de/coverservices/getcover.ashx?x13=8717418466985&amp;catid=175864&amp;libid=&amp;country=DE"
+                                                        grp="https://bibliothek.memmingen.de/customers///images/mediagrp/dvd.gif"
+                                                        src="../images/empty.gif" align="middle"
+                                                        style="width:80px;"/></a>
+                                            </div>
+                                            <div class="span10">
+                                                <div class="row-fluid">
+                                                    <div class="span6">
+                                                        <strong>Status:</strong>
+                                                        <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_1_labelStatus_1"
+                                                              class="media-status"><span
+                                                                class='text-error'>Noch nicht verfügbar</span></span><br/>
+
+                                                        <br/>
+                                                        <strong>
+                                                            <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_1_labelBranchHeader_1">Zweigstelle: </span></strong>
+                                                        <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_1_labelBranch_1">Stadtbibliothek Memmingen</span><br/>
+                                                        <strong>
+                                                            <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_1_labelMediennrHeader_1">Mediennummer: </span></strong>
+                                                        <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_1_labelMediennr_1"><i
+                                                                class='fa fa-barcode fa-fw'></i>50162994</span><br/>
+                                                        <strong>Mediengruppe: </strong>
+                                                        <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_1_labelMediagroup_1">DVD - Spielfilme (Erdgeschoß)</span><br/>
+                                                    </div>
+                                                    <div class="span6">
+                                                        <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_1_labelPosition_1"
+                                                              title="Ihre Position in der Liste der Vorbesteller">5.</span>
+                                <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_1_labelPositionHeader_1"
+                                      title="Ihre Position in der Liste der Vorbesteller">Position
+                                <br/>
+                                    <small class="muted">
+                                        <i class="fa fa-info-circle fa-fix-space"></i>Ihre Position in der Liste der Vorbesteller
+                                    </small>
+                                </span>
+                                                        <br/>
+                                                        <br/>
+
+
+                                                        <a id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_1_linkRemove_1"
+                                                           class="btn btn-danger noprint"
+                                                           onclick="javascript:ShowDeleteReservationModal(&#39;#ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_1_rowBorrow_1&#39;, &#39;#bookDetails-135837&#39;, &#39;../service/UserService.ashx&#39;);">Vorbestellung löschen</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+
+                        <tr id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_2_rowBorrow_2"
+                            class="toggleDetails">
+                            <td>
+                                <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_2_LabelAutor_2"
+                                      class="autor"></span>
+                            </td>
+                            <td>
+                                <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_2_LabelTitle_2"
+                                      class="title">Die Gärtnerin von Versailles</span>
+                            </td>
+                            <td>
+                                <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_2_LabelReservateDate_2"
+                                      class="reservateDate">09.12.2015</span>
+                            </td>
+                            <td>
+                                <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_2_LabelPickupPlace_2"
+                                      class="pickupPlace">Stadtbibliothek</span>
+                            </td>
+                            <td style="text-align: right" class="noprint">
+                                <small><a>Details <i class="fa fa-chevron-right"
+                                                     style="font-size: 85%;"></i></a></small>
+                            </td>
+                        </tr>
+
+                        <tr id="bookDetails-135184" class="rowDetails">
+                            <td colspan="5">
+                                <input type="hidden"
+                                       name="ctl00$ContentPlaceHolderMain$reservationDetailList$RepeaterListView$ctl03$ReservationDetailItemMain$hiddenValueDetail"
+                                       id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_2_hiddenValueDetail_2"
+                                       value="cmVzZXJ2YXRpb25JZD0xODMzOTUmYW1wO3JlYWRlcklkPTQ1OTQmYW1wO21vZGU9MQ==-Fu/Zl2m42J4="/>
+                                <div class="media-wrapper">
+                                    <div class="mediaDetails">
+                                        <div class="row-fluid">
+                                            <div class="span2">
+                                                <a id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_2_linkDetail_2"
+                                                   href="https://bibliothek.memmingen.de/detail.aspx?data=Y21kPTEmYW1wO1NyYz0yNiZhbXA7Q2F0YWxvZ3VlSWQ9MTc1MjExJmFtcDtTcmNJZD0xMg==-2ppBjnIygws="><img
+                                                        id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_2_CoverImage_2_ImageCover_2"
+                                                        title="Für mehr Infomationen bitte klicken!"
+                                                        class="cover"
+                                                        data-src="http://www2.winbiap.de/coverservices/getcover.ashx?x13=5053083044855&amp;catid=175211&amp;libid=&amp;country=DE"
+                                                        grp="https://bibliothek.memmingen.de/customers///images/mediagrp/dvd.gif"
+                                                        src="../images/empty.gif" align="middle"
+                                                        style="width:80px;"/></a>
+                                            </div>
+                                            <div class="span10">
+                                                <div class="row-fluid">
+                                                    <div class="span6">
+                                                        <strong>Status:</strong>
+                                                        <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_2_labelStatus_2"
+                                                              class="media-status"><span
+                                                                class='text-error'>Noch nicht verfügbar</span></span><br/>
+
+                                                        <br/>
+                                                        <strong>
+                                                            <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_2_labelBranchHeader_2">Zweigstelle: </span></strong>
+                                                        <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_2_labelBranch_2">Stadtbibliothek Memmingen</span><br/>
+                                                        <strong>
+                                                            <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_2_labelMediennrHeader_2">Mediennummer: </span></strong>
+                                                        <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_2_labelMediennr_2"><i
+                                                                class='fa fa-barcode fa-fw'></i>50160872</span><br/>
+                                                        <strong>Mediengruppe: </strong>
+                                                        <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_2_labelMediagroup_2">DVD - Spielfilme (Erdgeschoß)</span><br/>
+                                                    </div>
+                                                    <div class="span6">
+                                                        <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_2_labelPosition_2"
+                                                              title="Ihre Position in der Liste der Vorbesteller"></span>
+
+                                                        <br/>
+                                                        <br/>
+
+
+                                                        <a id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_2_linkRemove_2"
+                                                           class="btn btn-danger noprint"
+                                                           onclick="javascript:ShowDeleteReservationModal(&#39;#ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_2_rowBorrow_2&#39;, &#39;#bookDetails-135184&#39;, &#39;../service/UserService.ashx&#39;);">Vorbestellung löschen</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+
+                        <tr id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_3_rowBorrow_3"
+                            class="toggleDetails">
+                            <td>
+                                <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_3_LabelAutor_3"
+                                      class="autor"></span>
+                            </td>
+                            <td>
+                                <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_3_LabelTitle_3"
+                                      class="title">San Andreas</span>
+                            </td>
+                            <td>
+                                <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_3_LabelReservateDate_3"
+                                      class="reservateDate">25.01.2016</span>
+                            </td>
+                            <td>
+                                <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_3_LabelPickupPlace_3"
+                                      class="pickupPlace">Stadtbibliothek</span>
+                            </td>
+                            <td style="text-align: right" class="noprint">
+                                <small><a>Details <i class="fa fa-chevron-right"
+                                                     style="font-size: 85%;"></i></a></small>
+                            </td>
+                        </tr>
+
+                        <tr id="bookDetails-135607" class="rowDetails">
+                            <td colspan="5">
+                                <input type="hidden"
+                                       name="ctl00$ContentPlaceHolderMain$reservationDetailList$RepeaterListView$ctl04$ReservationDetailItemMain$hiddenValueDetail"
+                                       id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_3_hiddenValueDetail_3"
+                                       value="cmVzZXJ2YXRpb25JZD0xODY0NTImYW1wO3JlYWRlcklkPTQ1OTQmYW1wO21vZGU9MQ==-WZaXGaoPImc="/>
+                                <div class="media-wrapper">
+                                    <div class="mediaDetails">
+                                        <div class="row-fluid">
+                                            <div class="span2">
+                                                <a id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_3_linkDetail_3"
+                                                   href="https://bibliothek.memmingen.de/detail.aspx?data=Y21kPTEmYW1wO1NyYz0yNiZhbXA7Q2F0YWxvZ3VlSWQ9MTc1NjM0JmFtcDtTcmNJZD0xMg==-1D7o6p0AYVk="><img
+                                                        id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_3_CoverImage_3_ImageCover_3"
+                                                        title="Für mehr Infomationen bitte klicken!"
+                                                        class="cover"
+                                                        data-src="http://www2.winbiap.de/coverservices/getcover.ashx?x13=5051890292926&amp;catid=175634&amp;libid=&amp;country=DE"
+                                                        grp="https://bibliothek.memmingen.de/customers///images/mediagrp/dvd.gif"
+                                                        src="../images/empty.gif" align="middle"
+                                                        style="width:80px;"/></a>
+                                            </div>
+                                            <div class="span10">
+                                                <div class="row-fluid">
+                                                    <div class="span6">
+                                                        <strong>Status:</strong>
+                                                        <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_3_labelStatus_3"
+                                                              class="media-status"><span
+                                                                class='text-error'>Noch nicht verfügbar</span></span><br/>
+
+                                                        <br/>
+                                                        <strong>
+                                                            <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_3_labelBranchHeader_3">Zweigstelle: </span></strong>
+                                                        <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_3_labelBranch_3">Stadtbibliothek Memmingen</span><br/>
+                                                        <strong>
+                                                            <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_3_labelMediennrHeader_3">Mediennummer: </span></strong>
+                                                        <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_3_labelMediennr_3"><i
+                                                                class='fa fa-barcode fa-fw'></i>50162318</span><br/>
+                                                        <strong>Mediengruppe: </strong>
+                                                        <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_3_labelMediagroup_3">DVD - Spielfilme (Erdgeschoß)</span><br/>
+                                                    </div>
+                                                    <div class="span6">
+                                                        <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_3_labelPosition_3"
+                                                              title="Ihre Position in der Liste der Vorbesteller"></span>
+
+                                                        <br/>
+                                                        <br/>
+
+
+                                                        <a id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_3_linkRemove_3"
+                                                           class="btn btn-danger noprint"
+                                                           onclick="javascript:ShowDeleteReservationModal(&#39;#ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_3_rowBorrow_3&#39;, &#39;#bookDetails-135607&#39;, &#39;../service/UserService.ashx&#39;);">Vorbestellung löschen</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+
+                        <tr id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_4_rowBorrow_4"
+                            class="toggleDetails">
+                            <td>
+                                <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_4_LabelAutor_4"
+                                      class="autor"></span>
+                            </td>
+                            <td>
+                                <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_4_LabelTitle_4"
+                                      class="title">Winter's Tale</span>
+                            </td>
+                            <td>
+                                <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_4_LabelReservateDate_4"
+                                      class="reservateDate">18.02.2016</span>
+                            </td>
+                            <td>
+                                <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_4_LabelPickupPlace_4"
+                                      class="pickupPlace">Stadtbibliothek</span>
+                            </td>
+                            <td style="text-align: right" class="noprint">
+                                <small><a>Details <i class="fa fa-chevron-right"
+                                                     style="font-size: 85%;"></i></a></small>
+                            </td>
+                        </tr>
+
+                        <tr id="bookDetails-135899" class="rowDetails">
+                            <td colspan="5">
+                                <input type="hidden"
+                                       name="ctl00$ContentPlaceHolderMain$reservationDetailList$RepeaterListView$ctl05$ReservationDetailItemMain$hiddenValueDetail"
+                                       id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_4_hiddenValueDetail_4"
+                                       value="cmVzZXJ2YXRpb25JZD0xODgzOTAmYW1wO3JlYWRlcklkPTQ1OTQmYW1wO21vZGU9MQ==-niEniM5vvo0="/>
+                                <div class="media-wrapper">
+                                    <div class="mediaDetails">
+                                        <div class="row-fluid">
+                                            <div class="span2">
+                                                <a id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_4_linkDetail_4"
+                                                   href="https://bibliothek.memmingen.de/detail.aspx?data=Y21kPTEmYW1wO1NyYz0yNiZhbXA7Q2F0YWxvZ3VlSWQ9MTc1OTI2JmFtcDtTcmNJZD0xMg==-VdA0b0PU+WA="><img
+                                                        id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_4_CoverImage_4_ImageCover_4"
+                                                        title="Für mehr Infomationen bitte klicken!"
+                                                        class="cover"
+                                                        data-src="http://www2.winbiap.de/coverservices/getcover.ashx?x13=5051890223272&amp;catid=175926&amp;libid=&amp;country=DE"
+                                                        grp="https://bibliothek.memmingen.de/customers///images/mediagrp/dvd.gif"
+                                                        src="../images/empty.gif" align="middle"
+                                                        style="width:80px;"/></a>
+                                            </div>
+                                            <div class="span10">
+                                                <div class="row-fluid">
+                                                    <div class="span6">
+                                                        <strong>Status:</strong>
+                                                        <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_4_labelStatus_4"
+                                                              class="media-status"><span
+                                                                class='text-error'>Noch nicht verfügbar</span></span><br/>
+
+                                                        <br/>
+                                                        <strong>
+                                                            <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_4_labelBranchHeader_4">Zweigstelle: </span></strong>
+                                                        <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_4_labelBranch_4">Stadtbibliothek Memmingen</span><br/>
+                                                        <strong>
+                                                            <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_4_labelMediennrHeader_4">Mediennummer: </span></strong>
+                                                        <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_4_labelMediennr_4"><i
+                                                                class='fa fa-barcode fa-fw'></i>50163199</span><br/>
+                                                        <strong>Mediengruppe: </strong>
+                                                        <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_4_labelMediagroup_4">DVD - Spielfilme (Erdgeschoß)</span><br/>
+                                                    </div>
+                                                    <div class="span6">
+                                                        <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_4_labelPosition_4"
+                                                              title="Ihre Position in der Liste der Vorbesteller">3.</span>
+                                <span id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_4_labelPositionHeader_4"
+                                      title="Ihre Position in der Liste der Vorbesteller">Position
+                                <br/>
+                                    <small class="muted">
+                                        <i class="fa fa-info-circle fa-fix-space"></i>Ihre Position in der Liste der Vorbesteller
+                                    </small>
+                                </span>
+                                                        <br/>
+                                                        <br/>
+
+
+                                                        <a id="ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_4_linkRemove_4"
+                                                           class="btn btn-danger noprint"
+                                                           onclick="javascript:ShowDeleteReservationModal(&#39;#ContentPlaceHolderMain_reservationDetailList_RepeaterListView_ReservationDetailItemMain_4_rowBorrow_4&#39;, &#39;#bookDetails-135899&#39;, &#39;../service/UserService.ashx&#39;);">Vorbestellung löschen</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+
+                    </table>
+
+                    <div id="removeReservationModal" class="modal hide fade" tabindex="-1"
+                         role="dialog"
+                         aria-hidden="true">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-hidden="true">
+                                ×
+                            </button>
+                            <h3 id="myModalLabel">
+                                Vorbestellung
+                                wirklich löschen?</h3>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                Wollen Sie diese
+                                Vorbestellung
+                                wirklich löschen?</p>
+                            <div class="row-fluid">
+                                <div class="span2">
+                                    <img id="modalImageCover" class="cover" width="80px" alt="cover"
+                                         src="../images/mediagrp/leer.gif"/>
+                                </div>
+                                <div class="span10">
+                                    <p>
+                                        <strong>Autor: </strong><span id="modalAutor"></span>
+                                        <br/>
+                                        <strong>Titel: </strong><span id="modalTitle"></span>
+                                    </p>
+                                    <p>
+                                        <strong>Status: </strong><span
+                                            id="modalReservationStatus"></span>
+                                        <br/>
+                                        <strong>Vorbestellt am: </strong><span
+                                            id="modalReservationDate"></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="modalReservationButtonOk" class="btn btn-danger"
+                                    style="color: #fff">
+                                Ja,
+                                Vorbestellung
+                                löschen
+                            </button>
+                            <button class="btn" data-dismiss="modal" aria-hidden="true">
+                                Abbrechen
+                            </button>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+
+
+        $(document).on('click', '.toggleDetails', function () {
+            var $thisRow = $(this).closest('tr');
+            var $detailRow = $thisRow.next('tr');
+
+            $thisRow.add($detailRow).toggleClass('show');
+        });
+        
+        $('#modalReservationButtonOk').bind('click', function () {
+            DeleteReservation($(this));
+            return false;
+        });
+        
+        $(document).on('click', '.coverToggle', function () {
+            show = $(this).hasClass('active');
+            $('.toggleDetails, .rowDetails').toggleClass('show', show);
+            $('.detailTable').toggleClass('showAll', show);
+        });
+
+    
+
+                    </script>
+
+
+                </div>
+
+
+            </div>
+            <br style="clear: both"/>
+            <br/>
+            <div id="Navi" style="text-align: center;">
+
+                <a id="gototop" href="#top" class="GoTop">
+                    <small>Nach oben</small>
+                </a>
+
+            </div>
+            <div style="clear: both">
+
+            </div>
+            <br/>
+            <div id="Footer" class="hidden-print">
+                <div id="FooterSeperator">
+                </div>
+                    <span class="muted">
+                        <a id="impressum"
+                           href="https://bibliothek.memmingen.de/impressum.aspx">Impressum</a> &#183; <a
+                            id="privacy"
+                            href="https://bibliothek.memmingen.de/privacy.aspx">Datenschutzerklärung</a> &#183;
+                        <small>Powered by&nbsp;<a href="http://www.datronic.de/"
+                                                  target="_blank"><span
+                                style="color: #008000">datronic</span></a> WinBIAP WebOPAC 4.4.0
+
+                        </small>
+                    </span>
+
+                <div id="Textsize" class="Textsize">
+                    <a id="linkFontSizeBig" class="fontsize" data-value="1" title="Text größer"
+                       href="#">A+</a>
+                    <a id="linkFontSizeDefault" class="fontsize" data-value="-1"
+                       title="Text Normalgröße" href="#">A</a>
+                    <a id="linkFontSizeSmall" class="fontsize" data-value="2" title="Text kleiner"
+                       href="#">A-</a>
+                    <script type="text/javascript">
+        $(document).on('click', '.fontsize', function (e) {
+            e.preventDefault();
+            
+            var value = $(this).data('value');
+            //Check for int
+            if (value % 1 === 0) {
+                SearchService.SetFontSizeState(value);
+                var size = '';
+
+                switch (value) {
+                    case 1:
+                        size = '1.2em';
+                        break;
+                    case 2:
+                        size = '0.8em';
+                        break;
+                }
+
+                $('form').css('font-size', size);
+            }
+        });
+
+                    </script>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="loginBox" class="loginBox">
+        <div class="loginForm">
+            <div class="loginFormWrapper">
+                <p class="lead text-center" style="margin-bottom: 0">Im Leserkonto anmelden.</p>
+                <hr/>
+                <div class="loginBody">
+                    <fieldset class="loginFieldset">
+                        <fieldset class="text-center">
+                            <label for="username" class="text-left">
+                                Lesernummer:</label>
+                            <input type="text" name="username" id="username"/>
+                        </fieldset>
+                        <fieldset class="text-center">
+                            <label for="password" class="text-left">
+                                Passwort:</label>
+                            <input type="password" name="password" id="password"/>
+                        </fieldset>
+                        <fieldset class="text-center">
+                            <br/>
+                            <input id="buttonLogon" class="btn btn-primary" type="button"
+                                   value="Anmelden" style="width:10em"/>
+                        </fieldset>
+                    </fieldset>
+                    <div id="errorMessage" class="alert alert-error" style="display: none">
+                    </div>
+                    <div class="loginLoading" style="display: none">
+                        <div class="spinner-container"></div>
+                        Anmeldung wird überprüft...
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" id="returnUrl"
+               value="https://bibliothek.memmingen.de/user/overview.aspx"/>
+    </div>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        loginButtonPlugin = $('#buttonLogon').loginAsync({
+            serviceUserUrl: 'https://bibliothek.memmingen.de/service/UserService.ashx',
+            usernameField: '#username',
+            passwordField: '#password',
+            errorObject: '#errorMessage',
+            loginFormId: '#loginBox',
+            redirectTo: 'https://bibliothek.memmingen.de/user/overview.aspx'
+        });
+    });
+
+    </script>
+
+
+    <div id="loginBoxDiviBib" class="loginBox">
+        <div class="loginForm">
+            <div class="loginFormWrapper">
+                <p class="lead text-center" style="margin-bottom: 0">Im Leserkonto anmelden.</p>
+                <p id="loginSuccessful" class="text-center"
+                   style="display: none; margin-bottom: 0">Bitte klicken Sie unten auf den Link.</p>
+                <hr/>
+                <div class="loginBody">
+                    <fieldset class="loginFieldset">
+                        <fieldset class="text-center">
+                            <label for="username" class="text-left">
+                                Lesernummer:</label>
+                            <input type="text" name="username" id="usernameDiviBib"/>
+                        </fieldset>
+                        <fieldset class="text-center">
+                            <label for="password" class="text-left">
+                                Passwort:</label>
+                            <input type="password" name="password" id="passwordDiviBib"/>
+                        </fieldset>
+                        <fieldset class="text-center">
+                            <br/>
+                            <input id="buttonLogonDiviBib" class="btn btn-primary" type="button"
+                                   value="Anmelden" style="width: 10em"/>
+                        </fieldset>
+                    </fieldset>
+                    <div id="errorMessageDiviBib" class="alert alert-error" style="display: none">
+                    </div>
+                    <div class="loginLoading" style="display: none">
+                        <div class="spinner-container"></div>
+                        Anmeldung wird überprüft...
+                    </div>
+                    <div id="redirectToDiviBib" class="text-center" style="display: none">
+                        <br/>
+                        <a id="buttonRedirect" class="btn btn-primary" style="width: 10em"
+                           target="_blank">Onleihe öffnen</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" id="returnUrl"
+               value="https://bibliothek.memmingen.de/user/overview.aspx"/>
+    </div>
+    <script type="text/javascript">
+    
+    var userLoggedIn = true;
+    var checkStatus = function() {
+        $('.divibib-async').each(function () {
+            var $elem = $(this);
+            var id = $elem.data('id');
+
+            $.ajax({
+                type: "POST",
+                async: true,
+                cache: false,
+                url: 'https://bibliothek.memmingen.de/service/ncipservice.ashx',
+                data: 'action=lookup&itemId=' + id,
+                dataType: "json",
+                success: function (data) {
+                    if (data.Error) {
+                        console.warn(data.Problem.ProblemDetail);
+                    } 
+                    else {
+                        if (data.MediaItem.Available) {
+                            $elem.parent().find('.mediaStatus').html('verfügbar');
+                        
+                            if (userLoggedIn) {
+                                $elem.html('<i class="fa fa-at fa-fw"></i>&nbsp;Ausleihen');
+                                $elem.attr('href', 'https://bibliothek.memmingen.de/user/divibib.aspx?data=cmVkaXJlY3RUb0RpdmlCaWI9MQ==-PAQ+C/JJy6k=&itemId=' + id);
+                            }
+                        }
+                        else {
+                            $elem.parent().find('.mediaStatus').html('entliehen');
+
+                            if (data.MediaItem.Reservable && userLoggedIn) {
+                                $elem.html('<i class="fa fa-at fa-fw"></i>&nbsp;Vorbestellen');
+                                $elem.attr('href', 'https://bibliothek.memmingen.de/user/divibib.aspx?data=cmVkaXJlY3RUb0RpdmlCaWI9MSZhbXA7cHJlYm9vaz0x-LvKRWpHtgBQ=&itemId=' + id);
+                            }
+                        }
+                    }
+
+                }
+            });
+        });
+    }
+    
+$(document).ready(checkStatus);
+    
+
+    </script>
+
+
+</form>
+
+
+<script type="text/javascript">
+
+        SearchService.Init('https://bibliothek.memmingen.de/service/SearchService.ashx');
+
+        
+        
+        
+
+        $('.selectpicker').selectpicker();
+
+        $(document).on('click', '#gototop', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.scrollTo(0, 0);
+        });
+
+        window.onload = function () {
+            unveilCovers();
+        };
+
+        $(window).bind("beforeunload", function () {
+            showLoadingMessage();
+        });
+
+
+        $(document).on('click', '.morebutton', function () {
+            var $link = $(this);
+            var $more = $(this).prev(".more");
+
+            $more.slideToggle('fast', function () {
+                if ($(this).is(":hidden")) {
+                    $link.text('mehr...');
+                    $link.attr('title', 'Mehr Informationen anzeigen');
+                }
+                else {
+                    $link.attr('title', 'Informationen ausblenden');
+                    $link.html('...weniger');
+                }
+            });
+        });
+        $(document).ready(function () {
+            $('input, a').attr('disabled', false);
+        });
+
+        var loadingMessage = 'Bitte warten.';
+        var showLoadingMessage = function () {
+            setTimeout(function () {
+                $('input, a').attr('disabled', 'disabled');
+            }, 200);
+            setTimeout(function () {
+                if ($('.searchtext').length > 0) {
+                    var autocomplete = $('.searchtext').autocomplete();
+                    if (autocomplete)
+                        autocomplete.clear();
+                }
+
+                $('body').backdrop({
+                    small: true,
+                    spinner: true,
+                    text: loadingMessage
+                });
+
+                setTimeout(function () {
+                    $('.backdrop-wrapper p').html('Es wird auf eine Rückantwort gewartet.');
+                }, 5000);
+                setTimeout(function () {
+                    $('.backdrop-wrapper p').html('Die Anfrage dauert ungewöhnlich lange.<br/>Es geht gleich weiter.');
+                }, 10000);
+                setTimeout(function () {
+                    $('.backdrop-wrapper p').html('Augsburg? We have a problem.');
+                }, 20000);
+                setTimeout(function () {
+                    location.href = 'https://bibliothek.memmingen.de/index.aspx';
+                    $('.backdrop-wrapper p').html('Weiterleitung...');
+                }, 30000);
+
+            }, 4000);
+        }
+
+
+
+</script>
+
+</body>
+</html>

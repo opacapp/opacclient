@@ -1,0 +1,16 @@
+{
+    "account_supported": true,
+    "api": "winbiap",
+    "city": "Burglengenfeld",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://webopac.winbiap.de/burglengenfeld"
+    },
+    "geo": [
+        49.2066349,
+        12.0417131
+    ],
+    "information": "http://www.burglengenfeld.de/leben-in-burglengenfeld/stadtbibliothek/",
+    "state": "Bayern",
+    "title": "Stadtbibliothek"
+}

@@ -780,8 +780,11 @@ public class WinBiap extends BaseApi implements OpacApi {
             winBiap43 = true;
         }
 
+        // 4.2: id=...GridViewReservation_ct...
+        // 4.3: id=...DetailItemMain_rowBorrow
+        // 4.4: id=...DetailItemMain_0_rowBorrow_0
         for (Element tr : doc
-                .select(winBiap43 ? ".detailTable tr[id$=ReservationDetailItemMain_rowBorrow]" :
+                .select(winBiap43 ? ".detailTable tr[id*=_rowBorrow]" :
                         "tr[id*=GridViewReservation]")) {
             Map<String, String> item = new HashMap<>();
 
@@ -803,7 +806,7 @@ public class WinBiap extends BaseApi implements OpacApi {
             }
 
             putIfNotEmpty(item, AccountData.KEY_RESERVATION_READY,
-                    winBiap43 ? detailsTr.select("[id$=labelStatus]").text() :
+                    winBiap43 ? detailsTr.select("[id$=labelStatus], [id*=labelStatus_]").text() :
                             tr.select("[id$=ImageBorrow]").attr("title"));
             putIfNotEmpty(item, AccountData.KEY_RESERVATION_AUTHOR,
                     tr.select("[id$=LabelAutor], .autor").text());
