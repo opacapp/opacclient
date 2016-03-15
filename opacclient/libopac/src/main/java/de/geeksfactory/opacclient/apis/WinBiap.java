@@ -751,8 +751,9 @@ public class WinBiap extends BaseApi implements OpacApi {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            if (tr.select("input[id$=chkSelect]").size() > 0) {
-                item.put(AccountData.KEY_LENT_LINK, tr.select("input[id$=chkSelect]").attr("name"));
+            if (tr.select("input[id*=_chkSelect]").size() > 0) {
+                item.put(AccountData.KEY_LENT_LINK,
+                        tr.select("input[id*=_chkSelect]").attr("name"));
             } else {
                 item.put(AccountData.KEY_LENT_RENEWABLE, "N");
             }
