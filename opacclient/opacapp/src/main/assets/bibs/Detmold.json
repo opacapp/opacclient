@@ -5,14 +5,14 @@
     "country": "Deutschland",
     "data": {
         "accounttable": {
-            "author": 6,
-            "barcode": 3,
+            "author": 7,
+            "barcode": 4,
             "homebranch": -1,
             "lendingbranch": -1,
             "prolongurl": 3,
-            "returndate": 2,
-            "status": 4,
-            "title": 6
+            "returndate": 3,
+            "status": 5,
+            "title": 7
         },
         "baseurl": "http://62.153.231.120",
         "copiestable": {
