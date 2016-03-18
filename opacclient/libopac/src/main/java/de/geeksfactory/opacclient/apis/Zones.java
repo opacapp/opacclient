@@ -830,10 +830,13 @@ public class Zones extends BaseApi {
             return null;
         }
 
-        String lentHtml = httpGet(opac_url + "/" + lentLink.replace("utf-8?Method", "utf-8&Method"),
-                getDefaultEncoding());
+        List<Map<String, String>> lentItems = new ArrayList<>();
+        String lentUrl = opac_url + "/" + lentLink.replace("utf-8?Method", "utf-8&Method");
+        String lentHtml = httpGet(lentUrl, getDefaultEncoding());
         Document lentDoc = Jsoup.parse(lentHtml);
-        res.setLent(parseMediaList(lentDoc));
+        lentDoc.setBaseUri(lentUrl);
+        loadMediaList(lentDoc, lentItems);
+        res.setLent(lentItems);
 
         // In Koeln, the reservations link only doesn't show on the overview page
         if (resLink == null) {
@@ -844,12 +847,44 @@ public class Zones extends BaseApi {
             }
         }
 
+        List<Map<String, String>> reservedItems = new ArrayList<>();
         String resHtml = httpGet(opac_url + "/" + resLink,
                 getDefaultEncoding());
         Document resDoc = Jsoup.parse(resHtml);
-        res.setReservations(parseResList(resDoc));
+        loadResList(resDoc, reservedItems);
+        res.setReservations(reservedItems);
 
         return res;
+    }
+
+    private void loadMediaList(Document lentDoc, List<Map<String, String>> items)
+            throws IOException {
+        items.addAll(parseMediaList(lentDoc));
+        String nextPageUrl = findNextPageUrl(lentDoc);
+        if (nextPageUrl != null) {
+            Document doc = Jsoup.parse(httpGet(nextPageUrl, getDefaultEncoding()));
+            doc.setBaseUri(lentDoc.baseUri());
+            loadMediaList(doc, items);
+        }
+    }
+
+    private void loadResList(Document lentDoc, List<Map<String, String>> items) throws IOException {
+        items.addAll(parseResList(lentDoc));
+        String nextPageUrl = findNextPageUrl(lentDoc);
+        if (nextPageUrl != null) {
+            Document doc = Jsoup.parse(httpGet(nextPageUrl, getDefaultEncoding()));
+            doc.setBaseUri(lentDoc.baseUri());
+            loadResList(doc, items);
+        }
+    }
+
+    static String findNextPageUrl(Document doc) {
+        if (doc.select(".pageNavLink[title*=nächsten]").size() > 0) {
+            Element link = doc.select(".pageNavLink[title*=nächsten]").first();
+            return link.absUrl("href");
+        } else {
+            return null;
+        }
     }
 
     static List<Map<String, String>> parseResList(Document doc) {
