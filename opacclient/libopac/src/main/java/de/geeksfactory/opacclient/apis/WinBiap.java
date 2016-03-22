@@ -864,9 +864,9 @@ public class WinBiap extends BaseApi implements OpacApi {
         String html = httpGet(opac_url + "/search.aspx", getDefaultEncoding());
         Document doc = Jsoup.parse(html);
         Elements mediaGroupOptions = doc
-                .select("#ctl00_ContentPlaceHolderMain_searchPanel_ListBoxMediagroups_ListBoxMultiselection option");
+                .select("[id$=ListBoxMediagroups_ListBoxMultiselection] option");
         Elements branchOptions = doc
-                .select("#ctl00_ContentPlaceHolderMain_searchPanel_MultiSelectionBranch_ListBoxMultiselection option");
+                .select("[id$=MultiSelectionBranch_ListBoxMultiselection] option");
 
         final DropdownSearchField mediaGroups =
                 new DropdownSearchField(KEY_SEARCH_QUERY_CATEGORY, "Mediengruppe", false, null);
