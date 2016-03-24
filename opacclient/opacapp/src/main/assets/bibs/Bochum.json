@@ -28,7 +28,13 @@
         "searchtable": [
             2,
             3
-        ]
+        ],
+        "copiestable": {
+            "branch": 1,
+            "location": 2,
+            "barcode": 3,
+            "status": 4
+        }
     },
     "geo": [
         51.4818445,
