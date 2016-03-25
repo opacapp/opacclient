@@ -53,8 +53,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.geeksfactory.opacclient.i18n.StringProvider;
-import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.networking.HttpClientFactory;
+import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
@@ -784,7 +784,11 @@ public abstract class Pica extends BaseApi implements OpacApi {
 
     @Override
     public String getShareUrl(String id, String title) {
-        return id;
+        if (id.startsWith("http")) {
+            return id;
+        } else {
+            return opac_url + "/LNG=" + getLang() + "/DB=" + db + "/PPNSET?PPN=" + id;
+        }
     }
 
     @Override
