@@ -13,11 +13,11 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,14 +29,11 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +42,6 @@ import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
-import java.util.Map;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
@@ -68,6 +64,9 @@ import de.geeksfactory.opacclient.ui.AppCompatProgressDialog;
 import de.geeksfactory.opacclient.ui.WhitenessUtils;
 import de.geeksfactory.opacclient.utils.CompatibilityUtils;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
+import su.j2e.rvjoiner.JoinableAdapter;
+import su.j2e.rvjoiner.JoinableLayout;
+import su.j2e.rvjoiner.RvJoiner;
 
 /**
  * A fragment representing a single SearchResult detail screen. This fragment is either contained in
@@ -104,12 +103,9 @@ public class SearchResultDetailFragment extends Fragment
     protected Toolbar toolbar;
     protected ImageView ivCover;
     protected FrameLayout coverWrapper;
-    protected NestedScrollView scrollView;
     protected View gradientBottom, gradientTop;
-    protected TextView tvCopies, tvVolumes;
-    protected LinearLayout llDetails, llCopies, llVolumes;
+    protected RecyclerView rvDetails;
     protected ProgressBar progressBar;
-    protected RelativeLayout detailsLayout;
     protected FrameLayout errorView;
     protected CollapsingToolbarLayout collapsingToolbar;
     protected AppBarLayout appBarLayout;
@@ -148,11 +144,7 @@ public class SearchResultDetailFragment extends Fragment
         progress = show;
 
         if (view != null) {
-            View content = detailsLayout;
-
-            if (scrollView != null) {
-                scrollView.setVisibility(View.VISIBLE);
-            }
+            View content = rvDetails;
 
             if (show) {
                 if (animate) {
@@ -198,12 +190,12 @@ public class SearchResultDetailFragment extends Fragment
 
         progressBar.startAnimation(AnimationUtils.loadAnimation(getActivity(),
                 android.R.anim.fade_out));
-        scrollView.startAnimation(AnimationUtils.loadAnimation(getActivity(),
+        rvDetails.startAnimation(AnimationUtils.loadAnimation(getActivity(),
                 android.R.anim.fade_out));
         connError.startAnimation(AnimationUtils.loadAnimation(getActivity(),
                 android.R.anim.fade_in));
         progressBar.setVisibility(View.GONE);
-        scrollView.setVisibility(View.GONE);
+        rvDetails.setVisibility(View.GONE);
         connError.setVisibility(View.VISIBLE);
     }
 
@@ -269,7 +261,7 @@ public class SearchResultDetailFragment extends Fragment
         if (getActivity() instanceof SearchResultDetailActivity) {
             // This applies on phones, where the Toolbar is also the
             // main ActionBar of the Activity and needs a back button
-            toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+            toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -304,6 +296,9 @@ public class SearchResultDetailFragment extends Fragment
             public void onGenerated(Palette palette) {
                 Palette.Swatch swatch = palette.getDarkVibrantSwatch();
                 if (swatch == null) swatch = palette.getDarkMutedSwatch();
+                if (swatch == null) swatch = palette.getLightVibrantSwatch();
+                if (swatch == null) swatch = palette.getLightMutedSwatch();
+                if (swatch == null) swatch = palette.getSwatches().get(0);
                 if (swatch != null) {
                     appBarLayout.setBackgroundColor(swatch.getRgb());
                     collapsingToolbar.setContentScrimColor(swatch.getRgb());
@@ -324,21 +319,15 @@ public class SearchResultDetailFragment extends Fragment
 
     private void findViews() {
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        scrollView = (NestedScrollView) view.findViewById(R.id.rootView);
         ivCover = (ImageView) view.findViewById(R.id.ivCover);
         coverWrapper = (FrameLayout) view.findViewById(R.id.coverWrapper);
         gradientBottom = view.findViewById(R.id.gradient_bottom);
         gradientTop = view.findViewById(R.id.gradient_top);
         collapsingToolbar = (CollapsingToolbarLayout) view.findViewById(R.id.collapsingToolbar);
         appBarLayout = (AppBarLayout) view.findViewById(R.id.appBarLayout);
-        llDetails = (LinearLayout) view.findViewById(R.id.llDetails);
-        llCopies = (LinearLayout) view.findViewById(R.id.llCopies);
-        llVolumes = (LinearLayout) view.findViewById(R.id.llVolumes);
+        rvDetails = (RecyclerView) view.findViewById(R.id.rvDetails);
         progressBar = (ProgressBar) view.findViewById(R.id.progress);
-        detailsLayout = (RelativeLayout) view.findViewById(R.id.detailsLayout);
         errorView = (FrameLayout) view.findViewById(R.id.error_view);
-        tvCopies = (TextView) view.findViewById(R.id.tvCopies);
-        tvVolumes = (TextView) view.findViewById(R.id.tvVolumes);
     }
 
     /**
@@ -363,144 +352,38 @@ public class SearchResultDetailFragment extends Fragment
             ErrorReporter.handleException(e);
         }
         collapsingToolbar.setTitle(getItem().getTitle());
-        llDetails.removeAllViews();
-        for (Detail detail : item.getDetails()) {
-            View v = getLayoutInflater(null)
-                    .inflate(R.layout.listitem_detail, null);
-            ((TextView) v.findViewById(R.id.tvDesc)).setText(detail.getDesc());
-            ((TextView) v.findViewById(R.id.tvContent)).setText(detail
-                    .getContent());
-            Linkify.addLinks((TextView) v.findViewById(R.id.tvContent),
-                    Linkify.WEB_URLS);
-            llDetails.addView(v);
+
+        rvDetails.setLayoutManager(new LinearLayoutManager(getActivity()));
+        RvJoiner joiner = new RvJoiner();
+
+        addSubhead(joiner, R.string.details_head);
+        joiner.add(new JoinableAdapter(new DetailsAdapter(item.getDetails(), getActivity())));
+
+        if (item.getCopies().size() != 0) {
+            addSubhead(joiner, R.string.copies_head);
+            joiner.add(new JoinableAdapter(new CopiesAdapter(item.getCopies(), getActivity())));
         }
 
-        llVolumes.removeAllViews();
-        llCopies.removeAllViews();
         if (item.getVolumesearch() != null) {
-            Button btnVolume = new Button(getActivity());
-            btnVolume.setText(R.string.volumesearch);
-            btnVolume.setOnClickListener(new OnClickListener() {
+            addSubhead(joiner, R.string.volumes);
+            joiner.add(new JoinableLayout(
+                    R.layout.listitem_details_volumesearch, new JoinableLayout.Callback() {
                 @Override
-                public void onClick(View v) {
-                    app.startVolumeSearch(getActivity(), getItem().getVolumesearch());
+                public void onInflateComplete(View view, ViewGroup parent) {
+                    view.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            app.startVolumeSearch(getActivity(), getItem().getVolumesearch());
+                        }
+                    });
                 }
-            });
-            llVolumes.addView(btnVolume);
+            }));
         } else if (item.getVolumes().size() > 0) {
-            for (final Map<String, String> band : item.getVolumes()) {
-                View v = getLayoutInflater(null).inflate(R.layout.listitem_volume,
-                        null);
-                ((TextView) v.findViewById(R.id.tvTitel)).setText(band
-                        .get(DetailledItem.KEY_CHILD_TITLE));
-
-                v.findViewById(R.id.llItem).setOnClickListener(
-                        new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent(getActivity(),
-                                        SearchResultDetailActivity.class);
-                                intent.putExtra(ARG_ITEM_ID,
-                                        band.get(DetailledItem.KEY_CHILD_ID));
-                                intent.putExtra("from_collection", true);
-                                startActivity(intent);
-                            }
-                        });
-                llVolumes.addView(v);
-            }
-        } else {
-            tvVolumes.setVisibility(View.GONE);
+            addSubhead(joiner, R.string.volumes);
+            joiner.add(new JoinableAdapter(new VolumesAdapter(item.getVolumes(), getActivity())));
         }
 
-        if (item.getCopies().size() == 0) {
-            tvCopies.setVisibility(View.GONE);
-        } else {
-            for (Map<String, String> copy : item.getCopies()) {
-                View v = getLayoutInflater(null).inflate(
-                        R.layout.listitem_copy, llCopies, false);
-
-                if (v.findViewById(R.id.tvBranch) != null) {
-                    if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_BRANCH)) {
-                        ((TextView) v.findViewById(R.id.tvBranch))
-                                .setText(copy
-                                        .get(DetailledItem.KEY_COPY_BRANCH));
-                        v.findViewById(R.id.tvBranch).setVisibility(View.VISIBLE);
-                    } else {
-                        v.findViewById(R.id.tvBranch).setVisibility(View.GONE);
-                    }
-                }
-                if (v.findViewById(R.id.tvDepartment) != null) {
-                    if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_DEPARTMENT)) {
-                        ((TextView) v.findViewById(R.id.tvDepartment))
-                                .setText(copy
-                                        .get(DetailledItem.KEY_COPY_DEPARTMENT));
-                        v.findViewById(R.id.tvDepartment).setVisibility(View.VISIBLE);
-                    } else {
-                        v.findViewById(R.id.tvDepartment).setVisibility(View.GONE);
-                    }
-                }
-                if (v.findViewById(R.id.tvLocation) != null) {
-                    if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_LOCATION)) {
-                        ((TextView) v.findViewById(R.id.tvLocation))
-                                .setText(copy
-                                        .get(DetailledItem.KEY_COPY_LOCATION));
-                        v.findViewById(R.id.tvLocation).setVisibility(View.VISIBLE);
-                    } else {
-                        v.findViewById(R.id.tvLocation).setVisibility(View.GONE);
-                    }
-                }
-                if (v.findViewById(R.id.tvShelfmark) != null) {
-                    if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_SHELFMARK)) {
-                        ((TextView) v.findViewById(R.id.tvShelfmark))
-                                .setText(copy
-                                        .get(DetailledItem.KEY_COPY_SHELFMARK));
-                        v.findViewById(R.id.tvShelfmark).setVisibility(View.VISIBLE);
-                    } else {
-                        v.findViewById(R.id.tvShelfmark).setVisibility(View.GONE);
-                    }
-                }
-                if (v.findViewById(R.id.tvStatus) != null) {
-                    if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_STATUS)) {
-                        ((TextView) v.findViewById(R.id.tvStatus))
-                                .setText(copy
-                                        .get(DetailledItem.KEY_COPY_STATUS));
-                        v.findViewById(R.id.tvStatus).setVisibility(View.VISIBLE);
-                    } else {
-                        v.findViewById(R.id.tvStatus).setVisibility(View.GONE);
-                    }
-                }
-
-                if (v.findViewById(R.id.tvReservations) != null) {
-                    if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_RESERVATIONS)) {
-                        ((TextView) v.findViewById(R.id.tvReservations))
-                                .setText(copy.get(DetailledItem.KEY_COPY_RESERVATIONS));
-                        v.findViewById(R.id.tvReservations).setVisibility(View.VISIBLE);
-                    } else {
-                        v.findViewById(R.id.tvReservations).setVisibility(View.GONE);
-                    }
-                }
-                if (v.findViewById(R.id.tvReturndate) != null) {
-                    if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_RETURN)) {
-                        ((TextView) v.findViewById(R.id.tvReturndate))
-                                .setText(copy.get(DetailledItem.KEY_COPY_RETURN));
-                        v.findViewById(R.id.tvReturndate).setVisibility(View.VISIBLE);
-                    } else {
-                        v.findViewById(R.id.tvReturndate).setVisibility(View.GONE);
-                    }
-                }
-                if (v.findViewById(R.id.tvUrl) != null) {
-                    if (containsAndNotEmpty(copy, DetailledItem.KEY_COPY_URL)) {
-                        ((TextView) v.findViewById(R.id.tvUrl))
-                                .setText(copy.get(DetailledItem.KEY_COPY_URL));
-                        v.findViewById(R.id.tvUrl).setVisibility(View.VISIBLE);
-                    } else {
-                        v.findViewById(R.id.tvUrl).setVisibility(View.GONE);
-                    }
-                }
-
-                llCopies.addView(v);
-            }
-        }
+        rvDetails.setAdapter(joiner.getAdapter());
 
         if (id == null || id.equals("")) {
             id = getItem().getId();
@@ -509,6 +392,16 @@ public class SearchResultDetailFragment extends Fragment
         refreshMenu(toolbar.getMenu());
 
         setProgress(false, true);
+    }
+
+    private void addSubhead(RvJoiner joiner, final int text) {
+        joiner.add(new JoinableLayout(
+                R.layout.listitem_details_subhead, new JoinableLayout.Callback() {
+            @Override
+            public void onInflateComplete(View view, ViewGroup parent) {
+                ((TextView) view).setText(text);
+            }
+        }));
     }
 
     private void displayCover() {
@@ -525,10 +418,6 @@ public class SearchResultDetailFragment extends Fragment
             showCoverView(false);
             collapsingToolbar.setTitle(getItem().getTitle());
         }
-    }
-
-    private boolean containsAndNotEmpty(Map<String, String> map, String key) {
-        return map != null && map.containsKey(key) && !"".equals(map.get(key));
     }
 
     private void showCoverView(boolean b) {
@@ -616,8 +505,9 @@ public class SearchResultDetailFragment extends Fragment
     @Override
     public void onDestroy() {
         super.onDestroy();
-        OpacActivity.unbindDrawables(view.findViewById(R.id.rootView));
-        System.gc();
+        // TODO: what was this?
+        /*OpacActivity.unbindDrawables(view.findViewById(R.id.rootView));
+        System.gc();*/
     }
 
     @Override

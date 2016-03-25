@@ -3,6 +3,8 @@ package de.geeksfactory.opacclient.apis;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
 import org.apache.http.message.BasicNameValuePair;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -27,6 +29,7 @@ import java.util.regex.Pattern;
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
@@ -342,32 +345,35 @@ public class Primo extends BaseApi {
                 String title = th.text().toLowerCase(Locale.GERMAN).trim();
                 if (title.contains("library") || title.contains("bibliothek") ||
                         title.contains("branch")) {
-                    copymap.put(i, DetailledItem.KEY_COPY_BRANCH);
+                    copymap.put(i, "branch");
                 } else if (title.contains("location") || title.contains("ort")) {
-                    copymap.put(i, DetailledItem.KEY_COPY_LOCATION);
+                    copymap.put(i, "location");
                 } else if (title.contains("call number") || title.contains("signatur")) {
-                    copymap.put(i, DetailledItem.KEY_COPY_SHELFMARK);
+                    copymap.put(i, "signature");
                 } else if (title.contains("due date") || title.contains("llig am") ||
                         title.contains("ausgeliehen bis") || title.contains("lligkeit")
                         || title.contains("ausleihstatus")) {
-                    copymap.put(i, DetailledItem.KEY_COPY_RETURN);
+                    copymap.put(i, "returndate");
                 } else if (title.contains("loan to") || title.contains("bezugsmodalit") ||
                         title.contains("ausleihm") || title.contains("status")) {
-                    copymap.put(i, DetailledItem.KEY_COPY_STATUS);
+                    copymap.put(i, "status");
                 } else if (title.contains("queue") || title.contains("vormerker")) {
-                    copymap.put(i, DetailledItem.KEY_COPY_RESERVATIONS);
+                    copymap.put(i, "reservations");
                 }
                 i++;
             }
+
+            DateTimeFormatter fmt =
+                    DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
 
             for (Element tr : doc2
                     .select(".EXLLocationTable tr:not(.EXLLocationTitlesRow):not(" +
                             ".EXLAdditionalFieldsRow)")) {
                 int j = 0;
-                Map<String, String> copy = new HashMap<>();
+                Copy copy = new Copy();
                 for (Element td : tr.children()) {
                     if (copymap.containsKey(j)) {
-                        copy.put(copymap.get(j), td.text().trim());
+                        copy.set(copymap.get(j), td.text().trim(), fmt);
                     }
                     j++;
                 }

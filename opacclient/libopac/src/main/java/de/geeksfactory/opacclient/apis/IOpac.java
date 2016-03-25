@@ -50,6 +50,7 @@ import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
@@ -462,7 +463,7 @@ public class IOpac extends BaseApi implements OpacApi {
         result.setCover(imgUrl);
 
         // GET INFORMATION
-        Map<String, String> e = new HashMap<>();
+        Copy copy = new Copy();
 
         for (Element element : table) {
             String detail = element.select("td").text().trim()
@@ -474,15 +475,14 @@ public class IOpac extends BaseApi implements OpacApi {
 
                 if (title.contains("verliehen bis")) {
                     if (detail.equals("")) {
-                        e.put(DetailledItem.KEY_COPY_STATUS, "verfügbar");
+                        copy.setStatus("verfügbar");
                     } else {
-                        e.put(DetailledItem.KEY_COPY_STATUS, "verliehen bis "
-                                + detail);
+                        copy.setStatus("verliehen bis " + detail);
                     }
                 } else if (title.contains("Abteilung")) {
-                    e.put(DetailledItem.KEY_COPY_DEPARTMENT, detail);
+                    copy.setDepartment(detail);
                 } else if (title.contains("Signatur")) {
-                    e.put(DetailledItem.KEY_COPY_SHELFMARK, detail);
+                    copy.setShelfmark(detail);
                 } else if (title.contains("Titel")) {
                     result.setTitle(detail);
                 } else if (!title.contains("Cover")) {
@@ -492,10 +492,8 @@ public class IOpac extends BaseApi implements OpacApi {
         }
 
         // GET RESERVATION INFO
-        if ("verfügbar".equals(e.get(DetailledItem.KEY_COPY_STATUS))
-                || doc.select(
-                "a[href^=/cgi-bin/di.exe?mode=10], input.resbutton")
-                      .size() == 0) {
+        if ("verfügbar".equals(copy.getStatus())
+                || doc.select("a[href^=/cgi-bin/di.exe?mode=10], input.resbutton").size() == 0) {
             result.setReservable(false);
         } else {
             result.setReservable(true);
@@ -511,7 +509,7 @@ public class IOpac extends BaseApi implements OpacApi {
             }
         }
 
-        if (e.size() > 0) result.addCopy(e);
+        if (copy.notEmpty()) result.addCopy(copy);
 
         return result;
     }

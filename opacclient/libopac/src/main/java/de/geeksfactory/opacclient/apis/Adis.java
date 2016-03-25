@@ -6,6 +6,8 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -38,6 +40,7 @@ import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.networking.HttpUtils;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
@@ -599,39 +602,42 @@ public class Adis extends BaseApi implements OpacApi {
                         "#R09 table.rTable_table thead tr th")) {
             String head = th.text().trim();
             if (head.contains("Bibliothek") || head.contains("Library")) {
-                colmap.put(i, DetailledItem.KEY_COPY_BRANCH);
+                colmap.put(i, "branch");
             } else if (head.contains("Standort") || head.contains("Location")) {
-                colmap.put(i, DetailledItem.KEY_COPY_LOCATION);
+                colmap.put(i, "location");
             } else if (head.contains("Signatur") || head.contains("Call number")) {
-                colmap.put(i, DetailledItem.KEY_COPY_SHELFMARK);
+                colmap.put(i, "signature");
             } else if (head.contains("URL")) {
-                colmap.put(i, DetailledItem.KEY_COPY_URL);
+                colmap.put(i, "url");
             } else if (head.contains("Status") || head.contains("Hinweis")
                     || head.matches(".*Verf.+gbarkeit.*") || head.contains("Status")) {
-                colmap.put(i, DetailledItem.KEY_COPY_STATUS);
+                colmap.put(i, "status");
             }
             i++;
         }
 
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
         for (Element tr : doc.select("#R08 table.rTable_table tbody tr," +
                 "#R09 table.rTable_table tbody tr")) {
-            Map<String, String> line = new HashMap<>();
+            Copy copy = new Copy();
             for (Entry<Integer, String> entry : colmap.entrySet()) {
-                if (entry.getValue().equals(DetailledItem.KEY_COPY_STATUS)) {
+                if (entry.getValue().equals("status")) {
                     String status = tr.child(entry.getKey()).text().trim();
                     if (status.contains(" am: ")) {
-                        line.put(DetailledItem.KEY_COPY_STATUS,
-                                status.split("-")[0]);
-                        line.put(DetailledItem.KEY_COPY_RETURN,
-                                status.split(": ")[1]);
+                        copy.setStatus(status.split("-")[0]);
+                        try {
+                            copy.setReturnDate(fmt.parseLocalDate(status.split(": ")[1]));
+                        } catch (IllegalArgumentException e) {
+                            e.printStackTrace();
+                        }
                     } else {
-                        line.put(DetailledItem.KEY_COPY_STATUS, status);
+                        copy.setStatus(status);
                     }
                 } else {
-                    line.put(entry.getValue(), tr.child(entry.getKey()).text().trim());
+                    copy.set(entry.getValue(), tr.child(entry.getKey()).text().trim());
                 }
             }
-            res.addCopy(line);
+            res.addCopy(copy);
         }
 
         // Reset

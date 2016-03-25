@@ -90,7 +90,7 @@
     <string name="notification_warning_desc">Wie lange vorher soll benachrichtigt werden?</string>
     <string name="notif_ticker">%s Bücher müssen abgegeben oder verlängert werden!</string>
     <string name="notif_title">Bücher laufen ab</string>
-    <string name="volumes">ENTHALTENE WERKE</string>
+    <string name="volumes">Enthaltene Werke</string>
     <string name="volumesearch">Enthaltene Werke zeigen</string>
     <string name="star">Merken</string>
     <string name="starred">Das Medium ist jetzt auf deiner Merkliste</string>

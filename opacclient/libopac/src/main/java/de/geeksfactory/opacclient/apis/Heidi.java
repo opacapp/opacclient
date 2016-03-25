@@ -29,6 +29,8 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -53,6 +55,7 @@ import java.util.Set;
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
@@ -375,29 +378,28 @@ public class Heidi extends BaseApi implements OpacApi {
 
         if (doc.select(".ex table tr").size() > 0) {
             table = doc.select(".ex table tr");
+            DateTimeFormatter
+                    fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
             for (Element tr : table) {
                 if (tr.hasClass("exueber") || tr.select(".exsig").size() == 0
                         || tr.select(".exso").size() == 0
                         || tr.select(".exstatus").size() == 0) {
                     continue;
                 }
-                Map<String, String> e = new HashMap<>();
-                e.put(DetailledItem.KEY_COPY_SHELFMARK, tr.select(".exsig")
-                                                          .first().text());
-                e.put(DetailledItem.KEY_COPY_BRANCH, tr.select(".exso").first()
-                                                       .text());
+                Copy copy = new Copy();
+                copy.setShelfmark(tr.select(".exsig").first().text());
+                copy.setBranch(tr.select(".exso").first().text());
                 String status = tr.select(".exstatus").first().text();
                 if (status.contains("entliehen bis")) {
-                    e.put(DetailledItem.KEY_COPY_RETURN, status.replaceAll(
-                            "entliehen bis ([0-9.]+) .*", "$1"));
-                    e.put(DetailledItem.KEY_COPY_RESERVATIONS, status
-                            .replaceAll(".*\\(.*Vormerkungen: ([0-9]+)\\)",
-                                    "$1"));
-                    e.put(DetailledItem.KEY_COPY_STATUS, "entliehen");
+                    copy.setReturnDate(fmt.parseLocalDate(
+                            status.replaceAll("entliehen bis ([0-9.]+) .*", "$1")));
+                    copy.setReservations(
+                            status.replaceAll(".*\\(.*Vormerkungen: ([0-9]+)\\)", "$1"));
+                    copy.setStatus("entliehen");
                 } else {
-                    e.put(DetailledItem.KEY_COPY_STATUS, status);
+                    copy.setStatus(status);
                 }
-                item.addCopy(e);
+                item.addCopy(copy);
             }
         }
 

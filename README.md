@@ -34,6 +34,7 @@ It contains several libraries:
 * Android Support library, (c) Google Inc., Apache License
 * NineOldAndroids, (c) Jake Wharton, Apache License
 * android-flowlayout, (c) Artem Votincev, Apache License
+* rv-joiner, (c) Evgeny Egorov, Apache License
 
 
 Authors

@@ -1,5 +1,6 @@
 package de.geeksfactory.opacclient.apis;
 
+import org.joda.time.LocalDate;
 import org.junit.Test;
 
 import java.util.Objects;
@@ -15,8 +16,8 @@ public class WebOpacAtTest {
 
     @Test
     public void testParseCopyReturn() throws Exception {
-        assert Objects.equals(WebOpacAt.parseCopyReturn("1 (voraussichtl. bis 31.07.2015)"), "31.07.2015");
-
+        assert Objects.equals(WebOpacAt.parseCopyReturn("1 (voraussichtl. bis 31.07.2015)"),
+                new LocalDate(2015, 7, 31));
     }
 
 }

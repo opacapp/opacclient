@@ -11,6 +11,7 @@ dependencies {
     compile 'org.json:json:20090211'
     compile 'org.jsoup:jsoup:1.8.3'
     compile 'org.apache.httpcomponents:httpmime:4.3.6'
+    compile 'joda-time:joda-time:2.8.2'
     compile project(':noandroid')
     testCompile "junit:junit:4.12"
 }

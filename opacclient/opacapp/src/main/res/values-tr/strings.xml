@@ -90,7 +90,7 @@
     <string name="notification_warning_desc">Zaman dolmadan ne kadar önce bildirim almak istersiniz?</string>
     <string name="notif_ticker">%s öğenin geri verme zamanı yaklaştı!</string>
     <string name="notif_title">Öğelerin geri verme zamanı yaklaştı</string>
-    <string name="volumes">KİTAPLAR</string>
+    <string name="volumes">Kitaplar</string>
     <string name="volumesearch">Kitapları göster</string>
     <string name="star">Favorilere kaydet</string>
     <string name="starred">Öğe favori listenize eklendi.</string>

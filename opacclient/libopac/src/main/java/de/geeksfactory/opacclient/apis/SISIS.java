@@ -26,6 +26,8 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -56,6 +58,7 @@ import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult.Status;
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
@@ -862,27 +865,27 @@ public class SISIS extends BaseApi implements OpacApi {
 
         Map<String, Integer> copy_columnmap = new HashMap<>();
         // Default values
-        copy_columnmap.put(DetailledItem.KEY_COPY_BARCODE, 1);
-        copy_columnmap.put(DetailledItem.KEY_COPY_BRANCH, 3);
-        copy_columnmap.put(DetailledItem.KEY_COPY_STATUS, 4);
+        copy_columnmap.put("barcode", 1);
+        copy_columnmap.put("branch", 3);
+        copy_columnmap.put("status", 4);
         Elements copy_columns = doc.select("#tab-content .data tr#bg2 th");
         for (int i = 0; i < copy_columns.size(); i++) {
             Element th = copy_columns.get(i);
             String head = th.text().trim();
             if (head.contains("Status")) {
-                copy_columnmap.put(DetailledItem.KEY_COPY_STATUS, i);
+                copy_columnmap.put("status", i);
             }
             if (head.contains("Zweigstelle")) {
-                copy_columnmap.put(DetailledItem.KEY_COPY_BRANCH, i);
+                copy_columnmap.put("branch", i);
             }
             if (head.contains("Mediennummer")) {
-                copy_columnmap.put(DetailledItem.KEY_COPY_BARCODE, i);
+                copy_columnmap.put("barcode", i);
             }
             if (head.contains("Standort")) {
-                copy_columnmap.put(DetailledItem.KEY_COPY_LOCATION, i);
+                copy_columnmap.put("location", i);
             }
             if (head.contains("Signatur")) {
-                copy_columnmap.put(DetailledItem.KEY_COPY_SHELFMARK, i);
+                copy_columnmap.put("signature", i);
             }
         }
 
@@ -893,14 +896,13 @@ public class SISIS extends BaseApi implements OpacApi {
         Pattern status_and_barcode = Pattern.compile("^(.*) ([0-9A-Za-z]+)$");
 
         Elements exemplartrs = doc.select("#tab-content .data tr").not("#bg2");
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
+        DateTimeFormatter fmt =
+                DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
         for (Element tr : exemplartrs) {
             try {
-                Map<String, String> e = new HashMap<>();
-                Element status = tr.child(copy_columnmap
-                        .get(DetailledItem.KEY_COPY_STATUS));
-                Element barcode = tr.child(copy_columnmap
-                        .get(DetailledItem.KEY_COPY_BARCODE));
+                Copy copy = new Copy();
+                Element status = tr.child(copy_columnmap.get("status"));
+                Element barcode = tr.child(copy_columnmap.get("barcode"));
                 String barcodetext = barcode.text().trim()
                                             .replace(" Wegweiser", "");
 
@@ -911,8 +913,8 @@ public class SISIS extends BaseApi implements OpacApi {
                 } else {
                     statustext = status.text().trim();
                 }
-                if (copy_columnmap.get(DetailledItem.KEY_COPY_STATUS).equals(copy_columnmap
-                        .get(DetailledItem.KEY_COPY_BARCODE))) {
+                if (copy_columnmap.get("status").equals(copy_columnmap
+                        .get("barcode"))) {
                     Matcher matcher1 = status_and_barcode.matcher(statustext);
                     if (matcher1.matches()) {
                         statustext = matcher1.group(1);
@@ -922,45 +924,36 @@ public class SISIS extends BaseApi implements OpacApi {
 
                 Matcher matcher = status_lent.matcher(statustext);
                 if (matcher.matches()) {
-                    e.put(DetailledItem.KEY_COPY_STATUS, matcher.group(1));
-                    e.put(DetailledItem.KEY_COPY_RETURN, matcher.group(2));
-                    e.put(DetailledItem.KEY_COPY_RESERVATIONS, matcher.group(3));
-                    e.put(DetailledItem.KEY_COPY_RETURN_TIMESTAMP, String
-                            .valueOf(sdf.parse(matcher.group(2)).getTime()));
+                    copy.setStatus(matcher.group(1));
+                    copy.setReservations(matcher.group(3));
+                    copy.setReturnDate(fmt.parseLocalDate(matcher.group(2)));
                 } else {
-                    e.put(DetailledItem.KEY_COPY_STATUS, statustext);
+                    copy.setStatus(statustext);
                 }
-                e.put(DetailledItem.KEY_COPY_BARCODE, barcodetext);
+                copy.setBarcode(barcodetext);
                 if (status.select("a[href*=doVormerkung]").size() == 1) {
-                    e.put(DetailledItem.KEY_COPY_RESINFO,
-                            status.select("a[href*=doVormerkung]").attr("href")
-                                  .split("\\?")[1]);
+                    copy.setResInfo(status.select("a[href*=doVormerkung]").attr("href")
+                                          .split("\\?")[1]);
                 }
 
                 String branchtext = tr
-                        .child(copy_columnmap
-                                .get(DetailledItem.KEY_COPY_BRANCH)).text()
+                        .child(copy_columnmap.get("branch")).text()
                         .trim().replace(" Wegweiser", "");
-                e.put(DetailledItem.KEY_COPY_BRANCH, branchtext);
+                copy.setBranch(branchtext);
 
-                if (copy_columnmap.containsKey(DetailledItem.KEY_COPY_LOCATION)) {
-                    e.put(DetailledItem.KEY_COPY_LOCATION,
-                            tr.child(
-                                    copy_columnmap
-                                            .get(DetailledItem.KEY_COPY_LOCATION))
-                              .text().trim().replace(" Wegweiser", ""));
+                if (copy_columnmap.containsKey("location")) {
+                    copy.setLocation(tr.child(copy_columnmap.get("location"))
+                                       .text().trim().replace(" Wegweiser", ""));
                 }
 
                 if (copy_columnmap
-                        .containsKey(DetailledItem.KEY_COPY_SHELFMARK)) {
-                    e.put(DetailledItem.KEY_COPY_SHELFMARK,
-                            tr.child(
-                                    copy_columnmap
-                                            .get(DetailledItem.KEY_COPY_SHELFMARK))
+                        .containsKey("signature")) {
+                    copy.setShelfmark(
+                            tr.child(copy_columnmap.get("signature"))
                               .text().trim().replace(" Wegweiser", ""));
                 }
 
-                result.addCopy(e);
+                result.addCopy(copy);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -1126,9 +1119,9 @@ public class SISIS extends BaseApi implements OpacApi {
             String errmsg = doc.getElementsByClass("textrot").get(0).text();
             if (errmsg
                     .contains("Dieses oder andere Exemplare in anderer Zweigstelle ausleihbar")) {
-                Map<String, String> best = null;
-                for (Map<String, String> copy : item.getCopies()) {
-                    if (!copy.containsKey(DetailledItem.KEY_COPY_RESINFO)) {
+                Copy best = null;
+                for (Copy copy : item.getCopies()) {
+                    if (copy.getResInfo() == null) {
                         continue;
                     }
                     if (best == null) {
@@ -1136,20 +1129,13 @@ public class SISIS extends BaseApi implements OpacApi {
                         continue;
                     }
                     try {
-                        if (Integer.parseInt(copy
-                                .get(DetailledItem.KEY_COPY_RESERVATIONS)) < Long
-                                .parseLong(best
-                                        .get(DetailledItem.KEY_COPY_RESERVATIONS))) {
+                        if (Integer.parseInt(copy.getReservations()) <
+                                Long.parseLong(best.getReservations())) {
                             best = copy;
                         } else if (Integer.parseInt(copy
-                                .get(DetailledItem.KEY_COPY_RESERVATIONS)) == Long
-                                .parseLong(best
-                                        .get(DetailledItem.KEY_COPY_RESERVATIONS))) {
-                            if (Integer
-                                    .parseInt(copy
-                                            .get(DetailledItem.KEY_COPY_RETURN_TIMESTAMP)) < Long
-                                    .parseLong(best
-                                            .get(DetailledItem.KEY_COPY_RETURN_TIMESTAMP))) {
+                                .getReservations()) == Long
+                                .parseLong(best.getReservations())) {
+                            if (copy.getReturnDate().isBefore(best.getReturnDate())) {
                                 best = copy;
                             }
                         }
@@ -1159,7 +1145,7 @@ public class SISIS extends BaseApi implements OpacApi {
                 }
                 if (best != null) {
                     item.setReservation_info(best
-                            .get(DetailledItem.KEY_COPY_RESINFO));
+                            .getResInfo());
                     return reservation(item, acc, 0, null);
                 }
             }

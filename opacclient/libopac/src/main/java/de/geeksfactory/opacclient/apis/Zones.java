@@ -22,6 +22,8 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -48,6 +50,7 @@ import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
@@ -554,7 +557,9 @@ public class Zones extends BaseApi {
                 continue;
             }
 
-            Map<String, String> copy = new HashMap<>();
+            Copy copy = new Copy();
+            DateTimeFormatter fmt =
+                    DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
 
             // This is getting very ugly - check if it is valid for libraries which are not Hamburg.
             // Seems to also work in Kiel (Zones 1.8, checked 10.10.2015)
@@ -563,33 +568,33 @@ public class Zones extends BaseApi {
                 try {
                     if (node instanceof Element) {
                         if (((Element) node).tag().getName().equals("br")) {
-                            copy.put(DetailledItem.KEY_COPY_BRANCH, pop);
+                            copy.setBranch(pop);
                             result.addCopy(copy);
                             j = -1;
                         } else if (((Element) node).tag().getName().equals("b")
                                 && j == 1) {
-                            copy.put(DetailledItem.KEY_COPY_LOCATION,
-                                    ((Element) node).text());
+                            copy.setLocation(((Element) node).text());
                         } else if (((Element) node).tag().getName().equals("b")
                                 && j > 1) {
-                            copy.put(DetailledItem.KEY_COPY_STATUS,
-                                    ((Element) node).text());
+                            copy.setStatus(((Element) node).text());
                         }
                         j++;
                     } else if (node instanceof TextNode) {
                         if (j == 0) {
-                            copy.put(DetailledItem.KEY_COPY_DEPARTMENT,
-                                    ((TextNode) node).text());
+                            copy.setDepartment(((TextNode) node).text());
                         }
                         if (j == 2) {
-                            copy.put(DetailledItem.KEY_COPY_BARCODE,
-                                    ((TextNode) node).getWholeText().trim()
-                                                     .split("\n")[0].trim());
+                            copy.setBarcode(((TextNode) node).getWholeText().trim()
+                                                             .split("\n")[0].trim());
                         }
                         if (j == 6) {
                             String text = ((TextNode) node).text().trim();
-                            copy.put(DetailledItem.KEY_COPY_RETURN,
-                                    text.substring(text.length() - 10));
+                            String date = text.substring(text.length() - 10);
+                            try {
+                                copy.setReturnDate(fmt.parseLocalDate(date));
+                            } catch (IllegalArgumentException e) {
+                                e.printStackTrace();
+                            }
                         }
                         j++;
                     }

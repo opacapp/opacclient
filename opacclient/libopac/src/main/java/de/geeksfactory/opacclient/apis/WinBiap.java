@@ -4,6 +4,8 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.message.BasicNameValuePair;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Connection;
@@ -30,6 +32,7 @@ import java.util.regex.Pattern;
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
@@ -459,35 +462,28 @@ public class WinBiap extends BaseApi implements OpacApi {
             }
         }
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
 
         trs = doc.select(".detailCopies .tableCopies > tbody > tr:not(.headerCopies)");
         for (Element tr : trs) {
-            Map<String, String> copy = new HashMap<>();
-            copy.put(DetailledItem.KEY_COPY_BARCODE, tr.select(".mediaBarcode")
-                                                       .text().replace("#", ""));
-            copy.put(DetailledItem.KEY_COPY_STATUS, tr.select(".mediaStatus")
-                                                      .text());
+            Copy copy = new Copy();
+            copy.setBarcode(tr.select(".mediaBarcode").text().replace("#", ""));
+            copy.setStatus(tr.select(".mediaStatus").text());
             if (tr.select(".DateofReturn .borrowUntil").size() > 0) {
                 String returntime = tr.select(".DateofReturn .borrowUntil").text();
-                copy.put(DetailledItem.KEY_COPY_RETURN, returntime);
                 try {
-                    copy.put(DetailledItem.KEY_COPY_RETURN_TIMESTAMP,
-                            String.valueOf(sdf.parse(returntime).getTime()));
-                } catch (ParseException e) {
+                    copy.setReturnDate(fmt.parseLocalDate(returntime));
+                } catch (IllegalArgumentException e) {
                     e.printStackTrace();
                 }
 
             }
             if (tr.select(".mediaBranch").size() > 0) {
-                copy.put(DetailledItem.KEY_COPY_BRANCH,
-                        tr.select(".mediaBranch").text());
+                copy.setBranch(tr.select(".mediaBranch").text());
             }
-            copy.put(DetailledItem.KEY_COPY_LOCATION,
-                    tr.select(".cellMediaItemLocation span").text());
+            copy.setLocation(tr.select(".cellMediaItemLocation span").text());
             if (tr.select("#HyperLinkReservation").size() > 0) {
-                copy.put(DetailledItem.KEY_COPY_RESINFO, tr.select("#HyperLinkReservation")
-                                                           .attr("href"));
+                copy.setResInfo(tr.select("#HyperLinkReservation").attr("href"));
                 item.setReservable(true);
                 item.setReservation_info("reservable");
 
@@ -533,14 +529,14 @@ public class WinBiap extends BaseApi implements OpacApi {
         if (selection == null) {
             // Which copy?
             List<Map<String, String>> options = new ArrayList<>();
-            for (Map<String, String> copy : item.getCopies()) {
-                if (!copy.containsKey(DetailledItem.KEY_COPY_RESINFO)) continue;
+            for (Copy copy : item.getCopies()) {
+                if (copy.getResInfo() == null) continue;
 
                 Map<String, String> option = new HashMap<>();
-                option.put("key", copy.get(DetailledItem.KEY_COPY_RESINFO));
-                option.put("value", copy.get(DetailledItem.KEY_COPY_BARCODE) + " - "
-                        + copy.get(DetailledItem.KEY_COPY_BRANCH) + " - "
-                        + copy.get(DetailledItem.KEY_COPY_RETURN));
+                option.put("key", copy.getResInfo());
+                option.put("value", copy.getBarcode() + " - "
+                        + copy.getBranch() + " - "
+                        + copy.getReturnDate());
                 options.add(option);
             }
             if (options.size() == 0) {
