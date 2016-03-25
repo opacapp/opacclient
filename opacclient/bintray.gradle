@@ -1,8 +1,8 @@
 apply plugin: 'com.jfrog.bintray'
-apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
 version = libraryVersion
+group = 'net.opacapp'
 
 // Bintray
 Properties properties = new Properties()
