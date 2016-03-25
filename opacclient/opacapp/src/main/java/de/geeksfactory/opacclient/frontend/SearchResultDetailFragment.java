@@ -296,6 +296,9 @@ public class SearchResultDetailFragment extends Fragment
             public void onGenerated(Palette palette) {
                 Palette.Swatch swatch = palette.getDarkVibrantSwatch();
                 if (swatch == null) swatch = palette.getDarkMutedSwatch();
+                if (swatch == null) swatch = palette.getLightVibrantSwatch();
+                if (swatch == null) swatch = palette.getLightMutedSwatch();
+                if (swatch == null) swatch = palette.getSwatches().get(0);
                 if (swatch != null) {
                     appBarLayout.setBackgroundColor(swatch.getRgb());
                     collapsingToolbar.setContentScrimColor(swatch.getRgb());
