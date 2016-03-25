@@ -17,4 +17,33 @@ task copyTestResources(type: Copy) {
     from "${projectDir}/src/test/resources"
     into "${buildDir}/classes/test"
 }
+
 processTestResources.dependsOn copyTestResources
+
+
+ext {
+    bintrayOrga = 'opacapp'
+    bintrayRepo = 'libs'
+    bintrayName = 'libopac'
+
+    publishedGroupId = 'net.opacapp'
+    libraryName = 'OPAC communication adapter'
+    artifact = 'libopac'
+
+    libraryDescription = "A library to access the data from various library OPACs"
+
+    siteUrl = 'https://github.com/opacapp/opacclient'
+    gitUrl = 'https://github.com/opacapp/opacclient.git'
+
+    libraryVersion = '4.5.0-beta-2'
+
+    developerId = 'opacapp'
+    developerName = 'Web Opac App'
+    developerEmail = 'info@opacapp.net'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+apply from: '../bintray.gradle'
