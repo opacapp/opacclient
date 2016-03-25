@@ -46,10 +46,10 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import de.geeksfactory.opacclient.networking.HttpUtils;
+import de.geeksfactory.opacclient.networking.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Copy;

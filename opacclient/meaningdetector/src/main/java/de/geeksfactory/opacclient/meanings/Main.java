@@ -33,7 +33,7 @@ public class Main {
         Security.addProvider(new BouncyCastleProvider());
         Collection<String[]> libraries = libraries();
         Set<String> ignored = new JavaMeaningDetector(null,
-                "../opacclient/assets/meanings").getIgnoredFields();
+                "opacapp/src/main/assets/meanings").getIgnoredFields();
         Scanner in = new Scanner(System.in);
         final ExecutorService service = Executors.newFixedThreadPool(25);
         List<TaskInfo> tasks = new ArrayList<>();
@@ -43,7 +43,7 @@ public class Main {
             try {
                 library = Library.fromJSON(
                         libraryName,
-                        new JSONObject(readFile("../opacclient/assets/bibs/"
+                        new JSONObject(readFile("opacapp/src/main/assets/bibs/"
                                         + libraryName + ".json",
                                 Charset.defaultCharset())));
                 Future<Map<String, List<SearchField>>> future = service
@@ -64,12 +64,12 @@ public class Main {
                     System.out.println("Bibliothek: " + library.getIdent()
                             + ", Sprache: " + lang);
                     JavaMeaningDetector detector = new JavaMeaningDetector(
-                            library, "../opacclient/assets/meanings");
+                            library, "opacapp/src/main/assets/meanings");
                     for (int i = 0; i < fields.get(lang).size(); i++) {
                         fields.get(lang)
-                                .set(i,
-                                        detector.detectMeaning(fields.get(lang)
-                                                .get(i)));
+                              .set(i,
+                                      detector.detectMeaning(fields.get(lang)
+                                                                   .get(i)));
                     }
                     for (SearchField field : fields.get(lang)) {
                         if (field.getMeaning() != null
@@ -124,7 +124,7 @@ public class Main {
 
     private static Collection<String[]> libraries() {
         List<String[]> libraries = new ArrayList<>();
-        for (String file : new File("../opacclient/assets/bibs/").list()) {
+        for (String file : new File("opacapp/src/main/assets/bibs/").list()) {
             libraries.add(new String[]{file.replace(".json", "")});
         }
         return libraries;
@@ -141,7 +141,7 @@ public class Main {
         public Library lib;
 
         public TaskInfo(Library lib,
-                        Future<Map<String, List<SearchField>>> future) {
+                Future<Map<String, List<SearchField>>> future) {
             this.future = future;
             this.lib = lib;
         }

@@ -51,12 +51,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.geeksfactory.opacclient.NotReachableException;
-import de.geeksfactory.opacclient.SSLSecurityException;
 import de.geeksfactory.opacclient.i18n.DummyStringProvider;
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import de.geeksfactory.opacclient.networking.HttpUtils;
+import de.geeksfactory.opacclient.networking.NotReachableException;
+import de.geeksfactory.opacclient.networking.SSLSecurityException;
 import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
@@ -72,6 +72,7 @@ public abstract class BaseApi implements OpacApi {
     protected StringProvider stringProvider;
     protected Set<String> supportedLanguages;
     protected boolean initialised;
+    protected boolean httpLoggingEnabled = true;
 
     /**
      * Cleans the parameters of a URL by parsing it manually and reformatting it using {@link
@@ -293,28 +294,28 @@ public abstract class BaseApi implements OpacApi {
                     encoding);
             HttpUtils.consume(response.getEntity());
         } catch (javax.net.ssl.SSLPeerUnverifiedException e) {
-            e.printStackTrace();
+            logHttpError(e);
             throw new SSLSecurityException(e.getMessage());
         } catch (javax.net.ssl.SSLException e) {
             // Can be "Not trusted server certificate" or can be a
             // aborted/interrupted handshake/connection
             if (e.getMessage().contains("timed out")
                     || e.getMessage().contains("reset by")) {
-                e.printStackTrace();
+                logHttpError(e);
                 throw new NotReachableException(e.getMessage());
             } else {
-                e.printStackTrace();
+                logHttpError(e);
                 throw new SSLSecurityException(e.getMessage());
             }
         } catch (InterruptedIOException e) {
-            e.printStackTrace();
+            logHttpError(e);
             throw new NotReachableException(e.getMessage());
         } catch (UnknownHostException e) {
             throw new NotReachableException(e.getMessage());
         } catch (IOException e) {
             if (e.getMessage() != null
                     && e.getMessage().contains("Request aborted")) {
-                e.printStackTrace();
+                logHttpError(e);
                 throw new NotReachableException(e.getMessage());
             } else {
                 throw e;
@@ -365,7 +366,7 @@ public abstract class BaseApi implements OpacApi {
             item.setCoverBitmap(bytes);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logHttpError(e);
         }
     }
 
@@ -410,34 +411,40 @@ public abstract class BaseApi implements OpacApi {
                     encoding);
             HttpUtils.consume(response.getEntity());
         } catch (javax.net.ssl.SSLPeerUnverifiedException e) {
-            e.printStackTrace();
+            logHttpError(e);
             throw new SSLSecurityException(e.getMessage());
         } catch (javax.net.ssl.SSLException e) {
             // Can be "Not trusted server certificate" or can be a
             // aborted/interrupted handshake/connection
             if (e.getMessage().contains("timed out")
                     || e.getMessage().contains("reset by")) {
-                e.printStackTrace();
+                logHttpError(e);
                 throw new NotReachableException(e.getMessage());
             } else {
-                e.printStackTrace();
+                logHttpError(e);
                 throw new SSLSecurityException(e.getMessage());
             }
         } catch (InterruptedIOException e) {
-            e.printStackTrace();
+            logHttpError(e);
             throw new NotReachableException(e.getMessage());
         } catch (UnknownHostException e) {
             throw new NotReachableException(e.getMessage());
         } catch (IOException e) {
             if (e.getMessage() != null
                     && e.getMessage().contains("Request aborted")) {
-                e.printStackTrace();
+                logHttpError(e);
                 throw new NotReachableException(e.getMessage());
             } else {
                 throw e;
             }
         }
         return html;
+    }
+
+    private void logHttpError(Throwable e) {
+        if (httpLoggingEnabled) {
+            e.printStackTrace();
+        }
     }
 
     public String httpPost(String url, HttpEntity data,
@@ -484,5 +491,9 @@ public abstract class BaseApi implements OpacApi {
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void setHttpLoggingEnabled(boolean httpLoggingEnabled) {
+        this.httpLoggingEnabled = httpLoggingEnabled;
     }
 }

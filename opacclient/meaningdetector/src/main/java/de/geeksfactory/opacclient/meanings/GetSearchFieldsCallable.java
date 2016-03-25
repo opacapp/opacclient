@@ -9,11 +9,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
+import de.geeksfactory.opacclient.OpacApiFactory;
+import de.geeksfactory.opacclient.apis.BaseApi;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.searchfields.SearchField;
-import de.geeksfactory.opacclient.tests.apitests.LibraryApiTestCases;
 
 public class GetSearchFieldsCallable implements Callable<Map<String, List<SearchField>>> {
     private Library lib;
@@ -24,7 +25,12 @@ public class GetSearchFieldsCallable implements Callable<Map<String, List<Search
 
     @Override
     public Map<String, List<SearchField>> call() {
-        OpacApi api = LibraryApiTestCases.getApi(lib);
+        OpacApi api = OpacApiFactory.create(lib, "OpacApp/Test");
+
+        if (api instanceof BaseApi) {
+            ((BaseApi) api).setHttpLoggingEnabled(false);
+        }
+
         Set<String> langs = null;
         try {
             langs = api.getSupportedLanguages();
