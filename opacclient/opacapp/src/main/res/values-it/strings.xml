@@ -90,7 +90,7 @@
     <string name="notification_warning_desc">Quanto tempo prima vuoi ricevere il promemoria?</string>
     <string name="notif_ticker">%s libri sono in scadenza!</string>
     <string name="notif_title">Libri in scadenza</string>
-    <string name="volumes">VOLUMI</string>
+    <string name="volumes">Volumi</string>
     <string name="volumesearch">Mostra volumi</string>
     <string name="star">Aggiungi ai preferiti</string>
     <string name="starred">È stato aggiunto ai preferiti</string>
