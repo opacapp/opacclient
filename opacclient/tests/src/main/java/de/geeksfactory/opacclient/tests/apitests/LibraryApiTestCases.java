@@ -39,6 +39,7 @@ import de.geeksfactory.opacclient.apis.WebOpacAt;
 import de.geeksfactory.opacclient.apis.WebOpacNet;
 import de.geeksfactory.opacclient.apis.WinBiap;
 import de.geeksfactory.opacclient.apis.Zones;
+import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Library;
@@ -144,7 +145,7 @@ public class LibraryApiTestCases {
         } else {
             api = null;
         }
-        if (api != null) api.init(library);
+        if (api != null) api.init(library, new HttpClientFactory("OpacApp/Test"));
         return api;
     }
 
