@@ -22,6 +22,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import de.geeksfactory.opacclient.i18n.StringProvider;
+import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.DetailledItem;
@@ -36,8 +37,8 @@ import de.geeksfactory.opacclient.objects.Library;
 public class PicaLBS extends Pica {
     private String lbsUrl;
 
-    public void init(Library lib) {
-        super.init(lib);
+    public void init(Library lib, HttpClientFactory httpClientFactory) {
+        super.init(lib, httpClientFactory);
         this.lbsUrl = data.optString("lbs_url", this.opac_url);
     }
 

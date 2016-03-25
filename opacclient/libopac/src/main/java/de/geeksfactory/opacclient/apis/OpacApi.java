@@ -30,6 +30,7 @@ import java.util.Set;
 
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.i18n.StringProvider;
+import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.DetailledItem;
@@ -266,8 +267,11 @@ public interface OpacApi {
      * DefaultHTTPClient and to store the metadata and library objects.
      *
      * @param library The library the Api is initialized for
+     * @param httpClientFactory A HttpClientFactory instance that will be used for instantiating
+     *                          HTTP clients. This factory is pluggable because we want to use
+     *                          platform-specific code on Android.
      */
-    public void init(Library library);
+    public void init(Library library, HttpClientFactory httpClientFactory);
 
     /**
      * Performs a catalogue search. The given <code>List<SearchQuery></code> contains the search

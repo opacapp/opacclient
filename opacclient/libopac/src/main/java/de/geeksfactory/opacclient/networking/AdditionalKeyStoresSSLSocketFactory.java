@@ -31,11 +31,22 @@ import javax.net.ssl.X509TrustManager;
  */
 public class AdditionalKeyStoresSSLSocketFactory {
 
-    public static SSLConnectionSocketFactory create(KeyStore keyStore, boolean tls_only)
+    public static SSLConnectionSocketFactory create(KeyStore keyStore, boolean tls_only,
+            Class<?> socketFactory)
             throws NoSuchAlgorithmException, KeyManagementException {
         SSLContext sslContext = SSLContext.getInstance("TLS");
         sslContext.init(null, new TrustManager[]{new AdditionalKeyStoresTrustManager(keyStore)},
                 null);
+        if (socketFactory != null) {
+            try {
+                return (SSLConnectionSocketFactory) socketFactory
+                        .getDeclaredConstructor(SSLContext.class).newInstance
+                                (sslContext);
+            } catch (Exception e) {
+                // Fall back to default
+                e.printStackTrace();
+            }
+        }
         return new SSLConnectionSocketFactory(sslContext);
     }
 

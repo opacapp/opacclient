@@ -21,6 +21,7 @@
  */
 package de.geeksfactory.opacclient.apis;
 
+import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import org.apache.http.client.utils.URIBuilder;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
@@ -92,8 +93,8 @@ public class WebOpacAt extends SearchOnlyApi {
     protected List<SearchQuery> lastQuery;
 
     @Override
-    public void init(Library library) {
-        super.init(library);
+    public void init(Library library, HttpClientFactory httpClientFactory) {
+        super.init(library, httpClientFactory);
         try {
             this.opac_url = library.getData().getString("baseurl");
         } catch (JSONException e) {

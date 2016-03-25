@@ -55,7 +55,7 @@ import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.SSLSecurityException;
 import de.geeksfactory.opacclient.i18n.DummyStringProvider;
 import de.geeksfactory.opacclient.i18n.StringProvider;
-import de.geeksfactory.opacclient.networking.HTTPClient;
+import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import de.geeksfactory.opacclient.networking.HttpUtils;
 import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.Library;
@@ -141,7 +141,8 @@ public abstract class BaseApi implements OpacApi {
     }
 
     /**
-     * Reads content from an InputStream into a string, using the default {@code ISO-8859-1} encoding
+     * Reads content from an InputStream into a string, using the default {@code ISO-8859-1}
+     * encoding
      *
      * @param is InputStream to read from
      * @return String content of the InputStream
@@ -236,8 +237,9 @@ public abstract class BaseApi implements OpacApi {
      * Initializes HTTP client and String Provider
      */
     @Override
-    public void init(Library library) {
-        http_client = HTTPClient.getNewHttpClient(library.getData().optBoolean("customssl", false),
+    public void init(Library library, HttpClientFactory http_client_factory) {
+        http_client = http_client_factory.getNewApacheHttpClient(
+                library.getData().optBoolean("customssl", false),
                 library.getData().optBoolean("customssl_tls_only", true),
                 library.getData().optBoolean("disguise", false));
         this.library = library;
@@ -380,7 +382,7 @@ public abstract class BaseApi implements OpacApi {
      *                               than 400.
      */
     public String httpPost(String url, HttpEntity data,
-                           String encoding, boolean ignore_errors, CookieStore cookieStore)
+            String encoding, boolean ignore_errors, CookieStore cookieStore)
             throws IOException {
         HttpPost httppost = new HttpPost(cleanUrl(url));
         httppost.setEntity(data);
@@ -439,13 +441,13 @@ public abstract class BaseApi implements OpacApi {
     }
 
     public String httpPost(String url, HttpEntity data,
-                           String encoding, boolean ignore_errors)
+            String encoding, boolean ignore_errors)
             throws IOException {
         return httpPost(url, data, encoding, ignore_errors, null);
     }
 
     public String httpPost(String url, HttpEntity data,
-                           String encoding) throws IOException {
+            String encoding) throws IOException {
         return httpPost(url, data, encoding, false, null);
     }
 

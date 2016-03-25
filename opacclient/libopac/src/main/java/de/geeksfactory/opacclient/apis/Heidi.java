@@ -53,6 +53,7 @@ import java.util.Map;
 import java.util.Set;
 
 import de.geeksfactory.opacclient.i18n.StringProvider;
+import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Copy;
@@ -105,8 +106,8 @@ public class Heidi extends BaseApi implements OpacApi {
     }
 
     @Override
-    public void init(Library library) {
-        super.init(library);
+    public void init(Library library, HttpClientFactory httpClientFactory) {
+        super.init(library, httpClientFactory);
         this.library = library;
         this.data = library.getData();
         this.opac_url = data.optString("baseurl", "");

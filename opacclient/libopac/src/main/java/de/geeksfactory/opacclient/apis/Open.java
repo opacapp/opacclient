@@ -44,6 +44,7 @@ import java.util.regex.Pattern;
 
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.i18n.StringProvider;
+import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Copy;
@@ -199,8 +200,8 @@ public class Open extends BaseApi implements OpacApi {
     protected static final String NO_MOBILE = "?nomo=1";
 
     @Override
-    public void init(Library lib) {
-        super.init(lib);
+    public void init(Library lib, HttpClientFactory httpClientFactory) {
+        super.init(lib, httpClientFactory);
 
         this.data = lib.getData();
         try {

@@ -1,8 +1,6 @@
 package de.geeksfactory.opacclient.networking;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;import android.util.Log;
 
 import org.apache.http.HttpEntity;
@@ -49,7 +47,8 @@ public class CoverDownloadTask extends AsyncTask<Void, Integer, CoverHolder> {
             try {
                 float density = context.getResources().getDisplayMetrics().density;
 
-                HttpClient http_client = HTTPClient.getNewHttpClient(false, true, false);
+                HttpClient http_client = new AndroidHttpClientFactory()
+                        .getNewApacheHttpClient(false, true, false);
                 HttpGet httpget = new HttpGet(ISBNTools.getBestSizeCoverUrl(item.getCover(),
                         (int) (width * density), (int) (height * density)));
                 HttpResponse response;

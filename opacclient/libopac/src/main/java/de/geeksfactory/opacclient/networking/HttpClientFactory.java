@@ -1,22 +1,3 @@
-/**
- * Copyright (C) 2013 by Raphael Michel under the MIT license:
- * <p/>
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction,
- * including without limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * <p/>
- * The above copyright notice and this permission notice shall be included in all copies or
- * substantial portions of the Software.
- * <p/>
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
- * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
-
 package de.geeksfactory.opacclient.networking;
 
 import org.apache.http.Header;
@@ -34,6 +15,7 @@ import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.impl.client.RedirectLocations;
@@ -42,19 +24,57 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.Args;
 import org.apache.http.util.Asserts;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Paths;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 
-import de.geeksfactory.opacclient.OpacClient;
-import de.geeksfactory.opacclient.R;
+public class HttpClientFactory {
 
-public class HTTPClient {
+    public String user_agent;
+    public String ssl_store_path = "../res/raw/ssl_trust_store.bks";
+    private KeyStore trust_store;
 
-    public static KeyStore trustStore = null;
+    public HttpClientFactory(String user_agent) {
+        this.user_agent = user_agent;
+    }
 
-    public static HttpClient getNewHttpClient(boolean customssl, boolean tls_only,
+    public HttpClientFactory(String user_agent, String ssl_store_path) {
+        this.user_agent = user_agent;
+        this.ssl_store_path = ssl_store_path;
+    }
+
+    protected KeyStore getKeyStore()
+            throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
+        final KeyStore trustStore = KeyStore.getInstance("BKS");
+        InputStream in;
+        try {
+            in = Files.newInputStream(Paths.get(ssl_store_path));
+        } catch (NoSuchFileException e) {
+            in = Files.newInputStream(
+                    Paths.get("opacapp/src/main/res/raw/ssl_trust_store.bks"));
+        }
+        try {
+            trustStore.load(in,
+                    "ro5eivoijeeGohsh0daequoo5Zeepaen".toCharArray());
+        } finally {
+            in.close();
+        }
+        return trustStore;
+    }
+
+    protected Class<?> getSocketFactoryClass() {
+        return null;
+    }
+
+    public HttpClient getNewApacheHttpClient(boolean customssl, boolean tls_only,
             boolean disguise_app) {
         HttpClientBuilder builder = HttpClientBuilder.create();
         builder.setRedirectStrategy(new CustomRedirectStrategy());
@@ -62,23 +82,17 @@ public class HTTPClient {
             builder.setUserAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, " +
                     "like Gecko) Chrome/43.0.2357.130 Safari/537.36\t");
         } else {
-            builder.setUserAgent("OpacApp/" + OpacClient.versionName);
+            builder.setUserAgent(user_agent);
         }
+
         if (customssl) {
             try {
-                if (trustStore == null) {
-                    trustStore = KeyStore.getInstance("BKS");
-                    final InputStream in = OpacClient.context.getResources().openRawResource(
-                            R.raw.ssl_trust_store);
-                    try {
-                        trustStore.load(in, "ro5eivoijeeGohsh0daequoo5Zeepaen".toCharArray());
-                    } finally {
-                        in.close();
-                    }
+                if (trust_store == null) {
+                    trust_store = getKeyStore();
                 }
-
-                ConnectionSocketFactory sf =
-                        AdditionalKeyStoresSSLSocketFactory.create(trustStore, tls_only);
+                SSLConnectionSocketFactory sf =
+                        AdditionalKeyStoresSSLSocketFactory
+                                .create(trust_store, tls_only, getSocketFactoryClass());
 
                 Registry<ConnectionSocketFactory> registry =
                         RegistryBuilder.<ConnectionSocketFactory>create().register("http",
@@ -99,6 +113,7 @@ public class HTTPClient {
     }
 
     public static class CustomRedirectStrategy extends LaxRedirectStrategy {
+
 
         public CustomRedirectStrategy() {
             super();
@@ -121,10 +136,7 @@ public class HTTPClient {
                         "Received redirect response " + response.getStatusLine()
                                 + " but no location header");
             }
-            String location = locationHeader.getValue().replaceAll(" ", "%20");
-
-            // PICA LBS sometimes sends URLs ending with a " character, for whatever reason.
-            if (location.endsWith("\"")) location = location.substring(0, location.length() - 2);
+            final String location = locationHeader.getValue().replaceAll(" ", "%20");
 
             final RequestConfig config = clientContext.getRequestConfig();
 

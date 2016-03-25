@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import de.geeksfactory.opacclient.i18n.StringProvider;
+import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
@@ -32,7 +33,7 @@ public class TestApi implements OpacApi {
     }
 
     @Override
-    public void init(Library library) {
+    public void init(Library library, HttpClientFactory httpClientFactory) {
         makeSearchResult("Kurz", null, false);
         makeSearchResult("Weit hinten, hinter den Wortbergen, fern der Länder", null, false);
         makeSearchResult("Kurz", null, true);

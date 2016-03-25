@@ -51,6 +51,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.geeksfactory.opacclient.i18n.StringProvider;
+import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Copy;
@@ -231,8 +232,8 @@ public class TouchPoint extends BaseApi implements OpacApi {
     }
 
     @Override
-    public void init(Library lib) {
-        super.init(lib);
+    public void init(Library lib, HttpClientFactory httpClientFactory) {
+        super.init(lib, httpClientFactory);
         this.data = lib.getData();
 
         try {
@@ -1013,8 +1014,9 @@ public class TouchPoint extends BaseApi implements OpacApi {
             if (tr.text().contains("keine Daten")) {
                 return null;
             }
-            e.put(AccountData.KEY_LENT_TITLE, tr.select(".account-display-title").select("b, strong")
-                                                .text().trim());
+            e.put(AccountData.KEY_LENT_TITLE,
+                    tr.select(".account-display-title").select("b, strong")
+                      .text().trim());
             try {
                 e.put(AccountData.KEY_LENT_AUTHOR,
                         tr.select(".account-display-title").html().split("<br[ /]*>")[1].trim());

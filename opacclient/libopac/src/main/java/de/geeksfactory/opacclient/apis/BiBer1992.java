@@ -48,7 +48,7 @@ import java.util.regex.Pattern;
 
 import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.i18n.StringProvider;
-import de.geeksfactory.opacclient.networking.HTTPClient;
+import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import de.geeksfactory.opacclient.networking.HttpUtils;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -282,11 +282,8 @@ public class BiBer1992 extends BaseApi {
     }
 
     @Override
-    public void init(Library lib) {
-        super.init(lib);
-        http_client = HTTPClient.getNewHttpClient(lib.getData().optBoolean("customssl", false),
-                lib.getData().optBoolean("customssl_tls_only", true),
-                lib.getData().optBoolean("disguise", false));
+    public void init(Library lib, HttpClientFactory httpClientFactory) {
+        super.init(lib, httpClientFactory);
 
         data = lib.getData();
 

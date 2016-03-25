@@ -77,6 +77,7 @@ import de.geeksfactory.opacclient.frontend.MainPreferenceActivity;
 import de.geeksfactory.opacclient.frontend.SearchResultListActivity;
 import de.geeksfactory.opacclient.frontend.WelcomeActivity;
 import de.geeksfactory.opacclient.i18n.AndroidStringProvider;
+import de.geeksfactory.opacclient.networking.AndroidHttpClientFactory;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.searchfields.SearchField;
@@ -260,7 +261,7 @@ public class OpacClient extends Application {
         } else {
             return null;
         }
-        newApiInstance.init(lib);
+        newApiInstance.init(lib, new AndroidHttpClientFactory());
         newApiInstance.setStringProvider(new AndroidStringProvider());
         currentLang = getResources().getConfiguration().locale.getLanguage();
         newApiInstance.setLanguage(currentLang);
