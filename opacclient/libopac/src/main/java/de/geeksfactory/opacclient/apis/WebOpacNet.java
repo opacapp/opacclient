@@ -58,19 +58,19 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
 /**
  * @author Johan von Forstner, 06.04.2014
- *         <p/>
- *         WebOPAC.net, Version 2.2.70 gestartet mit Gemeindebibliothek Nürensdorf (erstes
- *         Google-Suchergebnis)
- *         <p/>
- *         weitere kompatible Bibliotheken: https://www.google.de/search?q=webOpac
- *         .net%202.1.30%20powered%20by%20winMedio .net&qscrl=1#q=%22webOpac.net+2.2
- *         .70+powered+by+winMedio.net%22+inurl%3Awinmedio&qscrl=1&start=0
- *         <p/>
- *         Unterstützt bisher nur Katalogsuche, Accountunterstüzung könnte (wenn keine Kontodaten
- *         verfügbar sind) über den Javascript-Code reverse-engineered werden:
- *         http://www.winmedio.net/nuerensdorf/de/mobile /GetScript.ashx?id=mobile.de.min
- *         .js&v=20140122
+ *
+ * WebOPAC.net, Version 2.2.70 gestartet mit Gemeindebibliothek Nürensdorf (erstes
+ * Google-Suchergebnis)
+ *
+ * Unterstützt bisher nur Katalogsuche, Accountunterstüzung könnte (wenn keine Kontodaten
+ * verfügbar sind) über den Javascript-Code reverse-engineered werden:
+ * http://www.winmedio.net/nuerensdorf/de/mobile/GetScript.ashx?id=mobile.de.min.js&amp;v=20140122
  */
+
+/*
+weitere kompatible Bibliotheken:
+ https://www.google.de/search?q=webOpac.net%202.1.30%20powered%20by%20winMedio.net&qscrl=1#q=%22webOpac.net+2.2.70+powered+by+winMedio.net%22+inurl%3Awinmedio&qscrl=1&start=0
+  */
 
 public class WebOpacNet extends BaseApi implements OpacApi {
 

@@ -28,7 +28,7 @@ import de.geeksfactory.opacclient.objects.SearchResult;
  * classes. Since version 3.2.1, it is highly discouraged to hardcode any string into the OpacApi
  * implementations which might be displayed to the user, as this makes internationalization very
  * hard.
- * <p/>
+ *
  * While Android has a powerful i18n library using the 'string resources' concept, our apis.*
  * subpackage should not depend on Android, to make it seperable from the app, e.g. for running our
  * test suite on a PC. Therefore, this abstract interface provides access to Android's i18n API on

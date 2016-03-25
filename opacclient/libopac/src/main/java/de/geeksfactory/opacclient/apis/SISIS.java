@@ -75,7 +75,7 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
 /**
  * OpacApi implementation for Web Opacs of the SISIS SunRise product, developed by OCLC.
- * <p/>
+ *
  * Restrictions: Bookmarks are only constantly supported if the library uses the BibTip extension.
  */
 public class SISIS extends BaseApi implements OpacApi {

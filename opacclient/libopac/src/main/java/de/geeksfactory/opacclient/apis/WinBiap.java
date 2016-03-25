@@ -54,14 +54,14 @@ import de.geeksfactory.opacclient.utils.Base64;
 
 /**
  * @author Johan von Forstner, 11.08.2014
- *         <p/>
+ *
  *         WinBIAP, Version 4.1.0 gestartet mit Bibliothek Unterföhring
- *         <p/>
+ *
  *         Unterstützt bisher nur Katalogsuche
- *         <p/>
+ *
  *         Example for a search query (parameter "data" in the URL, everything before the hyphen,
  *         base64 decoded, added formatting) as seen in Unterföhring:
- *         <p/>
+ *
  *         cmd=5&amp;				perform a search sC= c_0=1%%				unknown m_0=1%%
  *         unknown f_0=2%%				free
  *         search o_0=8%%				contains v_0=schule			"schule" ++ c_1=1%% unknown
@@ -86,7 +86,7 @@ import de.geeksfactory.opacclient.utils.Base64;
  *         unknown						|---  effect on the
  *         result o_7=1%%				unknown						|	  and can be left out
  *         v_7=5|4|101|102		unknown						-
- *         <p/>
+ *
  *         &amp;Sort=Autor				Sort by Author (default)
  */
 //@formatter:on

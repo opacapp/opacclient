@@ -1,15 +1,15 @@
 /**
  * Copyright (C) 2016 by Johan von Forstner under the MIT license:
- * <p/>
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p/>
+ *
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p/>
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
  * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -186,10 +186,10 @@ public class Copy {
     /**
      * Set property using the following keys: barcode, location, department, branch, status,
      * returndate, reservations, signature, resinfo, url
-     * <p/>
+     *
      * If you supply an invalid key, an {@link IllegalArgumentException} will be thrown.
-     * <p/>
-     * This method is used to simplify refactoring of old APIs from the Map<String, String> data
+     *
+     * This method is used to simplify refactoring of old APIs from the Map&lt;String, String&gt; data
      * structure to this class. If you are creating a new API, you probably don't need to use it.
      *
      * @param key   one of the keys mentioned above
@@ -234,12 +234,12 @@ public class Copy {
     /**
      * Set property using the following keys: barcode, location, department, branch, status,
      * returndate, reservations, signature, resinfo, url
-     * <p/>
+     *
      * For "returndate", the given {@link DateTimeFormatter} will be used to parse the date.
-     * <p/>
+     *
      * If you supply an invalid key, an {@link IllegalArgumentException} will be thrown.
-     * <p/>
-     * This method is used to simplify refactoring of old APIs from the Map<String, String> data
+     *
+     * This method is used to simplify refactoring of old APIs from the Map&lt;String, String&gt; data
      * structure to this class. If you are creating a new API, you probably don't need to use it.
      *
      * @param key   one of the keys mentioned above
@@ -259,11 +259,11 @@ public class Copy {
     /**
      * Get property using the following keys: barcode, location, department, branch, status,
      * returndate, reservations, signature, resinfo, url
-     * <p/>
+     *
      * Dates will be returned in ISO-8601 format (yyyy-MM-dd). If you supply an invalid key, an
      * {@link IllegalArgumentException} will be thrown.
-     * <p/>
-     * This method is used to simplify refactoring of old APIs from the Map<String, String> data
+     *
+     * This method is used to simplify refactoring of old APIs from the Map&lt;String, String&gt; data
      * structure to this class. If you are creating a new API, you probably don't need to use it.
      *
      * @param key one of the keys mentioned above

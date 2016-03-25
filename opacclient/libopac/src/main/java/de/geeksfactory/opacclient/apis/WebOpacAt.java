@@ -60,7 +60,7 @@ import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
 /**
- * An implementation of {@link *.web-opac.at} sites operated by the Austrian company
+ * An implementation of *.web-opac.at sites operated by the Austrian company
  * <a href="https://littera.eu/">Littera</a>.
  */
 public class WebOpacAt extends SearchOnlyApi {
