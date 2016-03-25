@@ -3,5 +3,5 @@ apply plugin: 'java'
 dependencies {
     compile "org.bouncycastle:bcprov-jdk15on:1.51"
     compile "org.json:json:20141113"
-    compile project(':tests')
+    compile project(':libopac')
 }
