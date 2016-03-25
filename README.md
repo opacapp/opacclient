@@ -22,6 +22,10 @@ Support
 -------
 Supports web catalogues of different library system vendors, see our [website](http://de.opacapp.net/kompatibilitaet/) or [wiki](https://github.com/raphaelm/opacclient/wiki/Supported-library-types) for details.
 
+Java Library (`libopac`)
+------------------------
+The underlying code that the app uses to connect to the different supported OPAC software systems and parse data from them is available as a separate library called `libopac`. It can also be used in ordinary Java projects because it does not depend on Android APIs. More information about the library can be found in [its own README file](https://github.com/opacapp/opacclient/blob/master/opacclient/libopac/README.md).
+
 License
 -------
 This code is released under the terms of the [MIT License](http://opensource.org/licenses/mit-license.php)
@@ -35,7 +39,6 @@ It contains several libraries:
 * NineOldAndroids, (c) Jake Wharton, Apache License
 * android-flowlayout, (c) Artem Votincev, Apache License
 * rv-joiner, (c) Evgeny Egorov, Apache License
-
 
 Authors
 -------
