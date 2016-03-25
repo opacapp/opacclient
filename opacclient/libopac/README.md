@@ -6,9 +6,7 @@ Web catalogues of different library system vendors are supported, see our [websi
 
 Installation
 ------------
-The library is available through our [Bintray repository](https://bintray.com/opacapp/libs/libopac/). Snippets for Maven or Gradle build configuration files and JAR downloads are available there.
-
-We also intend to release the library on JCenter soon.
+The library is available through [JCenter](https://bintray.com/opacapp/libs/libopac/). Snippets for Maven or Gradle build configuration files and JAR downloads are available there.
 
 Usage
 -----
