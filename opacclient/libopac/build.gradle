@@ -6,7 +6,6 @@ targetCompatibility = JavaVersion.VERSION_1_7
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
     // Use older org.json version to have an environment equivalent to the android platform
     compile 'org.json:json:20090211'
     compile 'org.jsoup:jsoup:1.8.3'
