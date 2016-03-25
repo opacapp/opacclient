@@ -21,8 +21,6 @@
  */
 package de.geeksfactory.opacclient.objects;
 
-import android.graphics.Bitmap;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +37,7 @@ public class DetailledItem implements CoverHolder {
     private String cover;
     private String title;
     private SearchResult.MediaType mediaType;
-    private Bitmap coverBitmap;
+    private byte[] coverBitmap;
     private boolean reservable;
     private String reservation_info;
     private boolean bookable;
@@ -84,7 +82,7 @@ public class DetailledItem implements CoverHolder {
      * Get cover image bitmap
      */
     @Override
-    public Bitmap getCoverBitmap() {
+    public byte[] getCoverBitmap() {
         return coverBitmap;
     }
 
@@ -92,7 +90,7 @@ public class DetailledItem implements CoverHolder {
      * Set cover image bitmap
      */
     @Override
-    public void setCoverBitmap(Bitmap coverBitmap) {
+    public void setCoverBitmap(byte[] coverBitmap) {
         this.coverBitmap = coverBitmap;
     }
 

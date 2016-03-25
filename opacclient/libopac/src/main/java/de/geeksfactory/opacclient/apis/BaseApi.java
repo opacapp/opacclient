@@ -21,9 +21,6 @@
  */
 package de.geeksfactory.opacclient.apis;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -363,9 +360,7 @@ public abstract class BaseApi implements OpacApi {
             HttpEntity entity = response.getEntity();
             byte[] bytes = EntityUtils.toByteArray(entity);
 
-            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0,
-                    bytes.length);
-            item.setCoverBitmap(bitmap);
+            item.setCoverBitmap(bytes);
 
         } catch (IOException e) {
             e.printStackTrace();

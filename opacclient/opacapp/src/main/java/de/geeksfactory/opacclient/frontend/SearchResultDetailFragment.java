@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -62,6 +63,7 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.StarDataSource;
 import de.geeksfactory.opacclient.ui.AppCompatProgressDialog;
 import de.geeksfactory.opacclient.ui.WhitenessUtils;
+import de.geeksfactory.opacclient.utils.BitmapUtils;
 import de.geeksfactory.opacclient.utils.CompatibilityUtils;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
 import su.j2e.rvjoiner.JoinableAdapter;
@@ -407,9 +409,10 @@ public class SearchResultDetailFragment extends Fragment
     private void displayCover() {
         if (getItem().getCoverBitmap() != null) {
             coverWrapper.setVisibility(View.VISIBLE);
-            ivCover.setImageBitmap(getItem().getCoverBitmap());
+            Bitmap bm = BitmapUtils.bitmapFromBytes(getItem().getCoverBitmap());
+            ivCover.setImageBitmap(bm);
             if (!image_analyzed) {
-                analyzeCover(getItem().getCoverBitmap());
+                analyzeCover(bm);
             }
             showCoverView(true);
         } else if (getArguments().containsKey(ARG_ITEM_COVER_BITMAP)) {

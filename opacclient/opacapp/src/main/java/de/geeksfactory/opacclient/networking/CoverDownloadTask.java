@@ -71,10 +71,8 @@ public class CoverDownloadTask extends AsyncTask<Void, Integer, CoverHolder> {
                         // done asynchronously.
                         item.setCover(null);
                     } else {
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0,
-                                bytes.length);
-                        if (bitmap.getHeight() > 1 && bitmap.getWidth() > 1) {
-                            item.setCoverBitmap(bitmap);
+                        if (bytes.length > 64) {
+                            item.setCoverBitmap(bytes);
                         } else {
                             // When images embedded from Amazon aren't available, a
                             // 1x1
