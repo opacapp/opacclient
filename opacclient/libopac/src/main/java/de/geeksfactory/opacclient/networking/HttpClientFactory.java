@@ -24,13 +24,12 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.Args;
 import org.apache.http.util.Asserts;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.Paths;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -56,10 +55,9 @@ public class HttpClientFactory {
         final KeyStore trustStore = KeyStore.getInstance("BKS");
         InputStream in;
         try {
-            in = Files.newInputStream(Paths.get(ssl_store_path));
-        } catch (NoSuchFileException e) {
-            in = Files.newInputStream(
-                    Paths.get("opacapp/src/main/res/raw/ssl_trust_store.bks"));
+            in = new FileInputStream(ssl_store_path);
+        } catch (FileNotFoundException e) {
+            in = new FileInputStream("opacapp/src/main/res/raw/ssl_trust_store.bks");
         }
         try {
             trustStore.load(in,
