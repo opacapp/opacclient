@@ -18,10 +18,6 @@
  */
 package de.geeksfactory.opacclient.reminder;
 
-import com.commonsware.cwac.wakeful.WakefulIntentService;
-
-import org.json.JSONException;
-
 import android.app.AlarmManager;
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +26,10 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
+import com.commonsware.cwac.wakeful.WakefulIntentService;
+
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.List;
@@ -56,6 +56,11 @@ public class SyncAccountService extends WakefulIntentService {
         if (BuildConfig.DEBUG) Log.i(NAME, "SyncAccountService started");
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+
+        if (!sp.getBoolean(SyncAccountAlarmListener.PREF_SYNC_SERVICE, false)) {
+            if (BuildConfig.DEBUG) Log.i(NAME, "notifications are disabled");
+            return;
+        }
 
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(
                 Context.CONNECTIVITY_SERVICE);

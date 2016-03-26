@@ -1,18 +1,19 @@
 package de.geeksfactory.opacclient.reminder;
 
-import com.commonsware.cwac.wakeful.WakefulIntentService;
-
-import org.joda.time.Minutes;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.commonsware.cwac.wakeful.WakefulIntentService;
+
+import org.joda.time.Minutes;
+
 public class SyncAccountAlarmListener implements WakefulIntentService.AlarmListener {
 
     public static final String PREF_SYNC_INTERVAL = "sync_interval";
+    public static final String PREF_SYNC_SERVICE = "notification_service";
     private boolean onePeriodBeforeStart = false;
 
     /**

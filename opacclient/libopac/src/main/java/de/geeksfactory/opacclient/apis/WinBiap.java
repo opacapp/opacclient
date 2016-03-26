@@ -18,8 +18,6 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -841,7 +839,7 @@ public class WinBiap extends BaseApi implements OpacApi {
                     item.setCancelData(base64);
                 }
             } else if (detailsTr.select("input[id*=_hiddenValueDetail][value]").size() > 0) {
-                item.put(AccountData.KEY_RESERVATION_CANCEL,
+                item.setCancelData(
                         detailsTr.select("input[id*=_hiddenValueDetail][value]").attr("value"));
             }
             reservations.add(item);
