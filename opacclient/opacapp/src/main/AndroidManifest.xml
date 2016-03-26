@@ -146,9 +146,11 @@
         <service android:name="de.geeksfactory.opacclient.reminder.SyncAccountService">
         </service>
 
-        <receiver android:name="de.geeksfactory.opacclient.reminder.ReminderBootBroadcastReceiver" >
+        <receiver
+            android:name="de.geeksfactory.opacclient.reminder.ReminderBootBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
             </intent-filter>
         </receiver>
 

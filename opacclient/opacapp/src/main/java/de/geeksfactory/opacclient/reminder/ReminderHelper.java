@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -36,6 +37,8 @@ public class ReminderHelper {
      * android.app.AlarmManager}
      */
     public void generateAlarms() {
+        resetNotified();
+
         int warning = Integer.parseInt(sp.getString("notification_warning", "3"));
         if (warning > 10) {
             // updated from the old app version -> change value to get days instead of milliseconds
@@ -57,11 +60,12 @@ public class ReminderHelper {
             arrangedIds.get(deadline).add(item.getDbId());
         }
 
-        // Remove alarms with no corresponding media
         for (Alarm alarm : data.getAllAlarms()) {
+            // Remove alarms with no corresponding media
             if (!arrangedIds.containsKey(alarm.deadline)) {
                 data.removeAlarm(alarm);
             }
+
         }
 
         // Find and add/update corresponding alarms for current lent media
@@ -126,8 +130,8 @@ public class ReminderHelper {
                         .getBroadcast(app, (int) alarm.id, i, PendingIntent.FLAG_UPDATE_CURRENT);
                 // If the alarm's timestamp is in the past, AlarmManager will trigger it
                 // immediately.
-                alarmManager
-                        .setExact(AlarmManager.RTC_WAKEUP, alarm.notificationTime.getMillis(), pi);
+                setExact(alarmManager, AlarmManager.RTC_WAKEUP, alarm.notificationTime.getMillis(),
+                        pi);
             }
         }
     }
@@ -136,5 +140,33 @@ public class ReminderHelper {
         long[] array = new long[list.size()];
         for (int i = 0; i < list.size(); i++) array[i] = list.get(i);
         return array;
+    }
+
+    private void setExact(AlarmManager am, int type, long triggerAtMillis,
+            PendingIntent operation) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            am.setExact(type, triggerAtMillis, operation);
+        } else {
+            am.set(type, triggerAtMillis, operation);
+        }
+    }
+
+    /**
+     * resets the notified field to false for all alarms with finished == false this will re-show
+     * notifications that were not dismissed yet (for example after reboot)
+     */
+    public void resetNotified() {
+        AccountDataSource data = new AccountDataSource(app);
+        data.open();
+        List<Alarm> alarms = data.getAllAlarms();
+
+        for (Alarm alarm : alarms) {
+            if (alarm.notified && !alarm.finished) {
+                alarm.notified = false;
+                data.updateAlarm(alarm);
+            }
+        }
+
+        data.close();
     }
 }
