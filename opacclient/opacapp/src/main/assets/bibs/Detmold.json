@@ -14,6 +14,14 @@
             "status": 5,
             "title": 7
         },
+        "reservationtable": {
+            "author": 3,
+            "title": 3,
+            "cancelurl": 1,
+            "availability": 4,
+            "branch": -1,
+            "expirationdate": -1
+        },
         "baseurl": "http://62.153.231.120",
         "copiestable": {
             "barcode": 3,
