@@ -861,6 +861,9 @@ public class WinBiap extends BaseApi implements OpacApi {
                     String base64 = matcher.group(1);
                     item.put(AccountData.KEY_RESERVATION_CANCEL, base64);
                 }
+            } else if (detailsTr.select("input[id*=_hiddenValueDetail][value]").size() > 0) {
+                item.put(AccountData.KEY_RESERVATION_CANCEL,
+                        detailsTr.select("input[id*=_hiddenValueDetail][value]").attr("value"));
             }
             reservations.add(item);
         }
