@@ -4,7 +4,7 @@
     "city": "Baden",
     "country": "Schweiz",
     "data": {
-        "baseurl": "http://62.2.168.69/webOPACClient.baden"
+        "baseurl": "http://opac.baden.ch/webOPACClient.baden"
     },
     "geo": [
         47.4737667,

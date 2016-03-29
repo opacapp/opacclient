@@ -4,7 +4,7 @@
     "city": "Wettingen",
     "country": "Schweiz",
     "data": {
-        "baseurl": "http://62.2.168.69/webOPACClient.wettingen",
+        "baseurl": "http://opac.baden.ch/webOPACClient.wettingen",
         "startparams": "Login=opextern"
     },
     "geo": [
