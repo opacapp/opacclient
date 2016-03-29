@@ -611,6 +611,19 @@ public class WinBiap extends BaseApi implements OpacApi {
             params.add(new BasicNameValuePair(kv.key(), kv.value()));
         }
 
+        if (lentPage.select("a[id$=ButtonBorrowChecked][href^=javascript]").size() > 0) {
+            String href =
+                    lentPage.select("a[id$=ButtonBorrowChecked][href^=javascript]").attr("href");
+            Pattern pattern = Pattern.compile("javascript:__doPostBack\\('([^,]*)','([^\\)]*)'\\)");
+            Matcher matcher = pattern.matcher(href);
+            if (!matcher.find()) {
+                return new ProlongResult(MultiStepResult.Status.ERROR,
+                        StringProvider.INTERNAL_ERROR);
+            }
+            params.add(new BasicNameValuePair("__EVENTTARGET", matcher.group(1)));
+            params.add(new BasicNameValuePair("__EVENTARGUMENT", matcher.group(2)));
+        }
+
         String html = httpPost(opac_url + "/user/borrow.aspx", new UrlEncodedFormEntity
                 (params), getDefaultEncoding());
         Document confirmationPage = Jsoup.parse(html);
