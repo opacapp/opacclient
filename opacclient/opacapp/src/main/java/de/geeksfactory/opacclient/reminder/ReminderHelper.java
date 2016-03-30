@@ -1,6 +1,7 @@
 package de.geeksfactory.opacclient.reminder;
 
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -34,16 +35,29 @@ public class ReminderHelper {
 
     /**
      * Save alarms for expiring media to the DB and schedule them using {@link
-     * android.app.AlarmManager}
+     * android.app.AlarmManager}.
      */
     public void generateAlarms() {
+        generateAlarms(-1, null);
+    }
+
+    private void generateAlarms(int warning, Boolean enabled) {
         resetNotified();
 
-        int warning = Integer.parseInt(sp.getString("notification_warning", "3"));
+        if (warning == -1) warning = Integer.parseInt(sp.getString("notification_warning", "3"));
         if (warning > 10) {
             // updated from the old app version -> change value to get days instead of milliseconds
             warning = warning / (24 * 60 * 60 * 1000);
             sp.edit().putString("notification_warning", String.valueOf(warning)).apply();
+        }
+
+        if (enabled == null) enabled = sp.getBoolean("notification_service", false);
+        if (!enabled) {
+            if (BuildConfig.DEBUG) {
+                Log.d("OpacClient",
+                        "scheduling no alarms because notifications are disabled");
+            }
+            return;
         }
 
         AccountDataSource data = new AccountDataSource(app);
@@ -92,27 +106,53 @@ public class ReminderHelper {
 
         data.close();
 
-        scheduleAlarms();
+        scheduleAlarms(enabled);
     }
 
     /**
      * Update alarms when the warning period setting is changed
+     * @param newWarning new warning period
      */
-    public void updateAlarms() {
+    public void updateAlarms(int newWarning) {
         // We could do this better, but for now, let's simply recreate all alarms. This can
         // result in some notifications being shown immediately.
+        cancelAllNotifications();
+        clearAlarms();
+        generateAlarms(newWarning, null);
+    }
+
+    /**
+     * Update alarms when notifications were enabled or disabled
+     * @param enabled Whether notification were enabled or disabled
+     */
+    public void updateAlarms(boolean enabled) {
+        cancelAllNotifications();
+        clearAlarms();
+        generateAlarms(-1, enabled);
+    }
+
+    private void clearAlarms() {
         AccountDataSource data = new AccountDataSource(app);
         data.open();
         data.clearAlarms();
         data.close();
-        generateAlarms();
+    }
+
+    private void cancelAllNotifications() {
+        NotificationManager notificationManager = (NotificationManager) app
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
     }
 
     /**
      * (re-)schedule alarms using {@link android.app.AlarmManager}
      */
     public void scheduleAlarms() {
-        if (!sp.getBoolean("notification_service", false)) return;
+        scheduleAlarms(false);
+    }
+
+    private void scheduleAlarms(boolean enabled) {
+        if (!sp.getBoolean("notification_service", false) && !enabled) return;
 
         AccountDataSource data = new AccountDataSource(app);
         AlarmManager alarmManager = (AlarmManager) app.getSystemService(Context.ALARM_SERVICE);

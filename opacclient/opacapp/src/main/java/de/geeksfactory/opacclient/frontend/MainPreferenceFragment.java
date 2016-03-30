@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceCategory;
@@ -78,15 +79,28 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
                     .removePreference(findPreference("email"));
         }
 
+        CheckBoxPreference notification =
+                (CheckBoxPreference) findPreference("notification_service");
+        notification.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                boolean enabled = (Boolean) newValue;
+                new ReminderHelper((OpacClient) getActivity().getApplication())
+                        .updateAlarms(enabled);
+                return true;
+            }
+        });
+
         ListPreference warning = (ListPreference) findPreference("notification_warning");
         warning.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 SharedPreferences prefs = PreferenceManager
                         .getDefaultSharedPreferences(getActivity());
-                /*int oldWarning = Integer.parseInt(prefs.getString("notification_warning", "3"));
-                int newWarning = Integer.parseInt((String) newValue);*/
-                new ReminderHelper((OpacClient) getActivity().getApplication()).updateAlarms();
+                //int oldWarning = Integer.parseInt(prefs.getString("notification_warning", "3"));
+                int newWarning = Integer.parseInt((String) newValue);
+                new ReminderHelper((OpacClient) getActivity().getApplication())
+                        .updateAlarms(newWarning);
                 return true;
             }
         });
