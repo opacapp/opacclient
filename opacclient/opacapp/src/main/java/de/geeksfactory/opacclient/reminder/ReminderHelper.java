@@ -106,7 +106,7 @@ public class ReminderHelper {
 
         data.close();
 
-        scheduleAlarms(enabled);
+        scheduleAlarms(true);
     }
 
     /**
@@ -182,6 +182,7 @@ public class ReminderHelper {
         return array;
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void setExact(AlarmManager am, int type, long triggerAtMillis,
             PendingIntent operation) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
