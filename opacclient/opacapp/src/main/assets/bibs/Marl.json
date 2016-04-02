@@ -6,9 +6,9 @@
     "data": {
         "accounttable": {
             "author": 0,
-            "homebranch": 3,
-            "lendingbranch": 3,
-            "prolongurl": 4,
+            "homebranch": -1,
+            "lendingbranch": -1,
+            "prolongurl": 3,
             "returndate": 2,
             "title": 1
         },
