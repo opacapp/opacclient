@@ -111,7 +111,7 @@ public class HttpClientFactory {
                     trust_store = getKeyStore();
                 }
                 SSLConnectionSocketFactory sf =
-                        AdditionalKeyStoresSSLSocketFactory.create(trust_store, true,
+                        AdditionalKeyStoresSSLSocketFactory.create(trust_store,
                                 getSocketFactoryClass(tls_only));
 
                 Registry<ConnectionSocketFactory> registry =
