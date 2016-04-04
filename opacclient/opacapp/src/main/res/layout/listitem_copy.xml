@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:autoLink="web"
             android:contentDescription="@string/url"
-            android:drawableLeft="@drawable/ic_url"
+            android:drawableLeft="@drawable/ic_url_selector"
             android:drawablePadding="4dp"
             android:ellipsize="end"
             android:gravity="center_vertical"
