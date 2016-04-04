@@ -10,9 +10,12 @@ import org.junit.runners.Parameterized;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.LentItem;
+import de.geeksfactory.opacclient.objects.ReservedItem;
+
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(Parameterized.class)
 public class BiBer1992AccountTest extends BaseAccountTest {
@@ -50,11 +53,9 @@ public class BiBer1992AccountTest extends BaseAccountTest {
         }
         json.put("accounttable", accounttable);
         if (html == null) return; // we may not have all files for all libraries
-        List<Map<String, String>> media =
-                BiBer1992.parseMediaList(new AccountData(0), Jsoup.parse(html), json);
-        for (Map<String, String> item : media) {
-            assertContainsData(item, AccountData.KEY_LENT_DEADLINE);
-            assertContainsData(item, AccountData.KEY_LENT_DEADLINE_TIMESTAMP);
+        List<LentItem> media = BiBer1992.parseMediaList(new AccountData(0), Jsoup.parse(html), json);
+        for (LentItem item : media) {
+            assertNotNull(item.getDeadline());
         }
     }
 
@@ -62,7 +63,6 @@ public class BiBer1992AccountTest extends BaseAccountTest {
     public void testParseResList() throws OpacApi.OpacErrorException, JSONException {
         String html = readResource("/biber1992/reslist/" + file);
         if (html == null) return; // we may not have all files for all libraries
-        List<Map<String, String>> media =
-                BiBer1992.parseResList(Jsoup.parse(html), new JSONObject());
+        List<ReservedItem> media = BiBer1992.parseResList(Jsoup.parse(html), new JSONObject());
     }
 }

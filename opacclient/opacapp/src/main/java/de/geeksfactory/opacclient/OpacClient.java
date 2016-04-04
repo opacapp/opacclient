@@ -18,6 +18,14 @@
  */
 package de.geeksfactory.opacclient;
 
+import com.commonsware.cwac.wakeful.WakefulIntentService;
+
+import org.acra.ACRA;
+import org.acra.ACRAConfiguration;
+import org.acra.annotation.ReportsCrashes;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
@@ -32,12 +40,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
-
-import org.acra.ACRA;
-import org.acra.ACRAConfiguration;
-import org.acra.annotation.ReportsCrashes;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -59,6 +61,7 @@ import de.geeksfactory.opacclient.i18n.AndroidStringProvider;
 import de.geeksfactory.opacclient.networking.AndroidHttpClientFactory;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.reminder.SyncAccountAlarmListener;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
@@ -360,6 +363,9 @@ public class OpacClient extends Application {
         } catch (NameNotFoundException e) {
             e.printStackTrace();
         }
+
+        // Schedule alarms
+        WakefulIntentService.scheduleAlarms(new SyncAccountAlarmListener(), this);
     }
 
     public boolean getSlidingMenuEnabled() {

@@ -59,18 +59,12 @@
     <string name="notification_service">Expiring items</string>
     <string name="notification_service_desc">Notify, if an item is about to expire (no warranties given)</string>
     <string name="notification_service_wifionly">Check on WiFi only</string>
-    <string name="notification_service_wifionly_desc">Does not download information over mobile networks. (Therefore, no warnings without WiFi!)</string>
+    <string name="notification_service_wifionly_desc">Does not download information over mobile networks. You might miss some notifications if you go without WiFi for a longer time.</string>
     <string-array name="warning">
         <item>Same day</item>
         <item>1 day before</item>
         <item>3 days before</item>
         <item>1 week before</item>
-    </string-array>
-    <string-array name="warning_n">
-        <item>86400000</item>
-        <item>172800000</item>
-        <item>259200000</item>
-        <item>604800000</item>
     </string-array>
     <string name="startup_title">Start screen</string>
     <string name="startup_summary">Which screen should be shown on startup?</string>
@@ -90,6 +84,11 @@
     <string name="notification_warning_desc">How long before the due date should a notification be shown?</string>
     <string name="notif_ticker">%s items are about to expire!</string>
     <string name="notif_title">Items are about to expire</string>
+    <string name="notif_ticker_expired">%s items have expired!</string>
+    <string name="notif_title_expired">Items have expired</string>
+    <string name="notif_plus_more">+%d more</string>
+    <string name="notif_snooze">Later</string>
+    <string name="notif_dont_remind_again">Discard</string>
     <string name="volumes">Volumes</string>
     <string name="volumesearch">Show volumes</string>
     <string name="star">Save to favorites</string>
@@ -194,7 +193,6 @@
     <string name="select_mail_app">Select mail app…</string>
     <string name="search_libraries_hint">Search library…</string>
     <string name="action_search">Search</string>
-    <string name="snooze">Remind me again tomorrow</string>
     <string name="expand">Show more search fields</string>
     <string name="collapse">Show less search fields</string>
     <string name="interested_to_help">I\'m interested in helping</string>
@@ -258,4 +256,5 @@
         fees.</string>
     <string name="do_not_ask_again">Do not show again</string>
     <string name="reservation_fee_continue">Continue</string>
+    <string name="notification_repeat">Repeat notifications</string>
 </resources>

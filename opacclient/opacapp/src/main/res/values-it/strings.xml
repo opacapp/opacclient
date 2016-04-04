@@ -59,18 +59,12 @@
     <string name="notification_service">Prestiti in scadenza</string>
     <string name="notification_service_desc">Mostra un promemoria quando un prestito sta per scadere (non garantito)</string>
     <string name="notification_service_wifionly">Utilizza solo Wi-Fi</string>
-    <string name="notification_service_wifionly_desc">Quando lo smartphone è connesso ad una rete dati mobile nessuna informazione verrà scaricata. In questo caso non verranno ricevute neanche le notifiche!</string>
+    <string name="notification_service_wifionly_desc">Quando lo smartphone è connesso ad una rete dati mobile nessuna informazione verrà scaricata.</string>
     <string-array name="warning">
         <item>Il giorno stesso</item>
         <item>Il giorno precedente</item>
         <item>3 giorni prima</item>
         <item>1 settimana prima</item>
-    </string-array>
-    <string-array name="warning_n">
-        <item>86400000</item>
-        <item>172800000</item>
-        <item>259200000</item>
-        <item>604800000</item>
     </string-array>
     <string name="startup_title">Pagina iniziale</string>
     <string name="startup_summary">Quale pagina vuoi che venga visualizzata all\'avvio?</string>
@@ -192,7 +186,6 @@
     <string name="select_mail_app">Seleziona applicazione per e-mail…</string>
     <string name="search_libraries_hint">Cerca biblioteca…</string>
     <string name="action_search">Cerca</string>
-    <string name="snooze">Ricordami domani</string>
     <string name="expand">Mostra ricerca avanzata</string>
     <string name="collapse">Mostra ricerca semplificata</string>
     <string name="interested_to_help">Vorrei contribuire al progetto.</string>

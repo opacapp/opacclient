@@ -19,8 +19,6 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -46,7 +44,9 @@ import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Filter.Option;
+import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.objects.ReservedItem;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
@@ -1171,12 +1171,12 @@ public class Adis extends BaseApi implements OpacApi {
                 adata.setValidUntil(tr.child(1).text().trim());
             }
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
 
         // Ausleihen
         String alink = null;
         int anum = 0;
-        List<Map<String, String>> lent = new ArrayList<>();
+        List<LentItem> lent = new ArrayList<>();
         for (Element tr : doc.select(".rTable_div tr")) {
             if (tr.select("a").size() == 1) {
                 if (tr.select("a").first().absUrl("href").contains("sp=SZA")) {
@@ -1210,9 +1210,8 @@ public class Adis extends BaseApi implements OpacApi {
                 adoc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
             }
             for (Element tr : adoc.select(".rTable_div tbody tr")) {
-                Map<String, String> line = new HashMap<>();
-                String text = Jsoup.parse(
-                        tr.child(3).html().replaceAll("(?i)<br[^>]*>", "#"))
+                LentItem item = new LentItem();
+                String text = Jsoup.parse(tr.child(3).html().replaceAll("(?i)<br[^>]*>", "#"))
                                    .text();
                 if (text.contains(" / ")) {
                     // Format "Titel / Autor #Sig#Nr", z.B. normale Ausleihe in Berlin
@@ -1221,38 +1220,30 @@ public class Adis extends BaseApi implements OpacApi {
                     if (split_title_author) {
                         title = title.replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1");
                     }
-                    line.put(AccountData.KEY_LENT_TITLE, title.trim());
+                    item.setTitle(title.trim());
                     if (split.length > 1) {
-                        line.put(AccountData.KEY_LENT_AUTHOR,
-                                split[1].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
+                        item.setAuthor(split[1].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
                     }
                 } else {
                     // Format "Autor: Titel - Verlag - ISBN:... #Nummer", z.B. Fernleihe in Berlin
                     String[] split = text.split("#");
                     String[] aut_tit = split[0].split(": ");
-                    line.put(AccountData.KEY_LENT_AUTHOR,
-                            aut_tit[0].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
+                    item.setAuthor(aut_tit[0].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
                     if (aut_tit.length > 1) {
-                        line.put(AccountData.KEY_LENT_TITLE,
+                        item.setTitle(
                                 aut_tit[1].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
                     }
                 }
-                line.put(AccountData.KEY_LENT_DEADLINE, tr.child(1).text()
-                                                          .trim());
+                String date = tr.child(1).text().trim();
                 try {
-                    line.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String
-                            .valueOf(sdf.parse(tr.child(1).text().trim())
-                                        .getTime()));
-                } catch (ParseException e) {
+                    item.setDeadline(fmt.parseLocalDate(date));
+                } catch (IllegalArgumentException e) {
                     e.printStackTrace();
                 }
-                line.put(AccountData.KEY_LENT_BRANCH, tr.child(2).text().trim());
-                line.put(AccountData.KEY_LENT_LINK,
-                        tr.select("input[type=checkbox]").attr("name") + "|"
-                                + alink);
-                // line.put(AccountData.KEY_LENT_RENEWABLE, tr.child(4).text()
-                // .matches(".*nicht verl.+ngerbar.*") ? "N" : "Y");
-                lent.add(line);
+                item.setHomeBranch(tr.child(2).text().trim());
+                item.setProlongData(tr.select("input[type=checkbox]").attr("name") + "|" + alink);
+                // item.setRenewable(tr.child(4).text().matches(".*nicht verl.+ngerbar.*"));
+                lent.add(item);
             }
             assert (lent.size() == anum);
             form = new ArrayList<>();
@@ -1276,7 +1267,7 @@ public class Adis extends BaseApi implements OpacApi {
 
         List<String[]> rlinks = new ArrayList<>();
         int rnum = 0;
-        List<Map<String, String>> res = new ArrayList<>();
+        List<ReservedItem> res = new ArrayList<>();
         for (Element tr : doc.select(".rTable_div tr")) {
             if (tr.select("a").size() == 1) {
                 if ((tr.text().contains("Reservationen")
@@ -1301,46 +1292,40 @@ public class Adis extends BaseApi implements OpacApi {
             boolean stacks = rdoc.html().contains("aus dem Magazin");
             boolean provision = rdoc.html().contains("Ihre Bereitstellung");
             Map<String, Integer> colmap = new HashMap<>();
-            colmap.put(AccountData.KEY_RESERVATION_TITLE, 2);
-            colmap.put(AccountData.KEY_RESERVATION_BRANCH, 1);
-            colmap.put(AccountData.KEY_RESERVATION_EXPIRE, 0);
+            colmap.put("title", 2);
+            colmap.put("branch", 1);
+            colmap.put("expirationdate", 0);
             int i = 0;
             for (Element th : rdoc.select(".rTable_div thead tr th")) {
                 if (th.text().contains("Bis")) {
-                    colmap.put(AccountData.KEY_RESERVATION_EXPIRE, i);
+                    colmap.put("expirationdate", i);
                 }
                 if (th.text().contains("Ausgabeort")) {
-                    colmap.put(AccountData.KEY_RESERVATION_BRANCH, i);
+                    colmap.put("branch", i);
                 }
                 if (th.text().contains("Titel")) {
-                    colmap.put(AccountData.KEY_RESERVATION_TITLE, i);
+                    colmap.put("title", i);
                 }
                 i++;
 
             }
             for (Element tr : rdoc.select(".rTable_div tbody tr")) {
                 if (tr.children().size() >= 4) {
-                    Map<String, String> line = new HashMap<>();
-                    String text = tr.child(
-                            colmap.get(AccountData.KEY_RESERVATION_TITLE))
-                                    .html();
-                    text = Jsoup.parse(text.replaceAll("(?i)<br[^>]*>", ";"))
-                                .text();
+                    ReservedItem item = new ReservedItem();
+                    String text = tr.child(colmap.get("title")).html();
+                    text = Jsoup.parse(text.replaceAll("(?i)<br[^>]*>", ";")).text();
                     if (split_title_author) {
                         String[] split = text.split("[:/;\n]");
-                        line.put(AccountData.KEY_RESERVATION_TITLE, split[0]
-                                .replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
+                        item.setTitle(split[0].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
                         if (split.length > 1) {
-                            line.put(AccountData.KEY_RESERVATION_AUTHOR, split[1]
-                                    .replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1")
-                                    .trim());
+                            item.setAuthor(
+                                    split[1].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
                         }
                     } else {
-                        line.put(AccountData.KEY_RESERVATION_TITLE, text);
+                        item.setTitle(text);
                     }
 
-                    String branch = tr.child(colmap.get(AccountData.KEY_RESERVATION_BRANCH))
-                                      .text().trim();
+                    String branch = tr.child(colmap.get("branch")).text().trim();
                     if (interlib) {
                         branch = stringProvider
                                 .getFormattedString(StringProvider.INTERLIB_BRANCH, branch);
@@ -1351,17 +1336,15 @@ public class Adis extends BaseApi implements OpacApi {
                         branch = stringProvider
                                 .getFormattedString(StringProvider.PROVISION_BRANCH, branch);
                     }
-                    line.put(AccountData.KEY_RESERVATION_BRANCH, branch);
+                    item.setBranch(branch);
 
                     if (rlink[0].contains("Abholbereit")) {
                         // Abholbereite Bestellungen
-                        line.put(AccountData.KEY_RESERVATION_READY, "bereit");
+                        item.setStatus("bereit");
                         if (tr.child(0).text().trim().length() >= 10) {
-                            line.put(
-                                    AccountData.KEY_RESERVATION_EXPIRE,
-                                    tr.child(
-                                            colmap.get(AccountData.KEY_RESERVATION_EXPIRE))
-                                      .text().trim().substring(0, 10));
+                            item.setExpirationDate(fmt.parseLocalDate(
+                                    tr.child(colmap.get("expirationdate")).text().trim()
+                                      .substring(0, 10)));
                         }
                     } else {
                         // Nicht abholbereite
@@ -1370,13 +1353,12 @@ public class Adis extends BaseApi implements OpacApi {
                                 "SP=SZM") || rlink[1].toUpperCase(
                                 Locale.GERMAN).contains("SP=SZW") || rlink[1].toUpperCase(
                                 Locale.GERMAN).contains("SP=SZB"))) {
-                            line.put(AccountData.KEY_RESERVATION_CANCEL, tr
-                                    .select("input[type=checkbox]")
-                                    .attr("name")
-                                    + "|" + rlink[1]);
+                            item.setCancelData(
+                                    tr.select("input[type=checkbox]").attr("name") + "|" +
+                                            rlink[1]);
                         }
                     }
-                    res.add(line);
+                    res.add(item);
                 } else {
                     // This is a strange bug where sometimes there is only three
                     // columns

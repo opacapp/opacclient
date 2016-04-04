@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -27,6 +28,9 @@ import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.barcode.BarcodeScanIntegrator;
 import de.geeksfactory.opacclient.objects.Account;
+import de.geeksfactory.opacclient.objects.LentItem;
+import de.geeksfactory.opacclient.reminder.Alarm;
+import de.geeksfactory.opacclient.reminder.ReminderBroadcastReceiver;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
@@ -105,6 +109,34 @@ public class MainActivity extends OpacActivity
         if (savedInstanceState == null) {
             if (getIntent().hasExtra(EXTRA_FRAGMENT)) {
                 selectItem(getIntent().getStringExtra(EXTRA_FRAGMENT));
+            } else if (getIntent().hasExtra(ReminderBroadcastReceiver.EXTRA_ALARM_ID)) {
+                AccountDataSource adata = new AccountDataSource(this);
+                adata.open();
+                Alarm alarm = adata.getAlarm(
+                        getIntent().getLongExtra(ReminderBroadcastReceiver.EXTRA_ALARM_ID, -1));
+                List<LentItem> items = adata.getLentItems(alarm.media);
+                if (items.size() > 0) {
+                    long firstAccount = items.get(0).getAccount();
+                    boolean multipleAccounts = false;
+                    for (LentItem item : items) {
+                        if (item.getAccount() != firstAccount) {
+                            multipleAccounts = true;
+                            break;
+                        }
+                    }
+                    if (multipleAccounts) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                drawerLayout.openDrawer(drawer);
+                            }
+                        }, 500);
+                    } else {
+                        selectaccount(firstAccount);
+                        selectItem("account");
+                    }
+                }
+                adata.close();
             } else if (sp.contains("startup_fragment")) {
                 selectItem(sp.getString("startup_fragment", "search"));
             } else {

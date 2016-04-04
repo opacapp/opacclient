@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <uses-feature
         android:name="android.hardware.nfc"
@@ -25,8 +26,8 @@
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Opacapp.NoActionBar"
-        android:supportsRtl="false">
+        android:supportsRtl="false"
+        android:theme="@style/Theme.Opacapp.NoActionBar">
     <activity
             android:name="de.geeksfactory.opacclient.frontend.MainActivity"
             android:label="@string/launcher_name"
@@ -54,8 +55,8 @@
         </activity>
         <activity
             android:name="de.geeksfactory.opacclient.frontend.AccountEditActivity"
-            android:theme="@style/Theme.Opacapp.Floating"
-            android:label="@string/accounts_edit">
+            android:label="@string/accounts_edit"
+            android:theme="@style/Theme.Opacapp.Floating">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.geeksfactory.opacclient.frontend.AccountListActivity" />
@@ -126,8 +127,8 @@
         </activity>
         <activity
             android:name="de.geeksfactory.opacclient.frontend.SuggestLibraryActivity"
-            android:theme="@style/Theme.Opacapp.Floating"
-            android:label="@string/title_activity_suggest_library" >
+            android:label="@string/title_activity_suggest_library"
+            android:theme="@style/Theme.Opacapp.Floating">
         	<meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.geeksfactory.opacclient.frontend.LibraryListActivity" />
@@ -138,17 +139,32 @@
             android:finishOnTaskLaunch="true"
             android:launchMode="singleInstance"
             android:theme="@style/Theme.AppCompat.Light.Dialog" />
+        <activity
+            android:name="de.geeksfactory.opacclient.frontend.SnoozeDatePickerActivity"
+            android:theme="@style/Theme.Opacapp.Transparent" />
 
-        <service android:name="de.geeksfactory.opacclient.reminder.ReminderCheckService" >
+        <service android:name="de.geeksfactory.opacclient.reminder.SyncAccountService">
         </service>
 
-        <receiver android:name="de.geeksfactory.opacclient.reminder.ReminderBootBroadcastReceiver" >
+        <receiver
+            android:name="de.geeksfactory.opacclient.reminder.ReminderBootBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="com.commonsware.cwac.wakeful.AlarmReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
+
+            <meta-data
+                android:name="com.commonsware.cwac.wakeful"
+                android:resource="@xml/wakefulintentservice" />
         </receiver>
-        <receiver android:name="de.geeksfactory.opacclient.reminder.ReminderAlarmReceiver" >
-        </receiver>
+
+        <receiver android:name="de.geeksfactory.opacclient.reminder.ReminderBroadcastReceiver" />
 
         <provider
             android:name="de.geeksfactory.opacclient.storage.StarContentProvider"

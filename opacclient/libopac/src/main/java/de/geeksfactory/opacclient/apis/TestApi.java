@@ -1,10 +1,10 @@
 package de.geeksfactory.opacclient.apis;
 
+import org.joda.time.LocalDate;
 import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -16,7 +16,9 @@ import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
+import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.objects.ReservedItem;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.searchfields.SearchField;
@@ -162,20 +164,25 @@ public class TestApi implements OpacApi {
     public AccountData account(Account account)
             throws IOException, JSONException, OpacErrorException {
         AccountData data = new AccountData(account.getId());
-        List<Map<String, String>> lent = new ArrayList<>();
-        List<Map<String, String>> reservations = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            Map<String, String> lentItem = new HashMap<>();
-            lentItem.put(AccountData.KEY_LENT_AUTHOR, "Max Mustermann");
-            lentItem.put(AccountData.KEY_LENT_TITLE, "Lorem Ipsum");
-            lentItem.put(AccountData.KEY_LENT_STATUS, "hier ist der Status");
+        List<LentItem> lent = new ArrayList<>();
+        List<ReservedItem> reservations = new ArrayList<>();
+        for (int i = 0; i < 6; i++) {
+            LentItem lentItem = new LentItem();
+            lentItem.setAuthor("Max Mustermann");
+            lentItem.setTitle("Lorem Ipsum");
+            lentItem.setStatus("hier ist der Status");
+            lentItem.setDeadline(new LocalDate(1442564454547L));
+            lentItem.setRenewable(false);
+            lentItem.setHomeBranch("Meine Zweigstelle");
+            lentItem.setLendingBranch("Ausleihzweigstelle");
+            lentItem.setBarcode("Barcode");
             lent.add(lentItem);
 
-            Map<String, String> reservationItem = new HashMap<>();
-            reservationItem.put(AccountData.KEY_RESERVATION_AUTHOR, "Max Mustermann");
-            reservationItem.put(AccountData.KEY_RESERVATION_TITLE, "Lorem Ipsum");
-            reservationItem.put(AccountData.KEY_RESERVATION_READY, "heute");
-            reservations.add(reservationItem);
+            ReservedItem reservedItem = new ReservedItem();
+            reservedItem.setAuthor("Max Mustermann");
+            reservedItem.setTitle("Lorem Ipsum");
+            reservedItem.setReadyDate(LocalDate.now());
+            reservations.add(reservedItem);
         }
         data.setLent(lent);
         data.setReservations(reservations);

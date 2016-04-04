@@ -59,18 +59,12 @@
     <string name="notification_service">Ablaufende Medien</string>
     <string name="notification_service_desc">Benachrichtigung, wenn ein Medium abgegeben werden muss (keine Garantie)</string>
     <string name="notification_service_wifionly">Nur über WLAN</string>
-    <string name="notification_service_wifionly_desc">Ruft keine Infos ab, wenn das Gerät mobiles Datennetz benutzt. Dadurch gibt es in diesem Zeitraum auch keine Warnungen!</string>
+    <string name="notification_service_wifionly_desc">Ruft keine Infos ab, wenn das Gerät mobiles Datennetz benutzt. Wenn lange keine WLAN-Verbindung verfügbar ist, erscheinen eventuell keine Benachrichtigungen.</string>
     <string-array name="warning">
         <item>Am selben Tag</item>
         <item>1 Tag vorher</item>
         <item>3 Tage vorher</item>
         <item>1 Woche vorher</item>
-    </string-array>
-    <string-array name="warning_n">
-        <item>86400000</item>
-        <item>172800000</item>
-        <item>259200000</item>
-        <item>604800000</item>
     </string-array>
     <string name="startup_title">Startbildschirm</string>
     <string name="startup_summary">Welcher Bildschirm soll beim Start der App angezeigt werden?</string>
@@ -90,6 +84,11 @@
     <string name="notification_warning_desc">Wie lange vorher soll benachrichtigt werden?</string>
     <string name="notif_ticker">%s Bücher müssen abgegeben oder verlängert werden!</string>
     <string name="notif_title">Bücher laufen ab</string>
+    <string name="notif_ticker_expired">%s Bücher sind bereits abgelaufen!</string>
+    <string name="notif_title_expired">Bücher sind abgelaufen</string>
+    <string name="notif_plus_more">+%d weitere</string>
+    <string name="notif_snooze">Später</string>
+    <string name="notif_dont_remind_again">Verwerfen</string>
     <string name="volumes">Enthaltene Werke</string>
     <string name="volumesearch">Enthaltene Werke zeigen</string>
     <string name="star">Merken</string>
@@ -194,7 +193,6 @@
     <string name="select_mail_app">E-Mail-App auswählen…</string>
     <string name="search_libraries_hint">Bibliothek suchen…</string>
     <string name="action_search">Suchen</string>
-    <string name="snooze">Morgen erneut erinnern</string>
     <string name="expand">Mehr Suchfelder anzeigen</string>
     <string name="collapse">Weniger Suchfelder anzeigen</string>
     <string name="interested_to_help">Ich bin interessiert zu helfen.</string>
@@ -261,4 +259,5 @@
         Bibliothek.</string>
     <string name="do_not_ask_again">Nicht noch einmal anzeigen</string>
     <string name="reservation_fee_continue">Weiter</string>
+    <string name="notification_repeat">Benachrichtigungen wiederholen</string>
 </resources>

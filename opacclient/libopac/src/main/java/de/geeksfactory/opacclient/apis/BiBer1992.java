@@ -34,8 +34,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -57,7 +55,9 @@ import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Filter.Option;
+import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.objects.ReservedItem;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
@@ -74,14 +74,14 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
 public class BiBer1992 extends BaseApi {
 
     protected static HashMap<String, MediaType> defaulttypes = new HashMap<>();
-    // we have to limit num of results because PUSH attribute SHOW=20 does not work:
-    // number of results is always 50 which is too much
-    final private int numOfResultsPerPage = 20;
-    protected boolean newStyleReservations = false;
 
     static {
     }
 
+    // we have to limit num of results because PUSH attribute SHOW=20 does not work:
+    // number of results is always 50 which is too much
+    final private int numOfResultsPerPage = 20;
+    protected boolean newStyleReservations = false;
     private String opacUrl = "";
     private String opacDir = "opac"; // sometimes also "opax"
     private String opacSuffix = ".C"; // sometimes also ".S"
@@ -954,29 +954,27 @@ public class BiBer1992 extends BaseApi {
         AccountData res = new AccountData(account.getId());
 
         // get media
-        List<Map<String, String>> media = accountGetMedia(account, res);
+        List<LentItem> media = accountGetMedia(account, res);
         res.setLent(media);
 
         // get reservations
-        List<Map<String, String>> reservations = accountGetReservations(account);
+        List<ReservedItem> reservations = accountGetReservations(account);
         res.setReservations(reservations);
 
         return res;
     }
 
-    private List<Map<String, String>> accountGetMedia(Account account,
-            AccountData res) throws IOException, JSONException,
+    private List<LentItem> accountGetMedia(Account account, AccountData res) throws IOException, JSONException,
             OpacErrorException {
-
         // get media list via http POST
         Document doc = accountHttpPost(account, "medk");
 
         return parseMediaList(res, doc, data);
     }
 
-    static List<Map<String, String>> parseMediaList(AccountData res, Document doc,
+    static List<LentItem> parseMediaList(AccountData res, Document doc,
             JSONObject data) throws JSONException {
-        List<Map<String, String>> media = new ArrayList<>();
+        List<LentItem> media = new ArrayList<>();
         if (doc == null) {
             return media;
         }
@@ -994,7 +992,7 @@ public class BiBer1992 extends BaseApi {
                 res.setPendingFees(text);
             }
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
         Elements rowElements = doc.select("form[name=medkl] table tr");
 
         // rows: skip 1st row -> title row
@@ -1003,7 +1001,7 @@ public class BiBer1992 extends BaseApi {
             if (tr.child(0).tagName().equals("th")) {
                 continue;
             }
-            Map<String, String> e = new HashMap<>();
+            LentItem item = new LentItem();
 
             Pattern itemIdPat = Pattern
                     .compile("javascript:smAcc\\('[a-z]+','[a-z]+','([A-Za-z0-9]+)'\\)");
@@ -1020,61 +1018,52 @@ public class BiBer1992 extends BaseApi {
                 if (index >= 0) {
                     String value = tr.child(index).text().trim();
 
-                    if (key.equals(AccountData.KEY_LENT_AUTHOR)) {
-                        value = findTitleAndAuthor(value)[1];
-                    } else if (key.equals(AccountData.KEY_LENT_TITLE)) {
-                        value = findTitleAndAuthor(value)[0];
+                    switch (key) {
+                        case "author":
+                            value = findTitleAndAuthor(value)[1];
+                            break;
+                        case "title":
+                            value = findTitleAndAuthor(value)[0];
+                            break;
+                        case "returndate":
+                            try {
+                                value = fmt.parseLocalDate(value).toString();
+                            } catch (IllegalArgumentException e1) {
+                                e1.printStackTrace();
+                            }
+                            break;
                     }
 
                     if (tr.child(index).select("a").size() == 1) {
                         Matcher matcher = itemIdPat.matcher(tr.child(index)
                                                               .select("a").attr("href"));
-                        if (matcher.find()) {
-                            e.put(AccountData.KEY_LENT_ID, matcher.group(1));
-                        }
+                        if (matcher.find()) item.setId(matcher.group(1));
                     }
 
-                    if (value != null && value.length() != 0) {
-                        e.put(key, value);
-                    }
+                    if (value != null && value.length() != 0) item.set(key, value);
                 }
             }
 
             if (tr.select("input[type=checkbox][value=YES]").size() > 0) {
-                e.put(AccountData.KEY_LENT_LINK,
-                        tr.select("input[type=checkbox][value=YES]").attr(
-                                "name"));
+                item.setProlongData(tr.select("input[type=checkbox][value=YES]").attr("name"));
             }
 
-            // calculate lent timestamp for notification purpose
-            if (e.containsKey(AccountData.KEY_LENT_DEADLINE)) {
-                try {
-                    e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String
-                            .valueOf(sdf.parse(
-                                    e.get(AccountData.KEY_LENT_DEADLINE))
-                                        .getTime()));
-                } catch (ParseException e1) {
-                    e1.printStackTrace();
-                }
-            }
-
-            media.add(e);
+            media.add(item);
         }
         return media;
     }
 
-    private List<Map<String, String>> accountGetReservations(Account account)
+    private List<ReservedItem> accountGetReservations(Account account)
             throws IOException, JSONException, OpacErrorException {
-
         // get reservations list via http POST
         Document doc = accountHttpPost(account, "vorm");
 
         return parseResList(doc, data);
     }
 
-    static List<Map<String, String>> parseResList(Document doc, JSONObject data)
+    static List<ReservedItem> parseResList(Document doc, JSONObject data)
             throws JSONException {
-        List<Map<String, String>> reservations = new ArrayList<>();
+        List<ReservedItem> reservations = new ArrayList<>();
         if (doc == null) {
             // error message as html result
             return reservations;
@@ -1095,6 +1084,8 @@ public class BiBer1992 extends BaseApi {
         } else {
             copymap = data.getJSONObject("reservationtable");
         }
+
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
         Elements rowElements = doc.select("form[name=vorml] table tr");
 
         // rows: skip 1st row -> title row
@@ -1103,10 +1094,9 @@ public class BiBer1992 extends BaseApi {
             if (tr.child(0).tagName().equals("th")) {
                 continue;
             }
-            Map<String, String> e = new HashMap<>();
+            ReservedItem item = new ReservedItem();
 
-            e.put(AccountData.KEY_RESERVATION_CANCEL,
-                    tr.select("input[type=checkbox]").attr("name"));
+            item.setCancelData(tr.select("input[type=checkbox]").attr("name"));
 
             // columns: all elements of one media
             Iterator<?> keys = copymap.keys();
@@ -1116,18 +1106,36 @@ public class BiBer1992 extends BaseApi {
                 if (index >= 0) {
                     String value = tr.child(index).text().trim();
 
-                    if (key.equals(AccountData.KEY_LENT_AUTHOR)) {
-                        value = findTitleAndAuthor(value)[1];
-                    } else if (key.equals(AccountData.KEY_LENT_TITLE)) {
-                        value = findTitleAndAuthor(value)[0];
+                    switch (key) {
+                        case "author":
+                            value = findTitleAndAuthor(value)[1];
+                            break;
+                        case "title":
+                            value = findTitleAndAuthor(value)[0];
+                            break;
+                        case "availability":
+                            try {
+                                value = fmt.parseLocalDate(value).toString();
+                            } catch (IllegalArgumentException e1) {
+                                key = "status";
+                            }
+                            break;
+                        case "expirationdate":
+                            try {
+                                value = fmt.parseLocalDate(value).toString();
+                            } catch (IllegalArgumentException e1) {
+                                key = "status";
+                            }
+                            break;
                     }
+
                     if (value != null && value.length() != 0) {
-                        e.put(key, value);
+                        item.set(key, value);
                     }
 
                 }
             }
-            reservations.add(e);
+            reservations.add(item);
         }
         return reservations;
     }

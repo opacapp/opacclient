@@ -44,8 +44,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -66,7 +64,9 @@ import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Filter.Option;
+import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.objects.ReservedItem;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
@@ -1003,7 +1003,7 @@ public class Bibliotheca extends BaseApi {
 
         JSONObject copymap = data.getJSONObject("accounttable");
 
-        List<Map<String, String>> media = new ArrayList<>();
+        List<LentItem> media = new ArrayList<>();
 
         if (doc.select(".kontozeile_center table").size() == 0) {
             return null;
@@ -1012,11 +1012,11 @@ public class Bibliotheca extends BaseApi {
         Elements exemplartrs = doc.select(".kontozeile_center table").get(0)
                                   .select("tr.tabKonto");
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
 
         for (int i = 0; i < exemplartrs.size(); i++) {
             Element tr = exemplartrs.get(i);
-            Map<String, String> e = new HashMap<>();
+            LentItem item = new LentItem();
 
             Iterator<?> keys = copymap.keys();
             while (keys.hasNext()) {
@@ -1028,30 +1028,25 @@ public class Bibliotheca extends BaseApi {
                     index = -1;
                 }
                 if (index >= 0) {
-                    if (key.equals(AccountData.KEY_LENT_LINK)) {
+                    if (key.equals("prolongurl")) {
                         if (tr.child(index).children().size() > 0) {
-                            e.put(key, tr.child(index).child(0).attr("href"));
-                            e.put(AccountData.KEY_LENT_RENEWABLE,
-                                    tr.child(index).child(0).attr("href")
-                                      .contains("vermsg") ? "N" : "Y");
+                            item.setProlongData(tr.child(index).child(0).attr("href"));
+                            item.setRenewable(
+                                    tr.child(index).child(0).attr("href").contains("vermsg"));
+                        }
+                    } else if (key.equals("deadline")) {
+                        try {
+                            item.setDeadline(fmt.parseLocalDate(tr.child(index).text()));
+                        } catch (IllegalArgumentException e1) {
+                            e1.printStackTrace();
                         }
                     } else {
-                        e.put(key, tr.child(index).text());
+                        item.set(key, tr.child(index).text());
                     }
                 }
             }
 
-            if (e.containsKey(AccountData.KEY_LENT_DEADLINE)) {
-                try {
-                    e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String
-                            .valueOf(sdf.parse(
-                                    e.get(AccountData.KEY_LENT_DEADLINE))
-                                        .getTime()));
-                } catch (ParseException e1) {
-                    e1.printStackTrace();
-                }
-            }
-            media.add(e);
+            media.add(item);
         }
         assert (doc.select(".kontozeile_center table").get(0).select("tr")
                    .size() > 0);
@@ -1059,12 +1054,12 @@ public class Bibliotheca extends BaseApi {
 
         copymap = data.getJSONObject("reservationtable");
 
-        List<Map<String, String>> reservations = new ArrayList<>();
+        List<ReservedItem> reservations = new ArrayList<>();
         exemplartrs = doc.select(".kontozeile_center table").get(1)
                          .select("tr.tabKonto");
         for (int i = 0; i < exemplartrs.size(); i++) {
             Element tr = exemplartrs.get(i);
-            Map<String, String> e = new HashMap<>();
+            ReservedItem item = new ReservedItem();
 
             Iterator<?> keys = copymap.keys();
             while (keys.hasNext()) {
@@ -1076,17 +1071,29 @@ public class Bibliotheca extends BaseApi {
                     index = -1;
                 }
                 if (index >= 0) {
-                    if (key.equals(AccountData.KEY_RESERVATION_CANCEL)) {
+                    if (key.equals("cancelurl")) {
                         if (tr.child(index).children().size() > 0) {
-                            e.put(key, tr.child(index).child(0).attr("href"));
+                            item.setCancelData(tr.child(index).child(0).attr("href"));
+                        }
+                    } else if (key.equals("availability")) {
+                        try {
+                            item.setReadyDate(fmt.parseLocalDate(tr.child(index).text()));
+                        } catch (IllegalArgumentException e1) {
+                            item.setStatus(tr.child(index).text());
+                        }
+                    } else if (key.equals("expirationdate")) {
+                        try {
+                            item.setExpirationDate(fmt.parseLocalDate(tr.child(index).text()));
+                        } catch (IllegalArgumentException e1) {
+                            item.setStatus(tr.child(index).text());
                         }
                     } else {
-                        e.put(key, tr.child(index).text());
+                        item.set(key, tr.child(index).text());
                     }
                 }
             }
 
-            reservations.add(e);
+            reservations.add(item);
         }
         assert (doc.select(".kontozeile_center table").get(1).select("tr")
                    .size() > 0);
