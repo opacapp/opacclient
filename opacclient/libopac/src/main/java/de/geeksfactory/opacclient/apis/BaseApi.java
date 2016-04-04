@@ -75,6 +75,168 @@ public abstract class BaseApi implements OpacApi {
     protected boolean httpLoggingEnabled = true;
 
     /**
+     * Keywords to do a free search. Some APIs do support this, some don't. If supported, it must at
+     * least search in title and author field, but should also search abstract and other things.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_FREE = "free";
+
+    /**
+     * Item title to search for. Doesn't have to be the full title, can also be a substring to be
+     * searched.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_TITLE = "titel";
+
+    /**
+     * Author name to search for.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_AUTHOR = "verfasser";
+
+    /**
+     * "Keyword A". Most libraries require very special input in this field. May be only shown if
+     * "advanced fields" is set in user preferences.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_KEYWORDA = "schlag_a";
+
+    /**
+     * "Keyword B". Most libraries require very special input in this field. May be only shown if
+     * "advanced fields" is set in user preferences. Can only be set, if
+     * <code>KEY_SEARCH_QUERY_KEYWORDA</code> is set as well.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_KEYWORDB = "schlag_b";
+
+    /**
+     * Library branch to search in. The user is able to select from multiple options, generated from
+     * the MetaData you store in the MetaDataSource you get in {@link #init(Library,
+     * HttpClientFactory)}.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_BRANCH = "zweigstelle";
+
+    /**
+     * "Home" library branch. Some library systems require this information at search request time
+     * to determine where book reservations should be placed. If in doubt, don't use. Behaves
+     * similar to <code>KEY_SEARCH_QUERY_BRANCH</code> .
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_HOME_BRANCH = "homebranch";
+
+    /**
+     * An ISBN / EAN code to search for. We cannot promise whether it comes with spaces or hyphens
+     * in between but it most likely won't. If it makes a difference to you, eliminate everything
+     * except numbers and X. We also cannot say whether a ISBN10 or a ISBN13 is supplied - if
+     * relevant, check in your {@link #search(List)} implementation.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_ISBN = "isbn";
+
+    /**
+     * Year of publication. Your API can either support this or both the
+     * <code>KEY_SEARCH_QUERY_YEAR_RANGE_*</code> fields (or none of them).
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_YEAR = "jahr";
+
+    /**
+     * End of range, if year of publication can be specified as a range. Can not be combined with
+     * <code>KEY_SEARCH_QUERY_YEAR</code> but has to be combined with
+     * <code>KEY_SEARCH_QUERY_YEAR_RANGE_END</code>.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_YEAR_RANGE_START = "jahr_von";
+
+    /**
+     * Start of range, if year of publication can be specified as a range. Can not be combined with
+     * <code>KEY_SEARCH_QUERY_YEAR</code> but has to be combined with
+     * <code>KEY_SEARCH_QUERY_YEAR_RANGE_START</code>.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_YEAR_RANGE_END = "jahr_bis";
+
+    /**
+     * Systematic identification, used in some libraries. Rarely in use. May be only shown if
+     * "advanced fields" is set in user preferences.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_SYSTEM = "systematik";
+
+    /**
+     * Some libraries support a special "audience" field with specified values. Rarely in use. May
+     * be only shown if "advanced fields" is set in user preferences.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_AUDIENCE = "interessenkreis";
+
+    /**
+     * The "publisher" search field
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_PUBLISHER = "verlag";
+
+    /**
+     * Item category (like "book" or "CD"). The user is able to select from multiple options,
+     * generated from the MetaData you store in the MetaDataSource you get in {@link #init(Library,
+     * HttpClientFactory)}.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_CATEGORY = "mediengruppe";
+
+    /**
+     * Unique item identifier. In most libraries, every single book has a unique number, most of the
+     * time printed on the in form of a barcode, sometimes encoded in a NFC chip.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_BARCODE = "barcode";
+
+    /**
+     * Item location in library. Currently not in use.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_LOCATION = "location";
+
+    /**
+     * Restrict search to digital media.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_DIGITAL = "digital";
+
+    /**
+     * Restrict search to available media.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_AVAILABLE = "available";
+
+    /**
+     * Sort search results in a specific order
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_ORDER = "order";
+
+    /**
      * Cleans the parameters of a URL by parsing it manually and reformatting it using {@link
      * URLEncodedUtils#format(java.util.List, String)}
      *
