@@ -1116,8 +1116,8 @@ public class SISIS extends BaseApi implements OpacApi {
             return result;
         }
 
-        if (doc.getElementsByClass("textrot").size() >= 1) {
-            String errmsg = doc.getElementsByClass("textrot").get(0).text();
+        if (doc.select("#CirculationForm .textrot").size() >= 1) {
+            String errmsg = doc.select("#CirculationForm .textrot").get(0).text();
             if (errmsg
                     .contains("Dieses oder andere Exemplare in anderer Zweigstelle ausleihbar")) {
                 Copy best = null;
