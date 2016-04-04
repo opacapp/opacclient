@@ -24,6 +24,12 @@
       "returndate": 5,
       "status": 3,
       "signature": 1
+    },
+    "reservationtable": {
+      "author": 0,
+      "availability": 2,
+      "cancelurl": 3,
+      "title": 1
     }
   },
   "geo": [
