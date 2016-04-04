@@ -48,10 +48,7 @@ public class AccountData {
     }
 
     /**
-     * Get lent items
-     *
-     * Each <code>ContentValues</code> can contain any of the
-     * <code>KEY_LENT_*</code> constants.
+     * Get a list of items borrowed by this user.
      *
      * @return List of lent items
      * @see #setLent(List)
@@ -61,10 +58,7 @@ public class AccountData {
     }
 
     /**
-     * Set lent items
-     *
-     * Each <code>ContentValues</code> can contain any of the
-     * <code>KEY_LENT_*</code> constants.
+     * Set the list of items borrowed by this user.
      *
      * @param lent List of items, see above
      */
@@ -73,10 +67,7 @@ public class AccountData {
     }
 
     /**
-     * Get ordered/reserved items
-     *
-     * Each <code>ContentValues</code> can contain any of the
-     * <code>KEY_RESERVATION_*</code> constants.
+     * Get the list of ordered/reserved items.
      *
      * @return List of reservations
      * @see #setReservations(List)
@@ -86,10 +77,7 @@ public class AccountData {
     }
 
     /**
-     * Set ordered/reserved items
-     *
-     * Each <code>ContentValues</code> can contain any of the
-     * <code>KEY_RESERVATION_*</code> constants.
+     * Set the list of ordered/reserved items.
      *
      * @param reservations List of reservations, see above
      */
@@ -136,7 +124,7 @@ public class AccountData {
     }
 
     /**
-     * Expiration date of a library account
+     * Expiration date of a library account as a human-readable text.
      *
      * @return A date
      * @since 2.0.24

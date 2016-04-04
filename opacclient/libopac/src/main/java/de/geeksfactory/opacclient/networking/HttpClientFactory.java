@@ -35,16 +35,30 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 
+/**
+ * Utility to create a new HTTP client.
+ */
 public class HttpClientFactory {
 
     public String user_agent;
     public String ssl_store_path = "../res/raw/ssl_trust_store.bks";
     private KeyStore trust_store;
 
+    /**
+     * Initialize a new client factory.
+     *
+     * @param user_agent The User-Agent header to be sent.
+     */
     public HttpClientFactory(String user_agent) {
         this.user_agent = user_agent;
     }
 
+    /**
+     * Initialize a new client factory with an additional key store to trust for SSL connections.
+     *
+     * @param user_agent     The User-Agent header to be sent.
+     * @param ssl_store_path The path to the .bks store
+     */
     public HttpClientFactory(String user_agent, String ssl_store_path) {
         this.user_agent = user_agent;
         this.ssl_store_path = ssl_store_path;
@@ -72,6 +86,14 @@ public class HttpClientFactory {
         return null;
     }
 
+    /**
+     * Create a new HttpClient.
+     *
+     * @param tls_only If this is true, only TLS v1 and newer will be used, SSLv3 will be disabled.
+     *                 We highly recommend to set this to true, if possible. This is currently a
+     *                 no-op on the default implementation and only used in the Android
+     *                 implementation!
+     */
     public HttpClient getNewApacheHttpClient(boolean customssl, boolean tls_only,
             boolean disguise_app) {
         HttpClientBuilder builder = HttpClientBuilder.create();

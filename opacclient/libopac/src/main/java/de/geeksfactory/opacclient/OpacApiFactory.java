@@ -73,7 +73,7 @@ public class OpacApiFactory {
      * @param lib  the {@link Library} you want to connect to
      * @param sp   the {@link StringProvider} to use
      * @param hcf  the {@link HttpClientFactory} to use
-     * @param lang the preferred language as a ISO-639-1 code, @see OpacApi#setLanguage(String)
+     * @param lang the preferred language as a ISO-639-1 code, see {@link OpacApi#setLanguage(String)}
      * @return a new {@link OpacApi} instance
      */
     public static OpacApi create(Library lib, StringProvider sp, HttpClientFactory hcf,

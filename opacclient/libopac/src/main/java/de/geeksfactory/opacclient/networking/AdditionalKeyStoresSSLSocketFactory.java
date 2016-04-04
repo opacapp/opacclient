@@ -31,8 +31,16 @@ import javax.net.ssl.X509TrustManager;
  */
 public class AdditionalKeyStoresSSLSocketFactory {
 
-    public static SSLConnectionSocketFactory create(KeyStore keyStore, boolean tls_only,
-            Class<?> socketFactory)
+    /**
+     * Creates a customized keystore
+     *
+     * @param keyStore      The keystore object that should be used in addition to the environments
+     *                      default key store.
+     * @param socketFactory The class that should be used to instantiate a new socket factory, must
+     *                      be a subclass of {@link SSLConnectionSocketFactory}.
+     * @return a new {@link SSLConnectionSocketFactory}
+     */
+    public static SSLConnectionSocketFactory create(KeyStore keyStore, Class<?> socketFactory)
             throws NoSuchAlgorithmException, KeyManagementException {
         SSLContext sslContext = SSLContext.getInstance("TLS");
         sslContext.init(null, new TrustManager[]{new AdditionalKeyStoresTrustManager(keyStore)},

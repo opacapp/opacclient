@@ -95,14 +95,14 @@ public class Detail {
     }
 
     /**
-     * @return the html
+     * Returns whether the content is to be treated as HTML or plain text.
      */
     public boolean isHtml() {
         return html;
     }
 
     /**
-     * @param html the html to set
+     * Set whether the content is to be treated as HTML or plain text.
      */
     public void setHtml(boolean html) {
         this.html = html;

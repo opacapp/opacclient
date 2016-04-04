@@ -831,7 +831,7 @@ public interface OpacApi {
     }
 
     /**
-     * The result of a {@link OpacApi#prolong(String, Account, int, String)} call
+     * The result of a {@link OpacApi#cancel(String, Account, int, String)} call
      */
     public class CancelResult extends MultiStepResult {
 

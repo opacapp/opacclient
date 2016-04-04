@@ -7,10 +7,9 @@ import java.io.InputStream;
 
 public class HttpUtils {
     /**
-     * Re-implement this here as it is in different classes on Android and non-Android due to the
-     * Android backporting process of HttpClient 4
+     * Re-implementing EntityUtils.consume() as it is in different classes on Android and
+     * non-Android due to the Android backporting process of HttpClient 4
      */
-
     public static void consume(HttpEntity entity) throws IOException {
         if (entity == null) {
             return;
