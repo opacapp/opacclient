@@ -10,6 +10,7 @@ android {
         targetSdkVersion 23
         versionCode 140
         versionName "4.4.4"
+        vectorDrawables.useSupportLibrary = true
     }
 
     lintOptions {

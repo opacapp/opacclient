@@ -263,7 +263,7 @@ public class SearchResultDetailFragment extends Fragment
         if (getActivity() instanceof SearchResultDetailActivity) {
             // This applies on phones, where the Toolbar is also the
             // main ActionBar of the Activity and needs a back button
-            toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material);
+            toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
