@@ -27,11 +27,10 @@ public class TlsSniSocketFactory extends SSLConnectionSocketFactory {
     final static String TAG = "opacclient.tls";
     private javax.net.ssl.SSLSocketFactory socketfactory;
     private final X509HostnameVerifier hostnameVerifier;
-    private final boolean tls_only;
+    protected boolean tls_only = true;
 
-    public TlsSniSocketFactory(final SSLContext sslContext, boolean tls_only) {
+    public TlsSniSocketFactory(final SSLContext sslContext) {
         super(sslContext, BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
-        this.tls_only = tls_only;
         socketfactory = sslContext.getSocketFactory();
         hostnameVerifier = BROWSER_COMPATIBLE_HOSTNAME_VERIFIER;
     }

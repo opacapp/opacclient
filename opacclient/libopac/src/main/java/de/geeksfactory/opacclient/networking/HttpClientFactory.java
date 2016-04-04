@@ -89,8 +89,8 @@ public class HttpClientFactory {
                     trust_store = getKeyStore();
                 }
                 SSLConnectionSocketFactory sf =
-                        AdditionalKeyStoresSSLSocketFactory
-                                .create(trust_store, tls_only, getSocketFactoryClass());
+                        AdditionalKeyStoresSSLSocketFactory.create(trust_store,
+                                getSocketFactoryClass());
 
                 Registry<ConnectionSocketFactory> registry =
                         RegistryBuilder.<ConnectionSocketFactory>create().register("http",
