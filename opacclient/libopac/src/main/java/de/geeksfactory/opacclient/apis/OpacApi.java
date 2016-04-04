@@ -192,12 +192,11 @@ public interface OpacApi {
      * operations in it.
      *
      * @param id         id of object to fetch
-     * @param homebranch The users "home branch". Only filled if your library system supports
-     *                   <code>KEY_SEARCH_QUERY_HOME_BRANCH</code>. Assume that it can be
-     *                   <code>null</code>. If in doubt, ignore.
+     * @param homebranch The users "home branch". "Home" library branch. Some library systems
+     *                   require this information at search request time to determine where book
+     *                   reservations should be placed. If in doubt, set to <code>null</code>.
      * @return Media details
      * @see de.geeksfactory.opacclient.objects.DetailledItem
-     * @see #KEY_SEARCH_QUERY_HOME_BRANCH
      */
     public DetailledItem getResultById(String id, String homebranch)
             throws IOException, OpacErrorException;
