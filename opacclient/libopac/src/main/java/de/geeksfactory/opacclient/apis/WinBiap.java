@@ -988,23 +988,31 @@ public class WinBiap extends BaseApi implements OpacApi {
                 httpGet(opac_url + "/user/login.aspx", getDefaultEncoding()));
         List<NameValuePair> data = new ArrayList<>();
 
+        String formAction = loginPage.select("form").attr("action");
+        boolean homePage = formAction.endsWith("index.aspx");
+
         /* pass all input fields beginning with two underscores to login url */
         Elements inputFields = loginPage.select("input[id^=__]");
         for (Element inputField : inputFields) {
             data.add(new BasicNameValuePair(inputField.attr("name"), inputField.val()));
         }
 
-        data.add(
-                new BasicNameValuePair(loginPage.select("input[id$=TextBoxLoginName]").attr("name"),
-                        account.getName()));
+        // Some WinBiap 4.4 installations (such as Neufahrn) redirect user/login.aspx to index.aspx
+        // This page then also has a login form, but it has different text box IDs:
+        // TextBoxLoginName -> TextBoxUsername and TextBoxLoginPassword -> TextBoxPassword
+
         data.add(new BasicNameValuePair(
-                loginPage.select("input[id$=TextBoxLoginPassword]").attr("name"),
-                account.getPassword()));
+                loginPage.select("input[id$=TextBoxLoginName], input[id$=TextBoxUsername]")
+                         .attr("name"), account.getName()));
+        data.add(new BasicNameValuePair(
+                loginPage.select("input[id$=TextBoxLoginPassword], input[id$=TextBoxPassword]")
+                         .attr("name"), account.getPassword()));
         data.add(new BasicNameValuePair(loginPage.select("input[id$=ButtonLogin]").attr("name"),
                 "Anmelden"));
 
-        String html = httpPost(opac_url + "/user/login.aspx", new UrlEncodedFormEntity(data),
-                "UTF-8");
+        // We also need to POST our data to the correct page.
+        String postUrl = opac_url + (homePage ? "/index.aspx" : "/user/login.aspx");
+        String html = httpPost(postUrl, new UrlEncodedFormEntity(data), "UTF-8");
         Document doc = Jsoup.parse(html);
         if (doc.select("#ctl00_ContentPlaceHolderMain_LabelLoginMessage").size() > 0) {
             throw new OpacErrorException(
