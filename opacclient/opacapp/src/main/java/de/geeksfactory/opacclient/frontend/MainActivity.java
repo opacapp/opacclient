@@ -236,7 +236,7 @@ public class MainActivity extends OpacActivity
                     throw new AssertionError("UTF-8 is unknown");
                 }
                 Bundle query = new Bundle();
-                query.putString(OpacApi.KEY_SEARCH_QUERY_TITLE, title);
+                query.putString("title", title);  // TODO: This won't work with most modern APIs
                 Intent intent = new Intent(MainActivity.this, SearchResultListActivity.class);
                 intent.putExtra("query", query);
                 startActivity(intent);
