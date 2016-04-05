@@ -1,7 +1,7 @@
 {
     "account_supported": true,
     "api": "sisis",
-    "city": "Leinfelden-Echterdingen",
+    "city": "Leinfelden-E.",
     "country": "Deutschland",
     "data": {
         "baseurl": "http://www.le-extranet.de/webOPACClient"

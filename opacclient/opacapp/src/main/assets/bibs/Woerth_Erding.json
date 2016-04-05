@@ -1,7 +1,7 @@
 {
     "account_supported": true,
     "api": "winbiap",
-    "city": "W\u00f6rth (Erding)",
+    "city": "W\u00f6rth/Erding",
     "country": "Deutschland",
     "data": {
         "baseurl": "http://woerth.webopac.winbiap.net/woerth"

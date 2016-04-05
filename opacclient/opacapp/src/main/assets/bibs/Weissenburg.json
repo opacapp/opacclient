@@ -1,7 +1,7 @@
 {
     "account_supported": true,
     "api": "winbiap",
-    "city": "Wei\u00dfenburg",
+    "city": "Wei\u00dfenburg/Bay",
     "country": "Deutschland",
     "data": {
         "baseurl": "http://webopac.winbiap.net/weissenburg"
@@ -12,5 +12,5 @@
     ],
     "information": "http://www.weissenburg.de/p/d1.asp?artikel_id=1324",
     "state": "Bayern",
-    "title": "Stadtbibliothek"
+    "title": "Stadtbibliothek in der Alten Post"
 }

@@ -1,7 +1,7 @@
 {
     "account_supported": true,
     "api": "winbiap",
-    "city": "Senden (Bayern)",
+    "city": "Senden/Bay",
     "country": "Deutschland",
     "data": {
         "baseurl": "https://webopac.winbiap.de/senden"

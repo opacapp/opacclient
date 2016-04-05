@@ -1,7 +1,7 @@
 {
     "account_supported": true,
     "api": "winbiap",
-    "city": "Vohburg",
+    "city": "Vohburg/Do",
     "country": "Deutschland",
     "data": {
         "baseurl": "https://webopac.winbiap.de/vohburg"

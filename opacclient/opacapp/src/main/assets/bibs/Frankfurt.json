@@ -1,7 +1,7 @@
 {
     "account_supported": true,
     "api": "bibliotheca",
-    "city": "Frankfurt",
+    "city": "Frankfurt/Main",
     "country": "Deutschland",
     "data": {
         "accounttable": {
@@ -57,5 +57,5 @@
     ],
     "information": "http://www.frankfurt.de/sixcms/detail.php?id=2962&_ffmpar[_id_inhalt]=2147168",
     "state": "Hessen",
-    "title": "Stadtbibliothek"
+    "title": "Stadtb\u00fccherei Zentralbibliothek"
 }

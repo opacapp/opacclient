@@ -1,7 +1,7 @@
 {
     "account_supported": true,
     "api": "winbiap",
-    "city": "Frankfurt (Oder)",
+    "city": "Frankfurt/Oder",
     "country": "Deutschland",
     "data": {
         "baseurl": "http://80.228.88.60/webopac"

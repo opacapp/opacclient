@@ -1,7 +1,7 @@
 {
     "account_supported": true,
     "api": "sisis",
-    "city": "Freiburg",
+    "city": "Freiburg/Br",
     "country": "Deutschland",
     "data": {
         "baseurl": "https://katalog.stadtbibliothek.freiburg.de/webOPACClient"

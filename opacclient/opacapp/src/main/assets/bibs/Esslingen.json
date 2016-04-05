@@ -1,7 +1,7 @@
 {
     "account_supported": true,
     "api": "sisis",
-    "city": "Esslingen",
+    "city": "Esslingen/N",
     "country": "Deutschland",
     "data": {
         "baseurl": "http://buecherei.esslingen.de/webOPACClient"
@@ -12,5 +12,5 @@
     ],
     "information": "http://www.stadtbuecherei.esslingen.de/,Lde/start/OrteZeiten.html",
     "state": "Baden-W\u00fcrttemberg",
-    "title": "Stadtbibliothek"
+    "title": "Stadtb\u00fccherei"
 }

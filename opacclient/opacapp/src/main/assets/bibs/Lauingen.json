@@ -1,7 +1,7 @@
 {
     "account_supported": true,
     "api": "winbiap",
-    "city": "Lauingen (Donau)",
+    "city": "Lauingen/Do",
     "country": "Deutschland",
     "data": {
         "baseurl": "https://webopac.winbiap.de/lauingen"

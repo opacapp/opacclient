@@ -1,7 +1,7 @@
 {
     "account_supported": true,
     "api": "winbiap",
-    "city": "M\u00fchldorf a. Inn",
+    "city": "M\u00fchldorf",
     "country": "Deutschland",
     "data": {
         "baseurl": "https://webopac.winbiap.de/muehldorf"
@@ -12,5 +12,5 @@
     ],
     "information": "http://buecherei.muehldorf.org/",
     "state": "Bayern",
-    "title": "Stadtb\u00fccherei"
+    "title": "Stadtb\u00fccherei im Kornkasten"
 }

@@ -1,7 +1,7 @@
 {
     "account_supported": false,
     "api": "open",
-    "city": "Landau",
+    "city": "Landau/Pfalz",
     "country": "Deutschland",
     "data": {
         "baseurl": "http://opac.landau.de",

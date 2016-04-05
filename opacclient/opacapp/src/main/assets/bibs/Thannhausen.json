@@ -1,7 +1,7 @@
 {
     "account_supported": true,
     "api": "winbiap",
-    "city": "Thannhausen",
+    "city": "Thannhausen/Schwaben",
     "country": "Deutschland",
     "data": {
         "baseurl": "https://webopac.winbiap.de/thannhausen"

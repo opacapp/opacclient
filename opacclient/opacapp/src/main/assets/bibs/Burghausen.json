@@ -1,7 +1,7 @@
 {
   "account_supported": false,
   "api": "open",
-  "city": "Burghausen",
+  "city": "Burghausen/Sal",
   "country": "Deutschland",
   "data": {
     "baseurl": "http://open.burghausen.de",
