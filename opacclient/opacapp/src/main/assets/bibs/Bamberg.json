@@ -14,7 +14,7 @@
             "status": -1,
             "title": 1
         },
-        "baseurl": "http://opac.stadtbuecherei-bamberg.de",
+        "baseurl": "http://opac.stadtbuecherei-bamberg.de/webopac",
         "copiestable": {
             "barcode": -1,
             "branch": 0,

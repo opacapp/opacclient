@@ -37,6 +37,7 @@ import de.geeksfactory.opacclient.networking.CoverDownloadTask;
 import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
+import de.geeksfactory.opacclient.utils.BitmapUtils;
 
 public class ResultsAdapter extends ArrayAdapter<SearchResult> {
     private List<SearchResult> objects;
@@ -93,13 +94,12 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
                 return R.drawable.type_audio_cassette;
             case URL:
                 return R.drawable.type_url;
-            case MP3:
-                return R.drawable.type_mp3;
             case EDOC:
                 return R.drawable.type_edoc;
             case EVIDEO:
                 return R.drawable.type_evideo;
             case EAUDIO:
+            case MP3:
                 return R.drawable.type_eaudio;
             case ART:
                 return R.drawable.type_art;
@@ -143,7 +143,7 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
         ImageView ivType = (ImageView) view.findViewById(R.id.ivType);
 
         if (item.getCoverBitmap() != null) {
-            ivType.setImageBitmap(item.getCoverBitmap());
+            ivType.setImageBitmap(BitmapUtils.bitmapFromBytes(item.getCoverBitmap()));
             ivType.setVisibility(View.VISIBLE);
         } else if (item.getCover() != null) {
             LoadCoverTask lct = new LoadCoverTask(ivType, item);
@@ -192,7 +192,7 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
         @Override
         protected void onPostExecute(CoverHolder result) {
             if (item.getCover() != null && item.getCoverBitmap() != null) {
-                iv.setImageBitmap(item.getCoverBitmap());
+                iv.setImageBitmap(BitmapUtils.bitmapFromBytes(item.getCoverBitmap()));
                 iv.setVisibility(View.VISIBLE);
             } else if (item instanceof SearchResult && ((SearchResult) item).getType() != null
                     && ((SearchResult) item).getType() != MediaType.NONE) {

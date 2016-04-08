@@ -59,18 +59,12 @@
     <string name="notification_service">Süresi Yaklaşanlar</string>
     <string name="notification_service_desc">Bir öğrenin geri verme zamanı gelmeden bana bildir (Bu özelliğin garantisi yoktur)</string>
     <string name="notification_service_wifionly">Sadece WiFi üzerinden kontrol et</string>
-    <string name="notification_service_wifionly_desc">Mobil ağlar üzerinden bilgi indirilmez. WiFi olmadan bildirim de alınamaz.</string>
+    <string name="notification_service_wifionly_desc">Mobil ağlar üzerinden bilgi indirilmez.</string>
     <string-array name="warning">
         <item>Aynı gün</item>
         <item>1 gün önce</item>
         <item>3 gün önce</item>
         <item>1 hafta önce</item>
-    </string-array>
-    <string-array name="warning_n">
-        <item>86400000</item>
-        <item>172800000</item>
-        <item>259200000</item>
-        <item>604800000</item>
     </string-array>
     <string name="startup_title">Başlangıç ekranı</string>
     <string name="startup_summary">Başlangıçta hangi ekran gösterilsin?</string>
@@ -90,7 +84,7 @@
     <string name="notification_warning_desc">Zaman dolmadan ne kadar önce bildirim almak istersiniz?</string>
     <string name="notif_ticker">%s öğenin geri verme zamanı yaklaştı!</string>
     <string name="notif_title">Öğelerin geri verme zamanı yaklaştı</string>
-    <string name="volumes">KİTAPLAR</string>
+    <string name="volumes">Kitaplar</string>
     <string name="volumesearch">Kitapları göster</string>
     <string name="star">Favorilere kaydet</string>
     <string name="starred">Öğe favori listenize eklendi.</string>
@@ -192,7 +186,6 @@
     <string name="select_mail_app">E-posta uygulaması seç…</string>
     <string name="search_libraries_hint">Kütüphane ara…</string>
     <string name="action_search">Arama</string>
-    <string name="snooze">Yarın tekrar hatırlat</string>
     <string name="expand">Daha fazla arama alanı göster</string>
     <string name="collapse">Daha az arama alanı göster</string>
     <string name="interested_to_help">Yardım etmek istiyorum</string>

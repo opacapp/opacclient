@@ -26,6 +26,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.preference.CheckBoxPreference;
+import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceFragmentCompat;
@@ -33,7 +35,8 @@ import android.support.v7.preference.PreferenceManager;
 
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
-import de.geeksfactory.opacclient.reminder.ReminderCheckService;
+import de.geeksfactory.opacclient.reminder.ReminderHelper;
+import de.geeksfactory.opacclient.reminder.SyncAccountService;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
 import de.geeksfactory.opacclient.storage.SearchFieldDataSource;
@@ -76,26 +79,48 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
                     .removePreference(findPreference("email"));
         }
 
+        CheckBoxPreference notification =
+                (CheckBoxPreference) findPreference("notification_service");
+        notification.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                boolean enabled = (Boolean) newValue;
+                new ReminderHelper((OpacClient) getActivity().getApplication())
+                        .updateAlarms(enabled);
+                return true;
+            }
+        });
+
+        ListPreference warning = (ListPreference) findPreference("notification_warning");
+        warning.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                SharedPreferences prefs = PreferenceManager
+                        .getDefaultSharedPreferences(getActivity());
+                //int oldWarning = Integer.parseInt(prefs.getString("notification_warning", "3"));
+                int newWarning = Integer.parseInt((String) newValue);
+                new ReminderHelper((OpacClient) getActivity().getApplication())
+                        .updateAlarms(newWarning);
+                return true;
+            }
+        });
+
         Preference meta = findPreference("meta_clear");
         meta.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference arg0) {
-                AccountDataSource adata = new AccountDataSource(
-                        context);
+                AccountDataSource adata = new AccountDataSource(context);
                 adata.open();
                 adata.invalidateCachedData();
-                adata.notificationClearCache(true);
                 adata.close();
 
-                SearchFieldDataSource sfdata = new JsonSearchFieldDataSource(
-                        context);
+                SearchFieldDataSource sfdata = new JsonSearchFieldDataSource(context);
                 sfdata.clearAll();
 
                 SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 sp.edit().remove("reservation_fee_warning_ignore").apply();
 
-                Intent i = new Intent(context,
-                        ReminderCheckService.class);
+                Intent i = new Intent(context, SyncAccountService.class);
                 context.startService(i);
                 return false;
             }

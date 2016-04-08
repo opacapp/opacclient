@@ -12,5 +12,7 @@
     "~format": "CATEGORY",
     "branch_de15": "BRANCH",
     "branch": "BRANCH",
-    "Signatur": "BARCODE"
+  "Signatur": "BARCODE",
+  "branch_dech1": "BRANCH",
+  "format_de15": "CATEGORY"
 }

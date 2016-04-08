@@ -22,6 +22,8 @@ import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -32,21 +34,20 @@ import org.jsoup.select.Elements;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.i18n.StringProvider;
+import de.geeksfactory.opacclient.networking.HttpClientFactory;
+import de.geeksfactory.opacclient.networking.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
@@ -199,8 +200,8 @@ public class Open extends BaseApi implements OpacApi {
     protected static final String NO_MOBILE = "?nomo=1";
 
     @Override
-    public void init(Library lib) {
-        super.init(lib);
+    public void init(Library lib, HttpClientFactory httpClientFactory) {
+        super.init(lib, httpClientFactory);
 
         this.data = lib.getData();
         try {
@@ -542,23 +543,15 @@ public class Open extends BaseApi implements OpacApi {
             columnmap.add(getCopyColumnKey(th.text()));
         }
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMANY);
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
         for (int i = 1; i < trs.size(); i++) {
             Elements tds = trs.get(i).select("td");
-            Map<String, String> copy = new HashMap<>();
+            Copy copy = new Copy();
             for (int j = 0; j < tds.size(); j++) {
                 if (columnmap.get(j) == null) continue;
                 String text = tds.get(j).text().replace("\u00a0", "");
                 if (text.equals("")) continue;
-                copy.put(columnmap.get(j), text);
-                if (columnmap.get(j).equals(DetailledItem.KEY_COPY_RETURN)) {
-                    try {
-                        copy.put(DetailledItem.KEY_COPY_RETURN_TIMESTAMP,
-                                String.valueOf(dateFormat.parse(text).getTime()));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                }
+                copy.set(columnmap.get(j), text, fmt);
             }
             item.addCopy(copy);
         }
@@ -569,15 +562,15 @@ public class Open extends BaseApi implements OpacApi {
     private String getCopyColumnKey(String text) {
         switch (text) {
             case "Zweigstelle":
-                return DetailledItem.KEY_COPY_BRANCH;
+                return "branch";
             case "Standorte":
-                return DetailledItem.KEY_COPY_LOCATION;
+                return "location";
             case "Status":
-                return DetailledItem.KEY_COPY_STATUS;
+                return "status";
             case "Vorbestellungen":
-                return DetailledItem.KEY_COPY_RESERVATIONS;
+                return "reservations";
             case "Frist":
-                return DetailledItem.KEY_COPY_RETURN;
+                return "returndate";
             default:
                 return null;
         }

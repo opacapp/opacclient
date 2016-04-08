@@ -6,7 +6,9 @@
                                     horizontalSpacing="0dip"
                                     verticalSpacing="0dip"
                                     android:orientation="horizontal"
-                                    android:padding="0dp">
+                                    android:padding="0dp"
+                                    android:layout_marginLeft="@dimen/key_line"
+                                    android:layout_marginRight="@dimen/key_line">
 
     <TextView
         android:id="@+id/tvDesc"

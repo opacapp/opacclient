@@ -58,5 +58,8 @@
 	"[VLG]": "PUBLISHER",
 	"[JHR]": "YEAR",
 	"[WOE]": "FREE",
-	"[ATR]": "AUTHOR"
+	"[ATR]": "AUTHOR",
+	"[AUT]": "AUTHOR",
+	"[SKT]": "KEYWORD",
+	"[SYC]": "SYSTEM"
 }

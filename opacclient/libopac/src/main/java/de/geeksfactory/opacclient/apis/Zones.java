@@ -1,15 +1,15 @@
 /**
  * Copyright (C) 2013 by Raphael Michel under the MIT license:
- * <p/>
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge, publish, distribute,
  * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p/>
+ *
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
- * <p/>
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
  * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -22,6 +22,8 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -33,8 +35,6 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,15 +44,19 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.i18n.StringProvider;
+import de.geeksfactory.opacclient.networking.HttpClientFactory;
+import de.geeksfactory.opacclient.networking.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Filter.Option;
+import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.objects.ReservedItem;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
@@ -63,7 +67,7 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
 /**
  * API für Web-Opacs von Zones mit dem Hinweis "Zones.2.2.45.xx" oder "ZONES v1.8.1" im Footer.
- * <p/>
+ *
  * TODO: Kontofunktionen für Zones 1.8.1
  */
 public class Zones extends BaseApi {
@@ -178,8 +182,8 @@ public class Zones extends BaseApi {
     }
 
     @Override
-    public void init(Library lib) {
-        super.init(lib);
+    public void init(Library lib, HttpClientFactory httpClientFactory) {
+        super.init(lib, httpClientFactory);
 
         this.library = lib;
         this.data = lib.getData();
@@ -554,7 +558,9 @@ public class Zones extends BaseApi {
                 continue;
             }
 
-            Map<String, String> copy = new HashMap<>();
+            Copy copy = new Copy();
+            DateTimeFormatter fmt =
+                    DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
 
             // This is getting very ugly - check if it is valid for libraries which are not Hamburg.
             // Seems to also work in Kiel (Zones 1.8, checked 10.10.2015)
@@ -563,33 +569,33 @@ public class Zones extends BaseApi {
                 try {
                     if (node instanceof Element) {
                         if (((Element) node).tag().getName().equals("br")) {
-                            copy.put(DetailledItem.KEY_COPY_BRANCH, pop);
+                            copy.setBranch(pop);
                             result.addCopy(copy);
                             j = -1;
                         } else if (((Element) node).tag().getName().equals("b")
                                 && j == 1) {
-                            copy.put(DetailledItem.KEY_COPY_LOCATION,
-                                    ((Element) node).text());
+                            copy.setLocation(((Element) node).text());
                         } else if (((Element) node).tag().getName().equals("b")
                                 && j > 1) {
-                            copy.put(DetailledItem.KEY_COPY_STATUS,
-                                    ((Element) node).text());
+                            copy.setStatus(((Element) node).text());
                         }
                         j++;
                     } else if (node instanceof TextNode) {
                         if (j == 0) {
-                            copy.put(DetailledItem.KEY_COPY_DEPARTMENT,
-                                    ((TextNode) node).text());
+                            copy.setDepartment(((TextNode) node).text());
                         }
                         if (j == 2) {
-                            copy.put(DetailledItem.KEY_COPY_BARCODE,
-                                    ((TextNode) node).getWholeText().trim()
-                                                     .split("\n")[0].trim());
+                            copy.setBarcode(((TextNode) node).getWholeText().trim()
+                                                             .split("\n")[0].trim());
                         }
                         if (j == 6) {
                             String text = ((TextNode) node).text().trim();
-                            copy.put(DetailledItem.KEY_COPY_RETURN,
-                                    text.substring(text.length() - 10));
+                            String date = text.substring(text.length() - 10);
+                            try {
+                                copy.setReturnDate(fmt.parseLocalDate(date));
+                            } catch (IllegalArgumentException e) {
+                                e.printStackTrace();
+                            }
                         }
                         j++;
                     }
@@ -830,10 +836,13 @@ public class Zones extends BaseApi {
             return null;
         }
 
-        String lentHtml = httpGet(opac_url + "/" + lentLink.replace("utf-8?Method", "utf-8&Method"),
-                getDefaultEncoding());
+        List<LentItem> lentItems = new ArrayList<>();
+        String lentUrl = opac_url + "/" + lentLink.replace("utf-8?Method", "utf-8&Method");
+        String lentHtml = httpGet(lentUrl, getDefaultEncoding());
         Document lentDoc = Jsoup.parse(lentHtml);
-        res.setLent(parseMediaList(lentDoc));
+        lentDoc.setBaseUri(lentUrl);
+        loadMediaList(lentDoc, lentItems);
+        res.setLent(lentItems);
 
         // In Koeln, the reservations link only doesn't show on the overview page
         if (resLink == null) {
@@ -844,52 +853,74 @@ public class Zones extends BaseApi {
             }
         }
 
+        List<ReservedItem> reservedItems = new ArrayList<>();
         String resHtml = httpGet(opac_url + "/" + resLink,
                 getDefaultEncoding());
         Document resDoc = Jsoup.parse(resHtml);
-        res.setReservations(parseResList(resDoc));
+        loadResList(resDoc, reservedItems);
+        res.setReservations(reservedItems);
 
         return res;
     }
 
-    static List<Map<String, String>> parseResList(Document doc) {
-        List<Map<String, String>> reservations = new ArrayList<>();
+    private void loadMediaList(Document lentDoc, List<LentItem> items)
+            throws IOException {
+        items.addAll(parseMediaList(lentDoc));
+        String nextPageUrl = findNextPageUrl(lentDoc);
+        if (nextPageUrl != null) {
+            Document doc = Jsoup.parse(httpGet(nextPageUrl, getDefaultEncoding()));
+            doc.setBaseUri(lentDoc.baseUri());
+            loadMediaList(doc, items);
+        }
+    }
+
+    private void loadResList(Document lentDoc, List<ReservedItem> items) throws IOException {
+        items.addAll(parseResList(lentDoc));
+        String nextPageUrl = findNextPageUrl(lentDoc);
+        if (nextPageUrl != null) {
+            Document doc = Jsoup.parse(httpGet(nextPageUrl, getDefaultEncoding()));
+            doc.setBaseUri(lentDoc.baseUri());
+            loadResList(doc, items);
+        }
+    }
+
+    static String findNextPageUrl(Document doc) {
+        if (doc.select(".pageNavLink[title*=nächsten]").size() > 0) {
+            Element link = doc.select(".pageNavLink[title*=nächsten]").first();
+            return link.absUrl("href");
+        } else {
+            return null;
+        }
+    }
+
+    static List<ReservedItem> parseResList(Document doc) {
+        List<ReservedItem> reservations = new ArrayList<>();
         for (Element table : doc
                 .select(".MessageBrowseItemDetailsCell table, " +
                         ".MessageBrowseItemDetailsCellStripe" +
                         " table")) {
-            Map<String, String> item = new HashMap<>();
+            ReservedItem item = new ReservedItem();
 
             for (Element tr : table.select("tr")) {
                 String desc = tr.select(".MessageBrowseFieldNameCell").text()
                                 .trim();
                 String value = tr.select(".MessageBrowseFieldDataCell").text()
                                  .trim();
-                if (desc.equals("Titel")) {
-                    item.put(AccountData.KEY_RESERVATION_TITLE, value);
-                }
-                if (desc.equals("Publikationsform")) {
-                    item.put(AccountData.KEY_RESERVATION_FORMAT, value);
-                }
-                if (desc.equals("Liefern an")) {
-                    item.put(AccountData.KEY_RESERVATION_BRANCH, value);
-                }
-                if (desc.equals("Status")) {
-                    item.put(AccountData.KEY_RESERVATION_READY, value);
-                }
+                if (desc.equals("Titel")) item.setTitle(value);
+                if (desc.equals("Publikationsform")) item.setFormat(value);
+                if (desc.equals("Liefern an")) item.setBranch(value);
+                if (desc.equals("Status")) item.setStatus(value);
             }
-            if ("Gelöscht".equals(item.get(AccountData.KEY_RESERVATION_READY))) {
-                continue;
-            }
+            if ("Gelöscht".equals(item.getStatus())) continue;
             reservations.add(item);
         }
         return reservations;
     }
 
-    static List<Map<String, String>> parseMediaList(Document doc) {
-        List<Map<String, String>> lent = new ArrayList<>();
+    static List<LentItem> parseMediaList(Document doc) {
+        List<LentItem> lent = new ArrayList<>();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.GERMAN);
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yyyy").withLocale(Locale.GERMAN);
         Pattern id_pat = Pattern.compile("javascript:renewItem\\('[0-9]+','(.*)'\\)");
         Pattern cannotrenew_pat =
                 Pattern.compile("javascript:CannotRenewLoan\\('[0-9]+','(.*)','[0-9]+'\\)");
@@ -898,52 +929,44 @@ public class Zones extends BaseApi {
                 .select(".LoansBrowseItemDetailsCellStripe table, " +
                         ".LoansBrowseItemDetailsCell " +
                         "table")) {
-            Map<String, String> item = new HashMap<>();
+            LentItem item = new LentItem();
 
             for (Element tr : table.select("tr")) {
-                String desc = tr.select(".LoanBrowseFieldNameCell").text().trim();
-                String value = tr.select(".LoanBrowseFieldDataCell").text().trim();
+                String desc = tr.select(".LoanBrowseFieldNameCell").text()
+                                .trim();
+                String value = tr.select(".LoanBrowseFieldDataCell").text()
+                                 .trim();
                 if (desc.equals("Titel")) {
-                    item.put(AccountData.KEY_LENT_TITLE, value);
+                    item.setTitle(value);
                     if (tr.select(".LoanBrowseFieldDataCell a[href]").size() > 0) {
                         String href = tr.select(".LoanBrowseFieldDataCell a[href]").attr("href");
                         Map<String, String> params = getQueryParamsFirst(href);
                         if (params.containsKey("BACNO")) {
-                            item.put(AccountData.KEY_LENT_ID, params.get("BACNO"));
+                            item.setId(params.get("BACNO"));
                         }
                     }
                 }
-                if (desc.equals("Verfasser")) {
-                    item.put(AccountData.KEY_LENT_AUTHOR, value);
-                }
-                if (desc.equals("Mediennummer")) {
-                    item.put(AccountData.KEY_LENT_BARCODE, value);
-                }
-                if (desc.equals("ausgeliehen in")) {
-                    item.put(AccountData.KEY_LENT_BRANCH, value);
-                }
+                if (desc.equals("Verfasser")) item.setAuthor(value);
+                if (desc.equals("Mediennummer")) item.setBarcode(value);
+                if (desc.equals("ausgeliehen in")) item.setHomeBranch(value);
                 if (desc.matches("F.+lligkeits.*datum")) {
                     value = value.split(" ")[0];
-                    item.put(AccountData.KEY_LENT_DEADLINE, value);
                     try {
-                        item.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP,
-                                String.valueOf(sdf.parse(value).getTime()));
-                    } catch (ParseException e) {
+                        item.setDeadline(fmt.parseLocalDate(value));
+                    } catch (IllegalArgumentException e) {
                         e.printStackTrace();
                     }
                 }
             }
             if (table.select(".button[Title~=Zum]").size() == 1) {
                 Matcher matcher1 = id_pat.matcher(table.select(".button[Title~=Zum]").attr("href"));
-                if (matcher1.matches()) {
-                    item.put(AccountData.KEY_LENT_LINK, matcher1.group(1));
-                }
+                if (matcher1.matches()) item.setProlongData(matcher1.group(1));
             } else if (table.select(".CannotRenewLink").size() == 1){
                 Matcher matcher = cannotrenew_pat.matcher(table.select(".CannotRenewLink").attr("href").trim());
                 if (matcher.matches()) {
-                    item.put(AccountData.KEY_LENT_LINK, "cannotrenew|" + matcher.group(1));
+                    item.setProlongData("cannotrenew|" + matcher.group(1));
                 }
-                item.put(AccountData.KEY_LENT_RENEWABLE, "N");
+                item.setRenewable(false);
             }
             lent.add(item);
         }

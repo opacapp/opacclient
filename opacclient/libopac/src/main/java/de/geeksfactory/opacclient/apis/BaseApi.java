@@ -21,9 +21,6 @@
  */
 package de.geeksfactory.opacclient.apis;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -54,12 +51,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.geeksfactory.opacclient.NotReachableException;
-import de.geeksfactory.opacclient.SSLSecurityException;
 import de.geeksfactory.opacclient.i18n.DummyStringProvider;
 import de.geeksfactory.opacclient.i18n.StringProvider;
-import de.geeksfactory.opacclient.networking.HTTPClient;
+import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import de.geeksfactory.opacclient.networking.HttpUtils;
+import de.geeksfactory.opacclient.networking.NotReachableException;
+import de.geeksfactory.opacclient.networking.SSLSecurityException;
 import de.geeksfactory.opacclient.objects.CoverHolder;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
@@ -75,6 +72,169 @@ public abstract class BaseApi implements OpacApi {
     protected StringProvider stringProvider;
     protected Set<String> supportedLanguages;
     protected boolean initialised;
+    protected boolean httpLoggingEnabled = true;
+
+    /**
+     * Keywords to do a free search. Some APIs do support this, some don't. If supported, it must at
+     * least search in title and author field, but should also search abstract and other things.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_FREE = "free";
+
+    /**
+     * Item title to search for. Doesn't have to be the full title, can also be a substring to be
+     * searched.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_TITLE = "titel";
+
+    /**
+     * Author name to search for.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_AUTHOR = "verfasser";
+
+    /**
+     * "Keyword A". Most libraries require very special input in this field. May be only shown if
+     * "advanced fields" is set in user preferences.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_KEYWORDA = "schlag_a";
+
+    /**
+     * "Keyword B". Most libraries require very special input in this field. May be only shown if
+     * "advanced fields" is set in user preferences. Can only be set, if
+     * <code>KEY_SEARCH_QUERY_KEYWORDA</code> is set as well.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_KEYWORDB = "schlag_b";
+
+    /**
+     * Library branch to search in. The user is able to select from multiple options, generated from
+     * the MetaData you store in the MetaDataSource you get in {@link #init(Library,
+     * HttpClientFactory)}.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_BRANCH = "zweigstelle";
+
+    /**
+     * "Home" library branch. Some library systems require this information at search request time
+     * to determine where book reservations should be placed. If in doubt, don't use. Behaves
+     * similar to <code>KEY_SEARCH_QUERY_BRANCH</code> .
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_HOME_BRANCH = "homebranch";
+
+    /**
+     * An ISBN / EAN code to search for. We cannot promise whether it comes with spaces or hyphens
+     * in between but it most likely won't. If it makes a difference to you, eliminate everything
+     * except numbers and X. We also cannot say whether a ISBN10 or a ISBN13 is supplied - if
+     * relevant, check in your {@link #search(List)} implementation.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_ISBN = "isbn";
+
+    /**
+     * Year of publication. Your API can either support this or both the
+     * <code>KEY_SEARCH_QUERY_YEAR_RANGE_*</code> fields (or none of them).
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_YEAR = "jahr";
+
+    /**
+     * End of range, if year of publication can be specified as a range. Can not be combined with
+     * <code>KEY_SEARCH_QUERY_YEAR</code> but has to be combined with
+     * <code>KEY_SEARCH_QUERY_YEAR_RANGE_END</code>.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_YEAR_RANGE_START = "jahr_von";
+
+    /**
+     * Start of range, if year of publication can be specified as a range. Can not be combined with
+     * <code>KEY_SEARCH_QUERY_YEAR</code> but has to be combined with
+     * <code>KEY_SEARCH_QUERY_YEAR_RANGE_START</code>.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_YEAR_RANGE_END = "jahr_bis";
+
+    /**
+     * Systematic identification, used in some libraries. Rarely in use. May be only shown if
+     * "advanced fields" is set in user preferences.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_SYSTEM = "systematik";
+
+    /**
+     * Some libraries support a special "audience" field with specified values. Rarely in use. May
+     * be only shown if "advanced fields" is set in user preferences.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_AUDIENCE = "interessenkreis";
+
+    /**
+     * The "publisher" search field
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_PUBLISHER = "verlag";
+
+    /**
+     * Item category (like "book" or "CD"). The user is able to select from multiple options,
+     * generated from the MetaData you store in the MetaDataSource you get in {@link #init(Library,
+     * HttpClientFactory)}.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_CATEGORY = "mediengruppe";
+
+    /**
+     * Unique item identifier. In most libraries, every single book has a unique number, most of the
+     * time printed on the in form of a barcode, sometimes encoded in a NFC chip.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_BARCODE = "barcode";
+
+    /**
+     * Item location in library. Currently not in use.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_LOCATION = "location";
+
+    /**
+     * Restrict search to digital media.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_DIGITAL = "digital";
+
+    /**
+     * Restrict search to available media.
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_AVAILABLE = "available";
+
+    /**
+     * Sort search results in a specific order
+     *
+     * This is only used internally to construct search fields.
+     */
+    protected static final String KEY_SEARCH_QUERY_ORDER = "order";
 
     /**
      * Cleans the parameters of a URL by parsing it manually and reformatting it using {@link
@@ -144,7 +304,8 @@ public abstract class BaseApi implements OpacApi {
     }
 
     /**
-     * Reads content from an InputStream into a string, using the default {@code ISO-8859-1} encoding
+     * Reads content from an InputStream into a string, using the default {@code ISO-8859-1}
+     * encoding
      *
      * @param is InputStream to read from
      * @return String content of the InputStream
@@ -239,8 +400,9 @@ public abstract class BaseApi implements OpacApi {
      * Initializes HTTP client and String Provider
      */
     @Override
-    public void init(Library library) {
-        http_client = HTTPClient.getNewHttpClient(library.getData().optBoolean("customssl", false),
+    public void init(Library library, HttpClientFactory http_client_factory) {
+        http_client = http_client_factory.getNewApacheHttpClient(
+                library.getData().optBoolean("customssl", false),
                 library.getData().optBoolean("customssl_tls_only", true),
                 library.getData().optBoolean("disguise", false));
         this.library = library;
@@ -294,28 +456,28 @@ public abstract class BaseApi implements OpacApi {
                     encoding);
             HttpUtils.consume(response.getEntity());
         } catch (javax.net.ssl.SSLPeerUnverifiedException e) {
-            e.printStackTrace();
+            logHttpError(e);
             throw new SSLSecurityException(e.getMessage());
         } catch (javax.net.ssl.SSLException e) {
             // Can be "Not trusted server certificate" or can be a
             // aborted/interrupted handshake/connection
             if (e.getMessage().contains("timed out")
                     || e.getMessage().contains("reset by")) {
-                e.printStackTrace();
+                logHttpError(e);
                 throw new NotReachableException(e.getMessage());
             } else {
-                e.printStackTrace();
+                logHttpError(e);
                 throw new SSLSecurityException(e.getMessage());
             }
         } catch (InterruptedIOException e) {
-            e.printStackTrace();
+            logHttpError(e);
             throw new NotReachableException(e.getMessage());
         } catch (UnknownHostException e) {
             throw new NotReachableException(e.getMessage());
         } catch (IOException e) {
             if (e.getMessage() != null
                     && e.getMessage().contains("Request aborted")) {
-                e.printStackTrace();
+                logHttpError(e);
                 throw new NotReachableException(e.getMessage());
             } else {
                 throw e;
@@ -363,12 +525,10 @@ public abstract class BaseApi implements OpacApi {
             HttpEntity entity = response.getEntity();
             byte[] bytes = EntityUtils.toByteArray(entity);
 
-            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0,
-                    bytes.length);
-            item.setCoverBitmap(bitmap);
+            item.setCoverBitmap(bytes);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logHttpError(e);
         }
     }
 
@@ -385,7 +545,7 @@ public abstract class BaseApi implements OpacApi {
      *                               than 400.
      */
     public String httpPost(String url, HttpEntity data,
-                           String encoding, boolean ignore_errors, CookieStore cookieStore)
+            String encoding, boolean ignore_errors, CookieStore cookieStore)
             throws IOException {
         HttpPost httppost = new HttpPost(cleanUrl(url));
         httppost.setEntity(data);
@@ -413,28 +573,28 @@ public abstract class BaseApi implements OpacApi {
                     encoding);
             HttpUtils.consume(response.getEntity());
         } catch (javax.net.ssl.SSLPeerUnverifiedException e) {
-            e.printStackTrace();
+            logHttpError(e);
             throw new SSLSecurityException(e.getMessage());
         } catch (javax.net.ssl.SSLException e) {
             // Can be "Not trusted server certificate" or can be a
             // aborted/interrupted handshake/connection
             if (e.getMessage().contains("timed out")
                     || e.getMessage().contains("reset by")) {
-                e.printStackTrace();
+                logHttpError(e);
                 throw new NotReachableException(e.getMessage());
             } else {
-                e.printStackTrace();
+                logHttpError(e);
                 throw new SSLSecurityException(e.getMessage());
             }
         } catch (InterruptedIOException e) {
-            e.printStackTrace();
+            logHttpError(e);
             throw new NotReachableException(e.getMessage());
         } catch (UnknownHostException e) {
             throw new NotReachableException(e.getMessage());
         } catch (IOException e) {
             if (e.getMessage() != null
                     && e.getMessage().contains("Request aborted")) {
-                e.printStackTrace();
+                logHttpError(e);
                 throw new NotReachableException(e.getMessage());
             } else {
                 throw e;
@@ -443,14 +603,20 @@ public abstract class BaseApi implements OpacApi {
         return html;
     }
 
+    private void logHttpError(Throwable e) {
+        if (httpLoggingEnabled) {
+            e.printStackTrace();
+        }
+    }
+
     public String httpPost(String url, HttpEntity data,
-                           String encoding, boolean ignore_errors)
+            String encoding, boolean ignore_errors)
             throws IOException {
         return httpPost(url, data, encoding, ignore_errors, null);
     }
 
     public String httpPost(String url, HttpEntity data,
-                           String encoding) throws IOException {
+            String encoding) throws IOException {
         return httpPost(url, data, encoding, false, null);
     }
 
@@ -487,5 +653,9 @@ public abstract class BaseApi implements OpacApi {
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void setHttpLoggingEnabled(boolean httpLoggingEnabled) {
+        this.httpLoggingEnabled = httpLoggingEnabled;
     }
 }

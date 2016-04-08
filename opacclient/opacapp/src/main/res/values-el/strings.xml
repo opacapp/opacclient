@@ -59,13 +59,7 @@
   <string name="notification_service">Στοιχεία που λήγουν </string>
   <string name="notification_service_desc">Ειδοποίηση, αν ένα στοιχείο πρόκειται να λήξει (καμία εγγύηση δεν δίνεται)</string>
   <string name="notification_service_wifionly">Έλεγχος στο WiFi μόνο</string>
-  <string name="notification_service_wifionly_desc">Δεν υπαρχει λήψη πληροφοριών μέσω κινητών δικτύων. (Ως εκ τούτου, καμία προειδοποίηση χωρίς WiFi!)</string>
-  <string-array name="warning_n">
-    <item>86400000</item>
-    <item>172800000</item>
-    <item>259200000</item>
-    <item>604800000</item>
-  </string-array>
+  <string name="notification_service_wifionly_desc">Δεν υπαρχει λήψη πληροφοριών μέσω κινητών δικτύων.</string>
   <string name="startup_title">Οθόνη εκκίνησης</string>
   <string name="startup_summary">Ποια οθόνη θα πρέπει να εμφανίζεται κατά την εκκίνηση;</string>
   <string name="notification_warning">Περίοδος προειδοποίησης</string>
@@ -175,7 +169,6 @@
   <string name="select_mail_app">Επιλογή εφαρμογής mail…</string>
   <string name="search_libraries_hint">Αναζήτηση βιβλιοθήκης…</string>
   <string name="action_search">Αναζήτηση</string>
-  <string name="snooze">Υπενθύμιση πάλι αύριο</string>
   <string name="expand">Εμφάνιση περισσότερων πεδίων αναζήτησης</string>
   <string name="collapse">Εμφάνιση λιγότερων πεδίων αναζήτησης</string>
   <string name="interested_to_help">Ενδιαφερομαι να βοηθησω</string>

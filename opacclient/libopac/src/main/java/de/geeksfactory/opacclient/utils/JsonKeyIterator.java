@@ -5,7 +5,7 @@ import org.json.JSONObject;
 import java.util.Iterator;
 
 /**
- * This {@link Iterator}<{@link String}> takes a {@link JSONObject} and iterates over its keys. In
+ * This {@link Iterator} takes a {@link JSONObject} and iterates over its keys. In
  * contrast to {@link JSONObject#keys()}, this Iterator will always return Strings instead of
  * generic Objects, so it prevents unchecked casts. If the value returned from {@link
  * JSONObject#keys()}'s {@link Iterator#next()} method is no String (which probably cannot happen),

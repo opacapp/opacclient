@@ -14,6 +14,7 @@
 -keep class android.support.design.widget.** { *; }
 -keep interface android.support.design.widget.** { *; }
 -dontwarn android.support.design.**
+-dontwarn android.support.v4.**
 
 # JavaMeaningDetector uses these Java 7 classes for accessing files which are not included in
 # Android, so we need to ignore warnings related to them
@@ -28,3 +29,7 @@
 -keepattributes SourceFile,LineNumberTable
 -keepattributes *Annotation*
 -keep class org.acra.** { *; }
+
+# Joda Time
+-dontwarn com.google.**
+-keep class com.google.** { *; }

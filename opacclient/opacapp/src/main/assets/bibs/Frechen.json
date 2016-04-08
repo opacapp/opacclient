@@ -36,12 +36,11 @@
             "6": "CD",
             "8": "BOOK"
         },
-        "opacdir": "opac",
+        "opacdir": "opax",
         "searchtable": [
             2,
             3,
-            4,
-            5
+            4
         ]
     },
     "geo": [

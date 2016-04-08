@@ -45,3 +45,9 @@ upload.sh
 release.sh
 
 *.keystore
+
+opacclient/captures/
+opacclient/libs/
+*.bak
+opacclient/tmp/
+

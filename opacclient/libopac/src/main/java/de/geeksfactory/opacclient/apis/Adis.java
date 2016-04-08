@@ -6,6 +6,8 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -17,8 +19,6 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,18 +31,22 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.geeksfactory.opacclient.NotReachableException;
-import de.geeksfactory.opacclient.SSLSecurityException;
 import de.geeksfactory.opacclient.apis.OpacApi.MultiStepResult.Status;
 import de.geeksfactory.opacclient.i18n.StringProvider;
+import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import de.geeksfactory.opacclient.networking.HttpUtils;
+import de.geeksfactory.opacclient.networking.NotReachableException;
+import de.geeksfactory.opacclient.networking.SSLSecurityException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Filter.Option;
+import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.objects.ReservedItem;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
@@ -469,8 +473,8 @@ public class Adis extends BaseApi implements OpacApi {
     }
 
     @Override
-    public void init(Library library) {
-        super.init(library);
+    public void init(Library library, HttpClientFactory httpClientFactory) {
+        super.init(library, httpClientFactory);
         this.library = library;
         this.data = library.getData();
         try {
@@ -599,39 +603,42 @@ public class Adis extends BaseApi implements OpacApi {
                         "#R09 table.rTable_table thead tr th")) {
             String head = th.text().trim();
             if (head.contains("Bibliothek") || head.contains("Library")) {
-                colmap.put(i, DetailledItem.KEY_COPY_BRANCH);
+                colmap.put(i, "branch");
             } else if (head.contains("Standort") || head.contains("Location")) {
-                colmap.put(i, DetailledItem.KEY_COPY_LOCATION);
+                colmap.put(i, "location");
             } else if (head.contains("Signatur") || head.contains("Call number")) {
-                colmap.put(i, DetailledItem.KEY_COPY_SHELFMARK);
+                colmap.put(i, "signature");
             } else if (head.contains("URL")) {
-                colmap.put(i, DetailledItem.KEY_COPY_URL);
+                colmap.put(i, "url");
             } else if (head.contains("Status") || head.contains("Hinweis")
                     || head.matches(".*Verf.+gbarkeit.*") || head.contains("Status")) {
-                colmap.put(i, DetailledItem.KEY_COPY_STATUS);
+                colmap.put(i, "status");
             }
             i++;
         }
 
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
         for (Element tr : doc.select("#R08 table.rTable_table tbody tr," +
                 "#R09 table.rTable_table tbody tr")) {
-            Map<String, String> line = new HashMap<>();
+            Copy copy = new Copy();
             for (Entry<Integer, String> entry : colmap.entrySet()) {
-                if (entry.getValue().equals(DetailledItem.KEY_COPY_STATUS)) {
+                if (entry.getValue().equals("status")) {
                     String status = tr.child(entry.getKey()).text().trim();
                     if (status.contains(" am: ")) {
-                        line.put(DetailledItem.KEY_COPY_STATUS,
-                                status.split("-")[0]);
-                        line.put(DetailledItem.KEY_COPY_RETURN,
-                                status.split(": ")[1]);
+                        copy.setStatus(status.split("-")[0]);
+                        try {
+                            copy.setReturnDate(fmt.parseLocalDate(status.split(": ")[1]));
+                        } catch (IllegalArgumentException e) {
+                            e.printStackTrace();
+                        }
                     } else {
-                        line.put(DetailledItem.KEY_COPY_STATUS, status);
+                        copy.setStatus(status);
                     }
                 } else {
-                    line.put(entry.getValue(), tr.child(entry.getKey()).text().trim());
+                    copy.set(entry.getValue(), tr.child(entry.getKey()).text().trim());
                 }
             }
-            res.addCopy(line);
+            res.addCopy(copy);
         }
 
         // Reset
@@ -1164,12 +1171,12 @@ public class Adis extends BaseApi implements OpacApi {
                 adata.setValidUntil(tr.child(1).text().trim());
             }
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
 
         // Ausleihen
         String alink = null;
         int anum = 0;
-        List<Map<String, String>> lent = new ArrayList<>();
+        List<LentItem> lent = new ArrayList<>();
         for (Element tr : doc.select(".rTable_div tr")) {
             if (tr.select("a").size() == 1) {
                 if (tr.select("a").first().absUrl("href").contains("sp=SZA")) {
@@ -1203,9 +1210,8 @@ public class Adis extends BaseApi implements OpacApi {
                 adoc = htmlPost(opac_url + ";jsessionid=" + s_sid, form);
             }
             for (Element tr : adoc.select(".rTable_div tbody tr")) {
-                Map<String, String> line = new HashMap<>();
-                String text = Jsoup.parse(
-                        tr.child(3).html().replaceAll("(?i)<br[^>]*>", "#"))
+                LentItem item = new LentItem();
+                String text = Jsoup.parse(tr.child(3).html().replaceAll("(?i)<br[^>]*>", "#"))
                                    .text();
                 if (text.contains(" / ")) {
                     // Format "Titel / Autor #Sig#Nr", z.B. normale Ausleihe in Berlin
@@ -1214,38 +1220,30 @@ public class Adis extends BaseApi implements OpacApi {
                     if (split_title_author) {
                         title = title.replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1");
                     }
-                    line.put(AccountData.KEY_LENT_TITLE, title.trim());
+                    item.setTitle(title.trim());
                     if (split.length > 1) {
-                        line.put(AccountData.KEY_LENT_AUTHOR,
-                                split[1].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
+                        item.setAuthor(split[1].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
                     }
                 } else {
                     // Format "Autor: Titel - Verlag - ISBN:... #Nummer", z.B. Fernleihe in Berlin
                     String[] split = text.split("#");
                     String[] aut_tit = split[0].split(": ");
-                    line.put(AccountData.KEY_LENT_AUTHOR,
-                            aut_tit[0].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
+                    item.setAuthor(aut_tit[0].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
                     if (aut_tit.length > 1) {
-                        line.put(AccountData.KEY_LENT_TITLE,
+                        item.setTitle(
                                 aut_tit[1].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
                     }
                 }
-                line.put(AccountData.KEY_LENT_DEADLINE, tr.child(1).text()
-                                                          .trim());
+                String date = tr.child(1).text().trim();
                 try {
-                    line.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String
-                            .valueOf(sdf.parse(tr.child(1).text().trim())
-                                        .getTime()));
-                } catch (ParseException e) {
+                    item.setDeadline(fmt.parseLocalDate(date));
+                } catch (IllegalArgumentException e) {
                     e.printStackTrace();
                 }
-                line.put(AccountData.KEY_LENT_BRANCH, tr.child(2).text().trim());
-                line.put(AccountData.KEY_LENT_LINK,
-                        tr.select("input[type=checkbox]").attr("name") + "|"
-                                + alink);
-                // line.put(AccountData.KEY_LENT_RENEWABLE, tr.child(4).text()
-                // .matches(".*nicht verl.+ngerbar.*") ? "N" : "Y");
-                lent.add(line);
+                item.setHomeBranch(tr.child(2).text().trim());
+                item.setProlongData(tr.select("input[type=checkbox]").attr("name") + "|" + alink);
+                // item.setRenewable(tr.child(4).text().matches(".*nicht verl.+ngerbar.*"));
+                lent.add(item);
             }
             assert (lent.size() == anum);
             form = new ArrayList<>();
@@ -1269,7 +1267,7 @@ public class Adis extends BaseApi implements OpacApi {
 
         List<String[]> rlinks = new ArrayList<>();
         int rnum = 0;
-        List<Map<String, String>> res = new ArrayList<>();
+        List<ReservedItem> res = new ArrayList<>();
         for (Element tr : doc.select(".rTable_div tr")) {
             if (tr.select("a").size() == 1) {
                 if ((tr.text().contains("Reservationen")
@@ -1294,46 +1292,40 @@ public class Adis extends BaseApi implements OpacApi {
             boolean stacks = rdoc.html().contains("aus dem Magazin");
             boolean provision = rdoc.html().contains("Ihre Bereitstellung");
             Map<String, Integer> colmap = new HashMap<>();
-            colmap.put(AccountData.KEY_RESERVATION_TITLE, 2);
-            colmap.put(AccountData.KEY_RESERVATION_BRANCH, 1);
-            colmap.put(AccountData.KEY_RESERVATION_EXPIRE, 0);
+            colmap.put("title", 2);
+            colmap.put("branch", 1);
+            colmap.put("expirationdate", 0);
             int i = 0;
             for (Element th : rdoc.select(".rTable_div thead tr th")) {
                 if (th.text().contains("Bis")) {
-                    colmap.put(AccountData.KEY_RESERVATION_EXPIRE, i);
+                    colmap.put("expirationdate", i);
                 }
                 if (th.text().contains("Ausgabeort")) {
-                    colmap.put(AccountData.KEY_RESERVATION_BRANCH, i);
+                    colmap.put("branch", i);
                 }
                 if (th.text().contains("Titel")) {
-                    colmap.put(AccountData.KEY_RESERVATION_TITLE, i);
+                    colmap.put("title", i);
                 }
                 i++;
 
             }
             for (Element tr : rdoc.select(".rTable_div tbody tr")) {
                 if (tr.children().size() >= 4) {
-                    Map<String, String> line = new HashMap<>();
-                    String text = tr.child(
-                            colmap.get(AccountData.KEY_RESERVATION_TITLE))
-                                    .html();
-                    text = Jsoup.parse(text.replaceAll("(?i)<br[^>]*>", ";"))
-                                .text();
+                    ReservedItem item = new ReservedItem();
+                    String text = tr.child(colmap.get("title")).html();
+                    text = Jsoup.parse(text.replaceAll("(?i)<br[^>]*>", ";")).text();
                     if (split_title_author) {
                         String[] split = text.split("[:/;\n]");
-                        line.put(AccountData.KEY_RESERVATION_TITLE, split[0]
-                                .replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
+                        item.setTitle(split[0].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
                         if (split.length > 1) {
-                            line.put(AccountData.KEY_RESERVATION_AUTHOR, split[1]
-                                    .replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1")
-                                    .trim());
+                            item.setAuthor(
+                                    split[1].replaceFirst("([^:;\n]+)[:;\n](.*)$", "$1").trim());
                         }
                     } else {
-                        line.put(AccountData.KEY_RESERVATION_TITLE, text);
+                        item.setTitle(text);
                     }
 
-                    String branch = tr.child(colmap.get(AccountData.KEY_RESERVATION_BRANCH))
-                                      .text().trim();
+                    String branch = tr.child(colmap.get("branch")).text().trim();
                     if (interlib) {
                         branch = stringProvider
                                 .getFormattedString(StringProvider.INTERLIB_BRANCH, branch);
@@ -1344,17 +1336,15 @@ public class Adis extends BaseApi implements OpacApi {
                         branch = stringProvider
                                 .getFormattedString(StringProvider.PROVISION_BRANCH, branch);
                     }
-                    line.put(AccountData.KEY_RESERVATION_BRANCH, branch);
+                    item.setBranch(branch);
 
                     if (rlink[0].contains("Abholbereit")) {
                         // Abholbereite Bestellungen
-                        line.put(AccountData.KEY_RESERVATION_READY, "bereit");
+                        item.setStatus("bereit");
                         if (tr.child(0).text().trim().length() >= 10) {
-                            line.put(
-                                    AccountData.KEY_RESERVATION_EXPIRE,
-                                    tr.child(
-                                            colmap.get(AccountData.KEY_RESERVATION_EXPIRE))
-                                      .text().trim().substring(0, 10));
+                            item.setExpirationDate(fmt.parseLocalDate(
+                                    tr.child(colmap.get("expirationdate")).text().trim()
+                                      .substring(0, 10)));
                         }
                     } else {
                         // Nicht abholbereite
@@ -1363,13 +1353,12 @@ public class Adis extends BaseApi implements OpacApi {
                                 "SP=SZM") || rlink[1].toUpperCase(
                                 Locale.GERMAN).contains("SP=SZW") || rlink[1].toUpperCase(
                                 Locale.GERMAN).contains("SP=SZB"))) {
-                            line.put(AccountData.KEY_RESERVATION_CANCEL, tr
-                                    .select("input[type=checkbox]")
-                                    .attr("name")
-                                    + "|" + rlink[1]);
+                            item.setCancelData(
+                                    tr.select("input[type=checkbox]").attr("name") + "|" +
+                                            rlink[1]);
                         }
                     }
-                    res.add(line);
+                    res.add(item);
                 } else {
                     // This is a strange bug where sometimes there is only three
                     // columns

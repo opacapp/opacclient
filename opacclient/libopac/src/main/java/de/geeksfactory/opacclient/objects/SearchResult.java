@@ -21,8 +21,6 @@
  */
 package de.geeksfactory.opacclient.objects;
 
-import android.graphics.Bitmap;
-
 import java.util.List;
 
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
@@ -38,7 +36,7 @@ public class SearchResult implements CoverHolder {
     private String id;
     private String innerhtml;
     private Status status;
-    private Bitmap coverBitmap;
+    private byte[] coverBitmap;
     private String cover;
     private int page;
     private List<SearchQuery> childQuery;
@@ -175,7 +173,7 @@ public class SearchResult implements CoverHolder {
      * Get cover image bitmap
      */
     @Override
-    public Bitmap getCoverBitmap() {
+    public byte[] getCoverBitmap() {
         return coverBitmap;
     }
 
@@ -183,7 +181,7 @@ public class SearchResult implements CoverHolder {
      * Set cover image bitmap
      */
     @Override
-    public void setCoverBitmap(Bitmap coverBitmap) {
+    public void setCoverBitmap(byte[] coverBitmap) {
         this.coverBitmap = coverBitmap;
     }
 

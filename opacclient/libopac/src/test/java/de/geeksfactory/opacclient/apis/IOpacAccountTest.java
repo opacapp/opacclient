@@ -9,9 +9,11 @@ import org.junit.runners.Parameterized;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
-import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.LentItem;
+import de.geeksfactory.opacclient.objects.ReservedItem;
+
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(Parameterized.class)
 public class IOpacAccountTest extends BaseAccountTest {
@@ -35,19 +37,18 @@ public class IOpacAccountTest extends BaseAccountTest {
     @Test
     public void testParseMediaList() throws OpacApi.OpacErrorException {
         String html = readResource("/iopac/" + file);
-        List<Map<String, String>> media = new ArrayList<>();
+        List<LentItem> media = new ArrayList<>();
         IOpac.parseMediaList(media, Jsoup.parse(html), new JSONObject());
-        for (Map<String, String> item : media) {
-            assertContainsData(item, AccountData.KEY_LENT_TITLE);
-            assertContainsData(item, AccountData.KEY_LENT_DEADLINE);
-            assertContainsData(item, AccountData.KEY_LENT_DEADLINE_TIMESTAMP);
+        for (LentItem item : media) {
+            assertNotNull(item.getTitle());
+            assertNotNull(item.getDeadline());
         }
     }
 
     @Test
     public void testParseResList() throws OpacApi.OpacErrorException {
         String html = readResource("/iopac/" + file);
-        List<Map<String, String>> media = new ArrayList<>();
+        List<ReservedItem> media = new ArrayList<>();
         IOpac.parseResList(media, Jsoup.parse(html), new JSONObject());
     }
 }

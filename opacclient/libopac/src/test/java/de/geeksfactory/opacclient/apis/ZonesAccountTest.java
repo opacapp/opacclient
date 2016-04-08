@@ -8,9 +8,11 @@ import org.junit.runners.Parameterized;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
-import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.LentItem;
+import de.geeksfactory.opacclient.objects.ReservedItem;
+
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(Parameterized.class)
 public class ZonesAccountTest extends BaseAccountTest {
@@ -35,11 +37,10 @@ public class ZonesAccountTest extends BaseAccountTest {
     public void testParseMediaList() throws OpacApi.OpacErrorException {
         String html = readResource("/zones/medialist/" + file);
         if (html == null) return; // we may not have all files for all libraries
-        List<Map<String, String>> media = Zones.parseMediaList(Jsoup.parse(html));
-        for (Map<String, String> item : media) {
-            assertContainsData(item, AccountData.KEY_LENT_TITLE);
-            assertContainsData(item, AccountData.KEY_LENT_DEADLINE);
-            assertContainsData(item, AccountData.KEY_LENT_DEADLINE_TIMESTAMP);
+        List<LentItem> media = Zones.parseMediaList(Jsoup.parse(html));
+        for (LentItem item : media) {
+            assertNotNull(item.getTitle());
+            assertNotNull(item.getDeadline());
         }
     }
 
@@ -47,6 +48,6 @@ public class ZonesAccountTest extends BaseAccountTest {
     public void testParseResList() throws OpacApi.OpacErrorException {
         String html = readResource("/zones/reslist/" + file);
         if (html == null) return; // we may not have all files for all libraries
-        List<Map<String, String>> media = Zones.parseResList(Jsoup.parse(html));
+        List<ReservedItem> media = Zones.parseResList(Jsoup.parse(html));
     }
 }

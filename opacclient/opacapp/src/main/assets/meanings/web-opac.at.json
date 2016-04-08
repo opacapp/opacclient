@@ -7,5 +7,7 @@
 	"vr": "PUBLISHER",
 	"jr": "YEAR",
 	"sw": "KEYWORD",
-	"is": "ISBN"
+	"is": "ISBN",
+	"ik": "AUDIENCE",
+	"ma": "CATEGORY"
 }

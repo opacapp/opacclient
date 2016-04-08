@@ -15,13 +15,14 @@ import android.view.View;
 
 import java.io.IOException;
 
-import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.R;
-import de.geeksfactory.opacclient.SSLSecurityException;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
+import de.geeksfactory.opacclient.networking.NotReachableException;
+import de.geeksfactory.opacclient.networking.SSLSecurityException;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
+import de.geeksfactory.opacclient.utils.BitmapUtils;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
 
 /**
@@ -133,7 +134,7 @@ public class SearchResultListActivity extends OpacActivity implements
     }
 
     public void showDetail(SearchResult res, View coverView, int touchX, int touchY) {
-        Bitmap cover = res.getCoverBitmap();
+        Bitmap cover = BitmapUtils.bitmapFromBytes(res.getCoverBitmap());
         Bitmap smallCover;
         if (cover != null && cover.getWidth() * cover.getHeight() > 300 * 300) {
             // Android's Parcelable implementation doesn't like huge images

@@ -36,12 +36,13 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import de.geeksfactory.opacclient.i18n.StringProvider;
+import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
@@ -57,19 +58,19 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
 
 /**
  * @author Johan von Forstner, 06.04.2014
- *         <p/>
- *         WebOPAC.net, Version 2.2.70 gestartet mit Gemeindebibliothek Nürensdorf (erstes
- *         Google-Suchergebnis)
- *         <p/>
- *         weitere kompatible Bibliotheken: https://www.google.de/search?q=webOpac
- *         .net%202.1.30%20powered%20by%20winMedio .net&qscrl=1#q=%22webOpac.net+2.2
- *         .70+powered+by+winMedio.net%22+inurl%3Awinmedio&qscrl=1&start=0
- *         <p/>
- *         Unterstützt bisher nur Katalogsuche, Accountunterstüzung könnte (wenn keine Kontodaten
- *         verfügbar sind) über den Javascript-Code reverse-engineered werden:
- *         http://www.winmedio.net/nuerensdorf/de/mobile /GetScript.ashx?id=mobile.de.min
- *         .js&v=20140122
+ *
+ * WebOPAC.net, Version 2.2.70 gestartet mit Gemeindebibliothek Nürensdorf (erstes
+ * Google-Suchergebnis)
+ *
+ * Unterstützt bisher nur Katalogsuche, Accountunterstüzung könnte (wenn keine Kontodaten
+ * verfügbar sind) über den Javascript-Code reverse-engineered werden:
+ * http://www.winmedio.net/nuerensdorf/de/mobile/GetScript.ashx?id=mobile.de.min.js&amp;v=20140122
  */
+
+/*
+weitere kompatible Bibliotheken:
+ https://www.google.de/search?q=webOpac.net%202.1.30%20powered%20by%20winMedio.net&qscrl=1#q=%22webOpac.net+2.2.70+powered+by+winMedio.net%22+inurl%3Awinmedio&qscrl=1&start=0
+  */
 
 public class WebOpacNet extends BaseApi implements OpacApi {
 
@@ -89,8 +90,8 @@ public class WebOpacNet extends BaseApi implements OpacApi {
     protected List<SearchQuery> query;
 
     @Override
-    public void init(Library lib) {
-        super.init(lib);
+    public void init(Library lib, HttpClientFactory httpClientFactory) {
+        super.init(lib, httpClientFactory);
         this.data = lib.getData();
 
         try {
@@ -285,7 +286,7 @@ public class WebOpacNet extends BaseApi implements OpacApi {
             JSONArray copies = json.getJSONArray("exemplare");
             for (int i = 0; i < copies.length(); i++) {
                 JSONObject copyJson = copies.getJSONObject(i);
-                Map<String, String> copy = new HashMap<>();
+                Copy copy = new Copy();
 
                 JSONArray values = copyJson.getJSONArray("rows");
                 for (int j = 0; j < values.length(); j++) {
@@ -296,29 +297,25 @@ public class WebOpacNet extends BaseApi implements OpacApi {
                     if (!value.equals("")) {
                         switch (name) {
                             case "Exemplarstatus":
-                                copy.put(DetailledItem.KEY_COPY_STATUS, value);
+                                copy.setStatus(value);
                                 break;
                             case "Signatur":
-                                copy.put(DetailledItem.KEY_COPY_SHELFMARK, value);
+                                copy.setShelfmark(value);
                                 break;
                             case "Standort":
-                                copy.put(DetailledItem.KEY_COPY_LOCATION, value);
+                                copy.setLocation(value);
                                 break;
                             case "Themenabteilung":
-                                if (copy.containsKey(DetailledItem.KEY_COPY_DEPARTMENT)) {
-                                    value = copy
-                                            .get(DetailledItem.KEY_COPY_DEPARTMENT)
-                                            + value;
+                                if (copy.getDepartment() != null) {
+                                    value = copy.getDepartment() + value;
                                 }
-                                copy.put(DetailledItem.KEY_COPY_DEPARTMENT, value);
+                                copy.setDepartment(value);
                                 break;
                             case "Themenbereich":
-                                if (copy.containsKey(DetailledItem.KEY_COPY_DEPARTMENT)) {
-                                    value = copy
-                                            .get(DetailledItem.KEY_COPY_DEPARTMENT)
-                                            + value;
+                                if (copy.getDepartment() != null) {
+                                    value = copy.getDepartment() + value;
                                 }
-                                copy.put(DetailledItem.KEY_COPY_DEPARTMENT, value);
+                                copy.setDepartment(value);
                                 break;
                         }
                     }

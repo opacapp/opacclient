@@ -28,8 +28,10 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
@@ -101,8 +103,8 @@ public class VuFind extends BaseApi {
     protected List<SearchQuery> last_query;
 
     @Override
-    public void init(Library lib) {
-        super.init(lib);
+    public void init(Library lib, HttpClientFactory httpClientFactory) {
+        super.init(lib, httpClientFactory);
 
         this.library = lib;
         this.data = lib.getData();
@@ -332,11 +334,11 @@ public class VuFind extends BaseApi {
                         if (i == 0) {
                             callNumber = row.child(1).text();
                         } else {
-                            Map<String, String> copy = new HashMap<>();
-                            copy.put(DetailledItem.KEY_COPY_BRANCH, branch);
-                            copy.put(DetailledItem.KEY_COPY_SHELFMARK, callNumber);
-                            copy.put(DetailledItem.KEY_COPY_BARCODE, row.child(0).text());
-                            copy.put(DetailledItem.KEY_COPY_STATUS, row.child(1).text());
+                            Copy copy = new Copy();
+                            copy.setBranch(branch);
+                            copy.setShelfmark(callNumber);
+                            copy.setBarcode(row.child(0).text());
+                            copy.setStatus(row.child(1).text());
                             res.addCopy(copy);
                         }
                         i++;
@@ -371,11 +373,11 @@ public class VuFind extends BaseApi {
                             i++;
                             continue;
                         }
-                        Map<String, String> copy = new HashMap<>();
+                        Copy copy = new Copy();
                         if (callNumber != null) {
-                            copy.put(DetailledItem.KEY_COPY_SHELFMARK, callNumber);
+                            copy.setShelfmark(callNumber);
                         }
-                        copy.put(DetailledItem.KEY_COPY_BRANCH, branch);
+                        copy.setBranch(branch);
                         Iterator<?> keys = copytable.keys();
                         while (keys.hasNext()) {
                             String key = (String) keys.next();
@@ -391,18 +393,18 @@ public class VuFind extends BaseApi {
                                         if (((Element) node).tagName().equals("br")) {
                                             j++;
                                         } else if (j == line) {
-                                            copy.put(key, ((Element) node).text());
+                                            copy.set(key, ((Element) node).text());
                                         }
                                     } else if (node instanceof TextNode && j == line &&
                                             !((TextNode) node).text().trim().equals("")) {
-                                        copy.put(key, ((TextNode) node).text());
+                                        copy.set(key, ((TextNode) node).text());
                                     }
                                 }
                             } else {
                                 // Thessaloniki_University
                                 if (copytable.optInt(key, -1) == -1) continue;
                                 String value = row.child(copytable.getInt(key)).text();
-                                copy.put(key, value);
+                                copy.set(key, value);
                             }
                         }
                         res.addCopy(copy);

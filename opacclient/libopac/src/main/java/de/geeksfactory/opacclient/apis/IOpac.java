@@ -25,6 +25,8 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -46,15 +48,19 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.i18n.StringProvider;
+import de.geeksfactory.opacclient.networking.HttpClientFactory;
+import de.geeksfactory.opacclient.networking.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Filter.Option;
+import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.objects.ReservedItem;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
@@ -107,8 +113,8 @@ public class IOpac extends BaseApi implements OpacApi {
     protected boolean newShareLinks;
 
     @Override
-    public void init(Library lib) {
-        super.init(lib);
+    public void init(Library lib, HttpClientFactory httpClientFactory) {
+        super.init(lib, httpClientFactory);
 
         this.data = lib.getData();
 
@@ -462,7 +468,7 @@ public class IOpac extends BaseApi implements OpacApi {
         result.setCover(imgUrl);
 
         // GET INFORMATION
-        Map<String, String> e = new HashMap<>();
+        Copy copy = new Copy();
 
         for (Element element : table) {
             String detail = element.select("td").text().trim()
@@ -474,15 +480,14 @@ public class IOpac extends BaseApi implements OpacApi {
 
                 if (title.contains("verliehen bis")) {
                     if (detail.equals("")) {
-                        e.put(DetailledItem.KEY_COPY_STATUS, "verfügbar");
+                        copy.setStatus("verfügbar");
                     } else {
-                        e.put(DetailledItem.KEY_COPY_STATUS, "verliehen bis "
-                                + detail);
+                        copy.setStatus("verliehen bis " + detail);
                     }
                 } else if (title.contains("Abteilung")) {
-                    e.put(DetailledItem.KEY_COPY_DEPARTMENT, detail);
+                    copy.setDepartment(detail);
                 } else if (title.contains("Signatur")) {
-                    e.put(DetailledItem.KEY_COPY_SHELFMARK, detail);
+                    copy.setShelfmark(detail);
                 } else if (title.contains("Titel")) {
                     result.setTitle(detail);
                 } else if (!title.contains("Cover")) {
@@ -492,10 +497,8 @@ public class IOpac extends BaseApi implements OpacApi {
         }
 
         // GET RESERVATION INFO
-        if ("verfügbar".equals(e.get(DetailledItem.KEY_COPY_STATUS))
-                || doc.select(
-                "a[href^=/cgi-bin/di.exe?mode=10], input.resbutton")
-                      .size() == 0) {
+        if ("verfügbar".equals(copy.getStatus())
+                || doc.select("a[href^=/cgi-bin/di.exe?mode=10], input.resbutton").size() == 0) {
             result.setReservable(false);
         } else {
             result.setReservable(true);
@@ -511,7 +514,7 @@ public class IOpac extends BaseApi implements OpacApi {
             }
         }
 
-        if (e.size() > 0) result.addCopy(e);
+        if (copy.notEmpty()) result.addCopy(copy);
 
         return result;
     }
@@ -699,8 +702,8 @@ public class IOpac extends BaseApi implements OpacApi {
 
         AccountData res = new AccountData(account.getId());
 
-        List<Map<String, String>> media = new ArrayList<>();
-        List<Map<String, String>> reserved = new ArrayList<>();
+        List<LentItem> media = new ArrayList<>();
+        List<ReservedItem> reserved = new ArrayList<>();
         parseMediaList(media, doc, data);
         parseResList(reserved, doc, data);
 
@@ -767,14 +770,14 @@ public class IOpac extends BaseApi implements OpacApi {
         }
     }
 
-    static void parseMediaList(List<Map<String, String>> media, Document doc, JSONObject data) {
+    static void parseMediaList(List<LentItem> media, Document doc, JSONObject data) {
         if (doc.select("a[name=AUS]").size() == 0) return;
 
         Elements copytrs = doc.select("a[name=AUS] ~ table, a[name=AUS] ~ form table").first()
                               .select("tr");
         doc.setBaseUri(data.optString("baseurl"));
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
 
         int trs = copytrs.size();
         if (trs < 2) {
@@ -790,48 +793,44 @@ public class IOpac extends BaseApi implements OpacApi {
         } catch (JSONException e) {
         }
 
+        Pattern datePattern = Pattern.compile("\\d{2}\\.\\d{2}\\.\\d{4}");
         for (int i = 1; i < trs; i++) {
             Element tr = copytrs.get(i);
-            Map<String, String> e = new HashMap<>();
+            LentItem item = new LentItem();
 
             if (copymap.optInt("title", 0) >= 0) {
-                e.put(AccountData.KEY_LENT_TITLE,
-                        tr.child(copymap.optInt("title", 0)).text().trim()
-                          .replace("\u00a0", ""));
+                item.setTitle(
+                        tr.child(copymap.optInt("title", 0)).text().trim().replace("\u00a0", ""));
             }
             if (copymap.optInt("author", 1) >= 0) {
-                e.put(AccountData.KEY_LENT_AUTHOR,
-                        tr.child(copymap.optInt("author", 1)).text().trim()
-                          .replace("\u00a0", ""));
+                item.setAuthor(
+                        tr.child(copymap.optInt("author", 1)).text().trim().replace("\u00a0", ""));
             }
             if (copymap.optInt("format", 2) >= 0) {
-                e.put(AccountData.KEY_LENT_FORMAT,
-                        tr.child(copymap.optInt("format", 2)).text().trim()
-                          .replace("\u00a0", ""));
+                item.setFormat(
+                        tr.child(copymap.optInt("format", 2)).text().trim().replace("\u00a0", ""));
             }
             int prolongCount = 0;
             if (copymap.optInt("prolongcount", 3) >= 0) {
                 prolongCount = Integer.parseInt(tr
                         .child(copymap.optInt("prolongcount", 3)).text().trim()
                         .replace("\u00a0", ""));
-                e.put(AccountData.KEY_LENT_STATUS, String.valueOf(prolongCount) + "x verl.");
+                item.setStatus(String.valueOf(prolongCount) + "x verl.");
             }
             if (data.optInt("maxprolongcount", -1) != -1) {
-                e.put(AccountData.KEY_LENT_RENEWABLE,
-                        prolongCount < data.optInt("maxprolongcount", -1) ? "Y" : "N");
+                item.setRenewable(prolongCount < data.optInt("maxprolongcount", -1));
             }
             if (copymap.optInt("deadline", 4) >= 0) {
-                e.put(AccountData.KEY_LENT_DEADLINE,
-                        tr.child(copymap.optInt("deadline", 4)).text().trim()
-                          .replace("\u00a0", ""));
-            }
-            try {
-                e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String
-                        .valueOf(sdf
-                                .parse(e.get(AccountData.KEY_LENT_DEADLINE))
-                                .getTime()));
-            } catch (ParseException e1) {
-                e1.printStackTrace();
+                String value = tr.child(copymap.optInt("deadline", 4)).text().trim()
+                                 .replace("\u00a0", "");
+                Matcher matcher = datePattern.matcher(value);
+                if (matcher.find()) {
+                    try {
+                        item.setDeadline(fmt.parseLocalDate(matcher.group()));
+                    } catch (IllegalArgumentException e1) {
+                        e1.printStackTrace();
+                    }
+                }
             }
             if (copymap.optInt("prolongurl", 5) >= 0) {
                 if (tr.children().size() > copymap.optInt("prolongurl", 5)) {
@@ -842,36 +841,32 @@ public class IOpac extends BaseApi implements OpacApi {
                         // the new iOPAC version
                         Element input = cell.select("input[name=MedNrVerlAll]").first();
                         String value = input.val();
-                        e.put(AccountData.KEY_LENT_LINK, "NEW" + value);
-                        e.put(AccountData.KEY_LENT_ID, value.split(";")[0]);
-                        if (input.hasAttr("disabled")) {
-                            e.put(AccountData.KEY_LENT_RENEWABLE, "N");
-                        }
+                        item.setProlongData("NEW" + value);
+                        item.setId(value.split(";")[0]);
+                        if (input.hasAttr("disabled")) item.setRenewable(false);
                     } else {
                         // previous versions - link for prolonging on every medium
                         String link = cell.select("a").attr("href");
-                        e.put(AccountData.KEY_LENT_LINK, link);
+                        item.setProlongData(link);
                         // find media number with regex
                         Pattern pattern = Pattern.compile("mednr=([^&]*)&");
                         Matcher matcher = pattern.matcher(link);
-                        if (matcher.find() && matcher.group() != null) {
-                            e.put(AccountData.KEY_LENT_ID, matcher.group(1));
-                        }
+                        if (matcher.find() && matcher.group() != null) item.setId(matcher.group(1));
                     }
                 }
             }
 
-            media.add(e);
+            media.add(item);
         }
         assert (media.size() == trs - 1);
 
     }
 
-    static void parseResList(List<Map<String, String>> media, Document doc, JSONObject data) {
+    static void parseResList(List<ReservedItem> media, Document doc, JSONObject data) {
         if (doc.select("a[name=RES]").size() == 0) return;
-        Elements copytrs = doc.select("a[name=RES] ~ table:contains(Titel)")
-                              .first().select("tr");
+        Elements copytrs = doc.select("a[name=RES] ~ table:contains(Titel)").first().select("tr");
         doc.setBaseUri(data.optString("baseurl"));
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
 
         int trs = copytrs.size();
         if (trs < 2) {
@@ -880,20 +875,21 @@ public class IOpac extends BaseApi implements OpacApi {
         assert (trs > 0);
         for (int i = 1; i < trs; i++) {
             Element tr = copytrs.get(i);
-            Map<String, String> e = new HashMap<>();
+            ReservedItem item = new ReservedItem();
 
-            e.put(AccountData.KEY_RESERVATION_TITLE, tr.child(0).text().trim()
-                                                       .replace("\u00a0", ""));
-            e.put(AccountData.KEY_RESERVATION_AUTHOR, tr.child(1).text().trim()
-                                                        .replace("\u00a0", ""));
-            e.put(AccountData.KEY_RESERVATION_READY, tr.child(4).text().trim()
-                                                       .replace("\u00a0", ""));
+            item.setTitle(tr.child(0).text().trim().replace("\u00a0", ""));
+            item.setAuthor(tr.child(1).text().trim().replace("\u00a0", ""));
+            try {
+                item.setReadyDate(
+                        fmt.parseLocalDate(tr.child(4).text().trim().replace("\u00a0", "")));
+            } catch (IllegalArgumentException e) {
+                item.setStatus(tr.child(4).text().trim().replace("\u00a0", ""));
+            }
             if (tr.select("a").size() > 0) {
-                e.put(AccountData.KEY_RESERVATION_CANCEL, tr.select("a").last()
-                                                            .attr("href"));
+                item.setCancelData(tr.select("a").last().attr("href"));
             }
 
-            media.add(e);
+            media.add(item);
         }
         assert (media.size() == trs - 1);
 

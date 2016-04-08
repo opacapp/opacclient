@@ -28,6 +28,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -42,8 +44,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -54,19 +54,23 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import de.geeksfactory.opacclient.NotReachableException;
 import de.geeksfactory.opacclient.i18n.StringProvider;
+import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import de.geeksfactory.opacclient.networking.HttpUtils;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
+import de.geeksfactory.opacclient.objects.Copy;
 import de.geeksfactory.opacclient.objects.Detail;
 import de.geeksfactory.opacclient.objects.DetailledItem;
 import de.geeksfactory.opacclient.objects.Filter;
 import de.geeksfactory.opacclient.objects.Filter.Option;
+import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.objects.ReservedItem;
 import de.geeksfactory.opacclient.objects.SearchRequestResult;
 import de.geeksfactory.opacclient.objects.SearchResult;
 import de.geeksfactory.opacclient.objects.SearchResult.MediaType;
+import de.geeksfactory.opacclient.objects.Volume;
 import de.geeksfactory.opacclient.searchfields.DropdownSearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchField.Meaning;
@@ -248,8 +252,8 @@ public class Bibliotheca extends BaseApi {
     }
 
     @Override
-    public void init(Library lib) {
-        super.init(lib);
+    public void init(Library lib, HttpClientFactory httpClientFactory) {
+        super.init(lib, httpClientFactory);
         this.library = lib;
         this.data = lib.getData();
 
@@ -505,35 +509,36 @@ public class Bibliotheca extends BaseApi {
                     Element th = ths.get(i);
                     String head = th.text().trim();
                     if (head.equals("Zweigstelle")) {
-                        copymap.put(DetailledItem.KEY_COPY_BRANCH, i);
+                        copymap.put("branch", i);
                     } else if (head.equals("Abteilung")) {
-                        copymap.put(DetailledItem.KEY_COPY_DEPARTMENT, i);
-                    } else if (head.equals("Bereich")) {
-                        copymap.put(DetailledItem.KEY_COPY_LOCATION, i);
-                    } else if (head.equals("Standort")) {
-                        copymap.put(DetailledItem.KEY_COPY_LOCATION, i);
+                        copymap.put("department", i);
+                    } else if (head.equals("Bereich")
+                            || head.equals("Standort")) {
+                        copymap.put("location", i);
                     } else if (head.equals("Signatur")) {
-                        copymap.put(DetailledItem.KEY_COPY_SHELFMARK, i);
+                        copymap.put("signature", i);
                     } else if (head.equals("Barcode")
                             || head.equals("Medien-Nummer")) {
-                        copymap.put(DetailledItem.KEY_COPY_BARCODE, i);
+                        copymap.put("barcode", i);
                     } else if (head.equals("Status")) {
-                        copymap.put(DetailledItem.KEY_COPY_STATUS, i);
+                        copymap.put("status", i);
                     } else if (head.equals("Frist")
                             || head.matches("Verf.+gbar")) {
-                        copymap.put(DetailledItem.KEY_COPY_RETURN, i);
+                        copymap.put("returndate", i);
                     } else if (head.equals("Vorbestellungen")
                             || head.equals("Reservierungen")) {
-                        copymap.put(DetailledItem.KEY_COPY_RESERVATIONS, i);
+                        copymap.put("reservations", i);
                     }
                 }
             }
             Elements exemplartrs = doc
                     .select(".exemplartab .tabExemplar, .exemplartab .tabExemplar_");
+            DateTimeFormatter
+                    fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
             for (int i = 0; i < exemplartrs.size(); i++) {
                 Element tr = exemplartrs.get(i);
 
-                Map<String, String> e = new HashMap<>();
+                Copy copy = new Copy();
 
                 Iterator<?> keys = copymap.keys();
                 while (keys.hasNext()) {
@@ -545,11 +550,15 @@ public class Bibliotheca extends BaseApi {
                         index = -1;
                     }
                     if (index >= 0) {
-                        e.put(key, tr.child(index).text());
+                        try {
+                            copy.set(key, tr.child(index).text(), fmt);
+                        } catch (IllegalArgumentException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
 
-                result.addCopy(e);
+                result.addCopy(copy);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -560,10 +569,10 @@ public class Bibliotheca extends BaseApi {
             for (int i = 0; i < bandtrs.size(); i++) {
                 Element tr = bandtrs.get(i);
 
-                Map<String, String> e = new HashMap<>();
-                e.put(DetailledItem.KEY_CHILD_ID, tr.attr("href").split("=")[1]);
-                e.put(DetailledItem.KEY_CHILD_TITLE, tr.text());
-                result.addVolume(e);
+                Volume volume = new Volume();
+                volume.setId(tr.attr("href").split("=")[1]);
+                volume.setTitle(tr.text());
+                result.addVolume(volume);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -994,7 +1003,7 @@ public class Bibliotheca extends BaseApi {
 
         JSONObject copymap = data.getJSONObject("accounttable");
 
-        List<Map<String, String>> media = new ArrayList<>();
+        List<LentItem> media = new ArrayList<>();
 
         if (doc.select(".kontozeile_center table").size() == 0) {
             return null;
@@ -1003,11 +1012,11 @@ public class Bibliotheca extends BaseApi {
         Elements exemplartrs = doc.select(".kontozeile_center table").get(0)
                                   .select("tr.tabKonto");
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
 
         for (int i = 0; i < exemplartrs.size(); i++) {
             Element tr = exemplartrs.get(i);
-            Map<String, String> e = new HashMap<>();
+            LentItem item = new LentItem();
 
             Iterator<?> keys = copymap.keys();
             while (keys.hasNext()) {
@@ -1019,30 +1028,25 @@ public class Bibliotheca extends BaseApi {
                     index = -1;
                 }
                 if (index >= 0) {
-                    if (key.equals(AccountData.KEY_LENT_LINK)) {
+                    if (key.equals("prolongurl")) {
                         if (tr.child(index).children().size() > 0) {
-                            e.put(key, tr.child(index).child(0).attr("href"));
-                            e.put(AccountData.KEY_LENT_RENEWABLE,
-                                    tr.child(index).child(0).attr("href")
-                                      .contains("vermsg") ? "N" : "Y");
+                            item.setProlongData(tr.child(index).child(0).attr("href"));
+                            item.setRenewable(
+                                    tr.child(index).child(0).attr("href").contains("vermsg"));
+                        }
+                    } else if (key.equals("deadline")) {
+                        try {
+                            item.setDeadline(fmt.parseLocalDate(tr.child(index).text()));
+                        } catch (IllegalArgumentException e1) {
+                            e1.printStackTrace();
                         }
                     } else {
-                        e.put(key, tr.child(index).text());
+                        item.set(key, tr.child(index).text());
                     }
                 }
             }
 
-            if (e.containsKey(AccountData.KEY_LENT_DEADLINE)) {
-                try {
-                    e.put(AccountData.KEY_LENT_DEADLINE_TIMESTAMP, String
-                            .valueOf(sdf.parse(
-                                    e.get(AccountData.KEY_LENT_DEADLINE))
-                                        .getTime()));
-                } catch (ParseException e1) {
-                    e1.printStackTrace();
-                }
-            }
-            media.add(e);
+            media.add(item);
         }
         assert (doc.select(".kontozeile_center table").get(0).select("tr")
                    .size() > 0);
@@ -1050,12 +1054,12 @@ public class Bibliotheca extends BaseApi {
 
         copymap = data.getJSONObject("reservationtable");
 
-        List<Map<String, String>> reservations = new ArrayList<>();
+        List<ReservedItem> reservations = new ArrayList<>();
         exemplartrs = doc.select(".kontozeile_center table").get(1)
                          .select("tr.tabKonto");
         for (int i = 0; i < exemplartrs.size(); i++) {
             Element tr = exemplartrs.get(i);
-            Map<String, String> e = new HashMap<>();
+            ReservedItem item = new ReservedItem();
 
             Iterator<?> keys = copymap.keys();
             while (keys.hasNext()) {
@@ -1067,17 +1071,29 @@ public class Bibliotheca extends BaseApi {
                     index = -1;
                 }
                 if (index >= 0) {
-                    if (key.equals(AccountData.KEY_RESERVATION_CANCEL)) {
+                    if (key.equals("cancelurl")) {
                         if (tr.child(index).children().size() > 0) {
-                            e.put(key, tr.child(index).child(0).attr("href"));
+                            item.setCancelData(tr.child(index).child(0).attr("href"));
+                        }
+                    } else if (key.equals("availability")) {
+                        try {
+                            item.setReadyDate(fmt.parseLocalDate(tr.child(index).text()));
+                        } catch (IllegalArgumentException e1) {
+                            item.setStatus(tr.child(index).text());
+                        }
+                    } else if (key.equals("expirationdate")) {
+                        try {
+                            item.setExpirationDate(fmt.parseLocalDate(tr.child(index).text()));
+                        } catch (IllegalArgumentException e1) {
+                            item.setStatus(tr.child(index).text());
                         }
                     } else {
-                        e.put(key, tr.child(index).text());
+                        item.set(key, tr.child(index).text());
                     }
                 }
             }
 
-            reservations.add(e);
+            reservations.add(item);
         }
         assert (doc.select(".kontozeile_center table").get(1).select("tr")
                    .size() > 0);
