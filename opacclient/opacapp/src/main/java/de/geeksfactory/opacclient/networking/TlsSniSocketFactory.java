@@ -92,6 +92,16 @@ public class TlsSniSocketFactory extends SSLConnectionSocketFactory {
     private void verifyHostname(final SSLSocket sslsock, final String hostname)
             throws IOException {
         try {
+            if (hostname.matches("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$")) {
+                // In very rare cases, we have endpoints with SSL enabled behind an IP address.
+                // Getting SSL certificates for an IP address is hard, so they always have
+                // invalid certificates. There is no way we could do a proper host name check
+                // here, so we skip it and still have more security than with SSL disabled.
+                // Note that this only applies to endpoints where an IP address is stored in
+                // *our* configuration, so this does not allow any new attacks on all other
+                // endpoints.
+                return;
+            }
             if (Log.isLoggable(TAG, Log.DEBUG)) {
                 try {
                     final SSLSession session = sslsock.getSession();
