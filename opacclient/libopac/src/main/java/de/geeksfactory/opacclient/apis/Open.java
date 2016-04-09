@@ -494,14 +494,13 @@ public class Open extends BaseApi implements OpacApi {
             String html =
                     httpGet(opac_url + "/" + data.getJSONObject("urls").getString("simple_search") +
                             NO_MOBILE + "&id=" + id, getDefaultEncoding());
-            return parse_result(html);
+            return parse_result(Jsoup.parse(html));
         } catch (JSONException e) {
             throw new IOException(e);
         }
     }
 
-    private DetailledItem parse_result(String html) {
-        Document doc = Jsoup.parse(html);
+    protected DetailledItem parse_result(Document doc) {
         DetailledItem item = new DetailledItem();
 
         // Title and Subtitle
