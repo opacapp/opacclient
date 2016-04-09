@@ -48,7 +48,7 @@ import de.geeksfactory.opacclient.objects.Library;
  * @author Johan von Forstner
  */
 public class OpacApiFactory {
-    private OpacApiFactory() {
+    protected OpacApiFactory() {
     }
 
     /**
