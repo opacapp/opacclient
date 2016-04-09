@@ -165,8 +165,10 @@ public class LentItem extends AccountItem {
                 break;
             case "renewable":
                 setRenewable("Y".equals(value));
+                break;
             case "download":
                 setDownloadData(value);
+                break;
             default:
                 super.set(key, value);
                 break;
