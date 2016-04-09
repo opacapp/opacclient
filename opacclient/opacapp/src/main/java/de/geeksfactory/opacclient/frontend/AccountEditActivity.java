@@ -338,9 +338,11 @@ public class AccountEditActivity extends AppCompatActivity {
 
             setProgress(false);
             if (result == null) {
+                account.setPasswordKnownValid(true);
                 save();
                 close();
             } else if (result instanceof OpacErrorException) {
+                account.setPasswordKnownValid(false);
                 OpacErrorException e = (OpacErrorException) result;
                 AlertDialog.Builder builder = new AlertDialog.Builder(
                         AccountEditActivity.this);
@@ -366,6 +368,7 @@ public class AccountEditActivity extends AppCompatActivity {
                                    }
                                }).create().show();
             } else {
+                account.setPasswordKnownValid(false);
                 AlertDialog.Builder builder = new AlertDialog.Builder(
                         AccountEditActivity.this);
                 builder.setMessage(R.string.user_data_connection_error)

@@ -110,10 +110,13 @@ public class SyncAccountService extends WakefulIntentService {
                 if (res == null) continue;
 
                 data.open();
+                account.setPasswordKnownValid(true);
+                data.update(account);
                 data.storeCachedAccountData(account, res);
                 data.close();
 
                 new ReminderHelper(app).generateAlarms();
+
             } catch (JSONException | IOException | OpacApi.OpacErrorException e) {
                 data.close();
                 e.printStackTrace();
