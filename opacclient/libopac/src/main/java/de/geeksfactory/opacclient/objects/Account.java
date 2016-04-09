@@ -34,11 +34,13 @@ public class Account {
     private String name;
     private String password;
     private long cached;
+    private boolean password_known_valid = false;
 
     @Override
     public String toString() {
         return "Account [id=" + id + ", library=" + library + ", label="
-                + label + ", name=" + name + ", cached=" + cached + "]";
+                + label + ", name=" + name + ", cached=" + cached + ", " +
+                "passwordValid=" + password_known_valid + "]";
     }
 
     /**
@@ -148,6 +150,14 @@ public class Account {
      */
     public void setCached(long cached) {
         this.cached = cached;
+    }
+
+    public boolean isPasswordKnownValid() {
+        return password_known_valid;
+    }
+
+    public void setPasswordKnownValid(boolean password_known_valid) {
+        this.password_known_valid = password_known_valid;
     }
 
     @Override

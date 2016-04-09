@@ -1491,7 +1491,7 @@ public class AccountFragment extends Fragment implements
         @Override
         protected AccountData doInBackground(Void... voids) {
             try {
-                AccountData data = app.getApi().account(app.getAccount());
+                AccountData data = app.getApi().account(account);
 
                 // save data
                 AccountDataSource adatasource;
@@ -1502,6 +1502,8 @@ public class AccountFragment extends Fragment implements
                 }
 
                 adatasource.open();
+                account.setPasswordKnownValid(true);
+                adatasource.update(account);
                 adatasource.storeCachedAccountData(adatasource.getAccount(data.getAccount()), data);
                 adatasource.close();
 
