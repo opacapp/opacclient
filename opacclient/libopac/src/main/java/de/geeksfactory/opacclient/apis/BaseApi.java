@@ -603,7 +603,7 @@ public abstract class BaseApi implements OpacApi {
         return html;
     }
 
-    private void logHttpError(Throwable e) {
+    protected void logHttpError(Throwable e) {
         if (httpLoggingEnabled) {
             e.printStackTrace();
         }
