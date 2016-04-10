@@ -800,7 +800,14 @@ public class LibraryListActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(List<Library> result) {
             libraries = result;
-            if (dialog != null) dialog.dismiss();
+            if (dialog != null) {
+                try {
+                    dialog.dismiss();
+                } catch (IllegalArgumentException e) {
+                    // we sometimes get a "IllegalArgumentException: View not attached to window"
+                    e.printStackTrace();
+                }
+            }
             if (libraries == null) return;
             if (!visible) return;
 
