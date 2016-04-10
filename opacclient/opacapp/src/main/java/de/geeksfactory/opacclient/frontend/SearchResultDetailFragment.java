@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -300,7 +299,9 @@ public class SearchResultDetailFragment extends Fragment
                 if (swatch == null) swatch = palette.getDarkMutedSwatch();
                 if (swatch == null) swatch = palette.getLightVibrantSwatch();
                 if (swatch == null) swatch = palette.getLightMutedSwatch();
-                if (swatch == null) swatch = palette.getSwatches().get(0);
+                if (swatch == null && palette.getSwatches().size() > 0) {
+                    swatch = palette.getSwatches().get(0);
+                }
                 if (swatch != null) {
                     appBarLayout.setBackgroundColor(swatch.getRgb());
                     collapsingToolbar.setContentScrimColor(swatch.getRgb());
