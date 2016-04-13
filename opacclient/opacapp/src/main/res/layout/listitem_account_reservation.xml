@@ -3,6 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:animateLayoutChanges="true"
     android:background="@drawable/ripple"
     android:orientation="horizontal">
@@ -20,62 +22,72 @@
         android:paddingBottom="4dp"
         android:paddingTop="4dp">
 
-        <TextView
+        <de.geeksfactory.opacclient.ui.vectordrawable.VectorDrawableTextView
             android:id="@+id/tvTitleAndAuthor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
             android:contentDescription="@string/title_and_author"
-            android:drawableLeft="@drawable/ic_title"
-            android:drawablePadding="4dp"
+            app:drawableLeftCompat="@drawable/ic_title_24dp"
+            tools:drawableLeft="@drawable/ic_title_24dp"
+            android:drawablePadding="8dp"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:singleLine="true"/>
 
-        <TextView
+        <de.geeksfactory.opacclient.ui.vectordrawable.VectorDrawableTextView
             android:id="@+id/tvStatus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:contentDescription="@string/status"
-            android:drawableLeft="@drawable/ic_status"
-            android:drawablePadding="4dp"
+            app:drawableLeftCompat="@drawable/ic_status_24dp"
+            tools:drawableLeft="@drawable/ic_status_24dp"
+            android:drawablePadding="8dp"
             android:gravity="center_vertical"/>
 
         <LinearLayout
             android:id="@+id/llDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:orientation="vertical"
             android:visibility="gone">
 
-            <TextView
+            <de.geeksfactory.opacclient.ui.vectordrawable.VectorDrawableTextView
                 android:id="@+id/tvAuthorDetail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
                 android:contentDescription="@string/author"
-                android:drawableLeft="@drawable/ic_author"
-                android:drawablePadding="4dp"
+                app:drawableLeftCompat="@drawable/ic_author_24dp"
+                tools:drawableLeft="@drawable/ic_author_24dp"
+                android:drawablePadding="8dp"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:singleLine="true"/>
 
-            <TextView
+            <de.geeksfactory.opacclient.ui.vectordrawable.VectorDrawableTextView
                 android:id="@+id/tvBranchDetail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
                 android:contentDescription="@string/branch"
-                android:drawableLeft="@drawable/ic_branch"
-                android:drawablePadding="4dp"
+                app:drawableLeftCompat="@drawable/ic_branch_24dp"
+                tools:drawableLeft="@drawable/ic_branch_24dp"
+                android:drawablePadding="8dp"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:singleLine="true"/>
 
-            <TextView
+            <de.geeksfactory.opacclient.ui.vectordrawable.VectorDrawableTextView
                 android:id="@+id/tvFormatDetail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
                 android:contentDescription="@string/mediatype"
-                android:drawableLeft="@drawable/ic_media_type"
-                android:drawablePadding="4dp"
+                app:drawableLeftCompat="@drawable/ic_media_type_24dp"
+                tools:drawableLeft="@drawable/ic_media_type_24dp"
+                android:drawablePadding="8dp"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:singleLine="true"/>
@@ -93,32 +105,36 @@
             android:id="@+id/ivCancel"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:padding="12dp"
             android:background="@drawable/ripple_unmasked"
             android:clickable="true"
             android:contentDescription="@string/reservation_cancel"
             android:focusable="true"
-            android:src="@drawable/ic_cancel"/>
+            app:srcCompat="@drawable/ic_cancel_24dp"
+            tools:src="@drawable/ic_cancel_24dp"/>
 
         <ImageView
             android:id="@+id/ivBooking"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:padding="12dp"
             android:background="@drawable/ripple_unmasked"
             android:clickable="true"
             android:contentDescription="@string/reservation_book"
             android:focusable="true"
-            android:src="@drawable/ic_booking"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_booking_24dp"/>
 
         <ImageView
             android:id="@+id/ivDetails"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:padding="12dp"
             android:background="@drawable/ripple_unmasked"
             android:clickable="true"
             android:contentDescription="@string/go_to_details"
             android:focusable="true"
-            android:src="@drawable/ic_detail"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_details_24dp"/>
     </LinearLayout>
 </LinearLayout>
