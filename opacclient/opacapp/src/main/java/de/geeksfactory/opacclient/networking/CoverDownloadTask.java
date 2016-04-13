@@ -18,8 +18,8 @@ import de.geeksfactory.opacclient.utils.ISBNTools;
 
 public class CoverDownloadTask extends AsyncTask<Void, Integer, CoverHolder> {
     protected static HashSet<String> rejectImages = new HashSet<>();
-    protected int width = 56;
-    protected int height = 56;
+    protected int width = 0;
+    protected int height = 0;
 
     static {
         rejectImages.add(
@@ -45,12 +45,17 @@ public class CoverDownloadTask extends AsyncTask<Void, Integer, CoverHolder> {
     protected CoverHolder doInBackground(Void... voids) {
         if (item.getCover() != null && item.getCoverBitmap() == null) {
             try {
-                float density = context.getResources().getDisplayMetrics().density;
-
                 HttpClient http_client = new AndroidHttpClientFactory()
                         .getNewApacheHttpClient(false, true, false);
+
+                if (width == 0 && height == 0) {
+                    // Use default
+                    float density = context.getResources().getDisplayMetrics().density;
+                    width = height = (int) density * 56;
+                }
+
                 HttpGet httpget = new HttpGet(ISBNTools.getBestSizeCoverUrl(item.getCover(),
-                        (int) (width * density), (int) (height * density)));
+                        width, height));
                 HttpResponse response;
 
                 try {

@@ -1139,7 +1139,7 @@ public class SearchResultDetailFragment extends Fragment
             item = result;
 
             if (item.getCover() != null && item.getCoverBitmap() == null) {
-                new LoadCoverTask(item, coverWrapper.getWidth(), coverWrapper.getHeight()).execute();
+                new LoadCoverTask(item, collapsingToolbar.getWidth(), collapsingToolbar.getHeight()).execute();
             } else {
                 displayCover();
             }
