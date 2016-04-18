@@ -59,7 +59,6 @@
   <string name="notification_service">Στοιχεία που λήγουν </string>
   <string name="notification_service_desc">Ειδοποίηση, αν ένα στοιχείο πρόκειται να λήξει (καμία εγγύηση δεν δίνεται)</string>
   <string name="notification_service_wifionly">Έλεγχος στο WiFi μόνο</string>
-  <string name="notification_service_wifionly_desc">Δεν υπαρχει λήψη πληροφοριών μέσω κινητών δικτύων.</string>
   <string name="startup_title">Οθόνη εκκίνησης</string>
   <string name="startup_summary">Ποια οθόνη θα πρέπει να εμφανίζεται κατά την εκκίνηση;</string>
   <string name="notification_warning">Περίοδος προειδοποίησης</string>

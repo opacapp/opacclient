@@ -1,0 +1,207 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="app_name">Webový katalog</string>
+  <string name="launcher_name">Webový katalog</string>
+  <string name="web_opac">Webový katalog</string>
+  <string name="branch">Pobočka/oddělení knihovny</string>
+  <string name="barcodes">Čárové kódy</string>
+  <string name="go_search">Hledat</string>
+  <string name="prefs">Nastavení</string>
+  <string name="account">Účet</string>
+  <string name="about">O nás</string>
+  <string name="about_summary">O této aplikaci</string>
+  <string name="changelog">Seznam provedených změn</string>
+  <string name="close">Zavřít</string>
+  <string name="osl">Licenční poznámky</string>
+  <string name="thanks">Poděkování</string>
+  <string name="developer_settings">Vývojářská nastavení</string>
+  <string name="details_head">Podrobnosti</string>
+  <string name="copies_head">Kopie</string>
+  <string name="ret">Datum vrácení</string>
+  <string name="res">Rezervováno</string>
+  <string name="tocollection">Zařadit do sbírky</string>
+  <string name="reserve">Rezervovat</string>
+  <string name="lendebook">Výpůjčka e-knihy</string>
+  <string name="doing_res">Provádím rezervaci...</string>
+  <string name="opac_error_email">Vyplňte, prosím, svůj e-mail v nastavení aplikace. </string>
+  <string name="doing_booking">Provádím výpůjčku....</string>
+  <string name="valid_until">Registrace platná do:</string>
+  <string name="no_warranty">Všechny uvedené informace jsou bez záruky.</string>
+  <string name="lent_head">Výpůjčka</string>
+  <string name="reservations_head">Rezervace</string>
+  <string name="entl_none">Nemáte nic vypůjčeno</string>
+  <string name="reservations_none">Nemáte žádné rezervace</string>
+  <string name="cancel_confirm">Opravdu chcete zrušit rezervaci?</string>
+  <string name="yes">Ano</string>
+  <string name="no">Ne</string>
+  <string name="cancel">Zrušit</string>
+  <string name="delete">Smazat</string>
+  <string name="accept">OK</string>
+  <string name="doing_cancel">Ruším rezervace...</string>
+  <string name="doing_prolong">Provádím prodloužení...</string>
+  <string name="doing_download">Probíhá stahování informaci...</string>
+  <string name="reader_needed_ignore">Ignorovat</string>
+  <string name="doing_prolong_all">Prodlužuji výpůjčku u dokumentů, kde je to možné...</string>
+  <string name="prolong_all_confirm">Opravdu chcete prodloužit všechny výpůjčky?</string>
+  <string name="opac_error">Zpráva o chybě Web:</string>
+  <string name="welcome">Vítejte!</string>
+  <string name="welcome_select">Nejprve zvolte si vyberte vaši knihovnu.</string>
+  <string name="select_library">Vybrat knihovnu</string>
+  <string name="report">Poslat hlášení o chybě</string>
+  <string name="report_sending">Posílám hlášení o chybě...</string>
+  <string name="report_sent">Hlášení bylo úspěšně odesláno. Děkujeme!</string>
+  <string name="report_error">Hlášení o chybě nebylo odesláno.</string>
+  <string name="notifications">Upozornění</string>
+  <string name="notification_service">Tituly s blízkým datem vrácení</string>
+  <string name="notification_service_desc">Upozornit v případě, že se blíží datum vácení (bez záruky)</string>
+  <string name="notification_service_wifionly">Kontrolovat jen přes WiFi</string>
+  <string-array name="warning">
+    <item>ve stejný den</item>
+    <item>1 den předem</item>
+    <item>3 dny předem</item>
+    <item>1 týden předem</item>
+  </string-array>
+  <string name="startup_title">Startovací obrazovka</string>
+  <string name="startup_summary">Jaká obrazovka se má zobrazit po spuštění aplikace?</string>
+  <string-array name="startup_labels">
+    <item>Hledání</item>
+    <item>Účet</item>
+    <item>Oblíbené</item>
+    <item>Informace</item>
+  </string-array>
+  <string-array name="startup_values">
+    <item>hledání</item>
+    <item>účet</item>
+    <item>oblíbené</item>
+    <item>informace</item>
+  </string-array>
+  <string name="notification_warning">Perioda pro upozornění</string>
+  <string name="notification_warning_desc">Jak dlouho dopředu chcete být upozorněni na blížící se datum vrácení?</string>
+  <string name="notif_ticker">u %s titulů se blíží datum vrácení!</string>
+  <string name="star">Uložit do oblíbených</string>
+  <string name="starred">Titul je nyní v seznamu vašich oblíbených.</string>
+  <string name="star_wait">Prosím vyčkejte, než dojde ke stažení podobností.</string>
+  <string name="share">Sdílet</string>
+  <string name="share_wait">Prosím vyčkejte, než dojde ke stažení podobností.</string>
+  <string name="share_notsupported">Tuto funkci bohužel knihovna nepodporuje.</string>
+  <string name="unsupported">Funkce není podporována</string>
+  <string name="account_unsupported_api">Tato funkce bohužel není vaší knihovnou podporována. Pokud nám dáte vědět, že o ní máte zájem, pokusíme se ji v budoucnu implementovat. Budeme rádi pokud nám napíšete e-mail na info@opacapp.de</string>
+  <string name="write_mail">Napsat e-mail</string>
+  <string name="info_error">Nepodařilo se získat doplňující informace k vybrané knihovně.</string>
+  <string name="info_unsupported">Bohužel nemáme k dispozici žádné další infomace o knihovně.</string>
+  <string name="retry">Prosím, zkuste to znovu</string>
+  <string name="connection_error_detail_security">Zabezpečené připojení na server knihovny se nezdařilo. Zkuste to prosím znovu. Pokud problém přetrvá, je možné, že něco blokuje spojení. Pokud se problém projevuje i na jiných WiFi sítích, dejte nám vědět na info@opacapp.de.</string>
+  <string name="default_account_name">Nepojmenovaný účet</string>
+  <string name="title_activity_account_list">Účty</string>
+  <string name="account_add">Přidat účet</string>
+  <string name="accounts">Účty</string>
+  <string name="accounts_edit">Změnit nastavení účtu</string>
+  <string name="accounts_desc">Správa vašich knihoven a identifikačních údajů</string>
+  <string name="account_label">Štítek</string>
+  <string name="account_nr">Členské ID/uživatelské jméno (volitelné)</string>
+  <string name="account_password">Heslo (volitelné)</string>
+  <string name="account_city">Knihovna</string>
+  <string name="account_delete_confirm">Opravdu chcete smazat účet?</string>
+  <string name="account_select">Zvolit účet</string>
+  <string name="privacy">Soukromí</string>
+  <string name="nav_hl_library">Knihovna</string>
+  <string name="nav_search">Hledat</string>
+  <string name="nav_account">Účet</string>
+  <string name="nav_starred">Oblíbené</string>
+  <string name="nav_info">Informace</string>
+  <string name="nav_hl_other">Různé</string>
+  <string name="nav_settings">Nastavení</string>
+  <string name="nav_about">O této aplikaci</string>
+  <string name="nav_hl_accountlist">Výběr účtu</string>
+  <string name="crash_toast_text">Nastala chyba. Prosíme o strpení.</string>
+  <string name="crash_notif_ticker_text">Aplikace Web Opac: Nastala neočekávaná chyba.</string>
+  <string name="crash_notif_text">Prosím ťukněte sem a odešlete hlášení o chybě.</string>
+  <string name="crash_notif_title">Aplikace Web Opac neočekávaně skončila</string>
+  <string name="refresh">Obnovit</string>
+  <string name="prolong_all">Prodlužit všechny výpůjčky</string>
+  <string name="account_no_concurrent">Prosím vyčkejte, než dojde k aktualizaci informací.</string>
+  <string name="confirm_title">Potvrdit</string>
+  <string name="confirm">Potvrdit</string>
+  <string name="account_up_to_date">Tyto informace jsou aktuální.</string>
+  <plurals name="account_age_minutes">
+    <item quantity="one">Poslední aktualizace infomací proběhla před minutou.</item>
+    <item quantity="few">Poslední aktualizace infomací proběhla před %d minutami. </item>
+    <item quantity="other">Poslední aktualizace infomací proběhla před %d minutami. </item>
+  </plurals>
+  <plurals name="account_age_hours">
+    <item quantity="one">Poslední aktualizace infomací proběhla před hodinou. </item>
+    <item quantity="few">Poslední aktualizace infomací proběhla před %d hodinami.</item>
+    <item quantity="other">Poslední aktualizace infomací proběhla před %d hodinami.</item>
+  </plurals>
+  <plurals name="account_age_days">
+    <item quantity="one">Poslední aktualizace infomací proběhla před jedním dnem.</item>
+    <item quantity="few">Poslední aktualizace infomací proběhla před %d dny.</item>
+    <item quantity="other">Poslední aktualizace infomací proběhla před %d dny.</item>
+  </plurals>
+  <string name="search_advanced">Rozšířené hledání</string>
+  <string name="search_free">Volné hledání</string>
+  <string name="barcode_title">Nainstalovat čtečku čárových kódů?</string>
+  <string name="barcode_gplay">Google Play</string>
+  <string name="barcode_amazon">Amazon</string>
+  <plurals name="result_number">
+    <item quantity="one">Jeden výsledek hledání</item>
+    <item quantity="few">%d výsledky hledání</item>
+    <item quantity="other">%d výsledků hledání</item>
+  </plurals>
+  <string name="export_starred">Export</string>
+  <string name="geolocate">Najít nejbližší knihovnu</string>
+  <string name="geolocate_progress">Provádím lokalizaci vaší polohy...</string>
+  <string name="alphabetic_list">Zobrazit celý seznam</string>
+  <string name="setting_nfc">Hledat za pomocí NFC štítků</string>
+  <string name="setting_nfc_desc">Experimentální funkce. Jen některá zařízení a knihovny podporují tuto funkci.</string>
+  <string name="notification_problems">Upozornění mohou být rozbitá.</string>
+  <string name="no_results">Nebyl nalezen žádný záznam, který by odpovídal zadaným parametrům.</string>
+  <string name="email_address">E-maily</string>
+  <string name="email_address_description">Vyžadováno pro rezervaci e-knih</string>
+  <string name="share_dialog_select">Sdíet výsledek</string>
+  <string name="share_link">Sdílet odkaz</string>
+  <string name="share_details">Podrobnosti exportu</string>
+  <string name="drawer_open">Otevřít navigaci</string>
+  <string name="drawer_close">Zavřít navigaci</string>
+  <string name="title_searchresult_list">Výsledky hledání</string>
+  <string name="title_activity_library_list">Výběr knihovny</string>
+  <string name="suggest_library">Nenašli jste svoji knihovnu v seznamu? Navhrněte ji k zařazení!</string>
+  <string name="title_activity_suggest_library">Navrhnout knihovnu</string>
+  <string name="city">Město</string>
+  <string name="library_name">Název knihovny</string>
+  <string name="hint_library_name">např. \"Veřejná knihovna\", \"Městská knihovna\", \"Knihovna univerzity\", …</string>
+  <string name="comment">Komentář</string>
+  <string name="send">Odeslat</string>
+  <string name="select_mail_app">Zvolte aplikaci pro odesílání e-mailů...</string>
+  <string name="search_libraries_hint">Hledat knihovnu...</string>
+  <string name="action_search">Hledání</string>
+  <string name="expand">Zobrazit více polí pro hledání</string>
+  <string name="collapse">Zobrazit méně polí pro hledání</string>
+  <string name="library_suggestion">Návrh na přidání knihovny</string>
+  <string name="cover">Obálka</string>
+  <string name="playstore">Obchod Play</string>
+  <string name="icon">Ikona</string>
+  <string name="prolong">Prodloužit</string>
+  <string name="reservation_cancel">Zrušit rezervaci</string>
+  <string name="reservation_book">Vypůjčeno</string>
+  <string name="mediatype">Typ dokumentu</string>
+  <string name="status">Stav</string>
+  <string name="no_fields_found">Žádné výsledky hledání</string>
+  <string name="meta_clear_title">Vymazat cache</string>
+  <string name="meta_clear">Smazat cache s metadaty</string>
+  <string name="version">Verze</string>
+  <string name="website">Webová stránka</string>
+  <string name="website_url">www.opacapp.net</string>
+  <string name="developer">Vývojář</string>
+  <string name="feedback">Zpětná vazba</string>
+  <string name="rate">Ohodnotit aplikaci</string>
+  <string name="source">Zdrojový kód</string>
+  <string name="loading">Načítám...</string>
+  <string name="loading_libraries">Načítám seznam knihoven...</string>
+  <string name="shelfmark">Označení regálu</string>
+  <string name="return_date">Datum vrácení</string>
+  <string name="location">Umístění</string>
+  <string name="department">Oddělení</string>
+  <string name="reservations">Rezervace</string>
+  <string name="clear_search">vymazat formulář</string>
+</resources>
