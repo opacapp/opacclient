@@ -292,32 +292,36 @@ public class SearchResultDetailFragment extends Fragment
     }
 
     private void analyzeCover(Bitmap bitmap) {
-        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-            @Override
-            public void onGenerated(Palette palette) {
-                Palette.Swatch swatch = palette.getDarkVibrantSwatch();
-                if (swatch == null) swatch = palette.getDarkMutedSwatch();
-                if (swatch == null) swatch = palette.getLightVibrantSwatch();
-                if (swatch == null) swatch = palette.getLightMutedSwatch();
-                if (swatch == null && palette.getSwatches().size() > 0) {
-                    swatch = palette.getSwatches().get(0);
-                }
-                if (swatch != null) {
-                    appBarLayout.setBackgroundColor(swatch.getRgb());
-                    collapsingToolbar.setContentScrimColor(swatch.getRgb());
-                    if (getActivity() != null &&
-                            getActivity() instanceof SearchResultDetailActivity &&
-                            Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        // show darkened color in status bar
-                        float[] hsv = swatch.getHsl();
-                        hsv[2] *= 0.95f;
-                        getActivity().getWindow().setStatusBarColor(Color.HSVToColor(hsv));
+        try {
+            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                @Override
+                public void onGenerated(Palette palette) {
+                    Palette.Swatch swatch = palette.getDarkVibrantSwatch();
+                    if (swatch == null) swatch = palette.getDarkMutedSwatch();
+                    if (swatch == null) swatch = palette.getLightVibrantSwatch();
+                    if (swatch == null) swatch = palette.getLightMutedSwatch();
+                    if (swatch == null && palette.getSwatches().size() > 0) {
+                        swatch = palette.getSwatches().get(0);
+                    }
+                    if (swatch != null) {
+                        appBarLayout.setBackgroundColor(swatch.getRgb());
+                        collapsingToolbar.setContentScrimColor(swatch.getRgb());
+                        if (getActivity() != null &&
+                                getActivity() instanceof SearchResultDetailActivity &&
+                                Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            // show darkened color in status bar
+                            float[] hsv = swatch.getHsl();
+                            hsv[2] *= 0.95f;
+                            getActivity().getWindow().setStatusBarColor(Color.HSVToColor(hsv));
+                        }
                     }
                 }
-            }
-        });
-        analyzeWhitenessOfCoverAsync(bitmap);
-        image_analyzed = true;
+            });
+            analyzeWhitenessOfCoverAsync(bitmap);
+            image_analyzed = true;
+        } catch (IllegalArgumentException ignored) {
+            Log.w("analyzeCover", "Invalid bitmap received");
+        }
     }
 
     private void findViews() {
