@@ -1,0 +1,16 @@
+{
+    "account_supported": true,
+    "api": "winbiap",
+    "city": "Friedberg (Hessen)",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "https://opac.winbiap.net/friedberg-hessen"
+    },
+    "geo": [
+        50.3248933,
+        8.74087
+    ],
+    "information": "http://www.bibliothekszentrumklosterbau.de/index_main.php?alias=maincontainer1",
+    "state": "Hessen",
+    "title": "Stadtbibliothek"
+}
