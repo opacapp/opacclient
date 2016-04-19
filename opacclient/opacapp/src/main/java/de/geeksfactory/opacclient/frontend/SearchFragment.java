@@ -366,7 +366,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
     protected void setAdvanced(boolean advanced) {
         this.advanced = advanced;
         if (advanced) {
-            ivExpandIcon.setImageResource(R.drawable.ic_action_collapse);
+            ivExpandIcon.setImageResource(R.drawable.ic_collapse_24dp);
             tvExpandString.setText(R.string.collapse);
             llAdvancedFields.setVisibility(View.VISIBLE);
             rlOuter.getViewTreeObserver().addOnGlobalLayoutListener(
@@ -379,7 +379,7 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                         }
                     });
         } else {
-            ivExpandIcon.setImageResource(R.drawable.ic_action_expand);
+            ivExpandIcon.setImageResource(R.drawable.ic_expand_24dp);
             tvExpandString.setText(R.string.expand);
             llAdvancedFields.setVisibility(View.GONE);
 

@@ -148,7 +148,7 @@ public class ResultsAdapter extends ArrayAdapter<SearchResult> {
         } else if (item.getCover() != null) {
             LoadCoverTask lct = new LoadCoverTask(ivType, item);
             lct.execute();
-            ivType.setImageResource(R.drawable.cover_loading);
+            ivType.setImageResource(R.drawable.ic_loading);
             ivType.setVisibility(View.VISIBLE);
         } else if (item.getType() != null && item.getType() != MediaType.NONE) {
             ivType.setImageResource(getResourceByMediaType(item.getType()));

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="fill_parent"
-             android:layout_height="fill_parent">
+             android:layout_height="fill_parent"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
         android:id="@+id/error_view"
@@ -120,7 +122,8 @@
                         android:layout_width="wrap_content"
                         android:contentDescription="@string/expand"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_action_expand"/>
+                        app:srcCompat="@drawable/ic_expand_24dp"
+                        tools:src="@drawable/ic_expand_24dp"/>
 
                     <TextView
                         android:id="@+id/tvExpandString"
