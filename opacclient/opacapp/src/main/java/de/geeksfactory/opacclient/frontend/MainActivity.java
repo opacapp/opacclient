@@ -33,6 +33,7 @@ import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.reminder.Alarm;
 import de.geeksfactory.opacclient.reminder.ReminderBroadcastReceiver;
+import de.geeksfactory.opacclient.reminder.SyncAccountAlarmListener;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
@@ -420,6 +421,9 @@ public class MainActivity extends OpacActivity
         Calendar cal = Calendar.getInstance();
         cal.set(2016, 5, 15, 0, 0, 0);
         if ((new Date()).after(cal.getTime())) {
+            return;
+        }
+        if (!sp.getBoolean(SyncAccountAlarmListener.PREF_SYNC_SERVICE, false)) {
             return;
         }
         if (!sp.contains("seen_update_dialog_4.5.0")) {
