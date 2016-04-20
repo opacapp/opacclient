@@ -39,7 +39,7 @@
                 android:layout_width="wrap_content"
                 android:contentDescription="@string/geolocate"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_locate"/>
+                android:src="@drawable/ic_locate_24dp"/>
 
             <TextView
                 android:id="@+id/tvLocateString"

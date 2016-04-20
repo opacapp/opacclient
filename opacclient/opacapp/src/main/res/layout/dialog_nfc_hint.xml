@@ -11,8 +11,7 @@
         android:background="@color/primary_red"
         android:contentDescription="@string/content_description_nfc_logo"
         android:cropToPadding="false"
-        android:scaleType="center"
-        android:src="@drawable/nfc_large" />
+        android:src="@drawable/ic_nfc_white"/>
 
     <ScrollView
         android:id="@+id/scrollView"

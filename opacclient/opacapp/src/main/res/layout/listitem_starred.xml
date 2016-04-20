@@ -12,7 +12,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:contentDescription="@string/delete"
-        android:src="@drawable/ic_delete"/>
+        android:src="@drawable/ic_delete_white_24dp"/>
 
     <ImageView
         android:id="@+id/ivMediaType"

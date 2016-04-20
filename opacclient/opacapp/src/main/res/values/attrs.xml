@@ -18,5 +18,9 @@
     <declare-styleable name="ScrimInsetsView">
         <attr name="scrimInsetsView_insetForeground" format="reference|color"/>
     </declare-styleable>
+    <declare-styleable name="VectorDrawableTextView">
+        <attr name="drawableLeftCompat" format="reference"/>
+        <attr name="android_drawableLeft" format="reference"/>
+    </declare-styleable>
 
 </resources>

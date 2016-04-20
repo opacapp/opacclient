@@ -554,12 +554,12 @@ public class SearchResultDetailFragment extends Fragment
         if ((id == null || id.equals("")) && item != null) {
             if (data.isStarredTitle(bib, item.getTitle())) {
                 menu.findItem(R.id.action_star).setIcon(
-                        R.drawable.ic_action_star_1);
+                        R.drawable.ic_star_1_white_24dp);
             }
         } else {
             if (data.isStarred(bib, id)) {
                 menu.findItem(R.id.action_star).setIcon(
-                        R.drawable.ic_action_star_1);
+                        R.drawable.ic_star_1_white_24dp);
             }
         }
     }
@@ -695,26 +695,26 @@ public class SearchResultDetailFragment extends Fragment
                 final String title = getItem().getTitle();
                 if (star.isStarredTitle(bib, title)) {
                     star.remove(star.getItemByTitle(bib, title));
-                    item.setIcon(R.drawable.ic_action_star_0);
+                    item.setIcon(R.drawable.ic_star_0_white_24dp);
                 } else {
                     star.star(null, title, bib, getItem().getMediaType());
                     Toast toast = Toast.makeText(getActivity(),
                             getString(R.string.starred), Toast.LENGTH_SHORT);
                     toast.show();
-                    item.setIcon(R.drawable.ic_action_star_1);
+                    item.setIcon(R.drawable.ic_star_1_white_24dp);
                 }
             } else {
                 final String title = getItem().getTitle();
                 final String id = getItem().getId();
                 if (star.isStarred(bib, id)) {
                     star.remove(star.getItem(bib, id));
-                    item.setIcon(R.drawable.ic_action_star_0);
+                    item.setIcon(R.drawable.ic_star_0_white_24dp);
                 } else {
                     star.star(id, title, bib, getItem().getMediaType());
                     Toast toast = Toast.makeText(getActivity(),
                             getString(R.string.starred), Toast.LENGTH_SHORT);
                     toast.show();
-                    item.setIcon(R.drawable.ic_action_star_1);
+                    item.setIcon(R.drawable.ic_star_1_white_24dp);
                 }
             }
             return true;
