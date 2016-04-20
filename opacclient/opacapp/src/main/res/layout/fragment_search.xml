@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="fill_parent"
-             android:layout_height="fill_parent"
              xmlns:app="http://schemas.android.com/apk/res-auto"
-             xmlns:tools="http://schemas.android.com/tools">
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="fill_parent"
+             android:layout_height="fill_parent">
 
     <FrameLayout
         android:id="@+id/error_view"
@@ -48,8 +48,8 @@
                     android:ems="10"
                     android:hint="@string/search_free"
                     android:inputType="text"
-                    android:textColorHint="@color/hint_fg"
-                    android:textColor="@color/account_head_fg">
+                    android:textColor="@color/account_head_fg"
+                    android:textColorHint="@color/hint_fg">
 
                     <requestFocus/>
                 </EditText>
@@ -120,9 +120,10 @@
                     <ImageView
                         android:id="@+id/ivExpandIcon"
                         android:layout_width="wrap_content"
-                        android:contentDescription="@string/expand"
                         android:layout_height="wrap_content"
+                        android:contentDescription="@string/expand"
                         app:srcCompat="@drawable/ic_expand_24dp"
+                        tools:ignore="MissingPrefix"
                         tools:src="@drawable/ic_expand_24dp"/>
 
                     <TextView

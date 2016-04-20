@@ -1,15 +1,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_height="168dp"
         android:layout_width="match_parent"
-        android:paddingBottom="110dp"
+        android:layout_height="168dp"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
+        android:paddingBottom="110dp"
         android:theme="@style/ThemeOverlay.Opacapp.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
@@ -22,13 +23,13 @@
     <FrameLayout
         android:layout_width="720dp"
         android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
         android:layout_below="@id/toolbar"
+        android:layout_centerHorizontal="true"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="-96dp"
-        android:elevation="8dp"
-        android:background="@drawable/popup_bg">
+        android:background="@drawable/popup_bg"
+        android:elevation="8dp">
 
         <ListView
             android:id="@+id/lvAccounts"
@@ -41,12 +42,13 @@
         android:id="@+id/add_fab"
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:layout_marginTop="-36dp"
-        android:layout_marginRight="36dp"
-        android:layout_below="@id/toolbar"
         android:layout_alignParentRight="true"
+        android:layout_below="@id/toolbar"
+        android:layout_marginRight="36dp"
+        android:layout_marginTop="-36dp"
+        android:contentDescription="@string/account_add"
         android:elevation="4dp"
         app:srcCompat="@drawable/ic_accounts_add_white_24dp"
-        android:contentDescription="@string/account_add"/>
+        tools:ignore="MissingPrefix"/>
 
 </RelativeLayout>
