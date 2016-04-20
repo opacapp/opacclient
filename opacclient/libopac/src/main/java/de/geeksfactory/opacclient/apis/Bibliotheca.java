@@ -1034,7 +1034,7 @@ public class Bibliotheca extends BaseApi {
                             item.setRenewable(
                                     tr.child(index).child(0).attr("href").contains("vermsg"));
                         }
-                    } else if (key.equals("deadline")) {
+                    } else if (key.equals("returndate")) {
                         try {
                             item.setDeadline(fmt.parseLocalDate(tr.child(index).text()));
                         } catch (IllegalArgumentException e1) {
