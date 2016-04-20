@@ -83,13 +83,18 @@ public class TranslationAnimationCreator {
         return anim;
     }
 
+    private static class Position {
+        public int x;
+        public int y;
+    }
+
     private static class TransitionPositionListener extends AnimatorListenerAdapter {
 
         private final View mViewInHierarchy;
         private final View mMovingView;
         private final int mStartX;
         private final int mStartY;
-        private int[] mTransitionPosition;
+        private Position mTransitionPosition;
         private float mPausedX;
         private float mPausedY;
         private final float mTerminalX;
@@ -103,7 +108,7 @@ public class TranslationAnimationCreator {
             mStartY = startY - Math.round(mMovingView.getTranslationY());
             mTerminalX = terminalX;
             mTerminalY = terminalY;
-            mTransitionPosition = (int[]) mViewInHierarchy.getTag(R.id.transitionPosition);
+            mTransitionPosition = (Position) mViewInHierarchy.getTag(R.id.transitionPosition);
             if (mTransitionPosition != null) {
                 mViewInHierarchy.setTag(R.id.transitionPosition, null);
             }
@@ -112,10 +117,10 @@ public class TranslationAnimationCreator {
         @Override
         public void onAnimationCancel(Animator animation) {
             if (mTransitionPosition == null) {
-                mTransitionPosition = new int[2];
+                mTransitionPosition = new Position();
             }
-            mTransitionPosition[0] = Math.round(mStartX + mMovingView.getTranslationX());
-            mTransitionPosition[1] = Math.round(mStartY + mMovingView.getTranslationY());
+            mTransitionPosition.x = Math.round(mStartX + mMovingView.getTranslationX());
+            mTransitionPosition.y = Math.round(mStartY + mMovingView.getTranslationY());
             mViewInHierarchy.setTag(R.id.transitionPosition, mTransitionPosition);
         }
 
