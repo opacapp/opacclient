@@ -1,0 +1,20 @@
+{
+    "account_supported": false,
+    "api": "open",
+    "city": "Wei\u00dfenfels",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://weissenfels.bibliotheca-open.de",
+        "urls": {
+            "advanced_search": "Mediensuche/ErweiterteSuche.aspx",
+            "simple_search": "Mediensuche/EinfacheSuche.aspx"
+        }
+    },
+    "geo": [
+        51.1972771,
+        11.9689146
+    ],
+    "information": "http://weissenfels.bibliotheca-open.de/Ueberuns/InfoKontakt.aspx",
+    "state": "Sachsen-Anhalt",
+    "title": "Stadtbibliothek"
+}
