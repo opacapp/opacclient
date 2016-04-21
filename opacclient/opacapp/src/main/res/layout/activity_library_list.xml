@@ -2,25 +2,26 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:minHeight="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
+        android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.Opacapp.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="5dp"
-        android:foreground="@drawable/toolbar_shadow">
+        android:foreground="@drawable/toolbar_shadow"
+        android:padding="5dp">
 
         <LinearLayout
             android:id="@+id/llLocate"
@@ -37,9 +38,11 @@
             <ImageView
                 android:id="@+id/ivLocationIcon"
                 android:layout_width="wrap_content"
-                android:contentDescription="@string/geolocate"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_locate_24dp"/>
+                android:contentDescription="@string/geolocate"
+                app:srcCompat="@drawable/ic_locate_24dp"
+                tools:ignore="MissingPrefix"
+                tools:src="@drawable/ic_locate_24dp"/>
 
             <TextView
                 android:id="@+id/tvLocateString"
@@ -73,9 +76,9 @@
                 android:id="@+id/tvSuggestLibrary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/suggest_library"
                 android:background="@drawable/suggest_library_background"
-                android:padding="8dp"/>
+                android:padding="8dp"
+                android:text="@string/suggest_library"/>
 
         </RelativeLayout>
 
