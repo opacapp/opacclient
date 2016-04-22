@@ -5,6 +5,7 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "https://pica1l.lhb.tu-darmstadt.de",
+		"charset": "ISO-8859-1",
         "db": "STBWO"
     },
     "geo": [
