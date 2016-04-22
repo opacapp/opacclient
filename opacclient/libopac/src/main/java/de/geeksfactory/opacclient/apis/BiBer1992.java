@@ -1016,7 +1016,7 @@ public class BiBer1992 extends BaseApi {
                     index = -1;
                 }
                 if (index >= 0) {
-                    String value = tr.child(index).text().trim();
+                    String value = tr.child(index).text().trim().replace("\u00A0", "");
 
                     switch (key) {
                         case "author":
