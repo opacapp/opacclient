@@ -125,6 +125,7 @@
             android:padding="12dp"
             android:visibility="gone"
             app:srcCompat="@drawable/ic_booking_24dp"
+            tools:src="@drawable/ic_booking_24dp"
             tools:ignore="MissingPrefix"/>
 
         <ImageView
@@ -138,6 +139,7 @@
             android:padding="12dp"
             android:visibility="gone"
             app:srcCompat="@drawable/ic_details_24dp"
+            tools:src="@drawable/ic_details_24dp"
             tools:ignore="MissingPrefix"/>
     </LinearLayout>
 </LinearLayout>

@@ -39,7 +39,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/geolocate"
-                android:src="@drawable/ic_locate_24dp"/>
+                app:srcCompat="@drawable/ic_locate_24dp"
+                tools:ignore="MissingPrefix"
+                tools:src="@drawable/ic_locate_24dp"/>
 
             <TextView
                 android:id="@+id/tvLocateString"
