@@ -5,14 +5,14 @@
     "country": "Deutschland",
     "data": {
         "accounttable": {
-            "author": 0,
+            "author": 1,
             "barcode": -1,
             "homebranch": -1,
             "lendingbranch": -1,
-            "prolongurl": 3,
-            "returndate": 2,
+            "prolongurl": 4,
+            "returndate": 3,
             "status": -1,
-            "title": 1
+            "title": 2
         },
         "baseurl": "https://wwwopac.rz-kiru.de/bllaengenfeld",
         "copiestable": {
@@ -26,12 +26,12 @@
         },
         "customssl": true,
         "reservationtable": {
-            "author": 0,
-            "availability": 2,
+            "author": 1,
+            "availability": 3,
             "branch": -1,
-            "cancelurl": 3,
+            "cancelurl": 4,
             "expirationdate": -1,
-            "title": 1
+            "title": 2
         }
     },
     "geo": [

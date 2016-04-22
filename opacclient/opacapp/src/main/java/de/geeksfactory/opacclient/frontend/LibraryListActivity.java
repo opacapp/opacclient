@@ -134,10 +134,10 @@ public class LibraryListActivity extends AppCompatActivity
                     MenuItemCompat.collapseActionView(searchItem);
                     showListCountries(true);
                     tvLocateString.setText(R.string.geolocate);
-                    ivLocationIcon.setImageResource(R.drawable.ic_locate);
+                    ivLocationIcon.setImageResource(R.drawable.ic_locate_24dp);
                 } else {
                     tvLocateString.setText(R.string.geolocate_progress);
-                    ivLocationIcon.setImageResource(R.drawable.ic_locate);
+                    ivLocationIcon.setImageResource(R.drawable.ic_locate_24dp);
                     showListGeo();
                 }
             }
@@ -219,7 +219,7 @@ public class LibraryListActivity extends AppCompatActivity
         if (provider == null) {
             Toast.makeText(this, R.string.geolocate_not_available, Toast.LENGTH_LONG).show();
             tvLocateString.setText(R.string.geolocate);
-            ivLocationIcon.setImageResource(R.drawable.ic_locate);
+            ivLocationIcon.setImageResource(R.drawable.ic_locate_24dp);
             return;
         }
         if (libraries == null) {
@@ -296,7 +296,7 @@ public class LibraryListActivity extends AppCompatActivity
                             }
 
                             tvLocateString.setText(R.string.alphabetic_list);
-                            ivLocationIcon.setImageResource(R.drawable.ic_list);
+                            ivLocationIcon.setImageResource(R.drawable.ic_list_24dp);
                         }
                     }
                 });
@@ -311,7 +311,7 @@ public class LibraryListActivity extends AppCompatActivity
                 showListGeo();
             } else {
                 tvLocateString.setText(R.string.geolocate);
-                ivLocationIcon.setImageResource(R.drawable.ic_locate);
+                ivLocationIcon.setImageResource(R.drawable.ic_locate_24dp);
             }
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -540,7 +540,7 @@ public class LibraryListActivity extends AppCompatActivity
         }
 
         tvLocateString.setText(R.string.alphabetic_list);
-        ivLocationIcon.setImageResource(R.drawable.ic_list);
+        ivLocationIcon.setImageResource(R.drawable.ic_list_24dp);
     }
 
     private static class LibrarySearchResult implements
@@ -800,7 +800,14 @@ public class LibraryListActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(List<Library> result) {
             libraries = result;
-            if (dialog != null) dialog.dismiss();
+            if (dialog != null) {
+                try {
+                    dialog.dismiss();
+                } catch (IllegalArgumentException e) {
+                    // we sometimes get a "IllegalArgumentException: View not attached to window"
+                    e.printStackTrace();
+                }
+            }
             if (libraries == null) return;
             if (!visible) return;
 

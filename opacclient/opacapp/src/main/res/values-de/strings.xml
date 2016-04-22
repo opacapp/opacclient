@@ -260,4 +260,6 @@
     <string name="do_not_ask_again">Nicht noch einmal anzeigen</string>
     <string name="reservation_fee_continue">Weiter</string>
     <string name="notification_repeat">Benachrichtigungen wiederholen</string>
+	<string name="update_info_title">Update-Hinweis</string>
+    <string name="update_info_text">Mit diesem Update haben wir die Erinnerungsfunktion komplett neu gebaut um sie zuverlässiger und intelligenter zu gestalten. Trotzdem möchten wir Sie bitten, die Funktion in den nächsten Wochen genauer zu beobachten und uns eventuelle Fehler per E-Mail zu melden. Vielen Dank!</string>
 </resources>

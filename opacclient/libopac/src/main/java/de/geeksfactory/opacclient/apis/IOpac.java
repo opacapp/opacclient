@@ -820,8 +820,8 @@ public class IOpac extends BaseApi implements OpacApi {
             if (data.optInt("maxprolongcount", -1) != -1) {
                 item.setRenewable(prolongCount < data.optInt("maxprolongcount", -1));
             }
-            if (copymap.optInt("deadline", 4) >= 0) {
-                String value = tr.child(copymap.optInt("deadline", 4)).text().trim()
+            if (copymap.optInt("returndate", 4) >= 0) {
+                String value = tr.child(copymap.optInt("returndate", 4)).text().trim()
                                  .replace("\u00a0", "");
                 Matcher matcher = datePattern.matcher(value);
                 if (matcher.find()) {

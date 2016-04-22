@@ -1,6 +1,7 @@
 <android.support.v4.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -59,7 +60,7 @@
             </FrameLayout>
         </LinearLayout>
 
-        <android.support.design.widget.FloatingActionButton
+        <de.geeksfactory.opacclient.ui.vectordrawable.VectorDrawableFloatingActionButton
             android:id="@+id/search_fab"
             android:layout_width="72dp"
             android:layout_height="72dp"
@@ -68,7 +69,8 @@
             android:layout_below="@id/toolbar"
             android:layout_alignParentRight="true"
             android:elevation="4dp"
-            android:src="@drawable/ic_action_search"/>
+            app:srcCompat="@drawable/ic_search_white_24dp"
+            tools:src="@drawable/ic_search_white_24dp"/>
     </RelativeLayout>
     <!-- The navigation drawer -->
     <de.geeksfactory.opacclient.ui.AccountSwitcherNavigationView

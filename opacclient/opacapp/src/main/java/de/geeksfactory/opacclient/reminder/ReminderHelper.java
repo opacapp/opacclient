@@ -68,6 +68,11 @@ public class ReminderHelper {
         Map<LocalDate, List<Long>> arrangedIds = new HashMap<>();
         for (LentItem item : items) {
             LocalDate deadline = item.getDeadline();
+            if (deadline == null) {
+                // Fail silently to not annoy users. We display a warning in account view in
+                // this case.
+                continue;
+            }
             if (!arrangedIds.containsKey(deadline)) {
                 arrangedIds.put(deadline, new ArrayList<Long>());
             }

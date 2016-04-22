@@ -1,0 +1,48 @@
+{
+    "account_supported": true,
+    "api": "bibliotheca",
+    "city": "Werne",
+    "country": "Deutschland",
+    "data": {
+        "accounttable": {
+            "author": 0,
+            "prolongurl": 3,
+            "returndate": 2,
+            "title": 1
+        },
+        "baseurl": "http://www.werne.de/wwwopac",
+        "copiestable": {
+            "branch": 5,
+            "department": 1,
+            "returndate": 4,
+            "status": 3
+        },
+        "mediatypes": {
+            "Download_kl.gif": "EDOC",
+            "at_33.gif": "EDOC",
+            "bluray.gif": "BLURAY",
+            "cdkl.gif": "CD",
+            "ebook.gif": "EBOOK",
+            "mCDROMS.gif": "CD_SOFTWARE",
+            "mCasetteS.gif": "AUDIO_CASSETTE",
+            "mComicS.gif": "BOOK",
+            "mController0S.gif": "GAME_CONSOLE",
+            "mDVDS.gif": "DVD",
+            "mDemenzS.gif": "UNKNOWN",
+            "mDisket1S.gif": "UNKNOWN",
+            "mFilmS.gif": "MOVIE"
+        },
+        "reservationtable": {
+            "author": 0,
+            "cancelurl": 2,
+            "title": 1
+        }
+    },
+    "geo": [
+        51.665041,
+        7.631431000000001
+    ],
+    "information": "http://www.werne.de/index.php?id=49",
+    "state": "Nordrhein-Westfalen",
+    "title": "Stadtb\u00fccherei"
+}

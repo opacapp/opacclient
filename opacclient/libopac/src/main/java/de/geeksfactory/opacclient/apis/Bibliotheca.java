@@ -995,12 +995,11 @@ public class Bibliotheca extends BaseApi {
                                             .get(0).text());
         }
         logged_in_as = acc;
-        return parse_account(acc, doc);
+        logged_in = System.currentTimeMillis();
+        return parse_account(acc, doc, data);
     }
 
-    public AccountData parse_account(Account acc, Document doc) throws JSONException {
-        logged_in = System.currentTimeMillis();
-
+    public static AccountData parse_account(Account acc, Document doc, JSONObject data) throws JSONException {
         JSONObject copymap = data.getJSONObject("accounttable");
 
         List<LentItem> media = new ArrayList<>();
@@ -1034,7 +1033,7 @@ public class Bibliotheca extends BaseApi {
                             item.setRenewable(
                                     tr.child(index).child(0).attr("href").contains("vermsg"));
                         }
-                    } else if (key.equals("deadline")) {
+                    } else if (key.equals("returndate")) {
                         try {
                             item.setDeadline(fmt.parseLocalDate(tr.child(index).text()));
                         } catch (IllegalArgumentException e1) {

@@ -1,6 +1,6 @@
 [main]
 host = https://www.transifex.com
-lang_map = de_DE:de
+lang_map = de_DE:de, cs_CZ:cs
 minimum_perc = 50
 
 [opacapp.strings]

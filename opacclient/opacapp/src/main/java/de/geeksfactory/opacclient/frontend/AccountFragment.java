@@ -97,6 +97,7 @@ import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.Library;
 import de.geeksfactory.opacclient.objects.ReservedItem;
 import de.geeksfactory.opacclient.reminder.ReminderHelper;
+import de.geeksfactory.opacclient.reminder.SyncAccountAlarmListener;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.ui.AppCompatProgressDialog;
 import de.geeksfactory.opacclient.ui.ExpandingCardListManager;
@@ -646,7 +647,7 @@ public class AccountFragment extends Fragment implements
 
         llLent.removeAllViews();
 
-        final boolean notification_on = sp.getBoolean("notification_service", false);
+        final boolean notification_on = sp.getBoolean(SyncAccountAlarmListener.PREF_SYNC_SERVICE, false);
         boolean notification_problems = false;
 
         if (tvWarning != null) {

@@ -257,4 +257,6 @@
     <string name="do_not_ask_again">Do not show again</string>
     <string name="reservation_fee_continue">Continue</string>
     <string name="notification_repeat">Repeat notifications</string>
+    <string name="update_info_title">Update information</string>
+    <string name="update_info_text">With this update, we have completely re-built the reminder feature to make it more intelligent and reliable. However, in the first weeks we\'d love if you would keep an extra eye on it and send us an email if something goes wrong. Thank you in advance!</string>
 </resources>

@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -293,30 +292,36 @@ public class SearchResultDetailFragment extends Fragment
     }
 
     private void analyzeCover(Bitmap bitmap) {
-        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-            @Override
-            public void onGenerated(Palette palette) {
-                Palette.Swatch swatch = palette.getDarkVibrantSwatch();
-                if (swatch == null) swatch = palette.getDarkMutedSwatch();
-                if (swatch == null) swatch = palette.getLightVibrantSwatch();
-                if (swatch == null) swatch = palette.getLightMutedSwatch();
-                if (swatch == null) swatch = palette.getSwatches().get(0);
-                if (swatch != null) {
-                    appBarLayout.setBackgroundColor(swatch.getRgb());
-                    collapsingToolbar.setContentScrimColor(swatch.getRgb());
-                    if (getActivity() != null &&
-                            getActivity() instanceof SearchResultDetailActivity &&
-                            Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        // show darkened color in status bar
-                        float[] hsv = swatch.getHsl();
-                        hsv[2] *= 0.95f;
-                        getActivity().getWindow().setStatusBarColor(Color.HSVToColor(hsv));
+        try {
+            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                @Override
+                public void onGenerated(Palette palette) {
+                    Palette.Swatch swatch = palette.getDarkVibrantSwatch();
+                    if (swatch == null) swatch = palette.getDarkMutedSwatch();
+                    if (swatch == null) swatch = palette.getLightVibrantSwatch();
+                    if (swatch == null) swatch = palette.getLightMutedSwatch();
+                    if (swatch == null && palette.getSwatches().size() > 0) {
+                        swatch = palette.getSwatches().get(0);
+                    }
+                    if (swatch != null) {
+                        appBarLayout.setBackgroundColor(swatch.getRgb());
+                        collapsingToolbar.setContentScrimColor(swatch.getRgb());
+                        if (getActivity() != null &&
+                                getActivity() instanceof SearchResultDetailActivity &&
+                                Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            // show darkened color in status bar
+                            float[] hsv = swatch.getHsl();
+                            hsv[2] *= 0.95f;
+                            getActivity().getWindow().setStatusBarColor(Color.HSVToColor(hsv));
+                        }
                     }
                 }
-            }
-        });
-        analyzeWhitenessOfCoverAsync(bitmap);
-        image_analyzed = true;
+            });
+            analyzeWhitenessOfCoverAsync(bitmap);
+            image_analyzed = true;
+        } catch (IllegalArgumentException ignored) {
+            Log.w("analyzeCover", "Invalid bitmap received");
+        }
     }
 
     private void findViews() {
@@ -549,12 +554,12 @@ public class SearchResultDetailFragment extends Fragment
         if ((id == null || id.equals("")) && item != null) {
             if (data.isStarredTitle(bib, item.getTitle())) {
                 menu.findItem(R.id.action_star).setIcon(
-                        R.drawable.ic_action_star_1);
+                        R.drawable.ic_star_1_white_24dp);
             }
         } else {
             if (data.isStarred(bib, id)) {
                 menu.findItem(R.id.action_star).setIcon(
-                        R.drawable.ic_action_star_1);
+                        R.drawable.ic_star_1_white_24dp);
             }
         }
     }
@@ -690,26 +695,26 @@ public class SearchResultDetailFragment extends Fragment
                 final String title = getItem().getTitle();
                 if (star.isStarredTitle(bib, title)) {
                     star.remove(star.getItemByTitle(bib, title));
-                    item.setIcon(R.drawable.ic_action_star_0);
+                    item.setIcon(R.drawable.ic_star_0_white_24dp);
                 } else {
                     star.star(null, title, bib, getItem().getMediaType());
                     Toast toast = Toast.makeText(getActivity(),
                             getString(R.string.starred), Toast.LENGTH_SHORT);
                     toast.show();
-                    item.setIcon(R.drawable.ic_action_star_1);
+                    item.setIcon(R.drawable.ic_star_1_white_24dp);
                 }
             } else {
                 final String title = getItem().getTitle();
                 final String id = getItem().getId();
                 if (star.isStarred(bib, id)) {
                     star.remove(star.getItem(bib, id));
-                    item.setIcon(R.drawable.ic_action_star_0);
+                    item.setIcon(R.drawable.ic_star_0_white_24dp);
                 } else {
                     star.star(id, title, bib, getItem().getMediaType());
                     Toast toast = Toast.makeText(getActivity(),
                             getString(R.string.starred), Toast.LENGTH_SHORT);
                     toast.show();
-                    item.setIcon(R.drawable.ic_action_star_1);
+                    item.setIcon(R.drawable.ic_star_1_white_24dp);
                 }
             }
             return true;
@@ -1138,7 +1143,7 @@ public class SearchResultDetailFragment extends Fragment
             item = result;
 
             if (item.getCover() != null && item.getCoverBitmap() == null) {
-                new LoadCoverTask(item, coverWrapper.getWidth(), coverWrapper.getHeight()).execute();
+                new LoadCoverTask(item, collapsingToolbar.getWidth(), collapsingToolbar.getHeight()).execute();
             } else {
                 displayCover();
             }

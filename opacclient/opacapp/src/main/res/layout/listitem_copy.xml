@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:elevation="4dp"
     app:cardCornerRadius="4dp"
     android:layout_marginTop="8dp"
@@ -15,89 +16,100 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="4dp">
+        android:padding="8dp">
 
-        <TextView
+        <de.geeksfactory.opacclient.ui.vectordrawable.VectorDrawableTextView
             android:id="@+id/tvBranch"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
             android:ellipsize="end"
             android:singleLine="true"
             android:textIsSelectable="true"
-            android:drawableLeft="@drawable/ic_branch"
-            android:drawablePadding="4dp"
+            app:drawableLeftCompat="@drawable/ic_branch_24dp"
+            tools:drawableLeft="@drawable/ic_branch_24dp"
+            android:drawablePadding="8dp"
             android:gravity="center_vertical"
             android:contentDescription="@string/branch"/>
 
-        <TextView
+        <de.geeksfactory.opacclient.ui.vectordrawable.VectorDrawableTextView
             android:id="@+id/tvDepartment"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
             android:ellipsize="end"
             android:singleLine="true"
             android:textIsSelectable="true"
-            android:drawableLeft="@drawable/ic_department"
-            android:drawablePadding="4dp"
+            app:drawableLeftCompat="@drawable/ic_department_24dp"
+            tools:drawableLeft="@drawable/ic_department_24dp"
+            android:drawablePadding="8dp"
             android:gravity="center_vertical"
             android:contentDescription="@string/department"/>
 
-        <TextView
+        <de.geeksfactory.opacclient.ui.vectordrawable.VectorDrawableTextView
             android:id="@+id/tvLocation"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
             android:ellipsize="end"
             android:singleLine="true"
             android:textIsSelectable="true"
-            android:drawableLeft="@drawable/ic_location"
-            android:drawablePadding="4dp"
+            app:drawableLeftCompat="@drawable/ic_location_24dp"
+            tools:drawableLeft="@drawable/ic_location_24dp"
+            android:drawablePadding="8dp"
             android:gravity="center_vertical"
             android:contentDescription="@string/location"/>
 
-        <TextView
+        <de.geeksfactory.opacclient.ui.vectordrawable.VectorDrawableTextView
             android:id="@+id/tvShelfmark"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
             android:ellipsize="end"
             android:singleLine="true"
             android:textIsSelectable="true"
-            android:drawableLeft="@drawable/ic_shelfmark"
-            android:drawablePadding="4dp"
+            app:drawableLeftCompat="@drawable/ic_shelfmark_24dp"
+            tools:drawableLeft="@drawable/ic_shelfmark_24dp"
+            android:drawablePadding="8dp"
             android:gravity="center_vertical"
             android:contentDescription="@string/shelfmark"/>
 
-        <TextView
+        <de.geeksfactory.opacclient.ui.vectordrawable.VectorDrawableTextView
             android:id="@+id/tvUrl"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
             android:autoLink="web"
             android:contentDescription="@string/url"
-            android:drawableLeft="@drawable/ic_url_selector"
-            android:drawablePadding="4dp"
+            app:drawableLeftCompat="@drawable/ic_url_24dp"
+            tools:drawableLeft="@drawable/ic_url_24dp"
+            android:drawablePadding="8dp"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:singleLine="true"
             android:textIsSelectable="true"/>
 
-        <TextView
+        <de.geeksfactory.opacclient.ui.vectordrawable.VectorDrawableTextView
             android:id="@+id/tvStatus"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
             android:ellipsize="end"
             android:singleLine="true"
             android:textIsSelectable="true"
-            android:drawableLeft="@drawable/ic_status"
-            android:drawablePadding="4dp"
+            app:drawableLeftCompat="@drawable/ic_status_24dp"
+            tools:drawableLeft="@drawable/ic_status_24dp"
+            android:drawablePadding="8dp"
             android:gravity="center_vertical"
             android:contentDescription="@string/status"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:orientation="horizontal"
             android:baselineAligned="false">
 
-            <TextView
+            <de.geeksfactory.opacclient.ui.vectordrawable.VectorDrawableTextView
                 android:id="@+id/tvReturndate"
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -105,12 +117,13 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:textIsSelectable="true"
-                android:drawableLeft="@drawable/ic_return_date"
-                android:drawablePadding="4dp"
+                app:drawableLeftCompat="@drawable/ic_return_date_24dp"
+                tools:drawableLeft="@drawable/ic_return_date_24dp"
+                android:drawablePadding="8dp"
                 android:gravity="center_vertical"
                 android:contentDescription="@string/return_date"/>
 
-            <TextView
+            <de.geeksfactory.opacclient.ui.vectordrawable.VectorDrawableTextView
                 android:id="@+id/tvReservations"
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -118,8 +131,9 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:textIsSelectable="true"
-                android:drawableLeft="@drawable/ic_reservations"
-                android:drawablePadding="4dp"
+                app:drawableLeftCompat="@drawable/ic_reservations_24dp"
+                tools:drawableLeft="@drawable/ic_reservations_24dp"
+                android:drawablePadding="8dp"
                 android:gravity="center_vertical"
                 android:contentDescription="@string/reservations"/>
         </LinearLayout>

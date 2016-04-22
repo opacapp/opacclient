@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
@@ -22,15 +23,17 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import de.geeksfactory.opacclient.R;
-import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.barcode.BarcodeScanIntegrator;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.reminder.Alarm;
 import de.geeksfactory.opacclient.reminder.ReminderBroadcastReceiver;
+import de.geeksfactory.opacclient.reminder.SyncAccountAlarmListener;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
@@ -170,6 +173,8 @@ public class MainActivity extends OpacActivity
         if (app.getLibrary() != null) {
             getSupportActionBar().setSubtitle(app.getLibrary().getDisplayName());
         }
+
+        showUpdateInfoDialog();
     }
 
     @Override
@@ -405,6 +410,26 @@ public class MainActivity extends OpacActivity
             } catch (Exception e) {
 
             }
+        }
+    }
+
+    public void showUpdateInfoDialog() {
+        if (!getApplicationContext().getPackageName().startsWith("de.geeksfactory.opacclient")) {
+            return;  // Never show e.g. in plus edition
+        }
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        Calendar cal = Calendar.getInstance();
+        cal.set(2016, 5, 15, 0, 0, 0);
+        if ((new Date()).after(cal.getTime())) {
+            return;
+        }
+        if (!sp.getBoolean(SyncAccountAlarmListener.PREF_SYNC_SERVICE, false)) {
+            return;
+        }
+        if (!sp.contains("seen_update_dialog_4.5.0")) {
+            DialogFragment newFragment = new UpdateInfoDialogFragment();
+            newFragment.show(getSupportFragmentManager(), "updateinfo");
+            sp.edit().putBoolean("seen_update_dialog_4.5.0", true).commit();
         }
     }
 

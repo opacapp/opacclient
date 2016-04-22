@@ -315,6 +315,11 @@ class IOpac(Api):
     def accountSupported(self):
         return True
 
+class Littera(Api):
+
+    def accountSupported(self):
+        return False
+
 class Open(Api):
 
     def accountSupported(self):
@@ -357,7 +362,8 @@ APIS = {
 	'winbiap'	  : WinBiap,
     'vufind'      : VuFind,
     'primo'       : Primo,
-    'open'        : Open
+    'open'        : Open,
+    'web-opac.at' : Littera,
 }
 
 data = {}

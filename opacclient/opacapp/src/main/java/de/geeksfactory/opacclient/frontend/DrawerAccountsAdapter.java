@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
@@ -212,7 +212,8 @@ public class DrawerAccountsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
 
         public void setIcon(int id) {
-            Drawable drawable = DrawableCompat.wrap(ContextCompat.getDrawable(context, id));
+            Drawable drawable = DrawableCompat.wrap(VectorDrawableCompat
+                    .create(context.getResources(), id, context.getTheme()));
             DrawableCompat.setTint(drawable, Color.argb(138, 0, 0, 0));
             icon.setImageDrawable(drawable);
         }
