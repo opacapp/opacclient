@@ -1235,6 +1235,11 @@ public class Adis extends BaseApi implements OpacApi {
                     }
                 }
                 String date = tr.child(1).text().trim();
+                if (date.contains("-")) {
+                    // Nürnberg: "29.03.2016 - 26.04.2016"
+                    // for beginning and end date in one field
+                    date = date.split("-", 1)[1].trim();
+                }
                 try {
                     item.setDeadline(fmt.parseLocalDate(date));
                 } catch (IllegalArgumentException e) {
