@@ -34,6 +34,8 @@ import org.jsoup.select.Elements;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -404,11 +406,22 @@ public class Open extends BaseApi implements OpacApi {
         // caller=vlbPublic&amp;func=DirectIsbnSearch&amp;isbn=9783868511291&amp;
         // nSiteId=11|c|SetNoCover|a|/DesktopModules/OCLC.OPEN.PL.DNN
         // .BaseLibrary/StyleSheets/Images/Fallbacks/emptyURL.gif?4.2.0.0|a|
-        String url = null;
-        if (parts.length >= 2 && parts[0].equals("SetSimpleCover")) {
-            url = parts[2].replace("&amp;", "&");
+        for (int i = 0; i + 2 < parts.length; i++) {
+            if (parts[i].equals("SetSimpleCover")) {
+                String url = parts[i + 2].replace("&amp;", "&");
+                try {
+                    HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+                    conn.setRequestMethod("HEAD");
+                    int code = conn.getResponseCode();
+                    if (code == 200) {
+                        return url;
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        return url;
+        return null;
     }
 
     private String numberToText(int number) {
@@ -748,7 +761,7 @@ public class Open extends BaseApi implements OpacApi {
      *                   null
      * @return A MultipartEntityBuilder containing the data of the form
      */
-    public MultipartEntityBuilder formData(FormElement form, String submitName) {
+    protected MultipartEntityBuilder formData(FormElement form, String submitName) {
         MultipartEntityBuilder data = MultipartEntityBuilder.create();
         data.setLaxMode();
 
