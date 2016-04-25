@@ -279,7 +279,7 @@ public class Open extends BaseApi implements OpacApi {
 
         int totalCount = Integer.parseInt(doc.select("span[id$=TotalItemsLabel]").first().text());
 
-        Elements elements = doc.select("div[id$=divMedium]");
+        Elements elements = doc.select("div[id$=divMedium], div[id$=divComprehensiveItem]");
         List<SearchResult> results = new ArrayList<>();
         int i = 0;
         for (Element element : elements) {
@@ -317,11 +317,13 @@ public class Open extends BaseApi implements OpacApi {
             }
 
             // Text
-            String title = catalogueContent.select("a[id$=LbtnShortDescriptionValue]").text();
+            String title = catalogueContent
+                    .select("a[id$=LbtnShortDescriptionValue], a[id$=LbtnTitleValue]").text();
             String subtitle = catalogueContent.select("span[id$=LblSubTitleValue]").text();
             String author = catalogueContent.select("span[id$=LblAuthorValue]").text();
             String year = catalogueContent.select("span[id$=LblProductionYearValue]").text();
-            String publisher = catalogueContent.select("span[id$=LblManufacturerValue]").text();
+            String publisher = catalogueContent
+                    .select("span[id$=LblManufacturerValue], span[id$=LblPublisherValue]").text();
             String series = catalogueContent.select("span[id$=LblSeriesValue]").text();
 
             StringBuilder text = new StringBuilder();
