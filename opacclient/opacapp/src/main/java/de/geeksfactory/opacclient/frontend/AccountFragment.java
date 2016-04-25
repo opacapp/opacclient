@@ -1494,6 +1494,10 @@ public class AccountFragment extends Fragment implements
             try {
                 AccountData data = app.getApi().account(account);
 
+                if (data == null) {
+                    return null;
+                }
+
                 // save data
                 AccountDataSource adatasource;
                 if (getActivity() == null && OpacClient.getEmergencyContext() != null) {

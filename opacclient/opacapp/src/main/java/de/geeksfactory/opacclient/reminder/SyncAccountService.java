@@ -107,7 +107,10 @@ public class SyncAccountService extends WakefulIntentService {
                 if (!library.isAccountSupported()) continue;
                 OpacApi api = app.getNewApi(library);
                 AccountData res = api.account(account);
-                if (res == null) continue;
+                if (res == null) {
+                    failed = true;
+                    continue;
+                }
 
                 data.open();
                 account.setPasswordKnownValid(true);
