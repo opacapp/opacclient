@@ -28,7 +28,7 @@ public class BibliothecaAccountTest extends BaseAccountTest {
         this.file = file;
     }
 
-    private static final String[] FILES = new String[]{"gladbeck.html"};
+    private static final String[] FILES = new String[]{"gladbeck.html", "marl.htm"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {
@@ -58,7 +58,7 @@ public class BibliothecaAccountTest extends BaseAccountTest {
             reservationtable.put("cancelurl", 3);
             reservationtable.put("expirationdate", -1);
             reservationtable.put("title", 1);
-        } else if (file.equals("marl.html")) {
+        } else if (file.equals("marl.htm")) {
             accounttable.put("author", 0);
             accounttable.put("barcode", 3);
             accounttable.put("homebranch", -1);
@@ -69,8 +69,8 @@ public class BibliothecaAccountTest extends BaseAccountTest {
             accounttable.put("title", 1);
             reservationtable.put("author", 0);
             reservationtable.put("availability", 2);
-            reservationtable.put("branch", 3);
-            reservationtable.put("cancelurl", 4);
+            reservationtable.put("branch", -1);
+            reservationtable.put("cancelurl", 3);
             reservationtable.put("expirationdate", -1);
             reservationtable.put("title", 1);
         }
