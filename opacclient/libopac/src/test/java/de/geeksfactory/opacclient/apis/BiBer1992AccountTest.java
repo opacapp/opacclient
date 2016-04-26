@@ -16,6 +16,7 @@ import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.ReservedItem;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
 public class BiBer1992AccountTest extends BaseAccountTest {
@@ -63,6 +64,7 @@ public class BiBer1992AccountTest extends BaseAccountTest {
         json.put("accounttable", accounttable);
         if (html == null) return; // we may not have all files for all libraries
         List<LentItem> media = BiBer1992.parseMediaList(new AccountData(0), Jsoup.parse(html), json);
+        assertTrue(media.size() > 0);
         for (LentItem item : media) {
             assertNotNull(item.getDeadline());
         }
@@ -73,5 +75,6 @@ public class BiBer1992AccountTest extends BaseAccountTest {
         String html = readResource("/biber1992/reslist/" + file);
         if (html == null) return; // we may not have all files for all libraries
         List<ReservedItem> media = BiBer1992.parseResList(Jsoup.parse(html), new JSONObject());
+        assertTrue(media.size() > 0);
     }
 }

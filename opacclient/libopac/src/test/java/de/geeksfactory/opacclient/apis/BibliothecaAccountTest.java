@@ -39,9 +39,7 @@ public class BibliothecaAccountTest extends BaseAccountTest {
         return files;
     }
 
-    @Test
-    public void testParseMediaList() throws OpacApi.OpacErrorException, JSONException {
-        String html = readResource("/bibliotheca/" + file);
+    private JSONObject getData(String file) throws JSONException {
         JSONObject json = new JSONObject();
         JSONObject accounttable = new JSONObject();
         JSONObject reservationtable = new JSONObject();
@@ -60,17 +58,55 @@ public class BibliothecaAccountTest extends BaseAccountTest {
             reservationtable.put("cancelurl", 3);
             reservationtable.put("expirationdate", -1);
             reservationtable.put("title", 1);
+        } else if (file.equals("marl.html")) {
+            accounttable.put("author", 0);
+            accounttable.put("barcode", 3);
+            accounttable.put("homebranch", -1);
+            accounttable.put("lendingbranch", -1);
+            accounttable.put("prolongurl", 4);
+            accounttable.put("returndate", 2);
+            accounttable.put("status", -1);
+            accounttable.put("title", 1);
+            reservationtable.put("author", 0);
+            reservationtable.put("availability", 2);
+            reservationtable.put("branch", 3);
+            reservationtable.put("cancelurl", 4);
+            reservationtable.put("expirationdate", -1);
+            reservationtable.put("title", 1);
         }
         json.put("accounttable", accounttable);
         json.put("reservationtable", reservationtable);
+        return json;
+    }
+
+    @Test
+    public void testParseMediaList() throws OpacApi.OpacErrorException, JSONException {
+        String html = readResource("/bibliotheca/" + file);
         if (html == null) return; // we may not have all files for all libraries
-        AccountData data = Bibliotheca.parse_account(new Account(), Jsoup.parse(html), json);
+        AccountData data = Bibliotheca.parse_account(new Account(), Jsoup.parse(html),
+                getData(file));
+        assertTrue(data.getLent().size() > 0);
         for (LentItem item : data.getLent()) {
             assertNotNull(item.getTitle());
             assertNotNull(item.getBarcode());
             assertNotNull(item.getAuthor());
             assertNotNull(item.getProlongData());
             assertNotNull(item.getDeadline());
+        }
+    }
+
+    @Test
+    public void testParseReservationList() throws OpacApi.OpacErrorException, JSONException {
+        String html = readResource("/bibliotheca/" + file);
+        if (html == null) return; // we may not have all files for all libraries
+        if (file.equals("gladbeck.html"))
+            return;
+        AccountData data = Bibliotheca.parse_account(new Account(), Jsoup.parse(html),
+                getData(file));
+        assertTrue(data.getReservations().size() > 0);
+        for (ReservedItem item : data.getReservations()) {
+            assertNotNull(item.getTitle());
+            assertNotNull(item.getAuthor());
         }
     }
 }
