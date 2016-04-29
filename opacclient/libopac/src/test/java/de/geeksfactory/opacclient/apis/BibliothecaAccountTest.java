@@ -28,7 +28,7 @@ public class BibliothecaAccountTest extends BaseAccountTest {
         this.file = file;
     }
 
-    private static final String[] FILES = new String[]{"gladbeck.html", "marl.htm"};
+    private static final String[] FILES = new String[]{"gladbeck.html", "marl.htm", "halle.html"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {
@@ -73,6 +73,21 @@ public class BibliothecaAccountTest extends BaseAccountTest {
             reservationtable.put("cancelurl", 3);
             reservationtable.put("expirationdate", -1);
             reservationtable.put("title", 1);
+        } else if (file.equals("halle.html")) {
+            accounttable.put("author", 1);
+            accounttable.put("barcode", -1);
+            accounttable.put("homebranch", 0);
+            accounttable.put("lendingbranch", -1);
+            accounttable.put("prolongurl", 6);
+            accounttable.put("returndate", 3);
+            accounttable.put("status", 5);
+            accounttable.put("title", 2);
+            reservationtable.put("author", 1);
+            reservationtable.put("availability", -1);
+            reservationtable.put("branch", 0);
+            reservationtable.put("cancelurl", 3);
+            reservationtable.put("expirationdate", -1);
+            reservationtable.put("title", 2);
         }
         json.put("accounttable", accounttable);
         json.put("reservationtable", reservationtable);
@@ -88,7 +103,6 @@ public class BibliothecaAccountTest extends BaseAccountTest {
         assertTrue(data.getLent().size() > 0);
         for (LentItem item : data.getLent()) {
             assertNotNull(item.getTitle());
-            assertNotNull(item.getBarcode());
             assertNotNull(item.getAuthor());
             assertNotNull(item.getProlongData());
             assertNotNull(item.getDeadline());
@@ -99,7 +113,7 @@ public class BibliothecaAccountTest extends BaseAccountTest {
     public void testParseReservationList() throws OpacApi.OpacErrorException, JSONException {
         String html = readResource("/bibliotheca/" + file);
         if (html == null) return; // we may not have all files for all libraries
-        if (file.equals("gladbeck.html"))
+        if (file.equals("gladbeck.html") || file.equals("halle.html"))
             return;
         AccountData data = Bibliotheca.parse_account(new Account(), Jsoup.parse(html),
                 getData(file));
