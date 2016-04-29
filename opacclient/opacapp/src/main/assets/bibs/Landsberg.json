@@ -1,7 +1,7 @@
 {
     "account_supported": true,
     "api": "winbiap",
-    "city": "Landsberg",
+    "city": "Landsberg/Lech",
     "country": "Deutschland",
     "data": {
         "baseurl": "https://webopac.winbiap.de/landsberg"

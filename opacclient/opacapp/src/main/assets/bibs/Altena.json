@@ -1,7 +1,7 @@
 {
     "account_supported": true,
     "api": "winbiap",
-    "city": "Altena",
+    "city": "Altena/Westf",
     "country": "Deutschland",
     "data": {
         "baseurl": "http://webopac.citkomm.de/altena"

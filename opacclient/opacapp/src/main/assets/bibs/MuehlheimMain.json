@@ -1,7 +1,7 @@
 {
     "account_supported": true,
     "api": "winbiap",
-    "city": "M\u00fchlheim (Main)",
+    "city": "M\u00fchlheim/M",
     "country": "Deutschland",
     "data": {
         "baseurl": "http://opac.winbiap.net/muehlheim"

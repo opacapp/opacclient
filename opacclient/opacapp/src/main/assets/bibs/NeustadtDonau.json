@@ -1,7 +1,7 @@
 {
     "account_supported": true,
     "api": "winbiap",
-    "city": "Neustadt a.d. Donau",
+    "city": "Neustadt/Do",
     "country": "Deutschland",
     "data": {
         "baseurl": "http://webopac.winbiap.net/neustadtdonau"

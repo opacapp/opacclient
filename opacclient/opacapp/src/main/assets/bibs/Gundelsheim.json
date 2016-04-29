@@ -1,7 +1,7 @@
 {
     "account_supported": false,
     "api": "open",
-    "city": "Gundelsheim",
+    "city": "Gundelsheim/W",
     "country": "Deutschland",
     "data": {
         "baseurl": "http://bibliotheken.kivbf.de/gundelsheim",

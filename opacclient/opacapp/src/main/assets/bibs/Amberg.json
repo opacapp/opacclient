@@ -1,7 +1,7 @@
 {
     "account_supported": true,
     "api": "winbiap",
-    "city": "Amberg",
+    "city": "Amberg/Oberpf.",
     "country": "Deutschland",
     "data": {
         "baseurl": "http://www.amberg.de/wwwopac"
