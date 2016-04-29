@@ -1031,7 +1031,7 @@ public class Bibliotheca extends BaseApi {
                         if (tr.child(index).children().size() > 0) {
                             item.setProlongData(tr.child(index).child(0).attr("href"));
                             item.setRenewable(
-                                    tr.child(index).child(0).attr("href").contains("vermsg"));
+                                    !tr.child(index).child(0).attr("href").contains("vermsg"));
                         }
                     } else if (key.equals("returndate")) {
                         try {
