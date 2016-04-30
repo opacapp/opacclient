@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -21,11 +20,12 @@ import org.joda.time.format.PeriodFormat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
-import de.geeksfactory.opacclient.BuildConfig;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.frontend.SnoozeDatePickerActivity;
+import de.geeksfactory.opacclient.logging.AppLogger;
 import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 
@@ -43,12 +43,14 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
     private Context context;
     private Intent intent;
     private SharedPreferences prefs;
+    private Logger logger;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         this.context = context;
         this.intent = intent;
         this.prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        this.logger = AppLogger.getLogger(context);
 
         adata = new AccountDataSource(context);
         adata.open();
@@ -83,23 +85,28 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
 
     private void showNotification() {
         if (!prefs.getBoolean("notification_service", false)) {
-            if (BuildConfig.DEBUG) Log.i(LOG_TAG, "not showing notification because disabled");
+            logger.info("not showing notification because disabled");
             return;
         }
         if (alarm.notified) {
-            if (BuildConfig.DEBUG) {
-                Log.i(LOG_TAG, "not showing notification because already notified");
-            }
+            logger.info("not showing notification because already notified");
             return;
         }
-        if (BuildConfig.DEBUG) Log.i(LOG_TAG, "showing notification");
+        logger.info("showing notification");
 
         alarm.notified = true;
         adata.updateAlarm(alarm);
 
         List<LentItem> expiringItems = new ArrayList<>();
         for (long mediaId : alarm.media) {
-            expiringItems.add(adata.getLentItem(mediaId));
+            LentItem item = adata.getLentItem(mediaId);
+            if (item != null) {
+                expiringItems.add(item);
+            }
+        }
+
+        if (expiringItems.isEmpty()) {
+            return;
         }
 
         String notificationText;
@@ -190,7 +197,7 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
     }
 
     private void finished() {
-        if (BuildConfig.DEBUG) Log.i(LOG_TAG, "alarm finished");
+        logger.info("alarm finished");
         alarm.finished = true;
         adata.updateAlarm(alarm);
     }
@@ -218,9 +225,7 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
     }
 
     private void snooze(ReadablePeriod duration) {
-        if (BuildConfig.DEBUG) {
-            Log.i(LOG_TAG, "snoozing notification for " + PeriodFormat.wordBased().print(duration));
-        }
+        logger.info("snoozing notification for " + PeriodFormat.wordBased().print(duration));
         alarm.notified = false;
         alarm.notificationTime = DateTime.now().plus(duration);
         adata.updateAlarm(alarm);

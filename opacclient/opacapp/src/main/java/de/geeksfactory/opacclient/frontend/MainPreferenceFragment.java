@@ -33,8 +33,16 @@ import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.logging.AppLogger;
 import de.geeksfactory.opacclient.reminder.ReminderHelper;
 import de.geeksfactory.opacclient.reminder.SyncAccountService;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
@@ -105,6 +113,30 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
             }
         });
 
+        Preference logs = findPreference("meta_logs");
+        logs.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference arg0) {
+                AppLogger.reInitialize(context);
+                return false;
+            }
+        });
+
+        Preference logs_send = findPreference("meta_logs_send");
+        logs_send.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference arg0) {
+                Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+                emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
+                        new String[]{"info@opacapp.de"});
+                emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "logs");
+                emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, readLogFile());
+                emailIntent.setType("text/plain");
+                startActivity(Intent.createChooser(emailIntent, getString(R.string.write_mail)));
+                return false;
+            }
+        });
+
         Preference meta = findPreference("meta_clear");
         meta.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -120,10 +152,35 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
                 SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 sp.edit().remove("reservation_fee_warning_ignore").apply();
 
+                context.deleteFile(AppLogger.LOG_FILE_NAME);
+                AppLogger.reInitialize(context);
+
                 Intent i = new Intent(context, SyncAccountService.class);
                 context.startService(i);
                 return false;
             }
         });
+    }
+
+    public String readLogFile() {
+        AppLogger.flush();
+        StringBuffer datax = new StringBuffer("");
+        try {
+            FileInputStream fIn = context.openFileInput(AppLogger.LOG_FILE_NAME);
+            InputStreamReader isr = new InputStreamReader(fIn);
+            BufferedReader buffreader = new BufferedReader(isr);
+
+            String readString = buffreader.readLine();
+            while (readString != null) {
+                datax.append(readString);
+                readString = buffreader.readLine();
+            }
+
+            isr.close();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+            return "no logs found";
+        }
+        return datax.toString();
     }
 }

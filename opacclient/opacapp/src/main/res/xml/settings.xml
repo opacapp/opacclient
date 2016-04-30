@@ -55,6 +55,15 @@
             android:summary="@string/setting_nfc_desc"
             android:title="@string/setting_nfc"/>
 
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="meta_logs"
+            android:title="@string/extended_logs" />
+
+        <Preference
+            android:key="meta_logs_send"
+            android:title="@string/extended_logs_send" />
+
         <Preference
             android:key="meta_clear"
             android:summary="@string/meta_clear"

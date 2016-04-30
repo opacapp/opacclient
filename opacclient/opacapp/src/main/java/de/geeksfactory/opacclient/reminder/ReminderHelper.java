@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
@@ -18,19 +17,22 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
-import de.geeksfactory.opacclient.BuildConfig;
 import de.geeksfactory.opacclient.OpacClient;
+import de.geeksfactory.opacclient.logging.AppLogger;
 import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 
 public class ReminderHelper {
     private OpacClient app;
     private SharedPreferences sp;
+    private Logger logger;
 
     public ReminderHelper(OpacClient app) {
         this.app = app;
         sp = PreferenceManager.getDefaultSharedPreferences(app);
+        logger = AppLogger.getLogger(app.getApplicationContext());
     }
 
     /**
@@ -53,10 +55,7 @@ public class ReminderHelper {
 
         if (enabled == null) enabled = sp.getBoolean("notification_service", false);
         if (!enabled) {
-            if (BuildConfig.DEBUG) {
-                Log.d("OpacClient",
-                        "scheduling no alarms because notifications are disabled");
-            }
+            logger.info("scheduling no alarms because notifications are disabled");
             return;
         }
 
@@ -99,12 +98,9 @@ public class ReminderHelper {
                     data.updateAlarm(alarm);
                 }
             } else {
-                if (BuildConfig.DEBUG) {
-                    Log.i("OpacClient",
-                            "scheduling alarm for " + media.length + " items with deadline on " +
+                logger.info("scheduling alarm for " + media.length + " items with deadline on " +
                                     DateTimeFormat.shortDate().print(deadline) + " on " +
                                     DateTimeFormat.shortDate().print(deadline.minusDays(warning)));
-                }
                 data.addAlarm(deadline, media,
                         deadline.minusDays(warning).toDateTimeAtStartOfDay());
             }

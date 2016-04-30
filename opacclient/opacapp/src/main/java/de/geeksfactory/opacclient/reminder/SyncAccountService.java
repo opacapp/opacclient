@@ -33,10 +33,12 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 
 import de.geeksfactory.opacclient.BuildConfig;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.apis.OpacApi;
+import de.geeksfactory.opacclient.logging.AppLogger;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Library;
@@ -53,12 +55,13 @@ public class SyncAccountService extends WakefulIntentService {
 
     @Override
     protected void doWakefulWork(Intent intent) {
-        if (BuildConfig.DEBUG) Log.i(NAME, "SyncAccountService started");
+        Logger logger = AppLogger.getLogger(this);
+        logger.info("SyncAccountService started");
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (!sp.getBoolean(SyncAccountAlarmListener.PREF_SYNC_SERVICE, false)) {
-            if (BuildConfig.DEBUG) Log.i(NAME, "notifications are disabled");
+            logger.info("notifications are disabled");
             return;
         }
 
@@ -77,10 +80,8 @@ public class SyncAccountService extends WakefulIntentService {
             failed = true;
         }
 
-        if (BuildConfig.DEBUG) {
-            Log.i(NAME, "SyncAccountService finished " +
-                    (failed ? " with errors" : " " + "successfully"));
-        }
+        logger.info("SyncAccountService finished " +
+                (failed ? " with errors" : " " + "successfully"));
 
         long previousPeriod = sp.getLong(SyncAccountAlarmListener.PREF_SYNC_INTERVAL, 0);
         long newPeriod = failed ? AlarmManager.INTERVAL_HOUR : AlarmManager.INTERVAL_HALF_DAY;
@@ -93,6 +94,7 @@ public class SyncAccountService extends WakefulIntentService {
     }
 
     private void syncAccounts() {
+        Logger logger = AppLogger.getLogger(this);
         OpacClient app = (OpacClient) getApplication();
         AccountDataSource data = new AccountDataSource(this);
         data.open();
@@ -100,7 +102,7 @@ public class SyncAccountService extends WakefulIntentService {
         data.close();
 
         for (Account account : accounts) {
-            if (BuildConfig.DEBUG) Log.i(NAME, "Loading data for Account " + account.toString());
+            logger.info("Loading data for Account " + account.toString());
 
             try {
                 Library library = app.getLibrary(account.getLibrary());
