@@ -99,34 +99,35 @@ public class SyncAccountService extends WakefulIntentService {
         List<Account> accounts = data.getAccountsWithPassword();
         data.close();
 
-        for (Account account : accounts) {
-            if (BuildConfig.DEBUG) Log.i(NAME, "Loading data for Account " + account.toString());
+        try {
+            for (Account account : accounts) {
+                if (BuildConfig.DEBUG)
+                    Log.i(NAME, "Loading data for Account " + account.toString());
 
-            try {
-                Library library = app.getLibrary(account.getLibrary());
-                if (!library.isAccountSupported()) continue;
-                OpacApi api = app.getNewApi(library);
-                AccountData res = api.account(account);
-                if (res == null) {
+                try {
+                    Library library = app.getLibrary(account.getLibrary());
+                    if (!library.isAccountSupported()) continue;
+                    OpacApi api = app.getNewApi(library);
+                    AccountData res = api.account(account);
+                    if (res == null) {
+                        failed = true;
+                        continue;
+                    }
+
+                    data.open();
+                    account.setPasswordKnownValid(true);
+                    data.update(account);
+                    data.storeCachedAccountData(account, res);
+                    data.close();
+                } catch (JSONException | IOException | OpacApi.OpacErrorException e) {
+                    data.close();
+                    e.printStackTrace();
                     failed = true;
-                    continue;
                 }
-
-                data.open();
-                account.setPasswordKnownValid(true);
-                data.update(account);
-                data.storeCachedAccountData(account, res);
-                data.close();
-
-                new ReminderHelper(app).generateAlarms();
-
-            } catch (JSONException | IOException | OpacApi.OpacErrorException e) {
-                data.close();
-                e.printStackTrace();
-                failed = true;
             }
+        } finally {
+            new ReminderHelper(app).generateAlarms();
         }
-
     }
 
 }
