@@ -1712,6 +1712,8 @@ public class AccountFragment extends Fragment implements
                 return;
             }
 
+            super.onPostExecute(res);
+
             if (!success || res == null) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(
                         getActivity());
@@ -1727,10 +1729,7 @@ public class AccountFragment extends Fragment implements
                                });
                 AlertDialog alert = builder.create();
                 alert.show();
-                return;
             }
-
-            super.onPostExecute(res);
         }
     }
 
