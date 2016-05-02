@@ -70,6 +70,7 @@ import java.util.Map;
 import de.geeksfactory.opacclient.OpacClient;
 import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.objects.Account;
+import de.geeksfactory.opacclient.reminder.ReminderHelper;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.ui.AccountSwitcherNavigationView;
 import de.geeksfactory.opacclient.utils.Utils;
@@ -518,6 +519,7 @@ public abstract class OpacActivity extends AppCompatActivity
                                 .setAccount(available_accounts.get(0).getId());
                     }
                     data.close();
+                    new ReminderHelper(app).generateAlarms();
                     if (app.getLibrary() != null) {
                         return;
                     }
