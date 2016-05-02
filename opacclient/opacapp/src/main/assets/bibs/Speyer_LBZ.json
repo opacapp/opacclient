@@ -1,0 +1,17 @@
+{
+    "account_supported": true,
+    "api": "sisis",
+    "city": "Speyer",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "https://kat.lbz-rlp.de/webOPACClient.lbzsis",
+        "startparams": "Login=wolbzplb"
+    },
+    "geo": [
+        49.3172765,
+        8.441217199999999
+    ],
+    "information": "http://lbz.rlp.de/de/ueber-uns/standorte/pfaelzische-landesbibliothek/",
+    "state": "Rheinland-Pfalz",
+    "title": "Pf\u00e4lzische Landesbibliothek"
+}

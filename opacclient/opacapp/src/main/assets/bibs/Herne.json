@@ -1,0 +1,17 @@
+{
+    "account_supported": true,
+    "api": "adis",
+    "city": "Herne",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "https://katalog.herne.de/aDISWeb/app",
+        "startparams": "\u001b[Cservice=direct/0/Home/$DirectLink&sp=S127.0.0.1%3A4404"
+    },
+    "geo": [
+        51.5368948,
+        7.200914699999999
+    ],
+    "information": "http://www.stadtbibliothek.herne.de/",
+    "state": "Nordrhein-Westfalen",
+    "title": "Stadtbibliothek"
+}

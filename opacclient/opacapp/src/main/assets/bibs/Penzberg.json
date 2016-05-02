@@ -1,0 +1,16 @@
+{
+    "account_supported": true,
+    "api": "winbiap",
+    "city": "Penzberg",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://www.buecherei-penzberg.de"
+    },
+    "geo": [
+        47.75612,
+        11.3698021
+    ],
+    "information": "https://cloudopac.winbiap.de/penzberg",
+    "state": "Bayern",
+    "title": "Stadtb\u00fccherei"
+}
