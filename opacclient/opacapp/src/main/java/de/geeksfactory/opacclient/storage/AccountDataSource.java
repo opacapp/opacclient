@@ -159,6 +159,7 @@ public class AccountDataSource {
     }
 
     public void remove(Account acc) {
+        deleteAccountData(acc);
         String[] selA = {"" + acc.getId()};
         database.delete("accounts", "id=?", selA);
     }
@@ -319,11 +320,16 @@ public class AccountDataSource {
         database.update(AccountDatabase.TABLENAME_ACCOUNTS, update, null, null);
     }
 
-    public void invalidateCachedAccountData(Account account) {
+    public void deleteAccountData(Account account) {
         database.delete(AccountDatabase.TABLENAME_LENT, "account = ?",
                 new String[]{"" + account.getId()});
         database.delete(AccountDatabase.TABLENAME_RESERVATION, "account = ?",
                 new String[]{"" + account.getId()});
+
+    }
+
+    public void invalidateCachedAccountData(Account account) {
+        deleteAccountData(account);
         ContentValues update = new ContentValues();
         update.put("cached", 0);
         update.put("pendingFees", (String) null);
