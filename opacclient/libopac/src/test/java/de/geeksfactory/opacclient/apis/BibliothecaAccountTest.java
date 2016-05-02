@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 import de.geeksfactory.opacclient.i18n.DummyStringProvider;
+import de.geeksfactory.opacclient.networking.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.LentItem;
@@ -95,7 +96,8 @@ public class BibliothecaAccountTest extends BaseAccountTest {
     }
 
     @Test
-    public void testParseMediaList() throws OpacApi.OpacErrorException, JSONException {
+    public void testParseMediaList()
+            throws OpacApi.OpacErrorException, JSONException, NotReachableException {
         String html = readResource("/bibliotheca/" + file);
         if (html == null) return; // we may not have all files for all libraries
         AccountData data = Bibliotheca.parse_account(new Account(), Jsoup.parse(html),
@@ -110,7 +112,8 @@ public class BibliothecaAccountTest extends BaseAccountTest {
     }
 
     @Test
-    public void testParseReservationList() throws OpacApi.OpacErrorException, JSONException {
+    public void testParseReservationList()
+            throws OpacApi.OpacErrorException, JSONException, NotReachableException {
         String html = readResource("/bibliotheca/" + file);
         if (html == null) return; // we may not have all files for all libraries
         if (file.equals("gladbeck.html") || file.equals("halle.html"))
