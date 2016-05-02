@@ -262,6 +262,8 @@ public class Littera extends SearchOnlyApi {
     }
 
     static LocalDate parseCopyReturn(String str) {
+        if (str == null)
+            return null;
         DateTimeFormatter fmt =
                 DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
         final Matcher matcher = Pattern.compile("[0-9.-]{4,}").matcher(str);
