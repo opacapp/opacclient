@@ -258,8 +258,9 @@ public class AccountFragment extends Fragment implements
             appendIfNotEmpty(string, item.getFormat(), R.string.accountdata_format);
             appendIfNotEmpty(string, item.getStatus(), R.string.accountdata_status);
             appendIfNotEmpty(string, item.getBarcode(), R.string.accountdata_lent_barcode);
-            appendIfNotEmpty(string, fmt2.print(item.getDeadline()),
-                    R.string.accountdata_lent_deadline);
+            if (item.getDeadline() != null)
+                appendIfNotEmpty(string, fmt2.print(item.getDeadline()),
+                        R.string.accountdata_lent_deadline);
             appendIfNotEmpty(string, item.getHomeBranch(), R.string.accountdata_lent_home_branch);
             appendIfNotEmpty(string, item.getLendingBranch(),
                     R.string.accountdata_lent_lending_branch);
@@ -277,10 +278,12 @@ public class AccountFragment extends Fragment implements
             appendIfNotEmpty(string, item.getAuthor(), R.string.accountdata_author);
             appendIfNotEmpty(string, item.getFormat(), R.string.accountdata_format);
             appendIfNotEmpty(string, item.getStatus(), R.string.accountdata_status);
-            appendIfNotEmpty(string, fmt2.print(item.getReadyDate()),
-                    R.string.accountdata_reserved_ready_date);
-            appendIfNotEmpty(string, fmt2.print(item.getExpirationDate()),
-                    R.string.accountdata_reserved_expiration_date);
+            if (item.getReadyDate() != null)
+                appendIfNotEmpty(string, fmt2.print(item.getReadyDate()),
+                        R.string.accountdata_reserved_ready_date);
+            if (item.getExpirationDate() != null)
+                appendIfNotEmpty(string, fmt2.print(item.getExpirationDate()),
+                        R.string.accountdata_reserved_expiration_date);
             appendIfNotEmpty(string, item.getBranch(), R.string.accountdata_reserved_branch);
             string.append("\n");
         }
