@@ -57,6 +57,7 @@ import java.util.regex.Pattern;
 import de.geeksfactory.opacclient.i18n.StringProvider;
 import de.geeksfactory.opacclient.networking.HttpClientFactory;
 import de.geeksfactory.opacclient.networking.HttpUtils;
+import de.geeksfactory.opacclient.networking.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
 import de.geeksfactory.opacclient.objects.Copy;
@@ -963,10 +964,6 @@ public class Bibliotheca extends BaseApi {
             start();
         }
 
-        if (acc.getName() == null || acc.getName().equals("null")) {
-            return null;
-        }
-
         List<NameValuePair> nameValuePairs;
         String html = httpGet(opac_url + "/index.asp?kontofenster=start",
                 "ISO-8859-1");
@@ -999,13 +996,14 @@ public class Bibliotheca extends BaseApi {
         return parse_account(acc, doc, data);
     }
 
-    public static AccountData parse_account(Account acc, Document doc, JSONObject data) throws JSONException {
+    public static AccountData parse_account(Account acc, Document doc, JSONObject data)
+            throws JSONException, NotReachableException {
         JSONObject copymap = data.getJSONObject("accounttable");
 
         List<LentItem> media = new ArrayList<>();
 
         if (doc.select(".kontozeile_center table").size() == 0) {
-            return null;
+            throw new NotReachableException();
         }
 
         Elements exemplartrs = doc.select(".kontozeile_center table").get(0)
