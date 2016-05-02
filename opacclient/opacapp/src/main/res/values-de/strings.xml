@@ -34,6 +34,7 @@
     <string name="entl_none">Keine Medien entliehen</string>
     <string name="reservations_none">Keine Medien vorbestellt</string>
     <string name="cancel_confirm">Vorbestellung wirklich entfernen?</string>
+    <string name="prolong_confirm">Medium wirklich verlängern?</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
     <string name="cancel">Abbrechen</string>

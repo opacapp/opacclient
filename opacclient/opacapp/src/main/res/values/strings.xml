@@ -33,7 +33,8 @@
     <string name="reservations_head">Reservations</string>
     <string name="entl_none">Nothing lent</string>
     <string name="reservations_none">Nothing reserved</string>
-    <string name="cancel_confirm">Really cancel reservation?</string>
+    <string name="cancel_confirm">Do you really want to cancel this reservation?</string>
+    <string name="prolong_confirm">Do you really want to renew this item?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="cancel">Cancel</string>
