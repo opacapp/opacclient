@@ -98,7 +98,8 @@
                         android:layout_toRightOf="@id/tvPendingFeesLabel"
                         android:ellipsize="end"
                         android:textColor="@color/account_head_fg"
-                        android:textIsSelectable="true"/>
+                        android:textIsSelectable="true"
+                        android:gravity="right"/>
 
                     <TextView
                         android:id="@+id/tvValidUntilLabel"
@@ -121,7 +122,9 @@
                         android:layout_toRightOf="@id/tvValidUntilLabel"
                         android:ellipsize="end"
                         android:textColor="@color/account_head_fg"
-                        android:textIsSelectable="true"/>
+                        android:textIsSelectable="true"
+                        android:singleLine="true"
+                        android:gravity="right"/>
                 </RelativeLayout>
 
                 <TextView
