@@ -16,6 +16,7 @@ import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.ReservedItem;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
 public class BiBer1992AccountTest extends BaseAccountTest {
@@ -25,7 +26,7 @@ public class BiBer1992AccountTest extends BaseAccountTest {
         this.file = file;
     }
 
-    private static final String[] FILES = new String[]{"gelsenkirchen.htm"};
+    private static final String[] FILES = new String[]{"gelsenkirchen.htm", "freising.html"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {
@@ -50,10 +51,20 @@ public class BiBer1992AccountTest extends BaseAccountTest {
             accounttable.put("returndate", 3);
             accounttable.put("status", 5);
             accounttable.put("title", 7);
+        } else if (file.equals("freising.html")) {
+            accounttable.put("author", 8);
+            accounttable.put("barcode", 4);
+            accounttable.put("homebranch", -1);
+            accounttable.put("lendingbranch", -1);
+            accounttable.put("prolongurl", 4);
+            accounttable.put("returndate", 3);
+            accounttable.put("status", 6);
+            accounttable.put("title", 8);
         }
         json.put("accounttable", accounttable);
         if (html == null) return; // we may not have all files for all libraries
         List<LentItem> media = BiBer1992.parseMediaList(new AccountData(0), Jsoup.parse(html), json);
+        assertTrue(media.size() > 0);
         for (LentItem item : media) {
             assertNotNull(item.getDeadline());
         }
@@ -64,5 +75,6 @@ public class BiBer1992AccountTest extends BaseAccountTest {
         String html = readResource("/biber1992/reslist/" + file);
         if (html == null) return; // we may not have all files for all libraries
         List<ReservedItem> media = BiBer1992.parseResList(Jsoup.parse(html), new JSONObject());
+        assertTrue(media.size() > 0);
     }
 }

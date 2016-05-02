@@ -14,7 +14,7 @@
             "status": 5,
             "title": 8
         },
-        "baseurl": "http://wwwopac.baden-baden.de",
+        "baseurl": "https://extranet3.baden-baden.de",
         "copiestable": {
             "barcode": -1,
             "branch": 0,

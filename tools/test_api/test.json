@@ -1,0 +1,27 @@
+{
+	"lent": [
+		{
+			"barcode": "12345",
+			"returndate": "2016-05-05",
+			"title": "Harry Potter",
+			"author": "J. K. Rowling",
+			"status": "V"
+		},
+		{
+			"barcode": "12346",
+			"returndate": "2016-05-05",
+			"title": "Eragon",
+			"author": "Christopher Paolini",
+			"status": "V"
+		},
+		{
+			"barcode": "12347",
+			"returndate": "2016-05-09",
+			"title": "Herr der Ringe",
+			"author": "J. R. R. Tolkien",
+			"status": "V"
+		}
+	],
+	"reservations": [
+	]
+}     

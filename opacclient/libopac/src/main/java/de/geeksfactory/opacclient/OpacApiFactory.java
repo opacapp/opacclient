@@ -33,7 +33,7 @@ import de.geeksfactory.opacclient.apis.SRU;
 import de.geeksfactory.opacclient.apis.TestApi;
 import de.geeksfactory.opacclient.apis.TouchPoint;
 import de.geeksfactory.opacclient.apis.VuFind;
-import de.geeksfactory.opacclient.apis.WebOpacAt;
+import de.geeksfactory.opacclient.apis.Littera;
 import de.geeksfactory.opacclient.apis.WebOpacNet;
 import de.geeksfactory.opacclient.apis.WinBiap;
 import de.geeksfactory.opacclient.apis.Zones;
@@ -111,8 +111,8 @@ public class OpacApiFactory {
             newApiInstance = new VuFind();
         } else if (lib.getApi().equals("webopac.net")) {
             newApiInstance = new WebOpacNet();
-        } else if (lib.getApi().equals("web-opac.at")) {
-            newApiInstance = new WebOpacAt();
+        } else if (lib.getApi().equals("web-opac.at") || lib.getApi().equals("littera")) {
+            newApiInstance = new Littera();
         } else if (lib.getApi().equals("winbiap")) {
             newApiInstance = new WinBiap();
         } else if (lib.getApi().equals("heidi")) {

@@ -34,6 +34,7 @@
     <string name="entl_none">Keine Medien entliehen</string>
     <string name="reservations_none">Keine Medien vorbestellt</string>
     <string name="cancel_confirm">Vorbestellung wirklich entfernen?</string>
+    <string name="prolong_confirm">Medium wirklich verlängern?</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
     <string name="cancel">Abbrechen</string>
@@ -94,6 +95,7 @@
     <string name="star">Merken</string>
     <string name="starred">Das Medium ist jetzt auf deiner Merkliste</string>
     <string name="star_wait">Bitte warten, bis die Details geladen wurden!</string>
+    <string name="star_unsupported">Wir konnten nicht genug Informationen ermitteln um dieses Medium als Favorig hinzuzufügen.</string>
     <string name="starred_welcome">Dies ist deine Merkliste. Du kannst in der Detailansicht von jedem Medium den Stern für „Merken“ auswählen, dann erscheint das Medium hier auf der Liste. Die Liste wird für jede Bibliothek, die du benutzt, separat geführt.</string>
     <string name="share">Teilen</string>
     <string name="share_wait">Bitte warten, bis die Details geladen wurden</string>
@@ -214,6 +216,7 @@
     <string name="support_search">Katalogsuche</string>
     <string name="meta_clear_title">Cache leeren</string>
     <string name="meta_clear">Löscht auf dem Handy zwischengespeicherten Zweigstellen, Metadaten, etc.</string>
+    <string name="meta_run_check">Synchronisierungsdienst ausführen</string>
     <string name="version">Version</string>
     <string name="website">Website</string>
     <string name="website_url">www.opacapp.de</string>

@@ -82,6 +82,7 @@ public class ReminderHelper {
         for (Alarm alarm : data.getAllAlarms()) {
             // Remove alarms with no corresponding media
             if (!arrangedIds.containsKey(alarm.deadline)) {
+                cancelNotification(alarm);
                 data.removeAlarm(alarm);
             }
 
@@ -141,6 +142,12 @@ public class ReminderHelper {
         data.open();
         data.clearAlarms();
         data.close();
+    }
+
+    private void cancelNotification(Alarm alarm) {
+        NotificationManager notificationManager = (NotificationManager) app
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel((int) alarm.id);
     }
 
     private void cancelAllNotifications() {

@@ -590,6 +590,15 @@ public class Adis extends BaseApi implements OpacApi {
             }
         }
 
+        if (res.getTitle() == null) {
+            for (Detail d : res.getDetails()) {
+                if (d.getDesc().contains("Gesamtwerk")) {
+                    res.setTitle(d.getContent());
+                    break;
+                }
+            }
+        }
+
         if (doc.select("input[value*=Reservieren], input[value*=Vormerken]")
                .size() > 0 && id != null) {
             res.setReservable(true);
@@ -1238,7 +1247,7 @@ public class Adis extends BaseApi implements OpacApi {
                 if (date.contains("-")) {
                     // Nürnberg: "29.03.2016 - 26.04.2016"
                     // for beginning and end date in one field
-                    date = date.split("-", 1)[1].trim();
+                    date = date.split("-")[1].trim();
                 }
                 try {
                     item.setDeadline(fmt.parseLocalDate(date));

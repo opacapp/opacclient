@@ -52,6 +52,7 @@ import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.OpacApi.OpacErrorException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.Library;
+import de.geeksfactory.opacclient.reminder.ReminderHelper;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
 
@@ -184,6 +185,7 @@ public class AccountEditActivity extends AppCompatActivity {
             }
         }
         data.close();
+        new ReminderHelper((OpacClient) getApplication()).generateAlarms();
     }
 
     @Override

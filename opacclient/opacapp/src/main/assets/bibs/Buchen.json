@@ -1,0 +1,20 @@
+{
+    "account_supported": false,
+    "api": "open",
+    "city": "Buchen",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://bibliotheken.kivbf.de/buchen",
+        "urls": {
+            "advanced_search": "Mediensuche.aspx",
+            "simple_search": "Mediensuche.aspx"
+        }
+    },
+    "geo": [
+        49.4978047,
+        9.342153
+    ],
+    "information": "http://bibliotheken.kivbf.de/buchen/InfoundKontakt/InfoKontakt.aspx",
+    "state": "Baden-W\u00fcrttemberg",
+    "title": "Stadtb\u00fccherei"
+}

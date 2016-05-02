@@ -59,6 +59,10 @@
             android:key="meta_clear"
             android:summary="@string/meta_clear"
             android:title="@string/meta_clear_title"/>
+
+        <Preference
+            android:key="meta_run_check"
+            android:title="@string/meta_run_check"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

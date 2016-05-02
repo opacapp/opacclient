@@ -105,6 +105,16 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
             }
         });
 
+        Preference meta_run_check = findPreference("meta_run_check");
+        meta_run_check.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference arg0) {
+                Intent i = new Intent(context, SyncAccountService.class);
+                context.startService(i);
+                return false;
+            }
+        });
+
         Preference meta = findPreference("meta_clear");
         meta.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -113,6 +123,7 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
                 adata.open();
                 adata.invalidateCachedData();
                 adata.close();
+                new ReminderHelper((OpacClient) context.getApplication()).updateAlarms(-1);
 
                 SearchFieldDataSource sfdata = new JsonSearchFieldDataSource(context);
                 sfdata.clearAll();

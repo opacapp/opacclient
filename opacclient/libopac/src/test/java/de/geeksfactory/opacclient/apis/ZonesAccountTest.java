@@ -13,6 +13,7 @@ import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.objects.ReservedItem;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
 public class ZonesAccountTest extends BaseAccountTest {
@@ -38,6 +39,7 @@ public class ZonesAccountTest extends BaseAccountTest {
         String html = readResource("/zones/medialist/" + file);
         if (html == null) return; // we may not have all files for all libraries
         List<LentItem> media = Zones.parseMediaList(Jsoup.parse(html));
+        assertTrue(media.size() > 0);
         for (LentItem item : media) {
             assertNotNull(item.getTitle());
             assertNotNull(item.getDeadline());

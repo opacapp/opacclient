@@ -90,9 +90,13 @@
                         android:id="@+id/tvPendingFees"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignEnd="@+id/tvAccUser"
+                        android:layout_alignRight="@+id/tvAccUser"
                         android:layout_below="@id/tvAccUser"
                         android:layout_marginBottom="4dp"
+                        android:layout_toEndOf="@id/tvPendingFeesLabel"
+                        android:layout_toRightOf="@id/tvPendingFeesLabel"
+                        android:ellipsize="end"
                         android:textColor="@color/account_head_fg"
                         android:textIsSelectable="true"/>
 
@@ -113,6 +117,9 @@
                         android:layout_alignParentRight="true"
                         android:layout_below="@id/tvPendingFees"
                         android:layout_marginBottom="4dp"
+                        android:layout_toEndOf="@id/tvValidUntilLabel"
+                        android:layout_toRightOf="@id/tvValidUntilLabel"
+                        android:ellipsize="end"
                         android:textColor="@color/account_head_fg"
                         android:textIsSelectable="true"/>
                 </RelativeLayout>

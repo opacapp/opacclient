@@ -63,7 +63,7 @@ import de.geeksfactory.opacclient.searchfields.TextSearchField;
  * An implementation of *.web-opac.at sites operated by the Austrian company
  * <a href="https://littera.eu/">Littera</a>.
  */
-public class WebOpacAt extends SearchOnlyApi {
+public class Littera extends SearchOnlyApi {
     protected static final Map<String, String> LANGUAGE_CODES = new HashMap<String, String>() {{
         put("en", "eng");
         put("de", "deu");
@@ -262,6 +262,8 @@ public class WebOpacAt extends SearchOnlyApi {
     }
 
     static LocalDate parseCopyReturn(String str) {
+        if (str == null)
+            return null;
         DateTimeFormatter fmt =
                 DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
         final Matcher matcher = Pattern.compile("[0-9.-]{4,}").matcher(str);

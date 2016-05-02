@@ -442,80 +442,109 @@ public class AccountFragment extends Fragment implements
             }
             return;
         }
-
-        MultiStepResultHelper<String> msrhProlong = new MultiStepResultHelper<>(
-                getActivity(), a, R.string.doing_prolong);
-        msrhProlong.setCallback(new Callback<String>() {
-            @Override
-            public void onSuccess(MultiStepResult result) {
-                if (getActivity() == null) {
-                    return;
-                }
-                invalidateData();
-
-                if (result.getMessage() != null) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(
-                            getActivity());
-                    builder.setMessage(result.getMessage())
-                           .setCancelable(false)
-                           .setNegativeButton(R.string.close,
-                                   new DialogInterface.OnClickListener() {
-                                       @Override
-                                       public void onClick(
-                                               DialogInterface dialog, int id) {
-                                           dialog.cancel();
-                                       }
-                                   });
-                    AlertDialog alert = builder.create();
-                    alert.show();
-                }
-            }
-
-            @Override
-            public void onError(MultiStepResult result) {
-                if (getActivity() == null) {
-                    return;
-                }
-                AlertDialog.Builder builder = new AlertDialog.Builder(
-                        getActivity());
-                builder.setMessage(result.getMessage())
-                       .setCancelable(true)
-                       .setNegativeButton(R.string.close,
-                               new DialogInterface.OnClickListener() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(R.string.prolong_confirm)
+               .setCancelable(true)
+               .setNegativeButton(R.string.no,
+                       new DialogInterface.OnClickListener() {
+                           @Override
+                           public void onClick(DialogInterface d, int id) {
+                               d.cancel();
+                           }
+                       })
+               .setPositiveButton(R.string.yes,
+                       new DialogInterface.OnClickListener() {
+                           @Override
+                           public void onClick(DialogInterface d, int id) {
+                               MultiStepResultHelper<String> msrhProlong =
+                                       new MultiStepResultHelper<>(
+                                               getActivity(), a, R.string.doing_prolong);
+                               msrhProlong.setCallback(new Callback<String>() {
                                    @Override
-                                   public void onClick(DialogInterface d,
-                                           int id) {
-                                       d.cancel();
+                                   public void onSuccess(MultiStepResult result) {
+                                       if (getActivity() == null) {
+                                           return;
+                                       }
+                                       invalidateData();
+
+                                       if (result.getMessage() != null) {
+                                           AlertDialog.Builder builder = new AlertDialog.Builder(
+                                                   getActivity());
+                                           builder.setMessage(result.getMessage())
+                                                  .setCancelable(false)
+                                                  .setNegativeButton(R.string.close,
+                                                          new DialogInterface.OnClickListener() {
+                                                              @Override
+                                                              public void onClick(
+                                                                      DialogInterface dialog,
+                                                                      int id) {
+                                                                  dialog.cancel();
+                                                              }
+                                                          });
+                                           AlertDialog alert = builder.create();
+                                           alert.show();
+                                       }
                                    }
-                               })
-                       .setOnCancelListener(
-                               new DialogInterface.OnCancelListener() {
+
                                    @Override
-                                   public void onCancel(DialogInterface d) {
-                                       if (d != null) {
-                                           d.cancel();
+                                   public void onError(MultiStepResult result) {
+                                       if (getActivity() == null) {
+                                           return;
                                        }
+                                       AlertDialog.Builder builder = new AlertDialog.Builder(
+                                               getActivity());
+                                       builder.setMessage(result.getMessage())
+                                              .setCancelable(true)
+                                              .setNegativeButton(R.string.close,
+                                                      new DialogInterface.OnClickListener() {
+                                                          @Override
+                                                          public void onClick(DialogInterface d,
+                                                                  int id) {
+                                                              d.cancel();
+                                                          }
+                                                      })
+                                              .setOnCancelListener(
+                                                      new DialogInterface.OnCancelListener() {
+                                                          @Override
+                                                          public void onCancel(DialogInterface d) {
+                                                              if (d != null) {
+                                                                  d.cancel();
+                                                              }
+                                                          }
+                                                      });
+                                       AlertDialog alert = builder.create();
+                                       alert.show();
+                                   }
+
+                                   @Override
+                                   public void onUnhandledResult(MultiStepResult result) {
+                                   }
+
+                                   @Override
+                                   public void onUserCancel() {
+                                   }
+
+                                   @Override
+                                   public StepTask<?> newTask(MultiStepResultHelper helper,
+                                           int useraction,
+                                           String selection, String argument) {
+                                       return new ProlongTask(helper, useraction, selection,
+                                               argument);
                                    }
                                });
-                AlertDialog alert = builder.create();
-                alert.show();
-            }
-
-            @Override
-            public void onUnhandledResult(MultiStepResult result) {
-            }
-
-            @Override
-            public void onUserCancel() {
-            }
-
-            @Override
-            public StepTask<?> newTask(MultiStepResultHelper helper, int useraction,
-                    String selection, String argument) {
-                return new ProlongTask(helper, useraction, selection, argument);
-            }
-        });
-        msrhProlong.start();
+                               msrhProlong.start();
+                           }
+                       })
+               .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                   @Override
+                   public void onCancel(DialogInterface d) {
+                       if (d != null) {
+                           d.cancel();
+                       }
+                   }
+               });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     protected void download(final String a) {
@@ -1494,6 +1523,10 @@ public class AccountFragment extends Fragment implements
             try {
                 AccountData data = app.getApi().account(account);
 
+                if (data == null) {
+                    return null;
+                }
+
                 // save data
                 AccountDataSource adatasource;
                 if (getActivity() == null && OpacClient.getEmergencyContext() != null) {
@@ -1708,6 +1741,8 @@ public class AccountFragment extends Fragment implements
                 return;
             }
 
+            super.onPostExecute(res);
+
             if (!success || res == null) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(
                         getActivity());
@@ -1723,10 +1758,7 @@ public class AccountFragment extends Fragment implements
                                });
                 AlertDialog alert = builder.create();
                 alert.show();
-                return;
             }
-
-            super.onPostExecute(res);
         }
     }
 
