@@ -590,6 +590,15 @@ public class Adis extends BaseApi implements OpacApi {
             }
         }
 
+        if (res.getTitle() == null) {
+            for (Detail d : res.getDetails()) {
+                if (d.getDesc().contains("Gesamtwerk")) {
+                    res.setTitle(d.getContent());
+                    break;
+                }
+            }
+        }
+
         if (doc.select("input[value*=Reservieren], input[value*=Vormerken]")
                .size() > 0 && id != null) {
             res.setReservable(true);
