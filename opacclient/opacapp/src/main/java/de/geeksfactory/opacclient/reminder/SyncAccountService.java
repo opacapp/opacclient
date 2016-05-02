@@ -33,6 +33,7 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.geeksfactory.opacclient.BuildConfig;
@@ -124,6 +125,7 @@ public class SyncAccountService extends WakefulIntentService {
 
             } catch (JSONException | IOException | OpacApi.OpacErrorException e) {
                 data.close();
+                logger.log(Level.WARNING, "Errror while fetching account", e);
                 e.printStackTrace();
                 failed = true;
             }

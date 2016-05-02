@@ -32,11 +32,10 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -113,15 +112,6 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
             }
         });
 
-        Preference logs = findPreference("meta_logs");
-        logs.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference arg0) {
-                AppLogger.reInitialize(context);
-                return false;
-            }
-        });
-
         Preference logs_send = findPreference("meta_logs_send");
         logs_send.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -130,7 +120,13 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
                 emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
                         new String[]{"info@opacapp.de"});
                 emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "logs");
-                emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, readLogFile());
+                String logfile = readLogFile();
+                if (logfile == null) {
+                    Toast.makeText(context, R.string.extended_logs_failed, Toast.LENGTH_SHORT)
+                         .show();
+                    return false;
+                }
+                emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, logfile);
                 emailIntent.setType("text/plain");
                 startActivity(Intent.createChooser(emailIntent, getString(R.string.write_mail)));
                 return false;
@@ -179,7 +175,7 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
             isr.close();
         } catch (IOException ioe) {
             ioe.printStackTrace();
-            return "no logs found";
+            return null;
         }
         return datax.toString();
     }

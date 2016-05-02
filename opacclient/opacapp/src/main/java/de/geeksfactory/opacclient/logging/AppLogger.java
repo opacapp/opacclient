@@ -1,8 +1,6 @@
 package de.geeksfactory.opacclient.logging;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.support.v7.preference.PreferenceManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +20,7 @@ public class AppLogger {
     static public Logger loggerSingleton;
     static public Handler handler;
     static public final String LOG_FILE_NAME = "opacapp.log";
-    static public final int LOG_FILE_MAX_SIZE = 1024 * 1024 * 2;
+    static public final int LOG_FILE_MAX_SIZE = 1024 * 900;
     static public final String LOGGER_NAME = "opacapp";
 
     static public Logger getLogger(Context ctx) {
@@ -39,16 +37,13 @@ public class AppLogger {
         }
 
         logger.setLevel(Level.ALL);
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
-        if (sp.getBoolean("meta_logs", false)) {
-            try {
-                handler = new FileHandler(file.getAbsolutePath(), LOG_FILE_MAX_SIZE, 1, true);
-                Formatter formatterTxt = new AppFormatter();
-                handler.setFormatter(formatterTxt);
-                logger.addHandler(handler);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            handler = new FileHandler(file.getAbsolutePath(), LOG_FILE_MAX_SIZE, 1, true);
+            Formatter formatterTxt = new AppFormatter();
+            handler.setFormatter(formatterTxt);
+            logger.addHandler(handler);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         loggerSingleton = logger;
         return logger;
@@ -61,6 +56,9 @@ public class AppLogger {
     }
 
     static public Logger reInitialize(Context ctx) {
+        if (handler != null) {
+            handler.close();
+        }
         loggerSingleton = null;
         return getLogger(ctx);
     }
@@ -72,7 +70,8 @@ public class AppLogger {
         @Override
         public String format(LogRecord r) {
             StringBuilder sb = new StringBuilder();
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.GERMAN);
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMAN);
+            sb.append("\r\n ");
             sb.append(df.format(new Date(r.getMillis()))).append(" ");
             sb.append(r.getLevel().getName()).append(" ");
             sb.append(r.getSourceClassName()).append(":");
