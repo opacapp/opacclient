@@ -214,6 +214,7 @@
     <string name="support_search">Search only</string>
     <string name="meta_clear_title">Clear cache</string>
     <string name="meta_clear">Deletes cached metadata</string>
+    <string name="meta_run_check">Run sync service</string>
     <string name="version">Version</string>
     <string name="website">Website</string>
     <string name="website_url">www.opacapp.net</string>

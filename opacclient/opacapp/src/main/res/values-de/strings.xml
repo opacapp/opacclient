@@ -214,6 +214,7 @@
     <string name="support_search">Katalogsuche</string>
     <string name="meta_clear_title">Cache leeren</string>
     <string name="meta_clear">Löscht auf dem Handy zwischengespeicherten Zweigstellen, Metadaten, etc.</string>
+    <string name="meta_run_check">Synchronisierungsdienst ausführen</string>
     <string name="version">Version</string>
     <string name="website">Website</string>
     <string name="website_url">www.opacapp.de</string>
