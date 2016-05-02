@@ -113,6 +113,7 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
                 adata.open();
                 adata.invalidateCachedData();
                 adata.close();
+                new ReminderHelper((OpacClient) context.getApplication()).updateAlarms(-1);
 
                 SearchFieldDataSource sfdata = new JsonSearchFieldDataSource(context);
                 sfdata.clearAll();
