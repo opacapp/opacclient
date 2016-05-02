@@ -35,7 +35,7 @@ public class StarDatabase extends SQLiteOpenHelper {
     // CHANGE THIS
     public static final String STAR_WHERE_ID = "id = ?";
     public static final String STAR_WHERE_LIB = "bib = ?";
-    public static final String STAR_WHERE_TITLE_LIB = "bib = ? AND title = ?";
+    public static final String STAR_WHERE_TITLE_LIB = "bib = ? AND medianr IS NULL AND title = ?";
     public static final String STAR_WHERE_NR_LIB = "bib = ? AND medianr = ?";
     public static final String[] COLUMNS = {"id AS _id", "medianr", "bib",
             "title", "mediatype"};

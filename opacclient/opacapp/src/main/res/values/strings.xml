@@ -94,6 +94,7 @@
     <string name="star">Save to favorites</string>
     <string name="starred">The item is now on your favorites list.</string>
     <string name="star_wait">Please wait for the details to load.</string>
+    <string name="star_unsupported">We could not obtain enough information about this item to add it to your list.</string>
     <string name="starred_welcome">This is your favorites list. You can add items by clicking the star on a detail page. The list is saved separately for every library you use.</string>
     <string name="share">Share</string>
     <string name="share_wait">Please wait for the details to load.</string>
