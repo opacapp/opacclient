@@ -1,7 +1,7 @@
 {
     "account_supported": false,
-    "api": "web-opac.at",
-    "city": "St.",
+    "api": "littera",
+    "city": "St. Wolfgang",
     "country": "\u00d6sterreich",
     "data": {
         "baseurl": "http://www.stwolfgang.webopac.at"
@@ -12,5 +12,5 @@
     ],
     "information": "http://www.bibliothek-stwolfgang.at",
     "state": "Salzburg",
-    "title": "\u00d6ffentliche Bibliothek der Pfarre St. Wolfgang"
+    "title": "\u00d6ffentliche Bibliothek der Pfarrei"
 }
