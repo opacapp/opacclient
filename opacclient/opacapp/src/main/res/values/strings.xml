@@ -165,6 +165,7 @@
         <item quantity="other">%d search results</item>
     </plurals>
     <string name="export_starred">Export</string>
+    <string name="export_account">Share as text</string>
     <string name="geolocate">Find nearby libraries</string>
     <string name="geolocate_progress">Locating you…</string>
     <string name="geolocate_not_available">Location is not available on this device. You might need to enable it in the settings.</string>
@@ -262,4 +263,16 @@
     <string name="notification_repeat">Repeat notifications</string>
     <string name="update_info_title">Update information</string>
     <string name="update_info_text">With this update, we have completely re-built the reminder feature to make it more intelligent and reliable. However, in the first weeks we\'d love if you would keep an extra eye on it and send us an email if something goes wrong. Thank you in advance!</string>
+    <string name="accountdata_export_header">Account data of %1$s at %2$s</string>
+    <string name="accountdata_title">Title</string>
+    <string name="accountdata_author">Author</string>
+    <string name="accountdata_format">Media type</string>
+    <string name="accountdata_status">Status</string>
+    <string name="accountdata_lent_barcode">Barcode</string>
+    <string name="accountdata_lent_deadline">Return date</string>
+    <string name="accountdata_lent_home_branch">Home Branch</string>
+    <string name="accountdata_lent_lending_branch">Lending Branch</string>
+    <string name="accountdata_reserved_ready_date">Ready date</string>
+    <string name="accountdata_reserved_expiration_date">Expiration date</string>
+    <string name="accountdata_reserved_branch">Branch</string>
 </resources>
