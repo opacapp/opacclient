@@ -329,12 +329,8 @@ public class AccountDataSource {
     }
 
     public void invalidateCachedAccountData(Account account) {
-        deleteAccountData(account);
         ContentValues update = new ContentValues();
         update.put("cached", 0);
-        update.put("pendingFees", (String) null);
-        update.put("validUntil", (String) null);
-        update.put("warning", (String) null);
         database.update(AccountDatabase.TABLENAME_ACCOUNTS, update, "id = ?",
                 new String[]{"" + account.getId()});
     }
