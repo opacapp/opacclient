@@ -3,7 +3,9 @@
     "api": "test",
     "city": "Test",
     "country": "Test",
-    "data": {},
+    "data": {
+        "url": "http://192.168.0.10:8000/test.json"
+    },
     "information": "http://opacapp.de/",
     "state": "Test",
     "title": "Testbibliothek"
