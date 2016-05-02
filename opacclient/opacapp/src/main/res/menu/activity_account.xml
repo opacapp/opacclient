@@ -14,4 +14,11 @@
         android:title="@string/prolong_all">
     </item>
 
+    <item
+        android:id="@+id/action_export"
+        android:icon="@drawable/ic_share_white_24dp"
+        app:showAsAction="ifRoom"
+        android:title="@string/export_account">
+    </item>
+
 </menu>
