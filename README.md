@@ -24,7 +24,22 @@ Supports web catalogues of different library system vendors, see our [website](h
 
 Java Library (`libopac`)
 ------------------------
-The underlying code that the app uses to connect to the different supported OPAC software systems and parse data from them is available as a separate library called `libopac`. It can also be used in ordinary Java projects because it does not depend on Android APIs. More information about the library can be found in [its own README file](https://github.com/opacapp/opacclient/blob/master/opacclient/libopac/README.md).
+The underlying code that the app uses to connect to the different supported OPAC software systems and parse 
+data from them is available as a separate library called `libopac`. It can also be used in ordinary Java 
+projects because it does not depend on Android APIs. More information about the library can be found in 
+[its own README file](https://github.com/opacapp/opacclient/blob/master/opacclient/libopac/README.md).
+
+Contributing
+------------
+We'd like to invite you to contribute to our project, e.g. by improving the user interface or adding support
+for new libraries. Checking out the project with Android Studio should be fairly straightforward, but we
+also got a little bit of information in the [project wiki](https://github.com/opacapp/opacclient/wiki).
+Contributions are best submitted via GitHub pull requests.
+
+If you get stuck anywhere in the process, please do not hestitate to ask us anytime at info@opacapp.de.
+
+Please note that we [Code of Conduct](https://github.com/oapcapp/opacclient/blob/master/CODE_OF_CONDUCT.md)
+in place that applies to all project-related communication.
 
 License
 -------
