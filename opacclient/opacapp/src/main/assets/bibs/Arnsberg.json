@@ -1,0 +1,16 @@
+{
+  "account_supported": true,
+  "api": "winbiap",
+  "city": "Arnsberg",
+  "country": "Deutschland",
+  "data": {
+    "baseurl": "https://webopac.kdvz.de/arnsberg"
+  },
+  "geo": [
+    51.4073375,
+    8.052771
+  ],
+  "information": "http://www.arnsberg.de/buechereien/index.php",
+  "state": "Nordrhein-Westfalen",
+  "title": "Stadtb\u00fcchereien"
+}
