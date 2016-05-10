@@ -764,21 +764,14 @@ public class TouchPoint extends BaseApi implements OpacApi {
     @Override
     public ReservationResult reservation(DetailledItem item, Account acc,
             int useraction, String selection) throws IOException {
-        if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
-                || logged_in_as == null) {
-            try {
-                login(acc);
-            } catch (OpacErrorException e) {
-                return new ReservationResult(MultiStepResult.Status.ERROR,
-                        e.getMessage());
-            }
-        } else if (logged_in_as.getId() != acc.getId()) {
-            try {
-                login(acc);
-            } catch (OpacErrorException e) {
-                return new ReservationResult(MultiStepResult.Status.ERROR,
-                        e.getMessage());
-            }
+        // Earlier, this place used some logic to find out whether it needed to re-login or not
+        // before starting the reservation. Because this didn't work, it now simply logs in every
+        // time.
+        try {
+            login(acc);
+        } catch (OpacErrorException e) {
+            return new ReservationResult(MultiStepResult.Status.ERROR,
+                    e.getMessage());
         }
         String html;
         if (reusehtml_reservation != null) {
@@ -818,6 +811,8 @@ public class TouchPoint extends BaseApi implements OpacApi {
             nameValuePairs.add(new BasicNameValuePair("location", selection));
             reusehtml_reservation = null;
         }
+
+        nameValuePairs.add(new BasicNameValuePair("submited", "true")); // sic!
 
         html = httpPost(opac_url + "/requestItem.do", new UrlEncodedFormEntity(
                 nameValuePairs), ENCODING);
