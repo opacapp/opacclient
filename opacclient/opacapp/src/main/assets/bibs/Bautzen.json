@@ -4,7 +4,7 @@
     "city": "Bautzen",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://80.146.210.20/webOPACClient",
+        "baseurl": "https://opac-stadtbibliothek.bautzen.de/webOPACClient",
         "startparams": "Login=extern"
     },
     "geo": [
