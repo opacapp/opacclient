@@ -30,7 +30,7 @@ public class DrawerAccountsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     protected Context context;
     private Map<Account, Integer> expiring;
     private Account currentAccount;
-    private Listener listener;
+    protected Listener listener;
 
     protected static final int TYPE_ACCOUNT = 0;
     protected static final int TYPE_SEPARATOR = 1;
