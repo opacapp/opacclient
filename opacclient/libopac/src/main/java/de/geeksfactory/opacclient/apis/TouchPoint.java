@@ -531,6 +531,11 @@ public class TouchPoint extends BaseApi implements OpacApi {
                             || (loanstatus.contains("ausleihbar") && !loanstatus
                             .contains("nicht ausleihbar"))) {
                         sr.setStatus(SearchResult.Status.GREEN);
+                    } else if (loanstatus.equals("")) {
+                        // In special databases (like "Handschriften" in Winterthur) ID lookup is
+                        // not possible, which we try to detect this way. We therefore also cannot
+                        // use getResultById when accessing the results.
+                        sr.setId(null);
                     }
                     if (sr.getType() != null) {
                         if (sr.getType().equals(MediaType.EBOOK)
