@@ -1,0 +1,16 @@
+{
+  "account_supported": true,
+  "api": "winbiap",
+  "city": "Feuchtwangen",
+  "country": "Deutschland",
+  "data": {
+    "baseurl": "https://cloudopac.winbiap.de/feuchtwangen"
+  },
+  "geo": [
+    49.1680911,
+    10.3297982
+  ],
+  "information": "http://www.feuchtwangen.de/de/leben-wohnen/stadtbuecherei/kontakt-oeffungszeiten/",
+  "state": "Bayern",
+  "title": "Stadtb\u00fccherei Haus Binz"
+}

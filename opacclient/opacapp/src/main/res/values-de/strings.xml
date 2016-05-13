@@ -95,7 +95,7 @@
     <string name="star">Merken</string>
     <string name="starred">Das Medium ist jetzt auf deiner Merkliste</string>
     <string name="star_wait">Bitte warten, bis die Details geladen wurden!</string>
-    <string name="star_unsupported">Wir konnten nicht genug Informationen ermitteln um dieses Medium als Favorig hinzuzufügen.</string>
+    <string name="star_unsupported">Wir konnten nicht genug Informationen ermitteln um dieses Medium als Favorit hinzuzufügen.</string>
     <string name="starred_welcome">Dies ist deine Merkliste. Du kannst in der Detailansicht von jedem Medium den Stern für „Merken“ auswählen, dann erscheint das Medium hier auf der Liste. Die Liste wird für jede Bibliothek, die du benutzt, separat geführt.</string>
     <string name="share">Teilen</string>
     <string name="share_wait">Bitte warten, bis die Details geladen wurden</string>
@@ -165,6 +165,7 @@
         <item quantity="other">%d Suchergebnisse</item>
     </plurals>
     <string name="export_starred">Exportieren</string>
+    <string name="export_account">Als Text teilen</string>
     <string name="geolocate">Finde Bibliotheken in meiner Nähe</string>
     <string name="geolocate_progress">Standort wird ermittelt…</string>
     <string name="geolocate_not_available">Standortbestimmung ist auf diesem Gerät nicht verfügbar. Vielleicht muss sie in den Einstellungen aktiviert werden.</string>
@@ -265,4 +266,16 @@
     <string name="notification_repeat">Benachrichtigungen wiederholen</string>
 	<string name="update_info_title">Update-Hinweis</string>
     <string name="update_info_text">Mit diesem Update haben wir die Erinnerungsfunktion komplett neu gebaut um sie zuverlässiger und intelligenter zu gestalten. Trotzdem möchten wir Sie bitten, die Funktion in den nächsten Wochen genauer zu beobachten und uns eventuelle Fehler per E-Mail zu melden. Vielen Dank!</string>
+    <string name="accountdata_export_header">Kontodaten von %1$s am %2$s</string>
+    <string name="accountdata_title">Titel</string>
+    <string name="accountdata_author">Autor</string>
+    <string name="accountdata_format">Medienart</string>
+    <string name="accountdata_status">Status</string>
+    <string name="accountdata_lent_barcode">Barcode</string>
+    <string name="accountdata_lent_deadline">Rückgabedatum</string>
+    <string name="accountdata_lent_home_branch">Eigene Zweigstelle</string>
+    <string name="accountdata_lent_lending_branch">Verleihende Zweigstelle</string>
+    <string name="accountdata_reserved_ready_date">Abholdatum</string>
+    <string name="accountdata_reserved_expiration_date">Ablaufdatum</string>
+    <string name="accountdata_reserved_branch">Zweigstelle</string>
 </resources>

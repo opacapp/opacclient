@@ -64,6 +64,7 @@ import com.nineoldandroids.view.ViewHelper;
 import org.apache.http.NoHttpResponseException;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
@@ -213,8 +214,97 @@ public class AccountFragment extends Fragment implements
             refresh();
         } else if (item.getItemId() == R.id.action_prolong_all) {
             prolongAllStart();
+        } else if (item.getItemId() == R.id.action_export) {
+            export();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void export() {
+        if (refreshing) {
+            Toast.makeText(getActivity(), R.string.account_no_concurrent,
+                    Toast.LENGTH_LONG).show();
+            if (!refreshing) {
+                refresh();
+            }
+            return;
+        }
+
+        Context ctx = getActivity() != null ? getActivity() : OpacClient
+                .getEmergencyContext();
+        AccountDataSource adatasource = new AccountDataSource(ctx);
+        adatasource.open();
+        AccountData data = adatasource.getCachedAccountData(account);
+        LocalDateTime dt = new LocalDateTime(adatasource.getCachedAccountDataTime(account));
+        adatasource.close();
+
+        if (data == null) return;
+
+        StringBuilder string = new StringBuilder();
+
+        DateTimeFormatter fmt1 = DateTimeFormat.shortDateTime().withLocale(
+                getResources().getConfiguration().locale);
+        DateTimeFormatter fmt2 = DateTimeFormat.shortDate().withLocale(
+                getResources().getConfiguration().locale);
+        String dateStr = fmt1.print(dt);
+        string.append(getResources()
+                .getString(R.string.accountdata_export_header, account.getLabel(), dateStr));
+        string.append("\n\n");
+        string.append(getResources().getString(R.string.lent_head));
+        string.append("\n\n");
+        for (LentItem item : data.getLent()) {
+            appendIfNotEmpty(string, item.getTitle(), R.string.accountdata_title);
+            appendIfNotEmpty(string, item.getAuthor(), R.string.accountdata_author);
+            appendIfNotEmpty(string, item.getFormat(), R.string.accountdata_format);
+            appendIfNotEmpty(string, item.getStatus(), R.string.accountdata_status);
+            appendIfNotEmpty(string, item.getBarcode(), R.string.accountdata_lent_barcode);
+            if (item.getDeadline() != null)
+                appendIfNotEmpty(string, fmt2.print(item.getDeadline()),
+                        R.string.accountdata_lent_deadline);
+            appendIfNotEmpty(string, item.getHomeBranch(), R.string.accountdata_lent_home_branch);
+            appendIfNotEmpty(string, item.getLendingBranch(),
+                    R.string.accountdata_lent_lending_branch);
+            string.append("\n");
+        }
+
+        if (data.getLent().size() == 0) {
+            string.append(getResources().getString(R.string.entl_none));
+        }
+
+        string.append(getResources().getString(R.string.reservations_head));
+        string.append("\n\n");
+        for (ReservedItem item : data.getReservations()) {
+            appendIfNotEmpty(string, item.getTitle(), R.string.accountdata_title);
+            appendIfNotEmpty(string, item.getAuthor(), R.string.accountdata_author);
+            appendIfNotEmpty(string, item.getFormat(), R.string.accountdata_format);
+            appendIfNotEmpty(string, item.getStatus(), R.string.accountdata_status);
+            if (item.getReadyDate() != null)
+                appendIfNotEmpty(string, fmt2.print(item.getReadyDate()),
+                        R.string.accountdata_reserved_ready_date);
+            if (item.getExpirationDate() != null)
+                appendIfNotEmpty(string, fmt2.print(item.getExpirationDate()),
+                        R.string.accountdata_reserved_expiration_date);
+            appendIfNotEmpty(string, item.getBranch(), R.string.accountdata_reserved_branch);
+            string.append("\n");
+        }
+
+        if (data.getReservations().size() == 0) {
+            string.append(getResources().getString(R.string.reservations_none));
+        }
+
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, string.toString());
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent,
+                getResources().getText(R.string.share_dialog_select)));
+    }
+
+    private void appendIfNotEmpty(StringBuilder string, String text, int id) {
+        if (text != null && !text.equals("")) {
+            string.append(getResources().getString(id)).append(": ")
+                  .append(text).append("\n");
+        }
     }
 
     @Override

@@ -188,6 +188,23 @@ public class TouchPoint extends BaseApi implements OpacApi {
             parseDropdown(dropdown, fields);
         }
 
+        if (doc.select(".selectDatabase").size() > 0) {
+            DropdownSearchField dropdown = new DropdownSearchField();
+            dropdown.setId("_database");
+            for (Element option : doc.select(".selectDatabase")) {
+                String label = option.parent().ownText().trim();
+                if (label.equals("")) {
+                    for (Element a : option.siblingElements()) {
+                        label += a.ownText().trim();
+                    }
+                }
+                dropdown.addDropdownValue(option.attr("name") + "=" + option.attr("value"),
+                        label.trim());
+            }
+            dropdown.setDisplayName(doc.select(".dbselection h3").first().text().trim());
+            fields.add(dropdown);
+        }
+
         return fields;
     }
 
@@ -251,22 +268,27 @@ public class TouchPoint extends BaseApi implements OpacApi {
             JSONException {
         List<NameValuePair> params = new ArrayList<>();
 
+        boolean selectDatabase = false;
         int index = 0;
         start();
 
         params.add(new BasicNameValuePair("methodToCall", "submitButtonCall"));
         params.add(new BasicNameValuePair("CSId", CSId));
-        params.add(new BasicNameValuePair("methodToCallParameter",
-                "submitSearch"));
         params.add(new BasicNameValuePair("refine", "false"));
+        params.add(new BasicNameValuePair("numberOfHits", "10"));
 
         for (SearchQuery entry : query) {
             if (entry.getValue().equals("")) {
                 continue;
             }
             if (entry.getSearchField() instanceof DropdownSearchField) {
-                params.add(new BasicNameValuePair(entry.getKey(), entry
-                        .getValue()));
+                if (entry.getKey().equals("_database")) {
+                    String[] parts = entry.getValue().split("=", 2);
+                    params.add(new BasicNameValuePair(parts[0], parts[1]));
+                    selectDatabase = true;
+                } else {
+                    params.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+                }
             } else {
                 if (index != 0) {
                     params.add(new BasicNameValuePair("combinationOperator["
@@ -289,9 +311,16 @@ public class TouchPoint extends BaseApi implements OpacApi {
                     StringProvider.LIMITED_NUM_OF_CRITERIA, 4, 4));
         }
 
-        params.add(new BasicNameValuePair("submitButtonCall_submitSearch",
-                "Suchen"));
-        params.add(new BasicNameValuePair("numberOfHits", "10"));
+        if (selectDatabase) {
+            List<NameValuePair> selectParams = new ArrayList<>();
+            selectParams.addAll(params);
+            selectParams.add(new BasicNameValuePair("methodToCallParameter", "selectDatabase"));
+            httpGet(opac_url + "/search.do?" + URLEncodedUtils.format(selectParams, "UTF-8"),
+                    ENCODING);
+        }
+
+        params.add(new BasicNameValuePair("submitButtonCall_submitSearch", "Suchen"));
+        params.add(new BasicNameValuePair("methodToCallParameter", "submitSearch"));
 
         String html = httpGet(
                 opac_url + "/search.do?"
@@ -502,6 +531,11 @@ public class TouchPoint extends BaseApi implements OpacApi {
                             || (loanstatus.contains("ausleihbar") && !loanstatus
                             .contains("nicht ausleihbar"))) {
                         sr.setStatus(SearchResult.Status.GREEN);
+                    } else if (loanstatus.equals("")) {
+                        // In special databases (like "Handschriften" in Winterthur) ID lookup is
+                        // not possible, which we try to detect this way. We therefore also cannot
+                        // use getResultById when accessing the results.
+                        sr.setId(null);
                     }
                     if (sr.getType() != null) {
                         if (sr.getType().equals(MediaType.EBOOK)
@@ -764,21 +798,14 @@ public class TouchPoint extends BaseApi implements OpacApi {
     @Override
     public ReservationResult reservation(DetailledItem item, Account acc,
             int useraction, String selection) throws IOException {
-        if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
-                || logged_in_as == null) {
-            try {
-                login(acc);
-            } catch (OpacErrorException e) {
-                return new ReservationResult(MultiStepResult.Status.ERROR,
-                        e.getMessage());
-            }
-        } else if (logged_in_as.getId() != acc.getId()) {
-            try {
-                login(acc);
-            } catch (OpacErrorException e) {
-                return new ReservationResult(MultiStepResult.Status.ERROR,
-                        e.getMessage());
-            }
+        // Earlier, this place used some logic to find out whether it needed to re-login or not
+        // before starting the reservation. Because this didn't work, it now simply logs in every
+        // time.
+        try {
+            login(acc);
+        } catch (OpacErrorException e) {
+            return new ReservationResult(MultiStepResult.Status.ERROR,
+                    e.getMessage());
         }
         String html;
         if (reusehtml_reservation != null) {
@@ -818,6 +845,8 @@ public class TouchPoint extends BaseApi implements OpacApi {
             nameValuePairs.add(new BasicNameValuePair("location", selection));
             reusehtml_reservation = null;
         }
+
+        nameValuePairs.add(new BasicNameValuePair("submited", "true")); // sic!
 
         html = httpPost(opac_url + "/requestItem.do", new UrlEncodedFormEntity(
                 nameValuePairs), ENCODING);
