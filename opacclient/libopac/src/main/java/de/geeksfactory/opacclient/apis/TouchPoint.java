@@ -188,6 +188,23 @@ public class TouchPoint extends BaseApi implements OpacApi {
             parseDropdown(dropdown, fields);
         }
 
+        if (doc.select(".selectDatabase").size() > 0) {
+            DropdownSearchField dropdown = new DropdownSearchField();
+            dropdown.setId("_database");
+            for (Element option : doc.select(".selectDatabase")) {
+                String label = option.parent().ownText().trim();
+                if (label.equals("")) {
+                    for (Element a : option.siblingElements()) {
+                        label += a.ownText().trim();
+                    }
+                }
+                dropdown.addDropdownValue(option.attr("name") + "=" + option.attr("value"),
+                        label.trim());
+            }
+            dropdown.setDisplayName(doc.select(".dbselection h3").first().text().trim());
+            fields.add(dropdown);
+        }
+
         return fields;
     }
 
@@ -251,22 +268,27 @@ public class TouchPoint extends BaseApi implements OpacApi {
             JSONException {
         List<NameValuePair> params = new ArrayList<>();
 
+        boolean selectDatabase = false;
         int index = 0;
         start();
 
         params.add(new BasicNameValuePair("methodToCall", "submitButtonCall"));
         params.add(new BasicNameValuePair("CSId", CSId));
-        params.add(new BasicNameValuePair("methodToCallParameter",
-                "submitSearch"));
         params.add(new BasicNameValuePair("refine", "false"));
+        params.add(new BasicNameValuePair("numberOfHits", "10"));
 
         for (SearchQuery entry : query) {
             if (entry.getValue().equals("")) {
                 continue;
             }
             if (entry.getSearchField() instanceof DropdownSearchField) {
-                params.add(new BasicNameValuePair(entry.getKey(), entry
-                        .getValue()));
+                if (entry.getKey().equals("_database")) {
+                    String[] parts = entry.getValue().split("=", 2);
+                    params.add(new BasicNameValuePair(parts[0], parts[1]));
+                    selectDatabase = true;
+                } else {
+                    params.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+                }
             } else {
                 if (index != 0) {
                     params.add(new BasicNameValuePair("combinationOperator["
@@ -289,9 +311,16 @@ public class TouchPoint extends BaseApi implements OpacApi {
                     StringProvider.LIMITED_NUM_OF_CRITERIA, 4, 4));
         }
 
-        params.add(new BasicNameValuePair("submitButtonCall_submitSearch",
-                "Suchen"));
-        params.add(new BasicNameValuePair("numberOfHits", "10"));
+        if (selectDatabase) {
+            List<NameValuePair> selectParams = new ArrayList<>();
+            selectParams.addAll(params);
+            selectParams.add(new BasicNameValuePair("methodToCallParameter", "selectDatabase"));
+            httpGet(opac_url + "/search.do?" + URLEncodedUtils.format(selectParams, "UTF-8"),
+                    ENCODING);
+        }
+
+        params.add(new BasicNameValuePair("submitButtonCall_submitSearch", "Suchen"));
+        params.add(new BasicNameValuePair("methodToCallParameter", "submitSearch"));
 
         String html = httpGet(
                 opac_url + "/search.do?"
