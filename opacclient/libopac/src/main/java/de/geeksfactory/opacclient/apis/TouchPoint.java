@@ -34,6 +34,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
+import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
@@ -1087,12 +1088,32 @@ public class TouchPoint extends BaseApi implements OpacApi {
             item.setTitle(tr.select(".account-display-title").select("b, strong")
                             .text().trim());
             try {
-                item.setAuthor(tr.select(".account-display-title").html().split("<br[ /]*>")[1].trim());
+                String[] lines = tr.select(".account-display-title").html().split("<br[ /]*>");
+                if (lines.length == 4 || lines.length == 5) {
+                    // Winterthur
+                    item.setAuthor(Jsoup.parse(lines[1]).text().trim());
+                    item.setBarcode(Jsoup.parse(lines[2]).text().trim());
+                    if (lines.length == 5) {
+                        // Chemnitz
+                        item.setStatus(Jsoup.parse(lines[3] + " " + lines[4]).text().trim());
+                    } else {
+                        // Winterthur
+                        item.setStatus(Jsoup.parse(lines[3]).text().trim());
+                    }
+                } else if (lines.length == 3) {
+                    // We can't really tell the difference between missing author and missing
+                    // shelfmark. However, all items have shelfmarks, not all have authors.
+                    item.setBarcode(Parser.unescapeEntities(lines[1].trim(), false));
+                    item.setStatus(Parser.unescapeEntities(lines[2].trim(), false));
+                } else if (lines.length == 2) {
+                    item.setAuthor(Parser.unescapeEntities(lines[1].trim(), false));
+                }
 
                 String[] col3split = tr.select(".account-display-state").html().split("<br[ /]*>");
                 String deadline = Jsoup.parse(col3split[0].trim()).text().trim();
                 if (deadline.contains(":")) {
-                    // BSB Munich: <span class="hidden-sm hidden-md hidden-lg">Fälligkeitsdatum : </span>26.02.2016<br>
+                    // BSB Munich: <span class="hidden-sm hidden-md hidden-lg">Fälligkeitsdatum :
+                    // </span>26.02.2016<br>
                     deadline = deadline.split(":")[1].trim();
                 }
                 if (deadline.contains("-")) {

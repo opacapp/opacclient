@@ -23,7 +23,8 @@ public class TouchPointAccountTest extends BaseAccountTest {
         this.file = file;
     }
 
-    private static final String[] FILES = new String[]{"chemnitz.html", "munchenbsb.html"};
+    private static final String[] FILES =
+            new String[]{"chemnitz.html", "munchenbsb.html", "winterthur.html"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {
