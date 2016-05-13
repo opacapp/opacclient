@@ -102,7 +102,7 @@ public abstract class OpacActivity extends AppCompatActivity
     protected TextView accountWarning;
     protected LinearLayout accountData;
     protected boolean accountSwitcherVisible = false;
-    private DrawerAccountsAdapter accountsAdapter;
+    protected DrawerAccountsAdapter accountsAdapter;
 
     protected static void unbindDrawables(View view) {
         if (view == null) {
