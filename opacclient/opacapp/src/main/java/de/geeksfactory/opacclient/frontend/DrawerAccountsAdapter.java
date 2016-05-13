@@ -27,16 +27,16 @@ import de.geeksfactory.opacclient.utils.Utils;
 public class DrawerAccountsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<Account> accounts;
     private List<Account> accountsWithoutCurrent;
-    private Context context;
+    protected Context context;
     private Map<Account, Integer> expiring;
     private Account currentAccount;
     private Listener listener;
 
-    private static final int TYPE_ACCOUNT = 0;
-    private static final int TYPE_SEPARATOR = 1;
-    private static final int TYPE_FOOTER = 2;
+    protected static final int TYPE_ACCOUNT = 0;
+    protected static final int TYPE_SEPARATOR = 1;
+    protected static final int TYPE_FOOTER = 2;
 
-    private static final int FOOTER_COUNT = 2;
+    protected static final int FOOTER_COUNT = 2;
 
     public DrawerAccountsAdapter(Context context, List<Account> accounts, Account currentAccount) {
         this.accounts = accounts;
@@ -148,11 +148,11 @@ public class DrawerAccountsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     public class AccountViewHolder extends RecyclerView.ViewHolder {
-        private TextView title;
-        private TextView subtitle;
-        private TextView warning;
-        private View view;
-        private Account account;
+        protected TextView title;
+        protected TextView subtitle;
+        protected TextView warning;
+        protected View view;
+        protected  Account account;
 
         public AccountViewHolder(View itemView) {
             super(itemView);
@@ -189,13 +189,13 @@ public class DrawerAccountsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         void onManageAccountsClicked();
     }
 
-    private class SeparatorViewHolder extends RecyclerView.ViewHolder {
+    protected class SeparatorViewHolder extends RecyclerView.ViewHolder {
         public SeparatorViewHolder(View view) {
             super(view);
         }
     }
 
-    private class FooterViewHolder extends RecyclerView.ViewHolder {
+    protected class FooterViewHolder extends RecyclerView.ViewHolder {
         private TextView title;
         private ImageView icon;
         private View view;
