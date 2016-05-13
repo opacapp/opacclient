@@ -910,7 +910,45 @@ public class TouchPoint extends BaseApi implements OpacApi {
     @Override
     public CancelResult cancel(String media, Account account, int useraction,
             String selection) throws IOException, OpacErrorException {
-        return null;
+        if (!initialised) {
+            start();
+        }
+        if (System.currentTimeMillis() - logged_in > SESSION_LIFETIME
+                || logged_in_as == null) {
+            try {
+                account(account);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return new CancelResult(MultiStepResult.Status.ERROR);
+            } catch (OpacErrorException e) {
+                return new CancelResult(MultiStepResult.Status.ERROR, e.getMessage());
+            }
+        } else if (logged_in_as.getId() != account.getId()) {
+            try {
+                account(account);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return new CancelResult(MultiStepResult.Status.ERROR);
+            } catch (OpacErrorException e) {
+                return new CancelResult(MultiStepResult.Status.ERROR, e.getMessage());
+            }
+        }
+        // We have to call the page we found the link originally on first
+        httpGet(opac_url
+                        + "/userAccount.do?methodToCall=showAccount&accountTyp=requested",
+                ENCODING);
+        // TODO: Check that the right media is prolonged (the links are
+        // index-based and the sorting could change)
+        String html = httpGet(opac_url + "/cancelReservation.do?" + media, ENCODING);
+        Document doc = Jsoup.parse(html);
+        if (doc.select(".message-confirm").size() > 0) {
+            return new CancelResult(MultiStepResult.Status.OK);
+        } else if (doc.select(".alert").size() > 0) {
+            return new CancelResult(MultiStepResult.Status.ERROR, doc
+                    .select(".alert").first().text());
+        } else {
+            return new CancelResult(MultiStepResult.Status.ERROR);
+        }
     }
 
     @Override
@@ -1114,6 +1152,17 @@ public class TouchPoint extends BaseApi implements OpacApi {
                 if (rowsplit3.length > 2) item.setBranch(rowsplit3[2].trim());
                 if (rowsplit3.length > 2) {
                     item.setStatus(rowsplit3[0].trim() + " (" + rowsplit3[1].trim() + ")");
+                }
+
+                if (tr.select("a").size() > 0) {
+                    for (Element link : tr.select("a")) {
+                        String href = link.attr("abs:href");
+                        Map<String, String> hrefq = getQueryParamsFirst(href);
+                        if (hrefq.get("methodToCall").equals("cancel")) {
+                            item.setCancelData(href.split("\\?")[1]);
+                            break;
+                        }
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
