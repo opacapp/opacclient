@@ -660,7 +660,7 @@ public class SearchResultDetailFragment extends Fragment
                             } catch (UnsupportedEncodingException e) {
                             }
 
-                            String text = t + "\n\n";
+                            String text = title + "\n\n";
 
                             for (Detail detail : getItem().getDetails()) {
                                 String colon = "";
