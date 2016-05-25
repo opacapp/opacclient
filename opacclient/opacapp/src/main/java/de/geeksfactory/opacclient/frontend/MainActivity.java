@@ -213,7 +213,7 @@ public class MainActivity extends OpacActivity
                 throw new AssertionError("UTF-8 is unknown");
             }
 
-            if (!app.getLibrary().getIdent().equals(bib)) {
+            if (app.getLibrary() == null || !app.getLibrary().getIdent().equals(bib)) {
                 AccountDataSource adata = new AccountDataSource(this);
                 adata.open();
                 List<Account> accounts = adata.getAllAccounts(bib);
