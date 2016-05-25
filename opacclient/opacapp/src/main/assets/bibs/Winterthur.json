@@ -1,10 +1,11 @@
 {
     "account_supported": true,
-    "api": "sisis",
+    "api": "touchpoint",
     "city": "Winterthur",
     "country": "Schweiz",
     "data": {
-        "baseurl": "https://katalog.winterthur.ch/webOPACClient.sisis"
+        "baseurl": "https://katalog.winterthur.ch/TouchPoint_touchpoint",
+		"startparams": "View=sunrise"
     },
     "geo": [
         47.49995,
