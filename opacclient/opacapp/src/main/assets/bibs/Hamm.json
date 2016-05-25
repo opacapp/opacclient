@@ -1,43 +1,20 @@
 {
     "account_supported": true,
-    "api": "bibliotheca",
+    "api": "open",
     "city": "Hamm",
     "country": "Deutschland",
     "data": {
-        "accounttable": {
-            "author": 0,
-            "barcode": -1,
-            "homebranch": -1,
-            "lendingbranch": 3,
-            "prolongurl": 4,
-            "returndate": 2,
-            "status": -1,
-            "title": 1
-        },
-        "baseurl": "http://opac.hamm.de/opac30",
-        "copiestable": {
-            "barcode": -1,
-            "branch": 0,
-            "department": -1,
-            "location": 3,
-            "reservations": 6,
-            "returndate": 2,
-            "status": 1
-        },
-        "reservationtable": {
-            "author": 0,
-            "availability": -1,
-            "branch": 2,
-            "cancelurl": 3,
-            "expirationdate": null,
-            "title": 1
+        "baseurl": "http://katalog.hamm.de",
+        "urls": {
+            "advanced_search": "Mediensuche/ErweiterteSuche.aspx",
+            "simple_search": "Mediensuche.aspx"
         }
     },
     "geo": [
         51.6787076,
         7.810426400000001
     ],
-    "information": "/../read/info.html",
+    "information": "http://katalog.hamm.de/%C3%9Cberuns/UnsereBibliotheken.aspx",
     "state": "Nordrhein-Westfalen",
     "title": "Stadtb\u00fccherei"
 }
