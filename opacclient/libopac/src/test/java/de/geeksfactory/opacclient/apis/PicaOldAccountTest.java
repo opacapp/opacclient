@@ -24,7 +24,9 @@ public class PicaOldAccountTest extends BaseAccountTest {
         this.file = file;
     }
 
-    private static final String[] FILES = new String[]{"marburg.html", "frankfurt_stgeorgen.html"};
+    private static final String[] FILES =
+            new String[]{"marburg.html", "frankfurt_stgeorgen.html", "hildesheim_ub.html",
+                    "hildesheim_hawk.html"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {
