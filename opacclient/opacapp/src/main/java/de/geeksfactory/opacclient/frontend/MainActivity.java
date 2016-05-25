@@ -100,14 +100,13 @@ public class MainActivity extends OpacActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
+
         if (getIntent() != null && getIntent().getAction() != null) {
             if (getIntent().getAction().equals("android.intent.action.VIEW")) {
                 urlintent();
-                return;
             }
         }
-
-        sp = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (savedInstanceState == null) {
             if (getIntent().hasExtra(EXTRA_FRAGMENT)) {
@@ -223,7 +222,7 @@ public class MainActivity extends OpacActivity
                     app.setAccount(accounts.get(0).getId());
                 } else {
                     Intent i = new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("http://opacapp.de/web" + d.getPath()));
+                            Uri.parse("https://de.opacapp.net/" + d.getPath()));
                     startActivity(i);
                     return;
                 }
