@@ -4,7 +4,8 @@
     "city": "Weilburg",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://opac.winbiap.net/weilburg"
+        "baseurl": "http://opac.winbiap.net/weilburg",
+		"customssl": true
     },
     "geo": [
         50.48527,

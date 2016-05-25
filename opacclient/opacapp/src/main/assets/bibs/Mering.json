@@ -4,7 +4,8 @@
     "city": "Mering",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://opac.winbiap.net/mering"
+        "baseurl": "http://opac.winbiap.net/mering",
+		"customssl": true
     },
     "geo": [
         48.267719,

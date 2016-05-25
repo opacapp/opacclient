@@ -4,7 +4,8 @@
     "city": "Walldorf",
     "country": "Deutschland",
     "data": {
-        "baseurl": "https://opac.winbiap.net/walldorf"
+        "baseurl": "https://opac.winbiap.net/walldorf",
+		"customssl": true
     },
     "geo": [
         49.3063689,

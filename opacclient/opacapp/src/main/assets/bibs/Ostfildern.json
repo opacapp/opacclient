@@ -4,7 +4,8 @@
     "city": "Ostfildern",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://opac.winbiap.net/ostfildern"
+        "baseurl": "http://opac.winbiap.net/ostfildern",
+		"customssl": true
     },
     "geo": [
         48.7287991,

@@ -4,7 +4,8 @@
     "city": "Wiggensbach",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://opac.winbiap.net/wiggensbach"
+        "baseurl": "http://opac.winbiap.net/wiggensbach",
+		"customssl": true
     },
     "geo": [
         47.745133,

@@ -4,7 +4,8 @@
   "city": "Schwaig",
   "country": "Deutschland",
   "data": {
-    "baseurl": "https://opac.winbiap.net/schwaig"
+    "baseurl": "https://opac.winbiap.net/schwaig",
+		"customssl": true
   },
   "geo": [
     49.4718884,

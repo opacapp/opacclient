@@ -4,7 +4,8 @@
     "city": "Friedberg (Hessen)",
     "country": "Deutschland",
     "data": {
-        "baseurl": "https://opac.winbiap.net/friedberg-hessen"
+        "baseurl": "https://opac.winbiap.net/friedberg-hessen",
+		"customssl": true
     },
     "geo": [
         50.3248933,
