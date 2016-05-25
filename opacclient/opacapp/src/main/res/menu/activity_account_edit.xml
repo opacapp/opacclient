@@ -2,7 +2,7 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_cancel"
-        android:icon="@drawable/ic_cancel_white_24dp"
+        android:icon="@drawable/ic_cancel_toolbar_24dp"
         android:orderInCategory="2"
         app:showAsAction="ifRoom"
         android:title="@string/cancel"/>
@@ -14,7 +14,7 @@
         android:title="@string/delete"/>
     <item
         android:id="@+id/action_accept"
-        android:icon="@drawable/ic_accept_white_24dp"
+        android:icon="@drawable/ic_accept_toolbar_24dp"
         android:orderInCategory="4"
         app:showAsAction="always"
         android:title="@string/accept">

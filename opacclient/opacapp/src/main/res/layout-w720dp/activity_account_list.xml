@@ -48,7 +48,7 @@
         android:layout_marginTop="-36dp"
         android:contentDescription="@string/account_add"
         android:elevation="4dp"
-        app:srcCompat="@drawable/ic_accounts_add_white_24dp"
+        app:srcCompat="@drawable/ic_accounts_add_toolbar_24dp"
         tools:ignore="MissingPrefix"/>
 
 </RelativeLayout>
