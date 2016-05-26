@@ -4,7 +4,7 @@
     "city": "Hildesheim",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://opac.lbs-hildesheim.gbv.de/",
+        "baseurl": "https://opac.lbs-hildesheim.gbv.de/",
         "db": "2"
     },
     "geo": [
