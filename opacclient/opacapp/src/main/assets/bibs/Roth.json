@@ -4,7 +4,8 @@
     "city": "Roth",
     "country": "Deutschland",
     "data": {
-        "baseurl": "https://opac.winbiap.net/roth"
+        "baseurl": "https://opac.winbiap.net/roth",
+		"customssl": true
     },
     "geo": [
         49.2456337,

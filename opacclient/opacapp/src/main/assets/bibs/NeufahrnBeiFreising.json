@@ -4,7 +4,8 @@
     "city": "Neufahrn",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://opac.winbiap.net/neufahrn"
+        "baseurl": "http://opac.winbiap.net/neufahrn",
+		"customssl": true
     },
     "geo": [
         48.3149823,

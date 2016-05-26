@@ -36,7 +36,7 @@
         android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
         android:elevation="4dp"
-        app:srcCompat="@drawable/ic_accounts_add_white_24dp"
+        app:srcCompat="@drawable/ic_accounts_add_toolbar_24dp"
         android:contentDescription="@string/account_add"/>
 
 </RelativeLayout>

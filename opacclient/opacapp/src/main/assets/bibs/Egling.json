@@ -1,0 +1,16 @@
+{
+    "account_supported": true,
+    "api": "winbiap",
+    "city": "Egling an der Paar",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "https://webopac.winbiap.de/egling"
+    },
+    "geo": [
+        48.1862159,
+        10.9771789
+    ],
+    "information": "http://www.egling.com/de/index.php?page=Buecherei",
+    "state": "Bayern",
+    "title": "Gemeindeb\u00fccherei"
+}

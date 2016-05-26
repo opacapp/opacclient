@@ -69,8 +69,8 @@
             android:layout_below="@id/toolbar"
             android:layout_alignParentRight="true"
             android:elevation="4dp"
-            app:srcCompat="@drawable/ic_search_white_24dp"
-            tools:src="@drawable/ic_search_white_24dp"/>
+            app:srcCompat="@drawable/ic_search_toolbar_24dp"
+            tools:src="@drawable/ic_search_toolbar_24dp"/>
     </RelativeLayout>
     <!-- The navigation drawer -->
     <de.geeksfactory.opacclient.ui.AccountSwitcherNavigationView
