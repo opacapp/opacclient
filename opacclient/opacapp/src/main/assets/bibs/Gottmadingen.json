@@ -5,6 +5,7 @@
   "country": "Deutschland",
   "data": {
     "baseurl": "https://web-opac.kivbf.de/gottmadingen",
+        "customssl": true,
     "accounttable": {
       "author": 0,
       "prolongurl": 4,

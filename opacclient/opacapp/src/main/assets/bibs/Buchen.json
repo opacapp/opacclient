@@ -5,6 +5,7 @@
     "country": "Deutschland",
     "data": {
         "baseurl": "http://bibliotheken.kivbf.de/buchen",
+        "customssl": true,
         "urls": {
             "advanced_search": "Mediensuche.aspx",
             "simple_search": "Mediensuche.aspx"
