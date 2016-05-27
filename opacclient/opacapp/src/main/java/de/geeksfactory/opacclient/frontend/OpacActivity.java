@@ -205,13 +205,15 @@ public abstract class OpacActivity extends AppCompatActivity
     }
 
     /**
-     * Fix status bar flashing problem during transitions by excluding the status bar background from transitions
+     * Fix status bar flashing problem during transitions by excluding the status bar background
+     * from transitions
      */
     @TargetApi(21)
     private void fixStatusBarFlashing() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().getEnterTransition().excludeTarget(android.R.id.statusBarBackground, true);
-            getWindow().getReenterTransition().excludeTarget(android.R.id.statusBarBackground, true);
+            getWindow().getReenterTransition()
+                       .excludeTarget(android.R.id.statusBarBackground, true);
             getWindow().getReturnTransition().excludeTarget(android.R.id.statusBarBackground, true);
             getWindow().getExitTransition().excludeTarget(android.R.id.statusBarBackground, true);
         }
@@ -264,8 +266,23 @@ public abstract class OpacActivity extends AppCompatActivity
                 }
 
                 @Override
-                public void onDrawerOpened(View drawerView) {
+                public void onDrawerOpened(final View drawerView) {
                     drawerToggle.onDrawerOpened(drawerView);
+
+                    final SharedPreferences sp = PreferenceManager
+                            .getDefaultSharedPreferences(OpacActivity.this);
+                    boolean show_toggle_notice = !sp.contains("seen_drawer_toggle_notice");
+                    drawerView.findViewById(R.id.toggle_notice)
+                              .setVisibility(show_toggle_notice ? View.VISIBLE : View.GONE);
+                    drawerView.findViewById(R.id.btToggleNotice).setOnClickListener(
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    sp.edit().putBoolean("seen_drawer_toggle_notice", true).commit();
+                                    drawerView.findViewById(R.id.toggle_notice)
+                                              .setVisibility(View.GONE);
+                                }
+                            });
                 }
 
                 @Override
