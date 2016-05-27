@@ -166,7 +166,7 @@ public abstract class OpacActivity extends AppCompatActivity
 
         Account selectedAccount = app.getAccount();
 
-        View header = drawer.getHeaderView(0);
+        final View header = drawer.getHeaderView(0);
         accountExpand = (ImageView) header.findViewById(R.id.account_expand);
         accountTitle = (TextView) header.findViewById(R.id.account_title);
         accountSubtitle = (TextView) header.findViewById(R.id.account_subtitle);
@@ -181,6 +181,21 @@ public abstract class OpacActivity extends AppCompatActivity
         };
         accountData.setOnClickListener(l);
         //accountExpand.setOnClickListener(l);
+
+        final SharedPreferences sp = PreferenceManager
+                .getDefaultSharedPreferences(OpacActivity.this);
+        boolean show_toggle_notice = !sp.contains("seen_drawer_toggle_notice");
+        header.findViewById(R.id.toggle_notice)
+              .setVisibility(show_toggle_notice ? View.VISIBLE : View.GONE);
+        header.findViewById(R.id.btToggleNotice).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        sp.edit().putBoolean("seen_drawer_toggle_notice", true).commit();
+                        header.findViewById(R.id.toggle_notice)
+                              .setVisibility(View.GONE);
+                    }
+                });
 
         accountsAdapter = new DrawerAccountsAdapter(this, accounts, app.getAccount());
         drawer.setAccountsAdapter(accountsAdapter);
@@ -268,21 +283,6 @@ public abstract class OpacActivity extends AppCompatActivity
                 @Override
                 public void onDrawerOpened(final View drawerView) {
                     drawerToggle.onDrawerOpened(drawerView);
-
-                    final SharedPreferences sp = PreferenceManager
-                            .getDefaultSharedPreferences(OpacActivity.this);
-                    boolean show_toggle_notice = !sp.contains("seen_drawer_toggle_notice");
-                    drawerView.findViewById(R.id.toggle_notice)
-                              .setVisibility(show_toggle_notice ? View.VISIBLE : View.GONE);
-                    drawerView.findViewById(R.id.btToggleNotice).setOnClickListener(
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    sp.edit().putBoolean("seen_drawer_toggle_notice", true).commit();
-                                    drawerView.findViewById(R.id.toggle_notice)
-                                              .setVisibility(View.GONE);
-                                }
-                            });
                 }
 
                 @Override

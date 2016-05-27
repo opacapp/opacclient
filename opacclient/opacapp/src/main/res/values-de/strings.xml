@@ -278,6 +278,6 @@
     <string name="accountdata_reserved_ready_date">Abholdatum</string>
     <string name="accountdata_reserved_expiration_date">Ablaufdatum</string>
     <string name="accountdata_reserved_branch">Zweigstelle</string>
-    <string name="toggle_notice">Klicke oben auf den Pfeil, um zwischen mehreren Konten zu wechseln.</string>
+    <string name="toggle_notice">Tippe oben auf den Pfeil, um zwischen mehreren Konten zu wechseln.</string>
     <string name="toggle_notice_button">Alles klar</string>
 </resources>
