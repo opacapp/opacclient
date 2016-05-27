@@ -275,6 +275,6 @@
     <string name="accountdata_reserved_ready_date">Ready date</string>
     <string name="accountdata_reserved_expiration_date">Expiration date</string>
     <string name="accountdata_reserved_branch">Branch</string>
-    <string name="toggle_notice">Click on the arrow above to switch between multiple accounts.</string>
+    <string name="toggle_notice">Tap the arrow above to switch between multiple accounts.</string>
     <string name="toggle_notice_button">Got it</string>
 </resources>
