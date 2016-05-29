@@ -15,6 +15,7 @@
             "title": 1
         },
         "baseurl": "https://web-opac.kivbf.de/buehl",
+        "customssl": true,
         "copiestable": {
             "barcode": -1,
             "branch": -1,
@@ -24,7 +25,6 @@
             "returndate": 3,
             "status": 2
         },
-        "customssl": true,
         "reservationtable": {
             "author": 0,
             "availability": -1,
