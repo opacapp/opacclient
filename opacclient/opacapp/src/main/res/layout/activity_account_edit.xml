@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -105,16 +106,27 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/account_nr"/>
-
-                <EditText
-                    android:id="@+id/etName"
+                <LinearLayout
+                    android:id="@+id/llBarcode"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:ems="10"
-                    android:inputType="textNoSuggestions"
-                    android:singleLine="true"/>
-
+                    android:layout_height="match_parent">
+                    <EditText
+                        android:id="@+id/etName"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:inputType="textNoSuggestions"
+                        android:singleLine="true" />
+                    <ImageView
+                        android:id="@+id/ivBarcode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/barcodes"
+                        app:srcCompat="@drawable/ic_barcode"
+                        tools:ignore="MissingPrefix"
+                        tools:src="@drawable/ic_barcode"/>
+                </LinearLayout>
                 <TextView
                     android:id="@+id/tvPasswordLabel"
                     android:layout_width="wrap_content"
