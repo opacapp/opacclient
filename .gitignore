@@ -36,6 +36,7 @@ Thumbs.db
 .gradle
 local.properties
 /opacclient/.idea/*
+/.idea/*
 *.iml
 .DS_Store
 build/

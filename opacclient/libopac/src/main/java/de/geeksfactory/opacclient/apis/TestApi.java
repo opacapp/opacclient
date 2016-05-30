@@ -204,7 +204,8 @@ public class TestApi extends BaseApi {
                 lentItem.setTitle("Lorem Ipsum");
                 lentItem.setStatus("hier ist der Status");
                 lentItem.setDeadline(new LocalDate(1442564454547L));
-                lentItem.setRenewable(false);
+                lentItem.setRenewable(true);
+                lentItem.setProlongData("foo");
                 lentItem.setHomeBranch("Meine Zweigstelle");
                 lentItem.setLendingBranch("Ausleihzweigstelle");
                 lentItem.setBarcode("Barcode");
