@@ -34,7 +34,7 @@
             app:srcCompat="@drawable/ic_barcode"
             tools:ignore="MissingPrefix"
             tools:src="@drawable/ic_barcode"
-            android:clickable="false" />
+            android:clickable="true" />
     </LinearLayout>
 
 </LinearLayout>

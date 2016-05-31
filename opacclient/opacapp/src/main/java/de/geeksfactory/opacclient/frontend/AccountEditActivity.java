@@ -204,7 +204,6 @@ public class AccountEditActivity extends AppCompatActivity implements SearchFrag
     public void onActivityResult(int requestCode, int resultCode, Intent idata) {
         super.onActivityResult(requestCode, resultCode, idata);
 
-        //TODO: Rewrite this for the new SearchField implementation
         // Barcode
         BarcodeScanIntegrator.ScanResult scanResult = BarcodeScanIntegrator
                 .parseActivityResult(requestCode, resultCode, idata);
