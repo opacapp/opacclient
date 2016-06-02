@@ -127,6 +127,8 @@ public class OpacApiFactory {
             newApiInstance = new TouchPoint();
         } else if (lib.getApi().equals("open")) {
             newApiInstance = new Open();
+        } else if (lib.getApi().equals("opac4")) {
+            newApiInstance = new Opac4();
         } else if (lib.getApi().equals("test")) {
             newApiInstance = new TestApi();
         } else {
