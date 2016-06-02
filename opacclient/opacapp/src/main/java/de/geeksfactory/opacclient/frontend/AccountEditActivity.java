@@ -84,8 +84,7 @@ public class AccountEditActivity extends AppCompatActivity implements SearchFrag
 
         ImageView image = (ImageView) findViewById(R.id.ivBarcode);
         image.setOnClickListener(new OnClickListener() {
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 scanBarcode();
             }
 
@@ -210,13 +209,10 @@ public class AccountEditActivity extends AppCompatActivity implements SearchFrag
         if (resultCode != RESULT_CANCELED && scanResult != null) {
             if (scanResult.getContents() == null) {
                 return;
-            }
-            else if (scanResult.getContents().length() < 3) {
+            } else if (scanResult.getContents().length() < 3) {
                 return;
-            }else {
-
-                account.setName(scanResult.getContents());
-                etName.setText(account.getName());
+            } else {
+                etName.setText(scanResult.getContents());
             }
 
 
