@@ -58,7 +58,7 @@ import de.geeksfactory.opacclient.reminder.ReminderHelper;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
 
-public class AccountEditActivity extends AppCompatActivity implements SearchFragment.Callback {
+public class AccountEditActivity extends AppCompatActivity {
 
     public static final String EXTRA_ACCOUNT_ID = "id";
 
@@ -85,7 +85,8 @@ public class AccountEditActivity extends AppCompatActivity implements SearchFrag
         ImageView image = (ImageView) findViewById(R.id.ivBarcode);
         image.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                scanBarcode();
+                BarcodeScanIntegrator integrator = new BarcodeScanIntegrator(AccountEditActivity.this);
+                integrator.initiateScan();
             }
 
         });
@@ -217,12 +218,6 @@ public class AccountEditActivity extends AppCompatActivity implements SearchFrag
 
 
         }
-    }
-
-    @Override
-    public void scanBarcode() {
-        BarcodeScanIntegrator integrator = new BarcodeScanIntegrator(this);
-        integrator.initiateScan();
     }
 
     @Override
