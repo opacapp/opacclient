@@ -26,6 +26,7 @@ import de.geeksfactory.opacclient.apis.IOpac;
 import de.geeksfactory.opacclient.apis.Littera;
 import de.geeksfactory.opacclient.apis.OpacApi;
 import de.geeksfactory.opacclient.apis.Open;
+import de.geeksfactory.opacclient.apis.Opac4;
 import de.geeksfactory.opacclient.apis.PicaLBS;
 import de.geeksfactory.opacclient.apis.PicaOld;
 import de.geeksfactory.opacclient.apis.Primo;
