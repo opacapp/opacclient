@@ -26,7 +26,8 @@ public class BiBer1992AccountTest extends BaseAccountTest {
         this.file = file;
     }
 
-    private static final String[] FILES = new String[]{"gelsenkirchen.htm", "freising.html"};
+    private static final String[] FILES =
+            new String[]{"gelsenkirchen.htm", "freising.html", "herford.htm"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {
@@ -59,6 +60,15 @@ public class BiBer1992AccountTest extends BaseAccountTest {
             accounttable.put("prolongurl", 4);
             accounttable.put("returndate", 3);
             accounttable.put("status", 6);
+            accounttable.put("title", 8);
+        } else if (file.equals("herford.htm")) {
+            accounttable.put("author", 8);
+            accounttable.put("barcode", 4);
+            accounttable.put("homebranch", -1);
+            accounttable.put("lendingbranch", -1);
+            accounttable.put("prolongurl", 1);
+            accounttable.put("returndate", 3);
+            accounttable.put("status", 9);
             accounttable.put("title", 8);
         }
         json.put("accounttable", accounttable);
