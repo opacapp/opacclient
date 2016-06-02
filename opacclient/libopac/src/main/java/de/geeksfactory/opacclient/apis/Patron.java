@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-public class Opac4 extends BaseApi{
+public class Patron extends BaseApi{
     @Override
     public void init(Library lib, HttpClientFactory httpClientFactory) {
 

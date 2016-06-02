@@ -1,6 +1,6 @@
 {
   "account_supported": false,
-  "api": "opac4",
+  "api": "patron",
   "city": "Bielsko-Biała",
   "country": "Polska",
   "data": {
