@@ -33,7 +33,8 @@
             android:contentDescription="@string/barcodes"
             app:srcCompat="@drawable/ic_barcode"
             tools:ignore="MissingPrefix"
-            tools:src="@drawable/ic_barcode"/>
+            tools:src="@drawable/ic_barcode"
+            android:clickable="true" />
     </LinearLayout>
 
 </LinearLayout>
