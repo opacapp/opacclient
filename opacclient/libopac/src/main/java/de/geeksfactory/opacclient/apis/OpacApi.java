@@ -86,6 +86,11 @@ public interface OpacApi {
     public static final int SUPPORT_FLAG_WARN_RESERVATION_FEES = 0x0000020;
 
     /**
+     * Asks the user responsibly about prolong fees
+     */
+    public static final int SUPPORT_FLAG_WARN_PROLONG_FEES = 0x0000040;
+
+    /**
      * May be called on application startup and you are free to call it in our {@link #search}
      * implementation or similar positions. It is commonly used to initialize a session. You MUST
      * NOT rely on it being called and should check by yourself, whether it was already called (if
