@@ -88,7 +88,7 @@ public interface OpacApi {
     /**
      * Asks the user responsibly about prolong fees
      */
-    public static final int SUPPORT_FLAG_WARN_PROLONG_FEES = 0x0000030;
+    public static final int SUPPORT_FLAG_WARN_PROLONG_FEES = 0x0000040;
 
     /**
      * May be called on application startup and you are free to call it in our {@link #search}
