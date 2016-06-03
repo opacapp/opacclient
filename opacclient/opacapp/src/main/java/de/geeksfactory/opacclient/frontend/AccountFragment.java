@@ -49,6 +49,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -532,109 +533,120 @@ public class AccountFragment extends Fragment implements
             }
             return;
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(R.string.prolong_confirm)
-               .setCancelable(true)
-               .setNegativeButton(R.string.no,
-                       new DialogInterface.OnClickListener() {
-                           @Override
-                           public void onClick(DialogInterface d, int id) {
-                               d.cancel();
-                           }
-                       })
-               .setPositiveButton(R.string.yes,
-                       new DialogInterface.OnClickListener() {
-                           @Override
-                           public void onClick(DialogInterface d, int id) {
-                               MultiStepResultHelper<String> msrhProlong =
-                                       new MultiStepResultHelper<>(
-                                               getActivity(), a, R.string.doing_prolong);
-                               msrhProlong.setCallback(new Callback<String>() {
-                                   @Override
-                                   public void onSuccess(MultiStepResult result) {
-                                       if (getActivity() == null) {
-                                           return;
-                                       }
-                                       invalidateData();
+        final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        if (sp.getBoolean("prolong_fee_warning_ignore", false) ||
+                (app.getApi().getSupportFlags() & OpacApi.SUPPORT_FLAG_WARN_PROLONG_FEES) > 0) {
+            prolongPerform(a);
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(
+                    getActivity());
+            View content = getLayoutInflater(null).inflate(R.layout.dialog_prolong_confirm, null);
+            final CheckBox check = (CheckBox) content.findViewById(R.id.check_box1);
+            builder.setView(content)
+                    .setCancelable(false)
+                    .setNegativeButton(R.string.cancel,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(
+                                        DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            })
+                    .setPositiveButton(R.string.reservation_fee_continue,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(
+                                        DialogInterface dialog, int id) {
+                                    if (check.isChecked()) {
+                                        sp.edit().putBoolean("prolong_fee_warning_ignore", true).apply();
+                                    }
+                                    prolongPerform(a);
+                                }
+                            });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+    }
 
-                                       if (result.getMessage() != null) {
-                                           AlertDialog.Builder builder = new AlertDialog.Builder(
-                                                   getActivity());
-                                           builder.setMessage(result.getMessage())
-                                                  .setCancelable(false)
-                                                  .setNegativeButton(R.string.close,
-                                                          new DialogInterface.OnClickListener() {
-                                                              @Override
-                                                              public void onClick(
-                                                                      DialogInterface dialog,
-                                                                      int id) {
-                                                                  dialog.cancel();
-                                                              }
-                                                          });
-                                           AlertDialog alert = builder.create();
-                                           alert.show();
-                                       }
-                                   }
+    protected void prolongPerform(final String a){
+                MultiStepResultHelper<String> msrhProlong =
+                        new MultiStepResultHelper<>(
+                                getActivity(), a, R.string.doing_prolong);
+                msrhProlong.setCallback(new Callback<String>() {
+                    @Override
+                    public void onSuccess(MultiStepResult result) {
+                        if (getActivity() == null) {
+                            return;
+                        }
+                        invalidateData();
 
-                                   @Override
-                                   public void onError(MultiStepResult result) {
-                                       if (getActivity() == null) {
-                                           return;
-                                       }
-                                       AlertDialog.Builder builder = new AlertDialog.Builder(
-                                               getActivity());
-                                       builder.setMessage(result.getMessage())
-                                              .setCancelable(true)
-                                              .setNegativeButton(R.string.close,
-                                                      new DialogInterface.OnClickListener() {
-                                                          @Override
-                                                          public void onClick(DialogInterface d,
-                                                                  int id) {
-                                                              d.cancel();
-                                                          }
-                                                      })
-                                              .setOnCancelListener(
-                                                      new DialogInterface.OnCancelListener() {
-                                                          @Override
-                                                          public void onCancel(DialogInterface d) {
-                                                              if (d != null) {
-                                                                  d.cancel();
-                                                              }
-                                                          }
-                                                      });
-                                       AlertDialog alert = builder.create();
-                                       alert.show();
-                                   }
+                        if (result.getMessage() != null) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(
+                                    getActivity());
+                            builder.setMessage(result.getMessage())
+                                    .setCancelable(false)
+                                    .setNegativeButton(R.string.close,
+                                            new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(
+                                                        DialogInterface dialog,
+                                                        int id) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+                            AlertDialog alert = builder.create();
+                            alert.show();
+                        }
+                    }
 
-                                   @Override
-                                   public void onUnhandledResult(MultiStepResult result) {
-                                   }
+                    @Override
+                    public void onError(MultiStepResult result) {
+                        if (getActivity() == null) {
+                            return;
+                        }
+                        AlertDialog.Builder builder = new AlertDialog.Builder(
+                                getActivity());
+                        builder.setMessage(result.getMessage())
+                                .setCancelable(true)
+                                .setNegativeButton(R.string.close,
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface d,
+                                                                int id) {
+                                                d.cancel();
+                                            }
+                                        })
+                                .setOnCancelListener(
+                                        new DialogInterface.OnCancelListener() {
+                                            @Override
+                                            public void onCancel(DialogInterface d) {
+                                                if (d != null) {
+                                                    d.cancel();
+                                                }
+                                            }
+                                        });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                    }
 
-                                   @Override
-                                   public void onUserCancel() {
-                                   }
+                    @Override
+                    public void onUnhandledResult(MultiStepResult result) {
+                    }
 
-                                   @Override
-                                   public StepTask<?> newTask(MultiStepResultHelper helper,
-                                           int useraction,
-                                           String selection, String argument) {
-                                       return new ProlongTask(helper, useraction, selection,
-                                               argument);
-                                   }
-                               });
-                               msrhProlong.start();
-                           }
-                       })
-               .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                   @Override
-                   public void onCancel(DialogInterface d) {
-                       if (d != null) {
-                           d.cancel();
-                       }
-                   }
-               });
-        AlertDialog alert = builder.create();
-        alert.show();
+                    @Override
+                    public void onUserCancel() {
+                    }
+
+                    @Override
+                    public StepTask<?> newTask(MultiStepResultHelper helper,
+                                               int useraction,
+                                               String selection, String argument) {
+                        return new ProlongTask(helper, useraction, selection,
+                                argument);
+                    }
+                });
+                msrhProlong.start();
+
     }
 
     protected void download(final String a) {
