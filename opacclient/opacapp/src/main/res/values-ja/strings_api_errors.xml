@@ -39,7 +39,9 @@
   <string name="provision_branch">提供: %s</string>
   <string name="unsupported_in_library">この機能は、この図書館でサポートされていません。</string>
   <string name="reservation_warning">予約は手数料がかかる場合があります。</string>
-  <string name="reservations_number">%s 予約</string>
+  <plurals name="reservations_number">
+    <item quantity="other">%d 予約</item>
+  </plurals>
   <string name="reserved_at_date">予約 %s</string>
   <string name="mediatype_none">なし</string>
   <string name="mediatype_book">本</string>
