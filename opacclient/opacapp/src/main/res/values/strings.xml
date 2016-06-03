@@ -258,6 +258,9 @@
     <string name="reservation_fee_warning">Please note that, depending on your library\'s rules,
         fees might apply for reservations. If in doubt, please check your library\'s scale of
         fees.</string>
+    <string name="prolong_fee_warning">Please note that, depending on your library\'s rules,
+        fees might apply for prolonging an item. If in doubt, please check your library\'s scale of
+        fees.</string>
     <string name="do_not_ask_again">Do not show again</string>
     <string name="reservation_fee_continue">Continue</string>
     <string name="notification_repeat">Repeat notifications</string>
