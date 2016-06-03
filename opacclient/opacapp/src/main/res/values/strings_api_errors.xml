@@ -40,7 +40,11 @@
     <string name="provision_branch">Provision: %s</string>
     <string name="unsupported_in_library">This feature is not supported in this library.</string>
     <string name="reservation_warning">This reservation might cost you a fee.</string>
-    <string name="reservations_number">%s reservations</string>
+    <plurals name="reservations_number">
+        <item quantity="one">%d reservation</item>
+        <item quantity="other">%d reservations</item>
+    </plurals>
+
     <string name="reserved_at_date">res. at %s</string>
     <string name="link">Link</string>
 

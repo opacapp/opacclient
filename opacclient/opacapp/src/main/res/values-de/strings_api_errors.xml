@@ -40,7 +40,10 @@
   <string name="provision_branch">Bereit: %s</string>
   <string name="unsupported_in_library">Diese Funktion wird in dieser Bibliothek nicht unterstützt.</string>
   <string name="reservation_warning">Für diese Vorbestellung fallen möglicherweise Gebühren an.</string>
-  <string name="reservations_number">%s Reservierungen</string>
+  <plurals name="reservations_number">
+    <item quantity="one">Eine Reservierung</item>
+    <item quantity="other">%d Reservierungen</item>
+  </plurals>
   <string name="reserved_at_date">res. am %s</string>
   <string name="link">Link</string>
 
