@@ -12,6 +12,7 @@
 			"format":2,
             "title": 1
         },
+        "customssl": true,
 		"copiestable": {
             "department": 1,
             "location": 0,

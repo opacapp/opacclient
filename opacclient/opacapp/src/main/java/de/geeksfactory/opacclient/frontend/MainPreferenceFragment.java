@@ -81,60 +81,70 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
 
         CheckBoxPreference notification =
                 (CheckBoxPreference) findPreference("notification_service");
-        notification.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                boolean enabled = (Boolean) newValue;
-                new ReminderHelper((OpacClient) getActivity().getApplication())
-                        .updateAlarms(enabled);
-                return true;
-            }
-        });
+        if (notification != null) {
+            notification.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    boolean enabled = (Boolean) newValue;
+                    new ReminderHelper((OpacClient) getActivity().getApplication())
+                            .updateAlarms(enabled);
+                    return true;
+                }
+            });
+        }
 
         ListPreference warning = (ListPreference) findPreference("notification_warning");
-        warning.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                SharedPreferences prefs = PreferenceManager
-                        .getDefaultSharedPreferences(getActivity());
-                //int oldWarning = Integer.parseInt(prefs.getString("notification_warning", "3"));
-                int newWarning = Integer.parseInt((String) newValue);
-                new ReminderHelper((OpacClient) getActivity().getApplication())
-                        .updateAlarms(newWarning);
-                return true;
-            }
-        });
+        if (warning != null) {
+            warning.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    SharedPreferences prefs = PreferenceManager
+                            .getDefaultSharedPreferences(getActivity());
+                    //int oldWarning = Integer.parseInt(prefs.getString("notification_warning", "3"));
+
+                    int newWarning = Integer.parseInt((String) newValue);
+                    new ReminderHelper((OpacClient) getActivity().getApplication())
+                            .updateAlarms(newWarning);
+                    return true;
+                }
+            });
+        }
 
         Preference meta_run_check = findPreference("meta_run_check");
-        meta_run_check.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference arg0) {
-                Intent i = new Intent(context, SyncAccountService.class);
-                context.startService(i);
-                return false;
-            }
-        });
+        if (meta_run_check != null) {
+            meta_run_check.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference arg0) {
+                    Intent i = new Intent(context, SyncAccountService.class);
+                    context.startService(i);
+                    return false;
+                }
+            });
+        }
 
         Preference meta = findPreference("meta_clear");
-        meta.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference arg0) {
-                AccountDataSource adata = new AccountDataSource(context);
-                adata.open();
-                adata.invalidateCachedData();
-                adata.close();
-                new ReminderHelper((OpacClient) context.getApplication()).updateAlarms(-1);
+        if (meta != null) {
+            meta.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference arg0) {
+                    AccountDataSource adata = new AccountDataSource(context);
+                    adata.open();
+                    adata.invalidateCachedData();
+                    adata.close();
+                    new ReminderHelper((OpacClient) context.getApplication()).updateAlarms(-1);
 
-                SearchFieldDataSource sfdata = new JsonSearchFieldDataSource(context);
-                sfdata.clearAll();
+                    SearchFieldDataSource sfdata = new JsonSearchFieldDataSource(context);
+                    sfdata.clearAll();
 
-                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                sp.edit().remove("reservation_fee_warning_ignore").apply();
+                    SharedPreferences sp =
+                            PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    sp.edit().remove("reservation_fee_warning_ignore").apply();
 
-                Intent i = new Intent(context, SyncAccountService.class);
-                context.startService(i);
-                return false;
-            }
-        });
+                    Intent i = new Intent(context, SyncAccountService.class);
+                    context.startService(i);
+                    return false;
+                }
+            });
+        }
     }
 }

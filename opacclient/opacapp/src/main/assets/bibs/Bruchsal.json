@@ -16,6 +16,7 @@
             "returndate": 3,
             "status": 2
         },
+		"customssl": true,
         "mediatypes": {
             "CDkl.gif": "CD_SOFTWARE",
             "Icon_eMedium_k.jpg": "EBOOK",
