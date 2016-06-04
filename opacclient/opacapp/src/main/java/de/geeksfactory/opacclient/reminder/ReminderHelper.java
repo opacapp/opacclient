@@ -73,6 +73,10 @@ public class ReminderHelper {
                 // this case.
                 continue;
             }
+            if (item.getDownloadData() != null && item.getDownloadData().startsWith("http")) {
+                // Don't remind people of bringing back ebooks, because ... uhm...
+                continue;
+            }
             if (!arrangedIds.containsKey(deadline)) {
                 arrangedIds.put(deadline, new ArrayList<Long>());
             }
