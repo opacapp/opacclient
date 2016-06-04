@@ -19,6 +19,8 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.widget.Toast;
 
+import org.json.JSONException;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -102,9 +104,47 @@ public class MainActivity extends OpacActivity
         super.onCreate(savedInstanceState);
         sp = PreferenceManager.getDefaultSharedPreferences(this);
 
+        String itemToSelect = null;
+
         if (getIntent() != null && getIntent().getAction() != null) {
             if (getIntent().getAction().equals("android.intent.action.VIEW")) {
                 urlintent();
+            } else if (getIntent().getAction().equals("de.geeksfactory.opacclient.SEARCH")
+                    || getIntent().getAction().equals("de.geeksfactory.opacclient.ACCOUNT")) {
+                String lib = getIntent().getStringExtra("library");
+                AccountDataSource adata = new AccountDataSource(this);
+                adata.open();
+                List<Account> accounts = adata.getAllAccounts(lib);
+                adata.close();
+
+                if (accounts.size() == 0) {
+                    // Check if library exists (an IOException should be thrown otherwise, correct?)
+                    try {
+                        app.getLibrary(lib);
+                    } catch (IOException | JSONException e) {
+                        return;
+                    }
+                    Account account = new Account();
+                    account.setLibrary(lib);
+                    account.setLabel(getString(R.string.default_account_name));
+                    account.setName("");
+                    account.setPassword("");
+                    adata.open();
+                    long id = adata.addAccount(account);
+                    adata.close();
+                    selectaccount(id);
+                } else if (accounts.size() == 1) {
+                    selectaccount(accounts.get(0).getId());
+                } else if (accounts.size() > 0) {
+                    // TODO: show select dialog, potentially check if accounts have
+                    // username/password
+                }
+
+                if (getIntent().getAction().equals("de.geeksfactory.opacclient.SEARCH")) {
+                    itemToSelect = "search";
+                } else {
+                    itemToSelect = "account";
+                }
             }
         }
 
@@ -139,6 +179,8 @@ public class MainActivity extends OpacActivity
                     }
                 }
                 adata.close();
+            } else if (itemToSelect != null) {
+                selectItem(itemToSelect);
             } else if (sp.contains("startup_fragment")) {
                 selectItem(sp.getString("startup_fragment", "search"));
             } else {
