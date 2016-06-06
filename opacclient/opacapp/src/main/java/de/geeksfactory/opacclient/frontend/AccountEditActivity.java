@@ -84,7 +84,6 @@ public class AccountEditActivity extends AppCompatActivity {
         etPassword = (EditText) findViewById(R.id.etPassword);
 
         AccountDataSource data = new AccountDataSource(this);
-        data.open();
         account = data.getAccount(getIntent()
                 .getLongExtra(EXTRA_ACCOUNT_ID, -1));
 
@@ -92,8 +91,6 @@ public class AccountEditActivity extends AppCompatActivity {
             finish();
             return;
         }
-
-        data.close();
 
         if (account.getLabel().equals(getString(R.string.default_account_name))) {
             etLabel.setText("");
@@ -169,7 +166,6 @@ public class AccountEditActivity extends AppCompatActivity {
 
     private void delete() {
         AccountDataSource data = new AccountDataSource(this);
-        data.open();
         data.remove(account);
 
         // Check whether he deleted account was selected
@@ -184,7 +180,6 @@ public class AccountEditActivity extends AppCompatActivity {
                         .get(0).getId());
             }
         }
-        data.close();
         new ReminderHelper((OpacClient) getApplication()).generateAlarms();
     }
 
@@ -257,9 +252,7 @@ public class AccountEditActivity extends AppCompatActivity {
 
     private void save() {
         AccountDataSource data = new AccountDataSource(AccountEditActivity.this);
-        data.open();
         data.update(account);
-        data.close();
         if (((OpacClient) getApplication()).getAccount().getId() == account
                 .getId()) {
             ((OpacClient) getApplication()).resetCache();

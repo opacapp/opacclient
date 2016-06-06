@@ -50,14 +50,12 @@ public class DrawerAccountsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         int tolerance = Integer.parseInt(sp.getString("notification_warning", "3"));
 
         AccountDataSource adata = new AccountDataSource(context);
-        adata.open();
         for (Account account : accounts) {
             expiring.put(account, adata.getExpiring(account, tolerance));
             if (account.getId() != currentAccount.getId()) {
                 accountsWithoutCurrent.add(account);
             }
         }
-        adata.close();
     }
 
     @Override

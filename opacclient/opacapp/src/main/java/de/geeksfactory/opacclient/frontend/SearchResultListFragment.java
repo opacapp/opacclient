@@ -160,9 +160,7 @@ public class SearchResultListFragment extends CustomListFragment {
 
     private void performGoogleSearch(final String query) {
         AccountDataSource data = new AccountDataSource(getActivity());
-        data.open();
         final List<Account> accounts = data.getAllAccounts();
-        data.close();
 
         if (accounts.size() == 0) {
             Toast.makeText(getActivity(), R.string.welcome_select,

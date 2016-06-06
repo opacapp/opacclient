@@ -616,13 +616,11 @@ public class LibraryListActivity extends AppCompatActivity
                 case LEVEL_LIBRARY:
                     Library lib = (Library) getListAdapter().getItem(position);
                     AccountDataSource data = new AccountDataSource(getActivity());
-                    data.open();
                     Account acc = new Account();
                     acc.setLibrary(lib.getIdent());
                     acc.setLabel(getActivity().getString(
                             R.string.default_account_name));
                     long insertedid = data.addAccount(acc);
-                    data.close();
 
                     ((OpacClient) getActivity().getApplication())
                             .setAccount(insertedid);

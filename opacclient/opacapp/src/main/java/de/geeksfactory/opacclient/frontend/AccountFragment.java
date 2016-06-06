@@ -233,10 +233,8 @@ public class AccountFragment extends Fragment implements
         Context ctx = getActivity() != null ? getActivity() : OpacClient
                 .getEmergencyContext();
         AccountDataSource adatasource = new AccountDataSource(ctx);
-        adatasource.open();
         AccountData data = adatasource.getCachedAccountData(account);
         LocalDateTime dt = new LocalDateTime(adatasource.getCachedAccountDataTime(account));
-        adatasource.close();
 
         if (data == null) return;
 
@@ -394,7 +392,6 @@ public class AccountFragment extends Fragment implements
             Context ctx = getActivity() != null ? getActivity() : OpacClient
                     .getEmergencyContext();
             AccountDataSource adatasource = new AccountDataSource(ctx);
-            adatasource.open();
             refreshtime = adatasource.getCachedAccountDataTime(account);
             if (refreshtime > 0) {
                 displaydata(adatasource.getCachedAccountData(account), true);
@@ -404,7 +401,6 @@ public class AccountFragment extends Fragment implements
             } else {
                 refresh();
             }
-            adatasource.close();
         }
     }
 
@@ -654,9 +650,7 @@ public class AccountFragment extends Fragment implements
 
     public void invalidateData() {
         AccountDataSource adatasource = new AccountDataSource(getActivity());
-        adatasource.open();
         adatasource.invalidateCachedAccountData(account);
-        adatasource.close();
         svAccount.setVisibility(View.GONE);
         accountSelected(account);
     }
@@ -670,9 +664,7 @@ public class AccountFragment extends Fragment implements
         }
         if (e instanceof OpacErrorException) {
             AccountDataSource adatasource = new AccountDataSource(getActivity());
-            adatasource.open();
             adatasource.invalidateCachedAccountData(account);
-            adatasource.close();
             dialog_wrong_credentials(e.getMessage());
             return;
         }
@@ -1625,11 +1617,9 @@ public class AccountFragment extends Fragment implements
                     adatasource = new AccountDataSource(getActivity());
                 }
 
-                adatasource.open();
                 account.setPasswordKnownValid(true);
                 adatasource.update(account);
                 adatasource.storeCachedAccountData(adatasource.getAccount(data.getAccount()), data);
-                adatasource.close();
 
                 new ReminderHelper(app).generateAlarms();
 

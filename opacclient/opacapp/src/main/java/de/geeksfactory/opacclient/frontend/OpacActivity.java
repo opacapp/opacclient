@@ -160,9 +160,7 @@ public abstract class OpacActivity extends AppCompatActivity
 
     protected void setupAccountSwitcher() {
         if (drawer == null || app.getAccount() == null) return;
-        aData.open();
         accounts = aData.getAllAccounts();
-        aData.close();
 
         Account selectedAccount = app.getAccount();
 
@@ -528,14 +526,12 @@ public abstract class OpacActivity extends AppCompatActivity
                     stream.close();
                 } catch (IOException e) {
                     AccountDataSource data = new AccountDataSource(this);
-                    data.open();
                     data.remove(app.getAccount());
                     List<Account> available_accounts = data.getAllAccounts();
                     if (available_accounts.size() > 0) {
                         ((OpacClient) getApplication())
                                 .setAccount(available_accounts.get(0).getId());
                     }
-                    data.close();
                     new ReminderHelper(app).generateAlarms();
                     if (app.getLibrary() != null) {
                         return;
@@ -561,10 +557,7 @@ public abstract class OpacActivity extends AppCompatActivity
         if (account == null) return;
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         int tolerance = Integer.parseInt(sp.getString("notification_warning", "3"));
-
-        aData.open();
         int expiring = aData.getExpiring(account, tolerance);
-        aData.close();
 
         accountTitle.setText(Utils.getAccountTitle(account, this));
         accountSubtitle.setText(Utils.getAccountSubtitle(account, this));
@@ -586,9 +579,7 @@ public abstract class OpacActivity extends AppCompatActivity
 
         ListView lv = (ListView) view.findViewById(R.id.lvBibs);
         AccountDataSource data = new AccountDataSource(this);
-        data.open();
         final List<Account> accounts = data.getAllAccounts();
-        data.close();
         AccountListAdapter adapter = new AccountListAdapter(this, accounts);
         lv.setAdapter(adapter);
         lv.setOnItemClickListener(new OnItemClickListener() {
