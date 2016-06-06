@@ -27,7 +27,8 @@ public class BiBer1992AccountTest extends BaseAccountTest {
     }
 
     private static final String[] FILES =
-            new String[]{"gelsenkirchen.htm", "freising.html", "herford.htm"};
+            new String[]{"gelsenkirchen.htm", "freising.html", "herford.htm", "erkrath_opac.html",
+                    "erkrath_opax.html", "nuertingen.html"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {
@@ -70,6 +71,33 @@ public class BiBer1992AccountTest extends BaseAccountTest {
             accounttable.put("returndate", 3);
             accounttable.put("status", 9);
             accounttable.put("title", 8);
+        } else if (file.equals("erkrath_opac.html")) {
+            accounttable.put("author", 6);
+            accounttable.put("barcode", 3);
+            accounttable.put("homebranch", -1);
+            accounttable.put("lendingbranch", -1);
+            accounttable.put("prolongurl", 3);
+            accounttable.put("returndate", 2);
+            accounttable.put("status", 4);
+            accounttable.put("title", 6);
+        } else if (file.equals("erkrath_opax.html")) {
+            accounttable.put("author", 8);
+            accounttable.put("barcode", 4);
+            accounttable.put("homebranch", -1);
+            accounttable.put("lendingbranch", -1);
+            accounttable.put("prolongurl", 1);
+            accounttable.put("returndate", 3);
+            accounttable.put("status", 9);
+            accounttable.put("title", 8);
+        } else if (file.equals("nuertingen.html")) {
+            accounttable.put("author", 8);
+            accounttable.put("barcode", 4);
+            accounttable.put("homebranch", -1);
+            accounttable.put("lendingbranch", -1);
+            accounttable.put("prolongurl", 4);
+            accounttable.put("returndate", 3);
+            accounttable.put("status", 6);
+            accounttable.put("title", 8);
         }
         json.put("accounttable", accounttable);
         if (html == null) return; // we may not have all files for all libraries
@@ -77,6 +105,7 @@ public class BiBer1992AccountTest extends BaseAccountTest {
         assertTrue(media.size() > 0);
         for (LentItem item : media) {
             assertNotNull(item.getDeadline());
+            assertNotNull(item.getId());
         }
     }
 

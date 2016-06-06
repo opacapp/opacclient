@@ -113,9 +113,7 @@ public class MainActivity extends OpacActivity
                     || getIntent().getAction().equals("de.geeksfactory.opacclient.ACCOUNT")) {
                 String lib = getIntent().getStringExtra("library");
                 AccountDataSource adata = new AccountDataSource(this);
-                adata.open();
                 List<Account> accounts = adata.getAllAccounts(lib);
-                adata.close();
 
                 if (accounts.size() == 0) {
                     // Check if library exists (an IOException should be thrown otherwise, correct?)
@@ -129,9 +127,7 @@ public class MainActivity extends OpacActivity
                     account.setLabel(getString(R.string.default_account_name));
                     account.setName("");
                     account.setPassword("");
-                    adata.open();
                     long id = adata.addAccount(account);
-                    adata.close();
                     selectaccount(id);
                 } else if (accounts.size() == 1) {
                     selectaccount(accounts.get(0).getId());
@@ -153,7 +149,6 @@ public class MainActivity extends OpacActivity
                 selectItem(getIntent().getStringExtra(EXTRA_FRAGMENT));
             } else if (getIntent().hasExtra(ReminderBroadcastReceiver.EXTRA_ALARM_ID)) {
                 AccountDataSource adata = new AccountDataSource(this);
-                adata.open();
                 Alarm alarm = adata.getAlarm(
                         getIntent().getLongExtra(ReminderBroadcastReceiver.EXTRA_ALARM_ID, -1));
                 List<LentItem> items = adata.getLentItems(alarm.media);
@@ -178,7 +173,6 @@ public class MainActivity extends OpacActivity
                         selectItem("account");
                     }
                 }
-                adata.close();
             } else if (itemToSelect != null) {
                 selectItem(itemToSelect);
             } else if (sp.contains("startup_fragment")) {
@@ -257,9 +251,7 @@ public class MainActivity extends OpacActivity
 
             if (app.getLibrary() == null || !app.getLibrary().getIdent().equals(bib)) {
                 AccountDataSource adata = new AccountDataSource(this);
-                adata.open();
                 List<Account> accounts = adata.getAllAccounts(bib);
-                adata.close();
                 if (accounts.size() > 0) {
                     app.setAccount(accounts.get(0).getId());
                 } else {
