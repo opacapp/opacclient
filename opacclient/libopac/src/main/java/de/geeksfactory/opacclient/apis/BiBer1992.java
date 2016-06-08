@@ -1211,8 +1211,8 @@ public class BiBer1992 extends BaseApi {
             throw new OpacErrorException(doc.select("font[color=red]").text());
         }
         if (doc.text().contains("No html file set")
-                || doc.text().contains(
-                "Der BIBDIA Server konnte den Auftrag nicht")) {
+                || doc.text().contains("Der BIBDIA Server konnte den Auftrag nicht")
+                || doc.text().contains("Fehler in der Ausf")) {
             throw new OpacErrorException(
                     stringProvider.getString(StringProvider.WRONG_LOGIN_DATA));
         }
