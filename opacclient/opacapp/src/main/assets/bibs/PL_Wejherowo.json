@@ -1,0 +1,15 @@
+{
+  "account_supported": false,
+  "api": "patron",
+  "city": "Wejherowo",
+  "country": "Polska",
+  "data": {
+    "baseurl": "http://biblioteka.wejherowo.pl:81/Opac4/"
+  },
+  "geo": [
+    54.604167, 18.248889
+  ],
+  "information": "http://biblioteka.wejherowo.pl/",
+  "state": "pomorskie",
+  "title": "Miejska Biblioteka Publiczna im. Aleksandra Majkowskiego w Wejherowie"
+}

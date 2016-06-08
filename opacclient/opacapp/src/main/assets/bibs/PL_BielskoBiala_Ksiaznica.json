@@ -4,7 +4,8 @@
   "city": "Bielsko-Biała",
   "country": "Polska",
   "data": {
-    "baseurl": "http://185.43.138.133:8080/Opac4/"
+    "baseurl": "http://185.43.138.133:8080/Opac4/",
+    "wiki": "https://pl.wikipedia.org/wiki/Ksi%C4%85%C5%BCnica_Beskidzka"
   },
   "geo": [
     49.8240171,
@@ -12,6 +13,5 @@
   ],
   "information": "http://ksiaznica.bielsko.pl/",
   "state": "śląskie",
-  "title": "Książnica Beskidzka",
-  "wiki": "https://pl.wikipedia.org/wiki/Ksi%C4%85%C5%BCnica_Beskidzka"
+  "title": "Książnica Beskidzka"
 }
