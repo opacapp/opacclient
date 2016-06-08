@@ -18,14 +18,13 @@
  */
 package de.geeksfactory.opacclient.storage;
 
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,19 +39,14 @@ import de.geeksfactory.opacclient.reminder.Alarm;
 public class AccountDataSource {
     // Database fields
     private SQLiteDatabase database;
-    private AccountDatabase dbHelper;
     private String[] allColumns = AccountDatabase.COLUMNS;
 
     public AccountDataSource(Context context) {
-        dbHelper = new AccountDatabase(context);
-    }
-
-    public void open() throws SQLException {
+        AccountDatabase dbHelper = AccountDatabase.getInstance(context);
         database = dbHelper.getWritableDatabase();
-    }
-
-    public void close() {
-        dbHelper.close();
+        // we do not need to close the database, as only one instance is created
+        // see e.g. http://stackoverflow
+        // .com/questions/4547461/closing-the-database-in-a-contentprovider/12715032#12715032
     }
 
     public long addAccount(Account acc) {

@@ -1004,7 +1004,7 @@ public class BiBer1992 extends BaseApi {
             LentItem item = new LentItem();
 
             Pattern itemIdPat = Pattern
-                    .compile("javascript:smAcc\\('[a-z]+','[a-z]+','([A-Za-z0-9]+)'\\)");
+                    .compile("javascript:(?:smAcc|smMedk)\\('[a-z]+','[a-z]+','([A-Za-z0-9]+)'\\)");
             // columns: all elements of one media
             Iterator<?> keys = copymap.keys();
             while (keys.hasNext()) {

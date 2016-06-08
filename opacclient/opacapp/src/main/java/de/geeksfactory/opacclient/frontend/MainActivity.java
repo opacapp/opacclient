@@ -47,6 +47,8 @@ public class MainActivity extends OpacActivity
         SearchResultDetailFragment.Callbacks {
 
     public static final String EXTRA_FRAGMENT = "fragment";
+    public static final String ACTION_SEARCH = "de.geeksfactory.opacclient.SEARCH";
+    public static final String ACTION_ACCOUNT = "de.geeksfactory.opacclient.ACCOUNT";
     private String[][] techListsArray;
     private IntentFilter[] intentFiltersArray;
     private PendingIntent nfcIntent;
@@ -109,13 +111,11 @@ public class MainActivity extends OpacActivity
         if (getIntent() != null && getIntent().getAction() != null) {
             if (getIntent().getAction().equals("android.intent.action.VIEW")) {
                 urlintent();
-            } else if (getIntent().getAction().equals("de.geeksfactory.opacclient.SEARCH")
-                    || getIntent().getAction().equals("de.geeksfactory.opacclient.ACCOUNT")) {
+            } else if (getIntent().getAction().equals(ACTION_SEARCH)
+                    || getIntent().getAction().equals(ACTION_ACCOUNT)) {
                 String lib = getIntent().getStringExtra("library");
                 AccountDataSource adata = new AccountDataSource(this);
-                adata.open();
                 List<Account> accounts = adata.getAllAccounts(lib);
-                adata.close();
 
                 if (accounts.size() == 0) {
                     // Check if library exists (an IOException should be thrown otherwise, correct?)
@@ -129,18 +129,31 @@ public class MainActivity extends OpacActivity
                     account.setLabel(getString(R.string.default_account_name));
                     account.setName("");
                     account.setPassword("");
-                    adata.open();
                     long id = adata.addAccount(account);
-                    adata.close();
                     selectaccount(id);
                 } else if (accounts.size() == 1) {
                     selectaccount(accounts.get(0).getId());
                 } else if (accounts.size() > 0) {
-                    // TODO: show select dialog, potentially check if accounts have
-                    // username/password
+                    if (getIntent().getAction().equals(ACTION_ACCOUNT)) {
+                        List<Account> accountsWithPassword = new ArrayList<>();
+                        for (Account account : accounts) {
+                            if (account.getName() != null && account.getPassword() != null
+                                    && !account.getName().isEmpty()
+                                    && !account.getPassword().isEmpty()) {
+                                accountsWithPassword.add(account);
+                            }
+                        }
+                        if (accountsWithPassword.size() == 1) {
+                            selectaccount(accountsWithPassword.get(0).getId());
+                        } else {
+                            showAccountSelectDialog(accounts);
+                        }
+                    } else {
+                        showAccountSelectDialog(accounts);
+                    }
                 }
 
-                if (getIntent().getAction().equals("de.geeksfactory.opacclient.SEARCH")) {
+                if (getIntent().getAction().equals(ACTION_SEARCH)) {
                     itemToSelect = "search";
                 } else {
                     itemToSelect = "account";
@@ -153,7 +166,6 @@ public class MainActivity extends OpacActivity
                 selectItem(getIntent().getStringExtra(EXTRA_FRAGMENT));
             } else if (getIntent().hasExtra(ReminderBroadcastReceiver.EXTRA_ALARM_ID)) {
                 AccountDataSource adata = new AccountDataSource(this);
-                adata.open();
                 Alarm alarm = adata.getAlarm(
                         getIntent().getLongExtra(ReminderBroadcastReceiver.EXTRA_ALARM_ID, -1));
                 List<LentItem> items = adata.getLentItems(alarm.media);
@@ -178,7 +190,6 @@ public class MainActivity extends OpacActivity
                         selectItem("account");
                     }
                 }
-                adata.close();
             } else if (itemToSelect != null) {
                 selectItem(itemToSelect);
             } else if (sp.contains("startup_fragment")) {
@@ -216,6 +227,22 @@ public class MainActivity extends OpacActivity
         }
 
         showUpdateInfoDialog();
+    }
+
+    private void showAccountSelectDialog(final List<Account> accounts) {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.account_select)
+                .setAdapter(
+                        new AccountListAdapter(this, accounts)
+                                .setHighlightActiveAccount(false),
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                    int which) {
+                                selectaccount(accounts.get(which).getId());
+                            }
+                        }).create().show();
     }
 
     @Override
@@ -257,9 +284,7 @@ public class MainActivity extends OpacActivity
 
             if (app.getLibrary() == null || !app.getLibrary().getIdent().equals(bib)) {
                 AccountDataSource adata = new AccountDataSource(this);
-                adata.open();
                 List<Account> accounts = adata.getAllAccounts(bib);
-                adata.close();
                 if (accounts.size() > 0) {
                     app.setAccount(accounts.get(0).getId());
                 } else {

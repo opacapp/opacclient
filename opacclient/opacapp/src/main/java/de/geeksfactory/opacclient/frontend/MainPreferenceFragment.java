@@ -128,9 +128,7 @@ public class MainPreferenceFragment extends PreferenceFragmentCompat {
                 @Override
                 public boolean onPreferenceClick(Preference arg0) {
                     AccountDataSource adata = new AccountDataSource(context);
-                    adata.open();
                     adata.invalidateCachedData();
-                    adata.close();
                     new ReminderHelper((OpacClient) context.getApplication()).updateAlarms(-1);
 
                     SearchFieldDataSource sfdata = new JsonSearchFieldDataSource(context);

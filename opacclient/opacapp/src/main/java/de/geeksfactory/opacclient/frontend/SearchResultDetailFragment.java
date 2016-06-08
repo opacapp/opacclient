@@ -804,10 +804,8 @@ public class SearchResultDetailFragment extends Fragment
         }
 
         AccountDataSource data = new AccountDataSource(getActivity());
-        data.open();
         final List<Account> accounts = data.getAccountsWithPassword(app
                 .getLibrary().getIdent());
-        data.close();
         if (accounts.size() == 0) {
             dialog_no_credentials();
         } else if (accounts.size() > 1
@@ -919,9 +917,7 @@ public class SearchResultDetailFragment extends Fragment
             @Override
             public void onSuccess(MultiStepResult result) {
                 AccountDataSource adata = new AccountDataSource(getActivity());
-                adata.open();
                 adata.invalidateCachedAccountData(app.getAccount());
-                adata.close();
                 if (result.getMessage() != null) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(
                             getActivity());
@@ -982,10 +978,8 @@ public class SearchResultDetailFragment extends Fragment
 
     protected void bookingStart() {
         AccountDataSource data = new AccountDataSource(getActivity());
-        data.open();
         final List<Account> accounts = data.getAccountsWithPassword(app
                 .getLibrary().getIdent());
-        data.close();
         if (accounts.size() == 0) {
             dialog_no_credentials();
         } else if (accounts.size() > 1) {
@@ -1035,9 +1029,7 @@ public class SearchResultDetailFragment extends Fragment
                     return;
                 }
                 AccountDataSource adata = new AccountDataSource(getActivity());
-                adata.open();
                 adata.invalidateCachedAccountData(app.getAccount());
-                adata.close();
                 Intent intent = new Intent(getActivity(), app.getMainActivity());
                 intent.putExtra(MainActivity.EXTRA_FRAGMENT, "account");
                 getActivity().startActivity(intent);

@@ -95,9 +95,7 @@ public class SyncAccountService extends WakefulIntentService {
     private void syncAccounts() {
         OpacClient app = (OpacClient) getApplication();
         AccountDataSource data = new AccountDataSource(this);
-        data.open();
         List<Account> accounts = data.getAccountsWithPassword();
-        data.close();
 
         try {
             for (Account account : accounts) {
@@ -115,20 +113,14 @@ public class SyncAccountService extends WakefulIntentService {
                         continue;
                     }
                 } catch (JSONException | IOException | OpacApi.OpacErrorException e) {
-                    data.close();
                     e.printStackTrace();
                     failed = true;
                     continue;
                 }
 
-                data.open();
-                try {
-                    account.setPasswordKnownValid(true);
-                    data.update(account);
-                    data.storeCachedAccountData(account, res);
-                } finally {
-                    data.close();
-                }
+                account.setPasswordKnownValid(true);
+                data.update(account);
+                data.storeCachedAccountData(account, res);
             }
         } finally {
             new ReminderHelper(app).generateAlarms();
