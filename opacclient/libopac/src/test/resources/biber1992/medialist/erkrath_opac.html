@@ -1,0 +1,123 @@
+<!DOCTYPE html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- opac/de/user -->
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <link rel="stylesheet" HREF="OPAC.css.S" TYPE="text/css">
+    <title>OPAC der Stadtb&uuml;cherei Erkrath</title>
+    <script language="JavaScript" src="scripts-opac.js.S" type="text/javascript"></script>
+    <script language="JavaScript" type="text/javascript">
+window.setTimeout("javascript:noHist('s2')",60000);
+document.onkeydown = what;
+
+    </script>
+</head>
+<body onLoad="parent.frames[2].focus(); javascript:noHist('s1')">
+<br>
+
+
+<table class="tab1" border="0" cellpadding="1" cellspacing="0" width="100%">
+    <tr>
+        <td><h2>Medienkonto</h2></td>
+        <td align="right" valign="top"><h4>Stadtbibliothek Erkrath</h4></td>
+    </tr>
+</table>
+<div class="hr1"></div>
+<table class="tab1" border="0" width="100%">
+    <tr>
+        <td width="15%">XXXXXXXXX</td>
+        <td width="*">01 Test</td>
+        <td width="20%"></td>
+        <td width="20%">ausgeliehen: 2</td>
+    </tr>
+    <tr>
+        <td width="15%"></td>
+        <td width="*"> Ausweisg&uuml;ltigkeit: 03.11.2016</td>
+        <td width="20%"></td>
+        <td width="20%"></td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td width="*"></td>
+        <td>&nbsp;</td>
+        <td width="20%"></td>
+    </tr>
+</table>
+
+<!-- Your output data goes in here -->
+
+<br>
+<font class="p61">Verl&auml;ngerungen bitte markieren und GO!-Taste klicken!</font>
+<form name="medkl" method="post" action="verl.C">
+    <input name="LANG" type="hidden" value="de">
+    <input name="FUNC" type="hidden" value="verl">
+    <input name="DUM1" type="hidden" value="">
+    <input name="DUM2" type="hidden" value="">
+    <input name="DUM3" type="hidden" value="">
+    <table border="1" width="100%">
+        <tr>
+            <th width="3%">&nbsp;</th>
+            <th width="3%">Nr</th>
+            <th width="10%">F&auml;llig</th>
+            <th width="12%">Mediennr</th>
+            <th width="3%"><p
+                    title="Verl&auml;ngerungen">&nbsp;V&nbsp;                                                                 </p>
+            </th>
+            <th width="3%"><p
+                    title="Mahnungen">&nbsp;M&nbsp;                                                                 </p>
+            </th>
+            <th width="*" align="left">Signatur / Kurztitel</th>
+            <th width="23%" colspan="2">Status</th>
+        </tr>
+        <tr>
+            <td width="3%"><input type="checkbox" name="101676742" value="YES">
+            <td width="3%" align="center">1</td>
+            <td width="10%" align="center">18.06.2016</td>
+            <td width="12%" align="center">101676742</td>
+            <td width="3%" align="center"> 1</td>
+            <td width="3%" align="center">&nbsp;</td>
+            <td width="*" align="left"><A
+                    href="javascript:smMedk('de','full','5201594')">CD Klassik B / Instrumente der </A>
+            </td>
+            <td width="10%" align="center">&nbsp;</td>
+            <td width="13%" align="center">&nbsp;</td>
+        </tr>
+        <tr>
+            <td width="3%"><input type="checkbox" name="101358480" value="YES">
+            <td width="3%" align="center">2</td>
+            <td width="10%" align="center">18.06.2016</td>
+            <td width="12%" align="center">101358480</td>
+            <td width="3%" align="center"> 1</td>
+            <td width="3%" align="center">&nbsp;</td>
+            <td width="*" align="left"><A
+                    href="javascript:smMedk('de','full','5166022')">CD Musik B / Hahn, Hilary: Silfra </A>
+            </td>
+            <td width="10%" align="center">&nbsp;</td>
+            <td width="13%" align="center">&nbsp;</td>
+        </tr>
+    </table>
+</form>
+
+
+<div class="hr1"></div>
+<br>
+<center>
+    <h2>Hier kommen Sie zu unserem neuen <a href="http://opac.erkrath.de/opax/de/index.html.S"
+                                            target="_top">Online-Katalog</a></h2>
+</center>
+<br>
+<table border="0">
+    <tr>
+        <td>
+            <h5>Webmaster : <a href="mailto:webmaster@erkrath.de">webmaster@erkrath.de</a><br>
+                / copyright 1992-2006 by BiBer GmbH<br>
+                &nbsp;&nbsp;All rights reserved</h5>
+        </td>
+        <td><img src="/opac/biber1.gif.S" border="0" alt=""></td>
+    <tr>
+</table>
+
+</body>
+</html>
+

@@ -51,11 +51,9 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
         this.prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         adata = new AccountDataSource(context);
-        adata.open();
         alarm = adata.getAlarm(intent.getLongExtra(EXTRA_ALARM_ID, -1));
 
         if (alarm == null) {
-            adata.close();
             return;
         }
 
@@ -76,7 +74,6 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
                 notificationDontRemindAgain();
                 break;
         }
-        adata.close();
         // reschedule alarms
         new ReminderHelper((OpacClient) context.getApplicationContext()).scheduleAlarms();
     }

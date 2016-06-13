@@ -18,14 +18,6 @@
  */
 package de.geeksfactory.opacclient;
 
-import com.commonsware.cwac.wakeful.WakefulIntentService;
-
-import org.acra.ACRA;
-import org.acra.ACRAConfiguration;
-import org.acra.annotation.ReportsCrashes;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
@@ -40,6 +32,14 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+
+import com.commonsware.cwac.wakeful.WakefulIntentService;
+
+import org.acra.ACRA;
+import org.acra.ACRAConfiguration;
+import org.acra.annotation.ReportsCrashes;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -223,9 +223,7 @@ public class OpacClient extends Application {
             }
         }
         AccountDataSource data = new AccountDataSource(this);
-        data.open();
         account = data.getAccount(sp.getLong(PREF_SELECTED_ACCOUNT, 0));
-        data.close();
         return account;
     }
 

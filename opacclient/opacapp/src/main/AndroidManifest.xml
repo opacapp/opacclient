@@ -48,6 +48,14 @@
                     android:pathPrefix="/:"
                     android:scheme="http" />
             </intent-filter>
+        <intent-filter>
+            <action android:name="de.geeksfactory.opacclient.SEARCH"/>
+            <category android:name="android.intent.category.DEFAULT"/>
+        </intent-filter>
+        <intent-filter>
+            <action android:name="de.geeksfactory.opacclient.ACCOUNT"/>
+            <category android:name="android.intent.category.DEFAULT"/>
+        </intent-filter>
         </activity>
         <activity
             android:name="de.geeksfactory.opacclient.frontend.WelcomeActivity"

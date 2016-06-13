@@ -28,6 +28,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class AccountDatabase extends SQLiteOpenHelper {
 
+    private static AccountDatabase instance;
     public static final String[] COLUMNS = {"id", "bib", "label", "name",
             "password", "cached", "pendingFees", "validUntil", "warning", "passwordValid"};
     public static final String[] COLUMNS_ALARMS = {"id", "deadline", "media", "alarm",
@@ -46,8 +47,13 @@ public class AccountDatabase extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "accounts.db";
     private static final int DATABASE_VERSION = 26; // REPLACE ONUPGRADE IF YOU
 
-    public AccountDatabase(Context context) {
+    private AccountDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    public static synchronized AccountDatabase getInstance(Context context) {
+        if (instance == null) instance = new AccountDatabase(context);
+        return instance;
     }
 
     @Override

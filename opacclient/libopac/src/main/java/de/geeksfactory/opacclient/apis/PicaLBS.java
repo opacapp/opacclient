@@ -281,8 +281,14 @@ public class PicaLBS extends Pica {
             String numberOfReservations =
                     extractAccountInfo(tr, "Vormerkung", "Number of reservations");
             if (numberOfReservations != null) {
-                status.append(stringProvider.getFormattedString(
-                        StringProvider.RESERVATIONS_NUMBER, numberOfReservations));
+                try {
+                    status.append(stringProvider.getQuantityString(
+                            StringProvider.RESERVATIONS_NUMBER,
+                            Integer.parseInt(numberOfReservations.trim()),
+                            Integer.parseInt(numberOfReservations.trim())));
+                } catch (NumberFormatException e) {
+                    status.append(numberOfReservations);
+                }
             }
 
             String reservationDate = extractAccountInfo(tr, "Reservationdate", "Vormerkungsdatum");

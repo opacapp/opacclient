@@ -97,9 +97,7 @@ public class AccountListActivity extends AppCompatActivity {
     public void refreshLv() {
         ListView lvAccounts = (ListView) findViewById(R.id.lvAccounts);
         AccountDataSource data = new AccountDataSource(this);
-        data.open();
         accounts = data.getAllAccounts();
-        data.close();
         AccountListAdapter adapter = new AccountListAdapter(this, accounts);
         lvAccounts.setAdapter(adapter);
     }

@@ -61,7 +61,6 @@ public class ReminderHelper {
         }
 
         AccountDataSource data = new AccountDataSource(app);
-        data.open();
         List<LentItem> items = data.getAllLentItems();
 
         // Sort lent items by deadline
@@ -71,6 +70,10 @@ public class ReminderHelper {
             if (deadline == null) {
                 // Fail silently to not annoy users. We display a warning in account view in
                 // this case.
+                continue;
+            }
+            if (item.getDownloadData() != null && item.getDownloadData().startsWith("http")) {
+                // Don't remind people of bringing back ebooks, because ... uhm...
                 continue;
             }
             if (!arrangedIds.containsKey(deadline)) {
@@ -109,9 +112,6 @@ public class ReminderHelper {
                         deadline.minusDays(warning).toDateTimeAtStartOfDay());
             }
         }
-
-        data.close();
-
         scheduleAlarms(true);
     }
 
@@ -139,9 +139,7 @@ public class ReminderHelper {
 
     private void clearAlarms() {
         AccountDataSource data = new AccountDataSource(app);
-        data.open();
         data.clearAlarms();
-        data.close();
     }
 
     private void cancelNotification(Alarm alarm) {
@@ -169,9 +167,7 @@ public class ReminderHelper {
         AccountDataSource data = new AccountDataSource(app);
         AlarmManager alarmManager = (AlarmManager) app.getSystemService(Context.ALARM_SERVICE);
 
-        data.open();
         List<Alarm> alarms = data.getAllAlarms();
-        data.close();
 
         for (Alarm alarm : alarms) {
             if (!alarm.notified) {
@@ -210,7 +206,6 @@ public class ReminderHelper {
      */
     public void resetNotified() {
         AccountDataSource data = new AccountDataSource(app);
-        data.open();
         List<Alarm> alarms = data.getAllAlarms();
 
         for (Alarm alarm : alarms) {
@@ -219,7 +214,5 @@ public class ReminderHelper {
                 data.updateAlarm(alarm);
             }
         }
-
-        data.close();
     }
 }
