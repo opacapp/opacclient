@@ -584,12 +584,12 @@ public class SearchFragment extends Fragment implements AccountSelectedListener 
                     text = (EditText) v.findViewById(R.id.edittext);
                 }
                 query.add(new SearchQuery(field, text.getEditableText()
-                                                     .toString()));
+                                                     .toString().trim()));
             } else if (field instanceof BarcodeSearchField) {
                 if (v == null) continue;
                 EditText text = (EditText) v.findViewById(R.id.edittext);
                 query.add(new SearchQuery(field, text.getEditableText()
-                                                     .toString()));
+                                                     .toString().trim()));
             } else if (field instanceof DropdownSearchField) {
                 if (v == null) continue;
                 Spinner spinner = (Spinner) v.findViewById(R.id.spinner);
