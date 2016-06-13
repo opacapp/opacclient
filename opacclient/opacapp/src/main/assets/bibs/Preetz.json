@@ -4,7 +4,7 @@
     "city": "Preetz",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://stabue-preetz.dyndns.org"
+        "baseurl": "http://185.19.197.195/iopac"
     },
     "geo": [
         54.23356,

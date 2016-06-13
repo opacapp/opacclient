@@ -4,7 +4,7 @@
     "city": "Eberswalde",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://opac.hnee.de/webOPACClient"
+        "baseurl": "https://opac.hnee.de/webOPACClient"
     },
     "geo": [
         52.83713299999999,
