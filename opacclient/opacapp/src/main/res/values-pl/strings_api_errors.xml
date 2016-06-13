@@ -4,7 +4,7 @@
   <plurals name="limited_num_of_criteria">
     <item quantity="one">Ta biblioteka wspiera tylko jedne kryteria wyszukiwania.</item>
     <item quantity="few">Ta biblioteka wspiera do %d kryteriów wyszukiwania.</item>
-    <item quantity="other">Ta biblioteka wspiera do %d kryteriów wyszukiwania.</item>
+    <item quantity="many">Ta biblioteka wspiera do %d kryteriów wyszukiwania.</item>
   </plurals>
   <string name="no_criteria_input">Nie wprowadzono kryteriów szukania.</string>
   <string name="combination_not_supported">Użyto kombinację kryteriów szukania nie wspieraną przez tę bibliotekę. Spróbuj innego zapytania.</string>
