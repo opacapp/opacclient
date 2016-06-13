@@ -1,37 +1,13 @@
 {
-    "account_supported": true,
-    "api": "bibliotheca",
+    "account_supported": false,
+    "api": "open",
     "city": "Holzgerlingen",
     "country": "Deutschland",
     "data": {
-        "accounttable": {
-            "author": 0,
-            "barcode": -1,
-            "homebranch": -1,
-            "lendingbranch": -1,
-            "prolongurl": 5,
-            "returndate": 2,
-            "status": 4,
-            "title": 1
-        },
-        "baseurl": "https://wwwopac.rz-kiru.de/holzgerlingen",
-        "copiestable": {
-            "barcode": -1,
-            "branch": -1,
-            "department": 1,
-            "location": 0,
-            "reservations": -1,
-            "returndate": 3,
-            "status": 2
-        },
-        "customssl": true,
-        "reservationtable": {
-            "author": 0,
-            "availability": 3,
-            "branch": -1,
-            "cancelurl": 4,
-            "expirationdate": -1,
-            "title": 1
+        "baseurl": "http://open.rz-kiru.de/holzgerlingen",
+        "urls": {
+            "advanced_search": "Mediensuche/ErweiterteSuche.aspx",
+            "simple_search": "Mediensuche/EinfacheSuche.aspx"
         }
     },
     "geo": [
