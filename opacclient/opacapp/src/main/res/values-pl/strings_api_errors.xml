@@ -41,7 +41,7 @@
   <plurals name="reservations_number">
     <item quantity="one">%d rezerwacja</item>
     <item quantity="few">%d rezerwacje</item>
-    <item quantity="other">%d rezerwacji</item>
+    <item quantity="many">%d rezerwacji</item>
   </plurals>
   <string name="reserved_at_date">rez. na %s</string>
   <string name="link">Link</string>
