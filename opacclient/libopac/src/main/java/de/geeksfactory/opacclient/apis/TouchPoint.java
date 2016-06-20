@@ -1129,6 +1129,7 @@ public class TouchPoint extends BaseApi implements OpacApi {
 
                 if (col3split.length > 1) item.setHomeBranch(col3split[1].trim());
 
+                item.setRenewable(false);
                 if (tr.select("a").size() > 0) {
                     for (Element link : tr.select("a")) {
                         String href = link.attr("abs:href");
