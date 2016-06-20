@@ -26,15 +26,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Serializable;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import de.geeksfactory.opacclient.R;
+import de.geeksfactory.opacclient.utils.DebugTools;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
 public class SuggestLibraryActivity extends AppCompatActivity {
 
@@ -176,41 +175,25 @@ public class SuggestLibraryActivity extends AppCompatActivity {
 
     private ArrayList<City> autocomplete(String input) {
         ArrayList<City> resultList = null;
+        OkHttpClient client = DebugTools.prepareHttpClient(new OkHttpClient.Builder()).build();
 
-        HttpURLConnection conn = null;
-        StringBuilder jsonResults = new StringBuilder();
+        String jsonResults;
         try {
-
-            URL url = new URL(
+            Request request = new Request.Builder().url(
                     GEOCODE_API + "?sensor=false" + "&language=de" + "&region=de" + "&address=" +
-                            URLEncoder.encode(input, "utf8"));
-            conn = (HttpURLConnection) url.openConnection();
-            InputStreamReader in = new InputStreamReader(conn.getInputStream());
-
-            // Load the results into a StringBuilder
-            int read;
-            char[] buff = new char[1024];
-            while ((read = in.read(buff)) != -1) {
-                jsonResults.append(buff, 0, read);
-            }
-        } catch (MalformedURLException e) {
-            Log.e(LOG_TAG, "Error processing Places API URL", e);
-            return null;
+                            URLEncoder.encode(input, "utf8")).build();
+            jsonResults = client.newCall(request).execute().body().string();
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error connecting to Places API", e);
             return null;
-        } finally {
-            if (conn != null) {
-                conn.disconnect();
-            }
         }
 
         try {
             // Create a JSON object hierarchy from the results
-            JSONObject jsonObj = new JSONObject(jsonResults.toString());
+            JSONObject jsonObj = new JSONObject(jsonResults);
             JSONArray resultsJsonArray = jsonObj.getJSONArray("results");
 
-            // Extract the Place descriptions from the results
+            // Extract data from the results
             resultList = new ArrayList<>();
             for (int i = 0; i < resultsJsonArray.length(); i++) {
                 JSONObject result = resultsJsonArray.getJSONObject(i);
