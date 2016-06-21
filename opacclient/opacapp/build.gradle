@@ -18,6 +18,7 @@ android {
         disable 'MissingTranslation'
         disable 'NewApi'  // does not respect our annotations at release time :(
         disable 'UnusedAttribute'
+        warning 'InvalidPackage'
     }
 
     signingConfigs {
