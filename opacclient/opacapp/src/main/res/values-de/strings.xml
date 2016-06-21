@@ -261,6 +261,9 @@
     <string name="reservation_fee_warning">Bitte beachten Sie, dass in manchen Bibliotheken Gebühren
         für Reservierungen anfallen können. Bitte überprüfen Sie im Zweifel die Gebührenordnung Ihrer
         Bibliothek.</string>
+    <string name="prolong_fee_warning">Bitte beachten Sie, dass in manchen Bibliotheken Gebühren
+        für Verlängerungen anfallen können. Bitte überprüfen Sie im Zweifel die Gebührenordnung Ihrer
+        Bibliothek.</string>
     <string name="do_not_ask_again">Nicht noch einmal anzeigen</string>
     <string name="reservation_fee_continue">Weiter</string>
     <string name="notification_repeat">Benachrichtigungen wiederholen</string>
