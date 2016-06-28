@@ -4,7 +4,7 @@
     "city": "Panketal",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://bibliothek-panketal.internetopac.de",
+        "baseurl": "https://bibliothek-panketal.internetopac.de",
         "accounttable": {
             "author": 0,
             "barcode": -1,

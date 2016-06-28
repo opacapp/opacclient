@@ -10,7 +10,7 @@
             "returndate": 2,
             "title": 1
         },
-        "baseurl": "http://stadtbibliothekbernau-bei-berlin.internetopac.de",
+        "baseurl": "https://stadtbibliothekbernau-bei-berlin.internetopac.de",
         "copiestable": {
             "branch": 0,
             "department": 2,

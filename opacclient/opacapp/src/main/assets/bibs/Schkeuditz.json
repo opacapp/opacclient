@@ -14,7 +14,7 @@
             "status": -1,
             "title": 1
         },
-        "baseurl": "http://schkeuditz.internetopac.de/",
+        "baseurl": "https://schkeuditz.internetopac.de/",
         "copiestable": {
             "barcode": 0,
             "branch": 4,

@@ -14,7 +14,7 @@
             "status": -1,
             "title": 1
         },
-        "baseurl": "http://neusalza-spremberg.internetopac.de",
+        "baseurl": "https://neusalza-spremberg.internetopac.de",
         "copiestable": {
             "barcode": 0,
             "branch": 4,

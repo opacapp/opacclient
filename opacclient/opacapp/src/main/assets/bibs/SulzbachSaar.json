@@ -14,7 +14,7 @@
             "status": -1,
             "title": 1
         },
-        "baseurl": "http://stadtbibliothek-sulzbach.internetopac.de",
+        "baseurl": "https://stadtbibliothek-sulzbach.internetopac.de",
         "copiestable": {
             "barcode": -1,
             "branch": -1,
