@@ -5,14 +5,14 @@
     "country": "Deutschland",
     "data": {
         "accounttable": {
-            "author": 6,
-            "barcode": 3,
+            "author": 8,
+            "barcode": 4,
             "homebranch": -1,
             "lendingbranch": -1,
-            "prolongurl": 3,
-            "returndate": 2,
-            "status": 4,
-            "title": 6
+            "prolongurl": 1,
+            "returndate": 3,
+            "status": 6,
+            "title": 8
         },
         "baseurl": "http://opac.erkrath.de",
         "mediatypes": {
@@ -28,7 +28,7 @@
             "6": "CD",
             "9": "BOARDGAME"
         },
-        "opacdir": "opac",
+        "opacdir": "opax",
         "searchtable": [
             1,
             2,

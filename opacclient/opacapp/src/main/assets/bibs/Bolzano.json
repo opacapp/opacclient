@@ -1,0 +1,22 @@
+{
+    "account_supported": false,
+    "api": "primo",
+    "city": "Bolzano",
+    "country": "Italia",
+    "data": {
+        "baseurl": "http://bolzano.hosted.exlibrisgroup.com/primo_library/libweb",
+        "db": "bolzano",
+        "languages": [
+            "de",
+            "en",
+            "it"
+        ]
+    },
+    "geo": [
+        46.4982953,
+        11.3547582
+    ],
+    "information": "http://www.gemeinde.bozen.it/cultura_sotto_home.jsp?hostmatch=true&area=48&ID_LINK=741",
+    "state": "Trentino-Alto Adige",
+    "title": "Biblioteca Civica"
+}

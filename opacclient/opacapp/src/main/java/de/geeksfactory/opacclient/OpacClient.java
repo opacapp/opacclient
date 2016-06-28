@@ -66,6 +66,7 @@ import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
 import de.geeksfactory.opacclient.storage.StarContentProvider;
+import de.geeksfactory.opacclient.utils.DebugTools;
 import de.geeksfactory.opacclient.utils.ErrorReporter;
 
 public class OpacClient extends Application {
@@ -348,6 +349,7 @@ public class OpacClient extends Application {
                         getLibrary().getIdent());
             }
         }
+        DebugTools.init(this);
 
         OpacClient.context = getApplicationContext();
 

@@ -10,7 +10,8 @@
             "returndate": 2,
             "title": 1
         },
-        "baseurl": "http://weissenhorn.internetopac.de",
+        "baseurl": "https://weissenhorn.internetopac.de",
+		"customssl": true,
         "copiestable": {
             "barcode": 0,
             "branch": 4,

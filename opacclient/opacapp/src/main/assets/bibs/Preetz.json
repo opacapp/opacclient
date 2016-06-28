@@ -4,7 +4,7 @@
     "city": "Preetz",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://185.19.197.195/iopac"
+        "baseurl": "http://185.19.197.195"
     },
     "geo": [
         54.23356,
