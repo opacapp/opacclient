@@ -426,6 +426,14 @@ public class AccountDataSource {
     }
 
     public long addAlarm(LocalDate deadline, long[] media, DateTime alarmTime) {
+        for (long mid : media) {
+            if (getLentItem(mid) == null) {
+                throw new DataIntegrityException(
+                        "Cannot add alarm with deadline " + deadline.toString() +
+                                " that has dependency on the non-existing media item " + mid);
+            }
+        }
+
         ContentValues values = new ContentValues();
         values.put("deadline", deadline.toString());
         values.put("media", joinLongs(media, ","));
@@ -436,6 +444,14 @@ public class AccountDataSource {
     }
 
     public void updateAlarm(Alarm alarm) {
+        for (long mid : alarm.media) {
+            if (getLentItem(mid) == null) {
+                throw new DataIntegrityException(
+                        "Cannot update alarm with deadline " + alarm.deadline.toString() +
+                                " that has dependency on the non-existing media item " + mid);
+            }
+        }
+
         ContentValues values = new ContentValues();
         values.put("deadline", alarm.deadline.toString());
         values.put("media", joinLongs(alarm.media, ","));

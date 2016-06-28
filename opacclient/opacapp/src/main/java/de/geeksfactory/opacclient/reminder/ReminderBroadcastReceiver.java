@@ -28,6 +28,7 @@ import de.geeksfactory.opacclient.R;
 import de.geeksfactory.opacclient.frontend.SnoozeDatePickerActivity;
 import de.geeksfactory.opacclient.objects.LentItem;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.storage.DataIntegrityException;
 
 public class ReminderBroadcastReceiver extends BroadcastReceiver {
     public static final String EXTRA_ALARM_ID = "alarmId";
@@ -96,7 +97,13 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
 
         List<LentItem> expiringItems = new ArrayList<>();
         for (long mediaId : alarm.media) {
-            expiringItems.add(adata.getLentItem(mediaId));
+            LentItem item = adata.getLentItem(mediaId);
+            if (item == null) {
+                throw new DataIntegrityException(
+                        "Unknown media ID " + mediaId + " in alarm with deadline " +
+                                alarm.deadline.toString());
+            }
+            expiringItems.add(item);
         }
 
         String notificationText;
@@ -129,10 +136,10 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
 
 
         builder.setStyle(style).setSmallIcon(R.drawable.ic_stat_notification)
-                .setWhen(alarm.deadline.toDateTimeAtStartOfDay().getMillis())
-                .setNumber(expiringItems.size())
-                .setColor(context.getResources().getColor(R.color.primary_red)).setSound(null)
-                .setVisibility(NotificationCompat.VISIBILITY_PRIVATE);
+               .setWhen(alarm.deadline.toDateTimeAtStartOfDay().getMillis())
+               .setNumber(expiringItems.size())
+               .setColor(context.getResources().getColor(R.color.primary_red)).setSound(null)
+               .setVisibility(NotificationCompat.VISIBILITY_PRIVATE);
 
         // Intent for when notification is deleted
         Intent deleteIntent = new Intent(context, ReminderBroadcastReceiver.class);
