@@ -1614,13 +1614,23 @@ public class AccountFragment extends Fragment implements
 
         @Override
         protected AccountData doInBackground(Void... voids) {
+            AccountData data;
             try {
-                AccountData data = app.getApi().account(account);
+                data = app.getApi().account(account);
 
                 if (data == null) {
                     return null;
                 }
+            } catch (IOException | OpacErrorException e) {
+                exception = e;
+                return null;
+            } catch (Exception e) {
+                ErrorReporter.handleException(e);
+                exception = e;
+                return null;
+            }
 
+            try {
                 // save data
                 AccountDataSource adatasource;
                 if (getActivity() == null && OpacClient.getEmergencyContext() != null) {
@@ -1632,17 +1642,11 @@ public class AccountFragment extends Fragment implements
                 account.setPasswordKnownValid(true);
                 adatasource.update(account);
                 adatasource.storeCachedAccountData(adatasource.getAccount(data.getAccount()), data);
-
+            } finally {
                 new ReminderHelper(app).generateAlarms();
-
-                return data;
-            } catch (IOException | OpacErrorException e) {
-                exception = e;
-            } catch (Exception e) {
-                ErrorReporter.handleException(e);
-                exception = e;
             }
-            return null;
+
+            return data;
         }
 
         @Override
