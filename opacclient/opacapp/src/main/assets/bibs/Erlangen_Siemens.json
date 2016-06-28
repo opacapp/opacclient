@@ -15,6 +15,7 @@
             "title": 1
         },
         "baseurl": "https://siemens-bibliothek-erlangen.internetopac.de",
+		"customssl": true,
         "copiestable": {
             "barcode": 0,
             "branch": 4,

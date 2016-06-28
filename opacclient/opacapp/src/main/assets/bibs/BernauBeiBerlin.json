@@ -11,6 +11,7 @@
             "title": 1
         },
         "baseurl": "https://stadtbibliothekbernau-bei-berlin.internetopac.de",
+		"customssl": true,
         "copiestable": {
             "branch": 0,
             "department": 2,

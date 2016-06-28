@@ -11,6 +11,7 @@
             "title": 1
         },
         "baseurl": "https://prenzlau.internetopac.de",
+		"customssl": true,
         "copiestable": {
             "barcode": 0,
             "branch": 4,
