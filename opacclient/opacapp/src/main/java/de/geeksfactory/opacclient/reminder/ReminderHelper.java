@@ -42,7 +42,10 @@ public class ReminderHelper {
     }
 
     private void generateAlarms(int warning, Boolean enabled) {
-        resetNotified();
+        AccountDataSource data = new AccountDataSource(app);
+        // resets the notified field to false for all alarms with finished == false this will re-show
+        // notifications that were not dismissed yet (for example after reboot)
+        data.resetNotifiedOnAllAlarams();
 
         if (warning == -1) warning = Integer.parseInt(sp.getString("notification_warning", "3"));
         if (warning > 10) {
@@ -60,7 +63,6 @@ public class ReminderHelper {
             return;
         }
 
-        AccountDataSource data = new AccountDataSource(app);
         List<LentItem> items = data.getAllLentItems();
 
         // Sort lent items by deadline
@@ -200,19 +202,4 @@ public class ReminderHelper {
         }
     }
 
-    /**
-     * resets the notified field to false for all alarms with finished == false this will re-show
-     * notifications that were not dismissed yet (for example after reboot)
-     */
-    public void resetNotified() {
-        AccountDataSource data = new AccountDataSource(app);
-        List<Alarm> alarms = data.getAllAlarms();
-
-        for (Alarm alarm : alarms) {
-            if (alarm.notified && !alarm.finished) {
-                alarm.notified = false;
-                data.updateAlarm(alarm);
-            }
-        }
-    }
 }

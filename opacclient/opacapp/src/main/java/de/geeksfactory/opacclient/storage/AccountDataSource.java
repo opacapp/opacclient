@@ -462,6 +462,12 @@ public class AccountDataSource {
                 new String[]{alarm.id + ""});
     }
 
+    public void resetNotifiedOnAllAlarams() {
+        ContentValues values = new ContentValues();
+        values.put("notified", 0);
+        database.update(AccountDatabase.TABLENAME_ALARMS, values, null, null);
+    }
+
     public Alarm getAlarmByDeadline(LocalDate deadline) {
         String[] selA = {deadline.toString()};
         Cursor cursor = database
