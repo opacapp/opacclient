@@ -1,5 +1,8 @@
 package de.geeksfactory.opacclient.reminder;
 
+import android.app.AlarmManager;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.SharedPreferences;
 
 import org.joda.time.DateTime;
@@ -31,6 +34,8 @@ public class ReminderHelperTest {
     private OpacClient app;
     private SharedPreferences sp;
     private AccountDataSource data;
+    private NotificationManager notificationManager;
+    private AlarmManager alarmManager;
 
     @Before
     public void setUp() throws Exception {
@@ -38,6 +43,12 @@ public class ReminderHelperTest {
         sp = mock(SharedPreferences.class);
         data = mock(AccountDataSource.class);
         rh = new ReminderHelper(app, sp, data);
+
+        notificationManager = mock(NotificationManager.class);
+        when(app.getSystemService(Context.NOTIFICATION_SERVICE)).thenReturn(notificationManager);
+
+        alarmManager = mock(AlarmManager.class);
+        when(app.getSystemService(Context.ALARM_SERVICE)).thenReturn(alarmManager);
 
         when(sp.getString(eq("notification_warning"), anyString())).thenReturn("3");
     }
@@ -79,6 +90,27 @@ public class ReminderHelperTest {
         rh.generateAlarms();
         verify(data, times(1)).addAlarm(date, new long[]{dbId},
                 date.toDateTimeAtStartOfDay().minus(Days.days(3)));
+    }
+
+    @Test
+    public void shouldRemoveAlarmForRemovedItem() throws Exception {
+        when(sp.getBoolean(eq("notification_service"), anyBoolean())).thenReturn(true);
+        when(data.getAllLentItems()).thenReturn(new ArrayList<LentItem>());
+
+        ArrayList<Alarm> alarms = new ArrayList<>();
+        Alarm alarm = new Alarm();
+        alarm.deadline = LocalDate.now();
+        alarm.finished = false;
+        alarm.notified = false;
+        alarm.id = 1L;
+        alarm.media = new long[]{1L};
+        alarm.notificationTime = DateTime.now();
+        alarms.add(alarm);
+
+        when(data.getAllAlarms()).thenReturn(alarms);
+
+        rh.generateAlarms();
+        verify(data, times(1)).removeAlarm(alarm);
     }
 
     @After
