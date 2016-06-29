@@ -96,6 +96,12 @@ public class SyncAccountService extends WakefulIntentService {
         OpacClient app = (OpacClient) getApplication();
         AccountDataSource data = new AccountDataSource(this);
         List<Account> accounts = data.getAccountsWithPassword();
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+
+        if (!sp.contains("update_151_clear_cache")) {
+            data.invalidateCachedData();
+            sp.edit().putBoolean("update_151_clear_cache", true).apply();
+       }
 
         try {
             for (Account account : accounts) {
