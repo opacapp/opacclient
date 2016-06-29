@@ -202,4 +202,8 @@ public class ReminderHelper {
         }
     }
 
+    public void resetNotified() {
+        AccountDataSource data = new AccountDataSource(app);
+        data.resetNotifiedOnAllAlarams();
+    }
 }
