@@ -465,7 +465,7 @@ public class AccountDataSource {
     public void resetNotifiedOnAllAlarams() {
         ContentValues values = new ContentValues();
         values.put("notified", 0);
-        database.update(AccountDatabase.TABLENAME_ALARMS, values, null, null);
+        database.update(AccountDatabase.TABLENAME_ALARMS, values, "finished = 0 AND notified = 1", null);
     }
 
     public Alarm getAlarmByDeadline(LocalDate deadline) {
