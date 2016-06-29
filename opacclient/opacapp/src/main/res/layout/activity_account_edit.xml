@@ -139,6 +139,7 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:inputType="textPassword"
+                    android:imeOptions="actionDone"
                     android:singleLine="true"/>
 
                 <TextView
