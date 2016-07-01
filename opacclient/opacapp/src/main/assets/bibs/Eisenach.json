@@ -4,7 +4,7 @@
     "city": "Eisenach",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://eisenach.bibliotheca-open.de",
+        "baseurl": "https://eisenach.bibliotheca-open.de",
         "urls": {
             "advanced_search": "Mediensuche/ErweiterteSuche.aspx",
             "simple_search": "Mediensuche/EinfacheSuche.aspx"
@@ -14,7 +14,7 @@
         50.9916247,
         10.2836982
     ],
-    "information": "http://eisenach.bibliotheca-open.de/%C3%9Cberuns/InfoKontakt.aspx",
+    "information": "https://eisenach.bibliotheca-open.de/%C3%9Cberuns/InfoKontakt.aspx",
     "state": "Thüringen",
     "title": "Stadtbibliothek"
 }
