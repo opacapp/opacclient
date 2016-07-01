@@ -364,7 +364,7 @@ public class MainActivity extends OpacActivity
         if (nfc_capable && sp.getBoolean("nfc_search", false)) {
             try {
                 mAdapter.disableForegroundDispatch(this);
-            } catch (SecurityException e) {
+            } catch (IllegalStateException | SecurityException e) {
                 e.printStackTrace();
             }
         }
