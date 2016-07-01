@@ -4,7 +4,7 @@
     "city": "Oranienburg",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://stadtbibliothekoranienburg.bibliotheca-open.de",
+        "baseurl": "https://stadtbibliothekoranienburg.bibliotheca-open.de",
         "urls": {
             "advanced_search": "Mediensuche/ErweiterteSuche.aspx",
             "simple_search": "Mediensuche/EinfacheSuche.aspx"
@@ -14,7 +14,7 @@
         52.753721,
         13.237746
     ],
-    "information": "http://stadtbibliothekoranienburg.bibliotheca-open.de/",
+    "information": "https://stadtbibliothekoranienburg.bibliotheca-open.de/",
     "state": "Brandenburg",
     "title": "Stadtbibliothek"
 }

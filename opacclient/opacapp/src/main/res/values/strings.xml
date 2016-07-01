@@ -280,4 +280,6 @@
     <string name="accountdata_reserved_branch">Branch</string>
     <string name="toggle_notice">Tap the arrow above to switch between multiple accounts.</string>
     <string name="toggle_notice_button">Got it</string>
+    <string name="starred_removed">Removed from favorites</string>
+    <string name="starred_removed_undo">Undo</string>
 </resources>

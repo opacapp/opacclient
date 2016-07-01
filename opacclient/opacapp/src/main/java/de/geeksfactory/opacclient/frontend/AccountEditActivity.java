@@ -32,6 +32,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -111,6 +112,14 @@ public class AccountEditActivity extends AppCompatActivity {
         }
         etName.setText(account.getName());
         etPassword.setText(account.getPassword());
+
+        etPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                saveAndCheck();
+                return false;
+            }
+        });
 
         try {
             lib = ((OpacClient) getApplication()).getLibrary(account

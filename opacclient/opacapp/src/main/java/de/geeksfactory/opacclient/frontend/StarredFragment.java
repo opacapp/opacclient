@@ -28,6 +28,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
@@ -74,6 +75,7 @@ public class StarredFragment extends Fragment implements
     private ListView listView;
     private int activatedPosition = ListView.INVALID_POSITION;
     private TextView tvWelcome;
+    private Starred sItem;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -176,7 +178,24 @@ public class StarredFragment extends Fragment implements
 
     public void remove(Starred item) {
         StarDataSource data = new StarDataSource(getActivity());
+        sItem = item;
+        showSnackBar();
         data.remove(item);
+    }
+
+    //Added code to show SnackBar when clicked on Remove button in Favorites screen
+    private void showSnackBar() {
+        Snackbar snackbar = Snackbar.make(view, getString(R.string.starred_removed), Snackbar.LENGTH_LONG);
+        snackbar.setAction(R.string.starred_removed_undo, new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                StarDataSource data = new StarDataSource(getActivity());
+                String bib = app.getLibrary().getIdent();
+                data.star(sItem.getMNr(), sItem.getTitle(), bib, sItem.getMediaType());
+            }
+        });
+        snackbar.show();
     }
 
     @Override

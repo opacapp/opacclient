@@ -426,6 +426,14 @@ public class AccountDataSource {
     }
 
     public long addAlarm(LocalDate deadline, long[] media, DateTime alarmTime) {
+        for (long mid : media) {
+            if (getLentItem(mid) == null) {
+                throw new DataIntegrityException(
+                        "Cannot add alarm with deadline " + deadline.toString() +
+                                " that has dependency on the non-existing media item " + mid);
+            }
+        }
+
         ContentValues values = new ContentValues();
         values.put("deadline", deadline.toString());
         values.put("media", joinLongs(media, ","));
@@ -436,6 +444,14 @@ public class AccountDataSource {
     }
 
     public void updateAlarm(Alarm alarm) {
+        for (long mid : alarm.media) {
+            if (getLentItem(mid) == null) {
+                throw new DataIntegrityException(
+                        "Cannot update alarm with deadline " + alarm.deadline.toString() +
+                                " that has dependency on the non-existing media item " + mid);
+            }
+        }
+
         ContentValues values = new ContentValues();
         values.put("deadline", alarm.deadline.toString());
         values.put("media", joinLongs(alarm.media, ","));
@@ -444,6 +460,12 @@ public class AccountDataSource {
         values.put("finished", alarm.finished ? 1 : 0);
         database.update(AccountDatabase.TABLENAME_ALARMS, values, "id = ?",
                 new String[]{alarm.id + ""});
+    }
+
+    public void resetNotifiedOnAllAlarams() {
+        ContentValues values = new ContentValues();
+        values.put("notified", 0);
+        database.update(AccountDatabase.TABLENAME_ALARMS, values, "finished = 0 AND notified = 1", null);
     }
 
     public Alarm getAlarmByDeadline(LocalDate deadline) {

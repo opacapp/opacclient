@@ -96,34 +96,40 @@ public class SyncAccountService extends WakefulIntentService {
         OpacClient app = (OpacClient) getApplication();
         AccountDataSource data = new AccountDataSource(this);
         List<Account> accounts = data.getAccountsWithPassword();
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 
-        try {
-            for (Account account : accounts) {
-                if (BuildConfig.DEBUG)
-                    Log.i(NAME, "Loading data for Account " + account.toString());
+        if (!sp.contains("update_151_clear_cache")) {
+            data.invalidateCachedData();
+            sp.edit().putBoolean("update_151_clear_cache", true).apply();
+       }
 
-                AccountData res;
-                try {
-                    Library library = app.getLibrary(account.getLibrary());
-                    if (!library.isAccountSupported()) continue;
-                    OpacApi api = app.getNewApi(library);
-                    res = api.account(account);
-                    if (res == null) {
-                        failed = true;
-                        continue;
-                    }
-                } catch (JSONException | IOException | OpacApi.OpacErrorException e) {
-                    e.printStackTrace();
+        for (Account account : accounts) {
+            if (BuildConfig.DEBUG)
+                Log.i(NAME, "Loading data for Account " + account.toString());
+
+            AccountData res;
+            try {
+                Library library = app.getLibrary(account.getLibrary());
+                if (!library.isAccountSupported()) continue;
+                OpacApi api = app.getNewApi(library);
+                res = api.account(account);
+                if (res == null) {
                     failed = true;
                     continue;
                 }
+            } catch (JSONException | IOException | OpacApi.OpacErrorException e) {
+                e.printStackTrace();
+                failed = true;
+                continue;
+            }
 
-                account.setPasswordKnownValid(true);
+            account.setPasswordKnownValid(true);
+            try {
                 data.update(account);
                 data.storeCachedAccountData(account, res);
+            } finally {
+                new ReminderHelper(app).generateAlarms();
             }
-        } finally {
-            new ReminderHelper(app).generateAlarms();
         }
     }
 

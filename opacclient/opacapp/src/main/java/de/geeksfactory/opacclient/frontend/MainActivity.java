@@ -39,6 +39,7 @@ import de.geeksfactory.opacclient.reminder.SyncAccountAlarmListener;
 import de.geeksfactory.opacclient.searchfields.SearchField;
 import de.geeksfactory.opacclient.searchfields.SearchQuery;
 import de.geeksfactory.opacclient.storage.AccountDataSource;
+import de.geeksfactory.opacclient.storage.DataIntegrityException;
 import de.geeksfactory.opacclient.storage.JsonSearchFieldDataSource;
 import de.geeksfactory.opacclient.storage.SearchFieldDataSource;
 
@@ -166,8 +167,11 @@ public class MainActivity extends OpacActivity
                 selectItem(getIntent().getStringExtra(EXTRA_FRAGMENT));
             } else if (getIntent().hasExtra(ReminderBroadcastReceiver.EXTRA_ALARM_ID)) {
                 AccountDataSource adata = new AccountDataSource(this);
-                Alarm alarm = adata.getAlarm(
-                        getIntent().getLongExtra(ReminderBroadcastReceiver.EXTRA_ALARM_ID, -1));
+                long alid = getIntent().getLongExtra(ReminderBroadcastReceiver.EXTRA_ALARM_ID, -1);
+                Alarm alarm = adata.getAlarm(alid);
+                if (alarm == null) {
+                    throw new DataIntegrityException("Unknown alarm ID " + alid + " received.");
+                }
                 List<LentItem> items = adata.getLentItems(alarm.media);
                 if (items.size() > 0) {
                     long firstAccount = items.get(0).getAccount();
@@ -360,7 +364,7 @@ public class MainActivity extends OpacActivity
         if (nfc_capable && sp.getBoolean("nfc_search", false)) {
             try {
                 mAdapter.disableForegroundDispatch(this);
-            } catch (SecurityException e) {
+            } catch (IllegalStateException | SecurityException e) {
                 e.printStackTrace();
             }
         }

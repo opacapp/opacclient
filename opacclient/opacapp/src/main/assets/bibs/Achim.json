@@ -1,0 +1,49 @@
+{
+    "account_supported": true,
+    "api": "bibliotheca",
+    "city": "Achim",
+    "country": "Deutschland",
+    "data": {
+        "accounttable": {
+            "author": 0,
+            "barcode": 3,
+            "prolongurl": 4,
+            "returndate": 2,
+            "title": 1
+        },
+        "baseurl": "http://www.stadtbibliothek-achim.de/webopac",
+        "copiestable": {
+            "barcode": 0,
+            "branch": 5,
+            "department": 1,
+            "location": 2,
+            "returndate": 6,
+            "status": 4
+        },
+        "mediatypes": {
+            "Joystick.GIF": "GAME_CONSOLE_PLAYSTATION",
+            "Zeitschriftkl.gif": "MAGAZINE",
+            "cdkl.gif": "AUDIOBOOK",
+            "dia1kl.gif": "EDOC",
+            "dvdkl.gif": "DVD",
+            "ebr2.GIF": "EBOOK",
+            "mComic1S.gif": "BOOK",
+            "mMusik2S.gif": "UNKNOWN",
+            "mMusikCDS.gif": "UNKNOWN",
+            "wuerfelkl.gif": "BOARDGAME"
+        },
+        "reservationtable": {
+            "author": 0,
+            "availability": 2,
+            "cancelurl": 3,
+            "title": 1
+        }
+    },
+    "geo": [
+        53.0092,
+        9.0510401
+    ],
+    "information": "http://achim.ver-net.de/portal/seiten/stadtbibliothek-902000059-20601.html?naviID=902000032&brotID=902000032&rubrik=2000006",
+    "state": "Niedersachsen",
+    "title": "Stadtbibliothek"
+}
