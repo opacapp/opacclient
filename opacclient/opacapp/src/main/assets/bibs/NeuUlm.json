@@ -14,7 +14,7 @@
             "status": -1,
             "title": 2
         },
-        "baseurl": "http://wwwopac.stadt.neu-ulm.de/webopac",
+        "baseurl": "https://webopac.neu-ulm.de/webopac",
         "copiestable": {
             "barcode": -1,
             "branch": 0,
