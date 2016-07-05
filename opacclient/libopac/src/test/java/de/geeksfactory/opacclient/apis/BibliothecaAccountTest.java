@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import de.geeksfactory.opacclient.i18n.DummyStringProvider;
 import de.geeksfactory.opacclient.networking.NotReachableException;
 import de.geeksfactory.opacclient.objects.Account;
 import de.geeksfactory.opacclient.objects.AccountData;
@@ -29,7 +28,8 @@ public class BibliothecaAccountTest extends BaseAccountTest {
         this.file = file;
     }
 
-    private static final String[] FILES = new String[]{"gladbeck.html", "marl.htm", "halle.html"};
+    private static final String[] FILES =
+            new String[]{"gladbeck.html", "marl.htm", "halle.html", "albstadt.html"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {
@@ -89,6 +89,27 @@ public class BibliothecaAccountTest extends BaseAccountTest {
             reservationtable.put("cancelurl", 3);
             reservationtable.put("expirationdate", -1);
             reservationtable.put("title", 2);
+        } else if (file.equals("albstadt.html")) {
+            accounttable = new JSONObject("{\n" +
+                    "            \"author\": 2,\n" +
+                    "            \"barcode\": 1,\n" +
+                    "            \"homebranch\": 0,\n" +
+                    "            \"lendingbranch\": 0,\n" +
+                    "            \"prolongurl\": 7,\n" +
+                    "            \"returndate\": 4,\n" +
+                    "            \"status\": 6,\n" +
+                    "            \"title\": 3,\n" +
+                    "            \"format\": 5\n" +
+                    "        }");
+            reservationtable = new JSONObject("{\n" +
+                    "            \"author\": 1,\n" +
+                    "            \"availability\": 4,\n" +
+                    "            \"branch\": 0,\n" +
+                    "            \"cancelurl\": 5,\n" +
+                    "            \"expirationdate\": -1,\n" +
+                    "            \"title\": 2,\n" +
+                    "            \"format\": 3\n" +
+                    "        }");
         }
         json.put("accounttable", accounttable);
         json.put("reservationtable", reservationtable);
@@ -116,7 +137,8 @@ public class BibliothecaAccountTest extends BaseAccountTest {
             throws OpacApi.OpacErrorException, JSONException, NotReachableException {
         String html = readResource("/bibliotheca/" + file);
         if (html == null) return; // we may not have all files for all libraries
-        if (file.equals("gladbeck.html") || file.equals("halle.html"))
+        if (file.equals("gladbeck.html") || file.equals("halle.html") ||
+                file.equals("albstadt.html"))
             return;
         AccountData data = Bibliotheca.parse_account(new Account(), Jsoup.parse(html),
                 getData(file));
