@@ -36,3 +36,8 @@ task jacocoRootReport(type: JacocoReport) {
         xml.destination = "build/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
     }
 }
+
+coveralls {
+    sourceDirs = files(["opacapp/src/main/java", "libopac/src/main/java"])
+    jacocoReportPath = "build/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
+}
