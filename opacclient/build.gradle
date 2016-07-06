@@ -38,6 +38,6 @@ task jacocoRootReport(type: JacocoReport) {
 }
 
 coveralls {
-    sourceDirs = files(["opacapp/src/main/java", "libopac/src/main/java"])
+    sourceDirs = ["opacapp/src/main/java", "libopac/src/main/java"]
     jacocoReportPath = "build/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
 }
