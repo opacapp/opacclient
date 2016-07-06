@@ -1,4 +1,4 @@
-Web Opac App [![Build Status](https://travis-ci.org/opacapp/opacclient.svg?branch=master)](https://travis-ci.org/opacapp/opacclient)
+Web Opac App [![Build Status](https://travis-ci.org/opacapp/opacclient.svg?branch=master)](https://travis-ci.org/opacapp/opacclient)[![Coverage Status](https://coveralls.io/repos/github/opacapp/opacclient/badge.svg?branch=master)](https://coveralls.io/github/opacapp/opacclient?branch=master)
 ============
 Android client for public libraries. See [opacapp.net](http://opacapp.net) for details.
 
