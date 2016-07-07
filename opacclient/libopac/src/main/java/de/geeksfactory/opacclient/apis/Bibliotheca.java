@@ -277,6 +277,7 @@ public class Bibliotheca extends BaseApi {
         nameValuePairs.add(new BasicNameValuePair("stichtit", "stich"));
 
         int ifeldCount = 0;
+        String order = "asc";
         for (SearchQuery query : queries) {
             if (query.getValue().equals("")) {
                 continue;
@@ -296,8 +297,7 @@ public class Bibliotheca extends BaseApi {
             if (key.equals("orderselect") && query.getValue().contains(":")) {
                 nameValuePairs.add(new BasicNameValuePair("orderselect", query
                         .getValue().split(":")[0]));
-                nameValuePairs.add(new BasicNameValuePair("order", query
-                        .getValue().split(":")[1]));
+                order = query.getValue().split(":")[1];
             } else {
                 nameValuePairs
                         .add(new BasicNameValuePair(key, query.getValue()));
@@ -331,6 +331,9 @@ public class Bibliotheca extends BaseApi {
 
         String html = httpPost(opac_url + "/index.asp",
                 new UrlEncodedFormEntity(nameValuePairs), getDefaultEncoding());
+        if (html.contains("<a href=\"index.asp?order=" + order + "\">")) {
+            html = httpGet(opac_url + "/index.asp?order=" + order, getDefaultEncoding());
+        }
         return parse_search(html, 1);
     }
 
