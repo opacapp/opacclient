@@ -1,4 +1,6 @@
 apply plugin: 'java'
+apply plugin: 'jacoco'
+apply plugin: 'com.github.kt3k.coveralls'
 
 sourceCompatibility = JavaVersion.VERSION_1_7
 targetCompatibility = JavaVersion.VERSION_1_7
@@ -16,6 +18,13 @@ dependencies {
 task copyTestResources(type: Copy) {
     from "${projectDir}/src/test/resources"
     into "${buildDir}/classes/test"
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true // coveralls plugin depends on xml format report
+        html.enabled = true
+    }
 }
 
 processTestResources.dependsOn copyTestResources
