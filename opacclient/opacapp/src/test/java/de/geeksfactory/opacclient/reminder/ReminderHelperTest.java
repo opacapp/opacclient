@@ -1,5 +1,6 @@
 package de.geeksfactory.opacclient.reminder;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -111,6 +112,22 @@ public class ReminderHelperTest {
 
         rh.generateAlarms();
         verify(data, times(1)).removeAlarm(alarm);
+    }
+
+    @SuppressLint("CommitPrefEdits")
+    @Test
+    public void shouldUpdateWarningPeriodFromMillisToDays() {
+        SharedPreferences.Editor editor = mock(SharedPreferences.Editor.class);
+        when(sp.getString(eq("notification_warning"), anyString())).thenReturn("259200000");
+        when(data.getAllLentItems()).thenReturn(new ArrayList<LentItem>());
+        when(editor.putString(anyString(), anyString())).thenReturn(editor);
+        when(sp.edit()).thenReturn(editor);
+
+        rh.generateAlarms();
+
+        verify(editor).putString("notification_warning", "3");
+        verify(editor).apply();
+        verifyNoMoreInteractions(editor);
     }
 
     @After

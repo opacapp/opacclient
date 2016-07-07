@@ -69,7 +69,10 @@ public class SyncAccountService extends WakefulIntentService {
             if (!sp.getBoolean("notification_service_wifionly", false) ||
                     networkInfo.getType() == ConnectivityManager.TYPE_WIFI ||
                     networkInfo.getType() == ConnectivityManager.TYPE_ETHERNET) {
-                syncAccounts();
+                OpacClient app = (OpacClient) getApplication();
+                AccountDataSource data = new AccountDataSource(this);
+                ReminderHelper helper = new ReminderHelper(app);
+                syncAccounts(app, data, sp, helper);
             } else {
                 failed = true;
             }
@@ -92,11 +95,9 @@ public class SyncAccountService extends WakefulIntentService {
         }
     }
 
-    private void syncAccounts() {
-        OpacClient app = (OpacClient) getApplication();
-        AccountDataSource data = new AccountDataSource(this);
+    void syncAccounts(OpacClient app, AccountDataSource data, SharedPreferences sp,
+            ReminderHelper helper) {
         List<Account> accounts = data.getAccountsWithPassword();
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (!sp.contains("update_151_clear_cache")) {
             data.invalidateCachedData();
@@ -128,7 +129,7 @@ public class SyncAccountService extends WakefulIntentService {
                 data.update(account);
                 data.storeCachedAccountData(account, res);
             } finally {
-                new ReminderHelper(app).generateAlarms();
+                helper.generateAlarms();
             }
         }
     }
