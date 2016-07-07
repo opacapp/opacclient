@@ -1,3 +1,6 @@
+apply plugin: 'com.github.kt3k.coveralls'
+apply plugin: 'jacoco'
+
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
@@ -14,4 +17,27 @@ allprojects {
     repositories {
         jcenter()
     }
+}
+
+task jacocoRootReport(type: JacocoReport) {
+    dependsOn = [":libopac:jacocoTestReport", ":opacapp:jacocoTestReport"]
+    executionData files(["libopac/build/jacoco/test.exec", "opacapp/build/jacoco/testDebugUnitTest.exec"])
+    sourceDirectories = files(["opacapp/src/main/java", "libopac/src/main/java"])
+
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+    def debugTree = fileTree(dir: "opacapp/build/intermediates/classes/debug", excludes: fileFilter)
+    def libopacDebugTree = fileTree(dir: "libopac/build/classes/main")
+    classDirectories = files([debugTree, libopacDebugTree])
+    jacocoClasspath = configurations.jacocoAnt
+    reports {
+        html.enabled = true
+        html.destination = "build/reports/jacoco/jacocoRootReport/html"
+        xml.enabled = true
+        xml.destination = "build/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
+    }
+}
+
+coveralls {
+    sourceDirs = ["opacapp/src/main/java", "libopac/src/main/java"]
+    jacocoReportPath = "build/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
 }

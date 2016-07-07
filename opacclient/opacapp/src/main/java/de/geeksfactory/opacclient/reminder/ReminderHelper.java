@@ -27,10 +27,21 @@ import de.geeksfactory.opacclient.storage.AccountDataSource;
 public class ReminderHelper {
     private OpacClient app;
     private SharedPreferences sp;
+    private AccountDataSource data;
+    private boolean log;
 
     public ReminderHelper(OpacClient app) {
         this.app = app;
         sp = PreferenceManager.getDefaultSharedPreferences(app);
+        data = new AccountDataSource(app);
+        log = BuildConfig.DEBUG;
+    }
+
+    ReminderHelper(OpacClient app, SharedPreferences sp, AccountDataSource data) {
+        this.app = app;
+        this.sp = sp;
+        this.data = data;
+        log = false;
     }
 
     /**
@@ -42,7 +53,6 @@ public class ReminderHelper {
     }
 
     private void generateAlarms(int warning, Boolean enabled) {
-        AccountDataSource data = new AccountDataSource(app);
         // resets the notified field to false for all alarms with finished == false this will re-show
         // notifications that were not dismissed yet (for example after reboot)
         data.resetNotifiedOnAllAlarams();
@@ -56,7 +66,7 @@ public class ReminderHelper {
 
         if (enabled == null) enabled = sp.getBoolean("notification_service", false);
         if (!enabled) {
-            if (BuildConfig.DEBUG) {
+            if (log) {
                 Log.d("OpacClient",
                         "scheduling no alarms because notifications are disabled");
             }
@@ -104,7 +114,7 @@ public class ReminderHelper {
                     data.updateAlarm(alarm);
                 }
             } else {
-                if (BuildConfig.DEBUG) {
+                if (log) {
                     Log.i("OpacClient",
                             "scheduling alarm for " + media.length + " items with deadline on " +
                                     DateTimeFormat.shortDate().print(deadline) + " on " +
@@ -140,7 +150,6 @@ public class ReminderHelper {
     }
 
     private void clearAlarms() {
-        AccountDataSource data = new AccountDataSource(app);
         data.clearAlarms();
     }
 
@@ -166,7 +175,6 @@ public class ReminderHelper {
     private void scheduleAlarms(boolean enabled) {
         if (!sp.getBoolean("notification_service", false) && !enabled) return;
 
-        AccountDataSource data = new AccountDataSource(app);
         AlarmManager alarmManager = (AlarmManager) app.getSystemService(Context.ALARM_SERVICE);
 
         List<Alarm> alarms = data.getAllAlarms();
@@ -203,7 +211,6 @@ public class ReminderHelper {
     }
 
     public void resetNotified() {
-        AccountDataSource data = new AccountDataSource(app);
         data.resetNotifiedOnAllAlarams();
     }
 }
