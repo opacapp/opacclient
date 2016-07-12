@@ -254,8 +254,13 @@ public abstract class BaseApi implements OpacApi {
                 for (String pair : pairs) {
                     String[] kv = pair.split("=");
                     if (kv.length > 1) {
+                        StringBuilder join = new StringBuilder();
+                        for (int i = 1; i < kv.length; i++) {
+                            if (i > 1) join.append("=");
+                            join.append(kv[i]);
+                        }
                         params.add(new BasicNameValuePair(URLDecoder.decode(
-                                kv[0], "UTF-8"), URLDecoder.decode(kv[1],
+                                kv[0], "UTF-8"), URLDecoder.decode(join.toString(),
                                 "UTF-8")));
                     } else {
                         params.add(new BasicNameValuePair(URLDecoder.decode(

@@ -238,7 +238,12 @@ public class VuFind extends BaseApi {
             String href = row.select("a.title").first().absUrl("href");
             try {
                 URL idurl = new URL(href);
-                res.setId(idurl.getPath().replace("/Record/", ""));
+                String path = idurl.getPath();
+                Pattern pattern = Pattern.compile("\\/Record\\/([^/]+)");
+                Matcher matcher = pattern.matcher(path);
+                if (matcher.find()) {
+                    res.setId(matcher.group(1));
+                }
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -302,7 +307,7 @@ public class VuFind extends BaseApi {
             String text = tr.child(1).text();
             if (tr.child(1).select("a").size() > 0) {
                 String href = tr.child(1).select("a").attr("href");
-                if (!href.startsWith("/") || !text.contains(opac_url)) {
+                if (!href.startsWith("/") && !text.contains(opac_url)) {
                     text += " " + href;
                 }
             }
@@ -349,7 +354,9 @@ public class VuFind extends BaseApi {
         } else if ("stackedtable".equals(data.optString("copystyle"))) {
             // e.g. http://search.lib.auth.gr/Record/376356
             // or https://katalog.ub.uni-leipzig.de/Record/0000196115
-            Element container = doc.select(".recordsubcontent").first();
+            // or https://www.stadt-muenster.de/opac2/Record/0367968
+            Element container = doc.select(".recordsubcontent, .tab-container").first();
+            // .tab-container is used in Muenster.
             String branch = "";
             JSONObject copytable = data.getJSONObject("copytable");
             for (Element child : container.children()) {
