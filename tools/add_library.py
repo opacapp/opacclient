@@ -328,15 +328,18 @@ class Open(Api):
     def prompt(self, data):
         data['data']['urls'] = {}
         baseurl = data['data']['baseurl'] + '/'
-        html = urllib.request.urlopen(baseurl).read().decode('utf-8')
-        doc = BeautifulSoup(html, 'html.parser')
-        elems = doc.select('#dnn_dnnNAV_ctldnnNAV li a')
-        for elem in elems:
-            name = elem.get_text()
-            if name in ('Einfache Suche'):
-                data['data']['urls']['simple_search'] = elem['href'].replace(baseurl, '')
-            elif name in ('Erweiterte Suche', 'Profisuche'):
-                data['data']['urls']['advanced_search'] = elem['href'].replace(baseurl, '')
+        try:
+            html = urllib.request.urlopen(baseurl).read().decode('utf-8')
+            doc = BeautifulSoup(html, 'html.parser')
+            elems = doc.select('#dnn_dnnNAV_ctldnnNAV li a')
+            for elem in elems:
+                name = elem.get_text()
+                if name in ('Einfache Suche'):
+                    data['data']['urls']['simple_search'] = elem['href'].replace(baseurl, '')
+                elif name in ('Erweiterte Suche', 'Profisuche'):
+                    data['data']['urls']['advanced_search'] = elem['href'].replace(baseurl, '')
+        except urllib.error.HTTPError:
+            pass
 
         if not 'simple_search' in data['data']['urls']:
             print("URL für Einfache Suche?")

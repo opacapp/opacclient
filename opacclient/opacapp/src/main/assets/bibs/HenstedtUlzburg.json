@@ -4,13 +4,13 @@
     "city": "Henstedt-Ulzburg",
     "country": "Deutschland",
     "data": {
-        "baseurl": "http://iopac-hu.dyndns.org"
+        "baseurl": "http://mediothek.h-u.de"
     },
     "geo": [
         53.79197,
         9.9805201
     ],
-    "information": "http://iopac-hu.dyndns.org/",
+    "information": "http://www.henstedt-ulzburg.de/gemeindebuecherei-mediothek.html",
     "state": "Schleswig-Holstein",
     "title": "Gemeindeb\u00fccherei und -mediothek"
 }
