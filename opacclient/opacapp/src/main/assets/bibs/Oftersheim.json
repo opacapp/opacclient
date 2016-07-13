@@ -1,0 +1,20 @@
+{
+    "account_supported": false,
+    "api": "open",
+    "city": "Oftersheim",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "http://bibliotheken.kivbf.de/oftersheim",
+        "urls": {
+            "advanced_search": "Mediensuche/Erweiterte-Suche",
+            "simple_search": "Mediensuche/Einfache-Suche"
+        }
+    },
+    "geo": [
+        49.3702809,
+        8.5838662
+    ],
+    "information": "http://www.oftersheim.de/gemeinde/einrichtungen/buecherei/",
+    "state": "Baden-W\u00fcrttemberg",
+    "title": "Gemeindeb\u00fccherei"
+}

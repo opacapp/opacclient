@@ -1,0 +1,16 @@
+{
+    "account_supported": true,
+    "api": "winbiap",
+    "city": "Leichlingen",
+    "country": "Deutschland",
+    "data": {
+        "baseurl": "https://webopac.kdvz.de/leichlingen"
+    },
+    "geo": [
+        51.102509,
+        7.0096126
+    ],
+    "information": "http://www.leichlingen.de/Stadtbuecherei.915.0.html",
+    "state": "Nordrhein-Westfalen",
+    "title": "Stadtb\u00fccherei"
+}

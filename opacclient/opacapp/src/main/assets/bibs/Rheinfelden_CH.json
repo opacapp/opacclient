@@ -1,0 +1,20 @@
+{
+    "account_supported": false,
+    "api": "open",
+    "city": "Rheinfelden",
+    "country": "Schweiz",
+    "data": {
+        "baseurl": "http://bibliotheken.kivbf.de/open_rheinfelden",
+        "urls": {
+            "advanced_search": "Mediensuche/ErweiterteSuche.aspx",
+            "simple_search": "Mediensuche/EinfacheSuche.aspx"
+        }
+    },
+    "geo": [
+        47.55219,
+        7.7922914
+    ],
+    "information": "http://bibliotheken.kivbf.de/open_rheinfelden/Home.aspx",
+    "state": "Aargau",
+    "title": "Stadtbibliotheken"
+}
