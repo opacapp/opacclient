@@ -9,8 +9,8 @@ android {
         applicationId "de.geeksfactory.opacclient"
         minSdkVersion 8
         targetSdkVersion 24
-        versionCode 151
-        versionName "4.5.8"
+        versionCode 152
+        versionName "4.5.9"
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -79,7 +79,7 @@ dependencies {
     compile 'org.apmem.tools:layouts:1.8@aar'
     compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
     compile 'org.apache.httpcomponents:httpmime:4.3.6'
-    compile 'net.opacapp:multiline-collapsingtoolbar:1.1.0'
+    compile 'net.opacapp:multiline-collapsingtoolbar:1.2.1'
     compile 'joda-time:joda-time:2.8.2'
     compile 'org.joda:joda-convert:1.8'
     compile 'su.j2e:rv-joiner:1.0.6'
