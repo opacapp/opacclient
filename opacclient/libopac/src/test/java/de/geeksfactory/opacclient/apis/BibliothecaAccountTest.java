@@ -29,7 +29,7 @@ public class BibliothecaAccountTest extends BaseAccountTest {
     }
 
     private static final String[] FILES =
-            new String[]{"gladbeck.html", "marl.htm", "halle.html", "albstadt.html"};
+            new String[]{"gladbeck.html", "marl.htm", "halle.html", "albstadt.html", "bernau.html"};
 
     @Parameterized.Parameters(name = "{0}")
     public static Collection<String[]> files() {
@@ -110,6 +110,19 @@ public class BibliothecaAccountTest extends BaseAccountTest {
                     "            \"title\": 2,\n" +
                     "            \"format\": 3\n" +
                     "        }");
+        } else if (file.equals("bernau.html")) {
+            accounttable = new JSONObject("{\n" +
+                    "            \"author\": 0,\n" +
+                    "            \"prolongurl\": 4,\n" +
+                    "            \"returndate\": 2,\n" +
+                    "            \"title\": 1\n" +
+                    "        }");
+            reservationtable = new JSONObject("{\n" +
+                    "            \"author\": 0,\n" +
+                    "            \"availability\": 2,\n" +
+                    "            \"cancelurl\": 4,\n" +
+                    "            \"title\": 1\n" +
+                    "        }");
         }
         json.put("accounttable", accounttable);
         json.put("reservationtable", reservationtable);
@@ -138,7 +151,7 @@ public class BibliothecaAccountTest extends BaseAccountTest {
         String html = readResource("/bibliotheca/" + file);
         if (html == null) return; // we may not have all files for all libraries
         if (file.equals("gladbeck.html") || file.equals("halle.html") ||
-                file.equals("albstadt.html"))
+                file.equals("albstadt.html") || file.equals("bernau.html"))
             return;
         AccountData data = Bibliotheca.parse_account(new Account(), Jsoup.parse(html),
                 getData(file));

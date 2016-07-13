@@ -1013,6 +1013,7 @@ public class Bibliotheca extends BaseApi {
                                   .select("tr.tabKonto");
 
         DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy").withLocale(Locale.GERMAN);
+        DateTimeFormatter fmt2 = DateTimeFormat.forPattern("d/M/yyyy").withLocale(Locale.GERMAN);
 
         for (int i = 0; i < exemplartrs.size(); i++) {
             Element tr = exemplartrs.get(i);
@@ -1038,7 +1039,11 @@ public class Bibliotheca extends BaseApi {
                         try {
                             item.setDeadline(fmt.parseLocalDate(tr.child(index).text()));
                         } catch (IllegalArgumentException e1) {
-                            e1.printStackTrace();
+                            try {
+                                item.setDeadline(fmt2.parseLocalDate(tr.child(index).text()));
+                            } catch (IllegalArgumentException e2) {
+                                e2.printStackTrace();
+                            }
                         }
                     } else {
                         item.set(key, tr.child(index).text());
@@ -1079,13 +1084,21 @@ public class Bibliotheca extends BaseApi {
                         try {
                             item.setReadyDate(fmt.parseLocalDate(tr.child(index).text()));
                         } catch (IllegalArgumentException e1) {
-                            item.setStatus(tr.child(index).text());
+                            try {
+                                item.setReadyDate(fmt2.parseLocalDate(tr.child(index).text()));
+                            } catch (IllegalArgumentException e2) {
+                                e2.printStackTrace();
+                            }
                         }
                     } else if (key.equals("expirationdate")) {
                         try {
                             item.setExpirationDate(fmt.parseLocalDate(tr.child(index).text()));
                         } catch (IllegalArgumentException e1) {
-                            item.setStatus(tr.child(index).text());
+                            try {
+                                item.setExpirationDate(fmt2.parseLocalDate(tr.child(index).text()));
+                            } catch (IllegalArgumentException e2) {
+                                item.setStatus(tr.child(index).text());
+                            }
                         }
                     } else {
                         item.set(key, tr.child(index).text());
