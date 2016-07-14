@@ -511,7 +511,7 @@ public class Open extends BaseApi implements OpacApi {
                             NO_MOBILE + "&id=" + id, getDefaultEncoding());
             return parse_result(Jsoup.parse(html));
         } catch (JSONException e) {
-            throw new IOException(e);
+            throw new IOException(e.getMessage());
         }
     }
 

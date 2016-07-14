@@ -177,8 +177,8 @@ public class Littera extends SearchOnlyApi {
         final URIBuilder builder = new URIBuilder(getApiUrl());
         final List<SearchQuery> nonEmptyQuery = new ArrayList<>();
         for (SearchQuery q : query) {
-            if (q.getValue().isEmpty()) {
-            } else if (q.getKey().startsWith("sort")) {
+            if (q.getValue().equals("")) continue;
+            if (q.getKey().startsWith("sort")) {
                 builder.addParameter(q.getKey(), q.getValue());
             } else {
                 nonEmptyQuery.add(q);
@@ -241,7 +241,7 @@ public class Littera extends SearchOnlyApi {
         for (final Element tr : detailTable.select("tr")) {
             final String desc = tr.child(0).text();
             final String content = tr.child(1).text();
-            if (desc != null && !desc.trim().isEmpty()) {
+            if (desc != null && !desc.trim().equals("")) {
                 result.addDetail(new Detail(desc, content));
             } else if (!result.getDetails().isEmpty()) {
                 final Detail lastDetail = result.getDetails().get(result.getDetails().size() - 1);
