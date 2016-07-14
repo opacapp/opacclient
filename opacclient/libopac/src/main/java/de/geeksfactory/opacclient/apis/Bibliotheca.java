@@ -334,7 +334,7 @@ public class Bibliotheca extends BaseApi {
         if (html.contains("<a href=\"index.asp?order=" + order + "\">")) {
             html = httpGet(opac_url + "/index.asp?order=" + order, getDefaultEncoding());
         }
-        return parse_search(html, 1);
+        return parseSearch(html, 1, data);
     }
 
     @Override
@@ -345,12 +345,12 @@ public class Bibliotheca extends BaseApi {
 
         String html = httpGet(opac_url + "/index.asp?scrollAction=" + page,
                 getDefaultEncoding());
-        return parse_search(html, page);
+        return parseSearch(html, page, data);
     }
 
-    protected SearchRequestResult parse_search(String html, int page) {
+    static SearchRequestResult parseSearch(String html, int page, JSONObject data) {
         Document doc = Jsoup.parse(html);
-        doc.setBaseUri(opac_url);
+        doc.setBaseUri(data.optString("baseurl"));
         Elements table = doc
                 .select(".resulttab tr.result_trefferX, .resulttab tr.result_treffer");
         List<SearchResult> results = new ArrayList<>();
@@ -436,7 +436,7 @@ public class Bibliotheca extends BaseApi {
         }
         String html = httpGet(opac_url + "/index.asp?MedienNr=" + a,
                 getDefaultEncoding());
-        DetailledItem result = parse_result(html);
+        DetailledItem result = parseResult(html, data);
         if (result.getId() == null) {
             result.setId(a);
         }
@@ -448,12 +448,12 @@ public class Bibliotheca extends BaseApi {
         String html = httpGet(opac_url + "/index.asp?detmediennr=" + nr,
                 getDefaultEncoding());
 
-        return parse_result(html);
+        return parseResult(html, data);
     }
 
-    protected DetailledItem parse_result(String html) {
+    static DetailledItem parseResult(String html, JSONObject data) {
         Document doc = Jsoup.parse(html);
-        doc.setBaseUri(opac_url);
+        doc.setBaseUri(data.optString("baseurl"));
 
         DetailledItem result = new DetailledItem();
 
